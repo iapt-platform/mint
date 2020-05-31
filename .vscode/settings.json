@@ -1,0 +1,11 @@
+{
+    "files.autoSave": "onFocusChange",
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "One Dark Pro",
+    "editor.formatOnSave": true,
+    "editor.fontFamily": "source code pro",
+    "editor.mouseWheelZoom": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}
