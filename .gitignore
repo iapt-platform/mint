@@ -1,0 +1,6 @@
+# cargo
+/target/
+
+# testing
+/tmp/
+/config.toml
