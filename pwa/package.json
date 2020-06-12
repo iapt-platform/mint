@@ -7,8 +7,11 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
     "@types/react": "^16.9.36",
     "@types/react-dom": "^16.9.8",
+    "material-ui-popup-state": "^1.5.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "typescript": "^3.9.5"
