@@ -1,8 +1,11 @@
 import React from 'react'
+import { WikipaliFrame } from './wikipali-frame'
 
 function App() {
   return (
-    <p>Hello world!</p>
+    <WikipaliFrame>
+      Hello world
+    </WikipaliFrame>
   );
 }
 
