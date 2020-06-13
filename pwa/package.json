@@ -14,11 +14,13 @@
     "material-ui-popup-state": "^1.5.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-intl": "^4.6.9",
     "typescript": "^3.9.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-contexts": "^5.3.19",
     "@storybook/addon-info": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
     "@storybook/addons": "^5.3.19",

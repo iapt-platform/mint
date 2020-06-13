@@ -10,6 +10,7 @@ import {
 } from 'material-ui-popup-state/hooks'
 import { WikipaliSearchBox } from './wikipali-searchbox';
 import { WikipaliBranding } from './wikipali-branding';
+import { FormattedMessage } from 'react-intl';
 
 const TopbarLeft = styled('div')({
   flex: "1", 
@@ -31,7 +32,9 @@ const TopbarRight = styled('div')({
 
 const SignOutButton = () => {
   return (
-    <Button color="inherit">Sign Out</Button>
+    <Button color="inherit">
+      <FormattedMessage id="topbar.sign-out" />  
+    </Button>
   );
 };
 

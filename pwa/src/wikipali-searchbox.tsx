@@ -2,6 +2,7 @@ import React from 'react';
 import { styled, fade } from "@material-ui/core/styles";
 import { InputBase } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
+import { useIntl } from 'react-intl';
 
 const StyledSearchBox = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -42,13 +43,16 @@ const StyledSearchInput = styled(InputBase)(({ theme }) => ({
     }
 }))
 
-export const WikipaliSearchBox = () => (
-    <StyledSearchBox>
-        <SearchBoxIcon>
-            <SearchIcon />
-        </SearchBoxIcon>
-        <StyledSearchInput
-            placeholder="Search..."
-        />
-    </StyledSearchBox>
-);
+export const WikipaliSearchBox = () => {
+    const intl = useIntl();
+    return (
+        <StyledSearchBox>
+            <SearchBoxIcon>
+                <SearchIcon />
+            </SearchBoxIcon>
+            <StyledSearchInput
+                placeholder={intl.formatMessage({id: 'topbar.search'})}
+            />
+        </StyledSearchBox>
+    )
+}

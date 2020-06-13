@@ -1,5 +1,6 @@
 import React from 'react';
 import { WikipaliFrame } from './wikipali-frame';
+import { FormattedMessage } from 'react-intl';
 
 export default {
   title: 'Frame',
@@ -8,6 +9,6 @@ export default {
 
 export const Basic = () => (
     <WikipaliFrame>
-        Page goes here
+        <FormattedMessage id="hello-world" />
     </WikipaliFrame>
 )
