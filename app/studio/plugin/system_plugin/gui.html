@@ -1,0 +1,150 @@
+<?php
+
+$pluginPath="./plugin/";
+$files = scandir($pluginPath);
+$arrlength=count($files);
+$pluginInfo=array();
+$pluginCounter=0;
+for($x=0;$x<$arrlength;$x++) {
+	if(!is_file($pluginPath.$files[$x])){
+		if(strlen($files[$x])>2)
+		{
+			$dirName=$pluginPath.$files[$x];
+			$infoFileName=$dirName."/info.xml";
+			if(file_exists($infoFileName)){
+				$pluginInfo[$pluginCounter]['path']=$dirName;
+				$xml = simplexml_load_file($infoFileName);
+				$pluginInfo[$pluginCounter]['caption']=$xml->xpath("caption")[0];
+				$pluginInfo[$pluginCounter]['author']=$xml->xpath("author")[0];
+				$pluginInfo[$pluginCounter]['class']=$xml->xpath("class")[0];
+				$pluginCounter++;
+			}
+		}
+	}
+}
+
+
+?>			
+			<div class="menu" id="menu_plugin">
+				<h1><?php echo $module_gui_str['editor_plugin']['1001']; ?></h1>
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_plugin']['1002']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+					<?php
+					for($i=0;$i<$pluginCounter;$i++){
+						$caption=$pluginInfo[$i]['caption'];
+						$author=$pluginInfo[$i]['author'];
+						$class=$pluginInfo[$i]['class'];
+						$path=$pluginInfo[$i]['path'];
+						if($class=="edit"){
+						echo "<script language=\"javascript\" src=\"$path/module_function.js\"></script>";
+						echo "<div class=\"plugin\">";
+						
+						echo "<div class=\"plugin_head\" onclick=\"editor_plugin_show_plugin_body(this)\">";
+						echo "<div class=\"plugin_head_1\">";
+						echo $caption;
+						echo "</div>";
+						echo "<div class=\"plugin_head_2\">";
+						echo $module_gui_str['editor_plugin']['1003'].$author;
+						echo "</div>";						
+						echo "</div>";
+					
+						echo "<div class=\"plugin_body\">";
+						require "$path/gui.html";
+						echo "</div>";
+					
+						echo "</div>";
+						}
+					}
+					?>
+					</div>
+				</div>
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_plugin']['1004']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+					<?php
+					for($i=0;$i<$pluginCounter;$i++){
+						$caption=$pluginInfo[$i]['caption'];
+						$author=$pluginInfo[$i]['author'];
+						$class=$pluginInfo[$i]['class'];
+						$path=$pluginInfo[$i]['path'];
+						if($class=="importexport"){
+						echo "<div class=\"plugin\">";
+						
+						echo "<div class=\"plugin_head\" onclick=\"editor_plugin_show_plugin_body(this)\">";
+						echo "<div class=\"plugin_head_1\">";
+						echo $caption;
+						echo "</div>";
+						echo "<div class=\"plugin_head_2\">";
+						echo $module_gui_str['editor_plugin']['1003'].$author;
+						echo "</div>";						
+						echo "</div>";
+					
+						echo "<div class=\"plugin_body\">";
+						require "$path/gui.html";
+						echo "</div>";
+					
+						echo "</div>";
+						}
+					}
+					?>
+					</div>
+				</div>
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_plugin']['1005']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+					<?php
+					for($i=0;$i<$pluginCounter;$i++){
+						$caption=$pluginInfo[$i]['caption'];
+						$author=$pluginInfo[$i]['author'];
+						$class=$pluginInfo[$i]['class'];
+						$path=$pluginInfo[$i]['path'];
+						if($class=="render"){
+						echo "<div class=\"plugin\">";
+						
+						echo "<div class=\"plugin_head\" onclick=\"editor_plugin_show_plugin_body(this)\">";
+						echo "<div class=\"plugin_head_1\">";
+						echo $caption;
+						echo "</div>";
+						echo "<div class=\"plugin_head_2\">";
+						echo $module_gui_str['editor_plugin']['1003'].$author;
+						echo "</div>";						
+						echo "</div>";
+					
+						echo "<div class=\"plugin_body\">";
+						require "$path/gui.html";
+						echo "</div>";
+					
+						echo "</div>";
+						}
+					}
+					?>
+					</div>
+				</div>		
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_plugin']['1006']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+
+					</div>
+				</div>					
+			</div>

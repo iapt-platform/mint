@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="css/main.css"/>
+	<title>Maha Paritta</title>
+	<script language="javascript" src="js/vn.js"></script>
+	<script language="javascript" src="js/xml.js"></script>
+	<script language="javascript">
+		var g_device="computer";
+		var strSertch = location.search;
+		if(strSertch.length>0){
+			strSertch = strSertch.substr(1);
+			var sertchList=strSertch.split('&');
+			for (x in sertchList){
+				var item = sertchList[x].split('=');
+				if(item[0]=="device"){
+					g_device=item[1];
+				}
+			}
+		}
+		if(g_device=="mobile"){
+			g_is_mobile=true;
+		}
+		else{
+			g_is_mobile=false;
+		}
+
+	</script>
+</head>
+<body class="mainbody" id="mbody" >
+<script>
+//提取已经填好的词作为字典
+loadDictFromDB('vandana.xml');
+			var xDict = xmlDict.getElementsByTagName("word");					
+			var tOut="";
+			var sDictPali="";
+			var sDictId="";
+			var sDictOrg="";
+			var sDictMean="";
+			var sDictCase="";
+			for(iword=0;iword<xDict.length;iword++)
+			{
+				var objDictItem=new Object();/*一个字典元素*/
+				objDictItem.Pali = getNodeText(xDict[iword],"pali");
+				objDictItem.Org = getNodeText(xDict[iword],"org");
+				objDictItem.Mean = getNodeText(xDict[iword],"mean");
+				objDictItem.Case = getNodeText(xDict[iword],"case");
+				document.write("<div>");
+				document.write(objDictItem.Pali+"-"+objDictItem.Org+"-"+objDictItem.Mean+"-"+objDictItem.Case+"<br>");
+				document.write("</div>");
+			}
+</script>
+</body>

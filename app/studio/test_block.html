@@ -1,0 +1,190 @@
+﻿<html>
+<head>
+<style>
+/* 下拉按钮样式 */
+.case_dropbtn {
+    /*background-color: #4CAF50;*/
+    /*color: white;*/
+    padding: 2px;
+    font-size: 80%;
+    border: none;
+	margin:0px;
+
+}
+.case_dropdown .case_dropbtn {
+    /*background-color: #F80;*/
+    /*color: white;*/
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border: none;
+	font-size: 100%;
+    cursor: pointer;
+	margin:0px;
+}
+
+/* 容器 <div> - 需要定位下拉内容 */
+.case_dropdown {
+    /*position: relative;*/
+    display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.case_dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 1em;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+}
+
+/* 下拉菜单的链接 */
+.case_dropdown-content a {
+    color: black;
+    padding: 2px 4px;
+    text-decoration: none;
+    display: inline;
+	cursor: pointer;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.case_dropdown-content a:hover {background-color: #f1f1f1}
+
+/* 在鼠标移上去后显示下拉菜单 */
+.case_dropdown:hover .case_dropdown-content {
+    display: inline;
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.case_dropdown:hover .case_dropbtn {
+    background-color: #3e8e41;
+}
+.mean_block{
+	display:inline-block;
+	cursor: pointer;
+	border: black solid thin;
+	margin:2px 2px;
+	padding:0px;
+	border-radius: 4px; 
+	background-color:#ECECEC;
+}
+.mean_inner{
+	display:inline;
+}
+.mean_button{
+	display:none;
+	margin:0;
+	padding:1px 5px;
+}
+.mean_block:hover .mean_button {
+    display: inline;
+	
+}
+.mean_button:hover{
+background-color: #3e8e41;
+}
+.button_shell{
+	display:inline-block;
+	width:1em;
+}
+</style>
+
+<style>
+
+/* Tooltip 容器 */ 
+.tooltip 
+{
+ position: relative;
+ display: inline-block;
+ border-bottom: 1px dotted black;
+ /* 悬停元素上显示点线 */ 
+ } 
+ /* Tooltip 文本 */ 
+ .tooltip .tooltiptext 
+ {
+ visibility: hidden;
+ width: 180px;
+ background-color: black;
+ color: #fff;
+ padding: 5px;
+ border-radius: 6px;
+ /* 定位 */ 
+ position: absolute;
+ z-index: 1; 
+ 	 top: 100%;
+	 left: 50%;
+	 margin-left: -60px;
+	 /* 使用一半宽度 (120/2 = 60) 来居中提示工具 */ 
+ } 
+ 
+ /* 鼠标移动上去后显示提示框 */ 
+ .tooltip:hover .tooltiptext 
+ {
+	visibility: visible; 
+ }
+ 
+.tooltip .tooltiptext::after 
+{
+ content: " ";
+ position: absolute;
+ bottom: 100%;
+ /* 提示工具头部 */ 
+ left: 50%;
+ margin-left: -5px;
+ border-width: 5px;
+ border-style: solid;
+ border-color: transparent transparent black transparent;
+ }
+.tooltip .tooltiptext 
+{
+ opacity: 0;
+ transition: opacity 1s;
+} 
+ .tooltip:hover .tooltiptext 
+ {
+ opacity: 1;
+ }
+ 
+ /* 下拉菜单的链接 */
+.tooltiptext a {
+    color: #FFF;
+    padding: 2px 4px;
+    text-decoration: none;
+    display: inline;
+	cursor: pointer;
+	border-right:#FFF solid thin;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.tooltiptext a:hover {background-color: #555}
+</style>
+</head>
+<body>
+
+
+<div class="mean_block">
+	<div class="button_shell">
+	<p class="mean_button">«</p>
+	</div>
+	<p class="mean_inner">Test</p>
+	<div class="button_shell">
+	<p class="mean_button">x</p>
+	</div>
+</div>
+
+<div class="mean_block">
+	<div class="button_shell">
+	<p class="mean_button">«</p>
+	</div>
+	<p class="mean_inner">Test</p>
+	<div class="button_shell">
+	<p class="mean_button">x</p>
+	</div>
+</div>
+
+<div class="tooltip">鼠标移动到这 <span class="tooltiptext"><a>提示1</a><a>提示1</a><a>提示1</a></span> </div>
+<script>
+
+</script>
+</body>
+</html>

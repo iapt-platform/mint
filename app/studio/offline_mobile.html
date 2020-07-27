@@ -1,0 +1,1372 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="css/main.css"/>
+	<link type="text/css" rel="stylesheet" href="css/static.css"/>
+	<title>Vandana</title>
+	<script language="javascript" src="js/vn.js"></script>
+	<script language="javascript" src="js/xml.js"></script>
+	<script language="javascript">
+		g_is_mobile=true;
+	</script>
+</head>
+<body class="mainbody" id="mbody" onLoad="windowsInitStatic()">
+		<!-- tool bar begin-->
+			<script language="javascript">
+			if(g_is_mobile){
+				document.write("<div class='toolbar_mobile'>");
+			}
+			else{
+				document.write("<div class='toolbar'>");
+			}
+			</script>		
+		
+			<script language="javascript">
+			if(g_is_mobile){
+				document.write("<div class='mainview_mobile'>");
+			}
+			else{
+				document.write("<div class='mainview'>");
+			}
+			</script>
+			<script language="javascript">
+			if(!g_is_mobile){
+				document.write("<input id=\"B_Navi\" onclick=\"setNaviVisibility()\" type=\"button\" value=\" ≡ \" /> ");
+			}
+			</script>
+				<span class="dropdown">
+				  <div><button class="dropbtn" id="use_mode" onclick="menuButtonClick('menu01')" >Read</button></div>
+				  <div class="dropdown-content" id="menu01">
+					<a href="#" onclick="setUseMode_Static('read')">Read</a>
+					<a href="#" onclick="setUseMode_Static('chanting')">Chanting</a>
+				  </div>
+				</span>
+				<button id="B_FontReduce" type="button" onclick="setPageFontSize(0.9)">A-</button> 
+				<button id="B_FontGain" type="button" onclick="setPageFontSize(1.1)">A+</button>
+				<button id="B_Day" type="button" onclick="setPageColor(0)">白色</button>
+				<button id="B_Sunset" type="button" onclick="setPageColor(1)">黄昏</button>
+				<button id="B_Night" type="button" onclick="setPageColor(2)">夜间</button>
+				<input id="B_Org" onclick="setOrgVisibility()" type="checkbox" checked />原型
+				<input id="B_Meaning" onclick="setMeaningVisibility()" type="checkbox" checked />意思
+				<input id="B_Gramma" onclick="setGrammaVisibility()" type="checkbox" checked />语法
+				<input id="B_ParTranEn" onclick="setParTranEnVisibility()" type="checkbox" checked />英译
+				<input id="B_ParTranCn" onclick="setParTranCnVisibility()" type="checkbox" checked />中译
+				<script language="javascript">
+				if(!g_is_mobile){
+					document.write("<input id=\"B_ParTranShowMode\" onclick=\"setParTranShowMode()\" type=\"checkbox\"  />上下对译");
+				}
+				</script>
+				
+				<span id="debug"></span>
+			</div>
+		</div>	
+		<!--tool bar end -->
+
+	<div class="main">
+		<!-- content begin--> 
+		<script language="javascript">
+		if(g_is_mobile){
+			document.write("<div id=\"leftmenuinner_mobile\">");
+		}
+		else{
+			document.write("<div id=\"leftmenuinner\">");
+		}
+		</script>
+			<script language="javascript">
+			if(g_is_mobile){
+				document.write("<div class='toc' id='leftmenuinnerinner_mobile'>");
+			}
+			else{
+				document.write("<div class='toc' id='leftmenuinnerinner'>");
+			}
+			</script>
+			
+				<div id="navi_toc">
+					<a name="_Content" ></a>
+					<h1>Content 目录</h1>
+					<div id="content">
+					<p><a href='#dasadhammasutta'>Dasa Dhamma Sutta 十法经</a><input id="chk_dasadhammasutta" onclick="setObjectVisibility2('chk_dasadhammasutta','dasadhammasutta')" type="checkbox" checked /></p>
+					<p><strong>每日轮诵</strong></p>
+					<p><a href='#dasadhammasutta2'>Dasa Dhamma Sutta 十法经(启动不显示)</a><input id="chk_dasadhammasutta2" onclick="setObjectVisibility2('chk_dasadhammasutta2','dasadhammasutta2')" type="checkbox" /></p>
+					<p><strong>功德回向</strong></p>
+					<p>功德回向.....</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- content end -->	
+		
+		<!--right side begin-->
+		<script language="javascript">
+		if(g_is_mobile){
+			document.write("<div class='mainview_mobile' id='body_mainview'>");
+		}
+		else{
+			document.write("<div class='mainview' id='body_mainview'>");
+		}
+		</script>
+		
+			<div id="sutta_text">
+			<!--经文起始-->
+<div class='sutta' id='dasadhammasutta'>
+<div class='sutta_title'>
+<a name='dasadhammasutta' href='#_Content' >返回目录</a><h1>6.Dasa Dhamma Sutta </h1>
+<p class='tran_h1_en' >Discourse On The Ten Matters(To Be Reflected Upon)</p>
+<p class='tran_h1_cn' >十法经43</p>
+</div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb0" class='word'> <p class='pali' name='wPali'><a name='w0' title="这样" onclick='showModifyWin("0")'><span name="spali">Evaŋ</span></a></p>
+<div  id='detail0'><div ><p class='ID'>0</p><p class='org' name='w_org'>evaṃ</p> <p class='mean'>这样</p> <p class='case' ><span class='cell'>adv.b</span></p></div></div></div>
+<div id="wb1" class='word'> <p class='pali' name='wPali'><a name='w1' title="我" onclick='showModifyWin("1")'><span name="spali">me</span></a></p>
+<div  id='detail1'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb2" class='word'> <p class='pali' name='wPali'><a name='w2' title="听到" onclick='showModifyWin("2")'><span name="spali">sutaŋ</span></a></p>
+<div  id='detail2'><div ><p class='ID'>0</p><p class='org' name='w_org'> suta</p> <p class='mean'>听到</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb3" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">:</span></p>
+<div  class='hidden'  id='detail3'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb4" class='word'> <p class='pali' name='wPali'><a name='w4' title="一" onclick='showModifyWin("4")'><span name="spali">Ekaŋ</span></a></p>
+<div  id='detail4'><div ><p class='ID'>0</p><p class='org' name='w_org'>eka</p> <p class='mean'>一</p> <p class='case' ><span class='cell'>形</span></p></div></div></div>
+<div id="wb5" class='word'> <p class='pali' name='wPali'><a name='w5' title="次" onclick='showModifyWin("5")'><span name="spali">samayaŋ</span></a></p>
+<div  id='detail5'><div ><p class='ID'>0</p><p class='org' name='w_org'>samaya</p> <p class='mean'>次</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>主</span></p></div></div></div>
+<div id="wb6" class='word'> <p class='pali' name='wPali'><a name='w6' title="世尊" onclick='showModifyWin("6")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail6'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb7" class='word'> <p class='pali' name='wPali'><a name='w7' title="沙瓦提城" onclick='showModifyWin("7")'><span name="spali">Sāvatthiyaŋ</span></a></p>
+<div  id='detail7'><div ><p class='ID'>0</p><p class='org' name='w_org'>sāvatthi</p> <p class='mean'>沙瓦提城</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb8" class='word'> <p class='pali' name='wPali'><a name='w8' title="居住" onclick='showModifyWin("8")'><span name="spali">viharati</span></a></p>
+<div  id='detail8'><div ><p class='ID'>0</p><p class='org' name='w_org'>viharati</p> <p class='mean'>居住</p> <p class='case' ><span class='cell'>单</span><span class='cell'>三</span></p></div></div></div>
+<div id="wb9" class='word'> <p class='pali' name='wPali'><a name='w9' title="揭达+树林" onclick='showModifyWin("9")'><span name="spali">Jetavane</span></a></p>
+<div  id='detail9'><div ><p class='ID'>0</p><p class='org' name='w_org'>jata+vana</p> <p class='mean'>揭达+树林</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb10" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail10'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb11" class='word'> <p class='pali' name='wPali'><a name='w11' title="给孤独长者" onclick='showModifyWin("11")'><span name="spali">Anāthapiṇḍikassa</span></a></p>
+<div  id='detail11'><div ><p class='ID'>0</p><p class='org' name='w_org'>Anāthapiṇḍika</p> <p class='mean'>给孤独长者</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>屬</span></p></div></div></div>
+<div id="wb12" class='word'> <p class='pali' name='wPali'><a name='w12' title="园,寺院" onclick='showModifyWin("12")'><span name="spali">ārāme</span></a></p>
+<div  id='detail12'><div ><p class='ID'>0</p><p class='org' name='w_org'>ārāma</p> <p class='mean'>园,寺院</p> <p class='case' ><span class='cell'>阳</span><span class='cell'>处</span></p></div></div></div>
+<div id="wb13" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail13'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb14" class='word'> <p class='pali' name='wPali'><a name='w14' title="?" onclick='showModifyWin("14")'><span name="spali">Tatra</span></a></p>
+<div  id='detail14'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb15" class='word'> <p class='pali' name='wPali'><a name='w15' title="?" onclick='showModifyWin("15")'><span name="spali">kho</span></a></p>
+<div  id='detail15'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb16" class='word'> <p class='pali' name='wPali'><a name='w16' title="世尊" onclick='showModifyWin("16")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail16'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb17" class='word'> <p class='pali' name='wPali'><a name='w17' title="比库" onclick='showModifyWin("17")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail17'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell'>呼</span></p></div></div></div>
+<div id="wb18" class='word'> <p class='pali' name='wPali'><a name='w18' title="?" onclick='showModifyWin("18")'><span name="spali">āmantesi</span></a></p>
+<div  id='detail18'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb19" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail19'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb20" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail20'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb21" class='word'> <p class='pali' name='wPali'><a name='w21' title="?" onclick='showModifyWin("21")'><span name="spali">Bhikkhavo</span></a></p>
+<div  id='detail21'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb22" class='word'> <p class='pali' name='wPali'><a name='w22' title="?" onclick='showModifyWin("22")'><span name="spali">!”</span></a></p>
+<div  class='hidden'  id='detail22'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb23" class='word'> <p class='pali' name='wPali'><a name='w23' title="引号" onclick='showModifyWin("23")'><span name="spali">ti</span></a></p>
+<div  id='detail23'><div ><p class='ID'>0</p><p class='org' name='w_org'>ti</p> <p class='mean'>引号</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb24" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail24'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb25" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail25'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb26" class='word'> <p class='pali' name='wPali'><a name='w26' title="?" onclick='showModifyWin("26")'><span name="spali">Bhadante</span></a></p>
+<div  id='detail26'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb27" class='word'> <p class='pali' name='wPali'><a name='w27' title="?" onclick='showModifyWin("27")'><span name="spali">!”</span></a></p>
+<div  class='hidden'  id='detail27'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb28" class='word'> <p class='pali' name='wPali'><a name='w28' title="引号" onclick='showModifyWin("28")'><span name="spali">ti</span></a></p>
+<div  id='detail28'><div ><p class='ID'>0</p><p class='org' name='w_org'>ti</p> <p class='mean'>引号</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb29" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail29'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb30" class='word'> <p class='pali' name='wPali'><a name='w30' title="你" onclick='showModifyWin("30")'><span name="spali">te</span></a></p>
+<div  id='detail30'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb31" class='word'> <p class='pali' name='wPali'><a name='w31' title="比库" onclick='showModifyWin("31")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail31'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell2'><a href='#'>主<a></span><span id="casew0" class='hidden'>主</span></p></div></div></div>
+<div id="wb32" class='word'> <p class='pali' name='wPali'><a name='w32' title="?" onclick='showModifyWin("32")'><span name="spali">Bhagavato</span></a></p>
+<div  id='detail32'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb33" class='word'> <p class='pali' name='wPali'><a name='w33' title="?" onclick='showModifyWin("33")'><span name="spali">paccassosuŋ</span></a></p>
+<div  id='detail33'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb34" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail34'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb35" class='word'> <p class='pali' name='wPali'><a name='w35' title="世尊" onclick='showModifyWin("35")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail35'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb36" class='word'> <p class='pali' name='wPali'><a name='w36' title="?" onclick='showModifyWin("36")'><span name="spali">eta·d·avoca</span></a></p>
+<div  id='detail36'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb37" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">:</span></p>
+<div  class='hidden'  id='detail37'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>Thus have I heard: At one time the Blessed One was staying near Sāvat-thi in Jeta's Grove at Anāthapiṇḍika's Park. There the Blessed One ad-dressed the monks saying, “Monks!”. “Venerable Sir!” the monks re-plied to the Blessed One. The Blessed One said this:</p><p class='tran_par_cn'>如是我闻。一时，世尊住舍卫城祇树给孤独园。尔时世尊语诸比丘: “诸比丘！”诸比丘答言:“尊师！”世尊如是告曰： </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb38" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail38'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb39" class='word'> <p class='pali' name='wPali'><a name='w39' title="十" onclick='showModifyWin("39")'><span name="spali">Dasa</span></a></p>
+<div  id='detail39'><div ><p class='ID'>0</p><p class='org' name='w_org'>dasa</p> <p class='mean'>十</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb40" class='word'> <p class='pali' name='wPali'><a name='w40' title="?" onclick='showModifyWin("40")'><span name="spali">ime</span></a></p>
+<div  id='detail40'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb41" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail41'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb42" class='word'> <p class='pali' name='wPali'><a name='w42' title="?" onclick='showModifyWin("42")'><span name="spali">bhikkhave</span></a></p>
+<div  id='detail42'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb43" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail43'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb44" class='word'> <p class='pali' name='wPali'><a name='w44' title="?" onclick='showModifyWin("44")'><span name="spali">dhammā</span></a></p>
+<div  id='detail44'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb45" class='word'> <p class='pali' name='wPali'><a name='w45' title="出家人" onclick='showModifyWin("45")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail45'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb46" class='word'> <p class='pali' name='wPali'><a name='w46' title="常常" onclick='showModifyWin("46")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail46'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb47" class='word'> <p class='pali' name='wPali'><a name='w47' title="?" onclick='showModifyWin("47")'><span name="spali">paccavekkhitabbā</span></a></p>
+<div  id='detail47'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb48" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail48'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb49" class='word'> <p class='pali' name='wPali'><a name='w49' title="?" onclick='showModifyWin("49")'><span name="spali">Katame</span></a></p>
+<div  id='detail49'><div ><p class='ID'>0</p><p class='org' name='w_org'>哪</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb50" class='word'> <p class='pali' name='wPali'><a name='w50' title="?" onclick='showModifyWin("50")'><span name="spali">dasa</span></a></p>
+<div  id='detail50'><div ><p class='ID'>0</p><p class='org' name='w_org'>十</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb51" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail51'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>“There are these ten matters, monks, that one who has gone forth should often reflect upon. What are the ten? </p><p class='tran_par_cn'>“诸比丘，爰有十法，为出家者，常应省察。何等为十？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb52" class='word'> <p class='pali' name='wPali'><a name='w52' title="?" onclick='showModifyWin("52")'><span name="spali">1.</span></a></p>
+<div  class='hidden'  id='detail52'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb53" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail53'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb54" class='word'> <p class='pali' name='wPali'><a name='w54' title="?" onclick='showModifyWin("54")'><span name="spali">Vevaṇṇiy'amhi</span></a></p>
+<div  id='detail54'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb55" class='word'> <p class='pali' name='wPali'><a name='w55' title="?" onclick='showModifyWin("55")'><span name="spali">ajjh'upagato</span></a></p>
+<div  id='detail55'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb56" class='word'> <p class='pali' name='wPali'><a name='w56' title="?" onclick='showModifyWin("56")'><span name="spali">'ti</span></a></p>
+<div  id='detail56'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb57" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail57'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb58" class='word'> <p class='pali' name='wPali'><a name='w58' title="出家人" onclick='showModifyWin("58")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail58'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb59" class='word'> <p class='pali' name='wPali'><a name='w59' title="常常" onclick='showModifyWin("59")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail59'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb60" class='word'> <p class='pali' name='wPali'><a name='w60' title="省思" onclick='showModifyWin("60")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail60'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb61" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail61'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`I have changed my appearance [with shaven head and beard, robes, bowl, etc.]', one who has gone forth should often reflect upon this. 44</p><p class='tran_par_cn'>为出家者，常应省察：“我此形仪，迥异故昔。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb62" class='word'> <p class='pali' name='wPali'><a name='w62' title="?" onclick='showModifyWin("62")'><span name="spali">2.</span></a></p>
+<div  class='hidden'  id='detail62'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb63" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail63'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb64" class='word'> <p class='pali' name='wPali'><a name='w64' title="?" onclick='showModifyWin("64")'><span name="spali">Para-paṭibaddhā</span></a></p>
+<div  id='detail64'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb65" class='word'> <p class='pali' name='wPali'><a name='w65' title="我" onclick='showModifyWin("65")'><span name="spali">me</span></a></p>
+<div  id='detail65'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb66" class='word'> <p class='pali' name='wPali'><a name='w66' title="?" onclick='showModifyWin("66")'><span name="spali">jīvikā'ti</span></a></p>
+<div  id='detail66'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb67" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail67'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb68" class='word'> <p class='pali' name='wPali'><a name='w68' title="出家人" onclick='showModifyWin("68")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail68'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb69" class='word'> <p class='pali' name='wPali'><a name='w69' title="常常" onclick='showModifyWin("69")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail69'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb70" class='word'> <p class='pali' name='wPali'><a name='w70' title="省思" onclick='showModifyWin("70")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail70'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb71" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail71'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`My living is dependent upon others', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察：“我不自活，实赖于他。” </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb72" class='word'> <p class='pali' name='wPali'><a name='w72' title="?" onclick='showModifyWin("72")'><span name="spali">3.</span></a></p>
+<div  class='hidden'  id='detail72'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb73" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail73'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb74" class='word'> <p class='pali' name='wPali'><a name='w74' title="?" onclick='showModifyWin("74")'><span name="spali">Añño</span></a></p>
+<div  id='detail74'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb75" class='word'> <p class='pali' name='wPali'><a name='w75' title="我" onclick='showModifyWin("75")'><span name="spali">me</span></a></p>
+<div  id='detail75'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb76" class='word'> <p class='pali' name='wPali'><a name='w76' title="?" onclick='showModifyWin("76")'><span name="spali">ākappo</span></a></p>
+<div  id='detail76'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb77" class='word'> <p class='pali' name='wPali'><a name='w77' title="?" onclick='showModifyWin("77")'><span name="spali">karaṇīyo</span></a></p>
+<div  id='detail77'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb78" class='word'> <p class='pali' name='wPali'><a name='w78' title="?" onclick='showModifyWin("78")'><span name="spali">'ti</span></a></p>
+<div  id='detail78'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb79" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail79'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb80" class='word'> <p class='pali' name='wPali'><a name='w80' title="出家人" onclick='showModifyWin("80")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail80'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb81" class='word'> <p class='pali' name='wPali'><a name='w81' title="常常" onclick='showModifyWin("81")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail81'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb82" class='word'> <p class='pali' name='wPali'><a name='w82' title="省思" onclick='showModifyWin("82")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail82'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb83" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail83'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`My deportment [behaviour] should be different', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“我今威仪，应异俗家。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb84" class='word'> <p class='pali' name='wPali'><a name='w84' title="?" onclick='showModifyWin("84")'><span name="spali">4.</span></a></p>
+<div  class='hidden'  id='detail84'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb85" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail85'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb86" class='word'> <p class='pali' name='wPali'><a name='w86' title="?" onclick='showModifyWin("86")'><span name="spali">Kacci</span></a></p>
+<div  id='detail86'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb87" class='word'> <p class='pali' name='wPali'><a name='w87' title="?" onclick='showModifyWin("87")'><span name="spali">nu</span></a></p>
+<div  id='detail87'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb88" class='word'> <p class='pali' name='wPali'><a name='w88' title="?" onclick='showModifyWin("88")'><span name="spali">kho</span></a></p>
+<div  id='detail88'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb89" class='word'> <p class='pali' name='wPali'><a name='w89' title="我" onclick='showModifyWin("89")'><span name="spali">me</span></a></p>
+<div  id='detail89'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb90" class='word'> <p class='pali' name='wPali'><a name='w90' title="?" onclick='showModifyWin("90")'><span name="spali">attā</span></a></p>
+<div  id='detail90'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb91" class='word'> <p class='pali' name='wPali'><a name='w91' title="?" onclick='showModifyWin("91")'><span name="spali">sīlato</span></a></p>
+<div  id='detail91'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb92" class='word'> <p class='pali' name='wPali'><a name='w92' title="?" onclick='showModifyWin("92")'><span name="spali">na</span></a></p>
+<div  id='detail92'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb93" class='word'> <p class='pali' name='wPali'><a name='w93' title="?" onclick='showModifyWin("93")'><span name="spali">upavadatī'ti</span></a></p>
+<div  id='detail93'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb94" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail94'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb95" class='word'> <p class='pali' name='wPali'><a name='w95' title="出家人" onclick='showModifyWin("95")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail95'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb96" class='word'> <p class='pali' name='wPali'><a name='w96' title="常常" onclick='showModifyWin("96")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail96'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb97" class='word'> <p class='pali' name='wPali'><a name='w97' title="省思" onclick='showModifyWin("97")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail97'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb98" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail98'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do I reproach myself in regard to my virtue?', one who has gone forth should often reflect upon this. </p><p class='tran_par_cn'>为出家者，常应省察:“我于戒行，堪自责否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb99" class='word'> <p class='pali' name='wPali'><a name='w99' title="?" onclick='showModifyWin("99")'><span name="spali">5.</span></a></p>
+<div  class='hidden'  id='detail99'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb100" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail100'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb101" class='word'> <p class='pali' name='wPali'><a name='w101' title="?" onclick='showModifyWin("101")'><span name="spali">Kacci</span></a></p>
+<div  id='detail101'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb102" class='word'> <p class='pali' name='wPali'><a name='w102' title="?" onclick='showModifyWin("102")'><span name="spali">nu</span></a></p>
+<div  id='detail102'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb103" class='word'> <p class='pali' name='wPali'><a name='w103' title="?" onclick='showModifyWin("103")'><span name="spali">kho</span></a></p>
+<div  id='detail103'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb104" class='word'> <p class='pali' name='wPali'><a name='w104' title="?" onclick='showModifyWin("104")'><span name="spali">maŋ</span></a></p>
+<div  id='detail104'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb105" class='word'> <p class='pali' name='wPali'><a name='w105' title="?x?" onclick='showModifyWin("105")'><span name="spali">anuvicca</span></a></p>
+<div  id='detail105'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'></p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb106" class='word'> <p class='pali' name='wPali'><a name='w106' title="?" onclick='showModifyWin("106")'><span name="spali">viññū</span></a></p>
+<div  id='detail106'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb107" class='word'> <p class='pali' name='wPali'><a name='w107' title="?" onclick='showModifyWin("107")'><span name="spali">sabrahmacārī</span></a></p>
+<div  id='detail107'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb108" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail108'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb109" class='word'> <p class='pali' name='wPali'><a name='w109' title="?" onclick='showModifyWin("109")'><span name="spali">sīlato</span></a></p>
+<div  id='detail109'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb110" class='word'> <p class='pali' name='wPali'><a name='w110' title="?" onclick='showModifyWin("110")'><span name="spali">na</span></a></p>
+<div  id='detail110'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb111" class='word'> <p class='pali' name='wPali'><a name='w111' title="?" onclick='showModifyWin("111")'><span name="spali">upavadantī'ti</span></a></p>
+<div  id='detail111'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb112" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail112'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb113" class='word'> <p class='pali' name='wPali'><a name='w113' title="出家人" onclick='showModifyWin("113")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail113'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb114" class='word'> <p class='pali' name='wPali'><a name='w114' title="常常" onclick='showModifyWin("114")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail114'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb115" class='word'> <p class='pali' name='wPali'><a name='w115' title="省思" onclick='showModifyWin("115")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail115'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb116" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail116'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do my wise companions in the life of purity, having investigated, re-proach me in regard to my virtue?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“同梵行中，诸有智者，于我戒行，能质难否？” </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb117" class='word'> <p class='pali' name='wPali'><a name='w117' title="?" onclick='showModifyWin("117")'><span name="spali">6.</span></a></p>
+<div  class='hidden'  id='detail117'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb118" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail118'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb119" class='word'> <p class='pali' name='wPali'><a name='w119' title="?" onclick='showModifyWin("119")'><span name="spali">Sabbehi</span></a></p>
+<div  id='detail119'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb120" class='word'> <p class='pali' name='wPali'><a name='w120' title="我" onclick='showModifyWin("120")'><span name="spali">me</span></a></p>
+<div  id='detail120'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb121" class='word'> <p class='pali' name='wPali'><a name='w121' title="?" onclick='showModifyWin("121")'><span name="spali">piyehi</span></a></p>
+<div  id='detail121'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb122" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail122'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb123" class='word'> <p class='pali' name='wPali'><a name='w123' title="?" onclick='showModifyWin("123")'><span name="spali">manāpehi</span></a></p>
+<div  id='detail123'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb124" class='word'> <p class='pali' name='wPali'><a name='w124' title="?" onclick='showModifyWin("124")'><span name="spali">nānā-bhāvo</span></a></p>
+<div  id='detail124'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb125" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail125'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb126" class='word'> <p class='pali' name='wPali'><a name='w126' title="?" onclick='showModifyWin("126")'><span name="spali">vinā-bhāvo</span></a></p>
+<div  id='detail126'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb127" class='word'> <p class='pali' name='wPali'><a name='w127' title="?" onclick='showModifyWin("127")'><span name="spali">'ti</span></a></p>
+<div  id='detail127'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb128" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail128'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb129" class='word'> <p class='pali' name='wPali'><a name='w129' title="出家人" onclick='showModifyWin("129")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail129'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb130" class='word'> <p class='pali' name='wPali'><a name='w130' title="常常" onclick='showModifyWin("130")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail130'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb131" class='word'> <p class='pali' name='wPali'><a name='w131' title="省思" onclick='showModifyWin("131")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail131'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb132" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail132'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`There will be parting and separation from everyone and everything dear and pleasing to me', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“凡诸可意，我所亲爱，会当别离，终必分散。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb133" class='word'> <p class='pali' name='wPali'><a name='w133' title="?" onclick='showModifyWin("133")'><span name="spali">7.</span></a></p>
+<div  class='hidden'  id='detail133'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb134" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail134'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb135" class='word'> <p class='pali' name='wPali'><a name='w135' title="?" onclick='showModifyWin("135")'><span name="spali">Kammassako'mhi</span></a></p>
+<div  id='detail135'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb136" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail136'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb137" class='word'> <p class='pali' name='wPali'><a name='w137' title="?" onclick='showModifyWin("137")'><span name="spali">kamma-dāyādo</span></a></p>
+<div  id='detail137'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb138" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail138'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb139" class='word'> <p class='pali' name='wPali'><a name='w139' title="?" onclick='showModifyWin("139")'><span name="spali">kamma-yoni</span></a></p>
+<div  id='detail139'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb140" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail140'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb141" class='word'> <p class='pali' name='wPali'><a name='w141' title="?" onclick='showModifyWin("141")'><span name="spali">kamma-bandhu</span></a></p>
+<div  id='detail141'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb142" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail142'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb143" class='word'> <p class='pali' name='wPali'><a name='w143' title="?" onclick='showModifyWin("143")'><span name="spali">kamma-paṭisaraṇo</span></a></p>
+<div  id='detail143'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb144" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail144'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb145" class='word'> <p class='pali' name='wPali'><a name='w145' title="?" onclick='showModifyWin("145")'><span name="spali">Yaŋ</span></a></p>
+<div  id='detail145'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb146" class='word'> <p class='pali' name='wPali'><a name='w146' title="?" onclick='showModifyWin("146")'><span name="spali">kammaŋ</span></a></p>
+<div  id='detail146'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb147" class='word'> <p class='pali' name='wPali'><a name='w147' title="?" onclick='showModifyWin("147")'><span name="spali">karissāmi</span></a></p>
+<div  id='detail147'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb148" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail148'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb149" class='word'> <p class='pali' name='wPali'><a name='w149' title="?" onclick='showModifyWin("149")'><span name="spali">kalyāṇaŋ</span></a></p>
+<div  id='detail149'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb150" class='word'> <p class='pali' name='wPali'><a name='w150' title="或" onclick='showModifyWin("150")'><span name="spali">vā</span></a></p>
+<div  id='detail150'><div ><p class='ID'>0</p><p class='org' name='w_org'>vā</p> <p class='mean'>或</p> <p class='case' ><span class='cell'>ind</span></p></div></div></div>
+<div id="wb151" class='word'> <p class='pali' name='wPali'><a name='w151' title="?" onclick='showModifyWin("151")'><span name="spali">pāpakaŋ</span></a></p>
+<div  id='detail151'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb152" class='word'> <p class='pali' name='wPali'><a name='w152' title="或" onclick='showModifyWin("152")'><span name="spali">vā</span></a></p>
+<div  id='detail152'><div ><p class='ID'>0</p><p class='org' name='w_org'>vā</p> <p class='mean'>或</p> <p class='case' ><span class='cell'>ind</span></p></div></div></div>
+<div id="wb153" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail153'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb154" class='word'> <p class='pali' name='wPali'><a name='w154' title="?" onclick='showModifyWin("154")'><span name="spali">tassa</span></a></p>
+<div  id='detail154'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb155" class='word'> <p class='pali' name='wPali'><a name='w155' title="?" onclick='showModifyWin("155")'><span name="spali">dāyādo</span></a></p>
+<div  id='detail155'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb156" class='word'> <p class='pali' name='wPali'><a name='w156' title="?" onclick='showModifyWin("156")'><span name="spali">bhavissāmī</span></a></p>
+<div  id='detail156'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb157" class='word'> <p class='pali' name='wPali'><a name='w157' title="?" onclick='showModifyWin("157")'><span name="spali">'ti</span></a></p>
+<div  id='detail157'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb158" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail158'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb159" class='word'> <p class='pali' name='wPali'><a name='w159' title="出家人" onclick='showModifyWin("159")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail159'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb160" class='word'> <p class='pali' name='wPali'><a name='w160' title="常常" onclick='showModifyWin("160")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail160'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb161" class='word'> <p class='pali' name='wPali'><a name='w161' title="省思" onclick='showModifyWin("161")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail161'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb162" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail162'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`I am the owner of my actions (kamma), heir of my actions, born of my actions, related to my actions, supported by my actions. Whatever ac-tions I will do, whether good or bad, to that will I be heir', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“我所从来，自业为本；我于自业，亦主亦嗣；自业于我，为亲为依。更作新业，若善若恶，但从自造，咸归自得。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb163" class='word'> <p class='pali' name='wPali'><a name='w163' title="?" onclick='showModifyWin("163")'><span name="spali">8.</span></a></p>
+<div  class='hidden'  id='detail163'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb164" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail164'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb165" class='word'> <p class='pali' name='wPali'><a name='w165' title="?" onclick='showModifyWin("165")'><span name="spali">Katha.m.bhūtassa</span></a></p>
+<div  id='detail165'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb166" class='word'> <p class='pali' name='wPali'><a name='w166' title="我" onclick='showModifyWin("166")'><span name="spali">me</span></a></p>
+<div  id='detail166'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb167" class='word'> <p class='pali' name='wPali'><a name='w167' title="?" onclick='showModifyWin("167")'><span name="spali">rattiŋ</span></a></p>
+<div  id='detail167'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb168" class='word'> <p class='pali' name='wPali'><a name='w168' title="?" onclick='showModifyWin("168")'><span name="spali">divā</span></a></p>
+<div  id='detail168'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb169" class='word'> <p class='pali' name='wPali'><a name='w169' title="?" onclick='showModifyWin("169")'><span name="spali">vītipatantī'ti</span></a></p>
+<div  id='detail169'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb170" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail170'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb171" class='word'> <p class='pali' name='wPali'><a name='w171' title="出家人" onclick='showModifyWin("171")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail171'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb172" class='word'> <p class='pali' name='wPali'><a name='w172' title="常常" onclick='showModifyWin("172")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail172'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb173" class='word'> <p class='pali' name='wPali'><a name='w173' title="省思" onclick='showModifyWin("173")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail173'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb174" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail174'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`How do I spend my nights and days?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“何所营为，以度日夜？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb175" class='word'> <p class='pali' name='wPali'><a name='w175' title="?" onclick='showModifyWin("175")'><span name="spali">9.</span></a></p>
+<div  class='hidden'  id='detail175'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb176" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail176'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb177" class='word'> <p class='pali' name='wPali'><a name='w177' title="?" onclick='showModifyWin("177")'><span name="spali">Kacci</span></a></p>
+<div  id='detail177'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb178" class='word'> <p class='pali' name='wPali'><a name='w178' title="?" onclick='showModifyWin("178")'><span name="spali">nu</span></a></p>
+<div  id='detail178'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb179" class='word'> <p class='pali' name='wPali'><a name='w179' title="?" onclick='showModifyWin("179")'><span name="spali">kho'haŋ</span></a></p>
+<div  id='detail179'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb180" class='word'> <p class='pali' name='wPali'><a name='w180' title="?" onclick='showModifyWin("180")'><span name="spali">suññ'āgāre</span></a></p>
+<div  id='detail180'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb181" class='word'> <p class='pali' name='wPali'><a name='w181' title="?" onclick='showModifyWin("181")'><span name="spali">abhiramāmī'ti</span></a></p>
+<div  id='detail181'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb182" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail182'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb183" class='word'> <p class='pali' name='wPali'><a name='w183' title="出家人" onclick='showModifyWin("183")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail183'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb184" class='word'> <p class='pali' name='wPali'><a name='w184' title="常常" onclick='showModifyWin("184")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail184'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb185" class='word'> <p class='pali' name='wPali'><a name='w185' title="省思" onclick='showModifyWin("185")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail185'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb186" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail186'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do I take delight in an empty [solitary] dwelling?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“身居空僻，我心于此，生欢喜否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb187" class='word'> <p class='pali' name='wPali'><a name='w187' title="?" onclick='showModifyWin("187")'><span name="spali">10.</span></a></p>
+<div  class='hidden'  id='detail187'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb188" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail188'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb189" class='word'> <p class='pali' name='wPali'><a name='w189' title="?" onclick='showModifyWin("189")'><span name="spali">Atthi</span></a></p>
+<div  id='detail189'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb190" class='word'> <p class='pali' name='wPali'><a name='w190' title="?" onclick='showModifyWin("190")'><span name="spali">nu</span></a></p>
+<div  id='detail190'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb191" class='word'> <p class='pali' name='wPali'><a name='w191' title="?" onclick='showModifyWin("191")'><span name="spali">kho</span></a></p>
+<div  id='detail191'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb192" class='word'> <p class='pali' name='wPali'><a name='w192' title="我" onclick='showModifyWin("192")'><span name="spali">me</span></a></p>
+<div  id='detail192'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb193" class='word'> <p class='pali' name='wPali'><a name='w193' title="?" onclick='showModifyWin("193")'><span name="spali">uttari-manussa-dhammā</span></a></p>
+<div  id='detail193'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb194" class='word'> <p class='pali' name='wPali'><a name='w194' title="?" onclick='showModifyWin("194")'><span name="spali">alam'ariya-ñāṇadassana-viseso</span></a></p>
+<div  id='detail194'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb195" class='word'> <p class='pali' name='wPali'><a name='w195' title="?" onclick='showModifyWin("195")'><span name="spali">adhigato</span></a></p>
+<div  id='detail195'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb196" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail196'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb197" class='word'> <p class='pali' name='wPali'><a name='w197' title="?" onclick='showModifyWin("197")'><span name="spali">so'haŋ</span></a></p>
+<div  id='detail197'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb198" class='word'> <p class='pali' name='wPali'><a name='w198' title="?" onclick='showModifyWin("198")'><span name="spali">pacchime</span></a></p>
+<div  id='detail198'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb199" class='word'> <p class='pali' name='wPali'><a name='w199' title="?" onclick='showModifyWin("199")'><span name="spali">kāle</span></a></p>
+<div  id='detail199'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb200" class='word'> <p class='pali' name='wPali'><a name='w200' title="?" onclick='showModifyWin("200")'><span name="spali">sabrahmacārīhi</span></a></p>
+<div  id='detail200'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb201" class='word'> <p class='pali' name='wPali'><a name='w201' title="?" onclick='showModifyWin("201")'><span name="spali">puṭṭho</span></a></p>
+<div  id='detail201'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb202" class='word'> <p class='pali' name='wPali'><a name='w202' title="?" onclick='showModifyWin("202")'><span name="spali">na</span></a></p>
+<div  id='detail202'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb203" class='word'> <p class='pali' name='wPali'><a name='w203' title="?" onclick='showModifyWin("203")'><span name="spali">maṅku</span></a></p>
+<div  id='detail203'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb204" class='word'> <p class='pali' name='wPali'><a name='w204' title="?" onclick='showModifyWin("204")'><span name="spali">bhavissāmī</span></a></p>
+<div  id='detail204'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb205" class='word'> <p class='pali' name='wPali'><a name='w205' title="?" onclick='showModifyWin("205")'><span name="spali">'ti</span></a></p>
+<div  id='detail205'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb206" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail206'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb207" class='word'> <p class='pali' name='wPali'><a name='w207' title="出家人" onclick='showModifyWin("207")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail207'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb208" class='word'> <p class='pali' name='wPali'><a name='w208' title="?" onclick='showModifyWin("208")'><span name="spali">ab-hiṇhaŋ</span></a></p>
+<div  id='detail208'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb209" class='word'> <p class='pali' name='wPali'><a name='w209' title="省思" onclick='showModifyWin("209")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail209'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb210" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail210'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Have I attained any superhuman distinction in knowledge and vision worthy of the noble ones, so that in my last days, when I am questioned by my companions in the holy life, I will not be embarrassed?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“诸上人法，贤圣所专，殊胜智见；我今于彼，能现证否？若临命终，同梵行人，执此相问；彼时我心，还自愧否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb211" class='word'> <p class='pali' name='wPali'><a name='w211' title="?" onclick='showModifyWin("211")'><span name="spali">Ime</span></a></p>
+<div  id='detail211'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb212" class='word'> <p class='pali' name='wPali'><a name='w212' title="?" onclick='showModifyWin("212")'><span name="spali">kho</span></a></p>
+<div  id='detail212'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb213" class='word'> <p class='pali' name='wPali'><a name='w213' title="?" onclick='showModifyWin("213")'><span name="spali">bhikkhave</span></a></p>
+<div  id='detail213'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb214" class='word'> <p class='pali' name='wPali'><a name='w214' title="?" onclick='showModifyWin("214")'><span name="spali">dasadhammā</span></a></p>
+<div  id='detail214'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb215" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail215'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb216" class='word'> <p class='pali' name='wPali'><a name='w216' title="出家人" onclick='showModifyWin("216")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail216'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb217" class='word'> <p class='pali' name='wPali'><a name='w217' title="常常" onclick='showModifyWin("217")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail217'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb218" class='word'> <p class='pali' name='wPali'><a name='w218' title="?" onclick='showModifyWin("218")'><span name="spali">paccavekkhitabbā</span></a></p>
+<div  id='detail218'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb219" class='word'> <p class='pali' name='wPali'><a name='w219' title="?" onclick='showModifyWin("219")'><span name="spali">”ti</span></a></p>
+<div  id='detail219'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb220" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail220'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb221" class='word'> <p class='pali' name='wPali'><a name='w221' title="?" onclick='showModifyWin("221")'><span name="spali">Idam'avoca</span></a></p>
+<div  id='detail221'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb222" class='word'> <p class='pali' name='wPali'><a name='w222' title="世尊" onclick='showModifyWin("222")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail222'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb223" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail223'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb224" class='word'> <p class='pali' name='wPali'><a name='w224' title="?" onclick='showModifyWin("224")'><span name="spali">Attamanā</span></a></p>
+<div  id='detail224'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb225" class='word'> <p class='pali' name='wPali'><a name='w225' title="你" onclick='showModifyWin("225")'><span name="spali">te</span></a></p>
+<div  id='detail225'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb226" class='word'> <p class='pali' name='wPali'><a name='w226' title="比库" onclick='showModifyWin("226")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail226'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell2'><a href='#'>主<a></span><span id="casew0" class='hidden'>主</span></p></div></div></div>
+<div id="wb227" class='word'> <p class='pali' name='wPali'><a name='w227' title="?" onclick='showModifyWin("227")'><span name="spali">Bhagavato</span></a></p>
+<div  id='detail227'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb228" class='word'> <p class='pali' name='wPali'><a name='w228' title="?" onclick='showModifyWin("228")'><span name="spali">bhāsitaŋ</span></a></p>
+<div  id='detail228'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb229" class='word'> <p class='pali' name='wPali'><a name='w229' title="?" onclick='showModifyWin("229")'><span name="spali">abhinandun</span></a></p>
+<div  id='detail229'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb230" class='word'> <p class='pali' name='wPali'><a name='w230' title="?" onclick='showModifyWin("230")'><span name="spali">'ti</span></a></p>
+<div  id='detail230'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb231" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail231'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>These are the ten matters, monks, that one who has gone forth should often reflect upon.”The Blessed One said this. Pleased, the monks delighted in the Blessed One's statement.</p><p class='tran_par_cn'>诸比丘！如是十法，为出家者，常应省察。”世尊慈诲，广说如是。时诸比丘，闻佛垂教，法味充满，皆大欢喜。</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb232" class='word'> <p class='pali' name='wPali'><a name='w232' title="这" onclick='showModifyWin("232")'><span name="spali">Etena</span></a></p>
+<div  id='detail232'><div ><p class='ID'>0</p><p class='org' name='w_org'>eta</p> <p class='mean'>这</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb233" class='word'> <p class='pali' name='wPali'><a name='w233' title="真理的语言" onclick='showModifyWin("233")'><span name="spali">sacca-vajjena</span></a></p>
+<div  id='detail233'><div ><p class='ID'>0</p><p class='org' name='w_org'>saccavajja=sacca+vacana</p> <p class='mean'>真理的语言</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb234" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">—</span></p>
+<div  class='hidden'  id='detail234'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb235" class='word'> <p class='pali' name='wPali'><a name='w235' title="平安" onclick='showModifyWin("235")'><span name="spali">sotthi</span></a></p>
+<div  id='detail235'><div ><p class='ID'>0</p><p class='org' name='w_org'>sotthi</p> <p class='mean'>平安</p> <p class='case' ><span class='cell'>f.</span></p></div></div></div>
+<div id="wb236" class='word'> <p class='pali' name='wPali'><a name='w236' title="我" onclick='showModifyWin("236")'><span name="spali">me</span></a></p>
+<div  id='detail236'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb237" class='word'> <p class='pali' name='wPali'><a name='w237' title="是" onclick='showModifyWin("237")'><span name="spali">hotu</span></a></p>
+<div  id='detail237'><div ><p class='ID'>0</p><p class='org' name='w_org'>hoti</p> <p class='mean'>是</p> <p class='case' ><span class='cell'>陰</span><span class='cell'>单</span><span class='cell'>處</span></p></div></div></div>
+<div id="wb238" class='word'> <p class='pali' name='wPali'><a name='w238' title="总是，每天" onclick='showModifyWin("238")'><span name="spali">sabbadā</span></a></p>
+<div  id='detail238'><div ><p class='ID'>0</p><p class='org' name='w_org'>sabbadā</p> <p class='mean'>总是，每天</p> <p class='case' ><span class='cell'>副</span></p></div></div></div>
+<div id="wb239" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail239'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb240" class='word'> <p class='pali' name='wPali'><a name='w240' title="?" onclick='showModifyWin("240")'><span name="spali">(1x)</span></a></p>
+<div  class='hidden'  id='detail240'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="enter"></div>
+<div id="wb242" class='word'> <p class='pali' name='wPali'><a name='w242' title="这" onclick='showModifyWin("242")'><span name="spali">Etena</span></a></p>
+<div  id='detail242'><div ><p class='ID'>0</p><p class='org' name='w_org'>eta</p> <p class='mean'>这</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb243" class='word'> <p class='pali' name='wPali'><a name='w243' title="真理的语言" onclick='showModifyWin("243")'><span name="spali">sacca-vajjena</span></a></p>
+<div  id='detail243'><div ><p class='ID'>0</p><p class='org' name='w_org'>saccavajja=sacca+vacana</p> <p class='mean'>真理的语言</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb244" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">—</span></p>
+<div  class='hidden'  id='detail244'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb245" class='word'> <p class='pali' name='wPali'><a name='w245' title="平安" onclick='showModifyWin("245")'><span name="spali">sotthi</span></a></p>
+<div  id='detail245'><div ><p class='ID'>0</p><p class='org' name='w_org'>sotthi</p> <p class='mean'>平安</p> <p class='case' ><span class='cell'>f.</span></p></div></div></div>
+<div id="wb246" class='word'> <p class='pali' name='wPali'><a name='w246' title="你" onclick='showModifyWin("246")'><span name="spali">te</span></a></p>
+<div  id='detail246'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb247" class='word'> <p class='pali' name='wPali'><a name='w247' title="是" onclick='showModifyWin("247")'><span name="spali">hotu</span></a></p>
+<div  id='detail247'><div ><p class='ID'>0</p><p class='org' name='w_org'>hoti</p> <p class='mean'>是</p> <p class='case' ><span class='cell'>陰</span><span class='cell'>单</span><span class='cell'>處</span></p></div></div></div>
+<div id="wb248" class='word'> <p class='pali' name='wPali'><a name='w248' title="总是，每天" onclick='showModifyWin("248")'><span name="spali">sabbadā</span></a></p>
+<div  id='detail248'><div ><p class='ID'>0</p><p class='org' name='w_org'>sabbadā</p> <p class='mean'>总是，每天</p> <p class='case' ><span class='cell'>副</span></p></div></div></div>
+<div id="wb249" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail249'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb250" class='word'> <p class='pali' name='wPali'><a name='w250' title="这样" onclick='showModifyWin("250")'><span name="spali">(2x)</span></a></p>
+<div  class='hidden'  id='detail250'><div ><p class='ID'>37</p><p class='org' name='w_org'>evaṃ</p> <p class='mean'>这样</p> <p class='case' ><span class='cell'>adv.a</span></p></div></div></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>By the assertion of this truth, may I always rest in well-being. <br/> By the assertion of this truth, may you always rest in well-being.</p><p class='tran_par_cn'>以此真实语，愿我常平安。（一遍）<br/>以此真实语，愿汝常平安。（两遍）</p></div>
+<div class='clr'></div></div>
+</div>
+
+<div class='sutta' id='dasadhammasutta2'>
+<div class='sutta_title'>
+<a name='dasadhammasutta' href='#_Content' >返回目录</a><h1>6.Dasa Dhamma Sutta2 </h1>
+<p class='tran_h1_en' >Discourse On The Ten Matters(To Be Reflected Upon)</p>
+<p class='tran_h1_cn' >十法经(启动不显示)</p>
+</div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb0" class='word'> <p class='pali' name='wPali'><a name='w0' title="这样" onclick='showModifyWin("0")'><span name="spali">Evaŋ</span></a></p>
+<div  id='detail0'><div ><p class='ID'>0</p><p class='org' name='w_org'>evaṃ</p> <p class='mean'>这样</p> <p class='case' ><span class='cell'>adv.b</span></p></div></div></div>
+<div id="wb1" class='word'> <p class='pali' name='wPali'><a name='w1' title="我" onclick='showModifyWin("1")'><span name="spali">me</span></a></p>
+<div  id='detail1'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb2" class='word'> <p class='pali' name='wPali'><a name='w2' title="听到" onclick='showModifyWin("2")'><span name="spali">sutaŋ</span></a></p>
+<div  id='detail2'><div ><p class='ID'>0</p><p class='org' name='w_org'> suta</p> <p class='mean'>听到</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb3" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">:</span></p>
+<div  class='hidden'  id='detail3'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb4" class='word'> <p class='pali' name='wPali'><a name='w4' title="一" onclick='showModifyWin("4")'><span name="spali">Ekaŋ</span></a></p>
+<div  id='detail4'><div ><p class='ID'>0</p><p class='org' name='w_org'>eka</p> <p class='mean'>一</p> <p class='case' ><span class='cell'>形</span></p></div></div></div>
+<div id="wb5" class='word'> <p class='pali' name='wPali'><a name='w5' title="次" onclick='showModifyWin("5")'><span name="spali">samayaŋ</span></a></p>
+<div  id='detail5'><div ><p class='ID'>0</p><p class='org' name='w_org'>samaya</p> <p class='mean'>次</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>主</span></p></div></div></div>
+<div id="wb6" class='word'> <p class='pali' name='wPali'><a name='w6' title="世尊" onclick='showModifyWin("6")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail6'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb7" class='word'> <p class='pali' name='wPali'><a name='w7' title="沙瓦提城" onclick='showModifyWin("7")'><span name="spali">Sāvatthiyaŋ</span></a></p>
+<div  id='detail7'><div ><p class='ID'>0</p><p class='org' name='w_org'>sāvatthi</p> <p class='mean'>沙瓦提城</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb8" class='word'> <p class='pali' name='wPali'><a name='w8' title="居住" onclick='showModifyWin("8")'><span name="spali">viharati</span></a></p>
+<div  id='detail8'><div ><p class='ID'>0</p><p class='org' name='w_org'>viharati</p> <p class='mean'>居住</p> <p class='case' ><span class='cell'>单</span><span class='cell'>三</span></p></div></div></div>
+<div id="wb9" class='word'> <p class='pali' name='wPali'><a name='w9' title="揭达+树林" onclick='showModifyWin("9")'><span name="spali">Jetavane</span></a></p>
+<div  id='detail9'><div ><p class='ID'>0</p><p class='org' name='w_org'>jata+vana</p> <p class='mean'>揭达+树林</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb10" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail10'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb11" class='word'> <p class='pali' name='wPali'><a name='w11' title="给孤独长者" onclick='showModifyWin("11")'><span name="spali">Anāthapiṇḍikassa</span></a></p>
+<div  id='detail11'><div ><p class='ID'>0</p><p class='org' name='w_org'>Anāthapiṇḍika</p> <p class='mean'>给孤独长者</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>屬</span></p></div></div></div>
+<div id="wb12" class='word'> <p class='pali' name='wPali'><a name='w12' title="园,寺院" onclick='showModifyWin("12")'><span name="spali">ārāme</span></a></p>
+<div  id='detail12'><div ><p class='ID'>0</p><p class='org' name='w_org'>ārāma</p> <p class='mean'>园,寺院</p> <p class='case' ><span class='cell'>阳</span><span class='cell'>处</span></p></div></div></div>
+<div id="wb13" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail13'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb14" class='word'> <p class='pali' name='wPali'><a name='w14' title="?" onclick='showModifyWin("14")'><span name="spali">Tatra</span></a></p>
+<div  id='detail14'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb15" class='word'> <p class='pali' name='wPali'><a name='w15' title="?" onclick='showModifyWin("15")'><span name="spali">kho</span></a></p>
+<div  id='detail15'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb16" class='word'> <p class='pali' name='wPali'><a name='w16' title="世尊" onclick='showModifyWin("16")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail16'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb17" class='word'> <p class='pali' name='wPali'><a name='w17' title="比库" onclick='showModifyWin("17")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail17'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell'>呼</span></p></div></div></div>
+<div id="wb18" class='word'> <p class='pali' name='wPali'><a name='w18' title="?" onclick='showModifyWin("18")'><span name="spali">āmantesi</span></a></p>
+<div  id='detail18'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb19" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail19'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb20" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail20'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb21" class='word'> <p class='pali' name='wPali'><a name='w21' title="?" onclick='showModifyWin("21")'><span name="spali">Bhikkhavo</span></a></p>
+<div  id='detail21'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb22" class='word'> <p class='pali' name='wPali'><a name='w22' title="?" onclick='showModifyWin("22")'><span name="spali">!”</span></a></p>
+<div  class='hidden'  id='detail22'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb23" class='word'> <p class='pali' name='wPali'><a name='w23' title="引号" onclick='showModifyWin("23")'><span name="spali">ti</span></a></p>
+<div  id='detail23'><div ><p class='ID'>0</p><p class='org' name='w_org'>ti</p> <p class='mean'>引号</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb24" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail24'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb25" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail25'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb26" class='word'> <p class='pali' name='wPali'><a name='w26' title="?" onclick='showModifyWin("26")'><span name="spali">Bhadante</span></a></p>
+<div  id='detail26'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb27" class='word'> <p class='pali' name='wPali'><a name='w27' title="?" onclick='showModifyWin("27")'><span name="spali">!”</span></a></p>
+<div  class='hidden'  id='detail27'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb28" class='word'> <p class='pali' name='wPali'><a name='w28' title="引号" onclick='showModifyWin("28")'><span name="spali">ti</span></a></p>
+<div  id='detail28'><div ><p class='ID'>0</p><p class='org' name='w_org'>ti</p> <p class='mean'>引号</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb29" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail29'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb30" class='word'> <p class='pali' name='wPali'><a name='w30' title="你" onclick='showModifyWin("30")'><span name="spali">te</span></a></p>
+<div  id='detail30'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb31" class='word'> <p class='pali' name='wPali'><a name='w31' title="比库" onclick='showModifyWin("31")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail31'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell2'><a href='#'>主<a></span><span id="casew0" class='hidden'>主</span></p></div></div></div>
+<div id="wb32" class='word'> <p class='pali' name='wPali'><a name='w32' title="?" onclick='showModifyWin("32")'><span name="spali">Bhagavato</span></a></p>
+<div  id='detail32'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb33" class='word'> <p class='pali' name='wPali'><a name='w33' title="?" onclick='showModifyWin("33")'><span name="spali">paccassosuŋ</span></a></p>
+<div  id='detail33'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb34" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail34'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb35" class='word'> <p class='pali' name='wPali'><a name='w35' title="世尊" onclick='showModifyWin("35")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail35'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb36" class='word'> <p class='pali' name='wPali'><a name='w36' title="?" onclick='showModifyWin("36")'><span name="spali">eta·d·avoca</span></a></p>
+<div  id='detail36'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb37" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">:</span></p>
+<div  class='hidden'  id='detail37'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>Thus have I heard: At one time the Blessed One was staying near Sāvat-thi in Jeta's Grove at Anāthapiṇḍika's Park. There the Blessed One ad-dressed the monks saying, “Monks!”. “Venerable Sir!” the monks re-plied to the Blessed One. The Blessed One said this:</p><p class='tran_par_cn'>如是我闻。一时，世尊住舍卫城祇树给孤独园。尔时世尊语诸比丘: “诸比丘！”诸比丘答言:“尊师！”世尊如是告曰： </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb38" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">“</span></p>
+<div  class='hidden'  id='detail38'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb39" class='word'> <p class='pali' name='wPali'><a name='w39' title="十" onclick='showModifyWin("39")'><span name="spali">Dasa</span></a></p>
+<div  id='detail39'><div ><p class='ID'>0</p><p class='org' name='w_org'>dasa</p> <p class='mean'>十</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb40" class='word'> <p class='pali' name='wPali'><a name='w40' title="?" onclick='showModifyWin("40")'><span name="spali">ime</span></a></p>
+<div  id='detail40'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb41" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail41'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb42" class='word'> <p class='pali' name='wPali'><a name='w42' title="?" onclick='showModifyWin("42")'><span name="spali">bhikkhave</span></a></p>
+<div  id='detail42'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb43" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail43'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb44" class='word'> <p class='pali' name='wPali'><a name='w44' title="?" onclick='showModifyWin("44")'><span name="spali">dhammā</span></a></p>
+<div  id='detail44'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb45" class='word'> <p class='pali' name='wPali'><a name='w45' title="出家人" onclick='showModifyWin("45")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail45'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb46" class='word'> <p class='pali' name='wPali'><a name='w46' title="常常" onclick='showModifyWin("46")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail46'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb47" class='word'> <p class='pali' name='wPali'><a name='w47' title="?" onclick='showModifyWin("47")'><span name="spali">paccavekkhitabbā</span></a></p>
+<div  id='detail47'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb48" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail48'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb49" class='word'> <p class='pali' name='wPali'><a name='w49' title="?" onclick='showModifyWin("49")'><span name="spali">Katame</span></a></p>
+<div  id='detail49'><div ><p class='ID'>0</p><p class='org' name='w_org'>哪</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb50" class='word'> <p class='pali' name='wPali'><a name='w50' title="?" onclick='showModifyWin("50")'><span name="spali">dasa</span></a></p>
+<div  id='detail50'><div ><p class='ID'>0</p><p class='org' name='w_org'>十</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb51" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail51'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>“There are these ten matters, monks, that one who has gone forth should often reflect upon. What are the ten? </p><p class='tran_par_cn'>“诸比丘，爰有十法，为出家者，常应省察。何等为十？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb52" class='word'> <p class='pali' name='wPali'><a name='w52' title="?" onclick='showModifyWin("52")'><span name="spali">1.</span></a></p>
+<div  class='hidden'  id='detail52'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb53" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail53'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb54" class='word'> <p class='pali' name='wPali'><a name='w54' title="?" onclick='showModifyWin("54")'><span name="spali">Vevaṇṇiy'amhi</span></a></p>
+<div  id='detail54'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb55" class='word'> <p class='pali' name='wPali'><a name='w55' title="?" onclick='showModifyWin("55")'><span name="spali">ajjh'upagato</span></a></p>
+<div  id='detail55'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb56" class='word'> <p class='pali' name='wPali'><a name='w56' title="?" onclick='showModifyWin("56")'><span name="spali">'ti</span></a></p>
+<div  id='detail56'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb57" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail57'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb58" class='word'> <p class='pali' name='wPali'><a name='w58' title="出家人" onclick='showModifyWin("58")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail58'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb59" class='word'> <p class='pali' name='wPali'><a name='w59' title="常常" onclick='showModifyWin("59")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail59'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb60" class='word'> <p class='pali' name='wPali'><a name='w60' title="省思" onclick='showModifyWin("60")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail60'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb61" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail61'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`I have changed my appearance [with shaven head and beard, robes, bowl, etc.]', one who has gone forth should often reflect upon this. 44</p><p class='tran_par_cn'>为出家者，常应省察：“我此形仪，迥异故昔。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb62" class='word'> <p class='pali' name='wPali'><a name='w62' title="?" onclick='showModifyWin("62")'><span name="spali">2.</span></a></p>
+<div  class='hidden'  id='detail62'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb63" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail63'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb64" class='word'> <p class='pali' name='wPali'><a name='w64' title="?" onclick='showModifyWin("64")'><span name="spali">Para-paṭibaddhā</span></a></p>
+<div  id='detail64'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb65" class='word'> <p class='pali' name='wPali'><a name='w65' title="我" onclick='showModifyWin("65")'><span name="spali">me</span></a></p>
+<div  id='detail65'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb66" class='word'> <p class='pali' name='wPali'><a name='w66' title="?" onclick='showModifyWin("66")'><span name="spali">jīvikā'ti</span></a></p>
+<div  id='detail66'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb67" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail67'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb68" class='word'> <p class='pali' name='wPali'><a name='w68' title="出家人" onclick='showModifyWin("68")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail68'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb69" class='word'> <p class='pali' name='wPali'><a name='w69' title="常常" onclick='showModifyWin("69")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail69'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb70" class='word'> <p class='pali' name='wPali'><a name='w70' title="省思" onclick='showModifyWin("70")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail70'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb71" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail71'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`My living is dependent upon others', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察：“我不自活，实赖于他。” </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb72" class='word'> <p class='pali' name='wPali'><a name='w72' title="?" onclick='showModifyWin("72")'><span name="spali">3.</span></a></p>
+<div  class='hidden'  id='detail72'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb73" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail73'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb74" class='word'> <p class='pali' name='wPali'><a name='w74' title="?" onclick='showModifyWin("74")'><span name="spali">Añño</span></a></p>
+<div  id='detail74'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb75" class='word'> <p class='pali' name='wPali'><a name='w75' title="我" onclick='showModifyWin("75")'><span name="spali">me</span></a></p>
+<div  id='detail75'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb76" class='word'> <p class='pali' name='wPali'><a name='w76' title="?" onclick='showModifyWin("76")'><span name="spali">ākappo</span></a></p>
+<div  id='detail76'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb77" class='word'> <p class='pali' name='wPali'><a name='w77' title="?" onclick='showModifyWin("77")'><span name="spali">karaṇīyo</span></a></p>
+<div  id='detail77'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb78" class='word'> <p class='pali' name='wPali'><a name='w78' title="?" onclick='showModifyWin("78")'><span name="spali">'ti</span></a></p>
+<div  id='detail78'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb79" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail79'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb80" class='word'> <p class='pali' name='wPali'><a name='w80' title="出家人" onclick='showModifyWin("80")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail80'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb81" class='word'> <p class='pali' name='wPali'><a name='w81' title="常常" onclick='showModifyWin("81")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail81'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb82" class='word'> <p class='pali' name='wPali'><a name='w82' title="省思" onclick='showModifyWin("82")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail82'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb83" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail83'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`My deportment [behaviour] should be different', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“我今威仪，应异俗家。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb84" class='word'> <p class='pali' name='wPali'><a name='w84' title="?" onclick='showModifyWin("84")'><span name="spali">4.</span></a></p>
+<div  class='hidden'  id='detail84'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb85" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail85'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb86" class='word'> <p class='pali' name='wPali'><a name='w86' title="?" onclick='showModifyWin("86")'><span name="spali">Kacci</span></a></p>
+<div  id='detail86'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb87" class='word'> <p class='pali' name='wPali'><a name='w87' title="?" onclick='showModifyWin("87")'><span name="spali">nu</span></a></p>
+<div  id='detail87'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb88" class='word'> <p class='pali' name='wPali'><a name='w88' title="?" onclick='showModifyWin("88")'><span name="spali">kho</span></a></p>
+<div  id='detail88'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb89" class='word'> <p class='pali' name='wPali'><a name='w89' title="我" onclick='showModifyWin("89")'><span name="spali">me</span></a></p>
+<div  id='detail89'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb90" class='word'> <p class='pali' name='wPali'><a name='w90' title="?" onclick='showModifyWin("90")'><span name="spali">attā</span></a></p>
+<div  id='detail90'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb91" class='word'> <p class='pali' name='wPali'><a name='w91' title="?" onclick='showModifyWin("91")'><span name="spali">sīlato</span></a></p>
+<div  id='detail91'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb92" class='word'> <p class='pali' name='wPali'><a name='w92' title="?" onclick='showModifyWin("92")'><span name="spali">na</span></a></p>
+<div  id='detail92'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb93" class='word'> <p class='pali' name='wPali'><a name='w93' title="?" onclick='showModifyWin("93")'><span name="spali">upavadatī'ti</span></a></p>
+<div  id='detail93'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb94" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail94'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb95" class='word'> <p class='pali' name='wPali'><a name='w95' title="出家人" onclick='showModifyWin("95")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail95'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb96" class='word'> <p class='pali' name='wPali'><a name='w96' title="常常" onclick='showModifyWin("96")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail96'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb97" class='word'> <p class='pali' name='wPali'><a name='w97' title="省思" onclick='showModifyWin("97")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail97'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb98" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail98'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do I reproach myself in regard to my virtue?', one who has gone forth should often reflect upon this. </p><p class='tran_par_cn'>为出家者，常应省察:“我于戒行，堪自责否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb99" class='word'> <p class='pali' name='wPali'><a name='w99' title="?" onclick='showModifyWin("99")'><span name="spali">5.</span></a></p>
+<div  class='hidden'  id='detail99'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb100" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail100'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb101" class='word'> <p class='pali' name='wPali'><a name='w101' title="?" onclick='showModifyWin("101")'><span name="spali">Kacci</span></a></p>
+<div  id='detail101'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb102" class='word'> <p class='pali' name='wPali'><a name='w102' title="?" onclick='showModifyWin("102")'><span name="spali">nu</span></a></p>
+<div  id='detail102'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb103" class='word'> <p class='pali' name='wPali'><a name='w103' title="?" onclick='showModifyWin("103")'><span name="spali">kho</span></a></p>
+<div  id='detail103'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb104" class='word'> <p class='pali' name='wPali'><a name='w104' title="?" onclick='showModifyWin("104")'><span name="spali">maŋ</span></a></p>
+<div  id='detail104'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb105" class='word'> <p class='pali' name='wPali'><a name='w105' title="?x?" onclick='showModifyWin("105")'><span name="spali">anuvicca</span></a></p>
+<div  id='detail105'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'></p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb106" class='word'> <p class='pali' name='wPali'><a name='w106' title="?" onclick='showModifyWin("106")'><span name="spali">viññū</span></a></p>
+<div  id='detail106'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb107" class='word'> <p class='pali' name='wPali'><a name='w107' title="?" onclick='showModifyWin("107")'><span name="spali">sabrahmacārī</span></a></p>
+<div  id='detail107'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb108" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail108'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb109" class='word'> <p class='pali' name='wPali'><a name='w109' title="?" onclick='showModifyWin("109")'><span name="spali">sīlato</span></a></p>
+<div  id='detail109'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb110" class='word'> <p class='pali' name='wPali'><a name='w110' title="?" onclick='showModifyWin("110")'><span name="spali">na</span></a></p>
+<div  id='detail110'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb111" class='word'> <p class='pali' name='wPali'><a name='w111' title="?" onclick='showModifyWin("111")'><span name="spali">upavadantī'ti</span></a></p>
+<div  id='detail111'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb112" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail112'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb113" class='word'> <p class='pali' name='wPali'><a name='w113' title="出家人" onclick='showModifyWin("113")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail113'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb114" class='word'> <p class='pali' name='wPali'><a name='w114' title="常常" onclick='showModifyWin("114")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail114'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb115" class='word'> <p class='pali' name='wPali'><a name='w115' title="省思" onclick='showModifyWin("115")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail115'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb116" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail116'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do my wise companions in the life of purity, having investigated, re-proach me in regard to my virtue?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“同梵行中，诸有智者，于我戒行，能质难否？” </p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb117" class='word'> <p class='pali' name='wPali'><a name='w117' title="?" onclick='showModifyWin("117")'><span name="spali">6.</span></a></p>
+<div  class='hidden'  id='detail117'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb118" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail118'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb119" class='word'> <p class='pali' name='wPali'><a name='w119' title="?" onclick='showModifyWin("119")'><span name="spali">Sabbehi</span></a></p>
+<div  id='detail119'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb120" class='word'> <p class='pali' name='wPali'><a name='w120' title="我" onclick='showModifyWin("120")'><span name="spali">me</span></a></p>
+<div  id='detail120'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb121" class='word'> <p class='pali' name='wPali'><a name='w121' title="?" onclick='showModifyWin("121")'><span name="spali">piyehi</span></a></p>
+<div  id='detail121'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb122" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail122'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb123" class='word'> <p class='pali' name='wPali'><a name='w123' title="?" onclick='showModifyWin("123")'><span name="spali">manāpehi</span></a></p>
+<div  id='detail123'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb124" class='word'> <p class='pali' name='wPali'><a name='w124' title="?" onclick='showModifyWin("124")'><span name="spali">nānā-bhāvo</span></a></p>
+<div  id='detail124'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb125" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail125'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb126" class='word'> <p class='pali' name='wPali'><a name='w126' title="?" onclick='showModifyWin("126")'><span name="spali">vinā-bhāvo</span></a></p>
+<div  id='detail126'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb127" class='word'> <p class='pali' name='wPali'><a name='w127' title="?" onclick='showModifyWin("127")'><span name="spali">'ti</span></a></p>
+<div  id='detail127'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb128" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail128'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb129" class='word'> <p class='pali' name='wPali'><a name='w129' title="出家人" onclick='showModifyWin("129")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail129'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb130" class='word'> <p class='pali' name='wPali'><a name='w130' title="常常" onclick='showModifyWin("130")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail130'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb131" class='word'> <p class='pali' name='wPali'><a name='w131' title="省思" onclick='showModifyWin("131")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail131'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb132" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail132'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`There will be parting and separation from everyone and everything dear and pleasing to me', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“凡诸可意，我所亲爱，会当别离，终必分散。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb133" class='word'> <p class='pali' name='wPali'><a name='w133' title="?" onclick='showModifyWin("133")'><span name="spali">7.</span></a></p>
+<div  class='hidden'  id='detail133'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb134" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail134'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb135" class='word'> <p class='pali' name='wPali'><a name='w135' title="?" onclick='showModifyWin("135")'><span name="spali">Kammassako'mhi</span></a></p>
+<div  id='detail135'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb136" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail136'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb137" class='word'> <p class='pali' name='wPali'><a name='w137' title="?" onclick='showModifyWin("137")'><span name="spali">kamma-dāyādo</span></a></p>
+<div  id='detail137'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb138" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail138'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb139" class='word'> <p class='pali' name='wPali'><a name='w139' title="?" onclick='showModifyWin("139")'><span name="spali">kamma-yoni</span></a></p>
+<div  id='detail139'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb140" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail140'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb141" class='word'> <p class='pali' name='wPali'><a name='w141' title="?" onclick='showModifyWin("141")'><span name="spali">kamma-bandhu</span></a></p>
+<div  id='detail141'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb142" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail142'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb143" class='word'> <p class='pali' name='wPali'><a name='w143' title="?" onclick='showModifyWin("143")'><span name="spali">kamma-paṭisaraṇo</span></a></p>
+<div  id='detail143'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb144" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail144'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb145" class='word'> <p class='pali' name='wPali'><a name='w145' title="?" onclick='showModifyWin("145")'><span name="spali">Yaŋ</span></a></p>
+<div  id='detail145'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb146" class='word'> <p class='pali' name='wPali'><a name='w146' title="?" onclick='showModifyWin("146")'><span name="spali">kammaŋ</span></a></p>
+<div  id='detail146'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb147" class='word'> <p class='pali' name='wPali'><a name='w147' title="?" onclick='showModifyWin("147")'><span name="spali">karissāmi</span></a></p>
+<div  id='detail147'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb148" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail148'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb149" class='word'> <p class='pali' name='wPali'><a name='w149' title="?" onclick='showModifyWin("149")'><span name="spali">kalyāṇaŋ</span></a></p>
+<div  id='detail149'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb150" class='word'> <p class='pali' name='wPali'><a name='w150' title="或" onclick='showModifyWin("150")'><span name="spali">vā</span></a></p>
+<div  id='detail150'><div ><p class='ID'>0</p><p class='org' name='w_org'>vā</p> <p class='mean'>或</p> <p class='case' ><span class='cell'>ind</span></p></div></div></div>
+<div id="wb151" class='word'> <p class='pali' name='wPali'><a name='w151' title="?" onclick='showModifyWin("151")'><span name="spali">pāpakaŋ</span></a></p>
+<div  id='detail151'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb152" class='word'> <p class='pali' name='wPali'><a name='w152' title="或" onclick='showModifyWin("152")'><span name="spali">vā</span></a></p>
+<div  id='detail152'><div ><p class='ID'>0</p><p class='org' name='w_org'>vā</p> <p class='mean'>或</p> <p class='case' ><span class='cell'>ind</span></p></div></div></div>
+<div id="wb153" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail153'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb154" class='word'> <p class='pali' name='wPali'><a name='w154' title="?" onclick='showModifyWin("154")'><span name="spali">tassa</span></a></p>
+<div  id='detail154'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb155" class='word'> <p class='pali' name='wPali'><a name='w155' title="?" onclick='showModifyWin("155")'><span name="spali">dāyādo</span></a></p>
+<div  id='detail155'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb156" class='word'> <p class='pali' name='wPali'><a name='w156' title="?" onclick='showModifyWin("156")'><span name="spali">bhavissāmī</span></a></p>
+<div  id='detail156'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb157" class='word'> <p class='pali' name='wPali'><a name='w157' title="?" onclick='showModifyWin("157")'><span name="spali">'ti</span></a></p>
+<div  id='detail157'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb158" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail158'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb159" class='word'> <p class='pali' name='wPali'><a name='w159' title="出家人" onclick='showModifyWin("159")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail159'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb160" class='word'> <p class='pali' name='wPali'><a name='w160' title="常常" onclick='showModifyWin("160")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail160'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb161" class='word'> <p class='pali' name='wPali'><a name='w161' title="省思" onclick='showModifyWin("161")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail161'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb162" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail162'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`I am the owner of my actions (kamma), heir of my actions, born of my actions, related to my actions, supported by my actions. Whatever ac-tions I will do, whether good or bad, to that will I be heir', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“我所从来，自业为本；我于自业，亦主亦嗣；自业于我，为亲为依。更作新业，若善若恶，但从自造，咸归自得。”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb163" class='word'> <p class='pali' name='wPali'><a name='w163' title="?" onclick='showModifyWin("163")'><span name="spali">8.</span></a></p>
+<div  class='hidden'  id='detail163'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb164" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail164'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb165" class='word'> <p class='pali' name='wPali'><a name='w165' title="?" onclick='showModifyWin("165")'><span name="spali">Katha.m.bhūtassa</span></a></p>
+<div  id='detail165'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb166" class='word'> <p class='pali' name='wPali'><a name='w166' title="我" onclick='showModifyWin("166")'><span name="spali">me</span></a></p>
+<div  id='detail166'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb167" class='word'> <p class='pali' name='wPali'><a name='w167' title="?" onclick='showModifyWin("167")'><span name="spali">rattiŋ</span></a></p>
+<div  id='detail167'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb168" class='word'> <p class='pali' name='wPali'><a name='w168' title="?" onclick='showModifyWin("168")'><span name="spali">divā</span></a></p>
+<div  id='detail168'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb169" class='word'> <p class='pali' name='wPali'><a name='w169' title="?" onclick='showModifyWin("169")'><span name="spali">vītipatantī'ti</span></a></p>
+<div  id='detail169'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb170" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail170'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb171" class='word'> <p class='pali' name='wPali'><a name='w171' title="出家人" onclick='showModifyWin("171")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail171'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb172" class='word'> <p class='pali' name='wPali'><a name='w172' title="常常" onclick='showModifyWin("172")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail172'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb173" class='word'> <p class='pali' name='wPali'><a name='w173' title="省思" onclick='showModifyWin("173")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail173'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb174" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail174'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`How do I spend my nights and days?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“何所营为，以度日夜？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb175" class='word'> <p class='pali' name='wPali'><a name='w175' title="?" onclick='showModifyWin("175")'><span name="spali">9.</span></a></p>
+<div  class='hidden'  id='detail175'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb176" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail176'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb177" class='word'> <p class='pali' name='wPali'><a name='w177' title="?" onclick='showModifyWin("177")'><span name="spali">Kacci</span></a></p>
+<div  id='detail177'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb178" class='word'> <p class='pali' name='wPali'><a name='w178' title="?" onclick='showModifyWin("178")'><span name="spali">nu</span></a></p>
+<div  id='detail178'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb179" class='word'> <p class='pali' name='wPali'><a name='w179' title="?" onclick='showModifyWin("179")'><span name="spali">kho'haŋ</span></a></p>
+<div  id='detail179'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb180" class='word'> <p class='pali' name='wPali'><a name='w180' title="?" onclick='showModifyWin("180")'><span name="spali">suññ'āgāre</span></a></p>
+<div  id='detail180'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb181" class='word'> <p class='pali' name='wPali'><a name='w181' title="?" onclick='showModifyWin("181")'><span name="spali">abhiramāmī'ti</span></a></p>
+<div  id='detail181'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb182" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail182'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb183" class='word'> <p class='pali' name='wPali'><a name='w183' title="出家人" onclick='showModifyWin("183")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail183'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb184" class='word'> <p class='pali' name='wPali'><a name='w184' title="常常" onclick='showModifyWin("184")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail184'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb185" class='word'> <p class='pali' name='wPali'><a name='w185' title="省思" onclick='showModifyWin("185")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail185'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb186" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail186'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Do I take delight in an empty [solitary] dwelling?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“身居空僻，我心于此，生欢喜否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb187" class='word'> <p class='pali' name='wPali'><a name='w187' title="?" onclick='showModifyWin("187")'><span name="spali">10.</span></a></p>
+<div  class='hidden'  id='detail187'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb188" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">`</span></p>
+<div  class='hidden'  id='detail188'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb189" class='word'> <p class='pali' name='wPali'><a name='w189' title="?" onclick='showModifyWin("189")'><span name="spali">Atthi</span></a></p>
+<div  id='detail189'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb190" class='word'> <p class='pali' name='wPali'><a name='w190' title="?" onclick='showModifyWin("190")'><span name="spali">nu</span></a></p>
+<div  id='detail190'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb191" class='word'> <p class='pali' name='wPali'><a name='w191' title="?" onclick='showModifyWin("191")'><span name="spali">kho</span></a></p>
+<div  id='detail191'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb192" class='word'> <p class='pali' name='wPali'><a name='w192' title="我" onclick='showModifyWin("192")'><span name="spali">me</span></a></p>
+<div  id='detail192'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb193" class='word'> <p class='pali' name='wPali'><a name='w193' title="?" onclick='showModifyWin("193")'><span name="spali">uttari-manussa-dhammā</span></a></p>
+<div  id='detail193'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb194" class='word'> <p class='pali' name='wPali'><a name='w194' title="?" onclick='showModifyWin("194")'><span name="spali">alam'ariya-ñāṇadassana-viseso</span></a></p>
+<div  id='detail194'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb195" class='word'> <p class='pali' name='wPali'><a name='w195' title="?" onclick='showModifyWin("195")'><span name="spali">adhigato</span></a></p>
+<div  id='detail195'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb196" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail196'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb197" class='word'> <p class='pali' name='wPali'><a name='w197' title="?" onclick='showModifyWin("197")'><span name="spali">so'haŋ</span></a></p>
+<div  id='detail197'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb198" class='word'> <p class='pali' name='wPali'><a name='w198' title="?" onclick='showModifyWin("198")'><span name="spali">pacchime</span></a></p>
+<div  id='detail198'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb199" class='word'> <p class='pali' name='wPali'><a name='w199' title="?" onclick='showModifyWin("199")'><span name="spali">kāle</span></a></p>
+<div  id='detail199'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb200" class='word'> <p class='pali' name='wPali'><a name='w200' title="?" onclick='showModifyWin("200")'><span name="spali">sabrahmacārīhi</span></a></p>
+<div  id='detail200'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb201" class='word'> <p class='pali' name='wPali'><a name='w201' title="?" onclick='showModifyWin("201")'><span name="spali">puṭṭho</span></a></p>
+<div  id='detail201'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb202" class='word'> <p class='pali' name='wPali'><a name='w202' title="?" onclick='showModifyWin("202")'><span name="spali">na</span></a></p>
+<div  id='detail202'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb203" class='word'> <p class='pali' name='wPali'><a name='w203' title="?" onclick='showModifyWin("203")'><span name="spali">maṅku</span></a></p>
+<div  id='detail203'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb204" class='word'> <p class='pali' name='wPali'><a name='w204' title="?" onclick='showModifyWin("204")'><span name="spali">bhavissāmī</span></a></p>
+<div  id='detail204'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb205" class='word'> <p class='pali' name='wPali'><a name='w205' title="?" onclick='showModifyWin("205")'><span name="spali">'ti</span></a></p>
+<div  id='detail205'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb206" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">?</span></p>
+<div  class='hidden'  id='detail206'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb207" class='word'> <p class='pali' name='wPali'><a name='w207' title="出家人" onclick='showModifyWin("207")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail207'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb208" class='word'> <p class='pali' name='wPali'><a name='w208' title="?" onclick='showModifyWin("208")'><span name="spali">ab-hiṇhaŋ</span></a></p>
+<div  id='detail208'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb209" class='word'> <p class='pali' name='wPali'><a name='w209' title="省思" onclick='showModifyWin("209")'><span name="spali">paccavekkhitabbaŋ</span></a></p>
+<div  id='detail209'><div ><p class='ID'>0</p><p class='org' name='w_org'>paccavekkhati</p> <p class='mean'>省思</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb210" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail210'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>`Have I attained any superhuman distinction in knowledge and vision worthy of the noble ones, so that in my last days, when I am questioned by my companions in the holy life, I will not be embarrassed?', one who has gone forth should often reflect upon this.</p><p class='tran_par_cn'>为出家者，常应省察:“诸上人法，贤圣所专，殊胜智见；我今于彼，能现证否？若临命终，同梵行人，执此相问；彼时我心，还自愧否？”</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb211" class='word'> <p class='pali' name='wPali'><a name='w211' title="?" onclick='showModifyWin("211")'><span name="spali">Ime</span></a></p>
+<div  id='detail211'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb212" class='word'> <p class='pali' name='wPali'><a name='w212' title="?" onclick='showModifyWin("212")'><span name="spali">kho</span></a></p>
+<div  id='detail212'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb213" class='word'> <p class='pali' name='wPali'><a name='w213' title="?" onclick='showModifyWin("213")'><span name="spali">bhikkhave</span></a></p>
+<div  id='detail213'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb214" class='word'> <p class='pali' name='wPali'><a name='w214' title="?" onclick='showModifyWin("214")'><span name="spali">dasadhammā</span></a></p>
+<div  id='detail214'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb215" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">,</span></p>
+<div  class='hidden'  id='detail215'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb216" class='word'> <p class='pali' name='wPali'><a name='w216' title="出家人" onclick='showModifyWin("216")'><span name="spali">pabbajitena</span></a></p>
+<div  id='detail216'><div ><p class='ID'>0</p><p class='org' name='w_org'>pabbajita</p> <p class='mean'>出家人</p> <p class='case' ><span class='cell'>陽性</span><span class='cell'>单数</span><span class='cell'>具格</span></p></div></div></div>
+<div id="wb217" class='word'> <p class='pali' name='wPali'><a name='w217' title="常常" onclick='showModifyWin("217")'><span name="spali">abhiṇhaŋ</span></a></p>
+<div  id='detail217'><div ><p class='ID'>0</p><p class='org' name='w_org'>abhiṇhaṃ</p> <p class='mean'>常常</p> <p class='case' ><span class='cell'>adv.</span></p></div></div></div>
+<div id="wb218" class='word'> <p class='pali' name='wPali'><a name='w218' title="?" onclick='showModifyWin("218")'><span name="spali">paccavekkhitabbā</span></a></p>
+<div  id='detail218'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb219" class='word'> <p class='pali' name='wPali'><a name='w219' title="?" onclick='showModifyWin("219")'><span name="spali">”ti</span></a></p>
+<div  id='detail219'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb220" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail220'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb221" class='word'> <p class='pali' name='wPali'><a name='w221' title="?" onclick='showModifyWin("221")'><span name="spali">Idam'avoca</span></a></p>
+<div  id='detail221'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb222" class='word'> <p class='pali' name='wPali'><a name='w222' title="世尊" onclick='showModifyWin("222")'><span name="spali">Bhagavā</span></a></p>
+<div  id='detail222'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhagavant</p> <p class='mean'>世尊</p> <p class='case' ><span class='cell'>m.</span></p></div></div></div>
+<div id="wb223" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail223'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb224" class='word'> <p class='pali' name='wPali'><a name='w224' title="?" onclick='showModifyWin("224")'><span name="spali">Attamanā</span></a></p>
+<div  id='detail224'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb225" class='word'> <p class='pali' name='wPali'><a name='w225' title="你" onclick='showModifyWin("225")'><span name="spali">te</span></a></p>
+<div  id='detail225'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb226" class='word'> <p class='pali' name='wPali'><a name='w226' title="比库" onclick='showModifyWin("226")'><span name="spali">bhikkhū</span></a></p>
+<div  id='detail226'><div ><p class='ID'>0</p><p class='org' name='w_org'>bhikkhu</p> <p class='mean'>比库</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>复</span><span class='cell2'><a href='#'>主<a></span><span id="casew0" class='hidden'>主</span></p></div></div></div>
+<div id="wb227" class='word'> <p class='pali' name='wPali'><a name='w227' title="?" onclick='showModifyWin("227")'><span name="spali">Bhagavato</span></a></p>
+<div  id='detail227'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb228" class='word'> <p class='pali' name='wPali'><a name='w228' title="?" onclick='showModifyWin("228")'><span name="spali">bhāsitaŋ</span></a></p>
+<div  id='detail228'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb229" class='word'> <p class='pali' name='wPali'><a name='w229' title="?" onclick='showModifyWin("229")'><span name="spali">abhinandun</span></a></p>
+<div  id='detail229'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb230" class='word'> <p class='pali' name='wPali'><a name='w230' title="?" onclick='showModifyWin("230")'><span name="spali">'ti</span></a></p>
+<div  id='detail230'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb231" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail231'><div ><p class='ID'>37</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>These are the ten matters, monks, that one who has gone forth should often reflect upon.”The Blessed One said this. Pleased, the monks delighted in the Blessed One's statement.</p><p class='tran_par_cn'>诸比丘！如是十法，为出家者，常应省察。”世尊慈诲，广说如是。时诸比丘，闻佛垂教，法味充满，皆大欢喜。</p></div>
+<div class='clr'></div></div>
+<div class='sutta_paragraph' >
+<div class='pali_par_mobile'>
+<div id="wb232" class='word'> <p class='pali' name='wPali'><a name='w232' title="这" onclick='showModifyWin("232")'><span name="spali">Etena</span></a></p>
+<div  id='detail232'><div ><p class='ID'>0</p><p class='org' name='w_org'>eta</p> <p class='mean'>这</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb233" class='word'> <p class='pali' name='wPali'><a name='w233' title="真理的语言" onclick='showModifyWin("233")'><span name="spali">sacca-vajjena</span></a></p>
+<div  id='detail233'><div ><p class='ID'>0</p><p class='org' name='w_org'>saccavajja=sacca+vacana</p> <p class='mean'>真理的语言</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb234" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">—</span></p>
+<div  class='hidden'  id='detail234'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb235" class='word'> <p class='pali' name='wPali'><a name='w235' title="平安" onclick='showModifyWin("235")'><span name="spali">sotthi</span></a></p>
+<div  id='detail235'><div ><p class='ID'>0</p><p class='org' name='w_org'>sotthi</p> <p class='mean'>平安</p> <p class='case' ><span class='cell'>f.</span></p></div></div></div>
+<div id="wb236" class='word'> <p class='pali' name='wPali'><a name='w236' title="我" onclick='showModifyWin("236")'><span name="spali">me</span></a></p>
+<div  id='detail236'><div ><p class='ID'>0</p><p class='org' name='w_org'>amha</p> <p class='mean'>我</p> <p class='case' ><span class='cell'>单</span><span class='cell'>与</span></p></div></div></div>
+<div id="wb237" class='word'> <p class='pali' name='wPali'><a name='w237' title="是" onclick='showModifyWin("237")'><span name="spali">hotu</span></a></p>
+<div  id='detail237'><div ><p class='ID'>0</p><p class='org' name='w_org'>hoti</p> <p class='mean'>是</p> <p class='case' ><span class='cell'>陰</span><span class='cell'>单</span><span class='cell'>處</span></p></div></div></div>
+<div id="wb238" class='word'> <p class='pali' name='wPali'><a name='w238' title="总是，每天" onclick='showModifyWin("238")'><span name="spali">sabbadā</span></a></p>
+<div  id='detail238'><div ><p class='ID'>0</p><p class='org' name='w_org'>sabbadā</p> <p class='mean'>总是，每天</p> <p class='case' ><span class='cell'>副</span></p></div></div></div>
+<div id="wb239" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail239'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb240" class='word'> <p class='pali' name='wPali'><a name='w240' title="?" onclick='showModifyWin("240")'><span name="spali">(1x)</span></a></p>
+<div  class='hidden'  id='detail240'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="enter"></div>
+<div id="wb242" class='word'> <p class='pali' name='wPali'><a name='w242' title="这" onclick='showModifyWin("242")'><span name="spali">Etena</span></a></p>
+<div  id='detail242'><div ><p class='ID'>0</p><p class='org' name='w_org'>eta</p> <p class='mean'>这</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb243" class='word'> <p class='pali' name='wPali'><a name='w243' title="真理的语言" onclick='showModifyWin("243")'><span name="spali">sacca-vajjena</span></a></p>
+<div  id='detail243'><div ><p class='ID'>0</p><p class='org' name='w_org'>saccavajja=sacca+vacana</p> <p class='mean'>真理的语言</p> <p class='case' ><span class='cell'>陽</span><span class='cell'>单</span><span class='cell'>具</span></p></div></div></div>
+<div id="wb244" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">—</span></p>
+<div  class='hidden'  id='detail244'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div id="wb245" class='word'> <p class='pali' name='wPali'><a name='w245' title="平安" onclick='showModifyWin("245")'><span name="spali">sotthi</span></a></p>
+<div  id='detail245'><div ><p class='ID'>0</p><p class='org' name='w_org'>sotthi</p> <p class='mean'>平安</p> <p class='case' ><span class='cell'>f.</span></p></div></div></div>
+<div id="wb246" class='word'> <p class='pali' name='wPali'><a name='w246' title="你" onclick='showModifyWin("246")'><span name="spali">te</span></a></p>
+<div  id='detail246'><div ><p class='ID'>0</p><p class='org' name='w_org'>tumha</p> <p class='mean'>你</p> <p class='case' ><span class='cell'>s.</span><span class='cell'>ins.dat.gen.</span></p></div></div></div>
+<div id="wb247" class='word'> <p class='pali' name='wPali'><a name='w247' title="是" onclick='showModifyWin("247")'><span name="spali">hotu</span></a></p>
+<div  id='detail247'><div ><p class='ID'>0</p><p class='org' name='w_org'>hoti</p> <p class='mean'>是</p> <p class='case' ><span class='cell'>陰</span><span class='cell'>单</span><span class='cell'>處</span></p></div></div></div>
+<div id="wb248" class='word'> <p class='pali' name='wPali'><a name='w248' title="总是，每天" onclick='showModifyWin("248")'><span name="spali">sabbadā</span></a></p>
+<div  id='detail248'><div ><p class='ID'>0</p><p class='org' name='w_org'>sabbadā</p> <p class='mean'>总是，每天</p> <p class='case' ><span class='cell'>副</span></p></div></div></div>
+<div id="wb249" class='word_punc'> <p class='pali' name='wPali'> <span name="spali">.</span></p>
+<div  class='hidden'  id='detail249'><div ><p class='ID'>0</p><p class='org' name='w_org'>&nbsp;</p> <p class='mean'>&nbsp;</p> <p class='case' >&nbsp;</p></div></div></div>
+<div class="chanting_enter"></div>
+<div id="wb250" class='word'> <p class='pali' name='wPali'><a name='w250' title="这样" onclick='showModifyWin("250")'><span name="spali">(2x)</span></a></p>
+<div  class='hidden'  id='detail250'><div ><p class='ID'>37</p><p class='org' name='w_org'>evaṃ</p> <p class='mean'>这样</p> <p class='case' ><span class='cell'>adv.a</span></p></div></div></div>
+<div class='clr'></div> </div>
+<div class='tran_par_mobile'><p class=tran_par_en>By the assertion of this truth, may I always rest in well-being. <br/> By the assertion of this truth, may you always rest in well-being.</p><p class='tran_par_cn'>以此真实语，愿我常平安。（一遍）<br/>以此真实语，愿汝常平安。（两遍）</p></div>
+<div class='clr'></div></div>
+</div>
+
+			<!--经文结束-->
+			</div>
+		</div>
+		<!--right side end-->
+	</div>
+
+</body>
+</html>
+
