@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h2>Insert to Index</h2>
+<p><a href="index.php">Home</a></p>
+<?php
+include "./_pdo.php";
+if(isset($_GET["from"])==false){
+?>
+<form action="db_insert_index.php" method="get">
+From: <input type="text" name="from"><br>
+To: <input type="text" name="to"><br>
+<input type="submit">
+</form>
+<?php
+return;
+}
+
+$from=$_GET["from"];
+$to=$_GET["to"];
+
+$g_wordCounter=0;
+$g_wordIndexCounter=0;
+$iAllWordIndex=array();
+$sAllWord=array();
+
+$dirLog="log/";
+$dirDb="db/";
+$dirXmlBase="xml/";
+
+$filelist=array();
+$fileNums=0;
+$log="";
+echo "<h2>$from</h2>";
+function getWordEn($strIn){
+	$out=$strIn;
+	$out=str_replace("ā","a",$out);
+	$out=str_replace("ī","i",$out);
+	$out=str_replace("ū","u",$out);
+	$out=str_replace("ṅ","n",$out);
+	$out=str_replace("ñ","n",$out);
+	$out=str_replace("ṭ","t",$out);
+	$out=str_replace("ḍ","d",$out);
+	$out=str_replace("ṇ","n",$out);
+	$out=str_replace("ḷ","l",$out);
+	$out=str_replace("ṃ","m",$out);
+	return($out);
+}
+
+if(($handle=fopen("filelist.csv",'r'))!==FALSE){
+	while(($filelist[$fileNums]=fgetcsv($handle,0,','))!==FALSE){
+		$fileNums++;
+	}
+}
+if($to==0 || $to>=$fileNums) $to=$fileNums-1;
+
+	$db_file = $dirDb.'index.db3';
+	PDO_Connect("sqlite:$db_file");
+	
+for($iFile=$from;$iFile<=$to;$iFile++){
+
+	$FileName=$filelist[$iFile][1].".htm";
+	$fileId=$filelist[$iFile][0];
+
+	$inputFileName=$FileName;
+	$outputFileNameHead=$filelist[$iFile][1];
+	$bookId=$filelist[$iFile][2];
+
+	$dirXml=$outputFileNameHead."/";
+
+	$xmlfile = $inputFileName;
+	echo "doing:".$xmlfile."<br>";
+	$log=$log."$iFile,$FileName,open\r\n";
+
+	$arrInserString=array();
+
+
+	// 打开文件并读取数据
+	$irow=0;
+	if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
+		while(($data=fgetcsv($fp,0,','))!==FALSE){
+			$irow++;
+			if($irow>1){
+				$params=$data;
+				$arrInserString[count($arrInserString)]=$params;
+			}
+		}
+		fclose($fp);
+		echo "单词表load：".$dirXmlBase.$dirXml.$outputFileNameHead.".csv<br>";
+	}
+	else{
+		echo "can not open csv file. filename=".$dirXmlBase.$dirXml.$outputFileNameHead.".csv";
+	}
+	
+
+	// 开始一个事务，关闭自动提交
+	//$PDO->beginTransaction();
+	//$query="INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
+	//$stmt = $PDO->prepare($query);
+	$count=0;
+	$count1=0;
+	$sen="";
+	$sen1="";
+	$sen_en="";
+	$sen_count=0;
+	$book="";
+	$paragraph="";
+	foreach($arrInserString as $oneParam){	
+		if($oneParam[5]!=""){
+			$g_wordCounter++;
+			$book=substr($oneParam[2],1);
+			$paragraph=$oneParam[3];
+			$word=$oneParam[5];
+			if($oneParam[15]=="bld" ){
+				$bold=1;
+			}
+			else{
+				$bold=0;
+			}			
+			
+			if(isset($sAllWord[$word])){
+				$wordindex=$sAllWord[$word];
+				
+				$iAllWordIndex[$wordindex][1]++;
+				if($bold==1){
+					$iAllWordIndex[$wordindex][3]++;
+				}
+				else{
+					$iAllWordIndex[$wordindex][2]++;
+				}
+				
+			}
+			else{
+				$wordindex=$g_wordIndexCounter;
+				$sAllWord[$word]=$g_wordIndexCounter;
+				
+				$iAllWordIndex[$g_wordIndexCounter][0]=$word;
+				
+				$iAllWordIndex[$g_wordIndexCounter][1]=1;//all word count
+				if($bold==1){
+					$iAllWordIndex[$g_wordIndexCounter][2]=0;
+					$iAllWordIndex[$g_wordIndexCounter][3]=1;
+				}
+				else{
+					$iAllWordIndex[$g_wordIndexCounter][2]=1;
+					$iAllWordIndex[$g_wordIndexCounter][3]=0;
+				}
+				
+				$g_wordIndexCounter++;
+			}
+		
+	
+			//$newWord=array($g_wordCounter,$book,$paragraph,$wordindex,$bold);
+			//$stmt->execute($newWord);
+			$count++;
+		}
+
+	}
+	/*
+	// 提交更改 
+	$PDO->commit();
+	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+		$error = PDO_ErrorInfo();
+		echo "error - $error[2] <br>";
+		$log.="$from, $FileName, error, $error[2] \r\n";
+	}
+	else{
+		echo "updata $count recorders.<br />";
+		$log.="updata $count recorders.\r\n";
+	}
+*/
+}
+
+	// 开始一个事务，关闭自动提交
+	$PDO->beginTransaction();
+	$query="INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES (?,?,?,?,?,?,?,?)";
+	$stmt = $PDO->prepare($query);
+	
+	echo count($iAllWordIndex)."words<br>";
+	for($iword=0;$iword<count($iAllWordIndex);$iword++){
+		$wordindex=$iword;
+		$newWord=array($wordindex,$iAllWordIndex[$iword][0],getWordEn($iAllWordIndex[$iword][0]),$iAllWordIndex[$iword][1],$iAllWordIndex[$iword][2],$iAllWordIndex[$iword][3],0,mb_strlen($iAllWordIndex[$iword][0],"UTF-8"));
+		//echo "<br>{$newWord[0]}-{$newWord[1]}-{$newWord[2]}-{$newWord[3]}-{$newWord[4]}-{$newWord[5]}-<br />";
+		$stmt->execute($newWord);
+	}
+
+	
+	// 提交更改 
+	$PDO->commit();
+	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+		$error = PDO_ErrorInfo();
+		echo "error - $error[2] <br>";
+		$log.="$from, $FileName, error, $error[2] \r\n";
+	}
+	else{
+		echo "updata iword recorders.<br />";
+		$log.="updata iword recorders.\r\n";
+	}			
+	
+	$myLogFile = fopen($dirLog."insert_index.log", "a");
+	fwrite($myLogFile, $log);
+	fclose($myLogFile);
+	
+	
+	echo "<h2>all done!</h2>";	
+?>
+
+
+
+</body>
+</html>

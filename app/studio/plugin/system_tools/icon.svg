@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" >
+<symbol id="icon_tools" viewBox="0 0 32 32">
+<defs>
+<style>.a{fill:#cdcdcd;}.b{fill:none;}</style>
+</defs>
+<path class="a" d="M30.942,25.942l-12.2-12.2A8.618,8.618,0,0,0,6.942,2.875l5.8,5.8L8.675,12.742l-5.8-5.8a8.618,8.618,0,0,0,10.867,11.8l12.2,12.2a1.288,1.288,0,0,0,1.867,0l3.133-3.133A1.288,1.288,0,0,0,30.942,25.942Z" transform="translate(-0.675 -0.675)"/>
+</symbol>
+</svg>

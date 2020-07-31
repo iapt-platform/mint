@@ -1,0 +1,49 @@
+							<a >
+								<span  onclick="set_word_click_action('Edit_Dialog','edit')" style="display: flex; color: var(--btn-color);">
+									<input id="Edit_Dialog" style="display:none;" type="checkbox" style="width: 14px; height: 14px" checked>
+									<svg id="icon_Edit_Dialog_on" style="display:block;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_assignment_on"></use>
+									</svg>
+									<svg id="icon_Edit_Dialog_off" style="display:none;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_assignment_off"></use>
+									</svg>
+									<?php echo $module_gui_str['editor']['1103'];//點詞
+									echo $module_gui_str['editor_project']['1012']; //編輯?>
+								</span>
+							</a>
+							<a >
+								<span onclick="set_word_click_action('Look_Up','lookup')" style="display: flex; color: var(--btn-color);">
+									<input id="Look_Up" style="display:none;" type="checkbox" checked>
+									<svg id="icon_Look_Up_on" style="display:block;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_search"></use>
+									</svg>
+									<svg id="icon_Look_Up_off" style="display:none;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_block"></use>
+									</svg>
+									<?php echo $module_gui_str['editor']['1103']; echo $module_gui_str['editor_dictionary']['1006'];//查詢 ?>
+								</span>
+							</a>
+							<a >
+								<span onclick="set_word_click_action('Trans_as','translate')" style="display: flex; color: var(--btn-color);">
+									<input id="Trans_as" type="checkbox" style="display:none;" >
+									<svg id="icon_Trans_as_on" style="display:none;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_translate"></use>
+									</svg>
+									<svg id="icon_Trans_as_off" style="display:block;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_block"></use>
+									</svg>
+									<?php echo $module_gui_str['editor']['1103']; echo $module_gui_str['editor']['1104'];//輸入 ?>
+								</span>
+							</a>
+							<a >
+								<span onclick="set_word_click_action('input_smart_switch','normal')" style="display: flex; color: var(--btn-color);">
+									<input id="input_smart_switch" style="display:none;" type="checkbox" checked>
+									<svg id="icon_input_smart_switch_on"class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_keyboard"></use>
+									</svg>
+									<svg id="icon_input_smart_switch_off" style="display:none;" class="icon">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_block"></use>
+									</svg>
+									<?php echo $module_gui_str['editor_project']['1042'];//智能鍵入 ?>
+								</span>
+							</a>

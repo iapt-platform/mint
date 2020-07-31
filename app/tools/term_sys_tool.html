@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>Paḷi Code Transfer</title>
+	<script language="javascript" src="../app/js/vn.js"></script>
+	<script language="javascript" src="../app/js/xml.js"></script>
+	<script language="javascript" src="../app/js/filenew.js"></script>
+	<script language="javascript" src="../app/js/editor.js"></script>
+	<script language="javascript" src="../app/term_sys_list.js"></script>
+	<script language="javascript" src="../app/charcode/sinhala.js"></script>
+	<script language="javascript" src="../app/charcode/unicode.js"></script>
+	<link type="text/css" rel="stylesheet" href="../app/css/style.css"/>
+	<script language="javascript">
+var g_selected_array=new Array();
+var g_unselected_array=new Array();
+
+var g_add_drop_str=new Array();
+var g_replace_list=new Array();
+
+
+function item_select(obj){
+	switch(obj.checked){
+		case true:
+			var id_array=obj.id.split("_");
+			id_array.pop();
+			g_selected_array.push(id_array.join("_"))
+			var i_selected=0;
+			for(i_selected in g_unselected_array){
+				if(g_unselected_array[i_selected]==id_array.join("_")){
+					g_unselected_array.splice(i_selected,1)
+				}
+			}
+			break;
+		case false:
+			var id_array=obj.id.split("_");
+			id_array.pop();
+			g_unselected_array.push(id_array.join("_"))
+			var i_selected=0;
+			for(i_selected in g_selected_array){
+				if(g_selected_array[i_selected]==id_array.join("_")){
+					g_selected_array.splice(i_selected,1)
+				}
+			}
+			break;
+		}
+	refresh_replace_list();
+}
+
+function add_button(dropdown_id){
+	var add_button_str="";
+	var add_drop_str="";
+	var i_add=Number(dropdown_id.split("_")[2])+1;
+	add_button_str+="<button id='add_drop' onclick=\"add_button('output_str_"+i_add+"')\">+</button>"
+	add_drop_str+="<select id='output_str_"+i_add+"' class='term_sys_dropdown'; onchange=\"item_change(this,"+i_add+")\";>";
+	add_drop_str+="<option value='0'>None</option>"
+	for(str_add in g_unselected_array){
+		add_drop_str+="<option value='"+g_unselected_array[str_add]+"'>"+g_unselected_array[str_add]+"</option>";
+	}
+	add_drop_str+="</select>";
+	g_add_drop_str.push(add_drop_str);
+	add_drop_str="";
+	for(i_output in g_add_drop_str){
+		add_drop_str+=g_add_drop_str[i_output];
+	}
+	document.getElementById("output_div").innerHTML=add_drop_str;
+
+	document.getElementById("add_drop").outerHTML=add_button_str;
+
+}
+function refresh_replace_list(){
+	g_replace_list=new Array();
+	for(i_refresh in term_list_str){
+		var replace_obj=new Object;
+		replace_obj.id="【"+term_list_str[i_refresh].id+"】";
+		replace_obj.value=""
+		for(j_refresh in g_selected_array){
+			var term_str=eval("term_list_str[i_refresh]."+g_selected_array[j_refresh]+"");
+			if(term_str!=""){
+				replace_obj.value+=term_str
+				if(j_refresh<g_selected_array.length-1){
+					replace_obj.value+="#"
+				}
+			}
+		}
+		replace_obj.value="#"+replace_obj.value+"#";
+		replace_obj.value=replace_obj.value.replace(/##/g,"");
+		if(replace_obj.value.lastIndexOf("#")==replace_obj.value.length-1 && replace_obj.value.length!=0){
+			replace_obj.value=replace_obj.value.slice(0,replace_obj.value.length-1)
+		}
+		if(replace_obj.value.indexOf("#")==0){
+			replace_obj.value=replace_obj.value.slice(1)
+		}
+		if(replace_obj.value.lastIndexOf("#")!=-1){
+			term_str=replace_obj.value.split("#");
+			var head=term_str[0]
+			term_str.shift();//删除第一个数组
+			if(term_str.length>1){
+				replace_obj.value=head+"(";
+				replace_obj.value+=term_str.join(",");
+				replace_obj.value+=")"
+				replace_obj.value.replace(/,\)/g,")");
+			}
+			else if(term_str.length==1 && term_str[0]!=""){
+				replace_obj.value=head+"(";
+				replace_obj.value+=term_str[0];
+				replace_obj.value+=")"
+			}
+
+		}
+		g_replace_list.push(replace_obj);
+		//g_replace_list[i_refresh].id=replace_obj.id.toString();
+		//g_replace_list[i_refresh].value=replace_obj.value.toString();
+	}
+	
+	
+}
+function glossary_replace(){
+	var output=document.getElementById("txtInput").value;
+	
+
+	for(i_term in g_replace_list){
+		//var  id_RE=new RegExp(g_replace_list[i_term].id.toString(),"g")
+		eval("output=output.replace(/"+g_replace_list[i_term].id+"/g,g_replace_list[i_term].value);");
+		//output=output.replace(id_RE,g_replace_list[i_term].value);
+	}
+	document.getElementById("txtOutput").innerHTML=output;
+}
+
+		
+		
+
+</script>
+</head>
+<body class="mainbody" id="mbody" style="font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:18px;">
+		<!-- tool bar begin-->
+
+		<div class='toolbar' >
+
+			<script language="javascript">
+			if(!g_is_mobile){
+				document.write("<button id=\"B_Navi\" onclick=\"setNaviVisibility()\" type=\"button\">≡</button> ");
+			}
+
+			</script>
+				<script language="javascript">
+				</script>
+				<span id="debug"></span>
+
+		</div>	
+		<!--tool bar end -->
+
+	<div class="main" style="width:100%;height:100%;text-align:center; ">
+
+				<div style="text-align:center; float:left;width:40%;height:80%;">
+				My Text Is In
+				<textarea id="txtInput" rows="30" cols="" style="float:left; font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; width:100%;height:100%;" ></textarea>
+				</div>
+				<div style="text-align:center; float:left;width:15%; display: flex;">
+				<select id="m_str" style="align:center; font-size: 120%">
+						<option value="ṃ,Ṃ">ṃ</option>
+						<option value="ṁ,Ṁ">ṁ</option>
+						<option value="ŋ,Ŋ">ŋ</option>
+				</select>
+				</br>
+				</br>
+				<button id="transfer" style="align:center; font-size: 200%; width:70px" type="button"  onclick="glossary_replace()">→</button>
+			</div>
+			<div style="display: flex;flex-direction: column;">
+				<span>
+					<button id="add_drop" type="button" onclick="add_button('output_str_0')">+</button>
+				I Need the Text In
+				</span>
+				<span id="output_span"; style="text-align:center;height:80%;">
+					
+				</span>
+				<div style="height: 30em; border: 0.2em solid silver;display: flex;">
+				<textarea id="txtOutput" style="font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; text-align: left; width:100%;height:100%"></textarea>
+				</div>
+			</div>
+				
+
+
+			<div class="debugMsg" id="xmldata"><!--调试信息-->
+	
+			</div>
+
+		<!--right side end-->
+	</div>
+
+<div id="modifywin">
+
+</div>
+</body>
+</html>
+<script language="javascript">
+	//function make_dropdown_opt(dropdown_id){
+var opt_str="";
+var iCount_term_select=3
+for(i_opt in term_list_str[0]){
+	if(iCount_term_select % 3==0){
+		opt_str+="<div class='term_select_div'>"
+	}
+	if(i_opt=="id"){}
+	else{
+		opt_str+="<span class='term_select_span'>";
+		opt_str+="<input id='"+i_opt+"_checkbox' type='checkbox' class='checkbox_1em' onclick='item_select(this)'>";
+		opt_str+=i_opt+"</span>";
+		g_unselected_array.push(i_opt);
+	}
+	if(iCount_term_select % 3==2 || iCount_term_select==term_list_str[0].length-1){
+		opt_str+="</div>"
+	}
+	iCount_term_select++
+}
+document.getElementById("output_span").innerHTML=opt_str
+
+//}
+</script>

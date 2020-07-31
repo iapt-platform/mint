@@ -1,0 +1,97 @@
+			<div class="menu" id="menu_dict">
+				<h1><?php echo $module_gui_str['editor_dictionary']['1001']; ?></h1>
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_dictionary']['1002']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+						<div>
+						<a href="dictadmin/user/phpliteadmin.php" target="user_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1009']; ?></a><br >
+						<a href="dictadmin/system/phpliteadmin.php" target="system_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1010']; ?></a><br >
+						<a href="dictadmin/3rd/phpliteadmin.php" target="3rd_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1011']; ?></a><br >
+						<button type="button" onclick="uploadAllWordData()"><?php echo $module_gui_str['editor_dictionary']['1012']; ?></button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_dictionary']['1003']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+	<?php	
+	//获取服务器端文件列表
+	$dir="../user/$userid/my_document/";
+	$files = scandir($dir);
+	$arrlength=count($files);
+	for($x=0;$x<$arrlength;$x++) {
+		if(is_file($dir.$files[$x])){
+			$exeName=mb_substr($files[$x],-4,NULL,"UTF-8");
+			if($exeName==".pcs"){
+			echo "<a onclick=menu_file_import_wbw('".$files[$x]."')>".$files[$x].'</a><br />';
+			}
+		}
+	}
+	?>
+						<span id="id_load_dict_from_WBW_msg_inner"></span>	
+					</div>
+
+				</div>	
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_dictionary']['1004']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+						<button type="button" onclick="menu_file_export_ild()"><?php echo $module_gui_str['editor_dictionary']['1007']; ?></button>
+						<button type="button" onclick="menu_file_import_ild()"><?php echo $module_gui_str['editor_dictionary']['1008']; ?></button>
+						<button type="button" onclick="project_res_ild_remove()"><?php echo $module_gui_str['editor_dictionary']['1020']; ?></button>
+						<span id="id_ild_msg_inner"></span>	
+					</div>
+
+				</div>	
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_dictionary']['1005']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+						<div id="basic_dict_list">
+						<?php echo $module_gui_str['editor_dictionary']['1019']; ?>
+						</div>
+						<div>
+						<button type="button" onclick="menu_dict_match()"><?php echo $module_gui_str['editor_dictionary']['1006']; ?></button>
+						<div id="id_dict_match_inner">
+						</div>
+						<p id="id_dict_msg"></p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_dictionary']['1014']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+						<div>
+							<?php echo $module_gui_str['editor_dictionary']['1015']; ?>
+							<select id="id_dict_applay_to">
+								<option value="current"><?php echo $module_gui_str['editor_dictionary']['1016']; ?></option>
+								<option value="sys"><?php echo $module_gui_str['editor_dictionary']['1017']; ?></option>
+								<option value="all"><?php echo $module_gui_str['editor_dictionary']['1018']; ?></option>
+							</select>
+					
+						</div>
+					</div>
+				</div>
+			</div>

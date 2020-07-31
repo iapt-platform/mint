@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<script>
+		function nextPar(arr,index)
+		{
+			if(index<arr.length-1)
+			{
+				for(var j=index+1;j<arr.length;j++)//循环arr的长度次
+				{
+					if(arr[j].id>0)
+					{
+						return(j)//把J的值返回成为函数值
+					}
+				}
+				return(-1)
+			}
+			else{
+				return(-1);
+			}
+		}
+	
+		function do_final(){
+			var biaodian = document.getElementById("biaodian").value.split("$")
+			var biaodian_no = document.getElementById("biaodian_no").value.split("$")
+			var strPali = document.getElementById("input_pali").value;
+			var strPaliPar=strPali.split("\n");/*按回车拆分原文为数组*/
+			var strTran = document.getElementById("output_translate").value;
+			var strTranPar=strTran.split("\n");//按回车拆分译文为数组
+			var strTranList = new Array()//创建原本译文数组
+			var newTran = new Array()//创建结果译文数组
+			
+			for(var i=0;i<strTranPar.length;i++)//依照译文行数进行循环
+			{
+				
+				parPart=strTranPar[i].split("\t")//依照tab将译文一维数组拆分成二维数组
+				var newPar=new Object()//创建对象
+				newPar.id=parPart[0]*10
+				newPar.text=parPart[1]//赋值：译文内容
+				newPar.id=newPar.id/10//赋值：巴利原文段落号
+				if(newPar.text){
+				if(newPar.id>0){
+					strTranList.push(newPar)//将一维矩阵塞入译文二维数组末端
+				}
+				else{
+					for(ibd in biaodian){
+						eval("newPar.text=newPar.text.replace(/"+biaodian[ibd]+"/g,'"+biaodian[ibd]+"\t')")
+						eval("newPar.text=newPar.text.replace(/\t"+biaodian[ibd]+"/g,'"+biaodian[ibd]+"')")
+					}
+					splitText=newPar.text.split("\t")
+					for(x in splitText){
+						var newSplitObj=new Object()//创建对象
+						newSplitObj.id=0
+						newSplitObj.text=splitText[x]
+						var strNoSpace=newSplitObj.text.replace(/ /g,"")
+						if(strNoSpace.length>0){
+							
+							var isBdNo=false
+							for(ibdno in biaodian_no){
+								if(strNoSpace==biaodian_no[ibdno]){
+									isBdNo=true;
+									break;
+								}
+							}
+							if(isBdNo)
+							{
+								strTranList[strTranList.length-1].text+=newSplitObj.text
+							}
+							else
+							{
+								strTranList.push(newSplitObj)
+							}
+						}
+					}
+				}
+				}
+				
+			}//依照tab将译文一维数组转换成二维数组
+			
+			//for(x in strTranList){
+			//	document.getElementById("info").innerHTML+=(strTranList[x].id+"-"+strTranList[x].text+"<br />")
+			//}
+			//return;
+			
+			var currPar=0;//定义当前译文段落号，起始值0
+			var currId=strTranList[currPar].id//定义当前译文ID，赋值：当前译文对应的巴利原文段落号
+			while(currPar<strTranList.length-1)//执行次数=strTranList的长度-1
+			{
+				var iNextPar=nextPar(strTranList,currPar)//定义下一标题译文段落号
+				var nextId=strTranList[iNextPar].id//定义下一标题ID，赋值：对应的巴利原文段落号
+				if(iNextPar==currPar+1){//紧挨着
+					if(nextId==currId+1){//正好
+						newTran.push(strTranList[currPar].text)//推送当前段落译文到结果译文数组
+					}
+					else{  //不够 拆分
+						//拆分后的段落数
+						var iSplitNum = nextId-currId;
+						var strCombinPali="";
+						//生成合并pali 并计算每段比例
+						for(var k=currId-1;k<nextId-1;k++){
+							strCombinPali=strCombinPali+strPaliPar[k]
+						}
+						splitText=new Array()
+						iCurrSplitBegin=0
+						for(var k=0;k<iSplitNum;k++){
+							newRate=strPaliPar[currId-1+k].length/strCombinPali.length
+							iCurrSplitEnd=iCurrSplitBegin+(strTranList[currPar].text.length*newRate)
+							newText=strTranList[currPar].text.slice(iCurrSplitBegin,iCurrSplitEnd)
+							iCurrSplitBegin=iCurrSplitEnd
+							newTran.push(newText)	
+							//document.getElementById("info").innerHTML=document.getElementById("info").innerHTML+newRate+" "+currId+" "+nextId+"<br>"
+						}
+					}
+				}
+				else//不挨着
+				{
+					if(nextId-currId==iNextPar-currPar){//正好，下一标题原文号-当前标题原文号=下一标题译文号-当前标题译文号
+						for(var iNew=currPar;iNew<iNextPar;iNew++)
+						{
+							newTran.push(strTranList[iNew].text)
+						}
+					}
+					else if(nextId-currId>iNextPar-currPar){//拆，原文段数>译文段数
+						newTran.push(strTranList[currPar].text)
+						//拆分后的段落数
+						var iSplitNum = nextId-currId-1;
+						
+						//生成合并译文
+						var strCombinTran="";
+						for(var k=currPar+1;k<iNextPar;k++){
+							strCombinTran=strCombinTran+strTranList[k].text
+						}						
+						//生成合并pali 并计算每段比例
+						var strCombinPali="";//定义合并巴利原文
+						for(var k=currId;k<nextId-1;k++)
+						{
+							strCombinPali=strCombinPali+strPaliPar[k]
+						}//将巴利原文合并
+						splitText=new Array()//定义新数组
+						iCurrSplitBegin=0
+						for(var k=0;k<iSplitNum;k++)//循环巴利原文段落数次
+						{
+							newRate=strPaliPar[currId+k].length/strCombinPali.length//从巴利原文数组中提取当前段落字符数和总字符数之比
+							iCurrSplitEnd=iCurrSplitBegin+(strCombinTran.length*newRate)//结束编码=起始编码+中间编码*比例
+							newText=strCombinTran.slice(iCurrSplitBegin,iCurrSplitEnd)//从起始到结束，取出
+							iCurrSplitBegin=iCurrSplitEnd
+							newTran.push(newText)	
+							//document.getElementById("info").innerHTML=document.getElementById("info").innerHTML+newRate+" "+currId+" "+nextId+"<br>"
+						}
+					}
+					else{//合并
+					newTran.push(strTranList[currPar].text)
+						//拆分后的段落数
+						var iSplitNum = nextId-currId-1;
+						var tranNum=new Array()
+						//生成合并译文
+						var strCombinTran="";
+						for(var k=currPar+1;k<iNextPar;k++){
+							strCombinTran=strCombinTran+strTranList[k].text
+							tranNum.push(strCombinTran.length)
+						}
+						var paliNum=new Array()
+						//生成合并pali 并计算每段比例
+						var strCombinPali="";
+						for(var k=currId;k<nextId-1;k++)
+						{
+							strCombinPali=strCombinPali+strPaliPar[k]
+							paliNum.push(strCombinPali.length)
+						}
+						var theoNum=new Array()
+						var PCRate=strCombinTran.length/strCombinPali.length//译巴字数比
+						for(var k=0;k<nextId-currId-1;k++)//得到理论字数
+						{
+							theoNum.push(paliNum[k]*PCRate)
+							//document.getElementById("info").innerHTML=document.getElementById("info").innerHTML+paliNum[k]+" "+theoNum[k]+"<br>"
+						}
+function tranPos(J)//输入译文段号返回合并段号
+	{
+	if(tranNum[J]-theoNum[0]<0)
+		{
+		return(0)
+		}
+	else if(J==0)
+		{
+		return(0)
+		}
+	else if(tranNum[J]>=theoNum[nextId-currId-2])
+		{
+		return(nextId-currId-2)
+		}
+	else
+	{
+	
+	for(var i=1;i<nextId-currId-1;i++)
+		{
+		if(tranNum[J]>theoNum[i])//译文J长度大于原文i理论值
+			{}
+		else//原文i理论值>译文J长度>原文i-1理论值
+			{
+			if(Math.abs(tranNum[J]-theoNum[i])<Math.abs(tranNum[J]-theoNum[i-1]))//更靠近原文i理论值
+				{
+				if(Math.abs(tranNum[J]-theoNum[i])<Math.abs(tranNum[J+1]-theoNum[i]))//译文J比译文J+1更靠近理论值
+					{
+					return(i)
+					}
+				else//译文J+1比译文J更靠近理论值
+					{
+					return(i)
+					}
+				}
+			else//更靠近原文i-1理论值
+				{
+				if(Math.abs(tranNum[J-1]-theoNum[i-1])<Math.abs(tranNum[J]-theoNum[i-1]))//译文J-1比译文J更靠近理论值i-1
+					{
+					return(i)
+					}
+				else//译文J比译文J-1更靠近理论值i-1
+					{
+					return(i-1)
+					}
+				}
+			}
+		}
+	}
+	
+}
+						var temtrancom=""
+						for(var k=0;k<iNextPar-currPar-1;k++)
+						{
+						var nextPos=tranPos(k+1)
+						var currPos=tranPos(k)
+						if(k==iNextPar-currPar-2)	
+							{
+							temtrancom=temtrancom+strTranList[k+currPar+1].text
+							newTran.push(temtrancom)
+							temtrancom=""
+							}
+						else
+						{
+							if(nextPos>currPos)
+								{
+								if(nextPos-currPos>1)
+									{
+									for(var x=1;x<nextPos-currPos;x++)
+										{
+										newTran.push(" ")
+										}
+									}
+								else
+									{}
+								temtrancom=temtrancom+strTranList[k+currPar+1].text
+								newTran.push(temtrancom)
+								temtrancom=""
+									
+									
+								}
+							else
+								{
+								temtrancom=temtrancom+strTranList[k+currPar+1].text
+								}
+						
+						}
+						//document.getElementById("info").innerHTML=document.getElementById("info").innerHTML+tranNum[k]+" "+tranPos(k)+" "+theoNum[tranPos(k)]+" "+(k+currPar+1)+"<br>"
+						}
+
+										
+					}
+					
+				}
+				currPar=iNextPar
+				currId=strTranList[currPar].id
+			}
+			newTran.push(strTranList[strTranList.length-1].text)
+			
+			var output=""
+			for(var i=0;i<newTran.length;i++){
+				output+=(i+1)+"\t"+newTran[i]+"\n"
+			}
+			document.getElementById("output_final").value=output
+			//output=output.replace(/#/g,"");
+
+
+		}
+	
+		</script>
+</head>
+<body>
+<h3>标点替换表</h3>
+<input type="input" id="biaodian" value="。$？$；$：$:$’$”" />
+<h3>标点不替换表</h3>
+<input type="input" id="biaodian_no" value="’$”" />
+<h3>巴利原文</h3>
+从“XXX_Pali.txt”文件中复制纯文本黏贴于此<br>
+<textarea id="input_pali" rows="15" cols="100">
+</textarea>
+<h3>添加译文</h3>
+从xls文件中复制“行号”“内容”两列内容黏贴于此<br>
+<textarea id="output_translate"  rows="15" cols="100"></textarea><br>
+<button type="button" onclick="do_final()">批量处理</button><br>
+<h3>对读结果</h3>
+可在文本编辑器中进行中巴对读查看结果<br>
+<textarea id="output_final"  rows="15" cols="100"></textarea><br>
+<div id="test">
+</div>
+<div id="info">
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+		<div class="menu" id="menu_bookmark">
+				<h1><?php echo $module_gui_str['editor_bookmark']['1001']; ?></h1>
+						<span><button id="button_bookmark_refresh" onclick="refreshBookMark()" >
+						<?php /*echo $module_gui_str['editor_bookmark']['1004']; */?>
+						<svg class="icon">
+							<use xlink:href="svg/icon.svg#ic_autorenew"></use>
+						</svg>
+						</button><br/></span>
+			<div style="display: flex;">
+				<div style="display: inline-flex;/*width: 100%;*/">
+					<div style="display: inline-grid;width: auto;height: 15em;margin-right: 1em;">
+						<span><input id="B_Bookmark_All" onclick="setBookmarkVisibility_all()" type="checkbox" style="width: 20px; height: 20px"  /><?php echo $module_gui_str['editor_bookmark']['1002']; ?></span>
+						<span id="B_Bookmark_a_span" class="bookmarkcolora , bookmarkcolorblock" onclick="setBookmarkVisibility('bma','B_Bookmark_a')" >
+							<input id="B_Bookmark_a" type="checkbox" style="display:none"  />
+								<svg class="icon" onclick=lock_key("B_Bookmark_a_span","on","B_Bookmark_a","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_off"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_x_span" class="bookmarkcolorx , bookmarkcolorblock" onclick="setBookmarkVisibility('bmx','B_Bookmark_x')">
+							<input id="B_Bookmark_x" type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_x_span","off","B_Bookmark_x","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+							
+						</span>
+						<span id="B_Bookmark_1_span" class="bookmarkcolor1 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm1','B_Bookmark_1')">
+							<input id="B_Bookmark_1"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_1_span","off","B_Bookmark_1","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_2_span" class="bookmarkcolor2 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm2','B_Bookmark_2')">
+							<input id="B_Bookmark_2"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_2_span","off","B_Bookmark_2","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_3_span" class="bookmarkcolor3 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm3','B_Bookmark_3')">
+							<input id="B_Bookmark_3"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_3_span","off","B_Bookmark_3","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_4_span" class="bookmarkcolor4 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm4','B_Bookmark_4')">
+							<input id="B_Bookmark_4"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_4_span","off","B_Bookmark_4","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_5_span" class="bookmarkcolor5 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm5','B_Bookmark_5')">
+							<input id="B_Bookmark_5"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_5_span","off","B_Bookmark_5","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+						<span id="B_Bookmark_0_span" class="bookmarkcolor0 , bookmarkcolorblock" onclick="setBookmarkVisibility('bm0','B_Bookmark_0')">
+							<input id="B_Bookmark_0"  type="checkbox" style="display:none" checked />
+								<svg class="icon" onclick=lock_key("B_Bookmark_0_span","off","B_Bookmark_0","bookmark")>
+									<use xlink:href="svg/icon.svg#ic_bookmark_on"></use>
+								</svg>
+						</span>
+					</div>
+				</div>
+				<div id="navi_bookmark_inner" ><?php echo $module_gui_str['editor_bookmark']['1003']; ?></div>
+			</div>
+		</div>

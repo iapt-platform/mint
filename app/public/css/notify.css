@@ -1,0 +1,15 @@
+	.pcd_notify{
+		position: fixed;
+		top:3.6em;
+		min-width:20em;
+		max-width:95%;
+		text-align:center;
+		background-color:rgba(128, 128, 128, 0.64);
+		color:white;
+		padding:5px;
+		margin-left:auto;
+		margin-right:auto;
+		border-radius: 8px;
+		-webkit-transition-duration: 0.5s;
+		transition-duration: 0.5;
+	}

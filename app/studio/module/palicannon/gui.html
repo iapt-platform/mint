@@ -1,0 +1,63 @@
+			<div class="menu" id="menu_pali_cannon">
+				<h1><?php echo $module_palicannon_gui_str['1001'] ?></h1>
+				<div id="pali_cannon_search">
+					<input type="text" /><button type="button"><?php echo $module_palicannon_gui_str['1002'] ?></button>
+				</div>
+				<div>
+					<ul id="id_select_modyfy_type" class="common-tab">
+						<li >Mula</li>
+						<li >Atthakatha</li>
+						<li >tika</li>
+					<ul>
+				</div>
+				<div>
+					<select  id="id_palicannon_index_c1" name="menu" onclick="palicannon_index_changed_c1(this)">
+
+					</select>
+				</div>
+				<div>
+					<select  id="id_palicannon_index_c2" name="menu" onclick="palicannon_index_changed_c2(this)">
+					</select>
+				</div>
+				<div>
+					<select  id="id_palicannon_index_c3" name="menu" onclick="palicannon_index_changed_c3(this)">
+					</select>
+				</div>
+				<div>
+					<select  id="id_palicannon_index_c4" name="menu" onclick="palicannon_index_changed_c4(this)">
+					</select>
+				</div>
+				<div>
+					<select  id="id_palicannon_index_book" name="menu" onclick="palicannon_index_changed_book(this)">
+						<option value="index_c1_mula">select one</option>
+					</select>
+				</div>
+				<div>
+				<button type="button" onclick="palicannon_nav_level_show(1)">1</button>
+				<button type="button" onclick="palicannon_nav_level_show(2)">2</button>
+				<button type="button" onclick="palicannon_nav_level_show(3)">3</button>
+				</div>
+				<div id="id_palicannon_index_filelist">
+				</div>
+				<div id="id_book_load_progress"></div>
+				<div id="id_palicannon_selected_par_info">
+					
+				</div>
+			
+				<div class="submenu">
+					<p class="submenu_title" >Book</p>
+					<div>
+					<select name="menu" >
+						<option value="menu_pali_cannon">VRI</option>
+						<option value="menu_toc">PTS</option>
+						<option value="menu_bookmark">Myammar</option>
+						<option value="menu_bookmark">Paragraph</option>
+					</select>
+					<input type="text" size="5" value="1.12" /><button type="button">Go</button>
+					</div>
+					<div class="submenu_details">
+
+					</div>
+				</div>
+				
+			</div>
