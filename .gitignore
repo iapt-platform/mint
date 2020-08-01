@@ -1,3 +1,5 @@
 /user
 /dicttext/system/*.db
 /dicttext/rich/*.db
+font
+appdata

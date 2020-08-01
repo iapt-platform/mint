@@ -6,6 +6,7 @@ include "../pcdl/html_head.php";
 <?php
 	require_once("../pcdl/head_bar.php");
 ?>
+<script src="../public/js/marked.js"></script>
 <style>
 		body{
 			margin: unset;
@@ -112,6 +113,23 @@ include "../pcdl/html_head.php";
 			border-radius: 99px;
 			cursor: pointer;
 		}
+		guide{
+			display:inline-block;
+			width:1.4em;
+			height:1.4em;
+			cursor: pointer;
+			background-color:gray;
+		}
+		#guide {
+			width:18em;
+			min-height:30em;
+			background-color:white;
+			box-shadow: 0 0 10px rgba(0,0,0,0.15);
+		}		
+		#guide h1{
+			font-size:2em;
+			font-weight:700;
+		}
 	</style>
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -138,7 +156,7 @@ include "../pcdl/html_head.php";
 						</div>
 					</div>
                 </div>
-				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">强力拆分</button>
+				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">强力拆分<guide gid="comp_split"></guide></button>
                 <div ></div>
 			</div>
 			<div style="display:block;z-index: 5;text-align:center;">
@@ -222,7 +240,27 @@ function GetPageScroll()
         echo "dict_pre_word_click(\"{$_GET["key"]}\")";
         echo "</script>";
     }
-    ?>
+	?>
+	<div id="guide" style="position:absolute;"></div>
+	<script>
+		$("guide").mouseenter(function(){
+			let id = $(this).attr("gid");
+			var guideObj = $(this);
+			$.get("../../documents/users_guide/en/"+id+".md",
+				{
+				},
+			function(data,status){
+				$("#guide").html(marked(data));
+				$("#guide").appendTo(guideObj);
+				//$("#guide").show();
+			});
+		});
+
+		$("guide").mouseout(function(){
+			//$("#guide").hide();
+		});
+
+	</script>
 <?php
 include "../pcdl/html_foot.php";
 ?>
