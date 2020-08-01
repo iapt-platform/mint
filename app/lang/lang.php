@@ -20,8 +20,14 @@
 	}
 	.dropdown-content a {
 		cursor: pointer;
+		background-color: var(--tool-bg-color);
 	}
-
+	.icon {
+		fill: var(--btn-color);
+	}
+	#lang_select{
+		margin: auto;
+	}
 	</style>
 		<div id="lang_select" class="dropdown" onmouseover="switchMenu(this,'lang_list')" onmouseout="hideMenu()">
 			<div style="">

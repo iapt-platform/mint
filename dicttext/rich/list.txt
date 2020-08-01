@@ -1,0 +1,7 @@
+bhmf.csv,bhmf.db
+concise.csv,concise.db
+pm.csv,pm.db
+shuihan.csv,shuihan.db
+uhan.csv,uhan.db
+uhan_en.csv,uhan_en.db
+pali_sinhala.csv,pali_sinhala.db

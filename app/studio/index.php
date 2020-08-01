@@ -74,18 +74,10 @@ else{
 			window.location.assign("index.php?language="+g_langrage);
 		}
 	
-	var gCurrPage="recent_scan";
+	var gCurrPage="index";
 	</script>
 	<style>
-	#recent_scan {
-		background-color: var(--btn-border-color);
-		
-	}
-	#recent_scan:hover{
-		background-color: var(--btn-border-color);
-		color: var(--btn-color);
-		cursor:auto;
-	}
+
 	</style>
 </head>
 <body id="file_list_body" onLoad="indexInit()">
@@ -97,142 +89,395 @@ else{
 		document.getElementById("id_language").value="<?php echo($currLanguage); ?>";
 	</script>
 		
+        <style>
+            #login_body{
+                display: flex;
+                padding: 2em;
+            }
+            #login_left {
+                padding-left: 4em;
+                flex: 5;
+            }
+            #login_right{
+                flex: 5;
+            }
+            .title{
+                font-size: 150%;
+                margin-top: 1em;
+                margin-bottom: 0.5em;
+            }
+            #login_form{
+                padding: 2em 0 1em 0;
+            }
+            #tool_bar {
+                padding: 1em;
+                display: flex;
+                justify-content: space-between;
+            }
+            #login_shortcut {
+                display: flex;
+                flex-direction: column;
+                padding: 2em 0;
+            }
+            #login_shortcut button{
+                height:3em;
+            }
+            #button_area{
+                text-align: right;
+                padding: 1em 0;
+            }
+            .form_help{
+                font-weight: 400;
+                color: var(--bookx);
+            }
+            .login_form input{
+                margin-top:2em;
+                padding:0.5em 0.5em;
+            }
+            .login_form select{
+                margin-top:2em;
+                padding:0.5em 0.5em;
+            }
+            .login_form input[type="submit"]{
+                margin-top:2em;
+                padding:0.1em 0.5em;
+            } 
+
+            .form_error{
+                color:var(--error-text);
+            }
+            #login_form_div{
+                width:30em;
+            }
+
+            #ucenter_body {
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+                padding: 0;
+                background-color: var(--tool-bg-color3);
+                color: var(--btn-color);
+            }
+            .icon_big {
+                height: 2em;
+                width: 2em;
+                fill: var(--btn-color);
+                transition: all 0.2s ease;
+            }
+            .form_field_name{
+                position: absolute;
+                margin-left: 7px;
+                margin-top: 2em;
+                color: var(--btn-border-line-color);
+                -webkit-transition-duration: 0.4s;
+                -moz-transition-duration: 0.4s;
+                transition-duration: 0.4s;
+                transform: translateY(0.5em);
+            }
+            .viewswitch_on {
+                position: absolute;
+                margin-left: 7px;
+                margin-top: 1.5em;
+                color: var(--bookx);
+                -webkit-transition-duration: 0.4s;
+                -moz-transition-duration: 0.4s;
+                transition-duration: 0.4s;
+                transform: translateY(-15px);
+            }
+
+            .help_div{
+                margin-bottom: 2em;
+                width: 28em;
+            }
+            .htlp_title{
+                font-size:140%;
+                margin-bottom: 0.5em;
+            }
+            .help_fun_block{
+                background-color: var(--tool-bg-color);
+                color: var(--tool-color);
+                padding: 4px 4px 4px 12px;
+                max-width: 95%;
+                border-radius: 4px;
+                margin-bottom: 0.5em;
+            }
+            .help_fun_block .title{
+                font-size:120%;
+                margin-top:0.5em;
+                margin-bottom:0.5em;
+            }
+            .help_fun_block_link_list li{
+                display:inline;
+            }
+        </style>
+
+<style  media="screen and (max-width:767px)">
+            #login_body {
+                flex-direction: column;
+                padding: 0.2em;
+            }
+
+            #login_left {
+                padding-right: 0;
+                padding-top: 6em;
+            }
+
+            #login_form_div{
+                width:100%;
+            }
+
+            #login_right {
+                margin-top: 2em;
+                margin-left: 10px;
+                margin-right: 8px;
+            }
+            .fun_block{
+                max-width: 100%;
+            }
+
+        </style>
+
+
+
 	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
-		<div class="file_list_block">
-			<div class="tool_bar">
-				<div>
-				<?php echo $_local->gui->recent_scan;?>
-				</div>
-				<div>
-				
 
-				<span class="icon_btn_div">
-					<span class="icon_btn_tip"><?php echo $_local->gui->share;?></span>
-					<button id="file_share" type="button" class="icon_btn" onclick="file_share(true)" title=" ">
-						<svg class="icon">
-							<use xlink:href="./svg/icon.svg#ic_add_person"></use>
-						</svg>
-					</button>
-				</span>
+	<div id="login_body" >
 
-				
-				<span class="icon_btn_div">				
-					<span class="icon_btn_tip"><?php echo $_local->gui->undo_shared;?></span>
-					<button id="file_unshare" type="button" class="icon_btn" onclick="file_share(false)" >
-						<svg class="icon" style="fill: var(--btn-border-color);">
-							<use xlink:href="./svg/icon.svg#ic_add_person"></use>
-						</svg>
-					</button>
-				</span>
-				<span class="icon_btn_div">
-					<span class="icon_btn_tip"><?php echo $_local->gui->add_folder;?></span>
-					<button id="add_folder" type="button" class="icon_btn" onclick="setNaviVisibility('')" title=" ">
-						<svg class="icon">
-							<use xlink:href="./svg/icon.svg#ic_add_folder"></use>
-						</svg>
-					</button>
-				</span>
-				
-				<span class="icon_btn_div">
-					<span class="icon_btn_tip"><?php echo $_local->gui->add_to_folder;?></span>
-					<button id="move_to_folder" type="button" class="icon_btn" onclick="setNaviVisibility('')" title=" ">
-						<svg class="icon">
-							<use xlink:href="./svg/icon.svg#ic_folder_move"></use>
-						</svg>
-					</button>
-				</span>
-				
-				<span class="icon_btn_div">				
-					<span class="icon_btn_tip"><?php echo $_local->gui->rename;?></span>
-					<button id="edit_title" type="button" class="icon_btn" onclick="setNaviVisibility('')" title=" ">
-						<svg class="icon">
-							<use xlink:href="./svg/icon.svg#ic_rename"></use>
-						</svg>
-					</button>
-				</span>	
-				
-				<span class="icon_btn_div">				
-					<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin;?></span>
-					<button id="to_recycle" type="button" class="icon_btn" onclick="file_del()" title=" ">
-						<svg class="icon">
-							<use xlink:href="./svg/icon.svg#ic_delete"></use>
-						</svg>
-					</button>
-				</span>	
-				
-				</div>
-			</div>
-			<div  id="file_filter" style="display:none;">
-				<div style="display:flex;justify-content: space-between;">
-					<div>
-						<select id="id_index_status"  onchange="showUserFilaList()">
-							<option value="all" >
-								<?php echo $module_gui_str['editor_dictionary']['1018'];//全部?>
-							</option>
-							<option value="share" >
-								<?php echo $module_gui_str['tools']['1017'];//已共享?>
-							</option>
-							<option value="recycle" >
-								<?php echo $module_gui_str['tools']['1007'];//回收站?>
-							</option>
-						</select>					
-					</div>
-					<div><?php echo $module_gui_str['editor']['1059'];//排序方式?>
-						<select id="id_index_orderby"  onchange="showUserFilaList()">
-							<option value="accese_time" ><?php echo $module_gui_str['editor']['1060'];//訪問?></option>
-							<option value="modify_time" ><?php echo $module_gui_str['editor']['1061'];//修改?></option>
-							<option value="create_time" ><?php echo $module_gui_str['editor']['1062'];//創建?></option>
-							<option value="title" ><?php echo $module_gui_str['editor']['1063'];//標題?></option>
-						</select>					
-						<select id="id_index_order"  onchange="showUserFilaList()">
-							<option value="DESC" ><?php echo $module_gui_str['editor']['1111'];//降序?></option>
-							<option value="ASC" ><?php echo $module_gui_str['editor']['1110'];//升序?></option>
-						</select>	
-						<button id="file_select" onclick="mydoc_file_select(true)">
-							选择
-						</button>
-					</div>
-				</div>
-				<div>
-				<input id="keyword" type="input"  placeholder='<?php echo $module_gui_str['editor']['1114'].$module_gui_str['editor']['1115'];?>'  onkeyup="file_search_keyup()"/>
-				</div>
-
-				<div>
-				<?php echo $module_gui_str['tools']['1005'];?>：<span id="tag_list"><span class="tag"><?php echo $module_gui_str['tools']['1006'];?><a>×</a></span></span><input type="input" style="width:10em;">
-				</div>
-			</div>
-			<div id="file_tools" style="display:none;">
-				<div  style="display:flex;justify-content: space-between;">
-					<div>
-						<span id="button_group_nomal" >
-						<button onclick="file_del()"><?php echo $module_gui_str['tools']['1009'];//刪除?></button>
-						<button onclick="file_share(true)"><?php echo $module_gui_str['tools']['1008'];//共享?></button>
-						<button onclick="file_share(false)"><?php echo $module_gui_str['tools']['1010'];//取消共享?></button>
-						</span>
-						<span id="button_group_recycle" style="dispaly:none">
-						<button onclick="file_remove()" style="background-color:red;"><?php echo $module_gui_str['tools']['1016'];//彻底删除?></button>
-						<button onclick="file_remove_all()"><?php echo $module_gui_str['tools']['1015'];//清空回收站?></button>
-						</span>
-					</div>
-					<div>
-						<button onclick="mydoc_file_select(false)"><?php echo $module_gui_str['editor']['1028'];//取消?></button>
-					</div>
-				</div>
-			</div>
-			<div>
-				<div class="file_list_row" style="border-top: none;">
-					<div class="file_list_col_1"><input type="checkbox" checked /></div>
-					<div class="file_list_col_2"><?php echo $_local->gui->title;?></div>
-					<div class="file_list_col_3"><?php echo $_local->gui->share;?></div>
-					<div class="file_list_col_4"><?php echo $_local->gui->time;?></div>
-					<div class="file_list_col_5"><?php echo $_local->gui->size;?></div>
-				</div>
-			</div>
-			<div id="userfilelist">
-			<?php echo $module_gui_str['editor']['1065'];?>
-			</div>
-			
+<div id="login_left">
+	<div class="help_div">
+		<div class="htlp_title">
 		</div>
+		<ul style="padding-left: 1.2em;">
+			<li><?php echo $_local->gui->pali_literature_platform;?></li>
+			<li><?php echo $_local->gui->user_data_share;?></li>
+			<li><?php echo $_local->gui->cooperate_edit;?></li>
+		</ul>
+
+	</div>
+	<div class="help_div">
+		<div class="htlp_title"><?php echo $_local->gui->start;?></div>
+		<ul style="list-style-type: none;">
+			<li><a href="studio/index.php" target="_block"><?php echo $_local->gui->newproject;?></a></li>
+			<li><a href="" target="_block">自学教程（建設中）</a></li>
+		</ul>
+	</div>
+	<div class="help_div">
+		<div class="htlp_title">
+		<?php echo $_local->gui->recent_scan;?>
+		</div>
+		<ul id="file_list" style="list-style-type: none;">
+		</ul>
+	</div>
+	<div class="help_div">
+		<div class="htlp_title">
+		<?php echo $_local->gui->help;?>
+		</div>
+		<ul style="list-style-type: none;">
+			<li><?php echo $_local->gui->function_introduce;?>&nbsp;&nbsp;&nbsp;
+				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFFNLOaZh2u3VwDYUyJuK_xa" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+					</svg>
+				</a>
+			</li>
+			<li><?php echo $_local->gui->project_introduce;?>&nbsp;&nbsp;&nbsp;
+				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFHT6UisME_cOSts5fFecK14" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+					</svg>
+				</a>
+			</li>
+			<li><?php echo $_local->gui->project_introduce_inbrief;?>&nbsp;&nbsp;&nbsp;
+				<a href="https://www.youtube.com/playlist?list=PLgavmc8e-GuWR-FKOr-7RfnUSWX82ED0q" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+					</svg>
+				</a>&nbsp;
+				<a href="" target="_block" style="display: none;">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+					</svg>
+				</a>
+			</li>
+			<li><a href="" target="_block">wikipali论坛（企劃中）</a></li>
+			<li>
+				<!--<a href="https://github.com/iapt-platform/PCD-internet1.0#wikipali-demo" target="_block">-->
+				<?php echo $_local->gui->help_doc;?>
+				</a>&nbsp;&nbsp;&nbsp;
+				<a href="https://iapt-platform.github.io/PCD-internet1.0/" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#github_logo"></use>
+					</svg>
+				</a>
+				<a href="https://gitee.com/sakya__kosalla/PCD-internet1.0#wikipali-demo" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#gitee_logo"></use>
+					</svg>
+				</a>
+			</li>
+			<li>
+				<!--<a href="https://github.com/iapt-platform/PCD-internet1.0" target="_block">-->
+				<?php echo $_local->gui->code_add;?>
+				</a>&nbsp;&nbsp;&nbsp;
+				<a href="https://github.com/iapt-platform/PCD-internet1.0" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#github_logo"></use>
+					</svg>
+				</a>
+				<a href="https://gitee.com/sakya__kosalla/PCD-internet1.0" target="_block">
+					<svg class="icon">
+						<use xlink:href="./studio/svg/icon.svg#gitee_logo"></use>
+					</svg>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>	
+
+<div id="login_right">
+
+	<div class="help_div">
+		<div  class="htlp_title">个性化设置</div>
+		<div>
+			<div class="help_fun_block">
+				<div class="title" >语言</div>
+				<div >
+				界面语言：<a>English</a> <a>简体中文</a> <a>繁体中文</a> <a>更多</a>
+				</div>
+				<div >
+				常用译文语言：<a>English</a> <a>简体中文</a> <a>繁体中文</a> <a>更多</a>
+				</div>
+				<div >
+				巴利脚本：<a>Roma</a> <a>sinhala</a> <a>mymar</a>
+				</div>
+			</div>
+			<div class="help_fun_block">
+				<div class="title" >外观</div>
+				<div >
+				颜色搭配：<a>静夜</a> <a>白色</a> <a>黄昏</a> <a>更多</a>
+				</div>
+			</div>
+		</div>
+	</div>       
+
+
+	<div class="help_div">
+		<div  class="htlp_title">
+		统计
+		<?php //echo $_local->gui->wikipali_suite;?>
+		</div>
+		<div>
+			<div class="help_fun_block">
+				<div class="title" >译经楼</div>
+				<ul class="help_fun_block_link_list">
+					<li  style="display:block;">发布连载：2</li>
+					<li style="display:block;">发布文章：12</li>
+					<li style="display:block;">私有文档：234</li>
+					<li style="display:block;">圣典百科：245</li>
+				</ul>
+			</div>
+			<div class="help_fun_block">
+				<div class="title" >藏经阁</div>
+				<ul class="help_fun_block_link_list" style="display:unset;">
+					<li style="display:block;">连载：2</li>
+					<li style="display:block;">文章：12</li>
+					<li style="display:block;">字典：245</li>
+				</ul>
+			</div>
+			<div class="help_fun_block">
+				<div class="title" >圣书院</div>
+				<ul class="help_fun_block_link_list" >
+					<li style="display:block;">创建课程：2</li>
+					<li style="display:block;">主讲课程：12</li>
+					<li style="display:block;">参与课程：245</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+		
+
+</div>	
+</div>
+
+<script>
+            function file_list(){
+                let username=getCookie("username");
+                if(username==""){
+                    $("#file_list").html("登陆后显示文件列表");
+                    return; 
+                }
+                var d=new Date();
+               
+                $.get("../studio/getfilelist.php",
+                {
+                    t:d.getTime(),
+                    keyword:"",
+                    status:"all",
+                    orderby:"accese_time",
+                    order:"DESC",
+                    currLanguage:$("#id_language").val()
+                },
+                function(data,status){
+                    var strFilelist="";
+                    let count=5;
+                    try{
+                        let file_list = JSON.parse(data);
+                        let html="";
+                        
+                        if(file_list.length<count){
+                            count=file_list.length;
+                        }
+                        for(let x=0;x<count;x++){
+                            if(file_list[x].doc_info && file_list[x].doc_info.length>1){
+                                $link="<a href='studio/editor.php?language=<?php echo $currLanguage;?>&op=opendb&fileid="+file_list[x].id+"' target='_blank'>[db]";
+                            }
+                            else{
+                                $link="<a href='studio/editor.php?language=<?php echo $currLanguage;?>&op=open&fileid="+file_list[x].id+"' target='_blank'>";
+                            }
+
+                            strFilelist += "<li>"+$link+file_list[x].title+"</a></li>";
+                        }
+                        if(file_list.length>count){
+                            strFilelist += "<li><a href='studio/' targe='_blank'>更多</a></li>";
+                        }
+                        $("#file_list").html(strFilelist);
+                    }
+                    catch(e){
+                        
+                    }
+                    
+                    
+                    
+                });
+            }
+file_list();
+</script>
 		
 	</div>
 	
@@ -261,6 +506,11 @@ else{
 	</div>
 	</div>
 	</div>
+
+
+
+
+
 </body>
 </html>
 

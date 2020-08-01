@@ -36,7 +36,7 @@ global $PDO;
 
 switch($op){
 	case "pre"://预查询
-		$dictFileName=$dir_dict_system."wordindex.db3";
+		$dictFileName=_FILE_DB_word_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		echo "<div>";
 		$query = "select word,count from wordindex where \"word_en\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')." limit 0,50";
@@ -111,7 +111,7 @@ switch($op){
 		/*查找实际出现的拼写
 
 		*/
-		$dictFileName=$dir_dict_system."wordindex.db3";
+		$dictFileName=_FILE_DB_word_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
 		$arrRealWordList = PDO_FetchAll($query);
@@ -149,7 +149,7 @@ switch($op){
 		echo "</div>";
 
 		//查找这些词出现在哪些书中
-		$dictFileName=$dir_dict_system."bookword.db3";
+		$dictFileName=_FILE_DB_BOOK_WORD_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "SELECT book,sum(count) as co FROM bookword WHERE \"wordindex\" IN $strQueryWordId  GROUP BY book LIMIT 0,217";
 		$Fetch = PDO_FetchAll($query);
@@ -184,14 +184,14 @@ switch($op){
 		//黑体字主显示区右侧开始
 		echo "<div id=\"dict_bold_right\" style='flex:7;'>";
 		//前20条记录
-		$dictFileName=$dir_dict_system."index.db3";
+		$dictFileName=_FILE_DB_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 
 		$query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId LIMIT 0,20";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
 		if($iFetch>0){
-			$dictFileName=$file_db_pali_text;
+			$dictFileName=_FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$dictFileName");			
 			for($i=0;$i<$iFetch;$i++){
 				$paliwordid=$Fetch[$i]["wordindex"];
@@ -237,7 +237,7 @@ switch($op){
 			case "bold";
 				$arrBookName=json_decode(file_get_contents("../public/book_name/sc.json"));
 				$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
-				$dictFileName=$dir_dict_system."bookword.db3";
+				$dictFileName=_FILE_DB_BOOK_WORD_;
 				PDO_Connect("sqlite:$dictFileName");
 				$wordlist=$_GET["wordlist"];
 				$booklist=$_GET["booklist"];
@@ -320,14 +320,14 @@ switch($op){
 				}
 				//查找这些词出现在哪些书中结束
 				//前20条记录
-				$dictFileName=$dir_dict_system."index.db3";
+				$dictFileName=_FILE_DB_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
 				$Fetch = PDO_FetchAll($query);
 				$iFetch=count($Fetch);
 				if($iFetch>0){
-					$dictFileName=$file_db_pali_text;
+					$dictFileName=_FILE_DB_PALITEXT_;
 					PDO_Connect("sqlite:$dictFileName");
 					for($i=0;$i<$iFetch;$i++){
 						$paliword=$Fetch[$i]["wordindex"];

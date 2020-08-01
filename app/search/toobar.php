@@ -9,7 +9,7 @@
 		.search_toolbar{
 			
 			height: initial;
-			padding: 1em 1em;
+			padding: 0.7em 1em 0 1em;;
 			background-color: var(--tool-bg-color1);
 			border-bottom: none;
 			color: var(--tool-color1);

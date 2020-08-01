@@ -30,11 +30,10 @@ $guid=GUIDv4();
 			break;
 		case "heading":
 			if($author=="templet"){
-				//$db_file = "../appdata/palicanon/templet/toc.db3";
-				$db_file = "../appdata/palicanon/pali_text/".$currBook."_pali.db3";
+				$db_file = _FILE_DB_PALITEXT_;
 			}
 			else{
-				$db_file = "../appdata/palicanon/heading/toc.db3";
+				$db_file = _FILE_DB_PALITEXT_;
 			}
 			break;
 		case "translate":
@@ -61,10 +60,10 @@ $guid=GUIDv4();
 			break;
 		case "heading":
 			if($author=="templet"){
-				$query = "SELECT * FROM \"data\" WHERE \"book\" = ".$PDO->quote($currBook)." AND \"paragraph\" = ".$PDO->quote($currParagraph);
+				$query = "SELECT * FROM \"pali_text\" WHERE \"book\" = ".$PDO->quote($currBook)." AND \"paragraph\" = ".$PDO->quote($currParagraph);
 			}
 			else{
-				$query = "SELECT * FROM \"data\" WHERE \"book\" = ".$PDO->quote($currBook)." AND \"par_num\" = ".$PDO->quote($currParagraph)." AND \"language\" = ".$PDO->quote($language)." AND \"author\" = ".$PDO->quote($author)." AND \"editor\" = ".$PDO->quote($editor)." AND \"edition\" = ".$PDO->quote($edition)." AND \"subver\" = ".$PDO->quote($subver);;
+				$query = "SELECT * FROM \"pali_text\" WHERE \"book\" = ".$PDO->quote($currBook)." AND \"par_num\" = ".$PDO->quote($currParagraph)." AND \"language\" = ".$PDO->quote($language)." AND \"author\" = ".$PDO->quote($author)." AND \"editor\" = ".$PDO->quote($editor)." AND \"edition\" = ".$PDO->quote($edition)." AND \"subver\" = ".$PDO->quote($subver);;
 			}
 			break;
 		case "translate":

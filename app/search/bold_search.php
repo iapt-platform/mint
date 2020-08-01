@@ -1,5 +1,6 @@
 <?php
 //查询参考字典
+require_once '../path.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
 require_once "../public/_pdo.php";
@@ -82,7 +83,7 @@ switch($op){
 			$strQueryWord="('{$word}')";
 		}
 
-		$dictFileName=$dir_palicanon."bold.db3";
+		$dictFileName=_FILE_DB_bold_;
 		PDO_Connect("sqlite:$dictFileName");
 		//查询符合的记录数
 		$query = "select count(*) as co from bold where \"word2\" in  $strQueryWord";
@@ -269,7 +270,7 @@ switch($op){
 		switch($target){
 			case "bold";
 				$arrBookName=json_decode(file_get_contents("../public/book_name/sc.json"));
-				$dictFileName=$dir_palicanon."bold.db3";
+				$dictFileName=_FILE_DB_bold_;
 				PDO_Connect("sqlite:$dictFileName");
 				$wordlist=$_GET["wordlist"];
 				$booklist=$_GET["booklist"];

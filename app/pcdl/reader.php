@@ -515,7 +515,7 @@ else{
 	}
 	
 	//先查pali text 因为要获取段落标题级别
-	$db_file = _DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+	$db_file = _FILE_DB_PALITEXT_;
 	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 
 	if($par_begin==-1){

@@ -54,7 +54,7 @@ else{
 	echo "not login";
 	exit;
 }
-	$db_file = "{$dir_user_base}message.db";//消息轉入user文件夾，方便升級
+	$db_file = _FILE_DB_MESSAGE_;//消息轉入user文件夾，方便升級
 	PDO_Connect("sqlite:$db_file");
 
 if($op=="send"){

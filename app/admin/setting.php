@@ -102,7 +102,7 @@ $album_power["2"]="编辑";
 			echo "</table>";
 			break;
 		case "album":
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");		
 			echo "<h2>Album</h2>";
 

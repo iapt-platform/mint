@@ -16,7 +16,7 @@ include "../pcdl/html_head.php";
 
 		.search_toolbar{
 			height: initial;
-			padding: 1em 1em;
+			padding: 0.6em 1em 0.1em 1em;
 			background-color: var(--tool-bg-color1);
 			border-bottom: none;
 		}
@@ -40,7 +40,7 @@ include "../pcdl/html_head.php";
             flex:6;
             padding:0.5em 1.5em;
         }
-        $dict_user{
+        #dict_user{
             flex:2;
         }
 		.dict_word_card{
@@ -74,6 +74,44 @@ include "../pcdl/html_head.php";
 			font-weight: unset;
 			display: block;
 		}
+
+		/*for word split part */
+		.dropdown_ctl{
+            display:inline-block;
+			margin-right: 0.7em;
+        }
+        .dropdown_ctl>.content{
+            display:flex;
+			border: 1px solid var(--border-line-color);
+    		border-radius: 99px;
+        }
+        .dropdown_ctl>.menu{
+            position:absolute;
+			box-shadow: 0 0 10px rgba(0,0,0,0.15);
+            display:none;
+        }
+        .dropdown_ctl>.menu{
+		background-color: white;
+        }
+        .dropdown_ctl>.content>.main_view>part{
+            margin:0 0.5em;
+            color:cornflowerblue;
+            cursor: pointer;
+        }
+		.dropdown_ctl>.menu>.part_list {
+			padding: 5px;
+			cursor: pointer;
+		}
+		.dropdown_ctl>.menu>.part_list:hover {
+			background-color:azure;
+		}
+		.dropdown_ctl>.content>.more_button {
+			background-color: var(--btn-color);
+			min-width: 1.4em;
+			text-align: center;
+			border-radius: 99px;
+			cursor: pointer;
+		}
 	</style>
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -81,7 +119,12 @@ include "../pcdl/html_head.php";
 				<div ></div>
 				<div>
 					<div>
-						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()">
+						<div>
+							<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
+						</div>
+						<div id="word_parts">
+							<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
+						</div>
 					</div>
 					
 					<div id="pre_search_result" style="background-color: var(--btn-color);z-index: 50;">
@@ -95,11 +138,11 @@ include "../pcdl/html_head.php";
 						</div>
 					</div>
                 </div>
-				<button>强力拆分</button>
+				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">强力拆分</button>
                 <div ></div>
 			</div>
 			<div style="display:block;z-index: 5;text-align:center;">
-            <div id="input_parts"></div>
+            
 			</div>
 	</div>	
 	<!--tool bar end -->

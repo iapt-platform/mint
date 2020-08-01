@@ -415,10 +415,11 @@
 "reader":"wikipāli reader",
 "folk":"folk",
 "and":"&nbsp;and&nbsp;",
-"":"",
-"":"",
-"":"",
-"":"",
+"digest":"digest",
+"composition":"composition",
+"corpus_statistics":"corpus statistics",
+"studio":"Studio",
+"library":"Library",
 "":""
 
 	},

@@ -80,7 +80,7 @@ $countInsert=0;
 $wordlist=array();
 
 
-$db_file = "../appdata/palicanon/word_analysis.db3";
+$db_file = _FILE_DB_STATISTICS_;
 $bookstring="";
 	for($i=0;$i<count($boolList);$i++)
 	{

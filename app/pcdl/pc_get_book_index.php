@@ -9,11 +9,10 @@ $wordlist=array();
 $outXml = "<index>";
 echo $outXml;
 
-	//$db_file = "../appdata/palicanon/templet/toc.db3";
-	$db_file = "../appdata/palicanon/pali_text/".$currBook."_pali.db3";
+	$db_file = _FILE_DB_PALITEXT_;
 		//open database
 	PDO_Connect("sqlite:$db_file");
-		$query = "select * FROM data where \"book\"=".$PDO->quote($currBook);
+		$query = "select * FROM pali_text where \"book\"=".$PDO->quote($currBook);
 
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
@@ -25,16 +24,9 @@ echo $outXml;
 				$outXml = $outXml."<par>".$Fetch[$i]["paragraph"]."</par>";
 				$outXml = $outXml."<level>".$Fetch[$i]["level"]."</level>";
 				$outXml = $outXml."<class>".$Fetch[$i]["class"]."</class>";
-				//if($Fetch[$i]["level"]==0)
-				{
-					$outXml = $outXml."<title>".mb_substr($Fetch[$i]["text"],0,50,"UTF-8")."</title>";
-				}
-				//else{
-				//	$outXml = $outXml."<title>".$Fetch[$i]["text"]."</title>";
-				//}
-				$outXml = $outXml."<language>".$Fetch[$i]["language"]."</language>";
-				//$outXml = $outXml."<author>".$Fetch[$i]["author"]."</author>";
-				$outXml = $outXml."<edition>".$Fetch[$i]["edition"]."</edition>";
+				$outXml = $outXml."<title>".mb_substr($Fetch[$i]["text"],0,50,"UTF-8")."</title>";
+				$outXml = $outXml."<language>pali</language>";
+				$outXml = $outXml."<edition>CSCD4</edition>";
 				$outXml = $outXml."<subver></subver>";
 				$outXml = $outXml."</paragraph>";			
 				echo $outXml;

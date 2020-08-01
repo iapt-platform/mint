@@ -1,7 +1,8 @@
 ﻿<?php
-require 'checklogin.inc';
-require '../public/config.php';
-require "../public/_pdo.php";
+require_once "../path.php";
+require_once 'checklogin.inc';
+require_once '../public/config.php';
+require_once "../public/_pdo.php";
 
 if(isset($_GET["language"])){$currLanguage=$_GET["language"];}
 else{$currLanguage="en";}
@@ -189,7 +190,7 @@ $album_power["2"]="编辑";
 			}
 			$iOnePage=300;
 			
-			$db_file = $_file_db_wbw;
+			$db_file = _FILE_DB_WBW_;
 			PDO_Connect("sqlite:$db_file");
 			$query = "select count(word_index) as co  from user_index where user_id={$UID}";
 			$allWord = PDO_FetchOne($query);
@@ -288,7 +289,7 @@ $album_power["2"]="编辑";
 			}
 			$iOnePage=300;
 			
-			$dictFileName=$dir_dict_term."dhammaterm.db";
+			$dictFileName=_FILE_DB_TERM_;
 			PDO_Connect("sqlite:$dictFileName");
 
 			$query = "select count(*) as co  from term where owner= ".$PDO->quote($USER_NAME);
@@ -365,7 +366,7 @@ $album_power["2"]="编辑";
 			echo "<a href='login.php?op=logout'>Logout</a>";
 			break;
 		case "album":
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");		
 			if(isset($_GET["id"])){
 				if(isset($_GET["power"])){

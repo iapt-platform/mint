@@ -3794,6 +3794,7 @@ border-bottom: 2px solid red;
 .edit_detail_span{
     display: inline-table;
     min-width: 5em;
+    flex: 4;
 }
 .black_background{
     background-color: #545454;
@@ -4371,4 +4372,7 @@ note {
     display:flex;
     height: 100%;
 	position: fixed;
+}
+.input_bar{
+    flex: 9;
 }

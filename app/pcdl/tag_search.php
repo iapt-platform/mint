@@ -16,7 +16,7 @@ else{
 	$order="";
 }
 
-	$db_file = $dir_palicannon.'res.db3';
+	$db_file = _FILE_DB_RES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 	$tag_string='{'.$tag.'}';
 	$query = "select * from 'index' where tag like '%$tag_string%' ";

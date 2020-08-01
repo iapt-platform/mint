@@ -23,7 +23,9 @@
     display: inline-flex;
 }
 
-
+.toolgroup1 {
+	display: flex;
+}
 
 /* 下拉内容 (默认隐藏) */
 .dropdown-content {
@@ -147,29 +149,38 @@
     max-width: 100%;
     width: 50em;
 	display:none;
-}
-.pre_serach_block{
-	border-bottom: 1px solid var(--shadow-color);
-    padding: 5px 8px;
-}
-.pre_serach_block_title{
-	display:flex;
-	justify-content: space-between;
-}
-.pre_serach_content{
-	padding: 4px 4px 4px 15px;
-}
+	}
+	.pre_serach_block{
+		border-bottom: 1px solid var(--shadow-color);
+		padding: 5px 8px;
+	}
+	.pre_serach_block_title{
+		display:flex;
+		justify-content: space-between;
+	}
+	.pre_serach_content{
+		padding: 4px 4px 4px 15px;
+	}
 
-.lab_tab{
-	display:flex;
-}
-.lab_tab>li{
-	padding:5px;
-}
-
-#user_info {
-		background-color: var(--bg-color);
-		color: var(--main-color);
+	.lab_tab{
+		display:flex;
+	}
+	.lab_tab>li{
+		padding:5px;
+	}
+	
+	.head_nav_dropdown:hover  {
+		color: var(--btn-border-color);
+	}
+	#user_info {
+			background-color: var(--bg-color);
+			color: var(--main-color);
+	}
+	.icon {
+		fill: var(--btn-color);
+	}
+	.head_nav_dropdown_content{
+		padding: 0.1em 0.5em 0.1em 0;
 	}
 	</style>
 		<!-- tool bar begin-->
@@ -185,35 +196,48 @@
 						</a>
 
 						<div class="head_nav_dropdown">
-							Libary <span style="margin-left:8px;font-size:20%;">▼</span>
-							<ul class="head_nav_dropdown_content" style="margin-top:0;">
-								<li><a class="nav_link" href="../pcdl">Libary</a></li>
-								<li><a class="nav_link" href="../studio" target="_blank">Studio</a></li>
+						
+						<span style="padding: 0.1em 0 0.1em 0.5em;display: flex;">
+							<b><?php echo $_local->gui->library; ?></b>
+							<svg style="width:1em;height:1em;" xmlns="http://www.w3.org/2000/svg" t="1596126410137" class="icon" viewBox="0 0 1025 1024" version="1.1" p-id="3309">
+								<path d="M186.1116047 187.53647595l648.82527161 0L834.93687631 836.36174757 186.1116047 187.53647595z" p-id="3310"/>
+							</svg>
+						</span>
+							<ul class="head_nav_dropdown_content" style="margin-top:0;margin-left:0; ">
+								<!--<li><a class="nav_link" href="../pcdl"><?php echo $_local->gui->library; ?></a></li>-->
+								<li><a class="nav_link" href="../studio" target="_blank"><b><?php echo $_local->gui->studio; ?></b></a></li>
 							</ul>
 						</div>
 					</li>
-					<li><a class="nav_link" href="../palicanon">三藏</a></li>
-					<li><a class="nav_link" href="../course">课程</a></li>
-					<li><a class="nav_link" href="../wiki">百科</a></li>
-					<li><a class="nav_link" href="../dict">字典</a></li>
-					<li class="nav_link head_nav_dropdown" id="">
-						<div>更多</div>
+					<li><a class="nav_link" href="../palicanon"><?php echo $_local->gui->pali_canon; ?></a></li>
+					<li><a class="nav_link" href="../course"><?php echo $_local->gui->lesson; ?></a></li>
+					<li><a class="nav_link" href="../wiki"><?php echo $_local->gui->encyclopedia; ?></a></li>
+					<li><a class="nav_link" href="../dict"><?php echo $_local->gui->dictionary; ?></a></li>
+					<li class="nav_link head_nav_dropdown" >
+						<div><?php echo $_local->gui->more; ?></div>
 						<ul class="head_nav_dropdown_content">
-							<li><a class="nav_link" href="../pc">书摘</a></li>
-							<li><a class="nav_link" href="../course">著作</a></li>
-							<li><a class="nav_link" href="../wiki">佛历</a></li>
-							<li><a class="nav_link" href="../wiki">巴利编码转换</a></li>
-							<li><a class="nav_link" href="../statistics">字符统计</a></li>
+							<li><a class="nav_link" href="../pc"><?php echo $_local->gui->digest;//书摘?></a></li>
+							<li><a class="nav_link" href="../course"><?php echo $_local->gui->composition;//著作?></a></li>
+							<li><a class="nav_link" href="../calendar"><?php echo $_local->gui->buddhist_calendar;?></a></li>
+							<li><a class="nav_link" href="../tools/unicode.html"><?php echo $_local->gui->code_convert;//巴利编码转换?></a></li>
+							<li><a class="nav_link" href="../statistics"><?php echo $_local->gui->corpus_statistics;?></a></li>
 						</ul>
 					</li>
 				</ul>			
 			</div>
 
-			<div >
+			<div>
 			</div>
 			<div class="toolgroup1">
 			<!--<input id="search_input" type="input" placeholder="搜索"  style="margin-left: 0.5em;padding:4px;width: 40em;max-width: 80%" >-->
-			<a href="../search">[搜索]</a>
+			<span>
+				<a href="../search">
+					<svg  style="height: 4em; fill: var(--btn-color);">
+						<use xlink:href="../pcdl/img/search_bar.svg#search_bar"></use>
+					</svg>
+				</a>
+			</span>
+
 			<?php 
 
 			include "../ucenter/user.php";

@@ -18,7 +18,7 @@ else{
 	exit;
 }
 _load_book_index();
-	$db_file = $dir_palicanon.'res.db3';
+	$db_file = _FILE_DB_RES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 switch($op){
 	case "pre":
@@ -44,8 +44,8 @@ switch($op){
 	$Fetch = PDO_FetchAll($query);
 	$iFetch=count($Fetch);
 	if($iFetch>0){
-		$dictFileName=$_file_db_pali_text;
-			PDO_Connect("sqlite:$dictFileName");	
+		$dictFileName = _FILE_DB_PALITEXT_;
+		PDO_Connect("sqlite:$dictFileName");	
 		$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
 		echo "<div class='search_list_div'><div class='search_type'>标题({$count})</div></div>";
 		for($i=0;$i<$iFetch;$i++){
@@ -97,7 +97,7 @@ switch($op){
 			echo "</div>";
 		}
 	}
-	$db_file = $dir_palicanon.'res.db3';
+	$db_file = _FILE_DB_RES_INDEX_;
 	PDO_Connect("sqlite:$db_file");	
 	//查标签
 	$query = "select count(*) from 'index' where tag like '%$word%'";

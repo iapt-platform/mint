@@ -14,6 +14,14 @@ include "../pcdl/html_head.php";
         .dict_bold_main{
             display:flex;
         }
+        .parent_fix{
+            height: 100%;
+            position: absolute;
+        }
+        .kid_scroll{
+            overflow: scroll;
+        }
+
     </style>
 	<script language="javascript" src="bold.js"></script>
 

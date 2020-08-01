@@ -95,9 +95,9 @@ else{
 				echo "</div>";
 				
 				//目录
-				$db_file = _DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+				$db_file = _FILE_DB_PALITEXT_;
 				PDO_Connect("sqlite:$db_file");
-				$query = "select * from 'data' where level>'0' and level<8 ";
+				$query = "select * from 'pali_text' where book = '{$book}' and ( level>'0' and level<8 ) ";
 				$Fetch_Toc = PDO_FetchAll($query);
 				$iFetchToc=count($Fetch_Toc);
 				if($iFetchToc>0){
@@ -141,9 +141,9 @@ else{
 		}
 		else{
 			//查书中的一个段
-			$db_file = _DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+			$db_file = _FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$db_file");
-			$query = "select text from 'data' where paragraph=$paragraph ";
+			$query = "select text from 'pali_text' where book= '{$book}' and  paragraph= '{$paragraph}' ";
 			$res_title = PDO_FetchOne($query);
 			echo "<div id='album_info_head'>";
 			echo "<h2>$res_title</h2>";
@@ -196,9 +196,9 @@ else{
 			}
 			
 			//目录
-			$db_file =_DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+			$db_file =_FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$db_file");
-			$query = "select * from 'data' where level>'0' and level<8 and paragraph>=$paragraph ";
+			$query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
 			
 			$Fetch_Toc = PDO_FetchAll($query);
 			$iFetchToc=count($Fetch_Toc);
@@ -297,9 +297,9 @@ else{
 					case 1:
 					case 2:
 					case 6:
-					$db_file = _DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+					$db_file = _FILE_DB_PALITEXT_;
 					PDO_Connect("sqlite:$db_file");
-					$query = "select * from 'data' where level>'0' and level<8 ";
+					$query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 ";
 					break;
 					case 3:
 						$db_file = '../'.$album_file_name;
@@ -415,9 +415,9 @@ else{
 					case 1:
 					case 2:
 					case 6:
-						$db_file = _DIR_PALICANON_PALITEXT_."/p$book"."_pali.db3";
+						$db_file =_FILE_DB_PALITEXT_;
 						PDO_Connect("sqlite:$db_file");
-						$query = "select * from 'data' where level>'0' and level<8 and paragraph>=$paragraph ";
+						$query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
 						break;
 					case 3:
 						$db_file = "../{$album_file_name}";

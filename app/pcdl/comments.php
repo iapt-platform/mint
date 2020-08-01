@@ -1,5 +1,5 @@
 <?php
-include "./config.php";
+include "../path.php";
 include "./_pdo.php";
 if(isset($_POST["album"])){
 	$album=$_POST["album"];
@@ -32,7 +32,7 @@ else{
 	echo "no text";
 	exit;
 }
-	$db_file =  $dir_palicannon.'comments.db3';
+	$db_file =  _FILE_DB_COMMENTS_;
 	PDO_Connect("sqlite:$db_file");
 
 	// 开始一个事务，关闭自动提交

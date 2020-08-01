@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿<?php 
+/*
+用拆分好的三藏数据 生成模板库
+*/
+?>
+<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -6,7 +11,8 @@
 <h2>Insert to DB</h2>
 <p><a href="index.php">Home</a></p>
 <?php
-include "./_pdo.php";
+require_once '../public/_pdo.php';
+require_once '../path.php';
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_insert_templet.php" method="get">
@@ -103,6 +109,7 @@ $query="CREATE INDEX 'search' ON \"main\" (\"book\", \"paragraph\", \"wid\" ASC)
 if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
 	while(($data=fgetcsv($fp,0,','))!==FALSE){
 		//id,wid,book,paragraph,word,real,type,gramma,mean,note,part,partmean,bmc,bmt,un,style,vri,sya,si,ka,pi,pa,kam
+		
 		$params=array($data[0],
 					 mb_substr($data[2],1),
 					 $data[3],

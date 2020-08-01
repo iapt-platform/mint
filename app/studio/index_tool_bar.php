@@ -20,7 +20,7 @@
 						<?php echo $_local->gui->pali_canon;?>
 					</span>
 				</li>
-				<li id="recent_scan" onclick="goto_url(this,'../studio/index.php?language=<?php echo $currLanguage; ?>')">
+				<li id="recent_scan" onclick="goto_url(this,'../studio/index_recent.php?language=<?php echo $currLanguage; ?>')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#recent_scan"></use>
@@ -63,11 +63,12 @@
 				<li id="course"  onclick="goto_url(this,'../course/my_course_index.php')">
 					<span  class="navi_icon">
 						<svg class="icon">
-							<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>
+							<use xlink:href="../studio/svg/icon.svg#class_video"></use>
 						</svg>	
 					</span>	
 					<span class="navi_text">
-					课程
+					<?php echo $_local->gui->lesson;?>
+					
 					</span>
 				</li>
 			</ul>
@@ -76,7 +77,7 @@
 		<!-- tool bar begin-->
 		<div class='index_toolbar'>
 			<div id="index_nav">
-			<svg class="icon" style="    fill: #f1ca23;height: 2em;width: 8.5em;">
+			<svg class="icon" style="height: 3.5em;width: 15em;padding-top: 15px;">
 				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
 			</svg>
 			</div>
@@ -104,7 +105,9 @@
 							</div>
 							<div id="pre_search_word"  class="pre_serach_block">
 								<div id="pre_search_word_title"   class="pre_serach_block_title">
-									<div id="pre_search_word_title_left">群组</div>
+									<div id="pre_search_word_title_left">
+									<?php echo $_local->gui->group;?>
+									</div>
 									<div id="pre_search_word_title_right"></div>								
 								</div>
 								<div id="pre_search_word_content"   class="pre_serach_content">
