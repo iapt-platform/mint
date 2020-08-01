@@ -1,0 +1,9 @@
+# dependencies
+/node_modules/
+/yarn.lock
+
+# production
+/dist/
+
+# umi
+/src/.umi
