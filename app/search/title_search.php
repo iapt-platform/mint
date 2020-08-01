@@ -1,8 +1,8 @@
 <?php
 //全文搜索
+require_once '../path.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
-require_once "../public/config.php";
 require_once "../public/_pdo.php";
 require_once "../public/load_lang.php";//语言文件
 require_once "../public/function.php";
@@ -280,7 +280,7 @@ switch($op){
 				$time_start=microtime_float();
 
 
-				$dictFileName=$dir_dict_system."index.db3";
+				$dictFileName=_FILE_DB_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";

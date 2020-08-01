@@ -30,9 +30,15 @@
 	#user_info_welcome2{
 		text-align:right;
 	}
+	#user_bar{
+		border: 2px solid var(--btn-border-color);
+		border-radius: 99px;
+		color: var(--btn-color);
+		padding: 2px 2px 2px 15px;
+	}
 	</style>
-		<div class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
-			<div style="    border: 1px solid var(--btn-border-color);border-radius: 99px;padding-left: 10px;color: var(--btn-color);">
+		<div style="margin:auto;" class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
+			<div id="user_bar" >
 				<span>
 				<?php
 				if(isset($_COOKIE["userid"])){
@@ -60,7 +66,7 @@
 				<a href="../studio/setting.php" target="_blank">
 					<span>
 					<svg class="icon">
-						<use xlink:href="svg/icon.svg#ic_settings"></use>
+						<use xlink:href="../studio/svg/icon.svg#ic_settings"></use>
 					</svg>
 						<?php echo $_local->gui->setting;//用户设置?>
 					</span>
@@ -68,14 +74,14 @@
 				<a href="../sync" target="_blank">
 					<span>
 					<svg class="icon">
-						<use xlink:href="svg/icon.svg#ic_autorenew_24px"></use>
+						<use xlink:href="../studio/svg/icon.svg#ic_autorenew_24px"></use>
 					</svg>
 						<?php echo $_local->gui->sync;//同步数据?>
 					</span>
 				</a>
 				<a href='../ucenter/index.php?op=logout'>
 					<svg class="icon">
-						<use xlink:href="svg/icon.svg#ic_exit_to_app_24px"></use>
+						<use xlink:href="../studio/svg/icon.svg#ic_exit_to_app_24px"></use>
 					</svg>
 					<?php echo $_local->gui->logout;?>
 				</a>

@@ -39,10 +39,10 @@ echo "<h2>$from</h2>";
 			$edition1=$Fetch[$i]["edition1"];
 			$type=$Fetch[$i]["type"];
 
-			$db_file = "../appdata/palicanon/pali_text/p".$book."_pali.db3";
+			$db_file = _FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$db_file");
 	
-			$query="select * from data where level > 0 and level < 8";
+			$query="select * from pali_text where book = '{$book}' and level > 0 and level < 8";
 			$title_data = PDO_FetchAll($query);
 			echo  "par count:".count($title_data)."<br>";
 			$par_list="";
@@ -59,7 +59,7 @@ echo "<h2>$from</h2>";
 			
 			
 			
-			$db_file = $dir_palicannon.'res.db3';
+			$db_file =_FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");			
 			$query="select * from album where guid = '$guid'";
 			$search_album = PDO_FetchAll($query);

@@ -9,7 +9,7 @@ require_once "../public/function.php";
 function render_book_list($strWordlist,$booklist=null){
 	//查找这些词出现在哪些书中
 	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
-	$dictFileName=$GLOBALS['dir_dict_system']."bookword.db3";
+	$dictFileName=_FILE_DB_BOOK_WORD_;
 	PDO_Connect("sqlite:$dictFileName");	
 	if(isset($booklist)){
 		foreach($booklist as $oneBook){

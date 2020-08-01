@@ -118,7 +118,7 @@ switch($op){
 				$dict_list[$guid]=$Fetch[$i]["owner"];
 				echo "<div class='dict_word'>";
 				echo "<a name='ref_dict_$guid'></a>";
-				echo"<div class='dict'>$word</div>";
+				echo "<div class='dict'>$word</div>";
 				echo "<div id='term_dict_my_$guid'>";
 				echo "<div class='mean'>".$mean."</div>";
 				echo "<div class='other_mean'>".$Fetch[$i]["other_meaning"]."</div>";
@@ -127,30 +127,45 @@ switch($op){
 				//编辑词条表单
 				echo "<div id='term_dict_my_edit_$guid' style='display:none'>";
 				echo "<input type='hidden' id='term_edit_word_$guid' value='$word' />";
-				echo "<div class='mean'><input type='input' id='term_edit_mean_$guid'  placeholder='".$module_gui_str['editor']['1010']."'value='$mean' /></div>";//'意思'
-				echo "<div class='other_mean'><input type='input' id='term_edit_mean2_$guid'  placeholder=".$module_gui_str['editor']['1120']." value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
-				echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$module_gui_str['editor']['1043']."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
+				echo "<div class='mean'><input type='input' id='term_edit_mean_$guid'  placeholder='".$_local->gui->g_mean."'value='$mean' /></div>";//'意思'
+				echo "<div class='other_mean'><input type='input' id='term_edit_mean2_$guid'  placeholder=".$_local->gui->other_meaning." value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
+				echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$_local->gui->note."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
 				echo "</div>";
 				echo "<div id='term_edit_btn1_$guid'>";
-				echo "<button onclick=\"term_apply('$guid')\">".$module_gui_str['editor_layout']['1003']."</button>";//Apply
-				echo "<button onclick=\"term_edit('$guid')\">".$module_gui_str['editor']['1002']."</button>";//Edit
+				echo "<button onclick=\"term_apply('$guid')\">".$_local->gui->apply."</button>";//Apply
+				echo "<button onclick=\"term_edit('$guid')\">".$_local->gui->edit."</button>";//Edit
 				echo "</div>";
 				echo "<div id='term_edit_btn2_$guid'  style='display:none'>";
-				echo "<button onclick=\"term_data_esc_edit('$guid')\">".$module_gui_str['editor']['1028']."</button>";//Cancel
-				echo "<button onclick=\"term_data_save('$guid')\">".$module_gui_str['editor']['1017']."</button>";//保存
+				echo "<button onclick=\"term_data_esc_edit('$guid')\">".$_local->gui->cancel."</button>";//Cancel
+				echo "<button onclick=\"term_data_save('$guid')\">".$_local->gui->cancel."</button>";//保存
 				echo "</div>";
 				echo "</div>";
 			}
 		}
 		//新建词条
 		echo "<div class='dict_word'>";
-		echo "<div class='dict'>".$module_gui_str['editor']['1121']."</div>";//New Techinc Term
-		echo "<div class='mean'>巴利拼写：<input type='input' placeholder=".$module_gui_str['editor']['1119']." id='term_new_word' value='{$word}' /></div>";//'拼写'
-		echo "<div class='mean'>意思<input type='input' placeholder='".$module_gui_str["editor"]["1010"]."' id='term_new_mean'/></div>";//'意思'
-		echo "<div class='other_mean'>第二意思：<input type='input'  placeholder='".$module_gui_str['editor']['1120']."' id='term_new_mean2'/></div>";//'备选意思（可选项）'
-		echo "<div class='tag'>分类：<input type='input'  placeholder='".$module_gui_str['tools']['1005']."' id='term_new_tag'/></div>";//'标签'
-		echo "<div class='note'>注解：<textarea width='100%' height='3em'  placeholder='".$module_gui_str['editor']['1043']."' id='term_new_note'></textarea></div>";//'注解'
-		echo "<button onclick=\"term_data_save('')\">".$module_gui_str['editor']['1017']."</button>";//保存
+		echo "<div class='dict'>".$_local->gui->new_technic_term."</div>";//New Techinc Term
+		echo "<div class='mean'>";
+		echo "<span>".$_local->gui->spell."：</span>";
+		echo "<input type='input' placeholder=".$_local->gui->spell." id='term_new_word' value='{$word}' />";
+		echo "</div>";//'拼写'
+		echo "<div class='mean'>";
+		echo "<span>".$_local->gui->g_mean."：</span>";
+		echo "<input type='input' placeholder='".$_local->gui->g_mean."' id='term_new_mean'/>";
+		echo "</div>";//'意思'
+		echo "<div class='other_mean'>";
+		echo "<span>".$_local->gui->other_meaning."：</span>";
+		echo "<input type='input'  placeholder='".$_local->gui->other_meaning."' id='term_new_mean2'/>";
+		echo "</div>";//'备选意思（可选项）'
+		echo "<div class='tag'>";
+		echo "<span>".$_local->gui->tag."：</span>";
+		echo "<input type='input'  placeholder='".$_local->gui->tag."' id='term_new_tag'/>";
+		echo "</div>";//'标签'
+		echo "<div class='note'>";
+		echo "<span>".$_local->gui->note."：</span>";
+		echo "<textarea width='100%' height='3em'  placeholder='".$_local->gui->note."' id='term_new_note'></textarea>";
+		echo "</div>";//'注解'
+		echo "<button onclick=\"term_data_save('')\">".$_local->gui->save."</button>";//保存
 		echo "</div>";
 
 		
@@ -167,7 +182,7 @@ switch($op){
 				$dict_list[$guid]=$Fetch[$i]["owner"];
 				echo "<div class='dict_word'>";
 				echo "<a name='ref_dict_$guid'></a>";
-				echo"<div class='dict'>".$Fetch[$i]["owner"]."</div>";
+				echo "<div class='dict'>".$Fetch[$i]["owner"]."</div>";
 				echo "<div class='mean'>".$mean."</div>";
 				echo "<div class='other_mean'>".$Fetch[$i]["other_meaning"]."</div>";
 				echo "<div class='note'>".$Fetch[$i]["note"]."</div>";
@@ -221,7 +236,7 @@ switch($op){
 
 		echo "<div id='dictlist'>";
 		foreach($dict_list as $x=>$x_value) {
-		  echo "<a href='#ref_dict_$x'>$x_value</a><br/>";
+			echo "<a href='#ref_dict_$x'>$x_value</a><br/>";
 		}
 		echo "</div>";
 		

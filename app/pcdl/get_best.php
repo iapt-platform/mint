@@ -24,7 +24,7 @@ else{
 	echo "no op";
 	exit;
 }
-	$db_file = $dir_palicanon.'res.db3';
+	$db_file = _FILE_DB_RES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 	switch($op){
 		case "all":

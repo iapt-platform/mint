@@ -159,6 +159,10 @@ else{$currDevice="computer";}
 	.left_panal_content{
 		padding: 8px 0 8px 3.2em;
 	}
+	#svg_parent2{
+		width: 1em;
+		margin-left: -1em;
+	}
 	</style>
 	
 	<!--左侧工具栏-->
@@ -575,7 +579,7 @@ foreach($plugin_list as $info){
 				<!-- 意思 -->
 				<div class="edit_detail_p">
 					<span class="edit_detail_span"><?php echo $_local->gui->g_mean;?>：</span>
-					<input type="text" id="input_meaning" value="" name="in_meaning">
+					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
@@ -587,7 +591,7 @@ foreach($plugin_list as $info){
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
 					<span class="edit_detail_span"><?php echo $_local->gui->factor;?>：</span>
-					<input type="text" id="input_org" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
+					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
@@ -599,21 +603,23 @@ foreach($plugin_list as $info){
 				<!-- 拆分意思 -->
 				<div class="edit_detail_p" >
 					<span class="edit_detail_span"><?php echo $_local->gui->f_mean;?>：</span>
-					<div id="input_org_select" style="width:80%; display:inline-flex;"></div>
-					<input type="text" id="input_om" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
+					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
+					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
 					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>				
 					<p><input type="text" id="input_case" value="" name="in_case" onblur="input_org_switch('input_case','input_select_case')" ></p>
-					<div id="input_select_case" style="width:80%; display:inline-flex;">
+					<div id="input_select_case" class="input_bar" style="width:80%; display:inline-flex;">
 						<div style="display:inline-flex;">
 							<span></span>
 							<span></span>
 							<span></span>
 							<span></span>
 						</div>
-						<button style="margin-left:auto; display:none;" onclick="input_org_switch('input_select_case','input_case')"><?php echo $_local->gui->source;?></button>
+						<button style="margin-left:auto; display:none;" onclick="input_org_switch('input_select_case','input_case')">
+							<?php echo $_local->gui->source;?>
+						</button>
 						<div class="case_dropdown">
 							<svg class="edit_icon">
 								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
@@ -650,7 +656,7 @@ foreach($plugin_list as $info){
 					</svg>
 				</span>
 					<span class="edit_detail_span"><?php echo $_local->gui->parent;?>：</span>
-					<input type="text" id="id_text_parent"  onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
+					<input type="text" id="id_text_parent" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
 					<div class="case_dropdown">
 						<svg class="edit_icon">
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
@@ -663,14 +669,14 @@ foreach($plugin_list as $info){
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
 						<span style="padding-right: 4px;">┕</span>
-						<span id="parent_grammar">pp.</span>
+						<span id="parent_grammar">.ppa.</span>
 						<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
 							<a onclick="edit_parent_grammar_changed(this)">pp.</a>
 							<a onclick="edit_parent_grammar_changed(this)">pr.p.</a>				
 							<a onclick="edit_parent_grammar_changed(this)">fpp.</a>
 						</div>
 					</div>
-					<input type="text" id="id_text_prt_prt"  onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
+					<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
 					<div class="case_dropdown">
 						<svg class="edit_icon">
 							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>

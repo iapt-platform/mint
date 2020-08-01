@@ -12,7 +12,7 @@
 <?php
 //工程文件操作
 //建立，
-require_once '../public/config.php';
+require_once '../path.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../public/load_lang.php";
@@ -89,7 +89,7 @@ switch($op){
 			$language=$res[$iRes]->language;
 			$author=$res[$iRes]->author;
 			
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");
 			$query = "select guid,owner from 'album' where id='{$res_album_id}'";
 			$Fetch = PDO_FetchAll($query);
@@ -111,7 +111,7 @@ switch($op){
 					$album_type=$get_res_type;
 					//获取段落层级和标题
 					$para_title=array();
-					PDO_Connect("sqlite:$_file_db_pali_text");
+					PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 					$query="SELECT * FROM pali_text WHERE \"book\" = ".$PDO->quote($res_book)." AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
 					$sth = $PDO->prepare($query);
 					$sth->execute();
@@ -122,7 +122,7 @@ switch($op){
 						$para_title["{$paragraph}"][1]=$result["text"];
 					}
 						
-					$db_file = "{$dir_palicanon}templet/p".$res_book."_tpl.db3";					
+					$db_file = _DIR_PALICANON_TEMPLET_."/p".$res_book."_tpl.db3";					
 					PDO_Connect("sqlite:$db_file");
 					foreach($aParaList as $iPar){
 						$query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) ";
@@ -212,7 +212,7 @@ switch($op){
 					}
 					
 					//服务器端文件列表
-					$db_file = $_file_db_fileindex;
+					$db_file = _FILE_DB_FILEINDEX_;
 					PDO_Connect("sqlite:$db_file");
 					$query="INSERT INTO fileindex ('id',
 												'parent_id',
@@ -351,7 +351,7 @@ switch($op){
 			$language=$res[$iRes]->language;
 			$author=$res[$iRes]->author;
 			
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");
 			$query = "select guid,owner from 'album' where id='{$res_album_id}'";
 			$Fetch = PDO_FetchAll($query);
@@ -367,7 +367,7 @@ switch($op){
 			switch($get_res_type){
 				case "1"://pali text
 				{
-					PDO_Connect("sqlite:$_file_db_pali_text");
+					PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 					$query="SELECT * FROM pali_text WHERE \"book\" = ".$PDO->quote($res_book)." AND (\"paragraph\" in {$strQueryParaList} ) ";
 
 					$sth = $PDO->prepare($query);
@@ -429,7 +429,7 @@ switch($op){
 					$album_title = "title";
 					$album_author = $author;
 					$album_type=$get_res_type;	
-					$db_file = $dir_palicannon_wbw."p{$res_book}_wbw.db3";
+					$db_file = _DIR_PALICANON_WBW_."/p{$res_book}_wbw.db3";
 					$table_info="p{$res_book}_wbw_info";
 					$table_data="p{$res_book}_wbw_data";
 					PDO_Connect("sqlite:$db_file");
@@ -497,7 +497,7 @@ switch($op){
 				case "3"://translate
 				{
 					//打开翻译数据文件
-					$db_file = "../".DIR_PALICANON_TRANSLATION."p{$book}_translate.db3";
+					$db_file = _DIR_PALICANON_TRAN_."/p{$book}_translate.db3";
 					PDO_Connect("sqlite:$db_file");
 					$table="p{$book}_translate_info";
 					//部分段落
@@ -572,7 +572,7 @@ switch($op){
 					$album_type=$get_res_type;
 					//获取段落层级和标题
 					$para_title=array();
-					PDO_Connect("sqlite:$_file_db_pali_text");
+					PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 					$query="SELECT * FROM pali_text WHERE \"book\" = ".$PDO->quote($res_book)." AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
 					$sth = $PDO->prepare($query);
 					$sth->execute();
@@ -583,7 +583,7 @@ switch($op){
 						$para_title["{$paragraph}"][1]=$result["text"];
 					}
 						
-					$db_file = "{$dir_palicanon}templet/p".$res_book."_tpl.db3";					
+					$db_file = _DIR_PALICANON_TEMPLET_."/p".$res_book."_tpl.db3";					
 					PDO_Connect("sqlite:$db_file");
 					foreach($aParaList as $iPar){
 						$query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) ";
@@ -689,7 +689,7 @@ switch($op){
 		echo "<p>save ok</p>";
 		$filesize=filesize($sFullFileName);
 		//服务器端文件列表
-		$db_file = $_file_db_fileindex;
+		$db_file = _FILE_DB_FILEINDEX_;
 		PDO_Connect("sqlite:$db_file");
 
 					$query="INSERT INTO fileindex ('id',
@@ -760,7 +760,7 @@ switch($op){
 			echo "尚未登录";
 			exit;
 		}
-		$db_file = $_file_db_fileindex;
+		$db_file = _FILE_DB_FILEINDEX_;
 		PDO_Connect("sqlite:$db_file");
 		if(isset($_GET["doc_id"])){
 			$doc_id=$_GET["doc_id"];
@@ -834,7 +834,7 @@ switch($op){
 						if($open_in=="editor"){
 							//获取文件路径
 							echo "共享的文档，复制并打开...";
-							$db_file = $_file_db_userinfo;
+							$db_file = _FILE_DB_USERINFO_;
 							PDO_Connect("sqlite:$db_file");
 							$query = "select userid from user where id='$owner'";
 							$FetchUid = PDO_FetchOne($query);
@@ -850,7 +850,7 @@ switch($op){
 								//插入记录到文件索引
 								$filesize=filesize($dest);
 								//服务器端文件列表
-								$db_file = $_file_db_fileindex;
+								$db_file = _FILE_DB_FILEINDEX_;
 								PDO_Connect("sqlite:$db_file");
 
 

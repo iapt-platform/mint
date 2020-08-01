@@ -142,3 +142,59 @@ function cls_word_search_history(){
 	$("#dict_ref_search_result").html("");
 
 }
+
+
+function trubo_split(){
+	$("#pre_search_result").hide();
+	$.post("split.php",
+    {
+      word:$("#dict_ref_search_input").val()
+    },
+    function(data,status){
+        try{
+			let result= JSON.parse(data);
+			let html="<div>";
+			if(result.length>0){
+				for( const part of result[0]["data"]){
+					html += '<div class="dropdown_ctl">';
+					html += '<div class="content">';
+					html += '<div class="main_view">'+"<part>"+part[0].word.replace(/\+/g,"</part><part>")+"</part>"+'</div>';
+					html += '<div class="more_button">'+part.length+'</div>';
+					html += '</div>';
+					html += '<div class="menu" >';
+					for(const one_part of part){
+						html += '<div class="part_list">'+one_part.word+'</div>';				
+					}
+					html += '</div>';
+					html += '</div>';
+				}
+			}
+			html += "</div>";
+			$("#input_parts").html(html);
+
+			$(".more_button").click(function(){
+				$(this).parent().siblings(".menu").toggle();
+			}
+			);
+
+			$(".part_list").click(function(){
+				let html="<part>"+$(this).text().replace(/\+/g,"</part><part>")+"</part>";
+				$(this).parent().parent().find(".main_view").html(html);
+				$(this).parent().hide();
+				$("part").click(function(){
+					dict_search($(this).text());
+				});
+			}
+			);
+
+			$("part").click(function(){
+				dict_search($(this).text());
+			}
+			);
+
+		}
+		catch(e){
+
+		}
+    });
+}

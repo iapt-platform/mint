@@ -28,7 +28,7 @@ function microtime_float()
 function render_book_list($strWordlist,$booklist=null){
 	//查找这些词出现在哪些书中
 	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
-	$dictFileName=$GLOBALS['dir_dict_system']."bookword.db3";
+	$dictFileName=_FILE_DB_BOOK_WORD_;
 	PDO_Connect("sqlite:$dictFileName");	
 	if(isset($booklist)){
 		foreach($booklist as $oneBook){
@@ -122,7 +122,7 @@ switch($op){
 		$time_start = microtime_float();
 		
 		$searching=$arrWordList[count($arrWordList)-1];
-		$dictFileName=$dir_dict_system."wordindex.db3";
+		$dictFileName=_FILE_DB_word_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		
 		if(count($arrWordList)>1){
@@ -159,7 +159,7 @@ switch($op){
 				$strQuery.="\"text\" like \"% {$oneword} %\" AND";
 			}
 			$strQuery = substr($strQuery,0,-3);
-			$dictFileName=$dir_palicanon."pali_text.db3";
+			$dictFileName=_FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$dictFileName");
 			$query = "SELECT book,paragraph, html FROM pali_text WHERE {$strQuery}  LIMIT 0,20";
 			$Fetch = PDO_FetchAll($query);
@@ -217,7 +217,7 @@ switch($op){
 		//查找实际出现的拼写
 
 		$time_start = microtime_float();
-		$dictFileName=$dir_dict_system."wordindex.db3";
+		$dictFileName=_FILE_DB_word_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
 		$arrRealWordList = PDO_FetchAll($query);
@@ -293,7 +293,7 @@ switch($op){
 		echo "<div id=\"dict_bold_right\" style='flex:7;'>";
 		//前20条记录
 		$time_start=microtime_float();
-		$dictFileName=$dir_dict_system."index.db3";
+		$dictFileName=_FILE_DB_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
 		$Fetch = PDO_FetchAll($query);
@@ -393,7 +393,7 @@ switch($op){
 				
 				//前20条记录
 				$time_start=microtime_float();
-				$dictFileName=$dir_dict_system."index.db3";
+				$dictFileName=_FILE_DB_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";

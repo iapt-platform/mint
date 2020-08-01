@@ -1,6 +1,5 @@
-# cargo
-/target/
-
-# testing
-/tmp/
-/config.toml
+/user
+/dicttext/system/*.db
+/dicttext/rich/*.db
+/font
+/appdata

@@ -28,7 +28,7 @@ if(isset($_GET["to"])){
 switch($res_type){
 	case "palitext":
 	echo "<h2>正在处理 - $res_type - $from</h2>";
-	PDO_Connect("sqlite:$_file_db_pali_text");
+	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 	$query="select * from pali_text_album where 1";
 	$Fetch = PDO_FetchAll($query);
 	$iFetch=count($Fetch);
@@ -39,7 +39,7 @@ switch($res_type){
 			$album_id=$Fetch[$i]["id"];
 			$guid=$Fetch[$i]["guid"];
 			$title=$Fetch[$i]["title"];
-			$file=$_file_db_pali_text;
+			$file=_FILE_DB_PALITEXT_;
 			$cover=$Fetch[$i]["cover"];
 			$language=$Fetch[$i]["language"];
 			$author=$Fetch[$i]["author"];
@@ -51,7 +51,7 @@ switch($res_type){
 			$edition1=$Fetch[$i]["edition_text"];
 			$type=$Fetch[$i]["type"];
 			
-			PDO_Connect("sqlite:$_file_db_pali_text");
+			PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 			$query="select * from pali_text where album_index='$album_id' ";
 			$title_data = PDO_FetchAll($query);
 			echo  "Paragraph Count:".count($title_data)."<br>";
@@ -149,7 +149,7 @@ switch($res_type){
 			*/
 
 			
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RES_INDEX_;
 			PDO_Connect("sqlite:$db_file");			
 			$query="select * from album where guid = '$guid'";
 			$search_album = PDO_FetchAll($query);
@@ -345,7 +345,7 @@ switch($res_type){
 	
 	break;
 	case "album":
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RES_INDEX_;
 		PDO_Connect("sqlite:$db_file");			
 		$query="select * from album where 1";
 		$search_album = PDO_FetchAll($query);
