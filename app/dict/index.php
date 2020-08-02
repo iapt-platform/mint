@@ -140,7 +140,16 @@ require_once "../pcdl/html_head.php";
 						</div>
 					</div>
                 </div>
-				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">强力拆分<guide gid="comp_split"></guide></button>
+				<span>
+				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">
+				<?php echo $_local->gui->turbo_split;//强力拆分?>
+				</button>
+				<guide gid="comp_split">
+					<svg xmlns="http://www.w3.org/2000/svg" t="1596298528884" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="2093">
+						<path d="M512 16C238.086 16 16 238.166 16 512c0 273.994 222.086 496 496 496s496-222.006 496-496C1008 238.166 785.914 16 512 16z m0 220c46.392 0 84 37.608 84 84s-37.608 84-84 84-84-37.608-84-84 37.608-84 84-84z m112 508c0 13.254-10.746 24-24 24h-176c-13.254 0-24-10.746-24-24v-48c0-13.254 10.746-24 24-24h24v-128h-24c-13.254 0-24-10.746-24-24v-48c0-13.254 10.746-24 24-24h128c13.254 0 24 10.746 24 24v200h24c13.254 0 24 10.746 24 24v48z" p-id="2094"/>
+					</svg>
+				</guide>
+				</span>
                 <div ></div>
 			</div>
 			<div style="display:block;z-index: 5;text-align:center;">
