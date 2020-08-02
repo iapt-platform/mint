@@ -5,8 +5,7 @@ set -e
 declare -a folders=(
     "appdata"
     "user"
-    "palihtml"
-    "font"
+    "palihtml"    
     "dicttext"
     "palicsv"
     "temp"
