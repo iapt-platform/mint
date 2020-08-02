@@ -113,34 +113,7 @@ require_once "../pcdl/html_head.php";
 			border-radius: 99px;
 			cursor: pointer;
 		}
-		guide{
-			position: relative;
-			display:inline-block;
-			width:1.4em;
-			height:1.4em;
-			cursor: pointer;
-			background-color:gray;
-		}
-		guide:hover  .guide_contence{
-			display:inline-block;
-		}
-		.guide_contence {
-			position: absolute;
-			top:100%;
-			width:18em;
-			min-height:30em;
-			padding:10px;
-			background-color:white;
-			box-shadow: 0 0 10px rgba(0,0,0,0.15);
-			font-size:10pt;
-			text-align:left;
-			display:none;
-		}
 
-		.guide_contence  h1{
-			font-size:1.5em;
-			font-weight:700;
-		}
 	</style>
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -149,7 +122,7 @@ require_once "../pcdl/html_head.php";
 				<div>
 					<div>
 						<div>
-						<guide gid="comp_split"></guide><input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
+						<guide gid="dict_search_input"></guide><input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
 						</div>
 						<div id="word_parts">
 							<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
@@ -253,38 +226,7 @@ function GetPageScroll()
     }
 	?>
 	
-	<script>
-		$("guide").each(function(){
-			if($(this).offset().left<$(document.body).width()/2){
-				$(this).append('<div  class="guide_contence" style="left: 0;"></div>');
-			}
-			else{
-				$(this).append('<div  class="guide_contence" style="right: 0;"></div>');
-			}
-		});
 
-		$("guide").mouseenter(function(){
-			if($(this).children(".guide_contence").first().html().length>0){
-				return;
-			}
-			let gid = $(this).attr("gid");
-			let guideObj = $(this);
-			$.get("../guide/get.php",
-				{
-					id:gid
-				},
-			function(data,status){
-				try{
-					let jsonGuide = JSON.parse(data);
-					$("guide[gid='"+jsonGuide.id+"']").find(".guide_contence").html(marked(jsonGuide.data));
-				}
-				catch(e){
-					console.error(e);
-				}
-			});
-		});
-
-	</script>
 <?php
 include "../pcdl/html_foot.php";
 ?>
