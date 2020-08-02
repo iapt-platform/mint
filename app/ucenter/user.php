@@ -31,10 +31,11 @@
 		text-align:right;
 	}
 	#user_bar{
-		border: 2px solid var(--btn-border-color);
+		border: 1px solid var(--btn-border-color);
 		border-radius: 99px;
 		color: var(--btn-color);
 		padding: 2px 2px 2px 15px;
+		height: min-content;
 	}
 	</style>
 		<div style="margin:auto;" class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">

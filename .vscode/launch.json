@@ -10,6 +10,12 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:80",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Listen for XDebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9000
         }
     ]
 }

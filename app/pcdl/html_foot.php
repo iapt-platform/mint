@@ -48,7 +48,12 @@
 </div>S
 	
 <div class="foot_div">
-wikipali @2020
+	<div>wikipali @2020</div>
+	<div>Powered by PCD Suite</div>
 </div>
+
+<script>
+	guide_init();
+</script>
 </body>
 </html>

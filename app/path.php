@@ -14,6 +14,9 @@ define("_DIR_DICT_SYSTEM_" , __DIR__."/../appdata/dict/system");
 define("_DIR_DICT_3RD_" , __DIR__."/../appdata/dict/3rd");
 define("_DIR_DICT_REF_" , __DIR__."/../appdata/dict/ref");
 
+define("_DIR_USERS_GUIDE_" , __DIR__."/../documents/users_guide");
+
+
 define("_FILE_DB_REF_"  , __DIR__."/../appdata/dict/system/ref.db");
 define("_FILE_DB_REF_INDEX_"  , __DIR__."/../appdata/dict/system/ref1.db");
 define("_FILE_DB_part_"  , __DIR__."/../appdata/dict/system/part.db3");

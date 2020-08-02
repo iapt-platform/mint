@@ -1,4 +1,8 @@
 /user/
 /dicttext/system/*.db
 /dicttext/rich/*.db
-/appdata/
+/appdata
+/log
+/palicsv
+/palihtml
+/temp
