@@ -209,7 +209,6 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
 			else if($pre[4]==")" && $Note_Mark==1){
 				$Note_Mark=0;
 			}
-			
 
 			if($curr[15]!="note" || mb_substr($curr[1],0,5,"UTF-8")!="gatha"){
 				if($curr[4]=="."  && !is_numeric($pre[4]) && $next[3]==$iCurrPara && $Note_Mark==0){//以.結尾且非註釋
