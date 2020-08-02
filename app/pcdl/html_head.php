@@ -27,11 +27,16 @@ else{
     <link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
+
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+
     <title>圣典</title>
 
 	<script src="../public/js/jquery.js"></script>
 	<script src="../public/js/comm.js"></script>
 	<script src="../studio/js/fixedsticky.js"></script>
+	<script src="../guide/guide.js"></script>
+	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
 	</script>

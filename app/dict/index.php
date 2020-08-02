@@ -1,5 +1,5 @@
 ﻿<?PHP
-include "../pcdl/html_head.php";
+require_once "../pcdl/html_head.php";
 ?>
 <body>
 
@@ -113,23 +113,7 @@ include "../pcdl/html_head.php";
 			border-radius: 99px;
 			cursor: pointer;
 		}
-		guide{
-			display:inline-block;
-			width:1.4em;
-			height:1.4em;
-			cursor: pointer;
-			background-color:gray;
-		}
-		#guide {
-			width:18em;
-			min-height:30em;
-			background-color:white;
-			box-shadow: 0 0 10px rgba(0,0,0,0.15);
-		}		
-		#guide h1{
-			font-size:2em;
-			font-weight:700;
-		}
+
 	</style>
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -138,7 +122,7 @@ include "../pcdl/html_head.php";
 				<div>
 					<div>
 						<div>
-							<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
+						<guide gid="dict_search_input"></guide><input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
 						</div>
 						<div id="word_parts">
 							<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
@@ -247,26 +231,8 @@ function GetPageScroll()
         echo "</script>";
     }
 	?>
-	<div id="guide" style="position:absolute;"></div>
-	<script>
-		$("guide").mouseenter(function(){
-			let id = $(this).attr("gid");
-			var guideObj = $(this);
-			$.get("../../documents/users_guide/en/"+id+".md",
-				{
-				},
-			function(data,status){
-				$("#guide").html(marked(data));
-				$("#guide").appendTo(guideObj);
-				//$("#guide").show();
-			});
-		});
+	
 
-		$("guide").mouseout(function(){
-			//$("#guide").hide();
-		});
-
-	</script>
 <?php
 include "../pcdl/html_foot.php";
 ?>
