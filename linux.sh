@@ -18,6 +18,4 @@ do
     sudo chown -R www-data:www-data $i    
 done
 
-sudo chmod 755 
-
 exit 0
