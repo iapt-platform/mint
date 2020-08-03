@@ -9,7 +9,7 @@ declare -a folders=(
     "dicttext"
     "palicsv"
     "temp"
-    "log"
+    "log"    
 )
 
 for i in "${folders[@]}"
@@ -17,5 +17,7 @@ do
     mkdir -pv $i
     sudo chown -R www-data:www-data $i    
 done
+
+sudo chmod 755 
 
 exit 0
