@@ -5,13 +5,18 @@
 <body>
 <h2>Insert to bold</h2>
 <p><a href="index.php">Home</a></p>
+<div>
+生成黑体字数据库。黑体字多数是义注复注里的单词（尤其是专有名词）解释。
+</div>
 <?php
 include "./_pdo.php";
+include "../path.php";
+
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_insert_bold.php" method="get">
-From: <input type="text" name="from"><br>
-To: <input type="text" name="to"><br>
+From: <input type="text" name="from" value="0"><br>
+To: <input type="text" name="to" value="216"><br>
 <input type="submit">
 </form>
 <?php
@@ -41,16 +46,17 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_;
 
-$dirDb="db/";
+//输出文件夹
+$dirDb=_DIR_PALICANON_."/";
 $inputFileName=$FileName;
 $outputFileNameHead=$filelist[$from][1];
 $bookId=$filelist[$from][2];
 $vriParNum=0;
 $wordOrder=1;
 
-$dirXmlBase="xml/";
+$dirXmlBase=_DIR_PALI_CSV_."/";
 $dirXml=$outputFileNameHead."/";
 
 $currChapter="";
@@ -74,7 +80,7 @@ echo "doing:".$xmlfile."<br>";
 $log=$log."$from,$FileName,open\r\n";
 
 $arrInserString=array();
-$db_file = $dirDb.'bold.db3';
+$db_file = _FILE_DB_BOLD_;
 PDO_Connect("sqlite:$db_file");
 
 // 打开文件并读取数据

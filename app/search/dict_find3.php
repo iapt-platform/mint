@@ -36,7 +36,7 @@ global $PDO;
 
 switch($op){
 	case "pre"://预查询
-		$dictFileName=_FILE_DB_word_INDEX_;
+		$dictFileName=_FILE_DB_WORD_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		echo "<div>";
 		$query = "select word,count from wordindex where \"word_en\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')." limit 0,50";
@@ -111,7 +111,7 @@ switch($op){
 		/*查找实际出现的拼写
 
 		*/
-		$dictFileName=_FILE_DB_word_INDEX_;
+		$dictFileName=_FILE_DB_WORD_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
 		$arrRealWordList = PDO_FetchAll($query);

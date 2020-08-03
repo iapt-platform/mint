@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<!--句子库生成-->
+<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -25,6 +26,8 @@ if(file_exists($db_file)){
 	}
 }
 		PDO_Connect("sqlite:$db_file");
+
+		
 		$query="CREATE TABLE pali_sent (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     book      INTEGER,

@@ -5,6 +5,7 @@
 <body>
 <p><a href="index.php">Home</a></p>
 <?php
+//生成巴利语单词统计表
 $dirXmlBase="xml/";
 
 $filelist=array();

@@ -3,7 +3,7 @@ require_once '../pcdl/html_head.php';
 ?>
 
 <body>
-<h3>Step 2 Dictionary</h3>
+<h3>Step 3 Dictionary</h3>
 <div style="margin:1em;background-color:#f1e7a4;">
 生成字典数据库。约需要10分钟。您可以从网络下载已经生成好的数据库。
 <a href="https://www.dropbox.com/s/naf7sk9i9sf0dfi/appdata.7z?dl=0">drobox 7z format 754MB</a>

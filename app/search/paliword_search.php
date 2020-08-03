@@ -32,7 +32,7 @@ switch($op){
 		$time_start = microtime_float();
 		
 		$searching=$arrWordList[count($arrWordList)-1];
-		$dbfile = _FILE_DB_word_INDEX_;
+		$dbfile = _FILE_DB_WORD_INDEX_;
 		echo $dbfile;
 		PDO_Connect("sqlite:".$dbfile);
 		

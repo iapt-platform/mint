@@ -46,11 +46,11 @@ define("_FILE_DB_RES_INDEX_"  , __DIR__."/../appdata/palicanon/res.db3");
 define("_FILE_DB_PALITEXT_" , __DIR__."/../appdata/palicanon/pali_text.db3");
 define("_FILE_DB_STATISTICS_" , __DIR__."/../appdata/palicanon/word_statistics.db3");
 define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../appdata/palicanon/pali_sent.db3");
-define("_FILE_DB_word_INDEX_"  , __DIR__."/../appdata/palicanon/wordindex.db3");
+define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../appdata/palicanon/wordindex.db3");
 define("_FILE_DB_INDEX_"  , __DIR__."/../appdata/palicanon/index.db3");
 define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../appdata/palicanon/paliindex.db3");
 define("_FILE_DB_BOOK_WORD_"  , __DIR__."/../appdata/palicanon/bookword.db3");
-define("_FILE_DB_bold_"  , __DIR__."/../appdata/palicanon/bold.db3");
+define("_FILE_DB_BOLD_"  , __DIR__."/../appdata/palicanon/bold.db3");
 
 /*user data*/
 define("_FILE_DB_USER_WBW_" , __DIR__."/../user/user_wbw.db3");
