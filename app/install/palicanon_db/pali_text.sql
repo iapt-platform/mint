@@ -34,7 +34,8 @@ CREATE TABLE pali_text (
     chapter_len  INTEGER,
     next_chapter INTEGER,
     prev_chapter INTEGER,
-    parent       INTEGER
+    parent       INTEGER,
+    chapter_strlen       INTEGER
 );
 
 

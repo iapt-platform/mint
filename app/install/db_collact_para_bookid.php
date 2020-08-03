@@ -25,7 +25,7 @@ $to=$_GET["to"];
 $filelist=array();
 $fileNums=0;
 $log="";
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 $dirDb="db/";
 
 

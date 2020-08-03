@@ -7,11 +7,12 @@
 <p><a href="index.php">Home</a></p>
 <?php
 include "./_pdo.php";
+include "../path.php";
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_insert_index.php" method="get">
-From: <input type="text" name="from"><br>
-To: <input type="text" name="to"><br>
+From: <input type="text" name="from" value="0"><br>
+To: <input type="text" name="to" value="216"><br>
 <input type="submit">
 </form>
 <?php
@@ -26,7 +27,7 @@ $g_wordIndexCounter=0;
 $iAllWordIndex=array();
 $sAllWord=array();
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 $dirDb="db/";
 $dirXmlBase="xml/";
 

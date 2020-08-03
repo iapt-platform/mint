@@ -5,6 +5,14 @@ require_once '../path.php';
 <head>
 </head>
 <body>
+<style>
+#step4{
+	background-color:#f1e7a4;
+}
+</style>
+<?php
+require_once 'nav_bar.php';
+?>
 <h3>Step 4 三藏语料库</h3>
 <div style="margin:1em;background-color:#f1e7a4;">
 	生成三藏语料库
@@ -13,11 +21,12 @@ require_once '../path.php';
 <h4>生成数据库文件</h4>
 <?php
 $dbfile[]=array(_FILE_DB_BOLD_,"bold.sql");
-$dbfile[]=array(_FILE_DB_BOOK_WORD_,"bookword.sql");
 $dbfile[]=array(_FILE_DB_INDEX_,"index.sql");
-$dbfile[]=array(_FILE_DB_PALITEXT_,"pali_text.sql");
+$dbfile[]=array(_FILE_DB_BOOK_WORD_,"bookword.sql");
 $dbfile[]=array(_FILE_DB_PALI_INDEX_,"paliindex.sql");
 $dbfile[]=array(_FILE_DB_WORD_INDEX_,"wordindex.sql");
+$dbfile[]=array(_FILE_DB_PALI_SENTENCE_,"pali_sent.sql");
+$dbfile[]=array(_FILE_DB_PALITEXT_,"pali_text.sql");
 $dir="./palicanon_db/";
 
 if(isset($_GET["index"])){

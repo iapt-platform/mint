@@ -6,12 +6,13 @@
 <h2>Insert Pali Text To DB</h2>
 <p><a href="index.php">Home</a></p>
 <?php
-include "./_pdo.php";
+require_once "./_pdo.php";
+require_once "../path.php";
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_insert_palitext.php" method="get">
-From: <input type="text" name="from"><br>
-To: <input type="text" name="to"><br>
+From: <input type="text" name="from" value="0"><br>
+To: <input type="text" name="to" value="216"><br>
 <input type="submit">
 </form>
 <?php
@@ -36,17 +37,16 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
-$dirDb="db/templet/";
 $inputFileName=$FileName;
 $outputFileNameHead=$filelist[$from][1];
 $bookId=$filelist[$from][2];
 $vriParNum=0;
 $wordOrder=1;
 
-$dirXmlBase="xml/";
-$dirPaliTextBase="pali-text/";
+$dirXmlBase=_DIR_PALI_CSV_."/";
+$dirPaliTextBase=_DIR_PALI_HTML_."/";
 $dirXml=$outputFileNameHead."/";
 
 
@@ -56,26 +56,10 @@ echo "doing:".$xmlfile."<br>";
 $log=$log."$from,$FileName,open\r\n";
 
 $arrInserString=array();
-$db_file = $dirDb.$bookId.'_pali.db3';
+$db_file =_FILE_DB_PALITEXT_;
 PDO_Connect("sqlite:$db_file");
 
-$query="CREATE TABLE 'data' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 'paragraph' INTEGER, 'language' TEXT, 'anchor' TEXT, 'text' TEXT, 'author' TEXT, 'editor' TEXT, 'revision' TEXT, 'edition' INTEGER, 'subver' INTEGER,'time' DATETIME DEFAULT CURRENT_TIMESTAMP)";
-    $stmt = @PDO_Execute($query);
-    if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-        $error = PDO_ErrorInfo();
-        print_r($error[2]);
-        break;
-    }
-
-	$query="CREATE INDEX 'search' ON \"data\" (\"paragraph\",\"language\",\"author\", \"editor\", \"revision\", \"edition\", \"subver\" , \"time\" )";
-    $stmt = @PDO_Execute($query);
-    if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-        $error = PDO_ErrorInfo();
-        print_r($error[2]);
-        $log=$log."$from, $FileName, error, $error[2] \r\n";
-    }
-
-// 打开文件并读取数据
+// 打开vri html文件并读取数据
 $pali_text_array=array();
 if(($fpPaliText=fopen($dirPaliTextBase.$xmlfile, "r"))!==FALSE){
 	while(($data=fgets($fpPaliText))!==FALSE){
@@ -87,15 +71,15 @@ if(($fpPaliText=fopen($dirPaliTextBase.$xmlfile, "r"))!==FALSE){
 else{
 	echo "can not pali text file. filename=".$dirPaliTextBase.$xmlfile;
 }
+
 $inputRow=0;
 if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_pali.csv", "r"))!==FALSE){
-	while(($data=fgetcsv($fp,0,','))!==FALSE){
+	while(($data=fgetcsv($fp , 0 , ',' )) !== FALSE ){
 		if($inputRow>0){
 		if(($inputRow-1)<count($pali_text_array)){
-			$data[6]=$pali_text_array[$inputRow-1];
+			$data[5]=$pali_text_array[$inputRow-1];
 		}
-		$params=$data;
-		$arrInserString[count($arrInserString)]=$params;
+		$arrInserString[]=$data;
 		}
 		$inputRow++;
 	}
@@ -113,10 +97,16 @@ $log=$log."$from, $FileName,error,文件行数不匹配 inputRow=$inputRow pali_
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
 
-$query="INSERT INTO data ('id','paragraph','language','anchor','text','author','editor','revision','edition','subver') VALUES (NULL,?,?,?,?,?,?,?,?,?)";
+$query="INSERT INTO pali_text ('id', 'book','paragraph','level','class','toc','text','html','lenght') VALUES (NULL, ? , ? , ? , ? , ? , ? , ?,? )";
 $stmt = $PDO->prepare($query);
 foreach($arrInserString as $oneParam){
-	$newData=array($oneParam[2],"pali","",$oneParam[6],"PCSD","PCSD","","1","0");
+	if($oneParam[3]<100){
+		$toc = $oneParam[6];
+	}
+	else{
+		$toc = "";
+	}
+	$newData=array($from+1, $oneParam[2], $oneParam[3], $oneParam[4], $toc , $oneParam[6], $oneParam[5], mb_strlen($oneParam[6],"UTF-8"));
 	$stmt->execute($newData);
 }
 // 提交更改 

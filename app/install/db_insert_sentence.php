@@ -9,7 +9,8 @@
 <?php
 include "./_pdo.php";
 require_once '../path.php';
-$db_file = _DIR_TEMP_."/pali_sent.db3";
+
+$db_file =_FILE_DB_PALI_SENTENCE_;
 $thisfile = '.'.mb_substr(__FILE__,mb_strlen(__DIR__));
 if(isset($_GET["from"])==false){
 ?>
@@ -19,12 +20,7 @@ To: <input type="text" value="216" name="to"><br>
 <input type="submit">
 </form>
 <?php
-if(file_exists($db_file)){
-	if(!unlink($db_file)){
-		echo "error: can not delete file "._DIR_TEMP_."/pali_sent.db3";
-		return;
-	}
-}
+
 		PDO_Connect("sqlite:$db_file");
 
 		
@@ -79,7 +75,7 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
 $dirDb="db/";
 $inputFileName=$FileName;

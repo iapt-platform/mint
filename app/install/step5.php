@@ -6,17 +6,13 @@ require_once '../path.php';
 </head>
 <body>
 <style>
-.card {
-    box-shadow: 0 0 10px rgba(0,0,0,0.15);
-    font-size: 1em;
-    line-height: 1.3;
-    margin:1em;
-    padding:1em;
-    max-width:60em;
-    margin-left:auto;
-    margin-right:auto;
+#step5{
+	background-color: #f1e7a4;
 }
 </style>
+<?php
+require_once 'nav_bar.php';
+?>
 <h3>Step 4 Build Pali Canon Database 建立三藏语料数据库</h3>
 
 <div class="card" style="background-color:#f1e7a4;">
@@ -69,10 +65,17 @@ else{
 </div>
 
 <div class="card">
-<h4>黑体字数据库</h4>
-<div class="contence">
-<a href="db_insert_bold.php" target="_blank">生成</a>
+	<h4>单词索引表</h4>
+	<div class="contence">
+	<a href="db_insert_bold.php" target="_blank">生成</a>
+	</div>
 </div>
+
+<div class="card">
+	<h4>黑体字数据库</h4>
+	<div class="contence">
+	<a href="db_insert_bold.php" target="_blank">生成</a>
+	</div>
 </div>
 
 <div class="card">

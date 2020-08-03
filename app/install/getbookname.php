@@ -23,7 +23,7 @@ if(($handle=fopen("filelist.csv",'r'))!==FALSE){
 		$FileName=$htmlFileName[1].".htm";
 		$fileId=$htmlFileName[0];
 
-		$dirLog="log/";
+		$dirLog=_DIR_LOG_."/";
 		$dirHtml="pali/";
 		$inputFileName=$dirHtml.$FileName;
 

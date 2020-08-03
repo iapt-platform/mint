@@ -10,8 +10,8 @@ include "../public/_pdo.php";
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_update_palitext.php" method="get">
-From: <input type="text" name="from"><br>
-To: <input type="text" name="to"><br>
+From: <input type="text" name="from" value="0"><br> 
+To: <input type="text" name="to" value="216"><br>
 <input type="submit">
 </form>
 <?php
@@ -36,9 +36,9 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
-$dirDb="db/";
+$dirDb="/";
 $inputFileName=$FileName;
 $outputFileNameHead=$filelist[$from][1];
 $bookId=$filelist[$from][2];
@@ -103,7 +103,7 @@ echo $query;
 $Fetch_old = PDO_FetchAll($query);
 
 
-$db_file = $dirDb.'pali_text.db3';
+$db_file =_FILE_DB_PALITEXT_;
 PDO_Connect("sqlite:$db_file");
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();

@@ -12,8 +12,12 @@ html --> A[xmlmaker.php]
   A -->f(sandhi)
   A -->g(sandhi 组分)
   B -->|db_insert_templet.php| h{模板库}
-  B --> j{单词索引}
+  B -->|db_index.php| j{单词索引}
    e --> i
    html --> i{巴利原文<br>pali_text}
-
+  j --> 总单词索引-index.db3
+  j --> 单独单词表
+  j --> 三藏单词
+  j --> 书单词索引
+  toc-手工维护 --> |升级程序|i
 ```
