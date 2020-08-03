@@ -26,16 +26,13 @@ define("_DIR_USER_BASE_" , __DIR__."/../user");
 define("_DIR_USER_IMG_" , "../../user/media/3");
 define("_DIR_MYDOCUMENT_" , "/my_document");
 
-
-define("_DIR_PALI_HTML_" , __DIR__."/../palihtml");
 define("_DIR_FONT_" , __DIR__."/../font");
-
+define("_DIR_PALI_HTML_" , __DIR__."/../palihtml");
 define("_DIR_DICT_TEXT_" , __DIR__."/../dicttext");
 define("_DIR_PALI_CSV_" , __DIR__."/../palicsv");
 define("_DIR_LOG_" , __DIR__."/../log");
 define("_DIR_TEMP_" , __DIR__."/../temp");
-
-
+define("_DIR_PALI_TITLE_" , __DIR__."/../pali_title");
 define("_DIR_APP_" , __DIR__."/../app");
 define("_DIR_LANGUAGE_" , __DIR__."/../app/public/lang");
 define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
