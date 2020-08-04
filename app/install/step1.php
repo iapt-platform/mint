@@ -5,6 +5,14 @@ require_once '../path.php';
 <head>
 </head>
 <body>
+<style>
+#step1{
+	background-color: #f1e7a4;
+}
+</style>
+<?php
+require_once 'nav_bar.php';
+?>
 <h3>Step 1 Create Dir</h3>
 <div>
 <?php

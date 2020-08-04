@@ -83,7 +83,7 @@ switch($op){
 			$strQueryWord="('{$word}')";
 		}
 
-		$dictFileName=_FILE_DB_bold_;
+		$dictFileName=_FILE_DB_BOLD_;
 		PDO_Connect("sqlite:$dictFileName");
 		//查询符合的记录数
 		$query = "select count(*) as co from bold where \"word2\" in  $strQueryWord";
@@ -270,7 +270,7 @@ switch($op){
 		switch($target){
 			case "bold";
 				$arrBookName=json_decode(file_get_contents("../public/book_name/sc.json"));
-				$dictFileName=_FILE_DB_bold_;
+				$dictFileName=_FILE_DB_BOLD_;
 				PDO_Connect("sqlite:$dictFileName");
 				$wordlist=$_GET["wordlist"];
 				$booklist=$_GET["booklist"];

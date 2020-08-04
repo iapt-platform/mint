@@ -122,7 +122,7 @@ switch($op){
 		$time_start = microtime_float();
 		
 		$searching=$arrWordList[count($arrWordList)-1];
-		$dictFileName=_FILE_DB_word_INDEX_;
+		$dictFileName=_FILE_DB_WORD_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		
 		if(count($arrWordList)>1){
@@ -217,7 +217,7 @@ switch($op){
 		//查找实际出现的拼写
 
 		$time_start = microtime_float();
-		$dictFileName=_FILE_DB_word_INDEX_;
+		$dictFileName=_FILE_DB_WORD_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
 		$arrRealWordList = PDO_FetchAll($query);

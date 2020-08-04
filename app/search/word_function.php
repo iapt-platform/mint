@@ -140,7 +140,7 @@ function countWordInPali($word,$sort=false){
 
 		//查找实际出现的拼写
 
-        $dsn = "sqlite:"._FILE_DB_word_INDEX_;
+        $dsn = "sqlite:"._FILE_DB_WORD_INDEX_;
         $user = "";
         $password = "";
         $PDO = new PDO($dsn, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
