@@ -41,3 +41,6 @@ guide:hover  .guide_contence{
     font-size:1em;
     font-weight:700;
 }
+.guide_contence  li{
+    display: contents;
+}
