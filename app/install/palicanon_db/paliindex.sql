@@ -30,4 +30,5 @@ CREATE INDEX pali ON word (
 
 
 COMMIT TRANSACTION;
+VACUUM;
 PRAGMA foreign_keys = on;

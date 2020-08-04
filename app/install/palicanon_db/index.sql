@@ -65,3 +65,5 @@ CREATE UNIQUE INDEX wordid ON wordindex (
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
+
+VACUUM;

@@ -5,6 +5,14 @@ require_once '../path.php';
 <head>
 </head>
 <body>
+<style>
+#step2{
+	background-color: #f1e7a4;
+}
+</style>
+<?php
+require_once 'nav_bar.php';
+?>
 <h3>Step 2 Create User Database</h3>
 <?php
 $dbfile[]=array(_FILE_DB_USER_WBW_,"user_wbw.sql");

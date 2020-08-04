@@ -32,4 +32,5 @@ CREATE INDEX "" ON wordindex (
 
 
 COMMIT TRANSACTION;
+VACUUM;
 PRAGMA foreign_keys = on;

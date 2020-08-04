@@ -22,19 +22,62 @@ return;
 $from=$_GET["from"];
 $to=$_GET["to"];
 
-$g_wordCounter=0;
-$g_wordIndexCounter=0;
-$iAllWordIndex=array();
-$sAllWord=array();
+
 
 $dirLog=_DIR_LOG_."/";
 $dirDb="db/";
-$dirXmlBase="xml/";
+$dirXmlBase=_DIR_PALI_CSV_."/";
 
 $filelist=array();
 $fileNums=0;
 $log="";
 echo "<h2>$from</h2>";
+
+//已经存在的词
+$g_wordCounter=0;
+$g_wordIndexCounter=0;
+$iAllWordIndex=array();
+$sAllWord=array();
+//新加入的词
+$wordindex_max_index = 0;
+$aNewWordIndex = array(); //词内容
+$sNewWord = array(); //词头索引
+
+global $dbh_word_index;
+$dns = "sqlite:"._FILE_DB_WORD_INDEX_;
+$dbh_word_index = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+$query = "select id from wordindex where 1 order by id DESC ";
+	$stmt = $dbh_word_index->prepare($query);
+	$stmt->execute(array());
+	$id  = $stmt->fetch(PDO::FETCH_ASSOC);
+	if($id === FALSE){
+		$wordindex_max_index = 0;
+	}
+	else{
+		$wordindex_max_index =$id["id"];
+	}
+	$db_file = _FILE_DB_PALI_INDEX_;
+	PDO_Connect("sqlite:$db_file");
+	$query = "select id from word where 1 order by id DESC ";
+	$stmt = $PDO->prepare($query);
+	$stmt->execute(array());
+	$id  = $stmt->fetch(PDO::FETCH_ASSOC);	
+	if($id === FALSE){
+		$g_wordCounter = 0;
+	}
+	else{
+		$g_wordCounter = $id["id"];
+	}
+function dict_lookup($word){
+	global $dbh_word_index;
+	$query = "select * from wordindex where \"word\" = ? ";
+	$stmt = $dbh_word_index->prepare($query);
+	$stmt->execute(array($word));
+    return $stmt->fetch(PDO::FETCH_ASSOC);	
+}
+
 function getWordEn($strIn){
 	$out=$strIn;
 	$out=str_replace("ā","a",$out);
@@ -57,10 +100,11 @@ if(($handle=fopen("filelist.csv",'r'))!==FALSE){
 }
 if($to==0 || $to>=$fileNums) $to=$fileNums-1;
 
-	$db_file = $dirDb.'index.db3';
-	PDO_Connect("sqlite:$db_file");
+
 	
-for($iFile=$from;$iFile<=$to;$iFile++){
+//for($iFile=$from;$iFile<=$to;$iFile++)
+$iFile=$from;
+{
 
 	$FileName=$filelist[$iFile][1].".htm";
 	$fileId=$filelist[$iFile][0];
@@ -77,7 +121,6 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 
 	$arrInserString=array();
 
-
 	// 打开文件并读取数据
 	$irow=0;
 	if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
@@ -85,7 +128,7 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 			$irow++;
 			if($irow>1){
 				$params=$data;
-				$arrInserString[count($arrInserString)]=$params;
+				$arrInserString[]=$params;
 			}
 		}
 		fclose($fp);
@@ -97,9 +140,9 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 	
 
 	// 开始一个事务，关闭自动提交
-	//$PDO->beginTransaction();
-	//$query="INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
-	//$stmt = $PDO->prepare($query);
+	$PDO->beginTransaction();
+	$query="INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
+	$stmt = $PDO->prepare($query);
 	$count=0;
 	$count1=0;
 	$sen="";
@@ -108,7 +151,7 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 	$sen_count=0;
 	$book="";
 	$paragraph="";
-	foreach($arrInserString as $oneParam){	
+	foreach($arrInserString as $oneParam){
 		if($oneParam[5]!=""){
 			$g_wordCounter++;
 			$book=substr($oneParam[2],1);
@@ -122,6 +165,7 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 			}			
 			
 			if(isset($sAllWord[$word])){
+				//已经存在的词
 				$wordindex=$sAllWord[$word];
 				
 				$iAllWordIndex[$wordindex][1]++;
@@ -133,33 +177,62 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 				}
 				
 			}
-			else{
-				$wordindex=$g_wordIndexCounter;
-				$sAllWord[$word]=$g_wordIndexCounter;
+			else if(isset($sNewWord[$word])){
+				//是新家入的词
+				$wordindex=$sNewWord[$word];
 				
-				$iAllWordIndex[$g_wordIndexCounter][0]=$word;
-				
-				$iAllWordIndex[$g_wordIndexCounter][1]=1;//all word count
+				$aNewWordIndex[$wordindex][1]++;
 				if($bold==1){
-					$iAllWordIndex[$g_wordIndexCounter][2]=0;
-					$iAllWordIndex[$g_wordIndexCounter][3]=1;
+					$aNewWordIndex[$wordindex][3]++;
 				}
 				else{
-					$iAllWordIndex[$g_wordIndexCounter][2]=1;
-					$iAllWordIndex[$g_wordIndexCounter][3]=0;
+					$aNewWordIndex[$wordindex][2]++;
+				}
+			}
+			else if(($lookup=dict_lookup($word)) !== FALSE){
+				//在数据库中找到
+				$wordindex=$lookup["id"];
+				$sAllWord[$word]=$wordindex;
+				$iAllWordIndex[$wordindex][0]=$word;
+				
+				$iAllWordIndex[$wordindex][1]=$lookup["count"] + 1;//all word count
+				if($bold==1){
+					$iAllWordIndex[$wordindex][2] = $lookup["normal"] ;
+					$iAllWordIndex[$wordindex][3] = $lookup["bold"] + 1;
+				}
+				else{
+					$iAllWordIndex[$wordindex][2] = $lookup["normal"] + 1;
+					$iAllWordIndex[$wordindex][3] = $lookup["bold"] ;
+				}
+			}
+			else{
+				//数据库里也没找到 怎么办呢？我想呀想 想呀想
+				$wordindex=$wordindex_max_index + 1;
+				$sNewWord[$word]=$wordindex;
+				
+				$aNewWordIndex[$wordindex][0]=$word;
+				
+				$aNewWordIndex[$wordindex][1]=1;//all word count
+				if($bold==1){
+					$aNewWordIndex[$wordindex][2]=0;
+					$aNewWordIndex[$wordindex][3]=1;
+				}
+				else{
+					$aNewWordIndex[$wordindex][2]=1;
+					$aNewWordIndex[$wordindex][3]=0;
 				}
 				
-				$g_wordIndexCounter++;
+				$wordindex_max_index++;
 			}
 		
 	
-			//$newWord=array($g_wordCounter,$book,$paragraph,$wordindex,$bold);
-			//$stmt->execute($newWord);
+			$newWord=array($g_wordCounter,$book,$paragraph,$wordindex,$bold);
+			$stmt->execute($newWord);
 			$count++;
 		}
 
 	}
-	/*
+	
 	// 提交更改 
 	$PDO->commit();
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -171,44 +244,94 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 		echo "updata $count recorders.<br />";
 		$log.="updata $count recorders.\r\n";
 	}
-*/
-}
 
+}
+//更新单词索引表
+
+//首先插入新的词
 	// 开始一个事务，关闭自动提交
-	$PDO->beginTransaction();
-	$query="INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES (?,?,?,?,?,?,?,?)";
-	$stmt = $PDO->prepare($query);
+	$dbh_word_index->beginTransaction();
+	$query="INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+	$stmt = $dbh_word_index->prepare($query);
 	
-	echo count($iAllWordIndex)."words<br>";
-	for($iword=0;$iword<count($iAllWordIndex);$iword++){
+	echo "INSERT:".count($aNewWordIndex)."words<br>";
+	foreach($aNewWordIndex as $wIndex => $info){
 		$wordindex=$iword;
-		$newWord=array($wordindex,$iAllWordIndex[$iword][0],getWordEn($iAllWordIndex[$iword][0]),$iAllWordIndex[$iword][1],$iAllWordIndex[$iword][2],$iAllWordIndex[$iword][3],0,mb_strlen($iAllWordIndex[$iword][0],"UTF-8"));
-		//echo "<br>{$newWord[0]}-{$newWord[1]}-{$newWord[2]}-{$newWord[3]}-{$newWord[4]}-{$newWord[5]}-<br />";
+		$newWord=array(
+								$wIndex,
+								$info[0],
+								getWordEn($info[0]),
+								$info[1],
+								$info[2],
+								$info[3],
+								0,
+								mb_strlen($info[0],"UTF-8")
+							);
 		$stmt->execute($newWord);
 	}
-
-	
 	// 提交更改 
-	$PDO->commit();
+	$dbh_word_index->commit();
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-		$error = PDO_ErrorInfo();
+		$error = $dbh_word_index->errorInfo();
 		echo "error - $error[2] <br>";
 		$log.="$from, $FileName, error, $error[2] \r\n";
 	}
 	else{
 		echo "updata iword recorders.<br />";
 		$log.="updata iword recorders.\r\n";
-	}			
+	}
 	
+
+//然后修改已经有的词
+	// 开始一个事务，关闭自动提交
+	$dbh_word_index->beginTransaction();
+	$query="UPDATE wordindex SET count = ? , normal = ? , bold = ?   where  id = ?  ";
+	$stmt = $dbh_word_index->prepare($query);
+	
+	echo "UPDATE:".count($iAllWordIndex)."words<br>";
+	foreach($iAllWordIndex as $wIndex => $info){
+		$wordindex=$iword;
+		$newWord=array(
+								$info[1],
+								$info[2],
+								$info[3],
+								$wIndex
+							);
+		$stmt->execute($newWord);
+	}
+	// 提交更改 
+	$dbh_word_index->commit();
+	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+		$error = $dbh_word_index->errorInfo();
+		echo "error - $error[2] <br>";
+		$log.="$from, $FileName, error, $error[2] \r\n";
+	}
+	else{
+		echo "updata iword recorders.<br />";
+		$log.="updata iword recorders.\r\n";
+	}
+
+
+
 	$myLogFile = fopen($dirLog."insert_index.log", "a");
 	fwrite($myLogFile, $log);
 	fclose($myLogFile);
 	
-	
-	echo "<h2>all done!</h2>";	
+
 ?>
 
 
+<?php 
 
+if($from>=$to){
+	echo "<h2>all done!</h2>";
+}
+else{
+	echo "<script>";
+	echo "window.location.assign(\"db_insert_index.php?from=".($from+1)."&to=".$to."\")";
+	echo "</script>";
+	echo "正在载入:".($from+1)."——".$filelist[$from+1][0];
+}
+?>
 </body>
 </html>

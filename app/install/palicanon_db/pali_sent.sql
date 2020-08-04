@@ -24,4 +24,5 @@ CREATE TABLE pali_sent (
 
 
 COMMIT TRANSACTION;
+VACUUM;
 PRAGMA foreign_keys = on;

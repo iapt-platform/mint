@@ -22,4 +22,5 @@ CREATE TABLE bold (
 
 
 COMMIT TRANSACTION;
+VACUUM;
 PRAGMA foreign_keys = on;

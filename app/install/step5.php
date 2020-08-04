@@ -67,7 +67,8 @@ else{
 <div class="card">
 	<h4>单词索引表</h4>
 	<div class="contence">
-	<a href="db_insert_bold.php" target="_blank">生成</a>
+	<a href="db_insert_index.php" target="_blank">生成-一本书一次写入</a><br>
+	<a href="db_insert_index_once.php" target="_blank">一次生成所有的书</a>
 	</div>
 </div>
 

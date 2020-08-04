@@ -3,6 +3,14 @@ require_once '../pcdl/html_head.php';
 ?>
 
 <body>
+<style>
+#step3{
+	background-color: #f1e7a4;
+}
+</style>
+<?php
+require_once 'nav_bar.php';
+?>
 <h3>Step 3 Dictionary</h3>
 <div style="margin:1em;background-color:#f1e7a4;">
 生成字典数据库。约需要10分钟。您可以从网络下载已经生成好的数据库。

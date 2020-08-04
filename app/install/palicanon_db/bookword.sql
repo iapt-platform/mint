@@ -25,4 +25,5 @@ CREATE INDEX "" ON bookword (
 
 
 COMMIT TRANSACTION;
+VACUUM;
 PRAGMA foreign_keys = on;
