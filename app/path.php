@@ -19,7 +19,7 @@ define("_DIR_USERS_GUIDE_" , __DIR__."/../documents/users_guide");
 
 define("_FILE_DB_REF_"  , __DIR__."/../appdata/dict/system/ref.db");
 define("_FILE_DB_REF_INDEX_"  , __DIR__."/../appdata/dict/system/ref1.db");
-define("_FILE_DB_part_"  , __DIR__."/../appdata/dict/system/part.db3");
+define("_FILE_DB_PART_"  , __DIR__."/../appdata/dict/system/part.db3");
 
 
 define("_DIR_USER_BASE_" , __DIR__."/../user");

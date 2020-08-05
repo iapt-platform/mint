@@ -75,26 +75,32 @@ switch($_GET["dbtype"]){
 
     break;
     case "thin":
-        $dbfilename = _DIR_DICT_TEXT_."/system/{$dbname}";
-        $sDescDbFile = _DIR_DICT_SYSTEM_."/".$dbname;      
-        $csvfile = _DIR_DICT_TEXT_."/system/{$filename}";    
-        $dns = "sqlite:".$dbfilename;
+        echo "doing filename: $filename dbname: $dbname table:$table<br>";
+        $sDescDbFile = _DIR_DICT_SYSTEM_."/".$dbname; 
+        $csvfile = _DIR_DICT_TEXT_."/thin/{$filename}";    
+        $dns = "sqlite:".$sDescDbFile;
         $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         // 开始一个事务，关闭自动提交
         $dbh->beginTransaction();
         if($dbname==="ref.db"){
             if($table==="dict"){
-                $query="INSERT INTO {$table} ('id','pali', 'type', 'gramma', 'parent', 'mean', 'note', 'parts', 'partmean', 'status', 'confidence', 'len', 'dict_name', 'lang') VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query="INSERT INTO dict ('id','language', 'dict_id', 'eword', 'word', 'paliword', 'mean', 'length', 'status') VALUES ( ? ,  ? ,  ? ,  ? ,  ? ,  ? ,  ? ,  ? ,  ?  )";
             }
             else if($table==="info"){
-                $query="INSERT INTO {$table} ('id','pali', 'type', 'gramma', 'parent', 'mean', 'note', 'parts', 'partmean', 'status', 'confidence', 'len', 'dict_name', 'lang') VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query="INSERT INTO info ('language' , 'id' ,  'shortname' , 'name') VALUES (  ? ,  ? ,  ? ,  ? )";
+            }
+            else{
+                echo "table name $table unkow.";
             }
         }
         else if($dbname==="ref1.db"){
-            $query="INSERT INTO {$table} ('id','pali', 'type', 'gramma', 'parent', 'mean', 'note', 'parts', 'partmean', 'status', 'confidence', 'len', 'dict_name', 'lang') VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $query="INSERT INTO dict ('id','eword', 'word', 'length', 'count') VALUES (  ? ,  ? ,  ? ,  ? ,  ? )";
         }
-        
+        else{
+            echo "db name $dbname unkow.";
+        }
+       
         $stmt = $dbh->prepare($query);
         $count=0;
         // 打开文件并读取数据
@@ -122,17 +128,9 @@ switch($_GET["dbtype"]){
 
         $dbh = null;
 
-
-        if(copy($dbfilename,$sDescDbFile)){
-            echo "文件复制成功<br>";
-        }
-        else{
-            echo "文件复制失败<br>";
-        }
-
     break;
     case "part":
-        $dns = "sqlite:"._FILE_DB_part_;
+        $dns = "sqlite:"._FILE_DB_PART_;
         $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -156,7 +154,6 @@ switch($_GET["dbtype"]){
         // 打开文件并读取数据
         if(($fp=fopen(_DIR_DICT_TEXT_."/system/part.csv", "r"))!==FALSE){
             while(($data=fgetcsv($fp,0,','))!==FALSE){
-                //id,wid,book,paragraph,word,real,type,gramma,mean,note,part,partmean,bmc,bmt,un,style,vri,sya,si,ka,pi,pa,kam
                 $stmt->execute($data);
                 $count++;
             }

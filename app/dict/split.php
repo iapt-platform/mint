@@ -7,7 +7,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 
 if(isset($_POST["word"])){
-	$input_word=mb_strtolower($_POST["word"],'UTF-8');
+	$input_word=mb_strtolower(trim($_POST["word"]),'UTF-8');
 	if(trim($input_word)==""){
 		echo "Empty";
 	return;
@@ -27,7 +27,7 @@ Words: <textarea type="text" name="word"></textarea>
 	return;
 }
 global $dbh;
-$dns = "sqlite:"._FILE_DB_part_;
+$dns = "sqlite:"._FILE_DB_PART_;
 $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -420,7 +420,13 @@ function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
 		}
 		$len=pow(mb_strlen($strWord,"UTF-8"),3);
 		$cf+=(0-$len)/($len+150);
-		$word .= "{$strWord}(0)";
+		if(isset($_POST["debug"])){
+			$word .= $strWord."(0)";
+		}
+		else{
+			$word .= $strWord;
+		}
+		
 		$result[$word]=$cf;
 	}
 }
