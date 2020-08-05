@@ -25,7 +25,7 @@ $to=$_GET["to"];
 $filelist=array();
 $fileNums=0;
 $log="";
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 $dirDb="db/";
 
 
@@ -96,7 +96,7 @@ for($iFile=$from;$iFile<$to;$iFile++){
 		echo "{$x}<br>";
 	}
 
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 
 ?>
 </body>

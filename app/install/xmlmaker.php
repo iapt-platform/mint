@@ -60,7 +60,7 @@ $g_wordCounter=0;
 $arrUnWords[0]=array("id","word","type","gramma","parent","mean","note","part","partmean","cf","state","delete","tag","len");
 $g_unWordCounter=0;
 
-$arrToc[0]=array("id","book","par_num","level","class","language","title","author","editor","revision","edition","sub_ver");
+$arrToc[0]=array("id","book","par_num","level","class","title","text");
 $g_TocCounter=0;
 
 $arrUnPart[0]="word";
@@ -401,7 +401,7 @@ foreach ($values as $child)
 					$vriParNum++;
 					$wordOrder=1;
 					$g_TocCounter++;
-					$arrToc[$g_TocCounter]=array('NULL',$bookId,$vriParNum,"0",$class,"pali","","PCDS","PCDS","","1","0");					
+					$arrToc[$g_TocCounter]=array('NULL',$bookId,$vriParNum,"0",$class,"","");					
 					splitWords(getChildNodeValue($child,"value"));
 					$parBegin=true;
 					break;
@@ -415,7 +415,7 @@ foreach ($values as $child)
 					$wordOrder=1;
 					$parText=getChildNodeValue($child,"value");	
 					$g_TocCounter++;
-					$arrToc[$g_TocCounter]=array('NULL',$bookId,$vriParNum,"0",$class,"pali","","PCDS","PCDS","","1","0");
+					$arrToc[$g_TocCounter]=array('NULL',$bookId,$vriParNum,"0",$class,"","");
 					splitWords($parText);
 					$parBegin=false;
 					break;
@@ -498,8 +498,9 @@ foreach ($values as $child)
 
 //Toc
 $counter=0;
-//$fpCombinToc=fopen($dirDbBase."combin_toc.csv", "a");
-
+if(($fptitle=fopen($dirXmlBase.$dirXml."/".($from+1)."_title.csv", "w")) === FALSE){
+	echo "error: can not open output file toc .";
+}
 if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_toc.csv", "w"))!==FALSE){
 	$fpPaliText=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_pali.csv", "w");
 	foreach($arrToc as $xWord){
@@ -507,31 +508,42 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_toc.csv", "w"))!==FALSE)
 		switch($xWord[4]){
 			case "book":
 				$xWord[3]=1;
+				$xPali[3] = 1;
 				break;
 			case "chapter":
 				$xWord[3]=2;
+				$xPali[3] = 2;
 				break;
 			case "title":
 				$xWord[3]=3;
+				$xPali[3] = 3;
 				break;
 			case "subhead":
 				$xWord[3]=4;
+				$xPali[3] = 4;
 				break;
 			case "subsubhead":
 				$xWord[3]=5;
+				$xPali[3] = 5;
 				break;
 			case "hangnum":
 				$xWord[3]=8;
+				$xPali[3] = 8;
 				break;
 			default:
-				$xWord[3]=0;
+				$xWord[3]=100;
+				$xPali[3] = 100;
 				break;
 		}
 		
+		if($xWord[3] < 100){
+			$xWord[5] = $xWord[6];
+		}
 		
 		
 		fputcsv($fpPaliText,$xPali);
 		fputcsv($fp,$xWord);
+		fputcsv($fptitle,$xWord);
 		if($counter>0){
 			//fputcsv($fpCombinToc,$xWord);
 		}
@@ -540,6 +552,7 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_toc.csv", "w"))!==FALSE)
 	}
 	fclose($fpPaliText);
 	fclose($fp);
+	fclose($fptitle);
 	//fclose($fpCombinToc);
 	echo "TOC 表导出到：".$dirXmlBase.$dirXml.$outputFileNameHead."_toc.csv<br>";
 }
@@ -617,7 +630,7 @@ else{
 
 <?php 
 if($from>=$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";

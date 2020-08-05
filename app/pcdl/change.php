@@ -256,7 +256,7 @@ $i=$from;
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 	
 	echo "create $i ok<br>";
@@ -268,7 +268,7 @@ $i=$from;
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 	
 
@@ -279,7 +279,7 @@ $i=$from;
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 	
 	$query="UPDATE data SET album = '1' WHERE 1 ";
@@ -287,11 +287,11 @@ $i=$from;
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 }
 if($from==$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";

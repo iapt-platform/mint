@@ -36,7 +36,7 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
 $dirDb="db/";
 $inputFileName=$FileName;
@@ -113,7 +113,7 @@ else{
 
 <?php 
 if($from==$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";

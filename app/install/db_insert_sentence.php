@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<!--句子库生成-->
+<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -8,7 +9,8 @@
 <?php
 include "./_pdo.php";
 require_once '../path.php';
-$db_file = _DIR_TEMP_."/pali_sent.db3";
+
+$db_file =_FILE_DB_PALI_SENTENCE_;
 $thisfile = '.'.mb_substr(__FILE__,mb_strlen(__DIR__));
 if(isset($_GET["from"])==false){
 ?>
@@ -18,13 +20,10 @@ To: <input type="text" value="216" name="to"><br>
 <input type="submit">
 </form>
 <?php
-if(file_exists($db_file)){
-	if(!unlink($db_file)){
-		echo "error: can not delete file "._DIR_TEMP_."/pali_sent.db3";
-		return;
-	}
-}
+
 		PDO_Connect("sqlite:$db_file");
+
+		
 		$query="CREATE TABLE pali_sent (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     book      INTEGER,
@@ -76,7 +75,7 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
 $dirDb="db/";
 $inputFileName=$FileName;
@@ -209,7 +208,6 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
 			else if($pre[4]==")" && $Note_Mark==1){
 				$Note_Mark=0;
 			}
-			
 
 			if($curr[15]!="note" || mb_substr($curr[1],0,5,"UTF-8")!="gatha"){
 				if($curr[4]=="."  && !is_numeric($pre[4]) && $next[3]==$iCurrPara && $Note_Mark==0){//以.結尾且非註釋
@@ -311,7 +309,7 @@ else{
 <?php 
 
 if($from>=$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";

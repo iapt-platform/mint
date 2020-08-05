@@ -42,16 +42,16 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_;
 
-$dirDb="db/templet/";
+$dirDb=_DIR_PALICANON_TEMPLET_;
 $inputFileName=$FileName;
 $outputFileNameHead=$filelist[$from][1];
 $bookId=$filelist[$from][2];
 $vriParNum=0;
 $wordOrder=1;
 
-$dirXmlBase="xml/";
+$dirXmlBase=_DIR_PALI_CSV_."/";
 $dirXml=$outputFileNameHead."/";
 
 $currChapter="";
@@ -77,9 +77,10 @@ echo "doing:".$xmlfile."<br>";
 $log=$log."$from,$FileName,open\r\n";
 
 $arrInserString=array();
-$db_file = $dirDb.$bookId.'_tpl.db3';
+$db_file = $dirDb."/".$bookId.'_tpl.db3';
 PDO_Connect("sqlite:$db_file");
 
+PDO_Execute("DROP TABLE IF EXISTS main;");
 $query="CREATE TABLE 'main' ( 'id' TEXT PRIMARY KEY NOT NULL, 
 							'book' INTEGER, 
 							'paragraph' INTEGER, 
@@ -95,8 +96,9 @@ $query="CREATE TABLE 'main' ( 'id' TEXT PRIMARY KEY NOT NULL,
         $error = PDO_ErrorInfo();
         print_r($error[2]);
 
-    }
-
+	}
+	PDO_Execute("DROP INDEX IF EXISTS search;");
+	
 $query="CREATE INDEX 'search' ON \"main\" (\"book\", \"paragraph\", \"wid\" ASC)";
     $stmt = @PDO_Execute($query);
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -157,7 +159,7 @@ else{
 
 <?php 
 if($from==$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";

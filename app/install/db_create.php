@@ -38,7 +38,7 @@ $FileName=$filelist[$from][1].".htm";
 $fileId=$filelist[$from][0];
 $fileId=$filelist[$from][0];
 
-$dirLog="log/";
+$dirLog=_DIR_LOG_."/";
 
 $dirDb="db/$res/";
 $inputFileName=$FileName;
@@ -70,7 +70,7 @@ switch($res){
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 
 $query="CREATE INDEX 'search' ON \"data\" (\"paragraph\",\"language\",\"author\", \"editor\", \"revision\", \"edition\", \"subver\" , \"time\" )";
@@ -91,7 +91,7 @@ $query="CREATE INDEX 'search' ON \"data\" (\"paragraph\",\"language\",\"author\"
 
 <?php 
 if($from==$to){
-	echo "<h2>all done!</h2>";
+	echo "<h2>齐活！功德无量！all done!</h2>";
 }
 else{
 	echo "<script>";
