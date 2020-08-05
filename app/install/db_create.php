@@ -70,7 +70,7 @@ switch($res){
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
-        break;
+        exit;
     }
 
 $query="CREATE INDEX 'search' ON \"data\" (\"paragraph\",\"language\",\"author\", \"editor\", \"revision\", \"edition\", \"subver\" , \"time\" )";
