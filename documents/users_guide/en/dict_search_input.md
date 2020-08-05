@@ -1,16 +1,11 @@
 ## Smart Dictionary
 
+You can type the plus **（+）** in the input-box between parts in the compone word, and than click one part (under the search input) lookup dictionary.
 
-输入框中支持用**加号**分隔单词中各个组成部分。
-- 如：输入citta+kamma
+- Example：citta+kamma
 
-点击搜索框下方的**组分**查询每个组分的意思。
+Each factor will be show under the input-box, **each factor** can be clicked to be looked up in the dictionary.
 
-点击左侧的词典列表中的**词典名称**，可以进行词条跳转。
+The list on the left will list the **name of dictionary**, which can be clicked and jump.
 
-词典列表下方的**拼写列表**中，穷举了一切存在的**变化形式**以及在语料库中的出现频率。
-
-You can put the plus（+）between parts in the compone word, and than click one part(under the search input) lookup dictionary.
-
-### Example：
-citta+kamma
+The **word list** below the dictionary list contains all the existed exhaustive declension of this word and their frequencies in the whole Pāli Literature.
