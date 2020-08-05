@@ -37,6 +37,9 @@ define("_DIR_APP_" , __DIR__."/../app");
 define("_DIR_LANGUAGE_" , __DIR__."/../app/public/lang");
 define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
+//语料库
+define("_DIR_CSV_PALI_CANON_WORD_" , __DIR__."/../paliword/book");
+define("_DIR_CSV_PALI_CANON_WORD_INDEX_" , __DIR__."/../paliword/index");
 
 //pali canon db file
 define("_FILE_DB_RES_INDEX_"  , __DIR__."/../appdata/palicanon/res.db3");
