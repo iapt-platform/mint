@@ -280,7 +280,7 @@ switch($op){
 				$time_start=microtime_float();
 
 
-				$dictFileName=_FILE_DB_INDEX_;
+				$dictFileName=_FILE_DB_PALI_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
