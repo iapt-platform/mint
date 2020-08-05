@@ -67,48 +67,49 @@ $filelist = array();
 if(($handle=fopen(_DIR_DICT_TEXT_.'/rich/list.txt','r'))!==FALSE){
 	while(($data=fgetcsv($handle,0,','))!==FALSE){
         $filelist[] = $data;     
-	}
+    }
+    foreach($filelist as $value){
+        echo "rich_file_list.push(['{$value[0]}','{$value[1]}']);\n";
+    }    
 }
 else{
     exit("无法打开rich文件列表");
 }
 
-foreach($filelist as $value){
-    echo "rich_file_list.push(['{$value[0]}','{$value[1]}']);\n";
 
-}
 
 echo "var sys_file_list = new Array();\n";
 $filelist = array();
 if(($handle=fopen(_DIR_DICT_TEXT_.'/system/list.txt','r'))!==FALSE){
 	while(($data=fgetcsv($handle,0,','))!==FALSE){
         $filelist[] = $data; 
-	}
+    }
+    foreach($filelist as $value){
+        echo "sys_file_list.push(['{$value[0]}','{$value[1]}']);\n";
+
+    }    
 }
 else{
     exit("无法打开system文件列表");
 }
 
-foreach($filelist as $value){
-    echo "sys_file_list.push(['{$value[0]}','{$value[1]}']);\n";
 
-}
 
 echo "var thin_file_list = new Array();\n";
 $filelist = array();
 if(($handle=fopen(_DIR_DICT_TEXT_.'/thin/list.csv','r'))!==FALSE){
 	while( ($data=fgetcsv($handle,0 , ',' ) )!==FALSE){
         $filelist[] = $data; 
-	}
+    }
+    foreach($filelist as $value){
+        echo "thin_file_list.push(['{$value[0]}','{$value[1]}','{$value[2]}']);\n";
+    }    
 }
 else{
     exit("无法打开thin文件列表");
 }
 
-foreach($filelist as $value){
-    echo "thin_file_list.push(['{$value[0]}','{$value[1]}','{$value[2]}']);\n";
 
-}
 
 ?>
 var iCurrRichDictIndex = 0;
