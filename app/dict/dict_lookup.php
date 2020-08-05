@@ -363,15 +363,17 @@ switch($op){
 		echo "<div>".count($arrWords)."个相关单词</div>";
 		$weight = 0;
 		foreach($arrWords as $oneword){
+			$weight += $oneword["count"] * $oneword["len"];
+		}
+		echo "<div>单词总重量：$weight</div>";
+		foreach($arrWords as $oneword){
 			if($oneword["bold"]>0){
 				echo "<div><b>{$oneword["word"]}</b>[{$oneword["count"]}]</div>";
 			}
 			else{
 				echo "<div>{$oneword["word"]}[{$oneword["count"]}]</div>";
 			}
-			$weight += $oneword["count"] * $oneword["len"];
-		}
-		echo "<div>单词重量：$weight</div>";
+		}		
 		echo "</div>";
 		echo "</div>";
 		echo "</div>";
@@ -390,20 +392,20 @@ switch($op){
 		else{
 			echo "<div id='user_word_edit'>";
 		}
-		echo "<div class=''>Type：";
+		echo "<fieldset class='broder-1 broder-r'><legend>Type</legend>";
 		echo "<select id=\"id_type\" name=\"type\" >";
 		foreach($_local->type_str as $type){
 			echo "<option value=\"{$type->id}\" >{$type->value}</option>";
 		}
 		echo "</select>";
-		echo "</div>";
-		echo "<div class=''>Gramma:<input type='input' value=''/></div>";
-		echo "<div class=''>语基：<input type='input' value=''/></div>";
-		echo "<div class=''>意思：<input type='input' value=''/></div>";
-		echo "<div class=''>注解：<textarea></textarea></div>";
-		echo "<div class=''>组分：<input type='input' value=''/></div>";
-		echo "<div class=''>组分意思：<input type='input' value=''/></div>";
-		echo "<div class=''><button>收藏</button></div>";
+		echo "</fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>Gramma</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>语基</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>意思</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>注解</legend><textarea></textarea></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>组分</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>组分意思</legend><input type='input' value=''/></fieldset>";
+		echo "<div class=''><button>添加到我的单词本</button></div>";
 		echo "</div>";
 		echo "</div>";	
 		echo "</div>";			

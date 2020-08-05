@@ -109,4 +109,12 @@ a:active {
     transition-duration: 0.2s;
 }
 
-
+.broder-1{
+    border: 1px solid var(--border-line-color);
+}
+.broder-2{
+    border: 2px solid var(--border-line-color);
+}
+.broder-r{
+    border-radius: 5px;
+}

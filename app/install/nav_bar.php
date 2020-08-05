@@ -26,38 +26,50 @@
 </div>
 
 <div id = "step1" class="card nav_card">
-    <h3>1.建立目录</h3>
-    <div class="content">
-   
-    </div>
+    <a href="step1.php" style="display: inline-block;width: 100%;height: 100%;">
+        <h3>1.建立目录</h3>
+        <div class="content">
+    
+        </div>
+    </a>
 </div>
 
 <div  id = "step2" class="card nav_card">
+    <a href="step2.php" style="display: inline-block;width: 100%;height: 100%;">
     <h3>2-用户数据存储库</h3>
     <div class="content">
     
     </div>
+    </a>
 </div>
+
 
 <div  id = "step3" class="card nav_card">
-    <h3>3-字典数据库</h3>
-    <div class="content">
-    
-    </div>
+    <a href="step3.php" style="display: inline-block;width: 100%;height: 100%;">
+        <h3>3-字典数据库</h3>
+        <div class="content">
+        
+        </div>
+    </a>
 </div>
 
+
 <div  id = "step4" class="card nav_card">
+    <a href="step4.php" style="display: inline-block;width: 100%;height: 100%;">
     <h3>4-语料库数据库文件</h3>
     <div class="content">
     
     </div>
+    </a>
 </div>
 
 <div  id = "step5" class="card nav_card">
+    <a href="step5.php" style="display: inline-block;width: 100%;height: 100%;">
     <h3>建立三藏语料数据库</h3>
     <div class="content">
     Build Pali Canon Database
     </div>
+    </a>
 </div>
 
 </div>

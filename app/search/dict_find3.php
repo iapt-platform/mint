@@ -184,7 +184,7 @@ switch($op){
 		//黑体字主显示区右侧开始
 		echo "<div id=\"dict_bold_right\" style='flex:7;'>";
 		//前20条记录
-		$dictFileName=_FILE_DB_INDEX_;
+		$dictFileName=_FILE_DB_WORD_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 
 		$query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId LIMIT 0,20";
@@ -320,7 +320,7 @@ switch($op){
 				}
 				//查找这些词出现在哪些书中结束
 				//前20条记录
-				$dictFileName=_FILE_DB_INDEX_;
+				$dictFileName=_FILE_DB_WORD_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";

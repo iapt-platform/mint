@@ -332,7 +332,7 @@ switch($res_type){
 	}
 	echo "insert  ok<br>";	
 	if($from>=$to){
-		echo "<h2>all done!</h2>";
+		echo "<h2>齐活！功德无量！all done!</h2>";
 	}
 	else{
 		echo "<script>";
