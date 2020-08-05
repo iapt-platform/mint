@@ -19,7 +19,7 @@ define("_DIR_USERS_GUIDE_" , __DIR__."/../documents/users_guide");
 
 define("_FILE_DB_REF_"  , __DIR__."/../appdata/dict/system/ref.db");
 define("_FILE_DB_REF_INDEX_"  , __DIR__."/../appdata/dict/system/ref1.db");
-define("_FILE_DB_part_"  , __DIR__."/../appdata/dict/system/part.db3");
+define("_FILE_DB_PART_"  , __DIR__."/../appdata/dict/system/part.db3");
 
 
 define("_DIR_USER_BASE_" , __DIR__."/../user");
@@ -37,6 +37,9 @@ define("_DIR_APP_" , __DIR__."/../app");
 define("_DIR_LANGUAGE_" , __DIR__."/../app/public/lang");
 define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
+//语料库
+define("_DIR_CSV_PALI_CANON_WORD_" , __DIR__."/../paliword/book");
+define("_DIR_CSV_PALI_CANON_WORD_INDEX_" , __DIR__."/../paliword/index");
 
 //pali canon db file
 define("_FILE_DB_RES_INDEX_"  , __DIR__."/../appdata/palicanon/res.db3");

@@ -67,8 +67,15 @@ else{
 <div class="card">
 	<h4>单词索引表</h4>
 	<div class="contence">
+	<a href="db_insert_index_csv.php" target="_blank">csv</a><br>
 	<a href="db_insert_index.php" target="_blank">生成-一本书一次写入</a><br>
-	<a href="db_insert_index_once.php" target="_blank">一次生成所有的书</a>
+	<a href="db_insert_index_once.php" target="_blank">一次生成所有的书</a><br>
+
+	<a href="db_insert_word_from_csv.php" target="_blank">从csv文件导入单词表</a><br>
+	<a href="db_insert_wordindex_from_csv.php" target="_blank">从csv文件导入单词索引表</a><br>
+
+	<a href="db_insert_bookword_from_csv.php" target="_blank">从csv文件导入书单词索引表</a><br>
+	
 	</div>
 </div>
 
