@@ -1,6 +1,6 @@
 <?php
 if(!isset($_COOKIE["username"])){
-	exit;
+	//exit;
 }
 //	
 //	Project: phpLiteAdmin (http://www.phpliteadmin.org/)
