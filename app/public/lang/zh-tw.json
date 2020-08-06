@@ -189,7 +189,7 @@
 		"months": "個月",
 		"more": "更多",
 		"my_book": "自定義書籍",
-		"my_dictionary": "我的詞典",
+		"my_dictionary": "我的單詞表",
 		"my_document": "我的檔案",
 		"my_loc": "我的位置",
 		"name": "名稱",
@@ -423,6 +423,12 @@
 		"library": "藏經閣",
 		"turbo_split": "強力拆分",
 		"full_text": "全文",
+		"word_weight": "單詞權重",
+		"characters": "個字元",
+		"real_declension": "實際變化",
+		"forms": "種形式",
+		"add_to": "新增到",
+		"undone_function": "未完成功能",
 		"": ""
 	},
 	"grammastr": [

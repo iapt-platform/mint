@@ -1,10 +1,12 @@
 function guide_init() {
     $("guide").each(function () {
         if ($(this).offset().left < $(document.body).width() / 2) {
-            $(this).append('<div  class="guide_contence" style="left: 0;"></div>');
+            $(this).append('<div  class="guide_contence" style="left: -5px;"></div>');
+            $(".guide_contence:after").css("left", "0");
         }
         else {
-            $(this).append('<div  class="guide_contence" style="right: 0;"></div>');
+            $(this).append('<div  class="guide_contence" style="right: -5px;"></div>');
+            $(".guide_contence:after").css("right", "0");
         }
     });
 
@@ -27,6 +29,13 @@ function guide_init() {
                     console.error(e);
                 }
             });
+        /*        if ($(this).offset().left < $(document.body).width() / 2) {
+                    $(".guide_contence:after").css("left", "0");
+                }
+                else {
+                    $(".guide_contence:after").css("right", "0");
+                }*/
+
     });
 
 }
