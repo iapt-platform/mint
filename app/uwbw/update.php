@@ -2,9 +2,9 @@
 /*
 get xml doc from db
 */
-include "../path.php";
-include "../public/_pdo.php";
-include "../public/function.php";
+require_once "../path.php";
+require_once "../public/_pdo.php";
+require_once "../public/function.php";
 
 
 $aData=json_decode($_POST["data"]);

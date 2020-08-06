@@ -3,7 +3,7 @@
 <head>
 </head>
 <body>
-<h2>Insert to Index</h2>
+<h2>Insert csv to word table</h2>
 <p><a href="index.php">Home</a></p>
 <?php
 include "./_pdo.php";

@@ -1,80 +1,9 @@
 <?php
-require_once '../ucenter/login.php';
-require_once '../public/config.php';
-require_once '../public/load_lang.php';
-
-
-//load language file
-if(file_exists($dir_language.$currLanguage.".php")){
-	require $dir_language.$currLanguage.".php";
-}
-else{
-	include $dir_language."default.php";
-}
-
-
-
-if(isset($_GET["device"])){
-	$currDevice=$_GET["device"];
-}
-else{
-	if(isset($_COOKIE["device"])){
-		$currDevice=$_COOKIE["device"];
-	}
-	else{
-		$currDevice="computer";
-	}
-}
-
+require_once '../studio/index_head.php';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link type="text/css" rel="stylesheet" href="css/style.css"/>
-	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<title><?php echo $_local->gui->pcd_studio; ?></title>
-	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/index_mydoc.js"></script>
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="../public/js/jquery.js"></script>
-	<script src="js/fixedsticky.js"></script>
-	<script src="../doc/coop.js"></script>
-	<script src="../public/js/notify.js"></script>
-	<script src="../public/js/comm.js"></script>
-	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
-
-	<script type="text/javascript">
-	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
-		
-		var g_device = "computer";
-		var strSertch = location.search;
-		if(strSertch.length>0){
-			strSertch = strSertch.substr(1);
-			var sertchList=strSertch.split('&');
-			for ( i in sertchList){
-				var item = sertchList[i].split('=');
-				if(item[0]=="device"){
-					g_device=item[1];
-				}
-			}
-		}
-		if(g_device=="mobile"){
-			g_is_mobile=true;
-		}
-		else{
-			g_is_mobile=false;
-		}
-
-		var g_langrage="en";
-		function menuLangrage(obj){
-			g_langrage=obj.value;
-			setCookie('language',g_langrage,365);
-			window.location.assign("index.php?language="+g_langrage);
-		}
-	
-	var gCurrPage="recent_scan";
+<body id="file_list_body" onLoad="indexInit()">
+	<script>
+		var gCurrPage="recent_scan";
 	</script>
 	<style>
 	#recent_scan {
@@ -87,8 +16,8 @@ else{
 		cursor:auto;
 	}
 	</style>
-</head>
-<body id="file_list_body" onLoad="indexInit()">
+	<script language="javascript" src="js/index_mydoc.js"></script>
+	<script src="../doc/coop.js"></script>
 
 	<?php
 	require_once 'index_tool_bar.php';

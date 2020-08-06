@@ -290,7 +290,7 @@ switch($op){
 				echo "<div >搜索时间：$queryTime </div>";
 				$iFetch=count($Fetch);
 				if($iFetch>0){
-					$dictFileName=$_file_db_pali_text;
+					$dictFileName=_FILE_DB_PALITEXT_;
 					PDO_Connect("sqlite:$dictFileName");
 					for($i=0;$i<$iFetch;$i++){
 						$paliword=$Fetch[$i]["wordindex"];

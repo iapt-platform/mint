@@ -55,22 +55,13 @@ $month=$_GET['m']?$_GET['m']:date('m');
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">
-	<link type="text/css" rel="stylesheet" href="<?php echo $dir_user_base.$userid.$dir_myApp; ?>/style.css"/>
 	<title>PCD Studio</title>
 	<script language="javascript" src="config.js"></script>
 	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/xml.js"></script>
-	<script language="javascript" src="js/editor.js"></script>
-	<script language="javascript" src="js/dict.js"></script>
-	<script language="javascript" src="js/wizard.js"></script>
-	<script language="javascript" src="js/search.js"></script>
-	<script language="javascript" src="term_sys_list.js"></script>
 	<script language="javascript" src="charcode/sinhala.js"></script>
 	<script language="javascript" src="charcode/myanmar.js"></script>
 	<script language="javascript" src="charcode/unicode.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
-
-	<script language="javascript" src="<?php echo $dir_user_base.$userid.$dir_myApp; ?>/userinfo.js"></script>
 
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 	<script language="javascript" src="module/editor/language/<?php echo $currLanguage; ?>.js"></script>
@@ -127,14 +118,16 @@ $month=$_GET['m']?$_GET['m']:date('m');
 
 	<!--加载语言文件 -->
 	<script language="javascript" src="language/default.js"></script>
-	<?php
-	if(file_exists("../user/App/language/$currLanguage.js")){
-		echo("<script language=\"javascript\" src=\"../user/App/language/$currLanguage.js\"></script>");
-	}
-	else{
-		echo("<script language=\"javascript\" src=\"language/$currLanguage.js\"></script>");
-	}
+	<script language="javascript">
+	<?php 
+	//加载js语言包
+	require_once '../public/load_lang_js.php';
 	?>
+	</script>	
+
+	//加载js语言包
+
+
 	<!--加载语言文件结束 -->
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/fixedsticky.js"></script>

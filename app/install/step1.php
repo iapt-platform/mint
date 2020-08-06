@@ -17,6 +17,7 @@ require_once 'nav_bar.php';
 <div>
 <?php
 $dir[]=_DIR_APPDATA_;
+
 $dir[]=_DIR_PALICANON_;
 $dir[]=_DIR_PALICANON_TEMPLET_;
 $dir[]=_DIR_PALICANON_WBW_;
@@ -27,9 +28,6 @@ $dir[]=_DIR_DICT_SYSTEM_;
 $dir[]=_DIR_DICT_3RD_;
 
 $dir[]=_DIR_USER_BASE_;
-$dir[]=_DIR_PALI_HTML_;
-$dir[]=_DIR_FONT_;
-$dir[]=_DIR_DICT_TEXT_;
 $dir[]=_DIR_PALI_CSV_;
 $dir[]=_DIR_TEMP_;
 $dir[]=_DIR_LOG_;
@@ -55,6 +53,7 @@ foreach($dir as $onedir){
 }
 ?>
 </div>
-<h2><a href="step2.php">Next</a></h2>
+<hr>
+<h2  style="text-align:center;"><a href="step2.php">Next</a></h2>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 global $PDO;
 
@@ -149,7 +149,7 @@ else{
 						<?php
 						
 
-		$dictFileName=$dir_dict_system."ref.db";
+		$dictFileName=_FILE_DB_REF_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "select * from info where 1  limit 0,100";
 		$Fetch = PDO_FetchAll($query);

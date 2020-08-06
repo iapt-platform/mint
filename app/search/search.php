@@ -6,6 +6,7 @@ require_once "../public/config.php";
 require_once "../public/_pdo.php";
 require_once "../public/load_lang.php";//语言文件
 require_once "../public/function.php";
+require_once "../path.php";
 
 _load_book_index();
 
@@ -301,7 +302,7 @@ switch($op){
 		$queryTime=(microtime_float()-$time_start)*1000;
 		$iFetch=count($Fetch);
 		if($iFetch>0){
-			$dictFileName=$_file_db_pali_text;
+			$dictFileName=_FILE_DB_PALITEXT_;
 			PDO_Connect("sqlite:$dictFileName");			
 			for($i=0;$i<$iFetch;$i++){
 				$paliwordid=$Fetch[$i]["wordindex"];
@@ -403,7 +404,7 @@ switch($op){
 				echo "<div >搜索时间：$queryTime </div>";
 				$iFetch=count($Fetch);
 				if($iFetch>0){
-					$dictFileName=$_file_db_pali_text;
+					$dictFileName=_FILE_DB_PALITEXT_;
 					PDO_Connect("sqlite:$dictFileName");
 					for($i=0;$i<$iFetch;$i++){
 						$paliword=$Fetch[$i]["wordindex"];

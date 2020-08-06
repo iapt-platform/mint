@@ -257,7 +257,7 @@ else{
 	<div class="help_div">
 		<div class="htlp_title"><?php echo $_local->gui->start;?></div>
 		<ul style="list-style-type: none;">
-			<li><a href="studio/index.php" target="_block"><?php echo $_local->gui->newproject;?></a></li>
+			<li><a href="../studio/index_pc.php" target="_block"><?php echo $_local->gui->newproject;?></a></li>
 			<li><a href="" target="_block">自学教程（建設中）</a></li>
 		</ul>
 	</div>
@@ -395,8 +395,8 @@ else{
 			<div class="help_fun_block">
 				<div class="title" >译经楼</div>
 				<ul class="help_fun_block_link_list">
-					<li  style="display:block;">发布连载：2</li>
-					<li style="display:block;">发布文章：12</li>
+					<li style="display:block;">已发表的文集：2</li>
+					<li style="display:block;">已发表的文章：12</li>
 					<li style="display:block;">私有文档：234</li>
 					<li style="display:block;">圣典百科：245</li>
 				</ul>
@@ -404,9 +404,9 @@ else{
 			<div class="help_fun_block">
 				<div class="title" >藏经阁</div>
 				<ul class="help_fun_block_link_list" style="display:unset;">
-					<li style="display:block;">连载：2</li>
+					<li style="display:block;">文集：2</li>
 					<li style="display:block;">文章：12</li>
-					<li style="display:block;">字典：245</li>
+					<li style="display:block;">百科：245</li>
 				</ul>
 			</div>
 			<div class="help_fun_block">
@@ -455,10 +455,10 @@ else{
                         }
                         for(let x=0;x<count;x++){
                             if(file_list[x].doc_info && file_list[x].doc_info.length>1){
-                                $link="<a href='studio/editor.php?language=<?php echo $currLanguage;?>&op=opendb&fileid="+file_list[x].id+"' target='_blank'>[db]";
+                                $link="<a href='../studio/editor.php?language=<?php echo $currLanguage;?>&op=opendb&fileid="+file_list[x].id+"' target='_blank'>[db]";
                             }
                             else{
-                                $link="<a href='studio/editor.php?language=<?php echo $currLanguage;?>&op=open&fileid="+file_list[x].id+"' target='_blank'>";
+                                $link="<a href='../studio/editor.php?language=<?php echo $currLanguage;?>&op=open&fileid="+file_list[x].id+"' target='_blank'>";
                             }
 
                             strFilelist += "<li>"+$link+file_list[x].title+"</a></li>";

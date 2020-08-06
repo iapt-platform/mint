@@ -63,7 +63,10 @@ PDO_Connect("sqlite:$db_file");
 $pali_text_array=array();
 if(($fpPaliText=fopen($dirPaliTextBase.$xmlfile, "r"))!==FALSE){
 	while(($data=fgets($fpPaliText))!==FALSE){
-		array_push($pali_text_array,$data);
+		if(  substr($data,0,2) === "<p" ){
+			array_push($pali_text_array,$data);
+		}
+		
 	}
 	fclose($fpPaliText);
 	echo "pali text load：".$dirPaliTextBase.$xmlfile."<br>";
@@ -76,10 +79,10 @@ $inputRow=0;
 if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead."_pali.csv", "r"))!==FALSE){
 	while(($data=fgetcsv($fp , 0 , ',' )) !== FALSE ){
 		if($inputRow>0){
-		if(($inputRow-1)<count($pali_text_array)){
-			$data[5]=$pali_text_array[$inputRow-1];
-		}
-		$arrInserString[]=$data;
+			if(($inputRow-1)<count($pali_text_array)){
+				$data[5]=$pali_text_array[$inputRow-1];
+			}
+			$arrInserString[]=$data;
 		}
 		$inputRow++;
 	}

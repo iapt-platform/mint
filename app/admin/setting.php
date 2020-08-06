@@ -1,6 +1,6 @@
 ﻿<?php
 
-require_once '../public/config.php';
+require_once '../path.php';
 require_once "../public/_pdo.php";
 
 if(isset($_GET["language"])){$currLanguage=$_GET["language"];}
@@ -85,7 +85,7 @@ $album_power["2"]="编辑";
 <?php
 	switch($currSettingItem){
 		case "account":
-			PDO_Connect("sqlite:$_file_db_userinfo");
+			PDO_Connect("sqlite:"._FILE_DB_USERINFO_);
 			$query = "select * from 'user' where 1 limit 0,1000";
 			$user_info = PDO_FetchAll($query);
 			echo "<table>";
@@ -127,7 +127,7 @@ $album_power["2"]="编辑";
 			echo "</table>";
 			break;		
 		case "share":
-			PDO_Connect("sqlite:$_file_db_fileindex");
+			PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 			$query = "select count(*) from 'fileindex' where share=1";
 			$file_count = PDO_FetchOne($query);
 			echo "共计：{$file_count} 个共享文件";

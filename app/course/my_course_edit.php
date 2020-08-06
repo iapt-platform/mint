@@ -46,7 +46,7 @@ foreach ($covers as $value) {
 
     $coverlink = $cover["{$lesson_info["cover"]}"];
     if(substr($coverlink,0,6)=="media:"){
-        $cover_html = '<div style="width: 20em;"><img src="../../user/media/3/'.substr($coverlink,6).'" width="100%" height="auto"></div>';
+        $cover_html = '<div style="width: 20em;"><img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto"></div>';
     }
     else{
         $cover_html =  '<div style="width: 20em;"><img src="'.$coverlink.'" width="50" height="50"></div>';

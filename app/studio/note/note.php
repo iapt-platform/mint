@@ -1,5 +1,5 @@
 <?php
-require_once '../../public/config.php';
+require_once '../../path.php';
 require_once "../../public/_pdo.php";
 require_once "../public.inc";
 require_once "../book_list_en.inc";
@@ -52,14 +52,17 @@ while($result = $sth->fetch(PDO::FETCH_ASSOC))
 }
 $para_path=_get_para_path($bookId,$para);
 //find out translation
-$tran="";
-$db_file="../".$dir_palicanon."sentence.db3";
+
+$db_file=_FILE_DB_SENTENCE_;
 PDO_Connect("sqlite:$db_file");
 $query="select * from sentence where book='{$bookId}' and paragraph='{$para}' and begin='{$begin}' and end='{$end}' ";
 $Fetch = PDO_FetchAll($query);
 $iFetch=count($Fetch);
 if($iFetch>0){
 	$tran = $Fetch[0]["text"];
+}
+else{
+	$tran="";
 }
 		
 

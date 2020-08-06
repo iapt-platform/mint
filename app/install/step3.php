@@ -73,7 +73,7 @@ if(($handle=fopen(_DIR_DICT_TEXT_.'/rich/list.txt','r'))!==FALSE){
     }    
 }
 else{
-    exit("无法打开rich文件列表");
+   // exit("无法打开rich文件列表");
 }
 
 
@@ -90,7 +90,7 @@ if(($handle=fopen(_DIR_DICT_TEXT_.'/system/list.txt','r'))!==FALSE){
     }    
 }
 else{
-    exit("无法打开system文件列表");
+   // exit("无法打开system文件列表");
 }
 
 
@@ -106,7 +106,7 @@ if(($handle=fopen(_DIR_DICT_TEXT_.'/thin/list.csv','r'))!==FALSE){
     }    
 }
 else{
-    exit("无法打开thin文件列表");
+    //exit("无法打开thin文件列表");
 }
 
 
@@ -215,6 +215,6 @@ function run_part_dict(){
 	</div>
 </div>
 <hr>
-<h2><a href="step4.php">[Next]</a></h2>
+<h2 style="text-align:center;"><a href="step5.php">[Next]</a></h2>
 </body>
 </html>

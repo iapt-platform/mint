@@ -1,8 +1,8 @@
 ﻿<?php
 //查询参考字典
-require 'casesuf.inc';
-include "./config.php";
-include "./_pdo.php";
+require_once 'casesuf.inc';
+require_once "../path.php";
+require_once "./_pdo.php";
 
 
 $op=$_GET["op"];
@@ -13,7 +13,7 @@ $count_return=0;
 $dict_list=array();
 
 global $PDO;
-$dictFileName=$dir_dict_system."ref.db";
+$dictFileName=_FILE_DB_REF_;
 PDO_Connect("sqlite:$dictFileName");
 
 function isExsit($word){

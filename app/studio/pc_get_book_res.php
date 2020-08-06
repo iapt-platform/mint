@@ -10,7 +10,7 @@ $revision=$_GET["revision"];
 $edition=$_GET["edition"];
 $subver=$_GET["subver"];
 
-include "./config.php";
+include "../path.php";
 include "./_pdo.php";
 include "./public.inc";
 
@@ -22,7 +22,7 @@ $guid=GUIDv4();
 	switch($res_type){
 		case "wbw":
 			if($author=="templet"){
-				$db_file = "../appdata/palicanon/templet/".$currBook."_tpl.db3";
+				$db_file = _DIR_PALICANON_TEMPLET_."/".$currBook."_tpl.db3";
 			}
 			else{
 				$db_file = "../appdata/palicanon/wbw/".$currBook."_wbw.db3";
@@ -30,15 +30,14 @@ $guid=GUIDv4();
 			break;
 		case "heading":
 			if($author=="templet"){
-				//$db_file = "../appdata/palicanon/templet/toc.db3";
-				$db_file = "../appdata/palicanon/pali_text/".$currBook."_pali.db3";
+				$db_file = _FILE_DB_PALITEXT_;
 			}
 			else{
-				$db_file = "../appdata/palicanon/heading/toc.db3";
+				$db_file = _FILE_DB_PALITEXT_;
 			}
 			break;
 		case "translate":
-			$db_file = "../appdata/palicanon/translate/".$currBook."_translate.db3";
+			$db_file = _DIR_PALICANON_TRAN_."/".$currBook."_translate.db3";
 			break;
 		case "note":
 			$db_file = "../appdata/palicanon/note/".$currBook."_note.db3";

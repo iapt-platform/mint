@@ -1,6 +1,6 @@
 <?php
 require 'checklogin.inc';
-require '../public/config.php';
+require '../path.php';
 require "../public/_pdo.php";
 require "./public.inc";
 $type["pali"]=1;
@@ -67,7 +67,7 @@ function new_album($filename,$book,$album_id,$album_type,$album_author,$album_ti
 switch($step){
 	case 1:
 		if(isset($_GET["filename"])){
-			$db_file = $dir_palicanon.'res.db3';
+			$db_file = _FILE_DB_RESRES_INDEX_;
 			PDO_Connect("sqlite:$db_file");
 			$album_id=$_GET["id"];
 			$filename=$_GET["filename"];
@@ -103,7 +103,7 @@ switch($step){
 		}
 		break;
 	case 3://选择专辑
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");
 		$album_type=$_GET["album_type"];
 		$book=$_GET["book"];
@@ -327,7 +327,7 @@ switch($step){
 				
 				
 				//更新索引表
-				$db_file = $dir_palicanon.'res.db3';
+				$db_file = _FILE_DB_RESRES_INDEX_;
 				PDO_Connect("sqlite:$db_file");	
 				echo "开始更新索引 ",count($arrToc),"<br />";
 				//开始更新索引
@@ -582,7 +582,7 @@ switch($step){
 				
 				
 				//更新索引表
-				$db_file = $dir_palicanon.'res.db3';
+				$db_file = _FILE_DB_RESRES_INDEX_;
 				PDO_Connect("sqlite:$db_file");	
 				echo "开始更新索引 ",count($arrToc),"<br />";
 				//开始更新索引
