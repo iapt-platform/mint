@@ -12,14 +12,17 @@ require_once '../public/load_lang.php';
 
 	<link type="text/css" rel="stylesheet" href="../studio/css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="../studio/css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>	
+	
 
 	<title id="page_title"><?php echo $_local->gui->pcd_studio; ?></title>
 
 	<script src="../studio/js/common.js"></script>
+	<script src="../public/js/jquery.js"></script>	
 	<script src="../studio/js/fixedsticky.js"></script>	
-	<script src="../public/js/jquery.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
 	<script src="../public/js/notify.js"></script>
+
 	<script src="../public/js/comm.js"></script>
 
 
