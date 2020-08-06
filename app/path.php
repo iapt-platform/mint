@@ -49,9 +49,6 @@ define("_DIR_APP_" , __DIR__."/../app");
 define("_DIR_LANGUAGE_" , __DIR__."/../app/public/lang");
 define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
-
-
-
 /*user data*/
 define("_DIR_USER_BASE_" , __DIR__."/../tmp/user");
 define("_DIR_USER_IMG_" , __DIR__."/../tmp/user/media/3");
