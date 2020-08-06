@@ -1,6 +1,6 @@
 ﻿<?php
 require 'checklogin.inc';
-require 'config.php';
+
 //获取服务器端字典列表
 /*
 $dir = 'dict/';

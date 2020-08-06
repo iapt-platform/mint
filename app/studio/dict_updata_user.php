@@ -1,4 +1,7 @@
 <?php
+/*
+更新用户字典，已经不使用了
+*/
 include "./_pdo.php";
 include "config.php";
 
