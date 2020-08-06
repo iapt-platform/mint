@@ -1,141 +1,34 @@
 <?php
-require_once 'checklogin.inc';
-require_once '../public/config.php';
-require_once '../public/load_lang.php';
-require_once "../public/_pdo.php";
-
-//load language file
-if(file_exists($dir_language.$currLanguage.".php")){
-	require $dir_language.$currLanguage.".php";
-}
-else{
-	include $dir_language."default.php";
-}
-
-
-
-if(isset($_GET["device"])){
-	$currDevice=$_GET["device"];
-}
-else{
-	if(isset($_COOKIE["device"])){
-		$currDevice=$_COOKIE["device"];
-	}
-	else{
-		$currDevice="computer";
-	}
-}
-
+require_once '../studio/index_head.php';
+require_once '../public/_pdo.php';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link type="text/css" rel="stylesheet" href="css/style.css"/>
-	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<title><?php echo $_local->gui->pcd_studio; ?></title>
-	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/filenew.js"></script>
-	<script language="javascript" src="js/index_mydoc.js"></script>
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="../public/js/jquery.js"></script>
-	<script src="js/fixedsticky.js"></script>
-	<script type="text/javascript">
-	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
-		
-		var g_device = "computer";
-		var strSertch = location.search;
-		if(strSertch.length>0){
-			strSertch = strSertch.substr(1);
-			var sertchList=strSertch.split('&');
-			for ( i in sertchList){
-				var item = sertchList[i].split('=');
-				if(item[0]=="device"){
-					g_device=item[1];
-				}
-			}
-		}
-		if(g_device=="mobile"){
-			g_is_mobile=true;
-		}
-		else{
-			g_is_mobile=false;
-		}
 
-		var g_langrage="en";
-		function menuLangrage(obj){
-			g_langrage=obj.value;
-			setCookie('language',g_langrage,365);
-			window.location.assign("index.php?language="+g_langrage);
-		}
-
-	</script>
-
-</head>
 <body class="indexbody" >
+<script >
+	var gCurrPage="group_index";
+</script>
 
+<style>
+	#group_index {
+		background-color: var(--btn-border-color);
+		
+	}
+	#group_index:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
 		<!-- tool bar begin-->
-		<div class='index_toolbar'>
-			<div id="index_nav">
-				<button><?php echo $_local->gui->recent_scan;?></button>
-				<button><a href="index_pc.php?language=<?php echo $currLanguage; ?>"><?php echo $_local->gui->pali_canon;?></a></button>
-				<button class="selected" ><a href="group.php?language=<?php echo $currLanguage; ?>">Group</a></button>
-				<button><a href="filenew.php?language=<?php echo $currLanguage; ?>"><?php echo $_local->gui->new_project;?></a></button>
-				<button><a href="index_tools.php?language=<?php echo $currLanguage; ?>"><?php echo $_local->gui->tools;?></a></button>
-			</div>
-			<div>
-			
-			</div>
-			<div class="toolgroup1">
-				<span><?php echo $_local->gui->language;?></span>
-				<select id="id_language" name="menu" onchange="menuLangrage(this)">
-					<option value="en" >English</option>
-					<option value="si" >සිංහල</option>
-					<option value="my" >myanmar</option>
-					<option value="zh-cn" >简体中文</option>
-					<option value="zh-tw" >繁體中文</option>
-				</select>
-			
-			<?php 
-			
-				echo $_local->gui->welcome;
-				echo "<a href=\"setting.php?item=account\">";
-				echo urldecode($_COOKIE["nickname"]);
-				echo "</a>";
-				echo $_local->gui->to_the_dhamma;
-				echo "<a href='login.php?op=logout'>";
-				echo $_local->gui->logout;
-				echo "</a>";;
-			?>
-				<button class="icon_btn" id="file_select" >
-					<a href="setting.php" target='_blank'>
-					<svg class="icon">
-						<use xlink:href="svg/icon.svg#ic_settings"></use>
-					</svg>
-					</a>
-				</button>			
-			</div>
-		</div>	
+		<?php
+		require_once '../studio/index_tool_bar.php';
+		?>
 		<!--tool bar end -->
 		<script>
 			document.getElementById("id_language").value="<?php echo($currLanguage); ?>";
 		</script>
 	<div class="index_inner">
-		<div id="id_app_name"><?php echo $module_gui_str['editor']['1051'];?>
-			<span style="font-size: 70%;">1.6</span><br />
-			<?php if($currLanguage=="en"){ ?>
-				<span style="font-size: 70%;">Pali Cannon Database Studio</span>
-			<?php 
-			}
-			else{
-			?>
-				<span style="font-size: 70%;">PCD Studio</span>
-			<?php
-			}
-			?>
-		</div>
-				
+			
 		<div class="fun_block">
 			<div id="userfilelist">
 			<?php
@@ -146,7 +39,7 @@ else{
 				$list="group";
 			}
 
-			PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
+			PDO_Connect("sqlite:"._FILE_DB_GROUP_);
 			switch($list){
 				case "group":
 					echo "<div class='group_path'>Group</div>";

@@ -3,6 +3,22 @@ require_once '../studio/index_head.php';
 ?>
 
 <body class="indexbody" onload="wizard_palicannon_init()">
+<script >
+	var gCurrPage="pali_canon";
+</script>
+
+<style>
+	#pali_canon {
+		background-color: var(--btn-border-color);
+		
+	}
+	#pali_canon:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
 	<script language="javascript" src="module/editor_palicannon/palicannon.js"></script>
 	<script language="javascript" src="module/editor_palicannon/language/<?php echo $currLanguage; ?>.js"></script>
 
