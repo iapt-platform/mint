@@ -145,8 +145,8 @@ else{
 			else{
 				$list="group";
 			}
-			$db_file = '../user/fileindex.db';
-			PDO_Connect("sqlite:{$_file_db_group}");
+
+			PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 			switch($list){
 				case "group":
 					echo "<div class='group_path'>Group</div>";

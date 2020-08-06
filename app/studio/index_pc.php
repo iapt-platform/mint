@@ -49,17 +49,6 @@ else{
 	<script language="javascript" src="module/editor_palicannon/palicannon.js"></script>
 	<script language="javascript" src="module/editor_palicannon/language/<?php echo $currLanguage; ?>.js"></script>
 	
-	<!--加载语言文件 -->
-	<script language="javascript" src="language/default.js"></script>
-	<?php
-	if(file_exists("../user/App/language/$currLanguage.js")){
-		echo("<script language=\"javascript\" src=\"../user/App/language/$currLanguage.js\"></script>");
-	}
-	else{
-		echo("<script language=\"javascript\" src=\"language/$currLanguage.js\"></script>");
-	}
-	?>
-	<!--加载语言文件结束 -->
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/fixedsticky.js"></script>
 	<script type="text/javascript">
