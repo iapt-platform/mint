@@ -81,7 +81,6 @@ if(file_exists(_DIR_PALICANON_TEMPLET_)){
 		echo "缺少".(217-$iCount)."个文件<br>";
 		echo '<a href="db_insert_templet.php">生成数据库</a>';
 	}
-	
 }
 else{
 	echo "模板数据库目录不存在<br>";

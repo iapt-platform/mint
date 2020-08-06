@@ -32,6 +32,11 @@ require_once "../public/function.php";
 		}
 		case "new":
 		{
+			$host = $_SERVER['HTTP_HOST'];
+			if(strpos ($host,"wikipali.org") !== FALSE){
+				echo "网站正处于开发阶段。目前不支持注册。";
+				exit;
+			}
 			break;
 		}
 	}
@@ -303,7 +308,12 @@ require_once "../public/function.php";
 	</div>	
 	<div id="login_right">
 		<div id = "login_form_div" class="fun_block" >
+		
 		<?php
+					$host = $_SERVER['HTTP_HOST'];
+					if(strpos ($host,"wikipali.org") !== FALSE){
+						echo "网站正处于开发阶段。目前不支持注册。";
+					}
 		if(isset($error_comm)){
 			echo '<div class="form_error">';
 			echo $error_comm;
