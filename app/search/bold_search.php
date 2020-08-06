@@ -19,7 +19,7 @@ global $PDO;
 
 switch($op){
 	case "pre"://预查询
-		$dictFileName=$dir_dict_system."ref1.db";
+		$dictFileName=_FILE_DB_REF_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		echo "<div>";
 		$query = "select word,count from dict where \"eword\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')."  limit 0,100";
@@ -153,7 +153,7 @@ switch($op){
 			$Fetch = PDO_FetchAll($query);
 			$iFetch=count($Fetch);
 			if($iFetch>0){
-				$dictFileName=$_file_db_pali_text;
+				$dictFileName=_FILE_DB_PALITEXT_;
 				PDO_Connect("sqlite:$dictFileName");
 				for($i=0;$i<$iFetch;$i++){
 					$paliword=$Fetch[$i]["word"];
@@ -173,7 +173,7 @@ switch($op){
 						echo  "<div class='mean'>$pali</div>";
 					}
 					else{
-						$dictFileName=$_file_db_pali_text;
+						$dictFileName=_FILE_DB_PALITEXT_;
 						PDO_Connect("sqlite:$dictFileName");
 						$query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
 						$FetchPaliText = PDO_FetchAll($query);
@@ -331,7 +331,7 @@ switch($op){
 							echo  "<div class='mean'>$pali</div>";
 						}
 						else{
-							$dictFileName=$_file_db_pali_text;
+							$dictFileName=_FILE_DB_PALITEXT_;
 						PDO_Connect("sqlite:$dictFileName");
 						$query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
 						$FetchPaliText = PDO_FetchAll($query);

@@ -1,6 +1,5 @@
 <?php
-require 'checklogin.inc';
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 include "../public/function.php";
 
@@ -49,8 +48,6 @@ if(mb_strlen($in_word)==0){
 	exit;
 }
 
-
-
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
@@ -59,34 +56,29 @@ function microtime_float()
 
 $time_start = microtime_float();
 
-$dict_file_user=$dir_user_base.$userid.$dir_dict_user.'/';
-$dict_file_sys=$dir_dict_system;
-$dict_file_third=$dir_dict_3rd;
 
 //open database
 
 global $PDO;
 $word_list=str_getcsv($in_word);
 
-
-
 $dict_word_spell=array();
 $output=array();
 $db_file_list=array();
 //用户词典
 if($dict_name==""){
-array_push($db_file_list , $_file_db_wbw);
+array_push($db_file_list , _FILE_DB_WBW_);
 
-array_push($db_file_list , $dict_file_sys."sys_regular.db");
-array_push($db_file_list , $dict_file_sys."sys_irregular.db");
-array_push($db_file_list , $dict_file_sys."union.db");
-array_push($db_file_list , $dict_file_sys."comp.db");
+array_push($db_file_list , _DIR_DICT_SYSTEM_."/sys_regular.db");
+array_push($db_file_list , _DIR_DICT_SYSTEM_."/sys_irregular.db");
+array_push($db_file_list , _DIR_DICT_SYSTEM_."/union.db");
+array_push($db_file_list , _DIR_DICT_SYSTEM_."/comp.db");
 
-array_push($db_file_list , $dict_file_third."pm.db");
-array_push($db_file_list , $dict_file_third."bhmf.db");
-array_push($db_file_list , $dict_file_third."shuihan.db");
-array_push($db_file_list , $dict_file_third."concise.db");
-array_push($db_file_list , $dict_file_third."uhan_en.db");
+array_push($db_file_list , _DIR_DICT_3RD_."/pm.db");
+array_push($db_file_list , _DIR_DICT_3RD_."/bhmf.db");
+array_push($db_file_list , _DIR_DICT_3RD_."/shuihan.db");
+array_push($db_file_list , _DIR_DICT_3RD_."/concise.db");
+array_push($db_file_list , _DIR_DICT_3RD_."/uhan_en.db");
 }
 else{
 	$dict_list=str_getcsv($dict_name,',');

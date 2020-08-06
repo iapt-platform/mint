@@ -1,6 +1,5 @@
 <?php
-require 'checklogin.inc';
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 include "../public/function.php";
 
@@ -36,17 +35,13 @@ function microtime_float()
 
 $time_start = microtime_float();
 
-$dict_file_user=$dir_user_base.$userid.$dir_dict_user.'/';
-$dict_file_sys=$dir_dict_system;
-$dict_file_third=$dir_dict_3rd;
-
 //open database
 
 global $PDO;
 
 
 	//查询单词表
-	$db_file = "{$dir_palicanon}templet/p".$in_book."_tpl.db3";
+	$db_file = _DIR_PALICANON_TEMPLET_."/p".$in_book."_tpl.db3";
 	
 	PDO_Connect("sqlite:$db_file");
 	$query="SELECT paragraph,vri,real FROM \"main\" WHERE (\"paragraph\" in ".$strQueryPara." ) and \"real\"<>\"\" and \"type\"<>'.ctl.' ";
@@ -81,18 +76,18 @@ $dict_word_spell=array();
 $output=array();
 $db_file_list=array();
 //用户词典
-array_push($db_file_list , array($_file_db_wbw," ORDER BY rowid DESC"));
+array_push($db_file_list , array(_FILE_DB_WBW_," ORDER BY rowid DESC"));
 
-array_push($db_file_list , array($dict_file_sys."sys_regular.db"," ORDER BY confidence DESC"));
-array_push($db_file_list , array($dict_file_sys."sys_irregular.db",""));
-array_push($db_file_list , array($dict_file_sys."union.db",""));
-array_push($db_file_list , array($dict_file_sys."comp.db",""));
+array_push($db_file_list , array(_DIR_DICT_SYSTEM_."/sys_regular.db"," ORDER BY confidence DESC"));
+array_push($db_file_list , array(_DIR_DICT_SYSTEM_."/sys_irregular.db",""));
+array_push($db_file_list , array(_DIR_DICT_SYSTEM_."/union.db",""));
+array_push($db_file_list , array(_DIR_DICT_SYSTEM_."/comp.db",""));
 
-array_push($db_file_list , array($dict_file_third."pm.db",""));
-array_push($db_file_list , array($dict_file_third."bhmf.db",""));
-array_push($db_file_list , array($dict_file_third."shuihan.db",""));
-array_push($db_file_list , array($dict_file_third."concise.db",""));
-array_push($db_file_list , array($dict_file_third."uhan_en.db",""));
+array_push($db_file_list , array(_DIR_DICT_3RD_."/pm.db",""));
+array_push($db_file_list , array(_DIR_DICT_3RD_."/bhmf.db",""));
+array_push($db_file_list , array(_DIR_DICT_3RD_."/shuihan.db",""));
+array_push($db_file_list , array(_DIR_DICT_3RD_."/concise.db",""));
+array_push($db_file_list , array(_DIR_DICT_3RD_."/uhan_en.db",""));
 
 
 for($i=0;$i<$lookup_loop;$i++)

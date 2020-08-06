@@ -1,7 +1,7 @@
 ﻿<?php
 require 'checklogin.inc';
 include "../public/_pdo.php";
-include "../public/config.php";
+include "../path.php";
 
 $input = file_get_contents("php://input");
 
@@ -10,7 +10,7 @@ $serverMsg="";
 
 $xml = simplexml_load_string($input);
 
-$db_file = $_file_db_wbw;
+$db_file = _FILE_DB_WBW_;
 PDO_Connect("sqlite:$db_file");
 
 $wordsList = $xml->xpath('//word');

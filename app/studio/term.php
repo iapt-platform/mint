@@ -1,6 +1,6 @@
 <?php
 //查询term字典
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 include "./public.inc";
 
@@ -47,7 +47,7 @@ $count_return=0;
 $dict_list=array();
 
 global $PDO;
-PDO_Connect("sqlite:$_file_db_term");
+PDO_Connect("sqlite:"._FILE_DB_TERM_);
 switch($op){
 	case "pre"://预查询
 

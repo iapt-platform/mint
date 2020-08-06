@@ -13,7 +13,7 @@ include "../public/_pdo.php";
 	echo "<index>";
 
 	//open database
-	PDO_Connect("sqlite:$_file_db_pali_text");
+	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 	$query = "select * FROM pali_text where \"book\"=".$PDO->quote($currBook);
 
 	$Fetch = PDO_FetchAll($query);

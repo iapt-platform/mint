@@ -217,7 +217,7 @@ switch($op){
 		}
 		//社区字典结束
 
-		PDO_Connect("sqlite:$_file_db_ref");
+		PDO_Connect("sqlite:"._FILE_DB_REF_);
 		//直接查询
 		$query = "select dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = ".$PDO->quote($word)." limit 0,100";
 		

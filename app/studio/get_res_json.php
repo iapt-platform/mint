@@ -7,7 +7,7 @@
 输出：资源列表的json数据
 */
 require_once "../studio/checklogin.inc";
-require_once "../public/config.php";
+require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../studio/public.inc";
 
@@ -114,7 +114,7 @@ function format_file_size($size){
 			}
 		}
 		//查共享文档
-		$db_file = $_file_db_fileindex;
+		$db_file = _FILE_DB_FILEINDEX_;
 		PDO_Connect("sqlite:$db_file");
 		$query = "select * from fileindex where book='$book' and paragraph=$paragraph  and status>0 and share>0 order by create_time";
 		$Fetch = PDO_FetchAll($query);

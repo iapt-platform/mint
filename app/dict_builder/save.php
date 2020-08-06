@@ -1,5 +1,5 @@
 <?php
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 
 if(isset($_POST['dict_id'])){
@@ -27,7 +27,7 @@ else{
 	$status="1";
 }
 
-		$dictFileName=$dir_dict_system."ref.db";
+		$dictFileName=_FILE_DB_REF_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "update dict set status='$status' where id='$word_id'";
 		$stmt = @PDO_Execute($query);
