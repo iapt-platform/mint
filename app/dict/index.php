@@ -40,9 +40,10 @@ require_once "../pcdl/html_head.php";
         #dict_ref{
             flex:6;
             padding:0.5em 1.5em;
-        }
+		}
+		
         #dict_user{
-            flex:2;
+			flex:2;
         }
 		.dict_word_card{
 		border-bottom: 1px solid var(--border-line-color);

@@ -427,6 +427,13 @@
 		"library": "Library",
 		"turbo_split": "Turbo Split",
 		"full_text": "full text",
+		"word_weight": "weightiness of this word",
+		"characters": "characters",
+		"real_declension": "reality of declensions",
+		"forms": "spelling forms",
+		"add_to": "add to",
+		"undone_function": "unfinished function",
+		"": "",
 		"": ""
 	},
 	"grammastr": [

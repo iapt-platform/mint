@@ -360,18 +360,18 @@ switch($op){
 		}
 		echo "<div>";
 		$arrWords = countWordInPali($word,true);
-		echo "<div>".count($arrWords)."个相关单词</div>";
 		$weight = 0;
 		foreach($arrWords as $oneword){
 			$weight += $oneword["count"] * $oneword["len"];
 		}
-		echo "<div>单词总重量：$weight</div>";
+		echo "<div>{$_local->gui->word_weight}：$weight {$_local->gui->characters}</div>";
+		echo "<div>{$_local->gui->real_declension}：".count($arrWords)." {$_local->gui->forms}</div>";
 		foreach($arrWords as $oneword){
 			if($oneword["bold"]>0){
-				echo "<div><b>{$oneword["word"]}</b>[{$oneword["count"]}]</div>";
+				echo "<div><b>{$oneword["word"]}</b> {$oneword["count"]} {$_local->gui->times}</div>";
 			}
 			else{
-				echo "<div>{$oneword["word"]}[{$oneword["count"]}]</div>";
+				echo "<div>{$oneword["word"]} {$oneword["count"]}{$_local->gui->times}</div>";
 			}
 		}		
 		echo "</div>";
@@ -382,8 +382,8 @@ switch($op){
 
 		//用户词典
 		echo "<div id='dict_user' >";	
-		echo "<div class='dict_word'>";
-		echo "<div class='' onclick=\"dict_show_edit()\">编辑并收藏</div>";		
+		echo "<div class='dict_word' ><b>{$_local->gui->undone_function}</b>";
+		echo "<div class='' onclick=\"dict_show_edit()\">{$_local->gui->edit}</div>";		
 		echo "<div class='pali'>{$word}</div>";
 
 		if($iFetch>0){
@@ -392,20 +392,20 @@ switch($op){
 		else{
 			echo "<div id='user_word_edit'>";
 		}
-		echo "<fieldset class='broder-1 broder-r'><legend>Type</legend>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->wordtype}</legend>";
 		echo "<select id=\"id_type\" name=\"type\" >";
 		foreach($_local->type_str as $type){
 			echo "<option value=\"{$type->id}\" >{$type->value}</option>";
 		}
 		echo "</select>";
 		echo "</fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>Gramma</legend><input type='input' value=''/></fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>语基</legend><input type='input' value=''/></fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>意思</legend><input type='input' value=''/></fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>注解</legend><textarea></textarea></fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>组分</legend><input type='input' value=''/></fieldset>";
-		echo "<fieldset class='broder-1 broder-r'><legend>组分意思</legend><input type='input' value=''/></fieldset>";
-		echo "<div class=''><button>添加到我的单词本</button></div>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->gramma}</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->parent}</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->g_mean}</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->note}</legend><textarea></textarea></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->factor}</legend><input type='input' value=''/></fieldset>";
+		echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->f_mean}</legend><input type='input' value=''/></fieldset>";
+		echo "<div class=''><button>{$_local->gui->add_to} {$_local->gui->my_dictionary}</button></div>";
 		echo "</div>";
 		echo "</div>";	
 		echo "</div>";			
