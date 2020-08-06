@@ -1,11 +1,11 @@
 <?php
-include "./config.php";
+include "../path.php";
 include "./_pdo.php";
 
 //获取服务器端文件列表
-$dir= $dir_user_base.$_COOKIE["userid"].$dir_mydocument."/";
-$db_file = $dir.'fileindex.db';
-PDO_Connect("sqlite:$db_file");
+$dir= _DIR_USER_BASE_.'/'.$_COOKIE["userid"].'/'._DIR_MYDOCUMENT_."/";
+
+PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 
 $files = scandir($dir);
 $arrlength=count($files);

@@ -2,7 +2,7 @@
 /*
 加载巴利原文
 */
-include "../public/config.php";
+include "../path.php";
 include "../public/_pdo.php";
 
 	$get_book=$_GET["book"];
@@ -12,10 +12,8 @@ include "../public/_pdo.php";
 
 	echo "book:$get_book<br />";
 
-	$outHtml="";
-
 	//open database
-	PDO_Connect("sqlite:{$_file_db_pali_text}");
+	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 	
 	$query="SELECT paragraph,html FROM pali_text WHERE book = ".$PDO->quote($get_book);
 	$Fetch = PDO_FetchAll($query);

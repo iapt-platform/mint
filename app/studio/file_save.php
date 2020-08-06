@@ -1,5 +1,4 @@
 <?php 
-include("config.php");
 
 $filename=$_POST["filename"];
 $data=$_POST["data"];

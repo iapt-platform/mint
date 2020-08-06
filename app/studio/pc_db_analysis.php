@@ -9,7 +9,7 @@ $countInsert=0;
 $wordlist=array();
 
 
-$db_file = "../appdata/palicanon/templet/res.db3";
+$db_file = _FILE_DB_RESRES_INDEX_;
 $bookstring="";
 	for($i=0;$i<count($boolList);$i++)
 	{

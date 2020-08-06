@@ -1,141 +1,42 @@
 ﻿<?php
-require 'checklogin.inc';
-require_once '../public/config.php';
-require_once '../public/load_lang.php';
-
-//load language file
-if(file_exists($dir_language.$currLanguage.".php")){
-	require $dir_language.$currLanguage.".php";
-}
-else{
-	include $dir_language."default.php";
-}
-if(isset($_GET["device"])){
-	$currDevice=$_GET["device"];
-}
-else{
-	if(isset($_COOKIE["device"])){
-		$currDevice=$_COOKIE["device"];
-	}
-	else{
-		$currDevice="computer";
-	}
-}
+require_once '../studio/index_head.php';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link type="text/css" rel="stylesheet" href="css/style.css"/>
-	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">
-	<link type="text/css" rel="stylesheet" href="<?php echo $dir_user_base.$userid.$dir_myApp; ?>/style.css"/>
-	<link type="text/css" rel="stylesheet" href="../public/css/notify.css" id="colorchange" />
-	
-	<title><?php echo $_local->gui->pcd_studio; ?></title>
-	<script language="javascript" src="config.js"></script>
-	<script language="javascript" src="js/data.js"></script>
-	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/render.js"></script>	
-	<script language="javascript" src="js/xml.js"></script>
-	<script language="javascript" src="js/editor.js"></script>
-	<script language="javascript" src="js/wizard.js"></script>
-	<script language="javascript" src="../public/js/notify.js"></script>
-	<script language="javascript" src="<?php echo $dir_user_base.$userid.$dir_myApp; ?>/userinfo.js"></script>
-	<script language="javascript" src="module/editor/language/default.js"></script>	
-	<script language="javascript" src="module/editor/language/<?php echo $currLanguage; ?>.js"></script>
-	
+
+<body class="indexbody" onload="wizard_palicannon_init()">
+<script >
+	var gCurrPage="pali_canon";
+</script>
+
+<style>
+	#pali_canon {
+		background-color: var(--btn-border-color);
+		
+	}
+	#pali_canon:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
 	<script language="javascript" src="module/editor_palicannon/palicannon.js"></script>
 	<script language="javascript" src="module/editor_palicannon/language/<?php echo $currLanguage; ?>.js"></script>
-	
-	<!--加载语言文件 -->
-	<script language="javascript" src="language/default.js"></script>
-	<?php
-	if(file_exists("../user/App/language/$currLanguage.js")){
-		echo("<script language=\"javascript\" src=\"../user/App/language/$currLanguage.js\"></script>");
-	}
-	else{
-		echo("<script language=\"javascript\" src=\"language/$currLanguage.js\"></script>");
-	}
-	?>
-	<!--加载语言文件结束 -->
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/fixedsticky.js"></script>
-	<script type="text/javascript">
-	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
-		var g_device = "computer";
-		var strSertch = location.search;
-		if(strSertch.length>0){
-			strSertch = strSertch.substr(1);
-			var sertchList=strSertch.split('&');
-			for ( i in sertchList){
-				var item = sertchList[i].split('=');
-				if(item[0]=="device"){
-					g_device=item[1];
-				}
-			}
-		}
-		if(g_device=="mobile"){
-			g_is_mobile=true;
-		}
-		else{
-			g_is_mobile=false;
-		}
-			var g_langrage="en";
-			function menuLangrage(obj){
-				g_langrage=obj.value;
-				//setCookie('language',g_langrage,365);
-				window.location.assign("index_pc.php?language="+g_langrage);
-			}
-	</script>
-</head>
-<body class="indexbody" onload="wizard_palicannon_init()">
+
+	<script language="javascript" src="js/wizard.js"></script>
+	<script language="javascript" src="js/editor.js"></script>
+	<script language="javascript" src="js/xml.js"></script>
+
 		<!-- tool bar begin-->
-		<div class='index_toolbar'>
-			<div id="index_nav">
-				<button><a href="index.php?language=<?php echo $currLanguage; ?>"><?php echo $module_gui_str['editor']['1018'];?></a></button>
-				<button class="selected"><?php echo $module_gui_str['editor_wizard']['1002'];?></button>
-				<button><a href="filenew.php?language=<?php echo $currLanguage; ?>"><?php echo $module_gui_str['editor']['1064'];?></a></button>
-				<button><a href="index_tools.php?language=<?php echo $currLanguage; ?>"><?php echo $module_gui_str['editor']['1052'];?></a></button>
-				
-			
-			</div>
-			<div class="toolgroup1">
-				
-				<span><?php echo $module_gui_str['editor']['1050'];?></span>
-				<select id="id_language" name="menu" onchange="menuLangrage(this)">
-					<option value="en" >English</option>
-					<option value="si" >සිංහල</option>
-					<option value="my" >myanmar</option>
-					<option value="zh-cn" >简体中文</option>
-					<option value="zh-tw" >正體中文</option>
-				</select>
-			
-			<?php 
-				echo $_local->gui->welcome;
-				echo "<a href=\"setting.php?item=account\">";
-				echo urldecode($_COOKIE["nickname"]);
-				echo "</a>";
-				echo $_local->gui->to_the_dhamma;
-				echo "<a href='login.php?op=logout'>";
-				echo $_local->gui->logout;
-				echo "</a>";
-			?>
-			</div>
-		</div>	
+		<?php
+		require_once '../studio/index_tool_bar.php';
+		?>
 		<!--tool bar end -->
-		<script>
-			document.getElementById("id_language").value="<?php echo($currLanguage); ?>";
-		</script>
+
 	<div class="index_inner" style="width: 100%;">
-		<div id="search_div">
-			<input type="input" style="display: inline;width: 15em;" />
-			<button><?php echo $module_gui_str['editor_palicannon']['1002'];?></button>	
-		</div>
+
 <div class="editor_wizard">
 	<div id="wizard_div"></div>
-	<div class="editor_wizard_pali_cannon">
+	<div class="editor_wizard_pali_cannon" style = "padding-left:16em;">
 		<div class="pali_book_select_div_shell">
 			<div class="pali_book_select_div">
 				<div class="book_index_shell">
@@ -204,10 +105,10 @@ else{
 			
 			<div id="wizard_palicannon_par_select">
 				<a name="toc_root"></a>
-				<div id="wizard_palicannon_par_select_toc" class="fixedsticky">
+				<div id="wizard_palicannon_par_select_toc" class="fixedsticky" style="flex:2;">
 				
 				</div>
-				<div id="wizard_palicannon_par_select_text">
+				<div id="wizard_palicannon_par_select_text" style="flex:8;">
 					<div id="wizard_palicannon_par_select_text_head">
 						<h2 id="wizard_palicannon_par_select_text_head_bookname"><span  ><?php echo $module_gui_str['editor_wizard']['1012'];?></span></h2><span id="star_lv"></span>		
 						<div class="wizard_palicannon_par_select_text_head_inner">
@@ -251,10 +152,11 @@ else{
 </div>
 	<!--  Tool bar on right side -->
 	<div class="right_tool_btn">
-		<button onclick="editor_show_right_tool_bar(true)">
+		<button ><a href="#toc_root">
 		<svg class="icon">
     		<use xlink:href="svg/icon.svg#ic_move_to_inbox"></use>
 		</svg>
+		</a>
 		</button>
 	</div>
 	<div id="right_tool_bar" onmouseover="editor_show_right_tool_bar(true)">
@@ -290,9 +192,7 @@ else{
 	</div>
 	<!--  Tool bar on right side end -->
 	
-<div class="foot_div">
-<?php echo $module_gui_str['editor']['1066'];?>
-</div>
-</body>
-</html>
+	<?php
+require_once '../studio/index_foot.php';
+?>
 

@@ -26,7 +26,7 @@ foreach($Fetch as $row){
     $coverlink = $cover["{$row["cover"]}"];
     echo '<div class="v-cover">';
     if(substr($coverlink,0,6)=="media:"){
-        echo '<img src="../../user/media/3/'.substr($coverlink,6).'" width="100%" height="auto">';
+        echo '<img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto">';
     }
     else{
         echo '<img src="'.$coverlink.'" width="50" height="50">';

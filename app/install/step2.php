@@ -67,7 +67,7 @@ for($i=0; $i<count($dbfile); $i++){
 ?>
 <div>
 </div>
-
-<h2><a href="step3.php">Next</a></h2>
+<hr>
+<h2  style="text-align:center;"><a href="step3.php">Next</a></h2>
 </body>
 </html>

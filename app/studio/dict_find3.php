@@ -3,7 +3,7 @@
 require_once '../public/casesuf.inc';
 require_once 'dict_find_un.inc';
 require_once 'sandhi.php';
-require_once "../public/config.php";
+require_once "../path.php";
 require_once "../public/_pdo.php";
 
 require_once '../public/load_lang.php';
@@ -174,7 +174,7 @@ function mySplit2($strWord){
 
 switch($op){
 	case "pre"://预查询
-		$dictFileName=$dir_dict_system."ref1.db";
+		$dictFileName=_FILE_DB_REF_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		echo "<wordlist>";
 		$query = "select word,count from dict where \"eword\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')."  limit 0,100";
@@ -193,7 +193,7 @@ switch($op){
 		echo "</wordlist>";
 		break;
 	case "search":
-		$dictFileName=$dir_dict_system."ref.db";
+		$dictFileName=_FILE_DB_REF_;
 		PDO_Connect("sqlite:$dictFileName");
 
 		//直接查询

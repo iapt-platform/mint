@@ -9,16 +9,14 @@ switch($_GET["dbtype"]){
     case "rich":
     case "system":
         if($_GET["dbtype"]=="rich"){
-            $dbfilename = _DIR_DICT_TEXT_."/rich/{$dbname}";
             $sDescDbFile = _DIR_DICT_3RD_."/".$dbname;
             $csvfile = _DIR_DICT_TEXT_."/rich/{$filename}";
         }
         else if($_GET["dbtype"]=="system"){
-            $dbfilename = _DIR_DICT_TEXT_."/system/{$dbname}";
             $sDescDbFile = _DIR_DICT_SYSTEM_."/".$dbname;      
             $csvfile = _DIR_DICT_TEXT_."/system/{$filename}";      
         }
-        $dns = "sqlite:".$dbfilename;
+        $dns = "sqlite:".$sDescDbFile;
         $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -64,14 +62,6 @@ switch($_GET["dbtype"]){
         }
 
         $dbh = null;
-
-
-        if(copy($dbfilename,$sDescDbFile)){
-            echo "文件复制成功<br>";
-        }
-        else{
-            echo "文件复制失败<br>";
-        }
 
     break;
     case "thin":

@@ -1,6 +1,6 @@
 ﻿<?php
 //获取书的目录-索引 包含缩减的正文
-include "../public/config.php";
+require_once "../path.php";
 include "../public/_pdo.php";
 
 	$currBook=$_GET["book"];
@@ -13,7 +13,7 @@ include "../public/_pdo.php";
 	echo "<index>";
 
 	//open database
-	PDO_Connect("sqlite:$_file_db_pali_text");
+	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 	$query = "select * FROM pali_text where \"book\"=".$PDO->quote($currBook);
 
 	$Fetch = PDO_FetchAll($query);
