@@ -44,7 +44,7 @@ function format_file_size($size){
 	return($str_size);
 }
 
-	$db_file = $dir_palicanon.'res.db3';
+	$db_file = _FILE_DB_RESRES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 
 	$res=array();
@@ -78,7 +78,7 @@ function format_file_size($size){
 	}
 	else{
 		//查书中的一个段
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");			
 		$query = "select * from 'index' where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
 		$Fetch = PDO_FetchAll($query);

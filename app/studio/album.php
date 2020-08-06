@@ -1,6 +1,6 @@
 <?php
 require 'checklogin.inc';
-require '../public/config.php';
+require '../path.php';
 require "../public/_pdo.php";
 require "./public.inc";
 
@@ -48,7 +48,7 @@ if(isset($_GET["type"])){
 switch($op)
 {
 	case "show_info":
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");
 		$album_id=$_GET["album_id"];
 		$query = "select * from 'album' where id='{$album_id}'";
@@ -263,7 +263,7 @@ switch($op)
 			<?php	
 	break;
 	case "new":
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");
 		$album_guid=$_GET["album_guid"];
 		$album_type=$_GET["album_type"];
@@ -274,7 +274,7 @@ switch($op)
 		$author=$_GET["author"];
 		$edition=$_GET["edition"];
 		$title=$_GET["title"];
-		$dbFileName="../appdata/palicanon/".$album_type."/p".$book."_".$album_type.".db3";
+		$dbFileName=_DIR_PALICANON_."/".$album_type."/p".$book."_".$album_type.".db3";
 		$PDO->beginTransaction();
 		$query="INSERT INTO album (id, 
 				book,
@@ -322,7 +322,7 @@ switch($op)
 	
 	break;
 	case "get":
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");	
 		$query = "select * from 'album' where book='{$book}' and type='{$type[$album_type]}' and owner='{$UID}'";
 		$Fetch = PDO_FetchAll($query);
@@ -338,7 +338,7 @@ switch($op)
 		if(isset($_GET["type"])){
 			$album_type=$_GET["type"];
 		}
-		$db_file = $dir_palicanon.'res.db3';
+		$db_file = _FILE_DB_RESRES_INDEX_;
 		PDO_Connect("sqlite:$db_file");	
 		$query = "select * from 'album' where id='{$album_id}'";
 		$Fetch = PDO_FetchAll($query);

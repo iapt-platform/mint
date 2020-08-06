@@ -24,7 +24,7 @@ $bookId=$arrSent[0];
 $para=$arrSent[1];
 $begin=$arrSent[2];
 $end=$arrSent[3];
-$db_file = _DIR_PALICANON_."/templet/p".$bookId."_tpl.db3";		
+$db_file = _DIR_PALICANON_TEMPLET_."/p".$bookId."_tpl.db3";		
 			
 PDO_Connect("sqlite:$db_file");
 $query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($para)." ) ";
@@ -33,7 +33,7 @@ $sth->execute();
 $palitext="";
 while($result = $sth->fetch(PDO::FETCH_ASSOC))
 {
-	$index = str_getcsv($result["wid"],"-")[2];
+	$index =$result["wid"];
 	if($index>=$begin && $index<=$end){
 		if($result["type"]!=".ctl."){
 			$paliword=$result["word"];
@@ -64,7 +64,7 @@ try{
 	}
 }
 catch (Exception $e) {
-	$tran = "";
+	$tran = $e->getMessage();
     //echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 		

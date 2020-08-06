@@ -1,14 +1,7 @@
 <?php
 require_once "../public/_pdo.php";
 require_once "../path.php";
-/*
-if(isset($_GET["word"])){
-	if(empty($_GET["word"])){
-		return;
-	}
-	$word=mb_strtolower($_GET["word"],'UTF-8');
-}
-*/
+
 if(isset($_GET["id"])){
 	$_get_id=$_GET["id"];
 }
@@ -23,25 +16,20 @@ else{
 }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link type="text/css" rel="stylesheet" href="../studio/css/style.css"/>
-        <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
-	
-	<title id="doc_title">圣典百科</title>
-	<style>
-
-	</style>
-	<script src="../public/js/jquery.js"></script>
-	<script src="../public/js/comm.js"></script>
+<?PHP
+include "../pcdl/html_head.php";
+?>
+<body style="margin: 0;padding: 0;" class="reader_body" onload="<?php
+if(isset($_get_id)){
+echo "wiki_load_id('{$_get_id}')";
+}
+else if(isset($_get_word)){
+echo "wiki_load_word('{$_get_word}')";
+}
+?>">
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="wiki.js"></script>
-	
 	<style>
 	.term_link,.term_link_new{
 		color: blue;
@@ -150,14 +138,6 @@ else{
 }
 
 	</style>
-<body style="margin: 0;padding: 0;" class="reader_body" onload="<?php
-if(isset($_get_id)){
-echo "wiki_load_id('{$_get_id}')";
-}
-else if(isset($_get_word)){
-echo "wiki_load_word('{$_get_word}')";
-}
-?>">
 <script>
 term_word_link_fun("wiki_goto_word");
 </script>
@@ -177,29 +157,28 @@ term_word_link_fun("wiki_goto_word");
     require_once("../pcdl/head_bar.php");
 ?>
 <div id="head_bar" >
-	<div id="pali_pedia">圣典百科</div>
-
-
-	<div>
-		<span id="wiki_search" style="width:20em;">
-			<span>
-				<input id="wiki_search_input" type="input" placeholder="search" style="width:30em;" onkeyup="wiki_search_keyup(event,this)"/>
+	<div id="pali_pedia" style="display:flex;">
+		<span>圣典百科</span>
+		<span id="wiki_search" style="width:25em;">
+			<span style="display:block;">
+				<input id="wiki_search_input" type="input" placeholder="search" style="width:30em;background-color: var(--btn-color);"  onkeyup="wiki_search_keyup(event,this)"/>
 			</span>
 			<span id="search_result">
 			</span>
 		</span>	
+	</div>
+
+	<div>
+
 		<span>
 			<a href="#">[设置]</a>
 			<a href="#">[建立词条]</a>
 			<a href="#">[帮助]</a>
-			<a href="#">[当前用户]</a>
 		</span>
-
-	
 	</div>
 </div>
 
-<div id="wiki_contents">
+<div id="wiki_contents" style="padding: 0 1em;">
 loading...
 </div>
 

@@ -8,7 +8,27 @@ define("_DIR_PALICANON_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text
 define("_DIR_PALICANON_WBW_" , __DIR__."/../tmp/appdata/palicanon/wbw");
 define("_DIR_PALICANON_TRAN_" , __DIR__."/../tmp/appdata/palicanon/translate");
 
+//pali canon db file
+define("_FILE_DB_RESRES_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/res.db3");
+define("_FILE_DB_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text.db3");
+define("_FILE_DB_STATISTICS_" , __DIR__."/../tmp/appdata/palicanon/word_statistics.db3");
+define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../tmp/appdata/palicanon/pali_sent.db3");
+define("_FILE_DB_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/index.db3");
+define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/wordindex.db3");
+define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/paliindex.db3");
+define("_FILE_DB_BOOK_WORD_"  , __DIR__."/../tmp/appdata/palicanon/bookword.db3");
+define("_FILE_DB_BOLD_"  , __DIR__."/../tmp/appdata/palicanon/bold.db3");
 
+//语料库
+
+define("_DIR_CSV_PALI_CANON_WORD_" , __DIR__."/../paliword/book");
+define("_DIR_CSV_PALI_CANON_WORD_INDEX_" , __DIR__."/../paliword/index");
+
+define("_DIR_PALI_CSV_" , __DIR__."/../tmp/palicsv");
+define("_DIR_LOG_" , __DIR__."/../tmp/log");
+define("_DIR_TEMP_" , __DIR__."/../tmp/temp");
+
+//dictionary
 define("_DIR_DICT_" , __DIR__."/../tmp/appdata/dict");
 define("_DIR_DICT_SYSTEM_" , __DIR__."/../tmp/appdata/dict/system");
 define("_DIR_DICT_3RD_" , __DIR__."/../tmp/appdata/dict/3rd");
@@ -29,23 +49,8 @@ define("_DIR_APP_" , __DIR__."/../app");
 define("_DIR_LANGUAGE_" , __DIR__."/../app/public/lang");
 define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
-//语料库
-define("_DIR_CSV_PALI_CANON_WORD_" , __DIR__."/../paliword/book");
-define("_DIR_CSV_PALI_CANON_WORD_INDEX_" , __DIR__."/../paliword/index");
 
-define("_DIR_PALI_CSV_" , __DIR__."/../tmp/palicsv");
-define("_DIR_LOG_" , __DIR__."/../tmp/log");
-define("_DIR_TEMP_" , __DIR__."/../tmp/temp");
-//pali canon db file
-define("_FILE_DB_RES_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/res.db3");
-define("_FILE_DB_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text.db3");
-define("_FILE_DB_STATISTICS_" , __DIR__."/../tmp/appdata/palicanon/word_statistics.db3");
-define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../tmp/appdata/palicanon/pali_sent.db3");
-define("_FILE_DB_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/index.db3");
-define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/wordindex.db3");
-define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/paliindex.db3");
-define("_FILE_DB_BOOK_WORD_"  , __DIR__."/../tmp/appdata/palicanon/bookword.db3");
-define("_FILE_DB_BOLD_"  , __DIR__."/../tmp/appdata/palicanon/bold.db3");
+
 
 /*user data*/
 define("_DIR_USER_BASE_" , __DIR__."/../tmp/user");
