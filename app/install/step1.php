@@ -53,6 +53,7 @@ foreach($dir as $onedir){
 }
 ?>
 </div>
-<h2><a href="step2.php">Next</a></h2>
+<hr>
+<h2  style="text-align:center;"><a href="step2.php">Next</a></h2>
 </body>
 </html>
