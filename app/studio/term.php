@@ -1,29 +1,10 @@
 <?php
 //查询term字典
-include "../path.php";
-include "../public/_pdo.php";
-include "./public.inc";
+require_once "../path.php";
+require_once "../public/_pdo.php";
+require_once "./public.inc";
+require_once "../public/load_lang.php";
 
-if(isset($_GET["language"])){
-	$currLanguage=$_GET["language"];
-	$_COOKIE["language"]=$currLanguage;
-}
-else{
-	if(isset($_COOKIE["language"])){
-		$currLanguage=$_COOKIE["language"];
-	}
-	else{
-		$currLanguage="en";
-		$_COOKIE["language"]=$currLanguage;
-	}
-}
-//load language file
-if(file_exists($dir_language.$currLanguage.".php")){
-	require $dir_language.$currLanguage.".php";
-}
-else{
-	include $dir_language."default.php";
-}
 
 $username = "";
 if(isset($_COOKIE["username"]) && !empty($_COOKIE["username"])){

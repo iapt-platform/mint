@@ -89,7 +89,7 @@ switch($op){
 			$language=$res[$iRes]->language;
 			$author=$res[$iRes]->author;
 			
-			$db_file = _FILE_DB_RES_INDEX_;
+			$db_file = _FILE_DB_RESRES_INDEX_;
 			PDO_Connect("sqlite:$db_file");
 			$query = "select guid,owner from 'album' where id='{$res_album_id}'";
 			$Fetch = PDO_FetchAll($query);
@@ -154,7 +154,8 @@ switch($op){
 							$strXml="<word>";
 							$strXml.="<pali>{$result["word"]}</pali>";
 							$strXml.="<real>{$result["real"]}</real>";
-							$strXml.="<id>{$result["wid"]}</id>";
+							$wordid = "p{$result["book"]}-{$result["paragraph"]}-{$result["wid"]}"; 
+							$strXml.="<id>{$wordid}</id>";
 							$strXml.="<type s=\"0\">{$result["type"]}</type>";
 							$strXml.="<gramma s=\"0\">{$wGrammar}</gramma>";
 							$strXml.="<mean s=\"0\"></mean>";
@@ -164,7 +165,7 @@ switch($op){
 							$strXml.="<style>{$result["style"]}</style>";
 							$strXml.="<status>0</status>";
 							$strXml.="</word>";
-							$wbw_data[] = array(UUID::v4(),$block_id,$book,$iPar,$result["vri"],$result["real"],$strXml,time(),time(),1,$USER_NAME);
+							$wbw_data[] = array(UUID::v4(),$block_id,$book,$iPar,$result["wid"],$result["real"],$strXml,time(),time(),1,$USER_NAME);
 						}
 							
 						}
@@ -235,13 +236,14 @@ switch($op){
 									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 					$stmt = $PDO->prepare($query);
 					$doc_id=UUID::v4();
+					$file_name = $book . '_' . $create_para . '_' . time();
 					$newData=array(
 								   $doc_id,
 								   "",
 								   $uid,
 								   $book,
 								   $create_para,
-								   "",
+								   $file_name,
 								   $user_title,
 								   $tag,
 								   1,
@@ -351,7 +353,7 @@ switch($op){
 			$language=$res[$iRes]->language;
 			$author=$res[$iRes]->author;
 			
-			$db_file = _FILE_DB_RES_INDEX_;
+			$db_file = _FILE_DB_RESRES_INDEX_;
 			PDO_Connect("sqlite:$db_file");
 			$query = "select guid,owner from 'album' where id='{$res_album_id}'";
 			$Fetch = PDO_FetchAll($query);

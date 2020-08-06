@@ -366,7 +366,7 @@ $album_power["2"]="编辑";
 			echo "<a href='login.php?op=logout'>Logout</a>";
 			break;
 		case "album":
-			$db_file = _FILE_DB_RES_INDEX_;
+			$db_file = _FILE_DB_RESRES_INDEX_;
 			PDO_Connect("sqlite:$db_file");		
 			if(isset($_GET["id"])){
 				if(isset($_GET["power"])){

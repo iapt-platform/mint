@@ -44,7 +44,7 @@ global $PDO;
 	$db_file = _DIR_PALICANON_TEMPLET_."/p".$in_book."_tpl.db3";
 	
 	PDO_Connect("sqlite:$db_file");
-	$query="SELECT paragraph,vri,real FROM \"main\" WHERE (\"paragraph\" in ".$strQueryPara." ) and \"real\"<>\"\" and \"type\"<>'.ctl.' ";
+	$query="SELECT paragraph,wid,real FROM \"main\" WHERE (\"paragraph\" in ".$strQueryPara." ) and \"real\"<>\"\" and \"type\"<>'.ctl.' ";
 	if($debug){
 		echo "filename:".$db_file."<br>";
 		echo $query."<br>";
@@ -378,7 +378,7 @@ foreach($FetchAllWord as $word){
 	array_push($output,
 			array("book"=>$in_book,
 				 "paragraph"=>$word["paragraph"],
-				 "num"=>$word["vri"],
+				 "num"=>$word["wid"],
 			     "pali"=>$word["real"],
 				 "type"=>$type,
 				 "gramma"=>$gramma,
