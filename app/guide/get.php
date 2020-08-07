@@ -23,7 +23,7 @@ else{
     }
     else{
         //尝试使用英语文件不成功，报错
-        $output["data"]  =  "Error: Can't Find Item In Server. Item Id:{$_GET["id"]}  Language:{$lang}";
+        $output["data"]  =  "Error: Can't Find Item In Server.<br> Item Id:{$_GET["id"]} <br> Language:{$lang}";
         $output["id"]  =$_GET["id"];
     }
 }
