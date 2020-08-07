@@ -359,6 +359,7 @@ switch($op){
 		  echo "<div><a href='#ref_dict_$x'>$x_value</a></div>";
 		}
 		echo "<div>";
+
 		$arrWords = countWordInPali($word,true);
 		echo "<div>".count($arrWords)."个相关单词</div>";
 		$weight = 0;
@@ -366,6 +367,7 @@ switch($op){
 			$weight += $oneword["count"] * $oneword["len"];
 		}
 		echo "<div>单词总重量：$weight</div>";
+		echo "<div><a href='word_statistics.php?word={$word}' target='_blank'>单词分析</a></div>";
 		foreach($arrWords as $oneword){
 			if($oneword["bold"]>0){
 				echo "<div><b>{$oneword["word"]}</b>[{$oneword["count"]}]</div>";
