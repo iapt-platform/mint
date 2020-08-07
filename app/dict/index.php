@@ -114,8 +114,14 @@ require_once "../pcdl/html_head.php";
 			border-radius: 99px;
 			cursor: pointer;
 		}
+		#footer_nav {
+			display: none;
+		}
 
 	</style>
+	<!-- <link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">-->
+	
+
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
 			<div style="display:flex;justify-content: space-between;">
