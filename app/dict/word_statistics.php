@@ -78,7 +78,7 @@ require_once "../public/load_lang_js.php";//语言文件
     Highcharts.getOptions().colors.splice(0, 0, 'transparent');
 
     Highcharts.setOptions({
-            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+            colors: ['#f5f5f5', '#d2691e', '#7cb5ec', '#f08080', '#ffd700', '#f15c80', '#e4d354', '#8b0000', '#8d4653']
         });
     Highcharts.chart('container', {
         chart: {
@@ -176,8 +176,14 @@ require_once "../public/load_lang_js.php";//语言文件
                 //crosshair: false, 功能未知
                 style: {
                     fontSize: 'small',
-                }
+                },
+                padding: 5,
+                //reserveSpace: false, 轴标签是否占空间
+                step: 1//每个标签都显示，不跳
     		},
+            //tickWidth: 1,//刻度显示宽度
+            //tickPixelInterval: 0,
+            //tickAmount: 10
 
         },
         yAxis: {
@@ -206,8 +212,11 @@ require_once "../public/load_lang_js.php";//语言文件
             bar: {
                 pointPadding: 0,
                 borderWidth: 0,
-                pointWidth: 20,
-                allowOverlap: true,
+                //pointWidth: 10,
+                dataLabels: {
+                    //allowOverlap: true,
+                    //enabled: true
+                }
 		}
 
         },

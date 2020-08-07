@@ -19,9 +19,11 @@
     font-weight: 300;
     display: inline-block;
     font-style: normal;
+ 
 }
 
 .dict_word input,select,textarea{
 	background-color:white;
-	color:black;
+    color:rgb(0, 0, 0);
+
 }
