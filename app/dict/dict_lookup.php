@@ -359,6 +359,7 @@ switch($op){
 		  echo "<div><a href='#ref_dict_$x'>$x_value</a></div>";
 		}
 		echo "<div>";
+
 		$arrWords = countWordInPali($word,true);
 		$weight = 0;
 		foreach($arrWords as $oneword){
