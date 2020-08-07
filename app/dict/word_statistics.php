@@ -1,5 +1,6 @@
 <?PHP
 include "../pcdl/html_head.php";
+require_once "../public/load_lang_js.php";//语言文件
 ?>
 	<body>
 		<style type="text/css">
@@ -38,6 +39,15 @@ include "../pcdl/html_head.php";
             .highcharts-data-table tr:hover {
                 background: #f1f7ff;
             }
+            .chart_head_1 {
+                text-align: center;
+                font-size: x-large;
+                margin-bottom: 0;
+                font-weight: bold;
+            }
+            .highcharts-data-label {
+                font-size: small;
+            }
 		</style>
 <script src="../public/js/highcharts/highcharts.js"></script>
 <script src="../public/js/highcharts/modules/sunburst.js"></script>
@@ -47,7 +57,7 @@ include "../pcdl/html_head.php";
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
-<h2 style="text-align:center;"><?php echo $_GET["word"] ?></h2>
+<h2 class="chart_head_1"><?php echo $_local->gui->statistical.$_local->gui->chart."："; ?><?php echo ucfirst($_GET["word"]) ?></h2>
 <div style="display:flex;">
 <figure class="highcharts-figure">
     <div id="container"></div>
@@ -76,7 +86,7 @@ include "../pcdl/html_head.php";
         },
 
         title: {
-            text: 'Distribution'
+            text: gLocal.gui.distribution
         },
         subtitle: {
             text: ''
@@ -99,6 +109,9 @@ include "../pcdl/html_head.php";
                 level: 1,
                 levelIsConstant: false,
                 dataLabels: {
+                    style: {
+        				fontSize: 'x-large',
+	        		},
                     filter: {
                         property: 'outerArcLength',
                         operator: '>',
@@ -107,13 +120,23 @@ include "../pcdl/html_head.php";
                 }
             }, {
                 level: 2,
-                colorByPoint: true
+                colorByPoint: true,
+                dataLabels: {
+                    style: {
+        				fontSize: 'large',
+	        		},
+                }
             },
             {
                 level: 3,
                 colorVariation: {
                     key: 'brightness',
                     to: -0.5
+                },
+                dataLabels: {
+                    style: {
+        				fontSize: 'small',
+	        		},
                 }
             }, {
                 level: 4,
@@ -125,7 +148,7 @@ include "../pcdl/html_head.php";
         }],
         tooltip: {
             headerFormat: "",
-            pointFormat: '三藏译文 <b>{point.name}</b> 为 <b>{point.value}</b>'
+            pointFormat: '<b><?php echo ucfirst($_GET["word"]) ?></b> <?php echo $_local->gui->in ?> <b>{point.name}</b> <?php echo $_local->gui->present ?> <b>{point.value}</b> '+gLocal.gui.times
         }
     });
   });
@@ -141,24 +164,52 @@ include "../pcdl/html_head.php";
             type: 'bar'
         },
         title: {
-            text: 'Declension List'
+            text: gLocal.gui.declension_list,
+            style: {
+				fontSize: 'large',
+			    }
         },
         xAxis: {
-            categories: worddata.wordlist
+            categories: worddata.wordlist,
+            labels: {
+                enabled: true,//显示
+                //crosshair: false, 功能未知
+                style: {
+                    fontSize: 'small',
+                }
+    		},
+
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Frequency'
-            }
+                text: gLocal.gui.frequency,
+                style: {
+				fontSize: 'large',
+			    }
+            },
+            labels: {
+                style: {
+                    fontSize: 'small',
+                }
+    		},
         },
         legend: {
-            reversed: true
+            reversed: true,
+            verticalAlign: "top",
+            enabled: true //图例开关
         },
         plotOptions: {
             series: {
                 stacking: 'normal'
-            }
+            },
+            bar: {
+                pointPadding: 0,
+                borderWidth: 0,
+                pointWidth: 20,
+                allowOverlap: true,
+		}
+
         },
         series: worddata.data
     });

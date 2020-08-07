@@ -433,6 +433,10 @@
 		"forms": "spelling forms",
 		"add_to": "add to",
 		"undone_function": "unfinished function",
+		"click_to_chart": "click to check the chart",
+		"frequency": "Frequency",
+		"declension_list": "Declension List",
+		"distribution": "Distribution Chart",
 		"": "",
 		"": ""
 	},

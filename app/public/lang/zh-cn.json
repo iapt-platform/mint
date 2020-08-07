@@ -431,7 +431,12 @@
 		"undone_function": "未完成功能",
 		"click_to_chart": "点击查看统计图表",
 		"frequency": "词频",
-		"": ""
+		"declension_list": "变化表",
+		"distribution": "分布图",
+		"statistical": "统计",
+		"chart": "图表",
+		"in": "在",
+		"present": "中出现"
 	},
 	"grammastr": [
 		{
