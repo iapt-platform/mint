@@ -188,7 +188,7 @@
 		"months": " month(s) ",
 		"more": "more",
 		"my_book": "My Book",
-		"my_dictionary": "My Dictionary",
+		"my_dictionary": "My Vocabulary",
 		"my_document": "My Document",
 		"my_loc": "my location",
 		"name": "Name",
@@ -422,6 +422,13 @@
 		"library": "Library",
 		"turbo_split": "Turbo Split",
 		"full_text": "full text",
+		"word_weight": "weightiness of this word",
+		"characters": "characters",
+		"real_declension": "reality of declensions",
+		"forms": "spelling forms",
+		"add_to": "add to",
+		"undone_function": "unfinished function",
+		"": "",
 		"": ""
 	},
 	"grammastr": [
