@@ -45,9 +45,9 @@
 		</div>
 		<div class="nav_text btn_color">我的</div>
 	</div>
-</div>S
+</div>
 	
-<div class="foot_div">
+<div class="foot_div" style="text-align: center; font-size: x-large; font-weight: bold; color: #3333;">
 	<div>wikipali @2020</div>
 	<div>Powered by PCD Suite</div>
 </div>
