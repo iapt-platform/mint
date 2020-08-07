@@ -29,6 +29,7 @@ function dict_search(word) {
 			$("#dict_search_result").html(data);
 			$("#dict_list").html($("#dictlist").html());
 			$("#dictlist").html("");
+			guide_init();
 		});
 }
 function standardize(word) {

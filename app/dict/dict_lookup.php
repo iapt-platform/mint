@@ -157,7 +157,7 @@ switch($op){
 	case "search":
 		echo "<div id='dict_list'></div>";
 		echo "<div id='dict_ref'>";	
-
+		$dict_list_a = [];
 		//社区字典开始
 		PDO_Connect("sqlite:"._FILE_DB_WBW_);
 		$query = "select *  from dict where \"pali\"= ".$PDO->quote($word)." limit 0,100";
@@ -183,30 +183,14 @@ switch($op){
 					$userdict["{$userwordcase}"]["factors"] = $value["factors"];
 				}
 				
-/*
-				$mean=$Fetch[$i]["mean"];
-				echo "<div class='dict_word'>";
-				echo "<div class='pali'>{$word}</div>";
-				echo "<div class=''>语法：{$Fetch[$i]["type"]}-{$Fetch[$i]["gramma"]}</div>";
-				if(strlen($Fetch[$i]["parent"])>0){
-					echo "<div class=''>语基：{$Fetch[$i]["parent"]}</div>";
-				}
-				echo "<div class=''>意思：{$Fetch[$i]["mean"]}</div>";
-				if(strlen($Fetch[$i]["note"]>0)){
-					echo "<div class=''>注解：{$Fetch[$i]["note"]}</div>";
-				}
-				echo "<div class=''>组分：{$Fetch[$i]["factors"]}</div>";
-				echo "<div class=''>组分意思：{$Fetch[$i]["factormean"]}</div>";
-				echo "<div class=''>贡献者：{$Fetch[$i]["creator"]}</div>";
-				echo "<div class=''>收藏：{$Fetch[$i]["ref_counter"]}次</div>";
-				echo "</div>";
-				*/
+
 			}
 			echo "<div class='dict_word'>";
-			echo "<div class='dict'>社区字典</div>";
+			echo "<div class='dict'>社区字典</div><a name='net'></a>";
+			$dict_list_a[] = array("net","社区字典");
+
 			foreach($userdict as $key => $value){
 				echo "<div class='mean'>{$key}:{$value["mean"]}</div>";
-				
 			}
 			echo "<div><span>贡献者：</span>";
 			foreach ($userlist as $key => $value) {
@@ -229,6 +213,7 @@ switch($op){
 				$mean=$Fetch[$i]["mean"];
 				$dictid=$Fetch[$i]["dict_id"];
 				$dict_list[$dictid]=$Fetch[$i]["shortname"];
+				$dict_list_a[] = array("ref_dict_$dictid",$Fetch[$i]["shortname"]);
 				$outXml = "<div class='dict_word'>";
 				$outXml = $outXml."<a name='ref_dict_$dictid'></a>";
 				$outXml = $outXml."<div class='dict'>".$Fetch[$i]["shortname"]."</div>";
@@ -245,11 +230,19 @@ switch($op){
 			if($end==$case[$row][1]){
 				$base=mb_substr($word, 0,mb_strlen($word,"UTF-8")-$len,"UTF-8").$case[$row][0];
 				if($base!=$word){
+					$thiscase = "";
+					$arrCase = explode('$',$case[$row][2]);
+					foreach($arrCase as $value){
+						$caseid = "grammar_".str_replace('.','',$value);
+						$thiscase .= "<guide gid='$caseid'>$value</guide>";
+					}
+					
+					
 					if(isset($newWord[$base])){
-						$newWord[$base] .= "<br />".$case[$row][2];
+						$newWord[$base] .= "<br />".$thiscase;
 					}
 					else{
-						$newWord[$base] = $case[$row][2];
+						$newWord[$base] = $thiscase;
 					}
 				}
 			}
@@ -262,11 +255,18 @@ switch($op){
 				$iFetch=count($Fetch);
 				$count_return+=$iFetch;
 				if($iFetch>0){
-					echo $x . ":<div class='dict_find_gramma'>" . $x_value . "</div>";
+					$dict_list_a[] = array("word_$x",$x);
+					echo "<div style='font-size:120%;font-weight:700;'><a name='word_$x'></a>".$x."</div>" ;
+					//语法信息
+					foreach($_local->grammastr as $gr){
+						$x_value = str_replace($gr->id,$gr->value,$x_value);
+					}
+					echo "<div class='dict_find_gramma'>" . $x_value . "</div>";
 					for($i=0;$i<$iFetch;$i++){
 						$mean=$Fetch[$i]["mean"];
 						$dictid=$Fetch[$i]["dict_id"];
 						$dict_list[$dictid]=$Fetch[$i]["shortname"];
+						$dict_list_a[] = array("ref_dict_$dictid",$Fetch[$i]["shortname"]);
 						echo "<div class='dict_word'>";
 						echo "<a name='ref_dict_$dictid'></a>";
 						echo "<div class='dict'>".$Fetch[$i]["shortname"]."</div>";
@@ -280,7 +280,7 @@ switch($op){
 		
 		//查连读词
 		if($count_return<2){
-			echo "Junction:<br />";
+			echo "<div>Junction</div>";
 			$newWord=array();
 			for ($row = 0; $row < count($un); $row++) {
 				$len=mb_strlen($un[$row][1],"UTF-8");
@@ -355,9 +355,14 @@ switch($op){
 
 
 		echo "<div id='dictlist'>";
-		foreach($dict_list as $x=>$x_value) {
-		  echo "<div><a href='#ref_dict_$x'>$x_value</a></div>";
-		}
+		foreach($dict_list_a as $x_value) {
+			if(substr($x_value[0],0,4)=="word"){
+				echo "<div style='font-size:120%;font-weight:700;margin-top:15px;'><a href='#{$x_value[0]}'>$x_value[1]</a></div>";
+			}
+			else{
+				echo "<div><a href='#{$x_value[0]}'>$x_value[1]</a></div>";
+			}
+		  }		
 		echo "<div>";
 
 		$arrWords = countWordInPali($word,true);
@@ -379,7 +384,6 @@ switch($op){
 		echo "</div>";
 		echo "</div>";
 		//参考字典查询结束
-		
 
 		//用户词典
 		echo "<div id='dict_user' >";	
