@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p135,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p135,2,100,nikaya,,Saṃyuttanikāye
-NULL,p135,3,1,book,Khandhavagga-aṭṭhakathā,Khandhavagga-aṭṭhakathā
+NULL,p135,3,1,book,"(SN) Khandhavagga-aṭṭhakathā",Khandhavagga-aṭṭhakathā
 NULL,p135,4,2,chapter,"1. Khandhasaṃyuttaṃ","1. Khandhasaṃyuttaṃ"
 NULL,p135,5,3,title,"1. Nakulapituvaggo","1. Nakulapituvaggo"
 NULL,p135,6,4,subhead,"1. Nakulapitusuttavaṇṇanā","1. Nakulapitusuttavaṇṇanā"

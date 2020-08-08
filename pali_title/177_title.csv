@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p177,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p177,2,100,nikaya,,Abhidhammāvatāro
+NULL,p177,2,1,nikaya,Abhidhammāvatāro,Abhidhammāvatāro
 NULL,p177,3,2,chapter,Ganthārambhakathā,Ganthārambhakathā
 NULL,p177,4,8,hangnum,1.,1.
 NULL,p177,5,100,gatha1,," Anantakaruṇāpaññaṃ, tathāgatamanuttaraṃ;"
@@ -4803,7 +4803,7 @@ NULL,p177,4801,100,gathalast,,"Tāva tiṭṭhatu saddhammo, dhammarājassa satt
 NULL,p177,4802,100,bodytext,,"Uragapuranivasanena ācariyena bhadantabuddhadattena sīlācārasampannena kato abhidhammāvatāro nāmāyaṃ."
 NULL,p177,4803,100,centered,,"Abhidhammāvatāro niṭṭhito."
 NULL,p177,4804,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p177,4805,2,chapter,Nāmarūpaparicchedo,Nāmarūpaparicchedo
+NULL,p177,4805,1,chapter,Nāmarūpaparicchedo,Nāmarūpaparicchedo
 NULL,p177,4806,2,chapter,Ganthārambhakathā,Ganthārambhakathā
 NULL,p177,4807,8,hangnum,1.,1.
 NULL,p177,4808,100,gatha1,," Sammā  sammābhisambuddhaṃ, dhammaṃ dhammappakāsanaṃ;"
@@ -10625,7 +10625,7 @@ NULL,p177,10623,100,gathalast,,"Niṭṭhantajjhāsayā subhā."
 NULL,p177,10624,100,centered,,"Iti anuruddhācariyena viracitaṃ"
 NULL,p177,10625,100,centered,,"Nāmarūpaparicchedapakaraṇaṃ niṭṭhitaṃ."
 NULL,p177,10626,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p177,10627,2,chapter,Paramatthavinicchayo,Paramatthavinicchayo
+NULL,p177,10627,1,chapter,Paramatthavinicchayo,Paramatthavinicchayo
 NULL,p177,10628,2,chapter,Ganthārambhakathā,Ganthārambhakathā
 NULL,p177,10629,8,hangnum,1.,1.
 NULL,p177,10630,100,gatha1,," Vanditvā  vandaneyyānaṃ, uttamaṃ ratanattayaṃ;"
@@ -14270,7 +14270,7 @@ NULL,p177,14268,100,gathalast,," Pakaraṇaṃ kataṃ tena, paramatthatthavedin
 NULL,p177,14269,100,centered,,"Iti anuruddhācariyena racito"
 NULL,p177,14270,100,centered,,"Paramatthavinicchayo niṭṭhito."
 NULL,p177,14271,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p177,14272,2,chapter,Saccasaṅkhepo,Saccasaṅkhepo
+NULL,p177,14272,1,chapter,Saccasaṅkhepo,Saccasaṅkhepo
 NULL,p177,14273,2,chapter,Ganthārambhakathā,Ganthārambhakathā
 NULL,p177,14274,8,hangnum,1.,1.
 NULL,p177,14275,100,gatha1,," Namassitvā  tilokaggaṃ, ñeyyasāgarapāraguṃ;"

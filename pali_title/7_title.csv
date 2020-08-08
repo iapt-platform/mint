@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p7,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p7,2,2,chapter,Pajjamadhu,Pajjamadhu
+NULL,p7,2,1,chapter,Pajjamadhu,Pajjamadhu
 NULL,p7,3,100,gatha1,,"Ānanda rañña ratanādi mahā yatinda,"
 NULL,p7,4,100,gatha2,,"Niccappabuddha padumappiya sevinaṅgī;"
 NULL,p7,5,100,gatha3,,"Buddhappiyena ghana buddha guṇappiyena,"

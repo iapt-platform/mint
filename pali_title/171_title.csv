@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p171,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p171,2,100,nikaya,,Saṃyuttanikāyo
-NULL,p171,3,1,book,Mahāvaggo,Mahāvaggo
+NULL,p171,3,1,book,(SN)Mahāvaggo,Mahāvaggo
 NULL,p171,4,2,chapter,"1. Maggasaṃyuttaṃ","1. Maggasaṃyuttaṃ"
 NULL,p171,5,3,title,"1. Avijjāvaggo","1. Avijjāvaggo"
 NULL,p171,6,4,subhead,"1. Avijjāsuttaṃ","1. Avijjāsuttaṃ"
@@ -836,7 +836,7 @@ NULL,p171,834,100,gatha1,,"Ogho  yogo upādānaṃ, ganthā anusayena ca;"
 NULL,p171,835,100,gathalast,,"Kāmaguṇā nīvaraṇā, khandhā oruddhambhāgiyānīti."
 NULL,p171,836,3,title,"14. Punagaṅgāpeyyālavaggo","14. Punagaṅgāpeyyālavaggo"
 NULL,p171,837,8,hangnum,312-323,312-323
-NULL,p171,838,4,subhead," Punagaṅgānadīādisuttaṃ"," Punagaṅgānadīādisuttaṃ"
+NULL,p171,838,4,subhead,Punagaṅgānadīādisuttaṃ," Punagaṅgānadīādisuttaṃ"
 NULL,p171,839,100,centered,,"Vaggo cuddasamo."
 NULL,p171,840,100,bodytext,,"Uddānaṃ –"
 NULL,p171,841,100,gatha1,,"Cha  pācīnato ninnā, cha ninnā ca samuddato;"
@@ -844,7 +844,7 @@ NULL,p171,842,100,gathalast,,"Dvete cha dvādasa honti, vaggo tena pavuccatīti.
 NULL,p171,843,100,bodytext,,"(Bojjhaṅgasaṃyuttassa gaṅgāpeyyālaṃ rāgavasena vitthāretabbaṃ)."
 NULL,p171,844,3,title,"15. Punaappamādavaggo","15. Punaappamādavaggo"
 NULL,p171,845,8,hangnum,324-333,324-333
-NULL,p171,846,4,subhead," Tathāgatādisuttaṃ"," Tathāgatādisuttaṃ"
+NULL,p171,846,4,subhead,Tathāgatādisuttaṃ," Tathāgatādisuttaṃ"
 NULL,p171,847,100,centered,,Pannarasamo.
 NULL,p171,848,100,bodytext,,"Uddānaṃ –"
 NULL,p171,849,100,gatha1,,"Tathāgataṃ padaṃ kūṭaṃ, mūlaṃ sārena vassikaṃ;"
@@ -852,7 +852,7 @@ NULL,p171,850,100,gathalast,,"Rājā candimasūriyā ca, vatthena dasamaṃ pada
 NULL,p171,851,100,bodytext,,"(Appamādavaggo rāgavasena vitthāretabbo)."
 NULL,p171,852,3,title,"16. Punabalakaraṇīyavaggo","16. Punabalakaraṇīyavaggo"
 NULL,p171,853,8,hangnum,334-345,334-345
-NULL,p171,854,4,subhead," Punabalādisuttaṃ"," Punabalādisuttaṃ"
+NULL,p171,854,4,subhead,Punabalādisuttaṃ," Punabalādisuttaṃ"
 NULL,p171,855,100,centered,,Soḷasamo.
 NULL,p171,856,100,bodytext,,"Uddānaṃ –"
 NULL,p171,857,100,gatha1,,"Balaṃ  bījañca nāgo ca, rukkho kumbhena sūkiyā;"
@@ -860,14 +860,14 @@ NULL,p171,858,100,gathalast,,"Ākāsena ca dve meghā, nāvā āgantukā nadīti
 NULL,p171,859,100,bodytext,,"(Bojjhaṅgasaṃyuttassa balakaraṇīyavaggo rāgavasena vitthāretabbo)."
 NULL,p171,860,3,title,"17. Punaesanāvaggo","17. Punaesanāvaggo"
 NULL,p171,861,8,hangnum,346-356,346-356
-NULL,p171,862,4,subhead," Punaesanādisuttaṃ"," Punaesanādisuttaṃ"
+NULL,p171,862,4,subhead,Punaesanādisuttaṃ," Punaesanādisuttaṃ"
 NULL,p171,863,100,centered,,"Punaesanāvaggo sattarasamo."
 NULL,p171,864,100,bodytext,,"Uddānaṃ –"
 NULL,p171,865,100,gatha1,,"Esanā vidhā āsavo, bhavo ca dukkhatā tisso;"
 NULL,p171,866,100,gathalast,,"Khilaṃ malañca nīgho ca, vedanātaṇhā tasināya cāti."
 NULL,p171,867,3,title,"18. Punaoghavaggo","18. Punaoghavaggo"
 NULL,p171,868,8,hangnum,357-366,357-366
-NULL,p171,869,4,subhead," Punaoghādisuttaṃ"," Punaoghādisuttaṃ"
+NULL,p171,869,4,subhead,Punaoghādisuttaṃ," Punaoghādisuttaṃ"
 NULL,p171,870,100,centered,,"Bojjhaṅgasaṃyutassa punaoghavaggo aṭṭhārasamo."
 NULL,p171,871,100,bodytext,,"Uddānaṃ –"
 NULL,p171,872,100,gatha1,,"Ogho yogo upādānaṃ, ganthā anusayena ca;"

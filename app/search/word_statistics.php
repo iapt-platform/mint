@@ -9,31 +9,31 @@ require_once "../public/function.php";
 require_once "../search/word_function.php";
 
     $resulte = array();
-    $resulte[] = array("id"=>"0.0", 'parent' => '',  'name' => '全部'  );
+    $resulte[] = array("id"=>"0.0", 'parent' => '',  'name' => $_local->gui->all  );
 
-    $resulte[] = array("id"=>"sutta", 'parent' => '0.0',  'name' => '经藏'  );
-    $resulte[] = array("id"=>"vinaya", 'parent' => '0.0',  'name' => '律藏'  );
-    $resulte[] = array("id"=>"abhidhamma", 'parent' => '0.0',  'name' => '论藏'  );
-    $resulte[] = array("id"=>"anna", 'parent' => '0.0',  'name' => '其他'  );
+    $resulte[] = array("id"=>"sutta", 'parent' => '0.0',  'name' => $_local->gui->sutta  );
+    $resulte[] = array("id"=>"vinaya", 'parent' => '0.0',  'name' => $_local->gui->vinaya  );
+    $resulte[] = array("id"=>"abhidhamma", 'parent' => '0.0',  'name' => $_local->gui->abhidhamma  );
+    $resulte[] = array("id"=>"anna", 'parent' => '0.0',  'name' => $_local->gui->anna  );
 
-    $resulte[] = array("id"=>"sutta.mula", 'parent' => 'sutta',  'name' => '根本'  );
-    $resulte[] = array("id"=>"sutta.atthakattha", 'parent' => 'sutta',  'name' => '义注'  );
-    $resulte[] = array("id"=>"sutta.tika", 'parent' => 'sutta',  'name' => '复注'  );
-    $resulte[] = array("id"=>"sutta.anna", 'parent' => 'sutta',  'name' => '其他'  );
+    $resulte[] = array("id"=>"sutta.mula", 'parent' => 'sutta',  'name' => $_local->gui->mula  );
+    $resulte[] = array("id"=>"sutta.atthakattha", 'parent' => 'sutta',  'name' => $_local->gui->atthakatha  );
+    $resulte[] = array("id"=>"sutta.tika", 'parent' => 'sutta',  'name' => $_local->gui->tika  );
+    $resulte[] = array("id"=>"sutta.anna", 'parent' => 'sutta',  'name' => $_local->gui->anna  );
 
-    $resulte[] = array("id"=>"vinaya.mula", 'parent' => 'vinaya',  'name' => '根本'  );
-    $resulte[] = array("id"=>"vinaya.atthakattha", 'parent' => 'vinaya',  'name' => '义注'  );
-    $resulte[] = array("id"=>"vinaya.tika", 'parent' => 'vinaya',  'name' => '复注'  );
-    $resulte[] = array("id"=>"vinaya.anna", 'parent' => 'vinaya',  'name' => '其他'  );
+    $resulte[] = array("id"=>"vinaya.mula", 'parent' => 'vinaya',  'name' => $_local->gui->mula  );
+    $resulte[] = array("id"=>"vinaya.atthakattha", 'parent' => 'vinaya',  'name' => $_local->gui->atthakatha  );
+    $resulte[] = array("id"=>"vinaya.tika", 'parent' => 'vinaya',  'name' => $_local->gui->tika  );
+    $resulte[] = array("id"=>"vinaya.anna", 'parent' => 'vinaya',  'name' => $_local->gui->anna  );
 
-    $resulte[] = array("id"=>"abhidhamma.mula", 'parent' => 'abhidhamma',  'name' => '根本'  );
-    $resulte[] = array("id"=>"abhidhamma.atthakattha", 'parent' => 'abhidhamma',  'name' => '义注'  );
-    $resulte[] = array("id"=>"abhidhamma.tika", 'parent' => 'abhidhamma',  'name' => '复注'  );
-    $resulte[] = array("id"=>"abhidhamma.anna", 'parent' => 'abhidhamma',  'name' => '其他'  );
+    $resulte[] = array("id"=>"abhidhamma.mula", 'parent' => 'abhidhamma',  'name' => $_local->gui->mula  );
+    $resulte[] = array("id"=>"abhidhamma.atthakattha", 'parent' => 'abhidhamma',  'name' => $_local->gui->atthakatha  );
+    $resulte[] = array("id"=>"abhidhamma.tika", 'parent' => 'abhidhamma',  'name' => $_local->gui->tika  );
+    $resulte[] = array("id"=>"abhidhamma.anna", 'parent' => 'abhidhamma',  'name' => $_local->gui->anna  );
 
-    $resulte[] = array("id"=>"anna.atthakattha", 'parent' => 'anna',  'name' => '义注'  );
-    $resulte[] = array("id"=>"anna.tika", 'parent' => 'anna',  'name' => '复注'  );
-    $resulte[] = array("id"=>"anna.anna2", 'parent' => 'anna',  'name' => '其他'  );
+    $resulte[] = array("id"=>"anna.atthakattha", 'parent' => 'anna',  'name' => $_local->gui->atthakatha  );
+    $resulte[] = array("id"=>"anna.tika", 'parent' => 'anna',  'name' => $_local->gui->tika  );
+    $resulte[] = array("id"=>"anna.anna2", 'parent' => 'anna',  'name' => $_local->gui->anna  );
 
     if(isset($_GET["word"])){
         $word=mb_strtolower($_GET["word"],'UTF-8'); 

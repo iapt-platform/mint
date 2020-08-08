@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p200,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p200,2,2,chapter,Vinayavinicchayo,Vinayavinicchayo
-NULL,p200,3,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p200,2,1,chapter,Vinayavinicchayo,Vinayavinicchayo
+NULL,p200,3,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p200,4,8,hangnum,1.,1.
 NULL,p200,5,100,gatha1,," Vanditvā  sirasā seṭṭhaṃ, buddhamappaṭipuggalaṃ;"
 NULL,p200,6,100,gathalast,,"Bhavābhāvakaraṃ dhammaṃ, gaṇañceva niraṅgaṇaṃ."
@@ -10174,8 +10174,8 @@ NULL,p200,10172,100,bodytext,,Samattā.
 NULL,p200,10173,100,bodytext,,"Iti tambapaṇṇiyena paramaveyyākaraṇena tipiṭakanayavidhikusalena paramakavijanahadayapadumavanavikasanakarena kavivaravasabhena paramaratikaravaramadhuravacanuggārena uragapurena buddhadattena racitoyaṃ vinayavinicchayo."
 NULL,p200,10174,100,centered,,"Vinayavinicchayo samatto."
 NULL,p200,10175,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p200,10176,2,chapter,Uttaravinicchayo,Uttaravinicchayo
-NULL,p200,10177,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p200,10176,1,chapter,Uttaravinicchayo,Uttaravinicchayo
+NULL,p200,10177,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p200,10178,8,hangnum,1.,1.
 NULL,p200,10179,100,gatha1,," Sabbasattuttamaṃ  dhīraṃ, vanditvā sirasā jinaṃ;"
 NULL,p200,10180,100,gathalast,,"Dhammañcādhammaviddhaṃsaṃ, gaṇamaṅgaṇanāsanaṃ."
@@ -10188,7 +10188,7 @@ NULL,p200,10186,100,gatha2,,"Suṇato cintayato panuttaraṃ;"
 NULL,p200,10187,100,gatha3,,"Paramaṃ abuddha buddhivaḍḍhanaṃ;"
 NULL,p200,10188,100,gathalast,,"Vadato me niratā nibodhatha."
 NULL,p200,10189,2,chapter,Mahāvibhaṅgasaṅgahakathā,Mahāvibhaṅgasaṅgahakathā
-NULL,p200,10190,8,hangnum,4.,4.
+NULL,p200,10190,5,hangnum,Pārājikakathā,4.
 NULL,p200,10191,100,gatha1,," Methunaṃ  paṭisevanto, kati āpattiyo phuse;"
 NULL,p200,10192,100,gathalast,,"Methunaṃ paṭisevanto, tisso āpattiyo phuse."
 NULL,p200,10193,8,hangnum,5.,5.
@@ -10217,7 +10217,7 @@ NULL,p200,10215,8,hangnum,11.,11.
 NULL,p200,10216,100,gatha1,," Asantaṃ uttariṃ dhammaṃ, bhaṇantassa parājayo;"
 NULL,p200,10217,100,gathalast,,"Thullaccayaṃ pariyāye, ñāte, no ce tu dukkaṭaṃ."
 NULL,p200,10218,100,centered,,Pārājikakathā.
-NULL,p200,10219,8,hangnum,12.,12.
+NULL,p200,10219,5,hangnum,Saṅghādisesakathā,12.
 NULL,p200,10220,100,gatha1,," Bhaṇa sukkaṃ vimocento;"
 NULL,p200,10221,100,gatha2,,"Kati āpattiyo phuse;"
 NULL,p200,10222,100,gatha3,,"Suṇa  sukkaṃ vimocento;"
@@ -10282,8 +10282,8 @@ NULL,p200,10280,8,hangnum,31.,31.
 NULL,p200,10281,100,gatha1,," Bhedānuvattake ceva, dubbace kuladūsake;"
 NULL,p200,10282,100,gathalast,,"Saṅghabhedakatulyova, hoti āpattinicchayo."
 NULL,p200,10283,100,centered,,Saṅghādisesakathā.
-NULL,p200,10284,8,hangnum,32.,32.
-NULL,p200,10285,100,gatha1,," Atikkamanto atirekacīvaraṃ;"
+NULL,p200,10284,5,hangnum,Tiṃsanissaggiyakathā,32.
+NULL,p200,10285,6,gatha1,"Kathinavaggo paṭhamo"," Atikkamanto atirekacīvaraṃ;"
 NULL,p200,10286,100,gatha2,,"Dasāhamāpajjati ekameva;"
 NULL,p200,10287,100,gatha3,,Nissaggipācittiyamekarattiṃ;
 NULL,p200,10288,100,gathalast,,"Ticīvarenāpi vinā vasanto."
@@ -10328,7 +10328,7 @@ NULL,p200,10326,8,hangnum,44.,44.
 NULL,p200,10327,100,gatha1,," Nipphādeti sace tassa, honti āpattiyo duve;"
 NULL,p200,10328,100,gathalast,,"Payoge dukkaṭaṃ, tassa, lābhe nissaggiyaṃ siyā."
 NULL,p200,10329,100,centered,,"Kathinavaggo paṭhamo."
-NULL,p200,10330,8,hangnum,45.,45.
+NULL,p200,10330,6,hangnum,"Kosiyavaggo dutiyo",45.
 NULL,p200,10331,100,gatha1,," Dosā kosiyavaggassa, dvedveādīsu pañcasu;"
 NULL,p200,10332,100,gathalast,,"Payoge dukkaṭaṃ vuttaṃ, lābhe nissaggiyaṃ siyā."
 NULL,p200,10333,8,hangnum,46.,46.
@@ -10347,7 +10347,7 @@ NULL,p200,10345,8,hangnum,50.,50.
 NULL,p200,10346,100,gatha1,," Nānappakārakaṃ bhikkhu, āpajje kayavikkayaṃ;"
 NULL,p200,10347,100,gathalast,,"Payoge dukkaṭaṃ, tasmiṃ, kate nissaggiyaṃ phuse."
 NULL,p200,10348,100,centered,,"Kosiyavaggo dutiyo."
-NULL,p200,10349,8,hangnum,51.,51.
+NULL,p200,10349,6,hangnum,"Pattavaggo tatiyo",51.
 NULL,p200,10350,100,gatha1,," Pattaṃ atikkamentassa, dasāhamatirekakaṃ;"
 NULL,p200,10351,100,gathalast,,"Tassa nissaggiyāpatti, hoti ekāva bhikkhuno."
 NULL,p200,10352,8,hangnum,52.,52.
@@ -10388,8 +10388,8 @@ NULL,p200,10386,100,gatha1,," Payoge dukkaṭaṃ hoti, nissaggi pariṇāmite;"
 NULL,p200,10387,100,gathalast,,"Sabbattha appanāvāra-parihāni katā mayā."
 NULL,p200,10388,100,centered,,"Pattavaggo tatiyo."
 NULL,p200,10389,100,centered,,Tiṃsanissaggiyakathā.
-NULL,p200,10390,8,hangnum,64.,64.
-NULL,p200,10391,100,gatha1,," Vadantassa musāvādaṃ, pañca āpattiyo siyuṃ;"
+NULL,p200,10390,5,hangnum,Pācittiyakathā,64.
+NULL,p200,10391,6,gatha1,"Musāvādavaggo paṭhamo"," Vadantassa musāvādaṃ, pañca āpattiyo siyuṃ;"
 NULL,p200,10392,100,gathalast,,"Manussuttaridhamme tu, abhūtasmiṃ parājayo."
 NULL,p200,10393,8,hangnum,65.,65.
 NULL,p200,10394,100,gatha1,," Codanāya garuṃ bhikkhuṃ, amūlantimavatthunā;"
@@ -10425,7 +10425,7 @@ NULL,p200,10423,8,hangnum,75.,75.
 NULL,p200,10424,100,gatha1,," Pathaviṃ khaṇato tassa, payoge dukkaṭaṃ mataṃ;"
 NULL,p200,10425,100,gathalast,,"Pahāre ca pahāre ca, pācitti pariyāputā."
 NULL,p200,10426,100,centered,,"Musāvādavaggo paṭhamo."
-NULL,p200,10427,8,hangnum,76.,76.
+NULL,p200,10427,6,hangnum,"Bhūtagāmavaggo dutiyo",76.
 NULL,p200,10428,100,gatha1,," Bhūtagāmaṃ tu pātento, dve panāpattiyo phuse;"
 NULL,p200,10429,100,gathalast,,"Payoge dukkaṭaṃ, tassa, pāte pācitti dīpitā."
 NULL,p200,10430,8,hangnum,77.,77.
@@ -10462,7 +10462,7 @@ NULL,p200,10460,8,hangnum,87.,87.
 NULL,p200,10461,100,gatha1,," Jānaṃ sappāṇakaṃ toyaṃ, tiṇaṃ vā siñcato pana;"
 NULL,p200,10462,100,gathalast,,"Payoge dukkaṭaṃ hoti, sitte pācittiyaṃ siyā."
 NULL,p200,10463,100,centered,,"Bhūtagāmavaggo dutiyo."
-NULL,p200,10464,8,hangnum,88.,88.
+NULL,p200,10464,6,hangnum,"Ovādavaggo tatiyo",88.
 NULL,p200,10465,100,gatha1,," Phuse bhikkhuniyo bhikkhu, ovadanto asammato;"
 NULL,p200,10466,100,gathalast,,"Payoge dukkaṭaṃ, tassa, pācittovadite siyā."
 NULL,p200,10467,8,hangnum,89.,89.
@@ -10490,7 +10490,7 @@ NULL,p200,10488,8,hangnum,96.,96.
 NULL,p200,10489,100,gatha1,," Bhikkhu bhikkhuniyā saddhiṃ, nisajjaṃ tu raho pana;"
 NULL,p200,10490,100,gathalast,,"Kappento hi phuse dvepi, payoge dukkaṭādayo."
 NULL,p200,10491,100,centered,,"Ovādavaggo tatiyo."
-NULL,p200,10492,8,hangnum,97.,97.
+NULL,p200,10492,6,hangnum,"Bhojanavaggo catuttho",97.
 NULL,p200,10493,100,gatha1,," Taduttariṃ āvasatha-piṇḍaṃ tu paribhuñjato;"
 NULL,p200,10494,100,gathalast,,"Anantarassa vaggassa, navamena samo nayo."
 NULL,p200,10495,8,hangnum,98.,98.
@@ -10512,7 +10512,7 @@ NULL,p200,10510,8,hangnum,103.,103.
 NULL,p200,10511,100,gatha1,," Sattame aṭṭhame ceva, navame dasamepi ca;"
 NULL,p200,10512,100,gathalast,,"Paṭhamena samānāva, āpattīnaṃ vibhāgatā."
 NULL,p200,10513,100,centered,,"Bhojanavaggo catuttho."
-NULL,p200,10514,8,hangnum,104.,104.
+NULL,p200,10514,6,hangnum,"Acelakavaggo pañcamo",104.
 NULL,p200,10515,100,gatha1,," Acelakādino dento, sahatthā bhojanādikaṃ;"
 NULL,p200,10516,100,gathalast,,"Payoge dukkaṭaṃ patto, dinne pācittiyaṃ phuse."
 NULL,p200,10517,8,hangnum,105.,105.
@@ -10543,7 +10543,7 @@ NULL,p200,10541,8,hangnum,113.,113.
 NULL,p200,10542,100,gatha1,," Uyyodhikaṃ  tu gacchanto, dve panāpattiyo phuse;"
 NULL,p200,10543,100,gathalast,,"Gacchanto dukkaṭaṃ vuttaṃ, hoti pācitti passato."
 NULL,p200,10544,100,centered,,"Acelakavaggo pañcamo."
-NULL,p200,10545,8,hangnum,114.,114.
+NULL,p200,10545,6,hangnum,"Surāpānavaggo chaṭṭho",114.
 NULL,p200,10546,100,gatha1,," Suraṃ vā pana mereyyaṃ, pivanto dve phuse muni;"
 NULL,p200,10547,100,gathalast,,"Gaṇhato dukkaṭaṃ pātuṃ, pīte pācittiyaṃ siyā."
 NULL,p200,10548,8,hangnum,115.,115.
@@ -10574,7 +10574,7 @@ NULL,p200,10572,8,hangnum,123.,123.
 NULL,p200,10573,100,gatha1,," Bhikkhussāpanidhento  dve, phuse pattādikaṃ pana;"
 NULL,p200,10574,100,gathalast,,"Payoge dukkaṭaṃ, tasmiṃ, sesāpanihite siyā."
 NULL,p200,10575,100,centered,,"Surāpānavaggo chaṭṭho."
-NULL,p200,10576,8,hangnum,124.,124.
+NULL,p200,10576,6,hangnum,"Sappāṇakavaggo sattamo",124.
 NULL,p200,10577,100,gatha1,," Sañcicca  jīvitā pāṇaṃ, voropento tapodhano;"
 NULL,p200,10578,100,gathalast,,"Āpattiyo catassova, āpajjati, na saṃsayo."
 NULL,p200,10579,8,hangnum,125.,125.
@@ -10614,7 +10614,7 @@ NULL,p200,10612,8,hangnum,136.,136.
 NULL,p200,10613,100,gatha1,," Nāsitaṃ samaṇuddesaṃpalāpento duve phuse;"
 NULL,p200,10614,100,gathalast,,"Payoge dukkaṭaṃ vuttaṃ, pācitti upalāpite."
 NULL,p200,10615,100,centered,,"Sappāṇakavaggo sattamo."
-NULL,p200,10616,8,hangnum,137.,137.
+NULL,p200,10616,6,hangnum,"Sahadhammikavaggo aṭṭhamo",137.
 NULL,p200,10617,100,gatha1,," Vuccamānassa  bhikkhussa, bhikkhūhi sahadhammikaṃ;"
 NULL,p200,10618,100,gathalast,,"‘‘Na sakkhissāmi’’iccevaṃ, bhaṇato dukkaṭādayo."
 NULL,p200,10619,8,hangnum,138.,138.
@@ -10654,7 +10654,7 @@ NULL,p200,10652,8,hangnum,149.,149.
 NULL,p200,10653,100,gatha1,," Lābhaṃ pariṇataṃ jānaṃ, saṅghikaṃ puggalassa hi;"
 NULL,p200,10654,100,gathalast,,"Dve phuse pariṇāmento, payoge dukkaṭādayo."
 NULL,p200,10655,100,centered,,"Sahadhammikavaggo aṭṭhamo."
-NULL,p200,10656,8,hangnum,150.,150.
+NULL,p200,10656,6,hangnum,"Ratanavaggo navamo",150.
 NULL,p200,10657,100,gatha1,," Pubbe  avidito hutvā, rañño antepuraṃ pana;"
 NULL,p200,10658,100,gathalast,,"Pavisantassa bhikkhuno, dve panāpattiyo siyuṃ."
 NULL,p200,10659,8,hangnum,151.,151.
@@ -10683,14 +10683,14 @@ NULL,p200,10681,100,gatha1,," Sattame aṭṭhame ceva, navame dasamepi ca;"
 NULL,p200,10682,100,gathalast,,"Anantarasamoyeva, āpattīnaṃ vinicchayo."
 NULL,p200,10683,100,centered,,"Ratanavaggo navamo."
 NULL,p200,10684,100,centered,,Pācittiyakathā.
-NULL,p200,10685,8,hangnum,159.,159.
+NULL,p200,10685,5,hangnum,Pāṭidesanīyakathā,159.
 NULL,p200,10686,100,gatha1,," Catūsu duvidhāpatti, pāṭidesaniyesupi;"
 NULL,p200,10687,100,gathalast,,"Avisesena niddiṭṭhā, buddhenādiccabandhunā."
 NULL,p200,10688,8,hangnum,160.,160.
 NULL,p200,10689,100,gatha1,," ‘‘Bhuñjissāmī’’ti bhikkhussa, dukkaṭaṃ paṭigaṇhato;"
 NULL,p200,10690,100,gathalast,,"Ajjhohāresu sabbattha, pāṭidesaniyaṃ siyā."
 NULL,p200,10691,100,centered,,Pāṭidesanīyakathā.
-NULL,p200,10692,8,hangnum,161.,161.
+NULL,p200,10692,5,hangnum,Sekhiyakathā,161.
 NULL,p200,10693,100,gatha1,," Sekhiyesu  ca dhammesu, ekāvāpatti dīpitā;"
 NULL,p200,10694,100,gathalast,,"Anādaravaseneva, dukkaṭaṃ samudāhaṭaṃ."
 NULL,p200,10695,100,centered,,Sekhiyakathā.
@@ -10720,7 +10720,7 @@ NULL,p200,10718,100,gatha1,," Sesesu sekhiyantesu, āpattīnaṃ vinicchayo;"
 NULL,p200,10719,100,gathalast,,"Heṭṭhā vuttanayeneva, veditabbo vibhāvinā."
 NULL,p200,10720,100,centered,,"Mahāvibhaṅgasaṅgaho niṭṭhito."
 NULL,p200,10721,2,chapter,Bhikkhunīvibhaṅgo,Bhikkhunīvibhaṅgo
-NULL,p200,10722,8,hangnum,170.,170.
+NULL,p200,10722,4,hangnum,Pārājikakathā,170.
 NULL,p200,10723,100,gatha1,," Bhikkhūnaṃ pāṭavatthāya, vinayassa vinicchaye;"
 NULL,p200,10724,100,gathalast,,"Bhikkhunīnaṃ vibhaṅgopi, kiñcimattaṃ bhaṇāmahaṃ."
 NULL,p200,10725,8,hangnum,171.,171.
@@ -10751,7 +10751,7 @@ NULL,p200,10749,8,hangnum,179.,179.
 NULL,p200,10750,100,gatha1,," Thullaccayaṃ tu posassa, hatthapāsappavesane;"
 NULL,p200,10751,100,gathalast,,"Pūrentī aṭṭhamaṃ vatthuṃ, samaṇī sā parājitā."
 NULL,p200,10752,100,centered,,Pārājikakathā.
-NULL,p200,10753,8,hangnum,180.,180.
+NULL,p200,10753,4,hangnum,Saṅghādisesakathā,180.
 NULL,p200,10754,100,gatha1,," Ussayavādikā aṭṭaṃ, karontī tividhaṃ phuse;"
 NULL,p200,10755,100,gathalast,,"Ekassārocane tassā, hoti āpatti dukkaṭaṃ."
 NULL,p200,10756,8,hangnum,181.,181.
@@ -10791,7 +10791,7 @@ NULL,p200,10789,8,hangnum,192.,192.
 NULL,p200,10790,100,gatha1,," Sattame aṭṭhame cāpi, navame dasamepi ca;"
 NULL,p200,10791,100,gathalast,,"Corivuṭṭhāpaneneva, samānova vinicchayo."
 NULL,p200,10792,100,centered,,Saṅghādisesakathā.
-NULL,p200,10793,8,hangnum,193.,193.
+NULL,p200,10793,4,hangnum,Nissaggiyakathā,193.
 NULL,p200,10794,100,gatha1,," Pattasannicayaṃ yiha, karontī bhikkhunī pana;"
 NULL,p200,10795,100,gathalast,,"Ekaṃ nissaggiyaṃyeva, phuse pācittiyaṃ tu sā."
 NULL,p200,10796,8,hangnum,194.,194.
@@ -10810,8 +10810,8 @@ NULL,p200,10808,8,hangnum,198.,198.
 NULL,p200,10809,100,gatha1,," Evameva ca sesesu, chaṭṭhādīsu ca sattasu;"
 NULL,p200,10810,100,gathalast,,"Anantarasamānova, āpattīnaṃ vinicchayo."
 NULL,p200,10811,100,centered,,Nissaggiyakathā.
-NULL,p200,10812,8,hangnum,199.,199.
-NULL,p200,10813,100,gatha1,," Lasuṇaṃ khādati dve ce, dukkaṭaṃ gahaṇe siyā;"
+NULL,p200,10812,4,hangnum,Pācittiyakathā,199.
+NULL,p200,10813,6,gatha1,"Lasuṇavaggo paṭhamo"," Lasuṇaṃ khādati dve ce, dukkaṭaṃ gahaṇe siyā;"
 NULL,p200,10814,100,gathalast,,"Ajjhohārapayogesu, pācitti pariyāputā."
 NULL,p200,10815,8,hangnum,200.,200.
 NULL,p200,10816,100,gatha1,," Saṃharāpentiyā lomaṃ, sambādhe dveva honti hi;"
@@ -10841,7 +10841,7 @@ NULL,p200,10839,8,hangnum,208.,208.
 NULL,p200,10840,100,gatha1,," Naccādiṃ  dassanatthāya, sace gacchati dukkaṭaṃ;"
 NULL,p200,10841,100,gathalast,,"Passantiyāpi pācitti, tatheva ca suṇantiyā."
 NULL,p200,10842,100,centered,,"Lasuṇavaggo paṭhamo."
-NULL,p200,10843,8,hangnum,209.,209.
+NULL,p200,10843,6,hangnum,"Rattandhakāravaggo dutiyo",209.
 NULL,p200,10844,100,gatha1,," Paṭhame  dutiye ceva, tatiye ca catutthake;"
 NULL,p200,10845,100,gathalast,,"Tulyo lasuṇavaggassa, chaṭṭhenidha vinicchayo."
 NULL,p200,10846,8,hangnum,210.,210.
@@ -10863,7 +10863,7 @@ NULL,p200,10861,8,hangnum,215.,215.
 NULL,p200,10862,100,gatha1,," Vadhitvā pana attānaṃ, rodantī tu duve phuse;"
 NULL,p200,10863,100,gathalast,,"Vadhati rodati pācitti, karotekaṃ tu dukkaṭaṃ."
 NULL,p200,10864,100,centered,,"Rattandhakāravaggo dutiyo."
-NULL,p200,10865,8,hangnum,216.,216.
+NULL,p200,10865,6,hangnum,"Nhānavaggo tatiyo",216.
 NULL,p200,10866,100,gatha1,," Naggā nhāyati dve ceva, payoge dukkaṭaṃ siyā;"
 NULL,p200,10867,100,gathalast,,"Nhānassa pariyosāne, tassā pācittiyaṃ siyā."
 NULL,p200,10868,8,hangnum,217.,217.
@@ -10894,7 +10894,7 @@ NULL,p200,10892,8,hangnum,225.,225.
 NULL,p200,10893,100,gatha1,," Dhammikaṃ kathinuddhāraṃ, paṭibāhantiyā duve;"
 NULL,p200,10894,100,gathalast,,"Payoge dukkaṭaṃ hoti, pācitti paṭibāhite."
 NULL,p200,10895,100,centered,,"Nhānavaggo tatiyo."
-NULL,p200,10896,8,hangnum,226.,226.
+NULL,p200,10896,6,hangnum,"Tuvaṭṭavaggo catuttho",226.
 NULL,p200,10897,100,gatha1,," Duve bhikkhuniyo eka-mañcasmiṃ ce tuvaṭṭeyyuṃ;"
 NULL,p200,10898,100,gathalast,,"Payoge dukkaṭaṃ tāsaṃ, nipanne itaraṃ siyā."
 NULL,p200,10899,8,hangnum,227.,227.
@@ -10916,7 +10916,7 @@ NULL,p200,10914,8,hangnum,232.,232.
 NULL,p200,10915,100,gatha1,," Aṭṭhamaṃ navamañceva, sattamena samaṃ mataṃ;"
 NULL,p200,10916,100,gathalast,,"Dasame pana ekāva, pācitti paridīpitā."
 NULL,p200,10917,100,centered,,"Tuvaṭṭavaggo catuttho."
-NULL,p200,10918,8,hangnum,233.,233.
+NULL,p200,10918,6,hangnum,"Cittāgāravaggo pañcamo",233.
 NULL,p200,10919,100,gatha1,," Rājāgārādikaṃ sabbaṃ, dassanatthāya gacchati;"
 NULL,p200,10920,100,gathalast,,"Payoge dukkaṭaṃ tassā, pācitti yadi passati."
 NULL,p200,10921,8,hangnum,234.,234.
@@ -10941,7 +10941,7 @@ NULL,p200,10939,8,hangnum,240.,240.
 NULL,p200,10940,100,gatha1,," Dasamaṃ navameneva, samānaṃ sabbathā pana;"
 NULL,p200,10941,100,gathalast,,"‘‘Pariyāpuṇāti, vāceti’’, padamattaṃ visesakaṃ."
 NULL,p200,10942,100,centered,,"Cittāgāravaggo pañcamo."
-NULL,p200,10943,8,hangnum,241.,241.
+NULL,p200,10943,6,hangnum,"Ārāmavaggo chaṭṭho",241.
 NULL,p200,10944,100,gatha1,," Sabhikkhukaṃ tamārāmaṃ, jānantī pana bhikkhunī;"
 NULL,p200,10945,100,gathalast,,"Pavisantī anāpucchā, dve panāpattiyo phuse."
 NULL,p200,10946,8,hangnum,242.,242.
@@ -10978,7 +10978,7 @@ NULL,p200,10976,8,hangnum,252.,252.
 NULL,p200,10977,100,gatha1,," Apucchitvāva saṅghaṃ vā, bhedāpeti pasākhajaṃ;"
 NULL,p200,10978,100,gathalast,,"Payoge dukkaṭaṃ, bhinne, pācitti pariyāputā."
 NULL,p200,10979,100,centered,,"Ārāmavaggo chaṭṭho."
-NULL,p200,10980,8,hangnum,253.,253.
+NULL,p200,10980,6,hangnum,"Gabbhinīvaggo sattamo",253.
 NULL,p200,10981,100,gatha1,," Gabbhiniṃ vuṭṭhapentī hi, dve panāpattiyo phuse;"
 NULL,p200,10982,100,gathalast,,"Payoge dukkaṭaṃ, vuṭṭhā-pite pācittiyaṃ siyā."
 NULL,p200,10983,8,hangnum,254.,254.
@@ -10991,7 +10991,7 @@ NULL,p200,10989,8,hangnum,256.,256.
 NULL,p200,10990,100,gatha1,," Navamaṃ dasamañceva, aṭṭhamena samaṃ mataṃ;"
 NULL,p200,10991,100,gathalast,,"Dvīsu āpattibhedasmiṃ, nānattaṃ natthi kiñcipi."
 NULL,p200,10992,100,centered,,"Gabbhinīvaggo sattamo."
-NULL,p200,10993,8,hangnum,257.,257.
+NULL,p200,10993,6,hangnum,"Kumārībhūtavaggo aṭṭhamo",257.
 NULL,p200,10994,100,gatha1,," Kumārībhūtavaggassa, ādito pana pañcapi;"
 NULL,p200,10995,100,gathalast,,"Samānā gabbhinīvagge, paṭhameneva sabbaso."
 NULL,p200,10996,8,hangnum,258.,258.
@@ -11001,7 +11001,7 @@ NULL,p200,10999,8,hangnum,259.,259.
 NULL,p200,11000,100,gatha1,," Sattame  aṭṭhame ceva, ekaṃ pācittiyaṃ mataṃ;"
 NULL,p200,11001,100,gathalast,,"Ādināva samānāni, navamādīni pañcapi."
 NULL,p200,11002,100,centered,,"Kumārībhūtavaggo aṭṭhamo."
-NULL,p200,11003,8,hangnum,260.,260.
+NULL,p200,11003,6,hangnum,"Chattupāhanavaggo navamo",260.
 NULL,p200,11004,100,gatha1,," Āpattiyo phuse dvepi, dhārentī chattupāhanaṃ;"
 NULL,p200,11005,100,gathalast,,"Payoge dukkaṭaṃ vuttaṃ, hoti pācitti dhārite."
 NULL,p200,11006,8,hangnum,261.,261.
@@ -11030,7 +11030,7 @@ NULL,p200,11028,100,gatha1,," Saṃkaccikaṃ vinā gāmaṃ, padasā pavisantiy
 NULL,p200,11029,100,gathalast,,"Paṭhameneva ārāma-vaggassa sadisaṃ vade."
 NULL,p200,11030,100,centered,,"Chattupāhanavaggo navamo."
 NULL,p200,11031,100,centered,,Pācittiyakathā.
-NULL,p200,11032,8,hangnum,269.,269.
+NULL,p200,11032,4,hangnum,Pāṭidesanīyakathā,269.
 NULL,p200,11033,100,gatha1,," Aṭṭhasu  duvidhāpatti, pāṭidesaniyesupi;"
 NULL,p200,11034,100,gathalast,,"Viññāpetvā sace sappiṃ, ‘‘bhuñjissāmī’’ti gaṇhati."
 NULL,p200,11035,8,hangnum,270.,270.

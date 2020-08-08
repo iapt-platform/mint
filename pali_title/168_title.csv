@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p168,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p168,2,100,nikaya,,Saṃyuttanikāyo
-NULL,p168,3,1,book,Nidānavaggo,Nidānavaggo
+NULL,p168,3,1,book,(SN)Nidānavaggo,Nidānavaggo
 NULL,p168,4,2,chapter,"1. Nidānasaṃyuttaṃ","1. Nidānasaṃyuttaṃ"
 NULL,p168,5,3,title,"1. Buddhavaggo","1. Buddhavaggo"
 NULL,p168,6,4,subhead,"1. Paṭiccasamuppādasuttaṃ","1. Paṭiccasamuppādasuttaṃ"

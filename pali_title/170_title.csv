@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p170,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p170,2,100,nikaya,,Saṃyuttanikāyo
-NULL,p170,3,1,book,Saḷāyatanavaggo,Saḷāyatanavaggo
+NULL,p170,3,1,book,(SN)Saḷāyatanavaggo,Saḷāyatanavaggo
 NULL,p170,4,2,chapter,"1. Saḷāyatanasaṃyuttaṃ","1. Saḷāyatanasaṃyuttaṃ"
 NULL,p170,5,3,title,"1. Aniccavaggo","1. Aniccavaggo"
 NULL,p170,6,4,subhead,"1. Ajjhattāniccasuttaṃ","1. Ajjhattāniccasuttaṃ"

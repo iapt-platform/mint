@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p32,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p32,2,2,chapter,Suttantanīti,Suttantanīti
+NULL,p32,2,1,chapter,Suttantanīti,Suttantanīti
 NULL,p32,3,8,hangnum,1.,1.
 NULL,p32,4,100,gatha1,," Parā  bhavantaṃ purisaṃ,"
 NULL,p32,5,100,gatha2,,"Mayaṃ pucchāma gotamaṃ;"
@@ -132,7 +132,7 @@ NULL,p32,130,100,gatha1,," Ete  parābhave loke,"
 NULL,p32,131,100,gatha2,,"Paṇḍito samavekkhiya;"
 NULL,p32,132,100,gatha3,,"Ariyo dassanasampanno,"
 NULL,p32,133,100,gathalast,,"Sa lokaṃ bhajate sivaṃ."
-NULL,p32,134,2,chapter,Vasalasutta,Vasalasutta
+NULL,p32,134,1,chapter,Vasalasutta,Vasalasutta
 NULL,p32,135,8,hangnum,1.,1.
 NULL,p32,136,100,gatha1,," Kodhano  upanāhīca,"
 NULL,p32,137,100,gatha2,,"Pāpamakkhī ca yo naro;"

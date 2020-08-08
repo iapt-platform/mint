@@ -1,13 +1,13 @@
 id,book,par_num,100,class,title,text
 NULL,p81,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p81,2,100,nikaya,,Abhidhammapiṭake
-NULL,p81,3,1,book,Paṭṭhānapāḷi,Paṭṭhānapāḷi
-NULL,p81,4,4,subhead,"(Paṭhamo bhāgo)","(Paṭhamo bhāgo)"
-NULL,p81,5,3,title,Dhammānulome,Dhammānulome
+NULL,p81,3,1,book,"Paṭṭhānapāḷi(Paṭhamo bhāgo)",Paṭṭhānapāḷi
+NULL,p81,4,100,subhead,,"(Paṭhamo bhāgo)"
+NULL,p81,5,2,title,Dhammānulome,Dhammānulome
 NULL,p81,6,3,title,Tikapaṭṭhānaṃ,Tikapaṭṭhānaṃ
-NULL,p81,7,2,chapter,"(1) Paccayuddeso","(1) Paccayuddeso"
+NULL,p81,7,4,chapter,"(1) Paccayuddeso","(1) Paccayuddeso"
 NULL,p81,8,100,bodytext,,"Hetupaccayo, ārammaṇapaccayo, adhipatipaccayo, anantarapaccayo, samanantarapaccayo, sahajātapaccayo, aññamaññapaccayo, nissayapaccayo, upanissayapaccayo, purejātapaccayo, pacchājātapaccayo, āsevanapaccayo, kammapaccayo, vipākapaccayo, āhārapaccayo, indriyapaccayo, jhānapaccayo, maggapaccayo, sampayuttapaccayo, vippayuttapaccayo, atthipaccayo, natthipaccayo, vigatapaccayo, avigatapaccayoti."
-NULL,p81,9,2,chapter,"(2) Paccayaniddeso","(2) Paccayaniddeso"
+NULL,p81,9,4,chapter,"(2) Paccayaniddeso","(2) Paccayaniddeso"
 NULL,p81,10,100,bodytext,,"1. Hetupaccayoti  – hetū hetusampayuttakānaṃ dhammānaṃ taṃsamuṭṭhānānañca rūpānaṃ hetupaccayena paccayo [paccayoti (syā.)]."
 NULL,p81,11,100,bodytext,,"2. Ārammaṇapaccayoti – rūpāyatanaṃ cakkhuviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Saddāyatanaṃ sotaviññāṇadhātuyā  taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Gandhāyatanaṃ ghānaviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Rasāyatanaṃ jivhāviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Phoṭṭhabbāyatanaṃ kāyaviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Rūpāyatanaṃ saddāyatanaṃ gandhāyatanaṃ rasāyatanaṃ phoṭṭhabbāyatanaṃ manodhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo. Sabbe dhammā manoviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ ārammaṇapaccayena paccayo."
 NULL,p81,12,100,bodytext,,"Yaṃ yaṃ dhammaṃ ārabbha ye ye dhammā uppajjanti cittacetasikā dhammā, te te dhammā tesaṃ tesaṃ dhammānaṃ ārammaṇapaccayena paccayo."
@@ -64,22 +64,22 @@ NULL,p81,62,100,bodytext,,"Cakkhāyatanaṃ cakkhuviññāṇadhātuyā taṃsam
 NULL,p81,63,100,bodytext,,"Rūpāyatanaṃ  cakkhuviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo. Saddāyatanaṃ sotaviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo. Gandhāyatanaṃ ghānaviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo. Rasāyatanaṃ jivhāviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo. Phoṭṭhabbāyatanaṃ kāyaviññāṇadhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo. Rūpāyatanaṃ saddāyatanaṃ gandhāyatanaṃ rasāyatanaṃ phoṭṭhabbāyatanaṃ manodhātuyā taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo."
 NULL,p81,64,100,bodytext,,"Yaṃ rūpaṃ nissāya manodhātu ca manoviññāṇadhātu ca vattanti, taṃ rūpaṃ manodhātuyā ca manoviññāṇadhātuyā ca taṃsampayuttakānañca dhammānaṃ avigatapaccayena paccayo."
 NULL,p81,65,100,centered,,Paccayaniddeso.
-NULL,p81,66,2,chapter,"3. Pucchāvāro","3. Pucchāvāro"
-NULL,p81,67,3,title,"1. Paccayānulomaṃ","1. Paccayānulomaṃ"
-NULL,p81,68,4,subhead,Ekamūlakaṃ,Ekamūlakaṃ
-NULL,p81,69,4,subhead,"(1.) Kusalapadaṃ","(1.) Kusalapadaṃ"
+NULL,p81,66,4,chapter,"3. Pucchāvāro","3. Pucchāvāro"
+NULL,p81,67,5,title,"1. Paccayānulomaṃ","1. Paccayānulomaṃ"
+NULL,p81,68,6,subhead,Ekamūlakaṃ,Ekamūlakaṃ
+NULL,p81,69,7,subhead,"(1.) Kusalapadaṃ","(1.) Kusalapadaṃ"
 NULL,p81,70,100,bodytext,,"25. Siyā  kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalaṃ dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,71,4,subhead,"(2) Akusalapadaṃ","(2) Akusalapadaṃ"
+NULL,p81,71,7,subhead,"(2) Akusalapadaṃ","(2) Akusalapadaṃ"
 NULL,p81,72,100,bodytext,,"26. Siyā akusalaṃ dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalaṃ dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,73,4,subhead,"(3) Abyākatapadaṃ","(3) Abyākatapadaṃ"
+NULL,p81,73,7,subhead,"(3) Abyākatapadaṃ","(3) Abyākatapadaṃ"
 NULL,p81,74,100,bodytext,,"27. Siyā abyākataṃ dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā abyākataṃ  dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā abyākataṃ dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā abyākataṃ dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā abyākataṃ dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā abyākataṃ dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā abyākataṃ dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,75,4,subhead,"(4) Kusalābyākatapadaṃ","(4) Kusalābyākatapadaṃ"
+NULL,p81,75,7,subhead,"(4) Kusalābyākatapadaṃ","(4) Kusalābyākatapadaṃ"
 NULL,p81,76,100,bodytext,,"28. Siyā kusalañca abyākatañca dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca abyākatañca dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca abyākatañca dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā kusalañca abyākatañca dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca abyākatañca  dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,77,4,subhead,"(5) Akusalābyākatapadaṃ","(5) Akusalābyākatapadaṃ"
+NULL,p81,77,7,subhead,"(5) Akusalābyākatapadaṃ","(5) Akusalābyākatapadaṃ"
 NULL,p81,78,100,bodytext,,"29. Siyā  akusalañca abyākatañca dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā akusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,79,4,subhead,"(6) Kusalākusalapadaṃ","(6) Kusalākusalapadaṃ"
+NULL,p81,79,7,subhead,"(6) Kusalākusalapadaṃ","(6) Kusalākusalapadaṃ"
 NULL,p81,80,100,bodytext,,"30. Siyā  kusalañca akusalañca dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca akusalañca dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca akusalañca dhammaṃ paṭicca abyākato dhammo uppajjeyya hetupaccayā. Siyā kusalañca  akusalañca dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
-NULL,p81,81,4,subhead,"(7) Kusalākusalābyākatapadaṃ","(7) Kusalākusalābyākatapadaṃ"
+NULL,p81,81,7,subhead,"(7) Kusalākusalābyākatapadaṃ","(7) Kusalākusalābyākatapadaṃ"
 NULL,p81,82,100,bodytext,,"31. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca abyākato dhammo uppajjeyya  hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca dhammā uppajjeyyuṃ hetupaccayā. Siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā."
 NULL,p81,83,100,centered,,Hetupaccayavāro.
 NULL,p81,84,100,bodytext,,"32. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya ārammaṇapaccayā."
@@ -88,18 +88,18 @@ NULL,p81,86,100,bodytext,,"33. Siyā  kusalaṃ dhammaṃ paṭicca kusalo dhamm
 NULL,p81,87,100,bodytext,,"34. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya avigatapaccayā…pe… akusalaṃ dhammaṃ paṭicca… abyākataṃ dhammaṃ paṭicca… kusalañca abyākatañca dhammaṃ paṭicca… akusalañca abyākatañca dhammaṃ paṭicca… kusalañca akusalañca dhammaṃ paṭicca… kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo dhammo uppajjeyya… akusalo dhammo uppajjeyya… abyākato dhammo uppajjeyya… kusalo ca abyākato ca dhammā uppajjeyyuṃ… akusalo  ca abyākato ca dhammā uppajjeyyuṃ… kusalo ca akusalo ca dhammā uppajjeyyuṃ… kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ avigatapaccayā."
 NULL,p81,88,100,bodytext,,"(Yathā hetupaccayo vitthārito, evaṃ avigatapaccayopi vitthāretabbo vācanāmaggena.)"
 NULL,p81,89,100,centered,,Ekamūlakaṃ.
-NULL,p81,90,3,title,Dumūlakādi,Dumūlakādi
-NULL,p81,91,4,subhead,Hetumūlakaṃ,Hetumūlakaṃ
+NULL,p81,90,6,title,Dumūlakādi,Dumūlakādi
+NULL,p81,91,7,subhead,Hetumūlakaṃ,Hetumūlakaṃ
 NULL,p81,92,100,bodytext,,"35. Siyā  kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā ārammaṇapaccayā…pe… siyā kusalañca akusalañca abyākatañca dhammaṃ paṭicca kusalo ca akusalo ca abyākato ca dhammā uppajjeyyuṃ hetupaccayā ārammaṇapaccayā."
 NULL,p81,93,100,bodytext,,"36. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā adhipatipaccayā  …pe… hetupaccayā anantarapaccayā… hetupaccayā samanantarapaccayā…pe… hetupaccayā avigatapaccayā."
-NULL,p81,94,100,centered,,Dumūlakaṃ.
+NULL,p81,94,7,centered,Dumūlakaṃ.,Dumūlakaṃ.
 NULL,p81,95,100,bodytext,,"37. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā ārammaṇapaccayā adhipatipaccayā…pe… hetupaccayā ārammaṇapaccayā anantarapaccayā…pe… hetupaccayā ārammaṇapaccayā avigatapaccayā."
-NULL,p81,96,100,centered,,Timūlakaṃ.
+NULL,p81,96,7,centered,Timūlakaṃ.,Timūlakaṃ.
 NULL,p81,97,100,bodytext,,"38. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā ārammaṇapaccayā adhipatipaccayā anantarapaccayā…pe… hetupaccayā ārammaṇapaccayā adhipatipaccayā avigatapaccayā."
-NULL,p81,98,100,centered,,Catumūlakaṃ.
+NULL,p81,98,7,centered,Catumūlakaṃ.,Catumūlakaṃ.
 NULL,p81,99,100,bodytext,,"(Pañcamūlakādikā saṃkhittā. Ekamūlakaṃ, dumūlakaṃ, timūlakaṃ, catumūlakaṃ, pañcamūlakaṃ, sabbamūlakaṃ asammuyhantena vitthāretabbaṃ.)"
 NULL,p81,100,100,centered,,Hetumūlakaṃ.
-NULL,p81,101,4,subhead,Ārammaṇamūlakādi,Ārammaṇamūlakādi
+NULL,p81,101,6,subhead,Ārammaṇamūlakādi,Ārammaṇamūlakādi
 NULL,p81,102,100,bodytext,,"39. Siyā  kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya ārammaṇapaccayā hetupaccayā… ārammaṇapaccayā adhipatipaccayā…pe… ārammaṇapaccayā avigatapaccayā."
 NULL,p81,103,100,bodytext,,"Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya adhipatipaccayā… anantarapaccayā… samanantarapaccayā… sahajātapaccayā… aññamaññapaccayā…pe… avigatapaccayā  hetupaccayā… avigatapaccayā ārammaṇapaccayā… avigatapaccayā adhipatipaccayā…pe… avigatapaccayā vigatapaccayā."
 NULL,p81,104,100,centered,,Dumūlakaṃ.
@@ -110,7 +110,7 @@ NULL,p81,108,100,gatha1,,"(Ka) tikañca paṭṭhānavaraṃ dukuttamaṃ,"
 NULL,p81,109,100,gatha2,,"Dukaṃ tikañceva tikaṃ dukañca;"
 NULL,p81,110,100,gatha3,,"Tikaṃ tikañceva dukaṃ dukañca,"
 NULL,p81,111,100,gathalast,,"Cha anulomamhi nayā sugambhīrāti."
-NULL,p81,112,4,subhead,"2. Paccayapaccanīyaṃ","2. Paccayapaccanīyaṃ"
+NULL,p81,112,5,subhead,"2. Paccayapaccanīyaṃ","2. Paccayapaccanīyaṃ"
 NULL,p81,113,100,bodytext,,"42. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya nahetupaccayā."
 NULL,p81,114,100,bodytext,,"(Yathā  anulome hetupaccayo vitthārito, evaṃ paccanīyepi nahetupaccayo vitthāretabbo.)"
 NULL,p81,115,100,bodytext,,"43. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya naārammaṇapaccayā… naadhipatipaccayā… naanantarapaccayā… nasamanantarapaccayā… nasahajātapaccayā… naaññamaññapaccayā… nanissayapaccayā… naupanissayapaccayā… napurejātapaccayā… napacchājātapaccayā  … naāsevanapaccayā… nakammapaccayā… navipākapaccayā… naāhārapaccayā… naindriyapaccayā… najhānapaccayā… namaggapaccayā… nasampayuttapaccayā… navippayuttapaccayā… noatthipaccayā… nonatthipaccayā… novigatapaccayā… noavigatapaccayā."
@@ -120,7 +120,7 @@ NULL,p81,118,100,gatha1,,"(Kha) tikañca paṭṭhānavaraṃ dukuttamaṃ,"
 NULL,p81,119,100,gatha2,,"Dukaṃ tikañceva tikaṃ dukañca;"
 NULL,p81,120,100,gatha3,,"Tikaṃ tikañceva dukaṃ dukañca,"
 NULL,p81,121,100,gathalast,,"Cha paccanīyamhi nayā sugambhīrāti."
-NULL,p81,122,4,subhead,"3. Paccayānulomapaccanīyaṃ","3. Paccayānulomapaccanīyaṃ"
+NULL,p81,122,5,subhead,"3. Paccayānulomapaccanīyaṃ","3. Paccayānulomapaccanīyaṃ"
 NULL,p81,123,100,bodytext,,"45. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā naārammaṇapaccayā… siyā kusalaṃ dhammaṃ paṭicca akusalo dhammo uppajjeyya hetupaccayā naārammaṇapaccayā."
 NULL,p81,124,100,bodytext,,"(Yathā anulome hetupaccayo vitthārito, evaṃ anulomapaccanīyepi padaṃ  vitthāretabbaṃ.)"
 NULL,p81,125,100,bodytext,,"46. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya hetupaccayā naadhipatipaccayā… hetupaccayā naanantarapaccayā…pe… hetupaccayā noavigatapaccayā."
@@ -136,7 +136,7 @@ NULL,p81,134,100,gatha1,,"(Ga) tikañca paṭṭhānavaraṃ dukuttamaṃ,"
 NULL,p81,135,100,gatha2,,"Dukaṃ tikañceva tikaṃ dukañca;"
 NULL,p81,136,100,gatha3,,"Tikaṃ tikañceva dukaṃ dukañca,"
 NULL,p81,137,100,gathalast,,"Cha anulomapaccanīyamhi nayā sugambhīrāti."
-NULL,p81,138,4,subhead,"4. Paccayapaccanīyānulomaṃ","4. Paccayapaccanīyānulomaṃ"
+NULL,p81,138,5,subhead,"4. Paccayapaccanīyānulomaṃ","4. Paccayapaccanīyānulomaṃ"
 NULL,p81,139,100,bodytext,,"49. Siyā  kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya nahetupaccayā ārammaṇapaccayā. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya nahetupaccayā adhipatipaccayā…pe… nahetupaccayā avigatapaccayā."
 NULL,p81,140,100,bodytext,,"50. Siyā kusalaṃ dhammaṃ paṭicca kusalo dhammo uppajjeyya nahetupaccayā naārammaṇapaccayā adhipatipaccayā…pe… avigatapaccayā."
 NULL,p81,141,100,bodytext,,"Nahetupaccayā naārammaṇapaccayā naadhipatipaccayā…pe… avigatapaccayā."

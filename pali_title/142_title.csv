@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p142,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p142,2,100,nikaya,,Vinayapiṭake
-NULL,p142,3,1,book,Parivāra-aṭṭhakathā,Parivāra-aṭṭhakathā
+NULL,p142,3,1,book,"(SP) Parivāra-aṭṭhakathā",Parivāra-aṭṭhakathā
 NULL,p142,4,2,chapter,Soḷasamahāvāro,Soḷasamahāvāro
 NULL,p142,5,4,subhead,Paññattivāravaṇṇanā,Paññattivāravaṇṇanā
 NULL,p142,6,100,gatha1,,"Visuddhaparivārassa, parivāroti sāsane;"
