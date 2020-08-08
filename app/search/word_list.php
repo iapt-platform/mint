@@ -8,6 +8,8 @@ require_once "../public/load_lang.php";//语言文件
 require_once "../public/function.php";
 require_once "../search/word_function.php";
 
+define("word_limit",12); //最大单词数量
+
     $resulte = array();
 
     if(isset($_GET["word"])){
@@ -25,7 +27,7 @@ require_once "../search/word_function.php";
 
 
 	//计算某词在三藏中出现的次数		
-    $arrRealWordList = countWordInPali($word);
+    $arrRealWordList = countWordInPali($word,true,word_limit);
 
     $countWord=count($arrRealWordList);
     if($countWord==0){
@@ -64,6 +66,7 @@ require_once "../search/word_function.php";
         $wordid=$aShowWordIdList[$x];
         $wordlist[] = $x;
         $wordlist_index[$x] = $i;
+
         $sutta[]=0;
         $vinaya[]=0;
         $abhidhamma[]=0;
@@ -76,14 +79,14 @@ require_once "../search/word_function.php";
     	//查找这些词出现在哪些书中
 	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
 	$dictFileName=_FILE_DB_BOOK_WORD_;
-	PDO_Connect("sqlite:$dictFileName");	
+	PDO_Connect("sqlite:$dictFileName");
 	if(isset($booklist)){
 		foreach($booklist as $oneBook){
 			$aInputBook["{$oneBook}"]=1;
 		}
 	}
 	$query = "select book, wordindex,count from bookword where \"wordindex\" in $strQueryWordId ";
-	$Fetch = PDO_FetchAll($query);
+    $Fetch = PDO_FetchAll($query);
 	$iFetch=count($Fetch);
     $newBookList=array();
 
@@ -92,8 +95,9 @@ require_once "../search/word_function.php";
 	if($iFetch>0){
 		for($i=0;$i<$iFetch;$i++){
 			$book=$Fetch[$i]["book"];
-
-			array_push($newBookList,array($book,$sum));
+             
+            array_push($newBookList,array($book,$sum));
+            
 			$t1=$arrBookType[$book-1]->c1;
             $t2=$arrBookType[$book-1]->c2;
             switch($t1){
@@ -117,12 +121,10 @@ require_once "../search/word_function.php";
 
         }
     }
-    $worddata[] = array( "name" => "anna","anna" => $anna);  
+    $worddata[] = array( "name" => "anna","data" => $anna);  
     $worddata[] = array( "name" => "abhidhamma","data" => $abhidhamma);      
     $worddata[] = array( "name" => "vinaya","data" => $vinaya);    
     $worddata[] = array( "name" => "sutta","data" => $sutta);
-
-
 
     $resulte["data"] = $worddata;
 

@@ -53,7 +53,7 @@ include "../pcdl/html_head.php";
     <div id="container"></div>
 </figure>
 <figure class="highcharts-figure">
-    <div id="container_list" style="height:50em;"></div>
+    <div id="container_list" style="height:56em;"></div>
 </figure>
 </div>
 
