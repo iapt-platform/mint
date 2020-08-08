@@ -37,6 +37,7 @@ $dbfile[]=array(_FILE_DB_PALI_INDEX_,"paliindex.sql");
 $dbfile[]=array(_FILE_DB_WORD_INDEX_,"wordindex.sql");
 $dbfile[]=array(_FILE_DB_PALI_SENTENCE_,"pali_sent.sql");
 $dbfile[]=array(_FILE_DB_PALITEXT_,"pali_text.sql");
+$dbfile[]=array(_FILE_DB_RESRES_INDEX_,"res.sql");
 $dir="./palicanon_db/";
 
 if(isset($_GET["index"])){
@@ -104,7 +105,7 @@ else{
 		else{
 			echo "<span style='color:green;'>已存在</span>";
 			echo "</div>"; 
-			echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">重建</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+			echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
 		}
 		echo "</div>";  
 	}
@@ -133,12 +134,12 @@ else{
 	if(!file_exists($db[0])){
         echo "<span style='color:red;'>数据库不存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">建立</a></div>';    
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>';    
 	}
 	else{
         echo "<span style='color:green;'>已存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
 	echo "</div>";  
 	?>
@@ -157,12 +158,12 @@ else{
 	if(!file_exists($db[0])){
         echo "<span style='color:red;'>数据库不存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">建立</a></div>';    
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>';    
 	}
 	else{
         echo "<span style='color:green;'>已存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
 	echo "</div>";  
 
@@ -179,7 +180,6 @@ else{
 
 <div class="card">
 <h4>Pali原文库</h4>
-
 <div>
 <?php
 	$db = $dbfile[6];
@@ -189,12 +189,12 @@ else{
 	if(!file_exists($db[0])){
         echo "<span style='color:red;'>数据库不存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">建立</a></div>';    
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>';    
 	}
 	else{
         echo "<span style='color:green;'>已存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step4.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
 	echo "</div>";  
 
@@ -211,6 +211,39 @@ echo "<a href = '"._DIR_LOG_."/db_update_palitext.log"."' target='_blank'>view L
 </div>
 </div>
 
+
+<div class="card">
+<h4>标题索引</h4>
+<div>
+<?php
+	$db = $dbfile[7];
+	echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
+	echo '<div style="flex:5;">'.$db[0].'</div>';
+	echo '<div style="flex:3;">';
+	if(!file_exists($db[0])){
+        echo "<span style='color:red;'>数据库不存在</span>";
+    	echo "</div>"; 
+        echo '<div style="flex:2;"><a href="step5.php?index=7">建立</a></div>'; 
+	}
+	else{
+        echo "<span style='color:green;'>已存在</span>";
+    	echo "</div>"; 
+        echo '<div style="flex:2;"><a href="step5.php?index=7">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+    }
+	echo "</div>";  
+
+	if(file_exists(_FILE_DB_PALITEXT_)){
+		echo "标题索引数据库已经存在<br>";
+		echo '<a href="db_update_toc.php" target="_blank">更新</a><br>';
+	}
+	else{
+		echo "标题索引数据库不存在<br>";
+		echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>'; 
+	}
+echo "<a href = '"._DIR_LOG_."/db_update_title.log"."' target='_blank'>view Log</a>"
+?>
+</div>
+</div>
 
 <hr>
 <h2>完成</h2>

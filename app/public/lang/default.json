@@ -432,8 +432,10 @@
 		"frequency": "Frequency",
 		"declension_list": "Declension List",
 		"distribution": "Distribution Chart",
+		"statistical": "statistical&nbsp;",
+		"chart": "chart",
 		"in": "present in",
-		"present": ""
+		"present": "",
 		"": ""
 	},
 	"grammastr": [

@@ -63,7 +63,7 @@ require_once "../public/load_lang_js.php";//语言文件
     <div id="container"></div>
 </figure>
 <figure class="highcharts-figure">
-    <div id="container_list" style="height:50em;"></div>
+    <div id="container_list" style="height:56em;"></div>
 </figure>
 </div>
 

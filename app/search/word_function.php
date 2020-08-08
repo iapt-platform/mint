@@ -97,7 +97,7 @@ function render_book_list($strWordlist,$booklist=null){
 				
 }
 
-function countWordInPali($word,$sort=false){
+function countWordInPali($word,$sort=false,$limit = 0){
             //加语尾
             $case =  $GLOBALS['case'];
             $union = $GLOBALS['union'];
@@ -144,13 +144,21 @@ function countWordInPali($word,$sort=false){
         $user = "";
         $password = "";
         $PDO = new PDO($dsn, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
-        $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		if($limit==0){
+			$sSqlLimit = "";
+		}
+		else{
+			$sSqlLimit = "limit 0 , ".$limit;
+		}
         if($sort){
-            $query = "select id,word,count,bold,len from wordindex where \"word\" in  $strQueryWord order by count DESC";
+			$sSqlSort = "order by count DESC";
         }
         else{
-            $query = "select id,word,count,bold,len from wordindex where \"word\" in  $strQueryWord";
-        }
+			$sSqlSort = "";
+		}
+		
+		 $query = "select id,word,count,bold,len from wordindex where \"word\" in  $strQueryWord ".$sSqlSort . " ".$sSqlLimit;
         
         $stmt = $PDO->query($query);
         $arrRealWordList = $stmt->fetchAll(PDO::FETCH_ASSOC);
