@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p214,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p214,2,100,nikaya,,Vinayapiṭake
-NULL,p214,3,1,book,Pācittiyapāḷi,Pācittiyapāḷi
+NULL,p214,3,1,book,(VN)Pācittiyapāḷi,Pācittiyapāḷi
 NULL,p214,4,2,chapter,"5. Pācittiyakaṇḍaṃ","5. Pācittiyakaṇḍaṃ"
 NULL,p214,5,3,title,"1. Musāvādavaggo","1. Musāvādavaggo"
 NULL,p214,6,4,subhead,"1. Musāvādasikkhāpadaṃ","1. Musāvādasikkhāpadaṃ"
@@ -2160,7 +2160,7 @@ NULL,p214,2158,100,centered,,"Adhikaraṇasamathā niṭṭhitā."
 NULL,p214,2159,100,bodytext,,"Uddiṭṭhaṃ kho, āyasmanto, nidānaṃ; uddiṭṭhā cattāro pārājikā dhammā; uddiṭṭhā terasa saṅghādisesā dhammā; uddiṭṭhā dve aniyatā dhammā; uddiṭṭhā tiṃsa nissaggiyā pācittiyā dhammā; uddiṭṭhā dvenavuti pācittiyā dhammā; uddiṭṭhā cattāro pāṭidesanīyā dhammā; uddiṭṭhā sekhiyā dhammā; uddiṭṭhā satta adhikaraṇasamathā dhammā. Ettakaṃ tassa bhagavato suttāgataṃ suttapariyāpannaṃ anvaddhamāsaṃ uddesaṃ āgacchati. Tattha sabbeheva samaggehi sammodamānehi avivadamānehi sikkhitabbanti."
 NULL,p214,2160,100,centered,,"Mahāvibhaṅgo niṭṭhito."
 NULL,p214,2161,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p214,2162,1,book,Bhikkhunīvibhaṅgo,Bhikkhunīvibhaṅgo
+NULL,p214,2162,2,book,(VN)Bhikkhunīvibhaṅgo,Bhikkhunīvibhaṅgo
 NULL,p214,2163,2,chapter,"1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgo)","1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgo)"
 NULL,p214,2164,4,subhead,"1. Paṭhamapārājikaṃ","1. Paṭhamapārājikaṃ"
 NULL,p214,2165,100,bodytext,,"656. Tena  samayena buddho bhagavā sāvatthiyaṃ viharati jetavane anāthapiṇḍikassa ārāme. Tena kho pana samayena sāḷho migāranattā bhikkhunisaṅghassa vihāraṃ kattukāmo hoti. Atha kho sāḷho migāranattā bhikkhuniyo upasaṅkamitvā etadavoca – ‘‘icchāmahaṃ, ayye, bhikkhunisaṅghassa vihāraṃ kātuṃ. Detha me navakammikaṃ bhikkhuni’’nti. Tena kho pana samayena catasso bhaginiyo bhikkhunīsu pabbajitā honti – nandā, nandavatī, sundarīnandā, thullanandāti. Tāsu sundarīnandā bhikkhunī taruṇapabbajitā abhirūpā hoti dassanīyā pāsādikā paṇḍitā byattā medhāvinī dakkhā analasā, tatrupāyāya vīmaṃsāya samannāgatā, alaṃ kātuṃ alaṃ saṃvidhātuṃ. Atha kho bhikkhunisaṅgho sundarīnandaṃ bhikkhuniṃ sammannitvā sāḷhassa migāranattuno navakammikaṃ adāsi. Tena kho pana samayena sundarīnandā bhikkhunī sāḷhassa  migāranattuno nivesanaṃ abhikkhaṇaṃ gacchati – ‘‘vāsiṃ detha, parasuṃ [pharasuṃ (syā. ka.)] detha, kuṭhāriṃ [kudhāriṃ (ka.)] detha, kuddālaṃ detha, nikhādanaṃ dethā’’ti. Sāḷhopi migāranattā bhikkhunupassayaṃ abhikkhaṇaṃ  gacchati katākataṃ jānituṃ. Te abhiṇhadassanena paṭibaddhacittā ahesuṃ."

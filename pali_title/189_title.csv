@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p189,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p189,2,100,nikaya,,Dīghanikāye
-NULL,p189,3,1,book,Sīlakkhandhavaggaabhinavaṭīkā,Sīlakkhandhavaggaabhinavaṭīkā
+NULL,p189,3,1,book,(DN)Sīlakkhandhavaggaabhinavaṭīkā,Sīlakkhandhavaggaabhinavaṭīkā
 NULL,p189,4,3,title,"(Dutiyo bhāgo)","(Dutiyo bhāgo)"
 NULL,p189,5,2,chapter,"2. Sāmaññaphalasuttavaṇṇanā","2. Sāmaññaphalasuttavaṇṇanā"
 NULL,p189,6,4,subhead,Rājāmaccakathāvaṇṇanā,Rājāmaccakathāvaṇṇanā

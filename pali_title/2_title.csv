@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p2,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p2,2,2,chapter,Mahāpaṇāmapāṭha,Mahāpaṇāmapāṭha
+NULL,p2,2,1,book,Mahāpaṇāmapāṭha,Mahāpaṇāmapāṭha
 NULL,p2,3,3,title,(Buddhavandanā),(Buddhavandanā)
 NULL,p2,4,8,hangnum,1.,1.
 NULL,p2,5,100,gatha1,," So, ko; Ne, saṃ;"
@@ -426,7 +426,7 @@ NULL,p2,424,100,gatha2,,"Saṇhodātuṇṇalomo samavaṭalagalo antaraṃsapi�
 NULL,p2,425,100,gatha3,,"Brahmagghoso munindo punapi gupakhumo uṇhisasamphullasīso,"
 NULL,p2,426,100,gathalast,,"Bāttiṃsaṅgopasobhaṃ mudurasahaṇī lokajeṭṭhaṃ name taṃ."
 NULL,p2,427,100,centered,,"Mahāpaṇāma niṭṭhitā."
-NULL,p2,428,2,chapter,"Tigumbacetiya thomanā","Tigumbacetiya thomanā"
+NULL,p2,428,1,book,"Tigumbacetiya thomanā","Tigumbacetiya thomanā"
 NULL,p2,429,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p2,430,8,hangnum,1.,1.
 NULL,p2,431,100,gatha1,," Yo  dīpaṅkaramūlamhi, padaṃ hattagataṃ caji;"
@@ -477,7 +477,7 @@ NULL,p2,475,100,gatha1,," Namāmahaṃ vandāmahaṃ, pūjemahaṃ siroruhaṃ;"
 NULL,p2,476,100,gathalast,,"Puññamidaṃ bhavatu me, paccayo āsavakkhaye."
 NULL,p2,477,100,bodytext,,"(Takāra nakāravipulā pathyāvattagāthā)."
 NULL,p2,478,100,centered,,"Tigumbacetiyathomanā niṭṭhitā."
-NULL,p2,479,2,chapter,Vāsamālinīkya,Vāsamālinīkya
+NULL,p2,479,1,book,Vāsamālinīkya,Vāsamālinīkya
 NULL,p2,480,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p2,481,8,hangnum,1.,1.
 NULL,p2,482,100,gatha1,," Vuḍḍhopi  jinānaṃ, buddhosi vijānaṃ;"

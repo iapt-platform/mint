@@ -1,8 +1,8 @@
 id,book,par_num,100,class,title,text
 NULL,p147,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p147,2,100,nikaya,,Khuddakanikāye
-NULL,p147,3,1,book,Jātakapāḷi,Jātakapāḷi
-NULL,p147,4,3,title,"(Dutiyo bhāgo)","(Dutiyo bhāgo)"
+NULL,p147,3,1,book,"Jātakapāḷi(Dutiyo bhāgo)",Jātakapāḷi
+NULL,p147,4,100,title,,"(Dutiyo bhāgo)"
 NULL,p147,5,2,chapter,"17. Cattālīsanipāto","17. Cattālīsanipāto"
 NULL,p147,6,4,subhead,"521. Tesakuṇajātakaṃ (1)","521. Tesakuṇajātakaṃ (1)"
 NULL,p147,7,8,hangnum,1.,1.

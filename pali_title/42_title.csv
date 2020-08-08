@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p42,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p42,2,100,nikaya,,Suttantapiṭaka
-NULL,p42,3,2,chapter,Aṅguttaranikāye,Aṅguttaranikāye
+NULL,p42,3,1,chapter,"(saṅgayana-puccha vissajjanā) Aṅguttaranikāye",Aṅguttaranikāye
 NULL,p42,4,4,subhead,"Saṃgāyanassa pucchā vissajjanā","Saṃgāyanassa pucchā vissajjanā"
 NULL,p42,5,100,bodytext,,"Pucchā – paṭhamamahāsaṃgītikāle  āvuso dhammasaṃgāhakā mahākassapādayo mahātheravarā porāṇasaṃgītikārā paṭhamaṃ vinayapiṭakaṃ saṃgāyitvā suttantapiṭake ca dīghamajjhimasaṃyuttasaṅkhāte tayo nikāye saṃgāyitvā tadanantaraṃ kiṃ nāma pāvacanaṃ saṃgāyiṃsu."
 NULL,p42,6,100,bodytext,,"Vissajjanā – paṭhamamahāsaṃgītikāle bhante dhammasaṃgāhakā mahākassapādayo mahātheravarā porāṇasaṃgītikārā paṭhamaṃ vinayaṃ saṃgāyitvā suttantapiṭake ca dīghamajjhimasaṃyuttasaṅkhāte tayo nikāye saṃgāyitvā tadanantaraṃ navahi ca suttasahassehi pañcahi ca suttasattehi sattapaññāsāya ca suttehi paṭimaṇḍitaṃ vīsatibhāṇavārasataparimāṇaṃ aṅguttaranikāyaṃ nāma pāvacanaṃ saṃgāyiṃsu."

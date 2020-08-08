@@ -1,8 +1,8 @@
 id,book,par_num,100,class,title,text
 NULL,p211,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p211,2,100,nikaya,,Vinayapiṭake
-NULL,p211,3,1,book,"Vinayālaṅkāra-ṭīkā (paṭhamo bhāgo)","Vinayālaṅkāra-ṭīkā (paṭhamo bhāgo)"
-NULL,p211,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p211,3,1,book,Vinayālaṅkāra-ṭīkā,"Vinayālaṅkāra-ṭīkā (paṭhamo bhāgo)"
+NULL,p211,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p211,5,4,subhead,Muttahārādinayagāthā,Muttahārādinayagāthā
 NULL,p211,6,100,gatha1,,"Yo  loke lokaloko varataraparado rājarājaggajañño;"
 NULL,p211,7,100,gathalast,,"Ākāsākārakāro paramaratirato devadevantavajjo."
@@ -35,7 +35,7 @@ NULL,p211,33,100,gatha1,,"Tasmā hi nānāsatthehi, sāramādāya sādhukaṃ;"
 NULL,p211,34,100,gathalast,,"Nātisaṅkhepavitthāraṃ, karissaṃ atthavaṇṇanaṃ."
 NULL,p211,35,100,gatha1,,"Vinayālaṅkāraṃ nāma, pesalānaṃ pamodanaṃ;"
 NULL,p211,36,100,gathalast,,"Imaṃ pakaraṇaṃ sabbe, sammā dhārentu sādhavoti."
-NULL,p211,37,3,title,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p211,37,2,title,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p211,38,100,bodytext,,"Vividhavisesanayasamannāgataṃ  kāyavācāvinayanakaraṇasamatthaṃ lajjipesalabhikkhūnaṃ saṃsayavinodanakārakaṃ yogāvacarapuggalānaṃ sīlavisuddhisampāpakaṃ jinasāsanavuḍḍhihetubhūtaṃ pakaraṇamidamārabhitukāmo ayamācariyāsabho paṭhamaṃ tāva ratanattayapaṇāmapaṇāmārahabhāvaabhidheyyakaraṇahetu karaṇappakārapakaraṇābhidhānanimittapayojanāni dassetuṃ ‘‘vatthuttayaṃ namassitvā’’tiādimāha. Ettha hi vatthuttayaṃ namassitvāti iminā ratanattayapaṇāmo vutto paṇāmetabbapaṇāmaatthadassanato. Saraṇaṃ sabbapāṇinanti iminā paṇāmārahabhāvo paṇāmahetudassanato. Pāḷimuttavinicchayanti abhidheyyo imassa pakaraṇassa atthabhāvato. Vippakiṇṇamanekatthāti karaṇahetu tenevakāraṇena pakaraṇassa katattā. Samāharitvā ekattha, dassayissamanākulanti karaṇappakāro tenākārena pakaraṇassa karaṇato. Pakaraṇābhidhānaṃ pana samāharitasaddassa sāmatthiyato dassitaṃ samāharitvā dassaneneva imassa pakaraṇassa vinayasaṅgahaiti nāmassa labhanato."
 NULL,p211,39,100,bodytext,,"Nimittaṃ  pana ajjhattikabāhiravasena duvidhaṃ. Tattha ajjhattikaṃ nāma karuṇā, taṃ dassanakiriyāya sāmatthiyato dassitaṃ tasmiṃ asati dassanakiriyāya abhāvato. Bāhiraṃ nāma sotujanasamūho, taṃ yogāvacarabhikkhūnanti tassa karuṇārammaṇabhāvato. Payojanaṃ pana duvidhaṃ paṇāmapayojanapakaraṇapayojanavasena. Tattha paṇāmapayojanaṃ nāma antarāyavisosanapasādajananādikaṃ, taṃ saraṇaṃ sabbapāṇinanti imassa sāmatthiyato dassitaṃ hetumhi sati phalassa avinābhāvato. Vuttañhi abhidhammaṭīkācariyena ‘‘guṇavisesavā hi paṇāmāraho  hoti, paṇāmārahe ca kato paṇāmo vuttappayojanasiddhikarova hotī’’ti (dha. sa. mūlaṭī. 1). Pakaraṇapayojanampi duvidhaṃ mukhyānusaṅgikavasena. Tesu mukhyapayojanaṃ nāma byañjanānurūpaṃ atthassa paṭivijjhanaṃ pakāsanañca atthānurūpaṃ byañjanassa uddisanaṃ uddesāpanañca, taṃ vinaye pāṭavatthāyāti iminā vuttaṃ. Anusaṅgikapayojanaṃ nāma sīlādianupādāparinibbānanto attho, taṃ samāharitvā ekattha dassayissanti imassa sāmatthiyena dassitaṃ ekattha samāharitvā dassane sati taduggahaparipucchādinā katapayogassa anantarāyena tadatthasijjhanatoti."
 NULL,p211,40,100,bodytext,,"Kimatthaṃ panettha ratanattayapaṇāmādayo ācariyena katā, nanu adhippetaganthārambhova kātabboti? Vuccate – ettha ratanattayapaṇāmakaraṇaṃ tabbihatantarāyo hutvā anāyāsena ganthaparisamāpanatthaṃ. Paṇāmārahabhāvavacanaṃ attano yuttapattakāritādassanatthaṃ, taṃ viññūnaṃ tosāpanatthaṃ, taṃ pakaraṇassa uggahaṇatthaṃ, taṃ sabbasampattinipphādanatthaṃ. Abhidheyyakathanaṃ viditābhidheyyassa ganthassa viññūnaṃ uggahadhāraṇādivasena paṭipajjanatthaṃ. Karaṇahetukathanaṃ akāraṇe katassa vāyāmassa nipphalabhāvato tappaṭikkhepanatthaṃ. Karaṇappakārakathanaṃ viditappakārassa ganthassa sotūnaṃ uggahaṇādīsu rucijananatthaṃ. Abhidhānadassanaṃ vohārasukhatthaṃ. Nimittakathanaṃ āsannakāraṇadassanatthaṃ. Payojanadassanaṃ duvidhapayojanakāmīnaṃ sotūnaṃ samussāhajananatthanti."

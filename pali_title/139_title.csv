@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p139,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p139,2,100,nikaya,,Vinayapiṭake
-NULL,p139,3,1,book,Pācittiya-aṭṭhakathā,Pācittiya-aṭṭhakathā
+NULL,p139,3,1,book,"(SP) Pācittiya-aṭṭhakathā",Pācittiya-aṭṭhakathā
 NULL,p139,4,2,chapter,"5. Pācittiyakaṇḍaṃ","5. Pācittiyakaṇḍaṃ"
 NULL,p139,5,3,title,"1. Musāvādavaggo","1. Musāvādavaggo"
 NULL,p139,6,4,subhead,"1. Musāvādasikkhāpadavaṇṇanā","1. Musāvādasikkhāpadavaṇṇanā"
@@ -923,7 +923,7 @@ NULL,p139,921,100,gatha1,,"Ciraṃ tiṭṭhatu saddhammo, kāle vassaṃ cira�
 NULL,p139,922,100,gathalast,,"Tappetu devo dhammena, rājā rakkhatu medaninti."
 NULL,p139,923,100,centered,,"Mahāvibhaṅgo niṭṭhito."
 NULL,p139,924,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p139,925,1,book,Bhikkhunīvibhaṅgavaṇṇanā,Bhikkhunīvibhaṅgavaṇṇanā
+NULL,p139,925,2,book,Bhikkhunīvibhaṅgavaṇṇanā,Bhikkhunīvibhaṅgavaṇṇanā
 NULL,p139,926,2,chapter,"1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p139,927,100,gatha1,,"Yo  bhikkhūnaṃ vibhaṅgassa, saṅgahito anantaraṃ;"
 NULL,p139,928,100,gathalast,,"Bhikkhunīnaṃ vibhaṅgassa, tassa saṃvaṇṇanākkamo."

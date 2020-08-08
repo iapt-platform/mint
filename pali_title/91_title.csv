@@ -2,7 +2,7 @@ id,book,par_num,100,class,title,text
 NULL,p91,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p91,2,100,nikaya,,Aṅguttaranikāyo
 NULL,p91,3,1,book,Aṭṭhakanipātapāḷi,Aṭṭhakanipātapāḷi
-NULL,p91,4,3,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
+NULL,p91,4,2,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
 NULL,p91,5,2,chapter,"1. Mettāvaggo","1. Mettāvaggo"
 NULL,p91,6,4,subhead,"1. Mettāsuttaṃ","1. Mettāsuttaṃ"
 NULL,p91,7,100,bodytext,,"1. Evaṃ  me sutaṃ – ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati jetavane anāthapiṇḍikassa ārāme. Tatra kho bhagavā bhikkhū āmantesi – ‘‘bhikkhavo’’ti. ‘‘Bhadante’’ti te bhikkhū bhagavato paccassosuṃ. Bhagavā etadavoca –"
@@ -673,7 +673,7 @@ NULL,p91,671,100,bodytext,,"Tassuddānaṃ –"
 NULL,p91,672,100,gatha1,,"Saṃkhitte vitthate visākhe, vāseṭṭho bojjhāya pañcamaṃ;"
 NULL,p91,673,100,gathalast,,"Anuruddhaṃ puna visākhe, nakulā idhalokikā dveti."
 NULL,p91,674,100,centered,,"Paṭhamapaṇṇāsakaṃ samattaṃ."
-NULL,p91,675,3,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
+NULL,p91,675,2,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
 NULL,p91,676,2,chapter,"(6) 1. Gotamīvaggo","(6) 1. Gotamīvaggo"
 NULL,p91,677,4,subhead,"1. Gotamīsuttaṃ","1. Gotamīsuttaṃ"
 NULL,p91,678,100,bodytext,,"51. Ekaṃ  samayaṃ bhagavā sakkesu viharati kapilavatthusmiṃ nigrodhārāme. Atha kho mahāpajāpatī [mahāpajāpati (syā.) cūḷava. 402] gotamī yena bhagavā tenupasaṅkami; upasaṅkamitvā bhagavantaṃ abhivādetvā ekamantaṃ aṭṭhāsi. Ekamantaṃ ṭhitā kho mahāpajāpatī gotamī bhagavantaṃ etadavoca – ‘‘sādhu, bhante, labheyya mātugāmo tathāgatappavedite dhammavinaye agārasmā anagāriyaṃ pabbajja’’nti. ‘‘Alaṃ, gotami! Mā te rucci mātugāmassa tathāgatappavedite dhammavinaye agārasmā anagāriyaṃ pabbajjā’’ti."

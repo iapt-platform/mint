@@ -1,10 +1,10 @@
 id,book,par_num,100,class,title,text
 NULL,p178,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p178,2,1,book,Abhidhammatthasaṅgaho,Abhidhammatthasaṅgaho
-NULL,p178,3,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p178,3,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p178,4,100,bodytext,,"1. Sammāsambuddhamatulaṃ, sasaddhammagaṇuttamaṃ."
 NULL,p178,5,100,gathalast,,"Abhivādiya bhāsissaṃ, abhidhammatthasaṅgahaṃ."
-NULL,p178,6,4,subhead,Catuparamatthadhammo,Catuparamatthadhammo
+NULL,p178,6,2,subhead,Catuparamatthadhammo,Catuparamatthadhammo
 NULL,p178,7,100,bodytext,,"2. Tattha vuttābhidhammatthā, catudhā paramatthato."
 NULL,p178,8,100,gathalast,,"Cittaṃ cetasikaṃ rūpaṃ, nibbānamiti sabbathā."
 NULL,p178,9,2,chapter,"1. Cittaparicchedo","1. Cittaparicchedo"
@@ -1227,7 +1227,7 @@ NULL,p178,1225,100,bodytext,,"15. Sabbaso vīthicittuppattiyā abhāvato pacchim
 NULL,p178,1226,100,bodytext,,"16. Pañcadvāre yathārahaṃ taṃtaṃdvārānurūpaṃ, taṃtaṃpaccayānurūpaṃ, taṃtaṃārammaṇādianurūpañca uppajjamānāni vīthicittāni āvajjanadassanādisampaṭicchanasantīraṇavoṭṭhabbanajavanatadārammaṇavasena avisesato satteva honti. Cittuppādā cittānaṃ  visuṃ visuṃ uppattivasena uppajjamānacittāniyeva vā catuddasa āvajjanādipañcakasattajavanatadārammaṇadvayavasena. Vitthārā pana catupaññāsa sabbesameva kāmāvacarānaṃ yathāsambhavaṃ tattha uppajjanato,"
 NULL,p178,1227,100,bodytext,,"Etthāti visayappavattisaṅgahe."
 NULL,p178,1228,100,centered,,"Pañcadvāravīthivaṇṇanā niṭṭhitā."
-NULL,p178,1229,3,title,Manodvāravīthi,Manodvāravīthi
+NULL,p178,1229,4,title,Manodvāravīthi,Manodvāravīthi
 NULL,p178,1230,4,subhead,Parittajavanavāravaṇṇanā,Parittajavanavāravaṇṇanā
 NULL,p178,1231,100,bodytext,,"17. Manodvārikacittānaṃ  atītānāgatampi ārammaṇaṃ hotīti tesaṃ atimahantādivasena visayavavatthānaṃ kātuṃ na sakkāti vibhūtāvibhūtavasenevetaṃ niyametuṃ ‘‘yadi vibhūtamārammaṇa’’ntyādi vuttaṃ."
 NULL,p178,1232,100,bodytext,,"19. Etthāti manodvāre. Ekacattālīsa pañcadvārāveṇikānaṃ dvipañcaviññāṇamanodhātuttayavasena terasacittānaṃ tattha appavattanato."

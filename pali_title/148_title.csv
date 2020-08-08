@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p148,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p148,2,100,nikaya,,Khuddakanikāye
-NULL,p148,3,1,book,Jātakapāḷi,Jātakapāḷi
+NULL,p148,3,1,book,"Jātakapāḷi(Paṭhamo bhāgo)",Jātakapāḷi
 NULL,p148,4,3,title,"(Paṭhamo bhāgo)","(Paṭhamo bhāgo)"
 NULL,p148,5,2,chapter,"1. Ekakanipāto","1. Ekakanipāto"
 NULL,p148,6,3,title,"1. Apaṇṇakavaggo","1. Apaṇṇakavaggo"
@@ -861,14 +861,14 @@ NULL,p148,859,100,gatha1,,"Akkodhena jine kodhaṃ, asādhuṃ sādhunā jine;"
 NULL,p148,860,100,gatha2,,"Jine kadariyaṃ dānena, saccenālikavādinaṃ;"
 NULL,p148,861,100,gathalast,,"Etādiso ayaṃ rājā, maggā uyyāhi sārathīti."
 NULL,p148,862,100,centered,,"Rājovādajātakaṃ paṭhamaṃ."
-NULL,p148,863,4,subhead," 152. Asamekkhitakammantaṃ, turitābhinipātinaṃ."," 152. Asamekkhitakammantaṃ, turitābhinipātinaṃ."
+NULL,p148,863,4,subhead,"152. Asamekkhitakammantaṃ, turitābhinipātinaṃ."," 152. Asamekkhitakammantaṃ, turitābhinipātinaṃ."
 NULL,p148,864,100,gathalast,,"Sāni kammāni tappenti, uṇhaṃvajjhohitaṃ mukhe."
 NULL,p148,865,8,hangnum,4.,4.
 NULL,p148,866,100,gatha1,,"Sīho ca sīhanādena, daddaraṃ abhinādayi;"
 NULL,p148,867,100,gatha2,,"Sutvā sīhassa nigghosaṃ, siṅgālo [sigālo (sī. syā. pī.)] daddare vasaṃ;"
 NULL,p148,868,100,gathalast,,"Bhīto santāsamāpādi, hadayañcassa apphalīti."
 NULL,p148,869,100,centered,,"Siṅgālajātakaṃ [sigālajātakaṃ (sī. syā. pī.)] dutiyaṃ."
-NULL,p148,870,4,subhead," 153. Sūkarajātakaṃ (2-1-3)"," 153. Sūkarajātakaṃ (2-1-3)"
+NULL,p148,870,4,subhead,"153. Sūkarajātakaṃ (2-1-3)"," 153. Sūkarajātakaṃ (2-1-3)"
 NULL,p148,871,8,hangnum,5.,5.
 NULL,p148,872,100,gatha1,,"Catuppado  ahaṃ samma, tvampi samma catuppado;"
 NULL,p148,873,100,gathalast,,"Ehi samma [sīha (sī. pī.)] nivattassu, kiṃ nu bhīto palāyasi."
@@ -876,7 +876,7 @@ NULL,p148,874,8,hangnum,6.,6.
 NULL,p148,875,100,gatha1,,"Asuci  pūtilomosi, duggandho vāsi sūkara;"
 NULL,p148,876,100,gathalast,,"Sace yujjhitukāmosi, jayaṃ samma dadāmi teti."
 NULL,p148,877,100,centered,,"Sūkarajātakaṃ tatiyaṃ."
-NULL,p148,878,4,subhead," 154. Uragajātaka (2-1-4)"," 154. Uragajātaka (2-1-4)"
+NULL,p148,878,4,subhead,"154. Uragajātaka (2-1-4)"," 154. Uragajātaka (2-1-4)"
 NULL,p148,879,8,hangnum,7.,7.
 NULL,p148,880,100,gatha1,,"Idhūragānaṃ  pavaro paviṭṭho, selassa vaṇṇena pamokkhamicchaṃ;"
 NULL,p148,881,100,gathalast,,"Brahmañca vaṇṇaṃ [vakkaṃ (ka.)] apacāyamāno, bubhukkhito no vitarāmi [visahāmi (ka. si. syā. pī.)] bhottuṃ."
@@ -884,7 +884,7 @@ NULL,p148,882,8,hangnum,8.,8.
 NULL,p148,883,100,gatha1,,"So brahmagutto cirameva jīva, dibyā ca te pātubhavantu bhakkhā;"
 NULL,p148,884,100,gathalast,,"Yo brahmavaṇṇaṃ apacāyamāno, bubhukkhito no vitarāsi [sabbatthapi samānaṃ] bhottunti."
 NULL,p148,885,100,centered,,"Uragajātakaṃ catutthaṃ."
-NULL,p148,886,4,subhead," 155. Bhaggajātakaṃ (2-1-5)"," 155. Bhaggajātakaṃ (2-1-5)"
+NULL,p148,886,4,subhead,"155. Bhaggajātakaṃ (2-1-5)"," 155. Bhaggajātakaṃ (2-1-5)"
 NULL,p148,887,8,hangnum,9.,9.
 NULL,p148,888,100,gatha1,,"Jīva  vassasataṃ bhagga [gagga (sī. pī.)], aparāni ca vīsatiṃ [vīsati (syā. ka.)];"
 NULL,p148,889,100,gathalast,,"Mā maṃ pisācā khādantu, jīva tvaṃ sarado sataṃ."
@@ -892,7 +892,7 @@ NULL,p148,890,8,hangnum,10.,10.
 NULL,p148,891,100,gatha1,,"Tvampi vassasataṃ jīva, aparāni ca vīsatiṃ;"
 NULL,p148,892,100,gathalast,,"Visaṃ pisācā khādantu, jīva tvaṃ sarado satanti."
 NULL,p148,893,100,centered,,"Bhaggajātakaṃ pañcamaṃ."
-NULL,p148,894,4,subhead," 156. Alīnacittajātakaṃ (2-1-6)"," 156. Alīnacittajātakaṃ (2-1-6)"
+NULL,p148,894,4,subhead,"156. Alīnacittajātakaṃ (2-1-6)"," 156. Alīnacittajātakaṃ (2-1-6)"
 NULL,p148,895,8,hangnum,11.,11.
 NULL,p148,896,100,gatha1,,"Alīnacittaṃ nissāya, pahaṭṭhā mahatī camū;"
 NULL,p148,897,100,gathalast,,"Kosalaṃ senāsantuṭṭhaṃ, jīvaggāhaṃ agāhayi."
@@ -910,7 +910,7 @@ NULL,p148,908,100,gatha1,,"Api  cepi dubbalo mitto, mittadhammesu tiṭṭhati;"
 NULL,p148,909,100,gatha2,,"So ñātako ca bandhu ca, so mitto so ca me sakhā;"
 NULL,p148,910,100,gathalast,,"Dāṭhini  mātimaññittho [maññivo (syā.), maññavho (ka.)], siṅgālo mama pāṇadoti."
 NULL,p148,911,100,centered,,"Guṇajātakaṃ sattamaṃ."
-NULL,p148,912,4,subhead," 158. Suhanujātakaṃ (2-1-8)"," 158. Suhanujātakaṃ (2-1-8)"
+NULL,p148,912,4,subhead,"158. Suhanujātakaṃ (2-1-8)"," 158. Suhanujātakaṃ (2-1-8)"
 NULL,p148,913,8,hangnum,15.,15.
 NULL,p148,914,100,gatha1,,"Nayidaṃ visamasīlena, soṇena suhanū saha;"
 NULL,p148,915,100,gathalast,,"Suhanūpi tādisoyeva, yo soṇassa sagocaro."
@@ -918,7 +918,7 @@ NULL,p148,916,8,hangnum,16.,16.
 NULL,p148,917,100,gatha1,,"Pakkhandinā pagabbhena, niccaṃ sandānakhādinā;"
 NULL,p148,918,100,gathalast,,"Sameti pāpaṃ pāpena, sameti asatā asanti."
 NULL,p148,919,100,centered,,"Suhanujātakaṃ aṭṭhamaṃ."
-NULL,p148,920,4,subhead," 159. Morajātakaṃ (2-1-9)"," 159. Morajātakaṃ (2-1-9)"
+NULL,p148,920,4,subhead,"159. Morajātakaṃ (2-1-9)"," 159. Morajātakaṃ (2-1-9)"
 NULL,p148,921,8,hangnum,17.,17.
 NULL,p148,922,100,gatha1,,"Udetayaṃ cakkhumā ekarājā, harissavaṇṇo pathavippabhāso [paṭhavippabhāso (sī. syā. pī.)];"
 NULL,p148,923,100,gathalast,,"Taṃ taṃ namassāmi harissavaṇṇaṃ pathavippabhāsaṃ, tayājja guttā viharemu divasaṃ."
@@ -932,7 +932,7 @@ NULL,p148,930,100,gatha1,,"Ye brāhmaṇā vedagū sabbadhamme, te me namo te ca
 NULL,p148,931,100,gatha2,,"Namatthu buddhānaṃ namatthu bodhiyā, namo vimuttānaṃ namo vimuttiyā;"
 NULL,p148,932,100,gathalast,,"Imaṃ so parittaṃ katvā, moro vāsamakappayīti."
 NULL,p148,933,100,centered,,"Morajātakaṃ navamaṃ."
-NULL,p148,934,4,subhead," 160. Vinīlajātakaṃ (2-1-10)"," 160. Vinīlajātakaṃ (2-1-10)"
+NULL,p148,934,4,subhead,"160. Vinīlajātakaṃ (2-1-10)"," 160. Vinīlajātakaṃ (2-1-10)"
 NULL,p148,935,8,hangnum,19.,19.
 NULL,p148,936,100,gatha1,,"Evameva nūna [nu (ka.)] rājānaṃ, vedehaṃ mithilaggahaṃ;"
 NULL,p148,937,100,gathalast,,"Assā vahanti ājaññā, yathā haṃsā vinīlakaṃ."
@@ -945,7 +945,7 @@ NULL,p148,943,100,bodytext,,"Tassuddānaṃ –"
 NULL,p148,944,100,gatha1,,"Varaballika  daddara sūkarako, uragūttama pañcamabhaggavaro;"
 NULL,p148,945,100,gathalast,,"Mahatīcamu yāva siṅgālavaro, suhanuttama mora vinīlaṃ dasāti."
 NULL,p148,946,3,title,"2. Santhavavaggo","2. Santhavavaggo"
-NULL,p148,947,4,subhead," 161. Indasamānagottajātakaṃ (2-2-1)"," 161. Indasamānagottajātakaṃ (2-2-1)"
+NULL,p148,947,4,subhead,"161. Indasamānagottajātakaṃ (2-2-1)"," 161. Indasamānagottajātakaṃ (2-2-1)"
 NULL,p148,948,8,hangnum,21.,21.
 NULL,p148,949,100,gatha1,,"Na  santhavaṃ [sandhavaṃ (ka.)] kāpurisena kayirā, ariyo anariyena pajānamatthaṃ;"
 NULL,p148,950,100,gathalast,,"Cirānuvutthopi karoti pāpaṃ, gajo yathā indasamānagottaṃ."
@@ -953,7 +953,7 @@ NULL,p148,951,8,hangnum,22.,22.
 NULL,p148,952,100,gatha1,,"Yaṃ tveva jaññā sadiso mamanti, sīlena paññāya sutena cāpi;"
 NULL,p148,953,100,gathalast,,"Teneva mettiṃ kayirātha saddhiṃ, sukho have sappurisena saṅgamoti."
 NULL,p148,954,100,centered,,"Indasamānagottajātakaṃ paṭhamaṃ."
-NULL,p148,955,4,subhead," 162. Santhavajātakaṃ (2-2-2)"," 162. Santhavajātakaṃ (2-2-2)"
+NULL,p148,955,4,subhead,"162. Santhavajātakaṃ (2-2-2)"," 162. Santhavajātakaṃ (2-2-2)"
 NULL,p148,956,8,hangnum,23.,23.
 NULL,p148,957,100,gatha1,,"Na  santhavasmā paramatthi pāpiyo, yo santhavo [sandhavo (ka.)] kāpurisena hoti;"
 NULL,p148,958,100,gathalast,,"Santappito sappinā pāyasena [pāyāsena (ka.)], kicchākataṃ paṇṇakuṭiṃ adayhi [adaḍḍhahi (sī. syā.), adaṭṭhahi (pī.), adaddahi (?)]."
@@ -961,7 +961,7 @@ NULL,p148,959,8,hangnum,24.,24.
 NULL,p148,960,100,gatha1,,"Na santhavasmā paramatthi seyyo, yo santhavo sappurisena hoti;"
 NULL,p148,961,100,gathalast,,"Sīhassa byagghassa ca dīpino ca, sāmā mukhaṃ lehati santhavenāti."
 NULL,p148,962,100,centered,,"Santhavajātakaṃ dutiyaṃ."
-NULL,p148,963,4,subhead," 163. Susīmajātakaṃ (2-2-3)"," 163. Susīmajātakaṃ (2-2-3)"
+NULL,p148,963,4,subhead,"163. Susīmajātakaṃ (2-2-3)"," 163. Susīmajātakaṃ (2-2-3)"
 NULL,p148,964,8,hangnum,25.,25.
 NULL,p148,965,100,gatha1,,"Kāḷā migā setadantā tavīme [tava ime (sī. syā. pī.)], parosataṃ hemajālābhichannā [hemajālābhisañchannā (sī.)];"
 NULL,p148,966,100,gathalast,,"Te te dadāmīti susīma brūsi, anussaraṃ  pettipitāmahānaṃ."
@@ -969,7 +969,7 @@ NULL,p148,967,8,hangnum,26.,26.
 NULL,p148,968,100,gatha1,,"Kāḷā  migā setadantā mamīme [mama ime (sī. pī.)], parosataṃ hemajālābhicchannā;"
 NULL,p148,969,100,gathalast,,"Te te dadāmīti vadāmi māṇava, anussaraṃ pettipitāmahānanti."
 NULL,p148,970,100,centered,,"Susīmajātakaṃ tatiyaṃ."
-NULL,p148,971,4,subhead," 164. Gijjhajātakaṃ (2-2-4)"," 164. Gijjhajātakaṃ (2-2-4)"
+NULL,p148,971,4,subhead,"164. Gijjhajātakaṃ (2-2-4)"," 164. Gijjhajātakaṃ (2-2-4)"
 NULL,p148,972,8,hangnum,27.,27.
 NULL,p148,973,100,gatha1,,"Yaṃ nu gijjho yojanasataṃ, kuṇapāni avekkhati;"
 NULL,p148,974,100,gathalast,,"Kasmā jālañca pāsañca, āsajjāpi na bujjhasi."
@@ -977,7 +977,7 @@ NULL,p148,975,8,hangnum,28.,28.
 NULL,p148,976,100,gatha1,,"Yadā parābhavo hoti, poso jīvitasaṅkhaye;"
 NULL,p148,977,100,gathalast,,"Atha jālañca pāsañca, āsajjāpi na bujjhatīti."
 NULL,p148,978,100,centered,,"Gijjhajātakaṃ catutthaṃ."
-NULL,p148,979,4,subhead," 165. Nakulajātakaṃ (2-2-5)"," 165. Nakulajātakaṃ (2-2-5)"
+NULL,p148,979,4,subhead,"165. Nakulajātakaṃ (2-2-5)"," 165. Nakulajātakaṃ (2-2-5)"
 NULL,p148,980,8,hangnum,29.,29.
 NULL,p148,981,100,gatha1,,"Sandhiṃ katvā amittena, aṇḍajena jalābuja;"
 NULL,p148,982,100,gathalast,,"Vivariya dāṭhaṃ sesi [sayasi (sī. syā. pī.)], kuto te bhayamāgataṃ."
@@ -985,7 +985,7 @@ NULL,p148,983,8,hangnum,30.,30.
 NULL,p148,984,100,gatha1,,"Saṅketheva [saṅkateva (ka.)] amittasmiṃ, mittasmimpi na vissase;"
 NULL,p148,985,100,gathalast,,"Abhayā bhayamuppannaṃ, api mūlāni kantatīti [mūlaṃ nikantatīti (sī.)]."
 NULL,p148,986,100,centered,,"Nakulajātakaṃ pañcamaṃ."
-NULL,p148,987,4,subhead," 166. Upasāḷakajātakaṃ (2-2-6)"," 166. Upasāḷakajātakaṃ (2-2-6)"
+NULL,p148,987,4,subhead,"166. Upasāḷakajātakaṃ (2-2-6)"," 166. Upasāḷakajātakaṃ (2-2-6)"
 NULL,p148,988,8,hangnum,31.,31.
 NULL,p148,989,100,gatha1,,"Upasāḷakanāmāni [upasāḷhakanāmānaṃ (sī. syā. pī.)], sahassāni catuddasa;"
 NULL,p148,990,100,gathalast,,"Asmiṃ padese daḍḍhāni, natthi loke anāmataṃ."
@@ -993,7 +993,7 @@ NULL,p148,991,8,hangnum,32.,32.
 NULL,p148,992,100,gatha1,,"Yamhi  saccañca dhammo ca, ahiṃsā saṃyamo damo;"
 NULL,p148,993,100,gathalast,,"Etaṃ ariyā sevanti, etaṃ loke anāmatanti."
 NULL,p148,994,100,centered,,"Upasāḷakajātakaṃ chaṭṭhaṃ."
-NULL,p148,995,4,subhead," 167. Samiddhijātakaṃ (2-2-7)"," 167. Samiddhijātakaṃ (2-2-7)"
+NULL,p148,995,4,subhead,"167. Samiddhijātakaṃ (2-2-7)"," 167. Samiddhijātakaṃ (2-2-7)"
 NULL,p148,996,8,hangnum,33.,33.
 NULL,p148,997,100,gatha1,,"Abhutvā  bhikkhasi bhikkhu, na hi bhutvāna bhikkhasi;"
 NULL,p148,998,100,gathalast,,"Bhutvāna bhikkhu bhikkhassu, mā taṃ kālo upaccagā."
@@ -1001,7 +1001,7 @@ NULL,p148,999,8,hangnum,34.,34.
 NULL,p148,1000,100,gatha1,,"Kālaṃ  vohaṃ na jānāmi, channo kālo na dissati;"
 NULL,p148,1001,100,gathalast,,"Tasmā abhutvā bhikkhāmi, mā maṃ kālo upaccagāti."
 NULL,p148,1002,100,centered,,"Samiddhijātakaṃ sattamaṃ."
-NULL,p148,1003,4,subhead," 168. Sakuṇagghijātakaṃ (2-2-8)"," 168. Sakuṇagghijātakaṃ (2-2-8)"
+NULL,p148,1003,4,subhead,"168. Sakuṇagghijātakaṃ (2-2-8)"," 168. Sakuṇagghijātakaṃ (2-2-8)"
 NULL,p148,1004,8,hangnum,35.,35.
 NULL,p148,1005,100,gatha1,,"Seno balasā patamāno, lāpaṃ gocaraṭhāyinaṃ;"
 NULL,p148,1006,100,gathalast,,"Sahasā ajjhappattova, maraṇaṃ tenupāgami."
@@ -1009,7 +1009,7 @@ NULL,p148,1007,8,hangnum,36.,36.
 NULL,p148,1008,100,gatha1,,"Sohaṃ nayena sampanno, pettike gocare rato;"
 NULL,p148,1009,100,gathalast,,"Apetasattu modāmi, sampassaṃ atthamattanoti."
 NULL,p148,1010,100,centered,,"Sakuṇagghijātakaṃ aṭṭhamaṃ."
-NULL,p148,1011,4,subhead," 169. Arakajātakaṃ (2-2-9)"," 169. Arakajātakaṃ (2-2-9)"
+NULL,p148,1011,4,subhead,"169. Arakajātakaṃ (2-2-9)"," 169. Arakajātakaṃ (2-2-9)"
 NULL,p148,1012,8,hangnum,37.,37.
 NULL,p148,1013,100,gatha1,,"Yo ve mettena cittena, sabbalokānukampati;"
 NULL,p148,1014,100,gathalast,,"Uddhaṃ  adho ca tiriyaṃ, appamāṇena sabbaso."
@@ -1017,7 +1017,7 @@ NULL,p148,1015,8,hangnum,38.,38.
 NULL,p148,1016,100,gatha1,,"Appamāṇaṃ hitaṃ cittaṃ, paripuṇṇaṃ subhāvitaṃ;"
 NULL,p148,1017,100,gathalast,,"Yaṃ pamāṇakataṃ kammaṃ, na taṃ tatrāvasissatīti."
 NULL,p148,1018,100,centered,,"Arakajātakaṃ navamaṃ."
-NULL,p148,1019,4,subhead," 170. Kakaṇṭakajātakaṃ (2-2-10)"," 170. Kakaṇṭakajātakaṃ (2-2-10)"
+NULL,p148,1019,4,subhead,"170. Kakaṇṭakajātakaṃ (2-2-10)"," 170. Kakaṇṭakajātakaṃ (2-2-10)"
 NULL,p148,1020,8,hangnum,39.,39.
 NULL,p148,1021,100,gatha1,,"Nāyaṃ pure uṇṇamati [unnamati (syā.)], toraṇagge kakaṇṭako;"
 NULL,p148,1022,100,gathalast,,"Mahosadha vijānāhi, kena thaddho kakaṇṭako."
@@ -1030,7 +1030,7 @@ NULL,p148,1028,100,bodytext,,"Tassuddānaṃ –"
 NULL,p148,1029,100,gatha1,,"Atha  indasamāna sapaṇṇakuṭi, susimuttama gijjha jalābujako;"
 NULL,p148,1030,100,gathalast,,"Upasāḷaka bhikkhu salāpavaro, atha mettavaro dasapuṇṇamatīti."
 NULL,p148,1031,3,title,"3. Kalyāṇavaggo","3. Kalyāṇavaggo"
-NULL,p148,1032,4,subhead," 171. Kalyāṇadhammajātakaṃ (2-3-1)"," 171. Kalyāṇadhammajātakaṃ (2-3-1)"
+NULL,p148,1032,4,subhead,"171. Kalyāṇadhammajātakaṃ (2-3-1)"," 171. Kalyāṇadhammajātakaṃ (2-3-1)"
 NULL,p148,1033,8,hangnum,41.,41.
 NULL,p148,1034,100,gatha1,,"Kalyāṇadhammoti  yadā janinda, loke samaññaṃ anupāpuṇāti;"
 NULL,p148,1035,100,gathalast,,"Tasmā na hiyyetha [hīyetha (sī.)] naro sapañño, hiriyāpi santo dhuramādiyanti."
@@ -1038,7 +1038,7 @@ NULL,p148,1036,8,hangnum,42.,42.
 NULL,p148,1037,100,gatha1,,"Sāyaṃ samaññā idha majja pattā, kalyāṇadhammoti janinda loke;"
 NULL,p148,1038,100,gathalast,,"Tāhaṃ samekkhaṃ idha pabbajissaṃ, na hi matthi chando idha kāmabhogeti."
 NULL,p148,1039,100,centered,,"Kalyāṇadhammajātakaṃ paṭhamaṃ."
-NULL,p148,1040,4,subhead," 172. Daddarajātakaṃ (2-3-2)"," 172. Daddarajātakaṃ (2-3-2)"
+NULL,p148,1040,4,subhead,"172. Daddarajātakaṃ (2-3-2)"," 172. Daddarajātakaṃ (2-3-2)"
 NULL,p148,1041,8,hangnum,43.,43.
 NULL,p148,1042,100,gatha1,,"Ko nu saddena mahatā, abhinādeti daddaraṃ;"
 NULL,p148,1043,100,gathalast,,"Taṃ sīhā nappaṭinadanti [kiṃ sīhā nappaṭinadanti (sī. pī.), na sīhā paṭinadanti (ka.)], ko nāmeso migādhibhū."
@@ -1046,7 +1046,7 @@ NULL,p148,1044,8,hangnum,44.,44.
 NULL,p148,1045,100,gatha1,,"Adhamo migajātānaṃ, siṅgālo tāta vassati;"
 NULL,p148,1046,100,gathalast,,"Jātimassa jigucchantā, tuṇhī sīhā samacchareti."
 NULL,p148,1047,100,centered,,"Daddarajātakaṃ dutiyaṃ."
-NULL,p148,1048,4,subhead," 173. Makkaṭajātakaṃ (2-3-3)"," 173. Makkaṭajātakaṃ (2-3-3)"
+NULL,p148,1048,4,subhead,"173. Makkaṭajātakaṃ (2-3-3)"," 173. Makkaṭajātakaṃ (2-3-3)"
 NULL,p148,1049,8,hangnum,45.,45.
 NULL,p148,1050,100,gatha1,,"Tāta  māṇavako eso, tālamūlaṃ apassito;"
 NULL,p148,1051,100,gathalast,,"Agārakañcidaṃ atthi, handa demassagārakaṃ."
@@ -1054,7 +1054,7 @@ NULL,p148,1052,8,hangnum,46.,46.
 NULL,p148,1053,100,gatha1,,"Mā kho tvaṃ tāta pakkosi, dūseyya no agārakaṃ;"
 NULL,p148,1054,100,gathalast,,"Netādisaṃ mukhaṃ hoti, brāhmaṇassa susīlinoti."
 NULL,p148,1055,100,centered,,"Makkaṭajātakaṃ tatiyaṃ."
-NULL,p148,1056,4,subhead," 174. Dubbhiyamakkaṭajātakaṃ (2-3-4)"," 174. Dubbhiyamakkaṭajātakaṃ (2-3-4)"
+NULL,p148,1056,4,subhead,"174. Dubbhiyamakkaṭajātakaṃ (2-3-4)"," 174. Dubbhiyamakkaṭajātakaṃ (2-3-4)"
 NULL,p148,1057,8,hangnum,47.,47.
 NULL,p148,1058,100,gatha1,,"Adamha te vāri pahūtarūpaṃ, ghammābhitattassa pipāsitassa;"
 NULL,p148,1059,100,gathalast,,"So dāni pitvāna [pītvāna (sī. pī.)] kiriṅkarosi [kikiṃkarosi (sī. syā. pī.)], asaṅgamo pāpajanena seyyo."
@@ -1062,7 +1062,7 @@ NULL,p148,1060,8,hangnum,48.,48.
 NULL,p148,1061,100,gatha1,,"Ko te suto vā diṭṭho vā, sīlavā nāma makkaṭo;"
 NULL,p148,1062,100,gathalast,,"Idāni kho taṃ ohacchaṃ [ūhacca (sī. pī.), ohaccaṃ (syā.), uhajjaṃ (ka.)], esā asmāka dhammatāti."
 NULL,p148,1063,100,centered,,"Dubbhiyamakkaṭajātakaṃ catutthaṃ."
-NULL,p148,1064,4,subhead," 175. Ādiccupaṭṭhānajātakaṃ (2-3-5)"," 175. Ādiccupaṭṭhānajātakaṃ (2-3-5)"
+NULL,p148,1064,4,subhead,"175. Ādiccupaṭṭhānajātakaṃ (2-3-5)"," 175. Ādiccupaṭṭhānajātakaṃ (2-3-5)"
 NULL,p148,1065,8,hangnum,49.,49.
 NULL,p148,1066,100,gatha1,,"Sabbesu  kira bhūtesu, santi sīlasamāhitā;"
 NULL,p148,1067,100,gathalast,,"Passa sākhāmigaṃ jammaṃ, ādiccamupatiṭṭhati."
@@ -1070,7 +1070,7 @@ NULL,p148,1068,8,hangnum,50.,50.
 NULL,p148,1069,100,gatha1,,"Nāssa sīlaṃ vijānātha, anaññāya pasaṃsatha;"
 NULL,p148,1070,100,gathalast,,"Aggihuttañca  uhannaṃ [ūhantaṃ (sī.), ūhanaṃ (syā.), ūhanti (pī.), uhadaṃ (ka.)], dve ca bhinnā kamaṇḍalūti."
 NULL,p148,1071,100,centered,,"Ādiccupaṭṭhānajātakaṃ pañcamaṃ."
-NULL,p148,1072,4,subhead," 176. Kaḷāyamuṭṭhijātakaṃ (2-3-6)"," 176. Kaḷāyamuṭṭhijātakaṃ (2-3-6)"
+NULL,p148,1072,4,subhead,"176. Kaḷāyamuṭṭhijātakaṃ (2-3-6)"," 176. Kaḷāyamuṭṭhijātakaṃ (2-3-6)"
 NULL,p148,1073,8,hangnum,51.,51.
 NULL,p148,1074,100,gatha1,,"Bālo  vatāyaṃ dumasākhagocaro, paññā janinda nayimassa vijjati;"
 NULL,p148,1075,100,gathalast,,"Kaḷāyamuṭṭhiṃ [kalāyamuṭṭhiṃ (sī. pī.)] avakiriya kevalaṃ, ekaṃ kaḷāyaṃ patitaṃ gavesati."
@@ -1078,7 +1078,7 @@ NULL,p148,1076,8,hangnum,52.,52.
 NULL,p148,1077,100,gatha1,,"Evameva mayaṃ rāja, ye caññe atilobhino;"
 NULL,p148,1078,100,gathalast,,"Appena bahuṃ jiyyāma, kaḷāyeneva vānaroti."
 NULL,p148,1079,100,centered,,"Kaḷāyamuṭṭhijātakaṃ chaṭṭhaṃ."
-NULL,p148,1080,4,subhead," 177. Tindukajātakaṃ (2-3-7)"," 177. Tindukajātakaṃ (2-3-7)"
+NULL,p148,1080,4,subhead,"177. Tindukajātakaṃ (2-3-7)"," 177. Tindukajātakaṃ (2-3-7)"
 NULL,p148,1081,8,hangnum,53.,53.
 NULL,p148,1082,100,gatha1,,"Dhanuhatthakalāpehi, nettiṃ savaradhāribhi;"
 NULL,p148,1083,100,gathalast,,"Samantā parikiṇṇamha, kathaṃ mokkho bhavissati."

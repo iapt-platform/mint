@@ -30,7 +30,7 @@ echo "<h2>$from</h2>";
 if($to==0 || $to>=217) $to=216;
     $book = $from +1;
 if(($fp=fopen(_DIR_PALI_TITLE_."/".$book."_title.csv", "w"))!==FALSE){
-    fputcsv($fp,array('id','book','par_num','level','class','title','text'));
+    fputcsv($fp,array('id','book','par_num','100','class','title','text'));
     PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
     $query="select id, book, paragraph, level, class, toc, text from pali_text where book = '$book' ";
     $title_data = PDO_FetchAll($query);

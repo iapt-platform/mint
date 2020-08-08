@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p217,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p217,2,100,nikaya,,Vinayapiṭake
-NULL,p217,3,1,book,Parivārapāḷi,Parivārapāḷi
+NULL,p217,3,1,book,(VN)Parivārapāḷi,Parivārapāḷi
 NULL,p217,4,3,title,"1. Bhikkhuvibhaṅgo","1. Bhikkhuvibhaṅgo"
 NULL,p217,5,2,chapter,Soḷasamahāvāro,Soḷasamahāvāro
 NULL,p217,6,3,title,"1. Katthapaññattivāro","1. Katthapaññattivāro"

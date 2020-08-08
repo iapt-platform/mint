@@ -2,7 +2,7 @@ id,book,par_num,100,class,title,text
 NULL,p89,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p89,2,100,nikaya,,Aṅguttaranikāyo
 NULL,p89,3,1,book,Chakkanipātapāḷi,Chakkanipātapāḷi
-NULL,p89,4,3,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
+NULL,p89,4,2,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
 NULL,p89,5,2,chapter,"1. Āhuneyyavaggo","1. Āhuneyyavaggo"
 NULL,p89,6,4,subhead,"1. Paṭhamaāhuneyyasuttaṃ","1. Paṭhamaāhuneyyasuttaṃ"
 NULL,p89,7,100,bodytext,,"1. Evaṃ  me sutaṃ – ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati jetavane anāthapiṇḍikassa ārāme. Tatra kho bhagavā bhikkhū āmantesi – ‘‘bhikkhavo’’ti. ‘‘Bhadante’’ti te bhikkhū bhagavato paccassosuṃ. Bhagavā etadavoca –"
@@ -490,7 +490,7 @@ NULL,p89,488,100,bodytext,,"Tassuddānaṃ –"
 NULL,p89,489,100,gatha1,,"Nāgamigasālā iṇaṃ, cundaṃ dve sandiṭṭhikā duve;"
 NULL,p89,490,100,gathalast,,"Khemaindriya ānanda, khattiyā appamādena dhammikoti."
 NULL,p89,491,100,centered,,"Paṭhamapaṇṇāsakaṃ samattaṃ."
-NULL,p89,492,3,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
+NULL,p89,492,2,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
 NULL,p89,493,2,chapter,"6. Mahāvaggo","6. Mahāvaggo"
 NULL,p89,494,4,subhead,"1. Soṇasuttaṃ","1. Soṇasuttaṃ"
 NULL,p89,495,100,bodytext,,"55. [mahāva. 243 āgataṃ] Evaṃ,  me sutaṃ – ekaṃ samayaṃ bhagavā rājagahe viharati gijjhakūṭe pabbate. Tena kho pana samayena āyasmā soṇo rājagahe viharati sītavanasmiṃ. Atha kho āyasmato soṇassa rahogatassa paṭisallīnassa evaṃ cetaso parivitakko udapādi – ‘‘ye kho keci bhagavato sāvakā āraddhavīriyā viharanti, ahaṃ tesaṃ aññataro. Atha ca pana me na anupādāya āsavehi cittaṃ vimuccati, saṃvijjanti kho pana me kule bhogā, sakkā bhogā ca bhuñjituṃ puññāni ca kātuṃ. Yaṃnūnāhaṃ sikkhaṃ paccakkhāya hīnāyāvattitvā bhoge ca bhuñjeyyaṃ puññāni ca kareyya’’nti."

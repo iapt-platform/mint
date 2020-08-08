@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p6,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p6,2,2,chapter,Kamalāñjali,Kamalāñjali
+NULL,p6,2,1,chapter,Kamalāñjali,Kamalāñjali
 NULL,p6,3,8,hangnum,1.,1.
 NULL,p6,4,100,gatha1,," Kamalāsana kamalāpati pamathādhipa vajirā,"
 NULL,p6,5,100,gatha2,,"Yudhadānava manujoraga bhujagāsana patinaṃ;"

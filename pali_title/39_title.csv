@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p39,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p39,2,100,nikaya,,Suttantapiṭake
-NULL,p39,3,1,book,Dīghanikāye,Dīghanikāye
+NULL,p39,3,1,book,"(saṅgayana-puccha vissajjanā) Dīghanikāye",Dīghanikāye
 NULL,p39,4,2,chapter,Sīlakkhandhavaggasutta,Sīlakkhandhavaggasutta
 NULL,p39,5,3,title,"Saṃgāyanassa pucchā vissajjanā","Saṃgāyanassa pucchā vissajjanā"
 NULL,p39,6,100,bodytext,,"Pucchā – paṭhamamahādhammasaṃgītikāle  āvuso dhammasaṃgāhakā mahākassapādayo mahātheravarā paṭhamaṃ vinayaṃ saṃgāyitvā tadanantaraṃ kaṃ nāma pāvacanaṃ saṃgāyiṃsu."
@@ -12,7 +12,7 @@ NULL,p39,10,100,bodytext,,"Pucchā – suttantapiṭake pi āvuso dīghamajjhima
 NULL,p39,11,100,bodytext,,"Vissajjanā – pañcasu bhante nikāyesu paṭhamaṃ dīghanikāyaṃ saṃgāyiṃsu."
 NULL,p39,12,100,bodytext,,"Pucchā – dīghanikāyepi āvuso tayo vaggā catuttiṃsā ca suttāni, tesu kataraṃ vaggaṃ katarañca suttaṃ paṭhamaṃ saṃgāyiṃsu."
 NULL,p39,13,100,bodytext,,"Vissajjanā – dīghanikāyepi bhante tīsu vaggesu paṭhamaṃ sīlakkhandhavaggaṃ, catuttiṃsatiyā ca suttesu paṭhamaṃ brahmajālasuttaṃ saṃgāyiṃsu."
-NULL,p39,14,2,chapter,Brahmajālasutta,Brahmajālasutta
+NULL,p39,14,3,chapter,Brahmajālasutta,Brahmajālasutta
 NULL,p39,15,100,bodytext,,"Pucchā – sādhu  sādhu āvuso mayampi dāni tatoyeva paṭṭhāya saṃgāyituṃ pubbakiccāni samārabhāma…, tenāvuso bhagavatā jānatā passatā arahatā sammāsambuddhena brahmajālasuttaṃ kattha bhāsitaṃ."
 NULL,p39,16,100,bodytext,,"Vissajjanā – antarā ca bhante rājagahaṃ antarā ca nāḷandaṃ ambalaṭṭhikāyaṃ rājāgārake bhāsitaṃ."
 NULL,p39,17,100,bodytext,,"Pucchā – kaṃ  āvuso ārabbha bhāsitaṃ."
@@ -43,7 +43,7 @@ NULL,p39,41,100,bodytext,,"Pucchā – kenāvuso  ābhataṃ."
 NULL,p39,42,100,bodytext,,"Vissajjanā – paramparāya bhante ābhataṃ."
 NULL,p39,43,100,bodytext,,"Pucchā – atthi nu kho āvuso ettha koci viraddhadosā, yena pacchimā janā micchāatthaṃ gaṇheyyuṃ."
 NULL,p39,44,100,bodytext,,"Vissajjanā – natthi bhante."
-NULL,p39,45,2,chapter,Sāmaññaphalasutta,Sāmaññaphalasutta
+NULL,p39,45,3,chapter,Sāmaññaphalasutta,Sāmaññaphalasutta
 NULL,p39,46,100,bodytext,,"Pucchā – tenāvuso  bhagavatā…pe… sammāsambuddhena sāmaññaphalasuttaṃ kattha bhāsitaṃ."
 NULL,p39,47,100,bodytext,,"Vissajjanā – rājagahe bhante jīvakassa komārabhaccassa ambavane bhāsitaṃ."
 NULL,p39,48,100,bodytext,,"Pucchā – kenāvuso saddhiṃ bhagavatā bhāsitaṃ."
@@ -179,53 +179,53 @@ NULL,p39,177,100,bodytext,,"Vissajjanā – so evaṃ samāhite citte parisuddhe
 NULL,p39,178,100,bodytext,,"Sādhu  sādhu āvuso, sādhu kho āvuso, yaṃ bhikkhu buddhasāsane saddhāpabbajito evaṃ svākhāte dhammavinaye sammāpaṭipanno āsavakkhayañāṇaṃ pāpuṇitvā dukkhassantaṃ karoti."
 NULL,p39,179,100,bodytext,,"Pucchā – kathaṃ  panāvuso rājā māgadho ajātasattu vedehiputto imissā desanāya pariyosāne bhagavati ca desanāyañca pasanno pasannākāraṃ akāsi, kīdisañca ānisaṃsaṃ paṭilabhi."
 NULL,p39,180,100,bodytext,,"Vissajjanā – evaṃ vutte bhante māgadho ajātasattu vedehiputto bhagavantaṃ etadavoca, abhikkantaṃ bhante, abhikkantaṃ bhante, seyyathāpi bhante nikkujjitaṃ vā ukkujjeyya, paṭicchannaṃ vā vivareyya…pe… ajjatagge pāṇṇupetaṃ saraṇaṃ gatanti, ayañhi bhante rājā pitumāritakālato paṭṭhāya neva rattiṃ na divā niddaṃ paṭilabhati, satthāraṃ pana upasaṅkamitvā imāya madhurāya ojavantiyā dhammadesanāya sutakālato paṭṭhāya niddaṃ paṭilabhati, tiṇṇaṃ ratanānaṃ mahāsakkāramakāsi, puthujjanikāya saddhāya samannāgato nāma iminā raññā sadiso nāhosi, anāgate pana vijitāvī nāma paccekabuddho hutvā parinibbāyissati. Evaṃ kho bhante rājā māgadho ajātasattu vedehiputto  desanāpariyosāne pasanno pasannākāramakāsi, idisañca bhante mahānisaṃsaṃ paṭilabhi."
-NULL,p39,181,4,subhead,Ambaṭṭhasutta,Ambaṭṭhasutta
+NULL,p39,181,3,subhead,Ambaṭṭhasutta,Ambaṭṭhasutta
 NULL,p39,182,100,bodytext,,"Pucchā – tenāvuso  bhagavā jānatā arahatā passatā sammāsambuddhena ambaṭṭhaṃ ṭāma suttaṃ kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,183,100,bodytext,,"Vissajjanā – kosalesu bhante janapade icchānaṅgale nāma kosalānaṃ brāhmaṇagāme ambaṭṭhaṃ nāma māṇavaṃ brāhmaṇassa pokkharasātissa antevāsiṃ ārabbha bhāsitaṃ."
-NULL,p39,184,4,subhead,Soṇadaṇḍasutta,Soṇadaṇḍasutta
+NULL,p39,184,3,subhead,Soṇadaṇḍasutta,Soṇadaṇḍasutta
 NULL,p39,185,100,bodytext,,"Pucchā – soṇadaṇḍaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,186,100,bodytext,,"Vissajjanā – aṅgesu bhante janapade campāyaṃ soṇadaṇḍaṃ brāhmaṇaṃ ārabbha bhāsitaṃ."
-NULL,p39,187,4,subhead,Kūṭadantasutta,Kūṭadantasutta
+NULL,p39,187,3,subhead,Kūṭadantasutta,Kūṭadantasutta
 NULL,p39,188,100,bodytext,,"Pucchā – kūṭadantaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,189,100,bodytext,,"Vissajjanā – magadhesu bhante khāṇumate nāma brāhmaṇagāme kūṭadanta brāhmaṇaṃ ārabbha bhāsitaṃ."
-NULL,p39,190,4,subhead,Mahālisutta,Mahālisutta
+NULL,p39,190,3,subhead,Mahālisutta,Mahālisutta
 NULL,p39,191,100,bodytext,,"Pucchā – mahāliṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,192,100,bodytext,,"Vissajjanā – vesāliyaṃ bhante oṭṭhaddhaṃ nāma licchaviṃ ārabbha bhāsitaṃ."
-NULL,p39,193,4,subhead,Jāliyasutta,Jāliyasutta
+NULL,p39,193,3,subhead,Jāliyasutta,Jāliyasutta
 NULL,p39,194,100,bodytext,,"Pucchā – jāliyaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,195,100,bodytext,,"Vissajjanā – kosambiyaṃ bhante dve pabbajite ārabbha bhāsitaṃ."
-NULL,p39,196,4,subhead,Mahāsīhanādasutta,Mahāsīhanādasutta
+NULL,p39,196,3,subhead,Mahāsīhanādasutta,Mahāsīhanādasutta
 NULL,p39,197,100,bodytext,,"Pucchā – mahāsīhanādaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,198,100,bodytext,,"Vissajjanā – uruññāyaṃ bhante kaṇṇakathale acelaṃ kassapaṃ ārabbha bhāsitaṃ."
-NULL,p39,199,4,subhead,Poṭṭhapādasutta,Poṭṭhapādasutta
+NULL,p39,199,3,subhead,Poṭṭhapādasutta,Poṭṭhapādasutta
 NULL,p39,200,100,bodytext,,"Pucchā – poṭṭhapādaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,201,100,bodytext,,"Vissajjanā – sāvatthiyaṃ bhante poṭṭhapādañca paribbājakaṃ cittañca hatthisāriputtaṃ ārabbha bhāsitaṃ."
-NULL,p39,202,4,subhead,Subhasutta,Subhasutta
+NULL,p39,202,3,subhead,Subhasutta,Subhasutta
 NULL,p39,203,100,bodytext,,"Pucchā – subhasuttaṃ  panāvuso kattha kaṃ ārabbha kena bhāsitaṃ."
 NULL,p39,204,100,bodytext,,"Vissajjanā – sāvatthiyaṃ bhante āyasmatā ānandena dhammabhaṇḍāgārikena subhaṃ māṇavaṃ todeyyaputtaṃ ārabbha bhāsitaṃ."
-NULL,p39,205,4,subhead,Kevaṭṭasutta,Kevaṭṭasutta
+NULL,p39,205,3,subhead,Kevaṭṭasutta,Kevaṭṭasutta
 NULL,p39,206,100,bodytext,,"Pucchā – kevaṭṭaṃ  panāvuso suttaṃ bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,207,100,bodytext,,"Vissajjanā – nāḷandā yaṃ bhante kevaṭṭaṃ gahapatiputtaṃ ārabbha bhāsitaṃ."
-NULL,p39,208,4,subhead,Lohiccasutta,Lohiccasutta
+NULL,p39,208,3,subhead,Lohiccasutta,Lohiccasutta
 NULL,p39,209,100,bodytext,,"Pucchā – lohiccasutta  panāvuso bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,210,100,bodytext,,"Vissajjanā – kosalesu bhante janapade sālavatikāyaṃ lohiccaṃ brāhmaṇaṃ ārabbha bhāsitaṃ."
-NULL,p39,211,4,subhead,Tevijjasutta,Tevijjasutta
+NULL,p39,211,3,subhead,Tevijjasutta,Tevijjasutta
 NULL,p39,212,100,bodytext,,"Pucchā – tevijjasuttaṃ  panāvuso bhagavatā kattha kaṃ ārabbha bhāsitaṃ."
 NULL,p39,213,100,bodytext,,"Vissajjanā – kosalesu bhante manasākaṭe nāma kosalānaṃ brāhmaṇagāme vāseṭṭhaṃ bhāradvājaṃ māṇavaṃ ārabbha bhāsitaṃ."
-NULL,p39,214,4,subhead,Mahāpadānasutta,Mahāpadānasutta
+NULL,p39,214,3,subhead,Mahāpadānasutta,Mahāpadānasutta
 NULL,p39,215,100,bodytext,,"Pucchā – tena  āvuso bhagavatā jānatā passatā arahatā sammāsambuddhena mahāpadānasuttaṃ dīghanikāye mahāvagge porāṇakehi saṅgitikārehi paṭhamaṃ saṅgitaṃ bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,216,100,bodytext,,"Vissajjanā – sāvatthiyaṃ bhante sambahule bhikkhū ārabbha bhāsitaṃ, sambahulānaṃ bhante bhikkhūnaṃ pacchābhattaṃ piṇḍapātapaṭikkantānaṃ maṇḍalamāḷe sannisinnānaṃ sannipatitānaṃ pubbenivāsapaṭisaṃyuttā dhammīkathā udapādi, itipi pubbenivāso itipi pubbenivāsoti, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,217,4,subhead,Mahānidānasutta,Mahānidānasutta
+NULL,p39,217,3,subhead,Mahānidānasutta,Mahānidānasutta
 NULL,p39,218,100,bodytext,,"Pucchā – mahānidānasuttaṃ  panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,219,100,bodytext,,"Vissajjanā – kurūsu bhante kammāsadhamme nāma kurūnaṃ nigame āyasmantaṃ ānandaṃ ārabbha bhāsitaṃ, āyasmā bhante ānando bhagavantaṃ upasaṅkamitvā etadavoca ‘‘acchariyaṃ bhante, abbhutaṃ bhante, yāva gambhīrocāyaṃ bhante paṭiccasamuppādo"
 NULL,p39,220,100,bodytext,,"Gambhīrāvabhāso  ca, atha ca pana me uttānakuttānako viya khāyatī’’ti, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,221,4,subhead,Mahāparinibbānasutta,Mahāparinibbānasutta
+NULL,p39,221,3,subhead,Mahāparinibbānasutta,Mahāparinibbānasutta
 NULL,p39,222,100,bodytext,,"Pucchā – mahāparinibbānasuttaṃ  panāvuso bahuanusandhikaṃ, bahudesanā saṅgahaṃ, buddhassa bhagavato parinibbānāsannavasse pavattaaṭṭhuppattidīpakavacanapabandhabhūtaṃ, tasmā taṃ antarābhedavasena vibhajja paricchijja paricchijja pucchissāmi, tatthāvuso bhagavatā paṭhamaṃ"
 NULL,p39,223,100,bodytext,,"Rājūnaṃ  aparihāniyadhammadesanā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitā."
 NULL,p39,224,100,bodytext,,"Vissajjanā – rājagahe bhante vassakāraṃ brāhmaṇaṃ magadhamahāmattaṃ ārabbha bhāsitā, vassakāro bhante brāhmaṇo magadhamahāmatto bhagavantaṃ upasaṅkamitvā etadavoca ‘‘rājā bho gotama māgadho ajātasattu vedehiputto vajjī abhiyātukāmo so evamāha ahaṃ hime vajjī evaṃ mahiddhike evaṃ mahānubhāve ucchecchāmi vajjī vināsessāmi vajjī anayabyasanaṃ āpādessāmī vajjī’’ti tasmiṃ bhante vatthusmiṃ bhāsitā."
 NULL,p39,225,100,bodytext,,"Pucchā – bhikkhūnaṃ  panāvuso aparihāniyadhammadesanā bhagavatā kattha kismiṃ vatthusmiṃ bhāsitā."
 NULL,p39,226,100,bodytext,,"Vissajjanā – tasmiṃyeva bhante rājagahe tasmiṃyeva vatthusmiṃ bhāsitā."
-NULL,p39,227,4,subhead,Jarāsutta,Jarāsutta
+NULL,p39,227,3,subhead,Jarāsutta,Jarāsutta
 NULL,p39,228,100,bodytext,,"Pucchā – dhammādāso  āvuso dhammapariyāyo bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsito."
 NULL,p39,229,100,bodytext,,"Vissajjanā – nātike bhante giñjakāvasathe āyasmantaṃ ānanda ārabbha bhāsito, āyasmā bhante ānando bhagavantaṃ upasaṅkamitvā nātikiyānaṃ dvādasannaṃ puggalānaṃ gatiabhisamparāyaṃ pucchi, tasmiṃ bhante vatthusmiṃ bhāsito."
 NULL,p39,230,4,subhead,"Attadīpa dhammadesanā","Attadīpa dhammadesanā"
@@ -246,32 +246,32 @@ NULL,p39,244,100,bodytext,,"Vissajjanā – kusinārāyaṃ bhante āyasmantaṃ
 NULL,p39,245,100,bodytext,,"Yehi  keci ānanda cetiyacārikaṃ āhiṇḍantā pasannacittā kālaṃ karissanti, sabbete kāyassa bhedā paraṃ maraṇā sugatiṃ saggaṃ lokaṃ upapajjissanti hu –"
 NULL,p39,246,100,bodytext,,"Pucchā – kathañcāvuso  bhagavā bhikkhūnaṃ mātugāmesu paṭipajjitabbavattaṃ kathesi."
 NULL,p39,247,100,bodytext,,"Vissajjanā – adassanaṃ ānandāti ca anālāpo ānandāti ca sati ānanda upaṭṭhabbetabbāti ca evaṃ kho bhante bhagavā mātugāmesu paṭipajjitabbākāraṃ kathesi."
-NULL,p39,248,4,subhead,Mahāsudassanasutta,Mahāsudassanasutta
+NULL,p39,248,3,subhead,Mahāsudassanasutta,Mahāsudassanasutta
 NULL,p39,249,100,bodytext,,"Pucchā – mahāsudassanasuttaṃ  panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,250,100,bodytext,,"Vissajjanā – tissaṃyeva bhante kusinārāyaṃ āyasmantaṃ ānandaṃ ārabbha bhāsitaṃ, āyasmā bhante ānando bhagavantaṃ etadavoca ‘‘mā bhante bhagavā imasmiṃ khuddakanagarake"
 NULL,p39,251,100,bodytext,,"Ujjaṅgalanagarake  sākhānagarake parinibbāyi. Santi bhante aññāni mahānagarāni. Seyyathidaṃ, campā, rājagahaṃ, sāvatthī, sāketaṃ, kosambī, bārāṇasī, ettha bhagavā parinibbāyatu, ettha bahū khattiyamahāsālā brāhmaṇa mahāsālā gahapati mahāsālā tathāgate abhippasannā. Te tathāgatassa sarīrapūjaṃ karissantī’’ti, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
 NULL,p39,252,100,bodytext,,"Pucchā – bhagavā  āvuso purimadivase pucchita vissajjitakkamena mahāsudassana suttantaṃ desetvā subhaddaṃnāma paribbājakaṃ buddhaveneyyesu pacchimasāvakabhūtaṃ kathaṃ vinesi."
 NULL,p39,253,100,bodytext,,"Vissajjanā – yasmiṃ kho subhadda dhammavinaye ariyo aṭṭhaṅgiko maggo na upalabbhati, samaṇopi tattha na upalabbhati, dutiyopi tattha samaṇo na upalabbhati, tatiyopi tattha samaṇo na upalabbhati, catutthopi tattha samaṇo na upalabbhati (peyyāla). Ime ca subhadda bhikkhū sammā vihareyyuṃ, asuñño loko arahantehi assa, evaṃ kho bhante bhagavā subhaddaṃ paribbājakaṃ buddhaveneyyesu pacchimaṃ sakkhisāvakaṃ vinesi."
-NULL,p39,254,4,subhead,Parinibbānasutta,Parinibbānasutta
+NULL,p39,254,3,subhead,Parinibbānasutta,Parinibbānasutta
 NULL,p39,255,100,bodytext,,"Pucchā – pacchime  panāvuso kāle bhagavā āyasmato ānandassa kīdisaṃ vacanaṃ kathetvā, kathañca bhikkhū pavāretvā, kīdisañca bhikkhūnaṃ vacanaṃ āmantetvā, kathañca anupādisesāya nibbānadhātuyā parinibbāyi."
 NULL,p39,256,100,bodytext,,"Vissajjanā – bhagavā bhante pacchime kāle āyasmato ānandassa siyā kho panānanda tumhākaṃ evamassa atītasatthukaṃ pāvacanaṃ natthi no satthāti evamādikaṃ vacanaṃ kathetvā, siyā kho pana bhikkhave ekabhikkhussāpi kaṅkhā vā vimati vā buddhe vā dhamme vā saṅghe vā magge vā paṭipadāya vāti evamādinā bhikkhū pavāretvā, handadāni bhikkhave āmantayāmi vo, vayadhammā saṅkhārā appamādena sampādethāti pacchimañca ovādavacanaṃ bhikkhūnaṃ āmantetvā, nava anupubbasamāpattiyo anulomaṃ paṭilomaṃ samāpajjitvā, catutthajjhānā vuṭṭhahitvā samanantarā anupādisesāya nibbānadhātuyā parinibbāyi."
 NULL,p39,257,100,bodytext,,"Nāvuso  ānanda bhagavā parinibbuto, saññāvedayita nirodhaṃ samāpanno."
-NULL,p39,258,4,subhead,Janavasabhasutta,Janavasabhasutta
+NULL,p39,258,3,subhead,Janavasabhasutta,Janavasabhasutta
 NULL,p39,259,100,bodytext,,"Pucchā – mahāsudassanasuttaṃ  panāvuso purimadivase pucchitañca vissajjitañca, janavasabhasuttaṃ panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,260,100,bodytext,,"Vissajjanā – nātike bhante giñjakāvasathe āyasmantaṃ ānandaṃ ārabbha bhāsitaṃ, āyasmā bhante ānando māgadhake paricārake ārabbha bhagavato sammukhā parikathaṃ kathesi, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,261,4,subhead,Mahāgovindasutta,Mahāgovindasutta
+NULL,p39,261,3,subhead,Mahāgovindasutta,Mahāgovindasutta
 NULL,p39,262,100,bodytext,,"Pucchā – mahāgovindasuttaṃ  panāvuso bhagavatā kattha bhāsitaṃ."
 NULL,p39,263,100,bodytext,,"Vissajjanā – rājagahe bhante bhāsitaṃ."
-NULL,p39,264,4,subhead,Mahāsamayasutta,Mahāsamayasutta
+NULL,p39,264,3,subhead,Mahāsamayasutta,Mahāsamayasutta
 NULL,p39,265,100,bodytext,,"Pucchā – mahāsamayasuttaṃ  panāvuso bhagavatā kattha bhāsitaṃ."
 NULL,p39,266,100,bodytext,,"Vissajjanā – sakkesu bhante kapilavatthusmiṃ bhāsitaṃ."
-NULL,p39,267,4,subhead,Sakkapañhasutta,Sakkapañhasutta
+NULL,p39,267,3,subhead,Sakkapañhasutta,Sakkapañhasutta
 NULL,p39,268,100,bodytext,,"Pucchā – sakkapañhasuttaṃ  panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,269,100,bodytext,,"Vissajjanā – magadhesu bhante pācīnato rājagahassa ambasaṇḍā nāma brāhmaṇagāmo, tassuttarato vediyake pabbate indasālaguhāyaṃ sakkaṃ devānamindaṃ ārabbha bhāsitaṃ, sakko bhante devānamindo bhagavantaṃ upasaṅkamitvā pañhaṃ pucchi, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,270,4,subhead,Mahāsatipaṭṭhānasutta,Mahāsatipaṭṭhānasutta
+NULL,p39,270,3,subhead,Mahāsatipaṭṭhānasutta,Mahāsatipaṭṭhānasutta
 NULL,p39,271,100,bodytext,,"Pucchā – mahāsatipaṭṭhānasuttaṃ  panāvuso bhagavatā kattha bhāsitaṃ."
 NULL,p39,272,100,bodytext,,"Vissajjanā – kurūsu bhante kammāsadhamme nāma kurūnaṃ nigame bhāsitaṃ."
-NULL,p39,273,4,subhead,Pāyāsisutta,Pāyāsisutta
+NULL,p39,273,3,subhead,Pāyāsisutta,Pāyāsisutta
 NULL,p39,274,100,bodytext,,"Pucchā – pāyāsi  suttaṃ panāvuso kattha kaṃ ārabbha kismiṃ vatthusmiṃ kena bhāsitaṃ."
 NULL,p39,275,100,bodytext,,"Vissajjanā – kosalesu bhante setabyānāma kosalānaṃ nagaraṃ uttarena setabyaṃ siṃsapāvane āyasmatā kumārakassapena pāyāsiṃ rājaññaṃ ārabbha bhāsitaṃ, pāyāsissa bhante rājaññassa evarūpaṃ pāpakaṃ diṭṭhigataṃ uppannaṃ hoti, itipi natthi paroloko natthi sattā opapātikā natthi sukatadukkaṭānaṃ kammānaṃ phalaṃ vipākoti, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
 NULL,p39,276,100,bodytext,,"Pucchā – tatthāvuso  pāyāsissa rājaññassa diṭṭhipakāsanāca āyasmato kumārakassapattherassa diṭṭhiviniveṭṭhanakathā ca anekavāraṃ āgatā, tatthāvuso paṭhamaṃ pāyāsi rājañño attano diṭṭhiṃ kathaṃ pakāsesi, kathañcāyasmā kumārakassapo taṃ micchādiṭṭhiṃ viniveṭhesi."
@@ -310,34 +310,34 @@ NULL,p39,308,100,bodytext,,"Pucchā – kathañcāvuso  pāyāsirājañño dāna
 NULL,p39,309,100,bodytext,,"Vissajjanā – pāyāsi bhante rājañño asakkaccaṃ dānamadāsi, asahatthā dānamadāsi, acittīkataṃ dānamadāsi, apaviddhaṃ dānamadāsi, so asakkaccaṃ dānaṃ datvā asahatthā dānaṃ datvā acittīkataṃ dānaṃ datvā apaviddhaṃ dānaṃ datvā kāyassabhedā paraṃ maraṇā cātumahārājikānaṃ devānaṃ sahabyataṃ upapajji suññaṃ serīsakaṃ vimānaṃ."
 NULL,p39,310,100,bodytext,,"Pucchā – tenāvuso  bhagavatā jānatā passatā arahatā sammāsambuddhena pāthiyavagge paṭhamaṃ pāthiyasuttaṃ kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,311,100,bodytext,,"Vissajjanā – mallesu bhante anupiye nāma mallānaṃ nigame bhaggavagottaṃ paribbājakaṃ ārabbha bhāsitaṃ, bhaggavagotto bhante paribbājako bhagavantaṃ etadavoca ‘‘purimāni bhante divasāni purimatarāni sunakkhatto licchaviputto yenāhaṃ tenupasaṅkami, upasaṅkamitvā maṃ etadavoca ‘‘paccakkhāto dāni mayā bhaggava bhagavā, na dānāhaṃ bhagavantaṃ uddissa viharāmī’ti, kacce taṃ bhante tatheva, yathā sunakkhatto, licchaviputto avacā’’ti, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,312,4,subhead,Udumbarikasutta,Udumbarikasutta
+NULL,p39,312,3,subhead,Udumbarikasutta,Udumbarikasutta
 NULL,p39,313,100,bodytext,,"Pucchā – udumbarikasuttaṃ  panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,314,100,bodytext,,"Vissajjanā – rājagahe bhante nigrodhaṃ paribbājakaṃ ārabbha bhāsitaṃ, nigrodho bhante paribbājako bhagavato parammukhā bhagavantaṃyeva ārabbha anekavihitaṃ abhūtakathaṃ kathesi, tasmiṃ vatthusmiṃ bhāsitaṃ."
-NULL,p39,315,4,subhead,Cakkavattisutta,Cakkavattisutta
+NULL,p39,315,3,subhead,Cakkavattisutta,Cakkavattisutta
 NULL,p39,316,100,bodytext,,"Pucchā – cakkavattisuttaṃ panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,317,100,bodytext,,"Vissajjanā – magadhesu bhante mātulāyaṃ sambahule bhikkhū ārabbha attajjhāsayena suttanikkhepena bhagavatā bhāsitaṃ."
-NULL,p39,318,4,subhead,Aggaññasutta,Aggaññasutta
+NULL,p39,318,3,subhead,Aggaññasutta,Aggaññasutta
 NULL,p39,319,100,bodytext,,"Pucchā – aggaññasuttaṃ panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,320,100,bodytext,,"Vissajjanā – sāvatthiyaṃ bhante pubbārāme migāramātupāsāde vāseṭṭhaṃ pabbajitaṃ ārabbha bhāsitaṃ, brāhmaṇā bhante vāseṭṭha bhāradvāje pabbajite akkosanti paribhāsanti attarūpāya"
 NULL,p39,321,100,bodytext,,"Paribhāsāya  paripuṇṇāya no aparipuṇṇāya, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
 NULL,p39,322,100,bodytext,,"Pucchā – sampasādanīya suttaṃ panāvuso kattha kena bhāsitaṃ."
 NULL,p39,323,100,bodytext,,"Vissajjanā – nāḷandāyaṃ bhante pāvārikambavane āyasmatā sāriputtena bhāsitaṃ."
-NULL,p39,324,4,subhead,Pāsādikasutta,Pāsādikasutta
+NULL,p39,324,3,subhead,Pāsādikasutta,Pāsādikasutta
 NULL,p39,325,100,bodytext,,"Pucchā – pāsādikasuttaṃ panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,326,100,bodytext,,"Vissajjanā – sakkesu bhante vedhaññānāma sakyānaṃ ambavane pāsāde cundaṃ samaṇuddesaṃ ārabbha bhāsitaṃ, cundo bhante samaṇuddeso pāvāyaṃ nigaṇṭhassa nāṭaputtassa kālaṃ kiriyāya bhinnānaṃ nigaṇṭhānaṃ dvedhikajātānaṃ bhaṇḍanajātānaṃ kalahajātānaṃ vivādāpannānaṃ aññamaññaṃ mukhasattīhi vitujjanakāraṇaṃ āyasmato ānandassa ārocesi, āyasmā ca bhante ānando bhagavato etamatthaṃ ārocesi, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,327,4,subhead,Lakkhaṇasutta,Lakkhaṇasutta
+NULL,p39,327,3,subhead,Lakkhaṇasutta,Lakkhaṇasutta
 NULL,p39,328,100,bodytext,,"Pucchā – lakkhaṇasuttaṃ  panāvuso bhagavatā kattha bhāsitaṃ."
 NULL,p39,329,100,bodytext,,"Vissajjanā – sāvatthiyaṃ bhante jetavanamahāvihāre bhāsitaṃ."
-NULL,p39,330,4,subhead,Siṅgālasutta,Siṅgālasutta
+NULL,p39,330,3,subhead,Siṅgālasutta,Siṅgālasutta
 NULL,p39,331,100,bodytext,,"Pucchā – siṅgālasuttaṃ panāvuso bhagavatā kattha kaṃ ārabbha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,332,100,bodytext,,"Vissajjanā – rājagahe bhante siṅgālaṃ gahapatiputtaṃ ārabbha bhāsitaṃ, siṅgālo bhante gahapatiputto kālasseva uṭṭhāya rājagahā nikkhamitvā allavattho allakeso pañjaliko puthudisā namassati puratthimaṃ disaṃ dakkhiṇaṃ disaṃ pacchimaṃ disaṃ uttaraṃ disaṃ heṭṭhimaṃ disaṃ uparimaṃ disaṃ, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,333,4,subhead,Āṭānāṭiyasutta,Āṭānāṭiyasutta
+NULL,p39,333,3,subhead,Āṭānāṭiyasutta,Āṭānāṭiyasutta
 NULL,p39,334,100,bodytext,,"Pucchā – āṭānāṭiyasuttaṃ  panāvuso bhagavatā kattha kismiṃ vatthusmiṃ bhāsitaṃ."
 NULL,p39,335,100,bodytext,,"Vissajjanā – rājagahe  bhante gijjhakūṭe pabbate bhāsitaṃ, bhagavati bhante rājagahe viharati cattāro mahārājāno catuddisaṃ rakkhaṃ ṭhapetvā catuddisaṃ gumbaṃ ṭhapetvā catuddisaṃ ovaraṇaṃ ṭhapetvā kevalakappaṃ gijjhakūṭapabbataṃ obhāsetvā yena bhagavā tenupasaṅkamiṃsu, upasaṅkamitvā bhagavantaṃ abhivādetvā ekamantaṃ nisīdiṃsu, ekamantaṃ nisinno kho bhante vessavaṇo mahārājā āṭānāṭiyaṃ rakkhaṃ bhagavato ārocesi bhikkhūnaṃ bhikkhunīnaṃ upāsakānaṃ upāsikānaṃ phāsuvihārāya, tasmiṃ bhante vatthusmiṃ bhāsitaṃ."
-NULL,p39,336,4,subhead,Saṅgītisutta,Saṅgītisutta
+NULL,p39,336,3,subhead,Saṅgītisutta,Saṅgītisutta
 NULL,p39,337,100,bodytext,,"Pucchā – saṅgīti  suttaṃ panāvuso kattha kena bhāsitaṃ."
 NULL,p39,338,100,bodytext,,"Vissajjanā – pāvāyaṃ bhante āyasmatā sāriputtena bhāsitaṃ."
-NULL,p39,339,4,subhead,Dasuttarasutta,Dasuttarasutta
+NULL,p39,339,3,subhead,Dasuttarasutta,Dasuttarasutta
 NULL,p39,340,100,bodytext,,"Pucchā – dasuttarasuttaṃ panāvuso kattha kena bhāsitaṃ."
 NULL,p39,341,100,bodytext,,"Vissajjanā – dasuttarasuttaṃ bhante campāyaṃ gaggarāya pokkharaṇiyā tīre āyasmatā sāriputtena bhāsitaṃ."
 NULL,p39,342,100,bodytext,,"Pucchā – ke  āvuso sikkhanti."

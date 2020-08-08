@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p138,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p138,2,100,nikaya,,Vinayapiṭake
-NULL,p138,3,1,book,"Pārājikakaṇḍa-aṭṭhakathā (paṭhamo bhāgo)","Pārājikakaṇḍa-aṭṭhakathā (paṭhamo bhāgo)"
+NULL,p138,3,1,book,Pārājikakaṇḍa-aṭṭhakathā,"Pārājikakaṇḍa-aṭṭhakathā (paṭhamo bhāgo)"
 NULL,p138,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p138,5,100,gatha1,,"Yo  kappakoṭīhipi appameyyaṃ;"
 NULL,p138,6,100,gatha2,,"Kālaṃ karonto atidukkarāni;"
@@ -1624,7 +1624,7 @@ NULL,p138,1622,100,centered,,Pārājikakaṇḍa-aṭṭhakathāya
 NULL,p138,1623,100,centered,,"Paṭhamo bhāgo niṭṭhito."
 NULL,p138,1624,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p138,1625,100,nikaya,,Vinayapiṭake
-NULL,p138,1626,1,book,"Pārājikakaṇḍa-aṭṭhakathā (dutiyo bhāgo)","Pārājikakaṇḍa-aṭṭhakathā (dutiyo bhāgo)"
+NULL,p138,1626,100,book,,"Pārājikakaṇḍa-aṭṭhakathā (dutiyo bhāgo)"
 NULL,p138,1627,3,title,"3. Tatiyapārājikaṃ","3. Tatiyapārājikaṃ"
 NULL,p138,1628,100,gatha1,,"Tatiyaṃ  tīhi suddhena, yaṃ buddhena vibhāvitaṃ;"
 NULL,p138,1629,100,gathalast,,"Pārājikaṃ tassa dāni, patto saṃvaṇṇanākkamo."
