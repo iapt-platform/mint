@@ -31,9 +31,9 @@ include "../public/_pdo.php";
 			echo "<level>{$level}</level>";
 			echo "<class>".$Fetch[$i]["class"]."</class>";
 			echo "<title>{$Fetch[$i]["toc"]}</title>";
-			echo "<language>".$Fetch[$i]["language"]."</language>";
-			echo "<author>".$Fetch[$i]["author"]."</author>";
-			echo "<edition>".$Fetch[$i]["edition"]."</edition>";
+			echo "<language>pali</language>";
+			echo "<author>cscd4</author>";
+			echo "<edition>4</edition>";
 			echo "<subver></subver>";
 			echo "</paragraph>";
 		}
