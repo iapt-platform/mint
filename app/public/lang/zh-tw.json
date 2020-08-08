@@ -429,6 +429,10 @@
 		"forms": "種形式",
 		"add_to": "新增到",
 		"undone_function": "未完成功能",
+		"click_to_chart": "點選檢視統計圖表",
+		"frequency": "詞頻",
+		"declension_list": "變化表",
+		"distribution": "分佈圖",
 		"": ""
 	},
 	"grammastr": [
