@@ -1,8 +1,8 @@
 id,book,par_num,100,class,title,text
 NULL,p152,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p152,2,100,nikaya,,Khuddakanikāye
-NULL,p152,3,2,chapter,Milindapañhapāḷi,Milindapañhapāḷi
-NULL,p152,4,8,hangnum,1.,1.
+NULL,p152,3,1,chapter,Milindapañhapāḷi,Milindapañhapāḷi
+NULL,p152,4,2,hangnum,1.,1.
 NULL,p152,5,100,gatha1,," Milindo  nāma so rājā, sāgalāyaṃ puruttame;"
 NULL,p152,6,100,gathalast,,"Upagañchi nāgasenaṃ, gaṅgā ca [gaṅgāva (sī. pī.)] yathā sāgaraṃ."
 NULL,p152,7,100,gatha1,,"Āsajja rājā citrakathiṃ, ukkādhāraṃ tamonudaṃ;"
@@ -17,7 +17,7 @@ NULL,p152,15,100,bodytext,,"2. Taṃ yathānusūyate – atthi yonakānaṃ nān
 NULL,p152,16,100,bodytext,,"Ettha ṭhatvā tesaṃ pubbakammaṃ kathetabbaṃ, kathentena ca chadhā vibhajitvā kathetabbaṃ. Seyyathīdaṃ – pubbayogo milindapañhaṃ lakkhaṇapañhaṃ meṇḍakapañhaṃ anumānapañhaṃ opammakathāpañhanti."
 NULL,p152,17,100,bodytext,,"Tattha milindapañho lakkhaṇapañho, vimaticchedanapañhoti duvidho. Meṇḍakapañhopi mahāvaggo, yogikathāpañhoti duvidho."
 NULL,p152,18,100,bodytext,,"Pubbayogoti tesaṃ pubbakammaṃ."
-NULL,p152,19,5,subsubhead,"1. Bāhirakathā","1. Bāhirakathā"
+NULL,p152,19,2,subsubhead,"1. Bāhirakathā","1. Bāhirakathā"
 NULL,p152,20,4,subhead,Pubbayogādi,Pubbayogādi
 NULL,p152,21,100,bodytext,,"3. Atīte  kira kassapassa bhagavato sāsane vattamāne gaṅgāya samīpe ekasmiṃ āvāse mahābhikkhusaṅgho paṭivasati, tattha vattasīlasampannā bhikkhū pātova uṭṭhāya yaṭṭhisammajjaniyo [yaṭṭhisammuñjaniyo (sī. pī.)] ādāya buddhaguṇe āvajjentā aṅgaṇaṃ sammajjitvā kacavarabyūhaṃ karonti. Atheko bhikkhu ekaṃ sāmaṇeraṃ ‘‘ehi sāmaṇera, imaṃ kacavaraṃ chaḍḍehī’’ti āha, so asuṇanto viya gacchati, so dutiyampi…pe… tatiyampi āmantiyamāno asuṇanto viya gacchateva. Tato so bhikkhu ‘‘dubbaco vatāyaṃ sāmaṇero’’ti kuddho sammajjanidaṇḍena  pahāraṃ adāsi. Tato so rodanto bhayena kacavaraṃ chaḍḍento ‘‘iminā kacavarachaḍḍanapuññakammena yāvāhaṃ nibbānaṃ pāpuṇāmi [na pāpuṇāmi (syā.)], etthantare nibbattanibbattaṭṭhāne majjhanhikasūriyo [suriyo (sī. pī.)] viya mahesakkho mahātejo bhaveyya’’nti paṭhamaṃ patthanaṃ paṭṭhapesi. Kacavaraṃ chaḍḍetvā nahānatthāya gaṅgātitthaṃ gato gaṅgāya ūmivegaṃ gaggarāyamānaṃ disvā ‘‘yāvāhaṃ nibbānaṃ pāpuṇāmi [na pāpuṇāmi (syā.)], etthantare nibbattanibbattaṭṭhāne ayaṃ ūmivego viya ṭhānuppattikapaṭibhāno bhaveyyaṃ akkhayapaṭibhāno’’ti dutiyampi patthanaṃ paṭṭhapesi."
 NULL,p152,22,100,bodytext,,"Sopi bhikkhu sammajjanisālāya sammajjaniṃ ṭhapetvā nahānatthāya gaṅgātitthaṃ gacchanto sāmaṇerassa patthanaṃ sutvā ‘‘esa mayā payojitopi tāva evaṃ pattheti, mayhaṃ kiṃ na samijjhissatī’’ti cintetvā ‘‘yāvāhaṃ nibbānaṃ pāpuṇāmi [na pāpuṇāmi (syā.)], etthantare nibbattanibbattaṭṭhāne ayaṃ gaṅgāūmivego viya akkhayapaṭibhāno bhaveyyaṃ, iminā pucchitapucchitaṃ sabbaṃ pañhapaṭibhānaṃ vijaṭetuṃ nibbeṭhetuṃ samattho bhaveyya’’nti patthanaṃ paṭṭhapesi."

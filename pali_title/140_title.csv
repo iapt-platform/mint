@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p140,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p140,2,100,nikaya,,Vinayapiṭake
-NULL,p140,3,1,book,Mahāvagga-aṭṭhakathā,Mahāvagga-aṭṭhakathā
+NULL,p140,3,1,book,"(SP) Mahāvagga-aṭṭhakathā",Mahāvagga-aṭṭhakathā
 NULL,p140,4,2,chapter,"1. Mahākhandhakaṃ","1. Mahākhandhakaṃ"
 NULL,p140,5,4,subhead,Bodhikathā,Bodhikathā
 NULL,p140,6,100,gatha1,,"Ubhinnaṃ  pātimokkhānaṃ, saṅgītisamanantaraṃ;"

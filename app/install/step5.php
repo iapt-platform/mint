@@ -120,7 +120,6 @@ else{
 	<a href="db_insert_word_from_csv.php" target="_blank">从csv文件导入单词表(paliindex)</a><br>
 	<a href="db_insert_wordindex_from_csv.php" target="_blank">从csv文件导入单词索引表(wordindex)</a><br>
 
-	
 	</div>
 </div>
 
@@ -158,12 +157,12 @@ else{
 	if(!file_exists($db[0])){
         echo "<span style='color:red;'>数据库不存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>';    
+        echo '<div style="flex:2;"><a href="step5.php?index=5">建立</a></div>';    
 	}
 	else{
         echo "<span style='color:green;'>已存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo '<div style="flex:2;"><a href="step5.php?index=5">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
 	echo "</div>";  
 
@@ -189,12 +188,12 @@ else{
 	if(!file_exists($db[0])){
         echo "<span style='color:red;'>数据库不存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">建立</a></div>';    
+        echo '<div style="flex:2;"><a href="step5.php?index=6">建立</a></div>';    
 	}
 	else{
         echo "<span style='color:green;'>已存在</span>";
     	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step5.php?index='.$i.'">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo '<div style="flex:2;"><a href="step5.php?index=6">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
 	echo "</div>";  
 

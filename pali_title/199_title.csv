@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p199,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p199,2,100,nikaya,,Saṃyuttanikāye
-NULL,p199,3,1,book,Mahāvaggaṭīkā,Mahāvaggaṭīkā
+NULL,p199,3,1,book,(SN)Mahāvagga-ṭīkā,Mahāvaggaṭīkā
 NULL,p199,4,2,chapter,"1. Maggasaṃyuttaṃ","1. Maggasaṃyuttaṃ"
 NULL,p199,5,3,title,"1. Avijjāvaggo","1. Avijjāvaggo"
 NULL,p199,6,4,subhead,"1-2. Avijjāsuttādivaṇṇanā","1-2. Avijjāsuttādivaṇṇanā"

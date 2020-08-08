@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p45,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p45,2,2,chapter,Aṭṭhakathā,Aṭṭhakathā
+NULL,p45,2,1,chapter,"(saṅgayana-puccha vissajjanā) Aṭṭhakathā",Aṭṭhakathā
 NULL,p45,3,4,subhead,"Saṃgāyanassa pucchā-vissajjanā","Saṃgāyanassa pucchā-vissajjanā"
 NULL,p45,4,100,gatha1,,"Sadevakopi  ce loko, āgantvā tāsayeyya maṃ;"
 NULL,p45,5,100,gathalast,,"Na me paṭibalo assa, janetuṃ bhayabheravaṃ."

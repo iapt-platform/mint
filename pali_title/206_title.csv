@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p206,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p206,2,100,nikaya,,Vinayapiṭake
-NULL,p206,3,1,book,"Sāratthadīpanī-ṭīkā (tatiyo bhāgo)","Sāratthadīpanī-ṭīkā (tatiyo bhāgo)"
+NULL,p206,3,1,book,"(SAD) Pācittiya-ṭīkā","Sāratthadīpanī-ṭīkā (tatiyo bhāgo)"
 NULL,p206,4,2,chapter,"5. Pācittiyakaṇḍaṃ","5. Pācittiyakaṇḍaṃ"
 NULL,p206,5,3,title,"1. Musāvādavaggo","1. Musāvādavaggo"
 NULL,p206,6,4,subhead,"1. Musāvādasikkhāpadavaṇṇanā","1. Musāvādasikkhāpadavaṇṇanā"
@@ -576,8 +576,8 @@ NULL,p206,574,100,centered,,"Iti samantapāsādikāya vinayaṭṭhakathāya sā
 NULL,p206,575,100,centered,,"Bhikkhuvibhaṅgavaṇṇanā niṭṭhitā."
 NULL,p206,576,100,centered,,"Mahāvibhaṅgo niṭṭhito."
 NULL,p206,577,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p206,578,3,title,Bhikkhunīvibhaṅgavaṇṇanā,Bhikkhunīvibhaṅgavaṇṇanā
-NULL,p206,579,2,chapter,"1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
+NULL,p206,578,2,title,Bhikkhunīvibhaṅgavaṇṇanā,Bhikkhunīvibhaṅgavaṇṇanā
+NULL,p206,579,3,chapter,"1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","1. Pārājikakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p206,580,4,subhead,"1. Paṭhamapārājikasikkhāpadavaṇṇanā","1. Paṭhamapārājikasikkhāpadavaṇṇanā"
 NULL,p206,581,100,bodytext,,"656. Bhikkhunīvibhaṅge yoti yo bhikkhunīnaṃ vibhaṅgo. Migāranattāti majjhapadalopenetaṃ vuttanti āha ‘‘migāramātuyā pana nattā hotī’’ti. Migāramātāti visākhāyetaṃ adhivacanaṃ. Navakammādhiṭṭhāyikanti navakammasaṃvidhāyikaṃ. Byañjanānaṃ paṭivijjhitabbo ākāro nātigambhīro, yathāsutaṃ dhāraṇameva tattha karaṇīyanti satiyā byāpāro adhiko, paññā tattha guṇībhūtāti vuttaṃ ‘‘satipubbaṅgamāya paññāyā’’ti. Sati pubbaṅgamā etissāti satipubbaṅgamā. Pubbaṅgamatā cettha padhānabhāvo ‘‘manopubbaṅgamā’’tiādīsu viya. Atthaggahaṇe pana paññāya byāpāro adhiko paṭivijjhitabbassa atthassa atigambhīrattāti āha ‘‘paññāpubbaṅgamāya satiyā’’ti. Ālasiyavirahitāti kosajjarahitā. Yathā  aññā kusītā nisinnaṭṭhāne nisinnāva honti, ṭhitaṭṭhāne ṭhitāva, evaṃ ahutvā vipphārikena cittena sabbakiccaṃ nipphādeti."
 NULL,p206,582,100,bodytext,,"Sabbā bhikkhuniyo satthuladdhūpasampadā saṅghato laddhūpasampadāti duvidhā. Garudhammapaaggahaṇena hi laddhūpasampadā mahāpajāpatigotamī satthusantikāva laddhūpasampadattā satthuladdhūpasampadā nāma. Sesā sabbāpi saṅghato laddhūpasampadā. Tāpi ekatoupasampannā ubhatoupasampannāti duvidhā. Tattha yā tā mahāpajāpatigotamiyā saddhiṃ nikkhantā pañcasatā sākiyāniyo, tā ekatoupasampannā bhikkhusaṅghato eva laddhūpasampadattā, itarā ubhatoupasampannā ubhatosaṅghe upasampannattā. Ehibhikkhunībhāvena upasampannā pana bhikkhuniyo na santi tāsaṃ tathā  upasampadāya abhāvato. Yadi evaṃ ‘‘ehi bhikkhunī’’ti idha kasmā vuttanti? Desanāya sotapatitabhāvato. Ayañhi sotapatitatā nāma katthaci labbhamānassapi aggahaṇena hoti, yathā abhidhamme manodhātuniddese (dha. sa. 160-161) labbhamānampi jhānaṅgaṃ pañcaviññāṇasote patitāya na uddhaṭaṃ katthaci desanāya asambhavato, yathā tattheva vatthuniddese (dha. sa. 984 ādayo) hadayavatthu. Katthaci alabbhamānassapi gahaṇavasena yathāṭhitakappīniddese. Yathāha –"
@@ -608,7 +608,7 @@ NULL,p206,606,100,bodytext,,"Methunadhammassa pubbabhāgattāti iminā methunadh
 NULL,p206,607,100,centered,,"Catutthapārājikasikkhāpadavaṇṇanā niṭṭhitā."
 NULL,p206,608,100,centered,,"Bhikkhunīvibhaṅge pārājikakaṇḍavaṇṇanā niṭṭhitā."
 NULL,p206,609,100,centered,,"Pārājikakaṇḍaṃ niṭṭhitaṃ."
-NULL,p206,610,2,chapter,"2. Saṅghādisesakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","2. Saṅghādisesakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
+NULL,p206,610,3,chapter,"2. Saṅghādisesakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","2. Saṅghādisesakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p206,611,4,subhead,"1. Paṭhamasaṅghādisesasikkhāpadavaṇṇanā","1. Paṭhamasaṅghādisesasikkhāpadavaṇṇanā"
 NULL,p206,612,100,bodytext,,"679. Saṅghādisesakaṇḍassa  paṭhamasikkhāpade dvīsu janesūti aḍḍakārakesu dvīsu janesu. Yo kocīti tesuyeva dvīsu yo koci, añño vā tehi āṇatto. Dutiyassa ārocetīti etthāpi dvīsu janesu yassa kassaci dutiyassa kathaṃ yo koci ārocetīti evamattho gahetabboti āha ‘‘dutiyassa ārocetīti etthāpi eseva nayo’’ti. Gatigatanti cirakālapavattaṃ."
 NULL,p206,613,100,bodytext,,"Āpattīti āpajjanaṃ. Saha vatthujjhācārāti vatthuvītikkamena saha. Sahayoge karaṇavacanappasaṅge idaṃ nissakkavacanaṃ. Yanti yaṃ dhammaṃ. Nissāretīti āpannaṃ bhikkhunisaṅghamhā nissāreti. Hetumhi cāyaṃ kattuvohāro. Nissāraṇahetubhūto hi dhammo nissāraṇīyoti vutto. Gīvāyeva hoti, na pārājikaṃ anāṇattiyā gahitattā. Yathā dāsadāsīvāpīādīni sampaṭicchituṃ na vaṭṭati, evaṃ tesaṃ atthāya aḍḍakaraṇampi na vaṭṭatīti āha ‘‘ayaṃ akappiyaaḍḍo nāma, na vaṭṭatī’’ti."
@@ -642,7 +642,7 @@ NULL,p206,640,100,centered,,"Navamasaṅghādisesasikkhāpadavaṇṇanā niṭ�
 NULL,p206,641,100,bodytext,,"727. Dasamaṃ uttānatthameva."
 NULL,p206,642,100,centered,,"Bhikkhunīvibhaṅge saṅghādisesavaṇṇanā niṭṭhitā."
 NULL,p206,643,100,centered,,"Saṅghādisesakaṇḍaṃ niṭṭhitaṃ."
-NULL,p206,644,2,chapter,"3. Nissaggiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","3. Nissaggiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
+NULL,p206,644,3,chapter,"3. Nissaggiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","3. Nissaggiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p206,645,100,bodytext,,"733. Nissaggiyesu  paṭhamaṃ uttānameva."
 NULL,p206,646,100,bodytext,,"740. Dutiye ‘‘ayyāya dammīti evaṃ paṭiladdhanti nissaṭṭhapaṭiladdhaṃ. Teneva mātikāṭṭhakathāyampi ‘‘nissaṭṭhaṃ paṭilabhitvāpi yathādāneyeva upanetabba’’nti vuttaṃ. Yathādāneyeva upanetabbanti yathā dāyakena dinnaṃ, tathā upanetabbaṃ, akālacīvarapakkheyeva ṭhapetabbanti vuttaṃ hoti. Ettha ca bhājāpitāya laddhacīvarameva nissaggiyaṃ hoti, taṃ vinayakammaṃ katvāpi attanā na labhati. Sesamettha uttānameva. Akālacīvaratā, tathāsaññitā, kālacīvaranti adhiṭṭhāya lesena bhājāpanaṃ, paṭilābhoti imāni panettha cattāri aṅgāni."
 NULL,p206,647,100,bodytext,,"743. Tatiye metanti me etaṃ. Sakasaññāya gahitattā pācittiyaṃ dukkaṭañca vuttaṃ. Itarathā bhaṇḍagghena kāretabbaṃ. Upasampannatā, parivattitacīvarassa vikappanupagatā, sakasaññāya acchindanaṃ vā acchindāpanaṃ vāti imāni panettha tīṇi aṅgāni."
@@ -655,7 +655,7 @@ NULL,p206,653,100,bodytext,,"784. Ekādasame yasmā pavāritaṭṭhāne viñña
 NULL,p206,654,100,bodytext,,"788. Dvādasamaṃ uttānatthameva."
 NULL,p206,655,100,centered,,"Bhikkhunīvibhaṅge nissaggiyapācittiyasikkhāpadavaṇṇanā niṭṭhitā."
 NULL,p206,656,100,centered,,"Nissaggiyakaṇḍaṃ niṭṭhitaṃ."
-NULL,p206,657,2,chapter,"4. Pācittiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","4. Pācittiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
+NULL,p206,657,3,chapter,"4. Pācittiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","4. Pācittiyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p206,658,4,subhead,"1. Lasuṇavaggavaṇṇanā","1. Lasuṇavaggavaṇṇanā"
 NULL,p206,659,100,bodytext,,"793-797. Pācittiyesu  lasuṇavaggassa paṭhame jātiṃ saratīti jātissaro. Sabhāvenevāti sūpasampākādiṃ vināva. Badarasāḷavaṃ nāma badaraphalāni sukkhāpetvā cuṇṇetvā kattabbā khādanīyavikati. Sesamettha uttānameva. Āmakalasuṇañceva ajjhoharaṇañcāti imāni panettha dve aṅgāni."
 NULL,p206,660,100,bodytext,,"798-802. Dutiyatatiyacatutthāni uttānatthāneva."
@@ -703,7 +703,7 @@ NULL,p206,701,100,centered,,"Chattupāhanavaggavaṇṇanā niṭṭhitā."
 NULL,p206,702,100,bodytext,,"Giraggasamajjādīni acittakāni lokavajjānīti vuttattā naccanti vā vaṇṇakanti vā ajānitvāva passantiyā vā nahāyantiyā vā āpattisambhavato vatthuajānanacittena acittakāni, naccanti vā vaṇṇakanti vā jānitvā passantiyā vā nahāyantiyā vā akusaleneva āpajjanato lokavajjānīti veditabbāni. Corīvuṭṭhāpanādīni corītiādinā vatthuṃ jānitvā karaṇe eva āpattisambhavato sacittakāni, upasampadādīnaṃ ekantaakusalacitteneva akattabbattā paṇṇattivajjāni. ‘‘Idha sacittakācittakatā paṇṇattijānanājānanatāya aggahetvā vatthujānanājānanatāya gahetabbā’’ti tīsupi gaṇṭhipadesu vuttaṃ. Sesamettha uttānatthameva."
 NULL,p206,703,100,centered,,"Bhikkhunīvibhaṅge khuddakavaṇṇanā niṭṭhitā."
 NULL,p206,704,100,centered,,"Pācittiyakaṇḍaṃ niṭṭhitaṃ."
-NULL,p206,705,2,chapter,"5. Pāṭidesanīyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","5. Pāṭidesanīyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
+NULL,p206,705,3,chapter,"5. Pāṭidesanīyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)","5. Pāṭidesanīyakaṇḍaṃ (bhikkhunīvibhaṅgavaṇṇanā)"
 NULL,p206,706,4,subhead,Pāṭidesanīyasikkhāpadavaṇṇanā,Pāṭidesanīyasikkhāpadavaṇṇanā
 NULL,p206,707,100,bodytext,,"1228. Pāṭidesanīyā  nāma ye aṭṭha dhammā saṅkhepeneva saṅgahaṃ āruḷhāti sambandho. Pāḷivinimuttakesūti pāḷiyaṃ anāgatesu sappiādīsu."
 NULL,p206,708,100,centered,,"Pāṭidesanīyasikkhāpadavaṇṇanā niṭṭhitā."
@@ -715,7 +715,7 @@ NULL,p206,713,100,centered,,"Bhikkhunīvibhaṅgavaṇṇanā niṭṭhitā."
 NULL,p206,714,100,centered,,"Ubhatovibhaṅgaṭṭhakathāvaṇṇanā niṭṭhitā."
 NULL,p206,715,100,centered,,"Pācittiyavaṇṇanā niṭṭhitā."
 NULL,p206,716,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p206,717,2,chapter,Mahāvagga-ṭīkā,Mahāvagga-ṭīkā
+NULL,p206,717,1,chapter,"(SAD) Mahāvagga-ṭīkā",Mahāvagga-ṭīkā
 NULL,p206,718,2,chapter,"1. Mahākhandhakaṃ","1. Mahākhandhakaṃ"
 NULL,p206,719,4,subhead,Bodhikathāvaṇṇanā,Bodhikathāvaṇṇanā
 NULL,p206,720,100,bodytext,,"Idāni  ubhatovibhaṅgānantaraṃ saṅgahamāropitassa mahāvaggacūḷavaggasaṅgahitassa khandhakassa atthasaṃvaṇṇanaṃ ārabhitukāmo ‘‘ubhinnaṃ pātimokkhāna’’ntiādimāha. Tattha ubhinnaṃ pātimokkhānanti ubhinnaṃ pātimokkhavibhaṅgānaṃ. Pātimokkhaggahaṇena hettha tesaṃ vibhaṅgo abhedena gahito. Yaṃ khandhakaṃ saṅgāyiṃsūti sambandho. Khandhānaṃ samūho khandhako, khandhānaṃ vā pakāsanato dīpanato khandhako. ‘‘Khandhā’’ti cettha pabbajjupasampadādivinayakammasaṅkhātā cārittavārittasikkhāpadasaṅkhātā ca paññattiyo adhippetā. Pabbajjādīni hi bhagavatā paññattattā ‘‘paññattiyo’’ti vuccanti. Paññattiyañca khandhasaddo dissati ‘‘dārukkhandho aggikkhandho’’tiādīsu viya. Apica bhāgarāsaṭṭhatāpettha yujjatiyeva tāsaṃ paññattīnaṃ bhāgato rāsito ca vibhattattā. Khandhakovidāti paññattibhāgarāsaṭṭhavasena khandhaṭṭhe kovidā."
@@ -1751,7 +1751,7 @@ NULL,p206,1749,100,centered,,"Kosambakakkhandhakavaṇṇanā niṭṭhitā."
 NULL,p206,1750,100,centered,,"Iti samantapāsādikāya vinayaṭṭhakathāya sāratthadīpaniyaṃ"
 NULL,p206,1751,100,centered,,"Mahāvaggavaṇṇanā niṭṭhitā."
 NULL,p206,1752,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p206,1753,2,chapter,Cūḷavagga-ṭīkā,Cūḷavagga-ṭīkā
+NULL,p206,1753,1,chapter,"(SAD) Cūḷavagga-ṭīkā",Cūḷavagga-ṭīkā
 NULL,p206,1754,2,chapter,"1. Kammakkhandhakaṃ","1. Kammakkhandhakaṃ"
 NULL,p206,1755,4,subhead,Tajjanīyakammakathāvaṇṇanā,Tajjanīyakammakathāvaṇṇanā
 NULL,p206,1756,100,bodytext,,"1. Cūḷavaggassa  paṭhame kammakkhandhake tāva ‘‘yaṭṭhiṃ pavesaya, kunte pavesayā’’tiādīsu viya sahacaraṇañāyena ‘‘mañcā ukkuṭṭhiṃ karontī’’tiādīsu viya nissitesu nissayavohāravasena vā paṇḍukalohitakanissitā paṇḍukalohitakasaddena vuttāti āha ‘‘tesaṃ nissitakāpi paṇḍukalohitakātveva paññāyantī’’ti. Paṭivadathāti paṭivacanaṃ detha."
@@ -2152,7 +2152,7 @@ NULL,p206,2150,100,bodytext,,"Dvivaggasaṅgahāti cūḷavaggamahāvaggasaṅkh
 NULL,p206,2151,100,centered,,"Iti samantapāsādikāya vinayaṭṭhakathāya sāratthadīpaniyaṃ"
 NULL,p206,2152,100,centered,,"Cūḷavaggavaṇṇanā niṭṭhitā."
 NULL,p206,2153,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p206,2154,2,chapter,Parivāra-ṭīkā,Parivāra-ṭīkā
+NULL,p206,2154,1,chapter,"(SAD) Parivāra-ṭīkā",Parivāra-ṭīkā
 NULL,p206,2155,2,chapter,Soḷasamahāvāro,Soḷasamahāvāro
 NULL,p206,2156,4,subhead,Paññattivāravaṇṇanā,Paññattivāravaṇṇanā
 NULL,p206,2157,100,bodytext,,"Visuddhaparivārassāti  sabbaso parisuddhakhīṇāsavaparivārassa. Dhammakkhandhasarīrassāti sīlasamādhipaññāvimuttivimuttiñāṇadassanasaṅkhātadhammakkhandhasarīrassa sāsaneti sambandho. Tassāti ‘‘parivāro’’ti yo saṅgahaṃ āruḷho, tassa. Pubbāgataṃ nayanti pubbe āgataṃ vinicchayaṃ."

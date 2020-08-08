@@ -2,7 +2,7 @@ id,book,par_num,100,class,title,text
 NULL,p92,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p92,2,100,nikaya,,Aṅguttaranikāyo
 NULL,p92,3,1,book,Navakanipātapāḷi,Navakanipātapāḷi
-NULL,p92,4,3,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
+NULL,p92,4,2,title,"1. Paṭhamapaṇṇāsakaṃ","1. Paṭhamapaṇṇāsakaṃ"
 NULL,p92,5,2,chapter,"1. Sambodhivaggo","1. Sambodhivaggo"
 NULL,p92,6,4,subhead,"1. Sambodhisuttaṃ","1. Sambodhisuttaṃ"
 NULL,p92,7,100,bodytext,,"1. Evaṃ  me sutaṃ – ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati jetavane anāthapiṇḍikassa ārāme. Tatra kho bhagavā bhikkhū āmantesi –"
@@ -404,7 +404,7 @@ NULL,p92,402,100,gatha2,,"Ubhatobhāgo sandiṭṭhikā dve;"
 NULL,p92,403,100,gatha3,,"Nibbānaṃ parinibbānaṃ,"
 NULL,p92,404,100,gathalast,,"Tadaṅgadiṭṭhadhammikena cāti."
 NULL,p92,405,100,centered,,"Paṭhamapaṇṇāsakaṃ samattaṃ."
-NULL,p92,406,3,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
+NULL,p92,406,2,title,"2. Dutiyapaṇṇāsakaṃ","2. Dutiyapaṇṇāsakaṃ"
 NULL,p92,407,2,chapter,"(6) 1. Khemavaggo","(6) 1. Khemavaggo"
 NULL,p92,408,4,subhead,"1. Khemasuttaṃ","1. Khemasuttaṃ"
 NULL,p92,409,100,bodytext,,"52. ‘‘‘Khemaṃ  khema’nti, āvuso, vuccati. Kittāvatā nu kho, āvuso, khemaṃ vuttaṃ bhagavatā’’ti?"

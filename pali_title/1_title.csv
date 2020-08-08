@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p1,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p1,2,2,chapter,Namakkārapāḷi,Namakkārapāḷi
+NULL,p1,2,1,book,Namakkārapāḷi,Namakkārapāḷi
 NULL,p1,3,8,hangnum,1.,1.
 NULL,p1,4,100,gatha1,," Sugataṃ  sugataṃ seṭṭhaṃ, kusalaṃkusalaṃ jahaṃ;"
 NULL,p1,5,100,gathalast,,"Amataṃ amataṃ santaṃ, asamaṃ asamaṃ dadaṃ."
@@ -157,7 +157,7 @@ NULL,p1,155,8,hangnum,33.,33.
 NULL,p1,156,100,gatha1,," Pūjito sabbalokehi, bhāvanābhiratīmano;"
 NULL,p1,157,100,gathalast,,"Janappiyo manāpo ca, kā kathākhiladhāraṇe."
 NULL,p1,158,100,centered,,"Namakkārapāḷi niṭṭhitā."
-NULL,p1,159,2,chapter,Namakkāraṭīkā,Namakkāraṭīkā
+NULL,p1,159,1,book,Namakkāraṭīkā,Namakkāraṭīkā
 NULL,p1,160,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p1,161,8,hangnum,1.,1.
 NULL,p1,162,100,gatha1,," Sugatantyādivaṇṇehi, pasatthañca sukhaddadaṃ;"

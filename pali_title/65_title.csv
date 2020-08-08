@@ -1,6 +1,6 @@
 id,book,par_num,100,class,title,text
 NULL,p65,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
-NULL,p65,2,1,book,Visuddhimaggo,Visuddhimaggo
+NULL,p65,2,1,book,"Visuddhimaggo(Dutiyo bhāgo)",Visuddhimaggo
 NULL,p65,3,4,subhead,"(Dutiyo bhāgo)","(Dutiyo bhāgo)"
 NULL,p65,4,2,chapter,"12. Iddhividhaniddeso","12. Iddhividhaniddeso"
 NULL,p65,5,4,subhead,Abhiññākathā,Abhiññākathā
@@ -590,7 +590,7 @@ NULL,p65,588,100,centered,,Paññābhāvanādhikāre
 NULL,p65,589,100,centered,,"Āyatanadhātuniddeso nāma"
 NULL,p65,590,100,centered,,"Pannarasamo paricchedo."
 NULL,p65,591,2,chapter,"16. Indriyasaccaniddeso","16. Indriyasaccaniddeso"
-NULL,p65,592,4,subhead,Indriyavitthārakathā,Indriyavitthārakathā
+NULL,p65,592,3,subhead,Indriyavitthārakathā,Indriyavitthārakathā
 NULL,p65,593,100,bodytext,,"525. Dhātūnaṃ  anantaraṃ uddiṭṭhāni pana indriyānīti bāvīsatindriyāni – cakkhundriyaṃ sotindriyaṃ ghānindriyaṃ jivhindriyaṃ kāyindriyaṃ manindriyaṃ itthindriyaṃ purisindriyaṃ jīvitindriyaṃ sukhindriyaṃ dukkhindriyaṃ somanassindriyaṃ domanassindriyaṃ upekkhindriyaṃ saddhindriyaṃ vīriyindriyaṃ satindriyaṃ samādhindriyaṃ paññindriyaṃ anaññātaññassāmītindriyaṃ aññindriyaṃ aññātāvindriyanti. Tattha –"
 NULL,p65,594,100,gatha1,,"Atthato lakkhaṇādīhi, kamato ca vijāniyā;"
 NULL,p65,595,100,gathalast,,"Bhedābhedā tathā kiccā, bhūmito ca vinicchayaṃ."
@@ -605,7 +605,7 @@ NULL,p65,603,100,bodytext,,"528. Bhūmitoti cakkhusotaghānajivhākāyaitthipuri
 NULL,p65,604,100,gatha1,,"Saṃvegabahulo bhikkhu, ṭhito indriyasaṃvare;"
 NULL,p65,605,100,gathalast,,"Indriyāni pariññāya, dukkhassantaṃ karissatīti."
 NULL,p65,606,100,centered,,"Idaṃ indriyānaṃ vitthārakathāmukhaṃ."
-NULL,p65,607,4,subhead,Saccavitthārakathā,Saccavitthārakathā
+NULL,p65,607,3,subhead,Saccavitthārakathā,Saccavitthārakathā
 NULL,p65,608,100,bodytext,,"529. Tadanantarāni pana saccānīti cattāri ariyasaccāni – dukkhaṃ ariyasaccaṃ, dukkhasamudayo  ariyasaccaṃ, dukkhanirodho ariyasaccaṃ, dukkhanirodhagāminī paṭipadā ariyasaccanti. Tattha –"
 NULL,p65,609,100,gatha1,,"Vibhāgato  nibbacana, lakkhaṇādippabhedato;"
 NULL,p65,610,100,gathalast,,"Atthatthuddhārato ceva, anūnādhikato tathā."
@@ -637,8 +637,8 @@ NULL,p65,635,100,bodytext,,"535. Anūnādhikatoti  kasmā pana cattāreva ariyas
 NULL,p65,636,100,bodytext,,"Apica pavattimācikkhanto bhagavā sahetukaṃ ācikkhi, nivattiñca saupāyaṃ. Iti pavattinivattitadubhayahetūnaṃ etaparamato cattāreva vuttāni. Tathā pariññeyyapahātabbasacchikātabbabhāvetabbānaṃ, taṇhāvatthutaṇhātaṇhānirodhataṇhānirodhupāyānaṃ, ālayaālayārāmatāālayasamugghātaālayasamugghātupāyānañca vasenāpi cattāreva vuttānīti evamettha anūnādhikato vinicchayo veditabbo."
 NULL,p65,637,100,bodytext,,"536. Kamatoti ayampi desanākkamova. Ettha ca oḷārikattā, sabbasattasādhāraṇattā ca suviññeyyanti dukkhasaccaṃ paṭhamaṃ vuttaṃ. Tasseva hetudassanatthaṃ tadanantaraṃ samudayasaccaṃ. Hetunirodhā phalanirodhoti ñāpanatthaṃ tato nirodhasaccaṃ. Tadadhigamupāyadassanatthaṃ ante maggasaccaṃ. Bhavasukhassādagadhitānaṃ vā sattānaṃ saṃvegajananatthaṃ paṭhamaṃ dukkhamāha. Taṃ neva akataṃ āgacchati, na issaranimmānādito hoti, ito pana hotīti ñāpanatthaṃ tadanantaraṃ samudayaṃ. Tato sahetukena dukkhena abhibhūtattā saṃviggamānasānaṃ dukkhanissaraṇagavesīnaṃ nissaraṇadassanena assāsajananatthaṃ nirodhaṃ. Tato nirodhādhigamatthaṃ nirodhasampāpakaṃ magganti evamettha kamato vinicchayo veditabbo."
 NULL,p65,638,100,bodytext,,"537. Jātiādīnaṃ nicchayāti ye te ariyasaccāni niddisantena bhagavatā ‘‘jātipi dukkhā, jarāpi dukkhā, maraṇampi dukkhaṃ, sokaparidevadukkhadomanassupāyāsāpi dukkhā, appiyehi sampayogo dukkho, piyehi  vippayogo dukkho, yampicchaṃ na labhati tampi dukkhaṃ, saṃkhittena pañcupādānakkhandhā dukkhā’’ti (vibha. 190) dukkhaniddese dvādasa dhammā, ‘‘yāyaṃ taṇhā ponobbhavikā nandīrāgasahagatā tatratatrābhinandinī. Seyyathidaṃ, kāmataṇhā, bhavataṇhā, vibhavataṇhā’’ti (vibha. 203) samudayaniddese tividhā taṇhā, ‘‘yo tassāyeva taṇhāya asesavirāganirodho cāgo paṭinissaggo mutti anālayo’’ti (vibha. 204) evaṃ nirodhaniddese atthato ekameva nibbānaṃ, ‘‘katamaṃ dukkhanirodhagāminīpaṭipadā ariyasaccaṃ, ayameva ariyo aṭṭhaṅgiko maggo. Seyyathidaṃ – sammādiṭṭhi…pe… sammāsamādhī’’ti (vibha. 205) evaṃ magganiddese aṭṭha dhammāti iti catunnaṃ saccānaṃ niddese jātiādayo dhammā vuttā, tesaṃ jātiādīnaṃ nicchayāpi ettha vinicchayo veditabbo."
-NULL,p65,639,3,title,Dukkhaniddesakathā,Dukkhaniddesakathā
-NULL,p65,640,4,subhead,Jātiniddeso,Jātiniddeso
+NULL,p65,639,4,title,Dukkhaniddesakathā,Dukkhaniddesakathā
+NULL,p65,640,5,subhead,Jātiniddeso,Jātiniddeso
 NULL,p65,641,100,bodytext,,"Seyyathidaṃ, ayañhi jāti-saddo anekattho. Tathā hesa ‘‘ekampi jātiṃ dvepi jātiyo’’ti (dī. ni. 1.244; pārā. 12) ettha bhave āgato. ‘‘Atthi, visākhe, nigaṇṭhā nāma samaṇajātī’’ti (a. ni. 3.71) ettha nikāye. ‘‘Jāti dvīhi khandhehi saṅgahitā’’ti (dhātu. 71) ettha saṅkhatalakkhaṇe. ‘‘Yaṃ mātukucchismiṃ paṭhamaṃ cittaṃ uppannaṃ, paṭhamaṃ viññāṇaṃ pātubhūtaṃ, tadupādāya sāvassa jātī’’ti (mahāva. 124) ettha paṭisandhiyaṃ. ‘‘Sampatijāto, ānanda, bodhisatto’’ti (ma. ni. 3.207) ettha pasūtiyaṃ. ‘‘Akkhitto anupakuṭṭho jātivādenā’’ti (dī. ni. 1.331) ettha kule. ‘‘Yatohaṃ, bhagini, ariyāya jātiyā jāto’’ti (ma. ni. 2.351) ettha ariyasīle."
 NULL,p65,642,100,bodytext,,"538. Svāyamidha  gabbhaseyyakānaṃ paṭisandhito paṭṭhāya yāva mātukucchimhā nikkhamanaṃ, tāva pavattesu khandhesu. Itaresaṃ paṭisandhikhandhesvevāti daṭṭhabbo. Ayampi ca pariyāyakathāva. Nippariyāyato pana tattha tattha nibbattamānānaṃ sattānaṃ ye ye khandhā pātubhavanti, tesaṃ tesaṃ paṭhamapātubhāvo jāti nāma."
 NULL,p65,643,100,bodytext,,"Sā  panesā tattha tattha bhave paṭhamābhinibbattilakkhaṇā, niyyātanarasā, atītabhavato idha ummujjanapaccupaṭṭhānā, dukkhavicittatāpaccupaṭṭhānā vā."
@@ -682,7 +682,7 @@ NULL,p65,680,100,gatha2,,"Atthīdha kiñcidapi dukkhamidaṃ kadāci;"
 NULL,p65,681,100,gatha3,,"Nevatthi jātivirahena yato mahesi,"
 NULL,p65,682,100,gathalast,,"Dukkhāti sabbapaṭhamaṃ imamāha jātinti."
 NULL,p65,683,100,centered,,"Ayaṃ tāva jātiyaṃ vinicchayo."
-NULL,p65,684,4,subhead,Jarāniddeso,Jarāniddeso
+NULL,p65,684,5,subhead,Jarāniddeso,Jarāniddeso
 NULL,p65,685,100,bodytext,,"542. Jarāpi dukkhāti ettha duvidhā jarā saṅkhatalakkhaṇañca, khaṇḍiccādisammato santatiyaṃ ekabhavapariyāpannakhandhapurāṇabhāvo ca, sā idha adhippetā. Sā panesā jarā khandhaparipākalakkhaṇā, maraṇūpanayanarasā, yobbanavināsapaccupaṭṭhānā. Dukkhā saṅkhāradukkhabhāvato ceva dukkhavatthuto ca. Yaṃ hi aṅgapaccaṅgasithilībhāvaindriyavikāravirūpatāyobbanavināsabalūpaghātasatimativippavāsaparaparibhavādianekapaccayaṃ kāyikacetasikadukkhaṃ uppajjati, jarā tassa vatthu. Tenetaṃ vuccati –"
 NULL,p65,686,100,gatha1,,"‘‘Aṅgānaṃ sithilībhāvā, indriyānaṃ vikārato;"
 NULL,p65,687,100,gathalast,,"Yobbanassa vināsena, balassa upaghātato."
@@ -691,7 +691,7 @@ NULL,p65,689,100,gathalast,,"Apasādanīyato ceva, bhiyyo bālattapattiyā."
 NULL,p65,690,100,gatha1,,"‘‘Pappoti dukkhaṃ yaṃ macco, kāyikaṃ mānasaṃ tathā;"
 NULL,p65,691,100,gathalast,,"Sabbametaṃ jarāhetu, yasmā tasmā jarā dukhā’’ti."
 NULL,p65,692,100,centered,,"Ayaṃ jarāyaṃ vinicchayo."
-NULL,p65,693,4,subhead,Maraṇaniddeso,Maraṇaniddeso
+NULL,p65,693,5,subhead,Maraṇaniddeso,Maraṇaniddeso
 NULL,p65,694,100,bodytext,,"543. Maraṇampi dukkhanti etthāpi duvidhaṃ maraṇaṃ saṅkhatalakkhaṇañca, yaṃ sandhāya vuttaṃ ‘‘jarāmaraṇaṃ dvīhi khandhehi saṅgahita’’nti (dhātu. 71). Ekabhavapariyāpannajīvitindriyappabandhavicchedo ca, yaṃ sandhāya vuttaṃ ‘‘niccaṃ maraṇato bhaya’’nti (su. ni. 581). Taṃ idha adhippetaṃ. Jātipaccayā maraṇaṃ upakkamamaraṇaṃ sarasamaraṇaṃ āyukkhayamaraṇaṃ puññakkhayamaraṇantipi tasseva nāmaṃ. Tayidaṃ cutilakkhaṇaṃ, viyogarasaṃ, gativippavāsapaccupaṭṭhānaṃ. Dukkhassa pana vatthubhāvato dukkhanti veditabbaṃ. Tenetaṃ vuccati –"
 NULL,p65,695,100,gatha1,,"‘‘Pāpassa pāpakammādi-nimittamanupassato;"
 NULL,p65,696,100,gatha2,,"Bhaddassāpasahantassa, viyogaṃ piyavatthukaṃ;"
@@ -701,58 +701,58 @@ NULL,p65,699,100,gathalast,,"Vitujjamānamammānaṃ, hoti dukkhaṃ sarīraja�
 NULL,p65,700,100,gatha1,,"Asayhamappatikāraṃ, dukkhassetassidaṃ yato;"
 NULL,p65,701,100,gathalast,,"Maraṇaṃ vatthu tenetaṃ, dukkhamicceva bhāsita’’nti."
 NULL,p65,702,100,centered,,"Ayaṃ maraṇe vinicchayo."
-NULL,p65,703,4,subhead,Sokādiniddesā,Sokādiniddesā
+NULL,p65,703,5,subhead,Sokādiniddesā,Sokādiniddesā
 NULL,p65,704,100,bodytext,,"544. Sokādīsu soko nāma ñātibyasanādīhi phuṭṭhassa cittasantāpo. So kiñcāpi atthato domanassameva hoti. Evaṃ santepi antonijjhānalakkhaṇo, cetaso parijjhāpanaraso, anusocanapaccupaṭṭhāno. Dukkho pana dukkhadukkhato dukkhavatthuto ca. Tenetaṃ vuccati –"
 NULL,p65,705,100,gatha1,,"‘‘Sattānaṃ hadayaṃ soko, visasallaṃva tujjati;"
 NULL,p65,706,100,gathalast,,"Aggitattova nārāco, bhusaṃva dahate puna."
 NULL,p65,707,100,gatha1,,"‘‘Samāvahati ca byādhi-jarāmaraṇabhedanaṃ;"
 NULL,p65,708,100,gathalast,,"Dukkhampi vividhaṃ yasmā, tasmā dukkhoti vuccatī’’ti."
 NULL,p65,709,100,centered,,"Ayaṃ soke vinicchayo."
-NULL,p65,710,4,subhead,Paridevo,Paridevo
+NULL,p65,710,5,subhead,Paridevo,Paridevo
 NULL,p65,711,100,bodytext,,"545. Paridevo nāma ñātibyasanādīhi phuṭṭhassa vacīpalāpo. So lālappanalakkhaṇo, guṇadosakittanaraso, sambhamapaccupaṭṭhāno. Dukkho pana saṅkhāradukkhabhāvato dukkhavatthuto ca. Tenetaṃ vuccati –"
 NULL,p65,712,100,gatha1,,"‘‘Yaṃ sokasallavihato paridevamāno,"
 NULL,p65,713,100,gatha2,,Kaṇṭhoṭṭhatālutalasosajamappasayhaṃ;
 NULL,p65,714,100,gatha3,,"Bhiyyodhimattamadhigacchatiyeva dukkhaṃ,"
 NULL,p65,715,100,gathalast,,"Dukkhoti tena bhagavā paridevamāhā’’ti."
 NULL,p65,716,100,centered,,"Ayaṃ parideve vinicchayo."
-NULL,p65,717,4,subhead,Dukkhaṃ,Dukkhaṃ
+NULL,p65,717,5,subhead,Dukkhaṃ,Dukkhaṃ
 NULL,p65,718,100,bodytext,,"546. Dukkhaṃ nāma kāyikaṃ dukkhaṃ, taṃ kāyapīḷanalakkhaṇaṃ, duppaññānaṃ domanassakaraṇarasaṃ, kāyikābādhapaccupaṭṭhānaṃ. Dukkhaṃ pana dukkhadukkhato mānasadukkhāvahanato ca. Tenetaṃ vuccati –"
 NULL,p65,719,100,gatha1,,"‘‘Pīḷeti kāyikamidaṃ, dukkhañca mānasaṃ bhiyyo;"
 NULL,p65,720,100,gathalast,,"Janayati yasmā tasmā, dukkhanti visesato vutta’’nti."
 NULL,p65,721,100,centered,,"Ayaṃ dukkhe vinicchayo."
-NULL,p65,722,4,subhead,Domanassaṃ,Domanassaṃ
+NULL,p65,722,5,subhead,Domanassaṃ,Domanassaṃ
 NULL,p65,723,100,bodytext,,"547. Domanassaṃ nāma mānasaṃ dukkhaṃ. Taṃ cittapīḷanalakkhaṇaṃ, manovighātarasaṃ, mānasabyādhipaccupaṭṭhānaṃ. Dukkhaṃ pana dukkhadukkhato kāyikadukkhāvahanato ca. Cetodukkhasamappitā hi kese pakiriya kandanti, urāni paṭipisanti, āvaṭṭanti, vivaṭṭanti, uddhaṃpādaṃ papatanti, satthaṃ āharanti, visaṃ khādanti, rajjuyā ubbandhanti, aggiṃ pavisantīti taṃ nānappakārakaṃ dukkhamanubhavanti. Tenetaṃ vuccati –"
 NULL,p65,724,100,gatha1,,"‘‘Pīḷeti yato cittaṃ, kāyassa ca pīḷanaṃ samāvahati;"
 NULL,p65,725,100,gathalast,,"Dukkhanti domanassaṃ, vidomanassā tato āhū’’ti."
 NULL,p65,726,100,centered,,"Ayaṃ domanasse vinicchayo."
-NULL,p65,727,4,subhead,Upāyāso,Upāyāso
+NULL,p65,727,5,subhead,Upāyāso,Upāyāso
 NULL,p65,728,100,bodytext,,"548. Upāyāso nāma ñātibyasanādīhi phuṭṭhassa adhimattacetodukkhappabhāvito dosoyeva. Saṅkhārakkhandhapariyāpanno eko dhammoti eke. So cittaparidahanalakkhaṇo, nitthunanaraso, visādapaccupaṭṭhāno. Dukkho pana saṅkhāradukkhabhāvato cittaparidahanato kāyavisādanato ca. Tenetaṃ vuccati –"
 NULL,p65,729,100,gatha1,,"‘‘Cittassa ca paridahanā, kāyassa visādanā ca adhimattaṃ;"
 NULL,p65,730,100,gathalast,,"Yaṃ dukkhamupāyāso, janeti dukkho tato vutto’’ti."
 NULL,p65,731,100,centered,,"Ayaṃ upāyāse vinicchayo."
 NULL,p65,732,100,bodytext,,"Ettha ca mandagginā antobhājane pāko viya soko. Tikkhagginā paccamānassa bhājanato bahinikkhamanaṃ viya paridevo. Bahinikkhantāvasesassa nikkhamituṃ appahontassa antobhājaneyeva yāva parikkhayā pāko viya upāyāso daṭṭhabbo."
-NULL,p65,733,4,subhead,Appiyasampayogo,Appiyasampayogo
+NULL,p65,733,5,subhead,Appiyasampayogo,Appiyasampayogo
 NULL,p65,734,100,bodytext,,"549. Appiyasampayogo nāma amanāpehi sattasaṅkhārehi samodhānaṃ. So aniṭṭhasamodhānalakkhaṇo, cittavighātakaraṇaraso, anatthabhāvapaccupaṭṭhāno. Dukkho pana dukkhavatthuto. Tenetaṃ vuccati –"
 NULL,p65,735,100,gatha1,,"‘‘Disvāva  appiye dukkhaṃ, paṭhamaṃ hoti cetasi;"
 NULL,p65,736,100,gathalast,,"Tadupakkamasambhūta-mathakāye yato idha."
 NULL,p65,737,100,gatha1,,"‘‘Tato dukkhadvayassāpi, vatthuto so mahesinā;"
 NULL,p65,738,100,gathalast,,"Dukkho vuttoti viññeyyo, appiyehi samāgamo’’ti."
 NULL,p65,739,100,centered,,"Ayaṃ appiyasampayoge vinicchayo."
-NULL,p65,740,4,subhead,Piyavippayogo,Piyavippayogo
+NULL,p65,740,5,subhead,Piyavippayogo,Piyavippayogo
 NULL,p65,741,100,bodytext,,"550. Piyavippayogo nāma manāpehi sattasaṅkhārehi vinābhāvo. So iṭṭhavatthuviyogalakkhaṇo, sokuppādanaraso, byasanapaccupaṭṭhāno. Dukkho pana sokadukkhassa vatthuto. Tenetaṃ vuccati –"
 NULL,p65,742,100,gatha1,,"‘‘Ñātidhanādiviyogā,"
 NULL,p65,743,100,gatha2,,"Sokasarasamappitā vitujjanti;"
 NULL,p65,744,100,gatha3,,"Bālā yato tato yaṃ,"
 NULL,p65,745,100,gathalast,,"Dukkhoti mato piyavippayogo’’ti."
 NULL,p65,746,100,centered,,"Ayaṃ piyavippayoge vinicchayo."
-NULL,p65,747,4,subhead,Icchitālābho,Icchitālābho
+NULL,p65,747,5,subhead,Icchitālābho,Icchitālābho
 NULL,p65,748,100,bodytext,,"551. Yampicchaṃ na labhatīti ettha ‘‘aho vata mayaṃ na jātidhammā assāmā’’tiādīsu (dī. ni. 2.398; vibha. 201) alabbhaneyyavatthūsu icchāva yampicchaṃ na labhati, tampi dukkhanti vuttā. Sā alabbhaneyyavatthuicchanalakkhaṇā, tappariyesanarasā, tesaṃ appattipaccupaṭṭhānā. Dukkhā pana dukkhavatthuto. Tenetaṃ vuccati –"
 NULL,p65,749,100,gatha1,,"‘‘Taṃ taṃ patthayamānānaṃ, tassa tassa alābhato;"
 NULL,p65,750,100,gathalast,,"Yaṃ vighātamayaṃ dukkhaṃ, sattānaṃ idha jāyati."
 NULL,p65,751,100,gatha1,,"‘‘Alabbhaneyyavatthūnaṃ, patthanā tassa kāraṇaṃ;"
 NULL,p65,752,100,gathalast,,"Yasmā tasmā jino dukkhaṃ, icchitālābhamabravī’’ti."
 NULL,p65,753,100,centered,,"Ayaṃ icchitālābhe vinicchayo."
-NULL,p65,754,4,subhead,Pañcupādānakkhandhā,Pañcupādānakkhandhā
+NULL,p65,754,5,subhead,Pañcupādānakkhandhā,Pañcupādānakkhandhā
 NULL,p65,755,100,bodytext,,"552. Saṃkhittenapañcupādānakkhandhā dukkhāti ettha pana –"
 NULL,p65,756,100,gatha1,,"Jātippabhutikaṃ  dukkhaṃ, yaṃ vuttamidha tādinā;"
 NULL,p65,757,100,gathalast,,"Avuttaṃ yañca taṃ sabbaṃ, vinā ete na vijjati."
@@ -772,7 +772,7 @@ NULL,p65,770,100,gathalast,,"Nibbattatī dukkhamidaṃ punappuna’’nti. (dha.
 NULL,p65,771,100,bodytext,,"Iti yasmā samudayanirodheneva dukkhaṃ nirujjhati, tasmā bhagavā dukkhanirodhaṃ desento samudayanirodheneva desesi. Sīhasamānavuttino hi tathāgatā. Te dukkhaṃ nirodhentā dukkhanirodhañca desentā hetumhi paṭipajjanti, na phale. Suvānavuttino pana titthiyā. Te dukkhaṃ nirodhentā dukkhanirodhañca desentā attakilamathānuyogadesanādīhi phale paṭipajjanti, na hetumhīti. Evaṃ tāva dukkhanirodhassa samudayanirodhavasena desanāya payojanaṃ veditabbaṃ."
 NULL,p65,772,100,bodytext,,"555. Ayaṃ panattho – tassāyeva taṇhāyāti tassā ‘‘ponobbhavikā’’ti vatvā kāmataṇhādivasena vibhattataṇhāya. Virāgo vuccati maggo. ‘‘Virāgā vimuccatī’’ti (ma. ni. 1.245; saṃ. ni. 3.14) hi vuttaṃ. Virāgena nirodho virāganirodho. Anusayasamugghātato aseso virāganirodho asesavirāganirodho. Atha vā virāgoti pahānaṃ vuccati, tasmā aseso  virāgo aseso nirodhoti evampettha yojanā daṭṭhabbā. Atthato pana sabbāneva  etāni nibbānassa vevacanāni. Paramatthato hi dukkhanirodho ariyasaccanti nibbānaṃ vuccati. Yasmā pana taṃ āgamma taṇhā virajjati ceva nirujjhati ca, tasmā virāgoti ca nirodhoti ca vuccati. Yasmā ca tadeva āgamma tassā cāgādayo honti, kāmaguṇālayesu cettha ekopi ālayo natthi, tasmā ‘‘cāgo paṭinissaggo mutti anālayo’’ti vuccati."
 NULL,p65,773,100,bodytext,,"556. Tayidaṃ santilakkhaṇaṃ, accutirasaṃ, assāsakaraṇarasaṃ vā, animittapaccupaṭṭhānaṃ, nippapañcapaccupaṭṭhānaṃ vā."
-NULL,p65,774,4,subhead,Nibbānakathā,Nibbānakathā
+NULL,p65,774,5,subhead,Nibbānakathā,Nibbānakathā
 NULL,p65,775,100,bodytext,,"557. Nattheva nibbānaṃ, sasavisāṇaṃ viya anupalabbhanīyatoti ce? Na, upāyena upalabbhanīyato. Upalabbhati hi taṃ tadanurūpapaṭipattisaṅkhātena upāyena, cetopariyañāṇena paresaṃ lokuttaracittaṃ viya, tasmā ‘‘anupalabbhanīyato natthī’’ti na vattabbaṃ. Na hi ‘‘yaṃ bālaputhujjanā na upalabhanti, taṃ natthī’’ti vattabbaṃ."
 NULL,p65,776,100,bodytext,,"558. Apica nibbānaṃ natthīti na vattabbaṃ, kasmā? Paṭipattiyā vañjhabhāvāpajjanato. Asati hi nibbāne sammādiṭṭhipurejavāya sīlādikhandhattayasaṅgahāya sammāpaṭipattiyā vañjhabhāvo āpajjati. Na cāyaṃ vañjhā, nibbānapāpanatoti. Na paṭipattiyā vañjhabhāvāpatti, abhāvapāpakattāti ce. Na, atītānāgatābhāvepi nibbānapattiyā abhāvato. Vattamānānampi abhāvo nibbānanti ce. Na, tesaṃ abhāvāsambhavato, abhāve ca avattamānabhāvāpajjanato, vattamānakkhandhanissitamaggakkhaṇe ca sopādisesanibbānadhātuppattiyā abhāvadosato. Tadā kilesānaṃ avattamānattā na dosoti ce. Na, ariyamaggassa niratthakabhāvāpajjanato. Evañhi sati ariyamaggakkhaṇato pubbepi kilesā na santīti ariyamaggassa niratthakabhāvo āpajjati. Tasmā akāraṇametaṃ."
 NULL,p65,777,100,bodytext,,"559. ‘‘Yo kho, āvuso, rāgakkhayo’’tiādivacanato (saṃ. ni. 4.315) ‘‘khayo nibbāna’’nti ce. Na, arahattassāpi khayamattāpajjanato. Tampi hi  ‘‘yo kho, āvuso, rāgakkhayo’’tiādinā (sa. ni. 4.315) nayena niddiṭṭhaṃ. Kiñca bhiyyo nibbānassa ittarakālādippattidosato. Evañhi sati nibbānaṃ ittarakālaṃ, saṅkhatalakkhaṇaṃ, sammāvāyāmanirapekkhādhigamanīyabhāvañca āpajjati. Saṅkhatalakkhaṇattāyeva ca saṅkhatapariyāpannaṃ, saṅkhatapariyāpannattā rāgādīhi aggīhi ādittaṃ, ādittattā dukkhañcātipi āpajjati. Yasmā khayā paṭṭhāya na bhiyyo pavatti nāma hoti, tassa nibbānabhāvato na dosoti ce. Na, tādisassa khayassa abhāvato. Bhāvepi cassa vuttappakāradosānativattanato, ariyamaggassa ca nibbānabhāvāpajjanato. Ariyamaggo hi dose khīṇeti, tasmā khayoti vuccati. Tato ca paṭṭhāya na bhiyyo dosānaṃ pavattīti."

@@ -1,7 +1,7 @@
 id,book,par_num,100,class,title,text
 NULL,p188,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p188,2,100,nikaya,,Dīghanikāye
-NULL,p188,3,1,book,Sīlakkhandhavaggaabhinavaṭīkā,Sīlakkhandhavaggaabhinavaṭīkā
+NULL,p188,3,1,book,(DN)Sīlakkhandhavaggaabhinavaṭīkā,Sīlakkhandhavaggaabhinavaṭīkā
 NULL,p188,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p188,5,100,gatha1,,"Yo  desetvāna saddhammaṃ, gambhīraṃ duddasaṃ varaṃ;"
 NULL,p188,6,100,gathalast,,"Dīghadassī ciraṃ kālaṃ, patiṭṭhāpesi sāsanaṃ.1."
