@@ -7,7 +7,7 @@ require_once "../public/_pdo.php";
 <head>
 </head>
 <body>
-<h2>Update Pali Text in single DB</h2>
+<h2>Update Pali Text Use CSV</h2>
 <p><a href="index.php">Home</a></p>
 <?php
 
