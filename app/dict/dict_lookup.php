@@ -18,6 +18,7 @@ $org_word=$word;
 $count_return=0;
 $dict_list=array();
 
+$right_word_list="";
 
 global $PDO;
 function isExsit($word){
@@ -370,18 +371,18 @@ switch($op){
 		foreach($arrWords as $oneword){
 			$weight += $oneword["count"] * $oneword["len"];
 		}
-		echo "<div><a href='word_statistics.php?word={$word}'>";
-		echo "<svg t='1596783175334' class='icon' style='font-size: xxx-large; fill: var(--link-hover-color);' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='7755' width='200' height='200'><path d='M1019.904 450.56L536.576 557.056l417.792 208.896C999.424 692.224 1024 606.208 1024 512c0-20.48 0-40.96-4.096-61.44z m-12.288-61.44C958.464 184.32 786.432 28.672 573.44 4.096L446.464 512l561.152-122.88zM737.28 970.752c73.728-36.864 139.264-90.112 188.416-159.744L507.904 602.112l229.376 368.64zM512 0C229.376 0 0 229.376 0 512s229.376 512 512 512c61.44 0 118.784-12.288 172.032-28.672L385.024 512 512 0z' p-id='7756'></path></svg>";
-		echo "<br>{$_local->gui->click_to_chart}</a></div>";
-		echo "<div>{$_local->gui->word_weight}：$weight {$_local->gui->characters}</div>";
-		echo "<div>{$_local->gui->real_declension}：".count($arrWords)." {$_local->gui->forms}</div>";
-		
+		//echo "<div>{$_local->gui->word_weight}：$weight {$_local->gui->characters}</div>";
+		//echo "<div>{$_local->gui->real_declension}：".count($arrWords)." {$_local->gui->forms}</div>";
+		$right_word_list .= "<div>{$_local->gui->word_weight}：$weight {$_local->gui->characters}</div>";
+		$right_word_list .= "<div>{$_local->gui->real_declension}：".count($arrWords)." {$_local->gui->forms}</div>";
 		foreach($arrWords as $oneword){
 			if($oneword["bold"]>0){
-				echo "<div><b>{$oneword["word"]}</b> {$oneword["count"]} {$_local->gui->times}</div>";
+				//echo "<div><b>{$oneword["word"]}</b> {$oneword["count"]} {$_local->gui->times}</div>";
+				$right_word_list .= "<div><b>{$oneword["word"]}</b> {$oneword["count"]} {$_local->gui->times}</div>";
 			}
 			else{
-				echo "<div>{$oneword["word"]} {$oneword["count"]}{$_local->gui->times}</div>";
+				//echo "<div>{$oneword["word"]} {$oneword["count"]}{$_local->gui->times}</div>";
+				$right_word_list .= "<div>{$oneword["word"]} {$oneword["count"]}{$_local->gui->times}</div>";
 			}
 		}		
 		echo "</div>";
@@ -389,8 +390,12 @@ switch($op){
 		echo "</div>";
 		//参考字典查询结束
 
-		//用户词典
+		//用户词典编辑窗口
 		echo "<div id='dict_user' >";	
+		echo "<div><a href='word_statistics.php?word={$word}'>";
+		echo "<svg t='1596783175334' class='icon' style='font-size: xxx-large; fill: var(--link-hover-color); margin: 5px;' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='7755' width='200' height='200'><path d='M1019.904 450.56L536.576 557.056l417.792 208.896C999.424 692.224 1024 606.208 1024 512c0-20.48 0-40.96-4.096-61.44z m-12.288-61.44C958.464 184.32 786.432 28.672 573.44 4.096L446.464 512l561.152-122.88zM737.28 970.752c73.728-36.864 139.264-90.112 188.416-159.744L507.904 602.112l229.376 368.64zM512 0C229.376 0 0 229.376 0 512s229.376 512 512 512c61.44 0 118.784-12.288 172.032-28.672L385.024 512 512 0z' p-id='7756'></path></svg>";
+		echo "<br>{$_local->gui->click_to_chart}</a></div>";
+		echo $right_word_list;
 		echo "<div class='dict_word' ><b>{$_local->gui->undone_function}</b>";
 		echo "<div class='' onclick=\"dict_show_edit()\">{$_local->gui->edit}</div>";		
 		echo "<div class='pali'>{$word}</div>";

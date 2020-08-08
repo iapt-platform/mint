@@ -2,7 +2,7 @@
 require_once "../pcdl/html_head.php";
 ?>
 <body>
-
+<a name="toc_root"></a>
 <?php
 	require_once("../pcdl/head_bar.php");
 ?>
@@ -117,7 +117,57 @@ require_once "../pcdl/html_head.php";
 		#footer_nav {
 			display: none;
 		}
-
+		.right_tool_btn {
+			position: fixed;
+			right: 50px;
+			top: 5em;
+			background-color: unset;
+		}
+		.right_tool_btn .icon {
+			height: 2em;
+			width: 2em;
+		}
+		.right_tool_btn button:hover {
+			background-color: var(--link-hover-color);
+			border-color: var(--link-color);
+			color: var(--btn-hover-color);
+			height: 3em;
+			width: 3em;
+			padding: 0;
+		}
+		.right_tool_btn button {
+			background-color: var(--link-color);
+			border-color: var(--link-color);
+			color: var(--btn-color);
+			height: 3em;
+			width: 3em;
+			padding: 0;
+		}
+		button, input[type="button"], input[type="submit"] {
+			font-weight: 500;
+			font-size: 90%;
+			background-color: none;
+			border: 2px solid var(--btn-border-color);
+			border-radius: 99px;
+			margin: 2px;
+			padding: 2px 12px;
+			-webkit-transition-duration: 0.2s;
+			-moz-transition-duration: 0.2s;
+			transition-duration: 0.2s;
+			cursor: pointer;
+			display: -webkit-inline-flex;
+			display: -moz-inline-flex;
+			display: inline-flex;
+			-webkit-align-items: center;
+			-moz-align-items: center;
+			align-items: center;
+			-webkit-flex-wrap: nowrap;
+			-moz-flex-wrap: nowrap;
+			flex-wrap: nowrap;
+			-webkit-justify-content: center;
+			-moz-justify-content: center;
+			justify-content: center;
+		}
 	</style>
 	<!-- <link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">-->
 	
@@ -155,8 +205,7 @@ require_once "../pcdl/html_head.php";
 				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">
 				<?php echo $_local->gui->turbo_split;//强力拆分?>
 				</button>
-				<guide gid="comp_split">
-				</guide>
+				<guide gid="comp_split"></guide>
 				</span>
                 <div ></div>
 			</div>
@@ -170,7 +219,7 @@ require_once "../pcdl/html_head.php";
 	<div id='search_toolbar_1' class="search_toolbar search_fixed">
 			<div style="display:flex;">
 				<span >
-				字典
+				<?php echo $_local->gui->dictionary;?>
 				</span>
 				<div>
 					<div>
@@ -192,7 +241,15 @@ require_once "../pcdl/html_head.php";
 			</div>
 	</div>	
 	<!--tool bar fixed end -->
-
+	<div id="tool_btn" class="right_tool_btn" style="display: none;">
+		<button style="border: 2px solid var(--nocolor); background-color: unset;"><a href="#toc_root">
+			<svg t="1596888255722" class="icon" style="height: 3em; width: 3em;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4368" width="200" height="200">
+				<path d="M510.4 514.2m-449.2 0a449.2 449.2 0 1 0 898.4 0 449.2 449.2 0 1 0-898.4 0Z" fill="#8a8a8a" p-id="4369"></path><path d="M719.4 314.5h-416c-8.5 0-15.4-6.9-15.4-15.4v-4.8c0-8.5 6.9-15.4 15.4-15.4h416.1c8.5 0 15.4 6.9 15.4 15.4v4.8c-0.1 8.4-7 15.4-15.5 15.4z" fill="#ffffff" p-id="4370"></path><path d="M494.1 735.1v-416c0-8.5 6.9-15.4 15.4-15.4h4.8c8.5 0 15.4 6.9 15.4 15.4v416.1c0 8.5-6.9 15.4-15.4 15.4h-4.8c-8.4-0.1-15.4-7-15.4-15.5z" fill="#ffffff" p-id="4371"></path><path d="M672.5 503.1l-165-165c-6-6-6-15.8 0-21.7l3.4-3.4c6-6 15.8-6 21.7 0l165 165c6 6 6 15.8 0 21.7l-3.4 3.4c-6 6-15.7 6-21.7 0z" fill="#ffffff" p-id="4372"></path><path d="M325.2 478l165-165c6-6 15.8-6 21.7 0l3.4 3.4c6 6 6 15.8 0 21.7l-165 165c-6 6-15.8 6-21.7 0l-3.4-3.4c-5.9-6-5.9-15.7 0-21.7z" fill="#ffffff" p-id="4373">
+				</path>
+			</svg>
+		</a>
+		</button>
+	</div>
 	<script>
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
@@ -202,6 +259,13 @@ require_once "../pcdl/html_head.php";
 		else{
 			$("#search_toolbar_1").css("top",GetPageScroll().y - 150) ;
 		}
+		if(GetPageScroll().y>$(window).height()*0.9){
+			$("#tool_btn").show();
+		}
+		else{
+			$("#tool_btn").hide();
+		}
+		
 	}
  //滚动条位置
 function GetPageScroll() 

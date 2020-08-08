@@ -148,7 +148,7 @@ require_once "../public/load_lang_js.php";//语言文件
         }],
         tooltip: {
             headerFormat: "",
-            pointFormat: '<b><?php echo ucfirst($_GET["word"]) ?></b> <?php echo $_local->gui->in ?> <b>{point.name}</b> <?php echo $_local->gui->present ?> <b>{point.value}</b> '+gLocal.gui.times
+            pointFormat: '<b><?php echo ucfirst($_GET["word"]) ?></b> <?php echo $_local->gui->in ?> <b>{point.name}</b> <?php echo $_local->gui->present ?> <b>{point.value}</b> <?php echo $_local->gui->times2 ?>'
         }
     });
   });
