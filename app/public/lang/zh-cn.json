@@ -436,7 +436,15 @@
 		"statistical": "统计",
 		"chart": "图表",
 		"in": "在",
-		"present": "中出现"
+		"present": "中出现",
+		"sutta": "经",
+		"vinaya": "律",
+		"abhidhamma": "阿毗达摩",
+		"anna": "其他",
+		"mula": "根本",
+		"atthakatha": "义註",
+		"tika": "复註",
+		"": ""
 	},
 	"grammastr": [
 		{
