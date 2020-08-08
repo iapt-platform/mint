@@ -163,7 +163,7 @@ switch($op){
 		echo "<div id=\"dict_bold_right\" style='flex:7;'>";
 		//前20条记录
 		$time_start=microtime_float();
-		$dictFileName=_FILE_DB_WORD_INDEX_;
+		$dictFileName=_FILE_DB_PALI_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
 		$Fetch = PDO_FetchAll($query);
