@@ -433,7 +433,10 @@
 		"frequency": "詞頻",
 		"declension_list": "變化表",
 		"distribution": "分佈圖",
-		"": ""
+		"statistical": "統計",
+		"chart": "圖表",
+		"in": "在",
+		"present": "中出現"
 	},
 	"grammastr": [
 		{
