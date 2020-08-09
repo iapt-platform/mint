@@ -1,12 +1,5 @@
 <?php
-//error handler function
-function customError($errno, $errstr)
- { 
- echo "<b>Error:</b> [$errno] $errstr";
- }
-
-//set error handler
-set_error_handler("customError");
+require_once "install_head.php";
 
 require_once '../path.php';
 require_once "../public/_pdo.php";

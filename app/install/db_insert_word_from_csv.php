@@ -1,3 +1,6 @@
+<?php
+require_once "install_head.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +10,7 @@
 <p><a href="index.php">Home</a></p>
 <?php
 include "./_pdo.php";
-include "../path.php";
+
 if(isset($_GET["from"])==false){
 ?>
 <form action="db_insert_word_from_csv.php" method="get">

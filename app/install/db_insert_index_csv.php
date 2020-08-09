@@ -1,7 +1,7 @@
 <?php
-include "./_pdo.php";
-include "../path.php";
 
+require_once "install_head.php";
+include "./_pdo.php";
 if (PHP_SAPI  == "cli") {
 	echo $argc;
 	if($argc>=3){

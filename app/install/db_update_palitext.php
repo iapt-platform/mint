@@ -1,5 +1,5 @@
 ﻿<?php
-require_once '../path.php';
+require_once "install_head.php";
 require_once "../public/_pdo.php";
 ?>
 <!DOCTYPE html>
