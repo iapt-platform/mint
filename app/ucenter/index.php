@@ -109,7 +109,7 @@ require_once "../public/function.php";
 			else if(isset($_POST["password"])){
 				$md5_password=md5($_POST["password"]);
 				PDO_Connect("sqlite:"._FILE_DB_USERINFO_);
-				$query = "select * from user where \"username\"=".$PDO->quote($_POST["username"])." and \"password\"=".$PDO->quote($md5_password);
+				$query = "select * from user where (\"username\"=".$PDO->quote($_POST["username"])." or \"email\"=".$PDO->quote($_POST["username"])." ) and \"password\"=".$PDO->quote($md5_password);
 				$Fetch = PDO_FetchAll($query);
 				$iFetch=count($Fetch);
 				if($iFetch>0){//username is exite
