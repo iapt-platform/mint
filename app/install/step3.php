@@ -1,4 +1,5 @@
 <?php
+require_once "install_head.php";
 require_once '../pcdl/html_head.php';
 ?>
 <body>

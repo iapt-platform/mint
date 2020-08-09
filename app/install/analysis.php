@@ -1,4 +1,6 @@
 ﻿<?php
+require_once "install_head.php";
+
 $filelist=array();
 $fileNums=0;
 if(($handle=fopen("filelist.csv",'r'))!==FALSE){
