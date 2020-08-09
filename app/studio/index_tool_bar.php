@@ -37,7 +37,7 @@
 						</svg>
 					</span>	
 					<span class="navi_text">
-					<?php echo $_local->gui->collaorate;?>
+					<?php echo $_local->gui->collaborate;?>
 					</span>
 				</li>
 				<li id="group_index"  onclick="goto_url(this,'../studio/group.php?language=<?php echo $currLanguage; ?>')">

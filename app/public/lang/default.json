@@ -387,7 +387,7 @@
 		"add_folder": "new folder",
 		"add_to_folder": "add to folder",
 		"rename": "rename",
-		"collaorate": "collaorate",
+		"collaborate": "collaborate",
 		"help": "help",
 		"function_introduce": "functions of Wikipāḷi",
 		"vedio_link": "vedio link",
@@ -444,6 +444,7 @@
 		"atthakatha": "aṭṭhakathā",
 		"tika": "ṭīkā",
 		"times2": "times",
+		"co_doc": "Collaborative Document",
 		"": ""
 	},
 	"grammastr": [
