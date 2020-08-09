@@ -47,6 +47,24 @@ else{
 }
 switch($op){
 	case "create":
+		//判断单词数量 太大的不能加载
+		$res=json_decode($data);
+		$res_book = $res[0]->book;
+		$paraList=$res[0]->parlist;
+		$paraList=rtrim($paraList,",");
+		$strQueryParaList=str_replace(",","','",$paraList);
+		$strQueryParaList="('".$strQueryParaList."')";
+		PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
+		$query="SELECT sum(lenght) as sum_str FROM pali_text WHERE \"book\" = ".$PDO->quote($res_book)." AND (\"paragraph\" in {$strQueryParaList} ) ";
+		$Fetch = PDO_FetchAll($query);
+		if(count($Fetch)>0){
+			if($Fetch[0]["sum_str"]>15000){
+				echo "文件过大。不能编辑。请选择小一点的章节";
+				exit;
+			}
+		}
+		//判断单词数量 结束
+
 	if(isset($_POST["format"]) && $_POST["format"]=="db"){
 		$res=json_decode($data);
 		
