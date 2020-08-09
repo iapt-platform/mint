@@ -2,6 +2,7 @@
 /*
 用拆分好的三藏数据 生成模板库
 */
+require_once "install_head.php";
 ?>
 <!DOCTYPE html>
 <html>

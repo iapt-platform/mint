@@ -1,3 +1,7 @@
+<?php
+require_once "install_head.php";
+include "./_pdo.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,8 +9,7 @@
 <body>
 <h2>Insert to Index</h2>
 <?php
-include "./_pdo.php";
-include "../path.php";
+
 if(isset($_GET["from"])==false){
     $from=0;
 }
