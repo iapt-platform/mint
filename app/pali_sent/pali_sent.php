@@ -44,11 +44,9 @@ function words_of_sentence(string $sent) {
 
 // 采用 jaccard 相似度，考虑到圣典中的相似句单词、句式都是非常接近的
 function jaccard_similarity($words_of_sent1, $words_of_sent2) {
-	$intersect_array = array_intersect($words_of_sent1, $words_of_sent2);
-	$intersect = count($intersect_array);
-	$union_array = array_merge($words_of_sent1, $words_of_sent2);
-	$union = count($union_array) - $intersect;
-	if ($intersect) {
+	$intersect = count(array_intersect($words_of_sent1, $words_of_sent2));
+	$union = count($words_of_sent1)+count($words_of_sent2)-$intersect;
+	if ($union) {
 		return $intersect / $union;
 	} else {
 		return 0;
@@ -96,16 +94,25 @@ class sim_sent_list {
 		while ($prev->next != null && $prev->next->jaccard_score > $jaccard_score) {
 			$prev = $prev->next;
 		}
-		if ($prev->next == null) {
-			$prev->next = new sim_sent_node($id, $jaccard_score, null);
-		} else {
-			$insert_node = new sim_sent_node($id, $jaccard_score, $prev->next);
-			$prev->next = $insert_node;
-		}
+		$prev->next = new sim_sent_node($id, $jaccard_score, $prev->next);
 		$this->size++;
 	}
 
-	// 调试用打印本链表
+	public function get_text_list() {
+		$prev = $this->head;
+		if ($this->size == 0) {
+			return;
+		}
+
+		$ids = "";
+		while ($prev->next != null) {
+			$ids = $ids.",".$prev->next->id;
+			$prev = $prev->next;
+		}
+		$ids = substr($ids, 1); // 去掉第一个逗号
+		return $ids;
+	}
+
 	public function print_list() {
 		$prev = $this->head;
 		if ($this->size == 0) {
@@ -118,8 +125,8 @@ class sim_sent_list {
 	}
 }
 
-// TODO: 将 current_id 的 similar_sent_list 存入数据库
-function insert_similar_sent_list_into_sqlite($current_id, $list) {
+// 将相似句列表存入数据库
+function insert_similar_sent_list_into_sqlite($current_id, $text_list) {
 	/* 使用这部分代码先为数据库添加一个 sim_sents 字段
 	$add_column = "ALTER TABLE pali_sent ADD COLUMN sim_sents TEXT";
 	$Action_add = PDO_Execute($add_column);
@@ -127,49 +134,103 @@ function insert_similar_sent_list_into_sqlite($current_id, $list) {
 	$Fetch = PDO_FetchALL($query);
 	print_r($Fetch);
 	*/
+	global $PDO;
+	$Update = "UPDATE pali_sent SET sim_sents = ".$PDO->quote($text_list)." WHERE id = ".$current_id;
+	$Result = PDO_Execute($Update);
 	return;
 }
 
-// TODO: 考虑圣典中的相似句位置应该比较接近，可以减少比较量
+// 预计算，存入数据库
 function similar_sent_matrix() {
-	$query = "select id,text from pali_sent limit 40000,1000";
-	#$query = "select id,text from pali_sent where id = 10872 or id = 10716";
-	$Fetch = PDO_FetchAll($query);
+	// 按照 count = 18, 8, ..., 255 依次获得查询结果 (i-3,i+3)
+	//          count = 17,16,...,7                                       (i-2,i+2)
+	for ($current_count=17; $current_count > 7; $current_count--) { 
+		print("单词数：".$current_count."\n");
+		$current_query = "select id,text from pali_sent where count=".$current_count;
+		$Current = PDO_FetchAll($current_query);
+		if (count($Current)) {
+			foreach($Current as $current_row) {
+				$current_id = $current_row['id'];
+				$current_sent = $current_row['text'];
+				$current_words = words_of_sentence($current_sent);
+				
+				// 按照 count > $current_count-3 and count <$current_count+3 查询希望比较的语句
+				$compare_query = "select id,text from pali_sent where count>".($current_count-2)." and count<".($current_count+2);
+				$Compare = PDO_FetchALL($compare_query);
 
-	foreach($Fetch as $current_row) {
-		$current_id = $current_row['id'];
-		$current_sent = $current_row['text'];
-		$current_words = words_of_sentence($current_sent);
+				$current_sim_sent_list = new sim_sent_list(); // 新建相似句链表
+				foreach($Compare as $compare_row) {
+					if ($current_row != $compare_row) {
+						$compare_id = $compare_row['id'];
+						$compare_sent = $compare_row['text'];
+						$compare_words = words_of_sentence($compare_sent);
 
-		if (count($current_words) > 5) { // 比较句子长度大于 5 的
+						$jaccard_score = jaccard_similarity($current_words, $compare_words);
+						if ($jaccard_score > 0.3) {
+							$current_sim_sent_list->jaccard_add($compare_id, $jaccard_score);
+						}
+					}
+				} // end of foreach $compare_row
+
+				if ($current_sim_sent_list->size != 0) {
+					print("update ".$current_id."\n");
+					$text_list = $current_sim_sent_list->get_text_list();
+					insert_similar_sent_list_into_sqlite($current_id, $text_list);
+				}
+			} // end of foreach $current_row
+		}
+	}
+	return;
+}
+
+// 实时计算相似句
+function sents_similar_to_id($id) {
+	$query = "SELECT count,text FROM pali_sent WHERE id=".$id;
+	$Current = PDO_FetchALL($query);
+	if (count($Current)) {
+		foreach($Current as $current_row) {
+			$current_count = $current_row['count'];
+			$current_sent = $current_row['text'];
+			$current_words = words_of_sentence($current_sent);
+			print("current text: \n".$current_sent."\n");
+
+			if ($current_count <= 5) {
+				print("[-] too short.\n");
+				return;
+			}
+
+			// 只和单词数大于 5 的比较
+			$compare_query = "SELECT id,text FROM pali_sent WHERE count>5";
+			$Compare = PDO_FetchALL($compare_query);
+
 			$current_sim_sent_list = new sim_sent_list(); // 新建相似句链表
-
-			foreach($Fetch as $compare_row) {
+			foreach($Compare as $compare_row) {
 				if ($current_row != $compare_row) {
 					$compare_id = $compare_row['id'];
 					$compare_sent = $compare_row['text'];
 					$compare_words = words_of_sentence($compare_sent);
 
-					if(count($compare_words) > 5) {
-						$jaccard_score = jaccard_similarity($current_words, $compare_words);
-						if ($jaccard_score > 0.3) {
-							$current_sim_sent_list->jaccard_add($compare_id, $jaccard_score);
-							#print($current_sim_sent_list->next->id);
-						}
+					$jaccard_score = jaccard_similarity($current_words, $compare_words);
+					if ($jaccard_score > 0.3) {
+						print("Jaccard similarity: ".$jaccard_score."\tSentence id:".$compare_id."\n");
+						print("Text: \n". $compare_sent."\n");
+						$current_sim_sent_list->jaccard_add($compare_id, $jaccard_score);
 					}
 				}
 			} // end of foreach $compare_row
 
 			if ($current_sim_sent_list->size != 0) {
-				print("sim_sent_list of ".$current_id.":\n");
-				$current_sim_sent_list->print_list();
-				insert_similar_sent_list_into_sqlite($current_id, $current_sim_sent_list);
+				// $current_sim_sent_list->print_list();
+			} else {
+				print("[-]not found.\n");
 			}
-		}
-	} // end of foreach $current_row
+
+		} // end of foreach($Current)
+	} // end of if (count($Current))
 }
 
-similar_sent_matrix();
+$id = $argv[1];
+sents_similar_to_id($id);
 
 if (!isset($_op)) {
 	exit(0);
