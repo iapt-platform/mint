@@ -16,6 +16,9 @@ require_once "../public/function.php";
 	switch($op){
 		case "login":
 		{
+			if(isset($_GET["url"])){
+				$goto_url = $_GET["url"];
+			}
 			break;
 		}
 		case "logout":
@@ -109,7 +112,7 @@ require_once "../public/function.php";
 			else if(isset($_POST["password"])){
 				$md5_password=md5($_POST["password"]);
 				PDO_Connect("sqlite:"._FILE_DB_USERINFO_);
-				$query = "select * from user where \"username\"=".$PDO->quote($_POST["username"])." and \"password\"=".$PDO->quote($md5_password);
+				$query = "select * from user where (\"username\"=".$PDO->quote($_POST["username"])." or \"email\"=".$PDO->quote($_POST["username"])." ) and \"password\"=".$PDO->quote($md5_password);
 				$Fetch = PDO_FetchAll($query);
 				$iFetch=count($Fetch);
 				if($iFetch>0){//username is exite
@@ -123,19 +126,36 @@ require_once "../public/function.php";
 					setcookie("userid", $userid, time()+60*60*24*365,"/");
 					setcookie("nickname", $nickname, time()+60*60*24*365,"/");
 					setcookie("email", $email, time()+60*60*24*365,"/");
-	
+					if(isset($_POST["url"])){
+						$goto_url = $_POST["url"];
+					}
+					if(isset($_COOKIE["url"])){
+						setcookie("pwd_set", "on", time()+60,"/");
+					}
 					$newUserPath=_DIR_USER_BASE_.'/'.$userid.'/';
 					if(!file_exists($newUserPath)){
 						echo "error:cannot find user dir:$newUserPath<br/>";
 					}
-?><!DOCTYPE html>
+?>
+
+<!DOCTYPE html>
 <html>
 	<head>
+
 		<title>wikipali starting</title>
-		<meta http-equiv="refresh" content="0,../studio/index.php"/>
+		<?php
+		if(isset($goto_url)){
+			$goto = $goto_url;
+		}
+		else{
+			$goto = "../studio/index.php";
+		}
+		?>
+		<meta http-equiv="refresh" content="0,<?php echo $goto;?>"/>
 	</head>
 	
 	<body>
+	
 		<br>
 		<br>
 		<p align="center"><a href="../studio/index.php">Auto Redirecting to Homepage! IF NOT WORKING, CLICK HERE</a></p>
@@ -428,6 +448,12 @@ require_once "../public/function.php";
 			<form action="index.php" method="post">
 				<div>
 				<?php
+				if(isset($goto_url)){
+					echo "<input type=\"hidden\" name=\"url\" value=\"{$goto_url}\"  />";
+				}
+				else if(isset($_POST["url"])){
+					echo "<input type=\"hidden\" name=\"url\" value=\"{$_POST["url"]}\"  />";
+				}
 				if(isset($_POST["username"]) && $_username_ok==true){
 					echo "<span id='tip_password' class='form_field_name'>".$_local->gui->password."</span>";
 					echo '<input type="password" name="password" />';

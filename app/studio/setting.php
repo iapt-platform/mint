@@ -360,10 +360,10 @@ $album_power["2"]="编辑";
 		case "account":
 			echo "<h2>Accont</h2>";
 			echo "User Name:$username<br />";
-			echo "Nick Name:$nickname<br />";
-			echo "User ID:$userid<br />";
+			echo "Nick Name:<>$nickname<br />";
 			echo "Email:$email<br />";
-			echo "<a href='login.php?op=logout'>Logout</a>";
+			echo "<a href='login.php?op=logout'>Logout</a><br>";
+			echo "<a href='../ucenter/pwd_set.php'>修改密码</a>";
 			break;
 		case "album":
 			$db_file = _FILE_DB_RESRES_INDEX_;
