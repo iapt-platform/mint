@@ -56,7 +56,7 @@ $tran="";
 $db_file=_FILE_DB_SENTENCE_;
 try{
 	PDO_Connect("sqlite:$db_file");
-	$query="select * from sentence where book='{$bookId}' and paragraph='{$para}' and begin='{$begin}' and end='{$end}' order by modify_time DESC ";
+	$query="SELECT * FROM sentence WHERE book='{$bookId}' AND paragraph='{$para}' AND begin='{$begin}' AND end='{$end}'  AND text <> '' order by modify_time DESC limit 0 ,1 ";
 	$Fetch = PDO_FetchAll($query);
 	$iFetch=count($Fetch);
 	if($iFetch>0){
