@@ -464,7 +464,7 @@ else{
                             strFilelist += "<li>"+$link+file_list[x].title+"</a></li>";
                         }
                         if(file_list.length>count){
-                            strFilelist += "<li><a href='studio/' targe='_blank'>更多</a></li>";
+                            strFilelist += "<li><a href='../studio/index_recent.php' targe='_blank'>更多</a></li>";
                         }
                         $("#file_list").html(strFilelist);
                     }
