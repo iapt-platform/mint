@@ -24,8 +24,8 @@ $bookId=$arrSent[0];
 $para=$arrSent[1];
 $begin=$arrSent[2];
 $end=$arrSent[3];
-$db_file = _DIR_PALICANON_TEMPLET_."/p".$bookId."_tpl.db3";		
-			
+$db_file = _DIR_PALICANON_TEMPLET_."/p".$bookId."_tpl.db3";	
+
 PDO_Connect("sqlite:$db_file");
 $query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($para)." ) ";
 $sth = $PDO->prepare($query);
