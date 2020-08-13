@@ -28,7 +28,7 @@ require_once '../studio/index_head.php';
 		<div class="file_list_block">
 			<div class="tool_bar">
 				<div>
-				<?php echo $_local->gui->collaorate;?>
+				<?php echo $_local->gui->collaborate;?>
 				</div>
 
 				<div>

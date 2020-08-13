@@ -1,5 +1,6 @@
 # 主格
 pāḷi：paccattavacana
+原意：独自的用语
 别名：体格
 ```
 Tatra paccattavacanaṃ nāma tividhaliṅgavavatthānagatānaṃ itthipumanapuṃsakānaṃ paccattasabhāvaniddesattho.

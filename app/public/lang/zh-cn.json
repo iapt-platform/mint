@@ -388,7 +388,7 @@
 		"add_folder": "新建文件夹",
 		"add_to_folder": "放入文件夹",
 		"rename": "重命名",
-		"collaorate": "协作文档",
+		"collaborate": "协作文档",
 		"help": "帮助",
 		"function_introduce": "Wikipāḷi功能介绍",
 		"vedio_link": "视频链接",
@@ -445,6 +445,13 @@
 		"atthakatha": "义註",
 		"tika": "复註",
 		"times2": "次",
+		"co_doc": "协作文档",
+		"open": "打开",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
 		"": ""
 	},
 	"grammastr": [

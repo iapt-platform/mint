@@ -823,7 +823,7 @@ switch($op){
 						}
 						else{
 						?>
-						<p>这是PCS共享文档，您是否要打开？</p>
+						<p><?php echo $_local->gui->co_doc?>，<?php echo $_local->gui->open?>？</p>
 						<div>
 						文档信息：
 						<ul>
