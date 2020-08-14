@@ -125,7 +125,7 @@ function msg_send() {
 							msg_show_content(msg_curr_show_content_type, msg_curr_show_content_id);
 
 							switch (obj.type) {
-								case 1: //wbw
+								case "1": //wbw
 									var iFind = false;
 									for (var iWordId = 0; iWordId < arrWordNewMsg.length; iWordId++) {
 										if (arrWordNewMsg[iWordId] == obj.data.id) {
@@ -137,7 +137,7 @@ function msg_send() {
 										arrWordNewMsg.push(obj.data.id);
 									}
 									break;
-								case 2:
+								case "2":
 									break;
 							}
 							gXmlBookDataMsg.appendChild(arrMsg[x].cloneNode(true));
@@ -209,9 +209,7 @@ function msg_apply_data(obj) {
 					let xAllWord = gXmlBookDataBody.getElementsByTagName("word");
 					let xWord = xAllWord[wIndex];
 					let sReal = getNodeText(xWord, "real");
-					let wordStatus = getNodeText(xWord, "status");
-					wordStatus++;
-					wordStatus--;
+					let wordStatus = parseInt(getNodeText(xWord, "status"));
 					let wordBodyChange = false;
 					let wordHeadChange = false;
 					let wordNoteChange = false;
@@ -382,6 +380,7 @@ function msg_show_content(type, id) {
 	}
 	let arrid;
 	let sen_begin, sen_end;
+	type = parseInt(type);
 	if (type == 2) {
 		arrid = id.split("-");
 		id = arrid[0];
@@ -528,8 +527,8 @@ function msg_update_msg_list() {
 
 	for (var i = 0; i < gDocMsgList.length; i++) {
 		switch (gDocMsgList[i].type) {
-			case 2:
-			case 1:
+			case "2":
+			case "1":
 				var iFind = _msg_find_id_in_list(msgList, gDocMsgList[i].data.id);
 				if (iFind >= 0) {
 					if (gDocMsgList[i].read == 0) {
@@ -576,7 +575,7 @@ function msg_update_msg_list() {
 				var d = new Date()
 				d.setTime(msgList[i].newTime * 1000);
 				switch (msgList[i].type) {
-					case 1:
+					case "1":
 						var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
 						var wIndex = getWordIndex(msgList[i].id);
 						if (wIndex >= 0) {
@@ -587,13 +586,13 @@ function msg_update_msg_list() {
 						}
 						strHtml += "<span>";
 						if (msgList[i].unread > 0) {
-							strHtml += "<span class='word_msg'>" + msgList[i].unread + "</span>";
+							strHtml += "<span class='word_msg'  onclick=\"msg_show_msg_content('1','" + msgList[i].id + "')\">" + msgList[i].unread + "</span>";
 						}
 						strHtml += "<a href='#w" + msgList[i].id + "'>[«]</a>";
 						strHtml += "<a onclick=\"msg_show_msg_content('1','" + msgList[i].id + "')\">" + wordSpell + "</a></span>";
 						strHtml += "<span>" + d.toLocaleString() + "</span>";
 						break;
-					case 2:
+					case "2":
 						strHtml += "<a onclick=\"msg_show_msg_content('2','" + msgList[i].id + "')\">" + msgList[i].id + "</a></span>";
 						strHtml += "<span>" + d.toLocaleString() + "</span>";
 						break;
@@ -617,4 +616,38 @@ function _msg_find_id_in_list(arrList, id) {
 
 function sortNumber(a, b) {
 	return b.newTime - a.newTime;
+}
+
+
+function show_tran_msg(bid, begin, end) {
+	msg_show_msg_content(2, bid + "-" + begin + "-" + end);
+}
+
+function word_msg_counter_click(wordId) {
+	msg_show_content(1, wordId);
+	msg_show_content_panal();
+	//tab_click('msg_panal_right', 'rb_msg');
+	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+	editor_show_right_tool_bar(true);
+}
+function msg_show_msg_content(type, id) {
+	msg_show_content(type, id);
+	msg_show_content_panal();
+	//tab_click('msg_panal_right', 'rb_msg');
+	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+}
+
+function msg_show_list_panal() {
+	$("#msg_panal_content_toolbar").hide();
+	$("#msg_panal_content").hide();
+
+	$("#msg_panal_list_toolbar").show();
+	$("#msg_panal_list").show();
+}
+function msg_show_content_panal() {
+	$("#msg_panal_content_toolbar").show();
+	$("#msg_panal_content").show();
+
+	$("#msg_panal_list_toolbar").hide();
+	$("#msg_panal_list").hide();
 }
