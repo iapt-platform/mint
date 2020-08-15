@@ -13,6 +13,7 @@
     }
     else{
         echo "尚未登录";
+        echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
         exit;
     }
     PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
@@ -44,12 +45,15 @@
                 if($iFetchSelf>0){
                     //以前打开过
                     echo "文档已经复刻";
-                    echo "<a href='../studio/editor.php?op=opendb&doc_id={$doc_id}'>在编辑器中打开</a>";
+                    echo "正在<a href='../studio/editor.php?op=opendb&doc_id={$doc_id}'>打开</a>文档";
+                    echo "<script>";
+                    echo "window.location.assign(\"../studio/editor.php?op=opendb&doc_id={$doc_id}\");";
+                    echo "</script>";
                 }
                 else{
                     //以前没打开过
-                    echo "共享的文档，fork并打开...";
-
+                    echo "<h3>共享的文档，正在fork...</h3>";
+                    echo "<div style='display:none;'>";
                     //获取文件路径
                     
                     PDO_Connect("sqlite:"._FILE_DB_USERINFO_);
@@ -339,8 +343,13 @@
                             //文档列表插入成功
                             
                             echo "doc list updata 1 recorders.";
-                            echo "<a href='../studio/editor.php?op=opendb&doc_id={$newDocId}'>在编辑器中打开</a>";
-                        }                        
+                            echo "</div>";
+                            echo "<h3>复刻成功</h3>";
+                            echo "正在<a href='../studio/editor.php?op=opendb&doc_id={$newDocId}'>打开</a>文档";
+                            echo "<script>";
+                            echo "window.location.assign(\"../studio/editor.php?op=opendb&fileid={$newDocId}\");";
+                            echo "</script>";
+                        } 
                     }
                     else{
                         echo "无效的文档id";

@@ -17,7 +17,7 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../public/load_lang.php";
 require_once "./book_list_en.inc";
-require_once "../path.php";
+require_once "../ucenter/function.php";
 
 $sLang["1"]="pali";
 $sLang["2"]="en";
@@ -777,7 +777,7 @@ switch($op){
 			$uid=$_COOKIE["uid"];
 		}
 		else{
-			echo "尚未登录";
+			echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
 			exit;
 		}
 		$db_file = _FILE_DB_FILEINDEX_;
@@ -799,9 +799,12 @@ switch($op){
 				
 				if($owner==$uid){
 					//自己的文档
-					echo "自己的文档";
+					echo "<h3>我的文档</h3>";
 					$my_doc_id=$doc_id;
-					//echo "<a href=\"editor.php?op=open&fileid={$doc_id}\">打开</a>";
+					echo "正在<a href=\"editor.php?op=opendb&fileid={$doc_id}\">打开</a>文档";
+					echo "<script>";
+					echo "window.location.assign(\"editor.php?op=opendb&fileid={$doc_id}\");";
+					echo "</script>";
 				}
 				else{
 					//别人的文档
@@ -811,9 +814,12 @@ switch($op){
 					$iFetchSelf=count($FetchSelf);
 					if($iFetchSelf>0){
 						//以前打开过
-						echo "共享的文档 以前打开过";
+						echo "已经复制的文档 Already Copy";
 						$my_doc_id=$FetchSelf[0]["id"];
-						echo "<a href='../studio/editor.php?op=opendb&doc_id={$doc_id}'>在编辑器中打开</a>";
+						echo "<a href='../studio/editor.php?op=opendb&fileid={$doc_id}'>Open in Studio</a>";
+						echo "<script>";
+						echo "window.location.assign(\"editor.php?op=opendb&fileid={$doc_id}\");";
+						echo "</script>";						
 					}
 					else{
 						//以前没打开过
@@ -829,21 +835,21 @@ switch($op){
 						<ul>
 						<?php
 						$book_name=$book["p".$mbook];
-						echo "<li>文档主人：{$owner}</li>";
-						echo "<li>文档标题：{$title}</li>";
-						echo "<li>书名：{$book_name}</li>";
+						echo "<li>Owner：".ucenter_get($owner)."</li>";
+						echo "<li>Title：{$title}</li>";
+						echo "<li>Book：{$book_name}</li>";
 						?>
 						</ul>
 						</div>
 						<p><?php echo $_local->gui->open_with?>：</p>
 						<ul>
-						<li><a href="../pcdl/reader.php?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
+						<li style="display:none;"><a href="../pcdl/reader.php?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
 						<?php
 						if(empty($doc_head)){
 							echo '<li><a href="../studio/project.php?op=open&doc_id='.$doc_id.'&openin=editor">复制到我的空间用编辑器打开</a></li>';
 						}
 						else{
-							echo '<li><a href="../doc/fork.php?doc_id='.$doc_id.'">'.$_local->gui->pcd_studio.'</a>（'.$_local->gui->folk.$_local->gui->and.$_local->gui->edit.'）</li>';
+							echo '<li>'.$_local->gui->pcd_studio.'<a href="../doc/fork.php?doc_id='.$doc_id.'">'.$_local->gui->folk.$_local->gui->and.$_local->gui->edit.'</a></li>';
 						}
 						?>
 						
