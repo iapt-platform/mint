@@ -318,7 +318,7 @@ function msg_apply_data(obj) {
 						console.log("句子 自动采纳");
 						tranBlock.text(obj.data.begin, obj.data.end, "text", obj.data.text);
 						tranBlock.text(obj.data.begin, obj.data.end, "status", 5);
-						sen_save(obj.data.id, obj.data.begin, obj.data.end, obj.data.text);
+						sen_save(tranBlock.info("id"), obj.data.begin, obj.data.end, obj.data.text);
 					}
 				}
 
@@ -381,12 +381,14 @@ function msg_show_content(type, id) {
 	let arrid;
 	let sen_begin, sen_end;
 	type = parseInt(type);
+
 	if (type == 2) {
-		arrid = id.split("-");
+		arrid = id.split("#");
 		id = arrid[0];
 		sen_begin = arrid[1];
 		sen_end = arrid[2];
 	}
+
 	msg_curr_show_content_id = id;
 	msg_curr_show_content_type = type;
 	var iMsg = 0;
@@ -542,6 +544,7 @@ function msg_update_msg_list() {
 				else {
 					objMsg = new Object();
 					objMsg.id = gDocMsgList[i].data.id;
+					objMsg.data = gDocMsgList[i].data;
 					objMsg.type = gDocMsgList[i].type;
 					if (gDocMsgList[i].read == 0) {
 						objMsg.unread = 1;
@@ -593,7 +596,9 @@ function msg_update_msg_list() {
 						strHtml += "<span>" + d.toLocaleString() + "</span>";
 						break;
 					case "2":
-						strHtml += "<a onclick=\"msg_show_msg_content('2','" + msgList[i].id + "')\">" + msgList[i].id + "</a></span>";
+						let sent_id = msgList[i].id + "#" + msgList[i].data.begin + "#" + msgList[i].data.end;
+						let sent_msg_title = msgList[i].data.begin + "-" + msgList[i].data.end + "-" + msgList[i].data.text.slice(0, 5);
+						strHtml += "<a onclick=\"msg_show_msg_content('2','" + sent_id + "')\">" + sent_msg_title + "</a></span>";
 						strHtml += "<span>" + d.toLocaleString() + "</span>";
 						break;
 				}

@@ -4923,8 +4923,9 @@ function tran_sen_save(blockid, senBegin, senEnd, input) {
 
 function tran_text_onchange(blockid, senBegin, senEnd, obj) {
 	let newText = obj.value;
-	sen_save(blockid, senBegin, senEnd, newText);
 	tran_sen_save(blockid, senBegin, senEnd, newText);
+	//保存到数据库
+	sen_save(blockid, senBegin, senEnd, newText);
 }
 
 /*

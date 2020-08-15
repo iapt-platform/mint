@@ -267,7 +267,7 @@ foreach($plugin_list as $info){
 		<!--左侧的区块-->
 		<div>
 
-			<svg class="icon" style="fill: #f1ca23;height: 2em;width: 8.5em;margin-top: 0.5em;margin-left: -0.5em;">
+			<svg class="icon" style="height: 2.7em; width: 12em; margin-top: 0.5em; ">
 				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
 			</svg>
 

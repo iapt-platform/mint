@@ -13,11 +13,11 @@ PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
 
 /* 开始一个事务，关闭自动提交 */
 $PDO->beginTransaction();
-$query="UPDATE sentence SET text= ?  , receive_time= ?  , modify_time= ?   where  id= ?  ";
+$query="UPDATE sentence SET text= ?  , status = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
 $sth = $PDO->prepare($query);
 
 foreach ($aData as $data) {
-    $sth->execute(array($data->text,mTime(),$data->time,$data->id));
+    $sth->execute(array($data->text, $data->status, mTime(),$data->time,$data->id));
 }
 $PDO->commit();
 
