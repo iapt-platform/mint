@@ -200,8 +200,8 @@ a:active {
 }
 .viewswitch_on {
     -webkit-transform:translateX(0em);
-    -moz-transform:translateX:(0em);
-    transform:translateX:(0em);
+    -moz-transform:translateX(0em);
+    transform:translateX(0em);
     /*box-shadow: 5px 0 20px 5px var(--shadow-color);*/
 }
 .viewswitch_off {

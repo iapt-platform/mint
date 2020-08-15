@@ -4845,36 +4845,7 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 	}
 }
 
-function show_tran_msg(bid, begin, end) {
-	msg_show_msg_content(2, bid + "-" + begin + "-" + end);
-}
 
-function word_msg_counter_click(wordId) {
-	msg_show_content(1, wordId);
-	msg_show_content_panal();
-	tab_click('msg_panal_right', 'rb_msg');
-	editor_show_right_tool_bar(true);
-}
-function msg_show_msg_content(type, id) {
-	msg_show_content(type, id);
-	msg_show_content_panal();
-	tab_click('msg_panal_right', 'rb_msg');
-}
-
-function msg_show_list_panal() {
-	$("#msg_panal_content_toolbar").hide();
-	$("#msg_panal_content").hide();
-
-	$("#msg_panal_list_toolbar").show();
-	$("#msg_panal_list").show();
-}
-function msg_show_content_panal() {
-	$("#msg_panal_content_toolbar").show();
-	$("#msg_panal_content").show();
-
-	$("#msg_panal_list_toolbar").hide();
-	$("#msg_panal_list").hide();
-}
 function editor_word_status_by_id(id, newStatus = null) {
 	var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
 	return (editor_word_status(xAllWord[getWordIndex(wordId)]), newStatus);
@@ -4952,8 +4923,9 @@ function tran_sen_save(blockid, senBegin, senEnd, input) {
 
 function tran_text_onchange(blockid, senBegin, senEnd, obj) {
 	let newText = obj.value;
-	sen_save(blockid, senBegin, senEnd, newText);
 	tran_sen_save(blockid, senBegin, senEnd, newText);
+	//保存到数据库
+	sen_save(blockid, senBegin, senEnd, newText);
 }
 
 /*

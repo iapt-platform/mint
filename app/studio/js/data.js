@@ -523,12 +523,15 @@ function _doc_tran_sent(begin, end, key, value = null) {
 					if (key == "text") {
 						ntf_show("修改：" + key + "=" + value);
 						let blockId;
+						/*
 						if (this.info("parent").length > 0) {
 							blockId = this.info("parent");
 						}
 						else {
 							blockId = this.info("id");
 						}
+						*/
+						blockId = this.info("id");
 						let book = this.info("book");
 						let para = this.info("paragraph");
 						update_tran_block_text(blockId);
@@ -590,7 +593,7 @@ function _doc_tran_info(key, value = null) {
 			setNodeText(this._info, key, value);
 		}
 		else {
-			var output = getNodeText(this._info, key);
+			let output = getNodeText(this._info, key);
 			return (output);
 		}
 	}
