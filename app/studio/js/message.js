@@ -198,7 +198,8 @@ function msg_read(msg_obj, status = null) {
 function msg_apply_data(obj) {
 	if (obj.sender == getCookie("username")) {
 		//忽略自己的消息
-		return;
+		msg_read(obj, 1);//设置为已读
+		return (true);
 	}
 	doc_info.sendmsg = false;//不发送消息
 	try {
@@ -372,6 +373,25 @@ function msg_set_tool_bar_msg_counter() {
 		$("#icon_notify_" + msg_my_id).show();
 	}
 }
+function time_standardize(date) {
+	var today_date = new Date();
+	var Local_time = date.toLocaleTimeString();
+	//將時間去掉秒的信息
+	if (Local_time && Local_time.split(":").length == 3) {
+		var Local_time_string = Local_time.split(":")[0] + ":" + Local_time.split(":")[1];
+		Local_time_string += Local_time.split(":")[2].slice(2);
+	}
+	else {
+		var Local_time_string = d.toLocaleTimeString()
+	}
+	if (date.toLocaleDateString() == today_date.toLocaleDateString()) {//如果是今天的消息，只显示时间
+		return (Local_time_string);
+	}
+	else {//如果不是今天的消息，只显示日期
+		return (date.toLocaleDateString());
+	}
+
+}
 
 //显示消息内容
 function msg_show_content(type, id) {
@@ -420,16 +440,9 @@ function msg_show_content(type, id) {
 				var d = new Date()
 				d.setTime(gDocMsgList[i].time * 1000);
 				//var Local_date=d.toLocaleDateString().split("/");
-				var Local_time = d.toLocaleTimeString();
-				//將時間去掉秒的信息
-				if (Local_time && Local_time.split(":").length == 3) {
-					var Local_time_string = Local_time.split(":")[0] + ":" + Local_time.split(":")[1];
-					Local_time_string += Local_time.split(":")[2].slice(2);
-				}
-				else {
-					var Local_time_string = d.toLocaleTimeString()
-				}
-				outHtml += "<div class='msgbox_time'><span>" + d.toLocaleDateString() + " " + Local_time_string + "</span></div>";//d.toLocaleeString()
+				var time_standardize_string = time_standardize(d);
+				outHtml += "<div class='msgbox_time'><span>" + time_standardize_string + "</span></div>";//d.toLocaleeString()
+
 			}
 			iLastTime = gDocMsgList[i].time;
 
@@ -575,7 +588,7 @@ function msg_update_msg_list() {
 			}
 			if (times == j) {
 				strHtml += "<li>";
-				var d = new Date()
+				var d = new Date();
 				d.setTime(msgList[i].newTime * 1000);
 				switch (msgList[i].type) {
 					case "1":
@@ -593,13 +606,13 @@ function msg_update_msg_list() {
 						}
 						strHtml += "<a href='#w" + msgList[i].id + "'>[«]</a>";
 						strHtml += "<a onclick=\"msg_show_msg_content('1','" + msgList[i].id + "')\">" + wordSpell + "</a></span>";
-						strHtml += "<span>" + d.toLocaleString() + "</span>";
+						strHtml += "<span>" + time_standardize(d) + "</span>";
 						break;
 					case "2":
 						let sent_id = msgList[i].id + "#" + msgList[i].data.begin + "#" + msgList[i].data.end;
 						let sent_msg_title = msgList[i].data.begin + "-" + msgList[i].data.end + "-" + msgList[i].data.text.slice(0, 5);
 						strHtml += "<a onclick=\"msg_show_msg_content('2','" + sent_id + "')\">" + sent_msg_title + "</a></span>";
-						strHtml += "<span>" + d.toLocaleString() + "</span>";
+						strHtml += "<span>" + time_standardize(d) + "</span>";
 						break;
 				}
 				strHtml += "</li>";
@@ -638,8 +651,21 @@ function word_msg_counter_click(wordId) {
 function msg_show_msg_content(type, id) {
 	msg_show_content(type, id);
 	msg_show_content_panal();
-	//tab_click('msg_panal_right', 'rb_msg');
 	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+}
+
+function show_tran_net(book, para, begin, end) {
+	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+	$.get("../usent/get.php",
+		{
+			book: book,
+			para: para,
+			begin: begin,
+			end: end
+		},
+		function (data, status) {
+			$("#msg_panal_content").html(data);
+		});
 }
 
 function msg_show_list_panal() {

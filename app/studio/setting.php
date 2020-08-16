@@ -1,15 +1,17 @@
 ﻿<?php
 require_once "../path.php";
 require_once 'checklogin.inc';
+require_once "../public/load_lang.php";
 require_once '../public/config.php';
 require_once "../public/_pdo.php";
 
-if(isset($_GET["language"])){$currLanguage=$_GET["language"];}
-else{$currLanguage="en";}
+//if(isset($_GET["language"])){$currLanguage=$_GET["language"];}
+//else{$currLanguage="en";}
 
 if(isset($_GET["device"])){$currDevice=$_GET["device"];}
 else{$currDevice="computer";}
 
+$menu_active["account"] = "";
 $menu_active["general"] = "";
 $menu_active["local"] = "";
 $menu_active["studio"] = "";
@@ -19,7 +21,6 @@ $menu_active["userdict"] = "";
 $menu_active["term"] = "";
 $menu_active["message"] = "";
 $menu_active["album"] = "";
-$menu_active["account"] = "";
 if(isset($_GET["item"])){
 	$currSettingItem=$_GET["item"];
 	$menu_active[$currSettingItem] = " class='act'";
@@ -64,16 +65,16 @@ $album_power["2"]="编辑";
 			
 			<div class='toc' id='leftmenuinnerinner'>	
 				<ul class="setting_item">
-					<li <?php echo $menu_active["general"];?>><a href="setting.php?item=general">General</a></li>
+					<li <?php echo $menu_active["account"];?>><a href="setting.php?item=account"><?php echo $_local->gui->account ;?></a></li>
+					<li <?php echo $menu_active["general"];?>><a href="setting.php?item=general"><?php echo $_local->gui->general ;?></a></li>
 					<li <?php echo $menu_active["local"];?>><a href="setting.php?item=local">Local</a></li>
-					<li <?php echo $menu_active["studio"];?>><a href="setting.php?item=studio">Studio</a></li>
-					<li <?php echo $menu_active["liberay"];?>><a href="setting.php?item=liberay">Liberay</a></li>
-					<li <?php echo $menu_active["dictionary"];?>><a href="setting.php?item=dictionary">Dictionary</a></li>
-					<li <?php echo $menu_active["userdict"];?>><a href="setting.php?item=userdict">User Dictionary</a></li>
-					<li <?php echo $menu_active["term"];?>><a href="setting.php?item=term">Term</a></li>
-					<li <?php echo $menu_active["message"];?>><a href="setting.php?item=message">Message</a></li>
+					<li <?php echo $menu_active["studio"];?>><a href="setting.php?item=studio"><?php echo $_local->gui->studio ;?></a></li>
+					<li <?php echo $menu_active["liberay"];?>><a href="setting.php?item=liberay"></a><?php echo $_local->gui->library ;?></li>
+					<li <?php echo $menu_active["dictionary"];?>><a href="setting.php?item=dictionary"><?php echo $_local->gui->dictionary ;?></a></li>
+					<li <?php echo $menu_active["userdict"];?>><a href="setting.php?item=userdict"><?php echo $_local->gui->user_dictionary ;?></a></li>
+					<li <?php echo $menu_active["term"];?>><a href="setting.php?item=term"><?php echo $_local->gui->dict_terms ;?></a></li>
+					<li <?php echo $menu_active["message"];?>><a href="setting.php?item=message"><?php echo $_local->gui->message ;?></a></li>
 					<li <?php echo $menu_active["album"];?>><a href="setting.php?item=album">Album</a></li>
-					<li <?php echo $menu_active["account"];?>><a href="setting.php?item=account">Accont</a></li>
 					<li><a href="../admin/setting.php?item=account">Web Admin</a></li>
 				</ul>
 			</div>
@@ -95,6 +96,7 @@ $album_power["2"]="编辑";
 			?>
 				
 			</div>
+			<!--
 			<div>
 				<span>Language</span>
 				<select id="id_language" name="menu" >
@@ -103,7 +105,7 @@ $album_power["2"]="编辑";
 					<option value="zh-cn" >简体中文</option>
 					<option value="zh-tw" >正體中文</option>
 				</select>
-			</div>
+			</div>-->
 		</div>
 <?php
 	switch($currSettingItem){
@@ -358,12 +360,12 @@ $album_power["2"]="编辑";
 
 			break;
 		case "account":
-			echo "<h2>Accont</h2>";
-			echo "User Name:$username<br />";
-			echo "Nick Name:<>$nickname<br />";
-			echo "Email:$email<br />";
-			echo "<a href='login.php?op=logout'>Logout</a><br>";
-			echo "<a href='../ucenter/pwd_set.php'>修改密码</a>";
+			echo "<h2>{$_local->gui->account}</h2>";
+			echo "{$_local->gui->username}：$username<br />";
+			echo "{$_local->gui->nick_name}：$nickname<br />";
+			echo "{$_local->gui->e_mail}：$email<br />";
+			echo "<a href='../ucenter/pwd_set.php'>{$_local->gui->change_password}</a><br>";
+			echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
 			break;
 		case "album":
 			$db_file = _FILE_DB_RESRES_INDEX_;
