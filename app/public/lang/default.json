@@ -445,6 +445,10 @@
 		"tika": "ṭīkā",
 		"times2": "times",
 		"co_doc": "Collaborative Document",
+		"open": "Open",
+		"general": "General",
+		"username": "Login ID",
+		"change_password": "change the password",
 		"": ""
 	},
 	"grammastr": [
