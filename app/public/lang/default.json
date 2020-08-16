@@ -449,6 +449,9 @@
 		"general": "General",
 		"username": "Login ID",
 		"change_password": "change the password",
+		"ignore": "ignore",
+		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
+		"open_doc": "如果未自动跳转，请点此打开",
 		"": ""
 	},
 	"grammastr": [

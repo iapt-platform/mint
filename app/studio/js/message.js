@@ -387,7 +387,11 @@ function time_standardize(date) {
 	if (date.toLocaleDateString() == today_date.toLocaleDateString()) {//如果是今天的消息，只显示时间
 		return (Local_time_string);
 	}
-	else {//如果不是今天的消息，只显示日期
+	else if (date.toLocaleDateString().slice(0, 5) == today_date.toLocaleDateString().slice(0, 5)) {//如果是今年但非今天的消息，只显示月日
+		var date_length = date.toLocaleDateString().length;
+		return (date.toLocaleDateString().slice(5, date_length - 1));
+	}
+	else {//如果不是今年的消息，显示年月日
 		return (date.toLocaleDateString());
 	}
 

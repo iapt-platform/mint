@@ -450,9 +450,9 @@
 		"general": "通用",
 		"username": "用户名",
 		"change_password": "修改密码",
-		"": "",
-		"": "",
-		"": "",
+		"ignore": "忽略",
+		"oversize_to_load": "尺寸过大，无法加载，请缩小加载范围",
+		"open_doc": "如果未自动跳转，请点此打开",
 		"": ""
 	},
 	"grammastr": [
