@@ -494,7 +494,7 @@ function renderTranslateParBlockInner(elementBlock) {
 		output += "<div class=\"tran_sent_text_tool_bar\">";
 		//output += "<button onclick=\"tran_sen_save_click('"+bId+"','"+senBegin+"','"+senEnd+"',this)\">Save</button>";
 		output += "<span></span>";
-		output += "<span onclick=\"show_tran_msg('" + bId + "','" + senBegin + "','" + senEnd + "')\">Others<span id='' class=\"word_msg\">2</span>&gt;&gt;</span>";
+		output += "<span onclick=\"show_tran_msg('" + bId + "','" + senBegin + "','" + senEnd + "')\"><span id='' class=\"word_msg\"></span></span>";
 
 		output += "</div>";
 		output += "</div>";
@@ -1157,7 +1157,7 @@ function renderWordParBlockInner(elementBlock) {
 				output += "<div class='translate_sent_head'>";
 				output += "<div class='translate_sent_head_toolbar'>";
 				output += "<span></span>";
-				output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">net</span></span>";
+				output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">issue</span></span>";
 				sent_begin = word_id;
 				output += "</div>";
 				output += "<div class='translate_sent_head_content'>";
@@ -1213,7 +1213,7 @@ function renderWordParBlockInner(elementBlock) {
 	output += "<div class='translate_sent_head'>";
 	output += "<div class='translate_sent_head_toolbar'>";
 	output += "<span></span>";
-	output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">net</span></span>";
+	output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">issue</span></span>";
 	output += "</div>";
 	output += "<div class='translate_sent_head_content'>";
 	output += "</div>";

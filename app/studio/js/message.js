@@ -198,7 +198,8 @@ function msg_read(msg_obj, status = null) {
 function msg_apply_data(obj) {
 	if (obj.sender == getCookie("username")) {
 		//忽略自己的消息
-		return;
+		msg_read(obj, 1);//设置为已读
+		return (true);
 	}
 	doc_info.sendmsg = false;//不发送消息
 	try {
