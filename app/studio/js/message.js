@@ -198,7 +198,8 @@ function msg_read(msg_obj, status = null) {
 function msg_apply_data(obj) {
 	if (obj.sender == getCookie("username")) {
 		//忽略自己的消息
-		return;
+		msg_read(obj, 1);//设置为已读
+		return (true);
 	}
 	doc_info.sendmsg = false;//不发送消息
 	try {
@@ -650,8 +651,21 @@ function word_msg_counter_click(wordId) {
 function msg_show_msg_content(type, id) {
 	msg_show_content(type, id);
 	msg_show_content_panal();
-	//tab_click('msg_panal_right', 'rb_msg');
 	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+}
+
+function show_tran_net(book, para, begin, end) {
+	tab_click_b('sys_message', 'tab_rb_sys_message', editor_show_right_tool_bar, true);
+	$.get("../usent/get.php",
+		{
+			book: book,
+			para: para,
+			begin: begin,
+			end: end
+		},
+		function (data, status) {
+			$("#msg_panal_content").html(data);
+		});
 }
 
 function msg_show_list_panal() {

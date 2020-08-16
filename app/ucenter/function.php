@@ -1,6 +1,6 @@
 <?php
 require_once '../path.php';
-function ucenter_get($userid,$fields){
+function ucenter_get($userid,$fields="username"){
     //打开数据库
     $dns = "sqlite:"._FILE_DB_USERINFO_;
     $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
@@ -11,7 +11,7 @@ function ucenter_get($userid,$fields){
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dbh=null;
     if(count($fUser)>0){
-        return($fUser[0]["username"]);
+        return($fUser[0][$fields]);
     }
     else{
         return("");
