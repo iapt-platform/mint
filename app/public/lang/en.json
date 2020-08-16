@@ -449,6 +449,8 @@
 		"general": "General",
 		"username": "Login ID",
 		"change_password": "change the password",
+		"ignore": "ignore",
+		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
 		"": ""
 	},
 	"grammastr": [
