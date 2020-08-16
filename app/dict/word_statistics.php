@@ -73,7 +73,13 @@ require_once "../public/load_lang_js.php";//语言文件
     word : "<?php echo $_GET["word"] ?>"
   },
   function(data,status){
-    let worddata =  JSON.parse(data);
+    let worddata;
+      try {
+          worddata =  JSON.parse(data);
+      } catch (error) {
+          console(error);
+      }
+    
     // Splice in transparent for the center circle
     Highcharts.getOptions().colors.splice(0, 0, 'transparent');
 

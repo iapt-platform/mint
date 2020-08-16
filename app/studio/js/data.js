@@ -175,30 +175,36 @@ function doc_file_info_get() {
 			doc_id: g_docid
 		},
 		function (data, status) {
-			arrDocFileInfo = JSON.parse(data);
-			if (arrDocFileInfo.parent_id == null) {
-				doc_info.parent_id = "";
-			}
-			else {
-				doc_info.parent_id = arrDocFileInfo.parent_id;
-			}
-			doc_info.doc_id = arrDocFileInfo.id;
-			doc_info.share = arrDocFileInfo.share;
-			if (arrDocFileInfo.parent_id && arrDocFileInfo.parent_id != null && arrDocFileInfo.parent_id.length > 0) {
-				strMsgDocList = arrDocFileInfo.parent_id;
-				msg_start();//该文档是他人分享的文档，需要发送消息
-				doc_info.sendmsg = true;
-			}
-			else {
-				if (parseInt(arrDocFileInfo.share) == 1) {
-					strMsgDocList = arrDocFileInfo.id;
-					msg_start();
-					doc_info.sendmsg = true;//共享给其他人，需要发送消息
+			try {
+				let arrDocFileInfo = JSON.parse(data);
+				if (arrDocFileInfo.parent_id == null) {
+					doc_info.parent_id = "";
 				}
 				else {
-					doc_info.sendmsg = false;//无需发送消息
+					doc_info.parent_id = arrDocFileInfo.parent_id;
+				}
+				doc_info.doc_id = arrDocFileInfo.id;
+				doc_info.share = arrDocFileInfo.share;
+				if (arrDocFileInfo.parent_id && arrDocFileInfo.parent_id != null && arrDocFileInfo.parent_id.length > 0) {
+					strMsgDocList = arrDocFileInfo.parent_id;
+					msg_start();//该文档是他人分享的文档，需要发送消息
+					doc_info.sendmsg = true;
+				}
+				else {
+					if (parseInt(arrDocFileInfo.share) == 1) {
+						strMsgDocList = arrDocFileInfo.id;
+						msg_start();
+						doc_info.sendmsg = true;//共享给其他人，需要发送消息
+					}
+					else {
+						doc_info.sendmsg = false;//无需发送消息
+					}
 				}
 			}
+			catch (e) {
+				console(e);
+			}
+
 		});
 }
 
@@ -635,6 +641,7 @@ function projectDataParse(xmlBookData) {
 				gDocMsgList.push(objMsg);//添加到消息列表数组
 			}
 			catch (e) {
+				console(e);
 			}
 		}
 	}

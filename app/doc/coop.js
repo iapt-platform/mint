@@ -31,7 +31,12 @@ function username_search(keyword) {
             username: keyword
         },
         function (data, status) {
-            let result = JSON.parse(data);
+            let result;
+            try {
+                result = JSON.parse(data);
+            } catch (error) {
+                console(error);
+            }
             let html = "<ul id='user_search_list'>";
             if (result.length > 0) {
                 for (x in result) {
