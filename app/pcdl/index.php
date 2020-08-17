@@ -24,7 +24,7 @@ require_once '../pcdl/html_head.php';
 		margin-bottom: 2em;
 	}
 	.index_list_categories a,a:link{
-		color:blue;
+		color: var(--tool-link-hover-color);
 	}
 	.pd-10{
 		padding:10px;

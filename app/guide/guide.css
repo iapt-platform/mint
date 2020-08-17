@@ -10,6 +10,7 @@ guide{
     background-repeat: no-repeat;
     background-size: contain;
     margin: 0 6px;
+    color: var(--tool-color);
 }
 guide:hover  .guide_contence{
     display:inline-block;
@@ -17,11 +18,14 @@ guide:hover  .guide_contence{
 .guide_contence {
     border-top: 7px;
     position: absolute;
+    border: 2px solid var(--btn-border-color);
+    border-radius: 10px;
     top:100%;
+    width: max-content;
     min-width:18em;
     min-height:15em;
     padding:10px;
-    background-color:white;
+    background-color: var(--tool-bg-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     font-size:10pt;
     text-align:left;

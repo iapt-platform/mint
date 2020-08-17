@@ -188,14 +188,14 @@ $bookstring="";
 				$prsent1=$prsent*100/$first;
 				$sum_prsent+=$prsent;
 				echo "<tr>";
-				echo "<td>".($i+1)."</td><td>".$Fetch[$i][$groupby]."</td><td>".number_format($sum)."</td><td><span style='width:".$prsent1."px;background-color:red;'></span><span style:'width:".(100-$prsent1)."px;background-color:blue;'></span>".number_format($prsent,3)."</td><td>".number_format($sum_prsent,1)."</td>";
+				echo "<td>".($i+1)."</td><td>".$Fetch[$i][$groupby]."</td><td>".number_format($sum)."</td><td><span style='width:".$prsent1."px;background-color:red;'></span><span style:'width:".(100-$prsent1)."px;background-color: var(--tool-link-hover-color);'></span>".number_format($prsent,3)."</td><td>".number_format($sum_prsent,1)."</td>";
 				echo "</tr>";
 			}
 		}
 		echo "</table>";
 	}
 	else{
-		echo("<h3>Word: <spen style='color:blue;'>$spell</spen></h3>");
+		echo("<h3>Word: <spen style='color: var(--tool-link-hover-color);'>$spell</spen></h3>");
 		$newSpell=$PDO->quote($spell);
 		$query = "SELECT count(*) FROM \"word\" WHERE (word $wordop $newSpell) ";/*查總词數*/
 		$count_word=PDO_FetchOne($query);
