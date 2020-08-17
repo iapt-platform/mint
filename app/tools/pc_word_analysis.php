@@ -118,7 +118,7 @@ $bookstring="";
 				$prsent1=$prsent*100/$first;
 				$sum_prsent+=$prsent;
 				echo "<tr>";
-				echo "<td>".($i+1)."</td><td>".$Fetch[$i]["parent"]."</td><td>".$sum."</td><td><span style='width:".$prsent1."px;background-color:red;'></span><span style:'width:".(100-$prsent1)."px;background-color:blue;'></span>".$prsent."</td><td>".$sum_prsent."</td>";
+				echo "<td>".($i+1)."</td><td>".$Fetch[$i]["parent"]."</td><td>".$sum."</td><td><span style='width:".$prsent1."px;background-color:red;'></span><span style:'width:".(100-$prsent1)."px;background-color: var(--tool-link-hover-color);'></span>".$prsent."</td><td>".$sum_prsent."</td>";
 				echo "</tr>";
 			}
 		}

@@ -43,6 +43,11 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/wordmap.js"></script>
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
+
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+	<script src="../public/js/marked.js"></script>
+
 	<script language="javascript" src="js/relation_list.json"></script>
 	
 	<script language="javascript" src="sent/sent.js"></script>
@@ -578,7 +583,8 @@ foreach($plugin_list as $info){
 			<div id="modify_detaile">
 				<!-- 意思 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->g_mean;?>：</span>
+					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
+					<guide gid="general_meaning"></guide>
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -590,7 +596,8 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->factor;?>：</span>
+					<span class="edit_detail_span"><?php echo $_local->gui->part;?>：</span>
+					<guide gid="break_down"></guide>
 					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -602,13 +609,15 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分意思 -->
 				<div class="edit_detail_p" >
-					<span class="edit_detail_span"><?php echo $_local->gui->f_mean;?>：</span>
+					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
+					<guide gid="part_meaning"></guide>
 					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
 					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>				
+					<guide gid="grammar_abbr"></guide>
 					<p><input type="text" id="input_case" value="" name="in_case" onblur="input_org_switch('input_case','input_select_case')" ></p>
 					<div id="input_select_case" class="input_bar" style="width:80%; display:inline-flex;">
 						<div style="display:inline-flex;">
@@ -620,7 +629,8 @@ foreach($plugin_list as $info){
 						<button style="margin-left:auto; display:none;" onclick="input_org_switch('input_select_case','input_case')">
 							<?php echo $_local->gui->source;?>
 						</button>
-						<div class="case_dropdown">
+					</div>				
+					<div class="case_dropdown">
 							<svg class="edit_icon">
 								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
 							</svg>
@@ -628,7 +638,6 @@ foreach($plugin_list as $info){
 							<div id="word_mdf_case_dropdown" class="case_dropdown-content">
 							</div>
 						</div>								
-					</div>				
 				</div>
 				<!-- 语基 -->
 				<div class="edit_detail_p">
@@ -656,6 +665,7 @@ foreach($plugin_list as $info){
 					</svg>
 				</span>
 					<span class="edit_detail_span"><?php echo $_local->gui->parent;?>：</span>
+					<guide gid="studio_parent"></guide>
 					<input type="text" id="id_text_parent" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -1106,7 +1116,9 @@ catch(e){
 	<script language="javascript" src="module/editor_dictionary/language/<?php echo $currLanguage; ?>.js"></script>
 	<script language="javascript" src="module/editor_plugin/module_function.js"></script>
 	<script language="javascript" src="module/editor_plugin/language/<?php echo $currLanguage; ?>.js"></script>
-
+	<script>
+		guide_init();
+	</script>
 </body>
 
 </html>
