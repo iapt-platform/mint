@@ -168,6 +168,9 @@ else{$currDevice="computer";}
 		width: 1em;
 		margin-left: -1em;
 	}
+	guide {
+		margin: 0 15px 0 -8px;
+	}
 	</style>
 	
 	<!--左侧工具栏-->
@@ -583,8 +586,8 @@ foreach($plugin_list as $info){
 			<div id="modify_detaile">
 				<!-- 意思 -->
 				<div class="edit_detail_p">
+					<guide gid="studio_general_meaning"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
-					<guide gid="general_meaning"></guide>
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -596,8 +599,8 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
+					<guide gid="studio_break_down"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->part;?>：</span>
-					<guide gid="break_down"></guide>
 					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -609,15 +612,15 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分意思 -->
 				<div class="edit_detail_p" >
+					<guide gid="studio_part_meaning"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
-					<guide gid="part_meaning"></guide>
 					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>				
 					<guide gid="grammar_abbr"></guide>
+					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>
 					<p><input type="text" id="input_case" value="" name="in_case" onblur="input_org_switch('input_case','input_select_case')" ></p>
 					<div id="input_select_case" class="input_bar" style="width:80%; display:inline-flex;">
 						<div style="display:inline-flex;">
@@ -641,6 +644,7 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 语基 -->
 				<div class="edit_detail_p">
+					<guide gid="studio_parent"></guide>
 				<script>
 					function edit_show_prt_prt(obj){
 						let o = obj.getElementsByTagName("svg");
@@ -665,7 +669,6 @@ foreach($plugin_list as $info){
 					</svg>
 				</span>
 					<span class="edit_detail_span"><?php echo $_local->gui->parent;?>：</span>
-					<guide gid="studio_parent"></guide>
 					<input type="text" id="id_text_parent" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -677,13 +680,14 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
+				<guide gid="studio_parent2"></guide>
 					<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
 						<span style="padding-right: 4px;">┕</span>
 						<span id="parent_grammar">.ppa.</span>
 						<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
-							<a onclick="edit_parent_grammar_changed(this)">pp.</a>
-							<a onclick="edit_parent_grammar_changed(this)">pr.p.</a>				
-							<a onclick="edit_parent_grammar_changed(this)">fpp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.pp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.prp.</a>				
+							<a onclick="edit_parent_grammar_changed(this)">.fpp.</a>
 						</div>
 					</div>
 					<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
