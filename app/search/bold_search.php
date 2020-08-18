@@ -5,6 +5,7 @@ require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../public/load_lang.php";
 
 _load_book_index();
 
@@ -253,7 +254,7 @@ switch($op){
 							}
 						}
 					}
-					echo  "<div class='search_para_tools'><button onclick=\"dict_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">{$_local->gui->edit_now}</button></div>";		
+					echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">{$_local->gui->edit_now}</button></div>";		
 					echo  "</div>";
 				}
 			}

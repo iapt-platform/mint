@@ -475,7 +475,7 @@ else{
 		<div id="main_text_view" style="padding-bottom: 10em;">
 <?php
 
-	PDO_Connect("sqlite:"._FILE_DB_RES_INDEX_);
+	PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
 	if(isset($album)){
 		//更新点击
 		$query = "select * from 'index' where book='$book' and paragraph='$paragraph' and album=$album";
@@ -572,7 +572,7 @@ else{
 		*/
 		
 		
-		PDO_Connect("sqlite:"._FILE_DB_RES_INDEX_);
+		PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
 		$query = "select * from 'album' where id='$album'";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);

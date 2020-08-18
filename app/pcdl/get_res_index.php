@@ -50,7 +50,7 @@ else{
 		return($str_size);
 	}
 
-	PDO_Connect("sqlite:"._FILE_DB_RES_INDEX_);
+	PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
 
 //资源名称
 	$res_title="";
@@ -156,7 +156,7 @@ else{
 			echo "</div>";
 			echo "</div>";		
 			
-			PDO_Connect("sqlite:"._FILE_DB_RES_INDEX_);			
+			PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);			
 			$query = "select resindex.id,resindex.title,resindex.type,resindex.album,author.name from 'index' as resindex LEFT JOIN author ON resindex.author = author.id where resindex.book='$book' and resindex.paragraph=$paragraph and resindex.type<>7 group by resindex.album";
 			$Fetch = PDO_FetchAll($query);
 			$iFetch=count($Fetch);

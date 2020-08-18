@@ -24,7 +24,7 @@ else{
 
 //获取服务器端文件列表
 
-$db_file = _FILE_DB_RES_INDEX_;
+$db_file = _FILE_DB_RESRES_INDEX_;
 PDO_Connect("sqlite:$db_file");
 /*
 $files = scandir($dir);

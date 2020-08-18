@@ -16,7 +16,7 @@ else{
 	$order="";
 }
 
-	$db_file = _FILE_DB_RES_INDEX_;
+	$db_file = _FILE_DB_RESRES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 	$tag_string='{'.$tag.'}';
 	$query = "select * from 'index' where tag like '%$tag_string%' ";
