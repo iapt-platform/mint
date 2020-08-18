@@ -48,6 +48,7 @@ else{$currDevice="computer";}
 	<script language="javascript" src="sent/sent.js"></script>
 	<script language="javascript" src="../public/js/notify.js"></script>
 	<script language="javascript" src="../public/js/comm.js"></script>
+	<script language="javascript" src="../public/js/localforage.min.js"></script>
 	<script language="javascript" src="../public/script/my.js"></script>
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	

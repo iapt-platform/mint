@@ -360,17 +360,13 @@ function doc_head(key, value = null) {
 function doc_msg_push(msgobj) {
 
 	gDocMsgList.push(msgobj);
-	if (gXmlBookDataMsg) {
-		var newNode = gXmlBookData.createElement("msg");
-		setNodeText(newNode, "id", msgobj.id);
-		setNodeText(newNode, "sender", msgobj.sender);
-		setNodeText(newNode, "type", msgobj.type);
-		setNodeText(newNode, "docid", msgobj.docid);
-		setNodeText(newNode, "time", msgobj.time);
-		setNodeText(newNode, "read", msgobj.read);
-		setNodeText(newNode, "data", msgobj.data);
-		gXmlBookDataMsg.appendChild(newNode);
-	}
+	localforage.setItem(g_docid, gDocMsgList).then(function (value) {
+		// This will output `1`.
+		console.log(value.length);
+	}).catch(function (err) {
+		// This code runs if there were any errors
+		console.log(err);
+	});
 }
 
 function doc_block(strSelector = "") {
@@ -625,6 +621,16 @@ function projectDataParse(xmlBookData) {
 		gXmlBookDataMsg = null;
 	}
 	//解析消息队列
+	localforage.getItem(g_docid).then(function (value) {
+		// This code runs once the value has been loaded
+		// from the offline store.
+		gDocMsgList = value;
+		console.log(value.length);
+	}).catch(function (err) {
+		// This code runs if there were any errors
+		console.log(err);
+	});
+
 	if (gXmlBookDataMsg) {
 		var msgElements = gXmlBookDataMsg.getElementsByTagName("msg");
 		for (var iMsg = 0; iMsg < msgElements.length; iMsg++) {

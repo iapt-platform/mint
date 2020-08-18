@@ -140,7 +140,7 @@ function msg_send() {
 								case "2":
 									break;
 							}
-							gXmlBookDataMsg.appendChild(arrMsg[x].cloneNode(true));
+							//gXmlBookDataMsg.appendChild(arrMsg[x].cloneNode(true));
 						}
 						break;
 				}
