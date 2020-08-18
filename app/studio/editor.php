@@ -599,7 +599,7 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
-					<guide gid="break_down"></guide>
+					<guide gid="studio_break_down"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->part;?>：</span>
 					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
@@ -612,7 +612,7 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分意思 -->
 				<div class="edit_detail_p" >
-					<guide gid="part_meaning"></guide>
+					<guide gid="studio_part_meaning"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
 					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
@@ -680,14 +680,14 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
-				<guide gid="studio_parent"></guide>
+				<guide gid="studio_parent2"></guide>
 					<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
 						<span style="padding-right: 4px;">┕</span>
 						<span id="parent_grammar">.ppa.</span>
 						<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
-							<a onclick="edit_parent_grammar_changed(this)">pp.</a>
-							<a onclick="edit_parent_grammar_changed(this)">pr.p.</a>				
-							<a onclick="edit_parent_grammar_changed(this)">fpp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.pp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.prp.</a>				
+							<a onclick="edit_parent_grammar_changed(this)">.fpp.</a>
 						</div>
 					</div>
 					<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
