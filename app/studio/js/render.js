@@ -1011,6 +1011,7 @@ function render_sent_tool_bar(elementBlock, begin) {
 	let sentIdStringLink = "{{" + sentIdString + "}}";
 	output += "<span>" + sentIdString + "<a onclick=\"copy_to_clipboard('" + sentIdStringLink + "')\">[" + gLocal.gui.copy_to_clipboard + "]</a></span>";
 	//	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
+	output += "<guide gid='sent_func' style='margin:unset;' onclick='guide_init()'></guide>";
 	output += "</div>";
 	return (output);
 }
@@ -1194,6 +1195,7 @@ function renderWordParBlockInner(elementBlock) {
 				let sentIdString = book + "-" + paragraph + "-" + nextBegin + "-" + nextEnd;
 				let sentIdStringLink = "{{" + sentIdString + "}}";
 				output += "<span>" + sentIdString + "<a onclick=\"copy_to_clipboard('" + sentIdStringLink + "')\">[" + gLocal.gui.copy_to_clipboard + "]</a></span>";
+				output += "<guide gid='sent_func' style='margin:unset;' onclick='guide_init()'></guide>";
 				output += "</div>";
 
 				output += "<div class='sent_wbw'>";
