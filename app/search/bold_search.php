@@ -200,7 +200,9 @@ switch($op){
 						}
 					}
 					$path=$bookPath.$path."No. ".$paragraph;
-					echo  "<div class='mean'>$path</div>";
+					//echo  "<div class='mean'>$path</div>";
+					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
+
 					
 								if(substr($paliword,-1)=="n"){
 									$paliword=substr($paliword,0,-1);
@@ -357,9 +359,11 @@ switch($op){
 							break;
 						}
 					}
-					$path="<div>{$bookPath}>{$path} No. {$paragraph}</div>";
-					echo  "<div class='mean'>$path</div>";
-					
+					$path="<span>{$bookPath}>{$path} No. {$paragraph}</span>";
+					//echo  "<div class='mean'>$path</div>";
+					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
+
+			
 									if(substr($paliword,-1)=="n"){
 										$paliword=substr($paliword,0,-1);
 									}
