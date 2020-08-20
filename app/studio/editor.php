@@ -800,7 +800,7 @@ foreach($plugin_list as $info){
 					<option value="tw">正體中文</option>
 			</select>
 			<span>
-				<?php echo $module_gui_str['editor_project']['1011'];?>
+				<?php echo $_local->gui->author;?>
 				<input type="input" id="id_text_edit_author" onkeydown="match_key(this)" onkeyup="unicode_key(this)"/>
 				<?php echo $module_gui_str['editor_project']['1042'];?>
 				<input id="id_text_edit_area_smart_switch" type="checkbox" checked="">
@@ -891,9 +891,9 @@ foreach($plugin_list as $info){
 		</div>
 	</div>
 	
-	<div id="end_of_page" class="borderT textS textAc">
-	The End of The Page<br>
-	——wikipāḷi studio——
+	<div id="end_of_page" class="borderT textS textAc" style="font-size: medium;">
+	<?php echo $_local->gui->page_end; ?><br>
+	——wikipāḷi <?php echo $_local->gui->studio; ?>——
 	</div>
 	
 	<style>

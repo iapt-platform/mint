@@ -1,7 +1,7 @@
-		<div class="menu" id="menu_project">
-			<h1><?php echo $module_gui_str['editor_project']['1001']; ?></h1>
-			<div id="project_resouce_manage" class="sub_li_menu">
-				<!--
+<div class="menu" id="menu_project">
+	<h1><?php echo $module_gui_str['editor_project']['1001']; ?></h1>
+	<div id="project_resouce_manage" class="sub_li_menu">
+		<!--
 				<div id="project_detail" class="submenu">
 					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_project']['1010'];?>
 						<svg class="icon">
@@ -13,292 +13,318 @@
 					</div>
 				</div>
 				-->
-				<div id="project_resouce" class="submenu">
-					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_project']['1004'];?>
-						<svg class="icon">
-    							<use xlink:href="svg/icon.svg#ic_add"></use>
-						</svg></p>
-					<div class="submenu_details">
-						<div id="id_editor_project_res_list">
-							<div>
-								<a onclick="project_res_type_click('doc')">Document</a>
-							</div>
-							<ul>
-								<li>
-									<!--<button type="button" onclick="com_show_sub_tree(this)" ><span>-</span></button>-->
-									<input type="checkbox" checked />
-									<a onclick="project_res_type_click('wbw')"><?php echo $module_gui_str['editor_project']['1005'];?></a>
-									<ul class="res_list" id="id_editor_project_res_wbw_inner">
-									</ul>
-								</li>
-								<li>
-									<input type="checkbox" checked />
-									<a onclick="project_res_type_click('tran')"><?php echo $module_gui_str['editor_project']['1006'];?></a>
-									<ul  class="res_list"  id="id_editor_project_res_translate_inner">
-									</ul>
-								</li>
-								<li>
-									<input type="checkbox" checked />
-									<a onclick="project_res_type_click('note')"><?php echo $module_gui_str['editor_project']['1007'];?></a>
-									<ul  class="res_list"  id="id_editor_project_res_note_inner">
-									</ul>
-								</li>
-								<li>
-									<input type="checkbox" />
-									<?php echo $module_gui_str['editor_project']['1008'];?>
-									<ul>
-									</ul>
-								</li>
-								<li>
-									<input type="checkbox" />
-									<?php echo $module_gui_str['editor_project']['1009'];?>
-									<ul  class="res_list"  id="id_editor_project_res_heading_inner">
-									</ul>
-								</li>
-								<li>
-									<input type="checkbox" />
-									<?php echo $module_gui_str['editor_project']['1037'];?>
-									<ul  class="res_list"  id="id_editor_project_res_ild_inner">
-									</ul>
-								</li>
-								
+		<div id="project_resouce" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $module_gui_str['editor_project']['1004'];?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg></p>
+			<div class="submenu_details">
+				<div id="id_editor_project_res_list">
+					<div>
+						<a onclick="project_res_type_click('doc')">Document</a>
+					</div>
+					<ul>
+						<li>
+							<!--<button type="button" onclick="com_show_sub_tree(this)" ><span>-</span></button>-->
+							<input type="checkbox" checked />
+							<a onclick="project_res_type_click('wbw')"><?php echo $_local->gui->word_by_word;?></a>
+							<ul class="res_list" id="id_editor_project_res_wbw_inner">
 							</ul>
-						</div>
-						<hr>
-						<div id="project_res_details">
-							<!--文档信息面板-->
-							<div id="id_editor_project_res_docinfo" style="display:none;">
-							<div class="project_res_info_head">
-								文档信息
-							</div>
-							<div id="id_editor_project_doc_info">
-							<span><?php echo $module_gui_str['editor_project']['1036'];?></span><input type="input" id="doc_info_title" onkeydown="match_key(this)" onkeyup="unicode_key(this)" onchange="doc_info_title_change(this)"/>
-							</div>
-							
-							<div id="id_editor_project_infomation">
-							</div>						
-						</div>
-							
-							<!--逐词译资源新建 导出面板-->
-							<div id="id_editor_project_res_wbw" class="editor_project_res_info" style="display:none;">
-								<div class="project_res_info_head">
-									新建逐词解析
-								</div>
-								<div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1013'];?></span>
-										<select id="id_project_wbw_new_language">
-											<option value="en">English</option>
-											<option value="sc">简体中文</option>
-											<option value="tc">正體中文</option>
-										</select>
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1011'];?></span>
-									<input id="id_project_wbw_new_author" type="text" value="<?php echo $nickname; ?>" /></div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1012'];?></span>
-									<input id="id_project_wbw_new_editor" type="text" value="<?php echo $nickname; ?>" /></div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1014'];?></span>
-									<input id="id_project_wbw_new_revision" type="text" value="" />
-								</div>
-								</div>
-								<button type="button" onclick="editor_project_wbw_new()"><?php echo $module_gui_str['editor_project']['1019'];?></button>
-								<div class="project_res_info_head">
-									导出逐词解析
-								</div>
-								<select id="id_wbw_export_list">
-								</select>
-								<textarea id="id_project_wbw_export_text"></textarea>
-								<button type="button" onclick="editor_project_wbw_export()"><?php echo $module_gui_str['editor_project']['1021'];?></button>
-							</div>		
+						</li>
+						<li>
+							<input type="checkbox" checked />
+							<a onclick="project_res_type_click('tran')"><?php echo $_local->gui->translate;?></a>
+							<ul class="res_list" id="id_editor_project_res_translate_inner">
+							</ul>
+						</li>
+						<li>
+							<input type="checkbox" checked />
+							<a onclick="project_res_type_click('note')"><?php echo $_local->gui->note;?></a>
+							<ul class="res_list" id="id_editor_project_res_note_inner">
+							</ul>
+						</li>
+						<li>
+							<input type="checkbox" />
+							<?php echo $module_gui_str['editor_project']['1008'];?>
+							<ul>
+							</ul>
+						</li>
+						<li>
+							<input type="checkbox" />
+							<?php echo $module_gui_str['editor_project']['1009'];?>
+							<ul class="res_list" id="id_editor_project_res_heading_inner">
+							</ul>
+						</li>
+						<li>
+							<input type="checkbox" />
+							<?php echo $module_gui_str['editor_project']['1037'];?>
+							<ul class="res_list" id="id_editor_project_res_ild_inner">
+							</ul>
+						</li>
 
-							<!--译文 新建 导出-->
-							<div id="id_editor_project_res_translate" class="editor_project_res_info" style="display:none;">
-								<div class="project_res_info_head">
-									新建译文
-								</div>								
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1013'];?></span>
-										<select id="id_project_translate_new_language">
-											<option value="en">English</option>
-											<option value="zh-cn">简体中文</option>
-											<option value="zh-tw">正體中文</option>
-										</select>
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1011'];?></span>
-									<input id="id_project_translate_new_author" type="text" value="<?php echo $nickname; ?>" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1012'];?></span>
-									<input id="id_project_translate_new_editor" type="text" value="<?php echo $nickname; ?>" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;">tag</span>
-									<input id="id_project_translate_new_tag" type="text" value="_trans_" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1034'];?></span>
-										<select id="id_file_translate_new_type">
-											<option value="par"><?php echo $module_gui_str['editor_project']['1032'];?></option>
-											<option value="sentence"><?php echo $module_gui_str['editor_project']['1033'];?></option>
-										</select>
-								</div>
-								<div id="project_new_tran_album"></div>
-								
-								<button type="button" onclick="editor_project_translate_addnew(false)"><?php echo $module_gui_str['editor_project']['1019'];?></button>
-
-
-								<div class="project_res_info_head">
-									导出译文
-								</div>	
-								<textarea id="id_project_translate_import_text"></textarea>
-								<button type="button" onclick="editor_project_translate_addnew(true)"><?php echo $module_gui_str['editor_project']['1020'];?></button>
-								<div class="project_res_info_head">
-									导入译文
-								</div>	
-								<select id="id_translate_export_list">
-								</select>
-								<textarea id="id_project_translate_export_text"></textarea>
-								<button type="button" onclick="editor_project_translate_export()"><?php echo $module_gui_str['editor_project']['1021'];?></button>
-							</div>
-							<!--注解新建 导出面板-->
-							<div id="id_editor_project_res_note" class="editor_project_res_info" style="display:none;">
-								<div class="project_res_info_head">
-									注解
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1013'];?></span>
-										<select id="id_project_note_new_language">
-											<option value="en">English</option>
-											<option value="sc">简体中文</option>
-											<option value="tc">正體中文</option>
-										</select>
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1011'];?></span>
-									<input id="id_project_note_new_author" type="text" value="<?php echo $nickname; ?>" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1012'];?></span>
-									<input id="id_project_note_new_editor" type="text" value="<?php echo $nickname; ?>" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1014'];?></span>
-									<input id="id_project_note_new_revision" type="text" value="" />
-								</div>
-
-								<button type="button"  onclick="editor_project_note_addnew(false)"><?php echo $module_gui_str['editor_project']['1019'];?></button>
-								<hr />
-								<textarea id="id_project_note_import_text"></textarea>
-								<button type="button" onclick="editor_project_note_addnew(true)"><?php echo $module_gui_str['editor_project']['1020'];?></button>
-								<hr />
-								<select id="id_note_export_list">
-								</select>
-								<textarea id="id_project_note_export_text"></textarea>
-								<button type="button" onclick="editor_project_note_export()"><?php echo $module_gui_str['editor_project']['1021'];?></button>
-							</div>	
-							<!--注解新建 导出面板 结束-->
-							<div id="project_res_album_info" style="display:none;">
-								<div id="project_res_info_title" class="project_res_info_head">
-									title...
-								</div>
-								<div class="project_res_album_toolbar">
-									<button type="button" onclick="editor_project_res_info_modify()"><?php echo $module_gui_str['editor_project']['1017'];?></button>
-									<button type="button" onclick="editor_project_res_remove()"><?php echo $module_gui_str['editor_project']['1018'];?></button>
-									<button type="button" onclick="editor_project_res_publish()">Publish</button>
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1013'];?></span>
-										<select id="id_project_res_info_language">
-											<option value="pali">Pali</option>
-											<option value="en">English</option>
-											<option value="sc">简体中文</option>
-											<option value="tc">正體中文</option>
-										</select>							
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1011'];?></span>
-									<input id="id_project_res_info_author" type="text" value="" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1012'];?></span>
-									<input id="id_project_res_info_editor" type="text" value="" />
-								</div>
-								<div class="project_res_add_author">
-									<span style="width: 10em;"><?php echo $module_gui_str['editor_project']['1015'];?></span>
-									<input id="id_project_res_info_edition" type="text" value="" />
-								</div>
-								
-								<div id="project_album_id">
-								
-								</div>
-							</div>
-								
-						</div>
-					
-					</div>
+					</ul>
 				</div>
+				<hr>
+				<div id="project_res_details">
+					<!--文档信息面板-->
+					<div id="id_editor_project_res_docinfo" style="display:none;">
+						<div class="project_res_info_head">
+							文档信息
+						</div>
+						<div id="id_editor_project_doc_info">
+							<span><?php echo $module_gui_str['editor_project']['1036'];?></span><input type="input"
+								id="doc_info_title" onkeydown="match_key(this)" onkeyup="unicode_key(this)"
+								onchange="doc_info_title_change(this)" />
+						</div>
 
-				<div id="project_tools" class="submenu">
-					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_project']['1028'];?>
-						<svg class="icon">
-    							<use xlink:href="svg/icon.svg#ic_add"></use>
-						</svg>
-					</p>
-					<div class="submenu_details">
-						<p class="menu_note"><?php echo $module_gui_str['editor_project']['1030'];?>：</p>
-						<button type="button" onclick="menu_file_tools_empty('all')" style="background-color:red;"><?php echo $module_gui_str['editor_project']['1029'];?></button>
-						<button type="button" onclick="menu_file_tools_empty('mean')" style="background-color:red;"><?php echo $module_gui_str['editor_project']['1041'];?></button>
-						<button type="button" onclick="menu_file_tools_empty('case')" style="background-color:red;"><?php echo $module_gui_str['editor_project']['1038'];?></button>
-						<button type="button" onclick="menu_file_tools_empty('bookmark')" style="background-color:red;"><?php echo $module_gui_str['editor_project']['1039'];?></button>
-						<button type="button" onclick="menu_file_tools_empty('note')" style="background-color:red;"><?php echo $module_gui_str['editor_project']['1040'];?></button>						
+						<div id="id_editor_project_infomation">
+						</div>
 					</div>
-				</div>
 
-				<div id="project_publish" class="submenu">
-					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_project']['1022'];?>
-						<svg class="icon">
-    							<use xlink:href="svg/icon.svg#ic_add"></use>
-						</svg>
-					</p>
-					<div class="submenu_details">
-						<button onclick="editor_project_publish()"><?php echo $module_gui_str['editor_project']['1022'];?></button>
+					<!--逐词译资源新建 导出面板-->
+					<div id="id_editor_project_res_wbw" class="editor_project_res_info" style="display:none;">
+						<div class="project_res_info_head">
+							新建逐词解析
+						</div>
+						<div>
+							<div class="project_res_add_author">
+								<span style="width: 10em;"><?php echo $_local->gui->language_select;?></span>
+								<select id="id_project_wbw_new_language">
+									<option value="en">English</option>
+									<option value="sc">简体中文</option>
+									<option value="tc">正體中文</option>
+								</select>
+							</div>
+							<div class="project_res_add_author">
+								<span style="width: 10em;"><?php echo $_local->gui->author;?></span>
+								<input id="id_project_wbw_new_author" type="text" value="<?php echo $nickname; ?>" />
+							</div>
+							<div class="project_res_add_author">
+								<span style="width: 10em;"><?php echo $_local->gui->editor;?></span>
+								<input id="id_project_wbw_new_editor" type="text" value="<?php echo $nickname; ?>" />
+							</div>
+							<div class="project_res_add_author">
+								<span style="width: 10em;"><?php echo $_local->gui->revision;?></span>
+								<input id="id_project_wbw_new_revision" type="text" value="" />
+							</div>
+						</div>
+						<button type="button"
+							onclick="editor_project_wbw_new()"><?php echo $_local->gui->new;?></button>
+						<div class="project_res_info_head">
+							导出逐词解析
+						</div>
+						<select id="id_wbw_export_list">
+						</select>
+						<textarea id="id_project_wbw_export_text"></textarea>
+						<button type="button"
+							onclick="editor_project_wbw_export()"><?php echo $_local->gui->export;?></button>
 					</div>
-				</div>
 
-
-				<div id="project_output" class="submenu">
-					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_project']['1021'];?>
-						<svg class="icon">
-    							<use xlink:href="svg/icon.svg#ic_add"></use>
-						</svg>
-					</p>
-					<div class="submenu_details">
+					<!--译文 新建 导出-->
+					<div id="id_editor_project_res_translate" class="editor_project_res_info" style="display:none;">
+						<div class="project_res_info_head">
+							<?php echo $_local->gui->new." ".$_local->gui->translation;?>
+						</div>
 						<div class="project_res_add_author">
-							<form action="export_html.php" method="post" onsubmit="return file_export_html_validate_form(this)" target="_blank">
-								<div class="project_res_add_author" id="export_data">
-									<textarea id="toc_string" rows="3" cols="18" name="txt_toc"></textarea><br>
-									<textarea id="sutta_string" rows="3" cols="18"  name="txt_sutta"></textarea><br>
-								</div>
-								<input type="submit" value="<?php echo $module_gui_str['editor_project']['1031'];?>" />
-							</form>
-							<button type="button" onclick="menu_file_export_csv()"><?php echo $module_gui_str['editor_project']['1025'];?></button>
+							<span style="width: 10em;"><?php echo $_local->gui->language_select;?></span>
+							<select id="id_project_translate_new_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">正體中文</option>
+							</select>
 						</div>
-						<hr/>
 						<div class="project_res_add_author">
-							<span style="width: 10em;">CSV <?php echo $module_gui_str['editor_project']['1027'];?></span>
-							<input type="input" id="import_csv_filename"/>
+							<span style="width: 10em;"><?php echo $_local->gui->author;?></span>
+							<input id="id_project_translate_new_author" type="text" value="<?php echo $nickname; ?>" />
 						</div>
-						<button type="button" onclick="menu_file_import_csv()"><?php echo $module_gui_str['editor_project']['1026'];?></button><br/>
-						<span id="id_csv_msg_inner"></span>
-					</div>
-				</div>	
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->editor;?></span>
+							<input id="id_project_translate_new_editor" type="text" value="<?php echo $nickname; ?>" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;">tag</span>
+							<input id="id_project_translate_new_tag" type="text" value="_trans_" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->base_on;?></span>
+							<select id="id_file_translate_new_type">
+								<option value="sentence"><?php echo $_local->gui->sentence;?></option>
+								<option value="par"><?php echo $_local->gui->paragraph;?></option>
+							</select>
+						</div>
+						<div id="project_new_tran_album"></div>
 
-		
-			</div>	
-		
+						<button type="button"
+							onclick="editor_project_translate_addnew(false)"><?php echo $_local->gui->new;?></button>
+
+
+						<div class="project_res_info_head">
+							<?php echo $_local->gui->export." ".$_local->gui->translation;?>
+						</div>
+						<textarea id="id_project_translate_import_text"></textarea>
+						<button type="button"
+							onclick="editor_project_translate_addnew(true)"><?php echo $_local->gui->import;?></button>
+						<div class="project_res_info_head">
+							<?php echo $_local->gui->import." ".$_local->gui->translation;?>
+						</div>
+						<select id="id_translate_export_list">
+						</select>
+						<textarea id="id_project_translate_export_text"></textarea>
+						<button type="button"
+							onclick="editor_project_translate_export()"><?php echo $_local->gui->export;?></button>
+					</div>
+					<!--注解新建 导出面板-->
+					<div id="id_editor_project_res_note" class="editor_project_res_info" style="display:none;">
+						<div class="project_res_info_head">
+							<?php echo $_local->gui->note;?>
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->language_select;?></span>
+							<select id="id_project_note_new_language">
+								<option value="en">English</option>
+								<option value="sc">简体中文</option>
+								<option value="tc">正體中文</option>
+							</select>
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->author;?></span>
+							<input id="id_project_note_new_author" type="text" value="<?php echo $nickname; ?>" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->editor;?></span>
+							<input id="id_project_note_new_editor" type="text" value="<?php echo $nickname; ?>" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->revision;?></span>
+							<input id="id_project_note_new_revision" type="text" value="" />
+						</div>
+
+						<button type="button"
+							onclick="editor_project_note_addnew(false)"><?php echo $_local->gui->new;?></button>
+						<hr />
+						<textarea id="id_project_note_import_text"></textarea>
+						<button type="button"
+							onclick="editor_project_note_addnew(true)"><?php echo $_local->gui->import;?></button>
+						<hr />
+						<select id="id_note_export_list">
+						</select>
+						<textarea id="id_project_note_export_text"></textarea>
+						<button type="button"
+							onclick="editor_project_note_export()"><?php echo $_local->gui->export;?></button>
+					</div>
+					<!--注解新建 导出面板 结束-->
+					<div id="project_res_album_info" style="display:none;">
+						<div id="project_res_info_title" class="project_res_info_head">
+							title...
+						</div>
+						<div class="project_res_album_toolbar">
+							<button type="button"
+								onclick="editor_project_res_info_modify()"><?php echo $_local->gui->modify;?></button>
+							<button type="button"
+								onclick="editor_project_res_remove()"><?php echo $_local->gui->remove;?></button>
+							<button type="button" onclick="editor_project_res_publish()">Publish</button>
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->language_select;?></span>
+							<select id="id_project_res_info_language">
+								<option value="pali">Pali</option>
+								<option value="en">English</option>
+								<option value="sc">简体中文</option>
+								<option value="tc">正體中文</option>
+							</select>
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->author;?></span>
+							<input id="id_project_res_info_author" type="text" value="" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->editor;?></span>
+							<input id="id_project_res_info_editor" type="text" value="" />
+						</div>
+						<div class="project_res_add_author">
+							<span style="width: 10em;"><?php echo $_local->gui->edition;?></span>
+							<input id="id_project_res_info_edition" type="text" value="" />
+						</div>
+
+						<div id="project_album_id">
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
 		</div>
-			
+
+		<div id="project_tools" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $module_gui_str['editor_project']['1028'];?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<p class="menu_note"><?php echo $module_gui_str['editor_project']['1030'];?>：</p>
+				<button type="button" onclick="menu_file_tools_empty('all')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1029'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('mean')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1041'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('case')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1038'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('bookmark')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1039'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('note')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1040'];?></button>
+			</div>
+		</div>
+
+		<div id="project_publish" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $module_gui_str['editor_project']['1022'];?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<button
+					onclick="editor_project_publish()"><?php echo $module_gui_str['editor_project']['1022'];?></button>
+			</div>
+		</div>
+
+
+		<div id="project_output" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $_local->gui->export;?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<div class="project_res_add_author">
+					<form action="export_html.php" method="post" onsubmit="return file_export_html_validate_form(this)"
+						target="_blank">
+						<div class="project_res_add_author" id="export_data">
+							<textarea id="toc_string" rows="3" cols="18" name="txt_toc"></textarea><br>
+							<textarea id="sutta_string" rows="3" cols="18" name="txt_sutta"></textarea><br>
+						</div>
+						<input type="submit" value="<?php echo $module_gui_str['editor_project']['1031'];?>" />
+					</form>
+					<button type="button"
+						onclick="menu_file_export_csv()"><?php echo $module_gui_str['editor_project']['1025'];?></button>
+				</div>
+				<hr />
+				<div class="project_res_add_author">
+					<span style="width: 10em;">CSV <?php echo $module_gui_str['editor_project']['1027'];?></span>
+					<input type="input" id="import_csv_filename" />
+				</div>
+				<button type="button"
+					onclick="menu_file_import_csv()"><?php echo $module_gui_str['editor_project']['1026'];?></button><br />
+				<span id="id_csv_msg_inner"></span>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>

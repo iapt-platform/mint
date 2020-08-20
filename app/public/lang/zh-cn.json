@@ -87,7 +87,7 @@
 		"edit_now": "立即编辑",
 		"edit1": "编辑：",
 		"edition": "版本：",
-		"editor": "编辑",
+		"editor": "编辑者",
 		"e_mail": "邮箱",
 		"empty": "清空",
 		"empty_history": "清空历史记录",
@@ -453,6 +453,7 @@
 		"ignore": "忽略",
 		"oversize_to_load": "尺寸过大，无法加载，请缩小加载范围",
 		"open_doc": "如果未自动跳转，请点此打开",
+		"page_end": "已到达页面底端",
 		"": ""
 	},
 	"grammastr": [
