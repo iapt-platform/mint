@@ -99,7 +99,7 @@ else{
 	$query="INSERT INTO 'index' ('id','book','paragraph','level','type','language','title','author','editor','edition','share','album','update_time') VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?)";
 	$stmt = $PDO->prepare($query);
 
-	$newData=array($first_book,$first_paragraph,$new_index,,'dighest','sc',$title,4,4,1,4,$first_album,time());
+	$newData = array($first_book,$first_paragraph,$new_index,'dighest','sc',$title,4,4,1,4,$first_album,time());
 	$stmt->execute($newData);
 
 
