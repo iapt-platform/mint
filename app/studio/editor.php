@@ -378,7 +378,7 @@ foreach($plugin_list as $info){
 					</button> 
 				
 				<!--Save-->
-				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" title="<?php echo $module_gui_str['editor']['1017'];?>">
+				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" style="display:none;" title="<?php echo $module_gui_str['editor']['1017'];?>">
 						<svg class="icon">
 							<use xlink:href="svg/icon.svg#ic_save"></use>
 						</svg>
