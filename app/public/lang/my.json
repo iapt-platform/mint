@@ -451,6 +451,7 @@
 		"change_password": "change the password",
 		"ignore": "ignore",
 		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
+		"page_end": "The End of The Page",
 		"": "",
 		"": ""
 	},

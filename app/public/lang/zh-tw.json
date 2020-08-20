@@ -453,6 +453,7 @@
 		"ignore": "忽略",
 		"oversize_to_load": "尺寸過大，無法載入，請縮減載入範圍",
 		"open_doc": "如果未自動跳轉，請點此開啟",
+		"page_end": "已到達頁面底端",
 		"": ""
 	},
 	"grammastr": [

@@ -463,7 +463,7 @@ function renderTranslateParBlockInner(elementBlock) {
 		}
 		output += "<div id='tran_pre_" + bId + "_" + senA + "' class='tran_sent_pre'>";
 		if (senText == "") {
-			output += "<span style='color:gray;'>我的译文</span>";
+			output += "<span style='color:gray;'>" + gLocal.gui.translation + "</span>";
 		}
 		else {
 			output += term_std_str_to_tran(senText);
