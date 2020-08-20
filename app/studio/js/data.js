@@ -360,7 +360,7 @@ function doc_head(key, value = null) {
 function doc_msg_push(msgobj) {
 
 	gDocMsgList.push(msgobj);
-	localforage.setItem(g_docid, gDocMsgList).then(function (value) {
+	localforage.setItem("msg_" + g_docid, gDocMsgList).then(function (value) {
 		// This will output `1`.
 		console.log(value.length);
 	}).catch(function (err) {
@@ -621,36 +621,33 @@ function projectDataParse(xmlBookData) {
 		gXmlBookDataMsg = null;
 	}
 	//解析消息队列
-	localforage.getItem(g_docid).then(function (value) {
-		// This code runs once the value has been loaded
-		// from the offline store.
-		gDocMsgList = value;
-		console.log(value.length);
+	localforage.getItem("msg_" + g_docid).then(function (value) {
+		if (value == null) {
+			console.log("离线消息数据不存在");
+			localforage.setItem("msg_" + g_docid, gDocMsgList).then(function (value) {
+				doc_head("msg_db_max_id", "1");
+				msg_init(1);
+				console.log("离线消息创建成功" + value.length);
+			}).catch(function (err) {
+				// This code runs if there were any errors
+				console.log(err);
+			});
+		}
+		else {
+			localforage.getItem(g_docid).then(function (value) {
+				gDocMsgList = value;
+				console.log(value.length);
+			}).catch(function (err) {
+				// This code runs if there were any errors
+				console.log(err);
+			});
+		}
 	}).catch(function (err) {
 		// This code runs if there were any errors
 		console.log(err);
 	});
+	//
 
-	if (gXmlBookDataMsg) {
-		var msgElements = gXmlBookDataMsg.getElementsByTagName("msg");
-		for (var iMsg = 0; iMsg < msgElements.length; iMsg++) {
-			var objMsg = new Object();
-			objMsg.id = getNodeText(msgElements[iMsg], "id");
-			objMsg.sender = getNodeText(msgElements[iMsg], "sender");
-			objMsg.type = getNodeText(msgElements[iMsg], "type");
-			objMsg.docid = getNodeText(msgElements[iMsg], "docid");
-			objMsg.time = getNodeText(msgElements[iMsg], "time");
-			objMsg.read = getNodeText(msgElements[iMsg], "read");
-			strData = getNodeText(msgElements[iMsg], "data");
-			try {
-				objMsg.data = JSON.parse(strData);
-				gDocMsgList.push(objMsg);//添加到消息列表数组
-			}
-			catch (e) {
-				console(e);
-			}
-		}
-	}
 
 
 	com_XmlAllWordRefresh();
