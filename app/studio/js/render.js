@@ -1011,7 +1011,7 @@ function render_sent_tool_bar(elementBlock, begin) {
 	let sentIdStringLink = "{{" + sentIdString + "}}";
 	output += "<span>" + sentIdString + "<a onclick=\"copy_to_clipboard('" + sentIdStringLink + "')\">[" + gLocal.gui.copy_to_clipboard + "]</a></span>";
 	//	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
-	output += "<guide gid='sent_func' style='margin:unset;' onclick='guide_init()'></guide>";
+	output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 	output += "</div>";
 	return (output);
 }
@@ -1195,7 +1195,7 @@ function renderWordParBlockInner(elementBlock) {
 				let sentIdString = book + "-" + paragraph + "-" + nextBegin + "-" + nextEnd;
 				let sentIdStringLink = "{{" + sentIdString + "}}";
 				output += "<span>" + sentIdString + "<a onclick=\"copy_to_clipboard('" + sentIdStringLink + "')\">[" + gLocal.gui.copy_to_clipboard + "]</a></span>";
-				output += "<guide gid='sent_func' style='margin:unset;' onclick='guide_init()'></guide>";
+				output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 				output += "</div>";
 
 				output += "<div class='sent_wbw'>";
@@ -1235,8 +1235,9 @@ function renderWordParBlockInner(elementBlock) {
 	arr_Para_ID.push(wID);
 	arr_par_sent_num.push(sent_ID);
 	g_arr_Para_ID[par_num] = arr_Para_ID;
-
+	guide_init();
 	return output;//+outList;
+
 }
 
 function magic_sentence_cut() {

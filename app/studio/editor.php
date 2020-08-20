@@ -32,7 +32,12 @@ else{$currDevice="computer";}
 			echo "<link type=\"text/css\" rel=\"stylesheet\" href=\"".$dir_user_base.$userid.$dir_myApp."/style.css\"/>";
 		}
 	?>
-	<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
+
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+	<script src="../public/js/marked.js"></script>
+
+<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
 	<script language="javascript" src="config.js"></script>
 	<script language="javascript" src="js/data.js"></script>
 	<script language="javascript" src="js/common.js"></script>
@@ -44,9 +49,6 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
 
-	<script src="../guide/guide.js"></script>
-	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
-	<script src="../public/js/marked.js"></script>
 
 	<script language="javascript" src="js/relation_list.json"></script>
 	
