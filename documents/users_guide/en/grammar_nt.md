@@ -1,3 +1,2 @@
-# 中性
+# neuter gender
 pāḷi：napuṃsaka
-本意：非雄，不是男的
