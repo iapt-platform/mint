@@ -32,7 +32,12 @@ else{$currDevice="computer";}
 			echo "<link type=\"text/css\" rel=\"stylesheet\" href=\"".$dir_user_base.$userid.$dir_myApp."/style.css\"/>";
 		}
 	?>
-	<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
+
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+	<script src="../public/js/marked.js"></script>
+
+<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
 	<script language="javascript" src="config.js"></script>
 	<script language="javascript" src="js/data.js"></script>
 	<script language="javascript" src="js/common.js"></script>
@@ -44,9 +49,6 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
 
-	<script src="../guide/guide.js"></script>
-	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
-	<script src="../public/js/marked.js"></script>
 
 	<script language="javascript" src="js/relation_list.json"></script>
 	
@@ -891,21 +893,21 @@ foreach($plugin_list as $info){
 	
 	<div id="end_of_page" class="borderT textS textAc">
 	The End of The Page<br>
-	——wikipāli studio——
+	——wikipāḷi studio——
 	</div>
 	
 	<style>
 	#word_note_pop{
 	border-radius: 6px;
     width: 95%;
-    max-height: 50%;
-    height: 10em;
+	max-height: calc(30vh);
     position: fixed;
-    top: calc(100% - 11em);
+    bottom: 10px;
     left: 3em;
-    background-color: var(--booka);
+	background-color: var(--drop-bg-color);
 	overflow-y: auto;
 	display:none;
+
 }
 
 
@@ -916,7 +918,12 @@ foreach($plugin_list as $info){
 	}
 	</script>
 	<div id="word_note_pop">
-		<div id="word_note_pop_title"><span onclick="close_word_note_pop()">[close]</span></div>
+		<div id="word_note_pop_title" style="background-color: var(--border-shadow);">
+			<span onclick="close_word_note_pop()" style="display: flex;">
+				<svg style="fill: var(--main-color);margin: 5px;height: 15px;width: 15px;"  t="1597905254064" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2185" ><path d="M573.207 527.834l404.184-404.22a52.811 52.811 0 0 0 0-74.401l-2.217-2.217a52.836 52.836 0 0 0-74.413 0l-404.209 404.73-404.22-404.9a52.823 52.823 0 0 0-74.401 0l-2.217 2.217a51.915 51.915 0 0 0 0 74.414l404.22 404.377-404.22 404.22a52.823 52.823 0 0 0 0 74.402l2.217 2.217a52.811 52.811 0 0 0 74.401 0l404.22-404.22 404.22 404.22a52.823 52.823 0 0 0 74.414 0l2.217-2.217a52.811 52.811 0 0 0 0-74.401z m0 0" p-id="2186"></path>
+				</svg>
+			</span>
+		</div>
 		<div id="word_note_pop_content">
 		</div>
 	</div>

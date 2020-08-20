@@ -1,5 +1,21 @@
-## 语法缩略语表
-| 缩略语   | 英文缩写  | 备注                         |
+## Basic Operations
+- Fill syntax information by selecting the drop-down list
+- First, select the type with outline, such as: verb
+- Then, select the following content, such as: **3p sg. pres.**
+- For the above-mentioned **syntax abbreviations**, please refer to the following table
+- Adjust **grammatical information** and **function word formula** to list the possible meanings of this word
+- Find out the optimal solution
+
+## Splitting of Slur
+The tutorial of splitting a slur word (unavailable)
+
+##  Splitting of Compound Word
+The tutorial of splitting compound word (text not yet available)
+- [YouTube](https://youtu.be/iN1t0Rq9aKk)  
+- [百度网盘](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w)  提取码：pali 
+
+## grammatical abbr. list
+| 缩略语   | abbr.     | note                         |
 | :------- | :-------- | :--------------------------- |
 | 名       | n.        | noun                         |
 | 动       | v.        | verb                         |
