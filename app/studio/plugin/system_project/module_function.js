@@ -320,7 +320,7 @@ function refreshResource() {
 			tran_count = 1;
 			wbwListStr2 += "<option value=\"" + (i - 1) + "\">" + info2 + "</option>"
 		}
-		else if (i == lstResWbw.length - 1) {
+		else if (i == lstResWbw.length - 1 && i != 0) {
 			wbwListStr += "<li><input type=\"checkbox\" checked /><a onclick=\"project_res_info_click('wbw'," + (i - 1) + ")\">" + lstResWbw[i - 1].author + "[" + lstResWbw[i - 1].language + "]-" + wbw_count + "</a></li>"
 			wbwListStr2 += "<option value=\"" + (i - 1) + "\">" + info2 + "</option>"
 
@@ -342,7 +342,7 @@ function refreshResource() {
 			tran_count = 1;
 			tranListStr2 += "<option value=\"" + (i - 1) + "\">" + info2 + "</option>"
 		}
-		else if (i == lstResTranslate.length - 1) {
+		else if (i == lstResTranslate.length - 1 && i != 0) {
 			tranListStr += "<li><input type=\"checkbox\" checked /><a onclick=\"project_res_info_click('translate'," + (i - 1) + ")\">" + lstResTranslate[i - 1].author + "[" + lstResTranslate[i - 1].language + "]-" + tran_count + "</a></li>"
 			tranListStr2 += "<option value=\"" + (i - 1) + "\">" + info2 + "</option>"
 

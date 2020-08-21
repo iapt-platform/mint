@@ -25,6 +25,7 @@ else{
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/font.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css"/>
+    <link type="text/css" rel="stylesheet" href="../pcdl/css/style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
 

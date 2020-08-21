@@ -78,6 +78,6 @@ guide ol{
     font-weight:700;
 }
 .guide_contence  li{
-    white-space: unset;
+    white-space: normal;
     word-break: normal;
 }

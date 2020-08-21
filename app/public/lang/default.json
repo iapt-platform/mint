@@ -235,7 +235,7 @@
 		"pcd_studio": "PCD Studio&nbsp;",
 		"piṭaka": "Piṭaka",
 		"plugin": "Plugin",
-		"poweredby": "Powered by PCSD  build27-Jul-2018",
+		"poweredby": "Powered by PCSD  build 27th-Jul-2018",
 		"preview": "preview",
 		"print": "Print",
 		"print_preview": "Print Preview",
@@ -453,6 +453,10 @@
 		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
 		"open_doc": "如果未自动跳转，请点此打开",
 		"page_end": "The End of The Page",
+		"academy": "Academy",
+		"preference": "preference",
+		"appearance": "appearance",
+		"theme": "theme",
 		"": ""
 	},
 	"grammastr": [

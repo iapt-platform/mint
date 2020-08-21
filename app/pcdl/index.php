@@ -2,6 +2,7 @@
 require_once '../pcdl/html_head.php';
 ?>
 <body >	
+
 <style>
 	.content_block{
 		flex: 0 0 auto;
