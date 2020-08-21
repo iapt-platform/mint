@@ -10,8 +10,9 @@
 
 ## 复合词拆分
 复合词拆分使用教程（文本暂缺）
-- [YouTube](https://youtu.be/iN1t0Rq9aKk)  
-- [百度网盘](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w)  提取码：pali 
+- [YouTube](https://youtu.be/iN1t0Rq9aKk "按住Ctrl键点开")
+- [优酷](https://v.youku.com/v_show/id_XNDgwOTg4NDQ4MA==.html "按住Ctrl键点开")
+- [百度网盘](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w "按住Ctrl键点开")  提取码：pali 
 
 ## 语法缩略语表
 | 缩略语   | 英文缩写  | 备注                         |
