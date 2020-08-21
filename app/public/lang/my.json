@@ -452,6 +452,10 @@
 		"ignore": "ignore",
 		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
 		"page_end": "The End of The Page",
+		"academy": "Academy",
+		"preference": "preference",
+		"appearance": "appearance",
+		"theme": "theme",
 		"": "",
 		"": ""
 	},

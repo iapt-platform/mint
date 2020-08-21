@@ -362,24 +362,24 @@ else{
 <div id="login_right">
 
 	<div class="help_div">
-		<div  class="htlp_title">个性化设置</div>
+		<div  class="htlp_title"><?php echo $_local->gui->preference;?></div>
 		<div>
 			<div class="help_fun_block">
-				<div class="title" >语言</div>
+				<div class="title" ><?php echo $_local->gui->language;?></div>
 				<div >
-				界面语言：<a>English</a> <a>简体中文</a> <a>繁体中文</a> <a>更多</a>
+					<?php echo $_local->gui->interface;?>：<a>English</a> <a>简体中文</a> <a>繁體中文</a><a>සින්හල</a> <a>မြန်မာ</a> <a><?php echo $_local->gui->more;?></a>
 				</div>
 				<div >
-				常用译文语言：<a>English</a> <a>简体中文</a> <a>繁体中文</a> <a>更多</a>
+					<?php echo $_local->gui->dictionary." & ".$_local->gui->translation;?>：<a>English</a> <a>简体中文</a> <a>繁体中文</a> <a>සින්හල</a> <a>မြန်မာ</a> <a><?php echo $_local->gui->more;?></a>
 				</div>
 				<div >
-				巴利脚本：<a>Roma</a> <a>sinhala</a> <a>mymar</a>
+					<?php echo $_local->gui->script;?>：<a>Pāḷi Roman</a> <a>සින්හල</a> <a>မြန်မာ</a> <a>తెలుగు</a> <a><?php echo $_local->gui->more;?></a>
 				</div>
 			</div>
 			<div class="help_fun_block">
-				<div class="title" >外观</div>
+				<div class="title" ><?php echo $_local->gui->appearance;?></div>
 				<div >
-				颜色搭配：<a>静夜</a> <a>白色</a> <a>黄昏</a> <a>更多</a>
+				<?php echo $_local->gui->theme;?>：<a><?php echo $_local->gui->night;?></a> <a><?php echo $_local->gui->white;?></a> <a><?php echo $_local->gui->dwan;?></a> <a><?php echo $_local->gui->more;?></a>
 				</div>
 			</div>
 		</div>
@@ -388,29 +388,28 @@ else{
 
 	<div class="help_div">
 		<div  class="htlp_title">
-		统计
-		<?php //echo $_local->gui->wikipali_suite;?>
+			<?php echo $_local->gui->statistical_data;?>
 		</div>
 		<div>
 			<div class="help_fun_block">
-				<div class="title" >译经楼</div>
+				<div class="title" ><?php echo $_local->gui->studio;?></div>
 				<ul class="help_fun_block_link_list">
 					<li style="display:block;">已发表的文集：2</li>
 					<li style="display:block;">已发表的文章：12</li>
-					<li style="display:block;">私有文档：234</li>
-					<li style="display:block;">圣典百科：245</li>
+					<li style="display:block;"><?php echo $_local->gui->my_document;?>：234</li>
+					<li style="display:block;"><?php echo $_local->gui->encyclopedia;?>：245</li>
 				</ul>
 			</div>
 			<div class="help_fun_block">
-				<div class="title" >藏经阁</div>
+				<div class="title" ><?php echo $_local->gui->library;?></div>
 				<ul class="help_fun_block_link_list" style="display:unset;">
 					<li style="display:block;">文集：2</li>
 					<li style="display:block;">文章：12</li>
-					<li style="display:block;">百科：245</li>
+					<li style="display:block;"><?php echo $_local->gui->encyclopedia;?>：245</li>
 				</ul>
 			</div>
 			<div class="help_fun_block">
-				<div class="title" >圣书院</div>
+				<div class="title" ><?php echo $_local->gui->academy;?></div>
 				<ul class="help_fun_block_link_list" >
 					<li style="display:block;">创建课程：2</li>
 					<li style="display:block;">主讲课程：12</li>
@@ -482,7 +481,7 @@ file_list();
 	</div>
 	
 	<div class="foot_div">
-	<?php echo $module_gui_str['editor']['1066'];?>
+		<?php echo $_local->gui->poweredby;?>
 	</div>
 
 
@@ -497,14 +496,14 @@ file_list();
 		}
 		</style>
 	<div id="rs_doc_coop_shell">
-	<div id="rs_doc_coop_win" >
-	<div id="rs_doc_coop_win_inner" >
+		<div id="rs_doc_coop_win" >
+			<div id="rs_doc_coop_win_inner" >
 
-	</div>
-	<div id="rs_doc_coop_win_foot" >
-		<button onclick="file_coop_win_close()">关闭</button>
-	</div>
-	</div>
+			</div>
+			<div id="rs_doc_coop_win_foot" >
+				<button onclick="file_coop_win_close()">关闭</button>
+			</div>
+		</div>
 	</div>
 
 

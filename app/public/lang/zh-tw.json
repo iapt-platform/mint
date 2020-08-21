@@ -236,7 +236,7 @@
 		"pcd_studio": "聖典工作室",
 		"piṭaka": "選欄",
 		"plugin": "外掛",
-		"poweredby": "技術支援：聖典工作室",
+		"poweredby": "技術支援：聖典工作室 2018年7月27日",
 		"preview": "預覽",
 		"print": "列印",
 		"print_preview": "預覽列印",
@@ -272,7 +272,7 @@
 		"sandhi_orginal_word": "黏音詞原詞",
 		"sandhi_splited_word": "黏音詞拆分",
 		"save": "儲存",
-		"script": "巴利字元",
+		"script": "巴利指令碼",
 		"search": "搜尋",
 		"season": "季節",
 		"sec": "秒",
@@ -454,6 +454,10 @@
 		"oversize_to_load": "尺寸過大，無法載入，請縮減載入範圍",
 		"open_doc": "如果未自動跳轉，請點此開啟",
 		"page_end": "已到達頁面底端",
+		"academy": "聖書院",
+		"preference": "個性化",
+		"appearance": "外觀",
+		"theme": "主題",
 		"": ""
 	},
 	"grammastr": [

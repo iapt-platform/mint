@@ -11,8 +11,9 @@ The tutorial of splitting a slur word (unavailable)
 
 ##  Splitting of Compound Word
 The tutorial of splitting compound word (text not yet available)
-- [YouTube](https://youtu.be/iN1t0Rq9aKk)  
-- [百度网盘](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w)  提取码：pali 
+- [YouTube](https://youtu.be/iN1t0Rq9aKk "Press Ctrl and Click On")  
+- [优酷](https://v.youku.com/v_show/id_XNDgwOTg4NDQ4MA==.html "Press Ctrl and Click On")
+- [百度网盘](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w "Press Ctrl and Click On")  提取码：pali 
 
 ## grammatical abbr. list
 | 缩略语   | abbr.     | note                         |

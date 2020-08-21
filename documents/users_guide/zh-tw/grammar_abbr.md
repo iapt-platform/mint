@@ -10,8 +10,9 @@
 
 ## 複合詞拆分
 複合詞拆分使用教程（文字暫缺）
-- [YouTube](https://youtu.be/iN1t0Rq9aKk)  
-- [百度網盤](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w)  提取碼：pali 
+- [YouTube](https://youtu.be/iN1t0Rq9aKk "按住Ctrl鍵點開")
+- [優酷](https://v.youku.com/v_show/id_XNDgwOTg4NDQ4MA==.html "按住Ctrl鍵點開")
+- [百度網盤](https://pan.baidu.com/s/1nXZG2GQkkkfblNnshDuS_w "按住Ctrl鍵點開")  提取碼：pali 
 
 ## 語法縮略語表
 | 縮略語   | 英文縮寫  | 備註                         |
