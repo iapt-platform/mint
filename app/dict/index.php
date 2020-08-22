@@ -294,7 +294,7 @@ function GetPageScroll()
             border-bottom: 2px solid var(--link-hover-color);
         }
     </style>
-	<script language="javascript" src="dict.js"></script>
+	<script language="javascript" src="./dict.js"></script>
 
 	<div id="dict_search_result" style="background-color:white;color:black;">
 	</div>

@@ -29,6 +29,7 @@ var lstResHeading = new Array();
 
 var doc_info = new Object();
 
+
 doc_info.msg_run = function (value) {
 	if (value) {
 		this.sendmsg = value;
@@ -37,6 +38,16 @@ doc_info.msg_run = function (value) {
 		return (this.sendmsg);
 	}
 }
+
+var isTransaction = false;
+function doc_beginTransaction() {
+	isTransaction = true;
+}
+function doc_commit() {
+
+	isTransaction = false;
+}
+
 function createXmlDoc() {
 	var strXml = "";
 	strXml += "<set>\n"
@@ -175,30 +186,36 @@ function doc_file_info_get() {
 			doc_id: g_docid
 		},
 		function (data, status) {
-			arrDocFileInfo = JSON.parse(data);
-			if (arrDocFileInfo.parent_id == null) {
-				doc_info.parent_id = "";
-			}
-			else {
-				doc_info.parent_id = arrDocFileInfo.parent_id;
-			}
-			doc_info.doc_id = arrDocFileInfo.id;
-			doc_info.share = arrDocFileInfo.share;
-			if (arrDocFileInfo.parent_id && arrDocFileInfo.parent_id != null && arrDocFileInfo.parent_id.length > 0) {
-				strMsgDocList = arrDocFileInfo.parent_id;
-				msg_start();//该文档是他人分享的文档，需要发送消息
-				doc_info.sendmsg = true;
-			}
-			else {
-				if (parseInt(arrDocFileInfo.share) == 1) {
-					strMsgDocList = arrDocFileInfo.id;
-					msg_start();
-					doc_info.sendmsg = true;//共享给其他人，需要发送消息
+			try {
+				let arrDocFileInfo = JSON.parse(data);
+				if (arrDocFileInfo.parent_id == null) {
+					doc_info.parent_id = "";
 				}
 				else {
-					doc_info.sendmsg = false;//无需发送消息
+					doc_info.parent_id = arrDocFileInfo.parent_id;
+				}
+				doc_info.doc_id = arrDocFileInfo.id;
+				doc_info.share = arrDocFileInfo.share;
+				if (arrDocFileInfo.parent_id && arrDocFileInfo.parent_id != null && arrDocFileInfo.parent_id.length > 0) {
+					strMsgDocList = arrDocFileInfo.parent_id;
+					msg_start();//该文档是他人分享的文档，需要发送消息
+					doc_info.sendmsg = true;
+				}
+				else {
+					if (parseInt(arrDocFileInfo.share) == 1) {
+						strMsgDocList = arrDocFileInfo.id;
+						msg_start();
+						doc_info.sendmsg = true;//共享给其他人，需要发送消息
+					}
+					else {
+						doc_info.sendmsg = false;//无需发送消息
+					}
 				}
 			}
+			catch (e) {
+				console(e);
+			}
+
 		});
 }
 
@@ -354,17 +371,13 @@ function doc_head(key, value = null) {
 function doc_msg_push(msgobj) {
 
 	gDocMsgList.push(msgobj);
-	if (gXmlBookDataMsg) {
-		var newNode = gXmlBookData.createElement("msg");
-		setNodeText(newNode, "id", msgobj.id);
-		setNodeText(newNode, "sender", msgobj.sender);
-		setNodeText(newNode, "type", msgobj.type);
-		setNodeText(newNode, "docid", msgobj.docid);
-		setNodeText(newNode, "time", msgobj.time);
-		setNodeText(newNode, "read", msgobj.read);
-		setNodeText(newNode, "data", msgobj.data);
-		gXmlBookDataMsg.appendChild(newNode);
-	}
+	localforage.setItem("msg_" + g_docid, gDocMsgList).then(function (value) {
+		// This will output `1`.
+		console.log(value.length);
+	}).catch(function (err) {
+		// This code runs if there were any errors
+		console.log(err);
+	});
 }
 
 function doc_block(strSelector = "") {
@@ -619,25 +632,33 @@ function projectDataParse(xmlBookData) {
 		gXmlBookDataMsg = null;
 	}
 	//解析消息队列
-	if (gXmlBookDataMsg) {
-		var msgElements = gXmlBookDataMsg.getElementsByTagName("msg");
-		for (var iMsg = 0; iMsg < msgElements.length; iMsg++) {
-			var objMsg = new Object();
-			objMsg.id = getNodeText(msgElements[iMsg], "id");
-			objMsg.sender = getNodeText(msgElements[iMsg], "sender");
-			objMsg.type = getNodeText(msgElements[iMsg], "type");
-			objMsg.docid = getNodeText(msgElements[iMsg], "docid");
-			objMsg.time = getNodeText(msgElements[iMsg], "time");
-			objMsg.read = getNodeText(msgElements[iMsg], "read");
-			strData = getNodeText(msgElements[iMsg], "data");
-			try {
-				objMsg.data = JSON.parse(strData);
-				gDocMsgList.push(objMsg);//添加到消息列表数组
-			}
-			catch (e) {
-			}
+	localforage.getItem("msg_" + g_docid).then(function (value) {
+		if (value == null) {
+			console.log("离线消息数据不存在");
+			localforage.setItem("msg_" + g_docid, gDocMsgList).then(function (value) {
+				doc_head("msg_db_max_id", "1");
+				msg_init(1);
+				console.log("离线消息创建成功" + value.length);
+			}).catch(function (err) {
+				// This code runs if there were any errors
+				console.log(err);
+			});
 		}
-	}
+		else {
+			localforage.getItem("msg_" + g_docid).then(function (value) {
+				gDocMsgList = value;
+				console.log(value.length);
+			}).catch(function (err) {
+				// This code runs if there were any errors
+				console.log(err);
+			});
+		}
+	}).catch(function (err) {
+		// This code runs if there were any errors
+		console.log(err);
+	});
+	//
+
 
 
 	com_XmlAllWordRefresh();

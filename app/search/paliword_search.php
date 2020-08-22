@@ -218,7 +218,8 @@ switch($op){
 						}
 					}
 					$path=$path_1.$path."para. ".$paragraph;
-					echo  "<div class='mean'><a href='../pcdl/reader.php?book={$book}&paragraph={$FetchPaliText[0]["parent"]}' target='_blank'>$path</a></div>";
+					//$FetchPaliText[0]["parent"]
+					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
 					
 					for($iPali=0;$iPali<$countPaliText;$iPali++){
 						if(substr($paliword,-1)=="n"){

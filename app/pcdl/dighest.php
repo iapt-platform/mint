@@ -91,7 +91,7 @@ else{
 	}	
 
 //更新索引数据库
-	$db_file =  _FILE_DB_RES_INDEX_;
+	$db_file =  _FILE_DB_RESRES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 
 	// 开始一个事务，关闭自动提交
@@ -99,7 +99,7 @@ else{
 	$query="INSERT INTO 'index' ('id','book','paragraph','level','type','language','title','author','editor','edition','share','album','update_time') VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?)";
 	$stmt = $PDO->prepare($query);
 
-	$newData=array($first_book,$first_paragraph,$new_index,,'dighest','sc',$title,4,4,1,4,$first_album,time());
+	$newData = array($first_book,$first_paragraph,$new_index,'dighest','sc',$title,4,4,1,4,$first_album,time());
 	$stmt->execute($newData);
 
 
@@ -114,7 +114,7 @@ else{
 	}
 
 //更新tag数据库
-	$db_file =  _FILE_DB_RES_INDEX_;
+	$db_file =  _FILE_DB_RESRES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 
 	// 开始一个事务，关闭自动提交
