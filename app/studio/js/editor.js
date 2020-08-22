@@ -4818,8 +4818,11 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 		else {
 			msg_doc_id = doc_info.doc_id;
 		}
-
-		msg_push(1, "{\"id\":\"" + inWordId + "\",\"" + inField + "\":\"" + inChangeTo + "\",\"status\":\"7\"}", msg_doc_id, d.getTime(), book, paragraph);
+		let msg_data = new Object();
+		msg_data.id = inWordId;
+		msg_data[inField] = inChangeTo;
+		msg_data.status = 7;
+		msg_push(1, JSON.stringify(msg_data), msg_doc_id, d.getTime(), book, paragraph);
 	}
 	modifyWordDetailByWordIndex(wordIndex);
 
@@ -4837,7 +4840,11 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 				//准备消息数据
 				if (doc_info.sendmsg) {
 					let wordid = getNodeText(xAllWord[i], "id");
-					msg_push(1, "{\"id\":\"" + wordid + "\",\"" + inField + "\":\"" + inChangeTo + "\",\"status\":\"5\"}", msg_doc_id, d.getTime(), book, paragraph);
+					let msg_data = new Object();
+					msg_data.id = wordid;
+					msg_data[inField] = inChangeTo;
+					msg_data.status = 5;
+					msg_push(1, JSON.stringify(msg_data), msg_doc_id, d.getTime(), book, paragraph);
 				}
 				modifyWordDetailByWordIndex(i);
 			}
