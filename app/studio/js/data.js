@@ -645,7 +645,7 @@ function projectDataParse(xmlBookData) {
 			});
 		}
 		else {
-			localforage.getItem(g_docid).then(function (value) {
+			localforage.getItem("msg_" + g_docid).then(function (value) {
 				gDocMsgList = value;
 				console.log(value.length);
 			}).catch(function (err) {
