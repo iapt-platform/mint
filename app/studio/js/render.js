@@ -1159,6 +1159,7 @@ function renderWordParBlockInner(elementBlock) {
 				output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
 				output += "<div class='translate_sent_head'>";
 				output += "<div class='translate_sent_head_toolbar'>";
+				output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
 				output += "<span></span>";
 				output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">issue</span></span>";
 				sent_begin = word_id;
@@ -1218,6 +1219,7 @@ function renderWordParBlockInner(elementBlock) {
 	output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
 	output += "<div class='translate_sent_head'>";
 	output += "<div class='translate_sent_head_toolbar'>";
+	output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
 	output += "<span></span>";
 	output += "<span onclick=\"show_tran_net('" + book + "','" + paragraph + "','" + sent_begin + "','" + word_id + "')\"><span id='' class=\"word_msg\">issue</span></span>";
 	output += "</div>";
