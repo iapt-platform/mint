@@ -651,4 +651,6 @@ function term_add_new(keyword) {
 
 function term_show_new() {
 	$("#term_new_recorder").slideToggle();
+	$("#new_term_button").hide();
+	guide_init();
 }

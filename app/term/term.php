@@ -176,14 +176,20 @@ switch($op){
 		}
 		//新建词条
 		echo "<div class='dict_word'>";
-		echo "<button onclick=\"term_show_new()\">{$_local->gui->new}</button>";
+		echo "<button id='new_term_button' onclick=\"term_show_new()\">{$_local->gui->new}</button>";
 		echo "<div id='term_new_recorder' style='display:none;'>";
-		echo "<div class='dict'>".$module_gui_str['editor']['1121']."</div>";//New Techinc Term
-		echo "<div class='mean'>{$_local->gui->pāli}：<input type='input' placeholder='{$_local->gui->pāli}' id='term_new_word' value='{$word}' /></div>";//'拼写'
-		echo "<div class='mean'>{$_local->gui->meaning}<input type='input' placeholder='{$_local->gui->meaning}' id='term_new_mean'/></div>";//'意思'
-		echo "<div class='other_mean'>{$_local->gui->other_meaning}：<input type='input'  placeholder='{$_local->gui->other_meaning}' id='term_new_mean2'/></div>";//'备选意思（可选项）'
-		echo "<div class='tag'>{$_local->gui->tag}：<input type='input'  placeholder='{$_local->gui->tag}' id='term_new_tag'/></div>";//'标签'
-		echo "<div class='note'>{$_local->gui->note}：<textarea width='100%' height='3em'  placeholder='{$_local->gui->note}' id='term_new_note'></textarea></div>";//'注解'
+		echo "<div class='dict'>".$_local->gui->new_technic_term."</div>";//New Techinc Term
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->pali_word}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_new_word' value='{$word}' /></div>";//'拼写'
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->first_choice_word}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_new_mean'/></div>";//'意思'
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->other_meaning}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_mean2'/></div>";//'备选意思（可选项）'
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->tag}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_tag'/></div>";//'标签'
+		echo "<div class='note'><span style='display:flex;'><span>{$_local->gui->encyclopedia} & {$_local->gui->note}：</span>";
+		echo "<guide gid='term_pedia_sys' style='margin-left: auto;'></guide></span>";
+		echo "<textarea width='100%' height='3em'  placeholder='{$_local->gui->optional}' id='term_new_note'></textarea></div>";//'注解'
 		echo "<button onclick=\"term_data_save('')\">{$_local->gui->save}</button>";//保存
 		echo "</div>";
 		echo "</div>";

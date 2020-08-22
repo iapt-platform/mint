@@ -31,7 +31,8 @@ guide ol{
     top:100%;
     width: max-content;
     min-width:18em;
-    max-width: calc(30vw);
+    /*max-width: calc(30vw);*/
+    max-width:20em;
     min-height:15em;
     padding:10px;
     background-color: var(--drop-bg-color);
@@ -80,4 +81,12 @@ guide ol{
 .guide_contence  li{
     white-space: normal;
     word-break: normal;
+}
+.guide_contence  pre{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.guide_contence  code{
+    white-space: normal;
+    word-break: normal;
+    font-family: arial;
 }

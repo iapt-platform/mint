@@ -284,10 +284,10 @@ input[type="submit"]:disabled {
     box-shadow: 5px 0 20px 5px var(--shadow-color);
 }
 .viewswitch_off {
-    -webkit-transform:translateX(0em);
+    -webkit-transform: translateX(0em);
     -moz-transform:translateX:(0em);
     transform:translateX:(0em);
-    box-shadow: 5px 0 20px 5px var(--shadow-color);
+    box-shadow : 5px 0 20px 5px var(--shadow-color);
 }
 
 .common-tab {

@@ -216,7 +216,7 @@
 		"ok": "成功",
 		"order_by": "排序方式",
 		"other": "其他",
-		"other_meaning": "备选意思（可选项）",
+		"other_meaning": "备选用词",
 		"otherdict": "其他词典",
 		"pa_auk_dictionary": "帕奥词典",
 		"pacchā_māsa": "下个月",
@@ -459,7 +459,10 @@
 		"preference": "个性化",
 		"appearance": "外观",
 		"theme": "主题",
-		"": ""
+		"first_choice_word": "首选用词",
+		"pali_word": "巴利原词",
+		"required": "必填",
+		"optional": "选填"
 	},
 	"grammastr": [
 		{
