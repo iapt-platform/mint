@@ -365,6 +365,9 @@ function msg_apply_data(obj) {
 }
 
 function msg_word_msg_num(wid) {
+	if (gDocMsgList == null) {
+		return;
+	}
 	var iMsg = 0;
 	for (var i = 0; i < gDocMsgList.length; i++) {
 		if (gDocMsgList[i].type == 1) {
@@ -377,6 +380,9 @@ function msg_word_msg_num(wid) {
 }
 
 function msg_set_tool_bar_msg_counter() {
+	if (gDocMsgList == null) {
+		return;
+	}
 	var iMsg = 0;
 	for (var i = 0; i < gDocMsgList.length; i++) {
 		if (gDocMsgList[i].read == 0) {
@@ -417,6 +423,9 @@ function time_standardize(date) {
 
 //显示消息内容
 function msg_show_content(type, id) {
+	if (gDocMsgList == null) {
+		return;
+	}
 	if (type == "" || id == "") {
 		return;
 	}
@@ -559,6 +568,9 @@ function msg_show_content(type, id) {
 
 //刷新消息列表
 function msg_update_msg_list() {
+	if (gDocMsgList == null) {
+		return;
+	}
 	let strHtml = "";
 	let msgList = new Array();
 
