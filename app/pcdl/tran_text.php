@@ -19,7 +19,7 @@ else{
 
 	$log="";
 	
-	$db_file = _FILE_DB_RES_INDEX_;
+	$db_file = _FILE_DB_RESRES_INDEX_;
 	PDO_Connect("sqlite:$db_file");
 	$query = "select * from 'album' where id='$album'";
 	$Fetch = PDO_FetchAll($query);
