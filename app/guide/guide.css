@@ -10,22 +10,42 @@ guide{
     background-repeat: no-repeat;
     background-size: contain;
     margin: 0 6px;
+    color: var(--tool-color);
 }
 guide:hover  .guide_contence{
     display:inline-block;
 }
+guide ul{
+    list-style-type:disc;
+    padding-left:20px;
+}
+guide ol{
+    list-style-type:decimal;
+    padding-left:20px;
+}
 .guide_contence {
     border-top: 7px;
     position: absolute;
+    border: 2px solid var(--btn-border-color);
+    border-radius: 10px;
     top:100%;
+    width: max-content;
     min-width:18em;
+    max-width: calc(30vw);
     min-height:15em;
     padding:10px;
-    background-color:white;
+    background-color: var(--drop-bg-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     font-size:10pt;
     text-align:left;
     display:none;
+
+    margin: 0.3em;
+    margin: -1px 0px;
+    box-shadow: 0px 3px 13px 0px var(--shadow-color);
+    color: var(--main-color);
+    z-index: 200;
+    padding: 0 0.2em;
 }
 /*
 .guide_contence:after {
@@ -58,7 +78,6 @@ guide:hover  .guide_contence{
     font-weight:700;
 }
 .guide_contence  li{
-    display: block;
-    white-space: unset;
+    white-space: normal;
     word-break: normal;
 }

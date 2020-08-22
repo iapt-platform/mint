@@ -31,24 +31,34 @@
 		text-align:right;
 	}
 	#user_bar{
-		border: 1px solid var(--btn-border-color);
+		border: 2px solid var(--btn-border-color);
 		border-radius: 99px;
 		color: var(--btn-color);
 		padding: 2px 2px 2px 15px;
 		height: min-content;
+		display: flex;
 	}
+	.new_account{
+		border: 2px solid var(--btn-border-color);
+		border-radius: 99px;
+		color: var(--btn-color);
+		padding: 5px 10px;
+		height: min-content;
+	}
+	.new_account:hover{
+		background: var(--btn-border-color);
+
+	}
+
 	</style>
 		<div style="margin:auto;" class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
-			<div id="user_bar" >
-				<span>
+			
 				<?php
 				if(isset($_COOKIE["userid"])){
-					echo $_COOKIE["nickname"];
-				}
-				else{
-					echo "<a href='../ucenter/'>[登陆]</a> <a href='../ucenter/index.php?op=new'>[注册]</a>";
-				}
 				?>
+			<div id="user_bar" >
+				<span style="padding: 4px 0;">
+					<?php echo $_COOKIE["nickname"]; ?>
 				</span>
 				<button class="dropbtn icon_btn" onClick="switchMenu(this,'user_info')" id="use_mode">	
 					<svg class="icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 32 32" id="ic_user_32px" style="fill: var(--tool-link-hover-color);">
@@ -56,9 +66,6 @@
 				</button>
 			</div>
 			<div class="dropdown-content" id="user_info">
-				<?php
-				if(isset($_COOKIE["userid"])){
-				?>
 				<div id="user_info_welcome">
 				<div id="user_info_welcome1"><?php echo $_local->gui->welcome;?></div>
 				<div id="user_info_name"><?php echo $_COOKIE["nickname"];?></div>
@@ -86,9 +93,19 @@
 					</svg>
 					<?php echo $_local->gui->logout;?>
 				</a>
-			<?php
-				}
-			?>				
 			</div>
+
+				<?php
+				}
+				else{
+					?>
+			<span style="display: flex;">
+				<div  style="padding: 7px; margin-right: 10px;"><a href='../ucenter/'><?php echo $_local->gui->login;?></a></div>
+				<div class="new_account"><a href='../ucenter/index.php?op=new'><?php echo $_local->gui->new_account;?></a></div>
+			</span>
+				<?php
+				}
+				?>
+
 
 		</div>

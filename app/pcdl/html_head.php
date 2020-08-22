@@ -25,10 +25,10 @@ else{
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/font.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css"/>
+    <link type="text/css" rel="stylesheet" href="../pcdl/css/style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
 
-	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 
     <title>圣典</title>
 
@@ -36,6 +36,7 @@ else{
 	<script src="../public/js/comm.js"></script>
 	<script src="../studio/js/fixedsticky.js"></script>
 	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
@@ -48,10 +49,10 @@ else{
 		line-height: 1.3;
 	}
 	.card .title a , a:link{
-		color:blue;
+		color: var(--tool-link-hover-color);
 	}
 	.card a:hover{
-		color:blue;
+		color: var(--tool-link-hover-color);
 	}
 
 	</style>

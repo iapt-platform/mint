@@ -84,7 +84,7 @@
 			<div >
 					<div>
 						<div>
-							<input id="search_input" type="input" placeholder='<?php echo $_local->gui->search;?>' onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%" onfocus="search_input_onfocus()">
+							<input id="search_input" type="input" placeholder='<?php echo $_local->gui->undone_function;?>' onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%" onfocus="search_input_onfocus()">
 						</div>
 						<div id="pre_search_result">
 							<div id="pre_search_chapter" class="pre_serach_block">

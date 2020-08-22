@@ -32,7 +32,12 @@ else{$currDevice="computer";}
 			echo "<link type=\"text/css\" rel=\"stylesheet\" href=\"".$dir_user_base.$userid.$dir_myApp."/style.css\"/>";
 		}
 	?>
-	<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
+
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+	<script src="../public/js/marked.js"></script>
+
+<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
 	<script language="javascript" src="config.js"></script>
 	<script language="javascript" src="js/data.js"></script>
 	<script language="javascript" src="js/common.js"></script>
@@ -43,6 +48,8 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/wordmap.js"></script>
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
+
+
 	<script language="javascript" src="js/relation_list.json"></script>
 	
 	<script language="javascript" src="sent/sent.js"></script>
@@ -163,6 +170,9 @@ else{$currDevice="computer";}
 	#svg_parent2{
 		width: 1em;
 		margin-left: -1em;
+	}
+	guide {
+		margin: 0 15px 0 -8px;
 	}
 	</style>
 	
@@ -369,7 +379,7 @@ foreach($plugin_list as $info){
 					</button> 
 				
 				<!--Save-->
-				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" title="<?php echo $module_gui_str['editor']['1017'];?>">
+				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" style="display:none;" title="<?php echo $module_gui_str['editor']['1017'];?>">
 						<svg class="icon">
 							<use xlink:href="svg/icon.svg#ic_save"></use>
 						</svg>
@@ -579,7 +589,8 @@ foreach($plugin_list as $info){
 			<div id="modify_detaile">
 				<!-- 意思 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->g_mean;?>：</span>
+					<guide gid="studio_general_meaning"></guide>
+					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -591,7 +602,8 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->factor;?>：</span>
+					<guide gid="studio_break_down"></guide>
+					<span class="edit_detail_span"><?php echo $_local->gui->part;?>：</span>
 					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -603,13 +615,15 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分意思 -->
 				<div class="edit_detail_p" >
-					<span class="edit_detail_span"><?php echo $_local->gui->f_mean;?>：</span>
+					<guide gid="studio_part_meaning"></guide>
+					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
 					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
-					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>				
+					<guide gid="grammar_abbr"></guide>
+					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>
 					<p><input type="text" id="input_case" value="" name="in_case" onblur="input_org_switch('input_case','input_select_case')" ></p>
 					<div id="input_select_case" class="input_bar" style="width:80%; display:inline-flex;">
 						<div style="display:inline-flex;">
@@ -621,7 +635,8 @@ foreach($plugin_list as $info){
 						<button style="margin-left:auto; display:none;" onclick="input_org_switch('input_select_case','input_case')">
 							<?php echo $_local->gui->source;?>
 						</button>
-						<div class="case_dropdown">
+					</div>				
+					<div class="case_dropdown">
 							<svg class="edit_icon">
 								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
 							</svg>
@@ -629,10 +644,10 @@ foreach($plugin_list as $info){
 							<div id="word_mdf_case_dropdown" class="case_dropdown-content">
 							</div>
 						</div>								
-					</div>				
 				</div>
 				<!-- 语基 -->
 				<div class="edit_detail_p">
+					<guide gid="studio_parent"></guide>
 				<script>
 					function edit_show_prt_prt(obj){
 						let o = obj.getElementsByTagName("svg");
@@ -668,13 +683,14 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
+				<guide gid="studio_parent2"></guide>
 					<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
 						<span style="padding-right: 4px;">┕</span>
 						<span id="parent_grammar">.ppa.</span>
 						<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
-							<a onclick="edit_parent_grammar_changed(this)">pp.</a>
-							<a onclick="edit_parent_grammar_changed(this)">pr.p.</a>				
-							<a onclick="edit_parent_grammar_changed(this)">fpp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.pp.</a>
+							<a onclick="edit_parent_grammar_changed(this)">.prp.</a>				
+							<a onclick="edit_parent_grammar_changed(this)">.fpp.</a>
 						</div>
 					</div>
 					<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
@@ -785,7 +801,7 @@ foreach($plugin_list as $info){
 					<option value="tw">正體中文</option>
 			</select>
 			<span>
-				<?php echo $module_gui_str['editor_project']['1011'];?>
+				<?php echo $_local->gui->author;?>
 				<input type="input" id="id_text_edit_author" onkeydown="match_key(this)" onkeyup="unicode_key(this)"/>
 				<?php echo $module_gui_str['editor_project']['1042'];?>
 				<input id="id_text_edit_area_smart_switch" type="checkbox" checked="">
@@ -876,23 +892,23 @@ foreach($plugin_list as $info){
 		</div>
 	</div>
 	
-	<div id="end_of_page" class="borderT textS textAc">
-	The End of The Page<br>
-	——wikipāli studio——
+	<div id="end_of_page" class="borderT textS textAc" style="font-size: medium;">
+	<?php echo $_local->gui->page_end; ?><br>
+	——wikipāḷi <?php echo $_local->gui->studio; ?>——
 	</div>
 	
 	<style>
 	#word_note_pop{
 	border-radius: 6px;
     width: 95%;
-    max-height: 50%;
-    height: 10em;
+	max-height: calc(30vh);
     position: fixed;
-    top: calc(100% - 11em);
+    bottom: 10px;
     left: 3em;
-    background-color: var(--booka);
+	background-color: var(--drop-bg-color);
 	overflow-y: auto;
 	display:none;
+
 }
 
 
@@ -903,7 +919,12 @@ foreach($plugin_list as $info){
 	}
 	</script>
 	<div id="word_note_pop">
-		<div id="word_note_pop_title"><span onclick="close_word_note_pop()">[close]</span></div>
+		<div id="word_note_pop_title" style="background-color: var(--border-shadow);">
+			<span onclick="close_word_note_pop()" style="display: flex;">
+				<svg style="fill: var(--main-color);margin: 5px;height: 15px;width: 15px;"  t="1597905254064" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2185" ><path d="M573.207 527.834l404.184-404.22a52.811 52.811 0 0 0 0-74.401l-2.217-2.217a52.836 52.836 0 0 0-74.413 0l-404.209 404.73-404.22-404.9a52.823 52.823 0 0 0-74.401 0l-2.217 2.217a51.915 51.915 0 0 0 0 74.414l404.22 404.377-404.22 404.22a52.823 52.823 0 0 0 0 74.402l2.217 2.217a52.811 52.811 0 0 0 74.401 0l404.22-404.22 404.22 404.22a52.823 52.823 0 0 0 74.414 0l2.217-2.217a52.811 52.811 0 0 0 0-74.401z m0 0" p-id="2186"></path>
+				</svg>
+			</span>
+		</div>
 		<div id="word_note_pop_content">
 		</div>
 	</div>
@@ -1107,7 +1128,9 @@ catch(e){
 	<script language="javascript" src="module/editor_dictionary/language/<?php echo $currLanguage; ?>.js"></script>
 	<script language="javascript" src="module/editor_plugin/module_function.js"></script>
 	<script language="javascript" src="module/editor_plugin/language/<?php echo $currLanguage; ?>.js"></script>
-
+	<script>
+		guide_init();
+	</script>
 </body>
 
 </html>

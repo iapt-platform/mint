@@ -59,7 +59,7 @@ switch($op){
 		$Fetch = PDO_FetchAll($query);
 		if(count($Fetch)>0){
 			if($Fetch[0]["sum_str"]>15000){
-				echo "文件过大。不能编辑。请选择小一点的章节";
+				echo $_local->gui->oversize_to_load;
 				exit;
 			}
 		}
@@ -283,7 +283,7 @@ switch($op){
 						echo "成功新建一个文件.";
 					}
 		
-					echo "<a href=\"editor.php?op=opendb&doc_id={$doc_id}\">打开</a>";
+					echo "<a href=\"editor.php?op=opendb&doc_id={$doc_id}\">{$_local->gui->open}</a>";
 				}
 				break;
 			}
@@ -777,7 +777,7 @@ switch($op){
 			$uid=$_COOKIE["uid"];
 		}
 		else{
-			echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
+			echo "<h3><a href='../ucenter/index.php?op=login'>{$_local->gui->login}</a>后才可以打开文档</h3>";
 			exit;
 		}
 		$db_file = _FILE_DB_FILEINDEX_;
@@ -799,9 +799,9 @@ switch($op){
 				
 				if($owner==$uid){
 					//自己的文档
-					echo "<h3>我的文档</h3>";
+					echo "<h3>{$_local->gui->my_document}</h3>";
 					$my_doc_id=$doc_id;
-					echo "正在<a href=\"editor.php?op=opendb&fileid={$doc_id}\">打开</a>文档";
+					echo "<a href=\"editor.php?op=opendb&fileid={$doc_id}\">{$_local->gui->open_doc}</a>";
 					echo "<script>";
 					echo "window.location.assign(\"editor.php?op=opendb&fileid={$doc_id}\");";
 					echo "</script>";
