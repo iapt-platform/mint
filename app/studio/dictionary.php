@@ -77,7 +77,7 @@ else{
 				<button id="B_FontReduce" type="button" onclick="setPageFontSize(0.9)">A-</button> 
 				<button id="B_FontGain" type="button" onclick="setPageFontSize(1.1)">A+</button>
 				<button id="B_Day" type="button" onclick="setPageColor(0)">White</button>
-				<button id="B_Sunset" type="button" onclick="setPageColor(1)">Dwan</button>
+				<button id="B_Sunset" type="button" onclick="setPageColor(1)">dawn</button>
 				<button id="B_Night" type="button" onclick="setPageColor(2)">Night</button>
 				<span id="debug"></span>
 			</div>

@@ -61,8 +61,8 @@ input[type="submit"] {
     font-weight: 500;
     font-size: 90%;
     background-color: rgba(255, 0, 0, 0);
-    color: red;
-    border: 1px solid red;
+    color: #757AF7;
+    border: 1px solid #ff000000;
     border-radius: 4px;
     margin: 2px;
     padding: 2px 12px;
@@ -87,7 +87,7 @@ input[type="submit"] {
 button:hover,
 input[type="button"]:hover,
 input[type="submit"]:hover {
-    background-color: red;
+    background-color: #ff000000;
     color: white;
 }
 
@@ -411,13 +411,16 @@ border-style: solid;
 border-color: transparent transparent black transparent; 
 }
 .tooltip:hover{
-color:red;
+color:#757AF7;
 }
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
-
+#tool_bar_title{
+    font-family: times;
+    font-weight: bold;
+}
 
 
 #tool_bar_fix{

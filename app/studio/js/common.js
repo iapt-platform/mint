@@ -40,7 +40,7 @@ function setPageColor(sColor) {
 			cssobj.setAttribute("href", "css/color_day.css");
 			break;
 		case 1:
-			cssobj.setAttribute("href", "css/color_dwan.css");
+			cssobj.setAttribute("href", "css/color_dawn.css");
 			break;
 		case 2:
 			cssobj.setAttribute("href", "css/color_night.css");
