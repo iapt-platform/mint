@@ -1,58 +1,18 @@
-<?php
-require_once "../public/_pdo.php";
-require_once "../path.php";
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="css/reader.css"/>
-	<title>PCD Reader</title>
-	<style>
-	.word{
-		display:inline-block;
-		padding: 1px 3px;
-	}
-	.mean{
-		font-size: 65%;
-	}
-		/* 下拉内容 (默认隐藏) */
-	#mean_menu {
-		margin: 0.3em;
-		position: absolute;
-		background-color: white;
-		min-width: 8em;
-		max-width: 30em;
-		margin: -1px 0px;
-		box-shadow: 0px 3px 13px 0px black;
-		color: var(--main-color);
-		z-index: 200;
-	}
+	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:767px)">
+	<title id="page_title">PCD Reader</title>
 
-	/* 下拉菜单的链接 */
-	#mean_menu a {
-		/*padding: 0.3em 0.4em;*/
-		line-height: 160%;
-		text-decoration: none;
-		display: block;
-		cursor: pointer;
-		text-align: left;
-		font-size:80%;
-	}
-
-	/* 鼠标移上去后修改下拉菜单链接颜色 */
-	.mean_menu a:hover {
-		background-color: blue;
-		color: white;
-	}
-
-	</style>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/fixedsticky.js"></script>
 	<script src="js/reader.js"></script>
+	<script src="../term/term.js"></script>
+	<script src="../term/note.js"></script>
 	
-
 	<script>
 		var curr_tool="";
 		var dighest_count=0;//书摘段落数量
@@ -376,8 +336,58 @@ require_once "../path.php";
 
 		}
 	</script>
-<body class="reader_body" onload="">
+<body class="reader_body" >
+
+<?php
+require_once "../public/_pdo.php";
+require_once "../path.php";
+?>
+
 <style>
+		#para_nav {
+			display: flex;
+			justify-content: space-between;
+			padding: 5px 1em;
+			border-top: 1px solid gray;
+		}
+
+	.word{
+		display:inline-block;
+		padding: 1px 3px;
+	}
+	.mean{
+		font-size: 65%;
+	}
+		/* 下拉内容 (默认隐藏) */
+	#mean_menu {
+		margin: 0.3em;
+		position: absolute;
+		background-color: white;
+		min-width: 8em;
+		max-width: 30em;
+		margin: -1px 0px;
+		box-shadow: 0px 3px 13px 0px black;
+		color: var(--main-color);
+		z-index: 200;
+	}
+
+	/* 下拉菜单的链接 */
+	#mean_menu a {
+		/*padding: 0.3em 0.4em;*/
+		line-height: 160%;
+		text-decoration: none;
+		display: block;
+		cursor: pointer;
+		text-align: left;
+		font-size:80%;
+	}
+
+	/* 鼠标移上去后修改下拉菜单链接颜色 */
+	.mean_menu a:hover {
+		background-color: blue;
+		color: white;
+	}
+
 .par_pali_div{
 	margin-top:1em;
 }
@@ -390,12 +400,33 @@ sent{
 	line-height: 150%;
 }
 sent:hover{
-	background-color:yellow;
+	background-color:#fefec1;
 }
 para{
-	color:blue;
+    color: white;
+    background-color: #b76f03a3;
+    min-width: 2em;
+    display: inline-block;
+    text-align: center;
+    padding: 2px 10px;
+    border-radius: 99px;
+	margin-right: 5px;
+	cursor:pointer;
 }
 para:hover{
+
+}
+
+.sent_count{
+	font-size:80%;
+    color: white;
+    background-color: #1cb70985;
+    min-width: 2em;
+    display: inline-block;
+    text-align: center;
+    padding: 2px 0;
+    border-radius: 99px;
+	margin-left: 5px;	
 	cursor:pointer;
 }
 </style>
@@ -408,17 +439,16 @@ para:hover{
 				<span id="tool_bar_title">Title</span>
 			</div>
 			<div>
-				<a>☆★</a>
 				<div class="case_dropdown">
 					<p class="case_dropbtn"><button>A</button></p>
-					<div class="case_dropdown-content" style="width:25em;">
+					<div class="case_dropdown-content" style="right: 0;width:10em;">
 						<div ><button>A+</button><button>A-</button></div>
 						<div ><button>白</button><button>棕</button><button>夜s</button></div>
 					</div>
 				</div>
 				<div class="case_dropdown">
 					<p class="case_dropbtn"><button>┇</button></p>
-					<div class="case_dropdown-content">
+					<div class="case_dropdown-content" style="right: 2em;min-width:6em;">
 						<a onclick="tool_changed('dighest')">书摘</a>
 						<a onclick="tool_changed('comments')">批注</a>
 						<a onclick="tool_changed('target')">标签</a>
@@ -475,6 +505,8 @@ para:hover{
 		<div id="main_text_view" style="padding-bottom: 10em;">
 		
 <?php
+$tocHtml="";
+
 if(isset($_GET["album"])){
 	$album=$_GET["album"];
 }
@@ -510,14 +542,14 @@ else{
 		$_display = $_GET["display"];
 	}
 	else{
-		if($_view=="para"){
+		if($_view=="para" || $_view=="sent"){
 			$_display = "sent";//默认值
 		}
 		else{
 			$_display = "para";
 		}
 	}
-	if($_view=="chapter" || $_view=="para" ){
+	if($_view=="chapter" || $_view=="para" || $_view=="sent" ){
 		PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 		//获取段落信息 如 父段落 下一个段落等
 		$query = "select * from 'pali_text' where book='$book' and paragraph='$paragraph'";
@@ -533,7 +565,9 @@ else{
 		else{
 			$par_end=$par_begin+$FetchParInfo[0]["chapter_len"]-1;	
 		}
+		
 		$par_next=$FetchParInfo[0]["next_chapter"];	
+		$par_prev=$FetchParInfo[0]["prev_chapter"];	
 		$par_parent=$FetchParInfo[0]["parent"];	
 		if($par_parent >= 0){
 			$query = "select toc from 'pali_text' where book='$book' and paragraph='$par_parent'";
@@ -542,8 +576,60 @@ else{
 				$_parent_title = $FetchToc[0]["toc"];
 			}
 		}
-	}
+		$query = "select paragraph,toc from 'pali_text' where book='$book' and parent='$paragraph' and level < '8'";
+		$FetchParent = PDO_FetchAll($query);
+		foreach ($FetchParent as $key => $value) {
+			$tocHtml .= "<div><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
+		}
 
+		//查询标题
+		if($_view=="chapter"){
+			$par_title = $FetchParInfo[0]["toc"];
+		}
+		else{
+			$par_title = $_parent_title;
+		}
+		//导航按钮		
+		if($_view=="sent"){
+			$next_para_link = "";
+			$prev_para_link = "";
+		}
+		else{
+			if($par_next != -1){
+				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_next' ";
+				$FetchPara = PDO_FetchAll($query);
+				if(count($FetchPara)>0){
+					$next_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_next}'><span id='para_nav_next'>{$FetchPara[0]["toc"]}</span><span  id='para_nav_next_a'>下一个</span></a>〉";
+				}
+				else{
+					$next_para_link = "没有查询到标题";
+				}
+			}
+			else{
+				$next_para_link = "没了";
+			}
+
+			if($par_prev != -1){
+				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_prev' ";
+				$FetchPara = PDO_FetchAll($query);
+				if(count($FetchPara)>0){
+					$prev_para_link = "〈<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}'><span id='para_nav_prev_a'>前一个</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+				}
+				else{
+					$prev_para_link = "没有查询到标题";
+				}
+			}
+			else{
+				$prev_para_link = "没了";
+			}			
+		}
+
+
+	}
+		//设置标题栏的经文名称
+		echo "<script>";
+		echo "document.getElementById('tool_bar_title').innerHTML='".$par_title."'";
+		echo "</script>";
 
 	//上一级
 	echo "<div>";
@@ -564,15 +650,16 @@ else{
 		break;
 		case "chapter":
 			if($par_parent >= 0){
-				echo "上一级<a href='reader.php?view={$_view}&book={$book}&paragraph={$par_parent}'>{$_parent_title}</a>";
+				echo "<a href='reader.php?view={$_view}&book={$book}&paragraph={$par_parent}'>▲{$_parent_title}</a>";
 			}
 		break;
 		case "para":
 			if($par_parent >= 0){
-				echo "上一级<a href='reader.php?view=chapter&book={$book}&paragraph={$par_parent}'>{$_parent_title}</a>";
+				echo "<a href='reader.php?view=chapter&book={$book}&paragraph={$par_parent}'>▲{$_parent_title}</a>";
 			}
 		break;
-		case 9:
+		case "sent":
+				echo "<a href='reader.php?view=para&book={$book}&paragraph={$paragraph}'>▲{$paragraph}</a>";
 		break;
 		case 10:
 		break;
@@ -580,21 +667,25 @@ else{
 	echo "</div>";
 	//生成一个段落空壳 等会儿查询数据，按照不同数据类型填充进去
 	PDO_Connect("sqlite:"._FILE_DB_PALI_SENTENCE_);
-	if($_view=="sent"){
-		$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$paragraph' and begin='{$_GET["begin"]}' and end ='{$_GET["end"]}'";
-			$FetchSent = PDO_FetchAll($query);
-			echo "<div>".$FetchSent[0]["text"]."</div>";
-	}
+
 	if($_display=="sent"){
 		//逐句显示
 		for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
-			$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$iPar'";
+			if($_view=="sent"){
+				$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$paragraph' and begin='{$_GET["begin"]}' and end ='{$_GET["end"]}'";
+			}
+			else{
+				$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$iPar'";
+			}
+			
 			$FetchSent = PDO_FetchAll($query);
 			echo "<div id='par-b$book-$iPar' class='par_div'>";
 			echo "<para book='$book' para='$iPar'>$iPar</para>";
 			foreach ($FetchSent as $key => $value) {
 				echo "<div id='sent-pali-b$book-$iPar-{$value["begin"]}' class='par_pali_div'>";
-				echo "<sent book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$value["text"]."</sent>";
+				$pali_sent = str_replace("{","<b>",$value["text"]);
+				$pali_sent = str_replace("}","</b>",$pali_sent);
+				echo "<sent book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</sent>";
 				echo "</div>";
 				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_translate_div'>";
 				echo "</div>";
@@ -634,36 +725,69 @@ else{
 	}
 
 	PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+	$dbh = new PDO("sqlite:"._FILE_DB_PALI_SENTENCE_, "", "");
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 	for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
-		
-	}
-		//查询句子译文内容
-		if($par_begin==-1){
-			$query="SELECT * FROM \"sentence\" WHERE book = '{$book}' ";
+		if($_view=="sent"){
+			$FetchPaliSent = array(array("begin" => $_GET["begin"] , "end" => $_GET["end"]));
 		}
 		else{
-			$query="SELECT * FROM \"sentence\" WHERE book = '{$book}' and  (\"paragraph\" BETWEEN ".$PDO->quote($par_begin)." AND ".$PDO->quote($par_end)." and length(text)>0)  order by paragraph,begin ";
+			$query = "select begin, end from 'pali_sent' where book='$book' and paragraph='$iPar'";
+			$stmt = $dbh->query($query);
+			$FetchPaliSent = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 		}
-		$FetchText = PDO_FetchAll($query);
-		$iFetchText=count($FetchText);
-		if($iFetchText>0){
-			for($i=0;$i<$iFetchText;$i++){
-				$currParNo=$FetchText[$i]["paragraph"];
-				$currParLevel=$FetchText[$i]["level"];
-				$par_level["$currParNo"]=$currParLevel;
-				echo "<sent_trans id='sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}' class='sent_trans text_level_{$currParLevel}' book='$book' para='$currParNo' begin='{$FetchText[$i]["begin"]}'>".$FetchText[$i]["text"]."</sent_trans>";
-				echo "<script>";
-				
-				if($_display=="sent"){
-					echo "document.getElementById('sent-translate-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
-				}
-				else{
-					echo "document.getElementById('par-translate-b{$book}-{$currParNo}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
-				}
-				echo "</script>";
+
+		foreach ($FetchPaliSent as $key => $value) {
+			$begin = $value["begin"];
+			$end = $value["end"];
+			if($_view=="sent"){
+				$query="SELECT * FROM \"sentence\" WHERE (book = '{$book}' AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND length(text)>0 )  order by modify_time  DESC";
 			}
+			else{
+				$query = "SELECT * FROM \"sentence\" WHERE book = '{$book}' AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND length(text)>0  order by modify_time DESC  limit 0, 1";
+			}
+
+			$query_count = "SELECT count(book) FROM \"sentence\" WHERE book = '{$book}' AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND length(text)>0  ";
+			$sent_count = PDO_FetchOne($query_count);
+			if($sent_count>9){
+				$sent_count = "9+";
+			}
+			$FetchText = PDO_FetchAll($query);
+			$iFetchText=count($FetchText);
+			if($iFetchText>0){
+				for($i=0;$i<$iFetchText;$i++){
+					$currParNo=$iPar;
+					if($_display=="sent"){
+						$sent_style = "display:block";
+					}
+					else{
+						$sent_style = "";
+					}
+					$tran_text = str_replace("[[","<term status='0'>",$FetchText[$i]["text"]);
+					$tran_text = str_replace("]]","</term>",$tran_text);
+					echo "<sent_trans style='{$sent_style}' id='sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}' class='sent_trans ' book='$book' para='$currParNo' begin='{$FetchText[$i]["begin"]}'>".$tran_text;
+					if($_view!="sent" && $_display=="sent"){
+						echo "<span class='sent_count'>$sent_count</span>";
+					}
+					echo "</sent_trans>";
+					echo "<script>";
+					if($_display=="sent"){
+						echo "document.getElementById('sent-translate-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
+					}
+					else{
+						echo "document.getElementById('par-translate-b{$book}-{$currParNo}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
+					}
+					echo "</script>";
+				}
+			}
+	
 		}
+	}
+		//查询句子译文内容
+
 		//查询句子译文内容结束
+
+	echo "<div id='para_nav'><div>$prev_para_link</div><div>$next_para_link</div></div>";
 
 	if(isset($album)){
 
@@ -697,6 +821,7 @@ else{
 		*/
 		
 		
+
 		PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
 		$query = "select * from 'album' where id='$album'";
 		$Fetch = PDO_FetchAll($query);
@@ -859,12 +984,13 @@ else{
 			</div>
 		</div>
 	</div>
-	
+	<!-- 全屏 黑色背景 -->	
+	<div id="BV" class="blackscreen" onclick="setNaviVisibility()"></div>
 		<!-- nav begin--> 
 
 		<div id="leftmenuinner" class="viewswitch_off">
 			<div class="win_caption">
-				<div><button onclick="setNaviVisibility()">返回</button></div>
+				<div><button id="left_menu_hide" onclick="setNaviVisibility()">返回</button></div>
 				<div id="menubartoolbar_New">
 					<ul class="common-tab">
 						<li id="content_menu_li" class="common-tab_li_act" onclick="menuSelected_2(menu_toc,'content_menu_li')">目录</li>
@@ -879,7 +1005,7 @@ else{
 			<!-- toc begin -->
 			<div class="menu" id="menu_toc">
 				<a name="_Content" ></a>
-				<select name="menu" onchange="show_toc_level(this)">
+				<select name="menu" onchange="show_toc_level(this)" style="display:none;">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -888,7 +1014,7 @@ else{
 					<option value="6">6</option>
 					<option value="7">7</option>
 				</select>
-				<div class="tocitems" id="content"><?php echo $tocHtml; ?></div>
+				<div  id="toc_content"><?php echo $tocHtml; ?></div>
 			</div>
 			<!-- toc end -->
 			<!-- comments begin -->
@@ -913,12 +1039,12 @@ else{
 			</div>
 			<!-- book mark end -->
 			
-						
 			</div>
 		
 		</div>
 		<!-- nav end -->	
-		<div id="BV" class="blackscreen" onclick="setNaviVisibility()"></div>
+
+
 		<div id="mean_menu" ></div>
 		<script>
 		//lookup();
@@ -950,19 +1076,76 @@ else{
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
 			let begin = $(this).attr("begin");
-			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("color","blue");
+			$(this).css("background-color","#fefec1");
+			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","#fefec1");
 		});
 		$("sent").mouseleave(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
 			let begin = $(this).attr("begin");
-			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("color","unset");
+			$(this).css("background-color","unset");
+			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
 		});
+
+		$("para").mouseenter(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","#fefec1");
+		});
+		$("para").mouseleave(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","unset");
+		});
+
+		$("sent_trans").mouseenter(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			let begin = $(this).attr("begin");
+			$(this).css("background-color","#fefec1");
+			$("sent[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","#fefec1");
+		});
+		$("sent_trans").mouseleave(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			let begin = $(this).attr("begin");
+			$(this).css("background-color","unset");
+			$("sent[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
+		});
+
 		$("para").click(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
 			window.location.assign("reader.php?view=para&book="+book+"&para="+para);
 		});
+
+		term_updata_translation();
+		var wordlist =  new Array();
+	$("term").each(function(index,element){
+		wordlist.push($(this).attr("pali"));
+	}
+	);
+	
+	function haha(){
+		var wordquery ="('" + wordlist.join("','")+"')";
+		$.post("../term/term.php",
+		{
+			op:"extract",
+			words:wordquery
+		},
+		function(data,status){
+			if(data.length>0){
+				try{
+					arrMyTerm = JSON.parse(data);
+					term_updata_translation();
+				}
+				catch(e){
+					console.error(e.error+" data:"+data);
+				}
+			}
+		});			
+	}
+
 		</script>
 	
 </body>

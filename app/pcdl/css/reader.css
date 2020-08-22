@@ -50,6 +50,7 @@
 }
 
 #main_text_view{
+    padding-left: 21em;
     padding-top:2.5em;
     font-family: 'Noto Sans', 'Noto Sans SC', 'Noto Sans TC', Arial, Verdana;
 }
@@ -274,6 +275,7 @@ input[type="submit"]:disabled {
     z-index: 15;
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
+    border-right: 1px solid gray;
 }
 .viewswitch_on {
     -webkit-transform:translateX(0em);
@@ -282,9 +284,10 @@ input[type="submit"]:disabled {
     box-shadow: 5px 0 20px 5px var(--shadow-color);
 }
 .viewswitch_off {
--webkit-transform:translateX(-82em);
--moz-transform:translateX(-82em);
-transform:translateX(-82em);
+    -webkit-transform:translateX(0em);
+    -moz-transform:translateX:(0em);
+    transform:translateX:(0em);
+    box-shadow: 5px 0 20px 5px var(--shadow-color);
 }
 
 .common-tab {
@@ -419,4 +422,26 @@ color:red;
 
 #tool_bar_fix{
 	display:none;
+}
+
+#left_menu_hide{
+    display:none;
+}
+
+#toc_content>div{
+    padding: 4px 8px;
+}
+#toc_content>div>a{
+    width: 100%;
+    display: inline-block;
+    color: black;
+    text-decoration: none;
+}
+
+#toc_content>div:hover{
+	background-color:#f1f1f1
+}
+
+#para_nav_next_a , #para_nav_prev_a{
+    display:none;
 }
