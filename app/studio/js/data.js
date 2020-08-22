@@ -29,6 +29,7 @@ var lstResHeading = new Array();
 
 var doc_info = new Object();
 
+
 doc_info.msg_run = function (value) {
 	if (value) {
 		this.sendmsg = value;
@@ -37,6 +38,16 @@ doc_info.msg_run = function (value) {
 		return (this.sendmsg);
 	}
 }
+
+var isTransaction = false;
+function doc_beginTransaction() {
+	isTransaction = true;
+}
+function doc_commit() {
+
+	isTransaction = false;
+}
+
 function createXmlDoc() {
 	var strXml = "";
 	strXml += "<set>\n"

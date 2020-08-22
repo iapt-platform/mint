@@ -84,12 +84,14 @@ function msg_send() {
 			}
 
 			if (msgXml == null) {
-				alert("error:can not load Project. xml obj is null.");
+				console.error("error:can not load Project. xml obj is null.");
 				return;
 			}
 			let arrMsg = msgXml.getElementsByTagName("msg");
 			var arrWordNewMsg = new Array();
 
+			//开始一个事务，关闭自动提交
+			doc_beginTransaction();
 			for (var x = 0; x < arrMsg.length; x++) {
 				switch (getNodeText(arrMsg[x], "type")) {
 					case "maxid":
@@ -98,8 +100,8 @@ function msg_send() {
 						console.log("iMsgLastUpdateId:" + iMsgLastUpdateId);
 						break;
 					default:
-
-						if (gXmlBookDataMsg) {
+						//if (gXmlBookDataMsg) 
+						{
 							var obj = new Object();
 							obj.id = getNodeText(arrMsg[x], "id");
 							obj.sender = getNodeText(arrMsg[x], "sender");
@@ -119,7 +121,7 @@ function msg_send() {
 							//尝试用此消息更新文档数据
 							if (msg_apply_data(obj)) {
 								//如果已经使用此消息，xml标记为已读
-								setNodeText(arrMsg[x], "read", "2");
+								//setNodeText(arrMsg[x], "read", "2");
 							}
 							doc_msg_push(obj);
 							msg_show_content(msg_curr_show_content_type, msg_curr_show_content_id);
@@ -145,6 +147,9 @@ function msg_send() {
 						break;
 				}
 			}
+			//提交一个事务
+			doc_commit();
+			user_wbw_commit();
 
 			for (let i = 0; i < arrWordNewMsg.length; i++) {
 				updataWordHeadById(arrWordNewMsg[i]);
@@ -218,6 +223,7 @@ function msg_apply_data(obj) {
 					let newWord = new Object();
 					newWord.real = sReal;
 					newWord.vaild = false;
+					let wordChanged = false;
 					if ((wordStatus != 7 && wordStatus != 5) && obj.sender != getCookie("username")) {
 						msg_read(obj, 2);
 						if (obj.data.real != null && obj.data.real != "") {
@@ -234,50 +240,66 @@ function msg_apply_data(obj) {
 							newWord.mean = obj.data.mean;
 							newWord.vaild = true;
 							wordBodyChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.org != null) {
 							setNodeText(xWord, "org", obj.data.org);
 							newWord.parts = obj.data.org;
 							newWord.vaild = true;
 							wordBodyChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.om != null) {
 							setNodeText(xWord, "om", obj.data.om);
 							newWord.partmean = obj.data.om;
 							newWord.vaild = true;
 							wordBodyChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.case != null) {
 							setNodeText(xWord, "case", obj.data.case);
 							newWord.case = obj.data.case;
 							newWord.vaild = true;
 							wordBodyChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.parent != null) {
 							setNodeText(xWord, "parent", obj.data.parent);
+							wordChanged = true;
 						}
 						if (obj.data.note != null) {
 							setNodeText(xWord, "note", obj.data.note);
 							wordNoteChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.rela != null) {
 							//setNodeText(xWord,"rela",decodeURI(obj.data.rela));
 							setNodeText(xWord, "rela", obj.data.rela);
 							wordRelationChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.bmc != null) {
 							setNodeText(xWord, "bmc", obj.data.bmc);
 							wordBodyChange = true;
+							wordChanged = true;
 						}
 						if (obj.data.bmt != null) {
 							setNodeText(xWord, "bmt", obj.data.bmt);
+							wordChanged = true;
 						}
 						if (obj.data.lock != null) {
 							setNodeText(xWord, "lock", obj.data.lock);
 							wordBodyChange = true;
+							wordChanged = true;
 						}
-						setNodeText(xWord, "status", 6);
+						if (wordChanged) {
+							setNodeText(xWord, "status", 6);
+							//提交用户逐词解析数据库
+							user_wbw_push_word(obj.data.id);
+						}
+
 					}
+
 					if (wordHeadChange) {
 						updataWordHeadByIndex(wIndex);
 					}
