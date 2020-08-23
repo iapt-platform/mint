@@ -9,7 +9,7 @@
 
 然而在电子阅读时代，这个问题是可以通过兼容的方式，同时照顾**译者**和**读者**两大群体的感受。
 ### 操作方法
-- [视频链接]
+- 视频演示 [YouTube](https://youtu.be/Pd1W0fPi9Ks) [优酷](https://v.youku.com/v_show/id_XNDgxMjU5NDIwMA==.html)
 - 点击逐词解析中的术语
 - 检查**词典原型**是否为空，如果为空请填入去掉变化之后的能够在词典中查询到的**原型**
 - 点击页面右上角的<svg id="icon_term" viewBox="0 0 24 24" style='fill:#6baaff;height: 15px; width: 15px;'><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"></path></svg>调出侧边栏
