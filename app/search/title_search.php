@@ -25,6 +25,7 @@ function microtime_float()
     return ((float)$usec + (float)$sec);
 }
 
+
 function render_book_list($strWord,$booklist=null){
 	//查找这些词出现在哪些书中
 	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
@@ -81,7 +82,7 @@ function render_book_list($strWord,$booklist=null){
 		echo "<input id='id_book_filter_atthakattha'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_atthakattha','atthakattha')\" />义注-{$booktypesum["atthakattha"][0]}-{$booktypesum["atthakattha"][1]}<br />";
 		echo "<input id='id_book_filter_tika'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_tika','tika')\" />复注-{$booktypesum["tika"][0]}-{$booktypesum["tika"][1]}<br />";
 		echo "<input id='id_book_filter_anna2'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_anna2','anna2')\" />其他-{$booktypesum["anna2"][0]}-{$booktypesum["anna2"][1]}<br /><br />";
-		echo "<hr>";
+		echo "<div style='margin:1em 0 ;'></div>";
 		for($i=0;$i<$iFetch;$i++){
 
 			$book=$Fetch[$i]["book"];
@@ -132,22 +133,16 @@ switch($op){
 			}
 			echo "</div>";
 		}
-		echo "<div>";
-		$query = "select title from 'index' where \"title_en\" like ".$PDO->quote("%".$searching.'%')." OR \"title\" like ".$PDO->quote("%".$searching.'%')." group by title limit 0,50";
-		echo $query;
+		$query = "select title from 'index' where \"title_en\" like ".$PDO->quote("%".$searching.'%')." OR \"title\" like ".$PDO->quote("%".$searching.'%')." group by title limit 0,20";
 		$Fetch = PDO_FetchAll($query);
 		$queryTime=(microtime_float()-$time_start)*1000;
-		echo "<div >搜索时间：$queryTime </div>";
 		$iFetch=count($Fetch);
 		if($iFetch>0){
 			for($i=0;$i<$iFetch;$i++){
 				$word=$Fetch[$i]["title"];
-				echo  "<div class='dict_word_list' style='color:black;'>";
 				echo  "<a href='title.php?key={$word}'>$word</a>";
-				echo  "</div>";
 			}
 		}
-		echo "</div>";
 		break;
 	}
 	case "search":
@@ -163,7 +158,7 @@ switch($op){
 		echo "<button onclick=\"dict_update_bold(0)\">筛选</button>";
 		$queryTime=(microtime_float()-$time_start)*1000;
 		
-		echo "<hr>";
+		echo "<div ></div>";
  		//查找这些词出现在哪些书中
 		echo "<div id='bold_book_list'>";
 		$booklist=render_book_list($_GET["word"]);
@@ -197,7 +192,6 @@ switch($op){
 			$query = "select * from 'index' where \"title_en\" like ".$PDO->quote("%".$_GET["word"].'%')." OR \"title\" like ".$PDO->quote("%".$_GET["word"].'%')." limit 0,50";
 		}
 		$Fetch = PDO_FetchAll($query);
-		echo "<div>$query</div>";
 		$queryTime=(microtime_float()-$time_start)*1000;
 		$iFetch=count($Fetch);
 		if($iFetch>0){
@@ -250,7 +244,6 @@ switch($op){
 		echo "</div>";
 		//黑体字主显示区右侧结束
 		echo "<div id=\"dict_bold_review\" style='flex:2;'>";
-		echo "haha";		
 		
 		echo "</div>";
 

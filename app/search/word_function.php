@@ -52,17 +52,19 @@ function render_book_list($strWordlist,$booklist=null){
 				$booktypesum[$t2][1]=$sum;
 			}
 		}
-		echo "<div id='bold_book_list_new'>";
-		echo "出现在{$iFetch}本书中：<br />";
-		echo "<input id='bold_all_book' type='checkbox' checked onclick=\"dict_bold_book_all_select()\" />全选<br />";
-		echo "<input id='id_book_filter_vinaya' type='checkbox' checked onclick=\"search_book_filter('id_book_filter_vinaya','vinaya')\" />律藏-{$booktypesum["vinaya"][0]}-{$booktypesum["vinaya"][1]}<br />";
-		echo "<input id='id_book_filter_sutta'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_sutta','sutta')\" />经藏-{$booktypesum["sutta"][0]}-{$booktypesum["sutta"][1]}<br />";
-		echo "<input id='id_book_filter_abhidhamma'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_abhidhamma','abhidhamma')\" />阿毗达摩藏-{$booktypesum["abhidhamma"][0]}-{$booktypesum["abhidhamma"][1]}<br />";
-		echo "<input id='id_book_filter_anna'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_anna','anna')\" />其他-{$booktypesum["anna"][0]}-{$booktypesum["anna"][1]}<br /><br />";	
-		echo "<input id='id_book_filter_mula' type='checkbox' checked onclick=\"search_book_filter('id_book_filter_mula','mula')\" />根本-{$booktypesum["mula"][0]}-{$booktypesum["mula"][1]}<br />";
-		echo "<input id='id_book_filter_atthakattha'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_atthakattha','atthakattha')\" />义注-{$booktypesum["atthakattha"][0]}-{$booktypesum["atthakattha"][1]}<br />";
-		echo "<input id='id_book_filter_tika'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_tika','tika')\" />复注-{$booktypesum["tika"][0]}-{$booktypesum["tika"][1]}<br />";
-		echo "<input id='id_book_filter_anna2'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_anna2','anna2')\" />其他-{$booktypesum["anna2"][0]}-{$booktypesum["anna2"][1]}<br /><br />";
+		echo "<div id='bold_book_list_new' style='margin:1em;0'>";
+
+		echo "<div>出现在{$iFetch}本书中：</div>";
+		echo "<div>全选<input id='bold_all_book' type='checkbox' checked onclick=\"dict_bold_book_all_select()\" /></div>";
+		echo "<div>律藏-{$booktypesum["vinaya"][0]}-{$booktypesum["vinaya"][1]}<input id='id_book_filter_vinaya' type='checkbox' checked onclick=\"search_book_filter('id_book_filter_vinaya','vinaya')\" /></div>";
+		echo "<div>经藏-{$booktypesum["sutta"][0]}-{$booktypesum["sutta"][1]}<input id='id_book_filter_sutta'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_sutta','sutta')\" /></div>";
+		echo "<div>阿毗达摩藏-{$booktypesum["abhidhamma"][0]}-{$booktypesum["abhidhamma"][1]}<input id='id_book_filter_abhidhamma'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_abhidhamma','abhidhamma')\" /></div>";
+		echo "<div >其他-{$booktypesum["anna"][0]}-{$booktypesum["anna"][1]}<input id='id_book_filter_anna'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_anna','anna')\" /></div>";	
+		echo "<div style='margin-bottom:1em';></div>";
+		echo "<div>根本-{$booktypesum["mula"][0]}-{$booktypesum["mula"][1]}<input id='id_book_filter_mula' type='checkbox' checked onclick=\"search_book_filter('id_book_filter_mula','mula')\" /></div>";
+		echo "<div>义注-{$booktypesum["atthakattha"][0]}-{$booktypesum["atthakattha"][1]}<input id='id_book_filter_atthakattha'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_atthakattha','atthakattha')\" /></div>";
+		echo "<div>复注-{$booktypesum["tika"][0]}-{$booktypesum["tika"][1]}<input id='id_book_filter_tika'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_tika','tika')\" /></div>";
+		echo "<div>其他-{$booktypesum["anna2"][0]}-{$booktypesum["anna2"][1]}<input id='id_book_filter_anna2'  type='checkbox' checked onclick=\"search_book_filter('id_book_filter_anna2','anna2')\" /></div>";
 		for($i=0;$i<$iFetch;$i++){
 
 			$book=$Fetch[$i]["book"];

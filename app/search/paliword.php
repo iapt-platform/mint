@@ -8,7 +8,7 @@ include "../pcdl/html_head.php";
 	require_once("../search/toobar.php");
 ?>
     <style>
-        #dt_pali{
+        #dt_pali , #dt_pali_1{
             border-bottom: 2px solid var(--link-hover-color);
         }
     </style>

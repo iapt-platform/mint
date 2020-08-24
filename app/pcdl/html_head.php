@@ -48,7 +48,7 @@ else{
 		font-size: 1em;
 		line-height: 1.3;
 	}
-	.card .title a , a:link{
+	.card>.title>a , .card>.title>a:link{
 		color: var(--tool-link-hover-color);
 	}
 	.card a:hover{

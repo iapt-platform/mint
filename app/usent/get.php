@@ -21,20 +21,6 @@ $stmt = $dbh->prepare($query);
 $stmt->execute(array($book,$para,$begin,$end));
 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $iFetch=count($Fetch);
-    if($iFetch>0){
-        foreach ($Fetch as $key => $value) {
-            echo "<div>";
-            echo "<div>".$value["author"]."</div>";
-            echo "<div>".$value["text"]."</div>";
-            echo "</div>";
-        }
-    }
-    else{
-        echo "沙发等你来坐。";
-    }
-
-
-//echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+    echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 
 ?>

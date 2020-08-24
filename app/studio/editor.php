@@ -112,9 +112,34 @@ else{$currDevice="computer";}
 <body class="mainbody" id="mbody" onLoad="editor_windowsInit()">
 	<style id="display_set">
 	</style>
-	
+
 	<style>
-	
+	.trans_text_block{
+		border-left: 5px solid #d1d1d1;
+		background-color: #f1f1f1;
+		margin-bottom: 0.5em;
+		padding: 0.5em 0.5em 0.1em 0.5em;
+	}
+	.trans_text_content{
+		color: var(--main-color);
+	}
+	.trans_text_info{
+		font-size: 80%;
+		border-top: 1px solid gray;
+		padding-top: 5px;
+		color: gray;
+		display:flex;
+		justify-content: space-between;
+	}
+	.trans_text_info .tag{
+		font-size: 75%;
+	}
+	.trans_text_info .tools{
+		visibility: hidden;
+	}
+	.trans_text_block:hover .trans_text_info .tools{
+		visibility: visible;
+	}
 	wnh{
 	background-color: var(--link-hover-color);
     color: var(--btn-color);

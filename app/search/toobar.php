@@ -21,6 +21,30 @@
 			display:flex;
 			padding: 0.5em 1em;
 		}
+		ul#dict_type li {
+			margin-right: 1em;
+		}
+		ul#dict_type a {
+			color: var(--main-color);
+		}
+
+		ul#dict_type li:hover {
+			background-color: var(--link-color);
+			color: var(--btn-hover-color);
+		}
+		ul#dict_type li:hover a {
+			color: var(--btn-hover-color);
+		}
+
+		.dict_word {
+			display: block;
+			border:none;
+			border-bottom: 1px solid var(--tool-line-color);
+			border-radius: 0;
+			margin: 6px 0;
+			padding: 5px;
+		}
+		
 	</style>
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -28,20 +52,11 @@
 				<span >
 					<?php echo $_local->gui->search;?>
 				</span>
-				<div>
+				<div class="case_dropdown">
 					<div>
-						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 80%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
+						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="width: 40em;max-width: 80%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
 					</div>
-					<div id="pre_search_result" style="background-color: var(--btn-color);z-index: 50;">
-						<div id="pre_search_word"  class="pre_serach_block">
-							<div id="pre_search_word_title"   class="pre_serach_block_title">
-								<div id="pre_search_word_title_left">单词</div>
-								<div id="pre_search_word_title_right"></div>						
-							</div>
-							<div id="pre_search_word_content"   class="pre_serach_content">
-							</div>
-						</div>
-					</div>
+					<div id="pre_search_word_content" class="case_dropdown-content"></div>
 				</div>
 			</div>
 			<div style="display:block;z-index: 5;">
@@ -70,20 +85,11 @@
 				<span >
 					搜索
 				</span>
-				<div>
+				<div class="case_dropdown">
 					<div>
-						<input id="dict_ref_search_input_1" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%;font-size:140%;padding: 0.3em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
+						<input id="dict_ref_search_input_1" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%;font-size:120%;padding: 0.2em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
 					</div>
-					<div id="pre_search_result_1" style="position: absolute;max-width: 100%; width: 50em;background-color: var(--btn-color);z-index: 51;display: none;">
-						<div  class="pre_serach_block">
-							<div class="pre_serach_block_title">
-								<div id="pre_search_word_title_left_1">单词</div>
-								<div id="pre_search_word_title_right_1"></div>						
-							</div>
-							<div id="pre_search_word_content_1"   class="pre_serach_content">
-							</div>
-						</div>
-					</div>
+					<div id="pre_search_word_content_1" class="case_dropdown-content"></div>
 				</div>
 			</div>
 			<div style="display:block;z-index: 5;">
