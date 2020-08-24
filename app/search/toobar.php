@@ -50,7 +50,10 @@
 	<div id='search_toolbar' class="search_toolbar">
 			<div style="display:flex;">
 				<span >
-					<?php echo $_local->gui->search;?>
+				<svg class="small_icon" style=" width: 3em;height: 3em;">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../studio/svg/icon.svg#ic_search"></use>
+			</svg>
+
 				</span>
 				<div class="case_dropdown">
 					<div>
