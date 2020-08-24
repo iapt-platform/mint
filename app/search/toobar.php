@@ -72,11 +72,11 @@
 					$key = "";
 				}
 				?>
-					<li id="dt_all" ><a href="../search/index.php<?php echo $key;?>"><span ><?php echo $_local->gui->all;//全部?></span><span id="search_all_num"></span></a></li>
+					<li id="dt_all"  style="display:none;"><a href="../search/index.php<?php echo $key;?>"><span ><?php echo $_local->gui->all;//全部?></span><span id="search_all_num"></span></a></li>
 					<li id="dt_title" ><a href="../search/title.php<?php echo $key;?>"><span ><?php echo $_local->gui->title;//标题?></span><span id="search_title_num"></span></a></li>
 					<li id="dt_pali" ><a href="../search/paliword.php<?php echo $key;?>"><span ><?php echo $_local->gui->full_text;//巴利原文?></span><span id="search_palitext_num"></span></a></li>
 					<li id="dt_bold" ><a href="../search/bold.php<?php echo $key;?>"><span ><?php echo $_local->gui->vannana;?></span><span id="search_bold_num"></span></a></li>
-					<li id="dt_trans" ><a href="../search/trans.php<?php echo $key;?>"><span ><?php echo $_local->gui->translate;?></span><span id="search_trans_num"></span></a></li>
+					<li id="dt_trans" style="display:none;"><a href="../search/trans.php<?php echo $key;?>"><span ><?php echo $_local->gui->translate;?></span><span id="search_trans_num"></span></a></li>
 				</ul>
 			</div>
 	</div>	
@@ -105,11 +105,11 @@
 					$key = "";
 				}
 				?>
-					<li id="dt_all_1" ><a href="../search/index.php<?php echo $key;?>"><span >全部</span><span id="search_all_num_1"></span></a></li>
+					<li id="dt_all_1"   style="display:none;"><a href="../search/index.php<?php echo $key;?>"><span >全部</span><span id="search_all_num_1"></span></a></li>
 					<li id="dt_title_1" ><a href="../search/title.php<?php echo $key;?>"><span >标题</span><span id="search_title_num_1"></span></a></li>
 					<li id="dt_pali_1" ><a href="../search/paliword.php<?php echo $key;?>"><span >巴利原文</span><span id="search_palitext_num_1"></span></a></li>
 					<li id="dt_bold_1" ><a href="../search/bold.php<?php echo $key;?>"><span ><?php echo $_local->gui->vannana;?></span><span id="search_bold_num_1"></span></a></li>
-					<li id="dt_trans_1" ><a href="../search/trans.php<?php echo $key;?>"><span ><?php echo $_local->gui->translate;?></span><span id="search_trans_num_1"></span></a></li>
+					<li id="dt_trans_1"   style="display:none;"><a href="../search/trans.php<?php echo $key;?>"><span ><?php echo $_local->gui->translate;?></span><span id="search_trans_num_1"></span></a></li>
 				</ul>
 			</div>
 	</div>	

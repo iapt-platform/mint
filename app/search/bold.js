@@ -127,6 +127,7 @@ function dict_search_serverResponse() {
       dict_result = document.getElementById("dict_ref_search_result");
       if (dict_result) {
         dict_result.innerHTML = serverText;
+        $("#index_list").hide();
         $("#dict_ref_dict_link").html($("#dictlist").html());
         $("#dictlist").html("");
       }
@@ -205,19 +206,28 @@ function search_show_history() {
   if (arrHistory.length > 0) {
     strHistory += '<a onclick="cls_word_search_history()">清空历史记录</a>';
   }
-  for (var i = 0; i < arrHistory.length; i++) {
+
+  const max_history_len = 20;
+  let history_len = 0;
+  if (arrHistory.length > max_history_len) {
+    history_len = max_history_len;
+  } else {
+    history_len = arrHistory.length;
+  }
+
+  for (var i = 0; i < history_len; i++) {
     var word = arrHistory[i];
     strHistory += "<div class='dict_word_list'>";
     strHistory +=
       "<a onclick='dict_pre_word_click(\"" + word + "\")'>" + word + "</a>";
     strHistory += "</div>";
   }
-  $("#dict_ref_search_result").html(strHistory);
+  $("#search_histray").html(strHistory);
 }
 
 function search_input_onfocus() {
   if ($("#dict_ref_search_input").val() == "") {
-    search_show_history();
+    //search_show_history();
   }
 }
 function search_input_keyup(e, obj) {
@@ -226,7 +236,7 @@ function search_input_keyup(e, obj) {
   var numcheck;
 
   if ($("#dict_ref_search_input").val() == "") {
-    search_show_history();
+    //search_show_history();
     $("#pre_search_result").hide();
     return;
   }

@@ -201,7 +201,7 @@ switch($op){
 				$book=$Fetch[$i]["book"];		
 				$paragraph=$Fetch[$i]["paragraph"];							
 				echo "<div style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-				echo  "<div style='font-size: 130%;font-weight: 700;'><a href='../pcdl/reader.php?view=chapter&book={$book}&paragraph={$paragraph}' target='_blank'>$title</a></div><br/>";		
+				echo  "<div style='font-size: 130%;font-weight: 700;'><a href='../pcdl/reader.php?view=chapter&book={$book}&paragraph={$paragraph}' target='_blank'>$title</a></div>";		
 
 				$bookInfo = _get_book_info($book);
 				$bookname=$bookInfo->title;
@@ -234,7 +234,7 @@ switch($op){
 				$paliContent = mb_substr($paliContent,0,200,"UTF-8");
 				echo "<div>{$paliContent}</div>";
 
-				echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$title}')\">Edit</button></div>";
+				echo  "<div class='search_para_tools'></div>";
 
 				echo  "</div>";
 			}
@@ -342,7 +342,7 @@ switch($op){
 								}
 								$light_text=str_replace($paliword,"<hl>{$paliword}</hl>",$FetchPaliText[$iPali]["html"]);
 								echo  "<div class='wizard_par_div'>{$light_text}</div>";
-								echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+								echo  "<div class='search_para_tools'></div>";
 
 							}
 						}

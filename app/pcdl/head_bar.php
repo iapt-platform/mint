@@ -231,7 +231,7 @@
 			<div class="toolgroup1">
 			<!--<input id="search_input" type="input" placeholder="搜索"  style="margin-left: 0.5em;padding:4px;width: 40em;max-width: 80%" >-->
 			<span>
-				<a href="../search">
+				<a href="../search/title.php">
 					<svg  style="height: 4em; fill: var(--btn-color);">
 						<use xlink:href="../pcdl/img/search_bar.svg#search_bar"></use>
 					</svg>

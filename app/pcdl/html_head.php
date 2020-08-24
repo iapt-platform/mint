@@ -37,6 +37,9 @@ else{
 	<script src="../studio/js/fixedsticky.js"></script>
 	<script src="../guide/guide.js"></script>
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+
+	<script src="../public/js/marked.js"></script>
+
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>

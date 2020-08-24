@@ -252,7 +252,7 @@ switch($op){
 							}
 						}
 					}
-					echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">{$_local->gui->edit_now}</button></div>";		
+					echo  "<div class='search_para_tools'></div>";		
 					echo  "</div>";
 				}
 			}
@@ -373,7 +373,7 @@ switch($op){
 								}
 							}
 						}
-						echo  "<div class='search_para_tools'><button onclick=\"dict_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+						echo  "<div class='search_para_tools'></div>";
 						echo  "</div>";
 					}
 				}		

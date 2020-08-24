@@ -184,7 +184,7 @@ switch($op){
 				$c3=$bookInfo->c3;
 
 				echo "<div class='dict_word' style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-				echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div><br/>";
+				echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div>";
 				//echo "<div class='dict_word'>";
 				$path_1 = $c1.">";
 				if($c2 !== ""){
@@ -217,8 +217,7 @@ switch($op){
 						}
 					}
 					$path=$path_1.$path."para. ".$paragraph;
-					//$FetchPaliText[0]["parent"]
-					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
+					echo  "<div class='mean' style='font-size:120%'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
 					
 					for($iPali=0;$iPali<$countPaliText;$iPali++){
 						if(substr($paliword,-1)=="n"){
@@ -229,7 +228,7 @@ switch($op){
 						echo  "<div class='wizard_par_div'>{$light_text}</div>";
 					}
 					//echo  "<div class='wizard_par_div'>{$light_text}</div>";
-					echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+					echo  "<div class='search_para_tools'></div>";
 					
 				}
 
@@ -330,16 +329,14 @@ switch($op){
 									}
 								}
 								$path=$path."No. ".$paragraph;
-								echo  "<div class='mean' style='font-size:130%;'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank' >$path</a></div>";
-					
-								//echo  "<div class='mean'>$paliword</div>";
+								echo  "<div class='mean' style='font-size:120%;'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank' >$path</a></div>";
 																
 								if(substr($paliword,-1)=="n"){
 									$paliword=substr($paliword,0,-1);
 								}
 								$light_text=str_replace($paliword,"<hl>{$paliword}</hl>",$FetchPaliText[$iPali]["html"]);
 								echo  "<div class='wizard_par_div'>{$light_text}</div>";
-								echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+								echo  "<div class='search_para_tools'></div>";
 
 							}
 						}
