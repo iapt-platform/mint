@@ -23,7 +23,7 @@ switch($op){
 		$dictFileName=_FILE_DB_REF_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		echo "<div>";
-		$query = "select word,count from dict where \"eword\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')."  limit 0,100";
+		$query = "select word,count from dict where \"eword\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')."  limit 0,20";
 
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
@@ -166,7 +166,7 @@ switch($op){
 					$base=$Fetch[$i]["base"];
 					$pali=$Fetch[$i]["pali"];
 					echo "<div class='dict_word'>";
-					echo  "<div class='dict'><b>《{$bookname}》</b> {$bookPath}</div>";
+					echo  "<div class='book' ><span style='font-size:110%;font-weight:700;'>《{$bookname}》</span> <tag>$bookInfo->c1</tag> <tag>$bookInfo->c2</tag> </div>";
 					echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div>";
 					
 								
@@ -200,16 +200,12 @@ switch($op){
 						}
 					}
 					$path=$bookPath.$path."No. ".$paragraph;
-					//echo  "<div class='mean'>$path</div>";
-					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
-
-					
+					echo  "<div class='mean' style='font-size:120%;'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
 								if(substr($paliword,-1)=="n"){
 									$paliword=substr($paliword,0,-1);
 								}
 								$htmlPara=str_replace(".0","。0",$FetchPaliText[$iPali]["html"]);
 								$aSent=str_getcsv($htmlPara,".");
-								echo count($aSent);
 								
 								$aSentInfo=array();
 								$aBold=array();
@@ -312,6 +308,9 @@ switch($op){
 				}
 				//查找这些词出现在哪些书中结束
 				//前20条记录
+				if($booklist=="()"){
+					echo "<div>请选择书名</div>";
+				}
 				$query = "select * from bold where \"word2\" in $wordlist and \"book\" in $booklist  limit 0,20";
 				$Fetch = PDO_FetchAll($query);
 				$iFetch=count($Fetch);
@@ -327,7 +326,8 @@ switch($op){
 						$base=$Fetch[$i]["base"];
 						$pali=$Fetch[$i]["pali"];
 						echo "<div class='dict_word'>";
-						echo  "<div class='dict'>《{$bookname}》 $c1 $c2 </div>";
+						echo  "<div class='book' ><span style='font-size:110%;font-weight:700;'>《{$bookname}》</span> <tag>$c1</tag> <tag>$2</tag> </div>";
+
 						echo  "<div class='mean'>$paliword</div>";
 						
 						if(strlen($pali)>1){
@@ -361,7 +361,7 @@ switch($op){
 					}
 					$path="<span>{$bookPath}>{$path} No. {$paragraph}</span>";
 					//echo  "<div class='mean'>$path</div>";
-					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
+					echo  "<div class='mean' style='font-size:120%;'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
 
 			
 									if(substr($paliword,-1)=="n"){
