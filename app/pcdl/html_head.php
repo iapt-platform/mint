@@ -52,11 +52,18 @@ else{
 		line-height: 1.3;
 	}
 	.card>.title>a , .card>.title>a:link{
-		color: var(--tool-link-hover-color);
+		color: var(--main-color);
+
 	}
 	.card a:hover{
 		color: var(--tool-link-hover-color);
 	}
+
+	.index_inner {
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 	</style>
 </head>

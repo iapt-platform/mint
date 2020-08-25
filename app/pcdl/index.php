@@ -24,9 +24,17 @@ require_once '../pcdl/html_head.php';
 	.index_list_categories{
 		margin-bottom: 2em;
 	}
-	.index_list_categories a,a:link{
+	
+	.index_list_categories a:hover{
 		color: var(--tool-link-hover-color);
 	}
+	.index_list_categories a,a:link{
+		color: var(--main-color);
+	}
+	.index_list_categories button{
+		border: none;
+	}
+	
 	.pd-10{
 		padding:10px;
 	}
