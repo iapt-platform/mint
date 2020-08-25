@@ -2431,7 +2431,7 @@ background-color:#AAA;
     height: calc(100% - 3.5em);
     top: 3.5em;
     left: 100%;
-    width: 25em;
+    width: 28vw;
     background-color: var(--tool-bg-color);
     box-shadow: 0px -4px 10px 0px var(--shadow-color);
     z-index: 20;
