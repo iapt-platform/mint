@@ -15,6 +15,7 @@ require_once '../public/load_lang.php';
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/fixedsticky.js"></script>
 	<script src="js/reader.js"></script>
+	<script src="../public/js/comm.js"></script>
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	
@@ -409,10 +410,11 @@ para {
     min-width: 2em;
     display: inline-block;
     text-align: center;
-    padding: 2px 10px;
+    padding: 3px 6px;
     border-radius: 99px;
 	margin-right: 5px;
 	cursor:pointer;
+	font-size:80%;
 }
 para:hover{
 
@@ -442,6 +444,18 @@ para:hover{
 				<span id="tool_bar_title"><?php echo $_local->gui->title; ?></span>
 			</div>
 			<div>
+			<form action="../studio/project.php" method="post" onsubmit="return pali_canon_edit_now(this)" target="_blank">
+				<div style="display:none;">
+					<input type="input" name="op" value="create">
+					<input type="hidden" name="view" value="<?php echo $_GET["view"]?>" />
+					<input type="hidden" name="book" value="<?php echo $_GET["book"]?>" />
+					<input type="hidden" id = "para" name="para" value="" />
+					<input type="hidden" id = "para_end" name="para_end" value="" />
+					<input type="hidden" id = "chapter_title" name="chapter_title" value="" />
+						<textarea id="project_new_res_data" rows="3" cols="18" name="data"></textarea>
+				</div>
+				<input type="submit" value="编辑">
+			</form>
 				<div class="case_dropdown">
 					<p class="case_dropbtn"><button>
 						<svg t='1598086376923' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='8426' width='20px' height='20px'><path d='M609.745455 453.818182v130.327273h69.818181V535.272727H744.727273v377.018182h95.418182V535.272727H907.636364v48.872728h69.818181V453.818182z' p-id='8427' fill='#757AF7'></path><path d='M677.236364 300.218182V111.709091H46.545455V300.218182h69.818181v-51.2h162.909091v663.272727h165.236364V249.018182h162.909091v51.2z' p-id='8428' fill='#757AF7'></path></svg>
@@ -635,12 +649,15 @@ else{
 			}			
 		}
 
-
-	}
 		//设置标题栏的经文名称
 		echo "<script>";
-		echo "document.getElementById('tool_bar_title').innerHTML='".$par_title."'";
-		echo "</script>";
+		echo "document.getElementById('tool_bar_title').innerHTML='".$par_title."';\n";
+		echo "$('#chapter_title').val('".$par_title."');\n";
+		echo "$('#para_end').val('".$par_end."');\n";
+		echo "$('#para').val('".$par_begin."');\n";
+		echo "</script>";		
+	}
+
 
 	//上一级
 	echo "<div>";
@@ -1021,7 +1038,7 @@ else{
 						<li id="palicanon_menu_li" class="common-tab_li" onclick="menuSelected_2(menu_pali_cannon,'palicanon_menu_li')">批注</li>
 						<li id="bookmark_menu_li" class="common-tab_li" onclick="menuSelected_2(menu_bookmark,'bookmark_menu_li')">书签</li>
 					</ul>
-				</div>			
+				</div>
 			</div>
 			
 			

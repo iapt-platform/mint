@@ -6,7 +6,7 @@ require_once "../pcdl/html_head.php";
 <?php
 	require_once("../pcdl/head_bar.php");
 ?>
-<script src="../public/js/marked.js"></script>
+
 <style>
 		body{
 			margin: unset;

@@ -1043,12 +1043,13 @@ input[type="submit"]:disabled {
 
 /* 下拉菜单的链接 */
 .case_dropdown-content a {
-    /*padding: 0.3em 0.4em;*/
+    padding: 0.3em 0.4em;
 	line-height: 160%;
     text-decoration: none;
     display: block;
     cursor: pointer;
     text-align: left;
+    color: var(--main-color);
 }
 
 /* 鼠标移上去后修改下拉菜单链接颜色 */
