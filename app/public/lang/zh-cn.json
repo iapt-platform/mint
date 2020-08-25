@@ -84,7 +84,7 @@
 		"each_sentence": "逐句",
 		"eat": "进餐",
 		"edit": "编辑",
-		"edit_now": "立即编辑",
+		"edit_now": "转到译经楼中编辑",
 		"edit1": "编辑：",
 		"edition": "版本：",
 		"editor": "编辑者",
@@ -462,7 +462,8 @@
 		"first_choice_word": "首选用词",
 		"pali_word": "巴利原词",
 		"required": "必填",
-		"optional": "选填"
+		"optional": "选填",
+		"": ""
 	},
 	"grammastr": [
 		{
