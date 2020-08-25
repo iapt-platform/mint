@@ -461,6 +461,11 @@
 		"preference": "preference",
 		"appearance": "appearance",
 		"theme": "theme",
+		"first_choice_word": "first-choice term",
+		"pali_word": "pali word",
+		"required": "required",
+		"optional": "optional",
+		"comment": "comments",
 		"": "",
 		"": ""
 	},
