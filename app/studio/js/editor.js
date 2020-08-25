@@ -4694,7 +4694,8 @@ function editor_right_tool_bar_slide_toggle() {
 
 	if (document.getElementById("right_tool_bar").style.left == "100%") {
 		document.getElementById("right_tool_bar").style.display = "block";
-		document.getElementById("right_tool_bar").style.left = "calc(100% - 25em)";
+		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
+		document.getElementById("right_tool_bar").style.width = "28vw";
 	}
 	else {
 		document.getElementById("right_tool_bar").style.left = "100%";
@@ -4703,7 +4704,8 @@ function editor_right_tool_bar_slide_toggle() {
 function right_panal_slide_toggle(idPanal) {
 	if ($("#" + idPanal).hasClass("act")) {
 		document.getElementById("right_tool_bar").style.display = "block";
-		document.getElementById("right_tool_bar").style.left = "calc(100% - 25em)";
+		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
+		document.getElementById("right_tool_bar").style.width = "28vw";
 	}
 	else {
 		document.getElementById("right_tool_bar").style.left = "100%";
@@ -4714,7 +4716,8 @@ function right_panal_slide_toggle(idPanal) {
 function editor_show_right_tool_bar(visible) {
 	if (visible) {
 		document.getElementById("right_tool_bar").style.display = "block";
-		document.getElementById("right_tool_bar").style.left = "calc(100% - 25em)";
+		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
+		document.getElementById("right_tool_bar").style.width = "28vw";
 	}
 	else {
 		document.getElementById("right_tool_bar").style.left = "100%";
@@ -4940,11 +4943,11 @@ function tran_text_onchange(blockid, senBegin, senEnd, obj) {
 退出编辑状态
 */
 function tran_sent_div_blur(blockId, senBegin, senEnd, obj) {
-	obj.style.height = "1.4em";
+	obj.style.height = "28px";
 
 }
 function tran_sent_div_onfocus(blockId, senBegin, senEnd, obj) {
-	obj.style.height = "5em";
+	obj.style.height = "100px";
 
 }
 //鼠标移到逐句翻译上 编辑状态

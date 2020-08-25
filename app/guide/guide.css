@@ -31,8 +31,7 @@ guide ol{
     top:100%;
     width: max-content;
     min-width:18em;
-    /*max-width: calc(30vw);*/
-    max-width:20em;
+    max-width: max(25vw, 100%);
     min-height:15em;
     padding:10px;
     background-color: var(--drop-bg-color);
@@ -46,7 +45,6 @@ guide ol{
     box-shadow: 0px 3px 13px 0px var(--shadow-color);
     color: var(--main-color);
     z-index: 200;
-    padding: 0 0.2em;
 }
 /*
 .guide_contence:after {
