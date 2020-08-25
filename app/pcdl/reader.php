@@ -470,13 +470,13 @@ para:hover{
 					<svg t='1598086493824' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='9217' width='20px' height='20px'><path d='M912.695652 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9218' fill='#757AF7'></path><path d='M512 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9219' fill='#757AF7'></path><path d='M111.304348 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9220' fill='#757AF7'></path></svg>
 					</button></p>
 					<div class="case_dropdown-content" style="right: 2em;min-width:6em;">
-						<a onclick="tool_changed('dighest')">书摘</a>
-						<a onclick="tool_changed('comments')">批注</a>
-						<a onclick="tool_changed('target')">标签</a>
-						<a onclick="tool_changed('layout')">布局</a>
-						<a onclick="tool_changed('porpername')">术语</a>
-						<a onclick="tool_changed('share')">分享</a>		
-						<a onclick="tool_changed('fix')">修改</a>								
+						<a onclick="tool_changed('dighest')"><?php echo $_local->gui->digest; //书摘?></a>
+						<a onclick="tool_changed('comments')"><?php echo $_local->gui->comment; //批注?></a>
+						<a onclick="tool_changed('target')"><?php echo $_local->gui->tag; //标签?></a>
+						<a onclick="tool_changed('layout')"><?php echo $_local->gui->layout; //布局?></a>
+						<a onclick="tool_changed('porpername')"><?php echo $_local->gui->dict_terms; //术语?></a>
+						<a onclick="tool_changed('share')"><?php echo $_local->gui->share; //分享?></a>		
+						<a onclick="tool_changed('fix')"><?php echo $_local->gui->modify; //修改?></a>								
 					</div>
 				</div>			
 			

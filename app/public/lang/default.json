@@ -461,6 +461,7 @@
 		"pali_word": "pali word",
 		"required": "required",
 		"optional": "optional",
+		"comment": "comments",
 		"": ""
 	},
 	"grammastr": [

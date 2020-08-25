@@ -463,6 +463,7 @@
 		"pali_word": "巴利原词",
 		"required": "必填",
 		"optional": "选填",
+		"comment": "评论",
 		"": ""
 	},
 	"grammastr": [
