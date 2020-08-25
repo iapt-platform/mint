@@ -37,6 +37,9 @@ else{
 	<script src="../studio/js/fixedsticky.js"></script>
 	<script src="../guide/guide.js"></script>
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+
+	<script src="../public/js/marked.js"></script>
+
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
@@ -48,7 +51,7 @@ else{
 		font-size: 1em;
 		line-height: 1.3;
 	}
-	.card .title a , a:link{
+	.card>.title>a , .card>.title>a:link{
 		color: var(--tool-link-hover-color);
 	}
 	.card a:hover{

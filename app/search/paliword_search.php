@@ -33,7 +33,6 @@ switch($op){
 		
 		$searching=$arrWordList[count($arrWordList)-1];
 		$dbfile = _FILE_DB_WORD_INDEX_;
-		echo $dbfile;
 		PDO_Connect("sqlite:".$dbfile);
 		
 		if(count($arrWordList)>1){
@@ -43,23 +42,22 @@ switch($op){
 			}
 			echo "</div>";
 		}
-		echo "<div>";
-		$query = "select word,count from wordindex where \"word_en\" like ".$PDO->quote($searching.'%')." OR \"word\" like ".$PDO->quote($searching.'%')." limit 0,50";
-		echo $query;
+
+		$query = "select word,count from wordindex where \"word_en\" like ".$PDO->quote($searching.'%')." OR \"word\" like ".$PDO->quote($searching.'%')." limit 0,20";
 		$Fetch = PDO_FetchAll($query);
 		$queryTime=(microtime_float()-$time_start)*1000;
-		echo "<div >搜索时间：$queryTime </div>";
+
 		$iFetch=count($Fetch);
 		if($iFetch>0){
 			for($i=0;$i<$iFetch;$i++){
 				$word=$Fetch[$i]["word"];
 				$count=$Fetch[$i]["count"];
-				echo  "<div class='dict_word_list'>";
+
 				echo  "<a href='paliword.php?key={$word}'>$word-$count</a>";
-				echo  "</div>";
+
 			}
 		}
-		echo "</div>";
+
 		break;
 	}
 	case "search":
@@ -115,7 +113,7 @@ switch($op){
 		echo "<div style='display:flex;'>";
 		
 		//主显示区左侧开始
-		echo "<div style='flex:3;max-width: 17em;min-width: 10em;'>";
+		echo "<div style='flex:3;max-width: 17em;min-width: 10em;border-right: 1px solid var(--border-line-color);text-align: right;padding-right: 1em;'>";
 
 
 		echo "<button onclick=\"dict_update_bold(0)\">筛选</button>";
@@ -129,10 +127,11 @@ switch($op){
 		$i=0;
 		foreach($aShowWordList as $x=>$x_value) {
 			$wordid=$aShowWordIdList[$x];
-			echo "<input id='bold_word_{$i}' type='checkbox' checked value='{$wordid}' />";
 			echo "<a onclick=\"dict_bold_word_select({$i})\">";
-			echo $x.":".$x_value."<br />";
-			echo "</a>";				
+			echo $x.":".$x_value;
+			echo "</a>";
+			echo "<input id='bold_word_{$i}' type='checkbox' checked value='{$wordid}' />";			
+			echo "<br />";
 			$i++;
 		}
 
@@ -160,7 +159,7 @@ switch($op){
 		//黑体字主显示区左侧结束
 		
 		//黑体字主显示区右侧开始
-		echo "<div id=\"dict_bold_right\" style='flex:7;'>";
+		echo "<div id=\"dict_bold_right\" style='flex:7;padding-left:1em;'>";
 		//前20条记录
 		$time_start=microtime_float();
 		$dictFileName=_FILE_DB_PALI_INDEX_;
@@ -185,7 +184,7 @@ switch($op){
 				$c3=$bookInfo->c3;
 
 				echo "<div class='dict_word' style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-				echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div><br/>";
+				echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div>";
 				//echo "<div class='dict_word'>";
 				$path_1 = $c1.">";
 				if($c2 !== ""){
@@ -218,8 +217,7 @@ switch($op){
 						}
 					}
 					$path=$path_1.$path."para. ".$paragraph;
-					//$FetchPaliText[0]["parent"]
-					echo  "<div class='mean'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
+					echo  "<div class='mean' style='font-size:120%'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank'>$path</a></div>";
 					
 					for($iPali=0;$iPali<$countPaliText;$iPali++){
 						if(substr($paliword,-1)=="n"){
@@ -230,7 +228,7 @@ switch($op){
 						echo  "<div class='wizard_par_div'>{$light_text}</div>";
 					}
 					//echo  "<div class='wizard_par_div'>{$light_text}</div>";
-					echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+					echo  "<div class='search_para_tools'></div>";
 					
 				}
 
@@ -241,8 +239,7 @@ switch($op){
 		echo "<div >搜索时间：$queryTime </div>";
 		echo "</div>";
 		//黑体字主显示区右侧结束
-		echo "<div id=\"dict_bold_review\" style='flex:2;'>";
-		echo "haha";		
+		echo "<div id=\"dict_bold_review\" style='flex:2;'>";	
 		
 		echo "</div>";
 
@@ -270,14 +267,16 @@ switch($op){
 				
 				//前20条记录
 				$time_start=microtime_float();
-				$dictFileName=_FILE_DB_WORD_INDEX_;
+				$dictFileName=_FILE_DB_PALI_INDEX_;
 				PDO_Connect("sqlite:$dictFileName");
 
 				$query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
 				$Fetch = PDO_FetchAll($query);
-				//echo "<div>$query</div>";
 				$queryTime=(microtime_float()-$time_start)*1000;
-				echo "<div >搜索时间：$queryTime </div>";
+				//echo "<div >搜索时间：$queryTime </div>";
+				if($booklist=="()"){
+					echo "<div >请选择书名</div>";
+				}
 				$iFetch=count($Fetch);
 				if($iFetch>0){
 					$dictFileName=_FILE_DB_PALITEXT_;
@@ -304,7 +303,7 @@ switch($op){
 						$path_1=$path_1."《{$bookname}》>";
 
 						echo "<div class='dict_word'>";
-						echo  "<div class='dict'>《{$bookname}》 $c1 $c2 </div>";
+						echo  "<div class='book' ><span style='font-size:110%;font-weight:700;'>《{$bookname}》</span> <tag>$c1</tag> <tag>$c2</tag> </div>";
 						echo  "<div class='mean'>$paliword</div>";
 
 						$query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
@@ -329,17 +328,15 @@ switch($op){
 										break;
 									}
 								}
-								$path=$path_1.$path."No. ".$paragraph;
-
-								echo  "<div class='mean'>$path</div>";
-								//echo  "<div class='mean'>$paliword</div>";
+								$path=$path."No. ".$paragraph;
+								echo  "<div class='mean' style='font-size:120%;'><a href='../pcdl/reader.php?view=para&book={$book}&paragraph={$paragraph}' target='_blank' >$path</a></div>";
 																
 								if(substr($paliword,-1)=="n"){
 									$paliword=substr($paliword,0,-1);
 								}
 								$light_text=str_replace($paliword,"<hl>{$paliword}</hl>",$FetchPaliText[$iPali]["html"]);
 								echo  "<div class='wizard_par_div'>{$light_text}</div>";
-								echo  "<div class='search_para_tools'><button onclick=\"search_edit_now('{$book}','{$paragraph}','{$sFirstParentTitle}')\">Edit</button></div>";
+								echo  "<div class='search_para_tools'></div>";
 
 							}
 						}
