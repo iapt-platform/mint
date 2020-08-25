@@ -79,7 +79,7 @@
 		"down": "向下",
 		"download": "下載",
 		"draft": "存草稿",
-		"dwan": "黃昏",
+		"dawn": "黃昏",
 		"each_paragraph": "逐段",
 		"each_sentence": "逐句",
 		"eat": "進餐",
@@ -458,6 +458,7 @@
 		"preference": "個性化",
 		"appearance": "外觀",
 		"theme": "主題",
+		"first_choice_word": "首选用词",
 		"": ""
 	},
 	"grammastr": [

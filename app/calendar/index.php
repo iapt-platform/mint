@@ -743,7 +743,7 @@ var num_s=Math.round((angle-num_d)*60-num_m);
 	}
 	return(angle_str);
 }
-function dwan_noon_display(){
+function dawn_noon_display(){
 	var Unix_string=document.getElementById('time_string').innerHTML
 	var Unix_Array=Unix_string.split("-");
 	var time_A=new Date();
@@ -792,7 +792,7 @@ function dwan_noon_display(){
 		$("#kala_inst_1").html(gLocal.gui.no_string+gLocal.gui.eat);
 		$("#kala_inst_2").html(gLocal.gui.need_inform+gLocal.gui.no_string+gLocal.gui.gama_entry);
 	}
-t=setTimeout('dwan_noon_display()',1000)
+t=setTimeout('dawn_noon_display()',1000)
 
 }
 function set_time_string(date_obj){
@@ -1374,7 +1374,7 @@ function showError(error){
 	select_day_string=$('#cur_day_string')[0].innerText.split('-');
 		pali_date(select_day_string[0],select_day_string[1],select_day_string[2],select_day_string[3],select_day_string[4],select_day_string[5],g_coordinate_this)
 }
-dwan_noon_display();
+dawn_noon_display();
 function air_confirm(place){
 	confirm_position(place+"_position_input",place+"_position_result",place);
 	var coordinate= get_coordinate_num(place);

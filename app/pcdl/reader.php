@@ -1,3 +1,8 @@
+<?php
+require_once "../public/_pdo.php";
+require_once "../path.php";
+require_once '../public/load_lang.php';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -339,10 +344,6 @@
 	</script>
 <body class="reader_body" >
 
-<?php
-require_once "../public/_pdo.php";
-require_once "../path.php";
-?>
 
 <style>
 		#para_nav {
@@ -403,9 +404,9 @@ sent{
 sent:hover{
 	background-color:#fefec1;
 }
-para{
+para {
     color: white;
-    background-color: #b76f03a3;
+    background-color:  #F1CA23;
     min-width: 2em;
     display: inline-block;
     text-align: center;
@@ -435,10 +436,12 @@ para:hover{
 		<!-- tool bar begin-->
 		<div id="main_tool_bar" class='reader_toolbar'>
 			<div id="index_nav">
-				<button onclick="setNaviVisibility()">M</button>
+				<button onclick="setNaviVisibility()">
+					<svg t='1598084571450' class='icon' viewBox='0 0 1029 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='6428' width='20px' height='20px'><path d='M159.744 69.632 53.248 69.632C28.672 69.632 4.096 90.112 4.096 118.784l0 94.208c0 28.672 24.576 49.152 53.248 49.152l102.4 0C184.32 266.24 208.896 241.664 208.896 212.992L208.896 118.784C208.896 90.112 184.32 69.632 159.744 69.632zM970.752 69.632 368.64 69.632c-28.672 0-57.344 24.576-57.344 49.152l0 94.208c0 28.672 32.768 49.152 57.344 49.152l598.016 0c28.672 0 57.344-24.576 57.344-49.152L1024 118.784C1028.096 94.208 999.424 69.632 970.752 69.632zM159.744 413.696 53.248 413.696c-28.672 0-53.248 24.576-53.248 49.152l0 94.208c0 28.672 24.576 49.152 53.248 49.152l102.4 0c28.672 0 53.248-24.576 53.248-49.152l0-94.208C208.896 438.272 184.32 413.696 159.744 413.696zM970.752 413.696 368.64 413.696c-28.672 0-57.344 24.576-57.344 49.152l0 94.208c0 28.672 32.768 49.152 57.344 49.152l598.016 0c28.672 0 57.344-24.576 57.344-49.152l0-94.208C1028.096 438.272 999.424 413.696 970.752 413.696zM159.744 757.76 53.248 757.76c-28.672 0-53.248 24.576-53.248 49.152l0 94.208c0 28.672 24.576 49.152 53.248 49.152l102.4 0c28.672 0 53.248-24.576 53.248-49.152l0-94.208C208.896 782.336 184.32 757.76 159.744 757.76zM970.752 761.856 368.64 761.856c-28.672 0-57.344 24.576-57.344 49.152l0 94.208c0 28.672 32.768 49.152 57.344 49.152l598.016 0c28.672 0 57.344-24.576 57.344-49.152l0-94.208C1028.096 782.336 999.424 761.856 970.752 761.856z' fill='#757AF7' p-id='6429'></path></svg>
+				</button>
 			</div>
 			<div>
-				<span id="tool_bar_title">Title</span>
+				<span id="tool_bar_title"><?php echo $_local->gui->title; ?></span>
 			</div>
 			<div>
 			<form action="../studio/project.php" method="post" onsubmit="return pali_canon_edit_now(this)" target="_blank">
@@ -454,14 +457,18 @@ para:hover{
 				<input type="submit" value="编辑">
 			</form>
 				<div class="case_dropdown">
-					<p class="case_dropbtn"><button>A</button></p>
+					<p class="case_dropbtn"><button>
+						<svg t='1598086376923' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='8426' width='20px' height='20px'><path d='M609.745455 453.818182v130.327273h69.818181V535.272727H744.727273v377.018182h95.418182V535.272727H907.636364v48.872728h69.818181V453.818182z' p-id='8427' fill='#757AF7'></path><path d='M677.236364 300.218182V111.709091H46.545455V300.218182h69.818181v-51.2h162.909091v663.272727h165.236364V249.018182h162.909091v51.2z' p-id='8428' fill='#757AF7'></path></svg>
+					</button></p>
 					<div class="case_dropdown-content" style="right: 0;width:10em;">
 						<div ><button>A+</button><button>A-</button></div>
-						<div ><button>白</button><button>棕</button><button>夜s</button></div>
+						<div ><button><?php echo $_local->gui->white;?></button><button><?php echo $_local->gui->dawn;//棕?></button><button><?php echo $_local->gui->night;//夜?></button></div>
 					</div>
 				</div>
 				<div class="case_dropdown">
-					<p class="case_dropbtn"><button>┇</button></p>
+					<p class="case_dropbtn"><button>
+					<svg t='1598086493824' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='9217' width='20px' height='20px'><path d='M912.695652 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9218' fill='#757AF7'></path><path d='M512 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9219' fill='#757AF7'></path><path d='M111.304348 512m-111.304348 0a5 5 0 1 0 222.608696 0 5 5 0 1 0-222.608696 0Z' p-id='9220' fill='#757AF7'></path></svg>
+					</button></p>
 					<div class="case_dropdown-content" style="right: 2em;min-width:6em;">
 						<a onclick="tool_changed('dighest')">书摘</a>
 						<a onclick="tool_changed('comments')">批注</a>
@@ -613,7 +620,9 @@ else{
 				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_next' ";
 				$FetchPara = PDO_FetchAll($query);
 				if(count($FetchPara)>0){
-					$next_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_next}'><span id='para_nav_next'>{$FetchPara[0]["toc"]}</span><span  id='para_nav_next_a'>下一个</span></a>〉";
+					$next_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_next}'><span id='para_nav_next'>{$FetchPara[0]["toc"]}</span><span  id='para_nav_next_a'>";
+					$next_para_link .= "<svg t='1598093121925' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4451' width='32px' height='32px'><path d='M540.5696 102.4c-225.83296 0-409.6 183.74656-409.6 409.6s183.76704 409.6 409.6 409.6c225.85344 0 409.6-183.74656 409.6-409.6s-183.74656-409.6-409.6-409.6z m180.14208 439.84896l-109.19936 128.59392a46.65344 46.65344 0 0 1-65.86368 5.36576 46.71488 46.71488 0 0 1-5.38624-65.8432l43.86816-51.63008h-188.12928a46.6944 46.6944 0 1 1 0-93.42976h188.12928l-43.86816-51.63008a46.75584 46.75584 0 0 1 71.24992-60.47744l109.19936 128.59392c14.82752 17.408 14.82752 43.008 0 60.45696z' p-id='4452' fill='#757AF7'></path></svg>";
+					$next_para_link .= "</span></a>";
 				}
 				else{
 					$next_para_link = "没有查询到标题";
@@ -627,7 +636,9 @@ else{
 				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_prev' ";
 				$FetchPara = PDO_FetchAll($query);
 				if(count($FetchPara)>0){
-					$prev_para_link = "〈<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}'><span id='para_nav_prev_a'>前一个</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+					$prev_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}'><span id='para_nav_prev_a'>";
+					$prev_para_link .= "<svg t='1598093521111' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4644' width='32' height='32'><path d='M540.5696 102.4c-225.83296 0-409.6 183.74656-409.6 409.6s183.76704 409.6 409.6 409.6c225.85344 0 409.6-183.74656 409.6-409.6s-183.74656-409.6-409.6-409.6z m144.54784 456.31488h-188.12928l43.84768 51.63008a46.6944 46.6944 0 0 1-35.59424 76.96384 46.55104 46.55104 0 0 1-35.61472-16.4864l-109.24032-128.59392a46.71488 46.71488 0 0 1 0-60.47744l109.24032-128.59392a46.6944 46.6944 0 1 1 71.20896 60.47744l-43.84768 51.63008h188.12928a46.6944 46.6944 0 1 1 0 93.45024z' p-id='4645' fill='#757AF7'></path></svg>";
+					$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
 				}
 				else{
 					$prev_para_link = "没有查询到标题";
@@ -667,16 +678,22 @@ else{
 		break;
 		case "chapter":
 			if($par_parent >= 0){
-				echo "<a href='reader.php?view={$_view}&book={$book}&paragraph={$par_parent}'>▲{$_parent_title}</a>";
+				echo "<a href='reader.php?view={$_view}&book={$book}&paragraph={$par_parent}'>";
+				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
+				echo "{$_parent_title}</a>";
 			}
 		break;
 		case "para":
 			if($par_parent >= 0){
-				echo "<a href='reader.php?view=chapter&book={$book}&paragraph={$par_parent}'>▲{$_parent_title}</a>";
+				echo "<a href='reader.php?view=chapter&book={$book}&paragraph={$par_parent}'>";
+				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
+				echo "{$_parent_title}</a>";
 			}
 		break;
 		case "sent":
-				echo "<a href='reader.php?view=para&book={$book}&paragraph={$paragraph}'>▲{$paragraph}</a>";
+				echo "<a href='reader.php?view=para&book={$book}&paragraph={$paragraph}'>";
+				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
+				echo "{$paragraph}</a>";
 		break;
 		case 10:
 		break;
@@ -804,7 +821,14 @@ else{
 
 		//查询句子译文内容结束
 
-	echo "<div id='para_nav'><div>$prev_para_link</div><div>$next_para_link</div></div>";
+	echo "<div id='para_nav'>";
+	echo "<div style='display:inline-flex;'>";
+	echo "<svg t='1598094361320' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4933' width='32' height='32'><path d='M698.75712 684.4416a81.92 81.92 0 0 1-124.88704 106.06592l-191.488-225.4848a81.89952 81.89952 0 0 1 0-106.06592l191.488-225.4848a81.92 81.92 0 0 1 124.88704 106.06592l-146.45248 172.46208 146.45248 172.4416z' p-id='4934' fill='#757AF7'></path></svg>";
+	echo "$prev_para_link</div>";
+	echo "<div style='display:inline-flex;'>$next_para_link";
+	echo "<svg t='1598094021808' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4451' width='32' height='32'><path d='M698.75712 565.02272l-191.488 225.4848a81.73568 81.73568 0 0 1-62.48448 28.89728 81.89952 81.89952 0 0 1-62.40256-134.94272l146.432-172.4416-146.432-172.4416a81.92 81.92 0 0 1 124.88704-106.06592l191.488 225.4848a81.87904 81.87904 0 0 1 0 106.02496z' p-id='4452' fill='#757AF7'></path></svg>";
+	echo "</div>";
+	echo "</div>";
 
 	if(isset($album)){
 

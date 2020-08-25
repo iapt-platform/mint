@@ -379,7 +379,7 @@ else{
 			<div class="help_fun_block">
 				<div class="title" ><?php echo $_local->gui->appearance;?></div>
 				<div >
-				<?php echo $_local->gui->theme;?>：<a><?php echo $_local->gui->night;?></a> <a><?php echo $_local->gui->white;?></a> <a><?php echo $_local->gui->dwan;?></a> <a><?php echo $_local->gui->more;?></a>
+				<?php echo $_local->gui->theme;?>：<a><?php echo $_local->gui->night;?></a> <a><?php echo $_local->gui->white;?></a> <a><?php echo $_local->gui->dawn;?></a> <a><?php echo $_local->gui->more;?></a>
 				</div>
 			</div>
 		</div>

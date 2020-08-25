@@ -39,7 +39,7 @@
 			</div>
 			<div class="dropdown-content" id="lang_list">
 				<a onclick="setLang('my')">
-					Myanmar
+					မြန်မာ
 				</a>
 				<a onclick="setLang('si')">
 					සිංහල

@@ -1297,7 +1297,7 @@ function render_sent_tool_bar(elementBlock, begin) {
 var arr_par_sent_num = new Array();
 var g_arr_Para_ID = new Array();
 function renderWordParBlockInner(elementBlock) {
-  let output = "<div style='display:block;width:100%'>";
+  var output = "<div style='display:block;width:100%'>";
   let outList = "<table>"; //list mode
   var Note_Mark = 0;
   var sent_gramma_i = 0;
@@ -1474,6 +1474,7 @@ function renderWordParBlockInner(elementBlock) {
         output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
         output += "<div class='translate_sent_head'>";
         output += "<div class='translate_sent_head_toolbar'>";
+        output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
         output += "<span></span>";
         output +=
           "<span onclick=\"show_tran_net('" +
@@ -1488,14 +1489,6 @@ function renderWordParBlockInner(elementBlock) {
         sent_begin = word_id;
         output += "</div>";
         output += "<div class='translate_sent_head_content'>";
-        output +=
-          "<div class='trans_text_content'  pcds='sent-net' book='" +
-          book +
-          "' para='" +
-          paragraph +
-          "' begin='" +
-          sent_begin +
-          "' end=''></div>";
         output += "</div>";
         output += "</div>";
         output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
@@ -1554,6 +1547,7 @@ function renderWordParBlockInner(elementBlock) {
   output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
   output += "<div class='translate_sent_head'>";
   output += "<div class='translate_sent_head_toolbar'>";
+  output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
   output += "<span></span>";
   output +=
     "<span onclick=\"show_tran_net('" +
@@ -1564,40 +1558,9 @@ function renderWordParBlockInner(elementBlock) {
     sent_begin +
     "','" +
     word_id +
-    "')\">" +
-    "<span id='' class=\"word_msg\">+</span>" +
-    "</span>";
+    "')\"><span id='' class=\"word_msg\">issue</span></span>";
   output += "</div>";
   output += "<div class='translate_sent_head_content'>";
-
-  output += "<div class='trans_text_block'>";
-  output +=
-    "<div class='trans_text_content'  pcds='sent-net' book='" +
-    book +
-    "' para='" +
-    paragraph +
-    "' begin='" +
-    sent_begin +
-    "' end=''>";
-  output += "</div>";
-  output +=
-    "<div class='trans_text_info'>" +
-    "<span><span>过滤</span><span class='author'>visuddhinanda</span><span class='tag'>笔记</span></span>" +
-    "<span class='tools'>" +
-    "<button>采纳</button>" +
-    "<button onclick=\"show_tran_net('" +
-    book +
-    "','" +
-    paragraph +
-    "','" +
-    sent_begin +
-    "','" +
-    word_id +
-    "')\">更多</button>" +
-    "</span>" +
-    "</div>";
-  output += "</div>";
-
   output += "</div>";
   output += "</div>";
   output += "<div id='sent_" + wID + "' class='translate_sent_content'>";

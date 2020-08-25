@@ -622,8 +622,8 @@ echo "</div>";
 
 ?>
 <script language="javascript">
-dwan_noon_display();
-function dwan_noon_display(){
+dawn_noon_display();
+function dawn_noon_display(){
 	var Unix_string=document.getElementById('time_string').innerHTML
 	var Unix_Array=Unix_string.split("-");
 	var time_A=new Date();
@@ -660,7 +660,7 @@ function dwan_noon_display(){
 		$("#kala_inst_1").html(local_gui.no_string+local_gui.eat);
 		$("#kala_inst_2").html(local_gui.need_inform+local_gui.no_string+local_gui.gama_entry);
 	}
-t=setTimeout('dwan_noon_display()',1000)
+t=setTimeout('dawn_noon_display()',1000)
 
 }
 function set_time_string(date_obj){

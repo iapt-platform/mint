@@ -441,7 +441,7 @@ function time_standardize(date) {
   ) {
     //如果是今年但非今天的消息，只显示月日
     var date_length = date.toLocaleDateString().length;
-    return date.toLocaleDateString().slice(5, date_length - 1);
+    return date.toLocaleDateString().slice(5, date_length);
   } else {
     //如果不是今年的消息，显示年月日
     return date.toLocaleDateString();
