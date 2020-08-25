@@ -444,7 +444,7 @@ para:hover{
 				<span id="tool_bar_title"><?php echo $_local->gui->title; ?></span>
 			</div>
 			<div>
-			<form action="../studio/project.php" method="post" onsubmit="return pali_canon_edit_now(this)" target="_blank">
+			<form action="../studio/project.php" method="post" onsubmit="return pali_canon_edit_now(this)" target="_blank" style="display: inline-block;">
 				<div style="display:none;">
 					<input type="input" name="op" value="create">
 					<input type="hidden" name="view" value="<?php echo $_GET["view"]?>" />
