@@ -812,6 +812,10 @@
 			"value": "pron."
 		},
 		{
+			"id": ".note.",
+			"value": "original"
+		},
+		{
 			"id": ".num.",
 			"value": "num."
 		},

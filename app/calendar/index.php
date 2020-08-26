@@ -615,7 +615,7 @@ echo "</div>";
 echo "<div id='departure_position_input' style='display:none;'>";
 //起飛時間
 echo $_local->gui->date;//日期
-echo "：<input id='departure_date' type='date' />";
+echo "：<input id='departure_date' type='datetime' />";
 echo $_local->gui->time;//時間
 echo "：<input id='departure_time' type='time' /><br>";
 //起飛地點

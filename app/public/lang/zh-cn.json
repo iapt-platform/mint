@@ -692,6 +692,10 @@
 			"value": "代"
 		},
 		{
+			"id": ".note.",
+			"value": "原版注释"
+		},
+		{
 			"id": ".pron.per.",
 			"value": "人代"
 		},
