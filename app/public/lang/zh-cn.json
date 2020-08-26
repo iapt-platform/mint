@@ -464,6 +464,7 @@
 		"required": "必填",
 		"optional": "选填",
 		"comment": "评论",
+		"my_term": "我的术语",
 		"": ""
 	},
 	"grammastr": [
@@ -690,6 +691,10 @@
 		{
 			"id": ".pron.",
 			"value": "代"
+		},
+		{
+			"id": ".note.",
+			"value": "原版注释"
 		},
 		{
 			"id": ".pron.per.",

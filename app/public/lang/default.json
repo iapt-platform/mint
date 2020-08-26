@@ -462,6 +462,7 @@
 		"required": "required",
 		"optional": "optional",
 		"comment": "comments",
+		"my_term": "my term",
 		"": ""
 	},
 	"grammastr": [
@@ -810,6 +811,10 @@
 		{
 			"id": ".pron.",
 			"value": "pron."
+		},
+		{
+			"id": ".note.",
+			"value": "original"
 		},
 		{
 			"id": ".num.",

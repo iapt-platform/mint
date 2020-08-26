@@ -463,6 +463,7 @@
 		"required": "必填",
 		"optional": "選填",
 		"comment": "評論",
+		"my_term": "我的術語",
 		"": ""
 	},
 	"grammastr": [

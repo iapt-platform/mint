@@ -149,19 +149,32 @@ switch($op){
 				echo "<div class='dict_word'>";
 				echo "<a name='ref_dict_$guid'></a>";
 				echo "<div id='term_dict_my_$guid'>";
-				echo "<div class='dict'>Your</div>";
+				echo "<div class='dict'>{$_local->gui->my_term}</div>";
+				echo "<div class='mean'><span>".$mean."</span>";
+				echo "<span class='other_mean' style='margin-right: auto;'>（".$Fetch[$i]["other_meaning"]."）</span></div>";
 				echo "<div class='tag'>{$Fetch[$i]["tag"]}</div>";
-				echo "<div class='mean'>".$mean."</div>";
-				echo "<div class='other_mean'>".$Fetch[$i]["other_meaning"]."</div>";
 				echo "<div class='term_note' status=0>".$Fetch[$i]["note"]."</div>";
 				echo "</div>";
 				//编辑词条表单
 				echo "<div id='term_dict_my_edit_$guid' style='display:none'>";
 				echo "<input type='hidden' id='term_edit_word_$guid' value='$word' />";
-				echo "<div class='mean'><input type='input' id='term_edit_mean_{$guid}'  placeholder='{$_local->gui->meaning}' value='$mean' /></div>";//'意思'
-				echo "<div class='other_mean'><input type='input' id='term_edit_mean2_{$guid}'  placeholder='{$_local->gui->other_meaning}' value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
-				echo "<div class='tag'><input type='input' id='term_edit_tag_{$guid}'  placeholder='{$_local->gui->other_tag}' value='".$Fetch[$i]["tag"]."' /></div>";//'备选意思（可选项）'
-				echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$module_gui_str['editor']['1043']."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
+				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->first_choice_word}：</span>";
+				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_edit_mean_{$guid}' value='$mean' /></div>";//'意思'
+		
+				//echo "<div class='mean'><input type='input' id='term_edit_mean_{$guid}'  placeholder='{$_local->gui->meaning}' value='$mean' /></div>";//'意思'
+				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->other_meaning}：</span>";
+				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_mean2_{$guid}' value='".$Fetch[$i]["other_meaning"]."'/></div>";//'备选意思（可选项）'
+
+				//echo "<div class='other_mean'><input type='input' id='term_edit_mean2_{$guid}'  placeholder='{$_local->gui->other_meaning}' value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
+				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->tag}：</span>";
+				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_tag_{$guid}' value='".$Fetch[$i]["tag"]."'/></div>";//'标签'
+
+				//echo "<div class='tag'><input type='input' id='term_edit_tag_{$guid}'  placeholder='{$_local->gui->other_tag}' value='".$Fetch[$i]["tag"]."' /></div>";//'标签'
+				echo "<div class='note'><span style='display:flex;'><span>{$_local->gui->encyclopedia} & {$_local->gui->note}：</span>";
+				echo "<guide gid='term_pedia_sys' style='margin-left: auto;'></guide></span>";
+				echo "<textarea width='100%' height='3em'  placeholder='{$_local->gui->optional}' id='term_edit_note_$guid'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
+
+				//echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$module_gui_str['editor']['1043']."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
 				echo "</div>";
 				echo "<div id='term_edit_btn1_$guid'>";
 				//echo "<button onclick=\"term_apply('$guid')\">{$_local->gui->apply}</button>";//Apply
