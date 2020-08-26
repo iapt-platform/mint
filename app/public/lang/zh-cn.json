@@ -464,6 +464,7 @@
 		"required": "必填",
 		"optional": "选填",
 		"comment": "评论",
+		"my_term": "我的术语",
 		"": ""
 	},
 	"grammastr": [
