@@ -429,7 +429,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() {}
+function renderBlock() { }
 /*
 重绘翻译数据块
 */
@@ -634,7 +634,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) {}
+function renderTranslateParBlockInnerPreview(strText) { }
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -1281,6 +1281,12 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += "<div class='sent_wbw_trans_bar'>";
   let sentIdString = abook + "-" + aparagraph + "-" + iBegin + "-" + iEnd;
   let sentIdStringLink = "{{" + sentIdString + "}}";
+  if (_display_sbs == 0) {//逐段模式
+    let sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph;
+  }
+  else {//逐句模式
+    let sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
+  }
   output +=
     "<span>" +
     sentIdString +
@@ -1290,6 +1296,8 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += gLocal.gui.copy_to_clipboard;
   output += "]</a></span>";
   //	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
+  output += "<a href=''>";
+  output += "</a>";
   output += "<guide gid='sent_func' style='margin:unset;'></guide>";
   output += "</div>";
   return output;
@@ -2325,12 +2333,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$$" +
-                  arrMean[i] +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                "$" +
+                arrMeaning.length +
+                "$$" +
+                arrMean[i] +
+                "$" +
+                g_DictWordList[iDict].Language
               );
             }
           }
@@ -2380,12 +2388,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$*$" +
-                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$*$" +
+                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2435,12 +2443,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$**$" +
-                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$**$" +
+                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2915,7 +2923,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) {}
+function renderWordNoteDivByParaNo(book, paragraph) { }
 /*
 paragraph word note
 */
@@ -3115,7 +3123,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) {}
+function updateWordCommentary(element) { }
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3238,13 +3246,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-      g_allparlen_array[gVisibleParBegin - 1] <=
+    g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin - 1] >
+    g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3271,13 +3279,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] <=
+    g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] >
+    g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -3714,12 +3722,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-        id +
-        "' name=\"word_note_" +
-        id +
-        '">[' +
-        (index + 1) +
-        "]</a>"
+      id +
+      "' name=\"word_note_" +
+      id +
+      '">[' +
+      (index + 1) +
+      "]</a>"
     );
   });
 
