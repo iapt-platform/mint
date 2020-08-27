@@ -579,6 +579,7 @@ else{
 			echo "Error:no paragraph info";
 			echo $query;
 		}
+		$currLevel = $FetchParInfo[0]["level"];
 		$par_begin=$paragraph+1-1;
 		if($_view=="para"){
 			$par_end = $par_begin;

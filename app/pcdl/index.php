@@ -24,9 +24,17 @@ require_once '../pcdl/html_head.php';
 	.index_list_categories{
 		margin-bottom: 2em;
 	}
-	.index_list_categories a,a:link{
+	
+	.index_list_categories a:hover{
 		color: var(--tool-link-hover-color);
 	}
+	.index_list_categories a,a:link{
+		color: var(--main-color);
+	}
+	.index_list_categories button{
+		border: none;
+	}
+	
 	.pd-10{
 		padding:10px;
 	}
@@ -44,7 +52,7 @@ require_once '../pcdl/html_head.php';
 <div class="index_list_categories">
 		<div class="title_bar">
 			<span class="title h3">圣典</span>	
-			<span class="title_more"><a href="../course">更多</a></span>
+			<span class="title_more"><a href="../palicanon">更多</a></span>
 		</div>
 		<div class="content">
 			<div class="content_inner">
