@@ -972,6 +972,7 @@ var suttaDom = document.getElementById('sutta_text');
 		return;
 	 }
 	 var top = getElementViewTop(suttaDom);
+	 //console.log(Date() +"-"+top);
 	 //top < 0 ? fixedDom.classList.add("fixed") : fixedDom.classList.remove("fixed");
 	 if(top>-500){
 		scrollEventLock=true;

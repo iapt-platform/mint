@@ -1,0 +1,1676 @@
+[
+  {
+    "book": "1",
+    "para": "2",
+    "title": "Namakkārapāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "1",
+    "para": "159",
+    "title": "Namakkāraṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "2",
+    "para": "2",
+    "title": "Mahāpaṇāmapāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "2",
+    "para": "428",
+    "title": "Tigumbacetiya thomanā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "2",
+    "para": "479",
+    "title": "Vāsamālinīkya",
+    "tag": ":anna:"
+  },
+  {
+    "book": "3",
+    "para": "2",
+    "title": "Lakkhaṇāto",
+    "tag": ":anna:"
+  },
+  {
+    "book": "4",
+    "para": "2",
+    "title": "Suttavandanā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "5",
+    "para": "2",
+    "title": "Jinālaṅkāra",
+    "tag": ":anna:"
+  },
+  {
+    "book": "6",
+    "para": "2",
+    "title": "Kamalāñjali",
+    "tag": ":anna:"
+  },
+  {
+    "book": "7",
+    "para": "2",
+    "title": "Pajjamadhu",
+    "tag": ":anna:"
+  },
+  {
+    "book": "8",
+    "para": "2",
+    "title": "Buddhaguṇagāthāvalī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "9",
+    "para": "2",
+    "title": "Abhidhānappadīpikāṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "10",
+    "para": "2",
+    "title": "Subodhālaṅkāro",
+    "tag": ":anna:"
+  },
+  {
+    "book": "11",
+    "para": "2",
+    "title": "Subodhālaṅkāraṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "12",
+    "para": "2",
+    "title": "Bālāvatāra",
+    "tag": ":anna:"
+  },
+  {
+    "book": "13",
+    "para": "2",
+    "title": "Moggallānasuttapāṭho",
+    "tag": ":anna:"
+  },
+  {
+    "book": "13",
+    "para": "1105",
+    "title": "Moggallānabyākaraṇaṃ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "14",
+    "para": "2",
+    "title": "Kaccāyanabyākaraṇaṃ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "14",
+    "para": "715",
+    "title": "Mahākaccāyanasaddāpāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "15",
+    "para": "2",
+    "title": "Saddanītippakaraṇaṃ (padamālā)",
+    "tag": ":anna:"
+  },
+  {
+    "book": "16",
+    "para": "2",
+    "title": "Saddanītippakaraṇaṃ (dhātumālā)",
+    "tag": ":anna:"
+  },
+  {
+    "book": "17",
+    "para": "2",
+    "title": "Padarūpasiddhi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "18",
+    "para": "2",
+    "title": "Moggallāna pañcikā ṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "19",
+    "para": "2",
+    "title": "Payogasiddhipāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "20",
+    "para": "2",
+    "title": "Vuttodayaṃ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "21",
+    "para": "2",
+    "title": "Abhidhānappadīpikā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "22",
+    "para": "2",
+    "title": "Niruttidīpanīpāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "23",
+    "para": "2",
+    "title": "Paramatthadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "24",
+    "para": "2",
+    "title": "Anudīpanīpāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "25",
+    "para": "2",
+    "title": "Paṭṭhānuddesa dīpanīpāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "26",
+    "para": "2",
+    "title": "Caturārakkhadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "27",
+    "para": "2",
+    "title": "Kavidappaṇanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "28",
+    "para": "2",
+    "title": "Nītimañjarī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "29",
+    "para": "2",
+    "title": "Dhammanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "30",
+    "para": "2",
+    "title": "Mahārahanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "31",
+    "para": "2",
+    "title": "Lokanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "32",
+    "para": "2",
+    "title": "Suttantanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "32",
+    "para": "134",
+    "title": "Vasalasutta",
+    "tag": ":anna:"
+  },
+  {
+    "book": "33",
+    "para": "2",
+    "title": "Sūrassatīnīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "34",
+    "para": "2",
+    "title": "Cāṇakyanītipāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "35",
+    "para": "2",
+    "title": "Naradakkhadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "36",
+    "para": "2",
+    "title": "Rasavāhinī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "37",
+    "para": "2",
+    "title": "Sīmavisodhanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "38",
+    "para": "2",
+    "title": "Vessantarāgīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "39",
+    "para": "3",
+    "title": "(saṅgayana-puccha vissajjanā) Dīghanikāye",
+    "tag": ":anna:"
+  },
+  {
+    "book": "40",
+    "para": "3",
+    "title": "(saṅgayana-puccha vissajjanā) Majjhimanikāya",
+    "tag": ":anna:"
+  },
+  {
+    "book": "41",
+    "para": "3",
+    "title": "(saṅgayana-puccha vissajjanā) Saṃyuttanikāye",
+    "tag": ":anna:"
+  },
+  {
+    "book": "42",
+    "para": "3",
+    "title": "(saṅgayana-puccha vissajjanā) Aṅguttaranikāye",
+    "tag": ":anna:"
+  },
+  {
+    "book": "43",
+    "para": "2",
+    "title": "(saṅgayana-puccha vissajjanā) Vinayapiṭaka",
+    "tag": ":anna:"
+  },
+  {
+    "book": "44",
+    "para": "2",
+    "title": "(saṅgayana-puccha vissajjanā) Abhidhammapiṭaka",
+    "tag": ":anna:"
+  },
+  {
+    "book": "45",
+    "para": "2",
+    "title": "(saṅgayana-puccha vissajjanā) Aṭṭhakathā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "46",
+    "para": "1",
+    "title": "Milidaṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "47",
+    "para": "1",
+    "title": "Padamañjarī ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "48",
+    "para": "1",
+    "title": "Padasādhanaṃ ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "49",
+    "para": "1",
+    "title": "Saddabindu pakaraṇaṃ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "50",
+    "para": "1",
+    "title": "Kaccāyana  dhātu mañjūsā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "51",
+    "para": "1",
+    "title": "Samantakūṭavaṇṇanā ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "52",
+    "para": "1",
+    "title": "Moggallāna vuttivivaraṇapañcikā. ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "53",
+    "para": "1",
+    "title": "Thupavaṃso ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "54",
+    "para": "1",
+    "title": "Dāṭhāvaṃso ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "55",
+    "para": "1",
+    "title": "Dhātupāṭha  vilāsiniyā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "56",
+    "para": "1",
+    "title": "Dhātuvaṃso ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "57",
+    "para": "1",
+    "title": "Hatthavanagallavihāra  vaṃso",
+    "tag": ":anna:"
+  },
+  {
+    "book": "58",
+    "para": "1",
+    "title": "Jinacaritaya ",
+    "tag": ":anna::atthakatha:"
+  },
+  {
+    "book": "59",
+    "para": "1",
+    "title": "Jinavaṃsadīpaṃ ",
+    "tag": ":anna::atthakatha:"
+  },
+  {
+    "book": "60",
+    "para": "1",
+    "title": "Telakaṭāhagāthā ",
+    "tag": ":anna::tika:"
+  },
+  {
+    "book": "61",
+    "para": "2",
+    "title": "Cūḷaganthavaṃsapāḷi",
+    "tag": ":anna::tika:"
+  },
+  {
+    "book": "62",
+    "para": "2",
+    "title": "Sāsanavaṃsappadīpikā",
+    "tag": ":anna::tika:"
+  },
+  {
+    "book": "63",
+    "para": "2",
+    "title": "Mahāvaṃsapāḷi",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "64",
+    "para": "2",
+    "title": "Visuddhimaggo(Paṭhamo bhāgo)",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "65",
+    "para": "2",
+    "title": "Visuddhimaggo(Dutiyo bhāgo)",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "66",
+    "para": "2",
+    "title": "Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo)",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "67",
+    "para": "2",
+    "title": "Visuddhimagga-mahāṭīkā(Dutiyo bhāgo)",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "68",
+    "para": "2",
+    "title": "Visuddhimagga nidānakathā",
+    "tag": ":anna::mula:"
+  },
+  {
+    "book": "69",
+    "para": "3",
+    "title": "Paṭṭhānapāḷi(Dutiyo bhāgo)",
+    "tag": ":abhidhamma::mula::Paṭṭhāna:"
+  },
+  {
+    "book": "70",
+    "para": "3",
+    "title": "Paṭṭhānapāḷi(Tatiyo bhāgo)",
+    "tag": ":abhidhamma::mula::Paṭṭhāna:"
+  },
+  {
+    "book": "71",
+    "para": "3",
+    "title": "Paṭṭhānapāḷi(Catuttho bhāgo)",
+    "tag": ":abhidhamma::mula::Paṭṭhāna:"
+  },
+  {
+    "book": "72",
+    "para": "3",
+    "title": "Paṭṭhānapāḷi(Pañcamo bhāgo)",
+    "tag": ":abhidhamma::mula::Paṭṭhāna:"
+  },
+  {
+    "book": "73",
+    "para": "3",
+    "title": "Dhammasaṅgaṇīpāḷi",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "74",
+    "para": "3",
+    "title": "Vibhaṅgapāḷi",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "75",
+    "para": "3",
+    "title": "Dhātukathāpāḷi",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "76",
+    "para": "3",
+    "title": "Puggalapaññattipāḷi",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "77",
+    "para": "3",
+    "title": "Kathāvatthupāḷi",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "78",
+    "para": "3",
+    "title": "Yamakapāḷi (paṭhamo bhāgo)",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "79",
+    "para": "3",
+    "title": "Yamakapāḷi (dutiyo bhāgo)",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "80",
+    "para": "3",
+    "title": "Yamakapāḷi (tatiyo bhāgo)",
+    "tag": ":abhidhamma::mula:"
+  },
+  {
+    "book": "81",
+    "para": "3",
+    "title": "Paṭṭhānapāḷi(Paṭhamo bhāgo)",
+    "tag": ":abhidhamma::mula::Paṭṭhāna:"
+  },
+  {
+    "book": "82",
+    "para": "3",
+    "title": "Dasakanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "83",
+    "para": "3",
+    "title": "Ekādasakanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "84",
+    "para": "3",
+    "title": "Ekakanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "85",
+    "para": "3",
+    "title": "Dukanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "86",
+    "para": "3",
+    "title": "Tikanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "87",
+    "para": "3",
+    "title": "Catukkanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "88",
+    "para": "3",
+    "title": "Pañcakanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "89",
+    "para": "3",
+    "title": "Chakkanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "90",
+    "para": "3",
+    "title": "Sattakanipātapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "91",
+    "para": "3",
+    "title": "Aṭṭhakanipātapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "92",
+    "para": "3",
+    "title": "Navakanipātapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "93",
+    "para": "3",
+    "title": "(DN) Sīlakkhandhavaggapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "94",
+    "para": "3",
+    "title": "(DN) Mahāvaggapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "95",
+    "para": "3",
+    "title": "(DN) Pāthikavaggapāḷi",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "96",
+    "para": "4",
+    "title": "Dhammasaṅgaṇī-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "97",
+    "para": "4",
+    "title": "Vibhaṅga-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "98",
+    "para": "4",
+    "title": "Dhātukathā-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "98",
+    "para": "173",
+    "title": "Puggalapaññatti-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "98",
+    "para": "474",
+    "title": "Kathāvatthu-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "98",
+    "para": "1623",
+    "title": "Yamakappakaraṇa-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha:"
+  },
+  {
+    "book": "98",
+    "para": "1880",
+    "title": "Paṭṭhānappakaraṇa-aṭṭhakathā",
+    "tag": ":abhidhamma::atthakatha::Paṭṭhāna:"
+  },
+  {
+    "book": "99",
+    "para": "3",
+    "title": "Ekakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "100",
+    "para": "3",
+    "title": "Dukanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "100",
+    "para": "325",
+    "title": "Tikanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "100",
+    "para": "997",
+    "title": "Catukkanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "101",
+    "para": "3",
+    "title": "Pañcakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "101",
+    "para": "503",
+    "title": "Chakkanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "101",
+    "para": "792",
+    "title": "Sattakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "102",
+    "para": "3",
+    "title": "Aṭṭhakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "102",
+    "para": "275",
+    "title": "Navakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "102",
+    "para": "409",
+    "title": "Dasakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "102",
+    "para": "706",
+    "title": "Ekādasakanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "103",
+    "para": "3",
+    "title": "(DN) Sīlakkhandhavaggaṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "104",
+    "para": "3",
+    "title": "(DN) Mahāvaggaṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "105",
+    "para": "3",
+    "title": "(DN) Pāthikavaggaṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "106",
+    "para": "3",
+    "title": "Therīgāthā-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "107",
+    "para": "3",
+    "title": "Apadāna-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "108",
+    "para": "3",
+    "title": "Buddhavaṃsa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "109",
+    "para": "3",
+    "title": "Cariyāpiṭaka-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "110",
+    "para": "4",
+    "title": "Jātaka-aṭṭhakathā(Paṭhamo bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "111",
+    "para": "3",
+    "title": "Jātaka-aṭṭhakathā(Dutiyo bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "112",
+    "para": "4",
+    "title": "Jātaka-aṭṭhakathā(Tatiyo bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "113",
+    "para": "4",
+    "title": "Jātaka-aṭṭhakathā(Catuttho bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "113",
+    "para": "5312",
+    "title": "Jātaka-aṭṭhakathā(Pañcamo bhāgo 16)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "114",
+    "para": "1",
+    "title": "Jātaka-aṭṭhakathā(Pañcamo bhāgo 17-21)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "115",
+    "para": "3",
+    "title": "Jātaka-aṭṭhakathā(Chaṭṭho bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "116",
+    "para": "3",
+    "title": "Khuddakapāṭha-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "117",
+    "para": "3",
+    "title": "Jātaka-aṭṭhakathā(Sattamo bhāgo)",
+    "tag": ":sutta::atthakatha::jataka:"
+  },
+  {
+    "book": "118",
+    "para": "3",
+    "title": "Mahāniddesa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "119",
+    "para": "3",
+    "title": "Cūḷaniddesa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "120",
+    "para": "3",
+    "title": "Paṭisambhidāmagga-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "121",
+    "para": "3",
+    "title": "Nettippakaraṇa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "122",
+    "para": "3",
+    "title": "Dhammapada-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "123",
+    "para": "3",
+    "title": "Udāna-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "124",
+    "para": "3",
+    "title": "Itivuttaka-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "125",
+    "para": "3",
+    "title": "Suttanipāta-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "126",
+    "para": "3",
+    "title": "Vimānavatthu-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "127",
+    "para": "3",
+    "title": "Petavatthu-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "128",
+    "para": "3",
+    "title": "Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "129",
+    "para": "3",
+    "title": "Theragāthā-aṭṭhakathā(Dutiyo bhāgo)",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "130",
+    "para": "3",
+    "title": "(MN) Mūlapaṇṇāsa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "131",
+    "para": "3",
+    "title": "(MN) Majjhimapaṇṇāsa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "132",
+    "para": "3",
+    "title": "(MN) Uparipaṇṇāsa-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "133",
+    "para": "3",
+    "title": "(SN) Sagāthāvagga-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "134",
+    "para": "3",
+    "title": "(SN) Nidānavagga-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "135",
+    "para": "3",
+    "title": "(SN) Khandhavagga-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "136",
+    "para": "3",
+    "title": "(SN) Saḷāyatanavagga-aṭṭhakathā",
+    "tag": ":sutta::atthakatha:"
+  },
+  {
+    "book": "137",
+    "para": "3",
+    "title": "(SN) Mahāvagga-aṭṭhakathā",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "138",
+    "para": "3",
+    "title": "Pārājikakaṇḍa-aṭṭhakathā",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "139",
+    "para": "3",
+    "title": "(SP) Pācittiya-aṭṭhakathā",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "140",
+    "para": "3",
+    "title": "(SP) Mahāvagga-aṭṭhakathā",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "141",
+    "para": "3",
+    "title": "(SP) Cūḷavagga-aṭṭhakathā",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "142",
+    "para": "3",
+    "title": "(SP) Parivāra-aṭṭhakathā",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "143",
+    "para": "3",
+    "title": "Therāpadānapāḷi(Paṭhamo bhāgo)",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "144",
+    "para": "3",
+    "title": "Therāpadānapāḷi(Dutiyo bhāgo)",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "144",
+    "para": "6534",
+    "title": "Therīapadānapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "145",
+    "para": "3",
+    "title": "Buddhavaṃsapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "146",
+    "para": "3",
+    "title": "Cariyāpiṭakapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "147",
+    "para": "3",
+    "title": "Jātakapāḷi(Dutiyo bhāgo)",
+    "tag": ":sutta::mula::jataka:"
+  },
+  {
+    "book": "148",
+    "para": "3",
+    "title": "Jātakapāḷi(Paṭhamo bhāgo)",
+    "tag": ":sutta::mula::jataka:"
+  },
+  {
+    "book": "149",
+    "para": "3",
+    "title": "Mahāniddesapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "150",
+    "para": "3",
+    "title": "Cūḷaniddesapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "151",
+    "para": "3",
+    "title": "Paṭisambhidāmaggapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "152",
+    "para": "3",
+    "title": "Milindapañhapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "153",
+    "para": "3",
+    "title": "Nettippakaraṇapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "154",
+    "para": "3",
+    "title": "Khuddakapāṭhapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "155",
+    "para": "3",
+    "title": "Peṭakopadesapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "156",
+    "para": "3",
+    "title": "Dhammapadapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "157",
+    "para": "3",
+    "title": "Udānapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "158",
+    "para": "3",
+    "title": "Itivuttakapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "159",
+    "para": "3",
+    "title": "Suttanipātapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "160",
+    "para": "3",
+    "title": "Vimānavatthupāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "161",
+    "para": "3",
+    "title": "Petavatthupāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "162",
+    "para": "3",
+    "title": "Theragāthāpāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "163",
+    "para": "3",
+    "title": "Therīgāthāpāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "164",
+    "para": "3",
+    "title": "(MN)Mūlapaṇṇāsapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "165",
+    "para": "3",
+    "title": "(MN)Majjhimapaṇṇāsapāḷi",
+    "tag": ":sutta::mula:"
+  },
+  {
+    "book": "166",
+    "para": "3",
+    "title": "(MN)Uparipaṇṇāsapāḷi",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "167",
+    "para": "3",
+    "title": "(SN)Sagāthāvaggo",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "168",
+    "para": "3",
+    "title": "(SN)Nidānavaggo",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "169",
+    "para": "3",
+    "title": "(SN)Khandhavaggo",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "170",
+    "para": "3",
+    "title": "(SN)Saḷāyatanavaggo",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "171",
+    "para": "3",
+    "title": "(SN)Mahāvaggo",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "172",
+    "para": "3",
+    "title": "Dhammasaṅgaṇī-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "173",
+    "para": "3",
+    "title": "Vibhaṅga-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "173",
+    "para": "1155",
+    "title": "Vibhaṅga-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "174",
+    "para": "4",
+    "title": "Dhātukathāpakaraṇa-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "174",
+    "para": "100",
+    "title": "Puggalapaññattipakaraṇa-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "174",
+    "para": "201",
+    "title": "Kathāvatthupakaraṇa-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "174",
+    "para": "865",
+    "title": "Yamakapakaraṇa-mūlaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "174",
+    "para": "1059",
+    "title": "Paṭṭhānapakaraṇa-mūlaṭīkā",
+    "tag": ":abhidhamma::tika::Paṭṭhāna:"
+  },
+  {
+    "book": "175",
+    "para": "3",
+    "title": "Dhammasaṅgaṇī-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "176",
+    "para": "4",
+    "title": "Dhātukathāpakaraṇa-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "176",
+    "para": "117",
+    "title": "Puggalapaññattipakaraṇa-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "176",
+    "para": "213",
+    "title": "Kathāvatthupakaraṇa-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "176",
+    "para": "917",
+    "title": "Yamakapakaraṇa-anuṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "176",
+    "para": "1139",
+    "title": "Paṭṭhānapakaraṇa-anuṭīkā",
+    "tag": ":abhidhamma::tika::Paṭṭhāna:"
+  },
+  {
+    "book": "177",
+    "para": "2",
+    "title": "Abhidhammāvatāro",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "177",
+    "para": "4805",
+    "title": "Nāmarūpaparicchedo",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "177",
+    "para": "10627",
+    "title": "Paramatthavinicchayo",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "177",
+    "para": "14272",
+    "title": "Saccasaṅkhepo",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "178",
+    "para": "2",
+    "title": "Abhidhammatthasaṅgaho",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "178",
+    "para": "875",
+    "title": "Abhidhammatthavibhāvinīṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "179",
+    "para": "2",
+    "title": "Abhidhammāvatāra-purāṇaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "179",
+    "para": "872",
+    "title": "Abhidhammāvatāra-abhinavaṭīkā",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "180",
+    "para": "2",
+    "title": "Abhidhammamātikāpāḷi",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "180",
+    "para": "1221",
+    "title": "Mohavicchedanī",
+    "tag": ":abhidhamma::tika:"
+  },
+  {
+    "book": "181",
+    "para": "3",
+    "title": "Ekakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "182",
+    "para": "3",
+    "title": "Dukanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "182",
+    "para": "324",
+    "title": "Tikanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "182",
+    "para": "1023",
+    "title": "Catukkanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "183",
+    "para": "3",
+    "title": "Pañcakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "183",
+    "para": "470",
+    "title": "Chakkanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "183",
+    "para": "793",
+    "title": "Sattakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "184",
+    "para": "3",
+    "title": "Aṭṭhakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "184",
+    "para": "278",
+    "title": "Navakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "184",
+    "para": "466",
+    "title": "Dasakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "184",
+    "para": "776",
+    "title": "Ekādasakanipāta-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "185",
+    "para": "3",
+    "title": "(DN)Sīlakkhandhavaggaṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "186",
+    "para": "3",
+    "title": "(DN)Mahāvaggaṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "187",
+    "para": "3",
+    "title": "(DN)Pāthikavaggaṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "188",
+    "para": "3",
+    "title": "(DN)Sīlakkhandhavaggaabhinavaṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "189",
+    "para": "3",
+    "title": "(DN)Sīlakkhandhavaggaabhinavaṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "190",
+    "para": "3",
+    "title": "Nettippakaraṇa-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "191",
+    "para": "3",
+    "title": "Nettivibhāvinī",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "192",
+    "para": "3",
+    "title": "(MN)Mūlapaṇṇāsa-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "193",
+    "para": "3",
+    "title": "(MN)Majjhimapaṇṇāsa-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "194",
+    "para": "3",
+    "title": "(MN)Uparipaṇṇāsa-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "195",
+    "para": "3",
+    "title": "(SN)Sagāthāvagga-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "196",
+    "para": "3",
+    "title": "(SN)Nidānavagga-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "197",
+    "para": "3",
+    "title": "(SN)Khandhavagga-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "198",
+    "para": "3",
+    "title": "(SN)Saḷāyatanavagga-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "199",
+    "para": "3",
+    "title": "(SN)Mahāvagga-ṭīkā",
+    "tag": ":sutta::tika:"
+  },
+  {
+    "book": "200",
+    "para": "2",
+    "title": "Vinayavinicchayo",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "200",
+    "para": "10176",
+    "title": "Uttaravinicchayo",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "201",
+    "para": "2",
+    "title": "Vinayavinicchaya-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "201",
+    "para": "4270",
+    "title": "Uttaravinicchaya-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "202",
+    "para": "3",
+    "title": "Pācityādiyojanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "203",
+    "para": "3",
+    "title": "Khuddasikkhā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "203",
+    "para": "1620",
+    "title": "Khuddasikkhā-purāṇaṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "203",
+    "para": "2361",
+    "title": "Khuddasikkhā-abhinavaṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "203",
+    "para": "3100",
+    "title": "Mūlasikkhā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "203",
+    "para": "3481",
+    "title": "Mūlasikkhā-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "204",
+    "para": "3",
+    "title": "Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "205",
+    "para": "3",
+    "title": "(SAD) Pārājika-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "206",
+    "para": "3",
+    "title": "(SAD) Pācittiya-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "206",
+    "para": "717",
+    "title": "(SAD) Mahāvagga-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "206",
+    "para": "1753",
+    "title": "(SAD) Cūḷavagga-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "206",
+    "para": "2154",
+    "title": "(SAD) Parivāra-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "207",
+    "para": "3",
+    "title": "Bhikkhupātimokkhapāḷi",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "207",
+    "para": "524",
+    "title": "Bhikkhunīpātimokkhapāḷi",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "207",
+    "para": "1215",
+    "title": "Kaṅkhāvitaraṇī-aṭṭhakathā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "208",
+    "para": "3",
+    "title": "Vinayasaṅgaha-aṭṭhakathā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "3",
+    "title": "Vajirabuddhi-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "166",
+    "title": "Pārājikavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "992",
+    "title": "Pācittiyavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "1708",
+    "title": "Mahāvaggavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "2217",
+    "title": "Cūḷavaggavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "209",
+    "para": "2428",
+    "title": "Parivāravaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "210",
+    "para": "3",
+    "title": "Bhikkhuvibhaṅgavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "210",
+    "para": "1658",
+    "title": "Bhikkhunīvibhaṅgavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "210",
+    "para": "1779",
+    "title": "Mahāvaggavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "210",
+    "para": "2431",
+    "title": "Cūḷavaggavaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "210",
+    "para": "2792",
+    "title": "Parivāravaṇṇanā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "211",
+    "para": "3",
+    "title": "Vinayālaṅkāra-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "212",
+    "para": "2",
+    "title": "Kaṅkhāvitaraṇīpurāṇa-ṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "212",
+    "para": "671",
+    "title": "Kaṅkhāvitaraṇī-abhinavaṭīkā",
+    "tag": ":vinaya::tika:"
+  },
+  {
+    "book": "213",
+    "para": "3",
+    "title": "(VN)Pārājikapāḷi",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "214",
+    "para": "3",
+    "title": "(VN)Pācittiyapāḷi",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "215",
+    "para": "3",
+    "title": "(VN)Mahāvaggapāḷi",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "216",
+    "para": "3",
+    "title": "(VN)Cūḷavaggapāḷi",
+    "tag": ":vinaya::mula:"
+  },
+  {
+    "book": "217",
+    "para": "3",
+    "title": "(VN)Parivārapāḷi",
+    "tag": ":vinaya::mula:"
+  }
+]

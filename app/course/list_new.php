@@ -22,22 +22,15 @@ foreach ($covers as $value) {
 foreach($Fetch as $row){
     echo '<div class="content_block">';
     echo '<div class="card">';
-    
-    $coverlink = $cover["{$row["cover"]}"];
-    echo '<div class="v-cover">';
-    if(substr($coverlink,0,6)=="media:"){
-        echo '<img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto">';
-    }
-    else{
-        echo '<img src="'.$coverlink.'" width="50" height="50">';
-    }
-    echo '</div>';
 
     echo '<div class="pd-10">';
-    echo '<div class="title" style="padding-bottom:5px;"><a href="../course/course.php?id='.$row["id"].'">'.$row["title"].'</a></div>';
+    echo '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
+    echo '<div class="author"  style="padding-bottom:5px;margin-bottom:0.4em;">主讲：'.$row["teacher"].'</div>';    
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
-    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.$row["teacher"].'</div>';
+    echo '</div>';
+    echo '<div class="pd-10" style="display:flex;justify-content: space-between;">';
+    echo '<button>赞<span>3</span></button><button>订阅<span>23</span></button>';
     echo '</div>';
     
     echo '</div>';
