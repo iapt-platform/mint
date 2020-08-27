@@ -87,15 +87,20 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:2;">'.'副标题'.'</div>';
     echo '<div style="flex:8;"><input type="input" name = "subtitle" value="'.$lesson_info["subtitle"].'" /></div>';
     echo '</div>';
+    $strDate = date("Y-m-d",$lesson_info["date"]/1000);
+    echo 'Date: <input type="date" name="lesson_date" value="'.$strDate.'"/>';
+    echo 'Time: <input type="time" name="lesson_time" />';
+    echo 'Duration: <input type="time" name="lesson_duration" />';
 
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'链接'.'</div>';
+    echo '<div style="flex:2;">'.'直播链接'.'</div>';
     echo '<div style="flex:8;"><textarea name="link" style="height:6em;">'.$lesson_info["link"].'</textarea></div>';
     echo '</div>';
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'链接(中国大陆)'.'</div>';
+    echo '<div style="flex:2;">'.'录播链接'.'</div>';
     echo '<div style="flex:8;"><textarea name="link1" style="height:6em;">'.$lesson_info["link"].'</textarea></div>';
     echo '</div>';
+
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.'简介'.'</div>';
