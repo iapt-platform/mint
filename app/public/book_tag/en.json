@@ -1,29 +1,94 @@
 [
-  { "book": "1", "para": "2", "title": "Namakkārapāḷi", "tag": ":anna:" },
-  { "book": "1", "para": "159", "title": "Namakkāraṭīkā", "tag": ":anna:" },
-  { "book": "2", "para": "2", "title": "Mahāpaṇāmapāṭha", "tag": ":anna:" },
+  {
+    "book": "1",
+    "para": "2",
+    "title": "Namakkārapāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "1",
+    "para": "159",
+    "title": "Namakkāraṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "2",
+    "para": "2",
+    "title": "Mahāpaṇāmapāṭha",
+    "tag": ":anna:"
+  },
   {
     "book": "2",
     "para": "428",
     "title": "Tigumbacetiya thomanā",
     "tag": ":anna:"
   },
-  { "book": "2", "para": "479", "title": "Vāsamālinīkya", "tag": ":anna:" },
-  { "book": "3", "para": "2", "title": "Lakkhaṇāto", "tag": ":anna:" },
-  { "book": "4", "para": "2", "title": "Suttavandanā", "tag": ":anna:" },
-  { "book": "5", "para": "2", "title": "Jinālaṅkāra", "tag": ":anna:" },
-  { "book": "6", "para": "2", "title": "Kamalāñjali", "tag": ":anna:" },
-  { "book": "7", "para": "2", "title": "Pajjamadhu", "tag": ":anna:" },
-  { "book": "8", "para": "2", "title": "Buddhaguṇagāthāvalī", "tag": ":anna:" },
+  {
+    "book": "2",
+    "para": "479",
+    "title": "Vāsamālinīkya",
+    "tag": ":anna:"
+  },
+  {
+    "book": "3",
+    "para": "2",
+    "title": "Lakkhaṇāto",
+    "tag": ":anna:"
+  },
+  {
+    "book": "4",
+    "para": "2",
+    "title": "Suttavandanā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "5",
+    "para": "2",
+    "title": "Jinālaṅkāra",
+    "tag": ":anna:"
+  },
+  {
+    "book": "6",
+    "para": "2",
+    "title": "Kamalāñjali",
+    "tag": ":anna:"
+  },
+  {
+    "book": "7",
+    "para": "2",
+    "title": "Pajjamadhu",
+    "tag": ":anna:"
+  },
+  {
+    "book": "8",
+    "para": "2",
+    "title": "Buddhaguṇagāthāvalī",
+    "tag": ":anna:"
+  },
   {
     "book": "9",
     "para": "2",
     "title": "Abhidhānappadīpikāṭīkā",
     "tag": ":anna:"
   },
-  { "book": "10", "para": "2", "title": "Subodhālaṅkāro", "tag": ":anna:" },
-  { "book": "11", "para": "2", "title": "Subodhālaṅkāraṭīkā", "tag": ":anna:" },
-  { "book": "12", "para": "2", "title": "Bālāvatāra", "tag": ":anna:" },
+  {
+    "book": "10",
+    "para": "2",
+    "title": "Subodhālaṅkāro",
+    "tag": ":anna:"
+  },
+  {
+    "book": "11",
+    "para": "2",
+    "title": "Subodhālaṅkāraṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "12",
+    "para": "2",
+    "title": "Bālāvatāra",
+    "tag": ":anna:"
+  },
   {
     "book": "13",
     "para": "2",
@@ -60,39 +125,144 @@
     "title": "Saddanītippakaraṇaṃ (dhātumālā)",
     "tag": ":anna:"
   },
-  { "book": "17", "para": "2", "title": "Padarūpasiddhi", "tag": ":anna:" },
+  {
+    "book": "17",
+    "para": "2",
+    "title": "Padarūpasiddhi",
+    "tag": ":anna:"
+  },
   {
     "book": "18",
     "para": "2",
     "title": "Moggallāna pañcikā ṭīkā",
     "tag": ":anna:"
   },
-  { "book": "19", "para": "2", "title": "Payogasiddhipāḷi", "tag": ":anna:" },
-  { "book": "20", "para": "2", "title": "Vuttodayaṃ", "tag": ":anna:" },
-  { "book": "21", "para": "2", "title": "Abhidhānappadīpikā", "tag": ":anna:" },
-  { "book": "22", "para": "2", "title": "Niruttidīpanīpāṭha", "tag": ":anna:" },
-  { "book": "23", "para": "2", "title": "Paramatthadīpanī", "tag": ":anna:" },
-  { "book": "24", "para": "2", "title": "Anudīpanīpāṭha", "tag": ":anna:" },
+  {
+    "book": "19",
+    "para": "2",
+    "title": "Payogasiddhipāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "20",
+    "para": "2",
+    "title": "Vuttodayaṃ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "21",
+    "para": "2",
+    "title": "Abhidhānappadīpikā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "22",
+    "para": "2",
+    "title": "Niruttidīpanīpāṭha",
+    "tag": ":anna:"
+  },
+  {
+    "book": "23",
+    "para": "2",
+    "title": "Paramatthadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "24",
+    "para": "2",
+    "title": "Anudīpanīpāṭha",
+    "tag": ":anna:"
+  },
   {
     "book": "25",
     "para": "2",
     "title": "Paṭṭhānuddesa dīpanīpāṭha",
     "tag": ":anna:"
   },
-  { "book": "26", "para": "2", "title": "Caturārakkhadīpanī", "tag": ":anna:" },
-  { "book": "27", "para": "2", "title": "Kavidappaṇanīti", "tag": ":anna:" },
-  { "book": "28", "para": "2", "title": "Nītimañjarī", "tag": ":anna:" },
-  { "book": "29", "para": "2", "title": "Dhammanīti", "tag": ":anna:" },
-  { "book": "30", "para": "2", "title": "Mahārahanīti", "tag": ":anna:" },
-  { "book": "31", "para": "2", "title": "Lokanīti", "tag": ":anna:" },
-  { "book": "32", "para": "2", "title": "Suttantanīti", "tag": ":anna:" },
-  { "book": "32", "para": "134", "title": "Vasalasutta", "tag": ":anna:" },
-  { "book": "33", "para": "2", "title": "Sūrassatīnīti", "tag": ":anna:" },
-  { "book": "34", "para": "2", "title": "Cāṇakyanītipāḷi", "tag": ":anna:" },
-  { "book": "35", "para": "2", "title": "Naradakkhadīpanī", "tag": ":anna:" },
-  { "book": "36", "para": "2", "title": "Rasavāhinī", "tag": ":anna:" },
-  { "book": "37", "para": "2", "title": "Sīmavisodhanī", "tag": ":anna:" },
-  { "book": "38", "para": "2", "title": "Vessantarāgīti", "tag": ":anna:" },
+  {
+    "book": "26",
+    "para": "2",
+    "title": "Caturārakkhadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "27",
+    "para": "2",
+    "title": "Kavidappaṇanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "28",
+    "para": "2",
+    "title": "Nītimañjarī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "29",
+    "para": "2",
+    "title": "Dhammanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "30",
+    "para": "2",
+    "title": "Mahārahanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "31",
+    "para": "2",
+    "title": "Lokanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "32",
+    "para": "2",
+    "title": "Suttantanīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "32",
+    "para": "134",
+    "title": "Vasalasutta",
+    "tag": ":anna:"
+  },
+  {
+    "book": "33",
+    "para": "2",
+    "title": "Sūrassatīnīti",
+    "tag": ":anna:"
+  },
+  {
+    "book": "34",
+    "para": "2",
+    "title": "Cāṇakyanītipāḷi",
+    "tag": ":anna:"
+  },
+  {
+    "book": "35",
+    "para": "2",
+    "title": "Naradakkhadīpanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "36",
+    "para": "2",
+    "title": "Rasavāhinī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "37",
+    "para": "2",
+    "title": "Sīmavisodhanī",
+    "tag": ":anna:"
+  },
+  {
+    "book": "38",
+    "para": "2",
+    "title": "Vessantarāgīti",
+    "tag": ":anna:"
+  },
   {
     "book": "39",
     "para": "3",
@@ -135,9 +305,24 @@
     "title": "(saṅgayana-puccha vissajjanā) Aṭṭhakathā",
     "tag": ":anna:"
   },
-  { "book": "46", "para": "1", "title": "Milidaṭīkā", "tag": ":anna:" },
-  { "book": "47", "para": "1", "title": "Padamañjarī ", "tag": ":anna:" },
-  { "book": "48", "para": "1", "title": "Padasādhanaṃ ", "tag": ":anna:" },
+  {
+    "book": "46",
+    "para": "1",
+    "title": "Milidaṭīkā",
+    "tag": ":anna:"
+  },
+  {
+    "book": "47",
+    "para": "1",
+    "title": "Padamañjarī ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "48",
+    "para": "1",
+    "title": "Padasādhanaṃ ",
+    "tag": ":anna:"
+  },
   {
     "book": "49",
     "para": "1",
@@ -162,15 +347,30 @@
     "title": "Moggallāna vuttivivaraṇapañcikā. ",
     "tag": ":anna:"
   },
-  { "book": "53", "para": "1", "title": "Thupavaṃso ", "tag": ":anna:" },
-  { "book": "54", "para": "1", "title": "Dāṭhāvaṃso ", "tag": ":anna:" },
+  {
+    "book": "53",
+    "para": "1",
+    "title": "Thupavaṃso ",
+    "tag": ":anna:"
+  },
+  {
+    "book": "54",
+    "para": "1",
+    "title": "Dāṭhāvaṃso ",
+    "tag": ":anna:"
+  },
   {
     "book": "55",
     "para": "1",
     "title": "Dhātupāṭha  vilāsiniyā",
     "tag": ":anna:"
   },
-  { "book": "56", "para": "1", "title": "Dhātuvaṃso ", "tag": ":anna:" },
+  {
+    "book": "56",
+    "para": "1",
+    "title": "Dhātuvaṃso ",
+    "tag": ":anna:"
+  },
   {
     "book": "57",
     "para": "1",
@@ -849,7 +1049,12 @@
     "title": "Dhammapadapāḷi",
     "tag": ":sutta::mula:"
   },
-  { "book": "157", "para": "3", "title": "Udānapāḷi", "tag": ":sutta::mula:" },
+  {
+    "book": "157",
+    "para": "3",
+    "title": "Udānapāḷi",
+    "tag": ":sutta::mula:"
+  },
   {
     "book": "158",
     "para": "3",

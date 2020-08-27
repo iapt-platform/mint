@@ -1281,11 +1281,12 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += "<div class='sent_wbw_trans_bar'>";
   let sentIdString = abook + "-" + aparagraph + "-" + iBegin + "-" + iEnd;
   let sentIdStringLink = "{{" + sentIdString + "}}";
+  let sentReaderLink = "";
   if (_display_sbs == 0) {//逐段模式
-    let sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph;
+    sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph;
   }
   else {//逐句模式
-    let sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
+    sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
   }
   output +=
     "<span>" +
@@ -1296,7 +1297,13 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += gLocal.gui.copy_to_clipboard;
   output += "]</a></span>";
   //	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
-  output += "<a href=''>";
+  if (_display_sbs == 0) {//逐段模式
+    output += "<a href='../pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph + "' target='_blank'>";
+  }
+  else {//逐句模式
+    output += "<a href='../pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd + "' target='_blank'>";
+  }
+  output += "[" + gLocal.gui.scan_in_reader + "]";
   output += "</a>";
   output += "<guide gid='sent_func' style='margin:unset;'></guide>";
   output += "</div>";
@@ -1537,6 +1544,9 @@ function renderWordParBlockInner(elementBlock) {
           "')\">[";
         output += gLocal.gui.copy_to_clipboard;
         output += "]</a></span>";
+        output += "<a href='../pcdl/reader.php?view=sent&book=" + book + "&para=" + paragraph + "&begin=" + nextBegin + "&end=" + nextEnd + "' target='_blank'>";
+        output += "[" + gLocal.gui.scan_in_reader + "]";
+        output += "</a>";
         output += "<guide gid='sent_func' style='margin:unset;'></guide>";
         output += "</div>";
 
