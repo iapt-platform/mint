@@ -35,6 +35,12 @@ include "../pcdl/html_head.php";
     #main_tag .select{
         border-bottom: 2px solid var(--link-color);
     }
+    tag{
+        background-color: var(--btn-color);
+    margin: 0 0.5em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    }
 </style>
 <?php
 //
@@ -54,7 +60,7 @@ echo '<div id="main_tag"  style="">';
 echo '<span tag="sutta">Sutta</span><span tag="vinaya">Vinaya</span><span tag="abhidhamma">Abhidhamma</span>';
 echo '<span tag="mula">Mula</span><span tag="atthakatha">Aṭṭhakathā</span><span tag="tika">ṭīkā</span><span tag="anna">anna</span>';
 echo '</div>';
-echo '<div id="tag_selected" class="summary"  style="padding-bottom:5px;"></div>';
+echo '<div id="tag_selected" class="summary"  style="padding-bottom:5px;margin:0.5em 0;"></div>';
 echo '<div id="tag_others" class="summary"  style="padding-bottom:5px;"></div>';
 echo "</div>";
 echo '</div>';
@@ -156,7 +162,7 @@ echo '</div>';
   function render_tag_list(){
     let strListTag = "已经选择：";
       for (const iterator of list_tag) {
-        strListTag +="<button >"+iterator+"<span onclick =\"tag_remove('"+iterator+"')\">X</span></button>";
+        strListTag +="<tag>"+iterator+"<span onclick =\"tag_remove('"+iterator+"')\">X</span></tag>";
       }
       $("#tag_selected").html(strListTag);
   }
