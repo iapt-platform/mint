@@ -36,10 +36,16 @@ include "../pcdl/html_head.php";
         border-bottom: 2px solid var(--link-color);
     }
     tag{
-        background-color: var(--btn-color);
+    background-color: var(--btn-color);
     margin: 0 0.5em;
-    padding: 3px 10px;
+    padding: 3px 5px;
     border-radius: 4px;
+    display:inline-flex;
+    border: 1.5px solid;
+    border-color: #707070;
+    }
+    tag .icon:hover{
+        background-color: silver;
     }
 </style>
 <?php
@@ -57,8 +63,13 @@ echo "<div class='index_inner '>";
 echo "<div style='font-size:140%'>";
 echo "</div>";
 echo '<div id="main_tag"  style="">';
-echo '<span tag="sutta">Sutta</span><span tag="vinaya">Vinaya</span><span tag="abhidhamma">Abhidhamma</span>';
-echo '<span tag="mula">Mula</span><span tag="atthakatha">Aṭṭhakathā</span><span tag="tika">ṭīkā</span><span tag="anna">anna</span>';
+echo '<span tag="sutta">Sutta</span>';
+echo '<span tag="vinaya">Vinaya</span>';
+echo '<span tag="abhidhamma">Abhidhamma</span>';
+echo '<span tag="mūla">Mūla</span>';
+echo '<span tag="aṭṭhakathā">Aṭṭhakathā</span>';
+echo '<span tag="ṭīkā">ṭīkā</span>';
+echo '<span tag="añña">añña</span>';
 echo '</div>';
 echo '<div id="tag_selected" class="summary"  style="padding-bottom:5px;margin:0.5em 0;"></div>';
 echo '<div id="tag_others" class="summary"  style="padding-bottom:5px;"></div>';
@@ -181,7 +192,12 @@ $("#tag_input").keypress(function(){
   function render_tag_list(){
     let strListTag = "已经选择：";
       for (const iterator of list_tag) {
-        strListTag +="<tag>"+iterator+"<span onclick =\"tag_remove('"+iterator+"')\">X</span></tag>";
+        strListTag +="<tag><span style='margin-right: 5px; font-weight: bold;'>"+iterator+"</span>";
+        strListTag +="<span style='display: contents;' onclick =\"tag_remove('"+iterator+"')\">";
+        strListTag +="<svg t= '1598638386903' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1223' width='16' height='16'>";
+        strListTag += "<path fill='#707070' p-id='1224' d='M512 620.544l253.3376 253.3376a76.6976 76.6976 0 1 0 108.544-108.544L620.6464 512l253.2352-253.3376a76.6976 76.6976 0 1 0-108.544-108.544L512 403.3536 258.6624 150.1184a76.6976 76.6976 0 1 0-108.544 108.544L403.3536 512 150.1184 765.3376a76.6976 76.6976 0 1 0 108.544 108.544L512 620.6464z' >";
+        strListTag +="</path></svg>";
+        strListTag +="</span></tag>";
       }
       strListTag += "<div style='display:inline-block;width:20em;'><input id='tag_input' type='input' placeholder='tag' size='20'  /></div>";
       $("#tag_selected").html(strListTag);
