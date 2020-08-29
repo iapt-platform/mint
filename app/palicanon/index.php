@@ -105,7 +105,7 @@ echo '</div>';
         }
         */
   });
-
+  var allTags = new Array();
   function tag_changed(){
     let strTags = "";
       if(list_tag.length>0){
@@ -122,11 +122,13 @@ echo '</div>';
             function(data,status){
                 let arrBookList = JSON.parse(data);
                 let html="";
-                let allTags = new Array();
+                allTags = new Array();
                 for (const iterator of arrBookList) {
                     html += "<div style='width:25%;padding:0.5em;'>";
                     html += "<div class='card' style='padding:10px;'>";
-                    html += "<div style='font-weight:700'>"+iterator[0].title+"</div>";
+                    html += "<div style='font-weight:700'><a href='../pcdl/reader.php?view=chapter&book="+iterator[0].book+"&para="+iterator[0].para+"' target = '_blank'>"+iterator[0].title+"</a></div>";
+                    html += "<div style=''>book:"+iterator[0].book+" para:"+iterator[0].para+"</div>";
+                    html += "<div style=''>tag:"+ iterator[0].tag+"</div>";
                     html += "</div>";
                     html += "</div>";
                     let tags = iterator[0].tag.split("::");
@@ -153,20 +155,37 @@ echo '</div>';
                         }
                     }
                 }
+                allTags.sort(sortNumber);
+                tag_render_others();
                 $("#book_list").html(html);
-                let strOthersTag = "";
-                for (const key in allTags) {
-                    if (allTags.hasOwnProperty(key)) {
-                        strOthersTag += "<button onclick =\"tag_click('"+key+"')\" >"+key+"</button>";
-                    }
-                }
-                $("#tag_others").html(strOthersTag);
+
             });
+  }
+
+$("#tag_input").keypress(function(){
+    tag_render_others();
+});
+  function tag_render_others(){
+    let strOthersTag = "";
+    for (const key in allTags) {
+        if (allTags.hasOwnProperty(key)) {
+            if($("#tag_input").val().length>0){
+                if(key.indexOf($("#tag_input").val())>=0){
+                    strOthersTag += "<button onclick =\"tag_click('"+key+"')\" >"+key+"</button>";
+                }
+            }
+            else{
+                strOthersTag += "<button onclick =\"tag_click('"+key+"')\" >"+key+"</button>";
+            }
+            
+        }
+    }
+    $("#tag_others").html(strOthersTag);
+
   }
   function tag_click(tag){
     list_tag.push(tag);
     render_tag_list();
-    let strTag = main_tag + "," + list_tag.join();
     tag_changed();
   }
 
@@ -180,6 +199,7 @@ echo '</div>';
         strListTag +="</path></svg>";
         strListTag +="</span></tag>";
       }
+      strListTag += "<div style='display:inline-block;width:20em;'><input id='tag_input' type='input' placeholder='tag' size='20'  /></div>";
       $("#tag_selected").html(strListTag);
   }
 
@@ -192,6 +212,11 @@ echo '</div>';
       render_tag_list();
       tag_changed();
   }
+
+function sortNumber(a, b)
+{
+    return b -a;
+}
 </script>
 <?php
 include "../pcdl/html_foot.php";
