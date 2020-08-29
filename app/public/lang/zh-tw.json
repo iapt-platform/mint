@@ -467,6 +467,9 @@
 		"scan_in_reader": "去藏經閣中閱覽",
 		"selected": "已選",
 		"to_be_selected": "待選",
+		"text_without_title": "有正文缺標題",
+		"end_of_text": "到底啦",
+		"begin_of_text": "到頂啦",
 		"": ""
 	},
 	"grammastr": [
