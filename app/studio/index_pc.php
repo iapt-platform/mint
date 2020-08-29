@@ -123,18 +123,18 @@ require_once '../studio/index_head.php';
 									<input type="input" name="op" value="create" />
 									<textarea id="project_new_res_data" rows="3" cols="18" name="data"></textarea><br>
 								</div>
-								<input type="submit" value="立即编辑" />
+								<input type="submit" value=<?php  echo $_local->gui->edit_now?> />
 							</form>
 							<!--
 							<button onclick="book_res_edit_now(1)">
 								<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_assignment_returned"></use></svg>
 								<?php echo $module_gui_str['editor_wizard']['1013'];?>
 							</button>
-							-->
+							
 							<button  onclick="explorer_res_add_to_list()">
 								<svg class="icon" viewBox="0 0 24 24" id="ic_add_shopping_cart_24px" ><path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-9.83-3.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4h-.01l-1.1 2-2.76 5H8.53l-.13-.27L6.16 6l-.95-2-.94-2H1v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.13 0-.25-.11-.25-.25z"></path></svg>
 								添加到编辑列表
-							</button>
+							</button>-->
 						</div>
 					</div>
 					<div id="wizard_palicannon_par_select_text_body">
@@ -151,11 +151,15 @@ require_once '../studio/index_head.php';
 		
 </div>
 	<!--  Tool bar on right side -->
-	<div class="right_tool_btn">
-		<button ><a href="#toc_root">
-		<svg class="icon">
-    		<use xlink:href="svg/icon.svg#ic_move_to_inbox"></use>
-		</svg>
+	<div id="tool_btn" class="right_tool_btn" style="display: none;">
+		<button style="border: 2px solid var(--nocolor); background-color: unset;"><a href="#toc_root">
+			<svg t="1596888255722" class="icon" style="height: 3em; width: 3em;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4368" width="200" height="200">
+				<path d="M510.4 514.2m-449.2 0a449.2 449.2 0 1 0 898.4 0 449.2 449.2 0 1 0-898.4 0Z" fill="#8a8a8a" p-id="4369"></path>
+				<path d="M719.4 314.5h-416c-8.5 0-15.4-6.9-15.4-15.4v-4.8c0-8.5 6.9-15.4 15.4-15.4h416.1c8.5 0 15.4 6.9 15.4 15.4v4.8c-0.1 8.4-7 15.4-15.5 15.4z" fill="#ffffff" p-id="4370"></path>
+				<path d="M494.1 735.1v-416c0-8.5 6.9-15.4 15.4-15.4h4.8c8.5 0 15.4 6.9 15.4 15.4v416.1c0 8.5-6.9 15.4-15.4 15.4h-4.8c-8.4-0.1-15.4-7-15.4-15.5z" fill="#ffffff" p-id="4371"></path>
+				<path d="M672.5 503.1l-165-165c-6-6-6-15.8 0-21.7l3.4-3.4c6-6 15.8-6 21.7 0l165 165c6 6 6 15.8 0 21.7l-3.4 3.4c-6 6-15.7 6-21.7 0z" fill="#ffffff" p-id="4372"></path>
+				<path d="M325.2 478l165-165c6-6 15.8-6 21.7 0l3.4 3.4c6 6 6 15.8 0 21.7l-165 165c-6 6-15.8 6-21.7 0l-3.4-3.4c-5.9-6-5.9-15.7 0-21.7z" fill="#ffffff" p-id="4373"></path>
+			</svg>
 		</a>
 		</button>
 	</div>
@@ -191,7 +195,45 @@ require_once '../studio/index_head.php';
 		</div>
 	</div>
 	<!--  Tool bar on right side end -->
-	
+	<script>
+	 window.addEventListener('scroll',winScroll);
+	function winScroll(e){ 
+		if(GetPageScroll().y>150){
+			$("#search_toolbar_1").css("top",0) ;
+		}
+		else{
+			$("#search_toolbar_1").css("top",GetPageScroll().y - 150) ;
+		}
+		if(GetPageScroll().y>$(window).height()*0.9){
+			$("#tool_btn").show();
+		}
+		else{
+			$("#tool_btn").hide();
+		}
+		
+	}
+ //滚动条位置
+function GetPageScroll() 
+{ 
+	var pos=new Object();
+	var x, y; 
+	if(window.pageYOffset) 
+	{	// all except IE	
+		y = window.pageYOffset;	
+		x = window.pageXOffset; 
+	} else if(document.documentElement && document.documentElement.scrollTop) 
+	{	// IE 6 Strict	
+		y = document.documentElement.scrollTop;	
+		x = document.documentElement.scrollLeft; 
+	} else if(document.body) {	// all other IE	
+		y = document.body.scrollTop;	
+		x = document.body.scrollLeft;   
+	} 
+	pos.x=x;
+	pos.y=y;
+	return(pos);
+}
+	</script>	
 	<?php
 require_once '../studio/index_foot.php';
 ?>

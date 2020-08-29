@@ -8,6 +8,7 @@ require_once '../public/load_lang.php';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
 	<link type="text/css" rel="stylesheet" href="css/reader.css"/>
 	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:767px)">
 	<title id="page_title">PCD Reader</title>
@@ -174,7 +175,7 @@ para:hover{
 				</button>
 			</div>
 			<div>
-				<span id="tool_bar_title"><?php echo $_local->gui->title; ?></span>
+				<span id="tool_bar_title" style="font-family: 'Noto Serif';"><?php echo $_local->gui->title; ?></span>
 			</div>
 			<div style="display: flex;">
 				<form action="../studio/project.php" method="post" onsubmit="return pali_canon_edit_now(this)" target="_blank" style="display: inline-block;">
@@ -360,7 +361,7 @@ else{
 				if($tocMinLevel==0){
 					if($value["level"]>$tocMaxLevel){
 						$tocMinLevel = $value["level"];
-						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
+						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
 					}
 					else{
 						$tocHtml .= "</div></div><div class='toc_1 {$classCurrToc}'>";
@@ -374,7 +375,7 @@ else{
 						$tocHtml .= "<div  class='toc_1_title {$classCurrToc}'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2' >";
 					}
 					else if($value["level"] == $tocMinLevel){
-						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
+						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
 					}
 				}
 
@@ -436,32 +437,38 @@ else{
 				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_next' ";
 				$FetchPara = PDO_FetchAll($query);
 				if(count($FetchPara)>0){
-					$next_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_next}'><span id='para_nav_next'>{$FetchPara[0]["toc"]}</span><span  id='para_nav_next_a'>";
+					$next_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_next}&display={$_display}'><span id='para_nav_next'>{$FetchPara[0]["toc"]}</span><span  id='para_nav_next_a'>";
 					$next_para_link .= "<svg t='1598093121925' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4451' width='32px' height='32px'><path d='M540.5696 102.4c-225.83296 0-409.6 183.74656-409.6 409.6s183.76704 409.6 409.6 409.6c225.85344 0 409.6-183.74656 409.6-409.6s-183.74656-409.6-409.6-409.6z m180.14208 439.84896l-109.19936 128.59392a46.65344 46.65344 0 0 1-65.86368 5.36576 46.71488 46.71488 0 0 1-5.38624-65.8432l43.86816-51.63008h-188.12928a46.6944 46.6944 0 1 1 0-93.42976h188.12928l-43.86816-51.63008a46.75584 46.75584 0 0 1 71.24992-60.47744l109.19936 128.59392c14.82752 17.408 14.82752 43.008 0 60.45696z' p-id='4452' fill='#757AF7'></path></svg>";
 					$next_para_link .= "</span></a>";
 				}
 				else{
-					$next_para_link = "没有查询到标题";
+					$next_para_link = $_local->gui->text_without_title;
 				}
 			}
 			else{
-				$next_para_link = "没了";
+				$next_para_link = $_local->gui->end_of_text;
 			}
 
 			if($par_prev != -1){
 				$query = "select paragraph , toc from 'pali_text' where book='$book' and paragraph='$par_prev' ";
 				$FetchPara = PDO_FetchAll($query);
 				if(count($FetchPara)>0){
-					$prev_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}'><span id='para_nav_prev_a'>";
+					$prev_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}&display={$_display}'><span id='para_nav_prev_a'>";
 					$prev_para_link .= "<svg t='1598093521111' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4644' width='32' height='32'><path d='M540.5696 102.4c-225.83296 0-409.6 183.74656-409.6 409.6s183.76704 409.6 409.6 409.6c225.85344 0 409.6-183.74656 409.6-409.6s-183.74656-409.6-409.6-409.6z m144.54784 456.31488h-188.12928l43.84768 51.63008a46.6944 46.6944 0 0 1-35.59424 76.96384 46.55104 46.55104 0 0 1-35.61472-16.4864l-109.24032-128.59392a46.71488 46.71488 0 0 1 0-60.47744l109.24032-128.59392a46.6944 46.6944 0 1 1 71.20896 60.47744l-43.84768 51.63008h188.12928a46.6944 46.6944 0 1 1 0 93.45024z' p-id='4645' fill='#757AF7'></path></svg>";
-					$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+					if($FetchPara[0]["toc"]==""){
+						$prev_para_link .= "</span><span id='para_nav_prev'>（{$_local->gui->text_without_title}）</span></a>";
+
+					}
+					else{
+						$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+					}
 				}
 				else{
-					$prev_para_link = "没有查询到标题";
+					$prev_para_link = $_local->gui->text_without_title;
 				}
 			}
 			else{
-				$prev_para_link = "没了";
+				$prev_para_link = $_local->gui->begin_of_text;
 			}			
 		}
 
@@ -475,7 +482,7 @@ else{
 	}
 
 	if($currLevel<$tocMinLevel){
-		echo "请选择章节";
+		echo $_local->gui->chapter_select;
 	}
 	else{
 	//上一级
@@ -735,7 +742,7 @@ else{
 				</div>
 			</div>
 			
-		<div class='toc' id='leftmenuinnerinner'>	
+		<div class='toc' id='leftmenuinnerinner' style="font-family: 'Noto Serif';">	
 			<!-- toc begin -->
 			<div class="menu" id="menu_toc">
 				<a name="_Content" ></a>

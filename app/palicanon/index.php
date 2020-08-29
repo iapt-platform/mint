@@ -190,7 +190,7 @@ $("#tag_input").keypress(function(){
   }
 
   function render_tag_list(){
-    let strListTag = "已经选择：";
+    let strListTag = gLocal.gui.selected+"：";
       for (const iterator of list_tag) {
         strListTag +="<tag><span style='margin-right: 5px; font-weight: bold;'>"+iterator+"</span>";
         strListTag +="<span style='display: contents;' onclick =\"tag_remove('"+iterator+"')\">";
