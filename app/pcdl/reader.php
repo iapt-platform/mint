@@ -443,7 +443,13 @@ else{
 				if(count($FetchPara)>0){
 					$prev_para_link = "<a href='reader.php?view={$_view}&book={$book}&para={$par_prev}&display={$_display}'><span id='para_nav_prev_a'>";
 					$prev_para_link .= "<svg t='1598093521111' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4644' width='32' height='32'><path d='M540.5696 102.4c-225.83296 0-409.6 183.74656-409.6 409.6s183.76704 409.6 409.6 409.6c225.85344 0 409.6-183.74656 409.6-409.6s-183.74656-409.6-409.6-409.6z m144.54784 456.31488h-188.12928l43.84768 51.63008a46.6944 46.6944 0 0 1-35.59424 76.96384 46.55104 46.55104 0 0 1-35.61472-16.4864l-109.24032-128.59392a46.71488 46.71488 0 0 1 0-60.47744l109.24032-128.59392a46.6944 46.6944 0 1 1 71.20896 60.47744l-43.84768 51.63008h188.12928a46.6944 46.6944 0 1 1 0 93.45024z' p-id='4645' fill='#757AF7'></path></svg>";
-					$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+					if($FetchPara[0]["toc"]==""){
+						$prev_para_link .= "</span><span id='para_nav_prev'>（{$_local->gui->text_without_title}）</span></a>";
+
+					}
+					else{
+						$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
+					}
 				}
 				else{
 					$prev_para_link = $_local->gui->text_without_title;
