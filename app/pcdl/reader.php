@@ -120,6 +120,7 @@ para:hover{
 .toc_1{
 	padding: 5px;
     cursor: pointer;
+	border-left: 2px solid #aaaaaa;
 }
 .toc_1_title{
 	font-weight:700;
@@ -130,7 +131,8 @@ para:hover{
 	display:none;
 }
 .curr_chapter{
-	background-color:#e1e1e1;
+	border-color: #4d4dff;
+	color: #4d4dff;
 }
 .toc_curr_chapter2{
 	display:block;
@@ -143,14 +145,21 @@ para:hover{
 .toc_title2 a:hover{
 	text-decoration: underline;
 }
-.curr_chapter_title2{
-	background-color:#F1CA23;
+.curr_chapter_title2 a{
+	color:#4d4dff;
 }
 #leftmenuinner{
 	width: 17em;
+		overflow-y: scroll;
+		border-right: unset;	
 }
 #leftmenuinnerinner{
-	overflow-y: scroll;
+
+}
+#leftmenuinnerinner{
+	margin-left: 2em;
+    font-size: 0.8em;
+	border-right: unset;
 }
 .sent_toc{
 	font-weight:700;
@@ -355,14 +364,14 @@ else{
 					}
 					else{
 						$tocHtml .= "</div></div><div class='toc_1 {$classCurrToc}'>";
-						$tocHtml .= "<div class='toc_1_title'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2'>";
+						$tocHtml .= "<div class='toc_1_title {$classCurrToc}'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2'>";
 					}
 					
 				}
 				else{
 					if($value["level"] == $tocMaxLevel){
 						$tocHtml .= "</div></div><div class='toc_1 {$classCurrToc}'>";
-						$tocHtml .= "<div  class='toc_1_title'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2' >";
+						$tocHtml .= "<div  class='toc_1_title {$classCurrToc}'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2' >";
 					}
 					else if($value["level"] == $tocMinLevel){
 						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
@@ -378,6 +387,9 @@ else{
 			}
 			echo "    </div></div>";
 		}
+
+		$htmlToc2 .= "<div><a href='#nav_foot'>导航</a></div>";
+		$htmlToc2 .= "<div><a href='#sim_doct'>相关文档</a></div>";
 
 		//获取段落信息 如 父段落 下一个段落等
 
@@ -642,7 +654,7 @@ else{
 
 		//查询句子译文内容结束
 
-	echo "<div id='para_nav'>";
+	echo "<div id='para_nav'><a name='nav_foot'></a>";
 	echo "<div style='display:inline-flex;'>";
 	echo "<svg t='1598094361320' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4933' width='32' height='32'><path d='M698.75712 684.4416a81.92 81.92 0 0 1-124.88704 106.06592l-191.488-225.4848a81.89952 81.89952 0 0 1 0-106.06592l191.488-225.4848a81.92 81.92 0 0 1 124.88704 106.06592l-146.45248 172.46208 146.45248 172.4416z' p-id='4934' fill='#757AF7'></path></svg>";
 	echo "$prev_para_link</div>";
@@ -656,6 +668,15 @@ else{
 
 
 ?>
+
+<a name="sim_doc"></div>
+<div>
+
+<div>相关文档</div>
+<ul>
+
+</ul>
+</div>
 
 	</div><!--main_text_view end-->
 
@@ -694,6 +715,7 @@ else{
 		echo $htmlToc2; 
 	}
 	?>
+
 	</div>
 
 	</div>
