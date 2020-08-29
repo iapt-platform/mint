@@ -352,7 +352,7 @@ else{
 				if($tocMinLevel==0){
 					if($value["level"]>$tocMaxLevel){
 						$tocMinLevel = $value["level"];
-						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
+						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
 					}
 					else{
 						$tocHtml .= "</div></div><div class='toc_1 {$classCurrToc}'>";
@@ -366,7 +366,7 @@ else{
 						$tocHtml .= "<div  class='toc_1_title'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2' >";
 					}
 					else if($value["level"] == $tocMinLevel){
-						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}'>{$value["toc"]}</a></div>";
+						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
 					}
 				}
 
@@ -430,11 +430,11 @@ else{
 					$next_para_link .= "</span></a>";
 				}
 				else{
-					$next_para_link = "没有查询到标题";
+					$next_para_link = $_local->gui->text_without_title;
 				}
 			}
 			else{
-				$next_para_link = "没了";
+				$next_para_link = $_local->gui->end_of_text;
 			}
 
 			if($par_prev != -1){
@@ -446,11 +446,11 @@ else{
 					$prev_para_link .= "</span><span id='para_nav_prev'>{$FetchPara[0]["toc"]}</span></a>";
 				}
 				else{
-					$prev_para_link = "没有查询到标题";
+					$prev_para_link = $_local->gui->text_without_title;
 				}
 			}
 			else{
-				$prev_para_link = "没了";
+				$prev_para_link = $_local->gui->begin_of_text;
 			}			
 		}
 
@@ -464,7 +464,7 @@ else{
 	}
 
 	if($currLevel<$tocMinLevel){
-		echo "请选择章节";
+		echo $_local->gui->chapter_select;
 	}
 	else{
 	//上一级
