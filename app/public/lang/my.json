@@ -463,6 +463,8 @@
 		"comment": "comments",
 		"my_term": "my term",
 		"scan_in_reader": "scan in reader",
+		"selected": "selected",
+		"to_be_selected": "to be selected",
 		"": "",
 		"": ""
 	},
