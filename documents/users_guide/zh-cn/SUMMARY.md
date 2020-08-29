@@ -29,3 +29,7 @@
   * [协作消息](studio_message.md)
   * [句子编号](sent_func.md)
 * [圣书院](academy.md)
+
+## 下载页
+如果字体不正常可以下载此开源字体包：
+百度网盘：[链接](https://pan.baidu.com/s/1LXJ1Tc5IaiaAeJwLm5gajg)   提取码：pali
