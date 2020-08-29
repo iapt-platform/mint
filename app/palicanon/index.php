@@ -128,7 +128,7 @@ echo '</div>';
                     html += "<div class='card' style='padding:10px;'>";
                     html += "<div style='font-weight:700'><a href='../pcdl/reader.php?view=chapter&book="+iterator[0].book+"&para="+iterator[0].para+"' target = '_blank'>"+iterator[0].title+"</a></div>";
                     html += "<div style=''>book:"+iterator[0].book+" para:"+iterator[0].para+"</div>";
-                    html += "<div style=''>tag:"+ iterator[0].tag+"</div>";
+                    html += "<div style='overflow-wrap: anywhere;'>tag="+ iterator[0].tag+"</div>";
                     html += "</div>";
                     html += "</div>";
                     let tags = iterator[0].tag.split("::");

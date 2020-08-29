@@ -8,7 +8,7 @@ $output = array();
 foreach ($arrBookTag as $bookkey => $bookvalue) {
     $isfind = 0;
     foreach ($tag as $tagkey => $tagvalue) {
-        if(strpos($bookvalue->tag,$tagvalue) !== FALSE){
+        if(strpos($bookvalue->tag,':'.$tagvalue.':') !== FALSE){
             $isfind++;
         }
     }
