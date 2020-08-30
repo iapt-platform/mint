@@ -1529,7 +1529,7 @@ function renderWordParBlockInner(elementBlock) {
           "','" +
           word_id +
           "')\"><span id='' class=\"word_msg\">issue</span></span>";
-        sent_begin = word_id;
+        //
         output += "</div>";
         output += "<div class='translate_sent_head_content'>";
         //句子预览
@@ -1587,6 +1587,8 @@ function renderWordParBlockInner(elementBlock) {
         //逐句翻译块结束
 
         output += "</div>"; //逐句块结束
+
+        sent_begin = word_id + 1;
         //下一个逐句块开始
         output += "<div class='sent_wbw_trans'>";
         //output += output += render_sent_tool_bar(elementBlock,word_id);
