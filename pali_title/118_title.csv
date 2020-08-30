@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p118,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p118,2,100,nikaya,,Khuddakanikāye
 NULL,p118,3,1,book,Mahāniddesa-aṭṭhakathā,Mahāniddesa-aṭṭhakathā
-NULL,p118,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p118,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p118,5,100,gatha1,,"Avijjālaṅgiṃ  ghātento, nandirāgañca mūlato;"
 NULL,p118,6,100,gathalast,,"Bhāventaṭṭhaṅgikaṃ maggaṃ, phusi yo amataṃ padaṃ."
 NULL,p118,7,100,gatha1,,"Pāpuṇitvā jino bodhiṃ, migadāyaṃ vigāhiya;"

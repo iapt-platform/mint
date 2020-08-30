@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p32,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p32,2,1,chapter,Suttantanīti,Suttantanīti
 NULL,p32,3,8,hangnum,1.,1.

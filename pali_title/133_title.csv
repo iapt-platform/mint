@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p133,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p133,2,100,nikaya,,Saṃyuttanikāye
 NULL,p133,3,1,book,"(SN) Sagāthāvagga-aṭṭhakathā",Sagāthāvagga-aṭṭhakathā
 NULL,p133,4,2,chapter,Ganthārambhakathā,Ganthārambhakathā
-NULL,p133,5,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p133,5,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p133,6,100,gatha1,,"Karuṇāsītalahadayaṃ, paññāpajjotavihatamohatamaṃ;"
 NULL,p133,7,100,gathalast,,"Sanarāmaralokagaruṃ, vande sugataṃ gativimuttaṃ."
 NULL,p133,8,100,gatha1,,"Buddhopi buddhabhāvaṃ, bhāvetvā ceva sacchikatvā ca;"

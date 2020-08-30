@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p122,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p122,2,100,nikaya,,Khuddakanikāye
 NULL,p122,3,1,book,Dhammapada-aṭṭhakathā,Dhammapada-aṭṭhakathā
 NULL,p122,4,100,title,,"(Paṭhamo bhāgo)"
-NULL,p122,5,4,subhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p122,5,2,subhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p122,6,8,hangnum,1.,1.
 NULL,p122,7,100,gatha1,," Mahāmohatamonaddhe, loke lokantadassinā;"
 NULL,p122,8,100,gathalast,,"Yena saddhammapajjoto, jālito jalitiddhinā."

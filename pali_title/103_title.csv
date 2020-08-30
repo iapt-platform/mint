@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p103,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p103,2,100,nikaya,,Dīghanikāye
 NULL,p103,3,1,book,"(DN) Sīlakkhandhavaggaṭṭhakathā",Sīlakkhandhavaggaṭṭhakathā
 NULL,p103,4,2,chapter,Ganthārambhakathā,Ganthārambhakathā
-NULL,p103,5,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p103,5,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p103,6,100,gatha1,,"Karuṇāsītalahadayaṃ, paññāpajjotavihatamohatamaṃ;"
 NULL,p103,7,100,gathalast,,"Sanarāmaralokagaruṃ, vande sugataṃ gativimuttaṃ."
 NULL,p103,8,100,gatha1,,"Buddhopi buddhabhāvaṃ, bhāvetvā ceva sacchikatvā ca;"
@@ -36,9 +36,9 @@ NULL,p103,34,100,gatha1,,"‘‘Majjhe visuddhimaggo, esa catunnampi āgamānañ
 NULL,p103,35,100,gathalast,,"Ṭhatvā pakāsayissati, tattha yathā bhāsitaṃ atthaṃ’’."
 NULL,p103,36,100,gatha1,,"Icceva kato tasmā, tampi gahetvāna saddhimetāya;"
 NULL,p103,37,100,gathalast,,"Aṭṭhakathāya vijānatha, dīghāgamanissitaṃ atthanti."
-NULL,p103,38,5,subsubhead,Nidānakathā,Nidānakathā
+NULL,p103,38,3,subsubhead,Nidānakathā,Nidānakathā
 NULL,p103,39,100,bodytext,,"Tattha dīghāgamo nāma sīlakkhandhavaggo, mahāvaggo, pāthikavaggoti vaggato tivaggo hoti; suttato catuttiṃsasuttasaṅgaho. Tassa vaggesu sīlakkhandhavaggo ādi, suttesu brahmajālaṃ. Brahmajālassāpi ‘‘evaṃ  me suta’’ntiādikaṃ āyasmatā ānandena paṭhamamahāsaṅgītikāle vuttaṃ nidānamādi."
-NULL,p103,40,4,subhead,Paṭhamamahāsaṅgītikathā,Paṭhamamahāsaṅgītikathā
+NULL,p103,40,3,subhead,Paṭhamamahāsaṅgītikathā,Paṭhamamahāsaṅgītikathā
 NULL,p103,41,100,bodytext,,"Paṭhamamahāsaṅgīti nāma cesā kiñcāpi vinayapiṭake tantimārūḷhā, nidānakosallatthaṃ pana idhāpi evaṃ veditabbā. Dhammacakkappavattanañhi ādiṃ katvā yāva subhaddaparibbājakavinayanā katabuddhakicce, kusinārāyaṃ upavattane mallānaṃ sālavane yamakasālānamantare visākhapuṇṇamadivase paccūsasamaye anupādisesāya nibbānadhātuyā parinibbute bhagavati lokanāthe, bhagavato dhātubhājanadivase sannipatitānaṃ sattannaṃ bhikkhusatasahassānaṃ saṅghatthero āyasmā mahākassapo sattāhaparinibbute bhagavati subhaddena vuḍḍhapabbajitena – ‘‘alaṃ, āvuso, mā socittha, mā paridevittha, sumuttā mayaṃ tena mahāsamaṇena, upaddutā ca homa – ‘idaṃ vo kappati, idaṃ vo na kappatī’ti, idāni pana mayaṃ yaṃ icchissāma, taṃ karissāma, yaṃ na icchissāma na taṃ karissāmā’’ti (cūḷava. 437) vuttavacanamanussaranto, īdisassa ca saṅghasannipātassa puna dullabhabhāvaṃ maññamāno, ‘‘ṭhānaṃ  kho panetaṃ vijjati, yaṃ pāpabhikkhū ‘atītasatthukaṃ pāvacana’nti maññamānā  pakkhaṃ labhitvā nacirasseva saddhammaṃ antaradhāpeyyuṃ, yāva ca dhammavinayo tiṭṭhati, tāva anatītasatthukameva pāvacanaṃ hoti. Vuttañhetaṃ bhagavatā –"
 NULL,p103,42,100,indent,,"‘Yo vo, ānanda, mayā dhammo ca vinayo ca desito paññatto, so vo mamaccayena satthā’ti (dī. ni. 2.216)."
 NULL,p103,43,100,bodytext,,"‘Yaṃnūnāhaṃ dhammañca vinayañca saṅgāyeyyaṃ, yathayidaṃ sāsanaṃ addhaniyaṃ assa ciraṭṭhitikaṃ’."

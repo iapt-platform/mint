@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p190,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p190,2,100,nikaya,,Khuddakanikāye
 NULL,p190,3,1,book,Nettippakaraṇa-ṭīkā,Nettippakaraṇa-ṭīkā
-NULL,p190,4,5,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p190,4,3,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p190,5,100,bodytext,,"Saṃvaṇṇanārambhe  (dī. ni. ṭī. 1.ganthārambhakathāvaṇṇanā; ma. ni. ṭī. 1.1 ganthārambhakathāvaṇṇanā; saṃ. ni. ṭī. 1.1.1 ganthārambhakathāvaṇṇanā) ratanattayavandanā saṃvaṇṇetabbassa dhammassa pabhavanissayavisuddhipaṭivedanatthaṃ, taṃ pana dhammasaṃvaṇṇanāsu viññūnaṃ bahumānuppādanatthaṃ, taṃ sammadeva tesaṃ uggahaṇadhāraṇādikkamaladdhabbāya sammāpaṭipattiyā sabbahitasukhanipphādanatthaṃ. Atha vā maṅgalabhāvato, sabbakiriyāsu pubbakiccabhāvato, paṇḍitehi sammācaritabhāvato, āyatiṃ paresaṃ diṭṭhānugatiāpajjanato ca saṃvaṇṇanāyaṃ ratanattayapaṇāmakiriyā. Atha vā ratanattayapaṇāmakaraṇaṃ pūjanīyapūjāpuññavisesanibbattanatthaṃ, taṃ attano yathāladdhasampattinimittassa kammassa balānuppadānatthaṃ, antarā ca tassa asaṅkocanatthaṃ, tadubhayaṃ anantarāyena aṭṭhakathāya parisamāpanatthaṃ. Idameva ca payojanaṃ ācariyena idhādhippetaṃ. Tathā  hi vakkhati ‘‘vandanājanitaṃ…pe… tassa tejasā’’ti. Vatthuttayapūjā hi niratisayapuññakkhettasambuddhiyā aparimeyyappabhāvo puññātisayoti bahuvidhantarāyepi lokasannivāse antarāyanibandhanasakalasaṃkilesaviddhaṃsanāya pahoti, bhayādiupaddavañca nivāreti. Yathāha –"
 NULL,p190,6,100,gatha1,,"‘‘Pūjārahe pūjayato, buddhe yadi va sāvake’’ti. (dha. pa. 195; apa. thera 1.10.1) ca,"
 NULL,p190,7,100,bodytext,,"Tathā  –"

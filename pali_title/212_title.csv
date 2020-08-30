@@ -1,7 +1,7 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p212,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p212,2,1,book,Kaṅkhāvitaraṇīpurāṇa-ṭīkā,Kaṅkhāvitaraṇīpurāṇa-ṭīkā
-NULL,p212,3,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p212,3,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p212,4,100,gatha1,,"Buddhaṃ  dhammañca saṅghanti-ādinā yā pakāsitā;"
 NULL,p212,5,100,gatha2,,"Bhadantabuddhaghosena, mātikāṭṭhakathā subhā;"
 NULL,p212,6,100,gathalast,,"Tassā hi līnapadaṃ vi-kāsanakoyamārambho."
@@ -670,7 +670,7 @@ NULL,p212,668,100,centered,,"Bhikkhunīpātimokkhavaṇṇanā niṭṭhitā."
 NULL,p212,669,100,centered,,"Kaṅkhāvitaraṇīpurāṇaṭīkā niṭṭhitā."
 NULL,p212,670,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p212,671,1,book,Kaṅkhāvitaraṇī-abhinavaṭīkā,Kaṅkhāvitaraṇī-abhinavaṭīkā
-NULL,p212,672,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p212,672,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p212,673,100,gatha1,,"Tilokatilakaṃ  buddhaṃ, vande suddhaguṇākaraṃ;"
 NULL,p212,674,100,gathalast,,"Karuṇāsītalībhūta-hadayaṃ mahitodayaṃ."
 NULL,p212,675,100,gatha1,,"Tenāpi dhammarājena, lokekācariyena yo;"
@@ -686,7 +686,7 @@ NULL,p212,684,100,gatha1,,"Kalyāṇācārayuttena, dhīmatā munisūnunā;"
 NULL,p212,685,100,gathalast,,"Vinayaṭṭhitikāmena, sumedhenābhiyācito."
 NULL,p212,686,100,gatha1,,"Tamahaṃ vaṇṇayissāmi, suvisuddhamanākulaṃ;"
 NULL,p212,687,100,gathalast,,"Sādhavo taṃ nisāmetha, sakkaccaṃ mama bhāsatoti."
-NULL,p212,688,4,subhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p212,688,2,subhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p212,689,100,bodytext,,"Sabbakusaladhammappamukhassa vipuloḷāraguṇavisesāvahassa paramagambhīrassa pātimokkhassa atthasaṃvaṇṇanaṃ kattukāmoyamācariyo paṭhamaṃ tāva ‘‘buddhaṃ dhamma’’ntiādinā ratanattayappaṇāmakaraṇena attano cittasantānaṃ punāti. Visuddhacittasantānanissayā hi paññā tikkhavisadabhāvappattiyā yathādhippetasaṃvaṇṇanāya pariyosānagamanasamatthā hotīti. Apica ratanattayappaṇāmena vidhutasabbakibbise cittasantāne bhavantarūpacitānipi antarāyikakammāni paccayavekallato yathādhippetāya atthasaṃvaṇṇanāya nālamantarāyakaraṇāyātipi ācariyassa ratanattayavandanā."
 NULL,p212,690,100,bodytext,,"Tattha buddhasaddassa tāva ‘‘bujjhitā saccānīti buddho, bodhetā pajāyāti buddho’’tiādinā (mahāni. 192; cūḷani. pārāyanatthutigāthāniddesa 97; paṭi. ma. 1.162) niddesanayena attho veditabbo. Atha vā savāsanāya aññāṇaniddāya accantavigamato, buddhiyā vā vikasitabhāvato buddhavāti buddho jāgaraṇavikasanatthavasena. Atha vā kassacipi ñeyyadhammassa anavabuddhassa abhāvena, ñeyyavisesassa ca kammabhāvena aggahaṇato  kammavacanicchāya abhāvena avagamanatthavaseneva kattuniddeso labbhatīti buddhavāti buddho yathā ‘‘dikkhito na dadātī’’ti. Atthato pana pāramitāparibhāvitena sayambhuñāṇena sahavāsanāya vigataviddhastaniravasesupakkileso mahākaruṇāsabbaññutaññāṇādiaparimeyyaguṇagaṇādhārova khandhasantāno buddho. Yathāha –"
 NULL,p212,691,100,indent,,"‘‘Buddhoti yo so bhagavā sayambhū anācariyako pubbe ananussutesu dhammesu sāmaṃ saccāni abhisambujjhi, tattha ca sabbaññutaṃ patto, balesu ca vasībhāva’’nti (mahāni. 192; cūḷani. pārāyanatthutigāthāniddesa 97; paṭi. ma. 1.161),"

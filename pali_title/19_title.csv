@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p19,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa."
 NULL,p19,2,1,book,Payogasiddhipāḷi,Payogasiddhipāḷi
 NULL,p19,3,2,chapter,"1. Saññādikaṇḍa","1. Saññādikaṇḍa"
 NULL,p19,4,100,centered,,"Siddha-mbatthuṃ sammā vande"
-NULL,p19,5,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p19,5,4,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p19,6,100,gatha1,,"Siddha+miṭṭhadadaṃ  buddhaṃ, dhammaṃ maṇiṃva svatthadaṃ;"
 NULL,p19,7,100,gathalast,,"Saṅghañca sādaraṃ natvā, payogasiddhi vuccate."
 NULL,p19,8,100,gatha1,,"Pabhāvo moggallānassa, byākaraṇe ca peṭake;"
@@ -1295,7 +1295,7 @@ NULL,p19,1293,4,subhead,"14. Cī kriyatthehi","14. Cī kriyatthehi"
 NULL,p19,1294,100,bodytext,,"Cīpaccayanto kriyatthehi syādyantehi sahe+kattho hoti. Amalīnaṃ malīnaṃ karitvāti viggayha ‘‘abhūtatabbhāve karā+sa+bhūyoge vikārācī’’ti cīpaccayekate iminā samāso. Ettha ca-kāro ‘‘cī kriyatthehī’’ti visesanattho. ‘‘Pyo vā tvāssa samāse’’ti pya hoti, pa-kāro ‘‘pye sissā’’ti visesanattho. Malinīkariya."
 NULL,p19,1295,4,subhead,"15. Bhūsanā+darā+nādaresva+laṃ+sā+sāti","15. Bhūsanā+darā+nādaresva+laṃ+sā+sāti"
 NULL,p19,1296,100,bodytext,,"Bhūsanādīsva+tthesva+la+mādayo saddā ekatthā honti. Alaṃ karitvā sakkaritvā asakkaritvāti viggayha samāse  kate pye ca ‘‘sā sādhikarā ca cariccā’’ti cādeso pararūpañca. Alaṃkariya, sakkacca, asakkacca."
-NULL,p19,1297,4,subhead,"16. Aññecā+ti suttena samāse kate… ettha yathā dvāraṃ vivarāti vutte pakaraṇato aggala+miti viññāyati, eva+midhāpi nipātapabhāve aññe cāti sāmaññaṃ ce+ti āgamānusārena labbhamānavibhatyantapaṭirūpanipātāva viññāyanti. Aggato bhavitvā purobhuyya, antarahito hutvā tirobhūya, antaradhānaṃ katvā tirokariya, urasi katvā urasikariya, manasi katvā manasikariya, majjhe katvā majjhekariya, tuṇhī bhavitvā tuṇhī bhūya.","16. Aññecā+ti suttena samāse kate… ettha yathā dvāraṃ vivarāti vutte pakaraṇato aggala+miti viññāyati, eva+midhāpi nipātapabhāve aññe cāti sāmaññaṃ ce+ti āgamānusārena labbhamānavibhatyantapaṭirūpanipātāva viññāyanti. Aggato bhavitvā purobhuyya, antarahito hutvā tirobhūya, antaradhānaṃ katvā tirokariya, urasi katvā urasikariya, manasi katvā manasikariya, majjhe katvā majjhekariya, tuṇhī bhavitvā tuṇhī bhūya."
+NULL,p19,1297,4,subhead,"16. Aññecā+ti suttena samāse kate…","16. Aññecā+ti suttena samāse kate… ettha yathā dvāraṃ vivarāti vutte pakaraṇato aggala+miti viññāyati, eva+midhāpi nipātapabhāve aññe cāti sāmaññaṃ ce+ti āgamānusārena labbhamānavibhatyantapaṭirūpanipātāva viññāyanti. Aggato bhavitvā purobhuyya, antarahito hutvā tirobhūya, antaradhānaṃ katvā tirokariya, urasi katvā urasikariya, manasi katvā manasikariya, majjhe katvā majjhekariya, tuṇhī bhavitvā tuṇhī bhūya."
 NULL,p19,1298,4,subhead,"17. Vā+neka+ññatthe","17. Vā+neka+ññatthe"
 NULL,p19,1299,100,bodytext,,"Anekaṃ syādyantaṃ aññassa padassa atthe ekatthaṃ vā hoti."
 NULL,p19,1300,100,gatha1,,"Padantarassa yassa+ttho, padhānaṃ liṅga+massa ca;"

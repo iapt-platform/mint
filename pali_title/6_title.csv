@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p6,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p6,2,1,chapter,Kamalāñjali,Kamalāñjali
 NULL,p6,3,8,hangnum,1.,1.

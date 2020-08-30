@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p65,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p65,2,1,book,"Visuddhimaggo(Dutiyo bhāgo)",Visuddhimaggo
 NULL,p65,3,4,subhead,"(Dutiyo bhāgo)","(Dutiyo bhāgo)"

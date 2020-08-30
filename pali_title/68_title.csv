@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p68,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa."
 NULL,p68,2,1,book,"Visuddhimagga nidānakathā","Visuddhimagga nidānakathā"
 NULL,p68,3,100,bodytext,,"Visuddhimaggo nāmāyaṃ gantho piṭakattayasārabhūto sakalaloke paṭipattidīpakaganthānaṃ aggo hoti seṭṭho pamukho pāmokkho uttamo pavaro cāti viññūhi pasattho. Tattha hi saṅgītittayārūḷhassa tepiṭakabuddhavacanassa atthaṃ saṃkhipitvā sikkhattayasaṅgahitaṃ brahmacariyaṃ paripuṇṇaṃ pakāsitaṃ suvisadañca. Evaṃ pasatthassetassa visuddhimaggassa nidānakathāyapi bhavitabbameva. Tasmādāni tampakāsanatthamidaṃ pañhakammaṃ vuccati –"

@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p77,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p77,2,100,nikaya,,Abhidhammapiṭake
 NULL,p77,3,1,book,Kathāvatthupāḷi,Kathāvatthupāḷi

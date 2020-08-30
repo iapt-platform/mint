@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p45,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p45,2,1,chapter,"(saṅgayana-puccha vissajjanā) Aṭṭhakathā",Aṭṭhakathā
 NULL,p45,3,4,subhead,"Saṃgāyanassa pucchā-vissajjanā","Saṃgāyanassa pucchā-vissajjanā"

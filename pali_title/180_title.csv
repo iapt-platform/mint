@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p180,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p180,2,1,book,Abhidhammamātikāpāḷi,Abhidhammamātikāpāḷi
 NULL,p180,3,100,bodytext,,"Ekaṃ  samayaṃ bhagavā devesu viharati tāvatiṃsabhavane pāricchattakamūle paṇḍukambalasilāyaṃ. Tatra kho bhagavā devānaṃ tāvatiṃsānaṃ abhidhammakathaṃ kathesi."
@@ -1220,7 +1220,7 @@ NULL,p180,1218,100,gathalast,,"Sattappakaraṇikā bhinnā, dhammasaṅgaṇimā
 NULL,p180,1219,100,centered,,"Abhidhammamātikāpāḷi niṭṭhitā."
 NULL,p180,1220,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p180,1221,1,book,Mohavicchedanī,Mohavicchedanī
-NULL,p180,1222,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p180,1222,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p180,1223,100,gatha1,,"1. Kāruññabhāvitaṃ  yassa, ñāṇacakkhu mahodayaṃ;"
 NULL,p180,1224,100,gathalast,,"Andhabhūtassa lokassa, jātaṃ sāmaññalocanaṃ."
 NULL,p180,1225,100,gatha1,,"2. Taṃ buddhaṃ sugataṃ dhīraṃ, sasaddhammaṃ sasāvakaṃ;"

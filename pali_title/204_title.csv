@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p204,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p204,2,100,nikaya,,Vinayapiṭake
 NULL,p204,3,1,book,"Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)","Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)"
-NULL,p204,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p204,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p204,5,100,gatha1,,"Mahākāruṇikaṃ buddhaṃ, dhammañca vimalaṃ varaṃ;"
 NULL,p204,6,100,gathalast,,"Vande ariyasaṅghañca, dakkhiṇeyyaṃ niraṅgaṇaṃ."
 NULL,p204,7,100,gatha1,,"Uḷārapuññatejena, katvā sattuvimaddanaṃ;"

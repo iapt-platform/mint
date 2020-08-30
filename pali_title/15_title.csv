@@ -1,7 +1,7 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p15,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p15,2,1,book,"Saddanītippakaraṇaṃ (padamālā)","Saddanītippakaraṇaṃ (padamālā)"
-NULL,p15,3,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p15,3,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p15,4,100,gatha1,,"Dhīrehi  magganāyena, yena buddhena desitaṃ;"
 NULL,p15,5,100,gathalast,,"Sitaṃ dhammamidhaññāya, ñāyate amataṃ padaṃ."
 NULL,p15,6,100,gatha1,,"Taṃ namitvā mahāvīraṃ, sabbaññuṃ lokanāyakaṃ;"

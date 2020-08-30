@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p191,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p191,2,100,nikaya,,Khuddakanikāye
 NULL,p191,3,1,book,Nettivibhāvinī,Nettivibhāvinī
-NULL,p191,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p191,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p191,5,100,gatha1,,"Yajitabbaṃ  yajitvāna, namitabbaṃ namāmahaṃ;"
 NULL,p191,6,100,gathalast,,"Yajanādyānubhāvena, antarāye jahaṃ sadā."
 NULL,p191,7,100,gatha1,,"Yena yā racitā netti, yena sā anumoditā;"

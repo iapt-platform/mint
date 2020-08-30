@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p120,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p120,2,100,nikaya,,Khuddakanikāye
 NULL,p120,3,1,book,Paṭisambhidāmagga-aṭṭhakathā,Paṭisambhidāmagga-aṭṭhakathā
 NULL,p120,4,4,title,"(Paṭhamo bhāgo)","(Paṭhamo bhāgo)"
-NULL,p120,5,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p120,5,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p120,6,100,gatha1,,"Yo  sabbalokātigasabbasobhā-"
 NULL,p120,7,100,gatha2,,"Yuttehi sabbehi guṇehi yutto;"
 NULL,p120,8,100,gatha3,,"Dosehi sabbehi savāsanehi,"
