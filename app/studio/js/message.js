@@ -354,6 +354,17 @@ function msg_apply_data(obj) {
             "']"
         ).html(obj.data.text);
 
+        $(
+          "[pcds='sent-net-div'][book='" +
+            book +
+            "'][para='" +
+            para +
+            "'][begin='" +
+            begin +
+            "']"
+        )
+          .find(".author")
+          .html(obj.sender);
         let tranBlock = doc_tran("#" + obj.data.id);
         if (tranBlock == null) {
           tranBlock = doc_tran("#" + obj.data.id, true);
