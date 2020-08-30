@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p96,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p96,2,100,nikaya,,Abhidhammapiṭake
 NULL,p96,3,3,title,"Aṭṭhasālinī nāma","Aṭṭhasālinī nāma"
 NULL,p96,4,1,book,Dhammasaṅgaṇī-aṭṭhakathā,Dhammasaṅgaṇī-aṭṭhakathā
-NULL,p96,5,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p96,5,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p96,6,100,gatha1,,"Karuṇā  viya sattesu, paññā yassa mahesino;"
 NULL,p96,7,100,gathalast,,"Ñeyyadhammesu sabbesu, pavattittha yathāruci."
 NULL,p96,8,100,gatha1,,"Dayāya  tāya sattesu, samussāhitamānaso;"

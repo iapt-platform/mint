@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p109,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p109,2,100,nikaya,,Khuddakanikāye
 NULL,p109,3,1,book,Cariyāpiṭaka-aṭṭhakathā,Cariyāpiṭaka-aṭṭhakathā
-NULL,p109,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p109,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p109,5,100,gatha1,,"Cariyā  sabbalokassa, hitā yassa mahesino;"
 NULL,p109,6,100,gathalast,,"Acinteyyānubhāvaṃ taṃ, vande lokagganāyakaṃ."
 NULL,p109,7,100,gatha1,,"Vijjācaraṇasampannā, yena nīyanti lokato;"

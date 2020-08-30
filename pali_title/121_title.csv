@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p121,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p121,2,100,nikaya,,Khuddakanikāye
 NULL,p121,3,1,book,Nettippakaraṇa-aṭṭhakathā,Nettippakaraṇa-aṭṭhakathā
-NULL,p121,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p121,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p121,5,100,gatha1,,"Mahākāruṇikaṃ nāthaṃ, ñeyyasāgarapāraguṃ;"
 NULL,p121,6,100,gathalast,,"Vande nipuṇagambhīra-vicitranayadesanaṃ."
 NULL,p121,7,100,gatha1,,"Vijjācaraṇasampannā, yena niyyanti lokato;"

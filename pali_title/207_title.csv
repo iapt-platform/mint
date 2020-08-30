@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p207,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p207,2,100,book,,Dvemātikāpāḷi
 NULL,p207,3,1,chapter,Bhikkhupātimokkhapāḷi,Bhikkhupātimokkhapāḷi
@@ -1214,7 +1214,7 @@ NULL,p207,1212,100,centered,,"Vitthāruddeso catuttho."
 NULL,p207,1213,100,centered,,"Bhikkhunipātimokkhaṃ niṭṭhitaṃ."
 NULL,p207,1214,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p207,1215,1,chapter,Kaṅkhāvitaraṇī-aṭṭhakathā,Kaṅkhāvitaraṇī-aṭṭhakathā
-NULL,p207,1216,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p207,1216,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p207,1217,100,gatha1,,"Buddhaṃ  dhammañca saṅghañca, vippasannena cetasā;"
 NULL,p207,1218,100,gathalast,,"Vanditvā vandanāmāna, pūjāsakkārabhājanaṃ."
 NULL,p207,1219,100,gatha1,,"Theravaṃsappadīpānaṃ, thirānaṃ vinayakkame;"

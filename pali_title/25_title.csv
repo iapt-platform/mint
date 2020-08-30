@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p25,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p25,2,1,book,"Paṭṭhānuddesa dīpanīpāṭha","Paṭṭhānuddesa dīpanīpāṭha"
 NULL,p25,3,2,chapter,"1. Hetupaccayo","1. Hetupaccayo"

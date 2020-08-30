@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p111,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p111,2,100,book,,Jātaka-aṭṭhakathā
 NULL,p111,3,1,title,"Jātaka-aṭṭhakathā(Dutiyo bhāgo)","(Dutiyo bhāgo)"

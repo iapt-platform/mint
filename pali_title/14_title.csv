@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p14,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p14,2,1,book,Kaccāyanabyākaraṇaṃ,Kaccāyanabyākaraṇaṃ
 NULL,p14,3,4,subhead,"1. Sandhi","1. Sandhi"

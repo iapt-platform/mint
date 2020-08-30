@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p189,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p189,2,100,nikaya,,Dīghanikāye
 NULL,p189,3,1,book,(DN)Sīlakkhandhavaggaabhinavaṭīkā,Sīlakkhandhavaggaabhinavaṭīkā
-NULL,p189,4,3,title,"(Dutiyo bhāgo)","(Dutiyo bhāgo)"
+NULL,p189,4,100,title,,"(Dutiyo bhāgo)"
 NULL,p189,5,2,chapter,"2. Sāmaññaphalasuttavaṇṇanā","2. Sāmaññaphalasuttavaṇṇanā"
 NULL,p189,6,4,subhead,Rājāmaccakathāvaṇṇanā,Rājāmaccakathāvaṇṇanā
 NULL,p189,7,100,bodytext,,"150. Idāni  sāmaññaphalasuttassa saṃvaṇṇanākkamo anuppattoti dassetuṃ ‘‘evaṃ…pe… sutta’’ntiādimāha. Tattha anupubbapadavaṇṇanāti anukkamena padavaṇṇanā, padaṃ padaṃ pati anukkamena vaṇṇanāti vuttaṃ hoti. Pubbe vuttañhi, uttānaṃ vā padamaññatra vaṇṇanāpi ‘‘anupubbapadavaṇṇanā’’ tveva vuccati. Evañca katvā ‘‘apubbapadavaṇṇanā’’tipi paṭhanti, pubbe avaṇṇitapadavaṇṇanāti attho. Duggajanapadaṭṭhānavisesasampadādiyogato padhānabhāvena rājūhi gahitaṭṭhena evaṃnāmakaṃ, na pana nāmamattenāti āha ‘‘tañhī’’tiādi. Nanu  mahāvagge mahāgovindasutte āgato esa purohito eva, na rājā, kasmā so rājasaddavacanīyabhāvena gahitoti? Mahāgovindena purohitena pariggahitampi cetaṃ reṇunā nāma magadharājena pariggahitamevāti atthasambhavato evaṃ vuttaṃ, na pana so rājasaddavacanīyabhāvena gahito tassa rājābhāvato. Mahāgovindapariggahitabhāvakittanañhi tadā reṇuraññā pariggahitabhāvūpalakkhaṇaṃ. So hi tassa sabbakiccakārako purohito, idampi ca loke samudāciṇṇaṃ  ‘‘rājakammapasutena katampi raññā kata’’nti. Idaṃ vuttaṃ hoti – mandhāturaññā ceva mahāgovindaṃ bodhisattaṃ purohitamāṇāpetvā reṇuraññā ca aññehi ca rājūhi pariggahitattā rājagahanti. Keci pana ‘‘mahāgovindo’’ti mahānubhāvo eko purātano rājāti vadanti. Pariggahitattāti rājadhānībhāvena pariggahitattā. Gayhatīti hi gahaṃ, rājūnaṃ, rājūhi vā gahanti rājagahaṃ. Nagarasaddāpekkhāya napuṃsakaniddeso."

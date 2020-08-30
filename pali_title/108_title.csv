@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p108,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p108,2,100,nikaya,,Khuddakanikāye
 NULL,p108,3,1,book,Buddhavaṃsa-aṭṭhakathā,Buddhavaṃsa-aṭṭhakathā
-NULL,p108,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p108,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p108,5,100,gatha1,,"Anantañāṇaṃ  karuṇālayaṃ layaṃ, malassa buddhaṃ susamāhitaṃ hitaṃ;"
 NULL,p108,6,100,gathalast,,"Namāmi dhammaṃ bhavasaṃvaraṃ varaṃ, guṇākarañceva niraṅgaṇaṃ gaṇaṃ."
 NULL,p108,7,100,gatha1,,"Paññāya seṭṭho jinasāvakānaṃ, yaṃ dhammasenāpati dhammarājaṃ;"

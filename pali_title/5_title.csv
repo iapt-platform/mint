@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p5,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p5,2,1,book,Jinālaṅkāra,Jinālaṅkāra
 NULL,p5,3,2,chapter,Paṇāmadīpanīgāthā,Paṇāmadīpanīgāthā

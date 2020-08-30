@@ -1,3 +1,86 @@
-title,book,para,error,change,
-Sīlakkhandhavaggapāḷi,93,,ok,,
-"",103,5,2,3,""
+status,book,para,level,change,title
+ok,93,,,,Sīlakkhandhavaggapāḷi
+,103,5,3,subsubhead,Ganthārambhakathā
+,103,38,3,subsubhead,Nidānakathā
+,103,40,3,subhead,Paṭhamamahāsaṅgītikathā
+"",185,74,2,subsubhead,Nidānakathāvaṇṇanā
+add,185,75,3,bodytext,(empty)
+"",185,76,3,subhead,Paṭhamamahāsaṅgītikathāvaṇṇanā
+"",188,147,2,subsubhead,Nidānakathāvaṇṇanā
+"",188,150,3,subhead,Paṭhamamahāsaṅgītikathāvaṇṇanā
+add,188,148,3,bodytext,(empty)
+"",189,4,100,title,(Dutiyo bhāgo)
+"",186,1205,3,subhead,Uddesavārakathāvaṇṇanā
+"",130,6,3,subsubhead,Ganthārambhakathā
+"",130,39,3,subsubhead,Nidānakathā
+"",130,727,4,bodytext,(empty)
+"",192,6,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",192,77,3,subsubhead,Nidānakathāvaṇṇanā
+"",11,3,3,subsubhead,Ganthārambhakathā
+"",15,3,3,subsubhead,Ganthārambhakathā
+"",19,5,4,subsubhead,Ganthārambhakathā
+"",66,4,3,subsubhead,Ganthārambhakathā
+"",96,5,3,subsubhead,Ganthārambhakathā
+"",99,4,3,subsubhead,Ganthārambhakathā
+"",103,5,3,subsubhead,Ganthārambhakathā
+"",107,5,3,subsubhead,Ganthārambhakathā
+"",108,4,3,subsubhead,Ganthārambhakathā
+"",109,4,3,subsubhead,Ganthārambhakathā
+"",110,5,3,subsubhead,Ganthārambhakathā
+"",118,4,3,subsubhead,Ganthārambhakathā
+"",120,5,3,subsubhead,Ganthārambhakathā
+"",121,4,3,subsubhead,Ganthārambhakathā
+"",126,4,3,subsubhead,Ganthārambhakathā
+"",127,4,3,subsubhead,Ganthārambhakathā
+"",128,5,3,subsubhead,Ganthārambhakathā
+"",130,6,3,subsubhead,Ganthārambhakathā
+"",133,5,3,subsubhead,Ganthārambhakathā
+"",138,4,3,subsubhead,Ganthārambhakathā
+"",178,3,3,subsubhead,Ganthārambhakathā
+"",178,876,3,subsubhead,Ganthārambhakathā
+"",179,874,3,subsubhead,Ganthārambhakathā
+"",180,1222,3,subsubhead,Ganthārambhakathā
+"",181,4,3,subsubhead,Ganthārambhakathā
+"",188,4,3,subsubhead,Ganthārambhakathā
+"",191,4,3,subsubhead,Ganthārambhakathā
+"",200,3,3,subsubhead,Ganthārambhakathā
+"",200,10177,3,subsubhead,Ganthārambhakathā
+"",201,4,3,subsubhead,Ganthārambhakathā
+"",203,4,3,subsubhead,Ganthārambhakathā
+"",203,1621,3,subsubhead,Ganthārambhakathā
+"",203,2362,3,subsubhead,Ganthārambhakathā
+"",203,3101,3,subsubhead,Ganthārambhakathā
+"",203,3482,3,subsubhead,Ganthārambhakathā
+"",204,4,3,subsubhead,Ganthārambhakathā
+"",207,1216,3,subsubhead,Ganthārambhakathā
+"",209,4,3,subsubhead,Ganthārambhakathā
+"",210,4,3,subsubhead,Ganthārambhakathā
+"",211,4,3,subsubhead,Ganthārambhakathā
+"",212,3,3,subsubhead,Ganthārambhakathā
+"",212,672,3,subsubhead,Ganthārambhakathā
+"",178,887,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",181,49,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",185,4,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",188,25,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",190,4,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",192,6,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",195,5,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",201,100,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",201,4271,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",203,1632,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",203,2373,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",203,3487,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",209,40,3,subsubhead,Ganthārambhakathāvaṇṇanā
+"",181,562,3,subhead,(14) 1. Paṭhamaetadaggavaggo
+"",181,622,100,title,14. Etadaggavaggo
+"",181,623,3,subhead,(14) 2. Dutiyaetadaggavaggavaṇṇanā
+"",181,656,100,title,14. Etadaggavaggo
+"",181,657,3,subhead,(14) 3. Tatiyaetadaggavaggavaṇṇanā
+"",181,717,100,title,14. Etadaggavaggo
+"",181,718,3,subhead,(14) 4. Catutthaetadaggavaggavaṇṇanā
+"",181,773,100,title,14. Etadaggavaggo
+"",181,774,3,subhead,(14) 5. Pañcamaetadaggavaggavaṇṇanā
+"",181,825,100,title,14. Etadaggavaggo
+"",181,826,3,subhead,(14) 6. Chaṭṭhaetadaggavaggavaṇṇanā
+"",181,861,100,title,14. Etadaggavaggo
+"",181,862,3,subhead,(14) 7. Sattamaetadaggavaggavaṇṇanā

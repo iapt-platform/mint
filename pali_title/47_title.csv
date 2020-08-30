@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p47,1,1,chapter,"Padamañjarī ","Padamañjarī "
 NULL,p47,2,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p47,3,100,gatha1,,"Niruttikāyodadhipāragaṃ jinaṃ,"

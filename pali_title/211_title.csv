@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p211,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p211,2,100,nikaya,,Vinayapiṭake
 NULL,p211,3,1,book,Vinayālaṅkāra-ṭīkā,"Vinayālaṅkāra-ṭīkā (paṭhamo bhāgo)"
-NULL,p211,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p211,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p211,5,4,subhead,Muttahārādinayagāthā,Muttahārādinayagāthā
 NULL,p211,6,100,gatha1,,"Yo  loke lokaloko varataraparado rājarājaggajañño;"
 NULL,p211,7,100,gathalast,,"Ākāsākārakāro paramaratirato devadevantavajjo."

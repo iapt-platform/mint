@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p8,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p8,2,1,chapter,Buddhaguṇagāthāvalī,Buddhaguṇagāthāvalī
 NULL,p8,3,100,gatha1,,"Yatheva puppharāsimhā, gantheyya mālā sobhanā;"

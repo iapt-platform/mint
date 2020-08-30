@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p138,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p138,2,100,nikaya,,Vinayapiṭake
 NULL,p138,3,1,book,Pārājikakaṇḍa-aṭṭhakathā,"Pārājikakaṇḍa-aṭṭhakathā (paṭhamo bhāgo)"
-NULL,p138,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p138,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p138,5,100,gatha1,,"Yo  kappakoṭīhipi appameyyaṃ;"
 NULL,p138,6,100,gatha2,,"Kālaṃ karonto atidukkarāni;"
 NULL,p138,7,100,gatha3,,"Khedaṃ gato lokahitāya nātho;"

@@ -1,7 +1,7 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p200,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p200,2,1,chapter,Vinayavinicchayo,Vinayavinicchayo
-NULL,p200,3,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p200,3,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p200,4,8,hangnum,1.,1.
 NULL,p200,5,100,gatha1,," Vanditvā  sirasā seṭṭhaṃ, buddhamappaṭipuggalaṃ;"
 NULL,p200,6,100,gathalast,,"Bhavābhāvakaraṃ dhammaṃ, gaṇañceva niraṅgaṇaṃ."
@@ -10175,7 +10175,7 @@ NULL,p200,10173,100,bodytext,,"Iti tambapaṇṇiyena paramaveyyākaraṇena tip
 NULL,p200,10174,100,centered,,"Vinayavinicchayo samatto."
 NULL,p200,10175,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p200,10176,1,chapter,Uttaravinicchayo,Uttaravinicchayo
-NULL,p200,10177,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p200,10177,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p200,10178,8,hangnum,1.,1.
 NULL,p200,10179,100,gatha1,," Sabbasattuttamaṃ  dhīraṃ, vanditvā sirasā jinaṃ;"
 NULL,p200,10180,100,gathalast,,"Dhammañcādhammaviddhaṃsaṃ, gaṇamaṅgaṇanāsanaṃ."

@@ -1,9 +1,9 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p195,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p195,2,100,nikaya,,Saṃyuttanikāye
 NULL,p195,3,1,book,(SN)Sagāthāvagga-ṭīkā,Sagāthāvaggaṭīkā
 NULL,p195,4,2,chapter,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
-NULL,p195,5,5,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p195,5,3,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p195,6,100,bodytext,,"1. Saṃvaṇṇanārambhe  ratanattayavandanā saṃvaṇṇetabbassa dhammassa pabhavanissayavisuddhipaṭivedanatthaṃ, taṃ pana dhammasaṃvaṇṇanāsu viññūnaṃ bahumānuppādanatthaṃ, taṃ sammadeva tesaṃ uggahaṇadhāraṇādikkamaladdhabbāya sammāpaṭipattiyā sabbahitasukhanipphādanatthanti. Atha vā maṅgalabhāvato, sabbakiriyāsu pubbakiccabhāvato, paṇḍitehi samācaritabhāvato, āyatiṃ paresaṃ diṭṭhānugatiāpajjanato ca saṃvaṇṇanāyaṃ ratanattayapaṇāmakiriyāti. Atha vā ratanattayapaṇāmakaraṇaṃ pūjanīyapūjāpuññavisesanibbattanatthaṃ, taṃ attano yathāladdhasampattinimittakassa kammassa balānuppadānatthaṃ, antarā ca tassa asaṃkocāpanatthaṃ, tadubhayaṃ anantarāyena aṭṭhakathāya parisamāpanatthanti idameva ca payojanaṃ ācariyena idhādhippetaṃ. Tathā hi vakkhati ‘‘iti me pasannamatino…pe… tassānubhāvenā’’ti. Vatthuttayapūjā hi niratisayapuññakkhettasaṃbuddhiyā aparimeyyapabhāvo puññātisayoti bahuvidhantarāyepi lokasannivāse  antarāyanibandhanasakalasaṃkilesaviddhaṃsanāya pahoti, bhayādiupaddavañca nivāreti. Yathāha ‘‘pūjārahe pūjayato’’tiādi (dha. pa. 195; apa. thera 1.10.1), tathā ‘‘ye, bhikkhave, buddhe pasannā, agge te pasannā, agge kho pana pasannānaṃ aggo vipāko hotī’’tiādi (itivu. 90)."
 NULL,p195,7,100,gatha1,,"‘‘Buddhoti  kittayantassa, kāye bhavati yā pīti;"
 NULL,p195,8,100,gatha2,,"Varameva hi sā pīti, kasiṇenapi jambudīpassa;"
