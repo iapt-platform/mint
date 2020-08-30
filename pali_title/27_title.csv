@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p27,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p27,2,1,book,Kavidappaṇanīti,Kavidappaṇanīti
 NULL,p27,3,2,chapter,Mātikā,Mātikā

@@ -1,10 +1,10 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p130,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p130,2,100,nikaya,,Majjhimanikāye
 NULL,p130,3,1,book,"(MN) Mūlapaṇṇāsa-aṭṭhakathā",Mūlapaṇṇāsa-aṭṭhakathā
 NULL,p130,4,100,subhead,,"(Paṭhamo bhāgo)"
 NULL,p130,5,2,chapter,Ganthārambhakathā,Ganthārambhakathā
-NULL,p130,6,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p130,6,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p130,7,100,gatha1,,"Karuṇāsītalahadayaṃ, paññāpajjotavihatamohatamaṃ;"
 NULL,p130,8,100,gathalast,,"Sanarāmaralokagaruṃ, vande sugataṃ gativimuttaṃ."
 NULL,p130,9,100,gatha1,,"Buddhopi buddhabhāvaṃ, bhāvetvā ceva sacchikatvā ca;"
@@ -37,7 +37,7 @@ NULL,p130,35,100,gatha1,,"‘‘Majjhe visuddhimaggo, esa catunnampi āgamānañ
 NULL,p130,36,100,gathalast,,"Ṭhatvā pakāsayissati, tattha yathābhāsitamatthaṃ’’."
 NULL,p130,37,100,gatha1,,"Icceva kato tasmā, tampi gahetvāna saddhimetāya;"
 NULL,p130,38,100,gathalast,,"Aṭṭhakathāya vijānatha, majjhimasaṅgītiyā atthanti."
-NULL,p130,39,5,subsubhead,Nidānakathā,Nidānakathā
+NULL,p130,39,3,subsubhead,Nidānakathā,Nidānakathā
 NULL,p130,40,100,bodytext,,"1. Tattha majjhimasaṅgīti nāma paṇṇāsato mūlapaṇṇāsā majjhimapaṇṇāsā uparipaṇṇāsāti paṇṇāsattayasaṅgahā. Vaggato ekekāya paṇṇāsāya pañca pañca vagge katvā pannarasavaggasamāyogā. Suttato diyaḍḍhasuttasataṃ dve ca suttantā. Padato tevīsuttarapañcasatādhikāni asītipadasahassāni. Tenāhu porāṇā –"
 NULL,p130,41,100,gatha1,,"‘‘Asītipadasahassāni, bhiyyo pañcasatāni ca;"
 NULL,p130,42,100,gathalast,,"Puna tevīsati vuttā, padamevaṃ vavatthita’’nti."
@@ -725,7 +725,7 @@ NULL,p130,723,100,centered,,"Upāsakavidhikathāvaṇṇanā niṭṭhitā."
 NULL,p130,724,100,centered,,"Papañcasūdaniyā majjhimanikāyaṭṭhakathāya"
 NULL,p130,725,100,centered,,"Bhayabheravasuttavaṇṇanā niṭṭhitā."
 NULL,p130,726,3,subhead,"5. Anaṅgaṇasuttavaṇṇanā","5. Anaṅgaṇasuttavaṇṇanā"
-NULL,p130,727,100,bodytext,,"57. Evaṃme sutaṃ…pe… āyasmā sāriputtoti anaṅgaṇasuttaṃ. Tatrāyaṃ anuttānapadavaṇṇanā – yathā cettha, evaṃ sabbasuttesu. Tasmā ito paraṃ ettakampi avatvā apubbapadavaṇṇanaṃyeva karissāma."
+NULL,p130,727,4,bodytext,(empty),"57. Evaṃme sutaṃ…pe… āyasmā sāriputtoti anaṅgaṇasuttaṃ. Tatrāyaṃ anuttānapadavaṇṇanā – yathā cettha, evaṃ sabbasuttesu. Tasmā ito paraṃ ettakampi avatvā apubbapadavaṇṇanaṃyeva karissāma."
 NULL,p130,728,100,bodytext,,"Cattāroti gaṇanaparicchedo. Puggalāti sattā narā posā. Ettāvatā ca puggalavādī mahātheroti na gahetabbaṃ, ayañhi āyasmā buddhaputtānaṃ seṭṭho, so buddhassa bhagavato desanaṃ avilomentoyeva deseti."
 NULL,p130,729,4,subhead,Sammutiparamatthadesanākathāvaṇṇanā,Sammutiparamatthadesanākathāvaṇṇanā
 NULL,p130,730,100,bodytext,,"Buddhassa bhagavato duvidhā desanā sammutidesanā, paramatthadesanā cāti. Tattha puggalo satto itthī puriso khattiyo brāhmaṇo devo māroti evarūpā sammutidesanā. Aniccaṃ dukkhaṃ anattā, khandhā dhātū āyatanāni satipaṭṭhānāti evarūpā paramatthadesanā."

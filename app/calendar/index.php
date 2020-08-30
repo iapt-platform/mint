@@ -1188,7 +1188,7 @@ function uposatha_calculator(month,day){
 	if(days_per_month==30){
 		if(day<=15){
 			day_obj.day=day;
-			day_obj.pakkha="kāla";
+			day_obj.pakkha="kāla "+gLocal.gui.kala_pakkha;
 			day_obj.pakkha_icon="🌖→🌑";
 			if(day==15){
 				day_obj.uposatha=true;

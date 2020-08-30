@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p13,1,100,centered,,"? Namo tassa bhagavato arahato sammāsambuddhassa "
 NULL,p13,2,1,book,Moggallānasuttapāṭho,Moggallānasuttapāṭho
 NULL,p13,3,4,subhead,"(1) Paṭhamo kaṇḍo (saññādi)","(1) Paṭhamo kaṇḍo (saññādi)"

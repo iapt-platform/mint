@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p95,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p95,2,100,nikaya,,Dīghanikāyo
 NULL,p95,3,1,book,"(DN) Pāthikavaggapāḷi",Pāthikavaggapāḷi

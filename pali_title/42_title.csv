@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p42,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p42,2,100,nikaya,,Suttantapiṭaka
 NULL,p42,3,1,chapter,"(saṅgayana-puccha vissajjanā) Aṅguttaranikāye",Aṅguttaranikāye

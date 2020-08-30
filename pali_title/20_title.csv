@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p20,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p20,2,1,book,Vuttodayaṃ,Vuttodayaṃ
 NULL,p20,3,2,chapter,"1. Saññāparibhāsāniddesa-paṭhamapariccheda","1. Saññāparibhāsāniddesa-paṭhamapariccheda"

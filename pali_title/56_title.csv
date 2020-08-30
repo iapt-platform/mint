@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p56,1,1,book,"Dhātuvaṃso ","Dhātuvaṃso "
 NULL,p56,2,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p56,3,2,chapter,"1. Tathāgatassāgamanakathā","1. Tathāgatassāgamanakathā"

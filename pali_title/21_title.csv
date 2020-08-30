@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p21,1,100,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p21,2,1,book,Abhidhānappadīpikā,Abhidhānappadīpikā
 NULL,p21,3,4,subhead,Buddhappaṇāmo,Buddhappaṇāmo

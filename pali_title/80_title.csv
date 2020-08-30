@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p80,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p80,2,100,nikaya,,Abhidhammapiṭake
 NULL,p80,3,1,book,"Yamakapāḷi (tatiyo bhāgo)","Yamakapāḷi (tatiyo bhāgo)"

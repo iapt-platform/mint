@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p140,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p140,2,100,nikaya,,Vinayapiṭake
 NULL,p140,3,1,book,"(SP) Mahāvagga-aṭṭhakathā",Mahāvagga-aṭṭhakathā

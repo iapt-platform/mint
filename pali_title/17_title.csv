@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p17,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p17,2,1,book,Padarūpasiddhi,Padarūpasiddhi
 NULL,p17,3,5,subsubhead,Ganthārambha,Ganthārambha

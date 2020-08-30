@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p63,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p63,2,1,book,Mahāvaṃsapāḷi,Mahāvaṃsapāḷi
 NULL,p63,3,2,chapter,Pathamapariccheda,Pathamapariccheda

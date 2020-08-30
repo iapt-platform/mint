@@ -1,4 +1,4 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p23,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p23,2,1,book,Paramatthadīpanī,Paramatthadīpanī
 NULL,p23,3,3,title,"Saṅgaha mahāṭīkā pāṭha","Saṅgaha mahāṭīkā pāṭha"

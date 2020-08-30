@@ -1,8 +1,8 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p99,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p99,2,100,nikaya,,Aṅguttaranikāye
 NULL,p99,3,1,book,Ekakanipāta-aṭṭhakathā,Ekakanipāta-aṭṭhakathā
-NULL,p99,4,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p99,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p99,5,100,gatha1,,"‘‘Karuṇāsītalahadayaṃ, paññāpajjotavihatamohatamaṃ;"
 NULL,p99,6,100,gathalast,,"Sanarāmaralokagaruṃ, vande sugataṃ gativimuttaṃ."
 NULL,p99,7,100,gatha1,,"‘‘Buddhopi buddhabhāvaṃ, bhāvetvā ceva sacchikatvā ca;"

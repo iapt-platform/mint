@@ -39,10 +39,10 @@ include "../pcdl/html_head.php";
     background-color: var(--btn-color);
     margin: 0 0.5em;
     padding: 3px 5px;
-    border-radius: 4px;
+    border-radius: 6px;
     display:inline-flex;
     border: 1.5px solid;
-    border-color: #707070;
+    border-color: #70707036;
     }
     tag .icon:hover{
         background-color: silver;

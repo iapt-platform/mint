@@ -1,7 +1,7 @@
-id,book,par_num,100,class,title,text
+id,book,par_num,level,class,title,text
 NULL,p178,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p178,2,1,book,Abhidhammatthasaṅgaho,Abhidhammatthasaṅgaho
-NULL,p178,3,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p178,3,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p178,4,100,bodytext,,"1. Sammāsambuddhamatulaṃ, sasaddhammagaṇuttamaṃ."
 NULL,p178,5,100,gathalast,,"Abhivādiya bhāsissaṃ, abhidhammatthasaṅgahaṃ."
 NULL,p178,6,2,subhead,Catuparamatthadhammo,Catuparamatthadhammo
@@ -874,7 +874,7 @@ NULL,p178,872,100,centered,,"Iti anuruddhācariyena racitaṃ"
 NULL,p178,873,100,centered,,"Abhidhammatthasaṅgahaṃ nāma pakaraṇaṃ."
 NULL,p178,874,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa."
 NULL,p178,875,1,book,Abhidhammatthavibhāvinīṭīkā,Abhidhammatthavibhāvinīṭīkā
-NULL,p178,876,5,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p178,876,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p178,877,100,gatha1,,"(Ka) visuddhakaruṇāñāṇaṃ, buddhaṃ sambuddhapūjitaṃ;"
 NULL,p178,878,100,gathalast,,"Dhammaṃ saddhammasambhūtaṃ, natvā saṃghaṃ niraṅgaṇaṃ."
 NULL,p178,879,100,gatha1,,"(Kha) sāriputtaṃ mahātheraṃ, pariyattivisāradaṃ;"
@@ -885,7 +885,7 @@ NULL,p178,883,100,gatha1,,"(Gha) porāṇehi  anekāpi, katā yā pana vaṇṇa
 NULL,p178,884,100,gathalast,,"Na tāhi sakkā sabbattha, attho viññātave idha."
 NULL,p178,885,100,gatha1,,"(Ṅa) tasmā līnapadānettha, sādhippāyamahāpayaṃ;"
 NULL,p178,886,100,gathalast,,"Vibhāvento samāsena, racayissāmi vaṇṇananti."
-NULL,p178,887,5,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p178,887,3,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p178,888,100,bodytext,,"1. Paramavicittanayasamannāgataṃ sakasamayasamayantaragahanaviggāhaṇasamatthaṃ suvimalavipulapaññāveyyattiyajananaṃ pakaraṇamidamārabhantoyamācariyo paṭhamaṃ tāva ratanattayapaṇāmābhidheyya karaṇappakārapakaraṇābhidhānapayojanāni dassetuṃ ‘‘sammāsambuddha’’ntyādimāha."
 NULL,p178,889,100,bodytext,,"Ettha  hi ‘‘sammāsambuddha…pe… abhivādiyā’’ti iminā ratanattayapaṇāmo vutto, abhidhammatthasaṅgaha’’nti etena abhidheyyakaraṇappakārapakaraṇābhidhānāni abhidhammatthānaṃ idha saṅgahetabbabhāvadassanena tesaṃ iminā samuditena paṭipādetabbabhāvadīpanato, ekattha saṅgayha kathanākāradīpanato, atthānugatasamaññāparidīpanato ca. Payojanaṃ pana saṅgahapadena sāmatthiyato dassitameva abhidhammatthānaṃ ekattha saṅgahe sati taduggahaparipucchādivasena tesaṃ sarūpāvabodhassa, tammūlikāya ca diṭṭhadhammikasamparāyikatthasiddhiyā anāyāsena saṃsijjhanato."
 NULL,p178,890,100,bodytext,,"Tattha ratanattayapaṇāmappayojanaṃ tāva bahudhā papañcenti ācariyā, visesato pana antarāyanivāraṇaṃ paccāsīsanti. Tathā hi vuttaṃ saṅgahakārehi ‘‘tassānubhāvena hatantarāyo’’ti (pārā. aṭṭha. 1.ganthārambhakathā). Ratanattayapaṇāmo hi atthato paṇāmakiriyābhinipphādikā kusalacetanā, sā ca vandaneyyavandakānaṃ khettajjhāsayasampadāhi diṭṭhadhammavedanīyabhūtā yathāladdhasampattinimittakassa kammassa anubalappadānavasena tannibbattitavipākasantatiyā antarāyakarāni upapīḷakaupacchedakakammāni paṭibāhitvā tannidānānaṃ yathādhippetasiddhivibandhakānaṃ rogādiantarāyānamappavattiṃ sādheti. Tasmā pakaraṇārambhe ratanattayapaṇāmakaraṇaṃ yathāraddhapakaraṇassa anantarāyena parisamāpanatthañceva sotūnañca vandanāpubbaṅgamāya paṭipattiyā anantarāyena uggahaṇadhāraṇādisaṃsijjhanatthañca. Abhidheyyakathanaṃ pana viditābhidheyyasseva ganthassa viññūhi uggahaṇādivasena  paṭipajjitabbabhāvato. Karaṇappakārappayojanasandassanāni ca sotujanasamussāhajananatthaṃ. Abhidhānakathanaṃ pana vohārasukhatthanti ayamettha samudāyattho. Ayaṃ pana avayavattho – sasaddhammagaṇuttamaṃ atulaṃ sammāsambuddhaṃ abhivādiya abhidhammatthasaṅgahaṃ bhāsissanti sambandho."
