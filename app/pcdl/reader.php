@@ -2,6 +2,7 @@
 require_once "../public/_pdo.php";
 require_once "../path.php";
 require_once '../public/load_lang.php';
+require_once '../public/function.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -21,12 +22,12 @@ require_once '../public/load_lang.php';
 	<script src="../term/note.js"></script>
 	
 <body class="reader_body" >
-
+<a name="page_head"></a>
 	<script type="text/javascript"> 
 	$(document).ready(function(){
 		$(".toc_1_title").click(function(){
-			$(".toc_2").hide();
-			$(this).siblings().slideDown("200");
+			$(this).parent().siblings().children(".toc_2").hide();
+			$(this).siblings().slideToggle("200");
 		});
 	});
 	</script>
@@ -148,6 +149,7 @@ para:hover{
 }
 .curr_chapter_title2 a{
 	color:#4d4dff;
+	font-weight:900;
 }
 #leftmenuinner{
 	width: 17em;
@@ -308,7 +310,7 @@ else{
 	if($_view=="chapter" || $_view=="para" || $_view=="sent" ){
 		PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 		//生成目录
-		$htmlToc2 = "";
+		$htmlToc2 = "<div><a href='#page_head'>页首</a></div>";
 		//找到该位置对应的书
 		$query = "select paragraph,level,chapter_len,parent from 'pali_text' where book='$book' and paragraph='$paragraph'";
 		$FetchParInfo = PDO_FetchAll($query);
@@ -320,7 +322,9 @@ else{
 			$parent = $FetchParInfo[0]["parent"];
 			$currParaBegin = $para;
 			$currParaEnd = $para + $chapter_len;
-			//循环查找父标题 得到整条路径
+			$currParaLevel = $level;
+			$currParaParentLevel = 0;
+			//循环查找父标题 找到level=1的段落 也就是书名
 			while($parent>-1){
 				$query = "select paragraph,level,parent,chapter_len from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
 				$FetParent = PDO_FetchAll($query);
@@ -329,6 +333,9 @@ else{
 					$level = $FetParent[0]["level"];
 					$chapter_len = $FetParent[0]["chapter_len"];
 					$parent = $FetParent[0]["parent"];
+					if($currParaParentLevel==0){
+						$currParaParentLevel = $level;
+					}
 				}
 				$deep++;
 				if($deep>8){
@@ -343,6 +350,10 @@ else{
 			$chapter_toc = PDO_FetchAll($query);
 			$tocMaxLevel = 0;
 			$tocMinLevel = 0;
+			$tocBegin = 0;
+			$tocEnd = 0;
+			$toc1Level = 0;
+			$toc2Level = 0;
 			echo "<div><div>";
 			foreach ($chapter_toc as $key => $value) {
 				$classCurrToc="";
@@ -354,10 +365,29 @@ else{
 					$classCurrTocTitle2=" curr_chapter_title2";
 				}
 				
-				if($tocMaxLevel==0){
-					$tocMaxLevel =$value["level"];
+				if($tocBegin==0 || ($tocBegin>0 && $value["paragraph"]>=$tocEnd)){
+					//开始新的标题1
+					$tocBegin =$value["paragraph"];
+					$tocEnd = $tocBegin + $value["chapter_len"];
+					$toc1Level = $value["level"];
+					if(isset($chapter_toc[$key+1])){
+						if($chapter_toc[$key+1]["level"]>$toc1Level){
+							$toc2Level = $chapter_toc[$key+1]["level"];
+						}
+						else{
+							$tocBegin=0;
+						}
+					}
+					$tocHtml .= "</div></div><div class='toc_1 {$classCurrToc}'>";
+					$tocHtml .= "<div class='toc_1_title {$classCurrToc}'>{$value["toc"]}</div><div class='toc_2 $classCurrToc2'>";
 				}
-			
+				else{
+					//下一级标题
+					if($value["level"]==$toc2Level  ){
+						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
+					}
+				}
+			/*
 				if($tocMinLevel==0){
 					if($value["level"]>$tocMaxLevel){
 						$tocMinLevel = $value["level"];
@@ -378,8 +408,9 @@ else{
 						$tocHtml .= "<div class='toc_title2 {$classCurrToc}{$classCurrTocTitle2}'><a href='reader.php?view=chapter&book={$book}&para={$value["paragraph"]}&display={$_display}'>{$value["toc"]}</a></div>";
 					}
 				}
-
+*/
 				//右侧目录
+				
 				if($value["paragraph"]>$currParaBegin && $value["paragraph"]<$currParaEnd){
 					$tocList[$value["paragraph"]] = $value["level"];
 					$htmlToc2 .= "<div><a href='#para_{$value["paragraph"]}'>{$value["toc"]}</a></div>";
@@ -390,7 +421,7 @@ else{
 		}
 
 		$htmlToc2 .= "<div><a href='#nav_foot'>导航</a></div>";
-		$htmlToc2 .= "<div><a href='#sim_doct'>相关文档</a></div>";
+		$htmlToc2 .= "<div><a href='#sim_doc'>相关文档</a></div>";
 
 		//获取段落信息 如 父段落 下一个段落等
 
@@ -481,7 +512,7 @@ else{
 		echo "</script>";		
 	}
 
-	if($currLevel<$tocMinLevel){
+	if($currParaLevel==1 || $currParaParentLevel==1){
 		echo $_local->gui->chapter_select;
 	}
 	else{
@@ -668,6 +699,7 @@ else{
 	echo "<div style='display:inline-flex;'>$next_para_link";
 	echo "<svg t='1598094021808' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4451' width='32' height='32'><path d='M698.75712 565.02272l-191.488 225.4848a81.73568 81.73568 0 0 1-62.48448 28.89728 81.89952 81.89952 0 0 1-62.40256-134.94272l146.432-172.4416-146.432-172.4416a81.92 81.92 0 0 1 124.88704-106.06592l191.488 225.4848a81.87904 81.87904 0 0 1 0 106.02496z' p-id='4452' fill='#757AF7'></path></svg>";
 	echo "</div>";
+
 	echo "</div>";
 		
 	}
@@ -676,12 +708,31 @@ else{
 
 ?>
 
-<a name="sim_doc"></div>
+
+
 <div>
-
-<div>相关文档</div>
+<a name="sim_doc"></a>
+<div>相关段落</div>
 <ul>
-
+<?php
+//查找相关标题
+	if(strtolower(mb_substr($par_title,mb_strlen($par_title,"UTF-8")-7,null,"UTF-8"))=="vaṇṇanā"){
+		$searchToc = strtolower(mb_substr($par_title,0,-7,"UTF-8"));
+	}
+	else{
+		$searchToc = strtolower(mb_substr($par_title,0,-1,"UTF-8"));
+	}
+	
+	PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
+	$query = "select book, paragraph,title from 'index' where  \"title\" like ".$PDO->quote($searchToc.'%')."  limit 0,50";
+	$Fetch = PDO_FetchAll($query);
+	foreach ($Fetch as $key => $value) {
+		echo "<div style='margin-bottom: 0.5em;'>";
+		echo "<div><a href='reader.php?view=chapter&book={$value["book"]}&para={$value["paragraph"]}' target='_blank'> {$value["title"]} </a></div>";
+		echo "<div>". _get_para_path($value["book"],$value["paragraph"])."</div>";
+		echo "</div>";
+	}
+?>
 </ul>
 </div>
 
@@ -746,15 +797,6 @@ else{
 			<!-- toc begin -->
 			<div class="menu" id="menu_toc">
 				<a name="_Content" ></a>
-				<select name="menu" onchange="show_toc_level(this)" style="display:none;">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-				</select>
 				<div  id="toc_content"><?php echo $tocHtml; ?></div>
 			</div>
 			<!-- toc end -->

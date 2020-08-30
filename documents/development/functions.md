@@ -41,7 +41,7 @@ citta:nt. 心；缤纷；
 - 所有后端功能不使用公开上传的方式扩展功能。应使用 pr and review 方式。
 - 扩展程序为只能包含 js css setting.json 少量图片
 
-# 平台结构
+# 平台结构 map
 
 - 藏经阁-Libray
   - 首页
@@ -220,3 +220,5 @@ www.wikipali.org/palicanon
 #### 添加
 
 #### 删除
+
+# 数据表与模块关系
