@@ -637,6 +637,7 @@ function projectDataParse(xmlBookData) {
           .getItem("msg_" + g_docid)
           .then(function (value) {
             gDocMsgList = value;
+            doc_msg_refresh_sent();
             console.log(value.length);
           })
           .catch(function (err) {
@@ -707,4 +708,38 @@ function doc_msg_get_trans(book, para, begin, end) {
     }
   }
   return output;
+}
+
+function doc_msg_refresh_sent() {
+  for (const it of gDocMsgList) {
+    if (it.type == 2) {
+      if (
+        book == it.data.book &&
+        para == it.data.para &&
+        begin == it.data.begin
+      ) {
+        $(
+          "[pcds='sent-net'][book='" +
+            it.data.book +
+            "'][para='" +
+            it.data.para +
+            "'][begin='" +
+            it.data.begin +
+            "']"
+        ).html(obj.data.text);
+
+        $(
+          "[pcds='sent-net-div'][book='" +
+            it.data.book +
+            "'][para='" +
+            it.data.para +
+            "'][begin='" +
+            it.data.begin +
+            "']"
+        )
+          .find(".author")
+          .html(it.sender);
+      }
+    }
+  }
 }
