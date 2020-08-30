@@ -30,7 +30,7 @@ else{
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
 
 
-    <title>圣典</title>
+    <title>wikipāḷi</title>
 
 	<script src="../public/js/jquery.js"></script>
 	<script src="../public/js/comm.js"></script>
