@@ -425,7 +425,7 @@
         <div><span id="today_dawn"></span></div>
         <div><span id="today_solarNoon"></span></div>
         <div><span id="today_sunset"></span></div>
-        <div><span id="today_moon_phase"></span></div>
+        <div>月相<span id="today_moon_phase"></span></div>
         <div>南偏西<span id="today_sun_azimuth"></span></div>
         <div>北偏东<span id="today_moon_azimuth"></span></div>
         <div>日月角<span id="angle_sun_e_moon"></span></div>
@@ -442,6 +442,20 @@
         if (curr_position) {
             g_coordinate_this.AT = curr_position.split("#")[0];
             g_coordinate_this.LT = curr_position.split("#")[1];
+            if (g_coordinate_this.AT >= 0) {
+                var AT_string = angle_trans(g_coordinate_this.AT) + "N";
+            }
+            else {
+                var AT_string = angle_trans(g_coordinate_this.AT) + "S";
+            }
+            if (g_coordinate_this.LT >= 0) {
+                var LT_string = angle_trans(g_coordinate_this.LT) + "E";
+            }
+            else {
+                var LT_string = angle_trans(g_coordinate_this.LT) + "W";
+            }
+            $("#selected_position_string").html(AT_string + " " + LT_string);
+
         }
         else {
             getLocation();
@@ -459,8 +473,8 @@
             $("#today_sunset").html(sun_times.sunset.toLocaleTimeString());
             $("#today_sun_azimuth").html(angle_trans(sun_position.azimuth / Math.PI * 180));//太阳水平弧度
             $("#today_moon_azimuth").html(angle_trans(moon_position.azimuth / Math.PI * 180));//月亮水平弧度
-            $("#today_moon_phase").html(moon_Illumination.phase);//月亮水平弧度
-            $("#today_moon_angle").html(angle_trans(moon_Illumination.angle / Math.PI * 180));//月亮水平弧度
+            $("#today_moon_phase").html(1 - 2 * moon_Illumination.phase);//月相值
+            $("#today_moon_angle").html(angle_trans(moon_Illumination.angle / Math.PI * 180));//月相角
             $("#angle_sun_e_moon").html(angle_trans(Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI * 180));//月亮水平弧度
 
 
