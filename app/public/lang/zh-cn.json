@@ -472,8 +472,10 @@
 		"end_of_text": "到底啦",
 		"begin_of_text": "到顶啦",
 		"chapter_select": "请在左侧边栏中选择章节",
-		"kala_pakkha": "渐凹半月",
-		"sukka_pakkha": "渐凸半月",
+		"kala_pakkha": "渐亏半月",
+		"sukka_pakkha": "渐盈半月",
+		"com_dict": "社区字典",
+		"contributor": "贡献者",
 		"": ""
 	},
 	"grammastr": [

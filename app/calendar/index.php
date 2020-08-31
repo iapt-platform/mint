@@ -61,7 +61,7 @@ $dir_app="../studio/";
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/style.css"/>
-	<title><?php echo $_local->gui->pcd_studio;?></title>
+	<title><?php echo $_local->gui->BE;?></title>
 	<script src="<?php echo $dir_app; ?>js/jquery-3.3.1.min.js"></script>
 <!--	<script language="javascript" src="<?php echo $dir_app; ?>charcode/sinhala.js"></script>
 	<script language="javascript" src="<?php echo $dir_app; ?>charcode/myanmar.js"></script>
