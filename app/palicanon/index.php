@@ -84,7 +84,6 @@ echo '</div>';
     var main_tag="";
     var list_tag=new Array();
     
-
     $("span[tag]").click(function(){
         $(this).siblings().removeClass("select");
         $(this).addClass("select");
@@ -92,18 +91,6 @@ echo '</div>';
         list_tag=new Array();
         tag_changed();
         render_tag_list();
-        /*
-        const tagSelected = document.getElementsByClassName("select");
-        if(tagSelected){
-            let tagList = new Array();
-            for (const iterator of tagSelected) {
-                tagList.push(iterator.getAttributeNode("tag").value);
-            }
-            main_tag = tagList[0];
-
-            tag_changed();
-        }
-        */
   });
   var allTags = new Array();
   function tag_changed(){

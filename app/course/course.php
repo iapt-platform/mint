@@ -18,7 +18,7 @@ include "../pcdl/html_head.php";
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
-require_once '../media/function.php';
+require_once '../ucenter/function.php';
 require_once '../public/function.php';
 
 global $PDO;
@@ -35,7 +35,10 @@ $course_info = $Fetch[0];
 echo "<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>";
 echo "<div class='index_inner '>";
 echo "<div style='font-size:140%'>";
-echo $course_info["teacher"]." > ";
+echo "<a href='../uhome/course.php?userid={$course_info["teacher"]}'>";
+echo ucenter_getA($course_info["teacher"]);
+echo "</a>";
+echo " > ";
 echo $course_info["title"];
 echo "</div>";
 echo '<div class="summary"  style="padding-bottom:5px;">'.$course_info["subtitle"].'</div>';

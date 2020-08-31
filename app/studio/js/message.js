@@ -889,7 +889,7 @@ function show_tran_net(book, para, begin, end) {
           "<div class='trans_text_info'>" +
           "<span><span class='author'>" +
           iterator.author +
-          "</span><span class='tag'>笔记</span></span>" +
+          "</span><span class='tag'>tag</span></span>" +
           "<span class='tools'>" +
           "<button>采纳</button>" +
           "</span>" +
