@@ -429,7 +429,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() { }
+function renderBlock() {}
 /*
 重绘翻译数据块
 */
@@ -634,7 +634,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) { }
+function renderTranslateParBlockInnerPreview(strText) {}
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -1282,11 +1282,24 @@ function render_sent_tool_bar(elementBlock, begin) {
   let sentIdString = abook + "-" + aparagraph + "-" + iBegin + "-" + iEnd;
   let sentIdStringLink = "{{" + sentIdString + "}}";
   let sentReaderLink = "";
-  if (_display_sbs == 0) {//逐段模式
-    sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph;
-  }
-  else {//逐句模式
-    sentReaderLink = "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
+  if (_display_sbs == 0) {
+    //逐段模式
+    sentReaderLink =
+      "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" +
+      abook +
+      "&para=" +
+      aparagraph;
+  } else {
+    //逐句模式
+    sentReaderLink =
+      "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" +
+      abook +
+      "&para=" +
+      aparagraph +
+      "&begin=" +
+      iBegin +
+      "&end=" +
+      iEnd;
   }
   output +=
     "<span>" +
@@ -1297,11 +1310,26 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += gLocal.gui.copy_to_clipboard;
   output += "]</a></span>";
   //	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
-  if (_display_sbs == 0) {//逐段模式
-    output += "<a href='../pcdl/reader.php?view=para&book=" + abook + "&para=" + aparagraph + "' target='_blank'>";
-  }
-  else {//逐句模式
-    output += "<a href='../pcdl/reader.php?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd + "' target='_blank'>";
+  if (_display_sbs == 0) {
+    //逐段模式
+    output +=
+      "<a href='../pcdl/reader.php?view=para&book=" +
+      abook +
+      "&para=" +
+      aparagraph +
+      "' target='_blank'>";
+  } else {
+    //逐句模式
+    output +=
+      "<a href='../pcdl/reader.php?view=sent&book=" +
+      abook +
+      "&para=" +
+      aparagraph +
+      "&begin=" +
+      iBegin +
+      "&end=" +
+      iEnd +
+      "' target='_blank'>";
   }
   output += "[" + gLocal.gui.scan_in_reader + "]";
   output += "</a>";
@@ -1501,9 +1529,54 @@ function renderWordParBlockInner(elementBlock) {
           "','" +
           word_id +
           "')\"><span id='' class=\"word_msg\">issue</span></span>";
-        sent_begin = word_id;
+        //
         output += "</div>";
         output += "<div class='translate_sent_head_content'>";
+        //句子预览
+        output += "<div class='trans_text_block'>";
+        output +=
+          "<div class='trans_text_content'  pcds='sent-net' book='" +
+          book +
+          "' para='" +
+          paragraph +
+          "' begin='" +
+          sent_begin +
+          "' end=''>";
+        let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
+        let sender = "";
+        if (netSent.length > 0) {
+          output += netSent[netSent.length - 1].data.text;
+          sender = netSent[netSent.length - 1].sender;
+        }
+        output += "</div>";
+        output +=
+          "<div class='trans_text_info'>" +
+          "<span><span>过滤</span><span class='author'>" +
+          sender +
+          "</span><span class='tag'>tag</span></span>" +
+          "<span class='tools'>" +
+          "<button>采纳</button>" +
+          "<button onclick=\"show_tran_net('" +
+          book +
+          "','" +
+          paragraph +
+          "','" +
+          sent_begin +
+          "','" +
+          word_id +
+          "')\">更多</button>" +
+          "</span>" +
+          "</div>";
+        output += "</div>";
+        //句子预览结束
+        output +=
+          "<div class='trans_text_content'  pcds='sent-net' book='" +
+          book +
+          "' para='" +
+          paragraph +
+          "' begin='" +
+          sent_begin +
+          "' end=''></div>";
         output += "</div>";
         output += "</div>";
         output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
@@ -1514,6 +1587,8 @@ function renderWordParBlockInner(elementBlock) {
         //逐句翻译块结束
 
         output += "</div>"; //逐句块结束
+
+        sent_begin = word_id + 1;
         //下一个逐句块开始
         output += "<div class='sent_wbw_trans'>";
         //output += output += render_sent_tool_bar(elementBlock,word_id);
@@ -1544,7 +1619,16 @@ function renderWordParBlockInner(elementBlock) {
           "')\">[";
         output += gLocal.gui.copy_to_clipboard;
         output += "]</a></span>";
-        output += "<a href='../pcdl/reader.php?view=sent&book=" + book + "&para=" + paragraph + "&begin=" + nextBegin + "&end=" + nextEnd + "' target='_blank'>";
+        output +=
+          "<a href='../pcdl/reader.php?view=sent&book=" +
+          book +
+          "&para=" +
+          paragraph +
+          "&begin=" +
+          nextBegin +
+          "&end=" +
+          nextEnd +
+          "' target='_blank'>";
         output += "[" + gLocal.gui.scan_in_reader + "]";
         output += "</a>";
         output += "<guide gid='sent_func' style='margin:unset;'></guide>";
@@ -1579,6 +1663,51 @@ function renderWordParBlockInner(elementBlock) {
     "')\"><span id='' class=\"word_msg\">issue</span></span>";
   output += "</div>";
   output += "<div class='translate_sent_head_content'>";
+
+  output +=
+    "<div class='trans_text_block' pcds='sent-net-div' book='" +
+    book +
+    "' para='" +
+    paragraph +
+    "' begin = '" +
+    sent_begin +
+    "' >";
+  output +=
+    "<div class='trans_text_content'  pcds='sent-net' book='" +
+    book +
+    "' para='" +
+    paragraph +
+    "' begin='" +
+    sent_begin +
+    "' end=''>";
+  let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
+  let sender = "";
+  if (netSent.length > 0) {
+    output += netSent[netSent.length - 1].data.text;
+    sender = netSent[netSent.length - 1].sender;
+  }
+  output += "</div>";
+  output +=
+    "<div class='trans_text_info'>" +
+    "<span><span>过滤</span><span class='author'>" +
+    sender +
+    "</span><span class='tag'>tag</span></span>" +
+    "<span class='tools'>" +
+    "<button>赞<span >0</span></button>" +
+    "<button>采纳</button>" +
+    "<button onclick=\"show_tran_net('" +
+    book +
+    "','" +
+    paragraph +
+    "','" +
+    sent_begin +
+    "','" +
+    word_id +
+    "')\">更多</button>" +
+    "</span>" +
+    "</div>";
+  output += "</div>";
+
   output += "</div>";
   output += "</div>";
   output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
@@ -2343,12 +2472,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                "$" +
-                arrMeaning.length +
-                "$$" +
-                arrMean[i] +
-                "$" +
-                g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$$" +
+                  arrMean[i] +
+                  "$" +
+                  g_DictWordList[iDict].Language
               );
             }
           }
@@ -2398,12 +2527,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$*$" +
-                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$*$" +
+                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2453,12 +2582,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$**$" +
-                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$**$" +
+                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2933,7 +3062,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) { }
+function renderWordNoteDivByParaNo(book, paragraph) {}
 /*
 paragraph word note
 */
@@ -3128,12 +3257,11 @@ function updateWordNote(element) {
       output += "<strong>" + paliword + ":</strong>";
     }
     output += wnote;
-
     $("#wnn_" + id).html(output);
   }
 }
 
-function updateWordCommentary(element) { }
+function updateWordCommentary(element) {}
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3256,13 +3384,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-    g_allparlen_array[gVisibleParBegin - 1] <=
+      g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin - 1] >
+      g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3289,13 +3417,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] <=
+      g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] >
+      g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -3732,12 +3860,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-      id +
-      "' name=\"word_note_" +
-      id +
-      '">[' +
-      (index + 1) +
-      "]</a>"
+        id +
+        "' name=\"word_note_" +
+        id +
+        '">[' +
+        (index + 1) +
+        "]</a>"
     );
   });
 
