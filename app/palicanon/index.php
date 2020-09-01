@@ -80,7 +80,6 @@ echo '<div level="2" class="tag_others"  style="padding-bottom:5px;"></div>';
 echo '<div level="3" class="tag_others"  style="padding-bottom:5px;"></div>';
 echo '<div level="4" class="tag_others"  style="padding-bottom:5px;"></div>';
 echo '<div level="5" class="tag_others"  style="padding-bottom:5px;"></div>';
-
 echo '<div level="100" class="tag_others"  style="padding-bottom:5px;"></div>';
 echo '<div level="8" class="tag_others"  style="padding-bottom:5px;"></div>';
 echo "</div>";
