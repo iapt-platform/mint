@@ -2022,6 +2022,7 @@ border: 1px solid #DCDCDC;
     margin: 2px 5px 2px 1em;
     padding: 2px;
     clear: left;
+    /*max-height: 30vh;*/
 }
 .wnotediv p {
     margin: 5px 2px;
@@ -3731,9 +3732,13 @@ border-bottom: 2px solid red;
     flex: 7;
     display: flex;
     flex-wrap: wrap;
+    /*overflow-y: auto;
+    max-height: 35vh;*/
 }
 .translate_sent{
     flex: 3;
+    /*overflow-y: auto;
+    max-height: 35vh;*/
     display:none;
 }
 
@@ -4118,9 +4123,10 @@ text-align: center;
 
 .sent_wbw_trans_bar{
     position: absolute;
-    background-color: silver;
     padding: 0 3px;
     margin-top: -23px;
+    width: 92%;
+    display: flex;
 }
 
 .tran_sent_inner{

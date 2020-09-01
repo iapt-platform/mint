@@ -13,6 +13,8 @@
     <script src="../public/js/jquery.js"></script>
     <script src="../public/js/comm.js"></script>
     <script src="jquery-3.3.1.min.js"></script>
+    <script src="lib/julian.js"></script>
+    <script src="lib/lune.js"></script>
     <script src="suncalc.js"></script>
     <script src="../studio/js/fixedsticky.js"></script>
     <script src="../guide/guide.js"></script>
@@ -437,6 +439,9 @@
 
     </div>
     <script>
+        var current_phase = lune.phase()
+        console.log(current_phase)//输出到控制台
+
         $("#title_text").html(localString[g_language].BE);
         var g_coordinate_this = new Object();
         var g_now_date = new Date();
