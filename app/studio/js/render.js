@@ -429,7 +429,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() {}
+function renderBlock() { }
 /*
 重绘翻译数据块
 */
@@ -634,7 +634,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) {}
+function renderTranslateParBlockInnerPreview(strText) { }
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -1302,13 +1302,13 @@ function render_sent_tool_bar(elementBlock, begin) {
       iEnd;
   }
   output +=
-    "<span>" +
+    "<span style='flex: 7;'><span style='background-color: silver;>" +
     sentIdString +
     "<a onclick=\"copy_to_clipboard('" +
     sentIdStringLink +
     "')\">[";
   output += gLocal.gui.copy_to_clipboard;
-  output += "]</a></span>";
+  output += "]</a>";
   //	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
   if (_display_sbs == 0) {
     //逐段模式
@@ -1333,7 +1333,8 @@ function render_sent_tool_bar(elementBlock, begin) {
   }
   output += "[" + gLocal.gui.scan_in_reader + "]";
   output += "</a>";
-  output += "<guide gid='sent_func' style='margin:unset;'></guide>";
+  output += "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+  output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
   output += "</div>";
   return output;
 }
@@ -1517,7 +1518,6 @@ function renderWordParBlockInner(elementBlock) {
         output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
         output += "<div class='translate_sent_head'>";
         output += "<div class='translate_sent_head_toolbar'>";
-        output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
         output += "<span></span>";
         output +=
           "<span onclick=\"show_tran_net('" +
@@ -1612,13 +1612,13 @@ function renderWordParBlockInner(elementBlock) {
           book + "-" + paragraph + "-" + nextBegin + "-" + nextEnd;
         let sentIdStringLink = "{{" + sentIdString + "}}";
         output +=
-          "<span>" +
+          "<span style='flex: 7;'><span style='background-color: silver;'>" +
           sentIdString +
           "<a onclick=\"copy_to_clipboard('" +
           sentIdStringLink +
           "')\">[";
         output += gLocal.gui.copy_to_clipboard;
-        output += "]</a></span>";
+        output += "]</a>";
         output +=
           "<a href='../pcdl/reader.php?view=sent&book=" +
           book +
@@ -1631,7 +1631,8 @@ function renderWordParBlockInner(elementBlock) {
           "' target='_blank'>";
         output += "[" + gLocal.gui.scan_in_reader + "]";
         output += "</a>";
-        output += "<guide gid='sent_func' style='margin:unset;'></guide>";
+        output += "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+        output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
         output += "</div>";
 
         output += "<div class='sent_wbw'>";
@@ -1649,7 +1650,6 @@ function renderWordParBlockInner(elementBlock) {
   output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
   output += "<div class='translate_sent_head'>";
   output += "<div class='translate_sent_head_toolbar'>";
-  output += "<guide gid='sent_trans' style='margin:unset;'></guide>";
   output += "<span></span>";
   output +=
     "<span onclick=\"show_tran_net('" +
@@ -2472,12 +2472,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$$" +
-                  arrMean[i] +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                "$" +
+                arrMeaning.length +
+                "$$" +
+                arrMean[i] +
+                "$" +
+                g_DictWordList[iDict].Language
               );
             }
           }
@@ -2527,12 +2527,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$*$" +
-                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$*$" +
+                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2582,12 +2582,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$**$" +
-                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$**$" +
+                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -3062,7 +3062,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) {}
+function renderWordNoteDivByParaNo(book, paragraph) { }
 /*
 paragraph word note
 */
@@ -3261,7 +3261,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) {}
+function updateWordCommentary(element) { }
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3384,13 +3384,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-      g_allparlen_array[gVisibleParBegin - 1] <=
+    g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin - 1] >
+    g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3417,13 +3417,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] <=
+    g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] >
+    g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -3860,12 +3860,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-        id +
-        "' name=\"word_note_" +
-        id +
-        '">[' +
-        (index + 1) +
-        "]</a>"
+      id +
+      "' name=\"word_note_" +
+      id +
+      '">[' +
+      (index + 1) +
+      "]</a>"
     );
   });
 
