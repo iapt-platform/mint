@@ -426,17 +426,20 @@
         <div><span id="today_solarNoon"></span></div>
         <div><span id="today_sunset"></span></div>
         <div>月相<span id="today_moon_phase"></span></div>
+        <div>圆满度<span id="today_moon_percent"></span></div>
         <div>南偏西<span id="today_sun_azimuth"></span></div>
         <div>北偏东<span id="today_moon_azimuth"></span></div>
         <div>日月角<span id="angle_sun_e_moon"></span></div>
         <div>月相角<span id="today_moon_angle"></span></div>
+        <div>当前时间<span id="curr_time"></span></div>
+        <div>现在时间<span id="now_time"></span></div>
 
 
     </div>
     <script>
         $("#title_text").html(localString[g_language].BE);
         var g_coordinate_this = new Object();
-        var today = new Date();
+        var g_now_date = new Date();
         var sun_times = new Object();
         var curr_position = localStorage.getItem("local_position");
         if (curr_position) {
@@ -464,6 +467,9 @@
             if ($("#input_time").val()) {
                 today = new Date($("#input_time").val());
             }
+            else {
+                today = g_now_date
+            }
             sun_times = SunCalc.getTimes(today, g_coordinate_this.AT, g_coordinate_this.LT, 0);
             sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
             moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
@@ -474,8 +480,12 @@
             $("#today_sun_azimuth").html(angle_trans(sun_position.azimuth / Math.PI * 180));//太阳水平弧度
             $("#today_moon_azimuth").html(angle_trans(moon_position.azimuth / Math.PI * 180));//月亮水平弧度
             $("#today_moon_phase").html(1 - 2 * moon_Illumination.phase);//月相值
+            $("#today_moon_percent").html(moon_Illumination.fraction);//月相值
             $("#today_moon_angle").html(angle_trans(moon_Illumination.angle / Math.PI * 180));//月相角
             $("#angle_sun_e_moon").html(angle_trans(Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI * 180));//月亮水平弧度
+            $("#curr_time").html(today.toLocaleTimeString());//当前时间
+            $("#now_time").html(g_now_date.toLocaleTimeString());//现在
+
 
 
         }
