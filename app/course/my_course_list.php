@@ -52,17 +52,6 @@ foreach ($covers as $value) {
 foreach($Fetch as $row){
     echo '<div class="file_list_row">';
 
-    
-    $coverlink = $cover["{$row["cover"]}"];
-    echo '<div class="v-cover" style="flex:2;">';
-    if(substr($coverlink,0,6)=="media:"){
-        echo '<img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto">';
-    }
-    else{
-        echo '<img src="'.$coverlink.'" width="50" height="50">';
-    }
-    echo '</div>';
-
     echo '<div class="pd-10" style="flex:8;padding:5px;">';
     echo '<div class="title" style="padding-bottom:5px;"><a href="../course/my_course_index.php?course='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
@@ -70,7 +59,6 @@ foreach($Fetch as $row){
     echo '<div class="author"  style="padding-bottom:5px;">主讲：'.$row["teacher"].'</div>';
     echo '</div>';
     
-
     echo '</div>';
 }
 
