@@ -93,6 +93,12 @@
 					</svg>
 					<?php echo $_local->gui->logout;?>
 				</a>
+				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"];?>'>
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#ic_exit_to_app_24px"></use>
+					</svg>
+					<?php echo "我的空间";?>
+				</a>
 			</div>
 
 				<?php

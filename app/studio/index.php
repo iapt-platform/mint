@@ -187,7 +187,6 @@ else{
 
             .help_div{
                 margin-bottom: 2em;
-                width: 28em;
             }
             .htlp_title{
                 font-size:140%;
@@ -385,6 +384,11 @@ else{
 		</div>
 	</div>       
 
+	<script src="../public/js/highcharts/highcharts.js"></script>
+	<script src="../public/js/highcharts/modules/exporting.js"></script>
+	<script src="../public/js/highcharts/modules/data.js"></script>
+	<script src="../public/js/highcharts/modules/series-label.js"></script>
+	<script src="../public/js/highcharts/modules/oldie.js"></script>
 
 	<div class="help_div">
 		<div  class="htlp_title">
@@ -393,12 +397,17 @@ else{
 		<div>
 			<div class="help_fun_block">
 				<div class="title" ><?php echo $_local->gui->studio;?></div>
-				<ul class="help_fun_block_link_list">
+				<div style="display:flex;">
+				<ul class="help_fun_block_link_list" style="flex:3;">
 					<li style="display:block;">已发表的文集：2</li>
 					<li style="display:block;">已发表的文章：12</li>
 					<li style="display:block;"><?php echo $_local->gui->my_document;?>：234</li>
 					<li style="display:block;"><?php echo $_local->gui->encyclopedia;?>：245</li>
+					<li style="display:block;"><?php echo $_local->gui->userdict;?>：245</li>
 				</ul>
+				<div id="container" style="height:250px;flex:7;">
+				</div>
+				</div>
 			</div>
 			<div class="help_fun_block">
 				<div class="title" ><?php echo $_local->gui->library;?></div>
@@ -478,6 +487,118 @@ else{
 file_list();
 </script>
 		
+<script>
+/*
+		$.get('../uwbw/update_analytics.php', function (csvStr) {
+			csvStr = csvStr.replace(/\n\n/g, '\n');
+			Highcharts.chart('container', {
+
+			chart: {
+				scrollablePlotArea: {
+					minWidth: 400
+				}
+			},
+
+			data: {
+				//csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
+				csv: csvStr
+			},
+
+			title: {
+				text: '逐词解析'
+			},
+
+			subtitle: {
+				text: ''
+			},
+
+			xAxis: {
+				tickInterval: 7 * 24 * 3600 * 1000, // one week
+				tickWidth: 0,
+				gridLineWidth: 1,
+				labels: {
+					align: 'left',
+					x: 3,
+					y: -3
+				}
+			},
+
+			yAxis: [{ // left y axis
+				title: {
+					text: null
+				},
+				labels: {
+					align: 'left',
+					x: 3,
+					y: 16,
+					format: '{value:.,0f}'
+				},
+				showFirstLabel: false
+			}, { // right y axis
+				linkedTo: 0,
+				gridLineWidth: 0,
+				opposite: true,
+				title: {
+					text: null
+				},
+				labels: {
+					align: 'right',
+					x: -3,
+					y: 16,
+					format: '{value:.,0f}'
+				},
+				showFirstLabel: false
+			}],
+
+			legend: {
+				align: 'left',
+				verticalAlign: 'top',
+				borderWidth: 0
+			},
+
+			tooltip: {
+				shared: true,
+				crosshairs: true
+			},
+
+			plotOptions: {
+				series: {
+					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (e) {
+								hs.htmlExpand(null, {
+									pageOrigin: {
+										x: e.pageX || e.clientX,
+										y: e.pageY || e.clientY
+									},
+									headingText: this.series.name,
+									maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+										this.y + ' sessions',
+									width: 200
+								});
+							}
+						}
+					},
+					marker: {
+						lineWidth: 1
+					}
+				}
+			},
+
+			series: [{
+				name: 'All sessions',
+				lineWidth: 4,
+				marker: {
+					radius: 4
+				}
+			}, {
+				name: 'New users'
+			}]
+			});
+		});
+		*/
+        </script>
 	</div>
 	
 	<div class="foot_div">

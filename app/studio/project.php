@@ -183,7 +183,7 @@ switch($op){
 							$strXml.="<style>{$result["style"]}</style>";
 							$strXml.="<status>0</status>";
 							$strXml.="</word>";
-							$wbw_data[] = array(UUID::v4(),$block_id,$book,$iPar,$result["wid"],$result["real"],$strXml,time(),time(),1,$USER_NAME);
+							$wbw_data[] = array(UUID::v4(),$block_id,$book,$iPar,$result["wid"],$result["real"],$strXml,mTime(),mTime(),1,$USER_NAME);
 						}
 							
 						}

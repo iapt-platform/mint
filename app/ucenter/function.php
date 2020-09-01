@@ -19,18 +19,18 @@ function ucenter_get($userid,$fields="username"){
 
 }
 
-function ucenter_getA($userid,$fields){
+function ucenter_getA($userid,$fields="nickname"){
     //打开数据库
     $dns = "sqlite:"._FILE_DB_USERINFO_;
     $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
-    $query = "select username from user where userid= ? ";
+    $query = "select username,nickname from user where userid= ? ";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($userid));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dbh=null;
     if(count($fUser)>0){
-        return($fUser[0]["username"]);
+        return($fUser[0][$fields]);
     }
     else{
         return("");

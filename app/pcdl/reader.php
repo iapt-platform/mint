@@ -166,7 +166,8 @@ para:hover{
 }
 .sent_toc{
 	font-weight:700;
-	font-size:120%;
+	font-family: Noto serif;
+    font-size: 150%;
 }
 </style>
 		<!-- tool bar begin-->
@@ -356,6 +357,7 @@ else{
 			$toc2Level = 0;
 			echo "<div><div>";
 			foreach ($chapter_toc as $key => $value) {
+				$tocList[$value["paragraph"]] = $value["level"];
 				$classCurrToc="";
 				$classCurrToc2 = "";
 				$classCurrTocTitle2="";
@@ -412,7 +414,7 @@ else{
 				//右侧目录
 				
 				if($value["paragraph"]>$currParaBegin && $value["paragraph"]<$currParaEnd){
-					$tocList[$value["paragraph"]] = $value["level"];
+					//$tocList[$value["paragraph"]] = $value["level"];
 					$htmlToc2 .= "<div><a href='#para_{$value["paragraph"]}'>{$value["toc"]}</a></div>";
 				}
 				
@@ -556,8 +558,6 @@ else{
 		break;
 	}
 	echo "</div>";
-
-
 	//生成一个段落空壳 等会儿查询数据，按照不同数据类型填充进去
 	PDO_Connect("sqlite:"._FILE_DB_PALI_SENTENCE_);
 
