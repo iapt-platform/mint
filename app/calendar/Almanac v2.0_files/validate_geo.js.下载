@@ -1,0 +1,153 @@
+function round_1000(num)
+{
+    return Math.floor((num + 0.0005) * 1000) / 1000;
+}
+
+
+/*
+ Validate set latitude and longitude 
+ */
+function check_values()
+{
+    var custom_URL = "/wp-content/plugins/observing-tools/almanac/almanac.html?";
+    var display_almanac;
+    var lat = parseFloat(document.observing.lat.value);
+    var lat_min = parseFloat(document.observing.latmin.value);
+    var lat_sgn = document.observing.latsgn.value;
+    var lng = parseFloat(document.observing.lng.value);
+    var lng_min = parseFloat(document.observing.lngmin.value);
+    var lng_sgn = document.observing.lngsgn.value;
+    var tzone = parseFloat(document.observing.tzone.value);
+
+    with (Math) {
+
+        lat = round_1000(lat + lat_min / 60);
+        lng = round_1000(lng + lng_min / 60);
+
+        if (lat_sgn == "S") {lat = lat * -1;}
+        if (lng_sgn == "E") {lng = lng * -1;}
+
+        if ((tzone > 0 && lng_sgn == "W") || (tzone < 0 && lng_sgn == "E"))
+        {
+            alert("Please check that you have selected the correct time zone for your longitude. Time zones are positive east of Greenwich, negative if west.");
+        }
+        else
+        {
+            custom_URL += "latitude=" + lat + "&";
+            custom_URL += "longitude=" + lng + "&";
+            custom_URL += "tzone=" + tzone + "&";
+            custom_URL += "UTdate=now&UTtime=now";
+            display_almanac = window.open(custom_URL,'chooser');
+            display_almanac.resizeTo(950, 975);
+        }
+
+    }
+}
+
+function check_values2()
+{
+    var custom_URL = "/wp-content/plugins/observing-tools/almanac/almanac.html?";
+    var display_almanac;
+    var lat = parseFloat(document.planets.lat.value);
+    var lat_min = parseFloat(document.planets.latmin.value);
+    var lat_sgn = document.planets.latsgn.value;
+    var lng = parseFloat(document.planets.lng.value);
+    var lng_min = parseFloat(document.planets.lngmin.value);
+    var lng_sgn = document.planets.lngsgn.value;
+    var tzone = parseFloat(document.planets.tzone.value);
+
+    with (Math) {
+
+        lat = round_1000(lat + lat_min / 60);
+        lng = round_1000(lng + lng_min / 60);
+
+        if (lat_sgn == "S") {lat = lat * -1;}
+        if (lng_sgn == "E") {lng = lng * -1;}
+
+        if ((tzone > 0 && lng_sgn == "W") || (tzone < 0 && lng_sgn == "E"))
+        {
+            alert("Please check that you have selected the correct time zone for your longitude. Time zones are positive east of Greenwich, negative if west.");
+        }
+        else
+        {
+            custom_URL += "latitude=" + lat + "&";
+            custom_URL += "longitude=" + lng + "&";
+            custom_URL += "tzone=" + tzone + "&";
+            custom_URL += "UTdate=now&UTtime=now";
+            display_almanac = window.open(custom_URL,'chooser');
+            display_almanac.resizeTo(970, 1025);
+        }
+
+    }
+}
+/*
+    Get cookie data for saved location
+ */
+function getCookie( name )
+{
+    var start = document.cookie.indexOf( name + "=" );
+    var len = start + name.length + 1;
+    if ( ( !start ) && ( name != document.cookie.substring( 0, name.length ) ) ) {
+        return null;
+    }
+    if ( start == -1 ) return null;
+    var end = document.cookie.indexOf( ";", len );
+    if ( end == -1 ) end = document.cookie.length;
+    return decodeURI( document.cookie.substring( len, end ) );
+}
+
+
+/*
+    Set cookie data for saving a location
+ */
+function setCookie( name, value, expires, path, domain, secure )
+{
+    var today = new Date();
+    today.setTime( today.getTime() );
+    if ( expires ) {
+        expires = expires * 1000 * 60 * 60 * 24;
+    }
+    var expires_date = new Date( today.getTime() + (expires) );
+    document.cookie = name+"="+encodeURI( value ) +
+        ( ( expires ) ? ";expires="+expires_date.toGMTString() : "" ) + //expires.toGMTString()
+        ( ( path ) ? ";path=" + path : "" ) +
+        ( ( domain ) ? ";domain=" + domain : "" ) +
+        ( ( secure ) ? ";secure" : "" );
+}
+
+/*
+ todo: Do not know what this function does
+ */
+function deleteCookie( name, path, domain )
+{
+    if ( getCookie( name ) ) document.cookie = name + "=" +
+        ( ( path ) ? ";path=" + path : "") +
+        ( ( domain ) ? ";domain=" + domain : "" ) +
+        ";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+}
+
+/*
+ Load cookie data for a saved location
+ */
+function load_saved()
+{
+    var recall_custom_URL = "/wp-content/plugins/observing-tools/almanac/almanac.html?";
+    var show_saved_almanac;
+    var latitude_degrees = getCookie('almanac2latdeg');
+    var longitude_degrees = getCookie('almanac2longdeg');
+    var t_zone_hours = getCookie('almanac2tzonehours');
+
+    if (latitude_degrees == null && longitude_degrees == null)
+    {
+        alert ("Sorry, but you haven't saved a previous location. Please choose a city from the Almanac's built-in gazetteer, or select a custom latitude, longitude and time zone from the pull-down menus. Once the Almanac is displayed you will have the option to save this information for future use.")
+    }
+    else
+    {
+        recall_custom_URL += "latitude=" + latitude_degrees + "&";
+        recall_custom_URL += "longitude=" + longitude_degrees + "&";
+        recall_custom_URL += "tzone=" + t_zone_hours + "&";
+        recall_custom_URL += "UTdate=now&UTtime=now";
+        show_saved_almanac = window.open(recall_custom_URL,'chooser');
+        show_saved_almanac.resizeTo(950, 975);
+    }
+}
