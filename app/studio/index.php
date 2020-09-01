@@ -488,6 +488,7 @@ file_list();
 </script>
 		
 <script>
+/*
 		$.get('../uwbw/update_analytics.php', function (csvStr) {
 			csvStr = csvStr.replace(/\n\n/g, '\n');
 			Highcharts.chart('container', {
@@ -596,6 +597,7 @@ file_list();
 			}]
 			});
 		});
+		*/
         </script>
 	</div>
 	

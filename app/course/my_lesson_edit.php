@@ -68,11 +68,6 @@ echo '<form action="../course/my_course_index.php" onsubmit="return lesson_valid
 echo '<input type="hidden" name="lesson" value="'.$lesson_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
-    echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'封面'.'</div>';
-    echo '<div id="img_cover" style="flex:8;">'.$cover_html.'</div>';
-    echo "<input id = 'cover_id' type='hidden' name = 'cover' value='{$lesson_info["cover"]}'>";
-    echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.'标题'.'</div>';
@@ -88,17 +83,19 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:8;"><input type="input" name = "subtitle" value="'.$lesson_info["subtitle"].'" /></div>';
     echo '</div>';
     $strDate = date("Y-m-d",$lesson_info["date"]/1000);
+    $strTime = date("H:i",$lesson_info["date"]/1000);
+    $strDuration = date("H:i",$lesson_info["duration"]);
     echo 'Date: <input type="date" name="lesson_date" value="'.$strDate.'"/>';
-    echo 'Time: <input type="time" name="lesson_time" />';
-    echo 'Duration: <input type="time" name="lesson_duration" />';
+    echo 'Time: <input type="time" name="lesson_time" value="'.$strTime.'"/>';
+    echo 'Duration: <input type="time" name="duration" value="'.$strDuration.'"/>';
 
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'直播链接'.'</div>';
-    echo '<div style="flex:8;"><textarea name="link" style="height:6em;">'.$lesson_info["link"].'</textarea></div>';
+    echo '<div style="flex:2;">'.'直播'.'</div>';
+    echo '<div style="flex:8;"><textarea name="live" style="height:6em;">'.$lesson_info["live"].'</textarea></div>';
     echo '</div>';
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'录播链接'.'</div>';
-    echo '<div style="flex:8;"><textarea name="link1" style="height:6em;">'.$lesson_info["link"].'</textarea></div>';
+    echo '<div style="flex:2;">'.'录播'.'</div>';
+    echo '<div style="flex:8;"><textarea name="replay" style="height:6em;">'.$lesson_info["replay"].'</textarea></div>';
     echo '</div>';
 
 

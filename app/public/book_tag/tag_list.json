@@ -1,0 +1,20 @@
+{
+  "sutta": { "level": 0 },
+  "vinaya": { "level": 0 },
+  "abhidhamma": { "level": 0 },
+  "mūla": { "level": 0 },
+  "aṭṭhakathā": { "level": 0 },
+  "ṭīkā": { "level": 0 },
+  "añña": { "level": 0 },
+  "dīgha": { "level": 1 },
+  "majjhima": { "level": 1 },
+  "saṃyutta": { "level": 1 },
+  "aṅguttara": { "level": 1 },
+  "khuddaka": { "level": 1 },
+  "mahāvibhaṅga": { "level": 1 },
+  "Bhikkhunīvibhaṅga": { "level": 1 },
+  "mahāvaggapāḷi": { "level": 1 },
+  "Cūḷavaggapāḷi": { "level": 1 },
+  "vibhaṅga": { "level": 1 },
+  "Theragāthā": { "level": 2 }
+}
