@@ -153,7 +153,7 @@ $month=$_GET['m']?$_GET['m']:date('m');
 		}
 
 
-			var g_langrage="en";
+			var g_language="en";
 
 var pali_num_str=[
 { "id":"1" , "value":"eka" },
@@ -674,9 +674,9 @@ function set_time_string(date_obj){
 	return(hh+":"+mm+":"+ss)
 }
 function menuLangrage(obj,year,month){
-	g_langrage=obj.value;
-	setCookie('language',g_langrage,365);
-	window.location.assign("buddhist_calendar.php?language="+g_langrage+"&y="+year+"&m="+month);
+	g_language=obj.value;
+	setCookie('language',g_language,365);
+	window.location.assign("buddhist_calendar.php?language="+g_language+"&y="+year+"&m="+month);
 }
 set_uposatha_day();
 set_cur_day_era();

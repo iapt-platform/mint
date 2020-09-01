@@ -1,6 +1,6 @@
 	<!--显示模式-->
 	<script>
-		var g_langrage="en";
+		var g_language="en";
 		var g_currLink="";
 		function user_init(strPage){
 			g_currLink = strPage;

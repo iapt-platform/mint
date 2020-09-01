@@ -1,5 +1,5 @@
 var g_is_mobile=false;
-var g_langrage="langrage_cn";
+var g_language="langrage_cn";
 //输出调试信息
 function debugOutput(str,level){
 str = "<p>"+str+"</p>";

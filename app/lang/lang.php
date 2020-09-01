@@ -1,14 +1,14 @@
 	<!--显示模式-->
 	<script>
-		var g_langrage="en";
+		var g_language="en";
 		var g_currLink="";
 		function lang_init(strPage){
 			g_currLink = strPage;
 		}
 		function setLang(strLang){
-			g_langrage=strLang;
-			setCookie('language',g_langrage,365);
-			window.location.assign(location.pathname+"?language="+g_langrage);
+			g_language=strLang;
+			setCookie('language',g_language,365);
+			window.location.assign(location.pathname+"?language="+g_language);
 		}
 	</script>
 	<style>

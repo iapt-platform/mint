@@ -470,6 +470,10 @@
 		"end_of_text": "No Prev",
 		"begin_of_text": "No Next",
 		"chapter_select": "Please choose a chapter in the left sidebar",
+		"kala_pakkha": "waning",
+		"sukka_pakkha": "waxing",
+		"com_dict": "Community Dictionary",
+		"contributor": "contributor",
 		"": ""
 	},
 	"grammastr": [
