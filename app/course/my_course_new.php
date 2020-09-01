@@ -17,11 +17,6 @@ echo '</div>';
 <input type="hidden" name="op" value="insert" />
 
 <div id="userfilelist">
-    <div style="display:flex;">
-    <div style="flex:2;">封面</div>
-    <div style="flex:8;"></div>
-    <input type="hidden" name="cover" value="" />
-    </div>
 
     <div style="display:flex;">
     <div style="flex:2;">标题</div>
@@ -31,7 +26,7 @@ echo '</div>';
     </div>
     </div>
 
-    <div style="display:flex;">
+    <div style="display:none;">
     <div style="flex:2;">副标题</div>
     <div style="flex:8;">
         <div style="text-align: right;color:gray;">0/32</div>

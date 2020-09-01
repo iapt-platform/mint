@@ -31,10 +31,6 @@ echo '</div>';
 <input type="hidden" name="video" value="" />
 
 <div id="userfilelist">
-    <div style="display:flex;">
-    <div style="flex:2;">封面</div>
-    <div style="flex:8;"></div>
-    </div>
 
     <div style="display:flex;">
     <div style="flex:2;">标题</div>
@@ -44,7 +40,7 @@ echo '</div>';
     </div>
     </div>
 
-    <div style="display:flex;">
+    <div style="display:none;">
     <div style="flex:2;">副标题</div>
     <div style="flex:8;">
         <div style="text-align: right;color:gray;">0/32</div>
@@ -66,12 +62,20 @@ echo '</div>';
     </div> 
 
     <div style="display:flex;">
-    <div style="flex:2;">链接</div>
-    <div style="flex:8;"><textarea  style="height:6em;"></textarea></div>
+        <div style="flex:2;">直播信息</div>
+        <div style="flex:8;"><textarea  name="live"  style="height:6em;"></textarea></div>
     </div>
     <div style="display:flex;">
-    <div style="flex:2;">链接(中国大陆)</div>
-    <div style="flex:8;"><textarea style="height:6em;"></textarea></div>
+        <div style="flex:2;">课程时间</div>
+        <div style="flex:8;">
+    日期: <input type="date" name="lesson_date" value=""/>
+    时间: <input type="time" name="lesson_time" value="08:00"/>
+   课程持续时间: <input type="time" name="duration" value="01:00"/>
+        </div>
+    </div>
+    <div style="display:flex;">
+    <div style="flex:2;">录播信息</div>
+    <div style="flex:8;"><textarea name="replay" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
@@ -81,6 +85,8 @@ echo '</div>';
         <span >课程语言<input type="hidden" name="speech_lang" value="" /></span>
     </div>
     </div> 
+
+
 
     <div style="display:flex;">
     <div style="flex:2;">标签</div>
