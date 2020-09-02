@@ -89,7 +89,7 @@ echo "</div>";
     for(const lesson of  arrLesson){
         html+= '<div class="card" style="display:flex;margin:1em;padding:10px;">';
 
-        html+= '<div style="flex:7;">';
+        html+= '<div style="flex:7;max-width: 80%;">';
         html+= '<div class="pd-10">';
         html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'+lesson["title"]+'</div>';
         let summary = "";
