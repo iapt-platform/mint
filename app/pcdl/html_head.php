@@ -65,10 +65,10 @@ else{
     margin-right: auto;
 }
 .card li{
-	white-space: unset;
+	white-space: normal;
 }
 .card code{
-	white-space: unset;
+	white-space: normal;
 }
 
 
