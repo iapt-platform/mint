@@ -64,6 +64,13 @@ else{
     margin-left: auto;
     margin-right: auto;
 }
+.card li{
+	white-space: unset;
+}
+.card code{
+	white-space: unset;
+}
+
 
 	</style>
 </head>
