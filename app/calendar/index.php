@@ -61,14 +61,14 @@ $dir_app="../studio/";
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="<?php echo $dir_app; ?>css/style.css"/>
-	<title><?php echo $_local->gui->pcd_studio;?></title>
+	<title><?php echo $_local->gui->BE;?></title>
 	<script src="<?php echo $dir_app; ?>js/jquery-3.3.1.min.js"></script>
 <!--	<script language="javascript" src="<?php echo $dir_app; ?>charcode/sinhala.js"></script>
 	<script language="javascript" src="<?php echo $dir_app; ?>charcode/myanmar.js"></script>
 	<script language="javascript" src="<?php echo $dir_app; ?>charcode/unicode.js"></script>
 -->
 <script>
-		<?php 
+	<?php 
 	//加载js语言包
 	require_once '../public/load_lang_js.php';
 	?>
@@ -149,7 +149,7 @@ input[type="date"]{
 		}
 
 
-			var g_langrage="en";
+			var g_language="en";
 function setCookie(c_name,value,expiredays)
 {
 	var exdate=new Date()
@@ -806,9 +806,9 @@ function set_time_string(date_obj){
 	return(hh+":"+mm+":"+ss)
 }
 function menuLangrage(obj,year,month){
-	g_langrage=obj.value;
-	setCookie('language',g_langrage,365);
-	window.location.assign("index.php?language="+g_langrage+"&y="+year+"&m="+month);
+	g_language=obj.value;
+	setCookie('language',g_language,365);
+	window.location.assign("index.php?language="+g_language+"&y="+year+"&m="+month);
 
 }
 set_uposatha_day();

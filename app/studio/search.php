@@ -99,11 +99,11 @@ else{
 		}
 
 
-			var g_langrage="en";
+			var g_language="en";
 			function menuLangrage(obj){
-				g_langrage=obj.value;
-				setCookie('language',g_langrage,365);
-				window.location.assign("search.php?language="+g_langrage);
+				g_language=obj.value;
+				setCookie('language',g_language,365);
+				window.location.assign("search.php?language="+g_language);
 			}
 
 	</script>

@@ -1,0 +1,954 @@
+body {
+    background: darkgrey;
+    font: normal 14px/18px Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #FFFFFF;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+html {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+ul li {
+    text-align: left;
+}
+
+html {
+    width: 100%;
+}
+
+input {
+    height: 25px;
+    border: 1px solid white;
+}
+
+a:link {
+    color: #FF0000;
+}
+
+a:visited {
+    color: #FF0000;
+}
+
+a:active {
+    color: #FF0000;
+}
+
+img {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+select {
+    /*height: 20px;*/
+    background-color: lightslategrey;
+    color: white;
+    border-radius: 2px;
+}
+
+input {
+    border: 1px solid black;
+    border-radius: 2px;
+    text-indent: 5px;
+}
+
+
+a {
+    color: #660066;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+h1 {
+    font: bold italic 1.3em Georgia, "Times New Roman", Times, serif;
+    color: #333333;
+    padding: 0;
+    margin: 0;
+}
+
+h2 {
+    font: italic 1.3em Georgia, "Times New Roman", Times, serif;
+    color: #660066;
+}
+
+h3 {
+    font: bold 1.1em Arial, Helvetica, sans-serif;
+    display: inline;
+    color: #333;
+    background-color: transparent;
+}
+
+span {
+display:inline-block; margin-top: 5%;
+}
+
+span label {
+display:block
+}
+
+
+
+textarea {
+    resize: none;
+}
+label {
+    font: bold 13px/13px Arial, Helvetica, sans-serif;
+
+}
+/* MAJOR IDs used for layout */
+#header {
+    background-image: url("http://media.skyandtelescope.com/designimages/hMain_back2.jpg");
+    /*width: 972px;*/
+}
+
+#wrapper {
+    clear: both;
+}
+
+#nav a:hover {
+    color: #CCCCCC;
+    text-decoration: underline;
+}
+
+#hMags img {
+    border: solid 1px white;
+}
+
+#hMags .cWrap {
+    border: none;
+    background-color: #000000;
+}
+
+#hMags .smLinks a {
+    color: #FFFFFF;
+    /*padding: 0 3px;*/
+}
+
+#hSearch {
+    /*padding: 3px 10px;*/
+    background-color: #FFFFFF;
+    color: #660066;
+}
+
+#hSearch form {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 12px;
+}
+
+#hProfile {
+    /*padding: 8px 0 0 8px;*/
+    color: #FFFFFF;
+}
+
+#hProfile form, input, textarea, select, option {
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+}
+#hProfile h1 {
+    margin: 0;
+    padding: 0;
+    /*padding-bottom: 3px;*/
+    color: #FFFFFF;
+    font: bold 15px/10px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+#hProfile a {
+    color: #FFFFFF;
+}
+
+#hProfile a:hover {
+    color: black;
+}
+
+#hAlmanac img {
+    /*padding-bottom: 5px;*/
+    margin: 0;
+}
+
+#hAlmanac_alt {
+    /*width: 728px;*/
+    /*height: 24px;*/
+    /*padding-top: 5px;*/
+    background-color: black;
+    color: #FFFFFF;
+    font: bold italic 18px Georgia, serif;
+    text-align: left;
+    text-transform: none;
+}
+
+#hAlmanac_alt h1 {
+    display: inline;
+    color: #FFFFFF;
+    /*padding: 0 5px;*/
+    margin: 0;
+    font: bold 15px Arial, sans;
+    text-transform: capitalize;
+}
+
+#hAdvert img {
+    padding: 0;
+    margin: 0;
+}
+
+/* -- ids and classes within content */
+.comment {
+    border: solid 1px #5274AE;
+    background-color: #F6F6ED;
+    /*padding: 5px;*/
+    /*margin-right: 117px;*/
+    /*margin-bottom: 5px;*/
+}
+
+#cLeft {
+    /*width: 567px;*/
+}
+
+#cRight {
+}
+.smDate {
+    color: #5274AE;
+    font: bold 12px/13px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.smHeader {
+    font: bold 15px/13px Arial, Helvetica, sans-serif;
+    text-align: left;
+    color: #000000;
+}
+
+.smByline {
+    font: bold 13px/13px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+    text-align: right;
+    background-color: black;
+    color: #FFFFFF;
+    padding-right: 3px;
+    margin: 0 0 5px 0;
+}
+
+.smLinks {
+    clear: left;
+    /*padding-top: 7px;*/
+    color: #359;
+    font: bold 12px/11px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.smLinks a {
+    /*padding-right: 8px;*/
+    color: #359;
+}
+
+.smLinks a:hover {
+    color: #000000;
+}
+
+.crumbs {
+    clear: none;
+    /*margin-bottom: 15px;*/
+    font: bold 12px/11px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.crumbs a {
+    color: #000000;
+    /*padding-right: 8px;*/
+}
+
+.crumbs a:hover {
+    color: #660000;
+}
+
+.utils {
+    font: bold 12px/11px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.utils a {
+    vertical-align: 50%;
+}
+
+.vRule {
+    border-left: 1px solid #5274AE;
+}
+
+.hRule {
+    border-top: 1px solid #5274AE;
+}
+
+.note {
+    font: bold .21em/1.25em Arial, sans;
+}
+
+.bg_bug {
+    /*padding: 5px;*/
+    /*padding-top: 60px;*/
+    color: #FFFFFF;
+    font: bold italic 13px/12px Georgia, serif;
+    background-image: url("http://media.skyandtelescope.com/designimages/BG_back.jpg");
+    border: solid 1px #000000;
+    /*margin-bottom: 5px;*/
+}
+
+.bg_bug form {
+    padding: 0;
+    margin: 0;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+/* Ad Column elements on all pages */
+#cAdvert {
+    float: right;
+    /*width: 213px;*/
+    /*margin: 5px 6px 0 0;*/
+}
+
+#cAdvert img {
+    border: 1px solid #000000;
+    /*margin-bottom: 5px;*/
+}
+
+#cAdvert .artTopAds img {
+    border: none;
+}
+
+#cAdvert h2 {
+    font: bold 14px Georgia, serif;
+    font-style: italic;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+#cMain {
+    /*padding-bottom: 7px;*/
+}
+
+.cWrap {
+    border: solid 1px black;
+    background-color: #FFFFFF;
+}
+
+.cMainImg {
+    float: left;
+    /*margin-right: 5px;*/
+}
+
+.cHeader {
+    /*padding: 1% 0 0 5px;*/
+    background-color: transparent;
+    color: #FFFFFF;
+    font: bold 13px/13px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.MoonHeader {
+    /*padding-left: 5px;*/
+    background: transparent;
+    color: #FFFFFF;
+    font: bold 13px/13px Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+}
+
+.smBlurb, .cArea {
+    font: normal 14px/16px Arial, Helvetica, sans-serif;
+}
+
+.cArea {
+    /*padding: 5px;*/
+    color: black;
+}
+
+.smBlurb {
+    color: #000000;
+}
+
+.cArea form {
+    padding: 0;
+    margin: 0;
+}
+
+.cFooter {
+    border-bottom: solid 6px black;
+}
+
+.cMainSub {
+    clear: both;
+    /*padding: 5px 0;*/
+    border: solid 1px black;
+    background-color: #E7E7E7;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.cSubBox {
+    /*width: 567px;*/
+    border: 1px solid #FFFFFF;
+    /*margin: 7px 0 0 10px;*/
+}
+
+.smPhoto {
+    float: left;
+    /*padding: 0 5px 5px 0;*/
+}
+
+
+/*
+Template custom elements
+*/
+.btn {
+    border-radius: 2px;
+    border: 1px solid white;
+    background-color: transparent;
+    color: white;
+    font-size: 13px;
+    font-weight: bolder;
+    font-family: 'Open Sans', sans-serif;
+    /*padding:5px 15px;*/
+    text-transform: capitalize;
+    transition: background-color .15s ease-out;
+}
+.container {
+    max-width: 915px;
+    /*height: 1100px;*/
+}
+
+.row {
+    overflow: auto;
+    /*height: 100%;*/
+    width: 100%;
+    border-bottom: 1px solid white;
+    background: url(almanac_files/header-bg.jpg) no-repeat;
+    background-size: cover;
+}
+
+.btn:hover {
+    background-color: white;
+    color: black;
+}
+.show {
+    display: none;
+}
+
+
+/*
+Top row custom elements
+*/
+.box1 {
+    /*width: 32.98%;*/
+    overflow: auto;
+    float: left;
+    border-right: 1px solid white;
+    height: 210px;
+
+}
+#header_box {
+    width: 34%;
+    overflow: auto;
+    float: left;
+    border-right: 1px solid white;
+}
+#loc_box {
+    width: 38.2%;
+    overflow: auto;
+    float: left;
+    border-right: 1px solid white;
+}
+
+#location_select {
+    margin-top: 7%;
+    margin-left: 5%;
+    width: 90%;
+}
+#time_select {
+    margin-left: 5%;
+    width: 90%;
+
+}
+
+.box1:nth-child(1), .box1:nth-child(2) {
+    padding-right: 0.33%;
+}
+
+#new_logo {
+    width: 75%;
+    height: auto;
+    margin-top: 5%;
+    margin-left: 9%;
+    vertical-align: middle;
+    text-align: center;
+}
+#d_s_t {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    /*margin-top: 10%;*/
+    margin-left: 5%;
+    vertical-align: bottom;
+    position: relative;
+    top: -1%;
+    *overflow: hidden;
+}
+#d_s_t_2 {
+    display: block;
+    padding-left: .5%;
+    text-indent: -.5%;
+}
+.long_span {
+    display: inline-block;
+    margin-top: 0;
+}
+.back_to_now {
+    margin-left: 5%; margin-top: 5%;
+}
+
+#lat_span {
+    display:inline-block;
+    /*margin-top: 5%;*/
+}
+#lat_lon_tz {
+    text-align: center;
+    border-right: none;
+    width: 26.2%;
+    overflow: auto;
+    float: left;
+}
+
+#lat_lon_tz select {
+    margin-top: 3%;
+}
+.box1 p {
+    text-transform: none; margin-left:10%;font: bold 13px/20px Arial, Helvetica, sans-serif;
+}
+
+
+
+#ut_img {
+    border: none;
+    background-color: transparent;
+    color: white;
+    outline: none;
+}
+
+/*
+Second row custom elements
+*/
+.box2 {
+    /*border-top: 1px solid white;*/
+    width: 16.4%;
+    height: 70px;
+    overflow: auto;
+    float: left;
+    text-align: center;
+}
+.box2 .btn {
+    margin-top: 15%;
+    font-size: 15px;
+    font-weight: bolder;
+
+}
+
+/*
+Almanac computation row custom elements
+*/
+.popup {
+    color:#FF0000; cursor:pointer;
+    cursor:hand; margin-left: 37%;
+    margin-top: 0;
+}
+.popup2 {
+    color:#FF0000; cursor:pointer;
+    cursor:hand;  margin-top: 0;
+}
+.box3 label {
+    width: 10%;
+}
+.box_comp p {
+    font-weight: bolder; text-transform: uppercase;
+}
+
+.box_comp {
+    width: 20%;
+    height: 110px;
+    overflow: auto;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+}
+.box_comp div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.box3 {
+    width: 39.5%;
+    height: 110px;
+    overflow: auto;
+    float: left;
+    text-align: center;
+
+}
+
+.box3 input {
+    width: 50%;
+    margin-top: 3%;
+}
+
+.box3 label {
+    display: inline-block;
+    text-align: center;
+    margin-right: 25%;
+    font: bold 13px/13px Arial, Helvetica, sans-serif;
+}
+
+#hours {
+    margin-top: -.5%;
+    margin-left: 35%;
+}
+
+/*
+Moon/Sun data row custom elements
+*/
+.inner_row {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    width: 100%;
+}
+.inner_row label {
+    text-align: center;
+}
+
+.inner_box span {
+    margin-top: 0;
+}
+.inner_box label {
+    text-align: center;
+}
+
+.inner_row span {
+    margin-top: 0;
+    display: inline-block;
+}
+#margin, #margin2 {
+    margin-left: 10%;
+}
+
+#phase6 {
+    width: 95%; height: 65px; margin-top: 2%; padding: 1px; font: normal 13px/18px Arial, Helvetica, sans-serif;
+}
+
+.box4 {
+    width: 25%;
+    height: 215px;
+    overflow: auto;
+    float: left;
+    background: black;
+    background-size: cover;
+}
+
+#moon_img {
+    width: 75%;
+    height: auto;
+    margin-left: 12%;
+    margin-top: 7%;
+}
+
+.box5 {
+    width: 75%;
+    height: 215px;
+    overflow: auto;
+    float: left;
+    background: url(almanac_files/header-bg.jpg) no-repeat;
+    background-size: cover;
+}
+
+
+/*
+Table data row custom elements
+*/
+#hide {
+    color: black;
+}
+.row_new p {
+    margin: 0; padding-left: 1%; color: black;
+}
+.data input {
+    display: inline-block;
+    width: 10.89%;
+    border: 1px solid black;
+    float: left;
+}
+
+.data h3 {
+    display: inline-block;
+    width: 10.89%;
+    border: 1px solid transparent;;
+    float: left;
+    text-align: center;
+    margin: 0;
+    color: white;
+    background: black;
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+}
+
+.data h2 {
+    display: inline-block;
+    width: 10.89%;
+    border: 1px solid transparent;;
+    float: left;
+    margin: 0;
+    vertical-align: middle;
+    height: 25px;
+    text-align: center;
+    color: black;
+    font-family: Arial;
+    font-style: normal;
+}
+
+.row_new {
+    overflow: auto;
+    /*height: 100%;*/
+    width: 100%;
+    border-bottom: 1px solid white;
+    background: darkgrey;
+    background-size: cover;
+}
+
+.data2 {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .inner_row label {
+        text-align: center;
+    }
+
+    .inner_box span {
+        margin-top: 0;
+        width: 100%;
+    }
+    .inner_box label {
+        text-align: center;
+        width: 100%;
+
+    }
+    .inner_box input{
+        width: 75%;
+    }
+    .inner_row span {
+        margin-top: 0;
+        display: inline-block;
+    }
+    #margin, #margin2 {
+        margin-left: 0;
+    }
+
+    .show {
+        border-radius: 2px;
+        width: 30%;
+        display: block;
+        border: 1px solid black;
+        background-color: black;
+        color: white;
+        font-size: 13px;
+        font-weight: bolder;
+        font-family: 'Open Sans', sans-serif;
+        text-transform: capitalize;
+        transition: background-color .15s ease-out;
+        margin-left: 35%;
+        /*margin-top: 2%;*/
+        margin-bottom: 2%;
+    }
+textarea{
+    margin-left: 2%;
+}
+    .show:hover {
+        background-color: white;
+        color: black;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    #header_box {
+        width: 99%;
+        border-bottom: 1px solid white;
+        border-right:none;
+        /*height: auto;*/
+    }
+    #loc_box {
+        width: 100%;
+        border-bottom: 1px solid white;
+        border-right:none;
+        /*height: auto;*/
+    }
+    #lat_lon_tz {
+        width: 99%;
+        border-bottom: 1px solid white;
+        border-right:none;
+        /*height: auto;*/
+    }
+    .data input {
+        width: 10.89%;
+        border: 1px solid black;
+        display: block;
+    }
+    .row_new {
+        overflow: auto;
+        width: 100%;
+        border-bottom: 1px solid white;
+        background: darkgrey;
+        background-size: cover;
+        display: none;
+    }
+
+    #show {
+        display: block;
+    }
+
+    #lat_lon_tz {
+        margin: 0;
+        border:none;
+        height: 225px;
+    }
+    #btn{
+        margin-bottom: 3%;
+    }
+
+    .box2 {
+        width: 16.4%;
+        overflow: auto;
+        float: left;
+        text-align: center;
+    }
+
+    .box2 .btn {
+        margin-top: 25px;
+        font-size: 10px;
+
+    }
+
+    .box_comp {
+        width: 100%;
+
+    }
+
+    .box3 {
+        width: 80%;
+    }
+
+    .box4 {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid white;
+    }
+
+    #moon_img {
+        width: 82%;
+        height: auto;
+    }
+
+    .box5 {
+        width: 100%;
+        height: 300px;
+    }
+
+    .data input {
+        display: inline-block;
+        width: 10.89%;
+        border: 1px solid black;
+        float: left;
+        font-size: 5px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .data h3 {
+        display: inline-block;
+        width: 10.89%;
+        border: 1px solid transparent;;
+        float: left;
+        text-align: center;
+        margin: 0;
+        color: white;
+        background: black;
+        padding-top: 1%;
+        padding-bottom: 1%;
+        font-size: 9px;
+    }
+
+    .inner_row {
+        width: 100%;
+        text-align: center;
+
+    }
+
+
+
+    .inner_box {
+        text-align: center;
+        width: 100%;
+
+    }
+
+    .inner_row input {
+        margin: 0;
+        padding: 0;
+    }
+
+    .inner_row span {
+        margin: 0;
+        padding: 0;
+    }
+
+    .inner_row label {
+        margin: 0;
+        padding: 0;
+    }
+
+    .data h2 {
+        display: inline-block;
+        width: 10.89%;
+        border: 1px solid transparent;;
+        float: left;
+        font-size: 9px;
+
+        margin: 0;
+        vertical-align: middle;
+        text-align: center;
+        color: black;
+        font-family: Arial;
+        font-style: normal;
+    }
+    .data2 h2 {
+        color: black;
+        font-family: Arial;
+        font-style: normal;
+    }
+    #new_logo {
+        width: 75%;
+    }
+
+}

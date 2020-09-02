@@ -18,7 +18,7 @@ include "../pcdl/html_head.php";
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
-require_once '../media/function.php';
+require_once '../ucenter/function.php';
 require_once '../public/function.php';
 
 global $PDO;
@@ -35,7 +35,10 @@ $course_info = $Fetch[0];
 echo "<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>";
 echo "<div class='index_inner '>";
 echo "<div style='font-size:140%'>";
-echo $course_info["teacher"]." > ";
+echo "<a href='../uhome/course.php?userid={$course_info["teacher"]}'>";
+echo ucenter_getA($course_info["teacher"]);
+echo "</a>";
+echo " > ";
 echo $course_info["title"];
 echo "</div>";
 echo '<div class="summary"  style="padding-bottom:5px;">'.$course_info["subtitle"].'</div>';
@@ -70,14 +73,16 @@ echo '</div>';
         echo '<div style="flex:7;">';
         echo '<div class="pd-10">';
         echo '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'.$row["title"].'</div>';
-        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
         echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
+        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["live"].'</div>';
+        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["replay"].'</div>';
+        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["attachment"].'</div>';
         echo '</div>'; 
         echo '</div>';
 
         echo '<div style="flex:3;max-width:15em;">';
         echo '<div >开始：'.date("Y/m/d h:ia",$row["date"]/1000) .'</div>';
-        $dt = $row["duration"];
+        $dt = $row["duration"]/60;
         $sdt = "";
         if($dt>59){
             $sdt .= floor($dt/60)."小时";
@@ -93,12 +98,12 @@ echo '</div>';
             $lesson_time = "尚未开始";
         }
         else if($now>$row["date"] && $now<($row["date"]+$dt*1000)){
-            $lesson_time = "已经结束";
-        }
-        else{
             $lesson_time = "正在进行";
         }
-        echo '<div ><span class="lesson_status">已经结束</span></div>';
+        else{
+            $lesson_time = "已经结束";
+        }
+        echo '<div ><span class="lesson_status">'.$lesson_time.'</span></div>';
         echo '</div>';
 
         echo '</div>';

@@ -30,11 +30,11 @@ require_once '../public/load_lang.php';
 	<script type="text/javascript">
 	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
 		
-		var g_langrage="en";
+		var g_language="en";
 		function menuLangrage(obj){
-			g_langrage=obj.value;
-			setCookie('language',g_langrage,365);
-			window.location.assign("index.php?language="+g_langrage);
+			g_language=obj.value;
+			setCookie('language',g_language,365);
+			window.location.assign("index.php?language="+g_language);
 		}
 	
 	</script>

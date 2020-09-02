@@ -78,11 +78,11 @@ else{$currDevice="computer";}
 			g_is_mobile=false;
 		}
 			
-			var g_langrage="en";
+			var g_language="en";
 			function menuLangrage(obj){
-				g_langrage=obj.value;
-				setCookie('language',g_langrage,365);
-				window.location.assign("filenew.php?language="+g_langrage);
+				g_language=obj.value;
+				setCookie('language',g_language,365);
+				window.location.assign("filenew.php?language="+g_language);
 			}
 
 	</script>

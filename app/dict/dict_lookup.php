@@ -187,13 +187,13 @@ switch($op){
 
 			}
 			echo "<div class='dict_word'>";
-			echo "<div class='dict'>社区字典</div><a name='net'></a>";
-			$dict_list_a[] = array("net","社区字典");
+			echo "<div class='dict'>{$_local->gui->com_dict}</div><a name='net'></a>";
+			$dict_list_a[] = array("net",$_local->gui->com_dict);
 
 			foreach($userdict as $key => $value){
 				echo "<div class='mean'>{$key}:{$value["mean"]}</div>";
 			}
-			echo "<div><span>贡献者：</span>";
+			echo "<div><span>{$_local->gui->contributor}：</span>";
 			foreach ($userlist as $key => $value) {
 				echo $key."[".$value."]";
 			}
@@ -358,7 +358,8 @@ switch($op){
 		echo "<div id='dictlist'>";
 		foreach($dict_list_a as $x_value) {
 			if(substr($x_value[0],0,4)=="word"){
-				echo "<div style='font-size:120%;font-weight:700;margin-top:15px;'><a href='#{$x_value[0]}'>$x_value[1]</a></div>";
+				echo "<div style='font-size:120%;font-weight:700;margin-top:15px;'>";
+				echo "<a href='#{$x_value[0]}'>$x_value[1]</a></div>";
 			}
 			else{
 				echo "<div><a href='#{$x_value[0]}'>$x_value[1]</a></div>";
