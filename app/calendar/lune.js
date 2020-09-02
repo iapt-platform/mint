@@ -16,7 +16,7 @@
 
 'use strict'
 
-const julian = require('./julian')
+//const julian = require('./julian')
 
 // Phases of the moon & precision
 const NEW = 0
@@ -46,7 +46,7 @@ const SYNODIC_MONTH = 29.53058868
  * @param  {Number} d Angle in degrees
  * @return {Number}   Angle in radians
  */
-function torad (d) {
+function torad(d) {
   return (Math.PI / 180.0) * d
 }
 
@@ -55,11 +55,11 @@ function torad (d) {
  * @param  {Number} r Angle in radians
  * @return {Number}   Angle in degrees
  */
-function dsin (d) {
+function dsin(d) {
   return Math.sin(torad(d))
 }
 
-function dcos (d) {
+function dcos(d) {
   return Math.cos(torad(d))
 }
 
@@ -68,7 +68,7 @@ function dcos (d) {
  * @param  {Number} au Distance in astronomical units
  * @return {Number}    Distance in kilometers
  */
-function tokm (au) {
+function tokm(au) {
   return 149597870.700 * au
 }
 
@@ -77,7 +77,7 @@ function tokm (au) {
  * @param  {Date}   date Date to get phase information of.
  * @return {Object}      Phase data
  */
-function phase (date) {
+function phase(date) {
   if (!date) {
     date = new Date()
   }
@@ -164,7 +164,7 @@ function phase (date) {
  * @param  {[type]} k     [description]
  * @return {[type]}       [description]
  */
-function meanphase (sdate, k) {
+function meanphase(sdate, k) {
   // Time in Julian centuries from 1900 January 12 noon UTC
   const delta = (sdate - -2208945600000.0) / 86400000.0
   const t = delta / 36525
@@ -181,7 +181,7 @@ function meanphase (sdate, k) {
  * @param  {[type]} tphase [description]
  * @return {[type]}        [description]
  */
-function truephase (k, tphase) {
+function truephase(k, tphase) {
   // restrict tphase to (0, 1, 2, 3)
   tphase = tphase & PHASE_MASK
 
@@ -253,7 +253,7 @@ function truephase (k, tphase) {
       break
   }
 
-  return julian.toDate(pt)
+  return toDate(pt)
 }
 
 /**
@@ -263,7 +263,7 @@ function truephase (k, tphase) {
  * @param  {Date} sdate Date to start hunting from (defaults to current date)
  * @return {Object}     Object containing recent past and future phases
  */
-function phaseHunt (sdate) {
+function phaseHunt(sdate) {
   if (!sdate) {
     sdate = new Date()
   }
@@ -278,7 +278,7 @@ function phaseHunt (sdate) {
   let k1 = Math.floor(12.3685 * (adate.getFullYear() + (1.0 / 12.0) * adate.getMonth() - 1900))
   let nt1 = meanphase(adate.getTime(), k1)
 
-  sdate = julian.fromDate(sdate)
+  sdate = fromDate(sdate)
   adate = nt1 + SYNODIC_MONTH
   let k2 = k1 + 1
   let nt2 = meanphase(adate, k2)
@@ -299,7 +299,7 @@ function phaseHunt (sdate) {
   }
 }
 
-function phaseRange (start, end, phase) {
+function phaseRange(start, end, phase) {
   if (!(start instanceof Date)) {
     throw new TypeError('First argument must be a Date object.')
   }
@@ -346,10 +346,10 @@ function phaseRange (start, end, phase) {
   return list
 }
 
-exports.PHASE_NEW = NEW
-exports.PHASE_FIRST = FIRST
-exports.PHASE_FULL = FULL
-exports.PHASE_LAST = LAST
-exports.phase = phase
-exports.phase_hunt = phaseHunt
-exports.phase_range = phaseRange
+//exports.PHASE_NEW = NEW
+//exports.PHASE_FIRST = FIRST
+//exports.PHASE_FULL = FULL
+//exports.PHASE_LAST = LAST
+//exports.phase = phase
+//exports.phase_hunt = phaseHunt
+//exports.phase_range = phaseRange

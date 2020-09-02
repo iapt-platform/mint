@@ -13,8 +13,8 @@
     <script src="../public/js/jquery.js"></script>
     <script src="../public/js/comm.js"></script>
     <script src="jquery-3.3.1.min.js"></script>
-    <script src="lib/julian.js"></script>
-    <script src="lib/lune.js"></script>
+    <script src="julian.js"></script>
+    <script src="lune.js"></script>
     <script src="suncalc.js"></script>
     <script src="../studio/js/fixedsticky.js"></script>
     <script src="../guide/guide.js"></script>
@@ -390,6 +390,19 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .table_line {
+            display: flex;
+            border-bottom: solid;
+        }
+
+        .table_column {
+            flex: 1;
+        }
+
+        .correct {
+            background-color: gold;
+        }
     </style>
     <title id='title_text'>
     </title>
@@ -424,27 +437,38 @@
     </div>
     <div>
         <div onclick="show_time()">Sun time table</div>
-        <div><span id="today_dawn"></span></div>
-        <div><span id="today_solarNoon"></span></div>
-        <div><span id="today_sunset"></span></div>
+        <div>破晓<span id="today_dawn"></span></div>
+        <div>正午<span id="today_solarNoon"></span></div>
+        <div>日落<span id="today_sunset"></span></div>
         <div>月相<span id="today_moon_phase"></span></div>
         <div>圆满度<span id="today_moon_percent"></span></div>
-        <div>南偏西<span id="today_sun_azimuth"></span></div>
-        <div>北偏东<span id="today_moon_azimuth"></span></div>
+        <div>太阳相位于南偏西<span id="today_sun_azimuth"></span></div>
+        <div>月亮相位于北偏东<span id="today_moon_azimuth"></span></div>
         <div>日月角<span id="angle_sun_e_moon"></span></div>
         <div>月相角<span id="today_moon_angle"></span></div>
         <div>当前时间<span id="curr_time"></span></div>
         <div>现在时间<span id="now_time"></span></div>
-
+        <div>
+            <span>精准月相（强化戒德之日）</span>
+            <table id="lunar_phase_list" style="min-width: 40vw;">
+            </table>
+        </div>
 
     </div>
     <script>
-        var current_phase = lune.phase()
+        var current_phase = phase()
         console.log(current_phase)//输出到控制台
 
         $("#title_text").html(localString[g_language].BE);
+        var new_list = new Array()//新月列表
+        var first_list = new Array()//上弦月列表
+        var full_list = new Array()//满月列表
+        var last_list = new Array()//下弦月列表
         var g_coordinate_this = new Object();
         var g_now_date = new Date();
+        var today = new Date()
+        var start_day = new Date()
+        var next_year = new Date();
         var sun_times = new Object();
         var curr_position = localStorage.getItem("local_position");
         if (curr_position) {
@@ -475,6 +499,29 @@
             else {
                 today = g_now_date
             }
+            if (phase(today).phase <= 0.5) {
+                start_day.setDate(today.getDate() - 16)//退到本月的新月之前
+                start_day = phaseHunt(start_day).full_date//得到之前最近的满月日
+                start_day.setDate(start_day.getDate() + 1)
+            }
+            else {
+                start_day.setDate(today.getDate() - 31)//退到本月的新月之前
+                start_day = phaseHunt(start_day).full_date//得到之前最近的满月日
+                start_day.setDate(start_day.getDate() + 1)
+            }
+            next_year.setDate(start_day.getDate() + 360)
+
+            last_list = phaseRange(start_day, next_year, LAST)//获取下弦月列表
+            new_list = phaseRange(start_day, next_year, NEW)//获取新月列表
+            first_list = phaseRange(start_day, next_year, FIRST)//获取上弦月列表
+            full_list = phaseRange(start_day, next_year, FULL)//获取满月列表
+
+            console.log(last_list)//输出到控制台
+            console.log(new_list)//输出到控制台
+            console.log(first_list)//输出到控制台
+            console.log(full_list)//输出到控制台
+            lunar_phase_list_refresh()
+
             sun_times = SunCalc.getTimes(today, g_coordinate_this.AT, g_coordinate_this.LT, 0);
             sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
             moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
@@ -484,8 +531,8 @@
             $("#today_sunset").html(sun_times.sunset.toLocaleTimeString());
             $("#today_sun_azimuth").html(angle_trans(sun_position.azimuth / Math.PI * 180));//太阳水平弧度
             $("#today_moon_azimuth").html(angle_trans(moon_position.azimuth / Math.PI * 180));//月亮水平弧度
-            $("#today_moon_phase").html(1 - 2 * moon_Illumination.phase);//月相值
-            $("#today_moon_percent").html(moon_Illumination.fraction);//月相值
+            $("#today_moon_phase").html(phase(today).phase);//月相值
+            $("#today_moon_percent").html(phase(today).illuminated);//月照度
             $("#today_moon_angle").html(angle_trans(moon_Illumination.angle / Math.PI * 180));//月相角
             $("#angle_sun_e_moon").html(angle_trans(Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI * 180));//月亮水平弧度
             $("#curr_time").html(today.toLocaleTimeString());//当前时间
@@ -494,7 +541,75 @@
 
 
         }
-
+        function lunar_phase_list_refresh() {
+            let output = ""
+            //画表头
+            output += "<tr class='table_line'>"
+            output += "<th class='table_column'>月份</th>"
+            output += "<th class='table_column'>下弦</th>"
+            output += "<th class='table_column'>新月(诵戒)</th>"
+            output += "<th class='table_column'>上弦</th>"
+            output += "<th class='table_column'>满月(诵戒)</th>"
+            output += "</tr>"
+            //画内容
+            let month_num = Math.min(last_list.length, new_list.length, first_list.length, full_list.length)
+            for (let i_month = 0; i_month < month_num; i_month++) {
+                output += "<tr class='table_line'>"
+                output += "<td class='table_column'>"
+                output += i_month + 1
+                output += "</td>"
+                if (SunCalc.getTimes(last_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - last_list[i_month] <= 0) {//如果在破晓之后，不修正
+                    output += "<td class='table_column' title='" + last_list[i_month].toLocaleTimeString() + "'>"
+                    output += last_list[i_month].toLocaleDateString()
+                    output += "</td>"
+                }
+                else {//如果在破晓之前，修正提前一天
+                    output += "<td class='table_column correct' title='" + last_list[i_month].toLocaleString() + "'>"
+                    let temp_date = last_list[i_month]
+                    temp_date.setDate(temp_date.getDate() - 1)
+                    output += temp_date.toLocaleDateString()
+                    output += "</td>"
+                }
+                if (SunCalc.getTimes(new_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - new_list[i_month] <= 0) {//如果在破晓之后，不修正
+                    output += "<td class='table_column' title='" + new_list[i_month].toLocaleTimeString() + "'>"
+                    output += new_list[i_month].toLocaleDateString()
+                    output += "</td>"
+                }
+                else {//如果在破晓之前，修正提前一天
+                    output += "<td class='table_column correct' title='" + new_list[i_month].toLocaleString() + "'>"
+                    let temp_date = new_list[i_month]
+                    temp_date.setDate(temp_date.getDate() - 1)
+                    output += temp_date.toLocaleDateString()
+                    output += "</td>"
+                }
+                if (SunCalc.getTimes(first_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - first_list[i_month] <= 0) {//如果在破晓之后，不修正
+                    output += "<td class='table_column' title='" + first_list[i_month].toLocaleTimeString() + "'>"
+                    output += first_list[i_month].toLocaleDateString()
+                    output += "</td>"
+                }
+                else {//如果在破晓之前，修正提前一天
+                    output += "<td class='table_column correct' title='" + first_list[i_month].toLocaleString() + "'>"
+                    let temp_date = first_list[i_month]
+                    temp_date.setDate(temp_date.getDate() - 1)
+                    output += temp_date.toLocaleDateString()
+                    output += "</td>"
+                }
+                if (SunCalc.getTimes(full_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - full_list[i_month] <= 0) {//如果在破晓之后，不修正
+                    output += "<td class='table_column' title='" + full_list[i_month].toLocaleTimeString() + "'>"
+                    output += full_list[i_month].toLocaleDateString()
+                    output += "</td>"
+                }
+                else {//如果在破晓之前，修正提前一天
+                    output += "<td class='table_column correct' title='" + full_list[i_month].toLocaleString() + "'>"
+                    let temp_date = full_list[i_month]
+                    temp_date.setDate(temp_date.getDate() - 1)
+                    output += temp_date.toLocaleDateString()
+                    output += "</td>"
+                }
+                output += "</tr>"
+            }
+            $("#lunar_phase_list").html(output)
+        }
         function getLocation() {//自动定位
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
