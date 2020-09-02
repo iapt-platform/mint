@@ -46,11 +46,8 @@ echo '<div class="summary"  style=""><button>关注</button><button>报名</butt
 echo "</div>";
 echo '</div>';
 
-echo "<div class='index_inner'>";
+echo "<div  class='index_inner'>";
 
-//课程视频
-$query = "select * from lesson where course_id = '{$_GET["id"]}'   limit 0,100";
-$fAllLesson = PDO_FetchAll($query);
 echo '<div class="card" style="margin:1em;">';
     echo '<div class="title">';
     echo '简介';
@@ -66,54 +63,103 @@ echo '<div class="card" style="margin:1em;">';
     echo '</div>';   
 echo '</div>';
 
+echo "<div id='lesson_list'>";
+//课程视频
+$query = "select * from lesson where course_id = '{$_GET["id"]}'   limit 0,100";
+$fAllLesson = PDO_FetchAll($query);
+foreach($fAllLesson as $row){
 
-    foreach($fAllLesson as $row){
-        echo '<div class="card" style="display:flex;margin:1em;padding:10px;">';
+}
 
-        echo '<div style="flex:7;">';
-        echo '<div class="pd-10">';
-        echo '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'.$row["title"].'</div>';
-        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
-        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["live"].'</div>';
-        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["replay"].'</div>';
-        echo '<div class="summary"  style="padding-bottom:5px;">'.$row["attachment"].'</div>';
-        echo '</div>'; 
-        echo '</div>';
-
-        echo '<div style="flex:3;max-width:15em;">';
-        echo '<div >开始：'.date("Y/m/d h:ia",$row["date"]/1000) .'</div>';
-        $dt = $row["duration"]/60;
-        $sdt = "";
-        if($dt>59){
-            $sdt .= floor($dt/60)."小时";
-        }
-        $m = ($dt %60);
-        if($m>0){
-            $sdt .=($dt %60)."分钟";
-        }
-        echo "<div >持续：{$sdt}</div>";
-        $now = mTime();
-        $lesson_time="";
-        if($now<$row["date"]){
-            $lesson_time = "尚未开始";
-        }
-        else if($now>$row["date"] && $now<($row["date"]+$dt*1000)){
-            $lesson_time = "正在进行";
-        }
-        else{
-            $lesson_time = "已经结束";
-        }
-        echo '<div ><span class="lesson_status">'.$lesson_time.'</span></div>';
-        echo '</div>';
-
-        echo '</div>';
-    }
-
+echo "</div>";
 
 ?>
 </div>
+<script src="../public/js/marked.js"></script>
 <script>
     $("#main_video_win").height($("#main_video_win").width()*9/16);
+
+    $.get("../course/lesson_list.php",
+  {
+    id:"<?php echo $_GET["id"]; ?>"
+  },
+  function(data,status){
+      let arrLesson = JSON.parse(data);
+      let html="";
+    for(const lesson of  arrLesson){
+        html+= '<div class="card" style="display:flex;margin:1em;padding:10px;">';
+
+        html+= '<div style="flex:7;max-width: 80%;">';
+        html+= '<div class="pd-10">';
+        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'+lesson["title"]+'</div>';
+        let summary = "";
+        try{
+            summary = marked(lesson["summary"]);
+        }
+        catch{
+
+        }
+        html+= '<div class="summary"  style="padding-bottom:5px;">'+summary+'</div>';
+        let live = "";
+        try{
+            live = marked(lesson["live"]);
+        }
+        catch{
+
+        }
+        html+= '<div class="summary"  style="padding-bottom:5px;">'+live+'</div>';
+        let replay = "";
+        try{
+            replay = marked(lesson["replay"]);
+        }
+        catch{
+
+        }
+        html+= '<div class="summary"  style="padding-bottom:5px;">'+replay+'</div>';
+        let attachment = "";
+        try{
+            attachment = marked(lesson["attachment"]);
+        }
+        catch{
+
+        }
+        html+= '<div class="summary"  style="padding-bottom:5px;">'+attachment+'</div>';
+        html+= '</div>'; 
+        html+= '</div>';
+
+        html+= '<div style="flex:3;max-width:15em;">';
+        /*
+        html+= '<div >开始：'+date("Y/m/d h:ia",lesson["date"]/1000) +'</div>';
+        let dt = lesson["duration"]/60;
+        let dt sdt = "";
+        if(dt>59){
+            sdt .= floor(dt/60)."小时";
+        }
+        let m = (dt %60);
+        if(m>0){
+            sdt .=(dt %60)."分钟";
+        }
+        html+= "<div >持续：{$sdt}</div>";
+        let now = mTime();
+        let lesson_time="";
+        if(now<lesson["date"]){
+            lesson_time = "尚未开始";
+        }
+        else if(now>lesson["date"] && now<(lesson["date"]+dt*1000)){
+            lesson_time = "正在进行";
+        }
+        else{
+            lesson_time = "已经结束";
+        }
+        html+= '<div ><span class="lesson_status">'+lesson_time+'</span></div>';
+*/        
+        html+= '</div>';
+
+        html+= '</div>';
+
+    }
+    $("#lesson_list").html(html);
+  });
 </script>
 <?php
 include "../pcdl/html_foot.php";
