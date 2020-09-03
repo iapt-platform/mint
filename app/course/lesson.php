@@ -61,8 +61,6 @@ echo '</div>';
 
 echo "<div  class='index_inner'>";
 
-
-
 echo "<div id='lesson_list'>";
 
 echo "</div>";
