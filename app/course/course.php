@@ -64,12 +64,7 @@ echo '<div class="card" style="margin:1em;">';
 echo '</div>';
 
 echo "<div id='lesson_list'>";
-//课程视频
-$query = "select * from lesson where course_id = '{$_GET["id"]}'   limit 0,100";
-$fAllLesson = PDO_FetchAll($query);
-foreach($fAllLesson as $row){
 
-}
 
 echo "</div>";
 
@@ -89,9 +84,10 @@ echo "</div>";
     for(const lesson of  arrLesson){
         html+= '<div class="card" style="display:flex;margin:1em;padding:10px;">';
 
-        html+= '<div style="flex:7;max-width: 80%;">';
+        html+= '<div style="flex:7;">';
         html+= '<div class="pd-10">';
-        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'+lesson["title"]+'</div>';
+        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;"><a href="../course/lesson.php?id='+lesson["id"]+'">'+lesson["title"]+'</a></div>';
+        html += '<div style="overflow-y: scroll;max-height: 20em;">';
         let summary = "";
         try{
             summary = marked(lesson["summary"]);
@@ -125,22 +121,28 @@ echo "</div>";
         }
         html+= '<div class="summary"  style="padding-bottom:5px;">'+attachment+'</div>';
         html+= '</div>'; 
+        html+= '</div>'; 
         html+= '</div>';
 
         html+= '<div style="flex:3;max-width:15em;">';
-        /*
-        html+= '<div >开始：'+date("Y/m/d h:ia",lesson["date"]/1000) +'</div>';
+        let d = new Date();
+        d.setTime(lesson["date"]);
+        let strData = d.toLocaleDateString();
+        let strTime = d.toLocaleTimeString();
+         html+= '<div >开始日期：'+strData +'</div>';
+         html+= '<div >开始时间：'+strTime +'</div>';
         let dt = lesson["duration"]/60;
-        let dt sdt = "";
+        let sdt = "";
         if(dt>59){
-            sdt .= floor(dt/60)."小时";
+            sdt += Math.floor(dt/60)+"小时";
         }
-        let m = (dt %60);
+        let m = (dt % 60);
         if(m>0){
-            sdt .=(dt %60)."分钟";
+            sdt +=(dt % 60)+"分钟";
         }
-        html+= "<div >持续：{$sdt}</div>";
-        let now = mTime();
+        html+= "<div >持续时间："+sdt+"</div>";        
+        let now = new Date(); 
+
         let lesson_time="";
         if(now<lesson["date"]){
             lesson_time = "尚未开始";
@@ -152,7 +154,7 @@ echo "</div>";
             lesson_time = "已经结束";
         }
         html+= '<div ><span class="lesson_status">'+lesson_time+'</span></div>';
-*/        
+      
         html+= '</div>';
 
         html+= '</div>';
