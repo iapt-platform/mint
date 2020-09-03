@@ -86,7 +86,7 @@ echo "</div>";
 
         html+= '<div style="flex:7;">';
         html+= '<div class="pd-10">';
-        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;"><a href="../course/lesson.php?id='+lesson["id"]+'">'+lesson["title"]+'</a></div>';
+        html+= '<div class="title" style="padding-bottom:5px;font-size:200%;font-weight:600;"><a href="../course/lesson.php?id='+lesson["id"]+'" style="color:var(--main-color);">'+lesson["title"]+'</a></div>';
         html += '<div style="overflow-y: scroll;max-height: 20em;">';
         let summary = "";
         try{
