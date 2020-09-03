@@ -41,6 +41,12 @@ include "../pcdl/html_head.php";
 	.pd-10{
 		padding:10px;
 	}
+	.card li{
+		white-space: unset;
+	}
+	.card code{
+		white-space: unset;
+	}
 	</style>
 <div class="index_inner" >
     

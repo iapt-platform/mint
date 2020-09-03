@@ -1302,7 +1302,7 @@ function render_sent_tool_bar(elementBlock, begin) {
       iEnd;
   }
   output +=
-    "<span style='flex: 7;'><span style='background-color: silver;>" +
+    "<span style='flex: 7;'><span style='background-color: silver;'>" +
     sentIdString +
     "<a onclick=\"copy_to_clipboard('" +
     sentIdStringLink +
