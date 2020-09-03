@@ -474,6 +474,7 @@
         if (curr_position) {
             g_coordinate_this.AT = curr_position.split("#")[0];
             g_coordinate_this.LT = curr_position.split("#")[1];
+            g_coordinate_this.height = curr_position.split("#")[2];
             if (g_coordinate_this.AT >= 0) {
                 var AT_string = angle_trans(g_coordinate_this.AT) + "N";
             }
@@ -486,7 +487,8 @@
             else {
                 var LT_string = angle_trans(g_coordinate_this.LT) + "W";
             }
-            $("#selected_position_string").html(AT_string + " " + LT_string);
+            let height_string = g_coordinate_this.height + "M"
+            $("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
 
         }
         else {
@@ -522,7 +524,7 @@
             console.log(full_list)//输出到控制台
             lunar_phase_list_refresh()
 
-            sun_times = SunCalc.getTimes(today, g_coordinate_this.AT, g_coordinate_this.LT, 0);
+            sun_times = SunCalc.getTimes(today, g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000);
             sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
             moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
             moon_Illumination = SunCalc.getMoonIllumination(today)
@@ -558,7 +560,7 @@
                 output += "<td class='table_column'>"
                 output += i_month + 1
                 output += "</td>"
-                if (SunCalc.getTimes(last_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - last_list[i_month] <= 0) {//如果在破晓之后，不修正
+                if (SunCalc.getTimes(last_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - last_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + last_list[i_month].toLocaleTimeString() + "'>"
                     output += last_list[i_month].toLocaleDateString()
                     output += "</td>"
@@ -570,7 +572,7 @@
                     output += temp_date.toLocaleDateString()
                     output += "</td>"
                 }
-                if (SunCalc.getTimes(new_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - new_list[i_month] <= 0) {//如果在破晓之后，不修正
+                if (SunCalc.getTimes(new_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - new_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + new_list[i_month].toLocaleTimeString() + "'>"
                     output += new_list[i_month].toLocaleDateString()
                     output += "</td>"
@@ -582,7 +584,7 @@
                     output += temp_date.toLocaleDateString()
                     output += "</td>"
                 }
-                if (SunCalc.getTimes(first_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - first_list[i_month] <= 0) {//如果在破晓之后，不修正
+                if (SunCalc.getTimes(first_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - first_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + first_list[i_month].toLocaleTimeString() + "'>"
                     output += first_list[i_month].toLocaleDateString()
                     output += "</td>"
@@ -594,7 +596,7 @@
                     output += temp_date.toLocaleDateString()
                     output += "</td>"
                 }
-                if (SunCalc.getTimes(full_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, 0).dawn - full_list[i_month] <= 0) {//如果在破晓之后，不修正
+                if (SunCalc.getTimes(full_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - full_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + full_list[i_month].toLocaleTimeString() + "'>"
                     output += full_list[i_month].toLocaleDateString()
                     output += "</td>"
@@ -620,9 +622,10 @@
         }
         function showPosition(position) {
             alert("get cordinate success");
-            g_coordinate_this.AT = position.coords.latitude;
-            g_coordinate_this.LT = position.coords.longitude;
-            let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT
+            g_coordinate_this.AT = position.coords.latitude;//纬度
+            g_coordinate_this.LT = position.coords.longitude;//经度
+            g_coordinate_this.height = position.coords.altitude;//海拔高度
+            let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height
             localStorage.setItem("local_position", position_string);
 
             if (g_coordinate_this.AT >= 0) {
@@ -637,7 +640,8 @@
             else {
                 var LT_string = angle_trans(g_coordinate_this.LT) + "W";
             }
-            $("#selected_position_string").html(AT_string + " " + LT_string);
+            let height_string = g_coordinate_this.height + "KM"
+            $("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
 
         }
         function showError(error) {
