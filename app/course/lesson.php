@@ -85,7 +85,7 @@ echo "</div>";
 
         html+= '<div style="flex:7;">';
         html+= '<div class="pd-10">';
-        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;">'+lesson["title"]+'</div>';
+        html+= '<div class="title" style="padding-bottom:5px;font-size:200%;font-weight:600;">'+lesson["title"]+'</div>';
         html += '<div style="">';
         let summary = "";
         try{
