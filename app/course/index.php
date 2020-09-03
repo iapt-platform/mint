@@ -85,8 +85,15 @@ include "../pcdl/html_head.php";
 
             html += '<div style="flex:7;">';
             html +=  '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='+iterator.id+'">'+iterator.title+'</a></div>';
-            html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.subtitle+'</div>';
-            html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.summary+'</div>';
+			html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.subtitle+'</div>';
+			let summary = "";
+        try{
+            summary = marked(iterator.summary);
+        }
+        catch(e){
+
+        }      
+            html += '<div class="summary"  style="padding-bottom:5px;">'+summary+'</div>';
 
             html += '</div>';
 
