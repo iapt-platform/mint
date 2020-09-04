@@ -61,6 +61,7 @@ global $sandhi ;
 	$sandhi[]=array("a"=>"a","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"ā","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
+	$sandhi[]=array("a"=>"ā","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"e","c"=>"e","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"i","c"=>"i","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"o","c"=>"o","len"=>1,"adj_len"=>0,"advance"=>false);
