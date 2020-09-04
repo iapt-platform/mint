@@ -48,18 +48,16 @@ echo '</div>';
 
 echo "<div  class='index_inner'>";
 
-echo '<div class="card" style="margin:1em;">';
+echo '<div class="card" style="margin:1em;padding:10px;">';
     echo '<div class="title">';
     echo '简介';
     echo '</div>';
-    echo '<div class="detail">';
-    echo $course_info["summary"];
+    echo '<div id="course_summary" class="detail">';
     echo '</div>';
     echo '<div class="title">';
     echo '参考资料';
     echo '</div>';    
-    echo '<div class="detail">';
-    echo $course_info["attachment"];
+    echo '<div id="course_attachment"  class="detail">';
     echo '</div>';   
 echo '</div>';
 
@@ -70,11 +68,36 @@ echo "</div>";
 
 ?>
 </div>
-<script src="../public/js/marked.js"></script>
 <script>
     $("#main_video_win").height($("#main_video_win").width()*9/16);
+    $.get("../course/course_get.php",
+  {
+    id:"<?php echo $_GET["id"]; ?>"
+  },
+  function(data,status){
+      let arrLesson = JSON.parse(data);
+      if(arrLesson && arrLesson.length>0){
+        let summary = "";
+        try{
+            summary = marked(arrLesson[0]["summary"]);
+        }
+        catch(e){
 
-    $.get("../course/lesson_list.php",
+        }          
+        $("#course_summary").html(summary);
+
+        let attachment = "";
+        try{
+            attachment = marked(arrLesson[0]["attachment"]);
+        }
+        catch(e){
+
+        }          
+        $("#course_attachment").html(attachment);
+      }
+    });
+
+$.get("../course/lesson_list.php",
   {
     id:"<?php echo $_GET["id"]; ?>"
   },
@@ -86,7 +109,7 @@ echo "</div>";
 
         html+= '<div style="flex:7;">';
         html+= '<div class="pd-10">';
-        html+= '<div class="title" style="padding-bottom:5px;font-size:100%;font-weight:600;"><a href="../course/lesson.php?id='+lesson["id"]+'">'+lesson["title"]+'</a></div>';
+        html+= '<div class="title" style="padding-bottom:5px;font-size:200%;font-weight:600;"><a href="../course/lesson.php?id='+lesson["id"]+'" style="color:var(--main-color);">'+lesson["title"]+'</a></div>';
         html += '<div style="overflow-y: scroll;max-height: 20em;">';
         let summary = "";
         try{
