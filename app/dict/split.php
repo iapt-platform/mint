@@ -19,12 +19,27 @@ else{
 <!--debug only-->
 <form action="split.php" method="post">
 Words: <textarea type="text" name="word"></textarea>
-<input name="debug" />
+<input name="debug" type="hidden" />批量查询，单词之间用英文逗号分隔。
+<div>
+<input type="checkbox" name = "express" checked /> 快速搜索（遇到第一个连音规则成功就返回）
+</div>
 <input type="submit">
 </form>
 
 <?php
 	return;
+}
+
+if(isset($_POST["express"])){
+	if($_POST["express"]==="on"){
+		$_express = true;
+	}
+	else{
+		$_express = false;
+	}
+}
+else{
+	$_express = false;
 }
 global $dbh;
 $dns = "sqlite:"._FILE_DB_PART_;
@@ -61,6 +76,7 @@ global $sandhi ;
 	$sandhi[]=array("a"=>"a","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"ā","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
+	$sandhi[]=array("a"=>"ā","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"e","c"=>"e","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"i","c"=>"i","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"o","c"=>"o","len"=>1,"adj_len"=>0,"advance"=>false);
@@ -165,20 +181,26 @@ foreach($arrWords as $oneword){
 		$result = array();//全局变量，递归程序的输出容器
 
 		if(mb_strlen($oneword,"UTF-8")<30){
-			mySplit2($oneword,0,true);
+			mySplit2($oneword,0,$_express);
 		}
 		else{
-			mySplit2($oneword,0,true);
+			mySplit2($oneword,0,$_express);
 		}
-		
 		
 		arsort($result);//按信心指数排序
 		$wordlist = array();
+		$iMax = 5;
+		$iCount = 0;
 		foreach($result as $row=>$value){
+			$iCount++;
 			$word_part  = array();
 			$word_part["word"] = $row;
 			$word_part["confidence"] = $value;
 			$wordlist[] = $word_part;
+			if($iCount>=$iMax){
+			break;
+			}
+
 		}
 		$output[] = $wordlist;
 
@@ -195,9 +217,6 @@ foreach($arrWords as $oneword){
 			$level=$value*90;
 			if(isset($_POST["debug"])){
 				echo $row."-[".$value."]<br>";
-			}
-			else{	
-				//echo $row."-[".round($level)."] ";
 			}
 		}
 		
@@ -265,7 +284,9 @@ function isExsit($word,$adj_len=0){
 	global $confidence;
 	$auto_split_times++;
 	
-	//echo "<div>正在查询：{$word}</div>";
+	if(isset($_POST["debug"])){
+		echo "<div>正在查询：{$word}</div>";
+	}
 	$isFound=false;
 	if(isset($part["{$word}"]))
 	{
@@ -281,6 +302,9 @@ function isExsit($word,$adj_len=0){
 		if($db>0){
 			$isFound=true;
 			$count=$db+1;
+		}
+		else{
+			
 		}
 	} 
 
@@ -311,8 +335,9 @@ function isExsit($word,$adj_len=0){
 
 $strWord, 要查询的词
 $deep, 当前递归深度
-$turbo=false, 简洁查询
+$express=true, 快速查询
 $adj_len=0 长度校正系数
+$c_threshhold 信心指数阈值
 */
 
 function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
@@ -404,7 +429,9 @@ function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
 					$word .= "({$part[2]})";
 				}
 				$cf=$cf+$part[2]*0.1;
-				$result[$word]=$cf;
+				if($cf >= $c_threshhold){
+					$result[$word]=$cf;
+				}
 			}
 		}
 	}
@@ -427,7 +454,9 @@ function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
 			$word .= $strWord;
 		}
 		
-		$result[$word]=$cf;
+		if($cf >= $c_threshhold){
+			$result[$word]=$cf;
+		}
 	}
 }
 
