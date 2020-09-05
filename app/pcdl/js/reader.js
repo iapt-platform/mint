@@ -52,8 +52,8 @@ function pali_canon_edit_now(thisform) {
 
   let strParList = "";
   //查找被选择的段落
-  let firstIndex = thisform.para.value;
-  let endIndex = thisform.para_end.value;
+  let firstIndex = parseInt(thisform.para.value);
+  let endIndex = parseInt(thisform.para_end.value);
   for (let iPar = firstIndex; iPar <= endIndex; iPar++) {
     strParList += iPar;
     if (iPar < endIndex) {

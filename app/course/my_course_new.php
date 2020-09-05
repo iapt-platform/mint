@@ -60,6 +60,11 @@ echo '</div>';
         <input type="input" name="tag" value="" />
     </div>
     </div> 
+
+    <div style="display:flex;">
+    <div style="flex:2;">附件链接</div>
+    <div style="flex:8;"><input type="input" name = "attachment" value="" /></div>
+    </div>
 </div>
 
 

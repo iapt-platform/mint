@@ -36,8 +36,15 @@ require_once '../studio/index_head.php';
 		else{
 			require_once("../course/my_lesson_edit.php");
 		}
+		
     }
     else if(isset($_GET["course"]) || isset($_POST["course"]) ){
+		if(isset($_GET["course"])){
+			$_course_id = $_GET["course"];
+		}
+		else if(isset($_POST["course"])){
+			$_course_id = $_POST["course"];
+		}
 		if(isset($_GET["op"]) && $_GET["op"]=="newlesson"){
 			require_once("../course/my_lesson_new.php");
 		}
@@ -53,6 +60,7 @@ require_once '../studio/index_head.php';
 		else{
 			require_once("../course/my_lesson_list.php");
 		}
+		
     }
     else{
 		if(isset($_GET["op"]) && $_GET["op"]=="new"){
