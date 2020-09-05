@@ -34,21 +34,13 @@
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/load_lang.php';
-require_once '../media/function.php';
+require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 $query = "select * from course where creator = '{$_COOKIE["userid"]}'  order by modify_time DESC limit 0,100";
 $Fetch = PDO_FetchAll($query);
 
-$coverList = array();
-foreach($Fetch as $row){
-    $coverList[] = $row["cover"];
-}
-$covers = media_get($coverList);
-foreach ($covers as $value) {
-    $cover["{$value["id"]}"] = $value["link"];
-}
 foreach($Fetch as $row){
     echo '<div class="file_list_row">';
 
@@ -56,7 +48,7 @@ foreach($Fetch as $row){
     echo '<div class="title" style="padding-bottom:5px;"><a href="../course/my_course_index.php?course='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
-    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.$row["teacher"].'</div>';
+    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.ucenter_getA($row["teacher"]).'</div>';
     echo '</div>';
     
     echo '</div>';

@@ -71,6 +71,30 @@
 					
 					</span>
 				</li>
+
+				<li id="channal"  onclick="goto_url(this,'../channal/my_channal_list.php')">
+					<span  class="navi_icon">
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#class_video"></use>
+						</svg>	
+					</span>	
+					<span class="navi_text">
+					<?php echo "Channal";?>
+					
+					</span>
+				</li>
+
+				<li id="udict"  onclick="goto_url(this,'../udict/my_dict_list.php')">
+					<span  class="navi_icon">
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#class_video"></use>
+						</svg>	
+					</span>	
+					<span class="navi_text">
+					<?php echo "单词本";?>
+					
+					</span>
+				</li>
 			</ul>
 		</div>
 		

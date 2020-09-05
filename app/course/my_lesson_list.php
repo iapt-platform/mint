@@ -8,7 +8,7 @@
 <?php
 require_once "../path.php";
 require_once "../public/_pdo.php";
-require_once '../media/function.php';
+require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
@@ -57,7 +57,7 @@ echo '</div>';
     echo '简介：'.$course_info["summary"];
     echo '</div>';
     echo '<div>';
-    echo '教师：'.$course_info["teacher"];
+    echo '教师：'.ucenter_getA($course_info["teacher"]);
     echo '</div>';
 ?>
 </div>
@@ -70,14 +70,6 @@ echo '</div>';
 $query = "select * from lesson where course_id = '{$_GET["course"]}'   limit 0,100";
 $fAllLesson = PDO_FetchAll($query);
 
-$coverList = array();
-foreach($fAllLesson as $row){
-    $coverList[] = $row["cover"];
-}
-$covers = media_get($coverList);
-foreach ($covers as $value) {
-    $cover["{$value["id"]}"] = $value["link"];
-}
 
 echo '<div id="userfilelist">';
 
@@ -85,17 +77,7 @@ foreach($fAllLesson as $row){
 
     echo '<div class="file_list_row" style="display:flex;">';
 
-    echo '<div style="width:10em;">';
-    $coverlink = $cover["{$row["cover"]}"];
-
-    echo '<div class="v-cover">';
-    if(substr($coverlink,0,6)=="media:"){
-        echo '<img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto">';
-    }
-    else{
-        echo '<img src="'.$coverlink.'" width="50" height="50">';
-    }
-    echo '</div>';    
+    echo '<div style="width:2em;">';
 
     echo '</div>';
 
@@ -105,7 +87,7 @@ foreach($fAllLesson as $row){
     echo '<div  style="padding-bottom:5px;font-size: 120%;"><a href="../course/my_course_index.php?lesson='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
-    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.$row["teacher"].'</div>';
+    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.ucenter_getA($row["teacher"]).'</div>';
     echo '</div>';    
 
     echo '</div>';
