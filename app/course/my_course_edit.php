@@ -60,11 +60,6 @@ echo '<input type="hidden" name="course" value="'.$course_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
 
-    echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.'封面'.'</div>';
-    echo '<div style="flex:8;">'.$cover_html.'</div>';
-    echo '<input type="hidden" name="cover" value="'.$course_info["cover"].'" />';
-    echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.'老师'.'</div>';
@@ -102,6 +97,12 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:2;">'.'标签'.'</div>';
     echo '<div style="flex:8;"><input type="input" name = "tag" value="'.$course_info["tag"].'" /></div>';
     echo '</div>';
+
+    echo '<div style="display:flex;">';
+    echo '<div style="flex:2;">'.'附件链接'.'</div>';
+    echo '<div style="flex:8;"><input type="input" name = "attachment" value="'.$course_info["attachment"].'" /></div>';
+    echo '</div>';
+
 echo '</div>';
 ?>
 

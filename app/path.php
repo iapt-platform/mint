@@ -67,5 +67,6 @@ define("_FILE_DB_COURSE_"  , __DIR__."/../tmp/user/course.db3");
 define("_FILE_DB_MEDIA_"  , __DIR__."/../tmp/user/media.db3");
 define("_FILE_DB_MESSAGE_"  , __DIR__."/../tmp/user/message.db");
 define("_FILE_DB_USER_STATISTICS_"  , __DIR__."/../tmp/user/statistics.db3");
+define("_FILE_DB_CHANNAL_"  , __DIR__."/../tmp/user/channal.db3");
 
 ?>

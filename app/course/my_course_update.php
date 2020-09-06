@@ -6,10 +6,10 @@ require_once '../public/function.php';
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 
-$query="UPDATE course SET cover = ? , title = ? , subtitle = ? ,  summary = ? , teacher = ?  , tag = ?  , lang = ?  ,  receive_time = ?  , modify_time = ?   where  id = ?  ";
+$query="UPDATE course SET  title = ? , subtitle = ? ,  summary = ? , teacher = ?  , tag = ?  , lang = ?  , attachment = ? , receive_time = ?  , modify_time = ?   where  id = ?  ";
 $sth = $PDO->prepare($query);
 
-$sth->execute(array($_POST["cover"] , $_POST["title"] , $_POST["subtitle"] ,  $_POST["summary"] ,   $_POST["teacher"]  ,  $_POST["tag"] ,  $_POST["lang"] ,  mTime() , mTime() , $_POST["course"]));
+$sth->execute(array( $_POST["title"] , $_POST["subtitle"] ,  $_POST["summary"] ,   $_POST["teacher"]  ,  $_POST["tag"] ,  $_POST["lang"] , $_POST["attachment"] , mTime() , mTime() , $_POST["course"]));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
