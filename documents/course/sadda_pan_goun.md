@@ -340,17 +340,21 @@ Accordingly, A is termed a Unit of General Content with reference to B.
 因此，A被称为关于B的一般内容单元。
 
 ## 13. [**Unit of Particular Content** *followed by* **Unit of General Content**](# "visesavākya - sāmaññavākya")
-E.g. 
+## 13. [**特指**-**一般**关系](# "Visesavākya- sāmañavākya")
+E.g. 例如：
 - A. The word *safe* means here " trustworthy".
-- B. It (**T.M**) may mean, as an adjective, " unharmed, free from danger, secure, sound, free from risk, certain, sure, reliable, trustworthy, cautious, good, fine (*slang*)" and
-as a noun, "a metal box (often set in a wall, secure against fire, thieves, etc), a ventilated box or cupboard for meat, etc".
+- “safe”一词在这里的意思是“值得信赖”
+- B. It (**T.M**) may mean, as an adjective, " unharmed, free from danger, secure, sound, free from risk, certain, sure, reliable, trustworthy, cautious, good, fine (*slang*)" and as a noun, "a metal box (often set in a wall, secure against fire, thieves, etc), a ventilated box or cupboard for meat, etc".
+- 作为形容词，它(**T. M**)的意思可以是“没有伤害，没有危险，安全，健全，没有风险，确定，确定，可靠，值得信赖，谨慎，良好，优良(*俚语*)”而作为名词（保险柜），“金属盒子(通常放在墙上，防火、防盗等)，放肉的通风盒子或橱柜等。
 
     (**T.M**) = "generally, in general"
+    (**T. M**)=“一般，一般”
 
 The following unit B is a Unit of General Content with reference to A, for it gives the **generally possible senses** of the word **given in A**, i.e., those of the word safe.
+下面的单元B是关于A的一般内容单元，因为它给出了**A中给出**的单词的**一般可能的含义**，即单词*Safe*的含义。
 
 Accordingly, A is termed a Unit of Particular Content with reference to B.
-
+因此，将A称为关于B的特指内容单元.
 ## 14. [**Unit of Affirmative Content** *followed by* **Unit of Negative Content**](# "anvayavākya - byatirekavākya")
 E.g. 
 
