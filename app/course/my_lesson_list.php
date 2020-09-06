@@ -41,25 +41,31 @@ echo '</div>';
     </div>
 </div>
 
-<div style="color: var(--border-line-color);border-bottom: 1px solid var(--tool-line-color);padding: 0 18px 18px 18px;">
-<div><a href="../course/my_course_index.php?course=<?php echo $course_info["id"];?>&op=edit">[修改课程信息]</a></div>
+<div style="display: flex; color: var(--border-line-color);border-bottom: 1px solid var(--tool-line-color);padding: 0 18px 18px 18px;">
+
 <?php
-    echo '<div>';
-    echo "<span style='padding:5px;'>创建：".strftime("%b-%d-%Y",$course_info["create_time"]/1000)."</span>";
-    echo "<span style='padding:5px;'>修改：".strftime("%b-%d-%Y",$course_info["modify_time"]/1000)."</span>";
+    echo '<div><div>';
+    echo "<span style='padding-right:5px;'>开课：".strftime("%b-%d-%Y",$course_info["create_time"]/1000)."</span>";
+    echo "<span style='padding:5px;'>最新：".strftime("%b-%d-%Y",$course_info["modify_time"]/1000)."</span>";
     echo "<span style='padding:5px;'>视频数量：{$course_info["lesson_num"]}</span>";
     echo "<span style='padding:5px;'>播放：100</span>";
     echo "<span style='padding:5px;'>点赞：10</span>";
     echo "<span style='padding:5px;'>订阅：20</span>";
     echo '</div>';
 
-    echo '<div>';
+    echo '<div style="padding-margin:5px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+    overflow: hidden;">';
     echo '简介：'.$course_info["summary"];
     echo '</div>';
     echo '<div>';
     echo '教师：'.ucenter_getA($course_info["teacher"]);
-    echo '</div>';
+    echo '</div></div>';
 ?>
+<div><a href="../course/my_course_index.php?course=<?php echo $course_info["id"];?>&op=edit">
+<svg viewBox="0 0 24 24" id="ic_mode_edit" height="24" width="24">
+        <path fill="silver" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+</svg>
+</a></div>
 </div>
 
 <div style="display:flex;">
@@ -86,7 +92,8 @@ foreach($fAllLesson as $row){
     echo '<div class="pd-10">';
     echo '<div  style="padding-bottom:5px;font-size: 120%;"><a href="../course/my_course_index.php?lesson='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
-    echo '<div class="summary"  style="padding-bottom:5px;">'.$row["summary"].'</div>';
+    echo '<div class="summary"  style="padding-margin:5px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+    overflow: hidden;">'.$row["summary"].'</div>';
     echo '<div class="author"  style="padding-bottom:5px;">主讲：'.ucenter_getA($row["teacher"]).'</div>';
     echo '</div>';    
 
