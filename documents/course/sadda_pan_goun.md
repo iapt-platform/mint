@@ -86,79 +86,113 @@ Mary (a housewife) . . . George (a student).
     Accordingly, A is termed a Unit of Elaborated Content with reference to B.
 
 ## 3. [**Unit of Vague Content** *followed by* **Unit of Illuminated Content**](# "apākaṭavākya - tappākaṭīkaraṇavākya")
-E.g. 
-- A. The couple came to town.
+## 3. [**笼统**-**具体**关系](# "apākaṭavākya- tapākaṭīkaṇavākya")
+E.g. 例如：
+- A. The couple came to town.这对夫妇进城了
 - B. Just (**T.M**) as birds come to a tree full of fruits for a good meal, they moved to town hoping for an easy and happy life.
+- 就(**T. M**)像鸟儿为了享用美味而来到一棵挂满果实的树一样，他们向往着轻松快乐的生活而搬到城里。
 
     (**T.M**) = " to explain OR to make lucid"
+    (**T. M**)=“解释或使清楚”
 * The following unit B is a Unit of Illuminated Content with reference to A, for it is an explanation of how that couple moved to town.
+* 以下单元B是参照A的照明内容单元，因为它解释了这对夫妇是如何搬到镇上的
 
     Accordingly, A is termed a Unit of Vague Content with reference to B.
+    因此，A被称为参照B的模糊内容单元。
 -----------------------
     Note: a simply exhaustive account is termed a Unit of Elaborated Content whereas the one given using similes or reasoning is called a Unit of Illuminated Content.
+    注：简单详尽的叙述称为详述内容的单元，而使用明喻或推理的叙述称为阐明内容的单元。
 -----------------------
 
 ## 4. [**Unit of Doubtful Content** *followed by* **Unit of Confirming Content**](# "daḷhiyavākya - daḷhīkaraṇavākya")
-E.g. 
+## 4. [**待定**-**确定**关系](# "daḷhiyavākya- daḷhīkaraṇavākya")
+E.g. 例如：
 
 1. 
    - A. He would have passed the examination if he really wished to do so.
+   - 如果他真的想通过考试，他早就通过了
    - B. The (**T.M**) saying goes, " When there’s a will, there’s a way."
+   - B. (**T. M**)谚语是这样说的：“有志者事竟成.”
 
         (**T.M**) = " it is true"
+        (**T. M**)=“这是真的”
 
     The following unit B is a Unit of Confirming Content with reference to A, for it quotes a popular proverb to confirm the prospect of passing the examination.
+    下面的单元B是参照A确认内容的单元，因为它引用了一句流行的谚语来确认通过考试的前景。
 
     Accordingly, A is termed a Unit of Doubtful Content with reference to B.
+    因此，A被称为关于B的待定内容单元
 2. 
    - A. He really wishes to pass the examination.
+   - 他真的很想通过考试。
    - B. Even (**T.M**) in his sleep, he is dreaming of his lessons.
+   - 即使(**T. M**)在睡梦中，他也在梦见他的功课。
    - (The translation of the thematic marker is the same as above)
+   - (关系连词译文同上)
 
     The following unit B is a Unit of Confirming Content with reference to A, for it gives the circumstantial evidence to confirm that he really "wills" to pass the examination.
+    下面的单元B是关于A的内容确认单元，因为它给出了环境证据，以确认他确实“愿意”通过考试。
 
     Accordingly, A is termed a Unit of Doubtful Content with reference to B.
+    因此，A被称为关于B的可疑内容单元。
 
 ## 5. [**Unit of Main Content** *followed by* **Unit of Concluding Content**](# "nigamanīyavākya - nigamanavākya")
+## 5. [**待总结**-**总结**关系](# "nigamanīyavākya- nigamanavākya")
 
 This pair is similar to that of [**Unit of Elaborated Content** *followed by* **Unit of Summarized Content**](# "vitthāravākya - saṅkhepavākya") but the **concluding part** of a topic or chapter or even a whole book is termed **Unit of Concluding Content** while the rest of the topic, etc. is labeled **Unit of Main Content**.
+此对类似于[**分**-**总**关系](# "vitthāravākya- saṅkhepavākya")，但一个主题或章节甚至整本书的**总结部分**称为**总结内容单元**，而主题的其余部分等被标记为[**待总结内容单元**](# "nigamanīyavākya")。
 
 ## 6. [**Unit of Premise (Cause)** *followed by* **Unit of Conclusion (Effect)**](# "kāraṇavākya - phalavākya")
-E.g. 
+## 6. [**条件**-**结论**关系](# "kāraṇavākya- phalavākya")
+E.g. 例如
 
 1. 
    - A. Smoke is seen on the mountain.
+   - 山上有烟
    - B. Fire (**T.M**) is on the mountain.
+   - 山上有火(**T. M**)
 
        (**T.M**) = " Therefore it is known that"
+       (**T. M**)=“因此，我们知道”
 
     The following unit B is a Unit of **Conclusion** with reference to A, for it is the conclusion of the **premise** given in A, i.e., "smoke being seen" .
+    下面的单元B是关于A的**结论**单元，因为它是A中给出的**条件**的结论，即“看到烟”。
 
     Accordingly, A is termed a Unit of Premise with reference to B.
+    因此，关于B，A称为前提单元
 2. 
    - A. A fire started to burn in the forest.
+   - 森林里开始着火了
    - B. Billows (**T.M**) of smoke rose into the sky.
+   - 滚滚浓烟(**T. M**)升入天空
 
        (**T.M**) = " Therefore"
+       (**T. M**)=“因此”
 
     The following unit B is a Unit of Effect with reference to A, for it is the **effect** of the **cause** given in A, i.e., " a fire burning in the forest".
+    下面的单元B是关于A的效果单元，因为它是A中给出的**原因**的**效果**，即“森林中燃烧的一场火”.
 
     Accordingly, A is termed a Unit of Cause with reference to B.
+    因此，A被称为关于B的原因单元
 
 ## 7. [**Unit of Conclusion (Effect)** *followed by* **Unit of Premise (Cause)**](# "phalavākya - kāraṇavākya")
-
-E.g. 
+## 7. [**结论**-**条件**关系](# "phalavākya- kāraṇavākya")
+E.g. 例如：
 
 1. 
    - A. Fire is on the mountain.
+   - 山上着火了。
    - B. Smoke (**T.M**) is seen on the mountain.
+   - 山上有烟(**T. M**)
 
         (**T.M**) = " It is known because"
+        (**T. M**)=“这是已知的，因为”
 
 The following unit B is a Unit of Premise with reference to A, for it is the premise of the conclusion given in A, i.e., "Fire being on the mountain" .
+下面的单元B是关于A的前提单元，因为它是A中所给出的结论的前提，即“火在山上”
 
 Accordingly, A is termed a Unit of Conclusion with reference to B.
-
+因此，A称为关于B的结论单元。
 2. 
    - A. Billows of smoke rose into the sky.
    - B. A fire (**T.M**) started to burn in the forest.
