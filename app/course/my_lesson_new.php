@@ -2,7 +2,7 @@
 <?php
 require_once "../path.php";
 require_once "../public/_pdo.php";
-require_once '../media/function.php';
+require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
@@ -50,14 +50,14 @@ echo '</div>';
 
     <div style="display:flex;">
     <div style="flex:2;">简介</div>
-    <div style="flex:8;"><textarea style="height:6em;"></textarea></div>
+    <div style="flex:8;"><textarea name="summary" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
     <div style="flex:2;">老师</div>
     <div   style="flex:8;">
-        <div id="teacher_id"></div>
-        <input id="form_teacher" type="hidden" name="teacher" value="" />
+        <div id="teacher_id"><?php echo ucenter_getA($course_info["teacher"]); ?></div>
+        <input id="form_teacher" type="hidden" name="teacher" value="<?php echo $course_info["teacher"] ?>" />
     </div>
     </div> 
 
