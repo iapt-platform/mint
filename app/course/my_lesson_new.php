@@ -50,7 +50,7 @@ echo '</div>';
 
     <div style="display:flex;">
     <div style="flex:2;">简介</div>
-    <div style="flex:8;"><textarea style="height:6em;"></textarea></div>
+    <div style="flex:8;"><textarea name="summary" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
