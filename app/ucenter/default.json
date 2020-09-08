@@ -1,0 +1,10 @@
+{
+  "ui.lang": ["en", "zh-cn", "zh-tw"],
+  "ui.lang.load": ["en", "zh-cn", "zh-tw", "si", "my"],
+  "system.translation.lang": ["en", "zh-cn", "zh-tw"],
+  "studio.translation.lang": ["en", "zh-cn"],
+  "system.dict": ["我的字典", "巴缅"],
+  "dict.lang": ["zh-cn", "en"],
+  "dict.whitelist": ["我的字典", "巴缅"],
+  "dict.blacklist": ["我的字典", "巴缅"]
+}
