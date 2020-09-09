@@ -71,7 +71,7 @@
 				<div id="user_info_name"><?php echo $_COOKIE["nickname"];?></div>
 				<div id="user_info_welcome2"><?php echo $_local->gui->to_the_dhamma;?></div>
 				</div>
-				<a href="../studio/setting.php" target="_blank">
+				<a href="../ucenter/setting.php" target="_blank">
 					<span>
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#ic_settings"></use>

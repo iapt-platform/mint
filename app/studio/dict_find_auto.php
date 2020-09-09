@@ -191,7 +191,9 @@ for($i=0;$i<$lookup_loop;$i++)
 				else{
 					$partmean = "";
 				}
-				
+				if(inLangSetting($one["lang"],$user_setting["dict.lang"])==false){
+					$partmean = "";
+				}
 				if(isset($one["part_id"])){
 					$part_id = $one["part_id"];
 				}

@@ -112,7 +112,7 @@ function setting_save() {
       data: JSON.stringify(setting),
     },
     function (data, status) {
-      alert(data);
+      ntf_show(data);
     }
   );
 }
