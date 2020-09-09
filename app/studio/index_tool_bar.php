@@ -95,6 +95,18 @@
 					
 					</span>
 				</li>
+
+				<li id="term"  onclick="goto_url(this,'../term/my_dict_list.php')">
+					<span  class="navi_icon">
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#class_video"></use>
+						</svg>	
+					</span>	
+					<span class="navi_text">
+					<?php echo "术语";?>
+					
+					</span>
+				</li>				
 			</ul>
 		</div>
 		

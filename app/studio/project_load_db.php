@@ -42,8 +42,8 @@ if(count($Fetch)>0){
 				echo "<paragraph>{$FetchBlock[0]["paragraph"]}</paragraph>";
 				echo "<level>100</level>";
 				echo "<title>title</title>";
-				echo "<album_id>1</album_id>";
-				echo "<album_guid>{$albumId}</album_guid>";
+				echo "<album_id>{$block->channal}</album_id>";
+				echo "<album_guid>{$block->channal}</album_guid>";
 				echo "<author>{$FetchBlock[0]["owner"]}</author>";
 				echo "<language>{$FetchBlock[0]["lang"]}</language>";
 				echo "<version>1</version>";
@@ -77,8 +77,8 @@ if(count($Fetch)>0){
 					echo "<paragraph>{$FetchBlock[0]["paragraph"]}</paragraph>";
 					echo "<level>100</level>";
 					echo "<title>title</title>";
-					echo "<album_id>1</album_id>";
-					echo "<album_guid>{$albumId}</album_guid>";
+					echo "<album_id>{$block->channal}</album_id>";
+					echo "<album_guid>{$block->channal}</album_guid>";
 					echo "<author>{$FetchBlock[0]["author"]}</author>";
 					echo "<editor>{$FetchBlock[0]["editor"]}</editor>";
 					echo "<language>{$FetchBlock[0]["lang"]}</language>";

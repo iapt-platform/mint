@@ -221,4 +221,8 @@ function pali2english($subject){
 function mTime(){
 	return(sprintf("%d",microtime(TRUE)*1000));
 }
+
+function getLanguageCode($inString){
+  return("zh-cn");
+}
 ?>

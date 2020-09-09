@@ -34,24 +34,6 @@ echo '<div></div>';
 echo '</div>';
 
 
-$coverList = array();
-
-$coverList[] = $course_info["cover"];
-
-$covers = media_get($coverList);
-foreach ($covers as $value) {
-    $cover["{$value["id"]}"] = $value["link"];
-}
-
-
-    $coverlink = $cover["{$lesson_info["cover"]}"];
-    if(substr($coverlink,0,6)=="media:"){
-        $cover_html = '<div style="width: 20em;"><img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto"></div>';
-    }
-    else{
-        $cover_html =  '<div style="width: 20em;"><img src="'.$coverlink.'" width="50" height="50"></div>';
-    }
-
 echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
@@ -113,17 +95,17 @@ echo '</div>';
 <div style="flex:2;border-left: 1px solid var(--tool-line-color);padding-left: 12px;">
 <div style="width:100%;padding:4px;">
 <?php
-    echo $lesson_info["link"];
+
 ?>
 </div>
 <div>创建时间：
 <?php
-    echo strftime("%b-%d-%Y",$lesson_info["create_time"]/1000);
+    echo strftime("%b-%d-%Y",$course_info["create_time"]/1000);
 ?>
 </div>
 <div>修改时间：
 <?php
-    echo strftime("%b-%d-%Y",$lesson_info["modify_time"]/1000);
+    echo strftime("%b-%d-%Y",$course_info["modify_time"]/1000);
 ?>
 </div>
 <div>点击：</div>

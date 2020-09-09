@@ -72,3 +72,16 @@ function pali_canon_edit_now(thisform) {
     return false;
   }
 }
+
+function setNaviVisibility(strObjId = "") {
+  var objNave = document.getElementById("leftmenuinner");
+  var objblack = document.getElementById("BV");
+
+  if (objNave.className == "viewswitch_off") {
+    objblack.style.display = "block";
+    objNave.className = "viewswitch_on";
+  } else {
+    objblack.style.display = "none";
+    objNave.className = "viewswitch_off";
+  }
+}

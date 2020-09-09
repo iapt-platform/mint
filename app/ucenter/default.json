@@ -1,0 +1,20 @@
+{
+  "_ui.lang": ["en", "zh-hans", "zh-hant"],
+  "ui.lang": ["en", "zh-hans", "zh-hant", "si", "my"],
+  "_studio.translation.lang": ["en", "zh-hans", "zh-hant", "si", "my"],
+  "studio.translation.lang": ["en", "zh-hans", "zh-hant"],
+  "_dict.lang": ["en", "zh", "zh-hans", "zh-hant", "si"],
+  "dict.lang": ["zh", "en"],
+  "_dict.list": [
+    {
+      "id": "regular",
+      "name": "dict_sys_regular",
+      "table": "/system/sys_regular.db"
+    },
+    { "id": "bhmf", "table": "bhmf.db" },
+    { "id": "bhmf", "table": "bhmf.db" },
+    { "id": "bhmf", "table": "bhmf.db" }
+  ],
+  "dict.whitelist": ["@kosalla", "@mine"],
+  "dict.blacklist": ["@all", "bhmf"]
+}
