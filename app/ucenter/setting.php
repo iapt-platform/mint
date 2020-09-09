@@ -216,7 +216,7 @@ para:hover{
     font-size: 150%;
 }
 .dict_lang{
-	border: 1px solid gray;
+	/*border: 1px solid gray;*/
     min-height: 4em;
 	margin:0.5em;
 }

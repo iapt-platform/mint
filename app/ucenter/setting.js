@@ -24,7 +24,8 @@ function setting_onload() {
       html += gLocal.gui.magic_dict_language + "：";
       html += "<div style='display:flex;'>";
 
-      html += "<div style='width:10em;'>" + gLocal.gui.priority;
+      html += "<fieldset style='width:10em;'>";
+      html += "<legend>" + gLocal.gui.priority + "</legend>";
       html += "<ul id='ul_dict_lang1' class='dict_lang'>";
       let i = 0;
       for (const iterator of setting["dict.lang"]) {
@@ -39,9 +40,10 @@ function setting_onload() {
         i++;
       }
       html += "</ul>";
-      html += "</div>";
+      html += "</fieldset>";
 
-      html += "<div style='width:10em;'>" + gLocal.gui.no_need;
+      html += "<fieldset style='width:10em;'>";
+      html += "<legend>" + gLocal.gui.no_need + "</legend>";
       html += "<ul id='ul_dict_lang2' class='dict_lang'>";
       i = 0;
       for (const iterator of dict_lang_others) {
@@ -56,7 +58,7 @@ function setting_onload() {
         i++;
       }
       html += "</ul>";
-      html += "</div>";
+      html += "</fieldset>";
       html += "</div>";
       $("#setting_dictionary").html(html);
 
