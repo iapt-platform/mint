@@ -1,7 +1,8 @@
 <?php
-include "../path.php";
-include "../public/_pdo.php";
-include "../public/function.php";
+require_once "../path.php";
+require_once "../public/_pdo.php";
+require_once "../public/function.php";
+require_once '../ucenter/setting_function.php';
 
 if(isset($_GET["book"])){
 	$in_book=$_GET["book"];
@@ -56,6 +57,7 @@ function microtime_float()
 
 $time_start = microtime_float();
 
+$user_setting = get_setting();
 
 //open database
 
@@ -133,7 +135,12 @@ for($i=0;$i<$lookup_loop;$i++)
 				$type = $one["type"];
 				$gramma = $one["gramma"];
 				$parent = $one["parent"];
-				$mean = $one["mean"];
+				if(inLangSetting($one["lang"],$user_setting["dict.lang"])){
+					$mean = $one["mean"];
+				}
+				else{
+					$mean = "";
+				}
 				$note = $one["note"];
 				if(isset($one["factors"])){
 					$parts = $one["factors"];
@@ -169,8 +176,8 @@ for($i=0;$i<$lookup_loop;$i++)
 					$dict_name = "";
 				}
 
-				if(isset($one["language"])){
-					$language = $one["language"];
+				if(isset($one["lang"])){
+					$language = $one["lang"];
 				}
 				else{
 					$language = "en";
