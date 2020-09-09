@@ -2983,11 +2983,11 @@ function showModifyWin(sWordId) {
 		tApply+= "</button>";
 		*/
 		tApply += "<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" + sWordId + "',true)\"  title='Save and Favorite'>";
-		tApply += gLocal.gui.save;
+		tApply += gLocal.gui.to_user_dictionary;
 		tApply += "</button>";
 
 		tApply += "<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" + sWordId + "',false)\"  title='Save Draft'>";
-		tApply += gLocal.gui.draft;
+		tApply += gLocal.gui.save;
 		tApply += "</button>";
 
 		tApply += "<button class=' apply_to' onclick=\"modifyCancel()\">";

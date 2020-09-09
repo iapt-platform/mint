@@ -12,12 +12,16 @@ require_once '../public/function.php';
 	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader.css"/>
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader_mob.css" media="screen and (max-width:767px)">
-	<title id="page_title">PCD Reader</title>
+	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
+	<title id="page_title">Setting</title>
 
-	<script src="../public/js/jquery.js"></script>
+	<script src="../public/js/jquery-3.5.1.js"></script>
 	<script src="../public/js/fixedsticky.js"></script>
 	<script src="./setting.js"></script>
+	<script src="../lang/lang.js"></script>
 	<script src="../public/js/comm.js"></script>
+	<script src="../public/js/notify.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 
 </head>
 <body class="reader_body" >
@@ -31,6 +35,10 @@ if(!isset($_COOKIE["userid"])){
 
 
 <style>
+.pcd_notify{
+	margin-left: 20em;
+	background-color: rgb(201 137 15 / 64%);
+}
 		#para_nav {
 			display: flex;
 			justify-content: space-between;
@@ -168,6 +176,11 @@ para:hover{
 	font-family: Noto serif;
     font-size: 150%;
 }
+.dict_lang{
+	border: 1px solid gray;
+    min-height: 4em;
+	margin:0.5em;
+}
 </style>
 		<!-- tool bar begin-->
 		<div id="main_tool_bar" class='reader_toolbar'>
@@ -258,6 +271,8 @@ para:hover{
 	<div id="mean_menu" ></div>
 <script>
 $(document).ready(setting_onload);
+
+ntf_init(1);
 
 function setNaviVisibility(strObjId = "") {
     var objNave = document.getElementById("leftmenuinner");

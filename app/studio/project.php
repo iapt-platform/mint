@@ -18,6 +18,9 @@ require_once "../public/function.php";
 require_once "../public/load_lang.php";
 require_once "./book_list_en.inc";
 require_once "../ucenter/function.php";
+require_once "../ucenter/setting_function.php";
+
+$user_setting = get_setting();
 
 $sLang["1"]="pali";
 $sLang["2"]="en";
@@ -157,9 +160,22 @@ switch($op){
 								$title="";
 							}
 							$block_id=UUID::v4();
-							$block_data[] = array($block_id,"",$USER_ID,$book,$iPar,"_none_","zh-cn",1);
-							$block_list[] = array("type"=>6,"block_id"=>$block_id);
-
+							$trans_block_id = UUID::v4();
+							$block_data[] = array($block_id,"",$_POST["channal"],$USER_ID,$book,$iPar,"_none_",$_POST["lang"],1);
+							$block_list[] = array("channal"=>$_POST["channal"],
+															"type"=>6,//word by word
+															"book"=>$res_book,
+															"paragraph"=>$iPar,
+															"block_id"=>$block_id,
+															"readonly"=>false
+														);
+														/*
+							$block_list[] = array("channal"=>$_POST["channal"],
+														"type"=>2,//translation
+														"book"=>$res_book,
+														"paragraph"=>$iPar,
+														"readonly"=>false
+													);*/
 						while($result = $sth->fetch(PDO::FETCH_ASSOC))
 						{
 							if($result["gramma"]=="?"){
@@ -185,9 +201,7 @@ switch($op){
 							$strXml.="</word>";
 							$wbw_data[] = array(UUID::v4(),$block_id,$book,$iPar,$result["wid"],$result["real"],$strXml,mTime(),mTime(),1,$USER_NAME);
 						}
-							
 						}
-							
 					}
 					
 					//写入数据库
@@ -195,7 +209,7 @@ switch($op){
 
 					PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
 					$PDO->beginTransaction();
-					$query="INSERT INTO wbw_block ('id','parent_id','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?)";
+					$query="INSERT INTO wbw_block ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 					$stmt = $PDO->prepare($query);
 					foreach($block_data as $oneParam){
 						$stmt->execute($oneParam);
@@ -235,6 +249,7 @@ switch($op){
 					PDO_Connect("sqlite:$db_file");
 					$query="INSERT INTO fileindex ('id',
 												'parent_id',
+												'channal',
 												'user_id',
 												'book',
 												'paragraph',
@@ -251,13 +266,14 @@ switch($op){
 												'doc_block',
 												'receive_time'
 												) 
-									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 					$stmt = $PDO->prepare($query);
 					$doc_id=UUID::v4();
 					$file_name = $book . '_' . $create_para . '_' . time();
 					$newData=array(
 								   $doc_id,
 								   "",
+								   $_POST["channal"],
 								   $uid,
 								   $book,
 								   $create_para,
@@ -311,24 +327,99 @@ switch($op){
 		$strQueryParaList=str_replace(",","','",$paraList);
 		$strQueryParaList="('".$strQueryParaList."')";
 		$aParaList=str_getcsv($paraList);
+		echo "<div style='display:none;'>";
 		echo $strQueryParaList;
 		echo "<textarea>";
 		print_r($res);
 		echo "</textarea>";
+		echo "</div>";
 		if(!isset($_POST["title"])){
 			$thisFileName=basename(__FILE__);
 			echo "<div class='fun_block'>";
-			echo "<h2>新建工程</h2>";
+			echo "<h2>New Document 新建文档</h2>";
 			echo "<form action=\"{$thisFileName}\" method=\"post\">";
 			echo "<input type='hidden' name='op' value='{$op}'/>";
 			echo "<input type='hidden' name='data' value='{$data}'/>";
-			echo "Project Title:<input type='input' name='title' value='{$title}'/><br>";
-			echo "<input type=\"checkbox\" name='new_tran' />自动新建译文<br>";
-			echo "<input type=\"submit\" value='Load'>";
-			echo "<select name='format'>";
-			echo "<option value='db'>".$_local->gui->database."</option>";
-			echo "<option value='file'>file</option>";
+			
+			echo "<fieldset>";
+			echo "<legend>Title 文档标题(必填)</legend>";
+			echo "<div>";
+			echo "<input type='input' name='title' value='{$title}'/>";
+			echo "</div>";
+			echo "</fieldset>";
+			echo "<fieldset>";
+			echo "<legend>Channal 频道(必填)</legend>";
+			echo "<div>";
+			PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+			$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+			$Fetch = PDO_FetchAll($query);
+			$i=0;
+			foreach($Fetch as $row){
+				echo '<div class="file_list_row" style="padding:5px;">';
+			
+				echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
+				echo '<input name="channal" value="'.$row["id"].'" ';
+				if($i==0){
+					echo "checked";
+				}
+				echo ' type="radio" />';
+				echo '</div>';
+				echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["name"].'</div>';
+				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+				PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+				$query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
+				$FetchWBW = PDO_FetchOne($query);
+				echo '</div>';
+				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+				if($FetchWBW==0){
+					echo "空白";
+				}
+				else{
+					echo $FetchWBW."个段落";
+				}
+				echo '</div>';
+
+				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+				PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+				$query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
+				$FetchWBW = PDO_FetchOne($query);
+				echo '</div>';
+				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+				if($FetchWBW==0){
+					echo "空白";
+				}
+				else{
+					echo $FetchWBW."个段落";
+				}
+				echo '</div>';
+
+				echo '<div class="summary"  style="flex:1;padding-bottom:5px;">'.$row["status"].'</div>';
+				echo '<div class="author"  style="flex:1;padding-bottom:5px;">'.$row["create_time"].'</div>';
+				
+				echo '</div>';
+				$i++;
+			}
+			echo '<div class="file_list_row" style="padding:5px;">';
+			
+			echo '<div class="pd-10"  style="max-width:2em;flex:1;">New Channal 新建频道</div>';
+			echo '<div class="title" style="flex:3;padding-bottom:5px;">';
+			echo '<input type="input" placeholder="Channal Title"></div>';
+			echo '<div class="author"  style="flex:1;padding-bottom:5px;"><button>New 新建</button></div>';
+			
+			echo '</div>';
+			echo "</div>";
+			echo "</fieldset>";
+			echo "<fieldset>";
+			echo "<legend>Language 语言</legend>";
+			echo "<select name='lang'>";
+			foreach ($user_setting['studio.translation.lang'] as $key => $value) {
+				echo "<option value='{$value}'>".$value."</option>";
+			}
+			
 			echo "</select>";
+			echo "</fieldset>";
+			echo "<input type=\"submit\" value='Create 建立'>";
+			echo "<input type='hidden' name='format' value='db'>";
 			echo "</form>";
 			echo "</div>";
 			echo "</body>";
@@ -513,7 +604,6 @@ switch($op){
 					}
 					break;
 				}
-			
 				case "3"://translate
 				{
 					//打开翻译数据文件
@@ -567,9 +657,7 @@ switch($op){
 					//输出数据内容					
 					$par_text="";
 					foreach($aParaText as $sent){
-						$par_text .= "<sen><begin>{$sent["begin"]}</begin>
-									<end>{$sent["end"]}</end>
-									<text>{$sent["text"]}</text></sen>";
+									$par_text .= "<sen><begin>{$sent["begin"]}</begin><end>{$sent["end"]}</end><text>{$sent["text"]}</text></sen>";
 					}
 					fwrite($myfile, $par_text);
 					//段落块结束
