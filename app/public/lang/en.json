@@ -474,6 +474,11 @@
 		"sukka_pakkha": "waxing",
 		"com_dict": "Community Dictionary",
 		"contributor": "contributor",
+		"interface_language": "interface language",
+		"translation_language": "languages of translation",
+		"magic_dict_language": "languages of dictionary",
+		"priority": "priority",
+		"no_need": "no need",
 		"": ""
 	},
 	"grammastr": [

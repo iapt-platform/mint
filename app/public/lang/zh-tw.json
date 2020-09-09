@@ -476,6 +476,11 @@
 		"sukka_pakkha": "漸盈半月",
 		"com_dict": "社羣字典",
 		"contributor": "貢獻者",
+		"interface_language": "介面語言",
+		"translation_language": "譯文語言",
+		"magic_dict_language": "詞典語言",
+		"priority": "優先順序",
+		"no_need": "不需要",
 		"": ""
 	},
 	"grammastr": [
