@@ -164,7 +164,7 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
 		if($wordlist[$i][3]>$iCurrPara){
 			//echo  "new paragraph<br>";
 			$iWord=0;
-			if($i>2){
+			if($i>2){//to do: 應該從第一個開始
 				//echo "上一段结束<br>";
 				if(strlen(trim($sent))>0){
 					$end = $wordlist[$i-1][16];
@@ -205,13 +205,19 @@ if(($fp=fopen($dirXmlBase.$dirXml.$outputFileNameHead.".csv", "r"))!==FALSE){
 			if($curr[5]!=""){
 				$wordcount++;
 			}
+			if($next[4]=="["){
+				$Note_Mark_1=1;
+			}
+			else if($pre[4]=="]" && $Note_Mark_1==1){
+				$Note_Mark_1=0;
+			}
 			if($next[4]=="("){
-				$Note_Mark=1;
+				$Note_Mark_2=1;
 			}
-			else if($pre[4]==")" && $Note_Mark==1){
-				$Note_Mark=0;
+			else if($pre[4]==")" && $Note_Mark_2==1){
+				$Note_Mark_2=0;
 			}
-
+			$Note_Mark=$Note_Mark_1*$Note_Mark_2;
 			if($curr[15]!="note" || mb_substr($curr[1],0,5,"UTF-8")!="gatha"){
 				if($curr[4]=="."  && !is_numeric($pre[4]) && $next[3]==$iCurrPara && $Note_Mark==0){//以.結尾且非註釋
 					if($next[4]!="("){

@@ -448,6 +448,7 @@
         <div>月相角<span id="today_moon_angle"></span></div>
         <div>当前时间<span id="curr_time"></span></div>
         <div>现在时间<span id="now_time"></span></div>
+        <div>当前時間戳<span id="curr_time_unix"></span></div>
         <div>
             <span>精准月相（强化戒德之日）</span>
             <table id="lunar_phase_list" style="min-width: 40vw;">
@@ -539,6 +540,7 @@
             $("#angle_sun_e_moon").html(angle_trans(Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI * 180));//月亮水平弧度
             $("#curr_time").html(today.toLocaleTimeString());//当前时间
             $("#now_time").html(g_now_date.toLocaleTimeString());//现在
+            $("#curr_time_unix").html(today.getTime());//時間戳
 
 
 
