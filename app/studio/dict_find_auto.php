@@ -153,12 +153,22 @@ for($i=0;$i<$lookup_loop;$i++)
 				else{
 					$guid = "";
 				}
+
+				if(isset($one["lang"])){
+					$language = $one["lang"];
+				}
+				else if(isset($one["language"])){
+					$language = $one["language"];
+				}
+				else{
+					$language = "en";
+				}
 				$pali = $one["pali"];
 				$dict_word_spell["{$pali}"]=1;
 				$type = $one["type"];
 				$gramma = $one["gramma"];
 				$parent = $one["parent"];
-				if(inLangSetting($one["lang"],$user_setting["dict.lang"])){
+				if(inLangSetting($language,$user_setting["dict.lang"])){
 					$mean = $one["mean"];
 				}
 				else{
@@ -191,7 +201,7 @@ for($i=0;$i<$lookup_loop;$i++)
 				else{
 					$partmean = "";
 				}
-				if(inLangSetting($one["lang"],$user_setting["dict.lang"])==false){
+				if(inLangSetting($language,$user_setting["dict.lang"])==false){
 					$partmean = "";
 				}
 				if(isset($one["part_id"])){
@@ -215,12 +225,6 @@ for($i=0;$i<$lookup_loop;$i++)
 					$dict_name = "";
 				}
 
-				if(isset($one["language"])){
-					$language = $one["language"];
-				}
-				else{
-					$language = "en";
-				}
 				
 				array_push($output,array(
 										"id"=>$id,
