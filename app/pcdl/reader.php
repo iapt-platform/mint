@@ -625,6 +625,21 @@ else{
 		}
 	}	
 
+	$strSimSent = "";
+	if($_GET["view"]=="sent"){
+		$query = "select sim_sents from 'pali_sent' where book='$book' and paragraph='$paragraph' and begin='{$_GET["begin"]}' and end ='{$_GET["end"]}'";
+		$FetchSent = PDO_FetchOne($query);
+		if(!empty($FetchSent)){
+			$sim_sents = str_replace(",","','",$FetchSent);
+			$sim_sents = "'".$sim_sents."'";
+			$query = "SELECT book, paragraph,begin, end, text from 'pali_sent' where id IN ( {$sim_sents} ) ";
+			$FetchSim = PDO_FetchAll($query);
+			foreach ($FetchSim as $key => $value) {
+				$strSimSent .= "<div><a href=''>". $value["text"]."</div>";
+				$strSimSent .= "<div>"._get_para_path($value["book"],$value["paragraph"])."</div><br/>";
+			}
+		}
+	}
 
 	if(isset($_GET["sent_mode"])){
 
@@ -710,6 +725,8 @@ else{
 
 <div>
 <a name="sim_doc"></a>
+<div>相似句子</div>
+<?php echo $strSimSent; ?>
 <div>相关段落</div>
 <ul>
 <?php
