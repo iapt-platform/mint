@@ -71,7 +71,7 @@ $album_power["2"]="编辑";
 					<li <?php echo $menu_active["studio"];?>><a href="setting.php?item=studio"><?php echo $_local->gui->studio ;?></a></li>
 					<li <?php echo $menu_active["liberay"];?>><a href="setting.php?item=liberay"></a><?php echo $_local->gui->library ;?></li>
 					<li <?php echo $menu_active["dictionary"];?>><a href="setting.php?item=dictionary"><?php echo $_local->gui->dictionary ;?></a></li>
-					<li <?php echo $menu_active["userdict"];?>><a href="setting.php?item=userdict"><?php echo $_local->gui->user_dictionary ;?></a></li>
+					<li <?php echo $menu_active["userdict"];?>><a href="setting.php?item=userdict"><?php echo $_local->gui->userdict ;?></a></li>
 					<li <?php echo $menu_active["term"];?>><a href="setting.php?item=term"><?php echo $_local->gui->dict_terms ;?></a></li>
 					<li <?php echo $menu_active["message"];?>><a href="setting.php?item=message"><?php echo $_local->gui->message ;?></a></li>
 					<li <?php echo $menu_active["album"];?>><a href="setting.php?item=album">Album</a></li>

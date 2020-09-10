@@ -4,8 +4,9 @@ require_once __DIR__.'/../path.php';
 /*
 load language file
 范例
-echo $_local->gui->;
-<?php echo $_local->gui->;?>
+echo $_local->gui->XXXX;
+<?php echo $_local->gui->XXXX;?>
+gLocal.gui.XXXX
 */
 if(isset($_GET["language"])){
 	$currLanguage=$_GET["language"];

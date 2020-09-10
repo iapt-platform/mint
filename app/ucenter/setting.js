@@ -6,11 +6,11 @@ function setting_onload() {
       let html;
 
       html = "";
-      html += "常用界面语言:";
+      html += gLocal.gui.interface_language + "：";
       $("#setting_general").html(html);
 
       html = "";
-      html += "常用译文语言:";
+      html += gLocal.gui.translation_language + "：";
 
       $("#setting_studio").html(html);
 
@@ -21,10 +21,11 @@ function setting_onload() {
         }
       }
       html = "";
-      html += "自动查词词典语言:";
+      html += gLocal.gui.magic_dict_language + "：";
       html += "<div style='display:flex;'>";
 
-      html += "<div style='width:10em;'>顺序";
+      html += "<fieldset style='width:10em;'>";
+      html += "<legend>" + gLocal.gui.priority + "</legend>";
       html += "<ul id='ul_dict_lang1' class='dict_lang'>";
       let i = 0;
       for (const iterator of setting["dict.lang"]) {
@@ -39,9 +40,10 @@ function setting_onload() {
         i++;
       }
       html += "</ul>";
-      html += "</div>";
+      html += "</fieldset>";
 
-      html += "<div style='width:10em;'>不展示";
+      html += "<fieldset style='width:10em;'>";
+      html += "<legend>" + gLocal.gui.no_need + "</legend>";
       html += "<ul id='ul_dict_lang2' class='dict_lang'>";
       i = 0;
       for (const iterator of dict_lang_others) {
@@ -56,7 +58,7 @@ function setting_onload() {
         i++;
       }
       html += "</ul>";
-      html += "</div>";
+      html += "</fieldset>";
       html += "</div>";
       $("#setting_dictionary").html(html);
 
@@ -76,7 +78,7 @@ function setting_onload() {
           setting_save();
         },
       });
-    } catch (e) {}
+    } catch (e) { }
   });
 }
 function li_remove() {

@@ -6,6 +6,45 @@ require_once '../public/function.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+<script language="javascript">
+	<?php 
+	//加载js语言包
+	//require_once '../public/load_lang_js.php';
+	?>
+	<?php
+	//加载js语言包
+	if(file_exists(_DIR_LANGUAGE_."/".$currLanguage.".json")){
+		echo "var gLocal = ".file_get_contents(_DIR_LANGUAGE_."/".$currLanguage.".json").";";
+	}
+	else{
+		echo "var gLocal = ".file_get_contents(_DIR_LANGUAGE_."/default.json").";";
+	}
+	?>
+		var gDownloadListString="";
+		
+		var g_device="computer";
+		var strSertch = location.search;
+		var gConfigDirMydocument="<?php echo _DIR_USER_BASE_."/".$userid._DIR_MYDOCUMENT_; ?>/";
+		
+		if(strSertch.length>0){
+			strSertch = strSertch.substr(1);
+			var sertchList=strSertch.split('&');
+			for (x in sertchList){
+				var item = sertchList[x].split('=');
+				if(item[0]=="device"){
+					g_device=item[1];
+				}
+			}
+		}
+		if(g_device=="mobile"){
+			g_is_mobile=true;
+		}
+		else{
+			g_is_mobile=false;
+		}
+		
+		var gCaseTable=<?php echo file_get_contents("../public/js/case.json"); ?>
+	</script>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,11 +56,11 @@ require_once '../public/function.php';
 
 	<script src="../public/js/jquery-3.5.1.js"></script>
 	<script src="../public/js/fixedsticky.js"></script>
-	<script src="./setting.js"></script>
 	<script src="../lang/lang.js"></script>
 	<script src="../public/js/comm.js"></script>
 	<script src="../public/js/notify.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<script src="./setting.js"></script>
 
 </head>
 <body class="reader_body" >
@@ -177,7 +216,7 @@ para:hover{
     font-size: 150%;
 }
 .dict_lang{
-	border: 1px solid gray;
+	/*border: 1px solid gray;*/
     min-height: 4em;
 	margin:0.5em;
 }

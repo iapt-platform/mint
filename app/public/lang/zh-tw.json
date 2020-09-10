@@ -325,7 +325,7 @@
 		"up_and_down": "上下對譯",
 		"update_all_wbw_to_database": "所有逐詞解析資訊上傳到資料庫",
 		"user": "使用者",
-		"user_dictionary": "使用者詞典",
+		"to_user_dictionary": "儲存並新增到單詞簿",
 		"user_id": "賬號",
 		"userdict": "使用者詞典",
 		"vannana": "註疏",
@@ -476,6 +476,11 @@
 		"sukka_pakkha": "漸盈半月",
 		"com_dict": "社羣字典",
 		"contributor": "貢獻者",
+		"interface_language": "介面語言",
+		"translation_language": "譯文語言",
+		"magic_dict_language": "詞典語言",
+		"priority": "優先順序",
+		"no_need": "不需要",
 		"": ""
 	},
 	"grammastr": [
