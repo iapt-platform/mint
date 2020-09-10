@@ -429,7 +429,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() { }
+function renderBlock() {}
 /*
 重绘翻译数据块
 */
@@ -634,7 +634,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) { }
+function renderTranslateParBlockInnerPreview(strText) {}
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -1333,8 +1333,10 @@ function render_sent_tool_bar(elementBlock, begin) {
   }
   output += "[" + gLocal.gui.scan_in_reader + "]";
   output += "</a>";
-  output += "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
-  output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+  output +=
+    "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+  output +=
+    "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
   output += "</div>";
   return output;
 }
@@ -1542,11 +1544,30 @@ function renderWordParBlockInner(elementBlock) {
           "' begin='" +
           sent_begin +
           "' end=''>";
+        let usent_count = _user_sent_buffer.getSentNum(
+          book,
+          paragraph,
+          sent_begin,
+          word_id
+        );
         let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
         let sender = "";
         if (netSent.length > 0) {
           output += netSent[netSent.length - 1].data.text;
           sender = netSent[netSent.length - 1].sender;
+        } else if (usent_count > 0) {
+          output += _user_sent_buffer.getSentText(
+            book,
+            paragraph,
+            sent_begin,
+            word_id
+          )[0].text;
+          sender = _user_sent_buffer.getSentText(
+            book,
+            paragraph,
+            sent_begin,
+            word_id
+          )[0].editor;
         }
         output += "</div>";
         output +=
@@ -1554,7 +1575,7 @@ function renderWordParBlockInner(elementBlock) {
           "<span><span>过滤</span><span class='author'>" +
           sender +
           "</span><span class='tag'>tag</span></span>" +
-          "<span class='tools'>" +
+          "<span><span class='tools'>" +
           "<button>采纳</button>" +
           "<button onclick=\"show_tran_net('" +
           book +
@@ -1565,7 +1586,9 @@ function renderWordParBlockInner(elementBlock) {
           "','" +
           word_id +
           "')\">更多</button>" +
-          "</span>" +
+          "</span><span>" +
+          usent_count +
+          "</span></span>" +
           "</div>";
         output += "</div>";
         //句子预览结束
@@ -1631,8 +1654,10 @@ function renderWordParBlockInner(elementBlock) {
           "' target='_blank'>";
         output += "[" + gLocal.gui.scan_in_reader + "]";
         output += "</a>";
-        output += "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
-        output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+        output +=
+          "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+        output +=
+          "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
         output += "</div>";
 
         output += "<div class='sent_wbw'>";
@@ -2472,12 +2497,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                "$" +
-                arrMeaning.length +
-                "$$" +
-                arrMean[i] +
-                "$" +
-                g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$$" +
+                  arrMean[i] +
+                  "$" +
+                  g_DictWordList[iDict].Language
               );
             }
           }
@@ -2527,12 +2552,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$*$" +
-                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$*$" +
+                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2582,12 +2607,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$**$" +
-                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$**$" +
+                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -3062,7 +3087,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) { }
+function renderWordNoteDivByParaNo(book, paragraph) {}
 /*
 paragraph word note
 */
@@ -3261,7 +3286,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) { }
+function updateWordCommentary(element) {}
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3384,13 +3409,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-    g_allparlen_array[gVisibleParBegin - 1] <=
+      g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin - 1] >
+      g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3417,13 +3442,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] <=
+      g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] >
+      g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -3860,12 +3885,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-      id +
-      "' name=\"word_note_" +
-      id +
-      '">[' +
-      (index + 1) +
-      "]</a>"
+        id +
+        "' name=\"word_note_" +
+        id +
+        '">[' +
+        (index + 1) +
+        "]</a>"
     );
   });
 

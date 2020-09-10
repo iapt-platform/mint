@@ -39,6 +39,8 @@ else{$currDevice="computer";}
 
 <title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
 	<script language="javascript" src="config.js"></script>
+	<script language="javascript" src="../pali_sent/pali_sent_list.js"></script>
+	<script language="javascript" src="../usent/usent_ref.js"></script>
 	<script language="javascript" src="js/data.js"></script>
 	<script language="javascript" src="js/common.js"></script>
 	<script language="javascript" src="js/render.js"></script>	
@@ -57,6 +59,7 @@ else{$currDevice="computer";}
 	<script language="javascript" src="../public/js/comm.js"></script>
 	<script language="javascript" src="../public/js/localforage.min.js"></script>
 	<script language="javascript" src="../public/script/my.js"></script>
+
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 	<script src="js/jquery-3.3.1.min.js"></script>
