@@ -6,6 +6,8 @@ var gXmlOldVerData; //old ver xml file xml doc
 var g_filename = ""; //工程文件名
 var arrDocFileInfo = null;
 
+var _user_sent_buffer = new USentResult(); //数据库中的全部参考译文句子
+
 //全部的逐词译单词xml 节点数组
 var gXmlAllWordInWBW = new Array();
 
