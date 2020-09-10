@@ -6,8 +6,6 @@ var gXmlOldVerData; //old ver xml file xml doc
 var g_filename = ""; //工程文件名
 var arrDocFileInfo = null;
 
-var _user_sent_buffer = new USentResult(); //数据库中的全部参考译文句子
-
 //全部的逐词译单词xml 节点数组
 var gXmlAllWordInWBW = new Array();
 
@@ -210,7 +208,7 @@ function doc_file_info_get() {
           }
         }
       } catch (e) {
-        console(e);
+        console.error(e);
       }
     }
   );
@@ -612,11 +610,27 @@ function projectDataParse(xmlBookData) {
   gXmlBookDataHead = xmlBookData.getElementsByTagName("head")[0];
   gXmlBookDataInlineDict = xmlBookData.getElementsByTagName("dict")[0];
   gXmlBookDataHeadToc = xmlBookData.getElementsByTagName("toc")[0];
-  if (xmlBookData.getElementsByTagName("message")) {
-    gXmlBookDataMsg = gXmlBookData.getElementsByTagName("message")[0];
-  } else {
-    gXmlBookDataMsg = null;
+
+  //扫描文档，获取句子列表
+  allBlock = gXmlBookDataBody.getElementsByTagName("block");
+  for (const iterator of allBlock) {
+    let xmlParInfo = iterator.getElementsByTagName("info")[0];
+
+    let book = getNodeText(xmlParInfo, "book");
+    let para = getNodeText(xmlParInfo, "paragraph");
+    _PaliSentList.pushPara(book, para);
   }
+  _PaliSentList.refresh(function (data) {
+    for (const iterator of data) {
+      let book = iterator.info.book;
+      let para = iterator.info.para;
+      for (const sent of iterator.data) {
+        _user_sent_buffer.pushSent(book, para, sent.begin, sent.end);
+      }
+    }
+    _user_sent_buffer.refresh();
+  });
+
   //解析消息队列
   localforage
     .getItem("msg_" + g_docid)
@@ -657,10 +671,13 @@ function projectDataParse(xmlBookData) {
   com_XmlAllWordRefresh();
   //更新工程资源列表
   editor_project_updataProjectInfo();
+
+  /*
   //解析内联字典数据
   ildDataParse(gXmlBookDataInlineDict);
   //将内联字典数据导入已经下载的词的列表
   dict_inid_ild_word_list();
+  */
 }
 
 /*

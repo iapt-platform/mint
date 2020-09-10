@@ -17,15 +17,16 @@ $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
 /* 开始一个事务，关闭自动提交 */
 
-$query="SELECT * FROM sentence WHERE (book = ?  AND paragraph = ? AND begin = ? AND end = ? text <> '' ) order by modify_time DESC limit 0,10";
+$query="SELECT * FROM sentence WHERE (book = ?  AND paragraph = ? AND begin = ? AND end = ? AND text <> '' ) order by modify_time DESC limit 0,10";
 $stmt = $dbh->prepare($query);
 foreach ($sentList as $key => $value) {
     # code...
     $stmt->execute(array($value->book,$value->para,$value->start,$value->end));
     $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $sent["info"]=array($value);
+    $sent = array();
+    $sent["info"]=$value;
     $sent["data"]=$Fetch;
-    $sent["length"]=count($Fetch);//句子个数
+    $sent["count"]=count($Fetch);//句子个数
     $output[] = $sent;
 }
 
