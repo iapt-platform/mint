@@ -230,7 +230,7 @@ function sents_similar_to_id($id) {
 }
 
 $id = $argv[1];
-sents_similar_to_id($id);
+//sents_similar_to_id($id);
 
 if (!isset($_op)) {
 	exit(0);
