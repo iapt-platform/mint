@@ -5,6 +5,7 @@ get user sentence from db
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../ucenter/function.php";
 
 $sent = $_POST["sent"];
 $filter = $_POST["filter"];
@@ -23,6 +24,9 @@ foreach ($sentList as $key => $value) {
     # code...
     $stmt->execute(array($value->book,$value->para,$value->start,$value->end));
     $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    for($i=0 ; $i<count($Fetch) ; $i++) {
+        $Fetch[$i]["nickname"] = ucenter_getA($Fetch[$i]["editor"]);
+    }
     $sent = array();
     $sent["info"]=$value;
     $sent["data"]=$Fetch;

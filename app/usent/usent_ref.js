@@ -57,7 +57,7 @@ class USentResult {
     }
     return 0;
   }
-  getSentText(book, para, start, end, num = 1) {
+  getSentText(book, para, start, end, channal = 0) {
     for (const iterator of _usent_buffer) {
       if (
         iterator.info.book == book &&
@@ -65,7 +65,17 @@ class USentResult {
         iterator.info.start == start &&
         iterator.info.end == end
       ) {
-        return iterator.data;
+        if (channal == 0) {
+          return iterator.data;
+        } else {
+          for (const sent of iterator.data) {
+            if (sent.channal == channal) {
+              return sent;
+            } else {
+              return false;
+            }
+          }
+        }
       }
     }
     return null;

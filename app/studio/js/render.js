@@ -1251,6 +1251,8 @@ function renderNoteShell(elementBlock) {
   }
   return output;
 }
+
+//句子上面的工具条
 function render_sent_tool_bar(elementBlock, begin) {
   let output = "";
   let axmlParInfo = elementBlock.getElementsByTagName("info")[0];
@@ -1340,11 +1342,11 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += "</div>";
   return output;
 }
+
 var arr_par_sent_num = new Array();
 var g_arr_Para_ID = new Array();
 function renderWordParBlockInner(elementBlock) {
   var output = "<div style='display:block;width:100%'>";
-  let outList = "<table>"; //list mode
   var Note_Mark = 0;
   var sent_gramma_i = 0;
   var word_length_count = 0;
@@ -1459,20 +1461,6 @@ function renderWordParBlockInner(elementBlock) {
     output += "	</div>";
     output += "</div>";
 
-    outList += "<tr>";
-    outList +=
-      "<td>" +
-      wReal +
-      ":</td> <td>" +
-      wType +
-      "</td><td>" +
-      wGramma +
-      "</td> <td>" +
-      wParent +
-      "</td> <td>" +
-      wMean +
-      "</td>";
-    outList += "</tr>";
     //渲染单词块结束
 
     word_length_count += wPali.length;
@@ -1533,65 +1521,20 @@ function renderWordParBlockInner(elementBlock) {
           "')\"><span id='' class=\"word_msg\">issue</span></span>";
         //
         output += "</div>";
+
         output += "<div class='translate_sent_head_content'>";
         //句子预览
-        output += "<div class='trans_text_block'>";
-        output +=
-          "<div class='trans_text_content'  pcds='sent-net' book='" +
-          book +
-          "' para='" +
-          paragraph +
-          "' begin='" +
-          sent_begin +
-          "' end=''>";
-        let usent_count = _user_sent_buffer.getSentNum(
+        output += render_tran_sent_block(
           book,
           paragraph,
           sent_begin,
-          word_id
+          word_id,
+          1,
+          false
         );
-        let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
-        let sender = "";
-        if (netSent.length > 0) {
-          output += netSent[netSent.length - 1].data.text;
-          sender = netSent[netSent.length - 1].sender;
-        } else if (usent_count > 0) {
-          output += _user_sent_buffer.getSentText(
-            book,
-            paragraph,
-            sent_begin,
-            word_id
-          )[0].text;
-          sender = _user_sent_buffer.getSentText(
-            book,
-            paragraph,
-            sent_begin,
-            word_id
-          )[0].editor;
-        }
-        output += "</div>";
-        output +=
-          "<div class='trans_text_info'>" +
-          "<span><span>过滤</span><span class='author'>" +
-          sender +
-          "</span><span class='tag'>tag</span></span>" +
-          "<span><span class='tools'>" +
-          "<button>采纳</button>" +
-          "<button onclick=\"show_tran_net('" +
-          book +
-          "','" +
-          paragraph +
-          "','" +
-          sent_begin +
-          "','" +
-          word_id +
-          "')\">更多</button>" +
-          "</span><span>" +
-          usent_count +
-          "</span></span>" +
-          "</div>";
-        output += "</div>";
         //句子预览结束
+        output += "</div>";
+
         output +=
           "<div class='trans_text_content'  pcds='sent-net' book='" +
           book +
@@ -1744,15 +1687,163 @@ function renderWordParBlockInner(elementBlock) {
 
   output += "</div>";
 
-  outList += "</table>";
-
   var sent_ID = "sent_" + par_num + "_" + sent_num;
   arr_Para_ID.push(wID);
   arr_par_sent_num.push(sent_ID);
   g_arr_Para_ID[par_num] = arr_Para_ID;
-  return output; //+outList;
+  return output;
 }
 
+function render_tran_sent_block(
+  book,
+  para,
+  begin,
+  end,
+  channal = 0,
+  readonly = true
+) {
+  let usent_count = _user_sent_buffer.getSentNum(book, para, begin, end);
+  let netSent = doc_msg_get_trans(book, para, begin, end);
+  let sender = "";
+  let sChannalName = "";
+  let sent_text = "";
+  let objSent;
+  if (channal == 0) {
+    //百家言
+    if (netSent.length > 0) {
+      sender = netSent[netSent.length - 1].sender;
+      sent_text += netSent[netSent.length - 1].data.text;
+    } else if (usent_count > 0) {
+      sender = _user_sent_buffer.getSentText(book, para, begin, end)[0]
+        .nickname;
+      sChannalName = "channal name";
+      sent_text += _user_sent_buffer.getSentText(book, para, begin, end)[0]
+        .text;
+    }
+  } else {
+    sender = "通道的名字";
+    objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
+
+    if (objSent == false) {
+      sent_text = "";
+    } else {
+      sent_text = objSent.text;
+    }
+  }
+
+  let output = "";
+
+  output += "<div class='trans_text_block' style='padding-top:0;";
+  if (readonly == false) {
+    output += "border-color: #ccd1ff;background-color:unset;";
+  }
+  output += "'>";
+  output += "<div class='trans_text_info' style='border:none;'>";
+  if (channal == 0) {
+    output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
+  } else {
+    output += "频道名";
+  }
+  output += "</div>";
+  output +=
+    "<div class='trans_text_content'  pcds='sent-net' book='" +
+    book +
+    "' para='" +
+    para +
+    "' begin='" +
+    begin +
+    "' end='" +
+    end +
+    "' channal='" +
+    channal +
+    "'>";
+  if (readonly) {
+    output += sent_text;
+  } else {
+    if (objSent == false) {
+      sent_text = "点击编辑";
+    }
+    output +=
+      "<span onclick=\"sent_edit_click('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "',)\">" +
+      sent_text +
+      "</span>";
+  }
+
+  output += "</div>";
+  if (readonly == false) {
+    output += "<div style='display:none;'>";
+    output +=
+      "<textarea class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' book='" +
+      book +
+      "'  para='" +
+      para +
+      "'  begin='" +
+      begin +
+      "'  end='" +
+      end +
+      "'  channal='" +
+      channal +
+      "' >";
+    output += sent_text;
+    output += "</textarea>";
+    output += "</div>";
+  }
+  output +=
+    "<div class='trans_text_info'>" +
+    "<span><span class='tag'>tag</span></span>" +
+    "<span><span class='tools'>";
+  if (readonly) {
+    output += "<button>采纳</button>";
+  } else {
+    output += "<button>保存</button>";
+  }
+
+  if (channal == 0) {
+    //百家言 显示更多按钮
+    output +=
+      "<button onclick=\"show_tran_net('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "')\">更多</button>";
+  }
+
+  output += "</span><span>" + usent_count + "</span></span>" + "</div>";
+  return output;
+}
+
+function sent_edit_click(book, para, begin, end, channal) {
+  $(".trans_sent_edit").parent().hide(200);
+  $(
+    ".trans_sent_edit[book='" +
+      book +
+      "'][para='" +
+      para +
+      "'][begin='" +
+      begin +
+      "'][end='" +
+      end +
+      "'][channal='" +
+      channal +
+      "']"
+  )
+    .parent()
+    .show();
+}
 function magic_sentence_cut() {
   var all_sent_array = document.getElementsByClassName("sent_wbw");
   for (i_magic = 0; i_magic < all_sent_array.length; i_magic++) {
