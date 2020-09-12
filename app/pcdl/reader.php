@@ -635,8 +635,8 @@ else{
 			$query = "SELECT book, paragraph,begin, end, text from 'pali_sent' where id IN ( {$sim_sents} ) ";
 			$FetchSim = PDO_FetchAll($query);
 			foreach ($FetchSim as $key => $value) {
-				$strSimSent .= "<div><a href=''>". $value["text"]."</div>";
-				$strSimSent .= "<div>"._get_para_path($value["book"],$value["paragraph"])."</div><br/>";
+				$strSimSent .= "<div>". $value["text"]."</div>";
+				$strSimSent .= "<div><a href='../pcdl/reader.php?view=para&book={$value["book"]}&para={$value["paragraph"]}'>"._get_para_path($value["book"],$value["paragraph"])."</a></div><br/>";
 			}
 		}
 	}

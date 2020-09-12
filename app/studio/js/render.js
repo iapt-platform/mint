@@ -1507,7 +1507,8 @@ function renderWordParBlockInner(elementBlock) {
         //逐句翻译块开始
         output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
         output += "<div class='translate_sent_head'>";
-        output += "<div class='translate_sent_head_toolbar'>";
+        output +=
+          "<div class='translate_sent_head_toolbar' style='display:none;'>";
         output += "<span></span>";
         output +=
           "<span onclick=\"show_tran_net('" +
@@ -1529,9 +1530,21 @@ function renderWordParBlockInner(elementBlock) {
           paragraph,
           sent_begin,
           word_id,
-          1,
-          false
+          0,
+          true
         );
+        if (_my_channal != null) {
+          for (const iterator of _my_channal) {
+            output += render_tran_sent_block(
+              book,
+              paragraph,
+              sent_begin,
+              word_id,
+              iterator.id,
+              false
+            );
+          }
+        }
         //句子预览结束
         output += "</div>";
 
@@ -1725,6 +1738,17 @@ function render_tran_sent_block(
     objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
 
     if (objSent == false) {
+      objSent = new Object();
+      objSent.text = "";
+      if (doc_head("lang") == "") {
+        objSent.language = "en";
+      } else {
+        objSent.language = doc_head("lang");
+      }
+      objSent.id = "";
+      objSent.tag = "[]";
+      objSent.author = "{}";
+
       sent_text = "";
     } else {
       sent_text = objSent.text;
@@ -1742,7 +1766,12 @@ function render_tran_sent_block(
   if (channal == 0) {
     output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
   } else {
-    output += "频道名";
+    let thischannal = channal_getById(channal);
+    if (thischannal) {
+      output += thischannal.name;
+    } else {
+      output += "未知的频道名";
+    }
   }
   output += "</div>";
   output +=
@@ -1760,9 +1789,6 @@ function render_tran_sent_block(
   if (readonly) {
     output += sent_text;
   } else {
-    if (objSent == false) {
-      sent_text = "点击编辑";
-    }
     output +=
       "<span onclick=\"sent_edit_click('" +
       book +
@@ -1774,16 +1800,37 @@ function render_tran_sent_block(
       end +
       "','" +
       channal +
-      "',)\">" +
-      sent_text +
-      "</span>";
+      "',)\">";
+    if (objSent.text == null || objSent.text == "") {
+      output += "<span style='color:gray;'>";
+      output +=
+        "<svg class='icon'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
+      output += "</span>";
+    } else {
+      output += objSent.text;
+    }
+
+    output += "</span>";
   }
 
   output += "</div>";
   if (readonly == false) {
     output += "<div style='display:none;'>";
     output +=
-      "<textarea class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' book='" +
+      "<textarea id='trans_sent_edit_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal +
+      "' class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
+      "sent_id='" +
+      objSent.id +
+      "' book='" +
       book +
       "'  para='" +
       para +
@@ -1793,25 +1840,19 @@ function render_tran_sent_block(
       end +
       "'  channal='" +
       channal +
+      "'  author='" +
+      objSent.author +
+      "'  lang='" +
+      objSent.language +
+      "'  tag='" +
+      objSent.tag +
       "' >";
-    output += sent_text;
+    output += objSent.text;
     output += "</textarea>";
-    output += "</div>";
-  }
-  output +=
-    "<div class='trans_text_info'>" +
-    "<span><span class='tag'>tag</span></span>" +
-    "<span><span class='tools'>";
-  if (readonly) {
-    output += "<button>采纳</button>";
-  } else {
-    output += "<button>保存</button>";
-  }
-
-  if (channal == 0) {
-    //百家言 显示更多按钮
+    output += "<div class='trans_text_info'>";
+    output += "<span></span>";
     output +=
-      "<button onclick=\"show_tran_net('" +
+      "<button onclick=\"trans_text_save('" +
       book +
       "','" +
       para +
@@ -1819,13 +1860,82 @@ function render_tran_sent_block(
       begin +
       "','" +
       end +
-      "')\">更多</button>";
+      "','" +
+      channal +
+      "')\">保存</button>";
+    output += "</div>";
+    output += "</div>";
   }
 
-  output += "</span><span>" + usent_count + "</span></span>" + "</div>";
+  if (readonly) {
+    output +=
+      "<div class='trans_text_info'>" +
+      "<span></span>" +
+      "<span><span class='tools'>";
+
+    output += "<button>采纳</button>";
+
+    if (channal == 0) {
+      //百家言 显示更多按钮
+      output +=
+        "<button onclick=\"show_tran_net('" +
+        book +
+        "','" +
+        para +
+        "','" +
+        begin +
+        "','" +
+        end +
+        "')\">更多</button>";
+    }
+
+    output += "</span><span>" + usent_count + "</span></span>";
+    output += "</div>";
+  }
+  output += "</div>";
   return output;
 }
 
+function trans_text_save(book, para, begin, end, channal) {
+  let textarea = $(
+    "#trans_sent_edit_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal
+  );
+  if (textarea) {
+    let objsent = new Object();
+    objsent.id = textarea.attr("sent_id");
+    objsent.book = book;
+    objsent.paragraph = para;
+    objsent.begin = begin;
+    objsent.end = end;
+    objsent.channal = channal;
+    objsent.author = textarea.attr("author");
+    objsent.lang = textarea.attr("lang");
+    objsent.text = textarea.val();
+    let sents = new Array();
+    sents.push(objsent);
+    $.post(
+      "../usent/update.php",
+      {
+        data: JSON.stringify(sents),
+      },
+      function (data, status) {
+        if (status == "success") {
+          let result = JSON.parse(data);
+          console.log(result);
+        }
+      }
+    );
+  }
+}
 function sent_edit_click(book, para, begin, end, channal) {
   $(".trans_sent_edit").parent().hide(200);
   $(

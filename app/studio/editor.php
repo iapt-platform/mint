@@ -52,6 +52,7 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/relation.js"></script>
 
 
+
 	<script language="javascript" src="js/relation_list.json"></script>
 	
 	<script language="javascript" src="sent/sent.js"></script>
@@ -69,6 +70,7 @@ else{$currDevice="computer";}
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
+	<script language="javascript" src="../channal/channal.js"></script>
 	
 
 	<script language="javascript">

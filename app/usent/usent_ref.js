@@ -71,10 +71,9 @@ class USentResult {
           for (const sent of iterator.data) {
             if (sent.channal == channal) {
               return sent;
-            } else {
-              return false;
-            }
+            } 
           }
+          return false;
         }
       }
     }

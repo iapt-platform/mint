@@ -172,7 +172,7 @@
   { "english": "Aymara", "name": "aymar aru", "code": "ay" },
   { "english": "Azerbaijani", "name": "azərbaycan dili", "code": "az" },
   { "english": "Chinese", "name": "中文", "code": "zh" },
-  { "english": "Chinese", "name": "漢語", "code": "zh-hant" },
+  { "english": "Chinese", "name": "繁体中文", "code": "zh-hant" },
   { "english": "Chinese", "name": "简体中文", "code": "zh-hans" },
   { "english": "Cree", "name": "ᓀᐦᐃᔭᐍᐏᐣ", "code": "cr" },
   { "english": "Estonian", "name": "eesti, eesti keel", "code": "et" },
