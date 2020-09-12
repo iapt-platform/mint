@@ -99,6 +99,7 @@ switch($op){
 		$doc_head.="        <style></style>\n";
 		$doc_head.="        <doc_title>$user_title</doc_title>\n";
 		$doc_head.="        <tag>$tag</tag>\n";
+		$doc_head.="        <lang>{$_POST["lang"]}</lang>\n";
 		$doc_head.="        <book>$book</book>\n";
 		$doc_head.="        <paragraph>$paragraph</paragraph>\n";
 		$doc_head.="    </head>\n";		
