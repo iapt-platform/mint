@@ -35,11 +35,13 @@ foreach ($aData as $data) {
 		$oldList[] = $data;
 	}
 }
+$update_list = array(); //已经成功修改数据库的数据列表 回传客户端
 
 /* 修改现有数据 */
 $PDO->beginTransaction();
-$query="UPDATE sentence SET text= ?  , status = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
+$query="UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
 $sth = $PDO->prepare($query);
+
 
 foreach ($oldList as $data) {
 	if(isset($data["id"])){
@@ -49,7 +51,7 @@ foreach ($oldList as $data) {
 		else{
 			$modify_time = mTime();
 		}
-		$sth->execute(array($data["text"], $data["status"], mTime(),$modify_time,$data["id"]));
+		$sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"],"UTF-8"), mTime(),$modify_time,$data["id"]));
 	} 
 }
 
@@ -67,10 +69,13 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 else{
 	$respond['status']=0;
 	$respond['message']="成功";
+	foreach ($oldList as $key => $value) {
+		$update_list[] =  $value;
+	}
 }
 
 
-/* 插入数据 */
+/* 插入新数据 */
 $PDO->beginTransaction();
 $query = "INSERT INTO sentence (id, 
 														parent,
@@ -86,12 +91,14 @@ $query = "INSERT INTO sentence (id,
 														language,
 														ver,
 														status,
+														strlen,
 														modify_time,
-														receive_time
+														receive_time,
+														create_time
 														) 
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 $sth = $PDO->prepare($query);
-$new_id = array();
+
 foreach ($newList as $data) {
 		$uuid = UUID::v4();
 		if($data["parent"]){
@@ -114,6 +121,8 @@ foreach ($newList as $data) {
 										  $data["language"],
 										  1,
 										  7,
+										  mb_strlen($data["text"],"UTF-8"),
+										  mTime(),
 										  mTime(),
 										  mTime()
 										));
@@ -131,8 +140,11 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 }
 else{
 	$respond['insert_error']=0;
-	$respond['new_list']=$new_id;
+	foreach ($newList as $key => $value) {
+		$update_list[] =  $value;
+	}
 }
+$respond['update']=$update_list;
 
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>

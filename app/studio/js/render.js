@@ -1763,16 +1763,32 @@ function render_tran_sent_block(
   }
   output += "'>";
   output += "<div class='trans_text_info' style='border:none;'>";
+
   if (channal == 0) {
     output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
   } else {
+    output +=
+      "<span><span class='send_status' id='send_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal +
+      "'></span>";
+    output += "<span>";
     let thischannal = channal_getById(channal);
     if (thischannal) {
       output += thischannal.name;
     } else {
       output += "未知的频道名";
     }
+    output += "</span>";
   }
+  output += "</span><span></span>";
   output += "</div>";
   output +=
     "<div class='trans_text_content'  pcds='sent-net' book='" +
@@ -1920,22 +1936,10 @@ function trans_text_save(book, para, begin, end, channal) {
     objsent.author = textarea.attr("author");
     objsent.lang = textarea.attr("lang");
     objsent.text = textarea.val();
-    let sents = new Array();
-    sents.push(objsent);
-    $.post(
-      "../usent/update.php",
-      {
-        data: JSON.stringify(sents),
-      },
-      function (data, status) {
-        if (status == "success") {
-          let result = JSON.parse(data);
-          console.log(result);
-        }
-      }
-    );
+    _user_sent_buffer.setSent(objsent);
   }
 }
+
 function sent_edit_click(book, para, begin, end, channal) {
   $(".trans_sent_edit").parent().hide(200);
   $(

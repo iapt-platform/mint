@@ -68,7 +68,7 @@ require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+$query = "SELECT * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
 $Fetch = PDO_FetchAll($query);
 
 foreach($Fetch as $row){
