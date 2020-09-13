@@ -1,6 +1,6 @@
 <div class="tool_bar">
 	<div>
-	课程
+	<?php echo $_local->gui->add;?>
 	</div>
 
 	<div>

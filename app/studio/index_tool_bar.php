@@ -70,7 +70,7 @@
 						</svg>	
 					</span>	
 					<span class="navi_text">
-					<?php echo $_local->gui->lesson;?>
+					<?php echo $_local->gui->academy;?>
 					
 					</span>
 				</li>
@@ -114,7 +114,7 @@
 		<!-- tool bar begin-->
 		<div class='index_toolbar'>
 			<div id="index_nav">
-			<svg class="icon" style="height: 3.5em;width: 15em;padding-top: 15px;">
+			<svg class="icon" style="height: 3em;width: 15em;padding-top: 3px;">
 				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
 			</svg>
 			</div>
