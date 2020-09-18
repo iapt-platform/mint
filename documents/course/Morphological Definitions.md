@@ -5,6 +5,8 @@
 - Some compound members, such as **prefixes** and certain **primary derivatives**, cannot stand alone as separate words; in this case, their synonyms having the status of an independent expression should be used in the definition.
 - 一些复合成员，如**前缀**和某些**初级派生词**，不能作为单独的词独立存在；在这种情况下，应在定义中使用具有独立表达式地位的同义词。
 
+
+
 ### A. **Kammadhāraya (Adjectival Compounds形容词复合词，持业释)**
 
 A definition for this type:
@@ -42,8 +44,8 @@ note注:
 
   当两个成员的性别不同时，插入的代词**ta**必须与第一个成员一致。
 ```mermaid
-graph LR;
-A["so"]--NIO<br>被描述-定性<br>普通-->B["uttamo"];
+graph LR
+A["so"]--NIO<br>被描述-定性<br>普通-->B["uttamo"]
 A--NIO<br>被描述-定性<br>普通-->C["puriso"]
 A--NIO<br>被描述-定性<br>普通-->D["uttamapuriso"]
 E["iti"]--CAU<br>归因关系-->D
@@ -153,8 +155,11 @@ A<sub title="standard of comparison喻体/喻依">com</sub>---->A<sub title="sub
 (yo) sīho viya / iva (hoti) iti (so) sīho.
 ```
 [sīha + a (sec. derivative of comparison sense二次派生的譬喻)]
-```
-yo hoti (DASO - P) sīho hoti (DASO - S) so sīho (NID)
+```mermaid
+graph LR;
+A["yo"]--DASO-P-->B["hoti"]
+C["sīho"]--DASO-S-->B
+D["so"]--NID-->C
 ```
 trs译文：
 - The one who is like a lion, he is sīha by name.
@@ -198,8 +203,11 @@ A["(A + eva)"]--Emphasized identity relation强调的同一性关系-->B
 ```
 sīlaṃ eva dhanaṃ sīladhanaṃ.
 ```
-- sīlaṃ (eva ) dhanaṃ (IAD) 
-- dhanaṃ sīladhanaṃ (NID<br>被命名-命名)
+```mermaid
+graph LR;
+A["sīlaṃ(eva)"]--IAD-->B["dhanaṃ"]
+B--NID<br>被命名-命名-->C[sīladhanaṃ]
+```
 
 trs译文：
 - "The property that is only morality (is) sīladhana by name.
@@ -261,10 +269,13 @@ E.g.例如：
 ```
 tayo ca te lokā cāti tilokā (asamāhāra type型) / tilokaṃ (samāhāra type型)
 ```
-- te tayo (NIO) 
-- te lokā (NIO) 
-- te tilokā / tilokaṃ (NID<br>被命名-命名)
-- iti tilokā / tilokaṃ (CAU)
+```mermaid
+graph LR;
+A["te"]--NIO-->B["tayo"]
+A--NIO-->C["lokā"]
+A--NID<br>被命名-命名-->D["tilokā/tilokaṃ"]
+E["iti"]--CAU-->D
+```
 
 trs译文：
 - " They (are) three and worlds too, therefore, (they are) tiloka by name."
@@ -274,8 +285,11 @@ tayo lokā tilokā (asamāhāra type型)
 OR或
 tayo lokā tilokaṃ (samāhāra type型)
 ```
-- tayo lokā (IAD) 
-- lokā tilokā / tilokaṃ (NID<br>被命名-命名)
+```mermaid
+graph LR;
+A["tayo"]--IAD-->B["lokā"]
+B--NID<br>被命名-命名-->C["tilokā/tilokaṃ"]
+```
 
 trs.译文：
 - " Three worlds (are) tiloka by name."
@@ -284,88 +298,90 @@ trs.译文：
  tayo lokā samāhaṭā tilokaṃ 
 ```
 This format for samāhāra type only此格式仅适用于Samāhāra类型
-- tayo lokā (IAD) samāhaṭā lokā (IAD)
-- lokā tilokā / tilokaṃ (NID<br>被命名-命名)
+```mermaid
+graph LR;
+A["tayo"]--IAD-->B["lokā"]
+B--NID<br>被命名-命名-->C["tilokā/tilokaṃ"]
+D["samāhaṭā"]--IAD-->B
+```
 
-trs.
-TRS。
---- " Three worlds combined (are) tiloka by name."
--“三个世界按名字合并在一起是蒂洛卡。”
+trs.译文
+- " Three worlds combined (are) tiloka by name."
+- “三个世界按名字合并在一起是蒂洛卡。”
+```
+tiṇṇaṃ lokānaṃ samāhāro tilokaṃ 
+```
+(This format also for samāhāra type only 此格式也仅适用于Samāhāra类型)
+```mermaid
+graph LR;
+A["tiṇṇaṃ"]--IAD-->B["lokānaṃ"]
+B--POS-->C["samāhāro"]
+C--NID<br>被命名-命名-->D["tilokaṃ"]
+```
 
-* tiṇṇaṃ lokānaṃ samāhāro tilokaṃ (This format also for samāhāra type only )
-*tiṇṇaṃLokānaṃSamāhāro Tilokaṃ(此格式也仅适用于Samāhāra类型)。
+trs.译文
+- " The collection of three worlds (is) tiloka by name."
+- “三个世界的集合(是)Tiloka的名字。”
 
-tiṇṇaṃ lokānaṃ (IAD) lokānaṃ samāhāro (POS)
-TIṇṇaṃLokānaṃ(IAD)LokāNAṃSamāhāro(POS)。
 
-samāhāro tilokaṃ (NID<br>被命名-命名)
-Samāhāro Tilokaṃ(NID<br>被命名-命名)。
+## C. Tappurisa (Dependent Determinative Compounds 根据限定词的复合词/依主释)
 
-trs.
-TRS。
---- " The collection of three worlds (is) tiloka by name."
--“三个世界的集合(是)Tiloka的名字。”
+### A definition for this type has 此类型的定义有：
 
-1 avadhāraṇapubbapada
-1 avadhāraṇapubapada。
 
-2 pādipubbapada / kunipātapubbapada127
-2 pādipubbapada/kunipāTapubbapada127。
+- a. the first member in one of six cases, namely, accusative, instrumental, dative, ablative, genitive and locative cases,
 
-## C. Tappurisa (Dependent Determinative Compounds)
-C.Tappurisa(依赖测定化合物)。
+  六种情况之一的第一成员，即宾格、工具格、与格、来源格，所有格和方位格，
 
-A definition for this type has:
-此类型的定义有：
+- b. the second member and the whole compound in nominative case.
 
-a. the first member in one of six cases, namely, accusative, instrumental, dative, ablative, genitive and locative cases,
+  第二个成员和整个复合词的主格。
 
-A.六种情况之一的第一成员，即宾格、工具、与格、。
-
-烧蚀格，所有格和方位格，
-
-b. the second member and the whole compound in nominative case.
-第二个成员和整个复合词的主格。
-
-A. With Accusative relation
-A.与宾语关系。
+### A. With Accusative relation 带有宾语关系
 
 [(arañña (forest) = A + gata (the one who goes) = B ]
 [(Arañña(森林)=A+Gata(去的那个人)=B]。
 
-A B (Acc.)
-A B(Acc.)。
+```mermaid
+graph LR;
+A--Acc-->B
+```
 
-* araññaṃ gato araññagato.
-*ArañaṃGato Arañagato。
+```
+araññaṃ gato araññagato.
+```
+```mermaid
+graph LR;
+A["araññaṃ"]--IOV-->B["gato"]
+B--NID<br>被命名-命名-->C["araññagato"]
+```
 
-araññaṃ gato (IOV) gato araññagato (NID<br>被命名-命名)
-Arañaṃgato(IOV)gato arañagato(NID<br>被命名-命名)。
-
-trs.
-TRS。
---- " The one who goes (to) forest (is) araññagata by name."
--“那个去森林的人叫阿拉·纳阿加塔(ArañAgata)。”
+trs.译文
+- " The one who goes (to) forest (is) araññagata by name."
+- “那个去森林的人被称为araññagata。”
 
 [(kamma (work) = A + kāra (the one who does) = B ]
 [(卡玛(工作)=A+kāra(做工作的人)=B]。
 
-A B (Acc.)
-A B(Acc.)。
+```mermaid
+graph LR;
+A--Acc-->B
+```
+```
+(yo) kammaṃ karoti / kato iti (so) kammakāro.
+```
+```mermaid
+graph LR;
+A["yo"]--ASV-->B["karoti/kato"]
+C["kammaṃ"]--IOV-->B
+D["iti"]--CAU-->E["kammakāro"]
+F["so"]--NID<br>被命名-命名-->E
+```
 
-* (yo) kammaṃ karoti / kato iti (so) kammakāro.
-*(哟)kammak caroti/ṃiti(So)kammakāro.。
 
-yo karoti / kato (ASV) kammaṃ karoti / kato (IOV)
-Yo Karoti/加藤(ASV)KammaṃKaroti/加藤(IOV)。
-
-iti kammakāro (CAU) so kammakāro (NID<br>被命名-命名)
-Iti kammakāro(Cau)so kammakāro(NID<br>被命名-命名)。
-
-trs.
-TRS。
---- " The one who does the work, he (is) kammakāra by name."
--“做这项工作的人，他叫Kammakāra。”
+trs.译文
+- " The one who does the work, he (is) kammakāra by name."
+- “做这项工作的人，他叫Kammakāra。”
 
 Note: In the second example, the second member kāra is a primary derivative
 注：在第二个例子中，第二个成员kāra是一阶导数。
@@ -375,90 +391,104 @@ derived from (kar + a- subjective case) but it cannot stand alone as a separate 
 Consequently, an active verb of the same root is used instead in the definition.
 因此，在定义中使用相同词根的主动动词。
 
-B. With relations Instrumental, etc.
-B.与工具性关系等。
+### B. With relations Instrumental, etc. 带有工具格等关系
 
-[(buddha (the lord Buddha) = A + bhāsita (the one which is said) = B ]
-[(佛(主佛)=A+bhāSita(所说的)=B]。
+[(buddha (the lord Buddha佛主) = A + bhāsita (the one which is said) = B ]
+```mermaid
+graph LR;
+A--Ins-->B
+```
+```
+buddhena bhāsito buddhabhāsito.
+```
+```mermaid
+graph LR;
+A["buddhena"]--ISV-->B["bhāsito"]
+B--NID<br>被命名-命名-->E["buddhabhāsito"]
+```
 
-A B (Ins.)
-A B(Ins.)。
 
-* buddhena bhāsito buddhabhāsito.
-*Buddhena bhāSito BuddhabhāSito。
+trs.译文
+- " The one which is said by the Buddha (is) buddhabhāsita by name."
+- “佛陀所说的被称为佛说。”
 
-buddhena bhāsito (ISV) bhāsito buddhabhāsito (NID<br>被命名-命名)
-Budhena bhāSito(Isv)bhāsito BuddhabhāSito(NID<br>被命名-命名)。
+[(saṅgha (the Order of Bhikkhus僧团) = A + bhatta (meal餐) = B ]
 
-trs.
-TRS。
---- " The one which is said by the Buddha (is) buddhabhāsita by name."
--“佛陀所说的就是佛陀āSita的名字。”
+```mermaid
+graph LR;
+A--Dat-->B
+```
+```
+saṅghassa bhattaṃ saṅghabhattaṃ.
+```
+```mermaid
+graph LR;
+A["saṅghassa"]--PUR-->B["bhattaṃ"]
+B--NID<br>被命名-命名-->E["saṅghabhattaṃ"]
+```
 
-[(saṅgha (the Order of Bhikkhus) = A + bhatta (meal) = B ]
-[(Saṅgha(比丘修道会)=A+bhatta(餐)=B]。
+trs.译文
+- " The meal for the Order of Bhikkhus (is) saṅghabhatta by name."
+- “比丘修会(Is)saṅghabhatta的餐点点名。”
 
-A B (Dat.)
-A B(Dat.)。
+[(nagara (town镇) = A + niggata (the one who went out外出的那个人) = B ]
 
-* saṅghassa bhattaṃ saṅghabhattaṃ.
-*Saṅghassa BhattaṃsaṅGhabhattaṃ。
+```mermaid
+graph LR;
+A--Abl-->B
+```
+```
+nagarasmā niggato nagaraniggato.
+```
+```mermaid
+graph LR;
+A["nagarasmā"]--DET-->B["niggato"]
+B--NID<br>被命名-命名-->E["nagaraniggato"]
+```
 
-saṅghassa bhattaṃ (PUR) bhattaṃ saṅghabhattaṃ (NID<br>被命名-命名)
-Saṅghassa bhattaṃ(Pur)bhattaṃsaṅghabhattaṃ(NID<br>被命名-命名)。
 
-trs.
-TRS。
---- " The meal for the Order of Bhikkhus (is) saṅghabhatta by name."
--“比丘修会(Is)saṅghabhatta的餐点点名。”
-
-[(nagara (town) = A + niggata (the one who went out) = B ]
-[(Nagara(镇)=A+niggata(外出的那个人)=B]。
-
-A B (Abl.)
-A、B(Abl.)。
-
-* nagarasmā niggato nagaraniggato.
-*nagarasmāniggato nagaraniggato。
-
-nagarasmā niggato (DET) niggato nagaraniggato (NID<br>被命名-命名)
-黑斑潜蝇āniggato(Det)nagaraniggato(NID<br>被命名-命名)。
-
-trs.
-TRS。
---- " The one who went out from the town (is) nagaraniggata by name."
--“那个从镇上出来的人叫那嘎拉尼加塔。”
+trs.译文
+- " The one who went out from the town (is) nagaraniggata by name."
+- “那个从镇上出来的人叫那嘎拉尼加塔。”
 
 [(buddha (the lord Buddha) = A + sāvaka (the disciple) = B ]
 [(佛(主佛)=A+sāVaka(弟子)=B]。
 
-A B (Gen.)
-A、B(Gen.)。
+```mermaid
+graph LR;
+A--Gen-->B
+```
+```
+buddhassa sāvako buddhasāvako.
+```
+```mermaid
+graph LR;
+A["buddhassa"]--POS-->B["sāvako"]
+B--NID<br>被命名-命名-->E["buddhasāvako"]
+```
 
-* buddhassa sāvako buddhasāvako.
-*布达哈萨的āvako佛像āvako。
-
-buddhassa sāvako (POS) sāvako buddhasāvako (NID<br>被命名-命名)
-菩萨的āvako(位置)的āvako佛像āvako(NID<br>被命名-命名)。
 
 trs.
 TRS。
---- " The disciple of the Lord Buddha (is) buddhasāvaka by name."128
--“佛祖(是)佛的弟子āVaka的名字。”
+- " The disciple of the Lord Buddha (is) buddhasāvaka by name."128
+- “佛主的弟子名为佛弟子。”
 
 [(arañña (forest) = A + vāsa (living, residence) = B ]
 [(Arañña(森林)=A+vāSa(居住、居住)=B]。
 
-A B (Loc.)
-A B(Loc.)。
+```mermaid
+graph LR;
+A--Loc-->B
+```
+```
+araññe vāso araññavāso.
+```
+```mermaid
+graph LR;
+A["araññe"]--LOV-->B["vāso"]
+B--NID<br>被命名-命名-->E["araññavāso"]
+```
 
-* araññe vāso araññavāso.
-*Arañe vāso Arañavāso。
-
-araññe vāso (LOV) vāso araññavāso (NID<br>被命名-命名)
-Arañe vāso(Lov)vāso Arañavāso(NID<br>被命名-命名)。
-
-trs.
-TRS。
---- " Living / Residence in the forest (is) araññavāsa by name.
--“生活/居住在森林中(IS)Arañavāsa的名字。
+trs.译文
+- " Living / Residence in the forest (is) araññavāsa by name.
+- “生活/居住在森林中(IS)Arañavāsa的名字。

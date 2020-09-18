@@ -118,6 +118,7 @@ function trans_sent_save() {
             $(".sent_text[sent_id='" + iterator.id + "']").html(iterator.text);
           }
           alert(result);
+          location.reload();
           trans_sent_cancel();
         }
       }
