@@ -3,6 +3,7 @@
   "ui.lang": ["en", "zh-hans", "zh-hant", "si", "my"],
   "_studio.translation.lang": ["en", "zh-hans", "zh-hant", "si", "my"],
   "studio.translation.lang": ["en", "zh-hans", "zh-hant"],
+  "studio.translation.autosave": true,
   "_dict.lang": ["en", "zh", "zh-hans", "zh-hant", "si"],
   "dict.lang": ["zh", "en"],
   "_dict.list": [

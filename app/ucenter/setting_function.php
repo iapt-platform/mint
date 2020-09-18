@@ -30,6 +30,9 @@ function get_setting(){
 }
 
 function inLangSetting($lang,$mySetting){
+    if(count($mySetting)==0){
+        return true;
+    }
     foreach ($mySetting as $key => $value) {
         if(strpos($lang,"-")==false){
             if($lang===$value){

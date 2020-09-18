@@ -7,21 +7,57 @@ include "../public/_pdo.php";
 include "../public/function.php";
 
 
-$aData=json_decode($_POST["data"]);
+$aData=json_decode($_POST["data"],TRUE);
 
 PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
 
-/* 开始一个事务，关闭自动提交 */
+//查询没有id的哪些是数据库里已经存在的，防止多次提交同一条记录造成一个句子 多个channal
+$newList = array();
+$oldList = array();
+$query = "SELECT id FROM sentence WHERE book = ? and paragraph = ? and  begin = ? and end = ? and channal = ? limit 0 , 1 ";
+foreach ($aData as $data) {
+	if(!isset($data["id"]) || empty($data["id"])){
+		$id = PDO_FetchOne($query,array($data["book"],
+																	   $data["paragraph"],
+																	   $data["begin"],
+																	   $data["end"],
+																	   $data["channal"]
+																	   ));
+		if(empty($id)){
+			$newList[] = $data;
+		}
+		else{
+			$data["id"] = $id;
+			$oldList[] = $data;
+		}
+	}
+	else{
+		$oldList[] = $data;
+	}
+}
+$update_list = array(); //已经成功修改数据库的数据列表 回传客户端
+
+/* 修改现有数据 */
 $PDO->beginTransaction();
-$query="UPDATE sentence SET text= ?  , status = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
+$query="UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
 $sth = $PDO->prepare($query);
 
-foreach ($aData as $data) {
-    $sth->execute(array($data->text, $data->status, mTime(),$data->time,$data->id));
+
+foreach ($oldList as $data) {
+	if(isset($data["id"])){
+		if(isset($data["time"])){
+			$modify_time = $data["time"];
+		}
+		else{
+			$modify_time = mTime();
+		}
+		$sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"],"UTF-8"), mTime(),$modify_time,$data["id"]));
+	} 
 }
+
 $PDO->commit();
 
-$respond=array("status"=>0,"message"=>"");
+$respond=array("status"=>0,"message"=>"","insert_error"=>"","new_list"=>array());
 
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	/*  识别错误且回滚更改  */
@@ -33,6 +69,82 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 else{
 	$respond['status']=0;
 	$respond['message']="成功";
-}		
+	foreach ($oldList as $key => $value) {
+		$update_list[] =  array("id" => $value["id"],"text" => $value["text"]);
+	}
+}
+
+
+/* 插入新数据 */
+$PDO->beginTransaction();
+$query = "INSERT INTO sentence (id, 
+														parent,
+														book,
+														paragraph,
+														begin,
+														end,
+														channal,
+														tag,
+														author,
+														editor,
+														text,
+														language,
+														ver,
+														status,
+														strlen,
+														modify_time,
+														receive_time,
+														create_time
+														) 
+										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+$sth = $PDO->prepare($query);
+
+foreach ($newList as $data) {
+		$uuid = UUID::v4();
+		if($data["parent"]){
+			$parent = $data["parent"];
+		}
+		else{
+			$parent  = "";
+		}
+		$sth->execute(array($uuid,
+										  $parent,
+										  $data["book"], 
+										  $data["paragraph"], 
+										  $data["begin"], 
+										  $data["end"], 
+										  $data["channal"], 
+										  $data["tag"], 
+										  $data["author"], 
+										  $_COOKIE["userid"],
+										  $data["text"],
+										  $data["language"],
+										  1,
+										  7,
+										  mb_strlen($data["text"],"UTF-8"),
+										  mTime(),
+										  mTime(),
+										  mTime()
+										));
+		$new_id[] = array($uuid,$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"]);
+}
+$PDO->commit();
+
+
+if (!$sth || ($sth && $sth->errorCode() != 0)) {
+	/*  识别错误且回滚更改  */
+	$PDO->rollBack();
+	$error = PDO_ErrorInfo();
+	$respond['insert_error']=$error[2];
+	$respond['new_list']=array();
+}
+else{
+	$respond['insert_error']=0;
+	foreach ($newList as $key => $value) {
+		$update_list[] =  array("id" => $value[0],"text" => $value["text"]);
+	}
+}
+$respond['update']=$update_list;
+
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>
