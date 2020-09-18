@@ -2,6 +2,9 @@
 include "../pcdl/html_head.php";
 ?>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@8.6.0/dist/mermaid.min.js"></script>
+
 <script src="../course/lesson.js"></script>
 <?php
     require_once("../pcdl/head_bar.php");
