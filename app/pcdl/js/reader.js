@@ -85,3 +85,46 @@ function setNaviVisibility(strObjId = "") {
     objNave.className = "viewswitch_off";
   }
 }
+
+function trans_sent_save() {
+  let textarea = $("#sent_modify_text");
+  if (textarea) {
+    let objsent = new Object();
+    const editor = textarea.attr("editor");
+    if (getCookie("userid") == editor) {
+      objsent.id = textarea.attr("sent_id");
+    } else {
+      objsent.parent = textarea.attr("sent_id");
+      objsent.tag = textarea.attr("translation");
+    }
+    objsent.book = textarea.attr("book");
+    objsent.paragraph = textarea.attr("para");
+    objsent.begin = textarea.attr("begin");
+    objsent.end = textarea.attr("end");
+    objsent.author = textarea.attr("author");
+    objsent.lang = textarea.attr("lang");
+    objsent.text = textarea.val();
+    let sents = new Array();
+    sents.push(objsent);
+    $.post(
+      "../usent/update.php",
+      {
+        data: JSON.stringify(sents),
+      },
+      function (data, status) {
+        if (status == "success") {
+          let result = JSON.parse(data);
+          for (const iterator of result.update) {
+            $(".sent_text[sent_id='" + iterator.id + "']").html(iterator.text);
+          }
+          alert(result);
+          trans_sent_cancel();
+        }
+      }
+    );
+  }
+}
+
+function trans_sent_cancel() {
+  $("#sent_modify_win").hide();
+}

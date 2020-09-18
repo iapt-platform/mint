@@ -1,4 +1,5 @@
-var _usent_buffer;
+var _usent_buffer = new Array();
+
 class USentResult {
   constructor(filter = {}) {
     this.filter = filter;
@@ -19,9 +20,11 @@ class USentResult {
     }
     this.sentList.push({ book: book, para: para, start: start, end: end });
   }
+
   newSent(sent) {
     this.buffer.push(sent);
   }
+
   queryCallback(data, status) {
     switch (status) {
       case "success":
@@ -34,6 +37,7 @@ class USentResult {
         break;
     }
   }
+
   refresh() {
     $.post(
       "../usent/sent_query.php",
@@ -57,7 +61,7 @@ class USentResult {
     }
     return 0;
   }
-  getSentText(book, para, start, end, num = 1) {
+  getSentText(book, para, start, end, channal = 0) {
     for (const iterator of _usent_buffer) {
       if (
         iterator.info.book == book &&
@@ -65,10 +69,96 @@ class USentResult {
         iterator.info.start == start &&
         iterator.info.end == end
       ) {
-        return iterator.data;
+        if (channal == 0) {
+          return iterator.data;
+        } else {
+          for (const sent of iterator.data) {
+            if (sent.channal == channal) {
+              return sent;
+            }
+          }
+          return false;
+        }
       }
     }
-    return null;
+    return false;
+  }
+
+  setSent(objSent) {
+    for (let iterator of _usent_buffer) {
+      if (
+        iterator.info.book == objSent.book &&
+        iterator.info.para == objSent.paragraph &&
+        iterator.info.start == objSent.begin &&
+        iterator.info.end == objSent.end
+      ) {
+        let sendSents = new Array();
+
+        if (objSent.id == "") {
+          //新建
+          objSent.sendId = com_uuid();
+          objSent.try = 1;
+          objSent.saveSuccess = false; //是否保存成功
+          iterator.data.push(objSent);
+          sendSents.push(objSent);
+        } else {
+          for (let sent of iterator.data) {
+            if (sent.id == objSent.id) {
+              sent = objSent;
+              sent.sendId = com_uuid();
+              sent.try = 1;
+              sent.saveSuccess = false; //是否保存成功
+              sendSents.push(sent);
+            }
+          }
+        }
+        if (sendSents.length > 0) {
+          for (const oneSent of sendSents) {
+            $(
+              "#send_" +
+                oneSent.book +
+                "_" +
+                oneSent.paragraph +
+                "_" +
+                oneSent.begin +
+                "_" +
+                oneSent.end +
+                "_" +
+                oneSent.channal
+            ).text("发送中");
+          }
+          $.post(
+            "../usent/update.php",
+            {
+              data: JSON.stringify(sendSents),
+            },
+            function (data, status) {
+              if (status == "success") {
+                let result = JSON.parse(data);
+                console.log(result);
+                for (const iterator of result.update) {
+                  $(
+                    "#send_" +
+                      iterator.book +
+                      "_" +
+                      iterator.paragraph +
+                      "_" +
+                      iterator.begin +
+                      "_" +
+                      iterator.end +
+                      "_" +
+                      iterator.channal
+                  ).text("");
+                }
+              }
+            }
+          );
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
   }
 }
 

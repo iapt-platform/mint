@@ -1251,6 +1251,8 @@ function renderNoteShell(elementBlock) {
   }
   return output;
 }
+
+//句子上面的工具条
 function render_sent_tool_bar(elementBlock, begin) {
   let output = "";
   let axmlParInfo = elementBlock.getElementsByTagName("info")[0];
@@ -1340,11 +1342,11 @@ function render_sent_tool_bar(elementBlock, begin) {
   output += "</div>";
   return output;
 }
+
 var arr_par_sent_num = new Array();
 var g_arr_Para_ID = new Array();
 function renderWordParBlockInner(elementBlock) {
   var output = "<div style='display:block;width:100%'>";
-  let outList = "<table>"; //list mode
   var Note_Mark = 0;
   var sent_gramma_i = 0;
   var word_length_count = 0;
@@ -1459,20 +1461,6 @@ function renderWordParBlockInner(elementBlock) {
     output += "	</div>";
     output += "</div>";
 
-    outList += "<tr>";
-    outList +=
-      "<td>" +
-      wReal +
-      ":</td> <td>" +
-      wType +
-      "</td><td>" +
-      wGramma +
-      "</td> <td>" +
-      wParent +
-      "</td> <td>" +
-      wMean +
-      "</td>";
-    outList += "</tr>";
     //渲染单词块结束
 
     word_length_count += wPali.length;
@@ -1519,7 +1507,8 @@ function renderWordParBlockInner(elementBlock) {
         //逐句翻译块开始
         output += "<div id='sent_div_" + wID + "' class='translate_sent'>";
         output += "<div class='translate_sent_head'>";
-        output += "<div class='translate_sent_head_toolbar'>";
+        output +=
+          "<div class='translate_sent_head_toolbar' style='display:none;'>";
         output += "<span></span>";
         output +=
           "<span onclick=\"show_tran_net('" +
@@ -1533,65 +1522,32 @@ function renderWordParBlockInner(elementBlock) {
           "')\"><span id='' class=\"word_msg\">issue</span></span>";
         //
         output += "</div>";
+
         output += "<div class='translate_sent_head_content'>";
         //句子预览
-        output += "<div class='trans_text_block'>";
-        output +=
-          "<div class='trans_text_content'  pcds='sent-net' book='" +
-          book +
-          "' para='" +
-          paragraph +
-          "' begin='" +
-          sent_begin +
-          "' end=''>";
-        let usent_count = _user_sent_buffer.getSentNum(
+        output += render_tran_sent_block(
           book,
           paragraph,
           sent_begin,
-          word_id
+          word_id,
+          0,
+          true
         );
-        let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
-        let sender = "";
-        if (netSent.length > 0) {
-          output += netSent[netSent.length - 1].data.text;
-          sender = netSent[netSent.length - 1].sender;
-        } else if (usent_count > 0) {
-          output += _user_sent_buffer.getSentText(
-            book,
-            paragraph,
-            sent_begin,
-            word_id
-          )[0].text;
-          sender = _user_sent_buffer.getSentText(
-            book,
-            paragraph,
-            sent_begin,
-            word_id
-          )[0].editor;
+        if (_my_channal != null) {
+          for (const iterator of _my_channal) {
+            output += render_tran_sent_block(
+              book,
+              paragraph,
+              sent_begin,
+              word_id,
+              iterator.id,
+              false
+            );
+          }
         }
-        output += "</div>";
-        output +=
-          "<div class='trans_text_info'>" +
-          "<span><span>过滤</span><span class='author'>" +
-          sender +
-          "</span><span class='tag'>tag</span></span>" +
-          "<span><span class='tools'>" +
-          "<button>采纳</button>" +
-          "<button onclick=\"show_tran_net('" +
-          book +
-          "','" +
-          paragraph +
-          "','" +
-          sent_begin +
-          "','" +
-          word_id +
-          "')\">更多</button>" +
-          "</span><span>" +
-          usent_count +
-          "</span></span>" +
-          "</div>";
-        output += "</div>";
         //句子预览结束
+        output += "</div>";
+
         output +=
           "<div class='trans_text_content'  pcds='sent-net' book='" +
           book +
@@ -1744,15 +1700,264 @@ function renderWordParBlockInner(elementBlock) {
 
   output += "</div>";
 
-  outList += "</table>";
-
   var sent_ID = "sent_" + par_num + "_" + sent_num;
   arr_Para_ID.push(wID);
   arr_par_sent_num.push(sent_ID);
   g_arr_Para_ID[par_num] = arr_Para_ID;
-  return output; //+outList;
+  return output;
 }
 
+function render_tran_sent_block(
+  book,
+  para,
+  begin,
+  end,
+  channal = 0,
+  readonly = true
+) {
+  let usent_count = _user_sent_buffer.getSentNum(book, para, begin, end);
+  let netSent = doc_msg_get_trans(book, para, begin, end);
+  let sender = "";
+  let sChannalName = "";
+  let sent_text = "";
+  let objSent;
+  if (channal == 0) {
+    //百家言
+    if (netSent.length > 0) {
+      sender = netSent[netSent.length - 1].sender;
+      sent_text += netSent[netSent.length - 1].data.text;
+    } else if (usent_count > 0) {
+      sender = _user_sent_buffer.getSentText(book, para, begin, end)[0]
+        .nickname;
+      sChannalName = "channal name";
+      sent_text += _user_sent_buffer.getSentText(book, para, begin, end)[0]
+        .text;
+    }
+  } else {
+    sender = "通道的名字";
+    objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
+
+    if (objSent == false) {
+      objSent = new Object();
+      objSent.text = "";
+      if (doc_head("lang") == "") {
+        objSent.language = "en";
+      } else {
+        objSent.language = doc_head("lang");
+      }
+      objSent.id = "";
+      objSent.tag = "[]";
+      objSent.author = "{}";
+
+      sent_text = "";
+    } else {
+      sent_text = objSent.text;
+    }
+  }
+
+  let output = "";
+
+  output += "<div class='trans_text_block' style='padding-top:0;";
+  if (readonly == false) {
+    output += "border-color: #ccd1ff;background-color:unset;";
+  }
+  output += "'>";
+  output += "<div class='trans_text_info' style='border:none;'>";
+
+  if (channal == 0) {
+    output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
+  } else {
+    output +=
+      "<span><span class='send_status' id='send_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal +
+      "'></span>";
+    output += "<span>";
+    let thischannal = channal_getById(channal);
+    if (thischannal) {
+      output += thischannal.name;
+    } else {
+      output += "未知的频道名";
+    }
+    output += "</span>";
+  }
+  output += "</span><span></span>";
+  output += "</div>";
+  output +=
+    "<div class='trans_text_content'  pcds='sent-net' book='" +
+    book +
+    "' para='" +
+    para +
+    "' begin='" +
+    begin +
+    "' end='" +
+    end +
+    "' channal='" +
+    channal +
+    "'>";
+  if (readonly) {
+    output += sent_text;
+  } else {
+    output +=
+      "<span onclick=\"sent_edit_click('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "',)\">";
+    if (objSent.text == null || objSent.text == "") {
+      output += "<span style='color:gray;'>";
+      output +=
+        "<svg class='icon'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
+      output += "</span>";
+    } else {
+      output += objSent.text;
+    }
+
+    output += "</span>";
+  }
+
+  output += "</div>";
+  if (readonly == false) {
+    output += "<div style='display:none;'>";
+    output +=
+      "<textarea id='trans_sent_edit_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal +
+      "' class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
+      "sent_id='" +
+      objSent.id +
+      "' book='" +
+      book +
+      "'  para='" +
+      para +
+      "'  begin='" +
+      begin +
+      "'  end='" +
+      end +
+      "'  channal='" +
+      channal +
+      "'  author='" +
+      objSent.author +
+      "'  lang='" +
+      objSent.language +
+      "'  tag='" +
+      objSent.tag +
+      "' >";
+    output += objSent.text;
+    output += "</textarea>";
+    output += "<div class='trans_text_info'>";
+    output += "<span></span>";
+    output +=
+      "<button onclick=\"trans_text_save('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "')\">保存</button>";
+    output += "</div>";
+    output += "</div>";
+  }
+
+  if (readonly) {
+    output +=
+      "<div class='trans_text_info'>" +
+      "<span></span>" +
+      "<span><span class='tools'>";
+
+    output += "<button>采纳</button>";
+
+    if (channal == 0) {
+      //百家言 显示更多按钮
+      output +=
+        "<button onclick=\"show_tran_net('" +
+        book +
+        "','" +
+        para +
+        "','" +
+        begin +
+        "','" +
+        end +
+        "')\">更多</button>";
+    }
+
+    output += "</span><span>" + usent_count + "</span></span>";
+    output += "</div>";
+  }
+  output += "</div>";
+  return output;
+}
+
+function trans_text_save(book, para, begin, end, channal) {
+  let textarea = $(
+    "#trans_sent_edit_" +
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal
+  );
+  if (textarea) {
+    let objsent = new Object();
+    objsent.id = textarea.attr("sent_id");
+    objsent.book = book;
+    objsent.paragraph = para;
+    objsent.begin = begin;
+    objsent.end = end;
+    objsent.channal = channal;
+    objsent.author = textarea.attr("author");
+    objsent.lang = textarea.attr("lang");
+    objsent.text = textarea.val();
+    _user_sent_buffer.setSent(objsent);
+  }
+}
+
+function sent_edit_click(book, para, begin, end, channal) {
+  $(".trans_sent_edit").parent().hide(200);
+  $(
+    ".trans_sent_edit[book='" +
+      book +
+      "'][para='" +
+      para +
+      "'][begin='" +
+      begin +
+      "'][end='" +
+      end +
+      "'][channal='" +
+      channal +
+      "']"
+  )
+    .parent()
+    .show();
+}
 function magic_sentence_cut() {
   var all_sent_array = document.getElementsByClassName("sent_wbw");
   for (i_magic = 0; i_magic < all_sent_array.length; i_magic++) {

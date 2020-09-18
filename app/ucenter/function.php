@@ -37,4 +37,32 @@ function ucenter_getA($userid,$fields="nickname"){
     }
 
 }
+
+class UserInfo
+{
+    public $dbh;
+    public function __construct() {
+        $dns = "sqlite:"._FILE_DB_USERINFO_;
+        $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+    }
+
+    public function getName($id){
+        if($this->dbh){
+            $query = "SELECT nickname FROM user WHERE userid= ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($id));
+            $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if(count($user)>0){
+                return $user[0]["nickname"];
+            }
+            else{
+                return "";
+            }            
+        }
+        else{
+            return "";
+        }
+    }
+}
 ?>

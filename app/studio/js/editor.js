@@ -3193,7 +3193,7 @@ function refreshPartMeaningSelect() {
 	output += "</button>";
 
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"input_org_switch('input_org_select','input_om')\">";
-	output += "<svg class=\"icon\"><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_mode_edit\">";
+	output += "<svg class='icon'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
 	output += "</button>";
 	output += "</div>";
 

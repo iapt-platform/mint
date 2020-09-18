@@ -19,6 +19,7 @@ require_once "../public/load_lang.php";
 require_once "./book_list_en.inc";
 require_once "../ucenter/function.php";
 require_once "../ucenter/setting_function.php";
+require_once "../lang/function.php";
 
 $user_setting = get_setting();
 
@@ -98,6 +99,7 @@ switch($op){
 		$doc_head.="        <style></style>\n";
 		$doc_head.="        <doc_title>$user_title</doc_title>\n";
 		$doc_head.="        <tag>$tag</tag>\n";
+		$doc_head.="        <lang>{$_POST["lang"]}</lang>\n";
 		$doc_head.="        <book>$book</book>\n";
 		$doc_head.="        <paragraph>$paragraph</paragraph>\n";
 		$doc_head.="    </head>\n";		
@@ -412,8 +414,9 @@ switch($op){
 			echo "<fieldset>";
 			echo "<legend>Language 语言</legend>";
 			echo "<select name='lang'>";
+			$lang_list = new lang_enum;
 			foreach ($user_setting['studio.translation.lang'] as $key => $value) {
-				echo "<option value='{$value}'>".$value."</option>";
+				echo "<option value='{$value}'>".$lang_list->getName($value)["name"]."</option>";
 			}
 			
 			echo "</select>";
