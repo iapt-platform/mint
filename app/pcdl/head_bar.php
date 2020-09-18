@@ -215,9 +215,9 @@
 					<li><a class="nav_link" href="../dict"><?php echo $_local->gui->dictionary; ?></a></li>
 					<li class="nav_link head_nav_dropdown" >
 						<div><?php echo $_local->gui->more; ?></div>
-						<ul class="head_nav_dropdown_content">
-							<li><a class="nav_link" href="../pc"><?php echo $_local->gui->digest;//书摘?></a></li>
-							<li><a class="nav_link" href="../course"><?php echo $_local->gui->composition;//著作?></a></li>
+						<ul class="head_nav_dropdown_content" style="margin-top: 0em;top: 2em;margin-left:-0.5em;padding-bottom: 0.5em;">
+							<!--<li><a class="nav_link" href="../pc"><?php echo $_local->gui->digest;//书摘?></a></li>
+							<li><a class="nav_link" href="../course"><?php echo $_local->gui->composition;//著作?></a></li>-->
 							<li><a class="nav_link" href="../calendar"><?php echo $_local->gui->buddhist_calendar;?></a></li>
 							<li><a class="nav_link" href="../tools/unicode.html"><?php echo $_local->gui->code_convert;//巴利编码转换?></a></li>
 							<li><a class="nav_link" href="../statistics"><?php echo $_local->gui->corpus_statistics;?></a></li>

@@ -16,6 +16,8 @@
     <script src="julian.js"></script>
     <script src="lune.js"></script>
     <script src="suncalc.js"></script>
+    <script src="./planet_position/js/planet-positions.js"></script>
+
     <script src="../studio/js/fixedsticky.js"></script>
     <script src="../guide/guide.js"></script>
     <link type="text/css" rel="stylesheet" href="../guide/guide.css" />
@@ -366,7 +368,64 @@
             "years": " සංවච්ඡ‍රා(නි) ",
             "yes_string": "can "
         };
+        var pali_month_name = [
+            { "id": "1", "value": "jeṭṭha", "season": "gimhāna", "season_icon": "☀" },//5.X-四-十五-心
+            { "id": "2", "value": "asāḷha", "season": "gimhāna", "season_icon": "☀" },//6.X-五-十五、十六-箕、斗
+            { "id": "3", "value": "sāvana", "season": "vassāna", "season_icon": "☔" },//7.X-六-十五-女
+            { "id": "4", "value": "poṭṭhapāda", "season": "vassāna", "season_icon": "☔" },//8.x-七-十五、十六-室、壁
+            { "id": "5", "value": "assajuja", "season": "vassāna", "season_icon": "☔" },//9.X-八-十五-樓
+            { "id": "6", "value": "kattika", "season": "vassāna", "season_icon": "☔" },//10.X-九-十五-昂
+            { "id": "7", "value": "māgasira", "season": "hemanta", "season_icon": "❄" },//11.X-十-十五-觜
+            { "id": "8", "value": "phussa", "season": "hemanta", "season_icon": "❄" },//12.X-十一-十五-鬼
+            { "id": "9", "value": "māgha", "season": "hemanta", "season_icon": "❄" },//1.X-十二-十五-星
+            { "id": "10", "value": "phagguna", "season": "hemanta", "season_icon": "❄" },//2.X-正月-十四、十五-張、異
+            { "id": "11", "value": "citta", "season": "gimhāna", "season_icon": "☀" },//3.X-二月-十五-角
+            { "id": "12", "value": "vesākha", "season": "gimhāna", "season_icon": "☀" }//4.X-三月-十五-氐
+        ]
+        var pali_nakkhatta_name = [
+            { "id": "0", "value": "assayuja", "name_zh": "娄宿" },
+            { "id": "1", "value": "bharaṇī", "name_zh": "胃宿" },
+            { "id": "2", "value": "Kattikā", "name_zh": "昂宿" },
+            { "id": "3", "value": "rohiṇī", "name_zh": "毕宿" },
+            { "id": "4", "value": "magasira", "name_zh": "觜宿" },
+            { "id": "5", "value": "Addā", "name_zh": "参宿" },
+            { "id": "6", "value": "punabbasu", "name_zh": "井宿" },
+            { "id": "7", "value": "phussa", "name_zh": "鬼宿" },
+            { "id": "8", "value": "Asilesā", "name_zh": "柳宿" },
+            { "id": "9", "value": "maghā", "name_zh": "星宿" },
+            { "id": "10", "value": "pubbaphagguṇī", "name_zh": "张宿" },
+            { "id": "11", "value": "uttaraphagguṇī", "name_zh": "翼宿" },
+            { "id": "12", "value": "hattha", "name_zh": "轸宿" },
+            { "id": "13", "value": "cittā", "name_zh": "角宿" },
+            { "id": "14", "value": "sāti", "name_zh": "亢宿" },
+            { "id": "15", "value": "visākhā", "name_zh": "氐宿" },
+            { "id": "16", "value": "anurādhā", "name_zh": "房宿" },
+            { "id": "17", "value": "jeṭṭha", "name_zh": "心宿" },
+            { "id": "18", "value": "mūlā", "name_zh": "尾宿" },
+            { "id": "19", "value": "pubbāsāḷha", "name_zh": "箕宿" },
+            { "id": "20", "value": "uttarāsāḷha", "name_zh": "斗宿" },
+            { "id": "21", "value": "savaṇa", "name_zh": "女宿" },
+            { "id": "22", "value": "dhaniṭṭhā", "name_zh": "虚宿" },
+            { "id": "23", "value": "satabhisaja", "name_zh": "危宿" },
+            { "id": "24", "value": "pubbabhaddapadā", "name_zh": "室宿" },
+            { "id": "25", "value": "uttarabhaddapadā", "name_zh": "壁宿" },
+            { "id": "26", "value": "revatī", "name_zh": "奎宿" }
+        ]
+        var horoscope_name = [
+            { "id": "0", "value": "Aries", "name_zh": "白羊", "icon": "♈" },
+            { "id": "1", "value": "Taurus", "name_zh": "金牛", "icon": "♉" },
+            { "id": "2", "value": "Gemini", "name_zh": "双子", "icon": "♊" },
+            { "id": "3", "value": "Cancer", "name_zh": "巨蟹", "icon": "♋" },
+            { "id": "4", "value": "Leo", "name_zh": "狮子", "icon": "♌" },
+            { "id": "5", "value": "Virgo", "name_zh": "处女", "icon": "♍" },
+            { "id": "6", "value": "Libra", "name_zh": "天秤", "icon": "♎" },
+            { "id": "7", "value": "Scorpio", "name_zh": "天蝎", "icon": "♏" },
+            { "id": "8", "value": "Sagittarius", "name_zh": "射手", "icon": "♐" },
+            { "id": "9", "value": "Capricornus", "name_zh": "摩羯", "icon": "♑" },
+            { "id": "10", "value": "Aquarius", "name_zh": "水瓶", "icon": "♒" },
+            { "id": "11", "value": "Pisces", "name_zh": "双鱼", "icon": "♓" }
 
+        ]
 
     </script>
     <style>
@@ -448,9 +507,14 @@
         <div>月相角<span id="today_moon_angle"></span></div>
         <div>当前时间<span id="curr_time"></span></div>
         <div>现在时间<span id="now_time"></span></div>
+        <div>当前時間戳<span id="curr_time_unix"></span></div>
+        <div>地球角度<span id="earth_angle"></span></div>
+        <div>月亮角度<span id="moon_angle"></span></div>
+        <div>月亮角度2<span id="moon_angle2"></span></div>
+
         <div>
-            <span>精准月相（强化戒德之日）</span>
-            <table id="lunar_phase_list" style="min-width: 40vw;">
+            <span>精准月相时间及星宿（强化戒德之日）</span>
+            <table id="lunar_phase_list" style="max-width: 70vw;width: -webkit-fill-available;">
             </table>
         </div>
 
@@ -464,12 +528,18 @@
         var first_list = new Array()//上弦月列表
         var full_list = new Array()//满月列表
         var last_list = new Array()//下弦月列表
+        var planets = new Array()//
+        var lunar_position = new Object
+
         var g_coordinate_this = new Object();
         var g_now_date = new Date();
         var today = new Date()
         var start_day = new Date()
         var next_year = new Date();
         var sun_times = new Object();
+
+
+
         var curr_position = localStorage.getItem("local_position");
         if (curr_position) {
             g_coordinate_this.AT = curr_position.split("#")[0];
@@ -523,6 +593,11 @@
             console.log(first_list)//输出到控制台
             console.log(full_list)//输出到控制台
             lunar_phase_list_refresh()
+            get_position(today)
+
+
+            let d_earth_to_moon = (lunar_position.position.x ^ 2 + lunar_position.position.y ^ 2 + lunar_position.position.z ^ 2) ^ 0.5
+            let d_earth_to_moon_0 = phase(today).distance
 
             sun_times = SunCalc.getTimes(today, g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000);
             sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
@@ -539,9 +614,99 @@
             $("#angle_sun_e_moon").html(angle_trans(Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI * 180));//月亮水平弧度
             $("#curr_time").html(today.toLocaleTimeString());//当前时间
             $("#now_time").html(g_now_date.toLocaleTimeString());//现在
+            $("#curr_time_unix").html(today.getTime());//時間戳
+
+            let earth_angle_string = ""
+            earth_angle_string += get_position(today).solar_position_angle + "——"
+            earth_angle_string += get_position(today).solar_position_angle_round + "——"
+            earth_angle_string += get_position(today).solar_station + "——"
+            earth_angle_string += get_station_name(today).solar.icon
+            $("#earth_angle").html(earth_angle_string);//地球角度
+
+            let moon_angle_string = ""
+            moon_angle_string += get_position(today).lunar_position_angle + "——"
+            moon_angle_string += get_position(today).lunar_position_angle_round + "——"
+            moon_angle_string += get_position(today).lunar_station + "——"
+            moon_angle_string += get_station_name(today).lunar.value
+            $("#moon_angle").html(moon_angle_string);//月亮角度——角度差算法
+
+            let moon_angle_string2 = ""
+            moon_angle_string2 += get_position(today).lunar_position_angle2 + "——"
+            moon_angle_string2 += get_position(today).lunar_position_angle_round2 + "——"
+            moon_angle_string2 += get_position(today).lunar_station2 + "——"
+            moon_angle_string2 += get_station_name(today).lunar.value
+            $("#moon_angle2").html(moon_angle_string2);//月亮角度——向量差算法
 
 
 
+        }
+        function get_position(date_time) {
+            let planets_position = new Object
+            planets = window.lagrange.planet_positions.getPositions(date_time);
+            //planets = global.planet_positions.getPositions(today);
+            //console.log(planets)//输出到控制台
+            earth_position = window.lagrange.planet_positions.getPositions(date_time)[3]
+            lunar_position = window.lagrange.planet_positions.getPositions(date_time)[11]
+            let lunar_position_angle = 0
+            let lunar_station = 0
+            let earth_position_angle = 0
+            let earth_station = 0
+            let earth_position_angle_round = 0
+            let lunar_position_angle_round = 0
+            //太阳相对地球的黄道偏角
+            if (earth_position.position.y >= 0) {
+                earth_position_angle = Math.atan2(earth_position.position.y, earth_position.position.x)
+            }
+            else {
+                earth_position_angle = Math.PI * 2 + Math.atan2(earth_position.position.y, earth_position.position.x)
+            }
+            earth_position_angle_round = earth_position_angle / Math.PI / 2 + 0.5
+            earth_position_angle_round = earth_position_angle_round - Math.floor(earth_position_angle_round)
+            earth_station = earth_position_angle_round * 12
+            planets_position.solar_station = earth_station
+            planets_position.solar_position_angle = earth_position_angle_round * Math.PI * 2
+            planets_position.solar_position_angle_round = earth_position_angle_round
+            //月球相对地球的黄道偏角——角度差算法
+            lunar_position_angle_round = earth_position_angle_round + phase(date_time).phase
+            lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round)
+            lunar_position_angle = lunar_position_angle_round * Math.PI * 2
+            lunar_station = lunar_position_angle_round * 27
+            //月球相对地球的黄道偏角算法——向量差算法
+            let lunar_to_earth = new Object
+            lunar_to_earth.y = lunar_position.position.y - earth_position.position.y
+            lunar_to_earth.x = lunar_position.position.x - earth_position.position.x
+            if (lunar_to_earth.y >= 0) {
+                lunar_position_angle2 = Math.atan2(lunar_to_earth.y, lunar_to_earth.x)
+            }
+            else {
+                lunar_position_angle2 = Math.PI * 2 + Math.atan2(lunar_to_earth.y, lunar_to_earth.x)
+            }
+            lunar_position_angle_round2 = lunar_position_angle2 / Math.PI / 2
+            //lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round)
+            lunar_position_angle2 = lunar_position_angle_round2 * Math.PI * 2
+
+            lunar_station2 = lunar_position_angle_round2 * 27
+
+            planets_position.lunar_station = lunar_station
+            planets_position.lunar_position_angle = lunar_position_angle
+            planets_position.lunar_position_angle_round = lunar_position_angle_round
+            planets_position.lunar_station2 = lunar_station2
+            planets_position.lunar_position_angle2 = lunar_position_angle2
+            planets_position.lunar_position_angle_round2 = lunar_position_angle_round2
+            return (planets_position)
+        }
+        function get_station_name(data_time) {//获取星象信息
+            let solar_num = 0
+            let lunar_num = 0
+            solar_num = get_position(data_time).solar_station
+            solar_num = Math.floor(solar_num)
+            lunar_num = get_position(data_time).lunar_station
+            lunar_num = Math.floor(lunar_num)
+
+            let result = new Object
+            result.solar = horoscope_name[solar_num]
+            result.lunar = pali_nakkhatta_name[lunar_num]
+            return (result)
         }
         function lunar_phase_list_refresh() {
             let output = ""
@@ -558,11 +723,21 @@
             for (let i_month = 0; i_month < month_num; i_month++) {
                 output += "<tr class='table_line'>"
                 output += "<td class='table_column'>"
-                output += i_month + 1
+                output += Math.round(get_position(full_list[i_month]).solar_station * 100) / 100
+                //output += "—"
+                //output += get_station_name(full_list[i_month]).lunar.value
+                //output += "—"
+                //output += get_station_name(full_list[i_month]).solar.name_zh
+                //output += "—"
+                //output += get_station_name(full_list[i_month]).solar.icon
                 output += "</td>"
+                //下弦月
                 if (SunCalc.getTimes(last_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - last_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + last_list[i_month].toLocaleTimeString() + "'>"
                     output += last_list[i_month].toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(last_list[i_month]).lunar.value
+                    //output += Math.round(get_position(last_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
                 else {//如果在破晓之前，修正提前一天
@@ -570,11 +745,18 @@
                     let temp_date = last_list[i_month]
                     temp_date.setDate(temp_date.getDate() - 1)
                     output += temp_date.toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(last_list[i_month]).lunar.value
+                    //output += Math.round(get_position(last_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
+                //新月
                 if (SunCalc.getTimes(new_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - new_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + new_list[i_month].toLocaleTimeString() + "'>"
                     output += new_list[i_month].toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(new_list[i_month]).lunar.value
+                    //output += Math.round(get_position(new_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
                 else {//如果在破晓之前，修正提前一天
@@ -582,11 +764,18 @@
                     let temp_date = new_list[i_month]
                     temp_date.setDate(temp_date.getDate() - 1)
                     output += temp_date.toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(new_list[i_month]).lunar.value
+                    //output += Math.round(get_position(new_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
+                //上弦月
                 if (SunCalc.getTimes(first_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - first_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + first_list[i_month].toLocaleTimeString() + "'>"
                     output += first_list[i_month].toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(first_list[i_month]).lunar.value
+                    //output += Math.round(get_position(first_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
                 else {//如果在破晓之前，修正提前一天
@@ -594,11 +783,18 @@
                     let temp_date = first_list[i_month]
                     temp_date.setDate(temp_date.getDate() - 1)
                     output += temp_date.toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(first_list[i_month]).lunar.value
+                    //output += Math.round(get_position(first_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
+                //满月
                 if (SunCalc.getTimes(full_list[i_month], g_coordinate_this.AT, g_coordinate_this.LT, g_coordinate_this.height / 1000).dawn - full_list[i_month] <= 0) {//如果在破晓之后，不修正
                     output += "<td class='table_column' title='" + full_list[i_month].toLocaleTimeString() + "'>"
                     output += full_list[i_month].toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(full_list[i_month]).lunar.value
+                    //output += Math.round(get_position(full_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
                 else {//如果在破晓之前，修正提前一天
@@ -606,6 +802,9 @@
                     let temp_date = full_list[i_month]
                     temp_date.setDate(temp_date.getDate() - 1)
                     output += temp_date.toLocaleDateString()
+                    output += "<br />"
+                    output += get_station_name(full_list[i_month]).lunar.value
+                    //output += Math.round(get_position(full_list[i_month]).lunar_station * 100) / 100
                     output += "</td>"
                 }
                 output += "</tr>"
