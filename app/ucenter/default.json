@@ -1,4 +1,5 @@
 {
+  "account.head": 0,
   "_ui.lang": ["en", "zh-hans", "zh-hant"],
   "ui.lang": ["en", "zh-hans", "zh-hant", "si", "my"],
   "_studio.translation.lang": ["en", "zh-hans", "zh-hant", "si", "my"],

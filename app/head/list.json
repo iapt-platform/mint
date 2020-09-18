@@ -1,0 +1,8 @@
+{
+  "category": ["lotus", "lamp", "others"],
+  "list": {
+    "0": { "category": "others", "file": "default.svg" },
+    "1": { "category": "lotus", "file": "1.svg" },
+    "2": { "category": "lotus", "file": "2.svg" }
+  }
+}

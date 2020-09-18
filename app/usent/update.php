@@ -13,6 +13,7 @@ PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
 
 //查询没有id的哪些是数据库里已经存在的，防止多次提交同一条记录造成一个句子 多个channal
 $newList = array();
+$new_id = array();
 $oldList = array();
 $query = "SELECT id FROM sentence WHERE book = ? and paragraph = ? and  begin = ? and end = ? and channal = ? limit 0 , 1 ";
 foreach ($aData as $data) {
@@ -70,7 +71,8 @@ else{
 	$respond['status']=0;
 	$respond['message']="成功";
 	foreach ($oldList as $key => $value) {
-		$update_list[] =  array("id" => $value["id"],"text" => $value["text"]);
+		$update_list[] =  array("id" => $value["id"],"book"=>$value["book"],"paragraph"=>$value["paragraph"],"begin"=>$value["begin"],"end"=>$value["end"],"channal"=>$value["channal"],"text" => $value["text"]);
+
 	}
 }
 
@@ -126,7 +128,7 @@ foreach ($newList as $data) {
 										  mTime(),
 										  mTime()
 										));
-		$new_id[] = array($uuid,$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"]);
+		$new_id[] = array($uuid,$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"],$data["text"]);
 }
 $PDO->commit();
 
@@ -140,8 +142,8 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 }
 else{
 	$respond['insert_error']=0;
-	foreach ($newList as $key => $value) {
-		$update_list[] =  array("id" => $value[0],"text" => $value["text"]);
+	foreach ($new_id as $key => $value) {
+		$update_list[] =  array("id" => $value[0],"book"=>$value[1],"paragraph"=>$value[2],"begin"=>$value[3],"end"=>$value[4],"channal"=>$value[5],"text" => $value[6]);
 	}
 }
 $respond['update']=$update_list;

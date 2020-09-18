@@ -1,4 +1,10 @@
 var setting;
+function setting_head_render(file) {
+  let html = '<svg class="head_icon" style="height: 3em;width: 3em;">';
+  html += '<use xlink:href="../head/images/"' + file + "></use>";
+  html += "</svg>";
+  $("#head_img").html(html);
+}
 function setting_onload() {
   $.post("get_setting.php", {}, function (data, status) {
     try {
@@ -78,7 +84,7 @@ function setting_onload() {
           setting_save();
         },
       });
-    } catch (e) { }
+    } catch (e) {}
   });
 }
 function li_remove() {
