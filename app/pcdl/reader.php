@@ -27,7 +27,7 @@ $_channal = new Channal();
 	<script src="js/fixedsticky.js"></script>
 	<script src="js/reader.js"></script>
 	<script src="../public/js/comm.js"></script>
-	<script src="../public/js/nty.js"></script>
+	<script src="../public/js/notify.js"></script>
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 </head>
@@ -683,6 +683,9 @@ else{
 			$query = "SELECT channal from 'sentence' where book= ? and paragraph =  ? AND begin =  ? AND end =  ? group by channal";
 			$FetchChannal = PDO_FetchAll($query,array($book,$par_begin,$_GET["begin"],$_GET["end"]));
 			break;	
+		default:
+			$FetchChannal = array();
+		break;
 	}
 	
 	
