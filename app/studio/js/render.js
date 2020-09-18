@@ -1,7 +1,7 @@
-var gDisplayCapacity = 20;
+var gDisplayCapacity = 20000;
 var gCurrTopParagraph = 0;
 var gVisibleParBegin = 0;
-var gVisibleParEnd = 10;
+var gVisibleParEnd = 10000;
 
 //显示模式
 var _display_para_arrange = 0; //0:横向 排列 1:纵向排列
@@ -54,9 +54,9 @@ function palitext_calculator() {
   for (i_cal in allTextLen_array) {
     g_allparlen_array.push(allTextLen_array[i_cal] / gtext_max_length);
   }
-  gDisplayCapacity = 19 + text_max2_length / gtext_max_length;
-  if (gDisplayCapacity * gtext_max_length < 5000) {
-    gDisplayCapacity = 5000 / gtext_max_length;
+  gDisplayCapacity = 190000000 + text_max2_length / gtext_max_length;
+  if (gDisplayCapacity * gtext_max_length < 500000000) {
+    gDisplayCapacity = 500000000 / gtext_max_length;
   }
 }
 //添加新的段落块
@@ -429,7 +429,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() {}
+function renderBlock() { }
 /*
 重绘翻译数据块
 */
@@ -634,7 +634,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) {}
+function renderTranslateParBlockInnerPreview(strText) { }
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -2702,12 +2702,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$$" +
-                  arrMean[i] +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                "$" +
+                arrMeaning.length +
+                "$$" +
+                arrMean[i] +
+                "$" +
+                g_DictWordList[iDict].Language
               );
             }
           }
@@ -2757,12 +2757,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$*$" +
-                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$*$" +
+                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2812,12 +2812,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$**$" +
-                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$**$" +
+                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -3292,7 +3292,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) {}
+function renderWordNoteDivByParaNo(book, paragraph) { }
 /*
 paragraph word note
 */
@@ -3491,7 +3491,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) {}
+function updateWordCommentary(element) { }
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3614,13 +3614,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-      g_allparlen_array[gVisibleParBegin - 1] <=
+    g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin - 1] >
+    g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3647,13 +3647,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] <=
+    g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] >
+    g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -4090,12 +4090,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-        id +
-        "' name=\"word_note_" +
-        id +
-        '">[' +
-        (index + 1) +
-        "]</a>"
+      id +
+      "' name=\"word_note_" +
+      id +
+      '">[' +
+      (index + 1) +
+      "]</a>"
     );
   });
 
