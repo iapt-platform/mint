@@ -704,6 +704,7 @@ else{
 		foreach ($FetchPaliSent as $key => $value) {
 			$begin = $value["begin"];
 			$end = $value["end"];
+			$query_channal = "";
 			if(isset($_GET["channal"])){
 				$query_channal = " AND channal=".$PDO->quote($_GET["channal"]);
 			}
