@@ -241,7 +241,9 @@ para:hover{
 	<div id="main_text_view" style="padding-bottom: 10em;">
         <?php 
             echo "<a name='account'></a>";
-            echo "<h2>{$_local->gui->account}</h2>";
+			echo "<h2>{$_local->gui->account}</h2>";
+			echo "头像：<span id='head_img'></span>";
+
             echo "{$_local->gui->username}：{$_COOKIE["username"]} <button>修改</button><br />";
             echo "{$_local->gui->nick_name}：{$_COOKIE["nickname"]} <button>修改</button><br />";
             echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>修改</button><br />";

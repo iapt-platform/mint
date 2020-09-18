@@ -43,6 +43,12 @@ $_channal = new Channal();
 	</script>
 
 <style>
+.par_translate_div{
+	margin-left: 1em;
+    border-left: 1px solid gray;
+    padding-left: 0.5em;
+    margin-top: 0.5em;
+}
 	.edit_icon{
 		display:inline-block;
 		width:1.4em;
@@ -597,7 +603,7 @@ else{
 				$pali_sent=$value["html"];
 				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</sent>";
 				echo "</div>";
-				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_translate_div'>";
+				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_wbw_div'>";
 				echo "</div>";
 				echo "<div id='sent-translate-b$book-$iPar-{$value["begin"]}' class='par_translate_div'>";
 				echo "</div>";
@@ -631,11 +637,11 @@ else{
 				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</sent>";
 			}
 			echo "</div>";
-			echo "<div id='par-wbwdiv-b$book-$iPar' class='par_translate_div'>";
+			echo "<div id='par-wbwdiv-b$book-$iPar' class='par_wbw_div'>";
 			echo "</div>";
 			echo "<div id='par-translate-b$book-$iPar' class='par_translate_div'>";
 			echo "</div>";
-			echo "<div id='par-note-b$book-$iPar' class='par_translate_div'>";
+			echo "<div id='par-note-b$book-$iPar' class='par_note_div'>";
 			echo "</div>";
 			echo "</div>";
 		}
@@ -704,6 +710,7 @@ else{
 		foreach ($FetchPaliSent as $key => $value) {
 			$begin = $value["begin"];
 			$end = $value["end"];
+			$query_channal = "";
 			if(isset($_GET["channal"])){
 				$query_channal = " AND channal=".$PDO->quote($_GET["channal"]);
 			}
@@ -717,7 +724,6 @@ else{
 				else{
 					$query="SELECT * FROM \"sentence\" WHERE (book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end'  AND strlen <> 0 AND parent = ''  ) {$query_channal}  order by modify_time  DESC";
 				}
-				
 			}
 			else{
 				$query = "SELECT * FROM \"sentence\" WHERE book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND strlen <> 0  {$query_channal} order by modify_time DESC  limit 0, 1";
