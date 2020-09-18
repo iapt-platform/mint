@@ -5,6 +5,12 @@ require_once '../public/load_lang.php';
 require_once '../public/function.php';
 require_once '../channal/function.php';
 require_once '../ucenter/function.php';
+
+global $_userinfo;
+global $_channal;
+$_userinfo = new UserInfo();
+$_channal = new Channal();
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -21,6 +27,7 @@ require_once '../ucenter/function.php';
 	<script src="js/fixedsticky.js"></script>
 	<script src="js/reader.js"></script>
 	<script src="../public/js/comm.js"></script>
+	<script src="../public/js/nty.js"></script>
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 </head>
@@ -100,21 +107,25 @@ sent:hover{
 	background-color:#fefec1;
 }
 para {
-    color: white;
-    background-color:  #F1CA23;
+    color: #d27e17;
+    background-color:  unset;
     min-width: 2em;
     display: inline-block;
     text-align: center;
-    padding: 3px 6px;
+    padding: 3px 5px;
     border-radius: 99px;
 	margin-right: 5px;
 	cursor:pointer;
-	font-size:80%;
+	font-size:90%;
+	font-weight:400;
 }
 para:hover{
-
+    color: white;
+    background-color:  #F1CA23;
 }
-
+paranum {
+    font-weight: 700;
+}
 .sent_count{
 	font-size:80%;
     color: white;
@@ -177,6 +188,12 @@ para:hover{
 	font-weight:700;
 	font-family: Noto serif;
     font-size: 150%;
+}
+note{
+	color:blue;
+}
+.mine{
+	color:green;
 }
 </style>
 		<!-- tool bar begin-->
@@ -527,20 +544,20 @@ else{
 		break;
 		case "chapter":
 			if($par_parent >= 0 && $currLevel>$tocMinLevel){
-				echo "<a href='reader.php?view={$_view}&book={$book}&paragraph={$par_parent}'>";
+				echo "<a href='reader.php?view={$_view}&book={$book}&para={$par_parent}'>";
 				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
 				echo "{$_parent_title}</a>";
 			}
 		break;
 		case "para":
 			if($par_parent >= 0){
-				echo "<a href='reader.php?view=chapter&book={$book}&paragraph={$par_parent}'>";
+				echo "<a href='reader.php?view=chapter&book={$book}&para={$par_parent}'>";
 				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
 				echo "{$_parent_title}</a>";
 			}
 		break;
 		case "sent":
-				echo "<a href='reader.php?view=para&book={$book}&paragraph={$paragraph}'>";
+				echo "<a href='reader.php?view=para&book={$book}&para={$paragraph}'>";
 				echo "<svg t='1598083209786' class='icon' style='fill:#666666;' height='30px' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4926'><path d='M446.464 118.784l-254.976 256c-13.312 13.312-4.096 35.84 15.36 35.84H716.8c18.432 0 28.672-22.528 15.36-35.84l-254.976-256c-9.216-8.192-22.528-8.192-30.72 0zM563.2 796.672V533.504c0-11.264-9.216-21.504-21.504-21.504H379.904c-11.264 0-21.504 9.216-21.504 21.504v366.592c0 11.264 9.216 21.504 21.504 21.504h467.968c11.264 0 21.504-9.216 21.504-21.504V839.68c0-11.264-9.216-21.504-21.504-21.504H584.704c-12.288 0-21.504-9.216-21.504-21.504z m0 21.504' p-id='4927'></path></svg>";
 				echo "{$paragraph}</a>";
 		break;
@@ -555,10 +572,10 @@ else{
 		//逐句显示
 		for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
 			if($_view=="sent"){
-				$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$paragraph' and begin='{$_GET["begin"]}' and end ='{$_GET["end"]}'";
+				$query = "select html, begin, end from 'pali_sent' where book='$book' and paragraph='$paragraph' and begin='{$_GET["begin"]}' and end ='{$_GET["end"]}'";
 			}
 			else{
-				$query = "select text, begin, end from 'pali_sent' where book='$book' and paragraph='$iPar'";
+				$query = "select html, begin, end from 'pali_sent' where book='$book' and paragraph='$iPar'";
 			}
 			if(isset($tocList[$iPar])){
 				$sentClass = " sent_toc";
@@ -568,12 +585,16 @@ else{
 			}
 			$FetchSent = PDO_FetchAll($query);
 			echo "<div id='par-b$book-$iPar' class='par_div'>";
-			echo "<para book='$book' para='$iPar'>$iPar</para><a name='para_{$iPar}'></a>";
+			if($_view=="chapter"){
+				echo "<para book='$book' para='$iPar' ";
+				if(isset($tocList[$iPar])){
+					echo " level = '{$tocList[$iPar]}' ";
+				}
+				echo ">$iPar</para><a name='para_{$iPar}'></a>";
+			}
 			foreach ($FetchSent as $key => $value) {
 				echo "<div id='sent-pali-b$book-$iPar-{$value["begin"]}' class='par_pali_div'>";
-				$pali_sent = str_replace("{","<b>",$value["text"]);
-				$pali_sent = str_replace("}","</b>",$pali_sent);
-				
+				$pali_sent=$value["html"];
 				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</sent>";
 				echo "</div>";
 				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_translate_div'>";
@@ -593,15 +614,21 @@ else{
 			else{
 				$sentClass = "";
 			}
-			$query = "select text , begin, end  from 'pali_sent' where book='$book' and paragraph='$iPar'";
+			$query = "select html , begin, end  from 'pali_sent' where book='$book' and paragraph='$iPar'";
 			$FetchSent = PDO_FetchAll($query);
 			echo "<div id='par-b$book-$iPar' class='par_div'>";
 			echo "<div id='par-pali-b$book-$iPar' class='par_pali_div'>";
-			echo "<para book='$book' para='$iPar'>$iPar</para><a name='para_{$iPar}'></a>";
+			
+			if($_view=="chapter"){
+				echo "<para book='$book' para='$iPar' ";
+				if(isset($tocList[$iPar])){
+					echo " level = '{$tocList[$iPar]}' ";
+				}
+				echo ">$iPar</para><a name='para_{$iPar}'></a>";
+			}
 			foreach ($FetchSent as $key => $value) {
-				$sent_text = str_replace("{","<b>",$value["text"]) ;
-				$sent_text = str_replace("}","</b>",$sent_text) ;	
-				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$sent_text}</sent>";
+				$pali_sent=$value["html"];
+				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</sent>";
 			}
 			echo "</div>";
 			echo "<div id='par-wbwdiv-b$book-$iPar' class='par_translate_div'>";
@@ -670,91 +697,69 @@ else{
 			$FetchPaliSent = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 		}
 
+		//使用巴利语句子列表 查询译文
 		foreach ($FetchPaliSent as $key => $value) {
 			$begin = $value["begin"];
 			$end = $value["end"];
 			if(isset($_GET["channal"])){
 				$query_channal = " AND channal=".$PDO->quote($_GET["channal"]);
 			}
+			$sent_count = 1;
 			if($_view=="sent"){
+				//显示一个巴利句子 以及相应的译文
 				if(isset($_GET["sent"])){
+					//如果指定译文句子编号，只显示该句子（和后面的跟帖）
 					$query="SELECT * FROM \"sentence\" WHERE id = ".$PDO->quote($_GET["sent"]);
 				}
 				else{
-					$query="SELECT * FROM \"sentence\" WHERE (book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end'  AND strlen <> 0  ) {$query_channal}  order by modify_time  DESC";
+					$query="SELECT * FROM \"sentence\" WHERE (book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end'  AND strlen <> 0 AND parent = ''  ) {$query_channal}  order by modify_time  DESC";
 				}
 				
 			}
 			else{
 				$query = "SELECT * FROM \"sentence\" WHERE book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND strlen <> 0  {$query_channal} order by modify_time DESC  limit 0, 1";
+				$query_count = "SELECT count(book) FROM \"sentence\" WHERE book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND strlen > 0  {$query_channal} ";
+				$sent_count = PDO_FetchOne($query_count);
+				if($sent_count>9){
+					$sent_count = "9+";
+				}
 			}
 
-			$query_count = "SELECT count(book) FROM \"sentence\" WHERE book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end' AND strlen > 0  {$query_channal} ";
-			$sent_count = PDO_FetchOne($query_count);
-			if($sent_count>9){
-				$sent_count = "9+";
-			}
 			$FetchText = PDO_FetchAll($query);
-			$iFetchText=count($FetchText);
-			if($iFetchText>0){
+			$i = 0;
+			foreach ($FetchText as $key => $value) {
+				$thisSent = $value;
+				$sentClass = "";
+				# 找出句子中 我贡献的，优先显示
+				if($_view != "sent"){
+					if(isset($_COOKIE["userid"])){
+						if($thisSent["editor"] !== $_COOKIE["userid"]){
+							$query="SELECT * FROM sentence WHERE parent = ".$PDO->quote($thisSent["id"])." AND editor = ".$PDO->quote($_COOKIE["userid"])." order by modify_time DESC limit 0,1";
+							$myText = PDO_FetchAll($query);
+							if(count($myText)>0){
+								$thisSent = $myText[0];
+								$sentClass = "mine";
+							}
+						}
+					}
+				}
+				echo render_sent($thisSent,$i,$_display,$sent_count,$sentClass);
+				$i++;
+			}
+			if(count($FetchText)>0){
 				if(isset($_GET["sent"])){
+					//如果指定句子译文编号，显示句子的跟帖
 					$query="SELECT * FROM \"sentence\" WHERE parent = ".$PDO->quote($_GET["sent"]);
 					$FetchChildren = PDO_FetchAll($query);
-					$FetchText = array_merge ($FetchText,$FetchChildren);
-				}
-				$iFetchText=count($FetchText);
-				for($i=0;$i<$iFetchText;$i++){
-					$currParNo=$iPar;
-					if($_display=="sent"){
-						$sent_style = "display:block";
-					}
-					else{
-						$sent_style = "";
-					}
-					if(!empty($FetchText[$i]["parent"])){
-						$reply_style = " sent_reply ";
-					}
-					else{
-						$reply_style = "";
-					}
-					$tran_text = str_replace("[[","<term status='0'>",$FetchText[$i]["text"]);
-					$tran_text = str_replace("]]","</term>",$tran_text);
-					echo "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}' class='sent_trans ' book='$book' para='$currParNo' begin='{$FetchText[$i]["begin"]}'>";
-					echo "<span class='sent_text' ";
-					echo " sent_id='".$FetchText[$i]["id"]."'";
-					echo " editor='".$FetchText[$i]["editor"]."'";
-					echo " book='".$FetchText[$i]["book"]."'";
-					echo " para='".$FetchText[$i]["paragraph"]."'";
-					echo " begin='".$FetchText[$i]["begin"]."'";
-					echo " end='".$FetchText[$i]["end"]."'";
-					echo " lang='".$FetchText[$i]["language"]."'";
-					echo " channal='".$FetchText[$i]["channal"]."'";
-					echo " tag='".$FetchText[$i]["tag"]."'";
-					echo " author='".$FetchText[$i]["author"]."'";
-					echo " text='".$FetchText[$i]["text"]."'";
-					echo ">";
-					echo $tran_text;
-					echo "</span>";
-					if($_view!="sent" && $_display=="sent"){
-						if(isset($_GET["channal"])){
-							echo "<svg class='edit_icon';'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
-						}
-						else{
-							echo "<span class='sent_count'>$sent_count</span>";
-						}
-					}
-					echo "</sent_trans>";
-					echo "<script>";
-					if($_display=="sent"){
-						echo "document.getElementById('sent-translate-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
-					}
-					else{
-						echo "document.getElementById('par-translate-b{$book}-{$currParNo}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$FetchText[$i]["begin"]}-{$i}'));";
-					}
-					echo "</script>";
+					$i = 0;
+					echo "<div style='margin-left:1em;'>";
+					foreach ($FetchChildren as $key => $value) {
+						echo render_sent($value,$i,$_display,$sent_count);
+						$i++;
+					}					
+					echo "</div>";
 				}
 			}
-	
 		}
 	}
 		//查询句子译文内容结束
@@ -772,7 +777,97 @@ else{
 	}
 ?>
 
+<?php
+function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
+	global $_userinfo;
+	global $_channal;
+	global $PDO;
+	$output = "";
+		$currParNo=$sent_data["paragraph"];
+		$book = $sent_data["book"];
+		if($display_mode=="sent"){
+			$sent_style = "display:block";
+		}
+		else{
+			$sent_style = "";
+		}
+		if(!empty($sent_data["parent"])){
+			$reply_style = " sent_reply ";
+		}
+		else{
+			$reply_style = "";
+		}
+		$tran_text = str_replace("[[","<term status='0'>",$sent_data["text"]);
+		$tran_text = str_replace("]]","</term>",$tran_text);
+		$output .= "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
+		
+		$output .= "<span class='sent_text {$class}' ";
+		$output .= " sent_id='".$sent_data["id"]."'";
+		$output .= " editor='".$sent_data["editor"]."'";
+		$output .= " book='".$sent_data["book"]."'";
+		$output .= " para='".$sent_data["paragraph"]."'";
+		$output .= " begin='".$sent_data["begin"]."'";
+		$output .= " end='".$sent_data["end"]."'";
+		$output .= " lang='".$sent_data["language"]."'";
+		$output .= " channal='".$sent_data["channal"]."'";
+		$output .= " tag='".$sent_data["tag"]."'";
+		$output .= " author='".$sent_data["author"]."'";
+		$output .= " text='".$sent_data["text"]."'";
+		$output .= ">";
+		$output .= $tran_text;
+		$output .= "</span>";
+		if($display_mode=="sent"){
+			if((isset($_GET["channal"]) || $_GET["view"]=="sent")  ){
+				if($sent_data["editor"] == $_COOKIE["userid"]){
+					$output .= "<svg class='edit_icon';'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
+				}
+				
+			}
+			else{
+				$output .= "<span class='sent_count'>$sent_count</span>";
+			}
+		}
+		if($_GET["view"]=="sent"){
+			$name = $_userinfo->getName($sent_data["editor"]);
+			$channalInfo = $_channal->getChannal($sent_data["channal"]);
 
+			$query="SELECT count(*) FROM \"sentence\" WHERE parent = ".$PDO->quote($sent_data["id"]);
+			$edit_count = PDO_FetchOne($query);
+		
+			$output .= "<div style='font-size:80%;color:gray;margin-bottom:1em;'>Author：$name / {$channalInfo["name"]} 赞：( ) ";
+			if($sent_data["editor"] == $_COOKIE["userid"]){
+				$output .= "<span>润校</span>：";
+			}
+			else{
+				$output .= "<edit>润校</edit>：";
+			}
+			
+			$output .= "({$edit_count})  ";
+			if($sent_data["editor"] != $_COOKIE["userid"]){
+				$output .= "<span onclick='sent_apply()'>采纳</span>";
+			}
+			$output .="</div>";
+		}
+
+
+		$output .= "</sent_trans>";
+
+		
+		if($_GET["view"]!="sent"){
+			$output .= "<script>";
+			if($display_mode=="sent"){
+				$output .= "document.getElementById('sent-translate-b{$book}-{$currParNo}-{$sent_data["begin"]}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}'));";
+			}
+			else{
+				$output .= "document.getElementById('par-translate-b{$book}-{$currParNo}').appendChild(document.getElementById('sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}'));";
+			}
+			$output .= "</script>";			
+		}
+
+		return $output;
+	}
+	
+?>
 
 <div>
 <a name="sim_doc"></a>
@@ -840,8 +935,8 @@ else{
 	}
 
 	echo "<div>Channal</div>";
-	$_channal = new Channal();
-	$_userinfo = new UserInfo();
+
+	
 	echo "<div>";
 	echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
 	echo "&book=".$_GET["book"];
@@ -867,6 +962,9 @@ else{
 		}
 		if(isset($_GET["end"])){
 			echo "&end=".$_GET["end"];
+		}
+		if(isset($_GET["display"])){
+			echo "&display=".$_GET["display"];
 		}
 		echo "&channal=".$value["channal"]."' >";
 		$channalInfo = $_channal->getChannal($value["channal"]);
@@ -937,9 +1035,10 @@ else{
 
 	<div id="sent_modify_win">
 		<div>
-			<textarea id="sent_modify_text" style="width:100%;">
-			</textarea><br>
-			<button onclick="trans_sent_save()">发送</button>				
+			<textarea id="sent_modify_text" style="display:block;width:100%;">
+			</textarea>
+			<button onclick="trans_sent_save()">Save</button>
+			<button onclick="trans_sent_cancel()">Cancel</button>
 		</div>
 	</div>
 
@@ -965,6 +1064,17 @@ else{
 		  
 		});
 
+		$("para").mouseenter(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","#fefec1");
+		});
+		$("para").mouseleave(function(e){
+			let book = $(this).attr("book");
+			let para = $(this).attr("para");
+			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","unset");
+		});
+
 		$("sent").click(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
@@ -972,6 +1082,9 @@ else{
 			let end = $(this).attr("end");
 			window.location.assign("reader.php?view=sent&book="+book+"&para="+para+"&begin="+begin+"&end="+end);
 		});
+
+
+
 		$("sent").mouseenter(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
@@ -985,17 +1098,6 @@ else{
 			let begin = $(this).attr("begin");
 			$(this).css("background-color","unset");
 			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
-		});
-
-		$("para").mouseenter(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","#fefec1");
-		});
-		$("para").mouseleave(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","unset");
 		});
 
 		$("sent_trans").mouseenter(function(e){
@@ -1012,6 +1114,9 @@ else{
 			$(this).css("background-color","unset");
 			$("sent[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
 		});
+
+
+
 		$(".sent_text").click(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
@@ -1035,15 +1140,40 @@ else{
 				$("#sent_modify_text").attr("end",objSent.attr("end"));
 				$("#sent_modify_text").attr("lang",objSent.attr("lang"));
 				$("#sent_modify_text").attr("tag",objSent.attr("tag"));
-				$(this).parent().append($("#sent_modify_win"));				
+				
+				$(this).parent().append($("#sent_modify_win"));			
+				$("#sent_modify_win").show();	
 			}
-
+		});
+	
+		$("edit").click(function(e){
+			let objSent = $(this).parent().parent().children(".sent_text").first();
+			if(objSent){
+				let text = objSent.attr("text");
+				$("#sent_modify_text").val(text);
+				$("#sent_modify_text").attr("sent_id",objSent.attr("sent_id"));
+				$("#sent_modify_text").attr("editor",objSent.attr("editor"));
+				$("#sent_modify_text").attr("book",objSent.attr("book"));
+				$("#sent_modify_text").attr("para",objSent.attr("para"));
+				$("#sent_modify_text").attr("begin",objSent.attr("begin"));
+				$("#sent_modify_text").attr("end",objSent.attr("end"));
+				$("#sent_modify_text").attr("lang",objSent.attr("lang"));
+				$("#sent_modify_text").attr("tag",objSent.attr("tag"));
+				
+				$(this).parent().append($("#sent_modify_win"));		
+				$("#sent_modify_win").show();		
+			}
 		});
 
 		$("para").click(function(e){
 			let book = $(this).attr("book");
 			let para = $(this).attr("para");
-			window.location.assign("reader.php?view=para&book="+book+"&para="+para);
+			let level = $(this).attr("level");
+			let view = "para";
+			if(level && level<100){
+				view = "chapter";
+			}
+			window.location.assign("reader.php?view="+view+"&book="+book+"&para="+para);
 		});
 
 		term_updata_translation();

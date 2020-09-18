@@ -1,4 +1,4 @@
-var _usent_buffer;
+var _usent_buffer = new Array();
 
 class USentResult {
   constructor(filter = {}) {

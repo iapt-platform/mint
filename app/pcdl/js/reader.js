@@ -114,9 +114,17 @@ function trans_sent_save() {
       function (data, status) {
         if (status == "success") {
           let result = JSON.parse(data);
+          for (const iterator of result.update) {
+            $(".sent_text[sent_id='" + iterator.id + "']").html(iterator.text);
+          }
           alert(result);
+          trans_sent_cancel();
         }
       }
     );
   }
+}
+
+function trans_sent_cancel() {
+  $("#sent_modify_win").hide();
 }

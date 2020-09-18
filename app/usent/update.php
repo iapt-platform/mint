@@ -70,7 +70,7 @@ else{
 	$respond['status']=0;
 	$respond['message']="成功";
 	foreach ($oldList as $key => $value) {
-		$update_list[] =  $value;
+		$update_list[] =  array("id" => $value["id"],"text" => $value["text"]);
 	}
 }
 
@@ -141,7 +141,7 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 else{
 	$respond['insert_error']=0;
 	foreach ($newList as $key => $value) {
-		$update_list[] =  $value;
+		$update_list[] =  array("id" => $value[0],"text" => $value["text"]);
 	}
 }
 $respond['update']=$update_list;
