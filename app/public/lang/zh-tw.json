@@ -481,6 +481,9 @@
 		"magic_dict_language": "詞典語言",
 		"priority": "優先順序",
 		"no_need": "不需要",
+		"not_started": "尚未開始",
+		"in_progress": "正在進行",
+		"already_over": "已經結束",
 		"": ""
 	},
 	"grammastr": [
