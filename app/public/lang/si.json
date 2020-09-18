@@ -484,6 +484,9 @@
 		"magic_dict_language": "languages of dictionary",
 		"priority": "priority",
 		"no_need": "no need",
+		"not_started": "not yet start",
+		"in_progress": "in progress",
+		"already_over": "already over",
 		"": "",
 		"": ""
 	},

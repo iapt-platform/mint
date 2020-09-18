@@ -152,8 +152,8 @@ $.get("../course/lesson_list.php",
         d.setTime(lesson["date"]);
         let strData = d.toLocaleDateString();
         let strTime = d.toLocaleTimeString();
-         html+= '<div >开始日期：'+strData +'</div>';
-         html+= '<div >开始时间：'+strTime +'</div>';
+         html+= '<div >'+gLocal.gui.date+'：'+strData +'</div>';
+         html+= '<div >'+gLocal.gui.time+'：'+strTime +'</div>';
         let dt = lesson["duration"]/60;
         let sdt = "";
         if(dt>59){
@@ -168,13 +168,13 @@ $.get("../course/lesson_list.php",
 
         let lesson_time="";
         if(now<lesson["date"]){
-            lesson_time = "尚未开始";
+            lesson_time = gLocal.gui.not_started;
         }
         else if(now>lesson["date"] && now<(lesson["date"]+dt*1000)){
-            lesson_time = "正在进行";
+            lesson_time = gLocal.gui.in_progress;
         }
         else{
-            lesson_time = "已经结束";
+            lesson_time = gLocal.gui.already_over;
         }
         html+= '<div ><span class="lesson_status">'+lesson_time+'</span></div>';
       

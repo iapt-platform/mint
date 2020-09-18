@@ -27,7 +27,7 @@ function lesson_show(id) {
         let summary = "";
         try {
           summary = marked(lesson["summary"], { renderer: renderer });
-        } catch {}
+        } catch { }
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
           summary +
@@ -35,7 +35,7 @@ function lesson_show(id) {
         let live = "";
         try {
           live = marked(lesson["live"], { renderer: renderer });
-        } catch {}
+        } catch { }
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
           live +
@@ -43,7 +43,7 @@ function lesson_show(id) {
         let replay = "";
         try {
           replay = marked(lesson["replay"], { renderer: renderer });
-        } catch {}
+        } catch { }
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
           replay +
@@ -51,7 +51,7 @@ function lesson_show(id) {
         let attachment = "";
         try {
           attachment = marked(lesson["attachment"], { renderer: renderer });
-        } catch {}
+        } catch { }
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
           attachment +
@@ -65,8 +65,8 @@ function lesson_show(id) {
         d.setTime(lesson["date"]);
         let strData = d.toLocaleDateString();
         let strTime = d.toLocaleTimeString();
-        html += "<div >开始日期：" + strData + "</div>";
-        html += "<div >开始时间：" + strTime + "</div>";
+        html += "<div >" + gLocal.gui.date + "：" + strData + "</div>";
+        html += "<div >" + gLocal.gui.time + "：" + strTime + "</div>";
         let dt = lesson["duration"] / 60;
         let sdt = "";
         if (dt > 59) {
@@ -81,11 +81,11 @@ function lesson_show(id) {
 
         let lesson_time = "";
         if (now < lesson["date"]) {
-          lesson_time = "尚未开始";
+          lesson_time = gLocal.gui.not_started;
         } else if (now > lesson["date"] && now < lesson["date"] + dt * 1000) {
-          lesson_time = "正在进行";
+          lesson_time = gLocal.gui.in_progress;
         } else {
-          lesson_time = "已经结束";
+          lesson_time = gLocal.gui.already_over;
         }
         html +=
           '<div ><span class="lesson_status">' + lesson_time + "</span></div>";
