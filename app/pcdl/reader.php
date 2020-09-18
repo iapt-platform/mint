@@ -439,7 +439,6 @@ else{
 		$htmlToc2 .= "<div><a href='#sim_doc'>相关文档</a></div>";
 
 		//获取段落信息 如 父段落 下一个段落等
-
 		$query = "select * from 'pali_text' where book='$book' and paragraph='$paragraph'";
 		$FetchParInfo = PDO_FetchAll($query);
 		if(count($FetchParInfo)==0){
@@ -722,7 +721,7 @@ else{
 					$query="SELECT * FROM \"sentence\" WHERE id = ".$PDO->quote($_GET["sent"]);
 				}
 				else{
-					$query="SELECT * FROM \"sentence\" WHERE (book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end'  AND strlen <> 0 AND parent = ''  ) {$query_channal}  order by modify_time  DESC";
+					$query="SELECT * FROM \"sentence\" WHERE (book = ".$PDO->quote($book)." AND  \"paragraph\" = ".$PDO->quote($iPar)." AND begin = '$begin' AND end = '$end'  AND strlen <> 0 AND (parent = ''  OR parent IS NULL) ) {$query_channal}  order by modify_time  DESC";
 				}
 			}
 			else{
@@ -795,7 +794,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		$currParNo=$sent_data["paragraph"];
 		$book = $sent_data["book"];
 		if($display_mode=="sent"){
-			$sent_style = "display:block";
+			$sent_style = "display:flex;";
 		}
 		else{
 			$sent_style = "";
@@ -808,8 +807,22 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		}
 		$tran_text = str_replace("[[","<term status='0'>",$sent_data["text"]);
 		$tran_text = str_replace("]]","</term>",$tran_text);
+
+
 		$output .= "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
+		if($display_mode=="sent"){
+			$output .= "<span>";
+			$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;'>";
+			$name = $_userinfo->getName($sent_data["editor"]);
+			$output .= mb_substr($name,0,2);
+			$output .= "</span>";
+			$output .= "</span>";
+		}
+		$output .= "<span>";
+
+		$output .= "<span>";
 		
+
 		$output .= "<span class='sent_text {$class}' ";
 		$output .= " sent_id='".$sent_data["id"]."'";
 		$output .= " editor='".$sent_data["editor"]."'";
@@ -825,6 +838,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		$output .= ">";
 		$output .= $tran_text;
 		$output .= "</span>";
+
 		if($display_mode=="sent"){
 			if((isset($_GET["channal"]) || $_GET["view"]=="sent")  ){
 				if($sent_data["editor"] == $_COOKIE["userid"]){
@@ -836,8 +850,10 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 				$output .= "<span class='sent_count'>$sent_count</span>";
 			}
 		}
+		echo "</span>";
+
 		if($_GET["view"]=="sent"){
-			$name = $_userinfo->getName($sent_data["editor"]);
+			
 			$channalInfo = $_channal->getChannal($sent_data["channal"]);
 
 			$query="SELECT count(*) FROM \"sentence\" WHERE parent = ".$PDO->quote($sent_data["id"]);
@@ -859,7 +875,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			}
 			$output .="</div>";
 		}
-
+		echo "</span>";
 
 		$output .= "</sent_trans>";
 
