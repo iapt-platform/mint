@@ -797,7 +797,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			$sent_style = "display:flex;";
 		}
 		else{
-			$sent_style = "display:inline-block";
+			$sent_style = "";
 		}
 		if(!empty($sent_data["parent"])){
 			$reply_style = " sent_reply ";
@@ -811,16 +811,17 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 
 		$output .= "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
 		if($display_mode=="sent"){
-		$output .= "<span>";
-		$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;'>";
-		$name = $_userinfo->getName($sent_data["editor"]);
-		$output .= mb_substr($name,0,2);
-		$output .= "</span>";
-		$output .= "</span>";
+			$output .= "<span>";
+			$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;'>";
+			$name = $_userinfo->getName($sent_data["editor"]);
+			$output .= mb_substr($name,0,2);
+			$output .= "</span>";
+			$output .= "</span>";
 		}
 		$output .= "<span>";
 
 		$output .= "<span>";
+		
 
 		$output .= "<span class='sent_text {$class}' ";
 		$output .= " sent_id='".$sent_data["id"]."'";
