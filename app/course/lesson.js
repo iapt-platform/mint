@@ -26,7 +26,7 @@ function lesson_show(id) {
         html += '<div style="">';
         let summary = "";
         try {
-          summary = marked(lesson["summary"]);
+          summary = marked(lesson["summary"], { renderer: renderer });
         } catch {}
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
@@ -42,7 +42,7 @@ function lesson_show(id) {
           "</div>";
         let replay = "";
         try {
-          replay = marked(lesson["replay"]);
+          replay = marked(lesson["replay"], { renderer: renderer });
         } catch {}
         html +=
           '<div class="summary"  style="padding-bottom:5px;">' +
