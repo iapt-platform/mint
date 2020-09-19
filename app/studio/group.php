@@ -289,10 +289,10 @@ require_once '../public/_pdo.php';
 					foreach($stage as $one){
 						echo "<button>{$one["stage"]}</button>{$one["name"]}-";
 						if($one["stage"]<$curr_stage){
-							echo "<span style='color:green'>已经完成Done</span>";
+							echo "<span style='color:green'>{$_local->gui->already_over}</span>";
 						}
 						else if($one["stage"]==$curr_stage){
-							echo "正在进行Runing<button>完成Done</button>";
+							echo "{$_local->gui->in_progress}<button>完成Done</button>";
 						}
 						else{
 							echo "尚未开始 Not Ready";

@@ -123,7 +123,7 @@ sāriputto thero sāriputtatthero
 - " (The one who is) Sāriputta and (who is) a senior monk, (he is) sāriputtatthera by name."
 - “(谁是)Sāriputta和(谁)，他是一位高级僧侣，他的名字叫āriputtalthera。“。
 
-#### A.3 visesana-ubhayapada
+#### A.3 visesana-ubhayapada 双重定语
 [ kata (the (work) finished已做) = A<sub title="modifier定语/修饰语">mod</sub>1] + [ akata = (the (work) not yet finished未做) = A<sub title="modifier定语/修饰语">mod</sub>2]
 
 A<sub title="modifier定语/修饰语">mod</sub>1 + A<sub title="modifier定语/修饰语">mod</sub>2---->A<sub title="substantive中心语">sub</sub> (sense, gender & number中心語、性与数)
@@ -147,7 +147,7 @@ kataṃ ca taṃ akataṃ cāti katākataṃ
 - “(已完成的那个)和没有完成(的)，(它是)katākata的名字。
 
 
-#### A.4 upamāna-uttarapada 后比喻
+#### A.4 upamāna-uttarapada 比喻后置
 [ muni (the monk僧) = A<sub title="substantive中心语/本体">sub</sub> ] + [ sīha (lion狮子) = A<sub title="standard of comparison喻体/喻依">com</sub>]
 
 A<sub title="standard of comparison喻体/喻依">com</sub>---->A<sub title="substantive中心语/本体">sub</sub> (Figurative identity relation 比喻身份关系)
@@ -169,7 +169,7 @@ muni ca so sīho cāti munisīho.
 ```
 trs译文：
 - "He (is) a monk and lion-like too, therefore, (he is) munisīha by name."
-- “他也是一个和尚和狮子一样的人，因此，他的名字是市政ī哈。”
+- “他既是一个僧侣又像狮子一样，因此，他的名为munisīha。”
 
 #### A.5 sambhāvanā-pubbapada 混合组分前置
 [pāṇa (living being生物) =A + iti + saññā (perception认定/想) = B]
