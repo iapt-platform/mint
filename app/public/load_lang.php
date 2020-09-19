@@ -8,6 +8,9 @@ echo $_local->gui->XXXX;
 <?php echo $_local->gui->XXXX;?>
 gLocal.gui.XXXX
 */
+global $_local;
+global $_local_arr;
+
 if(isset($_GET["language"])){
 	$currLanguage=$_GET["language"];
 }

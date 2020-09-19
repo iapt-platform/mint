@@ -295,6 +295,7 @@ note{
 		<div id="main_text_view" style="padding-bottom: 10em;">
 		
 <?php
+
 $tocHtml="";
 
 if(isset($_GET["album"])){
@@ -783,6 +784,7 @@ else{
 	echo "</div>";
 		
 	}
+
 ?>
 
 <?php
@@ -790,6 +792,9 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	global $_userinfo;
 	global $_channal;
 	global $PDO;
+	global $_local;
+	global $_local_arr;
+
 	$output = "";
 		$currParNo=$sent_data["paragraph"];
 		$book = $sent_data["book"];
@@ -812,7 +817,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		$output .= "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
 		if($display_mode=="sent"){
 			$output .= "<span>";
-			$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;'>";
+			$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;margin-top: 0.5em;'>";
 			$name = $_userinfo->getName($sent_data["editor"]);
 			$output .= mb_substr($name,0,2);
 			$output .= "</span>";
@@ -851,7 +856,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			}
 		}
 		echo "</span>";
-
+		
 		if($_GET["view"]=="sent"){
 			
 			$channalInfo = $_channal->getChannal($sent_data["channal"]);
@@ -859,14 +864,14 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			$query="SELECT count(*) FROM \"sentence\" WHERE parent = ".$PDO->quote($sent_data["id"]);
 			$edit_count = PDO_FetchOne($query);
 		
-			$output .= "<div style='font-size:80%;color:gray;margin-bottom:1em;'>Author：$name / {$channalInfo["name"]} ";
-			$output .= '<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="32" height="32"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';
-			$output .= '<span id="num_like"></span>';
+			$output .= "<div style='font-size:80%;color:gray;margin-bottom:1em;'>$name · {$channalInfo["name"]}|";
+			$output .= '<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="16" height="16"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';
+			$output .= '<span id="num_like">（0）|</span>';
 			if($sent_data["editor"] == $_COOKIE["userid"]){
-				$output .= "<span>润校</span>：";
+				$output .= "<span>{$_local_arr["gui"]["revise"]}</span>：";
 			}
 			else{
-				$output .= "<edit>润校</edit>：";
+				$output .= "<edit>{$_local_arr["gui"]["revise"]}</edit>：";
 			}
 			
 			$output .= "({$edit_count})  ";
