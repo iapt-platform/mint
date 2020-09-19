@@ -342,6 +342,7 @@ else{
 		}
 	}
 	$tocList = array();
+	$FetchChannal = array();
 	if($_view=="chapter" || $_view=="para" || $_view=="sent" ){
 		PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 		//生成目录
@@ -955,15 +956,20 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	</div>
 
 	<div id="right_panal_toc" style="position: fixed;top:3em;width:17em;left: calc(100% - 17em);height:auto; min-height:30em;border-left: 1px solid gray;    font-size: 80%;padding: 2em 0.5em;">
-	<?php  
+	<div>
+<?php  
 	if($currLevel>=$tocMinLevel){
 		echo $htmlToc2; 
 	}
+?>
+</div>
+<h4>CSCD4 Paragraph Number</h4>
+<div id="s6_para">
 
-	echo "<div>Channal</div>";
-
-	
-	echo "<div>";
+</div>
+	<div>Channal</div>
+	<div>
+	<?php
 	echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
 	echo "&book=".$_GET["book"];
 	echo "&para=".$_GET["para"];
@@ -1209,6 +1215,16 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	}
 	);
 	
+	let objParanum = document.querySelectorAll("paranum");
+	let parahtml="";
+	for (const iterator of objParanum) {
+		let num = iterator.innerHTML;
+		iterator.innerHTML = num + "<a name='para_s6_"+num+"'></a>";
+		parahtml += "<div><a href='#para_s6_"+num+"'>"+num+"</a></div>";
+		
+	}
+	$("#s6_para").html(parahtml);
+
 	function haha(){
 		var wordquery ="('" + wordlist.join("','")+"')";
 		$.post("../term/term.php",
