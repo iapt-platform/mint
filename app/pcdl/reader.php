@@ -147,7 +147,7 @@ paranum {
 .toc_1{
 	padding: 5px;
     cursor: pointer;
-	border-left: 2px solid #aaaaaa;
+	border-left: 3px solid #aaaaaa;
 }
 .toc_1_title{
 	font-weight:700;
@@ -200,6 +200,55 @@ note{
 }
 .mine{
 	color:green;
+}
+.head_img{
+	display: inline-block;
+    width: 20px;
+	font-size: 14px;
+    padding: 2px;
+    background-color: gray;
+    color: white;
+    border-radius: 99px;
+    text-align: center;
+    margin-right: 0.5em;
+    margin-top: 0.5em;
+}
+.sent_block{
+	display:flex;
+	padding: 2px 10px;
+}
+.sent_block>.sent_body>.sent_text{
+	font-size: 110%;
+	max-height: 5em;
+    overflow-y: scroll;
+}
+.fun_frame {
+    border: 1px solid gray;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.fun_frame>.title{
+	border-bottom: 1px solid gray;
+	padding:6px;
+}
+.fun_frame>.content{
+	padding:6px;
+	max-height:6em;
+	overflow-y: scroll;
+}
+#right_panal_toc{
+	position: fixed;
+    top: 3em;
+    width: 24em;
+    left: calc(100% - 24em);
+    height: auto;
+    min-height: 30em;
+    font-size: 80%;
+    padding: 2em 0.5em;
+}
+.list_with_head{
+	display:flex;
 }
 </style>
 		<!-- tool bar begin-->
@@ -303,6 +352,9 @@ if(isset($_GET["album"])){
 }
 if(isset($_GET["channal"])){
 	$channal=$_GET["channal"];
+}
+if(isset($_GET["sent"])){
+	echo "<script> _sent_id='{$_GET["sent"]}';</script>";
 }
 if(isset($_GET["book"])){
 	$book=$_GET["book"];
@@ -772,7 +824,7 @@ else{
 			}
 		}
 	}
-		//查询句子译文内容结束
+	//查询句子译文内容结束
 
 	echo "<div id='para_nav'><a name='nav_foot'></a>";
 	echo "<div style='display:inline-flex;'>";
@@ -815,12 +867,12 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		$tran_text = str_replace("]]","</term>",$tran_text);
 
 
-		$output .= "<sent_trans style='{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
+		$output .= "<sent_trans style='margin-bottom:1em;{$sent_style}{$reply_style}' id='sent-tran-b{$book}-{$currParNo}-{$sent_data["begin"]}-{$sn}' class='sent_trans ' book='$book' para='$currParNo' begin='{$sent_data["begin"]}'>";
 		if($display_mode=="sent"){
 			$output .= "<span>";
-			$output .= "<span style='display:inline-block;width:20px;font-size:18px;padding: 8px 12px;background-color:gray;color:white;border-radius: 99px;text-align: center;margin-right:0.5em;margin-top: 0.5em;'>";
+			$output .= "<span class='head_img'>";
 			$name = $_userinfo->getName($sent_data["editor"]);
-			$output .= mb_substr($name,0,2);
+			$output .= mb_substr($name["nickname"],0,2);
 			$output .= "</span>";
 			$output .= "</span>";
 		}
@@ -840,6 +892,9 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		$output .= " channal='".$sent_data["channal"]."'";
 		$output .= " tag='".$sent_data["tag"]."'";
 		$output .= " author='".$sent_data["author"]."'";
+		$output .= " nickname='".$name["nickname"]."'";
+		$output .= " username='".$name["username"]."'";
+		
 		$output .= " text='".$sent_data["text"]."'";
 		$output .= ">";
 		$output .= $tran_text;
@@ -865,20 +920,23 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			$query="SELECT count(*) FROM \"sentence\" WHERE parent = ".$PDO->quote($sent_data["id"]);
 			$edit_count = PDO_FetchOne($query);
 		
-			$output .= "<div style='font-size:80%;color:gray;margin-bottom:1em;'>$name · {$channalInfo["name"]}|";
-			$output .= '<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="16" height="16"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';
-			$output .= '<span id="num_like">（0）|</span>';
+			$output .= "<div style='font-size:80%;color:gray;'>{$name["nickname"]} <span style='color:gray;'>@{$name["username"]} </span>· {$channalInfo["name"]}</div>";
+			$output .= "<div class='sent_blcok_tools'>";
+
 			if($sent_data["editor"] == $_COOKIE["userid"]){
-				$output .= "<span>{$_local_arr["gui"]["revise"]}</span>：";
+				$output .= "<span>{$_local_arr["gui"]["revise"]}</span>";
 			}
 			else{
-				$output .= "<edit>{$_local_arr["gui"]["revise"]}</edit>：";
+				$output .= "<edit>{$_local_arr["gui"]["revise"]}</edit>";
 			}
-			
-			$output .= "({$edit_count})  ";
+	
+			$output .= "{$edit_count}  ";
 			if($sent_data["editor"] != $_COOKIE["userid"]){
-				$output .= "<span onclick='sent_apply()'>采纳</span>";
+				$output .= "<span onclick=\"sent_apply('{$sent_data["id"]}')\">采纳</span>";
 			}
+			$output .= '<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="16" height="16"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';
+			$output .= '<span id="num_like">0</span>';	
+
 			$output .="</div>";
 		}
 		echo "</span>";
@@ -961,36 +1019,37 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		</div>
 	</div>
 
-	<div id="right_panal_toc" style="position: fixed;top:3em;width:17em;left: calc(100% - 17em);height:auto; min-height:30em;border-left: 1px solid gray;    font-size: 80%;padding: 2em 0.5em;">
-	<div>
-<?php  
-	if($currLevel>=$tocMinLevel){
-		echo $htmlToc2; 
-	}
-?>
-</div>
-<h4>CSCD4 Paragraph Number</h4>
-<div id="s6_para">
+	<div id="right_panal_toc" >
 
+<div class="fun_frame">
+	<div class="title">跳转到</div>
+	<div class="content" >
+		<?php  
+			if($currLevel>=$tocMinLevel){
+				echo $htmlToc2; 
+			}
+		?>
+	</div>
 </div>
-	<div>Channal</div>
-	<div>
-	<?php
-	echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
-	echo "&book=".$_GET["book"];
-	echo "&para=".$_GET["para"];
-	if(isset($_GET["begin"])){
-		echo "&begin=".$_GET["begin"];
-	}
-	if(isset($_GET["end"])){
-		echo "&end=".$_GET["end"];
-	}
-	echo "' >";
-	echo "全部";
-	echo "</a>";
-	echo "</div>";
-	foreach ($FetchChannal as $key => $value) {
-		# code...
+
+<div class="fun_frame">
+	<div class="title">CSCD4 Paragraph Number</div>
+	<div class="content"  id="s6_para">
+
+	</div>
+</div>
+
+<div class="fun_frame">
+	<div class="title">译文语言</div>
+	<div class="content"  >
+
+	</div>
+</div>
+
+<div class="fun_frame">
+	<div class="title">贡献者</div>
+	<div class="content"  style='max-height:10em;' >
+		<?php
 		echo "<div>";
 		echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
 		echo "&book=".$_GET["book"];
@@ -1001,21 +1060,65 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		if(isset($_GET["end"])){
 			echo "&end=".$_GET["end"];
 		}
-		if(isset($_GET["display"])){
-			echo "&display=".$_GET["display"];
-		}
-		echo "&channal=".$value["channal"]."' >";
-		$channalInfo = $_channal->getChannal($value["channal"]);
-		if($channalInfo){
-			echo $_userinfo->getName($channalInfo["owner"]);
-			echo '/'.$channalInfo["name"];			
-		}
+		echo "' >";
+		echo "全部";
 		echo "</a>";
 		echo "</div>";
-	}
-	?>
+		foreach ($FetchChannal as $key => $value) {
+			if(!$value["channal"]){
+				continue;
+			}
+			# code...
+			$channalInfo = $_channal->getChannal($value["channal"]);
+			if($channalInfo){
+				$user = $_userinfo->getName($channalInfo["owner"]);
+			}
+			else{
+				$user=null;
+			}
+			echo "<div class='list_with_head'>";
 
+			echo "<div class='head'>";
+			echo "<span class='head_img'>";
+			echo mb_substr($user["nickname"],0,2);
+			echo "</span>";
+			echo "</div>";
+
+			echo "<div>";
+
+			echo "<div>";
+			echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
+			echo "&book=".$_GET["book"];
+			echo "&para=".$_GET["para"];
+			if(isset($_GET["begin"])){
+				echo "&begin=".$_GET["begin"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
+			}
+			if(isset($_GET["display"])){
+				echo "&display=".$_GET["display"];
+			}
+			echo "&channal=".$value["channal"]."' >";
+			
+			if($channalInfo){
+				echo $user["nickname"];
+				echo '/'.$channalInfo["name"];
+			}
+			echo "</a>";
+			echo "</div>";
+
+			echo "<div>";
+			echo "@".$user["username"];
+			echo "</div>";
+
+			echo "</div>";
+			echo "</div>";
+		}
+		?>
 	</div>
+</div>
+
 
 	</div>
 	<!-- 全屏 黑色背景 -->	
@@ -1070,187 +1173,78 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	</div>
 
 	<div id="mean_menu" ></div>
+	<div id="dlg_bg" class="blackscreen" style="z-index: 30;"></div>
+	<style>
+	.dlg_modal{
+		width:650px;
+		height:auto;
+		max-width:100%;
+		margin:0 auto;
+		left:0;
+		right:0;
+		position: fixed;
+		top:30px;
+		background-color:white;
+		z-index: 40;
+		border-radius: 5px;
+		display:none;
+	}
+	#sent_modify_win_body{
+		height:430px;
+	}
+	#sent_modify_win_title{
+		border-bottom: 1px solid gray;
+		padding: 5px;		
+	}
+	#sent_modify_win_bottom{
+		border-top: 1px solid gray;
+		padding: 5px;		
+	}
+	#sent_modify_win_org{
+		font-size:100%;
+	}
+	#sent_modify_text{
+		font-size:150%;
+		width:100%;
+		height:5em;
+	}
+	#sent_modify_win_new{
+		padding: 0.2em 1em;
+	}
+	#sent_modify_text{
 
-	<div id="sent_modify_win">
-		<div>
-			<textarea id="sent_modify_text" style="display:block;width:100%;">
-			</textarea>
-			<button onclick="trans_sent_save()">Save</button>
+	}
+	#sent_modify_win_pali{
+		padding: 10px;
+		max-height: 5em;
+    	overflow-y: scroll;
+	}
+	</style>
+
+	<div id="sent_modify_win" class="dlg_modal" >
+		<div id="sent_modify_win_title">
 			<button onclick="trans_sent_cancel()">Cancel</button>
+		</div>
+		<div  id="sent_modify_win_body">
+			<div id="sent_modify_win_pali">
+			</div>
+			<div id="sent_modify_win_org">
+			</div>
+			<div style='padding: 1em 1em 0;'>译文修改</div>
+			<div id="sent_modify_win_new">
+				<textarea id="sent_modify_text">
+				</textarea>			
+			</div>
+		</div>
+		<div id="sent_modify_win_bottom">
+			<button onclick="trans_sent_save()">Save</button>
 		</div>
 	</div>
 
 
 
 <script>
-
-
-		$(".pali").mouseover(function(e){
-			var targ
-			if (!e) var e = window.event;
-			if (e.target) targ = e.target;
-			else if (e.srcElement) targ = e.srcElement;
-			if (targ.nodeType == 3) // defeat Safari bug
-			   targ = targ.parentNode;
-			var pali_word;
-			pali_word=targ.innerHTML;
-			objCurrMouseOverPaliMean=targ.nextSibling;
-			
-			$("#tool_bar_title").html(pali_word);
-			$("#mean_menu").html(getWordMeanMenu(pali_word));
-			targ.parentNode.appendChild(document.getElementById("mean_menu"));
-		  
-		});
-
-		$("para").mouseenter(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","#fefec1");
-		});
-		$("para").mouseleave(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			$("sent[book='"+book+"'][para='"+para+"']").css("background-color","unset");
-		});
-
-		$("sent").click(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			let end = $(this).attr("end");
-			window.location.assign("reader.php?view=sent&book="+book+"&para="+para+"&begin="+begin+"&end="+end);
-		});
-
-
-
-		$("sent").mouseenter(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			$(this).css("background-color","#fefec1");
-			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","#fefec1");
-		});
-		$("sent").mouseleave(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			$(this).css("background-color","unset");
-			$("sent_trans[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
-		});
-
-		$("sent_trans").mouseenter(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			$(this).css("background-color","#fefec1");
-			$("sent[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","#fefec1");
-		});
-		$("sent_trans").mouseleave(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			$(this).css("background-color","unset");
-			$("sent[book='"+book+"'][para='"+para+"'][begin='"+begin+"']").css("background-color","unset");
-		});
-
-
-
-		$(".sent_text").click(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let begin = $(this).attr("begin");
-			let end = $(this).attr("end");
-			let id = $(this).attr("sent_id");
-			window.location.assign("reader.php?view=sent&book="+book+"&para="+para+"&begin="+begin+"&end="+end+"&sent="+id);
-		});
-
-
-		$(".edit_icon").click(function(e){
-			let objSent = $(this).parent().children(".sent_text").first();
-			if(objSent){
-				let text = objSent.attr("text");
-				$("#sent_modify_text").val(text);
-				$("#sent_modify_text").attr("sent_id",objSent.attr("sent_id"));
-				$("#sent_modify_text").attr("editor",objSent.attr("editor"));
-				$("#sent_modify_text").attr("book",objSent.attr("book"));
-				$("#sent_modify_text").attr("para",objSent.attr("para"));
-				$("#sent_modify_text").attr("begin",objSent.attr("begin"));
-				$("#sent_modify_text").attr("end",objSent.attr("end"));
-				$("#sent_modify_text").attr("lang",objSent.attr("lang"));
-				$("#sent_modify_text").attr("tag",objSent.attr("tag"));
-				
-				$(this).parent().append($("#sent_modify_win"));			
-				$("#sent_modify_win").show();	
-			}
-		});
-	
-		$("edit").click(function(e){
-			let objSent = $(this).parent().parent().children(".sent_text").first();
-			if(objSent){
-				let text = objSent.attr("text");
-				$("#sent_modify_text").val(text);
-				$("#sent_modify_text").attr("sent_id",objSent.attr("sent_id"));
-				$("#sent_modify_text").attr("editor",objSent.attr("editor"));
-				$("#sent_modify_text").attr("book",objSent.attr("book"));
-				$("#sent_modify_text").attr("para",objSent.attr("para"));
-				$("#sent_modify_text").attr("begin",objSent.attr("begin"));
-				$("#sent_modify_text").attr("end",objSent.attr("end"));
-				$("#sent_modify_text").attr("lang",objSent.attr("lang"));
-				$("#sent_modify_text").attr("tag",objSent.attr("tag"));
-				
-				$(this).parent().append($("#sent_modify_win"));		
-				$("#sent_modify_win").show();		
-			}
-		});
-
-		$("para").click(function(e){
-			let book = $(this).attr("book");
-			let para = $(this).attr("para");
-			let level = $(this).attr("level");
-			let view = "para";
-			if(level && level<100){
-				view = "chapter";
-			}
-			window.location.assign("reader.php?view="+view+"&book="+book+"&para="+para);
-		});
-
-		term_updata_translation();
-		var wordlist =  new Array();
-	$("term").each(function(index,element){
-		wordlist.push($(this).attr("pali"));
-	}
-	);
-	
-	let objParanum = document.querySelectorAll("paranum");
-	let parahtml="";
-	for (const iterator of objParanum) {
-		let num = iterator.innerHTML;
-		iterator.innerHTML = num + "<a name='para_s6_"+num+"'></a>";
-		parahtml += "<div><a href='#para_s6_"+num+"'>"+num+"</a></div>";
-		
-	}
-	$("#s6_para").html(parahtml);
-
-	function haha(){
-		var wordquery ="('" + wordlist.join("','")+"')";
-		$.post("../term/term.php",
-		{
-			op:"extract",
-			words:wordquery
-		},
-		function(data,status){
-			if(data.length>0){
-				try{
-					arrMyTerm = JSON.parse(data);
-					term_updata_translation();
-				}
-				catch(e){
-					console.error(e.error+" data:"+data);
-				}
-			}
-		});			
-	}
-
+reader_init();
 </script>
 	
 </body>
