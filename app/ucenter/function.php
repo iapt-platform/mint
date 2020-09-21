@@ -49,19 +49,19 @@ class UserInfo
 
     public function getName($id){
         if($this->dbh){
-            $query = "SELECT nickname FROM user WHERE userid= ? ";
+            $query = "SELECT nickname,username FROM user WHERE userid= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($id));
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if(count($user)>0){
-                return $user[0]["nickname"];
+                return array("nickname"=>$user[0]["nickname"],"username"=>$user[0]["username"]);
             }
             else{
-                return "";
+                return array("nickname"=>"","username"=>"");
             }            
         }
         else{
-            return "";
+            return array("nickname"=>"","username"=>"");
         }
     }
 }
