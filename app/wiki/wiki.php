@@ -54,6 +54,17 @@ echo "wiki_load_word('{$_get_word}')";
 		color: blue;
 		text-decoration: underline;
 	}
+	para{
+		background-color: #959595;
+		padding: 2px 8px;
+		text-decoration: none;
+		cursor: pointer;
+		color: white;
+		border-radius: 5px;
+	}
+	para:hover{
+		text-decoration: underline;
+	}
 	.icon{
 		width: 15px;
 		height: 15px;
@@ -183,6 +194,5 @@ loading...
 </div>
 
 <button onclick="run()">run</button>
-<button onclick="run2()">run2</button>
 </body>
 </html>

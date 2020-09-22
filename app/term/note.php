@@ -3,71 +3,80 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../path.php";
 
-
-if(isset($_GET["id"])){
-	$id=$_GET["id"];
+$_data = array();
+if(isset($_POST["data"])){
+	$_data = json_decode($_POST["data"],true);
 }
 else{
-	echo "error: no id";
-	return;
+	if(isset($_GET["id"])){
+		$id=$_GET["id"];
+	}
+	else{
+		echo "error: no id";
+		return;
+	}
+	if(isset($_GET["info"])){
+		$info=$_GET["info"];
+	}
+	else{
+		echo "error: no info";
+		return;
+	}
+	$_data[] = array("id"=>$id,"data"=>$info);
 }
-if(isset($_GET["info"])){
-	$info=$_GET["info"];
-}
-else{
-	echo "error: no info";
-	return;
-}
-$arrInfo = str_getcsv($info,"@");
-$arrSent = str_getcsv($arrInfo[0],"-");
-$bookId=$arrSent[0];
-$para=$arrSent[1];
-$begin=$arrSent[2];
-$end=$arrSent[3];
-$db_file = _DIR_PALICANON_TEMPLET_."/p".$bookId."_tpl.db3";	
+$dns = "sqlite:"._FILE_DB_PALI_SENTENCE_;
+$db_pali_sent = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+$db_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
 
-PDO_Connect("sqlite:$db_file");
-$query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($para)." ) ";
-$sth = $PDO->prepare($query);
-$sth->execute();
-$palitext="";
-while($result = $sth->fetch(PDO::FETCH_ASSOC))
-{
-	$index =$result["wid"];
-	if($index>=$begin && $index<=$end){
-		if($result["type"]!=".ctl."){
-			$paliword=$result["word"];
-			if($result["style"]=="bld"){
-				if(strchr($result["word"],"{")!=FALSE && strchr($result["word"],"}")!=FALSE ){
-					$paliword = str_replace("{","<strong>",$paliword);
-					$paliword = str_replace("}","</strong>",$paliword);
-				}
-				else{
-					$paliword = "<strong>{$paliword}</strong>";
-				}
-			}
-			$palitext .= $paliword." ";
+$dns = "sqlite:"._FILE_DB_SENTENCE_;
+$db_trans_sent = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+$db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+
+$output = array();
+
+foreach ($_data as $key => $value) {
+	# code...
+	$id = $value["id"];
+	$arrInfo = str_getcsv($value["data"],"@");
+	$arrSent = str_getcsv($arrInfo[0],"-");
+	$bookId=$arrSent[0];
+	$para=$arrSent[1];
+	$begin=$arrSent[2];
+	$end=$arrSent[3];
+
+	$query="SELECT html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
+	$sth = $db_pali_sent->prepare($query);
+	$sth->execute(array($bookId,$para,$begin,$end));
+	$row = $sth->fetch(PDO::FETCH_NUM);
+	if ($row) {
+		$palitext= $row[0];
+	} else {
+		$palitext="";
+	}
+
+	//find out translation
+	$tran="";
+	try{
+		$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 order by modify_time DESC limit 0 ,1 ";
+		$stmt = $db_trans_sent->prepare($query);
+		$stmt->execute(array($bookId,$para,$begin,$end));
+		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+		if($Fetch){
+			$tran = $Fetch["text"];
 		}
+		$tran_count = 1;
 	}
-}
-$para_path=_get_para_path($bookId,$para);
-//find out translation
-$tran="";
-$db_file=_FILE_DB_SENTENCE_;
-try{
-	PDO_Connect("sqlite:$db_file");
-	$query="SELECT * FROM sentence WHERE book='{$bookId}' AND paragraph='{$para}' AND begin='{$begin}' AND end='{$end}'  AND text <> '' order by modify_time DESC limit 0 ,1 ";
-	$Fetch = PDO_FetchAll($query);
-	$iFetch=count($Fetch);
-	if($iFetch>0){
-		$tran = $Fetch[0]["text"];
+	catch (Exception $e) {
+		$tran = $e->getMessage();
+		//echo 'Caught exception: ',  $e->getMessage(), "\n";
 	}
-}
-catch (Exception $e) {
-	$tran = $e->getMessage();
-    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-}
-		
+	
+	$para_path=_get_para_path($bookId,$para);
 
-$output=array("id"=>$id,"palitext"=>$palitext,"tran"=>$tran,"ref"=>$para_path,"tran_count"=>$iFetch);
+	$output[]=array("id"=>$id,"palitext"=>$palitext,"tran"=>$tran,"ref"=>$para_path,"tran_count"=>$tran_count);
+
+}
+
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
+
+?>
