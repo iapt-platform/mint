@@ -189,6 +189,10 @@ function reader_init() {
       "unset"
     );
   });
+  $("term").click(function (e) {
+    let word = $(this).attr("pali");
+    window.location.assign("../wiki/wiki.php?op=get&word=" + word);
+  });
 
   $("sent").click(function (e) {
     let book = $(this).attr("book");
@@ -353,8 +357,8 @@ function reader_init() {
       "reader.php?view=" + view + "&book=" + book + "&para=" + para
     );
   });
-
-  term_updata_translation();
+  term_get_dict();
+  //term_updata_translation();
   var wordlist = new Array();
   $("term").each(function (index, element) {
     wordlist.push($(this).attr("pali"));
