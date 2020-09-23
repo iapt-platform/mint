@@ -193,6 +193,5 @@ term_word_link_fun("wiki_goto_word");
 loading...
 </div>
 
-<button onclick="run()">run</button>
 </body>
 </html>
