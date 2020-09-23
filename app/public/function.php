@@ -79,20 +79,20 @@ function _get_para_path($book,$paragraph){
 		$query = "select * from pali_text where \"book\" = ? and \"paragraph\" = ? limit 0,1";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($book,$parent));
-    $FetParent = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
     
-		$toc="<chapter book=\"{$book}\" para=\"{$parent}\">{$FetParent[0]["toc"]}</chapter>";
+		$toc="<chapter book='{$book}' para='{$parent}'>{$FetParent["toc"]}</chapter>";
 		
 		if($path==""){
-			$path="({$paragraph})";
+			$path="<para book='{$book}' para='{$parent}'>{$paragraph}</para>";
 		}
 		else{
 			$path="{$toc}>{$path}";
 		}
 		if($sFirstParentTitle==""){
-			$sFirstParentTitle = $FetParent[0]["toc"];
+			$sFirstParentTitle = $FetParent["toc"];
 		}						
-		$parent = $FetParent[0]["parent"];
+		$parent = $FetParent["parent"];
 		$deep++;
 		if($deep>5){
 			break;

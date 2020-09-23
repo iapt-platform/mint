@@ -1557,9 +1557,10 @@ function renderWordParBlockInner(elementBlock) {
           sent_begin +
           "' end=''></div>";
         output += "</div>";
-        output += "</div>";
         output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
         output += "</div>";
+        output += "</div>";
+
         //逐句翻译块内容结束
         output += "<div class='translate_sent_foot'>";
         output += "</div>";
@@ -1667,53 +1668,7 @@ function renderWordParBlockInner(elementBlock) {
       );
     }
   }
-  /*
-  output +=
-    "<div class='trans_text_block' pcds='sent-net-div' book='" +
-    book +
-    "' para='" +
-    paragraph +
-    "' begin = '" +
-    sent_begin +
-    "' >";
-  output +=
-    "<div class='trans_text_content'  pcds='sent-net' book='" +
-    book +
-    "' para='" +
-    paragraph +
-    "' begin='" +
-    sent_begin +
-    "' end=''>";
-  let netSent = doc_msg_get_trans(book, paragraph, sent_begin, 0);
-  let sender = "";
-  if (netSent.length > 0) {
-    output += netSent[netSent.length - 1].data.text;
-    sender = netSent[netSent.length - 1].sender;
-  }
-  output += "</div>";
-  output +=
-    "<div class='trans_text_info'>" +
-    "<span><span>过滤</span><span class='author'>" +
-    sender +
-    "</span><span class='tag'>tag</span></span>" +
-    "<span class='tools'>" +
-    "<button>赞<span >0</span></button>" +
-    "<button>采纳</button>" +
-    "<button onclick=\"show_tran_net('" +
-    book +
-    "','" +
-    paragraph +
-    "','" +
-    sent_begin +
-    "','" +
-    word_id +
-    "')\">更多</button>" +
-    "</span>" +
-    "</div>";
-  output += "</div>";
 
-  output += "</div>";
-*/
   output += "</div>";
   output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
   output += "</div>";

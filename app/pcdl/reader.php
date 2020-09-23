@@ -250,6 +250,10 @@ note{
 .list_with_head{
 	display:flex;
 }
+.term_mean{
+	color:blue;
+	cursor: pointer;
+}
 </style>
 		<!-- tool bar begin-->
 		<div id="main_tool_bar" class='reader_toolbar'>
