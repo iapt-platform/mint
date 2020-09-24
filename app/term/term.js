@@ -164,7 +164,6 @@ function term_get_word_to_div(strWord, div, callback) {
       format: "json",
     },
     function (data, status) {
-      let html = "";
       if (status == "success") {
         try {
           let result = JSON.parse(data);
@@ -172,15 +171,15 @@ function term_get_word_to_div(strWord, div, callback) {
           if (result.length > 0) {
             let type = new Array();
             let authors = new Array();
-            for (x in result) {
-              if (result[x].tag == "") {
-                result[x].tag = "_null_";
+            for (const iterator of result) {
+              if (iterator.tag == "") {
+                iterator.tag = "_null_";
               }
-              if (type[result[x].tag] == null) {
-                type[result[x].tag] = new Array();
+              if (type[iterator.tag] == null) {
+                type[iterator.tag] = new Array();
               }
-              type[result[x].tag].push(result[x].meaning);
-              authors[result[x].owner] = 1;
+              type[iterator.tag].push(iterator.meaning);
+              authors[iterator.owner] = 1;
             }
 
             html += "<div class='term_word_head'>";
@@ -205,6 +204,8 @@ function term_get_word_to_div(strWord, div, callback) {
             html += "</div>";
             html += "</div>";
 
+            html += "<div id='term_list_div' style='display:flex;'>";
+            html += "<div id='term_list'>";
             for (x in result) {
               html += "<div class='term_block'>";
               html += "<div class='term_block_bar'>";
@@ -250,6 +251,26 @@ function term_get_word_to_div(strWord, div, callback) {
               '<div ><input type="input" value="" placeholder="language"/></div>';
             html += "<div ><textarea></textarea></div>";
           }
+
+          html += "</div>";
+          html += "<div id='term_list_right' >";
+
+          html += '<div class="fun_frame">';
+          html += '<div class="title">Language</div>';
+          html += '<div class="content" style="max-height:10em;">';
+          html += '<div><a href="">All</a></div>';
+          html += "</div>";
+          html += "</div>";
+
+          html += '<div class="fun_frame">';
+          html += '<div class="title">Translation</div>';
+          html += '<div class="content" style="max-height:10em;">';
+          html += '<div><a href="">All</a></div>';
+          html += "</div>";
+          html += "</div>";
+
+          html += "</div>";
+          html += "</div>";
           $("#" + div).html(html);
 
           note_refresh_new();
