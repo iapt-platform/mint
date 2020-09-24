@@ -178,14 +178,13 @@ echo "wiki_load_word('{$_get_word}')";
     justify-content: space-between;
 }
 	.fun_frame {
-		border: 1px solid gray;
+		border-bottom: 1px solid gray;
 		margin-right: 10px;
 		margin-bottom: 10px;
-		border-radius: 5px;
 	}
 	.fun_frame>.title{
-		border-bottom: 1px solid gray;
 		padding:6px;
+		font-weight: 700;
 	}
 	.fun_frame>.content{
 		padding:6px;
