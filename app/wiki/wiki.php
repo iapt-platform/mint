@@ -103,9 +103,10 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	note{
 		background-color: #80808014;
-    padding: 0.5em 0.8em;
-    margin-bottom: 0.4em;
-    border-radius: 5px;
+		padding: 0.5em 0.8em;
+		margin-bottom: 0.4em;
+		border-radius: 5px;
+		display:block;
 	}
 	note>.tran{
 		color: #5c5c5c;
@@ -158,6 +159,38 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	.term_link {
     cursor: pointer;
+	}
+	#wiki_contents{
+		padding: 0 1em;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+	}
+#term_list_right{
+	width: 25em;
+}
+#term_list{
+	width: 100%;
+    padding: 0.5em;
+}
+#term_list_div{
+	display: flex;
+    justify-content: space-between;
+}
+	.fun_frame {
+		border: 1px solid gray;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		border-radius: 5px;
+	}
+	.fun_frame>.title{
+		border-bottom: 1px solid gray;
+		padding:6px;
+	}
+	.fun_frame>.content{
+		padding:6px;
+		max-height:6em;
+		overflow-y: scroll;
 	}
 }
 
