@@ -94,16 +94,29 @@ echo "wiki_load_word('{$_get_word}')";
 		text-decoration: underline;
 		cursor: pointer;
 	}
-	note{
-		display: block;
-		background-color: #80808029;
-		padding: 0.5em;
-	}
+
 	note .ref{
 		text-align: right;
 		padding: 5px;
-		font-size: 80%;
+		font-size: 75%;
+		margin-top: 8px;
 	}
+	note{
+		background-color: #80808014;
+    padding: 0.5em 0.8em;
+    margin-bottom: 0.4em;
+    border-radius: 5px;
+	}
+	note>.tran{
+		color: #5c5c5c;
+		padding-left: 1em;
+	}
+	note>.palitext{
+    font-family: Noto serif;
+    line-height: 1.5em;
+	color: #9f3a01;
+    font-weight: 500;
+}
 	.term_block_bar {
 		display: flex;
 		justify-content: space-between;
@@ -162,6 +175,8 @@ term_word_link_fun("wiki_goto_word");
     margin-bottom: auto;
     padding-left: 0.5em;
 	}
+
+	
 </style>
 
 <?php
