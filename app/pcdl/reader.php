@@ -1080,6 +1080,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			else{
 				$user=null;
 			}
+			
 			echo "<div class='list_with_head'>";
 
 			echo "<div class='head'>";

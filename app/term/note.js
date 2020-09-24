@@ -66,9 +66,13 @@ function note_refresh_new() {
       }
     }
     {
+      let setting = new Object();
+      setting.lang = "";
+      setting.channal = _channal;
       $.post(
         "../term/note.php",
         {
+          setting: JSON.stringify(setting),
           data: JSON.stringify(arrSentInfo),
         },
         function (data, status) {
@@ -82,6 +86,7 @@ function note_refresh_new() {
               }
               note_ref_init();
               term_get_dict();
+              note_channal_list();
             } catch (e) {
               console.error(e);
             }
@@ -91,6 +96,74 @@ function note_refresh_new() {
     }
   }
 }
+
+function note_channal_list() {
+  let objNotes = document.querySelectorAll("note");
+  let arrSentInfo = new Array();
+  for (const iterator of objNotes) {
+    {
+      let info = iterator.getAttributeNode("info").value;
+      if (info && info != "") {
+        arrSentInfo.push({ id: "", data: info });
+      }
+    }
+    {
+      $.post(
+        "../term/channal_list.php",
+        {
+          setting: "",
+          data: JSON.stringify(arrSentInfo),
+        },
+        function (data, status) {
+          if (status == "success") {
+            try {
+              let arrData = JSON.parse(data);
+              let strHtml = "";
+              for (const iterator of arrData) {
+                strHtml = render_channal_list(iterator);
+              }
+              $("#channal_list").html(strHtml);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
+      );
+    }
+  }
+}
+
+function render_channal_list(channalinfo) {
+  let output = "";
+  output += "<div class='list_with_head'>";
+
+  output += "<div class='head'>";
+  output += "<span class='head_img'>";
+  output += channalinfo.nickname.slice(0, 2);
+  output += "</span>";
+  output += "</div>";
+
+  output += "<div>";
+
+  output += "<div>";
+  output += "<a href='../wiki/wiki.php?word=" + _word;
+  output += "&channal=" + channalinfo.id + "' >";
+
+  output += channalinfo["nickname"];
+  output += "/" + channalinfo["name"];
+
+  output += "</a>";
+  output += "</div>";
+
+  output += "<div>";
+  output += "@" + channalinfo["username"];
+  output += "</div>";
+
+  output += "</div>";
+  output += "</div>";
+  return output;
+}
+
 function note_ref_init() {
   $("chapter").click(function () {
     let bookid = $(this).attr("book");

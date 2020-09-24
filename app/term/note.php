@@ -24,6 +24,15 @@ else{
 	}
 	$_data[] = array("id"=>$id,"data"=>$info);
 }
+
+if(isset($_POST["setting"])){
+	$_setting = json_decode($_POST["setting"],true);
+}
+else{
+	$_setting["lang"] = "";
+	$_setting["channal"] = "";
+}
+
 $dns = "sqlite:"._FILE_DB_PALI_SENTENCE_;
 $db_pali_sent = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $db_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
@@ -57,9 +66,20 @@ foreach ($_data as $key => $value) {
 	//find out translation
 	$tran="";
 	try{
-		$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 order by modify_time DESC limit 0 ,1 ";
+		if(!empty($_setting["channal"])){
+			$queryChannal = " AND channal = ? ";
+		}
+		else{
+			$queryChannal ="";
+		}
+		$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  $queryChannal order by modify_time DESC limit 0 ,1 ";
 		$stmt = $db_trans_sent->prepare($query);
-		$stmt->execute(array($bookId,$para,$begin,$end));
+		if(empty($_setting["channal"])){
+			$stmt->execute(array($bookId,$para,$begin,$end));
+		}
+		else{
+			$stmt->execute(array($bookId,$para,$begin,$end,$_setting["channal"]));
+		}
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($Fetch){
 			$tran = $Fetch["text"];

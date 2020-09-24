@@ -14,6 +14,11 @@ function wiki_load(word){
   });
 }
 */
+
+var _word = "";
+var _channal = "";
+var _lang = "";
+var _author = "";
 function wiki_index_init() {}
 
 function wiki_load_id(guid) {
