@@ -102,6 +102,7 @@ function note_refresh_new() {
 }
 
 function note_channal_list() {
+  console.log("note_channal_list start");
   let objNotes = document.querySelectorAll("note");
   let arrSentInfo = new Array();
   for (const iterator of objNotes) {
@@ -111,29 +112,29 @@ function note_channal_list() {
         arrSentInfo.push({ id: "", data: info });
       }
     }
-    {
-      $.post(
-        "../term/channal_list.php",
-        {
-          setting: "",
-          data: JSON.stringify(arrSentInfo),
-        },
-        function (data, status) {
-          if (status == "success") {
-            try {
-              let arrData = JSON.parse(data);
-              let strHtml = "";
-              for (const iterator of arrData) {
-                strHtml = render_channal_list(iterator);
-              }
-              $("#channal_list").html(strHtml);
-            } catch (e) {
-              console.error(e);
+  }
+  if (arrSentInfo.length > 0) {
+    $.post(
+      "../term/channal_list.php",
+      {
+        setting: "",
+        data: JSON.stringify(arrSentInfo),
+      },
+      function (data, status) {
+        if (status == "success") {
+          try {
+            let arrData = JSON.parse(data);
+            let strHtml = "";
+            for (const iterator of arrData) {
+              strHtml += render_channal_list(iterator);
             }
+            $("#channal_list").html(strHtml);
+          } catch (e) {
+            console.error(e);
           }
         }
-      );
-    }
+      }
+    );
   }
 }
 
