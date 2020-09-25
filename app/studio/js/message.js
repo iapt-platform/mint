@@ -186,7 +186,7 @@ function msg_read(msg_obj, status = null) {
       let oldStatus = msg_obj.read;
       msg_obj.read = status;
       for (let i = 0; i < gDocMsgList.length; i++) {
-        if (gDocMsgList[i].id == msg_obj.id) {
+        if (gDocMsgList[i].data.id == msg_obj.id) {
           gDocMsgList[i].read = status;
           break;
         }
