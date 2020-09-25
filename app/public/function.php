@@ -81,13 +81,13 @@ function _get_para_path($book,$paragraph){
     $stmt->execute(array($book,$parent));
     $FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
     
-		$toc="<chapter book='{$book}' para='{$parent}'>{$FetParent["toc"]}</chapter>";
+		$toc="<chapter book='{$book}' para='{$parent}'>{$FetParent["toc"]}&gt</chapter>";
 		
 		if($path==""){
 			$path="<para book='{$book}' para='{$parent}'>{$paragraph}</para>";
 		}
 		else{
-			$path="{$toc}>{$path}";
+			$path=$toc.$path;
 		}
 		if($sFirstParentTitle==""){
 			$sFirstParentTitle = $FetParent["toc"];

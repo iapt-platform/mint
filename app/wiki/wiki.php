@@ -61,7 +61,14 @@ echo "wiki_load_word('{$_get_word}')";
 		max-width: 95%;
 		width: 24em;
 	}
+	note:hover chapter{
+		display:inline;
+	} 
+	.ref>chapter:first-child{
+		display:inline;
+	}
 	chapter{
+		display:none;
 		color: var(--box-bg-color1);
 		text-decoration: none;
 		cursor: pointer;
@@ -71,11 +78,11 @@ echo "wiki_load_word('{$_get_word}')";
 		text-decoration: underline;
 	}
 	para{
-		background-color: #959595;
+		background-color: var(--drop-bg-color);
 		padding: 2px 8px;
 		text-decoration: none;
 		cursor: pointer;
-		color: white;
+		color: var(--btn-border-color);
 		border-radius: 5px;
 	}
 	para:hover{
@@ -218,6 +225,13 @@ echo "wiki_load_word('{$_get_word}')";
 }
 
 	</style>
+
+<style media="screen and (max-width:767px)">
+#term_list_right{
+	display:none;
+}
+</style>
+
 <script>
 
 
