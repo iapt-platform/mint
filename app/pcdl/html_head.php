@@ -46,6 +46,21 @@ else{
 	</script>
 
 	<style>
+	.list_with_head{
+		display:flex;
+	}
+	.head_img{
+		display: inline-block;
+		width: 20px;
+		font-size: 14px;
+		padding: 2px;
+		background-color: gray;
+		color: white;
+		border-radius: 99px;
+		text-align: center;
+		margin-right: 0.5em;
+		margin-top: 0.5em;
+	}
 	.card{
 		box-shadow: 0 0 10px rgba(0,0,0,0.15);
 		font-size: 1em;

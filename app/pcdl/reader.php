@@ -201,18 +201,7 @@ note{
 .mine{
 	color:green;
 }
-.head_img{
-	display: inline-block;
-    width: 20px;
-	font-size: 14px;
-    padding: 2px;
-    background-color: gray;
-    color: white;
-    border-radius: 99px;
-    text-align: center;
-    margin-right: 0.5em;
-    margin-top: 0.5em;
-}
+
 .sent_block{
 	display:flex;
 	padding: 2px 10px;
@@ -249,6 +238,18 @@ note{
 }
 .list_with_head{
 	display:flex;
+}
+.head_img{
+	display: inline-block;
+    width: 20px;
+	font-size: 14px;
+    padding: 2px;
+    background-color: gray;
+    color: white;
+    border-radius: 99px;
+    text-align: center;
+    margin-right: 0.5em;
+    margin-top: 0.5em;
 }
 .term_mean{
 	color:blue;

@@ -62,12 +62,12 @@ echo "wiki_load_word('{$_get_word}')";
 		width: 24em;
 	}
 	chapter{
-		color: blue;
+		color: var(--box-bg-color1);
 		text-decoration: none;
 		cursor: pointer;
 	}
 	chapter:hover{
-		color: blue;
+		color: var(--link-color);
 		text-decoration: underline;
 	}
 	para{
