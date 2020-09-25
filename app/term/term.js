@@ -264,7 +264,8 @@ function term_get_word_to_div(strWord, div, callback) {
 
           html += '<div class="fun_frame">';
           html += '<div class="title">Translation</div>';
-          html += '<div class="content" style="max-height:10em;">';
+          html +=
+            '<div id="channal_list"  class="content" style="max-height:10em;">';
           html += '<div><a href="">All</a></div>';
           html += "</div>";
           html += "</div>";

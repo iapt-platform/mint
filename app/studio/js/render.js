@@ -641,7 +641,6 @@ function updateTranslationPreview_a(blockId, text) {
   newText = newText.replace(/\n\n/g, "<br />");
   newText = term_tran_edit_replace(newText);
   newText = term_edit_to_std_str(newText);
-  //out+=newText+"<br>";
   newText = term_std_str_to_tran(newText);
   out += newText;
   if (out == "") {
@@ -1772,8 +1771,13 @@ function render_tran_sent_block(
   }
   output += "</span><span></span>";
   output += "</div>";
+  let id =
+    "tran_pre_" + book + "_" + para + "_" + begin + "_" + end + "_" + channal;
   output +=
-    "<div class='trans_text_content'  pcds='sent-net' book='" +
+    "<div class='trans_text_content' id = '" +
+    id +
+    "'  pcds='sent-net' " +
+    " book='" +
     book +
     "' para='" +
     para +
@@ -1814,18 +1818,15 @@ function render_tran_sent_block(
   output += "</div>";
   if (readonly == false) {
     output += "<div style='display:none;'>";
+    let id = book + "_" + para + "_" + begin + "_" + end + "_" + channal;
     output +=
       "<textarea id='trans_sent_edit_" +
-      book +
-      "_" +
-      para +
-      "_" +
-      begin +
-      "_" +
-      end +
-      "_" +
-      channal +
-      "' class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
+      id +
+      "' " +
+      " onkeyup = \"updateTranslationPreview('" +
+      id +
+      "',this)\" " +
+      "class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
       "sent_id='" +
       objSent.id +
       "' book='" +

@@ -1,5 +1,5 @@
 <?php
-require_once "../public/_pdo.php";
+require_once "../public/load_lang.php";
 require_once "../path.php";
 
 if(isset($_GET["id"])){
@@ -30,6 +30,22 @@ echo "wiki_load_word('{$_get_word}')";
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="wiki.js"></script>
+	<script>
+	<?php
+	if(isset($_GET["word"])){
+		echo "_word='".$_GET["word"]."';";
+	}
+	if(isset($_GET["channal"])){
+		echo "_channal='".$_GET["channal"]."';";
+	}
+	if(isset($_GET["lang"])){
+		echo "_lang='".$_GET["lang"]."';";
+	}
+	if(isset($_GET["author"])){
+		echo "_author='".$_GET["author"]."';";
+	}
+	?>
+	</script>
 	<style>
 	.term_link,.term_link_new{
 		color: blue;
@@ -113,11 +129,19 @@ echo "wiki_load_word('{$_get_word}')";
 		padding-left: 1em;
 	}
 	note>.palitext{
-    font-family: Noto serif;
-    line-height: 1.5em;
-	color: #9f3a01;
-    font-weight: 500;
-}
+		font-family: Noto serif;
+		line-height: 1.5em;
+		color: #9f3a01;
+		font-weight: 500;
+	}
+	note>.palitext>note{
+		display:inline;
+		color:blue;
+		background-color: unset;
+		padding: unset;
+		margin-bottom: unset;
+		border-radius: unset;
+	}
 	.term_block_bar {
 		display: flex;
 		justify-content: space-between;
@@ -195,6 +219,8 @@ echo "wiki_load_word('{$_get_word}')";
 
 	</style>
 <script>
+
+
 term_word_link_fun("wiki_goto_word");
 </script>
 <style>
