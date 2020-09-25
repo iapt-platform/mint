@@ -89,6 +89,19 @@ function note_refresh_new() {
               let strHtml = note_json_html(iterator);
               $("#" + id).html(strHtml);
             }
+            $(".palitext").click(function () {
+              let sentid = $(this).parent().attr("info").split("-");
+              window.open(
+                "../pcdl/reader.php?view=sent&book=" +
+                  sentid[0] +
+                  "&para=" +
+                  sentid[1] +
+                  "&begin=" +
+                  sentid[2] +
+                  "&end=" +
+                  sentid[3]
+              );
+            });
             note_ref_init();
             term_get_dict();
             note_channal_list();
