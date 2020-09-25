@@ -3,7 +3,7 @@
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
-require_once '../public/load_lang.php';
+//require_once '../public/load_lang.php';
 require_once '../public/function.php';
 
 //is login
@@ -12,6 +12,17 @@ if(isset($_COOKIE["username"])){
 }
 else{
 	$username = "";
+}
+if(isset($_GET["language"])){
+	$currLanguage=$_GET["language"];
+}
+else{
+	if(isset($_COOKIE["language"])){
+		$currLanguage=$_COOKIE["language"];
+	}
+	else{
+		$currLanguage="en";
+	}
 }
 
 if(isset($_GET["op"])){
@@ -230,51 +241,6 @@ switch($op){
 			}
 		}
 
-	
-		//查内容
-		/*
-		if($count_return<2){
-			$word1=$org_word;
-			$wordInMean="%$org_word%";
-			echo $module_gui_str['editor']['1124']."：$org_word<br />";
-			$query = "select * from term  where \"meaning\" like ".$PDO->quote($word)." limit 0,30";
-			$Fetch = PDO_FetchAll($query);
-			$iFetch=count($Fetch);
-			$count_return+=$iFetch;
-			if($iFetch>0){
-				for($i=0;$i<$iFetch;$i++){
-					$mean=$Fetch[$i]["meaning"];
-					$pos=mb_stripos($mean,$word,0,"UTF-8");
-					if($pos){
-						if($pos>20){
-							$start=$pos-20;
-						}
-						else{
-							$start=0;
-						}
-						$newmean=mb_substr($mean,$start,100,"UTF-8");
-					}
-					else{
-						$newmean=$mean;
-					}
-					$pos=mb_stripos($newmean,$word1,0,"UTF-8");
-					$head=mb_substr($newmean,0,$pos,"UTF-8");
-					$mid=mb_substr($newmean,$pos,mb_strlen($word1,"UTF-8"),"UTF-8");
-					$end=mb_substr($newmean,$pos+mb_strlen($word1,"UTF-8"),NULL,"UTF-8");
-					$heigh_light_mean="$head<hl>$mid</hl>$end";
-					$outXml = "<div class='dict_word'>";
-					$outXml = $outXml."<div class='dict'>".$Fetch[$i]["owner"]."</div>";					
-					$outXml = $outXml."<div class='pali'>".$Fetch[$i]["word"]."</div>";
-					$outXml = $outXml."<div class='mean'>".$heigh_light_mean."</div>";
-					$outXml = $outXml."<div class='note'>{$Fetch[$i]["note"]}</div>";
-					$outXml = $outXml."</div>";
-					echo $outXml;
-				}
-			}		
-		}
-		*/
-		//查内容结束
-
 		echo "<div id='dictlist'>";
 		echo "</div>";
 		
@@ -377,9 +343,10 @@ switch($op){
 		}
 		if(isset($_POST["authors"])){
 			$authors=str_getcsv($_POST["authors"]);
-		}		
-		$query = "select * from term  where \"word\" in {$words}  limit 0,1000";
-		$Fetch = PDO_FetchAll($query);
+		}
+		$queryLang = $currLanguage."%";
+		$query = "SELECT * from term  where \"word\" in {$words} AND language like ?  limit 0,1000";
+		$Fetch = PDO_FetchAll($query,array($queryLang));
 		$iFetch=count($Fetch);
 		echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 		break;
@@ -387,7 +354,7 @@ switch($op){
 	case "sync":
 	{
 		$time=$_GET["time"];
-		$query = "select guid,modify_time from term  where receive_time>'{$time}' limit 0,1000";
+		$query = "SELECT guid,modify_time from term  where receive_time>'{$time}'   limit 0,1000";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
 		echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
