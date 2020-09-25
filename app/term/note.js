@@ -21,6 +21,10 @@
 <note id="guid" book=203 para=1654 begin=23 end=45 author=11 lang=en tag=*></note>
 
 */
+var _channal = "";
+var _lang = "";
+var _author = "";
+
 function note_init(input) {
   let output = "<div>";
   let arrInput = input.split("\n");
@@ -65,35 +69,35 @@ function note_refresh_new() {
         arrSentInfo.push({ id: id, data: info });
       }
     }
-    {
-      let setting = new Object();
-      setting.lang = "";
-      setting.channal = _channal;
-      $.post(
-        "../term/note.php",
-        {
-          setting: JSON.stringify(setting),
-          data: JSON.stringify(arrSentInfo),
-        },
-        function (data, status) {
-          if (status == "success") {
-            try {
-              let arrData = JSON.parse(data);
-              for (const iterator of arrData) {
-                let id = iterator.id;
-                let strHtml = note_json_html(iterator);
-                $("#" + id).html(strHtml);
-              }
-              note_ref_init();
-              term_get_dict();
-              note_channal_list();
-            } catch (e) {
-              console.error(e);
+  }
+  if (arrSentInfo.length > 0) {
+    let setting = new Object();
+    setting.lang = "";
+    setting.channal = _channal;
+    $.post(
+      "../term/note.php",
+      {
+        setting: JSON.stringify(setting),
+        data: JSON.stringify(arrSentInfo),
+      },
+      function (data, status) {
+        if (status == "success") {
+          try {
+            let arrData = JSON.parse(data);
+            for (const iterator of arrData) {
+              let id = iterator.id;
+              let strHtml = note_json_html(iterator);
+              $("#" + id).html(strHtml);
             }
+            note_ref_init();
+            term_get_dict();
+            note_channal_list();
+          } catch (e) {
+            console.error(e);
           }
         }
-      );
-    }
+      }
+    );
   }
 }
 
