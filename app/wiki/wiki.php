@@ -193,21 +193,21 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	#wiki_contents{
 		padding: 0 1em;
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
+		max-width: 1280px;
+		margin-left: auto;
+		margin-right: auto;
 	}
-#term_list_right{
-	width: 25em;
-}
-#term_list{
-	width: 100%;
-    padding: 0.5em;
-}
-#term_list_div{
-	display: flex;
-    justify-content: space-between;
-}
+	#term_list_right{
+		width: 25em;
+	}
+	#term_list{
+		width: 100%;
+		padding: 0.5em;
+	}
+	#term_list_div{
+		display: flex;
+		justify-content: space-between;
+	}
 	.fun_frame {
 		border-bottom: 1px solid gray;
 		margin-right: 10px;
@@ -222,32 +222,39 @@ echo "wiki_load_word('{$_get_word}')";
 		max-height:6em;
 		overflow-y: scroll;
 	}
-}
-.fixed{
-	position:fixed;
-}
-.bg_color_1{
-	background-color:var(--drop-bg-color);
-}
-.bg_color_2{
-	background:linear-gradient(to right, #6afdb033, var(--drop-bg-color));
-}
-.bg_color_3{
-	background:linear-gradient(to right, #6a95fd26, var(--drop-bg-color));
-}
-.bg_color_4{
-	background:linear-gradient(to right, #f9e7911c, var(--drop-bg-color));
-}
-.bg_color_5{
-	background:linear-gradient(to right, #fe99b91c, var(--drop-bg-color));
-}
+	
+	.fixed{
+		position:fixed;
+		right: 0;
+    	top: 0;
+	}
+	.when_right_fixed{
+		padding-right:20em;
+	}
+	.bg_color_1{
+		background-color:#ebebeb66;
+	}
+	.bg_color_2{
+		background:linear-gradient(to right, #6afdb033, #ebebeb66);
+	}
+	.bg_color_3{
+		background:linear-gradient(to right, #6a95fd26, #ebebeb66);
+	}
+	.bg_color_4{
+		background:linear-gradient(to right, #f9e7911c, #ebebeb66);
+	}
+	.bg_color_5{
+		background:linear-gradient(to right, #fe99b91c, #ebebeb66);
+	}
 	</style>
 
 <style media="screen and (max-width:767px)">
 #term_list_right{
 	display:none;
 }
-
+.when_right_fixed{
+	padding-right:0;
+}
 </style>
 
 <script>
@@ -300,11 +307,11 @@ loading...
 <script>
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
-		if(GetPageScroll().y>150){
-			$("#term_list_right").addClass("fixed");
+		if(GetPageScroll().y>220){
+
 		}
 		else{
-			$("#term_list_right").removeClass("fixed") ;
+
 		}
 		
 	}
