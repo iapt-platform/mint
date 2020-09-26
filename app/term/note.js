@@ -55,8 +55,25 @@ function note_init(input) {
   return output;
 }
 
+function note_update_background_style() {
+  var mSentsBook = new Array();
+  var mBgIndex = 1;
+  $("note").each(function () {
+    let info = $(this).attr("info").split("-");
+    if (info.length >= 2) {
+      let book = info[0];
+      $(this).attr("book", book);
+      if (!mSentsBook[book]) {
+        mSentsBook[book] = mBgIndex;
+        mBgIndex++;
+      }
+      $(this).addClass("bg_color_" + mSentsBook[book]);
+    }
+  });
+}
 //
 function note_refresh_new() {
+  note_update_background_style();
   let objNotes = document.querySelectorAll("note");
   let arrSentInfo = new Array();
   for (const iterator of objNotes) {
@@ -65,6 +82,13 @@ function note_refresh_new() {
       id = com_guid();
       iterator.id = id;
       let info = iterator.getAttributeNode("info").value;
+      let arrInfo = info.split("-");
+
+      if (arrInfo.length >= 2) {
+        let book = arrInfo[0];
+        let para = arrInfo[1];
+      }
+
       if (info && info != "") {
         arrSentInfo.push({ id: id, data: info });
       }
@@ -86,7 +110,8 @@ function note_refresh_new() {
             let arrData = JSON.parse(data);
             for (const iterator of arrData) {
               let id = iterator.id;
-              let strHtml = note_json_html(iterator);
+              let strHtml = "<a name='" + id + "'></a>";
+              strHtml += note_json_html(iterator);
               $("#" + id).html(strHtml);
             }
             $(".palitext").click(function () {
