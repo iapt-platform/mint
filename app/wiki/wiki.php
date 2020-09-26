@@ -230,16 +230,16 @@ echo "wiki_load_word('{$_get_word}')";
 	background-color:var(--drop-bg-color);
 }
 .bg_color_2{
-	background-color:#6afdb033;
+	background-color:linear-gradient(to right, #6afdb033, var(--drop-bg-color));
 }
 .bg_color_3{
-	background-color:#6a95fd26;
+	background-color:linear-gradient(to right, #6a95fd26, var(--drop-bg-color));
 }
 .bg_color_4{
-	background-color:#f9e7911c;
+	background-color:linear-gradient(to right, #f9e7911c, var(--drop-bg-color));
 }
 .bg_color_5{
-	background-color:#fe99b91c;
+	background-color:linear-gradient(to right, #fe99b91c, var(--drop-bg-color));
 }
 	</style>
 
