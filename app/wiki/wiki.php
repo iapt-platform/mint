@@ -223,13 +223,31 @@ echo "wiki_load_word('{$_get_word}')";
 		overflow-y: scroll;
 	}
 }
-
+.fixed{
+	position:fixed;
+}
+.bg_color_1{
+	background-color:var(--drop-bg-color);
+}
+.bg_color_2{
+	background-color:#6afdb033;
+}
+.bg_color_3{
+	background-color:#6a95fd26;
+}
+.bg_color_4{
+	background-color:#f9e7911c;
+}
+.bg_color_5{
+	background-color:#fe99b91c;
+}
 	</style>
 
 <style media="screen and (max-width:767px)">
 #term_list_right{
 	display:none;
 }
+
 </style>
 
 <script>
@@ -279,6 +297,39 @@ term_word_link_fun("wiki_goto_word");
 <div id="wiki_contents" style="padding: 0 1em;">
 loading...
 </div>
+<script>
+	 window.addEventListener('scroll',winScroll);
+	function winScroll(e){ 
+		if(GetPageScroll().y>150){
+			$("#term_list_right").addClass("fixed");
+		}
+		else{
+			$("#term_list_right").removeClass("fixed") ;
+		}
+		
+	}
+ //滚动条位置
+function GetPageScroll() 
+{ 
+	var pos=new Object();
+	var x, y; 
+	if(window.pageYOffset) 
+	{	// all except IE	
+		y = window.pageYOffset;	
+		x = window.pageXOffset; 
+	} else if(document.documentElement && document.documentElement.scrollTop) 
+	{	// IE 6 Strict	
+		y = document.documentElement.scrollTop;	
+		x = document.documentElement.scrollLeft; 
+	} else if(document.body) {	// all other IE	
+		y = document.body.scrollTop;	
+		x = document.body.scrollLeft;   
+	} 
+	pos.x=x;
+	pos.y=y;
+	return(pos);
+}
+	</script>
 
 </body>
 </html>
