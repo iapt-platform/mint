@@ -203,40 +203,70 @@ function term_get_word_to_div(strWord, div, callback) {
 
             html += "</div>";
             html += "</div>";
+            // end of term_word_head
 
             html += "<div id='term_list_div' style='display:flex;'>";
             html += "<div id='term_list'>";
-            for (x in result) {
+
+            for (const iterator of result) {
               html += "<div class='term_block'>";
               html += "<div class='term_block_bar'>";
+
               html += "<div class='term_block_bar_left'>";
 
               html += "<div class='term_block_bar_left_icon'>";
-              html += result[x].owner.slice(0, 1);
+              html += iterator.owner.slice(0, 1);
               html += "</div>";
 
               html += "<div class='term_block_bar_left_info'>";
-              html += "<div class='term_meaning'>" + result[x].meaning;
-              if (result[x].tag != "_null_") {
-                html += "<span class='term_tag'>" + result[x].tag + "</span>";
+              html += "<div class='term_meaning'>" + iterator.meaning;
+              if (iterator.tag != "_null_") {
+                html += "<span class='term_tag'>" + iterator.tag + "</span>";
               }
               html += "</div>";
-              html += "<div class='term_author'>" + result[x].owner + "</div>";
+              html += "<div class='term_author'>" + iterator.owner + "</div>";
               html += "</div>";
 
               html += "</div>";
+
               html += "<div class='term_block_bar_right'>";
               html +=
                 "<span><a href='#'>[编辑]</a><a href='#'>[赞]</a><a href='#'>[收藏]</a></span>";
               html += "</div>";
+
               html += "</div>";
-              //html += "<div class='term_meaning2'>"+result[x].other_meaning+"</div>";
+              //term_block_bar 结束
               html +=
                 "<div class='term_note' status='1'>" +
-                note_init(result[x].note) +
+                note_init(iterator.note) +
                 "</div>";
-              html += "</div>";
+              //html += "</div>";
             }
+            html += "</div>";
+
+            html += "<div id='term_list_right' >";
+
+            html += '<div class="fun_frame">';
+            html += '<div class="title">Language</div>';
+            html += '<div class="content" style="max-height:10em;">';
+            html += '<div><a href="">All</a></div>';
+            html += "</div>";
+            html += "</div>";
+
+            html += '<div class="fun_frame">';
+            html += '<div class="title">Translation</div>';
+            html +=
+              '<div id="channal_list"  class="content" style="max-height:10em;">';
+            html += '<div><a href="">All</a></div>';
+            html += "</div>";
+            html += "</div>";
+
+            html += "</div>";
+            //end of right
+
+            html += "</div>";
+            // end of term_list_div
+            //html += "</div>";
           } else {
             html += "<div >词条尚未创建</div>";
             html +=
@@ -252,26 +282,6 @@ function term_get_word_to_div(strWord, div, callback) {
             html += "<div ><textarea></textarea></div>";
           }
 
-          html += "</div>";
-          html += "<div id='term_list_right' >";
-
-          html += '<div class="fun_frame">';
-          html += '<div class="title">Language</div>';
-          html += '<div class="content" style="max-height:10em;">';
-          html += '<div><a href="">All</a></div>';
-          html += "</div>";
-          html += "</div>";
-
-          html += '<div class="fun_frame">';
-          html += '<div class="title">Translation</div>';
-          html +=
-            '<div id="channal_list"  class="content" style="max-height:10em;">';
-          html += '<div><a href="">All</a></div>';
-          html += "</div>";
-          html += "</div>";
-
-          html += "</div>";
-          html += "</div>";
           $("#" + div).html(html);
 
           note_refresh_new();

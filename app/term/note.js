@@ -29,6 +29,10 @@ var _author = "";
 
 function note_init(input) {
   let output = "<div>";
+  let newString = input.replace(/\{\{/g, '<note info="');
+  newString = newString.replace(/\}\}/g, '"></note>');
+  output = marked(newString);
+  /*
   let arrInput = input.split("\n");
   for (x in arrInput) {
     if (arrInput[x].slice(0, 2) == "==" && arrInput[x].slice(-2) == "==") {
@@ -53,6 +57,7 @@ function note_init(input) {
       output += row;
     }
   }
+  */
   output += "</div>";
   return output;
 }
@@ -238,7 +243,9 @@ function note_json_html(in_json) {
   let output = "";
   output += "<div class='palitext'>" + in_json.palitext + "</div>";
   output +=
-    "<div class='tran'>" + term_std_str_to_tran(in_json.tran) + "</div>";
+    "<div class='tran'>" +
+    marked(term_std_str_to_tran(in_json.tran)) +
+    "</div>";
   output += "<div class='ref'>" + in_json.ref + "</div>";
   return output;
 }
