@@ -246,6 +246,14 @@ echo "wiki_load_word('{$_get_word}')";
 	.bg_color_5{
 		background:linear-gradient(to right, #fe99b91c, #ebebeb66);
 	}
+
+	pre {
+		white-space: pre-line;
+		font-family: auto;
+		border-left: 3px solid var(--border-shadow);
+		margin-left: 1em;
+		padding-left: 0.5em;
+	}
 	</style>
 
 <style media="screen and (max-width:767px)">
