@@ -21,7 +21,7 @@
 <note id="guid" book=203 para=1654 begin=23 end=45 author=11 lang=en tag=*></note>
 
 */
-
+var _display = "";
 var _word = "";
 var _channal = "";
 var _lang = "";
