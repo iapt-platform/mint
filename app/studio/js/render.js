@@ -1334,8 +1334,18 @@ function render_sent_tool_bar(elementBlock, begin) {
   }
   output += "[" + gLocal.gui.scan_in_reader + "]";
   output += "</a>";
+  output += "<guide gid='sent_func' style='margin:unset;'></guide>";
   output +=
-    "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+    "<button class='rel_map' onclick=\"sent_show_rel_map('" +
+    abook +
+    "','" +
+    aparagraph +
+    "','" +
+    iBegin +
+    "','" +
+    iEnd +
+    "')\">[r]</button>";
+  output += "</span></span>";
   output +=
     "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
   output += "</div>";
@@ -1611,8 +1621,18 @@ function renderWordParBlockInner(elementBlock) {
           "' target='_blank'>";
         output += "[" + gLocal.gui.scan_in_reader + "]";
         output += "</a>";
+        output += "<guide gid='sent_func' style='margin:unset;'></guide>";
         output +=
-          "<guide gid='sent_func' style='margin:unset;'></guide></span></span>";
+          "<button class='rel_map' onclick=\"sent_show_rel_map('" +
+          book +
+          "','" +
+          paragraph +
+          "','" +
+          nextBegin +
+          "','" +
+          nextEnd +
+          "')\">[r]</button>";
+        output += "</span></span>";
         output +=
           "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
         output += "</div>";
@@ -1685,6 +1705,50 @@ function renderWordParBlockInner(elementBlock) {
   arr_par_sent_num.push(sent_ID);
   g_arr_Para_ID[par_num] = arr_Para_ID;
   return output;
+}
+
+function sent_show_rel_map(book, para, begin, end) {
+  let wordId;
+  let memind = "graph LR\n";
+  let pali_text = "";
+  for (wordId = begin; wordId <= end; wordId++) {
+    let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
+    let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
+    let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
+    if (type != ".ctl.") {
+      pali_text += pali + " ";
+    }
+
+    if (rel != "") {
+      let relaData = JSON.parse(rel);
+      for (const iterator of relaData) {
+        let strRel = iterator.relation;
+        let dest = iterator.dest_spell;
+        let type = doc_word("#" + iterator.dest_id).val("case");
+
+        if (type.indexOf(".v.") >= 0) {
+          dest = iterator.dest_id + "[/" + dest + "/]";
+        } else {
+          dest = iterator.dest_id + "[" + dest + "]";
+        }
+        if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
+          memind +=
+            wordId + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
+        } else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
+          memind +=
+            dest + " ==> |" + strRel + "|" + wordId + "(" + pali + ")" + "\n";
+        } else {
+          memind +=
+            wordId + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
+        }
+      }
+    }
+  }
+
+  let graph = mermaid.render("graphDiv", memind);
+  document.querySelector("#term_body").innerHTML =
+    "<h3>" + pali_text + "</h3>" + graph;
+  document.querySelector("#term_win").style.display = "flex";
 }
 
 //句子编辑块
