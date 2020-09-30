@@ -1718,7 +1718,7 @@ function sent_show_rel_map(book, para, begin, end) {
     if (type != ".ctl.") {
       pali_text += pali + " ";
     }
-    let wid = "#p" + book + "-" + para + "-" + wordId;
+    let wid = "p" + book + "-" + para + "-" + wordId;
 
     if (rel != "") {
       let relaData = JSON.parse(rel);
