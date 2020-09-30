@@ -1,34 +1,39 @@
 # wikipali demo wikipali 的功能演示
-## Breif Introduction 简介
-wikipali 的功能演示。用php pdo js html css3 写成。没有使用任何框架。jQuray 除外。
- 
- wikipali demo build by php  pdo js html css3 jQuray . no any framework. 
- 
- 本仓库为demo测试版代码，bug 多多，供设计者提交设计思路，仅供测试和功能演示，并非最终代码。
- 
- This is the demo code for disigners’ submit, but only for test and check not the final code.
- 
- 请注意，我们的协作仅仅在Github上进行，但我们回让【码云】上的代码与github保持强制同步，这会覆盖不知情者在【码云】上的修改。
 
- Attention please! we collaborate on Github only, but we will keep the synchronization of the code on Gitee with Github, which will overwrite unknowers’ commits.
-## Resources相关资源
-### web demo网站演示版
+## Breif Introduction 简介
+
+wikipali 的功能演示。用 php pdo js html css3 写成。没有使用任何框架。jQuray 除外。
+
+wikipali demo build by php pdo js html css3 jQuray . no any framework.
+
+本仓库为 demo 测试版代码，bug 多多，供设计者提交设计思路，仅供测试和功能演示，并非最终代码。
+
+This is the demo code for disigners’ submit, but only for test and check not the final code.
+
+请注意，我们的协作仅仅在 Github 上进行，但我们会让【码云】上的代码与 github 保持强制同步，这会覆盖不知情者在【码云】上的修改。
+
+Attention please! we collaborate on Github only, but we will keep the synchronization of the code on Gitee with Github, which will overwrite unknowers’ commits.
+
+## Resources 相关资源
+
+### web demo 网站演示版
 
 visit [www.wikipali.org/demo](https://www.wikipali.org/demo) to scan, test and check for the developer only, not for the normal users.
-
 
 访问[www.wikipali.org/demo](https://www.wikipali.org/demo) 仅仅是针对开发者来进行浏览、测试和检查的，而不是面向普通用户。
 
 ### code for wikipali website Demo 网站演示版代码
-1. If anyone want to push his github code to the server, please contact with Ven. Bhikkhu Visuddhinanda and Ven. Bhikkhu Kosalla by wechat or teams.
-想要将其github上的代码推送至服务器，请微信联络Bhikkhu Visuddhinanda和Bhikkhu Kosalla.
-2. download and install "gitbash", "TortoiseGit" and "github desktop" and make the submit and communication esay.
-下载并安装"gitbash", "TortoiseGit"和"github desktop"来进行代码提交，这样相互交流更加便捷。
 
-### videos视频
+1. If anyone want to push his github code to the server, please contact with Ven. Bhikkhu Visuddhinanda and Ven. Bhikkhu Kosalla by wechat or teams.
+   想要将其 github 上的代码推送至服务器，请微信联络 Bhikkhu Visuddhinanda 和 Bhikkhu Kosalla.
+2. download and install "gitbash", "TortoiseGit" and "github desktop" and make the submit and communication esay.
+   下载并安装"gitbash", "TortoiseGit"和"github desktop"来进行代码提交，这样相互交流更加便捷。
+
+### videos 视频
+
 [functions demo 功能演示](https://www.youtube.com/playlist?list=PL_1iJBQvNPFFNLOaZh2u3VwDYUyJuK_xa)
 
-[Example Class课程范例](https://www.youtube.com/playlist?list=PL_1iJBQvNPFHwP1ZL4sbhtJTnYeMiEm29)
+[Example Class 课程范例](https://www.youtube.com/playlist?list=PL_1iJBQvNPFHwP1ZL4sbhtJTnYeMiEm29)
 
 [conference of translating platform 三藏翻译会议简报](https://www.youtube.com/playlist?list=PL_1iJBQvNPFHT6UisME_cOSts5fFecK14)
 
@@ -38,41 +43,47 @@ Due to the unstable connection the online video conference had been influnced, o
 [collection of conference papers 会议文集](https://drive.google.com/file/d/1CDPKLXMUX30IXc27BeNleHI3uI5OhsFL/view?usp=sharing)（2020.2.12-14）
 
 # Summary of Database 数据库总体描述
-## 不包含用户数据的
-* 字典数据库
-  * 标准字典（逐词解析下拉菜单用的字典数据）
-    * 第三方字典
-    appdata\dict\3rd
-    * 标准变形
-    appdata\dict\system\sys_regular.db
-    * 非标准变形
-    appdata\dict\system\sys_regular.db
-  * 参考字典（字典模块用的字典数据）
-* 三藏全文 Full Text of nonPali Canon
-  * 逐词解析模板 Word By Word Translation
-    appdata/palicaono/templet
-  * 单词索引 Pali Canon Word Index
-  * 句子数据 Pali Canon Sentence
-    appdata/palicaono/sentence.db3
-  * 段落数据 Pali Canon Paragraph
-    appdata/palicaono/pali_text.db3
-## 包含用户数据 Include User Data
-* User Infomation用户
-* File Index文件目录
-* Dynamic User Dictionary动态用户词典
-* Word by Word Analyze逐词解析
-* Translation by Sentence逐句翻译
-* Term术语
-* [db manager(temporary) 数据库管理器（临时）](https://www.wikipali.org/demo/app/studio/dictadmin/user/pla.php)
-  
-# Import Pali Canon Data From HTML 基础三藏数据导入
-（discription unfinished描述未完成） 
 
-# User Center 用户管理 
+## 不包含用户数据的
+
+- 字典数据库
+  - 标准字典（逐词解析下拉菜单用的字典数据）
+    - 第三方字典
+      appdata\dict\3rd
+    - 标准变形
+      appdata\dict\system\sys_regular.db
+    - 非标准变形
+      appdata\dict\system\sys_regular.db
+  - 参考字典（字典模块用的字典数据）
+- 三藏全文 Full Text of nonPali Canon
+  - 逐词解析模板 Word By Word Translation
+    appdata/palicaono/templet
+  - 单词索引 Pali Canon Word Index
+  - 句子数据 Pali Canon Sentence
+    appdata/palicaono/sentence.db3
+  - 段落数据 Pali Canon Paragraph
+    appdata/palicaono/pali_text.db3
+
+## 包含用户数据 Include User Data
+
+- User Infomation 用户
+- File Index 文件目录
+- Dynamic User Dictionary 动态用户词典
+- Word by Word Analyze 逐词解析
+- Translation by Sentence 逐句翻译
+- Term 术语
+- [db manager(temporary) 数据库管理器（临时）](https://www.wikipali.org/demo/app/studio/dictadmin/user/pla.php)
+
+# Import Pali Canon Data From HTML 基础三藏数据导入
+
+（discription unfinished 描述未完成）
+
+# User Center 用户管理
 
 ## 功能
 
 ## 数据结构
+
 ```
 CREATE TABLE user (
     id       INTEGER    PRIMARY KEY AUTOINCREMENT,
@@ -86,23 +97,23 @@ CREATE TABLE user (
 
 ```
 
-| Field name | Type | Summary |
-| --- | --- | --- |
-| id | INTEGER    PRIMARY KEY AUTOINCREMENT, | |
-| userid | TEXT       UNIQUE, | uuid |
-| username | TEXT (64)  NOT NULL, | |
-| password | TEXT       NOT NULL, | |
-| nickname | TEXT (64)  NOT NULL, | |
-| email | TEXT (256), | |
-| ctime | INTEGER | 创建时间 |
+| Field name | Type                               | Summary  |
+| ---------- | ---------------------------------- | -------- |
+| id         | INTEGER PRIMARY KEY AUTOINCREMENT, |          |
+| userid     | TEXT UNIQUE,                       | uuid     |
+| username   | TEXT (64) NOT NULL,                |          |
+| password   | TEXT NOT NULL,                     |          |
+| nickname   | TEXT (64) NOT NULL,                |          |
+| email      | TEXT (256),                        |          |
+| ctime      | INTEGER                            | 创建时间 |
 
 ## 算法
 
 ## demo
 
-[login登录](https://www.wikipali.org/demo/app/ucenter/index.php?language=en)
+[login 登录](https://www.wikipali.org/demo/app/ucenter/index.php?language=en)
 
-[Sign in注册](https://www.wikipali.org/demo/app/ucenter/index.php?language=en&op=new)
+[Sign in 注册](https://www.wikipali.org/demo/app/ucenter/index.php?language=en&op=new)
 
 # File Manager
 
@@ -112,53 +123,53 @@ user/fileindex.db
 
 ## 数据结构
 
-| field name | type | summary |
-| --- | --- | --- |
-| id | INTEGER PRIMARY KEY AUTOINCREMENT, | 整数不方便离线建立数据的在线同步，以后将用doc_id |
-| userid | INTEGER, | |
-| parent_id | TEXT (40), | 从其他共享文档拉取的文档，有父文档的id |
-| doc_id | TEXT (40), | 文档uuid |
-| book | INTEGER DEFAULT (0), | 书号 1-217 |
-| paragraph | INTEGER DEFAULT (0), | 段落号 |
-| file_name | TEXT NOT NULL, | 文件名 |
-| title | TEXT, | 标题 |
-| tag | TEXT, | 标签 过滤文档用 |
-| status | INTEGER DEFAULT (1), | 状态 0 回收站 1 正常 |
-| create_time | INTEGER, | 建立时间 |
-| modify_time | INTEGER, | 修改时间 |
-| accese_time | INTEGER, | 访问时间 |
-| file_size | INTEGER, | 文件大小 |
-| share | INTEGER DEFAULT (0), | 是否是共享文档 0 否 1 是 |
-| doc_info | TEXT, | (json) |
-| doc_block | TEXT, | (json) |
-| receive_time | INTEGER | |
+| field name   | type                               | summary                                           |
+| ------------ | ---------------------------------- | ------------------------------------------------- |
+| id           | INTEGER PRIMARY KEY AUTOINCREMENT, | 整数不方便离线建立数据的在线同步，以后将用 doc_id |
+| userid       | INTEGER,                           |                                                   |
+| parent_id    | TEXT (40),                         | 从其他共享文档拉取的文档，有父文档的 id           |
+| doc_id       | TEXT (40),                         | 文档 uuid                                         |
+| book         | INTEGER DEFAULT (0),               | 书号 1-217                                        |
+| paragraph    | INTEGER DEFAULT (0),               | 段落号                                            |
+| file_name    | TEXT NOT NULL,                     | 文件名                                            |
+| title        | TEXT,                              | 标题                                              |
+| tag          | TEXT,                              | 标签 过滤文档用                                   |
+| status       | INTEGER DEFAULT (1),               | 状态 0 回收站 1 正常                              |
+| create_time  | INTEGER,                           | 建立时间                                          |
+| modify_time  | INTEGER,                           | 修改时间                                          |
+| accese_time  | INTEGER,                           | 访问时间                                          |
+| file_size    | INTEGER,                           | 文件大小                                          |
+| share        | INTEGER DEFAULT (0),               | 是否是共享文档 0 否 1 是                          |
+| doc_info     | TEXT,                              | (json)                                            |
+| doc_block    | TEXT,                              | (json)                                            |
+| receive_time | INTEGER                            |                                                   |
 
 用户文件索引。用于用户文件管理。所有用户用一张表。
 
 ## 文件存储方式
 
-1. xml文件
+1. xml 文件
 2. 数据库
 
-### xml文件
+### xml 文件
 
-扩展名pcs。保存在 user/user-uuid/my_document  
-文件格式见[Document Format文档格式](#document-format文档格式)
+扩展名 pcs。保存在 user/user-uuid/my_document  
+文件格式见[Document Format 文档格式](#document-format文档格式)
 
 ### 数据库
 
-使用数据库中的记录在服务器端生成相同的xml数据，并传送到浏览器。文件头使用doc_info字段。doc_block是数据块列表。
-从两个数据库中提取doc_block数据.详情见[database to memory XML Data](#new-method--database-to-memory-xml-data)
+使用数据库中的记录在服务器端生成相同的 xml 数据，并传送到浏览器。文件头使用 doc_info 字段。doc_block 是数据块列表。
+从两个数据库中提取 doc_block 数据.详情见[database to memory XML Data](#new-method--database-to-memory-xml-data)
 
 **以后的程序使用数据库方式。可以实现网路同步等功能。**
 
-# Studio编辑器
+# Studio 编辑器
 
-（discription unfinished描述未完成）
+（discription unfinished 描述未完成）
 
-[demo链接link](https://www.wikipali.org/demo/app/studio)
+[demo 链接 link](https://www.wikipali.org/demo/app/studio)
 
-## Document Format文档格式
+## Document Format 文档格式
 
 XML format use for the editable data.
 
@@ -185,18 +196,18 @@ studio/js/data.js is document manager
 
 ```
 
-* type:aways pcdsset
-* mode:aways package
-* var:varsion
-* toc:not used
-* style:Document css. css only for this Document
-* block: one block is one paragraph on one Media Type. Two Kinds of Type. 1. wbw(word by word translation) 2. translate 
+- type:aways pcdsset
+- mode:aways package
+- var:varsion
+- toc:not used
+- style:Document css. css only for this Document
+- block: one block is one paragraph on one Media Type. Two Kinds of Type. 1. wbw(word by word translation) 2. translate
 
 ```
 <block>
 	<info>
 		<type>heading</type>
-		<book>85</book>		
+		<book>85</book>
 		<paragraph>11</paragraph>
 		<album_id>85</album_id>
 		<album_guid>4FC0BE7B1C3042B79742D7D5BA90E77A</album_guid>
@@ -213,24 +224,24 @@ studio/js/data.js is document manager
 </block>
 
 ```
-* type
-  * heading
-  * pali_text
-  * translate
-  * wbw (word by word translation)
-* level 目录层级
-* id 数据块uuid 
 
-## Document Load 文档载入 
+- type
+  - heading
+  - pali_text
+  - translate
+  - wbw (word by word translation)
+- level 目录层级
+- id 数据块 uuid
 
-（discription unfinished描述未完成）
+## Document Load 文档载入
 
+（discription unfinished 描述未完成）
 
 ### Old Method —— XML File
 
 数据载入:studio/project_load.php
 
-js数据解析：studio/js/data.js 
+js 数据解析：studio/js/data.js
 function projectDataParse(xmlBookData)
 
 ### New Method —— database to memory XML Data
@@ -239,7 +250,7 @@ function projectDataParse(xmlBookData)
 
 #### 逐词解析数据库
 
-数据库user/user_wbw.db3
+数据库 user/user_wbw.db3
 数据块头信息
 
 ```
@@ -272,11 +283,11 @@ CREATE TABLE wbw (
     modify_time  INTEGER,
     receive_time INTEGER,
     status       INTEGER,
-    owner        CHAR (36) 
+    owner        CHAR (36)
 );
 ```
 
-data:xml格式单词数据
+data:xml 格式单词数据
 
 #### 译文数据库
 
@@ -297,7 +308,9 @@ CREATE TABLE sent_block (
 );
 
 ```
+
 句子内容。一条记录是一句。
+
 ```
 
 CREATE TABLE sentence (
@@ -319,10 +332,11 @@ CREATE TABLE sentence (
 );
 ```
 
-* begin:句子起始单词索引
-* end:句子终止单词索引
-* 
-## Edit Word by Word Translation 逐词解析编辑 
+- begin:句子起始单词索引
+- end:句子终止单词索引
+-
+
+## Edit Word by Word Translation 逐词解析编辑
 
 ## 用户词典
 
@@ -350,12 +364,12 @@ CREATE TABLE sentence (
 
 ### 文件列表
 
-* term\
-  * note.js - 生成注释
-  * note.php - 
-  * sync.php - 与internet或其他主机同步数据
-  * term.js
-  * term.php-术语数据库新增，修改，等
+- term\
+  - note.js - 生成注释
+  - note.php -
+  - sync.php - 与 internet 或其他主机同步数据
+  - term.js
+  - term.php-术语数据库新增，修改，等
 
 ### 数据结构
 
@@ -378,24 +392,24 @@ CREATE TABLE term (
 );
 ```
 
-term 
+term
 
-| field name | type | summary |
-| --- | --- | --- |
-| id | INTEGER   PRIMARY KEY AUTOINCREMENT | 以后会停用，改为uuid |
-| guid | TEXT (36) | uuid |
-| word | TEXT | pali词头 |
-| word_en | TEXT | 英文字母表示，ā->a ṭ->t用于模糊搜索 |
-| meaning | TEXT | 首选意思 |
-| other_meaning | TEXT | 备选意思 |
-| note | TEXT | 注解内容 |
-| tag | TEXT | 标签 |
-| create_time | INTEGER | * |
-| owner | TEXT | * |
-| hit | INTEGER   DEFAULT (0) | 点击量 |
-| language | CHAR (8) | * |
-| receive_time | INTEGER | 服务器接收到数据的时间 |
-| modify_time | INTEGER | * |
+| field name    | type                              | summary                              |
+| ------------- | --------------------------------- | ------------------------------------ |
+| id            | INTEGER PRIMARY KEY AUTOINCREMENT | 以后会停用，改为 uuid                |
+| guid          | TEXT (36)                         | uuid                                 |
+| word          | TEXT                              | pali 词头                            |
+| word_en       | TEXT                              | 英文字母表示，ā->a ṭ->t 用于模糊搜索 |
+| meaning       | TEXT                              | 首选意思                             |
+| other_meaning | TEXT                              | 备选意思                             |
+| note          | TEXT                              | 注解内容                             |
+| tag           | TEXT                              | 标签                                 |
+| create_time   | INTEGER                           | \*                                   |
+| owner         | TEXT                              | \*                                   |
+| hit           | INTEGER DEFAULT (0)               | 点击量                               |
+| language      | CHAR (8)                          | \*                                   |
+| receive_time  | INTEGER                           | 服务器接收到数据的时间               |
+| modify_time   | INTEGER                           | \*                                   |
 
 ### 算法
 
@@ -403,14 +417,13 @@ term
 
 ## Plugin 插件
 
-（discription unfinished描述未完成）
+（discription unfinished 描述未完成）
 
-# Dictionary字典
+# Dictionary 字典
 
 ## demo
 
 https://www.wikipali.org/demo/app/dict/index.php
-
 
 ## 数据结构
 
@@ -435,27 +448,26 @@ CREATE TABLE dict (
 );
 ```
 
-| Field name | Type | Summary |
-| --- | --- | --- |
-| id | INTEGER | --- |
-| pali | TEXT     NOT NULL | 巴利单词 |
-| type | TEXT | --- |
-| gramma | TEXT | --- |
-| parent | TEXT | --- |
-| mean | TEXT | 释义 |
-| note | TEXT | --- |
-| parts | TEXT | --- |
-| partmean | TEXT | --- |
-| status | INTEGER  DEFAULT (1) | --- |
-| confidence | INTEGER  DEFAULT (100) | 信心指数 1-100 |
-| len | INTEGER | 单词长度 |
-| dict_name | TEXT | 字典名 |
-| lang | CHAR (3) DEFAULT sc | 语言 |
+| Field name | Type                  | Summary        |
+| ---------- | --------------------- | -------------- |
+| id         | INTEGER               | ---            |
+| pali       | TEXT NOT NULL         | 巴利单词       |
+| type       | TEXT                  | ---            |
+| gramma     | TEXT                  | ---            |
+| parent     | TEXT                  | ---            |
+| mean       | TEXT                  | 释义           |
+| note       | TEXT                  | ---            |
+| parts      | TEXT                  | ---            |
+| partmean   | TEXT                  | ---            |
+| status     | INTEGER DEFAULT (1)   | ---            |
+| confidence | INTEGER DEFAULT (100) | 信心指数 1-100 |
+| len        | INTEGER               | 单词长度       |
+| dict_name  | TEXT                  | 字典名         |
+| lang       | CHAR (3) DEFAULT sc   | 语言           |
 
 ### 参考字典
 
-
-# Full Text Search全文搜索
+# Full Text Search 全文搜索
 
 ## Demo
 
@@ -467,7 +479,7 @@ https://www.wikipali.org/demo/app/search/index.php
 
 ## 算法
 
-# Encyclopedia百科
+# Encyclopedia 百科
 
 ## Demo
 
@@ -481,5 +493,3 @@ https://www.wikipali.org/demo/app/search/index.php
 
 base on the Term Database.
 基于术语数据库
-
-

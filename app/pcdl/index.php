@@ -55,43 +55,19 @@ require_once '../pcdl/html_head.php';
 			<span class="title_more"><a href="../palicanon">更多</a></span>
 		</div>
 		<div class="content">
-			<div class="content_inner">
-				<div class="content_block">
-					<div class="card">
+			<div id="article_new" class="content_inner">
 
-						<div class="title"><a href="#">Khudasikha</a></div>
-						<div class="summary">概要</div>
-						<div class="author">作者</div>
-					</div>
-				</div>
-				<div class="content_block">
-					<div class="card">
-
-						<div class="title pd-10">标题</div>
-						<div class="summary pd-10">概要</div>
-						<div class="author pd-10">作者</div>
-					</div>
-				</div>
-				<div class="content_block">
-					<div class="card">
-
-						<div class="title">标题</div>
-						<div class="summary">概要</div>
-						<div class="author">作者</div>
-					</div>
-				</div>
-				<div class="content_block">
-					<div class="card">
-
-						<div class="title">标题</div>
-						<div class="summary">概要</div>
-						<div class="author">作者</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
-    
+	<script>
+	$.get("../article/list_new.php",function(data,status){
+		let xDiv = document.getElementById("article_new");
+		if(xDiv){
+			xDiv.innerHTML=data;
+		}
+	});
+	</script>	
 	
 	<div class="index_list_categories">
 		<div class="title_bar">

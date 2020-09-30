@@ -21,7 +21,7 @@
 <note id="guid" book=203 para=1654 begin=23 end=45 author=11 lang=en tag=*></note>
 
 */
-
+var _display = "";
 var _word = "";
 var _channal = "";
 var _lang = "";
@@ -118,9 +118,32 @@ function note_refresh_new() {
             for (const iterator of arrData) {
               let id = iterator.id;
               let strHtml = "<a name='" + id + "'></a>";
-              strHtml += note_json_html(iterator);
-              $("#" + id).html(strHtml);
+              if (_display && _display == "para") {
+                let strPalitext = "<pali>" + iterator.palitext + "<pali>";
+                let divPali = $("#" + id)
+                  .parent()
+                  .children(".palitext");
+                if (divPali.length == 0) {
+                  $("#" + id)
+                    .parent()
+                    .prepend("<div class='palitext'></div>");
+                }
+                $("#" + id)
+                  .parent()
+                  .children(".palitext")
+                  .first()
+                  .append(strPalitext);
+                let htmlTran =
+                  "<span class='tran'>" +
+                  marked(term_std_str_to_tran(iterator.tran)) +
+                  "</span>";
+                $("#" + id).html(htmlTran);
+              } else {
+                strHtml += note_json_html(iterator);
+                $("#" + id).html(strHtml);
+              }
             }
+
             $(".palitext").click(function () {
               let sentid = $(this).parent().attr("info").split("-");
               window.open(
