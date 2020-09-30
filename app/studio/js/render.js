@@ -1718,6 +1718,7 @@ function sent_show_rel_map(book, para, begin, end) {
     if (type != ".ctl.") {
       pali_text += pali + " ";
     }
+    let wid = "#p" + book + "-" + para + "-" + wordId;
 
     if (rel != "") {
       let relaData = JSON.parse(rel);
@@ -1733,13 +1734,13 @@ function sent_show_rel_map(book, para, begin, end) {
         }
         if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
           memind +=
-            wordId + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
+            wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
         } else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
           memind +=
-            dest + " ==> |" + strRel + "|" + wordId + "(" + pali + ")" + "\n";
+            dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
         } else {
           memind +=
-            wordId + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
+            wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
         }
       }
     }
