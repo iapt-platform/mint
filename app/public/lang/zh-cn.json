@@ -486,6 +486,9 @@
 		"already_over": "已经结束",
 		"revise": "润校",
 		"relational_map": "关系图",
+		"pp": "过去分词",
+		"prp": "现在分词",
+		"fpp": "未来被动分词",
 		"": ""
 	},
 	"grammastr": [

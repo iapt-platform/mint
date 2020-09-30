@@ -486,6 +486,9 @@
 		"already_over": "已經結束",
 		"revise": "潤校",
 		"relational_map": "關係圖",
+		"pp": "過去分詞",
+		"prp": "現在分詞",
+		"fpp": "未來被動分詞",
 		"": ""
 	},
 	"grammastr": [
