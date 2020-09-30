@@ -46,12 +46,20 @@ $output = array();
 foreach ($_data as $key => $value) {
 	# code...
 	$id = $value["id"];
-	$arrInfo = str_getcsv($value["data"],"@");
-	$arrSent = str_getcsv($arrInfo[0],"-");
-	$bookId=$arrSent[0];
-	$para=$arrSent[1];
-	$begin=$arrSent[2];
-	$end=$arrSent[3];
+	$arrInfo = explode("@",$value["data"]);
+	if(isset($arrInfo[1])){
+		$sentChannal = $arrInfo[1];
+	}
+	else{
+		$sentChannal = "";
+	}
+	if(isset($arrInfo[0])){
+		$arrSent = str_getcsv($arrInfo[0],"-");
+		$bookId=$arrSent[0];
+		$para=$arrSent[1];
+		$begin=$arrSent[2];
+		$end=$arrSent[3];
+	}
 
 	$query="SELECT html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
 	$sth = $db_pali_sent->prepare($query);

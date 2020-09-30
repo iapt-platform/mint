@@ -105,9 +105,32 @@
 					</span>	
 					<span class="navi_text">
 					<?php echo $_local->gui->wiki_term;?>
-					
 					</span>
-				</li>				
+				</li>
+
+				<li id="article"  onclick="goto_url(this,'../article/my_article_index.php')">
+					<span  class="navi_icon">
+						<svg class="icon">
+							<use xlink:href="../studio/plugin/system_term/icon.svg#icon_term"></use>
+						</svg>	
+					</span>	
+					<span class="navi_text">
+					<?php echo "作品";?>
+					</span>
+				</li>
+
+				<li id="collect"  onclick="goto_url(this,'../article/my_collect_index.php')">
+					<span  class="navi_icon">
+						<svg class="icon">
+							<use xlink:href="../studio/plugin/system_term/icon.svg#icon_term"></use>
+						</svg>	
+					</span>	
+					<span class="navi_text">
+					<?php echo "文集";?>
+					</span>
+				</li>
+
+
 			</ul>
 		</div>
 		
