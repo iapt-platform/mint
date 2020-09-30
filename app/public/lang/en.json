@@ -53,7 +53,7 @@
 		"content": "Content",
 		"contents": "Contents",
 		"copy": "copy",
-		"copy_to_clipboard": "copy to clipboard",
+		"copy_to_clipboard": "copy the link to clipboard",
 		"creat_a_new_file_by_yourself": "Creat a new file by yourself",
 		"created": "Created",
 		"current": "Current",
@@ -483,6 +483,7 @@
 		"in_progress": "in progress",
 		"already_over": "already over",
 		"revise": "revise",
+		"relational_map": "relational map",
 		"": ""
 	},
 	"grammastr": [

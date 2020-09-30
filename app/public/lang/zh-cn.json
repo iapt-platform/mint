@@ -53,7 +53,7 @@
 		"content": "目录",
 		"contents": "目录",
 		"copy": "复制",
-		"copy_to_clipboard": "复制到剪切板",
+		"copy_to_clipboard": "复制句子链接到剪切板",
 		"creat_a_new_file_by_yourself": "创建自定义文档",
 		"created": "创建",
 		"current": "当前",
@@ -485,6 +485,7 @@
 		"in_progress": "正在进行",
 		"already_over": "已经结束",
 		"revise": "润校",
+		"relational_map": "关系图",
 		"": ""
 	},
 	"grammastr": [
