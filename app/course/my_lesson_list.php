@@ -32,10 +32,18 @@ echo '</div>';
 			<span class="icon_btn_tip"><?php echo $_local->gui->new;?></span>
 			<button id="file_share" type="button" class="icon_btn"  title=" ">
 			<a href="../course/my_course_index.php?course=<?php echo $course_info["id"] ?>&op=newlesson">
-				<svg class="icon">
-					<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
-				</svg>
-				</a>
+                <svg style="" t="1601520759574" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7839" width="200" height="200">
+                    <path d="M192 256h640v320H192z" p-id="7840"></path>
+                    <path d="M832 192.5v447.29H192V192.5h640m0-64H192c-35.35 0-64 28.65-64 64v447.29c0 35.35 28.65 64 64 64h640c35.35 0 64-28.65 64-64V192.5c0-35.35-28.65-64-64-64z" p-id="7841">
+                    </path><path d="M384.09 659.34h63.81v226.72h-63.81z" p-id="7842"></path>
+                    <path d="M447.78 659.46v226.47h-63.56V659.46h63.56m0.25-0.25h-64.06v226.97h64.06V659.21z" p-id="7843"></path><path d="M576.09 659.34h63.81v226.72h-63.81z" p-id="7844"></path>
+                    <path d="M639.78 659.46v226.47h-63.56V659.46h63.56m0.25-0.25h-64.06v226.97h64.06V659.21z" p-id="7845"></path>
+                    <path d="M288.03 895.94c-17.59 0-31.91-14.31-31.91-31.91s14.31-31.91 31.91-31.91h447.94c17.59 0 31.91 14.31 31.91 31.91s-14.31 31.91-31.91 31.91H288.03z" p-id="7846"></path>
+                    <path d="M735.97 832.25c17.52 0 31.78 14.26 31.78 31.78s-14.26 31.78-31.78 31.78H288.03c-17.52 0-31.78-14.26-31.78-31.78s14.26-31.78 31.78-31.78h447.94m0-0.25H288.03c-17.69 0-32.03 14.34-32.03 32.03s14.34 32.03 32.03 32.03h447.94c17.69 0 32.03-14.34 32.03-32.03S753.66 832 735.97 832z" p-id="7847">
+                    </path><path style="fill:#545454" d="M384 384h256v64H384z" p-id="7848"></path>
+                    <path style="fill:#545454" d="M480 288h64v256h-64z" p-id="7849"></path>
+                </svg>
+			</a>
 			</button>
 		</span>
     </div>
