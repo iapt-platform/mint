@@ -1216,7 +1216,7 @@ input[type="submit"]:disabled {
 /* option tab css */
 ul,
 li {
-    white-space: nowrap;
+    white-space: normal;
     color: inherit;
     margin: 0px;
     padding: 0px;
