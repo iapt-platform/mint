@@ -70,13 +70,13 @@ function lesson_show(id) {
         let dt = lesson["duration"] / 60;
         let sdt = "";
         if (dt > 59) {
-          sdt += Math.floor(dt / 60) + "小时";
+          sdt += Math.floor(dt / 60) + gLocal.gui.h;
         }
         let m = dt % 60;
         if (m > 0) {
-          sdt += (dt % 60) + "分钟";
+          sdt += (dt % 60) + gLocal.gui.mins;
         }
-        html += "<div >持续时间：" + sdt + "</div>";
+        html += "<div >" + gLocal.gui.duration + "：" + sdt + "</div>";
         let now = new Date();
 
         let lesson_time = "";
