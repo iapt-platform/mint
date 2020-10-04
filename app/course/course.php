@@ -42,7 +42,10 @@ echo " > ";
 echo $course_info["title"];
 echo "</div>";
 echo '<div class="summary"  style="padding-bottom:5px;">'.$course_info["subtitle"].'</div>';
-echo '<div class="summary"  style=""><button>关注</button><button>报名</button><button>分享</button></div>';
+echo '<div class="summary"  style="">';
+echo '<button>'.$_local->gui->watch.'</button>';
+echo '<button>'.$_local->gui->sign_up.'</button>';
+echo '<button>'.$_local->gui->share.'</button></div>';
 echo "</div>";
 echo '</div>';
 
@@ -50,12 +53,12 @@ echo "<div  class='index_inner'>";
 
 echo '<div class="card" style="margin:1em;padding:10px;">';
     echo '<div class="title">';
-    echo '简介';
+    echo $_local->gui->introduction;
     echo '</div>';
     echo '<div id="course_summary" class="detail">';
     echo '</div>';
     echo '<div class="title">';
-    echo '参考资料';
+    echo $_local->gui->attachment;
     echo '</div>';    
     echo '<div id="course_attachment"  class="detail">';
     echo '</div>';   
@@ -163,7 +166,7 @@ $.get("../course/lesson_list.php",
         if(m>0){
             sdt +=(dt % 60)+"分钟";
         }
-        html+= "<div >持续时间："+sdt+"</div>";        
+        html+= "<div >"+gLocal.gui.duration+"："+sdt+"</div>";        
         let now = new Date(); 
 
         let lesson_time="";

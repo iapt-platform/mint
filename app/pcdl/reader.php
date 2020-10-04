@@ -1000,24 +1000,25 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	<div id="new_comm_shell" style="display:none;">
 		<div id="new_comm_div">
 		<textarea id="new_comm_text"></textarea>
-		<button onclick="new_comm_submit()">提交</button><button onclick="new_comm_cancel()">取消</button>
+		<button onclick="new_comm_submit()"><?php echo $_local->gui->submit;?></button>
+		<button onclick="new_comm_cancel()"><?php echo $_local->gui->cancel;?></button>
 		</div>
 	</div>
 	
 	<div id="dighest_edit_div" class="full_screen_window">
 		<div class="win_caption">
-		<div><button onclick="dighest_edit_cancle()">取消</button></div>
-		<div><button onclick="dighest_edit_submit()">提交</button></div>
+		<div><button onclick="dighest_edit_cancle()"><?php echo $_local->gui->cancel;?></button></div>
+		<div><button onclick="dighest_edit_submit()"><?php echo $_local->gui->submit;?></button></div>
 		</div>
 		<div id="dighest_edit_body" class="win_body">
 			<div>
-				标题：<input id="dighest_edit_title" />
+				<?php echo $_local->gui->title;?>：<input id="dighest_edit_title" />
 			</div>
 			<div>
-				简介：<textarea id="dighest_edit_summary"></textarea>
+				<?php echo $_local->gui->introduction;?>：<textarea id="dighest_edit_summary"></textarea>
 			</div>
 			<div>
-				标签：<input id="dighest_edit_taget" />
+			<?php echo $_local->gui->tag;?>：<input id="dighest_edit_taget" />
 			</div>
 			<div id="dighest_text_preview">
 			</div>

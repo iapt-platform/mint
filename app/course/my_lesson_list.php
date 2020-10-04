@@ -22,7 +22,7 @@ if(count($Fetch)==0)
 $course_info = $Fetch[0];
 
 echo '<div>';
-echo '<a href="../course/my_course_index.php">全部课程</a> > '.$course_info["title"];
+echo '<a href="../course/my_course_index.php">'.$_local->gui->all_courses.'</a> > '.$course_info["title"];
 echo '</div>';
 
 ?>
@@ -53,21 +53,21 @@ echo '</div>';
 
 <?php
     echo '<div><div>';
-    echo "<span style='padding-right:5px;'>开课：".strftime("%b-%d-%Y",$course_info["create_time"]/1000)."</span>";
-    echo "<span style='padding:5px;'>最新：".strftime("%b-%d-%Y",$course_info["modify_time"]/1000)."</span>";
-    echo "<span style='padding:5px;'>视频数量：{$course_info["lesson_num"]}</span>";
-    echo "<span style='padding:5px;'>播放：100</span>";
+    echo "<span style='padding-right:5px;'>".$_local->gui->course_begin."：".strftime("%b-%d-%Y",$course_info["create_time"]/1000)."</span>";
+    echo "<span style='padding:5px;'>".$_local->gui->recent_update."：".strftime("%b-%d-%Y",$course_info["modify_time"]/1000)."</span>";
+    echo "<span style='padding:5px;'>".$_local->gui->num_of_lesson."：{$course_info["lesson_num"]}</span>";
+    echo "<span style='padding:5px;'>".$_local->gui->num_of_played."：100</span>";
     echo "<span style='padding:5px;'>".'<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="32" height="32"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';
     echo "10"."</span>";
-    echo "<span style='padding:5px;'>订阅：20</span>";
+    echo "<span style='padding:5px;'>".$_local->gui->signed_up."：20</span>";
     echo '</div>';
 
     echo '<div style="padding-margin:5px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     overflow: hidden;">';
-    echo '简介：'.$course_info["summary"];
+    echo $_local->gui->introduction.'：'.$course_info["summary"];
     echo '</div>';
     echo '<div>';
-    echo '教师：'.ucenter_getA($course_info["teacher"]);
+    echo $_local->gui->speaker.'：'.ucenter_getA($course_info["teacher"]);
     echo '</div></div>';
 ?>
 <div><a href="../course/my_course_index.php?course=<?php echo $course_info["id"];?>&op=edit">
@@ -103,7 +103,7 @@ foreach($fAllLesson as $row){
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
     echo '<div class="summary"  style="padding-margin:5px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     overflow: hidden;">'.$row["summary"].'</div>';
-    echo '<div class="author"  style="padding-bottom:5px;">主讲：'.ucenter_getA($row["teacher"]).'</div>';
+    echo '<div class="author"  style="padding-bottom:5px;">'.$_local->gui->speaker.'：'.ucenter_getA($row["teacher"]).'</div>';
     echo '</div>';    
 
     echo '</div>';
@@ -121,19 +121,19 @@ echo '</div>';
             echo $course_info["cover"];
         ?>
         </div>
-        <div>创建时间：
+        <div><?php echo $_local->gui->created_time ?>：
         <?php
             echo strftime("%b-%d-%Y",$course_info["create_time"]/1000);
         ?>
         </div>
-        <div>修改时间：
+        <div><?php echo $_local->gui->modified_time ?>：
         <?php
             echo strftime("%b-%d-%Y",$course_info["modify_time"]/1000);
         ?>
         </div>
-        <div>点击：</div>
+        <div><?php echo $_local->gui->num_of_hit ?>：</div>
         <div><svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="32" height="32"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg></div>
-        <div>收藏：</div>
+        <div><?php echo $_local->gui->favorite ?>：</div>
 
     </div>
 

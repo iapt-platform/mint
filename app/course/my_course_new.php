@@ -5,7 +5,7 @@ require_once "../public/_pdo.php";
 require_once '../media/function.php';
 
 echo '<div>';
-echo '新建课程';
+echo $_local->gui->create_course;
 echo '</div>';
 
 echo '<div></div>';
@@ -19,28 +19,28 @@ echo '</div>';
 <div id="userfilelist">
 
     <div style="display:flex;">
-    <div style="flex:2;">标题</div>
+    <div style="flex:2;"><?php echo $_local->gui->title ?></div>
     <div style="flex:8;">
     <div style="text-align: right;color:gray;">0/32</div>
-    <input type="input" name="title" value="" placeholder="标题" />
+    <input type="input" name="title" value="" placeholder="<?php echo $_local->gui->title ?>" />
     </div>
     </div>
 
     <div style="display:none;">
-    <div style="flex:2;">副标题</div>
+    <div style="flex:2;"><?php echo $_local->gui->sub_title ?></div>
     <div style="flex:8;">
         <div style="text-align: right;color:gray;">0/32</div>
-        <input type="input" name="subtitle" value="" placeholder="副标题" />
+        <input type="input" name="subtitle" value="" placeholder="<?php echo $_local->gui->sub_title ?>" />
     </div>
     </div>
 
     <div style="display:flex;">
-    <div style="flex:2;">简介</div>
+    <div style="flex:2;"><?php echo $_local->gui->introduction ?></div>
     <div style="flex:8;"><textarea name = "summary" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
-    <div style="flex:2;">老师</div>
+    <div style="flex:2;"><?php echo $_local->gui->speaker ?></div>
     <div   style="flex:8;">
         <div id="teacher_id"></div>
         <input id="form_teacher" type="hidden" name="teacher" value="" />
@@ -48,27 +48,27 @@ echo '</div>';
     </div> 
 
     <div style="display:flex;">
-    <div style="flex:2;">语言</div>
+    <div style="flex:2;"><?php echo $_local->gui->language_select ?></div>
     <div   style="flex:8;">
         <span >课程信息语言<input type="hidden" name="lang" value="" /></span>
     </div>
     </div> 
 
     <div style="display:flex;">
-    <div style="flex:2;">标签</div>
+    <div style="flex:2;"><?php echo $_local->gui->tag ?></div>
     <div   style="flex:8;">
         <input type="input" name="tag" value="" />
     </div>
     </div> 
 
     <div style="display:flex;">
-    <div style="flex:2;">附件链接</div>
+    <div style="flex:2;"><?php echo $_local->gui->attachment ?></div>
     <div style="flex:8;"><input type="input" name = "attachment" value="" /></div>
     </div>
 </div>
 
 
-<input type="submit" value="新建课程" />
+<input type="submit" value="<?php echo $_local->gui->create_course ?>" />
 </form>
 
 <script>
