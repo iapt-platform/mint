@@ -29,7 +29,7 @@ echo '</div>';
 
     <div>
 		<span class="icon_btn_div">
-			<span class="icon_btn_tip"><?php echo $_local->gui->new;?></span>
+			<span class="icon_btn_tip"><?php echo $_local->gui->new_lesson;?></span>
 			<button id="file_share" type="button" class="icon_btn"  title=" ">
 			<a href="../course/my_course_index.php?course=<?php echo $course_info["id"] ?>&op=newlesson">
                 <svg style="" t="1601520759574" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7839" width="200" height="200">
