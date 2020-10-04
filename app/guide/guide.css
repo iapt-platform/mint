@@ -46,20 +46,19 @@ guide ol {
   color: var(--main-color);
   z-index: 200;
 }
-/*
+
 .guide_contence:after {
-    content: "\00a0";
-    width: 0;
-    height: 0;
-    display: block;
-    border-style: solid;
-    border-width: 10px;
-    border-color: transparent transparent white transparent;
-    position: absolute;
-    top: -20px;
+  content: "\00a0";
+  width: 0;
+  height: 0;
+  display: block;
+  border-style: solid;
+  border-width: 10px;
+  border-color: transparent transparent var(--drop-bg-color) transparent;
+  position: absolute;
+  top: -20px;
 }
 
-*/
 .guide_contence h1 {
   font-size: 1.5em;
   font-weight: 700;

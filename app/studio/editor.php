@@ -119,6 +119,10 @@ else{$currDevice="computer";}
 	</style>
 
 	<style>
+	.term_link:hover .guide_contence {
+		display: inline-block;
+	}
+	
 	.trans_text_block{
 		border-left: 5px solid #d1d1d1;
 		background-color: #f1f1f1;

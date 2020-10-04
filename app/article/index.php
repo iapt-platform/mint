@@ -1,11 +1,7 @@
 <?php
 require_once "../public/load_lang.php";
 require_once "../path.php";
-
-?>
-
-<?PHP
-include "../pcdl/html_head.php";
+require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
 	<script src="../term/term.js"></script>
@@ -190,7 +186,8 @@ include "../pcdl/html_head.php";
 		margin: 0 8px;
 	}
 	.term_link {
-    cursor: pointer;
+	cursor: pointer;
+	position: relative;
 	}
 	.main_view{
 		padding: 0 1em;
@@ -268,7 +265,9 @@ include "../pcdl/html_head.php";
 	#head_bar{
 		height:unset;
 	}
-
+	.term_link:hover .guide_contence {
+		display: inline-block;
+	}
 <?php
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 ?>
