@@ -18,7 +18,7 @@ foreach($Fetch as $row){
     echo '<div class="pd-10">';
     echo '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;color: #ad4b00;">'.$row["subtitle"].'</div>';
-    echo '<div class="author"  style="padding-bottom:5px;margin-bottom:0.4em;">{$_local->gui->speaker}：';
+    echo '<div class="author"  style="padding-bottom:5px;margin-bottom:0.4em;">'.$_local->gui->speaker.'：';
     echo '<a href="../uhome/course.php?userid='.$row['teacher'].'">';
     echo ucenter_getA($row["teacher"]);
     echo '</a>';
