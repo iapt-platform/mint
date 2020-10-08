@@ -112,7 +112,6 @@ require_once "../pcdl/html_head.php";
 		margin-top: 8px;
 	}
 	note{
-		background-color: #80808014;
 		padding: 0.5em 0.8em;
 		margin-bottom: 0.4em;
 		border-radius: 5px;
@@ -123,6 +122,7 @@ require_once "../pcdl/html_head.php";
 		}
 		else{
 			echo "display:block;";
+			echo "background-color: #80808014;";
 		}
 		?>
 	}
@@ -229,6 +229,12 @@ require_once "../pcdl/html_head.php";
 	.when_right_fixed{
 		padding-right:20em;
 	}
+	<?php
+		if(isset($_GET["display"]) && $_GET["display"]=="para"){
+
+		}
+		else{
+?>
 	.bg_color_1{
 		background-color:#ebebeb66;
 	}
@@ -244,6 +250,10 @@ require_once "../pcdl/html_head.php";
 	.bg_color_5{
 		background:linear-gradient(to right, #fe99b91c, #ebebeb66);
 	}
+<?php
+		}
+		?>
+
 
 	pre {
 		white-space: pre-line;
@@ -255,9 +265,13 @@ require_once "../pcdl/html_head.php";
 	#contents_view{
 		display:flex;
 	}
-	#contents{
+	#contents_div{
 		flex:7;
 	}
+	#contents{
+		min-height: 400px;
+	}
+	
 	#right_pannal{
 		flex:3;
 		max-width:20em;
@@ -282,6 +296,18 @@ require_once "../pcdl/html_head.php";
 		}
 ?>
 
+#toc_content .level_2{
+	padding-left:0.5em;
+}
+#toc_content .level_3{
+	padding-left:1em;
+}
+#toc_content .level_4{
+	padding-left:1.5em;
+}
+#toc_content .level_5{
+	padding-left:2em;
+}
 	</style>
 
 <style media="screen and (max-width:767px)">
@@ -335,22 +361,28 @@ term_word_link_fun("wiki_goto_word");
 	<div id="article_author">author</div>
 </div>
 <div id="contents_view">
-	<div id="contents" style="padding: 0 1em;">
-	loading...
+	<div id="contents_div" style="padding: 0 1em;">
+		<div id="contents">
+		loading...
+		</div>
+		<div id="contents_foot">
+			<div id="contents_nav" style="display:flex;justify-content: space-between;">
+				<div id="contents_nav_left"></div>
+				<div id="contents_nav_right"></div>
+			</div>
+			<div id="contents_dicuse">
+			
+			</div>
+		</div>
 	</div>
 	<div id="right_pannal">
 		<div class="fun_frame">
-			<div class="title">About Author</div>
-			<div class="content" style="max-height:10em;">
+			<div id = "collect_title" class="title">Table of Content</div>
+			<div id = "toc_content" class="content" style="max-height:10em;">
 			</div>
 		</div>
 		<div class="fun_frame">
-			<div class="title">Table of Content</div>
-			<div class="content" style="max-height:10em;">
-			</div>
-		</div>
-		<div class="fun_frame">
-			<div class="title">Other Authors</div>
+			<div class="title">Translations</div>
 			<div class="content" style="max-height:10em;">
 			</div>
 		</div>
@@ -359,7 +391,8 @@ term_word_link_fun("wiki_goto_word");
 </div>
 <script>
 	articel_load(_articel_id);
-
+	articel_load_collect(_articel_id);
+	
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
 		if(GetPageScroll().y>220){

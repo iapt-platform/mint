@@ -120,7 +120,18 @@ function note_refresh_new() {
               let id = iterator.id;
               let strHtml = "<a name='" + id + "'></a>";
               if (_display && _display == "para") {
-                let strPalitext = "<pali>" + iterator.palitext + "<pali>";
+                let strPalitext =
+                  "<pali book='" +
+                  iterator.book +
+                  "' para='" +
+                  iterator.para +
+                  "' begin='" +
+                  iterator.begin +
+                  "' end='" +
+                  iterator.end +
+                  "' >" +
+                  iterator.palitext +
+                  "</pali>";
                 let divPali = $("#" + id)
                   .parent()
                   .children(".palitext");
@@ -144,7 +155,6 @@ function note_refresh_new() {
                 $("#" + id).html(strHtml);
               }
             }
-
             $(".palitext").click(function () {
               let sentid = $(this).parent().attr("info").split("-");
               window.open(
@@ -156,6 +166,18 @@ function note_refresh_new() {
                   sentid[2] +
                   "&end=" +
                   sentid[3]
+              );
+            });
+            $("pali").click(function () {
+              window.open(
+                "../pcdl/reader.php?view=sent&book=" +
+                  $(this).attr("book") +
+                  "&para=" +
+                  $(this).attr("para") +
+                  "&begin=" +
+                  $(this).attr("begin") +
+                  "&end=" +
+                  $(this).attr("end")
               );
             });
             note_ref_init();

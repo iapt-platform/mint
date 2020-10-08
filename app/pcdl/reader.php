@@ -18,7 +18,9 @@ $_channal = new Channal();
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="css/reader.css"/>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:767px)">
 	<title id="page_title">PCD Reader</title>
 
@@ -30,6 +32,10 @@ $_channal = new Channal();
 	<script src="../public/js/notify.js"></script>
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../public/js/marked.js"></script>
+	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 </head>
 <body class="reader_body" >
 <a name="page_head"></a>
@@ -43,11 +49,19 @@ $_channal = new Channal();
 	</script>
 
 <style>
+.term_link {
+    background: unset;
+    position: relative;
+}
+	.term_link:hover .guide_contence {
+		display: inline-block;
+	}
 .par_translate_div{
 	margin-left: 1em;
     border-left: 1px solid gray;
     padding-left: 0.5em;
     margin-top: 0.5em;
+	font-size: 1.1em
 }
 	.edit_icon{
 		display:inline-block;
@@ -254,6 +268,16 @@ note{
 .term_mean{
 	color:blue;
 	cursor: pointer;
+}
+more{
+    position: absolute;
+    display: none;
+    width: 1em;
+    height: 1em;
+    background-color: gray;
+}
+sent:hover more{
+	display: inline-block;
 }
 </style>
 		<!-- tool bar begin-->
@@ -1251,6 +1275,23 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 
 <script>
 reader_init();
+var htmlDropdown  = "<div class='case_dropdown'>";
+htmlDropdown  +="<svg class='edit_icon' >";
+htmlDropdown  +="<use xlink:href='svg/icon.svg#ic_more'></use>";
+htmlDropdown  +="</svg>";
+htmlDropdown  +="<div class='case_dropdown-content'>";
+htmlDropdown  +="<a onclick='copy_ref()'>复制引用</a>";
+htmlDropdown  +="<a onclick='add_to_list()'>添加到选择列表</a>";
+htmlDropdown  +="</div>";
+htmlDropdown  +="</div>";
+$("sent").each(function(){
+	$(this).append("<more>"+htmlDropdown+"</more>")
+})
+function copy_ref(){
+	let pali_sent = $(this).parent().parent().parent().prev();
+	let strRef = "{{"+pali_sent.attr("book")+"-"+pali_sent.attr("para")+"-"+pali_sent.attr("begin")+"-"+pali_sent.attr("end")+"}}";
+	alert(strRef);
+}
 </script>
 	
 </body>

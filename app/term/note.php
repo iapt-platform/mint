@@ -60,6 +60,12 @@ foreach ($_data as $key => $value) {
 		$begin=$arrSent[2];
 		$end=$arrSent[3];
 	}
+	else{
+		$bookId=0;
+		$para=0;
+		$begin=0;
+		$end=0;
+	}
 
 	$query="SELECT html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
 	$sth = $db_pali_sent->prepare($query);
@@ -101,7 +107,16 @@ foreach ($_data as $key => $value) {
 	
 	$para_path=_get_para_path($bookId,$para);
 
-	$output[]=array("id"=>$id,"palitext"=>$palitext,"tran"=>$tran,"ref"=>$para_path,"tran_count"=>$tran_count);
+	$output[]=array("id"=>$id,
+							   "palitext"=>$palitext,
+							   "tran"=>$tran,
+							   "ref"=>$para_path,
+							   "tran_count"=>$tran_count,
+							   "book"=>$bookId,
+							   "para"=>$para,
+							   "begin"=>$begin,
+							   "end"=>$end
+							);
 
 }
 
