@@ -272,9 +272,14 @@ note{
 more{
     position: absolute;
     display: none;
-    width: 1em;
-    height: 1em;
-    background-color: gray;
+    width: 1.4em;
+    height: 1.4em;
+}
+more .icon{
+	display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    background: url(../public/images/svg/more.svg);
 }
 sent:hover more{
 	display: inline-block;
@@ -683,7 +688,9 @@ else{
 			foreach ($FetchSent as $key => $value) {
 				echo "<div id='sent-pali-b$book-$iPar-{$value["begin"]}' class='par_pali_div'>";
 				$pali_sent=$value["html"];
-				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</sent>";
+				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >";
+				echo "<palitext book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</palitext>";
+				echo "</sent>";
 				echo "</div>";
 				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_wbw_div'>";
 				echo "</div>";
@@ -716,7 +723,9 @@ else{
 			}
 			foreach ($FetchSent as $key => $value) {
 				$pali_sent=$value["html"];
-				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</sent>";
+				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >";
+				echo "<palitext book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</palitext>";
+				echo "</sent>";
 			}
 			echo "</div>";
 			echo "<div id='par-wbwdiv-b$book-$iPar' class='par_wbw_div'>";
@@ -1276,22 +1285,19 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 <script>
 reader_init();
 var htmlDropdown  = "<div class='case_dropdown'>";
-htmlDropdown  +="<svg class='edit_icon' >";
+htmlDropdown  +="<svg class='icon' >";
 htmlDropdown  +="<use xlink:href='svg/icon.svg#ic_more'></use>";
 htmlDropdown  +="</svg>";
 htmlDropdown  +="<div class='case_dropdown-content'>";
-htmlDropdown  +="<a onclick='copy_ref()'>复制引用</a>";
+htmlDropdown  +="<a onclick='copy_ref(this)'>复制引用</a>";
+htmlDropdown  +="<a onclick='copy_text(this)'>复制纯文本</a>";
 htmlDropdown  +="<a onclick='add_to_list()'>添加到选择列表</a>";
 htmlDropdown  +="</div>";
 htmlDropdown  +="</div>";
 $("sent").each(function(){
-	$(this).append("<more>"+htmlDropdown+"</more>")
+	$(this).prepend("<more>"+htmlDropdown+"</more>")
 })
-function copy_ref(){
-	let pali_sent = $(this).parent().parent().parent().prev();
-	let strRef = "{{"+pali_sent.attr("book")+"-"+pali_sent.attr("para")+"-"+pali_sent.attr("begin")+"-"+pali_sent.attr("end")+"}}";
-	alert(strRef);
-}
+
 </script>
 	
 </body>
