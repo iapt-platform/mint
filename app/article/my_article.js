@@ -1,4 +1,8 @@
 var _display = "para";
+function my_article_init() {
+  my_article_list();
+  article_add_dlg_init("article_add_div");
+}
 function my_article_list() {
   $.get(
     "../article/list.php",

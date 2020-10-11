@@ -242,8 +242,10 @@ function render_channal_list(channalinfo) {
   output += "<div>";
 
   output += "<div>";
-  output += "<a href='../wiki/wiki.php?word=" + _word;
-  output += "&channal=" + channalinfo.id + "' >";
+
+  //  output += "<a href='../wiki/wiki.php?word=" + _word;
+  //  output += "&channal=" + channalinfo.id + "' >";
+  output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
 
   output += channalinfo["nickname"];
   output += "/" + channalinfo["name"];

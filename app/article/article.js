@@ -110,3 +110,14 @@ function articel_load_collect(article_id) {
     }
   );
 }
+
+function set_channal(channalid) {
+  let url = "../article/index.php?id=" + _articel_id;
+  if (channalid != "") {
+    url += "&channal=" + channalid;
+  }
+  if (_display != "") {
+    url += "&display=" + _display;
+  }
+  location.assign(url);
+}

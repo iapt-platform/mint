@@ -4361,7 +4361,9 @@ note {
   display: none;
   text-align: center;
 }
-
+.icon_btn_div {
+  position: relative;
+}
 .icon_btn_div:hover .icon_btn_tip {
   display: inline-block;
 }

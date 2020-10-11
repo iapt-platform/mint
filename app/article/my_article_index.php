@@ -1,9 +1,10 @@
 <?php
 require_once '../studio/index_head.php';
 ?>
-<body id="file_list_body" onLoad="my_article_list()">
+<body id="file_list_body" onLoad="my_article_init()">
 
 	<script language="javascript" src="../article/my_article.js"></script>
+	<script language="javascript" src="../article/article_add_dlg.js"></script>
 	<script >
 	var gCurrPage="article";
 	</script>
@@ -27,6 +28,14 @@ require_once '../studio/index_head.php';
 	.case_dropdown-content>.active{
 		background-color:gray;
 	}
+	.float_dlg{
+		display: none;
+    width: 15em;
+    position: absolute;
+    right: 0;
+    background-color: var(--btn-hover-bg-color);
+    padding: 10px;
+	}
 	</style>
 
 	<?php
@@ -40,13 +49,12 @@ require_once '../studio/index_head.php';
 				<div>
 					<span class="icon_btn_div">
 						<span class="icon_btn_tip"></span>
-						<button id="file_add" type="button" class="icon_btn" title=" ">
-							<a href="../course/my_course_index.php?op=new">
+						<button id="file_add" type="button" class="icon_btn" title=" " onclick="article_add_dlg_show()">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 							</svg>
-							</a>
 						</button>
+						<div id='article_add_div' class="float_dlg"></div>
 					</span>
 					
 					<span class="icon_btn_div">				
