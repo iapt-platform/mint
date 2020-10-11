@@ -1,3 +1,4 @@
+var _display = "para";
 function my_article_list() {
   $.get(
     "../article/list.php",
@@ -53,6 +54,8 @@ function render_status(status) {
     { id: 3, name: "公开", tip: "所有人均可看到" },
   ];
   html += '<div class="case_dropdown">';
+  html += '<input type="hidden" name="status"  value ="' + status + '" />';
+
   for (const iterator of objStatus) {
     if (iterator.id == status) {
       html += "<div >" + iterator.name + "</div>";
@@ -65,7 +68,7 @@ function render_status(status) {
     if (iterator.id == status) {
       active = "active";
     }
-    html += "<a class='" + active + "'  onclick='setStatus()'>";
+    html += "<a class='" + active + "'  onclick='setStatus(this)'>";
     html += "<div style='font-size:110%'>" + iterator.name + "</div>";
     html += "<div style='font-size:80%'>" + iterator.tip + "</div>";
     html += "</a>";
@@ -89,31 +92,44 @@ function my_article_edit(id) {
 
           html += '<div class="" style="padding:5px;">';
           html += '<div style="max-width:2em;flex:1;"></div>';
-          html += "<div style='flex:2;'>" + result.title + "</div>";
+          html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
-            "<div style='flex:2;'>" + render_status(result.status) + "</div>";
-          html += "<div style='flex:1;'>Copy Link</div>";
+            "<input type='hidden' name='tag' value='" + result.tag + "'/>";
           html +=
-            "<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
-            result.id +
-            "'>Edit</a></div>";
+            "<input type='hidden' name='summary' value='" +
+            result.summary +
+            "'/>";
+          html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
-            "<div style='flex:1;'><a href='../article/?id=" +
-            result.id +
-            "' target='_blank'>Preview</a></div>";
-          html += "<div style='flex:1;'>15</div>";
+            "<input type='hidden' name='status' value='" +
+            result.status +
+            "'/>";
+
+          html += "<button onclick='article_preview()'>Preview</button>";
+          html += "<input type='checkbox' name='import' />Import Data";
           html += "</div>";
           html += "<div style='display:flex;'>";
-          html += "<div style='flex:5;'>";
-          html +=
-            "<textarea style='height:500px;'>" + result.content + "</textarea>";
-          html += "</div>";
-          html += "<div style='flex:5;'>";
+          html += "<div style='flex:4;'>";
 
+          html +=
+            "<textarea id='article_content' name='content' style='height:500px;'>" +
+            result.content +
+            "</textarea>";
           html += "</div>";
+
+          html += "<div id='preview_div'>";
+          html += "<div id='preview_inner' ></div>";
+          html += "</div>";
+
           html += "</div>";
 
           $("#article_list").html(html);
+          $("#aritcle_status").html(render_status(result.status));
+          let html_title =
+            "<input type='input' name='title' value='" + result.title + "' />";
+          $("#article_title").html(html_title);
+          $("#preview_inner").html(note_init(result.content));
+          note_refresh_new();
         } catch (e) {
           console.error(e);
         }
@@ -122,4 +138,63 @@ function my_article_edit(id) {
       }
     }
   );
+}
+
+function article_preview() {
+  $("#preview_inner").html(note_init($("#article_content").val()));
+  note_refresh_new();
+}
+
+function my_article_save() {
+  $.ajax({
+    //几个参数需要注意一下
+    type: "POST", //方法类型
+    dataType: "json", //预期服务器返回的数据类型
+    url: "../article/my_article_post.php", //url
+    data: $("#article_edit").serialize(),
+    success: function (result) {
+      console.log(result); //打印服务端返回的数据(调试用)
+
+      if (result.status == 0) {
+        alert("保存成功");
+      } else {
+        alert("error:" + result.message);
+      }
+    },
+    error: function (data, status) {
+      alert("异常！" + data.responseText);
+      switch (status) {
+        case "timeout":
+          break;
+        case "error":
+          break;
+        case "notmodified":
+          break;
+        case "parsererror":
+          break;
+        default:
+          break;
+      }
+    },
+  });
+}
+
+function course_validate_required(field, alerttxt) {
+  with (field) {
+    if (value == null || value == "") {
+      alert(alerttxt);
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+function course_validate_form(thisform) {
+  with (thisform) {
+    if (course_validate_required(title, "Title must be filled out!") == false) {
+      title.focus();
+      return false;
+    }
+  }
 }

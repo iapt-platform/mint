@@ -7,6 +7,7 @@ require_once "../pcdl/html_head.php";
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="./article.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
 	<script>
 	<?php
 	$_id = "";
@@ -34,47 +35,14 @@ require_once "../pcdl/html_head.php";
 	body{
 		font-size:12pt;
 	}
-	.term_link,.term_link_new{
-		color: blue;
-		padding-left: 2px;
-		padding-right: 2px;
-	}
-	.term_link_new{
-		color:red;
-	}
+
 	#search_result{
 		position: absolute;
 		background: wheat;
 		max-width: 95%;
 		width: 24em;
 	}
-	note:hover chapter{
-		display:inline;
-	} 
-	.ref>chapter:first-child{
-		display:inline;
-	}
-	chapter{
-		display:none;
-		color: var(--box-bg-color1);
-		text-decoration: none;
-		cursor: pointer;
-	}
-	chapter:hover{
-		color: var(--link-color);
-		text-decoration: underline;
-	}
-	para{
-		background-color: var(--drop-bg-color);
-		padding: 2px 8px;
-		text-decoration: none;
-		cursor: pointer;
-		color: var(--btn-border-color);
-		border-radius: 5px;
-	}
-	para:hover{
-		text-decoration: underline;
-	}
+
 	.icon{
 		width: 15px;
 		height: 15px;
@@ -173,22 +141,7 @@ require_once "../pcdl/html_head.php";
 	.term_block_bar_left_info{
 		    padding-left: 8px;
 	}
-	.term_meaning{
-		font-weight: 700;
-	}
-	.term_author{
-		font-size: 80%;
-		color: gray;
-	}
-	.term_tag{
-		font-size: 80%;
-		font-weight: 500;
-		margin: 0 8px;
-	}
-	.term_link {
-	cursor: pointer;
-	position: relative;
-	}
+
 	.main_view{
 		padding: 0 1em;
 		max-width: 1280px;
@@ -271,7 +224,9 @@ require_once "../pcdl/html_head.php";
 	#contents{
 		min-height: 400px;
 	}
-	
+	#contents li{
+		white-space: normal;
+	}
 	#right_pannal{
 		flex:3;
 		max-width:20em;
@@ -279,9 +234,7 @@ require_once "../pcdl/html_head.php";
 	#head_bar{
 		height:unset;
 	}
-	.term_link:hover .guide_contence {
-		display: inline-block;
-	}
+
 <?php
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 ?>
@@ -383,7 +336,7 @@ term_word_link_fun("wiki_goto_word");
 		</div>
 		<div class="fun_frame">
 			<div class="title">Translations</div>
-			<div class="content" style="max-height:10em;">
+			<div id="channal_list" class="content" style="max-height:10em;">
 			</div>
 		</div>
 	</div>

@@ -292,6 +292,17 @@ function note_json_html(in_json) {
     "<div class='tran'>" +
     marked(term_std_str_to_tran(in_json.tran)) +
     "</div>";
-  output += "<div class='ref'>" + in_json.ref + "</div>";
+  output += "<div class='ref'>" + in_json.ref;
+  output +=
+    "<span class='sent_no'>" +
+    in_json.book +
+    "-" +
+    in_json.para +
+    "-" +
+    in_json.begin +
+    "-" +
+    in_json.end +
+    "<span>" +
+    "</div>";
   return output;
 }

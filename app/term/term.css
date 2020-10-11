@@ -1,0 +1,58 @@
+.term_link:hover .guide_contence {
+  display: inline-block;
+}
+
+.term_meaning {
+  font-weight: 700;
+}
+.term_author {
+  font-size: 80%;
+  color: gray;
+}
+.term_tag {
+  font-size: 80%;
+  font-weight: 500;
+  margin: 0 8px;
+}
+.term_link {
+  cursor: pointer;
+  position: relative;
+}
+
+.term_link,
+.term_link_new {
+  color: blue;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.term_link_new {
+  color: red;
+}
+
+note:hover chapter {
+  display: inline;
+}
+.ref > chapter:first-child {
+  display: inline;
+}
+chapter {
+  display: none;
+  color: var(--box-bg-color1);
+  text-decoration: none;
+  cursor: pointer;
+}
+chapter:hover {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+para {
+  background-color: var(--drop-bg-color);
+  padding: 2px 8px;
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--btn-border-color);
+  border-radius: 5px;
+}
+para:hover {
+  text-decoration: underline;
+}
