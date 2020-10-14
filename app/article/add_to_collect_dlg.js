@@ -2,7 +2,7 @@ function add_to_collect_dlg_init() {
   $("[vui='collect-dlg']").each(function () {
     $(this).css("position", "relative");
     $(this).html(
-      "<span class='button_add_to_collect'>添加到作品集</span><div class='float_dlg'></div>"
+      "<span class='button_add_to_collect'>添加到文集</span><div class='float_dlg'></div>"
     );
   });
 
@@ -25,10 +25,13 @@ function add_to_collect_dlg_init() {
       "<button onclick=\"article_add_to_collect_ok('" +
       article_id +
       "')\">Finish</button>";
-    html += "<button onclick='article_add_to_collect_cancel()'>Cancel</button>";
+    html +=
+      "<button onclick=\"article_add_to_collect_cancel('" +
+      article_id +
+      "')\">Cancel</button>";
     html += "</div>";
     html += "</div>";
-    $(this).siblings(".float_dlg").first().append(html);
+    $(this).siblings(".float_dlg").first().html(html);
     $(this).siblings(".float_dlg").first().show();
     $.get(
       "../article/list_article_in_collect.php",
@@ -88,8 +91,21 @@ function article_add_to_collect_ok(article_id) {
     },
     function (data) {
       let result = JSON.parse(data);
+      if (result.status > 0) {
+        alert(result.message);
+      } else {
+        add_to_collect_dlg_close(result.id);
+      }
     }
   );
 }
 
-function article_add_to_collect_cancel() {}
+function article_add_to_collect_cancel(article_id) {
+  add_to_collect_dlg_close(article_id);
+}
+
+function add_to_collect_dlg_close(article_id) {
+  $("#add_to_collect_dlg_" + article_id)
+    .parent()
+    .hide();
+}

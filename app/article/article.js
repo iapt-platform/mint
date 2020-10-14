@@ -61,12 +61,12 @@ function articel_load_collect(article_id) {
             let nextArticle = "无";
             for (let index = 0; index < article_list.length; index++) {
               const element = article_list[index];
-              if (element.aticle == _articel_id) {
+              if (element.article == _articel_id) {
                 if (index > 0) {
                   const prev = article_list[index - 1];
                   prevArticle =
                     "<a href='../article/index.php?id=" +
-                    prev.aticle +
+                    prev.article +
                     display +
                     "'>" +
                     prev.title +
@@ -76,7 +76,7 @@ function articel_load_collect(article_id) {
                   const next = article_list[index + 1];
                   nextArticle =
                     "<a href='../article/index.php?id=" +
-                    next.aticle +
+                    next.article +
                     display +
                     "'>" +
                     next.title +
@@ -90,7 +90,7 @@ function articel_load_collect(article_id) {
                 element.level +
                 "'>" +
                 "<a href='../article/index.php?id=" +
-                element.aticle +
+                element.article +
                 display +
                 "'>" +
                 element.title +
