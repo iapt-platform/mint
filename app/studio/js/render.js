@@ -60,12 +60,20 @@ function palitext_calculator() {
   }
 }
 //添加新的段落块
-function addNewBlockToHTML(bookId, parId) {
+function addNewBlockToHTML(bookId, parId, begin = -1, end = -1) {
   parHeadingLevel = 0;
   parTitle = "";
   var divBlock = document.createElement("div");
   var typId = document.createAttribute("id");
-  typId.nodeValue = "par_" + bookId + "_" + (parId - 1);
+  if (begin == -1 && end == -1) {
+    //基于段落的块
+    typId.nodeValue = "par_" + bookId + "_" + (parId - 1);
+  } else {
+    //基于句子的块
+    typId.nodeValue =
+      "par_" + bookId + "_" + (parId - 1) + "_" + begin + "_" + end;
+  }
+
   divBlock.attributes.setNamedItem(typId);
   var typClass = document.createAttribute("class");
   typClass.nodeValue = "pardiv";
@@ -260,16 +268,29 @@ function insertBlockToHtml(element) {
   xmlParInfo = element.getElementsByTagName("info")[0];
   xmlParData = element.getElementsByTagName("data")[0];
 
-  bookId = getNodeText(xmlParInfo, "book");
-  paragraph = getNodeText(xmlParInfo, "paragraph");
+  let bookId = getNodeText(xmlParInfo, "book");
+  let paragraph = getNodeText(xmlParInfo, "paragraph");
+  let base_on = getNodeText(xmlParInfo, "base");
+  let begin = getNodeText(xmlParInfo, "begin");
+  let end = getNodeText(xmlParInfo, "end");
+
   type = getNodeText(xmlParInfo, "type");
   language = getNodeText(xmlParInfo, "language");
   bId = getNodeText(xmlParInfo, "id");
 
-  blockId = "par_" + bookId + "_" + (paragraph - 1);
-  var htmlBlock = document.getElementById(blockId);
-  if (htmlBlock == null) {
-    addNewBlockToHTML(bookId, paragraph);
+  let htmlBlock;
+  if (base_on == "sentence") {
+    blockId = "par_" + bookId + "_" + (paragraph - 1) + "_" + begin + "_" + end;
+    htmlBlock = document.getElementById(blockId);
+    if (htmlBlock == null) {
+      addNewBlockToHTML(bookId, paragraph, begin, end);
+    }
+  } else {
+    blockId = "par_" + bookId + "_" + (paragraph - 1);
+    htmlBlock = document.getElementById(blockId);
+    if (htmlBlock == null) {
+      addNewBlockToHTML(bookId, paragraph);
+    }
   }
 
   if (!isParInView(getParIndex(bookId, paragraph))) {

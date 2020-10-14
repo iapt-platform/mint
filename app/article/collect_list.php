@@ -12,13 +12,8 @@ if(isset($_GET["userid"])){
     $userid=$_GET["userid"];
     $query = "SELECT * from collect  where owner = ".$PDO->quote($userid)." and status <> 0 order by modify_time DESC";
     $Fetch = PDO_FetchAll($query);
-    if($Fetch){
-        /*
-
-        */
-        echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+    echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 echo json_encode(array(), JSON_UNESCAPED_UNICODE);	

@@ -28,14 +28,7 @@ require_once '../studio/index_head.php';
 	.case_dropdown-content>.active{
 		background-color:gray;
 	}
-	.float_dlg{
-		display: none;
-    width: 15em;
-    position: absolute;
-    right: 0;
-    background-color: var(--btn-hover-bg-color);
-    padding: 10px;
-	}
+
 	</style>
 
 	<?php

@@ -93,7 +93,7 @@ function my_article_edit(id) {
         try {
           let html = "";
           let result = JSON.parse(data);
-
+          $("#article_collect").attr("a_id", result.id);
           html += '<div class="" style="padding:5px;">';
           html += '<div style="max-width:2em;flex:1;"></div>';
           html += "<input type='hidden' name='id' value='" + result.id + "'/>";
@@ -130,10 +130,14 @@ function my_article_edit(id) {
           $("#article_list").html(html);
           $("#aritcle_status").html(render_status(result.status));
           let html_title =
-            "<input type='input' name='title' value='" + result.title + "' />";
+            "<input id='input_article_title' type='input' name='title' value='" +
+            result.title +
+            "' />";
           $("#article_title").html(html_title);
           $("#preview_inner").html(note_init(result.content));
           note_refresh_new();
+
+          add_to_collect_dlg_init();
         } catch (e) {
           console.error(e);
         }

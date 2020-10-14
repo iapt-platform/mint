@@ -7,6 +7,7 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../term/note.js"></script>
 	<script language="javascript" src="../term/term.js"></script>
 	<script language="javascript" src="../public/js/marked.js"></script>
+	<script language="javascript" src="../article/add_to_collect_dlg.js"></script>
 	<script >
 	var gCurrPage="article";
 	</script>
@@ -57,6 +58,7 @@ require_once '../studio/index_head.php';
 			<div style="display:flex;">
 				<a href="../article/my_article_index.php">返回</a>
 				<span id="article_title"></span>
+				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
 				<div id="aritcle_status"></div>

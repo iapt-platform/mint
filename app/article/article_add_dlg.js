@@ -1,6 +1,6 @@
-var _dlg_div;
+var _article_add_dlg_div;
 function article_add_dlg_init(div) {
-  _dlg_div = div;
+  _article_add_dlg_div = div;
   let html = "";
   html += "<div id='article_add_dlg'>";
   html += "<div >";
@@ -19,10 +19,10 @@ function article_add_dlg_init(div) {
 }
 
 function article_add_dlg_show() {
-  $("#" + _dlg_div).show();
+  $("#" + _article_add_dlg_div).show();
 }
 function article_add_dlg_hide() {
-  $("#" + _dlg_div).hide();
+  $("#" + _article_add_dlg_div).hide();
 }
 function article_add_cancel() {
   article_add_dlg_hide();
