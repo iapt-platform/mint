@@ -9,7 +9,8 @@ function article_add_dlg_init(div) {
   html += "</div>";
   html += "<div>";
   html += "</div>";
-  html += "<div style='display:flex;'>";
+  html +=
+    "<div style='display:flex;justify-content: space-between;padding-top: 1em;'>";
   html += "<button onclick='article_add_cancel()'>Cancel</button>";
   html += "<button onclick='article_add_new()'>New</button>";
   html += "</div>";

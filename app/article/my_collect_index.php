@@ -1,11 +1,11 @@
 <?php
 require_once '../studio/index_head.php';
 ?>
-<body id="file_list_body" onLoad="my_collect_list()">
+<body id="file_list_body" onLoad="my_collect_init()">
 
 	<script language="javascript" src="../article/my_article.js"></script>
 	<script language="javascript" src="../article/my_collect.js"></script>
-
+	<script language="javascript" src="../article/collect_add_dlg.js"></script>
 	<script >
 	var gCurrPage="collect";
 	</script>
@@ -29,17 +29,16 @@ require_once '../studio/index_tool_bar.php';
 		<div class="index_inner " style="margin-left: 18em;margin-top: 5em;">
 		<div class="file_list_block">
 			<div class="tool_bar">
-				<div>作品列表</div>
+				<div>文集列表</div>
 				<div>
 					<span class="icon_btn_div">
 						<span class="icon_btn_tip"></span>
-						<button id="file_add" type="button" class="icon_btn" title=" ">
-							<a href="../course/my_course_index.php?op=new">
+						<button id="file_add" type="button" class="icon_btn" title=" " onclick="collect_add_dlg_show()">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 							</svg>
-							</a>
 						</button>
+						<div id='collect_add_div' class="float_dlg"></div>
 					</span>
 					
 					<span class="icon_btn_div">				

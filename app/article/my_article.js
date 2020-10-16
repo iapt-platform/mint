@@ -103,7 +103,6 @@ function my_article_edit(id) {
             "<input type='hidden' name='summary' value='" +
             result.summary +
             "'/>";
-          html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
             "<input type='hidden' name='status' value='" +
             result.status +
@@ -155,7 +154,6 @@ function article_preview() {
 
 function my_article_save() {
   $.ajax({
-    //几个参数需要注意一下
     type: "POST", //方法类型
     dataType: "json", //预期服务器返回的数据类型
     url: "../article/my_article_post.php", //url
