@@ -496,6 +496,7 @@ a:active {
   float: left;
   margin: 0 0 0.2em 0;
   padding-right: 0;
+  max-width: 60vw;
   pagebreakinside: avoid;
 }
 
