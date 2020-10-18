@@ -1,4 +1,5 @@
 var _my_channal = null;
+channal_list();
 
 function channal_list_init() {
   my_channal_list();
@@ -25,7 +26,7 @@ function channal_getById(id) {
 
 function my_channal_list() {
   $.get(
-    "../channal/my_channal_get.php",
+    "../channal/get.php",
     {
       setting: "",
     },
@@ -41,6 +42,7 @@ function my_channal_list() {
               '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
             html += "<div style='flex:1;'>" + key++ + "</div>";
             html += "<div style='flex:2;'>" + iterator.name + "</div>";
+            html += "<div style='flex:2;'>" + iterator.owner + "</div>";
             html +=
               "<div style='flex:2;'>" +
               //render_status(iterator.status) +

@@ -45,9 +45,12 @@ foreach ($_data as $key => $value) {
 		$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($Fetch as $key => $value) {
             # code...
-            if(!empty($value["channal"])){
-                $channal[$value["channal"]] = 1;
-            }
+            if(isset($value["channal"])){
+                $channal[$value["channal"]] ++;
+			}
+			else{
+				$channal[$value["channal"]] = 1;
+			}
             
         }
 	}
@@ -65,7 +68,9 @@ foreach ($channal as $key => $value) {
     $channalInfo = $_channal->getChannal($key);
     $name = $_userinfo->getName($channalInfo["owner"]);
     $channalInfo["username"] = $name["username"];
-    $channalInfo["nickname"] = $name["nickname"];
+	$channalInfo["nickname"] = $name["nickname"];
+	$channalInfo["count"] = $value;
+	$channalInfo["all"] = count($_data);
     $output[]= $channalInfo;
 }
 

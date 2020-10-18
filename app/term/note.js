@@ -217,11 +217,32 @@ function note_channal_list() {
       function (data, status) {
         if (status == "success") {
           try {
-            _channalData = JSON.parse(data);
+            let active = JSON.parse(data);
+            _channalData = active;
+            for (const iterator of _my_channal) {
+              let found = false;
+              for (const one of active) {
+                if (iterator.id == one.id) {
+                  found = true;
+                  break;
+                }
+              }
+              if (found == false) {
+                _channalData.push(iterator);
+              }
+            }
             let strHtml = "";
             for (const iterator of _channalData) {
-              strHtml += render_channal_list(iterator);
+              if (_channal.indexOf(iterator.id) >= 0) {
+                strHtml += render_channal_list(iterator);
+              }
             }
+            for (const iterator of _channalData) {
+              if (_channal.indexOf(iterator.id) == -1) {
+                strHtml += render_channal_list(iterator);
+              }
+            }
+
             $("#channal_list").html(strHtml);
             $("[channal_id]").change(function () {
               let channal_list = new Array();
@@ -268,7 +289,7 @@ function render_channal_list(channalinfo) {
   output += "</span>";
   output += "</div>";
 
-  output += "<div>";
+  output += "<div style='width: 100%;'>";
 
   output += "<div>";
 
@@ -285,7 +306,15 @@ function render_channal_list(channalinfo) {
   output += "<div>";
   output += "@" + channalinfo["username"];
   output += "</div>";
+  output += "<div style='background-color: #e0dfdffa;'>";
+  output +=
+    "<span  style='display: inline-block;background-color: #65ff65;width: " +
+    (channalinfo["count"] * 100) / channalinfo["all"] +
+    "%;'>";
+  output += channalinfo["count"] + "/" + channalinfo["all"];
+  output += "</span>";
 
+  output += "</div>";
   output += "</div>";
   output += "</div>";
   return output;

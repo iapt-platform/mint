@@ -16,7 +16,6 @@ if(isset($_GET["id"])){
 }
 else{
     PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-    $id=$_GET["id"];
     $query = "SELECT * FROM channal  WHERE owner = ? ";
     $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
     echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);

@@ -1860,7 +1860,7 @@ function render_tran_sent_block(
   let id =
     "tran_pre_" + book + "_" + para + "_" + begin + "_" + end + "_" + channal;
   output +=
-    "<div class='trans_text_content' id = '" +
+    "<div class='trans_text_content' tid = '" +
     id +
     "'  pcds='sent-net' " +
     " book='" +
@@ -1878,7 +1878,9 @@ function render_tran_sent_block(
     output += sent_text;
   } else {
     output +=
-      "<span onclick=\"sent_edit_click('" +
+      "<span id='" +
+      id +
+      "' onclick=\"sent_edit_click('" +
       book +
       "','" +
       para +
@@ -1912,6 +1914,17 @@ function render_tran_sent_block(
       " onkeyup = \"updateTranslationPreview('" +
       id +
       "',this)\" " +
+      " onchange=\"trans_text_save('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "')\"" +
       "class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
       "sent_id='" +
       objSent.id +
@@ -1948,6 +1961,19 @@ function render_tran_sent_block(
       "','" +
       channal +
       "')\">保存</button>";
+    output +=
+      "<button onclick=\"trans_text_send('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "')\">发送</button>";
+
     output += "</div>";
     output += "</div>";
   }
@@ -4140,8 +4166,12 @@ function repeat_combine(list) {
 }
 
 function show_pop_note(wordid) {
+  let html = $("wnc[wid='" + wordid + "']")
+    .parent()
+    .html();
   $("#word_note_pop_content").html(
-    note_init(doc_word("#" + wordid).val("note"))
+    html
+    /*note_init(doc_word("#" + wordid).val("note"))*/
   );
   $("#word_note_pop").show("500");
 }

@@ -6,6 +6,7 @@ require_once "../pcdl/html_head.php";
 <body style="margin: 0;padding: 0;" class="reader_body" >
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../channal/channal.js"></script>
 	<script src="./article.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
@@ -346,12 +347,12 @@ term_word_link_fun("wiki_goto_word");
 	<div id="right_pannal">
 		<div class="fun_frame">
 			<div id = "collect_title" class="title">Table of Content</div>
-			<div id = "toc_content" class="content" style="max-height:10em;">
+			<div id = "toc_content" class="content" style="max-height:20em;">
 			</div>
 		</div>
 		<div class="fun_frame">
 			<div class="title">Translations</div>
-			<div id="channal_list" class="content" style="max-height:10em;">
+			<div id="channal_list" class="content" style="max-height:20em;">
 			</div>
 		</div>
 	</div>

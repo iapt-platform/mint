@@ -36,7 +36,7 @@ require_once '../studio/index_head.php';
 
 	<div>
 		<span class="icon_btn_div">
-			<span class="icon_btn_tip"><?php echo $_local->gui->add;?></span>
+			<span class="icon_btn_tip"><?php echo "Add";?></span>
 			<button id="file_add" type="button" class="icon_btn" title=" "  onclick="channal_add_dlg_show()">
 				<svg class="icon">
 					<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
