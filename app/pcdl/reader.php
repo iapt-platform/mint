@@ -941,7 +941,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		if($display_mode=="sent"){
 			if((isset($_GET["channal"]) || $_GET["view"]=="sent")  ){
 				if($sent_data["editor"] == $_COOKIE["userid"]){
-					$output .= "<svg class='edit_icon';'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
+					$output .= "<svg class='edit_icon'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
 				}
 				
 			}

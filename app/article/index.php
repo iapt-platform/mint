@@ -7,7 +7,9 @@ require_once "../pcdl/html_head.php";
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="./article.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
 	<script>
 	<?php
 	$_id = "";
@@ -32,9 +34,7 @@ require_once "../pcdl/html_head.php";
 	?>
 	</script>
 	<style>
-	body{
-		font-size:12pt;
-	}
+
 
 	#search_result{
 		position: absolute;
@@ -122,8 +122,9 @@ require_once "../pcdl/html_head.php";
 		display: flex;
     justify-content: space-between;
     height: 5em;
-    background-color: var(--bookx);
+    background-color: var(--tool-bg-color1);
     border-bottom: 1px solid var(--tool-line-color);
+	padding:10px;
 	}
 	.term_block_bar_left{
 		display: flex;
@@ -261,6 +262,18 @@ require_once "../pcdl/html_head.php";
 #toc_content .level_5{
 	padding-left:2em;
 }
+.ui-dialog-titlebar{
+		display: flex;
+    justify-content: space-between;
+	background-color: var(--btn-bg-color);
+    padding: 5px;
+	}
+	.ui-widget-content{
+		background-color: var(--bg-color);
+	}
+	.ui-dialog{
+		box-shadow:  8px 8px 20px var(--border-shadow);
+	}
 	</style>
 
 <style media="screen and (max-width:767px)">
@@ -279,6 +292,8 @@ require_once "../pcdl/html_head.php";
     margin-bottom: auto;
     padding-left: 0.5em;
 	}
+
+
 </style>
 
 <script>
@@ -342,10 +357,17 @@ term_word_link_fun("wiki_goto_word");
 	</div>
 </div>
 </div>
+
+<!-- ui-dialog -->
+<div id="dialog" title="Dialog Title">
+	<div id="edit_dialog_content"></div>
+</div>
+
 <script>
+	note_create();
 	articel_load(_articel_id);
 	articel_load_collect(_articel_id);
-	
+
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
 		if(GetPageScroll().y>220){
@@ -378,6 +400,7 @@ function GetPageScroll()
 	return(pos);
 }
 	</script>
+
 
 </body>
 </html>

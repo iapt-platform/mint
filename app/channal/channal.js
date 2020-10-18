@@ -86,6 +86,12 @@ function my_channal_edit(id) {
             "<input type='input' name='name' value='" + result.name + "'/>";
           html += "<textarea name='summary'>" + result.summary + "</textarea>";
           html +=
+            '<div>	<input id="channal_lang_select" type="input" onchange="channal_lang_change()"  title="type language name/code" code="' +
+            result.lang +
+            '" value="' +
+            result.lang +
+            '" > <input id="channal_lang" type="hidden" name="lang" value=""></div>';
+          html +=
             "<input type='hidden' name='status' value='" +
             result.status +
             "'/>";
@@ -98,7 +104,7 @@ function my_channal_edit(id) {
           html += "</div>";
 
           $("#channal_info").html(html);
-
+          tran_lang_select_init("channal_lang_select");
           //$("#aritcle_status").html(render_status(result.status));
           $("#channal_title").html(result.name);
           $("#preview_inner").html();
@@ -110,4 +116,46 @@ function my_channal_edit(id) {
       }
     }
   );
+}
+
+function channal_lang_change() {
+  let lang = $("#channal_lang_select").val();
+  if (lang.split("-").length == 3) {
+    $("#channal_lang").val(lang.split("-")[2]);
+  } else {
+    $("#channal_lang").val(lang);
+  }
+}
+
+function my_channal_save() {
+  $.ajax({
+    type: "POST", //方法类型
+    dataType: "json", //预期服务器返回的数据类型
+    url: "../channal/my_channal_post.php", //url
+    data: $("#channal_edit").serialize(),
+    success: function (result) {
+      console.log(result); //打印服务端返回的数据(调试用)
+
+      if (result.status == 0) {
+        alert("保存成功");
+      } else {
+        alert("error:" + result.message);
+      }
+    },
+    error: function (data, status) {
+      alert("异常！" + status + data.responseText);
+      switch (status) {
+        case "timeout":
+          break;
+        case "error":
+          break;
+        case "notmodified":
+          break;
+        case "parsererror":
+          break;
+        default:
+          break;
+      }
+    },
+  });
 }

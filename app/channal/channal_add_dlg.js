@@ -12,10 +12,10 @@ function channal_add_dlg_init(div) {
   html +=
     "<div style='display:flex;justify-content: space-between;padding-top: 1em;'>";
   html += "<div>";
-  html += "<select id='channal_add_dlg_status'>";
-  html += "<option value='3'>公开</option>";
-  html += "<option value='2'>不公开列出</option>";
-  html += "<option value='1'>私有</option>";
+  html += "<select id='channal_add_dlg_lang' name='lang'>";
+  html += "<option value='zh'>Chinese-中文</option>";
+  html += "<option value='en'>English-English</option>";
+  html += "<option value='my'>Mymarnese-</option>";
   html += "</select>";
 
   html += "</div>";
@@ -41,11 +41,15 @@ function channal_add_cancel() {
 }
 
 function channal_add_new() {
+  if ($("#channal_add_title").val() == "") {
+    alert("channal name is empty!");
+    return;
+  }
   $.post(
     "../channal/my_channal_put.php",
     {
       name: $("#channal_add_title").val(),
-      status: $("#channal_add_dlg_status").val(),
+      lang: $("#channal_add_dlg_lang").val(),
     },
     function (data) {
       let error = JSON.parse(data);

@@ -41,8 +41,8 @@ require_once '../studio/index_head.php';
 				<svg class="icon">
 					<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 				</svg>
-				<div id='channal_add_div' class="float_dlg"></div>
 			</button>
+			<div id='channal_add_div' class="float_dlg"></div>
 		</span>
 		
 		<span class="icon_btn_div">				

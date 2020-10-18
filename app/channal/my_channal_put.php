@@ -6,9 +6,9 @@ require_once '../hostsetting/function.php';
 $respond=array("status"=>0,"message"=>"");
 if(isset($_COOKIE["userid"])){
 	PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-	$query="INSERT INTO channal ( id,  owner  , name  , summary ,  status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ? , ? , ? , ? , ?  ) ";
+	$query="INSERT INTO channal ( id,  owner  , name  , summary ,  status  , lang, create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ? , ? , ? , ? , ? , ?  ) ";
 	$sth = $PDO->prepare($query);
-	$sth->execute(array(UUID::v4() , $_COOKIE["userid"] , $_POST["name"] , "" ,$_POST["status"]  ,  mTime() ,  mTime() , mTime() ));
+	$sth->execute(array(UUID::v4() , $_COOKIE["userid"] , $_POST["name"] , "" , 1 ,$_POST["lang"]  ,  mTime() ,  mTime() , mTime() ));
 	$respond=array("status"=>0,"message"=>"");
 	if (!$sth || ($sth && $sth->errorCode() != 0)) {
 		$error = PDO_ErrorInfo();

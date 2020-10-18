@@ -64,6 +64,8 @@ else{$currDevice="computer";}
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="./js/message.js"></script>

@@ -6,6 +6,8 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../channal/channal.js"></script>
 	<script language="javascript" src="../public/js/marked.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
+	<script language="javascript" src="../lang/tran_lang_select.js"></script>
 
 	<script >
 	var gCurrPage="channal";
@@ -51,7 +53,7 @@ require_once '../studio/index_head.php';
 	?>
 		
 	<div class="index_inner " >
-	<form id="collect_edit" action="##" onsubmit="return false"  method="POST" >
+	<form id="channal_edit" action="##" onsubmit="return false"  method="POST" >
 	<div class="file_list_block">
 		<div class="tool_bar">
 			<div style="display:flex;">

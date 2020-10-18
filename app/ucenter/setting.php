@@ -55,11 +55,12 @@ require_once '../public/function.php';
 	<title id="page_title">Setting</title>
 
 	<script src="../public/js/jquery-3.5.1.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>	
 	<script src="../public/js/fixedsticky.js"></script>
 	<script src="../lang/lang.js"></script>
 	<script src="../public/js/comm.js"></script>
 	<script src="../public/js/notify.js"></script>
-	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 	<script src="./setting.js"></script>
 
 </head>

@@ -6,6 +6,9 @@ require_once '../public/function.php';
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 
+$query="UPDATE course SET  receive_time= ?  , modify_time= ?   where  id = ?  ";
+PDO_Execute($query,array(mTime(),mTime(),$_POST["course_id"]));
+
 $query = "INSERT INTO lesson (id, course_id,  live, replay, title,  subtitle ,  date ,  duration  ,  creator,  tag,  summary,  status,  cover,  teacher, attachment , lang , speech_lang , create_time , modify_time , receive_time ) 
 				 VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
 
