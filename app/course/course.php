@@ -124,7 +124,7 @@ $.get("../course/lesson_list.php",
         html+= '<div class="summary"  style="padding-bottom:5px;">'+summary+'</div>';
         let live = "";
         try{
-            live = marked(lesson["live"]);
+            //live = marked(lesson["live"]);
         }
         catch{
 
@@ -132,7 +132,7 @@ $.get("../course/lesson_list.php",
         html+= '<div class="summary"  style="padding-bottom:5px;">'+live+'</div>';
         let replay = "";
         try{
-            replay = marked(lesson["replay"]);
+            //replay = marked(lesson["replay"]);
         }
         catch{
 
