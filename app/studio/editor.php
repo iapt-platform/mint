@@ -688,7 +688,7 @@ foreach($plugin_list as $info){
 					function edit_show_prt_prt(obj){
 						let o = obj.getElementsByTagName("svg");
 						if(document.getElementById("edit_detail_prt_prt").style.display=="none"){
-							document.getElementById("edit_detail_prt_prt").style.display="flex";
+							document.getElementById("edit_detail_prt_prt").style.display="block";
 							o[0].style.transform="rotate(90deg)";
 						}
 						else{
@@ -698,7 +698,7 @@ foreach($plugin_list as $info){
 					}
 					
 					function edit_parent_grammar_changed(obj){
-						let val = obj.innerHTML;
+						let val = obj;
 						document.getElementById("parent_grammar").innerHTML=val;
 					}
 				</script>
@@ -719,24 +719,33 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
-				<guide gid="studio_parent2"></guide>
-					<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
-						<span style="padding-right: 4px;">┕</span>
-						<span id="parent_grammar">.ppa.</span>
-						<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
-							<a onclick="edit_parent_grammar_changed(this)">.pp.</a>
-							<a onclick="edit_parent_grammar_changed(this)">.prp.</a>				
-							<a onclick="edit_parent_grammar_changed(this)">.fpp.</a>
+					<span style="display:flex;">
+						<guide gid="studio_parent2"></guide>
+						<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
+							<span style="padding-right: 4px;">┕</span>
+							<span id="parent_grammar">.ppa.</span>
+							<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
+								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
+								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
+								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>
+							</div>
+						</div>
+						<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
+						<div class="case_dropdown">
+							<svg class="edit_icon">
+								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
+							</svg>
+							<div id="word_mdf_prt_prt_dropdown" class="case_dropdown-content">
+							</div>
+						</div>
+					</span>
+					<div>
+						<?php echo $_local->gui->relation; ?>
+						<imput type="hidden" id="id_relation_text" value="" />
+						<button onclick="rela_add_word()">+</button>
+						<div id="relation_div">
 						</div>
 					</div>
-					<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
-					<div class="case_dropdown">
-						<svg class="edit_icon">
-							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_more"></use>
-						</svg>
-						<div id="word_mdf_prt_prt_dropdown" class="case_dropdown-content">
-						</div>
-					</div>				
 				</div>
 				
 			</div>
@@ -792,13 +801,6 @@ foreach($plugin_list as $info){
 				<input type="input" id="id_text_pali" onkeydown="match_key(this)" onkeyup="unicode_key(this)" /><br/>
 				<?php echo $_local->gui->spell;?><br />
 				<input type="input" id="id_text_real"  onkeydown="match_key(this)" onkeyup="unicode_key(this)" /><br/>
-				<?php echo $_local->gui->relation;?><br />
-				<div id="relation_div">
-				</div>
-				<imput type="hidden" id="id_relation_text" value="" />
-				<button onclick="rela_add_word()">
-					+
-				</button>
 				<br/>
 			</div>
 			

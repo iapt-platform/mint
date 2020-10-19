@@ -61,8 +61,9 @@ select {
   margin: 3px 0;
 }
 
-ul li {
-  white-space: nowrap;
+ul,
+li {
+  white-space: normal;
   color: inherit;
   margin: 0px;
   padding: 0px;

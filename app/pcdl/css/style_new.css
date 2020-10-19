@@ -35,7 +35,7 @@ select option {
 }
 ul,
 li {
-    white-space: nowrap;
+    white-space: normal;
     color: inherit;
     margin: 0px;
     padding: 0px;
@@ -465,7 +465,7 @@ ul .search_list{
 	justify-content: space-between;
     word-break: keep-all;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: normal;
     border-bottom: 1px solid #989797;
 }
 .search_list .noline{

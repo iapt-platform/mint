@@ -16,7 +16,7 @@ if(count($Fetch)==0)
 $course_info = $Fetch[0];
 
 echo '<div>';
-echo '<a href="../course/my_course_index.php?course='.$course_info["id"].'">'.$course_info["title"]."</a> > 新建课";
+echo '<a href="../course/my_course_index.php?course='.$course_info["id"].'">'.$course_info["title"]."</a> > {$_local->gui->new_lesson}";
 echo '</div>';
 
 echo '<div></div>';
@@ -33,28 +33,28 @@ echo '</div>';
 <div id="userfilelist">
 
     <div style="display:flex;">
-    <div style="flex:2;">标题</div>
+    <div style="flex:2;"><?php echo $_local->gui->title ?></div>
     <div style="flex:8;">
     <div style="text-align: right;color:gray;">0/32</div>
-    <input type="input" name="title" value="" placeholder="标题" />
+    <input type="input" name="title" value="" placeholder="<?php echo $_local->gui->title ?>" />
     </div>
     </div>
 
     <div style="display:none;">
-    <div style="flex:2;">副标题</div>
+    <div style="flex:2;"><?php echo $_local->gui->sub_title ?></div>
     <div style="flex:8;">
         <div style="text-align: right;color:gray;">0/32</div>
-        <input type="input" name="subtitle" value="" placeholder="副标题" />
+        <input type="input" name="subtitle" value="" placeholder="<?php echo $_local->gui->sub_title ?>" />
     </div>
     </div>
 
     <div style="display:flex;">
-    <div style="flex:2;">简介</div>
+    <div style="flex:2;"><?php echo $_local->gui->introduction ?></div>
     <div style="flex:8;"><textarea name="summary" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
-    <div style="flex:2;">老师</div>
+    <div style="flex:2;"><?php echo $_local->gui->speaker ?></div>
     <div   style="flex:8;">
         <div id="teacher_id"><?php echo ucenter_getA($course_info["teacher"]); ?></div>
         <input id="form_teacher" type="hidden" name="teacher" value="<?php echo $course_info["teacher"] ?>" />
@@ -62,24 +62,24 @@ echo '</div>';
     </div> 
 
     <div style="display:flex;">
-        <div style="flex:2;">直播信息</div>
+        <div style="flex:2;"><?php echo $_local->gui->notice_live ?></div>
         <div style="flex:8;"><textarea  name="live"  style="height:6em;"></textarea></div>
     </div>
     <div style="display:flex;">
-        <div style="flex:2;">课程时间</div>
+        <div style="flex:2;"><?php echo $_local->gui->time_arrange ?></div>
         <div style="flex:8;">
-    日期: <input type="date" name="lesson_date" value=""/>
-    时间: <input type="time" name="lesson_time" value="08:00"/>
-   课程持续时间: <input type="time" name="duration" value="01:00"/>
+        <?php echo $_local->gui->date ?>：<input type="date" name="lesson_date" value=""/>
+        <?php echo $_local->gui->time ?>：<input type="time" name="lesson_time" value="08:00"/>
+        <?php echo $_local->gui->duration ?>: <input type="time" name="duration" value="01:00"/>
         </div>
     </div>
     <div style="display:flex;">
-    <div style="flex:2;">录播信息</div>
+    <div style="flex:2;"><?php echo $_local->gui->record_replay ?></div>
     <div style="flex:8;"><textarea name="replay" style="height:6em;"></textarea></div>
     </div>
 
     <div style="display:flex;">
-    <div style="flex:2;">语言</div>
+    <div style="flex:2;"><?php echo $_local->gui->language_select ?></div>
     <div   style="flex:8;">
         <span >课程信息语言<input type="hidden" name="lang" value="" /></span>
         <span >课程语言<input type="hidden" name="speech_lang" value="" /></span>
@@ -89,14 +89,14 @@ echo '</div>';
 
 
     <div style="display:flex;">
-    <div style="flex:2;">标签</div>
+    <div style="flex:2;"><?php echo $_local->gui->tag ?></div>
     <div   style="flex:8;">
         <input type="input" name="tag" value="" />
     </div>
     </div> 
 
     <div style="display:flex;">
-    <div style="flex:2;">附件</div>
+    <div style="flex:2;"><?php echo $_local->gui->attachment ?></div>
     <div   style="flex:8;">
         <input type="input" name="attachment" value="" />
     </div>
@@ -104,7 +104,7 @@ echo '</div>';
 </div>
 
 
-<input type="submit" />
+<input type="submit" value="<?php echo $_local->gui->submit ?>">
 </form>
 
 <script>
