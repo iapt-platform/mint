@@ -94,3 +94,7 @@ function wiki_pre_search(keyword) {
     }
   );
 }
+
+function set_channal(channalid) {
+  location.assign("../wiki/wiki.php?word=" + _word + "&channal=" + channalid);
+}

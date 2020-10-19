@@ -64,6 +64,8 @@ else{$currDevice="computer";}
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="./js/message.js"></script>
@@ -119,6 +121,10 @@ else{$currDevice="computer";}
 	</style>
 
 	<style>
+	.term_link:hover .guide_contence {
+		display: inline-block;
+	}
+	
 	.trans_text_block{
 		border-left: 5px solid #d1d1d1;
 		background-color: #f1f1f1;

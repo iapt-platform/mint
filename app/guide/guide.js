@@ -40,12 +40,6 @@ function guide_init() {
         }
       }
     );
-    /*        if ($(this).offset().left < $(document.body).width() / 2) {
-                    $(".guide_contence:after").css("left", "0");
-                }
-                else {
-                    $(".guide_contence:after").css("right", "0");
-                }*/
   });
 }
 

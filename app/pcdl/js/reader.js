@@ -194,7 +194,7 @@ function reader_init() {
     window.location.assign("../wiki/wiki.php?op=get&word=" + word);
   });
 
-  $("sent").click(function (e) {
+  $("palitext").click(function (e) {
     let book = $(this).attr("book");
     let para = $(this).attr("para");
     let begin = $(this).attr("begin");
@@ -439,4 +439,14 @@ function sent_apply(sentId) {
       }
     );
   }
+}
+
+function copy_ref(obj) {
+  let pali_sent_node = obj.parentNode.parentNode.parentNode.parentNode;
+  let book = pali_sent_node.getAttributeNode("book").value;
+  let para = pali_sent_node.getAttributeNode("para").value;
+  let begin = pali_sent_node.getAttributeNode("begin").value;
+  let end = pali_sent_node.getAttributeNode("end").value;
+  let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
+  copy_to_clipboard(strRef);
 }

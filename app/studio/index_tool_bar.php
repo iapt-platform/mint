@@ -75,7 +75,7 @@
 					</span>
 				</li>
 
-				<li id="channal"  onclick="goto_url(this,'../channal/my_channal_list.php')">
+				<li id="channal"  onclick="goto_url(this,'../channal/my_channal_index.php')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#class_video"></use>

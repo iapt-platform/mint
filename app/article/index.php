@@ -1,16 +1,16 @@
 <?php
 require_once "../public/load_lang.php";
 require_once "../path.php";
-
-?>
-
-<?PHP
-include "../pcdl/html_head.php";
+require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../channal/channal.js"></script>
 	<script src="./article.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
 	<script>
 	<?php
 	$_id = "";
@@ -35,50 +35,15 @@ include "../pcdl/html_head.php";
 	?>
 	</script>
 	<style>
-	body{
-		font-size:12pt;
-	}
-	.term_link,.term_link_new{
-		color: blue;
-		padding-left: 2px;
-		padding-right: 2px;
-	}
-	.term_link_new{
-		color:red;
-	}
+
+
 	#search_result{
 		position: absolute;
 		background: wheat;
 		max-width: 95%;
 		width: 24em;
 	}
-	note:hover chapter{
-		display:inline;
-	} 
-	.ref>chapter:first-child{
-		display:inline;
-	}
-	chapter{
-		display:none;
-		color: var(--box-bg-color1);
-		text-decoration: none;
-		cursor: pointer;
-	}
-	chapter:hover{
-		color: var(--link-color);
-		text-decoration: underline;
-	}
-	para{
-		background-color: var(--drop-bg-color);
-		padding: 2px 8px;
-		text-decoration: none;
-		cursor: pointer;
-		color: var(--btn-border-color);
-		border-radius: 5px;
-	}
-	para:hover{
-		text-decoration: underline;
-	}
+
 	.icon{
 		width: 15px;
 		height: 15px;
@@ -116,7 +81,6 @@ include "../pcdl/html_head.php";
 		margin-top: 8px;
 	}
 	note{
-		background-color: #80808014;
 		padding: 0.5em 0.8em;
 		margin-bottom: 0.4em;
 		border-radius: 5px;
@@ -127,6 +91,7 @@ include "../pcdl/html_head.php";
 		}
 		else{
 			echo "display:block;";
+			echo "background-color: #80808014;";
 		}
 		?>
 	}
@@ -158,8 +123,9 @@ include "../pcdl/html_head.php";
 		display: flex;
     justify-content: space-between;
     height: 5em;
-    background-color: var(--bookx);
+    background-color: var(--tool-bg-color1);
     border-bottom: 1px solid var(--tool-line-color);
+	padding:10px;
 	}
 	.term_block_bar_left{
 		display: flex;
@@ -177,21 +143,7 @@ include "../pcdl/html_head.php";
 	.term_block_bar_left_info{
 		    padding-left: 8px;
 	}
-	.term_meaning{
-		font-weight: 700;
-	}
-	.term_author{
-		font-size: 80%;
-		color: gray;
-	}
-	.term_tag{
-		font-size: 80%;
-		font-weight: 500;
-		margin: 0 8px;
-	}
-	.term_link {
-    cursor: pointer;
-	}
+
 	.main_view{
 		padding: 0 1em;
 		max-width: 1280px;
@@ -232,6 +184,12 @@ include "../pcdl/html_head.php";
 	.when_right_fixed{
 		padding-right:20em;
 	}
+	<?php
+		if(isset($_GET["display"]) && $_GET["display"]=="para"){
+
+		}
+		else{
+?>
 	.bg_color_1{
 		background-color:#ebebeb66;
 	}
@@ -247,6 +205,10 @@ include "../pcdl/html_head.php";
 	.bg_color_5{
 		background:linear-gradient(to right, #fe99b91c, #ebebeb66);
 	}
+<?php
+		}
+		?>
+
 
 	pre {
 		white-space: pre-line;
@@ -258,8 +220,14 @@ include "../pcdl/html_head.php";
 	#contents_view{
 		display:flex;
 	}
-	#contents{
+	#contents_div{
 		flex:7;
+	}
+	#contents{
+		min-height: 400px;
+	}
+	#contents li{
+		white-space: normal;
 	}
 	#right_pannal{
 		flex:3;
@@ -283,6 +251,30 @@ include "../pcdl/html_head.php";
 		}
 ?>
 
+#toc_content .level_2{
+	padding-left:0.5em;
+}
+#toc_content .level_3{
+	padding-left:1em;
+}
+#toc_content .level_4{
+	padding-left:1.5em;
+}
+#toc_content .level_5{
+	padding-left:2em;
+}
+.ui-dialog-titlebar{
+		display: flex;
+    justify-content: space-between;
+	background-color: var(--btn-bg-color);
+    padding: 5px;
+	}
+	.ui-widget-content{
+		background-color: var(--bg-color);
+	}
+	.ui-dialog{
+		box-shadow:  8px 8px 20px var(--border-shadow);
+	}
 	</style>
 
 <style media="screen and (max-width:767px)">
@@ -301,6 +293,8 @@ include "../pcdl/html_head.php";
     margin-bottom: auto;
     padding-left: 0.5em;
 	}
+
+
 </style>
 
 <script>
@@ -336,30 +330,44 @@ term_word_link_fun("wiki_goto_word");
 	<div id="article_author">author</div>
 </div>
 <div id="contents_view">
-	<div id="contents" style="padding: 0 1em;">
-	loading...
+	<div id="contents_div" style="padding: 0 1em;">
+		<div id="contents">
+		loading...
+		</div>
+		<div id="contents_foot">
+			<div id="contents_nav" style="display:flex;justify-content: space-between;">
+				<div id="contents_nav_left"></div>
+				<div id="contents_nav_right"></div>
+			</div>
+			<div id="contents_dicuse">
+			
+			</div>
+		</div>
 	</div>
 	<div id="right_pannal">
 		<div class="fun_frame">
-			<div class="title">About Author</div>
-			<div class="content" style="max-height:10em;">
+			<div id = "collect_title" class="title">Table of Content</div>
+			<div id = "toc_content" class="content" style="max-height:20em;">
 			</div>
 		</div>
 		<div class="fun_frame">
-			<div class="title">Table of Content</div>
-			<div class="content" style="max-height:10em;">
-			</div>
-		</div>
-		<div class="fun_frame">
-			<div class="title">Other Authors</div>
-			<div class="content" style="max-height:10em;">
+			<div class="title">Translations</div>
+			<div id="channal_list" class="content" style="max-height:20em;">
 			</div>
 		</div>
 	</div>
 </div>
 </div>
+
+<!-- ui-dialog -->
+<div id="dialog" title="Dialog Title">
+	<div id="edit_dialog_content"></div>
+</div>
+
 <script>
+	note_create();
 	articel_load(_articel_id);
+	articel_load_collect(_articel_id);
 
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
@@ -393,6 +401,7 @@ function GetPageScroll()
 	return(pos);
 }
 	</script>
+
 
 </body>
 </html>
