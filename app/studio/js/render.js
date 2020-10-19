@@ -60,12 +60,20 @@ function palitext_calculator() {
   }
 }
 //添加新的段落块
-function addNewBlockToHTML(bookId, parId) {
+function addNewBlockToHTML(bookId, parId, begin = -1, end = -1) {
   parHeadingLevel = 0;
   parTitle = "";
   var divBlock = document.createElement("div");
   var typId = document.createAttribute("id");
-  typId.nodeValue = "par_" + bookId + "_" + (parId - 1);
+  if (begin == -1 && end == -1) {
+    //基于段落的块
+    typId.nodeValue = "par_" + bookId + "_" + (parId - 1);
+  } else {
+    //基于句子的块
+    typId.nodeValue =
+      "par_" + bookId + "_" + (parId - 1) + "_" + begin + "_" + end;
+  }
+
   divBlock.attributes.setNamedItem(typId);
   var typClass = document.createAttribute("class");
   typClass.nodeValue = "pardiv";
@@ -260,16 +268,29 @@ function insertBlockToHtml(element) {
   xmlParInfo = element.getElementsByTagName("info")[0];
   xmlParData = element.getElementsByTagName("data")[0];
 
-  bookId = getNodeText(xmlParInfo, "book");
-  paragraph = getNodeText(xmlParInfo, "paragraph");
+  let bookId = getNodeText(xmlParInfo, "book");
+  let paragraph = getNodeText(xmlParInfo, "paragraph");
+  let base_on = getNodeText(xmlParInfo, "base");
+  let begin = getNodeText(xmlParInfo, "begin");
+  let end = getNodeText(xmlParInfo, "end");
+
   type = getNodeText(xmlParInfo, "type");
   language = getNodeText(xmlParInfo, "language");
   bId = getNodeText(xmlParInfo, "id");
 
-  blockId = "par_" + bookId + "_" + (paragraph - 1);
-  var htmlBlock = document.getElementById(blockId);
-  if (htmlBlock == null) {
-    addNewBlockToHTML(bookId, paragraph);
+  let htmlBlock;
+  if (base_on == "sentence") {
+    blockId = "par_" + bookId + "_" + (paragraph - 1) + "_" + begin + "_" + end;
+    htmlBlock = document.getElementById(blockId);
+    if (htmlBlock == null) {
+      addNewBlockToHTML(bookId, paragraph, begin, end);
+    }
+  } else {
+    blockId = "par_" + bookId + "_" + (paragraph - 1);
+    htmlBlock = document.getElementById(blockId);
+    if (htmlBlock == null) {
+      addNewBlockToHTML(bookId, paragraph);
+    }
   }
 
   if (!isParInView(getParIndex(bookId, paragraph))) {
@@ -1842,7 +1863,7 @@ function render_tran_sent_block(
   let id =
     "tran_pre_" + book + "_" + para + "_" + begin + "_" + end + "_" + channal;
   output +=
-    "<div class='trans_text_content' id = '" +
+    "<div class='trans_text_content' tid = '" +
     id +
     "'  pcds='sent-net' " +
     " book='" +
@@ -1860,7 +1881,9 @@ function render_tran_sent_block(
     output += sent_text;
   } else {
     output +=
-      "<span onclick=\"sent_edit_click('" +
+      "<span id='" +
+      id +
+      "' onclick=\"sent_edit_click('" +
       book +
       "','" +
       para +
@@ -1894,6 +1917,17 @@ function render_tran_sent_block(
       " onkeyup = \"updateTranslationPreview('" +
       id +
       "',this)\" " +
+      " onchange=\"trans_text_save('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "')\"" +
       "class='trans_sent_edit' style='background-color: #f8f8fa;color: black;border-color: silver;' " +
       "sent_id='" +
       objSent.id +
@@ -1930,6 +1964,19 @@ function render_tran_sent_block(
       "','" +
       channal +
       "')\">保存</button>";
+    output +=
+      "<button onclick=\"trans_text_send('" +
+      book +
+      "','" +
+      para +
+      "','" +
+      begin +
+      "','" +
+      end +
+      "','" +
+      channal +
+      "')\">发送</button>";
+
     output += "</div>";
     output += "</div>";
   }
@@ -4122,8 +4169,12 @@ function repeat_combine(list) {
 }
 
 function show_pop_note(wordid) {
+  let html = $("wnc[wid='" + wordid + "']")
+    .parent()
+    .html();
   $("#word_note_pop_content").html(
-    note_init(doc_word("#" + wordid).val("note"))
+    html
+    /*note_init(doc_word("#" + wordid).val("note"))*/
   );
   $("#word_note_pop").show("500");
 }

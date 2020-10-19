@@ -18,7 +18,9 @@ $_channal = new Channal();
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="css/reader.css"/>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:767px)">
 	<title id="page_title">PCD Reader</title>
 
@@ -30,6 +32,10 @@ $_channal = new Channal();
 	<script src="../public/js/notify.js"></script>
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../public/js/marked.js"></script>
+	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 </head>
 <body class="reader_body" >
 <a name="page_head"></a>
@@ -43,11 +49,19 @@ $_channal = new Channal();
 	</script>
 
 <style>
+.term_link {
+    background: unset;
+    position: relative;
+}
+	.term_link:hover .guide_contence {
+		display: inline-block;
+	}
 .par_translate_div{
 	margin-left: 1em;
     border-left: 1px solid gray;
     padding-left: 0.5em;
     margin-top: 0.5em;
+	font-size: 1.1em
 }
 	.edit_icon{
 		display:inline-block;
@@ -254,6 +268,21 @@ note{
 .term_mean{
 	color:blue;
 	cursor: pointer;
+}
+more{
+    position: absolute;
+    display: none;
+    width: 1.4em;
+    height: 1.4em;
+}
+more .icon{
+	display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    background: url(../public/images/svg/more.svg);
+}
+sent:hover more{
+	display: inline-block;
 }
 </style>
 		<!-- tool bar begin-->
@@ -659,7 +688,9 @@ else{
 			foreach ($FetchSent as $key => $value) {
 				echo "<div id='sent-pali-b$book-$iPar-{$value["begin"]}' class='par_pali_div'>";
 				$pali_sent=$value["html"];
-				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</sent>";
+				echo "<sent  class='{$sentClass}' book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >";
+				echo "<palitext book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >".$pali_sent."</palitext>";
+				echo "</sent>";
 				echo "</div>";
 				echo "<div id='sent-wbwdiv-b$book-$iPar-{$value["begin"]}' class='par_wbw_div'>";
 				echo "</div>";
@@ -692,7 +723,9 @@ else{
 			}
 			foreach ($FetchSent as $key => $value) {
 				$pali_sent=$value["html"];
-				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</sent>";
+				echo "<sent class='{$sentClass}'  book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >";
+				echo "<palitext book='{$book}' para='{$iPar}' begin='{$value["begin"]}' end='{$value["end"]}' >{$pali_sent}</palitext>";
+				echo "</sent>";
 			}
 			echo "</div>";
 			echo "<div id='par-wbwdiv-b$book-$iPar' class='par_wbw_div'>";
@@ -908,7 +941,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 		if($display_mode=="sent"){
 			if((isset($_GET["channal"]) || $_GET["view"]=="sent")  ){
 				if($sent_data["editor"] == $_COOKIE["userid"]){
-					$output .= "<svg class='edit_icon';'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
+					$output .= "<svg class='edit_icon'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
 				}
 				
 			}
@@ -1252,6 +1285,20 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 
 <script>
 reader_init();
+var htmlDropdown  = "<div class='case_dropdown'>";
+htmlDropdown  +="<svg class='icon' >";
+htmlDropdown  +="<use xlink:href='svg/icon.svg#ic_more'></use>";
+htmlDropdown  +="</svg>";
+htmlDropdown  +="<div class='case_dropdown-content'>";
+htmlDropdown  +="<a onclick='copy_ref(this)'>复制引用</a>";
+htmlDropdown  +="<a onclick='copy_text(this)'>复制纯文本</a>";
+htmlDropdown  +="<a onclick='add_to_list()'>添加到选择列表</a>";
+htmlDropdown  +="</div>";
+htmlDropdown  +="</div>";
+$("sent").each(function(){
+	$(this).prepend("<more>"+htmlDropdown+"</more>")
+})
+
 </script>
 	
 </body>

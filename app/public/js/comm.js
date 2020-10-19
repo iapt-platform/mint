@@ -133,3 +133,18 @@ function setCookie(c_name, value, expiredays) {
     escape(value) +
     (expiredays == null ? "" : "; expires=" + exdate.toGMTString() + ";path=/");
 }
+
+function copy_to_clipboard(strInput) {
+  const input = document.createElement("input");
+  input.setAttribute("readonly", "readonly");
+  input.setAttribute("value", strInput);
+  document.body.appendChild(input);
+  //	input.setSelectionRange(0, strInput.length);
+  //	input.focus();
+  input.select();
+  if (document.execCommand("copy")) {
+    document.execCommand("copy");
+    console.log("复制成功");
+  }
+  document.body.removeChild(input);
+}

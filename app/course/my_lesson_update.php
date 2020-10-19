@@ -5,6 +5,11 @@ require_once '../public/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+$query="SELECT course_id from lesson  where  id = ?  ";
+$course_id = PDO_FetchOne($query,array($_POST["lesson"]));
+
+$query="UPDATE course SET  receive_time= ?  , modify_time= ?   where  id = ?  ";
+PDO_Execute($query,array(mTime(),mTime(),$course_id));
 
 $query="UPDATE lesson SET title = ? , subtitle = ? , date = ? , duration = ? , live = ? , replay = ? , summary = ? , teacher = ?  , receive_time= ?  , modify_time= ?   where  id = ?  ";
 $sth = $PDO->prepare($query);

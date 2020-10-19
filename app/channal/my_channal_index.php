@@ -1,10 +1,11 @@
 <?php
 require_once '../studio/index_head.php';
 ?>
-<body id="file_list_body" onLoad="course_list()">
+<body id="file_list_body" onLoad="channal_list_init()">
 
-	<script language="javascript" src="../course/my_couse.js"></script>
 	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script language="javascript" src="../channal/channal_add_dlg.js"></script>
+	<script language="javascript" src="../channal/channal.js"></script>
 	<script >
 	var gCurrPage="channal";
 	</script>
@@ -35,14 +36,13 @@ require_once '../studio/index_head.php';
 
 	<div>
 		<span class="icon_btn_div">
-			<span class="icon_btn_tip"><?php echo $_local->gui->add;?></span>
-			<button id="file_add" type="button" class="icon_btn" title=" ">
-				<a href="../course/my_channal_new.php">
+			<span class="icon_btn_tip"><?php echo "Add";?></span>
+			<button id="file_add" type="button" class="icon_btn" title=" "  onclick="channal_add_dlg_show()">
 				<svg class="icon">
 					<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 				</svg>
-				</a>
 			</button>
+			<div id='channal_add_div' class="float_dlg"></div>
 		</span>
 		
 		<span class="icon_btn_div">				
@@ -57,9 +57,9 @@ require_once '../studio/index_head.php';
 				
 </div>
 
-<div id="userfilelist">
+<div id="my_channal_list">
 <?php
-//
+/*
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -82,7 +82,7 @@ foreach($Fetch as $row){
     
     echo '</div>';
 }
-
+*/
 ?>				
 </div>
 			

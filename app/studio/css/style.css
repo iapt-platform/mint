@@ -4362,7 +4362,9 @@ note {
   display: none;
   text-align: center;
 }
-
+.icon_btn_div {
+  position: relative;
+}
 .icon_btn_div:hover .icon_btn_tip {
   display: inline-block;
 }
@@ -4402,4 +4404,14 @@ note {
 }
 .input_bar {
   flex: 9;
+}
+.float_dlg {
+  display: none;
+  width: 25em;
+  position: absolute;
+  right: 0;
+  background-color: var(--btn-hover-bg-color);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px var(--main-color);
 }

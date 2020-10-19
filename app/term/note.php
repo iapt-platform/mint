@@ -60,6 +60,12 @@ foreach ($_data as $key => $value) {
 		$begin=$arrSent[2];
 		$end=$arrSent[3];
 	}
+	else{
+		$bookId=0;
+		$para=0;
+		$begin=0;
+		$end=0;
+	}
 
 	$query="SELECT html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
 	$sth = $db_pali_sent->prepare($query);
@@ -73,25 +79,43 @@ foreach ($_data as $key => $value) {
 
 	//find out translation
 	$tran="";
+	$translation = array();
 	try{
 		if(!empty($_setting["channal"])){
 			$queryChannal = " AND channal = ? ";
+			$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
+			$channal = $_setting["channal"];
 		}
 		else{
-			$queryChannal ="";
+			$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0   order by modify_time DESC limit 0 ,1 ";
+			$channal = "";
 		}
-		$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  $queryChannal order by modify_time DESC limit 0 ,1 ";
+		
 		$stmt = $db_trans_sent->prepare($query);
 		if(empty($_setting["channal"])){
 			$stmt->execute(array($bookId,$para,$begin,$end));
+			$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($Fetch){
+				$tran = $Fetch["text"];
+				$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+			}
 		}
 		else{
-			$stmt->execute(array($bookId,$para,$begin,$end,$_setting["channal"]));
+			$arrChannal = explode(",",$_setting["channal"]);
+			foreach ($arrChannal as $key => $value) {
+				# code...
+				$stmt->execute(array($bookId,$para,$begin,$end,$value));
+				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($Fetch){
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$value);
+				}
+				else{
+					$translation[]=array("id"=>"","text"=>"","channal"=>$value);
+				}
+			}
 		}
-		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-		if($Fetch){
-			$tran = $Fetch["text"];
-		}
+		
+
 		$tran_count = 1;
 	}
 	catch (Exception $e) {
@@ -101,7 +125,17 @@ foreach ($_data as $key => $value) {
 	
 	$para_path=_get_para_path($bookId,$para);
 
-	$output[]=array("id"=>$id,"palitext"=>$palitext,"tran"=>$tran,"ref"=>$para_path,"tran_count"=>$tran_count);
+	$output[]=array("id"=>$id,
+							   "palitext"=>$palitext,
+							   "tran"=>$tran,
+							   "translation"=>$translation,
+							   "ref"=>$para_path,
+							   "tran_count"=>$tran_count,
+							   "book"=>$bookId,
+							   "para"=>$para,
+							   "begin"=>$begin,
+							   "end"=>$end
+							);
 
 }
 
