@@ -199,6 +199,13 @@ function note_channal_list() {
   console.log("note_channal_list start");
   let objNotes = document.querySelectorAll("note");
   let arrSentInfo = new Array();
+  $("note").each(function () {
+    let info = $(this).attr("info");
+    if (info && info != "") {
+      arrSentInfo.push({ id: "", data: info });
+    }
+  });
+  /*
   for (const iterator of objNotes) {
     {
       let info = iterator.getAttributeNode("info").value;
@@ -207,6 +214,7 @@ function note_channal_list() {
       }
     }
   }
+*/
   if (arrSentInfo.length > 0) {
     $.post(
       "../term/channal_list.php",
