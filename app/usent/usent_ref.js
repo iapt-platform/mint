@@ -6,7 +6,9 @@ class USentResult {
     this.sentList = new Array();
     this.buffer = new Array();
   }
-
+  getSent() {
+    return this.sentList;
+  }
   pushSent(book, para, start, end) {
     for (const iterator of this.sentList) {
       if (
