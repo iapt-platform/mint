@@ -343,6 +343,7 @@ foreach($plugin_list as $info){
 			<div class="toolgroup1" id="topTools">
 
 <?php
+#头部中间的插件
 foreach($plugin_list as $info){
 	if($info->attach=="top_mid" && $info->enable=="true"){
 		echo "<style>";
@@ -855,6 +856,7 @@ foreach($plugin_list as $info){
 	
 		<div id="right_tool_bar_inner">
 <?php
+#头部右侧插件
 foreach($plugin_list as $info){
 	if($info->attach=="top_right" && $info->enable=="true"){
 		echo "<div id=\"{$info->id}\" >";

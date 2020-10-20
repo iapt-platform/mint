@@ -378,14 +378,14 @@ function doc_msg_push(msgobj) {
 
 function doc_block(strSelector = "") {
   if (strSelector == "") {
-    var xBlock = gXmlBookDataBody.getElementsByTagName("block");
+    let xBlock = gXmlBookDataBody.getElementsByTagName("block");
     return xBlock;
   } else if (strSelector.substr(0, 1) == "#") {
-    var sBlockId = strSelector.substr(1);
-    var xBlock = gXmlBookDataBody.getElementsByTagName("block");
-    for (let i in xBlock) {
-      let xmlParInfo = xBlock[i].getElementsByTagName("info")[0];
-      let xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
+    let sBlockId = strSelector.substr(1);
+    let xBlock = gXmlBookDataBody.getElementsByTagName("block");
+    for (const iterator of xBlock) {
+      let xmlParInfo = iterator.getElementsByTagName("info")[0];
+      let xmlParData = iterator.getElementsByTagName("data")[0];
       let blockId = getNodeText(xmlParInfo, "id");
       if (blockId == sBlockId) {
         var blockObj = new Object();
