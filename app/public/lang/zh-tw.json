@@ -512,6 +512,12 @@
 		"sign_up": "報名",
 		"watch": "關注",
 		"watched": "關注數",
+		"send": "傳送",
+		"accept_copy": "採納",
+		"with_idea": "我覺得……",
+		"text_num": "文字編號",
+		"copied_to_clipboard": "已複製到剪下板",
+		"I_know": "我知道了",
 		"": ""
 	},
 	"grammastr": [

@@ -138,7 +138,7 @@ else{$currDevice="computer";}
 		font-size: 80%;
 		border-top: 1px solid gray;
 		padding-top: 5px;
-		color: gray;
+		color: var(--detail-color);
 		display:flex;
 		justify-content: space-between;
 	}

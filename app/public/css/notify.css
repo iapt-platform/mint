@@ -1,6 +1,7 @@
 	.pcd_notify{
 		position: fixed;
 		top:3.6em;
+		left: 40vw;
 		min-width:20em;
 		max-width:95%;
 		text-align:center;

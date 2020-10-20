@@ -145,6 +145,7 @@ function copy_to_clipboard(strInput) {
   if (document.execCommand("copy")) {
     document.execCommand("copy");
     console.log("复制成功");
+    ntf_show("“" + strInput + "”" + gLocal.gui.copied_to_clipboard);
   }
   document.body.removeChild(input);
 }
