@@ -4,6 +4,18 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 $respond=array("status"=>0,"message"=>"");
+
+# 检查是否由修改权限
+PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+$query = "SELECT owner FROM  article WHERE id= ?";
+$owner = PDO_FetchOne($query,array($_POST["id"]));
+if($owner!=$_COOKIE["userid"]){
+    $respond["status"]=1;
+    $respond["message"]="No Power For Edit";
+    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $_content = $_POST["content"];
 
 if($_POST["import"]=='on'){
