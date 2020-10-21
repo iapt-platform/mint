@@ -193,7 +193,7 @@ require_once "../pcdl/html_head.php";
 					<div id="pre_search_result" style="background-color: var(--btn-color);z-index: 50;">
 						<div id="pre_search_word"  class="pre_serach_block">
 							<div id="pre_search_word_title"   class="pre_serach_block_title">
-								<div id="pre_search_word_title_left">单词</div>
+								<div id="pre_search_word_title_left"><?php echo $_local->gui->vocabulary_list;?></div>
 								<div id="pre_search_word_title_right"></div>						
 							</div>
 							<div id="pre_search_word_content"   class="pre_serach_content">
@@ -228,10 +228,10 @@ require_once "../pcdl/html_head.php";
 					<div id="pre_search_result_1" style="position: absolute;max-width: 100%; width: 50em;background-color: var(--btn-color);z-index: 51;display: none;">
 						<div  class="pre_serach_block">
 							<div class="pre_serach_block_title">
-								<div id="pre_search_word_title_left_1">单词</div>
+								<div id="pre_search_word_title_left_1"><?php echo $_local->gui->vocabulary_list;?></div>
 								<div id="pre_search_word_title_right_1"></div>						
 							</div>
-							<div id="pre_search_word_content_1"   class="pre_serach_content">
+							<div id="pre_search_word_content_1" class="pre_serach_content">
 							</div>
 						</div>
 					</div>
