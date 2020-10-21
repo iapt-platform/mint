@@ -510,6 +510,12 @@
 		"sign_up": "sign up",
 		"watch": "watch",
 		"watched": "watched",
+		"send": "send",
+		"accept_copy": "accept & copy",
+		"with_idea": "I have an idea…",
+		"text_num": "No. of text",
+		"copied_to_clipboard": "has been copied to clipboard.",
+		"I_know": "Got it！",
 		"": ""
 	},
 	"grammastr": [

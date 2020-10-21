@@ -16,8 +16,9 @@ function ntf_init(lines = 5) {
   body.appendChild(divNotify);
   divNotify.style.display = "none";
 }
-
+var time_out_func
 function ntf_show(msg, timeout = 8) {
+
   if (ntf_msg_list.length < ntf_max_msg_line) {
     ntf_msg_list.push(msg);
   } else {
@@ -34,6 +35,7 @@ function ntf_show(msg, timeout = 8) {
       strHtml += strMsg;
       strHtml += "</div>";
     }
+    strHtml += "<button onclick='ntf_hide()' style='margin-left: 70%;'>" + gLocal.gui.I_know + "</button>"
     divNotify.innerHTML = strHtml;
     divNotify.style.display = "block";
     setTimeout("ntf_hide()", timeout * 1000);

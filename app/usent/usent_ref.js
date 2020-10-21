@@ -1,5 +1,5 @@
 var _usent_buffer = new Array();
-
+var now_time = new Date()
 class USentResult {
   constructor(filter = {}) {
     this.filter = filter;
@@ -33,7 +33,7 @@ class USentResult {
         try {
           let arrSent = JSON.parse(data);
           _usent_buffer = arrSent;
-        } catch (e) {}
+        } catch (e) { }
         break;
       case "":
         break;
@@ -118,16 +118,16 @@ class USentResult {
           for (const oneSent of sendSents) {
             $(
               "#send_" +
-                oneSent.book +
-                "_" +
-                oneSent.paragraph +
-                "_" +
-                oneSent.begin +
-                "_" +
-                oneSent.end +
-                "_" +
-                oneSent.channal
-            ).text("发送中");
+              oneSent.book +
+              "_" +
+              oneSent.paragraph +
+              "_" +
+              oneSent.begin +
+              "_" +
+              oneSent.end +
+              "_" +
+              oneSent.channal
+            ).html("<svg class='icon icon_spin' style='fill: var(--detail-color); '><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#loading'>");
           }
           $.post(
             "../usent/update.php",
@@ -141,16 +141,16 @@ class USentResult {
                 for (const iterator of result.update) {
                   $(
                     "#send_" +
-                      iterator.book +
-                      "_" +
-                      iterator.paragraph +
-                      "_" +
-                      iterator.begin +
-                      "_" +
-                      iterator.end +
-                      "_" +
-                      iterator.channal
-                  ).text("");
+                    iterator.book +
+                    "_" +
+                    iterator.paragraph +
+                    "_" +
+                    iterator.begin +
+                    "_" +
+                    iterator.end +
+                    "_" +
+                    iterator.channal
+                  ).html(now_time.toLocaleTimeString() + "<svg class='icon' style='fill: var(--detail-color);'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_done'>");
                 }
               }
             }
