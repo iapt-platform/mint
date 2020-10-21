@@ -22,17 +22,22 @@ function msg_stop() {
   clearTimeout(msg_timer);
 }
 
-function msg_push(type, data, docid, time, book = 0, paragraph = 0) {
+function msg_push(type, data, docid, time = 0, book = 0, paragraph = 0) {
   /*
 	data.type
 	data.data
 	data.doc
-	*/
+  */
+  let send_time = time;
+  if (time == 0) {
+    let d = new Date();
+    send_time = d.getTime();
+  }
   var newMessage = {
     type: type,
     data: data,
     docid: docid,
-    time: time,
+    time: send_time,
     book: book,
     para: paragraph,
   };

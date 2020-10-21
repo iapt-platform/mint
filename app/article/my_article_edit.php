@@ -61,6 +61,7 @@ require_once '../studio/index_head.php';
 				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
+				<div><a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">Open in Library</a></div>
 				<div id="aritcle_status"></div>
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"></span>

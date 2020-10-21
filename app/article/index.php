@@ -312,14 +312,16 @@ term_word_link_fun("wiki_goto_word");
 	<div>
 		<span>
 		<?php
-		echo "<a href='../article/?id=".$_GET["id"];
-		echo "&display=para";
-		echo "'>[逐段]</a>";
+		echo "<a href='../article/my_article_edit.php?id={$_GET["id"]}'>";
+		echo "[Edit in Studio]";
+		echo "</a>";
+		echo "<a href='../article/?id={$_GET["id"]}&display=para'>";
+		echo "[Paragraph]</a>";
 		echo "<a href='../article/?id=".$_GET["id"];
 		echo "&display=sent";
-		echo "'>[逐句]</a>";
+		echo "'>[Sentence]</a>";
 		?>
-			<a href="#">[帮助]</a>
+			<a href="#">[Help]</a>
 		</span>
 	</div>
 </div>
