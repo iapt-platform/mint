@@ -288,29 +288,25 @@ term_word_link_fun("wiki_goto_word");
     require_once("../pcdl/head_bar.php");
 ?>
 <div id="head_bar" >
-	<div id="pali_pedia" style="display:flex;">
-		<span>圣典百科</span>
-		<span id="wiki_search" style="width:25em;">
+	<div id="pali_pedia" style="display:flex;width: 100%;">
+		<span style="margin: auto 1em auto 0;"><?php echo $_local->gui->wiki_term; ?></span>
+		<span id="wiki_search" style="width:35vw;margin: auto 0em;font-size: large;">
 			<span style="display:block;">
-				<input id="wiki_search_input" type="input" placeholder="search" style="width:30em;background-color: var(--btn-color);"  onkeyup="wiki_search_keyup(event,this)"/>
+				<input id="wiki_search_input" type="input" placeholder=<?php echo $_local->gui->search; ?> style="width:30vw;background-color: var(--btn-color);border: 1px solid var(--btn-border-color);border-radius: 99px;padding: 3px 15px;"  onkeyup="wiki_search_keyup(event,this)"/>
 			</span>
 			<span id="search_result">
 			</span>
 		</span>	
-	</div>
-
-	<div>
-
-		<span>
-			<a href="#">[设置]</a>
-			<a href="#">[建立词条]</a>
-			<a href="#">[帮助]</a>
+		<span style="font-size: medium; margin: auto 1em auto auto;">
+			<button class="icon_btn"><a href="#"><?php echo $_local->gui->setting; ?></a></button>
+			<button class="icon_btn"><a href="#"><?php echo $_local->gui->new; ?></a></button>
+			<button class="icon_btn"><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>
 	</div>
 </div>
 
 <div id="wiki_contents" style="padding: 0 1em;">
-loading...
+	<?php echo $_local->gui->loading; ?>...
 </div>
 <script>
 	 window.addEventListener('scroll',winScroll);

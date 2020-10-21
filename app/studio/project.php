@@ -344,13 +344,13 @@ switch($op){
 			echo "<input type='hidden' name='data' value='{$data}'/>";
 			
 			echo "<fieldset>";
-			echo "<legend>Title 文档标题(必填)</legend>";
+			echo "<legend>{$_local->gui->title} ({$_local->gui->required})</legend>";
 			echo "<div>";
 			echo "<input type='input' name='title' value='{$title}'/>";
 			echo "</div>";
 			echo "</fieldset>";
 			echo "<fieldset>";
-			echo "<legend>Channal 频道(必填)</legend>";
+			echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
 			echo "<div>";
 			PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
 			$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
@@ -374,10 +374,10 @@ switch($op){
 				echo '</div>';
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				if($FetchWBW==0){
-					echo "空白";
+					echo $_local->gui->blank;
 				}
 				else{
-					echo $FetchWBW."个段落";
+					echo $FetchWBW.$_local->gui->para;
 				}
 				echo '</div>';
 
@@ -388,10 +388,10 @@ switch($op){
 				echo '</div>';
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				if($FetchWBW==0){
-					echo "空白";
+					echo $_local->gui->blank;
 				}
 				else{
-					echo $FetchWBW."个段落";
+					echo $FetchWBW.$_local->gui->para;
 				}
 				echo '</div>';
 
@@ -412,7 +412,7 @@ switch($op){
 			echo "</div>";
 			echo "</fieldset>";
 			echo "<fieldset>";
-			echo "<legend>Language 语言</legend>";
+			echo "<legend>{$_local->gui->language}</legend>";
 			echo "<select name='lang'>";
 			$lang_list = new lang_enum;
 			foreach ($user_setting['studio.translation.lang'] as $key => $value) {

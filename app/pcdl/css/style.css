@@ -2607,16 +2607,19 @@ color:red;
 }
 
 .icon_btn{
-    color:var(--btn-color);
+    color: var(--btn-color);
     padding: 0.3em 0.3em;
-    border: 1px solid var(--nocolor);
+    border: 1px solid var(--btn-border-color);
     border-radius: 3px;
     margin: 0 2px;
 }
 
 .icon_btn:hover{
+    padding: 0.3em 0.3em;
     background-color: var(--btn-hover-bg-color);
-    border: 1px solid var(--btn-border-line-color);
+    border: 1px solid var(--btn-border-color);
+    border-radius: 3px;
+    margin: 0 2px;
 }
 
 .importbtn{
