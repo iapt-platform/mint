@@ -81,23 +81,37 @@ foreach ($_data as $key => $value) {
 	$tran="";
 	$translation = array();
 	try{
-		if(!empty($_setting["channal"])){
-			$queryChannal = " AND channal = ? ";
-			$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
-			$channal = $_setting["channal"];
+		if(empty($_setting["channal"])){
+			if($sentChannal==""){
+				$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0   order by modify_time DESC limit 0 ,1 ";
+				$channal = "";				
+			}
+			else{
+				$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
+			}
 		}
 		else{
-			$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0   order by modify_time DESC limit 0 ,1 ";
-			$channal = "";
+			$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
+			$channal = $_setting["channal"];
 		}
 		
 		$stmt = $db_trans_sent->prepare($query);
 		if(empty($_setting["channal"])){
-			$stmt->execute(array($bookId,$para,$begin,$end));
-			$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($Fetch){
-				$tran = $Fetch["text"];
-				$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+			if($sentChannal==""){
+				$stmt->execute(array($bookId,$para,$begin,$end));
+				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($Fetch){
+					$tran = $Fetch["text"];
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+				}
+			}
+			else{
+				$stmt->execute(array($bookId,$para,$begin,$end,$sentChannal));
+				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($Fetch){
+					$tran = $Fetch["text"];
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+				}
 			}
 		}
 		else{
