@@ -39,7 +39,8 @@ require_once '../studio/index_head.php';
 	}
 	.file_list_block {
     max-width: 100%;
-    margin-right: 1em;
+	margin-right: 1em;
+	max-height: 85vh;
 	}
 	.index_inner {
     margin-left: 16em;
@@ -48,7 +49,8 @@ require_once '../studio/index_head.php';
 #preview_div {
     flex: 6;
     overflow-y: scroll;
-    height: 550px;
+	height: 550px;
+	max-height: 75vh;
 }
 
 	</style>
