@@ -8,6 +8,12 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../term/term.js"></script>
 	<script language="javascript" src="../public/js/marked.js"></script>
 	<script language="javascript" src="../article/add_to_collect_dlg.js"></script>
+	<script language="javascript" src="../channal/channal_select.js"></script>
+	<script language="javascript" src="../channal/channal.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
+	<script language="javascript" src="../lang/tran_lang_select.js"></script>
+
 	<script >
 	var gCurrPage="article";
 	</script>
@@ -54,18 +60,34 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " >
 	<form id="article_edit" action="##" onsubmit="return false"  method="POST" >
 	<div class="file_list_block">
-		<div class="tool_bar">
+		<div class="tool_bar" style="width:50%;">
 			<div style="display:flex;">
-				<a href="../article/my_article_index.php"><?php echo $_local->gui->back ;?></a>
-				<span id="article_title"></span>
+				<button class="icon_btn" title=<?php echo $_local->gui->back ;?>>
+					<a href="../article/my_article_index.php" >
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#return"></use>
+					</svg>
+				</a></button>
+				<button onclick='article_preview()'  class="icon_btn" title=<?php echo $_local->gui->preview ;?>>
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#preview"></use>
+					</svg>
+				</button>
 				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
-				<div><a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank"><?php echo $_local->gui->scan_in_reader ;?></a></div>
-				<div id="aritcle_status"></div>
-				<span class="icon_btn_div">
+				<div>
+					<button class="icon_btn" title=<?php echo $_local->gui->scan_in_reader ;?>>
+						<a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">
+							<svg class="icon">
+								<use xlink:href="../studio/svg/icon.svg#library"></use>
+							</svg>
+						</a>
+					</button>
+				</div>
+					<span class="icon_btn_div">
 					<span class="icon_btn_tip"></span>
-					<button id="edit_save" type="button" class="icon_btn" title=" " onclick="my_article_save()">
+					<button id="edit_save" type="button" class="icon_btn" title=<?php echo $_local->gui->save ;?> onclick="my_article_save()">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>
 						</svg>
@@ -82,7 +104,6 @@ require_once '../studio/index_head.php';
 				</span>	
 			</div>
 		</div>
-
 		<div id="article_list"  class="file_list_block" style="">
 
 		</div>
@@ -92,7 +113,15 @@ require_once '../studio/index_head.php';
 	</div>
 	
 <script>
-my_article_edit("<?php echo $_GET["id"] ?>");
+<?php
+if(isset($_POST["active"]) && $_POST["active"]=="new"){
+	echo "my_article_edit('{$_POST["content"]}');";
+}
+else if(isset($_GET["id"])){
+	echo "my_article_edit('{$_GET["id"]}');";
+}
+
+?>
 </script>
 <?php
 require_once '../studio/index_foot.php';

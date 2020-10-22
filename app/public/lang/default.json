@@ -135,7 +135,7 @@
 		"home": "Home",
 		"hori_ref_time": "horizontal refraction correct ",
 		"html_text_data": "HTML Text Data",
-		"import": "Import",
+		"import": "Import ",
 		"import_csv": "Import CSV",
 		"import_export": "Import/Export",
 		"import_the_flie_from_cscd": "Import the flie From Cattha Sangayana data base",
@@ -533,6 +533,8 @@
 		"copy_link": "copy the Link",
 		"saved": "saved ",
 		"title_necessary": "title is necessary",
+		"example": "for example ",
+		"privacy": "privacy",
 		"": ""
 	},
 	"grammastr": [

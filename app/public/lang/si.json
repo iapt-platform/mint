@@ -136,7 +136,7 @@
 		"home": "නිවස",
 		"hori_ref_time": "horizontal refraction correct ",
 		"html_text_data": "HTML සටහන් දත්ත",
-		"import": "ආනයන",
+		"import": "ආනයන ",
 		"import_csv": "ආනයන csv",
 		"import_export": "ආනයන /අපනයන ",
 		"import_the_flie_from_cscd": "Import the flie From Cattha Sangayana data base",
@@ -537,6 +537,8 @@
 		"copy_link": "copy the Link",
 		"saved": "saved ",
 		"title_necessary": "title is necessary",
+		"example": "for example ",
+		"privacy": "privacy",
 		"": "",
 		"": ""
 	},

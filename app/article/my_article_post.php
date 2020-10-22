@@ -43,7 +43,7 @@ if($_POST["import"]=='on'){
 
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','strlen','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $query="INSERT INTO sentence ('id','block_id','channal','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','strlen','create_time','modify_time','receive_time') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)";
         
         $sth = $PDO->prepare($query);
         
@@ -69,6 +69,7 @@ if($_POST["import"]=='on'){
                 $sth->execute(
                         array(UUID::v4(),
                                     "",
+                                    $_POST["channal"],
                                     $currBook,
                                     $para,
                                     $sentNum,
@@ -77,10 +78,11 @@ if($_POST["import"]=='on'){
                                     "[]",
                                     $_COOKIE["userid"],
                                     $data,
-                                    "my",
+                                    $_POST["lang"],
                                     1,
                                     1,
                                     mb_strlen($data,"UTF-8"),
+                                    mTime(),
                                     mTime(),
                                     mTime()
                                 ));                

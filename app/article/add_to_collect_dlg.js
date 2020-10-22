@@ -2,7 +2,7 @@ function add_to_collect_dlg_init() {
   $("[vui='collect-dlg']").each(function () {
     $(this).css("position", "relative");
     $(this).html(
-      "<button class='button_add_to_collect'>" + gLocal.gui.add_to + gLocal.gui.anthology + "</button><div class='float_dlg'></div>"
+      "<button class='button_add_to_collect icon_btn' title='" + gLocal.gui.add_to + gLocal.gui.anthology + "'><svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg'></div>"
     );
   });
 
@@ -56,19 +56,21 @@ function add_to_collect_dlg_init() {
           .first()
           .html(html_exist);
 
-        let html_others = "";
-        for (const iterator of collect_list.others) {
-          html_others +=
-            "<div><input type='checkbox' class='collect' collect_id='" +
-            iterator.id +
-            "' />";
-          html_others += iterator.title;
-          html_others += "</div>";
+        if (collect_list.others) {
+          let html_others = "";
+          for (const iterator of collect_list.others) {
+            html_others +=
+              "<div><input type='checkbox' class='collect' collect_id='" +
+              iterator.id +
+              "' />";
+            html_others += iterator.title;
+            html_others += "</div>";
+          }
+          $("#add_to_collect_dlg_" + id)
+            .find(".others")
+            .first()
+            .html(html_others);
         }
-        $("#add_to_collect_dlg_" + id)
-          .find(".others")
-          .first()
-          .html(html_others);
       }
     );
   });

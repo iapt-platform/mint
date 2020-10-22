@@ -49,15 +49,16 @@ function my_article_list() {
   );
 }
 
+
 function render_status(status) {
   status = parseInt(status);
   let html = "";
   let objStatus = [
-    { id: 1, name: gLocal.gui.private, tip: gLocal.gui.private_note },
-    { id: 2, name: gLocal.gui.unlisted, tip: gLocal.gui.unlisted_note },
-    { id: 3, name: gLocal.gui.public, tip: gLocal.gui.public_note },
+    { id: 1, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" + gLocal.gui.private, tip: gLocal.gui.private_note },
+    { id: 2, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" + gLocal.gui.unlisted, tip: gLocal.gui.unlisted_note },
+    { id: 3, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" + gLocal.gui.public, tip: gLocal.gui.public_note },
   ];
-  html += '<div class="case_dropdown">';
+  html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.privacy + '</span><div class="case_dropdown"  style="flex:7;">';
   html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
   for (const iterator of objStatus) {
@@ -65,7 +66,7 @@ function render_status(status) {
       html += "<div >" + iterator.name + "</div>";
     }
   }
-  html += '<div class="case_dropdown-content">';
+  html += '<div id="privacy_list" class="case_dropdown-content" style="background-color: var(--detail-color); color: var(--btn-color);">';
 
   for (const iterator of objStatus) {
     let active = "";
@@ -94,25 +95,37 @@ function my_article_edit(id) {
           let html = "";
           let result = JSON.parse(data);
           $("#article_collect").attr("a_id", result.id);
+
+          html += "<div style='display:flex;'>";
+          html += "<div style='flex:4;'>";
+
           html += '<div class="" style="padding:5px;">';
           html += '<div style="max-width:2em;flex:1;"></div>';
           html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
             "<input type='hidden' name='tag' value='" + result.tag + "'/>";
           html +=
-            "<input type='hidden' name='summary' value='" +
-            result.summary +
-            "'/>";
+            "<textarea  name='summary' >" + result.summary + "</textarea>";
           html +=
             "<input type='hidden' name='status' value='" +
             result.status +
             "'/>";
 
-          html += "<button onclick='article_preview()'>" + gLocal.gui.preview + "</button>";
           html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
-          html += "</div>";
+          html += "<div>";
           html += "<div style='display:flex;'>";
-          html += "<div style='flex:4;'>";
+          html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>"
+          html += '<span id="article_title" style="flex:7;"></span></div>';
+          html += "<div id='channal_selector' form_name='channal' style='display:flex;'></div>";
+          html += "<div id='aritcle_status' style='display: flex; width: 100 %;'></div>";
+          html +=
+            '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' + gLocal.gui.language_select + '</span>	<input id="article_lang_select"  style="flex:7;" type="input" onchange="article_lang_change()"  placeholder="' + gLocal.gui.input + " & " + gLocal.gui.language_select + '，' + gLocal.gui.example + '：Engilish" code="' +
+            result.lang +
+            '" value="' +
+            result.lang +
+            '" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
+          html += "</div>";
+          html += "</div>";
 
           html +=
             "<textarea id='article_content' name='content' style='height:500px;'>" +
@@ -127,6 +140,8 @@ function my_article_edit(id) {
           html += "</div>";
 
           $("#article_list").html(html);
+          channal_select_init("channal_selector");
+          tran_lang_select_init("article_lang_select");
           $("#aritcle_status").html(render_status(result.status));
           let html_title =
             "<input id='input_article_title' type='input' name='title' value='" +
@@ -146,7 +161,14 @@ function my_article_edit(id) {
     }
   );
 }
-
+function article_lang_change() {
+  let lang = $("#article_lang_select").val();
+  if (lang.split("-").length == 3) {
+    $("#article_lang").val(lang.split("-")[2]);
+  } else {
+    $("#article_lang").val(lang);
+  }
+}
 function article_preview() {
   $("#preview_inner").html(note_init($("#article_content").val()));
   note_refresh_new();
