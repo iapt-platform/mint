@@ -56,19 +56,21 @@ function add_to_collect_dlg_init() {
           .first()
           .html(html_exist);
 
-        let html_others = "";
-        for (const iterator of collect_list.others) {
-          html_others +=
-            "<div><input type='checkbox' class='collect' collect_id='" +
-            iterator.id +
-            "' />";
-          html_others += iterator.title;
-          html_others += "</div>";
+        if (collect_list.others) {
+          let html_others = "";
+          for (const iterator of collect_list.others) {
+            html_others +=
+              "<div><input type='checkbox' class='collect' collect_id='" +
+              iterator.id +
+              "' />";
+            html_others += iterator.title;
+            html_others += "</div>";
+          }
+          $("#add_to_collect_dlg_" + id)
+            .find(".others")
+            .first()
+            .html(html_others);
         }
-        $("#add_to_collect_dlg_" + id)
-          .find(".others")
-          .first()
-          .html(html_others);
       }
     );
   });

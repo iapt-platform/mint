@@ -56,3 +56,10 @@ para {
 para:hover {
   text-decoration: underline;
 }
+
+commentary {
+  margin-left: 1.5em;
+  display: block;
+  border-left: 3px solid gray;
+  padding-left: 5px;
+}

@@ -305,13 +305,13 @@ function render_channal_list(channalinfo) {
   //  output += "&channal=" + channalinfo.id + "' >";
   output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
 
-  output += channalinfo["nickname"];
-  output += "/" + channalinfo["name"];
+  output += channalinfo["name"];
 
   output += "</a>";
   output += "</div>";
 
   output += "<div>";
+  output += channalinfo["nickname"] + "/";
   output += "@" + channalinfo["username"];
   output += "</div>";
   output += "<div style='background-color: #e0dfdffa;'>";
