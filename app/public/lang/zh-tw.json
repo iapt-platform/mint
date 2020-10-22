@@ -518,6 +518,13 @@
 		"text_num": "文字編號",
 		"copied_to_clipboard": "已複製到剪下板",
 		"I_know": "我知道了",
+		"text": "著作文章",
+		"anthology": "收藏文集",
+		"channel": "版風管理",
+		"channels": "版風列表",
+		"like": "贊",
+		"blank": "空白",
+		"vocabulary_list": "詞彙列表",
 		"": ""
 	},
 	"grammastr": [

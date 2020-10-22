@@ -4,17 +4,20 @@
 	
 </script>
 	<style>
-		.icon_btn{
-    color:var(--btn-color);
+.icon_btn{
+    color: var(--btn-color);
     padding: 0.3em 0.3em;
     border: 1px solid var(--nocolor);
-    border-radius: 6px;
+    border-radius: 3px;
     margin: 0 2px;
 }
 
 .icon_btn:hover{
+    padding: 0.3em 0.3em;
     background-color: var(--btn-hover-bg-color);
-    border: 1px solid var(--btn-border-line-color);
+    border: 1px solid var(--btn-border-color);
+    border-radius: 3px;
+    margin: 0 2px;
 }
 
 		/* 容器 <div> - 需要定位下拉内容 */

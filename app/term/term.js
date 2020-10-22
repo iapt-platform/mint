@@ -23,7 +23,7 @@ function note_replace(strIn) {
   return output;
 }
 
-function term_init() {}
+function term_init() { }
 var str_term_fun_word_link = "term_show_win";
 function term_word_link_fun(fun_name) {
   str_term_fun_word_link = fun_name;
@@ -104,9 +104,9 @@ function term_get_my_std_str(strMean) {
 function note_lookup(word, showto) {
   $("#" + showto).load(
     "../term/term.php?op=search&word=" +
-      word +
-      "&username=" +
-      getCookie("username"),
+    word +
+    "&username=" +
+    getCookie("username"),
     function (responseTxt, statusTxt, xhr) {
       if (statusTxt == "success") {
         $(".term_note").each(function (index, element) {
@@ -231,7 +231,7 @@ function term_get_word_to_div(strWord, div, callback) {
               }
               html += "</div>";
             }
-            html += "<div class='term_word_head_authors'>贡献者：";
+            html += "<div class='term_word_head_authors'>" + gLocal.gui.contributor + "：";
             for (y in authors) {
               html += '<a onclick="">' + y + "</a> ";
             }
@@ -266,7 +266,9 @@ function term_get_word_to_div(strWord, div, callback) {
 
               html += "<div class='term_block_bar_right'>";
               html +=
-                "<span><a href='#'>[编辑]</a><a href='#'>[赞]</a><a href='#'>[收藏]</a></span>";
+                "<span><button class='icon_btn'><a href='#'>" + gLocal.gui.edit + "</a></button>";
+              html += "<button class='icon_btn'><a href='#'>" + gLocal.gui.like + "</a></button>";
+              html += "<button class='icon_btn'><a href='#'>" + gLocal.gui.favorite + "</a></button></span>";
               html += "</div>";
 
               html += "</div>";
@@ -282,17 +284,17 @@ function term_get_word_to_div(strWord, div, callback) {
             html += "<div id='term_list_right' >";
 
             html += '<div class="fun_frame">';
-            html += '<div class="title">Language</div>';
+            html += '<div class="title">' + gLocal.gui.language + '</div>';
             html += '<div class="content" style="max-height:10em;">';
-            html += '<div><a href="">All</a></div>';
+            html += '<div><a href="">' + gLocal.gui.all + '</a></div>';
             html += "</div>";
             html += "</div>";
 
             html += '<div class="fun_frame">';
-            html += '<div class="title">Translation</div>';
+            html += '<div class="title">' + gLocal.gui.translation + '</div>';
             html +=
               '<div id="channal_list"  class="content" style="max-height:10em;">';
-            html += '<div><a href="">All</a></div>';
+            html += '<div><a href="">' + gLocal.gui.all + '</a></div>';
             html += "</div>";
             html += "</div>";
 
@@ -333,7 +335,7 @@ function term_get_word_to_div(strWord, div, callback) {
     }
   );
 }
-function term_get_guid_to_html(strGuid) {}
+function term_get_guid_to_html(strGuid) { }
 function term_apply(guid) {
   if (g_eCurrWord) {
     setNodeText(g_eCurrWord, "note", "=term(" + guid + ")");
@@ -603,18 +605,18 @@ function term_updata_translation() {
         noteText = noteText.replace(
           "[",
           "<span class='" +
-            linkclass +
-            "' id='term_link_" +
-            guid +
-            "' gid='" +
-            guid +
-            "' onclick=\"" +
-            str_term_fun_word_link +
-            "('" +
-            guid +
-            "','" +
-            pali +
-            "')\">"
+          linkclass +
+          "' id='term_link_" +
+          guid +
+          "' gid='" +
+          guid +
+          "' onclick=\"" +
+          str_term_fun_word_link +
+          "('" +
+          guid +
+          "','" +
+          pali +
+          "')\">"
         );
         noteText = noteText.replace("]", "</span>");
         noteText = noteText.replace(
@@ -667,8 +669,8 @@ function term_show_win(guid, keyWord = "") {
   if (guid == "") {
     $(term_body).html(
       "当前词条未创建。<br /><a onclick=\"term_add_new('" +
-        keyWord +
-        "')\">现在创建</a>"
+      keyWord +
+      "')\">现在创建</a>"
     );
   } else {
     let currWord = term_lookup_my_id(guid);
@@ -825,16 +827,16 @@ function term_popup_init() {
         //出现在左侧
         $(this).append(
           '<div id="gid_' +
-            gid +
-            '" class="guide_contence" style="left: -5px;"></div>'
+          gid +
+          '" class="guide_contence" style="left: -5px;"></div>'
         );
         $(".guide_contence:after").css("left", "0");
       } else {
         //出现在右侧
         $(this).append(
           '<div id="gid_' +
-            gid +
-            '" class="guide_contence" style="right: -5px;"></div>'
+          gid +
+          '" class="guide_contence" style="right: -5px;"></div>'
         );
         $(".guide_contence:after").css("right", "0");
       }

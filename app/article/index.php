@@ -285,14 +285,14 @@ require_once "../pcdl/html_head.php";
 	padding-right:0;
 }
 .index_toolbar{
-		position:unset;
-	}
-	#pali_pedia{
-		font-size: 200%;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding-left: 0.5em;
-	}
+	position:unset;
+}
+#pali_pedia{
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
 
 
 </style>
@@ -306,22 +306,20 @@ term_word_link_fun("wiki_goto_word");
 ?>
 <div id="head_bar" >
 	<div id="pali_pedia" style="display:flex;">
-		<span>文集</span>
+		<span><?php echo $_local->gui->anthology; ?></span>
 	</div>
 
 	<div>
 		<span>
 		<?php
-		echo "<a href='../article/my_article_edit.php?id={$_GET["id"]}'>";
-		echo "[Edit in Studio]";
-		echo "</a>";
-		echo "<a href='../article/?id={$_GET["id"]}&display=para'>";
-		echo "[Paragraph]</a>";
-		echo "<a href='../article/?id=".$_GET["id"];
+		echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
+		echo "&display=para";
+		echo "'>{$_local->gui->each_paragraph}</a></button>";
+		echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
 		echo "&display=sent";
-		echo "'>[Sentence]</a>";
+		echo "'>{$_local->gui->each_sentence}</a></button>";
 		?>
-			<a href="#">[Help]</a>
+			<button class='icon_btn'><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>
 	</div>
 </div>
@@ -334,7 +332,7 @@ term_word_link_fun("wiki_goto_word");
 <div id="contents_view">
 	<div id="contents_div" style="padding: 0 1em;">
 		<div id="contents">
-		loading...
+		<?php echo $_local->gui->loading; ?>...
 		</div>
 		<div id="contents_foot">
 			<div id="contents_nav" style="display:flex;justify-content: space-between;">
@@ -353,7 +351,7 @@ term_word_link_fun("wiki_goto_word");
 			</div>
 		</div>
 		<div class="fun_frame">
-			<div class="title">Translations</div>
+			<div class="title"><?php echo $_local->gui->channels; ?></div>
 			<div id="channal_list" class="content" style="max-height:20em;">
 			</div>
 		</div>
