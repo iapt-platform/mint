@@ -312,6 +312,8 @@ term_word_link_fun("wiki_goto_word");
 	<div>
 		<span>
 		<?php
+		echo "<button class='icon_btn'><a href='../article/my_article_edit.php?id=".$_GET["id"];
+		echo "'>Open in Studio</a></button>";
 		echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
 		echo "&display=para";
 		echo "'>{$_local->gui->each_paragraph}</a></button>";
