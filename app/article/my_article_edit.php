@@ -8,6 +8,12 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../term/term.js"></script>
 	<script language="javascript" src="../public/js/marked.js"></script>
 	<script language="javascript" src="../article/add_to_collect_dlg.js"></script>
+	<script language="javascript" src="../channal/channal_select.js"></script>
+	<script language="javascript" src="../channal/channal.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
+	<script language="javascript" src="../lang/tran_lang_select.js"></script>
+
 	<script >
 	var gCurrPage="article";
 	</script>
@@ -92,7 +98,15 @@ require_once '../studio/index_head.php';
 	</div>
 	
 <script>
-my_article_edit("<?php echo $_GET["id"] ?>");
+<?php
+if(isset($_POST["active"]) && $_POST["active"]=="new"){
+	echo "my_article_edit('{$_POST["content"]}');";
+}
+else if(isset($_GET["id"])){
+	echo "my_article_edit('{$_GET["id"]}');";
+}
+
+?>
 </script>
 <?php
 require_once '../studio/index_foot.php';

@@ -94,15 +94,17 @@ function my_article_edit(id) {
           let html = "";
           let result = JSON.parse(data);
           $("#article_collect").attr("a_id", result.id);
+
+          html += "<div style='display:flex;'>";
+          html += "<div style='flex:4;'>";
+
           html += '<div class="" style="padding:5px;">';
           html += '<div style="max-width:2em;flex:1;"></div>';
           html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
             "<input type='hidden' name='tag' value='" + result.tag + "'/>";
           html +=
-            "<input type='hidden' name='summary' value='" +
-            result.summary +
-            "'/>";
+            "<textarea  name='summary' >" + result.summary + "</textarea>";
           html +=
             "<input type='hidden' name='status' value='" +
             result.status +
@@ -110,9 +112,16 @@ function my_article_edit(id) {
 
           html += "<button onclick='article_preview()'>Preview</button>";
           html += "<input type='checkbox' name='import' />Import Data";
+          html += "<div>";
+          html += "<div id='channal_selector' form_name='channal'></div>";
+          html +=
+            '<div>	<input id="article_lang_select" type="input" onchange="article_lang_change()"  title="type language name/code" code="' +
+            result.lang +
+            '" value="' +
+            result.lang +
+            '" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
           html += "</div>";
-          html += "<div style='display:flex;'>";
-          html += "<div style='flex:4;'>";
+          html += "</div>";
 
           html +=
             "<textarea id='article_content' name='content' style='height:500px;'>" +
@@ -127,6 +136,8 @@ function my_article_edit(id) {
           html += "</div>";
 
           $("#article_list").html(html);
+          channal_select_init("channal_selector");
+          tran_lang_select_init("article_lang_select");
           $("#aritcle_status").html(render_status(result.status));
           let html_title =
             "<input id='input_article_title' type='input' name='title' value='" +
@@ -146,7 +157,14 @@ function my_article_edit(id) {
     }
   );
 }
-
+function article_lang_change() {
+  let lang = $("#article_lang_select").val();
+  if (lang.split("-").length == 3) {
+    $("#article_lang").val(lang.split("-")[2]);
+  } else {
+    $("#article_lang").val(lang);
+  }
+}
 function article_preview() {
   $("#preview_inner").html(note_init($("#article_content").val()));
   note_refresh_new();
