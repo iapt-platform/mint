@@ -50,7 +50,7 @@ function my_channal_list() {
             html +=
               "<div style='flex:1;'><a href='../channal/my_channal_edit.php?id=" +
               iterator.id +
-              "'>Edit</a></div>";
+              "'>" + gLocal.gui.edit + "</a></div>";
             html += "<div style='flex:1;'>15</div>";
             html += "</div>";
           }

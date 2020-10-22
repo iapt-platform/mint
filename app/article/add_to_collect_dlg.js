@@ -2,7 +2,7 @@ function add_to_collect_dlg_init() {
   $("[vui='collect-dlg']").each(function () {
     $(this).css("position", "relative");
     $(this).html(
-      "<span class='button_add_to_collect'>添加到文集</span><div class='float_dlg'></div>"
+      "<button class='button_add_to_collect'>" + gLocal.gui.add_to + gLocal.gui.anthology + "</button><div class='float_dlg'></div>"
     );
   });
 

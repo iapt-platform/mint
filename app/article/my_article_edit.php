@@ -56,12 +56,12 @@ require_once '../studio/index_head.php';
 	<div class="file_list_block">
 		<div class="tool_bar">
 			<div style="display:flex;">
-				<a href="../article/my_article_index.php">返回</a>
+				<a href="../article/my_article_index.php"><?php echo $_local->gui->back ;?></a>
 				<span id="article_title"></span>
 				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
-				<div><a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">Open in Library</a></div>
+				<div><a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank"><?php echo $_local->gui->scan_in_reader ;?></a></div>
 				<div id="aritcle_status"></div>
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"></span>
@@ -73,7 +73,7 @@ require_once '../studio/index_head.php';
 				</span>
 				
 				<span class="icon_btn_div">				
-					<span class="icon_btn_tip">回收站</span>
+					<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin ;?></span>
 					<button id="to_recycle" type="button" class="icon_btn" onclick="article_del()" title=" ">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>
