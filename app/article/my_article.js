@@ -26,15 +26,15 @@ function my_article_list() {
               "<div style='flex:2;'>" +
               render_status(iterator.status) +
               "</div>";
-            html += "<div style='flex:1;'>Copy Link</div>";
+            html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
             html +=
               "<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
               iterator.id +
-              "'>Edit</a></div>";
+              "'>" + gLocal.gui.edit + "</a></div>";
             html +=
               "<div style='flex:1;'><a href='../article/?id=" +
               iterator.id +
-              "' target='_blank'>Preview</a></div>";
+              "' target='_blank'>" + gLocal.gui.preview + "</a></div>";
             html += "<div style='flex:1;'>15</div>";
             html += "</div>";
           }
@@ -49,15 +49,16 @@ function my_article_list() {
   );
 }
 
+
 function render_status(status) {
   status = parseInt(status);
   let html = "";
   let objStatus = [
-    { id: 1, name: "私有", tip: "仅自己可见" },
-    { id: 2, name: "不公开列出", tip: "不能被搜索到，只能通过链接访问" },
-    { id: 3, name: "公开", tip: "所有人均可看到" },
+    { id: 1, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" + gLocal.gui.private, tip: gLocal.gui.private_note },
+    { id: 2, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" + gLocal.gui.unlisted, tip: gLocal.gui.unlisted_note },
+    { id: 3, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" + gLocal.gui.public, tip: gLocal.gui.public_note },
   ];
-  html += '<div class="case_dropdown">';
+  html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.privacy + '</span><div class="case_dropdown"  style="flex:7;">';
   html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
   for (const iterator of objStatus) {
@@ -65,7 +66,7 @@ function render_status(status) {
       html += "<div >" + iterator.name + "</div>";
     }
   }
-  html += '<div class="case_dropdown-content">';
+  html += '<div id="privacy_list" class="case_dropdown-content" style="background-color: var(--detail-color); color: var(--btn-color);">';
 
   for (const iterator of objStatus) {
     let active = "";
@@ -110,12 +111,15 @@ function my_article_edit(id) {
             result.status +
             "'/>";
 
-          html += "<button onclick='article_preview()'>Preview</button>";
-          html += "<input type='checkbox' name='import' />Import Data";
+          html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
           html += "<div>";
-          html += "<div id='channal_selector' form_name='channal'></div>";
+          html += "<div style='display:flex;'>";
+          html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>"
+          html += '<span id="article_title" style="flex:7;"></span></div>';
+          html += "<div id='channal_selector' form_name='channal' style='display:flex;'></div>";
+          html += "<div id='aritcle_status' style='display: flex; width: 100 %;'></div>";
           html +=
-            '<div>	<input id="article_lang_select" type="input" onchange="article_lang_change()"  title="type language name/code" code="' +
+            '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' + gLocal.gui.language_select + '</span>	<input id="article_lang_select"  style="flex:7;" type="input" onchange="article_lang_change()"  placeholder="' + gLocal.gui.input + " & " + gLocal.gui.language_select + '，' + gLocal.gui.example + '：Engilish" code="' +
             result.lang +
             '" value="' +
             result.lang +
@@ -180,7 +184,7 @@ function my_article_save() {
       console.log(result); //打印服务端返回的数据(调试用)
 
       if (result.status == 0) {
-        alert("保存成功");
+        alert(gLocal.gui.saved + gLocal.gui.successful);
       } else {
         alert("error:" + result.message);
       }
@@ -216,7 +220,7 @@ function course_validate_required(field, alerttxt) {
 
 function course_validate_form(thisform) {
   with (thisform) {
-    if (course_validate_required(title, "Title must be filled out!") == false) {
+    if (course_validate_required(title, gLocal.gui.title_necessary + "！") == false) {
       title.focus();
       return false;
     }
