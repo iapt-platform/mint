@@ -128,7 +128,7 @@ function my_article_edit(id) {
           html += "</div>";
 
           html +=
-            "<textarea id='article_content' name='content' style='height:500px;'>" +
+            "<textarea id='article_content' name='content' style='height:500px;max-height: 40vh;'>" +
             result.content +
             "</textarea>";
           html += "</div>";
