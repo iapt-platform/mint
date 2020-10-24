@@ -1,8 +1,10 @@
 <?php
 require_once '../studio/index_head.php';
 ?>
-<body id="file_list_body" onLoad="course_list()">
-
+<body id="file_list_body" onLoad="my_term_onload()">
+    <script src="../term/my_term.js"></script>
+    <script src="../term/term_edit_dlg.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	<script >
 	var gCurrPage="term";
 	</script>
@@ -31,18 +33,16 @@ require_once '../studio/index_head.php';
 
 		<div class="tool_bar">
 	<div>
-	术语百科
+	Term
 	</div>
 
 	<div>
 		<span class="icon_btn_div">
 			<span class="icon_btn_tip"><?php echo $_local->gui->add;?></span>
-			<button id="file_add" type="button" class="icon_btn" title=" ">
-				<a href="../course/my_channal_new.php">
+			<button id="file_add" type="button" class="icon_btn" title=" " onclick="term_edit_dlg_open()">
 				<svg class="icon">
 					<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 				</svg>
-				</a>
 			</button>
 		</span>
 		
@@ -78,9 +78,9 @@ $iOnePage=300;
 $dictFileName=_FILE_DB_TERM_;
 PDO_Connect("sqlite:$dictFileName");
 
-$query = "select count(*) as co  from term where owner= ".$PDO->quote($USER_NAME);
+$query = "select count(*) as co  from term where owner= ? ";
 
-$allWord = PDO_FetchOne($query);
+$allWord = PDO_FetchOne($query,array($_COOKIE["userid"]));
 $iCountWords=$allWord;
 
 if($iCountWords==0){
@@ -94,8 +94,8 @@ else{
     }
     $begin=$iCurrPage*$iOnePage;
 
-    $query = "select *  from term where owner= ".$PDO->quote($USER_NAME);
-    $allWords = PDO_FetchAll($query);
+    $query = "select *  from term where owner= ? ";
+    $allWords = PDO_FetchAll($query,array($_COOKIE["userid"]));
 
     echo '<div id="setting_user_dict_nav">';
 
@@ -125,12 +125,14 @@ else{
     <div>
         <div style="display:flex;">
             <div style='max-width:2em;flex:1;'></div>
-            <div style='flex:1;'>序号</div>
-            <div style='flex:2;'>拼写</div>
-            <div style='flex:2;'>意思</div>
-            <div style='flex:2;'>第二个意思</div>
-            <div style='flex:5;'>注解</div>
-            <div style='flex:1;'>语言</div>
+            <div style='flex:1;'>Sn</div>
+            <div style='flex:2;'>Spell</div>
+            <div style='flex:2;'>Meaning</div>
+            <div style='flex:2;'>Meaning2</div>
+            <div style='flex:4;'>Note</div>
+            <div style='flex:1;'>Language</div>
+            <div style='flex:1;'>Channal</div>
+            <div style='flex:1;'></div>
         </div>
     <?php
     
@@ -141,8 +143,10 @@ else{
         echo "<div style='flex:2;'>{$word["word"]}</div>";
         echo "<div style='flex:2;'>{$word["meaning"]}</div>";
         echo "<div style='flex:2;'>{$word["other_meaning"]}</div>";
-        echo "<div style='flex:5;'><textarea style='width:100%;'>{$word["note"]}</textarea></div>";
-        echo "<div style='flex:1;'></div>";
+        echo "<div style='flex:4;'><textarea style='width:100%;'>{$word["note"]}</textarea></div>";
+        echo "<div style='flex:1;'>{$word["language"]}</div>";
+        echo "<div style='flex:1;'>{$word["channal"]}</div>";
+        echo "<div style='flex:1;'><button onclick=\"term_edit_dlg_open('{$word["guid"]}')\">edit</button></div>";
         echo "</div>";
     }
 

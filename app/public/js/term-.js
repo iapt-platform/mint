@@ -5,10 +5,8 @@ var arrAllMean = new Array();
 var arrTermAllPali = new Array();
 var arrWordIdTermId = new Array();
 
-//术语渲染模板
 var strTermTanslationTmp = "[%mean%](%pali% %mean2% %mymean%)";
 var strTermTanslationTmp2 = "[%mean%]";
-
 var termCounter = new Array();
 var noteCounter = 0; //正文内注释计数器
 
@@ -25,25 +23,11 @@ function note_replace(strIn) {
   return output;
 }
 
-function term_init() {}
-var str_term_fun_word_link = "term_show_win";
-function term_word_link_fun(fun_name) {
-  str_term_fun_word_link = fun_name;
-}
 //将存储状态的字符串转换为预显示字符串
 //设置状态为 0：未处理的原始状态
-function term_std_str_to_tran(strIn, channal = "", editor = "", lang = "") {
+function term_std_str_to_tran(strIn) {
   return strIn
-    .replace(
-      /\[\[/g,
-      "<term status='0' channal='" +
-        channal +
-        "' editor='" +
-        editor +
-        "' lang='" +
-        lang +
-        "'>"
-    )
+    .replace(/\[\[/g, "<term status='0'>")
     .replace(/\]\]/g, "</term>");
 }
 
@@ -104,264 +88,32 @@ function term_get_std_str(strMean) {
   return "unkow@" + strMean;
 }
 function term_get_my_std_str(strMean) {
-  for (const iterator of arrMyTerm) {
-    if (iterator.meaning == strMean) {
-      return iterator.guid + "@" + strMean;
+  for (var x in arrMyTerm) {
+    if (arrMyTerm[x].meaning == strMean) {
+      return arrMyTerm[x].guid + "@" + strMean;
     }
   }
   return "unkow@" + strMean;
 }
 
 function note_lookup(word, showto) {
-  $("#" + showto).load(
-    "../term/term.php?op=search&word=" +
-      word +
-      "&username=" +
-      getCookie("username"),
-    function (responseTxt, statusTxt, xhr) {
-      if (statusTxt == "success") {
-        $(".term_note").each(function (index, element) {
-          $(this).html(note_init($(this).html()));
-          $(this).attr("status", 1);
-          note_refresh_new();
-        });
-      } else if (statusTxt == "error") {
-        console.error("Error: " + xhr.status + ": " + xhr.statusText);
-      }
+  $("#" + showto).load("term.php?op=search&word=" + word, function (
+    responseTxt,
+    statusTxt,
+    xhr
+  ) {
+    if (statusTxt == "success") {
+      $(".term_note").each(function (index, element) {
+        $(this).html(note_init($(this).html()));
+        $(this).attr("status", 1);
+        note_refresh_new();
+      });
+    } else if (statusTxt == "error") {
+      console.error("Error: " + xhr.status + ": " + xhr.statusText);
     }
-  );
+  });
 }
 
-function note_lookup_guid_json(guid, showto) {
-  $.get(
-    "../term/term.php",
-    {
-      op: "load_id",
-      id: guid,
-      format: "json",
-    },
-    function (data, status) {
-      let html = "";
-      if (status == "success") {
-        try {
-          let result = JSON.parse(data)[0];
-          html = "<div class='term_block'>";
-
-          html += "<h2>" + result.word + "</h2>";
-          html += "<div class='meaning'>" + result.meaning + "</div>";
-          html +=
-            "<div class='term_note' status='1'>" +
-            note_init(result.note) +
-            "</div>";
-          html += "</div>";
-          $("#" + showto).html(html);
-          note_refresh_new();
-        } catch (e) {
-          console.error("note_lookup_guid_json:" + e + " data:" + data);
-        }
-      }
-    }
-  );
-}
-
-function term_load_preview(guid, showto) {
-  $.get(
-    "../term/term.php",
-    {
-      op: "load_id",
-      id: guid,
-      format: "json",
-    },
-    function (data, status) {
-      let html = "";
-      if (status == "success") {
-        try {
-          let result = JSON.parse(data)[0];
-          html = "<div class='term_block'>";
-
-          html += "<h2>" + result.word + "</h2>";
-          html += "<div class='meaning'>" + result.meaning + "</div>";
-          html +=
-            "<div class='term_note' status='1'>" +
-            note_init(result.note) +
-            "</div>";
-          html +=
-            "<div ><a href='../wiki/wiki.php?word=" +
-            result.word +
-            "' target='_blank'>更多</a></div>";
-          html += "</div>";
-          $("#" + showto).html(html);
-        } catch (e) {
-          console.error("note_lookup_guid_json:" + e + " data:" + data);
-        }
-      }
-    }
-  );
-}
-
-var term_get_word_to_div_callback = null;
-function term_get_word_to_div(strWord, div, callback) {
-  term_get_word_to_div_callback = callback;
-  let word = [{ pali: strWord, channal: "", editor: "", lang: "" }];
-
-  $.post(
-    "../term/term_get.php",
-    {
-      words: JSON.stringify(word),
-    },
-    function (data, status) {
-      if (status == "success") {
-        try {
-          let result = JSON.parse(data);
-          let html = "";
-          if (result.length > 0) {
-            let type = new Array();
-            let authors = new Array();
-            for (const iterator of result) {
-              if (iterator.tag == "") {
-                iterator.tag = "_null_";
-              }
-              if (type[iterator.tag] == null) {
-                type[iterator.tag] = new Array();
-              }
-              type[iterator.tag].push(iterator.meaning);
-              authors[iterator.owner] = iterator.user;
-            }
-
-            html += "<div class='term_word_head'>";
-            html += "<div class='term_word_head_pali'>";
-            html += result[0].word;
-            html += "</div>";
-            for (y in type) {
-              html += "<div class='term_word_head_mean'>";
-              if (y != "_null_") {
-                html += y + "：";
-              }
-              for (k in type[y]) {
-                html += type[y][k];
-              }
-              html += "</div>";
-            }
-            html +=
-              "<div class='term_word_head_authors'>" +
-              gLocal.gui.contributor +
-              "：";
-            for (y in authors) {
-              if (authors[y].nickname != "") {
-                html += '<a onclick="">' + authors[y].nickname + "</a> ";
-              } else {
-                html += '<a onclick="">' + y + "</a> ";
-              }
-            }
-
-            html += "</div>";
-            html += "</div>";
-            // end of term_word_head
-
-            html += "<div id='term_list_div' style='display:flex;'>";
-            html += "<div id='term_list'>";
-
-            for (const iterator of result) {
-              html += "<div class='term_block'>";
-              html += "<div class='term_block_bar'>";
-
-              html += "<div class='term_block_bar_left'>";
-
-              html += "<div class='term_block_bar_left_icon'>";
-              html += iterator.owner.slice(0, 1);
-              html += "</div>";
-
-              html += "<div class='term_block_bar_left_info'>";
-              html += "<div class='term_meaning'>" + iterator.meaning;
-              if (iterator.tag != "_null_") {
-                html += "<span class='term_tag'>" + iterator.tag + "</span>";
-              }
-              html += "</div>";
-              html += "<div class='term_author'>" + iterator.owner + "</div>";
-              html += "</div>";
-
-              html += "</div>";
-
-              html += "<div class='term_block_bar_right'>";
-              html +=
-                "<span><button class='icon_btn'><a href='#'>" +
-                gLocal.gui.edit +
-                "</a></button>";
-              html +=
-                "<button class='icon_btn'><a href='#'>" +
-                gLocal.gui.like +
-                "</a></button>";
-              html +=
-                "<button class='icon_btn'><a href='#'>" +
-                gLocal.gui.favorite +
-                "</a></button></span>";
-              html += "</div>";
-
-              html += "</div>";
-              //term_block_bar 结束
-              html +=
-                "<div class='term_note' status='1'>" +
-                note_init(iterator.note) +
-                "</div>";
-              //html += "</div>";
-            }
-            html += "</div>";
-
-            html += "<div id='term_list_right' >";
-
-            html += '<div class="fun_frame">';
-            html += '<div class="title">' + gLocal.gui.language + "</div>";
-            html += '<div class="content" style="max-height:10em;">';
-            html += '<div><a href="">' + gLocal.gui.all + "</a></div>";
-            html += "</div>";
-            html += "</div>";
-
-            html += '<div class="fun_frame">';
-            html += '<div class="title">' + gLocal.gui.translation + "</div>";
-            html +=
-              '<div id="channal_list"  class="content" style="max-height:10em;">';
-            html += '<div><a href="">' + gLocal.gui.all + "</a></div>";
-            html += "</div>";
-            html += "</div>";
-
-            html += "</div>";
-            //end of right
-
-            html += "</div>";
-            // end of term_list_div
-            //html += "</div>";
-          } else {
-            html += "<div >词条尚未创建</div>";
-            html +=
-              '<div ><input type="input" value="" placeholder="pali"/></div>';
-            html +=
-              '<div ><input type="input" value="" placeholder="meaning"/></div>';
-            html +=
-              '<div ><input type="input" value="" placeholder="other meaning"/></div>';
-            html +=
-              '<div ><input type="input" value="" placeholder="category"/></div>';
-            html +=
-              '<div ><input type="input" value="" placeholder="language"/></div>';
-            html += "<div ><textarea></textarea></div>";
-          }
-
-          $("#" + div).html(html);
-
-          note_refresh_new();
-
-          if (term_get_word_to_div_callback != null) {
-            term_get_word_to_div_callback(result);
-          }
-        } catch (e) {
-          console.error("term_get_word_to_div:" + e + " data:" + data);
-        }
-      } else {
-        console.error("term error:" + data);
-      }
-    }
-  );
-}
-function term_get_guid_to_html(strGuid) {}
 function term_apply(guid) {
   if (g_eCurrWord) {
     setNodeText(g_eCurrWord, "note", "=term(" + guid + ")");
@@ -370,7 +122,7 @@ function term_apply(guid) {
 }
 
 function term_data_copy_to_me(guid) {
-  $("#term_dict").load("../term/term.php?op=copy&wordid=" + guid);
+  $("#term_dict").load("term.php?op=copy&wordid=" + guid);
 }
 
 //我的术语字典进入编辑模式
@@ -419,7 +171,7 @@ function term_data_save(guid) {
     var strNote = $("#term_edit_note_" + guid).val();
   }
   $.get(
-    "../term/term.php",
+    "term.php",
     {
       op: "save",
       guid: guid,
@@ -448,7 +200,7 @@ function term_data_save(guid) {
 }
 function term_get_all_pali() {
   $.get(
-    "../term/term.php",
+    "term.php",
     {
       op: "allpali",
     },
@@ -474,7 +226,7 @@ function term_lookup_all(pali) {
 
 function term_get_my() {
   $.get(
-    "../term/term.php",
+    "term.php",
     {
       op: "my",
     },
@@ -491,24 +243,17 @@ function term_get_my() {
 }
 
 //在我的术语字典里查询
-function term_lookup_my(pali, channal = "", owner = "", lang = "") {
-  for (const iterator of arrMyTerm) {
-    if (channal != "") {
-      if (channal == iterator.channal && iterator.word == pali) {
-        return iterator;
-      }
+function term_lookup_my(pali) {
+  for (var x in arrMyTerm) {
+    if (arrMyTerm[x].meaning == pali) {
+      return arrMyTerm[x];
+    }
+    if (arrMyTerm[x].word == pali) {
+      return arrMyTerm[x];
     }
   }
-  for (const iterator of arrMyTerm) {
-    if (owner != "") {
-      if (owner == iterator.owner && iterator.language == lang) {
-        return iterator;
-      }
-    }
-  }
-  return false;
+  return null;
 }
-
 function term_lookup_my_id(id) {
   for (var x in arrMyTerm) {
     if (arrMyTerm[x].guid == id) {
@@ -520,7 +265,7 @@ function term_lookup_my_id(id) {
 
 function term_get_all_meaning(word) {
   $.get(
-    "../term/term.php",
+    "term.php",
     {
       op: "allmean",
       word: word,
@@ -554,7 +299,7 @@ function term_array_updata() {
     idlist = idlist.replace(/,/g, "','");
     idlist = "'" + idlist + "'";
     $.get(
-      "../term/term.php",
+      "term.php",
       {
         op: "extract",
         list: idlist,
@@ -599,13 +344,8 @@ function term_updata_translation() {
       );
       noteCounter++;
     } else {
-      if (status == 0 || status == 2) {
-        let myterm = term_lookup_my(
-          termText,
-          $(this).attr("channal"),
-          $(this).attr("editor"),
-          $(this).attr("lang")
-        ); //我的术语字典
+      if (status == 0) {
+        let myterm = term_lookup_my(termText); //我的术语字典
         if (myterm) {
           $(this).attr("status", "1");
           $(this).attr("type", "0");
@@ -616,27 +356,21 @@ function term_updata_translation() {
           $(this).attr("replace", myterm.meaning);
         } else {
           $(this).attr("status", "2");
-          $(this).attr("pali", termText);
         }
       }
       let guid = $(this).attr("guid");
       let pali = $(this).attr("pali");
       let mean = $(this).attr("mean");
       let mean2 = $(this).attr("mean2");
-      let renderTo = $(this).attr("pos");
-      let noteText = "";
+      var renderTo = $(this).attr("pos");
+      var noteText = "";
 
       if (termCounter[guid]) {
         termCounter[guid] = 2;
       } else {
         termCounter[guid] = 1;
       }
-      myterm = term_lookup_my(
-        pali,
-        $(this).attr("channal"),
-        $(this).attr("editor"),
-        $(this).attr("lang")
-      ); //我的术语字典
+      var myterm = term_lookup_my(pali); //我的术语字典
       let linkclass = "";
       if (myterm) {
         linkclass = "term_link";
@@ -658,16 +392,8 @@ function term_updata_translation() {
           "[",
           "<span class='" +
             linkclass +
-            "' id='term_link_" +
+            "' onclick=\"term_show_win('" +
             guid +
-            "' gid='" +
-            guid +
-            "' onclick=\"" +
-            str_term_fun_word_link +
-            "('" +
-            guid +
-            "','" +
-            pali +
             "')\">"
         );
         noteText = noteText.replace("]", "</span>");
@@ -703,9 +429,7 @@ function term_updata_translation() {
         noteText =
           "<span class='" +
           linkclass +
-          "'  onclick=\"" +
-          str_term_fun_word_link +
-          "('','" +
+          "'  onclick=\"term_show_win('','" +
           termText +
           "')\">" +
           termText +
@@ -714,7 +438,6 @@ function term_updata_translation() {
       $(this).html(noteText);
     }
   });
-  term_popup_init();
 }
 
 function term_show_win(guid, keyWord = "") {
@@ -759,7 +482,7 @@ function term_show_win(guid, keyWord = "") {
 
       if (!currWord.note) {
         $.get(
-          "../term/term.php",
+          "term.php",
           {
             op: "load_id",
             id: currWord.guid,
@@ -820,99 +543,7 @@ function term_tmp(type, tmp) {
 
 function term_add_new(keyword) {
   document.getElementById("term_win").style.display = "none";
-
-  tab_click_b(
-    "sys_term",
-    "tab_rb_sys_term",
-    right_panal_slide_toggle,
-    "tab_rb_sys_term"
-  );
   editor_show_right_tool_bar(true);
+  tab_click_b("term_dict", "tab_rb_dict");
   note_lookup(keyword, "term_dict");
-}
-
-function term_show_new() {
-  $("#term_new_recorder").slideToggle();
-  $("#new_term_button").hide();
-  guide_init();
-}
-
-function term_get_dict() {
-  let termwordlist = new Array();
-  /*
-  let objTerm = document.querySelectorAll("term");
-  for (const iterator of objTerm) {
-    if (iterator.getAttributeNode("status").value == 0) {
-      termwordlist.push(iterator.innerHTML);
-    } else {
-      termwordlist.push(iterator.getAttributeNode("pali").value);
-    }
-  }
-*/
-  $("term").each(function () {
-    if ($(this).attr("status") == 0) {
-      $(this).attr("pali", $(this).text());
-    }
-    let termword = new Object();
-    termword.pali = $(this).attr("pali");
-    termword.channal = $(this).attr("channal");
-    termword.editor = $(this).attr("editor");
-    termword.lang = $(this).attr("lang");
-    termwordlist.push(termword);
-  });
-  //let wordquery = "('" + termwordlist.join("','") + "')";
-  $.post(
-    "../term/term_get.php",
-    {
-      words: JSON.stringify(termwordlist),
-      channal: _channal,
-    },
-    function (data, status) {
-      if (data.length > 0) {
-        try {
-          arrMyTerm = JSON.parse(data);
-          term_updata_translation();
-        } catch (e) {
-          console.error(e.error + " data:" + data);
-        }
-      }
-    }
-  );
-}
-
-function term_popup_init() {
-  $(".term_link").each(function () {
-    if ($(this).attr("init") != "1") {
-      if ($(this).text().length > 0) {
-        $(this).css("background", "unset");
-      }
-      let gid = $(this).attr("gid");
-      if ($(this).offset().left < $(document.body).width() / 2) {
-        //出现在左侧
-        $(this).append(
-          '<div id="gid_' +
-            gid +
-            '" class="guide_contence" style="left: -5px;"></div>'
-        );
-        $(".guide_contence:after").css("left", "0");
-      } else {
-        //出现在右侧
-        $(this).append(
-          '<div id="gid_' +
-            gid +
-            '" class="guide_contence" style="right: -5px;"></div>'
-        );
-        $(".guide_contence:after").css("right", "0");
-      }
-      $(this).attr("init", "1");
-    }
-  });
-
-  $(".term_link").mouseenter(function () {
-    if ($(this).children(".guide_contence").first().html().length > 0) {
-      return;
-    }
-    let gid = $(this).attr("gid");
-    term_load_preview(gid, "gid_" + gid);
-  });
 }

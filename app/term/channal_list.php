@@ -45,7 +45,7 @@ foreach ($_data as $key => $value) {
 		$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($Fetch as $key => $value) {
             # code...
-            if(isset($value["channal"])){
+            if(isset($channal[$value["channal"]])){
                 $channal[$value["channal"]] ++;
 			}
 			else{

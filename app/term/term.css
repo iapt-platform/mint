@@ -63,3 +63,53 @@ commentary {
   border-left: 3px solid gray;
   padding-left: 5px;
 }
+
+note > .tran {
+  color: #5c5c5c;
+  padding-left: 1em;
+  padding: 3px;
+}
+note > .palitext,
+.palitext {
+  font-family: Noto serif;
+  line-height: 1.5em;
+  color: #9f3a01;
+  font-weight: 500;
+}
+note > .palitext > note {
+  display: inline;
+  color: blue;
+  background-color: unset;
+  padding: unset;
+  margin-bottom: unset;
+  border-radius: unset;
+}
+
+.term_word_head_pali {
+  text-transform: capitalize;
+  font-size: 200%;
+  margin: 0.5em 0;
+}
+.term_word_head {
+  border-bottom: 1px solid #cecece;
+  padding: 5px 0;
+}
+.term_block {
+  border-bottom: 1px solid #cecece;
+  padding: 5px 0;
+}
+.term_word_head_authors a {
+  color: blue;
+  margin: 0 3px;
+}
+.term_word_head_authors a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+note .ref {
+  text-align: right;
+  padding: 5px;
+  font-size: 75%;
+  margin-top: 8px;
+}

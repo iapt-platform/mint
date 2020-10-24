@@ -40,6 +40,12 @@ else{
 
 	<script src="../public/js/marked.js"></script>
 	<script src="../public/js/mermaid.min.js"></script>
+
+	<script src="../public/js/notify.js"></script>
+    <link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
+
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>	
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
