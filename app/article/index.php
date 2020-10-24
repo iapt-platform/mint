@@ -8,9 +8,11 @@ require_once "../pcdl/html_head.php";
 	<script src="../term/note.js"></script>
 	<script src="../channal/channal.js"></script>
 	<script src="./article.js"></script>
-	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
-	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
+	<script src="../widget/click_dropdown.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
+
 	<script>
 	<?php
 	$_id = "";
@@ -52,34 +54,7 @@ require_once "../pcdl/html_head.php";
 		font-size: 120%;
 		font-weight: 700;		
 	}
-	.term_word_head_pali {
-		text-transform: capitalize;
-		font-size: 200%;
-		margin: 0.5em 0;
-	}
-	.term_word_head{
-		border-bottom: 1px solid #cecece;
-		padding: 5px 0;
-	}
-	.term_block{
-		border-bottom: 1px solid #cecece;
-		padding: 5px 0;
-	}
-	.term_word_head_authors a{
-		color: blue;
-		margin: 0 3px;
-	}
-	.term_word_head_authors a:hover{
-		text-decoration: underline;
-		cursor: pointer;
-	}
 
-	note .ref{
-		text-align: right;
-		padding: 5px;
-		font-size: 75%;
-		margin-top: 8px;
-	}
 	note{
 		padding: 0.5em 0.8em;
 		margin-bottom: 0.4em;
@@ -95,24 +70,7 @@ require_once "../pcdl/html_head.php";
 		}
 		?>
 	}
-	note>.tran{
-		color: #5c5c5c;
-		padding-left: 1em;
-	}
-	note>.palitext , .palitext{
-		font-family: Noto serif;
-		line-height: 1.5em;
-		color: #9f3a01;
-		font-weight: 500;
-	}
-	note>.palitext>note{
-		display:inline;
-		color:blue;
-		background-color: unset;
-		padding: unset;
-		margin-bottom: unset;
-		border-radius: unset;
-	}
+
 
 
 	.term_block_bar {
@@ -166,7 +124,7 @@ require_once "../pcdl/html_head.php";
 		margin-right: 10px;
 		margin-bottom: 10px;
 	}
-	.fun_frame>.title{
+	.fun_frame .title{
 		padding:6px;
 		font-weight: 700;
 	}
@@ -275,6 +233,11 @@ require_once "../pcdl/html_head.php";
 	.ui-dialog{
 		box-shadow:  8px 8px 20px var(--border-shadow);
 	}
+	.active{
+		background-color: var(--btn-hover-bg-color);
+	}
+
+
 	</style>
 
 <style media="screen and (max-width:767px)">
@@ -314,12 +277,38 @@ term_word_link_fun("wiki_goto_word");
 		<?php
 		echo "<button class='icon_btn'><a href='../article/my_article_edit.php?id=".$_GET["id"];
 		echo "'>Open in Studio</a></button>";
-		echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
-		echo "&display=para";
-		echo "'>{$_local->gui->each_paragraph}</a></button>";
-		echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
-		echo "&display=sent";
-		echo "'>{$_local->gui->each_sentence}</a></button>";
+		
+		if(isset($_GET["display"]) && $_GET["display"]=="para"){
+			echo "<button class='icon_btn active'>";
+			echo $_local->gui->each_paragraph;
+			echo "</button>";
+		}
+		else{
+			echo "<button class='icon_btn'>";
+			echo "<a href='../article/?id=".$_GET["id"];
+			if(isset($_GET["channal"])){
+				echo "&channal=".$_GET["channal"];
+			}
+			echo "&display=para'>";		
+			echo $_local->gui->each_paragraph;
+			echo "</a>";
+			echo "</button>";
+		}
+
+		if(isset($_GET["display"]) && $_GET["display"]=="sent"){
+			echo "<button class='icon_btn active'>";
+			echo $_local->gui->each_sentence;
+			echo "</button>";
+		}
+		else{
+			echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
+			if(isset($_GET["channal"])){
+				echo "&channal=".$_GET["channal"];
+			}
+			echo "&display=sent";
+			echo "'>{$_local->gui->each_sentence}</a></button>";
+		}
+
 		?>
 			<button class='icon_btn'><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>
@@ -353,7 +342,21 @@ term_word_link_fun("wiki_goto_word");
 			</div>
 		</div>
 		<div class="fun_frame">
-			<div class="title"><?php echo $_local->gui->channels; ?></div>
+			<div style="display:flex;justify-content: space-between;">
+				<div class="title"><?php echo $_local->gui->channels; ?></div>
+				<div class="click_dropdown_div">
+					<div class="click_dropdown_button">more</div>
+					<div class="click_dropdown_content">
+						<div class="click_dropdown_content_inner" id="channal_select">
+						列表
+						</div>
+						<div>
+						<button class="icon_btn click_dropdown_ok">Ok</button>
+						<button class="icon_btn click_dropdown_cancel">Cancel</button>
+						</div>
+					</div>	
+				</div>
+			</div>
 			<div id="channal_list" class="content" style="max-height:20em;">
 			</div>
 		</div>
@@ -367,9 +370,15 @@ term_word_link_fun("wiki_goto_word");
 </div>
 
 <script>
+	$(document).ready(function(){
 	note_create();
 	articel_load(_articel_id);
 	articel_load_collect(_articel_id);
+	click_dropdown_init();
+	ntf_init();
+	});
+
+
 
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 

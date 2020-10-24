@@ -134,6 +134,24 @@ function note_refresh_new() {
                   .parent()
                   .children(".palitext");
                 if (divPali.length == 0) {
+                  if (_channal != "") {
+                    let arrChannal = _channal.split(",");
+                    for (
+                      let index = arrChannal.length - 1;
+                      index >= 0;
+                      index--
+                    ) {
+                      const iChannal = arrChannal[index];
+                      $("#" + id)
+                        .parent()
+                        .prepend(
+                          "<div class='tran_div'  channal='" +
+                            iChannal +
+                            "'></div>"
+                        );
+                    }
+                  }
+
                   $("#" + id)
                     .parent()
                     .prepend("<div class='palitext'></div>");
@@ -145,12 +163,29 @@ function note_refresh_new() {
                   .append(strPalitext);
                 let htmlTran = "";
                 for (const oneTran of iterator.translation) {
-                  htmlTran +=
-                    "<span class='tran'>" +
-                    marked(term_std_str_to_tran(oneTran.text)) +
+                  let html =
+                    "<span class='tran' lang='" +
+                    oneTran.lang +
+                    "' channal='" +
+                    oneTran.channal +
+                    "'>" +
+                    marked(
+                      term_std_str_to_tran(
+                        oneTran.text,
+                        oneTran.channal,
+                        oneTran.editor,
+                        oneTran.lang
+                      )
+                    ) +
                     "</span>";
+                  if (_channal == "") {
+                    htmlTran += html;
+                  } else {
+                    $("#" + id)
+                      .siblings(".tran_div[channal='" + oneTran.channal + "']")
+                      .append(html);
+                  }
                 }
-
                 $("#" + id).html(htmlTran);
               } else {
                 //句子模式
@@ -328,6 +363,7 @@ function render_channal_list(channalinfo) {
   return output;
 }
 
+//点击引用 需要响应的事件
 function note_ref_init() {
   $("chapter").click(function () {
     let bookid = $(this).attr("book");
@@ -357,7 +393,7 @@ function note_json_html(in_json) {
   let output = "";
   output += "<div class='palitext'>" + in_json.palitext + "</div>";
   for (const iterator of in_json.translation) {
-    output += "<div class='tran'>";
+    output += "<div class='tran' lang='" + iterator.lang + "'>";
     output +=
       "<span class='edit_button' onclick=\"note_edit_sentence('" +
       in_json.book +
@@ -385,9 +421,22 @@ function note_json_html(in_json) {
       "'>";
     if (iterator.text == "") {
       //let channal = find_channal(iterator.channal);
-      output += "<span style='color:var(--border-line-color);'>新建译文</span>";
+      output += "<span style='color:var(--border-line-color);'></span>";
+      output +=
+        "<span style='color:var(--border-line-color);'>" +
+        iterator.channalinfo.name +
+        "-" +
+        iterator.channalinfo.lang +
+        "</span>";
     } else {
-      output += marked(term_std_str_to_tran(iterator.text));
+      output += marked(
+        term_std_str_to_tran(
+          iterator.text,
+          iterator.channal,
+          iterator.editor,
+          iterator.lang
+        )
+      );
     }
     output += "</div>";
 
@@ -485,7 +534,7 @@ function note_sent_save() {
       if (result.status > 0) {
         alert("error" + result.message);
       } else {
-        alert("成功");
+        ntf_show("success");
         $(
           "#tran_text_" +
             result.book +

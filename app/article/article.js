@@ -4,6 +4,7 @@ var _lang = "";
 var _author = "";
 var _display = "";
 
+function article_onload() {}
 function articel_load(id) {
   if (id == "") {
     return;
@@ -48,7 +49,7 @@ function articel_load_collect(article_id) {
       if (status == "success") {
         try {
           let result = JSON.parse(data);
-          if (result) {
+          if (result && result.length > 0) {
             $("#collect_title").html(result[0].title);
             let html = "";
             html += "<ul>";
