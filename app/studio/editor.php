@@ -51,8 +51,6 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
 
-
-
 	<script language="javascript" src="js/relation_list.json"></script>
 	
 	<script language="javascript" src="sent/sent.js"></script>
@@ -63,7 +61,7 @@ else{$currDevice="computer";}
 	<script src="../public/js/mermaid.min.js"></script>
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
-	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="./js/jquery-3.3.1.min.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 
 	<script src="../term/term.js"></script>
@@ -72,7 +70,7 @@ else{$currDevice="computer";}
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
-	<script language="javascript" src="../channal/channal.js"></script>
+	<script  src="../channal/channal.js"></script>
 	
 
 	<script language="javascript">
