@@ -39,7 +39,8 @@ require_once '../studio/index_head.php';
 	}
 	.file_list_block {
     max-width: 100%;
-    margin-right: 1em;
+	margin-right: 1em;
+	max-height: 85vh;
 	}
 	.index_inner {
     margin-left: 16em;
@@ -48,7 +49,8 @@ require_once '../studio/index_head.php';
 #preview_div {
     flex: 6;
     overflow-y: scroll;
-    height: 550px;
+	height: 550px;
+	max-height: 75vh;
 }
 
 	</style>
@@ -60,18 +62,34 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " >
 	<form id="article_edit" action="##" onsubmit="return false"  method="POST" >
 	<div class="file_list_block">
-		<div class="tool_bar">
+		<div class="tool_bar" style="width:50%;">
 			<div style="display:flex;">
-				<a href="../article/my_article_index.php">返回</a>
-				<span id="article_title"></span>
+				<button class="icon_btn" title=<?php echo $_local->gui->back ;?>>
+					<a href="../article/my_article_index.php" >
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#return"></use>
+					</svg>
+				</a></button>
+				<button onclick='article_preview()'  class="icon_btn" title=<?php echo $_local->gui->preview ;?>>
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#preview"></use>
+					</svg>
+				</button>
 				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
-				<div><a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">Open in Library</a></div>
-				<div id="aritcle_status"></div>
-				<span class="icon_btn_div">
+				<div>
+					<button class="icon_btn" title=<?php echo $_local->gui->scan_in_reader ;?>>
+						<a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">
+							<svg class="icon">
+								<use xlink:href="../studio/svg/icon.svg#library"></use>
+							</svg>
+						</a>
+					</button>
+				</div>
+					<span class="icon_btn_div">
 					<span class="icon_btn_tip"></span>
-					<button id="edit_save" type="button" class="icon_btn" title=" " onclick="my_article_save()">
+					<button id="edit_save" type="button" class="icon_btn" title=<?php echo $_local->gui->save ;?> onclick="my_article_save()">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>
 						</svg>
@@ -79,7 +97,7 @@ require_once '../studio/index_head.php';
 				</span>
 				
 				<span class="icon_btn_div">				
-					<span class="icon_btn_tip">回收站</span>
+					<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin ;?></span>
 					<button id="to_recycle" type="button" class="icon_btn" onclick="article_del()" title=" ">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>
@@ -88,7 +106,6 @@ require_once '../studio/index_head.php';
 				</span>	
 			</div>
 		</div>
-
 		<div id="article_list"  class="file_list_block" style="">
 
 		</div>

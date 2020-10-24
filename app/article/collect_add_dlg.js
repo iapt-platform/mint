@@ -4,7 +4,7 @@ function collect_add_dlg_init(div) {
   let html = "";
   html += "<div id='collect_add_dlg'>";
   html += "<div >";
-  html += "<div >Collect Title</div>";
+  html += "<div >" + gLocal.gui.anthology + gLocal.gui.title + "</div>";
   html += "<input type='input' id='collect_add_title' />";
   html += "</div>";
   html += "<div>";
@@ -13,15 +13,15 @@ function collect_add_dlg_init(div) {
     "<div style='display:flex;justify-content: space-between;padding-top: 1em;'>";
   html += "<div>";
   html += "<select id='collect_add_dlg_status'>";
-  html += "<option value='1'>私有</option>";
-  html += "<option value='2'>不公开列出</option>";
-  html += "<option value='3'>公开</option>";
+  html += "<option value='1'>" + gLocal.gui.private + "</option>";
+  html += "<option value='2'>" + gLocal.gui.unlisted + "</option>";
+  html += "<option value='3'>" + gLocal.gui.public + "</option>";
   html += "</select>";
 
   html += "</div>";
   html += "<div>";
-  html += "<button onclick='collect_add_cancel()'>Cancel</button>";
-  html += "<button onclick='collect_add_new()'>New</button>";
+  html += "<button onclick='collect_add_cancel()'>" + gLocal.gui.cancel + "</button>";
+  html += "<button onclick='collect_add_new()'>" + gLocal.gui.new + "</button>";
   html += "</div>";
   html += "</div>";
   html += "</div>";

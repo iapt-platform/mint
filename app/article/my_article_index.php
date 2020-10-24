@@ -38,7 +38,7 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " style="margin-left: 18em;margin-top: 5em;">
 		<div class="file_list_block">
 			<div class="tool_bar">
-				<div>作品列表</div>
+				<div><?php echo $_local->gui->text.$_local->gui->list ?></div>
 				<div>
 					<span class="icon_btn_div">
 						<span class="icon_btn_tip"></span>
@@ -51,7 +51,7 @@ require_once '../studio/index_head.php';
 					</span>
 					
 					<span class="icon_btn_div">				
-						<span class="icon_btn_tip">回收站</span>
+						<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin ;?></span>
 						<button id="to_recycle" type="button" class="icon_btn" onclick="file_del()" title=" ">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>

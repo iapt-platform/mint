@@ -1,5 +1,4 @@
 var _usent_buffer = new Array();
-var now_time = new Date()
 class USentResult {
   constructor(filter = {}) {
     this.filter = filter;
@@ -137,6 +136,7 @@ class USentResult {
             function (data, status) {
               if (status == "success") {
                 let result = JSON.parse(data);
+                let now_time = new Date()
                 console.log(result);
                 for (const iterator of result.update) {
                   $(
