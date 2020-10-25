@@ -298,7 +298,7 @@ switch($op){
 			$parm[]=mTime();
 			$parm[]=mTime();
 			$parm[]=mTime();
-			$query="INSERT INTO term (id, guid, word, worden, meaning, other_meaning, tag, channal, language,note,owner,hit,create_time,modify_time,receive_time ) 
+			$query="INSERT INTO term (id, guid, word, word_en, meaning, other_meaning, tag, channal, language,note,owner,hit,create_time,modify_time,receive_time ) 
 															VALUES (NULL, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "; 
 
 			$stmt = @PDO_Execute($query,$parm);
