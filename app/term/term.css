@@ -113,3 +113,69 @@ note .ref {
   font-size: 75%;
   margin-top: 8px;
 }
+
+.tran ul {
+  list-style-type: circle;
+  margin-left: 2em;
+}
+
+.tran li {
+  list-style: inherit;
+}
+
+.tran ol {
+  list-style-type: decimal;
+  margin: 0;
+  padding: 0;
+  margin-left: 2em;
+}
+
+.tran:lang(en) > ol {
+  list-style-type: decimal;
+}
+
+/*中文*/
+.tran:lang(zh) > ol {
+  list-style-type: cjk-ideographic;
+  margin-left: 2.5em;
+}
+
+/*简体中文*/
+.tran:lang(zh-cn) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+.tran:lang(zh-hans) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+/*繁体中文*/
+.tran:lang(zh-tw) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+.tran:lang(zh-hant) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+
+/*japanese*/
+.tran:lang(jp) > ol {
+  list-style-type: hiragana;
+  margin-left: 2.5em;
+}
+/*kora*/
+.tran:lang(ko) > ol {
+  list-style-type: korean-hangul-formal;
+  margin-left: 2.5em;
+}
+/*thai*/
+.tran:lang(ti) > ol {
+  list-style-type: thai;
+  margin-left: 2em;
+}
+/*myanmar*/
+.tran:lang(my) > ol {
+  list-style-type: myanmar;
+  margin-left: 2em;
+}
