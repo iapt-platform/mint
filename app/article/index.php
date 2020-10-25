@@ -6,7 +6,9 @@ require_once "../pcdl/html_head.php";
 <body style="margin: 0;padding: 0;" class="reader_body" >
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../term/term_popup.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	
 	<script src="../channal/channal.js"></script>
 	<script src="./article.js"></script>
 
