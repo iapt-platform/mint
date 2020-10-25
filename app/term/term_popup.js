@@ -57,9 +57,13 @@ function note_lookup_guid_json(guid) {
             "<div class='term_note' status='1'>" +
             note_init(result.note) +
             "</div>";
+          html +=
+            "<div ><a href='../wiki/wiki.php?word=" +
+            result.word +
+            "' target='_blank'>更多</a></div>";
           html += "</div>";
           $("[term-popup='" + guid + "']").html(html);
-          note_refresh_new();
+          //note_refresh_new();
         } catch (e) {
           console.error("note_lookup_guid_json:" + e + " data:" + data);
         }
