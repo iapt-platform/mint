@@ -46,6 +46,11 @@ else{
 
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>	
+
+	<script src="../term/term.js"></script>
+	<script src="../term/note.js"></script>
+	<script src="../term/term_popup.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>

@@ -66,6 +66,9 @@ else{$currDevice="computer";}
 
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
+	<script src="../term/term_popup.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+
 	<script src="./js/message.js"></script>
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
