@@ -4,14 +4,6 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
-$respond=array("status"=>0,"message"=>"");
-$respond['book']=$_POST["book"];
-$respond['para']=$_POST["para"];
-$respond['begin']=$_POST["begin"];
-$respond['end']=$_POST["end"];
-$respond['channal']=$_POST["channal"];
-$respond['text']=$_POST["text"];
-
 #检查是否登陆
 if(!isset($_COOKIE["userid"])){
     $respond["status"] = 1;
@@ -20,13 +12,28 @@ if(!isset($_COOKIE["userid"])){
     exit;
 }
 
+$respond=array("status"=>0,"message"=>"");
+$respond['book']=$_POST["book"];
+$respond['para']=$_POST["para"];
+$respond['begin']=$_POST["begin"];
+$respond['end']=$_POST["end"];
+$respond['channal']=$_POST["channal"];
+$respond['text']=$_POST["text"];
+$respond['editor']=$_COOKIE["userid"];
+
 #先查询对此channal是否有权限修改
 $cooperation = 0;
+$text_lang = "en";
 if(isset($_POST["channal"])){
    PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-    $query = "SELECT owner FROM channal WHERE id=?";
-    $fetch = PDO_FetchOne($query,array($_POST["channal"]));
-    if($fetch && $fetch==$_COOKIE["userid"]){
+    $query = "SELECT owner, lang FROM channal WHERE id=?";
+    $fetch = PDO_FetchRow($query,array($_POST["channal"]));
+    
+    if($fetch){
+        $text_lang = $fetch["lang"];
+    }
+    $respond['lang']=$text_lang;
+    if($fetch && $fetch["owner"]==$_COOKIE["userid"]){
         #自己的channal
         $cooperation = 1;
     }
@@ -89,7 +96,7 @@ if(isset($_POST["id"])){
 										  "[]", 
 										  $_COOKIE["userid"],
 										  $_POST["text"],
-										  $_POST["lang"],
+										  $text_lang ,
 										  1,
 										  7,
 										  mb_strlen($_POST["text"],"UTF-8"),

@@ -546,7 +546,17 @@ function note_sent_save() {
             result.end +
             "_" +
             result.channal
-        ).html(marked(result.text));
+        ).html(
+          marked(
+            term_std_str_to_tran(
+              result.text,
+              result.channal,
+              result.editor,
+              result.lang
+            )
+          )
+        );
+        term_updata_translation();
         for (const iterator of _arrData) {
           if (
             iterator.book == result.book &&
