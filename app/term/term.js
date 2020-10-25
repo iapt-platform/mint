@@ -501,7 +501,11 @@ function term_lookup_my(pali, channal = "", owner = "", lang = "") {
   }
   for (const iterator of arrMyTerm) {
     if (owner != "") {
-      if (owner == iterator.owner && iterator.language == lang) {
+      if (
+        iterator.word == pali &&
+        owner == iterator.owner &&
+        iterator.language.indexOf(lang) >= 0
+      ) {
         return iterator;
       }
     }
@@ -860,12 +864,17 @@ function term_get_dict() {
     termword.lang = $(this).attr("lang");
     termwordlist.push(termword);
   });
-  //let wordquery = "('" + termwordlist.join("','") + "')";
+
+  let readonly = true;
+  if (_display == "sent") {
+    readonly = false;
+  }
   $.post(
     "../term/term_get.php",
     {
       words: JSON.stringify(termwordlist),
       channal: _channal,
+      readonly: readonly,
     },
     function (data, status) {
       if (data.length > 0) {
