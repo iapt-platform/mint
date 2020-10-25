@@ -179,3 +179,14 @@ note .ref {
   list-style-type: myanmar;
   margin-left: 2em;
 }
+
+.tran_div {
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  padding-top: 0.5em;
+  border-bottom: 1px solid var(--border-line-color);
+}
+
+.tran_div:last-child {
+  border-bottom: none;
+}
