@@ -370,6 +370,7 @@ term_word_link_fun("wiki_goto_word");
 <script>
 	$(document).ready(function(){
 	note_create();
+	term_edit_dlg_init();
 	articel_load(_articel_id);
 	articel_load_collect(_articel_id);
 	click_dropdown_init();

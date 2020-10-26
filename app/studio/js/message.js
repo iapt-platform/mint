@@ -349,7 +349,7 @@ function msg_apply_data(obj) {
         let begin = obj.data.begin;
         let end = obj.data.end;
         $(
-          "[pcds='sent-net'][book='" +
+          "[pcds='sent-net-all'][book='" +
             book +
             "'][para='" +
             para +
