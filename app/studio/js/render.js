@@ -1889,10 +1889,14 @@ function render_tran_sent_block(
   output += "</div>";
   let id =
     "tran_pre_" + book + "_" + para + "_" + begin + "_" + end + "_" + channal;
+  output += "<div class='trans_text_content' tid = '" + id;
+  if (channal == 0) {
+    output += "'  pcds='sent-net-all' ";
+  } else {
+    output += "'  pcds='sent-net' ";
+  }
+
   output +=
-    "<div class='trans_text_content' tid = '" +
-    id +
-    "'  pcds='sent-net' " +
     " book='" +
     book +
     "' para='" +
