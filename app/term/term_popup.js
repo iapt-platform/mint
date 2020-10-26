@@ -57,10 +57,16 @@ function note_lookup_guid_json(guid) {
             "<div class='term_note' status='1'>" +
             note_init(result.note) +
             "</div>";
+          html += "<div >";
           html +=
-            "<div ><a href='../wiki/wiki.php?word=" +
+            "<a href='../wiki/wiki.php?word=" +
             result.word +
-            "' target='_blank'>更多</a></div>";
+            "' target='_blank'>更多</a>";
+          html +=
+            "<button onclick=\"term_edit_dlg_open('" +
+            result.guid +
+            "')\">修改</button>";
+          html += "</div>";
           html += "</div>";
           $("[term-popup='" + guid + "']").html(html);
           //note_refresh_new();

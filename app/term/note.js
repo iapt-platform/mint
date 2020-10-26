@@ -232,7 +232,6 @@ function note_refresh_new() {
 
 function note_channal_list() {
   console.log("note_channal_list start");
-  let objNotes = document.querySelectorAll("note");
   let arrSentInfo = new Array();
   $("note").each(function () {
     let info = $(this).attr("info");
@@ -240,16 +239,7 @@ function note_channal_list() {
       arrSentInfo.push({ id: "", data: info });
     }
   });
-  /*
-  for (const iterator of objNotes) {
-    {
-      let info = iterator.getAttributeNode("info").value;
-      if (info && info != "") {
-        arrSentInfo.push({ id: "", data: info });
-      }
-    }
-  }
-*/
+
   if (arrSentInfo.length > 0) {
     $.post(
       "../term/channal_list.php",
@@ -349,15 +339,61 @@ function render_channal_list(channalinfo) {
   output += channalinfo["nickname"] + "/";
   output += "@" + channalinfo["username"];
   output += "</div>";
-  output += "<div style='background-color: #e0dfdffa;'>";
-  output +=
-    "<span  style='display: inline-block;background-color: #65ff65;width: " +
-    (channalinfo["count"] * 100) / channalinfo["all"] +
-    "%;'>";
-  output += channalinfo["count"] + "/" + channalinfo["all"];
-  output += "</span>";
 
-  output += "</div>";
+  if (channalinfo["final"]) {
+    //进度
+    output += "<div>";
+    let article_len = channalinfo["article_len"];
+    let svg_width = article_len;
+    let svg_height = parseInt(article_len / 10);
+    output +=
+      '<svg viewBox="0 0 ' + svg_width + " " + svg_height + '" width="100%" >';
+
+    let curr_x = 0;
+    let allFinal = 0;
+    for (const iterator of channalinfo["final"]) {
+      let stroke_width = parseInt(iterator.len);
+      output += "<rect ";
+      output += ' x="' + curr_x + '"';
+      output += ' y="0"';
+      output += ' height="' + svg_height + '"';
+      output += ' width="' + stroke_width + '"';
+
+      if (iterator.final == true) {
+        allFinal += stroke_width;
+        output += ' style="stroke-width: 0; fill: rgb(0, 128, 6);"';
+      } else {
+        output += ' style="stroke-width: 0; fill: rgb(230, 230, 230);"';
+      }
+      output += "/>";
+
+      curr_x += stroke_width;
+    }
+    output +=
+      "<rect  x='0' y='0'  width='" +
+      svg_width +
+      "' height='" +
+      svg_height / 5 +
+      "'  style='stroke-width: 0; fill: rgb(230, 230, 230);'/>";
+    output +=
+      "<rect  x='0' y='0'  width='" +
+      allFinal +
+      "' height='" +
+      svg_height / 5 +
+      "'  style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
+    output +=
+      '<text x="0" y="' +
+      svg_height +
+      '" font-size="' +
+      svg_height * 0.8 +
+      '">';
+    output += channalinfo["count"] + "/" + channalinfo["all"];
+    output += "</text>";
+    output += "<svg>";
+    output += "</div>";
+    //进度结束
+  }
+
   output += "</div>";
   output += "</div>";
   return output;

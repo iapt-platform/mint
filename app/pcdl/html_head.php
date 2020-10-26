@@ -51,6 +51,8 @@ else{
 	<script src="../term/note.js"></script>
 	<script src="../term/term_popup.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	<script src="../term/term_edit_dlg.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
