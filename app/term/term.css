@@ -190,3 +190,23 @@ note .ref {
 .tran_div:last-child {
   border-bottom: none;
 }
+
+.progress_bar_done {
+  stroke-width: 0;
+  fill: royalblue;
+}
+
+.progress_bar_undone {
+  stroke-width: 0;
+  fill: #c0c0c052;
+}
+
+.progress_bar_bg {
+  stroke-width: 0;
+  fill: #ffffff;
+}
+
+.progress_bar_percent {
+  stroke-width: 0;
+  fill: limegreen;
+}

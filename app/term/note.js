@@ -361,9 +361,9 @@ function render_channal_list(channalinfo) {
 
       if (iterator.final == true) {
         allFinal += stroke_width;
-        output += ' style="stroke-width: 0; fill: rgb(0, 128, 6);"';
+        output += ' class="progress_bar_done" ';
       } else {
-        output += ' style="stroke-width: 0; fill: rgb(230, 230, 230);"';
+        output += ' class="progress_bar_undone" ';
       }
       output += "/>";
 
@@ -374,13 +374,13 @@ function render_channal_list(channalinfo) {
       svg_width +
       "' height='" +
       svg_height / 5 +
-      "'  style='stroke-width: 0; fill: rgb(230, 230, 230);'/>";
+      "' class='progress_bar_bg' />";
     output +=
       "<rect  x='0' y='0'  width='" +
       allFinal +
       "' height='" +
       svg_height / 5 +
-      "'  style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
+      "' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
     output +=
       '<text x="0" y="' +
       svg_height +
