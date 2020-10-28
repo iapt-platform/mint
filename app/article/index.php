@@ -16,9 +16,13 @@ require_once "../pcdl/html_head.php";
 	$_id = "";
 	$_display = "";
 	$_channal  = "";
+	$_collect = "";
 
 	if(isset($_GET["id"])){
 		echo "_articel_id='".$_GET["id"]."';";
+	}
+	if(isset($_GET["collect"])){
+		echo "_collect_id='".$_GET["collect"]."';";
 	}
 	if(isset($_GET["display"])){
 		echo "_display='".$_GET["display"]."';";
@@ -369,12 +373,17 @@ term_word_link_fun("wiki_goto_word");
 
 <script>
 	$(document).ready(function(){
+	ntf_init();				
+	click_dropdown_init();
 	note_create();
 	term_edit_dlg_init();
-	articel_load(_articel_id);
-	articel_load_collect(_articel_id);
-	click_dropdown_init();
-	ntf_init();
+	if(_collect_id==""){
+		articel_load(_articel_id);
+		articel_load_collect(_articel_id);
+	}
+	else{
+		collect_load(_collect_id);
+	}
 	});
 
 

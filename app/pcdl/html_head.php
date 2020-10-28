@@ -99,9 +99,5 @@ else{
 	white-space: normal;
 }
 
-body{
-	font-family: 'Padauk', sans-serif;
-}
-
 	</style>
 </head>

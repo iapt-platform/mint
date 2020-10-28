@@ -10,8 +10,8 @@ require_once '../ucenter/function.php';
 if(isset($_GET["id"])){
     PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
     $id=$_GET["id"];
-    $query = "select * from collect  where id = ".$PDO->quote($id);
-    $Fetch = PDO_FetchRow($query);
+    $query = "select * from collect  where id = ? ";
+    $Fetch = PDO_FetchRow($query,array($id));
     if($Fetch){
         $userinfo = new UserInfo();
         $user = $userinfo->getName($Fetch["owner"]);

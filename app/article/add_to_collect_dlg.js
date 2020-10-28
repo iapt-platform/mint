@@ -1,9 +1,16 @@
 function add_to_collect_dlg_init() {
   $("[vui='collect-dlg']").each(function () {
     $(this).css("position", "relative");
-    $(this).html(
-      "<button class='button_add_to_collect icon_btn' title='" + gLocal.gui.add_to + gLocal.gui.anthology + "'><svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg'></div>"
-    );
+    let html = "";
+    html +=
+      "<button class='button_add_to_collect icon_btn' title='" +
+      gLocal.gui.add_to +
+      gLocal.gui.anthology +
+      "'>";
+    html +=
+      "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg'></div>";
+
+    $(this).html(html);
   });
 
   $(".button_add_to_collect").click(function () {
