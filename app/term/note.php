@@ -1,7 +1,10 @@
 <?php
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../channal/function.php";
 require_once "../path.php";
+
+$_channal = new Channal();
 
 $_data = array();
 if(isset($_POST["data"])){
@@ -77,9 +80,10 @@ foreach ($_data as $key => $value) {
 		$palitext="";
 	}
 
-	//find out translation
+	//find out translation 查询译文
 	$tran="";
 	$translation = array();
+	$tran_channal = array();
 	try{
 		if(empty($_setting["channal"])){
 			if($sentChannal==""){
@@ -102,7 +106,10 @@ foreach ($_data as $key => $value) {
 				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($Fetch){
 					$tran = $Fetch["text"];
-					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"lang"=>$Fetch["language"],"channal"=>$Fetch["channal"],"editor"=>$Fetch["editor"]);
+					if(!empty($Fetch["channal"])){
+						$tran_channal[$Fetch["channal"]] = $Fetch["channal"];
+					}
 				}
 			}
 			else{
@@ -110,7 +117,8 @@ foreach ($_data as $key => $value) {
 				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($Fetch){
 					$tran = $Fetch["text"];
-					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$Fetch["channal"]);
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"lang"=>$Fetch["language"],"channal"=>$Fetch["channal"],"editor"=>$Fetch["editor"]);
+					$tran_channal[$Fetch["channal"]] = $Fetch["channal"];
 				}
 			}
 		}
@@ -121,21 +129,31 @@ foreach ($_data as $key => $value) {
 				$stmt->execute(array($bookId,$para,$begin,$end,$value));
 				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($Fetch){
-					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"channal"=>$value);
+					$translation[]=array("id"=>$Fetch["id"],"text"=>$Fetch["text"],"lang"=>$Fetch["language"],"channal"=>$value,"editor"=>$Fetch["editor"]);
+					
 				}
 				else{
-					$translation[]=array("id"=>"","text"=>"","channal"=>$value);
+					$translation[]=array("id"=>"","text"=>"","lang"=>"","channal"=>$value);
 				}
+				$tran_channal[$value] = $value;
 			}
 		}
-		
-
 		$tran_count = 1;
 	}
 	catch (Exception $e) {
 		$tran = $e->getMessage();
 		//echo 'Caught exception: ',  $e->getMessage(), "\n";
 	}
+
+	foreach ($tran_channal as $key => $value) {
+		# code...
+		$tran_channal[$key] = $_channal->getChannal($key);
+	}
+	foreach ($translation as $key => $value) {
+		# code...
+		$translation[$key]["channalinfo"]=$tran_channal[$value["channal"]];
+	}
+
 	
 	$para_path=_get_para_path($bookId,$para);
 

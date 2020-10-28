@@ -240,6 +240,25 @@
     url(../../../font/NotoSerif/NotoSerif-BlackItalic.ttf) format("truetype");
   font-display: fallback;
 }
+
+/*缅文*/
+@font-face {
+  font-family: "Padauk";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Padauk"),
+    url(../../../font/Padauk/Padauk-Regular.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Padauk";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Padauk Bold"),
+    url(../../../font/Padauk/Padauk-Bold.ttf) format("truetype");
+  font-display: fallback;
+}
 /*中文繁體*/
 
 @font-face {

@@ -148,10 +148,9 @@ switch($op){
 		echo"<div class='pali'>{$word}</div>";
 		//查本人数据
 		echo "<div></div>";//My Term
-		$query = "select * from term  where \"word\" = ".$PDO->quote($word)." AND \"owner\"= ".$PDO->quote($username)." limit 0,30";
-		$Fetch = PDO_FetchAll($query);
+		$query = "select * from term  where word = ? AND  owner = ? limit 0,30";
+		$Fetch = PDO_FetchAll($query,array($word,$_COOKIE["userid"]));
 		$iFetch=count($Fetch);
-		$count_return+=$iFetch;
 		if($iFetch>0){
 			for($i=0;$i<$iFetch;$i++){
 				$mean=$Fetch[$i]["meaning"];
@@ -164,6 +163,8 @@ switch($op){
 				echo "<div class='mean'><span>".$mean."</span>";
 				echo "<span class='other_mean' style='margin-right: auto;'>（".$Fetch[$i]["other_meaning"]."）</span></div>";
 				echo "<div class='tag'>{$Fetch[$i]["tag"]}</div>";
+				echo "<div class='mean'>{$Fetch[$i]["channal"]}</div>";				
+				echo "<div class='mean'>{$Fetch[$i]["language"]}</div>";
 				echo "<div class='term_note' status=0>".$Fetch[$i]["note"]."</div>";
 				echo "</div>";
 				//编辑词条表单
@@ -172,20 +173,22 @@ switch($op){
 				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->first_choice_word}：</span>";
 				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_edit_mean_{$guid}' value='$mean' /></div>";//'意思'
 		
-				//echo "<div class='mean'><input type='input' id='term_edit_mean_{$guid}'  placeholder='{$_local->gui->meaning}' value='$mean' /></div>";//'意思'
 				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->other_meaning}：</span>";
 				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_mean2_{$guid}' value='".$Fetch[$i]["other_meaning"]."'/></div>";//'备选意思（可选项）'
 
-				//echo "<div class='other_mean'><input type='input' id='term_edit_mean2_{$guid}'  placeholder='{$_local->gui->other_meaning}' value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
 				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->tag}：</span>";
 				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_tag_{$guid}' value='".$Fetch[$i]["tag"]."'/></div>";//'标签'
 
-				//echo "<div class='tag'><input type='input' id='term_edit_tag_{$guid}'  placeholder='{$_local->gui->other_tag}' value='".$Fetch[$i]["tag"]."' /></div>";//'标签'
+				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->channel}：</span>";
+				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_channal_{$guid}' value='".$Fetch[$i]["channal"]."'/></div>";//'版风'
+				
+				echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->language}：</span>";
+				echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_edit_language_{$guid}' value='".$Fetch[$i]["language"]."'/></div>";//'语言'
+
 				echo "<div class='note'><span style='display:flex;'><span>{$_local->gui->encyclopedia} & {$_local->gui->note}：</span>";
 				echo "<guide gid='term_pedia_sys' style='margin-left: auto;'></guide></span>";
 				echo "<textarea width='100%' height='3em'  placeholder='{$_local->gui->optional}' id='term_edit_note_$guid'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
 
-				//echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$module_gui_str['editor']['1043']."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
 				echo "</div>";
 				echo "<div id='term_edit_btn1_$guid'>";
 				//echo "<button onclick=\"term_apply('$guid')\">{$_local->gui->apply}</button>";//Apply
@@ -203,28 +206,39 @@ switch($op){
 		echo "<button id='new_term_button' onclick=\"term_show_new()\">{$_local->gui->new}</button>";
 		echo "<div id='term_new_recorder' style='display:none;'>";
 		echo "<div class='dict'>".$_local->gui->new_technic_term."</div>";//New Techinc Term
+		
 		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->pali_word}：</span>";
 		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_new_word' value='{$word}' /></div>";//'拼写'
+		
 		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->first_choice_word}：</span>";
 		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->required}' id='term_new_mean'/></div>";//'意思'
+		
 		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->other_meaning}：</span>";
 		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_mean2'/></div>";//'备选意思（可选项）'
+		
 		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->tag}：</span>";
 		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_tag'/></div>";//'标签'
+		
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->channel}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_channal'/></div>";//'标签'
+		
+		echo "<div class='mean' style='display:flex;'><span style='flex:1;'>{$_local->gui->language}：</span>";
+		echo "<input type='input' style='flex:3;' placeholder='{$_local->gui->optional}' id='term_new_language'/></div>";//'标签'
+		
 		echo "<div class='note'><span style='display:flex;'><span>{$_local->gui->encyclopedia} & {$_local->gui->note}：</span>";
 		echo "<guide gid='term_pedia_sys' style='margin-left: auto;'></guide></span>";
 		echo "<textarea width='100%' height='3em'  placeholder='{$_local->gui->optional}' id='term_new_note'></textarea></div>";//'注解'
+		
 		echo "<button onclick=\"term_data_save('')\">{$_local->gui->save}</button>";//保存
 		echo "</div>";
 		echo "</div>";
 
 		
 		//查他人数据
-		$query = "select * from term  where \"word\" = ".$PDO->quote($word)."AND \"owner\" <> ".$PDO->quote($username)." limit 0,30";
+		$query = "SELECT * FROM term  WHERE word = ? AND owner <> ? LIMIT 0,30";
 		
-		$Fetch = PDO_FetchAll($query);
+		$Fetch = PDO_FetchAll($query,array($word,$_COOKIE["userid"]));
 		$iFetch=count($Fetch);
-		$count_return+=$iFetch;
 		if($iFetch>0){
 			for($i=0;$i<$iFetch;$i++){
 				$mean=$Fetch[$i]["meaning"];
@@ -253,43 +267,43 @@ switch($op){
 			$mTime=$_GET["modify_time"];
 		}
 		else{
-			$mTime=time();
+			$mTime=mTime();
 		}
 		if($_GET["guid"]!=""){
-			$mean=$_GET["mean"];
-			$query="UPDATE term SET meaning='$mean' ,
-									other_meaning='".$_GET["mean2"]."' ,
-									tag='".$_GET["tag"]."' ,
-									receive_time='".time()."' ,
-									modify_time='$mTime' ,
-									note='".$_GET["note"]."' 
-							where guid='".$_GET["guid"]."'";
+			$query="UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
+			$stmt = @PDO_Execute($query,array($_GET["mean"],
+																		$_GET["mean2"],
+																		$_GET["tag"],
+																		$_GET["channal"],
+																		$_GET["language"],
+																		$_GET["note"],
+																		mTime(),
+																		$mTime,
+																		$_GET["guid"]
+																	));
 		}
 		else{
-			$newGuid=UUID::v4();
-			$word=$_GET["word"];
-			$worden=pali2english($word);
-			$mean=$_GET["mean"];
-			$mean2=$_GET["mean2"];
-			$note=$_GET["note"];
-			$tag=$_GET["tag"];
-			$time=time();
-			$query="INSERT INTO term VALUES (NULL, 
-											'$newGuid', 
-											'$word', 
-											'$worden', 
-											'$mean', 
-											'$mean2', 
-											'$note', 
-											'$tag', 
-											'$time', 
-											'$username', 
-											'1',
-											'zh',
-											'$time',
-											'$time')";		
+			$parm = array();
+			$parm[]=UUID::v4();
+			$parm[]=$_GET["word"];
+			$parm[]=pali2english($word);
+			$parm[]=$_GET["mean"];
+			$parm[]=$_GET["mean2"];
+			$parm[]=$_GET["tag"];			
+			$parm[]=$_GET["channal"];			
+			$parm[]=$_GET["language"];			
+			$parm[]=$_GET["note"];
+			$parm[]=$_COOKIE["userid"];
+			$parm[]=0;
+			$parm[]=mTime();
+			$parm[]=mTime();
+			$parm[]=mTime();
+			$query="INSERT INTO term (id, guid, word, word_en, meaning, other_meaning, tag, channal, language,note,owner,hit,create_time,modify_time,receive_time ) 
+															VALUES (NULL, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "; 
+
+			$stmt = @PDO_Execute($query,$parm);
 		}
-			$stmt = @PDO_Execute($query);
+			
 			$respond=array("status"=>0,"message"=>"");
 			if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 				$error = PDO_ErrorInfo();

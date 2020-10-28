@@ -30,11 +30,15 @@ function my_article_list() {
             html +=
               "<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
               iterator.id +
-              "'>" + gLocal.gui.edit + "</a></div>";
+              "'>" +
+              gLocal.gui.edit +
+              "</a></div>";
             html +=
               "<div style='flex:1;'><a href='../article/?id=" +
               iterator.id +
-              "' target='_blank'>" + gLocal.gui.preview + "</a></div>";
+              "' target='_blank'>" +
+              gLocal.gui.preview +
+              "</a></div>";
             html += "<div style='flex:1;'>15</div>";
             html += "</div>";
           }
@@ -49,16 +53,36 @@ function my_article_list() {
   );
 }
 
-
 function render_status(status) {
   status = parseInt(status);
   let html = "";
   let objStatus = [
-    { id: 1, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" + gLocal.gui.private, tip: gLocal.gui.private_note },
-    { id: 2, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" + gLocal.gui.unlisted, tip: gLocal.gui.unlisted_note },
-    { id: 3, name: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" + gLocal.gui.public, tip: gLocal.gui.public_note },
+    {
+      id: 1,
+      name:
+        "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" +
+        gLocal.gui.private,
+      tip: gLocal.gui.private_note,
+    },
+    {
+      id: 2,
+      name:
+        "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" +
+        gLocal.gui.unlisted,
+      tip: gLocal.gui.unlisted_note,
+    },
+    {
+      id: 3,
+      name:
+        "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" +
+        gLocal.gui.public,
+      tip: gLocal.gui.public_note,
+    },
   ];
-  html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.privacy + '</span><div class="case_dropdown"  style="flex:7;">';
+  html +=
+    "<span style='flex:3;margin:auto;'>" +
+    gLocal.gui.privacy +
+    '</span><div class="case_dropdown"  style="flex:7;">';
   html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
   for (const iterator of objStatus) {
@@ -66,7 +90,8 @@ function render_status(status) {
       html += "<div >" + iterator.name + "</div>";
     }
   }
-  html += '<div id="privacy_list" class="case_dropdown-content" style="background-color: var(--detail-color); color: var(--btn-color);">';
+  html +=
+    '<div id="privacy_list" class="case_dropdown-content" style="background-color: var(--detail-color); color: var(--btn-color);">';
 
   for (const iterator of objStatus) {
     let active = "";
@@ -81,6 +106,8 @@ function render_status(status) {
   html += "</div></div>";
   return html;
 }
+
+function setStatus(obj) {}
 
 function my_article_edit(id) {
   $.get(
@@ -109,16 +136,30 @@ function my_article_edit(id) {
             result.status +
             "'/>";
 
-          html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
+          html +=
+            "<input type='checkbox' name='import' />" +
+            gLocal.gui.import +
+            gLocal.gui.text;
           html += "<div>";
           html += "<div id='article_collect' vui='collect-dlg' ></div>"
           html += "<div style='display:flex;'>";
-          html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>"
-          html += '<span id="article_title" style="flex:7;"></span></div>';
-          html += "<div id='channal_selector' form_name='channal' style='display:flex;'></div>";
-          html += "<div id='aritcle_status' style='display: flex; width: 100 %;'></div>";
           html +=
-            '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' + gLocal.gui.language_select + '</span>	<input id="article_lang_select"  style="flex:7;" type="input" onchange="article_lang_change()"  placeholder="' + gLocal.gui.input + " & " + gLocal.gui.language_select + '，' + gLocal.gui.example + '：Engilish" code="' +
+            "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
+          html += '<span id="article_title" style="flex:7;"></span></div>';
+          html +=
+            "<div id='channal_selector' form_name='channal' style='display:flex;'></div>";
+          html +=
+            "<div id='aritcle_status' style='display: flex; width: 100 %;'></div>";
+          html +=
+            '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' +
+            gLocal.gui.language_select +
+            '</span>	<input id="article_lang_select"  style="flex:7;" type="input" onchange="article_lang_change()"  placeholder="' +
+            gLocal.gui.input +
+            " & " +
+            gLocal.gui.language_select +
+            "，" +
+            gLocal.gui.example +
+            '：Engilish" code="' +
             result.lang +
             '" value="' +
             result.lang +
@@ -223,7 +264,10 @@ function course_validate_required(field, alerttxt) {
 
 function course_validate_form(thisform) {
   with (thisform) {
-    if (course_validate_required(title, gLocal.gui.title_necessary + "！") == false) {
+    if (
+      course_validate_required(title, gLocal.gui.title_necessary + "！") ==
+      false
+    ) {
       title.focus();
       return false;
     }

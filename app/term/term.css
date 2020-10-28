@@ -63,3 +63,150 @@ commentary {
   border-left: 3px solid gray;
   padding-left: 5px;
 }
+
+note > .tran {
+  color: #5c5c5c;
+  padding-left: 1em;
+  padding: 3px;
+}
+note > .palitext,
+.palitext {
+  font-family: Noto serif;
+  line-height: 1.5em;
+  color: #9f3a01;
+  font-weight: 500;
+}
+note > .palitext > note {
+  display: inline;
+  color: blue;
+  background-color: unset;
+  padding: unset;
+  margin-bottom: unset;
+  border-radius: unset;
+}
+
+.term_word_head_pali {
+  text-transform: capitalize;
+  font-size: 200%;
+  margin: 0.5em 0;
+}
+.term_word_head {
+  border-bottom: 1px solid #cecece;
+  padding: 5px 0;
+}
+.term_block {
+  border-bottom: 1px solid #cecece;
+  padding: 5px 0;
+}
+.term_word_head_authors a {
+  color: blue;
+  margin: 0 3px;
+}
+.term_word_head_authors a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+note .ref {
+  text-align: right;
+  padding: 5px;
+  font-size: 75%;
+  margin-top: 8px;
+}
+
+.tran ul {
+  list-style-type: circle;
+  margin-left: 2em;
+}
+
+.tran li {
+  list-style: inherit;
+}
+
+.tran ol {
+  list-style-type: decimal;
+  margin: 0;
+  padding: 0;
+  margin-left: 2em;
+}
+
+.tran:lang(en) > ol {
+  list-style-type: decimal;
+}
+
+/*中文*/
+.tran:lang(zh) > ol {
+  list-style-type: cjk-ideographic;
+  margin-left: 2.5em;
+}
+
+/*简体中文*/
+.tran:lang(zh-cn) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+.tran:lang(zh-hans) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+/*繁体中文*/
+.tran:lang(zh-tw) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+.tran:lang(zh-hant) > ol {
+  list-style-type: trad-chinese-formal;
+  margin-left: 2.5em;
+}
+
+/*japanese*/
+.tran:lang(jp) > ol {
+  list-style-type: hiragana;
+  margin-left: 2.5em;
+}
+/*kora*/
+.tran:lang(ko) > ol {
+  list-style-type: korean-hangul-formal;
+  margin-left: 2.5em;
+}
+/*thai*/
+.tran:lang(ti) > ol {
+  list-style-type: thai;
+  margin-left: 2em;
+}
+/*myanmar*/
+.tran:lang(my) > ol {
+  list-style-type: myanmar;
+  margin-left: 2em;
+}
+
+.tran_div {
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  padding-top: 0.5em;
+  border-bottom: 1px solid var(--border-line-color);
+}
+
+.tran_div:last-child {
+  border-bottom: none;
+}
+
+.progress_bar_done {
+  stroke-width: 0;
+  fill: royalblue;
+}
+
+.progress_bar_undone {
+  stroke-width: 0;
+  fill: #c0c0c052;
+}
+
+.progress_bar_bg {
+  stroke-width: 0;
+  fill: #ffffff;
+}
+
+.progress_bar_percent {
+  stroke-width: 0;
+  fill: limegreen;
+}

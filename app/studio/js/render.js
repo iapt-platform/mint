@@ -450,7 +450,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() { }
+function renderBlock() {}
 /*
 重绘翻译数据块
 */
@@ -655,7 +655,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) { }
+function renderTranslateParBlockInnerPreview(strText) {}
 function updateTranslationPreview_a(blockId, text) {
   var out = "";
   var newText = text;
@@ -1324,12 +1324,17 @@ function render_sent_tool_bar(elementBlock, begin) {
       iEnd;
   }
   output +=
-    "<span style='flex: 7;display: flex;'><div style='background-color: silver;'><span style='font-size: large; font-weight: bolder;' title=" + gLocal.gui.text_num + ">" +
+    "<span style='flex: 7;display: flex;'><div style='background-color: silver;'><span style='font-size: large; font-weight: bolder;' title=" +
+    gLocal.gui.text_num +
+    ">" +
     sentIdString +
     "</span><button class='icon_btn' onclick=\"copy_to_clipboard('" +
     sentIdStringLink +
-    "')\" title=" + gLocal.gui.copy_to_clipboard + ">";
-  output += '<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
+    "')\" title=" +
+    gLocal.gui.copy_to_clipboard +
+    ">";
+  output +=
+    '<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
   output += "</button>";
   //	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
   if (_display_sbs == 0) {
@@ -1339,7 +1344,9 @@ function render_sent_tool_bar(elementBlock, begin) {
       abook +
       "&para=" +
       aparagraph +
-      "')\" target='_blank' title='" + gLocal.gui.scan_in_reader + "'>";
+      "')\" target='_blank' title='" +
+      gLocal.gui.scan_in_reader +
+      "'>";
   } else {
     //逐句模式
     output +=
@@ -1351,12 +1358,17 @@ function render_sent_tool_bar(elementBlock, begin) {
       iBegin +
       "&end=" +
       iEnd +
-      "')\" target='_blank' title='" + gLocal.gui.scan_in_reader + "'>";
+      "')\" target='_blank' title='" +
+      gLocal.gui.scan_in_reader +
+      "'>";
   }
-  output += '<svg style="fill: var(--link-color);" t="1601482753387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22291"><path d="M703.730499 544.578527a191.730499 191.730499 0 0 1 156.260356 302.806368l122.004508 122.004507a31.955083 31.955083 0 0 1-45.248398 45.184488l-121.940597-121.940598A191.730499 191.730499 0 1 1 703.730499 544.642437z m-6.391017-511.28133c38.857381 0 70.301183 30.67688 70.301183 68.511698v386.912146a255.640665 255.640665 0 1 0-69.022979 503.16474l-563.687667 0.06391c-38.857381 0-70.301183-30.67688-70.301183-68.447788V101.808895C64.628836 63.910166 96.072638 33.233286 134.930019 33.233286h562.409463z m6.391017 575.191496a127.820333 127.820333 0 1 0 0 255.640665 127.820333 127.820333 0 0 0 0-255.640665z m-351.505915 0h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511281h127.820332a31.955083 31.955083 0 0 0 0-63.910166z m0-191.730499h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h127.820332a31.955083 31.955083 0 0 0 0-63.910167z m191.730499-191.730499h-319.550831a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h319.550831a31.955083 31.955083 0 0 0 0-63.910167z" p-id="22292"></path></svg>';
+  output +=
+    '<svg style="fill: var(--link-color);" t="1601482753387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22291"><path d="M703.730499 544.578527a191.730499 191.730499 0 0 1 156.260356 302.806368l122.004508 122.004507a31.955083 31.955083 0 0 1-45.248398 45.184488l-121.940597-121.940598A191.730499 191.730499 0 1 1 703.730499 544.642437z m-6.391017-511.28133c38.857381 0 70.301183 30.67688 70.301183 68.511698v386.912146a255.640665 255.640665 0 1 0-69.022979 503.16474l-563.687667 0.06391c-38.857381 0-70.301183-30.67688-70.301183-68.447788V101.808895C64.628836 63.910166 96.072638 33.233286 134.930019 33.233286h562.409463z m6.391017 575.191496a127.820333 127.820333 0 1 0 0 255.640665 127.820333 127.820333 0 0 0 0-255.640665z m-351.505915 0h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511281h127.820332a31.955083 31.955083 0 0 0 0-63.910166z m0-191.730499h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h127.820332a31.955083 31.955083 0 0 0 0-63.910167z m191.730499-191.730499h-319.550831a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h319.550831a31.955083 31.955083 0 0 0 0-63.910167z" p-id="22292"></path></svg>';
   output += "</button>";
   output +=
-    "<button class='icon_btn' title='" + gLocal.gui.relational_map + "' class='rel_map' onclick=\"sent_show_rel_map('" +
+    "<button class='icon_btn' title='" +
+    gLocal.gui.relational_map +
+    "' class='rel_map' onclick=\"sent_show_rel_map('" +
     abook +
     "','" +
     aparagraph +
@@ -1364,7 +1376,9 @@ function render_sent_tool_bar(elementBlock, begin) {
     iBegin +
     "','" +
     iEnd +
-    "')\">" + '<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' + "</button>";
+    "')\">" +
+    '<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
+    "</button>";
   output += "</div>";
   output += "<guide gid='sent_func' style='margin:unset;'></guide>";
   output += "</span>";
@@ -1624,12 +1638,17 @@ function renderWordParBlockInner(elementBlock) {
           book + "-" + paragraph + "-" + nextBegin + "-" + nextEnd;
         let sentIdStringLink = "{{" + sentIdString + "}}";
         output +=
-          "<span style='flex: 7;display: flex;'><div style='background-color: silver;'><span style='font-size: large; font-weight: bolder;' title=" + gLocal.gui.text_num + ">" +
+          "<span style='flex: 7;display: flex;'><div style='background-color: silver;'><span style='font-size: large; font-weight: bolder;' title=" +
+          gLocal.gui.text_num +
+          ">" +
           sentIdString +
           "</span><button class='icon_btn' onclick=\"copy_to_clipboard('" +
           sentIdStringLink +
-          "')\" title=" + gLocal.gui.copy_to_clipboard + ">";
-        output += '<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
+          "')\" title=" +
+          gLocal.gui.copy_to_clipboard +
+          ">";
+        output +=
+          '<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
         output += "</button>";
         output +=
           "<button class='icon_btn'  onclick=\"window.open('../pcdl/reader.php?view=sent&book=" +
@@ -1640,12 +1659,17 @@ function renderWordParBlockInner(elementBlock) {
           nextBegin +
           "&end=" +
           nextEnd +
-          "')\" target='_blank' title='" + gLocal.gui.scan_in_reader + "'>";
+          "')\" target='_blank' title='" +
+          gLocal.gui.scan_in_reader +
+          "'>";
 
-        output += '<svg style="fill: var(--link-color);" t="1601482753387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22291"><path d="M703.730499 544.578527a191.730499 191.730499 0 0 1 156.260356 302.806368l122.004508 122.004507a31.955083 31.955083 0 0 1-45.248398 45.184488l-121.940597-121.940598A191.730499 191.730499 0 1 1 703.730499 544.642437z m-6.391017-511.28133c38.857381 0 70.301183 30.67688 70.301183 68.511698v386.912146a255.640665 255.640665 0 1 0-69.022979 503.16474l-563.687667 0.06391c-38.857381 0-70.301183-30.67688-70.301183-68.447788V101.808895C64.628836 63.910166 96.072638 33.233286 134.930019 33.233286h562.409463z m6.391017 575.191496a127.820333 127.820333 0 1 0 0 255.640665 127.820333 127.820333 0 0 0 0-255.640665z m-351.505915 0h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511281h127.820332a31.955083 31.955083 0 0 0 0-63.910166z m0-191.730499h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h127.820332a31.955083 31.955083 0 0 0 0-63.910167z m191.730499-191.730499h-319.550831a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h319.550831a31.955083 31.955083 0 0 0 0-63.910167z" p-id="22292"></path></svg>';
+        output +=
+          '<svg style="fill: var(--link-color);" t="1601482753387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22291"><path d="M703.730499 544.578527a191.730499 191.730499 0 0 1 156.260356 302.806368l122.004508 122.004507a31.955083 31.955083 0 0 1-45.248398 45.184488l-121.940597-121.940598A191.730499 191.730499 0 1 1 703.730499 544.642437z m-6.391017-511.28133c38.857381 0 70.301183 30.67688 70.301183 68.511698v386.912146a255.640665 255.640665 0 1 0-69.022979 503.16474l-563.687667 0.06391c-38.857381 0-70.301183-30.67688-70.301183-68.447788V101.808895C64.628836 63.910166 96.072638 33.233286 134.930019 33.233286h562.409463z m6.391017 575.191496a127.820333 127.820333 0 1 0 0 255.640665 127.820333 127.820333 0 0 0 0-255.640665z m-351.505915 0h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511281h127.820332a31.955083 31.955083 0 0 0 0-63.910166z m0-191.730499h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h127.820332a31.955083 31.955083 0 0 0 0-63.910167z m191.730499-191.730499h-319.550831a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h319.550831a31.955083 31.955083 0 0 0 0-63.910167z" p-id="22292"></path></svg>';
         output += "</button>";
         output +=
-          "<button class='icon_btn' title='" + gLocal.gui.relational_map + "' class='rel_map' onclick=\"sent_show_rel_map('" +
+          "<button class='icon_btn' title='" +
+          gLocal.gui.relational_map +
+          "' class='rel_map' onclick=\"sent_show_rel_map('" +
           book +
           "','" +
           paragraph +
@@ -1653,7 +1677,9 @@ function renderWordParBlockInner(elementBlock) {
           nextBegin +
           "','" +
           nextEnd +
-          "')\">" + '<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' + "</button>";
+          "')\">" +
+          '<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
+          "</button>";
         output += "</div>";
         output += "<guide gid='sent_func' style='margin:unset;'></guide>";
         output += "</span>";
@@ -1846,7 +1872,8 @@ function render_tran_sent_block(
       output += "未知的频道名";
     }
     output += "</span>";
-    output += "<span style='margin-left: auto;' class='send_status' id='send_" +
+    output +=
+      "<span style='margin-left: auto;' class='send_status' id='send_" +
       book +
       "_" +
       para +
@@ -1862,10 +1889,14 @@ function render_tran_sent_block(
   output += "</div>";
   let id =
     "tran_pre_" + book + "_" + para + "_" + begin + "_" + end + "_" + channal;
+  output += "<div class='trans_text_content' tid = '" + id;
+  if (channal == 0) {
+    output += "'  pcds='sent-net-all' ";
+  } else {
+    output += "'  pcds='sent-net' ";
+  }
+
   output +=
-    "<div class='trans_text_content' tid = '" +
-    id +
-    "'  pcds='sent-net' " +
     " book='" +
     book +
     "' para='" +
@@ -1950,7 +1981,8 @@ function render_tran_sent_block(
       "' >";
     output += objSent.text;
     output += "</textarea>";
-    output += "<div class='trans_text_info' style='justify-content: flex-end;'>";
+    output +=
+      "<div class='trans_text_info' style='justify-content: flex-end;'>";
     output += "<span></span>";
     output +=
       "<button class='icon_btn' onclick=\"trans_text_save('" +
@@ -1963,7 +1995,10 @@ function render_tran_sent_block(
       end +
       "','" +
       channal +
-      "')\" title=" + gLocal.gui.draft + ">" + '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="svg/icon.svg#ic_save"></use></svg>'
+      "')\" title=" +
+      gLocal.gui.draft +
+      ">" +
+      '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="svg/icon.svg#ic_save"></use></svg>';
     output += "</button>";
     output +=
       "<button class='icon_btn' onclick=\"trans_text_send('" +
@@ -1976,7 +2011,10 @@ function render_tran_sent_block(
       end +
       "','" +
       channal +
-      "')\" title=" + gLocal.gui.send + " disabled>" + '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="svg/icon.svg#send_by_paper_plane"></use></svg>'
+      "')\" title=" +
+      gLocal.gui.send +
+      " disabled>" +
+      '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="svg/icon.svg#send_by_paper_plane"></use></svg>';
     output += "</button>";
 
     output += "</div>";
@@ -1989,7 +2027,12 @@ function render_tran_sent_block(
       "<span></span>" +
       "<span><span class='tools'>";
 
-    output += "<button class='icon_btn' title=" + gLocal.gui.accept_copy + ">" + "<svg class='icon' style='fill: var(--link-color); height: 2em; width: 2em; '><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_move_to_inbox'></use></svg>" + "</button>";
+    output +=
+      "<button class='icon_btn' title=" +
+      gLocal.gui.accept_copy +
+      ">" +
+      "<svg class='icon' style='fill: var(--link-color); height: 2em; width: 2em; '><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_move_to_inbox'></use></svg>" +
+      "</button>";
 
     if (channal == 0) {
       //百家言 显示更多按钮
@@ -2002,7 +2045,11 @@ function render_tran_sent_block(
         begin +
         "','" +
         end +
-        "')\" title=" + gLocal.gui.message + ">" + '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="plugin/system_message/icon.svg#icon_message"></use></svg>' + "</button>";
+        "')\" title=" +
+        gLocal.gui.message +
+        ">" +
+        '<svg class="icon" style="fill: var(--link-color); height: 2em; width: 2em;"><use xlink:href="plugin/system_message/icon.svg#icon_message"></use></svg>' +
+        "</button>";
     }
 
     output += "</span><span>" + usent_count + "</span></span>";
@@ -2015,15 +2062,15 @@ function render_tran_sent_block(
 function trans_text_save(book, para, begin, end, channal) {
   let textarea = $(
     "#trans_sent_edit_" +
-    book +
-    "_" +
-    para +
-    "_" +
-    begin +
-    "_" +
-    end +
-    "_" +
-    channal
+      book +
+      "_" +
+      para +
+      "_" +
+      begin +
+      "_" +
+      end +
+      "_" +
+      channal
   );
   if (textarea) {
     let objsent = new Object();
@@ -2044,16 +2091,16 @@ function sent_edit_click(book, para, begin, end, channal) {
   $(".trans_sent_edit").parent().hide(200);
   $(
     ".trans_sent_edit[book='" +
-    book +
-    "'][para='" +
-    para +
-    "'][begin='" +
-    begin +
-    "'][end='" +
-    end +
-    "'][channal='" +
-    channal +
-    "']"
+      book +
+      "'][para='" +
+      para +
+      "'][begin='" +
+      begin +
+      "'][end='" +
+      end +
+      "'][channal='" +
+      channal +
+      "']"
   )
     .parent()
     .show();
@@ -2146,7 +2193,7 @@ function renderWordHeadInner(element) {
     wStyle += " term_word_head";
   } else {
     if (sParent.length > 0) {
-      if (term_lookup_my(sParent) != null) {
+      if (term_lookup_my(sParent) != false) {
         wStyle += " term_my";
       } else {
         if (term_lookup_all(sParent) != null) {
@@ -2802,12 +2849,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                "$" +
-                arrMeaning.length +
-                "$$" +
-                arrMean[i] +
-                "$" +
-                g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$$" +
+                  arrMean[i] +
+                  "$" +
+                  g_DictWordList[iDict].Language
               );
             }
           }
@@ -2857,12 +2904,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$*$" +
-                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$*$" +
+                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2912,12 +2959,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$**$" +
-                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                    "$" +
+                    arrMeaning.length +
+                    "$**$" +
+                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                    "$" +
+                    g_DictWordList[iDict].Language
                 );
               }
             }
@@ -3392,7 +3439,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) { }
+function renderWordNoteDivByParaNo(book, paragraph) {}
 /*
 paragraph word note
 */
@@ -3591,7 +3638,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) { }
+function updateWordCommentary(element) {}
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3714,13 +3761,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-    g_allparlen_array[gVisibleParBegin - 1] <=
+      g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin - 1] >
+      g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3747,13 +3794,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] <=
+      g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-    g_allparlen_array[gVisibleParBegin + 1] >
+      g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -4194,12 +4241,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-      id +
-      "' name=\"word_note_" +
-      id +
-      '">[' +
-      (index + 1) +
-      "]</a>"
+        id +
+        "' name=\"word_note_" +
+        id +
+        '">[' +
+        (index + 1) +
+        "]</a>"
     );
   });
 

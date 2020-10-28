@@ -64,18 +64,28 @@ require_once '../studio/index_head.php';
 	<div class="file_list_block">
 		<div class="tool_bar" style="width:50%;">
 			<div style="display:flex;">
-				<button class="icon_btn" title=<?php echo $_local->gui->back ;?>>
-					<a href="../article/my_article_index.php" >
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#return"></use>
-					</svg>
-				</a></button>
-				<button onclick='article_preview()'  class="icon_btn" title=<?php echo $_local->gui->preview ;?>>
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#preview"></use>
-					</svg>
-				</button>
-				
+
+				<span class="icon_btn_div">
+					<span class="icon_btn_tip"><?php echo $_local->gui->back ;?></span>
+					<button id="icon_btn" type="button" class="icon_btn"  onclick="my_article_save()">
+						<a href="../article/my_article_index.php" >
+							<svg class="icon">
+								<use xlink:href="../studio/svg/icon.svg#return"></use>
+							</svg>
+						</a>
+					</button>
+				</span>
+
+				<span class="icon_btn_div">
+					<span class="icon_btn_tip"><?php echo $_local->gui->preview ;?></span>
+					<button onclick='article_preview()'  class="icon_btn" >
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#preview"></use>
+						</svg>
+					</button>
+				</span>
+
+				<div id="article_collect" vui='collect-dlg' ></div>
 			</div>
 			<div style="display:flex;">
 				<div>
@@ -87,9 +97,10 @@ require_once '../studio/index_head.php';
 						</a>
 					</button>
 				</div>
-					<span class="icon_btn_div">
-					<span class="icon_btn_tip"></span>
-					<button id="edit_save" type="button" class="icon_btn" title=<?php echo $_local->gui->save ;?> onclick="my_article_save()">
+
+				<span class="icon_btn_div">
+					<span class="icon_btn_tip"><?php echo $_local->gui->save ;?></span>
+					<button id="edit_save" type="button" class="icon_btn"  onclick="my_article_save()">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>
 						</svg>

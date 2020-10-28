@@ -64,7 +64,7 @@ require_once '../studio/index_head.php';
 			<div style="display:flex;">
 				<div id="aritcle_status"></div>
 				<span class="icon_btn_div">
-					<span class="icon_btn_tip">保存</span>
+					<span class="icon_btn_tip">Save</span>
 					<button id="edit_save" type="button" class="icon_btn" title=" " onclick="my_collect_save()">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>

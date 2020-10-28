@@ -25,7 +25,14 @@ require_once '../public/load_lang.php';
 	<script src="../public/js/notify.js"></script>
 
 	<script src="../public/js/comm.js"></script>
+	
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>	
 
+	<script src="../term/term.js"></script>
+	<script src="../term/note.js"></script>
+	<script src="../term/term_popup.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
 
 	<script type="text/javascript">
 	<?php require_once '../public/load_lang_js.php';//加载js语言包?>

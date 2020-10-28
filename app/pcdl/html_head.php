@@ -28,7 +28,7 @@ else{
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
-
+	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 
     <title>wikipāḷi</title>
 
@@ -40,6 +40,19 @@ else{
 
 	<script src="../public/js/marked.js"></script>
 	<script src="../public/js/mermaid.min.js"></script>
+
+	<script src="../public/js/notify.js"></script>
+    <link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
+
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>	
+
+	<script src="../term/term.js"></script>
+	<script src="../term/note.js"></script>
+	<script src="../term/term_popup.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	<script src="../term/term_edit_dlg.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
@@ -85,7 +98,6 @@ else{
 .card code{
 	white-space: normal;
 }
-
 
 	</style>
 </head>
