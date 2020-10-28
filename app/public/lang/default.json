@@ -537,6 +537,18 @@
 		"privacy": "privacy",
 		"new_composition": "new composition",
 		"add": "add",
+		"completed": "completed",
+		"ongoing": "ongoing",
+		"popular": "popular",
+		"recommendation": "recommendation",
+		"collection": "collection",
+		"rates": "rates",
+		"updated": "updated",
+		"my_zone": "my zone",
+		"share_to": "share&nbsp;to",
+		"EXP": "EXP",
+		"composition_structure": "composition structure",
+		"search_tools": "search&nbsp;tools",
 		"": ""
 	},
 	"grammastr": [

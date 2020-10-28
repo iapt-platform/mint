@@ -238,6 +238,12 @@ require_once "../pcdl/html_head.php";
 	.active{
 		background-color: var(--btn-hover-bg-color);
 	}
+	.icon_btn a {
+	color: var(--main-color);
+	}
+	.icon_btn:hover a {
+		color: var(--btn-hover-color);
+	}
 
 
 	</style>
@@ -260,6 +266,7 @@ require_once "../pcdl/html_head.php";
 }
 
 
+
 </style>
 
 <script>
@@ -277,11 +284,12 @@ term_word_link_fun("wiki_goto_word");
 	<div>
 		<span>
 		<?php
-		echo "<button class='icon_btn'><a href='../article/my_article_edit.php?id=".$_GET["id"];
-		echo "'>Open in Studio</a></button>";
+		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
+		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
+		echo "'>{$_local->gui->modify}</a></button>";
 		
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
-			echo "<button class='icon_btn active'>";
+			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
 			echo $_local->gui->each_paragraph;
 			echo "</button>";
 		}
@@ -291,14 +299,14 @@ term_word_link_fun("wiki_goto_word");
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
 			}
-			echo "&display=para'>";		
+			echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
 			echo $_local->gui->each_paragraph;
 			echo "</a>";
 			echo "</button>";
 		}
 
 		if(isset($_GET["display"]) && $_GET["display"]=="sent"){
-			echo "<button class='icon_btn active'>";
+			echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>";
 			echo $_local->gui->each_sentence;
 			echo "</button>";
 		}
@@ -308,7 +316,7 @@ term_word_link_fun("wiki_goto_word");
 				echo "&channal=".$_GET["channal"];
 			}
 			echo "&display=sent";
-			echo "'>{$_local->gui->each_sentence}</a></button>";
+			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
 		}
 
 		?>
@@ -318,9 +326,9 @@ term_word_link_fun("wiki_goto_word");
 </div>
 <div id="main_view" class="main_view">
 <div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali">Title</div>
-	<div id="article_subtitle">Subtitle</div>
-	<div id="article_author">author</div>
+	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
+	<div id="article_subtitle"><?php echo $_local->gui->sub_title; ?></div>
+	<div id="article_author"><?php echo $_local->gui->author; ?></div>
 </div>
 <div id="contents_view">
 	<div id="contents_div" style="padding: 0 1em;">
@@ -347,14 +355,14 @@ term_word_link_fun("wiki_goto_word");
 			<div style="display:flex;justify-content: space-between;">
 				<div class="title"><?php echo $_local->gui->channels; ?></div>
 				<div class="click_dropdown_div">
-					<div class="click_dropdown_button">more</div>
+					<div class="click_dropdown_button"><?php echo $_local->gui->more; ?></div>
 					<div class="click_dropdown_content">
 						<div class="click_dropdown_content_inner" id="channal_select">
-						列表
+							<?php echo $_local->gui->channels; ?>
 						</div>
 						<div>
-						<button class="icon_btn click_dropdown_ok">Ok</button>
-						<button class="icon_btn click_dropdown_cancel">Cancel</button>
+						<button class="icon_btn click_dropdown_ok"><?php echo $_local->gui->confirm; ?></button>
+						<button class="icon_btn click_dropdown_cancel"><?php echo $_local->gui->cancel; ?></button>
 						</div>
 					</div>	
 				</div>

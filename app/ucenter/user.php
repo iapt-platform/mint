@@ -21,8 +21,9 @@
 		width:20em;
 	}
 	#user_info_welcome{
-    border-bottom: 1px solid var(--tool-line-color);
-    padding: 10px;
+		border-bottom: 1px solid var(--tool-line-color);
+		padding: 10px;
+		background-color: var(--bg-color);
 	}
 	#user_info_name{
 		font-size:200%;
@@ -57,7 +58,7 @@
 				if(isset($_COOKIE["userid"])){
 				?>
 			<div id="user_bar" >
-				<span style="padding: 4px 0;">
+				<span style="padding: 4px 0;white-space: nowrap;">
 					<?php echo $_COOKIE["nickname"]; ?>
 				</span>
 				<button class="dropbtn icon_btn" onClick="switchMenu(this,'user_info')" id="use_mode">	
@@ -81,23 +82,23 @@
 				</a>
 				<a href="../sync" target="_blank">
 					<span>
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#ic_autorenew_24px"></use>
-					</svg>
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#ic_autorenew_24px"></use>
+						</svg>
 						<?php echo $_local->gui->sync;//同步数据?>
 					</span>
+				</a>
+				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"];?>'>
+					<svg class="icon">
+						<use xlink:href="../studio/svg/icon.svg#my_zone"></use>
+					</svg>
+					<?php echo $_local->gui->my_zone;?>
 				</a>
 				<a href='../ucenter/index.php?op=logout'>
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#ic_exit_to_app_24px"></use>
 					</svg>
 					<?php echo $_local->gui->logout;?>
-				</a>
-				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"];?>'>
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#ic_exit_to_app_24px"></use>
-					</svg>
-					<?php echo "我的空间";?>
 				</a>
 			</div>
 

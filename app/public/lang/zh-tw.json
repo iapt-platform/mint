@@ -538,6 +538,18 @@
 		"privacy": "隱私設定",
 		"new_composition": "新建作品",
 		"add": "新增",
+		"completed": "已完結",
+		"ongoing": "連載中",
+		"popular": "人氣",
+		"recommendation": "推薦",
+		"collection": "收藏",
+		"rates": "評分",
+		"updated": "更新",
+		"my_zone": "我的空間",
+		"share_to": "分享到",
+		"EXP": "經驗",
+		"composition_structure": "文章架構",
+		"search_tools": "搜尋工具",
 		"": ""
 	},
 	"grammastr": [
