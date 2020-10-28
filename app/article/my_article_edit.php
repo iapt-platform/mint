@@ -75,7 +75,7 @@ require_once '../studio/index_head.php';
 						<use xlink:href="../studio/svg/icon.svg#preview"></use>
 					</svg>
 				</button>
-				<div id="article_collect" vui='collect-dlg' ></div>
+				
 			</div>
 			<div style="display:flex;">
 				<div>
