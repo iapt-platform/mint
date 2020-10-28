@@ -18,7 +18,8 @@
 }
 
 body {
-  font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", Arial, Verdana;
+  font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial,
+    Verdana;
   font-style: normal;
   color: var(--main-color);
   font-weight: 400;
@@ -4416,19 +4417,19 @@ note {
 }
 @-webkit-keyframes spin {
   from {
-      -webkit-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
   }
   to {
-      -webkit-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
   }
 }
 
 @keyframes spin {
   from {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 .icon_spin {

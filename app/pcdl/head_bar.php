@@ -216,6 +216,7 @@
 					<li><a class="nav_link" href="../course"><?php echo $_local->gui->lesson; ?></a></li>
 					<li><a class="nav_link" href="../wiki"><?php echo $_local->gui->encyclopedia; ?></a></li>
 					<li><a class="nav_link" href="../dict"><?php echo $_local->gui->dictionary; ?></a></li>
+					<li><a class="nav_link" href="../collect"><?php echo 'Collect'; ?></a></li>
 					<li class="nav_link head_nav_dropdown" >
 						<div><?php echo $_local->gui->more; ?></div>
 						<ul class="head_nav_dropdown_content" style="margin-top: 0em;top: 2em;margin-left:-0.5em;padding-bottom: 0.5em;">

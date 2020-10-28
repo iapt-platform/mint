@@ -2,6 +2,7 @@
 require_once '../pcdl/html_head.php';
 ?>
 <body >	
+<script language="javascript" src="../pcdl/index.js"></script>
 
 <style>
 	.content_block{
@@ -51,69 +52,49 @@ require_once '../pcdl/html_head.php';
 
 <div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">圣典</span>	
-			<span class="title_more"><a href="../palicanon">更多</a></span>
+			<span class="title h3">Collect</span>	
+			<span class="title_more"><a href="../collect">more</a></span>
 		</div>
 		<div class="content">
 			<div id="article_new" class="content_inner">
-
 			</div>
 		</div>
 	</div>
-	<script>
-	$.get("../article/list_new.php",function(data,status){
-		let xDiv = document.getElementById("article_new");
-		if(xDiv){
-			xDiv.innerHTML=data;
-		}
-	});
-	</script>	
 	
 	<div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">课程</span>	
-			<span class="title_more"><a href="../course">更多</a></span>
+			<span class="title h3">Course</span>	
+			<span class="title_more"><a href="../course">more</a></span>
 		</div>
 		<div class="content">
 			<div id="course_list_new" class="content_inner">
-
-
-
 			</div>
 		</div>
 	</div>
-	<script>
-	$.get("../course/list_new.php",function(data,status){
-		let xDiv = document.getElementById("course_list_new");
-		if(xDiv){
-			xDiv.innerHTML=data;
-		}
-	});
-	</script>	
+
 
     
 	<div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">百科</span>	
-			<span class="title_more"><a href="../wiki">更多</a></span>
+			<span class="title h3">Pali Term</span>	
+			<span class="title_more"><a href="../wiki">more</a></span>
 		</div>
 		<div class="content">
 			<div id="pali_pedia" class="content_inner">
 			</div>
 		</div>
 	</div>
-	<script>
-	$.get("../term/new.php",function(data,status){
-		let xDiv = document.getElementById("pali_pedia");
-		if(xDiv){
-			xDiv.innerHTML=data;
-		}
-	});
-	</script>	
+
 
     </div>
 
+	<script>
+	$(document).ready(function(){
+		index_onload();
+});
 
+
+	</script>	
 	
 
 <?php

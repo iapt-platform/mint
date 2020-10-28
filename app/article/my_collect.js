@@ -31,7 +31,7 @@ function my_collect_list() {
               iterator.id +
               "'>Edit</a></div>";
             html +=
-              "<div style='flex:1;'><a href='../article/?id=" +
+              "<div style='flex:1;'><a href='../article/?collect=" +
               iterator.id +
               "' target='_blank'>Preview</a></div>";
             html += "<div style='flex:1;'>15</div>";
