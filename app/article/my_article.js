@@ -107,7 +107,7 @@ function render_status(status) {
   return html;
 }
 
-function setStatus(obj) {}
+function setStatus(obj) { }
 
 function my_article_edit(id) {
   $.get(
@@ -141,7 +141,7 @@ function my_article_edit(id) {
             gLocal.gui.import +
             gLocal.gui.text;
           html += "<div>";
-          html += "<div id='article_collect' vui='collect-dlg' ></div>"
+          //html += "<div id='article_collect' vui='collect-dlg' ></div>"
           html += "<div style='display:flex;'>";
           html +=
             "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
