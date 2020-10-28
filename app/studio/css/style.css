@@ -4409,7 +4409,7 @@ note {
   display: none;
   width: 25em;
   position: absolute;
-  right: 0;
+  /*right: 0;*/
   background-color: var(--btn-hover-bg-color);
   padding: 10px;
   border-radius: 5px;

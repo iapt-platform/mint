@@ -518,7 +518,7 @@
 		"text_num": "文本编号",
 		"copied_to_clipboard": "已复制到剪切板",
 		"I_know": "我知道了",
-		"text": "著作文章",
+		"text": "文章",
 		"anthology": "文集",
 		"channel": "版风管理",
 		"channels": "版风列表",
@@ -536,8 +536,8 @@
 		"title_necessary": "必须填写标题",
 		"example": "例如",
 		"privacy": "隐私设置",
+		"new_composition": "新建作品",
 		"add": "添加",
-		"": "",
 		"": ""
 	},
 	"grammastr": [
