@@ -907,7 +907,7 @@ switch($op){
 						//以前打开过
 						echo "已经复制的文档 Already Copy";
 						$my_doc_id=$FetchSelf[0]["id"];
-						echo "<a href='../studio/editor.php?op=opendb&fileid={$doc_id}'>Open in Studio</a>";
+						echo "<a href='../studio/editor.php?op=opendb&fileid={$doc_id}'>{$_local->gui->edit_now}</a>";
 						echo "<script>";
 						echo "window.location.assign(\"editor.php?op=opendb&fileid={$doc_id}\");";
 						echo "</script>";						
