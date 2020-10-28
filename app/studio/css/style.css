@@ -4409,11 +4409,21 @@ note {
   display: none;
   width: 25em;
   position: absolute;
-  /*right: 0;*/
+  right: 0;
   background-color: var(--btn-hover-bg-color);
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 0 10px var(--main-color);
+}
+.float_dlg_left{
+  display: none;
+  width: 25em;
+  position: absolute;
+  background-color: var(--btn-hover-bg-color);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px var(--main-color);
+
 }
 @-webkit-keyframes spin {
   from {

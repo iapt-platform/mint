@@ -8,7 +8,7 @@ function add_to_collect_dlg_init() {
       gLocal.gui.anthology +
       "'>";
     html +=
-      "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg'></div>";
+      "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg' style='left:0;'></div>";
 
     $(this).html(html);
   });
