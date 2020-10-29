@@ -15,8 +15,8 @@ include "../public/_pdo.php";
 	//open database
 	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 	
-	$query="SELECT paragraph,html FROM pali_text WHERE book = ".$PDO->quote($get_book);
-	$Fetch = PDO_FetchAll($query);
+	$query="SELECT paragraph,html FROM pali_text WHERE book = ?";
+	$Fetch = PDO_FetchAll($query,array($get_book));
 	$iFetch=count($Fetch);
 	if($iFetch>0){
 		for($i=0;$i<$iFetch;$i++){
@@ -25,7 +25,7 @@ include "../public/_pdo.php";
 			echo "<div class=\"wizard_par_tools\">";
 			echo "<div class=\"wizard_par_tools_title\">";
 			echo "<input id='par_enable_$parNumber' onclick='par_enable_change($parNumber,this)' type=\"checkbox\" checked/>";				
-			echo "<a href='#toc_root' name='pali_text_par_$parNumber'>$parNumber</a><span id='par_level_$parNumber' class='par_level'></span>";
+			echo "<a href='../pcdl/reader.php?view=para&book={$get_book}&para={$parNumber}' name='pali_text_par_$parNumber' target='_blank'>$parNumber</a><span id='par_level_$parNumber' class='par_level'></span>";
 			echo "</div>";
 			echo "</div>";
 			echo "<div id=\"wizard_pali_par_text_$parNumber\">".$Fetch[$i]["html"]."</div>";
