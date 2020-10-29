@@ -9,9 +9,11 @@ function collect_load(begin = 0) {
       let html = "";
       for (const iterator of arrCollectList.data) {
         html += "<div style='width:25%;padding:0.5em;'>";
-        html += "<div class='card' style='padding:10px;'>";
+        html += '<div style="position: relative;">';
         html +=
-          "<div class='' style='position: absolute;background-color: #862002;margin-top: -10px;margin-left: 12em;color: white;padding: 0 3px;display: inline-block;'>" + gLocal.gui.ongoing + "</div>";
+          "<div class='' style='position: absolute;background-color: darkred;color: white;padding: 0 6px;right: 0;'>" + gLocal.gui.ongoing + "</div>";
+        html += "</div>";
+        html += "<div class='card' style='padding:10px;'>";
         html += "<div style='font-weight:700'>";
         html +=
           "<a href='../article/?collect=" +
@@ -21,14 +23,19 @@ function collect_load(begin = 0) {
           "</a>";
         html += "</div>";
 
-        html += "<div style=''>" + iterator.subtitle + "</div>";
+        if(iterator.subtitle){
+          html += "<div style=''>" + iterator.subtitle + "</div>";
+        }
 
         html += "<div style=''>" + iterator.username.nickname + "</div>";
+        if(iterator.summary){
+        html += "<div style=''>" + iterator.summary + "</div>";          
+        }
 
-        html += "<div style=''>" + iterator.summary + "</div>";
+        if(iterator.tag){
+          html += "<div style='overflow-wrap: anywhere;'>" + iterator.tag + "</div>";
+        }
 
-        html +=
-          "<div style='overflow-wrap: anywhere;'>" + iterator.tag + "</div>";
         const article_limit = 4;
         let article_count = 0;
         let article_list = JSON.parse(iterator.article_list);
