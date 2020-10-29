@@ -145,7 +145,7 @@ switch($op){
 						$para_title["{$paragraph}"][1]=$result["text"];
 					}
 						
-					$db_file = _DIR_PALICANON_TEMPLET_."/p".$res_book."_tpl.db3";					
+					$db_file = _DIR_PALICANON_TEMPLET_."/p".$res_book."_tpl.db3";
 					PDO_Connect("sqlite:$db_file");
 					foreach($aParaList as $iPar){
 						$query="SELECT * FROM 'main' WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) ";
@@ -378,6 +378,7 @@ switch($op){
 				}
 				else{
 					echo $FetchWBW.$_local->gui->para;
+					echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}'>open</a>";
 				}
 				echo '</div>';
 

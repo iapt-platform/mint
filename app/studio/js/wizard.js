@@ -1091,6 +1091,7 @@ function wizard_palicannon_pali_text_query(bookId){
 	wizard_palicannon_pali_text_xmlhttp.send();
 }
 
+//获取巴利原文
 function wizard_palicannon_pali_text_serverResponse(){
 	if (wizard_palicannon_pali_text_xmlhttp.readyState==4)// 4 = "loaded"
 	{
@@ -1099,10 +1100,21 @@ function wizard_palicannon_pali_text_serverResponse(){
 			var xmlText = wizard_palicannon_pali_text_xmlhttp.responseText;
 			$("#wizard_palicannon_par_select_text_body").html(xmlText);
 			$("#wizard_palicannon_par_select_text_head").show();
+
+			$("a[name]").each(function(){
+				let name = $(this).attr("name");
+				if(name.slice(0,1)=="M"){
+					$(this).css("background-color","rgb(255 255 0 / 42%)");
+					$(this).css("position","absolute");
+					$(this).css("right","0");
+					$(this).html(name);
+				}
+			});			
 		}
 		else
 		{
 			document.getElementById('wizard_palicannon_par_select_text_body').innerHTML="Problem retrieving data:" + wizard_palicannon_pali_text_xmlhttp.statusText;
+
 		}
 	}
 }
