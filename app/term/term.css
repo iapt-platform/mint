@@ -180,6 +180,11 @@ note .ref {
   margin-left: 2em;
 }
 
+/*myanmar*/
+.tran:lang(my) {
+  font-size: 120%;
+}
+
 .tran_div {
   margin-bottom: 1em;
   padding-bottom: 1em;
@@ -209,4 +214,9 @@ note .ref {
 .progress_bar_percent {
   stroke-width: 0;
   fill: limegreen;
+}
+
+r {
+  text-align: right;
+  display: block;
 }
