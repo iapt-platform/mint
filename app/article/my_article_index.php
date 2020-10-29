@@ -38,7 +38,7 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " style="margin-left: 18em;margin-top: 5em;">
 		<div class="file_list_block">
 			<div class="tool_bar">
-				<div><?php echo $_local->gui->text.$_local->gui->list ?></div>
+				<div><?php echo $_local->gui->composition.$_local->gui->list ?></div>
 				<div>
 					<span class="icon_btn_div">
 						<span class="icon_btn_tip"></span>

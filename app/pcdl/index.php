@@ -19,8 +19,14 @@ require_once '../pcdl/html_head.php';
 	.content_inner{
 		display:flex;
 	}
+	.title_bar{
+		border-bottom: solid 1px var(--tool-bt-border-line-color);
+	    justify-content: space-between;
+	    display: flex;
+	}
 	.h3{
 		font-size: 16px;
+		font-weight: 700;
 	}
 	.index_list_categories{
 		margin-bottom: 2em;
@@ -39,6 +45,9 @@ require_once '../pcdl/html_head.php';
 	.pd-10{
 		padding:10px;
 	}
+	#footer_nav{
+		display:none;
+	}
 	</style>
 	<a name="pagetop"></a>	
 	<!-- tool bar begin-->
@@ -52,8 +61,8 @@ require_once '../pcdl/html_head.php';
 
 <div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">Collect</span>	
-			<span class="title_more"><a href="../collect">more</a></span>
+			<span class="title h3"><?php echo $_local->gui->composition; ?></span>	
+			<span class="title_more"><a href="../collect"><?php echo $_local->gui->more;?></a></span>
 		</div>
 		<div class="content">
 			<div id="article_new" class="content_inner">
@@ -63,8 +72,8 @@ require_once '../pcdl/html_head.php';
 	
 	<div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">Course</span>	
-			<span class="title_more"><a href="../course">more</a></span>
+			<span class="title h3"><?php echo $_local->gui->lesson; ?></span>	
+			<span class="title_more"><a href="../course"><?php echo $_local->gui->more;?></a></span>
 		</div>
 		<div class="content">
 			<div id="course_list_new" class="content_inner">
@@ -76,8 +85,8 @@ require_once '../pcdl/html_head.php';
     
 	<div class="index_list_categories">
 		<div class="title_bar">
-			<span class="title h3">Pali Term</span>	
-			<span class="title_more"><a href="../wiki">more</a></span>
+			<span class="title h3"><?php echo $_local->gui->encyclopedia; ?></span>	
+			<span class="title_more"><a href="../wiki"><?php echo $_local->gui->more;?></a></span>
 		</div>
 		<div class="content">
 			<div id="pali_pedia" class="content_inner">

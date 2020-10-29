@@ -19,7 +19,7 @@ function index_load_collect_new() {
         html += "<div class='card' style='padding:10px;'>";
         html +=
           "<div class='' style='position: absolute;background-color: #862002;margin-top: -10px;margin-left: 12em;color: white;padding: 0 3px;display: inline-block;'>" +
-          "done</div>";
+          gLocal.gui.ongoing + "</div>";
         html += "<div style='font-weight:700'>";
         html +=
           "<a href='../article/?collect=" +

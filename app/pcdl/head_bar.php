@@ -126,6 +126,7 @@
 
 	.nav_link, .nav_link:link, .nav_link:visited {
 		color:var(--btn-color);
+		white-space: nowrap;
 	}
 	.nav_link:hover{
     	color: var(--btn-border-color);
@@ -142,6 +143,7 @@
 	}
 	.head_nav_dropdown:hover .head_nav_dropdown_content{
 		display:block;
+		border-radius: 3px;
 	}
 
 	#pre_search_result {
@@ -216,7 +218,7 @@
 					<li><a class="nav_link" href="../course"><?php echo $_local->gui->lesson; ?></a></li>
 					<li><a class="nav_link" href="../wiki"><?php echo $_local->gui->encyclopedia; ?></a></li>
 					<li><a class="nav_link" href="../dict"><?php echo $_local->gui->dictionary; ?></a></li>
-					<li><a class="nav_link" href="../collect"><?php echo 'Collect'; ?></a></li>
+					<li><a class="nav_link" href="../collect"><?php echo $_local->gui->composition; ?></a></li>
 					<li class="nav_link head_nav_dropdown" >
 						<div><?php echo $_local->gui->more; ?></div>
 						<ul class="head_nav_dropdown_content" style="margin-top: 0em;top: 2em;margin-left:-0.5em;padding-bottom: 0.5em;">
@@ -234,7 +236,7 @@
 			</div>
 			<div class="toolgroup1">
 			<!--<input id="search_input" type="input" placeholder="搜索"  style="margin-left: 0.5em;padding:4px;width: 40em;max-width: 80%" >-->
-			<span style="display: inline-flex; margin-right: 100px;"> 
+			<span style="display: inline-flex; margin-right: 100px;" title=<?php echo "wikipāli&nbsp;{$_local->gui->search_tools}";?>> 
 			<a href="../search" style="display: inline-flex;">
 					<svg t="1598273659942" class="icon" viewBox="0 0 5836 1024" style="fill: var(--btn-color); width: 150px; height: 25px;" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18667" >
 						<path d="M5243.733333666665 1024H619.2172046666668C338.4430106666666 1024 107.21720466666665 792.774194 107.21720466666665 512S338.4430106666666 0 619.2172046666668 0h4624.516129c280.774194 0 512 231.225806 512 512s-231.225806 512-512 512zM140.24946266666666 512C140.24946266666666 776.258065 354.9591396666666 990.967742 619.2172046666668 990.967742h4624.516129c264.258065 0 478.967742-214.709677 478.967742-478.967742 0 264.258065-214.709677 478.967742-478.967742 478.967742H619.2172046666668C354.9591396666666 990.967742 140.24946266666666 776.258065 140.24946266666666 512zM619.2172046666668 66.064516C374.7784946666666 66.064516 173.28172066666667 267.56129 173.28172066666667 512S374.7784946666666 957.935484 619.2172046666668 957.935484h4624.516129c244.43871 0 445.935484-201.496774 445.935484-445.935484S5488.172042666665 66.064516 5243.733333666665 66.064516H619.2172046666668z m4624.516129-33.032258c264.258065 0 478.967742 214.709677 478.967742 475.664516C5722.701075666665 247.741935 5507.991397666665 33.032258 5243.733333666665 33.032258zM619.2172046666668 33.032258C354.9591396666666 33.032258 140.24946266666666 247.741935 140.24946266666666 508.696774 140.24946266666666 247.741935 354.9591396666666 33.032258 619.2172046666668 33.032258z" p-id="18668">

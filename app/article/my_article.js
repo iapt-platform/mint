@@ -107,7 +107,7 @@ function render_status(status) {
   return html;
 }
 
-function setStatus(obj) {}
+function setStatus(obj) { }
 
 function my_article_edit(id) {
   $.get(
@@ -132,8 +132,6 @@ function my_article_edit(id) {
           html +=
             "<input type='hidden' name='tag' value='" + result.tag + "'/>";
           html +=
-            "<textarea  name='summary' >" + result.summary + "</textarea>";
-          html +=
             "<input type='hidden' name='status' value='" +
             result.status +
             "'/>";
@@ -143,6 +141,7 @@ function my_article_edit(id) {
             gLocal.gui.import +
             gLocal.gui.text;
           html += "<div>";
+          //html += "<div id='article_collect' vui='collect-dlg' ></div>"
           html += "<div style='display:flex;'>";
           html +=
             "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
@@ -165,6 +164,10 @@ function my_article_edit(id) {
             '" value="' +
             result.lang +
             '" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
+          html += "<div style='display:flex;'>";
+          html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.introduction + "</span>"
+          html +=
+            "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
           html += "</div>";
           html += "</div>";
 

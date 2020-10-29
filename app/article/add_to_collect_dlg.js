@@ -8,7 +8,7 @@ function add_to_collect_dlg_init() {
       gLocal.gui.anthology +
       "'>";
     html +=
-      "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg'></div>";
+      "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#add_to_anthology'></use></svg></button><div class='float_dlg' style='left:0;'></div>";
 
     $(this).html(html);
   });
@@ -18,7 +18,7 @@ function add_to_collect_dlg_init() {
     let article_id = $(this).parent().attr("a_id");
     html += "<div id='add_to_collect_dlg_" + article_id + "'>";
     html += "<div >";
-    html += "<input type='input'  placeholder='搜索文集' />";
+    html += "<input type='input'  placeholder='" + gLocal.gui.search + "' />";
     html += "</div>";
     html += "<div>";
     html += "<div class='exist'>";
@@ -27,15 +27,15 @@ function add_to_collect_dlg_init() {
     html += "</div>";
     html += "</div>";
     html += "<div style='display:flex;'>";
-    html += "<button onclick='collect_new()'>New Collect</button>";
-    html +=
-      "<button onclick=\"article_add_to_collect_ok('" +
-      article_id +
-      "')\">Finish</button>";
+    html += "<button onclick='collect_new()'>" + gLocal.gui.new_composition + "</button>";
     html +=
       "<button onclick=\"article_add_to_collect_cancel('" +
       article_id +
-      "')\">Cancel</button>";
+      "')\">" + gLocal.gui.cancel + "</button>";
+    html +=
+      "<button onclick=\"article_add_to_collect_ok('" +
+      article_id +
+      "')\">" + gLocal.gui.finish + "</button>";
     html += "</div>";
     html += "</div>";
     $(this).siblings(".float_dlg").first().html(html);

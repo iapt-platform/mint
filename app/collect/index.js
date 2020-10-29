@@ -11,8 +11,7 @@ function collect_load(begin = 0) {
         html += "<div style='width:25%;padding:0.5em;'>";
         html += "<div class='card' style='padding:10px;'>";
         html +=
-          "<div class='' style='position: absolute;background-color: #862002;margin-top: -10px;margin-left: 12em;color: white;padding: 0 3px;display: inline-block;'>" +
-          "done</div>";
+          "<div class='' style='position: absolute;background-color: #862002;margin-top: -10px;margin-left: 12em;color: white;padding: 0 3px;display: inline-block;'>" + gLocal.gui.ongoing + "</div>";
         html += "<div style='font-weight:700'>";
         html +=
           "<a href='../article/?collect=" +
