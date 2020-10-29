@@ -378,7 +378,7 @@ switch($op){
 				}
 				else{
 					echo $FetchWBW.$_local->gui->para;
-					echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}'>open</a>";
+					echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
 				}
 				echo '</div>';
 
