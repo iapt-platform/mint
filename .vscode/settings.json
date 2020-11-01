@@ -7,5 +7,6 @@
     "editor.mouseWheelZoom": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
-    }
+    },
+    "svg.preview.background": "transparent"
 }
