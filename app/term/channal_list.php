@@ -72,7 +72,6 @@ foreach ($_data as $key => $value) {
 			else{
 				$channal[$value["channal"]] = 1;
 			}
-            
 		}
 		
 		$final[]=$pali_letter;

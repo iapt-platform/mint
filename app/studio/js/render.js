@@ -657,11 +657,11 @@ function renderTranslateParBlockInner(elementBlock) {
 
 function renderTranslateParBlockInnerPreview(strText) {}
 function updateTranslationPreview_a(blockId, text) {
-  var out = "";
-  var newText = text;
-  newText = newText.replace(/\n\n/g, "<br />");
-  newText = term_tran_edit_replace(newText);
-  newText = term_edit_to_std_str(newText);
+  let out = "";
+  let newText = text;
+  newText = marked(newText);
+  //newText = term_tran_edit_replace(newText);
+  //newText = term_edit_to_std_str(newText);
   newText = term_std_str_to_tran(newText);
   out += newText;
   if (out == "") {
@@ -671,7 +671,22 @@ function updateTranslationPreview_a(blockId, text) {
   term_updata_translation();
 }
 function updateTranslationPreview(blockId, obj) {
-  updateTranslationPreview_a(blockId, obj.value);
+
+  let out = "";
+  let newText = obj.value;
+  newText = marked(newText);
+  //newText = term_tran_edit_replace(newText);
+  //newText = term_edit_to_std_str(newText);
+  let channal = $(obj).attr("channal");
+  let lang = $(obj).attr("lang");
+
+  newText = term_std_str_to_tran(newText,channal,getCookie("userid"),lang);
+  out += newText;
+  if (out == "") {
+    out = "<span style='color:#ccbfbf;'>" + gLocal.gui.with_idea + "</span>";
+  }
+  $("#tran_pre_" + blockId).html(out);
+  term_updata_translation();
 }
 
 function getSuperTranslateModifyString(inString, par_num, par_guid, language) {

@@ -432,8 +432,19 @@ function term_lookup_my(pali, channal = "", owner = "", lang = "") {
       }
     }
   }
-  for (const iterator of arrMyTerm) {
-    if (owner != "") {
+  //我自己的相同语言
+  if (owner != "") {
+    for (const iterator of arrMyTerm) {
+      if (
+        iterator.word == pali &&
+        owner == iterator.owner &&
+        iterator.language == lang
+      ) {
+        return iterator;
+      }
+    }
+
+    for (const iterator of arrMyTerm) {
       if (
         iterator.word == pali &&
         owner == iterator.owner &&
@@ -441,8 +452,84 @@ function term_lookup_my(pali, channal = "", owner = "", lang = "") {
       ) {
         return iterator;
       }
+    }  
+
+    //别人的相同语言
+    for (const iterator of arrMyTerm) {
+      if (
+        iterator.word == pali &&
+        iterator.language == lang
+      ) {
+        return iterator;
+      }
+    }  
+
+    for (const iterator of arrMyTerm) {
+      if (
+        iterator.word == pali &&
+        iterator.language.indexOf(lang) >= 0
+      ) {
+        return iterator;
+      }
+    } 
+  }
+  //找自己的相似语言
+  return false;
+}
+
+//在我的术语字典里查询
+function term_lookup_my_a(pali, channal = "", owner = "", lang = "") {
+  for (const iterator of arrMyTerm) {
+    if (channal != "") {
+      if (channal == iterator.channal ){
+        if( iterator.word.indexOf(pali)!=-1) {
+        return iterator;
+        }
+      }
     }
   }
+  //我自己的相同语言
+  if (owner != "") {
+    for (const iterator of arrMyTerm) {
+      if (
+        pali.indexOf(iterator.word)>=0 &&
+        owner == iterator.owner &&
+        iterator.language == lang
+      ) {
+        return iterator;
+      }
+    }
+
+    for (const iterator of arrMyTerm) {
+      if (
+        pali.indexOf(iterator.word)>=0 &&
+        owner == iterator.owner &&
+        iterator.language.indexOf(lang) >= 0
+      ) {
+        return iterator;
+      }
+    }  
+
+    //别人的相同语言
+    for (const iterator of arrMyTerm) {
+      if (
+        pali.indexOf(iterator.word)>=0 &&
+        iterator.language == lang
+      ) {
+        return iterator;
+      }
+    }  
+
+    for (const iterator of arrMyTerm) {
+      if (
+        pali.indexOf(iterator.word)>=0 &&
+        iterator.language.indexOf(lang) >= 0
+      ) {
+        return iterator;
+      }
+    } 
+  }
+  //找自己的相似语言
   return false;
 }
 

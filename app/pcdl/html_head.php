@@ -51,6 +51,11 @@ else{
 	<script src="../term/note.js"></script>
 	<script src="../term/term_popup.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
+	<?php
+		if(isset($_GET["display"]) && $_GET["display"]=="para"){
+			echo '<link type="text/css" rel="stylesheet" href="../term/term_para.css"/>';
+		}
+		?>
 	<script src="../term/term_edit_dlg.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	

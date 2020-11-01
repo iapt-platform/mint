@@ -6,27 +6,38 @@ require_once "../pcdl/html_head.php";
 <body style="margin: 0;padding: 0;" class="reader_body" >
 
 	<script src="../channal/channal.js"></script>
-	<script src="./article.js"></script>
+	<script src="./reader.js"></script>
 
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
 	<script>
 	<?php
-	$_id = "";
+	$_view = "";
 	$_display = "";
 	$_channal  = "";
 	$_collect = "";
 
-	if(isset($_GET["id"])){
-		echo "_articel_id='".$_GET["id"]."';";
+	if(isset($_GET["view"])){
+		echo "_reader_view='".$_GET["view"]."';";
 	}
-	if(isset($_GET["collect"])){
-		echo "_collect_id='".$_GET["collect"]."';";
+	if(isset($_GET["book"])){
+		echo "_reader_book='".$_GET["book"]."';";
 	}
+	if(isset($_GET["para"])){
+		echo "_reader_para='".$_GET["para"]."';";
+	}
+	if(isset($_GET["begin"])){
+		echo "_reader_begin='".$_GET["begin"]."';";
+	}
+	if(isset($_GET["end"])){
+		echo "_reader_end='".$_GET["end"]."';";
+	}
+
 	if(isset($_GET["display"])){
 		echo "_display='".$_GET["display"]."';";
 	}
+	
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
 	}
@@ -152,6 +163,39 @@ require_once "../pcdl/html_head.php";
 	.icon_btn:hover a {
 		color: var(--btn-hover-color);
 	}
+	chapter{
+	display:inline-block;
+}
+
+.language-para {
+    padding: 2px 8px;
+    position: absolute;
+    margin-left: -6em;
+    border-bottom: 3px solid var(--link-color);
+}
+
+.level_0{
+	margin-left:0;
+}
+.level_1{
+	margin-left:1em;
+}
+.level_2{
+	margin-left:2em;
+}
+.level_3{
+	margin-left:3em;
+}
+.level_4{
+	margin-left:4em;
+}
+.level_5{
+	margin-left:5em;
+}
+.level_6{
+	margin-left:6em;
+}
+
 
 	</style>
 
@@ -183,13 +227,19 @@ require_once "../pcdl/html_head.php";
 <div id="head_bar" >
 	<div id="pali_pedia" style="display:flex;">
 		<span><?php echo $_local->gui->anthology; ?></span>
+		<span id="para_path"></span>
+		<span class="case_dropdown" id="para_path_next_level">
+		next
+		<div id="toc_next_menu" class="case_dropdown-content">
+		</div>
+		</span>
 	</div>
 
 	<div>
 		<span>
 		<?php
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
-		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
+		echo "<a href='";
 		echo "'>{$_local->gui->modify}</a></button>";
 		
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
@@ -199,9 +249,21 @@ require_once "../pcdl/html_head.php";
 		}
 		else{
 			echo "<button class='icon_btn'>";
-			echo "<a href='../article/?id=".$_GET["id"];
+			echo "<a href='../reader/?view=".$_GET["view"];
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["para"])){
+				echo "&para=".$_GET["para"];
+			}
+			if(isset($_GET["begin"])){
+				echo "&begin=".$_GET["begin"];
+			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
 			}
 			echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
 			echo $_local->gui->each_paragraph;
@@ -215,9 +277,22 @@ require_once "../pcdl/html_head.php";
 			echo "</button>";
 		}
 		else{
-			echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
+			echo "<button class='icon_btn'>";
+			echo "<a href='../reader/?view=".$_GET["view"];
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["para"])){
+				echo "&para=".$_GET["para"];
+			}
+			if(isset($_GET["begin"])){
+				echo "&begin=".$_GET["begin"];
+			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
 			}
 			echo "&display=sent";
 			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
@@ -289,13 +364,7 @@ require_once "../pcdl/html_head.php";
 	click_dropdown_init();
 	note_create();
 	term_edit_dlg_init();
-	if(_collect_id==""){
-		articel_load(_articel_id);
-		articel_load_collect(_articel_id);
-	}
-	else{
-		collect_load(_collect_id);
-	}
+	reader_load();
 	});
 
 

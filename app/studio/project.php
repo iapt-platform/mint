@@ -367,6 +367,7 @@ switch($op){
 				echo ' type="radio" />';
 				echo '</div>';
 				echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["name"].'</div>';
+				echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["lang"].'</div>';
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
 				$query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
@@ -375,6 +376,7 @@ switch($op){
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				if($FetchWBW==0){
 					echo $_local->gui->blank;
+					echo "<a>快捷编辑</a>";
 				}
 				else{
 					echo $FetchWBW.$_local->gui->para;

@@ -193,6 +193,7 @@ function note_refresh_new() {
                 $("#" + id).html(strHtml);
               }
             }
+            /*
             $(".palitext").click(function () {
               let sentid = $(this).parent().attr("info").split("-");
               window.open(
@@ -218,6 +219,7 @@ function note_refresh_new() {
                   $(this).attr("end")
               );
             });
+            */
             note_ref_init();
             term_get_dict();
             note_channal_list();
@@ -405,7 +407,7 @@ function note_ref_init() {
     let bookid = $(this).attr("book");
     let para = $(this).attr("para");
     window.open(
-      "../pcdl/reader.php?view=chapter&book=" + bookid + "&para=" + para,
+      "../reader/?view=chapter&book=" + bookid + "&para=" + para,
       "_blank"
     );
   });
@@ -414,7 +416,7 @@ function note_ref_init() {
     let bookid = $(this).attr("book");
     let para = $(this).attr("para");
     window.open(
-      "../pcdl/reader.php?view=para&book=" + bookid + "&para=" + para,
+      "../reader/?view=para&book=" + bookid + "&para=" + para,
       "_blank"
     );
   });
@@ -427,6 +429,21 @@ ref
 */
 function note_json_html(in_json) {
   let output = "";
+  output +='<div class="note_tool_bar" style=" position: relative;">';
+  output +='<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
+  output  +="<svg class='icon' >";
+  output  +="<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
+  output  +="</svg>";
+  output  +="<div class='case_dropdown-content sent_menu'>";
+  if(typeof _reader_view !="undefined" && _reader_view != "sent"){
+      output  +="<a onclick='junp_to(this)'>跳转至此句</a>";
+  }
+  output  +="<a onclick=\"copy_ref('"+in_json.book+"','"+in_json.para+"','"+in_json.begin+"','"+in_json.end+"')\">复制引用</a>";
+  output  +="<a onclick='copy_text(this)'>复制文本</a>";
+  output  +="<a onclick='add_to_list()'>添加到选择列表</a>";
+  output  +="</div>";
+  output +='</div>';
+  output +=' </div>';
   output += "<div class='palitext'>" + in_json.palitext + "</div>";
   for (const iterator of in_json.translation) {
     output += "<div class='tran' lang='" + iterator.lang + "'>";
@@ -611,4 +628,10 @@ function note_sent_save() {
       }
     }
   );
+}
+
+
+function copy_ref(book,para,begin,end) {
+  let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
+  copy_to_clipboard(strRef);
 }
