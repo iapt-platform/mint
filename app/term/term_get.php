@@ -43,7 +43,12 @@ if(isset($_POST["words"])){
         }
         foreach ($fetch as $key => $value) {
             # code...
-            $fetch[$key]["user"] = $user[$key];
+            if(isset($user[$fetch[$key]["owner"]])){
+                $fetch[$key]["user"] = $user[$fetch[$key]["owner"]];
+            }
+            else{
+                $fetch[$key]["user"]  = array("nickname"=>"","username"=>"");
+            }
             $output[] =  $fetch[$key];
         }
     }

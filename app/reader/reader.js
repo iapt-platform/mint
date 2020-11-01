@@ -153,3 +153,27 @@ function palicanon_load_term() {
         }
     );
 }
+
+
+function set_channal(channalid) {
+    let url = "../reader/?view=" + _reader_view;
+    if (_reader_book != -1) {
+        url += "&book=" + _reader_book;
+    }
+    if (_reader_para != -1) {
+        url += "&para=" + _reader_para;
+    }
+    if (_reader_begin != -1) {
+        url += "&begin=" + _reader_begin;
+    }
+    if (_reader_end != -1) {
+        url += "&end=" + _reader_end;
+    }   
+    if (channalid != "") {
+      url += "&channal=" + channalid;
+    }
+    if (_display != "") {
+      url += "&display=" + _display;
+    }
+    location.assign(url);
+  }
