@@ -106,7 +106,7 @@ function reader_draw_para_menu(){
 function copy_para_ref(book,para) {
     let output = "";
     let currPara = para;
-    for (const iterator of _sent_data) {
+    for (const iterator of _sent_data.sentences) {
         if(iterator.book==book && iterator.paragraph==para){
             output +="{{"+book+"-"+para+"-"+iterator.begin+"-"+iterator.end+"}}\n";
         }
