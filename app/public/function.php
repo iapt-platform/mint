@@ -81,17 +81,22 @@ function _get_para_path($book,$paragraph){
     $stmt->execute(array($book,$parent));
     $FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
     
-		$toc="<chapter book='{$book}' para='{$parent}'>{$FetParent["toc"]}&gt</chapter>";
+		$toc="<chapter book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$FetParent["toc"]}</chapter>";
 		
 		if($path==""){
-			$path="<para book='{$book}' para='{$parent}'>{$paragraph}</para>";
+      if($FetParent["level"]<100){
+        $path=$toc;
+      }
+      else{
+        $path="<para book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$paragraph}</para>";
+      }
 		}
 		else{
 			$path=$toc.$path;
 		}
 		if($sFirstParentTitle==""){
 			$sFirstParentTitle = $FetParent["toc"];
-		}						
+		}	
 		$parent = $FetParent["parent"];
 		$deep++;
 		if($deep>5){

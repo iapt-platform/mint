@@ -96,11 +96,14 @@ switch($op){
 	}
 	case "my":
 	{
-		$query = "select guid,word,meaning,other_meaning from term  where owner= ".$PDO->quote($username);
-		$Fetch = PDO_FetchAll($query);
+		$query = "select guid,word,meaning,other_meaning,language from term  where owner= ? ";
+		$Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
 		$iFetch=count($Fetch);
 		if($iFetch>0){
 			echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
+		}
+		else{
+			echo json_encode(array(), JSON_UNESCAPED_UNICODE);
 		}
 		break;
 	}

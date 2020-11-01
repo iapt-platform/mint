@@ -59,9 +59,21 @@ else{
 
 
 PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
-if(isset($_POST["id"])){
-    if(empty($_POST["id"])){
-        #没有id新建
+
+$_id = false;
+if( (isset($_POST["id"]) && empty($_POST["id"])) || !isset($_POST["id"]) ){
+        # 判断是否已经有了
+        $query = "SELECT id FROM sentence WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? AND channal = ? ";
+        $_id = PDO_FetchOne($query,array($_POST["book"], $_POST["para"],  $_POST["begin"], $_POST["end"], $_POST["channal"]));
+}
+else{
+    $_id = $_POST["id"];
+}
+
+
+
+    if($_id==false){
+        # 没有id新建
         if($cooperation == 1){
             #有权限
             $query = "INSERT INTO sentence (id, 
@@ -134,7 +146,7 @@ if(isset($_POST["id"])){
                                                     $_COOKIE["userid"] ,
                                                     mTime(),
                                                     mTime(),
-                                                    $_POST["id"]));
+                                                    $_id));
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                 /*  识别错误  */
                 $error = PDO_ErrorInfo();
@@ -154,10 +166,7 @@ if(isset($_POST["id"])){
             $respond['status']=1;
         }
     }
-}
-else{
-# error
-}
+
 
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>

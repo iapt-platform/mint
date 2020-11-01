@@ -169,7 +169,7 @@ else{
 				echo "<li class='title'>可用资源</li>";
 				foreach($Fetch as $one_album){
 					$album_type=$one_album["type"];
-					$read_link="../pcdl/reader.php?book=$book&album=".$one_album["album"]."&paragraph=$paragraph";
+					$read_link="";//"../reader/?book=$book&album=".$one_album["album"]."&paragraph=$paragraph";
 					$info_link="index_render_res_list($book,".$one_album["album"].",$paragraph)";
 					echo "<li onclick='$info_link' >";
 					echo "<span><span class='media_type'>{$media_type_short[$album_type]}</span>{$one_album["title"]}</span>";

@@ -180,7 +180,7 @@ switch($op)
 			if($iFetchText>0){
 				echo "<ul>";
 				for($i=0;$i<$iFetchText;$i++){
-					$read_link="../pcdl/reader.php?book={$book}&album={$album_id}&paragraph={$FetchText[$i]["paragraph"]}";
+					$read_link="";//"../reader/?book={$book}&album={$album_id}&paragraph={$FetchText[$i]["paragraph"]}";
 					echo "<li class='palicannon_nav_level_{$FetchText[$i]["level"]}'><a href='{$read_link}' target='_blank'>{$FetchText[$i]["title"]}</a></li>";
 				}
 				echo "</ul>";

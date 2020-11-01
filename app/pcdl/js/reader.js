@@ -441,12 +441,4 @@ function sent_apply(sentId) {
   }
 }
 
-function copy_ref(obj) {
-  let pali_sent_node = obj.parentNode.parentNode.parentNode.parentNode;
-  let book = pali_sent_node.getAttributeNode("book").value;
-  let para = pali_sent_node.getAttributeNode("para").value;
-  let begin = pali_sent_node.getAttributeNode("begin").value;
-  let end = pali_sent_node.getAttributeNode("end").value;
-  let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
-  copy_to_clipboard(strRef);
-}
+
