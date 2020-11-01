@@ -201,7 +201,7 @@ switch($op){
 				$book=$Fetch[$i]["book"];		
 				$paragraph=$Fetch[$i]["paragraph"];							
 				echo "<div style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-				echo  "<div style='font-size: 130%;font-weight: 700;'><a href='../reader/?view=chapter&book={$book}&paragraph={$paragraph}' target='_blank'>$title</a></div>";		
+				echo  "<div style='font-size: 130%;font-weight: 700;'><a href='../reader/?view=chapter&book={$book}&para={$paragraph}' target='_blank'>$title</a></div>";		
 
 				$bookInfo = _get_book_info($book);
 				$bookname=$bookInfo->title;
