@@ -650,7 +650,7 @@ function explorer_show_res_list(book,para){
 			}
 			else{
 				arrResData[i].enable=true;
-				var read_link="../reader/?book="+arrResData[i].book+"&album="+arrResData[i].album_id+"&paragraph="+arrResData[i].paragraph;
+				var read_link="../reader/?view=para&book="+arrResData[i].book+"&channal="+arrResData[i].album_id+"&para="+arrResData[i].paragraph;
 				var check="<input type='checkbox' id='res_check_"+resCount+"' checked onclick=\"set_res_enable(this,"+i+")\" />";
 				html+=check+"["+arrResData[i].type+"]<a href='"+read_link+"' target='_blank'>"+arrResData[i].title+"</a>-"+arrResData[i].author;
 				resCount++;
