@@ -51,10 +51,10 @@ if($FetchParInfo){
     $output["toc"] = PDO_FetchAll($query , array($_book,$paraBegin,$paraEnd));
 
     if($FetchParInfo["chapter_strlen"]>_MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"])>1){
-        if($output["toc"][1].paragraph-$_para>1){
+        if($output["toc"][1]["paragraph"]-$_para>1){
             # 中间有间隔
             $paraBegin = $_para;
-            $paraEnd = $output["toc"][1].paragraph-1;
+            $paraEnd = $output["toc"][1]["paragraph"]-1;
             $output["head"] = 1;
         }
         else{

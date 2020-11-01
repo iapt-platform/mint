@@ -937,7 +937,7 @@ switch($op){
 						</div>
 						<p><?php echo $_local->gui->open_with?>：</p>
 						<ul>
-						<li style="display:none;"><a href="../pcdl/reader.php?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
+						<li style="display:none;"><a href="../reader/?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
 						<?php
 						if(empty($doc_head)){
 							echo '<li><a href="../studio/project.php?op=open&doc_id='.$doc_id.'&openin=editor">复制到我的空间用编辑器打开</a></li>';

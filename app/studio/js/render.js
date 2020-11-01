@@ -1322,14 +1322,14 @@ function render_sent_tool_bar(elementBlock, begin) {
   if (_display_sbs == 0) {
     //逐段模式
     sentReaderLink =
-      "https://www.wikipali.org/app/pcdl/reader.php?view=para&book=" +
+      "https://www.wikipali.org/app/reader/?view=para&book=" +
       abook +
       "&para=" +
       aparagraph;
   } else {
     //逐句模式
     sentReaderLink =
-      "https://www.wikipali.org/app/pcdl/reader.php?view=sent&book=" +
+      "https://www.wikipali.org/app/reader/?view=sent&book=" +
       abook +
       "&para=" +
       aparagraph +
@@ -1355,7 +1355,7 @@ function render_sent_tool_bar(elementBlock, begin) {
   if (_display_sbs == 0) {
     //逐段模式
     output +=
-      "<button class='icon_btn'  onclick=\"window.open('../pcdl/reader.php?view=para&book=" +
+      "<button class='icon_btn'  onclick=\"window.open('../reader/?view=para&book=" +
       abook +
       "&para=" +
       aparagraph +
@@ -1365,7 +1365,7 @@ function render_sent_tool_bar(elementBlock, begin) {
   } else {
     //逐句模式
     output +=
-      "<button class='icon_btn'  onclick=\"window.open('../pcdl/reader.php?view=sent&book=" +
+      "<button class='icon_btn'  onclick=\"window.open('../reader/?view=sent&book=" +
       abook +
       "&para=" +
       aparagraph +
@@ -1666,7 +1666,7 @@ function renderWordParBlockInner(elementBlock) {
           '<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
         output += "</button>";
         output +=
-          "<button class='icon_btn'  onclick=\"window.open('../pcdl/reader.php?view=sent&book=" +
+          "<button class='icon_btn'  onclick=\"window.open('../reader/?view=sent&book=" +
           book +
           "&para=" +
           paragraph +

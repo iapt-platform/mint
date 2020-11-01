@@ -116,7 +116,7 @@ require_once "../pcdl/html_head.php";
 		flex:7;
 	}
 	#contents{
-		min-height: 400px;
+
 	}
 	#contents li{
 		white-space: normal;
@@ -229,7 +229,7 @@ require_once "../pcdl/html_head.php";
 		<span><?php echo $_local->gui->anthology; ?></span>
 		<span id="para_path"></span>
 		<span class="case_dropdown" id="para_path_next_level">
-		next
+		……
 		<div id="toc_next_menu" class="case_dropdown-content">
 		</div>
 		</span>
@@ -313,6 +313,8 @@ require_once "../pcdl/html_head.php";
 	<div id="contents_div" style="padding: 0 1em;">
 		<div id="contents">
 		<?php echo $_local->gui->loading; ?>...
+		</div>
+		<div id="contents_toc">
 		</div>
 		<div id="contents_foot">
 			<div id="contents_nav" style="display:flex;justify-content: space-between;">

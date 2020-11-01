@@ -26,7 +26,7 @@ function reader_load(){
             _sent_data = JSON.parse(data);
             let tpl = "";
             let currPara=0;
-            if(_sent_data.sentences.length>0){
+            if(_sent_data.sentences.length>0  ){
                 for (const iterator of _sent_data.sentences) {
                     if(currPara!=iterator.paragraph){
                         tpl +="\n";
@@ -52,13 +52,22 @@ function reader_load(){
                         tocNextMenu +="<a href='../reader/?view=chapter&book="+_reader_book+"&para="+element.paragraph+"'>"+element.toc+"</a>";
                     } 
                     $("#toc_content").html(tocHtml);
-                    $("#toc_next_menu").html(tocNextMenu);
+                    if(tocNextMenu===""){
+                        $("#para_path_next_level").hide();
+                    }
+                    else{
+                        $("#toc_next_menu").html(tocNextMenu);
+                        $("#para_path_next_level").show();                       
+                    }
+
                 }
                 
             }
-            else{
-                //仅有目录
-                tpl += "<h2>Table of Content</h2>";
+
+            
+            if(_sent_data.head==1 || _sent_data.sentences.length==0){
+                //渲染目录
+                tpl = "<h2>Table of Content</h2>";
                 if(_sent_data.toc.length>0){
                     let firstLevel = _sent_data.toc[0].level;
                     for (let index = 1; index < _sent_data.toc.length; index++) {
@@ -68,9 +77,8 @@ function reader_load(){
                         }
                     } 
                 }
-                $("#contents").html(tpl);
+                $("#contents_toc").html(tpl);
             }
-            
         }
     );
 

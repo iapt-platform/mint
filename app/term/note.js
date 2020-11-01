@@ -197,7 +197,7 @@ function note_refresh_new() {
             $(".palitext").click(function () {
               let sentid = $(this).parent().attr("info").split("-");
               window.open(
-                "../pcdl/reader.php?view=sent&book=" +
+                "../reader/?view=sent&book=" +
                   sentid[0] +
                   "&para=" +
                   sentid[1] +
@@ -209,7 +209,7 @@ function note_refresh_new() {
             });
             $("pali").click(function () {
               window.open(
-                "../pcdl/reader.php?view=sent&book=" +
+                "../reader/?view=sent&book=" +
                   $(this).attr("book") +
                   "&para=" +
                   $(this).attr("para") +
