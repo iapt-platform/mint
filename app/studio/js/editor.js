@@ -29,6 +29,9 @@ var g_fileid = 0;
 var g_docid = "";
 
 var g_op = "";
+var g_book = "";
+var g_para = "";
+var g_channal = "";
 
 var gCurrModifyWindowParNo = -1;
 
@@ -191,9 +194,9 @@ function editor_windowsInit() {
 	var strSertch = location.search;
 	if (strSertch.length > 0) {
 		strSertch = strSertch.substr(1);
-		var sertchList = strSertch.split('&');
-		for (x in sertchList) {
-			var item = sertchList[x].split('=');
+		let sertchList = strSertch.split('&');
+		for (const param of sertchList) {
+			let item = param.split('=');
 			switch (item[0]) {
 				case "filename":
 					g_filename = item[1];
@@ -207,8 +210,16 @@ function editor_windowsInit() {
 				case "op":
 					g_op = item[1];
 					break;
-
-			}
+				case "book":
+					g_book = item[1];
+					break;
+				case "para":
+					g_para = item[1];
+					break;
+				case "channal":
+					g_channal = item[1];
+					break;
+			}			
 		}
 	}
 	checkCookie();
@@ -252,7 +263,9 @@ function editor_windowsInit() {
 				alert("no doc id");
 			}
 			break;
-
+		case "openchannal":
+				editor_openChannal(g_book,g_para,g_channal);
+			break;
 		case "import":
 			if (g_filename.length > 0) {
 				editor_importOldVer(g_filename)
@@ -3768,7 +3781,19 @@ function setHeadingInfo(id, objValue) {
 	}
 }
 
-
+function editor_openChannal(book,para,channal) {
+	$.post(
+		"../doc/load_channal_para.php",
+		{
+			book:book,
+			para:para,
+			channal:channal,
+		},
+		function(data) {
+			editor_parse_doc_xml(data);
+		}
+	);
+}
 //open project begin
 var editor_openProjectXmlHttp = null;
 function editor_openProject(strFileId, filetype) {
@@ -3800,12 +3825,7 @@ function editor_openProject(strFileId, filetype) {
 
 }
 
-function editor_open_project_serverResponse() {
-	// 4 = "loaded"
-	if (editor_openProjectXmlHttp.readyState == 4) {
-		if (editor_openProjectXmlHttp.status == 200) {// 200 = "OK"
-			var xmlText = editor_openProjectXmlHttp.responseText;
-
+function editor_parse_doc_xml(xmlText) {
 			if (window.DOMParser) {
 				parser = new DOMParser();
 				gXmlBookData = parser.parseFromString(xmlText, "text/xml");
@@ -3834,18 +3854,24 @@ function editor_open_project_serverResponse() {
 			else {
 				msg_init(1);
 			}
-
-
 			updataDocParagraphList();
 			updataToc();
 			//渲染数据块
 			blockShow(0);
 			refreshResource()
 			editro_layout_loadStyle();
+}
 
+function editor_open_project_serverResponse() {
+	// 4 = "loaded"
+	if (editor_openProjectXmlHttp.readyState == 4) {
+		if (editor_openProjectXmlHttp.status == 200) {
+			// 200 = "OK"
+			var xmlText = editor_openProjectXmlHttp.responseText;
+			editor_parse_doc_xml(xmlText);
 		}
 		else {
-			document.getElementById('sutta_text').innerHTML = "Problem retrieving data:" + editor_openProjectXmlHttp.statusText;
+			$('#sutta_text').html("Problem retrieving data:" + editor_openProjectXmlHttp.statusText);
 		}
 	}
 }

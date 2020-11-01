@@ -367,6 +367,7 @@ switch($op){
 				echo ' type="radio" />';
 				echo '</div>';
 				echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["name"].'</div>';
+				echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["lang"].'</div>';
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
 				$query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
@@ -375,10 +376,11 @@ switch($op){
 				echo '<div class="title" style="flex:2;padding-bottom:5px;">';
 				if($FetchWBW==0){
 					echo $_local->gui->blank;
+					echo "<a>快捷编辑</a>";
 				}
 				else{
 					echo $FetchWBW.$_local->gui->para;
-					echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}'>open</a>";
+					echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
 				}
 				echo '</div>';
 
@@ -935,7 +937,7 @@ switch($op){
 						</div>
 						<p><?php echo $_local->gui->open_with?>：</p>
 						<ul>
-						<li style="display:none;"><a href="../pcdl/reader.php?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
+						<li style="display:none;"><a href="../reader/?file=<?php echo $doc_id;?>"><?php echo $_local->gui->reader;?>（<?php echo $_local->gui->read_only;?>）</a></li>
 						<?php
 						if(empty($doc_head)){
 							echo '<li><a href="../studio/project.php?op=open&doc_id='.$doc_id.'&openin=editor">复制到我的空间用编辑器打开</a></li>';

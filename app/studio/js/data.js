@@ -46,7 +46,7 @@ function doc_commit() {
 }
 
 function createXmlDoc() {
-  var strXml = "";
+  let strXml = '<?xml version="1.0" encoding="UTF-8"?>';
   strXml += "<set>\n";
   strXml += "    <head>\n";
   strXml += "        <type>pcdsset</type>\n";

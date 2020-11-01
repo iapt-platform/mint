@@ -25,7 +25,7 @@ include "../public/_pdo.php";
 			echo "<div class=\"wizard_par_tools\">";
 			echo "<div class=\"wizard_par_tools_title\">";
 			echo "<input id='par_enable_$parNumber' onclick='par_enable_change($parNumber,this)' type=\"checkbox\" checked/>";				
-			echo "<a href='../pcdl/reader.php?view=para&book={$get_book}&para={$parNumber}' name='pali_text_par_$parNumber' target='_blank'>$parNumber</a><span id='par_level_$parNumber' class='par_level'></span>";
+			echo "<a href='../reader/?view=para&book={$get_book}&para={$parNumber}' name='pali_text_par_$parNumber' target='_blank'>$parNumber</a><span id='par_level_$parNumber' class='par_level'></span>";
 			echo "</div>";
 			echo "</div>";
 			echo "<div id=\"wizard_pali_par_text_$parNumber\">".$Fetch[$i]["html"]."</div>";

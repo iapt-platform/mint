@@ -749,7 +749,7 @@ else{
 			$FetchSim = PDO_FetchAll($query);
 			foreach ($FetchSim as $key => $value) {
 				$strSimSent .= "<div>". $value["text"]."</div>";
-				$strSimSent .= "<div><a href='../pcdl/reader.php?view=para&book={$value["book"]}&para={$value["paragraph"]}'>"._get_para_path($value["book"],$value["paragraph"])."</a></div><br/>";
+				$strSimSent .= "<div><a href='../reader/?view=para&book={$value["book"]}&para={$value["paragraph"]}'>"._get_para_path($value["book"],$value["paragraph"])."</a></div><br/>";
 			}
 		}
 	}
@@ -1090,7 +1090,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 	<div class="content"  style='max-height:10em;' >
 		<?php
 		echo "<div>";
-		echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
+		echo "<a href='../reader/?view={$_GET["view"]}";
 		echo "&book=".$_GET["book"];
 		echo "&para=".$_GET["para"];
 		if(isset($_GET["begin"])){
@@ -1127,7 +1127,7 @@ function render_sent($sent_data,$sn,$display_mode,$sent_count,$class=""){
 			echo "<div>";
 
 			echo "<div>";
-			echo "<a href='../pcdl/reader.php?view={$_GET["view"]}";
+			echo "<a href='../reader/?view={$_GET["view"]}";
 			echo "&book=".$_GET["book"];
 			echo "&para=".$_GET["para"];
 			if(isset($_GET["begin"])){

@@ -1,8 +1,8 @@
 <div class="menu" id="menu_dict">
-	<h1><?php echo $module_gui_str['editor_dictionary']['1001']; ?></h1>
+	<h1></h1>
 	<div class="submenu">
 		<p class="submenu_title" onclick="submenu_show_detail(this)">
-			<?php echo $module_gui_str['editor_dictionary']['1002']; ?>
+			
 			<svg class="icon">
 				<use xlink:href="svg/icon.svg#ic_add"></use>
 			</svg>
@@ -10,39 +10,24 @@
 		<div class="submenu_details">
 			<div>
 				<a href="dictadmin/user/phpliteadmin.php"
-					target="user_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1009']; ?></a><br>
+					target="user_dict_admin"></a><br>
 				<a href="dictadmin/system/phpliteadmin.php"
-					target="system_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1010']; ?></a><br>
+					target="system_dict_admin"></a><br>
 				<a href="dictadmin/3rd/phpliteadmin.php"
-					target="3rd_dict_admin"><?php echo $module_gui_str['editor_dictionary']['1011']; ?></a><br>
+					target="3rd_dict_admin"></a><br>
 				<button type="button"
-					onclick="uploadAllWordData()"><?php echo $module_gui_str['editor_dictionary']['1012']; ?></button>
+					onclick="uploadAllWordData()"></button>
 			</div>
 		</div>
 	</div>
 
 	<div class="submenu">
 		<p class="submenu_title" onclick="submenu_show_detail(this)">
-			<?php echo $module_gui_str['editor_dictionary']['1003']; ?>
 			<svg class="icon">
 				<use xlink:href="svg/icon.svg#ic_add"></use>
 			</svg>
 		</p>
 		<div class="submenu_details">
-			<?php	
-	//获取服务器端文件列表
-	$dir="../tmp/user/$userid/my_document/";
-	$files = scandir($dir);
-	$arrlength=count($files);
-	for($x=0;$x<$arrlength;$x++) {
-		if(is_file($dir.$files[$x])){
-			$exeName=mb_substr($files[$x],-4,NULL,"UTF-8");
-			if($exeName==".pcs"){
-			echo "<a onclick=menu_file_import_wbw('".$files[$x]."')>".$files[$x].'</a><br />';
-			}
-		}
-	}
-	?>
 			<span id="id_load_dict_from_WBW_msg_inner"></span>
 		</div>
 
@@ -50,18 +35,15 @@
 
 	<div class="submenu">
 		<p class="submenu_title" onclick="submenu_show_detail(this)">
-			<?php echo $module_gui_str['editor_dictionary']['1004']; ?>
 			<svg class="icon">
 				<use xlink:href="svg/icon.svg#ic_add"></use>
 			</svg>
 		</p>
 		<div class="submenu_details">
 			<button type="button"
-				onclick="menu_file_export_ild()"><?php echo $module_gui_str['editor_dictionary']['1007']; ?></button>
+				onclick="menu_file_export_ild()">export</button>
 			<button type="button"
-				onclick="menu_file_import_ild()"><?php echo $module_gui_str['editor_dictionary']['1008']; ?></button>
-			<button type="button"
-				onclick="project_res_ild_remove()"><?php echo $module_gui_str['editor_dictionary']['1020']; ?></button>
+				onclick="menu_file_import_ild()">import</button>
 			<span id="id_ild_msg_inner"></span>
 		</div>
 
