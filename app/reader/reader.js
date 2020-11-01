@@ -26,6 +26,7 @@ function reader_load(){
             _sent_data = JSON.parse(data);
             let tpl = "";
             let currPara=0;
+            $("#contents").html("");
             if(_sent_data.sentences.length>0  ){
                 for (const iterator of _sent_data.sentences) {
                     if(currPara!=iterator.paragraph){
