@@ -52,7 +52,9 @@ require_once '../studio/index_head.php';
 	height: 550px;
 	max-height: 75vh;
 }
-
+#preview_inner{
+	background-color: var(--bg-color);
+}
 	</style>
 
 	<?php

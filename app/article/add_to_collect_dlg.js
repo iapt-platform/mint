@@ -26,7 +26,7 @@ function add_to_collect_dlg_init() {
     html += "<div class='others'>";
     html += "</div>";
     html += "</div>";
-    html += "<div style='display:flex;'>";
+    html += "<div style='display:flex;justify-content: space-evenly;'>";
     html += "<button onclick='collect_new()'>" + gLocal.gui.new_composition + "</button>";
     html +=
       "<button onclick=\"article_add_to_collect_cancel('" +

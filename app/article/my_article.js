@@ -16,11 +16,31 @@ function my_article_list() {
           let html = "";
           let result = JSON.parse(data);
           let key = 1;
+          //表头
+          html += '<div class="file_list_row" style="padding:5px;">';
+          html +=
+            '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
+          html += "<div style='flex:0.5;'>" + key++ + "</div>";
+          html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+          html +=
+            "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
+          html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
+          html +=
+            "<div style='flex:1;'>" +
+            gLocal.gui.edit +
+            "</a></div>";
+          html +=
+            "<div style='flex:1;'>" +
+            gLocal.gui.preview +
+            "</a></div>";
+          html += "<div style='flex:1;'>15</div>";
+          html += "</div>";
+          //列表
           for (const iterator of result) {
             html += '<div class="file_list_row" style="padding:5px;">';
             html +=
               '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-            html += "<div style='flex:1;'>" + key++ + "</div>";
+            html += "<div style='flex:0.5;'>" + key++ + "</div>";
             html += "<div style='flex:2;'>" + iterator.title + "</div>";
             html +=
               "<div style='flex:2;'>" +
@@ -80,9 +100,7 @@ function render_status(status) {
     },
   ];
   html +=
-    "<span style='flex:3;margin:auto;'>" +
-    gLocal.gui.privacy +
-    '</span><div class="case_dropdown"  style="flex:7;">';
+    '<div class="case_dropdown"  style="flex:7;">';
   html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
   for (const iterator of objStatus) {
