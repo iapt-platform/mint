@@ -93,16 +93,23 @@ function reader_draw_para_menu(){
         let html="<a name='para_"+strPara+"'></a>";
         html  +="<div class='case_dropdown-content para_menu'>";
     if(typeof _reader_view !="undefined" &&  _reader_view != "para"){
-        html  +="<a onclick='junp_to('"+_reader_book+"','"+strPara+"')'>跳转至此段</a>";
+        html  +="<a onclick=\"junp_to_para('"+_reader_book+"','"+strPara+"')\">仅显示此段</a>";
     }
+    html  +="<a onclick=\"edit_wbw('"+_reader_book+"','"+strPara+"')\">编辑逐词解析</a>";
     html  +="<a onclick=\"copy_para_ref('"+_reader_book+"','"+strPara+"')\">复制引用</a>";
-    html  +="<a onclick='copy_text(this)'>复制文本</a>";
-    html  +="<a onclick='add_to_list()'>添加到选择列表</a>";
+    html  +="<a onclick=\"copy_text('"+_reader_book+"','"+strPara+"')\">复制文本</a>";
+    html  +="<a onclick=\"add_to_list('"+_reader_book+"','"+strPara+"')\">添加到选择列表</a>";
     html  +="</div>";
         $(this).append(html);        
     });
 
 }
+
+function junp_to_para(book,para) {
+    let url = "../reader/?view=para&book="+book+"&para="+para+"&display=sent";
+    location.assign(url);
+}
+
 function copy_para_ref(book,para) {
     let output = "";
     let currPara = para;

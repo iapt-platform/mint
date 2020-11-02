@@ -240,7 +240,7 @@ require_once "../pcdl/html_head.php";
 		<?php
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 		echo "<a href='";
-		echo "'>{$_local->gui->modify}</a></button>";
+		echo "'>{$_local->gui->edit}</a></button>";
 		
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
@@ -258,6 +258,9 @@ require_once "../pcdl/html_head.php";
 			}
 			if(isset($_GET["begin"])){
 				echo "&begin=".$_GET["begin"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
 			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
@@ -287,6 +290,9 @@ require_once "../pcdl/html_head.php";
 			}
 			if(isset($_GET["begin"])){
 				echo "&begin=".$_GET["begin"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
 			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
