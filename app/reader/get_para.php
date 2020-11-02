@@ -14,15 +14,17 @@ if(isset($_GET["end"])){
 }
 $_view = $_GET["view"];
 
-if($_view=="sent"){
-    $chapter = array(array("book"=>$_book,"paragraph"=>$_para,"begin"=>$_begin,"end"=>$_end));
-    echo json_encode($chapter,JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
 $output["toc"] = array();
 $output["sentences"] = array();
 $output["head"] = 0;
+
+if($_view=="sent"){
+    $output["sentences"] = array(array("book"=>$_book,"paragraph"=>$_para,"begin"=>$_begin,"end"=>$_end));
+    echo json_encode($output,JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+
 
 PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
 $query = "SELECT * FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
