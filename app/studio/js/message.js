@@ -58,7 +58,9 @@ function msg_reload() {
   iMsgLastUpdateId = 1;
 }
 function msg_send() {
-  $("#net_up").html("▲");
+  $("#net_up").html("");
+  $("#msg_tool_bar").html("<svg class='icon'><use xlink:href='../studio/svg/icon.svg#upload_ms'></use></svg>");
+
   if (arrMsgBuffer.length > 0) {
     var operation = "send";
   } else {
@@ -171,19 +173,22 @@ function msg_send() {
       msg_set_tool_bar_msg_counter();
       msg_update_msg_list();
       $("#net_down").html(" ");
+      $("#msg_tool_bar").html("<svg class='icon'><use xlink:href='../studio/svg/icon.svg#pause_ms'></use></svg>");
+
     }
   );
 
-  $("#net_up").html(" ");
-  $("#net_down").html("▼");
+  $("#net_up").html("");
+  $("#net_down").html("");
+  $("#msg_tool_bar").html("<svg class='icon'><use xlink:href='../studio/svg/icon.svg#download_ms'></use></svg>");
 
   arrMsgBuffer = new Array();
 
   msg_timer = setTimeout("msg_send()", msgTime);
 }
-function msg_new_msg_id_push() {}
+function msg_new_msg_id_push() { }
 
-function msg_stop() {}
+function msg_stop() { }
 
 function msg_read(msg_obj, status = null) {
   if (msg_obj) {
@@ -350,22 +355,22 @@ function msg_apply_data(obj) {
         let end = obj.data.end;
         $(
           "[pcds='sent-net-all'][book='" +
-            book +
-            "'][para='" +
-            para +
-            "'][begin='" +
-            begin +
-            "']"
+          book +
+          "'][para='" +
+          para +
+          "'][begin='" +
+          begin +
+          "']"
         ).html(obj.data.text);
 
         $(
           "[pcds='sent-net-div'][book='" +
-            book +
-            "'][para='" +
-            para +
-            "'][begin='" +
-            begin +
-            "']"
+          book +
+          "'][para='" +
+          para +
+          "'][begin='" +
+          begin +
+          "']"
         )
           .find(".author")
           .html(obj.sender);

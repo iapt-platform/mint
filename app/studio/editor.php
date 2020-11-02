@@ -314,22 +314,22 @@ foreach($plugin_list as $info){
 	<!--顶部工具栏tool bar begin-->
 	<div id='toolbar'>
 		<!--左侧的区块-->
-		<div>
+		<div style="display: inline-flex;flex: 4;max-width:40vw">
 
-			<svg class="icon" style="height: 2.7em; width: 12em; margin-top: 0.5em; ">
+			<svg class="icon" style="height: 2.7em; width: 12em;">
 				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
 			</svg>
 
-			<span>
-				<span id="net_up"></span>
-				<span id="net_down"></span>
-				<span id="msg_tool_bar"></span>
+			<span style="height: fit-content;margin: auto 0;">
+				<span id="net_up" style="display:none;"></span>
+				<span id="msg_tool_bar"><svg class='icon'><use xlink:href='../studio/svg/icon.svg#pause_ms'></use></svg></span>
+				<span id="net_down" style="display:none;"></span>
 			</span>
-			<span id="editor_doc_title" style="margin-top: 0.6em;margin-left: 1em;display: inline-block;max-width: 20em;font-size: 85%;"></span>
+			<span id="editor_doc_title" style="margin: auto 0;max-width: 20em;height: fit-content;position: inherit;"></span>
 		</div>
 		
 		<!--工具栏中间的区块-->
-		<div>
+		<div style="flex: 2;display: flex;justify-content: center;">
 			<!--手机版显示工具栏按钮-->
 			<span class="dropdown toolbtn" onmouseover="switchMenu(this,'topTools')">
 				<div>
@@ -429,7 +429,7 @@ foreach($plugin_list as $info){
 		</div>
 		
 		<!--工具栏右侧的区块开始-->
-		<div class="tab_a1">
+		<div class="tab_a1" style="flex: 4;display: flex;justify-content: flex-end;">
 <?php
 foreach($plugin_list as $info){
 	if($info->attach=="top_right" && $info->enable=="true"){
@@ -460,7 +460,7 @@ foreach($plugin_list as $info){
 ?>		
 		
 		</div>
-		
+
 	</div>
 	<!--顶部工具栏结束-->
 	
