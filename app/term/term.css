@@ -269,3 +269,11 @@ note:hover .note_tool_bar {
 .para_menu {
   left: 0;
 }
+
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+  font-family: unset;
+  font-size: 1.1em;
+}
