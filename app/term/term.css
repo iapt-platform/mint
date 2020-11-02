@@ -114,6 +114,10 @@ note .ref {
   margin-top: 8px;
 }
 
+.tran {
+  line-height: 1.5em;
+}
+
 .tran ul {
   list-style-type: circle;
   margin-left: 2em;
@@ -183,6 +187,7 @@ note .ref {
 /*myanmar*/
 .tran:lang(my) {
   font-size: 120%;
+  line-height: 2em;
 }
 
 .tran_div {
@@ -268,4 +273,16 @@ note:hover .note_tool_bar {
 }
 .para_menu {
   left: 0;
+}
+
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+  font-family: unset;
+  font-size: 1.1em;
+}
+
+.tran p {
+  margin: 0;
 }
