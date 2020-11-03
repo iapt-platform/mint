@@ -146,8 +146,8 @@ function note_refresh_new() {
                         .parent()
                         .prepend(
                           "<div class='tran_div'  channal='" +
-                            iChannal +
-                            "'></div>"
+                          iChannal +
+                          "'></div>"
                         );
                     }
                   }
@@ -429,26 +429,26 @@ ref
 */
 function note_json_html(in_json) {
   let output = "";
-  output +='<div class="note_tool_bar" style=" position: relative;">';
-  output +='<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
-  output  +="<svg class='icon' >";
-  output  +="<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
-  output  +="</svg>";
-  output  +="<div class='case_dropdown-content sent_menu'>";
-  if(typeof _reader_view !="undefined" && _reader_view != "sent"){
-      output  +="<a onclick='junp_to(this)'>跳转至此句</a>";
+  output += '<div class="note_tool_bar" style=" position: relative;">';
+  output += '<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
+  output += "<svg class='icon' >";
+  output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
+  output += "</svg>";
+  output += "<div class='case_dropdown-content sent_menu'>";
+  if (typeof _reader_view != "undefined" && _reader_view != "sent") {
+    output += "<a onclick='junp_to(this)'>跳转至此句</a>";
   }
-  output  +="<a onclick=\"copy_ref('"+in_json.book+"','"+in_json.para+"','"+in_json.begin+"','"+in_json.end+"')\">复制引用</a>";
-  output  +="<a onclick='copy_text(this)'>复制文本</a>";
-  output  +="<a onclick='add_to_list()'>添加到选择列表</a>";
-  output  +="</div>";
-  output +='</div>';
-  output +=' </div>';
+  output += "<a onclick=\"copy_ref('" + in_json.book + "','" + in_json.para + "','" + in_json.begin + "','" + in_json.end + "')\">" + gLocal.gui.copy_link + "</a>";
+  output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
+  output += "<a onclick='add_to_list()'>" + gLocal.gui.add_to_edit_list + "</a>";
+  output += "</div>";
+  output += '</div>';
+  output += ' </div>';
   output += "<div class='palitext'>" + in_json.palitext + "</div>";
   for (const iterator of in_json.translation) {
-    output += "<div class='tran' lang='" + iterator.lang + "'>";
+    output += "<div class='tran' lang='" + iterator.lang + "'";
     output +=
-      "<span class='edit_button' onclick=\"note_edit_sentence('" +
+      " onclick=\"note_edit_sentence('" +
       in_json.book +
       "' ,'" +
       in_json.para +
@@ -458,7 +458,8 @@ function note_json_html(in_json) {
       in_json.end +
       "' ,'" +
       iterator.channal +
-      "')\"></span>";
+      "')\">";
+    output += "<span class='edit_button'></span>";
 
     output +=
       "<div class='text' id='tran_text_" +
@@ -590,15 +591,15 @@ function note_sent_save() {
         ntf_show("success");
         $(
           "#tran_text_" +
-            result.book +
-            "_" +
-            result.para +
-            "_" +
-            result.begin +
-            "_" +
-            result.end +
-            "_" +
-            result.channal
+          result.book +
+          "_" +
+          result.para +
+          "_" +
+          result.begin +
+          "_" +
+          result.end +
+          "_" +
+          result.channal
         ).html(
           marked(
             term_std_str_to_tran(
@@ -631,7 +632,7 @@ function note_sent_save() {
 }
 
 
-function copy_ref(book,para,begin,end) {
+function copy_ref(book, para, begin, end) {
   let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
   copy_to_clipboard(strRef);
 }

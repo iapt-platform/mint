@@ -35,7 +35,7 @@ function ntf_show(msg, timeout = 8) {
       strHtml += strMsg;
       strHtml += "</div>";
     }
-    strHtml += "<button onclick='ntf_hide()' style='margin-left: 70%;'>" + gLocal.gui.I_know + "</button>"
+    strHtml += "<button onclick='ntf_hide()' style='margin-left: 70%;white-space: nowrap;'>" + gLocal.gui.I_know + "</button>"
     divNotify.innerHTML = strHtml;
     divNotify.style.display = "block";
     setTimeout("ntf_hide()", timeout * 1000);
