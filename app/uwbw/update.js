@@ -15,16 +15,22 @@ function user_wbw_push_word_element(xWord){
 function user_wbw_push_word(wordid){
 	let xWord = doc_word("#"+wordid);
 	let blockid=xWord.block.info("id");	
-	
+	let book=xWord.block.info("book");
+	let para = 	xWord.block.info("paragraph");
+
 	let aWordid = wordid.split("-");
 	aWordid.length=3;
+	if(para!=aWordid[1]){
+		alert("error：paragraph sn.");
+		return;
+	}
 	let newWordid=aWordid.join("-");
 	let wId = aWordid[2];
 	let xAllWord = gXmlBookDataBody.getElementsByTagName("word");	
-	let wid=getWordIndex(newWordid);
+	let index=getWordIndex(newWordid);
 	let wordData = "";
-	if(xAllWord[wid]){
-		for(i=wid;i<xAllWord.length;i++){
+	if(xAllWord[index]){
+		for(let i=index;i<xAllWord.length;i++){
 			if(getNodeText(xAllWord[i],"id").split("-")[2]!=wId){
 				break;
 			}
