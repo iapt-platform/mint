@@ -615,7 +615,7 @@ foreach($plugin_list as $info){
 	
 	<!--逐词解析编辑窗口-->
 	<div id="modifyDiv">
-		<div id="modifywin">
+		<div id="modifywin" style="">
 			<div>
 				<ul id="id_select_modyfy_type" class="common-tab">
 					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo $module_gui_str['editor']['1041'];?></li>

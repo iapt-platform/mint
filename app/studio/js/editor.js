@@ -219,7 +219,7 @@ function editor_windowsInit() {
 				case "channal":
 					g_channal = item[1];
 					break;
-			}			
+			}
 		}
 	}
 	checkCookie();
@@ -264,7 +264,7 @@ function editor_windowsInit() {
 			}
 			break;
 		case "openchannal":
-				editor_openChannal(g_book,g_para,g_channal);
+			editor_openChannal(g_book, g_para, g_channal);
 			break;
 		case "import":
 			if (g_filename.length > 0) {
@@ -3027,7 +3027,28 @@ function showModifyWin(sWordId) {
 		}
 		getBookMarkColor(g_currBookMarkColor);
 
+		//显示编辑窗口
 		eWin.style.display = "block";
+		//根据偏移量设置窗口位置
+		if ($("#wb" + sWordId).offset().left + $("#modifywin").outerWidth() < $(document.body).width() * 0.7) {
+			$("#modifywin").removeClass("right_edit_frame")
+			$("#modifywin").addClass("left_edit_frame")
+			$("#modifywin").css("margin-left", "0");
+
+			//$("#modifywin").style();
+			//$("#modifywin").css("margin-left", "8px");
+			//$("#modifywin::after").css("left", "0");
+			//$("#modifywin::after").style.left = "0";, "": "" }
+		} else {
+			let margin_change = $("#whead1_" + sWordId).outerWidth() - $("#modifywin").outerWidth();
+			$("#modifywin").removeClass("left_edit_frame")
+			$("#modifywin").addClass("right_edit_frame")
+			$("#modifywin").css("margin-left", margin_change + "px");
+			//$("#modifywin::after").css("margin-right", "8px");
+			//$("#modifywin::after").css("right", "0");
+			//$("#modifywin::after").style.right = "0";
+		}
+
 		var sDetail = "detail" + sWordId;
 		var eDetail = document.getElementById(sDetail);
 		eWord.insertBefore(eWin, eDetail);
@@ -3781,15 +3802,15 @@ function setHeadingInfo(id, objValue) {
 	}
 }
 
-function editor_openChannal(book,para,channal) {
+function editor_openChannal(book, para, channal) {
 	$.post(
 		"../doc/load_channal_para.php",
 		{
-			book:book,
-			para:para,
-			channal:channal,
+			book: book,
+			para: para,
+			channal: channal,
 		},
-		function(data) {
+		function (data) {
 			editor_parse_doc_xml(data);
 		}
 	);
@@ -3826,40 +3847,40 @@ function editor_openProject(strFileId, filetype) {
 }
 
 function editor_parse_doc_xml(xmlText) {
-			if (window.DOMParser) {
-				parser = new DOMParser();
-				gXmlBookData = parser.parseFromString(xmlText, "text/xml");
-			}
-			else { // Internet Explorer
+	if (window.DOMParser) {
+		parser = new DOMParser();
+		gXmlBookData = parser.parseFromString(xmlText, "text/xml");
+	}
+	else { // Internet Explorer
 
-				gXmlBookData = new ActiveXObject("Microsoft.XMLDOM");
-				gXmlBookData.async = "false";
-				gXmlBookData.loadXML(xmlText);
-			}
+		gXmlBookData = new ActiveXObject("Microsoft.XMLDOM");
+		gXmlBookData.async = "false";
+		gXmlBookData.loadXML(xmlText);
+	}
 
-			if (gXmlBookData == null) {
-				alert("error:can not load Project. xml obj is null.");
-				return;
-			}
+	if (gXmlBookData == null) {
+		alert("error:can not load Project. xml obj is null.");
+		return;
+	}
 
 
-			projectDataParse(gXmlBookData);
-			doc_file_info_get();
-			doc_info_change("accese_time", "");
-			//消息系统初始化
-			let msg_id = doc_head("msg_db_max_id");
-			if (msg_id != "" && !isNaN(msg_id)) {
-				msg_init(msg_id);
-			}
-			else {
-				msg_init(1);
-			}
-			updataDocParagraphList();
-			updataToc();
-			//渲染数据块
-			blockShow(0);
-			refreshResource()
-			editro_layout_loadStyle();
+	projectDataParse(gXmlBookData);
+	doc_file_info_get();
+	doc_info_change("accese_time", "");
+	//消息系统初始化
+	let msg_id = doc_head("msg_db_max_id");
+	if (msg_id != "" && !isNaN(msg_id)) {
+		msg_init(msg_id);
+	}
+	else {
+		msg_init(1);
+	}
+	updataDocParagraphList();
+	updataToc();
+	//渲染数据块
+	blockShow(0);
+	refreshResource()
+	editro_layout_loadStyle();
 }
 
 function editor_open_project_serverResponse() {

@@ -172,7 +172,7 @@ require_once "../pcdl/html_head.php";
     position: absolute;
     margin-top: 7px;
     border-bottom: 3px solid var(--link-color);
-	left: 0;
+	margin-left: -60px;
 	font-family: 'Noto Sans', 'Noto Sans SC', 'Noto Sans TC','Padauk', Arial, Verdana;
 }
 
@@ -318,7 +318,7 @@ require_once "../pcdl/html_head.php";
 	<div id="article_author"><?php echo $_local->gui->author; ?></div>
 </div>
 <div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em;">
+	<div id="contents_div" style="padding: 0 1em 0 30px;">
 		<div id="contents">
 		<?php echo $_local->gui->loading; ?>...
 		</div>
