@@ -269,7 +269,7 @@ function modifyApply(sWordId,update_user_dict){
 	let oldReal = getNodeText(x[wordIndex],"real");
 	if(sReal != oldReal){
 		setNodeText(x[wordIndex],"real",sReal);
-		msg_data.real=Real;
+		msg_data.real=sReal;
 	}
 	setNodeAttr(x[wordIndex],"real","status",wordCurrStatus);
 	
