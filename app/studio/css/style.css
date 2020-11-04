@@ -620,6 +620,27 @@ a:active {
   z-index: 52;
 }
 
+.right_edit_frame::after{
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  right:0;
+  margin-right: 8px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent var(--tool-bg-color2) transparent;
+}
+.left_edit_frame::after{
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left:0;
+  margin-left: 8px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent var(--tool-bg-color2) transparent;
+}
+
 #modifywin p {
   margin: 0;
   padding: 0;
