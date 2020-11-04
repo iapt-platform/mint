@@ -324,7 +324,7 @@ function render_channal_list(channalinfo) {
   output += "</span>";
   output += "</div>";
 
-  output += "<div style='width: 100%;'>";
+  output += "<div style='width: 100%;overflow-x: hidden;'>";
 
   output += "<div>";
 
