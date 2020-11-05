@@ -2605,8 +2605,9 @@ function closeModifyWindow() {
 	else {
 
 	}
-
-	$("#ws_" + g_currEditWord).removeClass("wbw_selected")
+	if (_display_sbs == 1) {
+		$("#ws_" + g_currEditWord).removeClass("wbw_selected")
+	}
 
 }
 
@@ -3034,25 +3035,28 @@ function showModifyWin(sWordId) {
 
 		//显示编辑窗口
 		eWin.style.display = "block";
-		$("#modifywin").addClass("left_edit_frame");
-		//根据偏移量设置窗口位置
-		if ($(".wbwdiv").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth() > 0) {
-			//$("#modifywin").removeClass("right_edit_frame")
-			$("#modifywin").css("margin-left", "0");
+		if (_display_sbs == 1) {
 
-			//$("#modifywin").style();
-			//$("#modifywin").css("margin-left", "8px");
-			//$("#modifywin::after").css("left", "0");
-			//$("#modifywin::after").style.left = "0";, "": "" }
-		} else {
-			let margin_change = $(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
-			//$("#modifywin").removeClass("left_edit_frame")
-			//$("#modifywin").addClass("right_edit_frame")
-			$("#modifywin").css("margin-left", margin_change + "px");
-			//$("#modifywin::after").css("right", "0");
-			//$("#modifywin::after").style.right = "0";
+			$("#modifywin").addClass("left_edit_frame");
+			//根据偏移量设置窗口位置
+			if ($(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth() > 0) {
+				//$("#modifywin").removeClass("right_edit_frame")
+				$("#modifywin").css("margin-left", "0");
+
+				//$("#modifywin").style();
+				//$("#modifywin").css("margin-left", "8px");
+				//$("#modifywin::after").css("left", "0");
+				//$("#modifywin::after").style.left = "0";, "": "" }
+			} else {
+				let margin_change = $(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
+				//$("#modifywin").removeClass("left_edit_frame")
+				//$("#modifywin").addClass("right_edit_frame")
+				$("#modifywin").css("margin-left", margin_change + "px");
+				//$("#modifywin::after").css("right", "0");
+				//$("#modifywin::after").style.right = "0";
+			}
+			$("#ws_" + sWordId).addClass("wbw_selected")
 		}
-		$("#ws_" + sWordId).addClass("wbw_selected")
 
 		var sDetail = "detail" + sWordId;
 		var eDetail = document.getElementById(sDetail);
