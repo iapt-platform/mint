@@ -586,8 +586,6 @@ function updateTranslationPreview(blockId, obj) {
 	let out = "";
 	let newText = obj.value;
 	newText = marked(newText);
-	//newText = term_tran_edit_replace(newText);
-	//newText = term_edit_to_std_str(newText);
 	let channal = $(obj).attr("channal");
 	let lang = $(obj).attr("lang");
 
@@ -1680,7 +1678,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	output +=
 		" book='" + book + "' para='" + para + "' begin='" + begin + "' end='" + end + "' channal='" + channal + "'>";
 	if (readonly) {
-		output += note_init(term_std_str_to_tran(sent_text, channal, "", sent_lang));
+		output += note_init(term_std_str_to_tran(sent_text, channal, getCookie("userid"), sent_lang));
 	} else {
 		output += "<span id='" + id + "' ";
 		output += "onclick=\"sent_edit_click('";
@@ -1691,7 +1689,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 			output += "<use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
 			output += "</span>";
 		} else {
-			output += note_init(objSent.text);
+			output += note_init(term_std_str_to_tran(objSent.text, channal, getCookie("userid"), sent_lang));
 		}
 
 		output += "</span>";
