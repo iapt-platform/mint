@@ -2605,6 +2605,9 @@ function closeModifyWindow() {
 	else {
 
 	}
+
+	$("#ws_" + g_currEditWord).removeClass("wbw_selected")
+
 }
 
 //取消对单个词的修改
@@ -2760,6 +2763,7 @@ function set_word_click_action(obj, item) {
 
 //鼠标点击词头
 function on_word_click(sWordId) {
+	closeModifyWindow();
 	g_currEditWord = sWordId;
 	var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
 	var wid = getWordIndex(sWordId);
@@ -2770,6 +2774,7 @@ function on_word_click(sWordId) {
 
 	//显示修改单个词的窗口
 	if (mouse_action_edit) {
+
 		showModifyWin(sWordId)
 	}
 
@@ -3029,10 +3034,10 @@ function showModifyWin(sWordId) {
 
 		//显示编辑窗口
 		eWin.style.display = "block";
+		$("#modifywin").addClass("left_edit_frame");
 		//根据偏移量设置窗口位置
-		if ($("#wb" + sWordId).offset().left + $("#modifywin").outerWidth() < $(document.body).width() * 0.7) {
-			$("#modifywin").removeClass("right_edit_frame")
-			$("#modifywin").addClass("left_edit_frame")
+		if ($(".wbwdiv").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth() > 0) {
+			//$("#modifywin").removeClass("right_edit_frame")
 			$("#modifywin").css("margin-left", "0");
 
 			//$("#modifywin").style();
@@ -3040,14 +3045,14 @@ function showModifyWin(sWordId) {
 			//$("#modifywin::after").css("left", "0");
 			//$("#modifywin::after").style.left = "0";, "": "" }
 		} else {
-			let margin_change = $("#whead1_" + sWordId).outerWidth() - $("#modifywin").outerWidth();
-			$("#modifywin").removeClass("left_edit_frame")
-			$("#modifywin").addClass("right_edit_frame")
+			let margin_change = $(".wbwdiv").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
+			//$("#modifywin").removeClass("left_edit_frame")
+			//$("#modifywin").addClass("right_edit_frame")
 			$("#modifywin").css("margin-left", margin_change + "px");
-			//$("#modifywin::after").css("margin-right", "8px");
 			//$("#modifywin::after").css("right", "0");
 			//$("#modifywin::after").style.right = "0";
 		}
+		$("#ws_" + sWordId).addClass("wbw_selected")
 
 		var sDetail = "detail" + sWordId;
 		var eDetail = document.getElementById(sDetail);
