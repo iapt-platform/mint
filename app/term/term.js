@@ -777,6 +777,7 @@ function term_show_new() {
 
 function term_get_dict() {
 	if (arrMyTerm.length > 0) {
+		term_updata_translation();
 		return;
 	}
 	let termwordlist = new Array();
