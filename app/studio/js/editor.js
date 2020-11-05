@@ -3045,7 +3045,7 @@ function showModifyWin(sWordId) {
 			//$("#modifywin::after").css("left", "0");
 			//$("#modifywin::after").style.left = "0";, "": "" }
 		} else {
-			let margin_change = $(".wbwdiv").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
+			let margin_change = $(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
 			//$("#modifywin").removeClass("left_edit_frame")
 			//$("#modifywin").addClass("right_edit_frame")
 			$("#modifywin").css("margin-left", margin_change + "px");
