@@ -31,395 +31,342 @@ var _channalData;
 
 */
 function note_create() {
-  $("#dialog").dialog({
-    autoOpen: false,
-    width: 550,
-    buttons: [
-      {
-        text: "Save",
-        click: function () {
-          note_sent_save();
-          $(this).dialog("close");
-        },
-      },
-      {
-        text: "Cancel",
-        click: function () {
-          $(this).dialog("close");
-        },
-      },
-    ],
-  });
+	$("#dialog").dialog({
+		autoOpen: false,
+		width: 550,
+		buttons: [
+			{
+				text: "Save",
+				click: function () {
+					note_sent_save();
+					$(this).dialog("close");
+				},
+			},
+			{
+				text: "Cancel",
+				click: function () {
+					$(this).dialog("close");
+				},
+			},
+		],
+	});
 }
+
 function note_init(input) {
-  let output = "<div>";
-  let newString = input.replace(/\{\{/g, '<note info="');
-  newString = newString.replace(/\}\}/g, '"></note>');
-  output = marked(newString);
-  output += "</div>";
-  return output;
+	let output = "<div>";
+	let newString = input.replace(/\{\{/g, '<note info="');
+	newString = newString.replace(/\}\}/g, '"></note>');
+	output = marked(newString);
+	output += "</div>";
+	return output;
 }
 
 function note_update_background_style() {
-  var mSentsBook = new Array();
-  var mBgIndex = 1;
-  $("note").each(function () {
-    let info = $(this).attr("info").split("-");
-    if (info.length >= 2) {
-      let book = info[0];
-      $(this).attr("book", book);
-      if (!mSentsBook[book]) {
-        mSentsBook[book] = mBgIndex;
-        mBgIndex++;
-      }
-      $(this).addClass("bg_color_" + mSentsBook[book]);
-    }
-  });
+	var mSentsBook = new Array();
+	var mBgIndex = 1;
+	$("note").each(function () {
+		let info = $(this).attr("info").split("-");
+		if (info.length >= 2) {
+			let book = info[0];
+			$(this).attr("book", book);
+			if (!mSentsBook[book]) {
+				mSentsBook[book] = mBgIndex;
+				mBgIndex++;
+			}
+			$(this).addClass("bg_color_" + mSentsBook[book]);
+		}
+	});
 }
 //
 function note_refresh_new() {
-  note_update_background_style();
-  let objNotes = document.querySelectorAll("note");
-  let arrSentInfo = new Array();
-  for (const iterator of objNotes) {
-    let id = iterator.id;
-    if (id == null || id == "") {
-      id = com_guid();
-      iterator.id = id;
-      let info = iterator.getAttributeNode("info").value;
-      let arrInfo = info.split("-");
+	note_update_background_style();
+	let objNotes = document.querySelectorAll("note");
+	let arrSentInfo = new Array();
+	for (const iterator of objNotes) {
+		let id = iterator.id;
+		if (id == null || id == "") {
+			id = com_guid();
+			iterator.id = id;
+			let info = iterator.getAttributeNode("info").value;
+			let arrInfo = info.split("-");
 
-      if (arrInfo.length >= 2) {
-        let book = arrInfo[0];
-        let para = arrInfo[1];
-      }
+			if (arrInfo.length >= 2) {
+				let book = arrInfo[0];
+				let para = arrInfo[1];
+			}
 
-      if (info && info != "") {
-        arrSentInfo.push({ id: id, data: info });
-      }
-    }
-  }
-  if (arrSentInfo.length > 0) {
-    let setting = new Object();
-    setting.lang = "";
-    setting.channal = _channal;
-    $.post(
-      "../term/note.php",
-      {
-        setting: JSON.stringify(setting),
-        data: JSON.stringify(arrSentInfo),
-      },
-      function (data, status) {
-        if (status == "success") {
-          try {
-            _arrData = JSON.parse(data);
-            for (const iterator of _arrData) {
-              let id = iterator.id;
-              let strHtml = "<a name='" + id + "'></a>";
-              if (_display && _display == "para") {
-                //段落模式
-                let strPalitext =
-                  "<pali book='" +
-                  iterator.book +
-                  "' para='" +
-                  iterator.para +
-                  "' begin='" +
-                  iterator.begin +
-                  "' end='" +
-                  iterator.end +
-                  "' >" +
-                  iterator.palitext +
-                  "</pali>";
-                let divPali = $("#" + id)
-                  .parent()
-                  .children(".palitext");
-                if (divPali.length == 0) {
-                  if (_channal != "") {
-                    let arrChannal = _channal.split(",");
-                    for (
-                      let index = arrChannal.length - 1;
-                      index >= 0;
-                      index--
-                    ) {
-                      const iChannal = arrChannal[index];
-                      $("#" + id)
-                        .parent()
-                        .prepend(
-                          "<div class='tran_div'  channal='" +
-                          iChannal +
-                          "'></div>"
-                        );
-                    }
-                  }
+			if (info && info != "") {
+				arrSentInfo.push({ id: id, data: info });
+			}
+		}
+	}
+	if (arrSentInfo.length > 0) {
+		let setting = new Object();
+		setting.lang = "";
+		setting.channal = _channal;
+		$.post(
+			"../term/note.php",
+			{
+				setting: JSON.stringify(setting),
+				data: JSON.stringify(arrSentInfo),
+			},
+			function (data, status) {
+				if (status == "success") {
+					try {
+						_arrData = JSON.parse(data);
+						for (const iterator of _arrData) {
+							let id = iterator.id;
+							let strHtml = "<a name='" + id + "'></a>";
+							if (_display && _display == "para") {
+								//段落模式
+								let strPalitext =
+									"<pali book='" +
+									iterator.book +
+									"' para='" +
+									iterator.para +
+									"' begin='" +
+									iterator.begin +
+									"' end='" +
+									iterator.end +
+									"' >" +
+									iterator.palitext +
+									"</pali>";
+								let divPali = $("#" + id)
+									.parent()
+									.children(".palitext");
+								if (divPali.length == 0) {
+									if (_channal != "") {
+										let arrChannal = _channal.split(",");
+										for (let index = arrChannal.length - 1; index >= 0; index--) {
+											const iChannal = arrChannal[index];
+											$("#" + id)
+												.parent()
+												.prepend("<div class='tran_div'  channal='" + iChannal + "'></div>");
+										}
+									}
 
-                  $("#" + id)
-                    .parent()
-                    .prepend("<div class='palitext'></div>");
-                }
-                $("#" + id)
-                  .parent()
-                  .children(".palitext")
-                  .first()
-                  .append(strPalitext);
-                let htmlTran = "";
-                for (const oneTran of iterator.translation) {
-                  let html =
-                    "<span class='tran' lang='" +
-                    oneTran.lang +
-                    "' channal='" +
-                    oneTran.channal +
-                    "'>" +
-                    marked(
-                      term_std_str_to_tran(
-                        oneTran.text,
-                        oneTran.channal,
-                        oneTran.editor,
-                        oneTran.lang
-                      )
-                    ) +
-                    "</span>";
-                  if (_channal == "") {
-                    htmlTran += html;
-                  } else {
-                    $("#" + id)
-                      .siblings(".tran_div[channal='" + oneTran.channal + "']")
-                      .append(html);
-                  }
-                }
-                $("#" + id).html(htmlTran);
-              } else {
-                //句子模式
-                strHtml += note_json_html(iterator);
-                $("#" + id).html(strHtml);
-              }
-            }
-            /*
-            $(".palitext").click(function () {
-              let sentid = $(this).parent().attr("info").split("-");
-              window.open(
-                "../reader/?view=sent&book=" +
-                  sentid[0] +
-                  "&para=" +
-                  sentid[1] +
-                  "&begin=" +
-                  sentid[2] +
-                  "&end=" +
-                  sentid[3]
-              );
-            });
-            $("pali").click(function () {
-              window.open(
-                "../reader/?view=sent&book=" +
-                  $(this).attr("book") +
-                  "&para=" +
-                  $(this).attr("para") +
-                  "&begin=" +
-                  $(this).attr("begin") +
-                  "&end=" +
-                  $(this).attr("end")
-              );
-            });
-            */
-            note_ref_init();
-            term_get_dict();
-            note_channal_list();
-          } catch (e) {
-            console.error(e);
-          }
-        }
-      }
-    );
-  }
+									$("#" + id)
+										.parent()
+										.prepend("<div class='palitext'></div>");
+								}
+								$("#" + id)
+									.parent()
+									.children(".palitext")
+									.first()
+									.append(strPalitext);
+								let htmlTran = "";
+								for (const oneTran of iterator.translation) {
+									let html =
+										"<span class='tran' lang='" +
+										oneTran.lang +
+										"' channal='" +
+										oneTran.channal +
+										"'>";
+									html += marked(
+										term_std_str_to_tran(
+											oneTran.text,
+											oneTran.channal,
+											oneTran.editor,
+											oneTran.lang
+										)
+									);
+									html += "</span>";
+									if (_channal == "") {
+										htmlTran += html;
+									} else {
+										$("#" + id)
+											.siblings(".tran_div[channal='" + oneTran.channal + "']")
+											.append(html);
+									}
+								}
+								$("#" + id).html(htmlTran);
+							} else {
+								//句子模式
+								strHtml += note_json_html(iterator);
+								$("#" + id).html(strHtml);
+							}
+						}
+						note_ref_init();
+						term_get_dict();
+						note_channal_list();
+					} catch (e) {
+						console.error(e);
+					}
+				}
+			}
+		);
+	} else {
+		//term_get_dict();
+	}
 }
 
 function note_channal_list() {
-  console.log("note_channal_list start");
-  let arrSentInfo = new Array();
-  $("note").each(function () {
-    let info = $(this).attr("info");
-    if (info && info != "") {
-      arrSentInfo.push({ id: "", data: info });
-    }
-  });
+	console.log("note_channal_list start");
+	let arrSentInfo = new Array();
+	$("note").each(function () {
+		let info = $(this).attr("info");
+		if (info && info != "") {
+			arrSentInfo.push({ id: "", data: info });
+		}
+	});
 
-  if (arrSentInfo.length > 0) {
-    $.post(
-      "../term/channal_list.php",
-      {
-        setting: "",
-        data: JSON.stringify(arrSentInfo),
-      },
-      function (data, status) {
-        if (status == "success") {
-          try {
-            let active = JSON.parse(data);
-            _channalData = active;
-            for (const iterator of _my_channal) {
-              let found = false;
-              for (const one of active) {
-                if (iterator.id == one.id) {
-                  found = true;
-                  break;
-                }
-              }
-              if (found == false) {
-                _channalData.push(iterator);
-              }
-            }
-            let strHtml = "";
-            for (const iterator of _channalData) {
-              if (_channal.indexOf(iterator.id) >= 0) {
-                strHtml += render_channal_list(iterator);
-              }
-            }
-            for (const iterator of _channalData) {
-              if (_channal.indexOf(iterator.id) == -1) {
-                strHtml += render_channal_list(iterator);
-              }
-            }
+	if (arrSentInfo.length > 0) {
+		$.post(
+			"../term/channal_list.php",
+			{
+				setting: "",
+				data: JSON.stringify(arrSentInfo),
+			},
+			function (data, status) {
+				if (status == "success") {
+					try {
+						let active = JSON.parse(data);
+						_channalData = active;
+						for (const iterator of _my_channal) {
+							let found = false;
+							for (const one of active) {
+								if (iterator.id == one.id) {
+									found = true;
+									break;
+								}
+							}
+							if (found == false) {
+								_channalData.push(iterator);
+							}
+						}
+						let strHtml = "";
+						for (const iterator of _channalData) {
+							if (_channal.indexOf(iterator.id) >= 0) {
+								strHtml += render_channal_list(iterator);
+							}
+						}
+						for (const iterator of _channalData) {
+							if (_channal.indexOf(iterator.id) == -1) {
+								strHtml += render_channal_list(iterator);
+							}
+						}
 
-            $("#channal_list").html(strHtml);
-            $("[channal_id]").change(function () {
-              let channal_list = new Array();
-              $("[channal_id]").each(function () {
-                if (this.checked) {
-                  channal_list.push($(this).attr("channal_id"));
-                }
-              });
-              set_channal(channal_list.join());
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        }
-      }
-    );
-  }
+						$("#channal_list").html(strHtml);
+						$("[channal_id]").change(function () {
+							let channal_list = new Array();
+							$("[channal_id]").each(function () {
+								if (this.checked) {
+									channal_list.push($(this).attr("channal_id"));
+								}
+							});
+							set_channal(channal_list.join());
+						});
+					} catch (e) {
+						console.error(e);
+					}
+				}
+			}
+		);
+	}
 }
 
 function find_channal(id) {
-  for (const iterator of _channalData) {
-    if (id == iterator.id) {
-      return iterator;
-    }
-  }
-  return false;
+	for (const iterator of _channalData) {
+		if (id == iterator.id) {
+			return iterator;
+		}
+	}
+	return false;
 }
 function render_channal_list(channalinfo) {
-  let output = "";
-  output += "<div class='list_with_head'>";
-  let checked = "";
-  if (_channal.indexOf(channalinfo.id) >= 0) {
-    checked = "checked";
-  }
-  output +=
-    '<div><input type="checkbox" ' +
-    checked +
-    " channal_id='" +
-    channalinfo.id +
-    "'></div>";
-  output += "<div class='head'>";
-  output += "<span class='head_img'>";
-  output += channalinfo.nickname.slice(0, 2);
-  output += "</span>";
-  output += "</div>";
+	let output = "";
+	output += "<div class='list_with_head'>";
+	let checked = "";
+	if (_channal.indexOf(channalinfo.id) >= 0) {
+		checked = "checked";
+	}
+	output += '<div><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
+	output += "<div class='head'>";
+	output += "<span class='head_img'>";
+	output += channalinfo.nickname.slice(0, 2);
+	output += "</span>";
+	output += "</div>";
 
-  output += "<div style='width: 100%;overflow-x: hidden;'>";
+	output += "<div style='width: 100%;overflow-x: hidden;'>";
 
-  output += "<div>";
+	output += "<div>";
 
-  //  output += "<a href='../wiki/wiki.php?word=" + _word;
-  //  output += "&channal=" + channalinfo.id + "' >";
-  output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
+	//  output += "<a href='../wiki/wiki.php?word=" + _word;
+	//  output += "&channal=" + channalinfo.id + "' >";
+	output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
 
-  output += channalinfo["name"];
+	output += channalinfo["name"];
 
-  output += "</a>";
-  output += "</div>";
+	output += "</a>";
+	output += "</div>";
 
-  output += "<div>";
-  output += channalinfo["nickname"] + "/";
-  output += "@" + channalinfo["username"];
-  output += "</div>";
+	output += "<div>";
+	output += channalinfo["nickname"] + "/";
+	output += "@" + channalinfo["username"];
+	output += "</div>";
 
-  if (channalinfo["final"]) {
-    //进度
-    output += "<div>";
-    let article_len = channalinfo["article_len"];
-    let svg_width = article_len;
-    let svg_height = parseInt(article_len / 10);
-    output +=
-      '<svg viewBox="0 0 ' + svg_width + " " + svg_height + '" width="100%" >';
+	if (channalinfo["final"]) {
+		//进度
+		output += "<div>";
+		let article_len = channalinfo["article_len"];
+		let svg_width = article_len;
+		let svg_height = parseInt(article_len / 10);
+		output += '<svg viewBox="0 0 ' + svg_width + " " + svg_height + '" width="100%" >';
 
-    let curr_x = 0;
-    let allFinal = 0;
-    for (const iterator of channalinfo["final"]) {
-      let stroke_width = parseInt(iterator.len);
-      output += "<rect ";
-      output += ' x="' + curr_x + '"';
-      output += ' y="0"';
-      output += ' height="' + svg_height + '"';
-      output += ' width="' + stroke_width + '"';
+		let curr_x = 0;
+		let allFinal = 0;
+		for (const iterator of channalinfo["final"]) {
+			let stroke_width = parseInt(iterator.len);
+			output += "<rect ";
+			output += ' x="' + curr_x + '"';
+			output += ' y="0"';
+			output += ' height="' + svg_height + '"';
+			output += ' width="' + stroke_width + '"';
 
-      if (iterator.final == true) {
-        allFinal += stroke_width;
-        output += ' class="progress_bar_done" ';
-      } else {
-        output += ' class="progress_bar_undone" ';
-      }
-      output += "/>";
+			if (iterator.final == true) {
+				allFinal += stroke_width;
+				output += ' class="progress_bar_done" ';
+			} else {
+				output += ' class="progress_bar_undone" ';
+			}
+			output += "/>";
 
-      curr_x += stroke_width;
-    }
-    output +=
-      "<rect  x='0' y='0'  width='" +
-      svg_width +
-      "' height='" +
-      svg_height / 5 +
-      "' class='progress_bar_bg' />";
-    output +=
-      "<rect  x='0' y='0'  width='" +
-      allFinal +
-      "' height='" +
-      svg_height / 5 +
-      "' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
-    output +=
-      '<text x="0" y="' +
-      svg_height +
-      '" font-size="' +
-      svg_height * 0.8 +
-      '">';
-    output += channalinfo["count"] + "/" + channalinfo["all"];
-    output += "</text>";
-    output += "<svg>";
-    output += "</div>";
-    //进度结束
-  }
+			curr_x += stroke_width;
+		}
+		output +=
+			"<rect  x='0' y='0'  width='" + svg_width + "' height='" + svg_height / 5 + "' class='progress_bar_bg' />";
+		output +=
+			"<rect  x='0' y='0'  width='" +
+			allFinal +
+			"' height='" +
+			svg_height / 5 +
+			"' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
+		output += '<text x="0" y="' + svg_height + '" font-size="' + svg_height * 0.8 + '">';
+		output += channalinfo["count"] + "/" + channalinfo["all"];
+		output += "</text>";
+		output += "<svg>";
+		output += "</div>";
+		//进度结束
+	}
 
-  output += "</div>";
-  output += "</div>";
-  return output;
+	output += "</div>";
+	output += "</div>";
+	return output;
 }
 
 //点击引用 需要响应的事件
 function note_ref_init() {
-  $("chapter").click(function () {
-    let bookid = $(this).attr("book");
-    let para = $(this).attr("para");
-    window.open(
-      "../reader/?view=chapter&book=" + bookid + "&para=" + para,
-      "_blank"
-    );
-  });
+	$("chapter").click(function () {
+		let bookid = $(this).attr("book");
+		let para = $(this).attr("para");
+		window.open("../reader/?view=chapter&book=" + bookid + "&para=" + para, "_blank");
+	});
 
-  $("para").click(function () {
-    let bookid = $(this).attr("book");
-    let para = $(this).attr("para");
-    window.open(
-      "../reader/?view=para&book=" + bookid + "&para=" + para,
-      "_blank"
-    );
-  });
+	$("para").click(function () {
+		let bookid = $(this).attr("book");
+		let para = $(this).attr("para");
+		window.open("../reader/?view=para&book=" + bookid + "&para=" + para, "_blank");
+	});
 }
 /*
 id
@@ -428,211 +375,195 @@ tran
 ref
 */
 function note_json_html(in_json) {
-  let output = "";
-  output += '<div class="note_tool_bar" style=" position: relative;">';
-  output += '<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
-  output += "<svg class='icon' >";
-  output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
-  output += "</svg>";
-  output += "<div class='case_dropdown-content sent_menu'>";
-  if (typeof _reader_view != "undefined" && _reader_view != "sent") {
-    output += "<a onclick='junp_to(this)'>跳转至此句</a>";
-  }
-  output += "<a onclick=\"copy_ref('" + in_json.book + "','" + in_json.para + "','" + in_json.begin + "','" + in_json.end + "')\">" + gLocal.gui.copy_link + "</a>";
-  output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
-  output += "<a onclick='add_to_list()'>" + gLocal.gui.add_to_edit_list + "</a>";
-  output += "</div>";
-  output += '</div>';
-  output += ' </div>';
-  output += "<div class='palitext'>" + in_json.palitext + "</div>";
-  for (const iterator of in_json.translation) {
-    output += "<div class='tran' lang='" + iterator.lang + "'";
-    output +=
-      " onclick=\"note_edit_sentence('" +
-      in_json.book +
-      "' ,'" +
-      in_json.para +
-      "' ,'" +
-      in_json.begin +
-      "' ,'" +
-      in_json.end +
-      "' ,'" +
-      iterator.channal +
-      "')\">";
-    output += "<span class='edit_button'></span>";
+	let output = "";
+	output += '<div class="note_tool_bar" style=" position: relative;">';
+	output += '<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
+	output += "<svg class='icon' >";
+	output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
+	output += "</svg>";
+	output += "<div class='case_dropdown-content sent_menu'>";
+	if (typeof _reader_view != "undefined" && _reader_view != "sent") {
+		output += "<a onclick='junp_to(this)'>跳转至此句</a>";
+	}
+	output +=
+		"<a onclick=\"copy_ref('" +
+		in_json.book +
+		"','" +
+		in_json.para +
+		"','" +
+		in_json.begin +
+		"','" +
+		in_json.end +
+		"')\">" +
+		gLocal.gui.copy_link +
+		"</a>";
+	output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
+	output += "<a onclick='add_to_list()'>" + gLocal.gui.add_to_edit_list + "</a>";
+	output += "</div>";
+	output += "</div>";
+	output += " </div>";
+	output += "<div class='palitext'>" + in_json.palitext + "</div>";
+	for (const iterator of in_json.translation) {
+		output += "<div class='tran' lang='" + iterator.lang + "'";
+		output +=
+			" onclick=\"note_edit_sentence('" +
+			in_json.book +
+			"' ,'" +
+			in_json.para +
+			"' ,'" +
+			in_json.begin +
+			"' ,'" +
+			in_json.end +
+			"' ,'" +
+			iterator.channal +
+			"')\">";
+		output += "<span class='edit_button'></span>";
 
-    output +=
-      "<div class='text' id='tran_text_" +
-      in_json.book +
-      "_" +
-      in_json.para +
-      "_" +
-      in_json.begin +
-      "_" +
-      in_json.end +
-      "_" +
-      iterator.channal +
-      "'>";
-    if (iterator.text == "") {
-      //let channal = find_channal(iterator.channal);
-      output += "<span style='color:var(--border-line-color);'></span>";
-      output +=
-        "<span style='color:var(--border-line-color);'>" +
-        iterator.channalinfo.name +
-        "-" +
-        iterator.channalinfo.lang +
-        "</span>";
-    } else {
-      output += marked(
-        term_std_str_to_tran(
-          iterator.text,
-          iterator.channal,
-          iterator.editor,
-          iterator.lang
-        )
-      );
-    }
-    output += "</div>";
+		output +=
+			"<div class='text' id='tran_text_" +
+			in_json.book +
+			"_" +
+			in_json.para +
+			"_" +
+			in_json.begin +
+			"_" +
+			in_json.end +
+			"_" +
+			iterator.channal +
+			"'>";
+		if (iterator.text == "") {
+			//let channal = find_channal(iterator.channal);
+			output += "<span style='color:var(--border-line-color);'></span>";
+			output +=
+				"<span style='color:var(--border-line-color);'>" +
+				iterator.channalinfo.name +
+				"-" +
+				iterator.channalinfo.lang +
+				"</span>";
+		} else {
+			output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		}
+		output += "</div>";
 
-    output += "</div>";
-  }
+		output += "</div>";
+	}
 
-  output += "<div class='ref'>" + in_json.ref;
-  output +=
-    "<span class='sent_no'>" +
-    in_json.book +
-    "-" +
-    in_json.para +
-    "-" +
-    in_json.begin +
-    "-" +
-    in_json.end +
-    "<span>" +
-    "</div>";
-  return output;
+	output += "<div class='ref'>" + in_json.ref;
+	output +=
+		"<span class='sent_no'>" +
+		in_json.book +
+		"-" +
+		in_json.para +
+		"-" +
+		in_json.begin +
+		"-" +
+		in_json.end +
+		"<span>" +
+		"</div>";
+	return output;
 }
 
 function note_edit_sentence(book, para, begin, end, channal) {
-  let channalInfo;
-  for (const iterator of _channalData) {
-    if (iterator.id == channal) {
-      channalInfo = iterator;
-      break;
-    }
-  }
-  for (const iterator of _arrData) {
-    if (
-      iterator.book == book &&
-      iterator.para == para &&
-      iterator.begin == begin &&
-      iterator.end == end
-    ) {
-      for (const tran of iterator.translation) {
-        if (tran.channal == channal) {
-          let html = "";
-          html +=
-            "<div style='color:blue;'>" +
-            channalInfo.nickname +
-            "/" +
-            channalInfo.name +
-            "</div>";
-          html +=
-            "<textarea id='edit_dialog_text' sent_id='" +
-            tran.id +
-            "' book='" +
-            iterator.book +
-            "' para='" +
-            iterator.para +
-            "' begin='" +
-            iterator.begin +
-            "' end='" +
-            iterator.end +
-            "' channal='" +
-            tran.channal +
-            "' style='width:100%;min-height:260px;'>" +
-            tran.text +
-            "</textarea>";
-          $("#edit_dialog_content").html(html);
-          break;
-        }
-      }
-    }
-  }
+	let channalInfo;
+	for (const iterator of _channalData) {
+		if (iterator.id == channal) {
+			channalInfo = iterator;
+			break;
+		}
+	}
+	for (const iterator of _arrData) {
+		if (iterator.book == book && iterator.para == para && iterator.begin == begin && iterator.end == end) {
+			for (const tran of iterator.translation) {
+				if (tran.channal == channal) {
+					let html = "";
+					html += "<div style='color:blue;'>" + channalInfo.nickname + "/" + channalInfo.name + "</div>";
+					html +=
+						"<textarea id='edit_dialog_text' sent_id='" +
+						tran.id +
+						"' book='" +
+						iterator.book +
+						"' para='" +
+						iterator.para +
+						"' begin='" +
+						iterator.begin +
+						"' end='" +
+						iterator.end +
+						"' channal='" +
+						tran.channal +
+						"' style='width:100%;min-height:260px;'>" +
+						tran.text +
+						"</textarea>";
+					$("#edit_dialog_content").html(html);
+					break;
+				}
+			}
+		}
+	}
 
-  $("#dialog").dialog("open");
+	$("#dialog").dialog("open");
 }
 
 function note_sent_save() {
-  let id = $("#edit_dialog_text").attr("sent_id");
-  let book = $("#edit_dialog_text").attr("book");
-  let para = $("#edit_dialog_text").attr("para");
-  let begin = $("#edit_dialog_text").attr("begin");
-  let end = $("#edit_dialog_text").attr("end");
-  let channal = $("#edit_dialog_text").attr("channal");
-  let text = $("#edit_dialog_text").val();
+	let id = $("#edit_dialog_text").attr("sent_id");
+	let book = $("#edit_dialog_text").attr("book");
+	let para = $("#edit_dialog_text").attr("para");
+	let begin = $("#edit_dialog_text").attr("begin");
+	let end = $("#edit_dialog_text").attr("end");
+	let channal = $("#edit_dialog_text").attr("channal");
+	let text = $("#edit_dialog_text").val();
 
-  $.post(
-    "../usent/sent_post.php",
-    {
-      id: id,
-      book: book,
-      para: para,
-      begin: begin,
-      end: end,
-      channal: channal,
-      text: text,
-      lang: "zh",
-    },
-    function (data) {
-      let result = JSON.parse(data);
-      if (result.status > 0) {
-        alert("error" + result.message);
-      } else {
-        ntf_show("success");
-        $(
-          "#tran_text_" +
-          result.book +
-          "_" +
-          result.para +
-          "_" +
-          result.begin +
-          "_" +
-          result.end +
-          "_" +
-          result.channal
-        ).html(
-          marked(
-            term_std_str_to_tran(
-              result.text,
-              result.channal,
-              result.editor,
-              result.lang
-            )
-          )
-        );
-        term_updata_translation();
-        for (const iterator of _arrData) {
-          if (
-            iterator.book == result.book &&
-            iterator.para == result.para &&
-            iterator.begin == result.begin &&
-            iterator.end == result.end
-          ) {
-            for (const tran of iterator.translation) {
-              if (tran.channal == result.channal) {
-                tran.text = result.text;
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-  );
+	$.post(
+		"../usent/sent_post.php",
+		{
+			id: id,
+			book: book,
+			para: para,
+			begin: begin,
+			end: end,
+			channal: channal,
+			text: text,
+			lang: "zh",
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			if (result.status > 0) {
+				alert("error" + result.message);
+			} else {
+				ntf_show("success");
+				$(
+					"#tran_text_" +
+						result.book +
+						"_" +
+						result.para +
+						"_" +
+						result.begin +
+						"_" +
+						result.end +
+						"_" +
+						result.channal
+				).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
+				term_updata_translation();
+				for (const iterator of _arrData) {
+					if (
+						iterator.book == result.book &&
+						iterator.para == result.para &&
+						iterator.begin == result.begin &&
+						iterator.end == result.end
+					) {
+						for (const tran of iterator.translation) {
+							if (tran.channal == result.channal) {
+								tran.text = result.text;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	);
 }
 
-
 function copy_ref(book, para, begin, end) {
-  let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
-  copy_to_clipboard(strRef);
+	let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
+	copy_to_clipboard(strRef);
 }
