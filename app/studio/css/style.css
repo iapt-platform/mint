@@ -620,25 +620,11 @@ a:active {
   z-index: 52;
 }
 
-.right_edit_frame::after{
-  content: " ";
-  position: absolute;
-  bottom: 100%;
-  right:0;
-  margin-right: 8px;
-  border-width: 8px;
-  border-style: solid;
-  border-color: transparent transparent var(--tool-bg-color2) transparent;
-}
-.left_edit_frame::after{
-  content: " ";
-  position: absolute;
-  bottom: 100%;
-  left:0;
-  margin-left: 8px;
-  border-width: 8px;
-  border-style: solid;
-  border-color: transparent transparent var(--tool-bg-color2) transparent;
+.wbw_selected{
+  background: var(--tool-bg-color3);
+  color: var(--bg-color);
+  border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 #modifywin p {
