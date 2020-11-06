@@ -148,7 +148,7 @@ else{$currDevice="computer";}
 		font-size: 75%;
 	}
 	.trans_text_info .tools{
-		visibility: hidden;
+		/*visibility: hidden;*/
 	}
 	.trans_text_block:hover .trans_text_info .tools{
 		visibility: visible;
