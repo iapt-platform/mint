@@ -450,7 +450,7 @@ function updataHeadingBlockInHtml(book, par) {
   }
 }
 
-function renderBlock() {}
+function renderBlock() { }
 /*
 重绘翻译数据块
 */
@@ -655,7 +655,7 @@ function renderTranslateParBlockInner(elementBlock) {
   return output;
 }
 
-function renderTranslateParBlockInnerPreview(strText) {}
+function renderTranslateParBlockInnerPreview(strText) { }
 function updateTranslationPreview_a(blockId, text) {
   let out = "";
   let newText = text;
@@ -680,7 +680,7 @@ function updateTranslationPreview(blockId, obj) {
   let channal = $(obj).attr("channal");
   let lang = $(obj).attr("lang");
 
-  newText = term_std_str_to_tran(newText,channal,getCookie("userid"),lang);
+  newText = term_std_str_to_tran(newText, channal, getCookie("userid"), lang);
   out += newText;
   if (out == "") {
     out = "<span style='color:#ccbfbf;'>" + gLocal.gui.with_idea + "</span>";
@@ -2077,15 +2077,15 @@ function render_tran_sent_block(
 function trans_text_save(book, para, begin, end, channal) {
   let textarea = $(
     "#trans_sent_edit_" +
-      book +
-      "_" +
-      para +
-      "_" +
-      begin +
-      "_" +
-      end +
-      "_" +
-      channal
+    book +
+    "_" +
+    para +
+    "_" +
+    begin +
+    "_" +
+    end +
+    "_" +
+    channal
   );
   if (textarea) {
     let objsent = new Object();
@@ -2106,16 +2106,16 @@ function sent_edit_click(book, para, begin, end, channal) {
   $(".trans_sent_edit").parent().hide(200);
   $(
     ".trans_sent_edit[book='" +
-      book +
-      "'][para='" +
-      para +
-      "'][begin='" +
-      begin +
-      "'][end='" +
-      end +
-      "'][channal='" +
-      channal +
-      "']"
+    book +
+    "'][para='" +
+    para +
+    "'][begin='" +
+    begin +
+    "'][end='" +
+    end +
+    "'][channal='" +
+    channal +
+    "']"
   )
     .parent()
     .show();
@@ -2864,12 +2864,12 @@ function renderWordDetailByElement(xmlElement) {
             ) {
               arrMeaning.push(
                 g_DictWordList[iDict].dictID +
-                  "$" +
-                  arrMeaning.length +
-                  "$$" +
-                  arrMean[i] +
-                  "$" +
-                  g_DictWordList[iDict].Language
+                "$" +
+                arrMeaning.length +
+                "$$" +
+                arrMean[i] +
+                "$" +
+                g_DictWordList[iDict].Language
               );
             }
           }
@@ -2919,12 +2919,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$*$" +
-                    getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$*$" +
+                  getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -2974,12 +2974,12 @@ function renderWordDetailByElement(xmlElement) {
               ) {
                 arrMeaning.push(
                   g_DictWordList[iDict].dictID +
-                    "$" +
-                    arrMeaning.length +
-                    "$**$" +
-                    getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
-                    "$" +
-                    g_DictWordList[iDict].Language
+                  "$" +
+                  arrMeaning.length +
+                  "$**$" +
+                  getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+                  "$" +
+                  g_DictWordList[iDict].Language
                 );
               }
             }
@@ -3454,7 +3454,7 @@ function renderWordDetailByElement(xmlElement) {
   return _txtOutDetail;
 }
 
-function renderWordNoteDivByParaNo(book, paragraph) {}
+function renderWordNoteDivByParaNo(book, paragraph) { }
 /*
 paragraph word note
 */
@@ -3653,7 +3653,7 @@ function updateWordNote(element) {
   }
 }
 
-function updateWordCommentary(element) {}
+function updateWordCommentary(element) { }
 
 //根据xmlDocument 对象中的单词序号修改单词块的显示（不含Pali）
 //返回 无
@@ -3776,13 +3776,13 @@ function prev_page() {
   gVisibleParEndOld = gVisibleParEnd;
   if (
     g_allparlen_array[gVisibleParEnd - 1] -
-      g_allparlen_array[gVisibleParBegin - 1] <=
+    g_allparlen_array[gVisibleParBegin - 1] <=
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin - 1] >
+    g_allparlen_array[gVisibleParBegin - 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin -= 1;
@@ -3809,13 +3809,13 @@ function next_page() {
 
   if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] <=
+    g_allparlen_array[gVisibleParBegin + 1] <=
     gDisplayCapacity
   ) {
     gVisibleParEnd += 1;
   } else if (
     g_allparlen_array[gVisibleParEnd + 1] -
-      g_allparlen_array[gVisibleParBegin + 1] >
+    g_allparlen_array[gVisibleParBegin + 1] >
     gDisplayCapacity
   ) {
     gVisibleParBegin += 1;
@@ -4256,12 +4256,12 @@ function refreshNoteNumber() {
     let id = $(this).attr("wid");
     $(this).html(
       "<a href='#word_note_root_" +
-        id +
-        "' name=\"word_note_" +
-        id +
-        '">[' +
-        (index + 1) +
-        "]</a>"
+      id +
+      "' name=\"word_note_" +
+      id +
+      '">[' +
+      (index + 1) +
+      "]</a>"
     );
   });
 
