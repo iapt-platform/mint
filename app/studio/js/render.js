@@ -3077,17 +3077,17 @@ function refreshWordNoteDiv(elementBlock) {
 	let html = renderWordNoteDivByElement(elementBlock);
 	let xmlParInfo = elementBlock.getElementsByTagName("info")[0];
 	let book = getNodeText(xmlParInfo, "book");
-	let paragraph = getNodeText(xmlParInfo, "paragraph");
+	let paragraph = parseInt(getNodeText(xmlParInfo, "paragraph"));
+	let noteid = "wnote_" + book + "_" + (paragraph - 1);
 	try {
 		if (html == "") {
-			document.getElementById("wnote_" + book + "_" + (paragraph - 1)).style.display = "none";
+			$("#" + noteid).hide();
 		} else {
-			document.getElementById("wnote_" + book + "_" + (paragraph - 1)).style.display = "block";
+			$("#" + noteid).html(html);
+			$("#" + noteid).show();
 		}
-		document.getElementById("wnote_" + book + "_" + (paragraph - 1)).innerHTML = html;
 	} catch (e) {
-		console.error(e.message);
-		console.error("wnote_" + book + "_" + (paragraph - 1));
+		console.error(e.message + noteid);
 	}
 }
 
