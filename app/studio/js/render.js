@@ -2698,6 +2698,405 @@ function renderWordDetailByElement(xmlElement) {
 
 		/*org begin 拆分*/
 		/*
+	=======
+		return renderWordDetailByElement_edit_a(xmlElement);
+	
+		if (xmlElement == null) {
+			return "";
+		}
+		wordNode = xmlElement;
+		var sPali = getNodeText(wordNode, "pali");
+		var sId = getNodeText(wordNode, "id");
+		var sReal = getNodeText(wordNode, "real");
+		var sMean = getNodeText(wordNode, "mean");
+		var sOrg = getNodeText(wordNode, "org");
+		var sOm = getNodeText(wordNode, "om");
+		var sCase = getNodeText(wordNode, "case");
+		var sType = getNodeText(wordNode, "type");
+		var sGramma = getNodeText(wordNode, "gramma");
+		var sParent = getNodeText(wordNode, "parent");
+		var sNote = getNodeText(wordNode, "note");
+		wordID = sId;
+	
+		if (sCase == "") {
+			sCase = sType + "#" + sGramma;
+		}
+	
+		var _txtOutDetail = "";
+		var _bgColor = "";
+		var _caseColor = "";
+		//标点符号
+		if (sReal.length <= 1) {
+			_txtOutDetail += "<div>";
+			/*id begin*/
+		_txtOutDetail += "<div class='ID'> </div>";
+		/*mean begin*/
+		_txtOutDetail += "<div class='mean'> </div>";
+		/*org begin*/
+		_txtOutDetail += "<div class='org'> </div>";
+		/*org mean begin*/
+		_txtOutDetail += "<div class='om'> </div>";
+		/*case begin*/
+		_txtOutDetail += "<div class='case'> </div>";
+
+		_txtOutDetail += "</div>";
+		return _txtOutDetail;
+	}
+
+	if (sMean == "?") {
+		_bgColor = " class='bookmarkcolorx' ";
+	}
+
+	strBookMarkColor = getNodeText(wordNode, "bmc");
+	if (strBookMarkColor.length > 2) {
+		var icolor = strBookMarkColor.substr(-1);
+		_bgColor = " class='bookmarkcolor" + icolor + "' ";
+	}
+
+	// Auto Match Begin
+
+	if (sCase == "?" && _bgColor == "") {
+		_caseColor = " class='bookmarkcolorx' ";
+	}
+	if (g_useMode == "read" || g_useMode == "translate") {
+		_bgColor = "";
+		_caseColor = "";
+		if (sOrg == "?") {
+			sOrg = " ";
+		}
+		if (sMean == "?") {
+			sMean = " ";
+		}
+		if (sCase == "?" || sCase == "?#?") {
+			sCase = " ";
+		}
+	}
+
+	if (g_useMode == "read") {
+		_txtOutDetail += "<div " + _bgColor + ">";
+
+		/*id begin*/
+		_txtOutDetail += "<p class='ID'>";
+		_txtOutDetail += sId + "&nbsp;";
+		_txtOutDetail += "</p>";
+		/*id end*/
+
+		/*meaning begin*/
+		var showMean = sMean.replace(/{/g, "<span class='grm_add_mean'>");
+		showMean = showMean.replace(/}/g, "</span>");
+		showMean = showMean.replace(/\[/g, "<span class='grm_add_mean_user'>");
+		showMean = showMean.replace(/\]/g, "</span>");
+		_txtOutDetail += "<p class='mean'>";
+		_txtOutDetail += showMean + "&nbsp;";
+		_txtOutDetail += "</p>";
+		/*meaning end*/
+
+		/*org begin*/
+		_txtOutDetail += "<p class='org'>";
+		_txtOutDetail += sOrg + "&nbsp;";
+		_txtOutDetail += "</p>";
+		/*org end*/
+
+		/*org meaning begin*/
+		_txtOutDetail += "<p class='om'>";
+		_txtOutDetail += sOm + "&nbsp;";
+		_txtOutDetail += "</p>";
+		/*org meaning end*/
+
+		/*grmma begin*/
+		_txtOutDetail += "<p class='case'>";
+		sCase = getLocalGrammaStr(sCase);
+		var mGramma = sCase.split("#");
+		if (mGramma.length >= 2) {
+			mType = sCase.split("#")[0];
+			mGramma = sCase.split("#")[1];
+		} else {
+			mType = "";
+			mGramma = sCase.split("#")[0];
+		}
+		//_txtOutDetail += ("<span class='type'>"+mType+"</span> "+mGramma);
+		if (mType != "") {
+			_txtOutDetail += "<span class='type'>" + mType + "</span>";
+		}
+		_txtOutDetail += mGramma;
+		_txtOutDetail = _txtOutDetail + "&nbsp;" + "</p>";
+		/*grmma end*/
+
+		_txtOutDetail += "</div>";
+	}
+
+	//编辑模式开始
+	if (g_useMode == "edit") {
+		if (getNodeText(wordNode, "lock") == "true") {
+			_bgColor += "  style='box-shadow: 0 3px 0 0 #FF0000'";
+		} else {
+			_bgColor += " class='bookmarkcolor0' style='box-shadow: 0 0 0 0'";
+		}
+
+		_txtOutDetail += "<div " + _bgColor + ">";
+
+		/*id begin*/
+		_txtOutDetail += "<p class='ID'>";
+		_txtOutDetail += sId + "&nbsp;";
+		_txtOutDetail += "</p>";
+		/*id end*/
+
+		/*gramma*/
+		/*find in dict*/
+		var arrGramma = new Array();
+		var thisWord = getNodeText(wordNode, "real");
+		for (iDict = 0; iDict < g_DictWordList.length; iDict++) {
+			if (thisWord == g_DictWordList[iDict].Pali) {
+				if (
+					(g_DictWordList[iDict].Type != "" && g_DictWordList[iDict].Type != "?") ||
+					(g_DictWordList[iDict].Gramma != "" && g_DictWordList[iDict].Gramma != "?")
+				) {
+					var arrCase = g_DictWordList[iDict].Type + "#" + g_DictWordList[iDict].Gramma;
+					pushNewToList(arrGramma, arrCase);
+				}
+			}
+		}
+
+		if (sCase == "?" || sCase == "?#?") {
+			if (arrGramma.length > 0) {
+				setNodeText(xmlElement, "case", arrGramma[0]);
+				sCase = arrGramma[0];
+			} else {
+				setNodeText(xmlElement, "case", "?#?");
+				sCase = "?#?";
+			}
+		} else {
+			if (sCase.indexOf("#") == -1) {
+				sCase = "?#" + sCase;
+				setNodeText(xmlElement, "case", "?#" + sCase);
+			}
+		}
+
+		var currType = sCase.split("#")[0];
+		var currGramma = sCase.split("#")[1];
+
+		//end gramma
+
+		/*meaning*/
+		/*find in dict*/
+		var arrMeaning = new Array();
+
+		var currMeaning = "";
+		var currGrammaMeaning = "";
+		var wordParent = "";
+		var wordGramma0 = "";
+		//self meaning
+		var thisWord = getNodeText(wordNode, "real");
+		for (iDict = 0; iDict < g_DictWordList.length; iDict++) {
+			if (
+				thisWord == g_DictWordList[iDict].Pali &&
+				g_DictWordList[iDict].Type != ".root." &&
+				g_DictWordList[iDict].Type != ".suf." &&
+				g_DictWordList[iDict].Type != ".prf."
+			) {
+				if (
+					wordParent == "" &&
+					g_DictWordList[iDict].Parent.length > 0 &&
+					g_DictWordList[iDict].Parent != thisWord
+				) {
+					wordParent = g_DictWordList[iDict].Parent;
+					wordGramma0 = g_DictWordList[iDict].Gramma;
+				}
+				var tempCase = g_DictWordList[iDict].Type + "#" + g_DictWordList[iDict].Gramma;
+				if (sCase == tempCase && g_DictWordList[iDict].Mean.length > 0) {
+					if (currGrammaMeaning == "") {
+						if (dict_language_enable.indexOf(g_DictWordList[iDict].Language) >= 0) {
+							currGrammaMeaning = g_DictWordList[iDict].Mean.split("$")[0];
+						}
+					}
+				}
+				var arrMean = g_DictWordList[iDict].Mean.split("$");
+				for (var i = 0; i < arrMean.length; i++) {
+					if (arrMean[i].length > 0 && arrMean[i] != "?") {
+						//pushNewToList(arrMeaning,g_DictWordList[iDict].dictID+'$'+arrMeaning.length+'$$'+arrMean[i]);
+						if (dict_language_enable.indexOf(g_DictWordList[iDict].Language) >= 0) {
+							arrMeaning.push(
+								g_DictWordList[iDict].dictID +
+									"$" +
+									arrMeaning.length +
+									"$$" +
+									arrMean[i] +
+									"$" +
+									g_DictWordList[iDict].Language
+							);
+						}
+					}
+				}
+			}
+		}
+
+		var wordGramma1 = "";
+		//find in father
+		if (wordParent != "") {
+			//add parent infomation
+			if (sParent == "" || sParent == " ") {
+				setNodeText(wordNode, "parent", wordParent);
+				sParent = wordParent;
+			}
+			thisWord = wordParent;
+			wordParent = "";
+			wordGramma1 = "";
+			for (iDict = 0; iDict < g_DictWordList.length; iDict++) {
+				if (
+					thisWord == g_DictWordList[iDict].Pali &&
+					g_DictWordList[iDict].Type != ".v." &&
+					g_DictWordList[iDict].Type != ".n." &&
+					g_DictWordList[iDict].Type != ".ti." &&
+					g_DictWordList[iDict].Type != ".adj." &&
+					g_DictWordList[iDict].Type != ".pron." &&
+					g_DictWordList[iDict].Type != ".num."
+				) {
+					if (g_DictWordList[iDict].Parent.length > 0 && g_DictWordList[iDict].Parent != thisWord) {
+						if (wordParent == "") {
+							wordParent = g_DictWordList[iDict].Parent;
+						}
+						if (wordGramma1 == "") {
+							wordGramma1 = g_DictWordList[iDict].Gramma;
+						}
+					}
+					var arrMean = g_DictWordList[iDict].Mean.split("$");
+					for (var i = 0; i < arrMean.length; i++) {
+						if (arrMean[i].length > 0 && arrMean[i] != "?") {
+							//pushNewToList(arrMeaning,g_DictWordList[iDict].dictID+'$'+"*$"+getLocalParentFormulaStr(wordGramma0,arrMean[i]));
+							if (dict_language_enable.indexOf(g_DictWordList[iDict].Language) >= 0) {
+								arrMeaning.push(
+									g_DictWordList[iDict].dictID +
+										"$" +
+										arrMeaning.length +
+										"$*$" +
+										getLocalParentFormulaStr(wordGramma0, arrMean[i]) +
+										"$" +
+										g_DictWordList[iDict].Language
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//爷爷跟父亲的关系 比如 pp
+		wordGranfatherGramma = wordGramma1;
+		wordGranfather = wordParent;
+
+		//grandfather
+		var wordGramma2 = "";
+		if (wordParent != "") {
+			thisWord = wordParent;
+			wordParent = "";
+			wordGramma2 = "";
+			for (iDict = 0; iDict < g_DictWordList.length; iDict++) {
+				if (
+					thisWord == g_DictWordList[iDict].Pali &&
+					g_DictWordList[iDict].Type != ".v." &&
+					g_DictWordList[iDict].Type != ".n." &&
+					g_DictWordList[iDict].Type != ".ti." &&
+					g_DictWordList[iDict].Type != ".adj." &&
+					g_DictWordList[iDict].Type != ".pron." &&
+					g_DictWordList[iDict].Type != ".num."
+				) {
+					if (g_DictWordList[iDict].Parent.length > 0 && g_DictWordList[iDict].Parent != thisWord) {
+						if (wordParent == "") {
+							wordParent = g_DictWordList[iDict].Parent;
+						}
+						if (wordGramma2 == "") {
+							wordGramma2 = g_DictWordList[iDict].Gramma;
+						}
+					}
+					var arrMean = g_DictWordList[iDict].Mean.split("$");
+					for (var i = 0; i < arrMean.length; i++) {
+						if (arrMean[i].length > 0 && arrMean[i] != "?") {
+							//pushNewToList(arrMeaning,g_DictWordList[iDict].dictID+'$'+"**"+getLocalParentFormulaStr(wordGramma1,arrMean[i]));
+							if (dict_language_enable.indexOf(g_DictWordList[iDict].Language) >= 0) {
+								arrMeaning.push(
+									g_DictWordList[iDict].dictID +
+										"$" +
+										arrMeaning.length +
+										"$**$" +
+										getLocalParentFormulaStr(wordGramma1, arrMean[i]) +
+										"$" +
+										g_DictWordList[iDict].Language
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		arrMeaning.sort(sortMeanByDictOrder);
+		//arrMeaning.sort(sortMeanByLanguageOrder);
+		newMeanList = removeSameWordInArray(arrMeaning);
+
+		sMean = sMean.replace("_un_auto_mean_", getLocalGrammaStr("_un_auto_mean_"));
+
+		if (sMean == "?") {
+			//自动匹配一个意思
+			//currGrammaMeaning是与语法信息最匹配的一个意思 如果使用这个 与语言排序冲突
+			if (currGrammaMeaning.length > 0 && currGrammaMeaning != "?") {
+				currMeaning = currGrammaMeaning;
+			} else {
+				if (newMeanList.length > 0) {
+					currMeaning = newMeanList[0].word;
+				} else {
+					currMeaning = sMean;
+				}
+			}
+		} else {
+			currMeaning = removeFormula(sMean);
+			currMeaning = getLocalFormulaStr(currGramma, currMeaning);
+		}
+
+		orgMeaning = removeFormula(currMeaning);
+		if (sReal.length < 4) {
+			currMeaning = getLocalFormulaStr(currGramma, cutString(orgMeaning, 24));
+		} else {
+			currMeaning = getLocalFormulaStr(currGramma, cutString(orgMeaning, sReal.length * 6));
+		}
+		setNodeText(wordNode, "mean", currMeaning);
+
+		renderMeaning = currMeaning.replace(/{/g, "<span class='grm_add_mean'>");
+		renderMeaning = renderMeaning.replace(/}/g, "</span>");
+		renderMeaning = renderMeaning.replace(/\[/g, "<span class='grm_add_mean_user'>");
+		renderMeaning = renderMeaning.replace(/\]/g, "</span>");
+
+		//渲染下拉菜单
+
+		_txtOutDetail += "<div class='mean'>";
+
+		_txtOutDetail += render_word_mean_menu(wordNode);
+
+		//render formula menu
+
+		arrFormula = getFormulaList(currGramma);
+		_txtOutDetail += '<div class="case_dropdown">';
+		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += '<div class="case_dropdown-content">';
+		newWord = removeFormula_B(orgMeaning);
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>[None]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[Auto]</a>";
+		for (var i in arrFormula) {
+			newWord = removeFormula_B(orgMeaning);
+			newWord = arrFormula[i].replace("~", newWord);
+			newWord = newWord.replace(/{/g, "[");
+			newWord = newWord.replace(/}/g, "]");
+			_txtOutDetail +=
+				"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>" + arrFormula[i] + "</a>";
+		}
+
+		_txtOutDetail += "</div>";
+		_txtOutDetail += "</div>";
+		_txtOutDetail += "</div> ";
+		/*end of meaning*/
+
+		/*org begin 拆分*/
+		/*
+>>>>>>> bc16896ae743d21de32c24d5ffe63b6be00a315c
 		_txtOutDetail +=  "<p class='org' name='w_org'>";
 		_txtOutDetail +=   sOrg  + "&nbsp;";
 		_txtOutDetail +=  "</p> ";

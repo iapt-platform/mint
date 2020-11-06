@@ -4453,3 +4453,19 @@ note {
   -webkit-animation: spin 1.5s linear infinite;
   animation: spin 1.5s linear infinite;
 }
+.trans_text_content img{
+  max-width: 100%;
+     max-height: 200px;
+     width: auto;
+     height: auto;
+     object-fit: cover;
+     background-size: contain;   
+ }
+ .tran  img{
+  max-width: 100%;
+     max-height: 200px;
+     width: auto;
+     height: auto;
+     object-fit: cover;
+     background-size: contain;   
+ }
