@@ -1407,9 +1407,11 @@ function renderWordParBlockInner(elementBlock) {
 					paragraph +
 					"' begin='" +
 					sent_begin +
-					"' end=''></div>";
+					"' end=''>";
 				output += "</div>";
+
 				output += "<div id='sent_" + wID + "' class='translate_sent_content'>";
+				output += "</div>";
 				output += "</div>";
 				output += "</div>";
 
