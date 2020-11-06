@@ -152,6 +152,14 @@ require_once "../pcdl/html_head.php";
 	.icon_btn:hover a {
 		color: var(--btn-hover-color);
 	}
+	.tran  img{
+	max-width: 100%;
+     max-height: 200px;
+     width: auto;
+     height: auto;
+     object-fit: cover;
+     background-size: contain;   
+ }
 
 	</style>
 
@@ -171,7 +179,6 @@ require_once "../pcdl/html_head.php";
 	margin-bottom: auto;
 	padding-left: 0.5em;
 }
-
 
 
 </style>
