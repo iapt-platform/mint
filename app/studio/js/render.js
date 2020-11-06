@@ -1,7 +1,7 @@
-var gDisplayCapacity = 20000;
+var gDisplayCapacity = 20;
 var gCurrTopParagraph = 0;
 var gVisibleParBegin = 0;
-var gVisibleParEnd = 10000;
+var gVisibleParEnd = 10;
 
 //显示模式
 var _display_para_arrange = 0; //0:横向 排列 1:纵向排列
@@ -54,9 +54,9 @@ function palitext_calculator() {
 	for (i_cal in allTextLen_array) {
 		g_allparlen_array.push(allTextLen_array[i_cal] / gtext_max_length);
 	}
-	gDisplayCapacity = 190000000 + text_max2_length / gtext_max_length;
-	if (gDisplayCapacity * gtext_max_length < 500000000) {
-		gDisplayCapacity = 500000000 / gtext_max_length;
+	gDisplayCapacity = 19 + text_max2_length / gtext_max_length;
+	if (gDisplayCapacity * gtext_max_length < 5000) {
+		gDisplayCapacity = 5000 / gtext_max_length;
 	}
 }
 //添加新的段落块
