@@ -31,7 +31,13 @@ var _channalData;
 
 */
 function note_create() {
-	$("#dialog").dialog({
+	wbw_channal_list_init();
+	note_sent_edit_dlg_init();
+	term_edit_dlg_init();
+}
+function note_sent_edit_dlg_init() {
+	$("body").append('<div id="note_sent_edit_dlg" title="Edit"><div id="edit_dialog_content"></div></div>');
+	$("#note_sent_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,
 		buttons: [
@@ -51,7 +57,6 @@ function note_create() {
 		],
 	});
 }
-
 function note_init(input) {
 	let output = "<div>";
 	let newString = input.replace(/\{\{/g, '<note info="');
@@ -398,6 +403,18 @@ function note_json_html(in_json) {
 		gLocal.gui.copy_link +
 		"</a>";
 	output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
+	output +=
+		"<a onclick=\"edit_in_studio('" +
+		in_json.book +
+		"','" +
+		in_json.para +
+		"','" +
+		in_json.begin +
+		"','" +
+		in_json.end +
+		"')\">" +
+		gLocal.gui.edit_now +
+		"</a>";
 	output += "<a onclick='add_to_list()'>" + gLocal.gui.add_to_edit_list + "</a>";
 	output += "</div>";
 	output += "</div>";
@@ -500,7 +517,7 @@ function note_edit_sentence(book, para, begin, end, channal) {
 		}
 	}
 
-	$("#dialog").dialog("open");
+	$("#note_sent_edit_dlg").dialog("open");
 }
 
 function note_sent_save() {
@@ -566,4 +583,8 @@ function note_sent_save() {
 function copy_ref(book, para, begin, end) {
 	let strRef = "{{" + book + "-" + para + "-" + begin + "-" + end + "}}";
 	copy_to_clipboard(strRef);
+}
+
+function edit_in_studio(book, para, begin, end) {
+	wbw_channal_list_open(book, [para]);
 }

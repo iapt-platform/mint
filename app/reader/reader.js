@@ -243,3 +243,7 @@ function set_channal(channalid) {
 	}
 	location.assign(url);
 }
+
+function edit_wbw(book, para) {
+	wbw_channal_list_open(book, [para]);
+}
