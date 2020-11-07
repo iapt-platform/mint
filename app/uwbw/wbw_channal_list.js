@@ -28,17 +28,23 @@ function wbw_channal_list_open(book, paralist) {
 			_wbw_channel = JSON.parse(data);
 			if (_wbw_channel.status == 0) {
 				let html = "";
-				let i = 0;
 				for (let index = 0; index < _wbw_channel.data.length; index++) {
 					const element = _wbw_channel.data[index];
-					html += "<div>";
-					html += "<span>";
-					html += "<button onclick=\"wbw_create('" + index + "')\">打开</button>";
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:2'>";
+					html += "<button onclick=\"wbw_create('" + index + "')\">";
+					if (parseInt(element.wbw_para) > 0) {
+						html += "打开";
+					} else {
+						html += "新建";
+					}
+
+					html += "</button>";
 					html += "</span>";
-					html += "<span>" + i + "</span>";
-					html += "<span>" + element.name + "</span>";
-					html += "<span>" + element.lang + "</span>";
-					html += "<span>" + element.wbw_para + "/" + element.count + "</span>";
+					html += "<span  style='flex:1'>" + (index + 1) + "</span>";
+					html += "<span style='flex:3'>" + element.name + "</span>";
+					html += "<span style='flex:2'>" + element.lang + "</span>";
+					html += "<span style='flex:2'>" + element.wbw_para + "/" + element.count + "</span>";
 					html += "</div>";
 				}
 
