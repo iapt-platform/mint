@@ -36,7 +36,7 @@ else{
 	echo "        <ver>1</ver>\n";
 	echo "        <toc></toc>\n";
 	echo "        <style></style>\n";
-	echo "        <title>{$book}-{$para}</title>\n";
+	echo "        <title>{$book}-{$paralist[0]}</title>\n";
 	echo "    </head>\n";
 	echo "\n<dict></dict>\n";
 	echo "<message></message>\n";
