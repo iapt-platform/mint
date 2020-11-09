@@ -4285,18 +4285,18 @@ function inline_dict_parse(data) {
 			if (spell[iterator.pali] == 0) {
 				mDict[iterator.pali].push(iterator);
 				mDictQueue[iterator.pali] = 0;
-			}			
+			}
 		}
 		let currWordParent = new Array();
 		if (mDict[gCurrLookupWord]) {
 			for (const iterator of mDict[gCurrLookupWord]) {
-				if(typeof iterator.parent == "string"){
-					if(iterator.parent.length>0){
-						currWordParent[mDict[iterator.parent] = 1;
+				if (typeof iterator.parent == "string") {
+					if (iterator.parent.length > 1) {
+						currWordParent[iterator.parent] = 1;
 					}
 				}
 			}
-			if (currWordParent.length ==0) {
+			if (currWordParent.length == 0) {
 				//
 				inline_dict_auto_case(gCurrLookupWord);
 			}
