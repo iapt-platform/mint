@@ -22,13 +22,18 @@ function palicanon_onload() {
 }
 
 function palicanon_load_term() {
-	$.get(
-		"../term/term.php",
+	$.post(
+		"../term/get_term_index.php",
 		{
-			op: "my",
+			lang: "zh-hans",
 		},
 		function (data) {
-			arrMyTerm = JSON.parse(data);
+			let result = JSON.parse(data);
+			if (result.status == 0) {
+				arrMyTerm = result.data;
+			} else {
+				alert(result.error);
+			}
 		}
 	);
 }
