@@ -4,8 +4,10 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 
-var _arrData;
+var _arrData = new Array();
 var _channalData;
+
+const MAX_NOTE_NEST = 2;
 
 /*
 {{203-1654-23-45@11@en@*}}
@@ -90,6 +92,20 @@ function note_refresh_new() {
 	for (const iterator of objNotes) {
 		let id = iterator.id;
 		if (id == null || id == "") {
+			//查看这个节点是第几层note嵌套。大于预定层数退出。
+			let layout = 1;
+			let parent = iterator.parentNode;
+			while (parent.nodeType == 1) {
+				if (parent.nodeName == "NOTE") {
+					layout++;
+					if (layout > MAX_NOTE_NEST) {
+						return false;
+					}
+				} else if (parent.nodeName == "BODY") {
+					break;
+				}
+				parent = parent.parentNode;
+			}
 			id = com_guid();
 			iterator.id = id;
 			let info = iterator.getAttributeNode("info").value;
@@ -118,8 +134,8 @@ function note_refresh_new() {
 			function (data, status) {
 				if (status == "success") {
 					try {
-						_arrData = JSON.parse(data);
-						for (const iterator of _arrData) {
+						let sentData = JSON.parse(data);
+						for (const iterator of sentData) {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
 							if (_display && _display == "para") {
@@ -191,6 +207,10 @@ function note_refresh_new() {
 								$("#" + id).html(strHtml);
 							}
 						}
+						//刷新句子链接递归，有加层数限制。
+						note_refresh_new();
+
+						_arrData = _arrData.concat(sentData);
 						note_ref_init();
 						term_get_dict();
 						note_channal_list();
@@ -422,6 +442,9 @@ function note_json_html(in_json) {
 	output += "<div class='palitext'>" + in_json.palitext + "</div>";
 	for (const iterator of in_json.translation) {
 		output += "<div class='tran' lang='" + iterator.lang + "'";
+
+		output += ">";
+		output += "<span class='edit_button' ";
 		output +=
 			" onclick=\"note_edit_sentence('" +
 			in_json.book +
@@ -433,8 +456,8 @@ function note_json_html(in_json) {
 			in_json.end +
 			"' ,'" +
 			iterator.channal +
-			"')\">";
-		output += "<span class='edit_button'></span>";
+			"')\"";
+		output += "></span>";
 
 		output +=
 			"<div class='text' id='tran_text_" +
@@ -458,7 +481,9 @@ function note_json_html(in_json) {
 				iterator.channalinfo.lang +
 				"</span>";
 		} else {
-			output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			//note_init处理句子链接 marked不处理
+			//output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
 		}
 		output += "</div>";
 
@@ -511,13 +536,13 @@ function note_edit_sentence(book, para, begin, end, channal) {
 						tran.text +
 						"</textarea>";
 					$("#edit_dialog_content").html(html);
-					break;
+					$("#note_sent_edit_dlg").dialog("open");
+					return;
 				}
 			}
 		}
 	}
-
-	$("#note_sent_edit_dlg").dialog("open");
+	alert("未找到句子");
 }
 
 function note_sent_save() {
