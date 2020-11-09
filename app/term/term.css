@@ -1,288 +1,369 @@
 .term_link:hover .guide_contence {
-  display: inline-block;
+	display: inline-block;
 }
 
 .term_meaning {
-  font-weight: 700;
+	font-weight: 700;
 }
 .term_author {
-  font-size: 80%;
-  color: gray;
+	font-size: 80%;
+	color: gray;
 }
 .term_tag {
-  font-size: 80%;
-  font-weight: 500;
-  margin: 0 8px;
+	font-size: 80%;
+	font-weight: 500;
+	margin: 0 8px;
 }
 .term_link {
-  cursor: pointer;
-  position: relative;
+	cursor: pointer;
+	position: relative;
 }
 
 .term_link,
 .term_link_new {
-  color: blue;
-  padding-left: 2px;
-  padding-right: 2px;
+	color: blue;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 .term_link_new {
-  color: red;
+	color: red;
 }
 
 note:hover chapter {
-  display: inline;
+	display: inline;
 }
 .ref > chapter:first-child {
-  display: inline;
+	display: inline;
 }
 chapter {
-  display: none;
-  color: var(--box-bg-color1);
-  text-decoration: none;
-  cursor: pointer;
+	display: none;
+	color: var(--box-bg-color1);
+	text-decoration: none;
+	cursor: pointer;
 }
 chapter:hover {
-  color: var(--link-color);
-  text-decoration: underline;
+	color: var(--link-color);
+	text-decoration: underline;
 }
 para {
-  background-color: var(--drop-bg-color);
-  padding: 2px 8px;
-  text-decoration: none;
-  cursor: pointer;
-  color: var(--btn-border-color);
-  border-radius: 5px;
+	background-color: var(--drop-bg-color);
+	padding: 2px 8px;
+	text-decoration: none;
+	cursor: pointer;
+	color: var(--btn-border-color);
+	border-radius: 5px;
 }
 para:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
-commentary {
-  margin-left: 1.5em;
-  display: block;
-  border-left: 3px solid gray;
-  padding-left: 5px;
+commentary,
+com,
+nt {
+	margin-left: 1.5em;
+	display: block;
+	border-left: 3px solid gray;
+	padding-left: 5px;
 }
 
 note > .tran {
-  color: #5c5c5c;
-  padding-left: 1em;
-  padding: 3px;
+	color: #5c5c5c;
+	padding-left: 1em;
+	padding: 0;
+	position: relative;
+	margin-top: -0.5em;
 }
+note > .tran > .text {
+	margin-bottom: 2em;
+}
+note > .tran > .tran_text_tool_bar {
+	padding: 0;
+	position: absolute;
+	display: none;
+	color: var(--border-line-color);
+	margin-left: 0;
+	z-index: 40;
+	width: auto;
+	font-size: 14px;
+	height: 28px;
+	line-height: 28px;
+	margin-top: -2em;
+	background-color: var(--box-bg-color1);
+	border-radius: 5px;
+}
+note > .tran:lang(my) > .tran_text_tool_bar {
+	margin-top: -2.5em;
+}
+note > .tran > .tran_text_tool_bar::after {
+	content: " ";
+	position: absolute;
+	left: 0;
+	bottom: 100%;
+	margin-left: 20px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent var(--box-bg-color1) transparent;
+}
+
+.tran:hover .tran_text_tool_bar {
+	display: block;
+}
+.tip_buttom {
+	border-right: 2px solid var(--border-line-color);
+	padding: 5px 8px;
+	cursor: pointer;
+}
+.tip_buttom:hover {
+	background-color: var(--btn-border-color);
+}
+.tran:hover .edit_button {
+	display: inline-block;
+}
+.edit_button {
+	display: inline-block;
+	width: auto;
+	min-width: 24px;
+	height: auto;
+	min-height: 24px;
+	cursor: pointer;
+	fill: var(--tool-color);
+	background: url(edit.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	color: var(--tool-color);
+	margin-top: -2em;
+}
+
 note > .palitext,
 .palitext {
-  font-family: Noto serif;
-  line-height: 1.5em;
-  color: #9f3a01;
-  font-weight: 500;
+	font-family: Noto serif;
+	line-height: 1.5em;
+	color: #9f3a01;
+	font-weight: 500;
+	margin-bottom: 10px;
 }
 note > .palitext > note {
-  display: inline;
-  color: blue;
-  background-color: unset;
-  padding: unset;
-  margin-bottom: unset;
-  border-radius: unset;
+	display: inline;
+	color: blue;
+	background-color: unset;
+	padding: unset;
+	margin-bottom: unset;
+	border-radius: unset;
 }
 
 .term_word_head_pali {
-  text-transform: capitalize;
-  font-size: 200%;
-  margin: 0.5em 0;
+	text-transform: capitalize;
+	font-size: 200%;
+	margin: 0.5em 0;
 }
 .term_word_head {
-  border-bottom: 1px solid #cecece;
-  padding: 5px 0;
+	border-bottom: 1px solid #cecece;
+	padding: 5px 0;
 }
 .term_block {
-  border-bottom: 1px solid #cecece;
-  padding: 5px 0;
+	border-bottom: 1px solid #cecece;
+	padding: 5px 0;
 }
 .term_word_head_authors a {
-  color: blue;
-  margin: 0 3px;
+	color: blue;
+	margin: 0 3px;
 }
 .term_word_head_authors a:hover {
-  text-decoration: underline;
-  cursor: pointer;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 note .ref {
-  text-align: right;
-  padding: 5px;
-  font-size: 75%;
-  margin-top: 8px;
+	text-align: right;
+	padding: 5px;
+	font-size: 75%;
+	margin-top: -2.5em;
 }
 
 .tran {
-  line-height: 1.5em;
+	line-height: 1.5em;
 }
 
 .tran ul {
-  list-style-type: circle;
-  margin-left: 2em;
+	list-style-type: circle;
+	margin-left: 2em;
 }
 
 .tran li {
-  list-style: inherit;
+	list-style: inherit;
 }
 
 .tran ol {
-  list-style-type: decimal;
-  margin: 0;
-  padding: 0;
-  margin-left: 2em;
+	list-style-type: decimal;
+	margin: 0;
+	padding: 0;
+	margin-left: 2em;
 }
 
 .tran:lang(en) > ol {
-  list-style-type: decimal;
+	list-style-type: decimal;
 }
 
 /*中文*/
 .tran:lang(zh) > ol {
-  list-style-type: cjk-ideographic;
-  margin-left: 2.5em;
+	list-style-type: cjk-ideographic;
+	margin-left: 2.5em;
 }
 
 /*简体中文*/
 .tran:lang(zh-cn) > ol {
-  list-style-type: trad-chinese-formal;
-  margin-left: 2.5em;
+	list-style-type: trad-chinese-formal;
+	margin-left: 2.5em;
 }
 .tran:lang(zh-hans) > ol {
-  list-style-type: trad-chinese-formal;
-  margin-left: 2.5em;
+	list-style-type: trad-chinese-formal;
+	margin-left: 2.5em;
 }
 /*繁体中文*/
 .tran:lang(zh-tw) > ol {
-  list-style-type: trad-chinese-formal;
-  margin-left: 2.5em;
+	list-style-type: trad-chinese-formal;
+	margin-left: 2.5em;
 }
 .tran:lang(zh-hant) > ol {
-  list-style-type: trad-chinese-formal;
-  margin-left: 2.5em;
+	list-style-type: trad-chinese-formal;
+	margin-left: 2.5em;
 }
 
 /*japanese*/
 .tran:lang(jp) > ol {
-  list-style-type: hiragana;
-  margin-left: 2.5em;
+	list-style-type: hiragana;
+	margin-left: 2.5em;
 }
 /*kora*/
 .tran:lang(ko) > ol {
-  list-style-type: korean-hangul-formal;
-  margin-left: 2.5em;
+	list-style-type: korean-hangul-formal;
+	margin-left: 2.5em;
 }
 /*thai*/
 .tran:lang(ti) > ol {
-  list-style-type: thai;
-  margin-left: 2em;
+	list-style-type: thai;
+	margin-left: 2em;
 }
 /*myanmar*/
 .tran:lang(my) > ol {
-  list-style-type: myanmar;
-  margin-left: 2em;
+	list-style-type: myanmar;
+	margin-left: 2em;
 }
 
 /*myanmar*/
 .tran:lang(my) {
-  font-size: 120%;
-  line-height: 2em;
+	font-size: 120%;
+	line-height: 2em;
 }
 
 .tran_div {
-  margin-bottom: 1em;
-  padding-bottom: 1em;
-  padding-top: 0.5em;
-  border-bottom: 1px solid var(--border-line-color);
+	margin-bottom: 1em;
+	padding-bottom: 1em;
+	padding-top: 0.5em;
+	border-bottom: 1px solid var(--border-line-color);
 }
 
 .tran_div:last-child {
-  border-bottom: none;
+	border-bottom: none;
 }
 
 .progress_bar_done {
-  stroke-width: 0;
-  fill: royalblue;
+	stroke-width: 0;
+	fill: royalblue;
 }
 
 .progress_bar_undone {
-  stroke-width: 0;
-  fill: #c0c0c052;
+	stroke-width: 0;
+	fill: #c0c0c052;
 }
 
 .progress_bar_bg {
-  stroke-width: 0;
-  fill: #ffffff;
+	stroke-width: 0;
+	fill: #ffffff;
 }
 
 .progress_bar_percent {
-  stroke-width: 0;
-  fill: limegreen;
+	stroke-width: 0;
+	fill: limegreen;
 }
 
 r {
-  text-align: right;
-  display: block;
+	text-align: right;
+	display: block;
 }
 
 note {
-  padding: 0.5em 0.8em;
-  margin-bottom: 0.4em;
-  border-radius: 5px;
-  line-height: 1.3em;
-  display: block;
-  background-color: #80808014;
+	padding: 0.5em 1em;
+	margin-bottom: 0.4em;
+	border-radius: 5px;
+	line-height: 1.3em;
+	display: block;
+	background-color: #80808014;
 }
 
 .bg_color_1 {
-  background-color: #ebebeb66;
+	background-color: #ebebeb66;
 }
 .bg_color_2 {
-  background: linear-gradient(to right, #6afdb033, #ebebeb66);
+	background: linear-gradient(to right, #6afdb033, #ebebeb66);
 }
 .bg_color_3 {
-  background: linear-gradient(to right, #6a95fd26, #ebebeb66);
+	background: linear-gradient(to right, #6a95fd26, #ebebeb66);
 }
 .bg_color_4 {
-  background: linear-gradient(to right, #f9e7911c, #ebebeb66);
+	background: linear-gradient(to right, #f9e7911c, #ebebeb66);
 }
 .bg_color_5 {
-  background: linear-gradient(to right, #fe99b91c, #ebebeb66);
+	background: linear-gradient(to right, #fe99b91c, #ebebeb66);
 }
 
 pre {
-  white-space: pre-line;
-  font-family: auto;
-  border-left: 3px solid var(--border-shadow);
-  margin-left: 1em;
-  padding-left: 0.5em;
+	white-space: pre-line;
+	font-family: auto;
+	border-left: 3px solid var(--border-shadow);
+	margin-left: 1em;
+	padding-left: 0.5em;
 }
 
 .note_tool_bar {
-  position: relative;
-  display: none;
+	position: relative;
+	display: none;
+	z-index: 50;
 }
 
 note:hover .note_tool_bar {
-  display: block;
+	display: block;
 }
 
 .sent_menu {
-  right: 0;
+	right: 0;
 }
 .para_menu {
-  left: 0;
+	left: 0;
 }
 
 .ui-widget input,
 .ui-widget select,
 .ui-widget textarea,
 .ui-widget button {
-  font-family: unset;
-  font-size: 1.1em;
+	font-family: unset;
+	font-size: 1.1em;
 }
 
 .tran p {
-  margin: 0;
+	margin: 0;
+}
+
+.note_tool_context {
+	position: absolute;
+	right: 0;
+	width: 1.5em;
+	text-align: right;
+}
+
+.note_tool_context .icon {
+	fill: var(--link-color);
+}
+.note_tool_context:hover .icon {
+	fill: (--link-hover-color);
 }

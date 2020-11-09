@@ -264,7 +264,7 @@ require_once "../pcdl/html_head.php";
 		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->channels; ?></div>
+				<div class="title"><?php echo "Contributor" ?></div>
 				<div class="click_dropdown_div">
 					<div class="click_dropdown_button"><?php echo $_local->gui->more; ?></div>
 					<div class="click_dropdown_content">
