@@ -59,7 +59,7 @@ else{
 	<script src="../term/term_edit_dlg.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	<script src="../uwbw/wbw_channal_list.js"></script>
-	
+	<script src="../usent/historay.js"></script>
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
 	</script>

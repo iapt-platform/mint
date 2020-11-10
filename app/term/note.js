@@ -7,7 +7,7 @@ var _author = "";
 var _arrData = new Array();
 var _channalData;
 
-const MAX_NOTE_NEST = 2;
+var MAX_NOTE_NEST = 2;
 
 /*
 {{203-1654-23-45@11@en@*}}
@@ -493,7 +493,9 @@ function note_json_html(in_json) {
 		output += "<span class = 'tip_buttom'>Share</span>";
 		output += "<span class = 'tip_buttom'>Copy</span>";
 		output += "<span class = 'tip_buttom'>Digest</span>";
-		output += "<span class = 'tip_buttom'>History</span>";
+		output += "<span class = 'tip_buttom' ";
+		output += " onclick=\"history_show('" + iterator.id + "')\"";
+		output += ">History</span>";
 		output += "<span class = 'tip_buttom'>Expand</span>";
 		output += "</div>";
 		//句子工具栏结束
