@@ -2,16 +2,16 @@ var g_DictWordList = new Array();
 var g_DocWordMean = new Array();
 var g_dictList = new Array();
 var g_DictWordNew = new Object();
-var g_DictWordUpdataIndex = 0;//正在更新的记录在内存字典表中的索引号
-var g_InlineDictWordList = new Array;
+var g_DictWordUpdataIndex = 0; //正在更新的记录在内存字典表中的索引号
+var g_InlineDictWordList = new Array();
 var g_CurrDictBuffer = null;
 var g_key_match_str = "";
 
-var myFormula = Array();//用户词典里的格位公式
+var myFormula = Array(); //用户词典里的格位公式
 
 var g_DictCount = 0;
 var g_currEditWord = -1; //当前正在编辑词的id
-var g_eCurrWord = null;  //当前正在编辑词的element对象
+var g_eCurrWord = null; //当前正在编辑词的element对象
 var g_currBookMarkColor = "0";
 var g_dictFindParentLevel = 0;
 var g_dictFindAllDone = false;
@@ -21,10 +21,10 @@ var g_currAutoMatchDictType = "user";
 var g_caseSelect = new Array("", "", "", "");
 
 var gEditorTranslateEditBlockId = -1;
-var gEditorNoteEditBlockId = -1
-var gEditorHeadingEditBlockId = -1
-var gEditorNewHeadingBookId = ""
-var gEditorNewHeadingPar = ""
+var gEditorNoteEditBlockId = -1;
+var gEditorHeadingEditBlockId = -1;
+var gEditorNewHeadingBookId = "";
+var gEditorNewHeadingPar = "";
 var g_fileid = 0;
 var g_docid = "";
 
@@ -41,26 +41,25 @@ var mDictQueue = Array();
 
 var gNaviCurrPanalId = "";
 function setNaviVisibility(strObjId = "") {
-	var objNave = document.getElementById('leftmenuinner');
-	var objblack = document.getElementById('BV');
+	var objNave = document.getElementById("leftmenuinner");
+	var objblack = document.getElementById("BV");
 	if (strObjId == "") {
 		objblack.style.display = "none";
 		objNave.className = "viewswitch_off";
-	}
-	else {
+	} else {
 		$("#" + strObjId).show();
-		$("#" + strObjId).siblings().hide();
+		$("#" + strObjId)
+			.siblings()
+			.hide();
 		if (strObjId == gNaviCurrPanalId) {
-			if (objNave.className == 'viewswitch_off') {
+			if (objNave.className == "viewswitch_off") {
 				objblack.style.display = "block";
 				objNave.className = "viewswitch_on";
-			}
-			else {
+			} else {
 				objblack.style.display = "none";
 				objNave.className = "viewswitch_off";
 			}
-		}
-		else {
+		} else {
 			objblack.style.display = "block";
 			objNave.className = "viewswitch_on";
 		}
@@ -79,11 +78,9 @@ function select_modyfy_type(itemname, idname) {
 	document.getElementById("note_li").className = "common-tab_li";
 	document.getElementById("spell_li").className = "common-tab_li";
 
-
 	document.getElementById(itemname).style.display = "block";
 	document.getElementById(idname).className = " common-tab_li_act";
 }
-
 
 function menuSelected(obj) {
 	var objMenuItems = document.getElementsByClassName("menu");
@@ -95,40 +92,37 @@ function menuSelected(obj) {
 }
 function menuSelected_2(obj, id_name, class_Name) {
 	var objMenuItems = document.getElementsByClassName(class_Name);
-	var id_array = new Array()
+	var id_array = new Array();
 	for (var i = 0; i < objMenuItems.length; i++) {
 		if (objMenuItems[i].id.split("_")[0] == obj.id.split("_")[0]) {
 			objMenuItems[i].style.display = "none";
-			id_array.push(objMenuItems[i].id)
+			id_array.push(objMenuItems[i].id);
 		}
 	}
 	var objThisItem = document.getElementById(obj.id);
 	objThisItem.style.display = "block";
 	for (menu_selected_i in id_array) {
-		document.getElementById(id_array[menu_selected_i] + '_li').className = "common-tab_li";
+		document.getElementById(id_array[menu_selected_i] + "_li").className = "common-tab_li";
 	}
 	//document.getElementById('content_menu_li').className = " common-tab_li";
 	//document.getElementById('bookmark_menu_li').className = " common-tab_li";
-	refreshBookMark()
+	refreshBookMark();
 	//document.getElementById('project_menu_li').className = " common-tab_li";
 	//document.getElementById('dictionary_menu_li').className = " common-tab_li";
 	//document.getElementById('layout_menu_li').className = " common-tab_li";
 	//document.getElementById('plugin_menu_li').className = " common-tab_li";
 
 	document.getElementById(id_name).className = " common-tab_li_act";
-
 }
-
-
-
 
 var editor_xmlhttp;
 var currMatchingDictNum = 0; //当前正在查询的字典索引
 function editor_getDictFileList() {
-	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+	if (window.XMLHttpRequest) {
+		// code for IE7+, Firefox, Chrome, Opera, Safari
 		editor_xmlhttp = new XMLHttpRequest();
-	}
-	else {// code for IE6, IE5
+	} else {
+		// code for IE6, IE5
 		editor_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	var d = new Date();
@@ -138,10 +132,11 @@ function editor_getDictFileList() {
 }
 
 function editor_serverResponse() {
-	if (editor_xmlhttp.readyState == 4)// 4 = "loaded"
-	{
-		if (editor_xmlhttp.status == 200) {// 200 = "OK"
-			var DictFileList = new Array;
+	if (editor_xmlhttp.readyState == 4) {
+		// 4 = "loaded"
+		if (editor_xmlhttp.status == 200) {
+			// 200 = "OK"
+			var DictFileList = new Array();
 			eval(editor_xmlhttp.responseText);
 			for (x in local_dict_list) {
 				g_dictList.push(local_dict_list[x]);
@@ -149,16 +144,34 @@ function editor_serverResponse() {
 			var fileList = "";
 			for (x in local_dict_list) {
 				if (local_dict_list[x].used) {
-					fileList = fileList + "<p><input id='id_dict_file_list_" + x + "'  type='checkbox' style='width: 20px; height: 20px' checked onclick='dict_active(this," + x + ")'/>" + local_dict_list[x].filename + "<span id='dict_result_" + x + "'></span></p>";
-				}
-				else {
-					fileList = fileList + "<p><input id='id_dict_file_list_" + x + "'  type='checkbox' style='width: 20px; height: 20px' onclick='dict_active(this," + x + ")'/>" + local_dict_list[x].filename + "<span id='dict_result_" + x + "'></span></p>";
+					fileList =
+						fileList +
+						"<p><input id='id_dict_file_list_" +
+						x +
+						"'  type='checkbox' style='width: 20px; height: 20px' checked onclick='dict_active(this," +
+						x +
+						")'/>" +
+						local_dict_list[x].filename +
+						"<span id='dict_result_" +
+						x +
+						"'></span></p>";
+				} else {
+					fileList =
+						fileList +
+						"<p><input id='id_dict_file_list_" +
+						x +
+						"'  type='checkbox' style='width: 20px; height: 20px' onclick='dict_active(this," +
+						x +
+						")'/>" +
+						local_dict_list[x].filename +
+						"<span id='dict_result_" +
+						x +
+						"'></span></p>";
 				}
 			}
-			document.getElementById('basic_dict_list').innerHTML = fileList;
-		}
-		else {
-			document.getElementById('basic_dict_list') = "Problem retrieving data:" + xmlhttp.statusText;
+			document.getElementById("basic_dict_list").innerHTML = fileList;
+		} else {
+			document.getElementById("basic_dict_list") = "Problem retrieving data:" + xmlhttp.statusText;
 		}
 	}
 }
@@ -166,37 +179,30 @@ function editor_serverResponse() {
 function dict_active(obj, dictIndex) {
 	if (this.checked) {
 		g_dictList[dictIndex].used = true;
-	}
-	else {
+	} else {
 		g_dictList[dictIndex].used = false;
 	}
 }
 
-
-
 function editor_windowsInit() {
-
 	$("see").click(function () {
 		var to = $(this).attr("to");
 		var link;
 		if (to) {
 			link = to;
-		}
-		else {
+		} else {
 			link = $(this).text();
 		}
 		alert(link);
 		dict_search(link);
-
 	});
-
 
 	var strSertch = location.search;
 	if (strSertch.length > 0) {
 		strSertch = strSertch.substr(1);
-		let sertchList = strSertch.split('&');
+		let sertchList = strSertch.split("&");
 		for (const param of sertchList) {
-			let item = param.split('=');
+			let item = param.split("=");
 			switch (item[0]) {
 				case "filename":
 					g_filename = item[1];
@@ -226,9 +232,9 @@ function editor_windowsInit() {
 	setUseMode("Edit");
 
 	editor_getDictFileList();
-	document.getElementById('id_info_window_select').value = "view_dict_curr";
-	windowsSelected(document.getElementById('id_info_window_select'));
-	document.getElementById('id_info_panal').style.height = "0px";
+	document.getElementById("id_info_window_select").value = "view_dict_curr";
+	windowsSelected(document.getElementById("id_info_window_select"));
+	document.getElementById("id_info_panal").style.height = "0px";
 
 	palicannon_init();
 
@@ -242,24 +248,22 @@ function editor_windowsInit() {
 	switch (g_op) {
 		case "new":
 			document.getElementById("wizard_div").style.display = "flex";
-			document.getElementById('id_editor_menu_select').value = "menu_pali_cannon"
-			menuSelected(document.getElementById('id_editor_menu_select'))
-			createXmlDoc()
+			document.getElementById("id_editor_menu_select").value = "menu_pali_cannon";
+			menuSelected(document.getElementById("id_editor_menu_select"));
+			createXmlDoc();
 			var_dump(gLocal.gui.newproject);
 			break;
 		case "open":
 			if (g_docid.length > 0) {
 				editor_openProject(g_docid, "pcs");
-			}
-			else {
+			} else {
 				alert(gLocal.gui.nofilename);
 			}
 			break;
 		case "opendb":
 			if (g_docid.length > 0) {
 				editor_openProject(g_docid, "db");
-			}
-			else {
+			} else {
 				alert("no doc id");
 			}
 			break;
@@ -268,10 +272,9 @@ function editor_windowsInit() {
 			break;
 		case "import":
 			if (g_filename.length > 0) {
-				editor_importOldVer(g_filename)
-				g_filename = g_filename.substring(0, g_filename.length - 4) + ".pcs"
-			}
-			else {
+				editor_importOldVer(g_filename);
+				g_filename = g_filename.substring(0, g_filename.length - 4) + ".pcs";
+			} else {
 				alert(gLocal.gui.nofilename);
 			}
 			break;
@@ -293,13 +296,21 @@ var g_dict_search_one_pass_done = null;
 var g_dict_search_one_dict_done = null;
 var g_dict_search_all_done = null;
 function editor_dict_all_done() {
-	document.getElementById('editor_doc_notify').innerHTML = gLocal.gui.all_done;
+	document.getElementById("editor_doc_notify").innerHTML = gLocal.gui.all_done;
 	var t = setTimeout("document.getElementById('editor_doc_notify').innerHTML=''", 5000);
 }
 function editor_dict_one_dict_done(dictIndex) {
-	document.getElementById('editor_doc_notify').innerHTML = gLocal.gui.round_1 + (g_dictFindParentLevel + 1) + gLocal.gui.round_2 + "【" + g_dictList[dictIndex].name + "】" + gLocal.gui.done;
+	document.getElementById("editor_doc_notify").innerHTML =
+		gLocal.gui.round_1 +
+		(g_dictFindParentLevel + 1) +
+		gLocal.gui.round_2 +
+		"【" +
+		g_dictList[dictIndex].name +
+		"】" +
+		gLocal.gui.done;
 	if (dictIndex + 1 < g_dictList.length - 1) {
-		document.getElementById('editor_doc_notify').innerHTML += "【" + g_dictList[dictIndex + 1].name + "】" + gLocal.gui.checking;
+		document.getElementById("editor_doc_notify").innerHTML +=
+			"【" + g_dictList[dictIndex + 1].name + "】" + gLocal.gui.checking;
 	}
 }
 
@@ -317,7 +328,8 @@ function menu_dict_match() {
 	var arrBuffer = dict_get_search_list();
 	g_CurrDictBuffer = JSON.stringify(arrBuffer);
 	dict_mark_word_list_done();
-	document.getElementById('id_dict_match_inner').innerHTML += "finding parent level " + g_dictFindParentLevel + " buffer:" + arrBuffer.length + "<br>";
+	document.getElementById("id_dict_match_inner").innerHTML +=
+		"finding parent level " + g_dictFindParentLevel + " buffer:" + arrBuffer.length + "<br>";
 	editor_dict_match();
 }
 
@@ -325,16 +337,14 @@ function editor_dict_match() {
 	if (currMatchingDictNum < g_dictList.length) {
 		if (g_dictList[currMatchingDictNum].used) {
 			editor_loadDictFromDB(g_filename, g_dictList[currMatchingDictNum]);
-		}
-		else {
+		} else {
 			currMatchingDictNum++;
 			editor_dict_match();
 		}
 		if (g_dictFindAllDone) {
 			dictMatchXMLDoc();
 		}
-	}
-	else {
+	} else {
 		if (g_dictFindParentLevel < 3) {
 			if (g_dict_search_one_pass_done) {
 				g_dict_search_one_pass_done(g_dictFindParentLevel);
@@ -345,11 +355,12 @@ function editor_dict_match() {
 			var arrBuffer = dict_get_search_list();
 			g_CurrDictBuffer = JSON.stringify(arrBuffer);
 			dict_mark_word_list_done();
-			document.getElementById('id_dict_match_inner').innerHTML += "finding parent level " + g_dictFindParentLevel + " buffer:" + arrBuffer.length + "<br>";
+			document.getElementById("id_dict_match_inner").innerHTML +=
+				"finding parent level " + g_dictFindParentLevel + " buffer:" + arrBuffer.length + "<br>";
 			editor_dict_match();
-		}
-		else {
-			document.getElementById('id_dict_match_inner').innerHTML += "Max Parent Level " + g_dictFindParentLevel + " Stop!<br>";
+		} else {
+			document.getElementById("id_dict_match_inner").innerHTML +=
+				"Max Parent Level " + g_dictFindParentLevel + " Stop!<br>";
 			if (g_dict_search_all_done) {
 				g_dict_search_all_done();
 			}
@@ -358,7 +369,6 @@ function editor_dict_match() {
 		}
 	}
 }
-
 
 function dict_push_word_to_download_list(word, level) {
 	for (var i in g_InlineDictWordList) {
@@ -374,14 +384,14 @@ function dict_push_word_to_download_list(word, level) {
 }
 
 function dict_get_search_list() {
-	var output = new Array()
+	var output = new Array();
 	for (var i in g_InlineDictWordList) {
 		if (g_InlineDictWordList[i].done == false) {
 			output.push(g_InlineDictWordList[i]);
 		}
 	}
 
-	return (output);
+	return output;
 }
 
 function dict_mark_word_list_done() {
@@ -391,7 +401,6 @@ function dict_mark_word_list_done() {
 }
 
 function dict_refresh_word_download_list() {
-
 	var xDict = gXmlBookDataBody.getElementsByTagName("word");
 	for (var iword = 0; iword < xDict.length; iword++) {
 		var pali = com_getPaliReal(getNodeText(xDict[iword], "real"));
@@ -462,8 +471,7 @@ function getAllWordList() {
 				output.push(pali);
 			}
 		}
-	}
-	else {
+	} else {
 		var currLevel = g_dictFindParentLevel - 1;
 		for (i = 0; i < g_DictWordList.length; i++) {
 			if (g_DictWordList[i].ParentLevel == currLevel) {
@@ -492,66 +500,72 @@ function getAllWordList() {
 	}
 	if (output.length > 0) {
 		return output.join("$");
-	}
-	else {
+	} else {
 		return null;
 	}
 }
 
 var editor_DictXmlHttp = null;
 function editor_loadDictFromDB(strFileName, dictName) {
-
 	var xmlText = "";
 
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		editor_DictXmlHttp = new XMLHttpRequest();
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		editor_DictXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
 	if (editor_DictXmlHttp != null) {
 		var d = new Date();
-		var strLink = "dict_find.php?mode=xml&filename=" + strFileName + "&type=" + dictName.type + "&dict=" + dictName.filename;
+		var strLink =
+			"dict_find.php?mode=xml&filename=" + strFileName + "&type=" + dictName.type + "&dict=" + dictName.filename;
 		editor_DictXmlHttp.onreadystatechange = editor_dict_serverResponse;
 		//var wordList=getAllWordList();
 
 		var wordList = g_CurrDictBuffer;
 
 		if (wordList != null) {
-			document.getElementById('id_dict_msg').innerHTML = "开始匹配字典" + dictName.name;
+			document.getElementById("id_dict_msg").innerHTML = "开始匹配字典" + dictName.name;
 			editor_DictXmlHttp.open("POST", "dict_find2.php", true);
 			//editor_DictXmlHttp.send(dictName.type+"$"+dictName.filename+"$"+g_dictFindParentLevel+"$"+wordList);
 			editor_DictXmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			editor_DictXmlHttp.send("type=" + dictName.type + "&filename=" + dictName.filename + "&level=" + g_dictFindParentLevel + "&data=" + wordList);
-		}
-		else {
+			editor_DictXmlHttp.send(
+				"type=" +
+					dictName.type +
+					"&filename=" +
+					dictName.filename +
+					"&level=" +
+					g_dictFindParentLevel +
+					"&data=" +
+					wordList
+			);
+		} else {
 			g_dictFindAllDone = true;
-			document.getElementById('id_dict_match_inner').innerHTML += "all done!";
+			document.getElementById("id_dict_match_inner").innerHTML += "all done!";
 			if (g_dict_search_all_done) {
 				g_dict_search_all_done();
 			}
 		}
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
-
 }
 
 function editor_dict_serverResponse() {
-	if (editor_DictXmlHttp.readyState == 4)// 4 = "loaded"
-	{
-		document.getElementById('id_dict_msg').innerHTML = "已经获取字典数据";
-		if (editor_DictXmlHttp.status == 200) {// 200 = "OK"
+	if (editor_DictXmlHttp.readyState == 4) {
+		// 4 = "loaded"
+		document.getElementById("id_dict_msg").innerHTML = "已经获取字典数据";
+		if (editor_DictXmlHttp.status == 200) {
+			// 200 = "OK"
 			var xmlText = editor_DictXmlHttp.responseText;
 
 			if (window.DOMParser) {
 				parser = new DOMParser();
 				xmlDict = parser.parseFromString(xmlText, "text/xml");
-			}
-			else // Internet Explorer
-			{
+			} // Internet Explorer
+			else {
 				xmlDict = new ActiveXObject("Microsoft.XMLDOM");
 				xmlDict.async = "false";
 				xmlDict.loadXML(xmlText);
@@ -562,19 +576,19 @@ function editor_dict_serverResponse() {
 				return;
 			}
 
-			document.getElementById('dict_result_' + currMatchingDictNum).innerHTML = " : " + g_dictFindParentLevel + "-" + xmlDict.getElementsByTagName("word").length;
+			document.getElementById("dict_result_" + currMatchingDictNum).innerHTML =
+				" : " + g_dictFindParentLevel + "-" + xmlDict.getElementsByTagName("word").length;
 			dictDataParse(xmlDict, currMatchingDictNum);
 			editor_addDictDataToXmlDoc(xmlDict);
-		}
-		else {
-			document.getElementById('id_dict_match_inner').innerHTML = "Problem retrieving data:" + editor_DictXmlHttp.statusText;
+		} else {
+			document.getElementById("id_dict_match_inner").innerHTML =
+				"Problem retrieving data:" + editor_DictXmlHttp.statusText;
 		}
 		if (g_dict_search_one_dict_done) {
 			g_dict_search_one_dict_done(currMatchingDictNum);
 		}
 		currMatchingDictNum++;
 		editor_dict_match();
-
 	}
 }
 //添加字典数据到内联字典
@@ -586,7 +600,7 @@ function editor_addDictDataToXmlDoc(xmlDictData) {
 }
 /*解析字典数据*/
 function dictDataParse(xmlDictData, dictID) {
-	document.getElementById('id_dict_msg').innerHTML = "正在解析字典数据";
+	document.getElementById("id_dict_msg").innerHTML = "正在解析字典数据";
 	var xDict = xmlDictData.getElementsByTagName("word");
 	var tOut = "";
 	var sDictPali = "";
@@ -595,7 +609,7 @@ function dictDataParse(xmlDictData, dictID) {
 	var sDictMean = "";
 	var sDictCase = "";
 	for (iword = 0; iword < xDict.length; iword++) {
-		var objDictItem = new Object();/*一个字典元素*/
+		var objDictItem = new Object(); /*一个字典元素*/
 		objDictItem.Id = getNodeText(xDict[iword], "id");
 		objDictItem.Guid = getNodeText(xDict[iword], "guid");
 		objDictItem.Pali = getNodeText(xDict[iword], "pali");
@@ -629,16 +643,13 @@ function dictDataParse(xmlDictData, dictID) {
 		if (objDictItem.Factors != "") {
 			var arrPart = objDictItem.Factors.split("+");
 			for (var ipart in arrPart) {
-
 				dict_push_word_to_download_list(arrPart[ipart], level);
 			}
 		}
 
-
 		if (objDictItem.Case != "?" || objDictItem.Org != "?" || objDictItem.Mean != "?") {
 			pushNewDictItem(g_DictWordList, objDictItem);
 		}
-
 	}
 	//dict end
 }
@@ -677,16 +688,14 @@ function setCurrActiveRecorder(recorderName) {
 
 function updataCurrActiveRecorder(filder, value) {
 	if (filder == "all") {
-	}
-	else {
+	} else {
 		document.getElementById(filder + "_" + g_CurrActiveRecorder).value = value;
 		mean_change(g_CurrActiveRecorder);
 	}
 }
 function addToCurrActiveRecorder(filder, value) {
 	if (filder == "all") {
-	}
-	else {
+	} else {
 		meanString = document.getElementById(filder + "_" + g_CurrActiveRecorder).value;
 		meanList = meanString.split("$");
 		for (i in meanList) {
@@ -707,25 +716,31 @@ function updataFactorMeanPrev(id, strNew) {
 
 function factorMeanItemChange(id, iPos, count, obj) {
 	//alert(id+":"+iPos+":"+newMean);
-	newMean = obj.value
+	newMean = obj.value;
 	var factorMeanPrevString = document.getElementById("id_factormean_prev_" + id).value;
 	currFactorMeanPrevList = factorMeanPrevString.split("+");
 	currFactorMeanPrevList[iPos] = newMean;
 	document.getElementById("id_factormean_prev_" + id).value = currFactorMeanPrevList.join("+");
-
 }
 
 function makeFactorBlock(factorStr, id) {
 	var output = "";
 	var factorList = factorStr.split("+");
-	var defualtFactorMeanList = new Array;
+	var defualtFactorMeanList = new Array();
 
 	for (iFactor in factorList) {
 		arrFM = findAllMeanInDict(factorList[iFactor], 10);
 		if (arrFM.length == 0) {
 			arrFM[0] = "unkow";
 		}
-		output += "<select onclick=\"factorMeanItemChange('" + id + "','" + iFactor + "','" + factorList.length + "',this)\">";
+		output +=
+			"<select onclick=\"factorMeanItemChange('" +
+			id +
+			"','" +
+			iFactor +
+			"','" +
+			factorList.length +
+			"',this)\">";
 		defualtFactorMeanList.push(arrFM[0]);
 		for (iFM in arrFM) {
 			output += "<option value='" + arrFM[iFM] + "' >" + arrFM[iFM] + "</option>";
@@ -737,32 +752,30 @@ function makeFactorBlock(factorStr, id) {
 	}
 	//updataFactorMeanPrev(id,defualtFactorMeanList.join("+"));
 	g_FactorMean = defualtFactorMeanList.join("+");
-	return (output);
+	return output;
 }
 function factor_change(id) {
 	var factorString = document.getElementById("id_dict_user_factors_" + id).value;
 	document.getElementById("id_factor_block_" + id).innerHTML = makeFactorBlock(factorString, id);
 }
 
-
 function makeMeanBlock(meanStr, id) {
 	var output = "";
 	var meanList = meanStr.split("$");
 	for (i in meanList) {
-		output += "<div class=\"mean_cell\">";
-		output += "<div class=\"button_shell\">";
-		output += "<p class=\"mean_button\" onclick=\"meanBlockMove('" + id + "'," + i + "," + (i - 1) + ")\">«</p>";
+		output += '<div class="mean_cell">';
+		output += '<div class="button_shell">';
+		output += '<p class="mean_button" onclick="meanBlockMove(\'' + id + "'," + i + "," + (i - 1) + ')">«</p>';
 		output += "</div>";
-		output += "<p class=\"mean_inner\" onclick=\"meanBlockMove('" + id + "'," + i + "," + 0 + ")\">" + meanList[i] + "</p>";
-		output += "<div class=\"button_shell\">";
-		output += "<p class=\"mean_button\" onclick=\"meanBlockDelete('" + id + "'," + i + ")\">x</p>";
+		output +=
+			'<p class="mean_inner" onclick="meanBlockMove(\'' + id + "'," + i + "," + 0 + ')">' + meanList[i] + "</p>";
+		output += '<div class="button_shell">';
+		output += '<p class="mean_button" onclick="meanBlockDelete(\'' + id + "'," + i + ')">x</p>';
 		output += "</div>";
 		output += "</div>";
 	}
-	return (output);
+	return output;
 }
-
-
 
 function mean_change(id) {
 	var meanString = document.getElementById("id_dict_user_mean_" + id).value;
@@ -807,9 +820,7 @@ function meanBlockMove(id, moveFrom, moveTo) {
 
 function addAutoMeanToFactorMean(id) {
 	document.getElementById("id_dict_user_fm_" + id).value = document.getElementById("id_factormean_prev_" + id).value;
-
 }
-
 
 //show current selected word in the word window to modify
 var g_WordTableCurrWord = "";
@@ -853,14 +864,14 @@ function dictCurrWordShowAsTable(inCurrWord) {
 		}
 	}
 	for (x in listParent) {
-		outData += "<a onclick=\"showCurrWordTable('" + listParent[x] + "')\">" + listParent[x] + "</a> "
+		outData += "<a onclick=\"showCurrWordTable('" + listParent[x] + "')\">" + listParent[x] + "</a> ";
 	}
 	for (x in listFactors) {
-		outData += "[<a onclick=\"showCurrWordTable('" + listFactors[x] + "')\">" + listFactors[x] + "</a>] "
+		outData += "[<a onclick=\"showCurrWordTable('" + listFactors[x] + "')\">" + listFactors[x] + "</a>] ";
 	}
 	outData += "</p>";
 
-	outData = outData + "<p class=\"word_current\">└" + inCurrWord + "</p>";
+	outData = outData + '<p class="word_current">└' + inCurrWord + "</p>";
 
 	outData += "<p class='word_child'>└" + gLocal.gui.children + ": ";
 	for (var i = 0; i < g_DictWordList.length; i++) {
@@ -880,7 +891,7 @@ function dictCurrWordShowAsTable(inCurrWord) {
 		}
 	}
 	for (x in listChildren) {
-		outData += "<a onclick=\"showCurrWordTable('" + listChildren[x] + "')\">" + listChildren[x] + "</a> "
+		outData += "<a onclick=\"showCurrWordTable('" + listChildren[x] + "')\">" + listChildren[x] + "</a> ";
 	}
 	outData += "</p>";
 
@@ -901,7 +912,7 @@ function dictCurrWordShowAsTable(inCurrWord) {
 	for (var i = 0; i < g_DictWordList.length; i++) {
 		if (g_DictWordList[i].Pali == inCurrWord) {
 			if (newRecorder.Type == "" && g_DictWordList[i].Type.length > 0) {
-				newRecorder.Type = g_DictWordList[i].Type
+				newRecorder.Type = g_DictWordList[i].Type;
 			}
 			if (newRecorder.Gramma == "" && g_DictWordList[i].Gramma.length > 0) {
 				newRecorder.Gramma = g_DictWordList[i].Gramma;
@@ -933,40 +944,79 @@ function dictCurrWordShowAsTable(inCurrWord) {
 	newFactorBlock = makeFactorBlock(newRecorder.Factors, "new");
 	newFactorMeanPrevString = g_FactorMean;
 
-	outData += "<div class=\"word_edit\">"
-	outData += "	<div class=\"word_edit_head\">"
-	outData += "<input type=\"input\" id=\"id_dict_user_id_new\" hidden value=\"0\" >"
-	outData += "<input type=\"input\" id=\"id_dict_user_pali_new\" hidden value=\"" + inCurrWord + "\" >"
-	outData += "		<button type=\"button\" onclick=\"editor_UserDictUpdata('new',this)\">" + gLocal.gui.newword + "</button>"
-	outData += "		" + gLocal.gui.wordtype + ":"
-	outData += "	<select name=\"type\" id=\"id_dict_user_type_new\" onchange=\"typeChange(this)\">";
+	outData += '<div class="word_edit">';
+	outData += '	<div class="word_edit_head">';
+	outData += '<input type="input" id="id_dict_user_id_new" hidden value="0" >';
+	outData += '<input type="input" id="id_dict_user_pali_new" hidden value="' + inCurrWord + '" >';
+	outData +=
+		'		<button type="button" onclick="editor_UserDictUpdata(\'new\',this)">' + gLocal.gui.newword + "</button>";
+	outData += "		" + gLocal.gui.wordtype + ":";
+	outData += '	<select name="type" id="id_dict_user_type_new" onchange="typeChange(this)">';
 	for (x in gLocal.type_str) {
 		if (gLocal.type_str[x].id == newRecorder.Type) {
-			outData = outData + "<option value=\"" + gLocal.type_str[x].id + "\" selected>" + gLocal.type_str[x].value + "</option>";
-		}
-		else {
-			outData = outData + "<option value=\"" + gLocal.type_str[x].id + "\">" + gLocal.type_str[x].value + "</option>";
+			outData =
+				outData +
+				'<option value="' +
+				gLocal.type_str[x].id +
+				'" selected>' +
+				gLocal.type_str[x].value +
+				"</option>";
+		} else {
+			outData =
+				outData + '<option value="' + gLocal.type_str[x].id + '">' + gLocal.type_str[x].value + "</option>";
 		}
 	}
 	outData = outData + "	</select>";
-	outData += "		" + gLocal.gui.gramma + ":<input type=\"input\" id=\"id_dict_user_gramma_new\" size=\"12\" value=\"" + newRecorder.Gramma + "\" />"
-	outData += "		" + gLocal.gui.parent + ":<input type=\"input\" id=\"id_dict_user_parent_new\" size=\"12\" value=\"" + newRecorder.Parent + "\" />"
-	outData += "		" + gLocal.gui.part + ":<input type=\"input\" id=\"id_dict_user_factors_new\" size=\"" + inCurrWord.length * 1.2 + "\" value=\"" + newRecorder.Factors + "\" onkeyup=\"factor_change('new')\" />"
-	outData += "		" + gLocal.gui.partmeaning + ":" + newFactorBlock
-	outData += "<button type=\"button\" onclick=\"addAutoMeanToFactorMean('new')\" >▶</button>"
-	outData += "		<input type=\"input\" id=\"id_dict_user_fm_new\" size=\"" + inCurrWord.length + "\" value=\"" + newRecorder.FactorMean + "\" />"
-	outData += "	</div>"
-	outData += "	<div class=\"word_edit_mean\">"
-	outData += "	" + gLocal.gui.meaning + ":<input type=\"input\" size='50' id=\"id_dict_user_mean_new\" value=\"" + newRecorder.Mean + "\" onkeyup=\"mean_change('new')\"/><div class='mean_block' id='id_mean_block_new'>" + newMeanBlock + "</div>"
-	outData += "	</div>"
-	outData += "<input type='text' id='id_factormean_prev_new' value='" + newFactorMeanPrevString + "' hidden />"
-	outData += "	<div class=\"word_edit_note\">"
-	outData += gLocal.gui.note + ":<br /><textarea id=\"id_dict_user_note_new\" rows='3' cols='100'>" + newRecorder.Note + "</textarea>"
-	outData += "	</div>"
-	outData += "</div>"
+	outData +=
+		"		" +
+		gLocal.gui.gramma +
+		':<input type="input" id="id_dict_user_gramma_new" size="12" value="' +
+		newRecorder.Gramma +
+		'" />';
+	outData +=
+		"		" +
+		gLocal.gui.parent +
+		':<input type="input" id="id_dict_user_parent_new" size="12" value="' +
+		newRecorder.Parent +
+		'" />';
+	outData +=
+		"		" +
+		gLocal.gui.part +
+		':<input type="input" id="id_dict_user_factors_new" size="' +
+		inCurrWord.length * 1.2 +
+		'" value="' +
+		newRecorder.Factors +
+		'" onkeyup="factor_change(\'new\')" />';
+	outData += "		" + gLocal.gui.partmeaning + ":" + newFactorBlock;
+	outData += '<button type="button" onclick="addAutoMeanToFactorMean(\'new\')" >▶</button>';
+	outData +=
+		'		<input type="input" id="id_dict_user_fm_new" size="' +
+		inCurrWord.length +
+		'" value="' +
+		newRecorder.FactorMean +
+		'" />';
+	outData += "	</div>";
+	outData += '	<div class="word_edit_mean">';
+	outData +=
+		"	" +
+		gLocal.gui.meaning +
+		':<input type="input" size=\'50\' id="id_dict_user_mean_new" value="' +
+		newRecorder.Mean +
+		"\" onkeyup=\"mean_change('new')\"/><div class='mean_block' id='id_mean_block_new'>" +
+		newMeanBlock +
+		"</div>";
+	outData += "	</div>";
+	outData += "<input type='text' id='id_factormean_prev_new' value='" + newFactorMeanPrevString + "' hidden />";
+	outData += '	<div class="word_edit_note">';
+	outData +=
+		gLocal.gui.note +
+		":<br /><textarea id=\"id_dict_user_note_new\" rows='3' cols='100'>" +
+		newRecorder.Note +
+		"</textarea>";
+	outData += "	</div>";
+	outData += "</div>";
 
-
-	//draw new 
+	//draw new
 
 	/*
 		outData=outData+"<h3>New:</h3>";
@@ -1006,46 +1056,129 @@ function dictCurrWordShowAsTable(inCurrWord) {
 	*/
 	// end of New
 
-
-
 	outData += "<h3>" + gLocal.gui.userdict + "</h3>";
 	outData += "<table>";
 
-	outData = outData + "<tr><th></th><th>" + gLocal.gui.dictsouce + "</th> <th>" + gLocal.gui.wordtype + "</th> <th>" + gLocal.gui.gramma + "</th> <th>" + gLocal.gui.parent + "</th> <th>" + gLocal.gui.meaning + "</th> <th>" + gLocal.gui.part + "</th> <th>" + gLocal.gui.partmeaning + "</th> <th></th> </tr>";
+	outData =
+		outData +
+		"<tr><th></th><th>" +
+		gLocal.gui.dictsouce +
+		"</th> <th>" +
+		gLocal.gui.wordtype +
+		"</th> <th>" +
+		gLocal.gui.gramma +
+		"</th> <th>" +
+		gLocal.gui.parent +
+		"</th> <th>" +
+		gLocal.gui.meaning +
+		"</th> <th>" +
+		gLocal.gui.part +
+		"</th> <th>" +
+		gLocal.gui.partmeaning +
+		"</th> <th></th> </tr>";
 	for (var i = 0; i < g_DictWordList.length; i++) {
 		if (g_DictWordList[i].Pali == inCurrWord) {
 			if (g_DictWordList[i].dictname == "用户字典") {
 				outData += "<tr class='dict_row" + g_DictWordList[i].ParentLevel + "'>";
-				outData += "<td><input type=radio name='dictupdata' onclick=\"setCurrActiveRecorder('" + i + "')\" /></td>";
+				outData +=
+					"<td><input type=radio name='dictupdata' onclick=\"setCurrActiveRecorder('" + i + "')\" /></td>";
 				outData = outData + "<td>" + g_DictWordList[i].dictname + "</td>";
-				outData = outData + "<td><input type=\"input\" id=\"id_dict_user_id_" + i + "\" hidden value=\"" + g_DictWordList[i].Id + "\" >";
-				outData = outData + "<input type=\"input\" id=\"id_dict_user_pali_" + i + "\" hidden value=\"" + g_DictWordList[i].Pali + "\" >";
-				outData = outData + "	<select name=\"type\" id=\"id_dict_user_type_" + i + "\" onchange=\"typeChange(this)\">";
+				outData =
+					outData +
+					'<td><input type="input" id="id_dict_user_id_' +
+					i +
+					'" hidden value="' +
+					g_DictWordList[i].Id +
+					'" >';
+				outData =
+					outData +
+					'<input type="input" id="id_dict_user_pali_' +
+					i +
+					'" hidden value="' +
+					g_DictWordList[i].Pali +
+					'" >';
+				outData = outData + '	<select name="type" id="id_dict_user_type_' + i + '" onchange="typeChange(this)">';
 				for (x in gLocal.type_str) {
 					if (gLocal.type_str[x].id == g_DictWordList[i].Type) {
-						outData = outData + "<option value=\"" + gLocal.type_str[x].id + "\" selected>" + gLocal.type_str[x].value + "</option>";
-					}
-					else {
-						outData = outData + "<option value=\"" + gLocal.type_str[x].id + "\">" + gLocal.type_str[x].value + "</option>";
+						outData =
+							outData +
+							'<option value="' +
+							gLocal.type_str[x].id +
+							'" selected>' +
+							gLocal.type_str[x].value +
+							"</option>";
+					} else {
+						outData =
+							outData +
+							'<option value="' +
+							gLocal.type_str[x].id +
+							'">' +
+							gLocal.type_str[x].value +
+							"</option>";
 					}
 				}
 				outData = outData + "	</select>";
 				outData = outData + "</td>";
-				outData = outData + "<td><input type=\"input\" id=\"id_dict_user_gramma_" + i + "\" size=\"12\" value=\"" + g_DictWordList[i].Gramma + "\" /></td>";
-				outData = outData + "<td><input type=\"input\" id=\"id_dict_user_parent_" + i + "\" size=\"12\" value=\"" + g_DictWordList[i].Parent + "\" />";
-				outData = outData + "<button type='button' onclick=\"showCurrWordTable('" + g_DictWordList[i].Parent + "')\">»</button></td>";
-				outData = outData + "<td><input type=\"input\" size='50' id=\"id_dict_user_mean_" + i + "\" value=\"" + g_DictWordList[i].Mean + "\" onkeyup='mean_change(" + i + ")' /><div class='mean_block' id='id_mean_block_" + i + "'></div></td>";
-				outData = outData + "<td><input type=\"input\" id=\"id_dict_user_factors_" + i + "\" size=\"15\" value=\"" + g_DictWordList[i].Factors + "\" /></td>";
-				outData = outData + "<td><input type=\"input\" id=\"id_dict_user_fm_" + i + "\" size=\"15\" value=\"" + g_DictWordList[i].FactorMean + "\" /></td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"editor_UserDictUpdata('" + i + "',this)\">Updata</button></td>";
+				outData =
+					outData +
+					'<td><input type="input" id="id_dict_user_gramma_' +
+					i +
+					'" size="12" value="' +
+					g_DictWordList[i].Gramma +
+					'" /></td>';
+				outData =
+					outData +
+					'<td><input type="input" id="id_dict_user_parent_' +
+					i +
+					'" size="12" value="' +
+					g_DictWordList[i].Parent +
+					'" />';
+				outData =
+					outData +
+					"<button type='button' onclick=\"showCurrWordTable('" +
+					g_DictWordList[i].Parent +
+					"')\">»</button></td>";
+				outData =
+					outData +
+					'<td><input type="input" size=\'50\' id="id_dict_user_mean_' +
+					i +
+					'" value="' +
+					g_DictWordList[i].Mean +
+					"\" onkeyup='mean_change(" +
+					i +
+					")' /><div class='mean_block' id='id_mean_block_" +
+					i +
+					"'></div></td>";
+				outData =
+					outData +
+					'<td><input type="input" id="id_dict_user_factors_' +
+					i +
+					'" size="15" value="' +
+					g_DictWordList[i].Factors +
+					'" /></td>';
+				outData =
+					outData +
+					'<td><input type="input" id="id_dict_user_fm_' +
+					i +
+					'" size="15" value="' +
+					g_DictWordList[i].FactorMean +
+					'" /></td>';
+				outData =
+					outData +
+					'<td><button type="button" onclick="editor_UserDictUpdata(\'' +
+					i +
+					"',this)\">Updata</button></td>";
 				outData = outData + "</tr>";
 				outData += "<tr ><td>Note</td>";
-				outData += "<td colspan=3><textarea id=\"id_dict_user_note_" + i + "\" rows='3' cols='100'>" + g_DictWordList[i].Note + "</textarea></td></tr>"
-
+				outData +=
+					'<td colspan=3><textarea id="id_dict_user_note_' +
+					i +
+					"\" rows='3' cols='100'>" +
+					g_DictWordList[i].Note +
+					"</textarea></td></tr>";
 			}
 		}
 	}
-
 
 	/*
 	for(var i=0;i<g_DictWordList.length;i++){
@@ -1088,24 +1221,86 @@ function dictCurrWordShowAsTable(inCurrWord) {
 
 	outData += "<h3>" + gLocal.gui.otherdict + "</h3>";
 	outData += "<table>";
-	outData = outData + "<tr><th></th><th>" + gLocal.gui.dictsouce + "</th> <th>" + gLocal.gui.wordtype + "</th> <th>" + gLocal.gui.gramma + "</th> <th>" + gLocal.gui.parent + "</th> <th>" + gLocal.gui.meaning + "</th> <th>" + gLocal.gui.part + "</th> <th>" + gLocal.gui.partmeaning + "</th> <th></th> </tr>";
+	outData =
+		outData +
+		"<tr><th></th><th>" +
+		gLocal.gui.dictsouce +
+		"</th> <th>" +
+		gLocal.gui.wordtype +
+		"</th> <th>" +
+		gLocal.gui.gramma +
+		"</th> <th>" +
+		gLocal.gui.parent +
+		"</th> <th>" +
+		gLocal.gui.meaning +
+		"</th> <th>" +
+		gLocal.gui.part +
+		"</th> <th>" +
+		gLocal.gui.partmeaning +
+		"</th> <th></th> </tr>";
 
 	for (var i = 0; i < g_DictWordList.length; i++) {
 		if (g_DictWordList[i].Pali == inCurrWord) {
 			if (g_DictWordList[i].dictname == "用户字典") {
-			}
-			else {
+			} else {
 				outData += "<tr class='dict_row" + g_DictWordList[i].ParentLevel + "'>";
-				outData += "<td><button type=\"button\" >▲</button></td>";
+				outData += '<td><button type="button" >▲</button></td>';
 				outData = outData + "<td>" + g_DictWordList[i].dictname + "</td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_type','" + g_DictWordList[i].Type + "')\" >▲</button><span id=\"id_dict_user_gramma_" + i + "\">" + g_DictWordList[i].Type + "</span></td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_gramma','" + g_DictWordList[i].Gramma + "')\">▲</button>" + g_DictWordList[i].Gramma + "</td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_parent','" + g_DictWordList[i].Parent + "')\">▲</button>" + g_DictWordList[i].Parent;
-				outData = outData + "<button type='button' onclick=\"showCurrWordTable('" + g_DictWordList[i].Parent + "')\">»</button></td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_mean','" + g_DictWordList[i].Mean + "')\">▲</button>" + g_DictWordList[i].Mean + "<br />" + makeMeanLink(g_DictWordList[i].Mean) + "</td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_factors','" + g_DictWordList[i].Factors + "')\">▲</button>" + g_DictWordList[i].Factors + "</td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_fm','" + g_DictWordList[i].FactorMean + "')\">▲</button>" + g_DictWordList[i].FactorMean + "</td>";
-				outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('all','" + g_DictWordList[i].Type + "')\">▲</button></td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_type','" +
+					g_DictWordList[i].Type +
+					'\')" >▲</button><span id="id_dict_user_gramma_' +
+					i +
+					'">' +
+					g_DictWordList[i].Type +
+					"</span></td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_gramma','" +
+					g_DictWordList[i].Gramma +
+					"')\">▲</button>" +
+					g_DictWordList[i].Gramma +
+					"</td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_parent','" +
+					g_DictWordList[i].Parent +
+					"')\">▲</button>" +
+					g_DictWordList[i].Parent;
+				outData =
+					outData +
+					"<button type='button' onclick=\"showCurrWordTable('" +
+					g_DictWordList[i].Parent +
+					"')\">»</button></td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_mean','" +
+					g_DictWordList[i].Mean +
+					"')\">▲</button>" +
+					g_DictWordList[i].Mean +
+					"<br />" +
+					makeMeanLink(g_DictWordList[i].Mean) +
+					"</td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_factors','" +
+					g_DictWordList[i].Factors +
+					"')\">▲</button>" +
+					g_DictWordList[i].Factors +
+					"</td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_fm','" +
+					g_DictWordList[i].FactorMean +
+					"')\">▲</button>" +
+					g_DictWordList[i].FactorMean +
+					"</td>";
+				outData =
+					outData +
+					"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('all','" +
+					g_DictWordList[i].Type +
+					"')\">▲</button></td>";
 				outData = outData + "</tr>";
 			}
 		}
@@ -1114,24 +1309,87 @@ function dictCurrWordShowAsTable(inCurrWord) {
 
 	//children
 	for (x in listChildren) {
-		wordChildren = listChildren[x]
+		wordChildren = listChildren[x];
 		outData += "<h4>" + wordChildren + "</h4> ";
 		outData += "<table>";
-		outData = outData + "<tr><th></th><th>" + gLocal.gui.dictsouce + "</th> <th>" + gLocal.gui.wordtype + "</th> <th>" + gLocal.gui.gramma + "</th> <th>" + gLocal.gui.parent + "</th> <th>" + gLocal.gui.meaning + "</th> <th>" + gLocal.gui.part + "</th> <th>" + gLocal.gui.partmeaning + "</th> <th></th> </tr>";
+		outData =
+			outData +
+			"<tr><th></th><th>" +
+			gLocal.gui.dictsouce +
+			"</th> <th>" +
+			gLocal.gui.wordtype +
+			"</th> <th>" +
+			gLocal.gui.gramma +
+			"</th> <th>" +
+			gLocal.gui.parent +
+			"</th> <th>" +
+			gLocal.gui.meaning +
+			"</th> <th>" +
+			gLocal.gui.part +
+			"</th> <th>" +
+			gLocal.gui.partmeaning +
+			"</th> <th></th> </tr>";
 		for (var i = 0; i < g_DictWordList.length; i++) {
 			if (g_DictWordList[i].Pali == wordChildren) {
 				{
 					outData += "<tr class='dict_row" + g_DictWordList[i].ParentLevel + "'>";
-					outData += "<td><button type=\"button\" >▲</button></td>";
+					outData += '<td><button type="button" >▲</button></td>';
 					outData = outData + "<td>" + g_DictWordList[i].dictname + "</td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_type','" + g_DictWordList[i].Type + "')\" >▲</button><span id=\"id_dict_user_gramma_" + i + "\">" + g_DictWordList[i].Type + "</span></td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_gramma','" + g_DictWordList[i].Gramma + "')\">▲</button>" + g_DictWordList[i].Gramma + "</td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_parent','" + g_DictWordList[i].Parent + "')\">▲</button>" + g_DictWordList[i].Parent;
-					outData = outData + "<button type='button' onclick=\"showCurrWordTable('" + g_DictWordList[i].Parent + "')\">»</button></td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_mean','" + g_DictWordList[i].Mean + "')\">▲</button>" + g_DictWordList[i].Mean + "<br />" + makeMeanLink(g_DictWordList[i].Mean) + "</td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_factors','" + g_DictWordList[i].Factors + "')\">▲</button>" + g_DictWordList[i].Factors + "</td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_fm','" + g_DictWordList[i].FactorMean + "')\">▲</button>" + g_DictWordList[i].FactorMean + "</td>";
-					outData = outData + "<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('all','" + g_DictWordList[i].Type + "')\">▲</button></td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_type','" +
+						g_DictWordList[i].Type +
+						'\')" >▲</button><span id="id_dict_user_gramma_' +
+						i +
+						'">' +
+						g_DictWordList[i].Type +
+						"</span></td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_gramma','" +
+						g_DictWordList[i].Gramma +
+						"')\">▲</button>" +
+						g_DictWordList[i].Gramma +
+						"</td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_parent','" +
+						g_DictWordList[i].Parent +
+						"')\">▲</button>" +
+						g_DictWordList[i].Parent;
+					outData =
+						outData +
+						"<button type='button' onclick=\"showCurrWordTable('" +
+						g_DictWordList[i].Parent +
+						"')\">»</button></td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_mean','" +
+						g_DictWordList[i].Mean +
+						"')\">▲</button>" +
+						g_DictWordList[i].Mean +
+						"<br />" +
+						makeMeanLink(g_DictWordList[i].Mean) +
+						"</td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_factors','" +
+						g_DictWordList[i].Factors +
+						"')\">▲</button>" +
+						g_DictWordList[i].Factors +
+						"</td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('id_dict_user_fm','" +
+						g_DictWordList[i].FactorMean +
+						"')\">▲</button>" +
+						g_DictWordList[i].FactorMean +
+						"</td>";
+					outData =
+						outData +
+						"<td><button type=\"button\" onclick=\"updataCurrActiveRecorder('all','" +
+						g_DictWordList[i].Type +
+						"')\">▲</button></td>";
 					outData = outData + "</tr>";
 				}
 			}
@@ -1145,18 +1403,19 @@ function makeMeanLink(inStr) {
 	var arrList = inStr.split("$");
 	var output = "";
 	for (i in arrList) {
-		output += "<a onclick=\"addToCurrActiveRecorder('id_dict_user_mean','" + arrList[i] + "')\">" + arrList[i] + "</a> "
+		output +=
+			"<a onclick=\"addToCurrActiveRecorder('id_dict_user_mean','" + arrList[i] + "')\">" + arrList[i] + "</a> ";
 	}
-	return (output);
+	return output;
 }
 
 function showCurrWordTable(currWord) {
-	document.getElementById('id_dict_curr_word_inner').innerHTML = dictCurrWordShowAsTable(currWord);
+	document.getElementById("id_dict_curr_word_inner").innerHTML = dictCurrWordShowAsTable(currWord);
 }
 
 //匹配字典数据到文档
 function dictMatchXMLDoc() {
-	document.getElementById('id_dict_msg').innerHTML = gLocal.gui.dict_match;
+	document.getElementById("id_dict_msg").innerHTML = gLocal.gui.dict_match;
 	var docWordCounter = 0;
 	var matchedCounter = 0;
 
@@ -1173,7 +1432,7 @@ function dictMatchXMLDoc() {
 			/*将这个词与字典匹配，*/
 			var iDict = 0;
 			//if(sMeanWord=="?"){
-			var thisWord = sPaliWord
+			var thisWord = sPaliWord;
 			for (iDict = 0; iDict < g_DictWordList.length; iDict++) {
 				if (thisWord == g_DictWordList[iDict].Pali && g_DictWordList[iDict].ParentLevel == 0) {
 					if (sMeanWord == "?") {
@@ -1191,30 +1450,26 @@ function dictMatchXMLDoc() {
 					matchedCounter++;
 				}
 			}*/
-
 		}
 	}
 
-	var progress = matchedCounter * 100 / docWordCounter;
+	var progress = (matchedCounter * 100) / docWordCounter;
 
-	document.getElementById('id_dict_msg').innerHTML = gLocal.gui.match_end + Math.round(progress) + "%";
+	document.getElementById("id_dict_msg").innerHTML = gLocal.gui.match_end + Math.round(progress) + "%";
 }
-
 
 function dictGetFirstMean(strMean) {
 	var arrMean = strMean.split("$");
 	if (arrMean.length > 0) {
 		for (var i = 0; i < arrMean.length; i++) {
 			if (arrMean[i].length > 0) {
-				return (arrMean[i]);
-			}
-			else {
+				return arrMean[i];
+			} else {
 				return "";
 			}
 		}
 		return "";
-	}
-	else {
+	} else {
 		return "";
 	}
 }
@@ -1234,8 +1489,7 @@ function isPaliWord(inWord) {
 	}
 	if (inWord.match(/[a-y]/)) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -1250,18 +1504,15 @@ function submenu_show_detail(obj) {
 		x[0].style.padding = "0px";
 		x[0].style.opacity = "0";
 		o[0].style.transform = "rotate(0deg)";
-	}
-	else {
+	} else {
 		x[0].style.maxHeight = "200em";
 		x[0].style.padding = "10px";
 		x[0].style.opacity = "1";
 		o[0].style.transform = "rotate(45deg)";
 	}
-
 }
 function getAutoMaxWidth() {
-	var Width = $('#').width
-
+	var Width = $("#").width;
 }
 
 //在导航窗口中显示与此词匹配的字典中的词
@@ -1298,13 +1549,34 @@ function showWordInNavi(inWord) {
 				outText = outText + "<dict><span>" + g_DictWordList[iDict].dictname + "<span></dict>";
 				sLastDict = g_DictWordList[iDict].dictname;
 			}
-			outText = outText + "<input type='input' id=\"id_dict_word_list_" + iDict + "\" size='5' value='" + g_DictWordList[iDict].Type + "' />";
+			outText =
+				outText +
+				"<input type='input' id=\"id_dict_word_list_" +
+				iDict +
+				"\" size='5' value='" +
+				g_DictWordList[iDict].Type +
+				"' />";
 			outText = outText + "<input type='input' size='15' value='" + g_DictWordList[iDict].Gramma + "' /><br />";
-			outText = outText + "<input type='input' size='20' value='" + g_DictWordList[iDict].Parent + "' /> <button type='button' onclick=\"showWordInNavi('" + g_DictWordList[iDict].Parent + "')\">»</button><br />";
-			outText = outText + "<textarea name=\"dict_mean\" rows=\"3\" col=\"25\" style=\"width:20em;\">" + g_DictWordList[iDict].Mean + "</textarea>"
+			outText =
+				outText +
+				"<input type='input' size='20' value='" +
+				g_DictWordList[iDict].Parent +
+				"' /> <button type='button' onclick=\"showWordInNavi('" +
+				g_DictWordList[iDict].Parent +
+				"')\">»</button><br />";
+			outText =
+				outText +
+				'<textarea name="dict_mean" rows="3" col="25" style="width:20em;">' +
+				g_DictWordList[iDict].Mean +
+				"</textarea>";
 			outText = outText + "<input type='input' size='20' value='" + g_DictWordList[iDict].Factors + "' /><br />";
-			outText = outText + "<input type='input' size='20' value='" + g_DictWordList[iDict].FactorMean + "' /><br />";
-			outText = outText + "<button type='button' onclick=\"updataDict('" + iDict + "','userdict')\">Modify</button><br />";
+			outText =
+				outText + "<input type='input' size='20' value='" + g_DictWordList[iDict].FactorMean + "' /><br />";
+			outText =
+				outText +
+				"<button type='button' onclick=\"updataDict('" +
+				iDict +
+				"','userdict')\">Modify</button><br />";
 			/*
 			outText=outText+"<mean onclick=\"updataWordFromDict(this,'mean')\">"+g_DictWordList[iDict].Mean+"</mean>";				
 			outText=outText+"<org onclick=\"updataWordFromDict(this,'org')\">"+g_DictWordList[iDict].Factors+"</org>";
@@ -1316,7 +1588,7 @@ function showWordInNavi(inWord) {
 	}
 
 	document.getElementById("id_dict_matched").innerHTML = outText;
-	document.getElementById('id_dict_curr_word_inner').innerHTML = dictCurrWordShowAsTable(inWord);
+	document.getElementById("id_dict_curr_word_inner").innerHTML = dictCurrWordShowAsTable(inWord);
 }
 
 function updataWordFromDict(obj, field) {
@@ -1351,10 +1623,7 @@ function updataWordFromDict(obj, field) {
 			}
 			break;
 	}
-
 }
-
-
 
 function setBookMarkColor(obj, strColor) {
 	var items = obj.parentNode.getElementsByTagName("li");
@@ -1362,9 +1631,8 @@ function setBookMarkColor(obj, strColor) {
 		items[i].style.outline = "0px solid";
 	}
 	if (g_currBookMarkColor == strColor || strColor == "bmc0") {
-		g_currBookMarkColor = "bmc0"
-	}
-	else {
+		g_currBookMarkColor = "bmc0";
+	} else {
 		obj.style.outline = "0.2em solid";
 		g_currBookMarkColor = strColor;
 	}
@@ -1389,7 +1657,6 @@ function match_key(obj) {
 		g_key_match_str = g_key_match_str.replace(/\[/g, "");
 		g_key_match_str = g_key_match_str.replace(/\]/g, "");
 	}
-
 }
 
 function unicode_key(obj) {
@@ -1406,12 +1673,15 @@ function unicode_key(obj) {
 		}
 	}
 
-	if (key_match_str != g_key_match_str && replace_judge == 1 && document.getElementById("input_smart_switch").checked) {
+	if (
+		key_match_str != g_key_match_str &&
+		replace_judge == 1 &&
+		document.getElementById("input_smart_switch").checked
+	) {
 		for (unicode_key_i in local_code_str) {
 			strNew = strNew.replace(local_code_str[unicode_key_i].id, local_code_str[unicode_key_i].value);
 		}
 		obj.value = strNew;
-
 	}
 }
 function input_key(obj) {
@@ -1437,7 +1707,7 @@ function getPaliReal(inStr) {
 			output += inStr[x];
 		}
 	}
-	return (output);
+	return output;
 }
 
 function menu_file_convert() {
@@ -1457,22 +1727,22 @@ function menu_file_convert() {
 	alert("convert " + xDocWords.length + "words.");
 }
 
-
 function editor_save() {
-	$.post("dom_http.php",
+	$.post(
+		"dom_http.php",
 		{
 			fileid: g_docid,
-			xmldata: com_xmlToString(gXmlBookData)
+			xmldata: com_xmlToString(gXmlBookData),
 		},
 		function (data, status) {
 			ntf_show("Data: " + data + "\nStatus: " + status);
-		});
+		}
+	);
 }
-
 
 /*Parse csv data and fill this document*/
 function csvDataParse(xmlCSVData) {
-	document.getElementById('id_csv_msg_inner').innerHTML = "Parseing CSV Data";
+	document.getElementById("id_csv_msg_inner").innerHTML = "Parseing CSV Data";
 	var xCSV = xmlCSVData.getElementsByTagName("word");
 	var xDocWords = gXmlBookDataBody.getElementsByTagName("word");
 
@@ -1490,21 +1760,21 @@ function csvDataParse(xmlCSVData) {
 		setNodeText(xDocWords[iword], "lock", getNodeText(xCSV[iword], "lock"));
 		modifyWordDetailByWordIndex(iword);
 	}
-	document.getElementById('id_csv_msg_inner').innerHTML = "Updata Document Data OK!";
+	document.getElementById("id_csv_msg_inner").innerHTML = "Updata Document Data OK!";
 }
 
 //import csv end
-
 
 //export cav begin
 function menu_file_export_ild() {
 	xmlHttp = null;
 	var_dump(gLocal.gui.loading);
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		xmlHttp = new XMLHttpRequest();
 		var_dump("test XMLHttpRequest<br/>");
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 		var_dump("testing Microsoft.XMLHTTP<br/>");
 	}
@@ -1537,16 +1807,14 @@ function menu_file_export_ild() {
 		dictDataString += "</dict>";
 		xmlHttp.send(sendHead + dictDataString);
 		var_dump(xmlHttp.responseText);
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
 }
 
-
 function menu_file_tools_empty(opt) {
 	var xDocWords = gXmlBookDataBody.getElementsByTagName("word");
-	if (opt == 'all') {
+	if (opt == "all") {
 		for (var iword = 0; iword < xDocWords.length; iword++) {
 			setNodeText(xDocWords[iword], "mean", "?");
 			setNodeText(xDocWords[iword], "org", "?");
@@ -1558,8 +1826,7 @@ function menu_file_tools_empty(opt) {
 			setNodeText(xDocWords[iword], "lock", "FALSE");
 			modifyWordDetailByWordIndex(iword);
 		}
-	}
-	else if (opt == 'mean') {
+	} else if (opt == "mean") {
 		for (var iword = 0; iword < xDocWords.length; iword++) {
 			setNodeText(xDocWords[iword], "mean", "[]");
 			//setNodeText(xDocWords[iword],"org","?");
@@ -1571,8 +1838,7 @@ function menu_file_tools_empty(opt) {
 			//setNodeText(xDocWords[iword],"lock","FALSE");
 			modifyWordDetailByWordIndex(iword);
 		}
-	}
-	else if (opt == 'case') {
+	} else if (opt == "case") {
 		for (var iword = 0; iword < xDocWords.length; iword++) {
 			//setNodeText(xDocWords[iword],"mean","[]");
 			//setNodeText(xDocWords[iword],"org","?");
@@ -1584,8 +1850,7 @@ function menu_file_tools_empty(opt) {
 			//setNodeText(xDocWords[iword],"lock","FALSE");
 			modifyWordDetailByWordIndex(iword);
 		}
-	}
-	else if (opt == 'bookmark') {
+	} else if (opt == "bookmark") {
 		for (var iword = 0; iword < xDocWords.length; iword++) {
 			//setNodeText(xDocWords[iword],"mean","[]");
 			//setNodeText(xDocWords[iword],"org","?");
@@ -1597,8 +1862,7 @@ function menu_file_tools_empty(opt) {
 			//setNodeText(xDocWords[iword],"lock","FALSE");
 			modifyWordDetailByWordIndex(iword);
 		}
-	}
-	else if (opt == 'note') {
+	} else if (opt == "note") {
 		for (var iword = 0; iword < xDocWords.length; iword++) {
 			//setNodeText(xDocWords[iword],"mean","[]");
 			//setNodeText(xDocWords[iword],"org","?");
@@ -1624,64 +1888,54 @@ function menu_file_tools_GUID() {
 }
 
 function showDebugPanal() {
-	var w = window.innerWidth
-		|| document.documentElement.clientWidth
-		|| document.body.clientWidth;
+	var w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-	var h = window.innerHeight
-		|| document.documentElement.clientHeight
-		|| document.body.clientHeight;
-
-
+	var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 }
 
 function show_popup(strMsg) {
-	var p = window.createPopup()
-	var pbody = p.document.body
-	pbody.style.backgroundColor = "red"
-	pbody.style.border = "solid black 1px"
-	pbody.innerHTML = strMsg + "<br />外面点击，即可关闭它！"
-	p.show(150, 150, 200, 50, document.body)
+	var p = window.createPopup();
+	var pbody = p.document.body;
+	pbody.style.backgroundColor = "red";
+	pbody.style.border = "solid black 1px";
+	pbody.innerHTML = strMsg + "<br />外面点击，即可关闭它！";
+	p.show(150, 150, 200, 50, document.body);
 }
 //Info_Panal顯示 begin
 
 function setInfoPanalVisibility() {
 	if (document.getElementById("id_info_panal").style.height == "0px") {
-		setInfoPanalSize('half');
-	}
-	else {
-		setInfoPanalSize('hidden');
+		setInfoPanalSize("half");
+	} else {
+		setInfoPanalSize("hidden");
 	}
 }
 
 //Info_Panal顯示尺寸
 function setInfoPanalSize(inSize) {
-
-	var h = window.innerHeight
-		|| document.documentElement.clientHeight
-		|| document.body.clientHeight;
+	var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 	var objInfoPanal = document.getElementById("id_info_panal");
 	//show_popup(w);
 	//alert(objInfoPanal.style.right);
 
 	switch (inSize) {
-		case "hidden"://min
+		case "hidden": //min
 			objInfoPanal.style.height = 0 + "px";
 			//setTimeout("hiddenPanal()",400);
 			break;
 
-		case "min"://min
-			objInfoPanal.style.height = (30) + "px";
+		case "min": //min
+			objInfoPanal.style.height = 30 + "px";
 			break;
-		case "half"://half
+		case "half": //half
 			objInfoPanal.style.height = h / 2 + "px";
 			break;
-		case "0.6"://2/3
-			objInfoPanal.style.height = (h * 0.6) + "px";
+		case "0.6": //2/3
+			objInfoPanal.style.height = h * 0.6 + "px";
 			break;
-		case "max"://max
-			objInfoPanal.style.height = (h) + "px";
+		case "max": //max
+			objInfoPanal.style.height = h + "px";
 			break;
 	}
 }
@@ -1692,54 +1946,53 @@ function hiddenPanal() {
 //Info_Panal顯示 end
 
 function windowsSelected(obj) {
-	document.getElementById('word_table').style.display = "none";
-	document.getElementById('id_dict_match_result').style.display = "none";
-	document.getElementById('id_dict_curr_word').style.display = "none";
-	document.getElementById('id_debug').style.display = "none";
+	document.getElementById("word_table").style.display = "none";
+	document.getElementById("id_dict_match_result").style.display = "none";
+	document.getElementById("id_dict_curr_word").style.display = "none";
+	document.getElementById("id_debug").style.display = "none";
 	switch (obj.value) {
 		case "view_vocabulary":
-			document.getElementById('word_table').style.display = "block";
+			document.getElementById("word_table").style.display = "block";
 			break;
 		case "view_dict_all":
-			document.getElementById('id_dict_match_result').style.display = "block";
+			document.getElementById("id_dict_match_result").style.display = "block";
 			break;
 		case "view_dict_curr":
-			document.getElementById('id_dict_curr_word').style.display = "block";
+			document.getElementById("id_dict_curr_word").style.display = "block";
 			break;
 		case "view_debug":
-			document.getElementById('id_debug').style.display = "block";
+			document.getElementById("id_debug").style.display = "block";
 			break;
 	}
 }
 
-function userDictUpdata() {
-
-}
+function userDictUpdata() {}
 
 var editor_DictUpdataXmlHttp = null;
 function editor_UserDictUpdata(recorderName, thisObj) {
 	thisObj.disabled = true;
 	var xmlText = "";
 
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		editor_DictUpdataXmlHttp = new XMLHttpRequest();
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		editor_DictUpdataXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
 	if (editor_DictUpdataXmlHttp != null) {
 		var queryString = "<wordlist>";
 		queryString += "<word>";
-		var d_id = document.getElementById('id_dict_user_id_' + recorderName).value;
-		var d_pali = document.getElementById('id_dict_user_pali_' + recorderName).value;
-		var d_type = document.getElementById('id_dict_user_type_' + recorderName).value;
-		var d_gramma = document.getElementById('id_dict_user_gramma_' + recorderName).value;
-		var d_parent = document.getElementById('id_dict_user_parent_' + recorderName).value;
-		var d_mean = document.getElementById('id_dict_user_mean_' + recorderName).value;
-		var d_note = document.getElementById('id_dict_user_note_' + recorderName).value;
-		var d_factors = document.getElementById('id_dict_user_factors_' + recorderName).value;
-		var d_fm = document.getElementById('id_dict_user_fm_' + recorderName).value;
+		var d_id = document.getElementById("id_dict_user_id_" + recorderName).value;
+		var d_pali = document.getElementById("id_dict_user_pali_" + recorderName).value;
+		var d_type = document.getElementById("id_dict_user_type_" + recorderName).value;
+		var d_gramma = document.getElementById("id_dict_user_gramma_" + recorderName).value;
+		var d_parent = document.getElementById("id_dict_user_parent_" + recorderName).value;
+		var d_mean = document.getElementById("id_dict_user_mean_" + recorderName).value;
+		var d_note = document.getElementById("id_dict_user_note_" + recorderName).value;
+		var d_factors = document.getElementById("id_dict_user_factors_" + recorderName).value;
+		var d_fm = document.getElementById("id_dict_user_fm_" + recorderName).value;
 		var d_confer = "";
 		var d_status = "";
 		var d_delete = "";
@@ -1783,33 +2036,34 @@ function editor_UserDictUpdata(recorderName, thisObj) {
 		g_DictWordNew.dictType = "user";
 		g_DictWordNew.fileName = "user_default";
 		g_DictWordNew.ParentLevel = 0;
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
-
 }
 
 function editor_UserDictUpdata_serverResponse() {
-	if (editor_DictUpdataXmlHttp.readyState == 4)// 4 = "loaded"
-	{
+	if (editor_DictUpdataXmlHttp.readyState == 4) {
+		// 4 = "loaded"
 		debugOutput("server response.", 0);
-		if (editor_DictUpdataXmlHttp.status == 200) {// 200 = "OK"
+		if (editor_DictUpdataXmlHttp.status == 200) {
+			// 200 = "OK"
 			var serverText = editor_DictUpdataXmlHttp.responseText;
 			debugOutput(serverText, 0);
 			obj = JSON.parse(serverText);
 			if (obj.msg[0].server_return == -1) {
 				alert(obj.msg[0].server_error);
-			}
-			else {
+			} else {
 				var_dump(gLocal.gui.userdict + obj.msg[0].server_op + " " + gLocal.gui.ok);
 				switch (obj.msg[0].server_op) {
 					case "insert":
 						g_DictWordNew.Id = obj.msg[0].server_return;
-						g_DictWordNew.dictID = 1;/*temp code*/
+						g_DictWordNew.dictID = 1; /*temp code*/
 						var inDict = false;
 						for (iFindNew in g_DictWordList) {
-							if (g_DictWordList[iFindNew].Id == g_DictWordNew.Id && g_DictWordList[iFindNew].fileName == "user_default") {
+							if (
+								g_DictWordList[iFindNew].Id == g_DictWordNew.Id &&
+								g_DictWordList[iFindNew].fileName == "user_default"
+							) {
 								inDict = true;
 								break;
 							}
@@ -1822,14 +2076,13 @@ function editor_UserDictUpdata_serverResponse() {
 						break;
 					case "update":
 						g_DictWordList[g_DictWordUpdataIndex] = g_DictWordNew;
-						editor_updataInlineDict(g_DictWordUpdataIndex, g_DictWordNew)
+						editor_updataInlineDict(g_DictWordUpdataIndex, g_DictWordNew);
 						break;
 				}
 			}
 			showCurrWordTable(g_WordTableCurrWord);
 			modifyWordDetailByWordId(g_currEditWord);
-		}
-		else {
+		} else {
 			debugOutput(xmlhttp.statusText, 0);
 		}
 	}
@@ -1859,14 +2112,13 @@ function editor_insertNewWordToInlineDict(newWord) {
 	setNodeText(newElement, "parentLevel", newWord.ParentLevel.toString());
 	if (xAllWord.length > 0) {
 		gXmlBookDataInlineDict.insertBefore(newElement, xAllWord[0]);
-	}
-	else {
+	} else {
 		gXmlBookDataInlineDict.insertBefore(newElement, null);
 	}
 }
 
 function editor_updataInlineDict(iword, newWord) {
-	var xILD = gXmlBookDataInlineDict.getElementsByTagName("word")
+	var xILD = gXmlBookDataInlineDict.getElementsByTagName("word");
 	if (xILD == null) {
 		return;
 	}
@@ -1887,7 +2139,6 @@ function editor_updataInlineDict(iword, newWord) {
 	setNodeText(xILD[iword], "dictType", newWord.dictType);
 	setNodeText(xILD[iword], "fileName", newWord.fileName);
 	setNodeText(xILD[iword], "parentLevel", newWord.ParentLevel);
-
 }
 /*
 上传到我的字典
@@ -1896,7 +2147,6 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 	let queryString = "<wordlist>";
 	let x = gXmlBookDataBody.getElementsByTagName("word");
 	let iCount = 0;
-
 
 	let wordNode;
 	let d_pali;
@@ -1921,17 +2171,15 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 			d_parent = $("#id_text_parent").val();
 			d_parent_id = "";
 			d_parent = com_getPaliReal(d_parent);
-			d_parentmean = removeFormulaB(d_mean, '[', ']');
-			d_parentmean = removeFormulaB(d_parentmean, '{', '}');
+			d_parentmean = removeFormulaB(d_mean, "[", "]");
+			d_parentmean = removeFormulaB(d_parentmean, "{", "}");
 			//if(d_parentmean.substr())
 			d_factors = $("#input_org").val();
-			d_fm = $("#input_om").val();//g_arrPartMean.join("+");
+			d_fm = $("#input_om").val(); //g_arrPartMean.join("+");
 			d_part_id = "";
 			d_case = $("#input_case").val();
 			d_note = $("#id_text_note").val();
-
-		}
-		else {
+		} else {
 			wordNode = x[wordID];
 			d_pali = getNodeText(wordNode, "real");
 			d_guid = getNodeText(wordNode, "guid");
@@ -1939,8 +2187,8 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 			d_parent = getNodeText(wordNode, "parent");
 			d_parent_id = getNodeText(wordNode, "parent_id");
 			d_parent = com_getPaliReal(d_parent);
-			d_parentmean = removeFormulaB(d_mean, '[', ']');
-			d_parentmean = removeFormulaB(d_parentmean, '{', '}');
+			d_parentmean = removeFormulaB(d_mean, "[", "]");
+			d_parentmean = removeFormulaB(d_parentmean, "{", "}");
 			d_factors = getNodeText(wordNode, "org");
 			d_fm = getNodeText(wordNode, "om");
 			d_part_id = getNodeText(wordNode, "part_id");
@@ -1952,12 +2200,10 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 			var d_type = d_case.substring(0, iPos);
 			if (iPos < d_case.length - 1) {
 				var d_gramma = d_case.substring(iPos + 1);
-			}
-			else {
+			} else {
 				var d_gramma = "";
 			}
-		}
-		else {
+		} else {
 			var d_type = "";
 			var d_gramma = d_case;
 		}
@@ -1975,10 +2221,8 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 			d_fm = "";
 		}
 
-		if ((d_type == ".un." || d_type == ".comp.") && (d_mean == "" && d_factors == "" && d_fm == "")) {
-		}
-		else if (d_pali.length > 0 && !(d_mean == "" && d_factors == "" && d_fm == "" && d_case == "")) {
-
+		if ((d_type == ".un." || d_type == ".comp.") && d_mean == "" && d_factors == "" && d_fm == "") {
+		} else if (d_pali.length > 0 && !(d_mean == "" && d_factors == "" && d_fm == "" && d_case == "")) {
 			//parent gramma infomation
 			switch (d_type) {
 				case ".n.":
@@ -1986,8 +2230,7 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 					d_parentGramma = d_gramma.split("$")[0];
 					if (d_parentGramma == ".m." || d_parentGramma == ".f." || d_parentGramma == ".nt.") {
 						d_parentGramma = d_parentGramma;
-					}
-					else {
+					} else {
 						d_parentGramma = "";
 					}
 					break;
@@ -2082,7 +2325,7 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 				queryString += "<mean>" + d_parentmean + "</mean>";
 				queryString += "<note></note>";
 				let fc = d_factors.split("+");
-				if (fc.length > 0 && (fc[fc.length - 1].slice(0, 1) == "[" && fc[fc.length - 1].slice(-1) == "]")) {
+				if (fc.length > 0 && fc[fc.length - 1].slice(0, 1) == "[" && fc[fc.length - 1].slice(-1) == "]") {
 					fc.pop();
 				}
 				queryString += "<factors>" + fc.join("+") + "</factors>";
@@ -2096,13 +2339,12 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 				queryString += "<language>" + d_language + "</language>";
 				queryString += "</word>";
 				iCount++;
-
 			}
 
 			//part recorder
 			if (d_fm.slice(0, 3) != "[a]") {
-				let arrPart = d_factors.split('+');
-				let arrPartMean = d_fm.split('+');
+				let arrPart = d_factors.split("+");
+				let arrPartMean = d_fm.split("+");
 				if (arrPart.length > 0 && arrPart.length == arrPartMean.length) {
 					for (iPart in arrPart) {
 						if (arrPartMean[iPart] != "" && arrPartMean[iPart] != "?")
@@ -2125,37 +2367,33 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 						queryString += "<enable>TRUE</enable>";
 						queryString += "<language>" + d_language + "</language>";
 						queryString += "</word>";
-						iCount++
+						iCount++;
 					}
 				}
 			}
 		}
-
 	}
 	queryString += "</wordlist>";
 
 	if (iCount == 0) {
 		ntf_show("no word update");
-	}
-	else {
-		$.post("dict_updata_wbw.php",
-			queryString,
-			function (data, status) {
-				ntf_show("Data: " + data + "\nStatus: " + status);
-			});
+	} else {
+		$.post("dict_updata_wbw.php", queryString, function (data, status) {
+			ntf_show("Data: " + data + "\nStatus: " + status);
+		});
 	}
 }
 
 // word by word dict updata
 var editor_wbwUpdataXmlHttp = null;
 function editor_WbwUpdata(wordIdFrom, wordIdTo) {
-
 	var xmlText = "";
 
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		editor_wbwUpdataXmlHttp = new XMLHttpRequest();
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		editor_wbwUpdataXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
@@ -2172,8 +2410,8 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 			let d_parent = getNodeText(wordNode, "parent");
 			let d_parent_id = getNodeText(wordNode, "parent_id");
 			d_parent = com_getPaliReal(d_parent);
-			let d_parentmean = removeFormulaB(d_mean, '[', ']');
-			d_parentmean = removeFormulaB(d_parentmean, '{', '}');
+			let d_parentmean = removeFormulaB(d_mean, "[", "]");
+			d_parentmean = removeFormulaB(d_parentmean, "{", "}");
 			let formula = getFormulaFromMeaning(d_mean);
 			let d_factors = getNodeText(wordNode, "org");
 			let d_fm = getNodeText(wordNode, "om");
@@ -2182,18 +2420,15 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 			let d_note = getNodeText(wordNode, "note");
 
 			if (d_pali.length > 0 && !(d_mean == "?" && d_factors == "?" && d_fm == "?" && d_case == "?")) {
-
 				let iPos = d_case.indexOf("#");
 				if (iPos >= 0) {
 					let d_type = d_case.substring(0, iPos);
 					if (iPos < d_case.length - 1) {
 						let d_gramma = d_case.substring(iPos + 1);
-					}
-					else {
+					} else {
 						let d_gramma = "";
 					}
-				}
-				else {
+				} else {
 					let d_type = "";
 					let d_gramma = d_case;
 				}
@@ -2205,8 +2440,7 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 						d_parentGramma = d_gramma.split("$")[0];
 						if (d_parentGramma == ".m." || d_parentGramma == ".f." || d_parentGramma == ".nt.") {
 							d_parentGramma = d_parentGramma;
-						}
-						else {
+						} else {
 							d_parentGramma = "";
 						}
 						break;
@@ -2303,12 +2537,11 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 					queryString += "<language>" + d_language + "</language>";
 					queryString += "</word>";
 					iCount++;
-
 				}
 
 				//part recorder
-				arrPart = d_factors.split('+');
-				arrPartMean = d_fm.split('+');
+				arrPart = d_factors.split("+");
+				arrPartMean = d_fm.split("+");
 				if (arrPart.length > 0 && arrPart.length == arrPartMean.length) {
 					for (iPart in arrPart) {
 						if (arrPartMean[iPart] != "?" && arrPartMean[iPart] != "" && arrPartMean[iPart] != "") {
@@ -2331,7 +2564,7 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 							queryString += "<enable>TRUE</enable>";
 							queryString += "<language>" + d_language + "</language>";
 							queryString += "</word>";
-							iCount++
+							iCount++;
 						}
 					}
 				}
@@ -2343,42 +2576,34 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 			console.log("updata user dict start.", 0);
 			editor_wbwUpdataXmlHttp.open("POST", "dict_updata_wbw.php", true);
 			editor_wbwUpdataXmlHttp.send(queryString);
-		}
-		else {
+		} else {
 			console.log("no user dicttionary data need updata.", 0);
 		}
-
-
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
-
 }
 
 function editor_wbwDictUpdata_serverResponse() {
-	if (editor_wbwUpdataXmlHttp.readyState == 4)// 4 = "loaded"
-	{
+	if (editor_wbwUpdataXmlHttp.readyState == 4) {
+		// 4 = "loaded"
 		debugOutput("server response.", 0);
-		if (editor_wbwUpdataXmlHttp.status == 200) {// 200 = "OK"
+		if (editor_wbwUpdataXmlHttp.status == 200) {
+			// 200 = "OK"
 			let serverText = editor_wbwUpdataXmlHttp.responseText;
 			var_dump(serverText);
 			debugOutput(serverText, 0);
-		}
-		else {
+		} else {
 			debugOutput(xmlhttp.statusText, 0);
 		}
 	}
 }
 
-
 function uploadAllWordData() {
 	let x = gXmlBookDataBody.getElementsByTagName("word");
 	if (x.length > 0) {
 		editor_WbwUpdata(0, x.length - 1);
-	}
-	else {
-
+	} else {
 	}
 }
 function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
@@ -2386,17 +2611,32 @@ function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
 	eCaseItems = eCaseTable.getElementsByTagName("span");
 
 	if (type) {
-		strTypeSelect = "<div id=\"id_case_dropdown_0_" + unique_id + "\" class=\"case_dropdown gramma_selector\" style='min-width: unset;padding-right: " + padding_width + "em;'>";
-		strTypeSelect += "<p class=\"case_dropbtn cell\" style='line-height: 1.2em;'>" + getLocalGrammaStr(type) + "</p>";
-	}
-	else {
-		strTypeSelect = "<div id=\"id_case_dropdown_0_" + unique_id + "\" class=\"case_dropdown gramma_selector\" style='min-width: unset;padding-right: " + padding_width + "em;'>";
+		strTypeSelect =
+			'<div id="id_case_dropdown_0_' +
+			unique_id +
+			'" class="case_dropdown gramma_selector" style=\'min-width: unset;padding-right: ' +
+			padding_width +
+			"em;'>";
+		strTypeSelect +=
+			"<p class=\"case_dropbtn cell\" style='line-height: 1.2em;'>" + getLocalGrammaStr(type) + "</p>";
+	} else {
+		strTypeSelect =
+			'<div id="id_case_dropdown_0_' +
+			unique_id +
+			'" class="case_dropdown gramma_selector" style=\'min-width: unset;padding-right: ' +
+			padding_width +
+			"em;'>";
 		strTypeSelect += "<p class=\"case_dropbtn  cell\" style='line-height: 1.2em;'>?</p>";
 	}
-	strTypeSelect += "<div class=\"case_dropdown-content\">";
+	strTypeSelect += '<div class="case_dropdown-content">';
 
 	for (iType = 0; iType < gLocal.type_str.length; iType++) {
-		strTypeSelect += "<a onclick=\"caseChanged(0,'" + gLocal.type_str[iType].id + "')\">" + gLocal.type_str[iType].value + "</a>"
+		strTypeSelect +=
+			"<a onclick=\"caseChanged(0,'" +
+			gLocal.type_str[iType].id +
+			"')\">" +
+			gLocal.type_str[iType].value +
+			"</a>";
 	}
 	strTypeSelect += "</div>";
 	strTypeSelect += "</div>";
@@ -2404,8 +2644,6 @@ function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
 
 	for (iType = 0; iType < gramma_str.length; iType++) {
 		if (gramma_str[iType].id == type) {
-
-
 			var strTypeSelect = "";
 			gramma = gramma_str[iType].a;
 			if (gramma.length > 0) {
@@ -2414,15 +2652,26 @@ function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
 					case1 = items[0];
 					g_caseSelect[1] = case1;
 				}
-				strTypeSelect = "<div id=\"id_case_dropdown_1_" + unique_id + "\" class=\"case_dropdown gramma_selector\" style='min-width: unset;padding-right: " + padding_width + "em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" + getLocalGrammaStr(case1) + "</p>";
-				strTypeSelect += "<div class=\"case_dropdown-content\">";
+				strTypeSelect =
+					'<div id="id_case_dropdown_1_' +
+					unique_id +
+					'" class="case_dropdown gramma_selector" style=\'min-width: unset;padding-right: ' +
+					padding_width +
+					"em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" +
+					getLocalGrammaStr(case1) +
+					"</p>";
+				strTypeSelect += '<div class="case_dropdown-content">';
 				for (iItem = 0; iItem < items.length; iItem++) {
-					strTypeSelect += "<a onclick=\"caseChanged(1,'" + items[iItem] + "')\">" + getLocalGrammaStr(items[iItem]) + "</a>"
+					strTypeSelect +=
+						"<a onclick=\"caseChanged(1,'" +
+						items[iItem] +
+						"')\">" +
+						getLocalGrammaStr(items[iItem]) +
+						"</a>";
 				}
 				strTypeSelect += "</div>";
 				strTypeSelect += "</div>";
-			}
-			else {
+			} else {
 				g_caseSelect[1] = "";
 			}
 			eCaseItems[1].innerHTML = strTypeSelect;
@@ -2435,15 +2684,26 @@ function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
 					case2 = items[0];
 					g_caseSelect[2] = case2;
 				}
-				strTypeSelect = "<div id=\"id_case_dropdown_2_" + unique_id + "\" class=\"case_dropdown gramma_selector\" style='min-width: unset;padding-right: " + padding_width + "em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" + getLocalGrammaStr(case2) + "</p>";
-				strTypeSelect += "<div class=\"case_dropdown-content\">";
+				strTypeSelect =
+					'<div id="id_case_dropdown_2_' +
+					unique_id +
+					'" class="case_dropdown gramma_selector" style=\'min-width: unset;padding-right: ' +
+					padding_width +
+					"em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" +
+					getLocalGrammaStr(case2) +
+					"</p>";
+				strTypeSelect += '<div class="case_dropdown-content">';
 				for (iItem = 0; iItem < items.length; iItem++) {
-					strTypeSelect += "<a onclick=\"caseChanged(2,'" + items[iItem] + "')\">" + getLocalGrammaStr(items[iItem]) + "</a>"
+					strTypeSelect +=
+						"<a onclick=\"caseChanged(2,'" +
+						items[iItem] +
+						"')\">" +
+						getLocalGrammaStr(items[iItem]) +
+						"</a>";
 				}
 				strTypeSelect += "</div>";
 				strTypeSelect += "</div>";
-			}
-			else {
+			} else {
 				g_caseSelect[2] = "";
 			}
 			eCaseItems[2].innerHTML = strTypeSelect;
@@ -2456,22 +2716,31 @@ function renderCaseSelect(type, case1, case2, case3, unique_id, padding_width) {
 					case3 = items[0];
 					g_caseSelect[3] = case3;
 				}
-				strTypeSelect = "<div id=\"id_case_dropdown_3_" + unique_id + "\" class=\"case_dropdown gramma_selector\" style='min-width: unset;padding-right: " + padding_width + "em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" + getLocalGrammaStr(case3) + "</p>";
-				strTypeSelect += "<div class=\"case_dropdown-content\">";
+				strTypeSelect =
+					'<div id="id_case_dropdown_3_' +
+					unique_id +
+					'" class="case_dropdown gramma_selector" style=\'min-width: unset;padding-right: ' +
+					padding_width +
+					"em;'><p class=\"case_dropbtn\" style='line-height: 1.2em;'>" +
+					getLocalGrammaStr(case3) +
+					"</p>";
+				strTypeSelect += '<div class="case_dropdown-content">';
 				for (iItem = 0; iItem < items.length; iItem++) {
-					strTypeSelect += "<a onclick=\"caseChanged(3,'" + items[iItem] + "')\">" + getLocalGrammaStr(items[iItem]) + "</a>"
+					strTypeSelect +=
+						"<a onclick=\"caseChanged(3,'" +
+						items[iItem] +
+						"')\">" +
+						getLocalGrammaStr(items[iItem]) +
+						"</a>";
 				}
 				strTypeSelect += "</div>";
 				strTypeSelect += "</div>";
-			}
-			else {
+			} else {
 				g_caseSelect[3] = "";
 			}
 			eCaseItems[3].innerHTML = strTypeSelect;
-
 		}
 	}
-
 }
 
 function refreshCaseSelect() {
@@ -2510,13 +2779,12 @@ function removeFormula_B(inStr) {
 		if (inStr[i] == "}" || inStr[i] == "]") {
 			copy = true;
 		}
-
 	}
 	return output;
 }
 function removeFormula(inStr) {
 	if (inStr.indexOf("[") >= 0) {
-		return (inStr);
+		return inStr;
 	}
 	pos = 0;
 	copy = true;
@@ -2531,7 +2799,6 @@ function removeFormula(inStr) {
 		if (inStr[i] == "}") {
 			copy = true;
 		}
-
 	}
 	return output;
 }
@@ -2553,11 +2820,9 @@ function removeFormulaB(inStr, sBegin, sEnd) {
 		if (inStr[i] == sEnd) {
 			copy = true;
 		}
-
 	}
 	return output;
 }
-
 
 function getFormulaFromMeaning(inStr, sBegin, sEnd) {
 	let pos = 0;
@@ -2569,13 +2834,11 @@ function getFormulaFromMeaning(inStr, sBegin, sEnd) {
 		if (inStr[i] == sBegin) {
 			fromulaBegin = true;
 			meaningBegin = false;
-		}
-		else if (inStr[i] == sEnd) {
+		} else if (inStr[i] == sEnd) {
 			fromulaBegin = false;
 			meaningBegin = true;
 			output += inStr[i];
-		}
-		else {
+		} else {
 			if (!fromulaBegin) {
 				meaningBegin = true;
 			}
@@ -2588,8 +2851,6 @@ function getFormulaFromMeaning(inStr, sBegin, sEnd) {
 		if (fromulaBegin) {
 			output += inStr[i];
 		}
-
-
 	}
 	return output;
 }
@@ -2601,14 +2862,11 @@ function closeModifyWindow() {
 		eWin.style.display = "none";
 		document.getElementById("modifyDiv").appendChild(eWin);
 		gCurrModifyWindowParNo = -1;
-	}
-	else {
-
+	} else {
 	}
 	if (_display_sbs == 1) {
-		$("#ws_" + g_currEditWord).removeClass("wbw_selected")
+		$("#ws_" + g_currEditWord).removeClass("wbw_selected");
 	}
-
 }
 
 //取消对单个词的修改
@@ -2629,7 +2887,7 @@ function getParIndexByWordId(wordId) {
 	var bookId = "";
 	var parNo = "";
 
-	var allBlock = gXmlBookDataBody.getElementsByTagName("block")
+	var allBlock = gXmlBookDataBody.getElementsByTagName("block");
 	for (var iBlock = 0; iBlock < allBlock.length; iBlock++) {
 		xmlParInfo = allBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = allBlock[iBlock].getElementsByTagName("data")[0];
@@ -2648,38 +2906,39 @@ function getParIndexByWordId(wordId) {
 		}
 	}
 	if (bookId == "" || parNo == "") {
-		return (false);
-	}
-	else {
+		return false;
+	} else {
 		for (var iPar = 0; iPar < gArrayDocParagraph.length; iPar++) {
-			currBookId = gArrayDocParagraph[iPar].book
-			currParNo = gArrayDocParagraph[iPar].paragraph
+			currBookId = gArrayDocParagraph[iPar].book;
+			currParNo = gArrayDocParagraph[iPar].paragraph;
 
 			if (currBookId == bookId && currParNo == parNo) {
-				return (iPar);
+				return iPar;
 			}
 		}
 	}
 
-	return (false);
+	return false;
 }
 var mouse_action_edit = true;
 var mouse_action_lookup = true;
 var mouse_action_translate = false;
 function lock_key(obj, key, check_id, svg_id) {
-	var lock_key_str = ""
+	var lock_key_str = "";
 	switch (key) {
 		case "off":
-			lock_key_str += "<input id='" + check_id + "' type=\"checkbox\" style=\"display:none; \" />";
-			lock_key_str += "<svg class=\"icon\" onclick=lock_key('" + obj + "','on','" + check_id + "','" + svg_id + "')>";
-			lock_key_str += "<use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_" + svg_id + "_off\">";
+			lock_key_str += "<input id='" + check_id + '\' type="checkbox" style="display:none; " />';
+			lock_key_str +=
+				'<svg class="icon" onclick=lock_key(\'' + obj + "','on','" + check_id + "','" + svg_id + "')>";
+			lock_key_str += '<use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_' + svg_id + '_off">';
 			lock_key_str += "</use></svg>";
 			document.getElementById(obj).innerHTML = lock_key_str;
 			break;
 		case "on":
-			lock_key_str += "<input id='" + check_id + "' type=\"checkbox\" style=\"display:none; \" checked/>";
-			lock_key_str += "<svg class=\"icon\" onclick=lock_key('" + obj + "','off','" + check_id + "','" + svg_id + "')>";
-			lock_key_str += "<use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_" + svg_id + "_on \">";
+			lock_key_str += "<input id='" + check_id + '\' type="checkbox" style="display:none; " checked/>';
+			lock_key_str +=
+				'<svg class="icon" onclick=lock_key(\'' + obj + "','off','" + check_id + "','" + svg_id + "')>";
+			lock_key_str += '<use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_' + svg_id + '_on ">';
 			lock_key_str += "</use></svg>";
 			document.getElementById(obj).innerHTML = lock_key_str;
 			break;
@@ -2693,8 +2952,7 @@ function set_word_click_action(obj, item) {
 				document.getElementById(obj).checked = false;
 				document.getElementById("icon_" + obj + "_on").style.display = "none";
 				document.getElementById("icon_" + obj + "_off").style.display = "block";
-			}
-			else {
+			} else {
 				document.getElementById(obj).checked = true;
 				document.getElementById("icon_" + obj + "_on").style.display = "block";
 				document.getElementById("icon_" + obj + "_off").style.display = "none";
@@ -2707,8 +2965,7 @@ function set_word_click_action(obj, item) {
 				document.getElementById("icon_" + obj + "_on").style.display = "none";
 				document.getElementById("icon_" + obj + "_off").style.display = "block";
 				mouse_action_edit = document.getElementById(obj).checked;
-			}
-			else {
+			} else {
 				document.getElementById(obj).checked = true;
 				document.getElementById("icon_" + obj + "_on").style.display = "block";
 				document.getElementById("icon_" + obj + "_off").style.display = "none";
@@ -2725,8 +2982,7 @@ function set_word_click_action(obj, item) {
 				document.getElementById("icon_" + obj + "_on").style.display = "none";
 				document.getElementById("icon_" + obj + "_off").style.display = "block";
 				mouse_action_lookup = document.getElementById(obj).checked;
-			}
-			else {
+			} else {
 				document.getElementById(obj).checked = true;
 				document.getElementById("icon_" + obj + "_on").style.display = "block";
 				document.getElementById("icon_" + obj + "_off").style.display = "none";
@@ -2743,8 +2999,7 @@ function set_word_click_action(obj, item) {
 				document.getElementById("icon_" + obj + "_on").style.display = "none";
 				document.getElementById("icon_" + obj + "_off").style.display = "block";
 				mouse_action_translate = document.getElementById(obj).checked;
-			}
-			else {
+			} else {
 				document.getElementById(obj).checked = true;
 				document.getElementById("icon_" + obj + "_on").style.display = "block";
 				document.getElementById("icon_" + obj + "_off").style.display = "none";
@@ -2775,8 +3030,7 @@ function on_word_click(sWordId) {
 
 	//显示修改单个词的窗口
 	if (mouse_action_edit) {
-
-		showModifyWin(sWordId)
+		showModifyWin(sWordId);
 	}
 
 	//word Message
@@ -2797,9 +3051,7 @@ function on_word_click(sWordId) {
 	//}
 }
 
-function note_apply(guid) {
-
-}
+function note_apply(guid) {}
 /*
 function apply_button_lock(){
 
@@ -2843,20 +3095,17 @@ function mdf_win_case_change(strCase) {
 	g_caseSelect[0] = type;
 	if (arrGramma[0]) {
 		g_caseSelect[1] = arrGramma[0];
-	}
-	else {
+	} else {
 		g_caseSelect[1] = "";
 	}
 	if (arrGramma[1]) {
 		g_caseSelect[2] = arrGramma[1];
-	}
-	else {
+	} else {
 		g_caseSelect[2] = "";
 	}
 	if (arrGramma[2]) {
 		g_caseSelect[3] = arrGramma[2];
-	}
-	else {
+	} else {
 		g_caseSelect[3] = "";
 	}
 	refreshCaseSelect();
@@ -2896,11 +3145,9 @@ function showModifyWin(sWordId) {
 		if (sParentGrammar != "" || sParent2 != "") {
 			document.getElementById("edit_detail_prt_prt").style.display = "block";
 			document.getElementById("svg_parent2").style.transform = "rotate(90deg)";
-		}
-		else {
+		} else {
 			document.getElementById("edit_detail_prt_prt").style.display = "none";
 			document.getElementById("svg_parent2").style.transform = "rotate(0deg)";
-
 		}
 		document.getElementById("parent_grammar").innerHTML = sParentGrammar;
 		$("#id_text_prt_prt").val(sParent2);
@@ -2915,8 +3162,7 @@ function showModifyWin(sWordId) {
 		if (typeAndGramma.length > 1) {
 			sType = typeAndGramma[0];
 			sGramma = typeAndGramma[1];
-		}
-		else {
+		} else {
 			sType = "";
 			sGramma = typeAndGramma[0];
 		}
@@ -2940,19 +3186,20 @@ function showModifyWin(sWordId) {
 			input_org_change(document.getElementById("input_org"));
 		}
 
-		tApply += "<div class=\"modifybutton\">";
-		tApply += "<p style='display: flex' >"//onclick=apply_button_lock()
+		tApply += '<div class="modifybutton">';
+		tApply += "<p style='display: flex' >"; //onclick=apply_button_lock()
 
 		if (getNodeText(xAllWord[wid], "lock") == "true") {
 			tApply += "<span class='apply_to' id='edit_lock' align=\"left\">";
-			tApply += "<input type=\"checkbox\" style=\" display:none;\" align=\"left\" id='input_lock' checked />"
-			tApply += "<svg class=\"icon\" onclick=lock_key('edit_lock','off','input_lock','lock')><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_lock_on \"></use></svg>";
-			tApply += "</span>"
-		}
-		else {
+			tApply += '<input type="checkbox" style=" display:none;" align="left" id=\'input_lock\' checked />';
+			tApply +=
+				"<svg class=\"icon\" onclick=lock_key('edit_lock','off','input_lock','lock')><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_lock_on \"></use></svg>";
+			tApply += "</span>";
+		} else {
 			tApply += "<span class='apply_to' id='edit_lock' align=\"left\">";
-			tApply += "<input type=\"checkbox\" style=\" display:none;\" align=\"left\" id='input_lock' />";
-			tApply += "<svg class=\"icon\" onclick=lock_key('edit_lock','on','input_lock','lock')><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_lock_off\"></use></svg>";
+			tApply += '<input type="checkbox" style=" display:none;" align="left" id=\'input_lock\' />';
+			tApply +=
+				"<svg class=\"icon\" onclick=lock_key('edit_lock','on','input_lock','lock')><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_lock_off\"></use></svg>";
 			tApply += "</span>";
 		}
 		//tApply += "<button onclick=\"upload_to_my_dict()\">上传到我的字典</button>";
@@ -2960,29 +3207,39 @@ function showModifyWin(sWordId) {
 		let allword = doc_word();
 		let sameCount = 0;
 		for (let i = 0; i < allword.length; i++) {
-			if (sReal == getNodeText(allword[i], "real") || (sParent != "" && sParent == getNodeText(allword[i], "parent"))) {
+			if (
+				sReal == getNodeText(allword[i], "real") ||
+				(sParent != "" && sParent == getNodeText(allword[i], "parent"))
+			) {
 				sameCount++;
 			}
 		}
 
 		if (sameCount > 1) {
 			tApply += "<span>";
-		}
-		else {
+		} else {
 			tApply += "<span style='display:none'>";
 		}
-		tApply += "<input id='checkbox_apply_same' type=\"checkbox\" style=\" width:14px; height:14px; margin-left:10px;\" align=\"left\"/>" + gLocal.gui.applyto + "&nbsp;<span id='same_word_count' >" + (sameCount + 1) + "&nbsp;" + gLocal.gui.same_word + "</span>";
+		tApply +=
+			'<input id=\'checkbox_apply_same\' type="checkbox" style=" width:14px; height:14px; margin-left:10px;" align="left"/>' +
+			gLocal.gui.applyto +
+			"&nbsp;<span id='same_word_count' >" +
+			(sameCount + 1) +
+			"&nbsp;" +
+			gLocal.gui.same_word +
+			"</span>";
 		tApply += "</span>";
 
 		tApply += "<span class='apply_to' id='upload_lock' align=\"left\">";
-		tApply += "<input type=\"checkbox\" style=\"display:none; width:14px; height:14px; margin-left:10px;\" align=\"left\" id='input_to_db' />";
+		tApply +=
+			'<input type="checkbox" style="display:none; width:14px; height:14px; margin-left:10px;" align="left" id=\'input_to_db\' />';
 		//tApply += "<svg class=\"icon\" onclick=lock_key('upload_lock','on','input_to_db','cloud')><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_cloud_off\"></span>";
 		tApply += "</span>";
 
 		tApply += "</p>";
 
 		tApply += "</div>";
-		tApply += "<div class=\"modifycancel\" align=\"right\">";
+		tApply += '<div class="modifycancel" align="right">';
 		/*		
 		tApply += "<span class='apply_to'>" 
 		tApply+= "<svg class=\"icon\"><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_format_paint\">";
@@ -3001,11 +3258,17 @@ function showModifyWin(sWordId) {
 		tApply+= "<svg class=\"icon\"><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_format_line_spacing\">";
 		tApply+= "</button>";
 		*/
-		tApply += "<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" + sWordId + "',true)\"  title='Save and Favorite'>";
+		tApply +=
+			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
+			sWordId +
+			"',true)\"  title='Save and Favorite'>";
 		tApply += gLocal.gui.to_user_dictionary;
 		tApply += "</button>";
 
-		tApply += "<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" + sWordId + "',false)\"  title='Save Draft'>";
+		tApply +=
+			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
+			sWordId +
+			"',false)\"  title='Save Draft'>";
 		tApply += gLocal.gui.save;
 		tApply += "</button>";
 
@@ -3027,8 +3290,7 @@ function showModifyWin(sWordId) {
 
 		if (getNodeText(xAllWord[wid], "bmc") == "") {
 			g_currBookMarkColor = "bmc0";
-		}
-		else {
+		} else {
 			g_currBookMarkColor = getNodeText(xAllWord[wid], "bmc");
 		}
 		getBookMarkColor(g_currBookMarkColor);
@@ -3036,10 +3298,15 @@ function showModifyWin(sWordId) {
 		//显示编辑窗口
 		eWin.style.display = "block";
 		if (_display_sbs == 1) {
-
 			$("#modifywin").addClass("left_edit_frame");
 			//根据偏移量设置窗口位置
-			if ($(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth() > 0) {
+			if (
+				$(".sent_wbw").outerWidth() +
+					$("#left_tool_bar").outerWidth() -
+					$("#wb" + sWordId).offset().left -
+					$("#modifywin").outerWidth() >
+				0
+			) {
 				//$("#modifywin").removeClass("right_edit_frame")
 				$("#modifywin").css("margin-left", "0");
 
@@ -3048,14 +3315,18 @@ function showModifyWin(sWordId) {
 				//$("#modifywin::after").css("left", "0");
 				//$("#modifywin::after").style.left = "0";, "": "" }
 			} else {
-				let margin_change = $(".sent_wbw").outerWidth() + $("#left_tool_bar").outerWidth() - $("#wb" + sWordId).offset().left - $("#modifywin").outerWidth();
+				let margin_change =
+					$(".sent_wbw").outerWidth() +
+					$("#left_tool_bar").outerWidth() -
+					$("#wb" + sWordId).offset().left -
+					$("#modifywin").outerWidth();
 				//$("#modifywin").removeClass("left_edit_frame")
 				//$("#modifywin").addClass("right_edit_frame")
 				$("#modifywin").css("margin-left", margin_change + "px");
 				//$("#modifywin::after").css("right", "0");
 				//$("#modifywin::after").style.right = "0";
 			}
-			$("#ws_" + sWordId).addClass("wbw_selected")
+			$("#ws_" + sWordId).addClass("wbw_selected");
 		}
 
 		var sDetail = "detail" + sWordId;
@@ -3066,8 +3337,6 @@ function showModifyWin(sWordId) {
 
 		//editor_refresh_inline_dict(sReal);
 	}
-
-
 }
 
 function get_book_name_by_id(bookid) {
@@ -3079,7 +3348,7 @@ function get_book_name_by_id(bookid) {
 			book_id2 = local_palicannon_index[i_bookname].title + book_id2;
 		}
 	}
-	return (book_id2);
+	return book_id2;
 }
 
 function add_word_to_tran_win(sMeaning) {
@@ -3110,16 +3379,16 @@ function input_org_change() {
 	}
 	if (arrNewPart.length > 0) {
 		//如果有内存字典里面没有的单词，查询
-		$.get("dict_find_one.php",
+		$.get(
+			"dict_find_one.php",
 			{
 				word: arrNewPart.join(),
-				type: "part"
+				type: "part",
 			},
 			function (data, status) {
 				try {
 					var worddata = JSON.parse(data);
-				}
-				catch (e) {
+				} catch (e) {
 					console.error(e.error);
 				}
 				if (worddata.length > 0) {
@@ -3127,8 +3396,7 @@ function input_org_change() {
 					for (var i in worddata) {
 						if (mDict[worddata[i].pali]) {
 							spell[worddata[i].pali] = 1;
-						}
-						else {
+						} else {
 							spell[worddata[i].pali] = 0;
 						}
 					}
@@ -3142,51 +3410,47 @@ function input_org_change() {
 							mDict[worddata[i].pali].push(worddata[i]);
 						}
 					}
-				}
-				else {
-
+				} else {
 				}
 				refreshPartMeaningSelect();
-
-			});
-	}
-	else {
+			}
+		);
+	} else {
 		refreshPartMeaningSelect();
 	}
 }
 
-
 const db_name = "../../tmp/user/wbw.db3";
+//载入我的字典中的各位公式
 function load_my_formula() {
-
 	//如果有内存字典里面没有的单词，查询
 	console.log("load_my_formula - dict_find_one.php");
-	$.get("dict_find_one.php",
+	$.get(
+		"dict_find_one.php",
 		{
 			word: "_formula_",
 			dict_name: db_name,
-			deep: 1
+			deep: 1,
 		},
 		function (data, status) {
 			try {
 				myFormula = JSON.parse(data);
-			}
-			catch (e) {
+			} catch (e) {
 				console.error(e.error);
 			}
-		});
-
+		}
+	);
 }
 
 function part_mean_ok() {
 	var part_mean_ok_str = g_arrPartMean.join("+");
-	part_mean_ok_str = "#" + part_mean_ok_str + "#"
+	part_mean_ok_str = "#" + part_mean_ok_str + "#";
 	part_mean_ok_str = part_mean_ok_str.replace(/\+ /g, "+");
 	part_mean_ok_str = part_mean_ok_str.replace(/ \+/g, "+");
 	part_mean_ok_str = part_mean_ok_str.replace(/\# /g, "");
 	part_mean_ok_str = part_mean_ok_str.replace(/ \#/g, "");
 	part_mean_ok_str = part_mean_ok_str.replace(/\#/g, "");
-	document.getElementById("input_om").value = part_mean_ok_str;//.slice(0,-1);
+	document.getElementById("input_om").value = part_mean_ok_str; //.slice(0,-1);
 }
 
 /*
@@ -3196,7 +3460,7 @@ function meaningPartChange(index, newValue) {
 	g_initPartMeaning = false;
 
 	g_arrPartMean[index] = newValue;
-	part_mean_ok()
+	part_mean_ok();
 
 	refreshPartMeaningSelect();
 }
@@ -3205,15 +3469,13 @@ function input_org_switch(id_1, id_2) {
 	document.getElementById(id_2).style.display = "inline-flex";
 	document.getElementById(id_2).focus();
 	refreshPartMeaningSelect();
-
 }
 function refreshPartMeaningSelect() {
 	var part = document.getElementById("input_org").value;
-	var arrPart = new Array;
+	var arrPart = new Array();
 	if (part == "" || part.lastIndexOf("+") == -1) {
 		arrPart.push(part);
-	}
-	else {
+	} else {
 		arrPart = part.split("+");
 	}
 	if (g_initPartMeaning) {
@@ -3222,20 +3484,20 @@ function refreshPartMeaningSelect() {
 	var output = "";
 	//output="<span style='width:90%' onclick=\"input_org_switch('input_org_select','input_om')\"></span><br/>"
 	for (iPart in arrPart) {
-		output += getMeaningMenuList(iPart, arrPart[iPart])
+		output += getMeaningMenuList(iPart, arrPart[iPart]);
 		if (arrPart.length == 1) {
 			break;
-		}
-		else if (iPart < arrPart.length - 1) {
+		} else if (iPart < arrPart.length - 1) {
 			output += "+";
 		}
 	}
 	output += "<div>";
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"copy_part_mean_to_mean()\">";
-	output += "<svg class=\"icon\"><use xlink=\"http://www.w3.org/1999/xlink\" href=\"svg/icon.svg#ic_vertical_align_top\">";
+	output += '<svg class="icon"><use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_vertical_align_top">';
 	output += "</button>";
 
-	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"input_org_switch('input_org_select','input_om')\">";
+	output +=
+		"<button style='margin-left:auto; padding: 1px 6px;' onclick=\"input_org_switch('input_org_select','input_om')\">";
 	output += "<svg class='icon'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
 	output += "</button>";
 	output += "</div>";
@@ -3243,11 +3505,10 @@ function refreshPartMeaningSelect() {
 	document.getElementById("input_org_select").innerHTML = output;
 	//增加拆分意思所见即所得
 	var part_mean_display_str = document.getElementById("input_om").value;
-	var part_mean_display_array = new Array;
+	var part_mean_display_array = new Array();
 	if (part_mean_display_str.lastIndexOf("+") != -1) {
 		part_mean_display_array = part_mean_display_str.split("+");
-	}
-	else {
+	} else {
 		part_mean_display_array.push(part_mean_display_str);
 	}
 
@@ -3260,21 +3521,18 @@ function refreshPartMeaningSelect() {
 				document.getElementById("org_part_mean_" + i_display).innerHTML = "↓↓";
 			}
 		}
-	}
-	else {
+	} else {
 		for (i_display in arrPart) {
 			if (i_display == arrPart.length - 1) {
-				var part_mean_display_str_last = ""
+				var part_mean_display_str_last = "";
 				for (j_display = i_display; j_display < part_mean_display_array.length; j_display++) {
 					part_mean_display_str_last += part_mean_display_array[j_display];
 				}
 				document.getElementById("org_part_mean_" + i_display).innerHTML = part_mean_display_str_last;
-			}
-			else {
+			} else {
 				document.getElementById("org_part_mean_" + i_display).innerHTML = part_mean_display_array[i_display];
 			}
 		}
-
 	}
 }
 //编辑窗口拆分意思复制到整体意思
@@ -3284,19 +3542,17 @@ function copy_part_mean_to_mean() {
 //编辑窗口拆分意思下拉菜单
 function getMeaningMenuList(index, word) {
 	var currMeaningList0 = getWordMeaningList(word);
-	var currMeaningList = new Array;
+	var currMeaningList = new Array();
 	var part_mean_display_str = document.getElementById("input_om").value;
-	var part_mean_display_array = new Array;
+	var part_mean_display_array = new Array();
 	if (part_mean_display_str.lastIndexOf("+") != -1) {
 		part_mean_display_array = part_mean_display_str.split("+");
-	}
-	else {
+	} else {
 		part_mean_display_array.push(part_mean_display_str);
 	}
 	if (part_mean_display_array.length - 1 >= index) {
 		currMeaningList.push(part_mean_display_array[index]);
-	}
-	else {
+	} else {
 		currMeaningList.push("↓↓");
 	}
 	for (MeaningList_i in currMeaningList0) {
@@ -3310,18 +3566,22 @@ function getMeaningMenuList(index, word) {
 		output += currMeaningList[0];
 
 		g_arrPartMean[index] = currMeaningList[0];
-	}
-	else {
-
+	} else {
 		output += g_arrPartMean[index];
 	}
 	output += "</p>";
 
-
-	output += "<div class=\"case_dropdown-content\" id='part_mean_menu_" + index + "'>";
+	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
 	for (i in currMeaningList) {
-		output += "<a onclick='meaningPartChange(" + index + ",\"" + currMeaningList[i] + "\")'>" + currMeaningList[i] + "</a>";
+		output +=
+			"<a onclick='meaningPartChange(" +
+			index +
+			',"' +
+			currMeaningList[i] +
+			"\")'>" +
+			currMeaningList[i] +
+			"</a>";
 	}
 
 	//带字典名的菜单
@@ -3350,7 +3610,7 @@ function getMeaningMenuList(index, word) {
 	*/
 	output += "</div>";
 	output += "</div>";
-	return (output);
+	return output;
 }
 function getWordMeaningList(word) {
 	var currOM = "";
@@ -3373,9 +3633,8 @@ function getWordMeaningList(word) {
 	if (arrOM.length == 0) {
 		arrOM.push("?");
 	}
-	return (arrOM);
+	return arrOM;
 }
-
 
 function edit_un_remove(parentId) {
 	edit_un_RemoveHtmlNode(parentId);
@@ -3388,7 +3647,7 @@ function edit_un_remove(parentId) {
 			count++;
 		}
 	}
-	var parentElement = document.getElementById('wb' + parentId);
+	var parentElement = document.getElementById("wb" + parentId);
 	if (parentElement) {
 		parentElement.classList.remove("un_parent");
 		parentElement.classList.remove("comp_parent");
@@ -3410,7 +3669,6 @@ function edit_un_RemoveHtmlNode(parentId) {
 			element.parentNode.removeChild(element);
 		}
 	}
-
 }
 
 /*
@@ -3420,20 +3678,22 @@ function edit_un_split(parentId) {
 	var xBlock = gXmlBookDataBody.getElementsByTagName("block");
 	var iWordCount = 0;
 	for (iBlock = 0; iBlock < xBlock.length; iBlock++) {
-		var xData = xBlock[iBlock].getElementsByTagName("data")[0]
+		var xData = xBlock[iBlock].getElementsByTagName("data")[0];
 		xWord = xData.getElementsByTagName("word");
 		for (iWord = 0; iWord < xWord.length; iWord++) {
 			if (getNodeText(xWord[iWord], "id") == parentId) {
 				mType = getNodeText(xWord[iWord], "case").split("#")[0];
 				if (mType == ".un." || mType == ".comp.") {
 					nextElement = com_get_nextsibling(xWord[iWord]);
-					if (nextElement != null) {//下一个元素存在
-						if (getNodeText(nextElement, "un") == parentId) {//若有孩子則不进行任何处理，直接返回
+					if (nextElement != null) {
+						//下一个元素存在
+						if (getNodeText(nextElement, "un") == parentId) {
+							//若有孩子則不进行任何处理，直接返回
 							return;
 						}
 					}
-				}
-				else {//若不是连读词則不进行任何处理，直接返回
+				} else {
+					//若不是连读词則不进行任何处理，直接返回
 					return;
 				}
 				if (getNodeText(xWord[iWord], "mean") == "?") {
@@ -3443,27 +3703,25 @@ function edit_un_split(parentId) {
 					setNodeText(xWord[iWord], "om", "_un_auto_factormean_");
 				}
 
-				var parentElement = document.getElementById('wb' + parentId);
+				var parentElement = document.getElementById("wb" + parentId);
 				if (parentElement) {
 					if (mType == ".un.") {
 						parentElement.classList.add("un_parent");
-					}
-					else {
+					} else {
 						parentElement.classList.add("comp_parent");
 					}
 				}
-				var nextWordNodeId = getNodeText(xWord[iWord + 1], "id")
+				var nextWordNodeId = getNodeText(xWord[iWord + 1], "id");
 				if (mType == ".un.") {
 					var org = "[+" + getNodeText(xWord[iWord], "org") + "+]";
-				}
-				else {
+				} else {
 					var org = getNodeText(xWord[iWord], "org").replace(/\+/g, "+-+");
 				}
 				var sSubPali = org.split("+");
-				var orgReal = org.replace(/n\+/g, "ṃ+");//智能識別結尾為n的拆分
-				orgReal = orgReal.replace(/ñ\+/g, "ṃ+");//智能識別結尾為n的拆分
-				orgReal = orgReal.replace(/m\+/g, "ṃ+");//智能識別結尾為n的拆分
-				orgReal = orgReal.replace(/d\+/g, "ṃ+");//智能識別結尾為n的拆分
+				var orgReal = org.replace(/n\+/g, "ṃ+"); //智能識別結尾為n的拆分
+				orgReal = orgReal.replace(/ñ\+/g, "ṃ+"); //智能識別結尾為n的拆分
+				orgReal = orgReal.replace(/m\+/g, "ṃ+"); //智能識別結尾為n的拆分
+				orgReal = orgReal.replace(/d\+/g, "ṃ+"); //智能識別結尾為n的拆分
 				var sSubReal = orgReal.split("+");
 				for (iNewWord = 0; iNewWord < sSubPali.length; iNewWord++) {
 					var newNode = gXmlBookData.createElement("word");
@@ -3475,13 +3733,11 @@ function edit_un_split(parentId) {
 					if (sSubPali[iNewWord] == "[") {
 						setNodeText(newNode, "real", "");
 						setNodeText(newNode, "case", ".un:begin.");
-					}
-					else if (sSubPali[iNewWord] == "]") {
+					} else if (sSubPali[iNewWord] == "]") {
 						setNodeText(newNode, "real", "");
 						setNodeText(newNode, "case", ".un:end.");
-					}
-					else {
-						setNodeText(newNode, "real", newPali);//real转换为小写
+					} else {
+						setNodeText(newNode, "real", newPali); //real转换为小写
 						setNodeText(newNode, "case", "?");
 					}
 					let newMeaning = findFirstMeanInDict(newPali);
@@ -3497,14 +3753,13 @@ function edit_un_split(parentId) {
 					if (iWord == xWord.length - 1) {
 						xData.insertBefore(newNode, null);
 						edit_un_AddNewHtmlNode(nextWordNodeId, sSubPali[iNewWord], newGUID, iWordCount + iNewWord + 1);
-					}
-					else {
+					} else {
 						xData.insertBefore(newNode, xWord[iWord + iNewWord + 1]);
 						edit_un_AddNewHtmlNode(nextWordNodeId, sSubPali[iNewWord], newGUID, iWordCount + iNewWord + 1);
 					}
 				}
 				modifyWordDetailByWordId(parentId);
-				word_mouse_event();//添加鼠标事件，每次都执行效率低以后需要修改
+				word_mouse_event(); //添加鼠标事件，每次都执行效率低以后需要修改
 				var_dump(gLocal.gui.unsplit + " " + gLocal.gui.ok);
 				user_wbw_push_word(parentId);
 				user_wbw_commit();
@@ -3527,8 +3782,7 @@ function edit_un_AddNewHtmlNode(nextNodeId, strInsert, guid, id) {
 
 	if (strInsert.length <= 1) {
 		typ.nodeValue = "word_punc";
-	}
-	else {
+	} else {
 		typ.nodeValue = "word";
 	}
 	divWord.attributes.setNamedItem(typ);
@@ -3536,7 +3790,6 @@ function edit_un_AddNewHtmlNode(nextNodeId, strInsert, guid, id) {
 	var typId = document.createAttribute("id");
 	typId.nodeValue = "wb" + guid;
 	divWord.attributes.setNamedItem(typId);
-
 
 	var txtOut = "";
 	/*word block begin*/
@@ -3564,11 +3817,9 @@ function edit_un_AddNewHtmlNode(nextNodeId, strInsert, guid, id) {
 		txtOut = txtOut + "<span class='paliword'  name=\"spali\">" + strInsert + "</span>";
 		txtOut = txtOut + "<span class='paliword2' name=\"spali\"></span>";
 		txtOut = txtOut + "</p>\n";
-
-	}
-	else {
+	} else {
 		txtOut = txtOut + "<p class='pali " + txtUnClass + "' name='wPali'>";
-		txtOut = txtOut + "<a name='w" + guid + "' title=\"\" onclick='on_word_click(\"" + guid + "\")'>";
+		txtOut = txtOut + "<a name='w" + guid + '\' title="" onclick=\'on_word_click("' + guid + "\")'>";
 		txtOut = txtOut + "<span class='paliword' name=\"spali\">" + strInsert + "</span>";
 		txtOut = txtOut + "<span class='paliword2' name=\"spali\"></span>";
 		txtOut = txtOut + "</a>";
@@ -3588,12 +3839,9 @@ function edit_un_AddNewHtmlNode(nextNodeId, strInsert, guid, id) {
 	//如果下一个词不存在。
 	if (element) {
 		element.parentNode.insertBefore(divWord, element);
-	}
-	else {
+	} else {
 		parentElement.parentNode.appendChild(divWord);
 	}
-
-
 }
 
 function file_export_html_validate_form(thisform) {
@@ -3609,8 +3857,7 @@ function file_export_html_validate_form(thisform) {
 function show_case_input(obj) {
 	if (obj.checked) {
 		document.getElementById("input_case").style.display = "block";
-	}
-	else {
+	} else {
 		document.getElementById("input_case").style.display = "none";
 	}
 }
@@ -3641,10 +3888,10 @@ function edit_tran_save() {
 			break;
 		case "heading":
 			var newHeadingInfo = new Object();
-			newHeadingInfo.level = document.getElementById("id_heading_edit_level").value
-			newHeadingInfo.language = document.getElementById("id_text_edit_language").value
-			newHeadingInfo.author = document.getElementById("id_text_edit_author").value
-			newHeadingInfo.text = document.getElementById("id_text_edit_area").value
+			newHeadingInfo.level = document.getElementById("id_heading_edit_level").value;
+			newHeadingInfo.language = document.getElementById("id_text_edit_language").value;
+			newHeadingInfo.author = document.getElementById("id_text_edit_author").value;
+			newHeadingInfo.text = document.getElementById("id_text_edit_area").value;
 			setHeadingInfo(gEditorHeadingEditBlockId, newHeadingInfo);
 			newText = document.getElementById("id_text_edit_area").value;
 			newText = newText.replace(/\n/g, "<br />");
@@ -3652,26 +3899,26 @@ function edit_tran_save() {
 			if (eBlock) {
 				eBlock.innerHTML = newText;
 			}
-			updataToc()
+			updataToc();
 			break;
 		case "new_heading":
 			var newHeadingInfo = new Object();
 			newHeadingInfo.book = gEditorNewHeadingBookId;
 			newHeadingInfo.paragraph = gEditorNewHeadingPar;
-			newHeadingInfo.level = document.getElementById("id_heading_edit_level").value
-			newHeadingInfo.language = document.getElementById("id_text_edit_language").value
-			newHeadingInfo.author = document.getElementById("id_text_edit_author").value
-			newHeadingInfo.text = document.getElementById("id_text_edit_area").value
-			newHeadBlock(newHeadingInfo)
-			updataToc()
+			newHeadingInfo.level = document.getElementById("id_heading_edit_level").value;
+			newHeadingInfo.language = document.getElementById("id_text_edit_language").value;
+			newHeadingInfo.author = document.getElementById("id_text_edit_author").value;
+			newHeadingInfo.text = document.getElementById("id_text_edit_area").value;
+			newHeadBlock(newHeadingInfo);
+			updataToc();
 			break;
 	}
 	document.getElementById("id_text_edit_form").style.display = "none";
-	Dragging(getDraggingDialog).disable()
+	Dragging(getDraggingDialog).disable();
 }
 function edit_tran_cancal() {
 	document.getElementById("id_text_edit_form").style.display = "none";
-	Dragging(getDraggingDialog).disable()
+	Dragging(getDraggingDialog).disable();
 }
 
 function edit_tran_delete() {
@@ -3681,19 +3928,19 @@ function edit_tran_delete() {
 			for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
 				xmlParInfo = xBlock[iBlock].getElementsByTagName("info")[0];
 				xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
-				mId = getNodeText(xmlParInfo, "id")
-				type = getNodeText(xmlParInfo, "type")
+				mId = getNodeText(xmlParInfo, "id");
+				type = getNodeText(xmlParInfo, "type");
 
 				if (mId == gEditorHeadingEditBlockId) {
 					gXmlBookDataBody.removeChild(xBlock[iBlock]);
-					return
+					return;
 				}
 			}
 			htmlNode = document.getElementById("id_heading_" + gEditorHeadingEditBlockId);
 			if (htmlNode) {
 				htmlNode.parentNode.removeChild(htmlNode);
 			}
-			updataToc()
+			updataToc();
 			break;
 	}
 
@@ -3712,10 +3959,6 @@ function editor_translate_edit(id) {
 	document.getElementById("id_text_edit_form").style.display = "block";
 	Dragging(getDraggingDialog).enable();
 }
-
-
-
-
 
 function editor_note_edit(id) {
 	gTextEditMediaType = "note";
@@ -3740,12 +3983,11 @@ function getNoteText(id) {
 			for (iSen = 0; iSen < xmlParDataSen.length; iSen++) {
 				currText += getNodeText(xmlParDataSen[iSen], "text");
 			}
-			return (currText);
+			return currText;
 		}
 	}
-	return ("");
+	return "";
 }
-
 
 function editor_heading_add_new(inBook, inPar) {
 	document.getElementById("id_text_edit_caption_text").innerHTML = gLocal.gui.newheading;
@@ -3780,8 +4022,8 @@ function getHeadingText(id) {
 	for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
 		xmlParInfo = xBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
-		mId = getNodeText(xmlParInfo, "id")
-		type = getNodeText(xmlParInfo, "type")
+		mId = getNodeText(xmlParInfo, "id");
+		type = getNodeText(xmlParInfo, "type");
 
 		if (mId == id) {
 			var obj = new Object();
@@ -3789,17 +4031,17 @@ function getHeadingText(id) {
 			obj.level = getNodeText(xmlParInfo, "level");
 			obj.language = getNodeText(xmlParInfo, "language");
 			obj.author = getNodeText(xmlParInfo, "author");
-			return (obj);
+			return obj;
 		}
 	}
-	return (null);
+	return null;
 }
 function setHeadingInfo(id, objValue) {
 	xBlock = gXmlBookDataBody.getElementsByTagName("block");
 	for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
 		xmlParInfo = xBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
-		blockId = getNodeText(xmlParInfo, "id")
+		blockId = getNodeText(xmlParInfo, "id");
 		if (blockId == id) {
 			newText = objValue.text.replace(/\n/g, "<br />");
 			setNodeText(xmlParData, "text", newText);
@@ -3827,10 +4069,11 @@ function editor_openChannal(book, para, channal) {
 //open project begin
 var editor_openProjectXmlHttp = null;
 function editor_openProject(strFileId, filetype) {
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		editor_openProjectXmlHttp = new XMLHttpRequest();
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		editor_openProjectXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
@@ -3839,28 +4082,23 @@ function editor_openProject(strFileId, filetype) {
 		var strLink = "";
 		if (filetype == "db") {
 			strLink = "project_load_db.php?id=" + strFileId;
-		}
-		else {
+		} else {
 			strLink = "project_load.php?id=" + strFileId;
 		}
 		editor_openProjectXmlHttp.onreadystatechange = editor_open_project_serverResponse;
 		editor_openProjectXmlHttp.open("GET", strLink, true);
 		editor_openProjectXmlHttp.send(null);
-
-
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
-
 }
 
 function editor_parse_doc_xml(xmlText) {
 	if (window.DOMParser) {
 		parser = new DOMParser();
 		gXmlBookData = parser.parseFromString(xmlText, "text/xml");
-	}
-	else { // Internet Explorer
+	} else {
+		// Internet Explorer
 
 		gXmlBookData = new ActiveXObject("Microsoft.XMLDOM");
 		gXmlBookData.async = "false";
@@ -3872,7 +4110,6 @@ function editor_parse_doc_xml(xmlText) {
 		return;
 	}
 
-
 	projectDataParse(gXmlBookData);
 	doc_file_info_get();
 	doc_info_change("accese_time", "");
@@ -3880,15 +4117,14 @@ function editor_parse_doc_xml(xmlText) {
 	let msg_id = doc_head("msg_db_max_id");
 	if (msg_id != "" && !isNaN(msg_id)) {
 		msg_init(msg_id);
-	}
-	else {
+	} else {
 		msg_init(1);
 	}
 	updataDocParagraphList();
 	updataToc();
 	//渲染数据块
 	blockShow(0);
-	refreshResource()
+	refreshResource();
 	editro_layout_loadStyle();
 }
 
@@ -3899,28 +4135,24 @@ function editor_open_project_serverResponse() {
 			// 200 = "OK"
 			var xmlText = editor_openProjectXmlHttp.responseText;
 			editor_parse_doc_xml(xmlText);
-		}
-		else {
-			$('#sutta_text').html("Problem retrieving data:" + editor_openProjectXmlHttp.statusText);
+		} else {
+			$("#sutta_text").html("Problem retrieving data:" + editor_openProjectXmlHttp.statusText);
 		}
 	}
 }
 
-
 //数据块显示
 function blockShow(id) {
-	xmlBlock = gXmlBookDataBody.getElementsByTagName("block")
+	xmlBlock = gXmlBookDataBody.getElementsByTagName("block");
 	if (id < xmlBlock.length) {
 		insertBlockToHtml(xmlBlock[id]);
-		t = setTimeout("blockShow(" + (id + 1) + ")", 1)
-		progress = id / xmlBlock.length//计算比例
-		strProgress = (progress * 100).toFixed(0) + "%"//计算百分比，保留1位小数
-		document.getElementById("load_progress_num").innerHTML = strProgress;//显示计算结果
+		t = setTimeout("blockShow(" + (id + 1) + ")", 1);
+		progress = id / xmlBlock.length; //计算比例
+		strProgress = (progress * 100).toFixed(0) + "%"; //计算百分比，保留1位小数
+		document.getElementById("load_progress_num").innerHTML = strProgress; //显示计算结果
 
-		loading.setAttribute("stroke-dashoffset", (255 - progress * 140) + "%");
-
-	}
-	else {
+		loading.setAttribute("stroke-dashoffset", 255 - progress * 140 + "%");
+	} else {
 		//文档载入完毕
 		strProgress = "OK";
 		loading.setAttribute("stroke-dashoffset", "0%");
@@ -3941,7 +4173,6 @@ function blockShow(id) {
 	}
 }
 
-
 function word_mouse_event() {
 	$(".word").mouseenter(on_word_mouse_enter);
 	$(".word").mouseleave(on_word_mouse_leave);
@@ -3960,6 +4191,7 @@ function on_word_mouse_leave() {
 	}
 	gCurrMoseEnterWordId = "";
 }
+
 //单词块鼠标进入事件
 var gCurrLookupWord = "";
 //save the broder style when mouse leave recover
@@ -3986,16 +4218,16 @@ function on_word_mouse_enter() {
 		//如果内存里有这个词，渲染单词下拉菜单
 		if (mDict[paliword]) {
 			render_word_menu(_curr_mouse_enter_wordid);
-		}
-		else {
+		} else {
 			//如果内存里没有这个词，查字典
 			if (!mDictQueue[paliword]) {
 				if (gCurrLookupWord != paliword) {
 					mDictQueue[paliword] = 1;
 					gCurrLookupWord = paliword;
-					$.get("dict_find_one.php",
+					$.get(
+						"dict_find_one.php",
 						{
-							word: paliword
+							word: paliword,
 						},
 						on_dict_lookup
 					);
@@ -4026,49 +4258,54 @@ function inline_dict_parse(data) {
 	}
 	try {
 		var worddata = JSON.parse(data);
-	}
-	catch (e) {
+	} catch (e) {
 		console.error(e + " data:" + data);
 		return;
 	}
 	if (worddata.length > 0) {
 		//如果有数据 解析查询数据
 		let spell = new Array();
-		for (let i in worddata) {
-			if (mDict[worddata[i].pali]) {
-				spell[worddata[i].pali] = 1;
-			}
-			else {
-				spell[worddata[i].pali] = 0;
-			}
-		}
-		for (let word in spell) {
-			if (spell[word] == 0) {
-				mDict[word] = new Array();
+		for (const iterator of worddata) {
+			if (mDict[iterator.pali]) {
+				spell[iterator.pali] = 1;
+			} else {
+				spell[iterator.pali] = 0;
 			}
 		}
-		for (let i in worddata) {
-			if (spell[worddata[i].pali] == 0) {
-				mDict[worddata[i].pali].push(worddata[i]);
-				mDictQueue[worddata[i].pali] = 0;
+		for (const key in spell) {
+			if (spell.hasOwnProperty(key)) {
+				const element = spell[key];
+				if (element == 0) {
+					mDict[key] = new Array();
+				}
 			}
 		}
-		let type = new Array();
+
+		for (const iterator of worddata) {
+			if (spell[iterator.pali] == 0) {
+				mDict[iterator.pali].push(iterator);
+				mDictQueue[iterator.pali] = 0;
+			}
+		}
+		let currWordParent = new Array();
 		if (mDict[gCurrLookupWord]) {
-			for (let i in mDict[gCurrLookupWord]) {
-				type[mDict[gCurrLookupWord][i].type] = 1;
+			for (const iterator of mDict[gCurrLookupWord]) {
+				if (typeof iterator.parent == "string") {
+					if (iterator.parent.length > 1) {
+						currWordParent[iterator.parent] = 1;
+					}
+				}
 			}
-			if (type.length == 1 && type[".comp."]) {
+			if (currWordParent.length == 0) {
+				//
 				inline_dict_auto_case(gCurrLookupWord);
 			}
-		}
-		else {
+		} else {
 			//如果没有查到数据  添加自动格位
 			mDict[gCurrLookupWord] = new Array();
 			inline_dict_auto_case(gCurrLookupWord);
 		}
-	}
-	else {
+	} else {
 		//如果没有查到数据  添加自动格位
 		mDict[gCurrLookupWord] = new Array();
 		inline_dict_auto_case(gCurrLookupWord);
@@ -4110,7 +4347,7 @@ function getAutoEnding(pali, base) {
 			}
 		}
 	}
-	return (ending);
+	return ending;
 }
 
 //查字典结果
@@ -4127,14 +4364,14 @@ function render_word_menu(id) {
 	$("#word_gramma").html(render_word_menu_gramma(id));
 
 	show_word_menu_mean(id);
-	show_word_menu_parts(id)
-	show_word_menu_partmean(id)
-	show_word_menu_gramma(id)
+	show_word_menu_parts(id);
+	show_word_menu_partmean(id);
+	show_word_menu_gramma(id);
 }
 
 //根据单词长度排序  短词优先
 function sortWordLen(a, b) {
-	return (a.length - b.length);
+	return a.length - b.length;
 }
 //渲染单词意思下拉菜单
 function render_word_menu_mean(id, target = 0) {
@@ -4166,9 +4403,13 @@ function render_word_menu_mean(id, target = 0) {
 	}
 	sWord.unshift(word_real);
 
-
-	output += "<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" + id + "\",\"mean\",\"\")'>" + gLocal.gui.empty1 + "</button>";
-	output += "<div class=\"case_dropdown-org\">";
+	output +=
+		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
+		id +
+		'","mean","")\'>' +
+		gLocal.gui.empty1 +
+		"</button>";
+	output += '<div class="case_dropdown-org">';
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
 		//该词字典数量
@@ -4182,21 +4423,20 @@ function render_word_menu_mean(id, target = 0) {
 		}
 
 		if (pali == word_parent) {
-			output += "<div class=\"case_dropdown-base\">";
+			output += '<div class="case_dropdown-base">';
+		} else {
+			output += '<div class="case_dropdown-first">';
 		}
-		else {
-			output += "<div class=\"case_dropdown-first\">";
-		}
-		output += "<a style=\"z-index:250; position:absolute; margin-right:2em;\" onclick='dict_search(\"" + pali + "\")'>";
+		output +=
+			'<a style="z-index:250; position:absolute; margin-right:2em;" onclick=\'dict_search("' + pali + "\")'>";
 		if (pali == word_parent) {
 			output += "<b>·" + pali + "·</b>";
-		}
-		else {
+		} else {
 			output += pali;
 		}
-		output += "-" + dict_count + "</a>"
-		output += "<span style=\"z-index:220\" class=\"case_dropdown-title\" onclick=\"submenu_show_detail(this)\">";
-		output += "<svg class=\"icon\" style=\"fill:var(--main-color)\"><use xlink:href=\"svg/icon.svg#ic_add\"></use></svg>";
+		output += "-" + dict_count + "</a>";
+		output += '<span style="z-index:220" class="case_dropdown-title" onclick="submenu_show_detail(this)">';
+		output += '<svg class="icon" style="fill:var(--main-color)"><use xlink:href="svg/icon.svg#ic_add"></use></svg>';
 		output += "</span>";
 		output += "<div class=\"case_dropdown-detail\" style='display:block;'>";
 		var currWordMean = new Array();
@@ -4223,47 +4463,71 @@ function render_word_menu_mean(id, target = 0) {
 				if (objMean.mean.length > 0) {
 					_mean_push(currWordMean, objMean);
 				}
-
 			}
 		}
 		for (var i in currWordMean) {
 			var htmlMean = "";
 			var wId = id;
 			output += "<a style='display:flex; flex-wrap: wrap;'>";
-			output += "<div id='div_dictname_" + wId + "_" + iWord + "_" + i + "' style='margin-right: auto; display:flex;'>"
-			output += "<span id='span_dictname_" + wId + "_" + iWord + "_" + i + "' style='height: 1.5em;' class='wm_dictname' >";
-			output += getLocalDictname(currWordMean[i].dict_name) + "</span>"
-			output += "</div>"
-			output += "<div id='div_type_" + wId + "_" + iWord + "_" + i + "' style='margin-left: 0.4em; display:flex'>"
-			output += "<span id='span_type_" + wId + "_" + iWord + "_" + i + "' style='height: 1.5em;' class='wm_wordtype'>" + getLocalGrammaStr(currWordMean[i].type) + "</span>"
+			output +=
+				"<div id='div_dictname_" + wId + "_" + iWord + "_" + i + "' style='margin-right: auto; display:flex;'>";
+			output +=
+				"<span id='span_dictname_" +
+				wId +
+				"_" +
+				iWord +
+				"_" +
+				i +
+				"' style='height: 1.5em;' class='wm_dictname' >";
+			output += getLocalDictname(currWordMean[i].dict_name) + "</span>";
+			output += "</div>";
+			output +=
+				"<div id='div_type_" + wId + "_" + iWord + "_" + i + "' style='margin-left: 0.4em; display:flex'>";
+			output +=
+				"<span id='span_type_" +
+				wId +
+				"_" +
+				iWord +
+				"_" +
+				i +
+				"' style='height: 1.5em;' class='wm_wordtype'>" +
+				getLocalGrammaStr(currWordMean[i].type) +
+				"</span>";
 
 			for (var iMean in currWordMean[i].mean) {
 				if (currWordMean[i].mean[iMean] != "") {
 					if (target == 0) {
-						htmlMean += "<span class='wm_one_mean' onclick='fieldListChanged(\"" + wId + "\",\"mean\",\"" + currWordMean[i].mean[iMean] + "\" ";
+						htmlMean +=
+							"<span class='wm_one_mean' onclick='fieldListChanged(\"" +
+							wId +
+							'","mean","' +
+							currWordMean[i].mean[iMean] +
+							'" ';
 						//parent 与意思联动
 						if (iWord > 0) {
-							htmlMean += ",\"" + pali + "\"";
+							htmlMean += ',"' + pali + '"';
 						}
 						htmlMean += " )'>" + currWordMean[i].mean[iMean] + "</span>";
-					}
-					else {
-						htmlMean += "<span class='wm_one_mean' onclick='_win_mean_change(\"" + currWordMean[i].mean[iMean] + "\" )'>" + currWordMean[i].mean[iMean] + "</span>";
+					} else {
+						htmlMean +=
+							"<span class='wm_one_mean' onclick='_win_mean_change(\"" +
+							currWordMean[i].mean[iMean] +
+							"\" )'>" +
+							currWordMean[i].mean[iMean] +
+							"</span>";
 					}
 				}
 			}
 			output += "</div>";
 			output += "<div style='width:15em; display:flex; flex-wrap: wrap;'>" + htmlMean + "</div>";
 			output += "</a>";
-
 		}
 
 		output += "</div></div>";
 	}
 
-
 	output += "</div>";
-	return (output);
+	return output;
 }
 
 function _win_mean_change(newmean) {
@@ -4276,11 +4540,10 @@ function _mean_push(arr, obj) {
 	if (arr[strIndex] == null) {
 		arr[strIndex] = new Object();
 		arr[strIndex].dict_name = obj.dict_name;
-		arr[strIndex].type = obj.type
+		arr[strIndex].type = obj.type;
 		arr[strIndex].gramma = obj.gramma;
 		arr[strIndex].mean = new Array();
 	}
-
 
 	for (var i = 0; i < arrMean.length; i++) {
 		var found = false;
@@ -4319,8 +4582,18 @@ function render_word_menu_parts(id, target = 0) {
 	let output = "";
 	let wordID = id;
 	output += "<div>";
-	output += "<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" + wordID + "\",\"org\",\"\")'>" + gLocal.gui.empty1 + "</button>"
-	output += "<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='show_word_map(\"" + wordID + "\")'>" + gLocal.gui.wordmap + "</button>";
+	output +=
+		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
+		wordID +
+		'","org","")\'>' +
+		gLocal.gui.empty1 +
+		"</button>";
+	output +=
+		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='show_word_map(\"" +
+		wordID +
+		"\")'>" +
+		gLocal.gui.wordmap +
+		"</button>";
 	output += "</div>";
 	let pali = doc_word("#" + id).val("real");
 	let wParent = doc_word("#" + id).val("parent");
@@ -4363,20 +4636,18 @@ function render_word_menu_parts(id, target = 0) {
 	for (let sPart in arrParts) {
 		if (wParts == sPart) {
 			outputPart = "<b>" + sPart + "</b>";
-		}
-		else {
+		} else {
 			outputPart = sPart;
 		}
 		if (target == 0) {
-			output += "<a onclick='fieldListChanged(\"" + wordID + "\",\"org\",\"" + sPart + "\")'>" + outputPart + "</a>";
-		}
-		else {
+			output += "<a onclick='fieldListChanged(\"" + wordID + '","org","' + sPart + "\")'>" + outputPart + "</a>";
+		} else {
 			output += "<a onclick='mdf_win_part_change(\"" + sPart + "\")'>" + outputPart + "</a>";
 		}
 	}
 	output += "</div>";
 
-	//base parts 信息 
+	//base parts 信息
 	for (let sParent in arrParent) {
 		if (mDict[sParent]) {
 			let arrParts = new Array();
@@ -4386,8 +4657,8 @@ function render_word_menu_parts(id, target = 0) {
 				}
 			}
 			if (arrParts.length > 0) {
-				output += "<div class=\"case_dropdown-org\">";
-				output += "<div class=\"case_dropdown-first\">";
+				output += '<div class="case_dropdown-org">';
+				output += '<div class="case_dropdown-first">';
 				output += "<a style='z-index:250; position:absolute; margin-right:2em;'>";
 				output += sParent + "</a>";
 				output += "<span style='z-index:220' class='case_dropdown-title'>";
@@ -4396,7 +4667,8 @@ function render_word_menu_parts(id, target = 0) {
 
 				output += "<div>";
 				for (let sPart in arrParts) {
-					output += "<a onclick='fieldListChanged(\"" + wordID + "\",\"org\",\"" + sPart + "\")'>" + sPart + "</a>";
+					output +=
+						"<a onclick='fieldListChanged(\"" + wordID + '","org","' + sPart + "\")'>" + sPart + "</a>";
 				}
 				output += "</div>";
 
@@ -4404,7 +4676,7 @@ function render_word_menu_parts(id, target = 0) {
 			}
 		}
 	}
-	return (output);
+	return output;
 }
 function show_word_menu_parts(id) {
 	var word_parts_div = document.getElementById("parts_" + id);
@@ -4425,19 +4697,33 @@ function render_word_menu_partmean(id) {
 	var listFactorForFactorMean = sOrg.split("+");
 	var currDefualtFM = "";
 	for (iFactor in listFactorForFactorMean) {
-		currDefualtFM += findFirstMeanInDict(listFactorForFactorMean[iFactor]) + "+";//拆分元素加号分隔
+		currDefualtFM += findFirstMeanInDict(listFactorForFactorMean[iFactor]) + "+"; //拆分元素加号分隔
 	}
 	currDefualtFM = currDefualtFM.replace(/"  "/g, " ");
 	currDefualtFM = currDefualtFM.replace(/"+ "/g, "+");
 	currDefualtFM = currDefualtFM.replace(/" +"/g, "+");
-	currDefualtFM = currDefualtFM.substring(0, currDefualtFM.length - 1);//去掉尾部的加号 kosalla
+	currDefualtFM = currDefualtFM.substring(0, currDefualtFM.length - 1); //去掉尾部的加号 kosalla
 
 	if (currDefualtFM.slice(-1, -2) == "+") {
 		currDefualtFM = currDefualtFM.substring(0, currDefualtFM.length - 1);
 	}
 
-	sHtml += "<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" + wordID + "\",\"om\",\"\")'>" + gLocal.gui.empty1 + "</button>";
-	sHtml += "<a onclick='fieldListChanged(\"" + wordID + "\",\"om\",\"[a]" + currDefualtFM + "\")'>[" + gLocal.gui.auto + "]" + currDefualtFM + "</a>";
+	sHtml +=
+		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
+		wordID +
+		'","om","")\'>' +
+		gLocal.gui.empty1 +
+		"</button>";
+	sHtml +=
+		"<a onclick='fieldListChanged(\"" +
+		wordID +
+		'","om","[a]' +
+		currDefualtFM +
+		"\")'>[" +
+		gLocal.gui.auto +
+		"]" +
+		currDefualtFM +
+		"</a>";
 
 	var arrPartMean = new Array();
 	if (mDict[pali]) {
@@ -4445,13 +4731,12 @@ function render_word_menu_partmean(id) {
 			if (mDict[pali][i].partmean && mDict[pali][i].partmean.length > 0) {
 				arrPartMean[mDict[pali][i].partmean] = 1;
 			}
-
 		}
 	}
 	for (var sPM in arrPartMean) {
-		sHtml += "<a onclick='fieldListChanged(\"" + wordID + "\",\"om\",\"" + sPM + "\")'>" + sPM + "</a>";
+		sHtml += "<a onclick='fieldListChanged(\"" + wordID + '","om","' + sPM + "\")'>" + sPM + "</a>";
 	}
-	return (sHtml);
+	return sHtml;
 }
 
 /*
@@ -4472,8 +4757,7 @@ function render_word_menu_parent(id) {
 	}
 	if (mDict[word_real]) {
 		for (let i in mDict[word_real]) {
-			if (mDict[word_real][i].parent &&
-				mDict[word_real][i].parent.length > 0) {
+			if (mDict[word_real][i].parent && mDict[word_real][i].parent.length > 0) {
 				arrParent[mDict[word_real][i].parent] = 1;
 			}
 		}
@@ -4493,13 +4777,12 @@ function render_word_menu_parent(id) {
 		output += "<a onclick=\"mdf_win_data_change('id_text_parent','" + pali + "')\">";
 		if (word_parent == pali) {
 			output += "<b>" + pali + "</b>";
-		}
-		else {
+		} else {
 			output += pali;
 		}
 		output += "</a>";
 	}
-	return (output);
+	return output;
 }
 
 function show_word_menu_partmean(id) {
@@ -4515,7 +4798,7 @@ function show_word_menu_partmean(id) {
 
 //语法按照信心指数排序
 function sortWordConfidence(a, b) {
-	return (b - a);
+	return b - a;
 }
 /*渲染语法菜单
 //@param 
@@ -4540,8 +4823,7 @@ function render_word_menu_gramma(id, target = 0) {
 					if (mDict[pali][i].confidence > arrGramma[sCase]) {
 						arrGramma[sCase] = mDict[pali][i].confidence;
 					}
-				}
-				else {
+				} else {
 					arrGramma[sCase] = 1;
 				}
 			}
@@ -4552,17 +4834,20 @@ function render_word_menu_gramma(id, target = 0) {
 	for (var sGramma in arrGramma) {
 		var sLocalCase = getLocalGrammaStr(sGramma);
 		if (target == 0) {
-			sHtml += "<a onclick='fieldListChanged(\"" + wordID + "\",\"case\",\"" + sGramma + "\")'>" + cutString(sLocalCase, 30) + "</a>";
-		}
-		else {
-
+			sHtml +=
+				"<a onclick='fieldListChanged(\"" +
+				wordID +
+				'","case","' +
+				sGramma +
+				"\")'>" +
+				cutString(sLocalCase, 30) +
+				"</a>";
+		} else {
 			sHtml += "<a onclick='mdf_win_case_change(\"" + sGramma + "\")'>" + cutString(sLocalCase, 30) + "</a>";
 		}
 	}
-	return (sHtml);
-
+	return sHtml;
 }
-
 
 function show_word_menu_gramma(id) {
 	var gramma_div = document.getElementById("gramma_" + id);
@@ -4598,10 +4883,11 @@ function editor_project_updataProjectInfo() {
 
 var editor_importOldVerXmlHttp = null;
 function editor_importOldVer(strFileName) {
-	if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+	if (window.XMLHttpRequest) {
+		// code for IE7, Firefox, Opera, etc.
 		editor_importOldVerXmlHttp = new XMLHttpRequest();
-	}
-	else if (window.ActiveXObject) {// code for IE6, IE5
+	} else if (window.ActiveXObject) {
+		// code for IE6, IE5
 		editor_importOldVerXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
@@ -4614,31 +4900,27 @@ function editor_importOldVer(strFileName) {
 			editor_importOldVerXmlHttp.open("GET", strLink, true);
 			editor_importOldVerXmlHttp.send(null);
 			//document.getElementById('sutta_text').innerHTML="Importing..."+strFileName;
-		}
-		else {
+		} else {
 			//document.getElementById('sutta_text').innerHTML="无法识别的文件类型";
 		}
-
-	}
-	else {
+	} else {
 		alert("Your browser does not support XMLHTTP.");
 	}
-
 }
 
 function editor_import_old_ver_serverResponse() {
 	// 4 = "loaded"
 	if (editor_importOldVerXmlHttp.readyState == 4) {
-
-		document.getElementById('sutta_text').innerHTML = "<div class=\"sutta_top_blank\"></div>";
-		if (editor_importOldVerXmlHttp.status == 200) {// 200 = "OK"
+		document.getElementById("sutta_text").innerHTML = '<div class="sutta_top_blank"></div>';
+		if (editor_importOldVerXmlHttp.status == 200) {
+			// 200 = "OK"
 			var xmlText = editor_importOldVerXmlHttp.responseText;
 
 			if (window.DOMParser) {
 				parser = new DOMParser();
 				gXmlOldVerData = parser.parseFromString(xmlText, "text/xml");
-			}
-			else { // Internet Explorer
+			} else {
+				// Internet Explorer
 
 				gXmlOldVerData = new ActiveXObject("Microsoft.XMLDOM");
 				gXmlOldVerData.async = "false";
@@ -4651,43 +4933,37 @@ function editor_import_old_ver_serverResponse() {
 			}
 
 			oldVerDataParse(gXmlOldVerData);
+		} else {
+			document.getElementById("sutta_text").innerHTML =
+				"Problem retrieving data:" + editor_openProjectXmlHttp.statusText;
 		}
-		else {
-			document.getElementById('sutta_text').innerHTML = "Problem retrieving data:" + editor_openProjectXmlHttp.statusText;
-		}
-
 	}
 }
-
-
-
 
 //在段落前设置或取消分页
 function editor_page_break(obj, book, par) {
 	if (obj.checked) {
-		document.getElementById("par_" + book + "_" + par).style.pageBreakBefore = "always"
-	}
-	else {
-		document.getElementById("par_" + book + "_" + par).style.pageBreakBefore = "auto"
+		document.getElementById("par_" + book + "_" + par).style.pageBreakBefore = "always";
+	} else {
+		document.getElementById("par_" + book + "_" + par).style.pageBreakBefore = "auto";
 	}
 }
 
-
 function editor_heading_change(obj, book, par) {
 	document.getElementById("content").innerHTML = "";
-	allBlock = gXmlBookDataBody.getElementsByTagName("block")
+	allBlock = gXmlBookDataBody.getElementsByTagName("block");
 	for (var iBlock = 0; iBlock < allBlock.length; iBlock++) {
 		xmlParInfo = allBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = allBlock[iBlock].getElementsByTagName("data")[0];
 
-		bookId = getNodeText(xmlParInfo, "book")
-		paragraph = getNodeText(xmlParInfo, "paragraph")
-		type = getNodeText(xmlParInfo, "type")
+		bookId = getNodeText(xmlParInfo, "book");
+		paragraph = getNodeText(xmlParInfo, "paragraph");
+		type = getNodeText(xmlParInfo, "type");
 		if (bookId == book && paragraph == par && type == "heading") {
-			setNodeText(xmlParInfo, "level", obj.value)
+			setNodeText(xmlParInfo, "level", obj.value);
 		}
 	}
-	updataHeadingBlockInHtml(book, par)
+	updataHeadingBlockInHtml(book, par);
 	updataToc();
 }
 
@@ -4695,24 +4971,23 @@ function editor_par_show(obj, book, par) {
 	parId = "par_" + book + "_" + (par - 1);
 	if (obj.checked) {
 		document.getElementById(parId).style.display = "block";
-	}
-	else {
+	} else {
 		document.getElementById(parId).style.display = "none";
 	}
 
-	var rootIndex = -1
-	var rootLevel = -1
-	allBlock = gXmlBookDataBody.getElementsByTagName("block")
+	var rootIndex = -1;
+	var rootLevel = -1;
+	allBlock = gXmlBookDataBody.getElementsByTagName("block");
 	for (var iBlock = 0; iBlock < allBlock.length; iBlock++) {
 		xmlParInfo = allBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = allBlock[iBlock].getElementsByTagName("data")[0];
 
-		bookId = getNodeText(xmlParInfo, "book")
-		paragraph = getNodeText(xmlParInfo, "paragraph")
-		type = getNodeText(xmlParInfo, "type")
+		bookId = getNodeText(xmlParInfo, "book");
+		paragraph = getNodeText(xmlParInfo, "paragraph");
+		type = getNodeText(xmlParInfo, "type");
 		if (bookId == book && paragraph == par && type == "heading") {
 			rootIndex = iBlock;
-			rootLevel = getNodeText(xmlParInfo, "level")
+			rootLevel = getNodeText(xmlParInfo, "level");
 			break;
 		}
 	}
@@ -4722,22 +4997,20 @@ function editor_par_show(obj, book, par) {
 		xmlParInfo = allBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = allBlock[iBlock].getElementsByTagName("data")[0];
 
-		bookId = getNodeText(xmlParInfo, "book")
-		paragraph = getNodeText(xmlParInfo, "paragraph")
-		type = getNodeText(xmlParInfo, "type")
+		bookId = getNodeText(xmlParInfo, "book");
+		paragraph = getNodeText(xmlParInfo, "paragraph");
+		type = getNodeText(xmlParInfo, "type");
 		if (type == "heading") {
-			currLevel = getNodeText(xmlParInfo, "level")
+			currLevel = getNodeText(xmlParInfo, "level");
 			if (currLevel == 0 || currLevel > rootLevel) {
 				opBegin = true;
 				parId = "par_" + bookId + "_" + (paragraph - 1);
 				if (obj.checked) {
 					document.getElementById(parId).style.display = "block";
-				}
-				else {
+				} else {
 					document.getElementById(parId).style.display = "none";
 				}
-			}
-			else {
+			} else {
 				if (opBegin) {
 					break;
 				}
@@ -4747,13 +5020,11 @@ function editor_par_show(obj, book, par) {
 }
 
 function editor_right_tool_bar_slide_toggle() {
-
 	if (document.getElementById("right_tool_bar").style.left == "100%") {
 		document.getElementById("right_tool_bar").style.display = "block";
 		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
 		document.getElementById("right_tool_bar").style.width = "28vw";
-	}
-	else {
+	} else {
 		document.getElementById("right_tool_bar").style.left = "100%";
 	}
 }
@@ -4762,11 +5033,9 @@ function right_panal_slide_toggle(idPanal) {
 		document.getElementById("right_tool_bar").style.display = "block";
 		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
 		document.getElementById("right_tool_bar").style.width = "28vw";
-	}
-	else {
+	} else {
 		document.getElementById("right_tool_bar").style.left = "100%";
 	}
-
 }
 
 function editor_show_right_tool_bar(visible) {
@@ -4774,8 +5043,7 @@ function editor_show_right_tool_bar(visible) {
 		document.getElementById("right_tool_bar").style.display = "block";
 		document.getElementById("right_tool_bar").style.left = "calc(100% - 28vw)";
 		document.getElementById("right_tool_bar").style.width = "28vw";
-	}
-	else {
+	} else {
 		document.getElementById("right_tool_bar").style.left = "100%";
 	}
 }
@@ -4787,20 +5055,18 @@ function editor_goto_link(bookId, parNo, strLink = "") {
 	scrollEventLock = false;
 	if (strLink == "") {
 		window.location.assign("#par_begin_" + bookId + "_" + (parNo - 1));
-	}
-	else {
+	} else {
 		window.location.assign("#" + strLink);
 	}
 }
 
-
 function get_language_order(strLanguage) {
 	for (iLan in dict_language_order) {
 		if (dict_language_order[iLan] == strLanguage) {
-			return (iLan);
+			return iLan;
 		}
 	}
-	return (1000);
+	return 1000;
 }
 
 function removeAllInlinDictItem() {
@@ -4811,7 +5077,7 @@ function removeAllInlinDictItem() {
 		gXmlBookDataInlineDict.removeChild(xAllWord[0]);
 	}
 	g_DictWordList = new Array();
-	return (count);
+	return count;
 }
 
 function editor_refresh_inline_dict(word) {
@@ -4831,17 +5097,14 @@ function editor_refresh_inline_dict(word) {
 		g_CurrDictBuffer = JSON.stringify(arrBuffer);
 		dict_mark_word_list_done();
 		editor_dict_match();
+	} else {
+		document.getElementById("editor_doc_notify").innerHTML = "no new part";
 	}
-	else {
-		document.getElementById('editor_doc_notify').innerHTML = "no new part";
-	}
-
 }
 
 function win_close(id) {
 	document.getElementById(id).style.display = "none";
 }
-
 
 //利用下拉菜单修改单词信息
 
@@ -4855,7 +5118,8 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 	setNodeText(xAllWord[wordIndex], "status", "7");
 	setNodeAttr(xAllWord[wordIndex], inField, "status", "7");
 
-	if (inField == "om") {/*拆分意思去掉开头的[a]*/
+	if (inField == "om") {
+		/*拆分意思去掉开头的[a]*/
 		inChangeTo = inChangeTo.replace("[a]", "");
 	}
 	setNodeText(xAllWord[wordIndex], inField, inChangeTo);
@@ -4873,8 +5137,7 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 	if (doc_info.sendmsg) {
 		if (doc_info.parent_id != "") {
 			msg_doc_id = doc_info.parent_id;
-		}
-		else {
+		} else {
 			msg_doc_id = doc_info.doc_id;
 		}
 		let msg_data = new Object();
@@ -4911,11 +5174,9 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 	}
 }
 
-
 function editor_word_status_by_id(id, newStatus = null) {
 	var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
-	return (editor_word_status(xAllWord[getWordIndex(wordId)]), newStatus);
-
+	return editor_word_status(xAllWord[getWordIndex(wordId)]), newStatus;
 }
 function editor_word_status(wElement, newStatus = null) {
 	if (newStatus == null) {
@@ -4923,54 +5184,52 @@ function editor_word_status(wElement, newStatus = null) {
 		if (wStatus == "") {
 			var oldVerStauts = getNodeText(wElement, "bmc");
 			if (oldVerStauts == "") {
-				setNodeText(wElement, "status", "1");//未处理
-				return (1);
+				setNodeText(wElement, "status", "1"); //未处理
+				return 1;
+			} else if (oldVerStauts == "bmca") {
+				setNodeText(wElement, "status", "3"); //自己机器自动
+				return 3;
+			} else {
+				setNodeText(wElement, "status", "7"); //人工
+				return 7;
 			}
-			else if (oldVerStauts == "bmca") {
-				setNodeText(wElement, "status", "3");//自己机器自动
-				return (3);
-			}
-			else {
-				setNodeText(wElement, "status", "7");//人工
-				return (7);
-			}
+		} else {
+			return wStatus;
 		}
-		else {
-			return (wStatus);
-		}
-	}
-	else {
+	} else {
 		setNodeText(wElement, "status", newStatus.toString());
 	}
 }
 
 //载入用户设置
 function editor_setup_load() {
-	$.post("user_setup.php",
+	$.post(
+		"user_setup.php",
 		{
-			op: "load"
+			op: "load",
 		},
 		function (data, status) {
 			if (data.length > 0) {
 				gUserSetup = JSON.parse(data);
 			}
-		});
+		}
+	);
 }
 //修改用户设置
 function editor_setup_save(key, value) {
-
-	$.post("user_setup.php",
+	$.post(
+		"user_setup.php",
 		{
 			op: "save",
 			key: key,
-			value: value
+			value: value,
 		},
 		function (data, status) {
 			if (data.length > 0) {
 				gUserSetup = JSON.parse(data);
 			}
-		});
-
+		}
+	);
 }
 
 function tran_sen_save_click(blockid, senBegin, senEnd, obj) {
@@ -5000,11 +5259,9 @@ function tran_text_onchange(blockid, senBegin, senEnd, obj) {
 */
 function tran_sent_div_blur(blockId, senBegin, senEnd, obj) {
 	obj.style.height = "28px";
-
 }
 function tran_sent_div_onfocus(blockId, senBegin, senEnd, obj) {
 	obj.style.height = "100px";
-
 }
 //鼠标移到逐句翻译上 编辑状态
 function tran_sent_div_mouseenter(blockId, wordSn) {
@@ -5031,7 +5288,6 @@ function set_tran_show_mode(set, obj) {
 	}
 }
 
-
 //按自动查词典按钮
 var _para_list = new Array();
 
@@ -5042,36 +5298,34 @@ function menu_dict_match1() {
 	for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
 		xmlParInfo = xBlock[iBlock].getElementsByTagName("info")[0];
 		xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
-		book = getNodeText(xmlParInfo, "book")
+		book = getNodeText(xmlParInfo, "book");
 		paragraph = getNodeText(xmlParInfo, "paragraph");
 
-		para[book + "-" + paragraph] = { "book": book, "para": paragraph };
+		para[book + "-" + paragraph] = { book: book, para: paragraph };
 	}
-	_para_list = new Array;
+	_para_list = new Array();
 	for (var i in para) {
 		_para_list.push(para[i]);
 	}
 	if (_para_list.length > 0) {
 		auto_match_wbw(0);
 	}
-
-
 }
 
 //自动查词典
 function auto_match_wbw(para_index) {
-	$.get("dict_find_auto.php",
+	$.get(
+		"dict_find_auto.php",
 		{
 			book: _para_list[para_index].book,
-			para: _para_list[para_index].para
+			para: _para_list[para_index].para,
 		},
 		function (data, status) {
 			if (data.length > 0) {
 				var dict_data = new Array();
 				try {
 					dict_data = JSON.parse(data);
-				}
-				catch (error) {
+				} catch (error) {
 					ntf_show("Error:" + error + "<br>" + data);
 				}
 				var counter = 0;
@@ -5119,24 +5373,34 @@ function auto_match_wbw(para_index) {
 				user_wbw_commit();
 			}
 			//计算查字典的进度
-			var precent = para_index * 100 / (_para_list.length - 1);
-			ntf_show(gLocal.gui.auto_fill + _para_list[para_index].book + "-" + _para_list[para_index].para + "-" + precent.toFixed(1) + "%" + gLocal.gui.finished);
+			var precent = (para_index * 100) / (_para_list.length - 1);
+			ntf_show(
+				gLocal.gui.auto_fill +
+					_para_list[para_index].book +
+					"-" +
+					_para_list[para_index].para +
+					"-" +
+					precent.toFixed(1) +
+					"%" +
+					gLocal.gui.finished
+			);
 			para_index++;
 			if (para_index < _para_list.length) {
 				auto_match_wbw(para_index);
 			}
-		});
+		}
+	);
 }
 
 //旧版本的xml解析
 function oldVerDataParse(oldXmlData) {
 	createXmlDoc();
-	newBlockString = "<root><block><info></info><data></data></block></root>"
+	newBlockString = "<root><block><info></info><data></data></block></root>";
 	if (window.DOMParser) {
 		parser = new DOMParser();
 		newXmlBlock = parser.parseFromString(newBlockString, "text/xml");
-	}
-	else { // Internet Explorer
+	} else {
+		// Internet Explorer
 		newXmlBlock = new ActiveXObject("Microsoft.XMLDOM");
 		newXmlBlock.async = "false";
 		newXmlBlock.loadXML(newBlockString);
@@ -5147,25 +5411,24 @@ function oldVerDataParse(oldXmlData) {
 		return;
 	}
 
-	var titleBlockInfo = new Array()
-	var titleInfo = new Object;
+	var titleBlockInfo = new Array();
+	var titleInfo = new Object();
 	titleInfo.language = "pali";
 	titleInfo.author = "author";
 	titleBlockInfo.push(titleInfo);
-	var titleInfo = new Object;
+	var titleInfo = new Object();
 	titleInfo.language = "en";
 	titleInfo.author = "author";
 	titleBlockInfo.push(titleInfo);
-	var titleInfo = new Object;
+	var titleInfo = new Object();
 	titleInfo.language = "zh";
 	titleInfo.author = "author";
 	titleBlockInfo.push(titleInfo);
 
-	var iPara = 1
+	var iPara = 1;
 	var BookId = com_guid();
 	var x = gXmlOldVerData.getElementsByTagName("sutta");
 	for (var i = 0; i < x.length; i++) {
-
 		//title begin
 		xTitle = x[i].getElementsByTagName("title");
 		/*if title node is */
@@ -5174,8 +5437,8 @@ function oldVerDataParse(oldXmlData) {
 			var xTitleText = xTitle[0].getElementsByTagName("text");
 			if (xTitleText.length > 0) {
 				for (var iTitleText = 0; iTitleText < xTitleText.length; iTitleText++) {
-					cloneBlock = newXmlBlock.cloneNode(true)
-					newBlock = cloneBlock.getElementsByTagName("block")[0]
+					cloneBlock = newXmlBlock.cloneNode(true);
+					newBlock = cloneBlock.getElementsByTagName("block")[0];
 					xmlNewInfo = newBlock.getElementsByTagName("info")[0];
 					xmlNewData = newBlock.getElementsByTagName("data")[0];
 
@@ -5193,9 +5456,9 @@ function oldVerDataParse(oldXmlData) {
 					setNodeText(xmlNewInfo, "book", BookId);
 					setNodeText(xmlNewInfo, "author", "kosalla");
 					setNodeText(xmlNewInfo, "language", titleLangauge);
-					setNodeText(xmlNewInfo, "edition", '0');
-					setNodeText(xmlNewInfo, "subedition", '0');
-					setNodeText(xmlNewInfo, "level", '1');
+					setNodeText(xmlNewInfo, "edition", "0");
+					setNodeText(xmlNewInfo, "subedition", "0");
+					setNodeText(xmlNewInfo, "level", "1");
 					setNodeText(xmlNewInfo, "id", com_guid());
 					setNodeText(xmlNewData, "text", strTitle);
 					gXmlBookDataBody.appendChild(newBlock);
@@ -5210,11 +5473,10 @@ function oldVerDataParse(oldXmlData) {
 			//toc begin
 			if (j > 0) {
 				for (var iTran = 0; iTran < titleBlockInfo.length; iTran++) {
-					cloneBlock = newXmlBlock.cloneNode(true)
-					newBlock = cloneBlock.getElementsByTagName("block")[0]
+					cloneBlock = newXmlBlock.cloneNode(true);
+					newBlock = cloneBlock.getElementsByTagName("block")[0];
 					xmlNewInfo = newBlock.getElementsByTagName("info")[0];
 					xmlNewData = newBlock.getElementsByTagName("data")[0];
-
 
 					titleLangauge = titleBlockInfo[iTran].language;
 					titleAuthor = titleBlockInfo[iTran].author;
@@ -5225,9 +5487,9 @@ function oldVerDataParse(oldXmlData) {
 					setNodeText(xmlNewInfo, "book", BookId);
 					setNodeText(xmlNewInfo, "author", titleAuthor);
 					setNodeText(xmlNewInfo, "language", titleLangauge);
-					setNodeText(xmlNewInfo, "edition", '0');
-					setNodeText(xmlNewInfo, "subedition", '0');
-					setNodeText(xmlNewInfo, "level", '0');
+					setNodeText(xmlNewInfo, "edition", "0");
+					setNodeText(xmlNewInfo, "subedition", "0");
+					setNodeText(xmlNewInfo, "level", "0");
 					setNodeText(xmlNewInfo, "id", com_guid());
 					setNodeText(xmlNewData, "text", strTitle);
 					gXmlBookDataBody.appendChild(newBlock);
@@ -5237,18 +5499,18 @@ function oldVerDataParse(oldXmlData) {
 			//word by word paragraph begin
 			xPali = xParagraph[j].getElementsByTagName("palipar");
 			if (xPali.length > 0) {
-				cloneBlock = newXmlBlock.cloneNode(true)
-				newBlock = cloneBlock.getElementsByTagName("block")[0]
+				cloneBlock = newXmlBlock.cloneNode(true);
+				newBlock = cloneBlock.getElementsByTagName("block")[0];
 				xmlNewInfo = newBlock.getElementsByTagName("info")[0];
 				xmlNewData = newBlock.getElementsByTagName("data")[0];
 				setNodeText(xmlNewInfo, "type", "wbw");
 				setNodeText(xmlNewInfo, "paragraph", iPara.toString());
 				setNodeText(xmlNewInfo, "book", BookId);
 				setNodeText(xmlNewInfo, "author", "kosalla");
-				setNodeText(xmlNewInfo, "edition", '0');
-				setNodeText(xmlNewInfo, "subedition", '0');
+				setNodeText(xmlNewInfo, "edition", "0");
+				setNodeText(xmlNewInfo, "subedition", "0");
 				setNodeText(xmlNewInfo, "id", com_guid());
-				xWord = xPali[0].getElementsByTagName("word");//如果只有一个palipar
+				xWord = xPali[0].getElementsByTagName("word"); //如果只有一个palipar
 				/*遍历此段落中所有单词*/
 				var iSen = 0;
 				var strTranWords = "";
@@ -5267,8 +5529,8 @@ function oldVerDataParse(oldXmlData) {
 				var xTranText = xTran[0].getElementsByTagName("text");
 				if (xTranText.length > 0) {
 					for (iTranText = 0; iTranText < xTranText.length; iTranText++) {
-						cloneBlock = newXmlBlock.cloneNode(true)
-						newBlock = cloneBlock.getElementsByTagName("block")[0]
+						cloneBlock = newXmlBlock.cloneNode(true);
+						newBlock = cloneBlock.getElementsByTagName("block")[0];
 						xmlNewInfo = newBlock.getElementsByTagName("info")[0];
 						xmlNewData = newBlock.getElementsByTagName("data")[0];
 
@@ -5286,8 +5548,8 @@ function oldVerDataParse(oldXmlData) {
 						setNodeText(xmlNewInfo, "book", BookId);
 						setNodeText(xmlNewInfo, "author", tranAuthor);
 						setNodeText(xmlNewInfo, "language", tranLangauge);
-						setNodeText(xmlNewInfo, "edition", '0');
-						setNodeText(xmlNewInfo, "subedition", '0');
+						setNodeText(xmlNewInfo, "edition", "0");
+						setNodeText(xmlNewInfo, "subedition", "0");
 						setNodeText(xmlNewInfo, "id", com_guid());
 						newSen = newXmlBlock.createElement("sen");
 						setNodeText(newSen, "a", "");
@@ -5307,8 +5569,8 @@ function oldVerDataParse(oldXmlData) {
 				var xTranText = xTran[0].getElementsByTagName("text");
 				if (xTranText.length > 0) {
 					for (iTranText = 0; iTranText < xTranText.length; iTranText++) {
-						cloneBlock = newXmlBlock.cloneNode(true)
-						newBlock = cloneBlock.getElementsByTagName("block")[0]
+						cloneBlock = newXmlBlock.cloneNode(true);
+						newBlock = cloneBlock.getElementsByTagName("block")[0];
 						xmlNewInfo = newBlock.getElementsByTagName("info")[0];
 						xmlNewData = newBlock.getElementsByTagName("data")[0];
 
@@ -5326,32 +5588,28 @@ function oldVerDataParse(oldXmlData) {
 						setNodeText(xmlNewInfo, "book", BookId);
 						setNodeText(xmlNewInfo, "author", tranAuthor);
 						setNodeText(xmlNewInfo, "language", titleLangauge);
-						setNodeText(xmlNewInfo, "edition", '0');
-						setNodeText(xmlNewInfo, "subedition", '0');
+						setNodeText(xmlNewInfo, "edition", "0");
+						setNodeText(xmlNewInfo, "subedition", "0");
 						setNodeText(xmlNewInfo, "id", com_guid());
 						newSen = newXmlBlock.createElement("sen");
 						setNodeText(newSen, "a", "");
 						setNodeText(newSen, "text", strNote);
 						xmlNewData.appendChild(newSen);
 						gXmlBookDataBody.appendChild(newBlock);
-
 					}
 				}
 				/*end of text of translate*/
 			}
 			/*文件内翻译块结束*/
 
-			iPara++
-
+			iPara++;
 		}
 	}
-	projectDataParse(gXmlBookData)
-	updataToc()
-	refreshResource()
-
+	projectDataParse(gXmlBookData);
+	updataToc();
+	refreshResource();
 }
 
 function add_part(part) {
 	$("#input_org").val(part);
 }
-

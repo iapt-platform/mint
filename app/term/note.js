@@ -4,8 +4,10 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 
-var _arrData;
+var _arrData = new Array();
 var _channalData;
+
+const MAX_NOTE_NEST = 2;
 
 /*
 {{203-1654-23-45@11@en@*}}
@@ -58,10 +60,11 @@ function note_sent_edit_dlg_init() {
 	});
 }
 function note_init(input) {
-	let output = "<div>";
 	let newString = input.replace(/\{\{/g, '<note info="');
 	newString = newString.replace(/\}\}/g, '"></note>');
-	output = marked(newString);
+
+	let output = "<div>";
+	output += marked(newString);
 	output += "</div>";
 	return output;
 }
@@ -90,6 +93,20 @@ function note_refresh_new() {
 	for (const iterator of objNotes) {
 		let id = iterator.id;
 		if (id == null || id == "") {
+			//查看这个节点是第几层note嵌套。大于预定层数退出。
+			let layout = 1;
+			let parent = iterator.parentNode;
+			while (parent.nodeType == 1) {
+				if (parent.nodeName == "NOTE") {
+					layout++;
+					if (layout > MAX_NOTE_NEST) {
+						return false;
+					}
+				} else if (parent.nodeName == "BODY") {
+					break;
+				}
+				parent = parent.parentNode;
+			}
 			id = com_guid();
 			iterator.id = id;
 			let info = iterator.getAttributeNode("info").value;
@@ -118,8 +135,8 @@ function note_refresh_new() {
 			function (data, status) {
 				if (status == "success") {
 					try {
-						_arrData = JSON.parse(data);
-						for (const iterator of _arrData) {
+						let sentData = JSON.parse(data);
+						for (const iterator of sentData) {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
 							if (_display && _display == "para") {
@@ -191,6 +208,10 @@ function note_refresh_new() {
 								$("#" + id).html(strHtml);
 							}
 						}
+						//刷新句子链接递归，有加层数限制。
+						note_refresh_new();
+
+						_arrData = _arrData.concat(sentData);
 						note_ref_init();
 						term_get_dict();
 						note_channal_list();
@@ -382,7 +403,8 @@ ref
 function note_json_html(in_json) {
 	let output = "";
 	output += '<div class="note_tool_bar" style=" position: relative;">';
-	output += '<div class="case_dropdown" style="position: absolute; right: 0;width:1.5em;">';
+	output +=
+		'<div class="case_dropdown note_tool_context" style="position: absolute; right: 0;width:1.5em;text-align: right;">';
 	output += "<svg class='icon' >";
 	output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
 	output += "</svg>";
@@ -419,22 +441,11 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += "</div>";
 	output += " </div>";
+
 	output += "<div class='palitext'>" + in_json.palitext + "</div>";
+
 	for (const iterator of in_json.translation) {
-		output += "<div class='tran' lang='" + iterator.lang + "'";
-		output +=
-			" onclick=\"note_edit_sentence('" +
-			in_json.book +
-			"' ,'" +
-			in_json.para +
-			"' ,'" +
-			in_json.begin +
-			"' ,'" +
-			in_json.end +
-			"' ,'" +
-			iterator.channal +
-			"')\">";
-		output += "<span class='edit_button'></span>";
+		output += "<div class='tran' lang='" + iterator.lang + "'>";
 
 		output +=
 			"<div class='text' id='tran_text_" +
@@ -449,8 +460,6 @@ function note_json_html(in_json) {
 			iterator.channal +
 			"'>";
 		if (iterator.text == "") {
-			//let channal = find_channal(iterator.channal);
-			output += "<span style='color:var(--border-line-color);'></span>";
 			output +=
 				"<span style='color:var(--border-line-color);'>" +
 				iterator.channalinfo.name +
@@ -458,10 +467,36 @@ function note_json_html(in_json) {
 				iterator.channalinfo.lang +
 				"</span>";
 		} else {
-			output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			//note_init处理句子链接 marked不处理
+			//output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
 		}
 		output += "</div>";
-
+		//句子工具栏
+		output += "<div class='tran_text_tool_bar'>";
+		output += "<span class = 'tip_buttom' ";
+		output +=
+			" onclick=\"note_edit_sentence('" +
+			in_json.book +
+			"' ,'" +
+			in_json.para +
+			"' ,'" +
+			in_json.begin +
+			"' ,'" +
+			in_json.end +
+			"' ,'" +
+			iterator.channal +
+			"')\"";
+		output += ">Edit</span>";
+		output += "<span class = 'tip_buttom'>Like</span>";
+		output += "<span class = 'tip_buttom'>Comment</span>";
+		output += "<span class = 'tip_buttom'>Share</span>";
+		output += "<span class = 'tip_buttom'>Copy</span>";
+		output += "<span class = 'tip_buttom'>Digest</span>";
+		output += "<span class = 'tip_buttom'>History</span>";
+		output += "<span class = 'tip_buttom'>Expand</span>";
+		output += "</div>";
+		//句子工具栏结束
 		output += "</div>";
 	}
 
@@ -511,13 +546,13 @@ function note_edit_sentence(book, para, begin, end, channal) {
 						tran.text +
 						"</textarea>";
 					$("#edit_dialog_content").html(html);
-					break;
+					$("#note_sent_edit_dlg").dialog("open");
+					return;
 				}
 			}
 		}
 	}
-
-	$("#note_sent_edit_dlg").dialog("open");
+	alert("未找到句子");
 }
 
 function note_sent_save() {
@@ -547,30 +582,50 @@ function note_sent_save() {
 				alert("error" + result.message);
 			} else {
 				ntf_show("success");
-				$(
-					"#tran_text_" +
-						result.book +
-						"_" +
-						result.para +
-						"_" +
-						result.begin +
-						"_" +
-						result.end +
-						"_" +
-						result.channal
-				).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
-				term_updata_translation();
-				for (const iterator of _arrData) {
-					if (
-						iterator.book == result.book &&
-						iterator.para == result.para &&
-						iterator.begin == result.begin &&
-						iterator.end == result.end
-					) {
-						for (const tran of iterator.translation) {
-							if (tran.channal == result.channal) {
-								tran.text = result.text;
-								break;
+				if (result.text == "") {
+					let channel_info = "Empty";
+					let thisChannel = find_channal(result.channal);
+					if (thisChannel) {
+						channel_info = thisChannel.name + "-" + thisChannel.nickname;
+					}
+					$(
+						"#tran_text_" +
+							result.book +
+							"_" +
+							result.para +
+							"_" +
+							result.begin +
+							"_" +
+							result.end +
+							"_" +
+							result.channal
+					).html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
+				} else {
+					$(
+						"#tran_text_" +
+							result.book +
+							"_" +
+							result.para +
+							"_" +
+							result.begin +
+							"_" +
+							result.end +
+							"_" +
+							result.channal
+					).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
+					term_updata_translation();
+					for (const iterator of _arrData) {
+						if (
+							iterator.book == result.book &&
+							iterator.para == result.para &&
+							iterator.begin == result.begin &&
+							iterator.end == result.end
+						) {
+							for (const tran of iterator.translation) {
+								if (tran.channal == result.channal) {
+									tran.text = result.text;
+									break;
+								}
 							}
 						}
 					}
