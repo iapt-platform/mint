@@ -41,6 +41,9 @@ chapter {
 	text-decoration: none;
 	cursor: pointer;
 }
+chapter::after {
+	content: " > ";
+}
 chapter:hover {
 	color: var(--link-color);
 	text-decoration: underline;
@@ -177,7 +180,7 @@ note .ref {
 	text-align: right;
 	padding: 5px;
 	font-size: 75%;
-	margin-top: -2.5em;
+	margin-top: -2em;
 }
 
 .tran {
