@@ -16,7 +16,15 @@
 		background-color: var(--tool-bg-color2);
 	}
 	#lang_list::after {
-    margin-right: 10px;
+	content: " ";
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-right: 0.7em;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom-color: var(--tool-bg-color);
 	}
 	.dropdown-content a {
 		cursor: pointer;
@@ -26,7 +34,7 @@
 		fill: var(--btn-color);
 	}
 	#lang_select{
-		margin: auto;
+		margin: auto 0;
 	}
 	</style>
 		<div id="lang_select" class="dropdown" onmouseover="switchMenu(this,'lang_list')" onmouseout="hideMenu()">
