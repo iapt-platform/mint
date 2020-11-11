@@ -264,7 +264,7 @@ require_once "../pcdl/html_head.php";
 		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->channels; ?></div>
+				<div class="title"><?php echo "Contributor" ?></div>
 				<div class="click_dropdown_div">
 					<div class="click_dropdown_button"><?php echo $_local->gui->more; ?></div>
 					<div class="click_dropdown_content">
@@ -285,17 +285,14 @@ require_once "../pcdl/html_head.php";
 </div>
 </div>
 
-<!-- ui-dialog -->
-<div id="dialog" title="Dialog Title">
-	<div id="edit_dialog_content"></div>
-</div>
+
 
 <script>
 	$(document).ready(function(){
 	ntf_init();				
 	click_dropdown_init();
 	note_create();
-	term_edit_dlg_init();
+	historay_init();
 	if(_collect_id==""){
 		articel_load(_articel_id);
 		articel_load_collect(_articel_id);

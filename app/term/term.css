@@ -60,7 +60,9 @@ para:hover {
 	text-decoration: underline;
 }
 
-commentary {
+commentary,
+com,
+nt {
 	margin-left: 1.5em;
 	display: block;
 	border-left: 3px solid gray;
@@ -70,14 +72,78 @@ commentary {
 note > .tran {
 	color: #5c5c5c;
 	padding-left: 1em;
-	padding: 3px;
+	padding: 0;
+	position: relative;
+	margin-top: -0.5em;
 }
+note > .tran > .text {
+	margin-bottom: 2em;
+}
+note > .tran > .tran_text_tool_bar {
+	padding: 0;
+	position: absolute;
+	display: none;
+	color: var(--border-line-color);
+	margin-left: 0;
+	z-index: 40;
+	width: auto;
+	font-size: 14px;
+	height: 28px;
+	line-height: 28px;
+	margin-top: -2em;
+	background-color: var(--box-bg-color1);
+	border-radius: 5px;
+}
+note > .tran:lang(my) > .tran_text_tool_bar {
+	margin-top: -2.5em;
+}
+note > .tran > .tran_text_tool_bar::after {
+	content: " ";
+	position: absolute;
+	left: 0;
+	bottom: 100%;
+	margin-left: 20px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent var(--box-bg-color1) transparent;
+}
+
+.tran:hover > .tran_text_tool_bar {
+	display: block;
+}
+.tip_buttom {
+	border-right: 2px solid var(--border-line-color);
+	padding: 5px 8px;
+	cursor: pointer;
+}
+.tip_buttom:hover {
+	background-color: var(--btn-border-color);
+}
+.tran:hover .edit_button {
+	display: inline-block;
+}
+.edit_button {
+	display: inline-block;
+	width: auto;
+	min-width: 24px;
+	height: auto;
+	min-height: 24px;
+	cursor: pointer;
+	fill: var(--tool-color);
+	background: url(edit.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	color: var(--tool-color);
+	margin-top: -2em;
+}
+
 note > .palitext,
 .palitext {
 	font-family: Noto serif;
 	line-height: 1.5em;
 	color: #9f3a01;
 	font-weight: 500;
+	margin-bottom: 10px;
 }
 note > .palitext > note {
 	display: inline;
@@ -114,7 +180,7 @@ note .ref {
 	text-align: right;
 	padding: 5px;
 	font-size: 75%;
-	margin-top: 8px;
+	margin-top: -2em;
 }
 
 .tran {
@@ -230,7 +296,7 @@ r {
 }
 
 note {
-	padding: 0.5em 0.8em;
+	padding: 0.5em 1em;
 	margin-bottom: 0.4em;
 	border-radius: 5px;
 	line-height: 1.3em;
@@ -265,6 +331,7 @@ pre {
 .note_tool_bar {
 	position: relative;
 	display: none;
+	z-index: 50;
 }
 
 note:hover .note_tool_bar {
@@ -288,4 +355,18 @@ note:hover .note_tool_bar {
 
 .tran p {
 	margin: 0;
+}
+
+.note_tool_context {
+	position: absolute;
+	right: 0;
+	width: 1.5em;
+	text-align: right;
+}
+
+.note_tool_context .icon {
+	fill: var(--link-color);
+}
+.note_tool_context:hover .icon {
+	fill: (--link-hover-color);
 }

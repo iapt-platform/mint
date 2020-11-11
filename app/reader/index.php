@@ -363,17 +363,12 @@ require_once "../pcdl/html_head.php";
 </div>
 </div>
 
-<!-- ui-dialog -->
-<div id="dialog" title="Dialog Title">
-	<div id="edit_dialog_content"></div>
-</div>
 
 <script>
 	$(document).ready(function(){
 	ntf_init();				
 	click_dropdown_init();
 	note_create();
-	term_edit_dlg_init();
 	reader_load();
 	});
 
