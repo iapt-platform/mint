@@ -11,7 +11,13 @@ if(!isset($_COOKIE["userid"])){
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
     exit;
 }
-
+if(isset($_POST["landmark"])){
+    $_landmark = $_POST["landmark"];
+}
+else{
+    $_landmark = "";
+}
+//回传数据
 $respond=array("status"=>0,"message"=>"");
 $respond['book']=$_POST["book"];
 $respond['para']=$_POST["para"];
@@ -97,7 +103,8 @@ else{
 														) 
 										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
             $stmt = $PDO->prepare($query);
-            $stmt->execute(array(UUID::v4(),
+            $newId = UUID::v4();
+            $stmt->execute(array($newId,
 										  "",
 										  $_POST["book"], 
 										  $_POST["para"], 
@@ -125,11 +132,19 @@ else{
                 exit;
             }
             else{
-                $respond['data']=array();
+                # 没错误
+                # 更新historay
+                #没错误 更新历史记录
+                $respond['message']=update_historay($newId,$_COOKIE["userid"] ,$_POST["text"],$_landmark);
+                if($respond['message']!==""){
+                    $respond['status']=1;
+                    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
             }
         }
         else{
-            #没权限
+            #TO DO没权限 插入建议数据
             $respond['message']="没有权限";
             $respond['status']=1;
         }
@@ -156,12 +171,18 @@ else{
                 exit;
             }
             else{
-                #没错误
+                #没错误 更新历史记录
 
+                $respond['message']=update_historay($_id,$_COOKIE["userid"] ,$_POST["text"],$_landmark);
+                if($respond['message']!==""){
+                    $respond['status']=1;
+                    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+                    exit;                   
+                }
             }
         }
         else{
-            #没权限 建议
+            #TO DO没权限 插入建议数据
             $respond['message']="没有权限";
             $respond['status']=1;
         }
@@ -169,4 +190,27 @@ else{
 
 
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+
+
+function update_historay($sent_id,$user_id,$text,$landmark){
+    # 更新historay
+    PDO_Connect("sqlite:"._FILE_DB_USER_SENTENCE_HISTORAY_);
+    $query =  "INSERT INTO sent_historay (sent_id,  user_id,  text,  date, landmark) VALUES (? , ? , ? , ? , ? )";
+    $stmt  = PDO_Execute($query,
+                                        array($sent_id,
+                                                 $user_id, 
+                                                 $text ,
+                                                mTime(),
+                                                $landmark
+                                            ));
+    if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+    /*  识别错误  */
+    $error = PDO_ErrorInfo();
+        return $error[2];
+    }
+    else{
+    #没错误
+        return "";
+    }
+}
 ?>

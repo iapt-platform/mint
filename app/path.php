@@ -71,5 +71,6 @@ define("_FILE_DB_CHANNAL_"  , __DIR__."/../tmp/user/channal.db3");
 define("_FILE_DB_USER_DICT_"  , __DIR__."/../tmp/user/udict.db3");
 define("_FILE_DB_USER_ARTICLE_"  , __DIR__."/../tmp/user/article.db3");
 define("_FILE_DB_HOSTSETTING_"  , __DIR__."/../tmp/user/hostsetting.db3");
+define("_FILE_DB_USER_SENTENCE_HISTORAY_"  , __DIR__."/../tmp/user/usent_historay.db3");
 
 ?>

@@ -292,7 +292,7 @@ require_once "../pcdl/html_head.php";
 	ntf_init();				
 	click_dropdown_init();
 	note_create();
-
+	historay_init();
 	if(_collect_id==""){
 		articel_load(_articel_id);
 		articel_load_collect(_articel_id);

@@ -54,6 +54,7 @@ require_once '../studio/index_head.php';
 }
 #preview_inner{
 	background-color: var(--bg-color);
+	color: var(--main-color);
 }
 	</style>
 

@@ -1,6 +1,6 @@
 <?php
 /*
-get xml doc from db
+向句子库中插入或更新数据
 */
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -36,7 +36,7 @@ foreach ($aData as $data) {
 		$oldList[] = $data;
 	}
 }
-$update_list = array(); //已经成功修改数据库的数据列表 回传客户端
+$update_list = array(); //已经成功修改数据库的数据 回传客户端
 
 /* 修改现有数据 */
 $PDO->beginTransaction();
