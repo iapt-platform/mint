@@ -109,15 +109,16 @@ function note_refresh_new() {
 			}
 			id = com_guid();
 			iterator.id = id;
-			let info = iterator.getAttributeNode("info").value;
-			let arrInfo = info.split("-");
-
-			if (arrInfo.length >= 2) {
-				let book = arrInfo[0];
-				let para = arrInfo[1];
-			}
-
-			if (info && info != "") {
+			let info = iterator.getAttribute("info");
+			if (info != null || info != "") {
+				/*
+				let arrInfo = info.split("-");
+				
+				if (arrInfo.length >= 2) {
+					let book = arrInfo[0];
+					let para = arrInfo[1];
+				}
+				*/
 				arrSentInfo.push({ id: id, data: info });
 			}
 		}
