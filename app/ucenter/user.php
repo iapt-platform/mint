@@ -12,7 +12,15 @@
 		background-color: var(--tool-bg-color2);
 	}
 	#user_info::after {
-    margin-right: 10px;
+	content: " ";
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-right: 1em;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom-color: var(--bg-color);
 	}
 	.dropdown-content a {
 		cursor: pointer;
@@ -20,6 +28,7 @@
 	#user_info{
 		width:20em;
 	}
+
 	#user_info_welcome{
 		border-bottom: 1px solid var(--tool-line-color);
 		padding: 10px;
@@ -52,7 +61,7 @@
 	}
 
 	</style>
-		<div style="margin:auto;" class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
+		<div style="margin:auto 0;" class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
 			
 				<?php
 				if(isset($_COOKIE["userid"])){
