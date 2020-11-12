@@ -72,7 +72,7 @@ function note_init(input) {
 function note_update_background_style() {
 	var mSentsBook = new Array();
 	var mBgIndex = 1;
-	$("note").each(function () {
+	$("note[info]").each(function () {
 		let info = $(this).attr("info").split("-");
 		if (info.length >= 2) {
 			let book = info[0];
