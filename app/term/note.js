@@ -487,16 +487,16 @@ function note_json_html(in_json) {
 			"' ,'" +
 			iterator.channal +
 			"')\"";
-		output += ">Edit</span>";
-		output += "<span class = 'tip_buttom'>Like</span>";
-		output += "<span class = 'tip_buttom'>Comment</span>";
-		output += "<span class = 'tip_buttom'>Share</span>";
-		output += "<span class = 'tip_buttom'>Copy</span>";
-		output += "<span class = 'tip_buttom'>Digest</span>";
+		output += ">" + gLocal.gui.edit + "</span>";
 		output += "<span class = 'tip_buttom' ";
 		output += " onclick=\"history_show('" + iterator.id + "')\"";
-		output += ">History</span>";
-		output += "<span class = 'tip_buttom'>Expand</span>";
+		output += ">" + gLocal.gui.timeline + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.extension + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.like + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.comment + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.copy + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.digest + "</span>";
+		output += "<span class = 'tip_buttom'>" + gLocal.gui.share_to + "</span>";
 		output += "</div>";
 		//句子工具栏结束
 		output += "</div>";
