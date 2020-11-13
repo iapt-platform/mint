@@ -552,6 +552,8 @@
 		"search_tools": "搜尋工具",
 		"timeline": "時間線",
 		"extension": "橫向對比",
+		"no_created": "尚未建立",
+		"create_now": "現在建立",
 		"": ""
 	},
 	"grammastr": [

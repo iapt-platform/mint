@@ -670,7 +670,17 @@ function term_updata_translation() {
 
 function term_show_win(guid, keyWord = "") {
 	if (guid == "") {
-		$(term_body).html("当前词条未创建。<br /><a onclick=\"term_add_new('" + keyWord + "')\">现在创建</a>");
+		$(term_body).html(
+			"“" +
+				keyWord +
+				"”" +
+				gLocal.gui.no_created +
+				"<br /><button onclick=\"term_add_new('" +
+				keyWord +
+				"')\">" +
+				gLocal.gui.create_now +
+				"</button>"
+		);
 	} else {
 		let currWord = term_lookup_my_id(guid);
 		if (currWord) {
