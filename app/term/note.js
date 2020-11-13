@@ -72,7 +72,7 @@ function note_init(input) {
 function note_update_background_style() {
 	var mSentsBook = new Array();
 	var mBgIndex = 1;
-	$("note").each(function () {
+	$("note[info]").each(function () {
 		let info = $(this).attr("info").split("-");
 		if (info.length >= 2) {
 			let book = info[0];
@@ -109,16 +109,19 @@ function note_refresh_new() {
 			}
 			id = com_guid();
 			iterator.id = id;
-			let info = iterator.getAttributeNode("info").value;
-			let arrInfo = info.split("-");
-
-			if (arrInfo.length >= 2) {
-				let book = arrInfo[0];
-				let para = arrInfo[1];
-			}
-
-			if (info && info != "") {
-				arrSentInfo.push({ id: id, data: info });
+			if (iterator.hasAttribute("info")) {
+				let info = iterator.getAttribute("info");
+				if (info != null || info != "") {
+					/*
+					let arrInfo = info.split("-");
+					
+					if (arrInfo.length >= 2) {
+						let book = arrInfo[0];
+						let para = arrInfo[1];
+					}
+					*/
+					arrSentInfo.push({ id: id, data: info });
+				}
 			}
 		}
 	}
