@@ -555,6 +555,8 @@
 		"search_tools": "search&nbsp;tools",
 		"timeline": "timeline",
 		"extension": "extension",
+		"no_created": "&nbsp;is not created yet",
+		"create_now": "create now",
 		"": "",
 		"": ""
 	},

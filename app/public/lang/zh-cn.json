@@ -552,6 +552,10 @@
 		"search_tools": "搜索工具",
 		"timeline": "时间线",
 		"extension": "横向对比",
+		"no_created": "尚未创建",
+		"create_now": "现在创建",
+		"": "",
+		"": "",
 		"": ""
 	},
 	"grammastr": [
