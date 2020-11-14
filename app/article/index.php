@@ -117,6 +117,9 @@ require_once "../pcdl/html_head.php";
 	#head_bar{
 		height:unset;
 	}
+	#contents_foot{
+		margin-bottom: 70vh;
+	}
 
 
 #toc_content .level_2{
@@ -160,6 +163,17 @@ require_once "../pcdl/html_head.php";
      object-fit: cover;
      background-size: contain;   
  }
+ .channal_list{
+		white-space: nowrap;
+		overflow-x: hidden;
+	}
+	.userinfo_channal{
+		display:none;
+	}
+	.userinfo_channal:hover{
+		display:block;
+	}
+
 
 	</style>
 
@@ -264,7 +278,7 @@ require_once "../pcdl/html_head.php";
 		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo "Contributor" ?></div>
+				<div class="title"><?php echo $_local->gui->contributor ?></div>
 				<div class="click_dropdown_div">
 					<div class="click_dropdown_button"><?php echo $_local->gui->more; ?></div>
 					<div class="click_dropdown_content">

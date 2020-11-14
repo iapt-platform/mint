@@ -38,20 +38,22 @@ function note_create() {
 	term_edit_dlg_init();
 }
 function note_sent_edit_dlg_init() {
-	$("body").append('<div id="note_sent_edit_dlg" title="Edit"><div id="edit_dialog_content"></div></div>');
+	$("body").append(
+		'<div id="note_sent_edit_dlg" title="' + gLocal.gui.edit + '"><div id="edit_dialog_content"></div></div>'
+	);
 	$("#note_sent_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,
 		buttons: [
 			{
-				text: "Save",
+				text: gLocal.gui.save,
 				click: function () {
 					note_sent_save();
 					$(this).dialog("close");
 				},
 			},
 			{
-				text: "Cancel",
+				text: gLocal.gui.cancel,
 				click: function () {
 					$(this).dialog("close");
 				},
@@ -309,8 +311,13 @@ function render_channal_list(channalinfo) {
 	if (_channal.indexOf(channalinfo.id) >= 0) {
 		checked = "checked";
 	}
-	output += '<div><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
-	output += "<div class='head'>";
+	output +=
+		'<div style="display:flex;"><input style="margin: auto 3px auto 0;" type="checkbox" ' +
+		checked +
+		" channal_id='" +
+		channalinfo.id +
+		"'></div>";
+	output += "<div class='head' style='display:flex;'>";
 	output += "<span class='head_img'>";
 	output += channalinfo.nickname.slice(0, 2);
 	output += "</span>";
@@ -318,7 +325,7 @@ function render_channal_list(channalinfo) {
 
 	output += "<div style='width: 100%;overflow-x: hidden;'>";
 
-	output += "<div>";
+	output += "<div class='channal_list' >";
 
 	//  output += "<a href='../wiki/wiki.php?word=" + _word;
 	//  output += "&channal=" + channalinfo.id + "' >";
@@ -327,11 +334,11 @@ function render_channal_list(channalinfo) {
 	output += channalinfo["name"];
 
 	output += "</a>";
+	output += "@" + channalinfo["nickname"];
 	output += "</div>";
 
-	output += "<div>";
-	output += channalinfo["nickname"] + "/";
-	output += "@" + channalinfo["username"];
+	output += "<div class='userinfo_channal'>";
+	output += channalinfo["username"];
 	output += "</div>";
 
 	if (channalinfo["final"]) {
@@ -533,7 +540,7 @@ function note_edit_sentence(book, para, begin, end, channal) {
 			for (const tran of iterator.translation) {
 				if (tran.channal == channal) {
 					let html = "";
-					html += "<div style='color:blue;'>" + channalInfo.nickname + "/" + channalInfo.name + "</div>";
+					html += "<div style='color:blue;'>" + channalInfo.name + "@" + channalInfo.nickname + "</div>";
 					html +=
 						"<textarea id='edit_dialog_text' sent_id='" +
 						tran.id +
