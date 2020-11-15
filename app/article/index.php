@@ -266,16 +266,7 @@ require_once "../pcdl/html_head.php";
 			<div style="display:flex;justify-content: space-between;">
 				<div class="title"><?php echo "Contributor" ?></div>
 				<div class="click_dropdown_div">
-					<div class="click_dropdown_button"><?php echo $_local->gui->more; ?></div>
-					<div class="click_dropdown_content">
-						<div class="click_dropdown_content_inner" id="channal_select">
-							<?php echo $_local->gui->channels; ?>
-						</div>
-						<div>
-						<button class="icon_btn click_dropdown_ok"><?php echo $_local->gui->confirm; ?></button>
-						<button class="icon_btn click_dropdown_cancel"><?php echo $_local->gui->cancel; ?></button>
-						</div>
-					</div>	
+					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo "Multi-Select"; ?></div>
 				</div>
 			</div>
 			<div id="channal_list" class="content" style="max-height:20em;">
