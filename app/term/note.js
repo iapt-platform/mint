@@ -38,20 +38,22 @@ function note_create() {
 	term_edit_dlg_init();
 }
 function note_sent_edit_dlg_init() {
-	$("body").append('<div id="note_sent_edit_dlg" title="Edit"><div id="edit_dialog_content"></div></div>');
+	$("body").append(
+		'<div id="note_sent_edit_dlg" title="' + gLocal.gui.edit + '"><div id="edit_dialog_content"></div></div>'
+	);
 	$("#note_sent_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,
 		buttons: [
 			{
-				text: "Save",
+				text: gLocal.gui.save,
 				click: function () {
 					note_sent_save();
 					$(this).dialog("close");
 				},
 			},
 			{
-				text: "Cancel",
+				text: gLocal.gui.cancel,
 				click: function () {
 					$(this).dialog("close");
 				},
@@ -229,6 +231,7 @@ function note_refresh_new() {
 	}
 }
 
+//生成channel列表
 function note_channal_list() {
 	console.log("note_channal_list start");
 	let arrSentInfo = new Array();
@@ -264,6 +267,10 @@ function note_channal_list() {
 							}
 						}
 						let strHtml = "";
+						strHtml += "<div class='channel_select'>";
+						strHtml += "<button onclick='onChannelChange()'>确定</button>";
+						strHtml += "<button onclick='onChannelMultiSelectCancel()'>取消</button>";
+						strHtml += "</div>";
 						for (const iterator of _channalData) {
 							if (_channal.indexOf(iterator.id) >= 0) {
 								strHtml += render_channal_list(iterator);
@@ -276,15 +283,7 @@ function note_channal_list() {
 						}
 
 						$("#channal_list").html(strHtml);
-						$("[channal_id]").change(function () {
-							let channal_list = new Array();
-							$("[channal_id]").each(function () {
-								if (this.checked) {
-									channal_list.push($(this).attr("channal_id"));
-								}
-							});
-							set_channal(channal_list.join());
-						});
+						set_more_button_display();
 					} catch (e) {
 						console.error(e);
 					}
@@ -304,12 +303,16 @@ function find_channal(id) {
 }
 function render_channal_list(channalinfo) {
 	let output = "";
-	output += "<div class='list_with_head'>";
 	let checked = "";
+	let selected = "noselect";
 	if (_channal.indexOf(channalinfo.id) >= 0) {
 		checked = "checked";
+		selected = "selected";
 	}
-	output += '<div><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
+	output += "<div class='list_with_head " + selected + "'>";
+
+	output +=
+		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
 	output += "<div class='head'>";
 	output += "<span class='head_img'>";
 	output += channalinfo.nickname.slice(0, 2);
@@ -318,7 +321,7 @@ function render_channal_list(channalinfo) {
 
 	output += "<div style='width: 100%;overflow-x: hidden;'>";
 
-	output += "<div>";
+	output += "<div class='channal_list' >";
 
 	//  output += "<a href='../wiki/wiki.php?word=" + _word;
 	//  output += "&channal=" + channalinfo.id + "' >";
@@ -327,11 +330,11 @@ function render_channal_list(channalinfo) {
 	output += channalinfo["name"];
 
 	output += "</a>";
+	output += "@" + channalinfo["nickname"];
 	output += "</div>";
 
-	output += "<div>";
-	output += channalinfo["nickname"] + "/";
-	output += "@" + channalinfo["username"];
+	output += "<div class='userinfo_channal'>";
+	output += channalinfo["username"];
 	output += "</div>";
 
 	if (channalinfo["final"]) {
@@ -383,6 +386,21 @@ function render_channal_list(channalinfo) {
 	return output;
 }
 
+function onChannelMultiSelectStart() {
+	$(".channel_select").show();
+}
+function onChannelMultiSelectCancel() {
+	$(".channel_select").hide();
+}
+function onChannelChange() {
+	let channal_list = new Array();
+	$("[channal_id]").each(function () {
+		if (this.checked) {
+			channal_list.push($(this).attr("channal_id"));
+		}
+	});
+	set_channal(channal_list.join());
+}
 //点击引用 需要响应的事件
 function note_ref_init() {
 	$("chapter").click(function () {
@@ -504,7 +522,9 @@ function note_json_html(in_json) {
 		//句子工具栏结束
 		output += "</div>";
 	}
-
+	output += "<div class='other_tran' sent='";
+	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
+	output += "'></div>";
 	output += "<div class='ref'>" + in_json.ref;
 	output +=
 		"<span class='sent_no'>" +
@@ -517,7 +537,78 @@ function note_json_html(in_json) {
 		in_json.end +
 		"<span>" +
 		"</div>";
+
+	output += "<div class='bottm_tool_button ' ";
+	output += "book='" + in_json.book + "' ";
+	output += "para='" + in_json.para + "' ";
+	output += "begin='" + in_json.begin + "' ";
+	output += "end='" + in_json.end + "' ";
+	output += " style='left:0;'>";
+	output += "<div class='add_new icon_add'></div>";
+	output += "<div class='more_tran icon_expand'></div>";
+	output += "</div>";
 	return output;
+}
+
+function set_more_button_display() {
+	$(".more_tran").each(function () {
+		let book = $(this).parent().attr("book");
+		let para = $(this).parent().attr("para");
+		let begin = $(this).parent().attr("begin");
+		let end = $(this).parent().attr("end");
+		let count = 0;
+		for (const iterator of _channalData) {
+			if (iterator.final) {
+				for (const onesent of iterator.final) {
+					let id = onesent.id.split("-");
+					if (book == id[0] && para == id[1] && begin == id[2] && end == id[3] && onesent.final) {
+						if (_channal.indexOf(iterator.id) == -1) {
+							count++;
+						}
+					}
+				}
+			}
+		}
+		if (count > 0) {
+			$(this).click(function () {
+				let book = $(this).parent().attr("book");
+				let para = $(this).parent().attr("para");
+				let begin = $(this).parent().attr("begin");
+				let end = $(this).parent().attr("end");
+				let sentId = book + "-" + para + "-" + begin + "-" + end;
+				$(".other_tran[sent='" + sentId + "']").slideToggle();
+
+				$.get(
+					"../usent/get.php",
+					{
+						book: book,
+						para: para,
+						begin: begin,
+						end: end,
+					},
+					function (data, status) {
+						let arrSent = JSON.parse(data);
+						let html = "";
+						for (const iterator of arrSent) {
+							if (_channal.indexOf(iterator.channal) == -1) {
+								html += "<div>" + marked(iterator.text) + "</div>";
+							}
+						}
+						let sentId =
+							arrSent[0].book +
+							"-" +
+							arrSent[0].paragraph +
+							"-" +
+							arrSent[0].begin +
+							"-" +
+							arrSent[0].end;
+						$(".other_tran[sent='" + sentId + "']").html(html);
+					}
+				);
+			});
+		}
+		//$(this).html("[" + count + "]");
+	});
 }
 
 function note_edit_sentence(book, para, begin, end, channal) {
@@ -533,7 +624,7 @@ function note_edit_sentence(book, para, begin, end, channal) {
 			for (const tran of iterator.translation) {
 				if (tran.channal == channal) {
 					let html = "";
-					html += "<div style='color:blue;'>" + channalInfo.nickname + "/" + channalInfo.name + "</div>";
+					html += "<div style='color:blue;'>" + channalInfo.name + "@" + channalInfo.nickname + "</div>";
 					html +=
 						"<textarea id='edit_dialog_text' sent_id='" +
 						tran.id +
