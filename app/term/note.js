@@ -606,8 +606,11 @@ function set_more_button_display() {
 					}
 				);
 			});
+			$(this).html(count);
+		} else {
+			//隐藏自己
+			$(this).hide();
 		}
-		//$(this).html("[" + count + "]");
 	});
 }
 
