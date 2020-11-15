@@ -252,6 +252,7 @@ note{
 }
 .list_with_head{
 	display:flex;
+	margin: 3px 0;
 }
 .head_img{
 	display: inline-block;
@@ -262,8 +263,7 @@ note{
     color: white;
     border-radius: 99px;
     text-align: center;
-    margin-right: 0.5em;
-    margin-top: 0.5em;
+    margin: auto 2px;
 }
 .term_mean{
 	color:blue;

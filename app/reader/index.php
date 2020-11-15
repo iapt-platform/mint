@@ -128,6 +128,9 @@ require_once "../pcdl/html_head.php";
 	#head_bar{
 		height:unset;
 	}
+	#contents_foot{
+		margin-bottom: 70vh;
+	}
 
 
 #toc_content .level_2{
@@ -197,6 +200,16 @@ require_once "../pcdl/html_head.php";
 .level_6{
 	margin-left:6em;
 }
+.channal_list{
+		white-space: nowrap;
+		overflow-x: hidden;
+	}
+	.userinfo_channal{
+		display:none;
+	}
+	.userinfo_channal:hover{
+		display:block;
+	}
 
 
 	</style>
