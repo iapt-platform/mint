@@ -305,8 +305,10 @@ note {
 	position: relative;
 }
 note > .bottm_tool_button {
-	position: absolute;
+	border-radius: 5px;
+	border: 4px dotted var(--border-line-color);
 	display: none;
+	transition: all 0.2s ease;
 }
 note:hover > .bottm_tool_button {
 	display: block;
@@ -314,14 +316,13 @@ note:hover > .bottm_tool_button {
 .bottm_tool_button > .add_new {
 	width: 30px;
 	height: 30px;
-	margin-top: -26px;
 	display: inline-block;
 }
-.bottm_tool_button > .more_tran {
-	width: 30px;
-	height: 30px;
-	margin-top: -26px;
+.tool_bar > .more_tran {
 	display: inline-block;
+	margin-right: 5px;
+	transform: rotate(-90deg);
+	transition: all 0.2s ease;
 }
 .icon_add {
 	width: auto;
@@ -353,6 +354,24 @@ note:hover > .bottm_tool_button {
 	background-repeat: no-repeat;
 	background-size: contain;
 }
+.other_tran_div {
+	min-height: 1em;
+	border-top: 1px solid var(--border-line-color);
+}
+.other_tran_div > .tool_bar {
+	position: absolute;
+	margin-top: -0.7em;
+	background-color: var(--btn-bg-color);
+	padding: 0 6px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.other_tran_div > .other_tran {
+	min-height: 1em;
+	transition: all 0.2s ease;
+	display: none;
+}
+
 .bg_color_1 {
 	background-color: #ebebeb66;
 }

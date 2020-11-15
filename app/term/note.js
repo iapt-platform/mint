@@ -465,6 +465,7 @@ function note_json_html(in_json) {
 
 	output += "<div class='palitext'>" + in_json.palitext + "</div>";
 
+	//output += "<div class='translation_div'>";
 	for (const iterator of in_json.translation) {
 		output += "<div class='tran' lang='" + iterator.lang + "'>";
 
@@ -493,6 +494,7 @@ function note_json_html(in_json) {
 			output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
 		}
 		output += "</div>";
+
 		//句子工具栏
 		output += "<div class='tran_text_tool_bar'>";
 		output += "<span class = 'tip_buttom' ";
@@ -520,11 +522,34 @@ function note_json_html(in_json) {
 		output += "<span class = 'tip_buttom'>" + gLocal.gui.share_to + "</span>";
 		output += "</div>";
 		//句子工具栏结束
+
 		output += "</div>";
 	}
-	output += "<div class='other_tran' sent='";
+	//output += "</div>";
+
+	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
-	output += "'></div>";
+	output += "'>";
+	output += "<div class='tool_bar'>";
+	output += "<span class='more_tran icon_expand'></span>";
+	output += "<span>其他译文</span>";
+	output += "（<span class='other_tran_num'></span>）";
+	output += "</div>";
+	output += "<div class='other_tran'>";
+
+	output += "</div>";
+	output += "</div>";
+
+	output += "<div class='bottm_tool_button ' ";
+	output += "book='" + in_json.book + "' ";
+	output += "para='" + in_json.para + "' ";
+	output += "begin='" + in_json.begin + "' ";
+	output += "end='" + in_json.end + "' ";
+	output += " style='left:0;'>";
+	output += "<div class='add_new icon_add'></div>";
+	//output += "<div class='more_tran icon_expand'></div>";
+	output += "</div>";
+
 	output += "<div class='ref'>" + in_json.ref;
 	output +=
 		"<span class='sent_no'>" +
@@ -538,24 +563,17 @@ function note_json_html(in_json) {
 		"<span>" +
 		"</div>";
 
-	output += "<div class='bottm_tool_button ' ";
-	output += "book='" + in_json.book + "' ";
-	output += "para='" + in_json.para + "' ";
-	output += "begin='" + in_json.begin + "' ";
-	output += "end='" + in_json.end + "' ";
-	output += " style='left:0;'>";
-	output += "<div class='add_new icon_add'></div>";
-	output += "<div class='more_tran icon_expand'></div>";
-	output += "</div>";
 	return output;
 }
 
 function set_more_button_display() {
-	$(".more_tran").each(function () {
-		let book = $(this).parent().attr("book");
-		let para = $(this).parent().attr("para");
-		let begin = $(this).parent().attr("begin");
-		let end = $(this).parent().attr("end");
+	$(".other_tran_div").each(function () {
+		const sentid = $(this).attr("sent").split("-");
+
+		const book = sentid[0];
+		const para = sentid[1];
+		const begin = sentid[2];
+		const end = sentid[3];
 		let count = 0;
 		for (const iterator of _channalData) {
 			if (iterator.final) {
@@ -570,46 +588,60 @@ function set_more_button_display() {
 			}
 		}
 		if (count > 0) {
-			$(this).click(function () {
-				let book = $(this).parent().attr("book");
-				let para = $(this).parent().attr("para");
-				let begin = $(this).parent().attr("begin");
-				let end = $(this).parent().attr("end");
-				let sentId = book + "-" + para + "-" + begin + "-" + end;
-				$(".other_tran[sent='" + sentId + "']").slideToggle();
-
-				$.get(
-					"../usent/get.php",
-					{
-						book: book,
-						para: para,
-						begin: begin,
-						end: end,
-					},
-					function (data, status) {
-						let arrSent = JSON.parse(data);
-						let html = "";
-						for (const iterator of arrSent) {
-							if (_channal.indexOf(iterator.channal) == -1) {
-								html += "<div>" + marked(iterator.text) + "</div>";
+			$(this).find(".other_tran_num").html(count);
+			$(this)
+				.find(".tool_bar")
+				.click(function () {
+					const sentid = $(this).parent().attr("sent").split("-");
+					const book = sentid[0];
+					const para = sentid[1];
+					const begin = sentid[2];
+					const end = sentid[3];
+					let sentId = book + "-" + para + "-" + begin + "-" + end;
+					if ($(this).siblings(".other_tran").first().css("display") == "none") {
+						$(".other_tran_div[sent='" + sentId + "']")
+							.children(".other_tran")
+							.slideDown();
+						$(this).children(".more_tran ").css("transform", "unset");
+						$.get(
+							"../usent/get.php",
+							{
+								book: book,
+								para: para,
+								begin: begin,
+								end: end,
+							},
+							function (data, status) {
+								let arrSent = JSON.parse(data);
+								let html = "";
+								for (const iterator of arrSent) {
+									if (_channal.indexOf(iterator.channal) == -1) {
+										html += "<div>" + marked(iterator.text) + "</div>";
+									}
+								}
+								let sentId =
+									arrSent[0].book +
+									"-" +
+									arrSent[0].paragraph +
+									"-" +
+									arrSent[0].begin +
+									"-" +
+									arrSent[0].end;
+								$(".other_tran_div[sent='" + sentId + "']")
+									.children(".other_tran")
+									.html(html);
 							}
-						}
-						let sentId =
-							arrSent[0].book +
-							"-" +
-							arrSent[0].paragraph +
-							"-" +
-							arrSent[0].begin +
-							"-" +
-							arrSent[0].end;
-						$(".other_tran[sent='" + sentId + "']").html(html);
+						);
+					} else {
+						$(".other_tran_div[sent='" + sentId + "']")
+							.children(".other_tran")
+							.slideUp();
+						$(this).children(".more_tran ").css("transform", "rotate(-90deg)");
 					}
-				);
-			});
-			$(this).html(count);
+				});
 		} else {
 			//隐藏自己
-			$(this).hide();
+			//$(this).hide();
 		}
 	});
 }
