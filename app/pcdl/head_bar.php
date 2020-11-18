@@ -113,15 +113,16 @@
 }
 	.head_nav{
 		display: flex;
-    padding: 0 1em;
-    color: var(--btn-color);
-    font-size: 1.2em;
-    font-weight: 300;
+		padding: 0 1em;
+		color: var(--btn-color);
+		font-size: 1.2em;
+		font-weight: 300;
+		text-transform: capitalize;
 	}	
 	.head_nav li{
 		display: inline-flex;
-    padding: 0 0.5em;
-    align-items: center;
+		padding: 0 0.5em;
+		align-items: center;
 	}
 
 	.nav_link, .nav_link:link, .nav_link:visited {

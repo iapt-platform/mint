@@ -123,16 +123,17 @@ for($iPar=0;$iPar < count($title_data); $iPar++){
 	$book=$from+1;
 	$paragraph=$title_data[$iPar]["paragraph"];
 	
-	if($title_data[$iPar]["level"]==8){
+	if((int)$title_data[$iPar]["level"]==8){
 		$title_data[$iPar]["level"]=100;
-	}				
-	$curr_level=$title_data[$iPar]["level"];
-
+	}
 	
+	$curr_level=(int)$title_data[$iPar]["level"];
+	# j计算这个chapter的段落数量
 	$length=-1;
 	for($iPar1=$iPar+1;$iPar1<count($title_data); $iPar1++){
-		if($title_data[$iPar1]["level"]<=$curr_level){
-			$length=$title_data[$iPar1]["paragraph"]-$paragraph;
+		$thislevel = (int)$title_data[$iPar1]["level"];
+		if( $thislevel <= $curr_level){
+			$length=(int)$title_data[$iPar1]["paragraph"]-$paragraph;
 			break;
 		}
 	}
