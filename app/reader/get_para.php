@@ -49,7 +49,7 @@ if($FetchParInfo){
     }
 
     //获取下级目录
-    $query = "SELECT * FROM 'pali_text'  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 100 ";
+    $query = "SELECT * FROM 'pali_text'  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
     $output["toc"] = PDO_FetchAll($query , array($_book,$paraBegin,$paraEnd));
 
     if($FetchParInfo["chapter_strlen"]>_MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"])>1){
