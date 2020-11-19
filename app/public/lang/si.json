@@ -557,6 +557,8 @@
 		"extension": "extension",
 		"no_created": "&nbsp;is not created yet",
 		"create_now": "create now",
+		"only_this_para": "show this paragraph only",
+		"no": "No&nbsp;",
 		"": "",
 		"": ""
 	},

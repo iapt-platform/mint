@@ -42,11 +42,11 @@ chapter {
 	cursor: pointer;
 }
 chapter::after {
-	content: " > ";
+	content: " ＞ ";
 }
 chapter:hover {
 	color: var(--link-color);
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 para {
 	background-color: var(--drop-bg-color);
@@ -178,9 +178,16 @@ note > .palitext > note {
 
 note .ref {
 	text-align: right;
-	padding: 5px;
+	padding: 0px 5px 2px 5px;
 	font-size: 75%;
-	margin-top: -2em;
+	white-space: nowrap;
+	overflow-x: scroll;
+	width: 67vw;
+	margin-left: auto;
+	border-top: solid 1px var(--nocolor);
+}
+note:hover .ref {
+	border-top: solid 1px var(--border-line-color);
 }
 
 .tran {
@@ -296,7 +303,7 @@ r {
 }
 
 note {
-	padding: 0.5em 1em;
+	padding: 0.5em 1.5vw;
 	margin-bottom: 0.4em;
 	border-radius: 5px;
 	line-height: 1.3em;
@@ -313,10 +320,9 @@ note > .bottm_tool_button {
 note:hover > .bottm_tool_button {
 	display: block;
 }
-.bottm_tool_button > .add_new {
-	width: 30px;
-	height: 30px;
+note:hover .add_new {
 	display: inline-block;
+	position: absolute;
 }
 .tool_bar > .more_tran {
 	display: inline-block;
@@ -326,13 +332,14 @@ note:hover > .bottm_tool_button {
 }
 .icon_add {
 	width: auto;
-	min-width: 18px;
-	height: auto;
-	min-height: 18x;
+	min-width: 1.4vw;
+	height: 1.5vw;
 	cursor: pointer;
 	background: url(add.svg);
 	background-repeat: no-repeat;
 	background-size: contain;
+	display: none;
+	margin-top: -0.5em;
 }
 .icon_expand {
 	width: auto;
@@ -365,6 +372,7 @@ note:hover > .bottm_tool_button {
 	padding: 0 6px;
 	border-radius: 4px;
 	cursor: pointer;
+	display: flex;
 }
 .other_tran_div > .other_tran {
 	min-height: 1em;
@@ -427,9 +435,10 @@ note:hover .note_tool_bar {
 
 .note_tool_context {
 	position: absolute;
-	right: 0;
+	right: -1vw;
 	width: 1.5em;
 	text-align: right;
+	margin-top: -0.3em;
 }
 
 .note_tool_context .icon {
@@ -451,4 +460,19 @@ note:hover .note_tool_bar {
 	background-color: unset;
 	padding: 5px;
 	border-radius: 5px;
+}
+.other_tran_num {
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	background-color: cornflowerblue;
+	position: relative;
+	min-width: 14px;
+	height: 14px;
+	display: inline-flex;
+	justify-content: center;
+	text-align: center;
+	line-height: 14px;
+	display: none;
+	margin: auto 2px;
+	color: whitesmoke;
 }
