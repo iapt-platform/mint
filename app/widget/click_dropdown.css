@@ -1,16 +1,17 @@
 .click_dropdown_div {
-  position: relative;
+	position: relative;
 }
 .click_dropdown_content {
-  display: none;
-  position: absolute;
-  right: 0;
-  width: 19em;
-  border-radius: 4px;
-  background-color: var(--drop-bg-color);
+	display: none;
+	position: absolute;
+	right: 0;
+	min-width: 5em;
+	border-radius: 4px;
+	background-color: var(--drop-bg-color);
 }
-
+.click_dropdown_button {
+}
 .click_dropdown_content_inner {
-  max-height: 300px;
-  min-height: 10em;
+	max-height: 300px;
+	/*min-height: 10em;*/
 }

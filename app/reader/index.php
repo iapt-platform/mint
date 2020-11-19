@@ -210,8 +210,11 @@ require_once "../pcdl/html_head.php";
 	.userinfo_channal:hover{
 		display:block;
 	}
-
-
+	
+	#para_path chapter{
+		color: var(--link-color);
+		font-size: 120%;
+	}
 	</style>
 
 <style media="screen and (max-width:767px)">
@@ -242,12 +245,7 @@ require_once "../pcdl/html_head.php";
 <div id="head_bar" >
 	<div id="pali_pedia" style="display:flex;">
 		<span><?php echo $_local->gui->anthology; ?></span>
-		<span id="para_path"></span>
-		<span class="case_dropdown" id="para_path_next_level">
-		……
-		<div id="toc_next_menu" class="case_dropdown-content">
-		</div>
-		</span>
+
 	</div>
 
 	<div>
@@ -327,8 +325,26 @@ require_once "../pcdl/html_head.php";
 <div id="main_view" class="main_view">
 <div id="article_head" style="border-bottom: 1px solid gray;">
 	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div id="article_subtitle"><?php echo $_local->gui->sub_title; ?></div>
-	<div id="article_author"><?php echo $_local->gui->author; ?></div>
+	<div  id='path_div' style="display:flex;justify-content: space-between;">
+		<div id="article_path">
+		<span id="para_path"></span>
+		<span class="case_dropdown" id="para_path_next_level">
+		……
+		<div id="toc_next_menu" class="case_dropdown-content">
+		</div>
+		</span>
+		</div>
+		<div id="article_lang">
+			<div class="click_dropdown_div">
+				<div class="click_dropdown_button">语言</div>
+				<div class="click_dropdown_content">
+					<div class="click_dropdown_content_inner">
+						<a>简体中文</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div id="contents_view">
 	<div id="contents_div" style="padding: 0 1em 0 30px;">
