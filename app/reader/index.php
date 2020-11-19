@@ -350,7 +350,7 @@ require_once "../pcdl/html_head.php";
 	<div id="right_pannal">
 		<div class="fun_frame">
 			<div id = "collect_title" class="title">Table of Content</div>
-			<div id = "toc_content" class="content" style="max-height:20em;">
+			<div id = "toc_content" class="content" style="max-height:25vw;">
 			</div>
 		</div>
 		<div class="fun_frame">
@@ -360,7 +360,7 @@ require_once "../pcdl/html_head.php";
 					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo "Multi-Select"; ?></div>
 				</div>
 			</div>
-			<div id="channal_list" class="content" style="max-height:20em;">
+			<div id="channal_list" class="content" style="max-height:25vw;">
 			</div>
 		</div>
 	</div>

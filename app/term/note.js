@@ -63,7 +63,7 @@ function note_sent_edit_dlg_init() {
 }
 function note_init(input) {
 	let newString = input.replace(/\{\{/g, '<note info="');
-	newString = newString.replace(/\}\}/g, '"></note>');
+	newString = newString.replace(/\}\}/g, '" style="width=70vw;"></note>');
 
 	let output = "<div>";
 	output += marked(newString);
@@ -424,8 +424,7 @@ ref
 function note_json_html(in_json) {
 	let output = "";
 	output += '<div class="note_tool_bar" style=" position: relative;">';
-	output +=
-		'<div class="case_dropdown note_tool_context" style="position: absolute; right: 0;width:1.5em;text-align: right;">';
+	output += '<div class="case_dropdown note_tool_context" >';
 	output += "<svg class='icon' >";
 	output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
 	output += "</svg>";
@@ -532,21 +531,21 @@ function note_json_html(in_json) {
 	output += "'>";
 	output += "<div class='tool_bar'>";
 	output += "<span class='more_tran icon_expand'></span>";
-	output += "<span>其他译文</span>";
-	output += "（<span class='other_tran_num'></span>）";
+	output += "<span class='other_tran_span'>" + gLocal.gui.other + gLocal.gui.translation + "</span>";
+	output += "<span class='other_tran_num'></span>";
 	output += "</div>";
 	output += "<div class='other_tran'>";
 
 	output += "</div>";
 	output += "</div>";
 
-	output += "<div class='bottm_tool_button ' ";
+	output += "<div class='add_new icon_add' ";
 	output += "book='" + in_json.book + "' ";
 	output += "para='" + in_json.para + "' ";
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
 	output += " style='left:0;'>";
-	output += "<div class='add_new icon_add'></div>";
+
 	//output += "<div class='more_tran icon_expand'></div>";
 	output += "</div>";
 
@@ -589,6 +588,7 @@ function set_more_button_display() {
 		}
 		if (count > 0) {
 			$(this).find(".other_tran_num").html(count);
+			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
 			$(this)
 				.find(".tool_bar")
 				.click(function () {
@@ -642,6 +642,10 @@ function set_more_button_display() {
 		} else {
 			//隐藏自己
 			//$(this).hide();
+			$(this)
+				.find(".other_tran_span")
+				.html(gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation);
+			$(this).find(".more_tran").hide();
 		}
 	});
 }

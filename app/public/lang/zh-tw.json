@@ -554,6 +554,8 @@
 		"extension": "橫向對比",
 		"no_created": "尚未建立",
 		"create_now": "現在建立",
+		"only_this_para": "獨立顯示本段",
+		"no": "無",
 		"": ""
 	},
 	"grammastr": [
