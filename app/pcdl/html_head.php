@@ -56,6 +56,10 @@ else{
 			echo '<link type="text/css" rel="stylesheet" href="../term/term_para.css"/>';
 		}
 		?>
+	
+	<script src="../term/popup_note.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/popup_note.css"/>
+
 	<script src="../term/term_edit_dlg.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	<script src="../uwbw/wbw_channal_list.js"></script>

@@ -213,6 +213,8 @@ function note_refresh_new() {
 								$("#" + id).html(strHtml);
 							}
 						}
+						//处理<code>标签作为气泡注释
+						popup_init();
 						//刷新句子链接递归，有加层数限制。
 						note_refresh_new();
 
