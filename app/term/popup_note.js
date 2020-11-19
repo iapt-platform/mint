@@ -1,5 +1,5 @@
 function popup_init() {
-	$("code").each(function () {
+	$("code:not([class])").each(function () {
 		if ($(this).attr("init") != "1") {
 			if ($(this).text().length == 0) {
 				return;

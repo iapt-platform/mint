@@ -12,6 +12,10 @@ code {
 	margin: 0 6px;
 	color: var(--tool-color);
 }
+.language-para {
+	background: none;
+	color: unset;
+}
 code:hover .popup_contence {
 	display: inline-block;
 }
