@@ -256,7 +256,7 @@ require_once "../pcdl/html_head.php";
 	<div id="article_author"><?php echo $_local->gui->author; ?></div>
 </div>
 <div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em 0 30px;">
+	<div id="contents_div" style="padding: 0 1em 0 30px;width:70vw;">
 		<div id="contents">
 		<?php echo $_local->gui->loading; ?>...
 		</div>
