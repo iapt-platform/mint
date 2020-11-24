@@ -51,7 +51,7 @@
 		"computer": "Computer",
 		"confirm": "Confirm",
 		"content": "Content",
-		"contents": "Contents",
+		"contents": "Table of Content",
 		"copy": "copy",
 		"copy_to_clipboard": "copy the link to clipboard",
 		"creat_a_new_file_by_yourself": "Creat a new file by yourself",
@@ -554,6 +554,7 @@
 		"create_now": "create now",
 		"only_this_para": "show this paragraph only",
 		"no": "No&nbsp;",
+		"select": "select",
 		"": ""
 	},
 	"grammastr": [

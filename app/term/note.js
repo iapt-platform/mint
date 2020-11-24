@@ -269,10 +269,6 @@ function note_channal_list() {
 							}
 						}
 						let strHtml = "";
-						strHtml += "<div class='channel_select'>";
-						strHtml += "<button onclick='onChannelChange()'>确定</button>";
-						strHtml += "<button onclick='onChannelMultiSelectCancel()'>取消</button>";
-						strHtml += "</div>";
 						for (const iterator of _channalData) {
 							if (_channal.indexOf(iterator.id) >= 0) {
 								strHtml += render_channal_list(iterator);
@@ -472,7 +468,7 @@ function note_json_html(in_json) {
 		//译文工具按钮开始
 		output += "<div class='tran_text_tool_botton' onclick='tool_bar_show(this)'>";
 		output +=
-			"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;'></div>";
+			"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;transition: transform 0.5s ease;'></div>";
 		//译文工具栏开始
 		output += "<div class='tran_text_tool_bar'>";
 		output += "<li class = 'tip_buttom' ";
@@ -794,7 +790,13 @@ function edit_in_studio(book, para, begin, end) {
 function tool_bar_show(element) {
 	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
 		$(element).find(".tran_text_tool_bar").show();
+		$(element).find(".icon_expand").css("transform", "rotate(-180deg)");
+		$(element).css("background-color", "var(--btn-bg-color)");
+		$(element).css("visibility", "visible");
 	} else {
 		$(element).find(".tran_text_tool_bar").hide();
+		$(element).css("background-color", "var(--nocolor)");
+		$(element).find(".icon_expand").css("transform", "unset");
+		$(element).css("visibility", "");
 	}
 }

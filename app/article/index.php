@@ -272,16 +272,20 @@ require_once "../pcdl/html_head.php";
 	</div>
 	<div id="right_pannal">
 		<div class="fun_frame">
-			<div id = "collect_title" class="title">Table of Content</div>
+			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
 			<div id = "toc_content" class="content" style="max-height:25vw;">
 			</div>
 		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor ?></div>
+				<div class="title"><?php echo $_local->gui->contributor; ?></div>
 				<div class="click_dropdown_div">
-					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo "Multi-Select"; ?></div>
+					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
 				</div>
+			</div>
+			<div class='channel_select'>
+				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
+				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
 			</div>
 			<div id="channal_list" class="content" style="max-height:25vw;">
 			</div>

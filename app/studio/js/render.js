@@ -1587,8 +1587,12 @@ function sent_show_rel_map(book, para, begin, end) {
 	}
 
 	let graph = mermaid.render("graphDiv", memind);
-	document.querySelector("#term_body").innerHTML = "<h3>" + pali_text + "</h3>" + graph;
+	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
+	document.querySelector("#term_body").outerHTML =
+		"<h3 style='padding: 0 1em;'>" + pali_text + "</h3>" + document.querySelector("#term_body").outerHTML;
+	document.querySelector("#term_body").innerHTML = graph;
 	document.querySelector("#term_win").style.display = "flex";
+	document.querySelector(".win_body").style.display = "block";
 }
 
 //句子编辑块

@@ -1,5 +1,6 @@
 .click_dropdown_div {
 	position: relative;
+	padding: 6px;
 }
 .click_dropdown_content {
 	display: none;
