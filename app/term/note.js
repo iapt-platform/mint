@@ -471,7 +471,7 @@ function note_json_html(in_json) {
 			"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;transition: transform 0.5s ease;'></div>";
 		//译文工具栏开始
 		output += "<div class='tran_text_tool_bar'>";
-		output += "<li class = 'tip_buttom' ";
+		output += "<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom' ";
 		output +=
 			" onclick=\"note_edit_sentence('" +
 			in_json.book +
@@ -484,17 +484,38 @@ function note_json_html(in_json) {
 			"' ,'" +
 			iterator.channal +
 			"')\"";
-		output += ">" + gLocal.gui.edit + "</li>";
+		output +=
+			">" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use></svg>';
+		output += gLocal.gui.edit + "</li>";
 		output += "<li class = 'tip_buttom' ";
 		output += " onclick=\"history_show('" + iterator.id + "')\"";
-		output += ">" + gLocal.gui.timeline + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.extension + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.like + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.comment + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.copy + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.digest + "</li>";
-		output += "<li class = 'tip_buttom'>" + gLocal.gui.share_to + "</li>";
-		output += "</div>";
+		output +=
+			">" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use></svg>';
+		output += gLocal.gui.timeline + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#copy"></use></svg>';
+		output += gLocal.gui.copy + "</li></div>";
+
+		output +=
+			"<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use></svg>';
+		output += gLocal.gui.like + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#comment"></use></svg>';
+		output += gLocal.gui.comment + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_shopping_cart"></use></svg>';
+		output += gLocal.gui.digest + "</li></div>";
+		output +=
+			"<div style='margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#share_to"></use></svg>';
+		output += gLocal.gui.share_to + "</li>";
+		output += "</div></div>";
 		//译文工具栏结束
 		output += "</div>";
 		//译文工具按钮结束
@@ -789,10 +810,17 @@ function edit_in_studio(book, para, begin, end) {
 
 function tool_bar_show(element) {
 	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
-		$(element).find(".tran_text_tool_bar").show();
+		$(element).find(".tran_text_tool_bar").css("display", "flex");
 		$(element).find(".icon_expand").css("transform", "rotate(-180deg)");
 		$(element).css("background-color", "var(--btn-bg-color)");
 		$(element).css("visibility", "visible");
+		$(document).one("click", function () {
+			$(element).find(".tran_text_tool_bar").hide();
+			$(element).css("background-color", "var(--nocolor)");
+			$(element).find(".icon_expand").css("transform", "unset");
+			$(element).css("visibility", "");
+		});
+		event.stopPropagation();
 	} else {
 		$(element).find(".tran_text_tool_bar").hide();
 		$(element).css("background-color", "var(--nocolor)");
