@@ -174,9 +174,11 @@ note > .tran > .text {
 	padding: 2px;
 	height: fit-content;
 	margin-left: -1em;
-    margin-right: 1em;
+	margin-right: 1em;
+	background-color: var(--nocolor);
+	visibility: hidden;
 }
-}
+
 .tran_text_tool_botton > .icon_expand {
 	width: 0.8em;
 	height: 0.8em;
@@ -192,7 +194,7 @@ note > .tran .tran_text_tool_bar {
 	width: auto;
 	left: -5em;
 	font-size: 14px;
-	height: 28px;
+	height: auto;
 	line-height: 28px;
 	margin-top: 1em;
 	background-color: var(--box-bg-color1);
@@ -212,8 +214,8 @@ note > .tran .tran_text_tool_bar::after {
 	border-color: transparent transparent var(--box-bg-color1) transparent;
 }
 
-.tran:hover > .tran_text_tool_bar {
-	display: block;
+.tran:hover > .tran_text_tool_botton {
+	visibility: visible;
 }
 .tran_text_tool_bar li {
 	list-style: none;
@@ -222,6 +224,7 @@ note > .tran .tran_text_tool_bar::after {
 	padding: 0 8px;
 	cursor: pointer;
 	background-color: inherit;
+	border-radius: 5px;
 }
 .tip_buttom:hover {
 	background-color: var(--btn-border-color);
@@ -337,7 +340,7 @@ note > .bottm_tool_button {
 	border-radius: 5px;
 	border: 4px dotted var(--border-line-color);
 	display: none;
-	transition: all 0.2s ease;
+	transition: all 0.3s ease;
 }
 note:hover > .bottm_tool_button {
 	display: block;

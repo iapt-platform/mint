@@ -49,7 +49,7 @@
 		"commentary": "註疏",
 		"completely_delete": "永久移除",
 		"computer": "電腦",
-		"confirm": "確認",
+		"confirm": "確定",
 		"content": "目錄",
 		"contents": "目錄",
 		"copy": "複製",
@@ -556,6 +556,7 @@
 		"create_now": "現在建立",
 		"only_this_para": "獨立顯示本段",
 		"no": "無",
+		"select": "選擇",
 		"": ""
 	},
 	"grammastr": [
