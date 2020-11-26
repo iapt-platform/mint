@@ -5,7 +5,7 @@ require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
 
-	<script src="../channal/channal.js"></script>
+
 	<script src="./article.js"></script>
 
 	<script src="../widget/click_dropdown.js"></script>

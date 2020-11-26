@@ -1,7 +1,7 @@
 <?php
 require_once "../public/load_lang.php";
 require_once "../path.php";
-
+require_once "../pcdl/html_head.php";
 if(isset($_GET["id"])){
 	$_get_id=$_GET["id"];
 }
@@ -16,9 +16,6 @@ else{
 }
 ?>
 
-<?PHP
-include "../pcdl/html_head.php";
-?>
 <body style="margin: 0;padding: 0;" class="reader_body" onload="<?php
 if(isset($_get_id)){
 echo "wiki_load_id('{$_get_id}')";

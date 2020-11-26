@@ -8,8 +8,6 @@ require_once "../pcdl/html_head.php";
 	<script src="../channal/channal.js"></script>
 	<script src="./reader.js"></script>
 
-	<script src="../widget/click_dropdown.js"></script>
-	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
 	<script>
 	<?php
@@ -132,24 +130,23 @@ require_once "../pcdl/html_head.php";
 		margin-bottom: 70vh;
 	}
 
-
-#toc_content .level_2{
-	padding-left:0.5em;
-}
-#toc_content .level_3{
-	padding-left:1em;
-}
-#toc_content .level_4{
-	padding-left:1.5em;
-}
-#toc_content .level_5{
-	padding-left:2em;
-}
-.ui-dialog-titlebar{
-		display: flex;
-    justify-content: space-between;
-	background-color: var(--btn-bg-color);
-    padding: 5px;
+	#toc_content .level_2{
+		padding-left:0.5em;
+	}
+	#toc_content .level_3{
+		padding-left:1em;
+	}
+	#toc_content .level_4{
+		padding-left:1.5em;
+	}
+	#toc_content .level_5{
+		padding-left:2em;
+	}
+	.ui-dialog-titlebar{
+			display: flex;
+		justify-content: space-between;
+		background-color: var(--btn-bg-color);
+		padding: 5px;
 	}
 	.ui-widget-content{
 		background-color: var(--bg-color);
@@ -319,65 +316,37 @@ require_once "../pcdl/html_head.php";
 		</span>
 	</div>
 </div>
+
 <div id="main_view" class="main_view">
-<div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div  id='path_div' style="display:flex;justify-content: space-between;">
-		<div id="article_path">
-		<span id="para_path"></span>
-		<span class="case_dropdown" id="para_path_next_level">
-		……
-		<div id="toc_next_menu" class="case_dropdown-content">
-		</div>
-		</span>
-		</div>
-		<div id="article_lang">
-			<div class="click_dropdown_div">
-				<div class="click_dropdown_button">语言</div>
-				<div class="click_dropdown_content">
-					<div class="click_dropdown_content_inner">
-						<a>简体中文</a>
-					</div>
+
+	<div id="contents_view">
+		<div id="contents_div" style="padding: 0 1em 0 30px;">
+			<div id="contents">
+			<?php echo $_local->gui->loading; ?>...
+			</div>
+			<div id="contents_foot">
+				<div id="contents_nav" style="">
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em 0 30px;">
-		<div id="contents">
-		<?php echo $_local->gui->loading; ?>...
-		</div>
-		<div id="contents_toc">
-		</div>
-		<div id="contents_foot">
-			<div id="contents_nav" style="display:flex;justify-content: space-between;">
-				<div id="contents_nav_left"></div>
-				<div id="contents_nav_right"></div>
+
+		<div id="right_pannal">
+			<div class="fun_frame">
+				<div id = "collect_title" class="title">Declation</div>
+				<div id = "case_content" class="content" style="max-height:20em;">
+				</div>
 			</div>
-			<div id="contents_dicuse">
-			
-			</div>
-		</div>
-	</div>
-	<div id="right_pannal">
-		<div class="fun_frame">
-			<div id = "collect_title" class="title">Table of Content</div>
-			<div id = "toc_content" class="content" style="max-height:20em;">
-			</div>
-		</div>
-		<div class="fun_frame">
-			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor; ?></div>
-				<div class="click_dropdown_div">
+			<div class="fun_frame">
+				<div style="display:flex;justify-content: space-between;">
+					<div class="title"><?php echo "Books"; ?></div>
 					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo "Multi-Select"; ?></div>
 				</div>
-			</div>
-			<div id="channal_list" class="content" style="max-height:20em;">
+				<div id="channal_list" class="content" style="max-height:20em;">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
 </div>
 
 
