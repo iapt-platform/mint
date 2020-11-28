@@ -116,7 +116,7 @@ for ($i=$from; $i <=$to ; $i++) {
 				//echo $weight."\n";
 				$fetch[$iWord]["weight"] = (int)($weight*100);
 			}
-			# 修改数据库
+			# 将整段权重写入据库
 			$dh_pali->beginTransaction();
 			$query = "UPDATE word set weight = ? where id=? ";
 			$stmt_weight = $dh_pali->prepare($query);
