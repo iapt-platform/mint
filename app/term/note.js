@@ -464,7 +464,7 @@ function note_json_html(in_json) {
 
 	//output += "<div class='translation_div'>";
 	for (const iterator of in_json.translation) {
-		output += "<div class='tran' lang='" + iterator.lang + "'>";
+		output += "<div class='tran' lang='" + iterator.lang + "' style='display:flex;'>";
 		//译文工具按钮开始
 		output += "<div class='tran_text_tool_botton' onclick='tool_bar_show(this)'>";
 		output +=
