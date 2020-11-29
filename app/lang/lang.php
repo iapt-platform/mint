@@ -8,7 +8,28 @@
 		function setLang(strLang){
 			g_language=strLang;
 			setCookie('language',g_language,365);
-			window.location.assign(location.pathname+"?language="+g_language);
+			if(window.location.search==""){
+				window.location.assign(location.href+"?language="+g_language);
+			}
+			else{
+				let org_parameter_str=window.location.search.substr(1);
+				let arr_parameter=org_parameter_str.split("&");
+				let new_parameter_str=""
+				for(let i_arr=0;i_arr<arr_parameter.length;i_arr++){
+					if(arr_parameter[i_arr].split("=")[0]=="language"){
+						arr_parameter[i_arr]="language="+g_language;
+						new_parameter_str=arr_parameter[i_arr];
+					}
+					else{}
+				}
+				if(new_parameter_str==""){
+					window.location.assign(location.href+"&language="+g_language);
+				}
+				else{
+					new_parameter_str="?"+arr_parameter.join("&");
+					window.location.assign(location.pathname+new_parameter_str);
+				}
+			}
 		}
 	</script>
 	<style>
