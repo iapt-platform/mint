@@ -50,7 +50,7 @@ require_once '../public/function.php';
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader.css"/>
-	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader_mob.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader_mob.css" media="screen and (max-width:800px)">
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
 	<title id="page_title">Setting</title>
 

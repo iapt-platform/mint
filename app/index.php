@@ -138,7 +138,7 @@ require_once "public/load_lang.php";
             }
         </style>
 
-	    <style  media="screen and (max-width:767px)">
+	    <style  media="screen and (max-width:800px)">
             #login_body {
                 flex-direction: column;
                 padding: 0.2em;

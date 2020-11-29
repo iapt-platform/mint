@@ -177,7 +177,7 @@ require_once "../pcdl/html_head.php";
 
 	</style>
 
-<style media="screen and (max-width:767px)">
+<style media="screen and (max-width:800px)">
 #right_pannal{
 	display:none;
 }

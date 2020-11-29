@@ -21,7 +21,7 @@ $_channal = new Channal();
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="css/reader.css"/>
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
-	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="css/reader_mob.css" media="screen and (max-width:800px)">
 	<title id="page_title">PCD Reader</title>
 
 	<script src="js/jquery-3.3.1.min.js"></script>

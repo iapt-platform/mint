@@ -27,7 +27,7 @@ else{
     <link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
-    <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
+    <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:800px)">
 	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 
     <title>wikipāḷi</title>

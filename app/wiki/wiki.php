@@ -253,7 +253,7 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	</style>
 
-<style media="screen and (max-width:767px)">
+<style media="screen and (max-width:800px)">
 #term_list_right{
 	display:none;
 }

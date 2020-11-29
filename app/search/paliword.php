@@ -74,7 +74,7 @@ include "../pcdl/html_head.php";
 		display:block;
 	}
     </style>
-    <style  media="screen and (max-width:767px)">
+    <style  media="screen and (max-width:800px)">
 		#index_list{
 			display:block;
 		}

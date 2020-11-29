@@ -15,7 +15,7 @@ require_once "../pcdl/html_head.php";
 			display:flex;
 		}
     </style>
-    <style  media="screen and (max-width:767px)">
+    <style  media="screen and (max-width:800px)">
 		#index_list{
 			display:block;
 		}
