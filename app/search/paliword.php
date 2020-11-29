@@ -73,6 +73,8 @@ include "../pcdl/html_head.php";
 	#pre_search_word_content{
 		display:block;
 	}
+
+
     </style>
     <style  media="screen and (max-width:800px)">
 		#index_list{

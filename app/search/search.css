@@ -36,7 +36,7 @@ highlight {
 	border-bottom: 1px;
 	display: flex;
 	justify-content: space-between;
-	padding: 3px 0;
+	padding: 3px;
 }
 .fileter_item > .tag {
 	background-color: gray;
@@ -64,21 +64,27 @@ highlight {
 	background-color: var(--link-hover-color);
 	color: var(--bg-color);
 }
-.fileter_item > .invalid a,
-.fileter_item > .invalid a:link,
-.fileter_item > .invalid a:visited {
+.fileter_item > .spell {
+	padding: 4px;
+}
+.fileter_item > .spell a,
+.fileter_item > .spell a:link,
+.fileter_item > .spell a:visited {
 	color: var(--box-bg-color1);
 }
-.fileter_item:hover > .invalid a,
-.fileter_item:hover > .invalid a:link,
-.fileter_item:hover > .invalid a:visited {
+.fileter_item:hover > .spell a,
+.fileter_item:hover > .spell a:link,
+.fileter_item:hover > .spell a:visited {
 	color: var(--bg-color);
 }
 
 .fileter_item > .selected {
+	border-left: 4px solid var(--link-hover-color);
 }
 .fileter_item > .selected a,
 .fileter_item > .selected a:link,
 .fileter_item > .selected a:visited {
 	font-weight: 700;
+}
+.book_item > .selected {
 }

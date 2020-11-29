@@ -112,9 +112,17 @@ function word_search_filter() {
 	_filter_word = wordlist;
 	paliword_search(_key_word, wordlist);
 }
+
+function word_select(wordid) {
+	_filter_word = [wordid];
+	paliword_search(_key_word, [wordid]);
+}
+
 function case_filter_all() {
 	paliword_search(_key_word);
 }
+
+//渲染书标签过滤
 function render_book_tag(data) {
 	let html = "";
 	html += "<div class='fileter_item book_tag'>";
@@ -126,14 +134,19 @@ function render_book_tag(data) {
 	html += "</div>";
 	return html;
 }
-
+//渲染书列表
 function render_book_list(data) {
 	let html = "";
 	let bookid = data.book;
+	let classSelected = "selected";
 	html += "<div class='fileter_item book_item'>";
-	html += "<div class='spell'>";
+	html += "<div class='spell ";
+	if (data.selected) {
+		html += classSelected;
+	}
+	html += "'>";
 	html += "<input book='" + bookid + "' class='book_list filter' type='checkbox' checked  />";
-	html += '<a onclick="dict_bold_word_select({$i})">';
+	html += '<a onclick="book_select(' + bookid + ')">';
 	html += data.title;
 	html += "</a>";
 	html += "</div>";
@@ -166,9 +179,6 @@ function filter_cancel() {
 	$("#case_tools").children(".select_button").show();
 }
 function search_filter() {}
-function word_select(wordid) {
-	paliword_search(_key_word, [wordid]);
-}
 
 function search_book_filter(objid, type) {
 	if (document.getElementById(objid).checked == true) {

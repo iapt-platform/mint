@@ -130,15 +130,17 @@ switch($op){
 			}
 			else{
 				foreach ($aInputWordList as $key => $value) {
-					$aInputWordList[$key] = true;
+					//$aInputWordList[$key] = true;
 				}
 			}
 		}
+		/*
 		else{
 			foreach ($aInputWordList as $key => $value) {
 				$aInputWordList[$key] = true;
 			}
 		}
+		*/
 		$strQueryWordId=mb_substr($strQueryWordId, 0,mb_strlen($strQueryWordId,"UTF-8")-1,"UTF-8");
 		$strQueryWordId.=")";
 
@@ -184,13 +186,26 @@ switch($op){
 		$strQueryBookId=" ";
 		if(isset($_GET["book"])){
 			$book_selected = json_decode($_GET["book"]);
+			$bookSelected = array();
 			if(count($book_selected)>0){
 				$strQueryBookId=" AND book IN (";
 				foreach ($book_selected as $key => $value) {
 					$strQueryBookId.="'{$value}',";
+					$bookSelected[$value]=1;
 				}
 				$strQueryBookId=mb_substr($strQueryBookId, 0,mb_strlen($strQueryBookId,"UTF-8")-1,"UTF-8");
 				$strQueryBookId.=")";
+
+				foreach ($result["book_list"] as $bookindex => $bookvalue) {
+					# code...
+					$bookid = $bookvalue["book"];
+					if(isset($bookSelected["{$bookid}"])){
+						$result["book_list"][$bookindex]["selected"]=true;
+					}
+					else{
+						$result["book_list"][$bookindex]["selected"]=false;
+					}
+				}
 			}
 		}
 
