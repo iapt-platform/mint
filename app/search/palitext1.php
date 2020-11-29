@@ -5,28 +5,37 @@ require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
 
+	<script src="../channal/channal.js"></script>
+	<script src="./reader.js"></script>
 
-	<script src="./article.js"></script>
-
-	<script src="../widget/click_dropdown.js"></script>
-	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
 	<script>
 	<?php
-	$_id = "";
+	$_view = "";
 	$_display = "";
 	$_channal  = "";
 	$_collect = "";
 
-	if(isset($_GET["id"])){
-		echo "_articel_id='".$_GET["id"]."';";
+	if(isset($_GET["view"])){
+		echo "_reader_view='".$_GET["view"]."';";
 	}
-	if(isset($_GET["collect"])){
-		echo "_collect_id='".$_GET["collect"]."';";
+	if(isset($_GET["book"])){
+		echo "_reader_book='".$_GET["book"]."';";
 	}
+	if(isset($_GET["para"])){
+		echo "_reader_para='".$_GET["para"]."';";
+	}
+	if(isset($_GET["begin"])){
+		echo "_reader_begin='".$_GET["begin"]."';";
+	}
+	if(isset($_GET["end"])){
+		echo "_reader_end='".$_GET["end"]."';";
+	}
+
 	if(isset($_GET["display"])){
 		echo "_display='".$_GET["display"]."';";
 	}
+	
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
 	}
@@ -105,7 +114,7 @@ require_once "../pcdl/html_head.php";
 		flex:7;
 	}
 	#contents{
-		min-height: 400px;
+
 	}
 	#contents li{
 		white-space: normal;
@@ -121,24 +130,23 @@ require_once "../pcdl/html_head.php";
 		margin-bottom: 70vh;
 	}
 
-
-#toc_content .level_2{
-	padding-left:0.5em;
-}
-#toc_content .level_3{
-	padding-left:1em;
-}
-#toc_content .level_4{
-	padding-left:1.5em;
-}
-#toc_content .level_5{
-	padding-left:2em;
-}
-.ui-dialog-titlebar{
-		display: flex;
-    justify-content: space-between;
-	background-color: var(--btn-bg-color);
-    padding: 5px;
+	#toc_content .level_2{
+		padding-left:0.5em;
+	}
+	#toc_content .level_3{
+		padding-left:1em;
+	}
+	#toc_content .level_4{
+		padding-left:1.5em;
+	}
+	#toc_content .level_5{
+		padding-left:2em;
+	}
+	.ui-dialog-titlebar{
+			display: flex;
+		justify-content: space-between;
+		background-color: var(--btn-bg-color);
+		padding: 5px;
 	}
 	.ui-widget-content{
 		background-color: var(--bg-color);
@@ -155,15 +163,41 @@ require_once "../pcdl/html_head.php";
 	.icon_btn:hover a {
 		color: var(--btn-hover-color);
 	}
-	.tran  img{
-	max-width: 100%;
-     max-height: 200px;
-     width: auto;
-     height: auto;
-     object-fit: cover;
-     background-size: contain;   
- }
- .channal_list{
+	chapter{
+	display:inline-block;
+}
+
+.language-para {
+    padding: 2px 2px;
+    position: absolute;
+    margin-top: 7px;
+    border-bottom: 3px solid var(--link-color);
+	margin-left: -60px;
+	font-family: 'Noto Sans', 'Noto Sans SC', 'Noto Sans TC','Padauk', Arial, Verdana;
+}
+
+.level_0{
+	margin-left:0;
+}
+.level_1{
+	margin-left:1em;
+}
+.level_2{
+	margin-left:2em;
+}
+.level_3{
+	margin-left:3em;
+}
+.level_4{
+	margin-left:4em;
+}
+.level_5{
+	margin-left:5em;
+}
+.level_6{
+	margin-left:6em;
+}
+.channal_list{
 		white-space: nowrap;
 		overflow-x: hidden;
 	}
@@ -173,28 +207,29 @@ require_once "../pcdl/html_head.php";
 	.userinfo_channal:hover{
 		display:block;
 	}
-
-
+	
+	#para_path chapter{
+		color: var(--link-color);
+		font-size: 120%;
+	}
 	</style>
 
 <style media="screen and (max-width:800px)">
-#right_pannal{
-	display:none;
-}
-.when_right_fixed{
-	padding-right:0;
-}
-.index_toolbar{
-	position:unset;
-}
-#pali_pedia{
-	font-size: 200%;
-	margin-top: auto;
-	margin-bottom: auto;
-	padding-left: 0.5em;
-}
-
-
+	#right_pannal{
+		display:none;
+	}
+	.when_right_fixed{
+		padding-right:0;
+	}
+	.index_toolbar{
+		position:unset;
+	}
+	#pali_pedia{
+		font-size: 200%;
+		margin-top: auto;
+		margin-bottom: auto;
+		padding-left: 0.5em;
+	}
 </style>
 
 
@@ -204,14 +239,15 @@ require_once "../pcdl/html_head.php";
 <div id="head_bar" >
 	<div id="pali_pedia" style="display:flex;">
 		<span><?php echo $_local->gui->anthology; ?></span>
+
 	</div>
 
 	<div>
 		<span>
 		<?php
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
-		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
-		echo "'>{$_local->gui->modify}</a></button>";
+		echo "<a href='";
+		echo "'>{$_local->gui->edit}</a></button>";
 		
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
@@ -220,9 +256,24 @@ require_once "../pcdl/html_head.php";
 		}
 		else{
 			echo "<button class='icon_btn'>";
-			echo "<a href='../article/?id=".$_GET["id"];
+			echo "<a href='../reader/?view=".$_GET["view"];
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["para"])){
+				echo "&para=".$_GET["para"];
+			}
+			if(isset($_GET["begin"])){
+				echo "&begin=".$_GET["begin"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
+			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
 			}
 			echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
 			echo $_local->gui->each_paragraph;
@@ -236,9 +287,25 @@ require_once "../pcdl/html_head.php";
 			echo "</button>";
 		}
 		else{
-			echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
+			echo "<button class='icon_btn'>";
+			echo "<a href='../reader/?view=".$_GET["view"];
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["para"])){
+				echo "&para=".$_GET["para"];
+			}
+			if(isset($_GET["begin"])){
+				echo "&begin=".$_GET["begin"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
+			}
 			if(isset($_GET["channal"])){
 				echo "&channal=".$_GET["channal"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
 			}
 			echo "&display=sent";
 			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
@@ -249,51 +316,38 @@ require_once "../pcdl/html_head.php";
 		</span>
 	</div>
 </div>
+
 <div id="main_view" class="main_view">
-<div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div id="article_subtitle"><?php echo $_local->gui->sub_title; ?></div>
-	<div id="article_author"><?php echo $_local->gui->author; ?></div>
-</div>
-<div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em 0 30px;width:70vw;">
-		<div id="contents">
-		<?php echo $_local->gui->loading; ?>...
-		</div>
-		<div id="contents_foot">
-			<div id="contents_nav" style="display:flex;justify-content: space-between;">
-				<div id="contents_nav_left"></div>
-				<div id="contents_nav_right"></div>
+
+	<div id="contents_view">
+		<div id="contents_div" style="padding: 0 1em 0 30px;">
+			<div id="contents">
+			<?php echo $_local->gui->loading; ?>...
 			</div>
-			<div id="contents_dicuse">
-			
-			</div>
-		</div>
-	</div>
-	<div id="right_pannal">
-		<div class="fun_frame">
-			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-			<div id = "toc_content" class="content" style="max-height:25vw;">
-			</div>
-		</div>
-		<div class="fun_frame">
-			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor; ?></div>
-				<div class="click_dropdown_div">
-					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+			<div id="contents_foot">
+				<div id="contents_nav" style="">
 				</div>
 			</div>
-			<div class='channel_select'>
-				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
-				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+		</div>
+
+		<div id="right_pannal">
+			<div class="fun_frame">
+				<div id = "collect_title" class="title">Declation</div>
+				<div id = "case_content" class="content" style="max-height:20em;">
+				</div>
 			</div>
-			<div id="channal_list" class="content" style="max-height:25vw;">
+			<div class="fun_frame">
+				<div style="display:flex;justify-content: space-between;">
+					<div class="title"><?php echo "Books"; ?></div>
+					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo "Multi-Select"; ?></div>
+				</div>
+				<div id="channal_list" class="content" style="max-height:20em;">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-</div>
 
+</div>
 
 
 <script>
@@ -301,14 +355,7 @@ require_once "../pcdl/html_head.php";
 	ntf_init();				
 	click_dropdown_init();
 	note_create();
-	historay_init();
-	if(_collect_id==""){
-		articel_load(_articel_id);
-		articel_load_collect(_articel_id);
-	}
-	else{
-		collect_load(_collect_id);
-	}
+	reader_load();
 	});
 
 

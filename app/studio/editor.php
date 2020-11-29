@@ -25,7 +25,7 @@ else{$currDevice="computer";}
 	<link rel="shortcut icon" href="../favicon.icon" />
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">
 	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
 	<?php

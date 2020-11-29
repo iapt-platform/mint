@@ -169,7 +169,7 @@ require_once "../pcdl/html_head.php";
 			justify-content: center;
 		}
 	</style>
-	<!-- <link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">-->
+	<!-- <link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">-->
 	
 
 	<!-- tool bar begin-->

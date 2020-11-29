@@ -6,6 +6,121 @@ require_once "../public/_pdo.php";
 require_once "../public/load_lang.php";//语言文件
 require_once "../public/function.php";
 
+function get_new_book_list($strWordlist,$booklist=null){
+		//查找这些词出现在哪些书中
+		$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
+		$dictFileName=_FILE_DB_BOOK_WORD_;
+		PDO_Connect("sqlite:$dictFileName");	
+		if(isset($booklist)){
+			foreach($booklist as $oneBook){
+				$aInputBook["{$oneBook}"]=1;
+			}
+		}
+		$query = "select book,sum(count) as co from bookword where \"wordindex\" in $strWordlist group by book order by co DESC";
+		$Fetch = PDO_FetchAll($query);
+		$iFetch=count($Fetch);
+		$newBookList=array();
+		if($iFetch>0){
+			$booktypesum["vinaya"]=array(0,0);
+			$booktypesum["sutta"]=array(0,0);
+			$booktypesum["abhidhamma"]=array(0,0);
+			$booktypesum["anna"]=array(0,0);
+			$booktypesum["mula"]=array(0,0);
+			$booktypesum["atthakattha"]=array(0,0);
+			$booktypesum["tika"]=array(0,0);
+			$booktypesum["anna2"]=array(0,0);
+			for($i=0;$i<$iFetch;$i++){
+				$book=$Fetch[$i]["book"];
+				$title=_get_book_info($book)->title;	
+				$sum=$Fetch[$i]["co"];
+				array_push($newBookList,array("book"=>$book,"count"=>$sum,"title"=>$title));
+				$t1=$arrBookType[$book-1]->c1;
+				$t2=$arrBookType[$book-1]->c2;
+				if(isset($booktypesum[$t1])){
+					$booktypesum[$t1][0]++;
+					$booktypesum[$t1][1]+=$sum;
+				}
+				else{
+					$booktypesum[$t1][0]=1;
+					$booktypesum[$t1][1]=$sum;
+				}
+				if(isset($booktypesum[$t2])){
+					$booktypesum[$t2][0]++;
+					$booktypesum[$t2][1]+=$sum;
+				}
+				else{
+					$booktypesum[$t2][0]=1;
+					$booktypesum[$t2][1]=$sum;
+				}
+			}
+
+		}
+		
+		return($newBookList);
+		//查找这些词出现在哪些书中结束
+}
+
+function get_book_tag($strWordlist,$booklist=null){
+	//查找这些词出现在哪些书中
+	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
+	$dictFileName=_FILE_DB_BOOK_WORD_;
+	PDO_Connect("sqlite:$dictFileName");	
+	if(isset($booklist)){
+		foreach($booklist as $oneBook){
+			$aInputBook["{$oneBook}"]=1;
+		}
+	}
+	$query = "select book,sum(count) as co from bookword where \"wordindex\" in $strWordlist group by book order by co DESC";
+	$Fetch = PDO_FetchAll($query);
+	$iFetch=count($Fetch);
+	$newBookList=array();
+	if($iFetch>0){
+		$booktypesum["vinaya"]=array(0,0);
+		$booktypesum["sutta"]=array(0,0);
+		$booktypesum["abhidhamma"]=array(0,0);
+		$booktypesum["anna"]=array(0,0);
+		$booktypesum["mula"]=array(0,0);
+		$booktypesum["atthakattha"]=array(0,0);
+		$booktypesum["tika"]=array(0,0);
+		$booktypesum["anna2"]=array(0,0);
+		for($i=0;$i<$iFetch;$i++){
+			$book=$Fetch[$i]["book"];
+			$sum=$Fetch[$i]["co"];
+			array_push($newBookList,array($book,$sum));
+			$t1=$arrBookType[$book-1]->c1;
+			$t2=$arrBookType[$book-1]->c2;
+			if(isset($booktypesum[$t1])){
+				$booktypesum[$t1][0]++;
+				$booktypesum[$t1][1]+=$sum;
+			}
+			else{
+				$booktypesum[$t1][0]=1;
+				$booktypesum[$t1][1]=$sum;
+			}
+			if(isset($booktypesum[$t2])){
+				$booktypesum[$t2][0]++;
+				$booktypesum[$t2][1]+=$sum;
+			}
+			else{
+				$booktypesum[$t2][0]=1;
+				$booktypesum[$t2][1]=$sum;
+			}
+		}
+
+		$output = array();
+		$output[] = array("tag"=>"vinaya","title"=>"律藏","count"=>$booktypesum["vinaya"][0]);
+		$output[] = array("tag"=>"sutta","title"=>"经藏","count"=>$booktypesum["sutta"][0]);
+		$output[] = array("tag"=>"abhidhamma","title"=>"阿毗达摩藏","count"=>$booktypesum["abhidhamma"][0]);
+		$output[] = array("tag"=>"anna","title"=>"其他","count"=>$booktypesum["anna"][0]);
+		$output[] = array("tag"=>"mula","title"=>"根本","count"=>$booktypesum["mula"][0]);
+		$output[] = array("tag"=>"atthakattha","title"=>"义注","count"=>$booktypesum["atthakattha"][0]);
+		$output[] = array("tag"=>"tika","title"=>"复注","count"=>$booktypesum["tika"][0]);
+		$output[] = array("tag"=>"anna2","title"=>"其他","count"=>$booktypesum["anna2"][0]);
+		return $output;
+	}
+
+}
+
 function render_book_list($strWordlist,$booklist=null){
 	//查找这些词出现在哪些书中
 	$arrBookType=json_decode(file_get_contents("../public/book_name/booktype.json"));
@@ -52,6 +167,7 @@ function render_book_list($strWordlist,$booklist=null){
 				$booktypesum[$t2][1]=$sum;
 			}
 		}
+
 		echo "<div id='bold_book_list_new' style='margin:1em;0'>";
 
 		echo "<div>出现在{$iFetch}本书中：</div>";

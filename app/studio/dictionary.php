@@ -27,7 +27,7 @@ else{
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">
 	<link type="text/css" rel="stylesheet" href="css/alertify.css" id="alertifyCSS">
 	<link type="text/css" rel="stylesheet" href="../user/App/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/dictionary.css"/>

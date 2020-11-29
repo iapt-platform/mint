@@ -297,7 +297,7 @@ require_once "../public/function.php";
 			
 		}
 		</script>
-	<link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)">
 	</head>
 	<body id="ucenter_body" onload="login_init()">
 	<div id="tool_bar">

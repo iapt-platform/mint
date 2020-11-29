@@ -47,7 +47,7 @@ else{
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/style_new.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
-	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:767px)">
+	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">
 	<title>PCD Libery</title>
 	
 	<script language="javascript" src="../app/js/data.js"></script>

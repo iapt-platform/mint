@@ -27,7 +27,7 @@ else{
     <link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/style.css"/>
     <link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
-    <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:767px)">
+    <link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:800px)">
 	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 
     <title>wikipāḷi</title>
@@ -55,8 +55,8 @@ else{
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 			echo '<link type="text/css" rel="stylesheet" href="../term/term_para.css"/>';
 		}
-		?>
-	
+	?>
+		<script src="../channal/channal.js"></script>
 	<script src="../term/popup_note.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/popup_note.css"/>
 
@@ -64,6 +64,11 @@ else{
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
 	<script src="../uwbw/wbw_channal_list.js"></script>
 	<script src="../usent/historay.js"></script>
+
+	<script src="../widget/click_dropdown.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
+
+
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
 	</script>

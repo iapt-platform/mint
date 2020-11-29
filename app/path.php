@@ -16,6 +16,7 @@ define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../tmp/appdata/palicanon/pali_sent.
 define("_FILE_DB_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/index.db3");
 define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/wordindex.db3");
 define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/paliindex.db3");
+define("_FILE_DB_PAGE_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/pagemap.db3");
 define("_FILE_DB_BOOK_WORD_"  , __DIR__."/../tmp/appdata/palicanon/bookword.db3");
 define("_FILE_DB_BOLD_"  , __DIR__."/../tmp/appdata/palicanon/bold.db3");
 
