@@ -156,12 +156,15 @@ else{$currDevice="computer";}
 	wnh{
 	background-color: var(--link-hover-color);
     color: var(--btn-color);
-    border-radius: 99px;
+    border-radius: 0.8em;
     cursor: pointer;
     padding: 2px;
     font-size: 80%;
     display: inline-block;
-    min-width: 1.2em;
+	min-width: 1.2em;
+	width: fit-content;
+	height: 1.2em;
+	line-height: 1.2em;
     text-align: center;
 	}	
 	#left_tool_bar {
@@ -817,23 +820,26 @@ foreach($plugin_list as $info){
 	<div id="id_text_edit_form">
 		<div id="id_text_edit_caption"  class="dialog-title">
 			<div><button id="id_text_edit_cancel" type="button" onclick="edit_tran_cancal()"><?php echo $module_gui_str['editor']['1028'];?></button></div>
-			<div><span id="id_text_edit_caption_text">Translate</span></div>
+			<div><span id="id_text_edit_caption_text">
+				<?php echo $_local->gui->translation; ?></span></div>
 			<div id="id_text_edit_bottom">
-				<button id="id_text_edit_delete" type="button" onclick="edit_tran_delete()"><?php echo $module_gui_str['editor']['1029'];?></button>
+				<button id="id_text_edit_delete" type="button" onclick="edit_tran_delete()">
+					<?php echo $_local->gui->delete;?>
+				</button>
 			</div>
-			<div><button id="id_text_edit_save" type="button" onclick="edit_tran_save()"><?php echo $module_gui_str['editor']['1027'];?></button></div>
+			<div><button id="id_text_edit_save" type="button" onclick="edit_tran_save()"><?php echo $_local->gui->save;?></button></div>
 		</div>
 		<div id="id_text_edit_info">
 			<select id="id_heading_edit_level" >
-					<option value="0"><?php echo $module_gui_str['editor']['1031'];?></option>
-					<option value="1"><?php echo $module_gui_str['editor']['1032'];?></option>
-					<option value="2"><?php echo $module_gui_str['editor']['1033'];?></option>
-					<option value="3"><?php echo $module_gui_str['editor']['1034'];?></option>
-					<option value="4"><?php echo $module_gui_str['editor']['1035'];?></option>
-					<option value="5"><?php echo $module_gui_str['editor']['1036'];?></option>
-					<option value="6"><?php echo $module_gui_str['editor']['1037'];?></option>
-					<option value="7"><?php echo $module_gui_str['editor']['1038'];?></option>
-					<option value="8"><?php echo $module_gui_str['editor']['1039'];?></option>
+					<option value="0"><?php echo $_local->gui->normal;?></option>
+					<option value="1"><?php echo $_local->gui->heading_1;?></option>
+					<option value="2"><?php echo $_local->gui->heading_2;?></option>
+					<option value="3"><?php echo $_local->gui->heading_3;?></option>
+					<option value="4"><?php echo $_local->gui->heading_4;?></option>
+					<option value="5"><?php echo $_local->gui->heading_5;?></option>
+					<option value="6"><?php echo $_local->gui->heading_6;?></option>
+					<option value="7"><?php echo $_local->gui->heading_7;?></option>
+					<option value="8"><?php echo $_local->gui->heading_8;?></option>
 			</select>
 			<select id="id_text_edit_language">
 					<option value="pali">Pali</option>
@@ -844,7 +850,7 @@ foreach($plugin_list as $info){
 			<span>
 				<?php echo $_local->gui->author;?>
 				<input type="input" id="id_text_edit_author" onkeydown="match_key(this)" onkeyup="unicode_key(this)"/>
-				<?php echo $module_gui_str['editor_project']['1042'];?>
+				<?php echo $_local->gui->smart_spell;?>
 				<input id="id_text_edit_area_smart_switch" type="checkbox" checked="">
 			</span>
 		</div>
@@ -904,14 +910,28 @@ foreach($plugin_list as $info){
 		<div class="pop_win_inner">
 			<div class="win_title">
 				<div>
-					<button onclick="win_close('term_win')">Close</button>
+					<button onclick="win_close('term_win')">
+						<svg class="button_icon" style="fill: var(--btn-hover-bg-color);">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_clear">
+							</use>
+						</svg>
+					</button>
 				</div>
-				<div><span>Term</span></div>
 				<div>
-					<button onclick="term_save()">Save</button>
+					<span>
+						<?php echo $_local->gui->relational_map; ?>
+					</span>
+				</div>
+				<div>
+					<button onclick="term_save()">
+					<svg class="button_icon" style="fill: var(--btn-hover-bg-color);">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_save">
+							</use>
+						</svg>
+					</button>
 				</div>
 			</div>
-			<div class="win_body">
+			<div class="win_body" id="term_body_parent">
 				<div class="win_body_inner" id="term_body">
 				</div>
 			</div>
@@ -930,7 +950,9 @@ foreach($plugin_list as $info){
 	<div id="word_tool_bar_div">
 		<div id="word_tool_bar" class="word_head_bar"style="font-size: 70%">
 			<button  onclick="rela_link_click()">Link</button>
-			<button  onclick="rela_link_click(false)">Cancel</button>
+			<button  onclick="rela_link_click(false)">
+				<?php echo $_local->gui->page_end; ?>
+			</button>
 		</div>
 	</div>
 	

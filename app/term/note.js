@@ -63,7 +63,7 @@ function note_sent_edit_dlg_init() {
 }
 function note_init(input) {
 	let newString = input.replace(/\{\{/g, '<note info="');
-	newString = newString.replace(/\}\}/g, '"></note>');
+	newString = newString.replace(/\}\}/g, '" ></note>');
 
 	let output = "<div>";
 	output += marked(newString);
@@ -269,10 +269,6 @@ function note_channal_list() {
 							}
 						}
 						let strHtml = "";
-						strHtml += "<div class='channel_select'>";
-						strHtml += "<button onclick='onChannelChange()'>确定</button>";
-						strHtml += "<button onclick='onChannelMultiSelectCancel()'>取消</button>";
-						strHtml += "</div>";
 						for (const iterator of _channalData) {
 							if (_channal.indexOf(iterator.id) >= 0) {
 								strHtml += render_channal_list(iterator);
@@ -426,8 +422,7 @@ ref
 function note_json_html(in_json) {
 	let output = "";
 	output += '<div class="note_tool_bar" style=" position: relative;">';
-	output +=
-		'<div class="case_dropdown note_tool_context" style="position: absolute; right: 0;width:1.5em;text-align: right;">';
+	output += '<div class="case_dropdown note_tool_context" >';
 	output += "<svg class='icon' >";
 	output += "<use xlink:href='../studio/svg/icon.svg#ic_more'></use>";
 	output += "</svg>";
@@ -469,8 +464,62 @@ function note_json_html(in_json) {
 
 	//output += "<div class='translation_div'>";
 	for (const iterator of in_json.translation) {
-		output += "<div class='tran' lang='" + iterator.lang + "'>";
+		output += "<div class='tran' lang='" + iterator.lang + "' style='display:flex;'>";
+		//译文工具按钮开始
+		output += "<div class='tran_text_tool_botton' onclick='tool_bar_show(this)'>";
+		output +=
+			"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;transition: transform 0.5s ease;'></div>";
+		//译文工具栏开始
+		output += "<div class='tran_text_tool_bar'>";
+		output += "<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom' ";
+		output +=
+			" onclick=\"note_edit_sentence('" +
+			in_json.book +
+			"' ,'" +
+			in_json.para +
+			"' ,'" +
+			in_json.begin +
+			"' ,'" +
+			in_json.end +
+			"' ,'" +
+			iterator.channal +
+			"')\"";
+		output +=
+			">" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use></svg>';
+		output += gLocal.gui.edit + "</li>";
+		output += "<li class = 'tip_buttom' ";
+		output += " onclick=\"history_show('" + iterator.id + "')\"";
+		output +=
+			">" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use></svg>';
+		output += gLocal.gui.timeline + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#copy"></use></svg>';
+		output += gLocal.gui.copy + "</li></div>";
 
+		output +=
+			"<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use></svg>';
+		output += gLocal.gui.like + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#comment"></use></svg>';
+		output += gLocal.gui.comment + "</li>";
+		output +=
+			"<li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_shopping_cart"></use></svg>';
+		output += gLocal.gui.digest + "</li></div>";
+		output +=
+			"<div style='margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#share_to"></use></svg>';
+		output += gLocal.gui.share_to + "</li>";
+		output += "</div></div>";
+		//译文工具栏结束
+		output += "</div>";
+		//译文工具按钮结束
+		//译文正文开始
 		output +=
 			"<div class='text' id='tran_text_" +
 			in_json.book +
@@ -496,62 +545,39 @@ function note_json_html(in_json) {
 			output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
 		}
 		output += "</div>";
-
-		//句子工具栏
-		output += "<div class='tran_text_tool_bar'>";
-		output += "<span class = 'tip_buttom' ";
-		output +=
-			" onclick=\"note_edit_sentence('" +
-			in_json.book +
-			"' ,'" +
-			in_json.para +
-			"' ,'" +
-			in_json.begin +
-			"' ,'" +
-			in_json.end +
-			"' ,'" +
-			iterator.channal +
-			"')\"";
-		output += ">" + gLocal.gui.edit + "</span>";
-		output += "<span class = 'tip_buttom' ";
-		output += " onclick=\"history_show('" + iterator.id + "')\"";
-		output += ">" + gLocal.gui.timeline + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.extension + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.like + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.comment + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.copy + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.digest + "</span>";
-		output += "<span class = 'tip_buttom'>" + gLocal.gui.share_to + "</span>";
-		output += "</div>";
-		//句子工具栏结束
+		//译文正文结束
 
 		output += "</div>";
+		//单个channal译文框结束
 	}
+	//所选全部译文结束
 	//output += "</div>";
-
+	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
 	output += "'>";
 	output += "<div class='tool_bar'>";
 	output += "<span class='more_tran icon_expand'></span>";
-	output += "<span>其他译文</span>";
-	output += "（<span class='other_tran_num'></span>）";
+	output += "<span class='other_tran_span'>" + gLocal.gui.other + gLocal.gui.translation + "</span>";
+	output += "<span class='other_tran_num'></span>";
 	output += "</div>";
 	output += "<div class='other_tran'>";
 
 	output += "</div>";
 	output += "</div>";
-
-	output += "<div class='bottm_tool_button ' ";
+	//未选择的其他译文开始
+	//新增译文按钮开始
+	output += "<div class='add_new icon_add' ";
 	output += "book='" + in_json.book + "' ";
 	output += "para='" + in_json.para + "' ";
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
-	output += " style='left:0;'>";
-	output += "<div class='add_new icon_add'></div>";
+	output += " >";
+
 	//output += "<div class='more_tran icon_expand'></div>";
 	output += "</div>";
-
+	//新增译文按钮结束
+	//出处路径开始
 	output += "<div class='ref'>" + in_json.ref;
 	output +=
 		"<span class='sent_no'>" +
@@ -564,7 +590,7 @@ function note_json_html(in_json) {
 		in_json.end +
 		"<span>" +
 		"</div>";
-
+	//出处路径结束
 	return output;
 }
 
@@ -591,6 +617,7 @@ function set_more_button_display() {
 		}
 		if (count > 0) {
 			$(this).find(".other_tran_num").html(count);
+			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
 			$(this)
 				.find(".tool_bar")
 				.click(function () {
@@ -644,6 +671,10 @@ function set_more_button_display() {
 		} else {
 			//隐藏自己
 			//$(this).hide();
+			$(this)
+				.find(".other_tran_span")
+				.html(gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation);
+			$(this).find(".more_tran").hide();
 		}
 	});
 }
@@ -775,4 +806,25 @@ function copy_ref(book, para, begin, end) {
 
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
+}
+
+function tool_bar_show(element) {
+	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
+		$(element).find(".tran_text_tool_bar").css("display", "flex");
+		$(element).find(".icon_expand").css("transform", "rotate(-180deg)");
+		$(element).css("background-color", "var(--btn-bg-color)");
+		$(element).css("visibility", "visible");
+		$(document).one("click", function () {
+			$(element).find(".tran_text_tool_bar").hide();
+			$(element).css("background-color", "var(--nocolor)");
+			$(element).find(".icon_expand").css("transform", "unset");
+			$(element).css("visibility", "");
+		});
+		event.stopPropagation();
+	} else {
+		$(element).find(".tran_text_tool_bar").hide();
+		$(element).css("background-color", "var(--nocolor)");
+		$(element).find(".icon_expand").css("transform", "unset");
+		$(element).css("visibility", "");
+	}
 }

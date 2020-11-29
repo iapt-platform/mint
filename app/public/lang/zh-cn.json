@@ -49,7 +49,7 @@
 		"commentary": "注疏",
 		"completely_delete": "彻底删除",
 		"computer": "电脑",
-		"confirm": "确认",
+		"confirm": "确定",
 		"content": "目录",
 		"contents": "目录",
 		"copy": "复制",
@@ -554,8 +554,9 @@
 		"extension": "横向对比",
 		"no_created": "尚未创建",
 		"create_now": "现在创建",
-		"": "",
-		"": "",
+		"only_this_para": "独立显示本段",
+		"no": "无",
+		"select": "选择",
 		"": ""
 	},
 	"grammastr": [

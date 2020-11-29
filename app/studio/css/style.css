@@ -3925,9 +3925,11 @@ border-bottom: 2px solid red;
 	overflow-y: scroll;
 }
 .win_body_inner {
-	width: calc(100% + 30em);
-	height: calc(100% + 30em);
-	padding: 1em;
+	max-height: 61vh;
+	max-width: 90vw;
+	padding: 0 1em;
+	overflow-y: scroll;
+	overflow-x: scroll;
 }
 .term_win_mean {
 	color: black;
