@@ -19,6 +19,7 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 		},
 		function (data) {
 			let result = JSON.parse(data);
+			console.log(result.time);
 			let html = "";
 			for (const iterator of result.data) {
 				html += render_word_result(iterator);

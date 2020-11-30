@@ -28,7 +28,8 @@ function microtime_float()
 
 $result = array();
 $result["error"]="";
-
+$_start=microtime(true);
+$result["time"][]=array("event"=>"begin","time"=>$_start);
 
 		$_pagesize = 20;
 		if(isset($_GET["page"])){
@@ -88,6 +89,7 @@ $result["error"]="";
 		$time_start = microtime_float();
 		$arrRealWordList = countWordInPali($word);
 		$countWord=count($arrRealWordList);
+		$result["time"][]=array("event"=>"计算某词在三藏中出现的次数","time"=>microtime(true)-$_start);
 		if($countWord==0){
 			#没查到 模糊查询
 			$dictFileName=_FILE_DB_PALITEXT_;
@@ -121,19 +123,8 @@ $result["error"]="";
 					$aInputWordList["{$value}"] = true;
 				}
 			}
-			else{
-				foreach ($aInputWordList as $key => $value) {
-					//$aInputWordList[$key] = true;
-				}
-			}
 		}
-		/*
-		else{
-			foreach ($aInputWordList as $key => $value) {
-				$aInputWordList[$key] = true;
-			}
-		}
-		*/
+
 		$strQueryWordId=mb_substr($strQueryWordId, 0,mb_strlen($strQueryWordId,"UTF-8")-1,"UTF-8");
 		$strQueryWordId.=")";
 
@@ -141,7 +132,7 @@ $result["error"]="";
 		
 		//显示单词列表
 		arsort($aShowWordList);
-		
+		$result["time"][]=array("event"=>"单词列表排序结束","time"=>microtime(true)-$_start);
 		$out_case = array();
 		$word_count=0;
 		foreach($aShowWordList as $x=>$x_value) {
@@ -163,6 +154,7 @@ $result["error"]="";
 
 		$result["book_list"]=$booklist;
 		$result["book_tag"]=get_book_tag($strQueryWordId);
+		$result["time"][]=array("event"=>"查找书结束","time"=>microtime(true)-$_start);
 		
 		$wordInBookCounter=0;
 		$strFirstBookList="(";
@@ -201,16 +193,17 @@ $result["error"]="";
 				}
 			}
 		}
-
+		$result["time"][]=array("event"=>"准备查询","time"=>microtime(true)-$_start);
 		//前20条记录
 		$time_start=microtime_float();
 		$dictFileName=_FILE_DB_PALI_INDEX_;
 		PDO_Connect("sqlite:$dictFileName");
 		$query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) where 1 ";
 		$result["record_count"]=  PDO_FetchOne($query);
+		$result["time"][]=array("event"=>"查询记录数","time"=>microtime(true)-$_start);
 		$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT 0,20";
 		$Fetch = PDO_FetchAll($query);
-		
+		$result["time"][]=array("event"=>"查询结束","time"=>microtime(true)-$_start);
 		$out_data = array();
 
 		$queryTime=(microtime_float()-$time_start)*1000;
@@ -231,9 +224,6 @@ $result["error"]="";
 				$c2=$bookInfo->c2;
 				$c3=$bookInfo->c3;
 
-				//echo "<div class='dict_word' style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-				//echo  "<div style='font-size: 130%;font-weight: 700;'>$paliword</div>";
-				//echo "<div class='dict_word'>";
 				$path_1 = $c1.">";
 				if($c2 !== ""){
 					$path_1=$path_1.$c2.">";
@@ -277,6 +267,7 @@ $result["error"]="";
 				
 			}
 		}
+		$result["time"][]=array("event"=>"查询路径结束","time"=>microtime(true)-$_start);
 		$result["data"] = $out_data;
 		echo json_encode($result,JSON_UNESCAPED_UNICODE);
 
