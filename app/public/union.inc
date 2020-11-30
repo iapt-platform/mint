@@ -1,7 +1,6 @@
 <?php
 $un = array(
 array("ena+’ti","enāti",256),
-array("āni+eva","āneva",256),
 array("ā+’ti","āti",256),
 array("a+’ti","āti",256),
 array("e+’ti","eti",256),
@@ -12,6 +11,7 @@ array("ū+’ti","uti",256),
 array("u+’ti","uti",256),
 array("ṃ+’ti","nti",256),
 array("ṃ+ca","ñca",256),
+array("āni+eva","āneva",256),
 array("o+eva","ova",256),
 array("e+eva","eva",256),
 array("ā+api","āpi",256),
