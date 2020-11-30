@@ -230,16 +230,19 @@ function countWordInPali($word,$sort=false,$limit = 0){
 		}
 		//加连读词尾
 		$arrUnWord=array();
-		for ($row = 0; $row < count($union); $row++) {
-			$len=mb_strlen($union[$row][0],"UTF-8");
-			foreach($arrNewWord as $x=>$x_value){
-				$end=mb_substr($x, 0-$len,NULL,"UTF-8");
-				if($end==$union[$row][0]){
-					$newWord=mb_substr($x, 0,mb_strlen($x,"UTF-8")-$len,"UTF-8").$union[$row][1];
-					$arrUnWord[$newWord]=1;
+		for($i=0; $i<2; $i++){
+			for ($row = 0; $row < count($union); $row++) {
+				$len=mb_strlen($union[$row][0],"UTF-8");
+				foreach($arrNewWord as $x=>$x_value){
+					$end=mb_substr($x, 0-$len,NULL,"UTF-8");
+					if($end==$union[$row][0]){
+						$newWord=mb_substr($x, 0,mb_strlen($x,"UTF-8")-$len,"UTF-8").$union[$row][1];
+						$arrUnWord[$newWord]=1;
+					}
 				}
 			}
 		}
+
 		//将连读词和$arrNewWord混合
 		foreach($arrUnWord as $x=>$x_value){
 			$arrNewWord[$x]=1;

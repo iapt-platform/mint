@@ -430,6 +430,7 @@ function note_json_html(in_json) {
 	if (typeof _reader_view != "undefined" && _reader_view != "sent") {
 		output += "<a onclick='junp_to(this)'>跳转至此句</a>";
 	}
+	output += "<a  onclick='goto_nissaya(" + in_json.book + "," + in_json.para + ")'>Nissaya</a>";
 	output +=
 		"<a onclick=\"copy_ref('" +
 		in_json.book +
@@ -804,6 +805,9 @@ function copy_ref(book, para, begin, end) {
 	copy_to_clipboard(strRef);
 }
 
+function goto_nissaya(book, para) {
+	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "_blank");
+}
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
 }
