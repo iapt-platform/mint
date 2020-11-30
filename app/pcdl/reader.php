@@ -255,16 +255,19 @@ note{
 	margin: 3px 0;
 }
 .head_img{
-	display: inline-block;
-    width: 20px;
-	font-size: 14px;
-    padding: 2px;
+	display: inline-flex;
+    min-width: 3em;
+    height: 3em;
+    padding: 0 0px;
+    font-size: 60%;
     background-color: gray;
     color: white;
-    border-radius: 99px;
+    border-radius: 1.5em;
     text-align: center;
+    justify-content: center;
     margin: auto 2px;
-}
+	line-height: 3em;
+	}
 .term_mean{
 	color:blue;
 	cursor: pointer;

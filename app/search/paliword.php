@@ -73,7 +73,27 @@ include "../pcdl/html_head.php";
 	#pre_search_word_content{
 		display:block;
 	}
+	@-webkit-keyframes spin {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
 
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+.icon_spin {
+	-webkit-animation: spin 2.5s linear infinite;
+	animation: spin 2.5s linear infinite;
+}
 
     </style>
     <style  media="screen and (max-width:800px)">
@@ -95,8 +115,12 @@ include "../pcdl/html_head.php";
 
 <div id="contents_view">
 	<div id="contents_div" style="padding: 0 1em 0 30px;">
-		<div id="contents">
-		<?php echo $_local->gui->loading; ?>...
+		<div id="contents" >
+		<div style="text-align: center;">
+			<svg class='icon_spin' style='fill: saddlebrown; '>
+				<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#dhammacakkha'></use>
+			</svg>
+		</div>
 		</div>
 		<div id="contents_foot">
 			<div id="contents_nav" style="">
@@ -107,12 +131,12 @@ include "../pcdl/html_head.php";
 	<div id="right_pannal">
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title">Declension</div>
-				<div id="case_tools">
-					<div class="select_button" onclick="onWordFilterStart()"><?php echo "Select"; ?></div>
-					<div class="filter">
-						<button onclick='word_search_filter()'>Filtrate</button>
-						<button onclick='filter_cancel()'>取消</button>
+				<div class="title"><?php echo $_local->gui->real_declension; ?></div>
+				<div id="case_tools" style="display:flex;">
+					<div class="select_button" style="margin:auto 0"  onclick="onWordFilterStart()"><?php echo $_local->gui->select; ?></div>
+					<div class="filter" >
+						<button onclick='word_search_filter()'><?php echo $_local->gui->filter; ?></button>
+						<button onclick='filter_cancel()'><?php echo $_local->gui->cancel; ?></button>
 					</div>
 				</div>
 			</div>
@@ -121,12 +145,12 @@ include "../pcdl/html_head.php";
 		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo "Books"; ?></div>
-				<div id="book_tools">
-					<div class="select_button" onclick="onBookFilterStart()"><?php echo "Select"; ?></div>
+				<div class="title"><?php echo $_local->gui->book_name.$_local->gui->list; ?></div>
+				<div id="book_tools" style="display:flex;">
+					<div class="select_button" style="margin:auto 0" onclick="onBookFilterStart()"><?php echo $_local->gui->select; ?></div>
 					<div class="filter">
-						<button onclick='book_search_filter()'>Filtrate</button>
-						<button onclick='book_filter_cancel()'>取消</button>
+						<button onclick='book_search_filter()'><?php echo $_local->gui->filter; ?></button>
+						<button onclick='book_filter_cancel()'><?php echo $_local->gui->cancel; ?></button>
 					</div>
 				</div>
 			</div>
@@ -146,13 +170,13 @@ include "../pcdl/html_head.php";
     <div id="index_list">
 			<div style="flex:3;margin:12px;">
 				<div class="card" style="padding:10px;">
-					<div>最近搜索</div>
+					<div><?php echo $_local->gui->search.$_local->gui->history; ?></div>
                     <div id="search_histray"></div>
 				</div>
 			</div>
 			<div style="flex:3;margin:12px;">
 				<div class="card" style="padding:10px;">
-					<div>热搜</div>
+					<div><?php echo $_local->gui->top_search; ?></div>
                     <div id="title_hot"></div>
 				</div>
 			</div>

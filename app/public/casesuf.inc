@@ -3143,6 +3143,10 @@ array("oti","vhaṃ",".2p.$.pl.$.aor.",256)
  );
  
  $union = array(
+array("ssa","ssāpi"),
+array("ssa","ssāti"),
+array("ena","enāti"),
+array("ena","enāpi"),
 array("ṃ","ñca"),
 array("ṃ","nti"),
 array("a","āti"),
@@ -3152,6 +3156,7 @@ array("i","īti"),
 array("u","ūti"),
 array("ū","ūti"),
 array("o","opi"),
+array("e","epi"),
 array("ṃ","mpi"),
 array("o","ova")
  );

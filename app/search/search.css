@@ -41,9 +41,14 @@ highlight {
 .fileter_item > .tag {
 	background-color: gray;
 	color: white;
-	border-radius: 99px;
+	border-radius: 1em;
 	font-size: 75%;
-	padding: 0 8px;
+	padding: 0 0.6em;
+	line-height: 2em;
+	height: 2em;
+	min-width: 2em;
+	justify-content: center;
+	display: inline-flex;
 }
 
 .book_tag_div {
