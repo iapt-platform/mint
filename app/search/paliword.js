@@ -44,6 +44,11 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 			}
 			html += "</div>";
 			if (result.book_list) {
+				let allcount = 0;
+				for (const iterator of result.book_list) {
+					allcount += parseInt(iterator.count);
+				}
+				html += render_book_list({ book: 0, title: "All", count: allcount });
 				for (const iterator of result.book_list) {
 					html += render_book_list(iterator);
 				}
@@ -54,8 +59,16 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 	);
 }
 function highlightWords(line, word) {
-	var regex = new RegExp("(" + word + ")", "gi");
-	return line.replace(regex, "<highlight>$1</highlight>");
+	if (line && line.length > 0) {
+		let output = line;
+		for (const iterator of word) {
+			let regex = new RegExp("(" + iterator + ")", "gi");
+			output = output.replace(regex, "<highlight>$1</highlight>");
+		}
+		return output;
+	} else {
+		return "";
+	}
 }
 function render_word_result(worddata) {
 	let html = "";
@@ -190,7 +203,11 @@ function search_book_filter(objid, type) {
 
 //选择需要过滤的书
 function book_select(bookid) {
-	paliword_search(_key_word, _filter_word, [bookid]);
+	if (bookid == 0) {
+		paliword_search(_key_word, _filter_word);
+	} else {
+		paliword_search(_key_word, _filter_word, [bookid]);
+	}
 }
 function book_search_filter() {
 	let booklist = new Array();
@@ -217,7 +234,7 @@ function book_filter_cancel() {
 
 function search_pre_search(word) {
 	$.get(
-		"../search/paliword_sc.php",
+		"../search/paliword_sc_pre.php",
 		{
 			op: "pre",
 			key: word,
