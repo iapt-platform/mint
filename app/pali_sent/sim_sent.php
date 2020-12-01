@@ -156,7 +156,7 @@ function similar_sent_matrix($begin,$end) {
 				} // end of foreach $compare_row
 
 				if ($current_sim_sent_list->size != 0) {
-					print("update ".$current_id."\n");
+					print("update $current_count - ".$current_id."\n");
 					$text_list = $current_sim_sent_list->get_text_list();
 					insert_similar_sent_list_into_sqlite($current_id, $text_list);
 				}
@@ -215,9 +215,9 @@ function sents_similar_to_id($id) {
 //$id = $argv[1];
 //sents_similar_to_id($id);
 
-if ($argc != 3){
-	echo "无效的参数 ";
-	exit;
+	if ($argc != 3){
+		echo "无效的参数 ";
+		exit;
 	}
 	$from = (int)$argv[1];
 	$to =(int)$argv[2];
