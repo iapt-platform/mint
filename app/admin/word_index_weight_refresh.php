@@ -1,5 +1,7 @@
 <?php
-
+/*
+计算单词权重
+*/
 require_once '../path.php';
 require_once './word_index_weight_table.php';
 
