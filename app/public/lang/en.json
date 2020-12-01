@@ -27,7 +27,7 @@
 		"bhumma": "Bhumma",
 		"book": "book",
 		"book_mark": "Book Mark",
-		"book_name": "book name",
+		"book_name": "book name&nbsp;",
 		"bookmark": "bookmark...",
 		"buddhist_calendar": "Buddhist Calendar",
 		"budha": "Budha",
@@ -555,6 +555,8 @@
 		"only_this_para": "show this paragraph only",
 		"no": "No&nbsp;",
 		"select": "select",
+		"history": "history",
+		"top_search": "Top search",
 		"": ""
 	},
 	"grammastr": [
