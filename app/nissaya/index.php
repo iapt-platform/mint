@@ -7,13 +7,13 @@ require_once "../pcdl/html_head.php";
 <script src="../nissaya/nissaya.js"></script>
 <style>
 .img_box{
-	width:720px;
-	height:1280px;
 	background-color:gray;
 }
 .book_page{
-	display:inline-block;
-	background-color:blue;
+	display: inline-block;
+    background-color: blue;
+    max-width: 100%;
+    width: 100vw;	
 }
 </style>
 <script>

@@ -130,13 +130,13 @@ else{
 				</select>
 			
 			<?php 
-				echo $module_gui_str['editor']['1049'];
+				echo $_local->gui->welcome;
 				echo "<a href=\"setting.php?item=account\">";
 				//echo $_COOKIE["nickname"];
 				echo "</a>";
-				echo $module_gui_str['editor']['1042'];
+				echo $_local->gui->to_the_dhamma;
 				echo "<a href='login.php?op=logout'>";
-				echo $module_gui_str['editor']['1089'];
+				echo $_local->gui->logout;
 				echo "</a>";
 			?>
 			</div>

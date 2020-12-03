@@ -106,7 +106,8 @@ else{
 	}
 
 	.index_inner {
-    width: 960px;
+	width:96vw;
+    max-width: 960px;
     margin-left: auto;
     margin-right: auto;
 }
