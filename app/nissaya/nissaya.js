@@ -47,7 +47,7 @@ function render_on_page(params) {
 	return html;
 }
 function render_nissaya_init(data) {
-	let dir = data.bookid.split("_")[0];
+	let dir = data.dir;
 	return render_on_page({
 		dir: dir,
 		book: data.nsyid,
