@@ -90,7 +90,7 @@ require_once '../studio/index_head.php';
 			</div>
 
 			<div id="userfilelist">
-				<?php echo $module_gui_str['editor']['1065'];?>
+				<?php echo $_local->gui->loading;?>
 			</div>
 			
 		</div>

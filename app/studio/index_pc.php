@@ -175,7 +175,7 @@ require_once '../studio/index_head.php';
 				<button  id="id_open_editor_load_stream"  onclick="open_editor_load_stream()"><?php //echo $module_gui_str['editor']['1030'];?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_cloud_download"></use></svg>
 				</button>
-				<button  id="id_cancel_stream" onclick="append_stream()"><?php //echo $module_gui_str['editor']['1028'];?>
+				<button  id="id_cancel_stream" onclick="append_stream()"><?php //echo $_local->gui->cancel;?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_note_add"></use></svg>
 				</button>
 				<button  id="pc_empty_download_list" onclick="pc_empty_download_list()"><?php //echo $module_gui_str['editor']['1045'];?>

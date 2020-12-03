@@ -690,7 +690,7 @@ echo "</center>";
 
 
 
-/*date_default_timezone_set("Asia/Rangoon");
+date_default_timezone_set("Asia/Rangoon");/*
 $Unix_now_time=strtotime("now");
 $sun_info=date_sun_info(strtotime("now"),7.738562,80.519675);
 $sun_info_1=date_sun_info(strtotime("+1 day"),7.738562,80.519675);
@@ -720,12 +720,12 @@ echo "</div>";
 //設定經緯度
 var g_coordinate_this=new Object;
 getLocation();
-	g_coordinate_this=get_coordinate_num("selected");
-	if(g_coordinate_this.AT==0 || g_coordinate_this.LT==0){
+g_coordinate_this=get_coordinate_num("selected");
+	/*if(g_coordinate_this.AT==0 || g_coordinate_this.LT==0){
 		g_coordinate_this.AT=7.738562;
 		g_coordinate_this.LT=80.519675;
 	}
-
+*/
 
 function angle_trans(angle){
 var angle_str="";
@@ -803,7 +803,8 @@ function set_time_string(date_obj){
 	hh=checkTime(hh)
 	mm=checkTime(mm)
 	ss=checkTime(ss)
-	return(hh+":"+mm+":"+ss)
+	//return(hh+":"+mm+":"+ss)
+	return(date_obj.toLocaleTimeString())
 }
 function menuLangrage(obj,year,month){
 	g_language=obj.value;

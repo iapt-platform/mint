@@ -505,3 +505,12 @@ note:hover .note_tool_bar {
 	margin: auto 2px;
 	color: whitesmoke;
 }
+.separate_line {
+	border: solid 1px #e8e8e8;
+    border-radius: 3px;
+    margin: 1px 5px;
+    width: 1px;
+    background: #c6c6c6;
+    text-decoration: none;
+}
+}
