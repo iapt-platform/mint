@@ -15,7 +15,9 @@ $query="UPDATE lesson SET title = ? , subtitle = ? , date = ? , duration = ? , l
 $sth = $PDO->prepare($query);
 $data = strtotime($_POST["lesson_date"]);
 $time = strtotime($_POST["lesson_time"]) - strtotime("today");
-$datatime = ($data+$time)*1000;
+$timezone = $_POST["lesson_timezone"];
+$datatime = ($data+$time+$timezone*60)*1000;
+
 $duration = strtotime($_POST["duration"]) - strtotime("today");
 $sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$datatime, $duration , $_POST["live"] , $_POST["replay"] , $_POST["summary"] ,  $_POST["teacher"] ,  mTime() , mTime() , $_POST["lesson"]));
 $respond=array("status"=>0,"message"=>"");

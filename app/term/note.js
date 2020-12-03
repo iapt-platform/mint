@@ -867,7 +867,7 @@ function copy_ref(book, para, begin, end) {
 }
 
 function goto_nissaya(book, para) {
-	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "_blank");
+	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "nissaya");
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
