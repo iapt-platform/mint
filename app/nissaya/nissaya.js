@@ -37,7 +37,9 @@ function nissaya_get(book, para) {
 function render_on_page(params) {
 	let filename = params.dir + "/" + params.book + "_" + params.page + ".gif";
 	let html = "";
+
 	html += "<div class='img_box' dir='" + params.dir + "' book='" + params.book + "' page='" + params.page + "'>";
+	html += "<div>" + filename + "</div>";
 	if (params.show) {
 		html += "<img class='book_page' src='../../tmp/nissaya/" + filename + "' />";
 	} else {
