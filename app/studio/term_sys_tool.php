@@ -305,13 +305,13 @@ function transfer_glossary(){
 				</select>
 			
 			<?php 
-				echo $module_gui_str['editor']['1049'];
+				echo $_local->gui->welcome;
 				echo "<a href=\"setting.php?item=account\">";
 				echo $_COOKIE["nickname"];
 				echo "</a>";
-				echo $module_gui_str['editor']['1042'];
+				echo $_local->gui->to_the_dhamma;
 				echo "<a href='login.php?op=logout'>";
-				echo $module_gui_str['editor']['1089'];
+				echo $_local->gui->logout;
 				echo "</a>";
 			?>
 			</div>
@@ -414,7 +414,7 @@ function transfer_glossary(){
 				<button  id="pc_empty_download_list" onclick="pc_empty_download_list()"><?php //echo $module_gui_str['editor']['1045'];?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_delete"></use></svg>
 				</button>
-				<button onclick="get_pc_res_download_list_from_cookie()"><?php //echo $module_gui_str['editor']['1081'];?>
+				<button onclick="get_pc_res_download_list_from_cookie()"><?php //echo $_local->gui->refresh;?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_autorenew"></use></svg>
 				</button>
 			</div>

@@ -47,14 +47,54 @@ include "../pcdl/html_head.php";
     #footer_nav{
         display:none;
     }
+    .index_inner{
+        display: flex;
+        flex-wrap: wrap;
+    }
     .index_inner .icon_btn .icon{
         fill: var(--btn-hover-bg-color);
     }
     .index_inner .icon_btn:hover .icon{
         fill: var(--btn-bg-color);
     }
+    .article_title_link{
+        white-space:nowrap;
+        overflow-x: scroll;
+    }
 </style>
+<style media="screen and (max-width:800px)">
+#right_pannal{
+	display:none;
+}
+.when_right_fixed{
+	padding-right:0;
+}
+.index_toolbar{
+	position:unset;
+}
+#pali_pedia{
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
+.index_inner{
+		display:block;
+	}
+	.card{
+	display: flex;
+    justify-content: space-between;
+    padding-right: 5em !important;
+}
+.card_info{
+	flex:5;
+}
+.article_title_link{
+	flex:5;
+}
 
+
+</style>
 <?php
 //
 
@@ -104,7 +144,7 @@ require_once '../public/function.php';
     </div>
 </div>
 
-<div id ="book_list" class='index_inner' style='display: flex;flex-wrap: wrap;'>
+<div id ="book_list" class='index_inner' style=''>
 
 </div>
 <div id="page_bottom" style="height:10em;">
