@@ -555,12 +555,21 @@ function note_json_html(in_json) {
 	//output += "</div>";
 	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
-	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
-	output += "'>";
-	output += "<div class='tool_bar'>";
+	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
+	output += "<div class='tool_bar' sent='";
+	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
 	output += "<span class='more_tran icon_expand'></span>";
-	output += "<span class='other_tran_span'>" + gLocal.gui.other + gLocal.gui.translation + "</span>";
+	//其他译文工具条
+	output += "<span class='other_bar'  >";
+	output += "<span class='other_tran_span' >" + gLocal.gui.other + gLocal.gui.translation + "</span>";
 	output += "<span class='other_tran_num'></span>";
+	output += "</span>";
+	output += "<span class='separate_line'></span>";
+	//相似句工具条
+	output += "<span class='other_bar' >";
+	output += "<span class='similar_sent_span' >" + gLocal.gui.similar_sentences + "</span>";
+	output += "<span class='similar_sent_num'></span>";
+	output += "</span>";
 	output += "</div>";
 	output += "<div class='other_tran'>";
 
@@ -620,7 +629,7 @@ function set_more_button_display() {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
 			$(this)
-				.find(".tool_bar")
+				.find(".other_bar")
 				.click(function () {
 					const sentid = $(this).parent().attr("sent").split("-");
 					const book = sentid[0];
@@ -628,11 +637,11 @@ function set_more_button_display() {
 					const begin = sentid[2];
 					const end = sentid[3];
 					let sentId = book + "-" + para + "-" + begin + "-" + end;
-					if ($(this).siblings(".other_tran").first().css("display") == "none") {
+					if ($(this).parent().siblings(".other_tran").first().css("display") == "none") {
 						$(".other_tran_div[sent='" + sentId + "']")
 							.children(".other_tran")
 							.slideDown();
-						$(this).children(".more_tran ").css("transform", "unset");
+						$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
 							"../usent/get.php",
 							{
@@ -666,7 +675,7 @@ function set_more_button_display() {
 						$(".other_tran_div[sent='" + sentId + "']")
 							.children(".other_tran")
 							.slideUp();
-						$(this).children(".more_tran ").css("transform", "rotate(-90deg)");
+						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
 				});
 		} else {
@@ -675,7 +684,7 @@ function set_more_button_display() {
 			$(this)
 				.find(".other_tran_span")
 				.html(gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation);
-			$(this).find(".more_tran").hide();
+			//$(this).find(".more_tran").hide();
 		}
 	});
 }

@@ -464,6 +464,25 @@
 			.correct {
 				background-color: gold;
 			}
+			#position_input{
+				width: fit-content;
+				background: #dfdfdf;
+				padding: 1em;
+				border: solid 2px #7d7d7d;
+				border-radius: 0.5em;
+				position: absolute;
+				left: 5em;
+				top: 10em;
+			}
+			#position_input input[type="number" i]{
+				width: 4em;
+			}
+			#position_input span {
+
+			}
+			#position_input select {
+				width: 3.5em;
+			}
 		</style>
 		<title id="title_text"> </title>
 	</head>
@@ -471,12 +490,12 @@
 	<body>
 		<!--多语言范例
         <script>
-            document.write(localString["language"].XXXX);
+            document.write(localString[g_language].XXXX);
         </script>
 
     -->
 		<div id="position_change">
-			<span id="selected_position_string">
+			<span id="selected_position_string" onclick="input_position()">
 				<script>
 					document.write(localString[g_language].loading);
 					//localString[g_language].loading;
@@ -494,6 +513,41 @@
 					//localString[g_language].my_loc
 				</script>
 			</button>
+			<div id="position_input" style="display:none;">
+				<div style="display:flex;"><span style="flex: 3;justify-content: flex-end;display: flex;margin: auto 1em auto 0;">
+					<script>
+						document.write(localString[g_language].atitude);
+					</script></span><span style="flex:7;white-space: nowrap;">
+					<input id="AT_°" type="number" min="0" max="90" /> °
+					<input id="AT_’" type="number" min="0" max="60" /> ’
+					<input id="AT_”" type="number" min="0" max="60" /> ”
+					<select id="NS">
+						<option value="+">N</option>
+						<option value="-">S</option>
+					</select></span>
+				</div>
+				<div style="display:flex;">
+					<span style="flex: 3;justify-content: flex-end;display: flex;margin: auto 1em auto 0;"><script>
+						document.write(localString[g_language].longitude);
+					</script></span><span style="flex:7;white-space: nowrap;">
+					<input id="LT_°" type="number" min="0" max="180" /> °
+					<input id="LT_’" type="number" min="0" max="60" /> ’
+					<input id="LT_”" type="number" min="0" max="60" /> ”
+					<select id="WE">
+						<option value="+">E</option>
+						<option value="-">W</option>
+					</select></span>
+				</div>
+				<div id="position_selected"></div>
+				<div style="display:flex;">
+					<button onclick="getLocation()" style="margin:0 auto;">
+					<script>
+						document.write(localString[g_language].confirm);
+					</script>
+					</button>
+				</div>
+			</div>
+
 			<input id="input_time" type="datetime-local" />
 		</div>
 		<div>
@@ -868,6 +922,22 @@
 				g_coordinate_this.AT = position.coords.latitude; //纬度
 				g_coordinate_this.LT = position.coords.longitude; //经度
 				g_coordinate_this.height = position.coords.altitude; //海拔高度
+				//手动输入
+				var LT=Number($("#LT_°")[0].value);
+					LT+=Number($("#LT_’")[0].value)/60;
+					LT+=Number($("#LT_”")[0].value)/3600;
+					LT=Number($("#WE")[0].value+LT);
+				var AT=Number($("#AT_°")[0].value);
+					AT+=Number($("#AT_’")[0].value)/60;
+					AT+=Number($("#AT_”")[0].value)/3600;
+					AT=Number($("#NS")[0].value+AT);
+					if(AT!=0){
+						g_coordinate_this.LT=LT;
+						g_coordinate_this.AT=AT;
+
+					}
+
+
 				let position_string =
 					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
 				localStorage.setItem("local_position", position_string);
@@ -884,6 +954,8 @@
 				}
 				let height_string = g_coordinate_this.height + "M";
 				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
+				$("#position_input").hide();
+
 			}
 			function showError(error) {
 				switch (error.code) {
@@ -916,6 +988,9 @@
 					angle_str += num_s + "”";
 				}
 				return angle_str;
+			}
+			function input_position(){
+				$("#position_input").show();
 			}
 		</script>
 	</body>
