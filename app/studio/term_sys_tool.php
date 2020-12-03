@@ -408,7 +408,7 @@ function transfer_glossary(){
 				<button  id="id_open_editor_load_stream"  onclick="pc_loadStream(0)"><?php //echo $module_gui_str['editor']['1030'];?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_cloud_download"></use></svg>
 				</button>
-				<button  id="id_cancel_stream" onclick="pc_cancelStream()"><?php //echo $module_gui_str['editor']['1028'];?>
+				<button  id="id_cancel_stream" onclick="pc_cancelStream()"><?php //echo $_local->gui->cancel;?>
 					<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_note_add"></use></svg>
 				</button>
 				<button  id="pc_empty_download_list" onclick="pc_empty_download_list()"><?php //echo $module_gui_str['editor']['1045'];?>
@@ -431,7 +431,7 @@ function transfer_glossary(){
 	
 <div class="foot_div">
 
-<?php echo $module_gui_str['editor']['1066'];?>
+<?php echo $_local->gui->poweredby;?>
 </div>
 <div class="debugMsg" id="id_debug" style="display: none;"><!--调试信息-->
 	<div id="id_debug_output"></div>

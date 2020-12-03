@@ -558,6 +558,8 @@
 		"select": "select",
 		"history": "history",
 		"top_search": "Top search",
+		"similar_sentences": "similar sentences",
+		"close": "close",
 		"": ""
 	},
 	"grammastr": [

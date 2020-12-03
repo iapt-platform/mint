@@ -174,14 +174,14 @@ else{
 				<div id="wizard_palicannon_par_select_text">
 					<div id="wizard_palicannon_par_select_text_body">
 						<div id="userfilelist">
-						<?php echo $module_gui_str['editor']['1065'];?>
+						<?php echo $_local->gui->loading;?>
 						</div>					
 					</div>
 				</div>
 		</div>				
 	</div>
 <div class="foot_div">
-<?php echo $module_gui_str['editor']['1066'];?>
+<?php echo $_local->gui->poweredby;?>
 </div>
 </body>
 </html>

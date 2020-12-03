@@ -124,7 +124,7 @@ else{
 		</div>
 	</div>
 <div class="foot_div">
-<?php echo $module_gui_str['editor']['1066'];?>
+<?php echo $_local->gui->poweredby;?>
 </div>
 </body>
 </html>

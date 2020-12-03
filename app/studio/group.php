@@ -173,26 +173,26 @@ require_once '../public/_pdo.php';
 					<div>
 						<select id="id_index_status"  onchange="showUserFilaList()">
 							<option value="all" >
-								<?php echo $module_gui_str['editor_dictionary']['1018'];//全部?>
+								<?php echo $_local->gui->all;//全部?>
 							</option>
 							<option value="share" >
-								<?php echo $module_gui_str['tools']['1017'];//已共享?>
+								<?php echo $_local->gui->shared;//已共享?>
 							</option>
 							<option value="recycle" >
-								<?php echo $module_gui_str['tools']['1007'];//回收站?>
+								<?php echo $_local->gui->recycle_bin;//回收站?>
 							</option>
 						</select>					
 					</div>
-					<div><?php echo $module_gui_str['editor']['1059'];//排序方式?>
+					<div><?php echo $_local->gui->order_by;//排序方式?>
 						<select id="id_index_orderby"  onchange="showUserFilaList()">
-							<option value="accese_time" ><?php echo $module_gui_str['editor']['1060'];//訪問?></option>
-							<option value="modify_time" ><?php echo $module_gui_str['editor']['1061'];//修改?></option>
-							<option value="create_time" ><?php echo $module_gui_str['editor']['1062'];//創建?></option>
-							<option value="title" ><?php echo $module_gui_str['editor']['1063'];//標題?></option>
+							<option value="accese_time" ><?php echo $_local->gui->accessed;//訪問?></option>
+							<option value="modify_time" ><?php echo $_local->gui->modified;//修改?></option>
+							<option value="create_time" ><?php echo $_local->gui->created;//創建?></option>
+							<option value="title" ><?php echo $_local->gui->title;//標題?></option>
 						</select>					
 						<select id="id_index_order"  onchange="showUserFilaList()">
-							<option value="DESC" ><?php echo $module_gui_str['editor']['1111'];//降序?></option>
-							<option value="ASC" ><?php echo $module_gui_str['editor']['1110'];//升序?></option>
+							<option value="DESC" ><?php echo $_local->gui->desc;//降序?></option>
+							<option value="ASC" ><?php echo $_local->gui->asc;;//升序?></option>
 						</select>	
 						<button id="file_select" onclick="mydoc_file_select(true)">
 							选择
@@ -200,7 +200,7 @@ require_once '../public/_pdo.php';
 					</div>
 				</div>
 				<div>
-				<input id="keyword" type="input"  placeholder=<?php echo $module_gui_str['editor']['1114'].$module_gui_str['editor']['1115'];?>  onkeyup="file_search_keyup()"/>
+				<input id="keyword" type="input"  placeholder=<?php echo $_local->gui->title.$_local->gui->search;?>  onkeyup="file_search_keyup()"/>
 				</div>
 
 			</div>
@@ -209,17 +209,17 @@ require_once '../public/_pdo.php';
 				<div  style="display:flex;justify-content: space-between;">
 					<div>
 						<span id="button_group_nomal" >
-						<button onclick="file_del()"><?php echo $module_gui_str['tools']['1009'];//刪除?></button>
-						<button onclick="file_share(true)"><?php echo $module_gui_str['tools']['1008'];//共享?></button>
-						<button onclick="file_share(false)"><?php echo $module_gui_str['tools']['1010'];//取消共享?></button>
+						<button onclick="file_del()"><?php echo $_local->gui->delete;//刪除?></button>
+						<button onclick="file_share(true)"><?php echo $_local->gui->share;//共享?></button>
+						<button onclick="file_share(false)"><?php echo $_local->gui->undo_shared;//取消共享?></button>
 						</span>
 						<span id="button_group_recycle" style="dispaly:none">
-						<button onclick="file_remove()" style="background-color:red;"><?php echo $module_gui_str['tools']['1016'];//彻底删除?></button>
-						<button onclick="file_remove_all()"><?php echo $module_gui_str['tools']['1015'];//清空回收站?></button>
+						<button onclick="file_remove()" style="background-color:red;"><?php echo $_local->gui->completely_delete;//彻底删除?></button>
+						<button onclick="file_remove_all()"><?php echo $_local->gui->empty_the_recycle_bin;//清空回收站?></button>
 						</span>
 					</div>
 					<div>
-						<button onclick="mydoc_file_select(false)"><?php echo $module_gui_str['editor']['1028'];//取消?></button>
+						<button onclick="mydoc_file_select(false)"><?php echo $_local->gui->cancel;//取消?></button>
 					</div>
 				</div>
 			</div>
@@ -308,7 +308,7 @@ require_once '../public/_pdo.php';
 		
 	</div>
 <div class="foot_div">
-<?php echo $module_gui_str['editor']['1066'];?>
+<?php echo $_local->gui->poweredby;?>
 </div>
 </body>
 </html>
