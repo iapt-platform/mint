@@ -61,8 +61,8 @@ else{
 					echo "<paragraph>{$para}</paragraph>";
 					echo "<level>100</level>";
 					echo "<title></title>";
-					echo "<album_id>{$block->channal}</album_id>";
-					echo "<album_guid>{$block->channal}</album_guid>";
+					echo "<album_id></album_id>";
+					echo "<album_guid></album_guid>";
 					echo "<author>{$FetchBlock["owner"]}</author>";
 					echo "<language>{$FetchBlock["lang"]}</language>";
 					echo "<version>1</version>";
