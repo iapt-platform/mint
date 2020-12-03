@@ -5,6 +5,10 @@ require_once "../public/_pdo.php";
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_PALI_SENTENCE_);
+PDO_Execute("PRAGMA synchronous = OFF");
+PDO_Execute("PRAGMA journal_mode = WAL");
+PDO_Execute("PRAGMA foreign_keys = ON");
+PDO_Execute("PRAGMA busy_timeout = 5000");
 
 
 // 输入一个句子，输出整个句子的单词 array
@@ -115,16 +119,21 @@ function insert_similar_sent_list_into_sqlite($current_id, $text_list) {
 }
 
 // 预计算，存入数据库
-function similar_sent_matrix($begin,$end) {
+function similar_sent_matrix($begin,$end,$begin_id=0) {
 	// 按照 count = 18, 8, ..., 255 依次获得查询结果 (i-3,i+3)
 	//          count = 17,16,...,7                                       (i-2,i+2)
-	for ($current_count=$begin; $current_count <$end ; $current_count++) { 
+	for ($current_count=$begin; $current_count <=$end ; $current_count++) { 
 		print("单词数：".$current_count."\n");
 		$current_query = "select id,text from pali_sent where count=".$current_count;
 		$Current = PDO_FetchAll($current_query);
 		if (count($Current)) {
 			foreach($Current as $current_row) {
 				$current_id = $current_row['id'];
+				if($begin_id>0 && $current_count==$begin){
+					if($current_id<$begin_id){
+						continue;
+					}
+				}
 				$current_sent = $current_row['text'];
 				$current_words = words_of_sentence($current_sent);
 				
@@ -215,18 +224,24 @@ function sents_similar_to_id($id) {
 //$id = $argv[1];
 //sents_similar_to_id($id);
 
-	if ($argc != 3){
+	if ($argc < 3){
 		echo "无效的参数 ";
 		exit;
 	}
 	$from = (int)$argv[1];
 	$to =(int)$argv[2];
+	if ($argc > 3){
+		$from_id = (int)$argv[3];
+	}
+	else{
+		$from_id = 0;
+	}
 	if($from<4){
 		$from = 4;
 	}
 	if($to>255){
 		$to = 255;
 	}
-	similar_sent_matrix($from,$to);
+	similar_sent_matrix($from,$to,$from_id);
 	echo "\n all done";
 ?>

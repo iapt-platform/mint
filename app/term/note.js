@@ -463,93 +463,9 @@ function note_json_html(in_json) {
 
 	output += "<div class='palitext'>" + in_json.palitext + "</div>";
 
-	//output += "<div class='translation_div'>";
+	//output += "<div id='translation_div'>";
 	for (const iterator of in_json.translation) {
-		output += "<div class='tran' lang='" + iterator.lang + "' style='display:flex;'>";
-		//译文工具按钮开始
-		output += "<div class='tran_text_tool_botton' onclick='tool_bar_show(this)'>";
-		output +=
-			"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;transition: transform 0.5s ease;'></div>";
-		//译文工具栏开始
-		output += "<div class='tran_text_tool_bar'>";
-		output += "<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom' ";
-		output +=
-			" onclick=\"note_edit_sentence('" +
-			in_json.book +
-			"' ,'" +
-			in_json.para +
-			"' ,'" +
-			in_json.begin +
-			"' ,'" +
-			in_json.end +
-			"' ,'" +
-			iterator.channal +
-			"')\"";
-		output +=
-			">" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use></svg>';
-		output += gLocal.gui.edit + "</li>";
-		output += "<li class = 'tip_buttom' ";
-		output += " onclick=\"history_show('" + iterator.id + "')\"";
-		output +=
-			">" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use></svg>';
-		output += gLocal.gui.timeline + "</li>";
-		output +=
-			"<li class = 'tip_buttom'>" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#copy"></use></svg>';
-		output += gLocal.gui.copy + "</li></div>";
-
-		output +=
-			"<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom'>" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use></svg>';
-		output += gLocal.gui.like + "</li>";
-		output +=
-			"<li class = 'tip_buttom'>" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#comment"></use></svg>';
-		output += gLocal.gui.comment + "</li>";
-		output +=
-			"<li class = 'tip_buttom'>" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_shopping_cart"></use></svg>';
-		output += gLocal.gui.digest + "</li></div>";
-		output +=
-			"<div style='margin: 0.3em 0;'><li class = 'tip_buttom'>" +
-			'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#share_to"></use></svg>';
-		output += gLocal.gui.share_to + "</li>";
-		output += "</div></div>";
-		//译文工具栏结束
-		output += "</div>";
-		//译文工具按钮结束
-		//译文正文开始
-		output +=
-			"<div class='text' id='tran_text_" +
-			in_json.book +
-			"_" +
-			in_json.para +
-			"_" +
-			in_json.begin +
-			"_" +
-			in_json.end +
-			"_" +
-			iterator.channal +
-			"'>";
-		if (iterator.text == "") {
-			output +=
-				"<span style='color:var(--border-line-color);'>" +
-				iterator.channalinfo.name +
-				"-" +
-				iterator.channalinfo.lang +
-				"</span>";
-		} else {
-			//note_init处理句子链接 marked不处理
-			//output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
-			output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
-		}
-		output += "</div>";
-		//译文正文结束
-
-		output += "</div>";
-		//单个channal译文框结束
+		output += render_one_sent_tran(in_json.book, in_json.para, in_json.begin, in_json.end, iterator);
 	}
 	//所选全部译文结束
 	//output += "</div>";
@@ -583,8 +499,9 @@ function note_json_html(in_json) {
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
 	output += " >";
-
-	//output += "<div class='more_tran icon_expand'></div>";
+	output += "<div class='icon_add' onclick='add_new_tran_button_click(this)'></div>";
+	output += "<div class='tran_text_tool_bar'>";
+	output += "</div>";
 	output += "</div>";
 	//新增译文按钮结束
 	//出处路径开始
@@ -604,6 +521,140 @@ function note_json_html(in_json) {
 	return output;
 }
 
+function render_one_sent_tran(book, para, begin, end, iterator) {
+	let output = "";
+	output += "<div class='tran' lang='" + iterator.lang + "' style='display:flex;'>";
+	//译文工具按钮开始
+	output += "<div class='tran_text_tool_botton' onclick='tool_bar_show(this)'>";
+	output +=
+		"<div class='icon_expand' style='width: 0.8em;height: 0.8em;min-width: 0.8em;min-height: 0.8em;transition: transform 0.5s ease;'></div>";
+	//译文工具栏开始
+	output += "<div class='tran_text_tool_bar'>";
+	output += "<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom' ";
+	output +=
+		" onclick=\"note_edit_sentence('" +
+		book +
+		"' ,'" +
+		para +
+		"' ,'" +
+		begin +
+		"' ,'" +
+		end +
+		"' ,'" +
+		iterator.channal +
+		"')\"";
+	output +=
+		">" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use></svg>';
+	output += gLocal.gui.edit + "</li>";
+	output += "<li class = 'tip_buttom' ";
+	output += " onclick=\"history_show('" + iterator.id + "')\"";
+	output +=
+		">" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use></svg>';
+	output += gLocal.gui.timeline + "</li>";
+	output +=
+		"<li class = 'tip_buttom'>" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#copy"></use></svg>';
+	output += gLocal.gui.copy + "</li></div>";
+
+	output +=
+		"<div style='border-right: solid 1px;margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use></svg>';
+	output += gLocal.gui.like + "</li>";
+	output +=
+		"<li class = 'tip_buttom'>" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#comment"></use></svg>';
+	output += gLocal.gui.comment + "</li>";
+	output +=
+		"<li class = 'tip_buttom'>" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_shopping_cart"></use></svg>';
+	output += gLocal.gui.digest + "</li></div>";
+	output +=
+		"<div style='margin: 0.3em 0;'><li class = 'tip_buttom'>" +
+		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#share_to"></use></svg>';
+	output += gLocal.gui.share_to + "</li>";
+	output += "</div></div>";
+	//译文工具栏结束
+	output += "</div>";
+	//译文工具按钮结束
+	//译文正文开始
+	output +=
+		"<div class='text' id='tran_text_" +
+		book +
+		"_" +
+		para +
+		"_" +
+		begin +
+		"_" +
+		end +
+		"_" +
+		iterator.channal +
+		"'>";
+	if (iterator.text == "") {
+		output +=
+			"<span style='color:var(--border-line-color);'>" +
+			iterator.channalinfo.name +
+			"-" +
+			iterator.channalinfo.lang +
+			"</span>";
+	} else {
+		//note_init处理句子链接 marked不处理
+		//output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+	}
+	output += "</div>";
+	//译文正文结束
+
+	output += "</div>";
+	//单个channal译文框结束
+	return output;
+}
+function add_new_tran_button_click(obj) {
+	let html = "<ul>";
+	for (const iterator of _my_channal) {
+		if (_channal.indexOf(iterator.id) < 0) {
+			html += '<li onclick="';
+			html +=
+				"new_sentence('" +
+				$(obj).parent().attr("book") +
+				"' ,'" +
+				$(obj).parent().attr("para") +
+				"' ,'" +
+				$(obj).parent().attr("begin") +
+				"' ,'" +
+				$(obj).parent().attr("end") +
+				"' ,'" +
+				iterator.id +
+				"')";
+			html += '">' + iterator.name + "</li>";
+		}
+	}
+	html += "</ul>";
+	$(obj).parent().children(".tran_text_tool_bar").first().html(html);
+	$(obj).parent().children(".tran_text_tool_bar").first().show();
+	$(obj).parent().show();
+}
+
+function new_sentence(book, para, begin, end, channel) {
+	let newsent = { id: "", text: "", lang: "", channal: channel };
+
+	for (let iterator of _arrData) {
+		if (iterator.book == book && iterator.para == para && iterator.begin == begin && iterator.end == end) {
+			let found = false;
+			for (const tran of iterator.translation) {
+				if (tran.channal == channel) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				iterator.translation.push(newsent);
+			}
+		}
+	}
+	note_edit_sentence(book, para, begin, end, channel);
+}
 function set_more_button_display() {
 	$(".other_tran_div").each(function () {
 		const sentid = $(this).attr("sent").split("-");
@@ -707,15 +758,15 @@ function note_edit_sentence(book, para, begin, end, channal) {
 						"<textarea id='edit_dialog_text' sent_id='" +
 						tran.id +
 						"' book='" +
-						iterator.book +
+						book +
 						"' para='" +
-						iterator.para +
+						para +
 						"' begin='" +
-						iterator.begin +
+						begin +
 						"' end='" +
-						iterator.end +
+						end +
 						"' channal='" +
-						tran.channal +
+						channal +
 						"' style='width:100%;min-height:260px;'>" +
 						tran.text +
 						"</textarea>";
@@ -726,6 +777,7 @@ function note_edit_sentence(book, para, begin, end, channal) {
 			}
 		}
 	}
+
 	alert("未找到句子");
 }
 
@@ -815,7 +867,7 @@ function copy_ref(book, para, begin, end) {
 }
 
 function goto_nissaya(book, para) {
-	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "_blank");
+	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "nissaya");
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);

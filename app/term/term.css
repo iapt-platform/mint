@@ -149,7 +149,9 @@ para:hover {
 
 commentary,
 com,
-nt {
+nt,
+blockquote {
+	margin: 0;
 	margin-left: 1.5em;
 	display: block;
 	border-left: 3px solid gray;
@@ -164,7 +166,7 @@ note > .tran {
 	margin-top: -0.5em;
 }
 note > .tran > .text {
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 }
 .tran_text_tool_botton {
 	border-radius: 50%;
@@ -184,7 +186,8 @@ note > .tran > .text {
 	min-width: 0.8em;
 	min-height: 0.8em;
 }
-note > .tran .tran_text_tool_bar {
+note > .tran .tran_text_tool_bar,
+.tran_text_tool_bar {
 	padding: 0 0.1em;
 	position: absolute;
 	display: none;
@@ -202,7 +205,8 @@ note > .tran .tran_text_tool_bar {
 note > .tran:lang(my) .tran_text_tool_bar {
 	margin-top: -2.5em;
 }
-note > .tran .tran_text_tool_bar::after {
+note > .tran .tran_text_tool_bar::after,
+.tran .tran_text_tool_bar::after {
 	content: " ";
 	position: absolute;
 	left: 1.4em;
@@ -349,9 +353,26 @@ note > .bottm_tool_button {
 note:hover > .bottm_tool_button {
 	display: block;
 }
+.add_new {
+	display: inline-block;
+	position: absolute;
+	min-width: 1.4vw;
+	display: none;
+}
 note:hover .add_new {
 	display: inline-block;
 	position: absolute;
+}
+.icon_add {
+	width: 1.5vw;
+	min-width: 1.4vw;
+	height: 1.5vw;
+	cursor: pointer;
+	background: url(add.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+
+	margin-bottom: -0.7em;
 }
 .tool_bar > .more_tran {
 	display: inline-block;
@@ -359,17 +380,7 @@ note:hover .add_new {
 	transform: rotate(-90deg);
 	transition: all 0.2s ease;
 }
-.icon_add {
-	width: auto;
-	min-width: 1.4vw;
-	height: 1.5vw;
-	cursor: pointer;
-	background: url(add.svg);
-	background-repeat: no-repeat;
-	background-size: contain;
-	display: none;
-	margin-bottom: -0.7em;
-}
+
 .icon_expand {
 	width: auto;
 	min-width: 14px;
@@ -507,10 +518,9 @@ note:hover .note_tool_bar {
 }
 .separate_line {
 	border: solid 1px #e8e8e8;
-    border-radius: 3px;
-    margin: 1px 5px;
-    width: 1px;
-    background: #c6c6c6;
-    text-decoration: none;
-}
+	border-radius: 3px;
+	margin: 1px 5px;
+	width: 1px;
+	background: #c6c6c6;
+	text-decoration: none;
 }

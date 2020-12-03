@@ -42,7 +42,7 @@ echo '</div>';
 echo '<div></div>';
 echo '</div>';
 
-
+/*
 $coverList = array();
 
 $coverList[] = $lesson_info["cover"];
@@ -59,12 +59,12 @@ foreach ($covers as $value) {
     else{
         $cover_html =  '<div style="width: 20em;"><img src="'.$coverlink.'" width="50" height="50"></div>';
     }
-
+*/
 echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
 
-echo '<form action="../course/my_course_index.php" onsubmit="return lesson_validate_form(this)"  method="POST">';
+echo '<form id="lesson_update" action="##"   method="POST">';
 echo '<input type="hidden" name="lesson" value="'.$lesson_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
@@ -94,8 +94,10 @@ echo '<div id="userfilelist">';
     $strDate = date("Y-m-d",$lesson_info["date"]/1000);
     $strTime = date("H:i",$lesson_info["date"]/1000);
     $strDuration = date("H:i",$lesson_info["duration"]);
-    echo $_local->gui->date.'：<input type="date" name="lesson_date" value="'.$strDate.'"/>';
-    echo $_local->gui->time.'：<input type="time" name="lesson_time" value="'.$strTime.'"/>';
+    echo '<input type="hidden" id="form_datetime" name="form_time" value="'.$lesson_info["date"].'"/>';
+    echo '<input type="hidden" id="lesson_timezone" name="lesson_timezone" value=""/>';
+    echo $_local->gui->date.'：<div id="form_date"></div>';
+    echo $_local->gui->time.'：<div id="form_time"></div>';
     echo $_local->gui->duration.'：<input type="time" name="duration" value="'.$strDuration.'"/>';
     echo '</div></div>';
 
@@ -117,16 +119,13 @@ echo '<div id="userfilelist">';
 echo '</div>';
 ?>
 
-<input type="submit" />
 </form>
-
+<button onclick="lesson_update()">submit</button>
 </div>
 
 <div style="flex:2;border-left: 1px solid var(--tool-line-color);padding-left: 12px;">
 <div style="width:100%;padding:4px;">
-<?php
-    echo $lesson_info["link"];
-?>
+
 </div>
 <div><?php echo $_local->gui->created_time ?>：
 <?php
@@ -149,4 +148,6 @@ echo '</div>';
 <script>
     name_selector_init("teacher_id",{input_id:"form_teacher"});
     img_dlg_init("img_cover",{input_id:"cover_id"});
+    time_init();
+    
 </script>
