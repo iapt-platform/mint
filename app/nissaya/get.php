@@ -31,9 +31,10 @@ foreach ($Fetch as $key => $value){
 	$query = "SELECT * from book_match where book_vri=? and vol=?";
 	$Fetch_nsy_book = PDO_FetchRow($query,array($value["book"],$value["page1"]));
 	if($Fetch_nsy_book){
-		$prefix = explode("_",$Fetch_nsy_book["bookid"])[0];
+		$prefix = $Fetch_nsy_book["table"];
 		$query = "SELECT * from {$prefix}_pagematch where bookid=? and bookpagenumber=?";
 		$Fetch_nsy_index = PDO_FetchRow($query,array($Fetch_nsy_book["bookid"],$value["page2"]));
+		$Fetch_nsy_index["dir"]=$prefix;
 		$result["data"][] = $Fetch_nsy_index;
 	}
 	else{
