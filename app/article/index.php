@@ -175,6 +175,25 @@ require_once "../pcdl/html_head.php";
 	}
 
 	</style>
+<style media="screen and (max-width:800px)">
+#right_pannal{
+	display:none;
+}
+.when_right_fixed{
+	padding-right:0;
+}
+.index_toolbar{
+	position:unset;
+}
+#pali_pedia{
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
+
+
+</style>
 
 
 
