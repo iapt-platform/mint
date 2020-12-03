@@ -64,7 +64,7 @@ echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
 
-echo '<form action="../course/my_course_index.php" onsubmit="return lesson_validate_form(this)"  method="POST">';
+echo '<form id="lesson_update" action="##"   method="POST">';
 echo '<input type="hidden" name="lesson" value="'.$lesson_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
@@ -95,7 +95,7 @@ echo '<div id="userfilelist">';
     $strTime = date("H:i",$lesson_info["date"]/1000);
     $strDuration = date("H:i",$lesson_info["duration"]);
     echo '<input type="hidden" id="form_datetime" name="form_time" value="'.$lesson_info["date"].'"/>';
-    echo '<input type="hidden" name="lesson_timezone" value=""/>';
+    echo '<input type="hidden" id="lesson_timezone" name="lesson_timezone" value=""/>';
     echo $_local->gui->date.'：<div id="form_date"></div>';
     echo $_local->gui->time.'：<div id="form_time"></div>';
     echo $_local->gui->duration.'：<input type="time" name="duration" value="'.$strDuration.'"/>';
@@ -119,9 +119,8 @@ echo '<div id="userfilelist">';
 echo '</div>';
 ?>
 
-<input type="submit" />
 </form>
-
+<button onclick="lesson_update()">submit</button>
 </div>
 
 <div style="flex:2;border-left: 1px solid var(--tool-line-color);padding-left: 12px;">
