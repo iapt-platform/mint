@@ -43,3 +43,20 @@ function course_validate_form(thisform) {
 }
 
 function course_list() {}
+
+function time_init() {
+	let lessonTime = new Date(parseInt($("#form_datetime").val()));
+	let month = lessonTime.getMonth() + 1;
+	month = month > 9 ? month : "0" + month;
+	let d = lessonTime.getDate();
+	d = d > 9 ? d : "0" + d;
+	let data = lessonTime.getFullYear() + "-" + month + "-" + d;
+	let strData = "<input type='date'  name='lesson_date' value='" + data + "'/>";
+	$("#form_date").html(strData);
+	let H = lessonTime.getHours();
+	H = H > 9 ? H : "0" + H;
+	let M = lessonTime.getMinutes();
+	M = M > 9 ? M : "0" + M;
+	let strTime = "<input type='time'  name='lesson_time' value='" + H + ":" + M + "'/>";
+	$("#form_time").html(strTime);
+}
