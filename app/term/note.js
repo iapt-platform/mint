@@ -463,12 +463,12 @@ function note_json_html(in_json) {
 
 	output += "<div class='palitext'>" + in_json.palitext + "</div>";
 
-	output += "<div id='translation_div'>";
+	//output += "<div id='translation_div'>";
 	for (const iterator of in_json.translation) {
 		output += render_one_sent_tran(in_json.book, in_json.para, in_json.begin, in_json.end, iterator);
 	}
 	//所选全部译文结束
-	output += "</div>";
+	//output += "</div>";
 	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
