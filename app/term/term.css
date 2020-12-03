@@ -149,7 +149,9 @@ para:hover {
 
 commentary,
 com,
-nt {
+nt,
+blockquote {
+	margin:0;
 	margin-left: 1.5em;
 	display: block;
 	border-left: 3px solid gray;
