@@ -94,9 +94,10 @@ echo '<div id="userfilelist">';
     $strDate = date("Y-m-d",$lesson_info["date"]/1000);
     $strTime = date("H:i",$lesson_info["date"]/1000);
     $strDuration = date("H:i",$lesson_info["duration"]);
+    echo '<input type="hidden" id="form_datetime" name="form_time" value="'.$lesson_info["date"].'"/>';
     echo '<input type="hidden" name="lesson_timezone" value=""/>';
-    echo $_local->gui->date.'：<input type="date" name="lesson_date" value="'.$strDate.'"/>';
-    echo $_local->gui->time.'：<input type="time" name="lesson_time" value="'.$strTime.'"/>';
+    echo $_local->gui->date.'：<div id="form_date"></div>';
+    echo $_local->gui->time.'：<div id="form_time"></div>';
     echo $_local->gui->duration.'：<input type="time" name="duration" value="'.$strDuration.'"/>';
     echo '</div></div>';
 
@@ -148,4 +149,6 @@ echo '</div>';
 <script>
     name_selector_init("teacher_id",{input_id:"form_teacher"});
     img_dlg_init("img_cover",{input_id:"cover_id"});
+    time_init();
+    
 </script>
