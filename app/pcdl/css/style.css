@@ -3158,3 +3158,6 @@ text-align: center;
 .file_list_shell{
 border-bottom: 1px solid var(--tool-line-color);
 }
+#footer_nav{
+    display: none;
+}

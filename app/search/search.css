@@ -4,7 +4,11 @@
 .search_result > .title {
 	font-size: 18px;
 }
+.search_result .bodytext {
+	overflow-x: scroll;
+}
 .search_result > .path {
+	overflow-x: scroll;
 	color: var(--btn-border-color);
 }
 highlight {
