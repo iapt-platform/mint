@@ -61,6 +61,10 @@ include "../pcdl/html_head.php";
         white-space:nowrap;
         overflow-x: scroll;
     }
+    .card{
+        height: 20vh;
+        overflow-y: scroll;
+    }
 </style>
 <style media="screen and (max-width:800px)">
 #right_pannal{
@@ -92,7 +96,9 @@ include "../pcdl/html_head.php";
 .article_title_link{
 	flex:5;
 }
-
+#book_list>div{
+    width:100% !important;
+}
 
 </style>
 <?php

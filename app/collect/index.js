@@ -8,7 +8,7 @@ function collect_load(begin = 0) {
 			let arrCollectList = JSON.parse(data);
 			let html = "";
 			for (const iterator of arrCollectList.data) {
-				html += "<div style='flex:3;padding:0.5em;'>";
+				html += "<div style='width:25%;padding:0.5em;'>";
 				html += '<div style="position: relative;">';
 				html +=
 					"<div class='' style='position: absolute;background-color: darkred;color: white;padding: 0 6px;right: 0;'>" +
