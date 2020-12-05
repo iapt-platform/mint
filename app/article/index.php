@@ -174,9 +174,7 @@ require_once "../pcdl/html_head.php";
 		display:block;
 	}
 
-
 	</style>
-
 <style media="screen and (max-width:800px)">
 #right_pannal{
 	display:none;
@@ -196,6 +194,8 @@ require_once "../pcdl/html_head.php";
 
 
 </style>
+
+
 
 
 <?php

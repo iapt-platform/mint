@@ -86,11 +86,11 @@
 	<div id='search_toolbar_1' class="search_toolbar search_fixed">
 			<div style="display:flex;">
 				<span >
-					搜索
+					<?php echo $_local->gui->search;?>
 				</span>
 				<div class="case_dropdown">
 					<div>
-						<input id="dict_ref_search_input_1" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%;font-size:120%;padding: 0.2em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
+						<input id="dict_ref_search_input_1" type="input" placeholder="<?php echo $_local->gui->search;?>" onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;min-width: 40vw;max-width: 80%;font-size:120%;padding: 0.2em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="search_input_onfocus()">
 					</div>
 					<div id="pre_search_word_content_1" class="case_dropdown-content"></div>
 				</div>

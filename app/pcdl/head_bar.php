@@ -174,7 +174,9 @@
 	.lab_tab>li{
 		padding:5px;
 	}
-	
+	.title_bar{
+		width:95vw;
+	}
 	.head_nav_dropdown:hover  {
 		color: var(--btn-border-color);
 	}
@@ -189,6 +191,59 @@
 		padding: 0.1em 0.5em 0.1em 0;
 	}
 	</style>
+	<style media="screen and (max-width:800px)">
+#right_pannal{
+	display:none;
+}
+.when_right_fixed{
+	padding-right:0;
+}
+.index_toolbar{
+	position:unset;
+}
+#pali_pedia{
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
+.index_inner{
+		display:block;
+	}
+	.card{
+	display: flex;
+    justify-content: space-between;
+    padding-right: 5em !important;
+}
+.card_info{
+	flex:5;
+}
+.article_title_link{
+	flex:5;
+}
+.content_inner{
+	width:95vw;
+}
+.content_inner>div{
+    width:100% !important;
+}
+.index_toolbar{
+	padding:0;
+
+}
+.head_nav{
+	padding:0;
+
+}
+.head_nav>li:not(:first-child){
+	display:none;
+}
+.toolgroup1>span{
+	display:none !important;
+}
+
+</style>
+
 		<!-- tool bar begin-->
 		<div class='index_toolbar'>
 			<div id="index_nav">

@@ -406,7 +406,7 @@ foreach($plugin_list as $info){
 					</div>
 
 				<!--infomation panal-->
-				<button id="info_panal" class="icon_btn" type="button" onclick="setInfoPanalVisibility()" title="<?php echo $module_gui_str['editor']['1004'];?>" style="display:none;">
+				<button id="info_panal" class="icon_btn" type="button" onclick="setInfoPanalVisibility()" title="<?php echo $_local->gui->info_panal;?>" style="display:none;">
 					<svg class="icon">
 						<use xlink:href="svg/icon.svg#ic_info_outline"></use>
 					</svg>
@@ -421,7 +421,7 @@ foreach($plugin_list as $info){
 					</button> 
 				
 				<!--Save-->
-				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" style="display:none;" title="<?php echo $module_gui_str['editor']['1017'];?>">
+				<button id="B_Save" class="icon_btn" onclick="editor_save()" type="button" style="display:none;" title="<?php echo $_local->gui->save;?>">
 						<svg class="icon">
 							<use xlink:href="svg/icon.svg#ic_save"></use>
 						</svg>
@@ -494,23 +494,23 @@ foreach($plugin_list as $info){
 
 			<div id="menubartoolbar" style="display: none">
 				<select id="id_editor_menu_select" name="menu" onchange="menuSelected(this)">
-					<option value="menu_toc" selected><?php echo $module_gui_str['editor']['1019'];?></option>				
-					<option value="menu_pali_cannon"><?php echo $module_gui_str['editor']['1020'];?></option>
-					<option value="menu_bookmark"><?php echo $module_gui_str['editor']['1021'];?></option>
-					<option value="menu_project"><?php echo $module_gui_str['editor']['1022'];?></option>
-					<option value="menu_dict"><?php echo $module_gui_str['editor']['1023'];?></option>
-					<option value="menu_layout"><?php echo $module_gui_str['editor']['1024'];?></option>
-					<option value="menu_plugin"><?php echo $module_gui_str['editor']['1025'];?></option>
+					<option value="menu_toc" selected><?php echo $_local->gui->content;?></option>				
+					<option value="menu_pali_cannon"><?php echo $_local->gui->pali_canon;?></option>
+					<option value="menu_bookmark"><?php echo $_local->gui->mark;?></option>
+					<option value="menu_project"><?php echo $_local->gui->project;?></option>
+					<option value="menu_dict"><?php echo $_local->gui->dict;?></option>
+					<option value="menu_layout"><?php echo $_local->gui->layout;?></option>
+					<option value="menu_plugin"><?php echo $_local->gui->plugin;?></option>
 				</select>
 			</div>
 			<div id="menubartoolbar_New" style="display:none;">
 				<ul class="common-tab">
-					<li id="menu_toc_li" class="common-tab_li_act" onclick="menuSelected_2(menu_toc,'menu_toc_li','menu' )"><?php echo $module_gui_str['editor']['1019'];?></li>
-					<li id="menu_bookmark_li" class="common-tab_li" onclick="menuSelected_2(menu_bookmark,'menu_bookmark_li','menu' )"><?php echo $module_gui_str['editor']['1021'];?></li>
-					<li id="menu_project_li" class="common-tab_li" onclick="menuSelected_2(menu_project,'menu_project_li','menu' )"><?php echo $module_gui_str['editor']['1022'];?></li>
-					<li id="menu_dict_li" class="common-tab_li" onclick="menuSelected_2(menu_dict,'menu_dict_li','menu' )"><?php echo $module_gui_str['editor']['1023'];?></li>
-					<li id="menu_layout_li" class="common-tab_li" onclick="menuSelected_2(menu_layout,'menu_layout_li','menu' )"><?php echo $module_gui_str['editor']['1024'];?></li>
-					<li id="menu_plugin_li" class="common-tab_li" onclick="menuSelected_2(menu_plugin,'menu_plugin_li','menu' )"><?php echo $module_gui_str['editor']['1025'];?></li>
+					<li id="menu_toc_li" class="common-tab_li_act" onclick="menuSelected_2(menu_toc,'menu_toc_li','menu' )"><?php echo $_local->gui->content;?></li>
+					<li id="menu_bookmark_li" class="common-tab_li" onclick="menuSelected_2(menu_bookmark,'menu_bookmark_li','menu' )"><?php echo $_local->gui->mark;?></li>
+					<li id="menu_project_li" class="common-tab_li" onclick="menuSelected_2(menu_project,'menu_project_li','menu' )"><?php echo $_local->gui->project;?></li>
+					<li id="menu_dict_li" class="common-tab_li" onclick="menuSelected_2(menu_dict,'menu_dict_li','menu' )"><?php echo $_local->gui->dict;?></li>
+					<li id="menu_layout_li" class="common-tab_li" onclick="menuSelected_2(menu_layout,'menu_layout_li','menu' )"><?php echo $_local->gui->layout;?></li>
+					<li id="menu_plugin_li" class="common-tab_li" onclick="menuSelected_2(menu_plugin,'menu_plugin_li','menu' )"><?php echo $_local->gui->plugin;?></li>
 				</ul>
 			</div>			
 			
@@ -577,25 +577,24 @@ foreach($plugin_list as $info){
 		<!--  infomation panal -->	
 		<div id="id_info_panal">
 			<select id="id_info_window_select" name="menu" onchange="windowsSelected(this)">
-				<option value="view_vocabulary"><?php echo $module_gui_str['editor']['1067'];?></option>
-				<option value="view_dict_all"><?php echo $module_gui_str['editor']['1068'];?></option>
-				<option value="view_dict_curr"><?php echo $module_gui_str['editor']['1069'];?></option>
-				<option value="view_debug"><?php echo $module_gui_str['editor']['1070'];?></option>
+				<option value="view_vocabulary"><?php echo $_local->gui->vocabulary;?></option>
+				<option value="view_dict_all"><?php echo $_local->gui->inline_dictionary;?></option>
+				<option value="view_dict_curr"><?php echo $_local->gui->my_dictionary;?></option>
+				<option value="view_debug"><?php echo $_local->gui->debug;?></option>
 			</select>
-			<button type="button" onclick="setInfoPanalSize('hidden')"><?php echo $module_gui_str['editor']['1071'];?></button>
-			<button type="button" onclick="setInfoPanalSize('min')"><?php echo $module_gui_str['editor']['1072'];?></button>
-			<button type="button" onclick="setInfoPanalSize('half')"><?php echo $module_gui_str['editor']['1073'];?></button>
-			<button type="button" onclick="setInfoPanalSize('0.6')"><?php echo $module_gui_str['editor']['1074'];?></button>
-			<button type="button" onclick="setInfoPanalSize('max')"><?php echo $module_gui_str['editor']['1075'];?></button>
+			<button type="button" onclick="setInfoPanalSize('hidden')"><?php echo $_local->gui->hidden;?></button>
+			<button type="button" onclick="setInfoPanalSize('min')"><?php echo $_local->gui->min;?></button>
+			<button type="button" onclick="setInfoPanalSize('half')"><?php echo $_local->gui->half;?></button>
+			<button type="button" onclick="setInfoPanalSize('max')"><?php echo $_local->gui->max;?></button>
 		
 			<div id='id_info_panal_inner'>
 				<div id="word_table">
-					<p><br/><?php echo $module_gui_str['editor']['1076'];?><input id="button_wordlist_refresh" onclick="refreshWordList()" type="button" value="<?php echo $module_gui_str['editor']['1081'];?>" /> </p>
+					<p><br/><?php echo $_local->gui->word_list;?><input id="button_wordlist_refresh" onclick="refreshWordList()" type="button" value="<?php echo $_local->gui->refresh;?>" /> </p>
 					<div id="word_table_inner"></div>
 				</div>
 
 				<div id="id_dict_match_result">
-					<p><br/><?php echo $module_gui_str['editor']['1077'];?></p>
+					<p><br/><?php echo $_local->gui->dictionary_match_result;?></p>
 					<div id="id_dict_match_result_inner"></div>
 				</div>
 				
@@ -621,10 +620,10 @@ foreach($plugin_list as $info){
 		<div id="modifywin" style="">
 			<div>
 				<ul id="id_select_modyfy_type" class="common-tab">
-					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo $module_gui_str['editor']['1041'];?></li>
-					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo $module_gui_str['editor']['1021'];?></li>
-					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo $module_gui_str['editor']['1043'];?></li>
-					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo $module_gui_str['editor']['1044'];?></li>
+					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo $_local->gui->detaile;?></li>
+					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo $_local->gui->mark;?></li>
+					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo $_local->gui->note;?></li>
+					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo $_local->gui->source;?></li>
 					
 				</ul>
 			</div>
@@ -878,7 +877,7 @@ foreach($plugin_list as $info){
 			<!--  三藏购物车 -->
 			<div id="pc_res_loader">
 				<div id="pc_res_load_button">
-					<button  id="id_open_editor_load_stream"  onclick="pc_loadStream(0)"><?php //echo $module_gui_str['editor']['1030'];?>
+					<button  id="id_open_editor_load_stream"  onclick="pc_loadStream(0)">
 						<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_cloud_download"></use></svg>
 					</button>
 					<button  id="id_cancel_stream" onclick="pc_cancelStream()"><?php //echo $_local->gui->cancel;?>
@@ -887,7 +886,7 @@ foreach($plugin_list as $info){
 					<button  id="pc_empty_download_list" onclick="pc_empty_download_list()"><?php //echo $module_gui_str['editor']['1045'];?>
 						<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_delete"></use></svg>
 					</button>
-					<button onclick="get_pc_res_download_list_from_cookie()"><?php //echo $module_gui_str['editor']['1081'];?>
+					<button onclick="get_pc_res_download_list_from_cookie()"><?php //echo $_local->gui->refresh;?>
 						<svg class="button_icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="svg/icon.svg#ic_autorenew"></use></svg>
 					</button>
 				</div>
