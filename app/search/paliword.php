@@ -100,6 +100,31 @@ include "../pcdl/html_head.php";
 		#index_list{
 			display:block;
 		}
+		#contents_view{
+		display:block;
+	}
+	#dict_ref_search_result{
+		display:none;
+	}
+	#footer_nav{
+    display: none;
+}
+#contents_foot {
+    margin-bottom: 70vh;
+    position: absolute;
+    left: 0;
+	width: 100vw;
+	margin-bottom: 10vh;
+}
+#contents_nav{
+	overflow-x: scroll;
+}
+.page_nav{
+	display:flex;
+}
+.foot_div{
+	margin-top:10vh;
+}
 	</style>
 	<script language="javascript" src="paliword.js"></script>
 	<script>
