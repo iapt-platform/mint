@@ -1551,10 +1551,11 @@ function renderWordParBlockInner(elementBlock) {
 }
 
 function sent_show_rel_map(book, para, begin, end) {
-	let wordId;
+	let wordId = 0;
 	let memind = "graph LR\n";
 	let pali_text = "";
-	for (wordId = begin; wordId <= end; wordId++) {
+
+	for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++) {
 		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
 		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
 		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
