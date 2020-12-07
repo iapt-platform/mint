@@ -5,6 +5,18 @@
 		<link href="../lib/main.css" rel="stylesheet" />
 		<script src="../lib/main.js"></script>
 		<script>
+			function getCookie(name) {
+				var start = document.cookie.indexOf(name + "=");
+				var len = start + name.length + 1;
+				if (!start && name != document.cookie.substring(0, name.length)) {
+					return null;
+				}
+				if (start == -1) return null;
+				var end = document.cookie.indexOf(";", len);
+				if (end == -1) end = document.cookie.length;
+				return decodeURI(document.cookie.substring(len, end));
+			}
+
 			document.addEventListener("DOMContentLoaded", function () {
 				var initialTimeZone = "local";
 				var timeZoneSelectorEl = document.getElementById("time-zone-selector");
@@ -13,6 +25,7 @@
 
 				var calendar = new FullCalendar.Calendar(calendarEl, {
 					timeZone: initialTimeZone,
+					locale: getCookie("language"),
 					headerToolbar: {
 						left: "prev,next today",
 						center: "title",
