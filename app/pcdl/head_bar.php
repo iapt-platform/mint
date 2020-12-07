@@ -174,9 +174,7 @@
 	.lab_tab>li{
 		padding:5px;
 	}
-	.title_bar{
-		width:95vw;
-	}
+
 	.head_nav_dropdown:hover  {
 		color: var(--btn-border-color);
 	}
@@ -241,7 +239,9 @@
 .toolgroup1>span{
 	display:none !important;
 }
-
+.title_bar{
+		width:95vw;
+	}
 </style>
 
 		<!-- tool bar begin-->
