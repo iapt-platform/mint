@@ -48,6 +48,23 @@ require_once '../pcdl/html_head.php';
 	#footer_nav{
 		display:none;
 	}
+	#article_new .card {
+    height: 20vh;
+    overflow-y: scroll;
+}
+#course_list_new .card {
+    height: 15em;
+    overflow-y: scroll;
+}
+#course_list_new .card .pd-10:first-child {
+    height: 12em;
+    overflow-y: scroll;
+	padding-bottom:2px;
+}
+#course_list_new .card .pd-10:last-child {
+padding-top:2px;
+}
+
 	</style>
 	<style media="screen and (max-width:800px)">
 #right_pannal{
