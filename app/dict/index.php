@@ -46,22 +46,25 @@ require_once "../pcdl/html_head.php";
 			flex:2;
         }
 		.dict_word_card{
-		border-bottom: 1px solid var(--border-line-color);
-    	padding: 5px 0;			
-		display: block;
-		border-radius: unset;
-		margin: 10px 0;
-		transition: unset;
-		box-shadow: unset;
+			border-bottom: 1px solid var(--border-line-color);
+			padding: 5px 0;			
+			display: block;
+			border-radius: unset;
+			margin: 10px 0;
+			transition: unset;
+			box-shadow: unset;
 		}
 		.dict_word{
-		border-bottom: 1px solid var(--border-line-color);
-    	padding: 5px 0;			
-		display: block;
-		border-radius: unset;
-		margin: 10px 0;
-		transition: unset;
-		box-shadow: unset;
+			border-left: none;
+			border-right: none;
+			border-top: none;
+			border-bottom: 1px solid var(--border-line-color);
+			padding: 5px 0;			
+			display: block;
+			border-radius: unset;
+			margin: 10px 0;
+			transition: unset;
+			box-shadow: unset;
 		}
 		.dict_word>.dict {
 			font-size: 110%;
@@ -93,7 +96,7 @@ require_once "../pcdl/html_head.php";
             display:none;
         }
         .dropdown_ctl>.menu{
-		background-color: white;
+			background-color: white;
         }
         .dropdown_ctl>.content>.main_view>part{
             margin:0 0.5em;

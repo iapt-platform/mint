@@ -247,6 +247,7 @@ require_once "../pcdl/html_head.php";
 
 	<div>
 		<span>
+		<input type="checkbox" onchange="setVisibility('palitext',this)" checked>Pali Text Visible
 		<?php
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 		echo "<a href='";
