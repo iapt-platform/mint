@@ -893,3 +893,19 @@ function tool_bar_show(element) {
 		$(element).css("visibility", "");
 	}
 }
+
+function setVisibility(key, value) {
+	switch (key) {
+		case "palitext":
+			if ($(value).is(":checked")) {
+				$(".palitext").show();
+			} else {
+				$(".palitext").hide();
+			}
+
+			break;
+
+		default:
+			break;
+	}
+}

@@ -61,8 +61,6 @@ if(($handle=fopen("filelist.csv",'r'))!==FALSE){
 	}
 }
 if($to==0 || $to>=$fileNums) $to=$fileNums-1;
-
-
 	
 for($iFile=$from;$iFile<=$to;$iFile++){
     echo "<h3>{$iFile}</h3>";
@@ -96,7 +94,6 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 		while(($data=fgetcsv($fp,0,','))!==FALSE){
 			$irow++;
 			if($irow>1){
-
 				if($data[6]==".ctl." && mb_substr($data[5],0,1,"UTF-8")=="M"){
 					$sPage= mb_substr($data[5],1,6,"UTF-8");
 					$aPage = explode(".",$sPage);
