@@ -3,8 +3,8 @@
 		"id": "999",
 		"title": "Dhammacakkha",
 		"url": "https://www.wikipali.org/app/course/lesson.php?id=6a42e993-8f7e-414a-a291-a4094764f992",
-		"startTime": "08:00:00+06:30",
-		"endTime": "09:30:00+06:30",
+		"startTime": "08:00:00+05:30",
+		"endTime": "09:30:00+05:30",
 		"allDay": false,
 		"daysOfWeek": [1, 2, 5]
 	},
