@@ -31,7 +31,7 @@
 						center: "title",
 						right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
 					},
-					initialDate: "2020-12-07",
+					//initialDate: "2020-12-12",
 					navLinks: true, // can click day/week names to navigate views
 					editable: true,
 					selectable: true,
@@ -42,6 +42,14 @@
 							document.getElementById("script-warning").style.display = "inline"; // show
 						},
 					},
+					eventClick: function (info) {
+						info.jsEvent.preventDefault(); // don't let the browser navigate
+
+						if (info.event.url) {
+							window.open(info.event.url);
+						}
+					},
+
 					loading: function (bool) {
 						if (bool) {
 							loadingEl.style.display = "inline"; // show
