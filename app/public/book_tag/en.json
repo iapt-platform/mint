@@ -5051,13 +5051,6 @@
 	},
 	{
 		"book": "78",
-		"para": "3",
-		"level": "1",
-		"title": "yamakapāḷi (paṭhamo bhāgo)",
-		"tag": ":yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:"
-	},
-	{
-		"book": "78",
 		"para": "4",
 		"level": "2",
 		"title": "1. mūlayamakaṃ",
@@ -5093,13 +5086,6 @@
 	},
 	{
 		"book": "79",
-		"para": "3",
-		"level": "1",
-		"title": "yamakapāḷi (dutiyo bhāgo)",
-		"tag": ":yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:"
-	},
-	{
-		"book": "79",
 		"para": "4",
 		"level": "2",
 		"title": "6. saṅkhārayamakaṃ",
@@ -5117,13 +5103,6 @@
 		"para": "3204",
 		"level": "2",
 		"title": "8. cittayamakaṃ",
-		"tag": ":yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:"
-	},
-	{
-		"book": "80",
-		"para": "3",
-		"level": "1",
-		"title": "yamakapāḷi (tatiyo bhāgo)",
 		"tag": ":yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:"
 	},
 	{
