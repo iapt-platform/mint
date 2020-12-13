@@ -24,7 +24,7 @@ include "../pcdl/html_head.php";
     },
     function(data,status){
         let arrData = JSON.parse(data);
-        let html='<iframe style="width: 100%;height: 67em;" src="../lib/fullcalendar/examples/time-zones.php?teacher=<?php echo $_GET["userid"]; ?>"></iframe>';
+        let html='<iframe style="width: 100%;height: 67em;" src="../fullcalendar/examples/time-zones.php"></iframe>';
         for (const iterator of arrData) {
             html += '<div class="card" style="display:flex;margin:1em;padding:10px;">';
 
