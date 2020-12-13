@@ -58,6 +58,8 @@
         </div>
 
         <div id="main_tag"  style="">
+            <span tag=<?php echo "jianjie";?>><?php echo "简介";?></span>
+
             <a href="trans.php?userid=<?php echo $_GET["userid"];?>">
                 <span tag=<?php echo $_local->gui->translation;?>>  
                     <?php echo $_local->gui->translation;?>
