@@ -8,10 +8,10 @@ require_once "../path.php";
 
 	// 打开文件并读取数据
 	$irow=0;
-	if(($fp=fopen("cs6_para.csv", "r"))!==FALSE){
+	if(($fp=fopen("./cs6_para.csv", "r"))!==FALSE){
 		// 开始一个事务，关闭自动提交
 		$PDO->beginTransaction();
-		$query="INSERT INTO cs6_para ('book','para','bookid','cspara') VALUES (  ? , ? , ? , ? )";
+		$query="INSERT INTO cs6_para ('book','para','book_name','cspara') VALUES (  ? , ? , ? , ? )";
 		$stmt = $PDO->prepare($query);
 
 		// 提交更改 
@@ -53,7 +53,7 @@ require_once "../path.php";
 		fclose($fp);
 	}
 	else{
-		echo "can not open csv file. filename=".$dirXmlBase.$dirXml.$outputFileNameHead.".csv";
+		echo "can not open csv file. cs6_para.csv";
 	}
 	
 
