@@ -1,4 +1,8 @@
 <?php
+/*
+查询相关联的书
+mula->attakhata->tika
+*/
 require_once "../public/_pdo.php";
 require_once "../path.php";
 
@@ -32,7 +36,7 @@ else{
 
 		foreach ($fetch as $key => $value) {
 			$param[] =$value["cspara"];
-		}		
+		}
 		$param[] = $fetch[0]["book_name"];
 		$fetch = PDO_FetchAll($query,$param);
 		$result["data"]=$fetch;
