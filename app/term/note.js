@@ -632,8 +632,12 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	$(obj).parent().children(".tran_text_tool_bar").first().html(html);
-	$(obj).parent().children(".tran_text_tool_bar").first().show();
-	$(obj).parent().show();
+	if ($(obj).parent().children(".tran_text_tool_bar").css("display") == "block") {
+		$(obj).parent().children(".tran_text_tool_bar").first().hide();
+	} else {
+		$(obj).parent().children(".tran_text_tool_bar").first().show();
+		$(obj).parent().show();
+	}
 }
 
 function new_sentence(book, para, begin, end, channel) {
