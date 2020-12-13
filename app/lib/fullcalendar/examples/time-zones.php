@@ -37,7 +37,7 @@
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
 					events: {
-						url: "php/get-events.php",
+						url: "php/get_date.php?teacher=<?php echo $_GET["teacher"]?>",
 						failure: function () {
 							document.getElementById("script-warning").style.display = "inline"; // show
 						},
