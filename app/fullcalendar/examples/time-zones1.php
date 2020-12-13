@@ -1,3 +1,8 @@
+<?php 
+
+include "../../ucenter/user.php";
+include "../../lang/lang.php";			
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -31,23 +36,16 @@
 						center: "title",
 						right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
 					},
-					//initialDate: '2020-09-12',
+					//initialDate: "2020-12-12",
 					navLinks: true, // can click day/week names to navigate views
 					editable: true,
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
 					events: {
-						url: "php/get-events.php",
+						url: "php/get_events.php",
 						failure: function () {
 							document.getElementById("script-warning").style.display = "inline"; // show
 						},
-					},
-					loading: function (bool) {
-						if (bool) {
-							loadingEl.style.display = "inline"; // show
-						} else {
-							loadingEl.style.display = "none"; // hide
-						}
 					},
 					eventClick: function (info) {
 						info.jsEvent.preventDefault(); // don't let the browser navigate
@@ -57,7 +55,15 @@
 						}
 					},
 
-					eventTimeFormat: { hour: "numeric", minute: "2-digit" }, //timeZoneName: "short"
+					loading: function (bool) {
+						if (bool) {
+							loadingEl.style.display = "inline"; // show
+						} else {
+							loadingEl.style.display = "none"; // hide
+						}
+					},
+
+					eventTimeFormat: { hour: "numeric", minute: "2-digit" },
 
 					dateClick: function (arg) {
 						console.log("dateClick", calendar.formatIso(arg.date));
@@ -147,7 +153,7 @@
 	<body>
 		<div id="top">
 			<div class="left">
-				Timezone:
+			<?php echo $_local->gui->timezone; ?>:
 				<select id="time-zone-selector">
 					<option value="local" selected>local</option>
 					<option value="UTC">UTC</option>

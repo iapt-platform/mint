@@ -1,8 +1,3 @@
-<?php 
-
-include "../ucenter/user.php";
-include "../../../lang/lang.php";			
-?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -36,16 +31,23 @@ include "../../../lang/lang.php";
 						center: "title",
 						right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
 					},
-					//initialDate: "2020-12-12",
+					//initialDate: '2020-09-12',
 					navLinks: true, // can click day/week names to navigate views
 					editable: true,
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
 					events: {
-						url: "php/get_events.php",
+						url: "php/get-events.php",
 						failure: function () {
 							document.getElementById("script-warning").style.display = "inline"; // show
 						},
+					},
+					loading: function (bool) {
+						if (bool) {
+							loadingEl.style.display = "inline"; // show
+						} else {
+							loadingEl.style.display = "none"; // hide
+						}
 					},
 					eventClick: function (info) {
 						info.jsEvent.preventDefault(); // don't let the browser navigate
@@ -55,15 +57,7 @@ include "../../../lang/lang.php";
 						}
 					},
 
-					loading: function (bool) {
-						if (bool) {
-							loadingEl.style.display = "inline"; // show
-						} else {
-							loadingEl.style.display = "none"; // hide
-						}
-					},
-
-					eventTimeFormat: { hour: "numeric", minute: "2-digit" },
+					eventTimeFormat: { hour: "numeric", minute: "2-digit" }, //timeZoneName: "short"
 
 					dateClick: function (arg) {
 						console.log("dateClick", calendar.formatIso(arg.date));
@@ -122,6 +116,7 @@ include "../../../lang/lang.php";
 			}
 			.left {
 				float: left;
+				font-size: 150%;
 			}
 			.right {
 				float: right;
@@ -148,12 +143,21 @@ include "../../../lang/lang.php";
 			.tzo {
 				color: #000;
 			}
+			#time-zone-selector{
+				font-size: 100%;
+			}		
+.fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {
+    flex-flow: wrap;
+}
+.fc-event-title{
+	margin-left: 16px;
+}
 		</style>
 	</head>
 	<body>
 		<div id="top">
 			<div class="left">
-				Timezone:
+			Timezone:
 				<select id="time-zone-selector">
 					<option value="local" selected>local</option>
 					<option value="UTC">UTC</option>
