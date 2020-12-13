@@ -464,7 +464,7 @@
 			.correct {
 				background-color: gold;
 			}
-			#position_input{
+			#position_input {
 				width: fit-content;
 				background: #dfdfdf;
 				padding: 1em;
@@ -474,11 +474,10 @@
 				left: 5em;
 				top: 10em;
 			}
-			#position_input input[type="number" i]{
+			#position_input input[type="number" i] {
 				width: 4em;
 			}
 			#position_input span {
-
 			}
 			#position_input select {
 				width: 3.5em;
@@ -513,37 +512,43 @@
 					//localString[g_language].my_loc
 				</script>
 			</button>
-			<div id="position_input" style="display:none;">
-				<div style="display:flex;"><span style="flex: 3;justify-content: flex-end;display: flex;margin: auto 1em auto 0;">
-					<script>
-						document.write(localString[g_language].atitude);
-					</script></span><span style="flex:7;white-space: nowrap;">
-					<input id="AT_°" type="number" min="0" max="90" /> °
-					<input id="AT_’" type="number" min="0" max="60" /> ’
-					<input id="AT_”" type="number" min="0" max="60" /> ”
-					<select id="NS">
-						<option value="+">N</option>
-						<option value="-">S</option>
-					</select></span>
+			<div id="position_input" style="display: none">
+				<div style="display: flex">
+					<span style="flex: 3; justify-content: flex-end; display: flex; margin: auto 1em auto 0">
+						<script>
+							document.write(localString[g_language].atitude);
+						</script></span
+					><span style="flex: 7; white-space: nowrap">
+						<input id="AT_°" type="number" min="0" max="90" /> °
+						<input id="AT_’" type="number" min="0" max="60" /> ’
+						<input id="AT_”" type="number" min="0" max="60" /> ”
+						<select id="NS">
+							<option value="+">N</option>
+							<option value="-">S</option>
+						</select></span
+					>
 				</div>
-				<div style="display:flex;">
-					<span style="flex: 3;justify-content: flex-end;display: flex;margin: auto 1em auto 0;"><script>
-						document.write(localString[g_language].longitude);
-					</script></span><span style="flex:7;white-space: nowrap;">
-					<input id="LT_°" type="number" min="0" max="180" /> °
-					<input id="LT_’" type="number" min="0" max="60" /> ’
-					<input id="LT_”" type="number" min="0" max="60" /> ”
-					<select id="WE">
-						<option value="+">E</option>
-						<option value="-">W</option>
-					</select></span>
+				<div style="display: flex">
+					<span style="flex: 3; justify-content: flex-end; display: flex; margin: auto 1em auto 0"
+						><script>
+							document.write(localString[g_language].longitude);
+						</script></span
+					><span style="flex: 7; white-space: nowrap">
+						<input id="LT_°" type="number" min="0" max="180" /> °
+						<input id="LT_’" type="number" min="0" max="60" /> ’
+						<input id="LT_”" type="number" min="0" max="60" /> ”
+						<select id="WE">
+							<option value="+">E</option>
+							<option value="-">W</option>
+						</select></span
+					>
 				</div>
 				<div id="position_selected"></div>
-				<div style="display:flex;">
-					<button onclick="getLocation()" style="margin:0 auto;">
-					<script>
-						document.write(localString[g_language].confirm);
-					</script>
+				<div style="display: flex">
+					<button onclick="getLocation()" style="margin: 0 auto">
+						<script>
+							document.write(localString[g_language].confirm);
+						</script>
 					</button>
 				</div>
 			</div>
@@ -658,9 +663,9 @@
 				sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
 				moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
 				moon_Illumination = SunCalc.getMoonIllumination(today);
-				$("#today_dawn").html(sun_times.dawn.toLocaleTimeString());
-				$("#today_solarNoon").html(sun_times.solarNoon.toLocaleTimeString());
-				$("#today_sunset").html(sun_times.sunset.toLocaleTimeString());
+				$("#today_dawn").html(sun_times.dawn.toLocaleTimeString()); //破晓
+				$("#today_solarNoon").html(sun_times.solarNoon.toLocaleTimeString()); //正午
+				$("#today_sunset").html(sun_times.sunset.toLocaleTimeString()); //日落
 				$("#today_sun_azimuth").html(angle_trans((sun_position.azimuth / Math.PI) * 180)); //太阳水平弧度
 				$("#today_moon_azimuth").html(angle_trans((moon_position.azimuth / Math.PI) * 180)); //月亮水平弧度
 				$("#today_moon_phase").html(phase(today).phase); //月相值
@@ -694,6 +699,7 @@
 				moon_angle_string2 += get_station_name(today).lunar.value;
 				$("#moon_angle2").html(moon_angle_string2); //月亮角度——向量差算法
 			}
+			//根据时间计算偏角，输出
 			function get_position(date_time) {
 				let planets_position = new Object();
 				planets = window.lagrange.planet_positions.getPositions(date_time);
@@ -740,14 +746,15 @@
 
 				lunar_station2 = lunar_position_angle_round2 * 27;
 
-				planets_position.lunar_station = lunar_station;
-				planets_position.lunar_position_angle = lunar_position_angle;
-				planets_position.lunar_position_angle_round = lunar_position_angle_round;
-				planets_position.lunar_station2 = lunar_station2;
-				planets_position.lunar_position_angle2 = lunar_position_angle2;
-				planets_position.lunar_position_angle_round2 = lunar_position_angle_round2;
+				planets_position.lunar_station = lunar_station; //月站值【角度差算夹角】
+				planets_position.lunar_position_angle = lunar_position_angle; //月站角【角度差算夹角】
+				planets_position.lunar_position_angle_round = lunar_position_angle_round; //月站圆周比率【角度差算夹角】
+				planets_position.lunar_station2 = lunar_station2; //月站值【矢量差算夹角】
+				planets_position.lunar_position_angle2 = lunar_position_angle2; //月站角【矢量差算夹角】
+				planets_position.lunar_position_angle_round2 = lunar_position_angle_round2; //月站圆周比率【矢量差算夹角】
 				return planets_position;
 			}
+			根据;
 			function get_station_name(data_time) {
 				//获取星象信息
 				let solar_num = 0;
@@ -758,8 +765,8 @@
 				lunar_num = Math.floor(lunar_num);
 
 				let result = new Object();
-				result.solar = horoscope_name[solar_num];
-				result.lunar = pali_nakkhatta_name[lunar_num];
+				result.solar = horoscope_name[solar_num]; //黄道十二宫星象名称
+				result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
 				return result;
 			}
 			function lunar_phase_list_refresh() {
@@ -923,20 +930,18 @@
 				g_coordinate_this.LT = position.coords.longitude; //经度
 				g_coordinate_this.height = position.coords.altitude; //海拔高度
 				//手动输入
-				var LT=Number($("#LT_°")[0].value);
-					LT+=Number($("#LT_’")[0].value)/60;
-					LT+=Number($("#LT_”")[0].value)/3600;
-					LT=Number($("#WE")[0].value+LT);
-				var AT=Number($("#AT_°")[0].value);
-					AT+=Number($("#AT_’")[0].value)/60;
-					AT+=Number($("#AT_”")[0].value)/3600;
-					AT=Number($("#NS")[0].value+AT);
-					if(AT!=0){
-						g_coordinate_this.LT=LT;
-						g_coordinate_this.AT=AT;
-
-					}
-
+				var LT = Number($("#LT_°")[0].value);
+				LT += Number($("#LT_’")[0].value) / 60;
+				LT += Number($("#LT_”")[0].value) / 3600;
+				LT = Number($("#WE")[0].value + LT);
+				var AT = Number($("#AT_°")[0].value);
+				AT += Number($("#AT_’")[0].value) / 60;
+				AT += Number($("#AT_”")[0].value) / 3600;
+				AT = Number($("#NS")[0].value + AT);
+				if (AT != 0) {
+					g_coordinate_this.LT = LT;
+					g_coordinate_this.AT = AT;
+				}
 
 				let position_string =
 					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
@@ -955,7 +960,6 @@
 				let height_string = g_coordinate_this.height + "M";
 				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
 				$("#position_input").hide();
-
 			}
 			function showError(error) {
 				switch (error.code) {
@@ -989,7 +993,7 @@
 				}
 				return angle_str;
 			}
-			function input_position(){
+			function input_position() {
 				$("#position_input").show();
 			}
 		</script>
