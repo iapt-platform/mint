@@ -173,7 +173,10 @@ require_once "../pcdl/html_head.php";
 	.userinfo_channal:hover{
 		display:block;
 	}
-
+	img {
+    width: 90vw;
+    max-width: 40em;
+}
 	</style>
 <style media="screen and (max-width:800px)">
 #right_pannal{
