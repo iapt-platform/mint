@@ -708,13 +708,24 @@
 
 					info_obj = new Object();
 					info_obj.id = "noon" + i;
-					info_obj.title = localString[g_language].noon_time;
+					info_obj.title = "☀️";
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
 						g_coordinate_this.LT,
 						g_coordinate_this.height / 1000
 					).solarNoon;
+
+					g_event_list_arr.push(info_obj);
+					info_obj = new Object();
+					info_obj.id = "sunset" + i;
+					info_obj.title = "🌇";
+					info_obj.start = SunCalc.getTimes(
+						date,
+						g_coordinate_this.AT,
+						g_coordinate_this.LT,
+						g_coordinate_this.height / 1000
+					).sunset;
 					g_event_list_arr.push(info_obj);
 				}
 
