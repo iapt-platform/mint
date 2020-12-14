@@ -41,6 +41,7 @@ include "../../lang/lang.php";
 					editable: true,
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
+					
 					events: {
 						url: "php/get_events.php",
 						failure: function () {
