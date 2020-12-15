@@ -628,7 +628,7 @@
 				g_coordinate_this.AT = position.coords.latitude; //纬度
 				g_coordinate_this.LT = position.coords.longitude; //经度
 				g_coordinate_this.height = position.coords.altitude; //海拔高度
-				//手动输入
+				/*/手动输入
 				var LT = Number($("#LT_°")[0].value);
 				LT += Number($("#LT_’")[0].value) / 60;
 				LT += Number($("#LT_”")[0].value) / 3600;
@@ -640,7 +640,7 @@
 				if (AT != 0) {
 					g_coordinate_this.LT = LT;
 					g_coordinate_this.AT = AT;
-				}
+				}*/
 
 				let position_string =
 					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
