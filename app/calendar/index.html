@@ -89,6 +89,7 @@
 				timezone: "时区",
 				local: "本地",
 				loading: "载入中",
+				sun_set: "日落",
 			};
 			localString["zh-tw"] = {
 				and_another: "又 ",
@@ -147,6 +148,7 @@
 				timezone: "時區",
 				local: "本地",
 				loading: "載入中",
+				sun_set: "日落",
 			};
 			localString["default"] = {
 				and_another: " and ",
@@ -205,6 +207,7 @@
 				timezone: "Timezone",
 				local: "local",
 				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["en"] = {
 				and_another: " and ",
@@ -263,6 +266,7 @@
 				timezone: "Timezone",
 				local: "local",
 				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["my"] = {
 				and_another: " and ",
@@ -321,6 +325,7 @@
 				timezone: "Timezone",
 				local: "local",
 				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["si"] = {
 				and_another: " ච ",
@@ -379,6 +384,7 @@
 				timezone: "Timezone",
 				local: "local",
 				loading: "loading",
+				sun_set: "sunset",
 			};
 			var pali_month_name = [
 				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
@@ -708,7 +714,7 @@
 
 					info_obj = new Object();
 					info_obj.id = "noon" + i;
-					info_obj.title = "☀️";
+					info_obj.title = localString[g_language].noon_time;
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
@@ -719,7 +725,7 @@
 					g_event_list_arr.push(info_obj);
 					info_obj = new Object();
 					info_obj.id = "sunset" + i;
-					info_obj.title = "🌇";
+					info_obj.title = localString[g_language].sun_set;
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
