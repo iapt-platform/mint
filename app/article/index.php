@@ -215,7 +215,11 @@ require_once "../pcdl/html_head.php";
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 		echo "'>{$_local->gui->modify}</a></button>";
-		
+
+		echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+		echo "<a href='../article/frame.php?id=".$_GET["id"];
+		echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";
+
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
 			echo $_local->gui->each_paragraph;
@@ -247,6 +251,7 @@ require_once "../pcdl/html_head.php";
 			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
 		}
 
+		
 		?>
 			<button class='icon_btn'><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>

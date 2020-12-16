@@ -540,7 +540,7 @@
 		"example": "for example ",
 		"privacy": "privacy",
 		"new_composition": "new composition",
-		"add": "add",
+		"add": "add&nbsp;",
 		"completed": "completed",
 		"ongoing": "ongoing",
 		"popular": "popular",
@@ -565,6 +565,7 @@
 		"similar_sentences": "similar sentences",
 		"close": "close",
 		"timezone": "Timezone",
+		"subfield": "subfield",
 		"": "",
 		"": ""
 	},
