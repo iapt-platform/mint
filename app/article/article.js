@@ -86,7 +86,10 @@ function articel_load_collect(article_id) {
 				try {
 					let result = JSON.parse(data);
 					if (result && result.length > 0) {
-						$("#collect_title").html(result[0].title);
+						//$("#collect_title").html(result[0].title);
+						let strTitle = "<a href='../article/?collect=" + result[0].id + "'>" + result[0].title + "</a>";
+						$("#pali_pedia").html(strTitle);
+
 						let article_list = JSON.parse(result[0].article_list);
 						render_article_list(article_list);
 					}
