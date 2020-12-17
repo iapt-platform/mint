@@ -86,6 +86,10 @@
 				year_1: "年 ",
 				years: "年 ",
 				yes_string: "可以",
+				timezone: "时区",
+				local: "本地",
+				loading: "载入中",
+				sun_set: "日落",
 			};
 			localString["zh-tw"] = {
 				and_another: "又 ",
@@ -141,6 +145,10 @@
 				year_1: "年 ",
 				years: "年 ",
 				yes_string: "可以",
+				timezone: "時區",
+				local: "本地",
+				loading: "載入中",
+				sun_set: "日落",
 			};
 			localString["default"] = {
 				and_another: " and ",
@@ -196,6 +204,10 @@
 				year_1: "- ",
 				years: " year(s) ",
 				yes_string: "can ",
+				timezone: "Timezone",
+				local: "local",
+				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["en"] = {
 				and_another: " and ",
@@ -251,6 +263,10 @@
 				year_1: "- ",
 				years: " year(s) ",
 				yes_string: "can ",
+				timezone: "Timezone",
+				local: "local",
+				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["my"] = {
 				and_another: " and ",
@@ -306,6 +322,10 @@
 				year_1: "- ",
 				years: " year(s) ",
 				yes_string: "can ",
+				timezone: "Timezone",
+				local: "local",
+				loading: "loading",
+				sun_set: "sunset",
 			};
 			localString["si"] = {
 				and_another: " ච ",
@@ -361,6 +381,10 @@
 				year_1: "- ",
 				years: " සංවච්ඡ‍රා(නි) ",
 				yes_string: "can ",
+				timezone: "Timezone",
+				local: "local",
+				loading: "loading",
+				sun_set: "sunset",
 			};
 			var pali_month_name = [
 				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
@@ -465,26 +489,6 @@
 				} else {
 					today = g_now_date;
 				}
-				if (phase(today).phase <= 0.5) {
-					start_day.setDate(today.getDate() - 16); //退到本月的新月之前
-					start_day = phaseHunt(start_day).full_date; //得到之前最近的满月日
-					start_day.setDate(start_day.getDate() + 1);
-				} else {
-					start_day.setDate(today.getDate() - 31); //退到本月的新月之前
-					start_day = phaseHunt(start_day).full_date; //得到之前最近的满月日
-					start_day.setDate(start_day.getDate() + 1);
-				}
-				next_year.setDate(start_day.getDate() + 360);
-
-				last_list = phaseRange(start_day, next_year, LAST); //获取下弦月列表
-				new_list = phaseRange(start_day, next_year, NEW); //获取新月列表
-				first_list = phaseRange(start_day, next_year, FIRST); //获取上弦月列表
-				full_list = phaseRange(start_day, next_year, FULL); //获取满月列表
-
-				console.log(last_list); //输出到控制台
-				console.log(new_list); //输出到控制台
-				console.log(first_list); //输出到控制台
-				console.log(full_list); //输出到控制台
 				lunar_phase_list_refresh();
 				get_position(today);
 
@@ -624,7 +628,7 @@
 				g_coordinate_this.AT = position.coords.latitude; //纬度
 				g_coordinate_this.LT = position.coords.longitude; //经度
 				g_coordinate_this.height = position.coords.altitude; //海拔高度
-				//手动输入
+				/*/手动输入
 				var LT = Number($("#LT_°")[0].value);
 				LT += Number($("#LT_’")[0].value) / 60;
 				LT += Number($("#LT_”")[0].value) / 3600;
@@ -636,7 +640,7 @@
 				if (AT != 0) {
 					g_coordinate_this.LT = LT;
 					g_coordinate_this.AT = AT;
-				}
+				}*/
 
 				let position_string =
 					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
@@ -693,9 +697,85 @@
 			}
 			var g_event_list_arr = new Array();
 			function get_event_arr() {
-				let from_str = new Date();
-				let info_obj = new Object();
+				let today = new Date();
+				let date = new Date();
+				for (i = -360; i < 360; i++) {
+					date.setTime(today.getTime() + i * 3600 * 24 * 1000);
+					let info_obj = new Object();
+					info_obj.id = "dawn" + i;
+					info_obj.title = localString[g_language].twilight_time;
+					info_obj.start = SunCalc.getTimes(
+						date,
+						g_coordinate_this.AT,
+						g_coordinate_this.LT,
+						g_coordinate_this.height / 1000
+					).dawn;
+					g_event_list_arr.push(info_obj);
+
+					info_obj = new Object();
+					info_obj.id = "noon" + i;
+					info_obj.title = localString[g_language].noon_time;
+					info_obj.start = SunCalc.getTimes(
+						date,
+						g_coordinate_this.AT,
+						g_coordinate_this.LT,
+						g_coordinate_this.height / 1000
+					).solarNoon;
+
+					g_event_list_arr.push(info_obj);
+					info_obj = new Object();
+					info_obj.id = "sunset" + i;
+					info_obj.title = localString[g_language].sun_set;
+					info_obj.start = SunCalc.getTimes(
+						date,
+						g_coordinate_this.AT,
+						g_coordinate_this.LT,
+						g_coordinate_this.height / 1000
+					).sunset;
+					g_event_list_arr.push(info_obj);
+				}
+
+				next_year.setDate(start_day.getDate() + 360);
+				start_day.setDate(today.getDate() - 360);
+				last_list = phaseRange(start_day, next_year, LAST); //获取下弦月列表
+				for (i_last in last_list) {
+					info_obj = new Object();
+					info_obj.id = "last_moon" + i_last;
+					info_obj.title = "🌗" + get_station_name(last_list[i_last]).lunar.value;
+					info_obj.start = last_list[i_last];
+					g_event_list_arr.push(info_obj);
+				}
+				new_list = phaseRange(start_day, next_year, NEW); //获取新月列表
+				for (i_new in new_list) {
+					info_obj = new Object();
+					info_obj.id = "new_moon" + i_new;
+					info_obj.title = "🌑" + get_station_name(new_list[i_new]).lunar.value;
+					info_obj.start = new_list[i_new];
+					g_event_list_arr.push(info_obj);
+				}
+				first_list = phaseRange(start_day, next_year, FIRST); //获取上弦月列表
+				for (i_first in first_list) {
+					info_obj = new Object();
+					info_obj.id = "first_moon" + i_first;
+					info_obj.title = "🌓" + get_station_name(first_list[i_first]).lunar.value;
+					info_obj.start = first_list[i_first];
+					g_event_list_arr.push(info_obj);
+				}
+				full_list = phaseRange(start_day, next_year, FULL); //获取满月列表
+				for (i_full in full_list) {
+					info_obj = new Object();
+					info_obj.id = "full_moon" + i_full;
+					info_obj.title = "🌕" + get_station_name(full_list[i_full]).lunar.value;
+					info_obj.start = full_list[i_full];
+					g_event_list_arr.push(info_obj);
+				}
+
+				/*console.log(last_list); //输出到控制台
+				console.log(new_list); //输出到控制台
+				console.log(first_list); //输出到控制台
+				console.log(full_list); //输出到控制台*/
 			}
+			get_event_arr();
 		</script>
 		<script src="../lib/main.js"></script>
 		<script>
@@ -730,13 +810,8 @@
 					editable: true,
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
-					resources: g_event_list_arr,
-					events: {
-						/*url: "php/get-events.php",
-							failure: function () {
-								document.getElementById("script-warning").style.display = "inline"; // show
-							},*/
-					},
+					//resources: g_event_list_arr,
+					events: g_event_list_arr,
 					eventClick: function (info) {
 						info.jsEvent.preventDefault(); // don't let the browser navigate
 
@@ -843,15 +918,25 @@
 	<body>
 		<div id="top">
 			<div class="left">
-				Timezone:
+				<script>
+					document.write(localString[g_language].timezone + "：");
+				</script>
 				<select id="time-zone-selector">
-					<option value="local" selected>local</option>
+					<option value="local" selected>
+						<script>
+							document.write(localString[g_language].local);
+						</script>
+					</option>
 					<option value="UTC">UTC</option>
 				</select>
 			</div>
 
 			<div class="right">
-				<span id="loading">loading...</span>
+				<span id="loading">
+					<script>
+						document.write(localString[g_language].loading + "…");
+					</script>
+				</span>
 				<span id="script-warning"><code>php/get-events.php</code> must be running.</span>
 			</div>
 
