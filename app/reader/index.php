@@ -249,9 +249,9 @@ require_once "../pcdl/html_head.php";
 		<span>
 		<input type="checkbox" onchange="setVisibility('palitext',this)" checked>Pali Text Visible
 		<?php
-		echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
-		echo "<a href='../article/frame.php?id=".$_GET["id"];
-		echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";
+		//echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+		//echo "<a href='../article/frame.php?id=".$_GET["id"];
+		//echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";
 		
 		if(isset($_GET["display"]) && $_GET["display"]=="para"){
 			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";

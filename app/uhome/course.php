@@ -1,4 +1,8 @@
 <?PHP
+if(isset($_GET["userid"])){
+    setcookie("teacher_id", $_GET["userid"], time()+60*60,"/");
+}
+
 include "../pcdl/html_head.php";
 ?>
 <body>

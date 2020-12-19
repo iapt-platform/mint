@@ -36,6 +36,7 @@ function note_create() {
 	wbw_channal_list_init();
 	note_sent_edit_dlg_init();
 	term_edit_dlg_init();
+	pali_sim_dlg_init();
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
@@ -483,8 +484,13 @@ function note_json_html(in_json) {
 	output += "<span class='separate_line'></span>";
 	//相似句工具条
 	output += "<span class='other_bar' >";
-	output += "<span class='similar_sent_span' >" + gLocal.gui.similar_sentences + "</span>";
-	output += "<span class='similar_sent_num'></span>";
+	output +=
+		"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
+		in_json.id +
+		"')\">" +
+		gLocal.gui.similar_sentences +
+		"</span>";
+	output += "<span class='similar_sent_num'>" + in_json.sim.length + "</span>";
 	output += "</span>";
 	output += "</div>";
 	output += "<div class='other_tran'>";
@@ -659,6 +665,8 @@ function new_sentence(book, para, begin, end, channel) {
 	}
 	note_edit_sentence(book, para, begin, end, channel);
 }
+
+//显示更多译文按钮动作
 function set_more_button_display() {
 	$(".other_tran_div").each(function () {
 		const sentid = $(this).attr("sent").split("-");
@@ -911,5 +919,13 @@ function setVisibility(key, value) {
 
 		default:
 			break;
+	}
+}
+
+function note_show_pali_sim(SentId) {
+	for (const iterator of _arrData) {
+		if (iterator.id == SentId) {
+			pali_sim_dlg_open(SentId, iterator.sim);
+		}
 	}
 }
