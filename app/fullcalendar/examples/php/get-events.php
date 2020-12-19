@@ -11,6 +11,7 @@
 
 // Require our Event class and datetime utilities
 require dirname(__FILE__) . '/utils.php';
+require_once "./get-date.php";
 
 // Short-circuit if the client did not give us a date range.
 if (!isset($_GET['start']) || !isset($_GET['end'])) {
@@ -30,8 +31,10 @@ if (isset($_GET['timeZone'])) {
 }
 
 // Read and parse our events JSON file into an array of event data arrays.
-$json = file_get_contents(dirname(__FILE__) . '/../json/events.json');
-$input_arrays = json_decode($json, true);
+//$json = file_get_contents(dirname(__FILE__) . '/../json/events.json');
+//$input_arrays = json_decode($json, true);
+//使用cookie传递老师id
+$input_arrays = get_teacher_course($_COOKIE["teacher_id"]);
 
 // Accumulate an output array of event data arrays.
 $output_arrays = array();
