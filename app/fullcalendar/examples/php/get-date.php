@@ -25,7 +25,7 @@ function get_teacher_course($teacher_id){
 			$end = date("Y-m-d\TH:i:s+00:00",$lesson["date"]/1000+$lesson["duration"]);
 			$output[]=array("id"=>$lesson["id"],
 										"title"=>$couse["title"],
-										"url"=>"../../../course/lesson.php?id=".$lesson["id"],
+										"url"=>"../../course/lesson.php?id=".$lesson["id"],
 										"start"=> $start,
 										"end"=>$end
 									);
