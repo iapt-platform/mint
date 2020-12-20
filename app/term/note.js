@@ -632,7 +632,7 @@ function add_new_tran_button_click(obj) {
 				$(obj).parent().attr("end") +
 				"' ,'" +
 				iterator.id +
-				"')";
+				"',this)";
 			html += '">' + iterator.name + "</li>";
 		}
 	}
@@ -646,7 +646,7 @@ function add_new_tran_button_click(obj) {
 	}
 }
 
-function new_sentence(book, para, begin, end, channel) {
+function new_sentence(book, para, begin, end, channel, obj) {
 	let newsent = { id: "", text: "", lang: "", channal: channel };
 
 	for (let iterator of _arrData) {
@@ -663,6 +663,10 @@ function new_sentence(book, para, begin, end, channel) {
 			}
 		}
 	}
+	if ($(obj).parent().parent().css("display") == "block") {
+		$(obj).parent().parent().hide();
+	}
+
 	note_edit_sentence(book, para, begin, end, channel);
 }
 
