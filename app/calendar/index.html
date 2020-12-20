@@ -19,16 +19,7 @@
 		<!--获取语言-->
 
 		<script>
-			var g_language = "en";
-			var g_currLink = "";
-			function lang_init(strPage) {
-				g_currLink = strPage;
-			}
-			function setLang(strLang) {
-				g_language = strLang;
-				setCookie("language", g_language, 365);
-				window.location.assign(location.pathname + "?language=" + g_language);
-			}
+			var g_language = getCookie("language");
 		</script>
 		<script>
 			var localString = new Array();
@@ -90,6 +81,11 @@
 				local: "本地",
 				loading: "载入中",
 				sun_set: "日落",
+				unknown: "未知",
+				altitude: "海拔",
+				today: "今天",
+				week: "周",
+				list: "列表",
 			};
 			localString["zh-tw"] = {
 				and_another: "又 ",
@@ -149,6 +145,11 @@
 				local: "本地",
 				loading: "載入中",
 				sun_set: "日落",
+				unknown: "未知",
+				altitude: "海拔",
+				today: "今天",
+				week: "周",
+				list: "列表",
 			};
 			localString["default"] = {
 				and_another: " and ",
@@ -208,6 +209,11 @@
 				local: "local",
 				loading: "loading",
 				sun_set: "sunset",
+				unknown: "unknown",
+				altitude: "Altitude",
+				today: "today",
+				week: "week",
+				list: "list",
 			};
 			localString["en"] = {
 				and_another: " and ",
@@ -267,6 +273,11 @@
 				local: "local",
 				loading: "loading",
 				sun_set: "sunset",
+				unknown: "unknown",
+				altitude: "Altitude",
+				today: "today",
+				week: "week",
+				list: "list",
 			};
 			localString["my"] = {
 				and_another: " and ",
@@ -326,6 +337,11 @@
 				local: "local",
 				loading: "loading",
 				sun_set: "sunset",
+				unknown: "unknown",
+				altitude: "Altitude",
+				today: "today",
+				week: "week",
+				list: "list",
 			};
 			localString["si"] = {
 				and_another: " ච ",
@@ -385,6 +401,11 @@
 				local: "local",
 				loading: "loading",
 				sun_set: "sunset",
+				unknown: "unknown",
+				altitude: "Altitude",
+				today: "today",
+				week: "week",
+				list: "list",
 			};
 			var pali_month_name = [
 				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
@@ -468,18 +489,35 @@
 				g_coordinate_this.AT = curr_position.split("#")[0];
 				g_coordinate_this.LT = curr_position.split("#")[1];
 				g_coordinate_this.height = curr_position.split("#")[2];
+				var AT_string =
+					angle_trans(g_coordinate_this.AT)[0] +
+					"°" +
+					angle_trans(g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.AT)[2] +
+					"”";
 				if (g_coordinate_this.AT >= 0) {
-					var AT_string = angle_trans(g_coordinate_this.AT) + "N";
+					AT_string += "N";
 				} else {
-					var AT_string = angle_trans(g_coordinate_this.AT) + "S";
+					AT_string += "S";
 				}
+				var LT_string =
+					angle_trans(g_coordinate_this.LT)[0] +
+					"°" +
+					angle_trans(g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.LT)[2] +
+					"”";
 				if (g_coordinate_this.LT >= 0) {
-					var LT_string = angle_trans(g_coordinate_this.LT) + "E";
+					LT_string += "E";
 				} else {
-					var LT_string = angle_trans(g_coordinate_this.LT) + "W";
+					LT_string += "W";
 				}
-				let height_string = g_coordinate_this.height + "M";
-				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
+				if (g_coordinate_this.height != "null") {
+					var height_string = g_coordinate_this.height + "M";
+				} else {
+					var height_string = localString[g_language].unknown;
+				}
 			} else {
 				getLocation();
 			}
@@ -509,41 +547,6 @@
 				sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
 				moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
 				moon_Illumination = SunCalc.getMoonIllumination(today);
-				$("#today_dawn").html(sun_times.dawn.toLocaleTimeString()); //破晓
-				$("#today_solarNoon").html(sun_times.solarNoon.toLocaleTimeString()); //正午
-				$("#today_sunset").html(sun_times.sunset.toLocaleTimeString()); //日落
-				$("#today_sun_azimuth").html(angle_trans((sun_position.azimuth / Math.PI) * 180)); //太阳水平弧度
-				$("#today_moon_azimuth").html(angle_trans((moon_position.azimuth / Math.PI) * 180)); //月亮水平弧度
-				$("#today_moon_phase").html(phase(today).phase); //月相值
-				$("#today_moon_percent").html(phase(today).illuminated); //月照度
-				$("#today_moon_angle").html(angle_trans((moon_Illumination.angle / Math.PI) * 180)); //月相角
-				$("#angle_sun_e_moon").html(
-					angle_trans((Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI) * 180)
-				); //月亮水平弧度
-				$("#curr_time").html(today.toLocaleTimeString()); //当前时间
-				$("#now_time").html(g_now_date.toLocaleTimeString()); //现在
-				$("#curr_time_unix").html(today.getTime()); //時間戳
-
-				let earth_angle_string = "";
-				earth_angle_string += get_position(today).solar_position_angle + "——";
-				earth_angle_string += get_position(today).solar_position_angle_round + "——";
-				earth_angle_string += get_position(today).solar_station + "——";
-				earth_angle_string += get_station_name(today).solar.icon;
-				$("#earth_angle").html(earth_angle_string); //地球角度
-
-				let moon_angle_string = "";
-				moon_angle_string += get_position(today).lunar_position_angle + "——";
-				moon_angle_string += get_position(today).lunar_position_angle_round + "——";
-				moon_angle_string += get_position(today).lunar_station + "——";
-				moon_angle_string += get_station_name(today).lunar.value;
-				$("#moon_angle").html(moon_angle_string); //月亮角度——角度差算法
-
-				let moon_angle_string2 = "";
-				moon_angle_string2 += get_position(today).lunar_position_angle2 + "——";
-				moon_angle_string2 += get_position(today).lunar_position_angle_round2 + "——";
-				moon_angle_string2 += get_position(today).lunar_station2 + "——";
-				moon_angle_string2 += get_station_name(today).lunar.value;
-				$("#moon_angle2").html(moon_angle_string2); //月亮角度——向量差算法
 			}
 			//根据时间计算偏角，输出
 			function get_position(date_time) {
@@ -623,12 +626,8 @@
 					$("#selected_position_string").html("Geolocation is not supported by this browser.");
 				}
 			}
-			function showPosition(position) {
-				alert("get cordinate success");
-				g_coordinate_this.AT = position.coords.latitude; //纬度
-				g_coordinate_this.LT = position.coords.longitude; //经度
-				g_coordinate_this.height = position.coords.altitude; //海拔高度
-				/*/手动输入
+			function position_input() {
+				//手动输入
 				var LT = Number($("#LT_°")[0].value);
 				LT += Number($("#LT_’")[0].value) / 60;
 				LT += Number($("#LT_”")[0].value) / 3600;
@@ -640,25 +639,7 @@
 				if (AT != 0) {
 					g_coordinate_this.LT = LT;
 					g_coordinate_this.AT = AT;
-				}*/
-
-				let position_string =
-					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
-				localStorage.setItem("local_position", position_string);
-
-				if (g_coordinate_this.AT >= 0) {
-					var AT_string = angle_trans(g_coordinate_this.AT) + "N";
-				} else {
-					var AT_string = angle_trans(g_coordinate_this.AT) + "S";
 				}
-				if (g_coordinate_this.LT >= 0) {
-					var LT_string = angle_trans(g_coordinate_this.LT) + "E";
-				} else {
-					var LT_string = angle_trans(g_coordinate_this.LT) + "W";
-				}
-				let height_string = g_coordinate_this.height + "M";
-				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
-				$("#position_input").hide();
 			}
 			function showError(error) {
 				switch (error.code) {
@@ -677,19 +658,14 @@
 				}
 			}
 			function angle_trans(angle) {
-				var angle_str = "";
+				var angle_str = new Array();
 				var num_d = Math.floor(angle);
 				var num_m = Math.floor((angle - num_d) * 60);
 				var num_s = Math.round((angle - num_d) * 60 - num_m);
-				if (num_d != 0) {
-					angle_str += num_d + "°";
-				}
-				if (num_m != 0) {
-					angle_str += num_m + "’";
-				}
-				if (num_s != 0) {
-					angle_str += num_s + "”";
-				}
+				angle_str.push(num_d);
+				angle_str.push(num_m);
+				angle_str.push(num_s);
+
 				return angle_str;
 			}
 			function input_position() {
@@ -812,6 +788,7 @@
 					dayMaxEvents: true, // allow "more" link when too many events
 					//resources: g_event_list_arr,
 					events: g_event_list_arr,
+					defaultTimedEventDuration: "00:01",
 					eventClick: function (info) {
 						info.jsEvent.preventDefault(); // don't let the browser navigate
 
@@ -819,7 +796,6 @@
 							window.open(info.event.url);
 						}
 					},
-
 					loading: function (bool) {
 						if (bool) {
 							loadingEl.style.display = "inline"; // show
@@ -829,7 +805,6 @@
 					},
 
 					eventTimeFormat: { hour: "numeric", minute: "2-digit" },
-
 					dateClick: function (arg) {
 						console.log("dateClick", calendar.formatIso(arg.date));
 					},
@@ -839,7 +814,6 @@
 				});
 
 				calendar.render();
-
 				// load the list of available timezones, build the <select> options
 				// it's HIGHLY recommended to use a different library for network requests, not this internal util func
 				FullCalendar.requestJson(
@@ -913,6 +887,9 @@
 			.tzo {
 				color: #000;
 			}
+			input[type="number" i] {
+				width: 2.5em;
+			}
 		</style>
 	</head>
 	<body>
@@ -930,7 +907,66 @@
 					<option value="UTC">UTC</option>
 				</select>
 			</div>
-
+			<div style="display: inline-block; width: 50%; justify-content: center; margin-left: 20%">
+				<div style="line-height: 2em; margin-top: 7px">
+					<script>
+						document.write(localString[g_language].atitude);
+					</script>
+					<span id="AT_str" onclick="show_ele(this)"></span>
+					<span class="coordinate_input" style="flex: 7; white-space: nowrap; display: none">
+						<input id="AT_°" type="number" min="0" max="89" /> °
+						<input id="AT_’" type="number" min="0" max="59" /> ’
+						<input id="AT_”" type="number" min="0" max="59" /> ”
+						<select id="NS">
+							<option value="+">N</option>
+							<option value="-">S</option>
+						</select>
+						<button onclick="show_ele('#AT_str')">
+							<script>
+								document.write(localString[g_language].confirm);
+							</script>
+						</button>
+					</span>
+				</div>
+				<div style="line-height: 2em">
+					<script>
+						document.write(localString[g_language].longitude);
+					</script>
+					<span id="LT_str" onclick="show_ele(this)"></span>
+					<span
+						class="coordinate_input"
+						onblur="show_ele(this)"
+						style="flex: 7; white-space: nowrap; display: none"
+					>
+						<input id="LT_°" type="number" min="0" max="179" style="width: 3em" /> °
+						<input id="LT_’" type="number" min="0" max="59" /> ’
+						<input id="LT_”" type="number" min="0" max="59" /> ”
+						<select id="WE">
+							<option value="+">E</option>
+							<option value="-">W</option>
+						</select>
+						<button onclick="show_ele('#LT_str')">
+							<script>
+								document.write(localString[g_language].confirm);
+							</script>
+						</button>
+					</span>
+				</div>
+				<div style="line-height: 2em">
+					<script>
+						document.write(localString[g_language].altitude);
+					</script>
+					<span id="altitude_string" onclick="show_ele(this)"></span>
+					<span class="coordinate_input" style="flex: 7; white-space: nowrap; display: none">
+						<input id="HT_M" type="number" min="0" max="19999" style="width: 4em" /> M
+						<button onclick="show_ele('#altitude_string')">
+							<script>
+								document.write(localString[g_language].confirm);
+							</script>
+						</button>
+					</span>
+				</div>
+			</div>
 			<div class="right">
 				<span id="loading">
 					<script>
@@ -945,4 +981,150 @@
 
 		<div id="calendar"></div>
 	</body>
+	<script>
+		function position_modify() {
+			var LT = Number($("#LT_°")[0].value);
+			LT += Number($("#LT_’")[0].value) / 60;
+			LT += Number($("#LT_”")[0].value) / 3600;
+			LT = Number($("#WE")[0].value + LT);
+			var AT = Number($("#AT_°")[0].value);
+			AT += Number($("#AT_’")[0].value) / 60;
+			AT += Number($("#AT_”")[0].value) / 3600;
+			AT = Number($("#NS")[0].value + AT);
+			if (AT != 0) {
+				g_coordinate_this.LT = LT;
+				g_coordinate_this.AT = AT;
+			}
+			//将新的坐标数据存到localStorage
+			let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
+			localStorage.setItem("local_position", position_string);
+		}
+		function position_modify_confirm(obj) {
+			position_modify();
+
+			show_ele(obj);
+		}
+		function show_ele(obj) {
+			if ($(obj).siblings("span").css("display") == "none") {
+				$(obj).hide();
+				$(obj).siblings("span").show();
+			} else {
+				$(obj).show();
+				$(obj).siblings("span").hide();
+			}
+		}
+		function getLocation() {
+			//自动定位
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition, showError);
+			} else {
+				$("#selected_position_string").html("Geolocation is not supported by this browser.");
+			}
+		}
+		function position_input() {
+			//手动输入
+			var LT = Number($("#LT_°")[0].value);
+			LT += Number($("#LT_’")[0].value) / 60;
+			LT += Number($("#LT_”")[0].value) / 3600;
+			LT = Number($("#WE")[0].value + LT);
+			var AT = Number($("#AT_°")[0].value);
+			AT += Number($("#AT_’")[0].value) / 60;
+			AT += Number($("#AT_”")[0].value) / 3600;
+			AT = Number($("#NS")[0].value + AT);
+			if (AT != 0) {
+				g_coordinate_this.LT = LT;
+				g_coordinate_this.AT = AT;
+			}
+		}
+		function showError(error) {
+			switch (error.code) {
+				case error.PERMISSION_DENIED:
+					alert("定位失败,用户拒绝请求地理定位");
+					break;
+				case error.POSITION_UNAVAILABLE:
+					alert("定位失败,位置信息是不可用");
+					break;
+				case error.TIMEOUT:
+					alert("定位失败,请求获取用户位置超时");
+					break;
+				case error.UNKNOWN_ERROR:
+					alert("定位失败,定位系统失效");
+					break;
+			}
+		}
+
+		$("#AT_str").html(AT_string);
+		$("#LT_str").html(LT_string);
+		$("#altitude_string").html(height_string);
+		$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
+		$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
+		$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
+		$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
+		$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
+		$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
+		$("#HT_M")[0].value = g_coordinate_this.height;
+
+		$(document).ready(function () {
+			$("button").each(function () {
+				if ($(this).html() == "today") {
+					$(this).html(localString[g_language].today);
+				}
+				if ($(this).html() == "list") {
+					$(this).html(localString[g_language].list);
+				}
+				if ($(this).html() == "week") {
+					$(this).html(localString[g_language].week);
+				}
+				if ($(this).html() == "month") {
+					$(this).html(localString[g_language].month);
+				}
+				if ($(this).html() == "day") {
+					$(this).html(localString[g_language].day);
+				}
+			});
+		});
+		$(document).ready(function () {
+			$("button").click(function () {
+				$("button").each(function () {
+					if ($(this).html().indexOf("today") != -1) {
+						$(this).html(localString[g_language].today);
+					}
+					if ($(this).html().indexOf("list") != -1) {
+						$(this).html(localString[g_language].list);
+					}
+					if ($(this).html().indexOf("week") != -1) {
+						$(this).html(localString[g_language].week);
+					}
+					if ($(this).html().indexOf("month") != -1) {
+						$(this).html(localString[g_language].month);
+					}
+					if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+						$(this).html(localString[g_language].day);
+					}
+				});
+			});
+		});
+
+		$(document).ready(function () {
+			$("div").click(function () {
+				$("button").each(function () {
+					if ($(this).html().indexOf("today") != -1) {
+						$(this).html(localString[g_language].today);
+					}
+					if ($(this).html().indexOf("list") != -1) {
+						$(this).html(localString[g_language].list);
+					}
+					if ($(this).html().indexOf("week") != -1) {
+						$(this).html(localString[g_language].week);
+					}
+					if ($(this).html().indexOf("month") != -1) {
+						$(this).html(localString[g_language].month);
+					}
+					if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+						$(this).html(localString[g_language].day);
+					}
+				});
+			});
+		});
+	</script>
 </html>
