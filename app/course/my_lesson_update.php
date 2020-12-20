@@ -13,12 +13,13 @@ PDO_Execute($query,array(mTime(),mTime(),$course_id));
 
 $query="UPDATE lesson SET title = ? , subtitle = ? , date = ? , duration = ? , live = ? , replay = ? , summary = ? , teacher = ?  , receive_time= ?  , modify_time= ?   where  id = ?  ";
 $sth = $PDO->prepare($query);
+
 $data = strtotime($_POST["lesson_date"]);
 $time = strtotime($_POST["lesson_time"]) - strtotime("today");
 $timezone = $_POST["lesson_timezone"];
 $datatime = ($data+$time+$timezone*60)*1000;
-
 $duration = strtotime($_POST["duration"]) - strtotime("today");
+
 $sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$datatime, $duration , $_POST["live"] , $_POST["replay"] , $_POST["summary"] ,  $_POST["teacher"] ,  mTime() , mTime() , $_POST["lesson"]));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
