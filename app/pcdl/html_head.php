@@ -61,9 +61,12 @@ else{
 	<link type="text/css" rel="stylesheet" href="../term/popup_note.css"/>
 
 	<script src="../term/term_edit_dlg.js"></script>
-	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>	
+	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>
 	<script src="../uwbw/wbw_channal_list.js"></script>
 	<script src="../usent/historay.js"></script>
+	<script src="../term/pali_sim_sent.js"></script>
+	<link type="text/css" rel="stylesheet" href="../term/pali_sim_dlg.css"/>
+
 
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>

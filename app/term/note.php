@@ -40,6 +40,10 @@ $dns = "sqlite:"._FILE_DB_PALI_SENTENCE_;
 $db_pali_sent = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $db_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
 
+$dns = "sqlite:"._FILE_DB_PALI_SENTENCE_SIM_;
+$db_pali_sent_sim = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+
 $dns = "sqlite:"._FILE_DB_SENTENCE_;
 $db_trans_sent = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
@@ -70,15 +74,28 @@ foreach ($_data as $key => $value) {
 		$end=0;
 	}
 
-	$query="SELECT html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
+	$query="SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
 	$sth = $db_pali_sent->prepare($query);
 	$sth->execute(array($bookId,$para,$begin,$end));
-	$row = $sth->fetch(PDO::FETCH_NUM);
+	$row = $sth->fetch(PDO::FETCH_ASSOC);
 	if ($row) {
-		$palitext= $row[0];
+		$palitext= $row['html'];
+		$pali_text_id = $row['id'];
 	} else {
 		$palitext="";
+		$pali_text_id = 0;
 	}
+	$query="SELECT sim_sents FROM 'pali_sent_sim' WHERE id = ?  ";
+	$sth = $db_pali_sent_sim->prepare($query);
+	$sth->execute(array($pali_text_id));
+	$row = $sth->fetch(PDO::FETCH_ASSOC);
+	if($row){
+		$pali_sim= explode(",",$row["sim_sents"]) ;
+	}
+	else{
+		$pali_sim=array();
+	}
+		//查询相似句
 
 	//find out translation 查询译文
 	$tran="";
@@ -154,8 +171,11 @@ foreach ($_data as $key => $value) {
 		$translation[$key]["channalinfo"]=$tran_channal[$value["channal"]];
 	}
 
-	
+	//查询路径
 	$para_path=_get_para_path($bookId,$para);
+
+
+
 
 	$output[]=array("id"=>$id,
 							   "palitext"=>$palitext,
@@ -166,7 +186,8 @@ foreach ($_data as $key => $value) {
 							   "book"=>$bookId,
 							   "para"=>$para,
 							   "begin"=>$begin,
-							   "end"=>$end
+							   "end"=>$end,
+							   "sim"=>$pali_sim
 							);
 
 }

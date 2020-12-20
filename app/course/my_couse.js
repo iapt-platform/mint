@@ -44,8 +44,15 @@ function course_validate_form(thisform) {
 
 function course_list() {}
 
-function time_init() {
-	let lessonTime = new Date(parseInt($("#form_datetime").val()));
+function time_init(time = 0) {
+	//time=0 input time
+	//time != 0 now
+	let lessonTime;
+	if (time == 0) {
+		lessonTime = new Date(parseInt($("#form_datetime").val()));
+	} else {
+		lessonTime = new Date();
+	}
 	let month = lessonTime.getMonth() + 1;
 	month = month > 9 ? month : "0" + month;
 	let d = lessonTime.getDate();
@@ -75,6 +82,41 @@ function lesson_update() {
 		},
 		error: function (data, status) {
 			alert("异常！" + data.responseText);
+			switch (status) {
+				case "timeout":
+					break;
+				case "error":
+					break;
+				case "notmodified":
+					break;
+				case "parsererror":
+					break;
+				default:
+					break;
+			}
+		},
+	});
+}
+
+function lesson_insert() {
+	const date = new Date();
+	$("#lesson_timezone").val(date.getTimezoneOffset());
+	$.ajax({
+		type: "POST", //方法类型
+		dataType: "json", //预期服务器返回的数据类型
+		url: "../course/my_lesson_insert.php", //url
+		data: $("#lesson_new").serialize(),
+		success: function (result) {
+			console.log(result); //打印服务端返回的数据(调试用)
+			if (result.status == 0) {
+				alert(result.message);
+				window.open("../course/my_course_index.php?course=" + result.course_id);
+			} else {
+				alert(result.message);
+			}
+		},
+		error: function (data, status) {
+			alert(status + ":" + data.responseText);
 			switch (status) {
 				case "timeout":
 					break;

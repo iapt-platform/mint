@@ -1,0 +1,7 @@
+.pali_sent_div {
+	padding: 3px;
+	margin-bottom: 5px;
+}
+.pali_sent_div > .path {
+	font-size: 75%;
+}
