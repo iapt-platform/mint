@@ -132,3 +132,64 @@ function lesson_insert() {
 		},
 	});
 }
+
+function course_update() {
+	$.ajax({
+		type: "POST", //方法类型
+		dataType: "json", //预期服务器返回的数据类型
+		url: "../course/my_course_update.php", //url
+		data: $("#course_update").serialize(),
+		success: function (result) {
+			console.log(result); //打印服务端返回的数据(调试用)
+			alert(result.message);
+		},
+		error: function (data, status) {
+			alert(status + ":" + data.responseText);
+			switch (status) {
+				case "timeout":
+					break;
+				case "error":
+					break;
+				case "notmodified":
+					break;
+				case "parsererror":
+					break;
+				default:
+					break;
+			}
+		},
+	});
+}
+
+function course_insert() {
+	$.ajax({
+		type: "POST", //方法类型
+		dataType: "json", //预期服务器返回的数据类型
+		url: "../course/my_course_insert.php", //url
+		data: $("#course_insert").serialize(),
+		success: function (result) {
+			console.log(result); //打印服务端返回的数据(调试用)
+			if (result.status == 0) {
+				alert(result.message);
+				window.open("../course/my_course_index.php");
+			} else {
+				alert(result.message);
+			}
+		},
+		error: function (data, status) {
+			alert(status + ":" + data.responseText);
+			switch (status) {
+				case "timeout":
+					break;
+				case "error":
+					break;
+				case "notmodified":
+					break;
+				case "parsererror":
+					break;
+				default:
+					break;
+			}
+		},
+	});
+}

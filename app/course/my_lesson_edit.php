@@ -1,3 +1,33 @@
+<?php
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" onLoad="course_list()">
+
+	<script language="javascript" src="../course/my_couse.js"></script>
+	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script >
+	var gCurrPage="course";
+	</script>
+
+	<style>
+	#course {
+		background-color: var(--btn-border-color);
+		
+	}
+	#course:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
+	<?php
+	require_once '../studio/index_tool_bar.php';
+	?>
+		
+	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+		<div id="course_list"  class="file_list_block">
+
 <script language="javascript" src="../media/img_dlg.js"></script>
 <style>
 .file_list_block{
@@ -97,9 +127,13 @@ echo '<div id="userfilelist">';
     $strDuration = date("H:i",$lesson_info["duration"]);
     echo '<input type="hidden" id="form_datetime" name="form_time" value="'.$lesson_info["date"].'"/>';
     echo '<input type="hidden" id="lesson_timezone" name="lesson_timezone" value=""/>';
-    echo $_local->gui->date.'：<div id="form_date"></div>';
-    echo $_local->gui->time.'：<div id="form_time"></div>';
-    echo $_local->gui->duration.'：<input type="time" name="duration" value="'.$strDuration.'"/>';
+    
+    echo '<div style="display:flex;">';
+    echo "<div><div>".$_local->gui->date.'</div><div id="form_date"></div></div>';
+    echo "<div><div>".$_local->gui->time.'</div><div id="form_time"></div></div>';
+    echo "<div><div>".$_local->gui->duration.'</div><input type="time" name="duration" value="'.$strDuration.'"/></div>';
+    echo '</div>';
+    
     echo '</div>';
     echo '</div>';
 
@@ -153,3 +187,13 @@ echo '</div>';
     time_init();
     
 </script>
+
+
+</div>
+		
+        </div>
+        
+    <?php
+    require_once '../studio/index_foot.php';
+    ?>
+    

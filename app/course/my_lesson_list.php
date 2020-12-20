@@ -1,3 +1,34 @@
+<?php
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" onLoad="course_list()">
+
+	<script language="javascript" src="../course/my_couse.js"></script>
+	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script >
+	var gCurrPage="course";
+	</script>
+
+	<style>
+	#course {
+		background-color: var(--btn-border-color);
+		
+	}
+	#course:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
+	<?php
+	require_once '../studio/index_tool_bar.php';
+	?>
+		
+	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+		<div id="course_list"  class="file_list_block">
+
+
 <style>
 .file_list_block{
     width:95%;
@@ -70,7 +101,7 @@ echo '</div>';
     echo $_local->gui->speaker.'：'.ucenter_getA($course_info["teacher"]);
     echo '</div></div>';
 ?>
-<div><a href="../course/my_course_index.php?course=<?php echo $course_info["id"];?>&op=edit">
+<div><a href="../course/my_course_edit.php?course=<?php echo $course_info["id"];?>">
 <svg viewBox="0 0 24 24" id="ic_mode_edit" height="24" width="24">
         <path fill="silver" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
 </svg>
@@ -99,7 +130,7 @@ foreach($fAllLesson as $row){
     echo '<div style="flex:7;padding: 5px 15px;">';
 
     echo '<div class="pd-10">';
-    echo '<div  style="padding-bottom:5px;font-size: 120%;"><a href="../course/my_course_index.php?lesson='.$row["id"].'">'.$row["title"].'</a></div>';
+    echo '<div  style="padding-bottom:5px;font-size: 120%;"><a href="../course/my_lesson_edit.php?lesson='.$row["id"].'">'.$row["title"].'</a></div>';
     echo '<div class="summary"  style="padding-bottom:5px;">'.$row["subtitle"].'</div>';
     echo '<div class="summary"  style="padding-margin:5px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     overflow: hidden;">'.$row["summary"].'</div>';
@@ -138,3 +169,12 @@ echo '</div>';
     </div>
 
 </div>
+
+
+</div>
+		
+        </div>
+        
+    <?php
+    require_once '../studio/index_foot.php';
+    ?>
