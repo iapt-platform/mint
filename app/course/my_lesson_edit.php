@@ -88,8 +88,9 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:8;"><textarea name="summary" style="height:6em;">'.$lesson_info["summary"].'</textarea></div>';
     echo '</div>';
 
+
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.$_local->gui->introduction.'</div>';
+    echo '<div style="flex:2;">'.$_local->gui->time_arrange.'</div>';
     echo '<div style="flex:8;">';
     $strDate = date("Y-m-d",$lesson_info["date"]/1000);
     $strTime = date("H:i",$lesson_info["date"]/1000);
@@ -99,7 +100,8 @@ echo '<div id="userfilelist">';
     echo $_local->gui->date.'：<div id="form_date"></div>';
     echo $_local->gui->time.'：<div id="form_time"></div>';
     echo $_local->gui->duration.'：<input type="time" name="duration" value="'.$strDuration.'"/>';
-    echo '</div></div>';
+    echo '</div>';
+    echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->notice_live.'</div>';

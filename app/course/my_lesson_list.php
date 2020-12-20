@@ -31,7 +31,7 @@ echo '</div>';
 		<span class="icon_btn_div">
 			<span class="icon_btn_tip"><?php echo $_local->gui->new_lesson;?></span>
 			<button id="file_share" type="button" class="icon_btn"  title=" ">
-			<a href="../course/my_course_index.php?course=<?php echo $course_info["id"] ?>&op=newlesson">
+			<a href="../course/my_lesson_new.php?course=<?php echo $course_info["id"] ?>&op=newlesson">
                 <svg style="" t="1601520759574" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7839" width="200" height="200">
                     <path d="M192 256h640v320H192z" p-id="7840"></path>
                     <path d="M832 192.5v447.29H192V192.5h640m0-64H192c-35.35 0-64 28.65-64 64v447.29c0 35.35 28.65 64 64 64h640c35.35 0 64-28.65 64-64V192.5c0-35.35-28.65-64-64-64z" p-id="7841">
