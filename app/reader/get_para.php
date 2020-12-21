@@ -4,8 +4,19 @@ require_once "../path.php";
 
 define("_MAX_CHAPTER_LEN_" , 20000);
 
-$_book = $_GET["book"];
-$_para = $_GET["para"];
+if(isset($_GET["book"])){
+    $_book = $_GET["book"];
+}
+else{
+    exit;
+}
+if(isset($_GET["para"])){
+    $_para = $_GET["para"];
+}
+else{
+    exit;
+}
+
 if(isset($_GET["begin"])){
     $_begin = $_GET["begin"];
 }
@@ -23,7 +34,6 @@ if($_view=="sent"){
     echo json_encode($output,JSON_UNESCAPED_UNICODE);
     exit;
 }
-
 
 
 PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
