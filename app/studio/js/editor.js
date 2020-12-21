@@ -4224,6 +4224,20 @@ function on_word_mouse_enter() {
 				if (gCurrLookupWord != paliword) {
 					mDictQueue[paliword] = 1;
 					gCurrLookupWord = paliword;
+					$.ajax({
+						type: "GET",
+						url: "dict_find_one.php",
+						dataType: "json",
+						data: "word=" + paliword,
+						success: function (response) {
+							inline_dict_parse(response);
+							render_word_menu(_curr_mouse_enter_wordid);
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							ntf_show(xhr.status + thrownError);
+						},
+					});
+					/*
 					$.get(
 						"dict_find_one.php",
 						{
@@ -4231,6 +4245,7 @@ function on_word_mouse_enter() {
 						},
 						on_dict_lookup
 					);
+*/
 				}
 			}
 		}
@@ -4253,15 +4268,19 @@ function on_word_mouse_enter() {
 
 //解析字典数据
 function inline_dict_parse(data) {
+	/*
 	if (data == "") {
 		return;
 	}
+	
 	try {
 		var worddata = JSON.parse(data);
 	} catch (e) {
 		console.error(e + " data:" + data);
 		return;
 	}
+	*/
+	let worddata = data;
 	if (worddata.length > 0) {
 		//如果有数据 解析查询数据
 		let spell = new Array();
