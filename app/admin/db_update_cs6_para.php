@@ -2,11 +2,11 @@
 require_once "../public/_pdo.php";
 require_once "../path.php";
 
-$db_file = _FILE_DB_PALITEXT_;
-PDO_Connect("sqlite:$db_file");
+	$db_file = _FILE_DB_PALITEXT_;
+	PDO_Connect("sqlite:$db_file");
 
-$query = "select * from books where 1";
-$books = PDO_FetchAll($query);
+	$query = "select * from books where 1";
+	$books = PDO_FetchAll($query);
 
 
 	$db_file = _FILE_DB_PAGE_INDEX_;

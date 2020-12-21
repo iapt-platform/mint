@@ -27,20 +27,38 @@ else{
 }
 
 	PDO_Connect("sqlite:"._FILE_DB_PAGE_INDEX_);
-	$query="select bookid,cspara ,book_name from cs6_para where book = ? and para=?";
+	$query="SELECT bookid,cspara ,book_name FROM cs6_para where book = ? and para= ? ";
 	$fetch = PDO_FetchAll($query,array($book,$para));
 	if(count($fetch)>0){
+		$aBookid=array();
 		$place_holders = implode(',', array_fill(0, count($fetch), '?'));
-		$query="SELECT book, para from cs6_para where bookid = ? and cspara in  ($place_holders) and book_name <> ?  ";
-		$param[] = $fetch[0]["bookid"];
+		$query="SELECT book, para,bookid from cs6_para where book_name = ? and cspara in  ($place_holders)  ";
+		$param[] = $fetch[0]["book_name"];
 
 		foreach ($fetch as $key => $value) {
 			$param[] =$value["cspara"];
 		}
-		$param[] = $fetch[0]["book_name"];
-		$fetch = PDO_FetchAll($query,$param);
-		$result["data"]=$fetch;
+		$fetchAllPara = PDO_FetchAll($query,$param);
+		foreach ($fetchAllPara as  $bookid) {
+			$aBookid["{$bookid["bookid"]}"] = 1;
+		}
+		$result["data"]=$fetchAllPara;
+		$result["curr_book_id"]=$fetch[0]["bookid"];
+
+		//获取书名 列表
+		$book_list= array();
+		$db_file = _FILE_DB_PALITEXT_;
+		PDO_Connect("sqlite:$db_file");
+		
+		foreach ($aBookid as $bookkey => $bookvalue ) {
+			# code...
+			$query = "select * from books where id=".$bookkey;
+			$book_list[] = PDO_FetchRow($query);
+		}
+		$result["book_list"]=$book_list;
+
 	}
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+	echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 ?>
