@@ -120,7 +120,7 @@ require_once '../public/function.php';
 				</svg>
             </button>
         </div>
-        <div id="main_tag"  style="">
+        <div id="main_tag">
             <span tag="vinaya">sīla</span>
             <span tag="sutta">samadhi</span>
             <span tag="abhidhamma">paññā</span>
@@ -150,7 +150,7 @@ require_once '../public/function.php';
     </div>
 </div>
 
-<div id ="book_list" class='index_inner' style=''>
+<div id ="book_list" class='index_inner'>
 
 </div>
 <div id="page_bottom" style="height:10em;">
