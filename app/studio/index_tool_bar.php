@@ -178,8 +178,8 @@
 			<div class="toolgroup1">
 			
 			<?php 
-			include "../lang/lang.php";
 			include "../ucenter/user.php";
+			include "../lang/lang.php";
 			?>			
 			</div>
 		</div>	

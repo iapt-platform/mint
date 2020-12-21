@@ -1,2 +1,4 @@
 /tmp
 /.vscode
+.DS_Store
+.vscode/settings.json

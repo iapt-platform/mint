@@ -25,15 +25,15 @@ include "../pcdl/html_head.php";
 		font-size: 16px;
 	}
 	.index_list_categories{
-		margin-bottom: 2em;
+		margin: 2em 0;
 	}
 	
 	.index_list_categories a:hover{
 		color: var(--tool-link-hover-color);
 	}
-	.index_list_categories a,a:link{
+	/*.index_list_categories a,a:link{
 		color: var(--main-color);
-	}
+	}*/
 	.index_list_categories button{
 		border: none;
 	}
