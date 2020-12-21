@@ -114,7 +114,7 @@ for($i=0;$i<$lookup_loop;$i++)
 			$query = "select * from dict where  \"pali\" in $strQueryWord  AND ( type <> '.n.' AND  type <> '.ti.' AND  type <> '.adj.'  AND  type <> '.pron.'  AND  type <> '.v.' )   ORDER BY rowid DESC";
 		}
 		if($debug){
-			//echo $query."<br>";
+			echo $query."<br>";
 		}
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
