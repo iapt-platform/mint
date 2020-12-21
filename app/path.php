@@ -8,7 +8,7 @@ define("_DIR_PALICANON_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text
 define("_DIR_PALICANON_WBW_" , __DIR__."/../tmp/appdata/palicanon/wbw");
 define("_DIR_PALICANON_TRAN_" , __DIR__."/../tmp/appdata/palicanon/translate");
 
-//pali canon db file
+//pali canon db file 语料库
 define("_FILE_DB_RESRES_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/res.db3");
 define("_FILE_DB_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text.db3");
 define("_FILE_DB_STATISTICS_" , __DIR__."/../tmp/appdata/palicanon/word_statistics.db3");

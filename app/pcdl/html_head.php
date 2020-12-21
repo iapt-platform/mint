@@ -66,6 +66,7 @@ else{
 	<script src="../usent/historay.js"></script>
 	<script src="../term/pali_sim_sent.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/pali_sim_dlg.css"/>
+	<script src="../term/related_para.js"></script>
 
 
 	<script src="../widget/click_dropdown.js"></script>

@@ -1,3 +1,32 @@
+<?php
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" onLoad="course_list()">
+
+	<script language="javascript" src="../course/my_couse.js"></script>
+	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script >
+	var gCurrPage="course";
+	</script>
+
+	<style>
+	#course {
+		background-color: var(--btn-border-color);
+		
+	}
+	#course:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
+	<?php
+	require_once '../studio/index_tool_bar.php';
+	?>
+		
+	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+		<div id="course_list"  class="file_list_block">
 <style>
 .file_list_block{
     width:90%;
@@ -37,7 +66,7 @@ echo '</div>';
 echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
-echo '<form action="../course/my_course_index.php" onsubmit="return course_validate_form(this)"  method="POST">';
+echo '<form id="course_update" action="##"   method="POST">';
 echo '<input type="hidden" name="course" value="'.$course_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
@@ -88,8 +117,9 @@ echo '<div id="userfilelist">';
 echo '</div>';
 ?>
 
-<input type="submit" value="<?php echo $_local->gui->submit ?>"/>
+
 </form>
+<button  onclick="course_update()"><?php echo $_local->gui->submit ?></button>
 </div>
 
 <div style="flex:2;border-left: 1px solid var(--tool-line-color);padding-left: 12px;">
@@ -119,3 +149,11 @@ echo '</div>';
 <script>
     name_selector_init("teacher_id",{input_id:"form_teacher"});
 </script>
+
+</div>
+		
+        </div>
+        
+    <?php
+    require_once '../studio/index_foot.php';
+    ?>

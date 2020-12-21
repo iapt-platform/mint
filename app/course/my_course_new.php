@@ -1,3 +1,63 @@
+<?php
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" onLoad="course_list()">
+
+	<script language="javascript" src="../course/my_couse.js"></script>
+	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script >
+	var gCurrPage="course";
+	</script>
+
+	<style>
+	#course {
+		background-color: var(--btn-border-color);
+		
+	}
+	#course:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
+	<?php
+	require_once '../studio/index_tool_bar.php';
+	?>
+		
+	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+		<div id="course_list"  class="file_list_block">
+
+<?php
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" onLoad="course_list()">
+
+	<script language="javascript" src="../course/my_couse.js"></script>
+	<script language="javascript" src="../ucenter/name_selector.js"></script>
+	<script >
+	var gCurrPage="course";
+	</script>
+
+	<style>
+	#course {
+		background-color: var(--btn-border-color);
+		
+	}
+	#course:hover{
+		background-color: var(--btn-border-color);
+		color: var(--btn-color);
+		cursor:auto;
+	}
+	</style>
+
+	<?php
+	require_once '../studio/index_tool_bar.php';
+	?>
+		
+	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+		<div id="course_list"  class="file_list_block">
+
 <div class="tool_bar">
 <?php
 require_once "../path.php";
@@ -13,7 +73,7 @@ echo '</div>';
 
 ?>
 
-<form action="../course/my_course_index.php" method="POST">
+<form id="course_insert" action="##" method="POST">
 <input type="hidden" name="op" value="insert" />
 
 <div id="userfilelist">
@@ -68,9 +128,19 @@ echo '</div>';
 </div>
 
 
-<input type="submit" value="<?php echo $_local->gui->create_course ?>" />
+
 </form>
+<button type="submit" onclick="course_insert()"><?php echo $_local->gui->create_course ?></button>
 
 <script>
     name_selector_init("teacher_id",{input_id:"form_teacher"});
 </script>
+
+
+</div>
+		
+        </div>
+        
+    <?php
+    require_once '../studio/index_foot.php';
+    ?>

@@ -37,6 +37,7 @@ function note_create() {
 	note_sent_edit_dlg_init();
 	term_edit_dlg_init();
 	pali_sim_dlg_init();
+	related_para_dlg_init();
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
@@ -431,6 +432,7 @@ function note_json_html(in_json) {
 	if (typeof _reader_view != "undefined" && _reader_view != "sent") {
 		output += "<a onclick='junp_to(this)'>跳转至此句</a>";
 	}
+	output += "<a  onclick='related_para_dlg_open(" + in_json.book + "," + in_json.para + ")'>相关段落</a>";
 	output += "<a  onclick='goto_nissaya(" + in_json.book + "," + in_json.para + ")'>Nissaya</a>";
 	output +=
 		"<a onclick=\"copy_ref('" +
