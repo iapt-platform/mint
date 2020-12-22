@@ -132,7 +132,12 @@ for($i=0;$i<$lookup_loop;$i++)
 		}
 		if($db_file["dbh"]){
 			$stmt = $db_file["dbh"]->query($query);
-			$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($stmt ){
+				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			}
+			else{
+				$Fetch = array();
+			}
 		}
 		else{
 			$Fetch = array();
