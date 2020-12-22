@@ -11,6 +11,7 @@
 		<script src="suncalc.js"></script>
 		<script src="./planet_position/js/planet-positions.js"></script>
 
+		<script src="city_15000.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
 		<script src="../guide/guide.js"></script>
 		<link type="text/css" rel="stylesheet" href="../guide/guide.css" />
@@ -86,6 +87,7 @@
 				today: "今天",
 				week: "周",
 				list: "列表",
+				location: "所在地",
 			};
 			localString["zh-tw"] = {
 				and_another: "又 ",
@@ -150,6 +152,7 @@
 				today: "今天",
 				week: "周",
 				list: "列表",
+				location: "所在地",
 			};
 			localString["default"] = {
 				and_another: " and ",
@@ -214,6 +217,7 @@
 				today: "today",
 				week: "week",
 				list: "list",
+				location: "location",
 			};
 			localString["en"] = {
 				and_another: " and ",
@@ -278,6 +282,7 @@
 				today: "today",
 				week: "week",
 				list: "list",
+				location: "location",
 			};
 			localString["my"] = {
 				and_another: " and ",
@@ -342,6 +347,7 @@
 				today: "today",
 				week: "week",
 				list: "list",
+				location: "location",
 			};
 			localString["si"] = {
 				and_another: " ච ",
@@ -406,6 +412,7 @@
 				today: "today",
 				week: "week",
 				list: "list",
+				location: "location",
 			};
 			var pali_month_name = [
 				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
@@ -483,36 +490,38 @@
 			var start_day = new Date();
 			var next_year = new Date();
 			var sun_times = new Object();
-
-			var curr_position = localStorage.getItem("local_position");
+			var curr_position="";
+			curr_position = localStorage.getItem("local_position");
 			if (curr_position) {
 				g_coordinate_this.AT = curr_position.split("#")[0];
 				g_coordinate_this.LT = curr_position.split("#")[1];
 				g_coordinate_this.height = curr_position.split("#")[2];
-				var AT_string =
-					angle_trans(g_coordinate_this.AT)[0] +
-					"°" +
-					angle_trans(g_coordinate_this.AT)[1] +
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT)[0]+"°" +angle_trans(g_coordinate_this.AT)[1] +
 					"’" +
 					angle_trans(g_coordinate_this.AT)[2] +
-					"”";
-				if (g_coordinate_this.AT >= 0) {
-					AT_string += "N";
+					"” N";
+
 				} else {
-					AT_string += "S";
+					var AT_string = angle_trans(0-g_coordinate_this.AT)[0]+"°" +angle_trans(0-g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.AT)[2] +
+					"” S";
 				}
-				var LT_string =
-					angle_trans(g_coordinate_this.LT)[0] +
-					"°" +
-					angle_trans(g_coordinate_this.LT)[1] +
+
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT)[0]+"°" +angle_trans(g_coordinate_this.LT)[1] +
 					"’" +
 					angle_trans(g_coordinate_this.LT)[2] +
-					"”";
-				if (g_coordinate_this.LT >= 0) {
-					LT_string += "E";
+					"” E";
+
 				} else {
-					LT_string += "W";
+					var LT_string = angle_trans(0-g_coordinate_this.LT)[0]+"°" +angle_trans(0-g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.LT)[2] +
+					"” W";
 				}
+
 				if (g_coordinate_this.height != "null") {
 					var height_string = g_coordinate_this.height + "M";
 				} else {
@@ -521,7 +530,9 @@
 			} else {
 				getLocation();
 			}
-			function show_time() {
+
+
+function show_time() {
 				if ($("#input_time").val()) {
 					today = new Date($("#input_time").val());
 				} else {
@@ -893,11 +904,13 @@
 		</style>
 	</head>
 	<body>
-		<div id="top">
-			<div class="left">
-				<script>
-					document.write(localString[g_language].timezone + "：");
-				</script>
+		<div id="top" style="display: inline-flex;width: 100vw;">
+			<div class="left" style="display: inline-flex;height: 5vh;margin: auto 1em;">
+				<span style="line-height: 5vh;white-space: nowrap;">
+					<script>
+						document.write(localString[g_language].timezone + "：");
+					</script>
+				</span>
 				<select id="time-zone-selector">
 					<option value="local" selected>
 						<script>
@@ -921,7 +934,7 @@
 							<option value="+">N</option>
 							<option value="-">S</option>
 						</select>
-						<button onclick="show_ele('#AT_str')">
+						<button onclick="coordinate_confirm('AT')">
 							<script>
 								document.write(localString[g_language].confirm);
 							</script>
@@ -945,7 +958,7 @@
 							<option value="+">E</option>
 							<option value="-">W</option>
 						</select>
-						<button onclick="show_ele('#LT_str')">
+						<button onclick="coordinate_confirm('LT')">
 							<script>
 								document.write(localString[g_language].confirm);
 							</script>
@@ -959,13 +972,20 @@
 					<span id="altitude_string" onclick="show_ele(this)"></span>
 					<span class="coordinate_input" style="flex: 7; white-space: nowrap; display: none">
 						<input id="HT_M" type="number" min="0" max="19999" style="width: 4em" /> M
-						<button onclick="show_ele('#altitude_string')">
+						<button onclick="coordinate_confirm('HT')">
 							<script>
 								document.write(localString[g_language].confirm);
 							</script>
 						</button>
 					</span>
 				</div>
+			</div>
+			<div style="display: inline-block; width: 50%; justify-content: center;">
+				<script>
+					document.write(localString[g_language].location);
+				</script>
+				<span id="city_str" onclick=""></span>
+
 			</div>
 			<div class="right">
 				<span id="loading">
@@ -995,9 +1015,11 @@
 				g_coordinate_this.LT = LT;
 				g_coordinate_this.AT = AT;
 			}
+			g_coordinate_this.height=Number($("#HT_M")[0].value);
 			//将新的坐标数据存到localStorage
 			let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
 			localStorage.setItem("local_position", position_string);
+			show_position();
 		}
 		function position_modify_confirm(obj) {
 			position_modify();
@@ -1052,17 +1074,95 @@
 					break;
 			}
 		}
+function coordinate_confirm(type){
+	switch(type){
+		case "AT":
+		show_ele('#AT_str');
+		break;
+		case "LT":
+		show_ele('#LT_str');
+		break;
+		case "HT":
+		show_ele('#altitude_string');
+		break;
+	}
+	position_modify();
+}
+function show_position(){
+	curr_position = localStorage.getItem("local_position");
+			if (curr_position) {
+				g_coordinate_this.AT = curr_position.split("#")[0];
+				g_coordinate_this.LT = curr_position.split("#")[1];
+				g_coordinate_this.height = curr_position.split("#")[2];
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT)[0]+"°" +angle_trans(g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.AT)[2] +
+					"” N";
 
-		$("#AT_str").html(AT_string);
-		$("#LT_str").html(LT_string);
-		$("#altitude_string").html(height_string);
-		$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
-		$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
-		$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
-		$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
-		$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
-		$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
+				} else {
+					var AT_string = angle_trans(0-g_coordinate_this.AT)[0]+"°" +angle_trans(0-g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.AT)[2] +
+					"” S";
+				}
+
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT)[0]+"°" +angle_trans(g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.LT)[2] +
+					"” E";
+
+				} else {
+					var LT_string = angle_trans(0-g_coordinate_this.LT)[0]+"°" +angle_trans(0-g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.LT)[2] +
+					"” W";
+				}
+
+				if (g_coordinate_this.height != "null") {
+					var height_string = g_coordinate_this.height + "M";
+				} else {
+					var height_string = localString[g_language].unknown;
+				}
+			} else {
+				getLocation();
+			}
+			$("#AT_str").html(AT_string);
+			$("#LT_str").html(LT_string);
+			$("#altitude_string").html(height_string);
+		if(g_coordinate_this.AT<0){
+			$("#AT_°")[0].value = angle_trans(0-g_coordinate_this.AT)[0];
+			$("#AT_’")[0].value = angle_trans(0-g_coordinate_this.AT)[1];
+			$("#AT_”")[0].value = angle_trans(0-g_coordinate_this.AT)[2];
+			$("#NS")[0].value="-";
+		}
+		else{
+			$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
+			$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
+			$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
+			$("#NS")[0].value="+";
+
+		}
+		if(g_coordinate_this.LT<0){
+			$("#LT_°")[0].value = angle_trans(0-g_coordinate_this.LT)[0];
+			$("#LT_’")[0].value = angle_trans(0-g_coordinate_this.LT)[1];
+			$("#LT_”")[0].value = angle_trans(0-g_coordinate_this.LT)[2];
+			$("#WE")[0].value="-";
+
+		}
+		else{
+			$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
+			$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
+			$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
+			$("#WE")[0].value="+";
+		}
 		$("#HT_M")[0].value = g_coordinate_this.height;
+		$("#city_str").html(find_city(g_coordinate_this.AT,g_coordinate_this.LT).name);
+}
+
+show_position();
+
 
 		$(document).ready(function () {
 			$("button").each(function () {
@@ -1126,5 +1226,48 @@
 				});
 			});
 		});
+//给出两个经纬度坐标直接的距离
+function distance(x, y) {
+    var toRadians = function(num) {
+      return num * Math.PI / 180;
+    };
+    var lat1 = x.latitude;
+    var lon1 = x.longitude;
+    var lat2 = y.latitude;
+    var lon2 = y.longitude;
+
+    var R = 6371; // km
+    var φ1 = toRadians(lat1);//纬度弧度1
+    var φ2 = toRadians(lat2);//纬度弧度2
+    var Δφ = toRadians(lat2 - lat1);//纬度弧度差
+    var Δλ = toRadians(lon2 - lon1);//经度弧度差
+    var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+function find_city(latitude,longitude){
+var point=new Object;
+var point_X=new Object;
+var city_info=new Object;
+var min_S=10000
+point.latitude=latitude;
+point.longitude=longitude;
+for(i in city_list){
+	point_X.latitude=city_list[i].latitude;
+	point_X.longitude=city_list[i].longitude;
+	if(distance(point,point_X)<min_S){
+		city_info=city_list[i];
+		min_S=distance(point,point_X);
+	}
+}
+	if(min_S==10000){
+		city_info.name=localString[g_language].unknown;
+		city_info.asciiName=localString[g_language].unknown;
+	}
+	return(city_info);
+}
+
 	</script>
 </html>
