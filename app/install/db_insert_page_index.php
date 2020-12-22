@@ -134,8 +134,6 @@ for($iFile=$from;$iFile<=$to;$iFile++){
 	else{
 		echo "can not open csv file. filename=".$dirXmlBase.$dirXml.$outputFileNameHead.".csv";
 	}
-	
-	
 }
 	echo "齐活！功德无量！all done!";	
 ?>
