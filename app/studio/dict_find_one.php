@@ -89,6 +89,20 @@ else{
 	}
 }
 
+$_dict_db = array();
+foreach($db_file_list as $db_file){
+	try {
+		$dbh = new PDO("sqlite:".$db_file, "", "");
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		$_dict_db[] = array("file"=>$db_file,"dbh"=>$dbh);
+
+	} catch (PDOException $e) {
+		if($debug){
+			print "Error!: " . $e->getMessage() . "<br/>";
+		}
+	}
+}
+
 for($i=0;$i<$lookup_loop;$i++)
 {
 	$parent_list=array();
@@ -102,11 +116,11 @@ for($i=0;$i<$lookup_loop;$i++)
 	if($debug){
 		echo "<h2>第".($i+1)."轮查询：".count($word_list)."</h2>";
 	}
-	foreach($db_file_list as $db_file){
+	foreach($_dict_db as $db_file){
 		if($debug){
-			echo "dict connect:$db_file<br>";
+			echo "dict connect:{$db_file["file"]}<br>";
 		}
-		PDO_Connect("sqlite:$db_file");	
+		//PDO_Connect("sqlite:".$db_file);
 		if($i==0){
 			$query = "select * from dict where \"pali\" in $strQueryWord ORDER BY rowid DESC";
 		}
@@ -114,9 +128,34 @@ for($i=0;$i<$lookup_loop;$i++)
 			$query = "select * from dict where  \"pali\" in $strQueryWord  AND ( type <> '.n.' AND  type <> '.ti.' AND  type <> '.adj.'  AND  type <> '.pron.'  AND  type <> '.v.' )   ORDER BY rowid DESC";
 		}
 		if($debug){
-			//echo $query."<br>";
+			echo $query."<br>";
 		}
-		$Fetch = PDO_FetchAll($query);
+		if($db_file["dbh"]){
+			try {
+				$stmt = $db_file["dbh"]->query($query);
+				if($stmt ){
+					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else{
+					$Fetch = array();
+					if($debug){
+						echo "无效的查询句柄";
+					}
+				}
+			}catch (PDOException $e) {
+				if($debug){
+					print "Error!: " . $e->getMessage() . "<br/>";
+				}
+				$Fetch = array();
+			}
+		}
+		else{
+			$Fetch = array();
+			if($debug){
+				echo "无效的数据库句柄";
+			}
+		}
+		//$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
 		if($debug){
 			echo "count:$iFetch<br>";
