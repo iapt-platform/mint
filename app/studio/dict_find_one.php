@@ -139,7 +139,7 @@ for($i=0;$i<$lookup_loop;$i++)
 				else{
 					$Fetch = array();
 					if($debug){
-						echo "无效的查询句柄";
+						echo "无效的Statement句柄";
 					}
 				}
 			}catch (PDOException $e) {

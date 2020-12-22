@@ -27,9 +27,6 @@ else{
 	$debug=false;
 }
 
-
-
-
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
@@ -41,7 +38,6 @@ $time_start = microtime_float();
 //open database
 
 global $PDO;
-
 
 	//查询单词表
 	$db_file = _DIR_PALICANON_TEMPLET_."/p".$in_book."_tpl.db3";
