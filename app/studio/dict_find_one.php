@@ -131,11 +131,18 @@ for($i=0;$i<$lookup_loop;$i++)
 			echo $query."<br>";
 		}
 		if($db_file["dbh"]){
-			$stmt = $db_file["dbh"]->query($query);
-			if($stmt ){
-				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			}
-			else{
+			try {
+				$stmt = $db_file["dbh"]->query($query);
+				if($stmt ){
+					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else{
+					$Fetch = array();
+				}
+			}catch (PDOException $e) {
+				if($debug){
+					print "Error!: " . $e->getMessage() . "<br/>";
+				}
 				$Fetch = array();
 			}
 		}
