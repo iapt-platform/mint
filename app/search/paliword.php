@@ -52,6 +52,7 @@ include "../pcdl/html_head.php";
 	}
 	#contents_div{
 		flex:7;
+		max-width: 70vw;
 	}
 	#contents{
 

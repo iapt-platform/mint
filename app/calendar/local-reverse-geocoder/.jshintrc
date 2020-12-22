@@ -1,8 +1,0 @@
-{
-  "globalstrict": false,
-  "maxlen": 80,
-  "node": true,
-  "loopfunc": true,
-  "expr": true,
-  "esversion": 6
-}
