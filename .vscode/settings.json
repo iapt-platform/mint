@@ -1,6 +1,6 @@
 {
 	"files.autoSave": "onFocusChange",
-	"workbench.iconTheme": "vscode-icons",
+	"workbench.iconTheme": "material-icon-theme",
 	"workbench.colorTheme": "Visual Studio Dark",
 	"editor.fontFamily": "SauceCodePro Nerd Font",
 	"editor.mouseWheelZoom": true,
