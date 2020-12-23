@@ -45,6 +45,14 @@ else{
 	<script src="../public/js/comm.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
 
+	<link rel="shortcut icon" href="http://www.wikipali.org/app/public/images/favicon/favicon.ico">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="http://www.wikipali.org/app/public/images/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://www.wikipali.org/app/public/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="http://www.wikipali.org/app/public/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="http://www.wikipali.org/app/public/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="http://www.wikipali.org/app/public/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="http://www.wikipali.org/app/public/images/favicon/safari-pinned-tab.svg" color="#333333">
+
 	<script type="text/javascript">
 	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
 		

@@ -13,13 +13,13 @@ require_once "public/load_lang.php";
     <link type="text/css" rel="stylesheet" href="studio/css/font.css" />
     <link type="text/css" rel="stylesheet" href="studio/css/style.css" />
     <link type="text/css" rel="stylesheet" href="studio/css/color_day.css" id="colorchange" />
-    <link rel="shortcut icon" href="public/images/favicon/favicon.ico">
-    <link rel="icon" sizes="16x16 32x32 64x64" href="public/images/favicon/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="public/images/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="public/images/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="public/images/favicon/favicon-16x16.png">
-    <link rel="manifest" href="public/images/favicon/site.webmanifest">
-    <link rel="mask-icon" href="public/images/favicon/safari-pinned-tab.svg" color="#333333">
+    <link rel="shortcut icon" href="http://www.wikipali.org/app/public/images/favicon/favicon.ico">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="http://www.wikipali.org/app/public/images/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://www.wikipali.org/app/public/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="http://www.wikipali.org/app/public/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="http://www.wikipali.org/app/public/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="http://www.wikipali.org/app/public/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="http://www.wikipali.org/app/public/images/favicon/safari-pinned-tab.svg" color="#333333">
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
     <title>wikipali</title>
