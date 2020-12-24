@@ -143,7 +143,7 @@ include "../pcdl/html_head.php";
 	<div id="contents_div" style="padding: 0 1em 0 30px;">
 		<div id="contents" >
 		<div style="text-align: center;">
-			<svg class='icon_spin' style='fill: saddlebrown; '>
+			<svg class='icon_spin' style='fill: saddlebrown;height: 4em;width: 4em; '>
 				<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#dhammacakkha'></use>
 			</svg>
 		</div>
