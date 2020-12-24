@@ -218,7 +218,7 @@ switch($op){
 						}
 					}
 					$path=$path_1.$path."para. ".$paragraph;
-					echo  "<div class='mean' style='font-size:120%'><a href='../reader/?view=para&book={$book}&para={$paragraph}' target='_blank'>$path</a></div>";
+					echo  "<div class='mean' style='font-size:120%'><a href='../reader/?view=para&book={$book}&para={$paragraph}&display=para' target='_blank'>$path</a></div>";
 					
 					for($iPali=0;$iPali<$countPaliText;$iPali++){
 						if(substr($paliword,-1)=="n"){
@@ -330,7 +330,7 @@ switch($op){
 									}
 								}
 								$path=$path."No. ".$paragraph;
-								echo  "<div class='mean' style='font-size:120%;'><a href='../reader/?view=para&book={$book}&para={$paragraph}' target='_blank' >$path</a></div>";
+								echo  "<div class='mean' style='font-size:120%;'><a href='../reader/?view=para&book={$book}&para={$paragraph}&display=sent#para_{$paragraph}' target='_blank' >$path</a></div>";
 																
 								if(substr($paliword,-1)=="n"){
 									$paliword=substr($paliword,0,-1);
