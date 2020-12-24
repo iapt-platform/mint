@@ -138,7 +138,7 @@ require_once '../studio/index_head.php';
 						<button onclick="file_share(true)"><?php echo $_local->gui->share;//共享?></button>
 						<button onclick="file_share(false)"><?php echo $_local->gui->undo_shared;//取消共享?></button>
 						</span>
-						<span id="button_group_recycle" style="dispaly:none">
+						<span id="button_group_recycle" style="display:none">
 						<button onclick="file_remove()" style="background-color:red;"><?php echo $_local->gui->completely_delete;//彻底删除?></button>
 						<button onclick="file_remove_all()"><?php echo $_local->gui->empty_the_recycle_bin;//清空回收站?></button>
 						</span>
