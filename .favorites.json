@@ -6,5 +6,13 @@
         "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
         "workspacePath": "app/studio",
         "id": "l0LIqg3rmy8bkGVw"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/pcdl",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/pcdl",
+        "id": "fFrl5CSnahWegGjw"
     }
 ]
