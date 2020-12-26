@@ -23,7 +23,7 @@
 		background-color: var(--tool-bg-color1);
 		border-bottom: none;
 		color: var(--tool-color1);
-		display: flex;
+		/*display: flex;*/
 	}
 
 	.search_fixed {
@@ -62,38 +62,7 @@
 </style>
 <!-- tool bar begin-->
 <div id='search_toolbar' class="search_toolbar">
-	<div style="display:block;z-index: 5;">
-			<ul id="dict_type" class="lab_tab" style="color:black;">
-				<?php
-				if (isset($_GET["key"])) {
-					$key = "?key=" . $_GET["key"];
-				} else {
-					$key = "";
-				}
-				?>
-				<li id="dt_all" style="display:none;">
-					<a href="../search/index.php<?php echo $key; ?>">
-						<span><?php echo $_local->gui->all; ?></span>
-						<span id="search_all_num"></span>
-					</a>
-				</li>
-				<li id="dt_title">
-					<a href="../search/title.php<?php echo $key; ?>">
-						<span><?php echo $_local->gui->title; ?></span>
-						<span id="search_title_num"></span>
-					</a>
-				</li>
-				<li id="dt_pali">
-					<a href="../search/paliword.php<?php echo $key; ?>">
-						<span><?php echo $_local->gui->full_text; ?></span>
-						<span id="search_palitext_num"></span>
-					</a>
-				</li>
-				<li id="dt_bold" style="display:none;"><a href="../search/bold.php<?php echo $key; ?>"><span><?php echo $_local->gui->vannana; ?></span><span id="search_bold_num"></span></a></li>
-				<li id="dt_trans" style="display:none;"><a href="../search/trans.php<?php echo $key; ?>"><span><?php echo $_local->gui->translate; ?></span><span id="search_trans_num"></span></a></li>
-			</ul>
-		</div>
-
+	
 	<div style="display:flex;">
 		<span>
 			<svg class="small_icon" style=" width: 3em;height: 3em;">
@@ -107,6 +76,36 @@
 			</div>
 			<div id="pre_search_word_content" class="case_dropdown-content"></div>
 		</div>
+	</div>
+	<div style="display:block;z-index: 5;">
+		<ul id="dict_type" class="lab_tab" style="color:black;display: flex;">
+			<?php
+			if (isset($_GET["key"])) {
+				$key = "?key=" . $_GET["key"];
+			} else {
+				$key = "";
+			}
+			?>
+			<li id="dt_all" style="display:none;">
+				<a href="../search/index.php<?php echo $key; ?>">
+				<span><?php echo $_local->gui->all; /*全部*/?></span>
+				<span id="search_all_num"></span>
+				</a>
+			</li>
+			<li id="dt_pali">
+				<a href="../search/paliword.php<?php echo $key; ?>">
+				<span><?php echo $_local->gui->full_text; /*巴利原文*/?></span>
+				<span id="search_palitext_num"></span>
+				</a>
+			</li>
+			<li id="dt_title">
+				<a href="../search/title.php<?php echo $key; ?>">
+				<span><?php echo $_local->gui->title; //标题?></span>
+				<span id="search_title_num"></span>
+				</a>
+			</li>
+
+		</ul>
 	</div>
 </div>
 <!--tool bar end -->
