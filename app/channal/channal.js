@@ -42,7 +42,7 @@ function my_channal_list() {
               '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
             html += "<div style='flex:1;'>" + key++ + "</div>";
             html += "<div style='flex:2;'>" + iterator.name + "</div>";
-            html += "<div style='flex:2;'>" + iterator.owner + "</div>";
+            html += "<div style='flex:2;'>" + iterator.nickname + "</div>";
             html +=
               "<div style='flex:2;'>" +
               //render_status(iterator.status) +
