@@ -25,15 +25,15 @@ function my_collect_list() {
               "<div style='flex:2;'>" +
               render_status(iterator.status) +
               "</div>";
-            html += "<div style='flex:1;'>Copy Link</div>";
+            html += "<div style='flex:1;'>"+gLocal.gui.copy_link+"</div>";
             html +=
               "<div style='flex:1;'><a href='../article/my_collect_edit.php?id=" +
               iterator.id +
-              "'>Edit</a></div>";
+              "'>"+gLocal.gui.edit+"</a></div>";
             html +=
               "<div style='flex:1;'><a href='../article/?collect=" +
               iterator.id +
-              "' target='_blank'>Preview</a></div>";
+              "' target='_blank'>"+gLocal.gui.preview+"</a></div>";
             html += "<div style='flex:1;'>15</div>";
             html += "</div>";
           }
