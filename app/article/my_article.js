@@ -171,7 +171,7 @@ function my_article_edit(id) {
           html +=
             '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' +
             gLocal.gui.language_select +
-            '</span>	<input id="article_lang_select"  style="flex:7;" type="input" onchange="article_lang_change()"  placeholder="' +
+            '</span>	<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
             gLocal.gui.input +
             " & " +
             gLocal.gui.language_select +
