@@ -8,7 +8,7 @@
 	}
 
 	.lab_tab {
-		display: flex;
+
 	}
 
 	.lab_tab>li {
@@ -23,6 +23,7 @@
 		background-color: var(--tool-bg-color1);
 		border-bottom: none;
 		color: var(--tool-color1);
+		/*display: flex;*/
 	}
 
 	.search_fixed {
@@ -61,6 +62,7 @@
 </style>
 <!-- tool bar begin-->
 <div id='search_toolbar' class="search_toolbar">
+	
 	<div style="display:flex;">
 		<span>
 			<svg class="small_icon" style=" width: 3em;height: 3em;">
@@ -76,7 +78,7 @@
 		</div>
 	</div>
 	<div style="display:block;z-index: 5;">
-		<ul id="dict_type" class="lab_tab" style="color:black;">
+		<ul id="dict_type" class="lab_tab" style="color:black;display: flex;">
 			<?php
 			if (isset($_GET["key"])) {
 				$key = "?key=" . $_GET["key"];

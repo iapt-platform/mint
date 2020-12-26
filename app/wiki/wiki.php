@@ -156,6 +156,7 @@ echo "wiki_load_word('{$_get_word}')";
     height: 5em;
     background-color: var(--bookx);
     border-bottom: 1px solid var(--tool-line-color);
+	margin-top: 50px;
 	}
 	.term_block_bar_left{
 		display: flex;

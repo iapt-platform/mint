@@ -13,13 +13,38 @@ require_once "public/load_lang.php";
     <link type="text/css" rel="stylesheet" href="studio/css/font.css" />
     <link type="text/css" rel="stylesheet" href="studio/css/style.css" />
     <link type="text/css" rel="stylesheet" href="studio/css/color_day.css" id="colorchange" />
-    <link rel="shortcut icon" href="public/images/favicon/favicon.ico">
-    <link rel="icon" sizes="16x16 32x32 64x64" href="public/images/favicon/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="public/images/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="public/images/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="public/images/favicon/favicon-16x16.png">
-    <link rel="manifest" href="public/images/favicon/site.webmanifest">
-    <link rel="mask-icon" href="public/images/favicon/safari-pinned-tab.svg" color="#333333">
+
+    <!-- generics -->
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon16.png" sizes="16x16">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon57.png" sizes="57x57">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon76.png" sizes="76x76">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon96.png" sizes="96x96">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon128.png" sizes="128x128">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon192.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="public/images/favicon/favicon228.png" sizes="228x228">
+	<link rel="icon" type="image/png" href="public/images/favicon/android-chrome-512x512.png" sizes="512x512">
+
+	<!-- Android -->
+	<link rel="shortcut icon" type="image/png" sizes="196x196" href=“public/images/favicon/favicon-196.png">
+
+	<!-- iOS -->
+	<link rel="apple-touch-icon" href="public/images/favicon/apple-touch-icon120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="public/images/favicon/apple-touch-icon152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="public/images/favicon/apple-touch-icon167.png" sizes="167x167">
+	<link rel="apple-touch-icon" href="public/images/favicon/apple-touch-icon180.png" sizes="180x180">
+
+	<!-- Windows 8 IE 10-->
+	<meta name="msapplication-TileColor" content="#FFFFFF">
+	<meta name="msapplication-TileImage" content="public/images/favicon/favicon144.png">
+
+	<!-- Windows 8.1 + IE11 and above -->
+	<meta name="msapplication-config" content="public/images/favicon/browserconfig.xml" />
+
+	<link rel="shortcut icon" href="public/images/favicon/favicon.ico">
+	<link rel="manifest" href="public/images/favicon/site.webmanifest">
+	<link rel="mask-icon" href="public/images/favicon/safari-pinned-tab.svg" color="#333333">
+    
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
     <title>wikipali</title>

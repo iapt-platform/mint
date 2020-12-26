@@ -52,6 +52,7 @@ include "../pcdl/html_head.php";
 	}
 	#contents_div{
 		flex:7;
+		max-width: 70vw;
 	}
 	#contents{
 
@@ -161,7 +162,7 @@ include "../pcdl/html_head.php";
 				</div>
 			</div>
 			<div style="text-align: center;display:none;">
-				<svg class='icon_spin' style='fill: saddlebrown; '>
+				<svg class='icon_spin' style='fill: saddlebrown;height: 4em;width: 4em; '>
 					<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#dhammacakkha'></use>
 				</svg>
 			</div>
@@ -207,7 +208,7 @@ include "../pcdl/html_head.php";
 </div>
 
 
-	<div id="dict_ref_search_result" style="background-color:white;color:black;">
+	<div id="dict_ref_search_result" style="background-color:white;color:black;display:none;">
 	</div>
 
 

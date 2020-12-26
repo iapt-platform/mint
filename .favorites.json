@@ -1,0 +1,26 @@
+[
+    {
+        "type": "Directory",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/studio",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/studio",
+        "id": "l0LIqg3rmy8bkGVw"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/pcdl",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/pcdl",
+        "id": "fFrl5CSnahWegGjw"
+    },
+    {
+        "type": "File",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/ucenter/user.php",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/ucenter/user.php",
+        "id": "Gzn2U0X5mR4wdoVK"
+    }
+]
