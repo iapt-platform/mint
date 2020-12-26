@@ -2,7 +2,7 @@
 	"files.autoSave": "onFocusChange",
 	"workbench.iconTheme": "material-icon-theme",
 	"workbench.colorTheme": "Visual Studio Dark",
-	"editor.fontFamily": "SauceCodePro Nerd Font",
+	/*"editor.fontFamily": "SauceCodePro Nerd Font",*/
 	"editor.mouseWheelZoom": true,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true

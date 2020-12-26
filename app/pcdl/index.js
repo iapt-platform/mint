@@ -6,7 +6,7 @@ function index_onload() {
 
 function index_load_collect_new() {
   $.get(
-    "../collect/list.php",
+    "../article/list_new.php",
     {
       begin: 0,
       page: 4,
@@ -20,17 +20,25 @@ function index_load_collect_new() {
         html +=
           "<div class='' style='position: absolute;background-color: darkred;color: white;padding: 0 6px;right: 0;'>" + gLocal.gui.ongoing + "</div>";
         html += "</div>";
-        html += "<div class='card' style='padding:10px;'>";
+        html += "<div class='card article_list' style='padding:10px;'>";
           gLocal.gui.ongoing + "</div>";
-        html += "<div style='font-weight:700'>";
+        html += "<div class='title' style='font-weight:700'>";
         html +=
-          "<a href='../article/?collect=" +
+          "<a href='../article/?id=" +
           iterator.id +
           "'>" +
           iterator.title +
           "</a>";
         html += "</div>";
 
+        html += "<div class='collect' style='color:gray'>";
+        if(iterator.collect){
+          html += "<a href='../article/?collect=" +iterator.collect.id + "'>" + iterator.collect.title + "</a>";
+        }
+        else{
+          html += "unkow";
+        }
+        html += "</div>";
         if(iterator.subtitle){
           html += "<div style=''>" + iterator.subtitle + "</div>";
         }
@@ -41,27 +49,6 @@ function index_load_collect_new() {
           html += "<div style=''>" + iterator.summary + "</div>";
         }
         
-        if( iterator.tag){
-          html +="<div style='overflow-wrap: anywhere;'>" + iterator.tag + "</div>";
-        }
-        
-        const article_limit = 4;
-        let article_count = 0;
-        let article_list = JSON.parse(iterator.article_list);
-        for (const article of article_list) {
-          html += "<div>";
-          html +=
-            "<a href='../article/?id=" +
-            article.article +
-            "' target='_blank'>" +
-            article.title +
-            "</a>";
-          html += "</div>";
-          article_count++;
-          if (article_count > article_limit) {
-            break;
-          }
-        }
         html += "</div>";
         html += "</div>";
       }

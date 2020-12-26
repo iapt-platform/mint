@@ -120,7 +120,6 @@ for($i=0;$i<$lookup_loop;$i++)
 		if($debug){
 			echo "dict connect:{$db_file["file"]}<br>";
 		}
-		//PDO_Connect("sqlite:".$db_file);
 		if($i==0){
 			$query = "select * from dict where \"pali\" in $strQueryWord ORDER BY rowid DESC";
 		}

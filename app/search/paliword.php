@@ -141,11 +141,30 @@ include "../pcdl/html_head.php";
 <div id="contents_view">
 	<div id="contents_div" style="padding: 0 1em 0 30px;">
 		<div id="contents" >
-		<div style="text-align: center;">
-			<svg class='icon_spin' style='fill: saddlebrown; '>
-				<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#dhammacakkha'></use>
-			</svg>
-		</div>
+			<div id="index_list">
+				<div style="flex:3;margin:12px;">
+					<div class="card" style="padding:10px;">
+						<div>最近搜索</div>
+						<div id="title_histray"></div>
+					</div>
+				</div>
+				<div style="flex:3;margin:12px;">
+					<div class="card" style="padding:10px;">
+						<div>热搜</div>
+						<div id="title_hot"></div>
+					</div>
+				</div>
+				<div style="flex:3;margin:12px;">
+					<div class="card" style="padding:10px;">
+						<div id="guide_title_search_index"></div>
+					</div>
+				</div>
+			</div>
+			<div style="text-align: center;display:none;">
+				<svg class='icon_spin' style='fill: saddlebrown; '>
+					<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#dhammacakkha'></use>
+				</svg>
+			</div>
 		</div>
 		<div id="contents_foot">
 			<div id="contents_nav" style="">
