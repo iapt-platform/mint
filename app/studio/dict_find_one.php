@@ -120,7 +120,6 @@ for($i=0;$i<$lookup_loop;$i++)
 		if($debug){
 			echo "dict connect:{$db_file["file"]}<br>";
 		}
-		//PDO_Connect("sqlite:".$db_file);
 		if($i==0){
 			$query = "select * from dict where \"pali\" in $strQueryWord ORDER BY rowid DESC";
 		}
@@ -139,7 +138,7 @@ for($i=0;$i<$lookup_loop;$i++)
 				else{
 					$Fetch = array();
 					if($debug){
-						echo "无效的查询句柄";
+						echo "无效的Statement句柄";
 					}
 				}
 			}catch (PDOException $e) {

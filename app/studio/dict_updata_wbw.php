@@ -12,6 +12,10 @@ $xml = simplexml_load_string($input);
 
 $db_file = _FILE_DB_WBW_;
 PDO_Connect("sqlite:$db_file");
+PDO_Execute("PRAGMA synchronous = OFF");
+PDO_Execute("PRAGMA journal_mode = WAL");
+PDO_Execute("PRAGMA foreign_keys = ON");
+PDO_Execute("PRAGMA busy_timeout = 5000");
 
 $wordsList = $xml->xpath('//word');
 //$serverMsg+= "word count:".count($wordsList)."<br>";

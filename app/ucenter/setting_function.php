@@ -30,11 +30,17 @@ function get_setting(){
 }
 
 function inLangSetting($lang,$mySetting){
+    # 通用语言 和 无译文语言 总是被采用
+    if($lang=="com" && $lang=="none"){
+        return true;
+    }
+    # 用户没有设置语言
     if(count($mySetting)==0){
         return true;
     }
     foreach ($mySetting as $key => $value) {
         if(strpos($lang,"-")==false){
+            # 语族
             if($lang===$value){
                 return true;
             }

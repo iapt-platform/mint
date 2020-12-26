@@ -1,5 +1,5 @@
 <?php
-//查询term字典
+//文集列表
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -7,22 +7,22 @@ require_once '../public/function.php';
 require_once '../ucenter/function.php';
 
 
-$onepage = 40;
-if(isset($_GET["page"])){
-    $onepage = $_GET["page"];
-}
-if(isset($_GET["begin"])){
-    if($_GET["begin"]>=0){
-        $begin=$_GET["begin"];
+    $onepage = 40;
+    if(isset($_GET["page"])){
+        $onepage = $_GET["page"];
+    }
+    if(isset($_GET["begin"])){
+        if($_GET["begin"]>=0){
+            $begin=$_GET["begin"];
+        }
+        else{
+            echo json_encode(array("data"=>array(),"next"=>-1), JSON_UNESCAPED_UNICODE);
+            exit;
+        }
     }
     else{
-        echo json_encode(array("data"=>array(),"next"=>-1), JSON_UNESCAPED_UNICODE);
-        exit;
+        $begin = 0;
     }
-}
-else{
-    $begin = 0;
-}
     PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
     $query = "SELECT * FROM collect  where  1 ";
     if(isset($_GET["orderby"])){
