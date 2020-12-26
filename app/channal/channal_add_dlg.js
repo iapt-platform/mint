@@ -5,7 +5,7 @@ function channal_add_dlg_init(div) {
   html += "<div id='channal_add_dlg'>";
   html += "<div >";
   html += "<div >Channal Title</div>";
-  html += "<input type='input' id='channal_add_title' />";
+  html += "<input type='input' id='channal_add_title' maxlength='32' placeholder='📝≤32'/>";
   html += "</div>";
   html += "<div>";
   html += "</div>";
