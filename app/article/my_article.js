@@ -163,11 +163,11 @@ function my_article_edit(id) {
           html += "<div style='display:flex;'>";
           html +=
             "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
-          html += '<span id="article_title" style="flex:7;"></span></div>';
+          html += '<span id="article_title" style="flex:7;width: 100 %;"></span></div>';
           html +=
             "<div id='channal_selector' form_name='channal' style='display:flex;'></div>";
           html +=
-            "<div id='aritcle_status' style='display: flex; width: 100 %;'></div>";
+            "<div id='aritcle_status' style='display: flex; '></div>";
           html +=
             '<div style="display:flex;width:100%;" ><span style="flex:3;margin: auto;">' +
             gLocal.gui.language_select +
