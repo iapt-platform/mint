@@ -7,19 +7,17 @@
 	}
 </script>
 <style>
-	#user_info {
-		width: 20em;
-	}
-
 	#user_info_welcome {
 		color: var(--main-color);
 		border-bottom: 1px solid var(--tool-line-color);
+		border-radius: 3px 3px 0 0;
 		padding: 10px;
 		background-color: var(--bg-color);
 	}
 
 	#user_info_name {
 		font-size: 200%;
+		margin: 0.1em;
 	}
 
 	#user_info_welcome2 {
@@ -85,7 +83,7 @@
 				<div id="user_info_name"><?php echo $_COOKIE["nickname"]; ?></div>
 				<div id="user_info_welcome2"><?php echo $_local->gui->to_the_dhamma; ?></div>
 			</div>
-			<div style="padding:10px;">
+			<div style="padding:10px; white-space:nowrap;">
 				<a href="../ucenter/setting.php" target="_blank">
 					<span>
 						<svg class="icon">
