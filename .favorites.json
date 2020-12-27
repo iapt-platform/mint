@@ -22,5 +22,21 @@
         "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
         "workspacePath": "app/ucenter/user.php",
         "id": "Gzn2U0X5mR4wdoVK"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/palicanon",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/palicanon",
+        "id": "6xoKe2dpJw3YN7BG"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/pannabhinanda/Documents/GitHub/mint/app/public/book_tag",
+        "parent_id": null,
+        "workspaceRoot": "/Users/pannabhinanda/Documents/GitHub/mint",
+        "workspacePath": "app/public/book_tag",
+        "id": "mspAzHVocFIxqJTu"
     }
 ]

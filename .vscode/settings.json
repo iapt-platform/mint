@@ -9,5 +9,6 @@
 	},
 	"svg.preview.background": "transparent",
 	"editor.fontSize": 15,
-	"editor.wordWrap": "on"
+	"editor.wordWrap": "on",
+	"editor.formatOnSave": true
 }
