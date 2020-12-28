@@ -1,9 +1,11 @@
+<?php require_once '../../public/load_lang.php';?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8" />
 		<link href="../lib/main.css" rel="stylesheet" />
 		<script src="../lib/main.js"></script>
+		<script src="../../public/js/jquery.js"></script>
 		<script>
 			function getCookie(name) {
 				var start = document.cookie.indexOf(name + "=");
@@ -157,15 +159,18 @@
 	<body>
 		<div id="top">
 			<div class="left">
-			Timezone:
+			<?php echo $_local->gui->timezone;?>：
 				<select id="time-zone-selector">
-					<option value="local" selected>local</option>
+					<option value="local" selected>
+						<?php echo $_local->gui->local;?>
+					</option>
 					<option value="UTC">UTC</option>
 				</select>
 			</div>
 
 			<div class="right">
-				<span id="loading">loading...</span>
+				<span id="loading">
+					<?php echo $_local->gui->loading;?>...</span>
 				<span id="script-warning"><code>php/get-events.php</code> must be running.</span>
 			</div>
 
@@ -174,4 +179,78 @@
 
 		<div id="calendar"></div>
 	</body>
+
 </html>
+<script>
+	document.addEventListener('load',function(){
+		$("button").each(function () {
+				if ($(this).html() == "today") {
+					$(this).html(gLocal.gui.today);
+				}
+				if ($(this).html() == "list") {
+					$(this).html(gLocal.gui.list);
+				}
+				if ($(this).html() == "week") {
+					$(this).html(gLocal.gui.week);
+				}
+				if ($(this).html() == "month") {
+					$(this).html(gLocal.gui.month);
+				}
+				if ($(this).html() == "day") {
+					$(this).html(gLocal.gui.day);
+				}
+			});
+		$("button").click(function () {
+				$("button").each(function () {
+					if ($(this).html().indexOf("today") != -1) {
+						$(this).html(gLocal.gui.today);
+					}
+					if ($(this).html().indexOf("list") != -1) {
+						$(this).html(gLocal.gui.list);
+					}
+					if ($(this).html().indexOf("week") != -1) {
+						$(this).html(gLocal.gui.week);
+					}
+					if ($(this).html().indexOf("month") != -1) {
+						$(this).html(gLocal.gui.month);
+					}
+					if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+						$(this).html(gLocal.gui.day);
+					}
+				});
+			});
+
+		$("div").click(function () {
+				$("button").each(function () {
+					if ($(this).html().indexOf("today") != -1) {
+						$(this).html(gLocal.gui.today);
+					}
+					if ($(this).html().indexOf("list") != -1) {
+						$(this).html(gLocal.gui.list);
+					}
+					if ($(this).html().indexOf("week") != -1) {
+						$(this).html(gLocal.gui.week);
+					}
+					if ($(this).html().indexOf("month") != -1) {
+						$(this).html(gLocal.gui.month);
+					}
+					if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+						$(this).html(gLocal.gui.day);
+					}
+				});
+			});
+    })
+for(wait_i=1;wait_i<50;wait_i++){
+	if(document.readyState!="complete"){
+		setTimeout("",100)
+	}
+	else{
+		
+		break;
+	}
+}
+		
+
+
+	</script>
+
