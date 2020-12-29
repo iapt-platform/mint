@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：dict
-DROP TABLE IF EXISTS dict;
+
 
 CREATE TABLE dict (
     id          INTEGER PRIMARY KEY AUTOINCREMENT
@@ -34,7 +34,7 @@ CREATE TABLE dict (
 
 
 -- 表：user_index
-DROP TABLE IF EXISTS user_index;
+
 
 CREATE TABLE user_index (
     id          INTEGER PRIMARY KEY AUTOINCREMENT

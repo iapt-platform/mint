@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：message
-DROP TABLE IF EXISTS message;
+
 
 CREATE TABLE message (
     id        INTEGER   PRIMARY KEY AUTOINCREMENT,

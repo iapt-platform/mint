@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：complaint
-DROP TABLE IF EXISTS complaint;
+
 
 CREATE TABLE complaint (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ CREATE TABLE complaint (
 
 
 -- 表：fileindex
-DROP TABLE IF EXISTS fileindex;
+
 
 CREATE TABLE fileindex (
     id           CHAR (36),
@@ -48,7 +48,7 @@ CREATE TABLE fileindex (
 
 
 -- 表：power
-DROP TABLE IF EXISTS power;
+
 
 CREATE TABLE power (
     id           CHAR (36) PRIMARY KEY,

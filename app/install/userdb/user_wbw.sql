@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：wbw
-DROP TABLE IF EXISTS wbw;
+
 
 CREATE TABLE wbw (
     id           CHAR (36) PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE wbw (
 
 
 -- 表：wbw_block
-DROP TABLE IF EXISTS wbw_block;
+
 
 CREATE TABLE wbw_block (
     id           CHAR (36) PRIMARY KEY,

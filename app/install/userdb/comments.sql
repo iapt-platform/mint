@@ -7,7 +7,6 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：comments
-DROP TABLE IF EXISTS comments;
 
 CREATE TABLE comments (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
