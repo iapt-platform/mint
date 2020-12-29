@@ -144,8 +144,11 @@ function similar_sent_matrix($begin,$end,$begin_id=0) {
 				else if($current_count>6){
 					$section = 2;
 				}
-				else{
+				else if($current_count>3){
 					$section = 1;
+				}
+				else {
+					$section = 0;
 				}
 				$compare_query = "select id,text from pali_sent where count>".($current_count-$section)." and count<".($current_count+$section);
 				$Compare = PDO_FetchALL($compare_query);
@@ -157,7 +160,22 @@ function similar_sent_matrix($begin,$end,$begin_id=0) {
 						$compare_sent = $compare_row['text'];
 						$compare_words = words_of_sentence($compare_sent);
 
-						$jaccard_score = jaccard_similarity($current_words, $compare_words);
+						if($current_count>3){
+							$jaccard_score = jaccard_similarity($current_words, $compare_words);
+						}
+						else if($current_count==3 ){
+							if($current_words==$compare_words){
+								$jaccard_score = 1;
+							}
+						}
+						else if($current_count==2){
+							if($current_words==$compare_words){
+								$jaccard_score = 1;
+							}
+						}
+						else{
+							$jaccard_score = 0;
+						}
 						if ($jaccard_score > 0.3) {
 							$current_sim_sent_list->jaccard_add($compare_id, $jaccard_score);
 						}
