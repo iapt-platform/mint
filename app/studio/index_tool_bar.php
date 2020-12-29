@@ -33,7 +33,7 @@
 					<?php echo $_local->gui->recent_scan;?>
 					</span>
 				</li>
-				<li id="share_doc" onclick="goto_url(this,'../studio/index_share.php?language=<?php echo $currLanguage; ?>')">
+				<li id="share_doc" style="display:none;" onclick="goto_url(this,'../studio/index_share.php?language=<?php echo $currLanguage; ?>')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#collabration_2"></use>
@@ -43,7 +43,7 @@
 					<?php echo $_local->gui->collaborate;?>
 					</span>
 				</li>
-				<li id="group_index"  onclick="goto_url(this,'../studio/group.php?language=<?php echo $currLanguage; ?>')">
+				<li id="group_index" style="display:none;" onclick="goto_url(this,'../studio/group.php?language=<?php echo $currLanguage; ?>')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_two_person"></use>
@@ -53,7 +53,7 @@
 					<?php echo $_local->gui->group;?>
 					</span>
 				</li>
-				<li id="recycle_bin"  onclick="goto_url(this,'../studio/recycle.php')">
+				<li id="recycle_bin" style="display:none;" onclick="goto_url(this,'../studio/recycle.php')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>

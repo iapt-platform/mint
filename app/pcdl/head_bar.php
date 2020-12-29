@@ -19,10 +19,10 @@
 		box-sizing: border-box;
 	}
 
-    body{
-        padding-top: 50px;
+	body {
+		padding-top: 50px;
 	}
-	
+
 	nav a,
 	nav a:link,
 	nav a:visited {
@@ -41,7 +41,7 @@
 		height: 50px;
 		z-index: 900;
 		width: 100%;
-		top:0;
+		top: 0;
 	}
 
 	header label {
@@ -70,9 +70,14 @@
 		transition: all ease 300ms;
 	}
 
+	.platform-toggle::before {
+		content: '<?php echo $_local->gui->library; ?>';
+	}
+
 	.platform-toggle a {
 		color: white;
 		transition: color ease 300ms;
+		display: none;
 	}
 
 	.goto-platform {
@@ -84,16 +89,6 @@
 		transition: all ease 250ms;
 		margin: 0;
 		padding: 0;
-	}
-
-	.platform-toggle:hover .goto-platform {
-		cursor: pointer;
-		transform: scaleX(1);
-		opacity: 1;
-	}
-
-	.platform-toggle:hover a {
-		color: var(--new-tool-content-disabled);
 	}
 
 	.platform-toggle::after {
@@ -109,9 +104,7 @@
 		transition: transform ease 300ms;
 	}
 
-	.platform-toggle:hover::after {
-		transform: scaleX(1);
-	}
+
 
 	nav {
 		position: absolute;
@@ -143,7 +136,8 @@
 		border-radius: 3px;
 		margin: 0 2px;
 	}
-/*
+
+	/*
 	.icon_btn:hover {
 		padding: 0.3em 0.3em;
 		background-color: var(--new-tool-list-hover-bg);
@@ -308,8 +302,8 @@
 		display: none;
 	}
 
-	.icon{
-		fill:var(--new-tool-btn);
+	.icon {
+		fill: var(--new-tool-btn);
 	}
 
 	/* 当下拉内容显示后修改下拉按钮的背景颜色 */
@@ -350,20 +344,20 @@
 			display: none;
 		}
 
-		header {
+		/*header {
 			display: grid;
 			grid-template-columns: 1fr auto 1fr auto 1fr;
 			padding: 0 1rem;
-		}
+		}*/
 
-		.head-logo {
-			grid-column: 1;
-			justify-content: left;
+		header {
+			display: flex;
+			justify-content: space-between;
+			padding: 0 1rem;
 		}
 
 		nav {
 			all: unset;
-			grid-column: 3;
 			display: flex;
 			align-items: center;
 			height: 50px;
@@ -395,6 +389,28 @@
 			display: block;
 		}
 
+		.platform-toggle a {
+			display:block;
+		}
+
+		.platform-toggle::before{
+			display:none;
+		}
+
+		.platform-toggle:hover .goto-platform {
+			cursor: pointer;
+			transform: scaleX(1);
+			opacity: 1;
+		}
+
+		.platform-toggle:hover a {
+			color: var(--new-tool-content-disabled);
+		}
+
+		.platform-toggle:hover::after {
+			transform: scaleX(1);
+		}
+
 		.platform-content {
 			top: unset;
 			position: relative;
@@ -421,6 +437,11 @@
 
 		.header-dropdown-content li div {
 			padding: 0.7rem;
+		}
+
+		.nav-right{
+			position:relative;
+			margin: 0;
 		}
 	}
 </style>

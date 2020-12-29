@@ -4,8 +4,8 @@ function channal_add_dlg_init(div) {
   let html = "";
   html += "<div id='channal_add_dlg'>";
   html += "<div >";
-  html += "<div >Channal Title</div>";
-  html += "<input type='input' id='channal_add_title' />";
+  html += "<div >"+gLocal.gui.name+"</div>";
+  html += "<input type='input' id='channal_add_title' maxlength='32' placeholder='📝≤32'/>";
   html += "</div>";
   html += "<div>";
   html += "</div>";
@@ -15,13 +15,14 @@ function channal_add_dlg_init(div) {
   html += "<select id='channal_add_dlg_lang' name='lang'>";
   html += "<option value='zh'>Chinese-中文</option>";
   html += "<option value='en'>English-English</option>";
-  html += "<option value='my'>Mymarnese-</option>";
+  html += "<option value='my'>Mymarnese-မြန်မာ</option>";
+  html += "<option value='si'>Sinhalese-සිංහල</option>";
   html += "</select>";
 
   html += "</div>";
   html += "<div>";
-  html += "<button onclick='channal_add_cancel()'>Cancel</button>";
-  html += "<button onclick='channal_add_new()'>New</button>";
+  html += "<button onclick='channal_add_cancel()'>"+gLocal.gui.cancel+"</button>";
+  html += "<button onclick='channal_add_new()'>"+gLocal.gui.new+"</button>";
   html += "</div>";
   html += "</div>";
   html += "</div>";

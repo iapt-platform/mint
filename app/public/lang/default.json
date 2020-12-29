@@ -562,6 +562,7 @@
 		"close": "close",
 		"timezone": "Timezone",
 		"subfield": "subfield",
+		"local": "Local",
 		"": ""
 	},
 	"grammastr": [

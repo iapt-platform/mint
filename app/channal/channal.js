@@ -42,7 +42,7 @@ function my_channal_list() {
               '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
             html += "<div style='flex:1;'>" + key++ + "</div>";
             html += "<div style='flex:2;'>" + iterator.name + "</div>";
-            html += "<div style='flex:2;'>" + iterator.owner + "</div>";
+            html += "<div style='flex:2;'>" + iterator.nickname + "</div>";
             html +=
               "<div style='flex:2;'>" +
               //render_status(iterator.status) +
@@ -85,7 +85,7 @@ function my_channal_edit(id) {
           html += "<div style='flex:4;'>";
           html += "<input type='hidden' name='id' value='" + result.id + "'/>";
           html +=
-            "<input type='input' name='name' value='" + result.name + "'/>";
+            "<input type='input' name='name' value='" + result.name + "' maxlength='32' placeholder='📝≤32'/>";
           html += "<textarea name='summary'>" + result.summary + "</textarea>";
           html +=
             '<div>	<input id="channal_lang_select" type="input" onchange="channal_lang_change()"  title="type language name/code" code="' +
