@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：hit
-DROP TABLE IF EXISTS hit;
+
 
 CREATE TABLE hit (
     id  CHAR (36) PRIMARY KEY,

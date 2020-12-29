@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：media
-DROP TABLE IF EXISTS media;
+
 
 CREATE TABLE media (
     id           CHAR (36) PRIMARY KEY,

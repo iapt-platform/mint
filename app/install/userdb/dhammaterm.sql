@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：term
-DROP TABLE IF EXISTS term;
+
 
 CREATE TABLE term (
     id            INTEGER   PRIMARY KEY AUTOINCREMENT,
