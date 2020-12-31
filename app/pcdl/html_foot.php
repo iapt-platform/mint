@@ -8,7 +8,7 @@
 		</div>
 		<div class="nav_text btn_color">推荐</div>
 	</div>
-	
+
 	<div class="navbar_button" onclick="main_menu_show(1)">
 		<div class="nav_icon">
 			<svg class="small_icon">
@@ -17,7 +17,7 @@
 		</div>
 		<div class="nav_text btn_color">三藏</div>
 	</div>
-	
+
 	<div class="navbar_button" onclick="main_menu_show(2)">
 		<div class="nav_icon">
 			<svg class="small_icon">
@@ -35,7 +35,7 @@
 		</div>
 		<div class="nav_text btn_color">搜索</div>
 	</div>
-	
+
 
 	<div class="navbar_button" onclick="main_menu_show(3)">
 		<div class="nav_icon">
@@ -46,8 +46,8 @@
 		<div class="nav_text btn_color">我的</div>
 	</div>
 </div>
-	
-<div class="foot_div" style="text-align: center; font-size: x-large; font-weight: bold; color: #3333;">
+
+<div class="foot_div">
 	<div>wikipali @2020</div>
 	<div>Powered by PCD Suite</div>
 </div>
@@ -56,4 +56,5 @@
 	guide_init();
 </script>
 </body>
+
 </html>

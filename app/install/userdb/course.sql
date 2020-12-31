@@ -7,7 +7,6 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：course
-DROP TABLE IF EXISTS course;
 
 CREATE TABLE course (
     id           CHAR (36) PRIMARY KEY,
@@ -29,7 +28,7 @@ CREATE TABLE course (
 
 
 -- 表：course_lang
-DROP TABLE IF EXISTS course_lang;
+
 
 CREATE TABLE course_lang (
     id           CHAR (36) PRIMARY KEY,
@@ -47,7 +46,7 @@ CREATE TABLE course_lang (
 
 
 -- 表：lesson
-DROP TABLE IF EXISTS lesson;
+
 
 CREATE TABLE lesson (
     id           CHAR (36) PRIMARY KEY,
@@ -72,7 +71,7 @@ CREATE TABLE lesson (
 
 
 -- 表：lesson_lang
-DROP TABLE IF EXISTS lesson_lang;
+
 
 CREATE TABLE lesson_lang (
     id           CHAR (36) PRIMARY KEY,

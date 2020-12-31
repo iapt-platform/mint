@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：group_file
-DROP TABLE IF EXISTS group_file;
+
 
 CREATE TABLE group_file (
     id          INTEGER   PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +25,7 @@ CREATE TABLE group_file (
 
 
 -- 表：group_file_contribution
-DROP TABLE IF EXISTS group_file_contribution;
+
 
 CREATE TABLE group_file_contribution (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,7 +45,7 @@ CREATE TABLE group_file_contribution (
 
 
 -- 表：group_file_power
-DROP TABLE IF EXISTS group_file_power;
+
 
 CREATE TABLE group_file_power (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,7 +61,7 @@ CREATE TABLE group_file_power (
 
 
 -- 表：group_info
-DROP TABLE IF EXISTS group_info;
+
 
 CREATE TABLE group_info (
     id            INTEGER   PRIMARY KEY AUTOINCREMENT,
@@ -76,7 +76,7 @@ CREATE TABLE group_info (
 
 
 -- 表：group_member
-DROP TABLE IF EXISTS group_member;
+
 
 CREATE TABLE group_member (
     id         INTEGER   PRIMARY KEY AUTOINCREMENT,
@@ -89,7 +89,7 @@ CREATE TABLE group_member (
 
 
 -- 表：group_power
-DROP TABLE IF EXISTS group_power;
+
 
 CREATE TABLE group_power (
     id       INTEGER   PRIMARY KEY AUTOINCREMENT,
@@ -101,7 +101,7 @@ CREATE TABLE group_power (
 
 
 -- 表：group_process
-DROP TABLE IF EXISTS group_process;
+
 
 CREATE TABLE group_process (
     id       INTEGER   PRIMARY KEY AUTOINCREMENT,

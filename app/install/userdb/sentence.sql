@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：sent_block
-DROP TABLE IF EXISTS sent_block;
+
 
 CREATE TABLE sent_block (
     id           CHAR (36),
@@ -26,7 +26,7 @@ CREATE TABLE sent_block (
 
 
 -- 表：sentence
-DROP TABLE IF EXISTS sentence;
+
 
 CREATE TABLE sentence (
     id           CHAR (36) PRIMARY KEY,

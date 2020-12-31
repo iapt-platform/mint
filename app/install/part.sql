@@ -7,7 +7,6 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- 表：part
-DROP TABLE IF EXISTS part;
 
 CREATE TABLE part (
     word   TEXT,
