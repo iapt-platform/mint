@@ -17,6 +17,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 $query="SELECT * FROM pali_sent WHERE  id = ?   ";
 $stmt = $dbh->prepare($query);
+$count = 0;
 foreach ($simList as  $value) {
     # code...
     $stmt->execute(array($value));
@@ -25,6 +26,10 @@ foreach ($simList as  $value) {
 		$sent = $Fetch;
 		$sent["path"]=_get_para_path($Fetch["book"],$Fetch["paragraph"]);
 		$output[] = $sent;  
+	}
+	$count++;
+	if($count>15){
+		break;
 	}
 }
 
