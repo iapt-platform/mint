@@ -215,7 +215,7 @@ require_once "../pcdl/html_head.php";
 		<?php
 		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
-		echo "'>{$_local->gui->modify}</a></button>";
+		echo "' target='_blank'>{$_local->gui->modify}</a></button>";
 
 		echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
 		echo "<a href='../article/frame.php?id=".$_GET["id"];
