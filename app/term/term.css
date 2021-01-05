@@ -525,3 +525,7 @@ note:hover .note_tool_bar {
 	background: #c6c6c6;
 	text-decoration: none;
 }
+
+pw {
+	padding-right: 0.5em;
+}

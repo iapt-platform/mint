@@ -93,21 +93,20 @@ function term_get_my_std_str(strMean) {
 }
 
 function note_lookup(word, showto) {
-	$("#" + showto).load("../term/term.php?op=search&word=" + word + "&username=" + getCookie("username"), function (
-		responseTxt,
-		statusTxt,
-		xhr
-	) {
-		if (statusTxt == "success") {
-			$(".term_note").each(function (index, element) {
-				$(this).html(note_init($(this).html()));
-				$(this).attr("status", 1);
-				note_refresh_new();
-			});
-		} else if (statusTxt == "error") {
-			console.error("Error: " + xhr.status + ": " + xhr.statusText);
+	$("#" + showto).load(
+		"../term/term.php?op=search&word=" + word + "&username=" + getCookie("username"),
+		function (responseTxt, statusTxt, xhr) {
+			if (statusTxt == "success") {
+				$(".term_note").each(function (index, element) {
+					$(this).html(note_init($(this).html()));
+					$(this).attr("status", 1);
+					note_refresh_new();
+				});
+			} else if (statusTxt == "error") {
+				console.error("Error: " + xhr.status + ": " + xhr.statusText);
+			}
 		}
-	});
+	);
 }
 
 var term_get_word_to_div_callback = null;
@@ -392,8 +391,9 @@ function term_lookup_my(pali, channal = "", owner = "", lang = "") {
 			}
 		}
 	}
-	//我自己的相同语言
+
 	if (owner != "") {
+		//我自己的相同语言
 		for (const iterator of arrMyTerm) {
 			if (iterator.word == pali && owner == iterator.owner && iterator.language == lang) {
 				return iterator;
@@ -409,25 +409,24 @@ function term_lookup_my(pali, channal = "", owner = "", lang = "") {
 				}
 			}
 		}
+	}
 
-		//别人的相同语言
-		for (const iterator of arrMyTerm) {
-			if (iterator.word == pali && iterator.language == lang) {
+	//别人的相同语言
+	for (const iterator of arrMyTerm) {
+		if (iterator.word == pali && iterator.language == lang) {
+			return iterator;
+		}
+	}
+
+	//找别人的相似语言
+	for (const iterator of arrMyTerm) {
+		if (pali == iterator.word) {
+			let thisLangFamily = iterator.language.split("-")[0];
+			if (thisLangFamily == langFamily) {
 				return iterator;
 			}
 		}
-
-		//找别人的相似语言
-		for (const iterator of arrMyTerm) {
-			if (pali == iterator.word) {
-				let thisLangFamily = iterator.language.split("-")[0];
-				if (thisLangFamily == langFamily) {
-					return iterator;
-				}
-			}
-		}
 	}
-	//找自己的相似语言
 	return false;
 }
 

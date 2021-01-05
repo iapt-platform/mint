@@ -20,7 +20,8 @@ include "../pcdl/html_head.php";
             font-size: 150%;
             text-align: center;
             margin: 5em 0;
-            transition: all 600ms ease
+            transition: all 600ms ease;
+            text-transform: capitalize;
         }
 
         #main_tag span {
@@ -129,13 +130,13 @@ include "../pcdl/html_head.php";
     echo "<div style='font-size:140%'>";
     echo "</div>";
     echo '<div id="main_tag"  style="">';
-    echo '<span tag="sutta">Sutta</span>';
-    echo '<span tag="vinaya">Vinaya</span>';
-    echo '<span tag="abhidhamma">Abhidhamma</span>';
-    echo '<span tag="mūla">Mūla</span>';
-    echo '<span tag="aṭṭhakathā">Aṭṭhakathā</span>';
-    echo '<span tag="ṭīkā">ṭīkā</span>';
-    echo '<span tag="añña">añña</span>';
+    echo '<span tag="sutta" title="sutta"></span>';
+    echo '<span tag="vinaya"  title="vinaya"></span>';
+    echo '<span tag="abhidhamma" title="abhidhamma"></span>';
+    echo '<span tag="mūla" title="mūla"></span>';
+    echo '<span tag="aṭṭhakathā" title="aṭṭhakathā"></span>';
+    echo '<span tag="ṭīkā" title="ṭīkā"></span>';
+    echo '<span tag="añña" title="añña"></span>';
     echo '</div>';
     echo '<div id="tag_selected"></div>';
     echo '<div level="0" class="tag_others"></div>';

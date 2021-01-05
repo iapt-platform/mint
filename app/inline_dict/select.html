@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title></title>
+		<script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<style type="text/css">
+			.tooltip {
+				width: 219px;
+				height: 33px;
+			}
+			.tooltip a {
+				width: 219px;
+				height: 33px;
+				display: block;
+			}
+		</style>
+		<script type="text/javascript">
+			// 获取选中的文本
+			function getSelectText() {
+				var txt = "";
+				if (document.selection) {
+					txt = document.selection.createRange().text;
+				} else {
+					txt = document.getSelection();
+					//txt = window.getSelection();
+				}
+				return $.trim(txt.toString());
+			}
+			function getPosition(e) {
+				var x = 15;
+				var y = 15;
+				var r = getSelectText();
+				if (r) {
+					var bowen = r.toString();
+					var tooltip =
+						"<div id='tooltip' class='tooltip'><a href='javascript:void(0)' target='_blank'>" +
+						bowen +
+						"</a></div>";
+					$("body").append(tooltip);
+					$("#tooltip")
+						.css({
+							top: e.pageY + y + "px",
+							left: e.pageX + x + "px",
+							position: "absolute",
+						})
+						.show("fast");
+				}
+			}
+			$(function () {
+				//将该id下的文章，鼠标选中松开后弹窗
+				$("#selectedArticle")
+					.mouseup(function (e) {
+						var txt = getSelectText();
+						txt = $.trim(txt);
+						getPosition(e);
+					})
+					.mousedown(function () {
+						$("#tooltip").remove();
+					});
+			});
+		</script>
+	</head>
+	<body>
+		<!--在文章内添加 selected-article ID-->
+		<div>
+			<textarea cols="60" rows="8" id="selectedArticle">
+asp、php、asp.net、javascript、jquery、vbscript、dos
+</textarea
+			>
+		</div>
+		asp、php、asp.net、javascript、jquery、vbscript、dos
+	</body>
+</html>

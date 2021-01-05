@@ -30,6 +30,15 @@ if(isset($_POST["word"])){
 else{
     $query ="select * from (select word,meaning,language,owner,count(*) as co from term where language=? group by word,meaning order by co DESC) where 1 group by word";
     $output["data"] = PDO_FetchAll($query,array($lang));
+    $pos = mb_strpos($lang,"-",0,"UTF-8");
+    if($pos){
+        $lang_family= mb_substr($lang,0,$pos,"UTF-8");
+        $query ="select * from (select word,meaning,language,owner,count(*) as co from term where language like ? group by word,meaning order by co DESC) where 1 group by word";
+        $otherlang = PDO_FetchAll($query,array($lang_family."%"));
+        foreach ($otherlang as $key => $value) {
+            $output["data"][]=$value;
+        }
+    }
 }
 
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
