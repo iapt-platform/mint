@@ -483,6 +483,9 @@
 						<li><a href="../statistics">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
 							</a></li>
+						<li><a href="../calendar/history.html">
+							<div class="nav_link"><?php echo $_local->gui->history; ?></div>
+						</a></li>
 					</ul>
 			</li>
 			<li class="nav_link nav-mobile"><a href="../calendar">
