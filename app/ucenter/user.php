@@ -93,7 +93,8 @@
 						?>
 					</span>
 				</a>
-				<a href="../sync" target="_blank">
+				<!--
+				<a href="../sync" target="_blank" >
 					<span>
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_autorenew_24px"></use>
@@ -102,6 +103,7 @@
 						?>
 					</span>
 				</a>
+				-->
 				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"]; ?>'>
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#my_zone"></use>

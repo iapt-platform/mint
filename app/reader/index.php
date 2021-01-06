@@ -216,6 +216,10 @@ require_once "../pcdl/html_head.php";
 		color: var(--link-color);
 		font-size: 120%;
 	}
+
+	#para_path_next_level{
+		display:inline-block;
+	}
 	</style>
 
 <style media="screen and (max-width:800px)">
