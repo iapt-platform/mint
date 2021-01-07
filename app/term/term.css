@@ -297,15 +297,11 @@ note > .palitext > note {
 
 note .ref {
 	text-align: right;
-	padding: 0px 5px 2px 5px;
 	font-size: 75%;
 	white-space: nowrap;
 	overflow-x: scroll;
 	margin-left: auto;
 	border-top: solid 1px var(--nocolor);
-	padding-top: 0.7em;
-	margin-top: 0.7em;
-	margin-left: 1.4em;
 	position: absolute;
 	bottom: -1.3em;
 	right: 0;
