@@ -307,7 +307,7 @@ note .ref {
 	margin-top: 0.7em;
 	margin-left: 1.4em;
 	position: absolute;
-	bottom: -5px;
+	bottom: -1.3em;
 	right: 0;
 }
 note:hover .ref {
