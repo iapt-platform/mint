@@ -63,7 +63,7 @@ require_once '../pcdl/html_head.php';
 
 		#course_list_new .card {
 			height: 15em;
-			overflow-y: scroll;
+
 		}
 
 		#course_list_new .card .pd-10:first-child {
