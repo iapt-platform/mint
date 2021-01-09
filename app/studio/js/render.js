@@ -1605,6 +1605,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	let sent_text = "";
 	let sent_lang = "en";
 	let objSent;
+	let thischannal;
 	if (channal == 0) {
 		//百家言
 		if (netSent.length > 0) {
@@ -1618,15 +1619,11 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	} else {
 		sender = "通道的名字";
 		objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
-
+		thischannal = channal_getById(channal);
 		if (objSent == false) {
 			objSent = new Object();
 			objSent.text = "";
-			if (doc_head("lang") == "") {
-				objSent.language = "en";
-			} else {
-				objSent.language = doc_head("lang");
-			}
+			objSent.language = thischannal.lang;
 			objSent.id = "";
 			objSent.tag = "[]";
 			objSent.author = "{}";
@@ -1652,9 +1649,9 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	} else {
 		output += "<span style='width: 100%;display: contents;'>";
 		output += "<span>";
-		let thischannal = channal_getById(channal);
+
 		if (thischannal) {
-			output += thischannal.name;
+			output += thischannal.name + "-" + thischannal.lang;
 		} else {
 			output += "未知的频道名";
 		}

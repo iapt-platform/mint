@@ -62,7 +62,6 @@ function history_show(id) {
 
 					html += "<div class=''>" + strPassTime + "</div>";
 					html += "<div class=''>" + iterator.text + "</div>";
-					html += "<div class=''><button>restore</button></div>";
 				}
 				$("#sent_history_content").html(html);
 				$("#sent_history_dlg").dialog("open");
