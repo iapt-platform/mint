@@ -51,7 +51,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.spell + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_word' value='" +
+		"<input type='input' id='term_edit_form_word' name='word' value='" +
 		word.word +
 		"'placeholder=" +
 		gLocal.gui.required +
@@ -61,7 +61,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.first_choice_word + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_meaning' value='" +
+		"<input type='input' id='term_edit_form_meaning' name='mean' value='" +
 		word.meaning +
 		"' placeholder=" +
 		gLocal.gui.required +
@@ -71,7 +71,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.other_meaning + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_othermeaning value='" +
+		"<input type='input' id='term_edit_form_othermeaning name='mean2' value='" +
 		word.other_meaning +
 		"' placeholder=" +
 		gLocal.gui.optional +
@@ -81,7 +81,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.tag + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_tag name='tag' value='" +
+		"<input type='input' id='term_edit_form_tag name='tag' name='tag' value='" +
 		word.tag +
 		"' placeholder=" +
 		gLocal.gui.optional +
@@ -91,7 +91,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.language + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_language' value='" +
+		"<input type='input' id='term_edit_form_language' name='language' value='" +
 		word.language +
 		"' placeholder=" +
 		gLocal.gui.required +
@@ -101,7 +101,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.channel + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_channal' value='" +
+		"<input type='input' id='term_edit_form_channal' name='channal' value='" +
 		word.channal +
 		"' placeholder=" +
 		gLocal.gui.optional +
@@ -110,7 +110,12 @@ function term_edit_dlg_render(word = "") {
 
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.encyclopedia + "</legend>";
-	output += "<textarea id='term_edit_form_note' placeholder=" + gLocal.gui.optional + ">" + word.note + "</textarea>";
+	output +=
+		"<textarea id='term_edit_form_note' name='note' placeholder=" +
+		gLocal.gui.optional +
+		">" +
+		word.note +
+		"</textarea>";
 	output += "</fieldset>";
 
 	output += "</form>";
