@@ -3,6 +3,7 @@
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../usent/function.php";
 
 #检查是否登陆
 if(!isset($_COOKIE["userid"])){
@@ -83,46 +84,46 @@ else{
         if($cooperation == 1){
             #有权限
             $query = "INSERT INTO sentence (id, 
-														parent,
-														book,
-														paragraph,
-														begin,
-														end,
-														channal,
-														tag,
-														author,
-														editor,
-														text,
-														language,
-														ver,
-														status,
-														strlen,
-														modify_time,
-														receive_time,
-														create_time
-														) 
+                                            parent,
+                                            book,
+                                            paragraph,
+                                            begin,
+                                            end,
+                                            channal,
+                                            tag,
+                                            author,
+                                            editor,
+                                            text,
+                                            language,
+                                            ver,
+                                            status,
+                                            strlen,
+                                            modify_time,
+                                            receive_time,
+                                            create_time
+                                            ) 
 										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
             $stmt = $PDO->prepare($query);
             $newId = UUID::v4();
             $stmt->execute(array($newId,
-										  "",
-										  $_POST["book"], 
-										  $_POST["para"], 
-										  $_POST["begin"], 
-										  $_POST["end"], 
-										  $_POST["channal"], 
-										  "", 
-										  "[]", 
-										  $_COOKIE["userid"],
-										  $_POST["text"],
-										  $text_lang ,
-										  1,
-										  7,
-										  mb_strlen($_POST["text"],"UTF-8"),
-										  mTime(),
-										  mTime(),
-										  mTime()
-                                        ));
+                                "",
+                                $_POST["book"], 
+                                $_POST["para"], 
+                                $_POST["begin"], 
+                                $_POST["end"], 
+                                $_POST["channal"], 
+                                "", 
+                                "[]", 
+                                $_COOKIE["userid"],
+                                $_POST["text"],
+                                $text_lang ,
+                                1,
+                                7,
+                                mb_strlen($_POST["text"],"UTF-8"),
+                                mTime(),
+                                mTime(),
+                                mTime()
+                            ));
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                 /*  识别错误  */
                 $error = PDO_ErrorInfo();
@@ -192,25 +193,5 @@ else{
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 
 
-function update_historay($sent_id,$user_id,$text,$landmark){
-    # 更新historay
-    PDO_Connect("sqlite:"._FILE_DB_USER_SENTENCE_HISTORAY_);
-    $query =  "INSERT INTO sent_historay (sent_id,  user_id,  text,  date, landmark) VALUES (? , ? , ? , ? , ? )";
-    $stmt  = PDO_Execute($query,
-                                        array($sent_id,
-                                                 $user_id, 
-                                                 $text ,
-                                                mTime(),
-                                                $landmark
-                                            ));
-    if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    /*  识别错误  */
-    $error = PDO_ErrorInfo();
-        return $error[2];
-    }
-    else{
-    #没错误
-        return "";
-    }
-}
+
 ?>

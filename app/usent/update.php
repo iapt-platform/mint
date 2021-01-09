@@ -5,7 +5,21 @@
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../usent/function.php";
 
+#检查是否登陆
+if(!isset($_COOKIE["userid"])){
+    $respond["status"] = 1;
+    $respond["message"] = 'not login';
+    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+if(isset($_POST["landmark"])){
+    $_landmark = $_POST["landmark"];
+}
+else{
+    $_landmark = "";
+}
 
 $aData=json_decode($_POST["data"],TRUE);
 
@@ -19,11 +33,11 @@ $query = "SELECT id FROM sentence WHERE book = ? and paragraph = ? and  begin = 
 foreach ($aData as $data) {
 	if(!isset($data["id"]) || empty($data["id"])){
 		$id = PDO_FetchOne($query,array($data["book"],
-																	   $data["paragraph"],
-																	   $data["begin"],
-																	   $data["end"],
-																	   $data["channal"]
-																	   ));
+						$data["paragraph"],
+						$data["begin"],
+						$data["end"],
+						$data["channal"]
+						));
 		if(empty($id)){
 			$newList[] = $data;
 		}
@@ -68,6 +82,15 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$respond['message']=$error[2];
 }
 else{
+	#没错误 更新历史记录
+	foreach ($oldList as $data) {
+		$respond['message']=update_historay($data["id"],$_COOKIE["userid"] ,$data["text"],$_landmark);
+		if($respond['message']!==""){
+			$respond['status']=1;
+			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+			exit;
+		}
+	}
 	$respond['status']=0;
 	$respond['message']="成功";
 	foreach ($oldList as $key => $value) {
@@ -78,74 +101,79 @@ else{
 
 
 /* 插入新数据 */
-$PDO->beginTransaction();
-$query = "INSERT INTO sentence (id, 
-														parent,
-														book,
-														paragraph,
-														begin,
-														end,
-														channal,
-														tag,
-														author,
-														editor,
-														text,
-														language,
-														ver,
-														status,
-														strlen,
-														modify_time,
-														receive_time,
-														create_time
-														) 
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-$sth = $PDO->prepare($query);
+//查询channel语言
 
-foreach ($newList as $data) {
-		$uuid = UUID::v4();
-		if($data["parent"]){
-			$parent = $data["parent"];
-		}
-		else{
-			$parent  = "";
-		}
-		$sth->execute(array($uuid,
-										  $parent,
-										  $data["book"], 
-										  $data["paragraph"], 
-										  $data["begin"], 
-										  $data["end"], 
-										  $data["channal"], 
-										  $data["tag"], 
-										  $data["author"], 
-										  $_COOKIE["userid"],
-										  $data["text"],
-										  $data["language"],
-										  1,
-										  7,
-										  mb_strlen($data["text"],"UTF-8"),
-										  mTime(),
-										  mTime(),
-										  mTime()
-										));
-		$new_id[] = array($uuid,$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"],$data["text"]);
-}
-$PDO->commit();
+if(count($newList)>0){
+	$PDO->beginTransaction();
+	$query = "INSERT INTO sentence (id, 
+									parent,
+									book,
+									paragraph,
+									begin,
+									end,
+									channal,
+									tag,
+									author,
+									editor,
+									text,
+									language,
+									ver,
+									status,
+									strlen,
+									modify_time,
+									receive_time,
+									create_time
+									) 
+						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+	$sth = $PDO->prepare($query);
 
-
-if (!$sth || ($sth && $sth->errorCode() != 0)) {
-	/*  识别错误且回滚更改  */
-	$PDO->rollBack();
-	$error = PDO_ErrorInfo();
-	$respond['insert_error']=$error[2];
-	$respond['new_list']=array();
-}
-else{
-	$respond['insert_error']=0;
-	foreach ($new_id as $key => $value) {
-		$update_list[] =  array("id" => $value[0],"book"=>$value[1],"paragraph"=>$value[2],"begin"=>$value[3],"end"=>$value[4],"channal"=>$value[5],"text" => $value[6]);
+	foreach ($newList as $data) {
+			$uuid = UUID::v4();
+			if($data["parent"]){
+				$parent = $data["parent"];
+			}
+			else{
+				$parent  = "";
+			}
+			$sth->execute(array($uuid,
+						$parent,
+						$data["book"], 
+						$data["paragraph"], 
+						$data["begin"], 
+						$data["end"], 
+						$data["channal"], 
+						$data["tag"], 
+						$data["author"], 
+						$_COOKIE["userid"],
+						$data["text"],
+						$data["language"],
+						1,
+						7,
+						mb_strlen($data["text"],"UTF-8"),
+						mTime(),
+						mTime(),
+						mTime()
+					));
+			$new_id[] = array($uuid,$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"],$data["text"]);
 	}
+	$PDO->commit();
+
+
+	if (!$sth || ($sth && $sth->errorCode() != 0)) {
+		/*  识别错误且回滚更改  */
+		$PDO->rollBack();
+		$error = PDO_ErrorInfo();
+		$respond['insert_error']=$error[2];
+		$respond['new_list']=array();
+	}
+	else{
+		$respond['insert_error']=0;
+		foreach ($new_id as $key => $value) {
+			$update_list[] =  array("id" => $value[0],"book"=>$value[1],"paragraph"=>$value[2],"begin"=>$value[3],"end"=>$value[4],"channal"=>$value[5],"text" => $value[6]);
+		}
+	}	
 }
+
 $respond['update']=$update_list;
 
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);

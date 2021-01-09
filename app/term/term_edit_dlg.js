@@ -46,7 +46,8 @@ function term_edit_dlg_render(word = "") {
 		word.pali = "";
 	}
 	let output = "";
-	output += "<input type='hidden' id='term_edit_form_id' value='" + word.guid + "'>";
+	output += "<form action='##' id='form_term'>";
+	output += "<input type='hidden' id='term_edit_form_id' name='id' value='" + word.guid + "'>";
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.spell + "</legend>";
 	output +=
@@ -78,6 +79,16 @@ function term_edit_dlg_render(word = "") {
 	output += "</fieldset>";
 
 	output += "<fieldset>";
+	output += "<legend>" + gLocal.gui.tag + "</legend>";
+	output +=
+		"<input type='input' id='term_edit_form_tag name='tag' value='" +
+		word.tag +
+		"' placeholder=" +
+		gLocal.gui.optional +
+		" >";
+	output += "</fieldset>";
+
+	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.language + "</legend>";
 	output +=
 		"<input type='input' id='term_edit_form_language' value='" +
@@ -102,6 +113,39 @@ function term_edit_dlg_render(word = "") {
 	output += "<textarea id='term_edit_form_note' placeholder=" + gLocal.gui.optional + ">" + word.note + "</textarea>";
 	output += "</fieldset>";
 
+	output += "</form>";
+
 	return output;
 }
-function term_edit_dlg_save() {}
+function term_edit_dlg_save() {
+	$.ajax({
+		type: "POST", //方法类型
+		dataType: "json", //预期服务器返回的数据类型
+		url: "../term/term_post.php", //url
+		data: $("#form_term").serialize(),
+		success: function (result) {
+			console.log(result); //打印服务端返回的数据(调试用)
+
+			if (result.status == 0) {
+				alert(result.message + gLocal.gui.saved + gLocal.gui.successful);
+			} else {
+				alert("error:" + result.message);
+			}
+		},
+		error: function (data, status) {
+			alert("异常！" + data.responseText);
+			switch (status) {
+				case "timeout":
+					break;
+				case "error":
+					break;
+				case "notmodified":
+					break;
+				case "parsererror":
+					break;
+				default:
+					break;
+			}
+		},
+	});
+}
