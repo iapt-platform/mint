@@ -33,7 +33,7 @@ require_once '../studio/index_head.php';
 
 		<div class="tool_bar">
 	<div>
-	Term
+        <?php echo $_local->gui->terms_system;?>
 	</div>
 
 	<div>
@@ -87,7 +87,7 @@ if($iCountWords==0){
     echo "<div id='setting_user_dict_count'>您的术语字典中没有单词。</div>";
 }
 else{
-    echo "<div id='setting_user_dict_count'>您的术语字典中已经有{$iCountWords}个单词。</div>";
+    echo "<div id='setting_user_dict_count'>".$_local->gui->my_term."&nbsp;".$_local->gui->include."{$iCountWords}".$_local->gui->words."</div>";
     $iPages=ceil($iCountWords/$iOnePage);
     if($iCurrPage>$iPages){
         $iCurrPage=$iPages;
