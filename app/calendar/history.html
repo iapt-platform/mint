@@ -1,0 +1,82 @@
+﻿<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/timeline.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+	<div id="container"></div>
+	<p class="highcharts-description">More stories need to be added, more history need to be create by you!</p>
+</figure>
+<script>
+	Highcharts.chart("container", {
+		chart: {
+			type: "timeline",
+		},
+		accessibility: {
+			screenReaderSection: {
+				beforeChartFormat:
+					"<h5>{chartTitle}</h5>" +
+					"<div>{typeDescription}</div>" +
+					"<div>{chartSubtitle}</div>" +
+					"<div>{chartLongdesc}</div>" +
+					"<div>{viewTableButton}</div>",
+			},
+			point: {
+				valueDescriptionFormat: "{index}. {point.label}. {point.description}.",
+			},
+		},
+		xAxis: {
+			visible: false,
+		},
+		yAxis: {
+			visible: false,
+		},
+		title: {
+			text: "wikipāli History",
+		},
+		subtitle: {
+			text: "Simple development of wikipāli",
+		},
+		colors: ["#4185F3", "#427CDD", "#406AB2", "#3E5A8E", "#3B4A68", "#363C46"],
+		series: [
+			{
+				data: [
+					{
+						name: "Display Only",
+						label: "2017 Vassa",
+						description:
+							"pāli Word by word translation display on Html, solve the working memory limitation on understanding the pāli text",
+					},
+					{
+						name: "Magic Dictionary",
+						label: "2018 spring festival",
+						description: "look up dictionary in batch work, reduce the difficulty of translating work",
+					},
+					{
+						name: "establishment of pāli corpus",
+						label: "2018 July 27",
+						description: "convert the XML pāli text into database, realize the fragmentation",
+					},
+					{
+						name: "conference in Sri Lanka",
+						label: "2020 Feb",
+						description:
+							"Discuss the tipiṭaka translating project and the establishment of  wikipāli platform, supported by many kinds of conditions",
+					},
+					{
+						name: "pilot class in Dawei Pa-auk",
+						label: "2020 March",
+						description:
+							"Testing and figure out the possible way of learning and translating pāli, U Kuṇḍadhāna Sayadaw join as the pioneer teacher",
+					},
+					{
+						name: "wikipāli online test",
+						label: "2020 vassa",
+						description:
+							"online class + online translation; word by word teaching get more and more acknowledge",
+					},
+				],
+			},
+		],
+	});
+</script>

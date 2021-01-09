@@ -198,7 +198,7 @@ note > .tran .tran_text_tool_bar,
 	font-size: 14px;
 	height: auto;
 	line-height: 28px;
-	margin-top: 1em;
+
 	background-color: var(--box-bg-color1);
 	border-radius: 5px;
 }
@@ -297,18 +297,18 @@ note > .palitext > note {
 
 note .ref {
 	text-align: right;
-	padding: 0px 5px 2px 5px;
 	font-size: 75%;
 	white-space: nowrap;
 	overflow-x: scroll;
 	margin-left: auto;
 	border-top: solid 1px var(--nocolor);
-	padding-top: 0.7em;
-	margin-top: 0.7em;
-	margin-left: 1.4em;
+	position: absolute;
+	bottom: -1.3em;
+	right: 0;
+	max-width: 100%;
 }
 note:hover .ref {
-	border-top: solid 1px var(--border-line-color);
+	/*border-top: solid 1px var(--border-line-color);*/
 }
 
 .progress_bar_done {
@@ -372,8 +372,8 @@ note:hover .add_new {
 	background: url(add.svg);
 	background-repeat: no-repeat;
 	background-size: contain;
-
-	margin-bottom: -0.7em;
+	left: 0;
+	bottom: 1em;
 }
 .tool_bar > .more_tran {
 	display: inline-block;
