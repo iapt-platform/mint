@@ -397,6 +397,7 @@ require_once "../pcdl/html_head.php";
 	click_dropdown_init();
 	note_create();
 	reader_load();
+	historay_init();
 	});
 
 

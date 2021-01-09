@@ -305,6 +305,7 @@ note .ref {
 	position: absolute;
 	bottom: -1.3em;
 	right: 0;
+	max-width: 100%;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/

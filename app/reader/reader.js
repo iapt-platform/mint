@@ -177,6 +177,7 @@ function reader_get_path() {
 		function (data) {
 			$("#para_path").html(data);
 			$("chapter").each(function () {
+				//替换为本地语言字符串
 				let title = $(this).text();
 				let strLocalTitle = "";
 				if (
