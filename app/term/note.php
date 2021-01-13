@@ -168,7 +168,12 @@ foreach ($_data as $key => $value) {
 	}
 	foreach ($translation as $key => $value) {
 		# code...
-		$translation[$key]["channalinfo"]=$tran_channal[$value["channal"]];
+		if($value["channal"]){
+			$translation[$key]["channalinfo"]=$tran_channal[$value["channal"]];
+		}
+		else{
+			$translation[$key]["channalinfo"]=false;
+		}
 	}
 
 	//查询路径

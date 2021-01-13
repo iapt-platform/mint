@@ -266,36 +266,36 @@ switch($op){
 	case "save":
 	{
 		$currTime=sprintf("%d",microtime(true)*1000);
-		if(isset($_GET["modify_time"])){
-			$mTime=$_GET["modify_time"];
+		if(isset($_POST["modify_time"])){
+			$mTime=$_POST["modify_time"];
 		}
 		else{
 			$mTime=mTime();
 		}
-		if($_GET["guid"]!=""){
+		if($_POST["guid"]!=""){
 			$query="UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
-			$stmt = @PDO_Execute($query,array($_GET["mean"],
-																		$_GET["mean2"],
-																		$_GET["tag"],
-																		$_GET["channal"],
-																		$_GET["language"],
-																		$_GET["note"],
-																		mTime(),
-																		$mTime,
-																		$_GET["guid"]
-																	));
+			$stmt = @PDO_Execute($query,array($_POST["mean"],
+											$_POST["mean2"],
+											$_POST["tag"],
+											$_POST["channal"],
+											$_POST["language"],
+											$_POST["note"],
+											mTime(),
+											$mTime,
+											$_POST["guid"]
+										));
 		}
 		else{
 			$parm = array();
 			$parm[]=UUID::v4();
-			$parm[]=$_GET["word"];
-			$parm[]=pali2english($word);
-			$parm[]=$_GET["mean"];
-			$parm[]=$_GET["mean2"];
-			$parm[]=$_GET["tag"];			
-			$parm[]=$_GET["channal"];			
-			$parm[]=$_GET["language"];			
-			$parm[]=$_GET["note"];
+			$parm[]=$_POST["word"];
+			$parm[]=pali2english($_POST["word"]);
+			$parm[]=$_POST["mean"];
+			$parm[]=$_POST["mean2"];
+			$parm[]=$_POST["tag"];			
+			$parm[]=$_POST["channal"];			
+			$parm[]=$_POST["language"];			
+			$parm[]=$_POST["note"];
 			$parm[]=$_COOKIE["userid"];
 			$parm[]=0;
 			$parm[]=mTime();
@@ -315,7 +315,7 @@ switch($op){
 			}
 			else{
 				$respond['status']=0;
-				$respond['message']=$word;
+				$respond['message']=$_POST["word"];
 			}		
 			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 		break;

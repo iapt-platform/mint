@@ -308,7 +308,7 @@ function term_data_save(guid) {
 		var strLanguage = $("#term_edit_language_" + guid).val();
 		var strNote = $("#term_edit_note_" + guid).val();
 	}
-	$.get(
+	$.post(
 		"../term/term.php",
 		{
 			op: "save",
