@@ -64,8 +64,8 @@ function note_sent_edit_dlg_init() {
 	});
 }
 function note_init(input) {
-	let newString = input.replace(/\{\{/g, '<note info="');
-	newString = newString.replace(/\}\}/g, '" ></note>');
+	let newString = input.replace(/\{\{/g, '<div class="note_shell"><note info="');
+	newString = newString.replace(/\}\}/g, '" ></note></div>');
 
 	let output = "<div>";
 	output += marked(newString);
@@ -460,6 +460,7 @@ function note_json_html(in_json) {
 		gLocal.gui.edit_now +
 		"</a>";
 	output += "<a onclick='add_to_list()'>" + gLocal.gui.add_to_edit_list + "</a>";
+	output += "<a onclick='slider_show(this)'>Slider Show</a>";
 	output += "</div>";
 	output += "</div>";
 	output += " </div>";
@@ -609,8 +610,7 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 			iterator.channalinfo.lang +
 			"</span>";
 	} else {
-		//note_init处理句子链接 marked不处理
-		//output += marked(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		//note_init处理句子链接
 		output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
 	}
 	output += "</div>";
@@ -962,4 +962,8 @@ function set_pali_script(pos, script) {
 	$("pl" + pos).html(function (index, oldcontent) {
 		return roman_to_my(oldcontent);
 	});
+}
+
+function slider_show(obj) {
+	$(obj).parent().parent().parent().parent().parent().toggleClass("slider_show_shell");
 }
