@@ -464,7 +464,9 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += " </div>";
 
-	output += "<div class='palitext'>" + in_json.palitext + "</div>";
+	output += "<div class='palitext palitext_roma'>" + in_json.palitext + "</div>";
+	output += "<div class='palitext palitext1'></div>";
+	output += "<div class='palitext palitext2'></div>";
 
 	//output += "<div id='translation_div'>";
 	for (const iterator of in_json.translation) {
@@ -934,4 +936,30 @@ function note_show_pali_sim(SentId) {
 			pali_sim_dlg_open(SentId, iterator.sim);
 		}
 	}
+}
+
+function set_pali_script(pos, script) {
+	$(".palitext" + pos).each(function () {
+		let html = $(this).siblings(".palitext_roma").first().html();
+		$(this).html(html);
+	});
+
+	$(".palitext" + pos)
+		.find("*")
+		.contents()
+		.filter(function () {
+			return this.nodeType != 1;
+		})
+		.wrap("<pl" + pos + "></pl" + pos + ">");
+
+	$(".palitext" + pos)
+		.contents()
+		.filter(function () {
+			return this.nodeType != 1;
+		})
+		.wrap("<pl" + pos + "></pl" + pos + ">");
+
+	$("pl" + pos).html(function (index, oldcontent) {
+		return roman_to_my(oldcontent);
+	});
 }
