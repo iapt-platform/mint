@@ -1,29 +1,46 @@
 #dict_ref_search_result {
-    margin: 4em 5px 5px 1em;
-    width: 100%;
-    padding: 1.5em 10px 0 10px;
+	margin: 4em 5px 5px 1em;
+	width: 100%;
+	padding: 1.5em 10px 0 10px;
 }
-.dict_word .pali{
-    font-size: 110%;
-    font-weight: 700;
+.dict_word .pali {
+	font-size: 110%;
+	font-weight: 700;
 }
-.dict_word .dict{
-    font-size: 100%;
-    font-style: normal;
-}
-
-.dict_word .mean{
-    font-size:90%;
-    margin: 2px 0;
-    line-height: 130%;
-    font-weight: 300;
-    display: inline-block;
-    font-style: normal;
- 
+.dict_word .dict {
+	font-size: 100%;
+	font-style: normal;
 }
 
-.dict_word input,select,textarea{
-	background-color:white;
-    color:rgb(0, 0, 0);
+.dict_word .mean {
+	font-size: 90%;
+	margin: 2px 0;
+	line-height: 130%;
+	font-weight: 300;
+	display: inline-block;
+	font-style: normal;
+}
 
+.dict_word input,
+select,
+textarea {
+	background-color: white;
+	color: rgb(0, 0, 0);
+}
+
+#dict_ref_search_input {
+	margin-left: 0.5em;
+	width: 100%;
+	font-size: 140%;
+	padding: 0.6em;
+	color: var(--btn-hover-bg-color);
+	background-color: var(--btn-color);
+}
+#left_menu_button {
+	display: none;
+}
+
+#trubo_split {
+	height: fit-content;
+	font-size: 1.2em;
 }

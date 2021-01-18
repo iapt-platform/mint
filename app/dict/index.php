@@ -5,7 +5,10 @@ require_once "../pcdl/html_head.php";
 <body>
 	<a name="toc_root"></a>
 	<?php
-	require_once("../pcdl/head_bar.php");
+	if(!(isset($_GET["inline"]) && $_GET["inline"]=='1')){
+		require_once("../pcdl/head_bar.php");
+	}
+	
 	?>
 
 	<style>
@@ -212,21 +215,29 @@ require_once "../pcdl/html_head.php";
 			justify-content: center;
 		}
 	</style>
-	<!-- <link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">-->
+	<link type="text/css" rel="stylesheet" href="./css/style.css" >
+	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
 
 
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
 		<div style="display:flex;justify-content: space-between;">
-			<div style="flex:2;">
-				<div style="width: fit-content; margin-right: 0; margin-left: auto; margin-top: 1em; margin-bottom: 1em;">
-					<guide gid="dict_search_input"></guide>
-				</div>
+			<div id="left_menu_button">
+				<button id="left_toc" type="button" class="icon_btn" onclick="setNaviVisibility('table_of_content')" title="Dict List">
+				<svg class="icon">
+					<use xlink:href="./icon.svg#icon_toc"></use>
+				</svg>
+				<span class="icon_notify" id="icon_notify_table_of_content">
+				</span>
+				</button>
+			</div>
+			<div >
+				<guide gid="dict_search_input"></guide>
 			</div>
 			<div style="flex:6;">
 				<div>
 					<div>
-						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search; ?>" onkeyup="dict_input_keyup(event,this)" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onfocus="dict_input_onfocus()" />
+						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search; ?>" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
 					<div id="word_parts">
 						<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
@@ -244,8 +255,8 @@ require_once "../pcdl/html_head.php";
 					</div>
 				</div>
 			</div>
-			<span style="flex:2;">
-				<button onclick="trubo_split()" style="height: fit-content;border: 1px solid var(--btn-border-color);background: var(--btn-color);border-radius: 4px;font-size: 1.2em;padding: 0.5em;">
+			<span style="display:flex;">
+				<button id="trubo_split" onclick="trubo_split()" >
 					<?php echo $_local->gui->turbo_split; //强力拆分
 					?>
 				</button>

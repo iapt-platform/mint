@@ -5,7 +5,36 @@
 body {
 
 }
+#dict_list_shell{
+	display:none;
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:#020202d9;
+	z-index: 100;
+	padding-top: 60px;
+}
+#dict_list{
+	width:300px;	
+	text-align:left;
+    -webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;		
+}
+.dict_list_off{
+	-webkit-transform:translateX(-100%);
+	-moz-transform:translateX(-100%);
+	transform:translateX(-100%);
+}
+.dict_list_on{
+	-webkit-transform:translateX(0);
+	-moz-transform:translateX(0);
+	transform:translateX(0);
+}
 
+#dict_user{
+	display:none;
+}
 .left_nav_bar{
 	display:none;
 }
@@ -87,4 +116,18 @@ body {
 #para_res_list_header{
 	display:block;
 	padding: 8px;
+}
+
+#dict_ref_search_input {
+	margin-left: 0.1em;
+	font-size: 120%;
+	padding: 0.3em;
+}
+
+#left_menu_button{
+	display: block;
+}
+
+#trubo_split {
+	font-size: unset;
 }
