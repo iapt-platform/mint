@@ -104,6 +104,7 @@ else{
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
+	<script src="../public/charcode/coverter_my.js"></script>
 
 	<script >
 	<?php require_once '../public/load_lang_js.php';?>
