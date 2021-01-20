@@ -655,6 +655,14 @@ function roman_to_my(input) {
 		{ id: "ū", value: "ဦ" },
 		{ id: "e", value: "ဧ" },
 		{ id: "o", value: "ဩ" },
+
+		{ id: "ခာ", value: "ခါ" },
+		{ id: "ဂာ", value: "ဂါ" },
+		{ id: "ငာ", value: "ငါ" },
+		{ id: "ဒာ", value: "ဒါ" },
+		{ id: "ပာ", value: "ပါ" },
+		{ id: "ဝာ", value: "ဝါ" },
+
 		{ id: "္အ", value: "" },
 		{ id: "1", value: "၁" },
 		{ id: "2", value: "၂" },

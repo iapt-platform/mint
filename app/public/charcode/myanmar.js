@@ -31,7 +31,7 @@ var char_roman_to_myn = [
 	{ id: "l", value: "လ္" },
 	{ id: "v", value: "ဝ္" },
 	{ id: "s", value: "သ္" },
-	{ id: "ṅ", value: "င္" },
+	{ id: "ṅ", value: "င်္" },
 	{ id: "္y", value: "ျ္" },
 	{ id: "္v", value: "ွ္" },
 	{ id: "္r", value: "ြ္" },
@@ -58,6 +58,12 @@ var char_roman_to_myn = [
 	{ id: "e", value: "ဧ" },
 	{ id: "o", value: "ဩ" },
 	{ id: "္အ", value: "" },
+	{ id: "ခာ", value: "ခါ" },
+	{ id: "ဂာ", value: "ဂါ" },
+	{ id: "ငာ", value: "ငါ" },
+	{ id: "ဒာ", value: "ဒါ" },
+	{ id: "ပာ", value: "ပါ" },
+	{ id: "ဝာ", value: "ဝါ" },
 ];
 
 var char_myn_to_roman_1 = [
