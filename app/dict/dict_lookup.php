@@ -156,7 +156,7 @@ switch($op){
 		echo "</div>";
 		break;
 	case "search":
-		echo "<div id='dict_list'></div>";
+		echo "<div id='dict_list_shell' onclick='setNaviVisibility()'><div id='dict_list' class='dict_list_off'></div></div>";
 		echo "<div id='dict_ref'>";	
 		$dict_list_a = [];
 		//社区字典开始

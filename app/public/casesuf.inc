@@ -3134,7 +3134,8 @@ array("oti","o",".2p.$.sg.$.aor."),
 array("oti","ā",".2p.$.sg.$.aor."),
 array("oti","ttha",".2p.$.pl.$.aor."),
 array("oti","se",".2p.$.sg.$.aor."),
-array("oti","vhaṃ",".2p.$.pl.$.aor.")
+array("oti","vhaṃ",".2p.$.pl.$.aor."),
+array("ati","ittha",".2p.$.pl.$.aor.")
 
 
 

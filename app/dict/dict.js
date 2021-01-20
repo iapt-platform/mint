@@ -20,17 +20,19 @@ function dict_search(word) {
 	}
 	word = standardize(word);
 
-	$.get("dict_lookup.php",
+	$.get(
+		"dict_lookup.php",
 		{
 			op: "search",
-			word: word
+			word: word,
 		},
 		function (data, status) {
 			$("#dict_search_result").html(data);
 			$("#dict_list").html($("#dictlist").html());
 			$("#dictlist").html("");
 			guide_init();
-		});
+		}
+	);
 }
 function standardize(word) {
 	let word_end = word.slice(-1);
@@ -38,26 +40,29 @@ function standardize(word) {
 		word_end = "ṃ";
 		word = word.slice(0, -1) + word_end;
 	}
-	return (word);
+	return word;
 }
 
 function dict_pre_search(word) {
-	if (dict_pre_searching == true) { return; }
+	if (dict_pre_searching == true) {
+		return;
+	}
 	dict_pre_searching = true;
 	dict_pre_search_curr_word = word;
 
-	$.get("dict_lookup.php",
+	$.get(
+		"dict_lookup.php",
 		{
 			op: "pre",
-			word: word
+			word: word,
 		},
 		function (data, status) {
 			dict_pre_searching = false;
 			dict_pre_search_curr_word = "";
 			$("#pre_search_word_content").html(data);
 			$("#pre_search_result").css("display", "block");
-		});
-
+		}
+	);
 }
 
 function dict_pre_word_click(word) {
@@ -76,39 +81,33 @@ function dict_input_onfocus() {
 	}
 }
 
-
 function dict_input_keyup(e, obj) {
-	var keynum
-	var keychar
-	var numcheck
+	var keynum;
+	var keychar;
+	var numcheck;
 
 	if ($("#dict_ref_search_input").val() == "") {
 		dict_show_history();
 		return;
 	}
-	if (window.event) // IE
-	{
-		keynum = e.keyCode
+	if (window.event) {
+		// IE
+		keynum = e.keyCode;
+	} else if (e.which) {
+		// Netscape/Firefox/Opera
+		keynum = e.which;
 	}
-	else if (e.which) // Netscape/Firefox/Opera
-	{
-		keynum = e.which
-	}
-	var keychar = String.fromCharCode(keynum)
+	var keychar = String.fromCharCode(keynum);
 	if (keynum == 13) {
 		dict_search(obj.value);
-	}
-	else {
+	} else {
 		dict_input_split(obj.value);
 		if (obj.value.indexOf("+") == -1) {
-
 			dict_pre_search(obj.value);
-		}
-		else {
+		} else {
 			dict_input_split(obj.value);
 			$("#pre_search_result").hide();
 		}
-
 	}
 }
 
@@ -120,13 +119,12 @@ function dict_input_split(word) {
 			//strParts += "<div class='part_list'><a onclick='dict_search(\"" + wordParts[i] + "\")'>" + wordParts[i] + "</a></div>";
 			strParts += "<part><a onclick='dict_search(\"" + wordParts[i] + "\")'>" + wordParts[i] + "</a></part>";
 		}
-		strParts = "<div class='dropdown_ctl'><div class='content'><div class='main_view' >" + strParts + "</div></div></div>";
+		strParts =
+			"<div class='dropdown_ctl'><div class='content'><div class='main_view' >" + strParts + "</div></div></div>";
 		$("#input_parts").html(strParts);
-	}
-	else {
+	} else {
 		$("#input_parts").html("");
 	}
-
 }
 
 function dict_show_history() {
@@ -136,7 +134,7 @@ function dict_show_history() {
 	var arrHistory = localStorage.searchword.split(",");
 	var strHistory = "";
 	if (arrHistory.length > 0) {
-		strHistory += "<a onclick=\"cls_word_search_history()\">清空历史记录</a>";
+		strHistory += '<a onclick="cls_word_search_history()">清空历史记录</a>';
 	}
 	for (var i = 0; i < arrHistory.length; i++) {
 		var word = arrHistory[i];
@@ -150,15 +148,14 @@ function dict_show_history() {
 function cls_word_search_history() {
 	localStorage.searchword = "";
 	$("#dict_ref_search_result").html("");
-
 }
-
 
 function trubo_split() {
 	$("#pre_search_result").hide();
-	$.post("split.php",
+	$.post(
+		"split.php",
 		{
-			word: $("#dict_ref_search_input").val()
+			word: $("#dict_ref_search_input").val(),
 		},
 		function (data, status) {
 			try {
@@ -168,15 +165,20 @@ function trubo_split() {
 					for (const part of result[0]["data"]) {
 						html += '<div class="dropdown_ctl">';
 						html += '<div class="content">';
-						html += '<div class="main_view">' + "<part>" + part[0].word.replace(/\+/g, "</part><part>") + "</part>" + '</div>';
-						html += '<div class="more_button">' + part.length + '</div>';
-						html += '</div>';
+						html +=
+							'<div class="main_view">' +
+							"<part>" +
+							part[0].word.replace(/\+/g, "</part><part>") +
+							"</part>" +
+							"</div>";
+						html += '<div class="more_button">' + part.length + "</div>";
+						html += "</div>";
 						html += '<div class="menu" >';
 						for (const one_part of part) {
-							html += '<div class="part_list">' + one_part.word + '</div>';
+							html += '<div class="part_list">' + one_part.word + "</div>";
 						}
-						html += '</div>';
-						html += '</div>';
+						html += "</div>";
+						html += "</div>";
 					}
 				}
 				html += "</div>";
@@ -184,8 +186,7 @@ function trubo_split() {
 
 				$(".more_button").click(function () {
 					$(this).parent().siblings(".menu").toggle();
-				}
-				);
+				});
 
 				$(".part_list").click(function () {
 					let html = "<part>" + $(this).text().replace(/\+/g, "</part><part>") + "</part>";
@@ -194,17 +195,24 @@ function trubo_split() {
 					$("part").click(function () {
 						dict_search($(this).text());
 					});
-				}
-				);
+				});
 
 				$("part").click(function () {
 					dict_search($(this).text());
-				}
-				);
+				});
+			} catch (e) {}
+		}
+	);
+}
 
-			}
-			catch (e) {
-
-			}
-		});
+function setNaviVisibility(strObjId = "") {
+	var objNave = document.getElementById("dict_list");
+	var objblack = document.getElementById("dict_list_shell");
+	if (strObjId == "") {
+		objblack.style.display = "none";
+		objNave.className = "dict_list_off";
+	} else {
+		objblack.style.display = "block";
+		objNave.className = "dict_list_on";
+	}
 }

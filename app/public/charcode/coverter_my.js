@@ -597,20 +597,6 @@ var char_myn_to_roman_2 = [
 
 function roman_to_my(input) {
 	let char_roman_to_myn = [
-		{ id: "1", value: "၁" },
-		{ id: "2", value: "၂" },
-		{ id: "3", value: "၃" },
-		{ id: "4", value: "၄" },
-		{ id: "5", value: "၅" },
-		{ id: "6", value: "၆" },
-		{ id: "7", value: "၇" },
-		{ id: "8", value: "၈" },
-		{ id: "9", value: "၉" },
-		{ id: "0", value: "၀" },
-		{ id: "”", value: "း" },
-		{ id: "’", value: "့" },
-		{ id: "．", value: "။" },
-		{ id: "，", value: "၊" },
 		{ id: "kh", value: "ခ္" },
 		{ id: "gh", value: "ဃ္" },
 		{ id: "ch", value: "ဆ္" },
@@ -669,7 +655,27 @@ function roman_to_my(input) {
 		{ id: "ū", value: "ဦ" },
 		{ id: "e", value: "ဧ" },
 		{ id: "o", value: "ဩ" },
+
+		{ id: "ခာ", value: "ခါ" },
+		{ id: "ဂာ", value: "ဂါ" },
+		{ id: "ငာ", value: "ငါ" },
+		{ id: "ဒာ", value: "ဒါ" },
+		{ id: "ပာ", value: "ပါ" },
+		{ id: "ဝာ", value: "ဝါ" },
+
 		{ id: "္အ", value: "" },
+		{ id: "1", value: "၁" },
+		{ id: "2", value: "၂" },
+		{ id: "3", value: "၃" },
+		{ id: "4", value: "၄" },
+		{ id: "5", value: "၅" },
+		{ id: "6", value: "၆" },
+		{ id: "7", value: "၇" },
+		{ id: "8", value: "၈" },
+		{ id: "9", value: "၉" },
+		{ id: "0", value: "၀" },
+		{ id: "．", value: "။" },
+		{ id: "，", value: "၊" },
 	];
 
 	let txt = input.toLowerCase();
