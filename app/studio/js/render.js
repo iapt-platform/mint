@@ -1164,12 +1164,17 @@ function render_sent_tool_bar(elementBlock, begin) {
 			"&end=" +
 			iEnd;
 	}
+
+	output += "<span style='flex: 7;display: flex;'>";
+	output += "<div style='background-color: silver;'>";
+	//句子编号
+	output += "<span style='font-size: large; font-weight: bolder;' title=" + gLocal.gui.text_num + ">";
+	output += sentIdString;
+	output += "</span>";
+	//功能按钮
+	//拷贝到剪贴板
 	output +=
-		"<span style='flex: 7;display: flex;'><div style='background-color: silver;'><span style='font-size: large; font-weight: bolder;' title=" +
-		gLocal.gui.text_num +
-		">" +
-		sentIdString +
-		"</span><button class='icon_btn' onclick=\"copy_to_clipboard('" +
+		"<button class='icon_btn' onclick=\"copy_to_clipboard('" +
 		sentIdStringLink +
 		"')\" title=" +
 		gLocal.gui.copy_to_clipboard +
@@ -1177,35 +1182,28 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output +=
 		'<svg style="fill: var(--link-color);" t="1601480724259" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4644"><path d="M791.272727 93.090909H139.636364v837.818182a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h558.545454a93.090909 93.090909 0 0 1 93.090909 93.090909zM232.727273 186.181818h744.727272v837.818182H232.727273V186.181818z" p-id="4645"></path></svg>';
 	output += "</button>";
-	//	output += "<span>"+abook+"-"+aparagraph+"-"+iBegin+"-"+iEnd+"</span>";
+
+	//在阅读器中打开
+	let reader_open_link = "";
 	if (_display_sbs == 0) {
 		//逐段模式
-		output +=
-			"<button class='icon_btn'  onclick=\"window.open('../reader/?view=para&book=" +
-			abook +
-			"&para=" +
-			aparagraph +
-			"')\" target='_blank' title='" +
-			gLocal.gui.scan_in_reader +
-			"'>";
+		reader_open_link = "../reader/?view=para&book=" + abook + "&para=" + aparagraph;
 	} else {
 		//逐句模式
-		output +=
-			"<button class='icon_btn'  onclick=\"window.open('../reader/?view=sent&book=" +
-			abook +
-			"&para=" +
-			aparagraph +
-			"&begin=" +
-			iBegin +
-			"&end=" +
-			iEnd +
-			"')\" target='_blank' title='" +
-			gLocal.gui.scan_in_reader +
-			"'>";
+		reader_open_link =
+			"../reader/?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
 	}
+	output +=
+		"<button class='icon_btn'  onclick=\"window.open('" +
+		reader_open_link +
+		"')\" target='_blank' title='" +
+		gLocal.gui.scan_in_reader +
+		"'>";
 	output +=
 		'<svg style="fill: var(--link-color);" t="1601482753387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22291"><path d="M703.730499 544.578527a191.730499 191.730499 0 0 1 156.260356 302.806368l122.004508 122.004507a31.955083 31.955083 0 0 1-45.248398 45.184488l-121.940597-121.940598A191.730499 191.730499 0 1 1 703.730499 544.642437z m-6.391017-511.28133c38.857381 0 70.301183 30.67688 70.301183 68.511698v386.912146a255.640665 255.640665 0 1 0-69.022979 503.16474l-563.687667 0.06391c-38.857381 0-70.301183-30.67688-70.301183-68.447788V101.808895C64.628836 63.910166 96.072638 33.233286 134.930019 33.233286h562.409463z m6.391017 575.191496a127.820333 127.820333 0 1 0 0 255.640665 127.820333 127.820333 0 0 0 0-255.640665z m-351.505915 0h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511281h127.820332a31.955083 31.955083 0 0 0 0-63.910166z m0-191.730499h-127.820332a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h127.820332a31.955083 31.955083 0 0 0 0-63.910167z m191.730499-191.730499h-319.550831a31.955083 31.955083 0 0 0-5.751915 63.398885l5.751915 0.511282h319.550831a31.955083 31.955083 0 0 0 0-63.910167z" p-id="22292"></path></svg>';
 	output += "</button>";
+
+	//关系图
 	output +=
 		"<button class='icon_btn' title='" +
 		gLocal.gui.relational_map +
@@ -1220,6 +1218,24 @@ function render_sent_tool_bar(elementBlock, begin) {
 		"')\">" +
 		'<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
 		"</button>";
+
+	//拷贝词意到剪贴板
+	output +=
+		"<button class='icon_btn' title='" +
+		"copy meaning" +
+		"' class='rel_map' onclick=\"sent_copy_meaning('" +
+		abook +
+		"','" +
+		aparagraph +
+		"','" +
+		iBegin +
+		"','" +
+		iEnd +
+		"')\">" +
+		'<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
+		"</button>";
+
+	//功能按钮结束
 	output += "</div>";
 	output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 	output += "</span>";
@@ -1442,6 +1458,7 @@ function renderWordParBlockInner(elementBlock) {
 				if (nextEnd == 0) {
 					nextEnd = iWordId;
 				}
+
 				output += "<div class='sent_wbw_trans_bar'>";
 				let sentIdString = book + "-" + paragraph + "-" + nextBegin + "-" + nextEnd;
 				let sentIdStringLink = "{{" + sentIdString + "}}";
@@ -1488,6 +1505,22 @@ function renderWordParBlockInner(elementBlock) {
 					"')\">" +
 					'<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
 					"</button>";
+				//拷贝词意到剪贴板
+				output +=
+					"<button class='icon_btn' title='" +
+					"copy meaning" +
+					"' class='rel_map' onclick=\"sent_copy_meaning('" +
+					book +
+					"','" +
+					paragraph +
+					"','" +
+					nextBegin +
+					"','" +
+					nextEnd +
+					"')\">" +
+					'<svg style="transform: rotate(-90deg); fill: var(--link-color);" t="1601482033694" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18290"><path d="M903.3 650.8H791.9V511.3H540.5V399.9h167.7c30.9 0 55.9-25.5 55.9-56.4V120.3c0-31.3-25.1-56.4-55.9-56.4H316.4c-30.9 0-55.5 25.1-55.5 56.4 0 0 0 222.8-0.4 223.2 0 31.3 25.1 56.4 55.9 56.4h168.2v111.4H232.8v139.6H120.9c-30.9-0.1-55.9 25-55.9 55.9v196.4c0 30.4 25.1 55.5 55.9 55.9h279.6c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25.1-55.9-55.9-55.9H288.7v-83.7H736v83.7H624.2c-30.9 0-55.9 25.1-55.9 55.9v196.4c0 30.9 25.1 55.9 55.9 55.9h279.1c30.9 0 55.9-25.1 55.9-55.9V706.8c0-30.9-25-56-55.9-56z" p-id="18291"></path></svg>' +
+					"</button>";
+
 				output += "</div>";
 				output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 				output += "</span>";
@@ -1549,7 +1582,18 @@ function renderWordParBlockInner(elementBlock) {
 	g_arr_Para_ID[par_num] = arr_Para_ID;
 	return output;
 }
+//根据relation 绘制关系图
+function sent_copy_meaning(book, para, begin, end) {
+	let wordId = 0;
 
+	let output = "";
+	for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++) {
+		output += doc_word("#p" + book + "-" + para + "-" + wordId).val("mean");
+	}
+	copy_to_clipboard(output);
+}
+
+//根据relation 绘制关系图
 function sent_show_rel_map(book, para, begin, end) {
 	let wordId = 0;
 	let memind = "graph LR\n";
