@@ -506,7 +506,7 @@ a:active {
     width: Auto;
     float: left;
     margin:0 0.6em 1.6em 0;
-	pageBreakInside:avoid;
+	page-break-inside:avoid;
 }
 /*
 .word_hightlight {
