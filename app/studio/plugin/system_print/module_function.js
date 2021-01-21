@@ -1,6 +1,4 @@
-﻿
-
-/*
+﻿/*
  * Modle Init.
  * public
  * @param param1 (type) 
@@ -10,26 +8,28 @@
  * @endcode
 
  */
-function setPageBreak(){
-	obj=document.getElementsByClassName("word")
-	for(var i=0;i<obj.length;i++){
-		obj[i].style.pageBreakInside="avoid";
+function setPageBreak() {
+	obj = document.getElementsByClassName("word");
+	for (var i = 0; i < obj.length; i++) {
+		obj[i].style.pageBreakInside = "avoid";
 	}
 }
-function menu_file_print_printpreview(isPrev){
-	setPageBreak();
+function menu_file_print_printpreview(isPrev) {
+	//setPageBreak();
 	printpreview(true);
 }
-function printpreview(isPrev){
-	var objNave = document.getElementById('leftmenuinner');
-	if(isPrev){
+function printpreview(isPrev) {
+	var objNave = document.getElementById("leftmenuinner");
+	if (isPrev) {
 		setNaviVisibility();
-		document.getElementById("sutta_text").style.width=document.getElementById("paper_width").value;
-		document.getElementById("toolbar").style.display="none";
-	}
-	else{
+		document.getElementById("sutta_text").style.width = document.getElementById("paper_width").value;
+		document.getElementById("toolbar").style.display = "none";
+		document.getElementById("left_tool_bar").style.display = "none";
+		$(".sent_wbw_trans_bar").hide();
+	} else {
 		setNaviVisibility();
-		document.getElementById("sutta_text").style.width="auto";
-		document.getElementById("toolbar").style.display="flex";
+		document.getElementById("sutta_text").style.width = "auto";
+		document.getElementById("toolbar").style.display = "flex";
+		document.getElementById("left_tool_bar").style.display = "fixed";
 	}
 }
