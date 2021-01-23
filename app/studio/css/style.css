@@ -4815,6 +4815,7 @@ note {
 	padding: 10px;
 	border-radius: 5px;
 	box-shadow: 0 0 10px var(--main-color);
+	z-index: 1;
 }
 
 .float_dlg_left {
