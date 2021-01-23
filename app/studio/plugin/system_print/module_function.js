@@ -15,7 +15,7 @@ function setPageBreak() {
 	}
 }
 function menu_file_print_printpreview(isPrev) {
-	//setPageBreak();
+	setPageBreak();
 	printpreview(true);
 }
 function printpreview(isPrev) {
