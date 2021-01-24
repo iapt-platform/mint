@@ -221,6 +221,11 @@ para:hover{
     min-height: 4em;
 	margin:0.5em;
 }
+.setting_shell{
+	border-bottom: 1px solid gray;
+    margin-bottom: 3em;
+    padding-bottom: 3em;
+}
 </style>
 		<!-- tool bar begin-->
 		<div id="main_tool_bar" class='reader_toolbar'>
@@ -240,7 +245,8 @@ para:hover{
 
 		
 	<div id="main_text_view" style="padding-bottom: 10em;">
-        <?php 
+		<?php 
+			echo "<div id='setting_account_shell' class='setting_shell'>";
             echo "<a name='account'></a>";
 			echo "<h2>{$_local->gui->account}</h2>";
 			echo "头像：<span id='head_img'></span>";
@@ -249,22 +255,37 @@ para:hover{
             echo "{$_local->gui->nick_name}：{$_COOKIE["nickname"]} <button>修改</button><br />";
             echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>修改</button><br />";
             echo "<a href='../ucenter/pwd_set.php'>{$_local->gui->change_password}</a><br>";
-            echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
+			echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
+			echo "</div>";
+			
 
+			echo "<div id='setting_general_shell' class='setting_shell'>";
+			echo "<a name='general'></a>";
             echo "<h2>{$_local->gui->general}</h2>";
             echo "<div id='setting_general' class='setting_content'>";
-            echo "</div>";
+			echo "</div>";
+			echo "</div>";
 
+			
+			echo "<div id='setting_library_shell' class='setting_shell'>";
+			echo "<a name='library'></a>";
+            echo "<h2>{$_local->gui->library}</h2>";
+            echo "<div id='setting_library' class='setting_content'>";
+            echo "</div>";			
+            echo "</div>";			
+
+			echo "<div id='setting_studio_shell' class='setting_shell'>";
+			echo "<a name='studio'></a>";
             echo "<h2>{$_local->gui->studio}</h2>";
             echo "<div id='setting_studio' class='setting_content'>";
             echo "</div>";
-            
-            echo "<h2>{$_local->gui->library}</h2>";
-            echo "<div id='setting_library' class='setting_content'>";
             echo "</div>";
 
+			echo "<div id='setting_dictionary_shell' class='setting_shell'>";
+			echo "<a name='dictionary'></a>";
             echo "<h2>{$_local->gui->dictionary}</h2>";
             echo "<div id='setting_dictionary' class='setting_content'>";
+            echo "</div>";
             echo "</div>";
 
         ?>
