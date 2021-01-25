@@ -1,4 +1,32 @@
 var char_roman_to_myn = [
+	{ id: "ggho", value: "ဂ္ဃေါ" },
+	{ id: "gghā", value: "ဂ္ဃါ" },
+
+	{ id: "ddho", value: "ဒ္ဓေါ" },
+	{ id: "ddhā", value: "ဒ္ဓါ" },
+
+	//{ id: "ppho", value: "ပ္ဖေါ" },
+	//{ id: "pphā", value: "ပ္ဖါ" },
+
+	{ id: "ss", value: "ဿ္" },
+
+	{ id: "vh", value: "ဝှ္" },
+	{ id: "vy", value: "ဝျ္" },
+	{ id: "vr", value: "ဝြ္" },
+
+	{ id: "yh", value: "ယှ္" },
+	{ id: "yy", value: "ယျ္" },
+	{ id: "yr", value: "ယြ္" },
+	{ id: "yv", value: "ယွ္" },
+
+	{ id: "hy", value: "ဟျ္" },
+	{ id: "hr", value: "ဟြ္" },
+	{ id: "hv", value: "ဟွ္" },
+
+	{ id: "rv", value: "ရွ္" },
+	{ id: "rh", value: "ရှ္" },
+	{ id: "ry", value: "ရျ္" },
+
 	{ id: "kh", value: "ခ္" },
 	{ id: "gh", value: "ဃ္" },
 	{ id: "ch", value: "ဆ္" },
@@ -22,20 +50,21 @@ var char_roman_to_myn = [
 	{ id: "t", value: "တ္" },
 	{ id: "d", value: "ဒ္" },
 	{ id: "n", value: "န္" },
-	{ id: "h", value: "ဟ္" },
 	{ id: "p", value: "ပ္" },
 	{ id: "b", value: "ဗ္" },
 	{ id: "m", value: "မ္" },
-	{ id: "y", value: "ယ္" },
-	{ id: "r", value: "ရ္" },
 	{ id: "l", value: "လ္" },
-	{ id: "v", value: "ဝ္" },
 	{ id: "s", value: "သ္" },
 	{ id: "ṅ", value: "င်္" },
-	{ id: "္y", value: "ျ္" },
-	{ id: "္v", value: "ွ္" },
-	{ id: "္r", value: "ြ္" },
+
 	{ id: "္h", value: "ှ္" },
+	{ id: "h", value: "ဟ္" },
+	{ id: "္y", value: "ျ္" },
+	{ id: "y", value: "ယ္" },
+	{ id: "္r", value: "ြ္" },
+	{ id: "r", value: "ရ္" },
+	{ id: "္v", value: "ွ္" },
+	{ id: "v", value: "ဝ္" },
 	{ id: "္aṃ", value: "ံ" },
 	{ id: "္iṃ", value: "ိံ" },
 	{ id: "္uṃ", value: "ုံ" },
@@ -57,13 +86,22 @@ var char_roman_to_myn = [
 	{ id: "ū", value: "ဦ" },
 	{ id: "e", value: "ဧ" },
 	{ id: "o", value: "ဩ" },
+	{ id: "်္အ", value: "" },
 	{ id: "္အ", value: "" },
-	{ id: "ခာ", value: "ခါ" },
-	{ id: "ဂာ", value: "ဂါ" },
-	{ id: "ငာ", value: "ငါ" },
-	{ id: "ဒာ", value: "ဒါ" },
-	{ id: "ပာ", value: "ပါ" },
-	{ id: "ဝာ", value: "ဝါ" },
+	{ id: "ခော", value: "ခေါ" },
+	{ id: "ခာ", value: "ခါ" }, //kh
+	{ id: "က္ခေါ", value: "က္ခော" }, //kkho
+	{ id: "က္ခါ", value: "က္ခာ" }, //kkhā
+	{ id: "ဂော", value: "ဂေါ" },
+	{ id: "ငော", value: "ငေါ" },
+	{ id: "ဒော", value: "ဒေါ" },
+	{ id: "ပော", value: "ပေါ" },
+	{ id: "ဝော", value: "ဝေါ" },
+	{ id: "ဂာ", value: "ဂါ" }, //g
+	{ id: "ငာ", value: "ငါ" }, //ṅ
+	{ id: "ဒာ", value: "ဒါ" }, //d
+	{ id: "ပာ", value: "ပါ" }, //p
+	{ id: "ဝာ", value: "ဝါ" }, //v
 ];
 
 var char_myn_to_roman_1 = [
