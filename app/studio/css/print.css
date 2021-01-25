@@ -1,0 +1,18 @@
+.word_punc,
+.word {
+	page-break-inside: avoid;
+}
+
+.mean,
+.org,
+.om,
+.case {
+	page-break-after: avoid;
+}
+#toolbar {
+	display: none;
+}
+
+#left_tool_bar {
+	display: none;
+}

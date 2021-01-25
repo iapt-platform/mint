@@ -214,6 +214,10 @@ require_once "../pcdl/html_head.php";
 			-moz-justify-content: center;
 			justify-content: center;
 		}
+
+		.dict_find_gramma guide{
+			color:unset;
+		}
 	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">

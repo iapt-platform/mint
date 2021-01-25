@@ -224,6 +224,7 @@ function note_refresh_new() {
 						note_ref_init();
 						term_get_dict();
 						note_channal_list();
+						refresh_pali_script();
 					} catch (e) {
 						console.error(e);
 					}
@@ -939,31 +940,46 @@ function note_show_pali_sim(SentId) {
 }
 
 function set_pali_script(pos, script) {
-	$(".palitext" + pos).each(function () {
-		let html = $(this).siblings(".palitext_roma").first().html();
-		$(this).html(html);
-	});
+	if (script == "none") {
+		$(".palitext" + pos).html("");
+	} else {
+		$(".palitext" + pos).each(function () {
+			let html = $(this).siblings(".palitext_roma").first().html();
+			$(this).html(html);
+		});
 
-	$(".palitext" + pos)
-		.find("*")
-		.contents()
-		.filter(function () {
-			return this.nodeType != 1;
-		})
-		.wrap("<pl" + pos + "></pl" + pos + ">");
+		$(".palitext" + pos)
+			.find("*")
+			.contents()
+			.filter(function () {
+				return this.nodeType != 1;
+			})
+			.wrap("<pl" + pos + "></pl" + pos + ">");
 
-	$(".palitext" + pos)
-		.contents()
-		.filter(function () {
-			return this.nodeType != 1;
-		})
-		.wrap("<pl" + pos + "></pl" + pos + ">");
+		$(".palitext" + pos)
+			.contents()
+			.filter(function () {
+				return this.nodeType != 1;
+			})
+			.wrap("<pl" + pos + "></pl" + pos + ">");
 
-	$("pl" + pos).html(function (index, oldcontent) {
-		return roman_to_my(oldcontent);
-	});
+		$("pl" + pos).html(function (index, oldcontent) {
+			return roman_to_my(oldcontent);
+		});
+	}
 }
 
+function refresh_pali_script() {
+	if (_display && _display == "para") {
+		//段落模式
+	} else {
+		//句子模式
+		setting_get("lib.second_script", set_second_scrip);
+	}
+}
+function set_second_scrip(value) {
+	set_pali_script(2, value);
+}
 function slider_show(obj) {
 	$(obj).parent().parent().parent().parent().parent().toggleClass("slider_show_shell");
 }
