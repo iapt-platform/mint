@@ -237,6 +237,9 @@ else{$currDevice="computer";}
 	guide {
 		margin: 0 15px 0 -8px;
 	}
+	.translate_sent_head_toolbar {
+	display: none;
+	}
 	</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
 	<style id="display_set">
