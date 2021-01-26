@@ -18,6 +18,7 @@ function setPageBreak() {
 }
 function menu_file_print_printpreview(isPrev) {
 	setPageBreak();
+	window.print();
 	//printpreview(true);
 }
 function printpreview(isPrev) {
