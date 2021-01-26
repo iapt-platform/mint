@@ -72,7 +72,7 @@
 { "id":".suf." , "value":"后缀" },
 { "id":".end." , "value":"语尾" },
 { "id":".part." , "value":"待定片段" },
-{ "id":"_un_auto_factormean_" , "value":"—自动—" },
+{ "id":"_un_auto_factormean_" , "value":" " },
 { "id":"_un_auto_mean_" , "value":"&nbsp;× × ×&nbsp;" },
 { "id":".un." , "value":"粘音" }
 ];

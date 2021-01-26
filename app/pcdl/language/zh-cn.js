@@ -71,7 +71,7 @@
 { "id":".root." , "value":"词根" },
 { "id":".suf." , "value":"后缀" },
 { "id":".end." , "value":"语尾" },
-{ "id":"_un_auto_factormean_" , "value":"—自动—" },
+{ "id":"_un_auto_factormean_" , "value":" " },
 { "id":"_un_auto_mean_" , "value":"&nbsp;× × ×&nbsp;" },
 { "id":".un." , "value":"粘音" }
 ];
