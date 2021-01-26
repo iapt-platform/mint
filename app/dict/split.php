@@ -1,27 +1,57 @@
 <?php
 //强力拆分复合词
+/*
+function: split compound word
+step 1 : split at diphthong . ~aa~ -> ~a-a~
+第一步：先切开双元音
+step 2 : every part use sandhi rule 
+第二步：用$sandhi的方法切分（套用连音规则）
+algorithm: 
+算法：
+f(word){
+	1. cut one letter from the end of word by sandhi rule in array($sandhi)
+	1. 从单词尾部切去一个字母
+	2. lookup first part . 
+	2. 查询剩余部分
+	if successful 
+	如果有结果
+		- get the confidence index of first part
+		获取该部分的信心指数
+		- to pull first part and confidence in stack
+		把第一部分的拼写及其信心指数压入堆栈
+		- process the remaining part at same way
+		用同样的方法处理剩余部分
+		- f(stack.first element)
+	else
+		add sandhi rule
+		goto 1
+}
+this is a recursion, depth=16
+此为递归算法，深度=16
+*/
 require_once '../public/casesuf.inc';
 require_once '../studio/dict_find_un.inc';
 require_once '../studio/sandhi.php';
 require_once "../path.php";
 require_once "../public/_pdo.php";
 
+//check input
 if(isset($_POST["word"])){
 	$input_word=mb_strtolower(trim($_POST["word"]),'UTF-8');
 	if(trim($input_word)==""){
 		echo "Empty";
-	return;
+		exit;
 	}
-	$arrWords = str_getcsv($input_word,"\n");//支持批量拆分
+	$arrWords = str_getcsv($input_word,"\n");//支持批量拆分 
 }
 else{
 ?>
 <!--debug only-->
 <form action="split.php" method="post">
 Words: <textarea type="text" name="word"></textarea>
-<input name="debug" type="hidden" />批量查询，单词之间用英文逗号分隔。
+<input name="debug" type="hidden" />批量查询，单词之间用换行分隔。 input word. between two words insert 'enter'
 <div>
-<input type="checkbox" name = "express" checked /> 快速搜索（遇到第一个连音规则成功就返回）
+<input type="checkbox" name = "express" checked /> 快速搜索（遇到第一个连音规则成功就返回） return when get first result 
 </div>
 <input type="submit">
 </form>
@@ -41,6 +71,8 @@ if(isset($_POST["express"])){
 else{
 	$_express = false;
 }
+
+// open word part db
 global $dbh;
 $dns = "sqlite:"._FILE_DB_PART_;
 $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
@@ -70,8 +102,8 @@ $path[]=array("",0);
 $path[]=array("",0);
 $path[]=array("",0);
 
-global $sandhi ;
-	//sandhi 语尾表
+	global $sandhi ;
+	//sandhi table 语尾表
 	$sandhi[]=array("a"=>"","b"=>"","c"=>"","len"=>0,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"ā","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
@@ -111,8 +143,10 @@ global $sandhi ;
 	$sandhi[]=array("a"=>"iti","b"=>"a","c"=>"icca","len"=>4,"adj_len"=>0,"advance"=>false);
 
 /*
-	$sandhi[]=array("a"=>"u[ūnaṃ]","b"=>"a","c"=>"ūnama","len"=>5,"adj_len"=>0,"advance"=>false);
-	$sandhi[]=array("a"=>"ī[īnaṃ]","b"=>"a","c"=>"īnama","len"=>5,"adj_len"=>0,"advance"=>false);
+other sandhi rule. can be use but program must be slow
+
+$sandhi[]=array("a"=>"u[ūnaṃ]","b"=>"a","c"=>"ūnama","len"=>5,"adj_len"=>0,"advance"=>false);
+$sandhi[]=array("a"=>"ī[īnaṃ]","b"=>"a","c"=>"īnama","len"=>5,"adj_len"=>0,"advance"=>false);
 
 $sandhi[]=array("a"=>"ā","b"=>"iti","c"=>"āti","len"=>3,"adj_len"=>0);
 $sandhi[]=array("a"=>"a","b"=>"iti","c"=>"āti","len"=>3,"adj_len"=>0);
@@ -158,14 +192,17 @@ $sandhi[]=array("a"=>"ṃ","b"=>"api","c"=>"mpi","len"=>3,"adj_len"=>0);
 	//$sandhi[]=array("a"=>"ī","b"=>"","c"=>"i","len"=>1,"adj_len"=>0,"advance"=>true);
 
 
-
+//diphthong table
 $search  = array('aa', 'ae', 'ai', 'ao', 'au', 'aā', 'aī', 'aū', 'ea', 'ee', 'ei', 'eo', 'eu', 'eā', 'eī', 'eū', 'ia', 'ie', 'ii', 'io', 'iu', 'iā', 'iī', 'iū', 'oa', 'oe', 'oi', 'oo', 'ou', 'oā', 'oī', 'oū', 'ua', 'ue', 'ui', 'uo', 'uu', 'uā', 'uī', 'uū', 'āa', 'āe', 'āi', 'āo', 'āu', 'āā', 'āī', 'āū', 'īa', 'īe', 'īi', 'īo', 'īu', 'īā', 'īī', 'īū', 'ūa', 'ūe', 'ūi', 'ūo', 'ūu', 'ūā', 'ūī', 'ūū');
 $replace = array('a-a', 'a-e', 'a-i', 'a-o', 'a-u', 'a-ā', 'a-ī', 'a-ū', 'e-a', 'e-e', 'e-i', 'e-o', 'e-u', 'e-ā', 'e-ī', 'e-ū', 'i-a', 'i-e', 'i-i', 'i-o', 'i-u', 'i-ā', 'i-ī', 'i-ū', 'o-a', 'o-e', 'o-i', 'o-o', 'o-u', 'o-ā', 'o-ī', 'o-ū', 'u-a', 'u-e', 'u-i', 'u-o', 'u-u', 'u-ā', 'u-ī', 'u-ū', 'ā-a', 'ā-e', 'ā-i', 'ā-o', 'ā-u', 'ā-ā', 'ā-ī', 'ā-ū', 'ī-a', 'ī-e', 'ī-i', 'ī-o', 'ī-u', 'ī-ā', 'ī-ī', 'ī-ū', 'ū-a', 'ū-e', 'ū-i', 'ū-o', 'ū-u', 'ū-ā', 'ū-ī', 'ū-ū');
+
+//main 
 
 $allword = array();
 foreach($arrWords as $oneword){
 	//预处理
 	//将双元音拆开
+	//step 1 : split at diphthong . ~aa~ -> ~a-a~
 	$word = str_replace($search, $replace, $oneword);
 
 	if(isset($_POST["debug"])){
@@ -275,6 +312,8 @@ function dict_lookup($word){
 /*
 查找某个单词是否在现有词典出现
 返回信心指数
+look up single word in dictionary vocabulary
+return the confidence value
 */
 function isExsit($word,$adj_len=0){
 
