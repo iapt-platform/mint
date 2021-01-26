@@ -67,3 +67,7 @@
 .sent_wbw_trans {
 	page-break-inside: avoid;
 }
+
+#id_info_panal {
+	display: none;
+}

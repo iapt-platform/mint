@@ -526,7 +526,7 @@ a:active {
 .word_punc {
 	width: Auto;
 	float: left;
-	margin: 0 0.5em 1.8em -0.4em;
+	margin: 0;
 	line-height: 1em;
 }
 
