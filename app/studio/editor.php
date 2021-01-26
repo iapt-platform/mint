@@ -26,7 +26,7 @@ else{$currDevice="computer";}
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)">
-	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
+	
 	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
 	<?php
@@ -120,19 +120,22 @@ else{$currDevice="computer";}
 	
 </head>
 <body class="mainbody" id="mbody" onLoad="editor_windowsInit()">
-	<style id="display_set">
-	</style>
-
 	<style>
 	.term_link:hover .guide_contence {
 		display: inline-block;
 	}
 	
 	.trans_text_block{
-		border-left: 5px solid #d1d1d1;
-		background-color: #f1f1f1;
+		border-left: 5px solid #ccd1ff;
+		border-color: #ccd1ff;
+		background-color:unset;
 		margin-bottom: 0.5em;
 		padding: 0.5em 0.5em 0.1em 0.5em;
+		padding-top:0;
+	}
+	.translate_sent_head_content .readonly{
+		border-color: #d1d1d1;
+		background-color: #f1f1f1;		
 	}
 	.trans_text_content{
 		color: var(--main-color);
@@ -144,7 +147,9 @@ else{$currDevice="computer";}
 		color: var(--detail-color);
 		display:flex;
 		justify-content: space-between;
+		border:none;
 	}
+
 	.trans_text_info .tag{
 		font-size: 75%;
 	}
@@ -217,7 +222,9 @@ else{$currDevice="computer";}
 		margin: 0 15px 0 -8px;
 	}
 	</style>
-	
+	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
+	<style id="display_set">
+	</style>
 	<!--左侧工具栏-->
 	<div id="left_tool_bar">
 		<div>

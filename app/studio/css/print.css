@@ -1,13 +1,20 @@
-.word_punc,
-.word {
-	page-break-inside: avoid;
+.mainview {
+	padding: 0;
 }
-
-.mean,
-.org,
-.om,
-.case {
-	page-break-after: avoid;
+.trans_text_info {
+	display: none;
+}
+.trans_text_block {
+	background-color: unset;
+}
+#btn_close_printprev {
+	display: none;
+}
+.word_head_bar {
+	display: none;
+}
+.sutta_top_blank {
+	height: 0;
 }
 #toolbar {
 	display: none;
@@ -15,4 +22,25 @@
 
 #left_tool_bar {
 	display: none;
+	visibility: hidden;
+}
+
+.sent_wbw_trans_bar {
+	display: none;
+}
+
+.in_word_button {
+	display: none;
+}
+
+.sent_wbw_trans {
+	display: block;
+}
+
+.sent_wbw_trans div {
+	page-break-inside: avoid;
+}
+
+.trans_text_block {
+	page-break-inside: avoid;
 }
