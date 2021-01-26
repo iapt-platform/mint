@@ -33,14 +33,37 @@
 	display: none;
 }
 
+#sutta_text {
+	margin-bottom: 0;
+}
+
+#end_of_page {
+	display: none;
+}
+
+.pardiv {
+	display: block;
+}
+.wbwdiv {
+	display: block;
+}
+.wbwparblock {
+	display: block;
+}
 .sent_wbw_trans {
 	display: block;
 }
-
-.sent_wbw_trans div {
+.sent_wbw {
 	page-break-inside: avoid;
 }
 
-.trans_text_block {
+.sent_wbw_trans {
+	border-bottom-width: 2px;
+}
+
+.translate_sent {
+	page-break-before: avoid;
+}
+.sent_wbw_trans {
 	page-break-inside: avoid;
 }

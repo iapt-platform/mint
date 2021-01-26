@@ -75,7 +75,23 @@ else{$currDevice="computer";}
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
+
+
 	<script  src="../channal/channal.js"></script>
+	<script>
+		get_channel_list_callback = function(){
+			let html ="<ul>";
+			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
+
+			if (_my_channal != null) {
+			for (const iterator of _my_channal) {
+				html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
+			}
+			html +="</ul>";
+			$("#layout_channel").html(html);
+		}		
+		}
+	</script>	
 	
 
 	<script language="javascript">
@@ -963,7 +979,7 @@ foreach($plugin_list as $info){
 		</div>
 	</div>
 	
-	<div id="end_of_page" class="borderT textS textAc" style="font-size: medium;">
+	<div id="end_of_page" class="borderT textS textAc">
 	<?php echo $_local->gui->page_end; ?><br>
 	——wikipāḷi <?php echo $_local->gui->studio; ?>——
 	</div>
