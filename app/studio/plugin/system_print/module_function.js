@@ -9,14 +9,16 @@
 
  */
 function setPageBreak() {
-	obj = document.getElementsByClassName("word");
-	for (var i = 0; i < obj.length; i++) {
-		obj[i].style.pageBreakInside = "avoid";
-	}
+	$(".pardiv").css("display", "block");
+	$(".wbwdiv").css("display", "block");
+	$(".wbwparblock").css("display", "block");
+	$(".sent_wbw_trans").css("display", "block");
+	$(".sent_wbw").css("page-break-inside", "avoid");
+	$(".translate_sent").css("page-break-before", "avoid");
 }
 function menu_file_print_printpreview(isPrev) {
 	setPageBreak();
-	printpreview(true);
+	//printpreview(true);
 }
 function printpreview(isPrev) {
 	var objNave = document.getElementById("leftmenuinner");

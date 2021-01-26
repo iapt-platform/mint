@@ -1650,8 +1650,10 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	let sent_lang = "en";
 	let objSent;
 	let thischannal;
+	let shell_class = "";
 	if (channal == 0) {
 		//百家言
+		shell_class += " channel_0";
 		if (netSent.length > 0) {
 			sender = netSent[netSent.length - 1].sender;
 			sent_text += netSent[netSent.length - 1].data.text;
@@ -1662,6 +1664,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		}
 	} else {
 		sender = "通道的名字";
+		shell_class += " mychannel";
 		objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
 		thischannal = channal_getById(channal);
 		if (objSent == false) {
@@ -1671,7 +1674,6 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 			objSent.id = "";
 			objSent.tag = "[]";
 			objSent.author = "{}";
-
 			sent_text = "";
 		} else {
 			sent_text = objSent.text;
@@ -1681,12 +1683,12 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 
 	let output = "";
 
-	output += "<div class='trans_text_block' style='padding-top:0;";
-	if (readonly == false) {
-		output += "border-color: #ccd1ff;background-color:unset;";
+	if (readonly == true) {
+		shell_class += " readonly";
 	}
-	output += "'>";
-	output += "<div class='trans_text_info' style='border:none;'>";
+
+	output += "<div class='trans_text_block " + shell_class + "' channel_id='" + channal + "'>";
+	output += "<div class='trans_text_info' >";
 
 	if (channal == 0) {
 		output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
