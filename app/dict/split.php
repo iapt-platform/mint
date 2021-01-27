@@ -23,8 +23,8 @@ f(word){
 		用同样的方法处理剩余部分
 		- f(stack.first element)
 	else
-		add sandhi rule
-		goto 1
+		apply other sandhi rule
+		back to 1
 }
 this is a recursion, depth=16
 此为递归算法，深度=16
