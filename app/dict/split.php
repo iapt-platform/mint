@@ -13,12 +13,10 @@ f(word){
 	1. 从单词尾部切去一个字母
 	2. lookup first part . 
 	2. 查询剩余部分
-	if successful 
+	if confidence value>0.8 
 	如果有结果
-		- get the confidence index of first part
+		- get the confidence value 
 		获取该部分的信心指数
-		- to pull first part and confidence in stack
-		把第一部分的拼写及其信心指数压入堆栈
 		- process the remaining part at same way
 		用同样的方法处理剩余部分
 		- f(stack.first element)
@@ -103,7 +101,7 @@ $path[]=array("",0);
 $path[]=array("",0);
 
 	global $sandhi ;
-	//sandhi table 语尾表
+	//sandhi rules table 语尾表
 	$sandhi[]=array("a"=>"","b"=>"","c"=>"","len"=>0,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"a","b"=>"a","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
 	$sandhi[]=array("a"=>"ā","b"=>"ā","c"=>"ā","len"=>1,"adj_len"=>0,"advance"=>false);
@@ -143,7 +141,8 @@ $path[]=array("",0);
 	$sandhi[]=array("a"=>"iti","b"=>"a","c"=>"icca","len"=>4,"adj_len"=>0,"advance"=>false);
 
 /*
-other sandhi rule. can be use but program must be slow
+other sandhi rule. can be use but program will be slow down
+其他连音规则，如果使用则会让程序运行变慢
 
 $sandhi[]=array("a"=>"u[ūnaṃ]","b"=>"a","c"=>"ūnama","len"=>5,"adj_len"=>0,"advance"=>false);
 $sandhi[]=array("a"=>"ī[īnaṃ]","b"=>"a","c"=>"īnama","len"=>5,"adj_len"=>0,"advance"=>false);
@@ -192,7 +191,7 @@ $sandhi[]=array("a"=>"ṃ","b"=>"api","c"=>"mpi","len"=>3,"adj_len"=>0);
 	//$sandhi[]=array("a"=>"ī","b"=>"","c"=>"i","len"=>1,"adj_len"=>0,"advance"=>true);
 
 
-//diphthong table
+//diphthong table双元音表
 $search  = array('aa', 'ae', 'ai', 'ao', 'au', 'aā', 'aī', 'aū', 'ea', 'ee', 'ei', 'eo', 'eu', 'eā', 'eī', 'eū', 'ia', 'ie', 'ii', 'io', 'iu', 'iā', 'iī', 'iū', 'oa', 'oe', 'oi', 'oo', 'ou', 'oā', 'oī', 'oū', 'ua', 'ue', 'ui', 'uo', 'uu', 'uā', 'uī', 'uū', 'āa', 'āe', 'āi', 'āo', 'āu', 'āā', 'āī', 'āū', 'īa', 'īe', 'īi', 'īo', 'īu', 'īā', 'īī', 'īū', 'ūa', 'ūe', 'ūi', 'ūo', 'ūu', 'ūā', 'ūī', 'ūū');
 $replace = array('a-a', 'a-e', 'a-i', 'a-o', 'a-u', 'a-ā', 'a-ī', 'a-ū', 'e-a', 'e-e', 'e-i', 'e-o', 'e-u', 'e-ā', 'e-ī', 'e-ū', 'i-a', 'i-e', 'i-i', 'i-o', 'i-u', 'i-ā', 'i-ī', 'i-ū', 'o-a', 'o-e', 'o-i', 'o-o', 'o-u', 'o-ā', 'o-ī', 'o-ū', 'u-a', 'u-e', 'u-i', 'u-o', 'u-u', 'u-ā', 'u-ī', 'u-ū', 'ā-a', 'ā-e', 'ā-i', 'ā-o', 'ā-u', 'ā-ā', 'ā-ī', 'ā-ū', 'ī-a', 'ī-e', 'ī-i', 'ī-o', 'ī-u', 'ī-ā', 'ī-ī', 'ī-ū', 'ū-a', 'ū-e', 'ū-i', 'ū-o', 'ū-u', 'ū-ā', 'ū-ī', 'ū-ū');
 
@@ -346,7 +345,7 @@ function isExsit($word,$adj_len=0){
 			
 		}
 	} 
-
+//fomular of confidence value 信心值计算公式
 	if($isFound)
 	{
 		if(isset($confidence["{$word}"])){
@@ -372,7 +371,7 @@ function isExsit($word,$adj_len=0){
 /*
 核心拆分函数
 
-$strWord, 要查询的词
+$strWord, word to be look up 要查询的词
 $deep, 当前递归深度
 $express=true, 快速查询
 $adj_len=0 长度校正系数

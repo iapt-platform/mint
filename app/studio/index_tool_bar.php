@@ -135,9 +135,11 @@
 		<!-- tool bar begin-->
 		<div class='index_toolbar'>
 			<div id="index_nav">
-			<svg class="icon" style="height: 3em;width: 15em;padding-top: 3px;">
-				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
-			</svg>
+			<a href="../pcdl">
+				<svg class="icon" style="height: 3em;width: 15em;padding-top: 3px;">
+					<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
+				</svg>
+			</a>
 			</div>
 			<div >
 					<div>
