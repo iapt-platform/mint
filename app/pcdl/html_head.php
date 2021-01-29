@@ -161,7 +161,6 @@ if (isset($_GET["language"])) {
 		}
 
 		.index_inner {
-
 			margin-left: auto;
 			margin-right: auto;
 		}
