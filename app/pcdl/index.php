@@ -12,29 +12,24 @@ require_once '../pcdl/html_head.php';
 			padding: 10px;
 		}
 
-		.index_inner {
-			width: 960px;
-			margin-left: auto;
-			margin-right: auto;
-		}
-
 		.content_inner {
 			display: flex;
 		}
 
 		.title_bar {
-			border-bottom: solid 1px var(--tool-bt-border-line-color);
 			justify-content: space-between;
 			display: flex;
+			margin: 1em 0;
 		}
 
 		.h3 {
-			font-size: 16px;
+			font-size: 18px;
 			font-weight: 700;
 		}
 
 		.index_list_categories {
-			margin: 2em 0;
+
+			padding: 1rem;
 		}
 
 		.index_list_categories a:hover {
@@ -56,26 +51,148 @@ require_once '../pcdl/html_head.php';
 			display: none;
 		}
 
-		#article_new .card {
-			height: 20vh;
-			overflow-y: scroll;
+		.index_article {
+			background-color: #e0e0e0;
+		}
+
+		.index_course {
+			background-color: #313131;
+		}
+
+		.index_course .h3 {
+			color: white;
+		}
+
+		.article_right {
+			width: calc(100% - 80px);
+		}
+
+		.course_right a,
+		.article_right a {
+			color: var(--main-color);
+		}
+
+		.title a,
+		.course_right title {
+			font-size: 120%;
+			font-weight: 700;
 		}
 
 		#course_list_new .card {
-			height: 15em;
-
+			height: 150px;
 		}
 
-		#course_list_new .card .pd-10:first-child {
-			height: 12em;
-			overflow-y: scroll;
-			padding-bottom: 2px;
+		.card_photo {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 150px;
+			background: gray;
+			border-radius: 20px 0 0 20px;
 		}
 
-		#course_list_new .card .pd-10:last-child {
-			padding-top: 2px;
+		.course_right {
+			margin-left: 150px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.summary {
+			margin-top: auto;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 100%;
+			-webkit-line-clamp: 2;
+		}
+
+		#pali_pedia .card {
+			background-color: #F9F9F9;
+			box-shadow: unset;
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			grid-template-areas:
+				"title author"
+				"summary author";
+		}
+
+		#pali_pedia .title {
+			grid-area: title;
+			font-size: 120%;
+		}
+
+		#pali_pedia .summary {
+			grid-area: summary;
+		}
+
+		#pali_pedia .author {
+			grid-area: author;
+			color: gray;
 		}
 	</style>
+	<style media="screen and (min-width:800px)">
+		.index_list_content {
+			display: flex;
+			margin: auto;
+			max-width: 900px;
+		}
+
+		.index_course .index_list_content {
+			flex-direction: row-reverse;
+		}
+
+		.title_bar {
+			flex: 4;
+			position: relative;
+			margin: 2em;
+		}
+
+		#article_new {
+			flex: 9;
+		}
+
+		#course_list_new {
+			flex: 8;
+		}
+
+		#pali_pedia .card {
+			margin: 0;
+		}
+
+		#pali_pedia {
+			flex: 12;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 10px;
+		}
+
+		.title_bar .h3 {
+			font-size: 250%;
+		}
+
+		.title_more {
+			position: absolute;
+			right: 30px;
+			bottom: 0;
+		}
+
+		.index_pedia .index_list_content {
+			flex-direction: column;
+		}
+
+		.index_pedia .title_bar {
+			display: grid;
+			justify-content: unset;
+			text-align: center;
+		}
+
+		.index_pedia .title_more {
+			all: unset;
+		}
+	</style>
+	<!--
 	<style media="screen and (max-width:800px)">
 		#right_pannal {
 			display: none;
@@ -99,7 +216,11 @@ require_once '../pcdl/html_head.php';
 		.content_inner {
 			display: block;
 		}
-	</style>
+
+
+
+		.article_list {}
+	</style>-->
 	<a name="pagetop"></a>
 	<!-- tool bar begin-->
 	<?php
@@ -110,37 +231,37 @@ require_once '../pcdl/html_head.php';
 
 	<div class="index_inner">
 
-		<div class="index_list_categories">
-			<div class="title_bar">
-				<span class="title h3"><?php echo $_local->gui->composition; ?></span>
-				<span class="title_more"><a href="../collect"><?php echo $_local->gui->more; ?></a></span>
-			</div>
-			<div class="content">
-				<div id="article_new" class="content_inner">
+		<div class="index_list_categories index_article">
+			<div class="index_list_content">
+				<div class="title_bar">
+					<span class="title h3"><?php echo $_local->gui->composition; ?></span>
+					<span class="title_more"><a href="../collect"><?php echo $_local->gui->more; ?></a></span>
+				</div>
+				<div id="article_new">
 				</div>
 			</div>
 		</div>
 
-		<div class="index_list_categories">
-			<div class="title_bar">
-				<span class="title h3"><?php echo $_local->gui->lesson; ?></span>
-				<span class="title_more"><a href="../course"><?php echo $_local->gui->more; ?></a></span>
-			</div>
-			<div class="content">
-				<div id="course_list_new" class="content_inner">
+		<div class="index_list_categories index_course">
+			<div class="index_list_content">
+				<div class="title_bar">
+					<span class="title h3"><?php echo $_local->gui->lesson; ?></span>
+					<span class="title_more"><a href="../course"><?php echo $_local->gui->more; ?></a></span>
+				</div>
+				<div id="course_list_new">
 				</div>
 			</div>
 		</div>
 
 
 
-		<div class="index_list_categories">
-			<div class="title_bar">
-				<span class="title h3"><?php echo $_local->gui->encyclopedia; ?></span>
-				<span class="title_more"><a href="../wiki"><?php echo $_local->gui->more; ?></a></span>
-			</div>
-			<div class="content">
-				<div id="pali_pedia" class="content_inner">
+		<div class="index_list_categories index_pedia">
+			<div class="index_list_content">
+				<div class="title_bar">
+					<span class="title h3"><?php echo $_local->gui->encyclopedia; ?></span>
+					<span class="title_more"><a href="../wiki"><?php echo $_local->gui->more; ?></a></span>
+				</div>
+				<div id="pali_pedia">
 				</div>
 			</div>
 		</div>

@@ -563,6 +563,7 @@
 		"timezone": "Timezone",
 		"subfield": "subfield",
 		"local": "Local",
+		"form_sent": "Form sentences with the words given & copy to clipboard",
 		"": ""
 	},
 	"grammastr": [

@@ -492,11 +492,11 @@ function note_json_html(in_json) {
 	output += "<span class='other_bar' >";
 	output +=
 		"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
-		in_json.id +
+		in_json.pali_sent_id +
 		"')\">" +
 		gLocal.gui.similar_sentences +
 		"</span>";
-	output += "<span class='similar_sent_num'>" + in_json.sim.length + "</span>";
+	output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
 	output += "</span>";
 	output += "</div>";
 	output += "<div class='other_tran'>";
@@ -932,11 +932,7 @@ function setVisibility(key, value) {
 }
 
 function note_show_pali_sim(SentId) {
-	for (const iterator of _arrData) {
-		if (iterator.id == SentId) {
-			pali_sim_dlg_open(SentId, iterator.sim);
-		}
-	}
+	pali_sim_dlg_open(SentId, 0, 20);
 }
 
 function set_pali_script(pos, script) {
