@@ -14,13 +14,14 @@ function pali_sim_dlg_init(title = "Sim") {
 		],
 	});
 }
-function pali_sim_dlg_open(id, sim_id) {
+function pali_sim_dlg_open(id, start, length) {
 	{
 		$.post(
 			"../pali_sent/get_sim.php",
 			{
-				id: id,
-				sim: JSON.stringify(sim_id),
+				sent_id: id,
+				start: start,
+				length: length,
 			},
 			function (data) {
 				let sents = JSON.parse(data);

@@ -435,7 +435,7 @@ function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
 					$str1=mb_substr($strWord,0,$i-$row["len"],"UTF-8").$row["a"];
 					$str2=$row["b"].mb_substr($strWord,$i,NULL,"UTF-8");
 					$confidence=isExsit($str1,$adj_len);
-					if($confidence >= $c_threshhold){
+					if($confidence > $c_threshhold){
 						$output[] = array($str1,$str2,$confidence,$row["adj_len"]);
 						if($express){
 							break;
@@ -446,6 +446,7 @@ function mySplit2($strWord,$deep,$express=false,$adj_len=0,$c_threshhold=0.8){
 			}
 		}
 	}
+
 	if(count($output)>0){
 		foreach($output as $part){
 			$path[$deep][0]=$part[0];

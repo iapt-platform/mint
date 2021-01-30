@@ -5,6 +5,7 @@ get xml doc from db
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../ucenter/active.php";
 
 
 $aData=json_decode($_POST["data"]);

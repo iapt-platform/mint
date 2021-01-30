@@ -1,6 +1,6 @@
 <?php
 require_once "../public/function.php";
-
+/*
 $dns = "sqlite:"._FILE_DB_PALITEXT_;
 $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
@@ -39,6 +39,6 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 	  }
   }
   $dbh = null;
-  
+*/
 echo _get_para_path($_GET["book"],$_GET["para"]);
 ?>
