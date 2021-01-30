@@ -3,6 +3,8 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../hostsetting/function.php';
+require_once "../ucenter/active.php";
+
 $respond=array("status"=>0,"message"=>"");
 
 # 检查是否由修改权限
