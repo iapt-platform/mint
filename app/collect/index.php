@@ -231,9 +231,11 @@ include "../pcdl/html_head.php";
 
     <div class="collect_section">
         <div class="section_inner">
-            <div class="left_content">
+            <div class="left_content">
                 <div style="display:flex;">
-                    <h2 style="margin-right:auto;">文集</h2>
+                    <h2 style="margin-right:auto">
+                        <?php echo $_local->gui->composition;?>
+                    </h2>
                     <div level="7" class="tag_others" style="padding-bottom:5px; margin-right:5px;">
                         <select>
                             <option><?php echo $_local->gui->all; ?></option>
@@ -255,14 +257,14 @@ include "../pcdl/html_head.php";
                 </div>
             </div>
             <div class="right_content">
-                <h2>熱門主題</h2>
+                <h2><?php echo $_local->gui->hot_topic; ?></h2>
                 <div class="disable" style="display:flex; margin:1em 0; flex-wrap:wrap;">
                     <div class="tag">sīla</div>
                     <div class="tag">smādhi</div>
                     <div class="tag">paññā</div>
-                    <div class="tag">本生</div>
-                    <div class="tag">visuddhimaga</div>
-                    <div class="tag">入出息</div>
+                    <div class="tag">jātaka</div>
+                    <div class="tag">visuddhimagga</div>
+                    <div class="tag">ānāpānassati</div>
                 </div>
                 <h2><?php echo $_local->gui->author; ?></h2>
                 <div class="disable" style="margin:1em 0;">
