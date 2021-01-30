@@ -6,6 +6,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../usent/function.php";
+require_once "../ucenter/active.php";
 
 #检查是否登陆
 if(!isset($_COOKIE["userid"])){
