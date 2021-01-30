@@ -85,15 +85,15 @@ foreach ($_data as $key => $value) {
 		$palitext="";
 		$pali_text_id = 0;
 	}
-	$query="SELECT sim_sents FROM 'pali_sent_sim' WHERE id = ?  ";
+	$query="SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
 	$sth = $db_pali_sent_sim->prepare($query);
 	$sth->execute(array($pali_text_id));
 	$row = $sth->fetch(PDO::FETCH_ASSOC);
 	if($row){
-		$pali_sim= explode(",",$row["sim_sents"]) ;
+		$pali_sim= $row["count"];//explode(",",$row["sim_sents"]) ;
 	}
 	else{
-		$pali_sim=array();
+		$pali_sim=0;
 	}
 		//查询相似句
 
@@ -184,6 +184,7 @@ foreach ($_data as $key => $value) {
 
 	$output[]=array("id"=>$id,
 							   "palitext"=>$palitext,
+							   "pali_sent_id"=>$pali_text_id,
 							   "tran"=>$tran,
 							   "translation"=>$translation,
 							   "ref"=>$para_path,
