@@ -24,7 +24,7 @@ function covertTimeToString($time){
 	else{
 		$hour = floor($time/3600);
 		$min = floor(($time-($hour*3600))/60);
-		return "$hour小时$min分钟";
+		return "{$hour}小时{$min}分钟";
 	}
 }
 

@@ -4,6 +4,7 @@ require_once '../path.php';
 require_once "../public/function.php";
 
 define("MAX_INTERVAL",600000);
+define("MIN_INTERVAL",10000);
 
 if(isset($_COOKIE["userid"])){
 	$dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
@@ -38,7 +39,7 @@ if(isset($_COOKIE["userid"])){
 	if($new_record){
 		$query="INSERT INTO edit ( user_id, start , end  , duration , hit )  VALUES  ( ? , ? , ? , ? , ? ) ";
 		$sth = $dbh->prepare($query);
-		$sth->execute(array($_COOKIE["userid"] , $currTime , $currTime , 10000,1) );
+		$sth->execute(array($_COOKIE["userid"] , $currTime , ($currTime+MIN_INTERVAL) , MIN_INTERVAL,1) );
 		if (!$sth || ($sth && $sth->errorCode() != 0)) {
 			$error = $dbh->errorInfo();
 		}

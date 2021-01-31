@@ -73,7 +73,9 @@
                     echo '<a href="course.php?userid='.$_GET["userid"].'"><span tag="'.$_local->gui->lesson.'">'.$_local->gui->lesson.'</span></a>';
                 }
             ?>
+            <a href="foot_step.php?userid=<?php echo $_GET["userid"];?>">
             <span tag=<?php echo $_local->gui->EXP;?>><?php echo $_local->gui->EXP;?></span>
+            </a>
             <span tag=<?php echo $_local->gui->statistical_data;?>><?php echo $_local->gui->statistical_data;?></span>
         </div>
     </div>
