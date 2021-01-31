@@ -10,6 +10,8 @@ require_once "../ucenter/active.php";
 
 $aData=json_decode($_POST["data"]);
 
+add_edit_event("wbw",array("book"=>0,"para"=>0));
+
 PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
 
 /* 开始一个事务，关闭自动提交 */

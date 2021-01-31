@@ -66,16 +66,19 @@ else{
 }
 
 
+
 PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
 
 $_id = false;
 if( (isset($_POST["id"]) && empty($_POST["id"])) || !isset($_POST["id"]) ){
+    add_edit_event("sent",array("book"=>$_POST["book"],"para"=>$_POST["para"]));
         # 判断是否已经有了
         $query = "SELECT id FROM sentence WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? AND channal = ? ";
         $_id = PDO_FetchOne($query,array($_POST["book"], $_POST["para"],  $_POST["begin"], $_POST["end"], $_POST["channal"]));
 }
 else{
     $_id = $_POST["id"];
+    add_edit_event("sent",array("id"=>$_POST["id"]));
 }
 
 

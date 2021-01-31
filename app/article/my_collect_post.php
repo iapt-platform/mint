@@ -5,6 +5,8 @@ require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
+add_edit_event("collect",array("id"=>$_POST["id"]));
+
 $respond=array("status"=>0,"message"=>"");
 
 PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);

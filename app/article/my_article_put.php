@@ -10,7 +10,9 @@ PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
 
 $query="INSERT INTO article ( id,  title  , subtitle  , summary , content   , tag  , owner, setting  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
 $sth = $PDO->prepare($query);
-$sth->execute(array(UUID::v4() , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["userid"] , "{}" , 1 , mTime() ,  mTime() , mTime() ));
+$uuid = UUID::v4();
+add_edit_event("article",array("id"=>$uuid,"action"=>"insert"));
+$sth->execute(array($uuid , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["userid"] , "{}" , 1 , mTime() ,  mTime() , mTime() ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
