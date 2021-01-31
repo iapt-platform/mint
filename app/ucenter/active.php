@@ -1,7 +1,6 @@
 <?php 
 //统计用户经验值
 require_once '../path.php';
-require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
 define("MAX_INTERVAL",600000);

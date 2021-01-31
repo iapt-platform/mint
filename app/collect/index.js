@@ -7,12 +7,8 @@ function collect_load(begin = 0) {
             let arrCollectList = JSON.parse(data);
             let html = "";
             for (const iterator of arrCollectList.data) {
-
                 html += "<div class='card collect_card'>";
-                html +=
-                    "<div class='card_state'>" +
-                    gLocal.gui.ongoing +
-                    "</div>";
+                html += "<div class='card_state'>" + gLocal.gui.ongoing + "</div>";
                 html += "<div class='card_info'>"; //卡片信息开始
                 html += "<div class='collect_title'>";
                 html += "<a href='../article/?collect=" + iterator.id + "'>" + iterator.title + "</a>";
@@ -34,17 +30,21 @@ function collect_load(begin = 0) {
                 let article_count = 0;
                 let article_list = JSON.parse(iterator.article_list);
                 //章节预览链接
-                html += "<div class='article_title_link' >";
+                html += "<div class='article_title_list' >";
 
                 //!!!!!!請加上不同語言！！！！！
-                html += "<div style='font-weight:700;'>目錄</div>";
+                html += "<div style='font-weight:700;'>" + gLocal.gui.content + "</div>";
 
                 //章節列表
                 html += "<div>";
                 for (const article of article_list) {
-                    html += "<div style='border-top: #707070 1px solid; text-overflow: ellipsis; line-height:2.2em;'>";
+                    html += "<div style='padding:6px 0; border-top: #707070 1px solid;'>";
                     html +=
-                        "<a style='color:var(--main_color);font-weight:700;' href='../article/?id=" + article.article + "' target='_blank'>" + article.title + "</a>";
+                        "<a class='article_title' style='color:var(--main_color);font-weight:700;' href='../article/?id=" +
+                        article.article +
+                        "' target='_blank'>" +
+                        article.title +
+                        "</a>";
                     html += "</div>";
                     article_count++;
                     if (article_count > article_limit) {

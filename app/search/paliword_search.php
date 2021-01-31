@@ -7,6 +7,7 @@ require_once "../public/_pdo.php";
 require_once "../public/load_lang.php";//语言文件
 require_once "../public/function.php";
 require_once "../search/word_function.php";
+require_once "../ucenter/active.php";
 
 _load_book_index();
 
