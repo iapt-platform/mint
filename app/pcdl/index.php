@@ -27,8 +27,12 @@ require_once '../pcdl/html_head.php';
 			font-weight: 700;
 		}
 
+		/* 
 		.index_list_categories {
 
+			padding: 1rem;
+		}*/
+		.index_list_content {
 			padding: 1rem;
 		}
 
@@ -150,8 +154,16 @@ require_once '../pcdl/html_head.php';
 			max-width: 900px;
 		}
 
+		.index_article .index_list_content {
+			background-image: url(img/books.svg);
+			background-repeat: no-repeat;
+		}
+
 		.index_course .index_list_content {
 			flex-direction: row-reverse;
+			background-image: url(img/teachers.svg);
+			background-repeat: no-repeat;
+			background-position-x: right;
 		}
 
 		.title_bar {
