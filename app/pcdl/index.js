@@ -48,7 +48,7 @@ function index_load_collect_new() {
                     html += "<div>" + iterator.summary + "</div>";
                 }
 
-                html += "<div style=''>" + iterator.username.nickname + "</div>";
+                html += "<div style='margin-top:1em;'>" + iterator.username.nickname + "</div>";
 
 
 

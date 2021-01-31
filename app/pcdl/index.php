@@ -76,26 +76,31 @@ require_once '../pcdl/html_head.php';
 		.course_right title {
 			font-size: 120%;
 			font-weight: 700;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-line-clamp: 2;
 		}
 
 		#course_list_new .card {
 			height: 150px;
+			padding: 0;
+			display: grid;
+			grid-template-columns: 120px 1fr;
 		}
 
 		.card_photo {
-			position: absolute;
-			left: 0;
-			top: 0;
 			height: 100%;
-			width: 150px;
 			background: gray;
 			border-radius: 20px 0 0 20px;
 		}
 
 		.course_right {
-			margin-left: 150px;
+			padding: 10px;
 			display: flex;
 			flex-direction: column;
+			width: calc(100% - 10px);
 		}
 
 		.summary {
@@ -130,6 +135,12 @@ require_once '../pcdl/html_head.php';
 		#pali_pedia .author {
 			grid-area: author;
 			color: gray;
+		}
+
+		.author {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 	</style>
 	<style media="screen and (min-width:800px)">
