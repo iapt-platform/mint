@@ -9,13 +9,25 @@ else{
 	echo "no user id";
 	exit;
 }
+
+include "../pcdl/html_head.php";
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8' />
+
+<body>
+
+<?php
+    require_once "../path.php";
+    require_once "../public/_pdo.php";
+    require_once '../public/function.php';
+    require_once '../ucenter/function.php';
+    require_once "../pcdl/head_bar.php";
+    $currChannal = "course";
+    require_once "../uhome/head.php";
+?>
+
 <link href='../lib/fullcalendar/main.css' rel='stylesheet' />
 <script src='../lib/fullcalendar/main.js'></script>
+
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -27,7 +39,6 @@ else{
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       },
-      initialDate: '2021-01-31',
       editable: true,
       navLinks: true, // can click day/week names to navigate views
       dayMaxEvents: true, // allow "more" link when too many events
@@ -82,9 +93,8 @@ else{
   }
 
 </style>
-</head>
-<body>
 
+<div class='index_inner'>
   <div id='script-warning'>
     <code>php/get-events.php</code> must be running.
   </div>
@@ -92,6 +102,7 @@ else{
   <div id='loading'>loading...</div>
 
   <div id='calendar'></div>
-
-</body>
-</html>
+</div>
+<?php
+include "../pcdl/html_foot.php";
+?>
