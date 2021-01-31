@@ -80,7 +80,7 @@ include "../pcdl/html_head.php";
             fill: var(--btn-bg-color);
         }
 
-        .article_title_link {
+        .article_title_list {
             margin-top: 18px;
             display: grid;
             grid-template-columns: 80px auto;
@@ -151,6 +151,14 @@ include "../pcdl/html_head.php";
             padding: 3px 6px;
             margin: 0 5px 5px 0;
         }
+
+        .article_title {
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+        }
     </style>
     <style media="screen and (min-width:800px)">
         .collect_section .section_inner {
@@ -206,7 +214,7 @@ include "../pcdl/html_head.php";
     <div id='course_head_bar' class='collect_head_bar'>
         <div class='section_inner'>
             <h1>著作</h1>
-            <div style='width:30em'>各種從經典中擷取的文章，所彙集成的文，其中有多人翻譯的篇章等等的各種。</div>
+            <div style='max-width:30em'>各種從經典中擷取的文章，所彙集成的文，其中有多人翻譯的篇章等等的各種。</div>
             <!--
             <div id="main_tag">
                 <span tag="vinaya">sīla</span>
@@ -220,7 +228,7 @@ include "../pcdl/html_head.php";
 
     <div class="search_section">
         <div style='font-size:140%;'>
-            <span style="display:inline-block;width:20em;"><input type="input" placeholder=<?php echo $_local->gui->search . '：' . $_local->gui->title . '&nbsp;OR&nbsp;' . $_local->gui->author; ?> style="background-color:var(--new-tool-input-text-bg); border:solid 1px var(--new-tool-btn-border)" /></span>
+            <span style="display:inline-block;max-width:20em;"><input type="input" placeholder=<?php echo $_local->gui->search . '：' . $_local->gui->title . '&nbsp;OR&nbsp;' . $_local->gui->author; ?> style="background-color:var(--new-tool-input-text-bg); border:solid 1px var(--new-tool-btn-border)" /></span>
             <button class="icon_btn">
                 <svg class="icon">
                     <use xlink:href="../studio/svg/icon.svg#ic_search"></use>
@@ -234,7 +242,7 @@ include "../pcdl/html_head.php";
             <div class="left_content">
                 <div style="display:flex;">
                     <h2 style="margin-right:auto">
-                        <?php echo $_local->gui->composition;?>
+                        <?php echo $_local->gui->composition; ?>
                     </h2>
                     <div level="7" class="tag_others" style="padding-bottom:5px; margin-right:5px;">
                         <select>
