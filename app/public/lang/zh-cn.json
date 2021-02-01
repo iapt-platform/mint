@@ -566,6 +566,10 @@
 		"local": "本地",
 		"form_sent": "连词成句到剪切板",
 		"hot_topic": "热门主题",
+		"composition_intro": "依巴利而<b>著</b><br>为明法而<b>作</b>",
+		"jump_to_this_sent": "跳转到此句",
+		"show_nissaya": "显示nissaya",
+		"related_para": "相应段落",
 		"": ""
 	},
 	"grammastr": [

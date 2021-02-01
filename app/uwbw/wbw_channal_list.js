@@ -8,7 +8,7 @@ function wbw_channal_list_init() {
 		width: 550,
 		buttons: [
 			{
-				text: "Cancel",
+				text: gLocal.gui.cancel,
 				click: function () {
 					$(this).dialog("close");
 				},
@@ -30,13 +30,13 @@ function wbw_channal_list_open(book, paralist) {
 				let html = "";
 				for (let index = 0; index < _wbw_channel.data.length; index++) {
 					const element = _wbw_channel.data[index];
-					html += "<div style='display:flex;'>";
+					html += "<div style='display:flex;line-height: 2.5em;'>";
 					html += "<span style='flex:2'>";
 					html += "<button onclick=\"wbw_create('" + index + "')\">";
 					if (parseInt(element.wbw_para) > 0) {
-						html += "打开";
+						html += gLocal.gui.open;
 					} else {
-						html += "新建";
+						html += gLocal.gui.new;
 					}
 
 					html += "</button>";
@@ -44,7 +44,7 @@ function wbw_channal_list_open(book, paralist) {
 					html += "<span  style='flex:1'>" + (index + 1) + "</span>";
 					html += "<span style='flex:3'>" + element.name + "</span>";
 					html += "<span style='flex:2'>" + element.lang + "</span>";
-					html += "<span style='flex:2'>" + element.wbw_para + "/" + element.count + "</span>";
+					html += "<span style='flex:2;display:none;'>" + element.wbw_para + "/" + element.count + "</span>";
 					html += "</div>";
 				}
 
@@ -58,6 +58,7 @@ function wbw_channal_list_open(book, paralist) {
 }
 
 function wbw_create(index) {
+	$("#wbw_channal_list_dlg").dialog("close");
 	$.post(
 		"../uwbw/create_wbw.php",
 		{
