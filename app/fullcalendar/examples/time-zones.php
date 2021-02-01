@@ -35,7 +35,7 @@
 					},
 					//initialDate: '2020-09-12',
 					navLinks: true, // can click day/week names to navigate views
-					editable: true,
+					editable: false,
 					selectable: true,
 					dayMaxEvents: true, // allow "more" link when too many events
 					events: {
