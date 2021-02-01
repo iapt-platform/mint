@@ -32,6 +32,12 @@ $dir[]=_DIR_PALI_CSV_;
 $dir[]=_DIR_TEMP_;
 $dir[]=_DIR_LOG_;
 
+$dir[]=_DIR_IMAGES_;
+$dir[]=_DIR_IMAGES_ARTICLE_;
+$dir[]=_DIR_IMAGES_COLLECTION_;
+$dir[]=_DIR_IMAGES_COURSE_;
+$dir[]=_DIR_IMAGES_LESSON_;
+
 foreach($dir as $onedir){
 	echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
 	echo '<div style="flex:7;">'.$onedir.'</div>';

@@ -70,40 +70,62 @@ include "../pcdl/html_head.php";
 			xDiv.innerHTML=data;
 		}
 	});
-	</script>	
-    <div class="card" style="margin:1em;">
-    过滤
-    </div>
-    <div id="course_list">
-    </div >
+	</script>
+	<div class="course_block">	
+		<div class="title" >
+		<?php echo $_local->gui->in_progress; ?>
+		</div>
+		<div id="course_list_ongoing">
+		</div >
+	</div>	
+
+	<div class="course_block">	
+		<div class="title" >
+		<?php echo $_local->gui->already_over; ?>
+		</div>
+		<div id="course_list_complete">
+		</div >
+	</div>
+
     <script>
+
 	$.get("../course/course_list.php",function(data,status){
         let arrData = JSON.parse(data);
-        let html="";
+        let html_complete="";
+        let html_ongoing="";
+		
         for (const iterator of arrData) {
-            html += '<div class="card" style="display:flex;margin:1em;padding:10px;">';
-
-            html += '<div style="flex:7;">';
+			let html="";
+			html += '<div class="card" style="display:flex;margin:1em;padding:10px;">';
+			html += '<div style="flex:3;max-width:15em;">';
+			html += '<img src="../../tmp/images/course/'+iterator.id+'.jpg" alt="cover" width="200" height="200">'
+            html += '</div>';
+            html += '<div style="flex:7;padding:5px;">';
             html +=  '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='+iterator.id+'">'+iterator.title+'</a></div>';
 			html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.subtitle+'</div>';
 			let summary = "";
-        try{
-            summary = marked(iterator.summary);
-        }
-        catch(e){
-
-        }      
+			try{
+				summary = marked(iterator.summary);
+			}
+			catch(e){
+			}
             html += '<div class="summary"  style="padding-bottom:5px;">'+summary+'</div>';
-
             html += '</div>';
-
             html += '<div style="flex:3;max-width:15em;">';
-
             html += '</div>';
-
             html += '</div>';
-            $("#course_list").html(html);
+			if(iterator.status==40){
+				html_complete += html;
+			}
+			else if(iterator.status==30 || iterator.status==20 ){
+				html_ongoing += html;
+			}
         }
+		$("#course_list_complete").html(html_complete);
+		$("#course_list_ongoing").html(html_ongoing);
+		$("img").one("error", function(){  
+    	$(this).attr("src", "../../tmp/images/course/default.jpg");   
+	});
 	});
 	</script>	
 
