@@ -73,7 +73,7 @@ include "../pcdl/html_head.php";
 	</script>
 	<div class="course_block">	
 		<div class="title" >
-		连载中
+		<?php echo $_local->gui->in_progress; ?>
 		</div>
 		<div id="course_list_ongoing">
 		</div >
@@ -81,7 +81,7 @@ include "../pcdl/html_head.php";
 
 	<div class="course_block">	
 		<div class="title" >
-		已完结
+		<?php echo $_local->gui->already_over; ?>
 		</div>
 		<div id="course_list_complete">
 		</div >
@@ -113,7 +113,7 @@ include "../pcdl/html_head.php";
 			if(iterator.status==40){
 				html_complete += html;
 			}
-			else if(iterator.status==30){
+			else if(iterator.status==30 || iterator.status==20 ){
 				html_ongoing += html;
 			}
         }

@@ -114,6 +114,26 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:8;"><input type="input" name = "attachment" value="'.$course_info["attachment"].'" /></div>';
     echo '</div>';
 
+    echo '<div style="display:flex;">';
+    echo '<div style="flex:2;">Status</div>';
+    echo '<div style="flex:8;">';
+    $arrStatus = array(array("id"=>0,"string"=>"deleted"),
+                       array("id"=>20,"string"=>$_local->gui->not_started),
+                       array("id"=>30,"string"=>$_local->gui->in_progress),
+                       array("id"=>40,"string"=>$_local->gui->already_over));
+    echo "<select name = 'status'>";
+    foreach ($arrStatus as $key => $value) {
+        # code...
+
+        echo "<option ";
+        if((int)$course_info["status"]==$value["id"]){
+            echo " selected ";
+        }        
+        echo " value='{$value["id"]}'>{$value["string"]}</option>";
+    }
+    echo "</select>";
+    echo '</div>';
+    echo '</div>';
 echo '</div>';
 ?>
 
