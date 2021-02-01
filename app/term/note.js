@@ -431,10 +431,18 @@ function note_json_html(in_json) {
 	output += "</svg>";
 	output += "<div class='case_dropdown-content sent_menu'>";
 	if (typeof _reader_view != "undefined" && _reader_view != "sent") {
-		output += "<a onclick='junp_to(this)'>跳转至此句</a>";
+		output += "<a onclick='junp_to(this)'>" + gLocal.gui.jump_to_this_sent + "</a>";
 	}
-	output += "<a  onclick='related_para_dlg_open(" + in_json.book + "," + in_json.para + ")'>相关段落</a>";
-	output += "<a  onclick='goto_nissaya(" + in_json.book + "," + in_json.para + ")'>Nissaya</a>";
+	output +=
+		"<a  onclick='related_para_dlg_open(" +
+		in_json.book +
+		"," +
+		in_json.para +
+		")'>" +
+		gLocal.gui.related_para +
+		"</a>";
+	output +=
+		"<a  onclick='goto_nissaya(" + in_json.book + "," + in_json.para + ")'>" + gLocal.gui.show_nissaya + "</a>";
 	output +=
 		"<a onclick=\"copy_ref('" +
 		in_json.book +

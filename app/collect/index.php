@@ -205,8 +205,8 @@ include "../pcdl/html_head.php";
     ?>
     <div id='course_head_bar' class='collect_head_bar'>
         <div class='section_inner'>
-            <h1>著作</h1>
-            <div style='width:30em'>各種從經典中擷取的文章，所彙集成的文，其中有多人翻譯的篇章等等的各種。</div>
+            <h1><?php echo $_local->gui->composition;?></h1>
+            <div style='width:30em'><?php echo $_local->gui->composition_intro;?></div>
             <!--
             <div id="main_tag">
                 <span tag="vinaya">sīla</span>

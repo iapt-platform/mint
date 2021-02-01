@@ -565,6 +565,10 @@
 		"local": "Local",
 		"form_sent": "Form sentences with the words given & copy to clipboard",
 		"hot_topic": "hot topic",
+		"composition_intro": "Make the Pāḷi easy to read<br>solution of Pāḷi glossary<br>For translating Pāḷi in Group<br>Show the source reference in Pāḷi",
+		"jump_to_this_sent": "jump to this sentence",
+		"show_nissaya": "show nissaya",
+		"related_para": "related&nbsp;paragraph",
 		"": ""
 	},
 	"grammastr": [
