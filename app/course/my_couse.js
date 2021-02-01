@@ -134,11 +134,28 @@ function lesson_insert() {
 }
 
 function course_update() {
+	//let data = $("#course_update").serialize();
+	let files = $("#cover_file").prop("files");
+	let data = new FormData();
+	data.append("course", $("#course_id").val());
+	data.append("teacher", $("#form_teacher").val());
+	data.append("lang", $("#lang").val());
+	data.append("title", $("#form_title").val());
+	data.append("subtitle", $("#subtitle").val());
+	data.append("summary", $("#summary").val());
+	data.append("tag", $("#tag").val());
+	data.append("attachment", $("#attachment").val());
+	data.append("status", $("#status").val());
+	data.append("cover", files[0]);
+
 	$.ajax({
 		type: "POST", //方法类型
 		dataType: "json", //预期服务器返回的数据类型
 		url: "../course/my_course_update.php", //url
-		data: $("#course_update").serialize(),
+		data: data,
+		cache: false,
+		processData: false,
+		contentType: false,
 		success: function (result) {
 			console.log(result); //打印服务端返回的数据(调试用)
 			alert(result.message);
