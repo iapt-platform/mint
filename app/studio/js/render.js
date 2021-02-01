@@ -1693,7 +1693,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	output += "<div class='trans_text_info' >";
 
 	if (channal == 0) {
-		output += "<span class='author'>" + sender + "</span><span>[滤]</span>";
+		output += "<span class='author'>" + sender + "</span>";
 	} else {
 		output += "<span style='width: 100%;display: contents;'>";
 		output += "<span>";
