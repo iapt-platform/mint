@@ -24,7 +24,7 @@ function covertTimeToString($time){
 	else{
 		$hour = floor($time/3600);
 		$min = floor(($time-($hour*3600))/60);
-		return "$hour小时$min分钟";
+		return "{$hour}小时{$min}分钟";
 	}
 }
 
@@ -46,9 +46,6 @@ if (isset($_GET['timeZone'])) {
 }
 
 // Read and parse our events JSON file into an array of event data arrays.
-//$json = file_get_contents(dirname(__FILE__) . '/../json/events.json');
-//$input_arrays = json_decode($json, true);
-//使用cookie传递老师id
 $dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
 $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
