@@ -51,6 +51,11 @@ require_once '../pcdl/html_head.php';
 			padding: 10px;
 		}
 
+		.collect {
+			color: var(--link-color);
+			font-weight: 700;
+		}
+
 		#footer_nav {
 			display: none;
 		}
@@ -88,7 +93,7 @@ require_once '../pcdl/html_head.php';
 		}
 
 		#course_list_new .card {
-			height: 150px;
+			height: 120px;
 			padding: 0;
 			display: grid;
 			grid-template-columns: 120px 1fr;
@@ -107,7 +112,7 @@ require_once '../pcdl/html_head.php';
 			width: calc(100% - 10px);
 		}
 
-		.summary {
+		.subtitle {
 			margin-top: auto;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;

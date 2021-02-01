@@ -34,7 +34,7 @@ function index_load_collect_new() {
                     "</a></div>";
 
 
-                html += "<div class='collect' style='color:gray'>";
+                html += "<div class='collect'>";
                 if (iterator.collect) {
                     html += "<a href='../article/?collect=" + iterator.collect.id + "'>" + iterator.collect.title + "</a>";
                 } else {
@@ -47,6 +47,7 @@ function index_load_collect_new() {
                 if (iterator.summary) {
                     html += "<div>" + iterator.summary + "</div>";
                 }
+
 
                 html += "<div style='margin-top:1em;'>" + iterator.username.nickname + "</div>";
 
