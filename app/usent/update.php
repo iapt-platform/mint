@@ -22,6 +22,8 @@ else{
     $_landmark = "";
 }
 
+add_edit_event("sent",array("book"=>0,"para"=>0));
+
 $aData=json_decode($_POST["data"],TRUE);
 
 PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);

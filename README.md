@@ -1,5 +1,13 @@
 # [PCD-Suite](https://github.com/iapt-platform/PCD-Suite)的 Rust&React 重写版
 
+## 安装
+
+```bash
+cd mint; mkdir tmp; chown -R www:www tmp
+```
+
+然后进入 http://localhost/app/install 开始安装
+
 ## 开发
 
 ### 工具

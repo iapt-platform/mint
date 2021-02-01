@@ -27,8 +27,12 @@ require_once '../pcdl/html_head.php';
 			font-weight: 700;
 		}
 
+		/* 
 		.index_list_categories {
 
+			padding: 1rem;
+		}*/
+		.index_list_content {
 			padding: 1rem;
 		}
 
@@ -45,6 +49,11 @@ require_once '../pcdl/html_head.php';
 
 		.pd-10 {
 			padding: 10px;
+		}
+
+		.collect {
+			color: var(--link-color);
+			font-weight: 700;
 		}
 
 		#footer_nav {
@@ -76,29 +85,34 @@ require_once '../pcdl/html_head.php';
 		.course_right title {
 			font-size: 120%;
 			font-weight: 700;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-line-clamp: 2;
 		}
 
 		#course_list_new .card {
-			height: 150px;
+			height: 120px;
+			padding: 0;
+			display: grid;
+			grid-template-columns: 120px 1fr;
 		}
 
 		.card_photo {
-			position: absolute;
-			left: 0;
-			top: 0;
 			height: 100%;
-			width: 150px;
 			background: gray;
 			border-radius: 20px 0 0 20px;
 		}
 
 		.course_right {
-			margin-left: 150px;
+			padding: 10px;
 			display: flex;
 			flex-direction: column;
+			width: calc(100% - 10px);
 		}
 
-		.summary {
+		.subtitle {
 			margin-top: auto;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
@@ -131,6 +145,12 @@ require_once '../pcdl/html_head.php';
 			grid-area: author;
 			color: gray;
 		}
+
+		.author {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
 	</style>
 	<style media="screen and (min-width:800px)">
 		.index_list_content {
@@ -139,8 +159,16 @@ require_once '../pcdl/html_head.php';
 			max-width: 900px;
 		}
 
+		.index_article .index_list_content {
+			background-image: url(img/books.svg);
+			background-repeat: no-repeat;
+		}
+
 		.index_course .index_list_content {
 			flex-direction: row-reverse;
+			background-image: url(img/teachers.svg);
+			background-repeat: no-repeat;
+			background-position-x: right;
 		}
 
 		.title_bar {
