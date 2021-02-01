@@ -140,6 +140,7 @@ if (isset($_GET["language"])) {
 			padding: 0.7rem;
 			display: flex;
 			position: relative;
+			word-break: break-word;
 		}
 
 		.card>.title>a,
