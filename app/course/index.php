@@ -124,7 +124,7 @@ include "../pcdl/html_head.php";
 		$("#course_list_complete").html(html_complete);
 		$("#course_list_ongoing").html(html_ongoing);
 		$("img").one("error", function(){  
-    	$(this).attr("src", "../../tmp/images/course/default.jpg");   
+    	$(this).attr("src", "../course/img/default.jpg");   
 	});
 	});
 	</script>	
