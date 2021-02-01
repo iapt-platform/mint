@@ -1,7 +1,10 @@
 var _wbw_channel;
 function wbw_channal_list_init() {
 	$("body").append(
-		'<div id="wbw_channal_list_dlg" title="Open WBW"><div id="wbw_channal_list_dlg_content"></div></div>'
+		'<div id="wbw_channal_list_dlg" title=' +
+			gLocal.gui.open +
+			gLocal.gui.wbw +
+			'><div id="wbw_channal_list_dlg_content"></div></div>'
 	);
 	$("#wbw_channal_list_dlg").dialog({
 		autoOpen: false,
