@@ -39,7 +39,8 @@ include "../pcdl/html_head.php";
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       },
-      editable: true,
+      locale: getCookie("language"),
+      editable: false,
       navLinks: true, // can click day/week names to navigate views
       dayMaxEvents: true, // allow "more" link when too many events
       events: {
