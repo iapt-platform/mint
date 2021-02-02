@@ -13,7 +13,7 @@ function name_selector_init(container, parameter) {
       if (result.length > 0) {
         html += result[0].nickname;
       } else {
-        html += "未找到";
+        html += gLocal.gui.not_found;
       }
       html += "</div>";
       html +=
@@ -21,7 +21,7 @@ function name_selector_init(container, parameter) {
       html +=
         "<input id='user_selector_input' type='input' onkeyup=\"user_select_search_keyup(event,this)\" />";
       html += "<div id='user_selector_list'></div>";
-      html += "<span onclick='user_select_close()'>关闭</span>";
+      html += "<span onclick='user_select_close()'>"+gLocal.gui.close+"</span>";
       html += "</div>";
       $("#" + container).html(html);
     }

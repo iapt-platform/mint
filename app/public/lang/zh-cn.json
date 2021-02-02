@@ -570,6 +570,10 @@
 		"jump_to_this_sent": "跳转到此句",
 		"show_nissaya": "显示nissaya",
 		"related_para": "相应段落",
+		"disable": "停用",
+		"not_found": "未找到",
+		"site_intro": "想学巴利不知从何开始<br>学过巴利语法但是面对圣典无从下手<br>想要翻译巴利但面临种种困难<br>我们都有相关工具为您提供支持<br>降低巴利语的阅读门槛",
+
 		"": ""
 	},
 	"grammastr": [
