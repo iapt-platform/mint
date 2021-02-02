@@ -31,7 +31,7 @@ require_once '../studio/index_head.php';
 
 		<div class="tool_bar">
 	<div>
-	单词本
+	<?php echo $_local->gui->userdict;?>
 	</div>
 
 	<div>
