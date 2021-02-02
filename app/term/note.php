@@ -50,6 +50,40 @@ $db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 $output = array();
 
+	#查询有阅读权限的channel
+	$channal_list = array();
+	if(isset($_COOKIE["userid"])){
+		PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+		$query = "SELECT id from channal where owner = ?   limit 0,100";
+		$Fetch_my = PDO_FetchAll($query,array($_COOKIE["userid"]));
+		foreach ($Fetch_my as $key => $value) {
+			# code...
+			$channal_list[]=$value["id"];
+		}
+
+		# 找协作的
+		$Fetch_coop = array();
+		$query = "SELECT channal_id FROM cooperation WHERE  user_id = ? ";
+		$coop_channal = PDO_FetchAll($query,array($_COOKIE["userid"]));
+		if(count($coop_channal)>0){
+			foreach ($coop_channal as $key => $value) {
+				# code...
+				$channal_list[]=$value["channal_id"];
+			}
+		}
+		/*  创建一个填充了和params相同数量占位符的字符串 */
+
+	}
+	if(count($channal_list)>0){
+		$channel_place_holders = implode(',', array_fill(0, count($channal_list), '?'));
+		$channel_query = " OR channal IN ($channel_place_holders)";
+	}
+	else{
+		$channel_query = "";
+	}
+
+	# 查询有阅读权限的channel 结束
+	
 foreach ($_data as $key => $value) {
 	# code...
 	$id = $value["id"];
@@ -98,13 +132,15 @@ foreach ($_data as $key => $value) {
 		//查询相似句
 
 	//find out translation 查询译文
+
+
 	$tran="";
 	$translation = array();
 	$tran_channal = array();
 	try{
 		if(empty($_setting["channal"])){
 			if($sentChannal==""){
-				$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0   order by modify_time DESC limit 0 ,1 ";
+				$query="SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} )   order by modify_time DESC limit 0 ,1 ";
 				$channal = "";				
 			}
 			else{
@@ -119,7 +155,9 @@ foreach ($_data as $key => $value) {
 		$stmt = $db_trans_sent->prepare($query);
 		if(empty($_setting["channal"])){
 			if($sentChannal==""){
-				$stmt->execute(array($bookId,$para,$begin,$end));
+				$parm = array($bookId,$para,$begin,$end);
+				$parm = array_merge_recursive($parm,$channal_list);
+				$stmt->execute($parm);
 				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($Fetch){
 					$tran = $Fetch["text"];
