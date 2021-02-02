@@ -66,8 +66,8 @@ echo '</div>';
 echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
-echo '<form id="course_update" action="##"   method="POST">';
-echo '<input type="hidden" name="course" value="'.$course_info["id"].'" />';
+echo '<form id="course_update" action="##"   method="POST" enctype="multipart/form-data">';
+echo '<input type="hidden" id="course_id" name="course" value="'.$course_info["id"].'" />';
 echo '<input type="hidden" name="op" value="update" />';
 echo '<div id="userfilelist">';
 
@@ -81,7 +81,7 @@ echo '<div id="userfilelist">';
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->language_select.'</div>';
     echo '<div id="teacher_id" style="flex:8;">';
-    echo '<input  type="input" name="lang" value="'.$course_info["lang"].'" />';
+    echo '<input  type="input" id="lang" name="lang" value="'.$course_info["lang"].'" />';
     echo '</div>';
     echo '</div>'; 
 
@@ -96,22 +96,22 @@ echo '<div id="userfilelist">';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->sub_title.'</div>';
-    echo '<div style="flex:8;"><input type="input" name = "subtitle" value="'.$course_info["subtitle"].'" /></div>';
+    echo '<div style="flex:8;"><input type="input" id = "subtitle" name = "subtitle" value="'.$course_info["subtitle"].'" /></div>';
     echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->introduction.'</div>';
-    echo '<div style="flex:8;"><textarea name="summary" style="height:6em;">'.$course_info["summary"].'</textarea></div>';
+    echo '<div style="flex:8;"><textarea id="summary" name="summary" style="height:6em;">'.$course_info["summary"].'</textarea></div>';
     echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->tag.'</div>';
-    echo '<div style="flex:8;"><input type="input" name = "tag" value="'.$course_info["tag"].'" /></div>';
+    echo '<div style="flex:8;"><input type="input" id = "tag" name = "tag" value="'.$course_info["tag"].'" /></div>';
     echo '</div>';
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->attachment.'</div>';
-    echo '<div style="flex:8;"><input type="input" name = "attachment" value="'.$course_info["attachment"].'" /></div>';
+    echo '<div style="flex:8;"><input type="input" id = "attachment" name = "attachment" value="'.$course_info["attachment"].'" /></div>';
     echo '</div>';
 
     echo '<div style="display:flex;">';
@@ -121,7 +121,7 @@ echo '<div id="userfilelist">';
                        array("id"=>20,"string"=>$_local->gui->not_started),
                        array("id"=>30,"string"=>$_local->gui->in_progress),
                        array("id"=>40,"string"=>$_local->gui->already_over));
-    echo "<select name = 'status'>";
+    echo "<select id = 'status'  name = 'status'>";
     foreach ($arrStatus as $key => $value) {
         # code...
 
@@ -132,6 +132,18 @@ echo '<div id="userfilelist">';
         echo " value='{$value["id"]}'>{$value["string"]}</option>";
     }
     echo "</select>";
+    echo "<div class='cover'>";
+    $cover_file  = _DIR_IMAGES_COURSE_."/".$course_info["id"].".jpg";
+    if(!file_exists(_DIR_IMAGES_COURSE_."/".$course_info["id"].".jpg")){
+            $cover_file = _DIR_IMAGES_COURSE_A_."/default.jpg";
+        
+    }
+    else{
+            $cover_file = _DIR_IMAGES_COURSE_A_."/".$course_info["id"].".jpg";
+        }
+    echo '<img src="'.$cover_file.'" alt="cover" width="200" height="200">';
+    echo "</div>";
+    echo '<div><input type="file" name="cover" id="cover_file" /></div> ';
     echo '</div>';
     echo '</div>';
 echo '</div>';

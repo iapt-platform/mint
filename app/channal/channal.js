@@ -46,10 +46,19 @@ function my_channal_list() {
 						html += "<div style='flex:1;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>" + iterator.name + "</div>";
 						html += "<div style='flex:2;'>" + iterator.nickname + "</div>";
-						html +=
-							"<div style='flex:2;'>" +
-							//render_status(iterator.status) +
-							"</div>";
+						html += "<div style='flex:2;'>";
+						let arrStatus = [
+							{ id: 0, string: gLocal.gui.disable },
+							{ id: 10, string: gLocal.gui.private },
+							{ id: 30, string: gLocal.gui.public },
+						];
+						for (const status of arrStatus) {
+							if (parseInt(iterator.status) == status.id) {
+								html += status.string;
+							}
+						}
+						//render_status(iterator.status) +
+						html += "</div>";
 						html +=
 							"<div style='flex:1;'><a href='../channal/my_channal_edit.php?id=" +
 							iterator.id +
@@ -94,13 +103,38 @@ function my_channal_edit(id) {
 						result.name +
 						"' maxlength='32' placeholder='📝≤32'/>";
 					html += "<textarea name='summary'>" + result.summary + "</textarea>";
+
+					html += "<div>";
 					html +=
-						'<div>	<input id="channal_lang_select" type="input" onchange="channal_lang_change()"  title="type language name/code" code="' +
+						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"  title="type language name/code" code="' +
 						result.lang +
 						'" value="' +
 						result.lang +
-						'" > <input id="channal_lang" type="hidden" name="lang" value=""></div>';
-					html += "<input type='hidden' name='status' value='" + result.status + "'/>";
+						'" > <input id="channal_lang" type="hidden" name="lang" value="' +
+						result.lang +
+						'">';
+					html += "</div>";
+
+					html += '<div style="display:flex;">';
+					html += '<div style="flex:2;">Status</div>';
+					html += '<div style="flex:8;">';
+					let arrStatus = [
+						{ id: 0, string: gLocal.gui.disable },
+						{ id: 10, string: gLocal.gui.private },
+						{ id: 30, string: gLocal.gui.public },
+					];
+					html += "<select id = 'status'  name = 'status'>";
+					for (const iterator of arrStatus) {
+						html += "<option ";
+						if (parseInt(result.status) == iterator.id) {
+							html += " selected ";
+						}
+						html += " value='" + iterator.id + "'>" + iterator.string + "</option>";
+					}
+
+					html += "</select>";
+					html += "</div>";
+					html += "</div>";
 					html += "</div>";
 
 					html += "<div id='preview_div'>";
@@ -126,8 +160,8 @@ function my_channal_edit(id) {
 
 function channal_lang_change() {
 	let lang = $("#channal_lang_select").val();
-	if (lang.split("-").length == 3) {
-		$("#channal_lang").val(lang.split("-")[2]);
+	if (lang.split("_").length == 3) {
+		$("#channal_lang").val(lang.split("_")[2]);
 	} else {
 		$("#channal_lang").val(lang);
 	}
