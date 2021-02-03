@@ -99,10 +99,17 @@ function my_channal_edit(id) {
 					html += '<div style="max-width:2em;flex:1;"></div>';
 					html += "</div>";
 
-					html += "<div style='display:flex;'>";
+					html += "<div style='width: 60%;padding: 1em;min-width: 25em;'>";
+					html += '<div style="display:flex;line-height:32px;">';
 					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:8;'>";
 					html += "<input type='hidden' name='id' value='" + result.id + "'/>";
+					html += "</div>";
+					html += "</div>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.name+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
 						"<input type='input' name='name' value='" +
 						result.name +
@@ -117,9 +124,9 @@ function my_channal_edit(id) {
 					html += "</div>";
 					html += "</div>";
 
-					html += "<div style='display:flex;'>";
-					html += "<div style='flex:2;'>" + gLocal.gui.language + "</div>";
-					html += "<div style='flex:8;'>";
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.language_select+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
 						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"' +
 						' placeholder = "try type chinese or en " ' +
@@ -133,8 +140,8 @@ function my_channal_edit(id) {
 					html += "</div>";
 					html += "</div>";
 
-					html += '<div style="display:flex;">';
-					html += '<div style="flex:2;">' + gLocal.gui.view + "</div>";
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.privacy+'</div>';
 					html += '<div style="flex:8;">';
 					let arrStatus = [
 						{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
@@ -153,7 +160,8 @@ function my_channal_edit(id) {
 					}
 
 					html += "</select>";
-					html += "<span id = 'status_help'>" + status_note + "</span><a href='#' target='_blank'>[详情]</a>";
+					html += "<span id = 'status_help' style='margin: 0 1em;'>" + status_note + "</span><a href='#' target='_blank'>["+gLocal.gui.infomation+"]</li>";
+					html += "</div>";
 					html += "</div>";
 					html += "</div>";
 
