@@ -82,7 +82,7 @@ require_once '../studio/index_head.php';
 			</div>
 		</div>
 
-		<div id="channal_info"  class="file_list_block" style="">
+		<div id="channal_info"  class="file_list_block" style="height: 28em;">
 
 		</div>
 

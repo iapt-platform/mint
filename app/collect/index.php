@@ -95,7 +95,7 @@ include "../pcdl/html_head.php";
         .collect_title {
             font-size: 20px;
             font-weight: 700;
-
+            width: calc(100% - 30px);
         }
 
         .subtitle {
@@ -213,8 +213,8 @@ include "../pcdl/html_head.php";
     ?>
     <div id='course_head_bar' class='collect_head_bar'>
         <div class='section_inner'>
-            <h1><?php echo $_local->gui->composition;?></h1>
-            <div style='width:30em'><?php echo $_local->gui->composition_intro;?></div>
+            <h1><?php echo $_local->gui->composition; ?></h1>
+            <div style='max-width:30em'><?php echo $_local->gui->composition_intro; ?></div>
             <!--
             <div id="main_tag">
                 <span tag="vinaya">sīla</span>
