@@ -95,16 +95,30 @@ function my_channal_edit(id) {
 					html += '<div class="" style="padding:5px;">';
 					html += '<div style="max-width:2em;flex:1;"></div>';
 					html += "</div>";
-					html += "<div style='display:flex;'>";
-					html += "<div style='flex:4;'>";
+					html += "<div style='display:flex;height: 20em;'>";
+					html += "<div style='flex:4;padding: 1em;'>";
 					html += "<input type='hidden' name='id' value='" + result.id + "'/>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.name+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
 						"<input type='input' name='name' value='" +
 						result.name +
 						"' maxlength='32' placeholder='📝≤32'/>";
-					html += "<textarea name='summary'>" + result.summary + "</textarea>";
+					html += "</div>";
+					html += "</div>";
 
-					html += "<div>";
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.introduction+'</div>';
+					html += '<div style="flex:8;">';
+					html += "<textarea name='summary'>" + result.summary + "</textarea>";
+					html += "</div>";
+					html += "</div>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.language_select+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
 						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"  title="type language name/code" code="' +
 						result.lang +
@@ -114,9 +128,10 @@ function my_channal_edit(id) {
 						result.lang +
 						'">';
 					html += "</div>";
+					html += "</div>";
 
-					html += '<div style="display:flex;">';
-					html += '<div style="flex:2;">Status</div>';
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.privacy+'</div>';
 					html += '<div style="flex:8;">';
 					let arrStatus = [
 						{ id: 0, string: gLocal.gui.disable },

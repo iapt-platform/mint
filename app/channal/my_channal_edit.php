@@ -55,10 +55,10 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " >
 	<form id="channal_edit" action="##" onsubmit="return false"  method="POST" >
 	<div class="file_list_block">
-		<div class="tool_bar">
+		<div class="tool_bar" style="line-height: 30px;">
 			<div style="display:flex;">
 				<a href="../channal/my_channal_index.php"><?php echo $_local->gui->back;?></a>
-				<span id="channal_title"></span>
+				<span id="channal_title" style="padding: 0 1em;"></span>
 			</div>
 			<div style="display:flex;">
 				<div id="aritcle_status"></div>
