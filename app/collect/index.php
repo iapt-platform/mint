@@ -95,7 +95,7 @@ include "../pcdl/html_head.php";
         .collect_title {
             font-size: 20px;
             font-weight: 700;
-
+            width: calc(100% -30px);
         }
 
         .subtitle {
