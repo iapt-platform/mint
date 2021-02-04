@@ -1,6 +1,6 @@
 <?php
 /*
-get xml doc from db
+获取句子译文
 */
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -46,6 +46,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 /* 开始一个事务，关闭自动提交 */
 
 if(isset($_GET["sentences"])){
+	#查询句子编号列表
     $arrSent = explode(",",$_GET["sentences"]);
     /*  创建一个填充了和params相同数量占位符的字符串 */
     $place_holders = implode(',', array_fill(0, count($arrSent), '?'));

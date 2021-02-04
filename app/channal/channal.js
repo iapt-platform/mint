@@ -79,6 +79,9 @@ function my_channal_list() {
 	);
 }
 
+/*
+编辑channel信息
+*/
 function my_channal_edit(id) {
 	$.get(
 		"../channal/my_channal_get.php",
@@ -95,18 +98,39 @@ function my_channal_edit(id) {
 					html += '<div class="" style="padding:5px;">';
 					html += '<div style="max-width:2em;flex:1;"></div>';
 					html += "</div>";
-					html += "<div style='display:flex;'>";
-					html += "<div style='flex:4;'>";
+
+					html += "<div style='width: 60%;padding: 1em;min-width: 25em;'>";
+					html += '<div style="display:flex;line-height:32px;">';
+					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:8;'>";
 					html += "<input type='hidden' name='id' value='" + result.id + "'/>";
+					html += "</div>";
+					html += "</div>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.name+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
 						"<input type='input' name='name' value='" +
 						result.name +
-						"' maxlength='32' placeholder='📝≤32'/>";
-					html += "<textarea name='summary'>" + result.summary + "</textarea>";
+						"' maxlength='32' placeholder='channel title'/>";
+					html += "</div>";
+					html += "</div>";
 
-					html += "<div>";
+					html += "<div style='display:flex;'>";
+					html += "<div style='flex:2;'>" + gLocal.gui.introduction + "</div>";
+					html += "<div style='flex:8;'>";
+					html += "<textarea name='summary'>" + result.summary + "</textarea>";
+					html += "</div>";
+					html += "</div>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.language_select+'</div>';
+					html += '<div style="flex:8;">';
 					html +=
-						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"  title="type language name/code" code="' +
+						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"' +
+						' placeholder = "try type chinese or en " ' +
+						'  title="type language name/code" code="' +
 						result.lang +
 						'" value="' +
 						result.lang +
@@ -114,33 +138,35 @@ function my_channal_edit(id) {
 						result.lang +
 						'">';
 					html += "</div>";
+					html += "</div>";
 
-					html += '<div style="display:flex;">';
-					html += '<div style="flex:2;">Status</div>';
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">'+gLocal.gui.privacy+'</div>';
 					html += '<div style="flex:8;">';
 					let arrStatus = [
-						{ id: 0, string: gLocal.gui.disable },
-						{ id: 10, string: gLocal.gui.private },
-						{ id: 30, string: gLocal.gui.public },
+						{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
+						{ id: 10, string: gLocal.gui.private, note: gLocal.gui.private_note },
+						{ id: 30, string: gLocal.gui.public, note: gLocal.gui.public_note },
 					];
-					html += "<select id = 'status'  name = 'status'>";
+					html += "<select id = 'status'  name = 'status' onchange='status_change(this)'>";
+					let status_note = "";
 					for (const iterator of arrStatus) {
 						html += "<option ";
 						if (parseInt(result.status) == iterator.id) {
 							html += " selected ";
+							status_note = iterator.note;
 						}
 						html += " value='" + iterator.id + "'>" + iterator.string + "</option>";
 					}
 
 					html += "</select>";
+					html += "<span id = 'status_help' style='margin: 0 1em;'>" + status_note + "</span><a href='#' target='_blank'>["+gLocal.gui.infomation+"]</li>";
 					html += "</div>";
 					html += "</div>";
 					html += "</div>";
 
 					html += "<div id='preview_div'>";
 					html += "<div id='preview_inner' ></div>";
-					html += "</div>";
-
 					html += "</div>";
 
 					$("#channal_info").html(html);
@@ -156,6 +182,20 @@ function my_channal_edit(id) {
 			}
 		}
 	);
+}
+
+function status_change(obj) {
+	let arrStatus = [
+		{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
+		{ id: 10, string: gLocal.gui.private, note: gLocal.gui.private_note },
+		{ id: 30, string: gLocal.gui.public, note: gLocal.gui.public_note },
+	];
+	let newStatus = $(obj).val();
+	for (const iterator of arrStatus) {
+		if (parseInt(newStatus) == iterator.id) {
+			$("#status_help").html(iterator.note);
+		}
+	}
 }
 
 function channal_lang_change() {
