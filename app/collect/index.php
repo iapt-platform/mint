@@ -89,7 +89,6 @@ include "../pcdl/html_head.php";
         .collect_card {
             display: block;
             padding: 1rem 1.5rem;
-            box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
         }
 
         .collect_title {

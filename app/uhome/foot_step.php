@@ -28,6 +28,13 @@ include "../pcdl/html_head.php";
 <link href='../lib/fullcalendar/main.css' rel='stylesheet' />
 <script src='../lib/fullcalendar/main.js'></script>
 
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+<div id="container" style="height: 400px; min-width: 310px"></div>
+
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -58,6 +65,37 @@ include "../pcdl/html_head.php";
     calendar.render();
   });
 
+
+  Highcharts.getJSON('../ucenter/active_get.php', function (data) {
+
+  // create the chart
+  Highcharts.stockChart('container', {
+
+
+    rangeSelector: {
+      selected: 2
+    },
+
+    title: {
+      text: 'Pali Step'
+    },
+
+    series: [{
+      type: 'ohlc',
+      name: '每日收获',
+      data: data,
+      dataGrouping: {
+        units: [[
+          'week', // unit name
+          [1] // allowed multiples
+        ], [
+          'month',
+          [1, 2, 3, 4, 6]
+        ]]
+      }
+    }]
+  });
+  });
 </script>
 <style>
 

@@ -13,6 +13,20 @@ include "../pcdl/html_head.php";
         width:100%;
         height:100%;
     }
+
+    #course_frame{
+        display:flex;
+    }
+    #course_content{
+        flex:5;
+        margin:1em;
+        padding:10px;
+    }
+    #lesson_list{
+        flex:5;
+        height: calc(100%-100px);
+        overflow-y: scroll;
+    }
 </style>
     
 
@@ -34,10 +48,12 @@ if(count($Fetch)==0)
     exit;
 }
 $course_info = $Fetch[0];
+?>
 
-echo "<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>";
-echo "<div class='index_inner '>";
-echo "<div style='font-size:140%'>";
+<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>
+<div class='index_inner '>
+<div style='font-size:140%'>
+<?php
 echo "<a href='../uhome/course.php?userid={$course_info["teacher"]}'>";
 echo ucenter_getA($course_info["teacher"]);
 echo "</a>";
@@ -51,9 +67,11 @@ echo '<button>'.$_local->gui->sign_up.'</button>';
 echo '<button>'.$_local->gui->share.'</button></div>';
 echo "</div>";
 echo '</div>';
-echo "<div  class='index_inner'>";
 
-echo '<div class="card" style="margin:1em;padding:10px;">';
+
+echo "<div id='course_frame' class='index_inner'>";
+
+echo '<div id="course_content" style="">';
     echo '<div class="title">';
     echo $_local->gui->introduction;
     echo '</div>';
@@ -65,14 +83,14 @@ echo '<div class="card" style="margin:1em;padding:10px;">';
     echo '<div id="course_attachment"  class="detail">';
     echo '</div>';   
 echo '</div>';
-
-echo "<div id='lesson_list'>";
-
-
-echo "</div>";
-
 ?>
+<div id='lesson_list'>
+
+
 </div>
+
+</div>
+
 <script>
     $("#main_video_win").height($("#main_video_win").width()*9/16);
     $.get("../course/course_get.php",

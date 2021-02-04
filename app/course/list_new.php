@@ -13,7 +13,11 @@ $Fetch = PDO_FetchAll($query);
 
 foreach ($Fetch as $row) {
     echo '<div class="card">';
-    echo '<div class="card_photo"></div>';
+    echo '<div>';
+    /* 需協助完善封面代碼...
+    echo '<img src="../../tmp/images/course/' . $iterator['id'] . '.jpg" alt="cover" width="120" height="120"  class="card_photo">';
+*/
+    echo '</div>';
     echo '<div class="course_right">';
     echo '<div class="title"><a href="../course/course.php?id=' . $row["id"] . '">' . $row["title"] . '</a></div>';
     echo '<div class="author">' . $_local->gui->speaker . '：';
