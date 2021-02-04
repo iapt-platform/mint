@@ -11,7 +11,7 @@ function add_edit_event($type="",$data=null){
 	if(isset($_COOKIE["userid"])){
 		$dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
 		$dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 		// 查询上次编辑活跃结束时间
 		$query = "SELECT id, end, start,hit  FROM edit WHERE user_id = ? order by end DESC";
 		$stmt = $dbh->prepare($query);
