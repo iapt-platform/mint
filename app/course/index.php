@@ -23,11 +23,29 @@ include "../pcdl/html_head.php";
 			grid-gap: 20px;
 		}
 
+		.collect_head_bar {
+			background-color: #212121;
+			height: 280px;
+			padding: 30px;
+			color: white;
+		}
+
+		.section_inner {
+			max-width: 960px;
+			margin: 0 auto;
+		}
+
 		.title_bar {
 			justify-content: space-between;
 			display: flex;
 			margin: 1em 0;
 			align-items: center;
+		}
+
+		h1 {
+			font-size: 42px;
+			font-weight: 700;
+			margin: 0.3em 0;
 		}
 
 		h3 {
@@ -170,7 +188,12 @@ include "../pcdl/html_head.php";
 
 
 	<div class="index_inner">
-
+		<div id="course_head_bar" class="collect_head_bar">
+			<div class="section_inner">
+				<h1>課程</h1>
+				<div style="max-width:30em">來自世界個地的巴利專家詳細解析聖典</div>
+			</div>
+		</div>
 		<div class="index_list_categories">
 			<div class="title_bar">
 				<h3><?php echo $_local->gui->speaker ?></h3>
