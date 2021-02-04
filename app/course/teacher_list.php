@@ -16,13 +16,18 @@ foreach ($Fetch as $value) {
     echo '<div class="teacher_photo"></div>';
     echo '<div class="teacher_text">';
     echo '<div class="title"><a href="../uhome/course.php?userid=' . $value['teacher'] . '">' . ucenter_getA($value['teacher']) . '</a></div>';
-    echo '<div class="teacher_intro">講師簡介</div>';
-    /*
-    $query = "select id, title  from course where teacher = '{$value['teacher']}'  order by create_time DESC limit 0,5";
-    $FetchTeacher = PDO_FetchAll($query);
-    foreach ($FetchTeacher as $row) {
-        echo '<div class="title" style="padding-bottom:5px;"><a href="../course/course.php?id=' . $row["id"] . '">' . $row["title"] . '</a></div>';
-    }*/
+    echo '<div class="teacher_intro">';
+    PDO_Connect("sqlite:" . _FILE_DB_USERINFO_);
+    $query = "select bio from profile where user_id = ? limit 0,10";
+    $Fetch = PDO_FetchAll($query,array($value['teacher']));
+    if($Fetch){
+        echo $Fetch[0]["bio"];
+    }
+    else{
+        echo "";
+    }
+    echo '</div>';
+
     echo '</div>';
     echo '</div>';
 }
