@@ -124,6 +124,7 @@ include "../pcdl/html_head.php";
 		}
 
 		.card_photo {
+			object-fit: cover;
 			border-radius: 20px 0 0 20px;
 		}
 
@@ -250,11 +251,11 @@ include "../pcdl/html_head.php";
 
 					//協助補上代碼：
 
-					html += '<div class="author">'+gLocal.gui.speaker+'：';
-					html += "<a href='../uhome/course.php?userid="+iterator.teacher+"'>"
+					html += '<div class="author">' + gLocal.gui.speaker + '：';
+					html += "<a href='../uhome/course.php?userid=" + iterator.teacher + "'>"
 					html += iterator.teacher_info.nickname;
 					html += "</a>";
-					html +='</div>';
+					html += '</div>';
 
 					html += '<div class="subtitle">' + iterator.subtitle + '</div>';
 
