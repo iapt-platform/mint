@@ -65,6 +65,17 @@ include "../pcdl/html_head.php";
     calendar.render();
   });
 
+Highcharts.setOptions({
+    lang: {
+        weekdays: [
+            gLocal.gui.ravi, gLocal.gui.canda, gLocal.gui.bhumma, gLocal.gui.budha,
+            gLocal.gui.guru, gLocal.gui.sukka, gLocal.gui.sora
+        ],
+		shortMonths:[
+			gLocal.gui.Jan, gLocal.gui.Feb, gLocal.gui.Mar, gLocal.gui.Apr, gLocal.gui.May, gLocal.gui.Jun, gLocal.gui.Jul, gLocal.gui.Aug, gLocal.gui.Sep, gLocal.gui.Oct, gLocal.gui.Nov, gLocal.gui.Dec
+		]
+    }
+});
 
   Highcharts.getJSON('../ucenter/active_get.php', function (data) {
 
@@ -77,12 +88,21 @@ include "../pcdl/html_head.php";
     },
 
     title: {
-      text: 'Pali Step'
+      text: gLocal.gui.progress_curve
     },
+	tooltip: {
+			shared: true,
+			useHTML: true,
+			headerFormat: '<small>{point.key}</small><table>',
+			pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+				'<td style="text-align: right"><b>{point.y} '+gLocal.gui.h+'</b></td></tr>',
+			footerFormat: '</table>',
+			valueDecimals: 2
+		},
 
     series: [{
       type: 'ohlc',
-      name: '每日收获',
+      name: gLocal.gui.day_EXP,
       data: data,
       dataGrouping: {
         units: [[
