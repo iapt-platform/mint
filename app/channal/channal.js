@@ -101,15 +101,12 @@ function my_channal_edit(id) {
 
 					html += "<div style='width: 60%;padding: 1em;min-width: 25em;'>";
 					html += '<div style="display:flex;line-height:32px;">';
-					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
-					html += "<div style='flex:8;'>";
 					html += "<input type='hidden' name='id' value='" + result.id + "'/>";
-					html += "</div>";
 					html += "</div>";
 
 					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">'+gLocal.gui.name+'</div>';
-					html += '<div style="flex:8;">';
+					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:8;'>";
 					html +=
 						"<input type='input' name='name' value='" +
 						result.name +

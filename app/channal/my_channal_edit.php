@@ -71,14 +71,14 @@ require_once '../studio/index_head.php';
 					</button>
 				</span>
 				
-				<span class="icon_btn_div">				
+				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin;?></span>
 					<button id="to_recycle" type="button" class="icon_btn" onclick="channal_del()" title=" ">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_delete"></use>
 						</svg>
 					</button>
-				</span>	
+				</span>
 			</div>
 		</div>
 
