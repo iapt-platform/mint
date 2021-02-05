@@ -248,8 +248,7 @@ include "../pcdl/html_head.php";
 					html += '<div class="course_right">';
 					html += '<div class="title"><a href="../course/course.php?id=' + iterator.id + '">' + iterator.title + '</a></div>';
 
-					//協助補上代碼：
-
+					//教师名字
 					html += '<div class="author">'+gLocal.gui.speaker+'：';
 					html += "<a href='../uhome/course.php?userid="+iterator.teacher+"'>"
 					html += iterator.teacher_info.nickname;
