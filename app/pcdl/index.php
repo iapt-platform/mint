@@ -94,6 +94,7 @@ require_once '../pcdl/html_head.php';
 		}
 
 		.card_photo {
+			object-fit: cover;
 			border-radius: 20px 0 0 20px;
 		}
 

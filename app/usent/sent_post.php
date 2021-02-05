@@ -32,13 +32,15 @@ $respond['editor']=$_COOKIE["userid"];
 #先查询对此channal是否有权限修改
 $cooperation = 0;
 $text_lang = "en";
+$channel_status = 0;
 if(isset($_POST["channal"])){
    PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-    $query = "SELECT owner, lang FROM channal WHERE id=?";
+    $query = "SELECT owner, lang , status FROM channal WHERE id=?";
     $fetch = PDO_FetchRow($query,array($_POST["channal"]));
     
     if($fetch){
         $text_lang = $fetch["lang"];
+        $channel_status = $fetch["status"];
     }
     $respond['lang']=$text_lang;
     if($fetch && $fetch["owner"]==$_COOKIE["userid"]){
@@ -122,7 +124,7 @@ else{
                                 $_POST["text"],
                                 $text_lang ,
                                 1,
-                                7,
+                                $channel_status,
                                 mb_strlen($_POST["text"],"UTF-8"),
                                 mTime(),
                                 mTime(),
