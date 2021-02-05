@@ -6,6 +6,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../usent/function.php";
+require_once "../channal/function.php";
 require_once "../ucenter/active.php";
 
 #检查是否登陆
@@ -130,13 +131,25 @@ if(count($newList)>0){
 						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 	$sth = $PDO->prepare($query);
 
+	$channel_info = new Channal();
+
 	foreach ($newList as $data) {
 			$uuid = UUID::v4();
-			if($data["parent"]){
+			if(isset($data["parent"])){
 				$parent = $data["parent"];
 			}
 			else{
 				$parent  = "";
+			}
+
+			$queryChannel = $channel_info->getChannal($data["channal"]);
+			if($queryChannel == false){
+				$lang = $data["language"];
+				$status = 10;
+			}
+			else{
+				$lang = $queryChannel["lang"];
+				$status = $queryChannel["status"];
 			}
 			$sth->execute(array($uuid,
 						$parent,
@@ -145,13 +158,13 @@ if(count($newList)>0){
 						$data["begin"], 
 						$data["end"], 
 						$data["channal"], 
-						$data["tag"], 
+						isset($data["tag"])? $data["tag"]:"", 
 						$data["author"], 
 						$_COOKIE["userid"],
 						$data["text"],
-						$data["language"],
+						$lang,
 						1,
-						7,
+						$status,
 						mb_strlen($data["text"],"UTF-8"),
 						mTime(),
 						mTime(),

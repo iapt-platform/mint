@@ -6,12 +6,6 @@ require_once '../pcdl/html_head.php';
 	<script language="javascript" src="../pcdl/index.js"></script>
 
 	<style>
-		.content_block {
-			flex: 0 0 auto;
-			width: 25%;
-			padding: 10px;
-		}
-
 		.content_inner {
 			display: flex;
 		}
@@ -100,8 +94,7 @@ require_once '../pcdl/html_head.php';
 		}
 
 		.card_photo {
-			height: 100%;
-			background: gray;
+			object-fit: cover;
 			border-radius: 20px 0 0 20px;
 		}
 
