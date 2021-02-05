@@ -1622,13 +1622,15 @@ function sent_show_rel_map(book, para, begin, end) {
 				} else {
 					dest = iterator.dest_id + "[" + dest + "]";
 				}
+/*
 				if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
 					memind += wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
 				} else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
 					memind += dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
 				} else {
-					memind += wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
 				}
+*/
+					memind += wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
 			}
 		}
 	}
