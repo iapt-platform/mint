@@ -151,7 +151,7 @@ else{
 
 		$dictFileName=_FILE_DB_REF_;
 		PDO_Connect("sqlite:$dictFileName");
-		$query = "select * from info where 1  limit 0,100";
+		$query = "SELECT * from info where 1  limit 0,100";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
 		if($iFetch>0){
@@ -170,8 +170,8 @@ else{
 			}
 		}
 		if($dict_id!=-1){
-			$query = "select count(*) from dict where dict_id='$dict_id' ";
-			$dict_count = PDO_FetchOne($query);
+			$query = "SELECT count(*) from dict where dict_id = ? ";
+			$dict_count = PDO_FetchOne($query,array($dict_id));
 			$totle_page=ceil($dict_count/$page_size);
 		}
 		else{
@@ -214,8 +214,8 @@ else{
 						<?php
 						if($dict_id!=-1){
 							$from=$page_no*$page_size;
-							$query = "select id, paliword,status from dict where dict_id='$dict_id' limit $from , $page_size";
-							$Fetch = PDO_FetchAll($query);
+							$query = "SELECT id, paliword,status from dict where dict_id = ? limit ? , ? ";
+							$Fetch = PDO_FetchAll($query,array($dict_id,$from,$page_size));
 							foreach($Fetch as $word){
 								$class_status="status_".$word["status"];
 								$str_status="";

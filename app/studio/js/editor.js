@@ -655,9 +655,8 @@ function dictDataParse(xmlDictData, dictID) {
 }
 
 function pushNewDictItem(inArray, objNew) {
-	//var isExist=false;
-	for (indexList in inArray) {
-		if (inArray[indexList].Id == objNew.Id && inArray[indexList].dictID == objNew.dictID) {
+	for (const iterator of inArray) {
+		if (iterator.Id == objNew.Id && iterator.dictID == objNew.dictID) {
 			return;
 		}
 	}

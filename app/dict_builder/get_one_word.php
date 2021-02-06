@@ -12,8 +12,8 @@ include "../public/_pdo.php";
 						
 		$dictFileName=_FILE_DB_REF_;
 		PDO_Connect("sqlite:$dictFileName");
-		$query = "select * from dict where id='$word_id'";
-		$Fetch = PDO_FetchAll($query);
+		$query = "SELECT * from dict where id = ? ";
+		$Fetch = PDO_FetchAll($query,array($word_id));
 		
 		$dictFileName=$dir_dict_3rd."all.db3";
 		PDO_Connect("sqlite:$dictFileName");
@@ -21,8 +21,8 @@ include "../public/_pdo.php";
 		foreach($Fetch as $word){
 			echo "<h3>".$word["paliword"]."</h3>";
 			if($word["status"]>1){
-				$query = "select * from dict where \"from\"='".$word["id"]."'";
-				$FetchRichWord = PDO_FetchAll($query);
+				$query = "SELECT * from dict where from = ? ";
+				$FetchRichWord = PDO_FetchAll($query,array($word["id"]));
 				echo "<div id='final_word'>";
 				echo "<div id='final_word_header'>已编辑数据<button onclick='final_word_show_hide()'>显示/隐藏</bnutton></div>";
 				echo "<div id='final_word_body'>";

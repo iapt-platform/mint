@@ -45,8 +45,8 @@ require_once '../media/function.php';
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 
-$query = "select * from lesson where id = '{$_GET["lesson"]}'   limit 0,1";
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT * from lesson where id = ?  limit 0,1";
+$Fetch = PDO_FetchAll($query,array($_GET["lesson"]));
 if(count($Fetch)==0)
 {
     echo "无法找到此课程。可能该课程已经被拥有者删除。";
@@ -54,8 +54,8 @@ if(count($Fetch)==0)
 }
 $lesson_info = $Fetch[0];
 
-$query = "select * from course where id = '{$lesson_info["course_id"]}'   limit 0,1";
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT * from course where id = ?   limit 0,1";
+$Fetch = PDO_FetchAll($query,array($lesson_info["course_id"]));
 if(count($Fetch)==0)
 {
     echo "无法找到此课程。可能该课程已经被拥有者删除。";

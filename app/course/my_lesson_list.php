@@ -43,8 +43,8 @@ require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
-$query = "select * from course where id = '{$_GET["course"]}'   limit 0,1";
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT * from course where id = ?   limit 0,1";
+$Fetch = PDO_FetchAll($query,array($_GET["course"]));
 if(count($Fetch)==0)
 {
     echo "无法找到此课程。可能该课程已经被拥有者删除。";
@@ -113,8 +113,8 @@ echo '</div>';
 <div style="flex:8;padding:0 0.8em;">
 
 <?php
-$query = "select * from lesson where course_id = '{$_GET["course"]}'   limit 0,100";
-$fAllLesson = PDO_FetchAll($query);
+$query = "SELECT * from lesson where course_id = ?   limit 0,100";
+$fAllLesson = PDO_FetchAll($query,array($_GET["course"]));
 
 
 echo '<div id="userfilelist">';

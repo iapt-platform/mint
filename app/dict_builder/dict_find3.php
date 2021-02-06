@@ -18,16 +18,9 @@ PDO_Connect("sqlite:$dictFileName");
 
 function isExsit($word){
 global $PDO;
-		$query = "select count(*) as co from dict where \"word\" = ".$PDO->quote($word);
-		$row=PDO_FetchOne($query);
-		/*
-		$Fetch = PDO_FetchAll($query);
-		$iFetch=count($Fetch);
-		$count_return+=$iFetch;
-		if($iFetch>0){
-		
-		}
-		*/
+		$query = "SELECT count(*) as co from dict where \"word\" = ?";
+		$row=PDO_FetchOne($query,array($word));
+
 		if($row[0]==0){
 			return false;
 		}
@@ -134,8 +127,8 @@ function mySplit($strWord){
 switch($op){
 	case "pre"://预查询
 		echo "<wordlist>";
-		$query = "select word,count(*) as co from dict where \"eword\" like ".$PDO->quote($word.'%')." OR \"word\" like ".$PDO->quote($word.'%')." group by word order by length limit 0,100";
-		$Fetch = PDO_FetchAll($query);
+		$query = "SELECT word,count(*) as co from dict where \"eword\" like ? OR \"word\" like ? group by word order by length limit 0,100";
+		$Fetch = PDO_FetchAll($query,array($word.'%',$word.'%'));
 		$iFetch=count($Fetch);
 		if($iFetch>0){
 			for($i=0;$i<$iFetch;$i++){
@@ -151,9 +144,9 @@ switch($op){
 		break;
 	case "search":
 		//直接查询
-		$query = "select dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = ".$PDO->quote($word)." limit 0,30";
+		$query = "SELECT dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = ? limit 0,30";
 		
-		$Fetch = PDO_FetchAll($query);
+		$Fetch = PDO_FetchAll($query,array($word));
 		$iFetch=count($Fetch);
 		$count_return+=$iFetch;
 		if($iFetch>0){
@@ -189,8 +182,8 @@ switch($op){
 
 		if(count($newWord)>0){
 			foreach($newWord as $x=>$x_value) {
-				$query = "select dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = ".$PDO->quote($x)." limit 0,30";
-				$Fetch = PDO_FetchAll($query);
+				$query = "SELECT dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = ? limit 0,30";
+				$Fetch = PDO_FetchAll($query,array($x));
 				$iFetch=count($Fetch);
 				$count_return+=$iFetch;
 				if($iFetch>0){
@@ -237,8 +230,8 @@ switch($op){
 			$word1=$org_word;
 			$wordInMean="%$org_word%";
 			echo "include $org_word:<br />";
-			$query = "select dict.dict_id,dict.word,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"mean\" like ".$PDO->quote($wordInMean)." limit 0,30";
-			$Fetch = PDO_FetchAll($query);
+			$query = "SELECT dict.dict_id,dict.word,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"mean\" like ? limit 0,30";
+			$Fetch = PDO_FetchAll($query,array($wordInMean));
 			$iFetch=count($Fetch);
 			$count_return+=$iFetch;
 			if($iFetch>0){

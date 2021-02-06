@@ -5,7 +5,7 @@ require_once "../path.php";
 	$db_file = _FILE_DB_PALITEXT_;
 	PDO_Connect("sqlite:$db_file");
 
-	$query = "select * from books where 1";
+	$query = "SELECT * from books where 1";
 	$books = PDO_FetchAll($query);
 
 

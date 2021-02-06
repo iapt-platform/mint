@@ -297,7 +297,7 @@ function microtime_float()
 
 function dict_lookup($word){
 	global $dbh;
-	$query = "select weight from part where \"word\" = ? ";
+	$query = "SELECT weight from part where word = ? ";
 	$stmt = $dbh->prepare($query);
 	$stmt->execute(array($word));
     $row = $stmt->fetch(PDO::FETCH_NUM);

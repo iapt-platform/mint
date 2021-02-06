@@ -86,7 +86,7 @@ $album_power["2"]="编辑";
 	switch($currSettingItem){
 		case "account":
 			PDO_Connect("sqlite:"._FILE_DB_USERINFO_);
-			$query = "select * from 'user' where 1 limit 0,1000";
+			$query = "SELECT * from 'user' where 1 limit 0,1000";
 			$user_info = PDO_FetchAll($query);
 			echo "<table>";
 			echo "<tr><th>id</th><th>user name</th><th>nick name</th></tr>";
@@ -106,7 +106,7 @@ $album_power["2"]="编辑";
 			PDO_Connect("sqlite:$db_file");		
 			echo "<h2>Album</h2>";
 
-			$query = "select * from 'album' where 1 limit 0,1000";
+			$query = "SELECT * from 'album' where 1 limit 0,1000";
 			$Fetch = PDO_FetchAll($query);
 			?>
 			<table>
@@ -128,10 +128,10 @@ $album_power["2"]="编辑";
 			break;		
 		case "share":
 			PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
-			$query = "select count(*) from 'fileindex' where share=1";
+			$query = "SELECT count(*) from 'fileindex' where share=1";
 			$file_count = PDO_FetchOne($query);
 			echo "共计：{$file_count} 个共享文件";
-			$query = "select * from 'fileindex' where share=1 limit 0,100";
+			$query = "SELECT * from 'fileindex' where share=1 limit 0,100";
 			$file_share = PDO_FetchAll($query);			
 			echo "<table>";
 			echo "<tr><th>id</th><th>user id</th><th>Title</th><th>Size</th><th></th></tr>";
