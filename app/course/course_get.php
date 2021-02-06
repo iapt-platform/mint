@@ -3,11 +3,23 @@
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
+require_once "../ucenter/function.php";
 
 global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 $query = "select * from course where id = '{$_GET["id"]}'   limit 0,1";
-$fAllLesson = PDO_FetchAll($query);
-echo json_encode($fAllLesson, JSON_UNESCAPED_UNICODE);
+$fCourse = PDO_FetchRow($query);
+$userinfo = new UserInfo();
+
+if ($fCourse) {
+    # code...
+    $user = $userinfo->getName($fCourse["teacher"]);
+	$fCourse["teacher_info"] = $user;
+	echo json_encode($fCourse, JSON_UNESCAPED_UNICODE);
+}
+else{
+	echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+}
+
 
 ?>
