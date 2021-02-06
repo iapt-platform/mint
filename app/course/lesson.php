@@ -8,16 +8,8 @@ include "../pcdl/html_head.php";
 <script src="../course/lesson.js"></script>
 <?php
     require_once("../pcdl/head_bar.php");
-?>
 
-<style>
-    #main_video_win iframe{
-        width:100%;
-        height:100%;
-    }
-</style>
-<?php
-//
+/*
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -67,14 +59,19 @@ echo "<div  class='index_inner'>";
 echo "<div id='lesson_list'>";
 
 echo "</div>";
-
+*/
 ?>
+
+<link type="text/css" rel="stylesheet" href="./style.css" />
+
+<div id='course_content' >
+    <div id='course_info_shell'><div id='course_info' class="section_inner"></div></div>
+    <div id='lesson_info_shell'><div id='lesson_info' class="section_inner"></div></div>
+    <div id='lesson_list_shell'><div id='lesson_list' class="section_inner lesson"></div></div>
 </div>
+
 <script>
-
-$("#main_video_win").height($("#main_video_win").width()*9/16);
-lesson_show("<?php echo $_GET["id"]; ?>");
-
+lesson_load("<?php echo $_GET["id"]; ?>");
 </script>
 <?php
 include "../pcdl/html_foot.php";
