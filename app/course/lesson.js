@@ -168,7 +168,9 @@ function lesson_load(lesson_id) {
 					html += "<div id='course_info_attachment' class='course_info_block'>";
 					html += "<h2>" + gLocal.gui.attachment + "</h2>";
 					try {
-						html += marked(lesson_info.attachment);
+						html += "<div class='course_info_content'>";
+						html += note_init(lesson_info.attachment);
+						html += "</div>";
 					} catch (e) {
 						html += e.message;
 					}
@@ -189,7 +191,7 @@ function lesson_load(lesson_id) {
 				}
 				//end of attachment
 				$("#lesson_info").html(html);
-
+				note_refresh_new();
 				render_lesson_list(lesson_info.course_id, lesson_info.id);
 			}
 		}
@@ -239,22 +241,6 @@ function render_lesson_list(id, currLesson) {
 					"</a></div>";
 
 				html += "</div>";
-
-				/*
-				let dt = lesson["duration"] / 60;
-				let sdt = "";
-				if (dt > 59) {
-					sdt += Math.floor(dt / 60) + "小时";
-				}
-				let m = dt % 60;
-				if (m > 0) {
-					sdt += (dt % 60) + "分钟";
-				}
-				html += "<div >" + gLocal.gui.duration + "：" + sdt + "</div>";
-				
-
-				html += '<div ><span class="lesson_status">' + lesson_time + "</span></div>";
-*/
 
 				html += "</div>";
 			}

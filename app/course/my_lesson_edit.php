@@ -72,24 +72,6 @@ echo '</div>';
 echo '<div></div>';
 echo '</div>';
 
-/*
-$coverList = array();
-
-$coverList[] = $lesson_info["cover"];
-
-$covers = media_get($coverList);
-foreach ($covers as $value) {
-    $cover["{$value["id"]}"] = $value["link"];
-}
-
-    $coverlink = $cover["{$lesson_info["cover"]}"];
-    if(substr($coverlink,0,6)=="media:"){
-        $cover_html = '<div style="width: 20em;"><img src="'._DIR_USER_IMG_LINK_.'/'.substr($coverlink,6).'" width="100%" height="auto"></div>';
-    }
-    else{
-        $cover_html =  '<div style="width: 20em;"><img src="'.$coverlink.'" width="50" height="50"></div>';
-    }
-*/
 echo '<div style="display:flex;">';
 
 echo '<div style="flex:8;padding:0 0.8em;">';
@@ -112,6 +94,14 @@ echo '<div id="userfilelist">';
     echo '<div style="flex:2;">'.$_local->gui->sub_title.'</div>';
     echo '<div style="flex:8;"><input type="input" name = "subtitle" value="'.$lesson_info["subtitle"].'" /></div>';
     echo '</div>';
+
+    
+    # 主讲人
+    echo '<div style="display:flex;">';
+    echo '<div style="flex:2;">'.$_local->gui->speaker.'</div>';
+    echo '<div id="teacher_id" style="flex:8;"></div>';
+    echo '<input id="form_teacher" type="hidden" name="teacher" value="'.$lesson_info["teacher"].'" />';
+    echo '</div>'; 
 
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->introduction.'</div>';
@@ -137,20 +127,24 @@ echo '<div id="userfilelist">';
     echo '</div>';
     echo '</div>';
 
+    #直播
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->notice_live.'</div>';
     echo '<div style="flex:8;"><textarea name="live" style="height:6em;">'.$lesson_info["live"].'</textarea></div>';
     echo '</div>';
+
+    #录播
     echo '<div style="display:flex;">';
     echo '<div style="flex:2;">'.$_local->gui->record_replay.'</div>';
     echo '<div style="flex:8;"><textarea name="replay" style="height:6em;">'.$lesson_info["replay"].'</textarea></div>';
     echo '</div>';
 
+
+    #附件
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">'.$_local->gui->speaker.'</div>';
-    echo '<div id="teacher_id" style="flex:8;"></div>';
-    echo '<input id="form_teacher" type="hidden" name="teacher" value="'.$lesson_info["teacher"].'" />';
-    echo '</div>'; 
+    echo '<div style="flex:2;">'.$_local->gui->attachment.'</div>';
+    echo '<div style="flex:8;"><textarea name="attachment" style="height:10em;">'.$lesson_info["attachment"].'</textarea></div>';
+    echo '</div>';
 
 echo '</div>';
 ?>
