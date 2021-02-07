@@ -2,8 +2,10 @@
 //统计用户经验值
 require_once '../path.php';
 require_once "../public/function.php";
+require_once "../public/php/define.php";
 
-function add_edit_event($type="",$data=null){
+
+function add_edit_event($type=0,$data=null){
 	date_default_timezone_set("UTC");
 	define("MAX_INTERVAL",600000);
 	define("MIN_INTERVAL",10000);
@@ -12,6 +14,8 @@ function add_edit_event($type="",$data=null){
 		$dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
 		$dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+		
 		// 查询上次编辑活跃结束时间
 		$query = "SELECT id, end, start,hit  FROM edit WHERE user_id = ? order by end DESC";
 		$stmt = $dbh->prepare($query);
@@ -105,6 +109,21 @@ function add_edit_event($type="",$data=null){
 		}
 		#更新经验总量表结束
 
+		#更新log
+		if($type > 0){
+			$dns = "sqlite:"._FILE_DB_USER_ACTIVE_LOG_;
+			$dbh_log = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
+			$dbh_log->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+			$query="INSERT INTO log ( user_id, active , content , time,timezone )  VALUES  ( ? , ? , ? , ? ,? ) ";
+			$sth = $dbh_log->prepare($query);
+			$sth->execute(array($_COOKIE["uid"] , $type , $data, $currTime,$client_timezone ) );
+			if (!$sth || ($sth && $sth->errorCode() != 0)) {
+				$error = $dbh->errorInfo();
+			}			
+		}
+
+		#更新log结束
 	}
 }
 

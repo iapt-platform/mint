@@ -149,7 +149,7 @@ switch($op){
 		echo "</div>";
 		break;
 	case "search":
-		add_edit_event("lookup");
+		add_edit_event(_DICT_LOOKUP_,$word);
 		echo "<div id='dict_list_shell' onclick='setNaviVisibility()'><div id='dict_list' class='dict_list_off'></div></div>";
 		echo "<div id='dict_ref'>";	
 		$dict_list_a = [];

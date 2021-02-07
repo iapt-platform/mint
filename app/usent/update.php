@@ -23,7 +23,7 @@ else{
     $_landmark = "";
 }
 
-add_edit_event("sent",array("book"=>0,"para"=>0));
+
 
 $aData=json_decode($_POST["data"],TRUE);
 
@@ -57,57 +57,61 @@ foreach ($aData as $data) {
 $update_list = array(); //已经成功修改数据库的数据 回传客户端
 
 /* 修改现有数据 */
-$PDO->beginTransaction();
-$query="UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
-$sth = $PDO->prepare($query);
+if(count($oldList)>0){
+	add_edit_event(_SENT_EDIT_,"{$oldList[0]["id"]}");	
+
+	$PDO->beginTransaction();
+	$query="UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
+	$sth = $PDO->prepare($query);
 
 
-foreach ($oldList as $data) {
-	if(isset($data["id"])){
-		if(isset($data["time"])){
-			$modify_time = $data["time"];
-		}
-		else{
-			$modify_time = mTime();
-		}
-		$sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"],"UTF-8"), mTime(),$modify_time,$data["id"]));
-	} 
-}
-
-$PDO->commit();
-
-$respond=array("status"=>0,"message"=>"","insert_error"=>"","new_list"=>array());
-
-if (!$sth || ($sth && $sth->errorCode() != 0)) {
-	/*  识别错误且回滚更改  */
-	$PDO->rollBack();
-	$error = PDO_ErrorInfo();
-	$respond['status']=1;
-	$respond['message']=$error[2];
-}
-else{
-	#没错误 更新历史记录
 	foreach ($oldList as $data) {
-		$respond['message']=update_historay($data["id"],$_COOKIE["userid"] ,$data["text"],$_landmark);
-		if($respond['message']!==""){
-			$respond['status']=1;
-			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
-			exit;
+		if(isset($data["id"])){
+			if(isset($data["time"])){
+				$modify_time = $data["time"];
+			}
+			else{
+				$modify_time = mTime();
+			}
+			$sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"],"UTF-8"), mTime(),$modify_time,$data["id"]));
+		} 
+	}
+
+	$PDO->commit();
+
+	$respond=array("status"=>0,"message"=>"","insert_error"=>"","new_list"=>array());
+
+	if (!$sth || ($sth && $sth->errorCode() != 0)) {
+		/*  识别错误且回滚更改  */
+		$PDO->rollBack();
+		$error = PDO_ErrorInfo();
+		$respond['status']=1;
+		$respond['message']=$error[2];
+	}
+	else{
+		#没错误 添加log 更新历史记录 
+		foreach ($oldList as $data) {
+			$respond['message']=update_historay($data["id"],$_COOKIE["userid"] ,$data["text"],$_landmark);
+			if($respond['message']!==""){
+				$respond['status']=1;
+				echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+				exit;
+			}
+		}
+		$respond['status']=0;
+		$respond['message']="成功";
+		foreach ($oldList as $key => $value) {
+			$update_list[] =  array("id" => $value["id"],"book"=>$value["book"],"paragraph"=>$value["paragraph"],"begin"=>$value["begin"],"end"=>$value["end"],"channal"=>$value["channal"],"text" => $value["text"]);
+
 		}
 	}
-	$respond['status']=0;
-	$respond['message']="成功";
-	foreach ($oldList as $key => $value) {
-		$update_list[] =  array("id" => $value["id"],"book"=>$value["book"],"paragraph"=>$value["paragraph"],"begin"=>$value["begin"],"end"=>$value["end"],"channal"=>$value["channal"],"text" => $value["text"]);
-
-	}
 }
-
 
 /* 插入新数据 */
 //查询channel语言
 
 if(count($newList)>0){
+	add_edit_event(_SENT_NEW_,"{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}");	
 	$PDO->beginTransaction();
 	$query = "INSERT INTO sentence (id, 
 									parent,

@@ -16,9 +16,36 @@ require_once "../pcdl/html_head.php";
     width: 100vw;	
 }
 </style>
+<?php
+if(isset($_GET["book"])){
+	$book = $_GET["book"];
+}
+else{
+	$book = 0;
+}
+if(isset($_GET["para"])){
+	$para = $_GET["para"];
+}
+else{
+	$para = 0;
+}
+if(isset($_GET["begin"])){
+	$begin = $_GET["begin"];
+}
+else{
+	$begin = 0;
+}
+if(isset($_GET["end"])){
+	$end = $_GET["end"];
+}
+else{
+	$end = 0;
+}
+?>
 <script>
-_nissaya_book = <?php echo $_GET["book"];?>;
-_nissaya_para = <?php echo $_GET["para"];?>;
+$(document).ready(function () {
+	nissaya_get(<?php echo "{$book},{$para},{$begin},{$end}";?>);
+});
 </script>
 
 <div id="contence">

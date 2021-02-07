@@ -442,7 +442,17 @@ function note_json_html(in_json) {
 		gLocal.gui.related_para +
 		"</a>";
 	output +=
-		"<a  onclick='goto_nissaya(" + in_json.book + "," + in_json.para + ")'>" + gLocal.gui.show_nissaya + "</a>";
+		"<a  onclick='goto_nissaya(" +
+		in_json.book +
+		"," +
+		in_json.para +
+		"," +
+		in_json.begin +
+		"," +
+		in_json.end +
+		")'>" +
+		gLocal.gui.show_nissaya +
+		"</a>";
 	output +=
 		"<a onclick=\"copy_ref('" +
 		in_json.book +
@@ -895,8 +905,8 @@ function copy_ref(book, para, begin, end) {
 	copy_to_clipboard(strRef);
 }
 
-function goto_nissaya(book, para) {
-	window.open("../nissaya/index.php?book=" + book + "&para=" + para, "nissaya");
+function goto_nissaya(book, para, begin = 0, end = 0) {
+	window.open("../nissaya/index.php?book=" + book + "&para=" + para + "&begin=" + begin + "&end=" + end, "nissaya");
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
