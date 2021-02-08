@@ -8,7 +8,7 @@ require_once "../public/php/define.php";
 function add_edit_event($type=0,$data=null){
 	date_default_timezone_set("UTC");
 	define("MAX_INTERVAL",600000);
-	define("MIN_INTERVAL",10000);
+	define("MIN_INTERVAL",60000);
 	
 	if(isset($_COOKIE["userid"])){
 		$dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
