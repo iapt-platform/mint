@@ -12,6 +12,12 @@ include "../pcdl/html_head.php";
 
 <link type="text/css" rel="stylesheet" href="./style.css" />
 
+<style>
+#course_info_shell{
+    baackground-color:gray;
+}
+</style>
+
 <div id='course_content' >
     <div id='course_info_shell'><div id='course_info' class="section_inner"></div></div>
     <div id='lesson_info_shell'><div id='lesson_info' class="section_inner"></div></div>
