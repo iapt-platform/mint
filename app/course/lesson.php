@@ -1,5 +1,5 @@
 <?PHP
-include "../pcdl/html_head.php";
+    include "../pcdl/html_head.php";
 ?>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -14,7 +14,19 @@ include "../pcdl/html_head.php";
 
 <style>
 #course_info_shell{
-    baackground-color:gray;
+    background-color: var(--box-bg-color1);
+}
+#course_info{
+    display:flex;
+    justify-content: space-between;
+    padding: 6px;
+}
+
+#parent_title,#parent_title a {
+    font-size: 13px;
+    line-height: 2.4em;
+    font-weight: 500;
+    color: var(--tool-color);
 }
 </style>
 

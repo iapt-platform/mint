@@ -24,7 +24,7 @@
 	margin: 0 auto;
 }
 #course_info_head_title {
-	padding: 12px;
+	padding: 12px 0;
 }
 #course_title {
 	font-size: 22px;
@@ -43,7 +43,7 @@
 	border-top: 1px solid var(--box-bg-color2);
 	padding: 10px 5px;
 }
-.course_info_block:first {
+.course_info_block:first-child {
 	border-top: none;
 }
 .course_info_block h2 {
@@ -89,5 +89,5 @@
 	color: gray;
 }
 #course_info_head_2 {
-	padding: 10px;
+	padding: 10px 0;
 }

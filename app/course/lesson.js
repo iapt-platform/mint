@@ -192,17 +192,42 @@ function lesson_load(lesson_id) {
 				//end of attachment
 				$("#lesson_info").html(html);
 				note_refresh_new();
+				render_course_info(lesson_info.course_id);
 				render_lesson_list(lesson_info.course_id, lesson_info.id);
 			}
 		}
 	);
 }
-
-function render_lesson_list(id, currLesson) {
+function render_course_info(course_id) {
+	$.get(
+		"../course/course_get.php",
+		{
+			id: course_id,
+		},
+		function (data, status) {
+			let html = "";
+			let course_info = JSON.parse(data);
+			if (course_info) {
+				let html = "";
+				html += "<div id='parent_title'>";
+				html += "<a href='../course/course.php?id=" + course_info.id + "'>";
+				html += course_info.title;
+				html += "</a>";
+				html += "</div>";
+				html += "<div id='course_button'>";
+				html += "<button>关注</button>";
+				html += "<button>报名</button>";
+				html += "</div>";
+				$("#course_info").html(html);
+			}
+		}
+	);
+}
+function render_lesson_list(course_id, currLesson) {
 	$.get(
 		"../course/lesson_list.php",
 		{
-			id: id,
+			id: course_id,
 		},
 		function (data, status) {
 			let arrLesson = JSON.parse(data);
