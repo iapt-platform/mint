@@ -13,12 +13,13 @@ define("_ARTICLE_EDIT_",20);
 define("_ARTICLE_NEW_",21);
 define("_DICT_LOOKUP_",30);
 define("_TERM_EDIT_",40);
-define("_TERM_LOOKUP_",50);
+define("_TERM_LOOKUP_",41);
 define("_WBW_EDIT_",60);
 define("_SENT_EDIT_",70);
 define("_SENT_NEW_",71);
 define("_COLLECTION_EDIT_",80);
 define("_COLLECTION_NEW_",81);
-define("_FIND_IN_NISSAYA_",90);
+define("_NISSAYA_FIND_",90);
+
 
 ?>

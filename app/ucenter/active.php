@@ -115,7 +115,7 @@ function add_edit_event($type=0,$data=null){
 			$dbh_log = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 			$dbh_log->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-			$query="INSERT INTO log ( user_id, active , content , time,timezone )  VALUES  ( ? , ? , ? , ? ,? ) ";
+			$query="INSERT INTO log ( user_id, active , content , time , timezone )  VALUES  ( ? , ? , ? , ? ,? ) ";
 			$sth = $dbh_log->prepare($query);
 			$sth->execute(array($_COOKIE["uid"] , $type , $data, $currTime,$client_timezone ) );
 			if (!$sth || ($sth && $sth->errorCode() != 0)) {

@@ -35,7 +35,7 @@ if(isset($_GET["end"])){
 else{
 	$end = 0;
 }
-add_edit_event(_FIND_IN_NISSAYA_,"{$book}-{$para}-{$begin}-{$end}");
+add_edit_event(_NISSAYA_FIND_,"{$book}-{$para}-{$begin}-{$end}");
 
 PDO_Connect("sqlite:"._FILE_DB_PAGE_INDEX_);
 $query = "SELECT * from m where book=? and para=?";
