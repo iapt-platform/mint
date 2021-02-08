@@ -58,7 +58,7 @@ $update_list = array(); //已经成功修改数据库的数据 回传客户端
 
 /* 修改现有数据 */
 if(count($oldList)>0){
-	add_edit_event(_SENT_EDIT_,"{$oldList[0]["id"]}");	
+	add_edit_event(_SENT_EDIT_,"{$oldList[0]["book"]}-{$oldList[0]["paragraph"]}-{$oldList[0]["begin"]}-{$oldList[0]["end"]}@{$oldList[0]["channal"]}");	
 
 	$PDO->beginTransaction();
 	$query="UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
@@ -111,7 +111,7 @@ if(count($oldList)>0){
 //查询channel语言
 
 if(count($newList)>0){
-	add_edit_event(_SENT_NEW_,"{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}");	
+	add_edit_event(_SENT_NEW_,"{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}@{$newList[0]["channal"]}");	
 	$PDO->beginTransaction();
 	$query = "INSERT INTO sentence (id, 
 									parent,
