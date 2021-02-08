@@ -42,8 +42,8 @@ set (doc_id ,userid ,value)
     PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 
         echo "<input id='doc_coop_docid' type='hidden' value='{$_doc_id}' />";
-        $query = "select * from fileindex where id='{$_doc_id}' ";
-        $Fetch = PDO_FetchAll($query);
+        $query = "SELECT * from fileindex where id = ? ";
+        $Fetch = PDO_FetchAll($query,array($_doc_id));
         $iFetch=count($Fetch);
         if($iFetch>0){
 
@@ -102,8 +102,8 @@ set (doc_id ,userid ,value)
 
                 }
                 
-                $query = "select * from power where doc_id='{$_doc_id}' ";
-                $Fetch = PDO_FetchAll($query);
+                $query = "SELECT * from power where doc_id = ? ";
+                $Fetch = PDO_FetchAll($query,$_doc_id);
 
                 echo "<ul>";
                 foreach($Fetch as $row){

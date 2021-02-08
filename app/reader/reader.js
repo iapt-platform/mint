@@ -126,6 +126,7 @@ function reader_draw_para_menu() {
 			html += "<a onclick=\"junp_to_para('" + _reader_book + "','" + strPara + "')\">仅显示此段</a>";
 		}
 		html += "<a onclick=\"edit_wbw('" + _reader_book + "','" + strPara + "')\">" + gLocal.gui.edit_now + "</a>";
+		html += "<a  onclick='goto_nissaya(" + _reader_book + "," + strPara + ")'>" + gLocal.gui.show_nissaya + "</a>";
 		html +=
 			"<a onclick=\"copy_para_ref('" + _reader_book + "','" + strPara + "')\">" + gLocal.gui.copy_link + "</a>";
 		html +=

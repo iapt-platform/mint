@@ -6,4 +6,20 @@ define("_CONTENT_VISIBILITY_PRIVATE_" , 10);
 define("_CONTENT_VISIBILITY_UNLISTED_" , 20);
 define("_CONTENT_VISIBILITY_PUBLIC_" , 30);
 
+#用户操作
+define("_CHANNEL_EDIT_",10);
+define("_CHANNEL_NEW_",11);
+define("_ARTICLE_EDIT_",20);
+define("_ARTICLE_NEW_",21);
+define("_DICT_LOOKUP_",30);
+define("_TERM_EDIT_",40);
+define("_TERM_LOOKUP_",41);
+define("_WBW_EDIT_",60);
+define("_SENT_EDIT_",70);
+define("_SENT_NEW_",71);
+define("_COLLECTION_EDIT_",80);
+define("_COLLECTION_NEW_",81);
+define("_NISSAYA_FIND_",90);
+
+
 ?>

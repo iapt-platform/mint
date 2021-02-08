@@ -8,7 +8,7 @@ require_once '../ucenter/function.php';
 
 global $PDO;
 PDO_Connect("sqlite:" . _FILE_DB_COURSE_);
-$query = "select * from course where 1  order by modify_time DESC limit 0,4";
+$query = "SELECT * from course where 1  order by modify_time DESC limit 0,4";
 $Fetch = PDO_FetchAll($query);
 
 foreach ($Fetch as $row) {

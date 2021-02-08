@@ -21,11 +21,11 @@ global $PDO;
 PDO_Connect("sqlite:"._FILE_DB_COURSE_);
 
 if(isset($_GET["teacher"])){
-    $query = "select * from course where teacher = ?  order by create_time DESC limit 0,100";
+    $query = "SELECT * from course where teacher = ?  order by create_time DESC limit 0,100";
     $Fetch = PDO_FetchAll($query,array($_GET["teacher"]));    
 }
 else{
-    $query = "select * from course where 1  order by create_time DESC limit 0,100";
+    $query = "SELECT * from course where 1  order by create_time DESC limit 0,100";
     $Fetch = PDO_FetchAll($query);
 }
 $userinfo = new UserInfo();

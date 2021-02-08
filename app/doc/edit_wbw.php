@@ -41,8 +41,8 @@ echo "<fieldset>";
 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
 echo "<div>";
 PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT * from channal where owner = ?   limit 0,100";
+$Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
 $i=0;
 foreach($Fetch as $row){
     echo '<div class="file_list_row" style="padding:5px;">';

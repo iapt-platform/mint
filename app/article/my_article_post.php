@@ -4,7 +4,8 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
-add_edit_event("article",array("id"=>$_POST["id"],"action"=>"update"));
+
+add_edit_event(_ARTICLE_EDIT_,$_POST["id"]);
 
 $respond=array("status"=>0,"message"=>"");
 

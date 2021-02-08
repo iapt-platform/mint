@@ -5,7 +5,7 @@ require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
-add_edit_event("collect",array("id"=>$_POST["id"]));
+add_edit_event(_COLLECTION_EDIT_,$_POST["id"]);
 
 $respond=array("status"=>0,"message"=>"");
 

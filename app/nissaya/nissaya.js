@@ -1,13 +1,8 @@
-var _nissaya_book = 0;
-var _nissaya_para = 0;
 var _nsy_book_dir = "";
 var _nsy_book_id = "";
 
-$(document).ready(function () {
-	nissaya_get(_nissaya_book, _nissaya_para);
-});
-function nissaya_get(book, para) {
-	if (book == 0 || _nissaya_para == 0) {
+function nissaya_get(book, para, begin = 0, end = 0) {
+	if (book == 0 || para == 0) {
 		return;
 	}
 	$.get(
@@ -15,6 +10,8 @@ function nissaya_get(book, para) {
 		{
 			book: book,
 			para: para,
+			begin: begin,
+			end: end,
 		},
 		function (data) {
 			let result = JSON.parse(data);
@@ -23,10 +20,7 @@ function nissaya_get(book, para) {
 					//找到的书的列表
 					for (const iterator of result.data) {
 					}
-					//_nsy_book_dir = data.bookid.split("_")[0];
-					//_nsy_book_id = result.data[0].nsyid;
 					$("#contence").html(render_nissaya_init(result.data[0]));
-					//insert_new_befor(1);
 					insert_new_end(1);
 				}
 			}
@@ -56,14 +50,6 @@ function render_nissaya_init(data) {
 		page: data.nsypagenumber,
 		show: true,
 	});
-	/*
-	let filename = dir + "/" + data.nsyid + "_" + data.nsypagenumber + ".gif";
-	let html = "";
-	html += "<div class='img_box' dir='" + dir + "' book='" + data.nsyid + "' page='" + data.nsypagenumber + "'>";
-	html += "<img src='../../tmp/nissaya/" + filename + "' />";
-	html += "</div>";
-	return html;
-	*/
 }
 
 function insert_new_befor(num = 2) {

@@ -19,8 +19,8 @@
     if(isset($_GET["id"])){
 
         $doc_id=$_GET["id"];
-        $query = "select * from fileindex where id='{$doc_id}' ";
-        $Fetch = PDO_FetchAll($query);
+        $query = "SELECT * from fileindex where id = ? ";
+        $Fetch = PDO_FetchAll($query,array($doc_id));
         $iFetch=count($Fetch);
         if($iFetch>0){
             //文档信息

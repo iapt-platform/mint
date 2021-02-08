@@ -1,6 +1,7 @@
 <?php
 require_once "../public/_pdo.php";
 require_once "../path.php";
+require_once "../ucenter/active.php";
 
 $result["error"]="";
 $result["data"]=array();
@@ -22,6 +23,19 @@ else{
 	exit;
 }
 
+if(isset($_GET["begin"])){
+	$begin = $_GET["begin"];
+}
+else{
+	$begin = 0;
+}
+if(isset($_GET["end"])){
+	$end = $_GET["end"];
+}
+else{
+	$end = 0;
+}
+add_edit_event(_NISSAYA_FIND_,"{$book}-{$para}-{$begin}-{$end}");
 
 PDO_Connect("sqlite:"._FILE_DB_PAGE_INDEX_);
 $query = "SELECT * from m where book=? and para=?";
