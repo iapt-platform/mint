@@ -1,5 +1,5 @@
 # Translation Guide for **Typing**
-
+[Syntax in detail](https://www.markdownguide.org/basic-syntax/)
 ## Font Style
 
 |typing in|display|
@@ -12,7 +12,6 @@
 |`[link to wikipali](www.wikipali.org)`|[link to wikipali](www.wikipali.org)|
 ---
 ## paragraph style
-
 
 <div style="display:flex;">
 

@@ -1,4 +1,5 @@
 # 译文输入范例指南
+[详细范例](https://www.markdownguide.org/basic-syntax/)
 ## 文本样式
 |输入|显示|
 |-|-|
