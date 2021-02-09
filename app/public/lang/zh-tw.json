@@ -587,7 +587,9 @@
 		"Oct": "十月",
 		"Nov": "十一月",
 		"Dec": "十二月",
-		"EXP_in_total": "总经验",
+		"EXP_in_total": "總經驗",
+		"day_action": "每日操作",
+		"action": "操作",
 		"": ""
 	},
 	"grammastr": [
