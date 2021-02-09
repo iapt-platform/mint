@@ -93,16 +93,13 @@ Highcharts.setOptions({
 	tooltip: {
 			shared: true,
 			useHTML: true,
-			headerFormat: '<small>{point.key}</small><table>',
-			pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
-				'<td style="text-align: right"><b>{point.y} '+gLocal.gui.h+'</b></td></tr>',
-			footerFormat: '</table>',
+			pointFormatter: function() { return '<b>'+this.series.name + ' : ' + this.high + '&nbsp;' +gLocal.gui.h+ '<br>' +gLocal.gui.day_EXP + ' : ' + Math.round((this.high - this.low)*100)/100 + '&nbsp;' +gLocal.gui.h+'</b><br/>'; },
 			valueDecimals: 2
 		},
 
     series: [{
       type: 'ohlc',
-      name: gLocal.gui.day_EXP,
+      name: gLocal.gui.EXP_in_total,
       data: data,
       dataGrouping: {
         units: [[
