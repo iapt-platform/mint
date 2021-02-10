@@ -14,12 +14,17 @@ define("_ARTICLE_NEW_",21);
 define("_DICT_LOOKUP_",30);
 define("_TERM_EDIT_",40);
 define("_TERM_LOOKUP_",41);
+define("_TERM_IN_SENT_",42);
+define("_SEARCH_",50);
 define("_WBW_EDIT_",60);
+define("_WBW_RELATION_",61);
+define("_WBW_NEW_",62);
 define("_SENT_EDIT_",70);
 define("_SENT_NEW_",71);
 define("_COLLECTION_EDIT_",80);
 define("_COLLECTION_NEW_",81);
 define("_NISSAYA_FIND_",90);
-
+define("_OPEN_READER_",100);
+define("_OPEN_STUDIO_",101);
 
 ?>

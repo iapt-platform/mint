@@ -1,0 +1,21 @@
+{
+	"title": "wikipali手册",
+	"description": "wikipali手册",
+	"structure": {
+		"glossory": "glossory.md",
+		"langs": "langs.md"
+	},
+	"introduction": {
+		"path": "readme.md",
+		"title": "wikipali手册"
+	},
+	"styles": {
+		"website": "styles/website.css",
+		"ebook": "styles/ebook.css",
+		"pdf": "styles/pdf.css",
+		"mobi": "styles/mobi.css",
+		"epub": "styles/epub.css"
+	},
+	"plugins": ["mermaid-gb3"],
+	"language": "zh-hans"
+}

@@ -39,8 +39,6 @@ require_once "../pcdl/html_head.php";
 	?>
 	</script>
 	<style>
-
-
 	#search_result{
 		position: absolute;
 		background: wheat;
@@ -59,12 +57,12 @@ require_once "../pcdl/html_head.php";
 
 	#head_bar{
 		display: flex;
-    justify-content: space-between;
-    height: 5em;
-    background-color: var(--tool-bg-color1);
-    border-bottom: 1px solid var(--tool-line-color);
-	padding:10px;
-	margin-top: 50px;
+		justify-content: space-between;
+		height: 5em;
+		background-color: var(--tool-bg-color1);
+		border-bottom: 1px solid var(--tool-line-color);
+		padding:10px;
+		margin-top: 50px;
 	}
 
 	.main_view{
@@ -199,7 +197,7 @@ require_once "../pcdl/html_head.php";
 
 </style>
 
-
+<link type="text/css" rel="stylesheet" href="print.css" media="print" />
 
 
 <?php
@@ -213,44 +211,54 @@ require_once "../pcdl/html_head.php";
 	<div>
 		<span>
 		<?php
-		echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
-		echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
-		echo "' target='_blank'>{$_local->gui->modify}</a></button>";
-
-		echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
-		echo "<a href='../article/frame.php?id=".$_GET["id"];
-		echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";
-
-		if(isset($_GET["display"]) && $_GET["display"]=="para"){
-			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
-			echo $_local->gui->each_paragraph;
-			echo "</button>";
-		}
-		else{
-			echo "<button class='icon_btn'>";
-			echo "<a href='../article/?id=".$_GET["id"];
-			if(isset($_GET["channal"])){
-				echo "&channal=".$_GET["channal"];
+		
+		if(isset($_GET["id"])){
+			echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
+			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
+			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
+			
+			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+			echo "<a href='../article/frame.php?id=".$_GET["id"];
+			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
+			
+			
+			if(isset($_GET["display"]) && $_GET["display"]=="para"){
+				echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
+				echo $_local->gui->each_paragraph;
+				echo "</button>";
 			}
-			echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
-			echo $_local->gui->each_paragraph;
-			echo "</a>";
-			echo "</button>";
+			else{
+				
+				echo "<button class='icon_btn'>";
+				echo "<a href='../article/?id=".$_GET["id"];
+				if(isset($_GET["channal"])){
+					echo "&channal=".$_GET["channal"];
+				}
+				echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
+				echo $_local->gui->each_paragraph;
+				echo "</a>";
+				echo "</button>";
+			}
+	
+			if(isset($_GET["display"]) && $_GET["display"]=="sent"){
+				echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>";
+				echo $_local->gui->each_sentence;
+				echo "</button>";
+			}
+			else{
+				echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
+				if(isset($_GET["channal"])){
+					echo "&channal=".$_GET["channal"];
+				}
+				echo "&display=sent";
+				echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
+			}
 		}
 
-		if(isset($_GET["display"]) && $_GET["display"]=="sent"){
-			echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>";
-			echo $_local->gui->each_sentence;
-			echo "</button>";
-		}
-		else{
-			echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
-			if(isset($_GET["channal"])){
-				echo "&channal=".$_GET["channal"];
-			}
-			echo "&display=sent";
-			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
-		}
+
+
+
+
 
 		
 		?>
