@@ -7,6 +7,7 @@ require_once "../public/function.php";
 require_once "../public/php/define.php";
 
 if(isset($_COOKIE["uid"])){
+	
 	$active_type[10] = "_CHANNEL_EDIT_";
 	$active_type[11] = "_CHANNEL_NEW_";
 	$active_type[20] = "_ARTICLE_EDIT_";

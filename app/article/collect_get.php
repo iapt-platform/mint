@@ -16,6 +16,10 @@ if(isset($_GET["id"])){
         $userinfo = new UserInfo();
         $user = $userinfo->getName($Fetch["owner"]);
         $Fetch["username"] = $user;
+        #查询文集中文档列表
+        $query = "select level,article_id as article,title from article_list  where collect_id = ? ";
+        $fArticle_list = PDO_FetchAll($query,array($id));    
+        $Fetch["article_list"] = json_encode($fArticle_list, JSON_UNESCAPED_UNICODE);
         echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
         exit;
     }

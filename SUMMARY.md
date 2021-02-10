@@ -1,9 +1,17 @@
-# wikipali文档
+# wikipali 文档
 
-* [关于](documents/about.md)
-* [日志](documents/dev_log.md)
-* [开发](documents/development/join_us.md)
-* [课程](documents/course/join_us.md)
-  * [课程通知模版](documents/course/课程通知.md)
-  * [重播replay](documents/course/课程历史链接.md)
-* [指南](documents/users_guide/readme.md)
+-   [关于我们](documents/about.md)
+-   [更新日志](documents/dev_log.md)
+-   [快速入门](documents/support/readme.md)
+-   [使用指南](documents/support/readme.md)
+
+    -   [工作室](documents/development/join_us.md)
+    -   [圣典列表](documents/development/join_us.md)
+    -   [课程](documents/development/join_us.md)
+    -   [文章文集](documents/development/join_us.md)
+    -   [字典](documents/development/join_us.md)
+    -   [其他工具](documents/development/join_us.md)
+
+-   [开发者](documents/development/join_us.md)
+-   [课程](documents/course/join_us.md)
+-   [指南](documents/users_guide/readme.md)

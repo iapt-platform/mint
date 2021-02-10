@@ -273,3 +273,83 @@ function render_lesson_list(course_id, currLesson) {
 		}
 	);
 }
+
+function lesson_get_timeline_settime(start, div) {
+	let lessonTime;
+	if (start) {
+		lessonTime = new Date(parseInt(start));
+	} else {
+		lessonTime = new Date();
+	}
+	let month = lessonTime.getMonth() + 1;
+	month = month > 9 ? month : "0" + month;
+	let d = lessonTime.getDate();
+	d = d > 9 ? d : "0" + d;
+	let data = lessonTime.getFullYear() + "-" + month + "-" + d;
+	let strData = "<input type='date'  id='" + div + "_date' value='" + data + "'/>";
+
+	let H = lessonTime.getHours();
+	H = H > 9 ? H : "0" + H;
+	let M = lessonTime.getMinutes();
+	M = M > 9 ? M : "0" + M;
+	let strTime = "<input type='time'  id='" + div + "_time' value='" + H + ":" + M + "'/>";
+
+	$("#form_" + div).html(strData + strTime);
+}
+
+function lesson_get_timeline_submit() {
+	let start_date = new Date();
+	let start_data = $("#start_date").val().split("-");
+	let start_time = $("#start_time").val().split(":");
+
+	start_date.setFullYear(start_data[0], parseInt(start_data[1]) - 1, start_data[2]);
+	start_date.setHours(start_time[0], start_time[1]);
+
+	let end_date = new Date();
+	let end_data = $("#end_date").val().split("-");
+	let end_time = $("#end_time").val().split(":");
+
+	end_date.setFullYear(end_data[0], parseInt(end_data[1]) - 1, end_data[2]);
+	end_date.setHours(end_time[0], end_time[1], 0, 0);
+
+	location.assign("../course/lesson_get_timeline.php?start=" + start_date.getTime() + "&end=" + end_date.getTime());
+}
+
+function lesson_get_timeline_json(start, end) {
+	$.get(
+		"../ucenter/active_log_get.php",
+		{
+			start: start,
+			end: end,
+		},
+		function (data) {
+			$("#timeline_json").val(data);
+			let json = JSON.parse(data);
+			let html = "<table>";
+			for (const row of json) {
+				html += "<tr>";
+				let start_date = new Date(parseInt(row.time));
+				html += "<td>" + start_date.getHours() + ":" + start_date.getMinutes() + "</td>";
+
+				html += "<td>" + gLocal.LogType[row.active] + "</td>";
+				html += "<td>";
+				switch (row.active) {
+					case "30":
+						html += "<a href='../dict/?word=" + row.content + "' target='_blank'>" + row.content + "</a>";
+						break;
+					case "11":
+						break;
+					case "20":
+						break;
+					default:
+						html += row.content;
+						break;
+				}
+				html += "</td>";
+				html += "</tr>";
+			}
+			html += "</table>";
+			$("#timeline_table").html(html);
+		}
+	);
+}
