@@ -29,3 +29,7 @@ note {
 note > .tran {
 	color: #000000;
 }
+
+#contents_foot {
+	display: none;
+}
