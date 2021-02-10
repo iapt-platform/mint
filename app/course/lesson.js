@@ -191,6 +191,7 @@ function lesson_load(lesson_id) {
 				}
 				//end of attachment
 				$("#lesson_info").html(html);
+				$("#page_title").text(lesson_info.title);
 				note_refresh_new();
 				render_course_info(lesson_info.course_id);
 				render_lesson_list(lesson_info.course_id, lesson_info.id);
