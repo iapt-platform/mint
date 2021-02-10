@@ -41,9 +41,11 @@ function note_create() {
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
-		'<div id="note_sent_edit_dlg" title="' + gLocal.gui.edit + '"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
+		'<div id="note_sent_edit_dlg" title="' +
+			gLocal.gui.edit +
+			'"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
 	);
-guide_init();
+	guide_init();
 	$("#note_sent_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,
@@ -65,13 +67,17 @@ guide_init();
 	});
 }
 function note_init(input) {
-	let newString = input.replace(/\{\{/g, '<div class="note_shell"><note info="');
-	newString = newString.replace(/\}\}/g, '" ></note></div>');
+	if (input) {
+		let newString = input.replace(/\{\{/g, '<div class="note_shell"><note info="');
+		newString = newString.replace(/\}\}/g, '" ></note></div>');
 
-	let output = "<div>";
-	output += marked(newString);
-	output += "</div>";
-	return output;
+		let output = "<div>";
+		output += marked(newString);
+		output += "</div>";
+		return output;
+	} else {
+		return "";
+	}
 }
 
 function note_update_background_style() {

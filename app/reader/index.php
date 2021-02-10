@@ -240,7 +240,7 @@ require_once "../pcdl/html_head.php";
 	}
 </style>
 
-
+<link type="text/css" rel="stylesheet" href="print.css" media="print" />
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
