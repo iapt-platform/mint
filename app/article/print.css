@@ -26,3 +26,6 @@ note {
 #contents_div {
 	padding: 0;
 }
+note > .tran {
+	color: #000000;
+}
