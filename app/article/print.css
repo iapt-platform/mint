@@ -14,3 +14,9 @@ header {
 note .ref {
 	display: none;
 }
+note {
+	padding: 0;
+}
+#contents_div {
+	padding: 0;
+}
