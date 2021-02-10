@@ -41,8 +41,9 @@ function note_create() {
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
-		'<div id="note_sent_edit_dlg" title="' + gLocal.gui.edit + '"><div id="edit_dialog_content"></div></div>'
+		'<div id="note_sent_edit_dlg" title="' + gLocal.gui.edit + '"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
 	);
+guide_init();
 	$("#note_sent_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,

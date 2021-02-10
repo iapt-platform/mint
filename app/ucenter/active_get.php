@@ -23,7 +23,7 @@ if(isset($userid)){
 	$last = 0;
 	while($row = $sth->fetch(PDO::FETCH_ASSOC)){
 		$curr = $last+$row["duration"]/3600000;
-		$output[]=array($row["date"],number_format($last,3,".",""),number_format($curr,3,".",""),number_format($last,3,".",""),number_format($curr,3,".",""));
+		$output[]=array($row["date"],number_format($last,3,".",""),number_format($curr,3,".",""),number_format($last,3,".",""),number_format($curr,3,".",""),$row["hit"]);
 		$last = $curr;
 	}
 
