@@ -141,6 +141,7 @@ function term_get_word_to_div(strWord, div, callback) {
 						html += "<div class='term_word_head'>";
 						html += "<div class='term_word_head_pali'>";
 						html += result[0].word;
+						$("#page_title").text(result[0].word + "-" + gLocal.gui.encyclopedia);
 						html += "</div>";
 						for (y in type) {
 							html += "<div class='term_word_head_mean'>";

@@ -39,8 +39,6 @@ require_once "../pcdl/html_head.php";
 	?>
 	</script>
 	<style>
-
-
 	#search_result{
 		position: absolute;
 		background: wheat;
@@ -59,12 +57,12 @@ require_once "../pcdl/html_head.php";
 
 	#head_bar{
 		display: flex;
-    justify-content: space-between;
-    height: 5em;
-    background-color: var(--tool-bg-color1);
-    border-bottom: 1px solid var(--tool-line-color);
-	padding:10px;
-	margin-top: 50px;
+		justify-content: space-between;
+		height: 5em;
+		background-color: var(--tool-bg-color1);
+		border-bottom: 1px solid var(--tool-line-color);
+		padding:10px;
+		margin-top: 50px;
 	}
 
 	.main_view{
@@ -104,6 +102,8 @@ require_once "../pcdl/html_head.php";
 	}
 	#contents_div{
 		flex:7;
+		padding: 0 1em 0 30px;
+		width:70vw;
 	}
 	#contents{
 		min-height: 400px;
@@ -199,7 +199,7 @@ require_once "../pcdl/html_head.php";
 
 </style>
 
-
+<link type="text/css" rel="stylesheet" href="print.css" media="print" />
 
 
 <?php
@@ -275,7 +275,7 @@ require_once "../pcdl/html_head.php";
 	<div id="article_author"><?php echo $_local->gui->author; ?></div>
 </div>
 <div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em 0 30px;width:70vw;">
+	<div id="contents_div">
 		<div id="contents">
 		<?php echo $_local->gui->loading; ?>...
 		</div>

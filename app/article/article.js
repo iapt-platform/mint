@@ -24,6 +24,7 @@ function articel_load(id) {
 					let result = JSON.parse(data);
 					if (result) {
 						$("#article_title").html(result.title);
+						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
 						$("#contents").html(note_init(result.content));
@@ -55,6 +56,7 @@ function collect_load(id) {
 					let result = JSON.parse(data);
 					if (result) {
 						$("#article_title").html(result.title);
+						$("#page_title").text(result.title);
 						if (result.subtitle) {
 							$("#article_subtitle").html(result.subtitle);
 						}

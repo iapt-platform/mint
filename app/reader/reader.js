@@ -204,6 +204,7 @@ function reader_get_path() {
 			});
 			let suttaTitle = $("chapter").last().html();
 			$("#article_title").html(suttaTitle);
+			$("#page_title").text(suttaTitle);
 			if (_reader_view == "chapter") {
 				//$("chapter").last().hide();
 			}

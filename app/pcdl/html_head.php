@@ -60,7 +60,7 @@ if (isset($_GET["language"])) {
 	<link rel="manifest" href="../public/images/favicon/site.webmanifest">
 	<link rel="mask-icon" href="../public/images/favicon/safari-pinned-tab.svg" color="#333333">
 
-	<title>wikipāḷi</title>
+	<title id="page_title">wikipāḷi</title>
 
 	<script src="../public/js/jquery.js"></script>
 	<script src="../public/js/comm.js"></script>
