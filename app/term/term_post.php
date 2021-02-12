@@ -1,24 +1,36 @@
 <?php
+/*
+修改术语
+*/
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
+
+#未登录不能修改
+if(isset($_COOKIE["userid"])==false){
+	$respond['status']=1;
+	$respond['message']="not yet log in";
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;
+}
 
 $respond=array("status"=>0,"message"=>"");
 PDO_Connect("sqlite:"._FILE_DB_TERM_);
 
 if($_POST["id"]!=""){
 	#更新
-    $query="UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
+    $query="UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? and owner = ? ";
     $stmt = @PDO_Execute($query,array($_POST["mean"],
-                                        $_POST["mean2"],
-                                        $_POST["tag"],
-                                        $_POST["channal"],
-                                        $_POST["language"],
-                                        $_POST["note"],
-                                        mTime(),
-                                        mTime(),
-                                        $_POST["id"]
-                                        ));
+                                      $_POST["mean2"],
+                                      $_POST["tag"],
+                                      $_POST["channal"],
+                                      $_POST["language"],
+                                      $_POST["note"],
+                                      mTime(),
+                                      mTime(),
+									  $_POST["id"],
+									  $_COOKIE["userid"]
+                                      ));
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         $respond['status']=1;
