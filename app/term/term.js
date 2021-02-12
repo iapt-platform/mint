@@ -670,17 +670,21 @@ function term_updata_translation() {
 
 function term_show_win(guid, keyWord = "") {
 	if (guid == "") {
-		$(term_body).html(
-			"“" +
-				keyWord +
-				"”" +
-				gLocal.gui.no_created +
-				"<br /><button onclick=\"term_add_new('" +
-				keyWord +
-				"')\">" +
-				gLocal.gui.create_now +
-				"</button>"
-		);
+		if (typeof term_body == "undefined") {
+			term_edit_dlg_open("", keyWord);
+		} else {
+			$(term_body).html(
+				"“" +
+					keyWord +
+					"”" +
+					gLocal.gui.no_created +
+					"<br /><button onclick=\"term_add_new('" +
+					keyWord +
+					"')\">" +
+					gLocal.gui.create_now +
+					"</button>"
+			);
+		}
 	} else {
 		let currWord = term_lookup_my_id(guid);
 		if (currWord) {

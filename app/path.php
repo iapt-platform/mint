@@ -21,7 +21,7 @@ define("_FILE_DB_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text.db3")
 define("_FILE_DB_STATISTICS_" , __DIR__."/../tmp/appdata/palicanon/word_statistics.db3");
 define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../tmp/appdata/palicanon/pali_sent.db3");
 define("_FILE_DB_PALI_SENTENCE_SIM_" , __DIR__."/../tmp/appdata/palicanon/pali_sim.db3");
-//define("_FILE_DB_PALI_SENTENCE_SIM_" , __DIR__."/../tmp/appdata/palicanon/pali_sent_sim.db3");
+define("_FILE_DB_PALI_TOC_" , __DIR__."/../tmp/appdata/palicanon/pali_toc.db3");
 define("_FILE_DB_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/index.db3");
 define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/wordindex.db3");
 define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/paliindex.db3");
