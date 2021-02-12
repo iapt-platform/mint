@@ -10,11 +10,15 @@ include "../pcdl/html_head.php";
     require_once("../pcdl/head_bar.php");
     ?>
 
-<link type="text/css" rel="stylesheet" href="./style.css" />
+    <link type="text/css" rel="stylesheet" href="./style.css" />
     <style>
         .disable {
             cursor: not-allowed;
             opacity: 0.5;
+        }
+
+        .padding_2_1rem {
+            padding: 2rem 1rem;
         }
 
         #main_video_win iframe {
@@ -31,17 +35,10 @@ include "../pcdl/html_head.php";
             padding: 0;
         }
 
-        #lesson_list {}
-
         #course_info_head_1 {
             display: grid;
             grid-template-columns: 200px 1fr;
             grid-gap: 20px;
-        }
-
-        #course_info_head_face {
-            /*width: 200px;
-            height: 200px;*/
         }
 
         #course_info_head_face img {
@@ -78,7 +75,7 @@ include "../pcdl/html_head.php";
         }
 
         #lesson_list_shell {
-            padding: 1rem;
+            padding: 2rem 1rem;
             background-color: #f5f5f5;
         }
 
@@ -147,6 +144,7 @@ include "../pcdl/html_head.php";
                 grid-gap: 10px;
             }
 
+            #course_info_head_face,
             #course_info_head_face img {
                 width: 100px;
                 height: 100px;
@@ -158,7 +156,7 @@ include "../pcdl/html_head.php";
 
 
     <div id='course_content'>
-        <div id='course_info_shell' style='padding:1rem;'>
+        <div id='course_info_shell' class='padding_2_1rem'>
             <div id='course_info' class="section_inner"></div>
         </div>
         <div id='lesson_list_shell'>

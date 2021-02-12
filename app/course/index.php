@@ -8,6 +8,10 @@ include "../pcdl/html_head.php";
 	require_once("../pcdl/head_bar.php");
 	?>
 	<style>
+		.padding_LR_1rem {
+			padding: 0 1rem;
+		}
+
 		.content_block {
 			width: 230px;
 		}
@@ -250,8 +254,8 @@ include "../pcdl/html_head.php";
 					html += '<div class="title"><a href="../course/course.php?id=' + iterator.id + '">' + iterator.title + '</a></div>';
 
 					//教师名字
-					html += '<div class="author">'+gLocal.gui.speaker+'：';
-					html += "<a href='../uhome/course.php?userid="+iterator.teacher+"'>"
+					html += '<div class="author">' + gLocal.gui.speaker + '：';
+					html += "<a href='../uhome/course.php?userid=" + iterator.teacher + "'>"
 					html += iterator.teacher_info.nickname;
 					html += "</a>";
 					html += '</div>';
