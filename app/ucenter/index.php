@@ -82,7 +82,7 @@ require_once "../public/function.php";
 				}
 				else{
 					//created user recorder 
-					$newUserPath=_DIR_USER_BASE_.'/'.$new_userid;
+					$newUserPath=_DIR_USER_DOC_.'/'.$new_userid;
 					$userDirMyDocument=$newUserPath._DIR_MYDOCUMENT_;
 					if(!file_exists($newUserPath)){
 						if(mkdir($newUserPath)){
@@ -132,7 +132,7 @@ require_once "../public/function.php";
 					if(isset($_COOKIE["url"])){
 						setcookie("pwd_set", "on", time()+60,"/");
 					}
-					$newUserPath=_DIR_USER_BASE_.'/'.$userid.'/';
+					$newUserPath=_DIR_USER_DOC_.'/'.$userid.'/';
 					if(!file_exists($newUserPath)){
 						echo "error:cannot find user dir:$newUserPath<br/>";
 					}
