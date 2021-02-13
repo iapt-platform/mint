@@ -27,7 +27,7 @@ if(isset($_GET["doc_id"])==false){
 }
 PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 $doc_id=$_GET["doc_id"];
-$query = "select * from fileindex where id= ? ";
+$query = "SELECT * from fileindex where id= ? ";
 $Fetch = PDO_FetchAll($query,array($doc_id));
 $iFetch=count($Fetch);
 if($iFetch>0){
@@ -42,7 +42,7 @@ if(isset($_GET["channel"])==false){
 	echo "<form action='pcs2db.php' method='get'>";
 	echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
 	PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-	$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+	$query = "SELECT * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
 	$Fetch = PDO_FetchAll($query);
 	$i=0;
 	foreach($Fetch as $row){
@@ -108,9 +108,9 @@ if($Fetch===false){
     exit;    
 }
 else{
-    $file_modify_time = $Fetch[0]["modify_time"];
-    if(empty($Fetch[0]["doc_info"])){
-        $file = $dir.'/'.$Fetch[0]["file_name"];    
+    $file_modify_time = $Fetch["modify_time"];
+    if(empty($Fetch["doc_info"])){
+        $file = $dir.'/'.$Fetch["file_name"];    
     }
     else{
 		echo "已经是数据库格式了。无需转换";
