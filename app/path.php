@@ -63,6 +63,7 @@ define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
 /*user data*/
 define("_DIR_USER_BASE_" , __DIR__."/../tmp/user");
+define("_DIR_USER_DOC_" , __DIR__."/../tmp/user_doc");
 define("_DIR_USER_IMG_" , __DIR__."/../tmp/user/media/3");
 define("_DIR_USER_IMG_LINK_" , "../../tmp/user/media/3");
 define("_DIR_MYDOCUMENT_" , "/my_document");

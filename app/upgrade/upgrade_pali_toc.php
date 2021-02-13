@@ -46,7 +46,7 @@ $sth_toc->execute();
 
 /* 开始一个事务，关闭自动提交 */
 $dbh_toc->beginTransaction();
-$query = "INSERT INTO progress (book, para , lang , all_strlen,public_strlen) VALUES (?, ?, ? , ? ,? )";
+$query = "INSERT INTO progress (book, para , lang , all_strlen , public_strlen) VALUES (?, ?, ? , ? ,? )";
 $sth_toc = $dbh_toc->prepare($query);
 foreach ($result_lang as $lang) {
 	# 第二步 生成para progress 1,2,15,zh-tw
@@ -87,7 +87,6 @@ foreach ($result_lang as $lang) {
 			$sth_toc->execute(array($para["book"],$para["paragraph"],$lang["language"],$para_strlen,0));
 		}
 	}
-
 }
 $dbh_toc->commit();
 if (!$sth_toc || ($sth_toc && $sth_toc->errorCode() != 0)) {

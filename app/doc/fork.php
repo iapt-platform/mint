@@ -1,12 +1,19 @@
 <?php
-/*
+/*拷贝其他人的文件
 *
 *
 */
-
+require_once '../studio/index_head.php';
+?>
+<body id="file_list_body" >
+<?php
     require_once "../public/_pdo.php";
     require_once "../public/function.php";
-    require_once "../path.php";
+	require_once "../path.php";
+
+	require_once '../studio/index_tool_bar.php';
+
+	echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
     if($_COOKIE["uid"]){
         $uid=$_COOKIE["uid"];
@@ -15,13 +22,91 @@
         echo "尚未登录";
         echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
         exit;
-    }
-    PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
-    if(isset($_GET["doc_id"])){
-        $doc_id=$_GET["doc_id"];
-        $query = "select * from fileindex where id='{$doc_id}' ";
-        $Fetch = PDO_FetchAll($query);
-        $iFetch=count($Fetch);
+	}
+	if(isset($_GET["doc_id"])==false){
+		echo "没有 文档编号";
+		exit;
+	}
+	PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
+	$doc_id=$_GET["doc_id"];
+	$query = "select * from fileindex where id= ? ";
+	$Fetch = PDO_FetchAll($query,array($doc_id));
+	$iFetch=count($Fetch);
+	if($iFetch>0){
+		//文档信息
+		$mbook=$Fetch[0]["book"];
+		$paragraph=$Fetch[0]["paragraph"];
+	}
+
+	if(isset($_GET["channel"])==false){
+		echo '<div class="file_list_block">';
+		echo "<h2>选择一个空白的版风存储新的文档</h2>";
+		echo "<form action='fork.php' method='get'>";
+		echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
+		PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+		$query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+		$Fetch = PDO_FetchAll($query);
+		$i=0;
+		foreach($Fetch as $row){
+			echo '<div class="file_list_row" style="padding:5px;display:flex;">';
+		
+			echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
+			echo '<input name="channel" value="'.$row["id"].'" ';
+			if($i==0){
+				echo "checked";
+			}
+			echo ' type="radio" />';
+			echo '</div>';
+			echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["name"].'</div>';
+			echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["lang"].'</div>';
+			echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+			PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+			$query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+			$FetchWBW = PDO_FetchOne($query);
+			echo '</div>';
+			echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+			if($FetchWBW==0){
+				echo $_local->gui->blank;
+			}
+			else{
+				echo $FetchWBW.$_local->gui->para;
+				echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+			}
+			echo '</div>';
+
+			echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+			PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+			$query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+			$FetchWBW = PDO_FetchOne($query);
+			echo '</div>';
+			echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+			if($FetchWBW==0){
+				echo $_local->gui->blank;
+			}
+			else{
+				echo $FetchWBW.$_local->gui->para;
+			}
+			echo '</div>';
+
+			echo '<div class="summary"  style="flex:1;padding-bottom:5px;">'.$row["status"].'</div>';
+			echo '<div class="author"  style="flex:1;padding-bottom:5px;">'.$row["create_time"].'</div>';
+			
+			echo '</div>';
+			$i++;
+		}
+		echo "<input type='submit' />";
+		echo "</form>";
+		echo "</div>";
+		exit;
+	}
+    
+	//if(isset($_GET["doc_id"]))
+	{
+		PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
+		$doc_id=$_GET["doc_id"];
+		$query = "select * from fileindex where id= ? ";
+		$Fetch = PDO_FetchAll($query,array($doc_id));
+		$iFetch=count($Fetch);
         if($iFetch>0){
             //文档信息
             $orgFileInfo = $Fetch[0];
@@ -97,23 +182,25 @@
                                     $stmt = $dbhSent->prepare($query);
                                     $stmt->execute(array($blockid));
                                     $fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                    $newBlockId = UUID::V4();
-                                    $newDocBlockList[]=array('type' => 2,'block_id' => $newBlockId);
+									$newBlockId = UUID::V4();
+									//不复刻译文
+                                    //$newDocBlockList[]=array('type' => 2,'block_id' => $newBlockId);
                                     $arrSentBlockTransform[$fBlock[0]["id"]] = $newBlockId;
                                     if(count($fBlock)>0){
-                                        array_push( $arrSentNewBlock,array($newBlockId,
-                                                                        $fBlock[0]["id"],
-                                                                        $fBlock[0]["book"],
-                                                                        $fBlock[0]["paragraph"],
-                                                                        $_COOKIE["userid"],
-                                                                        $fBlock[0]["lang"],
-                                                                        $fBlock[0]["author"],
-                                                                        $fBlock[0]["editor"],
-                                                                        $fBlock[0]["tag"],
-                                                                        $fBlock[0]["status"],
-                                                                        mTime(),
-                                                                        mTime()
-                                                                    ));
+										array_push( $arrSentNewBlock,
+													array($newBlockId,
+                                                          $fBlock[0]["id"],
+                                                          $fBlock[0]["book"],
+                                                          $fBlock[0]["paragraph"],
+                                                          $_COOKIE["userid"],
+                                                          $fBlock[0]["lang"],
+                                                          $fBlock[0]["author"],
+                                                          $fBlock[0]["editor"],
+                                                          $fBlock[0]["tag"],
+                                                          $fBlock[0]["status"],
+                                                          mTime(),
+                                                          mTime()
+                                                        ));
                                     }
 
                                     $query = "select * from sentence where block_id= ? ";
@@ -121,22 +208,24 @@
                                     $stmtSent->execute(array($fBlock[0]["id"]));
                                     $fBlockData = $stmtSent->fetchAll(PDO::FETCH_ASSOC);
                                     foreach($fBlockData as $value){
-                                        array_push( $arrSentNewBlockData,array(UUID::V4(),
-                                                                        $arrSentBlockTransform[$value["block_id"]],
-                                                                        $value["book"],
-                                                                        $value["paragraph"],
-                                                                        $value["begin"],
-                                                                        $value["end"],
-                                                                        $value["tag"],
-                                                                        $value["author"],
-                                                                        $_COOKIE["userid"],
-                                                                        $value["text"],
-                                                                        $value["language"],
-                                                                        $value["ver"],
-                                                                        $value["status"],
-                                                                        mTime(),
-                                                                        mTime()
-                                                                    ));
+										array_push( $arrSentNewBlockData,
+													array(UUID::V4(),
+														$arrSentBlockTransform[$value["block_id"]],
+														$value["book"],
+														$value["paragraph"],
+														$value["begin"],
+														$value["end"],
+														$value["channal"],
+														$value["tag"],
+														$value["author"],
+														$_COOKIE["userid"],
+														$value["text"],
+														$value["language"],
+														$value["ver"],
+														$value["status"],
+														mTime(),
+														mTime()
+													));
 
                                     }
                                     
@@ -147,7 +236,8 @@
                                 break;
                                 case 5:
                                 break;
-                                case 6:
+								case 6: 
+									#逐词解析
                                     $blockid = $blocks[$i]->block_id;
                                     $query = "select * from wbw_block where id= ? ";
                                     $stmt = $dbhWBW->prepare($query);
@@ -157,17 +247,19 @@
                                     $newDocBlockList[]=array('type' => 6,'block_id' => $newBlockId);
                                     $arrBlockTransform[$fBlock[0]["id"]] = $newBlockId;
                                     if(count($fBlock)>0){
-                                        array_push( $arrNewBlock,array($newBlockId,
-                                                                        $fBlock[0]["id"],
-                                                                        $_COOKIE["userid"],
-                                                                        $fBlock[0]["book"],
-                                                                        $fBlock[0]["paragraph"],
-                                                                        $fBlock[0]["style"],
-                                                                        $fBlock[0]["lang"],
-                                                                        $fBlock[0]["status"],
-                                                                        mTime(),
-                                                                        mTime()
-                                                                    ));
+										array_push( $arrNewBlock,
+													array($newBlockId,
+														$fBlock[0]["id"],
+														$_GET["channel"],
+														$_COOKIE["userid"],
+														$fBlock[0]["book"],
+														$fBlock[0]["paragraph"],
+														$fBlock[0]["style"],
+														$fBlock[0]["lang"],
+														$fBlock[0]["status"],
+														mTime(),
+														mTime()
+													));
                                     }
 
                                     $query = "select * from wbw where block_id= ? ";
@@ -175,18 +267,19 @@
                                     $stmtWBW->execute(array($fBlock[0]["id"]));
                                     $fBlockData = $stmtWBW->fetchAll(PDO::FETCH_ASSOC);
                                     foreach($fBlockData as $value){
-                                        array_push( $arrNewBlockData,array(UUID::V4(),
-                                                                        $arrBlockTransform[$value["block_id"]],
-                                                                        $value["book"],
-                                                                        $value["paragraph"],
-                                                                        $value["wid"],
-                                                                        $value["word"],
-                                                                        $value["data"],
-                                                                        mTime(),
-                                                                        mTime(),
-                                                                        $value["status"],
-                                                                        $_COOKIE["userid"]
-                                                                    ));
+										array_push( $arrNewBlockData,
+													array(UUID::V4(),
+														$arrBlockTransform[$value["block_id"]],
+														$value["book"],
+														$value["paragraph"],
+														$value["wid"],
+														$value["word"],
+														$value["data"],
+														mTime(),
+														mTime(),
+														$value["status"],
+														$_COOKIE["userid"]
+													));
 
                                     }
                                 break;
@@ -200,10 +293,9 @@
                         
                         if(count($arrNewBlock)>0){
                             $dbhWBW->beginTransaction();
-                            $query="INSERT INTO wbw_block ('id','parent_id','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?)";
+                            $query="INSERT INTO wbw_block ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                             $stmtNewBlock = $dbhWBW->prepare($query);
                             foreach($arrNewBlock as $oneParam){
-                                //print_r($oneParam);
                                 $stmtNewBlock->execute($oneParam);
                             }
                             // 提交更改 
@@ -239,10 +331,11 @@
                                 echo "new wbw $count recorders.";
                             }   
                         }
-                        
+						
+						//不复刻译文
                         
                         //译文 block数据块
-                        
+                        /*
                         if(count($arrSentNewBlock)>0){
                             $dbhSent->beginTransaction();
                             $query="INSERT INTO sent_block ('id','parent_id','book','paragraph','owner','lang','author','editor','tag','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -267,7 +360,7 @@
                         if(count($arrSentNewBlockData)>0){
                             // 开始一个事务，逐词解析数据 关闭自动提交
                             $dbhSent->beginTransaction();
-                            $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','modify_time','receive_time') VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
+                            $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','channal','tag','author','editor','text','language','ver','status','modify_time','receive_time') VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
                             $stmtSentData = $dbhSent->prepare($query);
                             foreach($arrSentNewBlockData as $oneParam){
                                 $stmtSentData->execute($oneParam);
@@ -284,7 +377,7 @@
                                 echo "new translation $count recorders.";
                             }   
                         }
-                        
+                        */
 
                         //插入记录到文件索引
                         $filesize=0;
@@ -360,5 +453,8 @@
         }
     }
 
-
+	echo "</div>";
 ?>
+
+</body>
+</html>

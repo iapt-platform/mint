@@ -24,7 +24,7 @@ PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 $query="select file_name from fileindex where user_id='{$_COOKIE["uid"]}' AND  id='{$fileid}'";
 $Fetch = PDO_FetchOne($query);
 $purefilename=$Fetch;
-$FileName =_DIR_USER_BASE_."/".$_COOKIE["userid"]._DIR_MYDOCUMENT_."/".$Fetch;
+$FileName =_DIR_USER_DOC_."/".$_COOKIE["userid"]._DIR_MYDOCUMENT_."/".$Fetch;
 
 
 if($_COOKIE["uid"]){
