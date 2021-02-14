@@ -1,5 +1,5 @@
 <?PHP
-include "../pcdl/html_head.php";
+require_once "../pcdl/html_head.php";
 ?>
 
 <body>
@@ -96,7 +96,7 @@ include "../pcdl/html_head.php";
 
         .sutta_row div {
             padding: 10px;
-            display: flex;
+            /*display: flex;*/
             justify-items: center;
         }
 
@@ -104,6 +104,34 @@ include "../pcdl/html_head.php";
             background-color: var(--drop-bg-color);
         }
 
+		.c_level_1 {
+			padding-top: 15px;
+			padding-bottom: 15px;
+			background-color: var(--main-color1);
+		}
+		.c_level_1 .chapter_title{
+			font-size:120%;
+			font-weight:700;
+		}
+		#book_list{
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.chapter_list{
+			display:none;
+		}
+		.chapter_book{
+			display:block;
+		}
+		.chapter_progress{
+			display:block;
+		}
+		.parent_chapter{
+			width:350px;
+		}
+		.parent_chapter .chapter_book,.parent_chapter .chapter_progress{
+			display:none;
+		}
         @media screen and (max-width:800px) {
             .sutta_row {
                 grid-template-columns: 100px 1fr 1fr;
@@ -150,8 +178,20 @@ include "../pcdl/html_head.php";
     echo "</div>";
     echo '</div>';
     ?>
-    <div id="book_list" class='index_inner' style='display: flex;flex-wrap: wrap;'>
+	<div class='index_inner'>
+	<div id="chapter_shell" style="display:flex;" >
 
+    <div id="book_list" class="chapter_list" list="1" >
+    </div>
+
+    <div id="chapter_list_1" class="chapter_list"  >
+    </div>
+    <div id="chapter_list_2" class="chapter_list" >
+    </div>
+    <div id="chapter_list_3" class="chapter_list" >
+    </div>
+
+    </div>
     </div>
 
     <script>

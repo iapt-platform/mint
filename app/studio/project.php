@@ -408,7 +408,7 @@ switch($op){
 			
 			echo '<div class="pd-10"  style="max-width:2em;flex:1;">New Channal 新建频道</div>';
 			echo '<div class="title" style="flex:3;padding-bottom:5px;">';
-			echo '<input type="input" placeholder="Channal Title"></div>';
+			echo '在studio中新建版本风格</div>';
 			echo '<div class="author"  style="flex:1;padding-bottom:5px;"><button>New 新建</button></div>';
 			
 			echo '</div>';
@@ -435,7 +435,7 @@ switch($op){
 		$create_para=$paragraph;
 		
 		$FileName = $book."_".$paragraph."_".time().".pcs";
-		$sFullFileName=_DIR_USER_BASE_."/".$USER_ID._DIR_MYDOCUMENT_."/".$FileName;
+		$sFullFileName=_DIR_USER_DOC_."/".$USER_ID._DIR_MYDOCUMENT_."/".$FileName;
 		echo "filename:".$sFullFileName;
 		$myfile = fopen($sFullFileName, "w") or die("Unable to open file!");
 		
@@ -961,8 +961,8 @@ switch($op){
 							$query = "select userid from user where id='$owner'";
 							$FetchUid = PDO_FetchOne($query);
 							if($FetchUid){
-								$source=_DIR_USER_BASE_."/".$FetchUid._DIR_MYDOCUMENT_."/".$filename;
-								$dest=_DIR_USER_BASE_."/".$_COOKIE["userid"] ._DIR_MYDOCUMENT_."/".$filename;
+								$source=_DIR_USER_DOC_."/".$FetchUid._DIR_MYDOCUMENT_."/".$filename;
+								$dest=_DIR_USER_DOC_."/".$_COOKIE["userid"] ._DIR_MYDOCUMENT_."/".$filename;
 							}
 							echo "<div>源文件{$source}</div>";
 							echo "<div>目标文件{$dest}</div>";

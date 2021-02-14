@@ -21,7 +21,7 @@ define("_FILE_DB_PALITEXT_" , __DIR__."/../tmp/appdata/palicanon/pali_text.db3")
 define("_FILE_DB_STATISTICS_" , __DIR__."/../tmp/appdata/palicanon/word_statistics.db3");
 define("_FILE_DB_PALI_SENTENCE_" , __DIR__."/../tmp/appdata/palicanon/pali_sent.db3");
 define("_FILE_DB_PALI_SENTENCE_SIM_" , __DIR__."/../tmp/appdata/palicanon/pali_sim.db3");
-//define("_FILE_DB_PALI_SENTENCE_SIM_" , __DIR__."/../tmp/appdata/palicanon/pali_sent_sim.db3");
+define("_FILE_DB_PALI_TOC_" , __DIR__."/../tmp/appdata/palicanon/pali_toc.db3");
 define("_FILE_DB_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/index.db3");
 define("_FILE_DB_WORD_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/wordindex.db3");
 define("_FILE_DB_PALI_INDEX_"  , __DIR__."/../tmp/appdata/palicanon/paliindex.db3");
@@ -63,6 +63,7 @@ define("_DIR_BOOK_INDEX_" , __DIR__."/../app/public/book_index");
 
 /*user data*/
 define("_DIR_USER_BASE_" , __DIR__."/../tmp/user");
+define("_DIR_USER_DOC_" , __DIR__."/../tmp/user_doc");
 define("_DIR_USER_IMG_" , __DIR__."/../tmp/user/media/3");
 define("_DIR_USER_IMG_LINK_" , "../../tmp/user/media/3");
 define("_DIR_MYDOCUMENT_" , "/my_document");

@@ -21,8 +21,19 @@ function term_edit_dlg_init(title = gLocal.gui.dict_terms) {
 		],
 	});
 }
-function term_edit_dlg_open(id = "") {
+function term_edit_dlg_open(id = "", word = "") {
 	if (id == "") {
+		let newWord = new Object();
+		newWord.guid = "";
+		newWord.word = word;
+		newWord.meaning = "";
+		newWord.other_meaning = "";
+		newWord.tag = "";
+		newWord.note = "";
+		newWord.language = "zh";
+		newWord.channal = "";
+		let html = term_edit_dlg_render(newWord);
+		$("#term_edit_dlg_content").html(html);
 		$("#term_edit_dlg").dialog("open");
 	} else {
 		$.post(
@@ -43,7 +54,12 @@ function term_edit_dlg_open(id = "") {
 function term_edit_dlg_render(word = "") {
 	if (word == "") {
 		word = new Object();
-		word.pali = "";
+		word.guid = "";
+		word.word = pali;
+		word.meaning = "";
+		word.other_meaning = "";
+		word.tag = "";
+		word.note = "";
 	}
 	let output = "";
 	output += "<form action='##' id='form_term'>";
@@ -71,7 +87,7 @@ function term_edit_dlg_render(word = "") {
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.other_meaning + "</legend>";
 	output +=
-		"<input type='input' id='term_edit_form_othermeaning name='mean2' value='" +
+		"<input type='input' id='term_edit_form_othermeaning' name='mean2' value='" +
 		word.other_meaning +
 		"' placeholder=" +
 		gLocal.gui.optional +

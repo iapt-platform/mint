@@ -24,7 +24,7 @@ require_once '../public/function.php';
 		
 		var g_device="computer";
 		var strSertch = location.search;
-		var gConfigDirMydocument="<?php echo _DIR_USER_BASE_."/".$userid._DIR_MYDOCUMENT_; ?>/";
+		var gConfigDirMydocument="<?php echo _DIR_USER_DOC_."/".$userid._DIR_MYDOCUMENT_; ?>/";
 		
 		if(strSertch.length>0){
 			strSertch = strSertch.substr(1);

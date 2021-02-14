@@ -7,27 +7,125 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
-echo "<h2>转换pcs 到数据库格式</h2>";
-$dir = _DIR_USER_BASE_.'/'.$_COOKIE["userid"]._DIR_MYDOCUMENT_;
-PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
-$query = "select file_name, doc_info, modify_time from fileindex where id='".$_GET["doc_id"]."' ";
-$Fetch = PDO_FetchAll($query);
+require_once '../studio/index_head.php';
+echo '<body id="file_list_body" >';
+echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
-if(count($Fetch)>0){
-    $file_modify_time = $Fetch[0]["modify_time"];
-    if(empty($Fetch[0]["doc_info"])){
-        $file = $dir.'/'.$Fetch[0]["file_name"];    
-    }
-    else{
-        echo "已经是数据库格式了。无需转换";
-    }
+echo "<h2>转换PCS 到数据库格式</h2>";
+
+if($_COOKIE["uid"]){
+	$uid=$_COOKIE["uid"];
 }
 else{
-    echo "文件不存在";
-    exit;    
+	echo "尚未登录";
+	echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
+	exit;
+}
+if(isset($_GET["doc_id"])==false){
+	echo "没有 文档编号";
+	exit;
+}
+PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
+$doc_id=$_GET["doc_id"];
+$query = "SELECT * from fileindex where id= ? ";
+$Fetch = PDO_FetchAll($query,array($doc_id));
+$iFetch=count($Fetch);
+if($iFetch>0){
+	//文档信息
+	$mbook=$Fetch[0]["book"];
+	$paragraph=$Fetch[0]["paragraph"];
 }
 
+if(isset($_GET["channel"])==false){
+	echo '<div class="file_list_block">';
+	echo "<h2>选择一个空白的版风存储新的文档</h2>";
+	echo "<form action='pcs2db.php' method='get'>";
+	echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
+	PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+	$query = "SELECT * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+	$Fetch = PDO_FetchAll($query);
+	$i=0;
+	foreach($Fetch as $row){
+		echo '<div class="file_list_row" style="padding:5px;display:flex;">';
+	
+		echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
+		echo '<input name="channel" value="'.$row["id"].'" ';
+		if($i==0){
+			echo "checked";
+		}
+		echo ' type="radio" />';
+		echo '</div>';
+		echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["name"].'</div>';
+		echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["lang"].'</div>';
+		echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+		PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+		$query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+		$FetchWBW = PDO_FetchOne($query);
+		echo '</div>';
+		echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+		if($FetchWBW==0){
+			echo $_local->gui->blank;
+		}
+		else{
+			echo $FetchWBW.$_local->gui->para;
+			echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+		}
+		echo '</div>';
+
+		echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+		PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+		$query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+		$FetchWBW = PDO_FetchOne($query);
+		echo '</div>';
+		echo '<div class="title" style="flex:2;padding-bottom:5px;">';
+		if($FetchWBW==0){
+			echo $_local->gui->blank;
+		}
+		else{
+			echo $FetchWBW.$_local->gui->para;
+		}
+		echo '</div>';
+
+		echo '<div class="summary"  style="flex:1;padding-bottom:5px;">'.$row["status"].'</div>';
+		echo '<div class="author"  style="flex:1;padding-bottom:5px;">'.$row["create_time"].'</div>';
+		
+		echo '</div>';
+		$i++;
+	}
+	echo "<input type='submit' />";
+	echo "</form>";
+	echo "</div>";
+	exit;
+}
+
+$dir = _DIR_USER_DOC_.'/'.$_COOKIE["userid"]._DIR_MYDOCUMENT_;
+PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
+$query = "SELECT file_name, doc_info, modify_time from fileindex where id=? ";
+$Fetch = PDO_FetchRow($query,array($_GET["doc_id"]));
+
+if($Fetch===false){
+	echo "文件不存在";
+    exit;    
+}
+else{
+    $file_modify_time = $Fetch["modify_time"];
+    if(empty($Fetch["doc_info"])){
+        $file = $dir.'/'.$Fetch["file_name"];    
+    }
+    else{
+		echo "已经是数据库格式了。无需转换";
+		exit;
+    }
+}
+if(!file_exists($file)){
+	echo "文件不存在";
+	exit;
+}
 $xml = simplexml_load_file($file);
+if($xml==false){
+	echo "载入pcs文件错误";
+	exit;
+}
 $xml_head = $xml->xpath('//head')[0];
 $strHead = "<head>";
 $strHead .= "<type>{$xml_head->type}</type>";
@@ -77,7 +175,6 @@ $dataBlock = $xml->xpath('//block');
                 echo "translate:".$block->info->book."<br>";
             break;
         }
-    
     }
 
     foreach($dataBlock as $block) {
@@ -86,8 +183,9 @@ $dataBlock = $xml->xpath('//block');
             break;
             case "translate":
                 //译文
-                $blockid = sprintf("%s",$block->info->id);
-                $newDocBlockList[]=array('type' => 2,'block_id' => $blockid);
+				$blockid = UUID::V4();
+				//译文不加入块列表 因为译文用channel解决 不需要渲染译文块
+                //$newDocBlockList[]=array('type' => 2,'block_id' => $blockid);
                 $arrSentBlockTransform["{$blockid}"] = $blockid;
                 //if(count($fBlock)>0)
                 {
@@ -118,46 +216,52 @@ $dataBlock = $xml->xpath('//block');
                     else{
                         $sent_end="";
                     }
-                    if(isset($sen->text)){
+                    if(isset($sen->text) && strlen(trim($sen->text))>0){
                         $paraText=$sen->text;
                         if( $block->info->level>0 &&  $block->info->level<8){
                             $toc.=$sen->text;
-                        }
+						}
+						array_push( $arrSentNewBlockData,
+									array(UUID::V4(),
+										$blockid,
+										$block->info->book,
+										$block->info->paragraph,
+										$sent_begin,
+										$sent_end,
+										"",
+										$block->info->author,
+										$_COOKIE["userid"],
+										$paraText,
+										mb_strlen($paraText,"UTF-8"),
+										$block->info->language,
+										"1",
+										"7",
+										$file_modify_time,
+										mTime(),
+										mTime(),
+										$_GET["channel"]
+									));						
                     }
-                    array_push( $arrSentNewBlockData,array(UUID::V4(),
-                                    $blockid,
-                                    $block->info->book,
-                                    $block->info->paragraph,
-                                    $sent_begin,
-                                    $sent_end,
-                                    "",
-                                    $block->info->author,
-                                    $_COOKIE["userid"],
-                                    $paraText,
-                                    $block->info->language,
-                                    "1",
-                                    "7",
-                                    $file_modify_time,
-                                    mTime()
-                                ));
                 }
             break;
             case "wbw":
-                $blockid = sprintf("%s",$block->info->id);
+                $blockid = UUID::V4();
                 $newDocBlockList[]=array('type' => 6,'block_id' => $blockid);
                 $arrBlockTransform["{$blockid}"] = $blockid;
                 {
-                    array_push( $arrNewBlock,array($blockid,
-                                                    "",
-                                                    $_COOKIE["userid"],
-                                                    $block->info->book,
-                                                    $block->info->paragraph,
-                                                    "",
-                                                    $block->info->language,
-                                                    "",
-                                                    $file_modify_time,
-                                                    mTime()
-                                                ));
+					array_push( $arrNewBlock,
+								array($blockid,
+								"",
+								$_GET["channel"],
+								$_COOKIE["userid"],
+								$block->info->book,
+								$block->info->paragraph,
+								"",
+								$block->info->language,
+								"",
+								$file_modify_time,
+								mTime()
+							));
                 }
 
                 $currWordId = "";
@@ -194,13 +298,13 @@ $dataBlock = $xml->xpath('//block');
                     $sWordData .= "<pali>{$word->pali}</pali>";
                     $sWordData .= "<real>{$word->real}</real>";
                     $sWordData .= "<id>{$word->id}</id>";
-                    $sWordData .= "<type status=\"0\">{$word->type}</type>";
-                    $sWordData .= "<gramma status=\"0\">{$word->gramma}</gramma>";
-                    $sWordData .= "<mean status=\"0\">{$word->mean}</mean>";
-                    $sWordData .= "<org status=\"0\">{$word->org}</org>";
-                    $sWordData .= "<om status=\"0\">{$word->om}</om>";
-                    $sWordData .= "<case status=\"0\">{$word->case}</case>";
-                    $sWordData .= "<note status=\"0\">{$word->note}</note>";
+                    $sWordData .= "<type status='0'>{$word->type}</type>";
+                    $sWordData .= "<gramma status='0'>{$word->gramma}</gramma>";
+                    $sWordData .= "<mean status='0'>{$word->mean}</mean>";
+                    $sWordData .= "<org status='0'>{$word->org}</org>";
+                    $sWordData .= "<om status='0'>{$word->om}</om>";
+                    $sWordData .= "<case status='0'>{$word->case}</case>";
+                    $sWordData .= "<note status='0'>{$word->note}</note>";
                     $sWordData .= "<style>{$word->style}</style>";
                     $sWordData .= "<status>{$word->status}</status>";
                     $sWordData .= "<parent>{$word->parent}</parent>";
@@ -221,18 +325,19 @@ $dataBlock = $xml->xpath('//block');
 
                      $iWordCount++;
                 }
-                array_push( $arrNewBlockData,array(UUID::V4(),
-                $blockid,
-                $block->info->book,
-                $block->info->paragraph,
-                $word_id,
-                $word->real,
-                $sWordData,
-                $file_modify_time,
-                mTime(),
-                $word->status,
-                $_COOKIE["userid"]
-            ));
+				array_push( $arrNewBlockData,
+							array(UUID::V4(),
+							$blockid,
+							$block->info->book,
+							$block->info->paragraph,
+							$word_id,
+							$word->real,
+							$sWordData,
+							$file_modify_time,
+							mTime(),
+							$word->status,
+							$_COOKIE["userid"]
+            			));
             break;
             case 2:
 
@@ -241,12 +346,26 @@ $dataBlock = $xml->xpath('//block');
 
     }
     
-    //逐词解析block数据块
+    //逐词解析block数据块结束
 
 
+	#插入逐词解析块数据
     if(count($arrNewBlock)>0){
         $dbhWBW->beginTransaction();
-        $query="INSERT INTO wbw_block ('id','parent_id','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $query="INSERT INTO wbw_block (
+										'id',
+										'parent_id',
+										'channal',
+										'owner',
+										'book',
+										'paragraph',
+										'style',
+										'lang',
+										'status',
+										'modify_time',
+										'receive_time'
+										) 
+										VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmtNewBlock = $dbhWBW->prepare($query);
         foreach($arrNewBlock as $oneParam){
             $stmtNewBlock->execute($oneParam);
@@ -312,7 +431,7 @@ $dataBlock = $xml->xpath('//block');
     if(count($arrSentNewBlockData)>0){
         // 开始一个事务，逐词解析数据 关闭自动提交
         $dbhSent->beginTransaction();
-        $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','modify_time','receive_time') VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
+        $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','strlen','language','ver','status','modify_time','receive_time','create_time','channal') VALUES (? , ? , ? , ? , ? ,?, ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? ,?)";
         $stmtSentData = $dbhSent->prepare($query);
         foreach($arrSentNewBlockData as $oneParam){
             $stmtSentData->execute($oneParam);
@@ -375,3 +494,7 @@ $dataBlock = $xml->xpath('//block');
                 
 }
 ?>
+
+</div>
+</body>
+</html>

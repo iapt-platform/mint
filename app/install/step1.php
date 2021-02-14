@@ -28,6 +28,7 @@ $dir[]=_DIR_DICT_SYSTEM_;
 $dir[]=_DIR_DICT_3RD_;
 
 $dir[]=_DIR_USER_BASE_;
+$dir[]=_DIR_USER_DOC_;
 $dir[]=_DIR_PALI_CSV_;
 $dir[]=_DIR_TEMP_;
 $dir[]=_DIR_LOG_;

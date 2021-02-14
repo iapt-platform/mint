@@ -90,19 +90,21 @@ function tag_changed() {
 					}
 				}
 
+				let level_class = "c_level_" + iterator[0].level;
 				//html += "<div style='width:100%;'>";
-				html += "<div class='sutta_row' >";
+				html += "<div class='sutta_row  " + level_class + "' >";
 				html += "<div class='sutta_box'>" + tag0 + "</div>";
+
 				html +=
-					"<div class='sutta_box'><a href='../reader/?view=chapter&book=" +
+					"<div class='chapter_title'><a href='../reader/?view=chapter&book=" +
 					iterator[0].book +
 					"&para=" +
 					iterator[0].para +
 					"' target = '_blank'>" +
 					iterator[0].title +
 					"</a></div>";
-				html += "<div class='sutta_box'>book:" + iterator[0].book + " para:" + iterator[0].para + "</div>";
-				html += "<div class='sutta_tag'>tag=" + iterator[0].tag + "</div>";
+				html += "<div class='chapter_book'>book:" + iterator[0].book + " para:" + iterator[0].para + "</div>";
+				html += "<div class='chapter_progress'>tag=" + iterator[0].tag + "</div>";
 				html += "</div>";
 				//html += "</div>";
 			}
@@ -119,6 +121,41 @@ function tag_changed() {
 			$("#book_list").html(html);
 		}
 	);
+}
+
+function palicanon_load_chapter(book, para) {
+	$.get(
+		"get_chapter_children.php",
+		{
+			book: book,
+			para: para,
+		},
+		function (data, status) {
+			let arrChapterList = JSON.parse(data);
+			let html = "";
+			for (const iterator of arrChapterList) {
+				html += palicanon_render_chapter_row(iterator);
+			}
+			$("#chapter_list_1").html(html);
+			$("#chapter_list_1").show();
+			$("#book_list").addClass("parent_chapter");
+		}
+	);
+}
+function palicanon_render_chapter_row(chapter) {
+	let html = "";
+	html += "<div class='sutta_row' >";
+	html += "<div class='chapter_title'><a>" + chapter.title + "</a></div>";
+	html += "<div class='chapter_book'>book:" + chapter.book + " para:" + chapter.para + "</div>";
+	html += "<div class='chapter_progress'>";
+	if (chapter.progress) {
+		for (const iterator of chapter.progress) {
+			html += "<div>" + iterator.lang + "-" + iterator.all_trans + "</div>";
+		}
+	}
+	html += "</div>";
+	html += "</div>";
+	return html;
 }
 function tag_get_local_word(word) {
 	let termKey = term_lookup_my(word, "", getCookie("userid"), getCookie("language"));
