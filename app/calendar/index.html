@@ -636,7 +636,80 @@ function show_time() {
 				result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
 				return result;
 			}
-			function getLocation() {
+			function show_position(){
+	curr_position = localStorage.getItem("local_position");
+			if (curr_position) {
+				g_coordinate_this.AT = curr_position.split("#")[0];
+				g_coordinate_this.LT = curr_position.split("#")[1];
+				g_coordinate_this.height = curr_position.split("#")[2];
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT)[0]+"°" +angle_trans(g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.AT)[2] +
+					"” N";
+
+				} else {
+					var AT_string = angle_trans(0-g_coordinate_this.AT)[0]+"°" +angle_trans(0-g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.AT)[2] +
+					"” S";
+				}
+
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT)[0]+"°" +angle_trans(g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.LT)[2] +
+					"” E";
+
+				} else {
+					var LT_string = angle_trans(0-g_coordinate_this.LT)[0]+"°" +angle_trans(0-g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(0-g_coordinate_this.LT)[2] +
+					"” W";
+				}
+
+				if (g_coordinate_this.height != "null") {
+					var height_string = g_coordinate_this.height + "M";
+				} else {
+					var height_string = localString[g_language].unknown;
+				}
+			} else {
+				getLocation();
+			}
+			$("#AT_str").html(AT_string);
+			$("#LT_str").html(LT_string);
+			$("#altitude_string").html(height_string);
+		if(g_coordinate_this.AT<0){
+			$("#AT_°")[0].value = angle_trans(0-g_coordinate_this.AT)[0];
+			$("#AT_’")[0].value = angle_trans(0-g_coordinate_this.AT)[1];
+			$("#AT_”")[0].value = angle_trans(0-g_coordinate_this.AT)[2];
+			$("#NS")[0].value="-";
+		}
+		else{
+			$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
+			$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
+			$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
+			$("#NS")[0].value="+";
+
+		}
+		if(g_coordinate_this.LT<0){
+			$("#LT_°")[0].value = angle_trans(0-g_coordinate_this.LT)[0];
+			$("#LT_’")[0].value = angle_trans(0-g_coordinate_this.LT)[1];
+			$("#LT_”")[0].value = angle_trans(0-g_coordinate_this.LT)[2];
+			$("#WE")[0].value="-";
+
+		}
+		else{
+			$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
+			$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
+			$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
+			$("#WE")[0].value="+";
+		}
+		$("#HT_M")[0].value = g_coordinate_this.height;
+		$("#city_str").html(find_city(g_coordinate_this.AT,g_coordinate_this.LT).name);
+}
+show_position();
+function getLocation() {
 				//自动定位
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -644,6 +717,17 @@ function show_time() {
 					$("#selected_position_string").html("Geolocation is not supported by this browser.");
 				}
 			}
+			function showPosition(position) {
+				alert("get cordinate success");
+				g_coordinate_this.AT = position.coords.latitude; //纬度
+				g_coordinate_this.LT = position.coords.longitude; //经度
+				g_coordinate_this.height = position.coords.altitude; //海拔高度
+
+				let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
+				localStorage.setItem("local_position", position_string);
+
+			}
+
 			function position_input() {
 				//手动输入
 				var LT = Number($("#LT_°")[0].value);
@@ -675,17 +759,31 @@ function show_time() {
 						break;
 				}
 			}
-			function angle_trans(angle) {
-				var angle_str = new Array();
-				var num_d = Math.floor(angle);
-				var num_m = Math.floor((angle - num_d) * 60);
-				var num_s = Math.round((angle - num_d) * 60 - num_m);
-				angle_str.push(num_d);
-				angle_str.push(num_m);
-				angle_str.push(num_s);
+function angle_trans(angle,type) {
+	var angle_str = new Object;
+	if(type=="L"){
+		if(angle>=0){
+			angle_str.suf="E";
+		}else{
+			angle_str.suf="W";
+		}
+	}
+	else{
+		if(angle>=0){
+			angle_str.suf="N";
+		}else{
+			angle_str.suf="S";
+		}
+	}
+	angle=Math.abs(angle);
+	angle_str.d = Math.floor(angle);
+	angle_str.m = Math.floor((angle - num_d) * 60);
+	angle_str.s = Math.round((angle - num_d) * 60 - num_m);
 
-				return angle_str;
-			}
+	angle_str.str=angle_str.d+"°"+angle_str.m+"’"+angle_str.s+"”"+angle_str.suf;
+
+	return angle_str;
+}
 			function input_position() {
 				$("#position_input").show();
 			}
@@ -1025,7 +1123,7 @@ function show_time() {
 			AT += Number($("#AT_’")[0].value) / 60;
 			AT += Number($("#AT_”")[0].value) / 3600;
 			AT = Number($("#NS")[0].value + AT);
-			if (AT != 0) {
+			if (AT != 0 || LT!=0) {
 				g_coordinate_this.LT = LT;
 				g_coordinate_this.AT = AT;
 			}
@@ -1057,6 +1155,13 @@ function show_time() {
 				$("#selected_position_string").html("Geolocation is not supported by this browser.");
 			}
 		}
+		function showPosition(position) {
+				alert("get cordinate success");
+				g_coordinate_this.AT = position.coords.latitude; //纬度
+				g_coordinate_this.LT = position.coords.longitude; //经度
+				g_coordinate_this.height = position.coords.altitude; //海拔高度
+			}
+
 		function position_input() {
 			//手动输入
 			var LT = Number($("#LT_°")[0].value);

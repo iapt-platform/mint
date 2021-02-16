@@ -532,6 +532,7 @@
 		"public": "公开",
 		"public_note": "可通过链接访问，支持订阅，可搜索",
 		"copy_link": "复制链接",
+		"copy_share_link": "复制分享链接",
 		"saved": "已保存",
 		"title_necessary": "必须填写标题",
 		"example": "例如",

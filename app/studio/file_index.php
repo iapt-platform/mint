@@ -56,14 +56,14 @@ switch($op){
 			$value=mTime();
 		}
 		$doc_id=$_POST["doc_id"];
-		$query="UPDATE fileindex SET $field='$value' where user_id='$uid' AND   id='{$doc_id}'";
+		$query="UPDATE fileindex SET $field='$value' where user_id='$uid' AND  id='{$doc_id}'";
 		$stmt = @PDO_Execute($query);
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			$error = PDO_ErrorInfo();
 			echo json_encode(array("error"=>$error[2],"message"=>$query), JSON_UNESCAPED_UNICODE);
 		}
 		else{
-			echo json_encode(array("error"=>"","message"=>$query), JSON_UNESCAPED_UNICODE);
+			echo json_encode(array("error"=>false,"message"=>$query), JSON_UNESCAPED_UNICODE);
 		}
 	break;
 	case "share":

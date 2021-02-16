@@ -531,6 +531,7 @@
 		"public": "public",
 		"public_note": "Can share URL，Shows in Subscriber feed， search & related",
 		"copy_link": "copy the Link",
+		"copy_share_link": "copy share link",
 		"saved": "saved ",
 		"title_necessary": "title is necessary",
 		"example": "for example ",
