@@ -15,8 +15,15 @@ require_once '../studio/index_head.php';
 		color: var(--btn-color);
 		cursor:auto;
 	}
+	.file_list_row .hidden_function{
+		visibility: hidden;
+	}
+	.file_list_row:hover .hidden_function{
+		visibility: visible;
+	}
 	</style>
 	<script language="javascript" src="js/index_mydoc.js"></script>
+	<script language="javascript" src="js/data.js"></script>
 	<script src="../doc/coop.js"></script>
 
 	<?php
@@ -64,7 +71,7 @@ require_once '../studio/index_head.php';
 				
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->add_to_folder;?></span>
-					<button id="move_to_folder" type="button" class="icon_btn" onclick="setNaviVisibility('')" title=" ">
+					<button id="move_to_folder" type="button" class="icon_btn" onclick="" title=" ">
 						<svg class="icon">
 							<use xlink:href="./svg/icon.svg#ic_folder_move"></use>
 						</svg>
@@ -73,7 +80,7 @@ require_once '../studio/index_head.php';
 				
 				<span class="icon_btn_div">				
 					<span class="icon_btn_tip"><?php echo $_local->gui->rename;?></span>
-					<button id="edit_title" type="button" class="icon_btn" onclick="setNaviVisibility('')" title=" ">
+					<button id="edit_title" type="button" class="icon_btn" onclick="" title=" ">
 						<svg class="icon">
 							<use xlink:href="./svg/icon.svg#ic_rename"></use>
 						</svg>

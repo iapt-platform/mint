@@ -243,6 +243,24 @@ function doc_info_title_change(obj) {
 		}
 	);
 }
+
+function _doc_info_title_change(id,title,callback=null){
+	if(callback==null){
+		callback=function (data, status) {
+			console.error("Data: " + data + "\nStatus: " + status);
+		}
+	}
+	$.post(
+		"file_index.php",
+		{
+			op: "set",
+			doc_id: id,
+			field: "title",
+			value: title,
+		},
+		callback
+	);
+}
 function getTranslateText(id) {
 	var xBlock = gXmlBookDataBody.getElementsByTagName("block");
 	for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
