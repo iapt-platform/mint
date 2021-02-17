@@ -113,7 +113,7 @@ foreach ($valid_book as $key => $book) {
 		# 查询巴利字符数
 		$query = "SELECT sum(strlen) as pali_strlen from pali_sent_index where book = ? and para between ? and ? ";
 		$stmt = $dbh_pali_sent->prepare($query);
-		$stmt->execute(array($book["book"],$chapter["paragraph"],$chapter["paragraph"]+$chapter["chapter_len"]));
+		$stmt->execute(array($book["book"],$chapter["paragraph"],(int)$chapter["paragraph"]+(int)$chapter["chapter_len"]-1));
 		$result_chapter_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($result_chapter_strlen){
 			$pali_strlen = (int)$result_chapter_strlen["pali_strlen"];
@@ -121,7 +121,7 @@ foreach ($valid_book as $key => $book) {
 			foreach ($result_lang as $lang) {
 				$query = "SELECT sum(all_strlen) as all_strlen from progress where book = ? and (para between ? and ? )and lang = ?";
 				$stmt = $dbh_toc->prepare($query);
-				$stmt->execute(array($book["book"],$chapter["paragraph"],$chapter["paragraph"]+$chapter["chapter_len"],$lang["language"]));
+				$stmt->execute(array($book["book"],$chapter["paragraph"],(int)$chapter["paragraph"]+(int)$chapter["chapter_len"]-1,$lang["language"]));
 				$result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($result_chapter_trans_strlen){
 					$tran_strlen = (int)$result_chapter_trans_strlen["all_strlen"];

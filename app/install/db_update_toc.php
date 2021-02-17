@@ -29,10 +29,10 @@ File: <input type="text" name="file" value="title"><br>
 Author: <input type="text" name="author" value=""><br>
 Language:
 <select name="lang">
-<option value="1">pali</option>
-<option value="2">English</option>
-<option value="3">简体中文</option>
-<option value="4">繁体中文</option>
+<option value="pali">pali</option>
+<option value="en">English</option>
+<option value="zh-hans">简体中文</option>
+<option value="zh-hant">繁体中文</option>
 </select>
 <br>
 <input type="submit">
@@ -125,13 +125,22 @@ $PDO->query($query);
 $PDO->beginTransaction();
 $query="INSERT INTO 'index' ('id','book','paragraph','title','title_en' ,'level','type','language','author','share','create_time','update_time' ) VALUES ( NULL , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $PDO->prepare($query);
-if($_lang=="1"){
+if($_lang=="pali"){
     $type=1;
 }
 else{
     $type=2;
 }
 foreach($arrInserString as $title){
+	if(isset($title[7])){
+		$author = $title[7];
+	}
+	else if(isset($_author)){
+		$author = $_author;
+	}
+	else{
+		$author = "";
+	}
 	$newData=array(
         $book,
         $title[2],
@@ -140,7 +149,7 @@ foreach($arrInserString as $title){
         $title[3],
 		$type,
 	    $_lang,
-        $_author,
+        $author,
 	   1,
 	   mTime(),
        mTime()

@@ -3635,17 +3635,22 @@ function getWordMeaningList(word) {
 	return arrOM;
 }
 
+//删除连音词
 function edit_un_remove(parentId) {
 	edit_un_RemoveHtmlNode(parentId);
 
-	var xWord = gXmlBookDataBody.getElementsByTagName("word");
+	let xWord = gXmlBookDataBody.getElementsByTagName("word");
 	var count = 0;
+	//移除内存数据
+
 	for (iWord = xWord.length - 1; iWord >= 0; iWord--) {
-		if (getNodeText(xWord[iWord], "un") == parentId) {
+		let id = getNodeText(xWord[iWord], "id");
+		if (id.indexOf(parentId) == 0 && id != parentId) {
 			xWord[iWord].parentNode.removeChild(xWord[iWord]);
 			count++;
 		}
 	}
+	//移除根单词的类标志
 	var parentElement = document.getElementById("wb" + parentId);
 	if (parentElement) {
 		parentElement.classList.remove("un_parent");
