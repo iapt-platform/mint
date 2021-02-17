@@ -1,0 +1,158 @@
+id,book,par_num,100,class,title,text,author
+NULL,94,3,1,book,Mahāvaggapāḷi,大品,莊春江
+NULL,94,4,2,chapter,1. Mahāpadānasuttaṃ,14、譬喻大經,莊春江
+NULL,94,5,4,subhead,Pubbenivāsapaṭisaṃyuttakathā,與前世住處有關的談說,莊春江
+NULL,94,38,4,subhead,Bodhisattadhammatā,菩薩常法,莊春江
+NULL,94,55,4,subhead,Dvattiṃsamahāpurisalakkhaṇā,三十二大丈夫相,莊春江
+NULL,94,91,4,subhead,Vipassīsamaññā,毗婆屍的稱呼,莊春江
+NULL,94,99,4,subhead,Jiṇṇapuriso,老年人,莊春江
+NULL,94,104,4,subhead,Byādhitapuriso,病人,莊春江
+NULL,94,110,4,subhead,Kālaṅkatapuriso,死人,莊春江
+NULL,94,115,4,subhead,Pabbajito,出家,莊春江
+NULL,94,119,4,subhead,Bodhisattapabbajjā,菩薩出家,莊春江
+NULL,94,121,4,subhead,Mahājanakāyaanupabbajjā,大群衆跟隨出家,莊春江
+NULL,94,125,4,subhead,Bodhisattaabhiniveso,菩薩-上安住,莊春江
+NULL,94,153,4,subhead,Brahmayācanakathā,梵天勸請的談說,莊春江
+NULL,94,185,4,subhead,Aggasāvakayugaṃ,最上雙弟子,莊春江
+NULL,94,192,4,subhead,Mahājanakāyapabbajjā,大群衆的出家,莊春江
+NULL,94,197,4,subhead,Purimapabbajitānaṃ dhammābhisamayo,最初出家者的現觀,莊春江
+NULL,94,202,4,subhead,Cārikāanujānanaṃ,允許遊行,莊春江
+NULL,94,219,4,subhead,Devatārocanaṃ,天神的告示,莊春江
+NULL,94,229,2,chapter,2. Mahānidānasuttaṃ,15、大因緣經,莊春江
+NULL,94,230,4,subhead,Paṭiccasamuppādo,緣起,莊春江
+NULL,94,261,4,subhead,Attapaññatti,真我之安立,莊春江
+NULL,94,267,4,subhead,Naattapaññatti,真我之不安立,莊春江
+NULL,94,273,4,subhead,Attasamanupassanā,真我之認為,莊春江
+NULL,94,280,4,subhead,Satta viññāṇaṭṭhiti,七識住,莊春江
+NULL,94,283,4,subhead,Aṭṭha vimokkhā,（暫缺）,莊春江
+NULL,94,287,2,chapter,3. Mahāparinibbānasuttaṃ,16、大般涅槃經,莊春江
+NULL,94,290,4,subhead,Vassakārabrāhmaṇo,作雨者婆羅門,莊春江
+NULL,94,292,4,subhead,Rājaaparihāniyadhammā,國王-不衰退法,莊春江
+NULL,94,303,4,subhead,Bhikkhuaparihāniyadhammā,比丘-不衰退法,莊春江
+NULL,94,340,4,subhead,Sāriputtasīhanādo,捨利弗的獅子吼,莊春江
+NULL,94,348,4,subhead,Dussīlaādīnavā,破戒（壞品德）的過患,莊春江
+NULL,94,355,4,subhead,Sīlavanttaānisaṃsā,持戒（有品德）的效益,莊春江
+NULL,94,362,4,subhead,Pāṭaliputtanagaramāpanaṃ,華氏城的建築,莊春江
+NULL,94,377,4,subhead,Ariyasaccakathā,聖諦的談說,莊春江
+NULL,94,385,4,subhead,Anāvattidhammasambodhiparāyaṇā,不還者與以正覺為彼岸,莊春江
+NULL,94,388,4,subhead,Dhammādāsadhammapariyāyā,法鏡法門,莊春江
+NULL,94,401,4,subhead,Ambapālīgaṇikā,藝妓蓭婆巴利,莊春江
+NULL,94,406,4,subhead,Veḷuvagāmavassūpagamanaṃ,在木瓜樹村進入雨季安居,莊春江
+NULL,94,411,4,subhead,Nimittobhāsakathā,徵相與暗示的談說,莊春江
+NULL,94,414,4,subhead,Mārayācanakathā,魔請求的談說,莊春江
+NULL,94,421,4,subhead,Āyusaṅkhāraossajjanaṃ,壽行的捨棄,莊春江
+NULL,94,425,4,subhead,Mahābhūmicālahetu,大地震的原因,莊春江
+NULL,94,436,4,subhead,Aṭṭha parisā,八衆,莊春江
+NULL,94,438,4,subhead,Aṭṭha abhibhāyatanāni,八勝處,莊春江
+NULL,94,447,4,subhead,Aṭṭha vimokkhā,八解脫,莊春江
+NULL,94,457,4,subhead,Ānandayācanakathā,阿難請求的談說,莊春江
+NULL,94,476,4,subhead,Nāgāpalokitaṃ,龍象回顧,莊春江
+NULL,94,484,4,subhead,Catumahāpadesakathā,四大法教,莊春江
+NULL,94,491,4,subhead,Kammāraputtacundavatthu,鐵匠之子純陀的事,莊春江
+NULL,94,501,4,subhead,Pānīyāharaṇaṃ,取水,莊春江
+NULL,94,505,4,subhead,Pukkusamallaputtavatthu,末羅人之子晡古色的事,莊春江
+NULL,94,537,4,subhead,Yamakasālā,雙沙羅樹,莊春江
+NULL,94,541,4,subhead,Upavāṇatthero,優波哇那上座,莊春江
+NULL,94,546,4,subhead,Catusaṃvejanīyaṭṭhānāni,四個能激起宗教信仰心之處,莊春江
+NULL,94,550,4,subhead,Ānandapucchākathā,阿難問題的談說,莊春江
+NULL,94,554,4,subhead,Thūpārahapuggalo,值得領受塔的人,莊春江
+NULL,94,560,4,subhead,Ānandaacchariyadhammo,阿難的未曾有法,莊春江
+NULL,94,565,4,subhead,Mahāsudassanasuttadesanā,大善見經的教導,莊春江
+NULL,94,569,4,subhead,Mallānaṃ vandanā,末羅人的禮拜,莊春江
+NULL,94,571,4,subhead,Subhaddaparibbājakavatthu,遊行者須跋陀的事,莊春江
+NULL,94,585,4,subhead,Tathāgatapacchimavācā,如來最後的話,莊春江
+NULL,94,589,4,subhead,Parinibbutakathā,般涅槃的談說,莊春江
+NULL,94,612,4,subhead,Buddhasarīrapūjā,世尊遺體供養,莊春江
+NULL,94,620,4,subhead,Mahākassapattheravatthu,大迦葉的事,莊春江
+NULL,94,626,4,subhead,Sarīradhātuvibhājanaṃ,遺骨的分配,莊春江
+NULL,94,646,4,subhead,Dhātuthūpapūjā,遺骨塔的尊敬,莊春江
+NULL,94,663,2,chapter,4. Mahāsudassanasuttaṃ,17、大善見經,莊春江
+NULL,94,666,4,subhead,Kusāvatīrājadhānī,咕薩瓦帝王都,莊春江
+NULL,94,669,4,subhead,Cakkaratanaṃ,輪寶,莊春江
+NULL,94,673,4,subhead,Hatthiratanaṃ,象寶,莊春江
+NULL,94,675,4,subhead,Assaratanaṃ,馬寶,莊春江
+NULL,94,677,4,subhead,Maṇiratanaṃ,珠寶,莊春江
+NULL,94,679,4,subhead,Itthiratanaṃ,女寶,莊春江
+NULL,94,681,4,subhead,Gahapatiratanaṃ,屋主寶,莊春江
+NULL,94,683,4,subhead,Pariṇāyakaratanaṃ,主兵臣寶,莊春江
+NULL,94,686,4,subhead,Catuiddhisamannāgato,具備四種成就,莊春江
+NULL,94,692,4,subhead,Dhammapāsādapokkharaṇī,達摩宮殿的蓮花池,莊春江
+NULL,94,712,4,subhead,Jhānasampatti,到達禪,莊春江
+NULL,94,717,4,subhead,Caturāsīti nagarasahassādi,八萬四仟城市,莊春江
+NULL,94,720,4,subhead,Subhaddādeviupasaṅkamanaṃ,善吉祥皇后到來,莊春江
+NULL,94,728,4,subhead,Brahmalokūpagamaṃ,往梵天世界,莊春江
+NULL,94,737,2,chapter,5. Janavasabhasuttaṃ,18、人牛王經,莊春江
+NULL,94,738,4,subhead,Nātikiyādibyākaraṇaṃ,在那低葛的記說等等,莊春江
+NULL,94,742,4,subhead,Ānandaparikathā,阿難的委婉談說,莊春江
+NULL,94,747,4,subhead,Janavasabhayakkho,人牛王夜叉,莊春江
+NULL,94,753,4,subhead,Devasabhā,諸天會堂,莊春江
+NULL,94,769,4,subhead,Sanaṅkumārakathā,常童子的談說,莊春江
+NULL,94,789,4,subhead,Bhāvitaiddhipādo,所修習的神足,莊春江
+NULL,94,792,4,subhead,Tividho okāsādhigamo,三種到達的空間,莊春江
+NULL,94,796,4,subhead,Catusatipaṭṭhānaṃ,四念住,莊春江
+NULL,94,798,4,subhead,Satta samādhiparikkhārā,七個定的資助,莊春江
+NULL,94,807,2,chapter,6. Mahāgovindasuttaṃ,19、大總管經,莊春江
+NULL,94,809,4,subhead,Devasabhā,諸天會堂,莊春江
+NULL,94,822,4,subhead,Aṭṭha yathābhuccavaṇṇā,八種如實稱贊,莊春江
+NULL,94,838,4,subhead,Sanaṅkumārakathā,常童子的談說,莊春江
+NULL,94,850,4,subhead,Aṭṭha yathābhuccavaṇṇā,八種如實稱贊,莊春江
+NULL,94,861,4,subhead,Govindabrāhmaṇavatthu,總管婆羅門的事,莊春江
+NULL,94,863,4,subhead,Mahāgovindavatthu,大總管的事,莊春江
+NULL,94,865,4,subhead,Rajjasaṃvibhajanaṃ,統治權的分享,莊春江
+NULL,94,877,4,subhead,Kittisaddaabbhuggamanaṃ,（暫缺）,莊春江
+NULL,94,885,4,subhead,Brahmunā sākacchā,梵天的交談,莊春江
+NULL,94,918,4,subhead,Reṇurājaāmantanā,雷奴國王的宣說,莊春江
+NULL,94,939,4,subhead,Cha khattiyaāmantanā,六位剎帝利的宣說,莊春江
+NULL,94,952,4,subhead,Brāhmaṇamahāsālādīnaṃ āmantanā,富有的婆羅門等的宣說,莊春江
+NULL,94,954,4,subhead,Bhariyānaṃ āmantanā,妻子們的宣說,莊春江
+NULL,94,956,4,subhead,Mahāgovindapabbajjā,大總管的出家,莊春江
+NULL,94,965,2,chapter,7. Mahāsamayasuttaṃ,20、大集會經,莊春江
+NULL,94,979,4,subhead,Devatāsannipātā,天神的集合,莊春江
+NULL,94,1130,2,chapter,8. Sakkapañhasuttaṃ,21、帝釋所問經,莊春江
+NULL,94,1135,4,subhead,Pañcasikhagītagāthā,五髻的歌唱偈頌,莊春江
+NULL,94,1171,4,subhead,Sakkūpasaṅkama,帝釋前往,莊春江
+NULL,94,1176,4,subhead,Gopakavatthu,守護者之事,莊春江
+NULL,94,1268,4,subhead,Vedanākammaṭṭhānaṃ,受之業處,莊春江
+NULL,94,1274,4,subhead,Pātimokkhasaṃvaro,巴帝摩卡自製,莊春江
+NULL,94,1281,4,subhead,Indriyasaṃvaro,根自製,莊春江
+NULL,94,1296,4,subhead,Somanassapaṭilābhakathā,獲得喜悅說,莊春江
+NULL,94,1341,2,chapter,9. Mahāsatipaṭṭhānasuttaṃ,22、大念住經,莊春江
+NULL,94,1343,4,subhead,Uddeso,總說,莊春江
+NULL,94,1347,4,subhead,Kāyānupassanā ānāpānapabbaṃ,隨觀身‧入出息節,莊春江
+NULL,94,1351,4,subhead,Kāyānupassanā iriyāpathapabbaṃ,隨觀身‧威儀路徑（方法）節,莊春江
+NULL,94,1354,4,subhead,Kāyānupassanā sampajānapabbaṃ,隨觀身‧正知節,莊春江
+NULL,94,1357,4,subhead,Kāyānupassanā paṭikūlamanasikārapabbaṃ,隨觀身‧厭拒作意節,莊春江
+NULL,94,1362,4,subhead,Kāyānupassanā dhātumanasikārapabbaṃ,隨觀身‧四界作意節,莊春江
+NULL,94,1367,4,subhead,Kāyānupassanā navasivathikapabbaṃ,隨觀身‧九墓地節,莊春江
+NULL,94,1377,4,subhead,Vedanānupassanā,隨觀受,莊春江
+NULL,94,1380,4,subhead,Cittānupassanā,隨觀心,莊春江
+NULL,94,1383,4,subhead,Dhammānupassanā nīvaraṇapabbaṃ,隨觀法‧蓋節,莊春江
+NULL,94,1392,4,subhead,Dhammānupassanā khandhapabbaṃ,隨觀法‧蘊節,莊春江
+NULL,94,1395,4,subhead,Dhammānupassanā āyatanapabbaṃ,隨觀法‧處節,莊春江
+NULL,94,1405,4,subhead,Dhammānupassanā bojjhaṅgapabbaṃ,隨觀法‧覺支節,莊春江
+NULL,94,1415,4,subhead,Dhammānupassanā saccapabbaṃ,隨觀法‧諦節,莊春江
+NULL,94,1418,4,subhead,Dukkhasaccaniddeso,苦諦的說明,莊春江
+NULL,94,1432,4,subhead,Samudayasaccaniddeso,集諦的說明,莊春江
+NULL,94,1445,4,subhead,Nirodhasaccaniddeso,滅諦的說明,莊春江
+NULL,94,1458,4,subhead,Maggasaccaniddeso,道諦的說明,莊春江
+NULL,94,1476,2,chapter,10. Pāyāsisuttaṃ,23、波亞西經,莊春江
+NULL,94,1478,4,subhead,Pāyāsirājaññavatthu,波亞西親王之事,莊春江
+NULL,94,1483,4,subhead,Natthikavādo,虛無論,莊春江
+NULL,94,1485,4,subhead,Candimasūriyaupamā,日月的譬喻,莊春江
+NULL,94,1488,4,subhead,Coraupamā,盜賊的譬喻,莊春江
+NULL,94,1491,4,subhead,Gūthakūpapurisaupamā,糞坑男子的譬喻,莊春江
+NULL,94,1495,4,subhead,Tāvatiṃsadevaupamā,三十三天的譬喻,莊春江
+NULL,94,1497,4,subhead,Jaccandhaupamā,天生盲者的譬喻,莊春江
+NULL,94,1501,4,subhead,Gabbhinīupamā,孕婦的譬喻,莊春江
+NULL,94,1505,4,subhead,Supinakaupamā,夢的譬喻,莊春江
+NULL,94,1508,4,subhead,Santattaayoguḷaupamā,曬熱鐵球的譬喻,莊春江
+NULL,94,1511,4,subhead,Saṅkhadhamaupamā,吹法螺者的譬喻,莊春江
+NULL,94,1515,4,subhead,Aggikajaṭilaupamā,結發拜火者的譬喻,莊春江
+NULL,94,1520,4,subhead,Dve satthavāhaupamā,二位商隊主的譬喻,莊春江
+NULL,94,1527,4,subhead,Gūthabhārikaupamā,擔糞者的譬喻,莊春江
+NULL,94,1530,4,subhead,Akkhadhuttakaupamā,賭徒的譬喻,莊春江
+NULL,94,1536,4,subhead,Sāṇabhārikaupamā,擔麻者的譬喻,莊春江
+NULL,94,1541,4,subhead,Saraṇagamanaṃ,歸依,莊春江
+NULL,94,1544,4,subhead,Yaññakathā,牲祭的談說,莊春江
+NULL,94,1547,4,subhead,Uttaramāṇavavatthu,更優秀的青年徒弟之事,莊春江
+NULL,94,1550,4,subhead,Pāyāsidevaputto,波亞西天子,莊春江

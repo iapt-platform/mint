@@ -1,0 +1,118 @@
+id,book,par_num,level,class,title,text,tran
+201936,103,3,1,book,(DN) Sīlakkhandhavaggaṭṭhakathā,戒蕴品注,system
+201937,103,4,2,chapter,Ganthārambhakathā,开篇偈诵注,system
+201938,103,5,3,subsubhead,Ganthārambhakathā,开篇偈诵注,system
+202132,103,199,2,chapter,1. Brahmajālasuttavaṇṇanā,1、梵网经注,system
+202133,103,200,4,subhead,Paribbājakakathāvaṇṇanā,游行者之说注,system
+202256,103,323,4,subhead,Cūḷasīlavaṇṇanā,小戒注,system
+202405,103,472,4,subhead,Majjhimasīlavaṇṇanā,中戒注,system
+202436,103,503,4,subhead,Mahāsīlavaṇṇanā,大戒注,system
+202450,103,517,4,subhead,Pubbantakappikasassatavādavaṇṇanā,属于过去时间的，恒常论注,system
+202480,103,547,4,subhead,Ekaccasassatavādavaṇṇanā,某部分恒常论注,system
+202494,103,561,4,subhead,Antānantavādavaṇṇanā,有边无边论注,system
+202497,103,564,4,subhead,Amarāvikkhepavādavaṇṇanā,诡辩论注,system
+202505,103,572,4,subhead,Adhiccasamuppannavādavaṇṇanā,自然生论注,system
+202508,103,575,4,subhead,Aparantakappikavaṇṇanā,属于未来时间的注,system
+202510,103,577,4,subhead,Saññīvādavaṇṇanā,有想论注,system
+202513,103,580,4,subhead,Asaññīvādavaṇṇanā,无想论注,system
+202515,103,582,4,subhead,Ucchedavādavaṇṇanā,断灭论注,system
+202521,103,588,4,subhead,Diṭṭhadhammanibbānavādavaṇṇanā,当生涅槃论注,system
+202534,103,601,4,subhead,Phassapaccayavāravaṇṇanā,以触为缘章注,system
+202537,103,604,4,subhead,Diṭṭhigatikādhiṭṭhānavaṭṭakathāvaṇṇanā,到达见依处的轮回谈说注,system
+202542,103,609,4,subhead,Vivaṭṭakathādivaṇṇanā,还灭之谈说等注,system
+202570,103,637,2,chapter,2. Sāmaññaphalasuttavaṇṇanā,2、沙门果经注,system
+202571,103,638,4,subhead,Rājāmaccakathāvaṇṇanā,国王大臣的谈论注,system
+202603,103,670,4,subhead,Komārabhaccajīvakakathāvaṇṇanā,养子耆婆的谈论注,system
+202622,103,689,4,subhead,Sāmaññaphalapucchāvaṇṇanā,沙门果的问题注,system
+202657,103,724,4,subhead,Pūraṇakassapavādavaṇṇanā,富兰那迦叶之论注,system
+202663,103,730,4,subhead,Makkhaligosālavādavaṇṇanā,末迦利瞿舍罗之论注,system
+202673,103,740,4,subhead,Ajitakesakambalavādavaṇṇanā,阿夷多翅舍钦婆罗之论注,system
+202680,103,747,4,subhead,Pakudhakaccāyanavādavaṇṇanā,浮陀迦旃延之论注,system
+202682,103,749,4,subhead,Nigaṇṭhanāṭaputtavādavaṇṇanā,尼干子若提子之论注,system
+202684,103,751,4,subhead,Sañcayabelaṭṭhaputtavādavaṇṇanā,散惹耶毗罗梨子之论注,system
+202686,103,753,4,subhead,Paṭhamasandiṭṭhikasāmaññaphalavaṇṇanā,第一个当生看得见的沙门果注,system
+202693,103,760,4,subhead,Dutiyasandiṭṭhikasāmaññaphalavaṇṇanā,第二个当生看得见的沙门果注,system
+202696,103,763,4,subhead,Paṇītatarasāmaññaphalavaṇṇanā,更胜妙的沙门果注,system
+202757,103,824,4,subhead,Cūḷasīlavaṇṇanā,小戒注,system
+202760,103,827,4,subhead,Indriyasaṃvarakathā,根的自制注,system
+202762,103,829,4,subhead,Satisampajaññakathā,正念与正知注,system
+202824,103,891,4,subhead,Santosakathā,知足注,system
+202869,103,936,4,subhead,Paṭhamajjhānakathā,初禅注,system
+202872,103,939,4,subhead,Dutiyajjhānakathā,第二禅注,system
+202874,103,941,4,subhead,Tatiyajjhānakathā,第三禅注,system
+202876,103,943,4,subhead,Catutthajjhānakathā,第四禅注,system
+202879,103,946,4,subhead,Vipassanāñāṇakathā,毗婆舍那智注,system
+202884,103,951,4,subhead,Manomayiddhiñāṇakathā,意生神通智注,system
+202886,103,953,4,subhead,Iddhividhañāṇādikathā,各种神通智注,system
+202892,103,959,4,subhead,Āsavakkhayañāṇakathā,烦恼之灭尽智注,system
+202903,103,970,4,subhead,Ajātasattuupāsakattapaṭivedanākathā,阿阇世-作为优婆塞的陈述注,system
+202964,103,1031,2,chapter,3. Ambaṭṭhasuttavaṇṇanā,3、安玻德经注,system
+202975,103,1042,4,subhead,Pokkharasātivatthuvaṇṇanā,玻科勒沙低的事注,system
+202984,103,1051,4,subhead,Ambaṭṭhamāṇavakathā,安玻德学生婆罗门注,system
+203004,103,1071,4,subhead,Paṭhamaibbhavādavaṇṇanā,第一次卑贱说注,system
+203011,103,1078,4,subhead,Dutiyaibbhavādavaṇṇanā,第二次卑贱说注,system
+203015,103,1082,4,subhead,Tatiyaibbhavādavaṇṇanā,第三次卑贱说注,system
+203018,103,1085,4,subhead,Dāsiputtavādavaṇṇanā,婢女之子说注,system
+203041,103,1108,4,subhead,Ambaṭṭhavaṃsakathā,安玻德的种姓说注,system
+203047,103,1114,4,subhead,Khattiyaseṭṭhabhāvavaṇṇanā,刹帝利的最胜性注,system
+203052,103,1119,4,subhead,Vijjācaraṇakathāvaṇṇanā,明与行之说注,system
+203056,103,1123,4,subhead,Catuapāyamukhakathāvaṇṇanā,四个败散口注,system
+203072,103,1139,4,subhead,Pubbakaisibhāvānuyogavaṇṇanā,以前仙人状态的实行注,system
+203080,103,1147,4,subhead,Dvelakkhaṇadassanavaṇṇanā,二相的未见注,system
+203088,103,1155,4,subhead,Pokkharasātibuddhūpasaṅkamanavaṇṇanā,玻科勒沙低往见佛陀注,system
+203092,103,1159,4,subhead,Pokkharasātiupāsakattapaṭivedanāvaṇṇanā,玻科勒沙低-作为优婆塞的陈述注,system
+203096,103,1163,2,chapter,4. Soṇadaṇḍasuttavaṇṇanā,4、犬杖经注,system
+203100,103,1167,4,subhead,Soṇadaṇḍaguṇakathā,犬杖的种种谈说注,system
+203111,103,1178,4,subhead,Buddhaguṇakathā,佛陀的种种谈说注,system
+203137,103,1204,4,subhead,Soṇadaṇḍaparivitakkavaṇṇanā,犬杖的深思注,system
+203139,103,1206,4,subhead,Brāhmaṇapaññattivaṇṇanā,婆罗门的安立注,system
+203144,103,1211,4,subhead,Sīlapaññākathāvaṇṇanā,戒、慧的谈说注,system
+203148,103,1215,4,subhead,Soṇadaṇḍaupāsakattapaṭivedanākathā,犬杖-作为优婆塞的陈述注,system
+203152,103,1219,2,chapter,5. Kūṭadantasuttavaṇṇanā,5、古得旦得经注,system
+203162,103,1229,4,subhead,Catuparikkhāravaṇṇanā,四个资助注,system
+203164,103,1231,4,subhead,Aṭṭhaparikkhāravaṇṇanā,八个资助注,system
+203166,103,1233,4,subhead,Catuparikkhārādivaṇṇanā,四个资助注,system
+203175,103,1242,4,subhead,Niccadānaanukulayaññavaṇṇanā,经常性施物-随家牲祭注,system
+203200,103,1267,4,subhead,Kūṭadantaupāsakattapaṭivedanāvaṇṇanā,古得旦得-作为优婆塞的陈述注,system
+203204,103,1271,2,chapter,6. Mahālisuttavaṇṇanā,6、摩诃里经注,system
+203205,103,1272,4,subhead,Brāhmaṇadūtavatthuvaṇṇanā,婆罗门使者的事注,system
+203208,103,1275,4,subhead,Oṭṭhaddhalicchavīvatthuvaṇṇanā,（暂缺）注,system
+203216,103,1283,4,subhead,Catuariyaphalavaṇṇanā,四种圣者之果注,system
+203219,103,1286,4,subhead,Ariyaaṭṭhaṅgikamaggavaṇṇanā,八支圣道注,system
+203225,103,1292,4,subhead,Dve pabbajitavatthuvaṇṇanā,二位出家者的事注,system
+203229,103,1296,2,chapter,7. Jāliyasuttavaṇṇanā,7、若里亚经注,system
+203230,103,1297,4,subhead,Dve pabbajitavatthuvaṇṇanā,二位出家者的事注,system
+203238,103,1305,2,chapter,8. Mahāsīhanādasuttavaṇṇanā,8、狮子吼大经注,system
+203239,103,1306,4,subhead,Acelakassapavatthuvaṇṇanā,裸体迦叶的事注,system
+203256,103,1323,4,subhead,Samanuyuñjāpanakathāvaṇṇanā,审问的谈说注,system
+203261,103,1328,4,subhead,Ariyaaṭṭhaṅgikamaggavaṇṇanā,八支圣道注,system
+203263,103,1330,4,subhead,Tapopakkamakathāvaṇṇanā,苦行着手者的谈说注,system
+203271,103,1338,4,subhead,Tapopakkamaniratthakatāvaṇṇanā,无利益的苦行着手者的谈说注,system
+203275,103,1342,4,subhead,Sīlasamādhipaññāsampadāvaṇṇanā,戒定慧具足注,system
+203277,103,1344,4,subhead,Sīhanādakathāvaṇṇanā,狮子吼的谈说注,system
+203284,103,1351,4,subhead,Titthiyaparivāsakathāvaṇṇanā,外道别住的谈说注,system
+203291,103,1358,2,chapter,9. Poṭṭhapādasuttavaṇṇanā,9、玻得播达经注,system
+203292,103,1359,4,subhead,Poṭṭhapādaparibbājakavatthuvaṇṇanā,游行者玻得播达的事注,system
+203300,103,1367,4,subhead,Abhisaññānirodhakathāvaṇṇanā,增上想灭的谈说注,system
+203307,103,1374,4,subhead,Ahetukasaññuppādanirodhakathāvaṇṇanā,想生灭有因的谈说注,system
+203321,103,1388,4,subhead,Saññāattakathāvaṇṇanā,想-真我的谈说注,system
+203328,103,1395,4,subhead,Cittahatthisāriputtapoṭṭhapādavatthuvaṇṇanā,质多象舍利弗与玻得播达的事注,system
+203331,103,1398,4,subhead,Ekaṃsikadhammavaṇṇanā,明确法注,system
+203334,103,1401,4,subhead,Tayoattapaṭilābhavaṇṇanā,三种真我取得注,system
+203348,103,1415,2,chapter,10. Subhasuttavaṇṇanā,10、苏玻经注,system
+203349,103,1416,4,subhead,Subhamāṇavakavatthuvaṇṇanā,学生婆罗门苏玻的事注,system
+203360,103,1427,4,subhead,Sīlakkhandhavaṇṇanā,戒蕴注,system
+203362,103,1429,4,subhead,Samādhikkhandhavaṇṇanā,定蕴注,system
+203367,103,1434,2,chapter,11. Kevaṭṭasuttavaṇṇanā,11、给哇得经注,system
+203368,103,1435,4,subhead,Kevaṭṭagahapatiputtavatthuvaṇṇanā,屋主之子给哇得的事注,system
+203372,103,1439,4,subhead,Iddhipāṭihāriyavaṇṇanā,神通神变注,system
+203374,103,1441,4,subhead,Ādesanāpāṭihāriyavaṇṇanā,记心神变注,system
+203376,103,1443,4,subhead,Anusāsanīpāṭihāriyavaṇṇanā,教诫神变注,system
+203379,103,1446,4,subhead,Bhūtanirodhesakavatthuvaṇṇanā,比丘寻求存在的灭的事注,system
+203393,103,1460,2,chapter,12. Lohiccasuttavaṇṇanā,12、罗希者经注,system
+203394,103,1461,4,subhead,Lohiccabrāhmaṇavatthuvaṇṇanā,罗希者婆罗门的事注,system
+203399,103,1466,4,subhead,Lohiccabrāhmaṇānuyogavaṇṇanā,罗希者婆罗门的实行注,system
+203402,103,1469,4,subhead,Tayo codanārahavaṇṇanā,三种适合呵责者注,system
+203406,103,1473,4,subhead,Na codanārahasatthuvaṇṇanā,不适合呵责的大师注,system
+203411,103,1478,2,chapter,13. Tevijjasuttavaṇṇanā,13、三明经注,system
+203425,103,1492,4,subhead,Aciravatīnadīupamākathā,阿致罗筏底河的譬喻注,system
