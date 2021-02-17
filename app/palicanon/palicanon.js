@@ -54,11 +54,19 @@ function tag_changed() {
 		strTags = main_tag;
 	}
 	console.log(strTags);
+	let lang = getCookie("language");
+	if (lang == "zh-cn") {
+		lang = "zh-hans";
+	} else if (lang == "zh-tw") {
+		lang = "zh-hant";
+	} else if (lang == "") {
+		lang = "en";
+	}
 	$.get(
 		"book_tag.php",
 		{
 			tag: strTags,
-			lang: "zh-hant",
+			lang: lang,
 		},
 		function (data, status) {
 			let arrBookList = JSON.parse(data);
@@ -68,7 +76,7 @@ function tag_changed() {
 
 			for (const iterator of arrBookList) {
 				let tag0 = "";
-				let tags = iterator[0].tag.split("::");
+				let tags = iterator.tag.split("::");
 				let currTag = new Array();
 				currTag[main_tag] = 1;
 				for (const scondTag of list_tag) {
@@ -93,14 +101,8 @@ function tag_changed() {
 					}
 				}
 
-				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator[0].level == 1)) {
-					arrChapter.push({
-						book: iterator[0].book,
-						para: iterator[0].para,
-						level: iterator[0].level,
-						title: iterator[0].title,
-						progress: [],
-					});
+				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator.level == 1)) {
+					arrChapter.push(iterator);
 				}
 			}
 
@@ -119,14 +121,30 @@ function tag_changed() {
 }
 
 function palicanon_load_chapter(book, para, div_index = 1) {
+	let lang = getCookie("language");
+	if (lang == "zh-cn") {
+		lang = "zh-hans";
+	} else if (lang == "zh-tw") {
+		lang = "zh-hant";
+	} else if (lang == "") {
+		lang = "en";
+	}
 	$.get(
 		"get_chapter_children.php",
 		{
 			book: book,
 			para: para,
-			lang: "zh-hant",
+			lang: lang,
 		},
 		function (data, status) {
+			let lang = getCookie("language");
+			if (lang == "zh-cn") {
+				lang = "zh-hans";
+			} else if (lang == "zh-tw") {
+				lang = "zh-hant";
+			} else if (lang == "") {
+				lang = "en";
+			}
 			let arrChapterList = JSON.parse(data);
 			palicanon_chapter_list_apply(arrChapterList, div_index);
 			$.get(
@@ -134,7 +152,7 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 				{
 					book: book,
 					para: para,
-					lang: "zh-hant",
+					lang: lang,
 				},
 				function (data, status) {
 					let arrChapterInfo = JSON.parse(data);
@@ -251,10 +269,10 @@ function palicanon_render_chapter_row(chapter) {
 	html += '	<div class="title_2" lang="pali">' + chapter.title + "</div>";
 	html += "</div>";
 	html += '<div class="resource">';
-	if (chapter.progress && chapter.progress.length > 0) {
+	if (chapter.progress) {
 		let r = 12;
 		let perimeter = 2 * Math.PI * r;
-		let stroke1 = parseInt(perimeter * chapter.progress[0].all_trans);
+		let stroke1 = parseInt(perimeter * chapter.progress.all_trans);
 		let stroke2 = perimeter - stroke1;
 		html += '<svg class="progress_circle" width="30" height="30" viewbox="0,0,30,30">';
 		html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
