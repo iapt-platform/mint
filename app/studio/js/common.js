@@ -8,10 +8,13 @@ function debugOutput(str, level = 0) {
 	console.log(str);
 }
 function var_dump(str) {
+	ntf_show(str);
+	/*
 	getStyleClass("debug_info").style.display = "-webkit-flex";
 	getStyleClass("debug_info").style.animation = "viewbug 2s";
 	document.getElementById("debug").innerHTML = str;
 	var t = setTimeout("clearDebugMsg()", 2000);
+	*/
 }
 function clearDebugMsg() {
 	document.getElementById("debug").innerHTML = "";

@@ -1,0 +1,103 @@
+.chapter_list {
+	display: flex;
+}
+.chapter_list .grid {
+	width: 400px;
+	max-width: 100%;
+}
+.chapter_list .list {
+	width: 200px;
+}
+.chapter_list .list .res_more {
+	display: none;
+}
+
+.chapter_list .show {
+	display: block;
+}
+
+.chapter_list .hidden {
+	display: none;
+}
+.chapter_list .list .resource .item {
+	display: none;
+}
+.chapter_list ul {
+	background-color: antiquewhite;
+	border-left: 1px solid brown;
+	border-right: 1px solid brown;
+	padding: 0;
+}
+.chapter_list ul li {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px;
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+.chapter_list ul li:hover {
+	background-color: darkorange;
+}
+.chapter_list .resource {
+	display: flex;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+.chapter_list .title .title_1 {
+	font-weight: 700;
+	font-size: 110%;
+}
+.chapter_list .title .title_2 {
+	font-size: 80%;
+	color: var(--main-color1);
+}
+.selected .title_2 {
+	font-size: 80%;
+	color: unset;
+}
+.chapter_list .title div:lang(pali) {
+	font-size: 80%;
+}
+
+.chapter_list .selected {
+	background-color: chocolate;
+	color: whitesmoke;
+}
+
+.chapter_list .level_1 {
+	background: linear-gradient(45deg, brown 20%, transparent 90%);
+	color: whitesmoke;
+}
+.progress_circle {
+	transform-origin: center;
+	transform: rotateZ(-90deg);
+}
+.progress_color {
+	stroke: mediumseagreen;
+}
+.progress_bg {
+	stroke: lightgrey;
+}
+
+.chapter_head {
+	border-bottom: 1px solid var(--border-line-color);
+}
+.chapter_head .title {
+	text-align: center;
+}
+.chapter_head .title .title_1 {
+	font-size: 120%;
+	padding: 1em 0 0.5em 0;
+	font-weight: 700;
+}
+.chapter_head .title .title_1 {
+	font-size: 120%;
+	padding: 1em 0 0.5em 0;
+	font-weight: 700;
+}
+.chapter_head .title .title_2 {
+	padding: 0 0 0.5em 0;
+}
+.progress .item {
+	display: flex;
+}

@@ -21,11 +21,11 @@ foreach ($paraList as $key => $value) {
     # code...
     $stmt->execute(array($value->book,$value->para));
     $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-         $sent["info"]=array("book"=>$value->book,"para"=>$value->para);
-        $sent["data"]=$Fetch;
-        $output[] = $sent;  
+    $sent["info"]=array("book"=>$value->book,"para"=>$value->para);
+    $sent["data"]=$Fetch;
+    $output[] = $sent;  
 }
 
-    echo json_encode($output, JSON_UNESCAPED_UNICODE);
+echo json_encode($output, JSON_UNESCAPED_UNICODE);
 
 ?>

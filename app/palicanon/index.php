@@ -11,10 +11,7 @@ require_once "../pcdl/html_head.php";
     ?>
 
     <style>
-        #main_video_win iframe {
-            width: 100%;
-            height: 100%;
-        }
+
 
         #main_tag {
             font-size: 150%;
@@ -132,6 +129,12 @@ require_once "../pcdl/html_head.php";
 		.parent_chapter .chapter_book,.parent_chapter .chapter_progress{
 			display:none;
 		}
+
+		#select_bar {
+			display: flex;
+			justify-content: space-between;
+		}
+
         @media screen and (max-width:800px) {
             .sutta_row {
                 grid-template-columns: 100px 1fr 1fr;
@@ -141,7 +144,9 @@ require_once "../pcdl/html_head.php";
                 grid-column: 1 / 4;
             }
         }
-    </style>
+	</style>
+	<link type="text/css" rel="stylesheet" href="../palicanon/style.css" />
+	
     <script>
         var tag_level = <?php echo file_get_contents("../public/book_tag/tag_list.json"); ?>;
     </script>
@@ -152,45 +157,84 @@ require_once "../pcdl/html_head.php";
     require_once "../public/_pdo.php";
     require_once '../media/function.php';
     require_once '../public/function.php';
-
-    echo "<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>";
-    echo "<div class='index_inner '>";
-    echo "<div style='font-size:140%'>";
-    echo "</div>";
-    echo '<div id="main_tag"  style="">';
-    echo '<span tag="sutta" title="sutta"></span>';
-    echo '<span tag="vinaya"  title="vinaya"></span>';
-    echo '<span tag="abhidhamma" title="abhidhamma"></span>';
-    echo '<span tag="mūla" title="mūla"></span>';
-    echo '<span tag="aṭṭhakathā" title="aṭṭhakathā"></span>';
-    echo '<span tag="ṭīkā" title="ṭīkā"></span>';
-    echo '<span tag="añña" title="añña"></span>';
-    echo '</div>';
-    echo '<div id="tag_selected"></div>';
-    echo '<div level="0" class="tag_others"></div>';
-    echo '<div level="1" class="tag_others"></div>';
-    echo '<div level="2" class="tag_others"></div>';
-    echo '<div level="3" class="tag_others"></div>';
-    echo '<div level="4" class="tag_others"></div>';
-    echo '<div level="5" class="tag_others"></div>';
-    echo '<div level="100" class="tag_others"></div>';
-    echo '<div level="8" class="tag_others"></div>';
-    echo "</div>";
-    echo '</div>';
-    ?>
+   ?>
+    <div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>
+    <div class='index_inner '>
+    <div style='font-size:140%'>
+    </div>
+    <div id="main_tag"  style="">
+    <span tag="sutta" title="sutta"></span>
+    <span tag="vinaya"  title="vinaya"></span>
+    <span tag="abhidhamma" title="abhidhamma"></span>
+    <span tag="mūla" title="mūla"></span>
+    <span tag="aṭṭhakathā" title="aṭṭhakathā"></span>
+    <span tag="ṭīkā" title="ṭīkā"></span>
+    <span tag="añña" title="añña"></span>
+	</div>
+	
+	<div id="select_bar" >
+		<div id="tag_selected"></div>
+		<div><button onclick="tag_list_slide_toggle()">展开</button></div>
+	</div>
+	<div>
+		
+		<div id="tag_list">
+			<div level="0" class="tag_others"></div>
+			<div level="1" class="tag_others"></div>
+			<div level="2" class="tag_others"></div>
+			<div level="3" class="tag_others"></div>
+			<div level="4" class="tag_others"></div>
+			<div level="5" class="tag_others"></div>
+			<div level="100" class="tag_others"></div>
+			<div level="8" class="tag_others"></div>
+		</div>
+	</div>
+    </div>
+    </div>
+ 
 	<div class='index_inner'>
-	<div id="chapter_shell" style="display:flex;" >
 
-    <div id="book_list" class="chapter_list" list="1" >
-    </div>
+	<div id="chapter_shell" class="chapter_list" >
+	<div id="list_shell_1" class="show" level="1">
+		<ul id="list-1" class="grid" level="1" >
+		</ul>
+	</div>
 
-    <div id="chapter_list_1" class="chapter_list"  >
-    </div>
-    <div id="chapter_list_2" class="chapter_list" >
-    </div>
-    <div id="chapter_list_3" class="chapter_list" >
-    </div>
+	<div id="list_shell_2" level="2">
+		<ul id="list-2" class="hidden" level="2"  >
+		</ul>
+	</div>
 
+	<div id="list_shell_3" level="3">
+		<ul id="list-3" class="hidden" level="3" >
+		</ul>
+	</div>
+
+	<div id="list_shell_4" level="4">
+		<ul id="list-4" class="hidden" level="4" >
+		</ul>
+	</div>
+
+	<div id="list_shell_5" level="5">
+		<ul id="list-5" class="hidden" level="5" >
+		</ul>
+	</div>
+
+	<div id="list_shell_6" level="6">
+		<ul id="list-6" class="hidden" level="6" >
+		</ul>
+	</div>
+
+	<div id="list_shell_7" level="7">
+		<ul id="list-7" class="hidden" level="7" >
+		</ul>
+	</div>
+
+	<div id="list_shell_8" level="8">
+		<ul id="list-8" class="hidden" level="8" >
+		</ul>
+	</div>
+	
     </div>
     </div>
 
