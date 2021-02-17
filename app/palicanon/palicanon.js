@@ -58,11 +58,14 @@ function tag_changed() {
 		"book_tag.php",
 		{
 			tag: strTags,
+			lang: "zh-hant",
 		},
 		function (data, status) {
 			let arrBookList = JSON.parse(data);
 			let html = "";
 			allTags = new Array();
+			let arrChapter = new Array();
+
 			for (const iterator of arrBookList) {
 				let tag0 = "";
 				let tags = iterator[0].tag.split("::");
@@ -90,23 +93,15 @@ function tag_changed() {
 					}
 				}
 
-				let level_class = "c_level_" + iterator[0].level;
-				//html += "<div style='width:100%;'>";
-				html += "<div class='sutta_row  " + level_class + "' >";
-				html += "<div class='sutta_box'>" + tag0 + "</div>";
-
-				html +=
-					"<div class='chapter_title'><a href='../reader/?view=chapter&book=" +
-					iterator[0].book +
-					"&para=" +
-					iterator[0].para +
-					"' target = '_blank'>" +
-					iterator[0].title +
-					"</a></div>";
-				html += "<div class='chapter_book'>book:" + iterator[0].book + " para:" + iterator[0].para + "</div>";
-				html += "<div class='chapter_progress'>tag=" + iterator[0].tag + "</div>";
-				html += "</div>";
-				//html += "</div>";
+				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator[0].level == 1)) {
+					arrChapter.push({
+						book: iterator[0].book,
+						para: iterator[0].para,
+						level: iterator[0].level,
+						title: iterator[0].title,
+						progress: [],
+					});
+				}
 			}
 
 			let newTags = new Array();
@@ -118,43 +113,171 @@ function tag_changed() {
 			allTags = newTags;
 			allTags.sort(sortNumber);
 			tag_render_others();
-			$("#book_list").html(html);
+			palicanon_chapter_list_apply(arrChapter, 0);
 		}
 	);
 }
 
-function palicanon_load_chapter(book, para) {
+function palicanon_load_chapter(book, para, div_index = 1) {
 	$.get(
 		"get_chapter_children.php",
 		{
 			book: book,
 			para: para,
+			lang: "zh-hant",
 		},
 		function (data, status) {
 			let arrChapterList = JSON.parse(data);
-			let html = "";
-			for (const iterator of arrChapterList) {
-				html += palicanon_render_chapter_row(iterator);
-			}
-			$("#chapter_list_1").html(html);
-			$("#chapter_list_1").show();
-			$("#book_list").addClass("parent_chapter");
+			palicanon_chapter_list_apply(arrChapterList, div_index);
+			$.get(
+				"get_chapter_info.php",
+				{
+					book: book,
+					para: para,
+					lang: "zh-hant",
+				},
+				function (data, status) {
+					let arrChapterInfo = JSON.parse(data);
+					let html = render_chapter_head(arrChapterInfo, div_index + 1);
+					$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
+				}
+			);
 		}
 	);
 }
-function palicanon_render_chapter_row(chapter) {
+
+function render_chapter_head(chapter_info, level) {
 	let html = "";
-	html += "<div class='sutta_row' >";
-	html += "<div class='chapter_title'><a>" + chapter.title + "</a></div>";
-	html += "<div class='chapter_book'>book:" + chapter.book + " para:" + chapter.para + "</div>";
-	html += "<div class='chapter_progress'>";
-	if (chapter.progress) {
-		for (const iterator of chapter.progress) {
-			html += "<div>" + iterator.lang + "-" + iterator.all_trans + "</div>";
+	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&para=" + chapter_info.paragraph;
+	html += "<div class='title'>";
+	if (typeof chapter_info.trans_title == "undefined") {
+		html += "	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.text + "</a></div>";
+	} else {
+		html +=
+			"	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.trans_title + "</a></div>";
+	}
+	html += "<div class='title_2'>" + chapter_info.text + "</div>";
+	html += "</div>";
+	html += "<div class='info res_more'>";
+	html += "<div class='progress'>";
+	if (chapter_info.progress && chapter_info.progress.length > 0) {
+		let r = 12;
+		let perimeter = 2 * Math.PI * r;
+		for (const iterator of chapter_info.progress) {
+			let stroke1 = parseInt(perimeter * iterator.all_trans);
+			let stroke2 = perimeter - stroke1;
+			html += '	<div class="item">';
+			html += '<svg class="progress_circle" width="30" height="30" viewbox="0,0,30,30">';
+			html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
+			html +=
+				'<circle class="progress_color" cx="15" cy="15" r="12" stroke-width="5" fill="none"  stroke-dasharray="' +
+				stroke1 +
+				" " +
+				stroke2 +
+				'"></circle>';
+			html += "</svg>";
+
+			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
+			html += "	</div>";
 		}
+	} else {
+		html += "无译文";
 	}
 	html += "</div>";
+
 	html += "</div>";
+
+	return html;
+}
+
+function palicanon_chapter_list_apply(chapterList, div_index) {
+	let iDiv = parseInt(div_index);
+	let html = "";
+	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
+	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
+	for (const iterator of chapterList) {
+		html += palicanon_render_chapter_row(iterator);
+	}
+	html += "</ul>";
+
+	$("#list_shell_" + (iDiv + 1)).html(html);
+	$("#list_shell_" + (iDiv + 1)).removeClass();
+	$("#list_shell_" + (iDiv + 1)).addClass("show");
+	//隐藏之后的列表
+	for (let index = iDiv + 2; index <= 8; index++) {
+		$("#list_shell_" + index).removeClass();
+		$("#list_shell_" + index).addClass("hidden");
+	}
+	//收缩当前的
+	$("#list-" + iDiv).removeClass();
+	$("#list-" + iDiv).addClass("list");
+
+	$("#list_shell_" + iDiv).removeClass();
+	$("#list_shell_" + iDiv).addClass("list");
+}
+
+function chapter_onclick(obj) {
+	let book = $(obj).attr("book");
+	let para = $(obj).attr("para");
+	let level = $(obj).parent().attr("level");
+	$(obj).siblings().removeClass("selected");
+	$(obj).addClass("selected");
+	$("#tag_list").slideUp();
+	palicanon_load_chapter(book, para, level);
+}
+
+function palicanon_render_chapter_row(chapter) {
+	let html = "";
+	let levelClass = "";
+	if (chapter.level == 1) {
+		levelClass = " level_1";
+	}
+	html +=
+		'<li class="' +
+		levelClass +
+		'" book="' +
+		chapter.book +
+		'" para="' +
+		chapter.para +
+		'" onclick="chapter_onclick(this)">';
+	html += '<div class="title">';
+
+	if (typeof chapter.trans_title == "undefined") {
+		html += "	<div class='title_1'>" + chapter.title + "</div>";
+	} else {
+		html += "	<div class='title_1'>" + chapter.trans_title + "</div>";
+	}
+
+	html += '	<div class="title_2" lang="pali">' + chapter.title + "</div>";
+	html += "</div>";
+	html += '<div class="resource">';
+	if (chapter.progress && chapter.progress.length > 0) {
+		let r = 12;
+		let perimeter = 2 * Math.PI * r;
+		let stroke1 = parseInt(perimeter * chapter.progress[0].all_trans);
+		let stroke2 = perimeter - stroke1;
+		html += '<svg class="progress_circle" width="30" height="30" viewbox="0,0,30,30">';
+		html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
+		html +=
+			'<circle class="progress_color" cx="15" cy="15" r="12" stroke-width="5" fill="none"  stroke-dasharray="' +
+			stroke1 +
+			" " +
+			stroke2 +
+			'"></circle>';
+		html += "</svg>";
+		/*
+		for (const iterator of chapter.progress) {
+			html += '	<div class="item">';
+			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
+			html += "	</div>";
+		}
+		*/
+	}
+	html += '	<div class="res_more">';
+	html += "		更多";
+	html += "	</div>";
+	html += "</div>";
+	html += "</li>";
 	return html;
 }
 function tag_get_local_word(word) {
@@ -212,6 +335,8 @@ function tag_click(tag) {
 }
 
 function render_tag_list() {
+	$("#tag_list").slideDown();
+
 	let strListTag = gLocal.gui.selected + "：";
 	for (const iterator of list_tag) {
 		strListTag += '<tag><span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
@@ -236,4 +361,8 @@ function tag_remove(tag) {
 
 function sortNumber(a, b) {
 	return b - a;
+}
+
+function tag_list_slide_toggle() {
+	$("#tag_list").slideToggle();
 }
