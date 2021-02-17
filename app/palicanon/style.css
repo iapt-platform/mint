@@ -55,6 +55,9 @@
 	font-size: 80%;
 	color: unset;
 }
+.chapter_list .title {
+	text-transform: capitalize;
+}
 .chapter_list .title div:lang(pali) {
 	font-size: 80%;
 }
@@ -63,7 +66,7 @@
 	background-color: chocolate;
 	color: whitesmoke;
 }
-
+/*書標題特殊樣式*/
 .chapter_list .level_1 {
 	background: linear-gradient(45deg, brown 20%, transparent 90%);
 	color: whitesmoke;

@@ -40,7 +40,7 @@ if($paraInfo){
 			$stmt = $dbh_toc->prepare($query);
 			$sth_toc = $dbh_toc->prepare($query);
 			$sth_toc->execute(array($value["book"],$value["para"]));
-			$paraProgress = $sth_toc->fetchAll(PDO::FETCH_ASSOC);
+			$paraProgress = $sth_toc->fetch(PDO::FETCH_ASSOC);
 			$paraList[$key]["progress"]=$paraProgress;
 
 			#查标题
