@@ -38,7 +38,7 @@ function time_standardize(date) {
 
 }
 
-
+//显示最近查看列表
 function file_list_refresh() {
 	var d = new Date();
 	$.get("getfilelist.php",
@@ -55,17 +55,14 @@ function file_list_refresh() {
 				let file_list = JSON.parse(data);
 				let html = "";
 				for (x in file_list) {
+					
 					html += "<div class=\"file_list_row\">";
+
 					html += "<div class=\"file_list_col_1\">";
 					html += "<input id='file_check_" + x + "' type=\"checkbox\" />";
 					html += "<input id='file_id_" + x + "' value='" + file_list[x].id + "' type=\"hidden\" />";
 					html += "</div>";
-					if (file_list[x].doc_info && file_list[x].doc_info.length > 1) {
-						$link = "<a href='editor.php?op=opendb&fileid=" + file_list[x].id + "' target='_blank'>[db]";
-					}
-					else {
-						$link = "<a href='editor.php?op=open&fileid=" + file_list[x].id + "' target='_blank'>";
-					}
+
 					html += "<div class=\"file_list_col_2\">";
 					if ((file_list[x].parent_id == null || file_list[x].parent_id == "") && parseInt(file_list[x].share) == 1) {
 						//shared
@@ -92,12 +89,32 @@ function file_list_refresh() {
 					}
 					html += "</svg>";
 					html += "</span>";
-					html += "<div id='coop_show_" + file_list[x].id + "' style='display:inline;'></div>";
-					html += $link + file_list[x].title;
-					html += "</a>";
 
+					html += "<div id='coop_show_" + file_list[x].id + "' style='display:inline;'></div>";
+					
+					let $link;
+					if (file_list[x].doc_info && file_list[x].doc_info.length > 1) {
+						$link = "<a href='editor.php?op=opendb&fileid=" + file_list[x].id + "' target='_blank'>[db]";
+					}
+					else {
+						$link = "<a href='editor.php?op=open&fileid=" + file_list[x].id + "' target='_blank'>";
+					}
+
+					html += $link +"<span id='title_"+file_list[x].id+"'>"+ file_list[x].title;
+					html += "</span></a>";
+					
+					//html +="<input type='input' style='diaplay:none;' id='input_title_"+file_list[x].id+"' value='"+file_list[x].title+"' />"
+					html +='<span class="icon_btn_div hidden_function">';	
+					html +='<span class="icon_btn_tip" style="margin-top: 0.7em;margin-left: 2.5em;">'+gLocal.gui.rename+'</span>';
+					html +="<button id='edit_title' type='button' class='icon_btn' onclick=\"title_change('"+file_list[x].id+"','"+file_list[x].title+"')\" >";
+					html +='	<svg class="icon">';
+					html +='		<use xlink:href="./svg/icon.svg#ic_rename"></use>';
+					html +='	</svg>';
+					html +='</button>';
+					html +='</span>	';
 
 					html += "</div>";
+
 					html += "<div class=\"file_list_col_3\">";
 
 					if ((file_list[x].parent_id && file_list[x].parent_id.length > 10) || parseInt(file_list[x].share) == 1) {
@@ -150,7 +167,23 @@ function file_list_refresh() {
 					if (!(file_list[x].doc_info && file_list[x].doc_info.length > 1)) {
 						html += "<a href='../doc/pcs2db.php?doc_id=" + file_list[x].id + "' target='_blank'>转数据库格式</a>";
 					}
+
+
+
 					html += "</div>";
+
+					html+="<div>";
+					html +='<span class="icon_btn_div hidden_function">';	
+					html +='<span class="icon_btn_tip">'+gLocal.gui.copy_share_link+'</span>';
+					html +="<button id='edit_title' type='button' class='icon_btn' onclick=\"share_link_copy_to_clipboard('"+file_list[x].id+"')\" >";
+					//html +='	<svg class="icon">';
+					//html +='		<use xlink:href="./svg/icon.svg#ic_rename"></use>';
+					//html +='	</svg>';
+					html +='<svg  t="1611985739555" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6173" width="200" height="200"><path d="M423.198 640a83.84 83.84 0 0 1-64-28.8 259.84 259.84 0 0 1-26.88-308.48L441.118 128a261.12 261.12 0 1 1 448 272l-35.2 57.6a83.84 83.84 0 1 1-145.92-90.24l35.2-57.6a92.8 92.8 0 0 0-158.72-96.64l-107.52 176.64a92.8 92.8 0 0 0 9.6 109.44 83.84 83.84 0 0 1-64 139.52z" p-id="6174"></path><path d="M357.918 1024a261.12 261.12 0 0 1-222.72-397.44l31.36-50.56a83.84 83.84 0 1 1 144 87.68l-31.36 51.2a92.8 92.8 0 0 0 30.72 128 91.52 91.52 0 0 0 70.4 10.88 92.16 92.16 0 0 0 57.6-41.6l107.52-177.92a93.44 93.44 0 0 0-6.4-105.6 83.84 83.84 0 1 1 134.4-103.68 262.4 262.4 0 0 1 17.28 296.96L581.278 896a259.84 259.84 0 0 1-163.84 120.32 263.68 263.68 0 0 1-59.52 7.68z" p-id="6175"></path></svg>';
+					html +='</button>';
+					html +='</span>	';					
+					html += "</div>";
+
 					html += "</div>";
 				}
 				html += "<input id='file_count' type='hidden' value='" + file_list.length + "'/>"
@@ -166,7 +199,23 @@ function showUserFilaList() {
 	file_list_refresh();
 }
 
-
+function title_change(id,title){
+	let newTitle = prompt("新的标题",title);
+	if(newTitle){
+		_doc_info_title_change(id,newTitle,function(data,status){
+		let result = JSON.parse(data);
+		if(result.error==false){
+			$("#title_"+id).text(newTitle);
+		}
+		else{
+			alert(result.message);
+		}
+	});
+	}
+}
+function share_link_copy_to_clipboard(id){
+	copy_to_clipboard("https://www.wikipali.org/app/studio/project.php?op=open&doc_id="+id)
+}
 function mydoc_file_select(doSelect) {
 	if (doSelect) {
 		$("#file_tools").show();
