@@ -65,7 +65,7 @@
 }
 
 .chapter_list .level_1 {
-	background: linear-gradient(45deg, brown 10%, transparent);
+	background: linear-gradient(45deg, brown 20%, transparent 90%);
 	color: whitesmoke;
 }
 .progress_circle {
