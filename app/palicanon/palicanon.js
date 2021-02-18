@@ -115,7 +115,8 @@ function tag_changed() {
 			allTags = newTags;
 			allTags.sort(sortNumber);
 			tag_render_others();
-			palicanon_chapter_list_apply(arrChapter, 0);
+			palicanon_chapter_list_apply(0);
+			$("#list-1").html(render_chapter_list(arrChapter));
 		}
 	);
 }
@@ -130,13 +131,19 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 		lang = "en";
 	}
 	$.get(
-		"get_chapter_children.php",
+		"get_chapter_info.php",
 		{
 			book: book,
 			para: para,
 			lang: lang,
 		},
 		function (data, status) {
+			palicanon_chapter_list_apply(div_index);
+
+			let arrChapterInfo = JSON.parse(data);
+			let html = render_chapter_head(arrChapterInfo, div_index + 1);
+			$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
+
 			let lang = getCookie("language");
 			if (lang == "zh-cn") {
 				lang = "zh-hans";
@@ -145,19 +152,18 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 			} else if (lang == "") {
 				lang = "en";
 			}
-			let arrChapterList = JSON.parse(data);
-			palicanon_chapter_list_apply(arrChapterList, div_index);
 			$.get(
-				"get_chapter_info.php",
+				"get_chapter_children.php",
 				{
 					book: book,
 					para: para,
 					lang: lang,
 				},
 				function (data, status) {
-					let arrChapterInfo = JSON.parse(data);
-					let html = render_chapter_head(arrChapterInfo, div_index + 1);
-					$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
+					let arrChapterList = JSON.parse(data);
+					$("#list-" + (parseInt(div_index) + 1)).html(render_chapter_list(arrChapterList));
+
+					//palicanon_chapter_list_apply(arrChapterList, div_index);
 				}
 			);
 		}
@@ -176,7 +182,8 @@ function render_chapter_head(chapter_info, level) {
 	}
 	html += "<div class='title_2'>" + chapter_info.text + "</div>";
 	html += "</div>";
-	html += "<div class='info res_more'>";
+	html += "<div class='res res_more'>";
+	html += "<h2>译文</h2>";
 	html += "<div class='progress'>";
 	if (chapter_info.progress && chapter_info.progress.length > 0) {
 		let r = 12;
@@ -195,7 +202,7 @@ function render_chapter_head(chapter_info, level) {
 				'"></circle>';
 			html += "</svg>";
 
-			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
+			html += "<div class='lang'>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
 			html += "	</div>";
 		}
 	} else {
@@ -208,14 +215,25 @@ function render_chapter_head(chapter_info, level) {
 	return html;
 }
 
-function palicanon_chapter_list_apply(chapterList, div_index) {
-	let iDiv = parseInt(div_index);
+function render_chapter_list(chapterList) {
 	let html = "";
-	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
-	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
 	for (const iterator of chapterList) {
 		html += palicanon_render_chapter_row(iterator);
 	}
+	return html;
+}
+
+function palicanon_chapter_list_apply(div_index) {
+	let iDiv = parseInt(div_index);
+	let html = "";
+	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
+
+	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
+	/*	
+	for (const iterator of chapterList) {
+		html += palicanon_render_chapter_row(iterator);
+	}
+*/
 	html += "</ul>";
 
 	$("#list_shell_" + (iDiv + 1)).html(html);
@@ -283,16 +301,9 @@ function palicanon_render_chapter_row(chapter) {
 			stroke2 +
 			'"></circle>';
 		html += "</svg>";
-		/*
-		for (const iterator of chapter.progress) {
-			html += '	<div class="item">';
-			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
-			html += "	</div>";
-		}
-		*/
 	}
-	html += '	<div class="res_more">';
-	html += "		更多";
+	html += '<div class="res_more">';
+	html += " ";
 	html += "	</div>";
 	html += "</div>";
 	html += "</li>";

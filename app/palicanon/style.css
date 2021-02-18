@@ -68,7 +68,7 @@
 }
 /*書標題特殊樣式*/
 .chapter_list .level_1 {
-	background: linear-gradient(45deg, brown 20%, transparent 90%);
+	background: linear-gradient(45deg, #e89650 20%, transparent 90%);
 	color: whitesmoke;
 }
 .progress_circle {
@@ -103,4 +103,19 @@
 }
 .progress .item {
 	display: flex;
+	margin: 5px;
+}
+
+.progress .item .lang {
+	line-height: 30px;
+	padding-left: 10px;
+}
+.chapter_head .res {
+	border-top: 1px solid var(--border-line-color);
+}
+
+.chapter_head .res h2 {
+	padding: 0 5px;
+	font-size: 100%;
+	font-weight: 700;
 }
