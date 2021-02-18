@@ -103,12 +103,12 @@ set (doc_id ,userid ,value)
                 }
                 
                 $query = "SELECT * from power where doc_id = ? ";
-                $Fetch = PDO_FetchAll($query,$_doc_id);
+                $Fetch = PDO_FetchAll($query,array($_doc_id));
 
                 echo "<ul>";
                 foreach($Fetch as $row){
                     echo "<li>";
-                    echo ucenter_getA($row["user"],"");
+                    echo ucenter_getA($row["user"],"username");
                     echo "<select onchange=\"coop_power_change('{$row["user"]}',this)\">";
                     foreach($powerlist as $key=>$value){
                         echo "<option value='{$key}' ";

@@ -1,21 +1,33 @@
 <?php
 require_once '../studio/index_head.php';
 ?>
-<body id="file_list_body" onLoad="channal_list_init()">
+<body id="file_list_body" onLoad="group_list_init()">
 
 	<script language="javascript" src="../ucenter/name_selector.js"></script>
-	<script language="javascript" src="../channal/channal_add_dlg.js"></script>
-	<script language="javascript" src="../channal/channal.js"></script>
+	<script language="javascript" src="../group/group_add_dlg.js"></script>
+	<script language="javascript" src="../group/group.js"></script>
 	<script >
-	var gCurrPage="channal";
+	var gCurrPage="group_index";
+	<?php 
+	if(isset($_GET["id"])){
+		echo "var gGroupId ='".$_GET["id"]."';\n";
+	}
+	if(isset($_GET["list"])){
+		echo "var gList ='".$_GET["list"]."';\n";
+	}
+	else{
+		echo "var gList='none';";
+	}
+	?>
+	
 	</script>
 
 	<style>
-	#channal {
+	#group_index {
 		background-color: var(--btn-border-color);
 		
 	}
-	#channal:hover{
+	#group_index:hover{
 		background-color: var(--btn-border-color);
 		color: var(--btn-color);
 		cursor:auto;
@@ -31,18 +43,20 @@ require_once '../studio/index_head.php';
 
 			<div class="tool_bar">
 				<div>
-					<?php echo $_local->gui->channels; ?>
+					<span><a href="../group/index.php"><?php echo $_local->gui->group; ?></a></span>
+					<span id="parent_group"></span>
+					<span id="curr_group"></span>
 				</div>
 
 				<div>
 					<span class="icon_btn_div">
 						<span class="icon_btn_tip"><?php echo "Add";?></span>
-						<button id="file_add" type="button" class="icon_btn" title=" "  onclick="channal_add_dlg_show()">
+						<button id="file_add" type="button" class="icon_btn" title=" "  onclick="group_add_dlg_show()">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 							</svg>
 						</button>
-						<div id='channal_add_div' class="float_dlg"></div>
+						<div id='group_add_div' class="float_dlg"></div>
 					</span>
 					
 					<span class="icon_btn_div">				
@@ -54,10 +68,9 @@ require_once '../studio/index_head.php';
 						</button>
 					</span>	
 				</div>
-					
 			</div>
 
-			<div id="my_channal_list">		</div>
+			<div id="my_group_list">		</div>
 			
 		</div>
 		

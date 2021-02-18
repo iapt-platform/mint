@@ -187,13 +187,13 @@ require_once '../studio/index_head.php';
 			border-radius: 4px;
 		}
 		</style>
-	<div id="rs_doc_coop_shell">
+	<div id="rs_doc_coop_shell" >
 	<div id="rs_doc_coop_win" >
 	<div id="rs_doc_coop_win_inner" >
 
 	</div>
-	<div id="rs_doc_coop_win_foot" >
-		<button onclick="file_coop_win_close()"><?php echo $_local->gui->poweredby;?></button>
+	<div id="rs_doc_coop_win_foot"  >
+		<button onclick="file_coop_win_close()"><?php echo $_local->gui->finish;?></button>
 	</div>
 	</div>
 	</div>
