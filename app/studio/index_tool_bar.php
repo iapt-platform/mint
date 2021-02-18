@@ -43,7 +43,7 @@
 					<?php echo $_local->gui->collaborate;?>
 					</span>
 				</li>
-				<li id="group_index" style="display:none;" onclick="goto_url(this,'../studio/group.php?language=<?php echo $currLanguage; ?>')">
+				<li id="group_index" style="display:none;" onclick="goto_url(this,'../group/group.php?language=<?php echo $currLanguage; ?>')">
 					<span  class="navi_icon">
 						<svg class="icon">
 							<use xlink:href="../studio/svg/icon.svg#ic_two_person"></use>
