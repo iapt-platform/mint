@@ -82,7 +82,8 @@ function group_list(id, list) {
 					let html = "";
 					let result = JSON.parse(data);
 					let key = 1;
-					html += "<div>";
+					html += "<div class='info_block'>";
+					html += "<h2>" + gLocal.gui.introduction + "</h2>";
 					html += result.info.description;
 					html += "</div>";
 					if (result.parent) {
@@ -96,8 +97,9 @@ function group_list(id, list) {
 					}
 					$("#curr_group").html("/ <a>" + result.info.name + "</a>");
 					//子小组列表
+					html += "<div class='info_block'>";
+					html += "<h2>" + gLocal.gui.sub_group + "</h2>";
 					if (result.children && result.children.length > 0) {
-						html += "<div><a href='../group/index.php?id=" + id + "&list=file'>列出公共文件</a></div>";
 						for (const iterator of result.children) {
 							html += '<div class="file_list_row" style="padding:5px;">';
 							html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
@@ -114,8 +116,14 @@ function group_list(id, list) {
 								"&list=file'>进入</a></div>";
 							html += "</div>";
 						}
+					} else {
+						html += "尚未设置小组";
 					}
-					//文件列表
+					html += "</div>";
+
+					//共享文件列表
+					html += "<div class='info_block'>";
+					html += "<h2>" + gLocal.gui.collaborate + "</h2>";
 					if (result.file && result.file.length > 0) {
 						for (const iterator of result.file) {
 							html += '<div class="file_list_row" style="padding:5px;">';
@@ -123,8 +131,17 @@ function group_list(id, list) {
 							html += "<div style='flex:1;'>" + key++ + "</div>";
 							html += "<div style='flex:2;'>" + iterator.title + "</div>";
 							html += "<div style='flex:2;'>";
-							if (iterator.power == 1) {
-								html += "拥有者";
+							switch (iterator.power) {
+								case 10:
+									html += gLocal.gui.read_only;
+									break;
+								case 20:
+									break;
+								case 30:
+									html += gLocal.gui.write;
+									break;
+								default:
+									break;
 							}
 							html += "</div>";
 							html +=
@@ -133,7 +150,12 @@ function group_list(id, list) {
 								"'>打开</a></div>";
 							html += "</div>";
 						}
+					} else {
+						html += "没有共享文档 在译经楼中添加";
 					}
+
+					html += "</div>";
+
 					$("#my_group_list").html(html);
 				} catch (e) {
 					console.error(e);

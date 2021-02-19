@@ -589,7 +589,11 @@
 		"EXP_in_total": "EXP in total",
 		"day_action": "Daily Action",
 		"action": "Actions",
-		"": "",
+		"cooperators": "Cooperators",
+		"person": "Person",
+		"write": "Write",
+		"sub_group": "Sub-Group",
+		"your": "Your",
 		"": ""
 	},
 	"grammastr": [

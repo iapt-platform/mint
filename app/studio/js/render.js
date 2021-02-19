@@ -1707,7 +1707,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		if (thischannal) {
 			output += thischannal.name + "-" + thischannal.lang + "@";
 			if (thischannal.username == getCookie("username")) {
-				output += "你的";
+				output += gLocal.gui.your;
 			} else {
 				output += thischannal.nickname;
 			}
