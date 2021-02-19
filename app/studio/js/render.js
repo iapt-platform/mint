@@ -1412,7 +1412,9 @@ function renderWordParBlockInner(elementBlock) {
 				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, 0, true);
 				if (_my_channal != null) {
 					for (const iterator of _my_channal) {
-						output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+						if (iterator.status > 0) {
+							output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+						}
 					}
 				}
 				//句子预览结束
@@ -1562,7 +1564,9 @@ function renderWordParBlockInner(elementBlock) {
 	output += render_tran_sent_block(book, paragraph, sent_begin, word_id, 0, true);
 	if (_my_channal != null) {
 		for (const iterator of _my_channal) {
-			output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+			if (iterator.status > 0) {
+				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+			}
 		}
 	}
 
@@ -1701,7 +1705,12 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		output += "<span>";
 
 		if (thischannal) {
-			output += thischannal.name + "-" + thischannal.lang;
+			output += thischannal.name + "-" + thischannal.lang + "@";
+			if (thischannal.username == getCookie("username")) {
+				output += "你的";
+			} else {
+				output += thischannal.nickname;
+			}
 		} else {
 			output += "未知的频道名";
 		}
