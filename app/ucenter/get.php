@@ -12,7 +12,7 @@ require_once '../path.php';
         $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     else if(isset($_GET["username"])){
-        $query = "select userid as id ,username,nickname,email from user where username like ? limit 0,5";
+        $query = "select userid as id ,username,nickname,email from user where  nickname like ? limit 0,8";
         $stmt = $dbh->prepare($query);
         $username = "%".$_GET["username"]."%";
         $stmt->execute(array($username));        

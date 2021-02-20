@@ -5,6 +5,7 @@ require_once '../studio/index_head.php';
 
 	<script language="javascript" src="../ucenter/name_selector.js"></script>
 	<script language="javascript" src="../group/group_add_dlg.js"></script>
+	<script language="javascript" src="../group/user_select_dlg.js"></script>
 	<script language="javascript" src="../group/group.js"></script>
 	<script >
 	var gCurrPage="group_index";
@@ -36,14 +37,39 @@ require_once '../studio/index_head.php';
 		margin-bottom:2em;
 		padding-left:1em;
 	}
-
+	#fun_content{
+		display:flex;
+		margin-left: 16em;
+		margin-top: 5em;
+	}
+	#channal_list{
+		flex:8;
+	}
+	#member_list_shell{
+		flex: 4;
+    	min-width: 200px;
+		visibility: hidden;
+	}
+	.file_list_block{
+		margin-left:0;
+		margin-right:1em;
+	}
+	#button_new_group{
+		display:none;
+	}
+	#delete{
+		display:none;
+	}
+	#button_new_sub_group{
+		display:none;
+	}
 	</style>
 
 	<?php
 	require_once '../studio/index_tool_bar.php';
 	?>
 		
-	<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">
+	<div id="fun_content" class="index_inner" >
 		<div id="channal_list"  class="file_list_block">
 
 			<div class="tool_bar">
@@ -54,8 +80,8 @@ require_once '../studio/index_head.php';
 				</div>
 
 				<div>
-					<span class="icon_btn_div">
-						<span class="icon_btn_tip"><?php echo "Add";?></span>
+					<span id="button_new_group" class="icon_btn_div">
+						<span class="icon_btn_tip"><?php echo $_local->gui->new_group;?></span>
 						<button id="file_add" type="button" class="icon_btn" title=" "  onclick="group_add_dlg_show()">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
@@ -63,8 +89,18 @@ require_once '../studio/index_head.php';
 						</button>
 						<div id='group_add_div' class="float_dlg"></div>
 					</span>
-					
-					<span class="icon_btn_div">				
+
+					<span id="button_new_sub_group" class="icon_btn_div">
+						<span class="icon_btn_tip"><?php echo $_local->gui->new_sub_group;?></span>
+						<button id="file_add" type="button" class="icon_btn" title=" "  onclick="group_add_dlg_show()">
+							<svg class="icon">
+								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
+							</svg>
+						</button>
+						<div id='sub_group_add_div' class="float_dlg"></div>
+					</span>
+
+					<span id="delete" class="icon_btn_div">				
 						<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin;?></span>
 						<button id="to_recycle" type="button" class="icon_btn" onclick="file_del()" title=" ">
 							<svg class="icon">
@@ -76,6 +112,31 @@ require_once '../studio/index_head.php';
 			</div>
 
 			<div id="my_group_list">		</div>
+			
+		</div>
+		<div id="member_list_shell"  class="file_list_block">
+
+			<div class="tool_bar">
+				<div>
+					<span><?php echo $_local->gui->member; ?><span id ="member_number"></span></span>
+					<span id="parent_group"></span>
+					<span id="curr_group"></span>
+				</div>
+
+				<div>
+					<span class="icon_btn_div">
+						<span class="icon_btn_tip"><?php echo "Add";?></span>
+						<button id="member_add" type="button" class="icon_btn" title=" "  onclick="user_select_dlg_show()">
+							<svg class="icon">
+								<use xlink:href="../studio/svg/icon.svg#ic_add_person"></use>
+							</svg>
+						</button>
+						<div id='user_select_div' class="float_dlg"></div>
+					</span>
+				</div>
+			</div>
+
+			<div id="member_list">		</div>
 			
 		</div>
 		

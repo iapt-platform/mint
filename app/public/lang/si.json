@@ -597,11 +597,14 @@
 		"cooperators": "Cooperators",
 		"person": "Person",
 		"write": "Write",
-		"sub_group": "Sub-Group",
+		"sub_group": "Project",
 		"your": "Your",
 		"status": "status",
 		"in_recycle_bin": "in&nbsp;recycle-bin",
 		"cover": "cover",
+		"member": "Member",
+		"new_group": "Create Group",
+		"new_sub_group": "Create Project",
 		"": ""
 	},
 	"grammastr": [

@@ -4,7 +4,7 @@ function group_add_dlg_init(div) {
 	let html = "";
 	html += "<div id='group_add_dlg'>";
 	html += "<div >";
-	html += "<div >" + gLocal.gui.group + gLocal.gui.name + "</div>";
+	html += "<div >" + gLocal.gui.name + "</div>";
 	html += "<input type='text' id='group_add_title' maxlength='32' placeholder='" + gLocal.gui.name + "'/>";
 	html += "</div>";
 	html += "<div>";
@@ -26,7 +26,7 @@ function team_add_dlg_init(div) {
 	let html = "";
 	html += "<div id='group_add_dlg'>";
 	html += "<div >";
-	html += "<div >小组" + gLocal.gui.name + "</div>";
+	html += "<div >" + gLocal.gui.name + "</div>";
 	html += "<input type='text' id='group_add_title' maxlength='32' placeholder='" + gLocal.gui.name + "'/>";
 	html += "</div>";
 	html += "<div>";
