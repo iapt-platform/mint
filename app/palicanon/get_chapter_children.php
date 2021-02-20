@@ -1,8 +1,14 @@
 <?php
 require_once '../path.php';
 
-$redis = new redis();  
-$r_conn = $redis->connect('127.0.0.1', 6379);
+try {
+	$redis = new redis();  
+	$r_conn = $redis->connect('127.0.0.1', 6379);
+} catch (Exception $e) {
+	$r_conn=false;
+}
+
+
 
 $dns = "sqlite:"._FILE_DB_PALI_TOC_;
 $dbh_toc = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
