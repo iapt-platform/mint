@@ -594,6 +594,9 @@
 		"EXP_in_total": "EXP in total",
 		"day_action": "Daily Action",
 		"action": "Actions",
+		"status": "status",
+		"in_recycle_bin": "in&nbsp;recycle-bin",
+		"cover": "cover",
 		"": "",
 		"": ""
 	},
