@@ -1,8 +1,11 @@
 <?php
+require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../channal/function.php";
-require_once "../path.php";
+require_once "../redis/function.php";
+
+$redis = redis_connect();
 
 $_channal = new Channal();
 
@@ -108,17 +111,27 @@ foreach ($_data as $key => $value) {
 		$end=0;
 	}
 
-	$query="SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
-	$sth = $db_pali_sent->prepare($query);
-	$sth->execute(array($bookId,$para,$begin,$end));
-	$row = $sth->fetch(PDO::FETCH_ASSOC);
-	if ($row) {
-		$palitext= $row['html'];
-		$pali_text_id = $row['id'];
-	} else {
-		$palitext="";
-		$pali_text_id = 0;
+	if($redis!=false){
+		$result = $redis->get('pali_sent_'.$bookId."_".$para."_".$begin."_".$end);  
+		$palitext = $result;
 	}
+	else{
+		$query="SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
+		$sth = $db_pali_sent->prepare($query);
+		$sth->execute(array($bookId,$para,$begin,$end));
+		$row = $sth->fetch(PDO::FETCH_ASSOC);
+		if ($row) {
+			$palitext= $row['html'];
+			$pali_text_id = $row['id'];
+		} else {
+			$palitext="";
+			$pali_text_id = 0;
+		}		
+	}
+
+
+	$pali_sim=0;
+	
 	$query="SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
 	$sth = $db_pali_sent_sim->prepare($query);
 	$sth->execute(array($pali_text_id));
@@ -129,6 +142,7 @@ foreach ($_data as $key => $value) {
 	else{
 		$pali_sim=0;
 	}
+	
 		//查询相似句
 
 	//find out translation 查询译文

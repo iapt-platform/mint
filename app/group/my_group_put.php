@@ -21,7 +21,13 @@ if(isset($_COOKIE["userid"])){
 	$query="INSERT INTO group_member (  user_id  , group_id  , power , group_name , level ,  status )  
 		VALUES  (  ? , ? , ? , ? , ?  ,? ) ";
 	$sth = $PDO->prepare($query);
-	$sth->execute(array($_COOKIE["userid"] ,$newid, 1 , $_POST["name"], 0 ,1 ));
+	if($_POST["parent"]==0){
+		$level = 0;
+	}
+	else{
+		$level = 1;
+	}
+	$sth->execute(array($_COOKIE["userid"] ,$newid, 1 , $_POST["name"], $level ,1 ));
 	$respond=array("status"=>0,"message"=>"");
 	if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

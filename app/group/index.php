@@ -32,6 +32,11 @@ require_once '../studio/index_head.php';
 		color: var(--btn-color);
 		cursor:auto;
 	}
+	.info_block{
+		margin-bottom:2em;
+		padding-left:1em;
+	}
+
 	</style>
 
 	<?php

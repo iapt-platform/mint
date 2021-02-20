@@ -24,66 +24,68 @@ function username_search_keyup(e, obj) {
 }
 
 function username_search(keyword) {
-	$.get(
-		"../ucenter/get.php",
-		{
-			username: keyword,
-		},
-		function (data, status) {
-			let result;
-			try {
-				result = JSON.parse(data);
-			} catch (error) {
-				console(error);
-			}
-			let html = "<ul id='user_search_list'>";
-			if (result.length > 0) {
-				for (x in result) {
-					html +=
-						"<li><a onclick=\"coop_add('" +
-						result[x].id +
-						"')\">" +
-						result[x].username +
-						"[" +
-						result[x].email +
-						"]</a></li>";
+	let obj = document.querySelector("#cooperator_type_user");
+	if (obj && obj.checked == true) {
+		$.get(
+			"../ucenter/get.php",
+			{
+				username: keyword,
+			},
+			function (data, status) {
+				let result;
+				try {
+					result = JSON.parse(data);
+				} catch (error) {
+					console(error);
 				}
-			}
-			html += "</ul>";
-			html += "<ul id='group_search_list'>";
-			html += "</ul>";
-			$("#search_result").html(html);
-
-			$.get(
-				"../group/get_name.php",
-				{
-					name: keyword,
-				},
-				function (data, status) {
-					let result;
-					try {
-						result = JSON.parse(data);
-					} catch (error) {
-						console(error);
+				let html = "<ul id='user_search_list'>";
+				if (result.length > 0) {
+					for (x in result) {
+						html +=
+							"<li><a onclick=\"coop_add('" +
+							result[x].id +
+							"',0)\">" +
+							result[x].username +
+							"[" +
+							result[x].email +
+							"]</a></li>";
 					}
-					let html1 = "";
-					if (result.length > 0) {
-						for (const iterator of result) {
-							html1 +=
-								"<li><a onclick=\"coop_add_group('" +
-								iterator.id +
-								"')\">" +
-								iterator.name +
-								"[" +
-								iterator.username.nickname +
-								"]</a></li>";
-						}
-					}
-					$("#group_search_list").html(html1);
 				}
-			);
-		}
-	);
+				html += "</ul>";
+				$("#search_result").html(html);
+			}
+		);
+	} else {
+		$.get(
+			"../group/get_name.php",
+			{
+				name: keyword,
+			},
+			function (data, status) {
+				let result;
+				try {
+					result = JSON.parse(data);
+				} catch (error) {
+					console(error);
+				}
+				let html = "<ul id='user_search_list'>";
+				if (result.length > 0) {
+					for (const iterator of result) {
+						html +=
+							"<li><a onclick=\"coop_add('" +
+							iterator.id +
+							"',1)\">" +
+							iterator.name +
+							"[" +
+							iterator.username.nickname +
+							"]</a></li>";
+					}
+				}
+				html += "</ul>";
+				$("#search_result").html(html);
+			}
+		);
+	}
 }
 
 var coop_show_div_id = "";
@@ -106,13 +108,14 @@ function coop_list() {
 	);
 }
 
-function coop_add(userid) {
+function coop_add(userid, type) {
 	$.get(
 		"../doc/coop.php",
 		{
 			do: "add",
 			doc_id: coop_doc_id,
 			user_id: userid,
+			type: type,
 		},
 		function (data, status) {
 			$("#" + coop_show_div_id).html(data);

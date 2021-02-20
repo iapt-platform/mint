@@ -45,7 +45,14 @@ function my_channal_list() {
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:1;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>" + iterator.name + "</div>";
-						html += "<div style='flex:2;'>" + iterator.nickname + "</div>";
+						html += "<div style='flex:2;'>";
+						if (iterator.username == getCookie("username")) {
+							html += gLocal.gui.your;
+						} else {
+							html += iterator.nickname;
+						}
+
+						html += "</div>";
 						html += "<div style='flex:2;'>";
 						let arrStatus = [
 							{ id: 0, string: gLocal.gui.disable },
@@ -65,7 +72,7 @@ function my_channal_list() {
 							"'>" +
 							gLocal.gui.edit +
 							"</a></div>";
-						html += "<div style='flex:1;'>15</div>";
+						html += "<div style='flex:1;'></div>";
 						html += "</div>";
 					}
 					$("#my_channal_list").html(html);
@@ -122,7 +129,7 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">'+gLocal.gui.language_select+'</div>';
+					html += '<div style="flex:2;">' + gLocal.gui.language_select + "</div>";
 					html += '<div style="flex:8;">';
 					html +=
 						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"' +
@@ -138,7 +145,7 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">'+gLocal.gui.privacy+'</div>';
+					html += '<div style="flex:2;">' + gLocal.gui.privacy + "</div>";
 					html += '<div style="flex:8;">';
 					let arrStatus = [
 						{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
@@ -157,13 +164,42 @@ function my_channal_edit(id) {
 					}
 
 					html += "</select>";
-					html += "<span id = 'status_help' style='margin: 0 1em;'>" + status_note + "</span><a href='#' target='_blank'>["+gLocal.gui.infomation+"]</li>";
+					html +=
+						"<span id = 'status_help' style='margin: 0 1em;'>" +
+						status_note +
+						"</span><a href='#' target='_blank'>[" +
+						gLocal.gui.infomation +
+						"]</a></li>";
 					html += "</div>";
 					html += "</div>";
 					html += "</div>";
 
-					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
+					html += "<div id='coop_div' style='padding:5px;'>";
+					html += "<h2>协作者</h2>";
+					html += "<button disabled>添加协作者</button>";
+					html += "<button disabled>添加协作群</button>";
+					html += "<div id='coop_inner' >";
+					if (typeof result.coop == "undefined" || result.coop.length == 0) {
+						html += "这里很安静";
+					} else {
+						for (const coop of result.coop) {
+							html += '<div class="file_list_row" style="padding:5px;">';
+							if (coop.type == 0) {
+								html += '<div style="flex:1;">个人</div>';
+								html += "<div style='flex:3;'>" + coop.user_name.nickname + "</div>";
+							} else {
+								html += '<div style="flex:1;">' + gLocal.gui.group + "</div>";
+								html += "<div style='flex:3;'>" + coop.user_name.name + "</div>";
+							}
+
+							html += "<div style='flex:3;'>" + coop.power + "</div>";
+							html += "<div class='hover_button' style='flex:3;'>";
+							html += "<button>移除</button>";
+							html += "</div>";
+							html += "</div>";
+						}
+					}
+					html += "</div>";
 					html += "</div>";
 
 					$("#channal_info").html(html);

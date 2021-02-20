@@ -5,6 +5,8 @@
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../channal/function.php";
+require_once "../ucenter/function.php";
 
 	#查询有阅读权限的channel
 	$channal_list = array();
@@ -67,6 +69,17 @@ else{
 }
 
 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$channel_info = new  Channal();
+$user_info = new UserInfo();
+
+foreach ($Fetch as $key => $value) {
+	# code...
+	$channel = $channel_info->getChannal($value["channal"]);
+	if($channel){
+		$Fetch[$key]["c_name"] = $channel["name"];
+		$Fetch[$key]["c_owner"] = $user_info->getName($channel["owner"]);
+	}
+}
 
 echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 

@@ -178,13 +178,19 @@ require_once '../studio/index_head.php';
 
 
 	<style>
+		#rs_doc_coop_shell{
+			display:none;
+		}
 		#rs_doc_coop_win{
 			min-height: 2em;
-			width: 20em;
+			width: 30em;
 			position: absolute;
 			background-color: var(--tool-bg-color1);
 			padding: 8px;
 			border-radius: 4px;
+		}
+		#rs_doc_coop_win_foot{
+			text-align: end;
 		}
 		</style>
 	<div id="rs_doc_coop_shell" >

@@ -592,6 +592,11 @@
 		"EXP_in_total": "总经验",
 		"day_action": "每日操作",
 		"action": "操作",
+		"cooperators": "协作者",
+		"person": "个人",
+		"write": "可编辑",
+		"sub_group": "小组",
+		"your": "你的",
 		"": ""
 	},
 	"grammastr": [

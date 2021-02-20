@@ -15,7 +15,7 @@ if(isset($_GET["id"])){
 	if($Fetch){
 		$output["info"] = $Fetch;
 		if($Fetch["parent"]==0 ){
-			#列出小组
+			#顶级组 列出小组
 			$query = "SELECT * FROM group_info  WHERE parent = ? ";
 			$FetchList = PDO_FetchAll($query,array($id));
 			$output["children"] = $FetchList;
@@ -26,11 +26,22 @@ if(isset($_GET["id"])){
 			$parent_group = PDO_FetchRow($query,array($Fetch["parent"]));
 			$output["parent"] = $parent_group;
 		}
-		#列出文件
-		if(isset($_GET["list"]) && $_GET["list"]=="file"){
+		#列出组文件
+		{
 			PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
-			$query = "SELECT * FROM group_share  WHERE group_id = ? ";
+			$query = "SELECT * FROM power  WHERE user = ? ";
 			$fileList = PDO_FetchAll($query,array($id));
+			foreach ($fileList as $key => $value) {
+				# code...
+				$query = "SELECT title FROM fileindex  WHERE id = ? ";
+				$file = PDO_FetchRow($query,array($value["doc_id"]));
+				if($file){
+					$fileList[$key]["title"]=$file["title"];
+				}
+				else{
+					$fileList[$key]["title"]="";
+				}
+			}
 			$output["file"] = $fileList;
 		}
 	}
