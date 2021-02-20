@@ -154,7 +154,7 @@ else{$currDevice="computer";}
 		background-color: #f1f1f1;		
 	}
 	.trans_text_content{
-		color: var(--main-color);
+		color: unset;
 	}
 	.trans_text_info{
 		font-size: 80%;

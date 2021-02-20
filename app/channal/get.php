@@ -5,16 +5,27 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../ucenter/function.php';
 
-$_userinfo = new UserInfo();
+# 找我加入的群
+PDO_Connect("sqlite:"._FILE_DB_GROUP_);
+$query = "SELECT group_id from group_member where user_id = ?  limit 0,100";
+$my_group = PDO_FetchAll($query,array($_COOKIE["userid"]));
+$userList = array();
+$userList[] = $_COOKIE["userid"];
+foreach ($my_group as $key => $value) {
+	# code...
+	$userList[]=$value["group_id"];
+}
 
+//找自己的
 PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
-$query = "SELECT * from channal where owner = ?   limit 0,100";
+$query = "SELECT * from channal where owner = ?  limit 0,100";
 $Fetch_my = PDO_FetchAll($query,array($_COOKIE["userid"]));
 
+$place_holders = implode(',', array_fill(0, count($userList), '?'));
 # 找协作的
 $Fetch_coop = array();
-$query = "SELECT channal_id FROM cooperation WHERE  user_id = ? ";
-$coop_channal = PDO_FetchAll($query,array($_COOKIE["userid"]));
+$query = "SELECT channal_id FROM cooperation WHERE  user_id IN ($place_holders) ";
+$coop_channal = PDO_FetchAll($query,$userList);
 if(count($coop_channal)>0){
     foreach ($coop_channal as $key => $value) {
         # code...
@@ -26,6 +37,11 @@ if(count($coop_channal)>0){
     $Fetch_coop = PDO_FetchAll($query,$channal);
 }
 $all = array_merge_recursive($Fetch_my,$Fetch_coop);
+
+
+
+$_userinfo = new UserInfo();
+
 $output = array();
 foreach ($all as $key => $value) {
     # code...

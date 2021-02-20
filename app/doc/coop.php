@@ -1,3 +1,14 @@
+	<style>
+	#coop_selector_title{
+		margin-top: 15px;
+		padding-top: 10px;
+		border-top: 1px solid var(--border-line-color);		
+	}
+	#coop_u_list li{
+		display:flex;
+		justify-content: space-between;
+	}
+	</style>
 <?php
 /*
 *
@@ -10,7 +21,10 @@ set (doc_id ,userid ,value)
     require_once "../path.php";
     require_once "../public/_pdo.php";
     require_once "../public/function.php";
+    require_once "../public/load_lang.php";
     require_once "../ucenter/function.php";
+    require_once "../group/function.php";
+
 
     
     $userid="";
@@ -34,10 +48,10 @@ set (doc_id ,userid ,value)
         exit;
     } 
 
-    $powerlist["10"] = "阅读";
-    $powerlist["20"] = "建议";
-    $powerlist["30"] = "修改";
-    $powerlist["40"] = "管理员";
+    $powerlist["10"] = "仅阅读";
+    //$powerlist["20"] = "建议";
+    $powerlist["30"] = "可修改";
+    //$powerlist["40"] = "管理员";
 
     PDO_Connect("sqlite:"._FILE_DB_FILEINDEX_);
 
@@ -55,8 +69,8 @@ set (doc_id ,userid ,value)
                     case "list":
                     break;
                     case "add":
-                        $query="INSERT INTO power ('id','doc_id','user','power','status','create_time','modify_time','receive_time') 
-                        VALUES (?,?,?,?,?,?,?,?)";
+                        $query="INSERT INTO power ('id','doc_id','user','power','status','create_time','modify_time','receive_time','type') 
+                        VALUES (?,?,?,?,?,?,?,?,?)";
                         $stmt = $PDO->prepare($query);
                         $stmt->execute( 
                             array(UUID::v4(),
@@ -66,7 +80,9 @@ set (doc_id ,userid ,value)
                             1,
                             mTime(),
                             mTime(),
-                            mTime())
+							mTime(),
+                            $_GET["type"]
+							)
                         );
                         if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                             $error = PDO_ErrorInfo();
@@ -103,12 +119,29 @@ set (doc_id ,userid ,value)
                 }
                 
                 $query = "SELECT * from power where doc_id = ? ";
-                $Fetch = PDO_FetchAll($query,$_doc_id);
+                $Fetch = PDO_FetchAll($query,array($_doc_id));
 
-                echo "<ul>";
+                echo "<ul id='coop_u_list'>";
                 foreach($Fetch as $row){
-                    echo "<li>";
-                    echo ucenter_getA($row["user"],"");
+					echo "<li>";
+					echo "<span>";
+					if($row["type"]==0){
+						//个人
+						echo "<svg class='icon' style='margin: 0 5px;'>";
+						echo '<use xlink:href="./svg/icon.svg#ic_person"></use>';
+						echo "</svg>";
+						echo ucenter_getA($row["user"],"username");
+					}
+					else if($row["type"]==1){
+						//群组
+						echo "<svg class='icon' style='margin: 0 5px;'>";
+						echo '<use xlink:href="./svg/icon.svg#ic_two_person"></use>';
+						echo "</svg>";
+						echo group_get_name($row["user"]);
+					}
+					echo "</span>";
+					echo "<span>";
+					
                     echo "<select onchange=\"coop_power_change('{$row["user"]}',this)\">";
                     foreach($powerlist as $key=>$value){
                         echo "<option value='{$key}' ";
@@ -118,14 +151,20 @@ set (doc_id ,userid ,value)
                         echo ">{$value}</option>";
                     }
                     echo "</select>";
-                    echo "<button onclick=\"coop_del('{$row["user"]}')\">删除</button>";
+					echo "<button onclick=\"coop_del('{$row["user"]}')\">".$_local->gui->delete."</button>";
+					echo "</span>";
+					
                     echo "</li>";
                 }
                 echo "</ul>";
                 ?>
-                添加协作者
+				<div id="coop_selector_title">
+                <?php echo $_local->gui->add." ".$_local->gui->cooperators; ?>
+				<input type="radio" id="cooperator_type_user" name="cooperator_type" checked><?php echo $_local->gui->person; ?> 
+				<input type="radio" id="cooperator_type_group" name="cooperator_type"><?php echo $_local->gui->group; ?>
+				</div>
                 <div id="wiki_search" style="width:100%;">
-                    <div><input id="username_input" type="input" placeholder="用户名" onkeyup="username_search_keyup(event,this)"/></div>
+                    <div><input id="username_input" type="input" placeholder="<?php echo $_local->gui->username; ?>" onkeyup="username_search_keyup(event,this)"/></div>
                     <div id="search_result">
                     </div>
 			    </div>

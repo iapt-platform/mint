@@ -23,9 +23,7 @@ require_once '../studio/index_head.php';
 		color: var(--btn-color);
 		cursor:auto;
 	}
-	.file_list_block{
-		width:unset;
-	}
+
 	.case_dropdown-content>a {
 		display:block;
 	}
@@ -33,8 +31,8 @@ require_once '../studio/index_head.php';
 		background-color:gray;
 	}
 	.file_list_block {
-    max-width: 100%;
-    margin-right: 1em;
+    	max-width: 65em;
+    	margin-right: 1em;
 	}
 	.index_inner {
     margin-left: 16em;

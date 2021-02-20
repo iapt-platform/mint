@@ -54,11 +54,19 @@ function tag_changed() {
 		strTags = main_tag;
 	}
 	console.log(strTags);
+	let lang = getCookie("language");
+	if (lang == "zh-cn") {
+		lang = "zh-hans";
+	} else if (lang == "zh-tw") {
+		lang = "zh-hant";
+	} else if (lang == "") {
+		lang = "en";
+	}
 	$.get(
 		"book_tag.php",
 		{
 			tag: strTags,
-			lang: "zh-hant",
+			lang: lang,
 		},
 		function (data, status) {
 			let arrBookList = JSON.parse(data);
@@ -68,7 +76,7 @@ function tag_changed() {
 
 			for (const iterator of arrBookList) {
 				let tag0 = "";
-				let tags = iterator[0].tag.split("::");
+				let tags = iterator.tag.split("::");
 				let currTag = new Array();
 				currTag[main_tag] = 1;
 				for (const scondTag of list_tag) {
@@ -93,14 +101,8 @@ function tag_changed() {
 					}
 				}
 
-				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator[0].level == 1)) {
-					arrChapter.push({
-						book: iterator[0].book,
-						para: iterator[0].para,
-						level: iterator[0].level,
-						title: iterator[0].title,
-						progress: [],
-					});
+				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator.level == 1)) {
+					arrChapter.push(iterator);
 				}
 			}
 
@@ -113,33 +115,55 @@ function tag_changed() {
 			allTags = newTags;
 			allTags.sort(sortNumber);
 			tag_render_others();
-			palicanon_chapter_list_apply(arrChapter, 0);
+			palicanon_chapter_list_apply(0);
+			$("#list-1").html(render_chapter_list(arrChapter));
 		}
 	);
 }
 
 function palicanon_load_chapter(book, para, div_index = 1) {
+	let lang = getCookie("language");
+	if (lang == "zh-cn") {
+		lang = "zh-hans";
+	} else if (lang == "zh-tw") {
+		lang = "zh-hant";
+	} else if (lang == "") {
+		lang = "en";
+	}
 	$.get(
-		"get_chapter_children.php",
+		"get_chapter_info.php",
 		{
 			book: book,
 			para: para,
-			lang: "zh-hant",
+			lang: lang,
 		},
 		function (data, status) {
-			let arrChapterList = JSON.parse(data);
-			palicanon_chapter_list_apply(arrChapterList, div_index);
+			palicanon_chapter_list_apply(div_index);
+
+			let arrChapterInfo = JSON.parse(data);
+			let html = render_chapter_head(arrChapterInfo, div_index + 1);
+			$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
+
+			let lang = getCookie("language");
+			if (lang == "zh-cn") {
+				lang = "zh-hans";
+			} else if (lang == "zh-tw") {
+				lang = "zh-hant";
+			} else if (lang == "") {
+				lang = "en";
+			}
 			$.get(
-				"get_chapter_info.php",
+				"get_chapter_children.php",
 				{
 					book: book,
 					para: para,
-					lang: "zh-hant",
+					lang: lang,
 				},
 				function (data, status) {
-					let arrChapterInfo = JSON.parse(data);
-					let html = render_chapter_head(arrChapterInfo, div_index + 1);
-					$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
+					let arrChapterList = JSON.parse(data);
+					$("#list-" + (parseInt(div_index) + 1)).html(render_chapter_list(arrChapterList));
+
+					//palicanon_chapter_list_apply(arrChapterList, div_index);
 				}
 			);
 		}
@@ -158,7 +182,8 @@ function render_chapter_head(chapter_info, level) {
 	}
 	html += "<div class='title_2'>" + chapter_info.text + "</div>";
 	html += "</div>";
-	html += "<div class='info res_more'>";
+	html += "<div class='res res_more'>";
+	html += "<h2>译文</h2>";
 	html += "<div class='progress'>";
 	if (chapter_info.progress && chapter_info.progress.length > 0) {
 		let r = 12;
@@ -177,7 +202,7 @@ function render_chapter_head(chapter_info, level) {
 				'"></circle>';
 			html += "</svg>";
 
-			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
+			html += "<div class='lang'>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
 			html += "	</div>";
 		}
 	} else {
@@ -190,14 +215,25 @@ function render_chapter_head(chapter_info, level) {
 	return html;
 }
 
-function palicanon_chapter_list_apply(chapterList, div_index) {
-	let iDiv = parseInt(div_index);
+function render_chapter_list(chapterList) {
 	let html = "";
-	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
-	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
 	for (const iterator of chapterList) {
 		html += palicanon_render_chapter_row(iterator);
 	}
+	return html;
+}
+
+function palicanon_chapter_list_apply(div_index) {
+	let iDiv = parseInt(div_index);
+	let html = "";
+	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
+
+	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
+	/*	
+	for (const iterator of chapterList) {
+		html += palicanon_render_chapter_row(iterator);
+	}
+*/
 	html += "</ul>";
 
 	$("#list_shell_" + (iDiv + 1)).html(html);
@@ -251,10 +287,10 @@ function palicanon_render_chapter_row(chapter) {
 	html += '	<div class="title_2" lang="pali">' + chapter.title + "</div>";
 	html += "</div>";
 	html += '<div class="resource">';
-	if (chapter.progress && chapter.progress.length > 0) {
+	if (chapter.progress) {
 		let r = 12;
 		let perimeter = 2 * Math.PI * r;
-		let stroke1 = parseInt(perimeter * chapter.progress[0].all_trans);
+		let stroke1 = parseInt(perimeter * chapter.progress.all_trans);
 		let stroke2 = perimeter - stroke1;
 		html += '<svg class="progress_circle" width="30" height="30" viewbox="0,0,30,30">';
 		html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
@@ -265,16 +301,9 @@ function palicanon_render_chapter_row(chapter) {
 			stroke2 +
 			'"></circle>';
 		html += "</svg>";
-		/*
-		for (const iterator of chapter.progress) {
-			html += '	<div class="item">';
-			html += "<div>" + iterator.lang + "-" + parseInt(iterator.all_trans * 100) + "%</div>";
-			html += "	</div>";
-		}
-		*/
 	}
-	html += '	<div class="res_more">';
-	html += "		更多";
+	html += '<div class="res_more">';
+	html += " ";
 	html += "	</div>";
 	html += "</div>";
 	html += "</li>";

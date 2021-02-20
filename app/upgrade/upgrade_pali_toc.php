@@ -2,6 +2,8 @@
 #升级段落完成度数据库
 require_once '../path.php';
 
+$redis = new redis();  
+$r_conn = $redis->connect('127.0.0.1', 6379);
 
 $dns = "sqlite:"._FILE_DB_PALI_TOC_;
 $dbh_toc = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
@@ -84,7 +86,12 @@ foreach ($result_lang as $lang) {
 			else{
 				$para_strlen = 0;
 			}
-			$sth_toc->execute(array($para["book"],$para["paragraph"],$lang["language"],$para_strlen,0));
+			if($r_conn){
+				$redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
+			}
+			else{
+				$sth_toc->execute(array($para["book"],$para["paragraph"],$lang["language"],$para_strlen,0));
+			}
 		}
 	}
 }
@@ -119,21 +126,37 @@ foreach ($valid_book as $key => $book) {
 			$pali_strlen = (int)$result_chapter_strlen["pali_strlen"];
 			# 译文等效字符数
 			foreach ($result_lang as $lang) {
-				$query = "SELECT sum(all_strlen) as all_strlen from progress where book = ? and (para between ? and ? )and lang = ?";
-				$stmt = $dbh_toc->prepare($query);
-				$stmt->execute(array($book["book"],$chapter["paragraph"],(int)$chapter["paragraph"]+(int)$chapter["chapter_len"]-1,$lang["language"]));
-				$result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
-				if($result_chapter_trans_strlen){
-					$tran_strlen = (int)$result_chapter_trans_strlen["all_strlen"];
+
+				if($r_conn){
+					$tran_strlen=0;
+					for ($i=$chapter["paragraph"]; $i <(int)$chapter["paragraph"]+(int)$chapter["chapter_len"] ; $i++) { 
+						# code...
+						$all_strlen = $redis->hGet("progress_{$book["book"]}-{$i}", $lang["language"]);
+						if($all_strlen){
+							$tran_strlen+=$all_strlen;
+						}
+					}
 					if($tran_strlen>0){
 						$progress = $tran_strlen/$pali_strlen;
-						$sth_toc->execute(array($book["book"],$chapter["paragraph"],$lang["language"],$progress,0));
-						//echo "{$book["book"]},{$chapter["paragraph"]},{$lang["language"]},{$progress}\n";
+						$redis->hSet("progress_chapter_{$book["book"]}_{$chapter["paragraph"]}", $lang["language"], $progress);
 					}
-
+				}
+				else
+				{
+					$query = "SELECT sum(all_strlen) as all_strlen from progress where book = ? and (para between ? and ? )and lang = ?";
+					$stmt = $dbh_toc->prepare($query);
+					$stmt->execute(array($book["book"],$chapter["paragraph"],(int)$chapter["paragraph"]+(int)$chapter["chapter_len"]-1,$lang["language"]));
+					$result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
+					if($result_chapter_trans_strlen){
+						$tran_strlen = (int)$result_chapter_trans_strlen["all_strlen"];
+						if($tran_strlen>0){
+							$progress = $tran_strlen/$pali_strlen;
+							$sth_toc->execute(array($book["book"],$chapter["paragraph"],$lang["language"],$progress,0));
+						}
+					}
 				}
 				#插入段落数据
-			}			
+			}
 		}
 	}
 }
