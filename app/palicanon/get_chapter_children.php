@@ -1,6 +1,9 @@
 <?php
 require_once '../path.php';
 
+$redis = new redis();  
+$r_conn = $redis->connect('127.0.0.1', 6379);
+
 $dns = "sqlite:"._FILE_DB_PALI_TOC_;
 $dbh_toc = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
 $dbh_toc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
@@ -36,11 +39,26 @@ if($paraInfo){
 		$paraList = $stmt->fetchAll(PDO::FETCH_ASSOC);	
 		foreach ($paraList as $key => $value) {
 			# 查进度
-			$query = "SELECT lang, all_trans from progress_chapter where book=? and para=?";
-			$stmt = $dbh_toc->prepare($query);
-			$sth_toc = $dbh_toc->prepare($query);
-			$sth_toc->execute(array($value["book"],$value["para"]));
-			$paraProgress = $sth_toc->fetch(PDO::FETCH_ASSOC);
+			$paraProgress = false;
+			if($r_conn){
+				$count = $redis->hLen("progress_chapter_{$value["book"]}_{$value["para"]}");
+				if($count>0){
+					$prog = $redis->hGetAll("progress_chapter_{$value["book"]}_{$value["para"]}");
+					foreach ($prog as $keylang => $valuetrans) {
+						# code...
+						$paraProgress = array("lang"=>$keylang,"all_trans"=>$valuetrans);
+						break;
+					}
+				}
+			}
+			else{
+				$query = "SELECT lang, all_trans from progress_chapter where book=? and para=?";
+				$stmt = $dbh_toc->prepare($query);
+				$sth_toc = $dbh_toc->prepare($query);
+				$sth_toc->execute(array($value["book"],$value["para"]));
+				$paraProgress = $sth_toc->fetch(PDO::FETCH_ASSOC);				
+			}
+
 			$paraList[$key]["progress"]=$paraProgress;
 
 			#查标题
