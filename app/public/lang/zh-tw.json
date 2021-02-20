@@ -594,8 +594,11 @@
 		"cooperators": "協作者",
 		"person": "個人",
 		"write": "可編輯",
-		"sub_group": "小組",
+		"sub_group": "項目組",
 		"your": "你的",
+		"member": "成員",
+		"new_group": "創建群組",
+		"new_sub_group": "創建項目組",
 		"": ""
 	},
 	"grammastr": [

@@ -33,7 +33,7 @@ if(isset($_COOKIE["userid"])){
 	$error = PDO_ErrorInfo();
 	$respond['status']=1;
 	$respond['message']=$error[2];
-	}	
+	}
 }
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>
