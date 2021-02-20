@@ -4718,6 +4718,12 @@ note {
 .file_list_row:hover {
 	background-color: gray;
 }
+.file_list_row .hover_button {
+	visibility: hidden;
+}
+.file_list_row:hover .hover_button {
+	visibility: visible;
+}
 
 #file_list_head {
 	border-bottom: 2px solid var(--btn-hover-bg-color);

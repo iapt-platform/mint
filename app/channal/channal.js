@@ -169,13 +169,37 @@ function my_channal_edit(id) {
 						status_note +
 						"</span><a href='#' target='_blank'>[" +
 						gLocal.gui.infomation +
-						"]</li>";
+						"]</a></li>";
 					html += "</div>";
 					html += "</div>";
 					html += "</div>";
 
-					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
+					html += "<div id='coop_div' style='padding:5px;'>";
+					html += "<h2>协作者</h2>";
+					html += "<button disabled>添加协作者</button>";
+					html += "<button disabled>添加协作群</button>";
+					html += "<div id='coop_inner' >";
+					if (typeof result.coop == "undefined" || result.coop.length == 0) {
+						html += "这里很安静";
+					} else {
+						for (const coop of result.coop) {
+							html += '<div class="file_list_row" style="padding:5px;">';
+							if (coop.type == 0) {
+								html += '<div style="flex:1;">个人</div>';
+								html += "<div style='flex:3;'>" + coop.user_name.nickname + "</div>";
+							} else {
+								html += '<div style="flex:1;">' + gLocal.gui.group + "</div>";
+								html += "<div style='flex:3;'>" + coop.user_name.name + "</div>";
+							}
+
+							html += "<div style='flex:3;'>" + coop.power + "</div>";
+							html += "<div class='hover_button' style='flex:3;'>";
+							html += "<button>移除</button>";
+							html += "</div>";
+							html += "</div>";
+						}
+					}
+					html += "</div>";
 					html += "</div>";
 
 					$("#channal_info").html(html);
