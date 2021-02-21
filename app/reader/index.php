@@ -70,12 +70,17 @@ require_once "../pcdl/html_head.php";
 
 	#head_bar{
 		display: flex;
-    justify-content: space-between;
-    height: 5em;
-    background-color: var(--tool-bg-color1);
-    border-bottom: 1px solid var(--tool-line-color);
-	padding:10px;
-	margin-top: 50px;
+		justify-content: space-between;
+		height: 5em;
+		background-color: var(--tool-bg-color1);
+		border-bottom: 1px solid var(--tool-line-color);
+		padding:10px;
+		margin-top: 50px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
 	}
 
 	.main_view{
@@ -126,9 +131,7 @@ require_once "../pcdl/html_head.php";
 		flex:3;
 		max-width:20em;
 	}
-	#head_bar{
-		height:unset;
-	}
+
 	#contents_foot{
 		margin-bottom: 70vh;
 	}
