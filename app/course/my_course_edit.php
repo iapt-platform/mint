@@ -115,9 +115,9 @@ echo '<div id="userfilelist">';
     echo '</div>';
 
     echo '<div style="display:flex;">';
-    echo '<div style="flex:2;">Status</div>';
+    echo '<div style="flex:2;">'.$_local->gui->status.'</div>';
     echo '<div style="flex:8;">';
-    $arrStatus = array(array("id"=>0,"string"=>"deleted"),
+    $arrStatus = array(array("id"=>0,"string"=>$_local->gui->in_recycle_bin),
                        array("id"=>20,"string"=>$_local->gui->not_started),
                        array("id"=>30,"string"=>$_local->gui->in_progress),
                        array("id"=>40,"string"=>$_local->gui->already_over));
@@ -141,7 +141,7 @@ echo '<div id="userfilelist">';
     else{
             $cover_file = _DIR_IMAGES_COURSE_A_."/".$course_info["id"].".jpg";
         }
-    echo '<img src="'.$cover_file.'" alt="cover" width="200" height="200">';
+    echo '<img src="'.$cover_file.'" alt="'.$_local->gui->cover.'" width="200" height="200">';
     echo "</div>";
     echo '<div><input type="file" name="cover" id="cover_file" /></div> ';
     echo '</div>';

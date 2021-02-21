@@ -6,9 +6,15 @@ function group_list_init() {
 	if (typeof gGroupId == "undefined") {
 		my_group_list();
 		group_add_dlg_init("group_add_div");
+		$("#button_new_group").show();
 	} else {
+		$("#button_new_sub_group").show();
 		group_list(gGroupId, gList);
-		team_add_dlg_init("group_add_div");
+		team_add_dlg_init("sub_group_add_div");
+		$("#member_list_shell").css("visibility", "visible");
+		member_list(gGroupId);
+		//初始化用户选择对话框
+		user_select_dlg_init("user_select_div");
 	}
 }
 function channal_list() {
@@ -86,6 +92,7 @@ function group_list(id, list) {
 					html += "<h2>" + gLocal.gui.introduction + "</h2>";
 					html += result.info.description;
 					html += "</div>";
+					$("#curr_group").html("/ <a>" + result.info.name + "</a>");
 					if (result.parent) {
 						$("#parent_group").html(
 							" / <a href='../group/index.php?id=" +
@@ -94,40 +101,39 @@ function group_list(id, list) {
 								result.parent.name +
 								"</a> "
 						);
-					}
-					$("#curr_group").html("/ <a>" + result.info.name + "</a>");
-					//子小组列表
-					html += "<div class='info_block'>";
-					html += "<h2>" + gLocal.gui.sub_group + "</h2>";
-					if (result.children && result.children.length > 0) {
-						for (const iterator of result.children) {
-							html += '<div class="file_list_row" style="padding:5px;">';
-							html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-							html += "<div style='flex:1;'>" + key++ + "</div>";
-							html += "<div style='flex:2;'>" + iterator.name + "</div>";
-							html += "<div style='flex:2;'>";
-							if (iterator.power == 1) {
-								html += "拥有者";
-							}
-							html += "</div>";
-							html +=
-								"<div style='flex:1;'><a href='../group/index.php?id=" +
-								iterator.id +
-								"&list=file'>进入</a></div>";
-							html += "</div>";
-						}
 					} else {
-						html += "尚未设置小组";
+						//子小组列表
+						html += "<div class='info_block'>";
+						html += "<h2>" + gLocal.gui.sub_group + "</h2>";
+						if (result.children && result.children.length > 0) {
+							for (const iterator of result.children) {
+								html += '<div class="file_list_row" style="padding:5px;">';
+								html += "<div style='flex:1;'>" + key++ + "</div>";
+								html += "<div style='flex:2;'>" + iterator.name + "</div>";
+								html += "<div style='flex:2;'>";
+								if (iterator.power == 1) {
+									html += "拥有者";
+								}
+								html += "</div>";
+								html +=
+									"<div style='flex:1;'><a href='../group/index.php?id=" +
+									iterator.id +
+									"&list=file'>进入</a></div>";
+								html += "</div>";
+							}
+						} else {
+							html += "尚未设置小组";
+						}
+						html += "</div>";
 					}
-					html += "</div>";
 
 					//共享文件列表
+					key = 1;
 					html += "<div class='info_block'>";
 					html += "<h2>" + gLocal.gui.collaborate + "</h2>";
 					if (result.file && result.file.length > 0) {
 						for (const iterator of result.file) {
 							html += '<div class="file_list_row" style="padding:5px;">';
-							html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 							html += "<div style='flex:1;'>" + key++ + "</div>";
 							html += "<div style='flex:2;'>" + iterator.title + "</div>";
 							html += "<div style='flex:2;'>";
@@ -166,6 +172,50 @@ function group_list(id, list) {
 		}
 	);
 }
+
+function member_list(id) {
+	$.get(
+		"../group/list_member.php",
+		{
+			id: id,
+		},
+		function (data, status) {
+			if (status == "success") {
+				try {
+					let html = "";
+					let result = JSON.parse(data);
+					$("#member_number").html("(" + result.length + ")");
+					//子小组列表
+					html += "<div class='info_block'>";
+					if (result && result.length > 0) {
+						for (const iterator of result) {
+							html += '<div class="file_list_row" style="padding:5px;">';
+							html += "<div style='flex:2;'>" + iterator.user_info.nickname + "</div>";
+							html += "<div style='flex:2;'>";
+							if (iterator.power == 1) {
+								html += "拥有者";
+							}
+							html += "</div>";
+							html += "<div style='flex:1;'>";
+							html += "</div>";
+							html += "</div>";
+						}
+					} else {
+						html += "这是一个安静的地方";
+					}
+					html += "</div>";
+
+					$("#member_list").html(html);
+				} catch (e) {
+					console.error(e);
+				}
+			} else {
+				console.error("ajex error");
+			}
+		}
+	);
+}
+
 /*
 编辑channel信息
 */

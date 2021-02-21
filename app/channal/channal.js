@@ -176,8 +176,10 @@ function my_channal_edit(id) {
 
 					html += "<div id='coop_div' style='padding:5px;'>";
 					html += "<h2>协作者</h2>";
-					html += "<button disabled>添加协作者</button>";
-					html += "<button disabled>添加协作群</button>";
+					html += "<div id='add_coop_user_dlg' class='float_dlg'></div>";
+					html += "<button onclick='add_coop_user()'>添加协作者</button>";
+					html += "<div id='add_coop_group_dlg' class='float_dlg'></div>";
+					html += "<button onclick='add_coop_group()' >添加协作群</button>";
 					html += "<div id='coop_inner' >";
 					if (typeof result.coop == "undefined" || result.coop.length == 0) {
 						html += "这里很安静";
