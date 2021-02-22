@@ -152,11 +152,11 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	#head_bar{
 		display: flex;
-    justify-content: space-between;
-    height: 5em;
-    background-color: var(--bookx);
-    border-bottom: 1px solid var(--tool-line-color);
-	margin-top: 50px;
+		justify-content: space-between;
+		/*height: 5em;*/
+		background-color: var(--bookx);
+		border-bottom: 1px solid var(--tool-line-color);
+		margin-top: 50px;
 	}
 	.term_block_bar_left{
 		display: flex;

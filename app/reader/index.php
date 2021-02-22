@@ -71,7 +71,7 @@ require_once "../pcdl/html_head.php";
 	#head_bar{
 		display: flex;
 		justify-content: space-between;
-		height: 5em;
+		/*height: 5em;*/
 		background-color: var(--tool-bg-color1);
 		border-bottom: 1px solid var(--tool-line-color);
 		padding:10px;
@@ -255,7 +255,7 @@ require_once "../pcdl/html_head.php";
 
 	<div>
 		<span>
-		<input type="checkbox" onchange="setVisibility('palitext',this)" checked>Pali Text Visible
+		<input type="checkbox" onchange="setVisibility('palitext',this)" checked><?php echo $_local->gui->script; ?>
 		<?php
 		//echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
 		//echo "<a href='../article/frame.php?id=".$_GET["id"];
