@@ -68,12 +68,12 @@ require_once "../pcdl/html_head.php";
 
 	#head_bar{
 		display: flex;
-    justify-content: space-between;
-    height: 5em;
-    background-color: var(--tool-bg-color1);
-    border-bottom: 1px solid var(--tool-line-color);
-	padding:10px;
-	margin-top: 50px;
+		justify-content: space-between;
+		/*height: 5em;*/
+		background-color: var(--tool-bg-color1);
+		border-bottom: 1px solid var(--tool-line-color);
+		padding:10px;
+		margin-top: 50px;
 	}
 
 	.main_view{
