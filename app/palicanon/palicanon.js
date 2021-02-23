@@ -141,7 +141,7 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 			palicanon_chapter_list_apply(div_index);
 
 			let arrChapterInfo = JSON.parse(data);
-			let html = render_chapter_head(arrChapterInfo, div_index + 1);
+			let html = render_chapter_head(arrChapterInfo, div_index);
 			$("#chapter_head_" + (parseInt(div_index) + 1)).html(html);
 
 			let lang = getCookie("language");
@@ -170,8 +170,22 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 	);
 }
 
-function render_chapter_head(chapter_info, level) {
+function render_chapter_head(chapter_info, parent) {
 	let html = "";
+	html = "<div class='chapter_head_tool_bar'>";
+	html +=
+		"<div><span class='chapter_back_button'  id='chapter_back_" +
+		(parent + 1) +
+		"' onclick=\"chapter_back('" +
+		parent +
+		"')\">back</span></div>";
+	html +=
+		"<div><span class='chapter_close_button' id='chapter_close_" +
+		(parent + 1) +
+		"' onclick=\"chapter_back('" +
+		parent +
+		"')\">back</span></div>";
+	html += "</div>";
 	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&para=" + chapter_info.paragraph;
 	html += "<div class='title'>";
 	if (typeof chapter_info.trans_title == "undefined") {
@@ -394,4 +408,18 @@ function sortNumber(a, b) {
 
 function tag_list_slide_toggle() {
 	$("#tag_list").slideToggle();
+}
+function chapter_back(parent) {
+	let curr = parseInt(parent) + 1;
+	let prt = parseInt(parent);
+	//隐藏当前的
+	$("#list_shell_" + curr).removeClass();
+	$("#list_shell_" + curr).addClass("hidden");
+
+	//展开上一个
+	$("#list-" + prt).removeClass();
+	$("#list-" + prt).addClass("grid");
+
+	$("#list_shell_" + prt).removeClass();
+	$("#list_shell_" + prt).addClass("show");
 }
