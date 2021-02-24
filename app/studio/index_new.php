@@ -82,7 +82,7 @@ else{
 				<select id="id_language" name="menu" onchange="menuLangrage(this)">
 					<option value="en" >English</option>
 					<option value="si" >සිංහල</option>
-					<option value="my" >myanmar</option>
+					<option value="my" >မြန်မာ</option>
 					<option value="zh-cn" >简体中文</option>
 					<option value="zh-tw" >正體中文</option>
 				</select>

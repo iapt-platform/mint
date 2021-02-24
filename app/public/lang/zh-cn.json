@@ -272,7 +272,7 @@
 		"sandhi_orginal_word": "连读词原词",
 		"sandhi_splited_word": "连读词拆分",
 		"save": "保存",
-		"script": "巴利脚本",
+		"script": "巴利文字",
 		"search": "搜索",
 		"season": "季节 ",
 		"sec": "秒",
@@ -603,6 +603,8 @@
 		"member": "成员",
 		"new_group": "创建群组",
 		"new_sub_group": "创建项目",
+		"avatar": "头像",
+		"display": "显示",
 		"": ""
 	},
 	"grammastr": [
