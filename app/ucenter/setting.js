@@ -20,9 +20,9 @@ function setting_onload() {
 			//Library 设置
 
 			html = "";
-			html += "<h3>显示/Display</h3>";
-			html += "<div>巴利原文1" + setting_render_paliscript("lib.first_script") + "</div>";
-			html += "<div>巴利原文2" + setting_render_paliscript("lib.second_script") + "</div>";
+			html += "<h3>"+gLocal.gui.script+gLocal.gui.display+"</h3>";
+			html += "<div>"+gLocal.gui.main_code +"&nbsp;"+ setting_render_paliscript("lib.first_script") + "</div>";
+			html += "<div>"+gLocal.gui.sub_pcode +"&nbsp;"+ setting_render_paliscript("lib.second_script") + "</div>";
 
 			$("#setting_library").html(html);
 			//Library 设置结束

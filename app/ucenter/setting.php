@@ -249,11 +249,11 @@ para:hover{
 			echo "<div id='setting_account_shell' class='setting_shell'>";
             echo "<a name='account'></a>";
 			echo "<h2>{$_local->gui->account}</h2>";
-			echo "头像：<span id='head_img'></span>";
+			echo "{$_local->gui->avatar}：<span id='head_img'></span>";
 
-            echo "{$_local->gui->username}：{$_COOKIE["username"]} <button>修改</button><br />";
-            echo "{$_local->gui->nick_name}：{$_COOKIE["nickname"]} <button>修改</button><br />";
-            echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>修改</button><br />";
+            echo "{$_local->gui->username}：{$_COOKIE["username"]} <button>{$_local->gui->modify}</button><br />";
+            echo "{$_local->gui->nick_name}：{$_COOKIE["nickname"]} <button>{$_local->gui->modify}</button><br />";
+            echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>{$_local->gui->modify}</button><br />";
             echo "<a href='../ucenter/pwd_set.php'>{$_local->gui->change_password}</a><br>";
 			echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
 			echo "</div>";

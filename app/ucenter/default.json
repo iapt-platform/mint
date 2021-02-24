@@ -19,7 +19,7 @@
 	],
 	"dict.whitelist": ["@kosalla", "@mine"],
 	"dict.blacklist": ["@all", "bhmf"],
-	"lib.first_script": "roma",
+	"lib.first_script": "Roman",
 	"lib.second_script": "none",
-	"lib.pali_script": ["none", "roma", "my"]
+	"lib.pali_script": ["none", "Roman", "မြန်မာ"]
 }
