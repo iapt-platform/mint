@@ -636,77 +636,74 @@ function show_time() {
 				result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
 				return result;
 			}
-			function show_position(){
+function show_position(){
 	curr_position = localStorage.getItem("local_position");
-			if (curr_position) {
-				g_coordinate_this.AT = curr_position.split("#")[0];
-				g_coordinate_this.LT = curr_position.split("#")[1];
-				g_coordinate_this.height = curr_position.split("#")[2];
-				if (g_coordinate_this.AT >= 0) {
-					var AT_string = angle_trans(g_coordinate_this.AT)[0]+"°" +angle_trans(g_coordinate_this.AT)[1] +
-					"’" +
-					angle_trans(g_coordinate_this.AT)[2] +
-					"” N";
-
-				} else {
-					var AT_string = angle_trans(0-g_coordinate_this.AT)[0]+"°" +angle_trans(0-g_coordinate_this.AT)[1] +
-					"’" +
-					angle_trans(0-g_coordinate_this.AT)[2] +
-					"” S";
-				}
-
-				if (g_coordinate_this.LT >= 0) {
-					var LT_string = angle_trans(g_coordinate_this.LT)[0]+"°" +angle_trans(g_coordinate_this.LT)[1] +
-					"’" +
-					angle_trans(g_coordinate_this.LT)[2] +
-					"” E";
-
-				} else {
-					var LT_string = angle_trans(0-g_coordinate_this.LT)[0]+"°" +angle_trans(0-g_coordinate_this.LT)[1] +
-					"’" +
-					angle_trans(0-g_coordinate_this.LT)[2] +
-					"” W";
-				}
-
-				if (g_coordinate_this.height != "null") {
-					var height_string = g_coordinate_this.height + "M";
-				} else {
-					var height_string = localString[g_language].unknown;
-				}
+		if (curr_position) {
+			g_coordinate_this.AT = curr_position.split("#")[0];
+			g_coordinate_this.LT = curr_position.split("#")[1];
+			g_coordinate_this.height = curr_position.split("#")[2];
+			if (g_coordinate_this.AT >= 0) {
+				var AT_string = angle_trans(g_coordinate_this.AT)[0]+"°" +angle_trans(g_coordinate_this.AT)[1] +
+				"’" +
+				angle_trans(g_coordinate_this.AT)[2] +
+				"” N";
 			} else {
-				getLocation();
+				var AT_string = angle_trans(0-g_coordinate_this.AT)[0]+"°" +angle_trans(0-g_coordinate_this.AT)[1] +
+				"’" +
+				angle_trans(0-g_coordinate_this.AT)[2] +
+				"” S";
 			}
-			$("#AT_str").html(AT_string);
-			$("#LT_str").html(LT_string);
-			$("#altitude_string").html(height_string);
-		if(g_coordinate_this.AT<0){
-			$("#AT_°")[0].value = angle_trans(0-g_coordinate_this.AT)[0];
-			$("#AT_’")[0].value = angle_trans(0-g_coordinate_this.AT)[1];
-			$("#AT_”")[0].value = angle_trans(0-g_coordinate_this.AT)[2];
-			$("#NS")[0].value="-";
-		}
-		else{
-			$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
-			$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
-			$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
-			$("#NS")[0].value="+";
+			if (g_coordinate_this.LT >= 0) {
+				var LT_string = angle_trans(g_coordinate_this.LT)[0]+"°" +angle_trans(g_coordinate_this.LT)[1] +
+				"’" +
+				angle_trans(g_coordinate_this.LT)[2] +
+				"” E";
 
+			} else {
+				var LT_string = angle_trans(0-g_coordinate_this.LT)[0]+"°" +angle_trans(0-g_coordinate_this.LT)[1] +
+				"’" +
+				angle_trans(0-g_coordinate_this.LT)[2] +
+				"” W";
+			}
+			if (g_coordinate_this.height != "null") {
+				var height_string = g_coordinate_this.height + "M";
+			} else {
+				var height_string = localString[g_language].unknown;
+			}
+		} else {
+			getLocation();
 		}
-		if(g_coordinate_this.LT<0){
-			$("#LT_°")[0].value = angle_trans(0-g_coordinate_this.LT)[0];
-			$("#LT_’")[0].value = angle_trans(0-g_coordinate_this.LT)[1];
-			$("#LT_”")[0].value = angle_trans(0-g_coordinate_this.LT)[2];
-			$("#WE")[0].value="-";
+	$("#AT_str").html(AT_string);
+	$("#LT_str").html(LT_string);
+	$("#altitude_string").html(height_string);
 
-		}
-		else{
-			$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
-			$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
-			$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
-			$("#WE")[0].value="+";
-		}
-		$("#HT_M")[0].value = g_coordinate_this.height;
-		$("#city_str").html(find_city(g_coordinate_this.AT,g_coordinate_this.LT).name);
+	if(g_coordinate_this.AT<0){
+		$("#AT_°")[0].value = angle_trans(0-g_coordinate_this.AT)[0];
+		$("#AT_’")[0].value = angle_trans(0-g_coordinate_this.AT)[1];
+		$("#AT_”")[0].value = angle_trans(0-g_coordinate_this.AT)[2];
+		$("#NS")[0].value="-";
+	}
+	else{
+		$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT)[0];
+		$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT)[1];
+		$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT)[2];
+		$("#NS")[0].value="+";
+
+	}
+	if(g_coordinate_this.LT<0){
+		$("#LT_°")[0].value = angle_trans(0-g_coordinate_this.LT)[0];
+		$("#LT_’")[0].value = angle_trans(0-g_coordinate_this.LT)[1];
+		$("#LT_”")[0].value = angle_trans(0-g_coordinate_this.LT)[2];
+		$("#WE")[0].value="-";
+	}
+	else{
+		$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT)[0];
+		$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT)[1];
+		$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT)[2];
+		$("#WE")[0].value="+";
+	}
+	$("#HT_M")[0].value = g_coordinate_this.height;
+	$("#city_str").html(find_city(g_coordinate_this.AT,g_coordinate_this.LT).name);
 }
 show_position();
 function getLocation() {
@@ -777,8 +774,8 @@ function angle_trans(angle,type) {
 	}
 	angle=Math.abs(angle);
 	angle_str.d = Math.floor(angle);
-	angle_str.m = Math.floor((angle - num_d) * 60);
-	angle_str.s = Math.round((angle - num_d) * 60 - num_m);
+	angle_str.m = Math.floor((angle - angle_str.d) * 60);
+	angle_str.s = Math.round((angle - angle_str.d) * 60 - angle_str.m);
 
 	angle_str.str=angle_str.d+"°"+angle_str.m+"’"+angle_str.s+"”"+angle_str.suf;
 
