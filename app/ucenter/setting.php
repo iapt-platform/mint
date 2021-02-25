@@ -238,7 +238,7 @@ para:hover{
 				<span id="tool_bar_title" style="font-family: 'Noto Serif';"><?php echo $_local->gui->title; ?></span>
 			</div>
 			<div style="display: flex;">	
-			
+
 			</div>
 		</div>	
 		
@@ -257,7 +257,7 @@ para:hover{
             echo "<a href='../ucenter/pwd_set.php'>{$_local->gui->change_password}</a><br>";
 			echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
 			echo "</div>";
-			
+
 
 			echo "<div id='setting_general_shell' class='setting_shell'>";
 			echo "<a name='general'></a>";
@@ -266,13 +266,13 @@ para:hover{
 			echo "</div>";
 			echo "</div>";
 
-			
+
 			echo "<div id='setting_library_shell' class='setting_shell'>";
 			echo "<a name='library'></a>";
             echo "<h2>{$_local->gui->library}</h2>";
             echo "<div id='setting_library' class='setting_content'>";
-            echo "</div>";			
-            echo "</div>";			
+            echo "</div>";
+            echo "</div>";
 
 			echo "<div id='setting_studio_shell' class='setting_shell'>";
 			echo "<a name='studio'></a>";
@@ -309,7 +309,7 @@ para:hover{
 			<div class="win_caption">
 				<div><button id="left_menu_hide" onclick="setNaviVisibility()">返回</button></div>
 			</div>
-			
+
 		<div class='toc' id='leftmenuinnerinner' style="font-family: 'Noto Serif';">	
 			<!-- toc begin -->
 			<div class="menu" id="menu_toc">
@@ -324,7 +324,7 @@ para:hover{
                 ?>
                 </div>
 
-			
+
 			</div>
 		
 		</div>
