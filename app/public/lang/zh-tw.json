@@ -272,7 +272,7 @@
 		"sandhi_orginal_word": "黏音詞原詞",
 		"sandhi_splited_word": "黏音詞拆分",
 		"save": "儲存",
-		"script": "巴利指令碼",
+		"script": "巴利文字",
 		"search": "搜尋",
 		"season": "季節",
 		"sec": "秒",
@@ -604,6 +604,8 @@
 		"owner": "擁有者",
 		"manager": "管理員",
 		"enter": "進入",
+		"avatar": "頭像",
+		"display": "顯示",
 		"": ""
 	},
 	"grammastr": [

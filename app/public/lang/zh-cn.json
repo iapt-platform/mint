@@ -272,7 +272,7 @@
 		"sandhi_orginal_word": "连读词原词",
 		"sandhi_splited_word": "连读词拆分",
 		"save": "保存",
-		"script": "巴利脚本",
+		"script": "巴利文字",
 		"search": "搜索",
 		"season": "季节 ",
 		"sec": "秒",
@@ -605,6 +605,8 @@
 		"owner": "拥有者",
 		"manager": "管理员",
 		"enter": "进入",
+		"avatar": "头像",
+		"display": "显示",
 		"": ""
 	},
 	"grammastr": [

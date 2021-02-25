@@ -607,6 +607,8 @@
 		"owner": "Owner",
 		"manager": "Manager",
 		"enter": "Enter",
+		"avatar": "Avatar",
+		"display": "display",
 		"": ""
 	},
 	"grammastr": [
