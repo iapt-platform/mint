@@ -16,7 +16,7 @@ if(isset($_POST["id"])){
     $dirty_collect = array();
     $data = json_decode($_POST["data"]);
     $title = $_POST["title"];
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $article_id=$_POST["id"];
     //找出脏的collect
     $query = "SELECT collect_id FROM article_list  WHERE article_id = ? ";

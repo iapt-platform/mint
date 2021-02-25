@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 global $PDO;
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 
 $query="UPDATE course SET  receive_time= ?  , modify_time= ?   where  id = ?  ";
 PDO_Execute($query,array(mTime(),mTime(),$_POST["course_id"]));

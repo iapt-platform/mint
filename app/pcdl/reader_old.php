@@ -2,25 +2,23 @@
 require_once "../public/_pdo.php";
 require_once "../path.php";
 
-if(isset($_GET["album"])){
-	$album=$_GET["album"];
+if (isset($_GET["album"])) {
+    $album = $_GET["album"];
 }
 
-if(isset($_GET["book"])){
-	$book=$_GET["book"];
+if (isset($_GET["book"])) {
+    $book = $_GET["book"];
+} else {
+    echo "no book id";
+    exit;
 }
-else{
-	echo "no book id";
-	exit;
+if (substr($book, 0, 1) == 'p') {
+    $book = substr($book, 1);
 }
-if(substr($book,0,1)=='p'){
-	$book=substr($book,1);
-}
-if(isset($_GET["paragraph"])){
-	$paragraph = $_GET["paragraph"];
-}
-else{
-	$paragraph = -1;
+if (isset($_GET["paragraph"])) {
+    $paragraph = $_GET["paragraph"];
+} else {
+    $paragraph = -1;
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -72,7 +70,7 @@ else{
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/fixedsticky.js"></script>
 	<script src="js/reader.js"></script>
-	
+
 	<script src="../appdata/dict/3rd/bh.js"></script>
 	<script src="../appdata/dict/system/sys_regular.js"></script>
 	<script>
@@ -113,7 +111,7 @@ else{
 					render_all_tran();
 				break;
 			}
-			
+
 		}
 		function paragraph_click(album,book,paragraph){
 			switch(curr_tool){
@@ -130,11 +128,11 @@ else{
 			new_comments_book=book;
 			new_comments_paragraph=paragraph;
 			document.getElementById("new-comm-a"+album+"-b"+book+"-"+paragraph).appendChild(document.getElementById("new_comm_div"));
-			
+
 		}
 		function new_comm_cancel(){
 			$("#tool_bar_comments").fadeOut();
-			$("#main_tool_bar").fadeIn();			
+			$("#main_tool_bar").fadeIn();
 			document.getElementById("new_comm_text").value="";
 			document.getElementById("new_comm_shell").appendChild(document.getElementById("new_comm_div"));
 			curr_tool="";
@@ -155,13 +153,13 @@ else{
 				alert("Data: " + data + "\nStatus: " + status);
 			});
 		}
-		
-		//书摘处理		
+
+		//书摘处理
 		function dighest_par_click(album,book,paragraph){
 			for (var x in res_list){
 				if(
-				res_list[x].album==album && 
-				res_list[x].book==book && 
+				res_list[x].album==album &&
+				res_list[x].book==book &&
 				res_list[x].paragraph==paragraph){
 					if(res_list[x].dighest==false){
 						res_list[x].dighest=true;
@@ -197,7 +195,7 @@ else{
 
 			}
 		}
-		
+
 		function dighest_cancle(){
 			$("#tool_bar_dighest").fadeOut();
 			$("#main_tool_bar").fadeIn();
@@ -218,7 +216,7 @@ else{
 			$("#dighest_edit_div").fadeIn();
 
 		}
-		
+
 		function dighest_edit_cancle(){
 			$("#dighest_edit_div").fadeOut();
 			$("#main_tool_bar").fadeIn();
@@ -258,11 +256,11 @@ else{
 			},
 			function(data,status){
 				alert("Data: " + data + "\nStatus: " + status);
-			});	
+			});
 			//将段落列表重置
-			dighest_reset_res_list();			
+			dighest_reset_res_list();
 		}
-		
+
 		function setNaviVisibility(){
 			var objNave = document.getElementById('leftmenuinner');
 			var objblack = document.getElementById('BV');
@@ -275,7 +273,7 @@ else{
 				objNave.className = "viewswitch_off";
 			}
 		}
-		
+
 		function render_all_tran(mode="fix"){
 			for (var x in res_list){
 				var album=res_list[x].album;
@@ -302,19 +300,19 @@ else{
 			newString = newString.replace(/”/g,"”#");
 			newString = newString.replace(/“/g,"“#");
 			newString = newString.replace(/’/g,"’#");
-			
+
 			arrString = newString.split("#");
-			
+
 			var output="";
 			var str_pos=0;
 			for (x in arrString){
 				var str_len=arrString[x].length;
 				str_pos+=str_len;
-				output +=arrString[x]+"<span  class=\"tooltip\">※<span class=\"tooltiptext tooltip-bottom\"><button onclick='text_move("+index+"," + str_pos + ",0)'>▲</button> <button onclick='text_move("+index+"," + str_pos + ",1)'>▼</button> </span> </span> ";	
+				output +=arrString[x]+"<span  class=\"tooltip\">※<span class=\"tooltiptext tooltip-bottom\"><button onclick='text_move("+index+"," + str_pos + ",0)'>▲</button> <button onclick='text_move("+index+"," + str_pos + ",1)'>▼</button> </span> </span> ";
 			}
 			return output;
 		}
-		
+
 		function text_move(index,str_pos,updown){
 			if(updown==0 && index==0){
 				return;
@@ -327,7 +325,7 @@ else{
 				res_list[index-1].textchanged=true;
 				res_list[index].text=res_list[index].text.substring(str_pos);
 				res_list[index].textchanged=true;
-				
+
 			}
 			else{
 				res_list[index+1].text=res_list[index].text.substring(str_pos)+res_list[index+1].text;
@@ -337,7 +335,7 @@ else{
 			}
 			render_all_tran();
 		}
-		
+
 		function fix_cancle(){
 			$("#tool_bar_fix").fadeOut();
 			$("#main_tool_bar").fadeIn();
@@ -371,9 +369,9 @@ else{
 			},
 			function(data,status){
 				alert("Data: " + data + "\nStatus: " + status);
-			});	
+			});
 		}
-		
+
 		function lookup(){
 			var xPali=document.getElementsByClassName("pali");
 			for (var x in xPali){
@@ -424,14 +422,14 @@ else{
 						<a onclick="tool_changed('target')">标签</a>
 						<a onclick="tool_changed('layout')">布局</a>
 						<a onclick="tool_changed('porpername')">术语</a>
-						<a onclick="tool_changed('share')">分享</a>		
-						<a onclick="tool_changed('fix')">修改</a>								
+						<a onclick="tool_changed('share')">分享</a>
+						<a onclick="tool_changed('fix')">修改</a>
 					</div>
-				</div>			
-			
+				</div>
+
 			</div>
-		</div>	
-		
+		</div>
+
 		<div id="tool_bar_comments">
 			<div class='reader_toolbar' style="height:auto;">
 			<div>
@@ -439,10 +437,10 @@ else{
 			<div>
 				<span>单击段落文字添加批注</span>
 			</div>
-			<div>			
+			<div>
 			</div>
 			</div>
-		</div>	
+		</div>
 		<div id="tool_bar_dighest">
 			<div  class='reader_toolbar'  style="height:auto;">
 			<div>
@@ -455,8 +453,8 @@ else{
 				<button onclick="dighest_ok()">完成</button>
 			</div>
 			</div>
-		</div>	
-		
+		</div>
+
 		<div id="tool_bar_fix">
 			<div  class='reader_toolbar'  style="height:auto;">
 			<div>
@@ -469,252 +467,248 @@ else{
 				<button onclick="fix_ok()">完成</button>
 			</div>
 			</div>
-		</div>	
+		</div>
 		<!--tool bar end -->
-		
+
 		<div id="main_text_view" style="padding-bottom: 10em;">
 <?php
 
-	PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
-	if(isset($album)){
-		//更新点击
-		$query = "select * from 'index' where book='$book' and paragraph='$paragraph' and album=$album";
-		$FetchRes = PDO_FetchAll($query);
-		if(count($FetchRes)>0){
-			$id=$FetchRes[0]["id"];
-			$hit=$FetchRes[0]["hit"]+1;
-			$query ="UPDATE 'index' SET hit = $hit WHERE id = $id";
-			$stmt = @PDO_Execute($query);
-					if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-						$error = PDO_ErrorInfo();
-						print_r($error[2]);
-					}
-		}
-	}
-	//获取段落信息 如 父段落 下一个段落等
-	$query = "select * from 'paragraph_info' where book='$book' and paragraph='$paragraph'";
-	$FetchParInfo = PDO_FetchAll($query);
-	if(!$FetchParInfo){
-		echo "Error:no paragraph info";
-	}
-	$par_begin=$paragraph+1-1;
-	$par_end=$par_begin+$FetchParInfo[0]["length"]-1;	
-	$par_next=$FetchParInfo[0]["next"];
-	//生成一个段落空壳 等会儿查询数据，按照不同数据类型填充进去
-	for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
-		echo "<div id='par-b$book-$iPar' class='par_div'>";
-		echo "<div id='par-pali-b$book-$iPar' class='par_pali_div'>";
-		echo "</div>";
-		echo "<div id='par-wbwdiv-b$book-$iPar' class='par_translate_div'>";
-		echo "</div>";
-		echo "<div id='par-translate-b$book-$iPar' class='par_translate_div'>";
-		echo "</div>";
-		echo "<div id='par-note-b$book-$iPar' class='par_translate_div'>";
-		echo "</div>";
-		echo "</div>";
-	}
-	
-	//先查pali text 因为要获取段落标题级别
-	$db_file = _FILE_DB_PALITEXT_;
-	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
+PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+if (isset($album)) {
+    //更新点击
+    $query = "select * from 'index' where book='$book' and paragraph='$paragraph' and album=$album";
+    $FetchRes = PDO_FetchAll($query);
+    if (count($FetchRes) > 0) {
+        $id = $FetchRes[0]["id"];
+        $hit = $FetchRes[0]["hit"] + 1;
+        $query = "UPDATE 'index' SET hit = $hit WHERE id = $id";
+        $stmt = @PDO_Execute($query);
+        if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+            $error = PDO_ErrorInfo();
+            print_r($error[2]);
+        }
+    }
+}
+//获取段落信息 如 父段落 下一个段落等
+$query = "select * from 'paragraph_info' where book='$book' and paragraph='$paragraph'";
+$FetchParInfo = PDO_FetchAll($query);
+if (!$FetchParInfo) {
+    echo "Error:no paragraph info";
+}
+$par_begin = $paragraph + 1 - 1;
+$par_end = $par_begin + $FetchParInfo[0]["length"] - 1;
+$par_next = $FetchParInfo[0]["next"];
+//生成一个段落空壳 等会儿查询数据，按照不同数据类型填充进去
+for ($iPar = $par_begin; $iPar <= $par_end; $iPar++) {
+    echo "<div id='par-b$book-$iPar' class='par_div'>";
+    echo "<div id='par-pali-b$book-$iPar' class='par_pali_div'>";
+    echo "</div>";
+    echo "<div id='par-wbwdiv-b$book-$iPar' class='par_translate_div'>";
+    echo "</div>";
+    echo "<div id='par-translate-b$book-$iPar' class='par_translate_div'>";
+    echo "</div>";
+    echo "<div id='par-note-b$book-$iPar' class='par_translate_div'>";
+    echo "</div>";
+    echo "</div>";
+}
 
-	if($par_begin==-1){
-		$query="SELECT * FROM \"pali_text\" WHERE book = '{$book}' ";
-	}
-	else{
-		$query="SELECT * FROM \"pali_text\" WHERE book = '{$book}' and  (\"paragraph\" BETWEEN ".$PDO->quote($par_begin)." AND ".$PDO->quote($par_end).") ";
-	}
-	//查询pali text内容
-	$FetchText = PDO_FetchAll($query);
-	$iFetchText=count($FetchText);
-	if($iFetchText>0){
-		for($i=0;$i<$iFetchText;$i++){
-			$currParNo=$FetchText[$i]["paragraph"];
-			$currParLevel=$FetchText[$i]["level"];
-			$par_level["$currParNo"]=$currParLevel;
-			echo "<div id='par-palitext-b{$book}-{$currParNo}' class='palitext_text'><div class=\"text_level_{$currParLevel}\">".$FetchText[$i]["text"]."</div></div>";
-			echo "<script>";
-			echo "document.getElementById('par-pali-b{$book}-{$currParNo}').appendChild(document.getElementById('par-palitext-b{$book}-{$currParNo}'));";
-			echo "</script>";					
-		}
+//先查pali text 因为要获取段落标题级别
+$db_file = _FILE_DB_PALITEXT_;
+PDO_Connect("" . _FILE_DB_PALITEXT_);
 
-	}	
-	//巴利原文加载结束
-	if(isset($album)){
+if ($par_begin == -1) {
+    $query = "SELECT * FROM \"pali_text\" WHERE book = '{$book}' ";
+} else {
+    $query = "SELECT * FROM \"pali_text\" WHERE book = '{$book}' and  (\"paragraph\" BETWEEN " . $PDO->quote($par_begin) . " AND " . $PDO->quote($par_end) . ") ";
+}
+//查询pali text内容
+$FetchText = PDO_FetchAll($query);
+$iFetchText = count($FetchText);
+if ($iFetchText > 0) {
+    for ($i = 0; $i < $iFetchText; $i++) {
+        $currParNo = $FetchText[$i]["paragraph"];
+        $currParLevel = $FetchText[$i]["level"];
+        $par_level["$currParNo"] = $currParLevel;
+        echo "<div id='par-palitext-b{$book}-{$currParNo}' class='palitext_text'><div class=\"text_level_{$currParLevel}\">" . $FetchText[$i]["text"] . "</div></div>";
+        echo "<script>";
+        echo "document.getElementById('par-pali-b{$book}-{$currParNo}').appendChild(document.getElementById('par-palitext-b{$book}-{$currParNo}'));";
+        echo "</script>";
+    }
 
-		/*
-		//自动逐词译
-		$db_file = "../appdata/palicanon/templet/p".$book."_tpl.db3";
-		PDO_Connect("sqlite:$db_file");
-		for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
-			$query="SELECT * FROM \"main\" WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) ";
-			$Fetch = PDO_FetchAll($query);
-			$iFetch=count($Fetch);
-			if($iFetch>0){
-				echo "<div id='par-wbw-b$book-$iPar' class='wbw_par'>";
-				for($i=0;$i<$iFetch;$i++){
-					$type=$Fetch[$i]["type"];
-					if($type!=".ctl."){
-					echo "<div class='word'>";
-					echo "<div class='pali'>".$Fetch[$i]["word"]."</div>";
-					echo "<div class='mean'>".$Fetch[$i]["mean"]."</div>";
-					echo "</div>";
-					}
-				}
-				echo "</div>";
-				echo "<script>";
-				echo "document.getElementById('par-wbwdiv-b$book-$iPar').appendChild(document.getElementById('par-wbw-b$book-$iPar'));";
-				echo "</script>";					
+}
+//巴利原文加载结束
+if (isset($album)) {
 
-				}		
-		}
-		////自动逐词译结束
-		*/
-		
-		
-		PDO_Connect("sqlite:"._FILE_DB_RESRES_INDEX_);
-		$query = "select * from 'album' where id='$album'";
-		$Fetch = PDO_FetchAll($query);
-		$iFetch=count($Fetch);
-		if($iFetch>0){
-			switch($Fetch[0]["type"]){
-				case 1://巴利原文
-				break;
-				case 2://逐词译
-					$db_file =_DIR_PALICANON_WBW_."/p{$book}_wbw.db3";
-					PDO_Connect("sqlite:$db_file");
-					for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
-						$table="p{$book}_wbw_data";
-						$query="SELECT * FROM \"{$table}\" WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) and album_id={$album} ";
-						$Fetch = PDO_FetchAll($query);
-						$iFetch=count($Fetch);
-						if($iFetch>0){
-							echo "<div id='par-wbw-b$book-$iPar' class='wbw_par'>";
-							for($i=0;$i<$iFetch;$i++){
-								$wordtype=$Fetch[$i]["type"];
-								if($wordtype!=".ctl."){
-								echo "<div class='word'>";
-								echo "<div class='pali'>{$Fetch[$i]["word"]}</div>";
-								echo "<div class='mean'>{$Fetch[$i]["mean"]}</div>";
-								echo "<div class='case'>{$wordtype}#{$Fetch[$i]["gramma"]}</div>";
-								echo "</div>";
-								}
-							}
-							echo "</div>";
-							echo "<script>";
-							echo "document.getElementById('par-wbwdiv-b$book-$iPar').appendChild(document.getElementById('par-wbw-b$book-$iPar'));";
-							echo "</script>";					
+    /*
+    //自动逐词译
+    $db_file = "../appdata/palicanon/templet/p".$book."_tpl.db3";
+    PDO_Connect("$db_file");
+    for($iPar=$par_begin;$iPar<=$par_end;$iPar++){
+    $query="SELECT * FROM \"main\" WHERE (\"paragraph\" = ".$PDO->quote($iPar)." ) ";
+    $Fetch = PDO_FetchAll($query);
+    $iFetch=count($Fetch);
+    if($iFetch>0){
+    echo "<div id='par-wbw-b$book-$iPar' class='wbw_par'>";
+    for($i=0;$i<$iFetch;$i++){
+    $type=$Fetch[$i]["type"];
+    if($type!=".ctl."){
+    echo "<div class='word'>";
+    echo "<div class='pali'>".$Fetch[$i]["word"]."</div>";
+    echo "<div class='mean'>".$Fetch[$i]["mean"]."</div>";
+    echo "</div>";
+    }
+    }
+    echo "</div>";
+    echo "<script>";
+    echo "document.getElementById('par-wbwdiv-b$book-$iPar').appendChild(document.getElementById('par-wbw-b$book-$iPar'));";
+    echo "</script>";
 
-							}		
-					}
-				break;
-				case 3:
-					//译文
-					$tocHtml="";
-					//打开翻译数据文件
-					$db_file =_DIR_PALICANON_TRAN_."/p{$book}_translate.db3";
-					PDO_Connect("sqlite:{$db_file}");
-					$this_album_id=$album;
-					$table="p{$book}_translate_info";
-					if($par_begin==-1){
-						//全文
-						$query="SELECT * FROM '{$table}' WHERE album_id=$this_album_id ";
-					}
-					else{
-						//部分段落
-						$query="SELECT * FROM '{$table}' WHERE (\"paragraph\" BETWEEN ".$PDO->quote($par_begin)." AND ".$PDO->quote($par_end).") and album_id=$this_album_id ";
-					}
+    }
+    }
+    ////自动逐词译结束
+     */
 
-					//查询翻译经文内容
-					$FetchText = PDO_FetchAll($query);
-					$iFetchText=count($FetchText);
-					if($iFetchText>0){
-						for($i=0;$i<$iFetchText;$i++){
-							$currParNo=$FetchText[$i]["paragraph"];
-							//查另一个表，获取段落文本。一句一条记录。有些是一段一条记录
-							$table_data="p{$book}_translate_data";
-							$query="SELECT * FROM '{$table_data}' WHERE info_id={$FetchText[$i]["id"]}";
-							$aParaText = PDO_FetchAll($query);
-							$par_text="";
-							foreach($aParaText as $sent){
-								$par_text.=$sent["text"];
-							}
-							//获取段落文本结束。
-							$par_text=str_replace("<pb></pb>","<br/><pb></pb>",$par_text);
-							echo "<div id='par-translate-a$album-b$book-$currParNo' class='translate_text'>";
-							echo "<a name='par_$currParNo'></a>";
-							echo "<div id='text-a$album-b$book-$currParNo' class='text_level_".$par_level["$currParNo"]."' onclick='paragraph_click($album,$book,$currParNo)'>".$par_text."</div>";
-							echo "<div id='comm-a$album-b$book-$currParNo' class='comments'>";
-							echo "<div id='new-comm-a$album-b$book-$currParNo'  class='new_comments'></div>";
-							echo "</div>";
-							echo "</div>";
-							echo "<script>";
-							echo "add_new_res($album,$book,$currParNo,'$par_text');";
-							echo "document.getElementById('par-translate-b$book-$currParNo').appendChild(document.getElementById('par-translate-a$album-b$book-$currParNo'));";
-							echo "</script>";
-							//目录字符串
-							$tocLevel=$par_level["$currParNo"]+1-1;
-							if($tocLevel>0 && $tocLevel<8){
-								$tocHtml.="<div class='toc_item level_$tocLevel'><a href='#par_$currParNo'>{$par_text}</a></div>";
-							}
-						}
-						//设置标题栏的经文名称
-						echo "<script>";
-						echo "document.getElementById('tool_bar_title').innerHTML='".$FetchText[0]["title"]."'";
-						echo "</script>";
-					}
-					break;
-				case 4:
-				break;
-				case 5:
-				break;
-				case 6:
-				break;
-				case 7:
-				break;
-			}
-		}
-		//添加注解
-		PDO_Connect("sqlite:"._FILE_DB_COMMENTS_);
+    PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+    $query = "select * from 'album' where id='$album'";
+    $Fetch = PDO_FetchAll($query);
+    $iFetch = count($Fetch);
+    if ($iFetch > 0) {
+        switch ($Fetch[0]["type"]) {
+            case 1: //巴利原文
+                break;
+            case 2: //逐词译
+                $db_file = _DIR_PALICANON_WBW_ . "/p{$book}_wbw.db3";
+                PDO_Connect("$db_file");
+                for ($iPar = $par_begin; $iPar <= $par_end; $iPar++) {
+                    $table = "p{$book}_wbw_data";
+                    $query = "SELECT * FROM \"{$table}\" WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) and album_id={$album} ";
+                    $Fetch = PDO_FetchAll($query);
+                    $iFetch = count($Fetch);
+                    if ($iFetch > 0) {
+                        echo "<div id='par-wbw-b$book-$iPar' class='wbw_par'>";
+                        for ($i = 0; $i < $iFetch; $i++) {
+                            $wordtype = $Fetch[$i]["type"];
+                            if ($wordtype != ".ctl.") {
+                                echo "<div class='word'>";
+                                echo "<div class='pali'>{$Fetch[$i]["word"]}</div>";
+                                echo "<div class='mean'>{$Fetch[$i]["mean"]}</div>";
+                                echo "<div class='case'>{$wordtype}#{$Fetch[$i]["gramma"]}</div>";
+                                echo "</div>";
+                            }
+                        }
+                        echo "</div>";
+                        echo "<script>";
+                        echo "document.getElementById('par-wbwdiv-b$book-$iPar').appendChild(document.getElementById('par-wbw-b$book-$iPar'));";
+                        echo "</script>";
 
-		if($par_begin==-1){
-			$query="SELECT * FROM \"comments\" WHERE album='$album'  order by id DESC";
-		}
-		else{
-			$query="SELECT * FROM \"comments\" WHERE  album='$album' AND (\"paragraph\" BETWEEN ".$PDO->quote($par_begin)." AND ".$PDO->quote($par_end).") order by id DESC ";
-		}
-		//查询注解内容
-		$FetchText = PDO_FetchAll($query);
-		$iFetchText=count($FetchText);
-		if($iFetchText>0){
-			for($i=0;$i<$iFetchText;$i++){
-				$currParNo=$FetchText[$i]["paragraph"];
-				$comm_id=$FetchText[$i]["id"];
-				
-				echo "<div id='comm-id-".$comm_id."' class='comments_text_div'><div class='comments_text'>".$FetchText[$i]["text"]."</div><div><button>赞</button>".$FetchText[$i]["reputable"]."</div></div>";
-				echo "<script>";
-				echo "document.getElementById('comm-a$album-b$book-$currParNo').appendChild(document.getElementById('comm-id-".$comm_id."'));";
-				echo "</script>";					
-			}
+                    }
+                }
+                break;
+            case 3:
+                //译文
+                $tocHtml = "";
+                //打开翻译数据文件
+                $db_file = _DIR_PALICANON_TRAN_ . "/p{$book}_translate.db3";
+                PDO_Connect("{$db_file}");
+                $this_album_id = $album;
+                $table = "p{$book}_translate_info";
+                if ($par_begin == -1) {
+                    //全文
+                    $query = "SELECT * FROM '{$table}' WHERE album_id=$this_album_id ";
+                } else {
+                    //部分段落
+                    $query = "SELECT * FROM '{$table}' WHERE (\"paragraph\" BETWEEN " . $PDO->quote($par_begin) . " AND " . $PDO->quote($par_end) . ") and album_id=$this_album_id ";
+                }
 
-		}
+                //查询翻译经文内容
+                $FetchText = PDO_FetchAll($query);
+                $iFetchText = count($FetchText);
+                if ($iFetchText > 0) {
+                    for ($i = 0; $i < $iFetchText; $i++) {
+                        $currParNo = $FetchText[$i]["paragraph"];
+                        //查另一个表，获取段落文本。一句一条记录。有些是一段一条记录
+                        $table_data = "p{$book}_translate_data";
+                        $query = "SELECT * FROM '{$table_data}' WHERE info_id={$FetchText[$i]["id"]}";
+                        $aParaText = PDO_FetchAll($query);
+                        $par_text = "";
+                        foreach ($aParaText as $sent) {
+                            $par_text .= $sent["text"];
+                        }
+                        //获取段落文本结束。
+                        $par_text = str_replace("<pb></pb>", "<br/><pb></pb>", $par_text);
+                        echo "<div id='par-translate-a$album-b$book-$currParNo' class='translate_text'>";
+                        echo "<a name='par_$currParNo'></a>";
+                        echo "<div id='text-a$album-b$book-$currParNo' class='text_level_" . $par_level["$currParNo"] . "' onclick='paragraph_click($album,$book,$currParNo)'>" . $par_text . "</div>";
+                        echo "<div id='comm-a$album-b$book-$currParNo' class='comments'>";
+                        echo "<div id='new-comm-a$album-b$book-$currParNo'  class='new_comments'></div>";
+                        echo "</div>";
+                        echo "</div>";
+                        echo "<script>";
+                        echo "add_new_res($album,$book,$currParNo,'$par_text');";
+                        echo "document.getElementById('par-translate-b$book-$currParNo').appendChild(document.getElementById('par-translate-a$album-b$book-$currParNo'));";
+                        echo "</script>";
+                        //目录字符串
+                        $tocLevel = $par_level["$currParNo"] + 1 - 1;
+                        if ($tocLevel > 0 && $tocLevel < 8) {
+                            $tocHtml .= "<div class='toc_item level_$tocLevel'><a href='#par_$currParNo'>{$par_text}</a></div>";
+                        }
+                    }
+                    //设置标题栏的经文名称
+                    echo "<script>";
+                    echo "document.getElementById('tool_bar_title').innerHTML='" . $FetchText[0]["title"] . "'";
+                    echo "</script>";
+                }
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+        }
+    }
+    //添加注解
+    PDO_Connect("" . _FILE_DB_COMMENTS_);
 
-		if($par_next!=-1){
-			echo "<a href='reader.php?book=$book&album=$album&paragraph=$par_next'>Next</a>";
-		}
-		
-	}
+    if ($par_begin == -1) {
+        $query = "SELECT * FROM \"comments\" WHERE album='$album'  order by id DESC";
+    } else {
+        $query = "SELECT * FROM \"comments\" WHERE  album='$album' AND (\"paragraph\" BETWEEN " . $PDO->quote($par_begin) . " AND " . $PDO->quote($par_end) . ") order by id DESC ";
+    }
+    //查询注解内容
+    $FetchText = PDO_FetchAll($query);
+    $iFetchText = count($FetchText);
+    if ($iFetchText > 0) {
+        for ($i = 0; $i < $iFetchText; $i++) {
+            $currParNo = $FetchText[$i]["paragraph"];
+            $comm_id = $FetchText[$i]["id"];
+
+            echo "<div id='comm-id-" . $comm_id . "' class='comments_text_div'><div class='comments_text'>" . $FetchText[$i]["text"] . "</div><div><button>赞</button>" . $FetchText[$i]["reputable"] . "</div></div>";
+            echo "<script>";
+            echo "document.getElementById('comm-a$album-b$book-$currParNo').appendChild(document.getElementById('comm-id-" . $comm_id . "'));";
+            echo "</script>";
+        }
+
+    }
+
+    if ($par_next != -1) {
+        echo "<a href='reader.php?book=$book&album=$album&paragraph=$par_next'>Next</a>";
+    }
+
+}
 ?>
 
 	</div><!--main_text_view end-->
-	
+
 	<div id="new_comm_shell" style="display:none;">
 		<div id="new_comm_div">
 		<textarea id="new_comm_text"></textarea>
 		<button onclick="new_comm_submit()">提交</button><button onclick="new_comm_cancel()">取消</button>
 		</div>
 	</div>
-	
+
 	<div id="dighest_edit_div" class="full_screen_window">
 		<div class="win_caption">
 		<div><button onclick="dighest_edit_cancle()">取消</button></div>
@@ -734,8 +728,8 @@ else{
 			</div>
 		</div>
 	</div>
-	
-		<!-- nav begin--> 
+
+		<!-- nav begin-->
 
 		<div id="leftmenuinner" class="viewswitch_off">
 			<div class="win_caption">
@@ -746,11 +740,11 @@ else{
 						<li id="palicanon_menu_li" class="common-tab_li" onclick="menuSelected_2(menu_pali_cannon,'palicanon_menu_li')">批注</li>
 						<li id="bookmark_menu_li" class="common-tab_li" onclick="menuSelected_2(menu_bookmark,'bookmark_menu_li')">书签</li>
 					</ul>
-				</div>			
+				</div>
 			</div>
-			
-			
-			<div class='toc' id='leftmenuinnerinner'>	
+
+
+			<div class='toc' id='leftmenuinnerinner'>
 			<!-- toc begin -->
 			<div class="menu" id="menu_toc">
 				<a name="_Content" ></a>
@@ -770,7 +764,7 @@ else{
 			<div class="menu" id="menu_comments">
 				<div id="navi_comments_inner"></div>
 			</div>
-			<!-- comments end -->			
+			<!-- comments end -->
 			<!-- book mark begin -->
 			<div class="menu" id="menu_bookmark" style="display:none;">
 				<div>
@@ -787,12 +781,12 @@ else{
 				<div id="navi_bookmark_inner"></div>
 			</div>
 			<!-- book mark end -->
-			
-						
+
+
 			</div>
-		
+
 		</div>
-		<!-- nav end -->	
+		<!-- nav end -->
 		<div id="BV" class="blackscreen" onclick="setNaviVisibility()"></div>
 		<div id="mean_menu" ></div>
 		<script>
@@ -807,15 +801,15 @@ else{
 			var pali_word;
 			pali_word=targ.innerHTML;
 			objCurrMouseOverPaliMean=targ.nextSibling;
-			
+
 			$("#tool_bar_title").html(pali_word);
 			$("#mean_menu").html(getWordMeanMenu(pali_word));
 			targ.parentNode.appendChild(document.getElementById("mean_menu"));
-		  
+
 		});
 
 
 		</script>
-	
+
 </body>
 </html>

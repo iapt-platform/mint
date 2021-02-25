@@ -4,7 +4,7 @@ class Channal
 {
     public $dbh;
     public function __construct() {
-        $dns = "sqlite:"._FILE_DB_CHANNAL_;
+        $dns = ""._FILE_DB_CHANNAL_;
         $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
     }

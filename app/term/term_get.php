@@ -3,27 +3,27 @@
 查询term字典
 输入单词列表
 输出查到的结果
-*/
+ */
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
 require_once '../channal/function.php';
 
-PDO_Connect("sqlite:"._FILE_DB_TERM_);
+PDO_Connect("" . _FILE_DB_TERM_);
 
 $output = array();
-if(isset($_POST["words"])){
+if (isset($_POST["words"])) {
     $wordlist = json_decode($_POST["words"]);
-    if($_POST["readonly"]=="false" && !empty($_POST["channal"])){
-        $channal = explode(",",$_POST["channal"]);
+    if ($_POST["readonly"] == "false" && !empty($_POST["channal"])) {
+        $channal = explode(",", $_POST["channal"]);
         $channal_info = new Channal();
         $channal_owner = array();
         foreach ($channal as $key => $value) {
             # code...
             $info = $channal_info->getChannal($value);
-            if($info){
-                $channal_owner[$info["owner"]]=1;
+            if ($info) {
+                $channal_owner[$info["owner"]] = 1;
             }
         }
         /*  创建一个填充了和params相同数量占位符的字符串 */
@@ -34,69 +34,65 @@ if(isset($_POST["words"])){
             # code...
             $channal[] = $key;
         }
-        $fetch = PDO_FetchAll($query,$channal);
+        $fetch = PDO_FetchAll($query, $channal);
         $userinfo = new UserInfo();
         $user = array();
         foreach ($channal_owner as $key => $value) {
             # code...
-            $user[$key]=$userinfo->getName($key);
+            $user[$key] = $userinfo->getName($key);
         }
         foreach ($fetch as $key => $value) {
             # code...
-            if(isset($user[$fetch[$key]["owner"]])){
+            if (isset($user[$fetch[$key]["owner"]])) {
                 $fetch[$key]["user"] = $user[$fetch[$key]["owner"]];
+            } else {
+                $fetch[$key]["user"] = array("nickname" => "", "username" => "");
             }
-            else{
-                $fetch[$key]["user"]  = array("nickname"=>"","username"=>"");
-            }
-            $output[] =  $fetch[$key];
+            $output[] = $fetch[$key];
         }
-    }
-    else{
+    } else {
         foreach ($wordlist as $key => $value) {
             # code...
             $pali = $value->pali;
             $parm = array();
-            $parm[] = $pali;       
+            $parm[] = $pali;
 
             $otherCase = "";
-            if($value->channal != ""){
+            if ($value->channal != "") {
                 $otherCase .= " channal = ? ";
                 $parm[] = $value->channal;
             }
 
-            if($value->editor != ""){
-                if($otherCase != ""){
+            if ($value->editor != "") {
+                if ($otherCase != "") {
                     $otherCase .= " OR ";
                 }
                 $otherCase .= " owner = ? ";
                 $parm[] = $value->editor;
             }
 
-            if($value->lang != ""){
-                if($otherCase != ""){
+            if ($value->lang != "") {
+                if ($otherCase != "") {
                     $otherCase .= " OR ";
                 }
                 $otherCase .= " language = ? ";
                 $parm[] = $value->lang;
             }
 
-            if($otherCase==""){
+            if ($otherCase == "") {
                 $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM term WHERE word = ? ";
-            }
-            else{
+            } else {
                 $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM term WHERE word = ? AND ( $otherCase )";
             }
 
-            $fetch = PDO_FetchAll($query,$parm);
+            $fetch = PDO_FetchAll($query, $parm);
             $userinfo = new UserInfo();
             foreach ($fetch as $key => $value) {
                 # code...
-                $fetch[$key]["user"]=$userinfo->getName($value["owner"]);
-                $output[] =  $fetch[$key];
+                $fetch[$key]["user"] = $userinfo->getName($value["owner"]);
+                $output[] = $fetch[$key];
             }
         }
     }
 }
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
-?>

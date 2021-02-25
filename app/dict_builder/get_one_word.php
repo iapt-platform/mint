@@ -11,12 +11,12 @@ include "../public/_pdo.php";
 		}
 						
 		$dictFileName=_FILE_DB_REF_;
-		PDO_Connect("sqlite:$dictFileName");
+		PDO_Connect("$dictFileName");
 		$query = "SELECT * from dict where id = ? ";
 		$Fetch = PDO_FetchAll($query,array($word_id));
 		
 		$dictFileName=$dir_dict_3rd."all.db3";
-		PDO_Connect("sqlite:$dictFileName");
+		PDO_Connect("$dictFileName");
 		
 		foreach($Fetch as $word){
 			echo "<h3>".$word["paliword"]."</h3>";

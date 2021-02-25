@@ -6,7 +6,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 // open word part db
 global $dbh;
-$dns = "sqlite:" . _FILE_DB_PART_;
+$dns = "" . _FILE_DB_PART_;
 $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 

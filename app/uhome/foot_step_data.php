@@ -13,24 +13,23 @@
 require_once '../path.php';
 require_once '../lib/fullcalendar/php/utils.php';
 
-function covertTimeToString($time){
-	$time = (int)$time;
-	if($time<60){
-		return $time."秒";
-	}
-	else if($time<3600){
-		return (floor($time/60))."分钟";
-	}
-	else{
-		$hour = floor($time/3600);
-		$min = floor(($time-($hour*3600))/60);
-		return "{$hour}小时{$min}分钟";
-	}
+function covertTimeToString($time)
+{
+    $time = (int) $time;
+    if ($time < 60) {
+        return $time . "秒";
+    } else if ($time < 3600) {
+        return (floor($time / 60)) . "分钟";
+    } else {
+        $hour = floor($time / 3600);
+        $min = floor(($time - ($hour * 3600)) / 60);
+        return "{$hour}小时{$min}分钟";
+    }
 }
 
 // Short-circuit if the client did not give us a date range.
 if (!isset($_GET['start']) || !isset($_GET['end'])) {
-  die("Please provide a date range.");
+    die("Please provide a date range.");
 }
 
 // Parse the start/end parameters.
@@ -42,40 +41,40 @@ $range_end = parseDateTime($_GET['end']);
 // Parse the timeZone parameter if it is present.
 $time_zone = null;
 if (isset($_GET['timeZone'])) {
-  $time_zone = new DateTimeZone($_GET['timeZone']);
+    $time_zone = new DateTimeZone($_GET['timeZone']);
 }
 
 // Read and parse our events JSON file into an array of event data arrays.
-$dns = "sqlite:"._FILE_DB_USER_ACTIVE_;
-$dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+$dns = "" . _FILE_DB_USER_ACTIVE_;
+$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $query = "SELECT id , start, end,duration, hit  FROM edit WHERE user_id = ?";
 $stmt = $dbh->prepare($query);
 $stmt->execute(array($_GET["userid"]));
 $allData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$input_arrays=array();
+$input_arrays = array();
 foreach ($allData as $key => $value) {
-	# code...
-	$strDuration = covertTimeToString($value["duration"]/1000)."-".$value["hit"]."次操作";
-	$start = date("Y-m-d\TH:i:s+00:00",$value["start"]/1000);
-	$end = date("Y-m-d\TH:i:s+00:00",$value["end"]/1000);
-	$input_arrays[] = array("id"=>$value["id"],
-					  "title"=>$strDuration,
-					  "start"=>$start,
-					  "end"=>$end);
+    # code...
+    $strDuration = covertTimeToString($value["duration"] / 1000) . "-" . $value["hit"] . "次操作";
+    $start = date("Y-m-d\TH:i:s+00:00", $value["start"] / 1000);
+    $end = date("Y-m-d\TH:i:s+00:00", $value["end"] / 1000);
+    $input_arrays[] = array("id" => $value["id"],
+        "title" => $strDuration,
+        "start" => $start,
+        "end" => $end);
 }
 
 // Accumulate an output array of event data arrays.
 $output_arrays = array();
 foreach ($input_arrays as $array) {
 
-  // Convert the input array into a useful Event object
-  $event = new Event($array, $time_zone);
+    // Convert the input array into a useful Event object
+    $event = new Event($array, $time_zone);
 
-  // If the event is in-bounds, add it to the output
-  if ($event->isWithinDayRange($range_start, $range_end)) {
-    $output_arrays[] = $event->toArray();
-  }
+    // If the event is in-bounds, add it to the output
+    if ($event->isWithinDayRange($range_start, $range_end)) {
+        $output_arrays[] = $event->toArray();
+    }
 }
 
 // Send JSON to the client.

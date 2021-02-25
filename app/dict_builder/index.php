@@ -3,23 +3,20 @@ include "../path.php";
 include "../public/_pdo.php";
 global $PDO;
 
-if(isset($_GET['dict_id'])){
-	$dict_id=$_GET['dict_id'];
+if (isset($_GET['dict_id'])) {
+    $dict_id = $_GET['dict_id'];
+} else {
+    $dict_id = -1;
 }
-else{
-	$dict_id=-1;
+if (isset($_GET['page_no'])) {
+    $page_no = $_GET['page_no'];
+} else {
+    $page_no = 0;
 }
-if(isset($_GET['page_no'])){
-	$page_no=$_GET['page_no'];
-}
-else{
-	$page_no=0;
-}
-if(isset($_GET['page_size'])){
-	$page_size=$_GET['page_size'];
-}
-else{
-	$page_size=20;
+if (isset($_GET['page_size'])) {
+    $page_size = $_GET['page_size'];
+} else {
+    $page_size = 20;
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -74,7 +71,7 @@ else{
 	.active{
 		border-top: 1px solid #9797ff;
 		border-bottom: 1px solid #9797ff;
-	}	
+	}
 
 	.status_2{
 		background-color:#d6d6d6;
@@ -107,7 +104,7 @@ else{
 		th {
 			border: 1px solid #D2D2D2;
 			vertical-align: baseline;
-			
+
 		}
 		tr.h {
 			background-color: #F5F5F5;
@@ -121,7 +118,7 @@ else{
 		margin: 5px;
 			display:none;
 		}
-		
+
 		#message_button{
 			text-align: center;
 		}
@@ -147,37 +144,34 @@ else{
 					<div>
 						<select onchange="dict_changed(this)">
 						<?php
-						
 
-		$dictFileName=_FILE_DB_REF_;
-		PDO_Connect("sqlite:$dictFileName");
-		$query = "SELECT * from info where 1  limit 0,100";
-		$Fetch = PDO_FetchAll($query);
-		$iFetch=count($Fetch);
-		if($iFetch>0){
-			if($dict_id==-1){
-				echo "<option value=\"-1\" selected >选择一本字典</option>";
-			}
-			for($i=0;$i<$iFetch;$i++){
-				if($Fetch[$i]["id"]==$dict_id){
-					$selected="selected";
-				}
-				else{
-					$selected="";
-				}
-				echo "selected : $selected<br>";
-				echo "<option value=\"".$Fetch[$i]["id"]."\" $selected >".$Fetch[$i]["shortname"]."</option>";
-			}
-		}
-		if($dict_id!=-1){
-			$query = "SELECT count(*) from dict where dict_id = ? ";
-			$dict_count = PDO_FetchOne($query,array($dict_id));
-			$totle_page=ceil($dict_count/$page_size);
-		}
-		else{
-			$totle_page=0;
-		}
-						?>
+$dictFileName = _FILE_DB_REF_;
+PDO_Connect("$dictFileName");
+$query = "SELECT * from info where 1  limit 0,100";
+$Fetch = PDO_FetchAll($query);
+$iFetch = count($Fetch);
+if ($iFetch > 0) {
+    if ($dict_id == -1) {
+        echo "<option value=\"-1\" selected >选择一本字典</option>";
+    }
+    for ($i = 0; $i < $iFetch; $i++) {
+        if ($Fetch[$i]["id"] == $dict_id) {
+            $selected = "selected";
+        } else {
+            $selected = "";
+        }
+        echo "selected : $selected<br>";
+        echo "<option value=\"" . $Fetch[$i]["id"] . "\" $selected >" . $Fetch[$i]["shortname"] . "</option>";
+    }
+}
+if ($dict_id != -1) {
+    $query = "SELECT count(*) from dict where dict_id = ? ";
+    $dict_count = PDO_FetchOne($query, array($dict_id));
+    $totle_page = ceil($dict_count / $page_size);
+} else {
+    $totle_page = 0;
+}
+?>
 						</select>
 					</div>
 					<div id="dict_ref_search_input_div">
@@ -187,23 +181,23 @@ else{
 						<div><span id="input_parts"><span></span></span></div>
 					</div>
 					<div id="dict_word_nav">
-					<a 
+					<a
 					<?php
-						if($page_no>0){
-							$prev_page = $page_no-1;
-							echo "href='index.php?dict_id=$dict_id&page_no=$prev_page&page_size=$page_size'";
-						}
-					?>
-					>上一页</a> 
+if ($page_no > 0) {
+    $prev_page = $page_no - 1;
+    echo "href='index.php?dict_id=$dict_id&page_no=$prev_page&page_size=$page_size'";
+}
+?>
+					>上一页</a>
 					<input type="input" value="<?php echo $page_no; ?>" onchange="goto_page(this,<?php echo $dict_id; ?>,<?php echo $totle_page; ?>)" style="width:4em;" />/
-					<span><?php echo $totle_page-1; ?></span>
-					<a 
+					<span><?php echo $totle_page - 1; ?></span>
+					<a
 					<?php
-						if($page_no<$totle_page){
-							$next_page=$page_no+1;
-							echo "href='index.php?dict_id=$dict_id&page_no=$next_page&page_size=$page_size'";
-						}
-					?>
+if ($page_no < $totle_page) {
+    $next_page = $page_no + 1;
+    echo "href='index.php?dict_id=$dict_id&page_no=$next_page&page_size=$page_size'";
+}
+?>
 
 					>下一页</a>
 					</div>
@@ -212,39 +206,39 @@ else{
 					<div id="dict_ref_search">
 						<div id="dict_ref_search_result">
 						<?php
-						if($dict_id!=-1){
-							$from=$page_no*$page_size;
-							$query = "SELECT id, paliword,status from dict where dict_id = ? limit ? , ? ";
-							$Fetch = PDO_FetchAll($query,array($dict_id,$from,$page_size));
-							foreach($Fetch as $word){
-								$class_status="status_".$word["status"];
-								$str_status="";
-								switch($word["status"]){
-									case 1:
-										$str_status="";
-									break;
-									case 2:
-										$str_status="[草]";
-									break;
-									case 3:
-										$str_status="[标]";
-									break;	
-									case 10:
-										$str_status="";
-									break;
-								}
+if ($dict_id != -1) {
+    $from = $page_no * $page_size;
+    $query = "SELECT id, paliword,status from dict where dict_id = ? limit ? , ? ";
+    $Fetch = PDO_FetchAll($query, array($dict_id, $from, $page_size));
+    foreach ($Fetch as $word) {
+        $class_status = "status_" . $word["status"];
+        $str_status = "";
+        switch ($word["status"]) {
+            case 1:
+                $str_status = "";
+                break;
+            case 2:
+                $str_status = "[草]";
+                break;
+            case 3:
+                $str_status = "[标]";
+                break;
+            case 10:
+                $str_status = "";
+                break;
+        }
 
-								echo  "<div id='word_".$word["id"]."' class='ref_word $class_status' onclick='res_word_selected(this,".$word["id"].")'>$str_status<span class='pali_word' >".$word["paliword"]."</div>";
-							}
+        echo "<div id='word_" . $word["id"] . "' class='ref_word $class_status' onclick='res_word_selected(this," . $word["id"] . ")'>$str_status<span class='pali_word' >" . $word["paliword"] . "</div>";
+    }
 
-						}						
-						?>
+}
+?>
 						</div>
 					</div>
 				</div>
 			</div>
 
-		
+
 		<div id="build-dict">
 			<div id="message">
 				<div id="message_text"></div>
@@ -263,10 +257,10 @@ else{
 				<textarea id="org_edit_text" onkeyup="org_edit_changed()" onchange="org_edit_changed()"></textarea>
 			</div>
 			<div id="word_table">
-			
-			</div>	
+
+			</div>
 		</div>
-		
+
 		<div id="right-bar">
 		<div id="right-bar-header">
 		</div>
@@ -282,14 +276,14 @@ else{
 		<button onclick="save_replace_table()">保存</button>
 		</div>
 		<textarea id="replace_table_main" class="replace_table" ></textarea>
-		<textarea id="replace_table_pali" class="replace_table" style="display:none;"></textarea>		
+		<textarea id="replace_table_pali" class="replace_table" style="display:none;"></textarea>
 		<textarea id="replace_table_type" class="replace_table" style="display:none;"></textarea>
 		<textarea id="replace_table_part" class="replace_table" style="display:none;"></textarea>
 
 		</div>
-				
+
 		</div>
 	</div>
-	
+
 </body>
 </html>

@@ -8,7 +8,7 @@ require_once '../ucenter/function.php';
 
 
 if(isset($_GET["userid"])){
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $userid=$_GET["userid"];
     $query = "SELECT * from collect  where owner = ".$PDO->quote($userid)." and status <> 0 order by modify_time DESC";
     $Fetch = PDO_FetchAll($query);

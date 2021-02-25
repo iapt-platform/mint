@@ -41,7 +41,7 @@ require_once "../public/_pdo.php";
 require_once '../media/function.php';
 
 global $PDO;
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 
 
 $query = "SELECT * from course where id = ?   limit 0,1";

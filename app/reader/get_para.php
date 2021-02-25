@@ -2,25 +2,23 @@
 require_once "../public/_pdo.php";
 require_once "../path.php";
 
-define("_MAX_CHAPTER_LEN_" , 20000);
+define("_MAX_CHAPTER_LEN_", 20000);
 
-if(isset($_GET["book"])){
+if (isset($_GET["book"])) {
     $_book = $_GET["book"];
-}
-else{
+} else {
     exit;
 }
-if(isset($_GET["para"])){
+if (isset($_GET["para"])) {
     $_para = $_GET["para"];
-}
-else{
+} else {
     exit;
 }
 
-if(isset($_GET["begin"])){
+if (isset($_GET["begin"])) {
     $_begin = $_GET["begin"];
 }
-if(isset($_GET["end"])){
+if (isset($_GET["end"])) {
     $_end = $_GET["end"];
 }
 $_view = $_GET["view"];
@@ -29,64 +27,60 @@ $output["toc"] = array();
 $output["sentences"] = array();
 $output["head"] = 0;
 
-if($_view=="sent"){
-    $output["sentences"] = array(array("book"=>$_book,"paragraph"=>$_para,"begin"=>$_begin,"end"=>$_end));
-    echo json_encode($output,JSON_UNESCAPED_UNICODE);
+if ($_view == "sent") {
+    $output["sentences"] = array(array("book" => $_book, "paragraph" => $_para, "begin" => $_begin, "end" => $_end));
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-
-PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
+PDO_Connect("" . _FILE_DB_PALITEXT_);
 $query = "SELECT * FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
-$FetchParInfo = PDO_FetchRow($query , array($_book,$_para));
-if($FetchParInfo){
+$FetchParInfo = PDO_FetchRow($query, array($_book, $_para));
+if ($FetchParInfo) {
     switch ($_view) {
         case 'chapter':
             # code...
             $paraBegin = $_para;
-			$paraEnd = $_para+$FetchParInfo["chapter_len"]-1;
+            $paraEnd = $_para + $FetchParInfo["chapter_len"] - 1;
             break;
         case 'para':
             $paraBegin = $_para;
-			$paraEnd = $_para;
+            $paraEnd = $_para;
             # code...
-            break;        
+            break;
         default:
             # code...
             $paraBegin = $_para;
-			$paraEnd = $_para;
+            $paraEnd = $_para;
             break;
     }
 
     //获取下级目录
     $query = "SELECT * FROM 'pali_text'  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
-    $output["toc"] = PDO_FetchAll($query , array($_book,$paraBegin,$paraEnd));
+    $output["toc"] = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 
-    if($FetchParInfo["chapter_strlen"]>_MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"])>1){
-        if($output["toc"][1]["paragraph"]-$_para>1){
+    if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"]) > 1) {
+        if ($output["toc"][1]["paragraph"] - $_para > 1) {
             # 中间有间隔
             $paraBegin = $_para;
-            $paraEnd = $output["toc"][1]["paragraph"]-1;
+            $paraEnd = $output["toc"][1]["paragraph"] - 1;
             $output["head"] = 1;
-        }
-        else{
+        } else {
             #中间无间隔
-            echo json_encode($output,JSON_UNESCAPED_UNICODE);
-            exit;            
+            echo json_encode($output, JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
     }
 
-    PDO_Connect("sqlite:"._FILE_DB_PALI_SENTENCE_);
+    PDO_Connect("" . _FILE_DB_PALI_SENTENCE_);
 
     $query = "SELECT book,paragraph,begin, end FROM 'pali_sent' WHERE book= ? AND (paragraph BETWEEN ?AND ? ) ";
-    $sent_list = PDO_FetchAll($query,array($_book,$paraBegin,$paraEnd));
+    $sent_list = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
     $output["sentences"] = $sent_list;
-    echo json_encode($output,JSON_UNESCAPED_UNICODE);        
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
+
+} else {
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
 
 }
-else{
-    echo json_encode($output,JSON_UNESCAPED_UNICODE);
-
-}
-?>

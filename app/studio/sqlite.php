@@ -1,6 +1,6 @@
 <style type="text/css">@import url("style.css");</style>
 <a href="index.php">Go back to index</a>
-| <a href="<?php echo $_SERVER["REQUEST_URI"];?>">Refresh</a>
+| <a href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Refresh</a>
 
 <h1>SQLite</h1>
 
@@ -9,7 +9,7 @@
 error_reporting(-1);
 include "./_pdo.php";
 $db_file = "./sqlite-database.db";
-PDO_Connect("sqlite:$db_file");
+PDO_Connect("$db_file");
 print("PDO_Connect(): successsfully connected<br>");
 print("The database file: <b>$db_file</b><br>");
 
@@ -24,14 +24,17 @@ print("<pre>");
 $queries = explode(";", $queries);
 foreach ($queries as $query) {
     $query = trim($query);
-    if (!$query) continue;
+    if (!$query) {
+        continue;
+    }
+
     $stmt = @PDO_Execute($query);
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
         print_r($error[2]);
         break;
     }
-    print($query."\n");
+    print($query . "\n");
 }
 print("</pre>");
 

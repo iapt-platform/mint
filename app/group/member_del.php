@@ -11,7 +11,7 @@ if (!isset($_COOKIE["userid"])) {
     exit;
 }
 if (isset($_POST["groupid"])) {
-    PDO_Connect("sqlite:" . _FILE_DB_GROUP_);
+    PDO_Connect("" . _FILE_DB_GROUP_);
     $mypower = 100;
     # 先查是否有删人权限
     $query = "SELECT * from group_info where id=?";

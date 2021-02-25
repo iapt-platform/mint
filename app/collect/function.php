@@ -6,7 +6,7 @@ class CollectInfo
     private $dbh;
     private $buffer;
     public function __construct() {
-        $dns = "sqlite:"._FILE_DB_USER_ARTICLE_;
+        $dns = ""._FILE_DB_USER_ARTICLE_;
         $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
         $buffer = array();

@@ -13,7 +13,7 @@ else{
 	//更新点击
 	$dir= $dir_user_base.$_COOKIE["userid"];
 	$db_file = $dir.'my_data.db';
-	PDO_Connect("sqlite:$db_file");
+	PDO_Connect("$db_file");
 
 	$query="INSERT INTO favorite ('id','res_id','title','tag','user','time') VALUES (NULL,?,?,?,?,?)";
 		$stmt = @PDO_Execute($query);

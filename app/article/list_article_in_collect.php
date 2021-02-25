@@ -8,7 +8,7 @@ require_once '../ucenter/function.php';
 
 $output  = array();
 if(isset($_GET["id"])){
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $article_id=$_GET["id"];
     $query = "SELECT collect_id as id from article_list  where article_id = ?  ";
     $exist = PDO_FetchAll($query,array($article_id));

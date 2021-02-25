@@ -6,7 +6,7 @@ require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
 $respond=array("status"=>0,"message"=>"");
-PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+PDO_Connect(""._FILE_DB_USER_ARTICLE_);
 
 $query="INSERT INTO collect ( id,  title  , subtitle  , summary , article_list   , owner, lang  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? ) ";
 $sth = $PDO->prepare($query);

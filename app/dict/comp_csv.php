@@ -9,7 +9,7 @@ $myfile = fopen(_DIR_TEMP_ . "/comp.csv", "a");
 $filefail = fopen(_DIR_TEMP_ . "/comp_fail.txt", "a");
 $iMax = 10;
 /*
-$dns = "sqlite:" . _FILE_DB_WORD_INDEX_;
+$dns = "" . _FILE_DB_WORD_INDEX_;
 $dbh_word = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 

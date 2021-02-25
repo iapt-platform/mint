@@ -7,7 +7,7 @@ require_once "../ucenter/function.php";
 
 $userinfo = new UserInfo();
 
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 $query = "SELECT * from lesson where id = ?   limit 0,1";
 $fLesson = PDO_FetchRow($query,array($_GET["id"]));
 

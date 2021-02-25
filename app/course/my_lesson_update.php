@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 global $PDO;
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 $query="SELECT course_id from lesson  where  id = ?  ";
 $course_id = PDO_FetchOne($query,array($_POST["lesson"]));
 
