@@ -4,13 +4,12 @@ require_once "../pcdl/html_head.php";
 
 <body>
 	<a name="toc_root"></a>
-	<?php
-	if(!(isset($_GET["inline"]) && $_GET["inline"]=='1')){
-		require_once("../pcdl/head_bar.php");
-	}
-	
-	?>
-
+<?php
+if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
+    require_once "../pcdl/head_bar.php";
+}
+?>
+	<script language="javascript" src="./dict.js"></script>
 	<style>
 		body {
 			margin: unset;
@@ -218,6 +217,16 @@ require_once "../pcdl/html_head.php";
 		.dict_find_gramma guide{
 			color:unset;
 		}
+
+		#pre_search_result{
+			background-color: var(--btn-color);
+			z-index: 50;
+			display:none;
+		}
+
+		#dt_title {
+			border-bottom: 2px solid var(--link-hover-color);
+		}
 	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
@@ -241,14 +250,15 @@ require_once "../pcdl/html_head.php";
 			<div style="flex:6;">
 				<div>
 					<div>
-						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search; ?>" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
+						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search; ?> 单词里面添加+ 预览拆词结果" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
+					<div id="result_msg"></div>
 					<div id="word_parts">
 						<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
 					</div>
 				</div>
 
-				<div id="pre_search_result" style="background-color: var(--btn-color);z-index: 50;">
+				<div id="pre_search_result" >
 					<div id="pre_search_word" class="pre_serach_block">
 						<div id="pre_search_word_title" class="pre_serach_block_title">
 							<div id="pre_search_word_title_left"><?php echo $_local->gui->vocabulary_list; ?></div>
@@ -261,8 +271,7 @@ require_once "../pcdl/html_head.php";
 			</div>
 			<span style="display:flex;">
 				<button id="trubo_split" onclick="trubo_split()" >
-					<?php echo $_local->gui->turbo_split; //强力拆分
-					?>
+					<?php echo $_local->gui->turbo_split; /*强力拆分*/ ?>
 				</button>
 				<guide gid="comp_split"></guide>
 			</span>
@@ -312,60 +321,53 @@ require_once "../pcdl/html_head.php";
 			</a>
 		</button>
 	</div>
-	<script>
-		window.addEventListener('scroll', winScroll);
 
-		function winScroll(e) {
-			if (GetPageScroll().y > 150) {
-				$("#search_toolbar_1").css("top", 0);
-			} else {
-				$("#search_toolbar_1").css("top", GetPageScroll().y - 150);
-			}
-			if (GetPageScroll().y > $(window).height() * 0.9) {
-				$("#tool_btn").show();
-			} else {
-				$("#tool_btn").hide();
-			}
-
-		}
-		//滚动条位置
-		function GetPageScroll() {
-			var pos = new Object();
-			var x, y;
-			if (window.pageYOffset) { // all except IE	
-				y = window.pageYOffset;
-				x = window.pageXOffset;
-			} else if (document.documentElement && document.documentElement.scrollTop) { // IE 6 Strict	
-				y = document.documentElement.scrollTop;
-				x = document.documentElement.scrollLeft;
-			} else if (document.body) { // all other IE	
-				y = document.body.scrollTop;
-				x = document.body.scrollLeft;
-			}
-			pos.x = x;
-			pos.y = y;
-			return (pos);
-		}
-	</script>
-	<style>
-		#dt_title {
-			border-bottom: 2px solid var(--link-hover-color);
-		}
-	</style>
-	<script language="javascript" src="./dict.js"></script>
 
 	<div id="dict_search_result" style="background-color:white;color:black;">
 	</div>
+	<script>
+<?php
+if (isset($_GET["key"]) && !empty($_GET["key"])) {
+    echo "var _key='{$_GET["key"]}';\n";
+    echo "search_on_load(\"{$_GET["key"]}\")";
+}
+?>
 
-	<?php
-	if (!empty($_GET["key"])) {
-		echo "<script>";
-		echo "dict_pre_word_click(\"{$_GET["key"]}\")";
-		echo "</script>";
+window.addEventListener('scroll', winScroll);
+
+function winScroll(e) {
+	if (GetPageScroll().y > 150) {
+		$("#search_toolbar_1").css("top", 0);
+	} else {
+		$("#search_toolbar_1").css("top", GetPageScroll().y - 150);
 	}
-	?>
+	if (GetPageScroll().y > $(window).height() * 0.9) {
+		$("#tool_btn").show();
+	} else {
+		$("#tool_btn").hide();
+	}
 
+}
+//滚动条位置
+function GetPageScroll() {
+	var pos = new Object();
+	var x, y;
+	if (window.pageYOffset) { // all except IE
+		y = window.pageYOffset;
+		x = window.pageXOffset;
+	} else if (document.documentElement && document.documentElement.scrollTop) { // IE 6 Strict
+		y = document.documentElement.scrollTop;
+		x = document.documentElement.scrollLeft;
+	} else if (document.body) { // all other IE
+		y = document.body.scrollTop;
+		x = document.body.scrollLeft;
+	}
+	pos.x = x;
+	pos.y = y;
+	return (pos);
+}
+</script>
 
 	<?php
-	include "../pcdl/html_foot.php";
-	?>
+include "../pcdl/html_foot.php";
+?>
