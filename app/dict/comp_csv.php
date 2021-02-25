@@ -1,10 +1,12 @@
 <?php
+require_once "../path.php";
+
 require_once "../dict/turbo_split.php";
 require_once "../redis/function.php";
 
 global $result;
-$myfile = fopen("comp.csv", "a");
-$filefail = fopen("comp_fail.txt", "a");
+$myfile = fopen(_DIR_TEMP_ . "/comp.csv", "a");
+$filefail = fopen(_DIR_TEMP_ . "/comp_fail.txt", "a");
 $iMax = 10;
 /*
 $dns = "sqlite:" . _FILE_DB_WORD_INDEX_;
@@ -59,7 +61,12 @@ while ($words = $redis->sscan("pali_word", $i)) {
                 $iCount = 0;
                 foreach ($result as $row => $value) {
                     $iCount++;
-                    fputcsv($myfile, array($oneword, $row, $value));
+                    if ($value > 0.8) {
+                        fputcsv($myfile, array($oneword, $row, $value));
+                    } else {
+                        fputcsv($filefail, array($oneword, $row, $value));
+                    }
+
                     if ($iCount >= $iMax) {
                         break;
                     }
