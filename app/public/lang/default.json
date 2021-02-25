@@ -600,6 +600,9 @@
 		"member": "Member",
 		"new_group": "Create Group",
 		"new_sub_group": "Create Project",
+		"owner": "Owner",
+		"manager": "Manager",
+		"enter": "Enter",
 		"": ""
 	},
 	"grammastr": [

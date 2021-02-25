@@ -358,7 +358,6 @@
 		"year_1": "- ",
 		"years": "&nbsp;year(s) ",
 		"yes_string": "can ",
-		"": "",
 		"continue": "continue",
 		"account": "Username",
 		"new_to_wikipali": "New to Wikipāḷi",
@@ -600,6 +599,9 @@
 		"member": "Member",
 		"new_group": "Create Group",
 		"new_sub_group": "Create Project",
+		"owner": "Owner",
+		"manager": "Manager",
+		"enter": "Enter",
 		"": ""
 	},
 	"grammastr": [

@@ -1,4 +1,5 @@
 <?php
+#新增群组或项目
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -6,7 +7,7 @@ require_once '../public/function.php';
 $respond=array("status"=>0,"message"=>"");
 if(isset($_COOKIE["userid"])){
 	PDO_Connect("sqlite:"._FILE_DB_GROUP_);
-	$query="INSERT INTO group_info ( id,  parent  , name  , description ,  status , owner ,create_time )  
+	$query="INSERT INTO group_info ( id,  parent  , name  , description ,  status , creator ,create_time )  
 	                       VALUES  ( ?, ? , ? , ? , ? , ?  ,? ) ";
 	$sth = $PDO->prepare($query);
 	$newid = UUID::v4();
@@ -23,11 +24,13 @@ if(isset($_COOKIE["userid"])){
 	$sth = $PDO->prepare($query);
 	if($_POST["parent"]==0){
 		$level = 0;
+		$power = 0;
 	}
 	else{
 		$level = 1;
+		$power = 1;
 	}
-	$sth->execute(array($_COOKIE["userid"] ,$newid, 1 , $_POST["name"], $level ,1 ));
+	$sth->execute(array($_COOKIE["userid"] ,$newid, $power , $_POST["name"], $level ,1 ));
 	$respond=array("status"=>0,"message"=>"");
 	if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

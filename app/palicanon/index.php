@@ -7,157 +7,24 @@ require_once "../pcdl/html_head.php";
     <script src="../term/term.js"></script>
 
     <?php
-    require_once("../pcdl/head_bar.php");
-    ?>
+require_once "../pcdl/head_bar.php";
+?>
 
-    <style>
-
-
-        #main_tag {
-            font-size: 150%;
-            text-align: center;
-            margin: 5em 0;
-            transition: all 600ms ease;
-            text-transform: capitalize;
-        }
-
-        #main_tag span {
-            margin: 2px;
-            padding: 2px 12px;
-            font-weight: 500;
-            transition-duration: 0.2s;
-            cursor: pointer;
-            font-size: 120%;
-            border: unset;
-            border-radius: 0;
-            border-bottom: 2px solid var(--nocolor);
-            display: inline-block;
-        }
-
-        #main_tag span:hover {
-            background-color: unset;
-            color: unset;
-            border-color: var(--link-hover-color);
-        }
-
-        #main_tag .select {
-            border-bottom: 2px solid var(--link-color);
-        }
-
-        #tag_selected {
-            margin: 1em 0;
-        }
-
-        tag {
-            background-color: var(--btn-color);
-            margin: 2px;
-            padding: 2px 12px;
-            border-radius: 5px;
-            border: 1px solid #fe897c;
-        }
-
-        .tag-delete {
-            margin-left: 6px;
-            color: #f93e3e;
-            cursor: pointer;
-        }
-
-        .tag-delete:hover {
-            color: red;
-            font-weight: 700;
-        }
-
-        .tag_others {
-            margin: 10px 0;
-        }
-
-        .canon-tag {
-            background-color: #46a6d2;
-            border: 0;
-            border-radius: 6px;
-            color: white;
-            font-weight: 400;
-        }
-
-        .canon-tag:hover {
-            background-color: var(--link-hover-color);
-        }
-
-        .sutta_row {
-            display: grid;
-            align-items: center;
-            grid-template-columns: 100px 200px 100px auto;
-            width: 100%;
-            border-bottom: 1px solid var(--border-line-color);
-        }
-
-        .sutta_row div {
-            padding: 10px;
-            /*display: flex;*/
-            justify-items: center;
-        }
-
-        .sutta_row:hover {
-            background-color: var(--drop-bg-color);
-        }
-
-		.c_level_1 {
-			padding-top: 15px;
-			padding-bottom: 15px;
-			background-color: var(--main-color1);
-		}
-		.c_level_1 .chapter_title{
-			font-size:120%;
-			font-weight:700;
-		}
-		#book_list{
-			display: flex;
-			flex-wrap: wrap;
-		}
-		.chapter_list{
-			display:none;
-		}
-		.chapter_book{
-			display:block;
-		}
-		.chapter_progress{
-			display:block;
-		}
-		.parent_chapter{
-			width:350px;
-		}
-		.parent_chapter .chapter_book,.parent_chapter .chapter_progress{
-			display:none;
-		}
-
-		#select_bar {
-			display: flex;
-			justify-content: space-between;
-		}
-
-        @media screen and (max-width:800px) {
-            .sutta_row {
-                grid-template-columns: 100px 1fr 1fr;
-            }
-
-            .sutta_tag {
-                grid-column: 1 / 4;
-            }
-        }
-	</style>
 	<link type="text/css" rel="stylesheet" href="../palicanon/style.css" />
-	
+	<link type="text/css" rel="stylesheet" href="../palicanon/style_mobile.css" media="screen and (max-width:800px)">
+
+
     <script>
         var tag_level = <?php echo file_get_contents("../public/book_tag/tag_list.json"); ?>;
     </script>
     <?php
-    //
+//
 
-    require_once "../path.php";
-    require_once "../public/_pdo.php";
-    require_once '../media/function.php';
-    require_once '../public/function.php';
-   ?>
+require_once "../path.php";
+require_once "../public/_pdo.php";
+require_once '../media/function.php';
+require_once '../public/function.php';
+?>
     <div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>
     <div class='index_inner '>
     <div style='font-size:140%'>
@@ -171,13 +38,13 @@ require_once "../pcdl/html_head.php";
     <span tag="ṭīkā" title="ṭīkā"></span>
     <span tag="añña" title="añña"></span>
 	</div>
-	
+
 	<div id="select_bar" >
 		<div id="tag_selected"></div>
 		<div><button onclick="tag_list_slide_toggle()">展开</button></div>
 	</div>
 	<div>
-		
+
 		<div id="tag_list">
 			<div level="0" class="tag_others"></div>
 			<div level="1" class="tag_others"></div>
@@ -191,7 +58,7 @@ require_once "../pcdl/html_head.php";
 	</div>
     </div>
     </div>
- 
+
 	<div class='index_inner'>
 
 	<div id="chapter_shell" class="chapter_list" >
@@ -234,7 +101,7 @@ require_once "../pcdl/html_head.php";
 		<ul id="list-8" class="hidden" level="8" >
 		</ul>
 	</div>
-	
+
     </div>
     </div>
 
@@ -244,5 +111,5 @@ require_once "../pcdl/html_head.php";
         });
     </script>
     <?php
-    include "../pcdl/html_foot.php";
-    ?>
+include "../pcdl/html_foot.php";
+?>

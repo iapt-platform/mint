@@ -8,6 +8,7 @@ require_once '../studio/index_head.php';
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
 	<script language="javascript" src="../lang/tran_lang_select.js"></script>
+	<script language="javascript" src="../group/user_select_dlg.js"></script>
 
 	<script >
 	var gCurrPage="channal";
@@ -89,6 +90,7 @@ require_once '../studio/index_head.php';
 	</div>
 	
 <script>
+
 my_channal_edit("<?php echo $_GET["id"] ?>");
 </script>
 <?php

@@ -61,6 +61,9 @@ function dict_pre_search(word) {
 			dict_pre_search_curr_word = "";
 			$("#pre_search_word_content").html(data);
 			$("#pre_search_result").css("display", "block");
+			$(document).one("click", function () {
+				$("#pre_search_result").hide();
+			});
 		}
 	);
 }
@@ -68,6 +71,11 @@ function dict_pre_search(word) {
 function dict_pre_word_click(word) {
 	$("#dict_ref_search_input").val(word);
 	$("#pre_search_result").hide();
+	dict_search(word);
+}
+
+function search_on_load(word) {
+	$("#dict_ref_search_input").val(word);
 	dict_search(word);
 }
 
@@ -180,6 +188,8 @@ function trubo_split() {
 						html += "</div>";
 						html += "</div>";
 					}
+				} else {
+					html += "无法拆分";
 				}
 				html += "</div>";
 				$("#input_parts").html(html);
