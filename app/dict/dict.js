@@ -51,19 +51,29 @@ function dict_pre_search(word) {
 	dict_pre_search_curr_word = word;
 
 	$.get(
-		"dict_lookup.php",
+		"dict_lookup_pre.php",
 		{
-			op: "pre",
 			word: word,
 		},
 		function (data, status) {
 			dict_pre_searching = false;
 			dict_pre_search_curr_word = "";
-			$("#pre_search_word_content").html(data);
-			$("#pre_search_result").css("display", "block");
-			$(document).one("click", function () {
-				$("#pre_search_result").hide();
-			});
+			try {
+				let result = JSON.parse(data);
+				let html = "<div>";
+				for (const iterator of result) {
+					html += "<div class='dict_word_list' onclick=\"dict_pre_word_click('" + iterator.word + "')\">";
+					html += "<span class='spell' >" + iterator.word + "(" + iterator.count + ")</span>";
+					html += "<div class='mean'>" + iterator.mean + "</div>";
+					html += "</div>";
+				}
+				html += "</div>";
+				$("#pre_search_word_content").html(html);
+				$("#pre_search_result").css("display", "block");
+				$(document).one("click", function () {
+					$("#pre_search_result").hide();
+				});
+			} catch (error) {}
 		}
 	);
 }

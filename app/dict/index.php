@@ -227,6 +227,27 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		#dt_title {
 			border-bottom: 2px solid var(--link-hover-color);
 		}
+
+		.dict_word_list .mean {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			padding-left: 1em;
+		}
+
+		.section_inner{
+			max-width:1024px;
+			margin: 0 auto;
+		}
+		.spell{
+			font-size: 110%;
+    		font-weight: 700;
+		}
+		.dict_word_list:hover{
+			color: var(--link-hover-color);
+		}
 	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
@@ -234,7 +255,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
-		<div style="display:flex;justify-content: space-between;">
+		<div class='section_inner' style="display:flex;justify-content: space-between;">
 			<div id="left_menu_button">
 				<button id="left_toc" type="button" class="icon_btn" onclick="setNaviVisibility('table_of_content')" title="Dict List">
 				<svg class="icon">
@@ -250,7 +271,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 			<div style="flex:6;">
 				<div>
 					<div>
-						<input id="dict_ref_search_input" type="input" placeholder="<?php echo $_local->gui->search; ?> 单词里面添加+ 预览拆词结果" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
+						<input id="dict_ref_search_input" type="text" autocomplete="off" placeholder="<?php echo $_local->gui->search; ?> 单词里面添加+ 预览拆词结果" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
 					<div id="result_msg"></div>
 					<div id="word_parts">
@@ -322,9 +343,10 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		</button>
 	</div>
 
-
-	<div id="dict_search_result" style="background-color:white;color:black;">
+<div>
+	<div class='section_inner' id="dict_search_result" style="background-color:white;color:black;">
 	</div>
+</div>
 	<script>
 <?php
 if (isset($_GET["key"]) && !empty($_GET["key"])) {
