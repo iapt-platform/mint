@@ -82,11 +82,16 @@ foreach ($arrWords as $currword) {
     foreach ($arrword as $oneword) {
         $result = array(); //全局变量，递归程序的输出容器
 
-        mySplit2($oneword, 0, $_express, 0, 0.1, 0.01, true, true);
+        mySplit2($oneword, 0, false, 0, 0.5, 0.8, true, false);
+		if(count($result) < 3){
+			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
+		}
         if (isset($_POST["debug"])) {
             echo "正切：" . count($result) . "\n";
-        }
-        mySplit2($oneword, 0, $_express, 0, 0.1, 0.01, false, true);
+		}
+		if(count($result) < 3){
+			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
+		}
         if (isset($_POST["debug"])) {
             echo "反切：" . count($result) . "\n";
         }

@@ -95,13 +95,14 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		/*for word split part */
 		.dropdown_ctl {
 			display: inline-block;
-			margin-right: 0.7em;
+			margin: 0 0.7em;
 		}
 
 		.dropdown_ctl>.content {
 			display: flex;
 			border: 1px solid var(--border-line-color);
 			border-radius: 99px;
+			line-height: 2em;
 		}
 
 		.dropdown_ctl>.menu {
@@ -247,6 +248,13 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		}
 		.dict_word_list:hover{
 			color: var(--link-hover-color);
+		}
+
+		.pali_spell{
+			font-size:200%;
+			font-weight:700;
+			margin-top:15px;
+			padding-bottom:0
 		}
 	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >

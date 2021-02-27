@@ -23,14 +23,17 @@ function dict_search(word) {
 	$.get(
 		"dict_lookup.php",
 		{
-			op: "search",
 			word: word,
 		},
 		function (data, status) {
 			$("#dict_search_result").html(data);
-			$("#dict_list").html($("#dictlist").html());
-			$("#dictlist").html("");
+			$("#dict_list").append($("#dictlist"));
+			$("#search_result_shell").append($("#search_summary"));
 			guide_init();
+			let word_count = parseInt($("#word_count").val());
+			if (word_count < 3) {
+				trubo_split();
+			}
 		}
 	);
 }
@@ -131,15 +134,16 @@ function dict_input_keyup(e, obj) {
 
 function dict_input_split(word) {
 	if (word.indexOf("+") >= 0) {
-		var wordParts = word.split("+");
-		var strParts = "";
-		for (var i in wordParts) {
-			//strParts += "<div class='part_list'><a onclick='dict_search(\"" + wordParts[i] + "\")'>" + wordParts[i] + "</a></div>";
-			strParts += "<part><a onclick='dict_search(\"" + wordParts[i] + "\")'>" + wordParts[i] + "</a></part>";
+		let wordParts = word.split("+");
+		let strParts = "";
+		for (const iterator of wordParts) {
+			strParts += "<part><a onclick='dict_search(\"" + iterator + "\")'>" + iterator + "</a></part>";
 		}
-		strParts =
-			"<div class='dropdown_ctl'><div class='content'><div class='main_view' >" + strParts + "</div></div></div>";
-		$("#input_parts").html(strParts);
+		let html =
+			"点击查词<div class='dropdown_ctl'><div class='content'><div class='main_view' >" +
+			strParts +
+			"</div></div></div>";
+		$("#input_parts").html(html);
 	} else {
 		$("#input_parts").html("");
 	}
@@ -170,6 +174,7 @@ function cls_word_search_history() {
 
 function trubo_split() {
 	$("#pre_search_result").hide();
+	$("#input_parts").html("正在自动切分复合词……");
 	$.post(
 		"split.php",
 		{
@@ -181,7 +186,7 @@ function trubo_split() {
 				let html = "<div>";
 				if (result.length > 0) {
 					for (const part of result[0]["data"]) {
-						html += '<div class="dropdown_ctl">';
+						html += '自动拆分结果<div class="dropdown_ctl">';
 						html += '<div class="content">';
 						html +=
 							'<div class="main_view">' +

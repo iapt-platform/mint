@@ -14,6 +14,8 @@ global $path;
 global $confidence;
 global $result;
 global $part;
+define("MAX_RESULT",100);
+
 $part = array();
 
 $path[] = array("", 0);
@@ -175,7 +177,7 @@ function dict_lookup($word)
     $stmt->execute(array($search));
     $row = $stmt->fetch(PDO::FETCH_NUM);
     if ($row) {
-        return $row[0];
+        return array($row[0],0);
     } else {
         //去除尾查
         $newWord = array();
@@ -185,12 +187,13 @@ function dict_lookup($word)
             if ($end == $case[$row][1]) {
                 $base = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $len, "UTF-8") . $case[$row][0];
                 if ($base != $word) {
-                    $newWord[$base] = 1;
+                    $newWord[$base] = mb_strlen($case[$row][1],"UTF-8");
                 }
             }
         }
         #找到最高频的base
-        $base_weight = 0;
+		$base_weight = 0;
+		$len = 0;
         foreach ($newWord as $x => $x_value) {
             $query = "SELECT weight from part where word = ? ";
             $stmt = $dbh->prepare($query);
@@ -198,11 +201,12 @@ function dict_lookup($word)
             $row = $stmt->fetch(PDO::FETCH_NUM);
             if ($row) {
                 if ($row[0] > $base_weight) {
-                    $base_weight = $row[0];
+					$base_weight = $row[0];
+					$len=$x_value;
                 }
             }
         }
-        return $base_weight;
+        return array($base_weight,$len);
     }
 }
 
@@ -227,21 +231,24 @@ function isExsit($word, $adj_len = 0)
     $isFound = false;
     $count = 0;
     if (isset($part["{$word}"])) {
-        if ($part["{$word}"] > 0) {
+		$word_count = $part["{$word}"][0];
+		$case_len = $part["{$word}"][1];
+        if ($word_count > 0) {
             $isFound = true;
-            $count = $part["{$word}"] + 1;
+            $count = $word_count + 1;
         }
     } else {
         $db = dict_lookup($word);
-
+		$word_count = $db[0];
+		$case_len = $db[1];
         //加入查询缓存
         $part["{$word}"] = $db;
-        if ($db > 0) {
+        if ($word_count > 0) {
             if (isset($_POST["debug"])) {
-                echo "查到：{$word}:{$db}个\n";
+                echo "查到：{$word}:{$word_count}个\n";
             }
             $isFound = true;
-            $count = $db + 1;
+            $count = $word_count + 1;
         }
     }
 //fomular of confidence value 信心值计算公式
@@ -253,8 +260,8 @@ function isExsit($word, $adj_len = 0)
             $len_correct = 1.2;
             $count2 = 1.1 + pow($count, 1.18);
             $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
-            $cf = round(1 / (1 + 640 * $conf_num), 9);
-
+            //$cf = round(1 / (1 + 640 * $conf_num), 9);
+			$cf = round((1-0.02*$case_len) / (1 + 640 * $conf_num), 9);
             $confidence["{$word}"] = $cf;
             if (isset($_POST["debug"])) {
                 echo "信心指数：{$word}:{$cf}\n";
@@ -301,12 +308,14 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
         $cf += (0 - $len) / ($len + 150);
         $word .= "{$strWord}";
         if ($forward == true) {
-            $result[$word] = $cf;
+			$result[$word] = $cf;
+			return;
         } else {
             $reverseWord = word_reverse($word);
-            $result[$reverseWord] = $cf;
+			$result[$reverseWord] = $cf;
+			return;
         }
-        return;
+        
     }
     //直接找到
     $confidence = isExsit($strWord, $adj_len);
@@ -387,7 +396,7 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
         }
 
     }
-
+	$word = "";
     if (count($output) > 0) {
         foreach ($output as $part) {
             $checked = $part[0];
@@ -413,13 +422,15 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
                 } else {
                     $word .= $checked;
                 }
-                $cf = $cf + $part[2] * 0.1;
+                $cf = $cf * $part[2];
                 if ($cf > $w_threshhold) {
                     if ($forward == true) {
-                        $result[$word] = $cf;
+						$result[$word] = $cf;
+						return;
                     } else {
                         $reverseWord = word_reverse($word);
                         $result[$reverseWord] = $cf;
+						return;
                     }
                 }
             } else {
@@ -441,26 +452,28 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
         }
         $len = pow(mb_strlen($strWord, "UTF-8"), 3);
         if ($forward) {
-            $cf += (0 - $len) / ($len + 150);
-        } else {
-            $cf += (0 - $len) / ($len + 5);
+            $cf =(1-$cf) * $len / ($len + 150);
+        } else 
+			$cf =(1-$cf) * $len / ($len + 5);
         }
         if (isset($_POST["debug"])) {
-            $word .= $strWord . "(0)";
+            $word = $word.$strWord . "(0)";
         } else {
-            $word .= $strWord;
+            $word = $word .$strWord;
         }
 
         if ($cf > $w_threshhold) {
             if ($forward == true) {
-                $result[$word] = $cf;
+				$result[$word] = $cf;
+				return;
             } else {
                 $reverseWord = word_reverse($word);
-                $result[$reverseWord] = $cf;
+				$result[$reverseWord] = $cf;
+				return;
             }
         }
     }
-}
+
 
 function word_reverse($word)
 {
