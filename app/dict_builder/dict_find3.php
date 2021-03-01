@@ -14,7 +14,7 @@ $dict_list=array();
 
 global $PDO;
 $dictFileName=_FILE_DB_REF_;
-PDO_Connect("sqlite:$dictFileName");
+PDO_Connect("$dictFileName");
 
 function isExsit($word){
 global $PDO;

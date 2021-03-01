@@ -44,7 +44,7 @@ $output{"para"}=$_para;
 $output{"channel"}=$_channel;
 
 //判断单词数量 太大的不能加载
-PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
+PDO_Connect(""._FILE_DB_PALITEXT_);
 $params = array(1, 21, 63, 171);
 /*  创建一个填充了和params相同数量占位符的字符串 */
 $place_holders = implode(',', array_fill(0, count($_para), '?'));
@@ -64,15 +64,15 @@ if($sum_len>MAX_LETTER){
 
 # 查询数据库是否有数据，没有就建立
 // 查询逐词解析库
-PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+PDO_Connect(""._FILE_DB_USER_WBW_);
 
 //模板库
-$db_tpl = "sqlite:"._DIR_PALICANON_TEMPLET_."/p".$_book."_tpl.db3";
+$db_tpl = ""._DIR_PALICANON_TEMPLET_."/p".$_book."_tpl.db3";
 $dbh_tpl = new PDO($db_tpl, "", "");
 $dbh_tpl->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 #用户逐词译库
-$db_wbw = "sqlite:"._FILE_DB_USER_WBW_;
+$db_wbw = ""._FILE_DB_USER_WBW_;
 $dbh_wbw= new PDO($db_wbw, "", "");
 $dbh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -212,7 +212,7 @@ foreach ($_para as $key => $para) {
 /*TO DO 
             //更新服务器端文件列表
             $db_file = _FILE_DB_FILEINDEX_;
-            PDO_Connect("sqlite:$db_file");
+            PDO_Connect("$db_file");
             $query="INSERT INTO fileindex ('id',
                                         'parent_id',
                                         'channal',

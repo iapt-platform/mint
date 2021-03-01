@@ -5,7 +5,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
-PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+PDO_Connect(""._FILE_DB_USER_ARTICLE_);
 if(isset($_GET["userid"])){
     $userid=$_GET["userid"];
     $query = "SELECT * from article  where owner = ? and status <> 0 order by modify_time DESC";

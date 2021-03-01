@@ -1,3 +1,126 @@
+#main_tag {
+	font-size: 150%;
+	text-align: center;
+	margin: 5em 0;
+	transition: all 600ms ease;
+	text-transform: capitalize;
+}
+
+#main_tag span {
+	margin: 2px;
+	padding: 2px 12px;
+	font-weight: 500;
+	transition-duration: 0.2s;
+	cursor: pointer;
+	font-size: 120%;
+	border: unset;
+	border-radius: 0;
+	border-bottom: 2px solid var(--nocolor);
+	display: inline-block;
+}
+
+#main_tag span:hover {
+	background-color: unset;
+	color: unset;
+	border-color: var(--link-hover-color);
+}
+
+#main_tag .select {
+	border-bottom: 2px solid var(--link-color);
+}
+
+#tag_selected {
+	margin: 1em 0;
+}
+
+tag {
+	background-color: var(--btn-color);
+	margin: 2px;
+	padding: 2px 12px;
+	border-radius: 5px;
+	border: 1px solid #fe897c;
+}
+
+.tag-delete {
+	margin-left: 6px;
+	color: #f93e3e;
+	cursor: pointer;
+}
+
+.tag-delete:hover {
+	color: red;
+	font-weight: 700;
+}
+
+.tag_others {
+	margin: 10px 0;
+}
+
+.canon-tag {
+	background-color: #46a6d2;
+	border: 0;
+	border-radius: 6px;
+	color: white;
+	font-weight: 400;
+}
+
+.canon-tag:hover {
+	background-color: var(--link-hover-color);
+}
+
+.sutta_row {
+	display: grid;
+	align-items: center;
+	grid-template-columns: 100px 200px 100px auto;
+	width: 100%;
+	border-bottom: 1px solid var(--border-line-color);
+}
+
+.sutta_row div {
+	padding: 10px;
+	/*display: flex;*/
+	justify-items: center;
+}
+
+.sutta_row:hover {
+	background-color: var(--drop-bg-color);
+}
+
+.c_level_1 {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	background-color: var(--main-color1);
+}
+.c_level_1 .chapter_title {
+	font-size: 120%;
+	font-weight: 700;
+}
+#book_list {
+	display: flex;
+	flex-wrap: wrap;
+}
+.chapter_list {
+	display: none;
+}
+.chapter_book {
+	display: block;
+}
+.chapter_progress {
+	display: block;
+}
+.parent_chapter {
+	width: 350px;
+}
+.parent_chapter .chapter_book,
+.parent_chapter .chapter_progress {
+	display: none;
+}
+
+#select_bar {
+	display: flex;
+	justify-content: space-between;
+}
+
 .chapter_list {
 	display: flex;
 }
@@ -7,6 +130,9 @@
 }
 .chapter_list .list {
 	width: 200px;
+}
+.chapter_list .list .chapter_head_tool_bar {
+	display: none;
 }
 .chapter_list .list .res_more {
 	display: none;
@@ -118,4 +244,15 @@
 	padding: 0 5px;
 	font-size: 100%;
 	font-weight: 700;
+}
+
+.chapter_head_tool_bar .chapter_back_button {
+	display: none;
+}
+.chapter_head_tool_bar .chapter_close_button {
+	display: inline-block;
+}
+.chapter_head_tool_bar {
+	display: flex;
+	justify-content: space-between;
 }

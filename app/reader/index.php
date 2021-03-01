@@ -81,6 +81,7 @@ require_once "../pcdl/html_head.php";
 		left: 0;
 		width: 100%;
 		z-index: 100;
+		
 	}
 
 	.main_view{

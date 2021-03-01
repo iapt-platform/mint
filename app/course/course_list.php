@@ -18,7 +18,7 @@ require_once '../ucenter/function.php';
 40 已完结
 */
 global $PDO;
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 
 if(isset($_GET["teacher"])){
     $query = "SELECT * from course where teacher = ?  order by create_time DESC limit 0,100";

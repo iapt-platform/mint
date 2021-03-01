@@ -37,7 +37,7 @@ require_once '../public/load_lang.php';
 require_once '../ucenter/function.php';
 
 global $PDO;
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 $query = "SELECT * from course where creator = ?  order by modify_time DESC limit 0,100";
 $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
 

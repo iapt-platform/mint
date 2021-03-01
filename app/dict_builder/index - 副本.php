@@ -80,7 +80,7 @@ include "./_pdo.php";
 
 global $PDO;
 $dictFileName=$dir_dict_3rd."bhmf.db";
-PDO_Connect("sqlite:$dictFileName");
+PDO_Connect("$dictFileName");
 		$query = "SELECT * from dict where 1  limit 0,1000";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);

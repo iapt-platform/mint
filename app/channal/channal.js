@@ -1,4 +1,5 @@
 var _my_channal = null;
+var gChannelId;
 var get_channel_list_callback = null;
 channal_list();
 
@@ -90,6 +91,7 @@ function my_channal_list() {
 编辑channel信息
 */
 function my_channal_edit(id) {
+	gChannelId = id;
 	$.get(
 		"../channal/my_channal_get.php",
 		{
@@ -174,12 +176,14 @@ function my_channal_edit(id) {
 					html += "</div>";
 					html += "</div>";
 
-					html += "<div id='coop_div' style='padding:5px;'>";
+					html += "<div id='coop_div' style='padding:5px;position: relative;'>";
 					html += "<h2>协作者</h2>";
-					html += "<div id='add_coop_user_dlg' class='float_dlg'></div>";
+
 					html += "<button onclick='add_coop_user()'>添加协作者</button>";
-					html += "<div id='add_coop_group_dlg' class='float_dlg'></div>";
+					html += "<div id='add_coop_user_dlg' class='float_dlg' style='left: 0;'></div>";
+
 					html += "<button onclick='add_coop_group()' >添加协作群</button>";
+					html += "<div id='add_coop_group_dlg' class='float_dlg' style='left: 0;'></div>";
 					html += "<div id='coop_inner' >";
 					if (typeof result.coop == "undefined" || result.coop.length == 0) {
 						html += "这里很安静";
@@ -205,6 +209,7 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					$("#channal_info").html(html);
+					user_select_dlg_init("add_coop_user_dlg");
 					tran_lang_select_init("channal_lang_select");
 					//$("#aritcle_status").html(render_status(result.status));
 					$("#channal_title").html(result.name);
@@ -214,6 +219,30 @@ function my_channal_edit(id) {
 				}
 			} else {
 				console.error("ajex error");
+			}
+		}
+	);
+}
+
+function add_coop_user() {
+	user_select_dlg_show();
+}
+
+function user_selected(id) {
+	$.post(
+		"../channal/coop_new_user.php",
+		{
+			userid: id,
+			channel_id: gChannelId,
+		},
+		function (data) {
+			let error = JSON.parse(data);
+			if (error.status == 0) {
+				user_select_cancel();
+				alert("ok");
+				location.reload();
+			} else {
+				alert(error.message);
 			}
 		}
 	);

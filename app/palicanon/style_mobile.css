@@ -1,0 +1,16 @@
+.chapter_list .list {
+	display: none;
+}
+.sutta_row {
+	grid-template-columns: 100px 1fr 1fr;
+}
+
+.sutta_tag {
+	grid-column: 1 / 4;
+}
+.chapter_head_tool_bar .chapter_back_button {
+	display: inline-block;
+}
+.chapter_head_tool_bar .chapter_close_button {
+	display: none;
+}

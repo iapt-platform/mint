@@ -3,41 +3,38 @@
 require_once "../path.php";
 include "../public/_pdo.php";
 
-	$currBook=$_GET["book"];
-	if(substr($currBook,0,1)=="p"){
-		$currBook = substr($currBook,1);
-	}
+$currBook = $_GET["book"];
+if (substr($currBook, 0, 1) == "p") {
+    $currBook = substr($currBook, 1);
+}
 
+echo "<index>";
 
+//open database
+PDO_Connect("" . _FILE_DB_PALITEXT_);
+$query = "select * FROM pali_text where \"book\"=" . $PDO->quote($currBook);
 
-	echo "<index>";
+$Fetch = PDO_FetchAll($query);
+$iFetch = count($Fetch);
 
-	//open database
-	PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
-	$query = "select * FROM pali_text where \"book\"=".$PDO->quote($currBook);
-
-	$Fetch = PDO_FetchAll($query);
-	$iFetch=count($Fetch);
-
-	if($iFetch>0){
-		for($i=0;$i<$iFetch;$i++){
-			$level=$Fetch[$i]["level"];
-			if($level==100){
-				$level=0;
-			}
-			echo "<paragraph>";
-			echo "<book>{$Fetch[$i]["book"]}</book>";
-			echo "<par>{$Fetch[$i]["paragraph"]}</par>";
-			echo "<level>{$level}</level>";
-			echo "<class>".$Fetch[$i]["class"]."</class>";
-			echo "<title>{$Fetch[$i]["toc"]}</title>";
-			echo "<language>pali</language>";
-			echo "<author>cscd4</author>";
-			echo "<edition>4</edition>";
-			echo "<subver></subver>";
-			echo "</paragraph>";
-		}
-	}
-	/*查询结束*/
-	echo  "</index>";
-?>
+if ($iFetch > 0) {
+    for ($i = 0; $i < $iFetch; $i++) {
+        $level = $Fetch[$i]["level"];
+        if ($level == 100) {
+            $level = 0;
+        }
+        echo "<paragraph>";
+        echo "<book>{$Fetch[$i]["book"]}</book>";
+        echo "<par>{$Fetch[$i]["paragraph"]}</par>";
+        echo "<level>{$level}</level>";
+        echo "<class>" . $Fetch[$i]["class"] . "</class>";
+        echo "<title>{$Fetch[$i]["toc"]}</title>";
+        echo "<language>pali</language>";
+        echo "<author>cscd4</author>";
+        echo "<edition>4</edition>";
+        echo "<subver></subver>";
+        echo "</paragraph>";
+    }
+}
+/*查询结束*/
+echo "</index>";

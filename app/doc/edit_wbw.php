@@ -9,7 +9,7 @@ require_once "../public/load_lang.php";
 $_book = $_POST["book"];
 $_para = json_decode($_POST["para"]);
 //判断单词数量 太大的不能加载
-PDO_Connect("sqlite:"._FILE_DB_PALITEXT_);
+PDO_Connect(""._FILE_DB_PALITEXT_);
 $params = array(1, 21, 63, 171);
 /*  创建一个填充了和params相同数量占位符的字符串 */
 $place_holders = implode(',', array_fill(0, count($_para), '?'));
@@ -40,7 +40,7 @@ echo "</fieldset>";
 echo "<fieldset>";
 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
 echo "<div>";
-PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+PDO_Connect(""._FILE_DB_CHANNAL_);
 $query = "SELECT * from channal where owner = ?   limit 0,100";
 $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
 $i=0;
@@ -58,7 +58,7 @@ foreach($Fetch as $row){
     echo '<div class="title" style="flex:3;padding-bottom:5px;">'.$row["lang"].'</div>';
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
     // 查询逐词解析库
-    PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+    PDO_Connect(""._FILE_DB_USER_WBW_);
     $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
     $FetchWBW = PDO_FetchOne($query);
     echo '</div>';
@@ -74,7 +74,7 @@ foreach($Fetch as $row){
     echo '</div>';
 
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-    PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+    PDO_Connect(""._FILE_DB_SENTENCE_);
     $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
     $FetchWBW = PDO_FetchOne($query);
     echo '</div>';

@@ -23,7 +23,7 @@ require_once '../ucenter/function.php';
     else{
         $begin = 0;
     }
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $query = "SELECT * FROM collect  where  1 ";
     if(isset($_GET["orderby"])){
         switch ($_GET["orderby"]) {

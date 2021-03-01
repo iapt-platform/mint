@@ -8,7 +8,7 @@ require_once '../ucenter/function.php';
 
 
 if(isset($_GET["id"])){
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $id=$_GET["id"];
     $query = "select * from collect  where id = ? ";
     $Fetch = PDO_FetchRow($query,array($id));
@@ -26,7 +26,7 @@ if(isset($_GET["id"])){
 }
 else if(isset($_GET["article"])){
     # 给文章编号，查文集信息
-    PDO_Connect("sqlite:"._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
     $article=$_GET["article"];
     $query = "SELECT collect_id FROM article_list  WHERE article_id = ? ";
     $Fetch = PDO_FetchAll($query,array($article));

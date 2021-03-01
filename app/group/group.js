@@ -8,7 +8,6 @@ function group_list_init() {
 		group_add_dlg_init("group_add_div");
 		$("#button_new_group").show();
 	} else {
-		$("#button_new_sub_group").show();
 		group_list(gGroupId, gList);
 		team_add_dlg_init("sub_group_add_div");
 		$("#member_list_shell").css("visibility", "visible");
@@ -52,14 +51,38 @@ function my_group_list() {
 						html += "<div style='flex:1;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>" + iterator.group_name + "</div>";
 						html += "<div style='flex:2;'>";
-						if (iterator.power == 1) {
-							html += "拥有者";
+						switch (parseInt(iterator.power)) {
+							case 0:
+								html += gLocal.gui.owner;
+								break;
+							case 1:
+								html += gLocal.gui.manager;
+								break;
+							case 2:
+								html += gLocal.gui.member;
+								break;
+							default:
+								break;
 						}
 						html += "</div>";
 						html +=
 							"<div style='flex:1;'><a href='../group/index.php?id=" +
 							iterator.group_id +
-							"'>进入</a></div>";
+							"'>" +
+							gLocal.gui.enter +
+							"</a></div>";
+						html += "<div style='flex:1;'><div class='hover_button'>";
+						if (parseInt(iterator.power) == 0) {
+							//管理员可以删除group
+							html +=
+								"<button onclick=\"group_del('" +
+								iterator.group_id +
+								"')\">" +
+								gLocal.gui.delete +
+								"</button>";
+						}
+
+						html += "</div></div>";
 						html += "</div>";
 					}
 				} else {
@@ -92,8 +115,10 @@ function group_list(id, list) {
 					html += "<h2>" + gLocal.gui.introduction + "</h2>";
 					html += result.info.description;
 					html += "</div>";
-					$("#curr_group").html("/ <a>" + result.info.name + "</a>");
+					$("#curr_group").html("/" + result.info.name);
+
 					if (result.parent) {
+						//如果是project 显示 group名词
 						$("#parent_group").html(
 							" / <a href='../group/index.php?id=" +
 								result.parent.id +
@@ -102,6 +127,9 @@ function group_list(id, list) {
 								"</a> "
 						);
 					} else {
+						if (result.info.creator == getCookie("userid")) {
+							$("#button_new_sub_group").show();
+						}
 						//子小组列表
 						html += "<div class='info_block'>";
 						html += "<h2>" + gLocal.gui.sub_group + "</h2>";
@@ -111,14 +139,26 @@ function group_list(id, list) {
 								html += "<div style='flex:1;'>" + key++ + "</div>";
 								html += "<div style='flex:2;'>" + iterator.name + "</div>";
 								html += "<div style='flex:2;'>";
-								if (iterator.power == 1) {
-									html += "拥有者";
+								if (iterator.creator == getCookie("userid")) {
+									html += gLocal.gui.owner;
 								}
 								html += "</div>";
 								html +=
 									"<div style='flex:1;'><a href='../group/index.php?id=" +
 									iterator.id +
-									"&list=file'>进入</a></div>";
+									"&list=file'>" +
+									gLocal.gui.enter +
+									"</a></div>";
+								html += "<div style='flex:1;'><div class='hover_button'>";
+								if (iterator.creator == getCookie("userid")) {
+									html +=
+										"<button onclick=\"group_del('" +
+										iterator.id +
+										"')\">" +
+										gLocal.gui.delete +
+										"</button>";
+								}
+								html += "</div></div>";
 								html += "</div>";
 							}
 						} else {
@@ -185,7 +225,7 @@ function member_list(id) {
 					let html = "";
 					let result = JSON.parse(data);
 					$("#member_number").html("(" + result.length + ")");
-					//子小组列表
+					//人员
 					html += "<div class='info_block'>";
 					if (result && result.length > 0) {
 						for (const iterator of result) {
@@ -196,8 +236,19 @@ function member_list(id) {
 								html += "拥有者";
 							}
 							html += "</div>";
-							html += "<div style='flex:1;'>";
-							html += "</div>";
+							html += "<div style='flex:1;'><div class='hover_button'>";
+							//if (iterator.creator == getCookie("userid"))
+							{
+								html +=
+									"<button onclick=\"member_del('" +
+									id +
+									"','" +
+									iterator.user_id +
+									"')\">" +
+									gLocal.gui.delete +
+									"</button>";
+							}
+							html += "</div></div>";
 							html += "</div>";
 						}
 					} else {
@@ -216,165 +267,88 @@ function member_list(id) {
 	);
 }
 
-/*
-编辑channel信息
-*/
-function my_channal_edit(id) {
-	$.get(
-		"../channal/my_channal_get.php",
+function user_selected(id) {
+	$.post(
+		"../group/member_put.php",
 		{
-			id: id,
-			setting: "",
+			userid: id,
+			groupid: gGroupId,
 		},
-		function (data, status) {
-			if (status == "success") {
-				try {
-					let html = "";
-					let result = JSON.parse(data);
-					$("#article_collect").attr("a_id", result.id);
-					html += '<div class="" style="padding:5px;">';
-					html += '<div style="max-width:2em;flex:1;"></div>';
-					html += "</div>";
-
-					html += "<div style='width: 60%;padding: 1em;min-width: 25em;'>";
-					html += '<div style="display:flex;line-height:32px;">';
-					html += "<input type='hidden' name='id' value='" + result.id + "'/>";
-					html += "</div>";
-
-					html += '<div style="display:flex;line-height:32px;">';
-					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
-					html += "<div style='flex:8;'>";
-					html +=
-						"<input type='input' name='name' value='" +
-						result.name +
-						"' maxlength='32' placeholder='channel title'/>";
-					html += "</div>";
-					html += "</div>";
-
-					html += "<div style='display:flex;'>";
-					html += "<div style='flex:2;'>" + gLocal.gui.introduction + "</div>";
-					html += "<div style='flex:8;'>";
-					html += "<textarea name='summary'>" + result.summary + "</textarea>";
-					html += "</div>";
-					html += "</div>";
-
-					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">' + gLocal.gui.language_select + "</div>";
-					html += '<div style="flex:8;">';
-					html +=
-						'<input id="channal_lang_select" type="input"  onchange="channal_lang_change()"' +
-						' placeholder = "try type chinese or en " ' +
-						'  title="type language name/code" code="' +
-						result.lang +
-						'" value="' +
-						result.lang +
-						'" > <input id="channal_lang" type="hidden" name="lang" value="' +
-						result.lang +
-						'">';
-					html += "</div>";
-					html += "</div>";
-
-					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">' + gLocal.gui.privacy + "</div>";
-					html += '<div style="flex:8;">';
-					let arrStatus = [
-						{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
-						{ id: 10, string: gLocal.gui.private, note: gLocal.gui.private_note },
-						{ id: 30, string: gLocal.gui.public, note: gLocal.gui.public_note },
-					];
-					html += "<select id = 'status'  name = 'status' onchange='status_change(this)'>";
-					let status_note = "";
-					for (const iterator of arrStatus) {
-						html += "<option ";
-						if (parseInt(result.status) == iterator.id) {
-							html += " selected ";
-							status_note = iterator.note;
-						}
-						html += " value='" + iterator.id + "'>" + iterator.string + "</option>";
-					}
-
-					html += "</select>";
-					html +=
-						"<span id = 'status_help' style='margin: 0 1em;'>" +
-						status_note +
-						"</span><a href='#' target='_blank'>[" +
-						gLocal.gui.infomation +
-						"]</li>";
-					html += "</div>";
-					html += "</div>";
-					html += "</div>";
-
-					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
-					html += "</div>";
-
-					$("#channal_info").html(html);
-					tran_lang_select_init("channal_lang_select");
-					//$("#aritcle_status").html(render_status(result.status));
-					$("#channal_title").html(result.name);
-					$("#preview_inner").html();
-				} catch (e) {
-					console.error(e);
-				}
+		function (data) {
+			let error = JSON.parse(data);
+			if (error.status == 0) {
+				user_select_cancel();
+				alert("ok");
+				location.reload();
 			} else {
-				console.error("ajex error");
+				user_select_cancel();
+				alert(error.message);
 			}
 		}
 	);
 }
 
-function status_change(obj) {
-	let arrStatus = [
-		{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
-		{ id: 10, string: gLocal.gui.private, note: gLocal.gui.private_note },
-		{ id: 30, string: gLocal.gui.public, note: gLocal.gui.public_note },
-	];
-	let newStatus = $(obj).val();
-	for (const iterator of arrStatus) {
-		if (parseInt(newStatus) == iterator.id) {
-			$("#status_help").html(iterator.note);
-		}
-	}
-}
-
-function channal_lang_change() {
-	let lang = $("#channal_lang_select").val();
-	if (lang.split("_").length == 3) {
-		$("#channal_lang").val(lang.split("_")[2]);
-	} else {
-		$("#channal_lang").val(lang);
-	}
-}
-
-function my_channal_save() {
-	$.ajax({
-		type: "POST", //方法类型
-		dataType: "json", //预期服务器返回的数据类型
-		url: "../channal/my_channal_post.php", //url
-		data: $("#channal_edit").serialize(),
-		success: function (result) {
-			console.log(result); //打印服务端返回的数据(调试用)
-
-			if (result.status == 0) {
-				alert("保存成功");
+function user_select_new() {
+	$.post(
+		"../group/my_group_put.php",
+		{
+			name: $("#user_select_title").val(),
+			parent: parentid,
+		},
+		function (data) {
+			let error = JSON.parse(data);
+			if (error.status == 0) {
+				alert("ok");
+				user_select_cancel();
+				location.reload();
 			} else {
-				alert("error:" + result.message);
+				alert(error.message);
 			}
-		},
-		error: function (data, status) {
-			alert("异常！" + status + data.responseText);
-			switch (status) {
-				case "timeout":
-					break;
-				case "error":
-					break;
-				case "notmodified":
-					break;
-				case "parsererror":
-					break;
-				default:
-					break;
+		}
+	);
+}
+
+function group_del(group_id) {
+	if (
+		confirm(
+			"此操作将删除组/项目。\n以及切断分享到此组/项目文件的链接。\n但是不会删除该文件。\n此操作不能恢复。仍然要删除吗!"
+		)
+	) {
+		$.post(
+			"../group/group_del.php",
+			{
+				groupid: group_id,
+			},
+			function (data) {
+				let error = JSON.parse(data);
+				if (error.status == 0) {
+					alert("ok");
+					location.reload();
+				} else {
+					alert(error.message);
+				}
 			}
-		},
-	});
+		);
+	}
+}
+
+function member_del(group_id, user_id) {
+	if (confirm("此操作将移除成员。\n此操作不能恢复。仍然要移除吗!")) {
+		$.post(
+			"../group/member_del.php",
+			{
+				groupid: group_id,
+				userid: user_id,
+			},
+			function (data) {
+				let error = JSON.parse(data);
+				if (error.status == 0) {
+					alert("ok");
+					location.reload();
+				} else {
+					alert(error.message);
+				}
+			}
+		);
+	}
 }

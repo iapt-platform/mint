@@ -4,14 +4,16 @@ require_once '../path.php';
 class Hostsetting
 {
     public $dbh;
-    public function __construct() {
-        $dns = "sqlite:"._FILE_DB_HOSTSETTING_;
-        $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+    public function __construct()
+    {
+        $dns = "" . _FILE_DB_HOSTSETTING_;
+        $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
-    public function get($key){
-        if($this->dbh){
+    public function get($key)
+    {
+        if ($this->dbh) {
             $query = "SELECT value FROM setting WHERE key= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($key));
@@ -21,28 +23,25 @@ class Hostsetting
             } else {
                 return false;
             }
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    public function set($key,$value){
-        if($this->dbh){
+    public function set($key, $value)
+    {
+        if ($this->dbh) {
             $query = "UPDATE setting SET value = ?  WHERE key= ? ";
             $stmt = $this->dbh->prepare($query);
-            $stmt->execute(array($value,$key));
+            $stmt->execute(array($value, $key));
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                 $error = PDO_ErrorInfo();
                 return false;
-            }
-            else{
+            } else {
                 return true;
             }
-        }
-        else{
+        } else {
             return false;
         }
     }
 }
-?>

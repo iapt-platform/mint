@@ -3,7 +3,7 @@
 [o],9
 [ā],24
 ka,100
-ṇa,100
+ṇa,5
 ta,100
 tta,100
 tā,100
@@ -64,7 +64,7 @@ eka,100
 esa,100
 esī,1
 eso,1
-eta,1
+eta,1000
 eva,100
 ika,100
 ikā,100
@@ -279,7 +279,6 @@ eso,2
 esu,6
 esā,1
 esī,5
-eta,6
 ete,1
 eḷa,7
 eḷā,5
@@ -344,7 +343,6 @@ isi,13
 iso,1
 isu,4
 ita,3
-iti,170
 ito,12
 iva,11
 iñj,1
@@ -217010,4 +217008,4 @@ cakkavattibhāvasaṃvattaniyadānasīlādipuññasambhārasamudāgamasampanna,2
 udayana,11
 āsīvislaya,1
 ādīnaṃ,10
-oti,10
+sa,100

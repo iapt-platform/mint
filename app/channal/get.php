@@ -6,7 +6,7 @@ require_once "../public/_pdo.php";
 require_once '../ucenter/function.php';
 
 # 找我加入的群
-PDO_Connect("sqlite:"._FILE_DB_GROUP_);
+PDO_Connect(""._FILE_DB_GROUP_);
 $query = "SELECT group_id from group_member where user_id = ?  limit 0,100";
 $my_group = PDO_FetchAll($query,array($_COOKIE["userid"]));
 $userList = array();
@@ -17,7 +17,7 @@ foreach ($my_group as $key => $value) {
 }
 
 //找自己的
-PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+PDO_Connect(""._FILE_DB_CHANNAL_);
 $query = "SELECT * from channal where owner = ?  limit 0,100";
 $Fetch_my = PDO_FetchAll($query,array($_COOKIE["userid"]));
 

@@ -6,7 +6,7 @@ require_once '../hostsetting/function.php';
 $respond=array("status"=>0,"message"=>"");
 
 #先查询对此channal是否有权限修改
-   PDO_Connect("sqlite:"._FILE_DB_CHANNAL_);
+   PDO_Connect(""._FILE_DB_CHANNAL_);
 $cooperation = 0;
 if(isset($_POST["id"])){
     $query = "SELECT owner FROM channal WHERE id=?";
@@ -53,7 +53,7 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 }
 else{
     // 设置 句子库和逐词译库可见性
-    PDO_Connect("sqlite:"._FILE_DB_SENTENCE_);
+    PDO_Connect(""._FILE_DB_SENTENCE_);
     $query="UPDATE sentence SET language = ?  , status = ? where  channal = ?  ";
     $sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
     if (!$sth || ($sth && $sth->errorCode() != 0)) {
@@ -63,7 +63,7 @@ else{
     }
     else{
         // 设置 逐词译库可见性
-        PDO_Connect("sqlite:"._FILE_DB_USER_WBW_);
+        PDO_Connect(""._FILE_DB_USER_WBW_);
         $query="UPDATE wbw_block SET lang = ?  , status = ? where  channal = ?  ";
         $sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
         if (!$sth || ($sth && $sth->errorCode() != 0)) {

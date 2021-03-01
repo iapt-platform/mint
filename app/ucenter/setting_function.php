@@ -1,57 +1,56 @@
 <?php
-    require_once '../path.php';
-function get_setting(){
+require_once '../path.php';
+function get_setting()
+{
 
-    if(!isset($_COOKIE["userid"])){
+    if (!isset($_COOKIE["userid"])) {
         $setting = array();
-    }
-    else{
-        $setting=json_decode(file_get_contents("../ucenter/default.json"),TRUE);
+    } else {
+        $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
         //打开数据库
-        $dns = "sqlite:"._FILE_DB_USERINFO_;
-        $dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+        $dns = "" . _FILE_DB_USERINFO_;
+        $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
         $query = "select setting from user where userid = ? ";
         $stmt = $dbh->prepare($query);
         $stmt->execute(array($_COOKIE["userid"]));
         $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $dbh=null;
-        if(isset($fUser[0]["setting"])){
-            $my_setting=json_decode($fUser[0]["setting"],TRUE);
+        $dbh = null;
+        if (isset($fUser[0]["setting"])) {
+            $my_setting = json_decode($fUser[0]["setting"], true);
             foreach ($setting as $key => $value) {
-                if(mb_substr($key,0,1,"UTF-8") !== '_' && isset($my_setting[$key])){
+                if (mb_substr($key, 0, 1, "UTF-8") !== '_' && isset($my_setting[$key])) {
                     $setting[$key] = $my_setting[$key];
                 }
             }
         }
     }
-    return($setting);
+    return ($setting);
 }
 
-function inLangSetting($lang,$mySetting){
+function inLangSetting($lang, $mySetting)
+{
     # 通用语言 和 无译文语言 总是被采用
-    if($lang=="com" && $lang=="none"){
+    if ($lang == "com" && $lang == "none") {
         return true;
     }
     # 用户没有设置语言
-    if(count($mySetting)==0){
+    if (count($mySetting) == 0) {
         return true;
     }
     foreach ($mySetting as $key => $value) {
-        if(strpos($lang,"-")==false){
+        if (strpos($lang, "-") == false) {
             # 语族
-            if($lang===$value){
+            if ($lang === $value) {
                 return true;
             }
-        }
-        else{
-            $befor = strstr($lang,"-" , TRUE);
-            if($lang===$value || $befor===$value){
+        } else {
+            $befor = strstr($lang, "-", true);
+            if ($lang === $value || $befor === $value) {
                 return true;
             }
         }
     }
     return false;
 }
-?>

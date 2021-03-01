@@ -34,7 +34,7 @@ if(isset($_FILES["cover"])){
 
 //处理文件上传结束
 
-PDO_Connect("sqlite:"._FILE_DB_COURSE_);
+PDO_Connect(""._FILE_DB_COURSE_);
 
 $query="UPDATE course SET  title = ? , subtitle = ? ,  summary = ? , teacher = ?  , tag = ?  , lang = ?  , attachment = ? , status = ? , receive_time = ?  , modify_time = ?   where  id = ?  ";
 $sth = $PDO->prepare($query);

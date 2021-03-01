@@ -19,44 +19,42 @@ require_once 'nav_bar.php';
 </div>
 <div>
 <?php
-$dbfile[]=array(_FILE_DB_REF_,"ref.sql");
-$dbfile[]=array(_FILE_DB_REF_INDEX_,"ref_index.sql");
-$dir="./refdict_db/";
+$dbfile[] = array(_FILE_DB_REF_, "ref.sql");
+$dbfile[] = array(_FILE_DB_REF_INDEX_, "ref_index.sql");
+$dir = "./refdict_db/";
 
-if(isset($_GET["index"])){
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;background-color:yellow;">';	
-	$index = $_GET["index"];
-	$dns = "sqlite:".$dbfile[$index][0];
-	$dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	//建立数据库
-	$_sql = file_get_contents($dir.$dbfile[$index][1]);
-	$_arr = explode(';', $_sql);
-	//执行sql语句
-	foreach ($_arr as $_value) {
-		$dbh->query($_value.';');
-	}
-	echo $dns."建立数据库成功";
-echo "</div>"; 
+if (isset($_GET["index"])) {
+    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;background-color:yellow;">';
+    $index = $_GET["index"];
+    $dns = "" . $dbfile[$index][0];
+    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+    //建立数据库
+    $_sql = file_get_contents($dir . $dbfile[$index][1]);
+    $_arr = explode(';', $_sql);
+    //执行sql语句
+    foreach ($_arr as $_value) {
+        $dbh->query($_value . ';');
+    }
+    echo $dns . "建立数据库成功";
+    echo "</div>";
 }
 
-
-for($i=0; $i<count($dbfile); $i++){
-	$db = $dbfile[$i];
-	echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-	echo '<div style="flex:5;">'.$db[0].'</div>';
-	echo '<div style="flex:3;">';
-	if(!file_exists($db[0])){
+for ($i = 0; $i < count($dbfile); $i++) {
+    $db = $dbfile[$i];
+    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
+    echo '<div style="flex:5;">' . $db[0] . '</div>';
+    echo '<div style="flex:3;">';
+    if (!file_exists($db[0])) {
         echo "<span style='color:red;'>数据库不存在</span>";
-    	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step3.php?index='.$i.'">建立</a></div>';    
-	}
-	else{
+        echo "</div>";
+        echo '<div style="flex:2;"><a href="step3.php?index=' . $i . '">建立</a></div>';
+    } else {
         echo "<span style='color:green;'>已存在</span>";
-    	echo "</div>"; 
-        echo '<div style="flex:2;"><a href="step3.php?index='.$i.'">重建</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
+        echo "</div>";
+        echo '<div style="flex:2;"><a href="step3.php?index=' . $i . '">重建</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
     }
-	echo "</div>";  
+    echo "</div>";
 }
 ?>
 </div>
@@ -65,52 +63,43 @@ for($i=0; $i<count($dbfile); $i++){
 <?php
 echo "var rich_file_list = new Array();\n";
 $filelist = array();
-if(($handle=fopen(_DIR_DICT_TEXT_.'/rich/list.txt','r'))!==FALSE){
-	while(($data=fgetcsv($handle,0,','))!==FALSE){
-        $filelist[] = $data;     
+if (($handle = fopen(_DIR_DICT_TEXT_ . '/rich/list.txt', 'r')) !== false) {
+    while (($data = fgetcsv($handle, 0, ',')) !== false) {
+        $filelist[] = $data;
     }
-    foreach($filelist as $value){
+    foreach ($filelist as $value) {
         echo "rich_file_list.push(['{$value[0]}','{$value[1]}']);\n";
-    }    
+    }
+} else {
+    // exit("无法打开rich文件列表");
 }
-else{
-   // exit("无法打开rich文件列表");
-}
-
-
 
 echo "var sys_file_list = new Array();\n";
 $filelist = array();
-if(($handle=fopen(_DIR_DICT_TEXT_.'/system/list.txt','r'))!==FALSE){
-	while(($data=fgetcsv($handle,0,','))!==FALSE){
-        $filelist[] = $data; 
+if (($handle = fopen(_DIR_DICT_TEXT_ . '/system/list.txt', 'r')) !== false) {
+    while (($data = fgetcsv($handle, 0, ',')) !== false) {
+        $filelist[] = $data;
     }
-    foreach($filelist as $value){
+    foreach ($filelist as $value) {
         echo "sys_file_list.push(['{$value[0]}','{$value[1]}']);\n";
 
-    }    
+    }
+} else {
+    // exit("无法打开system文件列表");
 }
-else{
-   // exit("无法打开system文件列表");
-}
-
-
 
 echo "var thin_file_list = new Array();\n";
 $filelist = array();
-if(($handle=fopen(_DIR_DICT_TEXT_.'/thin/list.csv','r'))!==FALSE){
-	while( ($data=fgetcsv($handle,0 , ',' ) )!==FALSE){
-        $filelist[] = $data; 
+if (($handle = fopen(_DIR_DICT_TEXT_ . '/thin/list.csv', 'r')) !== false) {
+    while (($data = fgetcsv($handle, 0, ',')) !== false) {
+        $filelist[] = $data;
     }
-    foreach($filelist as $value){
+    foreach ($filelist as $value) {
         echo "thin_file_list.push(['{$value[0]}','{$value[1]}','{$value[2]}']);\n";
-    }    
-}
-else{
+    }
+} else {
     //exit("无法打开thin文件列表");
 }
-
-
 
 ?>
 var iCurrRichDictIndex = 0;
