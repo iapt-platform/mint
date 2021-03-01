@@ -10,9 +10,14 @@ function getRefFirstMeaning($word,$lang,$redis){
 			PDO_Connect(_FILE_DB_REF_, _DB_USERNAME_, _DB_PASSWORD_);
 			$query = "SELECT mean,language as lang from " . _TABLE_DICT_REF_ . " where word = ?  group by language";
 			$Fetch = PDO_FetchAll($query, array($word));
-			foreach ($Fetch as $key => $value) {
-				# code...
-				$redis->hset("ref_first_mean_".$word,$value["lang"],$value["mean"]);
+			if(count($Fetch)){
+				foreach ($Fetch as $key => $value) {
+					# code...
+					$redis->hset("ref_first_mean_".$word,$value["lang"],$value["mean"]);
+				}				
+			}
+			else{
+				
 			}
 		}
 		$mean = $redis->hGet("ref_first_mean_".$word,$lang);

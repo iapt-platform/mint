@@ -124,7 +124,7 @@ function run_rich_dict(index){
     }
 }
 
-function run_sys_dict(index){
+function run_sys_dict(index,onlyOne=false){
     if(index >= sys_file_list.length){
         $("#response").html($("#response").html()+"All Down");
     }
@@ -138,8 +138,14 @@ function run_sys_dict(index){
         },
         function(data,status){
             $("#response").html($("#response").html()+data+"<br>");
-            iCurrSysDictIndex++;
-            run_sys_dict(iCurrSysDictIndex);
+			if(onlyOne){
+				$("#response").html($("#response").html()+"all done<br>");
+			}
+			else{
+				iCurrSysDictIndex++;
+				run_sys_dict(iCurrSysDictIndex);				
+			}
+
         });
     }
 }

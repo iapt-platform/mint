@@ -30,9 +30,10 @@ textarea {
 
 #dict_ref_search_input {
 	margin-left: 0.5em;
-	width: 100%;
-	font-size: 140%;
-	padding: 0.6em;
+	max-width: 500px;
+	font-size: 130%;
+	font-weight: 500;
+	padding: 0.3em 0.6em;
 	color: var(--btn-hover-bg-color);
 	background-color: var(--btn-color);
 }

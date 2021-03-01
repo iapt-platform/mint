@@ -35,7 +35,7 @@ if($redis!==false){
 	}
 	$arrResult = json_decode($arrWordIdx,true);
 	foreach ($arrResult as $key => $value) {
-		# code...
+		# 获取字典里的第一个意思
 		$arrResult[$key]["mean"]=getRefFirstMeaning($arrResult[$key]["word"],$currLanguage,$redis);
 	}
 	echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);

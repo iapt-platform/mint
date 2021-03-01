@@ -78,22 +78,24 @@ foreach ($arrWords as $currword) {
     //将双元音拆开
     //step 1 : split at diphthong . ~aa~ -> ~a-a~
     //按连字符拆开处理
-    $arrword = split_diphthong($currword);
+	$arrword = split_diphthong($currword);
+	
     foreach ($arrword as $oneword) {
-        $result = array(); //全局变量，递归程序的输出容器
+		$result = array(); //全局变量，递归程序的输出容器
+		//$noSandhi = removeSandhi($oneword);
 
-        mySplit2($oneword, 0, false, 0, 0.5, 0.8, true, false);
-		if(count($result) < 3){
-			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
+        mySplit2($oneword, 0, false, 0, 0.2, 0.1, true, false);
+		if(count($result) < 2){
+			//mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
 		}
         if (isset($_POST["debug"])) {
-            echo "正切：" . count($result) . "\n";
+            echo "正切：" . count($result) . "<br>\n";
 		}
-		if(count($result) < 3){
-			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
+		if(count($result) < 2){
+			//mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
 		}
         if (isset($_POST["debug"])) {
-            echo "反切：" . count($result) . "\n";
+            echo "反切：" . count($result) . "<br>\n";
         }
         /*
         if (count($result) < 5) {
@@ -124,10 +126,29 @@ foreach ($arrWords as $currword) {
         $iCount = 0;
         foreach ($result as $row => $value) {
             $iCount++;
-            $word_part = array();
+			$word_part = array();
+			
             $word_part["word"] = $row;
-            $word_part["confidence"] = $value;
-            $wordlist[] = $word_part;
+			$word_part["confidence"] = $value;
+			$wordlist[] = $word_part;
+
+			//后处理 进一步切分没有意思的长词
+			$new = split2($row);
+			if($new!==$row){
+				$word_part["word"] = $new;
+				$word_part["confidence"] = $value;
+				$wordlist[] = $word_part;	
+				#再处理一次
+				$new2 = split2($new);
+				if($new2!==$new){
+					$word_part["word"] = $new2;
+					$word_part["confidence"] = $value;
+					$wordlist[] = $word_part;					
+				}				
+			}
+
+
+
             if ($iCount >= $iMax) {
                 break;
             }
@@ -141,7 +162,7 @@ foreach ($arrWords as $currword) {
         }
         $iCount = 0;
         foreach ($result as $row => $value) {
-            if ($iCount > 10) {
+            if ($iCount > 100) {
                 break;
             }
             $iCount++;
