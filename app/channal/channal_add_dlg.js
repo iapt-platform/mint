@@ -5,6 +5,7 @@ function channal_add_dlg_init(div) {
 	html += "<div id='channal_add_dlg'>";
 	html += "<div >";
 	html += "<div >" + gLocal.gui.name + "</div>";
+	html += "<guide gid='channel_guide'></guide>"
 	html += "<input type='input' id='channal_add_title' maxlength='32' placeholder='" + gLocal.gui.name + "'/>";
 	html += "</div>";
 	html += "<div>";
@@ -31,6 +32,7 @@ function channal_add_dlg_init(div) {
 	html += "</div>";
 
 	$("#" + div).append(html);
+	guide_init();
 }
 
 function channal_add_dlg_show() {
@@ -67,4 +69,5 @@ function channal_add_new() {
 			}
 		}
 	);
+
 }

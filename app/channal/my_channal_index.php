@@ -6,9 +6,12 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../ucenter/name_selector.js"></script>
 	<script language="javascript" src="../channal/channal_add_dlg.js"></script>
 	<script language="javascript" src="../channal/channal.js"></script>
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 	<script >
 	var gCurrPage="channal";
 	</script>
+	<script src="../public/js/marked.js"></script>
 
 	<style>
 	#channal {
@@ -63,6 +66,7 @@ require_once '../studio/index_head.php';
 		
 	</div>
 	
+
 <?php
 require_once '../studio/index_foot.php';
 ?>
