@@ -23,6 +23,7 @@ $dbfile[] = array(_FILE_DB_REF_, "ref.sql");
 $dbfile[] = array(_FILE_DB_REF_INDEX_, "ref_index.sql");
 $dir = "./refdict_db/";
 
+/*
 foreach ($dbfile as $key => $db) {
 	# code...
     echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;background-color:yellow;">';
@@ -39,7 +40,7 @@ foreach ($dbfile as $key => $db) {
     echo $dns . "建立数据库成功";
     echo "</div>";	
 }
-
+*/
 ?>
 </div>
 <div id="response"></div>
@@ -184,7 +185,14 @@ function run_part_dict(){
 <div class="card">
 	<h4>标准格式字典</h4>
 	<div class="contence">
-	<button onclick="run_rich_dict(0)">Build rich dictionary </button><span style="请注意！此操作将会覆盖原有数据库。"><br>
+	<span style="请注意！此操作将会覆盖原有数据库。">
+	<div>
+	<button onclick="run_rich_dict(0)">Build All Rich dictionary </button>
+	</div>
+	<div>
+	<button onclick="run_sys_dict(0,true)">Build comp dictionary only </button>
+	</div>
+
 	</div>
 </div>
 
