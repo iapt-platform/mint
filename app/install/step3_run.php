@@ -69,7 +69,7 @@ switch ($_GET["dbtype"]) {
         echo "doing filename: $filename dbname: $dbname <br>";
         $sDescDbFile = _DIR_DICT_SYSTEM_ . "/" . $dbname;
         $csvfile = _DIR_DICT_TEXT_ . "/thin/{$filename}";
-        $dns = "" . $sDescDbFile;
+        $dns = "sqlite:" . $sDescDbFile;
         $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         // 开始一个事务，关闭自动提交

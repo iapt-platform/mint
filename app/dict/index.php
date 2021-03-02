@@ -10,299 +10,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 }
 ?>
 	<script language="javascript" src="./dict.js"></script>
-	<style>
-		body {
-			margin: unset;
-		}
 
-		.index_toolbar {
-			position: unset;
-		}
-
-		.search_toolbar {
-			height: initial;
-			padding: 0.6em 1em 0.1em 1em;
-			background-color: var(--tool-bg-color1);
-			border-bottom: none;
-		}
-
-		.search_fixed {
-			position: fixed;
-			top: -500px;
-			width: 100%;
-			display: flex;
-			padding: 0.5em 1em;
-		}
-
-		#dict_search_result {
-			display: flex;
-		}
-
-		#dict_list {
-			flex: 2;
-			text-align: right;
-			padding-right: 1em;
-			border-right: 1px solid var(--border-line-color);
-		}
-
-		#dict_ref {
-			flex: 6;
-			padding: 0.5em 1.5em;
-		}
-
-		#dict_user {
-			flex: 2;
-		}
-
-		.dict_word_card {
-			border-bottom: 1px solid var(--border-line-color);
-			padding: 5px 0;
-			display: block;
-			border-radius: unset;
-			margin: 10px 0;
-			transition: unset;
-			box-shadow: unset;
-		}
-
-		.dict_word {
-			border-left: none;
-			border-right: none;
-			border-top: none;
-			border-bottom: 1px solid var(--border-line-color);
-			padding: 5px 0;
-			display: block;
-			border-radius: unset;
-			margin: 10px 0;
-			transition: unset;
-			box-shadow: unset;
-		}
-
-		.dict_word>.dict {
-			font-size: 110%;
-			color: var(--main-color);
-			border-bottom: unset;
-			padding-bottom: 10px;
-		}
-
-		.dict_word>.mean {
-			font-size: unset;
-			margin: 2px 0;
-			line-height: 150%;
-			font-weight: unset;
-			display: block;
-		}
-
-		/*for word split part */
-		.dropdown_ctl {
-			display: inline-block;
-			margin: 0 0.7em;
-		}
-
-		.dropdown_ctl>.content {
-			display: flex;
-			border: 1px solid var(--border-line-color);
-			border-radius: 99px;
-			line-height: 2em;
-		}
-
-		.dropdown_ctl>.menu {
-			position: absolute;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-			display: none;
-		}
-
-		.dropdown_ctl>.menu {
-			background-color: white;
-		}
-
-		.dropdown_ctl>.content>.main_view>part {
-			margin: 0 0.5em;
-			color: cornflowerblue;
-			cursor: pointer;
-		}
-
-		.dropdown_ctl>.menu>.part_list {
-			padding: 5px;
-			cursor: pointer;
-		}
-
-		.dropdown_ctl>.menu>.part_list:hover {
-			background-color: azure;
-		}
-
-		.dropdown_ctl>.content>.more_button {
-			background-color: var(--btn-color);
-			min-width: 1.4em;
-			text-align: center;
-			border-radius: 99px;
-			cursor: pointer;
-		}
-
-
-		.pre_serach_block {
-			border-bottom: 1px solid var(--shadow-color);
-			padding: 5px 0;
-		}
-
-		.pre_serach_block_title {
-			display: flex;
-			justify-content: space-between;
-		}
-
-		.pre_serach_content {
-
-		}
-
-		#footer_nav {
-			display: none;
-		}
-
-		.right_tool_btn {
-			position: fixed;
-			right: 50px;
-			top: 5em;
-			background-color: unset;
-		}
-
-		.right_tool_btn .icon {
-			height: 2em;
-			width: 2em;
-		}
-
-		.right_tool_btn button:hover {
-			background-color: var(--link-hover-color);
-			border-color: var(--link-color);
-			color: var(--btn-hover-color);
-			height: 3em;
-			width: 3em;
-			padding: 0;
-		}
-
-		.right_tool_btn button {
-			background-color: var(--link-color);
-			border-color: var(--link-color);
-			color: var(--btn-color);
-			height: 3em;
-			width: 3em;
-			padding: 0;
-		}
-
-		button,
-		input[type="button"],
-		input[type="submit"] {
-			font-weight: 500;
-			font-size: 90%;
-			background-color: none;
-			border: 2px solid var(--btn-border-color);
-			border-radius: 99px;
-			margin: 2px;
-			padding: 2px 12px;
-			-webkit-transition-duration: 0.2s;
-			-moz-transition-duration: 0.2s;
-			transition-duration: 0.2s;
-			cursor: pointer;
-			display: -webkit-inline-flex;
-			display: -moz-inline-flex;
-			display: inline-flex;
-			-webkit-align-items: center;
-			-moz-align-items: center;
-			align-items: center;
-			-webkit-flex-wrap: nowrap;
-			-moz-flex-wrap: nowrap;
-			flex-wrap: nowrap;
-			-webkit-justify-content: center;
-			-moz-justify-content: center;
-			justify-content: center;
-		}
-
-		.dict_find_gramma guide{
-			color:unset;
-		}
-
-		#pre_search_result{
-			background-color: var(--bg-color);
-			z-index: 50;
-			display:none;
-		}
-
-		#dt_title {
-			border-bottom: 2px solid var(--link-hover-color);
-		}
-
-		.dict_word_list .mean {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 1;
-			padding-left: 1em;
-			color: var(--main-color1);
-		}
-		.dict_word_list{
-			padding: 2px 10px 5px 10px;
-		}
-		.dict_word_list:hover{
-			background-color: var(--link-color);
-			color: var(--btn-hover-color);
-		}
-		.section_inner{
-			max-width:1024px;
-			margin: 0 auto;
-		}
-		.spell{
-			font-size: 100%;
-    		font-weight: 500;
-		}
-
-
-		.pali_spell{
-			font-size:200%;
-			font-weight:700;
-			margin-top:15px;
-			padding-bottom:0
-		}
-		#main_view{
-			display:flex;
-		}
-		#main_result{
-			flex:7;
-		}
-		#right_bar{
-			flex:3;
-		}
-		.auto_mean{
-			display:flex;
-		}
-		.auto_mean>.spell{
-			font-weight: 700;
-			margin-right: 1em;
-		}
-		.auto_mean>.meaning{
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 2;
-			color: var(--main-color1);
-		}
-		#word_parts{
-
-		}
-		#search_info{
-			display:flex;
-			justify-content: space-between;
-		}
-		#part_mean{
-			margin: 1em;
-			padding: 1em;
-			border: 1px solid var(--border-line-color);
-			background-color: var(--bg-color);
-			box-shadow: 0 5px 7px rgb(0 0 0 / 5%);
-		}
-		#part_mean_shell{
-			display:none;
-		}
-	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
 
@@ -334,7 +42,9 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 				<div id="pre_search_result" >
 					<div id="pre_search_word" class="pre_serach_block">
 						<div id="pre_search_word_title" class="pre_serach_block_title">
-							<div id="pre_search_word_title_left"><?php echo $_local->gui->vocabulary_list; ?></div>
+							<div id="pre_search_word_title_left">
+							<?php #echo $_local->gui->vocabulary_list; ?>
+							</div>
 							<div id="pre_search_word_title_right"></div>
 						</div>
 						<div id="pre_search_word_content" class="pre_serach_content">
@@ -343,10 +53,12 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 				</div>
 			</div>
 			<span style="display:flex;">
+			<!--
 				<button id="trubo_split" onclick="trubo_split()" >
 					<?php echo $_local->gui->turbo_split; /*强力拆分*/ ?>
 				</button>
 				<guide gid="comp_split"></guide>
+				-->
 			</span>
 			<div></div>
 		</div>
@@ -457,6 +169,8 @@ function GetPageScroll() {
 	pos.y = y;
 	return (pos);
 }
+
+ntf_init(1);
 </script>
 
 	<?php
