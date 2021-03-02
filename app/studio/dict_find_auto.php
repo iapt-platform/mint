@@ -40,7 +40,7 @@ global $PDO;
 
 //查询单词表
 $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $in_book . "_tpl.db3";
-PDO_Connect("$db_file");
+PDO_Connect("sqlite:{$db_file}");
 $query = "SELECT paragraph,wid,real FROM \"main\" WHERE (\"paragraph\" in " . $strQueryPara . " ) and \"real\"<>\"\" and \"type\"<>'.ctl.' ";
 if ($debug) {
     echo "filename:" . $db_file . "<br>";
@@ -73,7 +73,7 @@ $dict_word_spell = array();
 $output = array();
 $db_file_list = array();
 //用户词典
-array_push($db_file_list, array(_FILE_DB_WBW_, " ORDER BY rowid DESC"));
+array_push($db_file_list, array(_FILE_DB_WBW1_, " ORDER BY rowid DESC"));
 
 array_push($db_file_list, array(_DIR_DICT_SYSTEM_ . "/sys_regular.db", " ORDER BY confidence DESC"));
 array_push($db_file_list, array(_DIR_DICT_SYSTEM_ . "/sys_irregular.db", ""));
@@ -104,7 +104,7 @@ for ($i = 0; $i < $lookup_loop; $i++) {
         if ($debug) {
             echo "dict:$db_file<br>";
         }
-        PDO_Connect("{$db_file}");
+        PDO_Connect("sqlite:{$db_file}");
         PDO_Execute("PRAGMA synchronous = OFF");
         PDO_Execute("PRAGMA journal_mode = WAL");
         PDO_Execute("PRAGMA foreign_keys = ON");

@@ -67,7 +67,7 @@ if($sum_len>MAX_LETTER){
 PDO_Connect(""._FILE_DB_USER_WBW_);
 
 //模板库
-$db_tpl = ""._DIR_PALICANON_TEMPLET_."/p".$_book."_tpl.db3";
+$db_tpl = "sqlite:"._DIR_PALICANON_TEMPLET_."/p".$_book."_tpl.db3";
 $dbh_tpl = new PDO($db_tpl, "", "");
 $dbh_tpl->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
