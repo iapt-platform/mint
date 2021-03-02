@@ -13,7 +13,7 @@ function getRefFirstMeaning($word,$lang,$redis){
 			if(count($Fetch)){
 				foreach ($Fetch as $key => $value) {
 					# code...
-					$redis->hset("ref_first_mean_".$word,$value["lang"],$value["mean"]);
+					$redis->hSet("ref_first_mean_".$word,$value["lang"],$value["mean"]);
 				}				
 			}
 			else{
