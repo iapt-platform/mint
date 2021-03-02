@@ -2206,8 +2206,8 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>[None]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[Auto]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -2741,8 +2741,8 @@ function renderWordDetailByElement(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>[None]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[Auto]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -3139,8 +3139,8 @@ function renderWordDetailByElement(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>[None]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[Auto]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
+		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);

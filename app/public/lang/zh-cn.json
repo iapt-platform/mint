@@ -607,6 +607,10 @@
 		"enter": "进入",
 		"avatar": "头像",
 		"display": "显示",
+		"none": "无",
+		"cooperate_group": "协作组",
+		"personal": "个人",
+		"empty_null_mark": "这里很安静",
 		"": ""
 	},
 	"grammastr": [

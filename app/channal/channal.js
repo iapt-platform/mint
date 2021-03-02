@@ -177,21 +177,21 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					html += "<div id='coop_div' style='padding:5px;position: relative;'>";
-					html += "<h2>协作者</h2>";
+					html += "<h2>"+gLocal.gui.cooperators+"</h2>";
 
-					html += "<button onclick='add_coop_user()'>添加协作者</button>";
+					html += "<button onclick='add_coop_user()'>"+gLocal.gui.add+gLocal.gui.cooperators+"</button>";
 					html += "<div id='add_coop_user_dlg' class='float_dlg' style='left: 0;'></div>";
 
-					html += "<button onclick='add_coop_group()' >添加协作群</button>";
+					html += "<button onclick='add_coop_group()' >"+gLocal.gui.add+gLocal.gui.cooperate_group+"</button>";
 					html += "<div id='add_coop_group_dlg' class='float_dlg' style='left: 0;'></div>";
 					html += "<div id='coop_inner' >";
 					if (typeof result.coop == "undefined" || result.coop.length == 0) {
-						html += "这里很安静";
+						html += gLocal.gui.empty_null_mark;
 					} else {
 						for (const coop of result.coop) {
 							html += '<div class="file_list_row" style="padding:5px;">';
 							if (coop.type == 0) {
-								html += '<div style="flex:1;">个人</div>';
+								html += '<div style="flex:1;">'+gLocal.gui.personal+'</div>';
 								html += "<div style='flex:3;'>" + coop.user_name.nickname + "</div>";
 							} else {
 								html += '<div style="flex:1;">' + gLocal.gui.group + "</div>";
@@ -200,7 +200,7 @@ function my_channal_edit(id) {
 
 							html += "<div style='flex:3;'>" + coop.power + "</div>";
 							html += "<div class='hover_button' style='flex:3;'>";
-							html += "<button>移除</button>";
+							html += "<button>"+gLocal.gui.remove+"</button>";
 							html += "</div>";
 							html += "</div>";
 						}
