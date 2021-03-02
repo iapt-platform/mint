@@ -141,7 +141,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 
 		.pre_serach_block {
 			border-bottom: 1px solid var(--shadow-color);
-			padding: 5px 8px;
+			padding: 5px 0;
 		}
 
 		.pre_serach_block_title {
@@ -150,7 +150,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		}
 
 		.pre_serach_content {
-			padding: 4px 4px 4px 15px;
+
 		}
 
 		#footer_nav {
@@ -220,7 +220,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		}
 
 		#pre_search_result{
-			background-color: var(--btn-color);
+			background-color: var(--bg-color);
 			z-index: 50;
 			display:none;
 		}
@@ -236,25 +236,71 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 			-webkit-box-orient: vertical;
 			-webkit-line-clamp: 1;
 			padding-left: 1em;
+			color: var(--main-color1);
 		}
-
+		.dict_word_list{
+			padding: 2px 10px 5px 10px;
+		}
+		.dict_word_list:hover{
+			background-color: var(--link-color);
+			color: var(--btn-hover-color);
+		}
 		.section_inner{
 			max-width:1024px;
 			margin: 0 auto;
 		}
 		.spell{
-			font-size: 110%;
-    		font-weight: 700;
+			font-size: 100%;
+    		font-weight: 500;
 		}
-		.dict_word_list:hover{
-			color: var(--link-hover-color);
-		}
+
 
 		.pali_spell{
 			font-size:200%;
 			font-weight:700;
 			margin-top:15px;
 			padding-bottom:0
+		}
+		#main_view{
+			display:flex;
+		}
+		#main_result{
+			flex:7;
+		}
+		#right_bar{
+			flex:3;
+		}
+		.auto_mean{
+			display:flex;
+		}
+		.auto_mean>.spell{
+			font-weight: 700;
+			margin-right: 1em;
+		}
+		.auto_mean>.meaning{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			color: var(--main-color1);
+		}
+		#word_parts{
+
+		}
+		#search_info{
+			display:flex;
+			justify-content: space-between;
+		}
+		#part_mean{
+			margin: 1em;
+			padding: 1em;
+			border: 1px solid var(--border-line-color);
+			background-color: var(--bg-color);
+			box-shadow: 0 5px 7px rgb(0 0 0 / 5%);
+		}
+		#part_mean_shell{
+			display:none;
 		}
 	</style>
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
@@ -279,12 +325,10 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 			<div style="flex:6;">
 				<div>
 					<div>
-						<input id="dict_ref_search_input" type="text" autocomplete="off" placeholder="<?php echo $_local->gui->search; ?> 单词里面添加+ 预览拆词结果" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
+						<input id="dict_ref_search_input" type="text" autocomplete="off" placeholder="<?php echo $_local->gui->search; ?> 单词里面添加 '+' 预览拆词结果" onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
 					<div id="result_msg"></div>
-					<div id="word_parts">
-						<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
-					</div>
+					<div id="manual_split"></div>
 				</div>
 
 				<div id="pre_search_result" >
@@ -351,10 +395,27 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 		</button>
 	</div>
 
-<div>
-	<div class='section_inner' id="dict_search_result" style="background-color:white;color:black;">
+	<div>
+		<div id="main_view" class='section_inner'  style="background-color:white;color:black;">
+			<div id='dict_list_shell' style="display:none" onclick='setNaviVisibility()'>
+				<div id='dict_list' class='dict_list_off'></div>
+			</div>
+			<div id="main_result">
+				<div id="search_info">
+					<div id='search_result_shell'></div>
+					<div id="word_parts">
+						<div id="input_parts" style="font-size: 1.1em;padding: 2px 1em;"></div>
+					</div>
+				</div>
+				
+				<div id="part_mean_shell">
+					<div id="part_mean"></div>
+				</div>
+				<div id="dict_search_result"></div>
+			</div>
+			<div id="right_bar"></div>
+		</div>
 	</div>
-</div>
 	<script>
 <?php
 if (isset($_GET["key"]) && !empty($_GET["key"])) {

@@ -4,6 +4,11 @@ require_once '../public/casesuf.inc';
 //require_once '../studio/sandhi.php';
 require_once "../path.php";
 require_once "../public/_pdo.php";
+
+require_once "../redis/function.php";
+global $redis;
+$redis = redis_connect();
+
 // open word part db
 global $dbh;
 $dns = "" . _FILE_DB_PART_;
@@ -38,97 +43,99 @@ $path[] = array("", 0);
 
 global $sandhi;
 //sandhi rules table 语尾表
-$sandhi[] = array("a" => "", "b" => "", "c" => "", "len" => 0, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "a", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ā", "b" => "ā", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "ā", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ā", "b" => "a", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "e", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "i", "c" => "i", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "o", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "u", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "a", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "u", "c" => "ū", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "u", "c" => "u", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "ī", "c" => "ī", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "ū", "c" => "ū", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "i", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "e", "b" => "a", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "i", "c" => "ī", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "e", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "a", "c" => "ya", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "atth", "c" => "atth", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "taṃ", "b" => "n", "c" => "tann", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "api", "c" => "mpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "eva", "c" => "meva", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[o]", "b" => "iva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "o", "b" => "a", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "ādi", "c" => "ādi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a[ānaṃ]", "b" => "a", "c" => "ānama", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "ca", "c" => "ñca", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "a", "c" => "ma", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ṃ", "b" => "a", "c" => "m", "len" => 1, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "ā", "c" => "mā", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "u", "c" => "mu", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "[ṃ]", "b" => "h", "c" => "ñh", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ā", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "[ṃ]", "c" => "im", "len" => 2, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ati", "b" => "tabba", "c" => "atabba", "len" => 6, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ati", "b" => "tabba", "c" => "itabba", "len" => 6, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "iti", "b" => "a", "c" => "icca", "len" => 4, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "", "b" => "", "c" => "", "len" => 0, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "a", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ā", "b" => "ā", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "ā", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ā", "b" => "a", "c" => "ā", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "e", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "i", "c" => "i", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "o", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "u", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "a", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "u", "c" => "ū", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "u", "c" => "u", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "ī", "c" => "ī", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "ū", "c" => "ū", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "i", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "e", "b" => "a", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "i", "c" => "ī", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "e", "c" => "e", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "a", "c" => "ya", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "atth", "c" => "atth", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "taṃ", "b" => "n", "c" => "tann", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "api", "c" => "mpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "eva", "c" => "meva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[o]", "b" => "iva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "o", "b" => "a", "c" => "o", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "ādi", "c" => "ādi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a[ānaṃ]", "b" => "a", "c" => "ānama", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "ca", "c" => "ñca", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "a", "c" => "ma", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "a", "c" => "m", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "ā", "c" => "mā", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "u", "c" => "mu", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "[ṃ]", "b" => "h", "c" => "ñh", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ā", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "[ṃ]", "c" => "im", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ati", "b" => "tabba", "c" => "atabba", "len" => 6, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ati", "b" => "tabba", "c" => "itabba", "len" => 6, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "iti", "b" => "a", "c" => "icca", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
-$sandhi[] = array("a" => "uṃ", "b" => "a", "c" => "uma", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u[ūnaṃ]", "b" => "a", "c" => "ūnama", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī[īnaṃ]", "b" => "a", "c" => "īnama", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "su", "b" => "a", "c" => "sva", "len" => 3, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "uṃ", "b" => "a", "c" => "uma", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u[ūnaṃ]", "b" => "a", "c" => "ūnama", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī[īnaṃ]", "b" => "a", "c" => "īnama", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "su", "b" => "a", "c" => "sva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
 #other sandhi rule. can be use but program will be slow down
 #其他连音规则，如果使用则会让程序运行变慢
 
-$sandhi[] = array("a" => "ā", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "e", "b" => "iti", "c" => "eti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "o", "b" => "iti", "c" => "oti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ū", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "ā", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "e", "b" => "iti", "c" => "eti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "o", "b" => "iti", "c" => "oti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ū", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
-$sandhi[] = array("a" => "ṃ", "b" => "ca", "c" => "ñca", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ṃ", "b" => "cāti", "c" => "ñcāti", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ṃ", "b" => "cet", "c" => "ñcet", "len" => 4, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "ṃ", "b" => "ca", "c" => "ñca", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "cāti", "c" => "ñcāti", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "cet", "c" => "ñcet", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "ev", "c" => "mev", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
 /*
-$sandhi[] = array("a" => "a", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ā", "b" => "eva", "c" => "āyeva", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "e", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "eva", "c" => "yeva", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "īyeva", "len" => 5, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "o", "b" => "eva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "eva", "c" => "veva", "len" => 3, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "a", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ā", "b" => "eva", "c" => "āyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "e", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "eva", "c" => "yeva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "īyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "o", "b" => "eva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "eva", "c" => "veva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
-$sandhi[] = array("a" => "a", "b" => "eva", "c" => "evā", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "e", "b" => "eva", "c" => "evā", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "eva", "c" => "yevā", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "yevā", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "iyevā", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "īyevā", "len" => 4, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "o", "b" => "eva", "c" => "ovā", "len" => 4, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "a", "b" => "eva", "c" => "evā", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "e", "b" => "eva", "c" => "evā", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "eva", "c" => "yevā", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "yevā", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "iyevā", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "eva", "c" => "īyevā", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "o", "b" => "eva", "c" => "ovā", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>1.0);
 
-$sandhi[] = array("a" => "ā", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "a", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "e", "b" => "api", "c" => "epi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ī", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "i", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "o", "b" => "api", "c" => "opi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ū", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "u", "b" => "api", "c" => "upi", "len" => 3, "adj_len" => 0, "advance" => false);
-$sandhi[] = array("a" => "ṃ", "b" => "api", "c" => "mpi", "len" => 3, "adj_len" => 0, "advance" => false);
+$sandhi[] = array("a" => "ā", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "a", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "e", "b" => "api", "c" => "epi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ī", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "i", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "o", "b" => "api", "c" => "opi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ū", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "u", "b" => "api", "c" => "upi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
+$sandhi[] = array("a" => "ṃ", "b" => "api", "c" => "mpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0);
  */
 $sandhi[] = array("a" => "a", "b" => "a", "c" => "a", "len" => 1, "adj_len" => -1, "advance" => true);
 $sandhi[] = array("a" => "ī", "b" => "", "c" => "i", "len" => 1, "adj_len" => 0, "advance" => true);
@@ -321,7 +328,8 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
     $confidence = isExsit($strWord, $adj_len);
     if ($confidence >= 0) {
         $output[] = array($strWord, "", $confidence);
-    } else {
+	} 
+	else {
         $confidence = isExsit("[" . $strWord . "]");
         if ($confidence >= 0) {
             $output[] = array("[" . $strWord . "]", "", $confidence);
@@ -356,7 +364,7 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
                         if ($confidence > $c_threshhold) {
                             $output[] = array($str1, $str2, $confidence, $row["adj_len"]);
                             if (isset($_POST["debug"])) {
-                                echo "插入：{$str1}\n";
+                                echo "插入：{$str1} 剩余{$str2} 应用：{$row["a"]}-{$row["b"]}-{$row["c"]}\n";
                             }
                             if ($express) {
                                 break;
@@ -394,8 +402,8 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
                 }
             }
         }
-
-    }
+	}
+	
 	$word = "";
     if (count($output) > 0) {
         foreach ($output as $part) {
@@ -438,7 +446,8 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
                 mySplit2($remainder, ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
             }
         }
-    } else {
+	} 
+	else {
         #尾巴查不到了
         $word = "";
         $cf = 1.0;
@@ -449,13 +458,16 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
             }
             $word .= "+";
             $cf = $cf * $path[$i][1];
-        }
-        $len = pow(mb_strlen($strWord, "UTF-8"), 3);
+		}
+		
+		$len = pow(mb_strlen($strWord, "UTF-8"), 3);
+		
         if ($forward) {
             $cf =(1-$cf) * $len / ($len + 150);
-        } else 
+        } else {
 			$cf =(1-$cf) * $len / ($len + 5);
-        }
+		}
+		
         if (isset($_POST["debug"])) {
             $word = $word.$strWord . "(0)";
         } else {
@@ -466,7 +478,8 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
             if ($forward == true) {
 				$result[$word] = $cf;
 				return;
-            } else {
+			} 
+			else {
                 $reverseWord = word_reverse($word);
 				$result[$reverseWord] = $cf;
 				return;
@@ -474,6 +487,7 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
         }
     }
 
+}
 
 function word_reverse($word)
 {
@@ -490,4 +504,62 @@ function word_reverse($word)
     } else {
         return $word;
     }
+}
+
+#后处理
+function split2($word){
+	global $redis;
+
+	$input = explode("+",$word);
+	$newword=array();
+	foreach ($input as $value) {
+		$word = strstr($value,"(",true);
+		if($word==false){
+			$word=$value;
+		}
+		if(mb_strlen($word,"UTF-8")>4){
+		# 先看有没有中文意思
+			if($redis->hExists("dict_ref_with_mean",$word)===TRUE){
+				$newword[]=$word;
+			}
+			else{
+				#如果没有查巴缅替换拆分
+				if($redis->hExists("dict_pm_part",$word)===TRUE){
+					$pmPart = explode("+",$redis->hGet("dict_pm_part",$word)) ;
+					foreach ($pmPart as  $pm) {
+						# code...
+						$newword[]=$pm;
+					}
+				}
+				else{
+					#如果没有查规则变形
+					if($redis->hExists("dict_regular_part",$word)===TRUE){
+						$rglPart = explode("+",$redis->hGet("dict_regular_part",$word)) ;
+						#看巴缅有没有第一部分
+						if($redis->hExists("dict_pm_part",$rglPart[0])===TRUE){
+							$pmPart = explode("+",$redis->hGet("dict_pm_part",$rglPart[0])) ;
+							foreach ($pmPart as  $pm) {
+								# code...
+								$newword[]=$pm;
+							}
+						}
+						else{
+							#没有
+							$newword[]=$rglPart[0];
+						}
+						$newword[]=$rglPart[1];
+					}
+					else{
+						#还没有就认命了
+						$newword[]=$word;
+					}
+				}
+			}
+		}
+		else{
+			$newword[]=$word;
+		}
+
+	}
+	return implode("+",$newword);
 }

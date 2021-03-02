@@ -1,8 +1,10 @@
 var dict_pre_searching = false;
 var dict_pre_search_curr_word = "";
 var dict_search_xml_http = null;
+var _autoSplit = true;
 
-function dict_search(word) {
+function dict_search(word, autoSplit = true) {
+	_autoSplit = autoSplit;
 	$("#pre_search_result").hide();
 	if (!localStorage.searchword) {
 		localStorage.searchword = "";
@@ -19,6 +21,7 @@ function dict_search(word) {
 		localStorage.searchword = word + "," + oldHistory;
 	}
 	word = standardize(word);
+	word = com_getPaliReal(word);
 
 	$.get(
 		"dict_lookup.php",
@@ -28,10 +31,16 @@ function dict_search(word) {
 		function (data, status) {
 			$("#dict_search_result").html(data);
 			$("#dict_list").append($("#dictlist"));
+
+			$("#right_bar").html("");
+			$("#right_bar").append($("#dict_user"));
+
+			$("#search_result_shell").html("");
 			$("#search_result_shell").append($("#search_summary"));
+
 			guide_init();
 			let word_count = parseInt($("#word_count").val());
-			if (word_count < 3) {
+			if (_autoSplit == true && word_count < 3) {
 				trubo_split();
 			}
 		}
@@ -131,6 +140,7 @@ function dict_input_keyup(e, obj) {
 		}
 	}
 }
+var t;
 
 function dict_input_split(word) {
 	if (word.indexOf("+") >= 0) {
@@ -143,9 +153,12 @@ function dict_input_split(word) {
 			"点击查词<div class='dropdown_ctl'><div class='content'><div class='main_view' >" +
 			strParts +
 			"</div></div></div>";
-		$("#input_parts").html(html);
+		$("#manual_split").html(html);
+		clearTimeout(t);
+		t = setTimeout("getPartMeaning()", 1000);
 	} else {
-		$("#input_parts").html("");
+		$("#manual_split").html("");
+		$("#part_mean_shell").slideUp();
 	}
 }
 
@@ -173,8 +186,12 @@ function cls_word_search_history() {
 }
 
 function trubo_split() {
+	let strSpliting = "正在自动切分复合词……";
+	if ($("#input_parts").html() == strSpliting) {
+		return;
+	}
 	$("#pre_search_result").hide();
-	$("#input_parts").html("正在自动切分复合词……");
+	$("#input_parts").html(strSpliting);
 	$.post(
 		"split.php",
 		{
@@ -184,9 +201,13 @@ function trubo_split() {
 			try {
 				let result = JSON.parse(data);
 				let html = "<div>";
+				let firstWord = new Array();
 				if (result.length > 0) {
+					html += "拆分";
+					let level1Count = 0;
 					for (const part of result[0]["data"]) {
-						html += '自动拆分结果<div class="dropdown_ctl">';
+						firstWord.push(part[0].word);
+						html += '<div class="dropdown_ctl">';
 						html += '<div class="content">';
 						html +=
 							'<div class="main_view">' +
@@ -202,12 +223,14 @@ function trubo_split() {
 						}
 						html += "</div>";
 						html += "</div>";
+						level1Count++;
 					}
 				} else {
 					html += "无法拆分";
 				}
 				html += "</div>";
 				$("#input_parts").html(html);
+				getPartMeaning(firstWord.join("+"));
 
 				$(".more_button").click(function () {
 					$(this).parent().siblings(".menu").toggle();
@@ -217,19 +240,50 @@ function trubo_split() {
 					let html = "<part>" + $(this).text().replace(/\+/g, "</part><part>") + "</part>";
 					$(this).parent().parent().find(".main_view").html(html);
 					$(this).parent().hide();
+					getPartMeaning($(this).text());
 					$("part").click(function () {
-						dict_search($(this).text());
+						dict_search($(this).text(), false);
 					});
 				});
 
 				$("part").click(function () {
-					dict_search($(this).text());
+					dict_search($(this).text(), false);
 				});
 			} catch (e) {}
 		}
 	);
 }
-
+function getPartMeaning(word = "") {
+	let sWord = word;
+	if (word == "") {
+		sWord = $("#dict_ref_search_input").val();
+	}
+	$.get(
+		"../dict/get_first_mean.php",
+		{
+			word: sWord,
+		},
+		function (data, status) {
+			try {
+				let result = JSON.parse(data);
+				let html = "<div>";
+				if (result.length > 0) {
+					for (const part of result) {
+						html +=
+							"<div class='auto_mean'><span class='spell'>" +
+							part.word +
+							"</span><span class='meaning'>" +
+							part.mean +
+							"</span></div>";
+					}
+				}
+				html += "</div>";
+				$("#part_mean").html(html);
+				$("#part_mean_shell").slideDown();
+			} catch (error) {}
+		}
+	);
+}
 function setNaviVisibility(strObjId = "") {
 	var objNave = document.getElementById("dict_list");
 	var objblack = document.getElementById("dict_list_shell");

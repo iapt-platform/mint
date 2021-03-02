@@ -131,3 +131,18 @@ body {
 #trubo_split {
 	font-size: unset;
 }
+
+#right_bar{
+	display:none;
+}
+.search_toolbar{
+	padding:0.5em 0;
+}
+
+guide{
+	display:none;
+}
+
+#search_info {
+    display: block;
+}
