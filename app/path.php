@@ -47,6 +47,7 @@ define("_DIR_CSV_PALI_CANON_WORD_INDEX_", __DIR__ . "/../paliword/index");
 define("_DIR_PALI_CSV_", __DIR__ . "/../tmp/palicsv");
 define("_DIR_LOG_", __DIR__ . "/../tmp/log");
 define("_DIR_TEMP_", __DIR__ . "/../tmp/temp");
+define("_DIR_TEMP_DICT_TEXT_", __DIR__ . "/../tmp/dict_text");
 define("_DIR_TMP_", __DIR__ . "/../tmp");
 
 //dictionary
@@ -54,6 +55,14 @@ define("_DIR_DICT_", __DIR__ . "/../tmp/appdata/dict");
 define("_DIR_DICT_SYSTEM_", __DIR__ . "/../tmp/appdata/dict/system");
 define("_DIR_DICT_3RD_", __DIR__ . "/../tmp/appdata/dict/3rd");
 define("_DIR_DICT_REF_", __DIR__ . "/../tmp/appdata/dict/ref");
+
+#巴缅字典
+define("_DICT_DB_PM_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/3rd/pm.db");
+define("_TABLE_DICT_PM_", "dict");
+
+#系统规则
+define("_DICT_DB_REGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_regular.db");
+define("_TABLE_DICT_REGULAR_", "dict");
 
 define("_DIR_USERS_GUIDE_", __DIR__ . "/../documents/users_guide");
 

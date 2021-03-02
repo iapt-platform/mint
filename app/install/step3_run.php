@@ -4,7 +4,9 @@ require_once '../path.php';
 
 $filename = $_GET["filename"];
 $dbname = $_GET["dbname"];
-$table = $_GET["table"];
+if(isset($_GET["table"])){
+	$table = $_GET["table"];
+}
 switch ($_GET["dbtype"]) {
     case "rich":
     case "system":
@@ -15,7 +17,7 @@ switch ($_GET["dbtype"]) {
             $sDescDbFile = _DIR_DICT_SYSTEM_ . "/" . $dbname;
             $csvfile = _DIR_DICT_TEXT_ . "/system/{$filename}";
         }
-        $dns = "" . $sDescDbFile;
+        $dns = "sqlite:" . $sDescDbFile;
         $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -28,8 +30,10 @@ switch ($_GET["dbtype"]) {
                 $dbh->query($_value . ';');
             }
             echo $dns . "建立数据库成功<br>";
-        }
-
+		}
+		
+		$query = "DELETE from dict where 1";
+		$dbh->query($query);
         // 开始一个事务，关闭自动提交
         $dbh->beginTransaction();
 
@@ -62,7 +66,7 @@ switch ($_GET["dbtype"]) {
 
         break;
     case "thin":
-        echo "doing filename: $filename dbname: $dbname table:$table<br>";
+        echo "doing filename: $filename dbname: $dbname <br>";
         $sDescDbFile = _DIR_DICT_SYSTEM_ . "/" . $dbname;
         $csvfile = _DIR_DICT_TEXT_ . "/thin/{$filename}";
         $dns = "" . $sDescDbFile;
@@ -76,7 +80,7 @@ switch ($_GET["dbtype"]) {
             } else if ($table === "info") {
                 $query = "INSERT INTO info ('language' , 'id' ,  'shortname' , 'name') VALUES (  ? ,  ? ,  ? ,  ? )";
             } else {
-                echo "table name $table unkow.";
+                echo "table name  unkow.";
             }
         } else if ($dbname === "ref1.db") {
             $query = "INSERT INTO dict ('id','eword', 'word', 'length', 'count') VALUES (  ? ,  ? ,  ? ,  ? ,  ? )";
@@ -114,17 +118,14 @@ switch ($_GET["dbtype"]) {
         $dns = "" . _FILE_DB_PART_;
         $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-
-        {
-            //建立数据库
-            $_sql = file_get_contents('part.sql');
-            $_arr = explode(';', $_sql);
-            //执行sql语句
-            foreach ($_arr as $_value) {
-                $dbh->query($_value . ';');
-            }
-            echo $dns . "建立数据库成功<br>";
-        }
+		//建立数据库
+		$_sql = file_get_contents('part.sql');
+		$_arr = explode(';', $_sql);
+		//执行sql语句
+		foreach ($_arr as $_value) {
+			$dbh->query($_value . ';');
+		}
+		echo $dns . "建立数据库成功<br>";
 
         // 开始一个事务，关闭自动提交
         $dbh->beginTransaction();

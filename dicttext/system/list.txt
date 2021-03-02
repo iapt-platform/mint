@@ -1,9 +1,4 @@
-comp.csv,comp.db
-comp1.csv,comp.db
-comp2.csv,comp.db
-comp3.csv,comp.db
-comp4.csv,comp.db
-comp5.csv,comp.db
+../../tmp/dict_text/comp.csv,comp.db
 sys_irregular.csv,sys_irregular.db
 sys_regular.csv,sys_regular.db
 sys_regular1.csv,sys_regular.db
