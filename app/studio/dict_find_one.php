@@ -64,7 +64,7 @@ $output = array();
 $db_file_list = array();
 //用户词典
 if ($dict_name == "") {
-    array_push($db_file_list, _FILE_DB_WBW_);
+    array_push($db_file_list, _FILE_DB_WBW1_);
 
     array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/sys_regular.db");
     array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/sys_irregular.db");
@@ -86,7 +86,7 @@ if ($dict_name == "") {
 $_dict_db = array();
 foreach ($db_file_list as $db_file) {
     try {
-        $dbh = new PDO("" . $db_file, "", "");
+        $dbh = new PDO("sqlite:" . $db_file, "", "");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $_dict_db[] = array("file" => $db_file, "dbh" => $dbh);
 
