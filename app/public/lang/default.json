@@ -605,6 +605,10 @@
 		"enter": "Enter",
 		"avatar": "Avatar",
 		"display": "display",
+		"none": "none",
+		"cooperate_group": "cooperative group",
+		"personal": "personal",
+		"empty_null_mark": "Here is so quiet",
 		"": ""
 	},
 	"grammastr": [
