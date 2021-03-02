@@ -85,462 +85,462 @@
 35638,X,23,amuyo,amuyo,Amuyo,amuyo，指示代名词 asu / amu（that，so-and-so）m.p.主,5,1
 40808,X,23,anena,anena,Anena,anena，指示代名词 ay / i（this / these）中性n.单数s.具格,5,1
 40809,X,23,anena,anena,Anena,anena，指示代名词 ay / i（this / these）阳性m.单数s.具格,5,1
-72167,C,23,asam,āsaṃ,Āsaṃ,āsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,4,1
-72168,C,23,asam,āsaṃ,Āsaṃ,āsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,4,1
-77269,C,23,asma,asmā,Asmā,asmā，指示代名词 ay / i（this / these）中性n．单数s．夺格,4,1
-77270,C,23,asma,asmā,Asmā,asmā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,4,1
-77287,C,23,asmakam,asmākaṃ,Asmākaṃ,asmākaṃ，人称代名词第一人称我amha复数p．属格gen．,7,1
-77288,C,23,asmakam,asmākaṃ,Asmākaṃ,asmākaṃ，人称代名词第一人称我amha复数p．与格dat．,7,1
-77305,C,23,asmasu,asmāsu,Asmāsu,asmāsu，人称代名词第一人称我amha复数p．处格loc．,6,1
-77310,C,23,asme,asme,Asme,asme，人称代名词第一人称我amha复数p．对格acc．,4,1
-77325,C,23,asmim,asmiṃ,Asmiṃ,asmiṃ，指示代名词 ay / i（this / these）中性n．单数s．处格,5,1
-77326,C,23,asmim,asmiṃ,Asmiṃ,asmiṃ，指示代名词 ay / i（this / these）阳性m．单数s．处格,5,1
-77529,C,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）中性n．单数s．属格,4,1
-77530,C,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）中性n．单数s．与格,4,1
-77531,C,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）阳性m．单数s．属格,4,1
-77532,C,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）阳性m．单数s．与格,4,1
-77565,C,23,assa,assā,Assā,assā，指示代名词 ay / i（this / these）阴性f．单数s．属格,4,1
-77566,C,23,assa,assā,Assā,assā，指示代名词 ay / i（this / these）阴性f．单数s．与格,4,1
-77936,C,23,assam,assaṃ,Assaṃ,assaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,5,1
-78577,C,23,assaya,assāya,Assāya,assāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,6,1
-78578,C,23,assaya,assāya,Assāya,assāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,6,1
-78791,C,23,asu,asu,Asu,asu，指示代名词 asu / amu（that，so-and-so）f．s．主,3,1
-78792,C,23,asu,asu,Asu,asu，指示代名词 asu / amu（that，so-and-so）m．s．主,3,1
-95709,C,23,ayam,ayaṃ,Ayaṃ,ayaṃ，指示代名词 ay / i（this / these）阴性f．单数s．主格,4,1
-95710,C,23,ayam,ayaṃ,Ayaṃ,ayaṃ，指示代名词 ay / i（this / these）阳性m．单数s．主格,4,1
-170586,C,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）中性n.复数p.夺格,4,1
-170587,C,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）中性n.复数p.具格,4,1
-170588,C,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）阳性m.复数p.夺格,4,1
-170589,C,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）阳性m.复数p.具格,4,1
-170636,C,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）中性n.复数p.夺格,3,1
-170637,C,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）中性n.复数p.具格,3,1
-170638,C,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）阳性m.复数p.夺格,3,1
-170639,C,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）阳性m.复数p.具格,3,1
-171632,C,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）中性n.复数p.属格,4,1
-171633,C,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）中性n.复数p.与格,4,1
-171634,C,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）阳性m.复数p.属格,4,1
-171635,C,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）阳性m.复数p.与格,4,1
-171651,C,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）中性n.复数p.属格,6,1
-171652,C,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）中性n.复数p.与格,6,1
-171653,C,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）阳性m.复数p.属格,6,1
-171654,C,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）阳性m.复数p.与格,6,1
-171727,C,23,esu,esu,esu,esu，指示代名词 ay / i（this / these）中性n.复数p.处格,3,1
-171728,C,23,esu,esu,esu,esu，指示代名词 ay / i（this / these）阳性m.复数p.处格,3,1
-189934,C,23,idam,idaṃ,idaṃ,idaṃ，指示代名词 ay / i（this / these）中性n.单数s.对格,4,1
-189935,C,23,idam,idaṃ,idaṃ,idaṃ，指示代名词 ay / i（this / these）中性n.单数s.主格,4,1
-190513,C,23,ima,imā,imā,imā，指示代名词 ay / i（this / these）阴性f．复数p．对格,3,1
-190514,C,23,ima,imā,imā,imā，指示代名词 ay / i（this / these）阴性f．复数p．主格,3,1
-190516,C,23,imabhi,imābhi,imābhi,imābhi，指示代名词 ay / i（this / these）阴性f．复数p．夺格,6,1
-190517,C,23,imabhi,imābhi,imābhi,imābhi，指示代名词 ay / i（this / these）阴性f．复数p．具格,6,1
-190518,C,23,imahi,imāhi,imāhi,imāhi，指示代名词 ay / i（this / these）阴性f．复数p．夺格,5,1
-190519,C,23,imahi,imāhi,imāhi,imāhi，指示代名词 ay / i（this / these）阴性f．复数p．具格,5,1
-190522,C,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）阴性f．单数s．对格,4,1
-190523,C,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）中性n．单数s．对格,4,1
-190524,C,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）中性n．单数s．主格,4,1
-190525,C,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）阳性m．单数s．对格,4,1
-190529,C,23,imamha,imamhā,imamhā,imamhā，指示代名词 ay / i（this / these）中性n．单数s．夺格,6,1
-190530,C,23,imamha,imamhā,imamhā,imamhā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,6,1
-190531,C,23,imamhi,imamhi,imamhi,imamhi，指示代名词 ay / i（this / these）中性n．单数s．处格,6,1
-190532,C,23,imamhi,imamhi,imamhi,imamhi，指示代名词 ay / i（this / these）阳性m．单数s．处格,6,1
-190533,C,23,imani,imāni,imāni,imāni，指示代名词 ay / i（this / these）中性n．复数p．对格,5,1
-190534,C,23,imani,imāni,imāni,imāni，指示代名词 ay / i（this / these）中性n．复数p．主格,5,1
-190535,C,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,6,1
-190536,C,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,6,1
-190537,C,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
-190538,C,23,imasanam,imāsānaṃ,imāsānaṃ,imāsānaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,8,1
-190539,C,23,imasanam,imāsānaṃ,imāsānaṃ,imāsānaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,8,1
-190540,C,23,imasma,imasmā,imasmā,imasmā，指示代名词 ay / i（this / these）中性n．单数s．夺格,6,1
-190541,C,23,imasma,imasmā,imasmā,imasmā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,6,1
-190543,C,23,imasmim,imasmiṃ,imasmiṃ,imasmiṃ，指示代名词 ay / i（this / these）中性n．单数s．处格,7,1
-190544,C,23,imasmim,imasmiṃ,imasmiṃ,imasmiṃ，指示代名词 ay / i（this / these）阳性m．单数s．处格,7,1
-190545,C,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）中性n．单数s．属格,6,1
-190546,C,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）中性n．单数s．与格,6,1
-190547,C,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）阳性m．单数s．属格,6,1
-190548,C,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）阳性m．单数s．与格,6,1
-190549,C,23,imassa,imassā,imassā,imassā，指示代名词 ay / i（this / these）阴性f．单数s．与格,6,1
-190550,C,23,imasu,imāsu,imāsu,imāsu，指示代名词 ay / i（this / these）阴性f．复数p．处格,5,1
-190551,C,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,5,1
-190552,C,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．夺格,5,1
-190553,C,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,5,1
-190554,C,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．具格,5,1
-190555,C,23,imayam,imāyaṃ,imāyaṃ,imāyaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
-190556,C,23,imayo,imāyo,imāyo,imāyo，指示代名词 ay / i（this / these）阴性f．复数p．对格,5,1
-190557,C,23,imayo,imāyo,imāyo,imāyo，指示代名词 ay / i（this / these）阴性f．复数p．主格,5,1
-190558,C,23,ime,ime,ime,ime，指示代名词 ay / i（this / these）阳性m．复数p．对格,3,1
-190559,C,23,ime,ime,ime,ime，指示代名词 ay / i（this / these）阳性m．复数p．主格,3,1
-190561,C,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）中性n．复数p．夺格,6,1
-190562,C,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）中性n．复数p．具格,6,1
-190563,C,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）阳性m．复数p．夺格,6,1
-190564,C,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）阳性m．复数p．具格,6,1
-190565,C,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）中性n．复数p．夺格,5,1
-190566,C,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）中性n．复数p．具格,5,1
-190567,C,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）阳性m．复数p．夺格,5,1
-190568,C,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）阳性m．复数p．具格,5,1
-190570,C,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）中性n．复数p．属格,6,1
-190571,C,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）中性n．复数p．与格,6,1
-190572,C,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）阳性m．复数p．属格,6,1
-190573,C,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）阳性m．复数p．与格,6,1
-190574,C,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）中性n．复数p．属格,8,1
-190575,C,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）中性n．复数p．与格,8,1
-190576,C,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）阳性m．复数p．属格,8,1
-190577,C,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）阳性m．复数p．与格,8,1
-190578,C,23,imesu,imesu,imesu,imesu，指示代名词 ay / i（this / these）中性n．复数p．处格,5,1
-190579,C,23,imesu,imesu,imesu,imesu，指示代名词 ay / i（this / these）阳性m．复数p．处格,5,1
-190580,C,23,imina,iminā,iminā,iminā，指示代名词 ay / i（this / these）中性n．单数s．具格,5,1
-190581,C,23,imina,iminā,iminā,iminā，指示代名词 ay / i（this / these）阳性m．单数s．具格,5,1
-190582,C,23,imissa,imissa,imissa,imissa，指示代名词 ay / i（this / these）阳性m．单数s．属格,6,1
-190583,C,23,imissa,imissa,imissa,imissa，指示代名词 ay / i（this / these）阳性m．单数s．与格,6,1
-190584,C,23,imissa,imissā,imissā,imissā，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
-190585,C,23,imissa,imissā,imissā,imissā，指示代名词 ay / i（this / these）阴性f．单数s．属格,6,1
-190586,C,23,imissam,imissaṃ,imissaṃ,imissaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,7,1
-190587,C,23,imissaya,imissāya,imissāya,imissāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,8,1
-190588,C,23,imissaya,imissāya,imissāya,imissāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,8,1
-203169,C,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．p．对,2,1
-203170,C,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．p．主,2,1
-203171,C,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．s．主,2,1
-203342,C,23,kabhi,kābhi,kābhi,kābhi，疑问代名词 ka / ki（who？what？which？）f．p．夺,5,1
-203343,C,23,kabhi,kābhi,kābhi,kābhi，疑问代名词 ka / ki（who？what？which？）f．p．具,5,1
-204263,C,23,kahi,kāhi,kāhi,kāhi，疑问代名词 ka / ki（who？what？which？）f．p．夺,4,1
-204264,C,23,kahi,kāhi,kāhi,kāhi，疑问代名词 ka / ki（who？what？which？）f．p．具,4,1
-207488,C,23,kam,kaṃ,kaṃ,kaṃ，疑问代名词 ka / ki（who？what？which？）f．s．对,3,1
-207489,C,23,kam,kaṃ,kaṃ,kaṃ，疑问代名词 ka / ki（who？what？which？）m．s．对,3,1
-209295,C,23,kamha,kamhā,kamhā,kamhā，疑问代名词 ka / ki（who？what？which？）n．s．夺,5,1
-209296,C,23,kamha,kamhā,kamhā,kamhā，疑问代名词 ka / ki（who？what？which？）m．s．夺,5,1
-209297,C,23,kamhi,kamhi,kamhi,kamhi，疑问代名词 ka / ki（who？what？which？）n．s．处,5,1
-209298,C,23,kamhi,kamhi,kamhi,kamhi，疑问代名词 ka / ki（who？what？which？）m．s．处,5,1
-212996,C,23,kani,kāni,kāni,kāni，疑问代名词 ka / ki（who？what？which？）n．p．对,4,1
-212997,C,23,kani,kāni,kāni,kāni，疑问代名词 ka / ki（who？what？which？）n．p．主,4,1
-217847,C,23,kasam,kāsaṃ,kāsaṃ,kāsaṃ，疑问代名词 ka / ki（who？what？which？）f．p．属,5,1
-217848,C,23,kasam,kāsaṃ,kāsaṃ,kāsaṃ，疑问代名词 ka / ki（who？what？which？）f．p．与,5,1
-217905,C,23,kasanam,kāsānaṃ,kāsānaṃ,kāsānaṃ，疑问代名词 ka / ki（who？what？which？）f．p．属,7,1
-217906,C,23,kasanam,kāsānaṃ,kāsānaṃ,kāsānaṃ，疑问代名词 ka / ki（who？what？which？）f．p．与,7,1
-218671,C,23,kasma,kasmā,kasmā,kasmā，疑问代名词 ka / ki（who？what？which？）n．s．夺,5,1
-218672,C,23,kasma,kasmā,kasmā,kasmā，疑问代名词 ka / ki（who？what？which？）m．s．夺,5,1
-218679,C,23,kasmim,kasmiṃ,kasmiṃ,kasmiṃ，疑问代名词 ka / ki（who？what？which？）n．s．处,6,1
-218680,C,23,kasmim,kasmiṃ,kasmiṃ,kasmiṃ，疑问代名词 ka / ki（who？what？which？）m．s．处,6,1
-218703,C,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）n．s．属,5,1
-218704,C,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）n．s．与,5,1
-218705,C,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）m．s．属,5,1
-218706,C,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）m．s．与,5,1
-218711,C,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．属,5,1
-218712,C,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．夺,5,1
-218713,C,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．与,5,1
-218744,C,23,kassam,kassaṃ,kassaṃ,kassaṃ，疑问代名词 ka / ki（who？what？which？）f．s．处,6,1
-218857,C,23,kasu,kāsu,kāsu,kāsu，疑问代名词 ka / ki（who？what？which？）f．p．处,4,1
-222454,C,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．属,4,1
-222455,C,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．夺,4,1
-222456,C,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．与,4,1
-222457,C,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．具,4,1
-223011,C,23,kayam,kāyaṃ,kāyaṃ,kāyaṃ，疑问代名词 ka / ki（who？what？which？）f．s．处,5,1
-224172,C,23,kayo,kāyo,kāyo,kāyo，疑问代名词 ka / ki（who？what？which？）f．p．对,4,1
-224173,C,23,kayo,kāyo,kāyo,kāyo，疑问代名词 ka / ki（who？what？which？）f．p．主,4,1
-224234,C,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．p．对,2,1
-224235,C,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．p．主,2,1
-224236,C,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．s．主,2,1
-224239,C,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）n．p．夺,5,1
-224240,C,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）n．p．具,5,1
-224241,C,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）m．p．夺,5,1
-224242,C,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）m．p．具,5,1
-224307,C,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）n．p．夺,4,1
-224308,C,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）n．p．具,4,1
-224309,C,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）m．p．夺,4,1
-224310,C,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）m．p．具,4,1
-224482,C,23,kena,kena,kena,kena，疑问代名词 ka / ki（who？what？which？）n．s．具,4,1
-224483,C,23,kena,kena,kena,kena，疑问代名词 ka / ki（who？what？which？）m．s．具,4,1
-224678,C,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）n．p．属,5,1
-224679,C,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）n．p．与,5,1
-224680,C,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）m．p．属,5,1
-224681,C,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）m．p．与,5,1
-224733,C,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）n．p．属,7,1
-224734,C,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）n．p．与,7,1
-224735,C,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）m．p．属,7,1
-224736,C,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）m．p．与,7,1
-224908,C,23,kesu,kesu,kesu,kesu，疑问代名词 ka / ki（who？what？which？）n．p．处,4,1
-224909,C,23,kesu,kesu,kesu,kesu，疑问代名词 ka / ki（who？what？which？）m．p．处,4,1
-234440,C,23,kim,kiṃ,kiṃ,kiṃ，疑问代名词 ka / ki（who？what？which？）n．s．对,3,1
-234441,C,23,kim,kiṃ,kiṃ,kiṃ，疑问代名词 ka / ki（who？what？which？）n．s．主,3,1
-235829,C,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）n．s．属,5,1
-235830,C,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）n．s．与,5,1
-235831,C,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）m．s．属,5,1
-235832,C,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）m．s．与,5,1
-236358,C,23,ko,ko,ko,ko，疑问代名词 ka / ki（who？what？which？）m．s．主,2,1
-265323,C,23,mam,maṃ,maṃ,maṃ，人称代名词第一人称我amha单数s．对格acc．,3,1
-265328,C,23,mama,mama,mama,mama，人称代名词第一人称我amha单数s．属格gen．,4,1
-265329,C,23,mama,mama,mama,mama，人称代名词第一人称我amha单数s．与格dat．,4,1
-265365,C,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．属格gen．,5,1
-265366,C,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．与格dat．,5,1
-265367,C,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．对格acc．,5,1
-274483,C,23,maya,mayā,mayā,mayā，人称代名词第一人称我amha单数s．夺格abl．,4,1
-274484,C,23,maya,mayā,mayā,mayā，人称代名词第一人称我amha单数s．具格ins．,4,1
-274535,C,23,mayam,mayaṃ,mayaṃ,mayaṃ，人称代名词第一人称我amha复数p．主格nom．,5,1
-274598,C,23,mayham,mayhaṃ,mayhaṃ,mayhaṃ，人称代名词第一人称我amha单数s．属格gen．,6,1
-274599,C,23,mayham,mayhaṃ,mayhaṃ,mayhaṃ，人称代名词第一人称我amha单数s．与格dat．,6,1
-274603,C,23,mayi,mayi,mayi,mayi，人称代名词第一人称我amha单数s．处格loc．,4,1
-274682,C,23,me,me,me,me，人称代名词第一人称我amha单数s．属格gen．,2,1
-274683,C,23,me,me,me,me，人称代名词第一人称我amha单数s．与格dat．,2,1
-274684,C,23,me,me,me,me，人称代名词第一人称我amha单数s．具格ins．,2,1
-286245,C,23,nam,naṃ,naṃ,naṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．对格,3,1
-286246,C,23,nam,naṃ,naṃ,naṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．对格,3,1
-293918,C,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,5,1
-293919,C,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,5,1
-293920,C,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,5,1
-293921,C,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,5,1
-293923,C,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,7,1
-293924,C,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,7,1
-293925,C,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,7,1
-293926,C,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,7,1
-314975,C,23,no,no,no,no，人称代名词第一人称我amha复数p．属格gen．,2,1
-314976,C,23,no,no,no,no，人称代名词第一人称我amha复数p．与格dat．,2,1
-314977,C,23,no,no,no,no，人称代名词第一人称我amha复数p．对格acc．,2,1
-381299,C,23,sa,sa,sa,sa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．主格,2,1
-381323,C,23,sa,sā,sā,sā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．主格,2,1
-381381,C,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．p．对,5,1
-381382,C,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．p．主,5,1
-381383,C,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．s．主,5,1
-381390,C,23,sabbabhi,sabbābhi,sabbābhi,sabbābhi，代名词形容词 sabba（一切（的））f．p．夺,8,1
-381391,C,23,sabbabhi,sabbābhi,sabbābhi,sabbābhi，代名词形容词 sabba（一切（的））f．p．具,8,1
-381443,C,23,sabbahi,sabbāhi,sabbāhi,sabbāhi，代名词形容词 sabba（一切（的））f．p．夺,7,1
-381444,C,23,sabbahi,sabbāhi,sabbāhi,sabbāhi，代名词形容词 sabba（一切（的））f．p．具,7,1
-381492,C,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））f．s．对,6,1
-381493,C,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））n．s．对,6,1
-381494,C,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））n．s．主,6,1
-381495,C,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））m．s．对,6,1
-381503,C,23,sabbamha,sabbamhā,sabbamhā,sabbamhā，代名词形容词 sabba（一切（的））n．s．夺,8,1
-381504,C,23,sabbamha,sabbamhā,sabbamhā,sabbamhā，代名词形容词 sabba（一切（的））m．s．夺,8,1
-381505,C,23,sabbamhi,sabbamhi,sabbamhi,sabbamhi，代名词形容词 sabba（一切（的））n．s．处,8,1
-381506,C,23,sabbamhi,sabbamhi,sabbamhi,sabbamhi，代名词形容词 sabba（一切（的））m．s．处,8,1
-381519,C,23,sabbani,sabbāni,sabbāni,sabbāni，代名词形容词 sabba（一切（的））n．p．对,7,1
-381520,C,23,sabbani,sabbāni,sabbāni,sabbāni，代名词形容词 sabba（一切（的））n．p．主,7,1
-381580,C,23,sabbasam,sabbāsaṃ,sabbāsaṃ,sabbāsaṃ，代名词形容词 sabba（一切（的））f．p．属,8,1
-381581,C,23,sabbasam,sabbāsaṃ,sabbāsaṃ,sabbāsaṃ，代名词形容词 sabba（一切（的））f．p．与,8,1
-381591,C,23,sabbasanam,sabbāsānaṃ,sabbāsānaṃ,sabbāsānaṃ，代名词形容词 sabba（一切（的））f．p．属,10,1
-381592,C,23,sabbasanam,sabbāsānaṃ,sabbāsānaṃ,sabbāsānaṃ，代名词形容词 sabba（一切（的））f．p．与,10,1
-381605,C,23,sabbasma,sabbasmā,sabbasmā,sabbasmā，代名词形容词 sabba（一切（的））n．s．夺,8,1
-381606,C,23,sabbasma,sabbasmā,sabbasmā,sabbasmā，代名词形容词 sabba（一切（的））m．s．夺,8,1
-381607,C,23,sabbasmim,sabbasmiṃ,sabbasmiṃ,sabbasmiṃ，代名词形容词 sabba（一切（的））n．s．处,9,1
-381608,C,23,sabbasmim,sabbasmiṃ,sabbasmiṃ,sabbasmiṃ，代名词形容词 sabba（一切（的））m．s．处,9,1
-381623,C,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））n．s．属,8,1
-381624,C,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））n．s．与,8,1
-381625,C,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））m．s．属,8,1
-381626,C,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））m．s．与,8,1
-381630,C,23,sabbassa,sabbassā,sabbassā,sabbassā，代名词形容词 sabba（一切（的））f．s．属,8,1
-381631,C,23,sabbassa,sabbassā,sabbassā,sabbassā，代名词形容词 sabba（一切（的））f．s．与,8,1
-381634,C,23,sabbassam,sabbassaṃ,sabbassaṃ,sabbassaṃ，代名词形容词 sabba（一切（的））f．s．处,9,1
-381635,C,23,sabbasu,sabbāsu,sabbāsu,sabbāsu，代名词形容词 sabba（一切（的））f．p．处,7,1
-381704,C,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．属,7,1
-381705,C,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．夺,7,1
-381706,C,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．与,7,1
-381707,C,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．具,7,1
-381708,C,23,sabbayam,sabbāyaṃ,sabbāyaṃ,sabbāyaṃ，代名词形容词 sabba（一切（的））f．s．处,8,1
-381709,C,23,sabbayo,sabbāyo,sabbāyo,sabbāyo，代名词形容词 sabba（一切（的））f．p．对,7,1
-381710,C,23,sabbayo,sabbāyo,sabbāyo,sabbāyo，代名词形容词 sabba（一切（的））f．p．主,7,1
-381713,C,23,sabbe,sabbe,sabbe,sabbe，代名词形容词 sabba（一切（的））m．p．对,5,1
-381714,C,23,sabbe,sabbe,sabbe,sabbe，代名词形容词 sabba（一切（的））m．p．主,5,1
-381715,C,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））n．p．夺,8,1
-381716,C,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））n．p．具,8,1
-381717,C,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））m．p．夺,8,1
-381718,C,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））m．p．具,8,1
-381719,C,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））n．p．夺,7,1
-381720,C,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））n．p．具,7,1
-381721,C,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））m．p．夺,7,1
-381722,C,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））m．p．具,7,1
-381723,C,23,sabbena,sabbena,sabbena,sabbena，代名词形容词 sabba（一切（的））n．s．具,7,1
-381724,C,23,sabbena,sabbena,sabbena,sabbena，代名词形容词 sabba（一切（的））m．s．具,7,1
-381727,C,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））n．p．属,8,1
-381728,C,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））n．p．与,8,1
-381729,C,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））m．p．属,8,1
-381730,C,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））m．p．与,8,1
-381731,C,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））n．p．属,10,1
-381732,C,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））n．p．与,10,1
-381733,C,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））m．p．属,10,1
-381734,C,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））m．p．与,10,1
-381736,C,23,sabbesu,sabbesu,sabbesu,sabbesu，代名词形容词 sabba（一切（的））n．p．处,7,1
-381737,C,23,sabbesu,sabbesu,sabbesu,sabbesu，代名词形容词 sabba（一切（的））m．p．处,7,1
-381757,C,23,sabbo,sabbo,sabbo,sabbo，代名词形容词 sabba（一切（的））m．s．主,5,1
-398899,C,23,se,se,se,se，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,2,1
-398900,C,23,se,se,se,se，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,2,1
-401702,C,23,so,so,so,so，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．主格,2,1
-406384,C,23,ta,tā,tā,tā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．对格,2,1
-406385,C,23,ta,tā,tā,tā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．主格,2,1
-406713,C,23,tabhi,tābhi,tābhi,tābhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．夺格,5,1
-406714,C,23,tabhi,tābhi,tābhi,tābhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．具格,5,1
-407025,C,23,tad,tad,tad,tad，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,3,1
-407026,C,23,tad,tad,tad,tad，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,3,1
-407240,C,23,tadam,tadaṃ,tadaṃ,tadaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,5,1
-407241,C,23,tadam,tadaṃ,tadaṃ,tadaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,5,1
-408345,C,23,tahi,tāhi,tāhi,tāhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．夺格,4,1
-408346,C,23,tahi,tāhi,tāhi,tāhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．具格,4,1
-409623,C,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．对格,3,1
-409624,C,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,3,1
-409625,C,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,3,1
-409626,C,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．对格,3,1
-409627,C,23,tam,taṃ,taṃ,taṃ，人称代名词第二人称你tumha单数s．对格acc．,3,1
-409628,C,23,tam,taṃ,taṃ,taṃ，人称代名词第二人称你tumha单数s．主格nom．,3,1
-410065,C,23,tamha,tamhā,tamhā,tamhā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,5,1
-410066,C,23,tamha,tamhā,tamhā,tamhā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,5,1
-410074,C,23,tamhi,tamhi,tamhi,tamhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．处格,5,1
-410075,C,23,tamhi,tamhi,tamhi,tamhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．处格,5,1
-411508,C,23,tani,tāni,tāni,tāni，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．对格,4,1
-411509,C,23,tani,tāni,tāni,tāni，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．主格,4,1
-413836,C,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．属格,5,1
-413837,C,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．与格,5,1
-413838,C,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,5,1
-413846,C,23,tasanam,tāsānaṃ,tāsānaṃ,tāsānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．属格,7,1
-413847,C,23,tasanam,tāsānaṃ,tāsānaṃ,tāsānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．与格,7,1
-413996,C,23,tasma,tasmā,tasmā,tasmā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,5,1
-413997,C,23,tasma,tasmā,tasmā,tasmā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,5,1
-414008,C,23,tasmim,tasmiṃ,tasmiṃ,tasmiṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．处格,6,1
-414009,C,23,tasmim,tasmiṃ,tasmiṃ,tasmiṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．处格,6,1
-414013,C,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．属格,5,1
-414014,C,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．与格,5,1
-414015,C,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．属格,5,1
-414016,C,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．与格,5,1
-414020,C,23,tassa,tassā,tassā,tassā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,5,1
-414021,C,23,tassa,tassā,tassā,tassā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,5,1
-414027,C,23,tassam,tassaṃ,tassaṃ,tassaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,6,1
-414047,C,23,tassaya,tassāya,tassāya,tassāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,7,1
-414048,C,23,tassaya,tassāya,tassāya,tassāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,7,1
-414056,C,23,tasu,tāsu,tāsu,tāsu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．处格,4,1
-414751,C,23,tato,tato,tato,tato，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,4,1
-414752,C,23,tato,tato,tato,tato，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,4,1
-415046,C,23,tava,tava,tava,tava，人称代名词第二人称你tumha单数s．属格gen．,4,1
-415047,C,23,tava,tava,tava,tava，人称代名词第二人称你tumha单数s．与格dat．,4,1
-415127,C,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．属格gen．,5,1
-415128,C,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．与格dat．,5,1
-415129,C,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．对格acc．,5,1
-415253,C,23,taya,tayā,tayā,tayā，人称代名词第二人称你tumha单数s．夺格abl．,4,1
-415254,C,23,taya,tayā,tayā,tayā，人称代名词第二人称你tumha单数s．具格ins．,4,1
-415256,C,23,taya,tāya,tāya,tāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．夺格,4,1
-415257,C,23,taya,tāya,tāya,tāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．具格,4,1
-415263,C,23,tayam,tāyaṃ,tāyaṃ,tāyaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,5,1
-415320,C,23,tayi,tayi,tayi,tayi，人称代名词第二人称你tumha单数s．处格loc．,4,1
-415352,C,23,tayo,tāyo,tāyo,tāyo，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．对格,4,1
-415353,C,23,tayo,tāyo,tāyo,tāyo，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．主格,4,1
-415374,C,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．对格,2,1
-415375,C,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．主格,2,1
-415376,C,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．对格,2,1
-415377,C,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．主格,2,1
-415378,C,23,te,te,te,te，人称代名词第二人称你tumha单数s．属格gen．,2,1
-415379,C,23,te,te,te,te，人称代名词第二人称你tumha单数s．与格dat．,2,1
-415380,C,23,te,te,te,te，人称代名词第二人称你tumha单数s．具格ins．,2,1
-415410,C,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．夺格,5,1
-415411,C,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．具格,5,1
-415412,C,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．夺格,5,1
-415413,C,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．具格,5,1
-415552,C,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．夺格,4,1
-415553,C,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．具格,4,1
-415554,C,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．夺格,4,1
-415555,C,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．具格,4,1
-416282,C,23,tena,tena,tena,tena，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．具格,4,1
-416283,C,23,tena,tena,tena,tena，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．具格,4,1
-416437,C,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,5,1
-416438,C,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,5,1
-416439,C,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,5,1
-416440,C,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,5,1
-416442,C,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,7,1
-416443,C,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,7,1
-416444,C,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,7,1
-416445,C,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,7,1
-416474,C,23,tesu,tesu,tesu,tesu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．处格,4,1
-416475,C,23,tesu,tesu,tesu,tesu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．处格,4,1
-424376,C,23,tissa,tissā,tissā,tissā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,5,1
-424377,C,23,tissa,tissā,tissā,tissā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,5,1
-424396,C,23,tissam,tissaṃ,tissaṃ,tissaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,6,1
-424438,C,23,tissaya,tissāya,tissāya,tissāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,7,1
-424439,C,23,tissaya,tissāya,tissāya,tissāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,7,1
-426348,C,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．属格gen．,8,1
-426349,C,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．与格dat．,8,1
-426350,C,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．对格acc．,8,1
-426351,C,23,tumham,tumham,tumham,tumham，人称代名词第二人称你tumha复数p．属格gen．,6,1
-426352,C,23,tumham,tumham,tumham,tumham，人称代名词第二人称你tumha复数p．与格dat．,6,1
-426354,C,23,tumham,tumhaṃ,tumhaṃ,tumhaṃ，人称代名词第二人称你tumha单数s．属格gen．,6,1
-426355,C,23,tumham,tumhaṃ,tumhaṃ,tumhaṃ，人称代名词第二人称你tumha单数s．与格dat．,6,1
-426358,C,23,tumhe,tumhe,tumhe,tumhe，人称代名词第二人称你tumha复数p．对格acc．,5,1
-426359,C,23,tumhe,tumhe,tumhe,tumhe，人称代名词第二人称你tumha复数p．主格nom．,5,1
-426362,C,23,tumhebhi,tumhebhi,tumhebhi,tumhebhi，人称代名词第二人称你tumha复数p．夺格abl．,8,1
-426363,C,23,tumhebhi,tumhebhi,tumhebhi,tumhebhi，人称代名词第二人称你tumha复数p．具格ins．,8,1
-426364,C,23,tumhehi,tumhehi,tumhehi,tumhehi，人称代名词第二人称你tumha复数p．夺格abl．,7,1
-426365,C,23,tumhehi,tumhehi,tumhehi,tumhehi，人称代名词第二人称你tumha复数p．具格ins．,7,1
-426366,C,23,tumhesu,tumhesu,tumhesu,tumhesu，人称代名词第二人称你tumha复数p．处格loc．,7,1
-427081,C,23,tuvam,tuvaṃ,tuvaṃ,tuvaṃ，人称代名词第二人称你tumha单数s．对格acc．,5,1
-427082,C,23,tuvam,tuvaṃ,tuvaṃ,tuvaṃ，人称代名词第二人称你tumha单数s．主格nom．,5,1
-427189,C,23,tuyham,tuyham,tuyham,tuyham，人称代名词第二人称你tumha单数s．属格gen．,6,1
-427190,C,23,tuyham,tuyham,tuyham,tuyham，人称代名词第二人称你tumha单数s．与格dat．,6,1
-427203,C,23,tvam,tvam,tvam,tvam，人称代名词第二人称你tumha单数s．对格acc．,4,1
-427204,C,23,tvam,tvam,tvam,tvam，人称代名词第二人称你tumha单数s．主格nom．,4,1
-427219,C,23,tvaya,tvayā,tvayā,tvayā，人称代名词第二人称你tumha单数s．夺格abl．,5,1
-427220,C,23,tvaya,tvayā,tvayā,tvayā，人称代名词第二人称你tumha单数s．具格ins．,5,1
-427221,C,23,tvayi,tvayi,tvayi,tvayi，人称代名词第二人称你tumha单数s．处格loc．,5,1
-469998,C,23,vayam,vayaṃ,vayaṃ,vayaṃ，人称代名词第一人称我amha复数p．主格nom．	,5,1
-496173,C,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．属格gen．	,2,1
-496174,C,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．与格dat．	,2,1
-496175,C,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．对格acc．	,2,1
-497372,C,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．p．对	,2,1
-497373,C,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．p．主	,2,1
-497374,C,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．s．主	,2,1
-497388,C,23,yabhi,yābhi,yābhi,yābhi，关系代名词 ya（who，what，which）f．p．夺	,5,1
-497389,C,23,yabhi,yābhi,yābhi,yābhi，关系代名词 ya（who，what，which）f．p．具	,5,1
-497688,C,23,yad,yad,yad,yad，关系代名词 ya（who，what，which）n．s．对	,3,1
-497689,C,23,yad,yad,yad,yad，关系代名词 ya（who，what，which）n．s．主	,3,1
-497984,C,23,yahi,yāhi,yāhi,yāhi，关系代名词 ya（who，what，which）f．p．夺	,4,1
-497985,C,23,yahi,yāhi,yāhi,yāhi，关系代名词 ya（who，what，which）f．p．具	,4,1
-498513,C,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）f．s．对	,3,1
-498514,C,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）n．s．对	,3,1
-498515,C,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）n．s．主	,3,1
-498516,C,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）m．s．对	,3,1
-498853,C,23,yamha,yamhā,yamhā,yamhā，关系代名词 ya（who，what，which）n．s．夺	,5,1
-498854,C,23,yamha,yamhā,yamhā,yamhā，关系代名词 ya（who，what，which）m．s．夺	,5,1
-498855,C,23,yamhi,yamhi,yamhi,yamhi，关系代名词 ya（who，what，which）n．s．处	,5,1
-498856,C,23,yamhi,yamhi,yamhi,yamhi，关系代名词 ya（who，what，which）m．s．处	,5,1
-499017,C,23,yani,yāni,yāni,yāni，关系代名词 ya（who，what，which）n．p．对	,4,1
-499018,C,23,yani,yāni,yāni,yāni，关系代名词 ya（who，what，which）n．p．主	,4,1
-499644,C,23,yasam,yāsaṃ,yāsaṃ,yāsaṃ，关系代名词 ya（who，what，which）f．p．属	,5,1
-499645,C,23,yasam,yāsaṃ,yāsaṃ,yāsaṃ，关系代名词 ya（who，what，which）f．p．与	,5,1
-499667,C,23,yasanam,yāsānaṃ,yāsānaṃ,yāsānaṃ，关系代名词 ya（who，what，which）f．p．属	,7,1
-499668,C,23,yasanam,yāsānaṃ,yāsānaṃ,yāsānaṃ，关系代名词 ya（who，what，which）f．p．与	,7,1
-499789,C,23,yasma,yasmā,yasmā,yasmā，关系代名词 ya（who，what，which）n．s．夺	,5,1
-499790,C,23,yasma,yasmā,yasmā,yasmā，关系代名词 ya（who，what，which）m．s．夺	,5,1
-499792,C,23,yasmim,yasmiṃ,yasmiṃ,yasmiṃ，关系代名词 ya（who，what，which）n．s．处	,6,1
-499793,C,23,yasmim,yasmiṃ,yasmiṃ,yasmiṃ，关系代名词 ya（who，what，which）m．s．处	,6,1
-499847,C,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）n．s．属	,5,1
-499848,C,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）n．s．与	,5,1
-499849,C,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）m．s．属	,5,1
-499850,C,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）m．s．与	,5,1
-499851,C,23,yassa,yassā,yassā,yassā，关系代名词 ya（who，what，which）f．s．属	,5,1
-499852,C,23,yassa,yassā,yassā,yassā，关系代名词 ya（who，what，which）f．s．与	,5,1
-499855,C,23,yassam,yassaṃ,yassaṃ,yassaṃ，关系代名词 ya（who，what，which）f．s．处	,6,1
-499864,C,23,yasu,yāsu,yāsu,yāsu，关系代名词 ya（who，what，which）f．p．处	,4,1
-502054,C,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．属	,4,1
-502055,C,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．夺	,4,1
-502056,C,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．与	,4,1
-502057,C,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．具	,4,1
-502060,C,23,yayam,yāyaṃ,yāyaṃ,yāyaṃ，关系代名词 ya（who，what，which）f．s．处	,5,1
-502098,C,23,yayo,yāyo,yāyo,yāyo，关系代名词 ya（who，what，which）f．p．对	,4,1
-502099,C,23,yayo,yāyo,yāyo,yāyo，关系代名词 ya（who，what，which）f．p．主	,4,1
-502101,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．p．对	,2,1
-502102,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．p．主	,2,1
-502103,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．s．对	,2,1
-502104,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．s．主	,2,1
-502105,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）m．p．对	,2,1
-502106,C,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）m．p．主	,2,1
-502108,C,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）n．p．夺	,5,1
-502109,C,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）n．p．具	,5,1
-502110,C,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）m．p．夺	,5,1
-502111,C,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）m．p．具	,5,1
-502186,C,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）n．p．夺	,4,1
-502187,C,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）n．p．具	,4,1
-502188,C,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）m．p．夺	,4,1
-502189,C,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）m．p．具	,4,1
-502193,C,23,yena,yena,yena,yena，关系代名词 ya（who，what，which）n．s．具	,4,1
-502194,C,23,yena,yena,yena,yena，关系代名词 ya（who，what，which）m．s．具	,4,1
-502214,C,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）n．p．属	,5,1
-502215,C,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）n．p．与	,5,1
-502216,C,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）m．p．属	,5,1
-502217,C,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）m．p．与	,5,1
-502218,C,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）n．p．属	,7,1
-502219,C,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）n．p．与	,7,1
-502220,C,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）m．p．属	,7,1
-502221,C,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）m．p．与	,7,1
-502223,C,23,yesu,yesu,yesu,yesu，关系代名词 ya（who，what，which）n．p．处	,4,1
-502224,C,23,yesu,yesu,yesu,yesu，关系代名词 ya（who，what，which）m．p．处	,4,1
-502278,C,23,yo,yo,yo,yo，关系代名词 ya（who，what，which）m．s．主	,2,1
+72167,zh,23,asam,āsaṃ,Āsaṃ,āsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,4,1
+72168,zh,23,asam,āsaṃ,Āsaṃ,āsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,4,1
+77269,zh,23,asma,asmā,Asmā,asmā，指示代名词 ay / i（this / these）中性n．单数s．夺格,4,1
+77270,zh,23,asma,asmā,Asmā,asmā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,4,1
+77287,zh,23,asmakam,asmākaṃ,Asmākaṃ,asmākaṃ，人称代名词第一人称我amha复数p．属格gen．,7,1
+77288,zh,23,asmakam,asmākaṃ,Asmākaṃ,asmākaṃ，人称代名词第一人称我amha复数p．与格dat．,7,1
+77305,zh,23,asmasu,asmāsu,Asmāsu,asmāsu，人称代名词第一人称我amha复数p．处格loc．,6,1
+77310,zh,23,asme,asme,Asme,asme，人称代名词第一人称我amha复数p．对格acc．,4,1
+77325,zh,23,asmim,asmiṃ,Asmiṃ,asmiṃ，指示代名词 ay / i（this / these）中性n．单数s．处格,5,1
+77326,zh,23,asmim,asmiṃ,Asmiṃ,asmiṃ，指示代名词 ay / i（this / these）阳性m．单数s．处格,5,1
+77529,zh,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）中性n．单数s．属格,4,1
+77530,zh,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）中性n．单数s．与格,4,1
+77531,zh,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）阳性m．单数s．属格,4,1
+77532,zh,23,assa,assa,Assa,assa，指示代名词 ay / i（this / these）阳性m．单数s．与格,4,1
+77565,zh,23,assa,assā,Assā,assā，指示代名词 ay / i（this / these）阴性f．单数s．属格,4,1
+77566,zh,23,assa,assā,Assā,assā，指示代名词 ay / i（this / these）阴性f．单数s．与格,4,1
+77936,zh,23,assam,assaṃ,Assaṃ,assaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,5,1
+78577,zh,23,assaya,assāya,Assāya,assāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,6,1
+78578,zh,23,assaya,assāya,Assāya,assāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,6,1
+78791,zh,23,asu,asu,Asu,asu，指示代名词 asu / amu（that，so-and-so）f．s．主,3,1
+78792,zh,23,asu,asu,Asu,asu，指示代名词 asu / amu（that，so-and-so）m．s．主,3,1
+95709,zh,23,ayam,ayaṃ,Ayaṃ,ayaṃ，指示代名词 ay / i（this / these）阴性f．单数s．主格,4,1
+95710,zh,23,ayam,ayaṃ,Ayaṃ,ayaṃ，指示代名词 ay / i（this / these）阳性m．单数s．主格,4,1
+170586,zh,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）中性n.复数p.夺格,4,1
+170587,zh,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）中性n.复数p.具格,4,1
+170588,zh,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）阳性m.复数p.夺格,4,1
+170589,zh,23,ebhi,ebhi,ebhi,ebhi，指示代名词 ay / i（this / these）阳性m.复数p.具格,4,1
+170636,zh,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）中性n.复数p.夺格,3,1
+170637,zh,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）中性n.复数p.具格,3,1
+170638,zh,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）阳性m.复数p.夺格,3,1
+170639,zh,23,ehi,ehi,ehi,ehi，指示代名词 ay / i（this / these）阳性m.复数p.具格,3,1
+171632,zh,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）中性n.复数p.属格,4,1
+171633,zh,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）中性n.复数p.与格,4,1
+171634,zh,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）阳性m.复数p.属格,4,1
+171635,zh,23,esam,esaṃ,esaṃ,esaṃ，指示代名词 ay / i（this / these）阳性m.复数p.与格,4,1
+171651,zh,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）中性n.复数p.属格,6,1
+171652,zh,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）中性n.复数p.与格,6,1
+171653,zh,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）阳性m.复数p.属格,6,1
+171654,zh,23,esanam,esānaṃ,esānaṃ,esānaṃ，指示代名词 ay / i（this / these）阳性m.复数p.与格,6,1
+171727,zh,23,esu,esu,esu,esu，指示代名词 ay / i（this / these）中性n.复数p.处格,3,1
+171728,zh,23,esu,esu,esu,esu，指示代名词 ay / i（this / these）阳性m.复数p.处格,3,1
+189934,zh,23,idam,idaṃ,idaṃ,idaṃ，指示代名词 ay / i（this / these）中性n.单数s.对格,4,1
+189935,zh,23,idam,idaṃ,idaṃ,idaṃ，指示代名词 ay / i（this / these）中性n.单数s.主格,4,1
+190513,zh,23,ima,imā,imā,imā，指示代名词 ay / i（this / these）阴性f．复数p．对格,3,1
+190514,zh,23,ima,imā,imā,imā，指示代名词 ay / i（this / these）阴性f．复数p．主格,3,1
+190516,zh,23,imabhi,imābhi,imābhi,imābhi，指示代名词 ay / i（this / these）阴性f．复数p．夺格,6,1
+190517,zh,23,imabhi,imābhi,imābhi,imābhi，指示代名词 ay / i（this / these）阴性f．复数p．具格,6,1
+190518,zh,23,imahi,imāhi,imāhi,imāhi，指示代名词 ay / i（this / these）阴性f．复数p．夺格,5,1
+190519,zh,23,imahi,imāhi,imāhi,imāhi，指示代名词 ay / i（this / these）阴性f．复数p．具格,5,1
+190522,zh,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）阴性f．单数s．对格,4,1
+190523,zh,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）中性n．单数s．对格,4,1
+190524,zh,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）中性n．单数s．主格,4,1
+190525,zh,23,imam,imaṃ,imaṃ,imaṃ，指示代名词 ay / i（this / these）阳性m．单数s．对格,4,1
+190529,zh,23,imamha,imamhā,imamhā,imamhā，指示代名词 ay / i（this / these）中性n．单数s．夺格,6,1
+190530,zh,23,imamha,imamhā,imamhā,imamhā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,6,1
+190531,zh,23,imamhi,imamhi,imamhi,imamhi，指示代名词 ay / i（this / these）中性n．单数s．处格,6,1
+190532,zh,23,imamhi,imamhi,imamhi,imamhi，指示代名词 ay / i（this / these）阳性m．单数s．处格,6,1
+190533,zh,23,imani,imāni,imāni,imāni，指示代名词 ay / i（this / these）中性n．复数p．对格,5,1
+190534,zh,23,imani,imāni,imāni,imāni，指示代名词 ay / i（this / these）中性n．复数p．主格,5,1
+190535,zh,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,6,1
+190536,zh,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,6,1
+190537,zh,23,imasam,imāsaṃ,imāsaṃ,imāsaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
+190538,zh,23,imasanam,imāsānaṃ,imāsānaṃ,imāsānaṃ，指示代名词 ay / i（this / these）阴性f．复数p．属格,8,1
+190539,zh,23,imasanam,imāsānaṃ,imāsānaṃ,imāsānaṃ，指示代名词 ay / i（this / these）阴性f．复数p．与格,8,1
+190540,zh,23,imasma,imasmā,imasmā,imasmā，指示代名词 ay / i（this / these）中性n．单数s．夺格,6,1
+190541,zh,23,imasma,imasmā,imasmā,imasmā，指示代名词 ay / i（this / these）阳性m．单数s．夺格,6,1
+190543,zh,23,imasmim,imasmiṃ,imasmiṃ,imasmiṃ，指示代名词 ay / i（this / these）中性n．单数s．处格,7,1
+190544,zh,23,imasmim,imasmiṃ,imasmiṃ,imasmiṃ，指示代名词 ay / i（this / these）阳性m．单数s．处格,7,1
+190545,zh,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）中性n．单数s．属格,6,1
+190546,zh,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）中性n．单数s．与格,6,1
+190547,zh,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）阳性m．单数s．属格,6,1
+190548,zh,23,imassa,imassa,imassa,imassa，指示代名词 ay / i（this / these）阳性m．单数s．与格,6,1
+190549,zh,23,imassa,imassā,imassā,imassā，指示代名词 ay / i（this / these）阴性f．单数s．与格,6,1
+190550,zh,23,imasu,imāsu,imāsu,imāsu，指示代名词 ay / i（this / these）阴性f．复数p．处格,5,1
+190551,zh,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,5,1
+190552,zh,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．夺格,5,1
+190553,zh,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,5,1
+190554,zh,23,imaya,imāya,imāya,imāya，指示代名词 ay / i（this / these）阴性f．单数s．具格,5,1
+190555,zh,23,imayam,imāyaṃ,imāyaṃ,imāyaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
+190556,zh,23,imayo,imāyo,imāyo,imāyo，指示代名词 ay / i（this / these）阴性f．复数p．对格,5,1
+190557,zh,23,imayo,imāyo,imāyo,imāyo，指示代名词 ay / i（this / these）阴性f．复数p．主格,5,1
+190558,zh,23,ime,ime,ime,ime，指示代名词 ay / i（this / these）阳性m．复数p．对格,3,1
+190559,zh,23,ime,ime,ime,ime，指示代名词 ay / i（this / these）阳性m．复数p．主格,3,1
+190561,zh,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）中性n．复数p．夺格,6,1
+190562,zh,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）中性n．复数p．具格,6,1
+190563,zh,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）阳性m．复数p．夺格,6,1
+190564,zh,23,imebhi,imebhi,imebhi,imebhi，指示代名词 ay / i（this / these）阳性m．复数p．具格,6,1
+190565,zh,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）中性n．复数p．夺格,5,1
+190566,zh,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）中性n．复数p．具格,5,1
+190567,zh,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）阳性m．复数p．夺格,5,1
+190568,zh,23,imehi,imehi,imehi,imehi，指示代名词 ay / i（this / these）阳性m．复数p．具格,5,1
+190570,zh,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）中性n．复数p．属格,6,1
+190571,zh,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）中性n．复数p．与格,6,1
+190572,zh,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）阳性m．复数p．属格,6,1
+190573,zh,23,imesam,imesaṃ,imesaṃ,imesaṃ，指示代名词 ay / i（this / these）阳性m．复数p．与格,6,1
+190574,zh,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）中性n．复数p．属格,8,1
+190575,zh,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）中性n．复数p．与格,8,1
+190576,zh,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）阳性m．复数p．属格,8,1
+190577,zh,23,imesanam,imesānaṃ,imesānaṃ,imesānaṃ，指示代名词 ay / i（this / these）阳性m．复数p．与格,8,1
+190578,zh,23,imesu,imesu,imesu,imesu，指示代名词 ay / i（this / these）中性n．复数p．处格,5,1
+190579,zh,23,imesu,imesu,imesu,imesu，指示代名词 ay / i（this / these）阳性m．复数p．处格,5,1
+190580,zh,23,imina,iminā,iminā,iminā，指示代名词 ay / i（this / these）中性n．单数s．具格,5,1
+190581,zh,23,imina,iminā,iminā,iminā，指示代名词 ay / i（this / these）阳性m．单数s．具格,5,1
+190582,zh,23,imissa,imissa,imissa,imissa，指示代名词 ay / i（this / these）阳性m．单数s．属格,6,1
+190583,zh,23,imissa,imissa,imissa,imissa，指示代名词 ay / i（this / these）阳性m．单数s．与格,6,1
+190584,zh,23,imissa,imissā,imissā,imissā，指示代名词 ay / i（this / these）阴性f．单数s．处格,6,1
+190585,zh,23,imissa,imissā,imissā,imissā，指示代名词 ay / i（this / these）阴性f．单数s．属格,6,1
+190586,zh,23,imissam,imissaṃ,imissaṃ,imissaṃ，指示代名词 ay / i（this / these）阴性f．单数s．处格,7,1
+190587,zh,23,imissaya,imissāya,imissāya,imissāya，指示代名词 ay / i（this / these）阴性f．单数s．属格,8,1
+190588,zh,23,imissaya,imissāya,imissāya,imissāya，指示代名词 ay / i（this / these）阴性f．单数s．与格,8,1
+203169,zh,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．p．对,2,1
+203170,zh,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．p．主,2,1
+203171,zh,23,ka,kā,kā,kā，疑问代名词 ka / ki（who？what？which？）f．s．主,2,1
+203342,zh,23,kabhi,kābhi,kābhi,kābhi，疑问代名词 ka / ki（who？what？which？）f．p．夺,5,1
+203343,zh,23,kabhi,kābhi,kābhi,kābhi，疑问代名词 ka / ki（who？what？which？）f．p．具,5,1
+204263,zh,23,kahi,kāhi,kāhi,kāhi，疑问代名词 ka / ki（who？what？which？）f．p．夺,4,1
+204264,zh,23,kahi,kāhi,kāhi,kāhi，疑问代名词 ka / ki（who？what？which？）f．p．具,4,1
+207488,zh,23,kam,kaṃ,kaṃ,kaṃ，疑问代名词 ka / ki（who？what？which？）f．s．对,3,1
+207489,zh,23,kam,kaṃ,kaṃ,kaṃ，疑问代名词 ka / ki（who？what？which？）m．s．对,3,1
+209295,zh,23,kamha,kamhā,kamhā,kamhā，疑问代名词 ka / ki（who？what？which？）n．s．夺,5,1
+209296,zh,23,kamha,kamhā,kamhā,kamhā，疑问代名词 ka / ki（who？what？which？）m．s．夺,5,1
+209297,zh,23,kamhi,kamhi,kamhi,kamhi，疑问代名词 ka / ki（who？what？which？）n．s．处,5,1
+209298,zh,23,kamhi,kamhi,kamhi,kamhi，疑问代名词 ka / ki（who？what？which？）m．s．处,5,1
+212996,zh,23,kani,kāni,kāni,kāni，疑问代名词 ka / ki（who？what？which？）n．p．对,4,1
+212997,zh,23,kani,kāni,kāni,kāni，疑问代名词 ka / ki（who？what？which？）n．p．主,4,1
+217847,zh,23,kasam,kāsaṃ,kāsaṃ,kāsaṃ，疑问代名词 ka / ki（who？what？which？）f．p．属,5,1
+217848,zh,23,kasam,kāsaṃ,kāsaṃ,kāsaṃ，疑问代名词 ka / ki（who？what？which？）f．p．与,5,1
+217905,zh,23,kasanam,kāsānaṃ,kāsānaṃ,kāsānaṃ，疑问代名词 ka / ki（who？what？which？）f．p．属,7,1
+217906,zh,23,kasanam,kāsānaṃ,kāsānaṃ,kāsānaṃ，疑问代名词 ka / ki（who？what？which？）f．p．与,7,1
+218671,zh,23,kasma,kasmā,kasmā,kasmā，疑问代名词 ka / ki（who？what？which？）n．s．夺,5,1
+218672,zh,23,kasma,kasmā,kasmā,kasmā，疑问代名词 ka / ki（who？what？which？）m．s．夺,5,1
+218679,zh,23,kasmim,kasmiṃ,kasmiṃ,kasmiṃ，疑问代名词 ka / ki（who？what？which？）n．s．处,6,1
+218680,zh,23,kasmim,kasmiṃ,kasmiṃ,kasmiṃ，疑问代名词 ka / ki（who？what？which？）m．s．处,6,1
+218703,zh,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）n．s．属,5,1
+218704,zh,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）n．s．与,5,1
+218705,zh,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）m．s．属,5,1
+218706,zh,23,kassa,kassa,kassa,kassa，疑问代名词 ka / ki（who？what？which？）m．s．与,5,1
+218711,zh,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．属,5,1
+218712,zh,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．夺,5,1
+218713,zh,23,kassa,kassā,kassā,kassā，疑问代名词 ka / ki（who？what？which？）f．s．与,5,1
+218744,zh,23,kassam,kassaṃ,kassaṃ,kassaṃ，疑问代名词 ka / ki（who？what？which？）f．s．处,6,1
+218857,zh,23,kasu,kāsu,kāsu,kāsu，疑问代名词 ka / ki（who？what？which？）f．p．处,4,1
+222454,zh,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．属,4,1
+222455,zh,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．夺,4,1
+222456,zh,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．与,4,1
+222457,zh,23,kaya,kāya,kāya,kāya，疑问代名词 ka / ki（who？what？which？）f．s．具,4,1
+223011,zh,23,kayam,kāyaṃ,kāyaṃ,kāyaṃ，疑问代名词 ka / ki（who？what？which？）f．s．处,5,1
+224172,zh,23,kayo,kāyo,kāyo,kāyo，疑问代名词 ka / ki（who？what？which？）f．p．对,4,1
+224173,zh,23,kayo,kāyo,kāyo,kāyo，疑问代名词 ka / ki（who？what？which？）f．p．主,4,1
+224234,zh,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．p．对,2,1
+224235,zh,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．p．主,2,1
+224236,zh,23,ke,ke,ke,ke，疑问代名词 ka / ki（who？what？which？）m．s．主,2,1
+224239,zh,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）n．p．夺,5,1
+224240,zh,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）n．p．具,5,1
+224241,zh,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）m．p．夺,5,1
+224242,zh,23,kebhi,kebhi,kebhi,kebhi，疑问代名词 ka / ki（who？what？which？）m．p．具,5,1
+224307,zh,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）n．p．夺,4,1
+224308,zh,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）n．p．具,4,1
+224309,zh,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）m．p．夺,4,1
+224310,zh,23,kehi,kehi,kehi,kehi，疑问代名词 ka / ki（who？what？which？）m．p．具,4,1
+224482,zh,23,kena,kena,kena,kena，疑问代名词 ka / ki（who？what？which？）n．s．具,4,1
+224483,zh,23,kena,kena,kena,kena，疑问代名词 ka / ki（who？what？which？）m．s．具,4,1
+224678,zh,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）n．p．属,5,1
+224679,zh,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）n．p．与,5,1
+224680,zh,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）m．p．属,5,1
+224681,zh,23,kesam,kesaṃ,kesaṃ,kesaṃ，疑问代名词 ka / ki（who？what？which？）m．p．与,5,1
+224733,zh,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）n．p．属,7,1
+224734,zh,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）n．p．与,7,1
+224735,zh,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）m．p．属,7,1
+224736,zh,23,kesanam,kesānaṃ,kesānaṃ,kesānaṃ，疑问代名词 ka / ki（who？what？which？）m．p．与,7,1
+224908,zh,23,kesu,kesu,kesu,kesu，疑问代名词 ka / ki（who？what？which？）n．p．处,4,1
+224909,zh,23,kesu,kesu,kesu,kesu，疑问代名词 ka / ki（who？what？which？）m．p．处,4,1
+234440,zh,23,kim,kiṃ,kiṃ,kiṃ，疑问代名词 ka / ki（who？what？which？）n．s．对,3,1
+234441,zh,23,kim,kiṃ,kiṃ,kiṃ，疑问代名词 ka / ki（who？what？which？）n．s．主,3,1
+235829,zh,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）n．s．属,5,1
+235830,zh,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）n．s．与,5,1
+235831,zh,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）m．s．属,5,1
+235832,zh,23,kissa,kissa,kissa,kissa，疑问代名词 ka / ki（who？what？which？）m．s．与,5,1
+236358,zh,23,ko,ko,ko,ko，疑问代名词 ka / ki（who？what？which？）m．s．主,2,1
+265323,zh,23,mam,maṃ,maṃ,maṃ，人称代名词第一人称我amha单数s．对格acc．,3,1
+265328,zh,23,mama,mama,mama,mama，人称代名词第一人称我amha单数s．属格gen．,4,1
+265329,zh,23,mama,mama,mama,mama，人称代名词第一人称我amha单数s．与格dat．,4,1
+265365,zh,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．属格gen．,5,1
+265366,zh,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．与格dat．,5,1
+265367,zh,23,mamam,mamaṃ,mamaṃ,mamaṃ，人称代名词第一人称我amha单数s．对格acc．,5,1
+274483,zh,23,maya,mayā,mayā,mayā，人称代名词第一人称我amha单数s．夺格abl．,4,1
+274484,zh,23,maya,mayā,mayā,mayā，人称代名词第一人称我amha单数s．具格ins．,4,1
+274535,zh,23,mayam,mayaṃ,mayaṃ,mayaṃ，人称代名词第一人称我amha复数p．主格nom．,5,1
+274598,zh,23,mayham,mayhaṃ,mayhaṃ,mayhaṃ，人称代名词第一人称我amha单数s．属格gen．,6,1
+274599,zh,23,mayham,mayhaṃ,mayhaṃ,mayhaṃ，人称代名词第一人称我amha单数s．与格dat．,6,1
+274603,zh,23,mayi,mayi,mayi,mayi，人称代名词第一人称我amha单数s．处格loc．,4,1
+274682,zh,23,me,me,me,me，人称代名词第一人称我amha单数s．属格gen．,2,1
+274683,zh,23,me,me,me,me，人称代名词第一人称我amha单数s．与格dat．,2,1
+274684,zh,23,me,me,me,me，人称代名词第一人称我amha单数s．具格ins．,2,1
+286245,zh,23,nam,naṃ,naṃ,naṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．对格,3,1
+286246,zh,23,nam,naṃ,naṃ,naṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．对格,3,1
+293918,zh,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,5,1
+293919,zh,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,5,1
+293920,zh,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,5,1
+293921,zh,23,nesam,nesaṃ,nesaṃ,nesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,5,1
+293923,zh,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,7,1
+293924,zh,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,7,1
+293925,zh,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,7,1
+293926,zh,23,nesanam,nesānaṃ,nesānaṃ,nesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,7,1
+314975,zh,23,no,no,no,no，人称代名词第一人称我amha复数p．属格gen．,2,1
+314976,zh,23,no,no,no,no，人称代名词第一人称我amha复数p．与格dat．,2,1
+314977,zh,23,no,no,no,no，人称代名词第一人称我amha复数p．对格acc．,2,1
+381299,zh,23,sa,sa,sa,sa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．主格,2,1
+381323,zh,23,sa,sā,sā,sā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．主格,2,1
+381381,zh,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．p．对,5,1
+381382,zh,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．p．主,5,1
+381383,zh,23,sabba,sabbā,sabbā,sabbā，代名词形容词 sabba（一切（的））f．s．主,5,1
+381390,zh,23,sabbabhi,sabbābhi,sabbābhi,sabbābhi，代名词形容词 sabba（一切（的））f．p．夺,8,1
+381391,zh,23,sabbabhi,sabbābhi,sabbābhi,sabbābhi，代名词形容词 sabba（一切（的））f．p．具,8,1
+381443,zh,23,sabbahi,sabbāhi,sabbāhi,sabbāhi，代名词形容词 sabba（一切（的））f．p．夺,7,1
+381444,zh,23,sabbahi,sabbāhi,sabbāhi,sabbāhi，代名词形容词 sabba（一切（的））f．p．具,7,1
+381492,zh,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））f．s．对,6,1
+381493,zh,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））n．s．对,6,1
+381494,zh,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））n．s．主,6,1
+381495,zh,23,sabbam,sabbaṃ,sabbaṃ,sabbaṃ，代名词形容词 sabba（一切（的））m．s．对,6,1
+381503,zh,23,sabbamha,sabbamhā,sabbamhā,sabbamhā，代名词形容词 sabba（一切（的））n．s．夺,8,1
+381504,zh,23,sabbamha,sabbamhā,sabbamhā,sabbamhā，代名词形容词 sabba（一切（的））m．s．夺,8,1
+381505,zh,23,sabbamhi,sabbamhi,sabbamhi,sabbamhi，代名词形容词 sabba（一切（的））n．s．处,8,1
+381506,zh,23,sabbamhi,sabbamhi,sabbamhi,sabbamhi，代名词形容词 sabba（一切（的））m．s．处,8,1
+381519,zh,23,sabbani,sabbāni,sabbāni,sabbāni，代名词形容词 sabba（一切（的））n．p．对,7,1
+381520,zh,23,sabbani,sabbāni,sabbāni,sabbāni，代名词形容词 sabba（一切（的））n．p．主,7,1
+381580,zh,23,sabbasam,sabbāsaṃ,sabbāsaṃ,sabbāsaṃ，代名词形容词 sabba（一切（的））f．p．属,8,1
+381581,zh,23,sabbasam,sabbāsaṃ,sabbāsaṃ,sabbāsaṃ，代名词形容词 sabba（一切（的））f．p．与,8,1
+381591,zh,23,sabbasanam,sabbāsānaṃ,sabbāsānaṃ,sabbāsānaṃ，代名词形容词 sabba（一切（的））f．p．属,10,1
+381592,zh,23,sabbasanam,sabbāsānaṃ,sabbāsānaṃ,sabbāsānaṃ，代名词形容词 sabba（一切（的））f．p．与,10,1
+381605,zh,23,sabbasma,sabbasmā,sabbasmā,sabbasmā，代名词形容词 sabba（一切（的））n．s．夺,8,1
+381606,zh,23,sabbasma,sabbasmā,sabbasmā,sabbasmā，代名词形容词 sabba（一切（的））m．s．夺,8,1
+381607,zh,23,sabbasmim,sabbasmiṃ,sabbasmiṃ,sabbasmiṃ，代名词形容词 sabba（一切（的））n．s．处,9,1
+381608,zh,23,sabbasmim,sabbasmiṃ,sabbasmiṃ,sabbasmiṃ，代名词形容词 sabba（一切（的））m．s．处,9,1
+381623,zh,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））n．s．属,8,1
+381624,zh,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））n．s．与,8,1
+381625,zh,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））m．s．属,8,1
+381626,zh,23,sabbassa,sabbassa,sabbassa,sabbassa，代名词形容词 sabba（一切（的））m．s．与,8,1
+381630,zh,23,sabbassa,sabbassā,sabbassā,sabbassā，代名词形容词 sabba（一切（的））f．s．属,8,1
+381631,zh,23,sabbassa,sabbassā,sabbassā,sabbassā，代名词形容词 sabba（一切（的））f．s．与,8,1
+381634,zh,23,sabbassam,sabbassaṃ,sabbassaṃ,sabbassaṃ，代名词形容词 sabba（一切（的））f．s．处,9,1
+381635,zh,23,sabbasu,sabbāsu,sabbāsu,sabbāsu，代名词形容词 sabba（一切（的））f．p．处,7,1
+381704,zh,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．属,7,1
+381705,zh,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．夺,7,1
+381706,zh,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．与,7,1
+381707,zh,23,sabbaya,sabbāya,sabbāya,sabbāya，代名词形容词 sabba（一切（的））f．s．具,7,1
+381708,zh,23,sabbayam,sabbāyaṃ,sabbāyaṃ,sabbāyaṃ，代名词形容词 sabba（一切（的））f．s．处,8,1
+381709,zh,23,sabbayo,sabbāyo,sabbāyo,sabbāyo，代名词形容词 sabba（一切（的））f．p．对,7,1
+381710,zh,23,sabbayo,sabbāyo,sabbāyo,sabbāyo，代名词形容词 sabba（一切（的））f．p．主,7,1
+381713,zh,23,sabbe,sabbe,sabbe,sabbe，代名词形容词 sabba（一切（的））m．p．对,5,1
+381714,zh,23,sabbe,sabbe,sabbe,sabbe，代名词形容词 sabba（一切（的））m．p．主,5,1
+381715,zh,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））n．p．夺,8,1
+381716,zh,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））n．p．具,8,1
+381717,zh,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））m．p．夺,8,1
+381718,zh,23,sabbebhi,sabbebhi,sabbebhi,sabbebhi，代名词形容词 sabba（一切（的））m．p．具,8,1
+381719,zh,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））n．p．夺,7,1
+381720,zh,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））n．p．具,7,1
+381721,zh,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））m．p．夺,7,1
+381722,zh,23,sabbehi,sabbehi,sabbehi,sabbehi，代名词形容词 sabba（一切（的））m．p．具,7,1
+381723,zh,23,sabbena,sabbena,sabbena,sabbena，代名词形容词 sabba（一切（的））n．s．具,7,1
+381724,zh,23,sabbena,sabbena,sabbena,sabbena，代名词形容词 sabba（一切（的））m．s．具,7,1
+381727,zh,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））n．p．属,8,1
+381728,zh,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））n．p．与,8,1
+381729,zh,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））m．p．属,8,1
+381730,zh,23,sabbesam,sabbesaṃ,sabbesaṃ,sabbesaṃ，代名词形容词 sabba（一切（的））m．p．与,8,1
+381731,zh,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））n．p．属,10,1
+381732,zh,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））n．p．与,10,1
+381733,zh,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））m．p．属,10,1
+381734,zh,23,sabbesanam,sabbesānaṃ,sabbesānaṃ,sabbesānaṃ，代名词形容词 sabba（一切（的））m．p．与,10,1
+381736,zh,23,sabbesu,sabbesu,sabbesu,sabbesu，代名词形容词 sabba（一切（的））n．p．处,7,1
+381737,zh,23,sabbesu,sabbesu,sabbesu,sabbesu，代名词形容词 sabba（一切（的））m．p．处,7,1
+381757,zh,23,sabbo,sabbo,sabbo,sabbo，代名词形容词 sabba（一切（的））m．s．主,5,1
+398899,zh,23,se,se,se,se，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,2,1
+398900,zh,23,se,se,se,se，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,2,1
+401702,zh,23,so,so,so,so，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．主格,2,1
+406384,zh,23,ta,tā,tā,tā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．对格,2,1
+406385,zh,23,ta,tā,tā,tā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．主格,2,1
+406713,zh,23,tabhi,tābhi,tābhi,tābhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．夺格,5,1
+406714,zh,23,tabhi,tābhi,tābhi,tābhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．具格,5,1
+407025,zh,23,tad,tad,tad,tad，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,3,1
+407026,zh,23,tad,tad,tad,tad，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,3,1
+407240,zh,23,tadam,tadaṃ,tadaṃ,tadaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,5,1
+407241,zh,23,tadam,tadaṃ,tadaṃ,tadaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,5,1
+408345,zh,23,tahi,tāhi,tāhi,tāhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．夺格,4,1
+408346,zh,23,tahi,tāhi,tāhi,tāhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．具格,4,1
+409623,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．对格,3,1
+409624,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．对格,3,1
+409625,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．主格,3,1
+409626,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．对格,3,1
+409627,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第二人称你tumha单数s．对格acc．,3,1
+409628,zh,23,tam,taṃ,taṃ,taṃ，人称代名词第二人称你tumha单数s．主格nom．,3,1
+410065,zh,23,tamha,tamhā,tamhā,tamhā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,5,1
+410066,zh,23,tamha,tamhā,tamhā,tamhā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,5,1
+410074,zh,23,tamhi,tamhi,tamhi,tamhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．处格,5,1
+410075,zh,23,tamhi,tamhi,tamhi,tamhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．处格,5,1
+411508,zh,23,tani,tāni,tāni,tāni，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．对格,4,1
+411509,zh,23,tani,tāni,tāni,tāni，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．主格,4,1
+413836,zh,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．属格,5,1
+413837,zh,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．与格,5,1
+413838,zh,23,tasam,tāsaṃ,tāsaṃ,tāsaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,5,1
+413846,zh,23,tasanam,tāsānaṃ,tāsānaṃ,tāsānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．属格,7,1
+413847,zh,23,tasanam,tāsānaṃ,tāsānaṃ,tāsānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．与格,7,1
+413996,zh,23,tasma,tasmā,tasmā,tasmā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,5,1
+413997,zh,23,tasma,tasmā,tasmā,tasmā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,5,1
+414008,zh,23,tasmim,tasmiṃ,tasmiṃ,tasmiṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．处格,6,1
+414009,zh,23,tasmim,tasmiṃ,tasmiṃ,tasmiṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．处格,6,1
+414013,zh,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．属格,5,1
+414014,zh,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．与格,5,1
+414015,zh,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．属格,5,1
+414016,zh,23,tassa,tassa,tassa,tassa，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．与格,5,1
+414020,zh,23,tassa,tassā,tassā,tassā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,5,1
+414021,zh,23,tassa,tassā,tassā,tassā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,5,1
+414027,zh,23,tassam,tassaṃ,tassaṃ,tassaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,6,1
+414047,zh,23,tassaya,tassāya,tassāya,tassāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,7,1
+414048,zh,23,tassaya,tassāya,tassāya,tassāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,7,1
+414056,zh,23,tasu,tāsu,tāsu,tāsu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．处格,4,1
+414751,zh,23,tato,tato,tato,tato，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．夺格,4,1
+414752,zh,23,tato,tato,tato,tato，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．夺格,4,1
+415046,zh,23,tava,tava,tava,tava，人称代名词第二人称你tumha单数s．属格gen．,4,1
+415047,zh,23,tava,tava,tava,tava，人称代名词第二人称你tumha单数s．与格dat．,4,1
+415127,zh,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．属格gen．,5,1
+415128,zh,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．与格dat．,5,1
+415129,zh,23,tavam,tavaṃ,tavaṃ,tavaṃ，人称代名词第二人称你tumha单数s．对格acc．,5,1
+415253,zh,23,taya,tayā,tayā,tayā，人称代名词第二人称你tumha单数s．夺格abl．,4,1
+415254,zh,23,taya,tayā,tayā,tayā，人称代名词第二人称你tumha单数s．具格ins．,4,1
+415256,zh,23,taya,tāya,tāya,tāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．夺格,4,1
+415257,zh,23,taya,tāya,tāya,tāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．具格,4,1
+415263,zh,23,tayam,tāyaṃ,tāyaṃ,tāyaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,5,1
+415320,zh,23,tayi,tayi,tayi,tayi，人称代名词第二人称你tumha单数s．处格loc．,4,1
+415352,zh,23,tayo,tāyo,tāyo,tāyo，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．对格,4,1
+415353,zh,23,tayo,tāyo,tāyo,tāyo，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．复数p．主格,4,1
+415374,zh,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．对格,2,1
+415375,zh,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．主格,2,1
+415376,zh,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．对格,2,1
+415377,zh,23,te,te,te,te，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．主格,2,1
+415378,zh,23,te,te,te,te，人称代名词第二人称你tumha单数s．属格gen．,2,1
+415379,zh,23,te,te,te,te，人称代名词第二人称你tumha单数s．与格dat．,2,1
+415380,zh,23,te,te,te,te，人称代名词第二人称你tumha单数s．具格ins．,2,1
+415410,zh,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．夺格,5,1
+415411,zh,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．具格,5,1
+415412,zh,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．夺格,5,1
+415413,zh,23,tebhi,tebhi,tebhi,tebhi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．具格,5,1
+415552,zh,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．夺格,4,1
+415553,zh,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．具格,4,1
+415554,zh,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．夺格,4,1
+415555,zh,23,tehi,tehi,tehi,tehi，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．具格,4,1
+416282,zh,23,tena,tena,tena,tena，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．单数s．具格,4,1
+416283,zh,23,tena,tena,tena,tena，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．单数s．具格,4,1
+416437,zh,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,5,1
+416438,zh,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,5,1
+416439,zh,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,5,1
+416440,zh,23,tesam,tesaṃ,tesaṃ,tesaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,5,1
+416442,zh,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．属格,7,1
+416443,zh,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．与格,7,1
+416444,zh,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．属格,7,1
+416445,zh,23,tesanam,tesānaṃ,tesānaṃ,tesānaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．与格,7,1
+416474,zh,23,tesu,tesu,tesu,tesu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）中性n．复数p．处格,4,1
+416475,zh,23,tesu,tesu,tesu,tesu，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阳性m．复数p．处格,4,1
+424376,zh,23,tissa,tissā,tissā,tissā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,5,1
+424377,zh,23,tissa,tissā,tissā,tissā，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,5,1
+424396,zh,23,tissam,tissaṃ,tissaṃ,tissaṃ，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．处格,6,1
+424438,zh,23,tissaya,tissāya,tissāya,tissāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．属格,7,1
+424439,zh,23,tissaya,tissāya,tissāya,tissāya，人称代名词第三人称（或为指示代名词）ta（he / it/ she；that远称：彼）阴性f．单数s．与格,7,1
+426348,zh,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．属格gen．,8,1
+426349,zh,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．与格dat．,8,1
+426350,zh,23,tumhakam,tumhākaṃ,tumhākaṃ,tumhākaṃ，人称代名词第二人称你tumha复数p．对格acc．,8,1
+426351,zh,23,tumham,tumham,tumham,tumham，人称代名词第二人称你tumha复数p．属格gen．,6,1
+426352,zh,23,tumham,tumham,tumham,tumham，人称代名词第二人称你tumha复数p．与格dat．,6,1
+426354,zh,23,tumham,tumhaṃ,tumhaṃ,tumhaṃ，人称代名词第二人称你tumha单数s．属格gen．,6,1
+426355,zh,23,tumham,tumhaṃ,tumhaṃ,tumhaṃ，人称代名词第二人称你tumha单数s．与格dat．,6,1
+426358,zh,23,tumhe,tumhe,tumhe,tumhe，人称代名词第二人称你tumha复数p．对格acc．,5,1
+426359,zh,23,tumhe,tumhe,tumhe,tumhe，人称代名词第二人称你tumha复数p．主格nom．,5,1
+426362,zh,23,tumhebhi,tumhebhi,tumhebhi,tumhebhi，人称代名词第二人称你tumha复数p．夺格abl．,8,1
+426363,zh,23,tumhebhi,tumhebhi,tumhebhi,tumhebhi，人称代名词第二人称你tumha复数p．具格ins．,8,1
+426364,zh,23,tumhehi,tumhehi,tumhehi,tumhehi，人称代名词第二人称你tumha复数p．夺格abl．,7,1
+426365,zh,23,tumhehi,tumhehi,tumhehi,tumhehi，人称代名词第二人称你tumha复数p．具格ins．,7,1
+426366,zh,23,tumhesu,tumhesu,tumhesu,tumhesu，人称代名词第二人称你tumha复数p．处格loc．,7,1
+427081,zh,23,tuvam,tuvaṃ,tuvaṃ,tuvaṃ，人称代名词第二人称你tumha单数s．对格acc．,5,1
+427082,zh,23,tuvam,tuvaṃ,tuvaṃ,tuvaṃ，人称代名词第二人称你tumha单数s．主格nom．,5,1
+427189,zh,23,tuyham,tuyham,tuyham,tuyham，人称代名词第二人称你tumha单数s．属格gen．,6,1
+427190,zh,23,tuyham,tuyham,tuyham,tuyham，人称代名词第二人称你tumha单数s．与格dat．,6,1
+427203,zh,23,tvam,tvam,tvam,tvam，人称代名词第二人称你tumha单数s．对格acc．,4,1
+427204,zh,23,tvam,tvam,tvam,tvam，人称代名词第二人称你tumha单数s．主格nom．,4,1
+427219,zh,23,tvaya,tvayā,tvayā,tvayā，人称代名词第二人称你tumha单数s．夺格abl．,5,1
+427220,zh,23,tvaya,tvayā,tvayā,tvayā，人称代名词第二人称你tumha单数s．具格ins．,5,1
+427221,zh,23,tvayi,tvayi,tvayi,tvayi，人称代名词第二人称你tumha单数s．处格loc．,5,1
+469998,zh,23,vayam,vayaṃ,vayaṃ,vayaṃ，人称代名词第一人称我amha复数p．主格nom．	,5,1
+496173,zh,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．属格gen．	,2,1
+496174,zh,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．与格dat．	,2,1
+496175,zh,23,vo,vo,vo,vo，人称代名词第二人称你tumha复数p．对格acc．	,2,1
+497372,zh,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．p．对	,2,1
+497373,zh,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．p．主	,2,1
+497374,zh,23,ya,yā,yā,yā，关系代名词 ya（who，what，which）f．s．主	,2,1
+497388,zh,23,yabhi,yābhi,yābhi,yābhi，关系代名词 ya（who，what，which）f．p．夺	,5,1
+497389,zh,23,yabhi,yābhi,yābhi,yābhi，关系代名词 ya（who，what，which）f．p．具	,5,1
+497688,zh,23,yad,yad,yad,yad，关系代名词 ya（who，what，which）n．s．对	,3,1
+497689,zh,23,yad,yad,yad,yad，关系代名词 ya（who，what，which）n．s．主	,3,1
+497984,zh,23,yahi,yāhi,yāhi,yāhi，关系代名词 ya（who，what，which）f．p．夺	,4,1
+497985,zh,23,yahi,yāhi,yāhi,yāhi，关系代名词 ya（who，what，which）f．p．具	,4,1
+498513,zh,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）f．s．对	,3,1
+498514,zh,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）n．s．对	,3,1
+498515,zh,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）n．s．主	,3,1
+498516,zh,23,yam,yaṃ,yaṃ,yaṃ，关系代名词 ya（who，what，which）m．s．对	,3,1
+498853,zh,23,yamha,yamhā,yamhā,yamhā，关系代名词 ya（who，what，which）n．s．夺	,5,1
+498854,zh,23,yamha,yamhā,yamhā,yamhā，关系代名词 ya（who，what，which）m．s．夺	,5,1
+498855,zh,23,yamhi,yamhi,yamhi,yamhi，关系代名词 ya（who，what，which）n．s．处	,5,1
+498856,zh,23,yamhi,yamhi,yamhi,yamhi，关系代名词 ya（who，what，which）m．s．处	,5,1
+499017,zh,23,yani,yāni,yāni,yāni，关系代名词 ya（who，what，which）n．p．对	,4,1
+499018,zh,23,yani,yāni,yāni,yāni，关系代名词 ya（who，what，which）n．p．主	,4,1
+499644,zh,23,yasam,yāsaṃ,yāsaṃ,yāsaṃ，关系代名词 ya（who，what，which）f．p．属	,5,1
+499645,zh,23,yasam,yāsaṃ,yāsaṃ,yāsaṃ，关系代名词 ya（who，what，which）f．p．与	,5,1
+499667,zh,23,yasanam,yāsānaṃ,yāsānaṃ,yāsānaṃ，关系代名词 ya（who，what，which）f．p．属	,7,1
+499668,zh,23,yasanam,yāsānaṃ,yāsānaṃ,yāsānaṃ，关系代名词 ya（who，what，which）f．p．与	,7,1
+499789,zh,23,yasma,yasmā,yasmā,yasmā，关系代名词 ya（who，what，which）n．s．夺	,5,1
+499790,zh,23,yasma,yasmā,yasmā,yasmā，关系代名词 ya（who，what，which）m．s．夺	,5,1
+499792,zh,23,yasmim,yasmiṃ,yasmiṃ,yasmiṃ，关系代名词 ya（who，what，which）n．s．处	,6,1
+499793,zh,23,yasmim,yasmiṃ,yasmiṃ,yasmiṃ，关系代名词 ya（who，what，which）m．s．处	,6,1
+499847,zh,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）n．s．属	,5,1
+499848,zh,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）n．s．与	,5,1
+499849,zh,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）m．s．属	,5,1
+499850,zh,23,yassa,yassa,yassa,yassa，关系代名词 ya（who，what，which）m．s．与	,5,1
+499851,zh,23,yassa,yassā,yassā,yassā，关系代名词 ya（who，what，which）f．s．属	,5,1
+499852,zh,23,yassa,yassā,yassā,yassā，关系代名词 ya（who，what，which）f．s．与	,5,1
+499855,zh,23,yassam,yassaṃ,yassaṃ,yassaṃ，关系代名词 ya（who，what，which）f．s．处	,6,1
+499864,zh,23,yasu,yāsu,yāsu,yāsu，关系代名词 ya（who，what，which）f．p．处	,4,1
+502054,zh,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．属	,4,1
+502055,zh,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．夺	,4,1
+502056,zh,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．与	,4,1
+502057,zh,23,yaya,yāya,yāya,yāya，关系代名词 ya（who，what，which）f．s．具	,4,1
+502060,zh,23,yayam,yāyaṃ,yāyaṃ,yāyaṃ，关系代名词 ya（who，what，which）f．s．处	,5,1
+502098,zh,23,yayo,yāyo,yāyo,yāyo，关系代名词 ya（who，what，which）f．p．对	,4,1
+502099,zh,23,yayo,yāyo,yāyo,yāyo，关系代名词 ya（who，what，which）f．p．主	,4,1
+502101,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．p．对	,2,1
+502102,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．p．主	,2,1
+502103,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．s．对	,2,1
+502104,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）n．s．主	,2,1
+502105,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）m．p．对	,2,1
+502106,zh,23,ye,ye,ye,ye，关系代名词 ya（who，what，which）m．p．主	,2,1
+502108,zh,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）n．p．夺	,5,1
+502109,zh,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）n．p．具	,5,1
+502110,zh,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）m．p．夺	,5,1
+502111,zh,23,yebhi,yebhi,yebhi,yebhi，关系代名词 ya（who，what，which）m．p．具	,5,1
+502186,zh,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）n．p．夺	,4,1
+502187,zh,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）n．p．具	,4,1
+502188,zh,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）m．p．夺	,4,1
+502189,zh,23,yehi,yehi,yehi,yehi，关系代名词 ya（who，what，which）m．p．具	,4,1
+502193,zh,23,yena,yena,yena,yena，关系代名词 ya（who，what，which）n．s．具	,4,1
+502194,zh,23,yena,yena,yena,yena，关系代名词 ya（who，what，which）m．s．具	,4,1
+502214,zh,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）n．p．属	,5,1
+502215,zh,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）n．p．与	,5,1
+502216,zh,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）m．p．属	,5,1
+502217,zh,23,yesam,yesaṃ,yesaṃ,yesaṃ，关系代名词 ya（who，what，which）m．p．与	,5,1
+502218,zh,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）n．p．属	,7,1
+502219,zh,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）n．p．与	,7,1
+502220,zh,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）m．p．属	,7,1
+502221,zh,23,yesanam,yesānaṃ,yesānaṃ,yesānaṃ，关系代名词 ya（who，what，which）m．p．与	,7,1
+502223,zh,23,yesu,yesu,yesu,yesu，关系代名词 ya（who，what，which）n．p．处	,4,1
+502224,zh,23,yesu,yesu,yesu,yesu，关系代名词 ya（who，what，which）m．p．处	,4,1
+502278,zh,23,yo,yo,yo,yo，关系代名词 ya（who，what，which）m．s．主	,2,1

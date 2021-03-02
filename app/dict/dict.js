@@ -39,9 +39,11 @@ function dict_search(word, autoSplit = true) {
 			$("#search_result_shell").append($("#search_summary"));
 
 			guide_init();
+			get_comp_data(word);
 			let word_count = parseInt($("#word_count").val());
+
 			if (_autoSplit == true && word_count < 3) {
-				trubo_split();
+				//trubo_split();
 			}
 		}
 	);
@@ -184,7 +186,76 @@ function cls_word_search_history() {
 	localStorage.searchword = "";
 	$("#dict_ref_search_result").html("");
 }
+function get_comp_data(word) {
+	$.get(
+		"get_split_data.php",
+		{
+			word: word,
+		},
+		function (data, status) {
+			$("#pre_search_result").hide();
+			try {
+				let result = JSON.parse(data);
+				render_parts_select(result);
+			} catch (e) {
+				console.error(e.message);
+			}
+		}
+	);
+}
 
+function render_parts_select(part_list) {
+	let html = "<div>";
+	let firstWord = new Array();
+	if (part_list.length > 0) {
+		html += "拆分";
+		let level1Count = 0;
+		for (const part of part_list) {
+			firstWord.push(part[0].word);
+			html += '<div class="dropdown_ctl">';
+			html += '<div class="content">';
+			html +=
+				'<div class="main_view">' +
+				"<part>" +
+				part[0].word.replace(/\+/g, "</part><part>") +
+				"</part>" +
+				"</div>";
+			html += '<div class="more_button">' + part_list[0].length + "</div>";
+			html += "</div>";
+			html += '<div class="menu" >';
+			for (const one_part of part) {
+				html += '<div class="part_list">' + one_part.word + "</div>";
+			}
+			html += "<div class='part_list' onclick=\"trubo_split()\">深度拆分</div>";
+			html += "</div>";
+			html += "</div>";
+			level1Count++;
+		}
+	} else {
+		html += "无法拆分";
+	}
+	html += "</div>";
+	$("#input_parts").html(html);
+	getPartMeaning(firstWord.join("+"));
+
+	$(".more_button").click(function () {
+		$(this).parent().siblings(".menu").toggle();
+	});
+
+	$(".part_list").click(function () {
+		let html = "<part>" + $(this).text().replace(/\+/g, "</part><part>") + "</part>";
+		$(this).parent().parent().find(".main_view").html(html);
+		$(this).parent().hide();
+		getPartMeaning($(this).text());
+		$("part").click(function () {
+			dict_search($(this).text(), false);
+		});
+	});
+
+	$("part").click(function () {
+		dict_search($(this).text(), false);
+	});
+}
 function trubo_split() {
 	let strSpliting = "正在自动切分复合词……";
 	if ($("#input_parts").html() == strSpliting) {
@@ -200,55 +271,7 @@ function trubo_split() {
 		function (data, status) {
 			try {
 				let result = JSON.parse(data);
-				let html = "<div>";
-				let firstWord = new Array();
-				if (result.length > 0) {
-					html += "拆分";
-					let level1Count = 0;
-					for (const part of result[0]["data"]) {
-						firstWord.push(part[0].word);
-						html += '<div class="dropdown_ctl">';
-						html += '<div class="content">';
-						html +=
-							'<div class="main_view">' +
-							"<part>" +
-							part[0].word.replace(/\+/g, "</part><part>") +
-							"</part>" +
-							"</div>";
-						html += '<div class="more_button">' + part.length + "</div>";
-						html += "</div>";
-						html += '<div class="menu" >';
-						for (const one_part of part) {
-							html += '<div class="part_list">' + one_part.word + "</div>";
-						}
-						html += "</div>";
-						html += "</div>";
-						level1Count++;
-					}
-				} else {
-					html += "无法拆分";
-				}
-				html += "</div>";
-				$("#input_parts").html(html);
-				getPartMeaning(firstWord.join("+"));
-
-				$(".more_button").click(function () {
-					$(this).parent().siblings(".menu").toggle();
-				});
-
-				$(".part_list").click(function () {
-					let html = "<part>" + $(this).text().replace(/\+/g, "</part><part>") + "</part>";
-					$(this).parent().parent().find(".main_view").html(html);
-					$(this).parent().hide();
-					getPartMeaning($(this).text());
-					$("part").click(function () {
-						dict_search($(this).text(), false);
-					});
-				});
-
-				$("part").click(function () {
-					dict_search($(this).text(), false);
-				});
+				render_parts_select(result[0]["data"]);
 			} catch (e) {}
 		}
 	);
