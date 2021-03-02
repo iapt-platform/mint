@@ -84,15 +84,15 @@ foreach ($arrWords as $currword) {
 		$result = array(); //全局变量，递归程序的输出容器
 		//$noSandhi = removeSandhi($oneword);
 
-        mySplit2($oneword, 0, false, 0, 0.2, 0.1, true, false);
+        mySplit2($oneword, 0, false, 0, 0.2, 0.9, true, false);
 		if(count($result) < 2){
-			//mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
+			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
 		}
         if (isset($_POST["debug"])) {
             echo "正切：" . count($result) . "<br>\n";
 		}
 		if(count($result) < 2){
-			//mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
+			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
 		}
         if (isset($_POST["debug"])) {
             echo "反切：" . count($result) . "<br>\n";

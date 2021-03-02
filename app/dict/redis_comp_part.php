@@ -1,4 +1,5 @@
 <?php
+#从自动复合词数据库中提取数据到ridis
 require_once "../path.php";
 require_once "../redis/function.php";
 
@@ -16,10 +17,10 @@ if (PHP_SAPI == "cli") {
 			$stmtOne->execute(array($row["pali"]));
 			$fComp = $stmtOne->fetchAll(PDO::FETCH_ASSOC);		
 			$output = json_encode(array($fComp), JSON_UNESCAPED_UNICODE);
-			$redis->hSet("dict_comp",$row["pali"],$output);
+			$redis->hSet("dict://comp",$row["pali"],$output);
 		}
 	}
-	echo "all done".$redis->hLen("dict_comp");
+	echo "all done".$redis->hLen("dict://comp");
 }
 
 ?>

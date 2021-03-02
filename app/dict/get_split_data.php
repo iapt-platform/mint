@@ -16,8 +16,8 @@ $redis = redis_connect();
 
 if($redis!==false){
 	#如果没有查巴缅替换拆分
-	if($redis->hExists("dict_comp",$inputWord)===TRUE){
-		$output = $redis->hGet("dict_comp",$inputWord) ;
+	if($redis->hExists("dict://comp",$inputWord)===TRUE){
+		$output = $redis->hGet("dict://comp",$inputWord) ;
 		echo $output;
 		exit;
 	}
@@ -25,12 +25,12 @@ if($redis!==false){
 $dbh = new PDO(_DICT_DB_COMP_, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $query = "SELECT parts from "._TABLE_DICT_COMP_." where pali =?";
-$stmt = $PDO->prepare($query);
+$stmt = $dbh->prepare($query);
 $stmt->execute(array($inputWord));
 $fComp = $stmt->fetchAll(PDO::FETCH_ASSOC);		
 $output = json_encode($fComp, JSON_UNESCAPED_UNICODE);
 if($redis!==false){
-	$output = $redis->hSet("dict_comp",$inputWord,$output) ;
+	$redis->hSet("dict://comp",$inputWord,$output) ;
 }
 echo $output;
 

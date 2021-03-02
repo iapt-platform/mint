@@ -39,10 +39,13 @@ function dict_search(word, autoSplit = true) {
 			$("#search_result_shell").append($("#search_summary"));
 
 			guide_init();
-			get_comp_data(word);
+			if (_autoSplit == true) {
+				get_comp_data(word);
+			}
+
 			let word_count = parseInt($("#word_count").val());
 
-			if (_autoSplit == true && word_count < 3) {
+			if (_autoSplit == true && word_count < 6) {
 				//trubo_split();
 			}
 		}
@@ -196,18 +199,22 @@ function get_comp_data(word) {
 			$("#pre_search_result").hide();
 			try {
 				let result = JSON.parse(data);
-				render_parts_select(result);
+				if (result.length > 0) {
+					render_parts_select(result);
+				} else {
+					trubo_split();
+				}
 			} catch (e) {
 				console.error(e.message);
 			}
 		}
 	);
 }
-
+var gCurrWordParts = "";
 function render_parts_select(part_list) {
 	let html = "<div>";
 	let firstWord = new Array();
-	if (part_list.length > 0) {
+	if (part_list.length > 0 && part_list[0].length > 0) {
 		html += "拆分";
 		let level1Count = 0;
 		for (const part of part_list) {
@@ -232,11 +239,14 @@ function render_parts_select(part_list) {
 			level1Count++;
 		}
 	} else {
-		html += "无法拆分";
+		html += "<button class='part_list' onclick=\"trubo_split()\">深度拆分</button>";
 	}
+	html += "<button onclick='copy_parts()'>copy</button>";
 	html += "</div>";
+
 	$("#input_parts").html(html);
-	getPartMeaning(firstWord.join("+"));
+	gCurrWordParts = firstWord.join("+");
+	getPartMeaning(gCurrWordParts);
 
 	$(".more_button").click(function () {
 		$(this).parent().siblings(".menu").toggle();
@@ -246,6 +256,7 @@ function render_parts_select(part_list) {
 		let html = "<part>" + $(this).text().replace(/\+/g, "</part><part>") + "</part>";
 		$(this).parent().parent().find(".main_view").html(html);
 		$(this).parent().hide();
+		gCurrWordParts = $(this).text();
 		getPartMeaning($(this).text());
 		$("part").click(function () {
 			dict_search($(this).text(), false);
@@ -256,8 +267,12 @@ function render_parts_select(part_list) {
 		dict_search($(this).text(), false);
 	});
 }
+
+function copy_parts() {
+	copy_to_clipboard(gCurrWordParts);
+}
 function trubo_split() {
-	let strSpliting = "正在自动切分复合词……";
+	let strSpliting = "正在自动切分……";
 	if ($("#input_parts").html() == strSpliting) {
 		return;
 	}

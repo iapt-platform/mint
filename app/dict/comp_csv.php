@@ -8,7 +8,7 @@ if (isset($argv[1])) {
 	$start = (int)$argv[1];
 }
 else{
-	$start=0;
+	$start=1;
 }
 
 if (isset($argv[2])) {
@@ -38,28 +38,25 @@ if ($redis == false) {
     exit;
 }
 $i = null;
-$counter = 0;
-while ($words = $redis->sscan("pali_word", $i)) {
+
+while($word = $redis->hGet("pali://wordindex.hash",$start))
+{
 	# code...
-	
-	if($counter<$start){
-		$counter+=10;
-		continue;
-	}
-	if($counter>$end){
+
+	if($start>$end){
 		echo "all done";
 		exit;
 	}
-    foreach ($words as $key => $word) {
+
+	{
         # code...
         $arrword = split_diphthong($word);
         if (count($arrword) > 1) {
-			$data = array($counter,$word,'.comp.','','','','',implode("+", $arrword),'',1,50,6,'comp','en');
+			$data = array($start,$word,'.comp.','','','','',implode("+", $arrword),'',1,50,6,'comp','en');
             fputcsv($myfile, $data);
         }
 
         foreach ($arrword as $oneword) {
-            $counter++;
 			$result = array(); //全局变量，递归程序的输出容器
 			mySplit2($oneword, 0, true, 0.5, 0.9, 0, true, false);
 			mySplit2($oneword, 0, true, 0.5, 0.9, 0, false, false);
@@ -84,23 +81,23 @@ while ($words = $redis->sscan("pali_word", $i)) {
             mySplit2($oneword, 0, false, 0, 0.8, 0.8, true);
             }
              */
-            echo "{$counter}-{$oneword}:" . count($result) . "\n";
+            echo "{$start}-{$oneword}:" . count($result) . "\n";
             if (count($result) > 0) {
                 arsort($result); //按信心指数排序
                 $iCount = 0;
                 foreach ($result as $row => $value) {
-					$data = array($counter,$oneword,'.comp.','','','','',$row,'',1,round($value*70),6,'comp','en');
+					$data = array($start,$oneword,'.comp.','','','','',$row,'',1,round($value*70),6,'comp','en');
 					fputcsv($myfile, $data);
 
 								//后处理 进一步切分没有意思的长词
 					$new = split2($row);
 					if($new!==$row){
-						$data = array($counter,$oneword,'.comp.','','','','',$new,'',1,round($value*70),6,'comp','en');
+						$data = array($start,$oneword,'.comp.','','','','',$new,'',1,round($value*70),6,'comp','en');
 						fputcsv($myfile, $data);
 						#再处理一次
 						$new2 = split2($new);
 						if($new2!==$new){
-							$data = array($counter,$oneword,'.comp.','','','','',$new2,'',1,round($value*70),6,'comp','en');
+							$data = array($start,$oneword,'.comp.','','','','',$new2,'',1,round($value*70),6,'comp','en');
 							fputcsv($myfile, $data);				
 						}				
 					}
@@ -115,5 +112,6 @@ while ($words = $redis->sscan("pali_word", $i)) {
 
         }
 
-    }
+	}
+	$start++;
 }
