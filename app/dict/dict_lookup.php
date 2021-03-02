@@ -220,7 +220,8 @@ $right_word_list = "";
 		echo "</div>";
 		echo "<input type='hidden' id='word_count' value='{$count_return}' />";
 
-        //查连读词
+		//查连读词
+		/*
         if ($count_return < 2) {
             echo "<div>Junction</div>";
             $newWord = array();
@@ -237,7 +238,7 @@ $right_word_list = "";
                 }
             }
 		}
-		
+		*/
 		//拆复合词
 		echo "<div id='auto_split'></div>";
 

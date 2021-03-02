@@ -64,6 +64,10 @@ define("_TABLE_DICT_PM_", "dict");
 define("_DICT_DB_REGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_regular.db");
 define("_TABLE_DICT_REGULAR_", "dict");
 
+#自动compone
+define("_DICT_DB_COMP_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/comp.db");
+define("_TABLE_DICT_COMP_", "dict");
+
 define("_DIR_USERS_GUIDE_", __DIR__ . "/../documents/users_guide");
 
 #参考字典
