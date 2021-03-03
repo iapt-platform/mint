@@ -8,7 +8,7 @@ require_once "../public/function.php";
 
 $id = $_GET["id"];
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect( _FILE_DB_FILEINDEX_);
 $query = "select * from fileindex where id=" . $PDO->quote($id);
 $Fetch = PDO_FetchAll($query);
 if (count($Fetch) > 0) {

@@ -56,7 +56,7 @@ switch ($op) {
         $paraList = rtrim($paraList, ",");
         $strQueryParaList = str_replace(",", "','", $paraList);
         $strQueryParaList = "('" . $strQueryParaList . "')";
-        PDO_Connect("" . _FILE_DB_PALITEXT_);
+        PDO_Connect(_FILE_DB_PALITEXT_);
         $query = "SELECT sum(lenght) as sum_str FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) ";
         $Fetch = PDO_FetchAll($query);
         if (count($Fetch) > 0) {
@@ -110,8 +110,7 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                $db_file = _FILE_DB_RESRES_INDEX_;
-                PDO_Connect("$db_file");
+                PDO_Connect(_FILE_DB_RESRES_INDEX_);
                 $query = "select guid,owner from 'album' where id='{$res_album_id}'";
                 $Fetch = PDO_FetchAll($query);
                 if (count($Fetch) > 0) {
@@ -202,7 +201,7 @@ switch ($op) {
                             //写入数据库
                             // 开始一个事务，关闭自动提交
 
-                            PDO_Connect("" . _FILE_DB_USER_WBW_);
+                            PDO_Connect(_FILE_DB_USER_WBW_);
                             $PDO->beginTransaction();
                             $query = "INSERT INTO wbw_block ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
@@ -238,8 +237,7 @@ switch ($op) {
                             }
 
                             //服务器端文件列表
-                            $db_file = _FILE_DB_FILEINDEX_;
-                            PDO_Connect("$db_file");
+                            PDO_Connect(_FILE_DB_FILEINDEX_);
                             $query = "INSERT INTO fileindex ('id',
 												'parent_id',
 												'channal',
@@ -340,7 +338,7 @@ switch ($op) {
                 echo "<fieldset>";
                 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
                 echo "<div>";
-                PDO_Connect("" . _FILE_DB_CHANNAL_);
+                PDO_Connect(_FILE_DB_CHANNAL_);
                 $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
                 $Fetch = PDO_FetchAll($query);
                 $i = 0;
@@ -357,7 +355,7 @@ switch ($op) {
                     echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["name"] . '</div>';
                     echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-                    PDO_Connect("" . _FILE_DB_USER_WBW_);
+                    PDO_Connect( _FILE_DB_USER_WBW_);
                     $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
                     $FetchWBW = PDO_FetchOne($query);
                     echo '</div>';
@@ -372,7 +370,7 @@ switch ($op) {
                     echo '</div>';
 
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-                    PDO_Connect("" . _FILE_DB_SENTENCE_);
+                    PDO_Connect( _FILE_DB_SENTENCE_);
                     $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
                     $FetchWBW = PDO_FetchOne($query);
                     echo '</div>';
@@ -454,8 +452,7 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                $db_file = _FILE_DB_RESRES_INDEX_;
-                PDO_Connect("$db_file");
+                PDO_Connect(_FILE_DB_RESRES_INDEX_);
                 $query = "select guid,owner from 'album' where id='{$res_album_id}'";
                 $Fetch = PDO_FetchAll($query);
                 if (count($Fetch) > 0) {
@@ -469,7 +466,7 @@ switch ($op) {
                 switch ($get_res_type) {
                     case "1": //pali text
                         {
-                            PDO_Connect("" . _FILE_DB_PALITEXT_);
+                            PDO_Connect(_FILE_DB_PALITEXT_);
                             $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) ";
 
                             $sth = $PDO->prepare($query);
@@ -593,6 +590,7 @@ switch ($op) {
                         }
                     case "3": //translate
                         {
+							#已经废弃
                             //打开翻译数据文件
                             $db_file = _DIR_PALICANON_TRAN_ . "/p{$book}_translate.db3";
                             PDO_Connect("$db_file");
@@ -666,7 +664,7 @@ switch ($op) {
                             $album_type = $get_res_type;
                             //获取段落层级和标题
                             $para_title = array();
-                            PDO_Connect("" . _FILE_DB_PALITEXT_);
+                            PDO_Connect(_FILE_DB_PALITEXT_);
                             $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
                             $sth = $PDO->prepare($query);
                             $sth->execute();
@@ -677,7 +675,7 @@ switch ($op) {
                             }
 
                             $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $res_book . "_tpl.db3";
-                            PDO_Connect("$db_file");
+                            PDO_Connect("sqlite:{$db_file}");
                             foreach ($aParaList as $iPar) {
                                 $query = "SELECT * FROM 'main' WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) ";
 
@@ -779,8 +777,7 @@ switch ($op) {
             echo "<p>save ok</p>";
             $filesize = filesize($sFullFileName);
             //服务器端文件列表
-            $db_file = _FILE_DB_FILEINDEX_;
-            PDO_Connect("$db_file");
+            PDO_Connect(_FILE_DB_FILEINDEX_);
 
             $query = "INSERT INTO fileindex ('id',
 												'parent_id',
@@ -848,8 +845,7 @@ switch ($op) {
                 echo "<h3><a href='../ucenter/index.php?op=login'>{$_local->gui->login}</a>后才可以打开文档</h3>";
                 exit;
             }
-            $db_file = _FILE_DB_FILEINDEX_;
-            PDO_Connect("$db_file");
+            PDO_Connect(_FILE_DB_FILEINDEX_);
             if (isset($_GET["doc_id"])) {
                 $doc_id = $_GET["doc_id"];
                 $query = "select * from fileindex where id='$doc_id' ";
@@ -926,8 +922,7 @@ exit;
                             if ($open_in == "editor") {
                                 //获取文件路径
                                 echo "共享的文档，复制并打开...";
-                                $db_file = _FILE_DB_USERINFO_;
-                                PDO_Connect("$db_file");
+                                PDO_Connect(_FILE_DB_USERINFO_);
                                 $query = "select userid from user where id='$owner'";
                                 $FetchUid = PDO_FetchOne($query);
                                 if ($FetchUid) {
@@ -942,8 +937,7 @@ exit;
                                     //插入记录到文件索引
                                     $filesize = filesize($dest);
                                     //服务器端文件列表
-                                    $db_file = _FILE_DB_FILEINDEX_;
-                                    PDO_Connect("$db_file");
+                                    PDO_Connect(_FILE_DB_FILEINDEX_);
 
                                     //$query="INSERT INTO fileindex ('id','userid','parent_id','doc_id','book','paragraph','file_name','title','tag','create_time','modify_time','accese_time','file_size')
                                     //                VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?)";

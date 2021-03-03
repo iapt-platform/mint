@@ -1,4 +1,5 @@
 ﻿<?php
+#已经废弃
 require_once "../path.php";
 require_once 'checklogin.inc';
 require_once "../public/load_lang.php";

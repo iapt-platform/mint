@@ -18,7 +18,7 @@ if (isset($_POST["xmldata"])) {
     return;
 }
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect( _FILE_DB_FILEINDEX_);
 $query = "select file_name from fileindex where user_id='{$_COOKIE["uid"]}' AND  id='{$fileid}'";
 $Fetch = PDO_FetchOne($query);
 $purefilename = $Fetch;

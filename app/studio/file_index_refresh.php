@@ -5,7 +5,7 @@ include "./_pdo.php";
 //获取服务器端文件列表
 $dir = _DIR_USER_DOC_ . '/' . $_COOKIE["userid"] . '/' . _DIR_MYDOCUMENT_ . "/";
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect( _FILE_DB_FILEINDEX_);
 
 $files = scandir($dir);
 $arrlength = count($files);

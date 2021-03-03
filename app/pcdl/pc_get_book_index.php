@@ -9,9 +9,8 @@ $wordlist = array();
 $outXml = "<index>";
 echo $outXml;
 
-$db_file = _FILE_DB_PALITEXT_;
 //open database
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_PALITEXT_);
 $query = "select * FROM pali_text where \"book\"=" . $PDO->quote($currBook);
 
 $Fetch = PDO_FetchAll($query);

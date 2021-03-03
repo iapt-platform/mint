@@ -13,7 +13,7 @@ if (substr($get_book, 0, 1) == "p") {
 echo "book:$get_book<br />";
 
 //open database
-PDO_Connect("" . _FILE_DB_PALITEXT_);
+PDO_Connect(_FILE_DB_PALITEXT_);
 
 $query = "SELECT paragraph,html FROM pali_text WHERE book = ?";
 $Fetch = PDO_FetchAll($query, array($get_book));

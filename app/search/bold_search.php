@@ -19,8 +19,7 @@ global $PDO;
 
 switch ($op) {
     case "pre": //预查询
-        $dictFileName = _FILE_DB_REF_INDEX_;
-        PDO_Connect("$dictFileName");
+        PDO_Connect(_FILE_DB_REF_INDEX_);
         echo "<div>";
         $query = "select word,count from dict where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . "  limit 0,20";
 
@@ -82,8 +81,7 @@ switch ($op) {
             $strQueryWord = "('{$word}')";
         }
 
-        $dictFileName = _FILE_DB_BOLD_;
-        PDO_Connect("$dictFileName");
+        PDO_Connect(_FILE_DB_BOLD_);
         //查询符合的记录数
         $query = "select count(*) as co from bold where \"word2\" in  $strQueryWord";
         $Fetch = PDO_FetchOne($query);
@@ -152,8 +150,7 @@ switch ($op) {
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
-                $dictFileName = _FILE_DB_PALITEXT_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_PALITEXT_);
                 for ($i = 0; $i < $iFetch; $i++) {
                     $paliword = $Fetch[$i]["word"];
                     $book = $Fetch[$i]["book"];
@@ -170,8 +167,7 @@ switch ($op) {
                     if (strlen($pali) > 1) {
                         echo "<div class='mean'>$pali</div>";
                     } else {
-                        $dictFileName = _FILE_DB_PALITEXT_;
-                        PDO_Connect("$dictFileName");
+                        PDO_Connect(_FILE_DB_PALITEXT_);
                         $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
                         $FetchPaliText = PDO_FetchAll($query);
                         $countPaliText = count($FetchPaliText);
@@ -265,8 +261,7 @@ switch ($op) {
         switch ($target) {
             case "bold";
                 $arrBookName = json_decode(file_get_contents("../public/book_name/sc.json"));
-                $dictFileName = _FILE_DB_BOLD_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_BOLD_);
                 $wordlist = $_GET["wordlist"];
                 $booklist = $_GET["booklist"];
                 $aBookList = ltrim($booklist, "(");
@@ -328,8 +323,7 @@ switch ($op) {
                         if (strlen($pali) > 1) {
                             echo "<div class='mean'>$pali</div>";
                         } else {
-                            $dictFileName = _FILE_DB_PALITEXT_;
-                            PDO_Connect("$dictFileName");
+                            PDO_Connect(_FILE_DB_PALITEXT_);
                             $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
                             $FetchPaliText = PDO_FetchAll($query);
                             $countPaliText = count($FetchPaliText);

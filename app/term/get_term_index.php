@@ -10,7 +10,7 @@ require_once "../public/_pdo.php";
 $output["status"] = 0;
 $output["error"] = "";
 
-PDO_Connect("" . _FILE_DB_TERM_);
+PDO_Connect(_FILE_DB_TERM_);
 
 if (isset($_POST["lang"])) {
     $lang = $_POST["lang"];

@@ -9,6 +9,7 @@ var _channalData;
 
 var MAX_NOTE_NEST = 2;
 
+var gBuildinDictIsOpen = false;
 /*
 {{203-1654-23-45@11@en@*}}
 <note>203-1654-23-45@11@en@*</note>
@@ -232,6 +233,8 @@ function note_refresh_new() {
 						term_get_dict();
 						note_channal_list();
 						refresh_pali_script();
+						//把巴利语单词用<w>分隔用于点词查询等
+						splite_pali_word();
 					} catch (e) {
 						console.error(e);
 					}
@@ -988,6 +991,27 @@ function set_pali_script(pos, script) {
 			return roman_to_my(oldcontent);
 		});
 	}
+}
+
+function splite_pali_word() {
+	$("pali")
+		.contents()
+		.filter(function () {
+			return this.nodeType != 1;
+		})
+		.wrap("<pl></pl>");
+
+	$("pl").each(function () {
+		let html = $(this).html();
+		$(this).html("<w>" + html.replace(/\s/g, "</w> <w>") + "</w>");
+	});
+
+	$("w").click(function () {
+		let word = com_getPaliReal($(this).text());
+		if (gBuildinDictIsOpen) {
+			window.open("../dict/index.php?builtin=true&key=" + word, "dict");
+		}
+	});
 }
 
 function refresh_pali_script() {

@@ -74,8 +74,7 @@ if (isset($_GET["page"])) {
 }
 $iOnePage = 300;
 
-$dictFileName = _FILE_DB_TERM_;
-PDO_Connect("$dictFileName");
+PDO_Connect(_FILE_DB_TERM_);
 
 $query = "select count(*) as co  from term where owner= ? ";
 

@@ -39,8 +39,7 @@ echo "<h2>$from</h2>";
             $edition1 = $Fetch[$i]["edition1"];
             $type = $Fetch[$i]["type"];
 
-            $db_file = _FILE_DB_PALITEXT_;
-            PDO_Connect("$db_file");
+            PDO_Connect(_FILE_DB_PALITEXT_);
 
             $query = "select * from pali_text where book = '{$book}' and level > 0 and level < 8";
             $title_data = PDO_FetchAll($query);
@@ -57,8 +56,7 @@ echo "<h2>$from</h2>";
             echo $query . "<br>";
             $paragraph_list = PDO_FetchAll($query);
 
-            $db_file = _FILE_DB_RESRES_INDEX_;
-            PDO_Connect("$db_file");
+            PDO_Connect(_FILE_DB_RESRES_INDEX_);
             $query = "select * from album where guid = '$guid'";
             $search_album = PDO_FetchAll($query);
             if (count($search_album) == 0) {

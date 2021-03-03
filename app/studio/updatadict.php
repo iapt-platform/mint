@@ -1,6 +1,7 @@
 ﻿<html>
 <body>
 <?php
+#已经废弃
 function inputWordIsEmpty($inWord)
 {
 

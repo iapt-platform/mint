@@ -47,8 +47,8 @@ if (isset($_COOKIE["username"]) && !empty($_COOKIE["username"])) {
     echo "not login";
     exit;
 }
-$db_file = _FILE_DB_MESSAGE_; //消息轉入user文件夾，方便升級
-PDO_Connect("$db_file");
+//消息轉入user文件夾，方便升級
+PDO_Connect(_FILE_DB_MESSAGE_);
 
 if ($op == "send") {
     // 开始一个事务，关闭自动提交

@@ -10,7 +10,7 @@ $get_par_end = $_GET["end"];
 $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $get_book . "_tpl.db3";
 
 //open database
-PDO_Connect("$db_file");
+PDO_Connect("sqlite:{$db_file}");
 if ($get_par_end == -1 || ($get_par_end - $get_par_begin) > 500) {
     echo "0,0,0,0";
     exit;

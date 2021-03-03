@@ -7,7 +7,7 @@ require_once '../public/load_lang.php';
 require_once '../public/function.php';
 
 global $PDO;
-PDO_Connect("" . _FILE_DB_TERM_);
+PDO_Connect(_FILE_DB_TERM_);
 
 $query = "select word,meaning , owner from term where 1  order by create_time DESC limit 0,4";
 $Fetch = PDO_FetchAll($query);

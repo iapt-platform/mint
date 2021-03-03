@@ -10,11 +10,11 @@ include "../public/_pdo.php";
 			exit;
 		}
 						
-		$dictFileName=_FILE_DB_REF_;
-		PDO_Connect("$dictFileName");
+		PDO_Connect(_FILE_DB_REF_);
 		$query = "SELECT * from dict where id = ? ";
 		$Fetch = PDO_FetchAll($query,array($word_id));
 		
+		#Todo 可疑代码带修补
 		$dictFileName=$dir_dict_3rd."all.db3";
 		PDO_Connect("$dictFileName");
 		

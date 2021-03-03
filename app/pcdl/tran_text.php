@@ -17,8 +17,7 @@ if (isset($_POST["data"])) {
 
 $log = "";
 
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 $query = "select * from 'album' where id='$album'";
 $Fetch = PDO_FetchAll($query);
 $iFetch = count($Fetch);

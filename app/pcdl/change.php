@@ -5,6 +5,9 @@
 <body>
 <h2>Change DB</h2>
 <?php
+
+#废弃代码
+
 include "./_pdo.php";
 include "../app/public.inc";
 

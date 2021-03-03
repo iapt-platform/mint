@@ -250,3 +250,9 @@ function set_channal(channalid) {
 function edit_wbw(book, para) {
 	wbw_channal_list_open(book, [para]);
 }
+
+function show_dict(obj) {
+	$("#main_view_shell").toggleClass("right_float_min");
+	$(obj).toggleClass("active");
+	gBuildinDictIsOpen = $(obj).hasClass("active");
+}

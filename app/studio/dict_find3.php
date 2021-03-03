@@ -170,8 +170,7 @@ function mySplit2($strWord)
 
 switch ($op) {
     case "pre": //预查询
-        $dictFileName = _FILE_DB_REF_INDEX_;
-        PDO_Connect("$dictFileName");
+        PDO_Connect(_FILE_DB_REF_INDEX_);
         echo "<wordlist>";
         $query = "select word,count from dict where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . "  limit 0,100";
         $Fetch = PDO_FetchAll($query);
@@ -189,8 +188,8 @@ switch ($op) {
         echo "</wordlist>";
         break;
     case "search":
-        $dictFileName = _FILE_DB_REF_;
-        PDO_Connect("$dictFileName");
+
+        PDO_Connect(_FILE_DB_REF_);
 
         //直接查询
         $query = "select dict.dict_id,dict.mean,info.shortname from dict LEFT JOIN info ON dict.dict_id = info.id where \"word\" = " . $PDO->quote($word) . " limit 0,30";

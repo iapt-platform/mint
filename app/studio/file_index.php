@@ -29,7 +29,7 @@ if ($_COOKIE["uid"]) {
     exit;
 }
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect( _FILE_DB_FILEINDEX_);
 
 switch ($op) {
     case "list":

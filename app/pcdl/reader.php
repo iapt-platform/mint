@@ -428,7 +428,7 @@ if (isset($_GET["display"])) {
 $tocList = array();
 $FetchChannal = array();
 if ($_view == "chapter" || $_view == "para" || $_view == "sent") {
-    PDO_Connect("" . _FILE_DB_PALITEXT_);
+    PDO_Connect( _FILE_DB_PALITEXT_);
     //生成目录
     $htmlToc2 = "<div><a href='#page_head'>页首</a></div>";
     //找到该位置对应的书
@@ -645,7 +645,7 @@ if ($currParaLevel == 1 || $currParaParentLevel == 1) {
     }
     echo "</div>";
     //生成一个段落空壳 等会儿查询数据，按照不同数据类型填充进去
-    PDO_Connect("" . _FILE_DB_PALI_SENTENCE_);
+    PDO_Connect(_FILE_DB_PALI_SENTENCE_);
 
     if ($_display == "sent") {
         //逐句显示
@@ -743,8 +743,8 @@ if ($currParaLevel == 1 || $currParaParentLevel == 1) {
     //查询编辑者数量
 
     //查询句子译文内容
-    PDO_Connect("" . _FILE_DB_SENTENCE_);
-    $dbh = new PDO("" . _FILE_DB_PALI_SENTENCE_, "", "");
+    PDO_Connect(_FILE_DB_SENTENCE_);
+    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, "", "");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     //查询channal数量
     switch ($_view) {
@@ -982,7 +982,7 @@ if (strtolower(mb_substr($par_title, mb_strlen($par_title, "UTF-8") - 7, null, "
     $searchToc = strtolower(mb_substr($par_title, 0, -1, "UTF-8"));
 }
 
-PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 $query = "select book, paragraph,title from 'index' where  \"title\" like " . $PDO->quote($searchToc . '%') . "  limit 0,50";
 $Fetch = PDO_FetchAll($query);
 foreach ($Fetch as $key => $value) {

@@ -16,8 +16,7 @@ if (isset($_GET["word"])) {
     exit;
 }
 _load_book_index();
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 switch ($op) {
     case "pre":
         //查作者
@@ -42,8 +41,7 @@ switch ($op) {
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
-            $dictFileName = _FILE_DB_PALITEXT_;
-            PDO_Connect("$dictFileName");
+            PDO_Connect(_FILE_DB_PALITEXT_);
             $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
             echo "<div class='search_list_div'><div class='search_type'>标题({$count})</div></div>";
             for ($i = 0; $i < $iFetch; $i++) {
@@ -94,8 +92,7 @@ switch ($op) {
                 echo "</div>";
             }
         }
-        $db_file = _FILE_DB_RESRES_INDEX_;
-        PDO_Connect("$db_file");
+        PDO_Connect(_FILE_DB_RESRES_INDEX_);
         //查标签
         $query = "select count(*) from 'index' where tag like '%$word%'";
         $count = PDO_FetchOne($query);

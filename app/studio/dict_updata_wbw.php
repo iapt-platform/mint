@@ -10,8 +10,7 @@ $serverMsg = "";
 
 $xml = simplexml_load_string($input);
 
-$db_file = _FILE_DB_WBW_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_WBW_);
 PDO_Execute("PRAGMA synchronous = OFF");
 PDO_Execute("PRAGMA journal_mode = WAL");
 PDO_Execute("PRAGMA foreign_keys = ON");

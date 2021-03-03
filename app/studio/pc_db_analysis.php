@@ -8,7 +8,6 @@ $boolList = str_getcsv($get_book, ','); /*生成書名數組*/
 $countInsert = 0;
 $wordlist = array();
 
-$db_file = _FILE_DB_RESRES_INDEX_;
 $bookstring = "";
 for ($i = 0; $i < count($boolList); $i++) {
     $bookstring .= "'" . $boolList[$i] . "'";
@@ -18,7 +17,7 @@ for ($i = 0; $i < count($boolList); $i++) {
 }
 
 //open database
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 $query = "select count(*) from (SELECT count() FROM \"toc\" WHERE (book in (" . $bookstring . ") and author='PCDS') group by book,par_num ) T"; /*查總數，并分類匯總*/
 $allpar = PDO_FetchOne($query);
 $query = "select count(*) from (SELECT count() FROM \"toc\" WHERE (book in (" . $bookstring . ") and author<>'PCDS') group by book,par_num ) T"; /*查有譯文的段落，并分類匯總——已完成*/

@@ -95,6 +95,9 @@ function com_xmlToString(elem) {
 }
 
 function com_getPaliReal(inStr) {
+	if (typeof inStr == "undefined") {
+		return "";
+	}
 	var paliletter = "abcdefghijklmnoprstuvyāīūṅñṭḍṇḷṃ";
 	var output = "";
 	inStr = inStr.toLowerCase();
