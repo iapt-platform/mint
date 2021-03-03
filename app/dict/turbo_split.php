@@ -519,13 +519,13 @@ function split2($word){
 		}
 		if(mb_strlen($word,"UTF-8")>4){
 		# 先看有没有中文意思
-			if($redis->hExists("dict_ref_with_mean",$word)===TRUE){
+			if($redis->hExists("dict://ref/has_mean",$word)===TRUE){
 				$newword[]=$word;
 			}
 			else{
 				#如果没有查巴缅替换拆分
-				if($redis->hExists("dict_pm_part",$word)===TRUE){
-					$pmPart = explode("+",$redis->hGet("dict_pm_part",$word)) ;
+				if($redis->hExists("dict://pm/part",$word)===TRUE){
+					$pmPart = explode("+",$redis->hGet("dict://pm/part",$word)) ;
 					foreach ($pmPart as  $pm) {
 						# code...
 						$newword[]=$pm;
@@ -533,11 +533,11 @@ function split2($word){
 				}
 				else{
 					#如果没有查规则变形
-					if($redis->hExists("dict_regular_part",$word)===TRUE){
-						$rglPart = explode("+",$redis->hGet("dict_regular_part",$word)) ;
+					if($redis->hExists("dict://regular/part",$word)===TRUE){
+						$rglPart = explode("+",$redis->hGet("dict://regular/part",$word)) ;
 						#看巴缅有没有第一部分
-						if($redis->hExists("dict_pm_part",$rglPart[0])===TRUE){
-							$pmPart = explode("+",$redis->hGet("dict_pm_part",$rglPart[0])) ;
+						if($redis->hExists("dict://pm/part",$rglPart[0])===TRUE){
+							$pmPart = explode("+",$redis->hGet("dict://pm/part",$rglPart[0])) ;
 							foreach ($pmPart as  $pm) {
 								# code...
 								$newword[]=$pm;

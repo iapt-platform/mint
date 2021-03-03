@@ -5,8 +5,9 @@ require_once '../redis/function.php';
 
 function getRefFirstMeaning($word,$lang,$redis){
 	if($redis!==false){
-		$len = $redis->hLen("ref_first_mean://".$word);
-		if($len===FALSE || $len==0){
+		/*
+		$mean = $redis->hGet("ref_first_mean://".$lang,$word);
+		if($mean===FALSE){
 			PDO_Connect(_FILE_DB_REF_, _DB_USERNAME_, _DB_PASSWORD_);
 			$query = "SELECT mean,language as lang from " . _TABLE_DICT_REF_ . " where word = ?  group by language";
 			$Fetch = PDO_FetchAll($query, array($word));
@@ -14,9 +15,10 @@ function getRefFirstMeaning($word,$lang,$redis){
 				foreach ($Fetch as $key => $value) {
 					# code...
 					$redis->hSet("ref_first_mean://".$word,$value["lang"],$value["mean"]);
-				}				
+				}
 			}
 		}
+		*/
 		$mean = $redis->hGet("ref_first_mean://".$word,$lang);
 		if($mean!=FALSE){
 			return $mean;
@@ -24,24 +26,21 @@ function getRefFirstMeaning($word,$lang,$redis){
 		else{
 			if($lang!="en"){
 				$mean = $redis->hGet("ref_first_mean://".$word,"en");
-				if($mean!=FALSE){
+				if($mean!==FALSE){
 					return $mean;
 				}
 			}
 
-			$arr_keys = $redis->hGetAll("ref_first_mean://".$word);
-			if(count($arr_keys)>0){
-				foreach ($arr_keys as $key => $value) {
+			$any = $redis->hGet("ref_first_mean://com",$word);
+			if($any!==FALSE){
 					# code...
-					return $value;
-				}
+				return $any;
+
 			}
 			else{
 				return "";
 			}
-
 		}
-		
 	}
 	else{
 		PDO_Connect(_FILE_DB_REF_, _DB_USERNAME_, _DB_PASSWORD_);
