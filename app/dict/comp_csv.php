@@ -58,7 +58,13 @@ while($word = $redis->hGet("pali://wordindex.hash",$start))
 
         foreach ($arrword as $oneword) {
 			$result = array(); //全局变量，递归程序的输出容器
-			mySplit2($oneword, 0, false, 0.2, 0.9, 0, true, false);
+			if(mb_strlen($oneword)>35){
+				mySplit2($oneword, 0, true, 0.8, 0.9, 0, true, false);
+			}
+			else{
+				mySplit2($oneword, 0, false, 0.8, 0.9, 0, true, false);
+			}
+			
 			if(count($result)<3){
 				mySplit2($oneword, 0, false, 0.2, 0.8, 0, true, true);
 				if (isset($_POST["debug"])) {
