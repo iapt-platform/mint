@@ -15,7 +15,7 @@ if (PHP_SAPI == "cli") {
 			$redis->hSet("dict://regular/part",$row["pali"],$row["parts"]);
 		}
 	}
-	echo "all done";
+	echo "all done ".$redis->hLen("dict://regular/part");
 }
 
 ?>

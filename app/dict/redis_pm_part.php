@@ -16,7 +16,7 @@ if (PHP_SAPI == "cli") {
 			}
 		}
 	}
-	echo "all done";
+	echo "all done ".$redis->hLen("dict://pm/part");
 }
 
 ?>
