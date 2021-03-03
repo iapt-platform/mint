@@ -13,10 +13,10 @@ if (PHP_SAPI == "cli") {
 		$stmt = $dbh->query($query);
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			# code...
-			$redis->hSet("dict_ref_with_mean",$row["word"],"1");
+			$redis->hSet("dict://ref/has_mean",$row["word"],"1");
 		}
 	}
-	echo "all done";
+	echo "all done ".$redis->hLen("dict://ref/has_mean");
 }
 
 ?>

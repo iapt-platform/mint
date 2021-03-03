@@ -12,12 +12,11 @@ if (PHP_SAPI == "cli") {
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			# code...
 			if(!empty($row["parts"])){
-				$redis->hSet("dict_pm_part",$row["pali"],$row["parts"]);
+				$redis->hSet("dict://pm/part",$row["pali"],$row["parts"]);
 			}
-			
 		}
 	}
-	echo "all done";
+	echo "all done ".$redis->hLen("dict://pm/part");
 }
 
 ?>

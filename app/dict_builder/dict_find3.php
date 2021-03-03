@@ -13,8 +13,7 @@ $count_return=0;
 $dict_list=array();
 
 global $PDO;
-$dictFileName=_FILE_DB_REF_;
-PDO_Connect("$dictFileName");
+PDO_Connect(_FILE_DB_REF_);
 
 function isExsit($word){
 global $PDO;

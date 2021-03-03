@@ -329,72 +329,76 @@ require_once "../pcdl/html_head.php";
 		</span>
 	</div>
 </div>
+
 <div id="main_view" class="main_view">
-<div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div  id='path_div' style="display:flex;justify-content: space-between;">
-		<div id="article_path">
-		<span id="para_path"></span>
-		<span class="case_dropdown" id="para_path_next_level">
-		……
-		<div id="toc_next_menu" class="case_dropdown-content">
-		</div>
-		</span>
-		</div>
-		<div id="article_lang">
-			<div class="click_dropdown_div">
-				<div class="click_dropdown_button">语言</div>
-				<div class="click_dropdown_content">
-					<div class="click_dropdown_content_inner">
-						<a>简体中文</a>
+	<div id="article_head" style="border-bottom: 1px solid gray;">
+		<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
+		<div  id='path_div' style="display:flex;justify-content: space-between;">
+			<div id="article_path">
+			<span id="para_path"></span>
+			<span class="case_dropdown" id="para_path_next_level">
+			……
+			<div id="toc_next_menu" class="case_dropdown-content">
+			</div>
+			</span>
+			</div>
+			<div id="article_lang">
+				<div class="click_dropdown_div">
+					<div class="click_dropdown_button">语言</div>
+					<div class="click_dropdown_content">
+						<div class="click_dropdown_content_inner">
+							<a>简体中文</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div id="contents_view">
-	<div id="contents_div" style="padding: 0 1em 0 30px;width:70vw;">
-		<div id="contents">
-		<?php echo $_local->gui->loading; ?>...
-		</div>
-		<div id="contents_toc">
-		</div>
-		<div id="contents_foot">
-			<div id="contents_nav" style="display:flex;justify-content: space-between;">
-				<div id="contents_nav_left"></div>
-				<div id="contents_nav_right"></div>
+	<div id="contents_view">
+		<div id="contents_div" style="padding: 0 1em 0 30px;width:70vw;">
+			<div id="contents">
+			<?php echo $_local->gui->loading; ?>...
 			</div>
-			<div id="contents_dicuse">
-			
+			<div id="contents_toc">
 			</div>
-		</div>
-	</div>
-	<div id="right_pannal">
-		<div class="fun_frame">
-			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-			<div id = "toc_content" class="content" style="max-height:25vw;">
-			</div>
-		</div>
-		<div class="fun_frame">
-			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor; ?></div>
-				<div class="click_dropdown_div">
-					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+			<div id="contents_foot">
+				<div id="contents_nav" style="display:flex;justify-content: space-between;">
+					<div id="contents_nav_left"></div>
+					<div id="contents_nav_right"></div>
+				</div>
+				<div id="contents_dicuse">
+				
 				</div>
 			</div>
-			<div class='channel_select'>
-			<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
-				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+		</div>
+		<div id="right_pannal">
+			<div class="fun_frame">
+				<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
+				<div id = "toc_content" class="content" style="max-height:25vw;">
+				</div>
 			</div>
-			<div id="channal_list" class="content" style="max-height:25vw;">
+			<div class="fun_frame">
+				<div style="display:flex;justify-content: space-between;">
+					<div class="title"><?php echo $_local->gui->contributor; ?></div>
+					<div class="click_dropdown_div">
+						<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+					</div>
+				</div>
+				<div class='channel_select'>
+				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
+					<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+				</div>
+				<div id="channal_list" class="content" style="max-height:25vw;">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
 </div>
 
-
+<div id="dict_pannal">
+	<iframe src="../dict/index.php?builtin=true" name="dict" title="W3Schools Free Online Web Tutorials"></iframe>
+</div>
 <script>
 	$(document).ready(function(){
 	ntf_init();				
