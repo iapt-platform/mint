@@ -254,4 +254,5 @@ function edit_wbw(book, para) {
 function show_dict(obj) {
 	$("#main_view_shell").toggleClass("right_float_min");
 	$(obj).toggleClass("active");
+	gBuildinDictIsOpen = $(obj).hasClass("active");
 }
