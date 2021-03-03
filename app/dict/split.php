@@ -82,58 +82,17 @@ foreach ($arrWords as $currword) {
 	
     foreach ($arrword as $oneword) {
 		$result = array(); //全局变量，递归程序的输出容器
-		//$noSandhi = removeSandhi($oneword);
+		#输出结果 ouput to json
+		$wordlist = array();
 
-        mySplit2($oneword, 0, false, 0, 0.2, 0.9, true, false);
-		if(count($result) < 2){
-			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
-		}
-        if (isset($_POST["debug"])) {
-            echo "正切：" . count($result) . "<br>\n";
-		}
-		if(count($result) < 2){
-			mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
-		}
-        if (isset($_POST["debug"])) {
-            echo "反切：" . count($result) . "<br>\n";
-        }
-        /*
-        if (count($result) < 5) {
-        #sandhi advance
-        mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false, true);
-        if (isset($_POST["debug"])) {
-        echo "反切：" . count($result) . "\n";
-        }
-        }
-        if (count($result) < 5) {
-        #反向
-        mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false);
-        }
-        if (count($result) < 5) {
-        #正向
-        mySplit2($oneword, 0, $_express, 0, 0.8, 0, true);
-        }
-        if (count($result) < 5) {
-        #反向
-        mySplit2($oneword, 0, $_express, 0, 0.8, 0, false);
-        }
-         */
-        arsort($result); //按信心指数排序
-
-        #输出结果 ouput to json
-        $wordlist = array();
-        $iMax = 5;
-        $iCount = 0;
-        foreach ($result as $row => $value) {
-            $iCount++;
-			$word_part = array();
-			
-            $word_part["word"] = $row;
-			$word_part["confidence"] = $value;
+		$needDeep = false;
+		$preSandhi = preSandhi($oneword);
+		if($preSandhi!==$oneword){
+			$word_part["word"] = $preSandhi;
+			$word_part["confidence"] = 1.0;
 			$wordlist[] = $word_part;
 
-			//后处理 进一步切分没有意思的长词
-			$new = split2($row);
+			$new = split2($preSandhi);
 			if($new!==$row){
 				$word_part["word"] = $new;
 				$word_part["confidence"] = $value;
@@ -144,16 +103,103 @@ foreach ($arrWords as $currword) {
 					$word_part["word"] = $new2;
 					$word_part["confidence"] = $value;
 					$wordlist[] = $word_part;					
-				}				
+				}	
+				$needDeep = false;
 			}
+			else{
+				$needDeep = true;
+			}
+		}
+		else{
+			$new = split2($oneword);
+			if($new!==$row){
+				$word_part["word"] = $new;
+				$word_part["confidence"] = $value;
+				$wordlist[] = $word_part;	
+				#再处理一次
+				$new2 = split2($new);
+				if($new2!==$new){
+					$word_part["word"] = $new2;
+					$word_part["confidence"] = $value;
+					$wordlist[] = $word_part;					
+				}	
+				$needDeep = false;
+			}
+			$needDeep = true;
+		}
+
+		if($needDeep){
+			mySplit2($oneword, 0, false, 0, 0.2, 0.9, true, false);
+			if(count($result) < 2){
+				mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
+			}
+			if (isset($_POST["debug"])) {
+				echo "正切：" . count($result) . "<br>\n";
+			}
+			if(count($result) < 2){
+				mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
+			}
+			if (isset($_POST["debug"])) {
+				echo "反切：" . count($result) . "<br>\n";
+			}
+			/*
+			if (count($result) < 5) {
+			#sandhi advance
+			mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false, true);
+			if (isset($_POST["debug"])) {
+			echo "反切：" . count($result) . "\n";
+			}
+			}
+			if (count($result) < 5) {
+			#反向
+			mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false);
+			}
+			if (count($result) < 5) {
+			#正向
+			mySplit2($oneword, 0, $_express, 0, 0.8, 0, true);
+			}
+			if (count($result) < 5) {
+			#反向
+			mySplit2($oneword, 0, $_express, 0, 0.8, 0, false);
+			}
+			*/
+			arsort($result); //按信心指数排序
+
+
+			$iMax = 5;
+			$iCount = 0;
+			foreach ($result as $row => $value) {
+				$iCount++;
+				$word_part = array();
+				
+				$word_part["word"] = $row;
+				$word_part["confidence"] = $value;
+				$wordlist[] = $word_part;
+
+				//后处理 进一步切分没有意思的长词
+				$new = split2($row);
+				if($new!==$row){
+					$word_part["word"] = $new;
+					$word_part["confidence"] = $value;
+					$wordlist[] = $word_part;	
+					#再处理一次
+					$new2 = split2($new);
+					if($new2!==$new){
+						$word_part["word"] = $new2;
+						$word_part["confidence"] = $value;
+						$wordlist[] = $word_part;					
+					}				
+				}
 
 
 
-            if ($iCount >= $iMax) {
-                break;
-            }
+				if ($iCount >= $iMax) {
+					break;
+				}
 
-        }
+			}			
+		}
+
         $output[] = $wordlist;
 
         if (isset($_POST["debug"])) {
