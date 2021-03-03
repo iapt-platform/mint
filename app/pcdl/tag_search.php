@@ -14,8 +14,7 @@ if (isset($_POST["order"])) {
     $order = "";
 }
 
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 $tag_string = '{' . $tag . '}';
 $query = "select * from 'index' where tag like '%$tag_string%' ";
 $Fetch = PDO_FetchAll($query);

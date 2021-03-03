@@ -987,6 +987,24 @@ function set_pali_script(pos, script) {
 		$("pl" + pos).html(function (index, oldcontent) {
 			return roman_to_my(oldcontent);
 		});
+		/*
+		$("pali")
+			.contents()
+			.filter(function () {
+				return this.nodeType != 1;
+			})
+			.wrap("<pl></pl>");
+			
+		$("pl").each(function () {
+			let html = $(this).html();
+			$(this).html("<w>" + html.replace(/\s/g, "</w> <w>") + "</w>");
+		});
+		
+		$("w").click(function () {
+			let word = $(this).text();
+			window.open("../dict/index.php?buildin=true&key=" + word, "dict");
+		});
+		*/
 	}
 }
 

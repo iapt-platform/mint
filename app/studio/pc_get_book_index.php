@@ -11,7 +11,7 @@ if (substr($currBook, 0, 1) == "p") {
 echo "<index>";
 
 //open database
-PDO_Connect("" . _FILE_DB_PALITEXT_);
+PDO_Connect(_FILE_DB_PALITEXT_);
 $query = "select * FROM pali_text where \"book\"=" . $PDO->quote($currBook);
 
 $Fetch = PDO_FetchAll($query);

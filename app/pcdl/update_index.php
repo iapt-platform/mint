@@ -336,8 +336,7 @@ switch ($res_type) {
 
         break;
     case "album":
-        $db_file = _FILE_DB_RESRES_INDEX_;
-        PDO_Connect("$db_file");
+        PDO_Connect(_FILE_DB_RESRES_INDEX_);
         $query = "select * from album where 1";
         $search_album = PDO_FetchAll($query);
         foreach ($search_album as $oneAlbum) {

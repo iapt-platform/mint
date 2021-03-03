@@ -28,7 +28,7 @@ function render_book_list($strWord, $booklist = null)
 {
     //查找这些词出现在哪些书中
     $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
-    PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+    PDO_Connect(_FILE_DB_RESRES_INDEX_);
     if (isset($booklist)) {
         foreach ($booklist as $oneBook) {
             $aInputBook["{$oneBook}"] = 1;
@@ -119,7 +119,7 @@ switch ($op) {
 
             $searching = $arrWordList[count($arrWordList) - 1];
 
-            PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+            PDO_Connect( _FILE_DB_RESRES_INDEX_);
 
             if (count($arrWordList) > 1) {
                 echo "<div>";
@@ -179,7 +179,7 @@ switch ($op) {
             //前20条记录
             $time_start = microtime_float();
 
-            PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+            PDO_Connect( _FILE_DB_RESRES_INDEX_);
             if (isset($_GET["booklist"])) {
                 $query = "select * from 'index' where (\"title_en\" like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR \"title\" like " . $PDO->quote("%" . $_GET["word"] . '%') . ") and book in {$_GET["booklist"]} limit 0,50";
             } else {
@@ -189,7 +189,7 @@ switch ($op) {
             $queryTime = (microtime_float() - $time_start) * 1000;
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
-                PDO_Connect("" . _FILE_DB_PALITEXT_);
+                PDO_Connect( _FILE_DB_PALITEXT_);
                 for ($i = 0; $i < $iFetch; $i++) {
                     $title = $Fetch[$i]["title"];
                     $book = $Fetch[$i]["book"];
@@ -266,8 +266,7 @@ switch ($op) {
                 //前20条记录
                 $time_start = microtime_float();
 
-                $dictFileName = _FILE_DB_PALI_INDEX_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_PALI_INDEX_);
 
                 $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
                 $Fetch = PDO_FetchAll($query);
@@ -276,8 +275,7 @@ switch ($op) {
                 echo "<div >搜索时间：$queryTime </div>";
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
-                    $dictFileName = _FILE_DB_PALITEXT_;
-                    PDO_Connect("$dictFileName");
+                    PDO_Connect(_FILE_DB_PALITEXT_);
                     for ($i = 0; $i < $iFetch; $i++) {
                         $paliword = $Fetch[$i]["wordindex"];
                         //$paliword=$wordlist["{$paliwordid}"];

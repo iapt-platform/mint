@@ -400,8 +400,7 @@ if ($album == -1) {
                 case 1:
                 case 2:
                 case 6:
-                    $db_file = _FILE_DB_PALITEXT_;
-                    PDO_Connect("$db_file");
+                    PDO_Connect(_FILE_DB_PALITEXT_);
                     $query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
                     break;
                 case 3:

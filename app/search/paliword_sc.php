@@ -38,8 +38,7 @@ if (isset($_GET["page"])) {
 }
 
 if (count($arrWordList) > 1) {
-    $dictFileName = _FILE_DB_PALITEXT_;
-    PDO_Connect("$dictFileName");
+    PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
     $query = "SELECT book,paragraph, text FROM pali_text WHERE text like ?  LIMIT ? , ?";
@@ -90,8 +89,8 @@ $countWord = count($arrRealWordList);
 $result["time"][] = array("event" => "计算某词在三藏中出现的次数", "time" => microtime(true) - $_start);
 if ($countWord == 0) {
     #没查到 模糊查询
-    $dictFileName = _FILE_DB_PALITEXT_;
-    PDO_Connect("$dictFileName");
+
+    PDO_Connect(_FILE_DB_PALITEXT_);
     $query = "SELECT book,paragraph, text FROM pali_text WHERE text like ?  LIMIT ? , ?";
     $Fetch = PDO_FetchAll($query, array("%{$word}%", $_page * $_pagesize, $_pagesize));
 
@@ -193,8 +192,8 @@ if (isset($_GET["book"])) {
 $result["time"][] = array("event" => "准备查询", "time" => microtime(true) - $_start);
 //前20条记录
 $time_start = microtime_float();
-$dictFileName = _FILE_DB_PALI_INDEX_;
-PDO_Connect("$dictFileName");
+
+PDO_Connect(_FILE_DB_PALI_INDEX_);
 $query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) where 1 ";
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
@@ -206,8 +205,8 @@ $out_data = array();
 $queryTime = (microtime_float() - $time_start) * 1000;
 $iFetch = count($Fetch);
 if ($iFetch > 0) {
-    $dictFileName = _FILE_DB_PALITEXT_;
-    PDO_Connect("$dictFileName");
+
+    PDO_Connect(_FILE_DB_PALITEXT_);
     for ($i = 0; $i < $iFetch; $i++) {
         $newRecode = array();
 

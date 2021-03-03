@@ -74,8 +74,7 @@ if (isset($_GET["page"])) {
 }
 $iOnePage = 300;
 
-$db_file = _FILE_DB_WBW_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_WBW_);
 $query = "select count(word_index) as co  from user_index where user_id={$UID}";
 $allWord = PDO_FetchOne($query);
 $iCountWords = $allWord;

@@ -10,8 +10,7 @@ function get_new_book_list($strWordlist, $booklist = null)
 {
     //查找这些词出现在哪些书中
     $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
-    $dictFileName = _FILE_DB_BOOK_WORD_;
-    PDO_Connect("$dictFileName");
+    PDO_Connect(_FILE_DB_BOOK_WORD_);
     if (isset($booklist)) {
         foreach ($booklist as $oneBook) {
             $aInputBook["{$oneBook}"] = 1;
@@ -63,8 +62,8 @@ function get_book_tag($strWordlist, $booklist = null)
 {
     //查找这些词出现在哪些书中
     $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
-    $dictFileName = _FILE_DB_BOOK_WORD_;
-    PDO_Connect("$dictFileName");
+
+    PDO_Connect(_FILE_DB_BOOK_WORD_);
     if (isset($booklist)) {
         foreach ($booklist as $oneBook) {
             $aInputBook["{$oneBook}"] = 1;
@@ -123,8 +122,8 @@ function render_book_list($strWordlist, $booklist = null)
 {
     //查找这些词出现在哪些书中
     $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
-    $dictFileName = _FILE_DB_BOOK_WORD_;
-    PDO_Connect("$dictFileName");
+
+    PDO_Connect(_FILE_DB_BOOK_WORD_);
     if (isset($booklist)) {
         foreach ($booklist as $oneBook) {
             $aInputBook["{$oneBook}"] = 1;

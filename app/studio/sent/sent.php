@@ -62,8 +62,8 @@ if (isset($_POST["block_id"])) {
 }
 
 global $PDO;
-$db_file = _FILE_DB_SENTENCE_;
-PDO_Connect("$db_file");
+
+PDO_Connect(_FILE_DB_SENTENCE_);
 
 switch ($op) {
     case "save":

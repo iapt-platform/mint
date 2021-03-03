@@ -21,8 +21,8 @@ if (isset($_GET["op"])) {
     echo "no op";
     exit;
 }
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 switch ($op) {
     case "all":
         //查热门

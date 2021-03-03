@@ -33,8 +33,7 @@ switch ($op) {
             $time_start = microtime_float();
 
             $searching = $arrWordList[count($arrWordList) - 1];
-            $dbfile = _FILE_DB_WORD_INDEX_;
-            PDO_Connect("" . $dbfile);
+            PDO_Connect(_FILE_DB_WORD_INDEX_);
 
             if (count($arrWordList) > 1) {
                 echo "<div>";
@@ -69,8 +68,7 @@ switch ($op) {
                     $strQuery .= "\"text\" like \"% {$oneword} %\" AND";
                 }
                 $strQuery = substr($strQuery, 0, -3);
-                $dictFileName = _FILE_DB_PALITEXT_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_PALITEXT_);
                 $query = "SELECT book,paragraph, html FROM pali_text WHERE {$strQuery}  LIMIT 0,20";
                 $Fetch = PDO_FetchAll($query);
                 echo "<div>$query</div>";
@@ -162,16 +160,15 @@ switch ($op) {
             echo "<div id=\"dict_bold_right\" style='flex:7;padding-left:1em;'>";
             //前20条记录
             $time_start = microtime_float();
-            $dictFileName = _FILE_DB_PALI_INDEX_;
-            PDO_Connect("$dictFileName");
+
+            PDO_Connect(_FILE_DB_PALI_INDEX_);
             $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
             $Fetch = PDO_FetchAll($query);
             //echo "<div>$query</div>";
             $queryTime = (microtime_float() - $time_start) * 1000;
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
-                $dictFileName = _FILE_DB_PALITEXT_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_PALITEXT_);
                 for ($i = 0; $i < $iFetch; $i++) {
                     $paliwordid = $Fetch[$i]["wordindex"];
                     $paliword = $aQueryWordList["{$paliwordid}"];
@@ -267,8 +264,7 @@ switch ($op) {
 
                 //前20条记录
                 $time_start = microtime_float();
-                $dictFileName = _FILE_DB_PALI_INDEX_;
-                PDO_Connect("$dictFileName");
+                PDO_Connect(_FILE_DB_PALI_INDEX_);
 
                 $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
                 $Fetch = PDO_FetchAll($query);
@@ -279,8 +275,7 @@ switch ($op) {
                 }
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
-                    $dictFileName = _FILE_DB_PALITEXT_;
-                    PDO_Connect("$dictFileName");
+                    PDO_Connect(_FILE_DB_PALITEXT_);
                     for ($i = 0; $i < $iFetch; $i++) {
                         $paliword = $Fetch[$i]["wordindex"];
                         //$paliword=$wordlist["{$paliwordid}"];

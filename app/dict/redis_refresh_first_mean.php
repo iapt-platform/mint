@@ -35,7 +35,7 @@ if (PHP_SAPI == "cli") {
 				# code...
 				$redis->hSet("ref_first_mean://com",$mean["word"],$mean["mean"]);
 			}
-			echo $thisLang.":".$redis->hLen("ref_first_mean://com")."\n";
+			echo "com:".$redis->hLen("ref_first_mean://com")."\n";
 		}
 
 	}

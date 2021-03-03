@@ -473,7 +473,7 @@ if (isset($_GET["paragraph"])) {
 		<div id="main_text_view" style="padding-bottom: 10em;">
 <?php
 
-PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+PDO_Connect( _FILE_DB_RESRES_INDEX_);
 if (isset($album)) {
     //更新点击
     $query = "select * from 'index' where book='$book' and paragraph='$paragraph' and album=$album";
@@ -513,8 +513,8 @@ for ($iPar = $par_begin; $iPar <= $par_end; $iPar++) {
 }
 
 //先查pali text 因为要获取段落标题级别
-$db_file = _FILE_DB_PALITEXT_;
-PDO_Connect("" . _FILE_DB_PALITEXT_);
+
+PDO_Connect(_FILE_DB_PALITEXT_);
 
 if ($par_begin == -1) {
     $query = "SELECT * FROM \"pali_text\" WHERE book = '{$book}' ";
@@ -568,7 +568,7 @@ if (isset($album)) {
     ////自动逐词译结束
      */
 
-    PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
+    PDO_Connect(_FILE_DB_RESRES_INDEX_);
     $query = "select * from 'album' where id='$album'";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
@@ -578,7 +578,7 @@ if (isset($album)) {
                 break;
             case 2: //逐词译
                 $db_file = _DIR_PALICANON_WBW_ . "/p{$book}_wbw.db3";
-                PDO_Connect("$db_file");
+                PDO_Connect("sqlite:{$db_file}");
                 for ($iPar = $par_begin; $iPar <= $par_end; $iPar++) {
                     $table = "p{$book}_wbw_data";
                     $query = "SELECT * FROM \"{$table}\" WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) and album_id={$album} ";
@@ -609,7 +609,7 @@ if (isset($album)) {
                 $tocHtml = "";
                 //打开翻译数据文件
                 $db_file = _DIR_PALICANON_TRAN_ . "/p{$book}_translate.db3";
-                PDO_Connect("{$db_file}");
+                PDO_Connect("sqlite:{$db_file}");
                 $this_album_id = $album;
                 $table = "p{$book}_translate_info";
                 if ($par_begin == -1) {
@@ -670,7 +670,7 @@ if (isset($album)) {
         }
     }
     //添加注解
-    PDO_Connect("" . _FILE_DB_COMMENTS_);
+    PDO_Connect( _FILE_DB_COMMENTS_);
 
     if ($par_begin == -1) {
         $query = "SELECT * FROM \"comments\" WHERE album='$album'  order by id DESC";

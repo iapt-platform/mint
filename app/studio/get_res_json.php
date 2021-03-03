@@ -39,8 +39,7 @@ function format_file_size($size)
     return ($str_size);
 }
 
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 
 $res = array();
 //查书
@@ -72,8 +71,7 @@ if ($paragraph == -1) {
     //相关专辑结束
 } else {
     //查书中的一个段
-    $db_file = _FILE_DB_RESRES_INDEX_;
-    PDO_Connect("$db_file");
+    PDO_Connect(_FILE_DB_RESRES_INDEX_);
     $query = "select * from 'index' where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
@@ -108,8 +106,7 @@ if ($paragraph == -1) {
         }
     }
     //查共享文档
-    $db_file = _FILE_DB_FILEINDEX_;
-    PDO_Connect("$db_file");
+    PDO_Connect(_FILE_DB_FILEINDEX_);
     $query = "select * from fileindex where book='$book' and paragraph=$paragraph  and status>0 and share>0 order by create_time";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);

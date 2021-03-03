@@ -21,8 +21,7 @@ if (isset($_GET["order"])) {
 
 //获取服务器端文件列表
 
-$db_file = _FILE_DB_RESRES_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
 /*
 $files = scandir($dir);
 $arrlength=count($files);

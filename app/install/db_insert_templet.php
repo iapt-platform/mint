@@ -80,7 +80,7 @@ $log = $log . "$from,$FileName,open\r\n";
 $arrInserString = array();
 
 $db_file = _DIR_PALICANON_TEMPLET_ . "/" . $bookId . '_tpl.db3';
-PDO_Connect("$db_file");
+PDO_Connect("sqlite:{$db_file}");
 
 PDO_Execute("DROP TABLE IF EXISTS main;");
 $query = "CREATE TABLE 'main' ( 'id' TEXT PRIMARY KEY NOT NULL,

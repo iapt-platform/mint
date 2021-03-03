@@ -79,7 +79,6 @@ echo "</br>";
 $countInsert = 0;
 $wordlist = array();
 
-$db_file = _FILE_DB_STATISTICS_;
 $bookstring = "";
 for ($i = 0; $i < count($boolList); $i++) {
     $bookstring .= "'" . $boolList[$i] . "'";
@@ -89,7 +88,7 @@ for ($i = 0; $i < count($boolList); $i++) {
 }
 
 //open database
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_STATISTICS_);
 if ($col == "parent") {
     $query = "SELECT count(*) FROM \"word\" WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
     $count_word = PDO_FetchOne($query);

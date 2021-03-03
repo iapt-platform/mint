@@ -31,7 +31,7 @@ $channal = array();
 #查询有阅读权限的channel
 $channal_list = array();
 if (isset($_COOKIE["userid"])) {
-    PDO_Connect("" . _FILE_DB_CHANNAL_);
+    PDO_Connect(_FILE_DB_CHANNAL_);
     $query = "SELECT id from channal where owner = ?   limit 0,100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {

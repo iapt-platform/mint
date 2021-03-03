@@ -8,7 +8,7 @@ require_once "../public/function.php";
 
 $id = $_GET["id"];
 
-PDO_Connect("" . _FILE_DB_USER_ARTICLE_);
+PDO_Connect( _FILE_DB_USER_ARTICLE_);
 $query = "select * from article where id=" . $PDO->quote($id);
 $Fetch = PDO_FetchAll($query);
 if (count($Fetch) > 0) {

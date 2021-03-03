@@ -79,8 +79,7 @@ foreach ($aShowWordList as $x => $x_value) {
 
 //查找这些词出现在哪些书中
 $arrBookType = json_decode(file_get_contents("../public/book_name/booktype.json"));
-$dictFileName = _FILE_DB_BOOK_WORD_;
-PDO_Connect("$dictFileName");
+PDO_Connect(_FILE_DB_BOOK_WORD_);
 if (isset($booklist)) {
     foreach ($booklist as $oneBook) {
         $aInputBook["{$oneBook}"] = 1;

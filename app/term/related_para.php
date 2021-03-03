@@ -24,7 +24,7 @@ if (isset($_GET["para"])) {
     exit;
 }
 
-PDO_Connect("" . _FILE_DB_PAGE_INDEX_);
+PDO_Connect(_FILE_DB_PAGE_INDEX_);
 $query = "SELECT bookid,cspara ,book_name FROM cs6_para where book = ? and para= ? ";
 $fetch = PDO_FetchAll($query, array($book, $para));
 if (count($fetch) > 0) {
@@ -45,8 +45,7 @@ if (count($fetch) > 0) {
 
     //获取书名 列表
     $book_list = array();
-    $db_file = _FILE_DB_PALITEXT_;
-    PDO_Connect("$db_file");
+    PDO_Connect(_FILE_DB_PALITEXT_);
 
     foreach ($aBookid as $bookkey => $bookvalue) {
         # code...

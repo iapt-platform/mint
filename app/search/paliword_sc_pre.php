@@ -11,8 +11,7 @@ $word = mb_strtolower($_GET["key"], 'UTF-8');
 $arrWordList = str_getcsv($word, " ");
 
 $searching = $arrWordList[count($arrWordList) - 1];
-$dbfile = _FILE_DB_WORD_INDEX_;
-PDO_Connect("" . $dbfile);
+PDO_Connect(_FILE_DB_WORD_INDEX_);
 
 if (count($arrWordList) > 1) {
     //echo "<div>";
