@@ -1,77 +1,80 @@
-:root{
-    --bgDisplay:block;
+:root {
+	--bgDisplay: block;
 }
 
 body {
-    font-size: 18px;
+	font-size: 18px;
 }
-.sutta_paragraph, .pardiv{
-	-webkit-flex-direction:column;
-	-moz-flex-direction:column;
-	flex-direction:column;
+.sutta_paragraph,
+.pardiv {
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	flex-direction: column;
 }
-.btn-group, #B_ParTranShowMode, #B_ApplyAuto{
+.btn-group,
+#B_ParTranShowMode,
+#B_ApplyAuto {
 	display: none;
 }
 
-.mainview{
+.mainview {
 	padding: 0 8px;
 }
-#id_text_edit_form{
+#id_text_edit_form {
 	left: 10px;
-	top:4em;
+	top: 4em;
 	width: 95%;
 	max-height: 85%;
 }
-#id_text_edit_author{
+#id_text_edit_author {
 	max-width: 10em;
 }
-
-#modifywin{
+#sutta_text {
+	margin-left: 2.5em;
+}
+#modifywin {
 	position: fixed;
 	top: 3em;
 	left: 1px;
 	max-width: 94%;
 	z-index: 22;
 }
-.tran_par, .trandiv{
+.tran_par,
+.trandiv {
 	max-width: 100%;
-    width: 100%;
-    margin: 1em 0;
+	width: 100%;
+	margin: 1em 0;
 }
-.wbwdiv{
+.wbwdiv {
 	margin: 1em 0;
 	display: -webkit-flex;
 	display: -moz-flex;
 	display: flex;
 }
 
-#info_panal{
+#info_panal {
 	display: none;
 }
-.btn-group{
+.btn-group {
 	display: none;
 }
-.toolbtn{
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: none;
+.toolbtn {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: none;
 }
-#toolbar{
+#toolbar {
 	padding: 8px;
 	padding-right: 2px;
 	height: 3em;
 }
 
-#leftmenuinner{
-	top:3em;
+#leftmenuinner {
+	top: 3em;
 }
 
-
-
-
-#menu_button_home{
-    margin:0;
+#menu_button_home {
+	margin: 0;
 }
 /*
 .dropdown-content{
@@ -95,35 +98,35 @@ body {
 	float: left;
 }
 */
-#B_Save{
+#B_Save {
 	height: 3em;
 	width: 3em;
 	position: fixed;
 	right: 10px;
 	bottom: 10px;
-	border-radius:1.5em;
+	border-radius: 1.5em;
 	border: 0;
 	box-shadow: -1px -1px 6px 0px var(--shadow-color);
 }
-.border_right{
+.border_right {
 	display: none;
 }
 #wizard_palicannon_par_select_text_head_res {
-    display: none;
+	display: none;
 }
-#wizard_palicannon_par_select_toc{
-	    display: none;
+#wizard_palicannon_par_select_toc {
+	display: none;
 }
 
 .fun_block {
-    width: auto;
-    padding: 2px 4px;
-    margin: 2px 5px;
+	width: auto;
+	padding: 2px 4px;
+	margin: 2px 5px;
 }
 .index_toolbar {
-	display:block;
+	display: block;
 }
 
-#editor_doc_title{
-	display:none;
+#editor_doc_title {
+	display: none;
 }

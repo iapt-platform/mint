@@ -606,6 +606,10 @@
 		"enter": "進入",
 		"avatar": "頭像",
 		"display": "顯示",
+		"none": "無",
+		"cooperate_group": "協作組",
+		"personal": "個人",
+		"empty_null_mark": "這裡很安靜",
 		"": ""
 	},
 	"grammastr": [
