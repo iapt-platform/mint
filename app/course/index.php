@@ -190,6 +190,7 @@ include "../pcdl/html_head.php";
 			}
 		}
 	</style>
+<script src="../public/js/marked.js"></script>
 
 
 	<div class="index_inner">
@@ -216,9 +217,13 @@ include "../pcdl/html_head.php";
 			$.get("../course/teacher_list.php", function(data, status) {
 				let xDiv = document.getElementById("course_list_new");
 				if (xDiv) {
+
 					xDiv.innerHTML = data;
 				}
 			});
+			/*$(".teacher_intro").each(function(){
+				$(this).innerHTML=marked($(this).innerHTML);
+			});*/
 		</script>
 		<div class="course_block">
 			<h3>
