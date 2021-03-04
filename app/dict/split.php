@@ -86,58 +86,67 @@ foreach ($arrWords as $currword) {
 		$wordlist = array();
 
 		$needDeep = false;
-		$preSandhi = preSandhi($oneword);
-		if($preSandhi!==$oneword){
-			$word_part["word"] = $preSandhi;
-			$word_part["confidence"] = 1.0;
-			$wordlist[] = $word_part;
-
-			$new = split2($preSandhi);
-			if($new!==$row){
-				$word_part["word"] = $new;
+		//看现有的字典里是不是有
+		$new = split2($oneword);
+		if($new!==$oneword){
+			//现有字典里查到
+			$word_part["word"] = $new;
+			$word_part["confidence"] = $value;
+			$wordlist[] = $word_part;	
+			#再处理一次
+			$new2 = split2($new);
+			if($new2!==$new){
+				$word_part["word"] = $new2;
 				$word_part["confidence"] = $value;
-				$wordlist[] = $word_part;	
-				#再处理一次
-				$new2 = split2($new);
-				if($new2!==$new){
-					$word_part["word"] = $new2;
+				$wordlist[] = $word_part;					
+			}	
+			$needDeep = false;
+		}
+		else{
+			//没查到，查连音词
+			$preSandhi = preSandhi($oneword);
+			if($preSandhi!==$oneword){
+				$word_part["word"] = $preSandhi;
+				$word_part["confidence"] = 1.0;
+				$wordlist[] = $word_part;
+
+				//将处理后的连音词再二次拆分
+				$new = split2($preSandhi);
+				if($new!==$row){
+					$word_part["word"] = $new;
 					$word_part["confidence"] = $value;
-					$wordlist[] = $word_part;					
-				}	
-				$needDeep = false;
+					$wordlist[] = $word_part;	
+					#再处理一次
+					$new2 = split2($new);
+					if($new2!==$new){
+						$word_part["word"] = $new2;
+						$word_part["confidence"] = $value;
+						$wordlist[] = $word_part;					
+					}	
+					//如果能处理，就不进行深度拆分了
+					$needDeep = false;
+				}
+				else{
+					//连音词的第一部分没查到，进行深度拆分
+					$needDeep = true;
+				}
 			}
 			else{
 				$needDeep = true;
-			}
-		}
-		else{
-			$new = split2($oneword);
-			if($new!==$row){
-				$word_part["word"] = $new;
-				$word_part["confidence"] = $value;
-				$wordlist[] = $word_part;	
-				#再处理一次
-				$new2 = split2($new);
-				if($new2!==$new){
-					$word_part["word"] = $new2;
-					$word_part["confidence"] = $value;
-					$wordlist[] = $word_part;					
-				}	
-				$needDeep = false;
-			}
-			$needDeep = true;
+			}		
 		}
 
+
 		if($needDeep){
-			mySplit2($oneword, 0, false, 0, 0.2, 0.9, true, false);
+			mySplit2($oneword, 0, false, 0, 0.5, 0.95, true, false);
 			if(count($result) < 2){
-				mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, true, true);
+				//mySplit2($oneword, 0, $_express, 0, 0.3, 0.8, true, true);
 			}
 			if (isset($_POST["debug"])) {
 				echo "正切：" . count($result) . "<br>\n";
 			}
 			if(count($result) < 2){
-				mySplit2($oneword, 0, $_express, 0, 0.2, 0.8, false, true);
+				//mySplit2($oneword, 0, $_express, 0, 0.3, 0.8, false, true);
 			}
 			if (isset($_POST["debug"])) {
 				echo "反切：" . count($result) . "<br>\n";

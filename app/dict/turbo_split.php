@@ -243,6 +243,9 @@ function isExsit($word, $adj_len = 0)
 		$word_count = $part["{$word}"][0];
 		$case_len = $part["{$word}"][1];
         if ($word_count > 0) {
+			if (isset($_POST["debug"])) {
+                echo "查到：{$word}:{$word_count}个\n";
+            }
             $isFound = true;
             $count = $word_count + 1;
         }
@@ -265,12 +268,13 @@ function isExsit($word, $adj_len = 0)
         if (isset($confidence["{$word}"])) {
             $cf = $confidence["{$word}"];
         } else {
-            $len = mb_strlen($word, "UTF-8") + $adj_len;
+			//$len = mb_strlen($word, "UTF-8") + $adj_len;
+			$len = mb_strlen($word, "UTF-8") - $case_len;
             $len_correct = 1.2;
             $count2 = 1.1 + pow($count, 1.18);
             $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
-            //$cf = round(1 / (1 + 640 * $conf_num), 9);
-			$cf = round((1-0.02*$case_len) / (1 + 640 * $conf_num), 9);
+            $cf = round(1 / (1 + 640 * $conf_num), 9);
+			//$cf = round((1-0.02*$case_len) / (1 + 640 * $conf_num), 9);
             $confidence["{$word}"] = $cf;
             if (isset($_POST["debug"])) {
                 echo "信心指数：{$word}:{$cf}\n";
@@ -354,15 +358,12 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
             for ($i = $len; $i > 1; $i--) {
                 foreach ($sandhi as $key => $row) {
                     if ($sandhi_advance == false && $row["advance"] == true) {
-                        continue;
+                        //continue;
                     }
                     if (mb_substr($strWord, $i - $row["len"], $row["len"], "UTF-8") == $row["c"]) {
                         $str1 = mb_substr($strWord, 0, $i - $row["len"], "UTF-8") . $row["a"];
                         $str2 = $row["b"] . mb_substr($strWord, $i, null, "UTF-8");
-                        $confidence = isExsit($str1, $adj_len);
-                        if ($row["advance"] == true) {
-                            $confidence = $confidence * 0.99;
-                        }
+                        $confidence = isExsit($str1, $adj_len)*$row["cf"];
                         if ($confidence > $c_threshhold) {
                             $output[] = array($str1, $str2, $confidence, $row["adj_len"]);
                             if (isset($_POST["debug"])) {
@@ -381,15 +382,12 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
             for ($i = 1; $i < $len - 1; $i++) {
                 foreach ($sandhi as $key => $row) {
                     if ($sandhi_advance == false && $row["advance"] == true) {
-                        continue;
+                        //continue;
                     }
                     if (mb_substr($strWord, $i, $row["len"], "UTF-8") == $row["c"]) {
                         $str1 = mb_substr($strWord, 0, $i, "UTF-8") . $row["a"];
                         $str2 = $row["b"] . mb_substr($strWord, $i + $row["len"], null, "UTF-8");
-                        $confidence = isExsit($str2, $adj_len);
-                        if ($row["advance"] == true) {
-                            $confidence = $confidence * 0.99;
-                        }
+                        $confidence = isExsit($str2, $adj_len)*$row["cf"];
                         if ($confidence > $c_threshhold) {
                             $output[] = array($str2, $str1, $confidence, $row["adj_len"]);
                             if (isset($_POST["debug"])) {
