@@ -2,6 +2,10 @@
 
 require_once '../path.php';
 
+set_error_handler(function(int $number, string $message) {
+	echo "Handler captured error $number: '$message'" . PHP_EOL  ;
+ });
+ 
 $filename = $_GET["filename"];
 $dbname = $_GET["dbname"];
 if(isset($_GET["table"])){
@@ -32,8 +36,8 @@ switch ($_GET["dbtype"]) {
             echo $dns . "建立数据库成功<br>";
 		}
 		
-		$query = "DELETE from dict where 1";
-		$dbh->query($query);
+		//$query = "DELETE from dict where 1";
+		//$dbh->query($query);
         // 开始一个事务，关闭自动提交
         $dbh->beginTransaction();
 
@@ -42,9 +46,18 @@ switch ($_GET["dbtype"]) {
         $count = 0;
         // 打开文件并读取数据
         if (($fp = fopen($csvfile, "r")) !== false) {
+			echo "正在处理 {$csvfile} <br>";
             while (($data = fgetcsv($fp, 0, ',')) !== false) {
-                //id,wid,book,paragraph,word,real,type,gramma,mean,note,part,partmean,bmc,bmt,un,style,vri,sya,si,ka,pi,pa,kam
-                $stmt->execute($data);
+				//id,wid,book,paragraph,word,real,type,gramma,mean,note,part,partmean,bmc,bmt,un,style,vri,sya,si,ka,pi,pa,kam
+				try {
+					//code...
+					$stmt->execute($data);
+				} catch (Throwable $e) {
+					//throw $th;
+					echo "幺蛾子数据在第{$count}行<br>";
+					echo "Captured Throwable: " . $e->getMessage() . PHP_EOL;
+				}
+                
                 $count++;
             }
             fclose($fp);
