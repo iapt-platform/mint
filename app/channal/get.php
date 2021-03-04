@@ -5,6 +5,11 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../ucenter/function.php';
 
+if(!isset($_COOKIE["userid"])){
+	echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+	exit;
+}
+
 # 找我加入的群
 PDO_Connect(""._FILE_DB_GROUP_);
 $query = "SELECT group_id from group_member where user_id = ?  limit 0,100";
