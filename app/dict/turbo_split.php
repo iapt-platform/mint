@@ -578,6 +578,7 @@ $sandhi2[] = array("a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_le
 $sandhi2[] = array("a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "ī", "b" => "eva", "c" => "īyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "u", "b" => "eva", "c" => "uyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
+$sandhi2[] = array("a" => "ṃ", "b" => "eva", "c" => "ṃyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "i", "b" => "eva", "c" => "yeva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "o", "b" => "eva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "ṃ", "b" => "eva", "c" => "meva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
