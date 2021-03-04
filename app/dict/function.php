@@ -5,42 +5,43 @@ require_once '../redis/function.php';
 
 function getRefFirstMeaning($word,$lang,$redis){
 	if($redis!==false){
-		/*
-		$mean = $redis->hGet("ref_first_mean://".$lang,$word);
-		if($mean===FALSE){
-			PDO_Connect(_FILE_DB_REF_, _DB_USERNAME_, _DB_PASSWORD_);
-			$query = "SELECT mean,language as lang from " . _TABLE_DICT_REF_ . " where word = ?  group by language";
-			$Fetch = PDO_FetchAll($query, array($word));
-			if(count($Fetch)>0){
-				foreach ($Fetch as $key => $value) {
-					# code...
-					$redis->hSet("ref_first_mean://".$word,$value["lang"],$value["mean"]);
-				}
+		if(mb_substr($word,0,1,"UTF-8")==="["){
+			$ending = "-".mb_substr($word,1,-1,"UTF-8");
+			$mean = $redis->hGet("ref_first_mean://".$lang,$ending);
+			if($mean!=FALSE){
+				return $mean;
 			}
 		}
-		*/
-		$mean = $redis->hGet("ref_first_mean://".$word,$lang);
+		$mean = $redis->hGet("ref_first_mean://".$lang,$word);
 		if($mean!=FALSE){
 			return $mean;
 		}
-		else{
-			if($lang!="en"){
-				$mean = $redis->hGet("ref_first_mean://".$word,"en");
-				if($mean!==FALSE){
-					return $mean;
-				}
-			}
 
-			$any = $redis->hGet("ref_first_mean://com",$word);
-			if($any!==FALSE){
-					# code...
-				return $any;
-
-			}
-			else{
-				return "";
+		if($lang!="en"){
+			$mean = $redis->hGet("ref_first_mean://en",$word);
+			if($mean!==FALSE){
+				return $mean;
 			}
 		}
+		#如果没有查规则变形
+		if($redis->hExists("dict://regular/part",$word)===TRUE){
+			$rglPart = explode("+",$redis->hGet("dict://regular/part",$word)) ;
+			$mean = $mean = $redis->hGet("ref_first_mean://".$lang,$rglPart[0]);
+			if($mean!=FALSE){
+				return $mean;
+			}
+		}
+		#查询其他的语言
+		$any = $redis->hGet("ref_first_mean://com",$word);
+		if($any!==FALSE){
+				# code...
+			return $any;
+
+		}
+		else{
+			return "";
+		}
+		
 	}
 	else{
 		PDO_Connect(_FILE_DB_REF_, _DB_USERNAME_, _DB_PASSWORD_);

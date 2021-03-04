@@ -167,18 +167,19 @@ require_once "../pcdl/html_head.php";
 		background-color: var(--btn-hover-bg-color);
 		
 	}
-	.active a{
-		color:white;
-	}
+
 	.icon_btn a {
 	color: var(--main-color);
 	}
 	.icon_btn:hover a {
 		color: var(--btn-hover-color);
 	}
+	.active a{
+		color:var(--btn-hover-color);
+	}
 	chapter{
 	display:inline-block;
-}
+	}
 
 .language-para {
     padding: 2px 2px;
@@ -233,10 +234,10 @@ require_once "../pcdl/html_head.php";
 
 	#right_float_pannal{
 		position: fixed;
-		height: calc(100% - 7.5em);
-		top: 7.5em;
+		height: calc(100% - 7.3em);
+		top: 7.3em;
 		left: 100%;
-		width: 28em;
+		width: 30em;
 		min-width:20em;
 		color: var(--btn-color);
 		background-color: var(--tool-bg-color);
@@ -253,7 +254,7 @@ require_once "../pcdl/html_head.php";
 	}
 
 	.right_float_min #right_float_pannal{
-		left: calc(100% - 28em);
+		left: calc(100% - 30em);
 	}
 	</style>
 
