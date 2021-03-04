@@ -136,7 +136,7 @@ if (isset($_GET["key"]) && !empty($_GET["key"])) {
 }
 ?>
 
-window.addEventListener('scroll', winScroll);
+//window.addEventListener('scroll', winScroll);
 
 function winScroll(e) {
 	if (GetPageScroll().y > 150) {

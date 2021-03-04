@@ -39,7 +39,7 @@ function dict_search(word, autoSplit = true) {
 			$("#search_result_shell").append($("#search_summary"));
 
 			guide_init();
-			if (_autoSplit == true) {
+			if (_autoSplit == true && word.length > 10) {
 				get_comp_data(word);
 			}
 
