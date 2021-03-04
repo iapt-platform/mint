@@ -140,13 +140,13 @@ foreach ($arrWords as $currword) {
 		if($needDeep){
 			mySplit2($oneword, 0, false, 0, 0.5, 0.95, true, false);
 			if(count($result) < 2){
-				//mySplit2($oneword, 0, $_express, 0, 0.3, 0.8, true, true);
+				mySplit2($oneword, 0, $_express, 0, 0.4, 0.8, true, true);
 			}
 			if (isset($_POST["debug"])) {
 				echo "正切：" . count($result) . "<br>\n";
 			}
 			if(count($result) < 2){
-				//mySplit2($oneword, 0, $_express, 0, 0.3, 0.8, false, true);
+				mySplit2($oneword, 0, $_express, 0, 0.4, 0.8, false, true);
 			}
 			if (isset($_POST["debug"])) {
 				echo "反切：" . count($result) . "<br>\n";
