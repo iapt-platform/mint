@@ -106,7 +106,8 @@ foreach ($_data as $key => $value) {
 
     if ($redis != false) {
         $result = $redis->get('pali_sent_' . $bookId . "_" . $para . "_" . $begin . "_" . $end);
-        $palitext = $result;
+		$palitext = $result;
+		$pali_text_id = 0;
     } else {
         $query = "SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
         $sth = $db_pali_sent->prepare($query);
