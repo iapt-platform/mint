@@ -205,15 +205,15 @@ require_once "../pcdl/html_head.php";
 		<div id="tool_bar">
 			<span>
 			<button id="max_right_float" class="icon_btn" onclick="max_right_float(this)">
-				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#left_expand'></use></svg>
 			</button>
 			<button id="min_right_float" class="icon_btn" onclick="min_right_float(this)">
-				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#right_expand'></use></svg>
 			</button>
 			</span>
 			<span>
 			<button id="close_right_float" class="icon_btn" onclick="close_right_float()">
-			<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+			<svg class='icon'><use xlink:href='../studio/svg/icon.svg#cross_with_circle'></use></svg>
 			</button>
 			</span>
 		</div>
