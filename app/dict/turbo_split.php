@@ -577,6 +577,7 @@ $sandhi2[] = array("a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_le
 
 $sandhi2[] = array("a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "ī", "b" => "eva", "c" => "īyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
+$sandhi2[] = array("a" => "u", "b" => "eva", "c" => "uyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "i", "b" => "eva", "c" => "yeva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "o", "b" => "eva", "c" => "ova", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "ṃ", "b" => "eva", "c" => "meva", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
@@ -584,14 +585,14 @@ $sandhi2[] = array("a" => "u", "b" => "eva", "c" => "veva", "len" => 4, "adj_len
 $sandhi2[] = array("a" => "a", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "e", "b" => "eva", "c" => "eva", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 
-$sandhi2[] = array("a" => "ā", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "a", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
+$sandhi2[] = array("a" => "ā", "b" => "api", "c" => "āpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "e", "b" => "api", "c" => "epi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
-$sandhi2[] = array("a" => "ī", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "i", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
+$sandhi2[] = array("a" => "ī", "b" => "api", "c" => "īpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "o", "b" => "api", "c" => "opi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
-$sandhi2[] = array("a" => "ū", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "u", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
+$sandhi2[] = array("a" => "ū", "b" => "api", "c" => "ūpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "u", "b" => "api", "c" => "upi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 $sandhi2[] = array("a" => "ṃ", "b" => "api", "c" => "mpi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999);
 

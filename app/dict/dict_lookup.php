@@ -8,6 +8,7 @@ require_once "../public/load_lang.php"; //语言文件
 require_once "../public/function.php";
 require_once "../search/word_function.php";
 require_once "../ucenter/active.php";
+require_once "../ucenter/function.php";
 require_once "../dict/p_ending.php";
 
 _load_book_index();
@@ -56,9 +57,11 @@ $right_word_list = "";
             foreach ($userdict as $key => $value) {
                 echo "<div class='mean'>{$key}:{$value["mean"]}</div>";
             }
-            echo "<div><span>{$_local->gui->contributor}：</span>";
+			echo "<div><span>{$_local->gui->contributor}：</span>";
+			$userinfo = new UserInfo();
             foreach ($userlist as $key => $value) {
-                echo $key . "[" . $value . "]";
+				$user = $userinfo->getName($key);
+                echo $user["nickname"] . "[" . $value . "]";
             }
             echo "</div>";
             echo "</div>";

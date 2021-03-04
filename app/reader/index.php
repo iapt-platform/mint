@@ -7,9 +7,11 @@ require_once "../pcdl/html_head.php";
 
 	<script src="../channal/channal.js"></script>
 	<script src="./reader.js"></script>
-
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
+	<link type="text/css" rel="stylesheet" href="style.css"  />
+	<link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)" />
+	<link type="text/css" rel="stylesheet" href="print.css" media="print" />
 
 	<script>
 	<?php
@@ -49,234 +51,8 @@ require_once "../pcdl/html_head.php";
 	}
 	?>
 	</script>
-	<style>
 
 
-	#search_result{
-		position: absolute;
-		background: wheat;
-		max-width: 95%;
-		width: 24em;
-	}
-
-	.icon{
-		width: 15px;
-		height: 15px;
-	}
-	.submenu_title{
-		font-size: 120%;
-		font-weight: 700;		
-	}
-
-	#head_bar{
-		display: flex;
-		justify-content: space-between;
-		/*height: 5em;*/
-		background-color: var(--tool-bg-color1);
-		border-bottom: 1px solid var(--tool-line-color);
-		padding:10px;
-		margin-top: 50px;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 100;
-		
-	}
-
-	.main_view{
-		padding: 0 1em;
-		padding-top: 7em;
-		max-width: 1280px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.fun_frame {
-		border-bottom: 1px solid gray;
-		margin-right: 10px;
-		margin-bottom: 10px;
-	}
-	.fun_frame .title{
-		padding:6px;
-		font-weight: 700;
-	}
-	.fun_frame>.content{
-		padding:6px;
-		max-height:6em;
-		overflow-y: scroll;
-	}
-	
-	.fixed{
-		position:fixed;
-		right: 0;
-    	top: 0;
-	}
-	.when_right_fixed{
-		padding-right:20em;
-	}
-
-
-	#contents_view{
-		display:flex;
-	}
-	#contents_div{
-		flex:7;
-	}
-	#contents{
-
-	}
-	#contents li{
-		white-space: normal;
-	}
-	#right_pannal{
-		flex:3;
-		max-width:20em;
-	}
-
-	#contents_foot{
-		margin-bottom: 70vh;
-	}
-
-
-#toc_content .level_2{
-	padding-left:0.5em;
-}
-#toc_content .level_3{
-	padding-left:1em;
-}
-#toc_content .level_4{
-	padding-left:1.5em;
-}
-#toc_content .level_5{
-	padding-left:2em;
-}
-.ui-dialog-titlebar{
-		display: flex;
-    justify-content: space-between;
-	background-color: var(--btn-bg-color);
-    padding: 5px;
-	}
-	.ui-widget-content{
-		background-color: var(--bg-color);
-	}
-	.ui-dialog{
-		box-shadow:  8px 8px 20px var(--border-shadow);
-	}
-	.active{
-		background-color: var(--btn-hover-bg-color);
-		
-	}
-
-	.icon_btn a {
-	color: var(--main-color);
-	}
-	.icon_btn:hover a {
-		color: var(--btn-hover-color);
-	}
-	.active a{
-		color:var(--btn-hover-color);
-	}
-	chapter{
-	display:inline-block;
-	}
-
-.language-para {
-    padding: 2px 2px;
-    position: absolute;
-    margin-top: 7px;
-    border-bottom: 3px solid var(--link-color);
-	margin-left: -60px;
-	font-family: 'Noto Sans', 'Noto Sans SC', 'Noto Sans TC','Padauk', Arial, Verdana;
-}
-
-.level_0{
-	margin-left:0;
-}
-.level_1{
-	margin-left:1em;
-}
-.level_2{
-	margin-left:2em;
-}
-.level_3{
-	margin-left:3em;
-}
-.level_4{
-	margin-left:4em;
-}
-.level_5{
-	margin-left:5em;
-}
-.level_6{
-	margin-left:6em;
-}
-.channal_list{
-		white-space: nowrap;
-		overflow-x: hidden;
-	}
-	.userinfo_channal{
-		display:none;
-	}
-	.userinfo_channal:hover{
-		display:block;
-	}
-	
-	#para_path chapter{
-		color: var(--link-color);
-		font-size: 120%;
-	}
-
-	#para_path_next_level{
-		display:inline-block;
-	}
-
-
-	#right_float_pannal{
-		position: fixed;
-		height: calc(100% - 7.3em);
-		top: 7.3em;
-		left: 100%;
-		width: 30em;
-		min-width:20em;
-		color: var(--btn-color);
-		background-color: var(--tool-bg-color);
-		z-index: 20;
-		-webkit-transition-duration: 0.4s;
-		transition-duration: 0.4s;
-		-webkit-contain: strict;
-		contain: strict;
-		z-index: 51;
-	}
-	#right_float_pannal>iframe{
-		width:100%;
-		height:100%;
-	}
-
-	.right_float_min #right_float_pannal{
-		left: calc(100% - 30em);
-	}
-	</style>
-
-<style media="screen and (max-width:800px)">
-	#right_pannal{
-		display:none;
-	}
-	.when_right_fixed{
-		padding-right:0;
-	}
-	.index_toolbar{
-		position:unset;
-	}
-	#pali_pedia{
-		font-size: 200%;
-		margin-top: auto;
-		margin-bottom: auto;
-		padding-left: 0.5em;
-	}
-</style>
-
-<link type="text/css" rel="stylesheet" href="print.css" media="print" />
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
@@ -357,13 +133,13 @@ require_once "../pcdl/html_head.php";
 		}
 
 		?>
-			<button class='icon_btn'><a href="#"><?php echo $_local->gui->help; ?></a></button>
-			<button class='icon_btn' onclick="show_dict(this)"><a href="#"><?php echo $_local->gui->dict; ?></a></button>
+			<button class='icon_btn'><a><?php echo $_local->gui->help; ?></a></button>
+			<button id="btn_show_dict" class='icon_btn' onclick="show_dict(this)"><a ><?php echo $_local->gui->dict; ?></a></button>
 		</span>
 	</div>
 </div>
 
-<div id="main_view_shell">
+
 	<div id="main_view" class="main_view">
 		<div id="article_head" style="border-bottom: 1px solid gray;">
 			<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
@@ -424,7 +200,23 @@ require_once "../pcdl/html_head.php";
 		</div>
 	</div>
 
+<div id="main_view_shell">
 	<div id="right_float_pannal">
+		<div id="tool_bar">
+			<span>
+			<button id="max_right_float" class="icon_btn" onclick="max_right_float(this)">
+				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+			</button>
+			<button id="min_right_float" class="icon_btn" onclick="min_right_float(this)">
+				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+			</button>
+			</span>
+			<span>
+			<button id="close_right_float" class="icon_btn" onclick="close_right_float()">
+			<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>
+			</button>
+			</span>
+		</div>
 		<iframe id="dict" src="../dict/index.php?builtin=true" name="dict" title="wikipali"></iframe>
 	</div>
 </div>

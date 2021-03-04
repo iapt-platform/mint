@@ -99,7 +99,7 @@ foreach ($arrWords as $currword) {
 				$word_part["word"] = $new2;
 				$word_part["confidence"] = $value;
 				$wordlist[] = $word_part;					
-			}	
+			}
 			$needDeep = false;
 		}
 		else{
@@ -138,8 +138,14 @@ foreach ($arrWords as $currword) {
 
 
 		if($needDeep){
-			mySplit2($oneword, 0, false, 0, 0.5, 0.95, true, false);
-			if(count($result) < 2){
+			if(mb_strlen($oneword,"UTF-8")>35){
+				mySplit2($oneword, 0, true, 0, 0.9, 0.95, true, false);
+			}
+			else{
+				mySplit2($oneword, 0, false, 0, 0.5, 0.95, true, false);
+			}
+			
+			if(count($result) < 1){
 				mySplit2($oneword, 0, $_express, 0, 0.4, 0.8, true, true);
 			}
 			if (isset($_POST["debug"])) {
@@ -151,27 +157,7 @@ foreach ($arrWords as $currword) {
 			if (isset($_POST["debug"])) {
 				echo "反切：" . count($result) . "<br>\n";
 			}
-			/*
-			if (count($result) < 5) {
-			#sandhi advance
-			mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false, true);
-			if (isset($_POST["debug"])) {
-			echo "反切：" . count($result) . "\n";
-			}
-			}
-			if (count($result) < 5) {
-			#反向
-			mySplit2($oneword, 0, $_express, 0, 0.8, 0.8, false);
-			}
-			if (count($result) < 5) {
-			#正向
-			mySplit2($oneword, 0, $_express, 0, 0.8, 0, true);
-			}
-			if (count($result) < 5) {
-			#反向
-			mySplit2($oneword, 0, $_express, 0, 0.8, 0, false);
-			}
-			*/
+
 			arsort($result); //按信心指数排序
 
 

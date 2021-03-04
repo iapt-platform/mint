@@ -59,9 +59,9 @@ class UserInfo
             return $buffer[$id];
         }
         if ($this->dbh) {
-            $query = "SELECT nickname,username FROM user WHERE userid= ? ";
+            $query = "SELECT nickname,username FROM user WHERE id = ? or userid= ? ";
             $stmt = $this->dbh->prepare($query);
-            $stmt->execute(array($id));
+            $stmt->execute(array($id,$id));
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($user) > 0) {
                 $buffer[$id] = array("nickname" => $user[0]["nickname"], "username" => $user[0]["username"]);
