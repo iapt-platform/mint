@@ -28,7 +28,7 @@ this is a recursion, depth=16
 此为递归算法，深度=16
  */
 require_once "../dict/turbo_split.php";
-
+global $auto_split_times;
 //check input
 if (isset($_POST["word"])) {
     $input_word = mb_strtolower(trim($_POST["word"]), 'UTF-8');
@@ -65,6 +65,7 @@ if (isset($_POST["express"])) {
 }
 
 //main
+
 
 $allword = array();
 foreach ($arrWords as $currword) {
