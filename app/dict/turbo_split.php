@@ -16,6 +16,9 @@ $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 global $path;
+#当前搜索路径信心指数，如果过低，马上终止这个路径的搜索
+global $currPathCf;
+#内存信心指数表
 global $confidence;
 global $result;
 global $part;
@@ -168,19 +171,80 @@ function microtime_float()
     return ((float) $usec + (float) $sec);
 }
 
+
+function dict_lookup2($word){
+	global $redis;
+	global $case;	
+    if (strlen($word) <= 0) {
+        return 0;
+    }
+	if(mb_substr($word,0,1)==="["){
+		$search = $word;
+	}
+	else{
+		$search = str_replace("[","",$word);
+		$search = str_replace("]","",$search);		
+	}
+	$cf = $redis->hGet("dict://part.hash",$search);
+	if($cf==false){
+		//去除尾查
+		$newWord = array();
+		for ($row = 0; $row < count($case); $row++) {
+			$len = mb_strlen($case[$row][1], "UTF-8");
+			$end = mb_substr($search, 0 - $len, null, "UTF-8");
+			if ($end == $case[$row][1]) {
+				$base = mb_substr($search, 0, mb_strlen($search, "UTF-8") - $len, "UTF-8") . $case[$row][0];
+				if ($base != $search) {
+					$newWord[$base] = mb_strlen($case[$row][1],"UTF-8");
+				}
+			}
+		}
+		#找到最高频的base
+		$base_weight = 0;
+		$isFound = false;
+		if(count($newWord)>0){
+			foreach ($newWord as $x => $x_value) {
+				$row = $redis->hGet("dict://part.hash",$x);
+				if ($row !=false) {
+					$isFound=true;
+					if ($row > $base_weight) {
+						$base_weight = $row;
+					}
+				}
+			}
+			if($isFound){
+				$base_weight*=0.9999;
+				$redis->hSet("dict://part.hash",$search,$base_weight);
+				if (isset($_POST["debug"])) {
+					echo "查到变格：{$search}:{$base_weight}\n";
+				}				
+			}
+		}
+		return $base_weight;
+	}
+	else{
+		if (isset($_POST["debug"])) {
+			echo "查到：{$search}:{$cf}\n";
+		}
+		return $cf;
+	}
+}
 function dict_lookup($word)
 {
     if (strlen($word) <= 1) {
         return 0;
     }
     global $case;
-    global $dbh;
-    $str = strstr($word, "[");
-    if ($str === false) {
-        $search = $word;
-    } else {
-        $search = $str;
-    }
+	global $dbh;
+
+	if(mb_substr($word,0,1)==="["){
+		$search = $word;
+	}
+	else{
+		$search = str_replace("[","",$word);
+		$search = str_replace("]","",$search);		
+	}
+
     $query = "SELECT weight from part where word = ? ";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($search));
@@ -192,10 +256,10 @@ function dict_lookup($word)
         $newWord = array();
         for ($row = 0; $row < count($case); $row++) {
             $len = mb_strlen($case[$row][1], "UTF-8");
-            $end = mb_substr($word, 0 - $len, null, "UTF-8");
+            $end = mb_substr($search, 0 - $len, null, "UTF-8");
             if ($end == $case[$row][1]) {
-                $base = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $len, "UTF-8") . $case[$row][0];
-                if ($base != $word) {
+                $base = mb_substr($search, 0, mb_strlen($search, "UTF-8") - $len, "UTF-8") . $case[$row][0];
+                if ($base != $search) {
                     $newWord[$base] = mb_strlen($case[$row][1],"UTF-8");
                 }
             }
@@ -229,14 +293,15 @@ function isExsit($word, $adj_len = 0)
 {
 
     global $auto_split_times;
-    global $result;
     global $part;
     global $confidence;
     $auto_split_times++;
 
     if (isset($_POST["debug"])) {
         echo "<div>正在查询：{$word}</div>";
-    }
+	}
+	//return dict_lookup2($word);
+
     $isFound = false;
     $count = 0;
     if (isset($part["{$word}"])) {
@@ -303,17 +368,22 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
     global $result;
     global $sandhi;
     $output = array();
-
+	#当前搜索路径信心指数，如果过低，马上终止这个路径的搜索
+	global $currPathCf;
+	if($deep == 0){
+		$currPathCf = 1;
+	}
     //达到最大搜索深度，返回
     if ($deep >= 16) {
         $word = "";
         $cf = 1.0;
         for ($i = 0; $i < $deep; $i++) {
             if (!empty($path[$i][0])) {
-                $word .= $path[$i][0] . "+";
+                $word .= $path[$i][0] ;
                 if (isset($_POST["debug"])) {
-                    $word .= "(" . $path[$i][1] . ")-";
-                }
+                    $word .= "(" . $path[$i][1] . ")";
+				}
+				$word .= "+";
                 $cf = $cf * $path[$i][1];
             }
         }
@@ -332,12 +402,12 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
     }
     //直接找到
     $confidence = isExsit($strWord, $adj_len);
-    if ($confidence >= 0) {
+    if ($confidence > $c_threshhold) {
         $output[] = array($strWord, "", $confidence);
 	} 
 	else {
         $confidence = isExsit("[" . $strWord . "]");
-        if ($confidence >= 0) {
+        if ($confidence > $c_threshhold) {
             $output[] = array("[" . $strWord . "]", "", $confidence);
         }
     }
@@ -411,7 +481,8 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
             $remainder = $part[1];
 
             $path[$deep][0] = $checked;
-            $path[$deep][1] = $part[2];
+			$path[$deep][1] = $part[2];
+
             if (empty($remainder)) {
                 #全切完了
                 $word = "";
@@ -442,8 +513,25 @@ function mySplit2($strWord, $deep = 0, $express = false, $adj_len = 0, $c_thresh
                     }
                 }
             } else {
-                #接着切
-                mySplit2($remainder, ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
+				#计算当前信心指数
+				$cf = 1.0;
+				for ($i = 0; $i < $deep; $i++) {
+					$cf = $cf * $path[$i][1];
+				}
+				if($cf<$w_threshhold)
+				{
+					if (isset($_POST["debug"])) {
+						echo "信心指数过低，提前返回 {$cf}<br>";
+					}
+					return;
+
+				}
+				else
+				{
+					#接着切
+					mySplit2($remainder, ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);					
+				}
+
             }
         }
 	} 

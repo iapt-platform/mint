@@ -203,7 +203,7 @@ foreach ($arrWords as $currword) {
         }
         $iCount = 0;
         foreach ($result as $row => $value) {
-            if ($iCount > 100) {
+            if ($iCount > 10) {
                 break;
             }
             $iCount++;

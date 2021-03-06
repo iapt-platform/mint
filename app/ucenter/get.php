@@ -6,7 +6,13 @@ $dns = "" . _FILE_DB_USERINFO_;
 $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 if (isset($_GET["id"])) {
-    $query = "select userid as id ,username,nickname from user where userid = ? ";
+	if(isset($_GET["bio"])){
+		$query = "select bio,email from profile where user_id = ? ";
+	}
+	else{
+		$query = "select userid as id ,username,nickname from user where userid = ? ";
+	}
+    
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($_GET["id"]));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -16,7 +22,8 @@ if (isset($_GET["id"])) {
     $username = "%" . $_GET["username"] . "%";
     $stmt->execute(array($username));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
+}
+else {
     $fUser = array();
 }
 

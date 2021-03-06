@@ -1,0 +1,15 @@
+#lesson_list {
+	column-count: 1;
+}
+
+#course_info_head_1 {
+	grid-template-columns: 100px 1fr;
+	grid-gap: 10px;
+}
+
+#course_info_head_face,
+#course_info_head_face img {
+	width: 100px;
+	height: 100px;
+	border-radius: 6px;
+}

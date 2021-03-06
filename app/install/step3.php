@@ -136,7 +136,7 @@ function run_sys_dict(index,onlyOne=false){
 }
 
 var iCurrThinDictIndex=0;
-function run_ref_dict(index){
+function run_ref_dict(index,once=false){
     if(index >= thin_file_list.length){
         $("#response").html($("#response").html()+"All Down");
     }
@@ -151,8 +151,11 @@ function run_ref_dict(index){
         },
         function(data,status){
             $("#response").html($("#response").html()+data+"<br>");
-            iCurrThinDictIndex++;
-            run_ref_dict(iCurrThinDictIndex);
+			if(!once){
+				iCurrThinDictIndex++;
+            	run_ref_dict(iCurrThinDictIndex);
+			}
+
         });
     }
 }

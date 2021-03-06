@@ -4,6 +4,13 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../ucenter/setting_function.php';
 
+global $error;
+$error = array();
+set_error_handler(function(int $number, string $message) {
+	global $error;
+	$error[] =  "Handler captured error $number: '$message'" . PHP_EOL  ;
+});
+
 $user_setting = get_setting();
 
 if (isset($_GET["book"])) {
@@ -86,6 +93,25 @@ array_push($db_file_list, array(_DIR_DICT_3RD_ . "/shuihan.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/concise.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/uhan_en.db", ""));
 
+$_dict_db = array();
+foreach ($db_file_list as $db_file) {
+    try {
+        $dbh = new PDO("sqlite:" . $db_file[0], "", "");
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		$dbh->query("PRAGMA synchronous = OFF");
+        $dbh->query("PRAGMA journal_mode = WAL");
+        $dbh->query("PRAGMA foreign_keys = ON");
+        $dbh->query("PRAGMA busy_timeout = 5000");
+		$_dict_db[] = array("file" => $db_file, "dbh" => $dbh);
+
+    } catch (PDOException $e) {
+        if ($debug) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+        }
+    }
+}
+
+
 for ($i = 0; $i < $lookup_loop; $i++) {
     $parent_list = array();
     $strQueryWord = "("; //单词查询字串
@@ -98,19 +124,13 @@ for ($i = 0; $i < $lookup_loop; $i++) {
     if ($debug) {
         echo "<h2>第{$i}轮查询：$strQueryWord</h2>";
     }
-    foreach ($db_file_list as $db) {
-        $db_file = $db[0];
-        $db_sort = $db[1];
+    foreach ($_dict_db as $db) {
+        $db_file = $db["file"][0];
+        $db_sort = $db["file"][1];
         if ($debug) {
             echo "dict:$db_file<br>";
-        }
-        PDO_Connect("sqlite:{$db_file}");
-        PDO_Execute("PRAGMA synchronous = OFF");
-        PDO_Execute("PRAGMA journal_mode = WAL");
-        PDO_Execute("PRAGMA foreign_keys = ON");
-        PDO_Execute("PRAGMA busy_timeout = 5000");
-
-        $strOrderby = $db[1];
+		}
+        $strOrderby = $db["file"][1];
 
         if ($i == 0) {
             $query = "select * from dict where \"pali\" in {$strQueryWord} AND ( type <> '.n:base.' AND  type <> '.ti:base.' AND  type <> '.adj:base.'  AND  type <> '.pron:base.'  AND  type <> '.v:base.'  AND  type <> '.part.' ) " . $strOrderby;
@@ -122,7 +142,16 @@ for ($i = 0; $i < $lookup_loop; $i++) {
             echo $query . "<br>";
         }
         try {
-            $Fetch = PDO_FetchAll($query);
+			//$Fetch = PDO_FetchAll($query);
+			$stmt = $db["dbh"]->query($query);
+			if ($stmt) {
+				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				$Fetch = array();
+				if ($debug) {
+					echo "无效的Statement句柄";
+				}
+			}
         } catch (Exception $e) {
             if ($debug) {
                 echo 'Caught exception: ', $e->getMessage(), "\n";
