@@ -91,13 +91,13 @@ foreach ($arrWords as $currword) {
 		if($new!==$oneword){
 			//现有字典里查到
 			$word_part["word"] = $new;
-			$word_part["confidence"] = $value;
+			$word_part["confidence"] = 1.0;
 			$wordlist[] = $word_part;	
 			#再处理一次
 			$new2 = split2($new);
 			if($new2!==$new){
 				$word_part["word"] = $new2;
-				$word_part["confidence"] = $value;
+				$word_part["confidence"] = 1.0;
 				$wordlist[] = $word_part;					
 			}
 			$needDeep = false;
