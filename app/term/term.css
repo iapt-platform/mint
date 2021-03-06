@@ -164,6 +164,7 @@ note > .tran {
 	padding: 0;
 	position: relative;
 	margin-top: -0.5em;
+	line-height: 1.8em;
 }
 note > .tran > .text {
 	margin-bottom: 1em;

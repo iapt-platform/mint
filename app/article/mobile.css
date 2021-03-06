@@ -1,0 +1,21 @@
+#right_pannal {
+	display: none;
+}
+.when_right_fixed {
+	padding-right: 0;
+}
+.index_toolbar {
+	position: unset;
+}
+#pali_pedia {
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
+#contents_div {
+	padding: 0;
+}
+#head_bar {
+	flex-direction: column;
+}
