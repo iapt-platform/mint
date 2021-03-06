@@ -40,14 +40,14 @@ function username_search(keyword) {
 				}
 				let html = "<ul id='user_search_list'>";
 				if (result.length > 0) {
-					for (x in result) {
+					for (const iterator of result) {
 						html +=
 							"<li><a onclick=\"coop_add('" +
-							result[x].id +
+							iterator.id +
 							"',0)\">" +
-							result[x].username +
+							iterator.username +
 							"[" +
-							result[x].email +
+							iterator.email +
 							"]</a></li>";
 					}
 				}

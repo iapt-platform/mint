@@ -38,6 +38,7 @@ function course_load(course_id) {
 				// end of course_info_head_2
 				html += "</div>";
 				//end of head
+
 				//summary
 				if (course_info.summary.length > 0) {
 					html += "<div id='course_info_summary' class='course_info_block'>";

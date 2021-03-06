@@ -20,9 +20,9 @@ include "../pcdl/html_head.php";
     require_once "../public/_pdo.php";
     require_once '../public/function.php';
     require_once '../ucenter/function.php';
-    require_once "../pcdl/head_bar.php";
-    $currChannal = "course";
-    require_once "../uhome/head.php";
+	require_once "../pcdl/head_bar.php";
+    $currChannal = "foot-step";
+	require_once "../uhome/head.php";
 ?>
 
 <link href='../lib/fullcalendar/main.css' rel='stylesheet' />
@@ -32,9 +32,9 @@ include "../pcdl/html_head.php";
 <script src="https://code.highcharts.com/stock/modules/data.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 
-
+<div class='section_inner'>
 <div id="container" style="height: 400px; min-width: 310px"></div>
-
+</div>
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -190,13 +190,6 @@ Highcharts.setOptions({
 </script>
 <style>
 
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-  }
-
   #script-warning {
     display: none;
     background: #eee;
@@ -224,13 +217,12 @@ Highcharts.setOptions({
 
 </style>
 
-<div class='index_inner'>
+<div class='section_inner'>
   <div id='script-warning'>
     <code>php/get-events.php</code> must be running.
   </div>
 
   <div id='loading'>loading...</div>
-
   <div id='calendar'></div>
 </div>
 <?php

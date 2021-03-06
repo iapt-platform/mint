@@ -1,3 +1,7 @@
+	<link type="text/css" rel="stylesheet" href="../course/style.css" />
+	<link type="text/css" rel="stylesheet" href="../course/mobile.css" media="screen and (max-width:800px)" />
+	<link type="text/css" rel="stylesheet" href="./style.css" />
+
 <style>
     #main_video_win iframe{
         width:100%;
@@ -35,48 +39,97 @@
     #footer_nav{
         display: none;
     }
+	.user_home_category{
+		display:flex;
+	}
+	.user_home_category li{
+		font-size: 16px;
+		margin-right:2em;
+		padding:5px;
+	}
+
 </style>
 
-<div id='course_head_bar' style='background-color:var(--tool-bg-color1);padding:1em 10px 0 10px;'>
-    <div class='index_inner '>
-        <div style='display:flex;'>
-            <div style='font-size:280%;flex:7;'>
-                <?php echo ucenter_getA($_GET["userid"]);?>
-            </div>
-            <div  style="display: inline-block;">
-                <button class="icon_btn" title=<?php echo $_local->gui->watch;?>>
-                    <svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#eye_enable"></use>
-					</svg>
-                </button>
-                <button class="icon_btn" title=<?php echo $_local->gui->share_to;?>>
-                    <svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#share_to"></use>
-					</svg>
-                </button>
-            </div>
-        </div>
+<script src="./uhome.js"></script>
 
-        <div id="main_tag"  style="">
-            <span tag=<?php echo "jianjie";?>><?php echo $_local->gui->introduction;?></span>
+<div id='course_head_bar' >
+    <div class='section_inner'>
+			<div id='course_info_head' class='course_info_block <?php if(isset($currChannal) && $currChannal!="index"){echo "compact";}?>'>
+				<div id='course_info_head_1'>
+					<div id='course_info_head_face'>
+						<img src='../../tmp/images/user/<?php echo $_GET["userid"];?>.jpg' />
+					</div>
+					<div id='course_info_head_title'>
+						<div id='course_title'><?php echo ucenter_getA($_GET["userid"]);?></div>
+						<div id='course_subtitle'></div>
+						<div id='course_button'>
+							<button class='disable'>+<?php echo $_local->gui->watch;?></button>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <a href="trans.php?userid=<?php echo $_GET["userid"];?>">
-                <span tag=<?php echo $_local->gui->translation;?>>  
-                    <?php echo $_local->gui->translation;?>
-                </span>
-            </a>
-            <?php 
-                if(isset($currChannal) && $currChannal=="course"){
-                    echo '<span class="select" tag="'.$_local->gui->lesson.'">'.$_local->gui->lesson.'</span>';
-                }
-                else{
-                    echo '<a href="course.php?userid='.$_GET["userid"].'"><span tag="'.$_local->gui->lesson.'">'.$_local->gui->lesson.'</span></a>';
-                }
-            ?>
-            <a href="foot_step.php?userid=<?php echo $_GET["userid"];?>">
-            <span tag=<?php echo $_local->gui->EXP;?>><?php echo $_local->gui->EXP;?></span>
-            </a>
-            <span tag=<?php echo $_local->gui->statistical_data;?>><?php echo $_local->gui->statistical_data;?></span>
-        </div>
+			<div id='' class='course_info_block'>
+				<ul class="user_home_category">
+					<li>
+					<?php 
+						if(isset($currChannal) && $currChannal=="index"){
+							echo '<span class="select">'.$_local->gui->home.'</span>';
+						}
+						else{
+							echo "<a href='index.php?userid={$_GET["userid"]}'>{$_local->gui->home}</a>";
+						}
+					?>
+					</li>
+					<li>
+					<?php 
+						if(isset($currChannal) && $currChannal=="palicanon"){
+							echo '<span class="select">'.$_local->gui->translation.'</span>';
+						}
+						else{
+							echo '<a href="palicanon.php?userid='.$_GET["userid"].'">'.$_local->gui->translation.'</a>';
+						}
+					?>		
+					</li>
+					<li>
+					<?php 
+						if(isset($currChannal) && $currChannal=="course"){
+							echo '<span class="select">'.$_local->gui->lesson.'</span>';
+						}
+						else{
+							echo '<a href="course.php?userid='.$_GET["userid"].'">'.$_local->gui->lesson.'</a>';
+						}
+					?>			
+					</li>
+					<li>
+					<?php 
+						if(isset($_GET["userid"]) && isset($_COOKIE["userid"]) ){
+							if($_COOKIE["userid"]==$_GET["userid"]){
+								$id = $_GET["userid"];
+							}
+							else{
+								$id=false;
+							}
+						}
+						else if(isset($_COOKIE["userid"])){
+							$id=$_COOKIE["userid"];
+						}
+						else{
+							$id = false;
+						}
+						if($id){
+							if(isset($currChannal) && $currChannal=="foot-step"){
+								echo '<span class="select">'.$_local->gui->EXP.'</span>';
+							}
+							else{
+								echo '<a href="foot_step.php?userid='.$id.'">'.$_local->gui->EXP.'</a>';
+							}							
+						}
+
+					?>		
+					</li>			
+				</ul>
+			</div>
+
     </div>
 </div>

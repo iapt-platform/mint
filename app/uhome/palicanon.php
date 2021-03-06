@@ -10,7 +10,7 @@ include "../pcdl/html_head.php";
     require_once '../public/function.php';
     require_once '../ucenter/function.php';
 	require_once "../pcdl/head_bar.php";
-	$currChannal = "index";
+	$currChannal = "palicanon";
     require_once "../uhome/head.php";
 ?>
 
@@ -21,7 +21,7 @@ include "../pcdl/html_head.php";
 
 <script>
 $(document).ready(function(){
-  getUserBio('<?php if(isset($_GET["userid"])){echo $_GET["userid"];} ?>')
+  getUserPalicanon('<?php if(isset($_GET["userid"])){echo $_GET["userid"];} ?>')
 });
 
 </script>

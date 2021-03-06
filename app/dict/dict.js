@@ -215,7 +215,7 @@ function render_parts_select(part_list) {
 	let html = "<div>";
 	let firstWord = new Array();
 	if (part_list.length > 0 && part_list[0].length > 0) {
-		html += "拆分";
+		html += "组成";
 		let level1Count = 0;
 		for (const part of part_list) {
 			firstWord.push(part[0].word);
