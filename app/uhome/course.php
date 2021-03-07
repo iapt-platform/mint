@@ -40,7 +40,7 @@ include "../pcdl/html_head.php";
 		let arrData = JSON.parse(data);
 		let html='';
 		html +="<div style='display:flex;'>";
-		html +="<div style='flex:7;'>"
+		html +="<div style='flex:10;'>"
 		html +='<iframe style="width:100%;height: 550px;" src="../fullcalendar/examples/time-zones.php"></iframe>';
 		html +="</div>";
 		html +="<div style='flex:5;'>";
@@ -48,7 +48,7 @@ include "../pcdl/html_head.php";
 			for (const iterator of arrData) {
 				html += '<div class="card" style="display:flex;margin:1em;padding:10px;">';
 
-				html += '<div style="flex:9;">';
+				html += '<div style="flex:7;">';
 				html +=  '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='+iterator.id+'">'+iterator.title+'</a></div>';
 				html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.subtitle+'</div>';
 				html += '<div class="summary"  style="padding-bottom:5px;">'+marked(iterator.summary)+'</div>';
