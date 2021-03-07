@@ -23,7 +23,6 @@ include "../pcdl/html_head.php";
 $(document).ready(function(){
   getUserBio('<?php if(isset($_GET["userid"])){echo $_GET["userid"];} ?>')
 });
-
 </script>
 <?php
 include "../pcdl/html_foot.php";

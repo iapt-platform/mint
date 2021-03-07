@@ -22,16 +22,16 @@ if($redis!==false){
 		exit;
 	}
 }
-$dbh = new PDO(_DICT_DB_COMP_, "", "", array(PDO::ATTR_PERSISTENT => true));
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-$query = "SELECT parts from "._TABLE_DICT_COMP_." where pali =?";
-$stmt = $dbh->prepare($query);
-$stmt->execute(array($inputWord));
-$fComp = $stmt->fetchAll(PDO::FETCH_ASSOC);		
-$output = json_encode($fComp, JSON_UNESCAPED_UNICODE);
-if($redis!==false){
-	$redis->hSet("dict://comp",$inputWord,$output) ;
+else{
+	$dbh = new PDO(_DICT_DB_COMP_, "", "", array(PDO::ATTR_PERSISTENT => true));
+	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+	$query = "SELECT parts from "._TABLE_DICT_COMP_." where pali =?";
+	$stmt = $dbh->prepare($query);
+	$stmt->execute(array($inputWord));
+	$fComp = $stmt->fetchAll(PDO::FETCH_ASSOC);		
+	$output = json_encode($fComp, JSON_UNESCAPED_UNICODE);
+	echo $output;	
 }
-echo $output;
+
 
 ?>
