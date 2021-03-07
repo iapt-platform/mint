@@ -18,8 +18,15 @@ if($redis!==false){
 	#如果没有查巴缅替换拆分
 	if($redis->hExists("dict://comp",$inputWord)===TRUE){
 		$output = $redis->hGet("dict://comp",$inputWord) ;
-		echo $output;
-		exit;
+		if(empty($output)){
+			echo "[]";
+		}
+		else{
+			echo $output;
+		}
+	}
+	else{
+		echo "[]";
 	}
 }
 else{
