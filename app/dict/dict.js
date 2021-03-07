@@ -301,6 +301,7 @@ function getPartMeaning(word = "") {
 	if (word == "") {
 		sWord = $("#dict_ref_search_input").val();
 	}
+
 	$.get(
 		"../dict/get_first_mean.php",
 		{
