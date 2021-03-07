@@ -23,16 +23,19 @@ if (PHP_SAPI == "cli") {
 					echo "单词表load {$csvfile}\n";
 					while (($data = fgets($fp)) !== false) {
 						$data1 = explode(",",$data);
-						$old = $redis->hGet($task->rediskey,$data1[$task->keycol]);
-						$new = array();
-						if($old){
-							$new = json_decode($old,true);
-							array_push($new,$data1);
+						if(count($data1)>1){
+							$old = $redis->hGet($task->rediskey,$data1[$task->keycol]);
+							$new = array();
+							if($old){
+								$new = json_decode($old,true);
+								array_push($new,$data1);
+							}
+							else{
+								$new[] = $data1;
+							}
+							$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));							
 						}
-						else{
-							$new[] = $data1;
-						}
-						$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));
+
 						$count++;
 						if($count%10000==0){
 							sleep(1);
