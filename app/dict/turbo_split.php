@@ -607,7 +607,7 @@ function split2($word){
 		}
 		if(mb_strlen($word,"UTF-8")>4){
 		# 先看有没有中文意思
-			if($redis->hExists("dict://ref/has_mean",$word)===TRUE){
+			if($redis->hExists("dict://ref/has_mean",$word)===TRUE && mb_strlen($word,"UTF-8")<7){
 				$newword[]=$word;
 			}
 			else{
