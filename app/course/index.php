@@ -196,13 +196,13 @@ include "../pcdl/html_head.php";
 	<div class="index_inner">
 		<div id="course_head_bar" class="collect_head_bar">
 			<div class="section_inner">
-				<h1>課程</h1>
-				<div style="max-width:30em">來自世界個地的巴利專家詳細解析聖典</div>
+				<h1><?php echo $_local->gui->lesson ;?></h1>
+				<div style="max-width:30em"><?php echo $_local->gui->lesson_intro; ?></div>
 			</div>
 		</div>
 		<div class="index_list_categories">
 			<div class="title_bar">
-				<h3><?php echo $_local->gui->speaker ?></h3>
+				<h3><?php echo $_local->gui->speaker ;?></h3>
 				<span class="title_more"><a href="../course"><?php echo $_local->gui->more ?></a></span>
 			</div>
 			<div class="content">
