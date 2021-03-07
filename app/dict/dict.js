@@ -200,7 +200,12 @@ function get_comp_data(word) {
 			try {
 				let result = JSON.parse(data);
 				if (result.length > 0) {
-					render_parts_select(result);
+					let comp = new Array();
+					for (const iterator of result) {
+						comp.push({ word: iterator[7], confidence: iterator[10] });
+					}
+					let compGroup = new Array(comp);
+					render_parts_select(compGroup);
 				} else {
 					trubo_split();
 				}
@@ -296,6 +301,7 @@ function getPartMeaning(word = "") {
 	if (word == "") {
 		sWord = $("#dict_ref_search_input").val();
 	}
+
 	$.get(
 		"../dict/get_first_mean.php",
 		{

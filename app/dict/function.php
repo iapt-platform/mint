@@ -4,6 +4,9 @@ require_once '../public/_pdo.php';
 require_once '../redis/function.php';
 
 function getRefFirstMeaning($word,$lang,$redis){
+	if(strpos($word,"[")){
+		$word = strstr($word,"[",true);
+	}
 	if($redis!==false){
 		if(mb_substr($word,0,1,"UTF-8")==="["){
 			$ending = "-".mb_substr($word,1,-1,"UTF-8");
