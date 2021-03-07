@@ -19,16 +19,17 @@ include "../pcdl/html_head.php";
 
 <div class='section_inner'>
 	<div class="course_info_block">
-		<h2>你发布的课程</h2>
+		<h2><?php echo $_local->gui->teaching_course ;?></h2>
 		<div id="course_list" >
 		</div>
 	</div>
 	<div class="course_info_block">
-		<h2>你关注的课程</h2>
+		<h2><?php echo $_local->gui->watching_course ;?></h2>
 		<div id="my_like" >
 		</div>
 	</div>
 </div>	
+<script src="../public/js/marked.js"></script>
 
 <script>
 	$.get("../course/course_list.php",
@@ -47,10 +48,10 @@ include "../pcdl/html_head.php";
 			for (const iterator of arrData) {
 				html += '<div class="card" style="display:flex;margin:1em;padding:10px;">';
 
-				html += '<div style="flex:7;">';
+				html += '<div style="flex:9;">';
 				html +=  '<div class="title" style="padding-bottom:5px;font-size:110%;font-weight:600;"><a href="../course/course.php?id='+iterator.id+'">'+iterator.title+'</a></div>';
 				html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.subtitle+'</div>';
-				html += '<div class="summary"  style="padding-bottom:5px;">'+iterator.summary+'</div>';
+				html += '<div class="summary"  style="padding-bottom:5px;">'+marked(iterator.summary)+'</div>';
 
 				html += '</div>';
 
