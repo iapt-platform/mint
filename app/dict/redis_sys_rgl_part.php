@@ -2,7 +2,8 @@
 require_once "../path.php";
 require_once "../redis/function.php";
 
-if (PHP_SAPI == "cli") {
+if (PHP_SAPI == "cli" || isset($_COOKIE["userid"])) 
+{
 	$redis = redis_connect();
 	if ($redis != false) {
 		$dbh = new PDO(_DICT_DB_REGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true));
