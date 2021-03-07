@@ -39,7 +39,7 @@ include "../pcdl/html_head.php";
 		let arrData = JSON.parse(data);
 		let html='';
 		html +="<div style='display:flex;'>";
-		html +="<div style='flex:5;'>"
+		html +="<div style='flex:7;'>"
 		html +='<iframe style="width:100%;height: 550px;" src="../fullcalendar/examples/time-zones.php"></iframe>';
 		html +="</div>";
 		html +="<div style='flex:5;'>";
@@ -54,7 +54,7 @@ include "../pcdl/html_head.php";
 
 				html += '</div>';
 
-				html += '<div style="flex:3;max-width:15em;">';
+				html += '<div style="/*flex:3;max-width:15em;*/">';
 
 				html += '</div>';
 
