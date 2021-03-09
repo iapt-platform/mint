@@ -46,6 +46,7 @@ define("_DIR_CSV_PALI_CANON_WORD_INDEX_", __DIR__ . "/../paliword/index");
 
 define("_DIR_PALI_CSV_", __DIR__ . "/../tmp/palicsv");
 define("_DIR_LOG_", __DIR__ . "/../tmp/log");
+define("_DIR_LOG_APP_", __DIR__ . "/../tmp/log/app.log");
 define("_DIR_TEMP_", __DIR__ . "/../tmp/temp");
 define("_DIR_TEMP_DICT_TEXT_", __DIR__ . "/../tmp/dict_text");
 define("_DIR_TMP_", __DIR__ . "/../tmp");

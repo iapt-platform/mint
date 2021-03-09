@@ -3,6 +3,10 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../ucenter/setting_function.php';
+require_once "../redis/function.php";
+
+$redis = redis_connect();
+//$redis = false;
 
 if (isset($_GET["book"])) {
     $in_book = $_GET["book"];
@@ -64,31 +68,31 @@ $output = array();
 $db_file_list = array();
 //用户词典
 if ($dict_name == "") {
-    array_push($db_file_list, _FILE_DB_WBW1_);
+    $db_file_list[] = array(_FILE_DB_WBW1_,"dict://user",false);
 
-    array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/sys_regular.db");
-    array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/sys_irregular.db");
-    array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/union.db");
-    array_push($db_file_list, _DIR_DICT_SYSTEM_ . "/comp.db");
+    $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_regular.db","dict://regular",true);
+    $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_irregular.db","dict://irregular",true);
+    $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/union.db","dict://union",true);
+    $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/comp.db","dict://comp",true);
 
-    array_push($db_file_list, _DIR_DICT_3RD_ . "/pm.db");
-    array_push($db_file_list, _DIR_DICT_3RD_ . "/bhmf.db");
-    array_push($db_file_list, _DIR_DICT_3RD_ . "/shuihan.db");
-    array_push($db_file_list, _DIR_DICT_3RD_ . "/concise.db");
-    array_push($db_file_list, _DIR_DICT_3RD_ . "/uhan_en.db");
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/pm.db","dict://pm",true);
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/bhmf.db","dict://bhmf",true);
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/shuihan.db","dict://shuihan",true);
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/concise.db","dict://concise",true);
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/uhan_en.db","dict://uhan_en",true);
 } else {
     $dict_list = str_getcsv($dict_name, ',');
     foreach ($dict_list as $dict) {
-        array_push($db_file_list, $dict);
+        $db_file_list[] = array( $dict,"");
     }
 }
 
 $_dict_db = array();
 foreach ($db_file_list as $db_file) {
     try {
-        $dbh = new PDO("sqlite:" . $db_file, "", "");
+        $dbh = new PDO("sqlite:" . $db_file[0], "", "");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $_dict_db[] = array("file" => $db_file, "dbh" => $dbh);
+        $_dict_db[] = array("file" => $db_file[0], "dbh" => $dbh,"redis"=>$db_file[1],"static"=>$db_file[2]);
 
     } catch (PDOException $e) {
         if ($debug) {
@@ -97,8 +101,23 @@ foreach ($db_file_list as $db_file) {
     }
 }
 
+$lookuped=array();
+
 for ($i = 0; $i < $lookup_loop; $i++) {
-    $parent_list = array();
+	$parent_list = array();
+	
+	$newWordList = array();
+	foreach ($word_list as $lsWord) {
+		# 记录已经查过的词，下次就不查了
+		if(!isset($lookuped[$lsWord]) && !empty($lsWord)){
+			$newWordList[]=$lsWord;
+			$lookuped[$lsWord]=1;
+		}
+	}
+	if(count($newWordList)==0){
+		break;
+	}
+	$word_list = $newWordList;
     $strQueryWord = "("; //单词查询字串
     foreach ($word_list as $word) {
         $word = str_replace("'", "’", $word);
@@ -114,37 +133,124 @@ for ($i = 0; $i < $lookup_loop; $i++) {
             echo "dict connect:{$db_file["file"]}<br>";
         }
         if ($i == 0) {
-            $query = "select * from dict where \"pali\" in $strQueryWord ORDER BY rowid DESC";
+            $query = "SELECT * from dict where \"pali\" in $strQueryWord ORDER BY id DESC";
         } else {
-            $query = "select * from dict where  \"pali\" in $strQueryWord  AND ( type <> '.n.' AND  type <> '.ti.' AND  type <> '.adj.'  AND  type <> '.pron.'  AND  type <> '.v.' )   ORDER BY rowid DESC";
+            $query = "SELECT * from dict where  \"pali\" in $strQueryWord  AND ( type <> '.n.' AND  type <> '.ti.' AND  type <> '.adj.'  AND  type <> '.pron.'  AND  type <> '.v.' )   ORDER BY id DESC";
 		}
 		
         if ($debug) {
             echo $query . "<br>";
-        }
-        if ($db_file["dbh"]) {
-            try {
-                $stmt = $db_file["dbh"]->query($query);
-                if ($stmt) {
-                    $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } else {
-                    $Fetch = array();
-                    if ($debug) {
-                        echo "无效的Statement句柄";
-                    }
-                }
-            } catch (PDOException $e) {
-                if ($debug) {
-                    print "Error!: " . $e->getMessage() . "<br/>";
-                }
-                $Fetch = array();
-            }
-        } else {
-            $Fetch = array();
-            if ($debug) {
-                echo "无效的数据库句柄";
-            }
-        }
+		}
+		
+		$Fetch = array();
+		if ($redis && !empty($db_file["redis"])) {
+			if ($debug) {
+				echo "<spen style='color:green;'>redis</spen>:{$db_file["redis"]}<br>";
+			}
+			foreach ($word_list as $word) {
+				$wordData = $redis->hGet($db_file["redis"],$word);
+				if($wordData){
+					if(!empty($wordData)){
+						$arrWord = json_decode($wordData,true);
+						foreach ($arrWord as  $one) {
+							# code...
+							$Fetch[] = array("id"=>$one[0],
+											"pali"=>$one[1],
+											"type"=>$one[2],
+											"gramma"=>$one[3],
+											"parent"=>$one[4],
+											"mean"=>$one[5],
+											"note"=>$one[6],
+											"parts"=>$one[7],
+											"partmean"=>$one[8],
+											"status"=>$one[9],
+											"confidence"=>$one[10],
+											"dict_name"=>$one[12],
+											"lang"=>$one[13],
+											);
+						}						
+					}
+				}
+				else{
+					/*
+					if($db_file["static"]==false){
+						try {
+							if ($debug) {
+								echo "<spen style='color:red;'>db query</spen>:{$word} in {$db_file["file"]}<br>";
+							}
+							$query = "SELECT * from dict where pali = ? ORDER BY id DESC";
+							$stmt = $db_file["dbh"]->prepare($query);
+							$stmt->execute(array($word));
+							if ($stmt) {
+								$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+								$redisWord=array();
+								foreach ($Fetch as  $one) {
+									# code...
+									$redisWord[] = array($one["id"],
+													 $one["pali"],
+													$one["type"],
+													$one["gramma"],
+													$one["parent"],
+													$one["mean"],
+													$one["note"],
+													$one["factors"],
+													$one["factormean"],
+													$one["status"],
+													$one["confidence"],
+													1,
+													$one["dict_name"],
+													$one["language"]
+													);
+								}
+								$redis->hSet($db_file["redis"],$word,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
+							} else {
+								$Fetch = array();
+								if ($debug) {
+									echo "无效的Statement句柄";
+								}
+							}
+						} catch (PDOException $e) {
+							if ($debug) {
+								print "Error!: " . $e->getMessage() . "<br/>";
+							}
+							$Fetch = array();
+						}
+					}
+					*/
+				}
+			}
+		}
+		else{
+			if ($debug) {
+				echo "<spen style='color:red;'>db query</spen>:{$db_file["file"]}<br>";
+			}
+			if ($db_file["dbh"]) {
+				try {
+					$stmt = $db_file["dbh"]->query($query);
+					if ($stmt) {
+						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					} else {
+						$Fetch = array();
+						if ($debug) {
+							echo "无效的Statement句柄";
+						}
+					}
+				} catch (PDOException $e) {
+					if ($debug) {
+						print "Error!: " . $e->getMessage() . "<br/>";
+					}
+					$Fetch = array();
+				}
+			} else {
+				$Fetch = array();
+				if ($debug) {
+					echo "无效的数据库句柄";
+				}
+			}			
+		}
+
+		
+
         //$Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($debug) {
@@ -159,9 +265,9 @@ for ($i = 0; $i < $lookup_loop; $i++) {
                     $guid = "";
                 }
                 if (isset($one["lang"])) {
-                    $language = $one["lang"];
+                    $language = substr($one["lang"],0,2);
                 } else if (isset($one["language"])) {
-                    $language = $one["language"];
+                    $language = substr($one["language"],0,2);
                 } else {
                     $language = "en";
                 }

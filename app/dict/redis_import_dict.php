@@ -47,6 +47,9 @@ function runTask($redis,$task,$dir){
 			while (($data = fgets($fp)) !== false) {
 				$data1 = explode(",",$data);
 				if(count($data1)>1){
+					if($data1[2]==".comp." && $data1[1]===$data1[7]){
+						continue;
+					}
 					$old = $redis->hGet($task->rediskey,$data1[$task->keycol]);
 					$new = array();
 					if($old){
@@ -60,12 +63,13 @@ function runTask($redis,$task,$dir){
 				}
 
 				$count++;
-				if($count%10000==0){
+				if($count%50000==0){
 					sleep(1);
 					echo $count."\n";
 				}
 			}
 			fclose($fp);
+			sleep(1);
 			echo "task : {$task->rediskey}:".$redis->hLen($task->rediskey)."\n";
 			
 		} else {

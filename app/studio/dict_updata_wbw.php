@@ -1,8 +1,10 @@
 ﻿<?php
-require 'checklogin.inc';
-include "../public/_pdo.php";
-include "../path.php";
+require_once 'checklogin.inc';
+require_once "../public/_pdo.php";
+require_once "../path.php";
+require_once "../redis/function.php";
 
+$redis = redis_connect();
 $input = file_get_contents("php://input");
 
 $return = "";
@@ -28,22 +30,27 @@ foreach ($wordsList as $ws) {
 $arrInserString = array();
 $arrExistWords = array();
 
+$updateWord = array();
+
 foreach ($word as $x => $ws) {
-    $query = "select id,ref_counter  from dict where
-				\"guid\"=" . $PDO->quote($ws->guid) . " AND
-				\"pali\"=" . $PDO->quote($ws->pali) . " AND
-				\"type\"=" . $PDO->quote($ws->type) . " AND
-				\"gramma\"=" . $PDO->quote($ws->gramma) . " AND
-				\"mean\"=" . $PDO->quote($ws->mean) . " AND
-				\"parent\"=" . $PDO->quote($ws->parent) . " AND
-				\"parent_id\"=" . $PDO->quote($ws->parent_id) . " AND
-				\"factors\"=" . $PDO->quote($ws->factors) . " AND
-				\"factormean\"=" . $PDO->quote($ws->fm) . " AND
-				\"part_id\"=" . $PDO->quote($ws->part_id);
-    $Fetch = PDO_FetchAll($query);
+	
+    $query = "SELECT id,ref_counter  FROM dict WHERE
+				\"guid\"= ? AND
+				\"pali\"= ? AND
+				\"type\"= ? AND
+				\"gramma\"= ? AND
+				\"mean\"= ? AND
+				\"parent\"= ? AND
+				\"parent_id\"= ? AND
+				\"factors\"= ? AND
+				\"factormean\"= ? AND
+				\"part_id\"= ?" ;
+    $Fetch = PDO_FetchAll($query,array($ws->guid,$ws->pali,$ws->type,$ws->gramma,$ws->mean,$ws->parent,$ws->parent_id,$ws->factors,$ws->fm,$ws->part_id));
     $FetchNum = count($Fetch);
 
     if ($FetchNum == 0) {
+		$updateWord["{$ws->pali}"] = 1;
+		//没有找到，新建数据
         //new recorder
         $params = array($ws->guid,
             $ws->pali,
@@ -113,7 +120,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = PDO_ErrorInfo();
     echo "error - $error[2] <br>";
 } else {
-
+	//成功
     $count = count($arrInserString);
     echo "updata $count recorders.";
     //更新索引表
@@ -141,5 +148,40 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         }
     } else {
         echo "updata index 0";
-    }
+	}
+	
+	#更新 redis
+	if ($redis != false) {
+		foreach ($updateWord as $key => $value) {
+			# code...
+			$query = "SELECT * from dict where pali = ? ";
+			$stmt = $PDO->prepare($query);
+			$stmt->execute(array($key));
+			if ($stmt) {
+				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$redisWord=array();
+				foreach ($Fetch as  $one) {
+					# code...
+					$redisWord[] = array($one["id"],
+										$one["pali"],
+									$one["type"],
+									$one["gramma"],
+									$one["parent"],
+									$one["mean"],
+									$one["note"],
+									$one["factors"],
+									$one["factormean"],
+									$one["status"],
+									$one["confidence"],
+									1,
+									$one["dict_name"],
+									$one["language"]
+									);
+				}
+				$redis->hSet("dict://user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
+			}				
+		}
+	
+	}
+
 }
