@@ -31,7 +31,7 @@ if (PHP_SAPI == "cli") {
 									$one["factormean"],
 									$one["status"],
 									$one["confidence"],
-									1,
+									$one["creator"],
 									$one["dict_name"],
 									$one["language"]
 									);

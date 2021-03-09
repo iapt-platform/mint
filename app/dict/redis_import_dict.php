@@ -45,7 +45,7 @@ function runTask($redis,$task,$dir){
 		if (($fp = fopen($csvfile, "r")) !== false) {
 			echo "单词表load {$csvfile}\n";
 			while (($data = fgets($fp)) !== false) {
-				$data1 = explode(",",$data);
+				$data1 = explode(",",trim($data));
 				if(count($data1)>1){
 					if($data1[2]==".comp." && $data1[1]===$data1[7]){
 						continue;

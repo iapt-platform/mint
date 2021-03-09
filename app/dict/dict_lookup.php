@@ -10,13 +10,22 @@ require_once "../search/word_function.php";
 require_once "../ucenter/active.php";
 require_once "../ucenter/function.php";
 require_once "../dict/p_ending.php";
+require_once "../redis/function.php";
+
+global $redis;
+$redis = redis_connect();
+
+global $count_return;
+$count_return = 0;
 
 _load_book_index();
 
 $word = mb_strtolower($_GET["word"], 'UTF-8');
 $org_word = $word;
 
-$count_return = 0;
+
+global $dict_list;
+
 $dict_list = array();
 
 $right_word_list = "";
@@ -24,49 +33,15 @@ $right_word_list = "";
         add_edit_event(_DICT_LOOKUP_, $word);
 
 		echo "<div id='dict_ref'>";
+		#先查原词
 		echo "<div class='pali_spell'><a name='{word_$word}'></a>" . $word . "</div>";
-        $dict_list_a = [];
-        //社区字典开始
-        PDO_Connect("" . _FILE_DB_WBW_);
-        $query = "SELECT *  from " . _TABLE_DICT_REF_ . " where pali = ? limit 0,100";
-        $Fetch = PDO_FetchAll($query, array($word));
-        $iFetch = count($Fetch);
-        $count_return += $iFetch;
-        if ($iFetch > 0) {
-            $userlist = array();
-            foreach ($Fetch as $value) {
-                if (isset($userlist[$value["creator"]])) {
-                    $userlist[$value["creator"]] += 1;
-                } else {
-                    $userlist[$value["creator"]] = 1;
-                }
-                $userwordcase = $value["type"] . "#" . $value["gramma"];
-                if (isset($userdict["{$userwordcase}"])) {
-                    $userdict["{$userwordcase}"]["mean"] .= $value["mean"] . ";";
-                    $userdict["{$userwordcase}"]["factors"] .= $value["factors"];
-                } else {
-                    $userdict["{$userwordcase}"]["mean"] = $value["mean"];
-                    $userdict["{$userwordcase}"]["factors"] = $value["factors"];
-                }
+		$dict_list_a = [];
+		
+		//社区字典开始
+		echo lookup_user($word);
+		//社区字典结束
+		echo lookup_term($word);
 
-            }
-            echo "<div class='dict_word'>";
-            echo "<div class='dict'>{$_local->gui->com_dict}</div><a name='net'></a>";
-            $dict_list_a[] = array("net", $_local->gui->com_dict);
-
-            foreach ($userdict as $key => $value) {
-                echo "<div class='mean'>{$key}:{$value["mean"]}</div>";
-            }
-			echo "<div><span>{$_local->gui->contributor}：</span>";
-			$userinfo = new UserInfo();
-            foreach ($userlist as $key => $value) {
-				$user = $userinfo->getName($key);
-                echo $user["nickname"] . "[" . $value . "]";
-            }
-            echo "</div>";
-            echo "</div>";
-        }
-        //社区字典结束
 
         PDO_Connect("" . _FILE_DB_REF_);
         //直接查询
@@ -118,6 +93,17 @@ $right_word_list = "";
 		$base_list = array();
         if (count($newWord) > 0) {
             foreach ($newWord as $x => $x_value) {
+				$titleHas = false;
+				$userDictStr = lookup_user($x);
+				$termDictStr = lookup_term($x);
+
+				if(!empty($userDictStr) || !empty($termDictStr)){
+					echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
+					$titleHas = true;
+				}
+				echo $userDictStr;
+				echo $termDictStr;
+				
                 $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
                 $Fetch = PDO_FetchAll($query, array($x));
                 $iFetch = count($Fetch);
@@ -125,7 +111,10 @@ $right_word_list = "";
                 if ($iFetch > 0) {
 					$base_list[] = $x;
                     $dict_list_a[] = array("word_$x", $x);
-                    echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
+					if(!$titleHas){
+						echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
+					}
+					
                     //语法信息
                     foreach ($_local->grammastr as $gr) {
                         $x_value = str_replace($gr->id, $gr->value, $x_value);
@@ -179,6 +168,7 @@ $right_word_list = "";
 			$base_list = array();
 			if (count($arrBase) > 0) {
 				foreach ($arrBase as $x => $x_value) {
+					
 					$query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
 					$Fetch = PDO_FetchAll($query, array($x));
 					$iFetch = count($Fetch);
@@ -359,3 +349,172 @@ $right_word_list = "";
 
 
 
+function lookup_user($word){
+	global $dict_list;
+	global $redis;
+	global $_local;
+	global $PDO;
+	global $count_return;
+
+	$output ="";
+	$Fetch=array();
+	if($redis){
+		$wordData = $redis->hGet("dict://user",$word);
+			if($wordData){
+				if(!empty($wordData)){
+					$arrWord = json_decode($wordData,true);
+					foreach ($arrWord as  $one) {
+						# code...
+						$Fetch[] = array("id"=>$one[0],
+										"pali"=>$one[1],
+										"type"=>$one[2],
+										"gramma"=>$one[3],
+										"parent"=>$one[4],
+										"mean"=>$one[5],
+										"note"=>$one[6],
+										"factors"=>$one[7],
+										"factormean"=>$one[8],
+										"status"=>$one[9],
+										"confidence"=>$one[10],
+										"creator"=>$one[11],
+										"dict_name"=>$one[12],
+										"lang"=>$one[13],
+										);
+					}						
+				}
+			}
+			else{
+				#  没找到就不找了
+			}
+	}
+	else{
+		PDO_Connect("" . _FILE_DB_WBW_);
+		$query = "SELECT *  from " . _TABLE_DICT_REF_ . " where pali = ? limit 0,100";
+		$Fetch = PDO_FetchAll($query, array($word));
+	}
+	
+	$iFetch = count($Fetch);
+	$count_return += $iFetch;
+	if ($iFetch > 0) {
+		$userlist = array();
+		foreach ($Fetch as $value) {
+			if (isset($userlist[$value["creator"]])) {
+				$userlist[$value["creator"]] += 1;
+			} else {
+				$userlist[$value["creator"]] = 1;
+			}
+			$userwordcase = $value["type"] . "#" . $value["gramma"];
+			if (isset($userdict["{$userwordcase}"])) {
+				$userdict["{$userwordcase}"]["mean"] .= $value["mean"] . ";";
+				$userdict["{$userwordcase}"]["factors"] .= $value["factors"];
+			} else {
+				$userdict["{$userwordcase}"]["mean"] = $value["mean"];
+				$userdict["{$userwordcase}"]["factors"] = $value["factors"];
+			}
+
+		}
+		$output .= "<div class='dict_word'>";
+		$output .= "<div class='dict'>{$_local->gui->com_dict}</div><a name='net'></a>";
+		$dict_list_a[] = array("net", $_local->gui->com_dict);
+
+		foreach ($userdict as $key => $value) {
+			$output .= "<div class='mean'>{$key}:{$value["mean"]}</div>";
+		}
+		$output .= "<div><span>{$_local->gui->contributor}：</span>";
+		$userinfo = new UserInfo();
+		foreach ($userlist as $key => $value) {
+			$user = $userinfo->getName($key);
+			$output .= $user["nickname"] . " ";
+		}
+		$output .= "</div>";
+		$output .= "</div>";
+	}
+	
+	return $output;
+
+}
+
+function lookup_term($word){
+	global $dict_list;
+	global $redis;
+	global $_local;
+	global $PDO;
+	global $count_return;
+
+	$output ="";
+	$Fetch=array();
+	if($redis){
+		$wordData = $redis->hGet("dict://term",$word);
+			if($wordData){
+				if(!empty($wordData)){
+					$arrWord = json_decode($wordData,true);
+					foreach ($arrWord as  $one) {
+						# code...
+						$Fetch[] = array("id"=>$one[0],
+										"pali"=>$one[1],
+										"type"=>$one[2],
+										"gramma"=>$one[3],
+										"parent"=>$one[4],
+										"mean"=>$one[5],
+										"note"=>$one[6],
+										"factors"=>$one[7],
+										"factormean"=>$one[8],
+										"status"=>$one[9],
+										"confidence"=>$one[10],
+										"creator"=>$one[11],
+										"dict_name"=>$one[12],
+										"lang"=>$one[13],
+										);
+					}						
+				}
+			}
+			else{
+				#  没找到就不找了
+			}
+	}
+	else{
+		PDO_Connect("" . _FILE_DB_WBW_);
+		$query = "SELECT *  from " . _TABLE_DICT_REF_ . " where pali = ? limit 0,100";
+		$Fetch = PDO_FetchAll($query, array($word));
+	}
+	
+	$iFetch = count($Fetch);
+	$count_return += $iFetch;
+	if ($iFetch > 0) {
+		$userlist = array();
+		foreach ($Fetch as $value) {
+			if (isset($userlist[$value["creator"]])) {
+				$userlist[$value["creator"]] += 1;
+			} else {
+				$userlist[$value["creator"]] = 1;
+			}
+			$userwordcase = $value["type"] . "#" . $value["gramma"];
+			if (isset($userdict["{$userwordcase}"])) {
+				$userdict["{$userwordcase}"]["mean"] .= $value["mean"] . ";";
+				$userdict["{$userwordcase}"]["factors"] .= $value["factors"];
+			} else {
+				$userdict["{$userwordcase}"]["mean"] = $value["mean"];
+				$userdict["{$userwordcase}"]["factors"] = $value["factors"];
+			}
+
+		}
+		$output .= "<div class='dict_word'>";
+		$output .= "<div class='dict'>{$_local->gui->wiki_term}</div><a name='net'></a>";
+		$dict_list_a[] = array("net", $_local->gui->wiki_term);
+
+		foreach ($userdict as $key => $value) {
+			$output .= "<div class='mean'>{$key}:{$value["mean"]}</div>";
+		}
+		$output .= "<div><span>{$_local->gui->contributor}：</span>";
+		$userinfo = new UserInfo();
+		foreach ($userlist as $key => $value) {
+			$user = $userinfo->getName($key);
+			$output .= $user["nickname"] . " ";
+		}
+		$output .= "</div>";
+		$output .= "</div>";
+	}
+	
+	return $output;
+
+}

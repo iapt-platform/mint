@@ -173,7 +173,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 									$one["factormean"],
 									$one["status"],
 									$one["confidence"],
-									1,
+									$one["creator"],
 									$one["dict_name"],
 									$one["language"]
 									);
@@ -181,7 +181,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 				$redis->hSet("dict://user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
 			}				
 		}
-	
 	}
+	#更新redis结束
 
 }

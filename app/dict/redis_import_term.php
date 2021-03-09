@@ -31,7 +31,7 @@ if (PHP_SAPI == "cli") {
 									"",
 									1,
 									100,
-									1,
+									$one["owner"],
 									"term",
 									$one["language"]
 									);

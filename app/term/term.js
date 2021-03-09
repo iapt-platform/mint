@@ -310,10 +310,9 @@ function term_data_save(guid) {
 		var strNote = $("#term_edit_note_" + guid).val();
 	}
 	$.post(
-		"../term/term.php",
+		"../term/term_post.php",
 		{
-			op: "save",
-			guid: guid,
+			id: guid,
 			word: strWord,
 			mean: strMean,
 			mean2: strMean2,

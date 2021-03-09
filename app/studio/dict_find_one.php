@@ -66,10 +66,11 @@ $word_list = str_getcsv($in_word);
 $dict_word_spell = array();
 $output = array();
 $db_file_list = array();
-//用户词典
+//词典列表
 if ($dict_name == "") {
-    $db_file_list[] = array(_FILE_DB_WBW1_,"dict://user",false);
-
+    $db_file_list[] = array(_FILE_DB_TERM_,"dict://term",true);	
+	$db_file_list[] = array(_FILE_DB_WBW1_,"dict://user",true);
+	
     $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_regular.db","dict://regular",true);
     $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_irregular.db","dict://irregular",true);
     $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/union.db","dict://union",true);
@@ -90,8 +91,14 @@ if ($dict_name == "") {
 $_dict_db = array();
 foreach ($db_file_list as $db_file) {
     try {
-        $dbh = new PDO("sqlite:" . $db_file[0], "", "");
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		if ($redis && !empty($db_file[1])) {
+			$dbh=null;
+		}
+		else{
+			$dbh = new PDO("sqlite:" . $db_file[0], "", "");
+        	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		}
+        
         $_dict_db[] = array("file" => $db_file[0], "dbh" => $dbh,"redis"=>$db_file[1],"static"=>$db_file[2]);
 
     } catch (PDOException $e) {
@@ -172,51 +179,7 @@ for ($i = 0; $i < $lookup_loop; $i++) {
 					}
 				}
 				else{
-					/*
-					if($db_file["static"]==false){
-						try {
-							if ($debug) {
-								echo "<spen style='color:red;'>db query</spen>:{$word} in {$db_file["file"]}<br>";
-							}
-							$query = "SELECT * from dict where pali = ? ORDER BY id DESC";
-							$stmt = $db_file["dbh"]->prepare($query);
-							$stmt->execute(array($word));
-							if ($stmt) {
-								$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-								$redisWord=array();
-								foreach ($Fetch as  $one) {
-									# code...
-									$redisWord[] = array($one["id"],
-													 $one["pali"],
-													$one["type"],
-													$one["gramma"],
-													$one["parent"],
-													$one["mean"],
-													$one["note"],
-													$one["factors"],
-													$one["factormean"],
-													$one["status"],
-													$one["confidence"],
-													1,
-													$one["dict_name"],
-													$one["language"]
-													);
-								}
-								$redis->hSet($db_file["redis"],$word,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
-							} else {
-								$Fetch = array();
-								if ($debug) {
-									echo "无效的Statement句柄";
-								}
-							}
-						} catch (PDOException $e) {
-							if ($debug) {
-								print "Error!: " . $e->getMessage() . "<br/>";
-							}
-							$Fetch = array();
-						}
-					}
-					*/
+					#  没找到就不找了
 				}
 			}
 		}
@@ -265,9 +228,9 @@ for ($i = 0; $i < $lookup_loop; $i++) {
                     $guid = "";
                 }
                 if (isset($one["lang"])) {
-                    $language = substr($one["lang"],0,2);
+                    $language = $one["lang"];
                 } else if (isset($one["language"])) {
-                    $language = substr($one["language"],0,2);
+                    $language = $one["language"];
                 } else {
                     $language = "en";
                 }
