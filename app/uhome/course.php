@@ -16,7 +16,18 @@ include "../pcdl/html_head.php";
     $currChannal = "course";
     require_once "../uhome/head.php";
 ?>
+<style>
+#course_list{
+	display:block;
+}
 
+</style>
+
+<style media="screen and (min-width:800px)">
+#course_list{
+	display:flex;
+}
+</style>
 <div class='section_inner'>
 	<div class="course_info_block">
 		<h2><?php echo $_local->gui->teaching_course ;?></h2>
@@ -28,7 +39,8 @@ include "../pcdl/html_head.php";
 		<div id="my_like" >
 		</div>
 	</div>
-</div>	
+</div>
+
 <script src="../public/js/marked.js"></script>
 
 <script>
@@ -39,7 +51,6 @@ include "../pcdl/html_head.php";
     function(data,status){
 		let arrData = JSON.parse(data);
 		let html='';
-		html +="<div style='display:flex;'>";
 		html +="<div style='flex:10;'>"
 		html +='<iframe style="width:100%;height: 550px;" src="../fullcalendar/examples/time-zones.php"></iframe>';
 		html +="</div>";
@@ -67,7 +78,6 @@ include "../pcdl/html_head.php";
 		else{
 			html += '尚未发布任何课程';
 		}
-		html +="</div>";
 		html +="</div>";
 		$("#course_list").html(html);
 	});
