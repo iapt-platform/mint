@@ -13,10 +13,12 @@ include "../pcdl/html_head.php";
 		color:red;
 	}
 	#search_result{
-    position: absolute;
-    background: wheat;
-    max-width: 95%;
-    width: 24em;
+		position: absolute;
+		background: var(--bg-color);
+    	box-shadow: 8px 8px 20px var(--border-shadow);
+		max-width: 95%;
+		width: 24em;
+		z-index: 20;
 	}
 	chapter{
 		color: blue;
@@ -50,6 +52,13 @@ include "../pcdl/html_head.php";
 		#index_list{
 			display:flex;
 		}
+		.wiki_search_list li{
+			padding:0 1em;
+			line-height:1.8em;
+		}
+		.wiki_search_list li:hover {
+			background-color: beige;
+		}
 	</style>
 	<style  media="screen and (max-width:800px)">
 		#index_list{
@@ -81,7 +90,7 @@ include "../pcdl/html_head.php";
 				<div ></div>
 				<div>
 					<div>
-						<input id="wiki_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" style="    margin-left: 0.5em;width: 40em;max-width: 100%;font-size:140%;padding: 0.6em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onkeyup="wiki_search_keyup(event,this)"/>
+						<input id="wiki_search_input" type="input" placeholder="<?php echo $_local->gui->search;?>" style="width: 40em;max-width: 100%;font-size:140%;padding: 0.3em;color: var(--btn-hover-bg-color);background-color: var(--btn-color);" onkeyup="wiki_search_keyup(event,this)"/>
 					</div>
 					<div id="search_result">
 					</div>	
@@ -90,7 +99,7 @@ include "../pcdl/html_head.php";
 				<ul>
 					<li>人人皆可编辑</li>
 					<li>引用圣典原文</li>
-					<li>内容翔实可信</li>
+					<li><a href="wiki.php?word=:new"><?php echo $_local->gui->new_technic_term; ?></a></li>
 
 				</ul>
 				</div>
