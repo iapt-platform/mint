@@ -53,7 +53,9 @@ function term_get_word_to_div(strWord) {
 							type[iterator.tag].push(iterator.meaning);
 							authors[iterator.owner] = iterator.user;
 						}
-
+						if (iterator.tag == "_null_") {
+							iterator.tag = "";
+						}
 						html += "<div class='term_word_head'>";
 						html += "<div class='term_word_head_pali'>";
 						html += result[0].word;
