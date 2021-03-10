@@ -122,7 +122,7 @@ function rela_render_context(wordid,index,strRela,grammar){
 	output += "<div class=\"case_dropdown rela_menu\" style='display: inline-block'>";
 	output += "<p class=\"case_dropbtn\">";
 	if(strRela==""){
-		output += "<span class='relation_blank'>Relation</span>";
+		output += "<span class='relation_blank'>"+gLocal.gui.relation+"</span>";
 	}
 	else{
 		output += "<span class='relation_text'>"+strRela+"</span>";
