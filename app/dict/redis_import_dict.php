@@ -44,7 +44,9 @@ function runTask($redis,$task,$dir){
 		$csvfile = $dir."/".$csv;
 		if (($fp = fopen($csvfile, "r")) !== false) {
 			echo "单词表load {$csvfile}\n";
+			$row=0;
 			while (($data = fgets($fp)) !== false) {
+				$row++;
 				$data1 = explode(",",trim($data));
 				if(count($data1)>7){
 					if($data1[2]==".comp." && $data1[1]===$data1[7]){
@@ -61,7 +63,9 @@ function runTask($redis,$task,$dir){
 					}
 					$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));							
 				}
-
+				else{
+					echo "列不足够：行：{$row} 列：".count($data1)." 数据：{$data} \n";
+				}
 				$count++;
 				if($count%50000==0){
 					sleep(1);

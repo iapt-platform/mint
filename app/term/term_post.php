@@ -17,11 +17,27 @@ if (isset($_COOKIE["userid"]) == false) {
     exit;
 }
 
+
 $respond = array("status" => 0, "message" => "");
 PDO_Connect("" . _FILE_DB_TERM_);
 
+
+
 if ($_POST["id"] != "") {
-    #更新
+	#更新
+	#先查询是否有权限
+	$query = "SELECT id from term where guid= ? and owner = ? ";
+	$stmt = $PDO->prepare($query);
+	$stmt->execute(array($_POST["id"],$_COOKIE["userid"]));
+	if ($stmt) {
+		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+		if(!$Fetch){
+			$respond['status'] = 1;
+			$respond['message'] = "no power";
+			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+			exit;			
+		}
+	}
     $query = "UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? and owner = ? ";
 	$stmt = @PDO_Execute($query, 
 						array($_POST["mean"],
@@ -44,7 +60,25 @@ if ($_POST["id"] != "") {
         $respond['message'] = $_POST["word"];
     }
 } else {
-    #新建
+	#新建
+	if(trim($_POST["word"])==""){
+		$respond['status'] = 1;
+		$respond['message'] = "pali word cannot be empty";
+		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+		exit;
+	}
+	if(trim($_POST["mean"])==""){
+		$respond['status'] = 1;
+		$respond['message'] = "meaning cannot be empty";
+		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+		exit;
+	}
+	if(trim($_POST["language"])==""){
+		$respond['status'] = 1;
+		$respond['message'] = "language cannot be empty";
+		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+		exit;
+	}
     $parm[] = UUID::v4();
     $parm[] = $_POST["word"];
     $parm[] = pali2english($_POST["word"]);

@@ -19,14 +19,14 @@ if($redis!==false){
 	if($redis->hExists("dict://comp",$inputWord)===TRUE){
 		$output = $redis->hGet("dict://comp",$inputWord) ;
 		if(empty($output)){
-			echo "[]";
+			echo json_encode(array(), JSON_UNESCAPED_UNICODE);
 		}
 		else{
 			echo $output;
 		}
 	}
 	else{
-		echo "[]";
+		echo json_encode(array(), JSON_UNESCAPED_UNICODE);
 	}
 }
 else{

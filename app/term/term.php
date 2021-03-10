@@ -45,10 +45,14 @@ PDO_Connect("" . _FILE_DB_TERM_);
 switch ($op) {
     case "pre": //预查询
         {
-            $query = "select word,meaning from term where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+			if(trim($word)==""){
+				echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+            	break;
+			}
+            $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
             $Fetch = PDO_FetchAll($query);
-            if (count($Fetch) < 5) {
-                $query = "select word,meaning from term where \"eword\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+            if (count($Fetch) < 3) {
+                $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                 $Fetch2 = PDO_FetchAll($query);
                 //去掉重复的
                 foreach ($Fetch2 as $onerow) {
@@ -64,12 +68,12 @@ switch ($op) {
                     }
                 }
                 if (count($Fetch) < 8) {
-                    $query = "select word,meaning from term where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+                    $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
                     $Fetch3 = PDO_FetchAll($query);
 
                     $Fetch = array_merge($Fetch, $Fetch3);
                     if (count($Fetch) < 8) {
-                        $query = "select word,meaning from term where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+                        $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                         $Fetch4 = PDO_FetchAll($query);
                         //去掉重复的
                         foreach ($Fetch4 as $onerow) {

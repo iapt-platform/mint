@@ -88,7 +88,13 @@ if (isset($_POST["words"])) {
             $fetch = PDO_FetchAll($query, $parm);
             $userinfo = new UserInfo();
             foreach ($fetch as $key => $value) {
-                # code...
+				# code...
+				if($value["owner"]==$_COOKIE["userid"]){
+					$fetch[$key]["readonly"]=false;
+				}
+				else{
+					$fetch[$key]["readonly"]=true;
+				}
                 $fetch[$key]["user"] = $userinfo->getName($value["owner"]);
                 $output[] = $fetch[$key];
             }
