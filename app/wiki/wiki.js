@@ -53,9 +53,7 @@ function term_get_word_to_div(strWord) {
 							type[iterator.tag].push(iterator.meaning);
 							authors[iterator.owner] = iterator.user;
 						}
-						if (iterator.tag == "_null_") {
-							iterator.tag = "";
-						}
+
 						html += "<div class='term_word_head'>";
 						html += "<div class='term_word_head_pali'>";
 						html += result[0].word;
@@ -90,6 +88,9 @@ function term_get_word_to_div(strWord) {
 						html += "<div id='term_list'>";
 
 						for (const iterator of result) {
+							if (iterator.tag == "_null_") {
+								iterator.tag = "";
+							}
 							html += "<div class='term_block'>";
 							html += "<div class='term_block_bar'>";
 							html += "<div class='term_block_bar_left'>";
