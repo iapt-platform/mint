@@ -131,10 +131,13 @@ require_once "../pcdl/html_head.php";
 			echo "&display=sent";
 			echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
 		}
-
 		?>
-			<button class='icon_btn'><a><?php echo $_local->gui->help; ?></a></button>
-			<button id="btn_show_dict" class='icon_btn' onclick="show_dict(this)"><a ><?php echo $_local->gui->dict; ?></a></button>
+			
+		<span>
+		<?php include "../reader/right_tool_bar.php";?>
+		</span>
+
+
 		</span>
 	</div>
 </div>
@@ -200,26 +203,7 @@ require_once "../pcdl/html_head.php";
 		</div>
 	</div>
 
-<div id="main_view_shell">
-	<div id="right_float_pannal">
-		<div id="tool_bar">
-			<span>
-			<button id="max_right_float" class="icon_btn" onclick="max_right_float(this)">
-				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#left_expand'></use></svg>
-			</button>
-			<button id="min_right_float" class="icon_btn" onclick="min_right_float(this)">
-				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#right_expand'></use></svg>
-			</button>
-			</span>
-			<span>
-			<button id="close_right_float" class="icon_btn" onclick="close_right_float()">
-			<svg class='icon'><use xlink:href='../studio/svg/icon.svg#cross_with_circle'></use></svg>
-			</button>
-			</span>
-		</div>
-		<iframe id="dict" src="../dict/index.php?builtin=true" name="dict" title="wikipali"></iframe>
-	</div>
-</div>
+
 
 <script>
 	$(document).ready(function(){

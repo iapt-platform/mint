@@ -125,8 +125,7 @@ chapter {
 .language-para {
 	padding: 2px 2px;
 	position: absolute;
-	margin-top: 7px;
-	border-bottom: 3px solid var(--link-color);
+	margin-top: 0;
 	margin-left: -60px;
 	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
 }
@@ -170,57 +169,4 @@ chapter {
 
 #para_path_next_level {
 	display: inline-block;
-}
-
-#right_float_pannal {
-	position: fixed;
-	height: calc(100% - 7.3em);
-	top: 7.3em;
-	left: 100%;
-	width: 30em;
-	min-width: 20em;
-	color: var(--btn-color);
-	background-color: var(--tool-bg-color);
-	z-index: 20;
-	-webkit-transition-duration: 0.4s;
-	transition-duration: 0.4s;
-	-webkit-contain: strict;
-	contain: strict;
-	z-index: 51;
-}
-#right_float_pannal > iframe {
-	width: 100%;
-	height: 100%;
-}
-.right_float_max #right_float_pannal {
-	left: 50%;
-	width: 50%;
-}
-
-.right_float_min #right_float_pannal {
-	left: calc(100% - 30em);
-}
-#right_float_pannal > #tool_bar {
-	position: absolute;
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
-}
-#right_float_pannal > #tool_bar svg {
-	fill: var(--box-bg-color1);
-}
-#min_right_float {
-	display: none;
-}
-.main_view_right_float_min {
-	margin-right: 29em;
-}
-.main_view_right_float_max {
-	margin-right: 50%;
-}
-.main_view_right_float_min #right_pannal {
-	display: none;
-}
-.main_view_right_float_max #right_pannal {
-	display: none;
 }
