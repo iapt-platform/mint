@@ -100,12 +100,6 @@ require_once "../pcdl/html_head.php";
 			}
 		}
 
-
-
-
-
-
-		
 		?>
 		<span>
 		<?php include "../reader/right_tool_bar.php";?>

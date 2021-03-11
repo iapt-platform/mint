@@ -92,7 +92,7 @@ var iCurrSysDictIndex = 0;
 function run_rich_dict(index){
     if(index >= rich_file_list.length){
         $("#response").html($("#response").html()+"rich dict Down");
-        run_sys_dict(0);
+        //run_sys_dict(0);
     }
     else{
         $.get("step3_run.php",
