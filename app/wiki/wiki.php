@@ -54,9 +54,11 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	#search_result{
 		position: absolute;
-		background: wheat;
+		background: var(--bg-color);
+    	box-shadow: 8px 8px 20px var(--border-shadow);
 		max-width: 95%;
 		width: 24em;
+		z-index: 20;
 	}
 	note:hover chapter{
 		display:inline;
@@ -172,14 +174,16 @@ echo "wiki_load_word('{$_get_word}')";
     border-radius: 99px;
 	}
 	.term_block_bar_left_info{
-		    padding-left: 8px;
+		padding-left: 8px;
+		display:flex;
 	}
 	.term_meaning{
 		font-weight: 700;
 	}
 	.term_author{
 		font-size: 80%;
-		color: gray;
+		color: var(--main-color1);
+		padding: 0 10px 0 5px;
 	}
 	.term_tag{
 		font-size: 80%;
@@ -191,7 +195,7 @@ echo "wiki_load_word('{$_get_word}')";
 	}
 	#wiki_contents{
 		padding: 0 1em;
-		max-width: 1280px;
+		max-width: 960px;
 		margin-left: auto;
 		margin-right: auto;
 	}
@@ -252,6 +256,28 @@ echo "wiki_load_word('{$_get_word}')";
 		margin-left: 1em;
 		padding-left: 0.5em;
 	}
+	#wiki_head{
+		min-height:100px;
+	}
+	#form_term ul li{
+		display:flex;
+	}
+	#form_term ul .field{
+		flex:1;
+	}
+	#form_term ul .input{
+		flex:8;
+	}
+	input[type="text"], input[type="input"], textarea{
+		border:1px solid var(--border-line-color);
+	}
+	.wiki_search_list li{
+			padding:0 1em;
+			line-height:1.8em;
+		}
+		.wiki_search_list li:hover {
+			background-color: beige;
+		}
 	</style>
 
 <style media="screen and (max-width:800px)">
@@ -273,7 +299,6 @@ term_word_link_fun("wiki_goto_word");
 		position:unset;
 	}
 	#pali_pedia{
-		font-size: 200%;
     margin-top: auto;
     margin-bottom: auto;
     padding-left: 0.5em;
@@ -288,7 +313,7 @@ term_word_link_fun("wiki_goto_word");
 <div id="head_bar" >
 	<div id="pali_pedia" style="display:flex;width: 100%;">
 		<span style="margin: auto 1em auto 0;"><?php echo $_local->gui->wiki_term; ?></span>
-		<span id="wiki_search" style="width:35vw;margin: auto 0em;font-size: large;">
+		<span id="wiki_search" style="width:35vw;margin: auto 0em;">
 			<span style="display:block;">
 				<input id="wiki_search_input" type="input" placeholder=<?php echo $_local->gui->search; ?> style="width:30vw;background-color: var(--btn-color);border: 1px solid var(--btn-border-color);border-radius: 99px;padding: 3px 15px;"  onkeyup="wiki_search_keyup(event,this)"/>
 			</span>
@@ -297,14 +322,39 @@ term_word_link_fun("wiki_goto_word");
 		</span>	
 		<span style="font-size: medium; margin: auto 1em auto auto;">
 			<button class="icon_btn"><a href="#"><?php echo $_local->gui->setting; ?></a></button>
-			<button class="icon_btn"><a href="#"><?php echo $_local->gui->new; ?></a></button>
+			<button class="icon_btn"><a href="wiki.php?word=:new"><?php echo $_local->gui->new_technic_term; ?></a></button>
 			<button class="icon_btn"><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>
 	</div>
 </div>
 
-<div id="wiki_contents" style="padding: 0 1em;">
-	<?php echo $_local->gui->loading; ?>...
+<div id="wiki_contents"  >
+	<div id="wiki_head"></div>
+	<div id="wiki_body" style="display:flex;">
+		<div id="wiki_body_left" style="flex:7;padding: 0 1em;">
+			<?php echo $_local->gui->loading; ?>...
+		</div>
+		<div id="wiki_body_right" style="flex:3">
+
+			<div id='term_list_right' >
+
+				<div class="fun_frame">
+					<div class="title"><?php echo $_local->gui->language; ?></div>
+					<div class="content" style="max-height:10em;">
+						<div><a href=""><?php echo $_local->gui->all; ?></a></div>
+					</div>
+				</div>
+
+				<div class="fun_frame">
+					<div class="title"><?php echo $_local->gui->translation; ?></div>
+					<div id="channal_list"  class="content" style="max-height:10em;">
+						<div><a href=""><?php echo $_local->gui->all; ?></a></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </div>
 <script>
 	 window.addEventListener('scroll',winScroll);

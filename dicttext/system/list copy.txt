@@ -1,4 +1,3 @@
-../../tmp/dict_text/comp1.csv,comp.db
 sys_irregular.csv,sys_irregular.db
 sys_regular.csv,sys_regular.db
 sys_regular1.csv,sys_regular.db

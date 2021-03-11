@@ -100,14 +100,10 @@ require_once "../pcdl/html_head.php";
 			}
 		}
 
-
-
-
-
-
-		
 		?>
-			<button class='icon_btn'><a href="#"><?php echo $_local->gui->help; ?></a></button>
+		<span>
+		<?php include "../reader/right_tool_bar.php";?>
+		</span>
 		</span>
 	</div>
 </div>

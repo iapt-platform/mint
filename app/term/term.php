@@ -45,10 +45,14 @@ PDO_Connect("" . _FILE_DB_TERM_);
 switch ($op) {
     case "pre": //预查询
         {
-            $query = "select word,meaning from term where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+			if(trim($word)==""){
+				echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+            	break;
+			}
+            $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
             $Fetch = PDO_FetchAll($query);
-            if (count($Fetch) < 5) {
-                $query = "select word,meaning from term where \"eword\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+            if (count($Fetch) < 3) {
+                $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                 $Fetch2 = PDO_FetchAll($query);
                 //去掉重复的
                 foreach ($Fetch2 as $onerow) {
@@ -64,12 +68,12 @@ switch ($op) {
                     }
                 }
                 if (count($Fetch) < 8) {
-                    $query = "select word,meaning from term where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+                    $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
                     $Fetch3 = PDO_FetchAll($query);
 
                     $Fetch = array_merge($Fetch, $Fetch3);
                     if (count($Fetch) < 8) {
-                        $query = "select word,meaning from term where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+                        $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                         $Fetch4 = PDO_FetchAll($query);
                         //去掉重复的
                         foreach ($Fetch4 as $onerow) {
@@ -254,60 +258,6 @@ switch ($op) {
             echo "<div id='dictlist'>";
             echo "</div>";
 
-            break;
-        }
-    case "save":
-        {
-            $currTime = sprintf("%d", microtime(true) * 1000);
-            if (isset($_POST["modify_time"])) {
-                $mTime = $_POST["modify_time"];
-            } else {
-                $mTime = mTime();
-            }
-            if ($_POST["guid"] != "") {
-                $query = "UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
-                $stmt = @PDO_Execute($query, array($_POST["mean"],
-                    $_POST["mean2"],
-                    $_POST["tag"],
-                    $_POST["channal"],
-                    $_POST["language"],
-                    $_POST["note"],
-                    mTime(),
-                    $mTime,
-                    $_POST["guid"],
-                ));
-            } else {
-                $parm = array();
-                $parm[] = UUID::v4();
-                $parm[] = $_POST["word"];
-                $parm[] = pali2english($_POST["word"]);
-                $parm[] = $_POST["mean"];
-                $parm[] = $_POST["mean2"];
-                $parm[] = $_POST["tag"];
-                $parm[] = $_POST["channal"];
-                $parm[] = $_POST["language"];
-                $parm[] = $_POST["note"];
-                $parm[] = $_COOKIE["userid"];
-                $parm[] = 0;
-                $parm[] = mTime();
-                $parm[] = mTime();
-                $parm[] = mTime();
-                $query = "INSERT INTO term (id, guid, word, word_en, meaning, other_meaning, tag, channal, language,note,owner,hit,create_time,modify_time,receive_time )
-															VALUES (NULL, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
-
-                $stmt = @PDO_Execute($query, $parm);
-            }
-
-            $respond = array("status" => 0, "message" => "");
-            if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-                $error = PDO_ErrorInfo();
-                $respond['status'] = 1;
-                $respond['message'] = $error[2] . $query;
-            } else {
-                $respond['status'] = 0;
-                $respond['message'] = $_POST["word"];
-            }
-            echo json_encode($respond, JSON_UNESCAPED_UNICODE);
             break;
         }
     case "copy": //拷贝到我的字典

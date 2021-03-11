@@ -109,149 +109,6 @@ function note_lookup(word, showto) {
 	);
 }
 
-var term_get_word_to_div_callback = null;
-function term_get_word_to_div(strWord, div, callback) {
-	term_get_word_to_div_callback = callback;
-	let word = [{ pali: strWord, channal: "", editor: "", lang: "" }];
-
-	$.post(
-		"../term/term_get.php",
-		{
-			words: JSON.stringify(word),
-		},
-		function (data, status) {
-			if (status == "success") {
-				try {
-					let result = JSON.parse(data);
-					let html = "";
-					if (result.length > 0) {
-						let type = new Array();
-						let authors = new Array();
-						for (const iterator of result) {
-							if (iterator.tag == "") {
-								iterator.tag = "_null_";
-							}
-							if (type[iterator.tag] == null) {
-								type[iterator.tag] = new Array();
-							}
-							type[iterator.tag].push(iterator.meaning);
-							authors[iterator.owner] = iterator.user;
-						}
-
-						html += "<div class='term_word_head'>";
-						html += "<div class='term_word_head_pali'>";
-						html += result[0].word;
-						$("#page_title").text(result[0].word + "-" + gLocal.gui.encyclopedia);
-						html += "</div>";
-						for (y in type) {
-							html += "<div class='term_word_head_mean'>";
-							if (y != "_null_") {
-								html += y + "：";
-							}
-							for (k in type[y]) {
-								html += type[y][k];
-							}
-							html += "</div>";
-						}
-						html += "<div class='term_word_head_authors'>" + gLocal.gui.contributor + "：";
-						for (y in authors) {
-							if (authors[y].nickname != "") {
-								html += '<a onclick="">' + authors[y].nickname + "</a> ";
-							} else {
-								html += '<a onclick="">' + y + "</a> ";
-							}
-						}
-
-						html += "</div>";
-						html += "</div>";
-						// end of term_word_head
-
-						html += "<div id='term_list_div' style='display:flex;'>";
-						html += "<div id='term_list'>";
-
-						for (const iterator of result) {
-							html += "<div class='term_block'>";
-							html += "<div class='term_block_bar'>";
-
-							html += "<div class='term_block_bar_left'>";
-
-							html += "<div class='term_block_bar_left_icon'>";
-							html += iterator.owner.slice(0, 1);
-							html += "</div>";
-
-							html += "<div class='term_block_bar_left_info'>";
-							html += "<div class='term_meaning'>" + iterator.meaning;
-							if (iterator.tag != "_null_") {
-								html += "<span class='term_tag'>" + iterator.tag + "</span>";
-							}
-							html += "</div>";
-							html += "<div class='term_author'>" + iterator.owner + "</div>";
-							html += "</div>";
-
-							html += "</div>";
-
-							html += "<div class='term_block_bar_right'>";
-							html += "<span><button class='icon_btn'><a href='#'>" + gLocal.gui.edit + "</a></button>";
-							html += "<button class='icon_btn'><a href='#'>" + gLocal.gui.like + "</a></button>";
-							html +=
-								"<button class='icon_btn'><a href='#'>" + gLocal.gui.favorite + "</a></button></span>";
-							html += "</div>";
-
-							html += "</div>";
-							//term_block_bar 结束
-							html += "<div class='term_note' status='1'>" + note_init(iterator.note) + "</div>";
-							//html += "</div>";
-						}
-						html += "</div>";
-
-						html += "<div id='term_list_right' >";
-
-						html += '<div class="fun_frame">';
-						html += '<div class="title">' + gLocal.gui.language + "</div>";
-						html += '<div class="content" style="max-height:10em;">';
-						html += '<div><a href="">' + gLocal.gui.all + "</a></div>";
-						html += "</div>";
-						html += "</div>";
-
-						html += '<div class="fun_frame">';
-						html += '<div class="title">' + gLocal.gui.translation + "</div>";
-						html += '<div id="channal_list"  class="content" style="max-height:10em;">';
-						html += '<div><a href="">' + gLocal.gui.all + "</a></div>";
-						html += "</div>";
-						html += "</div>";
-
-						html += "</div>";
-						//end of right
-
-						html += "</div>";
-						// end of term_list_div
-						//html += "</div>";
-					} else {
-						html += "<div >词条尚未创建</div>";
-						html += '<div ><input type="input" value="" placeholder="pali"/></div>';
-						html += '<div ><input type="input" value="" placeholder="meaning"/></div>';
-						html += '<div ><input type="input" value="" placeholder="other meaning"/></div>';
-						html += '<div ><input type="input" value="" placeholder="category"/></div>';
-						html += '<div ><input type="input" value="" placeholder="language"/></div>';
-						html += "<div ><textarea></textarea></div>";
-					}
-
-					$("#" + div).html(html);
-
-					note_refresh_new();
-
-					if (term_get_word_to_div_callback != null) {
-						term_get_word_to_div_callback(result);
-					}
-				} catch (e) {
-					console.error("term_get_word_to_div:" + e + " data:" + data);
-				}
-			} else {
-				console.error("term error:" + data);
-			}
-		}
-	);
-}
 function term_get_guid_to_html(strGuid) {}
 function term_apply(guid) {
 	if (g_eCurrWord) {
@@ -310,10 +167,9 @@ function term_data_save(guid) {
 		var strNote = $("#term_edit_note_" + guid).val();
 	}
 	$.post(
-		"../term/term.php",
+		"../term/term_post.php",
 		{
-			op: "save",
-			guid: guid,
+			id: guid,
 			word: strWord,
 			mean: strMean,
 			mean2: strMean2,
