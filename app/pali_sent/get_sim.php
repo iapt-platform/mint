@@ -39,7 +39,6 @@ foreach ($simList as $value) {
         $sent["path"] = _get_para_path($Fetch["book"], $Fetch["paragraph"]);
         $output[] = $sent;
     }
-
 }
 
 echo json_encode($output, JSON_UNESCAPED_UNICODE);

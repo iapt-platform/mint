@@ -10,31 +10,60 @@ if (isset($argv[1])) {
     if ($argv[1] == "del") {
         $redis = new redis();
         $r_conn = $redis->connect('127.0.0.1', 6379);
-        $keys = 'pali_sent_*';
-        $redis->delete($redis->keys($keys));
+		$keys = $redis->keys('pali_sent_*');
+		$count=0;
+		foreach ($keys as $key => $value) {
+			# code...
+			$deleted = $redis->del($value);
+			$count += $deleted;
+		}
+		
+		echo "delete ok ".$count;
     }
 } else {
     $dns = "" . _FILE_DB_PALI_SENTENCE_;
     $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+	$dns = "" . _FILE_DB_PALI_SENTENCE_SIM_;
+	$db_pali_sent_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-    $query = "SELECT book,paragraph, begin,end ,text FROM pali_sent WHERE 1 ";
+    $query = "SELECT id, book,paragraph, begin,end ,text FROM pali_sent WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $redis = new redis();
     $r_conn = $redis->connect('127.0.0.1', 6379);
-    $stringSize = 0;
+	$stringSize = 0;
+	$count = 0;
     if ($r_conn) {
         while ($sent = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$count++;
             $stringSize += strlen($sent["text"]);
             if ($stringSize > 50000000) {
                 sleep(1);
-                $stringSize = 0;
-                echo $sent["book"] . "_" . $sent["paragraph"] . "\n";
-            }
-            $result = $redis->set('pali_sent_' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], $sent["text"]);
+                $stringSize = 0;  
+			}
+			if($count%10000==0){
+				echo $count . "-".$sent["book"] . "_" . $sent["paragraph"] . "\n";
+			}
+			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "pali", $sent["text"]);
+			if($result===FALSE){
+				echo "hSet error \n";
+			}
+			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "id", $sent["id"]);	
+
+			$query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
+			$sth = $db_pali_sent_sim->prepare($query);
+			$sth->execute(array($sent["id"]));
+			$row = $sth->fetch(PDO::FETCH_ASSOC);
+			if ($row) {
+				$pali_sim = $row["count"];
+			} else {
+				$pali_sim = 0;
+			}
+			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "sim_count", $pali_sim);			
         }
-        echo "完成";
+        echo "完成 ". count($redis->keys("pali://sent/*"));
     } else {
         echo "连接redis失败";
     }
