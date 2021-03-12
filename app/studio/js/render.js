@@ -1705,7 +1705,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		output += "<span>";
 
 		if (thischannal) {
-			output += thischannal.name + "-" + thischannal.lang + "@";
+			output += thischannal.name + "-<b>" + thischannal.lang + "</b>@";
 			if (thischannal.username == getCookie("username")) {
 				output += gLocal.gui.your;
 			} else {
