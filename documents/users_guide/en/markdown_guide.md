@@ -9,7 +9,7 @@
 |`*italic*`|*italic*|
 |`***bold Italic***`|***bold Italic***|
 |`~~strikethrough~~`|~~strikethrough~~|
-|`[link to wikipali](www.wikipali.org)`|[link to wikipali](www.wikipali.org)|
+|`[link to wikipali](www.wikipali.org "commentary&#10;note")`|[link to wikipali](www.wikipali.org "commentary&#10;note")|
 ---
 ## paragraph style
 

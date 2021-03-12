@@ -103,11 +103,12 @@ foreach ($_data as $key => $value) {
         $begin = 0;
         $end = 0;
     }
-
+	$pali_sim = 0;
     if ($redis != false) {
-        $result = $redis->get('pali_sent_' . $bookId . "_" . $para . "_" . $begin . "_" . $end);
+        $result = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"pali");
 		$palitext = $result;
-		$pali_text_id = 0;
+		$pali_text_id = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"id");
+		$pali_sim = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"sim_count");
     } else {
         $query = "SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
         $sth = $db_pali_sent->prepare($query);
@@ -119,22 +120,21 @@ foreach ($_data as $key => $value) {
         } else {
             $palitext = "";
             $pali_text_id = 0;
-        }
+		}
+		//查询相似句
+
+
+			$query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
+			$sth = $db_pali_sent_sim->prepare($query);
+			$sth->execute(array($pali_text_id));
+			$row = $sth->fetch(PDO::FETCH_ASSOC);
+			if ($row) {
+				$pali_sim = $row["count"]; //explode(",",$row["sim_sents"]) ;
+			}		
     }
 
-    $pali_sim = 0;
 
-    $query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
-    $sth = $db_pali_sent_sim->prepare($query);
-    $sth->execute(array($pali_text_id));
-    $row = $sth->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        $pali_sim = $row["count"]; //explode(",",$row["sim_sents"]) ;
-    } else {
-        $pali_sim = 0;
-    }
-
-    //查询相似句
+    
 
     //find out translation 查询译文
 
