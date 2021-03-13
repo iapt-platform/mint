@@ -122,6 +122,7 @@ body {
 	margin-left: 0.1em;
 	font-size: 120%;
 	padding: 0.3em;
+	width:95%;
 }
 
 #left_menu_button{
@@ -134,9 +135,13 @@ body {
 
 #right_bar{
 	display:none;
+	position: fixed;
+	width: 100%;
 }
 .search_toolbar{
 	padding:0.5em 0;
+	position: fixed;
+	width: 100%;
 }
 
 guide{
@@ -145,4 +150,10 @@ guide{
 
 #search_info {
     display: block;
+}
+#main_result{
+	margin-top: 5em;
+}
+.foot_div {
+	margin-top: 5em;
 }

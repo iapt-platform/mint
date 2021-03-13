@@ -41,11 +41,7 @@ require_once '../public/function.php';
 
 	<div id="select_bar" >
 		<div id="tag_selected"></div>
-		<div>
-			<button onclick="tag_list_slide_toggle(this)">
-				⮝
-			</button>
-		</div>
+		<div><button onclick="tag_list_slide_toggle()">展开</button></div>
 	</div>
 	<div>
 
