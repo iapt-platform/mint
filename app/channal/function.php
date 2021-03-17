@@ -1,5 +1,22 @@
 <?php
 require_once "../path.php";
+
+function channel_get_title($id)
+{
+    if (isset($id)) {
+		PDO_Connect( _FILE_DB_CHANNAL_);
+		$query = "SELECT name FROM channal  WHERE id = ? ";
+		$channel = PDO_FetchRow($query, array($id));
+		if ($channel) {
+			return $channel["name"];
+		} else {
+			return "";
+		}
+    } else {
+        return "";
+    }
+}
+
 class Channal
 {
     public $dbh;

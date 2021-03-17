@@ -20,8 +20,12 @@ function guide_init() {
 			return;
 		}
 		let gid = $(this).attr("gid");
+		let url = $(this).attr("url");
+		if (typeof url == "undefined" || url == "") {
+			url = "../guide/get.php";
+		}
 		$.get(
-			"../guide/get.php",
+			url,
 			{
 				id: gid,
 			},

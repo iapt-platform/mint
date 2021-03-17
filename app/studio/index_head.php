@@ -64,6 +64,16 @@ require_once '../public/load_lang.php';
 	<script src="../term/term_popup.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css"/>
 
+	<script language="javascript" src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
+
+	<script src="../public/js/marked.js"></script>
+	<script src="../public/js/mermaid.min.js"></script>
+
+	<script src="../widget/iframe_modal_win.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/iframe_modal_win.css"/>
+
+
 	<script type="text/javascript">
 	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
 		

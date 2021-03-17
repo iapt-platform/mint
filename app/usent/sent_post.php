@@ -5,6 +5,7 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../usent/function.php";
 require_once "../ucenter/active.php";
+require_once "../share/function.php";
 
 #检查是否登陆
 if (!isset($_COOKIE["userid"])) {
@@ -28,6 +29,8 @@ $respond['channal'] = $_POST["channal"];
 $respond['text'] = $_POST["text"];
 $respond['editor'] = $_COOKIE["userid"];
 
+add_edit_event(_SENT_EDIT_, "{$_POST["book"]}-{$_POST["para"]}-{$_POST["begin"]}-{$_POST["end"]}@{$_POST["channal"]}");
+
 #先查询对此channal是否有权限修改
 $cooperation = 0;
 $text_lang = "en";
@@ -44,8 +47,11 @@ if (isset($_POST["channal"])) {
     $respond['lang'] = $text_lang;
     if ($fetch && $fetch["owner"] == $_COOKIE["userid"]) {
         #自己的channal
-        $cooperation = 1;
+        $cooperation = 30;
     } else {
+		$sharePower = share_get_res_power($_COOKIE["userid"],$_POST["channal"]);
+		$cooperation = $sharePower;
+		/*
         $query = "SELECT count(*) FROM cooperation WHERE channal_id= ? and user_id=? ";
         $fetch = PDO_FetchOne($query, array($_POST["channal"], $_COOKIE["userid"]));
         if ($fetch > 0) {
@@ -54,7 +60,8 @@ if (isset($_POST["channal"])) {
         } else {
             #无协作权限
             $cooperation = 0;
-        }
+		}
+		*/
     }
 } else {
     $respond["status"] = 1;
@@ -63,7 +70,12 @@ if (isset($_POST["channal"])) {
     exit;
 }
 
-add_edit_event(_SENT_EDIT_, "{$_POST["book"]}-{$_POST["para"]}-{$_POST["begin"]}-{$_POST["end"]}@{$_POST["channal"]}");
+if($cooperation==0){
+	$respond['message'] = "no power";
+	$respond['status'] = 1;
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 PDO_Connect("" . _FILE_DB_SENTENCE_);
 
@@ -79,27 +91,27 @@ if ((isset($_POST["id"]) && empty($_POST["id"])) || !isset($_POST["id"])) {
 
 if ($_id == false) {
     # 没有id新建
-    if ($cooperation == 1) {
-        #有权限
+    if ($cooperation >=20) {
+        #有写入权限
         $query = "INSERT INTO sentence (id,
-                                            parent,
-                                            book,
-                                            paragraph,
-                                            begin,
-                                            end,
-                                            channal,
-                                            tag,
-                                            author,
-                                            editor,
-                                            text,
-                                            language,
-                                            ver,
-                                            status,
-                                            strlen,
-                                            modify_time,
-                                            receive_time,
-                                            create_time
-                                            )
+                                        parent,
+                                        book,
+                                        paragraph,
+                                        begin,
+                                        end,
+                                        channal,
+                                        tag,
+                                        author,
+                                        editor,
+                                        text,
+                                        language,
+                                        ver,
+                                        status,
+                                        strlen,
+                                        modify_time,
+                                        receive_time,
+                                        create_time
+                                        )
 										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
         $stmt = $PDO->prepare($query);
         $newId = UUID::v4();
@@ -141,15 +153,65 @@ if ($_id == false) {
             }
         }
     } else {
-        #TO DO没权限 插入建议数据
-        $respond['message'] = "没有权限";
-        $respond['status'] = 1;
+		#没写入权限 插入pr数据
+		$query = "INSERT INTO sent_pr (id,
+										book,
+										paragraph,
+										begin,
+										end,
+										channel,
+										tag,
+										author,
+										editor,
+										text,
+										language,
+										ver,
+										status,
+										strlen,
+										modify_time,
+										receive_time,
+										create_time
+										)
+										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+		$stmt = $PDO->prepare($query);
+		$newId = UUID::v4();
+		# 初始状态 1 未处理
+		$stmt->execute(array($newId,
+							$_POST["book"],
+							$_POST["para"],
+							$_POST["begin"],
+							$_POST["end"],
+							$_POST["channal"],
+							"",
+							"[]",
+							$_COOKIE["userid"],
+							$_POST["text"],
+							$text_lang,
+							1,
+							1,
+							mb_strlen($_POST["text"], "UTF-8"),
+							mTime(),
+							mTime(),
+							mTime(),
+							));
+		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+			/*  识别错误  */
+			$error = PDO_ErrorInfo();
+			$respond['message'] = $error[2];
+			$respond['status'] = 1;
+			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+			exit;
+		} else {
+		# 没错误
+			$respond['message'] = "已经提交修改建议";
+			$respond['status'] = 0;
+		}
     }
 } else {
     /* 修改现有数据 */
     #判断是否有修改权限
-    if ($cooperation == 1) {
-        #有权限
+    if ($cooperation >=20) {
+        #有写入权限
         $query = "UPDATE sentence SET text= ?  , strlen = ? , editor = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
         $stmt = PDO_Execute($query,
             array($_POST["text"],
@@ -176,9 +238,60 @@ if ($_id == false) {
             }
         }
     } else {
-        #TO DO没权限 插入建议数据
-        $respond['message'] = "没有权限";
-        $respond['status'] = 1;
+        #TO DO没权限 插入pr数据
+		#没写入权限 插入pr数据
+		$query = "INSERT INTO sent_pr (id,
+										book,
+										paragraph,
+										begin,
+										end,
+										channel,
+										tag,
+										author,
+										editor,
+										text,
+										language,
+										ver,
+										status,
+										strlen,
+										modify_time,
+										receive_time,
+										create_time
+										)
+										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+		$stmt = $PDO->prepare($query);
+		$newId = UUID::v4();
+		# 初始状态 1 未处理
+		$stmt->execute(array($newId,
+							$_POST["book"],
+							$_POST["para"],
+							$_POST["begin"],
+							$_POST["end"],
+							$_POST["channal"],
+							"",
+							"[]",
+							$_COOKIE["userid"],
+							$_POST["text"],
+							$text_lang,
+							1,
+							1,
+							mb_strlen($_POST["text"], "UTF-8"),
+							mTime(),
+							mTime(),
+							mTime(),
+							));
+		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+			/*  识别错误  */
+			$error = PDO_ErrorInfo();
+			$respond['message'] = $error[2];
+			$respond['status'] = 1;
+			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+			exit;
+		} else {
+		# 没错误
+			$respond['message'] = "已经提交修改建议";
+			$respond['status'] = 0;
+		}
     }
 }
 

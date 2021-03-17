@@ -73,7 +73,7 @@ function my_group_list() {
 							"</a></div>";
 						html += "<div style='flex:1;'><div class='hover_button'>";
 						if (parseInt(iterator.power) == 0) {
-							//管理员可以删除group
+							//只有管理员可以删除group
 							html +=
 								"<button onclick=\"group_del('" +
 								iterator.group_id +
@@ -118,7 +118,7 @@ function group_list(id, list) {
 					$("#curr_group").html("/" + result.info.name);
 
 					if (result.parent) {
-						//如果是project 显示 group名词
+						//如果是project 显示 group名称
 						$("#parent_group").html(
 							" / <a href='../group/index.php?id=" +
 								result.parent.id +
@@ -175,16 +175,46 @@ function group_list(id, list) {
 						for (const iterator of result.file) {
 							html += '<div class="file_list_row" style="padding:5px;">';
 							html += "<div style='flex:1;'>" + key++ + "</div>";
-							html += "<div style='flex:2;'>" + iterator.title + "</div>";
+							html += "<div style='flex:1;'>";
+							//资源类型
+							html += "<svg class='icon'>";
+							let cardUrl = "";
+							switch (parseInt(iterator.res_type)) {
+								case 1: //pcs
+									html += "<use xlink:href='../studio/svg/icon.svg#ic_person'></use>";
+									cardUrl = "../doc/card.php";
+									break;
+								case 2: //channel
+									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
+									cardUrl = "../channal/card.php";
+									break;
+								case 3: //article
+									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
+									cardUrl = "../article/card.php";
+									break;
+								case 4: //collection
+									break;
+								case 5: //channel片段
+									break;
+								default:
+									html += "<use xlink:href='../studio/svg/icon.svg#ic_person'></use>";
+									break;
+							}
+
+							html += "</svg>";
+							html += "</div>";
 							html += "<div style='flex:2;'>";
-							switch (iterator.power) {
+							html += "<guide url='" + cardUrl + "' gid='" + iterator.res_id + "'>";
+							html += iterator.res_title + "</guide></div>";
+							html += "<div style='flex:2;'>";
+							switch (parseInt(iterator.power)) {
 								case 10:
 									html += gLocal.gui.read_only;
 									break;
 								case 20:
+									html += gLocal.gui.write;
 									break;
 								case 30:
-									html += gLocal.gui.write;
 									break;
 								default:
 									break;
@@ -203,6 +233,7 @@ function group_list(id, list) {
 					html += "</div>";
 
 					$("#my_group_list").html(html);
+					guide_init();
 				} catch (e) {
 					console.error(e);
 				}

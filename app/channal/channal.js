@@ -2,9 +2,10 @@ var _my_channal = null;
 var gChannelId;
 var get_channel_list_callback = null;
 channal_list();
-
+var share_win;
 function channal_list_init() {
 	my_channal_list();
+	share_win = iframe_win_init({ container: "share_win", name: "share", width: "500px" });
 	channal_add_dlg_init("channal_add_div");
 }
 function channal_list() {
@@ -47,7 +48,7 @@ function my_channal_list() {
 						html += "<div style='flex:1;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>" + iterator.name + "</div>";
 						html += "<div style='flex:2;'>";
-						if (iterator.username == getCookie("username")) {
+						if (iterator.username == "_you_") {
 							html += gLocal.gui.your;
 						} else {
 							html += iterator.nickname;
@@ -67,13 +68,47 @@ function my_channal_list() {
 						}
 						//render_status(iterator.status) +
 						html += "</div>";
-						html +=
-							"<div style='flex:1;'><a href='../channal/my_channal_edit.php?id=" +
-							iterator.id +
-							"'>" +
-							gLocal.gui.edit +
-							"</a></div>";
-						html += "<div style='flex:1;'></div>";
+
+						switch (parseInt(iterator.power)) {
+							case 10:
+								html += "<div style='flex:1;'>";
+								html += gLocal.gui.read_only;
+								html += "</div>";
+								html += "<div style='flex:1;'>";
+								html += "</div>";
+								break;
+							case 20:
+								html += "<div style='flex:1;'>";
+								html += gLocal.gui.write;
+								html += "</div>";
+								html += "<div style='flex:1;'>";
+								html +=
+									"<a href='../channal/my_channal_edit.php?id=" +
+									iterator.id +
+									"'>" +
+									gLocal.gui.edit +
+									"</a>";
+								html += "</div>";
+								break;
+							case 30:
+								html += "<div style='flex:1;'>";
+								html += gLocal.gui.owner;
+								html += "</div>";
+								html += "<div style='flex:1;'>";
+								html +=
+									"<a href='../channal/my_channal_edit.php?id=" +
+									iterator.id +
+									"'>" +
+									gLocal.gui.edit +
+									"</a>";
+								html += " <a onclick=\"channel_share('" + iterator.id + "')\">Share</a>";
+								html += "</div>";
+
+								break;
+							default:
+								break;
+						}
+
 						html += "</div>";
 					}
 					$("#my_channal_list").html(html);
@@ -87,6 +122,9 @@ function my_channal_list() {
 	);
 }
 
+function channel_share(id) {
+	share_win.show("../share/share.php?id=" + id + "&type=2");
+}
 /*
 编辑channel信息
 */
@@ -177,12 +215,17 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					html += "<div id='coop_div' style='padding:5px;position: relative;'>";
-					html += "<h2>"+gLocal.gui.cooperators+"</h2>";
+					html += "<h2>" + gLocal.gui.cooperators + "</h2>";
 
-					html += "<button onclick='add_coop_user()'>"+gLocal.gui.add+gLocal.gui.cooperators+"</button>";
+					html +=
+						"<button onclick='add_coop_user()'>" + gLocal.gui.add + gLocal.gui.cooperators + "</button>";
 					html += "<div id='add_coop_user_dlg' class='float_dlg' style='left: 0;'></div>";
 
-					html += "<button onclick='add_coop_group()' >"+gLocal.gui.add+gLocal.gui.cooperate_group+"</button>";
+					html +=
+						"<button onclick='add_coop_group()' >" +
+						gLocal.gui.add +
+						gLocal.gui.cooperate_group +
+						"</button>";
 					html += "<div id='add_coop_group_dlg' class='float_dlg' style='left: 0;'></div>";
 					html += "<div id='coop_inner' >";
 					if (typeof result.coop == "undefined" || result.coop.length == 0) {
@@ -191,7 +234,7 @@ function my_channal_edit(id) {
 						for (const coop of result.coop) {
 							html += '<div class="file_list_row" style="padding:5px;">';
 							if (coop.type == 0) {
-								html += '<div style="flex:1;">'+gLocal.gui.personal+'</div>';
+								html += '<div style="flex:1;">' + gLocal.gui.personal + "</div>";
 								html += "<div style='flex:3;'>" + coop.user_name.nickname + "</div>";
 							} else {
 								html += '<div style="flex:1;">' + gLocal.gui.group + "</div>";
@@ -200,7 +243,7 @@ function my_channal_edit(id) {
 
 							html += "<div style='flex:3;'>" + coop.power + "</div>";
 							html += "<div class='hover_button' style='flex:3;'>";
-							html += "<button>"+gLocal.gui.remove+"</button>";
+							html += "<button>" + gLocal.gui.remove + "</button>";
 							html += "</div>";
 							html += "</div>";
 						}

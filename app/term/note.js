@@ -326,7 +326,12 @@ function render_channal_list(channalinfo) {
 		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
 	output += "<div class='head'>";
 	output += "<span class='head_img'>";
-	output += channalinfo.nickname.slice(0, 2);
+	if (channalinfo.nickname == "_you_") {
+		output += gLocal.gui.your.slice(0, 1);
+	} else {
+		output += channalinfo.nickname.slice(0, 1);
+	}
+
 	output += "</span>";
 	output += "</div>";
 
@@ -341,7 +346,11 @@ function render_channal_list(channalinfo) {
 	output += channalinfo["name"];
 
 	output += "</a>";
-	output += "@" + channalinfo["nickname"];
+	if (channalinfo.nickname == "_you_") {
+		output += "@" + gLocal.gui.your;
+	} else {
+		output += "@" + channalinfo["nickname"];
+	}
 	output += "</div>";
 
 	output += "<div class='userinfo_channal'>";
@@ -666,7 +675,11 @@ function add_new_tran_button_click(obj) {
 				"' ,'" +
 				iterator.id +
 				"',this)";
-			html += '">' + iterator.name + "</li>";
+			html += '">' + iterator.name;
+			if (parseInt(iterator.power) < 20) {
+				html += "(建议)";
+			}
+			html += "</li>";
 		}
 	}
 	html += "</ul>";
