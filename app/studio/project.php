@@ -324,7 +324,7 @@ switch ($op) {
             if (!isset($_POST["title"])) {
                 $thisFileName = basename(__FILE__);
                 echo "<div class='fun_block'>";
-                echo "<h2>New Document 新建文档</h2>";
+                echo "<h2>{$_local->gui->new_project}</h2>";
                 echo "<form action=\"{$thisFileName}\" method=\"post\">";
                 echo "<input type='hidden' name='op' value='{$op}'/>";
                 echo "<input type='hidden' name='data' value='{$data}'/>";
@@ -362,10 +362,10 @@ switch ($op) {
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
                     if ($FetchWBW == 0) {
                         echo $_local->gui->blank;
-                        echo "<a>快捷编辑</a>";
+                        echo "&nbsp;<a></a>";//快捷编辑？
                     } else {
                         echo $FetchWBW . $_local->gui->para;
-                        echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+                        echo "&nbsp;<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>{$_local->gui->open}</a>";
                     }
                     echo '</div>';
 
@@ -390,10 +390,10 @@ switch ($op) {
                 }
                 echo '<div class="file_list_row" style="padding:5px;">';
 
-                echo '<div class="pd-10"  style="max-width:2em;flex:1;">New Channal 新建频道</div>';
-                echo '<div class="title" style="flex:3;padding-bottom:5px;">';
+                echo '<div class="pd-10"  style="max-width:7em;flex:1;">'.$_local->gui->new.'&nbsp;'.$_local->gui->channel.'</div>';
+                echo '<div class="title" style="flex:3;padding-bottom:5px;display:none;">';
                 echo '在studio中新建版本风格</div>';
-                echo '<div class="author"  style="flex:1;padding-bottom:5px;"><button>New 新建</button></div>';
+                echo '<div class="author"  style="flex:1;padding-bottom:5px;"><button>'.$_local->gui->new.'</button></div>';
 
                 echo '</div>';
                 echo "</div>";
@@ -408,7 +408,7 @@ switch ($op) {
 
                 echo "</select>";
                 echo "</fieldset>";
-                echo "<input type=\"submit\" value='Create 建立'>";
+                echo "<input type=\"submit\" value='{$_local->gui->create_now}'>";
                 echo "<input type='hidden' name='format' value='db'>";
                 echo "</form>";
                 echo "</div>";
