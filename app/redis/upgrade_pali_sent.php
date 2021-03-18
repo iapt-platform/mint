@@ -28,7 +28,7 @@ if (isset($argv[1])) {
 	$db_pali_sent_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-    $query = "SELECT id, book,paragraph, begin,end ,text FROM pali_sent WHERE 1 ";
+    $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $redis = new redis();
@@ -38,7 +38,7 @@ if (isset($argv[1])) {
     if ($r_conn) {
         while ($sent = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$count++;
-            $stringSize += strlen($sent["text"]);
+            $stringSize += strlen($sent["html"]);
             if ($stringSize > 50000000) {
                 sleep(1);
                 $stringSize = 0;  
@@ -46,7 +46,7 @@ if (isset($argv[1])) {
 			if($count%10000==0){
 				echo $count . "-".$sent["book"] . "_" . $sent["paragraph"] . "\n";
 			}
-			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "pali", $sent["text"]);
+			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "pali", $sent["html"]);
 			if($result===FALSE){
 				echo "hSet error \n";
 			}
