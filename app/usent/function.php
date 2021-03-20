@@ -23,8 +23,8 @@ function update_historay($sent_id, $user_id, $text, $landmark)
 
 class Sent_DB
 {
-    public $dbh_sent;
-	public $dbh_his;
+    private $dbh_sent;
+	private $dbh_his;
 	private $errorMsg="";
     public function __construct() {
         $this->dbh_sent = new PDO(_FILE_DB_SENTENCE_, "", "",array(PDO::ATTR_PERSISTENT=>true));
@@ -230,10 +230,11 @@ class Sent_DB
 							mTime(),
 							$data["landmark"]));
 		}
+		$this->dbh_his->commit();
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			/*  识别错误  */
-			$this->dbh_sent->rollBack();
-			$error = $this->dbh_sent->errorInfo();
+			$this->dbh_his->rollBack();
+			$error = $this->dbh_his->errorInfo();
 			$this->errorMsg = $error[2];
 			return false;
 		} else {

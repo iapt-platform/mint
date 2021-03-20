@@ -70,7 +70,6 @@ if($stmt){
 					#有写入权限 直接写入
 					$newData["id"] = UUID::v4();
 					$insertData[] = $newData;
-					
 					$insertHistoray[] = $newData;
 				}
 				else{
