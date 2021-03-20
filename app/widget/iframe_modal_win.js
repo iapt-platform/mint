@@ -38,3 +38,40 @@ function iframe_win_init(param) {
 	});
 	return iframeWin;
 }
+
+/*
+container 容器id
+name=iframe name
+width
+height
+*/
+function model_win_init(param) {
+	let modelWin = new Object();
+	modelWin.container = param.container;
+	modelWin.show = function (html) {
+		$(".modal_win_bg").show();
+		$("#" + modelWin.container).html(html);
+		$("#" + modelWin.container).show();
+	};
+	if (typeof param.onclose != "undefined") {
+		modelWin.onclose = onclose;
+	} else {
+		modelWin.onclose = function () {
+			return 1;
+		};
+	}
+	$("#" + modelWin.container).addClass("iframe_container");
+	if (typeof param.width != "undefined") {
+		$("#" + modelWin.container).css("width", param.width);
+	}
+	if (typeof param.height != "undefined") {
+		$("#" + modelWin.container).css("height", param.height);
+	}
+
+	$(".modal_win_bg").click(function () {
+		$(".modal_win_bg").hide();
+		$(".iframe_container").hide();
+		this.onclose();
+	});
+	return modelWin;
+}

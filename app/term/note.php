@@ -156,7 +156,9 @@ foreach ($_data as $key => $value) {
 
         $stmt = $db_trans_sent->prepare($query);
         if (empty($_setting["channal"])) {
+			#没有指定channel
             if ($sentChannal == "") {
+				#句子信息也没指定channel
                 $parm = array($bookId, $para, $begin, $end);
                 $parm = array_merge_recursive($parm, $channal_list);
                 $stmt->execute($parm);
@@ -169,6 +171,8 @@ foreach ($_data as $key => $value) {
                     }
                 }
             } else {
+				#句子信息包含channel
+				#{{book-para-begin-end@channelid}}
                 $stmt->execute(array($bookId, $para, $begin, $end, $sentChannal));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
@@ -178,13 +182,14 @@ foreach ($_data as $key => $value) {
                 }
             }
         } else {
+			#指定了channel
             $arrChannal = explode(",", $_setting["channal"]);
             foreach ($arrChannal as $key => $value) {
                 # code...
                 $stmt->execute(array($bookId, $para, $begin, $end, $value));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
-                    $translation[] = array("id" => $Fetch["id"], "text" => $Fetch["text"], "lang" => $Fetch["language"], "channal" => $value, "editor" => $Fetch["editor"]);
+                    $translation[] = array("id" => $Fetch["id"], "text" => $Fetch["text"], "lang" => $Fetch["language"], "channal" => $value, "editor" => $Fetch["editor"],"update_time"=>$Fetch["modify_time"]);
 
                 } else {
                     $translation[] = array("id" => "", "text" => "", "lang" => "", "channal" => $value);

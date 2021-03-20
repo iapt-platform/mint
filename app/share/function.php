@@ -13,7 +13,7 @@ function share_res_list_get($userid,$res_type=-1){
 	# 找我加入的群
 	$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");
     $dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	$query = "SELECT group_id from group_member where user_id = ?  limit 0,100";
+	$query = "SELECT group_id from group_member where user_id = ?  limit 0,200";
 	$stmtGroup = $dbhGroup->prepare($query);
 	$stmtGroup->execute(array($userid));
 	$my_group = $stmtGroup->fetchAll(PDO::FETCH_ASSOC);
@@ -29,45 +29,64 @@ function share_res_list_get($userid,$res_type=-1){
 	$PDO = new PDO(_FILE_DB_USER_SHARE_, "", "");
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 	if($res_type==-1){
-		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND cooperator_id IN ($place_holders) group by res_id ";
+		#所有类型资源
+		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND cooperator_id IN ($place_holders) ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute($userList);
 		$Fetch =$stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	else{
+		#指定类型资源
 		$userList[]=$res_type;
-		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND  cooperator_id IN ($place_holders) AND res_type = ? group by res_id";
+		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND  cooperator_id IN ($place_holders) AND res_type = ?";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute($userList);
 		$Fetch =$stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	$resOutput = array();
+	foreach ($Fetch as $key => $value) {
+		# 查重
+		if(isset($resOutput[$value["res_id"]])){
+			if($value["power"]>$resOutput[$value["res_id"]]["power"]){
+				$resOutput[$value["res_id"]]["power"] = $value["power"];
+			}
+		}
+		else{
+			$resOutput[$value["res_id"]]= array("power"=> $value["power"],"type" => $value["res_type"]);
+		}
+	}
+	$resList=array();
+	foreach ($resOutput as $key => $value) {
+		# code...
+		$resList[]=array("res_id"=>$key,"res_type"=>(int)$value["type"],"power"=>(int)$value["power"]);
+	}
 	$channel = new Channal(); 
-	foreach ($Fetch as $key => $res) {
+	foreach ($resList as $key => $res) {
 		# 获取资源标题 和所有者 
 		switch ($res["res_type"]) {
 			case 1:
 				# pcs 文档
-				$Fetch[$key]["res_title"]=pcs_get_title($res["res_id"]);
+				$resList[$key]["res_title"]=pcs_get_title($res["res_id"]);
 				break;
 			case 2:
 				# channel
 				$channelInfo = $channel->getChannal($res["res_id"]);
 				if($channelInfo){
-					$Fetch[$key]["res_title"]=$channelInfo["name"];
-					$Fetch[$key]["res_owner_id"]=$channelInfo["owner"];
+					$resList[$key]["res_title"]=$channelInfo["name"];
+					$resList[$key]["res_owner_id"]=$channelInfo["owner"];
 				}
 				else{
-					$Fetch[$key]["res_title"]="_unkown_";
-					$Fetch[$key]["res_owner_id"]="_unkown_";
+					$resList[$key]["res_title"]="_unkown_";
+					$resList[$key]["res_owner_id"]="_unkown_";
 				}
 				
 				break;
 			case 3:
-				# code...
+				# 3 Article 文章
 				break;
 			case 4:
-				# code...
+				# 4 Collection 文集
 				break;
 			case 5:
 				# code...
@@ -79,11 +98,11 @@ function share_res_list_get($userid,$res_type=-1){
 		}
 	}
 
-	return $Fetch;
+	return $resList;
 
 }
 
-//对某个共享资源的权限
+//获取对某个共享资源的权限
 function share_get_res_power($userid,$res_id){
 		# 找我加入的群
 		$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");

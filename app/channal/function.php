@@ -30,14 +30,41 @@ class Channal
         $query = "SELECT * FROM channal WHERE id= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
-        $channal = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if(count($channal)>0){
-            return $channal[0];
+        $channal = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($channal){
+            return $channal;
         }
         else{
             return false;
         }
-    }
+	}
+	
+	public function getPower($id){
+		#查询用户对此channel是否有权限		
+		if(!isset($_COOKIE["userid"])){
+			return 0;
+		}
+		$channelPower = 0;
+		$query = "SELECT owner,status FROM channal WHERE id=? and status>0 ";
+		$stmt = $this->dbh->prepare($query);
+		$stmt->execute(array($id));
+		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
+		if($channel){
+			if($channel["owner"]==$_COOKIE["userid"]){
+				return 30;
+			}
+			else if($channel["status"]>=30){
+				#全网公开的 可以提交pr
+				$channelPower = 10;
+			}
+		}
+
+		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		if($sharePower>$channelPower){
+			$channelPower=$sharePower;
+		}
+		return $channelPower;
+	}
 
 }
 

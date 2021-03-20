@@ -225,13 +225,18 @@ function note_refresh_new() {
 						}
 						//处理<code>标签作为气泡注释
 						popup_init();
-						//刷新句子链接递归，有加层数限制。
-						note_refresh_new();
 
+						//刷新句子链接递归，有加层数限制。
+						//note_refresh_new();
+
+						//将新的数据添加到数据总表
 						_arrData = _arrData.concat(sentData);
 						note_ref_init();
+						//获取术语字典
 						term_get_dict();
+						//刷新channel列表
 						note_channal_list();
+						//显示不同的巴利语脚本
 						refresh_pali_script();
 						//把巴利语单词用<w>分隔用于点词查询等
 						splite_pali_word();

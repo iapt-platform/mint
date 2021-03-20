@@ -45,9 +45,8 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 	<div class="item_block">
 		<h2>隐私设置</h2>
 		<ul>
-		<li><input type="radio" name="list" checked />私有</li>
-		<li><input type="radio" name="list" />公开列出</li>
-		<li><input type="radio" name="list" />公开编辑</li>
+			<li><input type="radio" name="list" checked />私有</li>
+			<li><input type="radio" name="list" />公开列出</li>
 		</ul>
 	</div>
 	<div class="item_block">
@@ -77,7 +76,6 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 			<select id="user_type" >
 				<option value="1">用户</option>
 				<option value="2">工作组</option>
-				<option value="3">项目</option>
 			</select>
 			</div>
 			<div id="user_search">

@@ -42,7 +42,7 @@ if (isset($_POST["channal"])) {
 
     if ($fetch) {
         $text_lang = $fetch["lang"];
-        $channel_status = $fetch["status"];
+		$channel_status = $fetch["status"];
     }
     $respond['lang'] = $text_lang;
     if ($fetch && $fetch["owner"] == $_COOKIE["userid"]) {
@@ -51,6 +51,10 @@ if (isset($_POST["channal"])) {
     } else {
 		$sharePower = share_get_res_power($_COOKIE["userid"],$_POST["channal"]);
 		$cooperation = $sharePower;
+		if($channel_status>=30 && $cooperation<10){
+			#全网公开的 可以提交pr
+			$cooperation = 10;
+		}
 		/*
         $query = "SELECT count(*) FROM cooperation WHERE channal_id= ? and user_id=? ";
         $fetch = PDO_FetchOne($query, array($_POST["channal"], $_COOKIE["userid"]));
@@ -77,7 +81,7 @@ if($cooperation==0){
     exit;
 }
 
-PDO_Connect("" . _FILE_DB_SENTENCE_);
+PDO_Connect(_FILE_DB_SENTENCE_);
 
 $_id = false;
 if ((isset($_POST["id"]) && empty($_POST["id"])) || !isset($_POST["id"])) {

@@ -46,12 +46,18 @@ function my_channal_list() {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:1;'>" + key++ + "</div>";
-						html += "<div style='flex:2;'>" + iterator.name + "</div>";
 						html += "<div style='flex:2;'>";
-						if (iterator.username == "_you_") {
+						html += "<guide url='../channal/card.php' gid='" + iterator.id + "'>";
+						html += iterator.name;
+						html += "</guide>";
+						html += "</div>";
+						html += "<div style='flex:2;'>";
+						if (parseInt(iterator.power) == 30) {
 							html += gLocal.gui.your;
 						} else {
+							html += "<guide url='../ucenter/card.php' gid='" + iterator.owner + "'>";
 							html += iterator.nickname;
+							html += "</guide>";
 						}
 
 						html += "</div>";
@@ -112,6 +118,7 @@ function my_channal_list() {
 						html += "</div>";
 					}
 					$("#my_channal_list").html(html);
+					guide_init();
 				} catch (e) {
 					console.error(e);
 				}

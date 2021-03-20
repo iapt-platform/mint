@@ -66,14 +66,12 @@ foreach ($all as $key => $value) {
     # code...
 	$new = $value;
 	$name = $_userinfo->getName($value["owner"]);	
+	$new["username"] = $name["username"];
+	$new["nickname"] = $name["nickname"];	
 	if($value["owner"]===$_COOKIE["userid"]){
-		$new["username"] = "_you_";
-		$new["nickname"] = "_you_";
 		$new["power"] = 30;
 	}
 	else{
-		$new["username"] = $name["username"];
-		$new["nickname"] = $name["nickname"];		
 		$new["power"] = $value["power"];		
 	}
 
