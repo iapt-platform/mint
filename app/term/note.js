@@ -355,7 +355,6 @@ function render_channal_list(channalinfo) {
 		let svg_width = article_len;
 		let svg_height = parseInt(article_len / 10);
 		output += '<svg viewBox="0 0 ' + svg_width + " " + svg_height + '" width="100%" >';
-
 		let curr_x = 0;
 		let allFinal = 0;
 		for (const iterator of channalinfo["final"]) {
@@ -385,7 +384,7 @@ function render_channal_list(channalinfo) {
 			svg_height / 5 +
 			"' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
 		output += '<text x="0" y="' + svg_height + '" font-size="' + svg_height * 0.8 + '">';
-		output += channalinfo["count"] + "/" + channalinfo["all"];
+		output += channalinfo["count"] + "/" + channalinfo["all"]+"@"+curr_x;
 		output += "</text>";
 		output += "<svg>";
 		output += "</div>";
