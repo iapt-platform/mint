@@ -331,7 +331,7 @@ function render_channal_list(channalinfo) {
 		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
 	output += "<div class='head'>";
 	output += "<span class='head_img'>";
-	if (channalinfo.nickname == "_you_") {
+	if (parseInt(channalinfo.power) == 30) {
 		output += gLocal.gui.your.slice(0, 1);
 	} else {
 		output += channalinfo.nickname.slice(0, 1);
@@ -346,12 +346,19 @@ function render_channal_list(channalinfo) {
 
 	//  output += "<a href='../wiki/wiki.php?word=" + _word;
 	//  output += "&channal=" + channalinfo.id + "' >";
+	if (parseInt(channalinfo.power) >= 20) {
+		if (parseInt(channalinfo.power) != 30) {
+			output += "[写]";
+		}
+	} else {
+		output += "[读]";
+	}
 	output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
 
 	output += channalinfo["name"];
 
 	output += "</a>";
-	if (channalinfo.nickname == "_you_") {
+	if (parseInt(channalinfo.power) == 30) {
 		output += "@" + gLocal.gui.your;
 	} else {
 		output += "@" + channalinfo["nickname"];

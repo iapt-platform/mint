@@ -126,14 +126,26 @@ function render_user_list() {
 	let html = "<ul>";
 	let arrIndex = 0;
 	for (const iterator of gUserList) {
-		html += "<li>" + iterator.name + ' <a onclick="userlist_del(' + arrIndex + ')">删除</a>';
+		html += "<li> <a class='btn_del' onclick=\"userlist_del(' + arrIndex + ')\">删除</a>" + iterator.name;
 		if (iterator.type == 1) {
 			//如果是小组，显示项目列表
 			html += "<div>";
-			html += "<div><input id='prj_" + iterator.id + "' checked type='checkbox' />全组可用</div>";
+			html +=
+				"<div><input id='prj_" +
+				iterator.id +
+				"' checked type='radio' name='prj_" +
+				iterator.id +
+				"' />全组成员</div>";
 			if (typeof iterator.project != "undefined") {
 				for (const project of iterator.project) {
-					html += "<div><input id='prj_" + project.id + "' type='checkbox' />" + project.name + "</div>";
+					html +=
+						"<div><input id='prj_" +
+						project.id +
+						"' type='radio' name='prj_" +
+						iterator.id +
+						"' />" +
+						project.name +
+						"</div>";
 				}
 			}
 			html += "</div>";

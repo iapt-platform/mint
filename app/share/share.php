@@ -40,6 +40,20 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 	height: 28px;
     width: 28px;
 }
+#user_list li{
+    border: 1px solid var(--btn-border-color);
+    width: 270px;
+    border-radius: 5px;
+    line-height: 24px;
+    padding: 0 5px;
+
+}
+#user_list li>.btn_del{
+	visibility: hidden;
+}
+#user_list li:hover .btn_del{
+	visibility: visible;
+}
 </style>
 <div class=" " >
 	<div class="item_block">
@@ -65,18 +79,21 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 		<h2>协作</h2>
 		<div>
 			<div style="display:flex;">
+			<select id="user_type" >
+				<option value="1">👤个人</option>
+				<option value="2">👥工作组</option>
+			</select>
+			<!--			
 			<span>
 				<svg class="icon">
 					<use xlink:href="../studio/svg/icon.svg#ic_add_person"></use>
 				</svg>
 			</span>
+			-->
 			<span style="max-width:200px;">
 			<input id="search_user" type="input" name="" placeholder="输入用户名或组名" onkeyup="username_search_keyup(event,this)" />
 			</span>
-			<select id="user_type" >
-				<option value="1">用户</option>
-				<option value="2">工作组</option>
-			</select>
+
 			</div>
 			<div id="user_search">
 			</div>

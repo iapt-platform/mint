@@ -1,0 +1,82 @@
+id,book,par_num,level,class,title,text,author
+270043,125,3,1,book,Suttanipāta-aṭṭhakathā,经集注,元亨寺
+270045,125,5,2,subhead,Ganthārambhakathā,开篇偈诵,元亨寺
+270062,125,22,2,chapter,1. Uragavaggo,一　蛇　品,元亨寺
+270063,125,23,4,subhead,1. Uragasuttavaṇṇanā,一　蛇经注,元亨寺
+270176,125,136,4,subhead,2. Dhaniyasuttavaṇṇanā,二　陀尼耶经注,元亨寺
+270239,125,199,4,subhead,3. Khaggavisāṇasuttavaṇṇanā,三　犀牛经注,元亨寺
+270546,125,506,4,subhead,4. Kasibhāradvājasuttavaṇṇanā,四　耕田婆罗堕阇经注,元亨寺
+270613,125,573,4,subhead,5. Cundasuttavaṇṇanā,五　淳陀经注,元亨寺
+270636,125,596,4,subhead,6. Parābhavasuttavaṇṇanā,六　败亡经注,元亨寺
+270671,125,631,4,subhead,7. Aggikabhāradvājasuttavaṇṇanā,七　贱民经注,元亨寺
+270736,125,696,4,subhead,8. Mettasuttavaṇṇanā,八　慈经注,元亨寺
+270806,125,766,4,subhead,9. Hemavatasuttavaṇṇanā,九　雪山〔夜叉〕经注,元亨寺
+270868,125,828,4,subhead,10. Āḷavakasuttavaṇṇanā,一〇　旷野（夜叉）经注,元亨寺
+270939,125,899,4,subhead,11. Vijayasuttavaṇṇanā,一一　征胜经注,元亨寺
+270988,125,948,4,subhead,12. Munisuttavaṇṇanā,一二　牟尼经注,元亨寺
+271041,125,1001,2,chapter,2. Cūḷavaggo,二　小品,元亨寺
+271042,125,1002,3,subhead,1. Ratanasuttavaṇṇanā,一　宝经注,元亨寺
+271155,125,1115,3,subhead,2. Āmagandhasuttavaṇṇanā,二　臭秽经注,元亨寺
+271181,125,1141,3,subhead,3. Hirisuttavaṇṇanā,三　惭经注,元亨寺
+271202,125,1162,3,subhead,4. Maṅgalasuttavaṇṇanā,四　大吉祥经注,元亨寺
+271443,125,1403,3,subhead,5. Sūcilomasuttavaṇṇanā,五　针毛夜叉经注,元亨寺
+271457,125,1417,3,subhead,6. Kapilasutta-(dhammacariyasutta)-vaṇṇanā,六　法行经注,元亨寺
+271480,125,1440,3,subhead,7. Brāhmaṇadhammikasuttavaṇṇanā,七　婆罗门法经注,元亨寺
+271524,125,1484,3,subhead,8. Dhammasutta-(nāvāsutta)-vaṇṇanā,八　船经注,元亨寺
+271539,125,1499,3,subhead,9. Kiṃsīlasuttavaṇṇanā,九　何谓戒经注,元亨寺
+271553,125,1513,3,subhead,10. Uṭṭhānasuttavaṇṇanā,一〇　起立经注,元亨寺
+271564,125,1524,3,subhead,11. Rāhulasuttavaṇṇanā,一一　罗睺罗经注,元亨寺
+271580,125,1540,3,subhead,12. Nigrodhakappasutta-(vaṅgīsasutta)-vaṇṇanā,一二　鹏耆舍经注,元亨寺
+271616,125,1576,3,subhead,13. Sammāparibbājanīyasutta-(mahāsamayasutta)-vaṇṇanā,一三　正普行经注,元亨寺
+271671,125,1631,3,subhead,14. Dhammikasuttavaṇṇanā,一四　昙弥迦经注,元亨寺
+271716,125,1676,2,chapter,3. Mahāvaggo,三　大品,元亨寺
+271717,125,1677,4,subhead,1. Pabbajjāsuttavaṇṇanā,一　出家经注,元亨寺
+271733,125,1693,4,subhead,2. Padhānasuttavaṇṇanā,二　精勤经注,元亨寺
+271763,125,1723,4,subhead,3. Subhāsitasuttavaṇṇanā,三　善说经注,元亨寺
+271786,125,1746,4,subhead,4. Pūraḷāsasutta-(sundarikabhāradvājasutta)-vaṇṇanā,四　孙陀利迦婆罗堕阇经注,元亨寺
+271827,125,1787,4,subhead,5. Māghasuttavaṇṇanā,五　摩伽经注,元亨寺
+271853,125,1813,4,subhead,6. Sabhiyasuttavaṇṇanā,六　萨毘耶经注,元亨寺
+271903,125,1863,4,subhead,7. Selasuttavaṇṇanā,七　施罗经注,元亨寺
+271988,125,1948,4,subhead,8. Sallasuttavaṇṇanā,八　箭经注,元亨寺
+272027,125,1987,4,subhead,9. Vāseṭṭhasuttavaṇṇanā,九　婆私咤经注,元亨寺
+272084,125,2044,4,subhead,10. Kokālikasuttavaṇṇanā,一〇　拘迦利耶经注,元亨寺
+272117,125,2077,4,subhead,11. Nālakasuttavaṇṇanā,一一　那罗迦经注,元亨寺
+272176,125,2136,4,subhead,12. Dvayatānupassanāsuttavaṇṇanā,一二　二种随观经注,元亨寺
+272224,125,2184,2,chapter,4. Aṭṭhakavaggo,四　义品,元亨寺
+272225,125,2185,4,subhead,1. Kāmasuttavaṇṇanā,一　欲经注,元亨寺
+272234,125,2194,4,subhead,2. Guhaṭṭhakasuttavaṇṇanā,二　窟八偈经注,元亨寺
+272247,125,2207,4,subhead,3. Duṭṭhaṭṭhakasuttavaṇṇanā,三　瞋怒八偈经注,元亨寺
+272262,125,2222,4,subhead,4. Suddhaṭṭhakasuttavaṇṇanā,四　净八偈经注,元亨寺
+272276,125,2236,4,subhead,5. Paramaṭṭhakasuttavaṇṇanā,五　第一八偈经注,元亨寺
+272286,125,2246,4,subhead,6. Jarāsuttavaṇṇanā,六　老经注,元亨寺
+272303,125,2263,4,subhead,7. Tissametteyyasuttavaṇṇanā,七　帝须弥勒经注,元亨寺
+272315,125,2275,4,subhead,8. Pasūrasuttavaṇṇanā,八　波须罗经注,元亨寺
+272344,125,2304,4,subhead,9. Māgaṇḍiyasuttavaṇṇanā,九　摩健地耶经注,元亨寺
+272367,125,2327,4,subhead,10. Purābhedasuttavaṇṇanā,一〇　死前经注,元亨寺
+272386,125,2346,4,subhead,11. Kalahavivādasuttavaṇṇanā,一一　斗诤经注,元亨寺
+272404,125,2364,4,subhead,12. Cūḷabyūhasuttavaṇṇanā,一二　小集积经注,元亨寺
+272421,125,2381,4,subhead,13. Mahābyūhasuttavaṇṇanā,一三　大集积经注,元亨寺
+272443,125,2403,4,subhead,14. Tuvaṭakasuttavaṇṇanā,一四　迅速经注,元亨寺
+272464,125,2424,4,subhead,15. Attadaṇḍasuttavaṇṇanā,一五　执杖经注,元亨寺
+272486,125,2446,4,subhead,16. Sāriputtasuttavaṇṇanā,一六　舍利弗经注,元亨寺
+272522,125,2482,2,chapter,5. Pārāyanavaggo,五　彼岸道品,元亨寺
+272523,125,2483,4,subhead,Vatthugāthāvaṇṇanā,一　序偈,元亨寺
+272562,125,2522,4,subhead,1. Ajitasuttavaṇṇanā,二　阿耆多学童所问注,元亨寺
+272574,125,2534,4,subhead,2. Tissametteyyasuttavaṇṇanā,三　帝须弥勒学童所问注,元亨寺
+272581,125,2541,4,subhead,3. Puṇṇakasuttavaṇṇanā,四　富那迦学童所问注,元亨寺
+272590,125,2550,4,subhead,4. Mettagūsuttavaṇṇanā,五　弥多求学童所问注,元亨寺
+272604,125,2564,4,subhead,5. Dhotakasuttavaṇṇanā,六　度多迦学童所问注,元亨寺
+272612,125,2572,4,subhead,6. Upasīvasuttavaṇṇanā,七　优波私婆学童所问注,元亨寺
+272623,125,2583,4,subhead,7. Nandasuttavaṇṇanā,八　难陀学童所问注,元亨寺
+272630,125,2590,4,subhead,8. Hemakasuttavaṇṇanā,九　醯摩迦学童所问注,元亨寺
+272635,125,2595,4,subhead,9. Todeyyasuttavaṇṇanā,一〇　刀提耶学童所问注,元亨寺
+272641,125,2601,4,subhead,10. Kappasuttavaṇṇanā,一一　劫波学童所问注,元亨寺
+272647,125,2607,4,subhead,11. Jatukaṇṇisuttavaṇṇanā,一二　阇都乾耳学童所问注,元亨寺
+272653,125,2613,4,subhead,12. Bhadrāvudhasuttavaṇṇanā,一三　跋陀罗浮陀学童所问注,元亨寺
+272660,125,2620,4,subhead,13. Udayasuttavaṇṇanā,一四　优陀耶学童所问注,元亨寺
+272668,125,2628,4,subhead,14. Posālasuttavaṇṇanā,一五　布沙罗学童所问注,元亨寺
+272675,125,2635,4,subhead,15. Mogharājasuttavaṇṇanā,一六　莫伽罗阇学童所问注,元亨寺
+272683,125,2643,4,subhead,16. Piṅgiyasuttavaṇṇanā,一七　宾祇耶学童所问注,元亨寺
+272690,125,2650,4,subhead,Pārāyanatthutigāthāvaṇṇanā,一八　〔十六学童所问之结语〕,元亨寺
+272693,125,2653,4,subhead,Pārāyanānugītigāthāvaṇṇanā,一八　〔十六学童所问之结语〕,元亨寺
+272712,125,2672,4,subhead,Nigamanakathā,结束语,元亨寺

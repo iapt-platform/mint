@@ -1,0 +1,20 @@
+id,book,par_num,level,class,title,text,author
+255157,118,3,1,book,Mahāniddesa-aṭṭhakathā,大義釋註,元亨寺
+255158,118,4,3,subsubhead,Ganthārambhakathā,开题偈诵,元亨寺
+255216,118,62,3,title,1. Aṭṭhakavaggo,義品,元亨寺
+255217,118,63,2,chapter,1. Kāmasuttaniddesavaṇṇanā,第一　欲經之義釋註,元亨寺
+255518,118,364,2,chapter,2. Guhaṭṭhakasuttaniddesavaṇṇanā,第二　窟八偈經之義釋註,元亨寺
+255859,118,705,2,chapter,3. Duṭṭhaṭṭhakasuttaniddesavaṇṇanā,第三　瞋怒八偈經之義釋註,元亨寺
+255926,118,772,2,chapter,4. Suddhaṭṭhakasuttaniddesavaṇṇanā,第四　淨八偈之義釋註,元亨寺
+256040,118,886,2,chapter,5. Paramaṭṭhakasuttaniddesavaṇṇanā,第五　第一八偈經之義釋註,元亨寺
+256067,118,913,2,chapter,6. Jarāsuttaniddesavaṇṇanā,第六　老經之義釋註,元亨寺
+256137,118,983,2,chapter,7. Tissametteyyasuttaniddesavaṇṇanā,第七　帝須彌勒經之義釋註,元亨寺
+256225,118,1071,2,chapter,8. Pasūrasuttaniddesavaṇṇanā,第八　波須羅經之義釋註,元亨寺
+256295,118,1141,2,chapter,9. Māgaṇḍiyasuttaniddesavaṇṇanā,第九　摩健地耶經之義釋註,元亨寺
+256338,118,1184,2,chapter,10. Purābhedasuttaniddesavaṇṇanā,第十　死前經之義釋註,元亨寺
+256483,118,1329,2,chapter,11. Kalahavivādasuttaniddesavaṇṇanā,第十一　鬥諍經之義釋註,元亨寺
+256522,118,1368,2,chapter,12. Cūḷabyūhasuttaniddesavaṇṇanā,第十二　小集積經之義釋註,元亨寺
+256554,118,1400,2,chapter,13. Mahābyūhasuttaniddesavaṇṇanā,第十三　大集積經之義釋註,元亨寺
+256592,118,1438,2,chapter,14. Tuvaṭakasuttaniddesavaṇṇanā,第十四　迅速經之義釋註,元亨寺
+256762,118,1608,2,chapter,15. Attadaṇḍasuttaniddesavaṇṇanā,第十五　執杖經之義釋註,元亨寺
+256825,118,1671,2,chapter,16. Sāriputtasuttaniddesavaṇṇanā,第十六　舍利弗經之義釋註,元亨寺

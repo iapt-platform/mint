@@ -5,6 +5,7 @@ require_once "../public/_pdo.php";
 require_once "../path.php";
 require_once '../channal/function.php';
 require_once '../ucenter/function.php';
+require_once '../share/function.php';
 
 $_data = array();
 $output = array();
@@ -30,29 +31,35 @@ $channal = array();
 
 #查询有阅读权限的channel
 $channal_list = array();
+$channel_power=array();
 if (isset($_COOKIE["userid"])) {
+	//找自己的
     PDO_Connect(_FILE_DB_CHANNAL_);
     $query = "SELECT id from channal where owner = ?   limit 0,100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
-        $channal_list[] = $value["id"];
+		$channal_list[] = $value["id"];
+		$channel_power[$value["id"]]=30;
     }
 
-    # 找协作的
-    $Fetch_coop = array();
-    $query = "SELECT channal_id FROM cooperation WHERE  user_id = ? ";
-    $coop_channal = PDO_FetchAll($query, array($_COOKIE["userid"]));
-    if (count($coop_channal) > 0) {
-        foreach ($coop_channal as $key => $value) {
-            # code...
-            $channal_list[] = $value["channal_id"];
-        }
-    }
-    /*  创建一个填充了和params相同数量占位符的字符串 */
+	# 找协作的
+	$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
+	foreach ($coop_channal as $key => $value) {
+		# return res_id,res_type,power res_title  res_owner_id
+		$channal_list[] = $value["res_id"];
+		if(isset($channel_power[$value["res_id"]])){
+			if($channel_power[$value["res_id"]]<(int)$value["power"]){
+				$channel_power[$value["res_id"]]=(int)$value["power"];
+			}
+		}
+	}
+
+    
 
 }
 if (count($channal_list) > 0) {
+	#  创建一个填充了和params相同数量占位符的字符串 
     $channel_place_holders = implode(',', array_fill(0, count($channal_list), '?'));
     $channel_query = " OR channal IN ($channel_place_holders)";
 } else {
@@ -137,8 +144,13 @@ foreach ($channal as $key => $value) {
     $channalInfo["count"] = $value;
     $channalInfo["all"] = count($_data);
     $channalInfo["final"] = $arr_sent_final;
-    $channalInfo["article_len"] = $article_len;
-
+	$channalInfo["article_len"] = $article_len;
+	if(isset($channel_power[$key])){
+		$channalInfo["power"] =$channel_power[$key];
+	}
+	else{
+		$channalInfo["power"] =10;
+	}
     $output[] = $channalInfo;
 }
 
