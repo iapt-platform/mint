@@ -22,10 +22,22 @@
 	border-bottom: 1px solid var(--tool-line-color);
 	padding: 10px;
 	margin-top: 50px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+}
+#pali_pedia {
+	font-size: 200%;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
 }
 
 .main_view {
 	padding: 0 1em;
+	padding-top: 7em;
 	max-width: 1280px;
 	margin-left: auto;
 	margin-right: auto;
