@@ -1413,7 +1413,20 @@ function renderWordParBlockInner(elementBlock) {
 				if (_my_channal != null) {
 					for (const iterator of _my_channal) {
 						if (iterator.status > 0) {
-							output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+							let readonly;
+							if (iterator.power > 0 && iterator.power < 20) {
+								readonly = true;
+							} else {
+								readonly = false;
+							}
+							output += render_tran_sent_block(
+								book,
+								paragraph,
+								sent_begin,
+								word_id,
+								iterator.id,
+								readonly
+							);
 						}
 					}
 				}
@@ -1565,7 +1578,13 @@ function renderWordParBlockInner(elementBlock) {
 	if (_my_channal != null) {
 		for (const iterator of _my_channal) {
 			if (iterator.status > 0) {
-				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+				let readonly;
+				if (iterator.power > 0 && iterator.power < 20) {
+					readonly = true;
+				} else {
+					readonly = false;
+				}
+				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, readonly);
 			}
 		}
 	}
