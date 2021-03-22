@@ -1705,8 +1705,8 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		output += "<span>";
 
 		if (thischannal) {
-			output += thischannal.name + "-<b>" + thischannal.lang + "</b>@";
-			if (thischannal.username == getCookie("username")) {
+			output += "<b>" + thischannal.name + "</b>@";
+			if (parseInt(thischannal.power) >= 30) {
 				output += gLocal.gui.your;
 			} else {
 				output += thischannal.nickname;
@@ -1714,6 +1714,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		} else {
 			output += "未知的频道名";
 		}
+		output += "-[" + thischannal.lang + "]";
 		output += "</span>";
 		output +=
 			"<span style='margin-left: auto;' class='send_status' id='send_" +
@@ -2206,8 +2207,16 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -2741,8 +2750,16 @@ function renderWordDetailByElement(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -3139,8 +3156,16 @@ function renderWordDetailByElement(xmlElement) {
 		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
