@@ -2223,7 +2223,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
 		_txtOutDetail +=
@@ -2766,7 +2766,7 @@ function renderWordDetailByElement(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
 		_txtOutDetail +=
@@ -3172,7 +3172,7 @@ function renderWordDetailByElement(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
 		_txtOutDetail +=
