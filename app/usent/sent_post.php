@@ -28,6 +28,7 @@ $respond['end'] = $_POST["end"];
 $respond['channal'] = $_POST["channal"];
 $respond['text'] = $_POST["text"];
 $respond['editor'] = $_COOKIE["userid"];
+$respond['commit_type'] = 0; #0 未提交 1 插入 2 修改 3pr 
 
 add_edit_event(_SENT_EDIT_, "{$_POST["book"]}-{$_POST["para"]}-{$_POST["begin"]}-{$_POST["end"]}@{$_POST["channal"]}");
 
@@ -55,17 +56,6 @@ if (isset($_POST["channal"])) {
 			#全网公开的 可以提交pr
 			$cooperation = 10;
 		}
-		/*
-        $query = "SELECT count(*) FROM cooperation WHERE channal_id= ? and user_id=? ";
-        $fetch = PDO_FetchOne($query, array($_POST["channal"], $_COOKIE["userid"]));
-        if ($fetch > 0) {
-            #有协作权限
-            $cooperation = 1;
-        } else {
-            #无协作权限
-            $cooperation = 0;
-		}
-		*/
     }
 } else {
     $respond["status"] = 1;
@@ -148,7 +138,8 @@ if ($_id == false) {
         } else {
             # 没错误
             # 更新historay
-            #没错误 更新历史记录
+			#没错误 更新历史记录
+			$respond['commit_type'] = 1;
             $respond['message'] = update_historay($newId, $_COOKIE["userid"], $_POST["text"], $_landmark);
             if ($respond['message'] !== "") {
                 $respond['status'] = 1;
@@ -169,18 +160,16 @@ if ($_id == false) {
 										editor,
 										text,
 										language,
-										ver,
 										status,
 										strlen,
 										modify_time,
 										receive_time,
 										create_time
 										)
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+										VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		$stmt = $PDO->prepare($query);
-		$newId = UUID::v4();
 		# 初始状态 1 未处理
-		$stmt->execute(array($newId,
+		$stmt->execute(array(
 							$_POST["book"],
 							$_POST["para"],
 							$_POST["begin"],
@@ -192,11 +181,10 @@ if ($_id == false) {
 							$_POST["text"],
 							$text_lang,
 							1,
-							1,
 							mb_strlen($_POST["text"], "UTF-8"),
 							mTime(),
 							mTime(),
-							mTime(),
+							mTime()
 							));
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			/*  识别错误  */
@@ -209,6 +197,7 @@ if ($_id == false) {
 		# 没错误
 			$respond['message'] = "已经提交修改建议";
 			$respond['status'] = 0;
+			$respond['commit_type'] = 3;
 		}
     }
 } else {
@@ -233,7 +222,7 @@ if ($_id == false) {
             exit;
         } else {
             #没错误 更新历史记录
-
+			$respond['commit_type'] = 2;
             $respond['message'] = update_historay($_id, $_COOKIE["userid"], $_POST["text"], $_landmark);
             if ($respond['message'] !== "") {
                 $respond['status'] = 1;
@@ -255,18 +244,16 @@ if ($_id == false) {
 										editor,
 										text,
 										language,
-										ver,
 										status,
 										strlen,
 										modify_time,
 										receive_time,
 										create_time
 										)
-										VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+										VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		$stmt = $PDO->prepare($query);
-		$newId = UUID::v4();
 		# 初始状态 1 未处理
-		$stmt->execute(array($newId,
+		$stmt->execute(array(
 							$_POST["book"],
 							$_POST["para"],
 							$_POST["begin"],
@@ -278,11 +265,10 @@ if ($_id == false) {
 							$_POST["text"],
 							$text_lang,
 							1,
-							1,
 							mb_strlen($_POST["text"], "UTF-8"),
 							mTime(),
 							mTime(),
-							mTime(),
+							mTime()
 							));
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			/*  识别错误  */
@@ -293,6 +279,7 @@ if ($_id == false) {
 			exit;
 		} else {
 		# 没错误
+			$respond['commit_type'] = 3;
 			$respond['message'] = "已经提交修改建议";
 			$respond['status'] = 0;
 		}
