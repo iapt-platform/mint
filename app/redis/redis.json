@@ -1,0 +1,5 @@
+[
+	{ "key": "ref_dict_idx", "type": "hash", "valid": true, "description": "参考字典索引" },
+	{ "key": "pali_sent_*", "type": "string", "valid": false, "description": "巴利句子列表" },
+	{ "key": "pali://sent/*", "type": "hash", "valid": true, "description": "巴利句子列表" }
+]
