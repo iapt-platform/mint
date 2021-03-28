@@ -1,5 +1,6 @@
 <?php
 require_once "../path.php";
+require_once "../share/function.php";
 
 function channel_get_title($id)
 {
@@ -19,11 +20,10 @@ function channel_get_title($id)
 
 class Channal
 {
-    public $dbh;
+    private $dbh;
     public function __construct() {
-        $dns = ""._FILE_DB_CHANNAL_;
-        $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+        $this->dbh = new PDO(_FILE_DB_CHANNAL_, "", "",array(PDO::ATTR_PERSISTENT=>true));
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
     public function getChannal($id){
@@ -41,15 +41,25 @@ class Channal
 	
 	public function getPower($id){
 		#查询用户对此channel是否有权限		
-		if(!isset($_COOKIE["userid"])){
-			return 0;
-		}
+
 		$channelPower = 0;
 		$query = "SELECT owner,status FROM channal WHERE id=? and status>0 ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
+			if(!isset($_COOKIE["userid"])  ){
+				#未登录用户
+				if($channel["status"]==30){
+					#全网公开有建议权限
+					return 10;
+				}
+				else{
+					#其他状态没有任何权限
+					return 0;
+				}
+				
+			}
 			if($channel["owner"]==$_COOKIE["userid"]){
 				return 30;
 			}
@@ -58,7 +68,7 @@ class Channal
 				$channelPower = 10;
 			}
 		}
-
+		#查询共享权限，如果共享权限更大，覆盖上面的的
 		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
 		if($sharePower>$channelPower){
 			$channelPower=$sharePower;

@@ -346,13 +346,26 @@ function render_channal_list(channalinfo) {
 
 	//  output += "<a href='../wiki/wiki.php?word=" + _word;
 	//  output += "&channal=" + channalinfo.id + "' >";
-	if (parseInt(channalinfo.power) >= 20) {
-		if (parseInt(channalinfo.power) != 30) {
-			output += "[写]";
-		}
-	} else {
-		output += "[读]";
+	switch (parseInt(channalinfo.status)) {
+		case 10:
+			output += "🔐";
+			break;
+		case 20:
+			output += "🌐";
+			break;
+		case 30:
+			output += "🌐";
+			break;
+		default:
+			break;
 	}
+	if (parseInt(channalinfo.power) >= 20) {
+		//if (parseInt(channalinfo.power) != 30)
+		{
+			output += "✏️";
+		}
+	}
+	//✋
 	output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
 
 	output += channalinfo["name"];
@@ -521,7 +534,8 @@ function note_json_html(in_json) {
 
 	//output += "<div id='translation_div'>";
 	for (const iterator of in_json.translation) {
-		output += render_one_sent_tran(in_json.book, in_json.para, in_json.begin, in_json.end, iterator);
+		output += render_one_sent_tran_a(iterator);
+		//output += render_one_sent_tran(in_json.book, in_json.para, in_json.begin, in_json.end, iterator);
 	}
 	//所选全部译文结束
 	//output += "</div>";
@@ -581,6 +595,259 @@ function note_json_html(in_json) {
 	//出处路径结束
 	return output;
 }
+function sent_tran_edit(obj) {
+	let jqObj = $(obj);
+	while (!jqObj.hasClass("sent_tran")) {
+		jqObj = jqObj.parent();
+		if (!jqObj) {
+			return;
+		}
+	}
+	if (jqObj.hasClass("edit_mode")) {
+		jqObj.removeClass("edit_mode");
+	} else {
+		$(".sent_tran").removeClass("edit_mode");
+		jqObj.addClass("edit_mode");
+	}
+}
+
+function sent_pr_merge(id) {
+	$.post(
+		"../usent/sent_pr_merge.php",
+		{
+			id: id,
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			if (result.status > 0) {
+				alert("error" + result.message);
+			} else {
+				ntf_show("成功采纳");
+			}
+		}
+	);
+}
+function render_one_sent_tran_a(iterator) {
+	let mChannel = get_channel_by_id(iterator.channal);
+
+	let tranText;
+	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
+	if (iterator.text == "") {
+		tranText =
+			"<span style='color:var(--border-line-color);'>" +
+			iterator.channalinfo.name +
+			"-" +
+			iterator.channalinfo.lang +
+			"</span>";
+	} else {
+		//note_init处理句子链接
+		tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+	}
+	let html = "";
+	html += "<div class='sent_tran ";
+	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
+		html += " pr ";
+	}
+	html += "' channel='" + iterator.channal + "' sid='" + sid + "'>";
+	html += "<div class='sent_tran_inner'>";
+	html += '<div class="tool_bar">';
+	html += '	<div class="right">';
+	//句子菜单
+	html += '<div class="pop_menu">';
+
+	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
+		//在pr 列表中的译文
+		if (typeof iterator.is_pr_editor != "undefined" && iterator.is_pr_editor == true) {
+			//提交人
+			//修改按钮
+			html += "<button class='icon_btn tooltip' onclick='sent_pr_edit(this)'>";
+			html += '<svg class="icon" >';
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+			html += "</svg>";
+			html += "<span class='tooltiptext tooltip-top'>";
+			html += gLocal.gui.modify;
+			html += "</span>";
+			html += "</button>";
+
+			//删除按钮
+			html += "<button class='icon_btn tooltip' onclick='sent_pr_del(this)'>";
+			html += '<svg class="icon" >';
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_delete"></use>';
+			html += "</svg>";
+			html += "<span class='tooltiptext tooltip-top'>";
+			html += gLocal.gui.delete;
+			html += "</span>";
+			html += "</button>";
+		} else {
+			//非提交人
+			//采纳按钮
+			html += "<button class='icon_btn tooltip' onclick=\"sent_pr_merge('" + iterator.id + "')\">";
+			html += '<svg class="icon" >';
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+			html += "</svg>";
+			html += "<span class='tooltiptext tooltip-top'>";
+			html += gLocal.gui.accept_copy;
+			html += "</span>";
+			html += "</button>";
+
+			//点赞按钮
+			html += "<button class='icon_btn tooltip' onclick='sent_pr_like(this)'>";
+			html += '<svg class="icon" >';
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use>';
+			html += "</svg>";
+			html += "<span class='tooltiptext tooltip-top'>";
+			html += gLocal.gui.like;
+			html += "</span>";
+			html += "</button>";
+		}
+	} else {
+		//非pr列表里的句子
+		//编辑按钮
+		html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+		html += "</svg>";
+		html += "<span class='tooltiptext tooltip-top'>";
+		if (parseInt(iterator.mypower) < 20) {
+			html += "建议";
+		} else {
+			html += gLocal.gui.edit;
+		}
+
+		html += "</span>";
+		html += "</button>";
+
+		//推送按钮
+		if (parseInt(iterator.mypower) >= 20) {
+			html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
+			html += '<svg class="icon" >';
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+			html += "</svg>";
+			html += "<span class='tooltiptext tooltip-top'>";
+			html += "推送";
+			html += "</span>";
+			html += "</button>";
+		}
+
+		//更多按钮
+		html += '<div class="case_dropdown">';
+		html += "<button class='icon_btn'>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_more"></use>';
+		html += "</svg>";
+		html += "</button>";
+		html += '<div class="case_dropdown-content menu_space_between" style="right:0;">';
+		//时间线
+		html += "<a onclick=\"history_show('" + iterator.id + "')\">";
+		html += "<span>" + gLocal.gui.timeline + "</span>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use>';
+		html += "</svg>";
+		html += "</a>";
+		//复制
+		html += "<a onclick=\"history_show('" + iterator.id + "')\">";
+		html += "<span>" + gLocal.gui.copy + "</span>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#copy"></use>';
+		html += "</svg>";
+		html += "</a>";
+		//点赞
+		html += "<a onclick=\"history_show('" + iterator.id + "')\">";
+		html += "<span>" + gLocal.gui.like + "</span>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use>';
+		html += "</svg>";
+		html += "</a>";
+		//分享
+		html += "<a onclick=\"history_show('" + iterator.id + "')\">";
+		html += "<span>" + gLocal.gui.share_to + "</span>";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#share_to"></use>';
+		html += "</svg>";
+		html += "</a>";
+
+		html += "</div>";
+		html += "</div>";
+		//更多按钮结束
+	}
+
+	html += "</div>";
+	//句子菜单结束
+	html += "</div>";
+	html += "</div>";
+	//tool_bar 结束
+	html += '<div class="left_bar">';
+	html += '	<div class="face">';
+	if (iterator.id != "") {
+		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
+	}
+	html += "</div>";
+	html += '<div class="date">' + getPassDataTime(iterator.update_time) + "</div>";
+	html += "</div>";
+	html += '<div class="body">';
+	html += '<div class="head_bar">';
+	html += '<div class="info">';
+	html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
+	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
+	html += "</div>";
+	html += "<div class='preview'>" + tranText + "</div>";
+	html += "</div>";
+
+	html += '<div class="edit">';
+	html += '<div class="input">';
+	html += "<textarea dbid='" + iterator.id + "' ";
+	html += "sid='" + sid + "' ";
+	html += "channel='" + iterator.channal + "' ";
+	html += 'onchange="note_sent_save_a(this)">' + iterator.text + "</textarea>";
+	html += "</div>";
+	html += '<div class="edit_tool">';
+	if (parseInt(iterator.mypower) < 20) {
+		html += "<b>提交修改建议</b> ";
+	}
+	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>保存</a> 支持markdown语法";
+	html += "</div>";
+	html += "</div>";
+
+	html += '<div class="foot_bar">';
+
+	html += '<div class="info">';
+	if (iterator.id != "") {
+		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
+	}
+	if (iterator.id != "") {
+		html += '<span class="date"> 于' + getPassDataTime(iterator.update_time) + "</span>";
+	}
+	if (iterator.id != "") {
+		html += '<span class="channel">更新了 @' + iterator.channalinfo.name + "</span>";
+	} else {
+		html += '<span class="channel">无人更新 @' + iterator.channalinfo.name + "</span>";
+	}
+
+	html += '<ul class="tag_list">';
+	if (iterator.pr_all && parseInt(iterator.pr_all) > 0) {
+		html +=
+			"			<li onclick=\"note_pr_show('" +
+			iterator.channal +
+			"','" +
+			sid +
+			"')\"><span class='icon'>✋</span><span class='num'>" +
+			iterator.pr_new +
+			"/" +
+			iterator.pr_all +
+			"</span></li>";
+	}
+	html += "</ul>";
+	html += "</div>"; //end of info
+
+	html += "</div>"; //end of foot bar
+
+	html += "</div>";
+	html += "</div>";
+	//sent_tran_inner结束
+	html += '<div class="pr_content"></div>';
+	html += "</div>";
+	return html;
+}
 
 function render_one_sent_tran(book, para, begin, end, iterator) {
 	let output = "";
@@ -609,9 +876,8 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use></svg>';
 	output += gLocal.gui.edit + "</li>";
 	output += "<li class = 'tip_buttom' ";
-	output += " onclick=\"history_show('" + iterator.id + "')\"";
+	output += " onclick=\"history_show('" + iterator.id + "')\" >";
 	output +=
-		">" +
 		'<svg class="icon" ><use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#recent_scan"></use></svg>';
 	output += gLocal.gui.timeline + "</li>";
 	output +=
@@ -777,12 +1043,14 @@ function set_more_button_display() {
 							},
 							function (data, status) {
 								let arrSent = JSON.parse(data);
-								let html = "";
+								let html = "<div class='compact'>";
 								for (const iterator of arrSent) {
 									if (_channal.indexOf(iterator.channal) == -1) {
-										html += "<div>" + marked(iterator.text) + "</div>";
+										html += render_one_sent_tran_a(iterator);
+										//html += "<div>" + marked(iterator.text) + "</div>";
 									}
 								}
+								html += "</div>";
 								let sentId =
 									arrSent[0].book +
 									"-" +
@@ -854,7 +1122,87 @@ function note_edit_sentence(book, para, begin, end, channal) {
 
 	alert("未找到句子");
 }
+function update_note_sent_tran(obj) {}
+//保存译文句子 新
+function note_sent_save_a(obj) {
+	let id = $(obj).attr("dbid");
+	let sid = $(obj).attr("sid").split("-");
+	let book = sid[0];
+	let para = sid[1];
+	let begin = sid[2];
+	let end = sid[3];
+	let channal = $(obj).attr("channel");
+	let text = $(obj).val();
+	let sent_tran_div = find_sent_tran_div(obj);
+	$.post(
+		"../usent/sent_post.php",
+		{
+			id: id,
+			book: book,
+			para: para,
+			begin: begin,
+			end: end,
+			channal: channal,
+			text: text,
+			lang: "zh",
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			if (result.status > 0) {
+				alert("error" + result.message);
+			} else {
+				if (result.commit_type == 1 || result.commit_type == 2) {
+					ntf_show("成功修改");
+					if (sent_tran_div) {
+						let divPreview = $(sent_tran_div).find(".preview").first();
+						if (result.text == "") {
+							let channel_info = "Empty";
+							let thisChannel = find_channal(result.channal);
+							if (thisChannel) {
+								channel_info = thisChannel.name + "-" + thisChannel.nickname;
+							}
+							divPreview.html(
+								"<span style='color:var(--border-line-color);'>" + channel_info + "</span>"
+							);
+						} else {
+							divPreview.html(
+								marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+							);
+							term_updata_translation();
+							popup_init();
+							for (const iterator of _arrData) {
+								if (
+									iterator.book == result.book &&
+									iterator.para == result.para &&
+									iterator.begin == result.begin &&
+									iterator.end == result.end
+								) {
+									for (const tran of iterator.translation) {
+										if (tran.channal == result.channal) {
+											tran.text = result.text;
+											break;
+										}
+									}
+								}
+							}
+						}
+						$(sent_tran_div).find(".preview").removeClass("loading");
+					}
+				} else if (result.commit_type == 3) {
+					ntf_show("已经提交修改建议");
+				} else {
+					ntf_show("未提交");
+				}
+			}
+		}
+	);
 
+	if (sent_tran_div) {
+		$(sent_tran_div).find(".preview").addClass("loading");
+	}
+}
+
+//保存译文句子
 function note_sent_save() {
 	let id = $("#edit_dialog_text").attr("sent_id");
 	let book = $("#edit_dialog_text").attr("book");
@@ -881,54 +1229,60 @@ function note_sent_save() {
 			if (result.status > 0) {
 				alert("error" + result.message);
 			} else {
-				ntf_show("success");
-				if (result.text == "") {
-					let channel_info = "Empty";
-					let thisChannel = find_channal(result.channal);
-					if (thisChannel) {
-						channel_info = thisChannel.name + "-" + thisChannel.nickname;
-					}
-					$(
-						"#tran_text_" +
-							result.book +
-							"_" +
-							result.para +
-							"_" +
-							result.begin +
-							"_" +
-							result.end +
-							"_" +
-							result.channal
-					).html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
-				} else {
-					$(
-						"#tran_text_" +
-							result.book +
-							"_" +
-							result.para +
-							"_" +
-							result.begin +
-							"_" +
-							result.end +
-							"_" +
-							result.channal
-					).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
-					term_updata_translation();
-					for (const iterator of _arrData) {
-						if (
-							iterator.book == result.book &&
-							iterator.para == result.para &&
-							iterator.begin == result.begin &&
-							iterator.end == result.end
-						) {
-							for (const tran of iterator.translation) {
-								if (tran.channal == result.channal) {
-									tran.text = result.text;
-									break;
+				if (result.commit_type == 1 || result.commit_type == 2) {
+					ntf_show("成功修改");
+					if (result.text == "") {
+						let channel_info = "Empty";
+						let thisChannel = find_channal(result.channal);
+						if (thisChannel) {
+							channel_info = thisChannel.name + "-" + thisChannel.nickname;
+						}
+						$(
+							"#tran_text_" +
+								result.book +
+								"_" +
+								result.para +
+								"_" +
+								result.begin +
+								"_" +
+								result.end +
+								"_" +
+								result.channal
+						).html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
+					} else {
+						$(
+							"#tran_text_" +
+								result.book +
+								"_" +
+								result.para +
+								"_" +
+								result.begin +
+								"_" +
+								result.end +
+								"_" +
+								result.channal
+						).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
+						term_updata_translation();
+						for (const iterator of _arrData) {
+							if (
+								iterator.book == result.book &&
+								iterator.para == result.para &&
+								iterator.begin == result.begin &&
+								iterator.end == result.end
+							) {
+								for (const tran of iterator.translation) {
+									if (tran.channal == result.channal) {
+										tran.text = result.text;
+										break;
+									}
 								}
 							}
 						}
 					}
+				} else if (result.commit_type == 3) {
+					ntf_show("已经提交修改建议");
+				} else {
+					ntf_show("未提交");
 				}
 			}
 		}
@@ -968,6 +1322,7 @@ function tool_bar_show(element) {
 	}
 }
 
+//显示和隐藏某个内容 如 巴利文
 function setVisibility(key, value) {
 	switch (key) {
 		case "palitext":
@@ -1052,4 +1407,89 @@ function set_second_scrip(value) {
 }
 function slider_show(obj) {
 	$(obj).parent().parent().parent().parent().parent().toggleClass("slider_show_shell");
+}
+
+function find_sent_tran_div(obj) {
+	let parent = obj.parentNode;
+	while (parent.nodeType == 1) {
+		if ($(parent).hasClass("sent_tran")) {
+			return parent;
+		} else if (parent.nodeName == "BODY") {
+			return false;
+		}
+		parent = parent.parentNode;
+	}
+
+	return false;
+}
+//显示或隐藏pr数据
+function note_pr_show(channel, id) {
+	let obj = $(".sent_tran[channel='" + channel + "'][sid='" + id + "']").find(".pr_content");
+	let prHtml = obj.first().html();
+	if (prHtml == "") {
+		note_get_pr(channel, id);
+	} else {
+		obj.slideUp();
+		obj.html("");
+	}
+}
+
+//获取pr数据并显示
+function note_get_pr(channel, id) {
+	let sid = id.split("-");
+	let book = sid[0];
+	let para = sid[1];
+	let begin = sid[2];
+	let end = sid[3];
+	$.post(
+		"../usent/get_pr.php",
+		{
+			book: book,
+			para: para,
+			begin: begin,
+			end: end,
+			channel: channel,
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			if (result.length > 0) {
+				let html = "<div class='compact'>";
+				for (const iterator of result) {
+					html += render_one_sent_tran_a(iterator);
+				}
+				html += "</div>";
+				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
+					.find(".pr_content")
+					.html(html);
+				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
+					.find(".pr_content")
+					.slideDown();
+			} else {
+			}
+		}
+	);
+	$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
+		.find(".pr_content")
+		.html("loading");
+	$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
+		.find(".pr_content")
+		.show();
+}
+
+function get_channel_by_id(id) {
+	if (typeof _channalData != "undefined") {
+		for (const iterator of _channalData) {
+			if (iterator.id == id) {
+				return iterator;
+			}
+		}
+	}
+	if (typeof _my_channal != "undefined") {
+		for (const iterator of _my_channal) {
+			if (iterator.id == id) {
+				return iterator;
+			}
+		}
+	}
+	return false;
 }

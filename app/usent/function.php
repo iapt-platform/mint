@@ -21,6 +21,85 @@ function update_historay($sent_id, $user_id, $text, $landmark)
     }
 }
 
+class SentPr{
+	private $dbh_sent;
+	private $redis;
+	public function __construct($redis=false) {
+        $this->dbh_sent = new PDO(_FILE_DB_SENTENCE_, "", "",array(PDO::ATTR_PERSISTENT=>true));
+		$this->dbh_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
+		$this->redis=$redis;
+	}
+	public function getNewPrNumber($book,$para,$begin,$end,$channel){
+		if ($this->dbh_sent) {
+            $query = "SELECT count(*) as ct FROM sent_pr WHERE book = ? and paragraph= ? and begin=? and end=? and channel=? and status=1 ";
+            $stmt = $this->dbh_sent->prepare($query);
+            $stmt->execute(array($book,$para,$begin,$end,$channel));
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($result){
+				return $result["ct"];
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+	public function getAllPrNumber($book,$para,$begin,$end,$channel){
+		if ($this->dbh_sent) {
+            $query = "SELECT count(*) as ct FROM sent_pr WHERE book = ? and paragraph= ? and begin=? and end=? and channel=?  ";
+            $stmt = $this->dbh_sent->prepare($query);
+            $stmt->execute(array($book,$para,$begin,$end,$channel));
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($result){
+				return $result["ct"];
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+
+	public function getPrData($book,$para,$begin,$end,$channel){
+		if ($this->dbh_sent) {
+            $query = "SELECT id,book,paragraph,begin,end,text,editor,modify_time FROM sent_pr WHERE book = ? and paragraph= ? and begin=? and end=? and channel=? and status=1 limit 0,100";
+            $stmt = $this->dbh_sent->prepare($query);
+            $stmt->execute(array($book,$para,$begin,$end,$channel));
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($result){
+				return $result;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+	public function getPrDataById($id){
+		if ($this->dbh_sent) {
+            $query = "SELECT id,book,paragraph,begin,end,channel,text,editor,modify_time FROM sent_pr WHERE id = ? ";
+            $stmt = $this->dbh_sent->prepare($query);
+            $stmt->execute(array($id));
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($result){
+				return $result;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+}
+
 class Sent_DB
 {
     private $dbh_sent;
@@ -35,6 +114,19 @@ class Sent_DB
 	}
 	public function getError(){
 		return $errorMsg;
+	}
+	public function getSent($book,$para,$begin,$end,$channel){
+		$query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND channal = ?  ";
+		$stmt = $this->dbh_sent->prepare($query);
+		if($stmt){
+			$stmt->execute(array($book,$para,$begin,$end,$channel));
+			$fetchDest = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $fetchDest;
+		}
+		else{
+			return false;
+		}
+		
 	}
 	public function update($arrData){
 		/* 修改现有数据 */

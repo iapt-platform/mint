@@ -76,7 +76,11 @@ foreach ($Fetch as $key => $value) {
     if ($channel) {
         $Fetch[$key]["c_name"] = $channel["name"];
         $Fetch[$key]["c_owner"] = $user_info->getName($channel["owner"]);
+        $Fetch[$key]["channalinfo"] = $channel;
     }
+	$Fetch[$key]["editor_name"]=$user_info->getName($value["editor"]);
+	$Fetch[$key]["update_time"]=$value["modify_time"];
+
 }
 
 echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
