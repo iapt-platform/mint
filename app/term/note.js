@@ -627,6 +627,13 @@ function sent_pr_merge(id) {
 		}
 	);
 }
+function sent_commit(src, id) {
+	commit_init({
+		src: src,
+		sent: [id],
+		express: true,
+	});
+}
 function render_one_sent_tran_a(iterator) {
 	let mChannel = get_channel_by_id(iterator.channal);
 
@@ -719,7 +726,8 @@ function render_one_sent_tran_a(iterator) {
 
 		//推送按钮
 		if (parseInt(iterator.mypower) >= 20) {
-			html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
+			html += "<button class='icon_btn tooltip' ";
+			html += " onclick=\"sent_commit('" + iterator.channal + "','" + sid + "')\">";
 			html += '<svg class="icon" >';
 			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
 			html += "</svg>";

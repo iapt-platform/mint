@@ -33,19 +33,21 @@ function commit_render_channel_select() {
 		}
 	}
 	for (const iterator of _my_channal) {
-		html += "<option value='" + iterator.id + "' ";
-		if (_commit_data.src == iterator.id) {
-			html += " selected ";
+		if (iterator.status > 0) {
+			html += "<option value='" + iterator.id + "' ";
+			if (_commit_data.src == iterator.id) {
+				html += " selected ";
+			}
+			html += ">" + iterator.name + "-";
+			if (iterator.power >= 30) {
+				html += gLocal.gui.your;
+			} else if (iterator.power >= 20) {
+				html += "可编辑";
+			} else {
+				html += "只读";
+			}
+			html += "</option>";
 		}
-		html += ">" + iterator.name + "-";
-		if (iterator.power >= 30) {
-			html += gLocal.gui.your;
-		} else if (iterator.power >= 20) {
-			html += "可编辑";
-		} else {
-			html += "只读";
-		}
-		html += "</option>";
 	}
 	html += "</select>";
 
@@ -62,28 +64,41 @@ function commit_render_channel_select() {
 		}
 	}
 	for (const iterator of _my_channal) {
-		html += "<option value='" + iterator.id + "' ";
-		if (_commit_data.dest == iterator.id) {
-			html += " selected ";
+		if (iterator.status > 0) {
+			html += "<option value='" + iterator.id + "' ";
+			if (_commit_data.dest == iterator.id) {
+				html += " selected ";
+			}
+			if (typeof _commit_data.src != "undefined" && _commit_data.src == iterator.id) {
+				html += "style:'display:none;' ";
+			}
+			html += " >" + iterator.name + "-";
+			if (iterator.power >= 30) {
+				html += gLocal.gui.your;
+			} else if (iterator.power >= 20) {
+				html += "可编辑";
+			} else if (iterator.power >= 10) {
+				html += "只读";
+			} else {
+				html += "停用";
+			}
+			html += "</option>";
 		}
-		if (typeof _commit_data.src != "undefined" && _commit_data.src == iterator.id) {
-			html += "style:'display:none;' ";
-		}
-		html += " >" + iterator.name + "-";
-		if (iterator.power >= 30) {
-			html += gLocal.gui.your;
-		} else if (iterator.power >= 20) {
-			html += "可编辑";
-		} else {
-			html += "只读";
-		}
-		html += "</option>";
 	}
 	html += "</select>";
 	html += "</div>";
 
 	html += "<div id='commit_preview'>";
-	html += "<button onclick='previewWin.show(commit_preview_render())'>文本比对</button>";
+	if (typeof _commit_data.express != "undefined" && _commit_data.express == true) {
+		if (typeof _commit_data.sent != "undefined" && _commit_data.sent.length != 0) {
+			html += "<button onclick='commit_pull()'>推送</button>";
+		} else {
+			html += "没有句子数据";
+		}
+	} else {
+		html += "<button onclick='previewWin.show(commit_preview_render())'>文本比对</button>";
+	}
+
 	html += "</div>";
 	html += "</div>";
 
@@ -104,11 +119,14 @@ function commit_preview_render() {
 		_commit_data.dest != null &&
 		_commit_data.dest != ""
 	) {
-		let sentList = new Array();
-		for (const iterator of _arrData) {
-			sentList.push(iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end);
+		if (typeof _commit_data.sent == "undefined" || _commit_data.sent.length == 0) {
+			let sentList = new Array();
+			for (const iterator of _arrData) {
+				sentList.push(iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end);
+			}
+			_commit_data.sent = sentList;
 		}
-		_commit_data.sent = sentList;
+
 		let arrSentInfo = new Array();
 		for (const iterator of _commit_data.sent) {
 			let id = com_guid();

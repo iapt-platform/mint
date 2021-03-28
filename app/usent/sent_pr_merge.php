@@ -67,4 +67,7 @@ if($prData){
 		$output["message"]="没有写入权限";
 	}
 }
+
+echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+
 ?>

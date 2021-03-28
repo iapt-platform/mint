@@ -7,18 +7,34 @@ require_once "../redis/function.php";
 require_once "../share/function.php";
 require_once "../usent/function.php";
 
+$respond['message'] = "";
+$respond['status'] = 0;
+
 $_data = array();
 if (isset($_POST["data"])) {
     $_data = json_decode($_POST["data"], true);
 } else {
+	$respond['message'] = "缺少输入数据";
+	$respond['status'] = 1;
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 	exit;
 }
 $channelInfo  = new Channal();
 $srcChannelPower = $channelInfo->getPower($_data["src"]);
 $destChannelPower = $channelInfo->getPower($_data["dest"]);
 
-if($srcChannelPower<10 || $destChannelPower<10){
-	exit;
+
+if($srcChannelPower<10){
+	$respond['message'] = "源channel无权限";
+	$respond['status'] = 1;
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;		
+}
+if($destChannelPower<10){
+	$respond['message'] = "channel无权限";
+	$respond['status'] = 1;
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;		
 }
 
 $db_trans_sent = new PDO(_FILE_DB_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -82,8 +98,7 @@ if($stmt){
 	#到此，所有的数据已经准备好
 
 	$sentDb = new Sent_DB();
-	$respond['message'] = "";
-	$respond['status'] = 0;
+
 	if($sentDb->update($updateDate)){
 		$respond['update'] = count($updateDate);
 	}
