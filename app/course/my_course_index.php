@@ -19,6 +19,10 @@ require_once '../studio/index_head.php';
 		color: var(--btn-color);
 		cursor:auto;
 	}
+	.summary{
+		max-height: 10em;
+		overflow-y: scroll;
+	}
 	</style>
 
 	<?php
