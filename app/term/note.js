@@ -947,25 +947,27 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 function add_new_tran_button_click(obj) {
 	let html = "<ul>";
 	for (const iterator of _my_channal) {
-		if (_channal.indexOf(iterator.id) < 0) {
-			html += '<li onclick="';
-			html +=
-				"new_sentence('" +
-				$(obj).parent().attr("book") +
-				"' ,'" +
-				$(obj).parent().attr("para") +
-				"' ,'" +
-				$(obj).parent().attr("begin") +
-				"' ,'" +
-				$(obj).parent().attr("end") +
-				"' ,'" +
-				iterator.id +
-				"',this)";
-			html += '">' + iterator.name;
-			if (parseInt(iterator.power) < 20) {
-				html += "(建议)";
+		if (iterator.status > 0) {
+			if (_channal.indexOf(iterator.id) < 0) {
+				html += '<li onclick="';
+				html +=
+					"new_sentence('" +
+					$(obj).parent().attr("book") +
+					"' ,'" +
+					$(obj).parent().attr("para") +
+					"' ,'" +
+					$(obj).parent().attr("begin") +
+					"' ,'" +
+					$(obj).parent().attr("end") +
+					"' ,'" +
+					iterator.id +
+					"',this)";
+				html += '">' + iterator.name;
+				if (parseInt(iterator.power) < 20) {
+					html += "(建议)";
+				}
+				html += "</li>";
 			}
-			html += "</li>";
 		}
 	}
 	html += "</ul>";
