@@ -150,8 +150,8 @@ else{$currDevice="computer";}
 		padding-top:0;
 	}
 	.translate_sent_head_content{
-		max-height: 9em;
-    overflow-y: scroll;
+		max-height: 17em;
+		overflow-y: scroll;
 	}
 	.translate_sent_head_content .readonly{
 		border-color: #d1d1d1;
