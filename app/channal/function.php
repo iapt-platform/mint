@@ -38,7 +38,22 @@ class Channal
             return false;
         }
 	}
-	
+	public function getTitle($id)
+	{
+		if (isset($id)) {
+			$query = "SELECT name FROM channal  WHERE id = ? ";
+			$stmt = $this->dbh->prepare($query);
+			$stmt->execute(array($id));
+			$channal = $stmt->fetch(PDO::FETCH_ASSOC);
+			if ($channel) {
+				return $channel["name"];
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+	}
 	public function getPower($id){
 		#查询用户对此channel是否有权限		
 

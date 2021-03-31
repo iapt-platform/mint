@@ -190,7 +190,7 @@ function group_list(id, list) {
 								case 1: //pcs
 									html += "<use xlink:href='../studio/svg/icon.svg#article'></use>";
 									cardUrl = "../doc/card.php";
-									html +=
+									doing +=
 										"<a href='../studio/project.php?op=open&doc_id=" +
 										iterator.res_id +
 										"'>打开</a>";
@@ -203,9 +203,9 @@ function group_list(id, list) {
 									html += "<use xlink:href='../studio/svg/icon.svg#article-1'></use>";
 									cardUrl = "../article/card.php";
 									doing +=
-										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>预览</a>";
+										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>查看</a>";
 									doing +=
-										"<a href='../article/my_article_edit.php?id=" +
+										"|<a href='../article/my_article_edit.php?id=" +
 										iterator.res_id +
 										"' target='_blank'>编辑</a>";
 									break;
@@ -214,7 +214,7 @@ function group_list(id, list) {
 								case 5: //channel片段
 									break;
 								default:
-									html += "<use xlink:href='../studio/svg/icon.svg#ic_person'></use>";
+									html += "unkow";
 									break;
 							}
 

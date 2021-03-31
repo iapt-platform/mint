@@ -4,12 +4,15 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
 require_once '../channal/function.php';
+require_once '../article/function.php';
+require_once '../redis/function.php';
 require_once '../doc/function.php';
 /*
 获取某用户的可见的协作资源
 $res_type 见readme.md#资源类型 -1全部类型资源
 */
 function share_res_list_get($userid,$res_type=-1){
+	$redis = redis_connect();
 	# 找我加入的群
 	$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");
     $dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -62,6 +65,7 @@ function share_res_list_get($userid,$res_type=-1){
 		$resList[]=array("res_id"=>$key,"res_type"=>(int)$value["type"],"power"=>(int)$value["power"]);
 	}
 	$channel = new Channal(); 
+	$article = new Article($redis); 
 	foreach ($resList as $key => $res) {
 		# 获取资源标题 和所有者 
 		switch ($res["res_type"]) {
@@ -87,6 +91,19 @@ function share_res_list_get($userid,$res_type=-1){
 				break;
 			case 3:
 				# 3 Article 文章
+				$aInfo = $article->getInfo($res["res_id"]);
+				if($aInfo){
+					$resList[$key]["res_title"]=$aInfo["title"];
+					$resList[$key]["res_owner_id"]=$aInfo["owner"];
+					$resList[$key]["status"]=$aInfo["status"];
+					$resList[$key]["lang"]='';
+				}
+				else{
+					$resList[$key]["res_title"]="_unkown_";
+					$resList[$key]["res_owner_id"]="_unkown_";
+					$resList[$key]["status"]="0";
+					$resList[$key]["lang"]="unkow";
+				}
 				break;
 			case 4:
 				# 4 Collection 文集
