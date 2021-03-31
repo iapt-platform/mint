@@ -66,7 +66,7 @@ class SentPr{
 
 	public function getPrData($book,$para,$begin,$end,$channel){
 		if ($this->dbh_sent) {
-            $query = "SELECT id,book,paragraph,begin,end,text,editor,modify_time FROM sent_pr WHERE book = ? and paragraph= ? and begin=? and end=? and channel=? and status=1 limit 0,100";
+            $query = "SELECT id,book,paragraph,begin,end,channel,text,editor,modify_time FROM sent_pr WHERE book = ? and paragraph= ? and begin=? and end=? and channel=? and status=1 limit 0,100";
             $stmt = $this->dbh_sent->prepare($query);
             $stmt->execute(array($book,$para,$begin,$end,$channel));
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,6 +92,27 @@ class SentPr{
 			}
 			else{
 				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+
+	public function setPrData($id,$text){
+		if ($this->dbh_sent) {
+            $query = "UPDATE sent_pr set text=? ,modify_time=?  WHERE id = ? and editor= ? ";
+            $stmt = $this->dbh_sent->prepare($query);
+            $stmt->execute(array($text,mTime(),$id,$_COOKIE["userid"]));
+            
+			if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+				/*  识别错误  */
+				$error = $this->dbh_sent->errorInfo();
+				//$respond['message'] = $error[2];
+				return false;
+			} else {
+				#没错误 更新历史记录
+				return true;
 			}
 		}
 		else{

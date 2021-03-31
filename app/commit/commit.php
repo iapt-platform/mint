@@ -66,7 +66,16 @@ if($stmt){
 			$fetchDest = $stmt->fetch(PDO::FETCH_ASSOC);
 			if ($fetchDest) {
 				#有目标数据，比较时间
-				if($fetchSrc["modify_time"]>$fetchDest["modify_time"]){
+				$insert=false;
+				if(isset($_data["compare"]) && $_data["compare"]=="auto"){
+					if($fetchSrc["modify_time"]>$fetchDest["modify_time"]){
+						$insert = true;
+					}					
+				}
+				else{
+					$insert = true;
+				}
+				if($insert){
 					#新数据 更新
 					if($destChannelPower>=20){
 						#有权限 直接写入
@@ -77,7 +86,7 @@ if($stmt){
 					else{
 						#pr
 						$prData[] = $newData;
-					}
+					}					
 				}
 			}
 			else{

@@ -22,36 +22,34 @@ function commit_render_channel_select() {
 	html += "<div class='commit_win_inner' >";
 	html += commit_render_head(1);
 	html += "<div style='display:flex;'>";
-	html += "<div>译文来源:";
-	html += "<select id='src_channel' onchange='src_change(this)'>";
-	if (typeof _commit_data.src == "undefined") {
-		let lastSrc = localStorage.getItem("commit_last_src");
-		if (typeof lastSrc == "undefined") {
-			html += "<option value='' selected>请选择当前版本</option>";
-		} else {
-			_commit_data.src = lastSrc;
-		}
-	}
-	for (const iterator of _my_channal) {
-		if (iterator.status > 0) {
-			html += "<option value='" + iterator.id + "' ";
-			if (_commit_data.src == iterator.id) {
-				html += " selected ";
-			}
-			html += ">" + iterator.name + "-";
-			if (iterator.power >= 30) {
-				html += gLocal.gui.your;
-			} else if (iterator.power >= 20) {
-				html += "可编辑";
-			} else {
-				html += "只读";
-			}
-			html += "</option>";
-		}
-	}
-	html += "</select>";
 
-	html += "</div>";
+	if (typeof _commit_data.src != "undefined") {
+		html += "<div>译文来源:";
+		let isFound = false;
+		for (const iterator of _my_channal) {
+			if (_commit_data.src == iterator.id) {
+				html += iterator.name;
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			for (const iterator of _channalData) {
+				if (_commit_data.src == iterator.id) {
+					html += iterator.name;
+					isFound = true;
+					break;
+				}
+			}
+		}
+		if (!isFound) {
+			html += "无法找到Channel";
+		}
+		html += "</div>";
+	} else {
+		html += "<div>请选择译文来源";
+		html += "</div>";
+	}
 	html += "<div>==></div>";
 	html += "<div>目标译文:";
 	html += "<select id='dest_channel' onchange='dest_change(this)'>";
@@ -64,7 +62,7 @@ function commit_render_channel_select() {
 		}
 	}
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0) {
+		if (iterator.status > 0 && _commit_data.src != iterator.id) {
 			html += "<option value='" + iterator.id + "' ";
 			if (_commit_data.dest == iterator.id) {
 				html += " selected ";
@@ -200,24 +198,30 @@ function commit_render_comp(mode) {
 	html += "</div>";
 
 	let textCount = 0;
-	for (const iterator of sentData) {
+	let sentIndex = 0;
+	for (let iterator of sentData) {
+		iterator.checked = false;
 		if (iterator.translation[0].text != iterator.translation[1].text) {
 			textCount++;
 			if (iterator.translation[0].id != "") {
 				html += "<div class='commit_compare'>";
-				html += "<div ><input class='sent_checkbox' type='checkbox' ";
+				html += "<div >";
+				html += "<input class='sent_checkbox' index='" + sentIndex + "' type='checkbox' ";
 				switch (mode) {
 					case 0:
 						if (iterator.translation[1].id == "") {
 							html += " checked ";
+							iterator.checked = true;
 						} else {
 							if (iterator.translation[0].update_time > iterator.translation[1].update_time) {
 								html += " checked ";
+								iterator.checked = true;
 							}
 						}
 						break;
 					case 1:
 						html += " checked ";
+						iterator.checked = true;
 						break;
 					case 2:
 						break;
@@ -260,6 +264,7 @@ function commit_render_comp(mode) {
 				html += "</div>";
 			}
 		}
+		sentIndex++;
 	}
 	if (textCount == 0) {
 		html += "译文全部相同，无需推送。";
@@ -270,9 +275,10 @@ function commit_render_comp(mode) {
 
 function commit_sent_select(obj) {
 	let sent_id = $(obj).attr("sent_id");
-	for (const iterator of sentData) {
+	for (let iterator of sentData) {
 		if (iterator.pali_sent_id == sent_id) {
 			let html = "";
+			iterator.checked = obj.checked;
 			if (obj.checked) {
 				if (iterator.translation[1].id != "") {
 					html += "<del>" + iterator.translation[1].text + "</del><br>";
@@ -306,6 +312,19 @@ function commit_render_final(result) {
 }
 function commit_pull() {
 	localStorage.setItem("commit_src_" + _commit_data.src, _commit_data.dest);
+	let pullData = new Array();
+	for (const iterator of sentData) {
+		if (iterator.checked) {
+			for (const iterator of _arrData) {
+				pullData.push(iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end);
+			}
+			_commit_data.sent = pullData;
+		}
+	}
+	if (pullData.length == 0) {
+		alert("没有数据被选择");
+		return;
+	}
 	$.post(
 		"../commit/commit.php",
 		{

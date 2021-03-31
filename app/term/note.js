@@ -655,7 +655,7 @@ function render_one_sent_tran_a(iterator) {
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
 		html += " pr ";
 	}
-	html += "' channel='" + iterator.channal + "' sid='" + sid + "'>";
+	html += "' dbid='" + iterator.id + "' channel='" + iterator.channal + "' sid='" + sid + "'>";
 	html += "<div class='sent_tran_inner'>";
 	html += '<div class="tool_bar">';
 	html += '	<div class="right">';
@@ -667,7 +667,7 @@ function render_one_sent_tran_a(iterator) {
 		if (typeof iterator.is_pr_editor != "undefined" && iterator.is_pr_editor == true) {
 			//提交人
 			//修改按钮
-			html += "<button class='icon_btn tooltip' onclick='sent_pr_edit(this)'>";
+			html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
 			html += '<svg class="icon" >';
 			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
 			html += "</svg>";
@@ -687,16 +687,17 @@ function render_one_sent_tran_a(iterator) {
 			html += "</button>";
 		} else {
 			//非提交人
-			//采纳按钮
-			html += "<button class='icon_btn tooltip' onclick=\"sent_pr_merge('" + iterator.id + "')\">";
-			html += '<svg class="icon" >';
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
-			html += "</svg>";
-			html += "<span class='tooltiptext tooltip-top'>";
-			html += gLocal.gui.accept_copy;
-			html += "</span>";
-			html += "</button>";
-
+			if (parseInt(iterator.mypower) >= 20) {
+				//有权限 采纳按钮
+				html += "<button class='icon_btn tooltip' onclick=\"sent_pr_merge('" + iterator.id + "')\">";
+				html += '<svg class="icon" >';
+				html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#accept_copy"></use>';
+				html += "</svg>";
+				html += "<span class='tooltiptext tooltip-top'>";
+				html += gLocal.gui.accept_copy;
+				html += "</span>";
+				html += "</button>";
+			}
 			//点赞按钮
 			html += "<button class='icon_btn tooltip' onclick='sent_pr_like(this)'>";
 			html += '<svg class="icon" >';
@@ -712,7 +713,11 @@ function render_one_sent_tran_a(iterator) {
 		//编辑按钮
 		html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
 		html += '<svg class="icon" >';
-		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+		if (parseInt(iterator.mypower) < 20) {
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#my_idea"></use>';
+		} else {
+			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+		}
 		html += "</svg>";
 		html += "<span class='tooltiptext tooltip-top'>";
 		if (parseInt(iterator.mypower) < 20) {
@@ -720,22 +725,37 @@ function render_one_sent_tran_a(iterator) {
 		} else {
 			html += gLocal.gui.edit;
 		}
-
 		html += "</span>";
 		html += "</button>";
 
 		//推送按钮
-		if (parseInt(iterator.mypower) >= 20) {
-			html += "<button class='icon_btn tooltip' ";
-			html += " onclick=\"sent_commit('" + iterator.channal + "','" + sid + "')\">";
-			html += '<svg class="icon" >';
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
-			html += "</svg>";
-			html += "<span class='tooltiptext tooltip-top'>";
-			html += "推送";
-			html += "</span>";
-			html += "</button>";
+		let commitIcon = "";
+		let commitTipText = "";
+		if (parseInt(iterator.mypower) >= 30 && parseInt(iterator.status) < 30) {
+			//我的私有资源 公开发布
+			commitIcon = "publish";
+			commitTipText = "公开发布";
+		} else {
+			if (parseInt(iterator.mypower) < 20) {
+				//只读资源 采纳
+				commitIcon = "accept_copy";
+				commitTipText = "采纳";
+			} else {
+				//其他资源 复制到
+				commitIcon = "copy";
+				commitTipText = "复制到";
+			}
 		}
+		html += "<button class='icon_btn tooltip' ";
+		html += " onclick=\"sent_commit('" + iterator.channal + "','" + sid + "')\">";
+		html += '<svg class="icon" >';
+		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#' + commitIcon + '"></use>';
+		html += "</svg>";
+		html += "<span class='tooltiptext tooltip-top'>";
+		html += commitTipText;
+		html += "</span>";
+		html += "</button>";
+		//推送按钮结束
 
 		//更多按钮
 		html += '<div class="case_dropdown">';
@@ -806,7 +826,13 @@ function render_one_sent_tran_a(iterator) {
 	html += "<textarea dbid='" + iterator.id + "' ";
 	html += "sid='" + sid + "' ";
 	html += "channel='" + iterator.channal + "' ";
-	html += 'onchange="note_sent_save_a(this)">' + iterator.text + "</textarea>";
+	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
+		html += 'onchange="note_pr_save(this)"';
+	} else {
+		html += 'onchange="note_sent_save_a(this)"';
+	}
+
+	html += ">" + iterator.text + "</textarea>";
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	if (parseInt(iterator.mypower) < 20) {
@@ -1133,6 +1159,36 @@ function note_edit_sentence(book, para, begin, end, channal) {
 	alert("未找到句子");
 }
 function update_note_sent_tran(obj) {}
+//保存pr句子 新
+function note_pr_save(obj) {
+	let id = $(obj).attr("dbid");
+	let sid = $(obj).attr("sid").split("-");
+	let book = sid[0];
+	let para = sid[1];
+	let begin = sid[2];
+	let end = sid[3];
+	let channel = $(obj).attr("channel");
+	let text = $(obj).val();
+	let sent_tran_div = find_sent_tran_div(obj);
+	$.post(
+		"../usent/pr_post.php",
+		{
+			id: id,
+			book: book,
+			para: para,
+			begin: begin,
+			end: end,
+			channel: channel,
+			text: text,
+		},
+		sent_save_callback
+	);
+
+	if (sent_tran_div) {
+		$(sent_tran_div).find(".preview").addClass("loading");
+	}
+}
+
 //保存译文句子 新
 function note_sent_save_a(obj) {
 	let id = $(obj).attr("dbid");
@@ -1156,59 +1212,64 @@ function note_sent_save_a(obj) {
 			text: text,
 			lang: "zh",
 		},
-		function (data) {
-			let result = JSON.parse(data);
-			if (result.status > 0) {
-				alert("error" + result.message);
-			} else {
-				if (result.commit_type == 1 || result.commit_type == 2) {
-					ntf_show("成功修改");
-					if (sent_tran_div) {
-						let divPreview = $(sent_tran_div).find(".preview").first();
-						if (result.text == "") {
-							let channel_info = "Empty";
-							let thisChannel = find_channal(result.channal);
-							if (thisChannel) {
-								channel_info = thisChannel.name + "-" + thisChannel.nickname;
-							}
-							divPreview.html(
-								"<span style='color:var(--border-line-color);'>" + channel_info + "</span>"
-							);
-						} else {
-							divPreview.html(
-								marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
-							);
-							term_updata_translation();
-							popup_init();
-							for (const iterator of _arrData) {
-								if (
-									iterator.book == result.book &&
-									iterator.para == result.para &&
-									iterator.begin == result.begin &&
-									iterator.end == result.end
-								) {
-									for (const tran of iterator.translation) {
-										if (tran.channal == result.channal) {
-											tran.text = result.text;
-											break;
-										}
-									}
-								}
-							}
-						}
-						$(sent_tran_div).find(".preview").removeClass("loading");
-					}
-				} else if (result.commit_type == 3) {
-					ntf_show("已经提交修改建议");
-				} else {
-					ntf_show("未提交");
-				}
-			}
-		}
+		sent_save_callback
 	);
 
 	if (sent_tran_div) {
 		$(sent_tran_div).find(".preview").addClass("loading");
+	}
+}
+
+function sent_save_callback(data) {
+	let result = JSON.parse(data);
+	if (result.status > 0) {
+		alert("error" + result.message);
+	} else {
+		let sid = result.book + "-" + result.para + "-" + result.begin + "-" + result.end;
+
+		let sent_tran_div = $(
+			".sent_tran[dbid='" + result.id + "'][channel='" + result.channal + "'][sid='" + sid + "']"
+		);
+		if (result.commit_type == 1 || result.commit_type == 2) {
+			ntf_show("成功修改");
+			if (sent_tran_div) {
+				let divPreview = sent_tran_div.find(".preview").first();
+				if (result.text == "") {
+					let channel_info = "Empty";
+					let thisChannel = find_channal(result.channal);
+					if (thisChannel) {
+						channel_info = thisChannel.name + "-" + thisChannel.nickname;
+					}
+					divPreview.html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
+				} else {
+					divPreview.html(
+						marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+					);
+					term_updata_translation();
+					popup_init();
+					for (const iterator of _arrData) {
+						if (
+							iterator.book == result.book &&
+							iterator.para == result.para &&
+							iterator.begin == result.begin &&
+							iterator.end == result.end
+						) {
+							for (const tran of iterator.translation) {
+								if (tran.channal == result.channal) {
+									tran.text = result.text;
+									break;
+								}
+							}
+						}
+					}
+				}
+				sent_tran_div.find(".preview").removeClass("loading");
+			}
+		} else if (result.commit_type == 3) {
+			ntf_show("已经提交修改建议");
+		} else {
+			ntf_show("未提交");
+		}
 	}
 }
 

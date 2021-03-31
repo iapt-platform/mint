@@ -21,6 +21,7 @@ if (isset($_POST["landmark"])) {
 }
 //回传数据
 $respond = array("status" => 0, "message" => "");
+$respond['id'] = $_POST["id"];
 $respond['book'] = $_POST["book"];
 $respond['para'] = $_POST["para"];
 $respond['begin'] = $_POST["begin"];

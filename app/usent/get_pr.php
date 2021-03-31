@@ -15,7 +15,10 @@ foreach ($result as $key => $value) {
 	# code...
 	$result[$key]["editor_name"]=$user_info->getName($value["editor"]);
 	$result[$key]["update_time"]=$value["modify_time"];
-	$result[$key]["channalinfo"] = $channel_info->getChannal($value["channal"]);
+	$result[$key]["channal"]=$value["channel"];
+	$result[$key]["para"]=$value["paragraph"];
+	$result[$key]["channalinfo"] = $channel_info->getChannal($value["channel"]);
+	$result[$key]["mypower"] = $channel_info->getPower($value["channel"]);
 	if(isset($_COOKIE["userid"])){
 		if($value["editor"]==$_COOKIE["userid"]){
 			$result[$key]["is_pr_editor"] =true;
