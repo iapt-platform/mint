@@ -10,10 +10,11 @@ require_once '../group/function.php';
 if(isset($_GET["res_id"])){
     PDO_Connect(_FILE_DB_USER_SHARE_);
     $id=$_GET["res_id"];
-    $query = "SELECT * FROM share_cooperator  WHERE res_id = ? ";
-	$Fetch = PDO_FetchAll($query,array($id));
+    $type=$_GET["res_type"];
+    $query = "SELECT * FROM share_cooperator  WHERE res_id = ? and res_type=? ";
+	$Fetch = PDO_FetchAll($query,array($id,$type));
 
-	#获取协作者
+	#获取协作者名字
 	if(count($Fetch)>0){
 		$user_info = new UserInfo();
 		$group_info = new GroupInfo();
@@ -24,7 +25,7 @@ if(isset($_GET["res_id"])){
 					$Fetch[$key]["user"] = $user_info->getName($value["cooperator_id"]);
 					break;
 				case 1:
-					# 小组写作者
+					# 小组协作者
 					$Fetch[$key]["user"] = $group_info->getName($value["cooperator_id"]);
 					$Fetch[$key]["parent_name"] = $group_info->getName($group_info->getParentId($value["cooperator_id"]));
 					break;

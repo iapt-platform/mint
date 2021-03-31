@@ -35,7 +35,7 @@ $channel_power=array();
 if (isset($_COOKIE["userid"])) {
 	//找自己的
     PDO_Connect(_FILE_DB_CHANNAL_);
-    $query = "SELECT id from channal where owner = ?   limit 0,100";
+    $query = "SELECT id from channal where owner = ? and status >0   limit 0,100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
@@ -54,9 +54,6 @@ if (isset($_COOKIE["userid"])) {
 			}
 		}
 	}
-
-    
-
 }
 if (count($channal_list) > 0) {
 	#  创建一个填充了和params相同数量占位符的字符串 

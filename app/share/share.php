@@ -6,7 +6,7 @@ require_once '../studio/index_head.php';
 <script language="javascript" src="../share/share.js"></script>
 <style>
 .item_block{
-	border-top: 1px solid var(--border-line-color);
+	border-bottom: 1px solid var(--border-line-color);
     padding: 0 0 2em 0;
 }
 #coop_new_tools{
@@ -41,12 +41,13 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
     width: 28px;
 }
 #user_list li{
-    border: 1px solid var(--btn-border-color);
+    border-bottom: 1px solid var(--btn-border-color);
     width: 270px;
     border-radius: 5px;
     line-height: 24px;
     padding: 0 5px;
-
+	display:flex;
+	justify-content: space-between;
 }
 #user_list li>.btn_del{
 	visibility: hidden;
@@ -56,6 +57,11 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 }
 </style>
 <div class=" " >
+	<div class="item_block" style="display:none;">
+		<h2 id="res_type"></h2>
+		<div id="res_title">
+		</div>
+	</div>
 	<div class="item_block">
 		<h2>隐私设置</h2>
 		<ul>

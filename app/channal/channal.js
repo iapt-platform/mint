@@ -220,7 +220,8 @@ function my_channal_edit(id) {
 					html += "</div>";
 					html += "</div>";
 					html += "</div>";
-
+					/*
+					旧的channel分享方式 删除
 					html += "<div id='coop_div' style='padding:5px;position: relative;'>";
 					html += "<h2>" + gLocal.gui.cooperators + "</h2>";
 
@@ -257,7 +258,7 @@ function my_channal_edit(id) {
 					}
 					html += "</div>";
 					html += "</div>";
-
+*/
 					$("#channal_info").html(html);
 					user_select_dlg_init("add_coop_user_dlg");
 					tran_lang_select_init("channal_lang_select");

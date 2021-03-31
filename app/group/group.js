@@ -111,10 +111,13 @@ function group_list(id, list) {
 					let html = "";
 					let result = JSON.parse(data);
 					let key = 1;
-					html += "<div class='info_block'>";
-					html += "<h2>" + gLocal.gui.introduction + "</h2>";
-					html += result.info.description;
-					html += "</div>";
+					if (typeof result.info.description != "undefined" && result.info.description.length > 0) {
+						html += "<div class='info_block'>";
+						html += "<h2>" + gLocal.gui.introduction + "</h2>";
+						html += marked(result.info.description);
+						html += "</div>";
+					}
+
 					$("#curr_group").html("/" + result.info.name);
 
 					if (result.parent) {
@@ -127,6 +130,8 @@ function group_list(id, list) {
 								"</a> "
 						);
 					} else {
+						/*
+						关闭子小组功能
 						if (result.info.creator == getCookie("userid")) {
 							$("#button_new_sub_group").show();
 						}
@@ -165,6 +170,7 @@ function group_list(id, list) {
 							html += "尚未设置小组";
 						}
 						html += "</div>";
+*/
 					}
 
 					//共享文件列表
@@ -179,18 +185,29 @@ function group_list(id, list) {
 							//资源类型
 							html += "<svg class='icon'>";
 							let cardUrl = "";
+							let doing = "";
 							switch (parseInt(iterator.res_type)) {
 								case 1: //pcs
-									html += "<use xlink:href='../studio/svg/icon.svg#ic_person'></use>";
+									html += "<use xlink:href='../studio/svg/icon.svg#article'></use>";
 									cardUrl = "../doc/card.php";
+									html +=
+										"<a href='../studio/project.php?op=open&doc_id=" +
+										iterator.res_id +
+										"'>打开</a>";
 									break;
 								case 2: //channel
 									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
 									cardUrl = "../channal/card.php";
 									break;
 								case 3: //article
-									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
+									html += "<use xlink:href='../studio/svg/icon.svg#article-1'></use>";
 									cardUrl = "../article/card.php";
+									doing +=
+										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>预览</a>";
+									doing +=
+										"<a href='../article/my_article_edit.php?id=" +
+										iterator.res_id +
+										"' target='_blank'>编辑</a>";
 									break;
 								case 4: //collection
 									break;
@@ -220,10 +237,10 @@ function group_list(id, list) {
 									break;
 							}
 							html += "</div>";
-							html +=
-								"<div style='flex:1;'><a href='../studio/project.php?op=open&doc_id=" +
-								iterator.doc_id +
-								"'>打开</a></div>";
+							html += "<div style='flex:1;'>";
+							//可用的操作
+							html += doing;
+							html += "</div>";
 							html += "</div>";
 						}
 					} else {

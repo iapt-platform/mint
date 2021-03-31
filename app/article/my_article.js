@@ -1,6 +1,8 @@
 var _display = "para";
+var share_win;
 function my_article_init() {
 	my_article_list();
+	share_win = iframe_win_init({ container: "share_win", name: "share", width: "500px" });
 	article_add_dlg_init("article_add_div");
 }
 function my_article_list() {
@@ -25,7 +27,7 @@ function my_article_list() {
 					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
-					html += "<div style='flex:1;'>15</div>";
+					html += "<div style='flex:1;'></div>";
 					html += "</div>";
 					//列表
 					for (const iterator of result) {
@@ -47,7 +49,9 @@ function my_article_list() {
 							"' target='_blank'>" +
 							gLocal.gui.preview +
 							"</a></div>";
-						html += "<div style='flex:1;'>15</div>";
+						html += "<div style='flex:1;'>";
+						html += "<a onclick=\"article_share('" + iterator.id + "')\">share</a>";
+						html += "</div>";
 						html += "</div>";
 					}
 					$("#article_list").html(html);
@@ -60,7 +64,9 @@ function my_article_list() {
 		}
 	);
 }
-
+function article_share(id) {
+	share_win.show("../share/share.php?id=" + id + "&type=3");
+}
 function render_status(status) {
 	status = parseInt(status);
 	let html = "";

@@ -3,14 +3,15 @@ var _res_type;
 var gUserList = new Array();
 
 function share_load(id, type) {
-	refresh_coop_list(id);
+	refresh_coop_list(id, type);
 }
 
-function refresh_coop_list(id) {
+function refresh_coop_list(id, type) {
 	$.get(
 		"../share/coop_get.php",
 		{
 			res_id: id,
+			res_type: type,
 		},
 		function (data, status) {
 			if (status == "success") {
@@ -126,30 +127,17 @@ function render_user_list() {
 	let html = "<ul>";
 	let arrIndex = 0;
 	for (const iterator of gUserList) {
-		html += "<li> <a class='btn_del' onclick=\"userlist_del(' + arrIndex + ')\">删除</a>" + iterator.name;
+		html += "<li>";
+		html += "<span>";
 		if (iterator.type == 1) {
-			//如果是小组，显示项目列表
-			html += "<div>";
-			html +=
-				"<div><input id='prj_" +
-				iterator.id +
-				"' checked type='radio' name='prj_" +
-				iterator.id +
-				"' />全组成员</div>";
-			if (typeof iterator.project != "undefined") {
-				for (const project of iterator.project) {
-					html +=
-						"<div><input id='prj_" +
-						project.id +
-						"' type='radio' name='prj_" +
-						iterator.id +
-						"' />" +
-						project.name +
-						"</div>";
-				}
-			}
-			html += "</div>";
+			//小组
+			html += "👥";
+		} else {
+			html += "👤";
 		}
+		html += iterator.name;
+		html += "</span>";
+		html += "<a class='btn_del' onclick=\"userlist_del(' + arrIndex + ')\">删除</a>";
 		html += "</li>";
 		arrIndex++;
 	}
@@ -241,6 +229,8 @@ function username_search(keyword, type) {
 function add_coop() {
 	let coopList = new Array();
 	for (const itUser of gUserList) {
+		coopList.push({ id: itUser.id, type: itUser.type });
+		/*
 		if (itUser.type == 0) {
 			coopList.push({ id: itUser.id, type: itUser.type });
 		} else if (itUser.type == 1) {
@@ -257,6 +247,7 @@ function add_coop() {
 				}
 			}
 		}
+		*/
 	}
 	$.post(
 		"../share/coop_put.php",
@@ -270,7 +261,7 @@ function add_coop() {
 			cancel_coop();
 			let result = JSON.parse(data);
 			if (parseInt(result.status) == 0) {
-				refresh_coop_list(_res_id);
+				refresh_coop_list(_res_id, _res_type);
 			} else {
 				alert(result.message);
 			}
@@ -300,7 +291,7 @@ function coop_remove(userid, username) {
 				cancel_coop();
 				let result = JSON.parse(data);
 				if (parseInt(result.status) == 0) {
-					refresh_coop_list(_res_id);
+					refresh_coop_list(_res_id, _res_type);
 				} else {
 					alert(result.message);
 				}
@@ -323,28 +314,11 @@ function coop_set_power(userid, power) {
 				cancel_coop();
 				let result = JSON.parse(data);
 				if (parseInt(result.status) == 0) {
-					refresh_coop_list(_res_id);
+					refresh_coop_list(_res_id, _res_type);
 				} else {
 					alert(result.message);
 				}
 			}
 		);
 	}
-}
-
-function get_group_project(id) {
-	$.get(
-		"../group/get.php",
-		{
-			id: id,
-		},
-		function (data, status) {
-			let result = JSON.parse(data);
-			if (parseInt(result.status) == 0) {
-				refresh_coop_list(_res_id);
-			} else {
-				alert(result.message);
-			}
-		}
-	);
 }

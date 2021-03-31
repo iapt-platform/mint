@@ -84,7 +84,6 @@ function share_res_list_get($userid,$res_type=-1){
 					$resList[$key]["status"]="0";
 					$resList[$key]["lang"]="unkow";
 				}
-				
 				break;
 			case 3:
 				# 3 Article 文章

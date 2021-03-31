@@ -90,6 +90,7 @@ require_once '../studio/index_head.php';
 						<div id='group_add_div' class="float_dlg"></div>
 					</span>
 
+<!--
 					<span id="button_new_sub_group" class="icon_btn_div">
 						<span class="icon_btn_tip"><?php echo $_local->gui->new_sub_group;?></span>
 						<button id="file_add" type="button" class="icon_btn" title=" "  onclick="group_add_dlg_show()">
@@ -99,7 +100,7 @@ require_once '../studio/index_head.php';
 						</button>
 						<div id='sub_group_add_div' class="float_dlg"></div>
 					</span>
-
+-->
 					<span id="delete" class="icon_btn_div">				
 						<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin;?></span>
 						<button id="to_recycle" type="button" class="icon_btn" onclick="file_del()" title=" ">
