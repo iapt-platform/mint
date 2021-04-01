@@ -132,7 +132,7 @@ function group_list(id, list) {
 					} else {
 						/*
 						关闭子小组功能
-						if (result.info.creator == getCookie("userid")) {
+						if (result.info.owner == getCookie("userid")) {
 							$("#button_new_sub_group").show();
 						}
 						//子小组列表
@@ -144,7 +144,7 @@ function group_list(id, list) {
 								html += "<div style='flex:1;'>" + key++ + "</div>";
 								html += "<div style='flex:2;'>" + iterator.name + "</div>";
 								html += "<div style='flex:2;'>";
-								if (iterator.creator == getCookie("userid")) {
+								if (iterator.owner == getCookie("userid")) {
 									html += gLocal.gui.owner;
 								}
 								html += "</div>";
@@ -155,7 +155,7 @@ function group_list(id, list) {
 									gLocal.gui.enter +
 									"</a></div>";
 								html += "<div style='flex:1;'><div class='hover_button'>";
-								if (iterator.creator == getCookie("userid")) {
+								if (iterator.owner == getCookie("userid")) {
 									html +=
 										"<button onclick=\"group_del('" +
 										iterator.id +
@@ -285,7 +285,7 @@ function member_list(id) {
 							}
 							html += "</div>";
 							html += "<div style='flex:1;'><div class='hover_button'>";
-							//if (iterator.creator == getCookie("userid"))
+							//if (iterator.owner == getCookie("userid"))
 							{
 								html +=
 									"<button onclick=\"member_del('" +
