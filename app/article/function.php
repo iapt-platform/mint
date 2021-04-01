@@ -15,28 +15,34 @@ class Article
     public function getInfo($id){
 		$output = array();
 		if($this->_redis!==false){
-			if($this->_redis->exists("article://info/".$id)===1){
-				$output["title"]=$this->_redis->hGet("article://info/".$id,"title");
-				$output["owner"]=$this->_redis->hGet("article://info/".$id,"owner");
-				$output["summary"]=$this->_redis->hGet("article://info/".$id,"summary");
-				$output["status"]=$this->_redis->hGet("article://info/".$id,"status");
-				$output["create_time"]=$this->_redis->hGet("article://info/".$id,"create_time");
-				$output["modify_time"]=$this->_redis->hGet("article://info/".$id,"modify_time");
+			if($this->_redis->exists("article://".$id)===1){
+				$output["id"]=$this->_redis->hGet("article://".$id,"id");
+				$output["title"]=$this->_redis->hGet("article://".$id,"title");
+				$output["subtitle"]=$this->_redis->hGet("article://".$id,"subtitle");
+				$output["owner"]=$this->_redis->hGet("article://".$id,"owner");
+				$output["summary"]=$this->_redis->hGet("article://".$id,"summary");
+				$output["tag"]=$this->_redis->hGet("article://".$id,"tag");
+				$output["status"]=$this->_redis->hGet("article://".$id,"status");
+				$output["create_time"]=$this->_redis->hGet("article://".$id,"create_time");
+				$output["modify_time"]=$this->_redis->hGet("article://".$id,"modify_time");
 				return $output;
 			}
 		}
-        $query = "SELECT title,owner,summary,status,create_time,modify_time FROM article WHERE id= ? ";
+        $query = "SELECT id,title,owner,summary,tag,status,create_time,modify_time FROM article WHERE id= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
         if($output){
 			if($this->_redis!==false){
-				$this->_redis->hSet("article://info/".$id,"title",$output["title"]);
-				$this->_redis->hSet("article://info/".$id,"owner",$output["owner"]);
-				$this->_redis->hSet("article://info/".$id,"summary",$output["summary"]);
-				$this->_redis->hSet("article://info/".$id,"status",$output["status"]);
-				$this->_redis->hSet("article://info/".$id,"create_time",$output["create_time"]);
-				$this->_redis->hSet("article://info/".$id,"modify_time",$output["modify_time"]);
+				$this->_redis->hSet("article://".$id,"id",$output["id"]);
+				$this->_redis->hSet("article://".$id,"title",$output["title"]);
+				$this->_redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				$this->_redis->hSet("article://".$id,"summary",$output["summary"]);
+				$this->_redis->hSet("article://".$id,"owner",$output["owner"]);
+				$this->_redis->hSet("article://".$id,"tag",$output["tag"]);
+				$this->_redis->hSet("article://".$id,"status",$output["status"]);
+				$this->_redis->hSet("article://".$id,"create_time",$output["create_time"]);
+				$this->_redis->hSet("article://".$id,"modify_time",$output["modify_time"]);
 			}
             return $output;
         }
@@ -44,23 +50,33 @@ class Article
             return false;
         }
 	}
-	public function getTitle($id){
-
-		$query = "SELECT title FROM article  WHERE id = ? ";
-		$stmt = $this->dbh->prepare($query);
-		$stmt->execute(array($id));
-		$channal = $stmt->fetch(PDO::FETCH_ASSOC);
-		if ($channel) {
-			return $channel["name"];
-		} else {
-			return "";
+    public function getContent($id){
+		$output = array();
+		if($this->_redis!==false){
+			if($this->_redis->hExists("article://".$id,"content")===TRUE){
+				$content=$this->_redis->hGet("article://".$id,"content");
+				return $content;
+			}
 		}
+        $query = "SELECT content FROM article WHERE id= ? ";
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute(array($id));
+        $output = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($output){
+			if($this->_redis!==false){
+				$this->_redis->hSet("article://".$id,"content",$output["content"]);
+			}
+            return $output["content"];
+        }
+        else{
+            return false;
+        }
 	}
 	public function getPower($id){
-		#查询用户对此channel是否有权限		
+		#查询用户对此是否有权限		
 
 		$iPower = 0;
-		$query = "SELECT owner,status FROM article WHERE id=? and status>0 ";
+		$query = "SELECT owner,status FROM article WHERE id=?  ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -68,7 +84,7 @@ class Article
 			if(!isset($_COOKIE["userid"])  ){
 				#未登录用户
 				if($channel["status"]==30){
-					#全网公开有建议权限
+					#全网公开有读取和建议权限
 					return 10;
 				}
 				else{

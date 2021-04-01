@@ -2,9 +2,10 @@
 //
 
 require_once "../path.php";
-require_once "./function.php";
-require_once '../ucenter/function.php';
 require_once '../redis/function.php';
+require_once "../article/function.php";
+require_once '../ucenter/function.php';
+
 
 if (isset($_GET["id"])) {
 	$output["id"]=$_GET["id"];

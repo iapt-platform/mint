@@ -25,7 +25,7 @@ require_once '../collect/function.php';
         $begin = 0;
     }
     PDO_Connect(""._FILE_DB_USER_ARTICLE_);
-    $query = "SELECT id,title,subtitle,summary,owner,modify_time from article  where status <> 0 ";
+    $query = "SELECT id,title,subtitle,summary,owner,modify_time from article  where status >= 30 ";
     
     if(isset($_GET["orderby"])){
         switch ($_GET["orderby"]) {

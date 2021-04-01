@@ -15,9 +15,9 @@
 		"description": "译文句子列表 key: sent://channel/book-para-start-end "
 	},
 	{
-		"key": "article://info/*",
+		"key": "article://*",
 		"type": "hash",
 		"valid": true,
-		"description": "article 主要信息 key: article://info/id  字段 title,owner,summary,create_time,modify_time "
+		"description": "article 主要信息 key: article://id  字段 title,owner,summary,create_time,modify_time "
 	}
 ]
