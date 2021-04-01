@@ -1,4 +1,5 @@
 <?php
+
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -13,8 +14,8 @@ $sth = $PDO->prepare($query);
 $uuid = UUID::v4();
 //写入日志
 add_edit_event(_ARTICLE_NEW_,$uuid);
-
-$sth->execute(array($uuid , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["userid"] , "{}" , 1 , mTime() ,  mTime() , mTime() ));
+#新建文章默认私有
+$sth->execute(array($uuid , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["userid"] , "{}" , 10 , mTime() ,  mTime() , mTime() ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
