@@ -7,7 +7,7 @@ require_once '../public/function.php';
 $respond = array("status" => 0, "message" => "");
 if (isset($_COOKIE["userid"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
-    $query = "INSERT INTO group_info ( id,  parent  , name  , description ,  status , creator ,create_time )
+    $query = "INSERT INTO group_info ( id,  parent  , name  , description ,  status , owner ,create_time )
 	                       VALUES  ( ?, ? , ? , ? , ? , ?  ,? ) ";
     $sth = $PDO->prepare($query);
     $newid = UUID::v4();
