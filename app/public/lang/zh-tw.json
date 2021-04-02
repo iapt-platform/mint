@@ -196,7 +196,7 @@
 		"need_inform": "未告知其他同伴",
 		"new": "新建",
 		"new_account": "註冊",
-		"new_project": "新建工程",
+		"new_project": "新建逐詞解析",
 		"new_revision": "新版本",
 		"new_technic_term": "新建術語",
 		"newheading": "內容編輯",
@@ -522,7 +522,7 @@
 		"channel": "版本風格",
 		"channels": "版本風格列錶",
 		"like": "贊",
-		"blank": "空白",
+		"blank": "無",
 		"vocabulary_list": "詞彙列錶",
 		"private": "私享",
 		"private_note": "僅自己可見，不推訂閱，不可搜尋",
@@ -613,6 +613,8 @@
 		"lesson_intro": "看看世界各地的巴利專家都是如何解析聖典的",
 		"teaching_course": "主講的課程",
 		"watching_course": "關注的課程",
+		"searching_instruction": "查詞指南",
+		"dict_searching_placehold": "单词里面添加“+”可分别查看查询结果",
 		"": ""
 	},
 	"grammastr": [

@@ -149,6 +149,10 @@ else{$currDevice="computer";}
 		padding: 0.5em 0.5em 0.1em 0.5em;
 		padding-top:0;
 	}
+	.translate_sent_head_content{
+		max-height: 17em;
+		overflow-y: scroll;
+	}
 	.translate_sent_head_content .readonly{
 		border-color: #d1d1d1;
 		background-color: #f1f1f1;		

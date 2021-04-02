@@ -195,7 +195,7 @@
 		"need_inform": "without informing other Bhikkhu ",
 		"new": "New",
 		"new_account": "New Account",
-		"new_project": "New Project",
+		"new_project": "New Word by Word Analysis",
 		"new_revision": "New Revision",
 		"new_technic_term": "New Technic Term",
 		"newheading": "Text Editor",
@@ -611,6 +611,8 @@
 		"lesson_intro": "Let’s take the course to see how the pāḷi experts explain conon",
 		"teaching_course": "teaching course",
 		"watching_course": "watching course",
+		"searching_instruction": "searching instruction",
+		"dict_searching_placehold": "insert “+” into a word to search them separately",
 		"": ""
 	},
 	"grammastr": [

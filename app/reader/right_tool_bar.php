@@ -30,13 +30,15 @@
 	left: calc(100% - 30em);
 }
 #right_float_pannal > #tool_bar {
-	position: absolute;
+	/*position: absolute;*/
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
 }
 #right_float_pannal > #tool_bar svg {
-	fill: var(--box-bg-color1);
+	fill: var(--bg-color);
+	height: 2em;
+	width: 2em;
 }
 #min_right_float {
 	display: none;
@@ -68,6 +70,9 @@
 				<svg class='icon'><use xlink:href='../studio/svg/icon.svg#right_expand'></use></svg>
 			</button>
 			</span>
+			<span id="tool_bar_title" style="font-size: 150%;">
+				<?php echo $_local->gui->searching_instruction; ?><guide gid="dict_search_input" init="1"></guide>
+			</span>
 			<span>
 			<button id="close_right_float" class="icon_btn" onclick="close_right_float()">
 			<svg class='icon'><use xlink:href='../studio/svg/icon.svg#cross_with_circle'></use></svg>
@@ -76,4 +81,8 @@
 		</div>
 		<iframe id="dict" src="../dict/index.php?builtin=true" name="dict" title="wikipali"></iframe>
 	</div>
-</div>				
+</div>
+
+<script>
+	guide_init();
+</script>

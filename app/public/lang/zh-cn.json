@@ -196,7 +196,7 @@
 		"need_inform": "未告知其他比库",
 		"new": "新建",
 		"new_account": "注册",
-		"new_project": "新建工程",
+		"new_project": "新建逐词解析",
 		"new_revision": "新版本",
 		"new_technic_term": "新建术语",
 		"newheading": "内容编辑",
@@ -522,7 +522,7 @@
 		"channel": "版本风格",
 		"channels": "版本风格列表",
 		"like": "赞",
-		"blank": "空白",
+		"blank": "无",
 		"vocabulary_list": "词汇列表",
 		"private": "私享",
 		"private_note": "仅自己可见，不支持订阅，不可搜索",
@@ -614,6 +614,9 @@
 		"lesson_intro": "看看世界各地的巴利专家都是如何解析圣典的",
 		"teaching_course": "主讲的课程",
 		"watching_course": "关注的课程",
+		"searching_instruction": "查词指南",
+		"dict_searching_placehold": "单词里面添加“+”可分别查看查询结果",
+		"": "",
 		"": ""
 	},
 	"grammastr": [

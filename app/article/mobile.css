@@ -19,3 +19,6 @@
 #head_bar {
 	flex-direction: column;
 }
+#main_view {
+	padding-top: 10em;
+}

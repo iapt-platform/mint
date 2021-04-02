@@ -9,6 +9,7 @@ var _author = "";
 var _display = "para";
 var arrMyTerm = new Array();
 var _sent_data = new Array();
+var link_str="";
 
 palicanon_load_term();
 
@@ -47,6 +48,7 @@ function reader_load() {
 						iterator.end +
 						"}}\n";
 				}
+				link_str=tpl;
 				$("#contents").html(note_init(tpl));
 				note_refresh_new();
 				reader_draw_para_menu();

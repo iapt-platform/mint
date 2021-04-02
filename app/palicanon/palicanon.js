@@ -406,7 +406,13 @@ function sortNumber(a, b) {
 	return b - a;
 }
 
-function tag_list_slide_toggle() {
+function tag_list_slide_toggle(element) {
+	if($(element).html().indexOf("⮟")!= -1){
+		$(element).html("⮝")
+	}
+	else{
+		$(element).html("⮟")
+	}
 	$("#tag_list").slideToggle();
 }
 function chapter_back(parent) {

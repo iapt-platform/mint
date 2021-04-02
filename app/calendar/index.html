@@ -90,6 +90,7 @@
 				list: "列表",
 				location: "所在地",
 				city_name: "城市名",
+				re_loc: "重新定位",
 			};
 			localString["zh-tw"] = {
 				and_another: "又 ",
@@ -156,6 +157,7 @@
 				list: "列表",
 				location: "所在地",
 				city_name: "城市名",
+				re_loc: "重新定位",
 			};
 			localString["default"] = {
 				and_another: " and ",
@@ -222,6 +224,7 @@
 				list: "list",
 				location: "location",
 				city_name: "city name",
+				re_loc: "relocation",
 			};
 			localString["en"] = {
 				and_another: " and ",
@@ -288,6 +291,7 @@
 				list: "list",
 				location: "location",
 				city_name: "city name",
+				re_loc: "relocation",
 			};
 			localString["my"] = {
 				and_another: " and ",
@@ -354,6 +358,7 @@
 				list: "list",
 				location: "location",
 				city_name: "city name",
+				re_loc: "relocation",
 			};
 			localString["si"] = {
 				and_another: " ච ",
@@ -420,6 +425,7 @@
 				list: "list",
 				location: "location",
 				city_name: "city name",
+				re_loc: "relocation",
 			};
 			var pali_month_name = [
 				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
@@ -1079,6 +1085,11 @@ function angle_trans(angle,type) {
 					document.write(localString[g_language].location);
 				</script>
 				<span id="city_str" onclick=""></span>
+				<button id="re_loc" onclick="getLocation()">
+					<script>
+						document.write(localString[g_language].re_loc);
+					</script>
+				</button>
 				<span id="city_info" ></span>
 				<input class="cityinput" id="citySelect" value="" style="display: none;">
 				<div class="citySelector" style="position: absolute; left: 8px; top: 25.6px; z-index: 999999;">
