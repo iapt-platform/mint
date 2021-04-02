@@ -244,7 +244,7 @@
 		"project": "工程",
 		"protection": "保护(英)",
 		"pubba_māsa": "上个月",
-		"publish": "公布",
+		"publish": "公开发布",
 		"ravi": "周日",
 		"read": "阅读",
 		"read_only": "只读",
@@ -616,7 +616,8 @@
 		"watching_course": "关注的课程",
 		"searching_instruction": "查词指南",
 		"dict_searching_placehold": "单词里面添加“+”可分别查看查询结果",
-		"": "",
+		"copy_to": "复制到",
+		"add_tran": "添加译文",
 		"": ""
 	},
 	"grammastr": [

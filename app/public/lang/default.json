@@ -614,6 +614,8 @@
 		"watching_course": "watching course",
 		"searching_instruction": "searching instruction",
 		"dict_searching_placehold": "insert “+” into a word to search them separately",
+		"copy_to": "copy to",
+		"add_tran": "add translation",
 		"": ""
 	},
 	"grammastr": [

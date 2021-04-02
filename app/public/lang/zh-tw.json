@@ -244,7 +244,7 @@
 		"project": "工程",
 		"protection": "保護(英)",
 		"pubba_māsa": "上個月",
-		"publish": "公佈",
+		"publish": "公開發佈",
 		"ravi": "週日",
 		"read": "閱讀",
 		"read_only": "隻讀",
@@ -615,6 +615,8 @@
 		"watching_course": "關注的課程",
 		"searching_instruction": "查詞指南",
 		"dict_searching_placehold": "单词里面添加“+”可分别查看查询结果",
+		"copy_to": "複製到",
+		"add_tran": "新增譯文",
 		"": ""
 	},
 	"grammastr": [
