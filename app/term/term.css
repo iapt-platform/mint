@@ -189,13 +189,12 @@ note > .tran > .text {
 }
 note > .tran .tran_text_tool_bar,
 .tran_text_tool_bar {
-	padding: 0 0.1em;
+	padding: 0.5em 1em;
 	position: absolute;
 	display: none;
 	color: var(--border-line-color);
 	z-index: 40;
 	width: auto;
-	left: -2em;
 	font-size: 14px;
 	height: auto;
 	line-height: 28px;
@@ -265,13 +264,9 @@ note > .palitext,
 	font-weight: 500;
 	margin-bottom: 10px;
 }
-note > .palitext > note {
+note n {
 	display: inline;
 	color: blue;
-	background-color: unset;
-	padding: unset;
-	margin-bottom: unset;
-	border-radius: unset;
 }
 
 .term_word_head_pali {
@@ -297,17 +292,10 @@ note > .palitext > note {
 }
 
 note .ref {
-	text-align: right;
 	font-size: 75%;
 	white-space: nowrap;
 	overflow-x: scroll;
-	margin-left: auto;
-	border-top: solid 1px var(--nocolor);
-	position: absolute;
-	bottom: -1.3em;
-	right: 0;
 	max-width: 100%;
-	right: 1.3em;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
@@ -339,7 +327,7 @@ r {
 }
 
 note {
-	padding: 0.5em 2em;
+	padding: 0.5em 0 0 0;
 	margin-bottom: 0.4em;
 	border-radius: 5px;
 	line-height: 1.3em;
@@ -409,13 +397,12 @@ note:hover .add_new {
 	border-top: 1px solid var(--border-line-color);
 }
 .other_tran_div > .tool_bar {
-	position: absolute;
-	margin-top: -0.7em;
 	background-color: var(--btn-bg-color);
 	padding: 0 6px;
-	border-radius: 4px;
+	border-radius: 0 0 4px 4px;
 	cursor: pointer;
 	display: flex;
+	justify-content: space-between;
 }
 .other_tran_div > .other_tran {
 	min-height: 1em;
@@ -504,7 +491,8 @@ note:hover .note_tool_bar {
 	padding: 5px;
 	border-radius: 5px;
 }
-.other_tran_num {
+.other_tran_num,
+.similar_sent_num {
 	-webkit-border-radius: 7px;
 	border-radius: 7px;
 	background-color: cornflowerblue;
@@ -518,6 +506,9 @@ note:hover .note_tool_bar {
 	display: none;
 	margin: auto 2px;
 	color: whitesmoke;
+}
+.similar_sent_num {
+	display: unset;
 }
 .separate_line {
 	border: solid 1px #e8e8e8;
@@ -546,4 +537,152 @@ pw {
 
 .slider_show_shell .bg_color_1 {
 	background-color: unset;
+}
+
+/*编辑框*/
+.sent_tran {
+	padding: 5px;
+	margin-bottom: 2px;
+}
+.sent_tran_inner {
+	display: flex;
+}
+.sent_tran:hover {
+	background-color: #fafafa;
+}
+.left_bar {
+	width: 40px;
+}
+.sent_tran .left_bar > .face {
+	display: block;
+}
+.compact .left_bar > .face {
+	display: none;
+}
+.left_bar > .date {
+	display: none;
+}
+.compact .left_bar > .date {
+	display: block;
+}
+
+.sent_tran_inner > .body {
+	width: 100%;
+	display: block;
+}
+.preview {
+	font-size: 110%;
+}
+.compact .body > .head_bar {
+	display: flex;
+}
+.compact .body > .head_bar > .date {
+	display: none;
+}
+.head_bar > .info {
+	display: none;
+}
+.head_bar > .info > .name {
+	font-weight: 700;
+}
+.head_bar > .info > .date {
+	font-size: 0.8em;
+	color: gray;
+}
+.compact .head_bar > .info {
+	display: block;
+}
+.compact .head_bar > .info > .date {
+	display: none;
+}
+.foot_bar .info {
+	color: gray;
+}
+.tool_bar > .right {
+	position: absolute;
+	right: 0;
+	margin-top: -18px;
+	display: none;
+	width: auto;
+	background-color: var(--bg-color);
+	border: 1px solid var(--border-line-color);
+	border-radius: 6px;
+	padding: 3px;
+	margin-right: 20px;
+}
+.sent_tran_inner:hover .tool_bar > .right {
+	display: block;
+}
+
+.body > .edit {
+	display: none;
+}
+.body > .edit textarea {
+	color: var(--main-color);
+	width: 100%;
+	background-color: var(--drop-bg-color);
+	border: unset;
+	border-radius: 8px;
+	padding: 5px;
+	line-height: 1.5em;
+	height: 90px;
+	font-size: 120%;
+}
+.foot_bar {
+	font-size: 90%;
+}
+.foot_bar > .info {
+	display: flex;
+}
+.foot_bar > .info span {
+	margin-right: 4px;
+}
+.compact .foot_bar {
+	display: none;
+}
+.edit_mode {
+	background-color: #fafafa;
+}
+.edit_mode > .sent_tran_inner > .body > .head_bar > .preview {
+	display: none;
+}
+.edit_mode > .sent_tran_inner > .body > .edit {
+	display: block;
+}
+.pop_menu {
+	display: flex;
+}
+.tag_list {
+	display: flex;
+	list-style-type: none;
+}
+.tag_list li {
+	border-radius: 6px;
+	margin-right: 5px;
+	background-color: var(--bookx);
+	padding: 2px 5px;
+	cursor: pointer;
+}
+li.active {
+	background-color: var(--booka);
+}
+.tag_list li:hover {
+	background-color: var(--booka);
+}
+.sent_tran .preview p {
+	margin: 0;
+}
+.pop_menu .icon {
+	fill: var(--main-color);
+}
+.pr_content {
+	margin-left: 3em;
+	border-left: 3px solid var(--border-line-color);
+}
+.menu_space_between a {
+	display: flex;
+	justify-content: space-between;
+}
+.body > .head_bar > .loading {
+	color: gray;
 }

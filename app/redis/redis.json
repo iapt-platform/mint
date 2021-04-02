@@ -1,0 +1,23 @@
+[
+	{ "key": "ref_dict_idx", "type": "hash", "valid": true, "rebuild": "", "description": "参考字典索引" },
+	{ "key": "pali_sent_*", "type": "string", "valid": false, "description": "巴利句子列表" },
+	{
+		"key": "pali://sent/*",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../pali_sent/redis_upgrade_pali_sent.php",
+		"description": "巴利句子列表"
+	},
+	{
+		"key": "sent://*",
+		"type": "hash",
+		"valid": true,
+		"description": "译文句子列表 key: sent://channel/book-para-start-end "
+	},
+	{
+		"key": "article://*",
+		"type": "hash",
+		"valid": true,
+		"description": "article 主要信息 key: article://id  字段 title,owner,summary,create_time,modify_time "
+	}
+]

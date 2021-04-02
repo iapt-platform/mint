@@ -18,13 +18,13 @@ if (isset($_POST["groupid"])) {
     $fc = PDO_FetchRow($query, array($_POST["groupid"]));
     if ($fc) {
         if ($fc["parent"] == 0) {
-            if ($fc["creator"] == $_COOKIE["userid"]) {
+            if ($fc["owner"] == $_COOKIE["userid"]) {
                 $mypower = 0;
             }
         } else {
-            $query = "SELECT creator  from group_info where id=?";
+            $query = "SELECT owner  from group_info where id=?";
             $g_parent = PDO_FetchRow($query, array($fc["parent"]));
-            if ($g_parent && $g_parent["creator"] == $_COOKIE["userid"]) {
+            if ($g_parent && $g_parent["owner"] == $_COOKIE["userid"]) {
                 $mypower = 0;
             }
         }

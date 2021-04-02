@@ -3,11 +3,15 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../channal/function.php";
+require_once "../ucenter/function.php";
+require_once "../usent/function.php";
 require_once "../redis/function.php";
 
 $redis = redis_connect();
 
 $_channal = new Channal();
+$_userinfo = new UserInfo();
+$_sentPr = new SentPr($redis);
 
 $_data = array();
 if (isset($_POST["data"])) {
@@ -156,38 +160,91 @@ foreach ($_data as $key => $value) {
 
         $stmt = $db_trans_sent->prepare($query);
         if (empty($_setting["channal"])) {
+			#没有指定channel
             if ($sentChannal == "") {
+				#句子信息也没指定channel
                 $parm = array($bookId, $para, $begin, $end);
                 $parm = array_merge_recursive($parm, $channal_list);
                 $stmt->execute($parm);
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
                     $tran = $Fetch["text"];
-                    $translation[] = array("id" => $Fetch["id"], "text" => $Fetch["text"], "lang" => $Fetch["language"], "channal" => $Fetch["channal"], "editor" => $Fetch["editor"]);
+                    $translation[] = array("id" => $Fetch["id"], 
+										   "book"=>$bookId,
+										   "para"=>$para,
+										   "begin"=>$begin,
+										   "end"=>$end,
+										   "text" => $Fetch["text"], 
+										   "lang" => $Fetch["language"], 
+										   "channal" => $Fetch["channal"], 
+										   "status" => $Fetch["status"], 
+										   "editor" => $Fetch["editor"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "update_time"=>$Fetch["modify_time"]
+										);
                     if (!empty($Fetch["channal"])) {
                         $tran_channal[$Fetch["channal"]] = $Fetch["channal"];
                     }
                 }
             } else {
+				#句子信息包含channel
+				#{{book-para-begin-end@channelid}}
                 $stmt->execute(array($bookId, $para, $begin, $end, $sentChannal));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
                     $tran = $Fetch["text"];
-                    $translation[] = array("id" => $Fetch["id"], "text" => $Fetch["text"], "lang" => $Fetch["language"], "channal" => $Fetch["channal"], "editor" => $Fetch["editor"]);
+                    $translation[] = array("id" => $Fetch["id"], 
+											"book"=>$bookId,
+											"para"=>$para,
+											"begin"=>$begin,
+											"end"=>$end,
+										   "text" => $Fetch["text"], 
+										   "lang" => $Fetch["language"], 
+										   "channal" => $Fetch["channal"], 
+										   "status" => $Fetch["status"], 
+										   "editor" => $Fetch["editor"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "update_time"=>$Fetch["modify_time"]
+										);
                     $tran_channal[$Fetch["channal"]] = $Fetch["channal"];
                 }
             }
         } else {
+			#指定了channel
             $arrChannal = explode(",", $_setting["channal"]);
             foreach ($arrChannal as $key => $value) {
                 # code...
                 $stmt->execute(array($bookId, $para, $begin, $end, $value));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
-                    $translation[] = array("id" => $Fetch["id"], "text" => $Fetch["text"], "lang" => $Fetch["language"], "channal" => $value, "editor" => $Fetch["editor"]);
+                    $translation[] = array("id" => $Fetch["id"],
+										   "book"=>$bookId,
+										   "para"=>$para,
+										   "begin"=>$begin,
+										   "end"=>$end,
+										   "text" => $Fetch["text"], 
+										   "lang" => $Fetch["language"], 
+										   "channal" => $value, 
+										   "status" => $Fetch["status"], 
+										   "editor" => $Fetch["editor"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "update_time"=>$Fetch["modify_time"]
+										);
 
                 } else {
-                    $translation[] = array("id" => "", "text" => "", "lang" => "", "channal" => $value);
+                    $translation[] = array("id" => "", 
+											"book"=>$bookId,
+											"para"=>$para,
+											"begin"=>$begin,
+											"end"=>$end,
+										   "text" => "", 
+										   "lang" => "", 
+										   "channal" => $value,
+										   "status" => 0,
+										   "editor" => false,
+										   "editor_name"=>false,
+										   "update_time"=>false
+										);
                 }
                 $tran_channal[$value] = $value;
             }
@@ -201,14 +258,21 @@ foreach ($_data as $key => $value) {
     foreach ($tran_channal as $key => $value) {
         # code...
         $tran_channal[$key] = $_channal->getChannal($key);
+		$tran_channal[$key]["mypower"] = $_channal->getPower($key);
     }
     foreach ($translation as $key => $value) {
         # code...
         if ($value["channal"]) {
             $translation[$key]["channalinfo"] = $tran_channal[$value["channal"]];
+            $translation[$key]["mypower"] = $tran_channal[$value["channal"]]["mypower"];
+            $translation[$key]["status"] = $tran_channal[$value["channal"]]["status"];
+			#查询句子pr
+			$translation[$key]["pr_new"]=$_sentPr->getNewPrNumber($value["book"],$value["para"],$value["begin"],$value["end"],$value["channal"]);
+			$translation[$key]["pr_all"]=$_sentPr->getAllPrNumber($value["book"],$value["para"],$value["begin"],$value["end"],$value["channal"]);
         } else {
             $translation[$key]["channalinfo"] = false;
         }
+
     }
 
     //查询路径

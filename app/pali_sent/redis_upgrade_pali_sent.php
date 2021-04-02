@@ -1,10 +1,13 @@
 <?php
 /*
-get user sentence from db
+从巴利句子列表数据库中提取数据填充redis
+每个句子包含 
+pali 
+id 
+sim_count
  */
 require_once "../path.php";
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
+require_once "../redis/function.php";
 
 if (isset($argv[1])) {
     if ($argv[1] == "del") {
@@ -21,18 +24,17 @@ if (isset($argv[1])) {
 		echo "delete ok ".$count;
     }
 } else {
-    $dns = "" . _FILE_DB_PALI_SENTENCE_;
-    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+
+    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	$dns = "" . _FILE_DB_PALI_SENTENCE_SIM_;
-	$db_pali_sent_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+
+	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, "", "", array(PDO::ATTR_PERSISTENT => true));
 	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
-    $redis = new redis();
-    $r_conn = $redis->connect('127.0.0.1', 6379);
+    $r_conn = redis_connect();
 	$stringSize = 0;
 	$count = 0;
     if ($r_conn) {

@@ -156,5 +156,34 @@ function copy_to_clipboard(strInput) {
 	document.body.removeChild(input);
 }
 
+function getPassDataTime(time) {
+	let currDate = new Date();
+
+	let pass = currDate.getTime() - time;
+	let strPassTime = "";
+	if (pass < 60 * 1000) {
+		//一分钟内
+		strPassTime = Math.floor(pass / 1000) + "秒前";
+	} else if (pass < 3600 * 1000) {
+		//一小时内
+		strPassTime = Math.floor(pass / 1000 / 60) + "分钟前";
+	} else if (pass < 3600 * 24 * 1000) {
+		//一天内
+		strPassTime = Math.floor(pass / 1000 / 3600) + "小时前";
+	} else if (pass < 3600 * 24 * 7 * 1000) {
+		//一周内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24) + "天前";
+	} else if (pass < 3600 * 24 * 30 * 1000) {
+		//一个月内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 7) + "周前";
+	} else if (pass < 3600 * 24 * 365 * 1000) {
+		//一年内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 30) + "月前";
+	} else {
+		//超过一年
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + "年前";
+	}
+	return strPassTime;
+}
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();

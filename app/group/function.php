@@ -31,6 +31,7 @@ class GroupInfo
         $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $buffer = array();
+        $parentId = array();
     }
 
     public function getName($id)
@@ -56,6 +57,32 @@ class GroupInfo
         } else {
             $buffer[$id] = "";
             return $buffer[$id];
+        }
+	}
+	
+	public function getParentId($id)
+    {
+        if (empty($id)) {
+            return "";
+        }
+        if (isset($parentId[$id])) {
+            return $parentId[$id];
+        }
+        if ($this->dbh) {
+            $query = "SELECT parent FROM group_info WHERE id= ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($id));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                $parentId[$id] = $user["parent"];
+                return $parentId[$id];
+            } else {
+                $parentId[$id] = "";
+                return $parentId[$id];
+            }
+        } else {
+            $parentId[$id] = "";
+            return $parentId[$id];
         }
     }
 }

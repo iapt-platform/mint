@@ -7,11 +7,11 @@ $respond = array("status" => 0, "message" => "");
 if (isset($_COOKIE["userid"]) && isset($_POST["groupid"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
     #TODO 先查是否有删除权限
-    $query = "SELECT parent from group_info where id=? and creator=? ";
+    $query = "SELECT parent from group_info where id=? and owner=? ";
     $gInfo = PDO_FetchRow($query, array($_POST["groupid"], $_COOKIE["userid"]));
     if ($gInfo) {
         #删除group info
-        $query = "DELETE from group_info where id=? and creator=? ";
+        $query = "DELETE from group_info where id=? and owner=? ";
         PDO_Execute($query, array($_POST["groupid"], $_COOKIE["userid"]));
         #删除 组员
         $query = "DELETE from group_member where group_id=? ";

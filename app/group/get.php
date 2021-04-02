@@ -5,6 +5,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
+require_once '../share/function.php';
 
 $output = array();
 if (isset($_GET["id"])) {
@@ -25,8 +26,9 @@ if (isset($_GET["id"])) {
             $parent_group = PDO_FetchRow($query, array($Fetch["parent"]));
             $output["parent"] = $parent_group;
         }
-        #列出组文件
+        #列出组共享资源
         {
+			/*
             PDO_Connect("" . _FILE_DB_FILEINDEX_);
             $query = "SELECT * FROM power  WHERE user = ? ";
             $fileList = PDO_FetchAll($query, array($id));
@@ -39,8 +41,11 @@ if (isset($_GET["id"])) {
                 } else {
                     $fileList[$key]["title"] = "";
                 }
-            }
-            $output["file"] = $fileList;
+			}
+			
+			$output["file"] = $fileList;
+			*/
+			$output["file"] =share_res_list_get($id);
         }
     }
 }

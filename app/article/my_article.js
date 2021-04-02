@@ -1,6 +1,8 @@
 var _display = "para";
+var share_win;
 function my_article_init() {
 	my_article_list();
+	share_win = iframe_win_init({ container: "share_win", name: "share", width: "500px" });
 	article_add_dlg_init("article_add_div");
 }
 function my_article_list() {
@@ -25,7 +27,7 @@ function my_article_list() {
 					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
-					html += "<div style='flex:1;'>15</div>";
+					html += "<div style='flex:1;'></div>";
 					html += "</div>";
 					//列表
 					for (const iterator of result) {
@@ -47,7 +49,9 @@ function my_article_list() {
 							"' target='_blank'>" +
 							gLocal.gui.preview +
 							"</a></div>";
-						html += "<div style='flex:1;'>15</div>";
+						html += "<div style='flex:1;'>";
+						html += "<a onclick=\"article_share('" + iterator.id + "')\">share</a>";
+						html += "</div>";
 						html += "</div>";
 					}
 					$("#article_list").html(html);
@@ -60,32 +64,53 @@ function my_article_list() {
 		}
 	);
 }
-
-function render_status(status) {
+function article_share(id) {
+	share_win.show("../share/share.php?id=" + id + "&type=3");
+}
+function render_status(status, readonly = true) {
 	status = parseInt(status);
 	let html = "";
 	let objStatus = [
 		{
-			id: 1,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" + gLocal.gui.private,
+			id: 10,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>",
+			name: gLocal.gui.private,
 			tip: gLocal.gui.private_note,
-		},
-		{
-			id: 2,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" +
-				gLocal.gui.unlisted,
+		} /*
+		,{
+			id: 20,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>",
+			name: gLocal.gui.unlisted,
 			tip: gLocal.gui.unlisted_note,
-		},
+		}*/,
 		{
-			id: 3,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" +
-				gLocal.gui.public,
+			id: 30,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>",
+			name: gLocal.gui.public,
 			tip: gLocal.gui.public_note,
 		},
 	];
+	if (readonly) {
+		for (const iterator of objStatus) {
+			if (iterator.id == status) {
+				return "<div >" + iterator.icon + iterator.name + "</div>";
+			}
+		}
+	} else {
+		let html = "";
+		html += "<select name='status'>";
+		for (const iterator of objStatus) {
+			html += "<option value='" + iterator.id + "' ";
+			if (iterator.id == status) {
+				html += "selected";
+			}
+			html += " >";
+			html += iterator.name;
+			html += "</option>";
+		}
+		html += "</select>";
+		return html;
+	}
 	html += '<div class="case_dropdown"  style="flex:7;">';
 	html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
@@ -136,7 +161,7 @@ function my_article_edit(id) {
 					html += "<input type='hidden' name='tag' value='" + result.tag + "'/>";
 					html += "<input type='hidden' name='status' value='" + result.status + "'/>";
 
-					html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
+					//html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
 					html += "<div>";
 					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
 					html += "<div style='display:flex;'>";
@@ -179,7 +204,7 @@ function my_article_edit(id) {
 					$("#article_list").html(html);
 					channal_select_init("channal_selector");
 					tran_lang_select_init("article_lang_select");
-					$("#aritcle_status").html(render_status(result.status));
+					$("#aritcle_status").html(render_status(result.status, false));
 					let html_title =
 						"<input id='input_article_title' type='input' name='title' value='" + result.title + "' />";
 					$("#article_title").html(html_title);

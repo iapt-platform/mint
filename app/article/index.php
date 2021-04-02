@@ -204,6 +204,9 @@ function GetPageScroll()
 }
 	</script>
 
+<div class="modal_win_bg">
+</div>
+<div id="model_win" class="model_win_container"></div>
 
 </body>
 </html>
