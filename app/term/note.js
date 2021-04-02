@@ -542,57 +542,67 @@ function note_json_html(in_json) {
 	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
-	output += "<div class='tool_bar' sent='";
+	output += "<div class='tool_bar' style='display:flex;' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
+	output += "<span class='tool_left'>";
+	//第一个按钮
+	//新增译文按钮开始
+	output += "<span class='' ";
+	output += "book='" + in_json.book + "' ";
+	output += "para='" + in_json.para + "' ";
+	output += "begin='" + in_json.begin + "' ";
+	output += "end='" + in_json.end + "' ";
+	output += " >";
+	output += "<span class='' onclick='add_new_tran_button_click(this)'>＋添加译文</span>";
+	output += "<div class='tran_text_tool_bar'>";
+	output += "</div>";
+	output += "</span>";
+	//新增译文按钮结束
+	output += "<span class='separate_line'></span>";
+	//第二个按钮
 	output += "<span class='more_tran icon_expand'></span>";
 	//其他译文工具条
 	output += "<span class='other_bar'  >";
 	output += "<span class='other_tran_span' >" + gLocal.gui.other + gLocal.gui.translation + "</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
+
 	output += "<span class='separate_line'></span>";
-	//相似句工具条
-	output += "<span class='other_bar' >";
-	output +=
-		"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
-		in_json.pali_sent_id +
-		"')\">" +
-		gLocal.gui.similar_sentences +
-		"</span>";
-	output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
+	//第三个按钮 相似句
+	if (parseInt(in_json.sim) > 0) {
+		output += "<span class='other_bar' >";
+		output +=
+			"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
+			in_json.pali_sent_id +
+			"')\">" +
+			gLocal.gui.similar_sentences +
+			"</span>";
+		output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
+		output += "</span>";
+	}
+
+	//第三个按钮 相似句结束
 	output += "</span>";
-	output += "</div>";
-	output += "<div class='other_tran'>";
+
+	output += "<span class='tool_right'>";
+	//出处路径开始
+	output += "<span class='ref'>" + in_json.ref;
+	output += "<span class='sent_no'>";
+	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
+	output += "<span>";
+	output += "</span>";
+	//出处路径结束
+	output += "</span>";
 
 	output += "</div>";
-	output += "</div>";
+	//工具栏结束
+
 	//未选择的其他译文开始
-	//新增译文按钮开始
-	output += "<div class='add_new icon_add' ";
-	output += "book='" + in_json.book + "' ";
-	output += "para='" + in_json.para + "' ";
-	output += "begin='" + in_json.begin + "' ";
-	output += "end='" + in_json.end + "' ";
-	output += " >";
-	output += "<div class='icon_add' onclick='add_new_tran_button_click(this)'></div>";
-	output += "<div class='tran_text_tool_bar'>";
+	output += "<div class='other_tran'>";
 	output += "</div>";
+
 	output += "</div>";
-	//新增译文按钮结束
-	//出处路径开始
-	output += "<div class='ref'>" + in_json.ref;
-	output +=
-		"<span class='sent_no'>" +
-		in_json.book +
-		"-" +
-		in_json.para +
-		"-" +
-		in_json.begin +
-		"-" +
-		in_json.end +
-		"<span>" +
-		"</div>";
-	//出处路径结束
+
 	return output;
 }
 function sent_tran_edit(obj) {
@@ -998,14 +1008,38 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	$(obj).parent().children(".tran_text_tool_bar").first().html(html);
+
 	if ($(obj).parent().children(".tran_text_tool_bar").css("display") == "block") {
 		$(obj).parent().children(".tran_text_tool_bar").first().hide();
 	} else {
 		$(obj).parent().children(".tran_text_tool_bar").first().show();
+		$(document).one("click", function () {
+			$(obj).parent().children(".tran_text_tool_bar").first().hide();
+		});
+		event.stopPropagation();
 		$(obj).parent().show();
 	}
 }
-
+function tool_bar_show(element) {
+	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
+		$(element).find(".tran_text_tool_bar").css("display", "flex");
+		$(element).find(".icon_expand").css("transform", "rotate(-180deg)");
+		$(element).css("background-color", "var(--btn-bg-color)");
+		$(element).css("visibility", "visible");
+		$(document).one("click", function () {
+			$(element).find(".tran_text_tool_bar").hide();
+			$(element).css("background-color", "var(--nocolor)");
+			$(element).find(".icon_expand").css("transform", "unset");
+			$(element).css("visibility", "");
+		});
+		event.stopPropagation();
+	} else {
+		$(element).find(".tran_text_tool_bar").hide();
+		$(element).css("background-color", "var(--nocolor)");
+		$(element).find(".icon_expand").css("transform", "unset");
+		$(element).css("visibility", "");
+	}
+}
 function new_sentence(book, para, begin, end, channel, obj) {
 	let newsent = { id: "", text: "", lang: "", channal: channel };
 
@@ -1058,13 +1092,13 @@ function set_more_button_display() {
 			$(this)
 				.find(".other_bar")
 				.click(function () {
-					const sentid = $(this).parent().attr("sent").split("-");
+					const sentid = $(this).parent().parent().attr("sent").split("-");
 					const book = sentid[0];
 					const para = sentid[1];
 					const begin = sentid[2];
 					const end = sentid[3];
 					let sentId = book + "-" + para + "-" + begin + "-" + end;
-					if ($(this).parent().siblings(".other_tran").first().css("display") == "none") {
+					if ($(this).parent().parent().siblings(".other_tran").first().css("display") == "none") {
 						$(".other_tran_div[sent='" + sentId + "']")
 							.children(".other_tran")
 							.slideDown();
@@ -1370,27 +1404,6 @@ function goto_nissaya(book, para, begin = 0, end = 0) {
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
-}
-
-function tool_bar_show(element) {
-	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
-		$(element).find(".tran_text_tool_bar").css("display", "flex");
-		$(element).find(".icon_expand").css("transform", "rotate(-180deg)");
-		$(element).css("background-color", "var(--btn-bg-color)");
-		$(element).css("visibility", "visible");
-		$(document).one("click", function () {
-			$(element).find(".tran_text_tool_bar").hide();
-			$(element).css("background-color", "var(--nocolor)");
-			$(element).find(".icon_expand").css("transform", "unset");
-			$(element).css("visibility", "");
-		});
-		event.stopPropagation();
-	} else {
-		$(element).find(".tran_text_tool_bar").hide();
-		$(element).css("background-color", "var(--nocolor)");
-		$(element).find(".icon_expand").css("transform", "unset");
-		$(element).css("visibility", "");
-	}
 }
 
 //显示和隐藏某个内容 如 巴利文

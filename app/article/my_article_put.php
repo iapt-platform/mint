@@ -1,5 +1,7 @@
 <?php
-
+/*
+新建文章
+*/
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -7,7 +9,7 @@ require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
 $respond=array("status"=>0,"message"=>"");
-PDO_Connect(""._FILE_DB_USER_ARTICLE_);
+PDO_Connect(_FILE_DB_USER_ARTICLE_);
 
 $query="INSERT INTO article ( id,  title  , subtitle  , summary , content   , tag  , owner, setting  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
 $sth = $PDO->prepare($query);
