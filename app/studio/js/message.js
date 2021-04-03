@@ -103,7 +103,8 @@ function msg_send() {
 				switch (getNodeText(arrMsg[x], "type")) {
 					case "maxid":
 						iMsgLastUpdateId = getNodeText(arrMsg[x], "data");
-						doc_head("msg_db_max_id", iMsgLastUpdateId);
+						//TO DO 用local storage解决
+						//doc_head("msg_db_max_id", iMsgLastUpdateId);
 						console.log("iMsgLastUpdateId:" + iMsgLastUpdateId);
 						break;
 					default:
