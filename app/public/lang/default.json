@@ -616,6 +616,15 @@
 		"dict_searching_placehold": "insert “+” into a word to search them separately",
 		"copy_to": "copy to",
 		"add_tran": "add translation",
+		"no_updated": "no update",
+		"secs_ago": "secs ago",
+		"mins_ago": "mins ago",
+		"hs_ago": "hs ago",
+		"days_ago": "days ago",
+		"weeks_ago": "weeks ago",
+		"months_ago": "months ago",
+		"year_ago": "year ago",
+		"years_ago": "years ago",
 		"": ""
 	},
 	"grammastr": [

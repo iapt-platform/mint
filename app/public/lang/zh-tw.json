@@ -617,6 +617,15 @@
 		"dict_searching_placehold": "单词里面添加“+”可分别查看查询结果",
 		"copy_to": "複製到",
 		"add_tran": "新增譯文",
+		"no_updated": "無更新",
+		"secs_ago": "秒前",
+		"mins_ago": "分鐘前",
+		"hs_ago": "小時前",
+		"days_ago": "天前",
+		"weeks_ago": "週前",
+		"months_ago": "月前",
+		"year_ago": "年前",
+		"years_ago": "年前",
 		"": ""
 	},
 	"grammastr": [

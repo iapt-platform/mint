@@ -542,7 +542,7 @@ function note_json_html(in_json) {
 	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
-	output += "<div class='tool_bar' style='display:flex;' sent='";
+	output += "<div class='tool_bar' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
 	output += "<span class='tool_left'>";
 	//第一个按钮
@@ -814,7 +814,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	html += "</div>";
 	//tool_bar 结束
-	html += '<div class="left_bar">';
+	html += '<div class="left_bar" >';
 	html += '	<div class="face">';
 	if (iterator.id != "") {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
@@ -859,12 +859,12 @@ function render_one_sent_tran_a(iterator) {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="date"> 于' + getPassDataTime(iterator.update_time) + "</span>";
+		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="channel">更新了 @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">'+gLocal.gui.updated+' @' + iterator.channalinfo.name + "</span>";
 	} else {
-		html += '<span class="channel">无人更新 @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">'+gLocal.gui.no_updated+' @' + iterator.channalinfo.name + "</span>";
 	}
 
 	html += '<ul class="tag_list">';

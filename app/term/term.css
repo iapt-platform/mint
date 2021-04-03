@@ -129,7 +129,7 @@ chapter {
 	cursor: pointer;
 }
 chapter::after {
-	content: " ＞ ";
+	content: " > ";
 }
 chapter:hover {
 	color: var(--link-color);
@@ -137,7 +137,7 @@ chapter:hover {
 }
 para {
 	background-color: var(--drop-bg-color);
-	padding: 2px 8px;
+	padding: 0 4px;
 	text-decoration: none;
 	cursor: pointer;
 	color: var(--btn-border-color);
@@ -262,7 +262,7 @@ note > .palitext,
 	line-height: 1.5em;
 	color: #9f3a01;
 	font-weight: 500;
-	margin-bottom: 10px;
+	margin: 4px;
 }
 note n {
 	display: inline;
@@ -296,6 +296,7 @@ note .ref {
 	white-space: nowrap;
 	overflow-x: scroll;
 	max-width: 100%;
+	white-space: pre-wrap;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
@@ -401,15 +402,23 @@ note:hover .add_new {
 	padding: 0 6px;
 	border-radius: 0 0 4px 4px;
 	cursor: pointer;
-	display: flex;
 	justify-content: space-between;
+}
+.other_tran_div > .tool_bar > .tool_left {
+	white-space: nowrap;
+}
+.other_tran_div > .tool_bar > .tool_right {
+	white-space: pre-wrap;
+	margin-left: auto;
 }
 .other_tran_div > .other_tran {
 	min-height: 1em;
 	transition: all 0.2s ease;
 	display: none;
 }
-
+.tool_bar {
+	display: flex;
+}
 .bg_color_1 {
 	background-color: #ebebeb66;
 }
@@ -438,6 +447,7 @@ pre {
 	position: relative;
 	display: none;
 	z-index: 50;
+	margin-right: 1em;
 }
 
 note:hover .note_tool_bar {
@@ -506,9 +516,10 @@ note:hover .note_tool_bar {
 	display: none;
 	margin: auto 2px;
 	color: whitesmoke;
+	padding: 0 3px;
 }
 .similar_sent_num {
-	display: unset;
+	display: inline-flex;
 }
 .separate_line {
 	border: solid 1px #e8e8e8;
@@ -548,10 +559,11 @@ pw {
 	display: flex;
 }
 .sent_tran:hover {
-	background-color: #fafafa;
+	background-color: var(--btn-border-color);
 }
 .left_bar {
-	width: 40px;
+	flex: 2;
+	display: flex;
 }
 .sent_tran .left_bar > .face {
 	display: block;
@@ -569,6 +581,7 @@ pw {
 .sent_tran_inner > .body {
 	width: 100%;
 	display: block;
+	flex: 13;
 }
 .preview {
 	font-size: 110%;
@@ -596,7 +609,7 @@ pw {
 	display: none;
 }
 .foot_bar .info {
-	color: gray;
+	color: var(--main-color);
 }
 .tool_bar > .right {
 	position: absolute;

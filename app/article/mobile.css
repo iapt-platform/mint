@@ -22,3 +22,16 @@
 #main_view {
 	padding-top: 10em;
 }
+.other_tran_div > .tool_bar {
+	display: grid;
+	min-height: 3em;
+}
+.other_tran_div > .tool_bar > .tool_left {
+	width: calc(100vw - 2em - 12px);
+	max-width: 100%;
+}
+.other_tran_div > .tool_bar > .tool_right {
+	position: absolute;
+	right: 6px;
+	margin-top: 1.5em;
+}

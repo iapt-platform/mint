@@ -161,27 +161,29 @@ function getPassDataTime(time) {
 
 	let pass = currDate.getTime() - time;
 	let strPassTime = "";
-	if (pass < 60 * 1000) {
-		//一分钟内
-		strPassTime = Math.floor(pass / 1000) + "秒前";
-	} else if (pass < 3600 * 1000) {
-		//一小时内
-		strPassTime = Math.floor(pass / 1000 / 60) + "分钟前";
-	} else if (pass < 3600 * 24 * 1000) {
-		//一天内
-		strPassTime = Math.floor(pass / 1000 / 3600) + "小时前";
-	} else if (pass < 3600 * 24 * 7 * 1000) {
-		//一周内
-		strPassTime = Math.floor(pass / 1000 / 3600 / 24) + "天前";
-	} else if (pass < 3600 * 24 * 30 * 1000) {
-		//一个月内
-		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 7) + "周前";
+	if (pass < 120 * 1000) {
+		//二分钟内
+		strPassTime = Math.floor(pass / 1000) + gLocal.gui.secs_ago;
+	} else if (pass < 7200 * 1000) {
+		//二小时内
+		strPassTime = Math.floor(pass / 1000 / 60) + gLocal.gui.mins_ago;
+	} else if (pass < 3600 * 48 * 1000) {
+		//二天内
+		strPassTime = Math.floor(pass / 1000 / 3600) + gLocal.gui.hs_ago;
+	} else if (pass < 3600 * 24 * 14 * 1000) {
+		//二周内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24) + gLocal.gui.days_ago;
+	} else if (pass < 3600 * 24 * 60 * 1000) {
+		//二个月内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 7) + gLocal.gui.weeks_ago;
 	} else if (pass < 3600 * 24 * 365 * 1000) {
 		//一年内
-		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 30) + "月前";
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 30) + gLocal.gui.months_ago;
+	} else if (pass < 3600 * 24 * 730 * 1000) {
+		//超过1年小于2年
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + gLocal.gui.year_ago;
 	} else {
-		//超过一年
-		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + "年前";
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + gLocal.gui.years_ago;
 	}
 	return strPassTime;
 }
