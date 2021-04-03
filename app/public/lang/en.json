@@ -613,6 +613,17 @@
 		"watching_course": "watching course",
 		"searching_instruction": "searching instruction",
 		"dict_searching_placehold": "insert “+” into a word to search them separately",
+		"copy_to": "copy to",
+		"add_tran": "add translation",
+		"no_updated": "no update",
+		"secs_ago": "&nbsp;secs&nbsp;ago",
+		"mins_ago": "&nbsp;mins&nbsp;ago",
+		"hs_ago": "&nbsp;hs&nbsp;ago",
+		"days_ago": "&nbsp;days&nbsp;ago",
+		"weeks_ago": "&nbsp;weeks&nbsp;ago",
+		"months_ago": "&nbsp;months&nbsp;ago",
+		"year_ago": "&nbsp;year&nbsp;ago",
+		"years_ago": "&nbsp;years&nbsp;ago",
 		"": ""
 	},
 	"grammastr": [

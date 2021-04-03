@@ -542,7 +542,7 @@ function note_json_html(in_json) {
 	//未选择的其他译文开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
-	output += "<div class='tool_bar' style='display:flex;' sent='";
+	output += "<div class='tool_bar' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
 	output += "<span class='tool_left'>";
 	//第一个按钮
@@ -553,7 +553,7 @@ function note_json_html(in_json) {
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
 	output += " >";
-	output += "<span class='' onclick='add_new_tran_button_click(this)'>＋添加译文</span>";
+	output += "<span class='' onclick='add_new_tran_button_click(this)'>＋"+gLocal.gui.add_tran+"</span>";
 	output += "<div class='tran_text_tool_bar'>";
 	output += "</div>";
 	output += "</span>";
@@ -744,16 +744,16 @@ function render_one_sent_tran_a(iterator) {
 		if (parseInt(iterator.mypower) >= 30 && parseInt(iterator.status) < 30) {
 			//我的私有资源 公开发布
 			commitIcon = "publish";
-			commitTipText = "公开发布";
+			commitTipText = gLocal.gui.publish;
 		} else {
 			if (parseInt(iterator.mypower) < 20) {
 				//只读资源 采纳
 				commitIcon = "accept_copy";
-				commitTipText = "采纳";
+				commitTipText = gLocal.gui.accept_copy;
 			} else {
 				//其他资源 复制到
 				commitIcon = "copy";
-				commitTipText = "复制到";
+				commitTipText = gLocal.gui.copy_to;
 			}
 		}
 		html += "<button class='icon_btn tooltip' ";
@@ -814,7 +814,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	html += "</div>";
 	//tool_bar 结束
-	html += '<div class="left_bar">';
+	html += '<div class="left_bar" >';
 	html += '	<div class="face">';
 	if (iterator.id != "") {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
@@ -848,7 +848,7 @@ function render_one_sent_tran_a(iterator) {
 	if (parseInt(iterator.mypower) < 20) {
 		html += "<b>提交修改建议</b> ";
 	}
-	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>保存</a> 支持markdown语法";
+	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>"+gLocal.gui.save+"</a> 支持markdown语法";
 	html += "</div>";
 	html += "</div>";
 
@@ -859,12 +859,12 @@ function render_one_sent_tran_a(iterator) {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="date"> 于' + getPassDataTime(iterator.update_time) + "</span>";
+		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="channel">更新了 @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">'+gLocal.gui.updated+' @' + iterator.channalinfo.name + "</span>";
 	} else {
-		html += '<span class="channel">无人更新 @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">'+gLocal.gui.no_updated+' @' + iterator.channalinfo.name + "</span>";
 	}
 
 	html += '<ul class="tag_list">';

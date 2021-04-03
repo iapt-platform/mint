@@ -160,3 +160,6 @@ img {
     flex: 5;
 }
 */
+.tool_bar {
+	display: flex;
+}
