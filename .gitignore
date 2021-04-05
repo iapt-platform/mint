@@ -1,3 +1,5 @@
+/.debug
+/.vscode
 /tmp
 /.vscode
 .DS_Store
