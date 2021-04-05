@@ -572,6 +572,7 @@ pw {
 	background-color: var(--btn-border-color);
 }
 .left_bar {
+	flex: 2;
 	display: flex;
 }
 .sent_tran .left_bar > .face {

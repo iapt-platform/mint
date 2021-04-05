@@ -1,5 +1,6 @@
 {
 	"require": {
-		"elasticsearch/elasticsearch": "~7.0"
+		"elasticsearch/elasticsearch": "~7.0",
+		"phpexcel/phpexcel": "dev-master"
 	}
 }

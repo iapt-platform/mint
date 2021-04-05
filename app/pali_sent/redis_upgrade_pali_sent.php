@@ -34,8 +34,7 @@ if (isset($argv[1])) {
     $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
-    $redis = new redis();
-    $r_conn = $redis->connect('127.0.0.1', 6379);
+    $r_conn = redis_connect();
 	$stringSize = 0;
 	$count = 0;
     if ($r_conn) {
