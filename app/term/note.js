@@ -419,7 +419,7 @@ function render_channal_list(channalinfo) {
 			svg_height / 5 +
 			"' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
 		output += '<text x="0" y="' + svg_height + '" font-size="' + svg_height * 0.8 + '">';
-		output += channalinfo["count"] + "/" + channalinfo["all"]+"@"+curr_x;
+		output += channalinfo["count"] + "/" + channalinfo["all"] + "@" + curr_x;
 		output += "</text>";
 		output += "<svg>";
 		output += "</div>";
@@ -566,8 +566,15 @@ function note_json_html(in_json) {
 	output += "<span class='other_tran_span' title='" + gLocal.gui.other + gLocal.gui.translation + "'>🧲</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
-
 	output += "<span class='separate_line'></span>";
+
+	//手工义注
+	output += "<span class='other_bar'  >";
+	output += "<span class='other_tran_span commentray' >commentray</span>";
+	output += "<span class='other_tran_num'></span>";
+	output += "</span>";
+	output += "<span class='separate_line'></span>";
+
 	//第三个按钮 相似句
 	if (parseInt(in_json.sim) > 0) {
 		output += "<span class='other_bar' >";
@@ -849,7 +856,7 @@ function render_one_sent_tran_a(iterator) {
 	if (parseInt(iterator.mypower) < 20) {
 		html += "<b>提交修改建议</b> ";
 	}
-	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>"+gLocal.gui.save+"</a> 支持markdown语法";
+	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>" + gLocal.gui.save + "</a> 支持markdown语法";
 	html += "</div>";
 	html += "</div>";
 
@@ -863,9 +870,9 @@ function render_one_sent_tran_a(iterator) {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="channel">'+gLocal.gui.updated+' @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">' + gLocal.gui.updated + " @" + iterator.channalinfo.name + "</span>";
 	} else {
-		html += '<span class="channel">'+gLocal.gui.no_updated+' @' + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">' + gLocal.gui.no_updated + " @" + iterator.channalinfo.name + "</span>";
 	}
 
 	html += '<ul class="tag_list">';
@@ -1098,7 +1105,7 @@ function set_more_button_display() {
 					const para = sentid[1];
 					const begin = sentid[2];
 					const end = sentid[3];
-					let sentId = book + "-" + para + "-" + begin + "-" + end;
+					let sentId = $(this).parent().parent().attr("sent");
 					if ($(this).parent().parent().siblings(".other_tran").first().css("display") == "none") {
 						$(".other_tran_div[sent='" + sentId + "']")
 							.children(".other_tran")

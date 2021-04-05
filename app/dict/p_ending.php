@@ -12,8 +12,8 @@ array("ti","tabba",".ti.$.fpp."),
 array("ati","itabba",".ti.$.fpp."),
 array("eti","itabba",".ti.$.fpp."),
 array("oti","itabba",".ti.$.fpp."),
-array("ati","aniya",".ti.$.fpp."),
-array("eti","aniya",".ti.$.fpp."),
-array("oti","aniya",".ti.$.fpp.")
+array("ati","anīya",".ti.$.fpp."),
+array("eti","anīya",".ti.$.fpp."),
+array("oti","anīya",".ti.$.fpp.")
 )
 ?>

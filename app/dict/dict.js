@@ -21,7 +21,7 @@ function dict_search(word, autoSplit = true) {
 		localStorage.searchword = word + "," + oldHistory;
 	}
 	word = standardize(word);
-	word = com_getPaliReal(word);
+	//word = com_getPaliReal(word);
 
 	$.get(
 		"dict_lookup.php",
