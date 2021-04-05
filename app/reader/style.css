@@ -118,7 +118,7 @@
 .active a {
 	color: var(--btn-hover-color);
 }
-chapter {
+note:hover chapter {
 	display: inline-block;
 }
 

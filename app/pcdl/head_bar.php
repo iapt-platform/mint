@@ -336,7 +336,7 @@
 
 	.disable {
 		color: var(--new-tool-content-disabled);
-		cursor: default;
+		cursor: not-allowed;
 	}
 
 	@media screen and (min-width: 840px) {

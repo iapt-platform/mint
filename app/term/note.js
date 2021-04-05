@@ -553,7 +553,7 @@ function note_json_html(in_json) {
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
 	output += " >";
-	output += "<span class='' onclick='add_new_tran_button_click(this)'>＋"+gLocal.gui.add_tran+"</span>";
+	output += "<span class='' onclick='add_new_tran_button_click(this)' title='"+gLocal.gui.add_tran+"'>➕</span>";
 	output += "<div class='tran_text_tool_bar'>";
 	output += "</div>";
 	output += "</span>";
@@ -563,7 +563,7 @@ function note_json_html(in_json) {
 	output += "<span class='more_tran icon_expand'></span>";
 	//其他译文工具条
 	output += "<span class='other_bar'  >";
-	output += "<span class='other_tran_span' >" + gLocal.gui.other + gLocal.gui.translation + "</span>";
+	output += "<span class='other_tran_span' title='" + gLocal.gui.other + gLocal.gui.translation + "'>🧲</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 
@@ -574,11 +574,12 @@ function note_json_html(in_json) {
 		output +=
 			"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
 			in_json.pali_sent_id +
-			"')\">" +
+			"')\" title='" +
 			gLocal.gui.similar_sentences +
-			"</span>";
+			"'>🔗</span>";
 		output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
 		output += "</span>";
+		output += "<span class='separate_line'></span>";
 	}
 
 	//第三个按钮 相似句结束
@@ -856,10 +857,10 @@ function render_one_sent_tran_a(iterator) {
 
 	html += '<div class="info">';
 	if (iterator.id != "") {
-		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
+		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
+		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
 	if (iterator.id != "") {
 		html += '<span class="channel">'+gLocal.gui.updated+' @' + iterator.channalinfo.name + "</span>";
@@ -1146,7 +1147,8 @@ function set_more_button_display() {
 			//$(this).hide();
 			$(this)
 				.find(".other_tran_span")
-				.html(gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation);
+				.addClass("disable")
+				.html("🧲");//gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
 			//$(this).find(".more_tran").hide();
 		}
 	});
