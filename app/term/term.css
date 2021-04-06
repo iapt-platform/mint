@@ -569,10 +569,10 @@ pw {
 	display: flex;
 }
 .sent_tran:hover {
-	background-color: var(--btn-border-color);
+	background-color: rgba(0.5, 0.5, 0.5, 0.02);
 }
 .left_bar {
-	flex: 2;
+	flex: 1;
 	display: flex;
 }
 .sent_tran .left_bar > .face {
@@ -587,14 +587,14 @@ pw {
 }
 .compact .left_bar > .date {
 	display: block;
-	margin-left: auto;
-	margin-right: 0.5em;
+	font-size: 80%;
+	color: var(--main-color1);
 }
 
 .sent_tran_inner > .body {
 	width: 100%;
 	display: block;
-	flex: 13;
+	flex: 20;
 }
 .preview {
 	font-size: 110%;

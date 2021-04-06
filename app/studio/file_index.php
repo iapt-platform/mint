@@ -41,7 +41,6 @@ switch ($op) {
         break;
     case "getall";
         //
-        $time = time();
         $query = "select * from fileindex where user_id='$uid' AND  id='{$_POST["doc_id"]}'";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);

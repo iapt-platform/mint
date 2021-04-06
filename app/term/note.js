@@ -828,7 +828,12 @@ function render_one_sent_tran_a(iterator) {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
 	}
 	html += "</div>";
-	html += '<div class="date">' + getPassDataTime(iterator.update_time) + "</div>";
+	html +=
+		'<div class="date" title="' +
+		getFullDataTime(iterator.update_time) +
+		'">' +
+		getDataTime(iterator.update_time) +
+		"</div>";
 	html += "</div>";
 	html += '<div class="body">';
 	html += '<div class="head_bar">';
