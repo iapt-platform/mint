@@ -564,6 +564,7 @@ pw {
 .left_bar {
 	flex: 1;
 	display: flex;
+	margin-right: 5px;
 }
 .sent_tran .left_bar > .face {
 	display: block;
