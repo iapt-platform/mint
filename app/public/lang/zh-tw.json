@@ -387,7 +387,7 @@
 		"add_folder": "新建資料夾",
 		"add_to_folder": "加入資料夾",
 		"rename": "重新命名",
-		"collaborate": "協作檔案",
+		"collaborate": "協作",
 		"help": "幫助",
 		"function_introduce": "Wikipāḷi功能介紹",
 		"vedio_link": "視訊連結",
@@ -626,6 +626,7 @@
 		"months_ago": "月前",
 		"year_ago": "年前",
 		"years_ago": "年前",
+		"similar": "相似",
 		"": ""
 	},
 	"grammastr": [

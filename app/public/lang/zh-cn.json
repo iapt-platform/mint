@@ -328,7 +328,7 @@
 		"to_user_dictionary": "保存并添加到单词本",
 		"user_id": "账号",
 		"userdict": "单词本",
-		"vannana": "注疏",
+		"vannana": "注释书",
 		"view": "可见",
 		"vikala": "不适当的时间",
 		"vocabulary": "词汇总量：",
@@ -387,7 +387,7 @@
 		"add_folder": "新建文件夹",
 		"add_to_folder": "放入文件夹",
 		"rename": "重命名",
-		"collaborate": "协作文档",
+		"collaborate": "协作",
 		"help": "帮助",
 		"function_introduce": "Wikipāḷi功能介绍",
 		"vedio_link": "视频链接",
@@ -627,6 +627,7 @@
 		"months_ago": "月前",
 		"year_ago": "年前",
 		"years_ago": "年前",
+		"similar": "相似",
 		"": ""
 	},
 	"grammastr": [

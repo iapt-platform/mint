@@ -97,7 +97,7 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 			</span>
 			-->
 			<span style="max-width:200px;">
-			<input id="search_user" type="input" name="" placeholder="输入用户名或组名" onkeyup="username_search_keyup(event,this)" />
+			<input id="search_user" type="input" name="" placeholder="🔍输入用户名或组名" onkeyup="username_search_keyup(event,this)" />
 			</span>
 
 			</div>
@@ -108,8 +108,8 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 				</div>
 				<div id="coop_new_tools">
 					<select id="coop_new_power">
-						<option value="10">查看者</option>
-						<option value="20">编辑者</option>
+						<option value="10">👁‍🗨查看者</option>
+						<option value="20">📝编辑者</option>
 					</select>
 					<button onclick="add_coop()">添加</button>
 					<button onclick="cancel_coop()">取消</button>

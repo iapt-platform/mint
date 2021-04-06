@@ -563,14 +563,14 @@ function note_json_html(in_json) {
 	output += "<span class='more_tran icon_expand'></span>";
 	//其他译文工具条
 	output += "<span class='other_bar'  >";
-	output += "<span class='other_tran_span' title='" + gLocal.gui.other + gLocal.gui.translation + "'>🧲</span>";
+	output += "<span class='other_tran_span' title='" + gLocal.gui.other + gLocal.gui.translation + "'>🧲"+gLocal.gui.translation+"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
 
 	//手工义注
 	output += "<span class='other_bar'  >";
-	output += "<span class='other_tran_span commentray' >commentray</span>";
+	output += "<span class='other_tran_span commentray' title='📔" + gLocal.gui.vannana + "'>🪔"+gLocal.gui.commentary+"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
@@ -583,7 +583,7 @@ function note_json_html(in_json) {
 			in_json.pali_sent_id +
 			"')\" title='" +
 			gLocal.gui.similar_sentences +
-			"'>🔗</span>";
+			"'>🧬"+gLocal.gui.similar+"</span>";
 		output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
 		output += "</span>";
 		output += "<span class='separate_line'></span>";
@@ -1154,8 +1154,7 @@ function set_more_button_display() {
 			//$(this).hide();
 			$(this)
 				.find(".other_tran_span")
-				.addClass("disable")
-				.html("🧲");//gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
+				.addClass("disable");//gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
 			//$(this).find(".more_tran").hide();
 		}
 	});
