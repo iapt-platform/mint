@@ -187,5 +187,44 @@ function getPassDataTime(time) {
 	}
 	return strPassTime;
 }
+function getFullDataTime(time) {
+	let inputDate = new Date();
+	inputDate.setTime(time);
+	return inputDate.toLocaleString();
+}
+function getDataTime(time) {
+	let today = new Date();
+	let inputDate = new Date();
+	inputDate.setTime(time);
+
+	let day = inputDate.getDate();
+	let month = inputDate.getMonth() + 1;
+	let year = inputDate.getFullYear();
+
+	let hours = inputDate.getHours();
+	let minutes = inputDate.getMinutes();
+	let seconds = inputDate.getSeconds();
+
+	let today_day = today.getDate();
+	let today_month = today.getMonth() + 1;
+	let today_year = today.getFullYear();
+
+	let today_hours = today.getHours();
+	let today_minutes = today.getMinutes();
+	let today_seconds = today.getSeconds();
+
+	let output = "";
+	if (today_day == day && today_month == month && today_year == year) {
+		//当天
+		output = hours + ":" + minutes;
+	} else if (today_year != year) {
+		//不同年
+		output = year;
+	} else {
+		//同一年
+		output = month + "/" + day;
+	}
+	return output;
+}
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();
