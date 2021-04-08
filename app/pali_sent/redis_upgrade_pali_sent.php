@@ -34,10 +34,10 @@ if (isset($argv[1])) {
     $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
-    $r_conn = redis_connect();
+    $redis = redis_connect();
 	$stringSize = 0;
 	$count = 0;
-    if ($r_conn) {
+    if ($redis) {
         while ($sent = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$count++;
             $stringSize += strlen($sent["html"]);
