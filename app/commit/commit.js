@@ -50,8 +50,8 @@ function commit_render_channel_select() {
 		html += "<div>请选择译文来源";
 		html += "</div>";
 	}
-	html += "<div>==></div>";
-	html += "<div>目标译文:";
+	html += "<div>➡目标译文:</div>";
+	html += "<div>";
 	html += "<select id='dest_channel' onchange='dest_change(this)'>";
 	if (typeof _commit_data.dest == "undefined") {
 		let lastDest = localStorage.getItem("commit_src_" + _commit_data.src);
@@ -89,7 +89,7 @@ function commit_render_channel_select() {
 	html += "<div id='commit_preview'>";
 	if (typeof _commit_data.express != "undefined" && _commit_data.express == true) {
 		if (typeof _commit_data.sent != "undefined" && _commit_data.sent.length != 0) {
-			html += "<button onclick='commit_pull()'>推送</button>";
+			html += "<button onclick='commit_pull()'>✔</button>";
 		} else {
 			html += "没有句子数据";
 		}

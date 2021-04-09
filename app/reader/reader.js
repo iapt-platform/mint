@@ -204,7 +204,10 @@ function reader_get_path() {
 					$(this).html(newLocal);
 				}
 			});
+			var bookTitle = $("chapter").first().html();
 			let suttaTitle = $("chapter").last().html();
+			
+			$("#pali_pedia").html(bookTitle);
 			$("#article_title").html(suttaTitle);
 			$("#page_title").text(suttaTitle);
 			if (_reader_view == "chapter") {

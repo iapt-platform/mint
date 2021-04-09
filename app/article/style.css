@@ -83,7 +83,6 @@
 }
 #right_pannal {
 	flex: 3;
-	max-width: 20em;
 }
 #head_bar {
 	height: unset;

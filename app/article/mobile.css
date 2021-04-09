@@ -23,15 +23,23 @@
 	padding-top: 10em;
 }
 .other_tran_div > .tool_bar {
-	display: grid;
-	min-height: 3em;
 }
 .other_tran_div > .tool_bar > .tool_left {
 	width: calc(100vw - 2em - 12px);
 	max-width: 100%;
 }
 .other_tran_div > .tool_bar > .tool_right {
-	position: absolute;
 	right: 6px;
-	margin-top: 1.5em;
+	max-width: 50vw;
+}
+#head_span {
+	width: 90vw;
+	display: inline-flex;
+	justify-content: space-between;
+	margin-top: 5px;
+}
+note:hover .ref {
+	margin-left: -60vw;
+	width: 60vw;
+	max-width: 60vw;
 }

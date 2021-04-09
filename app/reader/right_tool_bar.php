@@ -6,8 +6,8 @@
 	height: calc(100% - 7.3em);
 	top: 7.3em;
 	left: 100%;
-	width: 30em;
-	min-width: 20em;
+	width: calc(30vw - 0.6em);
+	min-width: 20vw;
 	color: var(--btn-color);
 	background-color: var(--tool-bg-color);
 	z-index: 20;
@@ -27,7 +27,7 @@
 }
 
 .right_float_min #right_float_pannal {
-	left: calc(100% - 30em);
+	left: calc(100% - 30vw + 0.6em);
 }
 #right_float_pannal > #tool_bar {
 	/*position: absolute;*/
@@ -44,7 +44,7 @@
 	display: none;
 }
 .main_view_right_float_min {
-	margin-right: 29em;
+	margin-right: calc(30vw - 0.6em);
 }
 .main_view_right_float_max {
 	margin-right: 50%;

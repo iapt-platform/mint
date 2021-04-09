@@ -296,10 +296,19 @@ note .ref {
 	white-space: nowrap;
 	overflow-x: scroll;
 	max-width: 100%;
-	white-space: pre-wrap;
+	white-space: nowrap;
+	position: absolute;
+	right: 1em;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
+	position: absolute;
+	margin-left: -45vw;
+	width: 45vw;
+	max-width: 45vw;
+	overflow: hidden;
+	white-space: nowrap;
+	overflow-x: scroll;
 }
 
 .progress_bar_done {
@@ -403,6 +412,7 @@ note:hover .add_new {
 	border-radius: 0 0 4px 4px;
 	cursor: pointer;
 	justify-content: space-between;
+	line-height: 1.5em;
 }
 .other_tran_div > .tool_bar > .tool_left {
 	white-space: nowrap;
@@ -568,6 +578,7 @@ pw {
 }
 .sent_tran .left_bar > .face {
 	display: block;
+	margin: auto 0.5em auto auto;
 }
 .compact .left_bar > .face {
 	display: none;
@@ -600,6 +611,8 @@ pw {
 }
 .head_bar > .info > .name {
 	font-weight: 700;
+	white-space: nowrap;
+	margin-right: 0.5em;
 }
 .head_bar > .info > .date {
 	font-size: 0.8em;
@@ -701,4 +714,10 @@ li.active {
 }
 .body > .head_bar > .loading {
 	color: gray;
+}
+.tooltip {
+	display: inline-flex;
+}
+.disable {
+	cursor: not-allowed;
 }

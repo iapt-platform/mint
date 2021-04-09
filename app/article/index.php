@@ -53,8 +53,8 @@ require_once "../pcdl/html_head.php";
 		<span><?php echo $_local->gui->anthology; ?></span>
 	</div>
 
-	<div>
-		<span>
+	<div style="margin: auto 0;">
+		<span id="head_span">
 		<?php
 		
 		if(isset($_GET["id"])){

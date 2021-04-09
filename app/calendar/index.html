@@ -428,46 +428,47 @@
 				re_loc: "relocation",
 			};
 			var pali_month_name = [
-				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
-				{ id: "2", value: "asāḷha", season: "gimhāna", season_icon: "☀" }, //6.X-五-十五、十六-箕、斗
-				{ id: "3", value: "sāvana", season: "vassāna", season_icon: "☔" }, //7.X-六-十五-女
-				{ id: "4", value: "poṭṭhapāda", season: "vassāna", season_icon: "☔" }, //8.x-七-十五、十六-室、壁
-				{ id: "5", value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
-				{ id: "6", value: "kattika", season: "vassāna", season_icon: "☔" }, //10.X-九-十五-昂
-				{ id: "7", value: "māgasira", season: "hemanta", season_icon: "❄" }, //11.X-十-十五-觜
-				{ id: "8", value: "phussa", season: "hemanta", season_icon: "❄" }, //12.X-十一-十五-鬼
-				{ id: "9", value: "māgha", season: "hemanta", season_icon: "❄" }, //1.X-十二-十五-星
-				{ id: "10", value: "phagguna", season: "hemanta", season_icon: "❄" }, //2.X-正月-十四、十五-張、異
-				{ id: "11", value: "citta", season: "gimhāna", season_icon: "☀" }, //3.X-二月-十五-角
-				{ id: "12", value: "vesākha", season: "gimhāna", season_icon: "☀" }, //4.X-三月-十五-氐
+				{ id: "5", position: 0, value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
+				{ id: "6", position: 1.25, value: "kattika", season: "vassāna", season_icon: "☔" }, //10.X-九-十五-昂
+				{ id: "7", position: 3.5, value: "māgasira", season: "hemanta", season_icon: "❄" }, //11.X-十-十五-觜
+				{ id: "8", position: 5.75, value: "phussa", season: "hemanta", season_icon: "❄" }, //12.X-十一-十五-鬼
+				{ id: "9", position: 8, value: "māgha", season: "hemanta", season_icon: "❄" }, //1.X-十二-十五-星
+				{ id: "10", position: 10, value: "phagguna", season: "hemanta", season_icon: "❄" }, //2.X-正月-十四、十五-張、異
+				{ id: "11", position: 12.25, value: "citta", season: "gimhāna", season_icon: "☀" }, //3.X-二月-十五-角
+				{ id: "12", position: 14.5, value: "vesākha", season: "gimhāna", season_icon: "☀" }, //4.X-三月-十五-氐
+				{ id: "1", position: 16.75, value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
+				{ id: "2", position: 18.75, value: "asāḷha", season: "gimhāna", season_icon: "☀" }, //6.X-五-十五、十六-箕、斗
+				{ id: "3", position: 21, value: "sāvana", season: "vassāna", season_icon: "☔" }, //7.X-六-十五-女
+				{ id: "4", position: 23.5, value: "poṭṭhapāda", season: "vassāna", season_icon: "☔" }, //8.x-七-十五、十六-室、壁
+				{ id: "5", position: 26, value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
 			];
 			var pali_nakkhatta_name = [
-				{ id: "0", value: "assayuja", name_zh: "娄宿" },
+				{ id: "0", value: "assayuja", name_zh: "娄宿" },//V3
 				{ id: "1", value: "bharaṇī", name_zh: "胃宿" },
-				{ id: "2", value: "Kattikā", name_zh: "昂宿" },
+				{ id: "2", value: "Kattikā", name_zh: "昂宿" },//V4
 				{ id: "3", value: "rohiṇī", name_zh: "毕宿" },
-				{ id: "4", value: "magasira", name_zh: "觜宿" },
+				{ id: "4", value: "magasira", name_zh: "觜宿" },//H1
 				{ id: "5", value: "Addā", name_zh: "参宿" },
 				{ id: "6", value: "punabbasu", name_zh: "井宿" },
-				{ id: "7", value: "phussa", name_zh: "鬼宿" },
+				{ id: "7", value: "phussa", name_zh: "鬼宿" },//H2
 				{ id: "8", value: "Asilesā", name_zh: "柳宿" },
-				{ id: "9", value: "maghā", name_zh: "星宿" },
-				{ id: "10", value: "pubbaphagguṇī", name_zh: "张宿" },
-				{ id: "11", value: "uttaraphagguṇī", name_zh: "翼宿" },
+				{ id: "9", value: "maghā", name_zh: "星宿" },//H3
+				{ id: "10", value: "pubbaphagguṇī", name_zh: "张宿" },//H4
+				{ id: "11", value: "uttaraphagguṇī", name_zh: "翼宿" },//H4
 				{ id: "12", value: "hattha", name_zh: "轸宿" },
-				{ id: "13", value: "cittā", name_zh: "角宿" },
+				{ id: "13", value: "cittā", name_zh: "角宿" },//G1
 				{ id: "14", value: "sāti", name_zh: "亢宿" },
-				{ id: "15", value: "visākhā", name_zh: "氐宿" },
+				{ id: "15", value: "visākhā", name_zh: "氐宿" },//G2
 				{ id: "16", value: "anurādhā", name_zh: "房宿" },
-				{ id: "17", value: "jeṭṭha", name_zh: "心宿" },
+				{ id: "17", value: "jeṭṭha", name_zh: "心宿" },//G3
 				{ id: "18", value: "mūlā", name_zh: "尾宿" },
-				{ id: "19", value: "pubbāsāḷha", name_zh: "箕宿" },
-				{ id: "20", value: "uttarāsāḷha", name_zh: "斗宿" },
-				{ id: "21", value: "savaṇa", name_zh: "女宿" },
+				{ id: "19", value: "pubbāsāḷha", name_zh: "箕宿" },//G4
+				{ id: "20", value: "uttarāsāḷha", name_zh: "斗宿" },//G4
+				{ id: "21", value: "savaṇa", name_zh: "女宿" },//V1
 				{ id: "22", value: "dhaniṭṭhā", name_zh: "虚宿" },
 				{ id: "23", value: "satabhisaja", name_zh: "危宿" },
-				{ id: "24", value: "pubbabhaddapadā", name_zh: "室宿" },
-				{ id: "25", value: "uttarabhaddapadā", name_zh: "壁宿" },
+				{ id: "24", value: "pubbabhaddapadā", name_zh: "室宿" },//V2
+				{ id: "25", value: "uttarabhaddapadā", name_zh: "壁宿" },//V2
 				{ id: "26", value: "revatī", name_zh: "奎宿" },
 			];
 			var horoscope_name = [
@@ -630,14 +631,25 @@ function show_time() {
 			//根据;
 			function get_station_name(data_time) {
 				//获取星象信息
+				var x_m=0;
 				let solar_num = 0;
 				let lunar_num = 0;
+				let result = new Object();
 				solar_num = get_position(data_time).solar_station;
 				solar_num = Math.floor(solar_num);
 				lunar_num = get_position(data_time).lunar_station;
+				for(x_m in pali_month_name){
+					if(lunar_num>pali_month_name[x_m].position && lunar_num<pali_month_name[Number(x_m)+1].position){
+						result.month_name=pali_month_name[x_m]
+						break;
+					} else if(lunar_num<1.25 || lunar_num>=26){
+						result.month_name=pali_month_name[0]
+						break;
+					}
+					
+				}
 				lunar_num = Math.floor(lunar_num);
 
-				let result = new Object();
 				result.solar = horoscope_name[solar_num]; //黄道十二宫星象名称
 				result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
 				return result;
@@ -790,7 +802,7 @@ function angle_trans(angle,type) {
 					date.setTime(today.getTime() + i * 3600 * 24 * 1000);
 					let info_obj = new Object();
 					info_obj.id = "dawn" + i;
-					info_obj.title = localString[g_language].twilight_time;
+					info_obj.title = "🌆"+localString[g_language].twilight_time;
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
@@ -801,7 +813,7 @@ function angle_trans(angle,type) {
 
 					info_obj = new Object();
 					info_obj.id = "noon" + i;
-					info_obj.title = localString[g_language].noon_time;
+					info_obj.title = "🌞"+localString[g_language].noon_time;
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
@@ -812,7 +824,7 @@ function angle_trans(angle,type) {
 					g_event_list_arr.push(info_obj);
 					info_obj = new Object();
 					info_obj.id = "sunset" + i;
-					info_obj.title = localString[g_language].sun_set;
+					info_obj.title = "🌇"+localString[g_language].sun_set;
 					info_obj.start = SunCalc.getTimes(
 						date,
 						g_coordinate_this.AT,
@@ -852,7 +864,13 @@ function angle_trans(angle,type) {
 				for (i_full in full_list) {
 					info_obj = new Object();
 					info_obj.id = "full_moon" + i_full;
-					info_obj.title = "🌕" + get_station_name(full_list[i_full]).lunar.value;
+					info_obj.title = "🌕@" + get_station_name(full_list[i_full]).lunar.value + "🌟";
+					info_obj.start = full_list[i_full];
+					g_event_list_arr.push(info_obj);
+
+					info_obj = new Object();
+					info_obj.id = "month" + i_full;
+					info_obj.title =get_station_name(full_list[i_full]).month_name.value+localString[g_language].month;
 					info_obj.start = full_list[i_full];
 					g_event_list_arr.push(info_obj);
 				}
