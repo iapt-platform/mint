@@ -129,6 +129,7 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 else{
 	if($redis){
 		$redis->del("article://".$_POST["id"]);
+		$redis->del("power://article/".$_POST["id"]);
 	}
 	
 }

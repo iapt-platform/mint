@@ -1,5 +1,5 @@
 <?php
-//查询term字典
+#获取文集信息
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -8,7 +8,7 @@ require_once '../ucenter/function.php';
 
 
 if(isset($_GET["id"])){
-    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(_FILE_DB_USER_ARTICLE_);
     $id=$_GET["id"];
     $query = "select * from collect  where id = ? ";
     $Fetch = PDO_FetchRow($query,array($id));

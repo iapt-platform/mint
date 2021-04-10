@@ -1,4 +1,5 @@
 <?php
+#已经废弃
 require_once '../path.php';
 
 date_default_timezone_set("UTC");
@@ -8,12 +9,10 @@ $start = strtotime($last . " +1 day");
 $end = strtotime($last . " +2 day");
 $today = strtotime("today");
 
-$dns = "" . _FILE_DB_USER_ACTIVE_;
-$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh = new PDO(_FILE_DB_USER_ACTIVE_, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_USER_ACTIVE_INDEX_;
-$dbh_index = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh_index = new PDO(_FILE_DB_USER_ACTIVE_INDEX_, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 /* 开始一个事务，关闭自动提交 */
 $dbh_index->beginTransaction();

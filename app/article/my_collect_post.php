@@ -5,11 +5,18 @@ require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
+$respond=array("status"=>0,"message"=>"");
+if(!isset($_COOKIE["userid"])){
+	#不登录不能新建
+	$respond['status']=1;
+	$respond['message']="no power create article";
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;
+}
+
 add_edit_event(_COLLECTION_EDIT_,$_POST["id"]);
 
-$respond=array("status"=>0,"message"=>"");
-
-PDO_Connect(""._FILE_DB_USER_ARTICLE_);
+PDO_Connect(_FILE_DB_USER_ARTICLE_);
 
 $query="UPDATE collect SET title = ? , subtitle = ? , summary = ?, article_list = ?  ,  status = ? , lang = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
 $sth = $PDO->prepare($query);
