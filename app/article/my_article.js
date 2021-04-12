@@ -49,9 +49,11 @@ function my_article_list() {
 							"' target='_blank'>" +
 							gLocal.gui.preview +
 							"</a></div>";
+
 						html += "<div style='flex:1;'>";
 						html += "<a onclick=\"article_share('" + iterator.id + "')\">share</a>";
 						html += "</div>";
+
 						html += "</div>";
 					}
 					$("#article_list").html(html);

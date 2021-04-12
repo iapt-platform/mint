@@ -5,9 +5,19 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
+require_once '../collect/function.php';
+require_once '../redis/function.php';
 
-
+$redis = redis_connect();
 if(isset($_GET["id"])){
+	//查询权限
+
+	$collection = new CollectInfo($redis); 
+	$power = $collection->getPower($_GET["id"]);
+	if($power<10){
+		echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+        exit;
+	}
     PDO_Connect(_FILE_DB_USER_ARTICLE_);
     $id=$_GET["id"];
     $query = "select * from collect  where id = ? ";

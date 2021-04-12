@@ -72,7 +72,7 @@ class Article
             return false;
         }
 	}
-	public function getPower($id){
+	public function getPower($id,$collectionId=""){
 		#查询用户对此是否有权限	
 		if(isset($_COOKIE["userid"])){
 			$userId = $_COOKIE["userid"];
@@ -116,8 +116,17 @@ class Article
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
 		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		if($collectionId!=""){
+			$sharePowerCollection = share_get_res_power($_COOKIE["userid"],$collectionId);
+		}
+		else{
+			$sharePowerCollection =0;
+		}
 		if($sharePower>$iPower){
 			$iPower=$sharePower;
+		}
+		if($sharePowerCollection>$iPower){
+			$iPower=$sharePowerCollection;
 		}
 		$this->_redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
 		return $iPower;

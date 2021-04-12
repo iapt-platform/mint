@@ -24,6 +24,9 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["collect"])){
 		echo "_collect_id='".$_GET["collect"]."';";
 	}
+	if(isset($_GET["collection"])){
+		echo "_collection_id='".$_GET["collection"]."';";
+	}
 	if(isset($_GET["display"])){
 		echo "_display='".$_GET["display"]."';";
 	}
@@ -161,15 +164,13 @@ require_once "../pcdl/html_head.php";
 	note_create();
 	historay_init();
 	if(_collect_id==""){
-		articel_load(_articel_id);
+		articel_load(_articel_id,_collection_id);
 		articel_load_collect(_articel_id);
 	}
 	else{
 		collect_load(_collect_id);
 	}
 	});
-
-
 
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 

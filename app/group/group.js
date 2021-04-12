@@ -210,6 +210,16 @@ function group_list(id, list) {
 										"' target='_blank'>编辑</a>";
 									break;
 								case 4: //collection
+									html += "<use xlink:href='../studio/svg/icon.svg#collection'></use>";
+									cardUrl = "../collect/card.php";
+									doing +=
+										"<a href='../article/?collect=" +
+										iterator.res_id +
+										"' target='_blank'>查看</a>";
+									doing +=
+										"|<a href='../article/my_collect_edit.php?id=" +
+										iterator.res_id +
+										"' target='_blank'>编辑</a>";
 									break;
 								case 5: //channel片段
 									break;

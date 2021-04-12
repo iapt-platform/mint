@@ -272,7 +272,6 @@ foreach ($_data as $key => $value) {
         } else {
             $translation[$key]["channalinfo"] = false;
         }
-
     }
 
     //查询路径
