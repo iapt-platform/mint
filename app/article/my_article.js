@@ -21,36 +21,55 @@ function my_article_list() {
 					//表头
 					html += '<div class="file_list_row" style="padding:5px;">';
 					html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-					html += "<div style='flex:0.5;'>" + key++ + "</div>";
-					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:0.5;'>No.</div>";
+					html += "<div style='flex:4;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
-					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
-					html += "<div style='flex:1;'></div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.share_to + "</div>";
 					html += "</div>";
 					//列表
 					for (const iterator of result) {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
-						html += "<div style='flex:2;'>" + iterator.title + "</div>";
+						html += "<div style='flex:4;'>" + iterator.title + "</div>";
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 						html +=
 							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
 							iterator.id +
-							"'>" +
-							gLocal.gui.edit +
-							"</a></div>";
+							"' title='"+gLocal.gui.edit+"'>";
+						html += "<button class='icon_btn'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>"
+						html += "</svg>";
+						html += "</button>";
+
+						html += "</a></div>";
 						html +=
 							"<div style='flex:1;'><a href='../article/?id=" +
 							iterator.id +
-							"' target='_blank'>" +
-							gLocal.gui.preview +
-							"</a></div>";
+							"' target='_blank' title='"+gLocal.gui.preview+"' >";
+						html += "<button class='icon_btn'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>"
+						html += "</svg>";
+						html += "</button>";
+						html += "</a></div>";
+						html += "<div style='flex:1;'>"
+						html += "<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id="+iterator.id+"')\" title='"+gLocal.gui.copy_link+"'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>"
+						html += "</svg>";
+						html += "</button>";
+						html += "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<a onclick=\"article_share('" + iterator.id + "')\">share</a>";
+						html += "<button title='"+gLocal.gui.share_to+"' class='icon_btn' onclick=\"article_share('" + iterator.id + "')\">";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>"
+						html += "</svg>";
+						html += "</button>";
 						html += "</div>";
 						html += "</div>";
 					}

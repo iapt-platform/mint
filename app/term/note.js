@@ -739,7 +739,7 @@ function render_one_sent_tran_a(iterator) {
 		html += "</svg>";
 		html += "<span class='tooltiptext tooltip-top'>";
 		if (parseInt(iterator.mypower) < 20) {
-			html += "建议";
+			html += gLocal.gui.suggest;
 		} else {
 			html += gLocal.gui.edit;
 		}

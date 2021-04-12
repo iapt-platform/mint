@@ -295,7 +295,7 @@ note .ref {
 	font-size: 75%;
 	white-space: nowrap;
 	overflow-x: scroll;
-	max-width: 100%;
+	max-width: 45%;
 	white-space: nowrap;
 	position: absolute;
 	right: 1em;
@@ -303,9 +303,6 @@ note .ref {
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
 	position: absolute;
-	margin-left: -45vw;
-	width: 45vw;
-	max-width: 45vw;
 	overflow: hidden;
 	white-space: nowrap;
 	overflow-x: scroll;
@@ -433,16 +430,16 @@ note:hover .add_new {
 	background-color: #ebebeb66;
 }
 .bg_color_2 {
-	background: linear-gradient(to right, #6afdb033, #ebebeb66);
+	background: linear-gradient(to left, #6afdb033, #ebebeb66);
 }
 .bg_color_3 {
-	background: linear-gradient(to right, #6a95fd26, #ebebeb66);
+	background: linear-gradient(to left, #6a95fd26, #ebebeb66);
 }
 .bg_color_4 {
-	background: linear-gradient(to right, #f9e7911c, #ebebeb66);
+	background: linear-gradient(to left, #f9e7911c, #ebebeb66);
 }
 .bg_color_5 {
-	background: linear-gradient(to right, #fe99b91c, #ebebeb66);
+	background: linear-gradient(to left, #fe99b91c, #ebebeb66);
 }
 
 pre {

@@ -284,17 +284,15 @@ function member_list(id) {
 								html += "拥有者";
 							}
 							html += "</div>";
-							html += "<div style='flex:1;'><div class='hover_button'>";
+							html += "<div style='position: absolute;margin-top: -1.5em;right: 1em;'><div class='hover_button'>";
 							//if (iterator.owner == getCookie("userid"))
 							{
 								html +=
-									"<button onclick=\"member_del('" +
+									"<button style='background: var(--bg-color);' onclick=\"member_del('" +
 									id +
 									"','" +
 									iterator.user_id +
-									"')\">" +
-									gLocal.gui.delete +
-									"</button>";
+									"')\">❌</button>";
 							}
 							html += "</div></div>";
 							html += "</div>";
