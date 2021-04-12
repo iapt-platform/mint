@@ -553,7 +553,7 @@ function note_json_html(in_json) {
 	output += "begin='" + in_json.begin + "' ";
 	output += "end='" + in_json.end + "' ";
 	output += " >";
-	output += "<span class='' onclick='add_new_tran_button_click(this)' title='"+gLocal.gui.add_tran+"'>➕</span>";
+	output += "<span class='' onclick='add_new_tran_button_click(this)' title='" + gLocal.gui.add_tran + "'>➕</span>";
 	output += "<div class='tran_text_tool_bar'>";
 	output += "</div>";
 	output += "</span>";
@@ -563,14 +563,25 @@ function note_json_html(in_json) {
 	output += "<span class='more_tran icon_expand'></span>";
 	//其他译文工具条
 	output += "<span class='other_bar'  >";
-	output += "<span class='other_tran_span' title='" + gLocal.gui.other + gLocal.gui.translation + "'>🧲"+gLocal.gui.translation+"</span>";
+	output +=
+		"<span class='other_tran_span' title='" +
+		gLocal.gui.other +
+		gLocal.gui.translation +
+		"'>🧲" +
+		gLocal.gui.translation +
+		"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
 
 	//手工义注
 	output += "<span class='other_bar'  >";
-	output += "<span class='other_tran_span commentray' title='📔" + gLocal.gui.vannana + "'>🪔"+gLocal.gui.commentary+"</span>";
+	output +=
+		"<span class='other_tran_span commentray' title='📔" +
+		gLocal.gui.vannana +
+		"'>🪔" +
+		gLocal.gui.commentary +
+		"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
@@ -583,7 +594,9 @@ function note_json_html(in_json) {
 			in_json.pali_sent_id +
 			"')\" title='" +
 			gLocal.gui.similar_sentences +
-			"'>🧬"+gLocal.gui.similar+"</span>";
+			"'>🧬" +
+			gLocal.gui.similar +
+			"</span>";
 		output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
 		output += "</span>";
 		output += "<span class='separate_line'></span>";
@@ -658,12 +671,21 @@ function render_one_sent_tran_a(iterator) {
 	let tranText;
 	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
 	if (iterator.text == "") {
-		tranText =
-			"<span style='color:var(--border-line-color);'>" +
-			iterator.channalinfo.name +
-			"-" +
-			iterator.channalinfo.lang +
-			"</span>";
+		if (typeof iterator.channalinfo == "undefined") {
+			tranText =
+				"<span style='color:var(--border-line-color);'>" +
+				"空" +
+				"@" +
+				iterator.editor_name.nickname +
+				"</span>";
+		} else {
+			tranText =
+				"<span style='color:var(--border-line-color);'>" +
+				iterator.channalinfo.name +
+				"-" +
+				iterator.channalinfo.lang +
+				"</span>";
+		}
 	} else {
 		//note_init处理句子链接
 		tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
@@ -875,9 +897,21 @@ function render_one_sent_tran_a(iterator) {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
 	if (iterator.id != "") {
-		html += '<span class="channel">' + gLocal.gui.updated + " @" + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">' + gLocal.gui.updated + " @";
+		if (typeof iterator.channalinfo == "undefined") {
+			html += "unkown";
+		} else {
+			html += iterator.channalinfo.name;
+		}
+		html += "</span>";
 	} else {
-		html += '<span class="channel">' + gLocal.gui.no_updated + " @" + iterator.channalinfo.name + "</span>";
+		html += '<span class="channel">' + gLocal.gui.no_updated + " @";
+		if (typeof iterator.channalinfo == "undefined") {
+			html += "unkown";
+		} else {
+			html += iterator.channalinfo.name;
+		}
+		html += "</span>";
 	}
 
 	html += '<ul class="tag_list">';
@@ -1157,9 +1191,7 @@ function set_more_button_display() {
 		} else {
 			//隐藏自己
 			//$(this).hide();
-			$(this)
-				.find(".other_tran_span")
-				.addClass("disable");//gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
+			$(this).find(".other_tran_span").addClass("disable"); //gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
 			//$(this).find(".more_tran").hide();
 		}
 	});

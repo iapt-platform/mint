@@ -24,7 +24,7 @@ require_once '../collect/function.php';
     else{
         $begin = 0;
     }
-    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
+    PDO_Connect(_FILE_DB_USER_ARTICLE_);
     $query = "SELECT id,title,subtitle,summary,owner,modify_time from article  where status >= 30 ";
     
     if(isset($_GET["orderby"])){

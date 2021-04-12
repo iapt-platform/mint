@@ -71,6 +71,7 @@ function my_article_list() {
 						html += "</svg>";
 						html += "</button>";
 						html += "</div>";
+
 						html += "</div>";
 					}
 					$("#article_list").html(html);

@@ -78,6 +78,10 @@ foreach ($Fetch as $key => $value) {
         $Fetch[$key]["c_owner"] = $user_info->getName($channel["owner"]);
         $Fetch[$key]["channalinfo"] = $channel;
     }
+	else{
+		$Fetch[$key]["c_name"] = "unkow";
+        $Fetch[$key]["c_owner"] = "unkow";
+	}
 	$Fetch[$key]["editor_name"]=$user_info->getName($value["editor"]);
 	$Fetch[$key]["update_time"]=$value["modify_time"];
 

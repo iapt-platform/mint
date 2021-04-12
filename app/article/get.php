@@ -1,5 +1,5 @@
 <?php
-//查询term字典
+//获取article内容
 
 require_once "../path.php";
 require_once "../public/_pdo.php";
@@ -12,9 +12,10 @@ require_once "../article/function.php";
 
 if(isset($_GET["id"])){
 	//查询权限
+	$collectionId = $_GET["collection_id"];
 	$redis = redis_connect();
 	$article = new Article($redis); 
-	$power = $article->getPower($_GET["id"]);
+	$power = $article->getPower($_GET["id"],$collectionId);
 	if($power<10){
 		$output = array();
 		$output["title"]="error";

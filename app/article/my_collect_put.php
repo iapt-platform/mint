@@ -6,6 +6,20 @@ require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
 $respond=array("status"=>0,"message"=>"");
+if(!isset($_COOKIE["userid"])){
+	#不登录不能新建
+	$respond['status']=1;
+	$respond['message']="no power create article";
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;
+}
+if(!isset($_POST["title"])){
+	#无标题不能新建
+	$respond['status']=1;
+	$respond['message']="no title";
+	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;
+}
 PDO_Connect(""._FILE_DB_USER_ARTICLE_);
 
 $query="INSERT INTO collect ( id,  title  , subtitle  , summary , article_list   , owner, lang  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? ) ";

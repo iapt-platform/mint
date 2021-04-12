@@ -72,16 +72,27 @@ class Article
             return false;
         }
 	}
-	public function getPower($id){
-		#查询用户对此是否有权限		
-
+	public function getPower($id,$collectionId=""){
+		#查询用户对此是否有权限	
+		if(isset($_COOKIE["userid"])){
+			$userId = $_COOKIE["userid"];
+		}
+		else{
+			$userId=0;
+		}
+		if($this->_redis!==false){
+			$power = $this->_redis->hGet("power://article/".$id,$userId);
+			if($power!==FALSE){
+				return $power;
+			}
+		}
 		$iPower = 0;
 		$query = "SELECT owner,status FROM article WHERE id=?  ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
-			if(!isset($_COOKIE["userid"])  ){
+			if(!isset($_COOKIE["userid"])){
 				#未登录用户
 				if($channel["status"]==30){
 					#全网公开有读取和建议权限
@@ -91,24 +102,35 @@ class Article
 					#其他状态没有任何权限
 					return 0;
 				}
-				
 			}
-			if($channel["owner"]==$_COOKIE["userid"]){
-				return 30;
-			}
-			else if($channel["status"]>=30){
-				#全网公开的 可以提交pr
-				$iPower = 10;
+			else{
+				if($channel["owner"]==$_COOKIE["userid"]){
+					#自己的
+					return 30;
+				}
+				else if($channel["status"]>=30){
+					#全网公开的 可以提交pr
+					$iPower = 10;
+				}				
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
 		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		if($collectionId!=""){
+			$sharePowerCollection = share_get_res_power($_COOKIE["userid"],$collectionId);
+		}
+		else{
+			$sharePowerCollection =0;
+		}
 		if($sharePower>$iPower){
 			$iPower=$sharePower;
 		}
+		if($sharePowerCollection>$iPower){
+			$iPower=$sharePowerCollection;
+		}
+		$this->_redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
 		return $iPower;
 	}
-
 }
 
 ?>

@@ -3,6 +3,7 @@ require_once '../studio/index_head.php';
 ?>
 <body id="file_list_body" >
 
+	<script language="javascript" src="../article/my_article.js"></script>
 	<script language="javascript" src="../article/my_collect.js"></script>
 	<script language="javascript" src="../term/note.js"></script>
 	<script language="javascript" src="../term/term.js"></script>
@@ -17,7 +18,6 @@ require_once '../studio/index_head.php';
 	<style>
 	#collect {
 		background-color: var(--btn-border-color);
-		
 	}
 	#collect:hover{
 		background-color: var(--btn-border-color);
@@ -59,7 +59,7 @@ require_once '../studio/index_head.php';
 		<div class="tool_bar">
 			<div style="display:flex;">
 				<a href="../article/my_collect_index.php">返回</a>
-				<span><input  id="collect_title" type='input' name='title' value="" /></span>
+				<span id='collection_title'></span>
 			</div>
 			<div style="display:flex;">
 				<div id="aritcle_status"></div>
@@ -83,6 +83,9 @@ require_once '../studio/index_head.php';
 			</div>
 		</div>
 
+		<div id="collection_info"  class="file_list_block" style="">
+
+		</div>
 		<div id="article_list"  class="file_list_block" style="">
 
 		</div>

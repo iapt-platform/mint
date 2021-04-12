@@ -5,6 +5,7 @@ require_once '../public/function.php';
 require_once '../ucenter/function.php';
 require_once '../channal/function.php';
 require_once '../article/function.php';
+require_once '../collect/function.php';
 require_once '../redis/function.php';
 require_once '../doc/function.php';
 /*
@@ -66,6 +67,7 @@ function share_res_list_get($userid,$res_type=-1){
 	}
 	$channel = new Channal(); 
 	$article = new Article($redis); 
+	$collection = new CollectInfo($redis); 
 	foreach ($resList as $key => $res) {
 		# 获取资源标题 和所有者 
 		switch ($res["res_type"]) {
@@ -107,6 +109,19 @@ function share_res_list_get($userid,$res_type=-1){
 				break;
 			case 4:
 				# 4 Collection 文集
+				$aInfo = $collection->get($res["res_id"]);
+				if($aInfo){
+					$resList[$key]["res_title"]=$aInfo["title"];
+					$resList[$key]["res_owner_id"]=$aInfo["owner"];
+					$resList[$key]["status"]=$aInfo["status"];
+					$resList[$key]["lang"]=$aInfo["lang"];
+				}
+				else{
+					$resList[$key]["res_title"]="_unkown_";
+					$resList[$key]["res_owner_id"]="_unkown_";
+					$resList[$key]["status"]="0";
+					$resList[$key]["lang"]="unkow";
+				}
 				break;
 			case 5:
 				# code...
@@ -124,6 +139,10 @@ function share_res_list_get($userid,$res_type=-1){
 
 //获取对某个共享资源的权限
 function share_get_res_power($userid,$res_id){
+		if($userid==='0'){
+			#未登录用户 没有共享资源
+			return 0;
+		}
 		# 找我加入的群
 		$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");
 		$dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
