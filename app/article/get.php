@@ -18,10 +18,10 @@ if(isset($_GET["id"])){
 	$power = $article->getPower($_GET["id"],$collectionId);
 	if($power<10){
 		$output = array();
-		$output["title"]="error";
-		$output["subtitle"]="No Power For Read";
+		$output["title"]="Sorry对不起";
+		$output["subtitle"]="No Power For Read<br>没有阅读权限";
 		$output["summary"]="";
-		$output["content"]="该资源不是公开资源。您**没有**阅读权限。";
+		$output["content"]="This is a **private** rescouce, reading need special <guide gid='power_set'><b>power</b></guide>.<br>该资源是**私密**资源，阅读需要<guide gid='power_set'><b>权限</b></guide>。";
 		$output["owner"]="";
 		$output["username"]=array("username"=>"","nickname"=>"");
 		$output["status"]="";

@@ -10,7 +10,7 @@ guide {
 	background-repeat: no-repeat;
 	background-size: contain;
 	margin: 0 6px;
-	color: var(--tool-color);
+	color: var(--link-color);
 }
 guide:hover .guide_contence {
 	display: inline-block;

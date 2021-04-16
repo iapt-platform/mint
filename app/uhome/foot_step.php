@@ -28,6 +28,10 @@ include "../pcdl/html_head.php";
 <link href='../lib/fullcalendar/main.css' rel='stylesheet' />
 <script src='../lib/fullcalendar/main.js'></script>
 
+<script src="..app/public/js/highcharts/modules/stock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/data.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>

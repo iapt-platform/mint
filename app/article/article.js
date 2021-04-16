@@ -31,6 +31,7 @@ function articel_load(id, collection_id) {
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new();
+						guide_init();
 					}
 				} catch (e) {
 					console.error(e);

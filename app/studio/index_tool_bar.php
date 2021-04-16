@@ -111,7 +111,7 @@
 				<li id="article"  onclick="goto_url(this,'../article/my_article_index.php')">
 					<span  class="navi_icon">
 					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#article-1"></use>
+						<use xlink:href="../studio/svg/icon.svg#article_1"></use>
 					</svg>	
 					</span>	
 					<span class="navi_text">

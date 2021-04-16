@@ -200,7 +200,7 @@ function group_list(id, list) {
 									cardUrl = "../channal/card.php";
 									break;
 								case 3: //article
-									html += "<use xlink:href='../studio/svg/icon.svg#article-1'></use>";
+									html += "<use xlink:href='../studio/svg/icon.svg#article_1'></use>";
 									cardUrl = "../article/card.php";
 									doing +=
 										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>查看</a>";
