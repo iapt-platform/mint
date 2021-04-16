@@ -121,6 +121,12 @@ class SentPr{
 	}
 }
 
+class Sent_his
+{
+	private $dbh_his;
+	private $errorMsg="";
+}
+
 class Sent_DB
 {
     private $dbh_sent;
@@ -147,8 +153,20 @@ class Sent_DB
 		else{
 			return false;
 		}
-		
 	}
+	public function getSentDefaultByLan($book,$para,$begin,$end,$lang){
+		$query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND channal = ?  ";
+		$stmt = $this->dbh_sent->prepare($query);
+		if($stmt){
+			$stmt->execute(array($book,$para,$begin,$end,$channel));
+			$fetchDest = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $fetchDest;
+		}
+		else{
+			return false;
+		}
+	}
+
 	public function update($arrData){
 		/* 修改现有数据 */
 	

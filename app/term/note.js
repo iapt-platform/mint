@@ -69,13 +69,14 @@ function note_sent_edit_dlg_init() {
 }
 function note_init(input) {
 	if (input) {
-		let newString = input.replace(/\{\{/g, '<div class="note_shell"><note info="');
-		newString = newString.replace(/\}\}/g, '" ></note></div>');
-
 		let output = "<div>";
-		output += marked(newString);
+		output += marked(input);
 		output += "</div>";
-		return output;
+
+		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note info="');
+		newString = newString.replace(/\}\}/g, '" ></note></span>');
+
+		return newString;
 	} else {
 		return "";
 	}
@@ -155,70 +156,11 @@ function note_refresh_new() {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
 							if (_display && _display == "para") {
-								//段落模式
-								let strPalitext =
-									"<pali book='" +
-									iterator.book +
-									"' para='" +
-									iterator.para +
-									"' begin='" +
-									iterator.begin +
-									"' end='" +
-									iterator.end +
-									"' >" +
-									iterator.palitext +
-									"</pali>";
-								let divPali = $("#" + id)
-									.parent()
-									.children(".palitext");
-								if (divPali.length == 0) {
-									if (_channal != "") {
-										let arrChannal = _channal.split(",");
-										for (let index = arrChannal.length - 1; index >= 0; index--) {
-											const iChannal = arrChannal[index];
-											$("#" + id)
-												.parent()
-												.prepend("<div class='tran_div'  channal='" + iChannal + "'></div>");
-										}
-									}
-
-									$("#" + id)
-										.parent()
-										.prepend("<div class='palitext'></div>");
-								}
-								$("#" + id)
-									.parent()
-									.children(".palitext")
-									.first()
-									.append(strPalitext);
-								let htmlTran = "";
-								for (const oneTran of iterator.translation) {
-									let html =
-										"<span class='tran' lang='" +
-										oneTran.lang +
-										"' channal='" +
-										oneTran.channal +
-										"'>";
-									html += marked(
-										term_std_str_to_tran(
-											oneTran.text,
-											oneTran.channal,
-											oneTran.editor,
-											oneTran.lang
-										)
-									);
-									html += "</span>";
-									if (_channal == "") {
-										htmlTran += html;
-									} else {
-										$("#" + id)
-											.siblings(".tran_div[channal='" + oneTran.channal + "']")
-											.append(html);
-									}
-								}
-								$("#" + id).html(htmlTran);
+								//阅读模式
+								strHtml += render_read_mode_sent(iterator);
+								$("#" + id).html(strHtml);
 							} else {
-								//句子模式
+								//编辑模式
 								strHtml += note_json_html(iterator);
 								$("#" + id).html(strHtml);
 							}
@@ -240,6 +182,8 @@ function note_refresh_new() {
 						refresh_pali_script();
 						//把巴利语单词用<w>分隔用于点词查询等
 						splite_pali_word();
+						//处理编辑框消息
+						tran_sent_textarea_event_init();
 					} catch (e) {
 						console.error(e);
 					}
@@ -251,6 +195,63 @@ function note_refresh_new() {
 	}
 }
 
+//渲染阅读模式句子
+function render_read_mode_sent(iterator) {
+	let id = iterator.id;
+	let strPalitext =
+		"<pali book='" +
+		iterator.book +
+		"' para='" +
+		iterator.para +
+		"' begin='" +
+		iterator.begin +
+		"' end='" +
+		iterator.end +
+		"' >" +
+		iterator.palitext +
+		"</pali>";
+	let divPali = $("#" + id)
+		.parent()
+		.parent()
+		.children(".palitext");
+	if (divPali.length == 0) {
+		if (_channal != "") {
+			let arrChannal = _channal.split(",");
+			for (let index = arrChannal.length - 1; index >= 0; index--) {
+				const iChannal = arrChannal[index];
+				$("#" + id)
+					.parent()
+					.parent()
+					.prepend("<div class='tran_div'  channal='" + iChannal + "'></div>");
+			}
+		}
+
+		$("#" + id)
+			.parent()
+			.parent()
+			.prepend("<div class='palitext'></div>");
+	}
+	$("#" + id)
+		.parent()
+		.parent()
+		.children(".palitext")
+		.first()
+		.append(strPalitext);
+	let htmlTran = "";
+	for (const oneTran of iterator.translation) {
+		let html = "<span class='tran' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
+		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
+		html += "</span>";
+		if (_channal == "") {
+			htmlTran += html;
+		} else {
+			$("#" + id)
+				.siblings(".tran_div[channal='" + oneTran.channal + "']")
+				.append(html);
+		}
+	}
+	return htmlTran;
+}
 //生成channel列表
 function note_channal_list() {
 	console.log("note_channal_list start");
@@ -461,6 +462,7 @@ function note_ref_init() {
 	});
 }
 /*
+生成编辑模式句子块
 id
 palitext
 tran
@@ -528,18 +530,19 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += " </div>";
 
+	output += "<div class='pali_div'>";
 	output += "<div class='palitext palitext_roma'>" + in_json.palitext + "</div>";
 	output += "<div class='palitext palitext1'></div>";
 	output += "<div class='palitext palitext2'></div>";
+	output += "</div>";
 
-	//output += "<div id='translation_div'>";
+	output += "<div class='translation_div'>";
 	for (const iterator of in_json.translation) {
 		output += render_one_sent_tran_a(iterator);
-		//output += render_one_sent_tran(in_json.book, in_json.para, in_json.begin, in_json.end, iterator);
 	}
 	//所选全部译文结束
-	//output += "</div>";
-	//未选择的其他译文开始
+	output += "</div>";
+	//工具栏开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
 	output += "<div class='tool_bar' sent='";
@@ -607,10 +610,16 @@ function note_json_html(in_json) {
 
 	output += "<span class='tool_right'>";
 	//出处路径开始
-	output += "<span class='ref'>" + in_json.ref;
+	output += "<span class='ref'>";
+	output += "<span class='book_name tooltip'>" + in_json.booktitle;
+	output += "<span class='tooltiptext tooltip-bottom'>";
+	output += in_json.ref;
+	output += "</span>";
 	output += "<span class='sent_no'>";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
 	output += "<span>";
+	output += "</span>";
+
 	output += "</span>";
 	//出处路径结束
 	output += "</span>";
@@ -626,6 +635,22 @@ function note_json_html(in_json) {
 
 	return output;
 }
+
+//设置取消输入框的编辑模式
+function sent_tran_set_edit_mode(obj, isEditMode) {
+	$(".sent_tran").removeClass("edit_mode");
+	if (isEditMode) {
+		let jqObj = $(obj);
+		while (!jqObj.hasClass("sent_tran")) {
+			jqObj = jqObj.parent();
+			if (!jqObj) {
+				return;
+			}
+		}
+		jqObj.addClass("edit_mode");
+	}
+}
+
 function sent_tran_edit(obj) {
 	let jqObj = $(obj);
 	while (!jqObj.hasClass("sent_tran")) {
@@ -868,22 +893,25 @@ function render_one_sent_tran_a(iterator) {
 
 	html += '<div class="edit">';
 	html += '<div class="input">';
-	html += "<textarea dbid='" + iterator.id + "' ";
+	html += "<textarea class='tran_sent_textarea' dbid='" + iterator.id + "' ";
 	html += "sid='" + sid + "' ";
 	html += "channel='" + iterator.channal + "' ";
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
-		html += 'onchange="note_pr_save(this)"';
+		html += ' is_pr="true" onchange1="note_pr_save(this)"';
 	} else {
-		html += 'onchange="note_sent_save_a(this)"';
+		html += 'is_pr="false" onchange1="note_sent_save_a(this)"';
 	}
 
 	html += ">" + iterator.text + "</textarea>";
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	if (parseInt(iterator.mypower) < 20) {
-		html += "<b>提交修改建议</b> ";
+		html += "提交<b>修改建议</b> ";
 	}
-	html += "点击输入框外面自动<a onclick='sent_tran_edit(this)'>" + gLocal.gui.save + "</a> 支持markdown语法";
+	html +=
+		"按Esc <a onclick='tran_sent_edit_cancel(this)'>取消</a> 按回车<a onclick='tran_sent_save(this)'>" +
+		gLocal.gui.save +
+		"</a> 按shift+回车换行 支持markdown语法";
 	html += "</div>";
 	html += "</div>";
 
@@ -938,6 +966,39 @@ function render_one_sent_tran_a(iterator) {
 	html += '<div class="pr_content"></div>';
 	html += "</div>";
 	return html;
+}
+
+function tran_sent_textarea_event_init() {
+	let textarea = document.querySelectorAll(".tran_sent_textarea");
+	for (let iterator of textarea) {
+		iterator.onkeydown = function (e) {
+			let menu = document.querySelector("#menu");
+			switch (e.key) {
+				case "Enter":
+					if (menu && menu.style.display == "block") {
+						let value = textarea.value;
+						let selectionStart = textarea.selectionStart;
+						let str1 = value.slice(0, selectionStart);
+						let str2 = value.slice(selectionStart);
+						textarea.value = str1 + data[menuFocusIndex] + "]]" + str2;
+						menu.style.display = "none";
+						return false;
+					} else {
+						if (!e.shiftKey) {
+							//回车存盘
+							tran_sent_save(e.currentTarget);
+							return false;
+						}
+					}
+					break;
+				case "Escape":
+					tran_sent_edit_cancel(e.currentTarget);
+					break;
+				default:
+					break;
+			}
+		};
+	}
 }
 
 function render_one_sent_tran(book, para, begin, end, iterator) {
@@ -1164,7 +1225,6 @@ function set_more_button_display() {
 								for (const iterator of arrSent) {
 									if (_channal.indexOf(iterator.channal) == -1) {
 										html += render_one_sent_tran_a(iterator);
-										//html += "<div>" + marked(iterator.text) + "</div>";
 									}
 								}
 								html += "</div>";
@@ -1237,7 +1297,25 @@ function note_edit_sentence(book, para, begin, end, channal) {
 
 	alert("未找到句子");
 }
-function update_note_sent_tran(obj) {}
+function tran_sent_edit_cancel(obj) {
+	sent_tran_set_edit_mode(obj, false);
+}
+function tran_sent_save(obj) {
+	let sentDiv = find_sent_tran_div(obj);
+	if (sentDiv) {
+		let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
+		let isPr = $(textarea).attr("is_pr");
+		if (isPr == "true") {
+			note_pr_save(textarea);
+		} else {
+			note_sent_save_a(textarea);
+		}
+		sent_tran_set_edit_mode(textarea, false);
+	} else {
+		console.error("sent div not found");
+	}
+}
+
 //保存pr句子 新
 function note_pr_save(obj) {
 	let id = $(obj).attr("dbid");
@@ -1298,7 +1376,7 @@ function note_sent_save_a(obj) {
 		$(sent_tran_div).find(".preview").addClass("loading");
 	}
 }
-
+function update_sent_tran(sentData) {}
 function sent_save_callback(data) {
 	let result = JSON.parse(data);
 	if (result.status > 0) {
@@ -1539,6 +1617,15 @@ function slider_show(obj) {
 }
 
 function find_sent_tran_div(obj) {
+	let jqObj = $(obj);
+	while (!jqObj.hasClass("sent_tran")) {
+		jqObj = jqObj.parent();
+		if (!jqObj) {
+			return false;
+		}
+	}
+	return jqObj;
+	/*
 	let parent = obj.parentNode;
 	while (parent.nodeType == 1) {
 		if ($(parent).hasClass("sent_tran")) {
@@ -1550,6 +1637,7 @@ function find_sent_tran_div(obj) {
 	}
 
 	return false;
+	*/
 }
 //显示或隐藏pr数据
 function note_pr_show(channel, id) {

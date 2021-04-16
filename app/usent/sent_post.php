@@ -38,7 +38,7 @@ $cooperation = 0;
 $text_lang = "en";
 $channel_status = 0;
 if (isset($_POST["channal"])) {
-    PDO_Connect("" . _FILE_DB_CHANNAL_);
+    PDO_Connect( _FILE_DB_CHANNAL_);
     $query = "SELECT owner, lang , status FROM channal WHERE id=?";
     $fetch = PDO_FetchRow($query, array($_POST["channal"]));
 
