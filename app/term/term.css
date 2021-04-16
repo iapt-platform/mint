@@ -115,11 +115,26 @@
 .tran_div:last-child {
 	border-bottom: none;
 }
-
-note:hover chapter {
-	display: inline;
+.ref .tooltiptext {
+	background-color: seashell;
 }
-.ref > chapter:first-child {
+.ref .tooltip .tooltiptext {
+	right: 0;
+	box-shadow: 0 0 10px rgb(0 0 0 / 15%);
+}
+.ref .tooltip .tooltip-bottom::after {
+	left: 90%;
+	border-color: transparent transparent seashell transparent;
+}
+.ref .tooltip-bottom {
+	top: 100%;
+	left: unset;
+	margin-left: unset;
+}
+note:hover chapter {
+	/*display: inline;*/
+}
+.ref > .book_name > chapter:first-child {
 	display: inline;
 }
 chapter {
@@ -135,6 +150,9 @@ chapter:hover {
 	color: var(--link-color);
 	/*text-decoration: underline;*/
 }
+.tooltiptext chapter {
+	display: inline;
+}
 para {
 	background-color: var(--drop-bg-color);
 	padding: 0 4px;
@@ -142,6 +160,10 @@ para {
 	cursor: pointer;
 	color: var(--btn-border-color);
 	border-radius: 5px;
+	display: none;
+}
+.tooltiptext para {
+	display: inline;
 }
 para:hover {
 	text-decoration: underline;
@@ -297,8 +319,7 @@ note .ref {
 	overflow-x: scroll;
 	max-width: 45%;
 	white-space: nowrap;
-	position: absolute;
-	right: 1em;
+	text-align: right;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
@@ -726,4 +747,7 @@ li.active {
 }
 .channel_list {
 	margin-right: 4px;
+}
+.pali_div {
+	padding: 0 10px 5px 10px;
 }

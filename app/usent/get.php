@@ -6,12 +6,16 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../channal/function.php";
+require_once "../redis/function.php";
 require_once "../ucenter/function.php";
+require_once "../share/function.php";
+
+$redis = redis_connect();
 
 #查询有阅读权限的channel
 $channal_list = array();
 if (isset($_COOKIE["userid"])) {
-    PDO_Connect("" . _FILE_DB_CHANNAL_);
+    PDO_Connect(_FILE_DB_CHANNAL_);
     $query = "SELECT id from channal where owner = ?   limit 0,100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
@@ -20,17 +24,11 @@ if (isset($_COOKIE["userid"])) {
     }
 
     # 找协作的
-    $Fetch_coop = array();
-    $query = "SELECT channal_id FROM cooperation WHERE  user_id = ? ";
-    $coop_channal = PDO_FetchAll($query, array($_COOKIE["userid"]));
-    if (count($coop_channal) > 0) {
-        foreach ($coop_channal as $key => $value) {
-            # code...
-            $channal_list[] = $value["channal_id"];
-        }
-    }
-    /*  创建一个填充了和params相同数量占位符的字符串 */
-
+	$coop_channal = share_res_list_get($_COOKIE["userid"],2);
+	foreach ($coop_channal as $key => $value) {
+		# code...
+		$channal_list[] = $value["res_id"];
+	}
 }
 if (count($channal_list) > 0) {
     $channel_place_holders = implode(',', array_fill(0, count($channal_list), '?'));
@@ -41,8 +39,7 @@ if (count($channal_list) > 0) {
 
 # 查询有阅读权限的channel 结束
 
-$dns = "" . _FILE_DB_SENTENCE_;
-$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh = new PDO(_FILE_DB_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 /* 开始一个事务，关闭自动提交 */
 
@@ -67,13 +64,14 @@ if (isset($_GET["sentences"])) {
 }
 
 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$channel_info = new Channal();
+$channel_info = new Channal($redis);
 $user_info = new UserInfo();
 
 foreach ($Fetch as $key => $value) {
     # code...
     $channel = $channel_info->getChannal($value["channal"]);
     if ($channel) {
+		$Fetch[$key]["mypower"] = $channel_info->getPower($value["channal"]);
         $Fetch[$key]["c_name"] = $channel["name"];
         $Fetch[$key]["c_owner"] = $user_info->getName($channel["owner"]);
         $Fetch[$key]["channalinfo"] = $channel;

@@ -9,7 +9,7 @@ var _author = "";
 var _display = "para";
 var arrMyTerm = new Array();
 var _sent_data = new Array();
-var link_str="";
+var link_str = "";
 
 palicanon_load_term();
 
@@ -31,11 +31,11 @@ function reader_load() {
 			if (_sent_data.sentences.length > 0) {
 				for (const iterator of _sent_data.sentences) {
 					if (currPara != iterator.paragraph) {
-						tpl += "\n";
+						tpl += "\n\n";
 						currPara = iterator.paragraph;
 						tpl += "```para\n";
 						tpl += currPara + "\n";
-						tpl += "```\n";
+						tpl += "```\n\n";
 					}
 					tpl +=
 						"{{" +
@@ -48,7 +48,7 @@ function reader_load() {
 						iterator.end +
 						"}}\n";
 				}
-				link_str=tpl;
+				link_str = tpl;
 				$("#contents").html(note_init(tpl));
 				note_refresh_new();
 				reader_draw_para_menu();
@@ -206,7 +206,7 @@ function reader_get_path() {
 			});
 			var bookTitle = $("chapter").first().html();
 			let suttaTitle = $("chapter").last().html();
-			
+
 			$("#pali_pedia").html(bookTitle);
 			$("#article_title").html(suttaTitle);
 			$("#page_title").text(suttaTitle);

@@ -5,6 +5,7 @@ require_once "../public/function.php";
 require_once "../channal/function.php";
 require_once "../ucenter/function.php";
 require_once "../usent/function.php";
+require_once "../pali_text/function.php";
 require_once "../redis/function.php";
 
 $redis = redis_connect();
@@ -12,6 +13,8 @@ $redis = redis_connect();
 $_channal = new Channal();
 $_userinfo = new UserInfo();
 $_sentPr = new SentPr($redis);
+$_pali_text = new PaliText($redis);
+$_pali_book = new PaliBook($redis);
 
 $_data = array();
 if (isset($_POST["data"])) {
@@ -136,10 +139,6 @@ foreach ($_data as $key => $value) {
 				$pali_sim = $row["count"]; //explode(",",$row["sim_sents"]) ;
 			}		
     }
-
-
-    
-
     //find out translation 查询译文
 
     $tran = "";
@@ -162,7 +161,7 @@ foreach ($_data as $key => $value) {
         if (empty($_setting["channal"])) {
 			#没有指定channel
             if ($sentChannal == "") {
-				#句子信息也没指定channel
+				#句子信息也没指定channel 查找默认译文
                 $parm = array($bookId, $para, $begin, $end);
                 $parm = array_merge_recursive($parm, $channal_list);
                 $stmt->execute($parm);
@@ -262,7 +261,7 @@ foreach ($_data as $key => $value) {
     }
     foreach ($translation as $key => $value) {
         # code...
-        if ($value["channal"]) {
+        if (!empty($value["channal"])) {
             $translation[$key]["channalinfo"] = $tran_channal[$value["channal"]];
             $translation[$key]["mypower"] = $tran_channal[$value["channal"]]["mypower"];
             $translation[$key]["status"] = $tran_channal[$value["channal"]]["status"];
@@ -275,14 +274,26 @@ foreach ($_data as $key => $value) {
     }
 
     //查询路径
-    $para_path = _get_para_path($bookId, $para);
+	$arrPath = $_pali_text->getPath($bookId, $para);
+	if(count($arrPath)>0){
+		$ref = $_pali_text->getPathHtml($arrPath);
+		$pathTopLevel = $arrPath[count($arrPath)-1];
+		$bookTitle = $_pali_book->getBookTitle($pathTopLevel["book"],$pathTopLevel["para"]);
+	}
+	else{
+		$ref="";
+		$bookTitle="";
+	}
+
+    //$para_path = _get_para_path($bookId, $para);
 
     $output[] = array("id" => $id,
         "palitext" => $palitext,
         "pali_sent_id" => $pali_text_id,
         "tran" => $tran,
         "translation" => $translation,
-        "ref" => $para_path,
+        "ref" => $ref,
+		"booktitle"=>$bookTitle,
         "tran_count" => $tran_count,
         "book" => $bookId,
         "para" => $para,

@@ -1,29 +1,12 @@
 <?php
 require_once "../path.php";
 require_once "../share/function.php";
+require_once "../db/table.php";
 
-function channel_get_title($id)
+class Channal extends Table
 {
-    if (isset($id)) {
-		PDO_Connect( _FILE_DB_CHANNAL_);
-		$query = "SELECT name FROM channal  WHERE id = ? ";
-		$channel = PDO_FetchRow($query, array($id));
-		if ($channel) {
-			return $channel["name"];
-		} else {
-			return "";
-		}
-    } else {
-        return "";
-    }
-}
-
-class Channal
-{
-    private $dbh;
-    public function __construct() {
-        $this->dbh = new PDO(_FILE_DB_CHANNAL_, "", "",array(PDO::ATTR_PERSISTENT=>true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+    function __construct($redis=false) {
+		parent::__construct(_FILE_DB_CHANNAL_, "channal", "", "",$redis);
     }
 
     public function getChannal($id){
@@ -54,9 +37,29 @@ class Channal
 			return "";
 		}
 	}
+	public function insert($data){
+
+	}
+	public function update($data){
+
+	}
+	public function delete($data){
+
+	}
 	public function getPower($id){
 		#查询用户对此channel是否有权限		
-
+		if(isset($_COOKIE["userid"])){
+			$userId = $_COOKIE["userid"];
+		}
+		else{
+			$userId='0';
+		}
+		if($this->redis!==false){
+			$power = $this->redis->hGet("power://channel/".$id,$userId);
+			if($power!==FALSE){
+				return $power;
+			}
+		}
 		$channelPower = 0;
 		$query = "SELECT owner,status FROM channal WHERE id=? and status>0 ";
 		$stmt = $this->dbh->prepare($query);
@@ -88,6 +91,10 @@ class Channal
 		if($sharePower>$channelPower){
 			$channelPower=$sharePower;
 		}
+		if($this->redis){
+			$this->redis->hSet("power://channel/".$id,$_COOKIE["userid"],$channelPower);
+		}
+		
 		return $channelPower;
 	}
 
