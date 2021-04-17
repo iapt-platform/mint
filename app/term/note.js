@@ -567,18 +567,17 @@ function note_json_html(in_json) {
 	//其他译文工具条
 	output += "<span class='other_bar'  >";
 	output +=
-		"<span class='other_tran_span' title='" +
+		"<span class='other_tran_span' title='🧲" +
 		gLocal.gui.other +
 		gLocal.gui.translation +
-		"'>🧲" +
-		gLocal.gui.translation +
+		"'><svg class='icon' style='fill: var(--box-bg-color1)'><use xlink:href=\"../studio/svg/icon.svg#more_tran\"></svg>" +gLocal.gui.translation +
 		"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
 
 	//手工义注
-	output += "<span class='other_bar'  >";
+	output += "<span class='other_bar'>";
 	output +=
 		"<span class='other_tran_span commentray' title='📔" +
 		gLocal.gui.vannana +
@@ -909,9 +908,9 @@ function render_one_sent_tran_a(iterator) {
 		html += "提交<b>修改建议</b> ";
 	}
 	html +=
-		"按Esc <a onclick='tran_sent_edit_cancel(this)'>取消</a> 按回车<a onclick='tran_sent_save(this)'>" +
+		"Esc <a onclick='tran_sent_edit_cancel(this)'>"+gLocal.gui.cancel+"</a>shift+按回车<a onclick='tran_sent_save(this)'>" +
 		gLocal.gui.save +
-		"</a> 按shift+回车换行 支持markdown语法";
+		"</a> 按回车换行 支持markdown语法";
 	html += "</div>";
 	html += "</div>";
 
@@ -984,7 +983,7 @@ function tran_sent_textarea_event_init() {
 						menu.style.display = "none";
 						return false;
 					} else {
-						if (!e.shiftKey) {
+						if (e.shiftKey) {
 							//回车存盘
 							tran_sent_save(e.currentTarget);
 							return false;
@@ -1098,7 +1097,7 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "<ul class='channel_list lang_0' >";
-	html += '<li style="border-bottom: solid 1px;">';
+	html += '<li>';
 	html += first_lang;
 	html += "</li>";
 	for (const iterator of _my_channal) {
@@ -1128,7 +1127,7 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	html+="<ul class='channel_list lang_1'>";
-	html += '<li style="border-bottom: solid 1px;">';
+	html += '<li>';
 	html += gLocal.gui.other;
 	html += "</li>";
 	for (const iterator of _my_channal) {
@@ -1158,7 +1157,7 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	html+="<ul class='channel_list lang_2'>";
-	html += '<li style="border-bottom: solid 1px;">';
+	html += '<li>';
 	html += gLocal.gui.collaborate;
 	html += "</li>";
 	for (const iterator of _my_channal) {

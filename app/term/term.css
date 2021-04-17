@@ -132,7 +132,9 @@
 	margin-left: unset;
 }
 note:hover chapter {
-	/*display: inline;*/
+	display: inline;
+
+	/*position: absolute;*/
 }
 .ref > .book_name > chapter:first-child {
 	display: inline;
@@ -294,7 +296,7 @@ note n {
 .term_word_head_pali {
 	text-transform: capitalize;
 	font-size: 200%;
-	margin: 0.5em 0;
+	margin-top: 0.5em;
 }
 .term_word_head {
 	border-bottom: 1px solid #cecece;
@@ -315,18 +317,14 @@ note n {
 
 note .ref {
 	font-size: 75%;
-	white-space: nowrap;
-	overflow-x: scroll;
+	white-space: normal;
 	max-width: 45%;
-	white-space: nowrap;
 	text-align: right;
+	position: absolute;
+	right: 1em;
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
-	position: absolute;
-	overflow: hidden;
-	white-space: nowrap;
-	overflow-x: scroll;
 }
 
 .progress_bar_done {
@@ -648,14 +646,14 @@ pw {
 .tool_bar > .right {
 	position: absolute;
 	right: 0;
-	margin-top: -2.6em;
+	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
 	background-color: var(--bg-color);
 	border: 1px solid var(--border-line-color);
 	border-radius: 6px;
 	padding: 3px;
-	margin-right: 20px;
+	/*margin-right: 20px;*/
 }
 .sent_tran_inner:hover .tool_bar > .right {
 	display: block;
@@ -750,4 +748,12 @@ li.active {
 }
 .pali_div {
 	padding: 0 10px 5px 10px;
+}
+.case_dropdown {
+	min-width: unset;
+}
+.channel_list > li:first-child {
+	border-bottom: solid 1px;
+	justify-content: center;
+	font-weight: bold;
 }
