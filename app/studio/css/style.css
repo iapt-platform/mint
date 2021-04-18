@@ -3072,6 +3072,7 @@ th {
 .tooltip:hover .tooltip-top {
 	top: -180%;
 }
+
 .tooltip .tooltip-top::after {
 	content: " ";
 	position: absolute;
@@ -3087,7 +3088,9 @@ th {
 	left: 50%;
 	margin-left: -60px;
 }
-
+.tooltip:hover .tooltip-bottom {
+	top: 120%;
+}
 .tooltip-bottom::after {
 	content: "";
 	position: absolute;

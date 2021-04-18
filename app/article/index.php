@@ -39,6 +39,14 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
+	if(isset($_GET["mode"]) && $_GET["mode"]=="edit"){
+		$_mode = "edit";
+		echo "_mode='edit';";
+	}
+	else{
+		$_mode = "read";
+		echo "_mode='read';";
+	}
 	?>
 	</script>
 
@@ -69,38 +77,6 @@ require_once "../pcdl/html_head.php";
 			echo "<a href='../article/frame.php?id=".$_GET["id"];
 			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
 			
-			
-			if(isset($_GET["display"]) && $_GET["display"]=="para"){
-				echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
-				echo $_local->gui->each_paragraph;
-				echo "</button>";
-			}
-			else{
-				
-				echo "<button class='icon_btn'>";
-				echo "<a href='../article/?id=".$_GET["id"];
-				if(isset($_GET["channal"])){
-					echo "&channal=".$_GET["channal"];
-				}
-				echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
-				echo $_local->gui->each_paragraph;
-				echo "</a>";
-				echo "</button>";
-			}
-	
-			if(isset($_GET["display"]) && $_GET["display"]=="sent"){
-				echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>";
-				echo $_local->gui->each_sentence;
-				echo "</button>";
-			}
-			else{
-				echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
-				if(isset($_GET["channal"])){
-					echo "&channal=".$_GET["channal"];
-				}
-				echo "&display=sent";
-				echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
-			}
 		}
 
 		?>
@@ -118,7 +94,16 @@ require_once "../pcdl/html_head.php";
 </div>
 <div id="contents_view">
 	<div id="contents_div">
-		<div id="contents">
+		<div id="contents" 
+		<?php
+				if($_mode=="read"){
+					echo 'class="para_mode horizontal"';
+				}
+				else{
+					echo 'class="sent_mode vertical"';
+				}
+				?>
+		>
 		<?php echo $_local->gui->loading; ?>...
 		</div>
 		<div id="contents_foot">

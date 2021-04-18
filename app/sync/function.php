@@ -19,12 +19,22 @@ function do_sync($param)
     switch ($op) {
         case "sync":
             {
-                $time = $_POST["time"];
-                $query = "select {$param->uuid} as guid, {$param->modify_time} from {$param->table}  where {$param->receive_time} > '{$time}' limit 0,10000";
-                $stmt = $PDO->query($query);
-                $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $iFetch = count($Fetch);
-                echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));
+				if(isset($_POST["time"])){
+					$time = $_POST["time"];
+					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->modify_time} > '{$time}' order by {$param->modify_time} ASC  limit 0,1000";
+					$stmt = $PDO->query($query);
+					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$iFetch = count($Fetch);
+					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));					
+				}
+				else if(isset($_POST["id"])){
+					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} from {$param->table}  where {$param->uuid} in ({$_POST["id"]})  limit 0,1000";
+					$stmt = $PDO->query($query);
+					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$iFetch = count($Fetch);
+					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));						
+				}
+
                 break;
             }
         case "get":

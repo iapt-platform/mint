@@ -647,7 +647,7 @@ pw {
 	display: none;
 }
 .foot_bar .info {
-	color: var(--main-color);
+	color: var(--btn-border-line-color);
 }
 .tool_bar > .right {
 	position: absolute;
@@ -746,4 +746,64 @@ li.active {
 
 .pali_div {
 	padding: 0 10px 5px 10px;
+}
+w {
+	cursor: pointer;
+}
+w:hover {
+	text-decoration: underline;
+}
+
+/*纵向*/
+.vertical .para_div {
+	flex-direction: column;
+}
+.vertical .note_shell > note > .note_body {
+	flex-direction: column;
+}
+
+.para_div {
+	display: flex;
+}
+.note_shell > note > .note_body {
+	display: flex;
+}
+/*段落模式 横向*/
+.horizontal .para_div {
+	flex-direction: row;
+}
+.horizontal .palitext_div {
+	flex: 5;
+}
+.horizontal .para_tran_div {
+	flex: 5;
+}
+/*句子模式 横向*/
+
+.horizontal .note_shell > note > .note_body {
+	flex-direction: row;
+}
+.horizontal .palitext_div {
+	flex: 5;
+}
+.horizontal .sent_tran_div {
+	flex: 5;
+}
+
+/*段落模式*/
+.para_mode .para_div {
+	display: flex;
+}
+.para_mode .note_shell {
+	display: none;
+}
+/*句子模式*/
+.sent_mode .para_div {
+	display: none;
+}
+.sent_mode .note_shell {
+	display: block;
+}
+.tran_sent p {
+	display: inline;
 }

@@ -66,6 +66,8 @@
 }
 #contents_div {
 	flex: 7;
+	padding: 0 1em 0 30px;
+	width: 70vw;
 }
 #contents {
 }

@@ -7,6 +7,9 @@ require_once '../channal/function.php';
 require_once '../ucenter/function.php';
 require_once '../share/function.php';
 
+$log = "";
+$timeStart = microtime(true);
+
 $_data = array();
 $output = array();
 if (isset($_POST["data"])) {
@@ -42,6 +45,9 @@ if (isset($_COOKIE["userid"])) {
 		$channal_list[] = $value["id"];
 		$channel_power[$value["id"]]=30;
     }
+	$time = microtime(true);
+	$log .= $time-$timeStart ." - 找自己的结束". PHP_EOL;
+	$timeStart = $time;
 
 	# 找协作的
 	$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
@@ -54,6 +60,9 @@ if (isset($_COOKIE["userid"])) {
 			}
 		}
 	}
+	$time = microtime(true);
+	$log .= $time-$timeStart ." - 找协作的结束". PHP_EOL;
+	$timeStart = $time;
 }
 if (count($channal_list) > 0) {
 	#  创建一个填充了和params相同数量占位符的字符串 
@@ -64,6 +73,9 @@ if (count($channal_list) > 0) {
 }
 
 # 查询有阅读权限的channel 结束
+$time = microtime(true);
+$log .= $time-$timeStart ." - 查询有阅读权限的channel 结束". PHP_EOL;
+$timeStart = $time;
 
 $final = array();
 $article_len = 0;
@@ -119,6 +131,10 @@ foreach ($_data as $key => $value) {
 
 }
 
+$time = microtime(true);
+$log .= $time-$timeStart ." - 查询句子长度 结束 ". PHP_EOL;
+$timeStart = $time;
+
 foreach ($channal as $key => $value) {
     # 计算句子的完成分布
     $arr_sent_final = array();
@@ -150,5 +166,9 @@ foreach ($channal as $key => $value) {
 	}
     $output[] = $channalInfo;
 }
+
+$time = microtime(true);
+$log .= $time-$timeStart ." - 计算句子的完成分布 结束 ". PHP_EOL;
+$timeStart = $time;
 
 echo json_encode($output, JSON_UNESCAPED_UNICODE);

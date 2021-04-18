@@ -4,7 +4,7 @@ require_once "../path.php";
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html >
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -23,14 +23,15 @@ require_once "../path.php";
 			<div id="wiki_search" style="width:100%;">
 				<div>
 					<h3>Server Address</h3>
-					<input id="sync_server_address" type="input" placeholder="server address" value="https://www.wikipali.org/demo" style="width:30em;" />
+					<input id="sync_server_address" type="input" placeholder="server address" value="https://www.wikipali.org" style="width:30em;" />
 					<h3>Local Address</h3>
 					<input id="sync_local_address" type="input" placeholder="local address" value="" style="width:30em;" />
 					
-					<button onclick="sync_start()">Start</button>
+					<button onclick="sync_pull()">pull</button>
+					<button onclick="sync_push()">push</button>
 				</div>
-
 			</div>
+			<div>上次更新时间：</div>
 			<div id="sync_result">
 
 			</div>

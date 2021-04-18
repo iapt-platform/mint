@@ -13,3 +13,17 @@
 	margin-bottom: auto;
 	padding-left: 0.5em;
 }
+.language-para {
+	display: none;
+}
+#contents_div {
+	flex: 7;
+	padding: 5px;
+	width: 100%;
+}
+#contents .para_div {
+	flex-direction: column;
+}
+#contents .note_shell > note > .note_body {
+	flex-direction: column;
+}
