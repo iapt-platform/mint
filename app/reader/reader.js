@@ -255,3 +255,29 @@ function set_channal(channalid) {
 function edit_wbw(book, para) {
 	wbw_channal_list_open(book, [para]);
 }
+
+function setMode(mode = "read") {
+	let url = "../reader/?view=" + _reader_view;
+	if (_reader_book != -1) {
+		url += "&book=" + _reader_book;
+	}
+	if (_reader_para != -1) {
+		url += "&para=" + _reader_para;
+	}
+	if (_reader_begin != -1) {
+		url += "&begin=" + _reader_begin;
+	}
+	if (_reader_end != -1) {
+		url += "&end=" + _reader_end;
+	}
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (mode != "") {
+		url += "&mode=" + mode;
+	}
+	location.assign(url);
+}

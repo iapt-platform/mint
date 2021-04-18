@@ -4,7 +4,7 @@ function get_setting()
 {
 
     if (!isset($_COOKIE["userid"])) {
-        $setting = array();
+        $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
     } else {
         $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
         //打开数据库

@@ -175,3 +175,16 @@ function set_channal(channalid) {
 	}
 	location.assign(url);
 }
+function setMode(mode = "read") {
+	let url = "../article/index.php?id=" + _articel_id;
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (mode != "") {
+		url += "&mode=" + mode;
+	}
+	location.assign(url);
+}

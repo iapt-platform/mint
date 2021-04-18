@@ -1,4 +1,5 @@
 var _display = "";
+var _mode = "read";
 var _word = "";
 var _channal = "";
 var _lang = "";
@@ -155,7 +156,7 @@ function note_refresh_new() {
 						for (const iterator of sentData) {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
-							if (_display && _display == "para") {
+							if (_mode && _mode == "read") {
 								//阅读模式
 								strHtml += render_read_mode_sent(iterator);
 								$("#" + id).html(strHtml);
@@ -210,47 +211,66 @@ function render_read_mode_sent(iterator) {
 		"' >" +
 		iterator.palitext +
 		"</pali>";
-	let divPali = $("#" + id)
-		.parent()
-		.parent()
-		.children(".palitext");
-	if (divPali.length == 0) {
+
+	if (
+		$("#" + id)
+			.parent()
+			.parent()
+			.children(".para_div").length == 0
+	) {
+		let tranDivHtml = "";
 		if (_channal != "") {
 			let arrChannal = _channal.split(",");
 			for (let index = arrChannal.length - 1; index >= 0; index--) {
 				const iChannal = arrChannal[index];
-				$("#" + id)
-					.parent()
-					.parent()
-					.prepend("<div class='tran_div'  channal='" + iChannal + "'></div>");
+				tranDivHtml += "<div class='tran_div_channel'  channal='" + iChannal + "'></div>";
 			}
+		} else {
+			tranDivHtml = "<div class='tran_div_channel'  channal='0'></div>";
 		}
-
 		$("#" + id)
 			.parent()
 			.parent()
-			.prepend("<div class='palitext'></div>");
+			.prepend(
+				"<div class='para_div'><div class='palitext_div'><div class='palitext palitext1'></div><div class='palitext palitext2'></div></div><div class='para_tran_div'>" +
+					tranDivHtml +
+					"</div></div>"
+			);
 	}
+
 	$("#" + id)
 		.parent()
 		.parent()
-		.children(".palitext")
+		.children(".para_div")
+		.find(".palitext")
 		.first()
 		.append(strPalitext);
-	let htmlTran = "";
+
+	let htmlSent = "";
+	htmlSent += "<div class='note_body'>";
+	htmlSent += "<div class='palitext_div'>";
+	htmlSent += "<div class='palitext palitext1'>" + strPalitext + "</div>";
+	htmlSent += "<div class='palitext palitext2'></div>";
+	htmlSent += "</div>";
+	htmlSent += "<div class='sent_tran_div'>";
 	for (const oneTran of iterator.translation) {
-		let html = "<span class='tran' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
+		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
 		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
 		html += "</span>";
-		if (_channal == "") {
-			htmlTran += html;
-		} else {
-			$("#" + id)
-				.siblings(".tran_div[channal='" + oneTran.channal + "']")
-				.append(html);
+		htmlSent += html;
+		let channelId = "0";
+		if (_channal != "") {
+			channelId = oneTran.channal;
 		}
+		$("#" + id)
+			.parent()
+			.parent()
+			.find(".tran_div_channel[channal='" + channelId + "']")
+			.append(html);
 	}
-	return htmlTran;
+	htmlSent += "</div>";
+	htmlSent += "</div>";
+	return htmlSent;
 }
 //生成channel列表
 function note_channal_list() {
@@ -383,12 +403,13 @@ function render_channal_list(channalinfo) {
 	output += channalinfo["username"];
 	output += "</div>";
 
+	//绘制句子进度
 	if (channalinfo["final"]) {
 		//进度
 		output += "<div>";
 		let article_len = channalinfo["article_len"];
 		let svg_width = article_len;
-		let svg_height = parseInt(article_len / 10);
+		let svg_height = parseInt(article_len / 15);
 		output += '<svg viewBox="0 0 ' + svg_width + " " + svg_height + '" width="100%" >';
 
 		let curr_x = 0;
@@ -530,18 +551,35 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += " </div>";
 
-	output += "<div class='pali_div'>";
-	output += "<div class='palitext palitext_roma'>" + in_json.palitext + "</div>";
+	let strPalitext =
+		"<pali book='" +
+		in_json.book +
+		"' para='" +
+		in_json.para +
+		"' begin='" +
+		in_json.begin +
+		"' end='" +
+		in_json.end +
+		"' >" +
+		in_json.palitext +
+		"</pali>";
+
+	output += "<div class='note_body'>";
+	output += "<div class='palitext_div'>";
+	output += "<div class='palitext palitext_roma'>" + strPalitext + "</div>";
 	output += "<div class='palitext palitext1'></div>";
 	output += "<div class='palitext palitext2'></div>";
 	output += "</div>";
 
-	output += "<div class='translation_div'>";
+	//译文开始
+	output += "<div class='sent_tran_div'>";
 	for (const iterator of in_json.translation) {
 		output += render_one_sent_tran_a(iterator);
 	}
-	//所选全部译文结束
 	output += "</div>";
+	//译文结束
+	output += "</div>"; /**note_body end */
+
 	//工具栏开始
 	output += "<div class='other_tran_div' sent='";
 	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
@@ -1782,4 +1820,24 @@ function get_channel_by_id(id) {
 		}
 	}
 	return false;
+}
+//设置显示方向
+function setDirection(obj) {
+	if (obj.value == "row") {
+		$("#contents").removeClass("vertical");
+		$("#contents").addClass("horizontal");
+	} else {
+		$("#contents").removeClass("horizontal");
+		$("#contents").addClass("vertical");
+	}
+}
+//设置逐段或逐句模式
+function setDisplay(obj) {
+	if (obj.value == "para") {
+		$("#contents").removeClass("sent_mode");
+		$("#contents").addClass("para_mode");
+	} else {
+		$("#contents").removeClass("para_mode");
+		$("#contents").addClass("sent_mode");
+	}
 }
