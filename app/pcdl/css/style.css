@@ -1857,8 +1857,10 @@ span:active {
 
 .edit_tool {
 	flex: 0 0 100%;
-	display: block;
+	display: inline-flex;
 	margin: 0;
+	width: 100%;
+	justify-content: space-evenly;
 }
 
 .edit_tool .icon {

@@ -944,5 +944,40 @@
 		<path style="stroke-width:3.11335" id="path3"
 			d="m 642.18858,738.4304 c 24.83469,0 44.96654,-16.41523 44.96654,-36.66508 0,-20.24703 -20.13185,-36.66225 -44.96654,-36.66225 H 457.44726 L 434.2158,608.26408 c -0.41029,-0.9952 -0.64129,-1.82171 -0.76541,-2.47113 0.78954,-0.10685 1.82389,-0.18836 3.10303,-0.18836 l 302.69834,-0.003 c 20.18703,0 55.30656,13.95814 78.27942,31.10149 54.0826,40.38723 122.30123,130.60205 123.22182,131.82496 8.48509,11.28457 23.24867,17.50601 38.37428,17.50601 8.01274,0 16.12893,-1.74863 23.46242,-5.41739 21.1731,-10.58457 27.8067,-33.15935 14.8257,-50.42078 -3.0583,-4.06515 -75.62807,-100.13031 -139.15423,-147.5711 -33.57493,-25.06279 -89.58138,-50.3505 -139.00596,-50.3505 l -302.69835,0.003 c -31.87168,0 -59.87491,10.99783 -76.83132,30.17376 -16.95639,19.1759 -20.90415,44.32305 -10.82617,68.98945 l 13.0052,31.81555 c -24.33821,-3.87117 -53.02754,-13.39588 -68.73583,-23.64307 L 124.50116,529.56157 C 85.437306,504.0827 52.841571,512.45195 40.639703,517.23399 28.434418,522.01885 0.05536677,537.54568 0.05536677,578.33774 v 69.75975 c 0,40.06393 28.52386923,89.02846 66.62231923,114.73784 L 234.11438,892.48997 c 0.92404,0.71408 1.87563,1.3944 2.8686,2.04382 36.32285,23.6965 98.78019,41.56798 145.2879,41.56798 h 356.98433 c 27.32401,0 72.93875,11.2396 95.69782,23.57562 l 107.27564,58.18291 c 7.6576,4.1523 16.30474,6.1397 24.86225,6.1397 14.54638,0 28.81692,-5.7463 37.47788,-16.3589 13.7533,-16.85939 8.1403,-39.61693 -12.53629,-50.83125 L 884.74652,898.62143 C 847.0549,878.18885 784.50791,862.77727 739.25521,862.77727 H 382.26742 c -25.63114,0 -66.87056,-11.64724 -87.78162,-24.65516 L 127.36973,708.71487 c -0.92057,-0.71125 -1.87561,-1.3944 -2.86515,-2.03819 -17.74938,-11.57977 -34.5265,-40.04707 -34.5265,-58.57357 V 600.9575 l 147.00145,95.91335 c 36.31939,23.69368 98.77329,41.56234 145.28789,41.56234 h 259.92116 z" />
 	</svg>
-
+	<svg id="ESC_button" viewBox="0 0 210 210" height="48" width="48" version="1.1">
+		<filter inkscape:label="Button" inkscape:menu="Bevels"
+			inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;"
+			id="filter1808">
+			<feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" />
+			<feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" />
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91"
+				id="feColorMatrix1788" />
+			<feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" />
+			<feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" />
+			<feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796">
+				<feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" />
+			</feDiffuseLighting>
+			<feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" />
+			<feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" />
+			<feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804">
+				<feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" />
+			</feSpecularLighting>
+			<feComposite in2="result3" operator="atop" id="feComposite1806" />
+		</filter>
+		</defs>
+		<sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0"
+			inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857"
+			inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1"
+			inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001"
+			inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" />
+		<rect ry="58.781078"
+			style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)"
+			id="rect1264" width="210" height="210" x="0" y="0" /><text xml:space="preserve" id="text1266"
+			style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;"
+			transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)">
+			<tspan x="21.166016" y="96.120016">
+				<tspan style="font-size:70.5556px;fill:#ffffff">ESC</tspan>
+			</tspan>
+		</text>
+	</svg>
 </svg>

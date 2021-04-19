@@ -119,8 +119,11 @@
 	background-color: seashell;
 }
 .ref .tooltip .tooltiptext {
+	left: calc(100% - 65vw);
 	right: 0;
-	box-shadow: 0 0 10px rgb(0 0 0 / 15%);
+	box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px;
+	white-space: normal;
+	max-width: 80vw;
 }
 .ref .tooltip .tooltip-bottom::after {
 	left: 90%;
@@ -317,11 +320,11 @@ note n {
 
 note .ref {
 	font-size: 75%;
-	white-space: normal;
+	white-space: nowrap;
 	max-width: 45%;
 	text-align: right;
-	position: absolute;
-	right: 1em;
+	/*position: absolute;
+	right: 1em;*/
 }
 note:hover .ref {
 	/*border-top: solid 1px var(--border-line-color);*/
