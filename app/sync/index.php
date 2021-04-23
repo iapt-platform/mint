@@ -26,7 +26,7 @@ require_once "../pcdl/html_head.php";
 		<div id="wiki_search" style="width:100%;">
 			<div>
 				<h3>Server Address</h3>
-				<input id="sync_server_address" type="input" readonly value="<?php echo $_COOKIE["sync_sverver"];?>" style="width:30em;" />
+				<input id="sync_server_address" type="input" readonly value="<?php echo $_COOKIE["sync_server"];?>" style="width:30em;" />
 				<h3>Local Address</h3>
 				<input id="sync_local_address" type="input" placeholder="local address" value="" style="width:30em;" />
 				
