@@ -728,6 +728,7 @@ li.active {
 }
 .sent_tran .preview p {
 	line-height: normal;
+	margin: 0;
 }
 .pop_menu .icon {
 	fill: var(--main-color);
