@@ -132,23 +132,25 @@ else{
 
 	if(count($insert_to_local)>0){
 		$message .=  "需要新增到本地".count($insert_to_local)."条记录<br>";
-		
+		/*
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
 		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$serverData}","key"=>$sync_key]]);
 		$message .=  $response->getBody()."<br>";
+		*/
 		
 	}
 
 	if(count($update_to_local)>0){
 		$message .=  "需要更新到本地".count($update_to_local)."条记录<br>";
-		
+		/*
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
 		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$serverData}","key"=>$sync_key]]);
 		$message .=  $response->getBody()."<br>";
+		*/
 		
 	}
 	
