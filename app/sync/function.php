@@ -4,20 +4,33 @@ require_once '../redis/function.php';
 
 function do_sync($param)
 {
-	
+	$output=array();
+	$output["error"]=0;
+	$output["message"]="";
+	$output["data"]=array();
+
 	$redis=redis_connect();
 	if($redis){
 		$key = $redis->hget("sync://key",$_POST["userid"]);
 		if($key===FALSE){
+			$output["error"]=1;
+			$output["message"]="key验证失败";
+			echo json_encode($output, JSON_UNESCAPED_UNICODE);	
 			return false;
 		}
 		else{
-			if($key!=$_POST["sync_key"]){
+			if($key!=$_POST["key"]){
+				$output["error"]=1;
+				$output["message"]="key验证失败";
+				echo json_encode($output, JSON_UNESCAPED_UNICODE);	
 				return false;
 			}
 		}
 	}
 	else{
+		$output["error"]=1;
+		$output["message"]="redis初始化失败";
+		echo json_encode($output, JSON_UNESCAPED_UNICODE);	
 		return false;
 	}
 
@@ -26,8 +39,10 @@ function do_sync($param)
     } else if (isset($_POST["op"])) {
         $op = $_POST["op"];
     } else {
-        echo "error: no op";
-        return (false);
+		$output["error"]=1;
+		$output["message"]="无操作码";
+		echo json_encode($output, JSON_UNESCAPED_UNICODE);	
+		return false;
     }
 
     $PDO = new PDO("" . $param->database, "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -59,8 +74,9 @@ function do_sync($param)
 						$stmt->execute(array($time,$newTime));
 						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					}
-
-					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));					
+					$output["data"]=$Fetch;
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
+					return;			
 				}
 				else if(isset($_POST["id"])){
 					$params = json_decode($_POST["id"],true);
@@ -72,7 +88,8 @@ function do_sync($param)
 					$stmt->execute($params);
 					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					$iFetch = count($Fetch);
-					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));						
+					$output["data"]=$Fetch;
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);					
 				}
 
                 break;
@@ -93,7 +110,8 @@ function do_sync($param)
 				$stmt = $PDO->prepare($query);
 				$stmt->execute($arrId);
                 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));
+				$output["data"]=$Fetch;
+				echo json_encode($output, JSON_UNESCAPED_UNICODE);
                 return (true);
                 break;
             }
@@ -135,11 +153,15 @@ function do_sync($param)
                 $PDO->commit();
                 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                     $error = $PDO->errorInfo();
-                    echo "error - $error[2] <br>";
+					$output["error"]=1;
+					$output["message"]="error - $error[2] <br>";
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
                     return (false);
                 } else {
                     $count = count($arrData);
-                    echo "INSERT $count recorders." . "<br>";
+					$output["error"]=1;
+					$output["message"]="INSERT $count recorders." . "<br>";
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);						
                     return (true);
                 }
                 break;
@@ -150,8 +172,10 @@ function do_sync($param)
                 if (isset($_POST["data"])) {
                     $data = $_POST["data"];
                 } else {
-                    echo "没有输入数据<br>";
-                    return (false);
+					$output["error"]=1;
+					$output["message"]="没有输入数据<br>";
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
+                    return false;
                 }
                 $arrData = json_decode($data, true);
                 $query = "UPDATE {$param->table} SET ";
@@ -177,17 +201,23 @@ function do_sync($param)
                     $PDO->commit();
                     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                         $error = $PDO->errorInfo();
-                        echo "error - $error[2] <br>";
-                        return (false);
+						$output["error"]=1;
+						$output["message"]="error - $error[2] <br>";
+						echo json_encode($output, JSON_UNESCAPED_UNICODE);	
+						return false;
                     } else {
                         $count = count($arrData);
-                        echo "INSERT $count recorders." . "<br>";
-                        return (true);
+						$output["error"]=0;
+						$output["message"]="INSERT $count recorders." . "<br>";
+						echo json_encode($output, JSON_UNESCAPED_UNICODE);	
+                        return true;
                     }
                 } catch (Exception $e) {
                     $PDO->rollback();
-                    echo "Failed:" . $e->getMessage() . "<br>";
-                    return (false);
+					$output["error"]=1;
+					$output["message"]="Failed:" . $e->getMessage() . "<br>";
+					echo json_encode($output, JSON_UNESCAPED_UNICODE);						
+                    return false;
                 }
 
                 break;

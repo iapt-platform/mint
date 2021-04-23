@@ -31,12 +31,18 @@ else{
 $client = new \GuzzleHttp\Client();
 $response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $serverJson=$response->getBody();
-$serverData = json_decode($serverJson);
-$output["src_row"]=count($serverData);
+$serverData = json_decode($serverJson,true);
+if($serverData["error"]>0){
+	$output["message"]=$serverData["message"];
+	echo json_encode($output, JSON_UNESCAPED_UNICODE);
+	exit;
+}
+$serverDBData = $serverData["data"];
+$output["src_row"]=count($serverDBData);
 $message.= "输入时间:".$time."<br>";
 $message.= "src_row:".$output["src_row"]."<br>";
 if($output["src_row"]>0){
-	$output["time"]=$serverData[$output["src_row"]-1]->modify_time;
+	$output["time"]=$serverDBData[$output["src_row"]-1]["modify_time"];
 	$message.= "最新时间:".$output["time"]."<br>";
 }
 else{
@@ -44,15 +50,21 @@ else{
 	exit;
 }
 $aIdList=array();
-foreach($serverData as $sd){
-	$aIdList[]=$sd->guid;
+foreach($serverDBData as $sd){
+	$aIdList[]=$sd["guid"];
 }
 $sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);;
 // 拉 id 列表
 $response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $strLocalData = $response->getBody();
-$localData = json_decode($strLocalData);
-$localCount = count($localData);
+$localData = json_decode($strLocalData,true);
+if($localData["error"]>0){
+	$output["message"]=$localData["message"];
+	echo json_encode($output, JSON_UNESCAPED_UNICODE);
+	exit;
+}
+$localDBData = $localData["data"];
+$localCount = count($localDBData);
 $message .= "local-row:".$localCount."<br>";
 $localindex=array();
 
@@ -61,18 +73,18 @@ $update_to_server=array();
 $insert_to_local=array();
 $update_to_local=array();
 $message .= "<h3>{$path}</h3>";
-foreach($localData as $local){
-	$localindex[$local->guid][0]=$local->modify_time;
-	$localindex[$local->guid][1]=false;
+foreach($localDBData as $local){
+	$localindex[$local["guid"]][0]=$local["modify_time"];
+	$localindex[$local["guid"]][1]=false;
 }
-foreach($serverData as $sd){
-	if(isset($localindex[$sd->guid])){
-		$localindex[$sd->guid][1]=true;
-		if($sd->modify_time>$localindex[$sd->guid][0]){
+foreach($serverDBData as $sd){
+	if(isset($localindex[$sd["guid"]])){
+		$localindex[$sd["guid"]][1]=true;
+		if($sd['modify_time']>$localindex[$sd["guid"]][0]){
 			//服务器数据较新 server data is new than local
-			$update_to_local[]=$sd->guid;
+			$update_to_local[]=$sd["guid"];
 		}
-		else if($sd->modify_time==$localindex[$sd->guid][0]){
+		else if($sd['modify_time']==$localindex[$sd["guid"]][0]){
 			//"相同 same
 		}
 		else{
@@ -82,7 +94,7 @@ foreach($serverData as $sd){
 	}
 	else{
 		//本地没有 新增 insert recorder in local
-		$insert_to_local[]=$sd->guid;
+		$insert_to_local[]=$sd['guid'];
 	}
 }
 
@@ -136,10 +148,11 @@ else{
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
-		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$serverData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+		$arrData = json_decode($serverData,true);
+		$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
+		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$message .=  $response->getBody()."<br>";
 		*/
-		
 	}
 
 	if(count($update_to_local)>0){
@@ -148,15 +161,14 @@ else{
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
-		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$serverData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+		$arrData = json_decode($serverData,true);
+		$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
+		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$message .=  $response->getBody()."<br>";
 		*/
-		
 	}
-	
 }
 $output["message"]=$message;
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
-
 
 ?>

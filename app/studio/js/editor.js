@@ -3554,21 +3554,27 @@ function getMeaningMenuList(index, word) {
 	} else {
 		currMeaningList.push("↓↓");
 	}
-	for (MeaningList_i in currMeaningList0) {
-		currMeaningList.push(currMeaningList0[MeaningList_i]);
+	for (const iterator of currMeaningList0) {
+		if (iterator != "") {
+			currMeaningList.push(iterator);
+		}
 	}
+
 	var output = "";
 	output += "<div class=\"case_dropdown\" style='display:inline-block;'>";
 
+	let currMean;
 	output += "<p id='org_part_mean_" + index + "' class='case_dropbtn' >";
 	if (g_initPartMeaning) {
-		output += currMeaningList[0];
-
+		currMean = currMeaningList[0];
 		g_arrPartMean[index] = currMeaningList[0];
 	} else {
-		output += g_arrPartMean[index];
+		currMean = g_arrPartMean[index];
 	}
-	output += "</p>";
+	if (currMean == "") {
+		currMean = "↓↓";
+	}
+	output += currMean + "</p>";
 
 	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
