@@ -4,7 +4,7 @@ require_once '../redis/function.php';
 
 function do_sync($param)
 {
-	/*
+	
 	$redis=redis_connect();
 	if($redis){
 		$key = $redis->hget("sync://key",$_POST["userid"]);
@@ -20,7 +20,7 @@ function do_sync($param)
 	else{
 		return false;
 	}
-*/
+
     if (isset($_GET["op"])) {
         $op = $_GET["op"];
     } else if (isset($_POST["op"])) {
