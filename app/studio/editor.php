@@ -242,7 +242,14 @@ else{$currDevice="computer";}
 		margin: 0 15px 0 -8px;
 	}
 	.translate_sent_head_toolbar {
-	display: none;
+		display: none;
+	}
+	div#input_org_select .case_dropbtn {
+		background-color: rgb(127 127 127 / 20%);
+		padding: 0 6px;
+		border-radius: 4px;
+		min-width: 1em;
+		min-height: 1.3em;
 	}
 	</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
@@ -686,6 +693,7 @@ foreach($plugin_list as $info){
 					</div>				
 				</div>
 				<!-- 拆分意思 -->
+
 				<div class="edit_detail_p" >
 					<guide gid="studio_part_meaning"></guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
