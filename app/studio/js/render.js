@@ -1316,7 +1316,11 @@ function renderWordParBlockInner(elementBlock) {
 		} else {
 			if (wReal == "") {
 				output +=
-					'<div id="wb' + wID + '" class="word_punc un_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //符號
+					'<div id="wb' +
+					wID +
+					'" class="word word_punc un_parent sent_gramma_' +
+					(sent_gramma_i % 3) +
+					'" >'; //符號
 			} else {
 				if (wType == ".un.") {
 					output +=
@@ -1624,10 +1628,25 @@ function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
 
-	for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++) {
+	let idList = new Array();
+	$("#wbp" + book + "-" + para + "-" + begin)
+		.parent()
+		.children(".word")
+		.each(function (index, element) {
+			idList.push(this.id.slice(3));
+		});
+
+	//for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++)
+	for (const iterator of idList) {
+		let rel = doc_word("#p" + iterator).val("rela");
+		let pali = doc_word("#p" + iterator).val("pali");
+		let real = doc_word("#p" + iterator).val("real");
+		let type = doc_word("#p" + iterator).val("type");
+		/*
 		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
 		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
 		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
+		*/
 		if (type != ".ctl.") {
 			pali_text += pali + " ";
 		}
@@ -1653,7 +1672,7 @@ function sent_show_rel_map(book, para, begin, end) {
 				} else {
 				}
 */
-				memind += wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
+				memind += wid + "(" + real + ")" + " -- " + strRel + " --> " + dest + "\n";
 			}
 		}
 	}
