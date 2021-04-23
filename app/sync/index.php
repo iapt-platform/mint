@@ -21,7 +21,7 @@ require_once "../pcdl/html_head.php";
 	}
 	else{
 ?>
-	<div class="fun_block">
+	<div class="fun_block" style="margin-left: auto;margin-right: auto;max-width: 100%;">
 		<h2>Sync</h2>
 		<div id="wiki_search" style="width:100%;">
 			<div>

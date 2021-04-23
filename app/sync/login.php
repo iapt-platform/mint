@@ -31,12 +31,13 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 			$phpFile = $_POST["server"]."/app/sync/login.php";
 			$client = new \GuzzleHttp\Client();
 			$response = $client->request('POST', $phpFile,['verify' => false,'form_params'=>['userid'=>$_POST["userid"],'password'=>$_POST["password"]]]);
-			$serveMsg=$response->getBody();
+			$serveMsg=(string)$response->getBody();
 			$arrServerMsg = json_decode($serveMsg,true);
 			if($arrServerMsg["error"]==0){
 				#验证成功
 				$redis->hset("sync://key",$_POST["userid"],$arrServerMsg["key"]);
-				$output["message"]="本机登录成功<br>服务器验证成功:msg:".$serveMsg;
+				$output["message"]="本机登录成功<br>服务器验证成功:msg:".$serveMsg."<br>";
+				$output["message"].="<a href='index.php'>开始同步</a>";
 			}
 			else{
 				#验证失败
