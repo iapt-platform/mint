@@ -74,5 +74,20 @@ class UserInfo
             $buffer[$id] = array("nickname" => "", "username" => "");
             return $buffer[$id];
         }
-    }
+	}
+	public function check_password($userid,$password){
+		if ($this->dbh) {
+            $query = "SELECT username FROM user WHERE  userid= ? and password = ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($userid,md5($password)));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+	}
 }

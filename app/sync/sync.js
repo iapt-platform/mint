@@ -1,7 +1,7 @@
 var sync_db_list = new Array("term/sync_index.php");
 //var sync_db_list = ["doc/sync_index.php", "term/sync_index.php", "usent/sync.php"];
 var sync_curr_do_db = 0;
-function sync_index_init() {}
+function sync_index_init() { }
 
 function sync_pull() {
 	sync_curr_do_db = 0;
@@ -14,13 +14,15 @@ function sync_push() {
 	sync_do_db($("#sync_local_address").val(), $("#sync_server_address").val(), 1);
 }
 function sync_do_db(src, dest, time = 1) {
+	let size = 500;
 	$.get(
 		"sync.php",
 		{
-			server: $("#sync_server_address").val(),
-			localhost: $("#sync_local_address").val(),
+			server: src,
+			localhost: dest,
 			path: sync_db_list[sync_curr_do_db],
 			time: time,
+			size: size,
 		},
 		function (data) {
 			let result;
@@ -30,8 +32,8 @@ function sync_do_db(src, dest, time = 1) {
 				console.error(error + " data:" + data);
 				return;
 			}
-			$("#sync_result").html($("#sync_result").html() + "<br>" + result.message + "<br>" + result.row); //
-			if (result.row == 1000) {
+			$("#sync_result").html($("#sync_result").html() + "<br>" + result.message + "<br>" + result.src_row); //
+			if (result.src_row >= size) {
 				sync_do_db(src, dest, result.time);
 			} else {
 				sync_curr_do_db++;
@@ -41,6 +43,22 @@ function sync_do_db(src, dest, time = 1) {
 					$("#sync_result").html($("#sync_result").html() + "<br>All Done"); //
 				}
 			}
+		}
+	);
+}
+
+function login() {
+	$("#server_msg").html("正在登录<br>");
+	$.post(
+		"login.php",
+		{
+			userid: $("#userid").val(),
+			password: $("#password").val(),
+			server: $("#sync_server_address").val(),
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			$("#server_msg").html(result.message);
 		}
 	);
 }

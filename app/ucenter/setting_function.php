@@ -32,7 +32,7 @@ function get_setting()
 function inLangSetting($lang, $mySetting)
 {
     # 通用语言 和 无译文语言 总是被采用
-    if ($lang == "com" && $lang == "none") {
+    if ($lang == "com" || $lang == "none") {
         return true;
     }
     # 用户没有设置语言

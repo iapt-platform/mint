@@ -1,8 +1,24 @@
 <?php
 require_once "../public/function.php";
+require_once '../redis/function.php';
 
 function do_sync($param)
 {
+	$redis=redis_connect();
+	if($redis){
+		$key = $redis->hget("sync://key",$_POST["userid"]);
+		if($key===FALSE){
+			return false;
+		}
+		else{
+			if($key!=$_POST["sync_key"]){
+				return false;
+			}
+		}
+	}
+	else{
+		return false;
+	}
 
     if (isset($_GET["op"])) {
         $op = $_GET["op"];
@@ -19,17 +35,40 @@ function do_sync($param)
     switch ($op) {
         case "sync":
             {
+				if(isset($_POST["size"])){
+					$size=intval($_POST["size"]);
+				}
+				else{
+					$size=0;
+				}
+				if($size>2000){
+					$size=2000;
+				}
 				if(isset($_POST["time"])){
 					$time = $_POST["time"];
-					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->modify_time} > '{$time}' order by {$param->modify_time} ASC  limit 0,1000";
-					$stmt = $PDO->query($query);
+					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->modify_time} > ? order by {$param->modify_time} ASC  limit 0,".$size;
+					$stmt = $PDO->prepare($query);
+					$stmt->execute(array($time));
 					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					$iFetch = count($Fetch);
+
+					if(count($Fetch)>0){
+						$newTime = $Fetch[count($Fetch)-1]["modify_time"];
+						$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->modify_time} > ? and {$param->modify_time} <= ?  order by {$param->modify_time} ASC ";
+						$stmt = $PDO->prepare($query);
+						$stmt->execute(array($time,$newTime));
+						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					}
+
 					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));					
 				}
 				else if(isset($_POST["id"])){
-					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} from {$param->table}  where {$param->uuid} in ({$_POST["id"]})  limit 0,1000";
-					$stmt = $PDO->query($query);
+					$params = json_decode($_POST["id"],true);
+					$count =count($params);
+					/*  创建一个填充了和params相同数量占位符的字符串 */
+					$place_holders = implode(',', array_fill(0, count($params), '?'));
+					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} from {$param->table}  where {$param->uuid} in ($place_holders)  limit 0,".$size;
+					$stmt = $PDO->prepare($query);
+					$stmt->execute($params);
 					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					$iFetch = count($Fetch);
 					echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));						
@@ -47,14 +86,11 @@ function do_sync($param)
                     return (false);
                 }
                 $arrId = json_decode($id);
-                $queryId = "('";
-                foreach ($arrId as $one) {
-                    $queryId .= $one . "','";
-                }
-                $queryId = substr($queryId, 0, -2) . ")";
-                $query = "SELECT * FROM {$param->table} WHERE {$param->uuid} in {$queryId}";
-
-                $stmt = $PDO->query($query);
+				/*  创建一个填充了和params相同数量占位符的字符串 */
+				$place_holders = implode(',', array_fill(0, count($arrId), '?'));
+                $query = "SELECT * FROM {$param->table} WHERE {$param->uuid} in ($place_holders)";
+				$stmt = $PDO->prepare($query);
+				$stmt->execute($arrId);
                 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo (json_encode($Fetch, JSON_UNESCAPED_UNICODE));
                 return (true);
