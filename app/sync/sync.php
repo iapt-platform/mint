@@ -29,7 +29,7 @@ else{
 }
 
 $client = new \GuzzleHttp\Client();
-$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key]]);
+$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $serverJson=$response->getBody();
 $serverData = json_decode($serverJson);
 $output["src_row"]=count($serverData);
@@ -49,7 +49,7 @@ foreach($serverData as $sd){
 }
 $sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);;
 // 拉 id 列表
-$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key]]);
+$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $strLocalData = $response->getBody();
 $localData = json_decode($strLocalData);
 $localCount = count($localData);
@@ -136,7 +136,7 @@ else{
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
-		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$serverData}","key"=>$sync_key]]);
+		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$serverData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$message .=  $response->getBody()."<br>";
 		*/
 		
@@ -148,7 +148,7 @@ else{
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
 		$serverData=$response->getBody();
-		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$serverData}","key"=>$sync_key]]);
+		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$serverData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$message .=  $response->getBody()."<br>";
 		*/
 		
