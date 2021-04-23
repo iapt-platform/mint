@@ -36,7 +36,7 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 			if($arrServerMsg["error"]==0){
 				#验证成功
 				$redis->hset("sync://key",$_POST["userid"],$arrServerMsg["key"]);
-				$output["message"]="本机登录成功<br>服务器验证成功".$arrServerMsg["message"];
+				$output["message"]="本机登录成功<br>服务器验证成功:msg:".$serveMsg;
 			}
 			else{
 				#验证失败
@@ -52,6 +52,7 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 			
 			$key=UUID::v4();
 			$redis->hset("sync://key",$_POST["userid"],$key);
+			$output["error"]=0;
 			$output["message"]="服务器登录成功";
 			$output["key"]=$key;
 			echo json_encode($output, JSON_UNESCAPED_UNICODE);
