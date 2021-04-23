@@ -1,6 +1,6 @@
 {
 	"require": {
 		"elasticsearch/elasticsearch": "~7.0",
-		"phpexcel/phpexcel": "dev-master"
+		"guzzlehttp/guzzle": "7.0"
 	}
 }

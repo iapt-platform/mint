@@ -6,7 +6,6 @@ require_once '../ucenter/setting_function.php';
 require_once "../redis/function.php";
 
 $redis = redis_connect();
-//$redis = false;
 
 if (isset($_GET["book"])) {
     $in_book = $_GET["book"];
@@ -113,9 +112,10 @@ $lookuped=array();
 for ($i = 0; $i < $lookup_loop; $i++) {
 	$parent_list = array();
 	
+	# 记录已经查过的词，下次就不查了
 	$newWordList = array();
 	foreach ($word_list as $lsWord) {
-		# 记录已经查过的词，下次就不查了
+		
 		if(!isset($lookuped[$lsWord]) && !empty($lsWord)){
 			$newWordList[]=$lsWord;
 			$lookuped[$lsWord]=1;
@@ -125,6 +125,8 @@ for ($i = 0; $i < $lookup_loop; $i++) {
 		break;
 	}
 	$word_list = $newWordList;
+	# 记录已经查过的词结束
+
     $strQueryWord = "("; //单词查询字串
     foreach ($word_list as $word) {
         $word = str_replace("'", "’", $word);
@@ -161,20 +163,38 @@ for ($i = 0; $i < $lookup_loop; $i++) {
 						$arrWord = json_decode($wordData,true);
 						foreach ($arrWord as  $one) {
 							# code...
-							$Fetch[] = array("id"=>$one[0],
-											"pali"=>$one[1],
-											"type"=>$one[2],
-											"gramma"=>$one[3],
-											"parent"=>$one[4],
-											"mean"=>$one[5],
-											"note"=>$one[6],
-											"parts"=>$one[7],
-											"partmean"=>$one[8],
-											"status"=>$one[9],
-											"confidence"=>$one[10],
-											"dict_name"=>$one[12],
-											"lang"=>$one[13],
-											);
+							if(count($one)==14){
+								$Fetch[] = array("id"=>$one[0],
+												"pali"=>$one[1],
+												"type"=>$one[2],
+												"gramma"=>$one[3],
+												"parent"=>$one[4],
+												"mean"=>$one[5],
+												"note"=>$one[6],
+												"parts"=>$one[7],
+												"partmean"=>$one[8],
+												"status"=>$one[9],
+												"confidence"=>$one[10],
+												"dict_name"=>$one[12],
+												"lang"=>$one[13],
+												);								
+							}
+							else{
+								$Fetch[] = array("id"=>$one[0],
+												"pali"=>$one[1],
+												"type"=>$one[2],
+												"gramma"=>$one[3],
+												"parent"=>$one[4],
+												"mean"=>$one[5],
+												"note"=>$one[6],
+												"parts"=>$one[7],
+												"partmean"=>$one[8],
+												"status"=>$one[9],
+												"confidence"=>$one[10],
+												"dict_name"=>$one[12],
+												"lang"=>"en"
+												);										
+							}
 						}						
 					}
 				}
