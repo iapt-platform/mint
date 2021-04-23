@@ -148,6 +148,9 @@ chapter {
 	text-decoration: none;
 	cursor: pointer;
 }
+.path chapter {
+	display: unset;
+}
 chapter::after {
 	content: " > ";
 }
@@ -170,8 +173,14 @@ para {
 .tooltiptext para {
 	display: inline;
 }
+.path para {
+	display: unset;
+}
 para:hover {
 	text-decoration: underline;
+}
+#contents_div .sent_no_read_mode {
+	display: none;
 }
 
 commentary,
@@ -648,7 +657,7 @@ pw {
 }
 .tool_bar > .right {
 	position: absolute;
-	right: 0;
+	right: calc(100% - 65vw);
 	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
@@ -718,7 +727,7 @@ li.active {
 	background-color: var(--booka);
 }
 .sent_tran .preview p {
-	margin: 0;
+	line-height: normal;
 }
 .pop_menu .icon {
 	fill: var(--main-color);
@@ -819,4 +828,7 @@ w:hover {
 }
 .tran_sent p {
 	display: inline;
+}
+.sent_tran li {
+	line-height: normal;
 }

@@ -250,6 +250,9 @@ function render_read_mode_sent(iterator) {
 	htmlSent += "<div class='note_body'>";
 	htmlSent += "<div class='palitext_div'>";
 	htmlSent += "<div class='palitext palitext1'>" + strPalitext + "</div>";
+	htmlSent += "<span class='sent_no_read_mode'>";
+	htmlSent += iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
+	htmlSent += "<span>";
 	htmlSent += "<div class='palitext palitext2'></div>";
 	htmlSent += "</div>";
 	htmlSent += "<div class='sent_tran_div'>";

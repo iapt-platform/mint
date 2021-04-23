@@ -2695,7 +2695,7 @@ th {
 	min-width: 80px;
 	background-color: #555;
 	color: #fff;
-	text-align: center;
+	/*text-align: center;*/
 	padding: 5px;
 	border-radius: 6px;
 	z-index: 1;

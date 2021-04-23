@@ -1628,6 +1628,14 @@ function sent_show_rel_map(book, para, begin, end) {
 		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
 		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
 		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
+		let meaning = doc_word("#p" + book + "-" + para + "-" + wordId).val("mean");
+		meaning = removeFormulaB(meaning, "[", "]");
+		meaning = removeFormulaB(meaning, "【", "】");
+		meaning = removeFormulaB(meaning, "{", "}");
+		meaning = removeFormulaB(meaning, "｛", "｝");
+		meaning = removeFormulaB(meaning, "(", ")");
+		meaning = removeFormulaB(meaning, "（", "）");
+
 		if (type != ".ctl.") {
 			pali_text += pali + " ";
 		}
@@ -1635,25 +1643,42 @@ function sent_show_rel_map(book, para, begin, end) {
 
 		if (rel != "") {
 			let relaData = JSON.parse(rel);
+			let language=getCookie("language")
 			for (const iterator of relaData) {
 				let strRel = iterator.relation;
+				let relation_locstr = "";
+				for(let x in list_relation){
+					if(list_relation[x].id==strRel && language==list_relation[x].language){
+						relation_locstr=list_relation[x].note;
+						break;
+					}
+				}
+
 				let dest = iterator.dest_spell;
 				let type = doc_word("#" + iterator.dest_id).val("case");
+				let meanDest = doc_word("#" + iterator.dest_id).val("mean");
+				meanDest = removeFormulaB(meanDest, "[", "]");
+				meanDest = removeFormulaB(meanDest, "【", "】");
+				meanDest = removeFormulaB(meanDest, "{", "}");
+				meanDest = removeFormulaB(meanDest, "｛", "｝");
+				meanDest = removeFormulaB(meanDest, "(", ")");
+				meanDest = removeFormulaB(meanDest, "（", "）");
 
 				if (type.indexOf(".v.") >= 0) {
-					dest = iterator.dest_id + "[/" + dest + "/]";
+					dest = iterator.dest_id + "((" + dest + "<br>" + meanDest + "))";
 				} else {
-					dest = iterator.dest_id + "[" + dest + "]";
+					dest = iterator.dest_id + "[" + dest + "<br>" + meanDest + "]";
 				}
 				/*
 				if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
 					memind += wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
+		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
 				} else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
 					memind += dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
 				} else {
 				}
 */
-				memind += wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
+				memind += wid + "(" + pali +"<br>"+ meaning + ")" + " -- " + strRel+"<br>"+ relation_locstr + " --> " + dest + "\n";
 			}
 		}
 	}

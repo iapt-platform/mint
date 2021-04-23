@@ -216,7 +216,7 @@ function my_article_edit(id) {
 					html += "</div>";
 
 					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
+					html += "<div id='preview_inner' class='sent_mode vertical'></div>";
 					html += "</div>";
 
 					html += "</div>";
