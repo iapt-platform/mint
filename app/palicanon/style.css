@@ -163,6 +163,7 @@ tag {
 }
 .chapter_list ul li:hover {
 	background-color: darkorange;
+	cursor: pointer;
 }
 .chapter_list .resource {
 	display: flex;
@@ -170,6 +171,7 @@ tag {
 	margin-bottom: auto;
 }
 .chapter_list .title .title_1 {
+	color: var(--main-color);
 	font-weight: 700;
 	font-size: 110%;
 }
@@ -215,11 +217,7 @@ tag {
 	text-align: center;
 }
 .chapter_head .title .title_1 {
-	font-size: 120%;
-	padding: 1em 0 0.5em 0;
-	font-weight: 700;
-}
-.chapter_head .title .title_1 {
+	color: var(--main-color);
 	font-size: 120%;
 	padding: 1em 0 0.5em 0;
 	font-weight: 700;
@@ -255,4 +253,21 @@ tag {
 .chapter_head_tool_bar {
 	display: flex;
 	justify-content: space-between;
+}
+
+.book_view .grid {
+	width: 100%;
+}
+.book_view ul {
+	border-right: unset;
+}
+.book_view ul li {
+	width: 180px;
+	height: 250px;
+	margin: 1em;
+	border: 10px solid wheat;
+}
+.book_view ul {
+	display: flex;
+	flex-flow: wrap;
 }

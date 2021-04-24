@@ -101,7 +101,7 @@ function tag_changed() {
 					}
 				}
 
-				if (arrBookList.length < 100 || (arrBookList.length > 100 && iterator.level == 1)) {
+				if (arrBookList.length < 50 || (arrBookList.length > 50 && iterator.level == 1)) {
 					arrChapter.push(iterator);
 				}
 			}
@@ -117,6 +117,11 @@ function tag_changed() {
 			tag_render_others();
 			palicanon_chapter_list_apply(0);
 			$("#list-1").html(render_chapter_list(arrChapter));
+			if (arrBookList.length < 50) {
+				$("#list_shell_1").removeClass("book_view");
+			} else {
+				$("#list_shell_1").addClass("book_view");
+			}
 		}
 	);
 }
@@ -407,11 +412,10 @@ function sortNumber(a, b) {
 }
 
 function tag_list_slide_toggle(element) {
-	if($(element).html().indexOf("⮟")!= -1){
-		$(element).html("⮝")
-	}
-	else{
-		$(element).html("⮟")
+	if ($(element).html().indexOf("⮟") != -1) {
+		$(element).html("⮝");
+	} else {
+		$(element).html("⮟");
 	}
 	$("#tag_list").slideToggle();
 }
