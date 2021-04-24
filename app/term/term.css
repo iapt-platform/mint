@@ -657,7 +657,8 @@ pw {
 }
 .tool_bar > .right {
 	position: absolute;
-	right: calc(100% - 65vw);
+	right: calc(30px + 2.4em - 70vw);
+	right: calc(30px + 3em - 100vw);
 	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
@@ -729,6 +730,8 @@ li.active {
 .sent_tran .preview p {
 	line-height: normal;
 	margin: 0;
+	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV1-Normal", "Arial",
+		"Verdana";
 }
 .pop_menu .icon {
 	fill: var(--main-color);
