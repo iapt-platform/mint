@@ -9,43 +9,54 @@ $path=$_GET["path"];
 $time=$_GET["time"];
 $size=$_GET["size"];
 
-$message="";
-
 $output=["message"=>"","time"=>0,"src_row"=>0];
+$message = "<h3>正在处理 {$path}</h3>";
 
 $redis=redis_connect();
 if($redis){
 	$sync_key = $redis->hget("sync://key",$_COOKIE["userid"]);
 	if($sync_key===FALSE){
 		$message.= "客户端没有钥匙"."<br>";
+		$output["message"]=$message;
 		echo json_encode($output, JSON_UNESCAPED_UNICODE);
 		exit;
 	}
 }
 else{
 	$message.= "redis连接失败"."<br>";
+	$output["message"]=$message;
 	echo json_encode($output, JSON_UNESCAPED_UNICODE);
 	exit;
 }
 
 $client = new \GuzzleHttp\Client();
 $response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
-$serverJson=$response->getBody();
+$serverJson=(string)$response->getBody();
 $serverData = json_decode($serverJson,true);
+if($serverData===NULL){
+	$message.="无法解码 数据：".$serverJson;
+	$output["message"]=$message;
+	echo json_encode($output, JSON_UNESCAPED_UNICODE);
+	exit;	
+}
 if($serverData["error"]>0){
-	$output["message"]=$serverData["message"];
+	$message.=$serverData["message"];
+	$output["message"]=$message;
 	echo json_encode($output, JSON_UNESCAPED_UNICODE);
 	exit;
 }
+$message .= "<div>";
 $serverDBData = $serverData["data"];
 $output["src_row"]=count($serverDBData);
-$message.= "输入时间:".$time."<br>";
-$message.= "src_row:".$output["src_row"]."<br>";
+$message.= "输入时间:".$time." | ";
+$message.= "src_row:".$output["src_row"]." | ";
 if($output["src_row"]>0){
 	$output["time"]=$serverDBData[$output["src_row"]-1]["modify_time"];
-	$message.= "最新时间:".$output["time"]."<br>";
+	$message.= "最新时间:".$output["time"]." | ";
 }
 else{
+	$message .= "没有查询到数据</div>";
+	$output["message"]=$message;
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
 	exit;
 }
@@ -53,26 +64,29 @@ $aIdList=array();
 foreach($serverDBData as $sd){
 	$aIdList[]=$sd["guid"];
 }
-$sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);;
+$sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);
 // 拉 id 列表
 $response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
-$strLocalData = $response->getBody();
+$strLocalData = (string)$response->getBody();
 $localData = json_decode($strLocalData,true);
 if($localData["error"]>0){
-	$output["message"]=$localData["message"];
+	$message .= $localData["message"];
+	$output["message"]=$message;
 	echo json_encode($output, JSON_UNESCAPED_UNICODE);
 	exit;
 }
 $localDBData = $localData["data"];
 $localCount = count($localDBData);
-$message .= "local-row:".$localCount."<br>";
+$message .= "local-row:".$localCount." | ";
+$message .= "</div>";
+
 $localindex=array();
 
 $insert_to_server=array();
 $update_to_server=array();
 $insert_to_local=array();
 $update_to_local=array();
-$message .= "<h3>{$path}</h3>";
+
 foreach($localDBData as $local){
 	$localindex[$local["guid"]][0]=$local["modify_time"];
 	$localindex[$local["guid"]][1]=false;
@@ -119,9 +133,9 @@ else{
 		/*
 		$idInLocal = json_encode($insert_to_server, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInLocal}"]]);
-		$localData=$response->getBody();
+		$localData=(string)$response->getBody();
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$localData}"]]);
-		$message .=  $response->getBody()."<br>";
+		$message .=  (string)$response->getBody()."<br>";
 		*/
 		
 	}
@@ -135,38 +149,56 @@ else{
 		
 		$idInLocal = json_encode($update_to_server, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInLocal}"]]);
-		$localData=$response->getBody();
+		$localData=(string)$response->getBody();
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$localData}"]]);
-		$message .=  $response->getBody()."<br>";
+		$message .=  (string)$response->getBody()."<br>";
 		*/
 		
 	}
-
+	$message .= "<div>";
 	if(count($insert_to_local)>0){
-		$message .=  "需要新增到本地".count($insert_to_local)."条记录<br>";
-		/*
+		$message .=  "需要新增到本地".count($insert_to_local)."条记录 | ";
+		#提取数据
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
-		$serverData=$response->getBody();
+		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+		$serverData=(string)$response->getBody();
 		$arrData = json_decode($serverData,true);
-		$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
-		$message .=  $response->getBody()."<br>";
-		*/
+		if($arrData["error"]==0){
+			$message .= "数据提取成功：{$arrData["message"]} | ";
+			$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
+			$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+			$insertMsg =  (string)$response->getBody();	
+			$arrInsertMsg = json_decode($insertMsg,true);	
+			$message .= $arrInsertMsg["message"] . " | ";
+		}
+		else{
+			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
+		}
 	}
+	$message .= "</div>";
 
+	$message .= "<div>";
 	if(count($update_to_local)>0){
-		$message .=  "需要更新到本地".count($update_to_local)."条记录<br>";
-		/*
+		$message .=  "需要更新到本地".count($update_to_local)."条记录 | ";
+		
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key]]);
-		$serverData=$response->getBody();
+		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+		$serverData=(string)$response->getBody();
 		$arrData = json_decode($serverData,true);
-		$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
-		$message .=  $response->getBody()."<br>";
-		*/
+		if($arrData["error"]==0){
+			$message .= "数据提取成功：{$arrData["message"]} | ";
+			$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
+			$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+			$strMsgUpdate =  (string)$response->getBody();
+			$arrMsgUpdate = json_decode($strMsgUpdate,true);
+			$message .= $arrMsgUpdate["message"] . " | ";;
+		}
+		else{
+			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
+		}
 	}
+	$message .= "</div>";
+
 }
 $output["message"]=$message;
 echo json_encode($output, JSON_UNESCAPED_UNICODE);

@@ -1316,7 +1316,11 @@ function renderWordParBlockInner(elementBlock) {
 		} else {
 			if (wReal == "") {
 				output +=
-					'<div id="wb' + wID + '" class="word_punc un_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //符號
+					'<div id="wb' +
+					wID +
+					'" class="word word_punc un_parent sent_gramma_' +
+					(sent_gramma_i % 3) +
+					'" >'; //符號
 			} else {
 				if (wType == ".un.") {
 					output +=
@@ -1624,11 +1628,21 @@ function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
 
-	for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++) {
-		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
-		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
-		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
-		let meaning = doc_word("#p" + book + "-" + para + "-" + wordId).val("mean");
+	let idList = new Array();
+	$("#wbp" + book + "-" + para + "-" + begin)
+		.parent()
+		.children(".word")
+		.each(function (index, element) {
+			idList.push(this.id.slice(3));
+		});
+
+	for (const iterator of idList) {
+		let rel = doc_word("#p" + iterator).val("rela");
+		let pali = doc_word("#p" + iterator).val("pali");
+		let real = doc_word("#p" + iterator).val("real");
+		let type = doc_word("#p" + iterator).val("type");
+
+		let meaning = doc_word("#p" + iterator).val("mean");
 		meaning = removeFormulaB(meaning, "[", "]");
 		meaning = removeFormulaB(meaning, "【", "】");
 		meaning = removeFormulaB(meaning, "{", "}");
@@ -1669,16 +1683,7 @@ function sent_show_rel_map(book, para, begin, end) {
 				} else {
 					dest = iterator.dest_id + "[" + dest + "<br>" + meanDest + "]";
 				}
-				/*
-				if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
-					memind += wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
-		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
-				} else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
-					memind += dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
-				} else {
-				}
-*/
-				memind += wid + "(" + pali +"<br>"+ meaning + ")" + " -- " + strRel+"<br>"+ relation_locstr + " --> " + dest + "\n";
+				memind += wid + "(" + real +"<br>"+ meaning + ")" + " -- " + strRel+"<br>"+ relation_locstr + " --> " + dest + "\n";
 			}
 		}
 	}

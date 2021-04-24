@@ -1,7 +1,11 @@
-var sync_db_list = new Array("term/sync_index.php");
-//var sync_db_list = ["doc/sync_index.php", "term/sync_index.php", "usent/sync.php"];
+var sync_db_list = [
+	"sync/table_term.php",
+	"sync/table_article.php",
+	"sync/table_article_list.php",
+	"sync/table_article_collect.php",
+];
 var sync_curr_do_db = 0;
-function sync_index_init() { }
+function sync_index_init() {}
 
 function sync_pull() {
 	sync_curr_do_db = 0;
@@ -32,7 +36,14 @@ function sync_do_db(src, dest, time = 1) {
 				console.error(error + " data:" + data);
 				return;
 			}
-			$("#sync_result").html($("#sync_result").html() + "<br>" + result.message + "<br>" + result.src_row); //
+			$("#sync_result").html(
+				$("#sync_result").html() +
+					"<div><h2>" +
+					sync_db_list[sync_curr_do_db] +
+					"</h2>" +
+					result.message +
+					"</div>"
+			); //
 			if (result.src_row >= size) {
 				sync_do_db(src, dest, result.time);
 			} else {
