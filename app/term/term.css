@@ -820,3 +820,7 @@ w:hover {
 .tran_sent p {
 	display: inline;
 }
+.note_foot {
+	display: flex;
+	justify-content: space-between;
+}

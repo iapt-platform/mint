@@ -39,10 +39,12 @@ function my_article_list() {
 						html +=
 							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
 							iterator.id +
-							"' title='"+gLocal.gui.edit+"'>";
+							"' title='" +
+							gLocal.gui.edit +
+							"'>";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>";
 						html += "</svg>";
 						html += "</button>";
 
@@ -50,24 +52,36 @@ function my_article_list() {
 						html +=
 							"<div style='flex:1;'><a href='../article/?id=" +
 							iterator.id +
-							"' target='_blank' title='"+gLocal.gui.preview+"' >";
+							"' target='_blank' title='" +
+							gLocal.gui.preview +
+							"' >";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</a></div>";
-						html += "<div style='flex:1;'>"
-						html += "<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id="+iterator.id+"')\" title='"+gLocal.gui.copy_link+"'>";
+						html += "<div style='flex:1;'>";
+						html +=
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id=" +
+							iterator.id +
+							"')\" title='" +
+							gLocal.gui.copy_link +
+							"'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<button title='"+gLocal.gui.share_to+"' class='icon_btn' onclick=\"article_share('" + iterator.id + "')\">";
+						html +=
+							"<button title='" +
+							gLocal.gui.share_to +
+							"' class='icon_btn' onclick=\"article_share('" +
+							iterator.id +
+							"')\">";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</div>";
@@ -216,7 +230,7 @@ function my_article_edit(id) {
 					html += "</div>";
 
 					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
+					html += "<div id='preview_inner' class='sent_mode vertical'></div>";
 					html += "</div>";
 
 					html += "</div>";
