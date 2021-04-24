@@ -199,10 +199,14 @@ function my_article_edit(id) {
 					html += "<div>";
 					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
-					html += '<span id="article_title" style="flex:7;"></span></div>';
+					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
+					html += '<span id="article_title" style="flex:7;"></span>';
+					html += "</div>";
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
-					html += "<div id='aritcle_status' style='display: flex; '></div>";
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
+					html += '<span id="aritcle_status" style="flex:7;"></span>';
+					html += "</div>";
 					html +=
 						'<div style="display:none;width:100%;" ><span style="flex:3;margin: auto;">' +
 						gLocal.gui.language_select +
@@ -218,13 +222,13 @@ function my_article_edit(id) {
 						result.lang +
 						'" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.introduction + "</span>";
+					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
 					html += "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
 					html += "</div>";
 					html += "</div>";
 
 					html +=
-						"<textarea id='article_content' name='content' style='height:500px;max-height: 40vh;'>" +
+						"<textarea id='article_content' name='content' style='height:480px;resize: vertical;'>" +
 						result.content +
 						"</textarea>";
 					html += "</div>";
