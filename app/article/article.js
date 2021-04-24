@@ -173,6 +173,12 @@ function set_channal(channalid) {
 	if (_display != "") {
 		url += "&display=" + _display;
 	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
 	location.assign(url);
 }
 function setMode(mode = "read") {

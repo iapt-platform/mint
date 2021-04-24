@@ -1,5 +1,6 @@
-var _display = "";
+var _display = "para";
 var _mode = "read";
+var _direction = "row";
 var _word = "";
 var _channal = "";
 var _lang = "";
@@ -1868,9 +1869,11 @@ function setDirection(obj) {
 	if (obj.value == "row") {
 		$("#contents").removeClass("vertical");
 		$("#contents").addClass("horizontal");
+		_direction = "row";
 	} else {
 		$("#contents").removeClass("horizontal");
 		$("#contents").addClass("vertical");
+		_direction = "col";
 	}
 }
 //设置逐段或逐句模式
@@ -1878,8 +1881,10 @@ function setDisplay(obj) {
 	if (obj.value == "para") {
 		$("#contents").removeClass("sent_mode");
 		$("#contents").addClass("para_mode");
+		_display = "para";
 	} else {
 		$("#contents").removeClass("para_mode");
 		$("#contents").addClass("sent_mode");
+		_display = "sent";
 	}
 }
