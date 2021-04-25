@@ -7,7 +7,7 @@ var arrWordIdTermId = new Array();
 
 //术语渲染模板
 var strTermTanslationTmp = "[%mean%](%pali% %mean2% %mymean%)";
-var strTermTanslationTmp2 = "[%mean%]";
+var strTermTanslationTmp2 = "[%mean%](%pali%)";
 
 var termCounter = new Array();
 var noteCounter = 0; //正文内注释计数器
@@ -492,7 +492,12 @@ function term_updata_translation() {
 				noteText = noteText.replace("]", "</span>");
 				noteText = noteText.replace("%mean%", "<span class='term_mean'>" + mean + "</span>");
 				noteText = noteText.replace("%pali%", "<span class='term_pali'>" + pali + "</span>");
-				noteText = noteText.replace("%mean2%", "<span class='term_mean2'>" + mean2 + "</span>");
+				if(mean2!=""){
+					noteText = noteText.replace("%mean2%", ", <span class='term_mean2'>" + mean2 + "</span>");
+				}
+				else{
+					noteText = noteText.replace("%mean2%", "");
+				}
 				noteText = noteText.replace("%note%", "<span class='term_note'>" + "" + "</span>");
 				if (myterm) {
 					if (myterm.meaning != mean) {

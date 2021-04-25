@@ -839,3 +839,6 @@ w:hover {
 	display: flex;
 	justify-content: space-between;
 }
+.term_pali {
+	font-style: italic;
+}
