@@ -3,6 +3,8 @@ require_once "../path.php";
 require_once "../share/function.php";
 require_once "../db/table.php";
 
+
+
 class Article extends Table
 {
     function __construct($redis=false) {
@@ -47,6 +49,7 @@ class Article extends Table
             return false;
         }
 	}
+
     public function getContent($id){
 		$output = array();
 		if($this->redis!==false){
@@ -69,6 +72,7 @@ class Article extends Table
             return false;
         }
 	}
+
 	public function getPower($id,$collectionId=""){
 		#查询用户对此是否有权限	
 		if(isset($_COOKIE["userid"])){
@@ -128,6 +132,7 @@ class Article extends Table
 		$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
 		return $iPower;
 	}
+
 }
 
 
