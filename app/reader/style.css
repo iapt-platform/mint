@@ -172,3 +172,7 @@ note:hover chapter {
 #para_path_next_level {
 	display: inline-block;
 }
+
+#path_div chapter {
+	display: inline-block;
+}

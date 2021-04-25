@@ -835,3 +835,7 @@ w:hover {
 .sent_tran li {
 	line-height: normal;
 }
+.note_foot {
+	display: flex;
+	justify-content: space-between;
+}

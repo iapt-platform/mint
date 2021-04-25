@@ -1,5 +1,6 @@
-var _display = "";
+var _display = "para";
 var _mode = "read";
+var _direction = "row";
 var _word = "";
 var _channal = "";
 var _lang = "";
@@ -272,7 +273,21 @@ function render_read_mode_sent(iterator) {
 			.append(html);
 	}
 	htmlSent += "</div>";
-	htmlSent += "</div>";
+	htmlSent += "</div>"; //note_body
+	htmlSent += "<div class='note_foot'>";
+	htmlSent += "<span>" + iterator.ref + "</span>";
+	htmlSent +=
+		"<span class='sent_id'>" +
+		iterator.book +
+		"-" +
+		iterator.para +
+		"-" +
+		iterator.begin +
+		"-" +
+		iterator.end +
+		"</span>";
+	htmlSent += "</div>"; //note_foot
+
 	return htmlSent;
 }
 //生成channel列表
@@ -611,7 +626,8 @@ function note_json_html(in_json) {
 		"<span class='other_tran_span' title='🧲" +
 		gLocal.gui.other +
 		gLocal.gui.translation +
-		"'><svg class='icon' style='fill: var(--box-bg-color1)'><use xlink:href=\"../studio/svg/icon.svg#more_tran\"></svg>" +gLocal.gui.translation +
+		"'><svg class='icon' style='fill: var(--box-bg-color1)'><use xlink:href=\"../studio/svg/icon.svg#more_tran\"></svg>" +
+		gLocal.gui.translation +
 		"</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
@@ -925,7 +941,7 @@ function render_one_sent_tran_a(iterator) {
 	html += '<div class="body">';
 	html += '<div class="head_bar">';
 	html += '<div class="info">';
-	html += '<span class="name" title="'+ iterator.editor_name.nickname + gLocal.gui.recent_update+'">'
+	html += '<span class="name" title="' + iterator.editor_name.nickname + gLocal.gui.recent_update + '">';
 	if (typeof iterator.channalinfo == "undefined") {
 		html += "unkown";
 	} else {
@@ -953,23 +969,28 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	//html += ""
-	html += '<span style="display: inline-flex;"><svg class="icon" style="width: 25px;height: 18px;"><svg id="ESC_button" viewBox="0 0 210 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="210" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">ESC</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;'
-	html += "<a onclick='tran_sent_edit_cancel(this)'>"+gLocal.gui.cancel+"</a></span><span style='display: inline-flex;'>"
-	html += '<svg class="icon" style="width: 30px;height: 18px;"><svg id="ESC_button" viewBox="0 0 250 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="250" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Shift</tspan></tspan></text></svg></svg>'
-	html += "➕"
-	html += '<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;';
+	html +=
+		'<span style="display: inline-flex;"><svg class="icon" style="width: 25px;height: 18px;"><svg id="ESC_button" viewBox="0 0 210 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="210" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">ESC</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;';
+	html +=
+		"<a onclick='tran_sent_edit_cancel(this)'>" +
+		gLocal.gui.cancel +
+		"</a></span><span style='display: inline-flex;'>";
+	html +=
+		'<svg class="icon" style="width: 30px;height: 18px;"><svg id="ESC_button" viewBox="0 0 250 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="250" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Shift</tspan></tspan></text></svg></svg>';
+	html += "➕";
+	html +=
+		'<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;';
 	if (parseInt(iterator.mypower) < 20) {
 		html += "<a onclick='tran_sent_save(this)'>";
-		html +=  gLocal.gui.submit+"<b>"+gLocal.gui.suggest+gLocal.gui.translation+"</b>";
+		html += gLocal.gui.submit + "<b>" + gLocal.gui.suggest + gLocal.gui.translation + "</b>";
 		html += "</a></span><span style='display: inline-flex;'>";
-
-	}
-	else{
+	} else {
 		html += "<a onclick='tran_sent_save(this)'>";
 		html += gLocal.gui.save;
 		html += "</a></span><span style='display: inline-flex;'>";
 	}
-	html += '<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>';
+	html +=
+		'<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>';
 	//html += "<button>Enter</button>"
 	html += "&nbsp;=&nbsp;";
 	html += gLocal.gui.next_line;
@@ -991,7 +1012,7 @@ function render_one_sent_tran_a(iterator) {
 		if (typeof iterator.channalinfo == "undefined") {
 			html += "unkown";
 		} else {
-			html += "<a title='"+iterator.channalinfo.owner+"'>"+iterator.channalinfo.name+"@</a>";
+			html += "<a title='" + iterator.channalinfo.owner + "'>" + iterator.channalinfo.name + "@</a>";
 		}
 		html += "</span>";
 	} else {
@@ -999,7 +1020,7 @@ function render_one_sent_tran_a(iterator) {
 		if (typeof iterator.channalinfo == "undefined") {
 			html += "unkown";
 		} else {
-			html += "<a title='"+iterator.channalinfo.owner+"'>"+iterator.channalinfo.name+"@</a>";
+			html += "<a title='" + iterator.channalinfo.owner + "'>" + iterator.channalinfo.name + "@</a>";
 		}
 		html += "</span>";
 	}
@@ -1151,20 +1172,20 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	return output;
 }
 function add_new_tran_button_click(obj) {
-	let html = "<div style='display:flex; max-width: 40vw; white-space: normal;'>"
-	var first_lang = ""
+	let html = "<div style='display:flex; max-width: 40vw; white-space: normal;'>";
+	var first_lang = "";
 	for (const iterator of _my_channal) {
-		if(iterator.lang){
-			first_lang=iterator.lang
+		if (iterator.lang) {
+			first_lang = iterator.lang;
 			break;
 		}
 	}
 	html += "<ul class='channel_list lang_0' >";
-	html += '<li>';
+	html += "<li>";
 	html += first_lang;
 	html += "</li>";
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && first_lang.indexOf(iterator.lang)!=-1 && iterator.lang!=0) {
+		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
 			if (_channal.indexOf(iterator.id) < 0) {
 				html += '<li class="channel_name" onclick="';
 				html +=
@@ -1179,7 +1200,7 @@ function add_new_tran_button_click(obj) {
 					"' ,'" +
 					iterator.id +
 					"',this)";
-				html += '" title="'+iterator.nickname
+				html += '" title="' + iterator.nickname;
 				html += '">' + iterator.name;
 				if (parseInt(iterator.power) < 20) {
 					html += "(建议)";
@@ -1189,12 +1210,12 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "</ul>";
-	html+="<ul class='channel_list lang_1'>";
-	html += '<li>';
+	html += "<ul class='channel_list lang_1'>";
+	html += "<li>";
 	html += gLocal.gui.other;
 	html += "</li>";
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && first_lang.indexOf(iterator.lang)==-1 && iterator.lang!=0) {
+		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
 			if (_channal.indexOf(iterator.id) < 0) {
 				html += '<li class="channel_name" onclick="';
 				html +=
@@ -1209,7 +1230,7 @@ function add_new_tran_button_click(obj) {
 					"' ,'" +
 					iterator.id +
 					"',this)";
-				html += '" title="'+iterator.nickname
+				html += '" title="' + iterator.nickname;
 				html += '">' + iterator.name;
 				if (parseInt(iterator.power) < 20) {
 					html += "(建议)";
@@ -1219,12 +1240,12 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "</ul>";
-	html+="<ul class='channel_list lang_2'>";
-	html += '<li>';
+	html += "<ul class='channel_list lang_2'>";
+	html += "<li>";
 	html += gLocal.gui.collaborate;
 	html += "</li>";
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && iterator.lang==0) {
+		if (iterator.status > 0 && iterator.lang == 0) {
 			if (_channal.indexOf(iterator.id) < 0) {
 				html += '<li class="channel_name" onclick="';
 				html +=
@@ -1239,7 +1260,7 @@ function add_new_tran_button_click(obj) {
 					"' ,'" +
 					iterator.id +
 					"',this)";
-				html += '" title="'+iterator.nickname
+				html += '" title="' + iterator.nickname;
 				html += '">' + iterator.name;
 				if (parseInt(iterator.power) < 20) {
 					html += "(建议)";
@@ -1851,9 +1872,11 @@ function setDirection(obj) {
 	if (obj.value == "row") {
 		$("#contents").removeClass("vertical");
 		$("#contents").addClass("horizontal");
+		_direction = "row";
 	} else {
 		$("#contents").removeClass("horizontal");
 		$("#contents").addClass("vertical");
+		_direction = "col";
 	}
 }
 //设置逐段或逐句模式
@@ -1861,8 +1884,10 @@ function setDisplay(obj) {
 	if (obj.value == "para") {
 		$("#contents").removeClass("sent_mode");
 		$("#contents").addClass("para_mode");
+		_display = "para";
 	} else {
 		$("#contents").removeClass("para_mode");
 		$("#contents").addClass("sent_mode");
+		_display = "sent";
 	}
 }

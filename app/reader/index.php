@@ -35,10 +35,6 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["end"])){
 		echo "_reader_end='".$_GET["end"]."';";
 	}
-
-	if(isset($_GET["display"])){
-		echo "_display='".$_GET["display"]."';";
-	}
 	
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
@@ -56,6 +52,35 @@ require_once "../pcdl/html_head.php";
 	else{
 		$_mode = "read";
 		echo "_mode='read';";
+	}
+	if(isset($_GET["display"])){
+		$_display = $_GET["display"];
+		echo "_display='".$_GET["display"]."';";
+	}
+	else{
+		if($_mode=="read"){
+			$_display = "para";
+			echo "_display='para';";
+		}
+		else{
+			$_display = "sent";
+			echo "_display='sent';";			
+		}
+
+	}	
+	if(isset($_GET["direction"])){
+		$_direction = $_GET["direction"];
+		echo "_direction='".$_GET["direction"]."';";
+	}
+	else{
+		if($_mode=="read"){
+			$_direction = "row";
+			echo "_direction='row';";
+		}
+		else{
+			$_direction = "col";
+			echo "_direction='col';";
+		}
 	}
 	?>
 	</script>
@@ -108,16 +133,23 @@ require_once "../pcdl/html_head.php";
 		</div>
 		<div id="contents_view">
 			<div id="contents_div" >
-				<div id="contents" 
+			<div id="contents" class="
 				<?php
-				if($_mode=="read"){
-					echo 'class="para_mode horizontal"';
+				if($_direction=="row"){
+					echo ' horizontal ';
 				}
 				else{
-					echo 'class="sent_mode vertical"';
+					echo ' vertical ';
+				}
+				if($_display=="para"){
+					echo ' para_mode ';
+				}
+				else{
+					echo ' sent_mode ';
 				}
 				?>
-				><?php echo $_local->gui->loading; ?>...</div>
+		">
+				<?php echo $_local->gui->loading; ?>...</div>
 				<div id="contents_toc"></div>
 				<div id="contents_foot">
 					<div id="contents_nav" style="display:flex;justify-content: space-between;">

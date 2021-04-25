@@ -1245,14 +1245,66 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "</div>";
 	return output;
 }
+function renderWordBlock(element) {
+	let output = "";
+	let Note_Mark = 0;
+	let wID = getNodeText(element, "id");
+	let wPali = getNodeText(element, "pali");
+	let wReal = getNodeText(element, "real");
+	let wType = getNodeText(element, "type");
+	let wGramma = getNodeText(element, "gramma");
+	let wCase = getNodeText(element, "case");
+	let wUn = getNodeText(element, "un");
+	if ((wType == "" || wType == "?") && wCase != "") {
+		wType = wCase.split("#")[0];
+	}
 
+	//渲染单词块
+	//word div class
+	let wordclass;
+	let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
+	if (wType == ".ctl." && wGramma == ".a.") {
+		wordclass = "ctrl";
+	} else if (Note_Mark == 1) {
+		wordclass = "word org_note";
+	} else {
+		if (wReal == "") {
+			wordclass = "word word_punc un_parent "; //符號
+		} else {
+			if (wType == ".un.") {
+				wordclass = "word un_parent"; //粘音詞
+			} else if (wType == ".comp.") {
+				wordclass = "word comp_parent"; //複合詞
+			} else {
+				wordclass = "word"; //普通
+			}
+		}
+	}
+	output += '<div id="wb' + wID + "\" class='" + wordclass + "'> <a name='" + wPali + "'></a>";
+	//head div class
+	output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
+	let wordheadclass;
+	if (wUn.length > 0) {
+		wordheadclass = "word_head un_pali";
+	} else {
+		wordheadclass = "word_head";
+	}
+	output += "	<div class='" + wordheadclass + "' id=\"whead_" + wID + '">';
+	output += renderWordHeadInner(element);
+	output += "	</div>";
+	output += "	</div>"; //word_head_shell
+	output += '	<div id="detail' + wID + '" class="wbody">';
+	output += renderWordBodyInner(element);
+	output += "	</div>";
+
+	output += "</div>";
+	return output;
+}
 var arr_par_sent_num = new Array();
 var g_arr_Para_ID = new Array();
 function renderWordParBlockInner(elementBlock) {
 	var output = "<div style='display:block;width:100%'>";
 	var Note_Mark = 0;
-	var sent_gramma_i = 0;
-	var word_length_count = 0;
 	var sent_num = 0;
 
 	var arr_Para_ID = new Array();
@@ -1260,7 +1312,6 @@ function renderWordParBlockInner(elementBlock) {
 	let book = getNodeText(xmlParInfo, "book");
 	let paragraph = getNodeText(xmlParInfo, "paragraph");
 	let par_num = paragraph - 1;
-	let type = getNodeText(xmlParInfo, "type");
 	let allWord = elementBlock.getElementsByTagName("word");
 	output += "<div class='sent_wbw_trans'>";
 	output += render_sent_tool_bar(elementBlock, 0);
@@ -1276,83 +1327,61 @@ function renderWordParBlockInner(elementBlock) {
 		let wType = getNodeText(allWord[iWord], "type");
 		let wGramma = getNodeText(allWord[iWord], "gramma");
 		let wCase = getNodeText(allWord[iWord], "case");
-		let wMean = getNodeText(allWord[iWord], "mean");
-		let wParent = getNodeText(allWord[iWord], "parent");
 		let wUn = getNodeText(allWord[iWord], "un");
-		let wStyle = getNodeText(allWord[iWord], "style");
 		let wEnter = getNodeText(allWord[iWord], "enter");
-
 		if ((wType == "" || wType == "?") && wCase != "") {
 			wType = wCase.split("#")[0];
 		}
+
+		//渲染单词块
+		output += renderWordBlock(allWord[iWord]);
+		/*
+		//word div class
+		let wordclass;
+		let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
+		if (wType == ".ctl." && wGramma == ".a.") {
+			wordclass = "ctrl";
+		} else if (Note_Mark == 1) {
+			wordclass = "word org_note";
+		} else {
+			if (wReal == "") {
+				wordclass = "word word_punc un_parent "; //符號
+			} else {
+				if (wType == ".un.") {
+					wordclass = "word un_parent"; //粘音詞
+				} else if (wType == ".comp.") {
+					wordclass = "word comp_parent"; //複合詞
+				} else {
+					wordclass = "word"; //普通
+				}
+			}
+		}
+		output += '<div id="wb' + wID + "\" class='" + wordclass + "'> <a name='" + wPali + "'></a>";
+		//head div class
+		output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
+		let wordheadclass;
+		if (wUn.length > 0) {
+			wordheadclass = "word_head un_pali";
+		} else {
+			wordheadclass = "word_head";
+		}
+		output += "	<div class='" + wordheadclass + "' id=\"whead_" + wID + '">';
+		output += renderWordHeadInner(allWord[iWord]);
+		output += "	</div>";
+		output += "	</div>"; //word_head_shell
+		output += '	<div id="detail' + wID + '" class="wbody">';
+		output += renderWordBodyInner(allWord[iWord]);
+		output += "	</div>";
+
+		output += "</div>";
+*/
+		//渲染单词块结束
 
 		word_id = parseInt(wID.split("-")[2]);
 		if (sent_begin == 0) {
 			sent_begin = word_id;
 		}
 
-		//渲染单词块
-		//word div class
-		let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
-		if (wType == ".ctl." && wGramma == ".a.") {
-			//output += "<div><a name='"+wPali+"'></a></div>";
-			output +=
-				'<div id="wb' +
-				wID +
-				"\" class='ctrl sent_gramma_" +
-				(sent_gramma_i % 3) +
-				"'> <a name='" +
-				wPali +
-				"'></a>";
-		} else if (Note_Mark == 1) {
-			output +=
-				'<div id="wb' +
-				wID +
-				"\" class='word org_note sent_gramma_" +
-				(sent_gramma_i % 3) +
-				"'> <a name='" +
-				wPali +
-				"'></a>";
-		} else {
-			if (wReal == "") {
-				output +=
-					'<div id="wb' +
-					wID +
-					'" class="word word_punc un_parent sent_gramma_' +
-					(sent_gramma_i % 3) +
-					'" >'; //符號
-			} else {
-				if (wType == ".un.") {
-					output +=
-						'<div id="wb' + wID + '" class="word un_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //粘音詞
-				} else if (wType == ".comp.") {
-					output +=
-						'<div id="wb' + wID + '" class="word comp_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //複合詞
-				} else {
-					output += '<div id="wb' + wID + '" class="word sent_gramma_' + (sent_gramma_i % 3) + '" >'; //普通
-				}
-			}
-		}
-
-		//head div class
-		output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
-		if (wUn.length > 0) {
-			output += "	<div class='word_head un_pali' id=\"whead_" + wID + '">';
-		} else {
-			output += "	<div class='word_head' id=\"whead_" + wID + '">';
-		}
-
-		output += renderWordHeadInner(allWord[iWord]);
-		output += "	</div>";
-		output += "	</div>";
-		output += '	<div id="detail' + wID + '" class="wbody">';
-		output += renderWordBodyInner(allWord[iWord]);
-		output += "	</div>";
-		output += "</div>";
-
-		//渲染单词块结束
-
-		word_length_count += wPali.length;
 		if (iWord >= 1) {
 			var pre_pali_spell = getNodeText(allWord[iWord - 1], "pali");
 			var pre_pali_type = getNodeText(allWord[iWord - 1], "type");
@@ -1551,8 +1580,6 @@ function renderWordParBlockInner(elementBlock) {
 				output += "<div class='sent_wbw'>";
 			}
 			sent_num += 1;
-			word_length_count = 0;
-			sent_gramma_i = 0;
 			arr_Para_ID.push(wID);
 		}
 	} //循環結束

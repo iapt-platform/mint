@@ -39,10 +39,12 @@ function my_article_list() {
 						html +=
 							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
 							iterator.id +
-							"' title='"+gLocal.gui.edit+"'>";
+							"' title='" +
+							gLocal.gui.edit +
+							"'>";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>";
 						html += "</svg>";
 						html += "</button>";
 
@@ -50,24 +52,36 @@ function my_article_list() {
 						html +=
 							"<div style='flex:1;'><a href='../article/?id=" +
 							iterator.id +
-							"' target='_blank' title='"+gLocal.gui.preview+"' >";
+							"' target='_blank' title='" +
+							gLocal.gui.preview +
+							"' >";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</a></div>";
-						html += "<div style='flex:1;'>"
-						html += "<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id="+iterator.id+"')\" title='"+gLocal.gui.copy_link+"'>";
+						html += "<div style='flex:1;'>";
+						html +=
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id=" +
+							iterator.id +
+							"')\" title='" +
+							gLocal.gui.copy_link +
+							"'>";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<button title='"+gLocal.gui.share_to+"' class='icon_btn' onclick=\"article_share('" + iterator.id + "')\">";
+						html +=
+							"<button title='" +
+							gLocal.gui.share_to +
+							"' class='icon_btn' onclick=\"article_share('" +
+							iterator.id +
+							"')\">";
 						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>"
+						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>";
 						html += "</svg>";
 						html += "</button>";
 						html += "</div>";
@@ -185,10 +199,14 @@ function my_article_edit(id) {
 					html += "<div>";
 					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
-					html += '<span id="article_title" style="flex:7;"></span></div>';
+					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
+					html += '<span id="article_title" style="flex:7;"></span>';
+					html += "</div>";
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
-					html += "<div id='aritcle_status' style='display: flex; '></div>";
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
+					html += '<span id="aritcle_status" style="flex:7;"></span>';
+					html += "</div>";
 					html +=
 						'<div style="display:none;width:100%;" ><span style="flex:3;margin: auto;">' +
 						gLocal.gui.language_select +
@@ -204,13 +222,13 @@ function my_article_edit(id) {
 						result.lang +
 						'" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.introduction + "</span>";
+					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
 					html += "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
 					html += "</div>";
 					html += "</div>";
 
 					html +=
-						"<textarea id='article_content' name='content' style='height:500px;max-height: 40vh;'>" +
+						"<textarea id='article_content' name='content' style='height:480px;resize: vertical;'>" +
 						result.content +
 						"</textarea>";
 					html += "</div>";
