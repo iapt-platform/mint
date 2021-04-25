@@ -3,8 +3,6 @@ require_once "../path.php";
 require_once "../share/function.php";
 require_once "../db/table.php";
 
-
-
 class Article extends Table
 {
     function __construct($redis=false) {

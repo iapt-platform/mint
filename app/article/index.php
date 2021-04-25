@@ -46,8 +46,14 @@ require_once "../pcdl/html_head.php";
 		echo "_mode='read';";
 	}
 	if(isset($_GET["display"])){
-		$_display = $_GET["display"];
-		echo "_display='".$_GET["display"]."';";
+		if($_mode == "edit"){
+			$_display = "sent";
+			echo "_display='sent';";	
+		}
+		else{
+			$_display = $_GET["display"];
+			echo "_display='".$_GET["display"]."';";			
+		}
 	}
 	else{
 		if($_mode=="read"){

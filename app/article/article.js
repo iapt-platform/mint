@@ -187,7 +187,11 @@ function setMode(mode = "read") {
 		url += "&channal=" + _channal;
 	}
 	if (_display != "") {
-		url += "&display=" + _display;
+		if (mode == "read") {
+			url += "&display=" + _display;
+		} else {
+			url += "&display=sent";
+		}
 	}
 	if (mode != "") {
 		url += "&mode=" + mode;
