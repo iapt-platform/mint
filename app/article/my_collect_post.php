@@ -47,9 +47,9 @@ else{
 	}
     # 更新 article_list 表
     $query = "DELETE FROM article_list WHERE collect_id = ? ";
-     PDO_Execute($query,array($_POST["id"]));
-     $arrList = json_decode($_POST["article_list"]);
-     if(count($arrList)>0){
+    PDO_Execute($query,array($_POST["id"]));
+    $arrList = json_decode($_POST["article_list"]);
+    if(count($arrList)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
         $query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
@@ -69,7 +69,7 @@ else{
             $respond['status']=1;
             $respond['message']=$error[2];
         }
-     }
+    }
 }
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>

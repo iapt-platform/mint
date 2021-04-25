@@ -74,6 +74,20 @@ require_once "../pcdl/html_head.php";
 			echo "_direction='col';";
 		}
 	}
+	$contentClass= "";
+	if($_direction=="row"){
+		$contentClass .= ' horizontal ';
+	}
+	else{
+		$contentClass .= ' vertical ';
+	}
+	if($_display=="para"){
+		$contentClass .= ' para_mode ';
+	}
+	else{
+		$contentClass .= ' sent_mode ';
+	}
+
 	?>
 	</script>
 
@@ -121,22 +135,8 @@ require_once "../pcdl/html_head.php";
 </div>
 <div id="contents_view">
 	<div id="contents_div">
-		<div id="contents" class="
-				<?php
-				if($_direction=="row"){
-					echo ' horizontal ';
-				}
-				else{
-					echo ' vertical ';
-				}
-				if($_display=="para"){
-					echo ' para_mode ';
-				}
-				else{
-					echo ' sent_mode ';
-				}
-				?>
-		">
+	
+		<div id="contents" class="<?php echo $contentClass;?>">
 		<?php echo $_local->gui->loading; ?>...
 		</div>
 		<div id="contents_foot">
