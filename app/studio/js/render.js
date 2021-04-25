@@ -1636,13 +1636,13 @@ function sent_show_rel_map(book, para, begin, end) {
 			idList.push(this.id.slice(3));
 		});
 
-	for (const iterator of idList) {
-		let rel = doc_word("#p" + iterator).val("rela");
-		let pali = doc_word("#p" + iterator).val("pali");
-		let real = doc_word("#p" + iterator).val("real");
-		let type = doc_word("#p" + iterator).val("type");
+	for (const iterator_wid of idList) {
+		let rel = doc_word("#p" + iterator_wid).val("rela");
+		let pali = doc_word("#p" + iterator_wid).val("pali");
+		let real = doc_word("#p" + iterator_wid).val("real");
+		let type = doc_word("#p" + iterator_wid).val("type");
 
-		let meaning = doc_word("#p" + iterator).val("mean");
+		let meaning = doc_word("#p" + iterator_wid).val("mean");
 		meaning = removeFormulaB(meaning, "[", "]");
 		meaning = removeFormulaB(meaning, "【", "】");
 		meaning = removeFormulaB(meaning, "{", "}");
@@ -1654,7 +1654,7 @@ function sent_show_rel_map(book, para, begin, end) {
 			pali_text += pali + " ";
 		}
 		let wid = "p" + book + "-" + para + "-" + wordId;
-
+		wordId++;
 		if (rel != "") {
 			let relaData = JSON.parse(rel);
 			let language=getCookie("language")
@@ -1679,11 +1679,11 @@ function sent_show_rel_map(book, para, begin, end) {
 				meanDest = removeFormulaB(meanDest, "（", "）");
 
 				if (type.indexOf(".v.") >= 0) {
-					dest = iterator.dest_id + "((" + dest + "<br>" + meanDest + "))";
+					dest = iterator.dest_id + '(("' + dest + '<br>' + meanDest + '"))';
 				} else {
-					dest = iterator.dest_id + "[" + dest + "<br>" + meanDest + "]";
+					dest = iterator.dest_id + '["' + dest + '<br>' + meanDest + '"]';
 				}
-				memind += wid + "(" + real +"<br>"+ meaning + ")" + " -- " + strRel+"<br>"+ relation_locstr + " --> " + dest + "\n";
+				memind += wid + '("' + real +'<br>'+ meaning + '")--"'+ strRel+'<br>'+ relation_locstr + '" --> ' + dest + "\n";
 			}
 		}
 	}

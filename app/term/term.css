@@ -657,8 +657,7 @@ pw {
 }
 .tool_bar > .right {
 	position: absolute;
-	right: calc(30px + 2.4em - 70vw);
-	right: calc(30px + 3em - 100vw);
+	right: 2em;
 	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
