@@ -1,30 +1,27 @@
 <?php
 require_once "../path.php";
 require_once "../share/function.php";
+require_once "../db/table.php";
 
-class Article
+class Article extends Table
 {
-    private $dbh;
-	private $_redis;
-    public function __construct($redis=false) {
-        $this->dbh = new PDO(_FILE_DB_USER_ARTICLE_, "", "",array(PDO::ATTR_PERSISTENT=>true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$this->_redis=$redis;
+    function __construct($redis=false) {
+		parent::__construct(_FILE_DB_USER_ARTICLE_, "article", "", "",$redis);
     }
 
     public function getInfo($id){
 		$output = array();
-		if($this->_redis!==false){
-			if($this->_redis->exists("article://".$id)===1){
-				$output["id"]=$this->_redis->hGet("article://".$id,"id");
-				$output["title"]=$this->_redis->hGet("article://".$id,"title");
-				$output["subtitle"]=$this->_redis->hGet("article://".$id,"subtitle");
-				$output["owner"]=$this->_redis->hGet("article://".$id,"owner");
-				$output["summary"]=$this->_redis->hGet("article://".$id,"summary");
-				$output["tag"]=$this->_redis->hGet("article://".$id,"tag");
-				$output["status"]=$this->_redis->hGet("article://".$id,"status");
-				$output["create_time"]=$this->_redis->hGet("article://".$id,"create_time");
-				$output["modify_time"]=$this->_redis->hGet("article://".$id,"modify_time");
+		if($this->redis!==false){
+			if($this->redis->exists("article://".$id)===1){
+				$output["id"]=$this->redis->hGet("article://".$id,"id");
+				$output["title"]=$this->redis->hGet("article://".$id,"title");
+				$output["subtitle"]=$this->redis->hGet("article://".$id,"subtitle");
+				$output["owner"]=$this->redis->hGet("article://".$id,"owner");
+				$output["summary"]=$this->redis->hGet("article://".$id,"summary");
+				$output["tag"]=$this->redis->hGet("article://".$id,"tag");
+				$output["status"]=$this->redis->hGet("article://".$id,"status");
+				$output["create_time"]=$this->redis->hGet("article://".$id,"create_time");
+				$output["modify_time"]=$this->redis->hGet("article://".$id,"modify_time");
 				return $output;
 			}
 		}
@@ -33,16 +30,16 @@ class Article
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
         if($output){
-			if($this->_redis!==false){
-				$this->_redis->hSet("article://".$id,"id",$output["id"]);
-				$this->_redis->hSet("article://".$id,"title",$output["title"]);
-				$this->_redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
-				$this->_redis->hSet("article://".$id,"summary",$output["summary"]);
-				$this->_redis->hSet("article://".$id,"owner",$output["owner"]);
-				$this->_redis->hSet("article://".$id,"tag",$output["tag"]);
-				$this->_redis->hSet("article://".$id,"status",$output["status"]);
-				$this->_redis->hSet("article://".$id,"create_time",$output["create_time"]);
-				$this->_redis->hSet("article://".$id,"modify_time",$output["modify_time"]);
+			if($this->redis!==false){
+				$this->redis->hSet("article://".$id,"id",$output["id"]);
+				$this->redis->hSet("article://".$id,"title",$output["title"]);
+				$this->redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				$this->redis->hSet("article://".$id,"summary",$output["summary"]);
+				$this->redis->hSet("article://".$id,"owner",$output["owner"]);
+				$this->redis->hSet("article://".$id,"tag",$output["tag"]);
+				$this->redis->hSet("article://".$id,"status",$output["status"]);
+				$this->redis->hSet("article://".$id,"create_time",$output["create_time"]);
+				$this->redis->hSet("article://".$id,"modify_time",$output["modify_time"]);
 			}
             return $output;
         }
@@ -52,9 +49,9 @@ class Article
 	}
     public function getContent($id){
 		$output = array();
-		if($this->_redis!==false){
-			if($this->_redis->hExists("article://".$id,"content")===TRUE){
-				$content=$this->_redis->hGet("article://".$id,"content");
+		if($this->redis!==false){
+			if($this->redis->hExists("article://".$id,"content")===TRUE){
+				$content=$this->redis->hGet("article://".$id,"content");
 				return $content;
 			}
 		}
@@ -63,8 +60,8 @@ class Article
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
         if($output){
-			if($this->_redis!==false){
-				$this->_redis->hSet("article://".$id,"content",$output["content"]);
+			if($this->redis!==false){
+				$this->redis->hSet("article://".$id,"content",$output["content"]);
 			}
             return $output["content"];
         }
@@ -80,8 +77,8 @@ class Article
 		else{
 			$userId=0;
 		}
-		if($this->_redis!==false){
-			$power = $this->_redis->hGet("power://article/".$id,$userId);
+		if($this->redis!==false){
+			$power = $this->redis->hGet("power://article/".$id,$userId);
 			if($power!==FALSE){
 				return $power;
 			}
@@ -128,9 +125,50 @@ class Article
 		if($sharePowerCollection>$iPower){
 			$iPower=$sharePowerCollection;
 		}
-		$this->_redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+		$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
 		return $iPower;
 	}
 }
 
+
+class ArticleList extends Table
+{
+    function __construct($redis=false) {
+		parent::__construct(_FILE_DB_USER_ARTICLE_, "article_list", "", "",$redis);
+    }
+
+	function upgrade($collectionId,$articleList=array()){
+		if(count($articleList)==0){
+
+		}
+		# 更新 article_list 表
+		$query = "DELETE FROM article_list WHERE collect_id = ? ";
+		$stmt = $this->dbh->prepare($query);
+		if($stmt){
+			$stmt->execute($collectionId);
+		}
+        
+		if(count($articleList)>0){
+			/* 开始一个事务，关闭自动提交 */
+			$PDO->beginTransaction();
+			$query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
+			$sth = $PDO->prepare($query);
+			foreach ($articleList as $row) {
+				$sth->execute(array($_POST["id"],$row->article,$row->level,$row->title));
+				if($redis){
+					#删除article权限缓存
+					$redis->del("power://article/".$row->article);
+				}
+			}
+			$PDO->commit();
+			if (!$sth || ($sth && $sth->errorCode() != 0)) {
+				/*  识别错误且回滚更改  */
+				$PDO->rollBack();
+				$error = PDO_ErrorInfo();
+				$respond['status']=1;
+				$respond['message']=$error[2];
+			}
+		}
+	}
+}
 ?>
