@@ -842,3 +842,7 @@ w:hover {
 .term_pali {
 	font-style: italic;
 }
+
+.note_body note {
+	display: inline;
+}
