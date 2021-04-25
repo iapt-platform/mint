@@ -26,7 +26,7 @@ class CollectInfo
             return $buffer[$id];
         }
         if($this->dbh){
-            $query = "SELECT id,title,owner,status,lang, FROM collect WHERE id= ?";
+            $query = "SELECT id,title,owner,status,lang,article_list FROM collect WHERE id= ?";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($id));
 			$collect = $stmt->fetch(PDO::FETCH_ASSOC);
