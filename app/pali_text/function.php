@@ -68,20 +68,22 @@ class PaliBook extends Table
     }
 	
 	public function getBookTitle($book,$para){
+		/*
 		if($this->redis!==false){
 			$result = $this->redis->hGet("pali_text://book",$book."-".$para);
 			if($result!==FALSE){
 				return $result;
 			}
 		}
+		*/
 		$query = "select title from books where \"book\" = ? and \"paragraph\" = ? limit 0,1";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($book, $para));
 		$book = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($book){
 			if($this->redis){
-				$this->redis->hSet("pali_text://book",$book."-".$para,$book["title"]);
-			}			
+				//$this->redis->hSet("pali_text://book",$book."-".$para,$book["title"]);
+			}
 			return $book["title"];
 		}
 		else{
