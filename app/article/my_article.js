@@ -63,7 +63,7 @@ function my_article_list() {
 						html += "</a></div>";
 						html += "<div style='flex:1;'>";
 						html +=
-							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id=" +
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/app/article/?id=" +
 							iterator.id +
 							"')\" title='" +
 							gLocal.gui.copy_link +
