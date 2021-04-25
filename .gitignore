@@ -6,3 +6,4 @@
 /.debug
 .favorites.json
 /vendor
+/node_modules

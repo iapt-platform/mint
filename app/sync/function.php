@@ -15,23 +15,20 @@ function do_sync($param)
 		if($key===FALSE){
 			$output["error"]=1;
 			$output["message"]="无法提取key userid:".$_POST["userid"];
-			echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-			return false;
+			return $output;	
 		}
 		else{
 			if($key!=$_POST["key"]){
 				$output["error"]=1;
 				$output["message"]="key验证失败 {$key}- {$_POST["key"]} ";
-				echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-				return false;
+				return $output;	
 			}
 		}
 	}
 	else{
 		$output["error"]=1;
 		$output["message"]="redis初始化失败";
-		echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-		return false;
+		return $output;	
 	}
 
     if (isset($_GET["op"])) {
@@ -41,11 +38,10 @@ function do_sync($param)
     } else {
 		$output["error"]=1;
 		$output["message"]="无操作码";
-		echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-		return false;
+		return $output;	
     }
 
-    $PDO = new PDO("" . $param->database, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $PDO = new PDO($param->database, "", "", array(PDO::ATTR_PERSISTENT => true));
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     switch ($op) {
@@ -75,8 +71,8 @@ function do_sync($param)
 						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					}
 					$output["data"]=$Fetch;
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-					return;			
+					return $output;
+			
 				}
 				else if(isset($_POST["id"])){
 					$params = json_decode($_POST["id"],true);
@@ -89,7 +85,8 @@ function do_sync($param)
 					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					$iFetch = count($Fetch);
 					$output["data"]=$Fetch;
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);					
+					return $output;
+					
 				}
 
                 break;
@@ -112,8 +109,7 @@ function do_sync($param)
                 $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				$output["message"]="提取数据".count($Fetch);
 				$output["data"]=$Fetch;
-				echo json_encode($output, JSON_UNESCAPED_UNICODE);
-                return true;
+				return $output;
                 break;
             }
         case "insert":
@@ -123,8 +119,7 @@ function do_sync($param)
                 } else {
 					$output["error"]=1;
 					$output["message"]="没有提交数据";
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-                    return false;
+					return $output;
                 }
 
                 // 开始一个事务，关闭自动提交
@@ -157,14 +152,13 @@ function do_sync($param)
                     $error = $PDO->errorInfo();
 					$output["error"]=1;
 					$output["message"]="error - $error[2]";
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-                    return false;
+					return $output;
+
                 } else {
                     $count = count($arrData);
 					$output["error"]=0;
 					$output["message"]="INSERT $count recorders.";
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);						
-                    return (true);
+					return $output;						
                 }
                 break;
             }
@@ -175,8 +169,7 @@ function do_sync($param)
                 } else {
 					$output["error"]=1;
 					$output["message"]="没有输入数据";
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-                    return false;
+					return $output;	
                 }
                 $arrData = json_decode($data, true);
                 $query = "UPDATE {$param->table} SET ";
@@ -204,23 +197,20 @@ function do_sync($param)
                         $error = $PDO->errorInfo();
 						$output["error"]=1;
 						$output["message"]="error - $error[2]";
-						echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-						return false;
+						return $output;
+
                     } else {
                         $count = count($arrData);
 						$output["error"]=0;
 						$output["message"]="Update $count recorders.";
-						echo json_encode($output, JSON_UNESCAPED_UNICODE);	
-                        return true;
+						return $output;
                     }
                 } catch (Exception $e) {
                     $PDO->rollback();
 					$output["error"]=1;
 					$output["message"]="Failed:" . $e->getMessage();
-					echo json_encode($output, JSON_UNESCAPED_UNICODE);						
-                    return false;
+					return $output;						
                 }
-
                 break;
             }
         default:

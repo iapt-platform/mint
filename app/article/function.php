@@ -142,7 +142,7 @@ class ArticleList extends Table
 
 	function upgrade($collectionId,$articleList=array()){
 		if(count($articleList)==0){
-
+			return false;
 		}
 		# 更新 article_list 表
 		$query = "DELETE FROM article_list WHERE collect_id = ? ";
@@ -153,9 +153,9 @@ class ArticleList extends Table
         
 		if(count($articleList)>0){
 			/* 开始一个事务，关闭自动提交 */
-			$PDO->beginTransaction();
+			$this->dbh->beginTransaction();
 			$query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
-			$sth = $PDO->prepare($query);
+			$sth = $this->dbh->prepare($query);
 			foreach ($articleList as $row) {
 				$sth->execute(array($_POST["id"],$row->article,$row->level,$row->title));
 				if($redis){

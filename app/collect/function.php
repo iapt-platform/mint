@@ -1,14 +1,15 @@
 <?php
 require_once '../path.php';
 require_once "../share/function.php";
-
+require_once "../db/table.php";
+require_once "../article/function.php";
 
 class CollectInfo
 {
     private $dbh;
     private $buffer;
 	private $_redis;
-
+	private $errorMsg;
     public function __construct($redis=false) {
         $dns = ""._FILE_DB_USER_ARTICLE_;
         $this->dbh = new PDO($dns, "", "",array(PDO::ATTR_PERSISTENT=>true));
@@ -25,7 +26,7 @@ class CollectInfo
             return $buffer[$id];
         }
         if($this->dbh){
-            $query = "SELECT id,title,owner,status,lang FROM collect WHERE id= ?";
+            $query = "SELECT id,title,owner,status,lang, FROM collect WHERE id= ?";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($id));
 			$collect = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -36,7 +37,7 @@ class CollectInfo
             else{
                 $buffer[$id] =false;
                 return $buffer[$id];
-            }            
+            }
         }
         else{
             $buffer[$id] = false;
@@ -114,6 +115,122 @@ class CollectInfo
 			$this->_redis->hSet("power://collection/".$id,$userId,$iPower);			
 		}
 		return $iPower;
+	}
+
+	public function update($arrData){
+		/* 修改现有数据 */
+	
+		if (count($arrData) > 0) {
+			$this->dbh->beginTransaction();
+			$query="UPDATE collect SET title = ? , subtitle = ? , summary = ?, article_list = ?  ,  status = ? , lang = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
+			$sth = $this->dbh->prepare($query);
+			foreach ($arrData as $data) {
+				$sth->execute(array($data["title"] , $data["subtitle"] ,$data["summary"], $data["article_list"] , $data["status"] , $data["lang"] ,  mTime() , mTime() , $data["id"]));
+			}
+			$this->dbh->commit();
+		
+			if (!$sth || ($sth && $sth->errorCode() != 0)) {
+				/*  识别错误且回滚更改  */
+				$this->dbh->rollBack();
+				$error = $this->dbh->errorInfo();
+				$this->errorMsg = $error[2];
+				return false;
+			} else {
+				#没错误 添加log 
+				$this->errorMsg = "";
+				//更新列表
+				$ArticleList = new ArticleList($this->_redis);
+				foreach ($arrData as $data) {
+					$arrList = json_decode($data["article_list"],true);
+					$ArticleList->upgrade($data["id"],$arrList);
+				}
+				return true;
+			}
+		}
+		else{
+			$this->errorMsg = "";
+			return true;
+		}
+	}
+
+	public function insert($arrData){
+		/* 插入新数据 */
+		$respond=array("status"=>0,"message"=>"");
+		if (count($arrData) > 0) {
+			$this->dbh->beginTransaction();
+			$query="INSERT INTO collect ( id,  title  , subtitle  , summary , article_list , owner, lang  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? ) ";
+			$sth = $this->dbh->prepare($query);
+			$newDataList=array();
+			foreach ($arrData as $data) {
+				$newData = array();
+				if(isset($data["title"]) && !empty($data["title"])){
+					$newData["title"]=$data["title"];
+					if(isset($data["id"])){
+						$newData["id"]=$data["id"];
+					}
+					else{
+						$newData["id"]=UUID::v4();
+					}
+					if(isset($data["subtitle"])){
+						$newData["subtitle"]=$data["subtitle"];
+					}
+					else{
+						$newData["subtitle"]="";
+					}
+					if(isset($data["summary"])){
+						$newData["summary"]=$data["summary"];
+					}
+					else{
+						$newData["summary"]="";
+					}	
+					if(isset($data["article_list"])){
+						$newData["article_list"]=$data["article_list"];
+					}
+					else{
+						$newData["article_list"]="";
+					}		
+					if(isset($data["lang"])){
+						$newData["lang"]=$data["lang"];
+					}
+					else{
+						$newData["lang"]="";
+					}
+					if(isset($data["status"])){
+						$newData["status"]=$data["status"];
+					}
+					else{
+						$newData["status"]="1";
+					}
+					$newDataList[]=$newData;
+					$sth->execute(array($newData["id"] , $newData["title"] , $newData["subtitle"] ,$newData["summary"], $newData["article_list"] ,  $_COOKIE["userid"] , $newData["lang"] , $newData["status"] , mTime() ,  mTime() , mTime() ));				
+				}
+				else{
+					$this->errorMsg="标题不能为空";
+				}
+			}
+			$this->dbh->commit();
+	
+			if (!$sth || ($sth && $sth->errorCode() != 0)) {
+				/*  识别错误且回滚更改  */
+				$this->dbh->rollBack();
+				$error = $this->dbh->errorInfo();
+				$this->errorMsg = $error[2];
+				return false;
+			} else {
+				$this->errorMsg = "";
+				//更新列表
+				$ArticleList = new ArticleList($this->_redis);
+				foreach ($newDataList as $data) {
+					$arrList = json_decode($data["article_list"],true);
+					$ArticleList->upgrade($data["id"],$arrList);
+				}
+				return true;
+			}
+		}
+		else{
+			$this->errorMsg = "";
+			return true;
+		}
 	}
 }
 ?>

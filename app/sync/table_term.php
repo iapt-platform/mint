@@ -41,6 +41,7 @@ $input = (object) [
     ]    
 ];
 
-do_sync($input);
+$result = do_sync($input);
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 ?>
