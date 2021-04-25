@@ -43,7 +43,7 @@ function wordStyle($word, $style)
 
         case 'note':
             # vir note...
-            return "<note>" . $word . "</note>";
+            return "<n>" . $word . "</n>";
             break;
         case 'paranum':
             # vir note...

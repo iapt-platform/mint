@@ -3042,13 +3042,13 @@ th {
 .tooltip {
 	position: relative;
 	display: inline;
-	zcursor: help;
+	cursor: help;
 }
 
 .tooltip .tooltiptext {
 	visibility: hidden;
 	position: absolute;
-	width: 100px;
+	min-width: 80px;
 	background-color: #555;
 	color: #fff;
 	text-align: center;
@@ -3056,24 +3056,41 @@ th {
 	border-radius: 6px;
 	z-index: 1;
 	opacity: 0;
-	transition: opacity 0.6s;
-}
-
-.tooltip:hover {
-	color: red;
+	transition: all 0.6s;
 }
 
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 	opacity: 1;
 }
+.tooltip-top {
+	top: -150%;
+	left: 50%;
+	margin-left: -40px;
+	transition: all 0.6s;
+}
+.tooltip:hover .tooltip-top {
+	top: -180%;
+}
 
+.tooltip .tooltip-top::after {
+	content: " ";
+	position: absolute;
+	top: 100%; /* 提示工具底部 */
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
 .tooltip-bottom {
 	top: 100%;
 	left: 50%;
 	margin-left: -60px;
 }
-
+.tooltip:hover .tooltip-bottom {
+	top: 120%;
+}
 .tooltip-bottom::after {
 	content: "";
 	position: absolute;
@@ -3113,10 +3130,6 @@ th {
 .tooltip_menu a:hover {
 	background-color: #fff;
 	color: #555;
-}
-
-.tooltip_menu:hover {
-	color: red;
 }
 
 .tooltip_menu:hover .tooltiptext {
@@ -4214,6 +4227,7 @@ border-bottom: 2px solid red;
 }
 
 .term_pali {
+	font-style: italic;
 }
 
 .term_mean2 {

@@ -73,7 +73,7 @@ function my_group_list() {
 							"</a></div>";
 						html += "<div style='flex:1;'><div class='hover_button'>";
 						if (parseInt(iterator.power) == 0) {
-							//管理员可以删除group
+							//只有管理员可以删除group
 							html +=
 								"<button onclick=\"group_del('" +
 								iterator.group_id +
@@ -111,14 +111,17 @@ function group_list(id, list) {
 					let html = "";
 					let result = JSON.parse(data);
 					let key = 1;
-					html += "<div class='info_block'>";
-					html += "<h2>" + gLocal.gui.introduction + "</h2>";
-					html += result.info.description;
-					html += "</div>";
+					if (typeof result.info.description != "undefined" && result.info.description.length > 0) {
+						html += "<div class='info_block'>";
+						html += "<h2>" + gLocal.gui.introduction + "</h2>";
+						html += marked(result.info.description);
+						html += "</div>";
+					}
+
 					$("#curr_group").html("/" + result.info.name);
 
 					if (result.parent) {
-						//如果是project 显示 group名词
+						//如果是project 显示 group名称
 						$("#parent_group").html(
 							" / <a href='../group/index.php?id=" +
 								result.parent.id +
@@ -127,7 +130,9 @@ function group_list(id, list) {
 								"</a> "
 						);
 					} else {
-						if (result.info.creator == getCookie("userid")) {
+						/*
+						关闭子小组功能
+						if (result.info.owner == getCookie("userid")) {
 							$("#button_new_sub_group").show();
 						}
 						//子小组列表
@@ -139,7 +144,7 @@ function group_list(id, list) {
 								html += "<div style='flex:1;'>" + key++ + "</div>";
 								html += "<div style='flex:2;'>" + iterator.name + "</div>";
 								html += "<div style='flex:2;'>";
-								if (iterator.creator == getCookie("userid")) {
+								if (iterator.owner == getCookie("userid")) {
 									html += gLocal.gui.owner;
 								}
 								html += "</div>";
@@ -150,7 +155,7 @@ function group_list(id, list) {
 									gLocal.gui.enter +
 									"</a></div>";
 								html += "<div style='flex:1;'><div class='hover_button'>";
-								if (iterator.creator == getCookie("userid")) {
+								if (iterator.owner == getCookie("userid")) {
 									html +=
 										"<button onclick=\"group_del('" +
 										iterator.id +
@@ -165,6 +170,7 @@ function group_list(id, list) {
 							html += "尚未设置小组";
 						}
 						html += "</div>";
+*/
 					}
 
 					//共享文件列表
@@ -175,25 +181,76 @@ function group_list(id, list) {
 						for (const iterator of result.file) {
 							html += '<div class="file_list_row" style="padding:5px;">';
 							html += "<div style='flex:1;'>" + key++ + "</div>";
-							html += "<div style='flex:2;'>" + iterator.title + "</div>";
+							html += "<div style='flex:1;'>";
+							//资源类型
+							html += "<svg class='icon'>";
+							let cardUrl = "";
+							let doing = "";
+							switch (parseInt(iterator.res_type)) {
+								case 1: //pcs
+									html += "<use xlink:href='../studio/svg/icon.svg#article'></use>";
+									cardUrl = "../doc/card.php";
+									doing +=
+										"<a href='../studio/project.php?op=open&doc_id=" +
+										iterator.res_id +
+										"'>打开</a>";
+									break;
+								case 2: //channel
+									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
+									cardUrl = "../channal/card.php";
+									break;
+								case 3: //article
+									html += "<use xlink:href='../studio/svg/icon.svg#article_1'></use>";
+									cardUrl = "../article/card.php";
+									doing +=
+										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>查看</a>";
+									doing +=
+										"|<a href='../article/my_article_edit.php?id=" +
+										iterator.res_id +
+										"' target='_blank'>编辑</a>";
+									break;
+								case 4: //collection
+									html += "<use xlink:href='../studio/svg/icon.svg#collection'></use>";
+									cardUrl = "../collect/card.php";
+									doing +=
+										"<a href='../article/?collect=" +
+										iterator.res_id +
+										"' target='_blank'>查看</a>";
+									doing +=
+										"|<a href='../article/my_collect_edit.php?id=" +
+										iterator.res_id +
+										"' target='_blank'>编辑</a>";
+									break;
+								case 5: //channel片段
+									break;
+								default:
+									html += "unkow";
+									break;
+							}
+
+							html += "</svg>";
+							html += "</div>";
 							html += "<div style='flex:2;'>";
-							switch (iterator.power) {
+							html += "<guide url='" + cardUrl + "' gid='" + iterator.res_id + "'>";
+							html += iterator.res_title + "</guide></div>";
+							html += "<div style='flex:2;'>";
+							switch (parseInt(iterator.power)) {
 								case 10:
 									html += gLocal.gui.read_only;
 									break;
 								case 20:
+									html += gLocal.gui.write;
 									break;
 								case 30:
-									html += gLocal.gui.write;
 									break;
 								default:
 									break;
 							}
 							html += "</div>";
-							html +=
-								"<div style='flex:1;'><a href='../studio/project.php?op=open&doc_id=" +
-								iterator.doc_id +
-								"'>打开</a></div>";
+							html += "<div style='flex:1;'>";
+							//可用的操作
+							html += doing;
+							html += "</div>";
 							html += "</div>";
 						}
 					} else {
@@ -203,6 +260,7 @@ function group_list(id, list) {
 					html += "</div>";
 
 					$("#my_group_list").html(html);
+					guide_init();
 				} catch (e) {
 					console.error(e);
 				}
@@ -236,17 +294,15 @@ function member_list(id) {
 								html += "拥有者";
 							}
 							html += "</div>";
-							html += "<div style='flex:1;'><div class='hover_button'>";
-							//if (iterator.creator == getCookie("userid"))
+							html += "<div style='position: absolute;margin-top: -1.5em;right: 1em;'><div class='hover_button'>";
+							//if (iterator.owner == getCookie("userid"))
 							{
 								html +=
-									"<button onclick=\"member_del('" +
+									"<button style='background: var(--bg-color);' onclick=\"member_del('" +
 									id +
 									"','" +
 									iterator.user_id +
-									"')\">" +
-									gLocal.gui.delete +
-									"</button>";
+									"')\">❌</button>";
 							}
 							html += "</div></div>";
 							html += "</div>";

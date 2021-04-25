@@ -6,8 +6,8 @@
 	height: calc(100% - 7.3em);
 	top: 7.3em;
 	left: 100%;
-	width: 30em;
-	min-width: 20em;
+	width: calc(30vw - 0.6em);
+	min-width: 20vw;
 	color: var(--btn-color);
 	background-color: var(--tool-bg-color);
 	z-index: 20;
@@ -27,7 +27,7 @@
 }
 
 .right_float_min #right_float_pannal {
-	left: calc(100% - 30em);
+	left: calc(100% - 30vw + 0.6em);
 }
 #right_float_pannal > #tool_bar {
 	/*position: absolute;*/
@@ -44,7 +44,7 @@
 	display: none;
 }
 .main_view_right_float_min {
-	margin-right: 29em;
+	margin-right: calc(30vw - 0.6em);
 }
 .main_view_right_float_max {
 	margin-right: 50%;
@@ -56,6 +56,41 @@
 	display: none;
 }
 	</style>
+			<select name="direction" onchange='setDirection(this)' >
+			<option value="row">横向</option>
+			<option value="column">纵向</option>
+		</select>
+<?php
+		if($_mode == "read"){
+			echo "<select onchange='setDisplay(this)'>";
+			echo "<option value='para'>逐段</option>";
+			echo "<option value='sent'>逐句</option>";
+			echo "</select>";
+		}
+		if($_mode == "read"){
+			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
+			echo $_local->gui->read;
+			echo "</button>";
+
+			echo "<button class='icon_btn'>";
+			echo "<a onclick=\"setMode('edit')\"";
+
+			echo " title='{$_local->gui->show} {$_local->gui->edit}'>{$_local->gui->edit}</a></button>";
+		}
+		else{
+			echo "<button class='icon_btn'>";
+			echo "<a onclick=\"setMode('read')\"";
+			echo " title='{$_local->gui->show} {$_local->gui->read}'>";		
+			echo $_local->gui->read;
+			echo "</a>";
+			echo "</button>";
+
+			echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->edit}'>";
+			echo $_local->gui->edit;
+			echo "</button>";
+		}
+?>
+
 				<button id="btn_show_dict" class='icon_btn' onclick="show_dict(this)">
 				<?php echo $_local->gui->dict; ?>
 				</button>

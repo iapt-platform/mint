@@ -55,7 +55,9 @@ require_once '../studio/index_head.php';
 #preview_inner{
 	background-color: var(--bg-color);
 	color: var(--main-color);
+	padding: 0.5em;
 }
+
 	</style>
 
 	<?php
@@ -65,7 +67,7 @@ require_once '../studio/index_head.php';
 	<div class="index_inner " >
 	<form id="article_edit" action="##" onsubmit="return false"  method="POST" >
 	<div class="file_list_block">
-		<div class="tool_bar" style="width:50%;">
+		<div class="tool_bar" >
 			<div style="display:flex;">
 
 				<span class="icon_btn_div">
@@ -88,18 +90,20 @@ require_once '../studio/index_head.php';
 					</button>
 				</span>
 
-				<div id="article_collect" vui='collect-dlg' ></div>
+				
 			</div>
 			<div style="display:flex;">
-				<div>
-					<button class="icon_btn" title=<?php echo $_local->gui->scan_in_reader ;?>>
+				<div id="article_collect" vui='collect-dlg' ></div>
+				<span class="icon_btn_div">
+					<span class="icon_btn_tip"><?php echo $_local->gui->scan_in_reader ;?></span>
+					<button type="button" class="icon_btn" >
 						<a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#library"></use>
 							</svg>
 						</a>
 					</button>
-				</div>
+				</span>
 
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->save ;?></span>

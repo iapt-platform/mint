@@ -3,6 +3,9 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../ucenter/setting_function.php';
+require_once "../redis/function.php";
+
+$redis = redis_connect();
 
 global $error;
 $error = array();
@@ -79,7 +82,8 @@ $lookup_loop = 2;
 $dict_word_spell = array();
 $output = array();
 $db_file_list = array();
-//用户词典
+//字典列表
+/*
 array_push($db_file_list, array(_FILE_DB_WBW1_, " ORDER BY rowid DESC"));
 
 array_push($db_file_list, array(_DIR_DICT_SYSTEM_ . "/sys_regular.db", " ORDER BY confidence DESC"));
@@ -92,17 +96,38 @@ array_push($db_file_list, array(_DIR_DICT_3RD_ . "/bhmf.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/shuihan.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/concise.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/uhan_en.db", ""));
+*/
+
+$db_file_list[] = array("","wbwdict://new/".$_COOKIE["userid"],true);	
+$db_file_list[] = array(_FILE_DB_TERM_,"dict://term",true);	
+$db_file_list[] = array(_FILE_DB_WBW1_,"dict://user",true);
+
+$db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_regular.db","dict://regular",true);
+$db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_irregular.db","dict://irregular",true);
+$db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/union.db","dict://union",true);
+$db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/comp.db","dict://comp",true);
+
+$db_file_list[] = array( _DIR_DICT_3RD_ . "/pm.db","dict://pm",true);
+$db_file_list[] = array( _DIR_DICT_3RD_ . "/bhmf.db","dict://bhmf",true);
+$db_file_list[] = array( _DIR_DICT_3RD_ . "/shuihan.db","dict://shuihan",true);
+$db_file_list[] = array( _DIR_DICT_3RD_ . "/concise.db","dict://concise",true);
+$db_file_list[] = array( _DIR_DICT_3RD_ . "/uhan_en.db","dict://uhan_en",true);
 
 $_dict_db = array();
 foreach ($db_file_list as $db_file) {
     try {
-        $dbh = new PDO("sqlite:" . $db_file[0], "", "");
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$dbh->query("PRAGMA synchronous = OFF");
-        $dbh->query("PRAGMA journal_mode = WAL");
-        $dbh->query("PRAGMA foreign_keys = ON");
-        $dbh->query("PRAGMA busy_timeout = 5000");
-		$_dict_db[] = array("file" => $db_file, "dbh" => $dbh);
+		if ($redis && !empty($db_file[1])) {
+			$dbh=null;
+		}
+		else{
+			$dbh = new PDO("sqlite:" . $db_file[0], "", "");
+			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+			$dbh->query("PRAGMA synchronous = OFF");
+			$dbh->query("PRAGMA journal_mode = WAL");
+			$dbh->query("PRAGMA foreign_keys = ON");
+			$dbh->query("PRAGMA busy_timeout = 5000");			
+		}
+        $_dict_db[] = array("file" => $db_file[0], "dbh" => $dbh,"redis"=>$db_file[1],"static"=>$db_file[2]);
 
     } catch (PDOException $e) {
         if ($debug) {
@@ -111,9 +136,25 @@ foreach ($db_file_list as $db_file) {
     }
 }
 
+$lookuped=array();
 
 for ($i = 0; $i < $lookup_loop; $i++) {
     $parent_list = array();
+
+	# 记录已经查过的词，下次就不查了
+	$newWordList = array();
+	foreach ($word_list as $lsWord) {
+		if(!isset($lookuped[$lsWord]) && !empty($lsWord)){
+			$newWordList[]=$lsWord;
+			$lookuped[$lsWord]=1;
+		}
+	}
+	if(count($newWordList)==0){
+		break;
+	}
+	$word_list = $newWordList;
+	# 记录已经查过的词结束
+
     $strQueryWord = "("; //单词查询字串
     foreach ($word_list as $word) {
         $word = str_replace("'", "’", $word);
@@ -125,8 +166,7 @@ for ($i = 0; $i < $lookup_loop; $i++) {
         echo "<h2>第{$i}轮查询：$strQueryWord</h2>";
     }
     foreach ($_dict_db as $db) {
-        $db_file = $db["file"][0];
-        $db_sort = $db["file"][1];
+        $db_file = $db["file"];
         if ($debug) {
             echo "dict:$db_file<br>";
 		}
@@ -141,23 +181,78 @@ for ($i = 0; $i < $lookup_loop; $i++) {
         if ($debug) {
             echo $query . "<br>";
         }
-        try {
-			//$Fetch = PDO_FetchAll($query);
-			$stmt = $db["dbh"]->query($query);
-			if ($stmt) {
-				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			} else {
-				$Fetch = array();
-				if ($debug) {
-					echo "无效的Statement句柄";
+
+		$Fetch = array();
+		if ($redis && !empty($db["redis"])) {
+			if ($debug) {
+				echo "<spen style='color:green;'>redis</spen>:{$db["redis"]}<br>";
+			}
+			foreach ($word_list as $word) {
+				$wordData = $redis->hGet($db["redis"],$word);
+				if($wordData){
+					if(!empty($wordData)){
+						$arrWord = json_decode($wordData,true);
+						foreach ($arrWord as  $one) {
+							# code...
+							if(count($one)==14){
+								$Fetch[] = array("id"=>$one[0],
+												"pali"=>$one[1],
+												"type"=>$one[2],
+												"gramma"=>$one[3],
+												"parent"=>$one[4],
+												"mean"=>$one[5],
+												"note"=>$one[6],
+												"parts"=>$one[7],
+												"partmean"=>$one[8],
+												"status"=>$one[9],
+												"confidence"=>$one[10],
+												"dict_name"=>$one[12],
+												"lang"=>$one[13]
+												);
+							}
+							else{
+								$Fetch[] = array("id"=>$one[0],
+												"pali"=>$one[1],
+												"type"=>$one[2],
+												"gramma"=>$one[3],
+												"parent"=>$one[4],
+												"mean"=>$one[5],
+												"note"=>$one[6],
+												"parts"=>$one[7],
+												"partmean"=>"",
+												"status"=>$one[8],
+												"confidence"=>$one[9],
+												"dict_name"=>$one[10],
+												"lang"=>$one[12]
+												);								
+							}
+						}						
+					}
+				}
+				else{
+					#  没找到就不找了
 				}
 			}
-        } catch (Exception $e) {
-            if ($debug) {
-                echo 'Caught exception: ', $e->getMessage(), "\n";
-            }
-            continue;
-        }
+		}
+		else{
+			try {
+				//$Fetch = PDO_FetchAll($query);
+				$stmt = $db["dbh"]->query($query);
+				if ($stmt) {
+					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				} else {
+					$Fetch = array();
+					if ($debug) {
+						echo "无效的Statement句柄";
+					}
+				}
+			} catch (Exception $e) {
+				if ($debug) {
+					echo 'Caught exception: ', $e->getMessage(), "\n";
+				}
+				continue;
+			}
+		}
 
         $iFetch = count($Fetch);
         if ($debug) {

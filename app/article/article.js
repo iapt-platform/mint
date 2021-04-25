@@ -4,11 +4,12 @@ var _lang = "";
 var _author = "";
 var _display = "";
 var _collect_id = "";
+var _collection_id = "";
 
 function article_onload() {
 	historay_init();
 }
-function articel_load(id) {
+function articel_load(id, collection_id) {
 	if (id == "") {
 		return;
 	}
@@ -16,6 +17,7 @@ function articel_load(id) {
 		"../article/get.php",
 		{
 			id: id,
+			collection_id: collection_id,
 			setting: "",
 		},
 		function (data, status) {
@@ -29,6 +31,7 @@ function articel_load(id) {
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new();
+						guide_init();
 					}
 				} catch (e) {
 					console.error(e);
@@ -64,7 +67,7 @@ function collect_load(id) {
 						$("#contents").html(marked(result.summary));
 
 						let article_list = JSON.parse(result.article_list);
-						render_article_list(article_list);
+						render_article_list(article_list, id);
 					}
 				} catch (e) {
 					console.error(e);
@@ -93,7 +96,7 @@ function articel_load_collect(article_id) {
 						$("#pali_pedia").html(strTitle);
 
 						let article_list = JSON.parse(result[0].article_list);
-						render_article_list(article_list);
+						render_article_list(article_list, result[0].id);
 					}
 				} catch (e) {
 					console.error(e);
@@ -105,7 +108,8 @@ function articel_load_collect(article_id) {
 	);
 }
 
-function render_article_list(article_list) {
+//在collect 中 的article列表
+function render_article_list(article_list, collection_id) {
 	let html = "";
 	html += "<ul>";
 	let display = "";
@@ -114,16 +118,31 @@ function render_article_list(article_list) {
 	}
 	let prevArticle = "无";
 	let nextArticle = "无";
+	let urlCollection = "&collection=" + collection_id;
 	for (let index = 0; index < article_list.length; index++) {
 		const element = article_list[index];
 		if (element.article == _articel_id) {
 			if (index > 0) {
 				const prev = article_list[index - 1];
-				prevArticle = "<a href='../article/index.php?id=" + prev.article + display + "'>" + prev.title + "</a>";
+				prevArticle =
+					"<a href='../article/index.php?id=" +
+					prev.article +
+					display +
+					urlCollection +
+					"'>" +
+					prev.title +
+					"</a>";
 			}
 			if (index < article_list.length - 1) {
 				const next = article_list[index + 1];
-				nextArticle = "<a href='../article/index.php?id=" + next.article + display + "'>" + next.title + "</a>";
+				nextArticle =
+					"<a href='../article/index.php?id=" +
+					next.article +
+					display +
+					urlCollection +
+					"'>" +
+					next.title +
+					"</a>";
 			}
 			$("#contents_nav_left").html(prevArticle);
 			$("#contents_nav_right").html(nextArticle);
@@ -135,6 +154,7 @@ function render_article_list(article_list) {
 			"<a href='../article/index.php?id=" +
 			element.article +
 			display +
+			urlCollection +
 			"'>" +
 			element.title +
 			"</a></li>";
@@ -152,6 +172,29 @@ function set_channal(channalid) {
 	}
 	if (_display != "") {
 		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
+function setMode(mode = "read") {
+	let url = "../article/index.php?id=" + _articel_id;
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		if (mode == "read") {
+			url += "&display=" + _display;
+		} else {
+			url += "&display=sent";
+		}
+	}
+	if (mode != "") {
+		url += "&mode=" + mode;
 	}
 	location.assign(url);
 }

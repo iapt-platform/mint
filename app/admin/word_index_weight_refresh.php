@@ -6,8 +6,8 @@ require_once '../path.php';
 require_once './word_index_weight_table.php';
 
 if (isset($_GET["from"])) {
-    $from = $_GET["from"];
-    $to = $_GET["to"];
+    $from = (int)$_GET["from"];
+    $to = (int)$_GET["to"];
 } else {
     if ($argc != 3) {
         echo "无效的参数 ";
@@ -20,18 +20,19 @@ if (isset($_GET["from"])) {
     }
 }
 
-$dh_word = new PDO("" . _FILE_DB_WORD_INDEX_, "", "");
+$dh_word = new PDO( _FILE_DB_WORD_INDEX_, "", "");
 $dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dh_pali = new PDO("" . _FILE_DB_PALI_INDEX_, "", "");
+$dh_pali = new PDO( _FILE_DB_PALI_INDEX_, "", "");
 $dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 echo "from=$from to = $to \n";
 for ($i = $from; $i <= $to; $i++) {
     $time_start = microtime(true);
     echo "正在处理 book= $i ";
-    $query = "SELECT max(paragraph) from word where book={$i}";
-    $stmt = $dh_pali->query($query);
+    $query = "SELECT max(paragraph) from word where book=?";
+	$stmt = $dh_pali->prepare($query);
+    $stmt->execute(array($i));
     $row = $stmt->fetch(PDO::FETCH_NUM);
     if ($row) {
         $max_para = $row[0];

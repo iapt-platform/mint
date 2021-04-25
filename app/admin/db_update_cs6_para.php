@@ -1,16 +1,13 @@
 <?php
+#将cscd4 段落编号插入数据库 用于义注跳转
 require_once "../public/_pdo.php";
 require_once "../path.php";
 
-$db_file = _FILE_DB_PALITEXT_;
-PDO_Connect("$db_file");
-
+PDO_Connect(_FILE_DB_PALITEXT_);
 $query = "SELECT * from books where 1";
 $books = PDO_FetchAll($query);
 
-$db_file = _FILE_DB_PAGE_INDEX_;
-PDO_Connect("$db_file");
-
+PDO_Connect(_FILE_DB_PAGE_INDEX_);
 // 打开文件并读取数据
 $irow = 0;
 if (($fp = fopen("./cs6_para.csv", "r")) !== false) {

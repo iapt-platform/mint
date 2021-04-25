@@ -57,7 +57,8 @@ require_once '../studio/index_tool_bar.php';
 			</div>
 		</div>
 	</div>
-	
+	<div class="modal_win_bg">
+	<div id="share_win" class="iframe_container"></div>
 <?php
 require_once '../studio/index_foot.php';
 ?>

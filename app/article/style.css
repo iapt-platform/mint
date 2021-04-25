@@ -20,7 +20,7 @@
 	/*height: 5em;*/
 	background-color: var(--tool-bg-color1);
 	border-bottom: 1px solid var(--tool-line-color);
-	padding: 10px;
+	padding: 0.5vh 0.5vw;
 	margin-top: 50px;
 	position: fixed;
 	top: 0;
@@ -83,7 +83,6 @@
 }
 #right_pannal {
 	flex: 3;
-	max-width: 20em;
 }
 #head_bar {
 	height: unset;
@@ -160,3 +159,6 @@ img {
     flex: 5;
 }
 */
+.tool_bar {
+	display: flex;
+}

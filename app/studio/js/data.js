@@ -206,6 +206,7 @@ function doc_file_info_get() {
 				}
 			} catch (e) {
 				console.error(e);
+				console.error(" data:" + data);
 			}
 		}
 	);
@@ -244,11 +245,11 @@ function doc_info_title_change(obj) {
 	);
 }
 
-function _doc_info_title_change(id,title,callback=null){
-	if(callback==null){
-		callback=function (data, status) {
+function _doc_info_title_change(id, title, callback = null) {
+	if (callback == null) {
+		callback = function (data, status) {
 			console.error("Data: " + data + "\nStatus: " + status);
-		}
+		};
 	}
 	$.post(
 		"file_index.php",

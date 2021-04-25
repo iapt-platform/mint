@@ -49,7 +49,7 @@ $powerlist["10"] = "仅阅读";
 $powerlist["30"] = "可修改";
 //$powerlist["40"] = "管理员";
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect(_FILE_DB_FILEINDEX_);
 
 echo "<input id='doc_coop_docid' type='hidden' value='{$_doc_id}' />";
 $query = "SELECT * from fileindex where id = ? ";

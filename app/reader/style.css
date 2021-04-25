@@ -66,6 +66,8 @@
 }
 #contents_div {
 	flex: 7;
+	padding: 0 1em 0 30px;
+	width: 70vw;
 }
 #contents {
 }
@@ -118,7 +120,7 @@
 .active a {
 	color: var(--btn-hover-color);
 }
-chapter {
+note:hover chapter {
 	display: inline-block;
 }
 
@@ -168,5 +170,9 @@ chapter {
 }
 
 #para_path_next_level {
+	display: inline-block;
+}
+
+#path_div chapter {
 	display: inline-block;
 }

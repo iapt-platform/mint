@@ -3554,21 +3554,27 @@ function getMeaningMenuList(index, word) {
 	} else {
 		currMeaningList.push("↓↓");
 	}
-	for (MeaningList_i in currMeaningList0) {
-		currMeaningList.push(currMeaningList0[MeaningList_i]);
+	for (const iterator of currMeaningList0) {
+		if (iterator != "") {
+			currMeaningList.push(iterator);
+		}
 	}
+
 	var output = "";
 	output += "<div class=\"case_dropdown\" style='display:inline-block;'>";
 
+	let currMean;
 	output += "<p id='org_part_mean_" + index + "' class='case_dropbtn' >";
 	if (g_initPartMeaning) {
-		output += currMeaningList[0];
-
+		currMean = currMeaningList[0];
 		g_arrPartMean[index] = currMeaningList[0];
 	} else {
-		output += g_arrPartMean[index];
+		currMean = g_arrPartMean[index];
 	}
-	output += "</p>";
+	if (currMean == "") {
+		currMean = "↓↓";
+	}
+	output += currMean + "</p>";
 
 	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
@@ -3773,78 +3779,21 @@ function edit_un_split(parentId) {
 		}
 	}
 }
-
+//添加连音词拆分html块
 function edit_un_AddNewHtmlNode(nextNodeId, strInsert, guid, id) {
-	var xWord = gXmlBookDataBody.getElementsByTagName("word");
-	var iWordIndex = getWordIndex(guid);
-	var parentId = guid.split("_")[0];
-	var parentElement = document.getElementById("wb" + parentId);
-	var element = document.getElementById("wb" + nextNodeId);
+	let xWord = gXmlBookDataBody.getElementsByTagName("word");
+	let iWordIndex = getWordIndex(guid);
+	let parentId = guid.split("_")[0];
+	let parentElement = document.getElementById("wb" + parentId);
+	let element = document.getElementById("wb" + nextNodeId);
 
-	var divWord = document.createElement("div");
-	var typ = document.createAttribute("class");
-
-	if (strInsert.length <= 1) {
-		typ.nodeValue = "word_punc";
-	} else {
-		typ.nodeValue = "word";
-	}
-	divWord.attributes.setNamedItem(typ);
-
-	var typId = document.createAttribute("id");
-	typId.nodeValue = "wb" + guid;
-	divWord.attributes.setNamedItem(typId);
-
-	var txtOut = "";
-	/*word block begin*/
-	//add more class string for union word
-	sUnParent = getNodeText(xWord[iWordIndex], "un");
-	sWordCase = getNodeText(xWord[iWordIndex], "case");
-	txtUnClass = "";
-	if (sUnParent.length > 0) {
-		switch (sWordCase) {
-			case ".un:begin.":
-				txtUnClass = " un_begin";
-				break;
-			case ".un:begin.":
-				txtUnClass = " un_end";
-				break;
-			default:
-				txtUnClass = " un_pali";
-				break;
-		}
-	}
-	//word head being
-	/*长度为1的为标点符号*/
-	if (strInsert.length <= 1) {
-		txtOut = txtOut + "<p class='pali " + txtUnClass + "' name='wPali'>";
-		txtOut = txtOut + "<span class='paliword'  name=\"spali\">" + strInsert + "</span>";
-		txtOut = txtOut + "<span class='paliword2' name=\"spali\"></span>";
-		txtOut = txtOut + "</p>\n";
-	} else {
-		txtOut = txtOut + "<p class='pali " + txtUnClass + "' name='wPali'>";
-		txtOut = txtOut + "<a name='w" + guid + '\' title="" onclick=\'on_word_click("' + guid + "\")'>";
-		txtOut = txtOut + "<span class='paliword' name=\"spali\">" + strInsert + "</span>";
-		txtOut = txtOut + "<span class='paliword2' name=\"spali\"></span>";
-		txtOut = txtOut + "</a>";
-		txtOut = txtOut + "</p>\n";
-	}
-	//word head end
-	/*Detail being*/
-
-	txtOut = txtOut + "<div id='detail" + guid + "'>";
-	txtOut = txtOut + renderWordDetailById(guid);
-	txtOut = txtOut + "</div>";
-	//detail end
-
-	//word block end
-
-	divWord.innerHTML = txtOut;
-	//如果下一个词不存在。
+	let htmlNewWord = renderWordBlock(xWord[iWordIndex]);
 	if (element) {
-		element.parentNode.insertBefore(divWord, element);
+		//下一个词存在。
+		$(element).before(htmlNewWord);
 	} else {
-		parentElement.parentNode.appendChild(divWord);
+		//下一个词不存在。
+		$(parentElement).append(htmlNewWord);
 	}
 }
 

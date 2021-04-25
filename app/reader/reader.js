@@ -9,7 +9,7 @@ var _author = "";
 var _display = "para";
 var arrMyTerm = new Array();
 var _sent_data = new Array();
-var link_str="";
+var link_str = "";
 
 palicanon_load_term();
 
@@ -31,11 +31,11 @@ function reader_load() {
 			if (_sent_data.sentences.length > 0) {
 				for (const iterator of _sent_data.sentences) {
 					if (currPara != iterator.paragraph) {
-						tpl += "\n";
+						tpl += "\n\n";
 						currPara = iterator.paragraph;
 						tpl += "```para\n";
 						tpl += currPara + "\n";
-						tpl += "```\n";
+						tpl += "```\n\n";
 					}
 					tpl +=
 						"{{" +
@@ -48,7 +48,7 @@ function reader_load() {
 						iterator.end +
 						"}}\n";
 				}
-				link_str=tpl;
+				link_str = tpl;
 				$("#contents").html(note_init(tpl));
 				note_refresh_new();
 				reader_draw_para_menu();
@@ -204,7 +204,10 @@ function reader_get_path() {
 					$(this).html(newLocal);
 				}
 			});
+			var bookTitle = $("chapter").first().html();
 			let suttaTitle = $("chapter").last().html();
+
+			$("#pali_pedia").html(bookTitle);
 			$("#article_title").html(suttaTitle);
 			$("#page_title").text(suttaTitle);
 			if (_reader_view == "chapter") {
@@ -246,9 +249,45 @@ function set_channal(channalid) {
 	if (_display != "") {
 		url += "&display=" + _display;
 	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
 	location.assign(url);
 }
 
 function edit_wbw(book, para) {
 	wbw_channal_list_open(book, [para]);
+}
+
+function setMode(mode = "read") {
+	let url = "../reader/?view=" + _reader_view;
+	if (_reader_book != -1) {
+		url += "&book=" + _reader_book;
+	}
+	if (_reader_para != -1) {
+		url += "&para=" + _reader_para;
+	}
+	if (_reader_begin != -1) {
+		url += "&begin=" + _reader_begin;
+	}
+	if (_reader_end != -1) {
+		url += "&end=" + _reader_end;
+	}
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		if (mode == "read") {
+			url += "&display=" + _display;
+		} else {
+			url += "&display=sent";
+		}
+	}
+	if (mode != "") {
+		url += "&mode=" + mode;
+	}
+	location.assign(url);
 }

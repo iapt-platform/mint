@@ -156,5 +156,75 @@ function copy_to_clipboard(strInput) {
 	document.body.removeChild(input);
 }
 
+function getPassDataTime(time) {
+	let currDate = new Date();
+
+	let pass = currDate.getTime() - time;
+	let strPassTime = "";
+	if (pass < 120 * 1000) {
+		//二分钟内
+		strPassTime = Math.floor(pass / 1000) + gLocal.gui.secs_ago;
+	} else if (pass < 7200 * 1000) {
+		//二小时内
+		strPassTime = Math.floor(pass / 1000 / 60) + gLocal.gui.mins_ago;
+	} else if (pass < 3600 * 48 * 1000) {
+		//二天内
+		strPassTime = Math.floor(pass / 1000 / 3600) + gLocal.gui.hs_ago;
+	} else if (pass < 3600 * 24 * 14 * 1000) {
+		//二周内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24) + gLocal.gui.days_ago;
+	} else if (pass < 3600 * 24 * 60 * 1000) {
+		//二个月内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 7) + gLocal.gui.weeks_ago;
+	} else if (pass < 3600 * 24 * 365 * 1000) {
+		//一年内
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 30) + gLocal.gui.months_ago;
+	} else if (pass < 3600 * 24 * 730 * 1000) {
+		//超过1年小于2年
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + gLocal.gui.year_ago;
+	} else {
+		strPassTime = Math.floor(pass / 1000 / 3600 / 24 / 365) + gLocal.gui.years_ago;
+	}
+	return strPassTime;
+}
+function getFullDataTime(time) {
+	let inputDate = new Date();
+	inputDate.setTime(time);
+	return inputDate.toLocaleString();
+}
+function getDataTime(time) {
+	let today = new Date();
+	let inputDate = new Date();
+	inputDate.setTime(time);
+
+	let day = inputDate.getDate();
+	let month = inputDate.getMonth() + 1;
+	let year = inputDate.getFullYear();
+
+	let hours = inputDate.getHours();
+	let minutes = inputDate.getMinutes();
+	let seconds = inputDate.getSeconds();
+
+	let today_day = today.getDate();
+	let today_month = today.getMonth() + 1;
+	let today_year = today.getFullYear();
+
+	let today_hours = today.getHours();
+	let today_minutes = today.getMinutes();
+	let today_seconds = today.getSeconds();
+
+	let output = "";
+	if (today_day == day && today_month == month && today_year == year) {
+		//当天
+		output = hours + ":" + minutes;
+	} else if (today_year != year) {
+		//不同年
+		output = year;
+	} else {
+		//同一年
+		output = month + "/" + day;
+	}
+	return output;
+}
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();

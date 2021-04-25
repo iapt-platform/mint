@@ -100,6 +100,13 @@ if (isset($_GET["language"])) {
 	<link type="text/css" rel="stylesheet" href="../term/pali_sim_dlg.css" />
 	<script src="../term/related_para.js"></script>
 
+	<script src="../widget/iframe_modal_win.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/iframe_modal_win.css"/>
+
+	<script src="../commit/commit.js"></script>
+	<link type="text/css" rel="stylesheet" href="../commit/commit.css"/>
+
+
 	<script src="../inline_dict/inline_dict.js"></script>
 
 	<script src="../widget/click_dropdown.js"></script>

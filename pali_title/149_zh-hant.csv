@@ -1,0 +1,19 @@
+id,book,par_num,level,class,title,text,author
+360651,149,3,1,book,Mahāniddesapāḷi,大義釋,元亨寺
+360652,149,4,3,title,1. Aṭṭhakavaggo,義品,元亨寺
+360653,149,5,2,chapter,1. Kāmasuttaniddeso,第一　欲經之義釋,元亨寺
+360769,149,121,2,chapter,2. Guhaṭṭhakasuttaniddeso,第二　窟八偈經之義釋,元亨寺
+360947,149,299,2,chapter,3. Duṭṭhaṭṭhakasuttaniddeso,第三　瞋怒八偈經之義釋,元亨寺
+361043,149,395,2,chapter,4. Suddhaṭṭhakasuttaniddeso,第四　淨八偈之義釋,元亨寺
+361148,149,500,2,chapter,5. Paramaṭṭhakasuttaniddeso,第五　第一八偈經之義釋,元亨寺
+361233,149,585,2,chapter,6. Jarāsuttaniddeso,第六　老經之義釋,元亨寺
+361381,149,733,2,chapter,7. Tissametteyyasuttaniddeso,第七　帝須彌勒經之義釋,元亨寺
+361498,149,850,2,chapter,8. Pasūrasuttaniddeso,第八　波須羅經之義釋,元亨寺
+361619,149,971,2,chapter,9. Māgaṇḍiyasuttaniddeso,第九　摩健地耶經之義釋,元亨寺
+361799,149,1151,2,chapter,10. Purābhedasuttaniddeso,第十　死前經之義釋,元亨寺
+361997,149,1349,2,chapter,11. Kalahavivādasuttaniddeso,第十一　鬥諍經之義釋,元亨寺
+362180,149,1532,2,chapter,12. Cūḷaviyūhasuttaniddeso,第十二　小集積經之義釋,元亨寺
+362348,149,1700,2,chapter,13. Mahāviyūhasuttaniddeso,第十三　大集積經之義釋,元亨寺
+362575,149,1927,2,chapter,14. Tuvaṭṭakasuttaniddeso,第十四　迅速經之義釋,元亨寺
+362877,149,2229,2,chapter,15. Attadaṇḍasuttaniddeso,第十五　執杖經之義釋,元亨寺
+363181,149,2533,2,chapter,16. Sāriputtasuttaniddeso,第十六　舍利弗經之義釋,元亨寺

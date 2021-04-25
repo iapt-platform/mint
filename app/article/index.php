@@ -24,9 +24,10 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["collect"])){
 		echo "_collect_id='".$_GET["collect"]."';";
 	}
-	if(isset($_GET["display"])){
-		echo "_display='".$_GET["display"]."';";
+	if(isset($_GET["collection"])){
+		echo "_collection_id='".$_GET["collection"]."';";
 	}
+
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
 	}
@@ -36,6 +37,63 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
+	if(isset($_GET["mode"]) && $_GET["mode"]=="edit"){
+		$_mode = "edit";
+		echo "_mode='edit';";
+	}
+	else{
+		$_mode = "read";
+		echo "_mode='read';";
+	}
+	if(isset($_GET["display"])){
+		if($_mode == "edit"){
+			$_display = "sent";
+			echo "_display='sent';";	
+		}
+		else{
+			$_display = $_GET["display"];
+			echo "_display='".$_GET["display"]."';";			
+		}
+	}
+	else{
+		if($_mode=="read"){
+			$_display = "para";
+			echo "_display='para';";
+		}
+		else{
+			$_display = "sent";
+			echo "_display='sent';";			
+		}
+
+	}	
+	if(isset($_GET["direction"])){
+		$_direction = $_GET["direction"];
+		echo "_direction='".$_GET["direction"]."';";
+	}
+	else{
+		if($_mode=="read"){
+			$_direction = "row";
+			echo "_direction='row';";
+		}
+		else{
+			$_direction = "col";
+			echo "_direction='col';";
+		}
+	}
+	$contentClass= "";
+	if($_direction=="row"){
+		$contentClass .= ' horizontal ';
+	}
+	else{
+		$contentClass .= ' vertical ';
+	}
+	if($_display=="para"){
+		$contentClass .= ' para_mode ';
+	}
+	else{
+		$contentClass .= ' sent_mode ';
+	}
+
 	?>
 	</script>
 
@@ -53,8 +111,8 @@ require_once "../pcdl/html_head.php";
 		<span><?php echo $_local->gui->anthology; ?></span>
 	</div>
 
-	<div>
-		<span>
+	<div style="margin: auto 0;">
+		<span id="head_span">
 		<?php
 		
 		if(isset($_GET["id"])){
@@ -66,38 +124,6 @@ require_once "../pcdl/html_head.php";
 			echo "<a href='../article/frame.php?id=".$_GET["id"];
 			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
 			
-			
-			if(isset($_GET["display"]) && $_GET["display"]=="para"){
-				echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
-				echo $_local->gui->each_paragraph;
-				echo "</button>";
-			}
-			else{
-				
-				echo "<button class='icon_btn'>";
-				echo "<a href='../article/?id=".$_GET["id"];
-				if(isset($_GET["channal"])){
-					echo "&channal=".$_GET["channal"];
-				}
-				echo "&display=para'  title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";		
-				echo $_local->gui->each_paragraph;
-				echo "</a>";
-				echo "</button>";
-			}
-	
-			if(isset($_GET["display"]) && $_GET["display"]=="sent"){
-				echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>";
-				echo $_local->gui->each_sentence;
-				echo "</button>";
-			}
-			else{
-				echo "<button class='icon_btn'><a href='../article/?id=".$_GET["id"];
-				if(isset($_GET["channal"])){
-					echo "&channal=".$_GET["channal"];
-				}
-				echo "&display=sent";
-				echo "'  title='{$_local->gui->show} {$_local->gui->each_sentence}'>{$_local->gui->each_sentence}</a></button>";
-			}
 		}
 
 		?>
@@ -115,7 +141,8 @@ require_once "../pcdl/html_head.php";
 </div>
 <div id="contents_view">
 	<div id="contents_div">
-		<div id="contents">
+	
+		<div id="contents" class="<?php echo $contentClass;?>">
 		<?php echo $_local->gui->loading; ?>...
 		</div>
 		<div id="contents_foot">
@@ -161,15 +188,13 @@ require_once "../pcdl/html_head.php";
 	note_create();
 	historay_init();
 	if(_collect_id==""){
-		articel_load(_articel_id);
+		articel_load(_articel_id,_collection_id);
 		articel_load_collect(_articel_id);
 	}
 	else{
 		collect_load(_collect_id);
 	}
 	});
-
-
 
 	 window.addEventListener('scroll',winScroll);
 	function winScroll(e){ 
@@ -204,6 +229,9 @@ function GetPageScroll()
 }
 	</script>
 
+<div class="modal_win_bg">
+</div>
+<div id="model_win" class="model_win_container"></div>
 
 </body>
 </html>

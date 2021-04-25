@@ -19,7 +19,7 @@
 }
 
 body {
-	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
+	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV3-Normal", Arial, Verdana;
 	font-style: normal;
 	color: var(--main-color);
 	font-weight: 400;
@@ -1857,8 +1857,10 @@ span:active {
 
 .edit_tool {
 	flex: 0 0 100%;
-	display: block;
+	display: inline-flex;
 	margin: 0;
+	width: 100%;
+	justify-content: space-evenly;
 }
 
 .edit_tool .icon {
@@ -2685,32 +2687,46 @@ th {
 .tooltip {
 	position: relative;
 	display: inline;
-	cursor: help;
 }
 
 .tooltip .tooltiptext {
 	visibility: hidden;
 	position: absolute;
-	width: 100px;
+	min-width: 80px;
 	background-color: #555;
 	color: #fff;
-	text-align: center;
-	padding: 5px 0;
+	/*text-align: center;*/
+	padding: 5px;
 	border-radius: 6px;
 	z-index: 1;
 	opacity: 0;
-	transition: opacity 0.6s;
-}
-
-.tooltip:hover {
-	color: red;
+	transition: all 0.6s;
+	white-space: nowrap;
 }
 
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 	opacity: 1;
 }
-
+.tooltip-top {
+	top: -120%;
+	left: 50%;
+	margin-left: -40px;
+	transition: all 0.6s;
+}
+.tooltip:hover .tooltip-top {
+	top: -150%;
+}
+.tooltip .tooltip-top::after {
+	content: " ";
+	position: absolute;
+	top: 100%; /* 提示工具底部 */
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
 .tooltip-bottom {
 	top: 100%;
 	left: 50%;

@@ -18,8 +18,6 @@ $redis = redis_connect();
 global $count_return;
 $count_return = 0;
 
-_load_book_index();
-
 $word = mb_strtolower($_GET["word"], 'UTF-8');
 $org_word = $word;
 
@@ -49,6 +47,7 @@ $right_word_list = "";
 
         $Fetch = PDO_FetchAll($query, array($word));
         $iFetch = count($Fetch);
+		echo "直接查询{$iFetch}<br>";
         $count_return += $iFetch;
         if ($iFetch > 0) {
             for ($i = 0; $i < $iFetch; $i++) {
@@ -141,7 +140,7 @@ $right_word_list = "";
 		if (count($newWord) > 0) {
 			foreach ($newWord as $base => $grammar){
 				for ($row = 0; $row < count($p_ending); $row++) {
-					$len = mb_strlen($case[$row][1], "UTF-8");
+					$len = mb_strlen($p_ending[$row][1], "UTF-8");
 					$end = mb_substr($base, 0 - $len, null, "UTF-8");
 					if ($end == $p_ending[$row][1]) {
 						$newbase = mb_substr($base, 0, mb_strlen($base, "UTF-8") - $len, "UTF-8") . $p_ending[$row][0];
@@ -171,14 +170,14 @@ $right_word_list = "";
 					
 					$query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
 					$Fetch = PDO_FetchAll($query, array($x));
-					$iFetch = count($Fetch);
+					$iFetch = count($Fetch);	
 					$count_return += $iFetch;
 					if ($iFetch > 0) {
 						$base_list[] = $x;
 						$dict_list_a[] = array("word_$x", $x);
 						echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
-						echo "<div style='color:gray;'>{$x}->{$x_value["parent"]}->{$word}</div>";
-						//语法信息
+						echo "<div style='color:gray;'>{$x}➡{$x_value["parent"]}➡{$word}</div>";
+						//替换为本地语法信息
 						foreach ($_local->grammastr as $gr) {
 							$x_value['grammar'] = str_replace($gr->id, $gr->value, $x_value['grammar']);
 						}
@@ -210,6 +209,7 @@ $right_word_list = "";
 				echo "<a>{$value}</a> ";
 			}
 		}
+		echo "<a>查询内文</a>";
 		echo "</div>";
 		echo "<input type='hidden' id='word_count' value='{$count_return}' />";
 
@@ -235,9 +235,9 @@ $right_word_list = "";
 		//拆复合词
 		echo "<div id='auto_split'></div>";
 
-/*
+
         //查内容
-        if ($count_return < 2) {
+        if ($count_return < 4) {
             $word1 = $org_word;
             $wordInMean = "%$org_word%";
             echo "包含 $org_word 的:<br />";
@@ -265,14 +265,18 @@ $right_word_list = "";
                     $end = mb_substr($newmean, $pos + mb_strlen($word1, "UTF-8"), null, "UTF-8");
                     $heigh_light_mean = "$head<hl>$mid</hl>$end";
                     echo "<div class='dict_word'>";
-                    echo "<div class='pali'>" . $Fetch[$i]["word"] . "</div>";
+                    echo "<div class='pali'><a href='index.php?key={$Fetch[$i]["word"]}'>" . $Fetch[$i]["word"] . "</a></div>";
                     echo "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
-                    echo "<div class='mean'>" . $heigh_light_mean . "</div>";
+					echo "<div class='mean'>" . $heigh_light_mean . "</div>";
+					echo "<div><a href='index.php?key={$Fetch[$i]["word"]}&hightlight={$org_word}'>详情</a></div>";
                     echo "</div>";
                 }
             }
-        }
-*/
+		}
+		else{
+
+		}
+
         echo "<div id='dictlist'>";
         foreach ($dict_list_a as $x_value) {
             if (substr($x_value[0], 0, 4) == "word") {
@@ -394,8 +398,9 @@ function lookup_user($word){
 	}
 	
 	$iFetch = count($Fetch);
-	$count_return += $iFetch;
+	
 	if ($iFetch > 0) {
+		$count_return++;
 		$userlist = array();
 		foreach ($Fetch as $value) {
 			if (isset($userlist[$value["creator"]])) {
@@ -404,12 +409,19 @@ function lookup_user($word){
 				$userlist[$value["creator"]] = 1;
 			}
 			$userwordcase = $value["type"] . "#" . $value["gramma"];
-			if (isset($userdict["{$userwordcase}"])) {
-				$userdict["{$userwordcase}"]["mean"] .= $value["mean"] . ";";
-				$userdict["{$userwordcase}"]["factors"] .= $value["factors"];
+			$parent = $value["parent"];
+			if(empty($parent)){
+				$parent = "_null_";
+			}
+			if (isset($userdict["{$parent}"])) {
+				$userdict["{$parent}"]["mean"] .= "$". $value["mean"] ;
+				$userdict["{$parent}"]["factors"] .= "@". $value["factors"];
+				$userdict["{$parent}"]["case"] .= "@".$userwordcase;
+
 			} else {
-				$userdict["{$userwordcase}"]["mean"] = $value["mean"];
-				$userdict["{$userwordcase}"]["factors"] = $value["factors"];
+				$userdict["{$parent}"]["mean"] = $value["mean"];
+				$userdict["{$parent}"]["factors"] = $value["factors"];
+				$userdict["{$parent}"]["case"] = $userwordcase;
 			}
 
 		}
@@ -417,8 +429,56 @@ function lookup_user($word){
 		$output .= "<div class='dict'>{$_local->gui->com_dict}</div><a name='net'></a>";
 		$dict_list_a[] = array("net", $_local->gui->com_dict);
 
+
 		foreach ($userdict as $key => $value) {
-			$output .= "<div class='mean'>{$key}:{$value["mean"]}</div>";
+			#语法信息查重
+			$thiscase = array();
+			$strCase = "";
+			$arrCase = explode("@",$value["case"]);
+			foreach ($arrCase as  $case) {
+				# code...
+				$thiscase[$case] = 1;
+			}
+			foreach ($thiscase as $case => $casevalue) {
+				# code...
+				$strCase .=$case . "; ";
+			}
+			#语法信息替换为本地字符串
+			foreach ($_local->grammastr as $gr) {
+				$strCase = str_replace($gr->id, $gr->value, $strCase);
+			}
+			#拆分查重复
+			$thispart = array();
+			$strPart = "";
+			$arrPart = explode("@",$value["factors"]);
+			foreach ($arrPart as  $part) {
+				# code...
+				$thispart[$part] = 1;
+			}
+			foreach ($thispart as $part => $partvalue) {
+				# code...
+				$strPart .=$part . "; ";
+			}
+
+			#意思查重复
+			$thismean = array();
+			$strMean = "";
+			$arrMean = explode("$",$value["mean"]);
+			foreach ($arrMean as  $mean) {
+				# code...
+				$thismean[$mean] = 1;
+			}
+			foreach ($thismean as $mean => $meanvalue) {
+				# code...
+				$strMean .=$mean . "; ";
+			}
+			$output .= "<div class='mean'><b>语法</b>:{$strCase}</div>";
+			if($key!=="_null_"){
+				$output .= "<div class='mean'><b>原型</b>:<a href='index.php?key={$key}'>{$key}</a></div>";				
+			}
+
+			$output .= "<div class='mean'><b>意思</b>:{$strMean}</div>";
+			$output .= "<div class='mean'><b>组成</b>:{$strPart}</div>";
 		}
 		$output .= "<div><span>{$_local->gui->contributor}：</span>";
 		$userinfo = new UserInfo();

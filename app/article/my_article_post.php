@@ -4,17 +4,19 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
+require_once "../article/function.php";
+require_once "../redis/function.php";
 
 add_edit_event(_ARTICLE_EDIT_,$_POST["id"]);
 
 $respond=array("status"=>0,"message"=>"");
 
-# 检查是否由修改权限
-PDO_Connect(""._FILE_DB_USER_ARTICLE_);
-$query = "SELECT owner FROM  article WHERE id= ?";
-$owner = PDO_FetchOne($query,array($_POST["id"]));
-if($owner!=$_COOKIE["userid"]){
-    $respond["status"]=1;
+# 检查是否有修改权限
+$redis = redis_connect();
+$article = new Article($redis); 
+$power = $article->getPower($_POST["id"]);
+if($power<20){
+	$respond["status"]=1;
     $respond["message"]="No Power For Edit";
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
     exit;
@@ -22,6 +24,7 @@ if($owner!=$_COOKIE["userid"]){
 
 $_content = $_POST["content"];
 
+/*
 if($_POST["import"]=='on'){
     $sent = explode("\n",$_POST["content"]);
     if($sent && count($sent)>0){
@@ -45,7 +48,7 @@ if($_POST["import"]=='on'){
         }
         PDO_Connect(""._FILE_DB_SENTENCE_);
 
-        /* 开始一个事务，关闭自动提交 */
+        # 开始一个事务，关闭自动提交 
         $PDO->beginTransaction();
         $query="INSERT INTO sentence ('id','block_id','channal','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','strlen','create_time','modify_time','receive_time') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)";
         
@@ -96,7 +99,7 @@ if($_POST["import"]=='on'){
         $PDO->commit();
         
         if (!$sth || ($sth && $sth->errorCode() != 0)) {
-            /*  识别错误且回滚更改  */
+            #  识别错误且回滚更改  
             $PDO->rollBack();
             $error = PDO_ErrorInfo();
             $respond['status']=1;
@@ -111,8 +114,8 @@ if($_POST["import"]=='on'){
         }		        
     }
 }
-
-PDO_Connect(""._FILE_DB_USER_ARTICLE_);
+*/
+PDO_Connect(_FILE_DB_USER_ARTICLE_);
 
 $query="UPDATE article SET title = ? , subtitle = ? , summary = ?, content = ?  , tag = ? , setting = ? , status = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
 $sth = $PDO->prepare($query);
@@ -122,6 +125,13 @@ if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
 	$respond['status']=1;
 	$respond['message']=$error[2];
+}
+else{
+	if($redis){
+		$redis->del("article://".$_POST["id"]);
+		$redis->del("power://article/".$_POST["id"]);
+	}
+	
 }
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>

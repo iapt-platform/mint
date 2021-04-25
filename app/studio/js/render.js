@@ -1245,14 +1245,66 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "</div>";
 	return output;
 }
+function renderWordBlock(element) {
+	let output = "";
+	let Note_Mark = 0;
+	let wID = getNodeText(element, "id");
+	let wPali = getNodeText(element, "pali");
+	let wReal = getNodeText(element, "real");
+	let wType = getNodeText(element, "type");
+	let wGramma = getNodeText(element, "gramma");
+	let wCase = getNodeText(element, "case");
+	let wUn = getNodeText(element, "un");
+	if ((wType == "" || wType == "?") && wCase != "") {
+		wType = wCase.split("#")[0];
+	}
 
+	//渲染单词块
+	//word div class
+	let wordclass;
+	let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
+	if (wType == ".ctl." && wGramma == ".a.") {
+		wordclass = "ctrl";
+	} else if (Note_Mark == 1) {
+		wordclass = "word org_note";
+	} else {
+		if (wReal == "") {
+			wordclass = "word word_punc un_parent "; //符號
+		} else {
+			if (wType == ".un.") {
+				wordclass = "word un_parent"; //粘音詞
+			} else if (wType == ".comp.") {
+				wordclass = "word comp_parent"; //複合詞
+			} else {
+				wordclass = "word"; //普通
+			}
+		}
+	}
+	output += '<div id="wb' + wID + "\" class='" + wordclass + "'> <a name='" + wPali + "'></a>";
+	//head div class
+	output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
+	let wordheadclass;
+	if (wUn.length > 0) {
+		wordheadclass = "word_head un_pali";
+	} else {
+		wordheadclass = "word_head";
+	}
+	output += "	<div class='" + wordheadclass + "' id=\"whead_" + wID + '">';
+	output += renderWordHeadInner(element);
+	output += "	</div>";
+	output += "	</div>"; //word_head_shell
+	output += '	<div id="detail' + wID + '" class="wbody">';
+	output += renderWordBodyInner(element);
+	output += "	</div>";
+
+	output += "</div>";
+	return output;
+}
 var arr_par_sent_num = new Array();
 var g_arr_Para_ID = new Array();
 function renderWordParBlockInner(elementBlock) {
 	var output = "<div style='display:block;width:100%'>";
 	var Note_Mark = 0;
-	var sent_gramma_i = 0;
-	var word_length_count = 0;
 	var sent_num = 0;
 
 	var arr_Para_ID = new Array();
@@ -1260,7 +1312,6 @@ function renderWordParBlockInner(elementBlock) {
 	let book = getNodeText(xmlParInfo, "book");
 	let paragraph = getNodeText(xmlParInfo, "paragraph");
 	let par_num = paragraph - 1;
-	let type = getNodeText(xmlParInfo, "type");
 	let allWord = elementBlock.getElementsByTagName("word");
 	output += "<div class='sent_wbw_trans'>";
 	output += render_sent_tool_bar(elementBlock, 0);
@@ -1276,79 +1327,61 @@ function renderWordParBlockInner(elementBlock) {
 		let wType = getNodeText(allWord[iWord], "type");
 		let wGramma = getNodeText(allWord[iWord], "gramma");
 		let wCase = getNodeText(allWord[iWord], "case");
-		let wMean = getNodeText(allWord[iWord], "mean");
-		let wParent = getNodeText(allWord[iWord], "parent");
 		let wUn = getNodeText(allWord[iWord], "un");
-		let wStyle = getNodeText(allWord[iWord], "style");
 		let wEnter = getNodeText(allWord[iWord], "enter");
-
 		if ((wType == "" || wType == "?") && wCase != "") {
 			wType = wCase.split("#")[0];
 		}
+
+		//渲染单词块
+		output += renderWordBlock(allWord[iWord]);
+		/*
+		//word div class
+		let wordclass;
+		let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
+		if (wType == ".ctl." && wGramma == ".a.") {
+			wordclass = "ctrl";
+		} else if (Note_Mark == 1) {
+			wordclass = "word org_note";
+		} else {
+			if (wReal == "") {
+				wordclass = "word word_punc un_parent "; //符號
+			} else {
+				if (wType == ".un.") {
+					wordclass = "word un_parent"; //粘音詞
+				} else if (wType == ".comp.") {
+					wordclass = "word comp_parent"; //複合詞
+				} else {
+					wordclass = "word"; //普通
+				}
+			}
+		}
+		output += '<div id="wb' + wID + "\" class='" + wordclass + "'> <a name='" + wPali + "'></a>";
+		//head div class
+		output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
+		let wordheadclass;
+		if (wUn.length > 0) {
+			wordheadclass = "word_head un_pali";
+		} else {
+			wordheadclass = "word_head";
+		}
+		output += "	<div class='" + wordheadclass + "' id=\"whead_" + wID + '">';
+		output += renderWordHeadInner(allWord[iWord]);
+		output += "	</div>";
+		output += "	</div>"; //word_head_shell
+		output += '	<div id="detail' + wID + '" class="wbody">';
+		output += renderWordBodyInner(allWord[iWord]);
+		output += "	</div>";
+
+		output += "</div>";
+*/
+		//渲染单词块结束
 
 		word_id = parseInt(wID.split("-")[2]);
 		if (sent_begin == 0) {
 			sent_begin = word_id;
 		}
 
-		//渲染单词块
-		//word div class
-		let strMouseEvent = ' onmouseover="on_word_mouse_enter()" onmouseout="on_word_mouse_leave()"';
-		if (wType == ".ctl." && wGramma == ".a.") {
-			//output += "<div><a name='"+wPali+"'></a></div>";
-			output +=
-				'<div id="wb' +
-				wID +
-				"\" class='ctrl sent_gramma_" +
-				(sent_gramma_i % 3) +
-				"'> <a name='" +
-				wPali +
-				"'></a>";
-		} else if (Note_Mark == 1) {
-			output +=
-				'<div id="wb' +
-				wID +
-				"\" class='word org_note sent_gramma_" +
-				(sent_gramma_i % 3) +
-				"'> <a name='" +
-				wPali +
-				"'></a>";
-		} else {
-			if (wReal == "") {
-				output +=
-					'<div id="wb' + wID + '" class="word_punc un_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //符號
-			} else {
-				if (wType == ".un.") {
-					output +=
-						'<div id="wb' + wID + '" class="word un_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //粘音詞
-				} else if (wType == ".comp.") {
-					output +=
-						'<div id="wb' + wID + '" class="word comp_parent sent_gramma_' + (sent_gramma_i % 3) + '" >'; //複合詞
-				} else {
-					output += '<div id="wb' + wID + '" class="word sent_gramma_' + (sent_gramma_i % 3) + '" >'; //普通
-				}
-			}
-		}
-
-		//head div class
-		output += "	<div id='ws_" + wID + "' class='word_head_shell' >";
-		if (wUn.length > 0) {
-			output += "	<div class='word_head un_pali' id=\"whead_" + wID + '">';
-		} else {
-			output += "	<div class='word_head' id=\"whead_" + wID + '">';
-		}
-
-		output += renderWordHeadInner(allWord[iWord]);
-		output += "	</div>";
-		output += "	</div>";
-		output += '	<div id="detail' + wID + '" class="wbody">';
-		output += renderWordBodyInner(allWord[iWord]);
-		output += "	</div>";
-		output += "</div>";
-
-		//渲染单词块结束
-
-		word_length_count += wPali.length;
 		if (iWord >= 1) {
 			var pre_pali_spell = getNodeText(allWord[iWord - 1], "pali");
 			var pre_pali_type = getNodeText(allWord[iWord - 1], "type");
@@ -1413,7 +1446,20 @@ function renderWordParBlockInner(elementBlock) {
 				if (_my_channal != null) {
 					for (const iterator of _my_channal) {
 						if (iterator.status > 0) {
-							output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+							let readonly;
+							if (iterator.power > 0 && iterator.power < 20) {
+								readonly = true;
+							} else {
+								readonly = false;
+							}
+							output += render_tran_sent_block(
+								book,
+								paragraph,
+								sent_begin,
+								word_id,
+								iterator.id,
+								readonly
+							);
 						}
 					}
 				}
@@ -1534,8 +1580,6 @@ function renderWordParBlockInner(elementBlock) {
 				output += "<div class='sent_wbw'>";
 			}
 			sent_num += 1;
-			word_length_count = 0;
-			sent_gramma_i = 0;
 			arr_Para_ID.push(wID);
 		}
 	} //循環結束
@@ -1565,7 +1609,13 @@ function renderWordParBlockInner(elementBlock) {
 	if (_my_channal != null) {
 		for (const iterator of _my_channal) {
 			if (iterator.status > 0) {
-				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, false);
+				let readonly;
+				if (iterator.power > 0 && iterator.power < 20) {
+					readonly = true;
+				} else {
+					readonly = false;
+				}
+				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, readonly);
 			}
 		}
 	}
@@ -1605,36 +1655,62 @@ function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
 
-	for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++) {
-		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
-		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
-		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
+	let idList = new Array();
+	$("#wbp" + book + "-" + para + "-" + begin)
+		.parent()
+		.children(".word")
+		.each(function (index, element) {
+			idList.push(this.id.slice(3));
+		});
+
+	for (const iterator_wid of idList) {
+		let rel = doc_word("#p" + iterator_wid).val("rela");
+		let pali = doc_word("#p" + iterator_wid).val("pali");
+		let real = doc_word("#p" + iterator_wid).val("real");
+		let type = doc_word("#p" + iterator_wid).val("type");
+
+		let meaning = doc_word("#p" + iterator_wid).val("mean");
+		meaning = removeFormulaB(meaning, "[", "]");
+		meaning = removeFormulaB(meaning, "【", "】");
+		meaning = removeFormulaB(meaning, "{", "}");
+		meaning = removeFormulaB(meaning, "｛", "｝");
+		meaning = removeFormulaB(meaning, "(", ")");
+		meaning = removeFormulaB(meaning, "（", "）");
+
 		if (type != ".ctl.") {
 			pali_text += pali + " ";
 		}
 		let wid = "p" + book + "-" + para + "-" + wordId;
-
+		wordId++;
 		if (rel != "") {
 			let relaData = JSON.parse(rel);
+			let language=getCookie("language")
 			for (const iterator of relaData) {
 				let strRel = iterator.relation;
+				let relation_locstr = "";
+				for(let x in list_relation){
+					if(list_relation[x].id==strRel && language==list_relation[x].language){
+						relation_locstr=list_relation[x].note;
+						break;
+					}
+				}
+
 				let dest = iterator.dest_spell;
 				let type = doc_word("#" + iterator.dest_id).val("case");
+				let meanDest = doc_word("#" + iterator.dest_id).val("mean");
+				meanDest = removeFormulaB(meanDest, "[", "]");
+				meanDest = removeFormulaB(meanDest, "【", "】");
+				meanDest = removeFormulaB(meanDest, "{", "}");
+				meanDest = removeFormulaB(meanDest, "｛", "｝");
+				meanDest = removeFormulaB(meanDest, "(", ")");
+				meanDest = removeFormulaB(meanDest, "（", "）");
 
 				if (type.indexOf(".v.") >= 0) {
-					dest = iterator.dest_id + "[/" + dest + "/]";
+					dest = iterator.dest_id + '(("' + dest + '<br>' + meanDest + '"))';
 				} else {
-					dest = iterator.dest_id + "[" + dest + "]";
+					dest = iterator.dest_id + '["' + dest + '<br>' + meanDest + '"]';
 				}
-				/*
-				if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
-					memind += wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
-				} else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
-					memind += dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
-				} else {
-				}
-*/
-				memind += wid + "(" + pali + ")" + " -- " + strRel + " --> " + dest + "\n";
+				memind += wid + '("' + real +'<br>'+ meaning + '")--"'+ strRel+'<br>'+ relation_locstr + '" --> ' + dest + "\n";
 			}
 		}
 	}
@@ -1705,8 +1781,8 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		output += "<span>";
 
 		if (thischannal) {
-			output += thischannal.name + "-<b>" + thischannal.lang + "</b>@";
-			if (thischannal.username == getCookie("username")) {
+			output += "<b>" + thischannal.name + "</b>@";
+			if (parseInt(thischannal.power) >= 30) {
 				output += gLocal.gui.your;
 			} else {
 				output += thischannal.nickname;
@@ -1714,6 +1790,7 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		} else {
 			output += "未知的频道名";
 		}
+		output += "-[" + thischannal.lang + "]";
 		output += "</span>";
 		output +=
 			"<span style='margin-left: auto;' class='send_status' id='send_" +
@@ -2203,11 +2280,19 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -2738,11 +2823,19 @@ function renderWordDetailByElement(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);
@@ -3136,11 +3229,19 @@ function renderWordDetailByElement(xmlElement) {
 
 		arrFormula = getFormulaList(currGramma);
 		_txtOutDetail += '<div class="case_dropdown">';
-		_txtOutDetail += "<svg class='edit_icon';'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
+		_txtOutDetail += "<svg class='edit_icon'><use xlink:href='svg/icon.svg#ic_more'></use></svg>";
 		_txtOutDetail += '<div class="case_dropdown-content">';
 		newWord = removeFormula_B(orgMeaning);
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","[]' + newWord + "\")'>["+gLocal.gui.none+"]</a>";
-		_txtOutDetail += "<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>["+gLocal.gui.auto+"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" +
+			wordID +
+			'","mean","[]' +
+			newWord +
+			"\")'>[" +
+			gLocal.gui.none +
+			"]</a>";
+		_txtOutDetail +=
+			"<a onclick='fieldListChanged(\"" + wordID + '","mean","' + newWord + "\")'>[" + gLocal.gui.auto + "]</a>";
 		for (var i in arrFormula) {
 			newWord = removeFormula_B(orgMeaning);
 			newWord = arrFormula[i].replace("~", newWord);

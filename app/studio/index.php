@@ -306,51 +306,51 @@ else{
 			<li><?php echo $_local->gui->function_introduce;?>&nbsp;&nbsp;&nbsp;
 				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFFNLOaZh2u3VwDYUyJuK_xa" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#tudou_logo"></use>
 					</svg>
 				</a>
 			</li>
 			<li><?php echo $_local->gui->project_introduce;?>&nbsp;&nbsp;&nbsp;
 				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFHT6UisME_cOSts5fFecK14" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#tudou_logo"></use>
 					</svg>
 				</a>
 			</li>
 			<li><?php echo $_local->gui->project_introduce_inbrief;?>&nbsp;&nbsp;&nbsp;
 				<a href="https://www.youtube.com/playlist?list=PLgavmc8e-GuWR-FKOr-7RfnUSWX82ED0q" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youtube_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#youku_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
 					</svg>
 				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#tudou_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#tudou_logo"></use>
 					</svg>
 				</a>
 			</li>
@@ -361,12 +361,12 @@ else{
 				</a>&nbsp;&nbsp;&nbsp;
 				<a href="https://iapt-platform.github.io/PCD-internet1.0/" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#github_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#github_logo"></use>
 					</svg>
 				</a>
 				<a href="https://gitee.com/sakya__kosalla/PCD-internet1.0#wikipali-demo" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#gitee_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#gitee_logo"></use>
 					</svg>
 				</a>
 			</li>
@@ -376,12 +376,12 @@ else{
 				</a>&nbsp;&nbsp;&nbsp;
 				<a href="https://github.com/iapt-platform/PCD-internet1.0" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#github_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#github_logo"></use>
 					</svg>
 				</a>
 				<a href="https://gitee.com/sakya__kosalla/PCD-internet1.0" target="_block">
 					<svg class="icon">
-						<use xlink:href="./studio/svg/icon.svg#gitee_logo"></use>
+						<use xlink:href="../studio/svg/icon.svg#gitee_logo"></use>
 					</svg>
 				</a>
 			</li>

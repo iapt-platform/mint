@@ -1,6 +1,9 @@
+/.debug
+/.vscode
 /tmp
 /.vscode
 .DS_Store
 /.debug
 .favorites.json
 /vendor
+/node_modules

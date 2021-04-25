@@ -4,7 +4,7 @@ function get_setting()
 {
 
     if (!isset($_COOKIE["userid"])) {
-        $setting = array();
+        $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
     } else {
         $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
         //打开数据库
@@ -32,7 +32,7 @@ function get_setting()
 function inLangSetting($lang, $mySetting)
 {
     # 通用语言 和 无译文语言 总是被采用
-    if ($lang == "com" && $lang == "none") {
+    if ($lang == "com" || $lang == "none") {
         return true;
     }
     # 用户没有设置语言

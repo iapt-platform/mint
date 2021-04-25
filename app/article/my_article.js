@@ -1,6 +1,8 @@
 var _display = "para";
+var share_win;
 function my_article_init() {
 	my_article_list();
+	share_win = iframe_win_init({ container: "share_win", name: "share", width: "500px" });
 	article_add_dlg_init("article_add_div");
 }
 function my_article_list() {
@@ -19,35 +21,71 @@ function my_article_list() {
 					//表头
 					html += '<div class="file_list_row" style="padding:5px;">';
 					html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-					html += "<div style='flex:0.5;'>" + key++ + "</div>";
-					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:0.5;'>No.</div>";
+					html += "<div style='flex:4;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
-					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
-					html += "<div style='flex:1;'>15</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.share_to + "</div>";
 					html += "</div>";
 					//列表
 					for (const iterator of result) {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
-						html += "<div style='flex:2;'>" + iterator.title + "</div>";
+						html += "<div style='flex:4;'>" + iterator.title + "</div>";
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 						html +=
 							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
 							iterator.id +
-							"'>" +
+							"' title='" +
 							gLocal.gui.edit +
-							"</a></div>";
+							"'>";
+						html += "<button class='icon_btn'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>";
+						html += "</svg>";
+						html += "</button>";
+
+						html += "</a></div>";
 						html +=
 							"<div style='flex:1;'><a href='../article/?id=" +
 							iterator.id +
-							"' target='_blank'>" +
+							"' target='_blank' title='" +
 							gLocal.gui.preview +
-							"</a></div>";
-						html += "<div style='flex:1;'>15</div>";
+							"' >";
+						html += "<button class='icon_btn'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
+						html += "</svg>";
+						html += "</button>";
+						html += "</a></div>";
+						html += "<div style='flex:1;'>";
+						html +=
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/mint/app/article/?id=" +
+							iterator.id +
+							"')\" title='" +
+							gLocal.gui.copy_link +
+							"'>";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>";
+						html += "</svg>";
+						html += "</button>";
+						html += "</div>";
+						html += "<div style='flex:1;'>";
+						html +=
+							"<button title='" +
+							gLocal.gui.share_to +
+							"' class='icon_btn' onclick=\"article_share('" +
+							iterator.id +
+							"')\">";
+						html += "<svg class='icon'>";
+						html += "<use xlink:href='../studio/svg/icon.svg#share_to'></use>";
+						html += "</svg>";
+						html += "</button>";
+						html += "</div>";
+
 						html += "</div>";
 					}
 					$("#article_list").html(html);
@@ -60,32 +98,53 @@ function my_article_list() {
 		}
 	);
 }
-
-function render_status(status) {
+function article_share(id) {
+	share_win.show("../share/share.php?id=" + id + "&type=3");
+}
+function render_status(status, readonly = true) {
 	status = parseInt(status);
 	let html = "";
 	let objStatus = [
 		{
-			id: 1,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>" + gLocal.gui.private,
+			id: 10,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#ic_lock'></use></svg>",
+			name: gLocal.gui.private,
 			tip: gLocal.gui.private_note,
-		},
-		{
-			id: 2,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>" +
-				gLocal.gui.unlisted,
+		} /*
+		,{
+			id: 20,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_disable'></use></svg>",
+			name: gLocal.gui.unlisted,
 			tip: gLocal.gui.unlisted_note,
-		},
+		}*/,
 		{
-			id: 3,
-			name:
-				"<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>" +
-				gLocal.gui.public,
+			id: 30,
+			icon: "<svg class='icon'><use xlink:href='../studio/svg/icon.svg#eye_enable'></use></svg>",
+			name: gLocal.gui.public,
 			tip: gLocal.gui.public_note,
 		},
 	];
+	if (readonly) {
+		for (const iterator of objStatus) {
+			if (iterator.id == status) {
+				return "<div >" + iterator.icon + iterator.name + "</div>";
+			}
+		}
+	} else {
+		let html = "";
+		html += "<select name='status'>";
+		for (const iterator of objStatus) {
+			html += "<option value='" + iterator.id + "' ";
+			if (iterator.id == status) {
+				html += "selected";
+			}
+			html += " >";
+			html += iterator.name;
+			html += "</option>";
+		}
+		html += "</select>";
+		return html;
+	}
 	html += '<div class="case_dropdown"  style="flex:7;">';
 	html += '<input type="hidden" name="status"  value ="' + status + '" />';
 
@@ -136,14 +195,18 @@ function my_article_edit(id) {
 					html += "<input type='hidden' name='tag' value='" + result.tag + "'/>";
 					html += "<input type='hidden' name='status' value='" + result.status + "'/>";
 
-					html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
+					//html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
 					html += "<div>";
 					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.title + "</span>";
-					html += '<span id="article_title" style="flex:7;"></span></div>';
+					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
+					html += '<span id="article_title" style="flex:7;"></span>';
+					html += "</div>";
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
-					html += "<div id='aritcle_status' style='display: flex; '></div>";
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
+					html += '<span id="aritcle_status" style="flex:7;"></span>';
+					html += "</div>";
 					html +=
 						'<div style="display:none;width:100%;" ><span style="flex:3;margin: auto;">' +
 						gLocal.gui.language_select +
@@ -159,19 +222,19 @@ function my_article_edit(id) {
 						result.lang +
 						'" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:3;margin:auto;'>" + gLocal.gui.introduction + "</span>";
+					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
 					html += "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
 					html += "</div>";
 					html += "</div>";
 
 					html +=
-						"<textarea id='article_content' name='content' style='height:500px;max-height: 40vh;'>" +
+						"<textarea id='article_content' name='content' style='height:480px;resize: vertical;'>" +
 						result.content +
 						"</textarea>";
 					html += "</div>";
 
 					html += "<div id='preview_div'>";
-					html += "<div id='preview_inner' ></div>";
+					html += "<div id='preview_inner' class='sent_mode vertical'></div>";
 					html += "</div>";
 
 					html += "</div>";
@@ -179,7 +242,7 @@ function my_article_edit(id) {
 					$("#article_list").html(html);
 					channal_select_init("channal_selector");
 					tran_lang_select_init("article_lang_select");
-					$("#aritcle_status").html(render_status(result.status));
+					$("#aritcle_status").html(render_status(result.status, false));
 					let html_title =
 						"<input id='input_article_title' type='input' name='title' value='" + result.title + "' />";
 					$("#article_title").html(html_title);

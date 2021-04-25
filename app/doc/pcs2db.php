@@ -101,7 +101,7 @@ $query = "SELECT file_name, doc_info, modify_time from fileindex where id=? ";
 $Fetch = PDO_FetchRow($query, array($_GET["doc_id"]));
 
 if ($Fetch === false) {
-    echo "文件不存在";
+    echo "数据库中查不到文件";
     exit;
 } else {
     $file_modify_time = $Fetch["modify_time"];
@@ -112,13 +112,14 @@ if ($Fetch === false) {
         exit;
     }
 }
+echo "File Name:{$file}<br>";
 if (!file_exists($file)) {
     echo "文件不存在";
     exit;
 }
 $xml = simplexml_load_file($file);
 if ($xml == false) {
-    echo "载入pcs文件错误";
+    echo "载入pcs文件错误。文件名：{$file}";
     exit;
 }
 $xml_head = $xml->xpath('//head')[0];
