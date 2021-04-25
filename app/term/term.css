@@ -148,6 +148,9 @@ chapter {
 	text-decoration: none;
 	cursor: pointer;
 }
+.path chapter {
+	display: unset;
+}
 chapter::after {
 	content: " > ";
 }
@@ -170,8 +173,14 @@ para {
 .tooltiptext para {
 	display: inline;
 }
+.path para {
+	display: unset;
+}
 para:hover {
 	text-decoration: underline;
+}
+#contents_div .sent_no_read_mode {
+	display: none;
 }
 
 commentary,
@@ -648,7 +657,7 @@ pw {
 }
 .tool_bar > .right {
 	position: absolute;
-	right: 0;
+	right: 2em;
 	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
@@ -718,7 +727,10 @@ li.active {
 	background-color: var(--booka);
 }
 .sent_tran .preview p {
+	line-height: normal;
 	margin: 0;
+	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV1-Normal", "Arial",
+		"Verdana";
 }
 .pop_menu .icon {
 	fill: var(--main-color);
@@ -820,7 +832,13 @@ w:hover {
 .tran_sent p {
 	display: inline;
 }
+.sent_tran li {
+	line-height: normal;
+}
 .note_foot {
 	display: flex;
 	justify-content: space-between;
+}
+.term_pali {
+	font-style: italic;
 }

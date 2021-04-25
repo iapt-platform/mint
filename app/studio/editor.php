@@ -987,9 +987,11 @@ foreach($plugin_list as $info){
 	<!-- 逐词解析 词头工具栏-->
 	<div id="word_tool_bar_div">
 		<div id="word_tool_bar" class="word_head_bar"style="font-size: 70%">
-			<button  onclick="rela_link_click()">Link</button>
+			<button  onclick="rela_link_click()">
+				<?php echo $_local->gui->link; ?>
+			</button>
 			<button  onclick="rela_link_click(false)">
-				<?php echo $_local->gui->page_end; ?>
+				<?php echo $_local->gui->cancel; ?>
 			</button>
 		</div>
 	</div>

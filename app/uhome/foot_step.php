@@ -28,9 +28,9 @@ include "../pcdl/html_head.php";
 <link href='../lib/fullcalendar/main.css' rel='stylesheet' />
 <script src='../lib/fullcalendar/main.js'></script>
 
-<script src="../public/js/Highstock-8.0.0/code/highstock.js"></script>
-<script src="../public/js/Highstock-8.0.0/code/modules/data.js"></script>
-<script src="../public/js/Highstock-8.0.0/code/modules/exporting.js"></script>
+<script src="../public/js/Highstock/code/highstock.js"></script>
+<script src="../public/js/Highstock/code/modules/data.js"></script>
+<script src="../public/js/Highstock/code/modules/exporting.js"></script>
 
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/data.js"></script>

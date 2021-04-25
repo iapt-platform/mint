@@ -1663,43 +1663,54 @@ function sent_show_rel_map(book, para, begin, end) {
 			idList.push(this.id.slice(3));
 		});
 
-	//for (wordId = parseInt(begin); wordId <= parseInt(end); wordId++)
-	for (const iterator of idList) {
-		let rel = doc_word("#p" + iterator).val("rela");
-		let pali = doc_word("#p" + iterator).val("pali");
-		let real = doc_word("#p" + iterator).val("real");
-		let type = doc_word("#p" + iterator).val("type");
-		/*
-		let rel = doc_word("#p" + book + "-" + para + "-" + wordId).val("rela");
-		let pali = doc_word("#p" + book + "-" + para + "-" + wordId).val("real");
-		let type = doc_word("#p" + book + "-" + para + "-" + wordId).val("type");
-		*/
+	for (const iterator_wid of idList) {
+		let rel = doc_word("#p" + iterator_wid).val("rela");
+		let pali = doc_word("#p" + iterator_wid).val("pali");
+		let real = doc_word("#p" + iterator_wid).val("real");
+		let type = doc_word("#p" + iterator_wid).val("type");
+
+		let meaning = doc_word("#p" + iterator_wid).val("mean");
+		meaning = removeFormulaB(meaning, "[", "]");
+		meaning = removeFormulaB(meaning, "【", "】");
+		meaning = removeFormulaB(meaning, "{", "}");
+		meaning = removeFormulaB(meaning, "｛", "｝");
+		meaning = removeFormulaB(meaning, "(", ")");
+		meaning = removeFormulaB(meaning, "（", "）");
+
 		if (type != ".ctl.") {
 			pali_text += pali + " ";
 		}
 		let wid = "p" + book + "-" + para + "-" + wordId;
-
+		wordId++;
 		if (rel != "") {
 			let relaData = JSON.parse(rel);
+			let language=getCookie("language")
 			for (const iterator of relaData) {
 				let strRel = iterator.relation;
+				let relation_locstr = "";
+				for(let x in list_relation){
+					if(list_relation[x].id==strRel && language==list_relation[x].language){
+						relation_locstr=list_relation[x].note;
+						break;
+					}
+				}
+
 				let dest = iterator.dest_spell;
 				let type = doc_word("#" + iterator.dest_id).val("case");
+				let meanDest = doc_word("#" + iterator.dest_id).val("mean");
+				meanDest = removeFormulaB(meanDest, "[", "]");
+				meanDest = removeFormulaB(meanDest, "【", "】");
+				meanDest = removeFormulaB(meanDest, "{", "}");
+				meanDest = removeFormulaB(meanDest, "｛", "｝");
+				meanDest = removeFormulaB(meanDest, "(", ")");
+				meanDest = removeFormulaB(meanDest, "（", "）");
 
 				if (type.indexOf(".v.") >= 0) {
-					dest = iterator.dest_id + "[/" + dest + "/]";
+					dest = iterator.dest_id + '(("' + dest + '<br>' + meanDest + '"))';
 				} else {
-					dest = iterator.dest_id + "[" + dest + "]";
+					dest = iterator.dest_id + '["' + dest + '<br>' + meanDest + '"]';
 				}
-				/*
-				if (strRel.indexOf("SV") >= 0 || strRel.indexOf("-P") >= 0) {
-					memind += wid + "(" + pali + ")" + " ==> |" + strRel + "|" + dest + "\n";
-				} else if (strRel.indexOf("OV") >= 0 || strRel.indexOf("-S") >= 0) {
-					memind += dest + " ==> |" + strRel + "|" + wid + "(" + pali + ")" + "\n";
-				} else {
-				}
-*/
-				memind += wid + "(" + real + ")" + " -- " + strRel + " --> " + dest + "\n";
+				memind += wid + '("' + real +'<br>'+ meaning + '")--"'+ strRel+'<br>'+ relation_locstr + '" --> ' + dest + "\n";
 			}
 		}
 	}

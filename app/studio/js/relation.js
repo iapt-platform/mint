@@ -130,8 +130,9 @@ function rela_render_context(wordid,index,strRela,grammar){
 	output += "</p>";
 	output += "<div class=\"case_dropdown-content\">";
 	output += "<div >";
+	let language=getCookie("language")
 	for(let x in list_relation){
-		if(grammar.indexOf(list_relation[x].case)>=0 || list_relation[x].case==""){
+		if((grammar.indexOf(list_relation[x].case)>=0 || list_relation[x].case=="") && language==list_relation[x].language){
 			output += "<a onclick=\"rela_menu_item_click('"+wordid+"','"+index+"','"+list_relation[x].id+"')\"><span class='rela_bold'>"+list_relation[x].id+"</span>("+list_relation[x].note+")</a>";
 		}
 	}
