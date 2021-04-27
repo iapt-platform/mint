@@ -9,7 +9,7 @@ $input = (object) [
     "table" =>  "article",
     "uuid" =>  "id",
     "modify_time" =>  "modify_time",
-    "receive_time" =>  "modify_time",
+    "receive_time" =>  "receive_time",
     "insert" => [
         'id',
 		'title',
