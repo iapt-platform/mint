@@ -141,33 +141,32 @@ class ArticleList extends Table
     }
 
 	function upgrade($collectionId,$articleList=array()){
-		if(count($articleList)==0){
-			return false;
-		}
 		# 更新 article_list 表
 		$query = "DELETE FROM article_list WHERE collect_id = ? ";
 		$stmt = $this->dbh->prepare($query);
 		if($stmt){
-			$stmt->execute($collectionId);
+			$stmt->execute(array($collectionId));
 		}
-        
+        $table->beginTransaction($query)
+			  ->set($date)
+			  ->commit();
 		if(count($articleList)>0){
 			/* 开始一个事务，关闭自动提交 */
 			$this->dbh->beginTransaction();
 			$query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
 			$sth = $this->dbh->prepare($query);
 			foreach ($articleList as $row) {
-				$sth->execute(array($_POST["id"],$row->article,$row->level,$row->title));
-				if($redis){
+				$sth->execute(array($collectionId,$row["article"],$row["level"],$row["title"]));
+				if($this->redis){
 					#删除article权限缓存
-					$redis->del("power://article/".$row->article);
+					$this->redis->del("power://article/".$row["article"]);
 				}
 			}
-			$PDO->commit();
+			$this->dbh->commit();
 			if (!$sth || ($sth && $sth->errorCode() != 0)) {
 				/*  识别错误且回滚更改  */
-				$PDO->rollBack();
-				$error = PDO_ErrorInfo();
+				$this->dbh->rollBack();
+				$error = $this->dbh->errorInfo();;
 				$respond['status']=1;
 				$respond['message']=$error[2];
 			}

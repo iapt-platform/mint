@@ -1,8 +1,8 @@
 var sync_db_list = [
-	"sync/table_article.php",
-	/*"sync/table_term.php",
+	/*"sync/table_article.php",*/
+	/*"sync/table_term.php",*/
 	"sync/table_article_collect.php",
-	"sync/table_sentence.php",*/
+	/*"sync/table_sentence.php",*/
 ];
 var sync_curr_do_db = 0;
 function sync_index_init() {}
