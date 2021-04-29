@@ -58,26 +58,38 @@ function do_sync($param)
 				}
 				if(isset($_POST["time"])){
 					$time = $_POST["time"];
-					$query = "SELECT {$param->uuid} as guid, {$param->receive_time} as receive_time from {$param->table}  where {$param->receive_time} > ? order by {$param->receive_time}  limit 0,".$size;
+					$query = "SELECT  {$param->receive_time} as receive_time from {$param->table}  where {$param->receive_time} > ? {$param->where} order by {$param->receive_time}  limit 0,".$size;
 					$stmt = $PDO->prepare($query);
 					$stmt->execute(array($time));
 					$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+					#防止同一个时间有两条数据
 					if(count($Fetch)>0){
 						$newTime = $Fetch[count($Fetch)-1]["receive_time"];
-						$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->receive_time} > ? and {$param->receive_time} <= ?  order by {$param->receive_time} ";
+						$syncId = implode(",",$param->sync_id);
+						$query = "SELECT {$param->uuid} as guid, $syncId , {$param->modify_time} as modify_time from {$param->table}  where {$param->receive_time} > ? and {$param->receive_time} <= ? {$param->where}  order by {$param->receive_time} ";
 						$stmt = $PDO->prepare($query);
 						$stmt->execute(array($time,$newTime));
 						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($Fetch as $key => $value) {
+							# code...
+							
+							$arrSyncId = array();
+							foreach ($param->sync_id as $field) {
+								# code...
+								$arrSyncId[]=$value[$field];
+							}
+							$Fetch[$key]["sync_id"] = implode("#",$arrSyncId);
+						}
 					}
 					$output["data"]=$Fetch;
 					return $output;
 			
 				}
 				else if(isset($_POST["id"])){
+					/*
 					$params = json_decode($_POST["id"],true);
 					$count =count($params);
-					/*  创建一个填充了和params相同数量占位符的字符串 */
+					#  创建一个填充了和params相同数量占位符的字符串 
 					$place_holders = implode(',', array_fill(0, count($params), '?'));
 					$query = "SELECT {$param->uuid} as guid, {$param->modify_time} as modify_time from {$param->table}  where {$param->uuid} in ($place_holders) order by {$param->receive_time} ASC  limit 0,".$size;
 					$stmt = $PDO->prepare($query);
@@ -86,7 +98,27 @@ function do_sync($param)
 					$iFetch = count($Fetch);
 					$output["data"]=$Fetch;
 					return $output;
-					
+					*/
+					$syncId = implode(",",$param->sync_id);
+					$arrId = json_decode($_POST["id"],true);
+					$query = "SELECT {$param->uuid} as guid, {$syncId} , {$param->modify_time} as modify_time from {$param->table}  where ";
+					foreach ($param->sync_id as $field) {
+						$query .= " $field = ? and";
+					}
+					$query .= " 1  limit 0,1";
+					$stmt = $PDO->prepare($query);
+					$data = array();
+					foreach ($arrId as $id) {
+						# code...
+						$stmt->execute(explode("#",$id));
+						$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+						if($Fetch){
+							$Fetch["sync_id"] = $id;
+							$data[]=$Fetch;
+						}
+					}
+					$output["data"]=$data;
+					return $output;
 				}
 
                 break;

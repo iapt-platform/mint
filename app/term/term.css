@@ -846,3 +846,12 @@ w:hover {
 .note_body note {
 	display: inline;
 }
+
+span.keybutton {
+	background-color: gray;
+	border-radius: 6px;
+	font-size: 80%;
+	padding: 0 3px;
+	color: white;
+	font-weight: 300;
+}

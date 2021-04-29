@@ -62,7 +62,7 @@ else{
 }
 $aIdList=array();
 foreach($serverDBData as $sd){
-	$aIdList[]=$sd["guid"];
+	$aIdList[]=$sd["sync_id"];
 }
 $sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);
 // 拉 id 列表
@@ -86,19 +86,19 @@ $insert_to_server=array();
 $update_to_server=array();
 $insert_to_local=array();
 $update_to_local=array();
-
+#开始比对数据
 foreach($localDBData as $local){
-	$localindex[$local["guid"]][0]=$local["modify_time"];
-	$localindex[$local["guid"]][1]=false;
+	$localindex[$local["sync_id"]][0]=$local["modify_time"];
+	$localindex[$local["sync_id"]][1]=false;
 }
 foreach($serverDBData as $sd){
-	if(isset($localindex[$sd["guid"]])){
-		$localindex[$sd["guid"]][1]=true;
-		if($sd['modify_time']>$localindex[$sd["guid"]][0]){
+	if(isset($localindex[$sd["sync_id"]])){
+		$localindex[$sd["sync_id"]][1]=true;
+		if($sd['modify_time']>$localindex[$sd["sync_id"]][0]){
 			//服务器数据较新 server data is new than local
 			$update_to_local[]=$sd["guid"];
 		}
-		else if($sd['modify_time']==$localindex[$sd["guid"]][0]){
+		else if($sd['modify_time']==$localindex[$sd["sync_id"]][0]){
 			//"相同 same
 		}
 		else{
@@ -125,39 +125,11 @@ if($syncCount==0){
 }
 else{
 //start sync
-	if(count($insert_to_server)>0){
-		/*
 
-		*/
-		$message .=  "需要插入服务器".count($insert_to_server)."条记录<br>";
-		/*
-		$idInLocal = json_encode($insert_to_server, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInLocal}"]]);
-		$localData=(string)$response->getBody();
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$localData}"]]);
-		$message .=  (string)$response->getBody()."<br>";
-		*/
-		
-	}
-
-	if(count($update_to_server)>0){
-		/*
-
-		*/
-		/*
-		$message .=  "需要更新到服务器".count($update_to_server)."条记录<br>";
-		
-		$idInLocal = json_encode($update_to_server, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInLocal}"]]);
-		$localData=(string)$response->getBody();
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$localData}"]]);
-		$message .=  (string)$response->getBody()."<br>";
-		*/
-		
-	}
 	$message .= "<div>";
 	if(count($insert_to_local)>0){
 		$message .=  "需要新增到本地".count($insert_to_local)."条记录 | ";
+		
 		#提取数据
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
@@ -174,6 +146,7 @@ else{
 		else{
 			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
 		}
+		
 	}
 	$message .= "</div>";
 
@@ -196,6 +169,7 @@ else{
 		else{
 			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
 		}
+		
 	}
 	$message .= "</div>";
 
