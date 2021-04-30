@@ -1546,13 +1546,13 @@ function note_sent_save_a(obj) {
 		sent_save_callback
 	)
 		.success(function () {
-			alert("second success");
+			//alert("second success");
 		})
 		.error(function () {
 			alert("error");
 		})
 		.complete(function () {
-			alert("complete");
+			//alert("complete");
 		});
 
 	if (sent_tran_div) {
