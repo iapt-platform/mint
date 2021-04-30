@@ -1,4 +1,9 @@
 <?php
+require_once "../path.php";
+require_once "../share/function.php";
+require_once "../channal/function.php";
+require_once "../db/table.php";
+
 function update_historay($sent_id, $user_id, $text, $landmark)
 {
     # 更新historay
@@ -132,7 +137,7 @@ class Sent_DB
     private $dbh_sent;
 	private $dbh_his;
 	private $errorMsg="";
-    public function __construct() {
+    public function __construct($redis=false) {
         $this->dbh_sent = new PDO(_FILE_DB_SENTENCE_, "", "",array(PDO::ATTR_PERSISTENT=>true));
 		$this->dbh_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);  
 		
@@ -142,6 +147,8 @@ class Sent_DB
 	public function getError(){
 		return $errorMsg;
 	}
+
+	#获取单个句子数据
 	public function getSent($book,$para,$begin,$end,$channel){
 		$query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND channal = ?  ";
 		$stmt = $this->dbh_sent->prepare($query);
@@ -174,13 +181,25 @@ class Sent_DB
 			//add_edit_event(_SENT_EDIT_, "{$oldList[0]["book"]}-{$oldList[0]["paragraph"]}-{$oldList[0]["begin"]}-{$oldList[0]["end"]}@{$oldList[0]["channal"]}");
 	
 			$this->dbh_sent->beginTransaction();
-			$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ?   where  id= ?  ";
-			$sth = $this->dbh_sent->prepare($query);
-	
-			foreach ($arrData as $data) {
-				$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],mTime(),$data["id"]));
+			if(isset($data["book"]) && isset($data["paragraph"]) && isset($data["begin"]) && isset($data["end"]) && isset($data["channal"])){
+				if(!isset($data["modify_time"])){
+					$data["modify_time"] = mTime();
+				}
+				$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ? , receive_time = ?  where  book = ? and paragraph=? and [begin]=? and [end]=? and channal=?  ";
+				$sth = $this->dbh_sent->prepare($query);
+				foreach ($arrData as $data) {
+					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],$data["modify_time"],mTime(),$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"]));
+				}
 			}
-	
+			else{
+				$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ? ,receive_time = ?   where  id= ?  ";
+				$sth = $this->dbh_sent->prepare($query);
+				foreach ($arrData as $data) {
+					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],mTime(),mTime(),$data["id"]));
+				}				
+			}
+
+
 			$this->dbh_sent->commit();
 		
 			if (!$sth || ($sth && $sth->errorCode() != 0)) {
@@ -202,8 +221,8 @@ class Sent_DB
 	}
 
 	public function insert($arrData){
-		/* 插入新数据 */
-		//查询channel语言
+		# 插入新数据 
+		
 		if (count($arrData) > 0) {
 			//add_edit_event(_SENT_NEW_, "{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}@{$newList[0]["channal"]}");
 			$this->dbh_sent->beginTransaction();
@@ -228,14 +247,22 @@ class Sent_DB
 											)
 								VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 			$sth = $this->dbh_sent->prepare($query);
-	
+
+			#查询channel语言
 			$channel_info = new Channal();
 	
 			foreach ($arrData as $data) {
 				if($data["id"]==""){
 					$data["id"] = UUID::v4();
 				}
-				
+				if(!isset($data["create_time"])){
+					$data["create_time"]=mTime();
+				}
+				if(!isset($data["modify_time"])){
+					$data["modify_time"]=mTime();
+				}
+				$data["receive_time"]=mTime();
+
 				$queryChannel = $channel_info->getChannal($data["channal"]);
 				if ($queryChannel == false) {
 					$lang = $data["language"];
@@ -259,9 +286,9 @@ class Sent_DB
 					1,
 					$status,
 					mb_strlen($data["text"], "UTF-8"),
-					mTime(),
-					mTime(),
-					mTime(),
+					$data["modify_time"],
+					$data["receive_time"],
+					$data["create_time"]
 				));
 			}
 			$this->dbh_sent->commit();
@@ -343,8 +370,7 @@ class Sent_DB
 		}
 	}
 
-	public function historay($arrData)
-	{
+	public function historay($arrData){
 		if (count($arrData) ==0) {
 			$this->errorMsg = "";
 			return true;

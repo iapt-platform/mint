@@ -969,17 +969,14 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	//html += ""
-	html +=
-		'<span style="display: inline-flex;"><svg class="icon" style="width: 25px;height: 18px;"><svg id="ESC_button" viewBox="0 0 210 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="210" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">ESC</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;';
-	html +=
-		"<a onclick='tran_sent_edit_cancel(this)'>" +
-		gLocal.gui.cancel +
-		"</a></span><span style='display: inline-flex;'>";
-	html +=
-		'<svg class="icon" style="width: 30px;height: 18px;"><svg id="ESC_button" viewBox="0 0 250 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="250" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Shift</tspan></tspan></text></svg></svg>';
+	html += '<span  style="display: inline-flex;">';
+	html += '<span class="keybutton" >ESC</span> = ';
+	html += "<a onclick='tran_sent_edit_cancel(this)'>" + gLocal.gui.cancel + "</a>";
+	html += "</span>";
+	html += "<span style='display: inline-flex;'>";
+	html += '<span class="keybutton" >Ctrl</span>';
 	html += "➕";
-	html +=
-		'<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>&nbsp;=&nbsp;';
+	html += '<span class="keybutton" >Enter</span> = ';
 	if (parseInt(iterator.mypower) < 20) {
 		html += "<a onclick='tran_sent_save(this)'>";
 		html += gLocal.gui.submit + "<b>" + gLocal.gui.suggest + gLocal.gui.translation + "</b>";
@@ -989,10 +986,7 @@ function render_one_sent_tran_a(iterator) {
 		html += gLocal.gui.save;
 		html += "</a></span><span style='display: inline-flex;'>";
 	}
-	html +=
-		'<svg class="icon" style="width: 32px;height: 18px;"><svg id="ESC_button" style="width: 32px;height: 18px;" viewBox="0 0 260 150" version="1.1"><filter inkscape:label="Button" inkscape:menu="Bevels" inkscape:menu-tooltip="Soft bevel, slightly depressed middle" style="color-interpolation-filters:sRGB;" id="filter1808"><feMorphology in="SourceAlpha" radius="6.6" result="result1" id="feMorphology1784" /><feGaussianBlur stdDeviation="8.9" in="result1" id="feGaussianBlur1786" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" result="result91" id="feColorMatrix1788" /><feComposite in="result0" operator="out" result="result2" in2="result91" id="feComposite1790" /><feGaussianBlur stdDeviation="1.7" result="result4" id="feGaussianBlur1792" /><feDiffuseLighting surfaceScale="10" id="feDiffuseLighting1796"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1794" /></feDiffuseLighting><feBlend in2="SourceGraphic" mode="multiply" id="feBlend1798" /><feComposite in2="SourceAlpha" operator="in" result="result3" id="feComposite1800" /><feSpecularLighting in="result4" surfaceScale="5" specularExponent="17.9" id="feSpecularLighting1804"><feDistantLight azimuth="225" elevation="45" id="feDistantLight1802" /></feSpecularLighting><feComposite in2="result3" operator="atop" id="feComposite1806" /></filter></defs><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.4865144" inkscape:cx="57.142857" inkscape:cy="96.638595" inkscape:document-units="mm" inkscape:current-layer="layer1" inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1001" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:window-maximized="1" /><rect ry="58.781078" style="fill:#999999;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter1808)" id="rect1264" width="260" height="150" x="0" y="0" /><text xml:space="preserve" id="text1266" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1268);fill:#000000;fill-opacity:1;stroke:none;" transform="matrix(1.1320886,0,0,1.1287136,-1.7621172,25.458127)"><tspan x="30" y="70"><tspan style="font-size:70.5556px;fill:#ffffff">Enter</tspan></tspan></text></svg></svg>';
-	//html += "<button>Enter</button>"
-	html += "&nbsp;=&nbsp;";
+	html += '<span class="keybutton" >Enter</span> = ';
 	html += gLocal.gui.next_line;
 	html += "</span><span style='display: inline-flex;'>MarkDown✅</span>";
 	html += "</div>";
@@ -1067,7 +1061,7 @@ function tran_sent_textarea_event_init() {
 						menu.style.display = "none";
 						return false;
 					} else {
-						if (e.shiftKey) {
+						if (e.ctrlKey) {
 							//回车存盘
 							tran_sent_save(e.currentTarget);
 							return false;
@@ -1514,7 +1508,30 @@ function note_sent_save_a(obj) {
 	let channal = $(obj).attr("channel");
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
-	$.post(
+	/*
+	var jqxhr = $.post("example.php", function() {
+      alert("success");
+    })
+    .success(function() { alert("second success"); })
+    .error(function() { alert("error"); })
+    .complete(function() { alert("complete"); });*/
+	/*
+	function (data, status) {
+			alert("异常！" + data.responseText);
+			switch (status) {
+				case "timeout":
+					break;
+				case "error":
+					break;
+				case "notmodified":
+					break;
+				case "parsererror":
+					break;
+				default:
+					break;
+			}
+	*/
+	var jqxhr = $.post(
 		"../usent/sent_post.php",
 		{
 			id: id,
@@ -1527,7 +1544,16 @@ function note_sent_save_a(obj) {
 			lang: "zh",
 		},
 		sent_save_callback
-	);
+	)
+		.success(function () {
+			alert("second success");
+		})
+		.error(function () {
+			alert("error");
+		})
+		.complete(function () {
+			alert("complete");
+		});
 
 	if (sent_tran_div) {
 		$(sent_tran_div).find(".preview").addClass("loading");

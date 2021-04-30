@@ -11,6 +11,7 @@ $input = (object) [
     "database" =>  _FILE_DB_USER_ARTICLE_,
     "table" =>  "collect",
     "uuid" =>  "id",
+    "sync_id" =>  ["id"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
     "insert" => [

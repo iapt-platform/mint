@@ -147,9 +147,7 @@ class ArticleList extends Table
 		if($stmt){
 			$stmt->execute(array($collectionId));
 		}
-        $table->beginTransaction($query)
-			  ->set($date)
-			  ->commit();
+
 		if(count($articleList)>0){
 			/* 开始一个事务，关闭自动提交 */
 			$this->dbh->beginTransaction();
