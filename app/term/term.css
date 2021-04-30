@@ -855,3 +855,12 @@ span.keybutton {
 	color: white;
 	font-weight: 300;
 }
+
+#contents_view .focus {
+	border-radius: 20px;
+	box-shadow: 0 5px 7px rgb(0 0 0 / 15%);
+	margin: 10px 0;
+	background-color: #f5deb36b;
+	padding: 0.7rem;
+	word-break: break-word;
+}

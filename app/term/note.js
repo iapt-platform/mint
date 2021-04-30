@@ -101,7 +101,7 @@ function note_update_background_style() {
 	});
 }
 //
-function note_refresh_new() {
+function note_refresh_new(callback = null) {
 	note_update_background_style();
 	let objNotes = document.querySelectorAll("note");
 	let arrSentInfo = new Array();
@@ -186,6 +186,9 @@ function note_refresh_new() {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
+						if (callback) {
+							callback();
+						}
 					} catch (e) {
 						console.error(e);
 					}
@@ -1548,11 +1551,30 @@ function note_sent_save_a(obj) {
 		.success(function () {
 			//alert("second success");
 		})
-		.error(function () {
-			alert("error");
+		.error(function (xhr, error, data) {
+			switch (error) {
+				case "timeout":
+					alert("服务器长时间没有回应。");
+					break;
+				case "error":
+					alert("与服务器通讯失败，您可能没有连接到网络。");
+					break;
+				case "notmodified":
+					break;
+				default:
+					break;
+			}
 		})
-		.complete(function () {
-			//alert("complete");
+		.complete(function (xhr, data) {
+			//请求完成后回调函数 (请求成功或失败之后均调用)。
+			switch (data) {
+				case "error":
+					break;
+				case "success":
+					break;
+				default:
+					break;
+			}
 		});
 
 	if (sent_tran_div) {

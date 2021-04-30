@@ -29,13 +29,20 @@ function reader_load() {
 			let currPara = 0;
 			$("#contents").html("");
 			if (_sent_data.sentences.length > 0) {
+				let firstPara = _sent_data.sentences[0].paragraph;
 				for (const iterator of _sent_data.sentences) {
 					if (currPara != iterator.paragraph) {
+						currPara = parseInt(iterator.paragraph);
+						if (currPara == parseInt(_reader_para) + 1 && parseInt(_reader_para) != firstPara) {
+							tpl += "</div>\n\n";
+						}
 						tpl += "\n\n";
-						currPara = iterator.paragraph;
 						tpl += "```para\n";
 						tpl += currPara + "\n";
 						tpl += "```\n\n";
+						if (currPara == _reader_para && parseInt(_reader_para) != firstPara) {
+							tpl += "<div id='para_focus' class='focus'>\n\n";
+						}
 					}
 					tpl +=
 						"{{" +
@@ -50,7 +57,13 @@ function reader_load() {
 				}
 				link_str = tpl;
 				$("#contents").html(note_init(tpl));
-				note_refresh_new();
+				note_refresh_new(function () {
+					document.querySelector("#para_focus").scrollIntoView({
+						block: "end",
+						behavior: "smooth",
+					});
+					//document.querySelector("#para_focus").scrollTo(0, 200);
+				});
 				reader_draw_para_menu();
 
 				//右侧目录
