@@ -5,11 +5,11 @@ function guide_init() {
 				$(this).css("background", "unset");
 			}
 			if ($(this).offset().left < $(document.body).width() / 2) {
-				$(this).append('<div  class="guide_contence" style="left: -5px;"></div>');
-				$(".guide_contence:after").css("left", "0");
+				$(this).append('<div  class="guide_contence left" style="left: -5px;"></div>');
+				//$(".guide_contence:after").css("left", "0");
 			} else {
-				$(this).append('<div  class="guide_contence" style="right: -5px;"></div>');
-				$(".guide_contence:after").css("right", "0");
+				$(this).append('<div  class="guide_contence right" style="right: -5px;"></div>');
+				//$(".guide_contence:after").css("right", "0");
 			}
 			$(this).attr("init", "1");
 		}

@@ -854,4 +854,5 @@ span.keybutton {
 	padding: 0 3px;
 	color: white;
 	font-weight: 300;
+	height: fit-content;
 }
