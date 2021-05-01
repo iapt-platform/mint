@@ -181,13 +181,14 @@ class Sent_DB
 			//add_edit_event(_SENT_EDIT_, "{$oldList[0]["book"]}-{$oldList[0]["paragraph"]}-{$oldList[0]["begin"]}-{$oldList[0]["end"]}@{$oldList[0]["channal"]}");
 	
 			$this->dbh_sent->beginTransaction();
-			if(isset($data["book"]) && isset($data["paragraph"]) && isset($data["begin"]) && isset($data["end"]) && isset($data["channal"])){
-				if(!isset($data["modify_time"])){
-					$data["modify_time"] = mTime();
-				}
+
+			if(isset($arrData[0]["book"]) && isset($arrData[0]["paragraph"]) && isset($arrData[0]["begin"]) && isset($arrData[0]["end"]) && isset($arrData[0]["channal"])){
 				$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ? , receive_time = ?  where  book = ? and paragraph=? and [begin]=? and [end]=? and channal=?  ";
 				$sth = $this->dbh_sent->prepare($query);
 				foreach ($arrData as $data) {
+					if(!isset($data["modify_time"])){
+						$data["modify_time"] = mTime();
+					}
 					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],$data["modify_time"],mTime(),$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"]));
 				}
 			}
@@ -195,7 +196,10 @@ class Sent_DB
 				$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ? ,receive_time = ?   where  id= ?  ";
 				$sth = $this->dbh_sent->prepare($query);
 				foreach ($arrData as $data) {
-					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],mTime(),mTime(),$data["id"]));
+					if(!isset($data["modify_time"])){
+						$data["modify_time"]=mTime();
+					}
+					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],$data["modify_time"],mTime(),$data["id"]));
 				}				
 			}
 

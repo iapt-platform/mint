@@ -30,6 +30,13 @@ else{
 }
 
 $client = new \GuzzleHttp\Client();
+if($size<0){
+	$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync_count','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
+	$serverJson=(string)$response->getBody();
+	$serverData = json_decode($serverJson,true);
+	echo json_encode($serverData, JSON_UNESCAPED_UNICODE);
+	exit;	
+}
 $response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $serverJson=(string)$response->getBody();
 $serverData = json_decode($serverJson,true);
@@ -51,7 +58,7 @@ $output["src_row"]=count($serverDBData);
 $message.= "输入时间:".$time." | ";
 $message.= "src_row:".$output["src_row"]." | ";
 if($output["src_row"]>0){
-	$output["time"]=$serverDBData[$output["src_row"]-1]["modify_time"];
+	$output["time"]=$serverDBData[$output["src_row"]-1]["receive_time"];
 	$message.= "最新时间:".$output["time"]." | ";
 }
 else{
@@ -153,7 +160,7 @@ else{
 	$message .= "<div>";
 	if(count($update_to_local)>0){
 		$message .=  "需要更新到本地".count($update_to_local)."条记录 | ";
-		
+		/*
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$serverData=(string)$response->getBody();
@@ -169,7 +176,7 @@ else{
 		else{
 			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
 		}
-		
+		*/
 	}
 	$message .= "</div>";
 

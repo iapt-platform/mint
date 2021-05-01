@@ -45,6 +45,25 @@ function do_sync($param)
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     switch ($op) {
+        case "sync_count":
+			if(isset($_POST["time"])){
+				$time = $_POST["time"];
+				$query = "SELECT  count(*) as co from {$param->table} where {$param->receive_time} > ? {$param->where} ";
+				$stmt = $PDO->prepare($query);
+				$stmt->execute(array($time));
+				$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($Fetch){
+					$output["data"]=(int)$Fetch["co"];
+				}
+				else{
+					$output["data"]=0;
+				}
+			}
+			else{
+				$output["data"]=0;
+			}
+			return $output;	
+			break;
         case "sync":
             {
 				if(isset($_POST["size"])){
@@ -66,7 +85,7 @@ function do_sync($param)
 					if(count($Fetch)>0){
 						$newTime = $Fetch[count($Fetch)-1]["receive_time"];
 						$syncId = implode(",",$param->sync_id);
-						$query = "SELECT {$param->uuid} as guid, $syncId , {$param->modify_time} as modify_time from {$param->table}  where {$param->receive_time} > ? and {$param->receive_time} <= ? {$param->where}  order by {$param->receive_time} ";
+						$query = "SELECT {$param->uuid} as guid, $syncId , {$param->modify_time} as modify_time , {$param->receive_time} as receive_time from {$param->table}  where {$param->receive_time} > ? and {$param->receive_time} <= ? {$param->where}  order by {$param->receive_time} ";
 						$stmt = $PDO->prepare($query);
 						$stmt->execute(array($time,$newTime));
 						$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);

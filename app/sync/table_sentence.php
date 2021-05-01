@@ -69,6 +69,10 @@ if (isset($_GET["op"])) {
 }
 
 switch ($op) {
+	case "sync_count":
+		$result = do_sync($input);
+		echo json_encode($result, JSON_UNESCAPED_UNICODE);
+	break;		
 	case "sync":
 		$result = do_sync($input);
 		echo json_encode($result, JSON_UNESCAPED_UNICODE);

@@ -32,12 +32,13 @@ require_once "../pcdl/html_head.php";
 				
 				<button onclick="sync_pull()">pull</button>
 				<button onclick="sync_push()">push</button>
+				<button onclick="sync_stop()">stop</button>
 			</div>
 		</div>
 		<div>上次更新时间：</div>
-		<div id="sync_result">
-
-		</div>
+		
+		<div id="sync_result"></div>
+		<div id="sync_log"></div>
 	</div>
 		
 	<script>
