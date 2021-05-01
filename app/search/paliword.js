@@ -75,8 +75,10 @@ function render_word_result(worddata) {
 	let html = "";
 	html += "<div class='search_result'>";
 	let keyword = worddata.keyword;
-	let link = "<a href='../reader/?view=para&book=" + worddata.book + "&para=" + worddata.para + "&display=sent' target='_blank'>";
-	html += "<div class='title'>" + link + worddata.title + "</a></div>";
+
+	html += "<div class='title'>";
+	html += "<a href='../reader/?view=chapter&book=" + worddata.book + "&para=" + worddata.para + "' target='_blank'>";
+	html += worddata.title + "</a></div>";
 
 	let newStr = highlightWords(worddata.palitext, keyword);
 

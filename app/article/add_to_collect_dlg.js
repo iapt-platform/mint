@@ -16,7 +16,7 @@ function add_to_collect_dlg_init() {
 
 	$(".button_add_to_collect").click(function () {
 		let html = "";
-		let article_id = $(this).parent().attr("a_id");
+		let article_id = $(this).parent().parent().attr("a_id");
 		html += "<div id='add_to_collect_dlg_" + article_id + "'>";
 		html += "<div >";
 		html += "<input type='input'  placeholder='" + gLocal.gui.search + "' />";

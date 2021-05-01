@@ -47,7 +47,7 @@ function related_para_dlg_render(para) {
 				}
 			}
 			output +=
-				"<a href='../reader/?view=para&book=" +
+				"<a href='../reader/?view=chapter&book=" +
 				paraList[0].book +
 				"&para=" +
 				paraList[0].para +

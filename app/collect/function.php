@@ -18,6 +18,10 @@ class CollectInfo
         $buffer = array();
     }
 
+	public function getError(){
+		return $this->errorMsg;
+	}
+
     public function get($id){
         if(empty($id)){
             return array("title"=>"","id"=>"");
@@ -122,10 +126,28 @@ class CollectInfo
 	
 		if (count($arrData) > 0) {
 			$this->dbh->beginTransaction();
-			$query="UPDATE collect SET title = ? , subtitle = ? , summary = ?, article_list = ?  ,  status = ? , lang = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
+			$query="UPDATE collect SET title = ? , 
+									   subtitle = ? , 
+									   summary = ?, 
+									   article_list = ?  ,  
+									   status = ? , 
+									   lang = ? , 
+									   receive_time= ?  , 
+									   modify_time= ?   
+									   where  id = ?  ";
 			$sth = $this->dbh->prepare($query);
 			foreach ($arrData as $data) {
-				$sth->execute(array($data["title"] , $data["subtitle"] ,$data["summary"], $data["article_list"] , $data["status"] , $data["lang"] ,  mTime() , mTime() , $data["id"]));
+				$sth->execute(array(
+									$data["title"] , 
+									$data["subtitle"] ,
+									$data["summary"], 
+									$data["article_list"] , 
+									$data["status"] , 
+									$data["lang"] ,  
+									$data["receive_time"] , 
+									$data["modify_time"] , 
+									$data["id"])
+								);
 			}
 			$this->dbh->commit();
 		
@@ -188,7 +210,13 @@ class CollectInfo
 					}
 					else{
 						$newData["article_list"]="";
-					}		
+					}	
+					if(isset($data["owner"])){
+						$newData["owner"]=$data["owner"];
+					}
+					else{
+						$newData["owner"]=$_COOKIE["userid"];
+					}	
 					if(isset($data["lang"])){
 						$newData["lang"]=$data["lang"];
 					}
@@ -201,8 +229,20 @@ class CollectInfo
 					else{
 						$newData["status"]="1";
 					}
+					if(isset($data["create_time"])){
+						$newData["create_time"]=$data["create_time"];
+					}
+					else{
+						$newData["create_time"]=mTime();
+					}
+					if(isset($data["modify_time"])){
+						$newData["modify_time"]=$data["modify_time"];
+					}
+					else{
+						$newData["modify_time"]=mTime();
+					}
 					$newDataList[]=$newData;
-					$sth->execute(array($newData["id"] , $newData["title"] , $newData["subtitle"] ,$newData["summary"], $newData["article_list"] ,  $_COOKIE["userid"] , $newData["lang"] , $newData["status"] , mTime() ,  mTime() , mTime() ));				
+					$sth->execute(array($newData["id"] , $newData["title"] , $newData["subtitle"] ,$newData["summary"], $newData["article_list"] , $newData["owner"] , $newData["lang"] , $newData["status"] , $newData["create_time"] ,  $newData["modify_time"] , mTime() ));				
 				}
 				else{
 					$this->errorMsg="标题不能为空";

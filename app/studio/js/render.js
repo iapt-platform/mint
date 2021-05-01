@@ -1651,7 +1651,6 @@ function sent_copy_meaning(book, para, begin, end) {
 
 //根据relation 绘制关系图
 function sent_show_rel_map(book, para, begin, end) {
-	let wordId = 0;
 	let memind = "graph LR\n";
 	let pali_text = "";
 
@@ -1670,47 +1669,46 @@ function sent_show_rel_map(book, para, begin, end) {
 		let type = doc_word("#p" + iterator_wid).val("type");
 
 		let meaning = doc_word("#p" + iterator_wid).val("mean");
-		meaning = removeFormulaB(meaning, "[", "]");
-		meaning = removeFormulaB(meaning, "【", "】");
-		meaning = removeFormulaB(meaning, "{", "}");
-		meaning = removeFormulaB(meaning, "｛", "｝");
-		meaning = removeFormulaB(meaning, "(", ")");
-		meaning = removeFormulaB(meaning, "（", "）");
 
 		if (type != ".ctl.") {
 			pali_text += pali + " ";
 		}
-		let wid = "p" + book + "-" + para + "-" + wordId;
-		wordId++;
 		if (rel != "") {
 			let relaData = JSON.parse(rel);
-			let language=getCookie("language")
+			let language = getCookie("language");
 			for (const iterator of relaData) {
 				let strRel = iterator.relation;
 				let relation_locstr = "";
-				for(let x in list_relation){
-					if(list_relation[x].id==strRel && language==list_relation[x].language){
-						relation_locstr=list_relation[x].note;
+				for (let x in list_relation) {
+					if (list_relation[x].id == strRel && language == list_relation[x].language) {
+						relation_locstr = list_relation[x].note;
 						break;
 					}
 				}
 
 				let dest = iterator.dest_spell;
-				let type = doc_word("#" + iterator.dest_id).val("case");
-				let meanDest = doc_word("#" + iterator.dest_id).val("mean");
-				meanDest = removeFormulaB(meanDest, "[", "]");
-				meanDest = removeFormulaB(meanDest, "【", "】");
-				meanDest = removeFormulaB(meanDest, "{", "}");
-				meanDest = removeFormulaB(meanDest, "｛", "｝");
-				meanDest = removeFormulaB(meanDest, "(", ")");
-				meanDest = removeFormulaB(meanDest, "（", "）");
+				let type = doc_word("#p" + iterator.dest_id).val("case");
+				let meanDest = doc_word("#p" + iterator.dest_id).val("mean");
 
 				if (type.indexOf(".v.") >= 0) {
-					dest = iterator.dest_id + '(("' + dest + '<br>' + meanDest + '"))';
+					dest = iterator.dest_id + '(("' + dest + "<br>" + meanDest + '"))';
 				} else {
-					dest = iterator.dest_id + '["' + dest + '<br>' + meanDest + '"]';
+					dest = iterator.dest_id + '["' + dest + "<br>" + meanDest + '"]';
 				}
-				memind += wid + '("' + real +'<br>'+ meaning + '")--"'+ strRel+'<br>'+ relation_locstr + '" --> ' + dest + "\n";
+				memind +=
+					"p" +
+					iterator_wid +
+					'("' +
+					real +
+					"<br>" +
+					meaning +
+					'")--"' +
+					strRel +
+					"<br>" +
+					relation_locstr +
+					'" --> ' +
+					dest +
+					"\n";
 			}
 		}
 	}

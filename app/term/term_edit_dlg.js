@@ -4,6 +4,7 @@ function term_edit_dlg_init(title = gLocal.gui.dict_terms) {
 	$("#term_edit_dlg").dialog({
 		autoOpen: false,
 		width: 550,
+		outerHeight: "80vh",
 		buttons: [
 			{
 				text: gLocal.gui.save,
@@ -95,22 +96,22 @@ function term_edit_dlg_render(word = "") {
 	output += "</fieldset>";
 
 	output += "<fieldset>";
-	output += "<legend>" + gLocal.gui.tag + "</legend>";
-	output +=
-		"<input type='input' id='term_edit_form_tag name='tag' name='tag' value='" +
-		word.tag +
-		"' placeholder=" +
-		gLocal.gui.optional +
-		" >";
-	output += "</fieldset>";
-
-	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.language + "</legend>";
 	output +=
 		"<input type='input' id='term_edit_form_language' name='language' value='" +
 		word.language +
 		"' placeholder=" +
 		gLocal.gui.required +
+		" >";
+	output += "</fieldset>";
+
+	output += "<fieldset>";
+	output += "<legend>" + gLocal.gui.tag + "</legend>";
+	output +=
+		"<input type='input' id='term_edit_form_tag name='tag' name='tag' value='" +
+		word.tag +
+		"' placeholder=" +
+		gLocal.gui.optional +
 		" >";
 	output += "</fieldset>";
 
@@ -133,7 +134,6 @@ function term_edit_dlg_render(word = "") {
 		word.note +
 		"</textarea>";
 	output += "</fieldset>";
-
 	output += "</form>";
 
 	return output;

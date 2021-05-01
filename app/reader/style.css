@@ -130,6 +130,8 @@ note:hover chapter {
 	margin-top: 0;
 	margin-left: -60px;
 	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
+	color: var(--main-color1);
+	font-size: 80%;
 }
 
 .level_0 {
