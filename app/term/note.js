@@ -637,14 +637,14 @@ function note_json_html(in_json) {
 	output += "<span class='separate_line'></span>";
 
 	//手工义注
-	output += "<span class='other_bar'>";
+	output += "<span class='other_bar disable'>";
 	output +=
 		"<span class='other_tran_span commentray' title='📔" +
 		gLocal.gui.vannana +
 		"'>🪔" +
 		gLocal.gui.commentary +
 		"</span>";
-	output += "<span class='other_tran_num'></span>";
+	output += "<span class='other_comm_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
 
@@ -1009,7 +1009,7 @@ function render_one_sent_tran_a(iterator) {
 		if (typeof iterator.channalinfo == "undefined") {
 			html += "unkown";
 		} else {
-			html += "<a title='" + iterator.channalinfo.owner + "'>" + iterator.channalinfo.name + "@</a>";
+			html += "<a title='" + iterator.channalinfo.summary + "'>" + iterator.channalinfo.name + "@</a>";
 		}
 		html += "</span>";
 	} else {

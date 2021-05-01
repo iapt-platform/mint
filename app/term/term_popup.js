@@ -10,17 +10,17 @@ function term_popup_init() {
         $(this).append(
           '<div term-popup="' +
             gid +
-            '"  class="guide_contence" style="left: -5px;"></div>'
+            '"  class="guide_contence left" style="left: -5px;"></div>'
         );
-        $(".guide_contence:after").css("left", "0");
+        //$(".guide_contence:after").css("left", "0");
       } else {
         //出现在右侧
         $(this).append(
           '<div term-popup="' +
             gid +
-            '" class="guide_contence" style="right: -5px;"></div>'
+            '" class="guide_contence right" style="right: -5px;"></div>'
         );
-        $(".guide_contence:after").css("right", "0");
+        //$(".guide_contence:after").css("right", "0");
       }
       $(this).attr("init", "1");
     }
