@@ -77,7 +77,7 @@ $response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false
 $strLocalData = (string)$response->getBody();
 $localData = json_decode($strLocalData,true);
 if($localData["error"]>0){
-	$message .= $localData["message"];
+	$message .="client 拉 id 列表 error:". $localData["message"];
 	$output["message"]=$message;
 	echo json_encode($output, JSON_UNESCAPED_UNICODE);
 	exit;
@@ -135,7 +135,7 @@ else{
 
 	$message .= "<div>";
 	if(count($insert_to_local)>0){
-		$message .=  "需要新增到本地".count($insert_to_local)."条记录 | ";
+		$message .=  "需要新增到目标机".count($insert_to_local)."条记录 | ";
 		
 		#提取数据
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
@@ -159,7 +159,7 @@ else{
 
 	$message .= "<div>";
 	if(count($update_to_local)>0){
-		$message .=  "需要更新到本地".count($update_to_local)."条记录 | ";
+		$message .=  "需要更新到目标机".count($update_to_local)."条记录 | ";
 		/*
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);

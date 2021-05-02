@@ -12,6 +12,7 @@ $input = (object) [
     "table" =>  "collect",
     "uuid" =>  "id",
     "sync_id" =>  ["id"],
+	"where"=>"",
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
     "insert" => [
