@@ -132,11 +132,11 @@
 	</button>
 	<ul class="header-dropdown-content right-content" id="lang_list">
 		<li>
-			<!--<a onclick="setLang('my')">-->
-			<div class="nav_link disable">
+			<a onclick="setLang('my')">
+			<div class="nav_link">
 				မြန်မာ
 			</div>
-			<!--</a>-->
+			</a>
 		</li>
 		<li><a onclick="setLang('si')">
 				<div class="nav_link">
