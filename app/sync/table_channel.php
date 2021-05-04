@@ -5,8 +5,8 @@ require_once "../path.php";
 require_once "../sync/function.php";
 
 $input = (object) [
-    "database" =>  _FILE_DB_USER_ARTICLE_,
-    "table" =>  "article",
+    "database" =>  _FILE_DB_CHANNAL_,
+    "table" =>  "channal",
     "uuid" =>  "id",
     "sync_id" =>  ["id"],
 	"where"=>"",
