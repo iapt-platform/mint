@@ -2,6 +2,7 @@ var sync_db_list = [
 	{ script: "sync/table_article.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_term.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_article_collect.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_sentence.php", count: -1, finished: 0, enable: true },
 ];
 var isStop = false;

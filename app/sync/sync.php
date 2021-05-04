@@ -160,7 +160,6 @@ else{
 	$message .= "<div>";
 	if(count($update_to_local)>0){
 		$message .=  "需要更新到目标机".count($update_to_local)."条记录 | ";
-		/*
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
 		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$serverData=(string)$response->getBody();
@@ -176,7 +175,6 @@ else{
 		else{
 			$message .= "数据提取错误 错误信息：{$arrData["message"]} ";
 		}
-		*/
 	}
 	$message .= "</div>";
 

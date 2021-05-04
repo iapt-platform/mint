@@ -25,8 +25,6 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 	if($user->check_password($_POST["userid"],$_POST["password"])){
 		if(isset($_POST["server"])){
 			#本地登录
-			setcookie ( "sync_userid" ,  $_POST["userid"] , 0 ,  "/" , "" ,  false , true );
-			setcookie ( "sync_server" ,  $_POST["server"] , 0 ,  "/" , "" ,  false , true );
 			#在远程主机验证用户身份
 			$phpFile = $_POST["server"]."/app/sync/login.php";
 			$client = new \GuzzleHttp\Client();
@@ -35,8 +33,10 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 			$arrServerMsg = json_decode($serveMsg,true);
 			if($arrServerMsg["error"]==0){
 				#验证成功
+				setcookie ( "sync_userid" ,  $_POST["userid"] , 0 ,  "/" , "" ,  false , true );
+				setcookie ( "sync_server" ,  $_POST["server"] , 0 ,  "/" , "" ,  false , true );				
 				$redis->hset("sync://key",$_POST["userid"],$arrServerMsg["key"]);
-				$output["message"]="本机登录成功<br>服务器验证成功:msg:".$serveMsg."<br>";
+				$output["message"]="本机登录成功<br>服务器验证成功<br>";
 				$output["message"].="<a href='index.php'>开始同步</a>";
 			}
 			else{

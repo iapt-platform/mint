@@ -14,29 +14,22 @@ $input = (object) [
     "receive_time" =>  "receive_time",
     "insert" => [
         'id',
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
 		'owner',
-		'setting',
+		'name',
+		'summary',
 		'status',
+		'lang',
 		'create_time',
 		'modify_time',
 		'receive_time'
     ],
     "update" =>  [
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
 		'owner',
-		'setting',
+		'name',
+		'summary',
 		'status',
-		'modify_time',
-		'receive_time'
+		'lang',
+		'modify_time'
     ]    
 ];
 

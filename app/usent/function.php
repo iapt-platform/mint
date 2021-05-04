@@ -192,7 +192,7 @@ class Sent_DB
 					$sth->execute(array($data["text"],mb_strlen($data["text"],"UTF-8"),$data["editor"],$data["modify_time"],mTime(),$data["book"],$data["paragraph"],$data["begin"],$data["end"],$data["channal"]));
 				}
 			}
-			else{
+			else if(isset($arrData[0]["id"])){
 				$query = "UPDATE sentence SET text = ? , strlen = ? , editor=?, modify_time= ? ,receive_time = ?   where  id= ?  ";
 				$sth = $this->dbh_sent->prepare($query);
 				foreach ($arrData as $data) {
