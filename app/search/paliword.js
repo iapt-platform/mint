@@ -179,6 +179,8 @@ function render_nav(result) {
 			html += "<li >" + (index + 1) + "</li> ";
 		}
 	}
+	html += "<li >上一页</li> ";
+	html += "<li >下一页</li> ";
 	html += "</ul>";
 	return html;
 }

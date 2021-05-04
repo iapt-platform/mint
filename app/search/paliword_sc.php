@@ -7,6 +7,10 @@ require_once "../public/_pdo.php";
 require_once "../public/load_lang.php"; //语言文件
 require_once "../public/function.php";
 require_once "../search/word_function.php";
+require_once "../db/pali_text.php";
+
+$_redis = redis_connect();
+$_dbPaliText = new PaliText($_redis);
 
 _load_book_index();
 
@@ -38,6 +42,7 @@ if (isset($_GET["page"])) {
 }
 
 if (count($arrWordList) > 1) {
+	# 查询多个词
     PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
@@ -46,7 +51,7 @@ if (count($arrWordList) > 1) {
 
     foreach ($Fetch1 as $key => $value) {
         # code...
-        $newRecode["title"] = "title";
+        $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
         $newRecode["path"] = _get_para_path($value["book"], $value["paragraph"]);
         $newRecode["book"] = $value["book"];
         $newRecode["para"] = $value["paragraph"];
@@ -55,6 +60,8 @@ if (count($arrWordList) > 1) {
         $newRecode["wt"] = 0;
         $out_data[] = $newRecode;
     }
+	$result["time"][] = array("event" => "精确匹配结束", "time" => microtime(true)-$_start);
+	/*
     #然后查分散的
     $strQuery = "";
     foreach ($arrWordList as $oneword) {
@@ -67,7 +74,7 @@ if (count($arrWordList) > 1) {
 
     foreach ($Fetch2 as $key => $value) {
         # code...
-        $newRecode["title"] = "title";
+        $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
         $newRecode["path"] = _get_para_path($value["book"], $value["paragraph"]);
         $newRecode["book"] = $value["book"];
         $newRecode["para"] = $value["paragraph"];
@@ -76,7 +83,10 @@ if (count($arrWordList) > 1) {
         $newRecode["wt"] = 0;
         $out_data[] = $newRecode;
     }
-    $result["data"] = $out_data;
+    
+	$result["time"][] = array("event" => "查分散的结束", "time" => microtime(true)-$_start);
+*/
+	$result["data"] = $out_data;
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     # 然后查特别不精确的
     exit;
@@ -194,9 +204,11 @@ $result["time"][] = array("event" => "准备查询", "time" => microtime(true) -
 $time_start = microtime_float();
 
 PDO_Connect(_FILE_DB_PALI_INDEX_);
+
 $query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) where 1 ";
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
+
 $query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT 0,20";
 $Fetch = PDO_FetchAll($query);
 $result["time"][] = array("event" => "查询结束", "time" => microtime(true) - $_start);
