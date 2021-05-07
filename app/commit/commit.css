@@ -18,7 +18,8 @@ del {
 	color: red;
 }
 ins {
-	color: green;
+	background-color: greenyellow;
+	text-decoration: unset;
 }
 
 .commit_head {
