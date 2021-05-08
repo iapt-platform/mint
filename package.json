@@ -3,6 +3,7 @@
   "lockfileVersion": 1,
   "dependencies": {
     "at-js": "^1.2.12",
+    "diff": "^5.0.0",
     "highcharts": "^9.0.1",
     "marked": "^2.0.3",
     "tributejs": "^5.1.3"

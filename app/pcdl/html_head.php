@@ -118,6 +118,8 @@ if (isset($_GET["language"])) {
 		<?php require_once '../public/load_lang_js.php'; ?>
 	</script>
 
+	<script src="../../node_modules/diff/dist/diff.js"></script>
+	
 	<style>
 		.list_with_head {
 			display: flex;

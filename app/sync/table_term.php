@@ -8,8 +8,10 @@ $input = (object) [
     "database" =>  _FILE_DB_TERM_,
     "table" =>  "term",
     "uuid" =>  "guid",
+    "sync_id" =>  ["pali","tag","channal","owner"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
+	"where"=>"",
     "insert" => [
         'guid',
 		'word',

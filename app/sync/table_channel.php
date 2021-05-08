@@ -5,8 +5,8 @@ require_once "../path.php";
 require_once "../sync/function.php";
 
 $input = (object) [
-    "database" =>  _FILE_DB_USER_ARTICLE_,
-    "table" =>  "article",
+    "database" =>  _FILE_DB_CHANNAL_,
+    "table" =>  "channal",
     "uuid" =>  "id",
     "sync_id" =>  ["id"],
 	"where"=>"",
@@ -14,29 +14,22 @@ $input = (object) [
     "receive_time" =>  "receive_time",
     "insert" => [
         'id',
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
 		'owner',
-		'setting',
+		'name',
+		'summary',
 		'status',
+		'lang',
 		'create_time',
 		'modify_time',
 		'receive_time'
     ],
     "update" =>  [
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
 		'owner',
-		'setting',
+		'name',
+		'summary',
 		'status',
-		'modify_time',
-		'receive_time'
+		'lang',
+		'modify_time'
     ]    
 ];
 

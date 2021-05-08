@@ -28,7 +28,7 @@ var list_relation=[
     },
     {
         "id": "ASV",
-        "case": ".nom.",
+        "case": "",
         "note": "Active Subject Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
@@ -37,7 +37,7 @@ var list_relation=[
     },
     {
         "id": "ASV",
-        "case": ".nom.",
+        "case": "",
         "note": "施动者<主格> -> 动词<br>XX把...",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
@@ -46,7 +46,7 @@ var list_relation=[
     },
     {
         "id": "ASV",
-        "case": ".nom.",
+        "case": "",
         "note": "vuttakattar -> kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",

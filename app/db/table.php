@@ -4,6 +4,8 @@
 			  ->set($date)
 			  ->commit();
 		*/
+require_once "../redis/function.php";
+
 class Table
 {
     protected $dbh;

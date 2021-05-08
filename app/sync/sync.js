@@ -2,6 +2,7 @@ var sync_db_list = [
 	{ script: "sync/table_article.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_term.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_article_collect.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_sentence.php", count: -1, finished: 0, enable: true },
 ];
 var isStop = false;
@@ -25,6 +26,7 @@ function sync_push() {
 function sync_stop() {
 	isStop = true;
 }
+var retryCount = 0;
 function sync_do_db(src, dest, time = 1) {
 	let size = 500;
 	while (sync_db_list[sync_curr_do_db].enable == false) {
@@ -86,6 +88,12 @@ function sync_do_db(src, dest, time = 1) {
 				if (isStop) {
 					return;
 				}
+				if (result.error > 0 && retryCount < 2) {
+					retryCount++;
+					sync_do_db(src, dest, time);
+					return;
+				}
+				retryCount = 0;
 				sync_db_list[sync_curr_do_db].finished += parseInt(result.src_row);
 				if (result.src_row >= size) {
 					//没弄完，接着弄

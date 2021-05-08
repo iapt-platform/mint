@@ -54,7 +54,7 @@ function commit_render_channel_select() {
 	html += "<div>";
 	html += "<select id='dest_channel' onchange='dest_change(this)'>";
 	if (typeof _commit_data.dest == "undefined") {
-		let lastDest = localStorage.getItem("commit_src_" + _commit_data.src);
+		let lastDest = localStorage.getItem("commit_dest_" + _commit_data.dest);
 		if (typeof lastDest == "undefined") {
 			html += "<option value='' selected>请选择目标版本</option>";
 		} else {
@@ -108,6 +108,7 @@ function commit_preview_render() {
 	let html = "";
 	html += "<div class='commit_win_inner'>";
 	html += commit_render_head(2);
+	_commit_data.dest = $("#dest_channel").val();
 
 	if (
 		typeof _commit_data.src != "undefined" &&
@@ -166,6 +167,11 @@ function commit_preview_render() {
 function commit_compare_mode_change(obj) {
 	previewWin.show(commit_render_comp(parseInt($(obj).val())));
 }
+/*
+		{ id: 0, string: "自动" },
+		{ id: 1, string: "全选" },
+		{ id: 2, string: "全不选" },
+*/
 function commit_render_comp(mode) {
 	let html = "";
 	html += "<div class='commit_win_inner'>";
@@ -244,16 +250,18 @@ function commit_render_comp(mode) {
 							html += "<ins>" + iterator.translation[0].text + "</ins>";
 						} else {
 							if (iterator.translation[0].update_time > iterator.translation[1].update_time) {
-								html += "<del>" + iterator.translation[1].text + "</del><br>";
-								html += "<ins>" + iterator.translation[0].text + "</ins>";
+								html += commit_render_diff(iterator.translation[1].text, iterator.translation[0].text);
+								//html += "<del>" + iterator.translation[1].text + "</del><br>";
+								//html += "<ins>" + iterator.translation[0].text + "</ins>";
 							} else {
 								html += "[新]" + iterator.translation[1].text;
 							}
 						}
 						break;
 					case 1:
-						html += "<del>" + iterator.translation[1].text + "</del><br>";
-						html += "<ins>" + iterator.translation[0].text + "</ins>";
+						html += commit_render_diff(iterator.translation[1].text, iterator.translation[0].text);
+						//html += "<del>" + iterator.translation[1].text + "</del><br>";
+						//html += "<ins>" + iterator.translation[0].text + "</ins>";
 						break;
 					case 2:
 						html += iterator.translation[1].text;
@@ -267,10 +275,29 @@ function commit_render_comp(mode) {
 		sentIndex++;
 	}
 	if (textCount == 0) {
-		html += "译文全部相同，无需推送。";
+		html += "全部相同，无需推送。";
 	}
 	html += "</div>";
 	return html;
+}
+
+function commit_render_diff(str1, str2) {
+	let output = "";
+
+	const diff = Diff.diffChars(str1, str2);
+
+	diff.forEach((part) => {
+		// green for additions, red for deletions
+		// grey for common parts
+		if (part.added) {
+			output += "<ins>" + part.value + "</ins>";
+		} else if (part.removed) {
+			output += "<del>" + part.value + "</del>";
+		} else {
+			output += part.value;
+		}
+	});
+	return output;
 }
 
 function commit_sent_select(obj) {
