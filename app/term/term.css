@@ -868,3 +868,26 @@ span.keybutton {
 span.tran_sent {
 	display: block;
 }
+
+.icon_sent_send_status {
+	display: none;
+	width: auto;
+	min-width: 14px;
+	height: auto;
+	min-height: 14px;
+	background-repeat: no-repeat;
+	background-size: contain;
+	margin: 0 6px;
+}
+.loading .icon_sent_send_status {
+	display: inline-block;
+	background: url(waiting.svg);
+	fill: #6baaff;
+}
+
+.error .icon_sent_send_status {
+	display: inline-block;
+	background: url(error.svg);
+	fill: red;
+	cursor: pointer;
+}
