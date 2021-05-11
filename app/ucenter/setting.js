@@ -1,4 +1,11 @@
 var setting;
+$(document).load(function () {
+	$.post("../ucenter/get_setting.php", {}, function (data, status) {
+		try {
+			setting = JSON.parse(data);
+		} catch (e) {}
+	});
+});
 function setting_head_render(file) {
 	let html = '<svg class="head_icon" style="height: 3em;width: 3em;">';
 	html += '<use xlink:href="../head/images/"' + file + "></use>";
@@ -20,11 +27,40 @@ function setting_onload() {
 			//Library 设置
 
 			html = "";
-			html += "<h3>"+gLocal.gui.script+gLocal.gui.display+"</h3>";
-			html += "<div>"+gLocal.gui.main_code +"&nbsp;"+ setting_render_paliscript("lib.first_script") + "</div>";
-			html += "<div>"+gLocal.gui.sub_pcode +"&nbsp;"+ setting_render_paliscript("lib.second_script") + "</div>";
+			html += "<h3>" + gLocal.gui.script + gLocal.gui.display + "</h3>";
+			html +=
+				"<div>" + gLocal.gui.main_code + "&nbsp;" + setting_render_paliscript("lib.first_script") + "</div>";
+			html +=
+				"<div>" + gLocal.gui.sub_pcode + "&nbsp;" + setting_render_paliscript("lib.second_script") + "</div>";
+			html += "<h3>术语模版" + "</h3>";
+			html +=
+				"<div>第一次出现<input type='input' class='term_template' index='0' value='" +
+				setting["term.template"][0] +
+				"' placeholder='不能为空'/>" +
+				"</div>";
+			html +=
+				"<div>第二次出现<input type='input'  class='term_template' index='1' value='" +
+				setting["term.template"][1] +
+				"' placeholder='同上'/>" +
+				"</div>";
+			html +=
+				"<div>第三次出现<input type='input'  class='term_template' index='2' value='" +
+				setting["term.template"][2] +
+				"' placeholder='同上'/>" +
+				"</div>";
+			html +=
+				"<div>第四次出现<input type='input'  class='term_template' index='3' value='" +
+				setting["term.template"][3] +
+				"' placeholder='同上' />" +
+				"</div>";
+			html += "<div>以后出现同第四次</div>";
+			html += "<div><button onclick='setting_save()'>保存</button></div>";
 
 			$("#setting_library").html(html);
+			$(".term_template").change(function () {
+				$index = $(this).attr("index");
+				setting["term.template"][$index] = $(this).val();
+			});
 			//Library 设置结束
 
 			//Studio 设置

@@ -36,6 +36,10 @@ var gBuildinDictIsOpen = false;
 
 */
 function note_create() {
+	$.post("../ucenter/get_setting.php", {}, function (data, status) {
+		setting = JSON.parse(data);
+	});
+
 	wbw_channal_list_init();
 	note_sent_edit_dlg_init();
 	term_edit_dlg_init();
@@ -954,7 +958,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "</span>";
 	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
-	html += "<div class='preview'>" + tranText + "</div>";
+	html += "<div class='preview'><span class='icon_sent_send_status'></span>" + tranText + "</div>";
 	html += "</div>";
 
 	html += '<div class="edit">';
@@ -977,7 +981,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "<a onclick='tran_sent_edit_cancel(this)'>" + gLocal.gui.cancel + "</a>";
 	html += "</span>";
 	html += "<span style='display: inline-flex;'>";
-	html += '<span class="keybutton" >Ctrl</span>';
+	html += '<span class="keybutton" >Ctrl/⌘</span>';
 	html += "➕";
 	html += '<span class="keybutton" >Enter</span> = ';
 	if (parseInt(iterator.mypower) < 20) {
@@ -1393,6 +1397,8 @@ function set_more_button_display() {
 								$(".other_tran_div[sent='" + sentId + "']")
 									.children(".other_tran")
 									.html(html);
+								//初始化文本编辑框消息处理
+								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
@@ -1552,12 +1558,20 @@ function note_sent_save_a(obj) {
 			//alert("second success");
 		})
 		.error(function (xhr, error, data) {
+			let sid = book + "-" + para + "-" + begin + "-" + end;
+
+			let sent_tran_div = $(".sent_tran[channel='" + channal + "'][sid='" + sid + "']");
+			if (sent_tran_div) {
+				sent_tran_div.first().children().find(".preview").first().removeClass("loading");
+				sent_tran_div.first().children().find(".preview").first().addClass("error");
+			}
+
 			switch (error) {
 				case "timeout":
-					alert("服务器长时间没有回应。");
+					alert("服务器长时间没有回应。请稍后重试。");
 					break;
 				case "error":
-					alert("与服务器通讯失败，您可能没有连接到网络。");
+					alert("与服务器通讯失败，您可能没有连接到网络。请稍后重试。");
 					break;
 				case "notmodified":
 					break;
