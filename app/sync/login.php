@@ -36,7 +36,7 @@ if(isset($_POST["userid"]) && isset($_POST["password"]) ){
 				setcookie ( "sync_userid" ,  $_POST["userid"] , 0 ,  "/" , "" ,  false , true );
 				setcookie ( "sync_server" ,  $_POST["server"] , 0 ,  "/" , "" ,  false , true );				
 				$redis->hset("sync://key",$_POST["userid"],$arrServerMsg["key"]);
-				$output["message"]="本机登录成功<br>服务器验证成功<br>";
+				$output["message"]="本机登录成功<br>服务器验证成功<br>".$arrServerMsg["message"];
 				$output["message"].="<a href='index.php'>开始同步</a>";
 			}
 			else{

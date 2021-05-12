@@ -933,6 +933,18 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	//tool_bar 结束
 	html += '<div class="left_bar" >';
+	html += "<span class='icon_sent_status icon_sent_loading'>";
+	html +=
+		"<svg class='icon icon_spin' style='fill: var(--detail-color); '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#loading'></use>" +
+		"</svg>";
+	html += "</span>";
+	html += "<span class='icon_sent_status icon_sent_error' title='再次发送' onclick='tran_sent_save(this)'>";
+	html +=
+		"<svg class='icon' style='fill: red; '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../term/error.svg'></use>" +
+		"</svg>";
+	html += "</span>";
 	html += '	<div class="face">';
 	if (iterator.id != "") {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
@@ -958,7 +970,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "</span>";
 	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
-	html += "<div class='preview'><span class='icon_sent_send_status'></span>" + tranText + "</div>";
+	html += "<div class='preview'>" + tranText + "</div>";
 	html += "</div>";
 
 	html += '<div class="edit">';
@@ -1502,7 +1514,7 @@ function note_pr_save(obj) {
 	);
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
 	}
 }
 
@@ -1562,8 +1574,8 @@ function note_sent_save_a(obj) {
 
 			let sent_tran_div = $(".sent_tran[channel='" + channal + "'][sid='" + sid + "']");
 			if (sent_tran_div) {
-				sent_tran_div.first().children().find(".preview").first().removeClass("loading");
-				sent_tran_div.first().children().find(".preview").first().addClass("error");
+				sent_tran_div.removeClass("loading");
+				sent_tran_div.addClass("error");
 			}
 
 			switch (error) {
@@ -1592,7 +1604,7 @@ function note_sent_save_a(obj) {
 		});
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
 	}
 }
 function update_sent_tran(sentData) {}
@@ -1639,7 +1651,7 @@ function sent_save_callback(data) {
 						}
 					}
 				}
-				sent_tran_div.find(".preview").removeClass("loading");
+				sent_tran_div.removeClass("loading");
 			}
 		} else if (result.commit_type == 3) {
 			ntf_show("已经提交修改建议");

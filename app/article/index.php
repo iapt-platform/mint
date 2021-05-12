@@ -93,7 +93,8 @@ require_once "../pcdl/html_head.php";
 	else{
 		$contentClass .= ' sent_mode ';
 	}
-
+	$contentClass .= " $_mode ";
+	
 	?>
 	</script>
 
