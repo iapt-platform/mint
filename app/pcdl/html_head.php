@@ -83,6 +83,8 @@ if (isset($_GET["language"])) {
 	<script src="../term/note.js"></script>
 	<script src="../term/term_popup.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term.css" />
+	<link type="text/css" rel="stylesheet" href="../term/term_mobile.css" media="screen and (max-width:800px)">
+
 	<?php
 	if (isset($_GET["display"]) && $_GET["display"] == "para") {
 		echo '<link type="text/css" rel="stylesheet" href="../term/term_para.css"/>';

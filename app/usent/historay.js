@@ -1,3 +1,7 @@
+/**
+ * 显示句子历史记录窗口
+ */
+
 function historay_init() {
 	$("body").append('<div id="sent_history_dlg" title="History"><div id="sent_history_content"></div></div>');
 	$("#sent_history_dlg").dialog({

@@ -8,10 +8,10 @@ $input = (object) [
     "database" =>  _FILE_DB_TERM_,
     "table" =>  "term",
     "uuid" =>  "guid",
-    "sync_id" =>  ["pali","tag","channal","owner"],
+    "sync_id" =>  ["pali","tag","owner"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
-	"where"=>"",
+	"where"=>" and ( (channal IS NULL) or channal = '' )",
     "insert" => [
         'guid',
 		'word',

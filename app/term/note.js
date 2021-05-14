@@ -36,6 +36,10 @@ var gBuildinDictIsOpen = false;
 
 */
 function note_create() {
+	$.post("../ucenter/get_setting.php", {}, function (data, status) {
+		setting = JSON.parse(data);
+	});
+
 	wbw_channal_list_init();
 	note_sent_edit_dlg_init();
 	term_edit_dlg_init();
@@ -929,6 +933,18 @@ function render_one_sent_tran_a(iterator) {
 	html += "</div>";
 	//tool_bar 结束
 	html += '<div class="left_bar" >';
+	html += "<span class='icon_sent_status icon_sent_loading'>";
+	html +=
+		"<svg class='icon icon_spin' style='fill: var(--detail-color); '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#loading'></use>" +
+		"</svg>";
+	html += "</span>";
+	html += "<span class='icon_sent_status icon_sent_error' title='再次发送' onclick='tran_sent_save(this)'>";
+	html +=
+		"<svg class='icon' style='fill: red; '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../term/error.svg'></use>" +
+		"</svg>";
+	html += "</span>";
 	html += '	<div class="face">';
 	if (iterator.id != "") {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
@@ -977,7 +993,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "<a onclick='tran_sent_edit_cancel(this)'>" + gLocal.gui.cancel + "</a>";
 	html += "</span>";
 	html += "<span style='display: inline-flex;'>";
-	html += '<span class="keybutton" >Ctrl</span>';
+	html += '<span class="keybutton" >Ctrl/⌘</span>';
 	html += "➕";
 	html += '<span class="keybutton" >Enter</span> = ';
 	if (parseInt(iterator.mypower) < 20) {
@@ -1393,6 +1409,8 @@ function set_more_button_display() {
 								$(".other_tran_div[sent='" + sentId + "']")
 									.children(".other_tran")
 									.html(html);
+								//初始化文本编辑框消息处理
+								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
@@ -1496,7 +1514,7 @@ function note_pr_save(obj) {
 	);
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
 	}
 }
 
@@ -1552,12 +1570,20 @@ function note_sent_save_a(obj) {
 			//alert("second success");
 		})
 		.error(function (xhr, error, data) {
+			let sid = book + "-" + para + "-" + begin + "-" + end;
+
+			let sent_tran_div = $(".sent_tran[channel='" + channal + "'][sid='" + sid + "']");
+			if (sent_tran_div) {
+				sent_tran_div.removeClass("loading");
+				sent_tran_div.addClass("error");
+			}
+
 			switch (error) {
 				case "timeout":
-					alert("服务器长时间没有回应。");
+					alert("服务器长时间没有回应。请稍后重试。");
 					break;
 				case "error":
-					alert("与服务器通讯失败，您可能没有连接到网络。");
+					alert("与服务器通讯失败，您可能没有连接到网络。请稍后重试。");
 					break;
 				case "notmodified":
 					break;
@@ -1578,7 +1604,7 @@ function note_sent_save_a(obj) {
 		});
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
 	}
 }
 function update_sent_tran(sentData) {}
@@ -1625,7 +1651,7 @@ function sent_save_callback(data) {
 						}
 					}
 				}
-				sent_tran_div.find(".preview").removeClass("loading");
+				sent_tran_div.removeClass("loading");
 			}
 		} else if (result.commit_type == 3) {
 			ntf_show("已经提交修改建议");

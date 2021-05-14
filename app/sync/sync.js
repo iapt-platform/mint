@@ -1,6 +1,7 @@
 var sync_db_list = [
 	{ script: "sync/table_article.php", count: -1, finished: 0, enable: false },
-	{ script: "sync/table_term.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_term_channel.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_term_editor.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_article_collect.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_sentence.php", count: -1, finished: 0, enable: true },
@@ -118,21 +119,35 @@ function sync_do_db(src, dest, time = 1) {
 		);
 	}
 }
+
+function db_selected(obj) {
+	let index = $(obj).attr("index");
+	sync_db_list[index].enable = obj.checked;
+}
+
 function render_progress() {
 	let html = "";
-	for (const iterator of sync_db_list) {
-		let spanWidth = parseInt((500 * iterator.finished) / iterator.count);
+	for (let index = 0; index < sync_db_list.length; index++) {
+		const element = sync_db_list[index];
+		let spanWidth = parseInt((500 * element.finished) / element.count);
+		html += "<div style='width:500px;background-color:white;color:black;'>";
+		html += "<input type='checkbox' index='" + index + "' ";
+		if (element.enable) {
+			html += "checked";
+		}
+		html += " onclick='db_selected(this)' />";
 		html +=
-			"<div style='width:500px;background-color:white;color:black;'><span style='background-color:green;display:inline-block;width:" +
+			"<span style='background-color:green;display:inline-block;width:" +
 			spanWidth +
 			"px;'>" +
-			iterator.script +
+			element.script +
 			"|" +
-			iterator.finished +
+			element.finished +
 			"/" +
-			iterator.count +
+			element.count +
 			"<span></div>";
 	}
+
 	$("#sync_result").html(html);
 }
 function login() {
