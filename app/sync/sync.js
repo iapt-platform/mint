@@ -16,13 +16,13 @@ function sync_pull() {
 	sync_curr_do_db = 0;
 	isStop = false;
 	$("#sync_log").html("working"); //
-	sync_do_db($("#sync_server_address").val(), $("#sync_local_address").val(), 1);
+	sync_do_db($("#sync_server_address").val(), $("#sync_local_address").val(), 0);
 }
 function sync_push() {
 	isStop = false;
 	sync_curr_do_db = 0;
 	$("#sync_log").html("working"); //
-	sync_do_db($("#sync_local_address").val(), $("#sync_server_address").val(), 1);
+	sync_do_db($("#sync_local_address").val(), $("#sync_server_address").val(), 0);
 }
 function sync_stop() {
 	isStop = true;
@@ -30,6 +30,7 @@ function sync_stop() {
 var retryCount = 0;
 function sync_do_db(src, dest, time = 1) {
 	let size = 500;
+	//找到下一个有效的数据库
 	while (sync_db_list[sync_curr_do_db].enable == false) {
 		sync_curr_do_db++;
 		if (sync_curr_do_db >= sync_db_list.length) {
@@ -37,7 +38,16 @@ function sync_do_db(src, dest, time = 1) {
 			return;
 		}
 	}
+	if (time == 0) {
+		time = localStorage.getItem(sync_db_list[sync_curr_do_db].script + src);
+		if (time) {
+			time = parseInt(time);
+		} else {
+			time = 1;
+		}
+	}
 	if (sync_db_list[sync_curr_do_db].count < 0) {
+		//获取全部数据条数，用来绘制进度条
 		$.get(
 			"sync.php",
 			{
@@ -77,10 +87,14 @@ function sync_do_db(src, dest, time = 1) {
 					console.error(error + " data:" + data);
 					return;
 				}
+				let myDate = new Date();
+				myDate.setTime(result.time);
+
 				$("#sync_log").html(
 					$("#sync_log").html() +
 						"<div><h2>" +
 						sync_db_list[sync_curr_do_db].script +
+						myDate +
 						"</h2>" +
 						result.message +
 						"</div>"
@@ -90,12 +104,14 @@ function sync_do_db(src, dest, time = 1) {
 					return;
 				}
 				if (result.error > 0 && retryCount < 2) {
+					//失败重试
 					retryCount++;
 					sync_do_db(src, dest, time);
 					return;
 				}
 				retryCount = 0;
 				sync_db_list[sync_curr_do_db].finished += parseInt(result.src_row);
+				localStorage.setItem(sync_db_list[sync_curr_do_db].script + src, result.time);
 				if (result.src_row >= size) {
 					//没弄完，接着弄
 					sync_do_db(src, dest, result.time);
