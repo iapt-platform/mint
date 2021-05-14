@@ -924,3 +924,6 @@ span.tran_sent {
 .read .bg_color_5 {
 	background: unset;
 }
+.palitext n {
+	color: dodgerblue;
+}
