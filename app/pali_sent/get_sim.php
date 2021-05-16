@@ -9,7 +9,7 @@ require_once "../public/function.php";
 //获取相似句子列表
 
 if (isset($_POST["sent_id"])) {
-    $dns = "" . _FILE_DB_PALI_SENTENCE_SIM_;
+    $dns = _FILE_DB_PALI_SENTENCE_SIM_;
     $dbh_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
     $dbh_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     $query = "SELECT sent2 FROM sent_sim WHERE  sent1 = ? limit 0 , 10";
@@ -23,7 +23,7 @@ if (isset($_POST["sent_id"])) {
 }
 $output = array();
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_;
+$dns = _FILE_DB_PALI_SENTENCE_;
 $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
