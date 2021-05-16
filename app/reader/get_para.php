@@ -1,18 +1,23 @@
 <?php
 require_once "../public/_pdo.php";
 require_once "../path.php";
+require_once "../redis/function.php";
+require_once "../db/pali_sent.php";
+require_once "../db/pali_sim_sent.php";
+
+$mRedis = redis_connect();
 
 define("_MAX_CHAPTER_LEN_", 20000);
 
 if (isset($_GET["book"])) {
     $_book = $_GET["book"];
 } else {
-    exit;
+    $_book = 0;
 }
 if (isset($_GET["para"])) {
     $_para = $_GET["para"];
 } else {
-    exit;
+    $_para = 0;
 }
 
 if (isset($_GET["begin"])) {
@@ -31,6 +36,29 @@ if ($_view == "sent") {
     $output["sentences"] = array(array("book" => $_book, "paragraph" => $_para, "begin" => $_begin, "end" => $_end));
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
+}
+if ($_view == "sim") {
+	$mPaliSent = new PaliSentence($mRedis);
+	$mPaliSim = new PaliSimSentence($mRedis);
+	if(!isset($_GET["id"])){
+		$id = $mPaliSent->getId($_book,$_para,$_begin,$_end);
+	}
+	else{
+		$id = $_GET["id"];
+	}
+	{
+		$sent_list[] = $mPaliSent->getInfo($id);
+		$arrList = $mPaliSim->getSimById($id);
+		if($arrList){
+			foreach ($arrList as $key => $value) {
+				# code...
+				$sent_list[] = $mPaliSent->getInfo($value["id"]);
+			}
+			$output["sentences"] = $sent_list;
+			echo json_encode($output, JSON_UNESCAPED_UNICODE);
+		}
+	}
+	exit;
 }
 
 $paraBegin=0;
@@ -60,6 +88,9 @@ if ($FetchParInfo) {
             $paraEnd = $_para;
             # code...
             break;
+		case "sim":
+
+			break;
         default:
             # code...
             $paraBegin = $_para;
