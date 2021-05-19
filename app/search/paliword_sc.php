@@ -209,8 +209,8 @@ $query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $st
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
 
-$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT 0,20";
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT ?,?";
+$Fetch = PDO_FetchAll($query,array($_page * $_pagesize, $_pagesize));
 $result["time"][] = array("event" => "查询结束", "time" => microtime(true) - $_start);
 $out_data = array();
 

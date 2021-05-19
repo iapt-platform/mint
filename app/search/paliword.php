@@ -133,7 +133,9 @@ include "../pcdl/html_head.php";
 		if(isset($_GET["key"])){
 			echo " _key_word = '{$_GET["key"]}';";
 		}
-		
+		if(isset($_GET["page"])){
+			echo " _page = '{$_GET["page"]}';";
+		}		
 		?>
 	</script>
 

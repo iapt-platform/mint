@@ -2,7 +2,9 @@ var dict_pre_searching = false;
 var dict_pre_search_curr_word = "";
 var dict_search_xml_http = null;
 var _key_word = "";
+var _page = 0;
 var _filter_word = new Array();
+var _bookId = new Array();
 
 $(document).ready(function () {
 	paliword_search(_key_word);
@@ -16,6 +18,7 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 			key: keyword,
 			words: JSON.stringify(words),
 			book: JSON.stringify(book),
+			page: _page,
 		},
 		function (data) {
 			let result = JSON.parse(data);
@@ -77,7 +80,12 @@ function render_word_result(worddata) {
 	let keyword = worddata.keyword;
 
 	html += "<div class='title'>";
-	html += "<a href='../reader/?view=chapter&book=" + worddata.book + "&para=" + worddata.para + "' target='_blank'>";
+	html +=
+		"<a href='../reader/?view=chapter&book=" +
+		worddata.book +
+		"&para=" +
+		worddata.para +
+		"&direction=col' target='_blank'>";
 	html += worddata.title + "</a></div>";
 
 	let newStr = highlightWords(worddata.palitext, keyword);
@@ -126,15 +134,18 @@ function word_search_filter() {
 	});
 	filter_cancel();
 	_filter_word = wordlist;
+	_page = 0;
 	paliword_search(_key_word, wordlist);
 }
 
 function word_select(wordid) {
 	_filter_word = [wordid];
+	_page = 0;
 	paliword_search(_key_word, [wordid]);
 }
 
 function case_filter_all() {
+	_page = 0;
 	paliword_search(_key_word);
 }
 
@@ -176,15 +187,23 @@ function render_nav(result) {
 	if (result["record_count"] > 20) {
 		let pages = parseInt(result["record_count"] / 20);
 		for (let index = 0; index < pages; index++) {
-			html += "<li >" + (index + 1) + "</li> ";
+			html += "<li ";
+			if (index == _page) {
+				html += "class='curr'";
+			}
+			html += " onclick=\"gotoPage('" + index + "')\"";
+			html += ">" + (index + 1) + "</li> ";
 		}
 	}
-	html += "<li >上一页</li> ";
-	html += "<li >下一页</li> ";
+	//html += "<li >上一页</li> ";
+	//html += "<li >下一页</li> ";
 	html += "</ul>";
 	return html;
 }
-
+function gotoPage(index) {
+	_page = index;
+	paliword_search(_key_word, _filter_word, _bookId);
+}
 function onWordFilterStart() {
 	$(".case_item").children().find(".filter").show();
 	$("#case_tools").children(".filter").show();
@@ -208,9 +227,13 @@ function search_book_filter(objid, type) {
 
 //选择需要过滤的书
 function book_select(bookid) {
+	_page = 0;
+
 	if (bookid == 0) {
+		_bookId = new Array();
 		paliword_search(_key_word, _filter_word);
 	} else {
+		_bookId = [bookid];
 		paliword_search(_key_word, _filter_word, [bookid]);
 	}
 }
@@ -222,6 +245,7 @@ function book_search_filter() {
 		}
 	});
 	book_filter_cancel();
+	_page = 0;
 	paliword_search(_key_word, _filter_word, booklist);
 }
 function onBookFilterStart() {
