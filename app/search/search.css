@@ -27,7 +27,8 @@ highlight {
 	display: inline-block;
 	cursor: pointer;
 }
-.page_nav li:hover {
+.page_nav li:hover,
+.page_nav .curr {
 	background-color: var(--link-hover-color);
 	color: var(--btn-hover-color);
 }

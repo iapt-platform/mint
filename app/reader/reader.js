@@ -1,5 +1,5 @@
 var _reader_view = "sent";
-var _reader_sent_id = 0;
+var _reader_sent_id = -1;
 var _reader_book = -1;
 var _reader_para = -1;
 var _reader_begin = -1;
@@ -8,6 +8,7 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 var _display = "para";
+var _direction = "row";
 var arrMyTerm = new Array();
 var _sent_data = new Array();
 var link_str = "";
@@ -280,6 +281,10 @@ function edit_wbw(book, para) {
 
 function setMode(mode = "read") {
 	let url = "../reader/?view=" + _reader_view;
+
+	if (_reader_sent_id != -1) {
+		url += "&id=" + _reader_sent_id;
+	}
 	if (_reader_book != -1) {
 		url += "&book=" + _reader_book;
 	}
