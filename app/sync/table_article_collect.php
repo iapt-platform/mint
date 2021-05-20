@@ -59,6 +59,10 @@ if (isset($_GET["op"])) {
 }
 
 switch ($op) {
+	case "sync_count":
+		$result = do_sync($input);
+		echo json_encode($result, JSON_UNESCAPED_UNICODE);
+		break;
 	case "sync":
 		$result = do_sync($input);
 		echo json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -106,7 +110,12 @@ switch ($op) {
 			$output["message"]=$collection->getError();
 		}
 		echo json_encode($result, JSON_UNESCAPED_UNICODE);
-	break;	
+	break;
+	default:
+		$output["error"]=1;
+		$output["message"]="错误的操作码";	
+		echo json_encode($result, JSON_UNESCAPED_UNICODE);
+	break;
 }
 
 

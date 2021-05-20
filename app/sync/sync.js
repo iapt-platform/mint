@@ -1,9 +1,9 @@
 var sync_db_list = [
+	{ script: "sync/table_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_article.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_article_collect.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_term_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_term_editor.php", count: -1, finished: 0, enable: false },
-	{ script: "sync/table_article_collect.php", count: -1, finished: 0, enable: false },
-	{ script: "sync/table_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_sentence.php", count: -1, finished: 0, enable: true },
 ];
 var isStop = false;
@@ -88,7 +88,7 @@ function sync_do_db(src, dest, time = 1) {
 					return;
 				}
 				let myDate = new Date();
-				myDate.setTime(result.time);
+				myDate.setTime(time);
 
 				$("#sync_log").html(
 					$("#sync_log").html() +

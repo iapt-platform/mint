@@ -30,7 +30,7 @@ $input = (object) [
 		'status',
 		'lang',
 		'modify_time'
-    ]    
+    ]
 ];
 
 $result = do_sync($input);
