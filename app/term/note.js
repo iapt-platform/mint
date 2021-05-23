@@ -750,10 +750,10 @@ function sent_commit(src, id) {
 	commit_init({
 		src: src,
 		sent: [id],
-		express: true,
+		express: false,
 	});
 }
-function render_one_sent_tran_a(iterator) {
+function render_one_sent_tran_a(iterator, diff = false) {
 	let mChannel = get_channel_by_id(iterator.channal);
 
 	let tranText;
@@ -775,8 +775,29 @@ function render_one_sent_tran_a(iterator) {
 				"</span>";
 		}
 	} else {
-		//note_init处理句子链接
-		tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		if (diff) {
+			let orgText = "";
+			for (const oneSent of _arrData) {
+				if (
+					oneSent.book == iterator.book &&
+					oneSent.para == iterator.para &&
+					oneSent.begin == iterator.begin &&
+					oneSent.end == iterator.end
+				) {
+					for (const tran of oneSent.translation) {
+						if (tran.channal == iterator.channal) {
+							orgText = tran.text;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			tranText = str_diff(orgText, iterator.text);
+		} else {
+			//note_init处理句子链接
+			tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		}
 	}
 	let html = "";
 	html += "<div class='sent_tran ";
@@ -960,13 +981,19 @@ function render_one_sent_tran_a(iterator) {
 	html += '<div class="body">';
 	html += '<div class="head_bar">';
 	html += '<div class="info">';
-	html += '<span class="name" title="' + iterator.editor_name.nickname + gLocal.gui.recent_update + '">';
+	html += '<span class="name channel_name" title="' + iterator.editor_name.nickname + gLocal.gui.recent_update + '">';
 	if (typeof iterator.channalinfo == "undefined") {
 		html += "unkown";
 	} else {
 		html += iterator.channalinfo.name;
 	}
-
+	html += "</span>";
+	html += '<span class="name editor_name" title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
+	if (typeof iterator.channalinfo == "undefined") {
+		html += "unkown";
+	} else {
+		html += iterator.editor_name.nickname;
+	}
 	html += "</span>";
 	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
@@ -1901,9 +1928,9 @@ function note_get_pr(channel, id) {
 		function (data) {
 			let result = JSON.parse(data);
 			if (result.length > 0) {
-				let html = "<div class='compact'>";
+				let html = "<div class='compact pr'>";
 				for (const iterator of result) {
-					html += render_one_sent_tran_a(iterator);
+					html += render_one_sent_tran_a(iterator, true);
 				}
 				html += "</div>";
 				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
