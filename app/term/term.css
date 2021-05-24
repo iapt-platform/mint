@@ -642,6 +642,15 @@ pw {
 	white-space: nowrap;
 	margin-right: 0.5em;
 }
+.head_bar > .info > .editor_name {
+	display: none;
+}
+.pr .head_bar > .info > .editor_name {
+	display: inline-block;
+}
+.pr .head_bar > .info > .channel_name {
+	display: none;
+}
 .head_bar > .info > .date {
 	font-size: 0.8em;
 	color: gray;
@@ -670,7 +679,12 @@ pw {
 .sent_tran_inner:hover .tool_bar > .right {
 	display: block;
 }
-
+.list_with_head:hover .tool_bar > .right {
+	display: block;
+}
+.list_with_head {
+	position: relative;
+}
 .body > .edit {
 	display: none;
 }
@@ -926,4 +940,12 @@ span.tran_sent {
 }
 .palitext n {
 	color: dodgerblue;
+}
+/*字符串比对*/
+del {
+	color: red;
+}
+ins {
+	background-color: greenyellow;
+	text-decoration: unset;
 }
