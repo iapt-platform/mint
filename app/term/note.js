@@ -1194,7 +1194,8 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	return output;
 }
 function add_new_tran_button_click(obj) {
-	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
+	let html = "<a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a>"
+	html += "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
 	for (const iterator of _my_channal) {
 		if (iterator.lang) {
