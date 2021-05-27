@@ -4,8 +4,11 @@
   "dependencies": {
     "at-js": "^1.2.12",
     "diff": "^5.0.0",
-    "highcharts": "^9.0.1",
-    "marked": "^2.0.3",
+    "fullcalendar": "^5.7.0",
+    "highcharts": "^9.1.0",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.12.1",
+    "marked": "^2.0.5",
     "tributejs": "^5.1.3"
   }
 }
