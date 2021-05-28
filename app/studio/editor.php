@@ -40,6 +40,10 @@ else{$currDevice="computer";}
 	<script src="../public/js/marked.js"></script>
 
 <title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
+
+	<script src="../../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 	<script language="javascript" src="config.js"></script>
 	<script language="javascript" src="../pali_sent/pali_sent_list.js"></script>
 	<script language="javascript" src="../usent/usent_ref.js"></script>
@@ -57,14 +61,17 @@ else{$currDevice="computer";}
 	
 	<script language="javascript" src="sent/sent.js"></script>
 	<script language="javascript" src="../public/js/notify.js"></script>
+
+	<script language="javascript" src="../widget/notify.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/notify.css"/>
+
 	<script language="javascript" src="../public/js/comm.js"></script>
 	<script language="javascript" src="../public/js/localforage.min.js"></script>
 	<script language="javascript" src="../public/script/my.js"></script>
 	<script src="../public/js/mermaid.min.js"></script>
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
-	<script src="./js/jquery-3.3.1.min.js"></script>
-	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+
 
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
