@@ -11,7 +11,7 @@ $input = (object) [
     "sync_id" =>  ["id"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
-	"where"=>" and ( (channal IS NOT NULL) or channal <> '') ",
+	"where"=>" and ( (channal IS NOT NULL) or channal <> '')  and owner = 'C1AB2ABF-EAA8-4EEF-B4D9-3854321852B4'  ",
     "insert" => [
         'id',
 		'parent_id',

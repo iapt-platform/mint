@@ -10,7 +10,7 @@ $input = (object) [
     "sync_id" =>  ["block_id","wid"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
-	"where"=>" ",
+	"where"=>" and owner = 'C1AB2ABF-EAA8-4EEF-B4D9-3854321852B4' ",
     "insert" => [
         'id',
 		'block_id',
