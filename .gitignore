@@ -1,9 +1,12 @@
-/.debug
-/.vscode
-/tmp
-/.vscode
+# editors
+/.vscode/
 .DS_Store
-/.debug
-.favorites.json
+
+# misc
+/.debug/
+/tmp/
+/.favorites.json
+
+# dependencies
 /vendor
 /node_modules
