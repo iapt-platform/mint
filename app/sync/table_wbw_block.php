@@ -1,40 +1,41 @@
 <?php
+//header('Content-type: application/json; charset=utf8');
 
 require_once "../path.php";
 require_once "../sync/function.php";
 
 $input = (object) [
     "database" =>  _FILE_DB_USER_WBW_,
-    "table" =>  "wbw",
+    "table" =>  "wbw_block",
     "uuid" =>  "id",
-    "sync_id" =>  ["block_id","wid"],
+    "sync_id" =>  ["id"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
-	"where"=>" and ( (channal IS NOT NULL ) or channal <> '' )",
+	"where"=>" and ( (channal IS NOT NULL) or channal <> '')  and owner = 'C1AB2ABF-EAA8-4EEF-B4D9-3854321852B4'  ",
     "insert" => [
         'id',
-		'block_id',
+		'parent_id',
+		'channal',
+		'owner',
 		'book',
 		'paragraph',
-		'wid',
-		'word',
-		'data',
+		'style',
+		'lang',
 		'status',
-		'owner',
 		'receive_time',
 		'modify_time'
     ],
     "update" =>  [
-        'id',
+		'parent_id',
+		'channal',
+		'owner',
 		'book',
 		'paragraph',
-		'word',
-		'data',
+		'style',
+		'lang',
 		'status',
-		'owner',
-		'receive_time',
 		'modify_time'
-    ]    
+    ]
 ];
 
 $result = do_sync($input);

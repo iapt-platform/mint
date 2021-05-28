@@ -5,6 +5,8 @@ var sync_db_list = [
 	{ script: "sync/table_term_channel.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_term_editor.php", count: -1, finished: 0, enable: false },
 	{ script: "sync/table_sentence.php", count: -1, finished: 0, enable: true },
+	{ script: "sync/table_wbw_block.php", count: -1, finished: 0, enable: false },
+	{ script: "sync/table_wbw.php", count: -1, finished: 0, enable: false },
 ];
 var isStop = false;
 var sync_curr_do_db = 0;

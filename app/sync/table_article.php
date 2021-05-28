@@ -37,7 +37,7 @@ $input = (object) [
 		'status',
 		'modify_time',
 		'receive_time'
-    ]    
+    ]
 ];
 
 $result = do_sync($input);
