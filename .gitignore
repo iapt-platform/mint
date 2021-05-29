@@ -4,15 +4,15 @@
 
 # misc
 /appdata/
-/dicttext/
 /log/
 /palicsv/
 /user/
 /.debug/
 /tmp/
 /.favorites.json
+/package-lock.json
+/composer.lock
 
 # dependencies
 /vendor/
 /node_modules/
-/package-lock.json

@@ -739,6 +739,7 @@ function sent_tran_edit(obj) {
 	}
 }
 
+//采纳 pr
 function sent_pr_merge(id) {
 	$.post(
 		"../usent/sent_pr_merge.php",
