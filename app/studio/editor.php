@@ -22,6 +22,9 @@ else{$currDevice="computer";}
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>	
+
 	<link rel="shortcut icon" href="../favicon.icon" />
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
@@ -39,9 +42,7 @@ else{$currDevice="computer";}
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 	<script src="../public/js/marked.js"></script>
 
-<title id="file_title"><?php echo $_local->gui->pcd_studio; ?></title>
-
-	<script src="../../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../public/js/jquery-3.6.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 
 	<script language="javascript" src="config.js"></script>
