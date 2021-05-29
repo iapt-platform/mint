@@ -15,3 +15,4 @@
 # dependencies
 /vendor/
 /node_modules/
+/package-lock.json
