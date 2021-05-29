@@ -3,6 +3,11 @@
 .DS_Store
 
 # misc
+/appdata/
+/dicttext/
+/log/
+/palicsv/
+/user/
 /.debug/
 /tmp/
 /.favorites.json
@@ -10,5 +15,6 @@
 /composer.lock
 
 # dependencies
-/vendor
-/node_modules
+/vendor/
+/node_modules/
+/package-lock.json

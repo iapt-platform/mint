@@ -49,8 +49,8 @@ function note_create() {
 function note_sent_edit_dlg_init() {
 	$("body").append(
 		'<div id="note_sent_edit_dlg" title="' +
-			gLocal.gui.edit +
-			'"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
+		gLocal.gui.edit +
+		'"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
 	);
 	guide_init();
 	$("#note_sent_edit_dlg").dialog({
@@ -241,8 +241,8 @@ function render_read_mode_sent(iterator) {
 			.parent()
 			.prepend(
 				"<div class='para_div'><div class='palitext_div'><div class='palitext palitext1'></div><div class='palitext palitext2'></div></div><div class='para_tran_div'>" +
-					tranDivHtml +
-					"</div></div>"
+				tranDivHtml +
+				"</div></div>"
 			);
 	}
 
@@ -1195,7 +1195,8 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	return output;
 }
 function add_new_tran_button_click(obj) {
-	let html = "<div style='display:flex; max-width: 40vw; white-space: normal;'>";
+	let html = "<a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a>"
+	html += "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
 	for (const iterator of _my_channal) {
 		if (iterator.lang) {
@@ -1203,9 +1204,10 @@ function add_new_tran_button_click(obj) {
 			break;
 		}
 	}
+	//母语channel列表
 	html += "<ul class='channel_list lang_0' >";
 	html += "<li>";
-	html += first_lang;
+	html += gLocal.language[first_lang];
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
@@ -1232,6 +1234,7 @@ function add_new_tran_button_click(obj) {
 			}
 		}
 	}
+	//非母语channel列表
 	html += "</ul>";
 	html += "<ul class='channel_list lang_1'>";
 	html += "<li>";
@@ -1263,12 +1266,44 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "</ul>";
+	//协作channel列表-带中文
 	html += "<ul class='channel_list lang_2'>";
 	html += "<li>";
-	html += gLocal.gui.collaborate;
+	html += "协作";
 	html += "</li>";
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && iterator.lang == 0) {
+		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == true) {
+			if (_channal.indexOf(iterator.id) < 0) {
+				html += '<li class="channel_name" onclick="';
+				html +=
+					"new_sentence('" +
+					$(obj).parent().attr("book") +
+					"' ,'" +
+					$(obj).parent().attr("para") +
+					"' ,'" +
+					$(obj).parent().attr("begin") +
+					"' ,'" +
+					$(obj).parent().attr("end") +
+					"' ,'" +
+					iterator.id +
+					"',this)";
+				html += '" title="' + iterator.nickname;
+				html += '">' + iterator.name;
+				if (parseInt(iterator.power) < 20) {
+					html += "(建议)";
+				}
+				html += "</li>";
+			}
+		}
+	}
+	html += "</ul>";
+	//协作channel列表-不带中文
+	html += "<ul class='channel_list lang_3'>";
+	html += "<li>";
+	html += "collaborate";
+	html += "</li>";
+	for (const iterator of _my_channal) {
+		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
 			if (_channal.indexOf(iterator.id) < 0) {
 				html += '<li class="channel_name" onclick="';
 				html +=
@@ -1307,6 +1342,13 @@ function add_new_tran_button_click(obj) {
 		event.stopPropagation();
 		$(obj).parent().show();
 	}
+}
+function checkStringIsChinese(str) {
+	var pattern = new RegExp("[\u4E00-\u9FA5]+");
+	if (pattern.test(str)) {
+		return true;
+	}
+	return false;
 }
 function tool_bar_show(element) {
 	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
@@ -1541,11 +1583,11 @@ function note_sent_save_a(obj) {
 	let sent_tran_div = find_sent_tran_div(obj);
 	/*
 	var jqxhr = $.post("example.php", function() {
-      alert("success");
-    })
-    .success(function() { alert("second success"); })
-    .error(function() { alert("error"); })
-    .complete(function() { alert("complete"); });*/
+	  alert("success");
+	})
+	.success(function() { alert("second success"); })
+	.error(function() { alert("error"); })
+	.complete(function() { alert("complete"); });*/
 	/*
 	function (data, status) {
 			alert("异常！" + data.responseText);
@@ -1617,7 +1659,7 @@ function note_sent_save_a(obj) {
 		$(sent_tran_div).addClass("loading");
 	}
 }
-function update_sent_tran(sentData) {}
+function update_sent_tran(sentData) { }
 function sent_save_callback(data) {
 	let result = JSON.parse(data);
 	if (result.status > 0) {
@@ -1708,28 +1750,28 @@ function note_sent_save() {
 						}
 						$(
 							"#tran_text_" +
-								result.book +
-								"_" +
-								result.para +
-								"_" +
-								result.begin +
-								"_" +
-								result.end +
-								"_" +
-								result.channal
+							result.book +
+							"_" +
+							result.para +
+							"_" +
+							result.begin +
+							"_" +
+							result.end +
+							"_" +
+							result.channal
 						).html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
 					} else {
 						$(
 							"#tran_text_" +
-								result.book +
-								"_" +
-								result.para +
-								"_" +
-								result.begin +
-								"_" +
-								result.end +
-								"_" +
-								result.channal
+							result.book +
+							"_" +
+							result.para +
+							"_" +
+							result.begin +
+							"_" +
+							result.end +
+							"_" +
+							result.channal
 						).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
 						term_updata_translation();
 						for (const iterator of _arrData) {
