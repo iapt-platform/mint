@@ -4,7 +4,6 @@
 
 # misc
 /appdata/
-/dicttext/
 /log/
 /palicsv/
 /user/
@@ -17,4 +16,3 @@
 # dependencies
 /vendor/
 /node_modules/
-/package-lock.json
