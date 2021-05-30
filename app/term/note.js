@@ -971,10 +971,12 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.channalinfo.name;
 	}
 	html += "</span>";
-	html += '<span class="name editor_name" title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
+	html += '<span class="name editor_name" '
 	if (typeof iterator.channalinfo == "undefined") {
+		html += '>';
 		html += "unkown";
 	} else {
+		html += 'title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
 		html += iterator.editor_name.nickname;
 	}
 	html += "</span>";
