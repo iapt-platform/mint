@@ -49,8 +49,8 @@ function note_create() {
 function note_sent_edit_dlg_init() {
 	$("body").append(
 		'<div id="note_sent_edit_dlg" title="' +
-		gLocal.gui.edit +
-		'"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
+			gLocal.gui.edit +
+			'"><guide gid="markdown_guide"></guide><div id="edit_dialog_content"></div></div>'
 	);
 	guide_init();
 	$("#note_sent_edit_dlg").dialog({
@@ -241,8 +241,8 @@ function render_read_mode_sent(iterator) {
 			.parent()
 			.prepend(
 				"<div class='para_div'><div class='palitext_div'><div class='palitext palitext1'></div><div class='palitext palitext2'></div></div><div class='para_tran_div'>" +
-				tranDivHtml +
-				"</div></div>"
+					tranDivHtml +
+					"</div></div>"
 			);
 	}
 
@@ -971,10 +971,12 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.channalinfo.name;
 	}
 	html += "</span>";
-	html += '<span class="name editor_name" title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
+	html += '<span class="name editor_name" '
 	if (typeof iterator.channalinfo == "undefined") {
+		html += '>';
 		html += "unkown";
 	} else {
+		html += 'title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
 		html += iterator.editor_name.nickname;
 	}
 	html += "</span>";
@@ -1195,7 +1197,12 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	return output;
 }
 function add_new_tran_button_click(obj) {
-	let html = "<a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a>"
+	let html =
+		"<a href='../channal/my_channal_index.php' target='_blank'><button>" +
+		gLocal.gui.new +
+		"&nbsp;" +
+		gLocal.gui.channel +
+		"</button></a>";
 	html += "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
 	for (const iterator of _my_channal) {
@@ -1659,7 +1666,7 @@ function note_sent_save_a(obj) {
 		$(sent_tran_div).addClass("loading");
 	}
 }
-function update_sent_tran(sentData) { }
+function update_sent_tran(sentData) {}
 function sent_save_callback(data) {
 	let result = JSON.parse(data);
 	if (result.status > 0) {
@@ -1670,6 +1677,9 @@ function sent_save_callback(data) {
 		let sent_tran_div = $(
 			".sent_tran[dbid='" + result.id + "'][channel='" + result.channal + "'][sid='" + sid + "']"
 		);
+		if (sent_tran_div) {
+			sent_tran_div.removeClass("loading");
+		}
 		if (result.commit_type == 1 || result.commit_type == 2) {
 			ntf_show("成功修改");
 			if (sent_tran_div) {
@@ -1703,7 +1713,6 @@ function sent_save_callback(data) {
 						}
 					}
 				}
-				sent_tran_div.removeClass("loading");
 			}
 		} else if (result.commit_type == 3) {
 			ntf_show("已经提交修改建议");
@@ -1750,28 +1759,28 @@ function note_sent_save() {
 						}
 						$(
 							"#tran_text_" +
-							result.book +
-							"_" +
-							result.para +
-							"_" +
-							result.begin +
-							"_" +
-							result.end +
-							"_" +
-							result.channal
+								result.book +
+								"_" +
+								result.para +
+								"_" +
+								result.begin +
+								"_" +
+								result.end +
+								"_" +
+								result.channal
 						).html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
 					} else {
 						$(
 							"#tran_text_" +
-							result.book +
-							"_" +
-							result.para +
-							"_" +
-							result.begin +
-							"_" +
-							result.end +
-							"_" +
-							result.channal
+								result.book +
+								"_" +
+								result.para +
+								"_" +
+								result.begin +
+								"_" +
+								result.end +
+								"_" +
+								result.channal
 						).html(marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang)));
 						term_updata_translation();
 						for (const iterator of _arrData) {

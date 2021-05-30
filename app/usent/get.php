@@ -69,6 +69,8 @@ $user_info = new UserInfo();
 
 foreach ($Fetch as $key => $value) {
     # code...
+	$Fetch[$key]["para"]=$value["paragraph"];
+
     $channel = $channel_info->getChannal($value["channal"]);
     if ($channel) {
 		$Fetch[$key]["mypower"] = $channel_info->getPower($value["channal"]);
