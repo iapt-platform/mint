@@ -1184,9 +1184,22 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	//单个channal译文框结束
 	return output;
 }
+function hidden_control(obj) {
+	if ($(".lang_2")[0].style.display == "none" && $(".lang_3")[0].style.display == "none") {
+		$(".lang_2").show();
+		$(".lang_3").show();
+		obj.innerHTML = gLocal.gui.hidden + "&nbsp;" + gLocal.gui.co_channel
+	}
+	else {
+		$(".lang_2").hide();
+		$(".lang_3").hide();
+		obj.innerHTML = gLocal.gui.show + "&nbsp;" + gLocal.gui.co_channel
+	}
+}
+
 function add_new_tran_button_click(obj) {
-	let html = "<a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a>"
-	html += "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
+
+	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
 	for (const iterator of _my_channal) {
 		if (iterator.lang) {
@@ -1224,11 +1237,13 @@ function add_new_tran_button_click(obj) {
 			}
 		}
 	}
-	//非母语channel列表
+	html += "<li><a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a></li>"
 	html += "</ul>";
+	//非母语channel列表
 	html += "<ul class='channel_list lang_1'>";
 	html += "<li>";
 	html += gLocal.gui.other;
+	html += "&nbsp;<span onmouseover='hidden_control(this)'>" + gLocal.gui.show + "&nbsp;" + gLocal.gui.co_channel + "</span>"
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
@@ -1257,7 +1272,7 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	//协作channel列表-带中文
-	html += "<ul class='channel_list lang_2'>";
+	html += "<ul class='channel_list lang_2' style='display:none;'>";
 	html += "<li>";
 	html += "协作";
 	html += "</li>";
@@ -1288,7 +1303,7 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 	//协作channel列表-不带中文
-	html += "<ul class='channel_list lang_3'>";
+	html += "<ul class='channel_list lang_3' style='display:none;'>";
 	html += "<li>";
 	html += "collaborate";
 	html += "</li>";
@@ -1318,6 +1333,7 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "</ul>";
+
 
 	html += "</div>";
 	$(obj).parent().children(".tran_text_tool_bar").first().html(html);

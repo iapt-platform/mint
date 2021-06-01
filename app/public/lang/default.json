@@ -131,7 +131,7 @@
 		"heading_lv6": "Heading Lv6",
 		"heading_lv7": "Heading Lv7",
 		"heading_lv8": "Heading Lv8",
-		"hidden": "hidden",
+		"hidden": "hide",
 		"home": "Home",
 		"hori_ref_time": "horizontal refraction correct ",
 		"html_text_data": "HTML Text Data",
@@ -629,6 +629,7 @@
 		"suggest": "suggest",
 		"next_line": "new line",
 		"link": "sambandha",
+		"co_channel": "collaborative channels",
 		"": ""
 	},
 	"grammastr": [
@@ -2023,7 +2024,6 @@
 		"zh_cn": "Simple cīna",
 		"zh_tw": "Traditional cīna"
 	},
-
 	"LogType": {
 		"10": "edit channel",
 		"11": "new channel",
