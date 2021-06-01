@@ -1733,7 +1733,6 @@ span:active {
 .file_list_block {
 	background-color: var(--tool-bg-color);
 	color: var(--tool-color);
-	width: 65em;
 	max-width: 95%;
 	border-radius: 6px;
 	text-align: left;
