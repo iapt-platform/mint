@@ -226,5 +226,23 @@ function getDataTime(time) {
 	}
 	return output;
 }
+function str_diff(str1, str2) {
+	let output = "";
+
+	const diff = Diff.diffChars(str1, str2);
+
+	diff.forEach((part) => {
+		// green for additions, red for deletions
+		// grey for common parts
+		if (part.added) {
+			output += "<ins>" + part.value + "</ins>";
+		} else if (part.removed) {
+			output += "<del>" + part.value + "</del>";
+		} else {
+			output += part.value;
+		}
+	});
+	return output;
+}
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();

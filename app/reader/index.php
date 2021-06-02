@@ -23,6 +23,9 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["view"])){
 		echo "_reader_view='".$_GET["view"]."';";
 	}
+	if(isset($_GET["id"])){
+		echo "_reader_sent_id='".$_GET["id"]."';";
+	}
 	if(isset($_GET["book"])){
 		echo "_reader_book='".$_GET["book"]."';";
 	}

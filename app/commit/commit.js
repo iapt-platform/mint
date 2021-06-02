@@ -21,10 +21,11 @@ function commit_render_channel_select() {
 	let html = "";
 	html += "<div class='commit_win_inner' >";
 	html += commit_render_head(1);
-	html += "<div style='display:flex;'>";
+	html += "<div id='step1' >";
 
 	if (typeof _commit_data.src != "undefined") {
-		html += "<div>译文来源:";
+		html += "<div >译文来源</div>";
+		html += "<div class='channel'>";
 		let isFound = false;
 		for (const iterator of _my_channal) {
 			if (_commit_data.src == iterator.id) {
@@ -50,8 +51,8 @@ function commit_render_channel_select() {
 		html += "<div>请选择译文来源";
 		html += "</div>";
 	}
-	html += "<div>➡目标译文:</div>";
-	html += "<div>";
+	html += "<div>目标译文:</div>";
+	html += "<div class='channel'>";
 	html += "<select id='dest_channel' onchange='dest_change(this)'>";
 	if (typeof _commit_data.dest == "undefined") {
 		let lastDest = localStorage.getItem("commit_dest_" + _commit_data.dest);
@@ -250,18 +251,14 @@ function commit_render_comp(mode) {
 							html += "<ins>" + iterator.translation[0].text + "</ins>";
 						} else {
 							if (iterator.translation[0].update_time > iterator.translation[1].update_time) {
-								html += commit_render_diff(iterator.translation[1].text, iterator.translation[0].text);
-								//html += "<del>" + iterator.translation[1].text + "</del><br>";
-								//html += "<ins>" + iterator.translation[0].text + "</ins>";
+								html += str_diff(iterator.translation[1].text, iterator.translation[0].text);
 							} else {
 								html += "[新]" + iterator.translation[1].text;
 							}
 						}
 						break;
 					case 1:
-						html += commit_render_diff(iterator.translation[1].text, iterator.translation[0].text);
-						//html += "<del>" + iterator.translation[1].text + "</del><br>";
-						//html += "<ins>" + iterator.translation[0].text + "</ins>";
+						html += str_diff(iterator.translation[1].text, iterator.translation[0].text);
 						break;
 					case 2:
 						html += iterator.translation[1].text;
@@ -279,25 +276,6 @@ function commit_render_comp(mode) {
 	}
 	html += "</div>";
 	return html;
-}
-
-function commit_render_diff(str1, str2) {
-	let output = "";
-
-	const diff = Diff.diffChars(str1, str2);
-
-	diff.forEach((part) => {
-		// green for additions, red for deletions
-		// grey for common parts
-		if (part.added) {
-			output += "<ins>" + part.value + "</ins>";
-		} else if (part.removed) {
-			output += "<del>" + part.value + "</del>";
-		} else {
-			output += part.value;
-		}
-	});
-	return output;
 }
 
 function commit_sent_select(obj) {
@@ -342,12 +320,10 @@ function commit_pull() {
 	let pullData = new Array();
 	for (const iterator of sentData) {
 		if (iterator.checked) {
-			for (const iterator of _arrData) {
-				pullData.push(iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end);
-			}
-			_commit_data.sent = pullData;
+			pullData.push(iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end);
 		}
 	}
+	_commit_data.sent = pullData;
 	if (pullData.length == 0) {
 		alert("没有数据被选择");
 		return;

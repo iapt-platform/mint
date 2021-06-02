@@ -1,36 +1,40 @@
 <?php
-//header('Content-type: application/json; charset=utf8');
 
 require_once "../path.php";
 require_once "../sync/function.php";
 
 $input = (object) [
-    "database" =>  _FILE_DB_CHANNAL_,
-    "table" =>  "channal",
+    "database" =>  _FILE_DB_USER_WBW_,
+    "table" =>  "wbw",
     "uuid" =>  "id",
-    "sync_id" =>  ["id"],
-	"where"=>"",
+    "sync_id" =>  ["block_id","wid"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
+	"where"=>"  ",
     "insert" => [
         'id',
-		'owner',
-		'name',
-		'summary',
+		'block_id',
+		'book',
+		'paragraph',
+		'wid',
+		'word',
+		'data',
 		'status',
-		'lang',
-		'create_time',
-		'modify_time',
-		'receive_time'
+		'owner',
+		'receive_time',
+		'modify_time'
     ],
     "update" =>  [
-		'owner',
-		'name',
-		'summary',
+        'id',
+		'book',
+		'paragraph',
+		'word',
+		'data',
 		'status',
-		'lang',
+		'owner',
+		'receive_time',
 		'modify_time'
-    ]
+    ]    
 ];
 
 $result = do_sync($input);

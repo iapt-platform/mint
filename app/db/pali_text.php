@@ -1,6 +1,5 @@
 <?php
 require_once "../path.php";
-require_once "../share/function.php";
 require_once "../db/table.php";
 
 class PaliText extends Table

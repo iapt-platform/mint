@@ -1,9 +1,18 @@
-/.debug
-/.vscode
-/tmp
-/.vscode
+# editors
+/.vscode/
 .DS_Store
-/.debug
-.favorites.json
-/vendor
-/node_modules
+
+# misc
+/appdata/
+/log/
+/palicsv/
+/user/
+/.debug/
+/tmp/
+/.favorites.json
+/package-lock.json
+/composer.lock
+
+# dependencies
+/vendor/
+/node_modules/

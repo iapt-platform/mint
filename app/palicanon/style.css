@@ -196,8 +196,15 @@ tag {
 }
 /*書標題特殊樣式*/
 .chapter_list .level_1 {
-	background: linear-gradient(45deg, #e89650 20%, transparent 90%);
 	color: whitesmoke;
+}
+.book_view .level_1 {
+	background: linear-gradient(45deg, #e89650 20%, transparent 90%);
+}
+/*当前选择書標題特殊樣式*/
+li.level_1.selected {
+	height: 250px;
+	background: linear-gradient(45deg, #e89650 20%, transparent 90%);
 }
 .progress_circle {
 	transform-origin: center;

@@ -5,38 +5,36 @@ require_once "../path.php";
 require_once "../sync/function.php";
 
 $input = (object) [
-    "database" =>  _FILE_DB_USER_ARTICLE_,
-    "table" =>  "article",
+    "database" =>  _FILE_DB_USER_WBW_,
+    "table" =>  "wbw_block",
     "uuid" =>  "id",
     "sync_id" =>  ["id"],
-	"where"=>"",
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
+	"where"=>" and ( (channal IS NOT NULL) or channal <> '')  ",
     "insert" => [
         'id',
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
+		'parent_id',
+		'channal',
 		'owner',
-		'setting',
+		'book',
+		'paragraph',
+		'style',
+		'lang',
 		'status',
-		'create_time',
-		'modify_time',
-		'receive_time'
+		'receive_time',
+		'modify_time'
     ],
     "update" =>  [
-		'title',
-		'subtitle',
-		'summary',
-		'content',
-		'tag',
+		'parent_id',
+		'channal',
 		'owner',
-		'setting',
+		'book',
+		'paragraph',
+		'style',
+		'lang',
 		'status',
-		'modify_time',
-		'receive_time'
+		'modify_time'
     ]
 ];
 
