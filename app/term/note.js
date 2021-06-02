@@ -1188,12 +1188,12 @@ function hidden_control(obj) {
 	if ($(".lang_2")[0].style.display == "none" && $(".lang_3")[0].style.display == "none") {
 		$(".lang_2").show();
 		$(".lang_3").show();
-		obj.innerHTML = gLocal.gui.hidden + "&nbsp;" + gLocal.gui.co_channel
+		obj.innerHTML = "⬅"
 	}
 	else {
 		$(".lang_2").hide();
 		$(".lang_3").hide();
-		obj.innerHTML = gLocal.gui.show + "&nbsp;" + gLocal.gui.co_channel
+		obj.innerHTML = "➡"
 	}
 }
 
@@ -1243,7 +1243,7 @@ function add_new_tran_button_click(obj) {
 	html += "<ul class='channel_list lang_1'>";
 	html += "<li>";
 	html += gLocal.gui.other;
-	html += "&nbsp;<span onmouseover='hidden_control(this)'>" + gLocal.gui.show + "&nbsp;" + gLocal.gui.co_channel + "</span>"
+	html += "&nbsp;<button style='height: 1.8em;' onmouseover='hidden_control(this)'>➡</button>"
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
