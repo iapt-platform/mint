@@ -23,6 +23,23 @@ class Table
 	public function setField($setting){
 		$this->field_setting = $setting;
 	}
+	protected function fetch($query,$params){
+		if (isset($params)) {
+			$stmt = $this->dbh->prepare($query);
+			if($stmt){
+				$stmt->execute($params);
+			}
+			
+		} else {
+			$stmt = $PDO->query($query);
+		}
+		if($stmt){
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		}
+		else{
+			return false;
+		}
+	}
 	public function syncList($time){
 
 	}

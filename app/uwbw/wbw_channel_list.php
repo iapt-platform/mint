@@ -53,11 +53,23 @@ foreach ($coop_channal as $key => $value) {
 		$channelList[$value["res_id"]]=array("power"=>(int)$value["power"]);
 	}
 }
+
+# 查询全网公开 的
+PDO_Connect( _FILE_DB_USER_WBW_);
+$query = "SELECT  channal FROM wbw_block WHERE  paragraph IN ($place_holders)  AND book = ? AND channal IS NOT NULL AND status = 30 group by channal ";
+$publicChannel = PDO_FetchAll($query, $params);
+foreach ($publicChannel as $key => $channel) {
+	# code...
+	if(!isset($channelList[$channel["channal"]])){
+		$channelList[$channel["channal"]]=array("power"=>10);
+	}
+}
+
 $channelInfo = new Channal($redis);
 $i = 0;
 $outputData = array();
 
-PDO_Connect( _FILE_DB_USER_WBW_);
+
 foreach ($channelList as $key => $row) {
     $queryParam = $params;
     $queryParam[] = $key;
@@ -72,8 +84,7 @@ foreach ($channelList as $key => $row) {
 	$outputData[]=$channelList[$key];
 }
 
-# 查询全网公开 
-$query = "SELECT count(*) as co , channal FROM wbw_block WHERE  paragraph IN ($place_holders)  AND book = ? AND channal IS NOT NULL AND status = 30 group by channal ";
+
 
 
 $output["data"] = $outputData;
