@@ -7,9 +7,15 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../ucenter/active.php";
 require_once "../redis/function.php";
+require_once "../channal/function.php";
+require_once "../db/wbw_block.php";
+
 
 $respond['status'] = 0;
 $respond['message'] = "";
+$redis = redis_connect();
+$channelInfo = new Channal($redis);
+$_WbwBlock = new WbwBlock($redis);
 
 if (isset($_POST["data"])) {
     $aData = json_decode($_POST["data"]);
@@ -25,13 +31,29 @@ if (count($aData) > 0) {
 
     PDO_Connect(_FILE_DB_USER_WBW_);
 
+	#确定block id 的写入权限
+	$listBlockId=array();
+	foreach ($aData as $data) {
+        $listBlockId[$data->block_id]=0;
+    }
+	#查询channel 的 权限
+	$maxPower=0;
+	foreach ($listBlockId as $key => $value) {
+		$listBlockId[$key] = $_WbwBlock->getPower($key);
+		if($listBlockId[$key]>$maxPower){
+			$maxPower = $listBlockId[$key];
+		}
+	}
+
     /* 开始一个事务，关闭自动提交 */
     $PDO->beginTransaction();
     $query = "UPDATE wbw SET data= ?  , receive_time= ?  , modify_time= ?   where block_id= ?  and wid= ?  ";
     $sth = $PDO->prepare($query);
 
     foreach ($aData as $data) {
-        $sth->execute(array($data->data, mTime(), $data->time, $data->block_id, $data->word_id));
+		if($listBlockId[$data->block_id]>=20){
+			$sth->execute(array($data->data, mTime(), $data->time, $data->block_id, $data->word_id));
+		}
     }
     $PDO->commit();
 
@@ -48,9 +70,14 @@ if (count($aData) > 0) {
         $respond['status'] = 0;
         $respond['message'] = "成功";
     }
+	
+	if($maxPower<20){
+		$respond['status'] = 1;
+        $respond['message'] = "没有修改权限";
+	}
 	if (count($aData) ==1){
-		$redis = redis_connect();
 		try {
+			#将数据插入redis 作为自动匹配最新数据
 			if($redis){
 				$xmlString = "<root>" . $data->data . "</root>";
 				$xmlWord = simplexml_load_string($xmlString);
