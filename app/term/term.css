@@ -294,12 +294,22 @@ note > .tran .tran_text_tool_bar::after,
 
 note > .palitext,
 .palitext {
-	font-family: Noto serif;
 	line-height: 1.5em;
 	color: #9f3a01;
 	font-weight: 500;
 	margin: 4px;
 }
+h1 .palitext {
+	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	font-weight: 700;
+	font-size: 130%;
+}
+h2 .palitext {
+	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	font-weight: 700;
+	font-size: 120%;
+}
+
 note n {
 	display: inline;
 	color: blue;
@@ -880,9 +890,13 @@ span.keybutton {
 	word-break: break-word;
 }
 span.tran_sent {
-	display: block;
+	line-height: 1.7em;
 }
-
+.tran_sent ul,
+.tran_sent li {
+	list-style-type: unset;
+	margin-left: 1em;
+}
 .icon_sent_status {
 	display: none;
 	width: 22px;
