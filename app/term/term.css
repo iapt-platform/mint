@@ -194,6 +194,12 @@ blockquote {
 	padding-left: 5px;
 }
 
+.read_mode blockquote {
+	font-size: 80%;
+	color: var(--main-color1);
+	background-color: #7d7d7d1f;
+}
+
 note > .tran {
 	color: #5c5c5c;
 	padding-left: 1em;
