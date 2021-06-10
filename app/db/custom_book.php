@@ -56,6 +56,17 @@ class CustomBookSentence extends Table
 		parent::__construct(_FILE_DB_USER_CUSTOM_BOOK_, "custom_book_sentence", "", "",$redis);
     }
 
+	public function getAll($book,$para,$start,$end){
+		$query="SELECT text,length,lang,modify_time,create_time,owner FROM custom_book_sentence WHERE book = ? AND paragraph = ? AND begin=? AND end = ?";
+		$result = $this->fetch($query,array($book,$para,$start,$end));
+		if($result){
+			return $result;
+		}
+		else{
+			return array("text"=>"","length"=>"","lang"=>"","modify_time"=>0,"create_time"=>0,"owner"=>"");
+		}
+	}
+
 	public function insert($book,$content,$lang)
 	{
 		$respond['status']=0;
