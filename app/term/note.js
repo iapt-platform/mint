@@ -363,6 +363,9 @@ function find_channal(id) {
 	}
 	return false;
 }
+
+//生成版本列表
+//选择列表中的版本切换页面
 function render_channal_list(channalinfo) {
 	let output = "";
 	let checked = "";

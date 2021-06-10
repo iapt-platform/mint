@@ -124,25 +124,11 @@ function render_article_list(article_list, collection_id) {
 		if (element.article == _articel_id) {
 			if (index > 0) {
 				const prev = article_list[index - 1];
-				prevArticle =
-					"<a href='../article/index.php?id=" +
-					prev.article +
-					display +
-					urlCollection +
-					"'>" +
-					prev.title +
-					"</a>";
+				prevArticle = "<a onclick=\"gotoArticle('" + prev.article + "')\">" + prev.title + "</a>";
 			}
 			if (index < article_list.length - 1) {
 				const next = article_list[index + 1];
-				nextArticle =
-					"<a href='../article/index.php?id=" +
-					next.article +
-					display +
-					urlCollection +
-					"'>" +
-					next.title +
-					"</a>";
+				nextArticle = "<a onclick=\"gotoArticle('" + next.article + "')\">" + next.title + "</a>";
 			}
 			$("#contents_nav_left").html(prevArticle);
 			$("#contents_nav_right").html(nextArticle);
@@ -151,11 +137,9 @@ function render_article_list(article_list, collection_id) {
 			"<li class='level_" +
 			element.level +
 			"'>" +
-			"<a href='../article/index.php?id=" +
+			"<a onclick=\"gotoArticle('" +
 			element.article +
-			display +
-			urlCollection +
-			"'>" +
+			"')\">" +
 			element.title +
 			"</a></li>";
 	}
@@ -195,6 +179,26 @@ function setMode(mode = "read") {
 	}
 	if (mode != "") {
 		url += "&mode=" + mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
+//跳转到另外一个文章
+function gotoArticle(articleId) {
+	let url = "../article/index.php?id=" + articleId;
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
 	}
 	location.assign(url);
 }
