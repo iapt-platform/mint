@@ -595,7 +595,7 @@ function note_json_html(in_json) {
 		"' end='" +
 		in_json.end +
 		"' >" +
-		in_json.palitext +
+		marked(in_json.palitext) +
 		"</pali>";
 
 	output += "<div class='note_body'>";
