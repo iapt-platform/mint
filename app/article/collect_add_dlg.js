@@ -12,9 +12,8 @@ function collect_add_dlg_init(div) {
 	html += "<div style='display:flex;justify-content: space-between;padding-top: 1em;'>";
 	html += "<div>";
 	html += "<select id='collect_add_dlg_status'>";
-	html += "<option value='1'>" + gLocal.gui.private + "</option>";
-	html += "<option value='2'>" + gLocal.gui.unlisted + "</option>";
-	html += "<option value='3'>" + gLocal.gui.public + "</option>";
+	html += "<option value='10'>" + gLocal.gui.private + "</option>";
+	html += "<option value='30'>" + gLocal.gui.public + "</option>";
 	html += "</select>";
 
 	html += "</div>";
