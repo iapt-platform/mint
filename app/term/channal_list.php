@@ -6,6 +6,12 @@ require_once "../path.php";
 require_once '../channal/function.php';
 require_once '../ucenter/function.php';
 require_once '../share/function.php';
+require_once '../db/custom_book.php';
+require_once '../redis/function.php';
+
+$redis = redis_connect();
+
+$custom_book = new CustomBookSentence($redis);
 
 $log = "";
 $timeStart = microtime(true);
@@ -95,16 +101,25 @@ foreach ($_data as $key => $value) {
     try {
         # 查询句子长度
         $pali_letter["id"] = $arrInfo[0];
-        $query = "SELECT length FROM pali_sent WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  ";
-        $stmt = $db_pali_sent->prepare($query);
-        $stmt->execute(array($bookId, $para, $begin, $end));
-        $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($Fetch) {
-            $pali_letter["len"] = $Fetch["length"];
-            $article_len += $Fetch["length"];
-        } else {
-            $pali_letter["len"] = 0;
-        }
+
+		if($bookId<1000){
+			$query = "SELECT length FROM pali_sent WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  ";
+			$stmt = $db_pali_sent->prepare($query);
+			$stmt->execute(array($bookId, $para, $begin, $end));
+			$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+			if ($Fetch) {
+				$pali_letter["len"] = $Fetch["length"];
+				$article_len += $Fetch["length"];
+			} else {
+				$pali_letter["len"] = 0;
+			}			
+		}
+		else{
+			$sentInfo = $custom_book->getAll($bookId, $para, $begin, $end);
+			$pali_letter["len"] = $sentInfo["length"];
+			$article_len += $sentInfo["length"];
+		}
+
 
         #公开 或 channel有权限的
         $query = "SELECT channal FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} ) group by channal  limit 0 ,20 ";
