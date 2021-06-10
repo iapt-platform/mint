@@ -217,7 +217,7 @@ function render_read_mode_sent(iterator) {
 		"' end='" +
 		iterator.end +
 		"' >" +
-		iterator.palitext +
+		marked(iterator.palitext) +
 		"</pali>";
 
 	if (
@@ -971,9 +971,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.channalinfo.name;
 	}
 	html += "</span>";
-	html += '<span class="name editor_name" '
+	html += '<span class="name editor_name" ';
 	if (typeof iterator.channalinfo == "undefined") {
-		html += '>';
+		html += ">";
 		html += "unkown";
 	} else {
 		html += 'title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';

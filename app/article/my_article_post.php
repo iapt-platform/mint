@@ -6,6 +6,7 @@ require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 require_once "../article/function.php";
 require_once "../redis/function.php";
+require_once "../db/custom_book.php";
 
 add_edit_event(_ARTICLE_EDIT_,$_POST["id"]);
 
@@ -24,97 +25,35 @@ if($power<20){
 
 $_content = $_POST["content"];
 
-/*
+
 if($_POST["import"]=='on'){
-    $sent = explode("\n",$_POST["content"]);
-    if($sent && count($sent)>0){
-        $setting =  new Hostsetting();
-        $max_book = $setting->get("max_book_number");
-        if($max_book){
-            $currBook = $max_book+1;
-            $setbooknum = $setting->set("max_book_number",$currBook);
-            if($setbooknum==false){
-                $respond["status"]=1;
-                $respond["message"]="设置书号错误";
-                echo json_encode($respond, JSON_UNESCAPED_UNICODE);
-                exit;
-            }
-        }
-        else{
-            $respond["status"]=1;
-            $respond["message"]="获取书号错误";
-            echo json_encode($respond, JSON_UNESCAPED_UNICODE);
-            exit;
-        }
-        PDO_Connect(""._FILE_DB_SENTENCE_);
+	#导入自定义书
+	$custom_book = new CustomBook($redis);
+	$_lang = explode("_",$_POST["lang"]);
+	if(count($_lang)===3){
+		$lang = $_lang[2];
+	}
+	else if(count($_lang)===1){
+		$lang = $_lang[0];
+	}
+	else{
+		$respond["status"]=1;
+		$respond["message"]="无法识别的语言".$_POST["lang"];
+		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+		exit;
+	}
 
-        # 开始一个事务，关闭自动提交 
-        $PDO->beginTransaction();
-        $query="INSERT INTO sentence ('id','block_id','channal','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','strlen','create_time','modify_time','receive_time') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)";
-        
-        $sth = $PDO->prepare($query);
-        
-        $para = 1;
-        $sentNum = 0;
-        $newText =  "";
-        foreach ($sent as $data) {
-            $data = trim($data);
-            if($data==""){
-                $para++;
-                $sentNum = 0;
-                $newText .="\n";
-                continue;
-            }
-            else{
-                $sentNum=$sentNum+10;
-            }
-            if(mb_substr($data,0,2,"UTF-8")=="{{"){
-                $newText .=$data."\n";
-            }
-            else{
-                $newText .='{{'."{$currBook}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
-                $sth->execute(
-                        array(UUID::v4(),
-                                    "",
-                                    $_POST["channal"],
-                                    $currBook,
-                                    $para,
-                                    $sentNum,
-                                    $sentNum,
-                                    "",
-                                    "[]",
-                                    $_COOKIE["userid"],
-                                    $data,
-                                    $_POST["lang"],
-                                    1,
-                                    1,
-                                    mb_strlen($data,"UTF-8"),
-                                    mTime(),
-                                    mTime(),
-                                    mTime()
-                                ));                
-            }
-
-        }
-        $PDO->commit();
-        
-        if (!$sth || ($sth && $sth->errorCode() != 0)) {
-            #  识别错误且回滚更改  
-            $PDO->rollBack();
-            $error = PDO_ErrorInfo();
-            $respond['status']=1;
-            $respond['message']=$error[2];
-            echo json_encode($respond, JSON_UNESCAPED_UNICODE);
-            exit;
-        }
-        else{
-            $respond['status']=0;
-            $respond['message']="成功";
-            $_content = $newText;
-        }		        
-    }
+	$respond = $custom_book->new($_POST["title"],$_content,$lang);
+	if($respond["status"]==0){
+		$_content = $respond["content"];
+	}
+	else{
+		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+		exit;
+	}
 }
-*/
+
+
 PDO_Connect(_FILE_DB_USER_ARTICLE_);
 
 $query="UPDATE article SET title = ? , subtitle = ? , summary = ?, content = ?  , tag = ? , setting = ? , status = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
