@@ -98,7 +98,7 @@ require_once '../studio/index_head.php';
 					<span class="icon_btn_tip"><?php echo "自定义书" ;?></span>
 					<button id="edit_custom_book" type="button" class="icon_btn"  onclick="my_article_custom_book()">
 						<svg class="icon">
-							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>
+							<use xlink:href="../studio/svg/icon.svg#convert"></use>
 						</svg>
 					</button>
 				</span>
