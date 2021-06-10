@@ -72,7 +72,7 @@ require_once '../studio/index_head.php';
 
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->back ;?></span>
-					<button id="icon_btn" type="button" class="icon_btn"  onclick="my_article_save()">
+					<button id="icon_btn" type="button" class="icon_btn" >
 						<a href="../article/my_article_index.php" >
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#return"></use>
@@ -92,7 +92,17 @@ require_once '../studio/index_head.php';
 
 				
 			</div>
+			
 			<div style="display:flex;">
+				<span class="icon_btn_div">
+					<span class="icon_btn_tip"><?php echo "自定义书" ;?></span>
+					<button id="edit_custom_book" type="button" class="icon_btn"  onclick="my_article_custom_book()">
+						<svg class="icon">
+							<use xlink:href="../studio/svg/icon.svg#ic_save"></use>
+						</svg>
+					</button>
+				</span>
+
 				<div id="article_collect" vui='collect-dlg' ></div>
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->scan_in_reader ;?></span>

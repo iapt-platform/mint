@@ -40,6 +40,24 @@ class Table
 			return false;
 		}
 	}
+
+	function execute($query, $params=null){
+		if (isset($params)) {
+			$stmt = $this->dbh->prepare($query);
+			if($stmt){
+				$stmt->execute($params);
+				return $stmt;				
+			}
+			else{
+				return false;
+			}
+
+		} else {
+			return $this->dbh->query($query);
+		}
+	}
+
+
 	public function syncList($time){
 
 	}
