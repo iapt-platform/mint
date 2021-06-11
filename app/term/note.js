@@ -363,6 +363,9 @@ function find_channal(id) {
 	}
 	return false;
 }
+
+//生成版本列表
+//选择列表中的版本切换页面
 function render_channal_list(channalinfo) {
 	let output = "";
 	let checked = "";
@@ -595,7 +598,7 @@ function note_json_html(in_json) {
 		"' end='" +
 		in_json.end +
 		"' >" +
-		in_json.palitext +
+		marked(in_json.palitext) +
 		"</pali>";
 
 	output += "<div class='note_body'>";
