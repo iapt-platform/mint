@@ -217,7 +217,7 @@ function render_read_mode_sent(iterator) {
 		"' end='" +
 		iterator.end +
 		"' >" +
-		marked(iterator.palitext) +
+		iterator.palitext +
 		"</pali>";
 
 	if (
@@ -598,7 +598,7 @@ function note_json_html(in_json) {
 		"' end='" +
 		in_json.end +
 		"' >" +
-		marked(in_json.palitext) +
+		in_json.palitext +
 		"</pali>";
 
 	output += "<div class='note_body'>";
