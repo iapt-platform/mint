@@ -842,6 +842,8 @@ w:hover {
 }
 .horizontal .sent_tran_div {
 	flex: 5;
+	display: flex;
+	flex-direction: column;
 }
 
 /*段落模式*/
