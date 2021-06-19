@@ -1,6 +1,7 @@
 # Usage
 
 ```bash
+cd dashboard
 # install dependencies
 yarn install
 # start the dev server
