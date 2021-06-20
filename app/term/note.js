@@ -363,6 +363,9 @@ function find_channal(id) {
 	}
 	return false;
 }
+
+//生成版本列表
+//选择列表中的版本切换页面
 function render_channal_list(channalinfo) {
 	let output = "";
 	let checked = "";
@@ -971,9 +974,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.channalinfo.name;
 	}
 	html += "</span>";
-	html += '<span class="name editor_name" '
+	html += '<span class="name editor_name" ';
 	if (typeof iterator.channalinfo == "undefined") {
-		html += '>';
+		html += ">";
 		html += "unkown";
 	} else {
 		html += 'title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
@@ -1599,47 +1602,25 @@ function note_sent_save_a(obj) {
 	let channal = $(obj).attr("channel");
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
-	/*
-	var jqxhr = $.post("example.php", function() {
-	  alert("success");
+
+	$.ajaxSetup({
+		timeout: 5000,
+	});
+
+	$.post("../usent/sent_post.php", {
+		id: id,
+		book: book,
+		para: para,
+		begin: begin,
+		end: end,
+		channal: channal,
+		text: text,
+		lang: "zh",
 	})
-	.success(function() { alert("second success"); })
-	.error(function() { alert("error"); })
-	.complete(function() { alert("complete"); });*/
-	/*
-	function (data, status) {
-			alert("异常！" + data.responseText);
-			switch (status) {
-				case "timeout":
-					break;
-				case "error":
-					break;
-				case "notmodified":
-					break;
-				case "parsererror":
-					break;
-				default:
-					break;
-			}
-	*/
-	var jqxhr = $.post(
-		"../usent/sent_post.php",
-		{
-			id: id,
-			book: book,
-			para: para,
-			begin: begin,
-			end: end,
-			channal: channal,
-			text: text,
-			lang: "zh",
-		},
-		sent_save_callback
-	)
-		.success(function () {
-			//alert("second success");
+		.done(function (data) {
+			sent_save_callback(data);
 		})
-		.error(function (xhr, error, data) {
+		.fail(function (xhr, error, data) {
 			let sid = book + "-" + para + "-" + begin + "-" + end;
 
 			let sent_tran_div = $(".sent_tran[channel='" + channal + "'][sid='" + sid + "']");
@@ -1660,26 +1641,22 @@ function note_sent_save_a(obj) {
 				default:
 					break;
 			}
-		})
-		.complete(function (xhr, data) {
-			//请求完成后回调函数 (请求成功或失败之后均调用)。
-			switch (data) {
-				case "error":
-					break;
-				case "success":
-					break;
-				default:
-					break;
-			}
 		});
 
 	if (sent_tran_div) {
 		$(sent_tran_div).addClass("loading");
+		$(sent_tran_div).removeClass("error");
 	}
 }
 function update_sent_tran(sentData) {}
 function sent_save_callback(data) {
-	let result = JSON.parse(data);
+	let result;
+	try {
+		result = JSON.parse(data);
+	} catch (e) {
+		alert(e.message);
+		return;
+	}
 	if (result.status > 0) {
 		alert("error" + result.message);
 	} else {
@@ -2036,4 +2013,9 @@ function setDisplay(obj) {
 		$("#contents").addClass("sent_mode");
 		_display = "sent";
 	}
+}
+
+//获取文章中H 并渲染为目录
+function render_heading_toc() {
+	//$(":header")
 }

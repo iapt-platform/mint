@@ -83,7 +83,7 @@ if ($dict_name == "") {
 } else {
     $dict_list = str_getcsv($dict_name, ',');
     foreach ($dict_list as $dict) {
-        $db_file_list[] = array( $dict,"");
+        $db_file_list[] = array( $dict,"",false);
     }
 }
 

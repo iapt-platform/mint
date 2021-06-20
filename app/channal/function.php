@@ -47,7 +47,7 @@ class Channal extends Table
 
 	}
 	public function getPower($id){
-		#查询用户对此channel是否有权限		
+		#查询用户对此channel是否有权限
 		if(isset($_COOKIE["userid"])){
 			$userId = $_COOKIE["userid"];
 		}

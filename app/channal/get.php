@@ -27,7 +27,7 @@ foreach ($my_group as $key => $value) {
 $channelList = array();
 
 //找自己的
-PDO_Connect(""._FILE_DB_CHANNAL_);
+PDO_Connect(_FILE_DB_CHANNAL_);
 $query = "SELECT id,owner,name,status,lang FROM channal WHERE owner = ?  LIMIT 0,100";
 $Fetch_my = PDO_FetchAll($query,array($_COOKIE["userid"]));
 
@@ -38,7 +38,6 @@ foreach ($Fetch_my as $key => $value) {
 
 # 找协作的
 $coop_channal =  share_res_list_get($_COOKIE["userid"],2);
-$Fetch_coop = array();
 foreach ($coop_channal as $key => $value) {
 	# return res_id,res_type,power res_title  res_owner_id
 	if(isset($channelList[$value["res_id"]])){

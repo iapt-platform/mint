@@ -23,6 +23,41 @@ class Table
 	public function setField($setting){
 		$this->field_setting = $setting;
 	}
+	protected function fetch($query,$params){
+		if (isset($params)) {
+			$stmt = $this->dbh->prepare($query);
+			if($stmt){
+				$stmt->execute($params);
+			}
+			
+		} else {
+			$stmt = $PDO->query($query);
+		}
+		if($stmt){
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		}
+		else{
+			return false;
+		}
+	}
+
+	function execute($query, $params=null){
+		if (isset($params)) {
+			$stmt = $this->dbh->prepare($query);
+			if($stmt){
+				$stmt->execute($params);
+				return $stmt;				
+			}
+			else{
+				return false;
+			}
+
+		} else {
+			return $this->dbh->query($query);
+		}
+	}
+
+
 	public function syncList($time){
 
 	}

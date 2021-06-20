@@ -62,7 +62,7 @@ if (isset($_GET["language"])) {
 
 	<title id="page_title">wikipāḷi</title>
 
-	<script src="../public/js/jquery.js"></script>
+	<script src="../../node_modules/jquery/dist/jquery.js"></script>
 	<script src="../public/js/comm.js"></script>
 	<script src="../studio/js/fixedsticky.js"></script>
 	<script src="../guide/guide.js"></script>

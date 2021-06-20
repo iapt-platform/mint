@@ -2256,6 +2256,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 			currMeaning = getLocalFormulaStr(currGramma, cutString(currMeaning, sReal.length * 6));
 		}
 
+		currMeaning = currMeaning.replace(/ /g, "&nbsp;");
 		renderMeaning = currMeaning.replace(/{/g, "<span class='grm_add_mean'>");
 		renderMeaning = renderMeaning.replace(/}/g, "</span>");
 		renderMeaning = renderMeaning.replace(/\[/g, "<span class='grm_add_mean_user'>");

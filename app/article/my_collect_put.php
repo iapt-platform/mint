@@ -26,7 +26,7 @@ PDO_Connect(""._FILE_DB_USER_ARTICLE_);
 $query="INSERT INTO collect ( id,  title  , subtitle  , summary , article_list   , owner, lang  , status  , create_time , modify_time , receive_time   )  VALUES  ( ? , ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? ) ";
 $sth = $PDO->prepare($query);
 $uuid = UUID::v4();
-$sth->execute(array($uuid , $_POST["title"] , "" ,"", "[]" ,  $_COOKIE["userid"] , "" , 1 , mTime() ,  mTime() , mTime() ));
+$sth->execute(array($uuid , $_POST["title"] , "" ,"", "[]" ,  $_COOKIE["userid"] , "" , $_POST["status"] , mTime() ,  mTime() , mTime() ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
