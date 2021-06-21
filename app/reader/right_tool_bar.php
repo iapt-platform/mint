@@ -57,14 +57,14 @@
 }
 	</style>
 			<select name="direction" onchange='setDirection(this)' >
-			<option value="row">横向</option>
-			<option value="column">纵向</option>
+			<option value="row"><?php echo $_local->gui->row_compare; ?></option>
+			<option value="column"><?php echo $_local->gui->column_compare; ?></option>
 		</select>
 <?php
 		if($_mode == "read"){
 			echo "<select onchange='setDisplay(this)'>";
-			echo "<option value='para'>逐段</option>";
-			echo "<option value='sent'>逐句</option>";
+			echo "<option value='para'>{$_local->gui->each_paragraph}</option>";
+			echo "<option value='sent'>{$_local->gui->each_sentence}</option>";
 			echo "</select>";
 		}
 		if($_mode == "read"){

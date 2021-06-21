@@ -42,10 +42,23 @@ function my_channal_list() {
 					let html = "";
 					let result = JSON.parse(data);
 					let key = 1;
+					//表头
+					html += '<div class="file_list_row" style="padding:5px;">';
+					html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
+					html += "<div style='flex:0.5;'>No.</div>";
+					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:2;'>" + gLocal.gui.owner + "</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.privacy + "</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.permission + "</a></div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.collaborate + "</div>";
+					html += "</div>";
+					//列表
+					
 					for (const iterator of result) {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-						html += "<div style='flex:1;'>" + key++ + "</div>";
+						html += "<div style='flex:0.5;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>";
 						html += "<guide url='../channal/card.php' gid='" + iterator.id + "'>";
 						html += iterator.name;
@@ -61,11 +74,11 @@ function my_channal_list() {
 						}
 
 						html += "</div>";
-						html += "<div style='flex:2;'>";
+						html += "<div style='flex:1;'>";
 						let arrStatus = [
 							{ id: 0, string: gLocal.gui.disable },
-							{ id: 10, string: gLocal.gui.private },
-							{ id: 30, string: gLocal.gui.public },
+							{ id: 10, string: "🔐"+gLocal.gui.private },
+							{ id: 30, string: "🌐"+gLocal.gui.public },
 						];
 						for (const status of arrStatus) {
 							if (parseInt(iterator.status) == status.id) {
@@ -82,6 +95,8 @@ function my_channal_list() {
 								html += "</div>";
 								html += "<div style='flex:1;'>";
 								html += "</div>";
+								html += "<div style='flex:1;'>";
+								html += "</div>";
 								break;
 							case 20:
 								html += "<div style='flex:1;'>";
@@ -91,9 +106,9 @@ function my_channal_list() {
 								html +=
 									"<a href='../channal/my_channal_edit.php?id=" +
 									iterator.id +
-									"'>" +
+									"'>✏️" +
 									gLocal.gui.edit +
-									"</a>";
+									"</a></div><div style='flex:1;'>";
 								html += "</div>";
 								break;
 							case 30:
@@ -104,10 +119,10 @@ function my_channal_list() {
 								html +=
 									"<a href='../channal/my_channal_edit.php?id=" +
 									iterator.id +
-									"'>" +
+									"'>✏️" +
 									gLocal.gui.edit +
-									"</a>";
-								html += " <a onclick=\"channel_share('" + iterator.id + "')\">Share</a>";
+									"</a></div><div style='flex:1;'>";
+								html += " <a onclick=\"channel_share('" + iterator.id + "')\">🔑"+gLocal.gui.share_to+"</a>";
 								html += "</div>";
 
 								break;
