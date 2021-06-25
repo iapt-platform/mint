@@ -13,7 +13,7 @@ $input = (object) [
     "sync_id" =>  ["book","paragraph","begin","end","channal"],
     "modify_time" =>  "modify_time",
     "receive_time" =>  "receive_time",
-	"where"=>"and (not (channal is null))",
+	"where"=>"and ( channal IS NOT NULL )",
     "insert" => [
         'id',
 		'block_id',
@@ -108,7 +108,7 @@ switch ($op) {
 			$result = $Sent->update($arrData);
 			if($result==false){
 				$output["error"]=1;
-				$output["message"]="修改失败";				
+				$output["message"]="修改失败";
 			}
 			else{
 				$output["error"]=0;
