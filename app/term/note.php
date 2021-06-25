@@ -7,6 +7,7 @@ require_once "../ucenter/function.php";
 require_once "../usent/function.php";
 require_once "../pali_text/function.php";
 require_once "../redis/function.php";
+require_once "../db/custom_book.php";
 
 $redis = redis_connect();
 
@@ -88,6 +89,7 @@ if (count($channal_list) > 0) {
 }
 
 # 查询有阅读权限的channel 结束
+$custom_book = new CustomBookSentence($redis);
 
 foreach ($_data as $key => $value) {
     # code...
@@ -112,10 +114,17 @@ foreach ($_data as $key => $value) {
     }
 	$pali_sim = 0;
     if ($redis != false) {
-        $result = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"pali");
-		$palitext = $result;
-		$pali_text_id = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"id");
-		$pali_sim = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"sim_count");
+		if($bookId<1000){
+			$result = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"pali");
+			$palitext = $result;
+			$pali_text_id = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"id");
+			$pali_sim = $redis->hGet('pali://sent/' . $bookId . "_" . $para . "_" . $begin . "_" . $end,"sim_count");
+		}
+		else{
+			$palitext = $custom_book->getText($bookId,$para,$begin,$end);
+			$pali_text_id = 0;
+		}
+
     } else {
         $query = "SELECT id,html FROM 'pali_sent' WHERE book = ? AND paragraph = ? AND begin = ? AND end = ? ";
         $sth = $db_pali_sent->prepare($query);

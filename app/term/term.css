@@ -194,6 +194,12 @@ blockquote {
 	padding-left: 5px;
 }
 
+.read blockquote {
+	font-size: 80%;
+	color: var(--main-color1);
+	background-color: #7d7d7d1f;
+}
+
 note > .tran {
 	color: #5c5c5c;
 	padding-left: 1em;
@@ -294,12 +300,21 @@ note > .tran .tran_text_tool_bar::after,
 
 note > .palitext,
 .palitext {
-	font-family: Noto serif;
 	line-height: 1.5em;
 	color: #9f3a01;
-	font-weight: 500;
 	margin: 4px;
 }
+h1 .palitext {
+	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	font-weight: 700;
+	font-size: 130%;
+}
+h2 .palitext {
+	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	font-weight: 700;
+	font-size: 120%;
+}
+
 note n {
 	display: inline;
 	color: blue;
@@ -606,7 +621,7 @@ pw {
 }
 .sent_tran .left_bar > .face {
 	display: block;
-	margin: auto 0.5em auto auto;
+	margin: 0 0.5em auto auto;
 }
 .compact .left_bar > .face {
 	display: none;
@@ -642,6 +657,15 @@ pw {
 	white-space: nowrap;
 	margin-right: 0.5em;
 }
+.head_bar > .info > .editor_name {
+	display: none;
+}
+.pr .head_bar > .info > .editor_name {
+	display: inline-block;
+}
+.pr .head_bar > .info > .channel_name {
+	display: none;
+}
 .head_bar > .info > .date {
 	font-size: 0.8em;
 	color: gray;
@@ -670,7 +694,12 @@ pw {
 .sent_tran_inner:hover .tool_bar > .right {
 	display: block;
 }
-
+.list_with_head:hover .tool_bar > .right {
+	display: block;
+}
+.list_with_head {
+	position: relative;
+}
 .body > .edit {
 	display: none;
 }
@@ -813,6 +842,8 @@ w:hover {
 }
 .horizontal .sent_tran_div {
 	flex: 5;
+	display: flex;
+	flex-direction: column;
 }
 
 /*段落模式*/
@@ -866,5 +897,76 @@ span.keybutton {
 	word-break: break-word;
 }
 span.tran_sent {
+	line-height: 1.7em;
+}
+.tran_sent ul,
+.tran_sent li {
+	list-style-type: unset;
+	margin-left: 1em;
+}
+.icon_sent_status {
+	display: none;
+	width: 22px;
+	height: 22px;
+	background-repeat: no-repeat;
+	background-size: contain;
+	margin: 0 6px;
+}
+.icon_sent_status .icon {
+	width: 22px;
+	height: 22px;
+}
+.icon_sent_loading {
+	background: url(loading.gif);
+	background-size: contain;
+}
+.loading .icon_sent_loading {
 	display: block;
+}
+.loading .face {
+	display: none;
+}
+.error .left_bar > .face {
+	display: none;
+}
+.icon_sent_error {
+	display: none;
+	fill: red;
+	cursor: pointer;
+	background: url(error.svg);
+	background-size: contain;
+}
+.error .icon_sent_error {
+	display: block;
+}
+.icon_spin {
+	-webkit-animation: spin 1.5s linear infinite;
+	animation: spin 1.5s linear infinite;
+}
+
+.read .bg_color_1 {
+	background-color: unset;
+}
+.read .bg_color_2 {
+	background: unset;
+}
+.read .bg_color_3 {
+	background: unset;
+}
+.read .bg_color_4 {
+	background: unset;
+}
+.read .bg_color_5 {
+	background: unset;
+}
+.palitext n {
+	color: dodgerblue;
+}
+/*字符串比对*/
+del {
+	color: red;
+}
+ins {
+	background-color: greenyellow;
+	text-decoration: unset;
 }

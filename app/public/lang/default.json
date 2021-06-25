@@ -45,7 +45,7 @@
 		"click_word_to": "click word to ",
 		"code_convert": "Code Convertor",
 		"color": "Color",
-		"column_compare": "column",
+		"column_compare": "Up&nbsp;&&nbsp;Down",
 		"commentary": "Commentary",
 		"completely_delete": "completely delete",
 		"computer": "Computer",
@@ -131,7 +131,7 @@
 		"heading_lv6": "Heading Lv6",
 		"heading_lv7": "Heading Lv7",
 		"heading_lv8": "Heading Lv8",
-		"hidden": "hidden",
+		"hidden": "hide",
 		"home": "Home",
 		"hori_ref_time": "horizontal refraction correct ",
 		"html_text_data": "HTML Text Data",
@@ -261,7 +261,7 @@
 		"revision_mode": "Revision Mode",
 		"round_1": "Round ",
 		"round_2": "&nbsp;dictionary",
-		"row_compare": "row",
+		"row_compare": "Left&nbsp;&&nbsp;Right",
 		"same_word": "same words",
 		"saṃvacchara": "saṃvacchara",
 		"sandhi": "Sandhi",
@@ -593,7 +593,7 @@
 		"person": "Person",
 		"write": "Write",
 		"sub_group": "Project",
-		"your": "Your",
+		"your": "Yours",
 		"status": "status",
 		"in_recycle_bin": "in&nbsp;recycle-bin",
 		"cover": "cover",
@@ -629,6 +629,8 @@
 		"suggest": "suggest",
 		"next_line": "new line",
 		"link": "sambandha",
+		"co_channel": "collaborative channels",
+		"permission": "permission",
 		"": ""
 	},
 	"grammastr": [
@@ -2023,7 +2025,6 @@
 		"zh_cn": "Simple cīna",
 		"zh_tw": "Traditional cīna"
 	},
-
 	"LogType": {
 		"10": "edit channel",
 		"11": "new channel",

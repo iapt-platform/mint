@@ -124,7 +124,7 @@ class USentResult {
 								"_" +
 								oneSent.channal
 						).html(
-							"<svg class='icon icon_spin' style='fill: var(--detail-color); '><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#loading'>"
+							"<svg class='icon icon_spin' style='fill: var(--detail-color); '><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#loading'></use></svg>"
 						);
 					}
 					$.post(
@@ -151,7 +151,7 @@ class USentResult {
 											iterator.channal
 									).html(
 										now_time.toLocaleTimeString() +
-											"<svg class='icon' style='fill: var(--detail-color);'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_done'>"
+											"<svg class='icon' style='fill: var(--detail-color);'><use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_done'></use></svg>"
 									);
 								}
 							}

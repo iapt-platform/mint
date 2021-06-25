@@ -1,4 +1,5 @@
 var _reader_view = "sent";
+var _reader_sent_id = -1;
 var _reader_book = -1;
 var _reader_para = -1;
 var _reader_begin = -1;
@@ -7,6 +8,7 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 var _display = "para";
+var _direction = "row";
 var arrMyTerm = new Array();
 var _sent_data = new Array();
 var link_str = "";
@@ -14,119 +16,121 @@ var link_str = "";
 palicanon_load_term();
 
 function reader_load() {
-	$.get(
-		"../reader/get_para.php",
-		{
+	let param;
+	if (_reader_view == "sim") {
+		param = { view: "sim", id: _reader_sent_id };
+	} else {
+		param = {
 			view: _reader_view,
 			book: _reader_book,
 			para: _reader_para,
 			begin: _reader_begin,
 			end: _reader_end,
-		},
-		function (data) {
-			_sent_data = JSON.parse(data);
-			let tpl = "";
-			let currPara = 0;
-			$("#contents").html("");
-			if (_sent_data.sentences.length > 0) {
-				let firstPara = _sent_data.sentences[0].paragraph;
-				for (const iterator of _sent_data.sentences) {
-					if (currPara != iterator.paragraph) {
-						currPara = parseInt(iterator.paragraph);
-						if (currPara == parseInt(_reader_para) + 1 && parseInt(_reader_para) != firstPara) {
-							tpl += "</div>\n\n";
-						}
-						tpl += "\n\n";
-						tpl += "```para\n";
-						tpl += currPara + "\n";
-						tpl += "```\n\n";
-						if (currPara == _reader_para && parseInt(_reader_para) != firstPara) {
-							tpl += "<div id='para_focus' class='focus'>\n\n";
-						}
+		};
+	}
+	$.get("../reader/get_para.php", param, function (data) {
+		_sent_data = JSON.parse(data);
+		let tpl = "";
+		let currPara = 0;
+		$("#contents").html("");
+		if (_sent_data.sentences.length > 0) {
+			let firstPara = _sent_data.sentences[0].paragraph;
+			for (const iterator of _sent_data.sentences) {
+				if (currPara != iterator.paragraph && _reader_view != "sim") {
+					currPara = parseInt(iterator.paragraph);
+					if (currPara == parseInt(_reader_para) + 1 && parseInt(_reader_para) != firstPara) {
+						tpl += "</div>\n\n";
 					}
-					tpl +=
-						"{{" +
-						iterator.book +
-						"-" +
-						iterator.paragraph +
-						"-" +
-						iterator.begin +
-						"-" +
-						iterator.end +
-						"}}\n";
+					tpl += "\n\n";
+					tpl += "```para\n";
+					tpl += currPara + "\n";
+					tpl += "```\n\n";
+					if (currPara == _reader_para && parseInt(_reader_para) != firstPara) {
+						tpl += "<div id='para_focus' class='focus'>\n\n";
+					}
 				}
-				link_str = tpl;
-				$("#contents").html(note_init(tpl));
-				note_refresh_new(function () {
-					document.querySelector("#para_focus").scrollIntoView({
-						block: "end",
-						behavior: "smooth",
-					});
-					//document.querySelector("#para_focus").scrollTo(0, 200);
+				tpl +=
+					"{{" +
+					iterator.book +
+					"-" +
+					iterator.paragraph +
+					"-" +
+					iterator.begin +
+					"-" +
+					iterator.end +
+					"}}\n";
+			}
+			link_str = tpl;
+			$("#contents").html(note_init(tpl));
+			note_refresh_new(function () {
+				document.querySelector("#para_focus").scrollIntoView({
+					block: "end",
+					behavior: "smooth",
 				});
-				reader_draw_para_menu();
+				//document.querySelector("#para_focus").scrollTo(0, 200);
+			});
+			reader_draw_para_menu();
 
-				//右侧目录
-				let tocHtml = "";
-				let tocNextMenu = "";
-				if (_sent_data.toc.length > 0) {
-					let firstLevel = _sent_data.toc[0].level;
-					for (let index = 1; index < _sent_data.toc.length; index++) {
-						const element = _sent_data.toc[index];
-						tocHtml +=
-							"<div class='reader_right_toc level_" +
+			//右侧目录
+			let tocHtml = "";
+			let tocNextMenu = "";
+			if (_sent_data.toc.length > 0) {
+				let firstLevel = _sent_data.toc[0].level;
+				for (let index = 1; index < _sent_data.toc.length; index++) {
+					const element = _sent_data.toc[index];
+					tocHtml +=
+						"<div class='reader_right_toc level_" +
+						(element.level - firstLevel) +
+						"'><a href='#para_" +
+						element.paragraph +
+						"'>" +
+						element.toc +
+						"</a></div>";
+					tocNextMenu +=
+						"<a href='../reader/?view=chapter&book=" +
+						_reader_book +
+						"&para=" +
+						element.paragraph +
+						"'>" +
+						element.toc +
+						"</a>";
+				}
+				$("#toc_content").html(tocHtml);
+				if (tocNextMenu === "") {
+					$("#para_path_next_level").hide();
+				} else {
+					$("#toc_next_menu").html(tocNextMenu);
+					$("#para_path_next_level").show();
+				}
+			}
+		}
+
+		if (_sent_data.head == 1 || _sent_data.sentences.length == 0) {
+			//渲染目录
+			tpl = "<h2>Table of Content</h2>";
+			if (_sent_data.toc.length > 0) {
+				let firstLevel = _sent_data.toc[0].level;
+				for (let index = 1; index < _sent_data.toc.length; index++) {
+					const element = _sent_data.toc[index];
+					if (element.level < 8) {
+						tpl +=
+							"<div class='reader_main_toc level_" +
 							(element.level - firstLevel) +
-							"'><a href='#para_" +
-							element.paragraph +
-							"'>" +
-							element.toc +
-							"</a></div>";
-						tocNextMenu +=
-							"<a href='../reader/?view=chapter&book=" +
+							"'><a href='../reader/?view=chapter&book=" +
 							_reader_book +
 							"&para=" +
 							element.paragraph +
+							"&display=" +
+							_display +
 							"'>" +
 							element.toc +
-							"</a>";
-					}
-					$("#toc_content").html(tocHtml);
-					if (tocNextMenu === "") {
-						$("#para_path_next_level").hide();
-					} else {
-						$("#toc_next_menu").html(tocNextMenu);
-						$("#para_path_next_level").show();
+							"</a></div>";
 					}
 				}
 			}
-
-			if (_sent_data.head == 1 || _sent_data.sentences.length == 0) {
-				//渲染目录
-				tpl = "<h2>Table of Content</h2>";
-				if (_sent_data.toc.length > 0) {
-					let firstLevel = _sent_data.toc[0].level;
-					for (let index = 1; index < _sent_data.toc.length; index++) {
-						const element = _sent_data.toc[index];
-						if (element.level < 8) {
-							tpl +=
-								"<div class='reader_main_toc level_" +
-								(element.level - firstLevel) +
-								"'><a href='../reader/?view=chapter&book=" +
-								_reader_book +
-								"&para=" +
-								element.paragraph +
-								"&display=" +
-								_display +
-								"'>" +
-								element.toc +
-								"</a></div>";
-						}
-					}
-				}
-				$("#contents_toc").html(tpl);
-			}
+			$("#contents_toc").html(tpl);
 		}
-	);
+	});
 
 	reader_get_path();
 }
@@ -277,6 +281,10 @@ function edit_wbw(book, para) {
 
 function setMode(mode = "read") {
 	let url = "../reader/?view=" + _reader_view;
+
+	if (_reader_sent_id != -1) {
+		url += "&id=" + _reader_sent_id;
+	}
 	if (_reader_book != -1) {
 		url += "&book=" + _reader_book;
 	}

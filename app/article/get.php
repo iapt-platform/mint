@@ -12,7 +12,12 @@ require_once "../article/function.php";
 
 if(isset($_GET["id"])){
 	//查询权限
-	$collectionId = $_GET["collection_id"];
+	if(isset($_GET["collection_id"])){
+		$collectionId = $_GET["collection_id"];
+	}
+	else{
+		$collectionId = "";
+	}
 	$redis = redis_connect();
 	$article = new Article($redis); 
 	$power = $article->getPower($_GET["id"],$collectionId);

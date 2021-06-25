@@ -46,7 +46,7 @@ else{
 		}
 	}
     // 设置 句子库和逐词译库可见性
-    PDO_Connect(""._FILE_DB_SENTENCE_);
+    PDO_Connect(_FILE_DB_SENTENCE_);
     $query="UPDATE sentence SET language = ?  , status = ? where  channal = ?  ";
     $sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
     if (!$sth || ($sth && $sth->errorCode() != 0)) {
@@ -54,17 +54,16 @@ else{
         $respond['status']=1;
         $respond['message']=$error[2];
     }
-    else{
-        // 设置 逐词译库可见性
-        PDO_Connect(""._FILE_DB_USER_WBW_);
-        $query="UPDATE wbw_block SET lang = ?  , status = ? where  channal = ?  ";
-        $sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
-        if (!$sth || ($sth && $sth->errorCode() != 0)) {
-            $error = PDO_ErrorInfo();
-            $respond['status']=1;
-            $respond['message']=$error[2];
-        }
-    }
+
+	// 设置 逐词译库可见性
+	PDO_Connect(_FILE_DB_USER_WBW_);
+	$query="UPDATE wbw_block SET lang = ?  , status = ? where  channal = ?  ";
+	$sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
+	if (!$sth || ($sth && $sth->errorCode() != 0)) {
+		$error = PDO_ErrorInfo();
+		$respond['status']=1;
+		$respond['message']=$error[2];
+	}	
 }
 
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);

@@ -7,7 +7,7 @@ var arrWordIdTermId = new Array();
 
 //术语渲染模板
 var strTermTanslationTmp = "[%mean%](%pali% %mean2% %mymean%)";
-var strTermTanslationTmp2 = "[%mean%](%pali%)";
+var strTermTanslationTmp2 = "[%mean%]";
 
 var termCounter = new Array();
 var noteCounter = 0; //正文内注释计数器
@@ -409,6 +409,15 @@ function term_array_updata() {
 function term_updata_translation() {
 	termCounter = new Array();
 	noteCounter = 1;
+	//计算有效模版数量
+	let iValidTmp = 0;
+	if (typeof setting !== "undefined") {
+		for (const iterator of setting["term.template"]) {
+			if (iterator != "") {
+				iValidTmp++;
+			}
+		}
+	}
 	$("term").each(function () {
 		let status = $(this).attr("status");
 		let termText = $(this).text();
@@ -466,10 +475,18 @@ function term_updata_translation() {
 				if (renderTo == "wbw") {
 					noteText = "%note%";
 				} else {
-					if (termCounter[guid] == 1) {
-						noteText = strTermTanslationTmp;
+					if (typeof setting !== "undefined") {
+						let currTermCounter = termCounter[guid];
+						if (currTermCounter > iValidTmp) {
+							currTermCounter = iValidTmp;
+						}
+						noteText = setting["term.template"][currTermCounter - 1];
 					} else {
-						noteText = strTermTanslationTmp2;
+						if (termCounter[guid] == 1) {
+							noteText = strTermTanslationTmp;
+						} else {
+							noteText = strTermTanslationTmp2;
+						}
 					}
 				}
 
@@ -492,10 +509,9 @@ function term_updata_translation() {
 				noteText = noteText.replace("]", "</span>");
 				noteText = noteText.replace("%mean%", "<span class='term_mean'>" + mean + "</span>");
 				noteText = noteText.replace("%pali%", "<span class='term_pali'>" + pali + "</span>");
-				if(mean2!=""){
+				if (mean2 != "") {
 					noteText = noteText.replace("%mean2%", ", <span class='term_mean2'>" + mean2 + "</span>");
-				}
-				else{
+				} else {
 					noteText = noteText.replace("%mean2%", "");
 				}
 				noteText = noteText.replace("%note%", "<span class='term_note'>" + "" + "</span>");

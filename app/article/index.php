@@ -37,7 +37,8 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
-	if(isset($_GET["mode"]) && $_GET["mode"]=="edit"){
+	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
+		#登录状态下 编辑模式
 		$_mode = "edit";
 		echo "_mode='edit';";
 	}
@@ -52,7 +53,7 @@ require_once "../pcdl/html_head.php";
 		}
 		else{
 			$_display = $_GET["display"];
-			echo "_display='".$_GET["display"]."';";			
+			echo "_display='".$_GET["display"]."';";	
 		}
 	}
 	else{
@@ -93,7 +94,8 @@ require_once "../pcdl/html_head.php";
 	else{
 		$contentClass .= ' sent_mode ';
 	}
-
+	$contentClass .= " $_mode ";
+	
 	?>
 	</script>
 

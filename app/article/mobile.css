@@ -8,7 +8,7 @@
 	position: unset;
 }
 #pali_pedia {
-	font-size: 200%;
+	font-size: inherit;
 	margin-top: auto;
 	margin-bottom: auto;
 	padding-left: 0.5em;

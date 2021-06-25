@@ -45,7 +45,7 @@
 		"click_word_to": "click word to ",
 		"code_convert": "Code Convert",
 		"color": "Color",
-		"column_compare": "column",
+		"column_compare": "Up&nbsp;&&nbsp;Down",
 		"commentary": "Commentary",
 		"completely_delete": "completely delete",
 		"computer": "Computer",
@@ -131,7 +131,7 @@
 		"heading_lv6": "Heading Lv6",
 		"heading_lv7": "Heading Lv7",
 		"heading_lv8": "Heading Lv8",
-		"hidden": "hidden",
+		"hidden": "hide",
 		"home": "Home",
 		"hori_ref_time": "horizontal refraction correct ",
 		"html_text_data": "HTML Text Data",
@@ -261,7 +261,7 @@
 		"revision_mode": "Revision Mode",
 		"round_1": "Round ",
 		"round_2": "&nbsp;dictionary",
-		"row_compare": "row",
+		"row_compare": "Left&nbsp;&&nbsp;Right",
 		"same_word": "same words",
 		"saṃvacchara": "သံဝစ္ဆရ",
 		"sandhi": "Sandhi",
@@ -592,7 +592,7 @@
 		"person": "Person",
 		"write": "Write",
 		"sub_group": "Project",
-		"your": "Your",
+		"your": "Yours",
 		"status": "status",
 		"in_recycle_bin": "in&nbsp;recycle-bin",
 		"cover": "cover",
@@ -628,6 +628,8 @@
 		"suggest": "suggest",
 		"next_line": "new line",
 		"link": "link",
+		"co_channel": "collaborative channels",
+		"permission": "permission",
 		"": ""
 	},
 	"grammastr": [
@@ -665,35 +667,35 @@
 		},
 		{
 			"id": ".nom.",
-			"value": "ပစ္စတ္တ"
+			"value": "ပ"
 		},
 		{
 			"id": ".acc.",
-			"value": "ဥပယောဂ"
+			"value": "ဒု"
 		},
 		{
 			"id": ".inst.",
-			"value": "ကရဏ"
+			"value": "တ"
 		},
 		{
 			"id": ".dat.",
-			"value": "သမ္ပဒာန"
+			"value": "စ"
 		},
 		{
 			"id": ".abl.",
-			"value": "နိသ္သက္က"
+			"value": "မီ"
 		},
 		{
 			"id": ".gen.",
-			"value": "သာမိ"
+			"value": "ဆ"
 		},
 		{
 			"id": ".loc.",
-			"value": "ဘုမ္မ"
+			"value": "သ"
 		},
 		{
 			"id": ".voc.",
-			"value": "အာမန္တန"
+			"value": "အာ"
 		},
 		{
 			"id": ".imp.",
@@ -725,27 +727,27 @@
 		},
 		{
 			"id": ".1p.",
-			"value": "အမ္ဟ"
+			"value": "ဥတ္တရပုရိသ"
 		},
 		{
 			"id": ".2p.",
-			"value": "တုမ္ဟ"
+			"value": "မဇ္ဈိမပုရိသ"
 		},
 		{
 			"id": ".3p.",
-			"value": "တ"
+			"value": "ပဌမပုရိသ"
 		},
 		{
 			"id": ".ger.",
-			"value": "Ger."
+			"value": "တွာ"
 		},
 		{
 			"id": ".abs.",
-			"value": "Abs."
+			"value": "တွာ"
 		},
 		{
 			"id": ".inf.",
-			"value": "Inf."
+			"value": "တုံ"
 		},
 		{
 			"id": ".pf.",
@@ -761,7 +763,7 @@
 		},
 		{
 			"id": ".prp.",
-			"value": "prp."
+			"value": "မာနန္တ"
 		},
 		{
 			"id": ".prpa.",
@@ -793,7 +795,7 @@
 		},
 		{
 			"id": ".fpp.",
-			"value": "fpp."
+			"value": "ကိစ္စ"
 		},
 		{
 			"id": ".grd.",
@@ -833,7 +835,7 @@
 		},
 		{
 			"id": ".v:ind.",
-			"value": "က္ရိယာ:ဗ္ယ"
+			"value": "ကြိ၊ဝိ"
 		},
 		{
 			"id": ".adv.",
@@ -929,7 +931,7 @@
 		},
 		{
 			"id": ".end.",
-			"value": "case end."
+			"value": "ဝိဘတ္တိ"
 		},
 		{
 			"id": "_un_auto_factormean_",
@@ -951,15 +953,15 @@
 		},
 		{
 			"id": ".v.",
-			"value": "က္ရိယာ"
+			"value": "ကြိ"
 		},
 		{
 			"id": ".ind.",
-			"value": "ဗ္ယ"
+			"value": "ဗျ"
 		},
 		{
 			"id": ".v:ind.",
-			"value": "က္ရိယာ:ဗ္ယ"
+			"value": "ကြိ၊ဝိ"
 		},
 		{
 			"id": ".adj.",
@@ -971,11 +973,11 @@
 		},
 		{
 			"id": ".pron.",
-			"value": "pron."
+			"value": "သဗ္ဗနာမ"
 		},
 		{
 			"id": ".num.",
-			"value": "num."
+			"value": "နာမ"
 		},
 		{
 			"id": ".un.",
@@ -987,27 +989,27 @@
 		},
 		{
 			"id": ".pron:base.",
-			"value": "pron:base."
+			"value": "လိင်္ဂ"
 		},
 		{
 			"id": ".adj:base.",
-			"value": "adj:base."
+			"value": "လိင်္ဂ"
 		},
 		{
 			"id": ".n:base.",
-			"value": "n:base."
+			"value": "လိင်္ဂ"
 		},
 		{
 			"id": ".ti:base.",
-			"value": "ti:base."
+			"value": "လိင်္ဂ"
 		},
 		{
 			"id": ".num:base.",
-			"value": "num:base."
+			"value": "လိင်္ဂ"
 		},
 		{
 			"id": ".pre.",
-			"value": "prefix."
+			"value": "ဥပသဂ္ဂ"
 		},
 		{
 			"id": ".root.",
@@ -1015,7 +1017,7 @@
 		},
 		{
 			"id": ".suf.",
-			"value": "suffix."
+			"value": "ပစ္စယ"
 		},
 		{
 			"id": ".end.",
@@ -1023,7 +1025,7 @@
 		},
 		{
 			"id": ".v:base.",
-			"value": "v:base."
+			"value": "ဝိဘတ္တိ"
 		}
 	],
 	"formula": [

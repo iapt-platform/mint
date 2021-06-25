@@ -195,7 +195,13 @@ function my_article_edit(id) {
 					html += "<input type='hidden' name='tag' value='" + result.tag + "'/>";
 					html += "<input type='hidden' name='status' value='" + result.status + "'/>";
 
-					//html += "<input type='checkbox' name='import' />" + gLocal.gui.import + gLocal.gui.text;
+					html += "<div style='display:none;'>";
+					html +=
+						"<input type='checkbox' name='import' id='import_custom_book'  />" +
+						gLocal.gui.import +
+						gLocal.gui.text;
+					html += "</div>";
+
 					html += "<div>";
 					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
 					html += "<div style='display:flex;'>";
@@ -207,8 +213,9 @@ function my_article_edit(id) {
 					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
 					html += '<span id="aritcle_status" style="flex:7;"></span>';
 					html += "</div>";
+					html += '<div style="width:100%;" >';
 					html +=
-						'<div style="display:none;width:100%;" ><span style="flex:3;margin: auto;">' +
+						'<span style="flex:3;margin: auto;">' +
 						gLocal.gui.language_select +
 						'</span>	<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
 						gLocal.gui.input +
@@ -271,7 +278,21 @@ function article_preview() {
 	$("#preview_inner").html(note_init($("#article_content").val()));
 	note_refresh_new();
 }
-
+function my_article_custom_book() {
+	$content = $("#article_content").val();
+	if ($content == "") {
+		alert("内容不能为空");
+		return;
+	}
+	if ($content.indexOf("{{") >= 0) {
+		alert("不能包含句子模版");
+		return;
+	}
+	if (confirm("将此文档转换为自定义书模版吗？") == true) {
+		document.querySelector("#import_custom_book").checked = true;
+		my_article_save();
+	}
+}
 function my_article_save() {
 	$.ajax({
 		type: "POST", //方法类型
@@ -283,6 +304,7 @@ function my_article_save() {
 
 			if (result.status == 0) {
 				alert(gLocal.gui.saved + gLocal.gui.successful);
+				window.location.reload();
 			} else {
 				alert("error:" + result.message);
 			}

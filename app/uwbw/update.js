@@ -49,12 +49,12 @@ function user_wbw_push(block_id, wid, data) {
 	objData.para = doc_block("#" + block_id).info("paragraph");
 	user_wbw_data_buffer.push(objData);
 }
-
+var commitTimes = 0;
 function user_wbw_commit() {
 	if (user_wbw_data_buffer.length == 0) {
 		return;
 	}
-	$.post(
+	var jqxhr = $.post(
 		"../uwbw/update.php",
 		{
 			data: JSON.stringify(user_wbw_data_buffer),
@@ -63,15 +63,55 @@ function user_wbw_commit() {
 			try {
 				let result = JSON.parse(data);
 				if (result.status == 0) {
-					ntf_show("user wbw" + result.message);
+					ntf_show("user wbw " + result.message);
+					user_wbw_data_buffer = new Array();
 				} else {
 					ntf_show("user wbw error" + result.message);
 				}
 			} catch (e) {
 				console.error("user_wbw_update:" + e + " data:" + data);
-				ntf_show("user wbw");
+				ntf_show("wbw fail");
 			}
 		}
 	);
-	user_wbw_data_buffer = new Array();
+	jqxhr.done(function () {
+		notify_bar.hide();
+	});
+	jqxhr.fail(function (xhr, error, data) {
+		switch (xhr.status) {
+			case 500:
+				if (commitTimes < 5) {
+					commitTimes++;
+					notify_bar.show("发送失败，重试。第" + commitTimes + "次。");
+					user_wbw_commit();
+				} else {
+					notify_bar.show("重试次数过多，请稍后再试。");
+					commitTimes = 0;
+				}
+				break;
+			default:
+				notify_bar.show(xhr.statusText);
+				break;
+		}
+		switch (error) {
+			case "timeout":
+				notify_bar.show(
+					"服务器长时间没有回应。等待发送队列" +
+						user_wbw_data_buffer.length +
+						"<button onclick='user_wbw_commit()'>重试</button>"
+				);
+				break;
+			case "error":
+				notify_bar.show(
+					"与服务器通讯失败，您可能没有连接到网络。等待发送队列" +
+						user_wbw_data_buffer.length +
+						"<button onclick='user_wbw_commit()'>重试</button>"
+				);
+				break;
+			case "notmodified":
+				break;
+			default:
+				break;
+		}
+	});
 }

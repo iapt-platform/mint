@@ -60,3 +60,11 @@ ins {
 .commit_win_inner {
 	padding: 1em;
 }
+.commit_win_inner #step1 {
+	display: flex;
+	flex-direction: column;
+}
+.commit_win_inner .channel {
+	font-size: 110%;
+	padding: 5px, 5px, 5px, 20px;
+}

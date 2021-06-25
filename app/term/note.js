@@ -36,6 +36,10 @@ var gBuildinDictIsOpen = false;
 
 */
 function note_create() {
+	$.post("../ucenter/get_setting.php", {}, function (data, status) {
+		setting = JSON.parse(data);
+	});
+
 	wbw_channal_list_init();
 	note_sent_edit_dlg_init();
 	term_edit_dlg_init();
@@ -359,6 +363,9 @@ function find_channal(id) {
 	}
 	return false;
 }
+
+//生成版本列表
+//选择列表中的版本切换页面
 function render_channal_list(channalinfo) {
 	let output = "";
 	let checked = "";
@@ -368,6 +375,15 @@ function render_channal_list(channalinfo) {
 		selected = "selected";
 	}
 	output += "<div class='list_with_head " + selected + "'>";
+
+	output += '<div class="tool_bar">';
+	output += '<div class="right">';
+	output += '<div class="pop_menu">';
+	output += render_icon_button("copy", "commit_init({src:'" + channalinfo.id + "'})", gLocal.gui.copy_to);
+	output += render_icon_button("ic_mode_edit", "", gLocal.gui.modify);
+	output += "</div>";
+	output += "</div>";
+	output += "</div>";
 
 	output +=
 		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
@@ -726,6 +742,7 @@ function sent_tran_edit(obj) {
 	}
 }
 
+//采纳 pr
 function sent_pr_merge(id) {
 	$.post(
 		"../usent/sent_pr_merge.php",
@@ -746,10 +763,24 @@ function sent_commit(src, id) {
 	commit_init({
 		src: src,
 		sent: [id],
-		express: true,
+		express: false,
 	});
 }
-function render_one_sent_tran_a(iterator) {
+
+function render_icon_button(icon_id, event, tiptitle) {
+	let html = "";
+	html += "<button class='icon_btn tooltip' onclick=\"" + event + '">';
+	html += '<svg class="icon" >';
+	html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#' + icon_id + '"></use>';
+	html += "</svg>";
+	html += "<span class='tooltiptext tooltip-top'>";
+	html += tiptitle;
+	html += "</span>";
+	html += "</button>";
+	return html;
+}
+
+function render_one_sent_tran_a(iterator, diff = false) {
 	let mChannel = get_channel_by_id(iterator.channal);
 
 	let tranText;
@@ -771,8 +802,29 @@ function render_one_sent_tran_a(iterator) {
 				"</span>";
 		}
 	} else {
-		//note_init处理句子链接
-		tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		if (diff) {
+			let orgText = "";
+			for (const oneSent of _arrData) {
+				if (
+					oneSent.book == iterator.book &&
+					oneSent.para == iterator.para &&
+					oneSent.begin == iterator.begin &&
+					oneSent.end == iterator.end
+				) {
+					for (const tran of oneSent.translation) {
+						if (tran.channal == iterator.channal) {
+							orgText = tran.text;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			tranText = str_diff(orgText, iterator.text);
+		} else {
+			//note_init处理句子链接
+			tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		}
 	}
 	let html = "";
 	html += "<div class='sent_tran ";
@@ -791,66 +843,30 @@ function render_one_sent_tran_a(iterator) {
 		if (typeof iterator.is_pr_editor != "undefined" && iterator.is_pr_editor == true) {
 			//提交人
 			//修改按钮
-			html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
-			html += '<svg class="icon" >';
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
-			html += "</svg>";
-			html += "<span class='tooltiptext tooltip-top'>";
-			html += gLocal.gui.modify;
-			html += "</span>";
-			html += "</button>";
-
+			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this)", gLocal.gui.modify);
 			//删除按钮
-			html += "<button class='icon_btn tooltip' onclick='sent_pr_del(this)'>";
-			html += '<svg class="icon" >';
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_delete"></use>';
-			html += "</svg>";
-			html += "<span class='tooltiptext tooltip-top'>";
-			html += gLocal.gui.delete;
-			html += "</span>";
-			html += "</button>";
+			html += render_icon_button("ic_delete", "sent_pr_del(this)", gLocal.gui.delete);
 		} else {
 			//非提交人
 			if (parseInt(iterator.mypower) >= 20) {
 				//有权限 采纳按钮
-				html += "<button class='icon_btn tooltip' onclick=\"sent_pr_merge('" + iterator.id + "')\">";
-				html += '<svg class="icon" >';
-				html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#accept_copy"></use>';
-				html += "</svg>";
-				html += "<span class='tooltiptext tooltip-top'>";
-				html += gLocal.gui.accept_copy;
-				html += "</span>";
-				html += "</button>";
+				html += render_icon_button(
+					"accept_copy",
+					"sent_pr_merge('" + iterator.id + "')",
+					gLocal.gui.accept_copy
+				);
 			}
 			//点赞按钮
-			html += "<button class='icon_btn tooltip' onclick='sent_pr_like(this)'>";
-			html += '<svg class="icon" >';
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#like"></use>';
-			html += "</svg>";
-			html += "<span class='tooltiptext tooltip-top'>";
-			html += gLocal.gui.like;
-			html += "</span>";
-			html += "</button>";
+			html += render_icon_button("like", "sent_pr_like(this)", gLocal.gui.like);
 		}
 	} else {
 		//非pr列表里的句子
 		//编辑按钮
-		html += "<button class='icon_btn tooltip' onclick='sent_tran_edit(this)'>";
-		html += '<svg class="icon" >';
 		if (parseInt(iterator.mypower) < 20) {
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#my_idea"></use>';
+			html += render_icon_button("my_idea", "sent_tran_edit(this)", gLocal.gui.suggest);
 		} else {
-			html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_mode_edit"></use>';
+			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this)", gLocal.gui.edit);
 		}
-		html += "</svg>";
-		html += "<span class='tooltiptext tooltip-top'>";
-		if (parseInt(iterator.mypower) < 20) {
-			html += gLocal.gui.suggest;
-		} else {
-			html += gLocal.gui.edit;
-		}
-		html += "</span>";
-		html += "</button>";
 
 		//推送按钮
 		let commitIcon = "";
@@ -870,24 +886,18 @@ function render_one_sent_tran_a(iterator) {
 				commitTipText = gLocal.gui.copy_to;
 			}
 		}
-		html += "<button class='icon_btn tooltip' ";
-		html += " onclick=\"sent_commit('" + iterator.channal + "','" + sid + "')\">";
-		html += '<svg class="icon" >';
-		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#' + commitIcon + '"></use>';
-		html += "</svg>";
-		html += "<span class='tooltiptext tooltip-top'>";
-		html += commitTipText;
-		html += "</span>";
-		html += "</button>";
+		html += render_icon_button(commitIcon, "sent_commit('" + iterator.channal + "','" + sid + "')", commitTipText);
 		//推送按钮结束
 
 		//更多按钮
 		html += '<div class="case_dropdown">';
+
 		html += "<button class='icon_btn'>";
 		html += '<svg class="icon" >';
 		html += '<use xlink="http://www.w3.org/1999/xlink" href="../studio/svg/icon.svg#ic_more"></use>';
 		html += "</svg>";
 		html += "</button>";
+
 		html += '<div class="case_dropdown-content menu_space_between" style="right:0;">';
 		//时间线
 		html += "<a onclick=\"history_show('" + iterator.id + "')\">";
@@ -925,10 +935,23 @@ function render_one_sent_tran_a(iterator) {
 
 	html += "</div>";
 	//句子菜单结束
+
 	html += "</div>";
 	html += "</div>";
 	//tool_bar 结束
 	html += '<div class="left_bar" >';
+	html += "<span class='icon_sent_status icon_sent_loading'>";
+	html +=
+		"<svg class='icon icon_spin' style='fill: var(--detail-color); '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../studio/svg/icon.svg#loading'></use>" +
+		"</svg>";
+	html += "</span>";
+	html += "<span class='icon_sent_status icon_sent_error' title='再次发送' onclick='tran_sent_save(this)'>";
+	html +=
+		"<svg class='icon' style='fill: red; '>" +
+		"<use xlink='http://www.w3.org/1999/xlink' href='../term/error.svg'></use>" +
+		"</svg>";
+	html += "</span>";
 	html += '	<div class="face">';
 	if (iterator.id != "") {
 		html += '<span class="head_img">' + iterator.editor_name.nickname.slice(0, 1) + "</span>";
@@ -944,13 +967,21 @@ function render_one_sent_tran_a(iterator) {
 	html += '<div class="body">';
 	html += '<div class="head_bar">';
 	html += '<div class="info">';
-	html += '<span class="name" title="' + iterator.editor_name.nickname + gLocal.gui.recent_update + '">';
+	html += '<span class="name channel_name" title="' + iterator.editor_name.nickname + gLocal.gui.recent_update + '">';
 	if (typeof iterator.channalinfo == "undefined") {
 		html += "unkown";
 	} else {
 		html += iterator.channalinfo.name;
 	}
-
+	html += "</span>";
+	html += '<span class="name editor_name" ';
+	if (typeof iterator.channalinfo == "undefined") {
+		html += ">";
+		html += "unkown";
+	} else {
+		html += 'title="' + iterator.channalinfo.name + gLocal.gui.recent_update + '">';
+		html += iterator.editor_name.nickname;
+	}
 	html += "</span>";
 	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
@@ -977,7 +1008,7 @@ function render_one_sent_tran_a(iterator) {
 	html += "<a onclick='tran_sent_edit_cancel(this)'>" + gLocal.gui.cancel + "</a>";
 	html += "</span>";
 	html += "<span style='display: inline-flex;'>";
-	html += '<span class="keybutton" >Ctrl</span>';
+	html += '<span class="keybutton" >Ctrl/⌘</span>';
 	html += "➕";
 	html += '<span class="keybutton" >Enter</span> = ';
 	if (parseInt(iterator.mypower) < 20) {
@@ -1168,8 +1199,22 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 	//单个channal译文框结束
 	return output;
 }
+function hidden_control(obj) {
+	if ($(".lang_2")[0].style.display == "none" && $(".lang_3")[0].style.display == "none") {
+		$(".lang_2").show();
+		$(".lang_3").show();
+		obj.innerHTML = "⬅"
+	}
+	else {
+		$(".lang_2").hide();
+		$(".lang_3").hide();
+		obj.innerHTML = "➡"
+	}
+}
+
 function add_new_tran_button_click(obj) {
-	let html = "<div style='display:flex; max-width: 40vw; white-space: normal;'>";
+
+	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
 	for (const iterator of _my_channal) {
 		if (iterator.lang) {
@@ -1177,9 +1222,10 @@ function add_new_tran_button_click(obj) {
 			break;
 		}
 	}
+	//母语channel列表
 	html += "<ul class='channel_list lang_0' >";
 	html += "<li>";
-	html += first_lang;
+	html += gLocal.language[first_lang];
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
@@ -1206,10 +1252,13 @@ function add_new_tran_button_click(obj) {
 			}
 		}
 	}
+	html += "<li><a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a></li>"
 	html += "</ul>";
+	//非母语channel列表
 	html += "<ul class='channel_list lang_1'>";
 	html += "<li>";
 	html += gLocal.gui.other;
+	html += "&nbsp;<button style='height: 1.8em;' onmouseover='hidden_control(this)'>➡</button>"
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
@@ -1237,12 +1286,44 @@ function add_new_tran_button_click(obj) {
 		}
 	}
 	html += "</ul>";
-	html += "<ul class='channel_list lang_2'>";
+	//协作channel列表-带中文
+	html += "<ul class='channel_list lang_2' style='display:none;'>";
 	html += "<li>";
-	html += gLocal.gui.collaborate;
+	html += "协作";
 	html += "</li>";
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && iterator.lang == 0) {
+		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == true) {
+			if (_channal.indexOf(iterator.id) < 0) {
+				html += '<li class="channel_name" onclick="';
+				html +=
+					"new_sentence('" +
+					$(obj).parent().attr("book") +
+					"' ,'" +
+					$(obj).parent().attr("para") +
+					"' ,'" +
+					$(obj).parent().attr("begin") +
+					"' ,'" +
+					$(obj).parent().attr("end") +
+					"' ,'" +
+					iterator.id +
+					"',this)";
+				html += '" title="' + iterator.nickname;
+				html += '">' + iterator.name;
+				if (parseInt(iterator.power) < 20) {
+					html += "(建议)";
+				}
+				html += "</li>";
+			}
+		}
+	}
+	html += "</ul>";
+	//协作channel列表-不带中文
+	html += "<ul class='channel_list lang_3' style='display:none;'>";
+	html += "<li>";
+	html += "collaborate";
+	html += "</li>";
+	for (const iterator of _my_channal) {
+		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
 			if (_channal.indexOf(iterator.id) < 0) {
 				html += '<li class="channel_name" onclick="';
 				html +=
@@ -1268,6 +1349,7 @@ function add_new_tran_button_click(obj) {
 	}
 	html += "</ul>";
 
+
 	html += "</div>";
 	$(obj).parent().children(".tran_text_tool_bar").first().html(html);
 
@@ -1281,6 +1363,13 @@ function add_new_tran_button_click(obj) {
 		event.stopPropagation();
 		$(obj).parent().show();
 	}
+}
+function checkStringIsChinese(str) {
+	var pattern = new RegExp("[\u4E00-\u9FA5]+");
+	if (pattern.test(str)) {
+		return true;
+	}
+	return false;
 }
 function tool_bar_show(element) {
 	if ($(element).find(".tran_text_tool_bar").css("display") == "none") {
@@ -1393,6 +1482,8 @@ function set_more_button_display() {
 								$(".other_tran_div[sent='" + sentId + "']")
 									.children(".other_tran")
 									.html(html);
+								//初始化文本编辑框消息处理
+								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
@@ -1496,7 +1587,7 @@ function note_pr_save(obj) {
 	);
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
 	}
 }
 
@@ -1511,66 +1602,41 @@ function note_sent_save_a(obj) {
 	let channal = $(obj).attr("channel");
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
-	/*
-	var jqxhr = $.post("example.php", function() {
-      alert("success");
-    })
-    .success(function() { alert("second success"); })
-    .error(function() { alert("error"); })
-    .complete(function() { alert("complete"); });*/
-	/*
-	function (data, status) {
-			alert("异常！" + data.responseText);
-			switch (status) {
-				case "timeout":
-					break;
-				case "error":
-					break;
-				case "notmodified":
-					break;
-				case "parsererror":
-					break;
-				default:
-					break;
-			}
-	*/
-	var jqxhr = $.post(
-		"../usent/sent_post.php",
-		{
-			id: id,
-			book: book,
-			para: para,
-			begin: begin,
-			end: end,
-			channal: channal,
-			text: text,
-			lang: "zh",
-		},
-		sent_save_callback
-	)
-		.success(function () {
-			//alert("second success");
+
+	$.ajaxSetup({
+		timeout: 5000,
+	});
+
+	$.post("../usent/sent_post.php", {
+		id: id,
+		book: book,
+		para: para,
+		begin: begin,
+		end: end,
+		channal: channal,
+		text: text,
+		lang: "zh",
+	})
+		.done(function (data) {
+			sent_save_callback(data);
 		})
-		.error(function (xhr, error, data) {
+		.fail(function (xhr, error, data) {
+			let sid = book + "-" + para + "-" + begin + "-" + end;
+
+			let sent_tran_div = $(".sent_tran[channel='" + channal + "'][sid='" + sid + "']");
+			if (sent_tran_div) {
+				sent_tran_div.removeClass("loading");
+				sent_tran_div.addClass("error");
+			}
+
 			switch (error) {
 				case "timeout":
-					alert("服务器长时间没有回应。");
+					alert("服务器长时间没有回应。请稍后重试。");
 					break;
 				case "error":
-					alert("与服务器通讯失败，您可能没有连接到网络。");
+					alert("与服务器通讯失败，您可能没有连接到网络。请稍后重试。");
 					break;
 				case "notmodified":
-					break;
-				default:
-					break;
-			}
-		})
-		.complete(function (xhr, data) {
-			//请求完成后回调函数 (请求成功或失败之后均调用)。
-			switch (data) {
-				case "error":
-					break;
-				case "success":
 					break;
 				default:
 					break;
@@ -1578,12 +1644,19 @@ function note_sent_save_a(obj) {
 		});
 
 	if (sent_tran_div) {
-		$(sent_tran_div).find(".preview").addClass("loading");
+		$(sent_tran_div).addClass("loading");
+		$(sent_tran_div).removeClass("error");
 	}
 }
 function update_sent_tran(sentData) {}
 function sent_save_callback(data) {
-	let result = JSON.parse(data);
+	let result;
+	try {
+		result = JSON.parse(data);
+	} catch (e) {
+		alert(e.message);
+		return;
+	}
 	if (result.status > 0) {
 		alert("error" + result.message);
 	} else {
@@ -1592,6 +1665,9 @@ function sent_save_callback(data) {
 		let sent_tran_div = $(
 			".sent_tran[dbid='" + result.id + "'][channel='" + result.channal + "'][sid='" + sid + "']"
 		);
+		if (sent_tran_div) {
+			sent_tran_div.removeClass("loading");
+		}
 		if (result.commit_type == 1 || result.commit_type == 2) {
 			ntf_show("成功修改");
 			if (sent_tran_div) {
@@ -1625,7 +1701,6 @@ function sent_save_callback(data) {
 						}
 					}
 				}
-				sent_tran_div.find(".preview").removeClass("loading");
 			}
 		} else if (result.commit_type == 3) {
 			ntf_show("已经提交修改建议");
@@ -1875,9 +1950,9 @@ function note_get_pr(channel, id) {
 		function (data) {
 			let result = JSON.parse(data);
 			if (result.length > 0) {
-				let html = "<div class='compact'>";
+				let html = "<div class='compact pr'>";
 				for (const iterator of result) {
-					html += render_one_sent_tran_a(iterator);
+					html += render_one_sent_tran_a(iterator, true);
 				}
 				html += "</div>";
 				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")
@@ -1938,4 +2013,9 @@ function setDisplay(obj) {
 		$("#contents").addClass("sent_mode");
 		_display = "sent";
 	}
+}
+
+//获取文章中H 并渲染为目录
+function render_heading_toc() {
+	//$(":header")
 }
