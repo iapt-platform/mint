@@ -20,6 +20,7 @@
   ./docker/ubuntu/next.sh
   # start servers
   > sudo supervisord -c /etc/supervisor/supervisord.conf
+  > netstat -ant | grep 'LISTEN'
   # connect to redis
   > redis-cli
   # connect to postgresql
