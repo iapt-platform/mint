@@ -8,8 +8,16 @@
   registries = ['quay.io', 'docker.io']
   ```
 
-- Clear outdated images: `podman rmi -a -f`
-- Import podman image: `podman load -q -i mint-TIMESTAMP.tar`.
+- Work with podman image
+
+  ```bash
+  # clear outdated images
+  podman rmi -a -f
+  # uncompress image files
+  cat palm.tar.xz.a* | tar xj
+  # import new podman image
+  podman load -q -i mint-TIMESTAMP.tar  
+  ```
 
 - Enjoy it!
   
