@@ -3,7 +3,8 @@
 	"lockfileVersion": 1,
 	"dependencies": {
 		"diff": "^5.0.0",
-		"fullcalendar": "^5.7.0",
+		"editor.md": "^1.5.0",
+		"fullcalendar": "^5.8.0",
 		"highcharts": "^9.1.0",
 		"jquery": "^3.6.0",
 		"jquery-ui": "^1.12.1",

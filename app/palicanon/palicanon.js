@@ -63,7 +63,7 @@ function tag_changed() {
 		lang = "en";
 	}
 	$.get(
-		"book_tag.php",
+		"./book_tag.php",
 		{
 			tag: strTags,
 			lang: lang,
@@ -136,7 +136,7 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 		lang = "en";
 	}
 	$.get(
-		"get_chapter_info.php",
+		"../palicanon/get_chapter_info.php",
 		{
 			book: book,
 			para: para,
@@ -158,7 +158,7 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 				lang = "en";
 			}
 			$.get(
-				"get_chapter_children.php",
+				"./get_chapter_children.php",
 				{
 					book: book,
 					para: para,

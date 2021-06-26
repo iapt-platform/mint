@@ -24,7 +24,7 @@ function dict_search(word, autoSplit = true) {
 	//word = com_getPaliReal(word);
 
 	$.get(
-		"dict_lookup.php",
+		"./dict_lookup.php",
 		{
 			word: word,
 		},
@@ -68,7 +68,7 @@ function dict_pre_search(word) {
 	dict_pre_search_curr_word = word;
 
 	$.get(
-		"dict_lookup_pre.php",
+		"./dict_lookup_pre.php",
 		{
 			word: word,
 		},
@@ -191,7 +191,7 @@ function cls_word_search_history() {
 }
 function get_comp_data(word) {
 	$.get(
-		"get_split_data.php",
+		"./get_split_data.php",
 		{
 			word: word,
 		},
@@ -284,7 +284,7 @@ function trubo_split() {
 	$("#pre_search_result").hide();
 	$("#input_parts").html(strSpliting);
 	$.post(
-		"split.php",
+		"./split.php",
 		{
 			word: $("#dict_ref_search_input").val(),
 		},
