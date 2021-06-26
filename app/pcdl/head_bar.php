@@ -456,7 +456,7 @@
 			</a>
 		</svg>
 		<div class="platform-toggle">
-			<a href="../studio" target="_blank"><?php echo $_local->gui->library; ?>
+			<a href="../studio/" target="_blank"><?php echo $_local->gui->library; ?>
 				<span class="goto-platform"> ▸ <?php echo $_local->gui->studio; ?></span></a>
 		</div>
 	</div>
