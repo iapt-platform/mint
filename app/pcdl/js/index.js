@@ -32,7 +32,7 @@ function index_render_res_list(book_id,album_id,paragraph,goback=false){
   else{
 	res_list_stack.push({ book: book_id, album: album_id,paragraph: paragraph });
   }
-  $.get("get_res_index.php", { book: book_id, album: album_id,paragraph: paragraph },
+  $.get("./get_res_index.php", { book: book_id, album: album_id,paragraph: paragraph },
   function(data){
 	$("#para_res_list").html(data);
 	document.getElementById("para_res_list_shell").style.display="block";
@@ -46,7 +46,7 @@ function index_render_res_list(book_id,album_id,paragraph,goback=false){
 }
 function show_par_res_in_toc(book,paragraph){
 	if($("#toc_para_res_"+paragraph).html()==""){
-		$.get("get_res_index.php", { book: book, album: "-1",paragraph: paragraph },
+		$.get("./get_res_index.php", { book: book, album: "-1",paragraph: paragraph },
 		function(data){
 			$(".toc_para_res").html("");
 			$(".toc_para_res").slideUp();
@@ -102,7 +102,7 @@ function wizard_palicannon_heading_change(base=-1,select=-1){
 				parNum=toc_info[iPar].paragraph;
 				output += "<div class=\"book_list_item "+cssSelected+" level_"+maxLevel+"\" >";
 				if(toc_type=="album"){
-					output  += "<button><a href='reader.php?book="+gCurrBookId+"&album="+toc_album+"&paragraph="+parNum+"' target='_blank'>读</a></button>";
+					output  += "<button><a href='./reader.php?book="+gCurrBookId+"&album="+toc_album+"&paragraph="+parNum+"' target='_blank'>读</a></button>";
 				}
 				else{
 					output  += "<button onclick=\"show_par_res_in_toc('"+gCurrBookId+"',"+parNum+")\">资</button>";
@@ -314,7 +314,7 @@ function main_menu_show(id){
 }
 
 function search_tag(search_tag){
-	$.post("tag_search.php",
+	$.post("./tag_search.php",
 			{
 				tag:search_tag,
 				order:"hit"
@@ -324,7 +324,7 @@ function search_tag(search_tag){
 			});	
 }
 function search_best(search_type){
-	$.get("get_best.php",
+	$.get("./get_best.php",
 			{
 				op:search_type,
 			},

@@ -13,7 +13,7 @@ function search_text_search(word) {
 
 	if (search_text_search_xml_http != null) {
 		search_text_search_xml_http.onreadystatechange = search_text_search_serverResponse;
-		search_text_search_xml_http.open("GET", "search_text.php?op=search&word=" + word, true);
+		search_text_search_xml_http.open("GET", "./search_text.php?op=search&word=" + word, true);
 		search_text_search_xml_http.send();
 	}
 	else {
@@ -56,7 +56,7 @@ function search_text_pre_search(word) {
 
 	if (search_text_pre_search_xml_http != null) {
 		search_text_pre_search_xml_http.onreadystatechange = search_text_pre_search_serverResponse;
-		search_text_pre_search_xml_http.open("GET", "search_text.php?op=pre&word=" + word, true);
+		search_text_pre_search_xml_http.open("GET", "./search_text.php?op=pre&word=" + word, true);
 		search_text_pre_search_xml_http.send();
 	}
 	else {
@@ -279,5 +279,5 @@ function search_edit(bookid, par) {
 	newRes.subver = 1;
 	var arrRes = new Array();
 	arrRes.push(newRes);
-	window.open("project.php?op=create&data=" + JSON.stringify(arrRes));
+	window.open("./project.php?op=create&data=" + JSON.stringify(arrRes));
 }

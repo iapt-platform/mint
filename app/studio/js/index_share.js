@@ -26,10 +26,10 @@ function file_list_refresh() {
 						//html += "[新]";
 					}
 					if (file_list[x].doc_info && file_list[x].doc_info.length > 1) {
-						$link = "<a href='project.php?op=open&doc_id=" + file_list[x].id + "' target='_blank'>[db]";
+						$link = "<a href='./project.php?op=open&doc_id=" + file_list[x].id + "' target='_blank'>[db]";
 					}
 					else {
-						$link = "<a href='editor.php?op=open&fileid=" + file_list[x].id + "&filename=" + file_list[x].file_name + "' target='_blank'>";
+						$link = "<a href='./editor.php?op=open&fileid=" + file_list[x].id + "&filename=" + file_list[x].file_name + "' target='_blank'>";
 
 					}
 					html += "<div class=\"file_list_title\">" + $link + file_list[x].title + "</a></div>";
@@ -57,7 +57,7 @@ function file_list_refresh() {
 
 					html += '<div class="file_list_col_4" >';
 					if (file_list[x].my_doc_id.length > 20) {
-						html += "<a href='editor.php?op=opendb&doc_id=" + file_list[x].my_doc_id + "' target='_blank'>[" + gLocal.gui.open + "]</a>";
+						html += "<a href='./editor.php?op=opendb&doc_id=" + file_list[x].my_doc_id + "' target='_blank'>[" + gLocal.gui.open + "]</a>";
 					}
 					else {
 						html += "[" + gLocal.gui.folk + "]";

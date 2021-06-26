@@ -172,7 +172,7 @@ function doc_setWordDataById(wordId, key, value) {
 }
 function doc_file_info_get() {
 	$.post(
-		"file_index.php",
+		"./file_index.php",
 		{
 			op: "getall",
 			doc_id: g_docid,
@@ -214,7 +214,7 @@ function doc_file_info_get() {
 
 function doc_info_change(field, value) {
 	$.post(
-		"file_index.php",
+		"./file_index.php",
 		{
 			op: "set",
 			doc_id: g_docid,
@@ -232,7 +232,7 @@ function doc_info_title_change(obj) {
 	document.getElementById("editor_doc_title").innerHTML = obj.value;
 	document.getElementById("file_title").innerHTML = obj.value;
 	$.post(
-		"file_index.php",
+		"./file_index.php",
 		{
 			op: "set",
 			doc_id: g_docid,
@@ -252,7 +252,7 @@ function _doc_info_title_change(id, title, callback = null) {
 		};
 	}
 	$.post(
-		"file_index.php",
+		"./file_index.php",
 		{
 			op: "set",
 			doc_id: id,

@@ -72,7 +72,7 @@ function menu_view_script_sinhala(){
 	if (xmlHttp!=null)
 	{
 		var d=new Date();
-		var strLink = "spt_get.php";
+		var strLink = "./spt_get.php";
 		xmlHttp.open("GET", strLink, false);
 		xmlHttp.send(null);
 		xmlText=xmlHttp.responseText;
@@ -138,7 +138,7 @@ function menu_view_script_sinhala(){
 		  }
 		var d=new Date();
 		dict_xmlhttp.onreadystatechange=dict_serverResponse;
-		dict_xmlhttp.open("GET","dict_get_list.php?t="+d.getTime(),true);
+		dict_xmlhttp.open("GET","./dict_get_list.php?t="+d.getTime(),true);
 		dict_xmlhttp.send();
 		}
 
@@ -278,7 +278,7 @@ function dict_loadDictFromDB(strFileName,dictName){
 		var wordList=dict_getAllWordList();
 		if(wordList!=null){
 			document.getElementById('id_dict_msg').innerHTML="开始匹配字典"+dictName.name;
-			dict_DictXmlHttp.open("POST", "dict_find2.php", true);
+			dict_DictXmlHttp.open("POST", "./dict_find2.php", true);
 			dict_DictXmlHttp.send(dictName.type+"$"+dictName.filename+"$"+g_dictFindParentLevel+"$"+wordList);
 		}
 		else{
@@ -1112,7 +1112,7 @@ function save(){
 	if (xmlHttp!=null)
 	  {
 	  var_dump("ok");
-	  xmlHttp.open("POST", "dom_http.php", false);
+	  xmlHttp.open("POST", "./dom_http.php", false);
 	  var sendHead="filename="+g_filename+"#";
 	  xmlHttp.send(sendHead+xmlToString(xmlDoc));
 	  var_dump(xmlHttp.responseText);
@@ -1140,7 +1140,7 @@ function menu_file_export_csv(){
 	if (xmlHttp!=null)
 	  {
 	  var_dump("ok");
-	  xmlHttp.open("POST", "export_csv.php", false);
+	  xmlHttp.open("POST", "./export_csv.php", false);
 	  var sendHead="filename="+g_filename+"#";
 	  xmlHttp.send(sendHead+xmlToString(xmlDoc));
 	  var_dump(xmlHttp.responseText);
@@ -1172,7 +1172,7 @@ function dict_loadDataFromCSV(strFileName){
 	if (dict_CSVXmlHttp!=null)
 	{
 		var d=new Date();
-		var strLink = "import_csv.php?filename="+strFileName;
+		var strLink = "./import_csv.php?filename="+strFileName;
 		dict_CSVXmlHttp.onreadystatechange=dict_csv_serverResponse;
 		dict_CSVXmlHttp.open("GET", strLink, true);
 		dict_CSVXmlHttp.send(null);
@@ -1449,7 +1449,7 @@ function dict_UserDictUpdata(recorderName,thisObj){
 		queryString+="</wordlist>";
 		dict_DictUpdataXmlHttp.onreadystatechange=dict_UserDictUpdata_serverResponse;
 		debugOutput("updata user dict start.",0);
-		dict_DictUpdataXmlHttp.open("POST", "dict_updata_user.php", true);
+		dict_DictUpdataXmlHttp.open("POST", "./dict_updata_user.php", true);
 		dict_DictUpdataXmlHttp.send(queryString);
 		
 		var i=recorderName;
@@ -1579,7 +1579,7 @@ function dict_WbwUpdata(wordIdFrom,wordIdTo){
 		queryString+="</wordlist>";
 		dict_wbwUpdataXmlHttp.onreadystatechange=dict_wbwDictUpdata_serverResponse;
 		debugOutput("updata user dict start.",0);
-		dict_wbwUpdataXmlHttp.open("POST", "dict_updata_wbw.php", true);
+		dict_wbwUpdataXmlHttp.open("POST", "./dict_updata_wbw.php", true);
 		dict_wbwUpdataXmlHttp.send(queryString);
 		
 

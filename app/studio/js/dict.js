@@ -7,7 +7,7 @@ var g_curr_word="";
 
 function dict_turbo_split(){
 	let word = $("#dict_ref_search_input").val();
-	$.post("dict_find4.php",
+	$.post("./dict_find4.php",
 	{
 	word:word
 	},
@@ -51,7 +51,7 @@ function dict_search(word,take_split=true){
 	{
 		dict_search_xml_http.onreadystatechange=dict_search_serverResponse;
 		word=word.replace(/\+/g,"%2b");
-		dict_search_xml_http.open("GET", "dict_find3.php?op=search&word="+word, true);
+		dict_search_xml_http.open("GET", "./dict_find3.php?op=search&word="+word, true);
 		dict_search_xml_http.send();
 	}
 	else
@@ -125,7 +125,7 @@ function dict_pre_search(word){
 	if (dict_pre_search_xml_http!=null)
 	{
 		dict_pre_search_xml_http.onreadystatechange=dict_pre_search_serverResponse;
-		dict_pre_search_xml_http.open("GET", "dict_find3.php?op=pre&word="+word, true);
+		dict_pre_search_xml_http.open("GET", "./dict_find3.php?op=pre&word="+word, true);
 		dict_pre_search_xml_http.send();
 	}
 	else

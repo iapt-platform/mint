@@ -61,7 +61,7 @@ function palicannon_show_filelist(strBook){
 	gCurrSelectedBook=strBook;
 	var d=new Date();
 	palicannon_xmlhttp.onreadystatechange=palicannon_serverResponse;
-	palicannon_xmlhttp.open("GET","pc_get_book_index.php?t="+d.getTime()+"&book="+strBook,true);
+	palicannon_xmlhttp.open("GET","./pc_get_book_index.php?t="+d.getTime()+"&book="+strBook,true);
 	palicannon_xmlhttp.send();
 }
 
@@ -163,7 +163,7 @@ function palicannon_load_book_par(strBook,parIndex,strVer){
 	}
 	var d=new Date();
 	palicannon_xmlLoadBookhttp.onreadystatechange=palicannon_load_book_serverResponse;
-	palicannon_xmlLoadBookhttp.open("GET","pc_get_book_xml.php?t="+d.getTime()+"&book="+strBook+"&paragraph="+parIndex+"&ver="+strVer,true);
+	palicannon_xmlLoadBookhttp.open("GET","./pc_get_book_xml.php?t="+d.getTime()+"&book="+strBook+"&paragraph="+parIndex+"&ver="+strVer,true);
 	palicannon_xmlLoadBookhttp.send();
 }
 

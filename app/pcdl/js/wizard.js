@@ -56,7 +56,7 @@ function wizard_new_finish(){
 	var xmlText = txtXML;
 	var newFileName = new_save(xmlText);
 	if(newFileName){
-		window.open("editor.php?op=open&filename="+newFileName,"_blank");
+		window.open("./editor.php?op=open&filename="+newFileName,"_blank");
 		//window.location.assign("index_new.php");
 		window.history.back();
 	}
@@ -87,7 +87,7 @@ function new_save(strData){
 				g_filename=gConfigDirMydocument+inputFileName+".pcs";
 			}
 		}
-	  xmlHttp.open("POST", "dom_http.php", false);
+	  xmlHttp.open("POST", "./dom_http.php", false);
 	  var sendHead="filename="+g_filename+"#";
 	  xmlHttp.send(sendHead+strData);
 	  var_dump(xmlHttp.responseText);
