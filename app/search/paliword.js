@@ -345,7 +345,7 @@ function dict_update_bold(currpage) {
 	booklist += ")";
 
 	$.get(
-		"paliword_search.php",
+		"./paliword_search.php",
 		{
 			op: "update",
 			target: "bold",
@@ -391,7 +391,7 @@ function search_search(word) {
 	if (dict_search_xml_http != null) {
 		dict_search_xml_http.onreadystatechange = dict_search_serverResponse;
 		word = word.replace(/\+/g, "%2b");
-		dict_search_xml_http.open("GET", "paliword_search.php?op=search&word=" + word, true);
+		dict_search_xml_http.open("GET", "./paliword_search.php?op=search&word=" + word, true);
 		dict_search_xml_http.send();
 	} else {
 		alert("Your browser does not support XMLHTTP.");

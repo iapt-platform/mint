@@ -456,25 +456,25 @@
 			</a>
 		</svg>
 		<div class="platform-toggle">
-			<a href="../studio" target="_blank"><?php echo $_local->gui->library; ?>
+			<a href="../studio/" target="_blank"><?php echo $_local->gui->library; ?>
 				<span class="goto-platform"> ▸ <?php echo $_local->gui->studio; ?></span></a>
 		</div>
 	</div>
 	<input type="checkbox" id="nav-toggle" class="nav-toggle">
 	<nav>
 		<ul>
-			<li class="nav_link"><a href="../palicanon"><?php echo $_local->gui->pali_canon; ?></a></li>
-			<li class="nav_link"><a href="../course"><?php echo $_local->gui->lesson; ?></a></li>
-			<li class="nav_link"><a href="../wiki"><?php echo $_local->gui->encyclopedia; ?></a></li>
-			<li class="nav_link"><a href="../dict"><?php echo $_local->gui->dictionary; ?></a></li>
-			<li class="nav_link"><a href="../collect"><?php echo $_local->gui->composition; ?></a></li>
+			<li class="nav_link"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
+			<li class="nav_link"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
+			<li class="nav_link"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
+			<li class="nav_link"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
+			<li class="nav_link"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
 			<li class="nav_link more_btn">
 				<div id="more" class="dropdown" onmouseover="switchMenu(this,'nav-more')" onmouseout="hideMenu()">
 					<button class="dropbtn icon_btn" style="all:unset;" onClick="switchMenu(this,'nav-more')" id="more_button">
 						<?php echo $_local->gui->more; ?>
 					</button>
 					<ul class="header-dropdown-content left-content" style="display: none;" id="nav-more">
-						<li><a href="../calendar">
+						<li><a href="../calendar/">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
 							</a></li>
 						<li><a href="../tools/unicode.html">
@@ -488,13 +488,13 @@
 						</a></li>
 					</ul>
 			</li>
-			<li class="nav_link nav-mobile"><a href="../calendar">
+			<li class="nav_link nav-mobile"><a href="../calendar/">
 					<?php echo $_local->gui->buddhist_calendar; ?>
 				</a></li>
 			<li class="nav_link nav-mobile"><a href="../tools/unicode.html">
 					<?php echo $_local->gui->code_convert; ?>
 				</a></li>
-			<li class="nav_link nav-mobile"><a href="../statistics">
+			<li class="nav_link nav-mobile"><a href="../statistics/">
 					<?php echo $_local->gui->corpus_statistics; ?>
 				</a></li>
 			<div>

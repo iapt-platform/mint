@@ -53,7 +53,7 @@ function dict_update_bold(currpage){
 	booklist=booklist.slice(0,-1);
 	booklist+=")";
 	
-	$.get("dict_find3.php",
+	$.get("./dict_find3.php",
 	  {
 		op:"update",
 		target:"bold",
@@ -99,7 +99,7 @@ function dict_search(word){
 	{
 		dict_search_xml_http.onreadystatechange=dict_search_serverResponse;
 		word=word.replace(/\+/g,"%2b");
-		dict_search_xml_http.open("GET", "dict_find3.php?op=search&word="+word, true);
+		dict_search_xml_http.open("GET", "./dict_find3.php?op=search&word="+word, true);
 		dict_search_xml_http.send();
 	}
 	else
@@ -146,7 +146,7 @@ function dict_pre_search(word){
 	if (dict_pre_search_xml_http!=null)
 	{
 		dict_pre_search_xml_http.onreadystatechange=dict_pre_search_serverResponse;
-		dict_pre_search_xml_http.open("GET", "dict_find3.php?op=pre&word="+word, true);
+		dict_pre_search_xml_http.open("GET", "./dict_find3.php?op=pre&word="+word, true);
 		dict_pre_search_xml_http.send();
 	}
 	else

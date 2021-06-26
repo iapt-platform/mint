@@ -36,7 +36,7 @@ else if (window.ActiveXObject)
 if (xmlHttp!=null)
   {
   var_dump("ok");
-  xmlHttp.open("POST", "xml_save.php", false);
+  xmlHttp.open("POST", "./xml_save.php", false);
   var sendHead="filename="+"../user/My Document/"+fileName+"#";
   xmlHttp.send(sendHead+txtXML);
   var_dump(xmlHttp.responseText);

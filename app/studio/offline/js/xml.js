@@ -630,7 +630,7 @@ else if (window.ActiveXObject)
 if (xmlHttp!=null)
   {
   var_dump("ok");
-  xmlHttp.open("POST", "dom_http.php", false);
+  xmlHttp.open("POST", "./dom_http.php", false);
   var sendHead="filename="+g_filename+"#";
   xmlHttp.send(sendHead+xmlToString(xmlDoc));
   var_dump(xmlHttp.responseText);

@@ -32,7 +32,7 @@
   # connect to redis
   > redis-cli
   # connect to postgresql
-  > psql -U postgres -h 127.0.0.1 -p 5433 
+  > psql -U postgres -h 127.0.0.1 -p 5432
   ```
 
   ![start](documents/start.png)

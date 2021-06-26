@@ -368,7 +368,7 @@ function wiki_pre_search(keyword) {
 			if (result.length > 0) {
 				for (x in result) {
 					html +=
-						"<li><a href='wiki.php?op=get&word=" +
+						"<li><a href='./wiki.php?op=get&word=" +
 						result[x].word +
 						"'>" +
 						result[x].word +
