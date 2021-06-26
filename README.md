@@ -12,7 +12,7 @@ cd mint; mkdir tmp; chown -R www:www tmp
 
 ### 工具
 
-推荐使用 **VSCode**, 常用插件列表
+#### 推荐使用 **VSCode**, 常用插件列表
 
 -   [ESLint](https://github.com/Microsoft/vscode-eslint)
 -   [Rust(rls)](https://github.com/rust-lang/rls-vscode)
@@ -22,6 +22,9 @@ cd mint; mkdir tmp; chown -R www:www tmp
 -   [Prettier - Code formatter](https://github.com/prettier/prettier-vscode)
 -   [SQL Formatter](https://github.com/kufii/vscode-sql-formatter)
 
+#### 数据库管理工具
+- [通用数据库管理工具-dbeaver](https://github.com/dbeaver/dbeaver)
+- [redis图形界面工具-RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)
 ### Git commit message 规范
 
 -   遵循 git pull request 流程
