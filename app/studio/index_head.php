@@ -26,7 +26,7 @@ require_once '../public/load_lang.php';
 	<link rel="icon" type="image/png" href="../public/images/favicon/android-chrome-512x512.png" sizes="512x512">
 
 	<!-- Android -->
-	<link rel="shortcut icon" type="image/png" sizes="196x196" href=“../public/images/favicon/favicon-196.png">
+	<link rel="shortcut icon" type="image/png" sizes="196x196" href="../public/images/favicon/favicon-196.png">
 
 	<!-- iOS -->
 	<link rel="apple-touch-icon" href="../public/images/favicon/apple-touch-icon120.png" sizes="120x120">
