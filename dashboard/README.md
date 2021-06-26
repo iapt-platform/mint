@@ -4,7 +4,7 @@
 cd dashboard
 # install dependencies
 yarn install
-# start the dev server
+# start the dev server: http://localhost:8000/my/
 yarn start
 ```
 
@@ -40,13 +40,18 @@ yarn start
 
 - Start backend & frontend server
 
-### Day 2
+### Day 2: Router & Component
 
-### Day 3
+- 浏览器打开： `http://localhost:8000/my/demo`
+- 路由跳转（history vs Link） **pages/demo/index.tsx**
+- 组件复用: **components/demo.ts**
+- 路由参数： **pages/demo/[id]/show.tsx**
 
-### Day 4
+### Day 3: State & Fetch
 
-### Day 5
+### Day 4: Form & Table
+
+### Day 5: Work with http rest api
 
 ### Day 6
 
