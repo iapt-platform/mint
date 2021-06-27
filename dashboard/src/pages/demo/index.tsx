@@ -9,10 +9,7 @@ export default ({}: IProps) => {
   return (
     <div>
       <h1>Demo home page</h1>
-
-
       <div>
-
         <Link to="/demo/items">List items</Link>
         &nbsp;
         <Link to="/demo/items/1/show">Show items 1</Link>
