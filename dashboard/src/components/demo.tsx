@@ -1,5 +1,7 @@
 import {Link} from 'umi';
 import { Alert } from 'antd';
+import { Input } from 'antd';
+
 
 type IWidget1Props ={
   message: String
@@ -63,10 +65,15 @@ export const WidgetWikiPaliArticle = (content: IWidgetArticle) => {
 }
 
 export const WidgetWikiPaliArticleEdit = (content: IWidgetArticle) => {
+  const onChange = e => {
+    console.log('Change:', e.target.value);
+  };
+
+  const { TextArea } = Input;
   return (
     <div>
       <p>wikipali article content edit</p>
-      <textarea>{content.text}</textarea>
+      <TextArea showCount maxLength={500} defaultValue={content.text} onChange={onChange} />
     </div>
   );
 }
