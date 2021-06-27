@@ -73,7 +73,7 @@ export const WidgetWikiPaliArticleEdit = (content: IWidgetArticle) => {
   return (
     <div>
       <p>wikipali article content edit</p>
-      <TextArea showCount maxLength={500} defaultValue={content.text} onChange={onChange} />
+      <TextArea autoSize showCount maxLength={500} defaultValue={content.text} onChange={onChange} />
     </div>
   );
 }
