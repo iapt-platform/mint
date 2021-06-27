@@ -68,7 +68,7 @@ function msg_send() {
 	}
 
 	$.post(
-		"message.php",
+		"./message.php",
 		{
 			op: operation,
 			lastid: iMsgLastUpdateId,

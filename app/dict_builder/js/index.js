@@ -28,7 +28,7 @@ var gCurrWordId=-1;
 	}
 	function select_word(id){
 		gCurrWordId=id;
-		  $("#org_data").load('get_one_word.php?id='+id,function(responseTxt,statusTxt,xhr){
+		  $("#org_data").load('./get_one_word.php?id='+id,function(responseTxt,statusTxt,xhr){
 			if(statusTxt=="success"){
 				var orgword=$("#word_org_text").html();
 				$("#org_edit_text").val(split_word(orgword));
@@ -286,7 +286,7 @@ function replace_table_show(obj){
 function save(edit_status){
 	
 	var word_data=JSON.stringify(new_word_list2);
-	 $.post("save.php",
+	 $.post("./save.php",
 	  {
 		dict_id:gDictId,
 		word_id:gCurrWordId,
@@ -302,7 +302,7 @@ function save(edit_status){
 
 }
 function save_replace_table(){
-	 $.post("save_replace_table.php",
+	 $.post("./save_replace_table.php",
 	  {
 		dict_id:gDictId,
 		main:$("#replace_table_main").val(),
@@ -333,7 +333,7 @@ function final_word_show_hide(){
 function goto_page(obj,dict_id,totle_page){
 	var newpage=obj.value;
 	if(newpage>=0 && newpage<totle_page){
-		window.location.assign("index.php?dict_id="+dict_id+"&page_no="+newpage);
+		window.location.assign("./index.php?dict_id="+dict_id+"&page_no="+newpage);
 
 	}
 }

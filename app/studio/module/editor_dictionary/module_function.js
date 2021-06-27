@@ -40,10 +40,10 @@ function editor_loadDataFromILD(strFileName){
 		var d=new Date();
 		var strLink ="";
 		if(strFileName.substr(-4)==".ild"){
-			strLink = "import_ild.php?filename="+strFileName;
+			strLink = "./import_ild.php?filename="+strFileName;
 		}
 		else if(strFileName.substr(-4)==".pcs"){
-			strLink = "import_wbw.php?filename="+strFileName;
+			strLink = "./import_wbw.php?filename="+strFileName;
 		}
 		if(strLink.length>0){
 			editor_ILDXmlHttp.onreadystatechange=editor_ild_serverResponse;

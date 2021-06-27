@@ -51,7 +51,7 @@ function dict_update_bold(currpage) {
   booklist += ")";
 
   $.get(
-    "title_search.php",
+    "./title_search.php",
     {
       op: "search",
       word: title_search_curr_key,
@@ -98,7 +98,7 @@ function search_search(word) {
     word = word.replace(/\+/g, "%2b");
     dict_search_xml_http.open(
       "GET",
-      "title_search.php?op=search&word=" + word,
+      "./title_search.php?op=search&word=" + word,
       true
     );
     dict_search_xml_http.send();
@@ -146,7 +146,7 @@ function search_pre_search(word) {
     dict_pre_search_xml_http.onreadystatechange = dict_pre_search_serverResponse;
     dict_pre_search_xml_http.open(
       "GET",
-      "title_search.php?op=pre&word=" + word,
+      "./title_search.php?op=pre&word=" + word,
       true
     );
     dict_pre_search_xml_http.send();

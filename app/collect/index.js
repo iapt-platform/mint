@@ -1,6 +1,6 @@
 function collect_load(begin = 0) {
     $.get(
-        "list.php", {
+        "./list.php", {
             begin: begin,
         },
         function(data, status) {

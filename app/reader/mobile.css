@@ -8,7 +8,7 @@
 	position: unset;
 }
 #pali_pedia {
-	font-size: 200%;
+	font-size: unset;
 	margin-top: auto;
 	margin-bottom: auto;
 	padding-left: 0.5em;
@@ -25,5 +25,8 @@
 	flex-direction: column;
 }
 #contents .note_shell > note > .note_body {
+	flex-direction: column;
+}
+#head_bar{
 	flex-direction: column;
 }

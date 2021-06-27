@@ -421,7 +421,7 @@ function indexInit() {
 function goHome() {
 	var r = confirm("在返回前请保存文件。否则所有的更改将丢失。\n 按<确定>回到主页。按<取消>留在当前页面。");
 	if (r == true) {
-		window.location.assign("index.php?device=" + g_device);
+		window.location.assign("./index.php?device=" + g_device);
 	}
 }
 
