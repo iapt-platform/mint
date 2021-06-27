@@ -127,7 +127,7 @@ function editor_getDictFileList() {
 	}
 	var d = new Date();
 	editor_xmlhttp.onreadystatechange = editor_serverResponse;
-	editor_xmlhttp.open("GET", "dict_get_list.php?t=" + d.getTime(), true);
+	editor_xmlhttp.open("GET", "./dict_get_list.php?t=" + d.getTime(), true);
 	editor_xmlhttp.send();
 }
 
@@ -520,7 +520,7 @@ function editor_loadDictFromDB(strFileName, dictName) {
 	if (editor_DictXmlHttp != null) {
 		var d = new Date();
 		var strLink =
-			"dict_find.php?mode=xml&filename=" + strFileName + "&type=" + dictName.type + "&dict=" + dictName.filename;
+			"./dict_find.php?mode=xml&filename=" + strFileName + "&type=" + dictName.type + "&dict=" + dictName.filename;
 		editor_DictXmlHttp.onreadystatechange = editor_dict_serverResponse;
 		//var wordList=getAllWordList();
 
@@ -528,7 +528,7 @@ function editor_loadDictFromDB(strFileName, dictName) {
 
 		if (wordList != null) {
 			document.getElementById("id_dict_msg").innerHTML = "开始匹配字典" + dictName.name;
-			editor_DictXmlHttp.open("POST", "dict_find2.php", true);
+			editor_DictXmlHttp.open("POST", "./dict_find2.php", true);
 			//editor_DictXmlHttp.send(dictName.type+"$"+dictName.filename+"$"+g_dictFindParentLevel+"$"+wordList);
 			editor_DictXmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			editor_DictXmlHttp.send(
@@ -1728,7 +1728,7 @@ function menu_file_convert() {
 
 function editor_save() {
 	$.post(
-		"dom_http.php",
+		"./dom_http.php",
 		{
 			fileid: g_docid,
 			xmldata: com_xmlToString(gXmlBookData),
@@ -1780,7 +1780,7 @@ function menu_file_export_ild() {
 
 	if (xmlHttp != null) {
 		var_dump(gLocal.gui.ok);
-		xmlHttp.open("POST", "export_ild.php", false);
+		xmlHttp.open("POST", "./export_ild.php", false);
 		var sendHead = "filename=" + g_filename + "#";
 		var dictDataString = "<dict>";
 		for (iDict in g_DictWordList) {
@@ -2014,7 +2014,7 @@ function editor_UserDictUpdata(recorderName, thisObj) {
 		queryString += "</wordlist>";
 		editor_DictUpdataXmlHttp.onreadystatechange = editor_UserDictUpdata_serverResponse;
 		debugOutput("updata user dict start.", 0);
-		editor_DictUpdataXmlHttp.open("POST", "dict_updata_user.php", true);
+		editor_DictUpdataXmlHttp.open("POST", "./dict_updata_user.php", true);
 		editor_DictUpdataXmlHttp.send(queryString);
 
 		var i = recorderName;
@@ -2377,7 +2377,7 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 	if (iCount == 0) {
 		ntf_show("no word update");
 	} else {
-		$.post("dict_updata_wbw.php", queryString, function (data, status) {
+		$.post("./dict_updata_wbw.php", queryString, function (data, status) {
 			ntf_show("Data: " + data + "\nStatus: " + status);
 		});
 	}
@@ -2573,7 +2573,7 @@ function editor_WbwUpdata(wordIdFrom, wordIdTo) {
 		if (iCount > 0) {
 			editor_wbwUpdataXmlHttp.onreadystatechange = editor_wbwDictUpdata_serverResponse;
 			console.log("updata user dict start.", 0);
-			editor_wbwUpdataXmlHttp.open("POST", "dict_updata_wbw.php", true);
+			editor_wbwUpdataXmlHttp.open("POST", "./dict_updata_wbw.php", true);
 			editor_wbwUpdataXmlHttp.send(queryString);
 		} else {
 			console.log("no user dicttionary data need updata.", 0);
@@ -3379,7 +3379,7 @@ function input_org_change() {
 	if (arrNewPart.length > 0) {
 		//如果有内存字典里面没有的单词，查询
 		$.get(
-			"dict_find_one.php",
+			"./dict_find_one.php",
 			{
 				word: arrNewPart.join(),
 				type: "part",
@@ -3425,7 +3425,7 @@ function load_my_formula() {
 	//如果有内存字典里面没有的单词，查询
 	console.log("load_my_formula - dict_find_one.php");
 	$.get(
-		"dict_find_one.php",
+		"./dict_find_one.php",
 		{
 			word: "_formula_",
 			dict_name: db_name,
@@ -4034,9 +4034,9 @@ function editor_openProject(strFileId, filetype) {
 		var d = new Date();
 		var strLink = "";
 		if (filetype == "db") {
-			strLink = "project_load_db.php?id=" + strFileId;
+			strLink = "./project_load_db.php?id=" + strFileId;
 		} else {
-			strLink = "project_load.php?id=" + strFileId;
+			strLink = "./project_load.php?id=" + strFileId;
 		}
 		editor_openProjectXmlHttp.onreadystatechange = editor_open_project_serverResponse;
 		editor_openProjectXmlHttp.open("GET", strLink, true);
@@ -4179,7 +4179,7 @@ function on_word_mouse_enter() {
 					gCurrLookupWord = paliword;
 					$.ajax({
 						type: "GET",
-						url: "dict_find_one.php",
+						url: "./dict_find_one.php",
 						dataType: "json",
 						data: "word=" + paliword,
 						success: function (response) {
@@ -4866,7 +4866,7 @@ function editor_importOldVer(strFileName) {
 	if (editor_importOldVerXmlHttp != null) {
 		var d = new Date();
 		var strLink = "";
-		strLink = "com_fileopen.php?filename=" + strFileName;
+		strLink = "./com_fileopen.php?filename=" + strFileName;
 		if (strLink.length > 0) {
 			editor_importOldVerXmlHttp.onreadystatechange = editor_import_old_ver_serverResponse;
 			editor_importOldVerXmlHttp.open("GET", strLink, true);
@@ -5176,7 +5176,7 @@ function editor_word_status(wElement, newStatus = null) {
 //载入用户设置
 function editor_setup_load() {
 	$.post(
-		"user_setup.php",
+		"./user_setup.php",
 		{
 			op: "load",
 		},
@@ -5190,7 +5190,7 @@ function editor_setup_load() {
 //修改用户设置
 function editor_setup_save(key, value) {
 	$.post(
-		"user_setup.php",
+		"./user_setup.php",
 		{
 			op: "save",
 			key: key,
@@ -5287,7 +5287,7 @@ function menu_dict_match1() {
 //自动查词典
 function auto_match_wbw(para_index) {
 	$.get(
-		"dict_find_auto.php",
+		"./dict_find_auto.php",
 		{
 			book: _para_list[para_index].book,
 			para: _para_list[para_index].para,

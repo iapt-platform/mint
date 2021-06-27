@@ -151,7 +151,7 @@ function palicannon_show_filelist(strFolder){
 	}
 	var d=new Date();
 	palicannon_xmlhttp.onreadystatechange=palicannon_serverResponse;
-	palicannon_xmlhttp.open("GET","palicannonfilelist.php?t="+d.getTime()+"&folder="+strFolder,true);
+	palicannon_xmlhttp.open("GET","./palicannonfilelist.php?t="+d.getTime()+"&folder="+strFolder,true);
 	palicannon_xmlhttp.send();
 }
 
@@ -166,7 +166,7 @@ function palicannon_serverResponse(){
 			{
 				var dir_myPaliCannon="../user/My Pali Canon/";
 				fileList = fileList + "<ul>"
-				fileList = fileList + "<li><a href=\"editor.php?filename="+dir_myPaliCannon+strBookFolder+"/"+arrFileList[x]+"&device="+g_device+"&language=zh\">"+arrFileList[x]+"</a></li>"
+				fileList = fileList + "<li><a href=\"./editor.php?filename="+dir_myPaliCannon+strBookFolder+"/"+arrFileList[x]+"&device="+g_device+"&language=zh\">"+arrFileList[x]+"</a></li>"
 				fileList = fileList + "</ul>"
 			}
 			document.getElementById('id_palicannon_index_filelist').innerHTML=fileList;

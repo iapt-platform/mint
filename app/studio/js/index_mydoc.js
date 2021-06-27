@@ -93,9 +93,9 @@ function file_list_refresh() {
 
 					let $link;
 					if (file_list[x].doc_info && file_list[x].doc_info.length > 1) {
-						$link = "<a href='editor.php?op=opendb&fileid=" + file_list[x].id + "' target='_blank'>";
+						$link = "<a href='./editor.php?op=opendb&fileid=" + file_list[x].id + "' target='_blank'>";
 					} else {
-						$link = "<a href='editor.php?op=open&fileid=" + file_list[x].id + "' target='_blank'>";
+						$link = "<a href='./editor.php?op=open&fileid=" + file_list[x].id + "' target='_blank'>";
 					}
 
 					html += $link + "<span id='title_" + file_list[x].id + "'>" + file_list[x].title;
@@ -258,7 +258,7 @@ function file_del() {
 	}
 	if (file_list.length > 0) {
 		$.post(
-			"file_index.php",
+			"./file_index.php",
 			{
 				op: "delete",
 				file: file_list.join(),
@@ -281,7 +281,7 @@ function file_remove() {
 	}
 	if (file_list.length > 0) {
 		$.post(
-			"file_index.php",
+			"./file_index.php",
 			{
 				op: "remove",
 				file: file_list.join(),
@@ -304,7 +304,7 @@ function file_restore() {
 	}
 	if (file_list.length > 0) {
 		$.post(
-			"file_index.php",
+			"./file_index.php",
 			{
 				op: "restore",
 				file: file_list.join(),
@@ -331,7 +331,7 @@ function file_share(isShare) {
 			var share = 0;
 		}
 		$.post(
-			"file_index.php",
+			"./file_index.php",
 			{
 				op: "share",
 				share: share,

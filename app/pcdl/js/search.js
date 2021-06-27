@@ -4,7 +4,7 @@ var search_search_xml_http=null;
 
 
 function pre_search(type="pre",find_word){
-	$.get("search.php",
+	$.get("./search.php",
 		{
 			op:type,
 			word:find_word

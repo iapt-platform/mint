@@ -420,7 +420,7 @@ function project_res_info_click(type, index) {
 
 var g_new_album_guid = "";
 function project_show_album_info(album_id, book, type) {
-	$.get("album.php",
+	$.get("./album.php",
 		{
 			op: "get_album",
 			book: book,
@@ -434,7 +434,7 @@ function project_show_album_info(album_id, book, type) {
 				var bFound = false;
 				for (var i = 0; i < album_data.length; i++) {
 					if (album_data[i].id == currResObj[currResIndex].album_id) {
-						var alink = "album.php?op=show_info&album_id=" + album_data[i].id;
+						var alink = "./album.php?op=show_info&album_id=" + album_data[i].id;
 						html = "专辑名称：<a href='" + alink + "' target='_blank'>《" + album_data[i].title + "》</a><button>删除</button>";
 						bFound = true;
 						break;
@@ -457,7 +457,7 @@ function project_show_album_info(album_id, book, type) {
 				}
 				for (var i = 0; i < album_data.length; i++) {
 					if (album_data[i].used == false) {
-						var alink = "album.php?op=show_info&album_id=" + album_data[i].id;
+						var alink = "./album.php?op=show_info&album_id=" + album_data[i].id;
 						var album_id = album_data[i].id;
 						var album_guid = album_data[i].guid;
 						html_album_list += "<li><a href='" + alink + "' target='_blank'>《" + album_data[i].title + "》</a>" + album_data[i].author + album_data[i].language + " <button onclick=\"project_apply_album('" + album_id + "','" + album_guid + "')\">使用此专辑发布</button></li>";
@@ -546,7 +546,7 @@ function project_new_album_submit() {
 		alert("标题不能为空");
 		return;
 	}
-	$.get("album.php",
+	$.get("./album.php",
 		{
 			op: "new",
 			album_guid: album_guid,
@@ -609,7 +609,7 @@ function editor_project_publish() {
 	}
 
 	if (xmlHttp != null) {
-		xmlHttp.open("POST", "pc_publish.php", false);
+		xmlHttp.open("POST", "./pc_publish.php", false);
 		xmlHttp.send(com_xmlToString(gXmlBookData));
 		var_dump(xmlHttp.responseText);
 	}
@@ -684,7 +684,7 @@ function editor_project_res_publish() {
 		var album_title = getNodeText(xmlParInfo, "album_title");
 		var book = getNodeText(xmlParInfo, "book");
 
-		window.open("publish.php?step=1&id=" + album_id + "&filename=" + g_filename + "&type=" + album_type + "&book=" + book + "&lang=" + album_lang + "&author=" + album_author + "&title=" + album_title, "_blank");
+		window.open("./publish.php?step=1&id=" + album_id + "&filename=" + g_filename + "&type=" + album_type + "&book=" + book + "&lang=" + album_lang + "&author=" + album_author + "&title=" + album_title, "_blank");
 
 	}
 }

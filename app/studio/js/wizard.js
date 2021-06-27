@@ -56,7 +56,7 @@ function wizard_new_finish(){
 	var xmlText = txtXML;
 	var newFileName = new_save(xmlText);
 	if(newFileName){
-		window.open("editor.php?op=open&filename="+newFileName,"_blank");
+		window.open("./editor.php?op=open&filename="+newFileName,"_blank");
 		//window.location.assign("index_new.php");
 		window.history.back();
 	}
@@ -87,7 +87,7 @@ function new_save(strData){
 				g_filename=gConfigDirMydocument+inputFileName+".pcs";
 			}
 		}
-	$.post("dom_http.php",
+	$.post("./dom_http.php",
 	  {
 		filename:g_filename,
 		fileid:0,
@@ -812,7 +812,7 @@ function wizard_palicannon_show_filelist(strBook){
 	gCurrSelectedBook=strBook;
 	var d=new Date();
 	wizard_palicannon_xmlhttp.onreadystatechange=wizard_palicannon_serverResponse;
-	wizard_palicannon_xmlhttp.open("GET","pc_get_book_index.php?t="+d.getTime()+"&book="+strBook,true);
+	wizard_palicannon_xmlhttp.open("GET","./pc_get_book_index.php?t="+d.getTime()+"&book="+strBook,true);
 	wizard_palicannon_xmlhttp.send();
 }
 
@@ -1087,7 +1087,7 @@ function wizard_palicannon_pali_text_query(bookId){
 	}
 	var d=new Date();
 	wizard_palicannon_pali_text_xmlhttp.onreadystatechange=wizard_palicannon_pali_text_serverResponse;
-	wizard_palicannon_pali_text_xmlhttp.open("GET","pc_get_pali_text.php?book="+bookId,true);
+	wizard_palicannon_pali_text_xmlhttp.open("GET","./pc_get_pali_text.php?book="+bookId,true);
 	wizard_palicannon_pali_text_xmlhttp.send();
 }
 
@@ -1592,7 +1592,7 @@ function pc_res_preview(resIndex){
 		edition=gResList[resIndex].edition;
 		subver=gResList[resIndex].subver;
 		
-		var link="pc_get_res_preview.php?res_type="+res+"&book="+book+"&begin="+thisParNum+"&end="+thisParEnd+"&author="+author+"&editor="+editor+"&revision="+revision+"&language="+language+"&edition="+edition+"&subver="+subver;
+		var link="./pc_get_res_preview.php?res_type="+res+"&book="+book+"&begin="+thisParNum+"&end="+thisParEnd+"&author="+author+"&editor="+editor+"&revision="+revision+"&language="+language+"&edition="+edition+"&subver="+subver;
 	
 	return(link);
 }
@@ -1797,7 +1797,7 @@ function wizard_palicannon_nav_level_show(showLevel){
  */
 function wizard_save_download_list(){
 	var strDownload = JSON.stringify(gResDownloadList);
-	$.post("user_file.php",
+	$.post("./user_file.php",
 	{
 		op:"save",
 		filename:"dl.json",

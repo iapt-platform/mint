@@ -11,6 +11,7 @@
 /tmp/
 /.favorites.json
 /package-lock.json
+/yarn.lock
 /composer.lock
 
 # dependencies

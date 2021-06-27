@@ -200,7 +200,7 @@ function reader_init() {
     let begin = $(this).attr("begin");
     let end = $(this).attr("end");
     window.location.assign(
-      "reader.php?view=sent&book=" +
+      "./reader.php?view=sent&book=" +
         book +
         "&para=" +
         para +
@@ -268,7 +268,7 @@ function reader_init() {
     let end = $(this).attr("end");
     let id = $(this).attr("sent_id");
     window.location.assign(
-      "reader.php?view=sent&book=" +
+      "./reader.php?view=sent&book=" +
         book +
         "&para=" +
         para +
@@ -354,7 +354,7 @@ function reader_init() {
       view = "chapter";
     }
     window.location.assign(
-      "reader.php?view=" + view + "&book=" + book + "&para=" + para
+      "./reader.php?view=" + view + "&book=" + book + "&para=" + para
     );
   });
   term_get_dict();

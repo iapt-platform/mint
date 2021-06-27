@@ -50,7 +50,7 @@ function menu_view_script(showto, code) {
 
 	if (xmlHttp != null) {
 		var d = new Date();
-		var strLink = "spt_get.php?code=" + code;
+		var strLink = "./spt_get.php?code=" + code;
 		xmlHttp.open("GET", strLink, false);
 		xmlHttp.send(null);
 		xmlText = xmlHttp.responseText;
