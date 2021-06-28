@@ -1,7 +1,24 @@
 # [PCD-Suite](https://github.com/iapt-platform/PCD-Suite)的 Rust&React 重写版
 
+## 目录
+
+|目录|用途|备注|
+|-|-|-|
+|app|旧的项目目录||
+|dashboard|前端代码||
+|api|后端代码||
+|documents|开发文档||
+|docker|podman 启动脚本||
+|font|网站所使用的字体||
+|dicttext|字典数据文件csv格式||
+|docker|podman 启动脚本||
+|pali_title|三藏标题csv|更新csv文件后，运行install/***.php更新数据库|
+|phphtml|三藏原文数据|html格式，来自pced|
+|paliword|巴利文献单词表 |用三藏原文数据库导出的单词表生成|以后考虑服务器端生成|
+
 ## 安装
 
+MacOS
 ```bash
 cd mint; mkdir tmp; chown -R www:www tmp
 ```
@@ -9,7 +26,17 @@ cd mint; mkdir tmp; chown -R www:www tmp
 然后进入 http://localhost/app/install 开始安装
 
 ## 开发
+### 技术栈
+#### 前端
+- ant design pro
+- react
+- Tapescript
 
+#### 后端
+- PostgreSQL
+- PHP
+- Laravel
+  
 ### 工具
 
 #### 推荐使用 **VSCode**, 常用插件列表
