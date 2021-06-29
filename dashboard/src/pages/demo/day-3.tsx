@@ -1,6 +1,10 @@
 import React,{useState} from 'react';
-import { Form, Input, Button, Select,Checkbox } from 'antd';
+import { Form, Input, Button, Select,Radio,Switch,DatePicker,Popconfirm,message,Space,Checkbox } from 'antd';
+import { CloseOutlined,CheckOutlined } from '@ant-design/icons';
+
 const {Option}=Select;
+
+
 
 export default () => {
     const [form] = Form.useForm();
@@ -60,6 +64,26 @@ export default () => {
     }
   }
 
+  const [valueLang,setValueLang] = React.useState(1);
+  const onChangeLang = e =>{
+    console.log('radio lang checked',e.target.value);
+    setValueLang(e.target.value);
+
+  }
+
+  function onChangeDate(value,dateString){
+    console.log("selectd time",value);
+    console.log('formatted selected time:',dateString);
+  }
+  function onOkDate(value){
+    console.log('onOk:',value);
+  }
+  function confirm(){
+    message.info('clicked on yes.');
+  }
+  function onChangeCheckbox(e){
+    console.log("checked:",e.target.checked);
+  }
   return (
     <Form
     form={form}
@@ -138,12 +162,33 @@ export default () => {
           <Option value="other">其他</Option>
       </Select>
   </Form.Item>
-  
+  <Form.Item name="lang" label="界面语言">
+    {
+      
+    }
+    <Radio.Group onChange={onChangeLang} value={valueLang}>
+        <Radio value={'en'}>英文</Radio>
+        <Radio value={'zh-hans'}>简体中文</Radio>
+        <Radio value={'zh-hant'}>繁体中文</Radio>
+    </Radio.Group>
+  </Form.Item>
+  <Form.Item name="datetime" label="开始时间">
+    <DatePicker showTime onChange={onChangeDate} onOk={onOkDate}/>
+  </Form.Item>
+  <Form.Item name="org_text" label="显示原文">
+    <Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} defaultChecked />
+  </Form.Item>
+  <Form.Item name="checkbox" label="checkbox">
+    <Checkbox onChange={onChangeCheckbox}>checkbox</Checkbox>
+  </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           提交
         </Button>
-        <Button type="link" htmlType="button" onClick={onFill}>填充</Button>
+        <Popconfirm placement="top" title="清空吗？" onConfirm={confirm} okText="是" cancelText="否">
+          <Button type="link" htmlType="button" onClick={onFill}>清空</Button>
+        </Popconfirm>
+        
       </Form.Item>
     </Form>
   );
