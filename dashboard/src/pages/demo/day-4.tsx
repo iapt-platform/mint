@@ -1,13 +1,15 @@
-import { Layout,Menu,Breadcrumb,Table,Tag,Space } from "antd";
+import { Layout,Menu,Breadcrumb,Table,Tag,Space,Pagination,message ,notification} from "antd";
+import {Row,Col} from "antd";
 import { UserOutlined,LaptopOutlined,NotificationOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
-import ReactDOM from "react-dom";
 
 const {SubMenu} = Menu;
 const {Header,Content,Sider}=Layout;
 
-
-
+message.config({
+    maxCount:4
+});
+//表数据
 const dataSource=[
     {
         key:'1',
@@ -20,10 +22,33 @@ const dataSource=[
         name:'name2',
         age:34,
         adress:'西湖公园'
+    },
+    {
+        key:'3',
+        name:'name1',
+        age:32,
+        adress:"西湖南路"
+    },
+    {
+        key:'4',
+        name:'name2',
+        age:34,
+        adress:'西湖公园'
+    },
+    {
+        key:'5',
+        name:'name1',
+        age:32,
+        adress:"西湖南路"
+    },
+    {
+        key:'6',
+        name:'name2',
+        age:34,
+        adress:'西湖公园'
     }
-
 ]
-
+//表头
 const columns=[
     {
         title:'Name',
@@ -43,29 +68,36 @@ const columns=[
     }
 ]
 
-
-class App extends React.Component{
-    state={
-        current:'mail',
+function handleClick(e){
+    console.log('click',e);
+    ntfOpen(e.key);
+}
+function pageChange(page: number,pagesize?: number | undefined){
+    message.info("page:"+page);
+    if(pagesize){    
+        message.error("pagesize:"+pagesize);
     }
-         handleclick=e=>{
-        console.log('click',e);
-        this.setState({current:e.key});
-    }
+}
+function ntfOpen(msg: string){
+    const args={
+        message:"title",
+        description:msg,
+        duration:5,
+        };
+        notification.open(args);
 
-    render(){
-    
-        const {current}=this.state;
-    
+}
+export default () => {
+
         return(
             <Layout>
                 <Header className="header">
                     <div className="logo" />
-                    <Menu onClick={this.handleclick} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                        <Menu.Item key="1">nav 1</Menu.Item>
-                        <Menu.Item key="2">nav 2</Menu.Item>
+                    <Menu onClick={handleClick} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                        <Menu.Item key="1">Palicanon</Menu.Item>
+                        <Menu.Item key="2">Course</Menu.Item>
                         <Menu.Item key="3">nav 3</Menu.Item>
-                        <SubMenu key="submenu" icon={<UserOutlined />} title="subnav -1">
+                        <SubMenu key="submenu" icon={<UserOutlined />} title="Others">
                             <Menu.ItemGroup title="group1">
                                 <Menu.Item key="4">option1</Menu.Item>
                                 <Menu.Item key="5">option2</Menu.Item>
@@ -78,9 +110,9 @@ class App extends React.Component{
                             </Menu.ItemGroup>
                         </SubMenu>
                     </Menu>
-                </Header>
+                </Header>                    
                 <Layout>
-                    <Sider width={200} className="site-layout-background">
+                    <Sider className="site-layout-background">
                         <Menu
                         mode="inline"
                         defaultSelectedKeys={['1']}
@@ -101,29 +133,44 @@ class App extends React.Component{
                             </SubMenu>
                         </Menu>
                     </Sider>
-                    <Layout style={{padding:'0 24px 24px'}}>
-                        <Breadcrumb style={{padding:'0 24px 24px'}}>
-                            <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            <Breadcrumb.Item>List</Breadcrumb.Item>
-                            <Breadcrumb.Item>App</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <Content
-                        className="site-layout-background"
-                        style={{
-                            padding:24,
-                            margin:0,
-                            minHeight:280,
-                        }}>
-                            <Table dataSource={dataSource} columns={columns} />
-                        </Content>
-                    </Layout>
-                    <Sider>right</Sider>
+
+                            <Layout style={{padding:'0 24px 24px'}}>
+                                <Breadcrumb style={{padding:'0 24px 24px'}}>
+                                    <Breadcrumb.Item>Home</Breadcrumb.Item>
+                                    <Breadcrumb.Item>List</Breadcrumb.Item>
+                                    <Breadcrumb.Item>App</Breadcrumb.Item>
+                                </Breadcrumb>
+                                <Content
+                                className="site-layout-background"
+                                style={{
+                                    padding:24,
+                                    margin:0,
+                                    minHeight:280,
+                                    width:"100%",
+                                    overflowX:"auto",
+                                }}>
+                                    <Table dataSource={dataSource} columns={columns} />
+                                    <div>搜索结果</div>
+                                    <Pagination defaultCurrent={1} total={54} onChange={pageChange} />
+                                </Content>
+                            </Layout>
+                            <Sider>right</Sider>
                 </Layout>
-                <Footer>footer</Footer>
+
+                <Footer>
+                    <Row>
+                        <Col span={4}>col1</Col>
+                        <Col span={16}>col2</Col>
+                        <Col span={4}>col3</Col>
+                    </Row>      
+                    <Row>
+                        <Col xs={4} md={5} xl={4}> col4</Col>
+                        <Col xs={20} md={14} xl={16}> col5 </Col>
+                        <Col xs={0} md={5} xl={4}> col6 </Col>
+                    </Row>
+                </Footer>
             </Layout>
         );
-    }
 
 }
 
-ReactDOM.render(<App />,mountNode);
