@@ -1,10 +1,13 @@
-import { Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification } from "antd";
+import { Affix, Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification, Anchor } from "antd";
 import { Row, Col } from "antd";
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
+import { useState } from 'react';
+import { WidgetCommitNofifiction } from '@/components/demo'
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+const { Link } = Anchor;
 
 message.config({
 	maxCount: 4
@@ -88,12 +91,29 @@ function ntfOpen(msg: string) {
 
 }
 export default () => {
+	const [top, setTop] = useState(0);
+	const [bottom, setBottom] = useState(10);
+	const [commitStatus, setcommitStatus] = useState(false);
+	const [commitTime, setcommitTime] = useState(0);
+	const [commitMsg, setcommitMsg] = useState("失败");
+
+	function pageChange(page: number, pagesize?: number | undefined) {
+		setcommitTime(page);
+		message.info("page:" + page);
+		if (pagesize) {
+			message.error("pagesize:" + pagesize);
+		}
+	}
 
 	return (
 		<Layout>
 			<Header className="header">
 				<div className="logo" />
+
 				<Menu onClick={handleClick} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+					<Menu.Item key="0">
+						<WidgetCommitNofifiction time={commitTime} message={commitMsg} successful={commitStatus} />
+					</Menu.Item>
 					<Menu.Item key="1">Palicanon</Menu.Item>
 					<Menu.Item key="2">Course</Menu.Item>
 					<Menu.Item key="3">nav 3</Menu.Item>
@@ -112,27 +132,29 @@ export default () => {
 				</Menu>
 			</Header>
 			<Layout>
-				<Sider className="site-layout-background">
-					<Menu
-						mode="inline"
-						defaultSelectedKeys={['1']}
-						defaultOpenKeys={['sub1']}
-						style={{ height: '100%', borderRight: 0 }}
-					>
-						<SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-							<Menu.Item key="1">option1</Menu.Item>
-							<Menu.Item key="2">option2</Menu.Item>
-							<Menu.Item key="3">option3</Menu.Item>
-							<Menu.Item key="4">option4</Menu.Item>
-						</SubMenu>
-						<SubMenu key="sub2" icon={<UserOutlined />} title="subnav 2">
-							<Menu.Item key="5">option1</Menu.Item>
-							<Menu.Item key="6">option2</Menu.Item>
-							<Menu.Item key="7">option3</Menu.Item>
-							<Menu.Item key="8">option4</Menu.Item>
-						</SubMenu>
-					</Menu>
-				</Sider>
+				<Affix offsetTop={top}>
+					<Sider className="site-layout-background">
+						<Menu
+							mode="inline"
+							defaultSelectedKeys={['1']}
+							defaultOpenKeys={['sub1']}
+							style={{ height: '100%', borderRight: 0 }}
+						>
+							<SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
+								<Menu.Item key="1">option1</Menu.Item>
+								<Menu.Item key="2">option2</Menu.Item>
+								<Menu.Item key="3">option3</Menu.Item>
+								<Menu.Item key="4">option4</Menu.Item>
+							</SubMenu>
+							<SubMenu key="sub2" icon={<UserOutlined />} title="subnav 2">
+								<Menu.Item key="5">option1</Menu.Item>
+								<Menu.Item key="6">option2</Menu.Item>
+								<Menu.Item key="7">option3</Menu.Item>
+								<Menu.Item key="8">option4</Menu.Item>
+							</SubMenu>
+						</Menu>
+					</Sider>
+				</Affix>
 
 				<Layout style={{ padding: '0 24px 24px' }}>
 					<Breadcrumb style={{ padding: '0 24px 24px' }}>
@@ -154,7 +176,16 @@ export default () => {
 						<Pagination defaultCurrent={1} total={54} onChange={pageChange} />
 					</Content>
 				</Layout>
-				<Sider>right</Sider>
+				<Affix offsetTop={top}>
+					<Sider>
+						<Anchor>
+							<Link href="#aa" title="aa" />
+							<Link href="#bb" title="bb" />
+							<Link href="#cc" title="cc" />
+							<Link href="#dd" title="dd" />
+						</Anchor>
+					</Sider>
+				</Affix>
 			</Layout>
 
 			<Footer>
