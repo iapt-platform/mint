@@ -1,10 +1,13 @@
-import { Layout,Menu,Breadcrumb,Table,Tag,Space,Pagination,message ,notification} from "antd";
+import { Affix, Layout,Menu,Breadcrumb,Table,Tag,Space,Pagination,message ,notification,Anchor} from "antd";
 import {Row,Col} from "antd";
 import { UserOutlined,LaptopOutlined,NotificationOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
+import { useState } from 'react';
+import {WidgetCommitNofifiction} from '@/components/demo'
 
 const {SubMenu} = Menu;
 const {Header,Content,Sider}=Layout;
+const {Link} = Anchor;
 
 message.config({
     maxCount:4
@@ -72,12 +75,7 @@ function handleClick(e){
     console.log('click',e);
     ntfOpen(e.key);
 }
-function pageChange(page: number,pagesize?: number | undefined){
-    message.info("page:"+page);
-    if(pagesize){    
-        message.error("pagesize:"+pagesize);
-    }
-}
+
 function ntfOpen(msg: string){
     const args={
         message:"title",
@@ -88,12 +86,29 @@ function ntfOpen(msg: string){
 
 }
 export default () => {
+    const [top,setTop] = useState(0);
+    const [bottom,setBottom] = useState(10);
+    const [commitStatus,setcommitStatus] = useState(false);
+    const [commitTime,setcommitTime] = useState(0);
+    const [commitMsg,setcommitMsg] = useState("失败");
+
+function pageChange(page: number,pagesize?: number | undefined){
+    setcommitTime(page);
+    message.info("page:"+page);
+    if(pagesize){    
+        message.error("pagesize:"+pagesize);
+    }
+}
 
         return(
             <Layout>
                 <Header className="header">
                     <div className="logo" />
+                    
                     <Menu onClick={handleClick} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                        <Menu.Item key="0">
+                            <WidgetCommitNofifiction time={commitTime} message={commitMsg} successful={commitStatus} />
+                        </Menu.Item>
                         <Menu.Item key="1">Palicanon</Menu.Item>
                         <Menu.Item key="2">Course</Menu.Item>
                         <Menu.Item key="3">nav 3</Menu.Item>
@@ -112,6 +127,7 @@ export default () => {
                     </Menu>
                 </Header>                    
                 <Layout>
+                    <Affix offsetTop={top}>
                     <Sider className="site-layout-background">
                         <Menu
                         mode="inline"
@@ -133,6 +149,7 @@ export default () => {
                             </SubMenu>
                         </Menu>
                     </Sider>
+                    </Affix>
 
                             <Layout style={{padding:'0 24px 24px'}}>
                                 <Breadcrumb style={{padding:'0 24px 24px'}}>
@@ -154,7 +171,16 @@ export default () => {
                                     <Pagination defaultCurrent={1} total={54} onChange={pageChange} />
                                 </Content>
                             </Layout>
-                            <Sider>right</Sider>
+                            <Affix offsetTop={top}>
+                                <Sider>
+                                    <Anchor>
+                                        <Link href="#aa" title="aa" />
+                                        <Link href="#bb" title="bb" />
+                                            <Link href="#cc" title="cc" />
+                                        <Link href="#dd" title="dd" />
+                                    </Anchor>
+                                </Sider>
+                            </Affix>
                 </Layout>
 
                 <Footer>
