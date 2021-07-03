@@ -5,6 +5,7 @@ import { Footer } from "antd/lib/layout/layout";
 import { useState } from 'react';
 import { WidgetCommitNofifiction } from '@/components/demo'
 
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Link } = Anchor;
@@ -96,6 +97,19 @@ export default () => {
 	const [commitStatus, setcommitStatus] = useState(false);
 	const [commitTime, setcommitTime] = useState(0);
 	const [commitMsg, setcommitMsg] = useState("失败");
+
+	const [tableData, setTableData] = useState();
+	/*
+		fetch('http://localhost/mint/app/day-5.json')
+			.then(function (response) {
+				console.log("ajex:", response);
+				return response.json();
+			})
+			.then(function (myJson) {
+				console.log(myJson);
+				setTableData(myJson);
+			});
+	*/
 
 	function pageChange(page: number, pagesize?: number | undefined) {
 		setcommitTime(page);
