@@ -15,6 +15,7 @@ func main() {
 
 	// TODO 在这里进行http mount
 	rt.GET("/demo/get", mint.GetDemo(db))
+	rt.POST("/demo/sign-in", mint.LoginDemo(db))
 
 	rt.Run()
 }

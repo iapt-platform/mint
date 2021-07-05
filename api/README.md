@@ -2,7 +2,7 @@
 
 ```bash
 go mod tidy
-go run ./cmd/mint
+go run .
 ```
 
 ## Documents
@@ -12,8 +12,9 @@ go run ./cmd/mint
 
 ## SOP
 
-- HTTP Router(GET/POST/PUT/PATCH/DELETE)
-- HTTP Request with JSON body
-- HTTP Response with JSON body
-- Gorm (Create Table): mint/db.go
+- Gin: Using GET, POST, PUT, PATCH, DELETE
+- Gin: Parameters in path
+- Gin: Querystring parameters
+- Gin: Model binding and validation
+- Gorm (Create Table with raw sql): mint/db.go
 - Gorm insert/update/delete/select
