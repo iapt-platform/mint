@@ -18,5 +18,4 @@ go run .
 - Gin: Parameters in path
 - Gin: Querystring parameters
 - Gin: Model binding and validation
-- Gorm (Create Table with raw sql): mint/db.go
 - Gorm insert/update/delete/select
