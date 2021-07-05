@@ -1,7 +1,9 @@
 # USAGE
 
 ```bash
+# Install third dependices
 go mod tidy
+# start http server
 go run .
 ```
 
