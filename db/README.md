@@ -1,8 +1,7 @@
 # USAGE
 
-```bash
-psql -U postgres -h 127.0.0.1 -p 5432
-> create database mint;
+![create database](create-database.png)
+
 ```
 
 ```bash
@@ -17,3 +16,5 @@ diesel migration revert
 # Lists all available migrations
 diesel migration list
 ```
+
+![generate](generate.png)
