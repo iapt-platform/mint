@@ -1,14 +1,17 @@
 # USAGE
 
 ```bash
+# Install third dependices
 go mod tidy
+# start http server
 go run .
 ```
 
 ## Documents
 
 - [Gin Web Framework](https://github.com/gin-gonic/gin)
-- [The fantastic ORM library for Golang](https://gorm.io/docs/)
+- [PostgreSQL client and ORM for Golang](https://github.com/go-pg/pg)
+- [Introduction to Object-relational mapping](https://pg.uptrace.dev/orm/intro/)
 
 ## SOP
 
@@ -16,5 +19,4 @@ go run .
 - Gin: Parameters in path
 - Gin: Querystring parameters
 - Gin: Model binding and validation
-- Gorm (Create Table with raw sql): mint/db.go
-- Gorm insert/update/delete/select
+- Pg: Quickstart(**ingore createSchema**)
