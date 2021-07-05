@@ -4,15 +4,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"github.com/go-pg/pg/v10"
 )
 
 type Login struct {
-	User     string `form:"user" json:"user" xml:"user"  binding:"required"`
-	Password string `form:"password" json:"password" xml:"password" binding:"required"`
+	User     string `form:"user" json:"user" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }
 
-func LoginDemo(_db *gorm.DB) gin.HandlerFunc {
+func LoginDemo(_db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// TODO 在这里进行db操作
 		var form Login
@@ -32,9 +32,13 @@ func LoginDemo(_db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GetDemo(_db *gorm.DB) gin.HandlerFunc {
+func GetDemo(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// TODO 在这里进行db操作
+		_, err := db.Exec("SELECT CURRENT_TIMESTAMP")
+		if err != nil {
+			panic(err)
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
