@@ -21,6 +21,7 @@
 	"dict.blacklist": ["@all", "bhmf"],
 	"lib.first_script": "Roman",
 	"lib.second_script": "none",
-	"lib.pali_script": ["none", "Roman", "မြန်မာ"],
+	"lib.pali_script": ["none", "Roman", "မြန်မာ","සිංහල"],
+	"_lib.pali_script": ["none", "Roman", "မြန်မာ","සිංහල"],
 	"term.template": ["[%mean%](%pali% %mean2% %mymean%)", "[%mean%]", "", ""]
 }

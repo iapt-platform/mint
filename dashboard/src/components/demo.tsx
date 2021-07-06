@@ -1,7 +1,7 @@
 import {Link} from 'umi';
 import { Alert } from 'antd';
 import { Input } from 'antd';
-
+import { WarningOutlined,LoadingOutlined  } from '@ant-design/icons';
 
 type IWidget1Props ={
   message: String
@@ -76,4 +76,28 @@ export const WidgetWikiPaliArticleEdit = (content: IWidgetArticle) => {
       <TextArea autoSize showCount maxLength={500} defaultValue={content.text} onChange={onChange} />
     </div>
   );
+}
+
+type IWidgetCommitMessage ={
+  message: string,
+  successful:boolean,
+  time:number,
+}
+
+export const WidgetCommitNofifiction = (message: IWidgetCommitMessage) => {
+        if(message.successful){
+          return (
+            <span>
+              <LoadingOutlined />{message.time}{message.message}
+            </span>
+          );          
+        }
+        else{
+          return (
+            <span>
+              <WarningOutlined />{message.time}{message.message}
+            </span>
+          );
+        } 
+
 }

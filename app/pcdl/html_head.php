@@ -115,7 +115,7 @@ if (isset($_GET["language"])) {
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css" />
 
 	<script src="../public/charcode/coverter_my.js"></script>
-
+	<script src="../public/charcode/converter_si.js"></script>
 	<script>
 		<?php require_once '../public/load_lang_js.php'; ?>
 	</script>
