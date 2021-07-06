@@ -36,3 +36,9 @@
   ```
 
   ![start](documents/start.png)
+
+- For VSCode **Run in your local host**
+
+```bash
+sudo apt install yarnpkg golang-go
+```
