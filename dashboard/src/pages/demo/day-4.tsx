@@ -55,20 +55,20 @@ const dataSource = [
 //表头
 const columns = [
 	{
-		title: 'Name',
-		dataIndex: 'name',
-		key: 'name',
+		title: 'Id',
+		dataIndex: 'id',
+		key: 'id',
 		render: text => <a>{text}</a>,
 	},
 	{
-		title: 'Age',
-		dataIndex: 'age',
-		key: 'age',
+		title: 'user_id',
+		dataIndex: 'user_id',
+		key: 'user_id',
 	},
 	{
-		title: "地址",
-		dataIndex: 'adress',
-		key: 'adress',
+		title: "title",
+		dataIndex: 'title',
+		key: 'title',
 	}
 ]
 
@@ -99,18 +99,19 @@ export default () => {
 	const [commitMsg, setcommitMsg] = useState("失败");
 
 	const [tableData, setTableData] = useState();
-	/*
-		fetch('http://localhost/mint/app/day-5.json')
+
+
+	function getTableData(){
+		fetch('https://gorest.co.in/public-api/posts')
 			.then(function (response) {
 				console.log("ajex:", response);
 				return response.json();
 			})
 			.then(function (myJson) {
-				console.log(myJson);
-				setTableData(myJson);
-			});
-	*/
-
+				console.log("ajex",myJson.data);
+				setTableData(myJson.data);
+			});		
+	}
 	function pageChange(page: number, pagesize?: number | undefined) {
 		setcommitTime(page);
 		message.info("page:" + page);
@@ -128,7 +129,7 @@ export default () => {
 					<Menu.Item key="0">
 						<WidgetCommitNofifiction time={commitTime} message={commitMsg} successful={commitStatus} />
 					</Menu.Item>
-					<Menu.Item key="1">Palicanon</Menu.Item>
+					<Menu.Item key="1" onClick={getTableData}>Palicanon</Menu.Item>
 					<Menu.Item key="2">Course</Menu.Item>
 					<Menu.Item key="3">nav 3</Menu.Item>
 					<SubMenu key="submenu" icon={<UserOutlined />} title="Others">
@@ -185,7 +186,7 @@ export default () => {
 							width: "100%",
 							overflowX: "auto",
 						}}>
-						<Table dataSource={dataSource} columns={columns} />
+						<Table dataSource={tableData} columns={columns} />
 						<div>搜索结果</div>
 						<Pagination defaultCurrent={1} total={54} onChange={pageChange} />
 					</Content>

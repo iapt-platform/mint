@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { Form, Input, Button, Select,Radio,Switch,DatePicker,Popconfirm,message,Space,Checkbox } from 'antd';
+import { Table,Form, Input, Button, Select,Radio,Switch,DatePicker,Popconfirm,message,Space,Checkbox } from 'antd';
 import { CloseOutlined,CheckOutlined } from '@ant-design/icons';
 
 const {Option}=Select;
@@ -51,6 +51,7 @@ export default () => {
   //提交表单
   const onSubmit=()=>{
     console.log("form:",form);
+    getTableData(form.getFieldValue("username"));
 
   }
   const validatePassword=(rule,value,callback)=>{
@@ -84,7 +85,45 @@ export default () => {
   function onChangeCheckbox(e){
     console.log("checked:",e.target.checked);
   }
+  //表头
+const columns = [
+	{
+		title: 'Id',
+		dataIndex: 'id',
+		key: 'id',
+		render: text => <a>{text}</a>,
+	},
+	{
+		title: 'name',
+		dataIndex: 'name',
+		key: 'name',
+	},
+	{
+		title: "gender",
+		dataIndex: 'gender',
+		key: 'gender',
+	},
+  {
+		title: "email",
+		dataIndex: 'email',
+		key: 'email',
+	}
+]
+function getTableData(name:string){
+  fetch('https://gorest.co.in/public-api/users?name='+name)
+    .then(function (response) {
+      console.log("ajex:", response);
+      return response.json();
+    })
+    .then(function (myJson) {
+      console.log("ajex",myJson.data);
+      setTableData(myJson.data);
+    });		
+}  
+const [tableData, setTableData] = useState();
   return (
+    <div>
+      <Table dataSource={tableData} columns={columns} />
     <Form
     form={form}
       name="control-hooks"
@@ -191,5 +230,9 @@ export default () => {
         
       </Form.Item>
     </Form>
+
+          
+    </div>
+
   );
 };

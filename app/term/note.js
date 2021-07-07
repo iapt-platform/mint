@@ -1855,7 +1855,15 @@ function set_pali_script(pos, script) {
 			.wrap("<pl" + pos + "></pl" + pos + ">");
 
 		$("pl" + pos).html(function (index, oldcontent) {
-			return roman_to_my(oldcontent);
+			switch(script){
+				case "မြန်မာ":
+					return roman_to_my(oldcontent);
+				case "සිංහල":
+					return roman_to_si(oldcontent);
+				default:
+					return(oldcontent);
+			}
+			
 		});
 	}
 }

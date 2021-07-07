@@ -96,12 +96,14 @@ var char_roman_to_myn = [
 	{ id: "ငော", value: "ငေါ" },
 	{ id: "ဒော", value: "ဒေါ" },
 	{ id: "ပော", value: "ပေါ" },
-	{ id: "ဝော", value: "ဝေါ" },
-	{ id: "ဂာ", value: "ဂါ" }, //g
-	{ id: "ငာ", value: "ငါ" }, //ṅ
-	{ id: "ဒာ", value: "ဒါ" }, //d
-	{ id: "ပာ", value: "ပါ" }, //p
-	{ id: "ဝာ", value: "ဝါ" }, //v
+	{ id: "ဝော", value: "ဝေါ" },//vo
+	{ id: "ဂာ", value: "ဂါ" }, //gā
+	{ id: "ငာ", value: "ငါ" }, //ṅā
+	{ id: "ဒာ", value: "ဒါ" }, //dā
+	{ id: "ပာ", value: "ပါ" }, //pā
+	{ id: "ဝာ", value: "ဝါ" }, //vā
+	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
+	
 ];
 
 var char_myn_to_roman_1 = [
