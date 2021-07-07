@@ -1,5 +1,45 @@
 # 数据库
 
+```mermaid
+classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    class Duck{
+      +String beakColor
+      +swim()
+      +quack()
+    }
+    class Fish{
+      -int sizeInFeet
+      -canEat()
+    }
+    class Zebra{
+      +bool is_wild
+      +run()
+    }
+    class user{
+    id INTEGER PRIMARY KEY
+    userid       TEXT
+    path         CHAR
+    username     TEXT
+    password     TEXT
+    nickname     TEXT
+    email        TEXT
+    create_time  INTEGER
+    modify_time  INTEGER
+    receive_time INTEGER
+    setting      TEXT
+    }
+
+
+
+```
+
 ## 语料库
 
 ## 字典
@@ -71,6 +111,9 @@ TEXT
 #### `email`
 电邮地址
 
+
+## Channel
+
 ## 用户字典
 
 ## 逐词解析
@@ -134,7 +177,6 @@ CREATE TABLE wbw (
 ## 工作组
 
 
-## Channel
 
 
 ## 文章
