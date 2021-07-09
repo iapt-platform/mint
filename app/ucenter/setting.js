@@ -183,7 +183,7 @@ function setting_paliscript_change(set) {
 function setting_render_paliscript(set) {
 	let html = "";
 	html += "<select id='" + set + "' onchange=\"setting_paliscript_change('" + set + "')\">";
-	for (const iterator of setting["lib.pali_script"]) {
+	for (const iterator of setting["_lib.pali_script"]) {
 		html += "<option value='" + iterator + "'";
 		if (iterator == setting[set]) {
 			html += "selected='selected'";

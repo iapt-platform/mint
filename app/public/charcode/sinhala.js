@@ -1220,3 +1220,4 @@ var char_unicode_to_si_n=[
 { "id":"e" , "value":"එ" },
 { "id":"o" , "value":"ඔ" }
 ];
+
