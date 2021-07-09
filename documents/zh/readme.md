@@ -1,6 +1,5 @@
 # wikipali 开发文档
 
-
 ## 概述
 ## 价值观
 - **可重用的数据** 从逐词解析到整篇译文。所有的数据应该是可重用的。可重用意味着在技术层面应该存储计算机可辨识的格式的数据。
@@ -14,3 +13,5 @@
 1. [前端文档]](dashboard/readme.md)
 1. [数据库设计]](db/readme.md)
 1. [运维]](deploy/readme.md)
+
+git commit message格式 请参见https://gitmoji.dev/
