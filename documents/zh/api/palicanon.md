@@ -1,20 +1,18 @@
-# 主题：Palicanon-巴利三藏 
+# 主题：语料库
 
-## API
-
-### book_tag.php
-
-#### 功能
+## 用标签查段落
+> 参照：book_tag.php
+### 功能
 根据输入标签，输出符合这个标签的标题
-#### 参数
+### 参数
 - GET
 - `tag` 以逗号分隔的标签字符串
 - `lang`  语言 如 en, zh-hans
   
-#### rest api
+### rest api
     api/palicanon/[lang]/[tag]
 
-#### 返回
+### 返回
 
 格式：json
 ```
