@@ -5,6 +5,13 @@
 - Redis
 - ES
 
+给vscode用的go
+```
+sudo apt install yarnpkg golang-go
+```
+## 文档资源
+
+
 ## 依赖
 https://github.com/go-redis/redis
 

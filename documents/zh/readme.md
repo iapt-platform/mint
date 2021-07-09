@@ -15,3 +15,5 @@
 1. [运维]](deploy/readme.md)
 
 git commit message格式 请参见https://gitmoji.dev/
+
+用户手册请参考https://github.com/iapt-platform/help.zh-hans
