@@ -11,6 +11,7 @@ go run .
 - [PostgreSQL client and ORM for Golang](https://github.com/go-pg/pg)
 - [Introduction to Object-relational mapping](https://pg.uptrace.dev/orm/intro/)
 - [Redis client for Golang](https://github.com/go-redis/redis)
+- [Go Standard library](https://golang.org/pkg/)
 
 ## SOP
 
