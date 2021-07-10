@@ -1860,7 +1860,11 @@ function set_pali_script(pos, script) {
 					return roman_to_my(oldcontent);
 				case "සිංහල":
 					return roman_to_si(oldcontent);
-				default:
+				case "ᨲ᩠ᩅᩫᨴᩱ᩠ᨿᨵᨾ᩠ᨾ᩼":
+					return roman_to_tai(oldcontent);
+				case "อักษรไทย":
+					return roman_to_thai(oldcontent);
+					default:
 					return(oldcontent);
 			}
 			
