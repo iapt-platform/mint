@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	opt, err := pg.ParseURL("postgres://postgres:@127.0.0.1:5433/mint?sslmode=disable")
+	opt, err := pg.ParseURL("postgres://postgres:@127.0.0.1:5432/mint?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
@@ -27,5 +27,19 @@ func main() {
 	rt.PUT("/demo/user",mint.PutDemo(db))
 	rt.PATCH("/demo/user/:id",mint.PatchDemo(db))
 	rt.DELETE("/demo/user/:id",mint.DeleteDemo(db))
+
+
+	rt.GET("/api/course/:cid",mint.GetCourse(db))
+	rt.GET("/api/course/title/:ctitle",mint.GetCourseByTitle(db))
+	rt.PUT("/api/course",mint.PutCourse(db)) 
+	//rt.POST /api/course/:cid/?data=data
+	//rt.DELETE /api/course/:cid
+/*
+	rt.GET /api/lesson/:lid
+	rt.GET /api/lessons/:cid
+	rt.PUT /api/lesson/?data=data
+	rt.POST /api/lesson/:lid/?data=data
+	rt.DELETE /api/lesson/:lid
+*/
 	rt.Run()
 }
