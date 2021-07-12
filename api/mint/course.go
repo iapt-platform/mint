@@ -6,27 +6,28 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
+	"time"
 )
 
-type Course struct{
-    Id int64
-    Cover string
-    Title string
-    Subtitle string
-    Summary string
-    Teacher int64
-    Tag string
-    Lang string
-    Speech_lang string
-    Status int64
-    Lesson_num int
-    Creator int64
+
+type Course struct {
+	Id     int64 `form:"id" json:"id" binding:"required"`
+	Cover string
+	Title string `form:"title" json:"title" binding:"required"`
+	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
+	Summary string `form:"summary" json:"summary" binding:"required"`
+	Tag string `form:"tag" json:"tag" binding:"required"`
+	Teacher int64 `form:"teacher" json:"teacher" binding:"required"`
+	Lang string `form:"lang" json:"lang" binding:"required"`
+	Speech_lang string `form:"speech_lang" json:"speech_lang" binding:"required"`
+	Status int64 `form:"status" json:"status" binding:"required"`
+	Content string `form:"content" json:"content" binding:"required"`
+	Creator int64
+    LessonNum int64
     Create_time int64
     Update_time int64
     Delete_time int64
-    Content string
 }
-
 //查询
 func GetCourse(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -68,7 +69,7 @@ func GetCourseByTitle(db *pg.DB) gin.HandlerFunc {
 	}
 }
 
-//增加
+//新建
 func PutCourse(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
 		title := c.Query("title")
@@ -83,7 +84,8 @@ func PutCourse(db *pg.DB) gin.HandlerFunc{
 			Status: status1,
 			Teacher:1,
 			Creator:1,
-			Create_time:1,
+			Create_time:time.Now().Unix(),
+			Update_time:time.Now().Unix(),
 		}
 		_, err = db.Model(newCouse).Insert()
 		if err != nil {
@@ -98,22 +100,60 @@ func PutCourse(db *pg.DB) gin.HandlerFunc{
 //改
 func PostCourse(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		userid,err := strconv.ParseInt(c.Param("id"),10,64)
-		if err != nil {
-			panic(err)
+		var form Course
+
+		if err := c.ShouldBindJSON(&form); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
-		email := c.Query("emails")
-		user1 := &User{
-			Id:   userid,
-			Emails: []string{email},
-		}
-		//_, err = db.Model(user1).WherePK().Update()
-		_, err = db.Model(user1).Set("emails = ?emails").Where("id = ?id").Update()
+
+		_,err := db.Model(&form).Table("courses").Column("title","subtitle","summary","teacher","tag","lang","speech_lang","status","content").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}
 		c.JSON(http.StatusOK,gin.H{
-			"message":"-patch="+email,
+			"message":"update ok",
+		})
+	}
+}
+
+//补
+func PostLessonNumInCousrse(db *pg.DB) gin.HandlerFunc{
+	return func(c *gin.Context){
+		courseId,err := strconv.ParseInt(c.Param("cid"),10,64)
+		lNum,err := strconv.ParseInt(c.Param("num"),10,64)
+		if err != nil {
+			panic(err)
+		}
+		course := &Course{
+			Id:   courseId,
+			LessonNum: lNum,
+		}
+		_, err = db.Model(course).Set("lesson_num = lesson_num + ?",lNum).WherePK().Update()
+		if err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK,gin.H{
+			"message":"-patch="+c.Param("cid"),
+		})
+	}
+}
+//删
+func DeleteCourse(db *pg.DB) gin.HandlerFunc{
+	return func(c *gin.Context){
+		id,err := strconv.ParseInt(c.Param("cid"),10,64)
+		if err != nil {
+			panic(err)
+		}
+		course := &Course{
+			Id:   id,
+		}
+		_, err = db.Model(course).WherePK().Delete()
+		if err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK,gin.H{
+			"message":"delete "+c.Param("cid"),
 		})
 	}
 }
