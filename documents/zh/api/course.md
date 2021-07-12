@@ -21,7 +21,7 @@ CREATE TABLE course
     update_time INTEGER, 
     delete_time INTEGER , 
     content TEXT
-)
+);
 ```
 
 ```
@@ -45,6 +45,19 @@ CREATE TABLE 'lesson'
     'date' INTEGER, 
     'duration' INTEGER, 
     'content' TEXT
-)
+);
 
 ```
+
+## API
+
+GET /api/course/:cid
+PUT /api/course/?data=data
+POST /api/course/:cid/?data=data
+DELETE /api/course/:cid
+
+GET /api/lesson/:lid
+GET /api/lessons/:cid
+PUT /api/lesson/?data=data
+POST /api/lesson/:lid/?data=data
+DELETE /api/lesson/:lid
