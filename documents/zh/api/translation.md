@@ -98,3 +98,23 @@ CREATE TABLE sent_pr (
 );
 
 ```
+
+# 修改历史
+
+```table
+CREATE TABLE sent_historay (
+    sent_id  CHAR (36),
+    user_id  CHAR (36),
+    text     TEXT,
+    create_at     BIGINT NOT NULL,
+    landmark VARCHAR(32)
+);
+```
+
+`sent_id` 外键 导入后改为int
+
+`user_id` 外键 导入后改为int
+
+`text` 句子文本
+
+`landmark` 里程碑标记
