@@ -28,14 +28,16 @@ cd mint; mkdir tmp; chown -R www:www tmp
 ## 开发
 ### 技术栈
 #### 前端
-- ant design pro
 - react
+- umijs
+- ant design pro
 - Tapescript
 
 #### 后端
 - PostgreSQL
-- PHP
-- Laravel
+- elasticsearch
+- golang
+- Redis
   
 ### 工具
 
@@ -52,7 +54,9 @@ cd mint; mkdir tmp; chown -R www:www tmp
 #### 数据库管理工具
 - [通用数据库管理工具-dbeaver](https://github.com/dbeaver/dbeaver)
 - [redis图形界面工具-RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)
+
 ### Git commit message 规范
+git commit message格式 请参见https://gitmoji.dev/
 
 -   遵循 git pull request 流程
 -   所有代码必须经过格式化

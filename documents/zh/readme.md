@@ -9,10 +9,10 @@
 
 ## 开发文档包含
 
-1. [API 接口](api/readme.md)
-1. [前端文档]](dashboard/readme.md)
-1. [数据库设计]](db/readme.md)
-1. [运维]](deploy/readme.md)
+* [API 接口](api/readme.md)
+* [前端文档](dashboard/readme.md)
+* [数据库设计](db/readme.md)
+* [运维](deploy/readme.md)
 
 git commit message格式 请参见https://gitmoji.dev/
 
