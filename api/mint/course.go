@@ -16,17 +16,16 @@ type Course struct {
 	Title string `form:"title" json:"title" binding:"required"`
 	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
 	Summary string `form:"summary" json:"summary" binding:"required"`
-	Tag string `form:"tag" json:"tag" binding:"required"`
-	Teacher int64 `form:"teacher" json:"teacher" binding:"required"`
+	Teacher int `form:"teacher" json:"teacher" binding:"required"`
 	Lang string `form:"lang" json:"lang" binding:"required"`
 	Speech_lang string `form:"speech_lang" json:"speech_lang" binding:"required"`
-	Status int64 `form:"status" json:"status" binding:"required"`
+	Status int `form:"status" json:"status" binding:"required"`
 	Content string `form:"content" json:"content" binding:"required"`
-	Creator int64
+	Creator int
     LessonNum int64
-    Create_time int64
-    Update_time int64
-    Delete_time int64
+    Version int64
+    CreatedAt time.Time
+    UpdatedAt time.Time
 }
 //查询
 func GetCourse(db *pg.DB) gin.HandlerFunc {
@@ -81,11 +80,9 @@ func PutCourse(db *pg.DB) gin.HandlerFunc{
 
 		newCouse := &Course{
 			Title:   title,
-			Status: status1,
+			Status: int(status1),
 			Teacher:1,
 			Creator:1,
-			Create_time:time.Now().Unix(),
-			Update_time:time.Now().Unix(),
 		}
 		_, err = db.Model(newCouse).Insert()
 		if err != nil {
@@ -107,7 +104,7 @@ func PostCourse(db *pg.DB) gin.HandlerFunc{
 			return
 		}
 
-		_,err := db.Model(&form).Table("courses").Column("title","subtitle","summary","teacher","tag","lang","speech_lang","status","content").WherePK().Update()
+		_,err := db.Model(&form).Table("courses").Column("title","subtitle","summary","teacher","lang","speech_lang","status","content").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}
@@ -129,7 +126,7 @@ func PostLessonNumInCousrse(db *pg.DB) gin.HandlerFunc{
 			Id:   courseId,
 			LessonNum: lNum,
 		}
-		_, err = db.Model(course).Set("lesson_num = lesson_num + ?",lNum).WherePK().Update()
+		_, err = db.Model(course).Set("lesson_num = ?lesson_num").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}

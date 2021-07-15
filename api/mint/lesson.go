@@ -12,24 +12,23 @@ import (
 )
 
 type Lesson struct {
-	Id     int64 `form:"id" json:"id" binding:"required"`
-	CourseId     int64 `form:"course_id" json:"course_id" binding:"required"`
+	Id     int `form:"id" json:"id" binding:"required"`
+	CourseId     int `form:"course_id" json:"course_id" binding:"required"`
 	Cover string
 	Title string `form:"title" json:"title" binding:"required"`
 	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
 	Summary string `form:"summary" json:"summary" binding:"required"`
-	Tag string `form:"tag" json:"tag" binding:"required"`
-	Teacher int64 `form:"teacher" json:"teacher" binding:"required"`
+	Teacher int `form:"teacher" json:"teacher" binding:"required"`
 	Lang string `form:"lang" json:"lang" binding:"required"`
 	Speech_lang string `form:"speech_lang" json:"speech_lang" binding:"required"`
-	Status int64 `form:"status" json:"status" binding:"required"`
+	Status int `form:"status" json:"status" binding:"required"`
 	Content string `form:"content" json:"content" binding:"required"`
-	Creator int64
-	StartDate int64 `form:"date" json:"date" binding:"required"`
+	Creator int
+	StartDate time.Time `form:"date" json:"date" binding:"required"`
     Duration int64 `form:"duration" json:"duration" binding:"required"` 
-    Create_time int64
-    Update_time int64
-    Delete_time int64
+	Version int64
+    CreatedAt time.Time
+    UpdatedAt time.Time
 }
 //查询
 func GetLesson(db *pg.DB) gin.HandlerFunc {
@@ -41,7 +40,7 @@ func GetLesson(db *pg.DB) gin.HandlerFunc {
 		fmt.Println("get lesson")
 		// TODO 在这里进行db操作
 		// Select user by primary key.
-		lesson := &Lesson{Id: lid}
+		lesson := &Lesson{Id: int(lid)}
 		err = db.Model(lesson).WherePK().Select()
 		if err != nil {
 			panic(err)
@@ -86,20 +85,23 @@ func PutLesson(db *pg.DB) gin.HandlerFunc{
 
 		newLesson := &Lesson{
 			Title:   title,
-			CourseId: courseId,
-			Status: status1,
+			CourseId: int(courseId),
+			Status: int(status1),
 			Teacher:0,
-			Creator:0,
-			Create_time:time.Now().Unix(),
-			Update_time:time.Now().Unix(),
+			Creator:1,
 		}
 		_, err = db.Model(newLesson).Insert()
 		if err != nil {
 			panic(err)
 		}
 
+		//查询这个course 里面有几个课程
+		countLesson, err := db.Model((*Lesson)(nil)).Where("course_id = ?",courseId).Count()
+		if err != nil {
+			panic(err)
+		}		
 		//修改course lesson number
-		url := "http://127.0.0.1:8080/api/course/lessonnum/"+c.Query("course_id")+"/1"
+		url := "http://127.0.0.1:8080/api/course/lessonnum/"+c.Query("course_id")+"/"+strconv.Itoa(countLesson);
 		contentType := "application/json"
 		data := `{"id":courseId,"lesson_num":1}`
 		resp, err := http.Post(url, contentType, strings.NewReader(data))
@@ -111,11 +113,16 @@ func PutLesson(db *pg.DB) gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
+		courseMessage :=string(b)
 		//修改完毕
 		c.JSON(http.StatusOK,gin.H{
-			"message":string(b),
+			"message":courseMessage,
 		})
 	}
+}
+
+func _updateLessonCount(db *pg.DB,courseId int) string{
+	return("")
 }
 
 //改
@@ -147,12 +154,15 @@ func DeleteLesson(db *pg.DB) gin.HandlerFunc{
 			panic(err)
 		}
 		lesson := &Lesson{
-			Id:   id,
+			Id:int(id),
 		}
+		//删之前获取 course_id
 		_, err = db.Model(lesson).WherePK().Delete()
 		if err != nil {
 			panic(err)
 		}
+
+		
 		c.JSON(http.StatusOK,gin.H{
 			"message":"delete "+c.Param("lid"),
 		})
