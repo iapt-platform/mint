@@ -1,5 +1,5 @@
-## 用户认证
-### user
+# 用户
+## users
 用户信息
 ```
 CREATE TABLE user_info (
@@ -39,11 +39,11 @@ INTEGER 服务器收到此数据时间
 #### `setting`
 TEXT 用户设置 json 数据
 
-### profile
+## profile
 用户简历
 ```
 CREATE TABLE user_profile (
-    id        INTEGER   PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     user_id   CHAR (36),
     bio       TEXT,
     lang      CHAR (8),
@@ -63,3 +63,62 @@ TEXT
 是否是默认记录。
 #### `email`
 电邮地址
+
+## 编辑记录索引active_index
+用户行为记录。以日期计算的使用与编辑有关功能的时间和操作次数
+```table
+CREATE TABLE active_index (
+    id SERIAL PRIMARY KEY,
+    user_id  INTEGER NOT NULL,
+    user_uuid  VARCHAR (36),
+    date     TIMESTAMP NOT NULL,
+    duration INTEGER NOT NULL,
+    hit      INTEGER NOT NULL 
+);
+```
+`date` 日期
+
+`duration` 持续时间 毫秒
+
+`hit` 操作次数
+
+## 编辑记录edit_records
+```table
+CREATE TABLE edit_records (
+    id SERIAL PRIMARY KEY,
+    user_id  INTEGER NOT NULL,
+    user_uuid  VARCHAR (36),
+    start_at    TIMESTAMP,
+    end_at    TIMESTAMP,
+    duration INTEGER,
+    hit      INTEGER   DEFAULT (0),
+    timezone INTEGER   DEFAULT (0) 
+);
+```
+
+## 编辑行为记录
+```table
+CREATE TABLE active_log (
+    id SERIAL PRIMARY KEY,
+    user_id  INTEGER NOT NULL,
+    active   INTEGER NOT NULL,
+    content  TEXT,
+    timezone INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+只添加不删除
+
+### api
+PUT /api/useractive/log
+
+body:
+```
+{
+    active:aid,
+    content:text,
+    timezone:timezone,
+}
+```
+
