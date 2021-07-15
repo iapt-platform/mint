@@ -15,9 +15,9 @@ CREATE TABLE article (
     setting      JSON,
     status       INTEGER   NOT NULL DEFAULT (10),
 	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at  TIMESTAMP
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ```
