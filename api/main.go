@@ -28,6 +28,7 @@ func main() {
 	rt.PATCH("/demo/user/:id",mint.PatchDemo(db))
 	rt.DELETE("/demo/user/:id",mint.DeleteDemo(db))
 
+	//课程
 	//根据id查询课程 
 	rt.GET("/api/course/:cid",mint.GetCourse(db))
 	//输入标题查询符合条件的课程 title% 
@@ -41,6 +42,7 @@ func main() {
 	//修改课程表里的课的数量
 	rt.POST("/api/course/lessonnum/:cid/:num",mint.PostLessonNumInCousrse(db))
 
+	//课
 	//根据id查询课程
 	rt.GET("/api/lesson/:lid",mint.GetLesson(db))
 	//输入标题查询符合条件的课程 title% 
@@ -51,6 +53,18 @@ func main() {
 	rt.POST("/api/lesson",mint.PostLesson(db))//改
 	//删除
 	rt.DELETE("/api/lesson/:lid",mint.DeleteLesson(db)) 
+
+	//文章
+	//根据id查询
+	rt.GET("/api/article/:aid",mint.GetArticle(db))
+	//输入标题查询符合条件的 title% 
+	rt.GET("/api/article/title/:title",mint.GetArticleByTitle(db))
+	//新建课
+	rt.PUT("/api/article",mint.PutArticle(db))
+	//修改
+	rt.POST("/api/article",mint.PostAritcle(db))//改
+	//删除
+	rt.DELETE("/api/article/:aid",mint.DeleteArticle(db))
 
 	rt.Run()
 }
