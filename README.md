@@ -56,7 +56,7 @@ cd mint; mkdir tmp; chown -R www:www tmp
 - [redis图形界面工具-RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)
 
 ### Git commit message 规范
-git commit message格式 请参见https://gitmoji.dev/
+git commit message格式 请参见 https://gitmoji.dev/
 
 -   遵循 git pull request 流程
 -   所有代码必须经过格式化
