@@ -3,14 +3,14 @@
 ## article 文章
 
 ```table
-CREATE TABLE article (
+CREATE TABLE articles (
     id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36) ,
-    title        VARCHAR (50) NOT NULL,
+    title        VARCHAR (32) NOT NULL,
     subtitle     VARCHAR (32),
     summary      VARCHAR (255),
     content      TEXT,
-    owner_id     INTEGER,
+    owner_id     INTEGER  NOT NULL,
     owner        VARCHAR (36),
     setting      JSON,
     status       INTEGER   NOT NULL DEFAULT (10),
@@ -29,7 +29,7 @@ CREATE TABLE article (
 ## article_list 关联表
 
 ```table
-CREATE TABLE article_list (
+CREATE TABLE article_lists (
     id            INTEGER      PRIMARY KEY AUTOINCREMENT,
     collect_id    VARCHAR (36) NOT NULL REFERENCES collect (id),
     collect_title TEXT,
@@ -48,7 +48,7 @@ article 和 collect 的关联表
 ## 文集
 
 ```table
-CREATE TABLE collect (
+CREATE TABLE collects (
     id INTEGER PRIMARY KEY,
     uuid         VARCHAR (36) ,
     title        VARCHAR (32) NOT NULL,
