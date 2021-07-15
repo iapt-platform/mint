@@ -35,3 +35,4 @@
 - `progress`: int 章节译文完成度  0-100
 - `trans_title` string, 根据lang查找对应的标题 如果没有查询到 无该变量
 
+## 
