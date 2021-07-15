@@ -22,6 +22,6 @@
 	"lib.first_script": "Roman",
 	"lib.second_script": "none",
 	"lib.pali_script": ["none", "Roman", "မြန်မာ","සිංහල"],
-	"_lib.pali_script": ["none", "Roman", "မြန်မာ","සිංහල"],
+	"_lib.pali_script": ["none", "Roman", "မြန်မာ","සිංහල","tai"],
 	"term.template": ["[%mean%](%pali% %mean2% %mymean%)", "[%mean%]", "", ""]
 }

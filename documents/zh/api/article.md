@@ -1,29 +1,33 @@
 # article
 
-## article文章
+## article 文章
+
 ```table
 CREATE TABLE article (
-    id           INTEGER PRIMARY KEY,
-    uuid         CHAR (36) ,
-    title        TEXT (50) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    uuid         VARCHAR (36) ,
+    title        VARCHAR (50) NOT NULL,
     subtitle     VARCHAR (32),
     summary      VARCHAR (255),
     content      TEXT,
     owner_id     INTEGER,
-    owner        CHAR (36),
-    setting      TEXT,
+    owner        VARCHAR (36),
+    setting      JSON,
     status       INTEGER   NOT NULL DEFAULT (10),
-    create_at  BIGINT,
-    update_at  BIGINT,
-    delete_at  BIGINT
+	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ```
-`uuid` 旧表中的主键 
 
-`setting` json格式。文章设置
+`uuid` 旧表中的主键
+
+`setting` json 格式。文章设置
 
 ## article_list 关联表
+
 ```table
 CREATE TABLE article_list (
     id            INTEGER      PRIMARY KEY AUTOINCREMENT,
@@ -34,13 +38,15 @@ CREATE TABLE article_list (
     title         VARCHAR (64) NOT NULL,
 );
 ```
-article 和 collect的关联表
+
+article 和 collect 的关联表
 
 `level`在目录中的层级 1-8
 
 `title`在目录中的文章标题
 
 ## 文集
+
 ```table
 CREATE TABLE collect (
     id INTEGER PRIMARY KEY,
@@ -58,4 +64,4 @@ CREATE TABLE collect (
 );
 ```
 
-uuid 旧表中的主键 
+uuid 旧表中的主键
