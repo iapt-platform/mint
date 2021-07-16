@@ -30,38 +30,36 @@ CREATE TABLE articles (
 
 ```table
 CREATE TABLE article_lists (
-    id            INTEGER      PRIMARY KEY AUTOINCREMENT,
-    collect_id    VARCHAR (36) NOT NULL REFERENCES collect (id),
-    collect_title TEXT,
-    article_id    VARCHAR (36)  NOT NULL REFERENCES article (id),
-    level         INTEGER  NOT NULL DEFAULT (1),
-    title         VARCHAR (64) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    collect_id    INTEGER NOT NULL REFERENCES collections (id),
+    article_id    INTEGER  NOT NULL REFERENCES articles (id),
 );
 ```
 
 article 和 collect 的关联表
 
-`level`在目录中的层级 1-8
-
-`title`在目录中的文章标题
 
 ## 文集
 
 ```table
-CREATE TABLE collects (
-    id INTEGER PRIMARY KEY,
+CREATE TABLE collections (
+    id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36) ,
     title        VARCHAR (32) NOT NULL,
     subtitle     VARCHAR (32),
     summary      VARCHAR (255),
     article_list TEXT,
     status       INTEGER   NOT NULL DEFAULT (10),
-    owner        CHAR (36),
+    creator_id   INTEGER,
+    owner        VARCHAR (36),
     lang         CHAR (8),
-    create_at  BIGINT,
-    update_at  BIGINT,
-    delete_at  BIGINT
+	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-uuid 旧表中的主键
+`uuid` 旧表中的主键
+
+`creator_id` 创建者。原来的表中是 owner uuid 导入后更新为int 然后删除owner

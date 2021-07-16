@@ -66,5 +66,17 @@ func main() {
 	//删除
 	rt.DELETE("/api/article/:aid",mint.DeleteArticle(db))
 
+	//文章
+	//根据id查询
+	rt.GET("/api/collection/:cid",mint.GetCollection(db))
+	//输入标题查询符合条件的 title% 
+	rt.GET("/api/collection/title/:title",mint.GetCollectionByTitle(db))
+	//新建课
+	rt.PUT("/api/collection",mint.PutCollection(db))
+	//修改
+	rt.POST("/api/collection",mint.PostCollection(db))//改
+	//删除
+	rt.DELETE("/api/collection/:cid",mint.DeleteCollection(db))
+
 	rt.Run()
 }
