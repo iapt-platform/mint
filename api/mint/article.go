@@ -112,7 +112,7 @@ func PutArticle(db *pg.DB) gin.HandlerFunc{
 //改
 func PostAritcle(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		var form Lesson
+		var form Article
 
 		if err := c.ShouldBindJSON(&form); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
