@@ -11,26 +11,26 @@ import (
 
 
 type Course struct {
-	Id     int64 `form:"id" json:"id" binding:"required"`
+	Id     int `form:"id" json:"id" binding:"required"`
 	Cover string
-	Title string `form:"title" json:"title" binding:"required"`
-	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
-	Summary string `form:"summary" json:"summary" binding:"required"`
-	Teacher int `form:"teacher" json:"teacher" binding:"required"`
-	Lang string `form:"lang" json:"lang" binding:"required"`
-	Speech_lang string `form:"speech_lang" json:"speech_lang" binding:"required"`
-	Status int `form:"status" json:"status" binding:"required"`
-	Content string `form:"content" json:"content" binding:"required"`
+	Title string `form:"title" json:"title"`
+	Subtitle string `form:"subtitle" json:"subtitle"`
+	Summary string `form:"summary" json:"summary"`
+	Teacher int `form:"teacher" json:"teacher"`
+	Lang string `form:"lang" json:"lang"`
+	Speech_lang string `form:"speech_lang" json:"speech_lang"`
+	Status int `form:"status" json:"status"`
+	Content string `form:"content" json:"content"`
 	Creator int
-    LessonNum int64
-    Version int64
+    LessonNum int `form:"lesson_num" json:"lesson_num"`
+    Version int
     CreatedAt time.Time
     UpdatedAt time.Time
 }
 //查询
 func GetCourse(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cid,err := strconv.ParseInt(c.Param("cid"),10,64)
+		cid,err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}
@@ -114,31 +114,30 @@ func PostCourse(db *pg.DB) gin.HandlerFunc{
 	}
 }
 
+
 //补
-func PostLessonNumInCousrse(db *pg.DB) gin.HandlerFunc{
+func PatchLessonNumInCousrse(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		courseId,err := strconv.ParseInt(c.Param("cid"),10,64)
-		lNum,err := strconv.ParseInt(c.Param("num"),10,64)
-		if err != nil {
-			panic(err)
+		var form Course
+
+		if err := c.ShouldBindJSON(&form); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
-		course := &Course{
-			Id:   courseId,
-			LessonNum: lNum,
-		}
-		_, err = db.Model(course).Set("lesson_num = ?lesson_num").WherePK().Update()
+
+		_, err := db.Model(&form).Column("lesson_num").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}
 		c.JSON(http.StatusOK,gin.H{
-			"message":"-patch="+c.Param("cid"),
+			"message":"patch ok",
 		})
 	}
 }
 //删
 func DeleteCourse(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		id,err := strconv.ParseInt(c.Param("cid"),10,64)
+		id,err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}

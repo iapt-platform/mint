@@ -3,7 +3,9 @@ package mint
 import (
 	"net/http"
 	"io/ioutil"
-	"strings"
+	/*"strings"*/
+	"bytes"
+	"encoding/json"
 	"strconv"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -71,22 +73,24 @@ func GetLessonByTitle(db *pg.DB) gin.HandlerFunc {
 	}
 }
 
-//新建-
+/*新建
+新建课以后，查询这个course 里有几个lesson 然后更新 courese 的 lesson_num
+*/
 //PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&course_id=1&status=10
 func PutLesson(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
 	
 		title := c.Query("title")
-		courseId,err := strconv.ParseInt(c.Query("course_id"),10,64)
-		status1,err := strconv.ParseInt(c.Query("status"),10,64)
+		courseId,err := strconv.Atoi(c.Query("course_id"))
+		status1,err := strconv.Atoi(c.Query("status"))
 		if err != nil {
 			panic(err)
 		}
 
 		newLesson := &Lesson{
 			Title:   title,
-			CourseId: int(courseId),
-			Status: int(status1),
+			CourseId: courseId,
+			Status: status1,
 			Teacher:0,
 			Creator:1,
 		}
@@ -94,27 +98,9 @@ func PutLesson(db *pg.DB) gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
-
-		//查询这个course 里面有几个课程
-		countLesson, err := db.Model((*Lesson)(nil)).Where("course_id = ?",courseId).Count()
-		if err != nil {
-			panic(err)
-		}		
-		//修改course lesson number
-		url := "http://127.0.0.1:8080/api/course/lessonnum/"+c.Query("course_id")+"/"+strconv.Itoa(countLesson);
-		contentType := "application/json"
-		data := `{"id":courseId,"lesson_num":1}`
-		resp, err := http.Post(url, contentType, strings.NewReader(data))
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		b, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
-		courseMessage :=string(b)
-		//修改完毕
+		//修改 course 的 lesson_num
+		courseMessage := _updateLessonCount(db,courseId)
+		
 		c.JSON(http.StatusOK,gin.H{
 			"message":courseMessage,
 		})
@@ -122,7 +108,40 @@ func PutLesson(db *pg.DB) gin.HandlerFunc{
 }
 
 func _updateLessonCount(db *pg.DB,courseId int) string{
-	return("")
+			//查询这个course 里面有几个课程
+			countLesson, err := db.Model((*Lesson)(nil)).Where("course_id = ?",courseId).Count()
+			if err != nil {
+				panic(err)
+			}		
+	
+			//修改course lesson number
+			url := "http://127.0.0.1:8080/api/course/lessonnum"
+			values := Course{
+				Id : courseId,
+				LessonNum : countLesson,
+			}
+			json_data, err := json.Marshal(values);
+			if err != nil {
+				panic(err)
+			}
+	
+			client := &http.Client{}
+			req, err := http.NewRequest("PATCH",url, bytes.NewBuffer(json_data))
+			if err != nil {
+				panic(err)
+			}
+			req.Header.Set("Content-Type","application/json")
+			resp,err := client.Do(req)
+			if err != nil {
+				panic(err)
+			}
+			 defer resp.Body.Close()
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				panic(err)
+			}
+	
+		return(string(b))
 }
 
 //改
@@ -155,16 +174,27 @@ func DeleteLesson(db *pg.DB) gin.HandlerFunc{
 		}
 		lesson := &Lesson{
 			Id:int(id),
+			CourseId: int(0) ,
 		}
 		//删之前获取 course_id
+		err = db.Model(lesson).Column("course_id").WherePK().Select()
+		if err != nil {
+			panic(err)
+		}
+		course_id := lesson.CourseId
+
 		_, err = db.Model(lesson).WherePK().Delete()
 		if err != nil {
 			panic(err)
 		}
 
-		
+		//修改 course 的 lesson_num
+		courseMessage := _updateLessonCount(db,course_id)
+
+	
 		c.JSON(http.StatusOK,gin.H{
 			"message":"delete "+c.Param("lid"),
+			"lesson_num":courseMessage,
 		})
 	}
 }
