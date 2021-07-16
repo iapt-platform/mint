@@ -29,7 +29,7 @@ CREATE TABLE articles (
 ## article_list 关联表
 
 ```table
-CREATE TABLE article_lists (
+CREATE TABLE collection_article_lists (
     id SERIAL PRIMARY KEY,
     collect_id    INTEGER NOT NULL REFERENCES collections (id),
     article_id    INTEGER  NOT NULL REFERENCES articles (id),
