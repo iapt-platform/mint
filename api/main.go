@@ -40,7 +40,7 @@ func main() {
 	//删除
 	rt.DELETE("/api/course/:cid",mint.DeleteCourse(db)) 
 	//修改课程表里的课的数量
-	rt.POST("/api/course/lessonnum/:cid/:num",mint.PostLessonNumInCousrse(db))
+	rt.PATCH("/api/course/lessonnum",mint.PatchLessonNumInCousrse(db))
 
 	//课
 	//根据id查询课程
@@ -66,7 +66,7 @@ func main() {
 	//删除
 	rt.DELETE("/api/article/:aid",mint.DeleteArticle(db))
 
-	//文章
+	//文集
 	//根据id查询
 	rt.GET("/api/collection/:cid",mint.GetCollection(db))
 	//输入标题查询符合条件的 title% 
