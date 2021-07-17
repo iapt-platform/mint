@@ -81,7 +81,7 @@ func GetArticleByTitle(db *pg.DB) gin.HandlerFunc {
 }
 
 //新建-
-//PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&course_id=1&status=10
+//PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&status=10
 func PutArticle(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
 	
@@ -109,7 +109,7 @@ func PutArticle(db *pg.DB) gin.HandlerFunc{
 }
 
 
-//改
+//修改
 func PostAritcle(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
 		var form Article
