@@ -1,52 +1,50 @@
-# Course课程
+# Course 课程
 
 ## Table
 
 ```
-CREATE TABLE course 
-( 
-    id SERIAL PRIMARY KEY, 
-    cover BYTEA, 
-    title VARCHAR(32) NOT NULL, 
+CREATE TABLE courses
+(
+    id SERIAL PRIMARY KEY,
+    cover VARCHAR(255),
+    title VARCHAR(32) NOT NULL,
     subtitle VARCHAR(32),
     summary VARCHAR(255),
-    teacher UUID NOT NULL, 
-    tag VARCHAR(255), 
-    lang VARCHAR (8), 
-    speech_lang VARCHAR (8), 
-    status INTEGER, 
-    lesson_num INTEGER, 
-    creator UUID NOT NULL, 
-    create_time INTEGER, 
-    update_time INTEGER, 
-    delete_time INTEGER , 
-    content TEXT
+    teacher INTEGER NOT NULL,
+    lang VARCHAR (8),
+    speech_lang VARCHAR (8),
+    status INTEGER NOT NULL DEFAULT(0),
+    lesson_num INTEGER NOT NULL DEFAULT(0),
+    content TEXT ,
+    creator INTEGER NOT NULL,
+    version INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
 ```
-CREATE TABLE 'lesson' 
-( 
-    id SERIAL PRIMARY KEY, 
-    course_id INTEGER,
-    title VARCHAR(32) NOT NULL, 
-    subtitle VARCHAR(32), 
-    creator CHAR (36), 
-    tag VARCHAR(255), 
-    summary VARCHAR(255), 
-    status INTEGER, 
-    cover BYTEA, 
-    teacher UUID NOT NULL, 
-    lang VARCHAR (8), 
-    speech_lang VARCHAR (8), 
-    create_time INTEGER, 
-    modify_time INTEGER, 
-    receive_time INTEGER , 
-    'date' INTEGER, 
-    'duration' INTEGER, 
-    'content' TEXT
+CREATE TABLE lessons
+(
+    id SERIAL PRIMARY KEY,
+    course_id INTEGER NOT NULL,
+    course_uuid VARCHAR(36),
+    title VARCHAR(32) NOT NULL,
+    subtitle VARCHAR(32),
+    summary VARCHAR(255),
+    status INTEGER  NOT NULL DEFAULT(0),
+    cover VARCHAR(255),
+    teacher INTEGER,
+    lang VARCHAR(8),
+    speech_lang VARCHAR(8),
+    start_date TIMESTAMP,
+    duration INTEGER,
+    content TEXT,
+    creator INTEGER  NOT NULL,
+    version INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 ```
 
 ## API
