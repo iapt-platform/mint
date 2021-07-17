@@ -1,61 +1,83 @@
 # article
 
-## article文章
+## article 文章
+
 ```table
-CREATE TABLE article (
-    id           INTEGER PRIMARY KEY,
-    uuid         CHAR (36) ,
-    title        TEXT (50) NOT NULL,
+CREATE TABLE articles (
+    id SERIAL PRIMARY KEY,
+    uuid         VARCHAR (36) ,
+    title        VARCHAR (32) NOT NULL,
     subtitle     VARCHAR (32),
     summary      VARCHAR (255),
     content      TEXT,
-    owner_id     INTEGER,
-    owner        CHAR (36),
-    setting      TEXT,
+    owner_id     INTEGER  NOT NULL,
+    owner        VARCHAR (36),
+    setting      JSON,
     status       INTEGER   NOT NULL DEFAULT (10),
-    create_at  BIGINT,
-    update_at  BIGINT,
-    delete_at  BIGINT
+	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ```
-`uuid` 旧表中的主键 
 
-`setting` json格式。文章设置
+`uuid` 旧表中的主键
+
+`setting` json 格式。文章设置
+
+### API
+	
+`GET /api/article/:aid`
+根据id查询
+	
+`GET /api/article/title/:title`
+输入标题查询符合条件的 title% 
+	
+`PUT /api/article`
+
+新建文章
+`POST /api/article`
+修改
+
+`DELETE /api/article/:aid`
+删除
 
 ## article_list 关联表
+
 ```table
-CREATE TABLE article_list (
-    id            INTEGER      PRIMARY KEY AUTOINCREMENT,
-    collect_id    VARCHAR (36) NOT NULL REFERENCES collect (id),
-    collect_title TEXT,
-    article_id    VARCHAR (36)  NOT NULL REFERENCES article (id),
-    level         INTEGER  NOT NULL DEFAULT (1),
-    title         VARCHAR (64) NOT NULL,
+CREATE TABLE collection_article_lists (
+    id SERIAL PRIMARY KEY,
+    collect_id    INTEGER NOT NULL REFERENCES collections (id),
+    article_id    INTEGER  NOT NULL REFERENCES articles (id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
 ```
-article 和 collect的关联表
 
-`level`在目录中的层级 1-8
+article 和 collect 的关联表
 
-`title`在目录中的文章标题
 
 ## 文集
+
 ```table
-CREATE TABLE collect (
-    id INTEGER PRIMARY KEY,
+CREATE TABLE collections (
+    id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36) ,
     title        VARCHAR (32) NOT NULL,
     subtitle     VARCHAR (32),
     summary      VARCHAR (255),
     article_list TEXT,
     status       INTEGER   NOT NULL DEFAULT (10),
-    owner        CHAR (36),
+    creator_id   INTEGER,
+    owner        VARCHAR (36),
     lang         CHAR (8),
-    create_at  BIGINT,
-    update_at  BIGINT,
-    delete_at  BIGINT
+	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-uuid 旧表中的主键 
+`uuid` 旧表中的主键
+
+`creator_id` 创建者。原来的表中是 owner uuid 导入后更新为int 然后删除owner
