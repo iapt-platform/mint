@@ -26,6 +26,23 @@ CREATE TABLE articles (
 
 `setting` json 格式。文章设置
 
+### API
+	
+`GET /api/article/:aid`
+根据id查询
+	
+`GET /api/article/title/:title`
+输入标题查询符合条件的 title% 
+	
+`PUT /api/article`
+
+新建文章
+`POST /api/article`
+修改
+
+`DELETE /api/article/:aid`
+删除
+
 ## article_list 关联表
 
 ```table
@@ -33,6 +50,7 @@ CREATE TABLE collection_article_lists (
     id SERIAL PRIMARY KEY,
     collect_id    INTEGER NOT NULL REFERENCES collections (id),
     article_id    INTEGER  NOT NULL REFERENCES articles (id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
 ```
 
