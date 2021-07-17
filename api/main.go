@@ -78,5 +78,9 @@ func main() {
 	//删除
 	rt.DELETE("/api/collection/:cid",mint.DeleteCollection(db))
 
+	rt.GET("/api/article_list/:cid",mint.GetCollectionArticleList(db))//改
+	//修改
+	rt.POST("/api/article_list/article/:aid",mint.PostArticleListByArticle(db))//改
+
 	rt.Run()
 }
