@@ -1,18 +1,18 @@
 # 译文
 
-## 句子块sent_block
+## 句子块 sent_block
 
 ```table
 CREATE TABLE sent_block (
-    id           int PRIMARY KEY,
-    uuid         CHAR (36),
-    parent_id    CHAR (36),
+    id SERIAL PRIMARY KEY,
+    uuid         VARCHAR (36),
+    parent_id    VARCHAR (36),
     book         INTEGER,
     paragraph    INTEGER,
     owner_id     INTEGER NOT NULL,
-    owner        CHAR (36) NOT NULL,
-    lang         CHAR (8),
-    author       CHAR (50),
+    owner        VARCHAR (36) NOT NULL,
+    lang         VARCHAR (8),
+    author       VARCHAR (50),
     editor_id    INTEGER,
     editor       TEXT,
     status       INTEGER,
@@ -26,9 +26,10 @@ CREATE TABLE sent_block (
 
 `paragraph` 书号
 
-`author` 
+`author`
 
 编辑者列表。还没设计好。 可能是这样
+
 ```
 [
     {"creater":"bhikkhu bodhi"},
@@ -41,6 +42,7 @@ CREATE TABLE sent_block (
 `owner` 记录的创建者
 
 ## sentence
+
 ```table
 CREATE TABLE sentence (
     id           int PRIMARY KEY,
@@ -59,24 +61,24 @@ CREATE TABLE sentence (
     version      INTEGER,
     status       INTEGER,
     strlen       INTEGER,
-    create_at    BIGINT  NOT NULL, 
+    create_at    BIGINT  NOT NULL,
     update_at    BIGINT   NOT NULL,
     delete_at    BIGINT,
 
 );
 ```
-`uuid` 原表的主键 新表中用int代替
 
-`channel_id` 外键 原表 channal uuid 导入后应改为int
+`uuid` 原表的主键 新表中用 int 代替
+
+`channel_id` 外键 原表 channal uuid 导入后应改为 int
 
 `editor_id` 记录的上传者 外键 原表用 uuid 现在改用 int
 
-`text` 句子文本 
+`text` 句子文本
 
 `version` 用于乐观锁 每次更新+1
 
 `strlen` 句子字符数
-
 
 ```table
 CREATE TABLE sent_pr (
@@ -92,7 +94,7 @@ CREATE TABLE sent_pr (
     language     VARCHAR (8),
     status       INTEGER,
     strlen       INTEGER,
-    create_at    BIGINT  NOT NULL, 
+    create_at    BIGINT  NOT NULL,
     update_at    BIGINT   NOT NULL,
     delete_at    BIGINT,
 );
@@ -111,9 +113,9 @@ CREATE TABLE sent_historay (
 );
 ```
 
-`sent_id` 外键 导入后改为int
+`sent_id` 外键 导入后改为 int
 
-`user_id` 外键 导入后改为int
+`user_id` 外键 导入后改为 int
 
 `text` 句子文本
 
