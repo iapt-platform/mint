@@ -35,7 +35,7 @@ function render_book_list($strWordlist, $booklist = null)
             $aInputBook["{$oneBook}"] = 1;
         }
     }
-    $query = "select book,sum(count) as co from bookword where \"wordindex\" in $strWordlist group by book order by co DESC";
+    $query = "SELECT book,sum(count) as co from "._TABLE_BOOK_WORD_." where \"wordindex\" in $strWordlist group by book order by co DESC";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     $newBookList = array();

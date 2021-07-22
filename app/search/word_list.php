@@ -79,7 +79,7 @@ if (isset($booklist)) {
         $aInputBook["{$oneBook}"] = 1;
     }
 }
-$query = "select book, wordindex,count from bookword where \"wordindex\" in $strQueryWordId ";
+$query = "SELECT book, wordindex,count from "._TABLE_BOOK_WORD_." where \"wordindex\" in $strQueryWordId ";
 $Fetch = PDO_FetchAll($query);
 $iFetch = count($Fetch);
 $newBookList = array();

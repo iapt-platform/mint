@@ -64,7 +64,7 @@ if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !
 
 // 开始一个事务，关闭自动提交
 $dbh_word_index->beginTransaction();
-$query = "INSERT INTO bookword ('book','wordindex','count') VALUES ( ? , ? , ?  )";
+$query = "INSERT INTO "._TABLE_BOOK_WORD_." ('book','wordindex','count') VALUES ( ? , ? , ?  )";
 $stmt = $dbh_word_index->prepare($query);
 
 foreach ($bookword as $key => $value) {
