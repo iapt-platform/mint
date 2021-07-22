@@ -700,7 +700,7 @@ function roman_to_my(input) {
 		{ id: "ဒာ", value: "ဒါ" }, //d
 		{ id: "ပာ", value: "ပါ" }, //p
 		{ id: "ဝာ", value: "ဝါ" }, //v
-
+		{ id: "ဒွာ", value: "ဒွါ" }, //dvā
 		{ id: "1", value: "၁" },
 		{ id: "2", value: "၂" },
 		{ id: "3", value: "၃" },

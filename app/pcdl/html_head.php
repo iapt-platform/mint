@@ -116,6 +116,8 @@ if (isset($_GET["language"])) {
 
 	<script src="../public/charcode/coverter_my.js"></script>
 	<script src="../public/charcode/converter_si.js"></script>
+	<script src="../public/charcode/converter_tai_tham.js"></script>
+	<script src="../public/charcode/converter_thai.js"></script>
 	<script>
 		<?php require_once '../public/load_lang_js.php'; ?>
 	</script>

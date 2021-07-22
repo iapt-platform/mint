@@ -1,4 +1,4 @@
-var char_roman_to_tai = [
+var char_roman_to_thai = [
 { id: "ggho", value: "ᨣ᩠ᨣᩮᩤ" },
 { id: "gghā", value: "ᨣ᩠ᨣᩤ" },
 { id: "ddho", value: "ᨴ᩠ᨵᩮᩤ" },
@@ -97,6 +97,9 @@ var char_roman_to_tai = [
 
 
 ];
+
+
+
 
 var char_tai_to_roman_1 = [
 { id: "ႁႏၵ", value: "ndra" }, //後加
@@ -695,12 +698,13 @@ var char_tai_to_roman_2 = [
 { id: "၊", value: "，" },
 ];
 
-function roman_to_tai(input) {
-let txt = input;
+function roman_to_thai(input) {
+
+let txt = input.toLowerCase();
 
 try {
-for (r_to_t_i in char_roman_to_tai) {
-eval("txt=txt.replace(/" + char_roman_to_tai[r_to_t_i].id + "/g,char_roman_to_tai[r_to_t_i].value);");
+for (r_to_t_i in char_roman_to_thai) {
+eval("txt=txt.replace(/" + char_roman_to_thai[r_to_t_i].id + "/g,char_roman_to_thai[r_to_t_i].value);");
 }
 } catch (err) {
 //error
