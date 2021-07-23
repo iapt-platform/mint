@@ -41,9 +41,9 @@
 
   - RabbitMQ: `http://localhost:15672`, user `guest`, password `guest`
   - Redis cluster ports `6371~6376`
-  - Minio server: `http://localhost:9000` user `admin`, password `12345678`
+  - Minio server: `http://localhost:9001` user `admin`, password `12345678`
   - PostgreSql: `psql -U postgres -h 127.0.0.1 -p 5432`
-  - ElasticSearch: `curl 127.0.0.1:9200/`
+  - ElasticSearch: `curl http://127.0.0.1:9200/`
 
 - For VSCode **Run in your local host**
 
