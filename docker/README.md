@@ -28,14 +28,15 @@
   ./docker/ubuntu/next.sh
   # start servers
   > sudo supervisord -c /etc/supervisor/supervisord.conf
-  > netstat -ant | grep 'LISTEN'
-  # connect to redis
-  > redis-cli
-  # connect to postgresql
-  > psql -U postgres -h 127.0.0.1 -p 5432
   ```
 
   ![start](documents/start.png)
+
+  - RabbitMQ: `http://localhost:15672`, user `guest`, password `guest`
+  - Redis cluster setup: `./docker/redis.sh`, ports `6371~6376`
+  - Minio server: `http://localhost:9000` user `admin`, password `12345678`
+  - PostgreSql: `psql -U postgres -h 127.0.0.1 -p 5432`
+  - ElasticSearch: `curl 127.0.0.1:9200/`
 
 - For VSCode **Run in your local host**
 
