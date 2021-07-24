@@ -45,7 +45,7 @@ $dh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 foreach ($paralist as $para) {
 
     $albumId = UUID::v4();
-    $query = "SELECT * FROM wbw_block WHERE channal=? AND book = ? AND paragraph = ?  ";
+    $query = "SELECT * FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal=? AND book = ? AND paragraph = ?  ";
     $stmt = $dh_wbw->prepare($query);
     $stmt->execute(array($channal, $book, $para));
     $FetchBlock = $stmt->fetch(PDO::FETCH_ASSOC);

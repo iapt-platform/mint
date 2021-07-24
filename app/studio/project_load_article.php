@@ -32,7 +32,7 @@ if (count($Fetch) > 0) {
             case "6":
                 {
                     $albumId = UUID::v4();
-                    $query = "select * from wbw_block where id='" . $block->block_id . "'";
+                    $query = "select * from "._TABLE_USER_WBW_BLOCK_." where id='" . $block->block_id . "'";
                     $stmt = $dh_wbw->query($query);
                     $FetchBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "\n<block>";

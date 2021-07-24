@@ -59,8 +59,8 @@ if (isset($_GET["channel"]) == false) {
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["name"] . '</div>';
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-        PDO_Connect("" . _FILE_DB_USER_WBW_);
-        $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        PDO_Connect(_FILE_DB_USER_WBW_);
+        $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -73,8 +73,8 @@ if (isset($_GET["channel"]) == false) {
         echo '</div>';
 
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-        PDO_Connect("" . _FILE_DB_SENTENCE_);
-        $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        PDO_Connect(_FILE_DB_SENTENCE_);
+        $query = "SELECT count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -101,7 +101,7 @@ if (isset($_GET["channel"]) == false) {
 {
     PDO_Connect("" . _FILE_DB_FILEINDEX_);
     $doc_id = $_GET["doc_id"];
-    $query = "select * from fileindex where id= ? ";
+    $query = "SELECT * from fileindex where id= ? ";
     $Fetch = PDO_FetchAll($query, array($doc_id));
     $iFetch = count($Fetch);
     if ($iFetch > 0) {
@@ -120,7 +120,7 @@ if (isset($_GET["channel"]) == false) {
         } else {
             //别人的文档
             //查询自己是否以前打开过
-            $query = "select * from fileindex where parent_id='{$doc_id}' and user_id='{$uid}' ";
+            $query = "SELECT * from fileindex where parent_id='{$doc_id}' and user_id='{$uid}' ";
             $FetchSelf = PDO_FetchAll($query);
             $iFetchSelf = count($FetchSelf);
             if ($iFetchSelf > 0) {
@@ -234,7 +234,7 @@ if (isset($_GET["channel"]) == false) {
                             case 6:
                                 #逐词解析
                                 $blockid = $blocks[$i]->block_id;
-                                $query = "select * from wbw_block where id= ? ";
+                                $query = "select * from "._TABLE_USER_WBW_BLOCK_." where id= ? ";
                                 $stmt = $dbhWBW->prepare($query);
                                 $stmt->execute(array($blockid));
                                 $fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -288,7 +288,7 @@ if (isset($_GET["channel"]) == false) {
 
                     if (count($arrNewBlock) > 0) {
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO wbw_block ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                         $stmtNewBlock = $dbhWBW->prepare($query);
                         foreach ($arrNewBlock as $oneParam) {
                             $stmtNewBlock->execute($oneParam);

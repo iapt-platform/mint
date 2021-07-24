@@ -78,7 +78,7 @@ $dbh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 foreach ($_para as $key => $para) {
     # code...
-    $query = "SELECT count(*) FROM wbw_block WHERE channal = ? AND book= ? and paragraph = ? ";
+    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal = ? AND book= ? and paragraph = ? ";
     $FetchWBW = PDO_FetchOne($query,array($_channel,$_book,$para));
     if($FetchWBW==0){
         #建立
@@ -107,7 +107,7 @@ foreach ($_para as $key => $para) {
                                         "readonly"=>false
                                     );
         $dbh_wbw->beginTransaction();
-        $query="INSERT INTO wbw_block ('id',
+        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id',
                                                                  'parent_id',
                                                                  'channal',
                                                                  'owner',

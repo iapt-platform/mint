@@ -203,7 +203,7 @@ switch ($op) {
 
                             PDO_Connect(_FILE_DB_USER_WBW_);
                             $PDO->beginTransaction();
-                            $query = "INSERT INTO wbw_block ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                            $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
                             foreach ($block_data as $oneParam) {
                                 $stmt->execute($oneParam);
@@ -356,7 +356,7 @@ switch ($op) {
                     echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
                     PDO_Connect( _FILE_DB_USER_WBW_);
-                    $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
+                    $query = "select count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
                     $FetchWBW = PDO_FetchOne($query);
                     echo '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';

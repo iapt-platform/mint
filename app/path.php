@@ -50,14 +50,17 @@ define("_DIR_USER_IMG_", __DIR__ . "/../tmp/user/media/3");
 define("_DIR_USER_IMG_LINK_", "../../tmp/user/media/3");
 define("_DIR_MYDOCUMENT_", "/my_document");
 
+# 逐词解析字典文件
+define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
+
 #数据库
 # 数据库基本参数
 define("_DB_ENGIN_", "sqlite");
 
 define("_DB_HOST_", "localhost");
 define("_DB_PORT_", "5432");
-define("_DB_USERNAME_", "");
-define("_DB_PASSWORD_", "");
+define("_DB_USERNAME_", "postgres");
+define("_DB_PASSWORD_", "123456");
 define("_DB_NAME_", "mint");
 
 //语料库数据表 pali canon db file 
@@ -84,7 +87,8 @@ define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/
 //页码对应
 define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
 //以书为单位的单词汇总表
-define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
+define("_FILE_DB_BOOK_WORD_", "pgsql:host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
 define("_TABLE_BOOK_WORD_", "bookword");
 //黑体字数据表
 define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
@@ -123,14 +127,15 @@ define("_TABLE_PART_", "part");
 //读写频繁
 # 逐词解析表
 define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
+define("_TABLE_USER_WBW_", "wbw");
+define("_TABLE_USER_WBW_BLOCK_", "wbw_block");
 # 译文
 define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
 # 译文编辑历史
 define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
 # 逐词解析字典
 define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-# 逐词解析字典文件
-define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
+
 
 //写入频繁 读取不频繁
 # 用户行为记录
@@ -173,7 +178,6 @@ define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
 
 # 用户字典 尚未启用
 define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
-
 
 
 # 评论 尚未启用
