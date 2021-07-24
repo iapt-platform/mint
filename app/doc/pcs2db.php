@@ -376,7 +376,7 @@ $dataBlock = $xml->xpath('//block');
     if (count($arrNewBlockData) > 0) {
         // 开始一个事务，逐词解析数据 关闭自动提交
         $dbhWBW->beginTransaction();
-        $query = "INSERT INTO wbw ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmtWbwData = $dbhWBW->prepare($query);
         foreach ($arrNewBlockData as $oneParam) {
             $stmtWbwData->execute($oneParam);

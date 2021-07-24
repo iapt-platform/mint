@@ -221,7 +221,7 @@ switch ($op) {
                             // 开始一个事务，关闭自动提交
 
                             $PDO->beginTransaction();
-                            $query = "INSERT INTO wbw ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                            $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
                             foreach ($wbw_data as $oneParam) {
                                 $stmt->execute($oneParam);

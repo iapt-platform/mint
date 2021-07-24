@@ -52,7 +52,7 @@ if (count($Fetch) > 0) {
                     echo "<id>{$block->block_id}</id>";
                     echo "</info>\n";
                     echo "<data>\n";
-                    $query = "select * from wbw where block_id='" . $block->block_id . "'";
+                    $query = "select * from "._TABLE_USER_WBW_." where block_id='" . $block->block_id . "'";
                     $stmt = $dh_wbw->query($query);
                     $wbw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($wbw_data as $word) {

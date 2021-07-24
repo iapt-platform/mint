@@ -179,7 +179,7 @@ foreach ($_para as $key => $para) {
             // 开始一个事务，关闭自动提交
 
             $dbh_wbw->beginTransaction();
-            $query="INSERT INTO wbw ('id',
+            $query="INSERT INTO "._TABLE_USER_WBW_." ('id',
                                                            'block_id',
                                                            'book',
                                                            'paragraph',
