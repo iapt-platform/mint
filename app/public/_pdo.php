@@ -2,7 +2,7 @@
 function PDO_Connect($dsn, $user="", $password="")
 {
     global $PDO;
-    $PDO = new PDO($dsn, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
+    $PDO = new PDO($dsn,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 }
 function PDO_FetchOne($query, $params=null)
