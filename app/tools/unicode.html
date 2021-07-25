@@ -14,6 +14,7 @@
 	<script language="javascript" src="../public/charcode/unicode.js"></script>
 	<script language="javascript" src="../public/charcode/myanmar.js"></script>
 	<script language="javascript" src="../public/charcode/tai_tham.js"></script>
+	<script language="javascript" src="../public/charcode/thai.js"></script>
 	<script language="javascript">
 		function sangayana2unicode(inStr, inM, inM2) {
 			var output = inStr;
@@ -270,6 +271,27 @@
 			document.getElementById("txtInput").value = txt;
 
 		}
+		function roman_to_thai() {
+			var txt = document.getElementById("txtInput").value;
+			output = "";
+
+			try {
+				for (r_to_m_i in char_roman_to_thai) {
+					eval("txt=txt.replace(/" + char_roman_to_thai[r_to_m_i].id + "/g,char_roman_to_thai[r_to_m_i].value);");
+				}
+			}
+
+			catch (err) {
+				//error
+				alert(err.message);
+			}
+			document.getElementById("txtOutput").value = document.getElementById("txtInput").value;
+			document.getElementById("txtInput").value = txt;
+			txt = document.getElementById("txtOutput").value;
+			u2u()
+			document.getElementById("txtInput").value = txt;
+
+		}
 		
 
 		function u2lkcs() {//兰卡简易版
@@ -428,6 +450,11 @@
 					document.getElementById("txtInput").value = document.getElementById("txtOutput").value
 					roman_to_tai_tham()
 					break;
+					case "12":
+					b2s()
+					document.getElementById("txtInput").value = document.getElementById("txtOutput").value
+					roman_to_thai()
+					break;
 
 			}
 
@@ -468,8 +495,8 @@
 
 		<div style="text-align:center; float:left;width:40%;height:80%;">
 			My Text Is In<select id="input_str" style="align:center; float:down; font-size: 100%;margin:20px;">
-				<option value="1">Sangayana</option>
 				<option value="2">Pāli Roman Unicode</option>
+				<option value="1">Sangayana</option>
 				<option value="3">Sinhala</option>
 				<option value="4">Myanmar1</option>
 				<option value="5">Myanmar2</option>
@@ -502,9 +529,10 @@
 				<option value="9">Telugu</option>
 				<option value="10">Myanmar</option>
 				<option value="11">经典傣文</option>
+				<option value="12">泰文</option>
 			</select></br>
 			<textarea id="txtOutput" rows="30" cols=""
-				style="font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans Tai Tham', 'ATaiThamKHNewV3-Normal', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; width:100%;height:100%"></textarea>
+				style="font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'ATaiThamKHNewV3-Normal', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; width:100%;height:100%"></textarea>
 		</div>
 
 
