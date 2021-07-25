@@ -195,9 +195,9 @@ var char_roman_to_tai = [
 	{ id: "᩠᩼ᩋ", value: "" },
 	{ id: "᩠ᩋ", value: "" },
 	{ id: "ᨡᩮᩣ", value: "ᨡᩮᩤ" },
-	{ id: "ᨡᩣ", value: " ᨡᩤ" },
-	{ id: " ᨠ᩠ᨡᩮᩤ", value: " ᨠ᩠ᨡᩮᩤ" },
-	{ id: "က᩠ခါ", value: " ᨠ᩠ᨡᩤ" },
+	{ id: "ᨡᩣ", value: "ᨡᩤ" },
+	{ id: "ᨠ᩠ᨡᩮᩤ", value: "ᨠ᩠ᨡᩮᩤ" },
+	{ id: "က᩠ခါ", value: "ᨠ᩠ᨡᩤ" },
 	{ id: "ဂော", value: "ᨣᩮᩤ" },
 	{ id: "ᨦᩮᩣ", value: "ᨦᩮᩤ" },
 	{ id: "ᨴᩮᩣ", value: "ᨴᩮᩤ" },
@@ -207,7 +207,7 @@ var char_roman_to_tai = [
 	{ id: "ᨦᩣ", value: "ᨦᩤ" },
 	{ id: "ᨴᩣ", value: "ᨴᩤ" },
 	{ id: "ᨷᩣ", value: "ᨷᩤ" },
-	{ id: "ᩅᩣ", value: "ᩅᩤ" },  
+	{ id: "ᩅᩣ", value: "ᩅᩤ" },
 	{ id: "ᨴ᩠ᩅᩣ", value: "ᨴ᩠ᩅᩤ" },
 
 ];
