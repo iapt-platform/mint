@@ -98,6 +98,9 @@ var char_roman_to_tai = [
 
 ];
 
+
+
+
 var char_tai_to_roman_1 = [
 { id: "ႁႏၵ", value: "ndra" }, //後加
 
@@ -696,7 +699,8 @@ var char_tai_to_roman_2 = [
 ];
 
 function roman_to_tai(input) {
-let txt = input;
+
+let txt = input.toLowerCase();
 
 try {
 for (r_to_t_i in char_roman_to_tai) {

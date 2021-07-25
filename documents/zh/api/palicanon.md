@@ -36,3 +36,10 @@
 - `trans_title` string, 根据lang查找对应的标题 如果没有查询到 无该变量
 
 ## 
+
+## 书中的单词汇总表
+CREATE TABLE bookword (
+    book      INTEGER,
+    wordindex INTEGER,
+    count     INTEGER
+);

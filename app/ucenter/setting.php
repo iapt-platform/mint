@@ -48,12 +48,12 @@ require_once '../public/function.php';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link type="text/css" rel="stylesheet" href="../studio/css/font.css"/>
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/font.css"/>
+
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader.css"/>
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/reader_mob.css" media="screen and (max-width:800px)">
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css"/>
-	<title id="page_title">Setting</title>
-
+	<title id="page_title"><?php echo $_local->gui->setting; ?></title>
 	<script src="../public/js/jquery-3.5.1.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>	
 	<script src="../public/js/fixedsticky.js"></script>
@@ -235,7 +235,7 @@ para:hover{
 				</button>
 			</div>
 			<div>
-				<span id="tool_bar_title" style="font-family: 'Noto Serif';"><?php echo $_local->gui->title; ?></span>
+				<span id="tool_bar_title" style="font-family: 'Noto Serif';"><?php echo $_local->gui->setting; ?></span>
 			</div>
 			<div style="display: flex;">	
 
