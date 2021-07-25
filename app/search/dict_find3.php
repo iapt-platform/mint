@@ -141,7 +141,7 @@ switch ($op) {
 
         //查找这些词出现在哪些书中
         PDO_Connect(_FILE_DB_BOOK_WORD_);
-        $query = "SELECT book,sum(count) as co FROM bookword WHERE \"wordindex\" IN $strQueryWordId  GROUP BY book LIMIT 0,217";
+        $query = "SELECT book,sum(count) as co FROM "._TABLE_BOOK_WORD_." WHERE \"wordindex\" IN $strQueryWordId  GROUP BY book LIMIT 0,217";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -238,7 +238,7 @@ switch ($op) {
                 }
 
                 //查找这些词出现在哪些书中
-                $query = "select book,sum(count) as co from bookword where \"wordindex\" in $wordlist group by book order by co DESC";
+                $query = "SELECT book,sum(count) as co from "._TABLE_BOOK_WORD_." where \"wordindex\" in $wordlist group by book order by co DESC";
                 $Fetch = PDO_FetchAll($query);
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {

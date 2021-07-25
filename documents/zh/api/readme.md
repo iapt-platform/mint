@@ -21,15 +21,15 @@ https://github.com/go-redis/redis
 
 ## 目录
 
+-   [用户](user.md)
 -   [版本](channel.md)
--   [课程](course.md)
+-   [术语](term.md)
 -   [字典](dict.md)
+-   [课程](course.md)
 -   [工作组](group.md)
 -   [语料库](palicanon.md)
--   [术语](term.md)
 -   [译文](translation.md)
 -   [文章文集](article.md)
--   [用户](user.md)
 -   [逐词解析](wbw.md)
 -   [全文搜索](search.md)
 -   [其他工具表](others.md)

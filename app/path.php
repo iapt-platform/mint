@@ -1,14 +1,5 @@
 <?php
-define("_DB_ENGIN_", "sqlite");
-
-define("_DB_HOST_", "localhost");
-define("_DB_USERNAME_", "");
-define("_DB_PASSWORD_", "");
-
-define("_DB_NAME_PALICANON_", "palicanon");
-define("_DB_NAME_DICTIONARY_", "dictionary");
-define("_DB_NAME_USERDATA_", "userdata");
-
+# 目录
 define("_DIR_APPDATA_", __DIR__ . "/../tmp/appdata");
 
 define("_DIR_PALICANON_", __DIR__ . "/../tmp/appdata/palicanon");
@@ -23,21 +14,6 @@ define("_DIR_IMAGES_COLLECTION_", __DIR__ . "/../tmp/images/collection");
 define("_DIR_IMAGES_COURSE_", __DIR__ . "/../tmp/images/course");
 define("_DIR_IMAGES_COURSE_A_", "../../tmp/images/course");
 define("_DIR_IMAGES_LESSON_", __DIR__ . "/../tmp/images/lesson");
-
-//pali canon db file 语料库
-define("_FILE_DB_PALICANON_TEMPLET_", __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
-define("_FILE_DB_RESRES_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/res.db3");
-define("_FILE_DB_PALITEXT_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_text.db3");
-define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
-define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
-define("_FILE_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
-define("_FILE_DB_PALI_TOC_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_toc.db3");
-define("_FILE_DB_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/index.db3");
-define("_FILE_DB_WORD_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/wordindex.db3");
-define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/paliindex.db3");
-define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
-define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
-define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
 
 //语料库
 
@@ -57,6 +33,63 @@ define("_DIR_DICT_SYSTEM_", __DIR__ . "/../tmp/appdata/dict/system");
 define("_DIR_DICT_3RD_", __DIR__ . "/../tmp/appdata/dict/3rd");
 define("_DIR_DICT_REF_", __DIR__ . "/../tmp/appdata/dict/ref");
 
+
+define("_DIR_FONT_", __DIR__ . "/../font");
+define("_DIR_PALI_HTML_", __DIR__ . "/../palihtml");
+define("_DIR_DICT_TEXT_", __DIR__ . "/../dicttext");
+
+define("_DIR_PALI_TITLE_", __DIR__ . "/../pali_title");
+define("_DIR_APP_", __DIR__ . "/../app");
+define("_DIR_LANGUAGE_", __DIR__ . "/../app/public/lang");
+define("_DIR_BOOK_INDEX_", __DIR__ . "/../app/public/book_index");
+
+/*user data*/
+define("_DIR_USER_BASE_", __DIR__ . "/../tmp/user");
+define("_DIR_USER_DOC_", __DIR__ . "/../tmp/user_doc");
+define("_DIR_USER_IMG_", __DIR__ . "/../tmp/user/media/3");
+define("_DIR_USER_IMG_LINK_", "../../tmp/user/media/3");
+define("_DIR_MYDOCUMENT_", "/my_document");
+
+#数据库
+# 数据库基本参数
+define("_DB_ENGIN_", "sqlite");
+
+define("_DB_HOST_", "localhost");
+define("_DB_PORT_", "5432");
+define("_DB_USERNAME_", "");
+define("_DB_PASSWORD_", "");
+define("_DB_NAME_", "mint");
+
+//语料库数据表 pali canon db file 
+//巴利语料模版表
+define("_FILE_DB_PALICANON_TEMPLET_", __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
+//标题资源表
+define("_FILE_DB_RESRES_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/res.db3");
+//巴利语料段落表
+define("_FILE_DB_PALITEXT_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_text.db3");
+//单词分析表
+define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
+//巴利句子表
+define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+//相似句
+define("_FILE_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
+//标题表
+define("_FILE_DB_PALI_TOC_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_toc.db3");
+//单词索引=92万词+单词索引
+define("_FILE_DB_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/index.db3");
+//92万词
+define("_FILE_DB_WORD_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/wordindex.db3");
+//单词索引
+define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/paliindex.db3");
+//页码对应
+define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
+//以书为单位的单词汇总表
+define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
+define("_TABLE_BOOK_WORD_", "bookword");
+//黑体字数据表
+define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
+
+# 字典数据表 全部存入redis
 #巴缅字典
 define("_DICT_DB_PM_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/3rd/pm.db");
 define("_TABLE_DICT_PM_", "dict");
@@ -84,41 +117,67 @@ define("_TABLE_REF_INDEX_", "dict");
 define("_FILE_DB_PART_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/part.db3");
 define("_TABLE_PART_", "part");
 
-define("_DIR_FONT_", __DIR__ . "/../font");
-define("_DIR_PALI_HTML_", __DIR__ . "/../palihtml");
-define("_DIR_DICT_TEXT_", __DIR__ . "/../dicttext");
 
-define("_DIR_PALI_TITLE_", __DIR__ . "/../pali_title");
-define("_DIR_APP_", __DIR__ . "/../app");
-define("_DIR_LANGUAGE_", __DIR__ . "/../app/public/lang");
-define("_DIR_BOOK_INDEX_", __DIR__ . "/../app/public/book_index");
+# 用户数据表
 
-/*user data*/
-define("_DIR_USER_BASE_", __DIR__ . "/../tmp/user");
-define("_DIR_USER_DOC_", __DIR__ . "/../tmp/user_doc");
-define("_DIR_USER_IMG_", __DIR__ . "/../tmp/user/media/3");
-define("_DIR_USER_IMG_LINK_", "../../tmp/user/media/3");
-define("_DIR_MYDOCUMENT_", "/my_document");
-
+//读写频繁
+# 逐词解析表
 define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
-define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
+# 译文
 define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
-define("_FILE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
-define("_FILE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
-define("_FILE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
-define("_FILE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
-define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
-define("_FILE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
-define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
-define("_FILE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
-define("_FILE_DB_USER_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/user/statistics.db3");
-define("_FILE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
-define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
-define("_FILE_DB_USER_ARTICLE_", "sqlite:" . __DIR__ . "/../tmp/user/article.db3");
-define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
+# 译文编辑历史
 define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
+# 逐词解析字典
+define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
+# 逐词解析字典文件
+define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
+
+//写入频繁 读取不频繁
+# 用户行为记录
 define("_FILE_DB_USER_ACTIVE_", "sqlite:" . __DIR__ . "/../tmp/user/user_active.db3");
 define("_FILE_DB_USER_ACTIVE_LOG_", "sqlite:" . __DIR__ . "/../tmp/user/user_active_log.db3");
+
+
+//读取频繁 写入不频繁 
+# 文章 文集
+define("_FILE_DB_USER_ARTICLE_", "sqlite:" . __DIR__ . "/../tmp/user/article.db3");
+
+# 术语
+define("_FILE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
+# 版本风格 
+define("_FILE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
+# 用户账号
+define("_FILE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
+# 协作
 define("_FILE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
+
+# 工作组
+define("_FILE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
+# 逐词解析文件索引
+define("_FILE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
+# 课程
+define("_FILE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
+# 用户自定义书
 define("_FILE_DB_USER_CUSTOM_BOOK_", "sqlite:" . __DIR__ . "/../tmp/user/custom_book.db3");
+# 逐词译和译文编辑消息
+define("_FILE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
+
+
+
+//很少使用
+# 网站设置
+define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
+
+# 用户图片数据 尚未启用
+define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
+
+# 用户字典 尚未启用
+define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
+
+
+
+# 评论 尚未启用
+define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
+
+
+define("_FILE_DB_USER_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/user/statistics.db3");
