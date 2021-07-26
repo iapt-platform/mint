@@ -42,14 +42,6 @@ IAPT = International Academy Of Pali Tipitaka - 国际巴利三藏学院
 - 巴利文献的整理翻译及研究
 - 基于项目培养相关人才，实现产学研一体化发展。
 
-# 参与开发
-
-关注此 [项目看板](https://github.com/orgs/iapt-platform/projects/5)
-
-发现有合适的待领取（To do 状态）任务时，联系 Visuddhinanda(email:visuddhinanda@gmail.com) 加入。
-
-技术细节：暂时请先尝试阅读代码，重构结束后会有补充完整的开发文档。
-
 # 什么是巴利圣典？
 
 巴利圣典乘载着佛陀的教导。
@@ -57,3 +49,14 @@ IAPT = International Academy Of Pali Tipitaka - 国际巴利三藏学院
 从佛陀入灭后一个月开始，五百位阿拉汉僧人作了集结会议，将佛陀所宣说的法完整的背诵了下来，在这2600多年中一共经历了六次的集结会议，将教法传承至今。因主要分为三个部分律藏、经藏、论藏，因此一般也称作巴利三藏。
 
 Pāli 即是圣典的意思，是以古印度语言为基础的文献，目前这种语言已不在于日常被使用，只用于传承佛法，因此也将此语言直接称作巴利语（Pāli language），为了避免混淆，通常在语言翻译上，会将「巴利」（表示语言）和「圣典」（表示典籍）分开，将它称作巴利圣典。
+
+# 参与开发
+
+- 关注 [项目看板](https://github.com/orgs/iapt-platform/projects/5)
+
+    发现有合适的待领取（To do 状态）任务时，可联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 加入。
+
+- 阅读 [开发文档](./documents/README.md
+)
+
+    开发文档尚未编写完毕，如有疑问，可参考代码，或联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 沟通。

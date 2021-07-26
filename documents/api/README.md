@@ -1,6 +1,11 @@
+# 注意
+
+- 该文档尚未完善，内容仅供参考
+- 该文档中的技术方案尚未敲定，如涉及具体开发，需先行商议
+
 # 后端开发文档
 
-## 开发环境
+## 开发环境（待商议）
 
 -   golang
 -   PostgreSQL
@@ -31,8 +36,8 @@ https://github.com/go-redis/redis
 -   [译文](translation.md)
 -   [文章文集](article.md)
 -   [逐词解析](wbw.md)
--   [全文搜索](search.md)
--   [其他工具表](others.md)
+-   全文搜索
+-   其他工具表
 
 ```mermaid
 graph LR
@@ -63,6 +68,8 @@ article_reader --> article_list
 collection_edit --> collection
 article_edit  --> article
 ```
+
+[全文搜索]: 
 
 ## 数据表设计
 
