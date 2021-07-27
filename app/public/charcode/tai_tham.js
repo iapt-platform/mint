@@ -10,6 +10,8 @@ var char_roman_to_tai = [
 	{ id: "mpho", value: "ᨾᩮ᩠ᨹᩣ" },
 	{ id: "ndho", value: "ᨶᩮᩣ᩠ᨵ" },
 	{ id: "ntho", value: "ᨶᩮᩣ᩠ᨳ" },
+	{ id: "ndhā", value: "ᨶᩣ᩠ᨵ" },
+	{ id: "nthā", value: "ᨶᩣ᩠ᨳ" },
 	{ id: "ṅgho", value: "ᩘᩮ᩠ᨿᩣ" },
 	{ id: "ṅkho", value: "ᩘᩮ᩠ᨡᩣ" },
 	{ id: "ñcho", value: "ᨬᩮ᩠ᨨᩣ" },
@@ -57,6 +59,9 @@ var char_roman_to_tai = [
 	{ id: "ndo", value: "ᨶᩮᩣ᩠ᨴ" },
 	{ id: "nno", value: "ᨶᩮᩣ᩠ᨶ" },
 	{ id: "nto", value: "ᨶᩮᩣ᩠ᨲ" },
+	{ id: "ndā", value: "ᨶᩣ᩠ᨴ" },
+	{ id: "nnā", value: "ᨶᩣ᩠ᨶ" },
+	{ id: "ntā", value: "ᨶᩣ᩠ᨲ" },
 	{ id: "ṅgo", value: "ᩘᩮ᩠ᨣᩣ" },
 	{ id: "ṅko", value: "ᩘᩮ᩠ᨠᩣ" },
 	{ id: "ñco", value: "ᨬᩮ᩠ᨧᩣ" },
@@ -119,7 +124,7 @@ var char_roman_to_tai = [
 	{ id: "rye", value: "ᩁᩮ᩠ᨿ" },
 	{ id: "vye", value: "ᩅᩮ᩠ᨿ" },
 	{ id: "yye", value: "ᨿᩮ᩠ᨿ" },
-	
+		
 { id: "ss", value: "ᩔ᩠" },
 { id: "vh", value: "ᩅ᩠ᩉ᩠" },
 { id: "vy", value: "ᩅ᩠ᨿ᩠" },
