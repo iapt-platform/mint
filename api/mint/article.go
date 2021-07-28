@@ -6,8 +6,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
+	"github.com/go-redis/redis/v8"
+	"context"
 	"time"
 )
+var ctx = context.Background()
+
+
 /*
     id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36) ,
@@ -28,36 +33,66 @@ import (
 type Article struct {
 	Id     int `form:"id" json:"id" binding:"required"`
 	Title string `form:"title" json:"title" binding:"required"`
-	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
-	Summary string `form:"summary" json:"summary" binding:"required"`
-	Content string `form:"content" json:"content" binding:"required"`
+	Subtitle string `form:"subtitle" json:"subtitle"`
+	Summary string `form:"summary" json:"summary"`
+	Content string `form:"content" json:"content"`
 	OwnerId int
-	Setting string `form:"setting" json:"setting" binding:"required"`
-	Status int `form:"status" json:"status" binding:"required"`
+	Setting string `form:"setting" json:"setting"`
+	Status int `form:"status" json:"status"`
 	Version int
     DeletedAt time.Time
     CreatedAt time.Time
     UpdatedAt time.Time
 }
 //查询
-func GetArticle(db *pg.DB) gin.HandlerFunc {
+func GetArticle(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		lid,err := strconv.ParseInt(c.Param("aid"),10,64)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("get lesson")
-		// TODO 在这里进行db操作
-		// Select user by primary key.
+		fmt.Println("get article")
+		rkey := "article://"+c.Param("aid")
+		n, err := rdb.Exists(ctx,rkey).Result()
+		if err != nil  {
+			fmt.Println(err)
+		}else if n == 0 {
+			fmt.Println("redis key not exist")
+		}else{
+			fmt.Println("redis key exist")
+			val, err := rdb.HGetAll(ctx, rkey).Result()
+			if err != nil || val == nil {
+				//有错误或者没查到
+				fmt.Println("redis error")
+					
+			}else{
+				fmt.Println("redis no error")
+				c.JSON(http.StatusOK, gin.H{
+					"data": val,
+				})
+				return
+			}	
+		}
+
 		article := &Article{Id: int(lid)}
-		err = db.Model(article).WherePK().Select()
+		err = db.Model(article).Column("id","title","subtitle","content","owner_id","setting","status","version","updated_at").WherePK().Select()
 		if err != nil {
 			panic(err)
-		}
-		
+		}			
 		c.JSON(http.StatusOK, gin.H{
-			"message": "article-"+article.Title,
+			"data": article,
 		})
+		//写入redis
+		rdb.HSet(ctx,rkey,"id",article.Id)
+		rdb.HSet(ctx,rkey,"title",article.Title)
+		rdb.HSet(ctx,rkey,"subtitle",article.Subtitle)
+		rdb.HSet(ctx,rkey,"content",article.Content)
+		rdb.HSet(ctx,rkey,"owner_id",article.OwnerId)
+		rdb.HSet(ctx,rkey,"setting",article.Setting)
+		rdb.HSet(ctx,rkey,"status",article.Status)
+		rdb.HSet(ctx,rkey,"version",article.Version)
+		rdb.HSet(ctx,rkey,"updated_at",article.UpdatedAt)
+			
 	}
 }
 
@@ -110,7 +145,7 @@ func PutArticle(db *pg.DB) gin.HandlerFunc{
 
 
 //修改
-func PostAritcle(db *pg.DB) gin.HandlerFunc{
+func PostAritcle(db *pg.DB,rdb *redis.Client) gin.HandlerFunc{
 	return func(c *gin.Context){
 		var form Article
 
@@ -126,14 +161,16 @@ func PostAritcle(db *pg.DB) gin.HandlerFunc{
 		c.JSON(http.StatusOK,gin.H{
 			"message":"update ok",
 		})
+		rkey := "article://"+strconv.Itoa(form.Id)
+		rdb.Del(ctx,rkey)
 	}
 }
 
 
 //删
-func DeleteArticle(db *pg.DB) gin.HandlerFunc{
+func DeleteArticle(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
 	return func(c *gin.Context){
-		id,err := strconv.ParseInt(c.Param("aid"),10,64)
+		id,err := strconv.Atoi(c.Param("aid"))
 		if err != nil {
 			panic(err)
 		}
@@ -145,9 +182,13 @@ func DeleteArticle(db *pg.DB) gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
-		
+		//TODO 删除article_list表相关项目
 		c.JSON(http.StatusOK,gin.H{
 			"message":"delete "+c.Param("lid"),
 		})
+
+		rkey := "article://"+c.Param("aid")
+		rdb.Del(ctx,rkey)
+
 	}
 }

@@ -7,8 +7,10 @@ import (
 	"github.com/go-pg/pg/v10"
 	"time"
 	"encoding/json"
-
+	"github.com/go-redis/redis/v8"
 )
+
+
 type ArticleList struct {
 	Id     int `form:"id" json:"id"`
 	CollectionId int `form:"collection_id" json:"collection_id" binding:"required"`
@@ -91,4 +93,46 @@ func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc{
 	}
 }
 
+//删
+func DeleteArticleInList(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
+	return func(c *gin.Context){
+		id,err := strconv.Atoi(c.Param("aid"))
+		if err != nil {
+			panic(err)
+		}
+		//删之前获取 course_id
+		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?",id).Delete()
+		if err != nil {
+			panic(err)
+		}
+		//TODO 删除article_list表相关项目
+		c.JSON(http.StatusOK,gin.H{
+			"message":"delete "+c.Param("aid"),
+		})
 
+		rkey := "article_list://"+c.Param("aid")
+		rdb.Del(ctx,rkey)
+
+	}
+}
+//删
+func DeleteCollectionInList(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
+	return func(c *gin.Context){
+		id,err := strconv.Atoi(c.Param("cid"))
+		if err != nil {
+			panic(err)
+		}
+		//删之前获取 course_id
+		_, err = db.Model((*ArticleList)(nil)).Where("collection_id = ?",id).Delete()
+		if err != nil {
+			panic(err)
+		}
+		//TODO 删除article_list表相关项目
+		c.JSON(http.StatusOK,gin.H{
+			"message":"delete "+c.Param("cid"),
+		})
+
+		rkey := "article_list://collection_"+c.Param("cid")
+		rdb.Del(ctx,rkey)
+	}
+}
