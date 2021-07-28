@@ -31,7 +31,7 @@ if (count($Fetch) > 0) {
             case "6":
                 {
                     $albumId = UUID::v4();
-                    $query = "select * from wbw_block where id='" . $block->block_id . "'";
+                    $query = "select * from "._TABLE_USER_WBW_BLOCK_." where id='" . $block->block_id . "'";
                     $stmt = $dh_wbw->query($query);
                     $FetchBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "\n<block>";
@@ -51,7 +51,7 @@ if (count($Fetch) > 0) {
                     echo "<id>{$block->block_id}</id>";
                     echo "</info>\n";
                     echo "<data>\n";
-                    $query = "SELECT * FROM wbw WHERE block_id='" . $block->block_id . "' order by wid ASC";
+                    $query = "SELECT * FROM "._TABLE_USER_WBW_." WHERE block_id='" . $block->block_id . "' order by wid ASC";
                     $stmt = $dh_wbw->query($query);
                     $wbw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($wbw_data as $word) {

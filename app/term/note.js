@@ -204,21 +204,33 @@ function note_refresh_new(callback = null) {
 	}
 }
 
+//渲染巴利原文句子
+function render_pali_sent(palitext){
+	let output = "";
+	output =
+		"<pali book='" +
+		palitext.book +
+		"' para='" +
+		palitext.para +
+		"' begin='" +
+		palitext.begin +
+		"' end='" +
+		palitext.end +
+		"' >";
+	if(palitext.book<1000){
+		output += palitext.palitext;
+	}
+	else{
+		output += marked(palitext.palitext);
+	}
+		
+	output +="</pali>";
+	return output;
+}
 //渲染阅读模式句子
 function render_read_mode_sent(iterator) {
 	let id = iterator.id;
-	let strPalitext =
-		"<pali book='" +
-		iterator.book +
-		"' para='" +
-		iterator.para +
-		"' begin='" +
-		iterator.begin +
-		"' end='" +
-		iterator.end +
-		"' >" +
-		iterator.palitext +
-		"</pali>";
+	let strPalitext =render_pali_sent(iterator);
 
 	if (
 		$("#" + id)
@@ -588,18 +600,7 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += " </div>";
 
-	let strPalitext =
-		"<pali book='" +
-		in_json.book +
-		"' para='" +
-		in_json.para +
-		"' begin='" +
-		in_json.begin +
-		"' end='" +
-		in_json.end +
-		"' >" +
-		in_json.palitext +
-		"</pali>";
+	let strPalitext = render_pali_sent(in_json);
 
 	output += "<div class='note_body'>";
 	output += "<div class='palitext_div'>";

@@ -1,4 +1,7 @@
 <?php
+/*
+逐词解析数据库数据分析
+*/
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/load_lang.php';
@@ -7,7 +10,7 @@ require_once '../public/function.php';
 global $PDO;
 PDO_Connect("" . _FILE_DB_USER_WBW_);
 
-$query = "SELECT * from wbw where  1";
+$query = "SELECT * from "._TABLE_USER_WBW_." where  1";
 
 $sth = $PDO->prepare($query);
 $sth->execute();

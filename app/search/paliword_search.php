@@ -162,6 +162,7 @@ switch ($op) {
             $time_start = microtime_float();
 
             PDO_Connect(_FILE_DB_PALI_INDEX_);
+			//TODO 在没有查到书的时候$strFirstBookList为 (  需要修改
             $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
             $Fetch = PDO_FetchAll($query);
             //echo "<div>$query</div>";

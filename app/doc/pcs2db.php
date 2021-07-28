@@ -58,7 +58,7 @@ if (isset($_GET["channel"]) == false) {
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
         PDO_Connect("" . _FILE_DB_USER_WBW_);
-        $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        $query = "select count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -343,7 +343,7 @@ $dataBlock = $xml->xpath('//block');
     #插入逐词解析块数据
     if (count($arrNewBlock) > 0) {
         $dbhWBW->beginTransaction();
-        $query = "INSERT INTO wbw_block (
+        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." (
 										'id',
 										'parent_id',
 										'channal',
@@ -376,7 +376,7 @@ $dataBlock = $xml->xpath('//block');
     if (count($arrNewBlockData) > 0) {
         // 开始一个事务，逐词解析数据 关闭自动提交
         $dbhWBW->beginTransaction();
-        $query = "INSERT INTO wbw ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmtWbwData = $dbhWBW->prepare($query);
         foreach ($arrNewBlockData as $oneParam) {
             $stmtWbwData->execute($oneParam);

@@ -13,6 +13,7 @@
 /package-lock.json
 /yarn.lock
 /composer.lock
+/app/phpinfo.php
 
 # dependencies
 /vendor/

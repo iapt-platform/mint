@@ -47,7 +47,7 @@ if (count($aData) > 0) {
 
     /* 开始一个事务，关闭自动提交 */
     $PDO->beginTransaction();
-    $query = "UPDATE wbw SET data= ?  , receive_time= ?  , modify_time= ?   where block_id= ?  and wid= ?  ";
+    $query = "UPDATE "._TABLE_USER_WBW_." SET data= ?  , receive_time= ?  , modify_time= ?   where block_id= ?  and wid= ?  ";
     $sth = $PDO->prepare($query);
 
     foreach ($aData as $data) {
