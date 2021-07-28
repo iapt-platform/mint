@@ -87,8 +87,8 @@ define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/
 //页码对应
 define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
 //以书为单位的单词汇总表
-define("_FILE_DB_BOOK_WORD_", "pgsql:host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-//define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
+//define("_FILE_DB_BOOK_WORD_", "pgsql:host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
 define("_TABLE_BOOK_WORD_", "bookword");
 //黑体字数据表
 define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
@@ -131,10 +131,15 @@ define("_TABLE_USER_WBW_", "wbw");
 define("_TABLE_USER_WBW_BLOCK_", "wbw_block");
 # 译文
 define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
+define("_TABLE_SENTENCE_", "sentence");
+define("_TABLE_SENTENCE_BLOCK_", "sent_block");
 # 译文编辑历史
 define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
+define("_TABLE_SENTENCE_HISTORAY_", "sent_historay");
 # 逐词解析字典
 define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
+define("_TABLE_DICT_WBW_", "wbw");
+define("_TABLE_DICT_WBW_INDEX_", "wbw_index");
 
 
 //写入频繁 读取不频繁
@@ -144,15 +149,16 @@ define("_FILE_DB_USER_ACTIVE_LOG_", "sqlite:" . __DIR__ . "/../tmp/user/user_act
 
 
 //读取频繁 写入不频繁 
+# 用户账号
+define("_FILE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
+# 版本风格 
+define("_FILE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
+
 # 文章 文集
 define("_FILE_DB_USER_ARTICLE_", "sqlite:" . __DIR__ . "/../tmp/user/article.db3");
 
 # 术语
 define("_FILE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
-# 版本风格 
-define("_FILE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
-# 用户账号
-define("_FILE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
 # 协作
 define("_FILE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
 
