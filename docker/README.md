@@ -34,7 +34,7 @@
   > sudo rabbitmq-plugins enable rabbitmq_management
 
   # enable redis clusters
-  > ./docker/redis.sh
+  > /etc/redis/redis.sh
   ```
 
   ![start](documents/start.png)
