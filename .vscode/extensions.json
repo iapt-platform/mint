@@ -1,0 +1,20 @@
+{
+    "recommendations": [
+        "rebornix.ruby",
+        "zbr.vscode-ansible",
+        "redhat.vscode-yaml",
+        "ms-vscode-remote.remote-ssh",
+        "ms-azuretools.vscode-docker",
+        "vscode-icons-team.vscode-icons",
+        "akamud.vscode-theme-onedark",
+        "hookyqr.beautify",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "editorconfig.editorconfig",
+        "bungcip.better-toml",
+        "adpyke.vscode-sql-formatter",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "gruntfuggly.todo-tree",
+    ]
+}

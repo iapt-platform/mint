@@ -1,0 +1,18 @@
+{
+    "files.autoSave": "onFocusChange",
+    "files.insertFinalNewline": true,
+    "workbench.colorTheme": "Atom One Dark",
+    "window.zoomLevel": 2,
+    "editor.formatOnSave": true,
+    "editor.fontFamily": "source code pro",
+    "editor.mouseWheelZoom": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    // https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/node_modules/**": true
+    },
+    "sql-formatter.uppercase": true
+}
