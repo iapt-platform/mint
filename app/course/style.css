@@ -41,13 +41,14 @@
     background-color: #f5f5f5;
 }
 
-
-}
 .course_info_block {
     padding: 1rem 0;
 }
 .course_info_block h2 {
     font-size: 16px;
+}
+.course_info_block p {
+    white-space: pre-wrap;
 }
 #lesson_list .lesson_card {
     width: 50%;
