@@ -111,17 +111,17 @@ function lesson_load(lesson_id) {
                 let dt = lesson_info["duration"] / 60;
                 let strDuration = "";
                 if (dt > 59) {
-                    strDuration += Math.floor(dt / 60) + "小时";
+                    strDuration += Math.floor(dt / 60) + gLocal.gui.h;
                 }
                 let m = dt % 60;
                 if (m > 0) {
-                    strDuration += (dt % 60) + "分钟";
+                    strDuration += (dt % 60) + gLocal.gui.mins;
                 }
 
                 html += "<div id='lesson_info_head_2' class='course_info_block'>";
-                html += "<div class='info_item'>" + "<span>上课时间：<span>" + strData + " " + strTime + "</div>";
+                html += "<div class='info_item'>" + "<span>"+gLocal.gui.time_arrange+"：</span><span>" + strData + " " + strTime + "</span></div>";
                 html +=
-                    "<div class='info_item'>" + "<span>" + gLocal.gui.duration + "：<span>" + strDuration + "</div>";
+                    "<div class='info_item'>" + "<span>" + gLocal.gui.duration + "：</span><span>" + strDuration + "</span></div>";
                 html += "<div class='info_item'>" + "<span>" + gLocal.gui.speaker + "：<span>";
                 html +=
                     "<a href='../uhome/course.php?userid=" +
@@ -177,11 +177,11 @@ function lesson_load(lesson_id) {
                 //end of attachment
 
                 //content
-                if (lesson_info.content && lesson_info.content.length > 0) {
+                if (lesson_info.summary && lesson_info.summary.length > 0) {
                     html += "<div id='course_info_content' class='course_info_block'>";
                     html += "<h2>" + gLocal.gui.detaile + "</h2>";
                     try {
-                        html += marked(lesson_info.content);
+                        html += marked(lesson_info.summary);
                     } catch (e) {
                         html += e.message;
                     }
@@ -214,8 +214,8 @@ function render_course_info(course_id) {
                 html += "</a>";
                 html += "</div>";
                 html += "<div id='course_button'>";
-                html += "<button>关注</button>";
-                html += "<button>报名</button>";
+                html += "<button>"+gLocal.gui.watch+"</button>";
+                html += "<button>"+gLocal.gui.sign_up+"</button>";
                 html += "</div>";
                 $("#course_info").html(html);
             }
