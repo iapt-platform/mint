@@ -6,7 +6,7 @@ require_once "../sync/function.php";
 
 $input = (object) [
     "database" =>  _FILE_DB_USER_WBW_,
-    "table" =>  "wbw_block",
+    "table" =>  _TABLE_USER_WBW_BLOCK_,
     "uuid" =>  "id",
     "sync_id" =>  ["id"],
     "modify_time" =>  "modify_time",

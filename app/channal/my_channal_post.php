@@ -57,7 +57,7 @@ else{
 
 	// 设置 逐词译库可见性
 	PDO_Connect(_FILE_DB_USER_WBW_);
-	$query="UPDATE wbw_block SET lang = ?  , status = ? where  channal = ?  ";
+	$query="UPDATE "._TABLE_USER_WBW_BLOCK_." SET lang = ?  , status = ? where  channal = ?  ";
 	$sth = PDO_Execute($query,array($_POST["lang"],$_POST["status"],$_POST["id"]));
 	if (!$sth || ($sth && $sth->errorCode() != 0)) {
 		$error = PDO_ErrorInfo();

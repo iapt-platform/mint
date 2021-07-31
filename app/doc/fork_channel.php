@@ -70,7 +70,7 @@ if (isset($_GET["dest_channel"]) == false) {
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["name"] . '</div>';
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-        $query = "select count(*) from wbw_block where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        $query = "select count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -110,7 +110,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
         } else {
             //别人的文档
             //查询以前自己是否曾经复刻
-            $query = "select * from wbw_block where parent_channel=? and owner=? ";
+            $query = "SELECT * from "._TABLE_USER_WBW_BLOCK_." where parent_channel=? and owner=? ";
             $FetchSelf = PDO_FetchAll($query,array($_GET["src_channel"],$_COOKIE["userid"]));
             $iFetchSelf = count($FetchSelf);
             if ($iFetchSelf > 0) {
@@ -139,7 +139,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 
                     $blocks = $_para;
                     for ($i = 0; $i < count($blocks); $i++) {
-						$query = "select id from wbw_block where book= ? and paragraph = ? and channal = ? ";
+						$query = "SELECT id from "._TABLE_USER_WBW_BLOCK_." where book= ? and paragraph = ? and channal = ? ";
 						$stmt = $dbhWBW->prepare($query);
 						$stmt->execute(array($_GET["book"],$iPara,$_GET["dest_channel"]));
 						$fDest = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -149,7 +149,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 						}
 						#逐词解析
 						$iPara = $blocks[$i];
-						$query = "select * from wbw_block where book= ? and paragraph = ? and channal = ? ";
+						$query = "SELECT * from "._TABLE_USER_WBW_BLOCK_." where book= ? and paragraph = ? and channal = ? ";
 						$stmt = $dbhWBW->prepare($query);
 						$stmt->execute(array($_GET["book"],$iPara,$_GET["src_channel"]));
 						$fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -178,7 +178,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 								));
 						}
 
-						$query = "select * from wbw where block_id= ? ";
+						$query = "SELECT * from "._TABLE_USER_WBW_." where block_id= ? ";
 						$stmtWBW = $dbhWBW->prepare($query);
 						$stmtWBW->execute(array($fBlock[0]["id"]));
 						$fBlockData = $stmtWBW->fetchAll(PDO::FETCH_ASSOC);
@@ -204,14 +204,14 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 					# 查找目标block是否存在
 
 					//删除旧的逐词解析block数据块
-					$query = "DELETE from wbw_block where  paragraph = ? AND book = ? AND channal = ? ";
+					$query = "DELETE from "._TABLE_USER_WBW_BLOCK_." where  paragraph = ? AND book = ? AND channal = ? ";
 					$stmt = $dbhWBW->prepare($query);
 					$stmt->execute(array($iPara,$_GET["book"],$_GET["dest_channel"]));
 					
                     //新增逐词解析block数据块
                     if (count($arrNewBlock) > 0) {
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO wbw_block ('id','parent_id','channal','parent_channel','owner','book','paragraph','style','lang','status','modify_time','receive_time','create_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id','parent_id','channal','parent_channel','owner','book','paragraph','style','lang','status','modify_time','receive_time','create_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmtNewBlock = $dbhWBW->prepare($query);
                         foreach ($arrNewBlock as $oneParam) {
                             $stmtNewBlock->execute($oneParam);
@@ -231,7 +231,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 
 					//删除逐词解析数据块
 					if(isset($destId)){
-						$query = "DELETE from wbw where  block_id = ? ";
+						$query = "DELETE from "._TABLE_USER_WBW_." where  block_id = ? ";
 						$stmt = $dbhWBW->prepare($query);
 						$stmt->execute($destId);
 					}
@@ -239,7 +239,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
                     if (count($arrNewBlockData) > 0) {
                         // 开始一个事务，逐词解析数据 关闭自动提交
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO wbw ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                         $stmtWbwData = $dbhWBW->prepare($query);
                         foreach ($arrNewBlockData as $oneParam) {
                             $stmtWbwData->execute($oneParam);

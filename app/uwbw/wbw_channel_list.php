@@ -56,7 +56,7 @@ foreach ($coop_channal as $key => $value) {
 
 # 查询全网公开 的
 PDO_Connect( _FILE_DB_USER_WBW_);
-$query = "SELECT  channal FROM wbw_block WHERE  paragraph IN ($place_holders)  AND book = ? AND channal IS NOT NULL AND status = 30 group by channal ";
+$query = "SELECT  channal FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book = ? AND channal IS NOT NULL AND status = 30 group by channal ";
 $publicChannel = PDO_FetchAll($query, $params);
 foreach ($publicChannel as $key => $channel) {
 	# code...
@@ -73,7 +73,7 @@ $outputData = array();
 foreach ($channelList as $key => $row) {
     $queryParam = $params;
     $queryParam[] = $key;
-    $query = "SELECT count(*) FROM wbw_block WHERE  paragraph IN ($place_holders)  AND book = ? AND channal = ? ";
+    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book = ? AND channal = ? ";
     $wbwCount = PDO_FetchOne($query, $queryParam);
     $channelList[$key]["wbw_para"] = $wbwCount;
     $channelList[$key]["count"] = count($_para);

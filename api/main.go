@@ -5,6 +5,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/iapt-platform/mint"
 	"fmt"
+    "github.com/go-redis/redis/v8"
 )
 
 func main() {
@@ -18,6 +19,13 @@ func main() {
 	defer db.Close()
 
 	rt := gin.Default()
+
+	rdb := redis.NewClient(&redis.Options{
+        Addr:     "localhost:6379",
+        Password: "", // no password set
+        DB:       0,  // use default DB
+    })
+
 
 	// TODO 在这里进行http mount
 
@@ -56,15 +64,15 @@ func main() {
 
 	//文章
 	//根据id查询
-	rt.GET("/api/article/:aid",mint.GetArticle(db))
+	rt.GET("/api/article/:aid",mint.GetArticle(db,rdb))
 	//输入标题查询符合条件的 title% 
 	rt.GET("/api/article/title/:title",mint.GetArticleByTitle(db))
 	//新建课
 	rt.PUT("/api/article",mint.PutArticle(db))
 	//修改
-	rt.POST("/api/article",mint.PostAritcle(db))//改
+	rt.POST("/api/article",mint.PostAritcle(db,rdb))//改
 	//删除
-	rt.DELETE("/api/article/:aid",mint.DeleteArticle(db))
+	rt.DELETE("/api/article/:aid",mint.DeleteArticle(db,rdb))
 
 	//文集
 	//根据id查询
@@ -78,9 +86,16 @@ func main() {
 	//删除
 	rt.DELETE("/api/collection/:cid",mint.DeleteCollection(db))
 
-	rt.GET("/api/article_list/:cid",mint.GetCollectionArticleList(db))//改
+	//文章列表
+	rt.GET("/api/article_list/collection/:cid",mint.GetCollectionArticleList(db))//改
 	//修改
 	rt.POST("/api/article_list/article/:aid",mint.PostArticleListByArticle(db))//改
 
+
+	rt.DELETE("/api/article_list",mint.DeleteArticleInList(db,rdb))
+	rt.DELETE("/api/article_list/article/:aid",mint.DeleteArticleInList(db,rdb))
+	rt.DELETE("/api/article_list/collection/:cid",mint.DeleteCollectionInList(db,rdb))
+
 	rt.Run()
 }
+

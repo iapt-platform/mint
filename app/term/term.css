@@ -970,3 +970,11 @@ ins {
 	background-color: greenyellow;
 	text-decoration: unset;
 }
+
+pali>p {
+    display: inline;
+}
+
+.para_mode .palitext{
+	text-indent: 2em;
+}

@@ -20,12 +20,15 @@
   ```
 
 - Enjoy it!
-  
+
+  ![workspace](documents/workspace.png)
+  ![start](documents/start.png)
+
   ```bash
   # for the first time start
-  ./docker/ubuntu/first.sh
+  ./docker/first.sh
   # fot the next time start
-  ./docker/ubuntu/next.sh
+  ./docker/next.sh
   
   # start servers
   > sudo supervisord -c /etc/supervisor/supervisord.conf
@@ -34,10 +37,8 @@
   > sudo rabbitmq-plugins enable rabbitmq_management
 
   # enable redis clusters
-  > ./docker/redis.sh
+  > /etc/redis/redis.sh
   ```
-
-  ![start](documents/start.png)
 
   - RabbitMQ: `http://localhost:15672`, user `guest`, password `guest`
   - Redis cluster ports `6371~6376`
