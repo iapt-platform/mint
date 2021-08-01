@@ -38,8 +38,10 @@
 ## 
 
 ## 书中的单词汇总表
+```
 CREATE TABLE bookword (
     book      INTEGER,
     wordindex INTEGER,
     count     INTEGER
 );
+```

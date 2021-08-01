@@ -3,19 +3,22 @@
 ## group_info
 
 ```table
-CREATE TABLE group_info (
-    id          int    PRIMARY KEY,
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
     uuid        VARCHAR (36) ,
     name        VARCHAR (32)    NOT NULL,
     description TEXT,
     status      INTEGER,
     owner_id    INTEGER,
-    owner       VARCHAR (36),
-    create_at BIGINT      NOT NULL,
-    update_at BIGINT NOT NULL,
-    delete_at BIGINT 
+    owner_uuid       VARCHAR (36),
+	version     INTEGER NOT NULL DEFAULT (1),
+    deleted_at  TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+旧的表叫group_info
 
 `owner`       VARCHAR (36),
 
@@ -29,23 +32,23 @@ CREATE TABLE group_info (
 ## group_member
 ```table
 CREATE TABLE group_member (
-    id         INTEGER   PRIMARY KEY AUTOINCREMENT,
-    user_id    CHAR (36) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    user_id    INTEGER NOT NULL,
     group_id   INTEGER   NOT NULL,
-    power      INTEGER   NOT NULL
+    right      INTEGER   NOT NULL
                          DEFAULT (1),
-    group_name CHAR (32),
-    level      INTEGER   DEFAULT (0),
-    status     INTEGER   DEFAULT (1) 
+    group_name VARCHAR (32),
+    status     INTEGER   DEFAULT (10) 
+	version     INTEGER NOT NULL DEFAULT (1),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
 `user_id` 原表中用uuid  新表替换为 int
 
 `group_name` 与 group_info中的name相同
 
-`power` 目前没有使用
-
-`level` 目前没有使用
+`right` 权限，目前没有使用
 
 `status` 
 - 0-禁用

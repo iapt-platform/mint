@@ -6,18 +6,19 @@
 CREATE TABLE courses
 (
     id SERIAL PRIMARY KEY,
+    uuid VARCHAR(36),	
     cover VARCHAR(255),
     title VARCHAR(32) NOT NULL,
     subtitle VARCHAR(32),
     summary VARCHAR(255),
-    teacher INTEGER NOT NULL,
+    teacher_id INTEGER NOT NULL,
     lang VARCHAR (8),
     speech_lang VARCHAR (8),
-    status INTEGER NOT NULL DEFAULT(0),
+    status INTEGER NOT NULL DEFAULT(10),
     lesson_num INTEGER NOT NULL DEFAULT(0),
     content TEXT ,
-    creator INTEGER NOT NULL,
-    version INTEGER,
+    creator_id INTEGER NOT NULL,
+    version INTEGER DEFAULT(1),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -27,21 +28,22 @@ CREATE TABLE courses
 CREATE TABLE lessons
 (
     id SERIAL PRIMARY KEY,
+    uuid VARCHAR(36),	
     course_id INTEGER NOT NULL,
     course_uuid VARCHAR(36),
+    cover VARCHAR(255),	
     title VARCHAR(32) NOT NULL,
     subtitle VARCHAR(32),
     summary VARCHAR(255),
-    status INTEGER  NOT NULL DEFAULT(0),
-    cover VARCHAR(255),
-    teacher INTEGER,
+    status INTEGER  NOT NULL DEFAULT(10),
+    teacher_id INTEGER,
     lang VARCHAR(8),
     speech_lang VARCHAR(8),
-    start_date TIMESTAMP,
+    start_datetime TIMESTAMP,
     duration INTEGER,
     content TEXT,
-    creator INTEGER  NOT NULL,
-    version INTEGER,
+    creator_id INTEGER  NOT NULL,
+    version INTEGER DEFAULT(1),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
