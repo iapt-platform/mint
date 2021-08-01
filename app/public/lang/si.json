@@ -73,7 +73,7 @@
 		"dict_terms": "Terms",
 		"dictionary": "ශබ්දකෝෂය",
 		"dictionary_match_result": "ශබ්දකෝෂය ගැළපීම ප්‍රතිඵල",
-		"dictsouce": "Dictionary Resouce",
+		"dictsouce": "Source of Terms",
 		"difficulty": "difficulty level",
 		"done": "”&nbsp;has been scanned",
 		"down": "Down",
@@ -635,6 +635,14 @@
 		"link": "link",
 		"co_channel": "collaborative channels",
 		"permission": "permission",
+		"first_page": "first page",
+		"previous_page": "previous page",
+		"next_page": "next page",
+		"last_page": "last page",
+		"citations": "citations",
+		"reference": "reference",
+		"original": "original",
+		"page_num": "page",
 		"": ""
 	},
 	"grammastr": [

@@ -20,6 +20,12 @@ require_once '../studio/index_head.php';
     #word_list{
         width:unset;
     }
+	#setting_user_dict_nav{
+		width:95%;
+		display:inline-flex;
+		justify-content: space-between;
+}
+	}
 	</style>
 
 	<?php
@@ -82,7 +88,7 @@ $iCountWords = $allWord;
 if ($iCountWords == 0) {
     echo "<div id='setting_user_dict_count'>您的用户字典中没有单词。</div>";
 } else {
-    echo "<div>search:<span style='display:inline-block;width:20em;'><input type='input'  /></span></div>";
+    echo "<div>{$_local->gui->search}<span style='display:inline-block;width:20em;'><input type='input'  /></span></div>";
     $iPages = ceil($iCountWords / $iOnePage);
     if ($iCurrPage > $iPages) {
         $iCurrPage = $iPages;
@@ -100,63 +106,62 @@ if ($iCountWords == 0) {
     $query = "select *  from dict where id in {$strQuery} order by time DESC";
     $allWords = PDO_FetchAll($query);
     ?>
-    <div id="setting_user_dict_nav" style="backgroud-color:gray">
+    <div id="setting_user_dict_nav">
     <?php
 if ($iCurrPage == 0) {
-        echo "第一页 | ";
-        echo "上一页";
+        echo "<span>{$_local->gui->first_page}</span>";
+        echo "<span>{$_local->gui->previous_page}</span>";
     } else {
-        echo "<a href=\"../udict/my_dict_list.phpphp?page=0\">第一页</a>";
+        echo "<span><a href=\"../udict/my_dict_list.php?page=0\">{$_local->gui->first_page}</a></span>";
         $prevPage = $iCurrPage - 1;
-        echo "<a href=\"../udict/my_dict_list.php?page={$prevPage}\">上一页</a>";
+        echo "<span><a href=\"../udict/my_dict_list.php?page={$prevPage}\">{$_local->gui->previous_page}</a></span>";
     }
 
-    echo "第<span style='display:inline-block;width:4em;'><input type=\"input\" value=\"" . ($iCurrPage + 1) . "\" size=\"4\" /></span>页";
-    echo "共{$iPages}页";
+    echo "<span style='display:inline-block;white-space: nowrap;'>{$_local->gui->page_num}<input type=\"input\" value=\"" . ($iCurrPage + 1) . "\" style='width:3em;height:1em;'/>/{$iPages}</span>";
 
     if ($iCurrPage < $iPages - 1) {
-        echo "<a href=\"../udict/my_dict_list.php?page=" . ($iCurrPage + 1) . "\">下一页</a>";
-        echo "<a href=\"../udict/my_dict_list.php?page=" . ($iPages - 1) . "\">最后一页</a>";
+        echo "<span><a href=\"../udict/my_dict_list.php?page=" . ($iCurrPage + 1) . "\">{$_local->gui->next_page}</a></span>";
+        echo "<span><a href=\"../udict/my_dict_list.php?page=" . ($iPages - 1) . "\">{$_local->gui->last_page}</a></span>";
 
     } else {
-        echo "下一页 | 最后一页";
+        echo "<span>{$_local->gui->next_page}</span><span>{$_local->gui->last_page}</span>";
     }
-    echo "<span id='setting_user_dict_count'>总计{$iCountWords}</span>";
+    echo "<span id='setting_user_dict_count'>{$_local->gui->vocabulary}：{$iCountWords}</span>";
     ?>
     </div>
-    <div>
-        <div style="display:flex;">
-            <div><input type="checkbox" /></div>
-            <div>拼写</div>
-            <div>类型</div>
-            <div>语法</div>
-            <div>意思</div>
-            <div>语基</div>
-            <div>状态</div>
-            <div>引用</div>
-            <div></div>
-        </div>
+    <table style="width:95%;">
+        <tr style="padding:5px;font-weight: bold;">
+            <td style=''><input type="checkbox" /></td>
+            <td style=''><?php echo $_local->gui->spell; //拼写?></td>
+            <td style=''><?php echo $_local->gui->wordtype; //单词类型?></td>
+            <td style=''><?php echo $_local->gui->gramma; //语法?></td>
+            <td style=''><?php echo $_local->gui->g_mean; //意思?></td>
+            <td style=''><?php echo $_local->gui->parent; //语基?></td>
+            <td style=''><?php echo $_local->gui->dictsouce; //词条来源?></td>
+            <td style=''><?php echo $_local->gui->citations; //引用数?></td>
+            <td style=''></td>
+        </tr>
     <?php
 foreach ($allWords as $word) {
-        echo '<div class="file_list_row" style="padding:5px;">';
-        echo "<div style='flex:1;'><input type=\"checkbox\" /></div>";
-        echo "<div style='flex:3;'>{$word["pali"]}</div>";
-        echo "<div style='flex:1;'>{$word["type"]}</div>";
-        echo "<div style='flex:1;'>{$word["gramma"]}</div>";
-        echo "<div style='flex:3;'>{$word["mean"]}</div>";
-        echo "<div style='flex:3;'>{$word["parent"]}</div>";
+        echo '<tr style="padding:5px;">';
+        echo "<td style=''><input type=\"checkbox\" /></td>";
+        echo "<td style='max-width:12vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;'>{$word["pali"]}</td>";
+        echo "<td style=''>".$word["type"]."</td>";
+        echo "<td style=''>{$word["gramma"]}</td>";
+        echo "<td style='max-width:12vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;'>{$word["mean"]}</td>";
+        echo "<td style='max-width:12vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;'>{$word["parent"]}</td>";
         if ($word["creator"] == $UID) {
-            echo "<div style='flex:1;'>原创</div>";
+            echo "<td style=''>{$_local->gui->original}</td>";
         } else {
-            echo "<div style='flex:1;'>引用</div>";
+            echo "<td style=''>{$_local->gui->reference}</td>";
         }
-        echo "<div style='flex:1;'>{$word["ref_counter"]}</div>";
-        echo "<div style='width:1em;;'>...</div>";
-        echo "</div>";
+        echo "<td style=''>{$word["ref_counter"]}</td>";
+        echo "<td style=''>...</td>";
+        echo "</tr>";
     }
 }
 ?>
-    </div>
+    </table>
 
 
 <?php

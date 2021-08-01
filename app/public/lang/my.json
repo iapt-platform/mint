@@ -73,7 +73,7 @@
 		"dict_terms": "Terms",
 		"dictionary": "Dictionary",
 		"dictionary_match_result": "Dictionary Match Result",
-		"dictsouce": "Dictionary Resouce",
+		"dictsouce": "Source of Terms",
 		"difficulty": "difficulty level",
 		"done": "&nbsp;scanned",
 		"down": "Down",
@@ -630,6 +630,14 @@
 		"link": "link",
 		"co_channel": "collaborative channels",
 		"permission": "permission",
+		"first_page": "first page",
+		"previous_page": "previous page",
+		"next_page": "next page",
+		"last_page": "last page",
+		"citations": "citations",
+		"reference": "reference",
+		"original": "original",
+		"page_num": "page",
 		"": ""
 	},
 	"grammastr": [
