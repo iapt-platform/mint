@@ -358,7 +358,7 @@ var local_gui =
     "partmeaning": "Factor-Meaning",
     "meaning": "Meaning",
     "userdict": "User Dictionary",
-    "dictsouce": "Dictionary Resouce",
+    "dictsouce": "Source of Terms",
     "otherdict": "Other Dictionary",
     "children": "Children",
     "newproject": "New Project",
