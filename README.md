@@ -1,109 +1,62 @@
-# [PCD-Suite](https://github.com/iapt-platform/PCD-Suite)的 Rust&React 重写版
+# 巴利圣典教育开放平台 - IAPT Platform
 
-## 目录
+IAPT = International Academy Of Pali Tipitaka - 国际巴利三藏学院
 
-|目录|用途|备注|
-|-|-|-|
-|app|旧的项目目录||
-|dashboard|前端代码||
-|api|后端代码||
-|documents|开发文档||
-|docker|podman 启动脚本||
-|font|网站所使用的字体||
-|dicttext|字典数据文件csv格式||
-|docker|podman 启动脚本||
-|pali_title|三藏标题csv|更新csv文件后，运行install/***.php更新数据库|
-|phphtml|三藏原文数据|html格式，来自pced|
-|paliword|巴利文献单词表 |用三藏原文数据库导出的单词表生成|以后考虑服务器端生成|
+试运行地址：https://www.wikipali.org/
 
-## 安装
+# 平台愿景
 
-MacOS
-```bash
-cd mint; mkdir tmp; chown -R www:www tmp
-```
+让巴利圣典的学习变得更容易，人人都能从巴利圣典中受益。
 
-然后进入 http://localhost/app/install 开始安装
+了解更多：https://youtu.be/HMACYkZryJQ
 
-## 开发
-### 技术栈
-#### 前端
-- react
-- umijs
-- ant design pro
-- Tapescript
+# 当前功能
 
-#### 后端
-- PostgreSQL
-- elasticsearch
-- golang
-- Redis
-  
-### 工具
+- 巴利圣典阅读与翻译
+- 在线课程发布与学习
+- 在线巴利语学习工具
 
-#### 推荐使用 **VSCode**, 常用插件列表
+# 重构计划
 
--   [ESLint](https://github.com/Microsoft/vscode-eslint)
--   [Rust(rls)](https://github.com/rust-lang/rls-vscode)
--   [Icons](https://github.com/vscode-icons/vscode-icons)
--   [OneDark Pro](https://github.com/Binaryify/OneDark-Pro)
--   [Better Toml](https://github.com/bungcip/better-toml)
--   [Prettier - Code formatter](https://github.com/prettier/prettier-vscode)
--   [SQL Formatter](https://github.com/kufii/vscode-sql-formatter)
+随着平台功能的完善，以及用户量的增加，当前平台面临以下几个问题
 
-#### 数据库管理工具
-- [通用数据库管理工具-dbeaver](https://github.com/dbeaver/dbeaver)
-- [redis图形界面工具-RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)
+- 性能瓶颈
+  多用户并发操作以及全文检索效率低，难以支撑更多的用户
+- 代码维护
+  当前代码内含有相当量的冗余和临时解决方案，难以扩展和维护
+- 权限管理
+  权限管理模块有瑕疵，多人协作编辑功能有待优化
 
-### Git commit message 规范
-git commit message格式 请参见 https://gitmoji.dev/
+基于以上几个问题，现启动平台重构计划。
 
--   遵循 git pull request 流程
--   所有代码必须经过格式化
--   禁止提交测试中间数据、key、db 等文件
--   Git commit message 格式
-    -   每条 message 不超过一行
-    -   每个 commit 应该是独立的一个 issue 任务
-    -   message 格式 `:code: message body`
-    -   code 定义
-        -   bug fix: `:bug:`
-        -   new feature: `:construction:`
-        -   document: `:pencil:`
-        -   ops: `:rocket:`
-        -   config file: `:wrench:`
-        -   test case: `::white_check_mark:`
+以解决问题为目标，细化任务，逐步实施。
 
-### 资源格式
+# 关于我们
 
--   文字统一使用**markdown**格式
--   图片
-    -   尽量使用**png**格式
-    -   如果是 svg 或 graphiz 绘图，**附带源代码**
-    -   **禁止**使用未经授权的图片
+国际巴利三藏学院，致力于让佛陀所揭示的真理可以平等的被所有族群方便的学习与运用。
 
-## 部署
+希望在传统和现代、老师与学生、翻译者与读者之间假设桥梁。向他们提供教育平台，享受前沿的教学科技，实现各种信息及资源的有效共享。指导圣典在人类生命系统净化提升的实践与运用。让全世界所有族群都可以享受高品质的圣典教育，最终实现圣典教育全球化。
 
-```bash
-$ ssh-copy-id deploy@xxx.xxx.xxx.xxx
-$ RUST_LOG=info axis -i staging -r deploy
-```
+- 巴利语文献语料库的建立
+- 相关参考文献的电子化
+- 巴利文献的整理翻译及研究
+- 基于项目培养相关人才，实现产学研一体化发展。
 
-## 文档
+# 什么是巴利圣典？
 
-### 后端
+巴利圣典乘载着佛陀的教导。
 
--   [MinIO is a high performance object storage server compatible with Amazon S3 APIs](https://github.com/minio/minio)
--   [Diesel: A safe, extensible ORM and Query Builder for Rust](https://github.com/diesel-rs/diesel)
--   [Actix web is a small, pragmatic, and extremely fast rust web framework](https://github.com/actix/actix-web)
+从佛陀入灭后一个月开始，五百位阿拉汉僧人作了集结会议，将佛陀所宣说的法完整的背诵了下来，在这2600多年中一共经历了六次的集结会议，将教法传承至今。因主要分为三个部分律藏、经藏、论藏，因此一般也称作巴利三藏。
 
-### 前端
+Pāli 即是圣典的意思，是以古印度语言为基础的文献，目前这种语言已不在于日常被使用，只用于传承佛法，因此也将此语言直接称作巴利语（Pāli language），为了避免混淆，通常在语言翻译上，会将「巴利」（表示语言）和「圣典」（表示典籍）分开，将它称作巴利圣典。
 
--   [Pluggable enterprise-level react application framework](https://umijs.org/)
--   [Ant Desigh Pro](https://pro.ant.design/docs/getting-started)
--   [Third-Party Libraries](https://ant.design/docs/react/recommendation)
+# 参与开发
 
-### Git
+- 关注 [项目看板](https://github.com/orgs/iapt-platform/projects/5)
 
--   [About git pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
--   [how to write a git commit message:](https://chris.beams.io/posts/git-commit/)
--   [An emoji guide for your commit messages](https://gitmoji.carloscuesta.me/)
+    发现有合适的待领取（To do 状态）任务时，可联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 加入。
+
+- 阅读 [开发文档](./documents/README.md
+)
+
+    开发文档尚未编写完毕，如有疑问，可参考代码，或联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 沟通。
