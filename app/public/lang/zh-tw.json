@@ -331,7 +331,7 @@
 		"vannana": "註疏",
 		"view": "可見",
 		"vikala": "不適當的時間",
-		"vocabulary": "詞匯總量：",
+		"vocabulary": "詞匯總量",
 		"wbw": "逐詞解析",
 		"week": "周",
 		"week_day": "星期",
@@ -632,6 +632,14 @@
 		"link": "關聯",
 		"co_channel": "協作版本",
 		"permission": "權限",
+		"first_page": "首頁",
+		"previous_page": "上一頁",
+		"next_page": "下一頁",
+		"last_page": "末頁",
+		"citations": "引用數",
+		"reference": "引用",
+		"original": "原創",
+		"page_num": "頁碼",
 		"": ""
 	},
 	"grammastr": [

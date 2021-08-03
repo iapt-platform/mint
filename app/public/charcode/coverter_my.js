@@ -1,3 +1,123 @@
+var char_roman_to_myn = [
+	{ id: "ggho", value: "ဂ္ဃေါ" },
+	{ id: "gghā", value: "ဂ္ဃါ" },
+
+	{ id: "ddho", value: "ဒ္ဓေါ" },
+	{ id: "ddhā", value: "ဒ္ဓါ" },
+
+	//{ id: "ppho", value: "ပ္ဖေါ" },
+	//{ id: "pphā", value: "ပ္ဖါ" },
+
+	{ id: "ss", value: "ဿ္" },
+
+	{ id: "vh", value: "ဝှ္" },
+	{ id: "vy", value: "ဝျ္" },
+	{ id: "vr", value: "ဝြ္" },
+
+	{ id: "yh", value: "ယှ္" },
+	{ id: "yy", value: "ယျ္" },
+	{ id: "yr", value: "ယြ္" },
+	{ id: "yv", value: "ယွ္" },
+
+	{ id: "hy", value: "ဟျ္" },
+	{ id: "hr", value: "ဟြ္" },
+	{ id: "hv", value: "ဟွ္" },
+
+	{ id: "rv", value: "ရွ္" },
+	{ id: "rh", value: "ရှ္" },
+	{ id: "ry", value: "ရျ္" },
+
+	{ id: "kh", value: "ခ္" },
+	{ id: "gh", value: "ဃ္" },
+	{ id: "ch", value: "ဆ္" },
+	{ id: "jh", value: "ဈ္" },
+	{ id: "ññ", value: "ည္" },
+	{ id: "ṭh", value: "ဌ္" },
+	{ id: "ḍh", value: "ဎ္" },
+	{ id: "th", value: "ထ္" },
+	{ id: "dh", value: "ဓ္" },
+	{ id: "ph", value: "ဖ္" },
+	{ id: "bh", value: "ဘ္" },
+	{ id: "k", value: "က္" },
+	{ id: "g", value: "ဂ္" },
+	{ id: "c", value: "စ္" },
+	{ id: "j", value: "ဇ္" },
+	{ id: "ñ", value: "ဉ္" },
+	{ id: "ḷ", value: "ဠ္" },
+	{ id: "ṭ", value: "ဋ္" },
+	{ id: "ḍ", value: "ဍ္" },
+	{ id: "ṇ", value: "ဏ္" },
+	{ id: "t", value: "တ္" },
+	{ id: "d", value: "ဒ္" },
+	{ id: "n", value: "န္" },
+	{ id: "p", value: "ပ္" },
+	{ id: "b", value: "ဗ္" },
+	{ id: "m", value: "မ္" },
+	{ id: "l", value: "လ္" },
+	{ id: "s", value: "သ္" },
+	{ id: "ṅ", value: "င်္" },
+
+	{ id: "္h", value: "ှ္" },
+	{ id: "h", value: "ဟ္" },
+	{ id: "္y", value: "ျ္" },
+	{ id: "y", value: "ယ္" },
+	{ id: "္r", value: "ြ္" },
+	{ id: "r", value: "ရ္" },
+	{ id: "္v", value: "ွ္" },
+	{ id: "v", value: "ဝ္" },
+	{ id: "္aṃ", value: "ံ" },
+	{ id: "္iṃ", value: "ိံ" },
+	{ id: "္uṃ", value: "ုံ" },
+	{ id: "္ā", value: "ာ" },
+	{ id: "္i", value: "ိ" },
+	{ id: "္ī", value: "ီ" },
+	{ id: "္u", value: "ု" },
+	{ id: "္ū", value: "ူ" },
+	{ id: "္e", value: "ေ" },
+	{ id: "္o", value: "ော" },
+	{ id: "aṃ", value: "အံ" },
+	{ id: "iṃ", value: "ဣံ" },
+	{ id: "uṃ", value: "ဥံ" },
+	{ id: "a", value: "အ" },
+	{ id: "ā", value: "အာ" },
+	{ id: "i", value: "ဣ" },
+	{ id: "ī", value: "ဤ" },
+	{ id: "u", value: "ဥ" },
+	{ id: "ū", value: "ဦ" },
+	{ id: "e", value: "ဧ" },
+	{ id: "o", value: "ဩ" },
+	{ id: "်္အ", value: "" },
+	{ id: "္အ", value: "" },
+	{ id: "ခော", value: "ခေါ" },
+	{ id: "ခာ", value: "ခါ" }, //kh
+	{ id: "က္ခေါ", value: "က္ခော" }, //kkho
+	{ id: "က္ခါ", value: "က္ခာ" }, //kkhā
+	{ id: "ဂော", value: "ဂေါ" },
+	{ id: "ငော", value: "ငေါ" },
+	{ id: "ဒော", value: "ဒေါ" },
+	{ id: "ပော", value: "ပေါ" },
+	{ id: "ဝော", value: "ဝေါ" },
+	{ id: "ဂာ", value: "ဂါ" }, //g
+	{ id: "ငာ", value: "ငါ" }, //ṅ
+	{ id: "ဒာ", value: "ဒါ" }, //d
+	{ id: "ပာ", value: "ပါ" }, //p
+	{ id: "ဝာ", value: "ဝါ" }, //v
+	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
+	{ id: "1", value: "၁" },
+	{ id: "2", value: "၂" },
+	{ id: "3", value: "၃" },
+	{ id: "4", value: "၄" },
+	{ id: "5", value: "၅" },
+	{ id: "6", value: "၆" },
+	{ id: "7", value: "၇" },
+	{ id: "8", value: "၈" },
+	{ id: "9", value: "၉" },
+	{ id: "0", value: "၀" },
+	{ id: "．", value: "။" },
+	{ id: ";", value: "။" },
+	{ id: "，", value: "၊" },
+	{ id: ",", value: "၊" },
+];
 var char_myn_to_roman_1 = [
 	{ id: "ႁႏၵ", value: "ndra" }, //後加
 
@@ -96,7 +216,8 @@ var char_myn_to_roman_1 = [
 	{ id: "ၨ", value: "္ja" }, //后加
 	{ id: "ၩ", value: "္jha" }, //后加
 
-	{ id: "်", value: "္ya" }, //后加
+	{ id: "်", value: "္a" }, //后加
+	{ id: "ျ", value: "္ya" }, //后加
 	{ id: "ႅ", value: "္la" }, //后加
 	{ id: "ၼ", value: "္ma" }, //后加
 	{ id: "ွ", value: "္ha" }, //后加
@@ -596,126 +717,6 @@ var char_myn_to_roman_2 = [
 ];
 
 function roman_to_my(input) {
-	let char_roman_to_myn = [
-		{ id: "ggho", value: "ဂ္ဃေါ" },
-		{ id: "gghā", value: "ဂ္ဃါ" },
-
-		{ id: "ddho", value: "ဒ္ဓေါ" },
-		{ id: "ddhā", value: "ဒ္ဓါ" },
-
-		//{ id: "ppho", value: "ပ္ဖေါ" },
-		//{ id: "pphā", value: "ပ္ဖါ" },
-
-		{ id: "ss", value: "ဿ္" },
-
-		{ id: "vh", value: "ဝှ္" },
-		{ id: "vy", value: "ဝျ္" },
-		{ id: "vr", value: "ဝြ္" },
-
-		{ id: "yh", value: "ယှ္" },
-		{ id: "yy", value: "ယျ္" },
-		{ id: "yr", value: "ယြ္" },
-		{ id: "yv", value: "ယွ္" },
-
-		{ id: "hy", value: "ဟျ္" },
-		{ id: "hr", value: "ဟြ္" },
-		{ id: "hv", value: "ဟွ္" },
-
-		{ id: "rv", value: "ရွ္" },
-		{ id: "rh", value: "ရှ္" },
-		{ id: "ry", value: "ရျ္" },
-
-		{ id: "kh", value: "ခ္" },
-		{ id: "gh", value: "ဃ္" },
-		{ id: "ch", value: "ဆ္" },
-		{ id: "jh", value: "ဈ္" },
-		{ id: "ññ", value: "ည္" },
-		{ id: "ṭh", value: "ဌ္" },
-		{ id: "ḍh", value: "ဎ္" },
-		{ id: "th", value: "ထ္" },
-		{ id: "dh", value: "ဓ္" },
-		{ id: "ph", value: "ဖ္" },
-		{ id: "bh", value: "ဘ္" },
-		{ id: "k", value: "က္" },
-		{ id: "g", value: "ဂ္" },
-		{ id: "c", value: "စ္" },
-		{ id: "j", value: "ဇ္" },
-		{ id: "ñ", value: "ဉ္" },
-		{ id: "ḷ", value: "ဠ္" },
-		{ id: "ṭ", value: "ဋ္" },
-		{ id: "ḍ", value: "ဍ္" },
-		{ id: "ṇ", value: "ဏ္" },
-		{ id: "t", value: "တ္" },
-		{ id: "d", value: "ဒ္" },
-		{ id: "n", value: "န္" },
-		{ id: "p", value: "ပ္" },
-		{ id: "b", value: "ဗ္" },
-		{ id: "m", value: "မ္" },
-		{ id: "l", value: "လ္" },
-		{ id: "s", value: "သ္" },
-		{ id: "ṅ", value: "င်္" },
-
-		{ id: "္h", value: "ှ္" },
-		{ id: "h", value: "ဟ္" },
-		{ id: "္y", value: "ျ္" },
-		{ id: "y", value: "ယ္" },
-		{ id: "္r", value: "ြ္" },
-		{ id: "r", value: "ရ္" },
-		{ id: "္v", value: "ွ္" },
-		{ id: "v", value: "ဝ္" },
-		{ id: "္aṃ", value: "ံ" },
-		{ id: "္iṃ", value: "ိံ" },
-		{ id: "္uṃ", value: "ုံ" },
-		{ id: "္ā", value: "ာ" },
-		{ id: "္i", value: "ိ" },
-		{ id: "္ī", value: "ီ" },
-		{ id: "္u", value: "ု" },
-		{ id: "္ū", value: "ူ" },
-		{ id: "္e", value: "ေ" },
-		{ id: "္o", value: "ော" },
-		{ id: "aṃ", value: "အံ" },
-		{ id: "iṃ", value: "ဣံ" },
-		{ id: "uṃ", value: "ဥံ" },
-		{ id: "a", value: "အ" },
-		{ id: "ā", value: "အာ" },
-		{ id: "i", value: "ဣ" },
-		{ id: "ī", value: "ဤ" },
-		{ id: "u", value: "ဥ" },
-		{ id: "ū", value: "ဦ" },
-		{ id: "e", value: "ဧ" },
-		{ id: "o", value: "ဩ" },
-		{ id: "်္အ", value: "" },
-		{ id: "္အ", value: "" },
-		{ id: "ခော", value: "ခေါ" },
-		{ id: "ခာ", value: "ခါ" }, //kh
-		{ id: "က္ခေါ", value: "က္ခော" }, //kkho
-		{ id: "က္ခါ", value: "က္ခာ" }, //kkhā
-		{ id: "ဂော", value: "ဂေါ" },
-		{ id: "ငော", value: "ငေါ" },
-		{ id: "ဒော", value: "ဒေါ" },
-		{ id: "ပော", value: "ပေါ" },
-		{ id: "ဝော", value: "ဝေါ" },
-		{ id: "ဂာ", value: "ဂါ" }, //g
-		{ id: "ငာ", value: "ငါ" }, //ṅ
-		{ id: "ဒာ", value: "ဒါ" }, //d
-		{ id: "ပာ", value: "ပါ" }, //p
-		{ id: "ဝာ", value: "ဝါ" }, //v
-		{ id: "ဒွာ", value: "ဒွါ" }, //dvā
-		{ id: "1", value: "၁" },
-		{ id: "2", value: "၂" },
-		{ id: "3", value: "၃" },
-		{ id: "4", value: "၄" },
-		{ id: "5", value: "၅" },
-		{ id: "6", value: "၆" },
-		{ id: "7", value: "၇" },
-		{ id: "8", value: "၈" },
-		{ id: "9", value: "၉" },
-		{ id: "0", value: "၀" },
-		{ id: "．", value: "။" },
-		{ id: ";", value: "။" },
-		{ id: "，", value: "၊" },
-		{ id: ",", value: "၊" },
-	];
 
 	let txt = input.toLowerCase();
 
