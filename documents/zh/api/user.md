@@ -110,7 +110,7 @@ TEXT
 用户行为记录。以日期计算的使用与编辑有关功能的时间和操作次数
 
 ```table
-CREATE TABLE active_index (
+CREATE TABLE event_day_frames (
     id SERIAL PRIMARY KEY,
     user_id  INTEGER NOT NULL,
     user_uuid  VARCHAR (36),
@@ -127,9 +127,10 @@ CREATE TABLE active_index (
 `hit` 操作次数
 
 ## 编辑记录 edit_records
+将十分钟内的编辑行为组块,时间段
 
 ```table
-CREATE TABLE edit_records (
+CREATE TABLE event_time_frames (
     id SERIAL PRIMARY KEY,
     user_id  INTEGER NOT NULL,
     user_uuid  VARCHAR (36),
@@ -144,7 +145,7 @@ CREATE TABLE edit_records (
 ## 编辑行为记录
 
 ```table
-CREATE TABLE active_log (
+CREATE TABLE event_logs (
     id SERIAL PRIMARY KEY,
     user_id  INTEGER NOT NULL,
     active   INTEGER NOT NULL,

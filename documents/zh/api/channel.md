@@ -1,7 +1,7 @@
 # channel
 
 ```table
-CREATE TABLE channal (
+CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36),
     owner_id     INTEGER NOT NULL,

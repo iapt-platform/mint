@@ -1,7 +1,7 @@
 # share
 
 ```table
-CREATE TABLE share_cooperator (
+CREATE TABLE share_to (
     id SERIAL PRIMARY KEY,
     res_id          INTEGER NOT NULL,
     res_uuid          VARCHAR (36),

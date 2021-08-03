@@ -51,7 +51,6 @@ CREATE TABLE wbw_datas (
     owner_id     INTEGER NOT NULL,
     owner        VARCHAR(36),
     deleted_at TIMESTAMP,
-    version INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL
 );

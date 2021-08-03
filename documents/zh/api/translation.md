@@ -5,20 +5,15 @@
 ```table
 CREATE TABLE sent_block (
     id SERIAL PRIMARY KEY,
-    uuid         VARCHAR (36),
-    parent_id    VARCHAR (36),
-    book         INTEGER,
-    paragraph    INTEGER,
-    owner_id     INTEGER NOT NULL,
-    owner        VARCHAR (36) NOT NULL,
-    lang         VARCHAR (8),
-    author       VARCHAR (50),
-    editor_id    INTEGER,
-    editor       TEXT,
-    status       INTEGER,
-    create_at  BIGINT,
-    update_at  BIGINT,
-    delete_at  BIGINT
+    uid         VARCHAR (36),
+    book        INTEGER,
+    paragraph   INTEGER,
+    owner_id    INTEGER NOT NULL,
+    lang        VARCHAR (16),
+    status      INTEGER,
+    created_at  TIMESTAMP,
+    updated_at  TIMESTAMP,
+    deleted_at  TIMESTAMP
 );
 ```
 
@@ -45,25 +40,24 @@ CREATE TABLE sent_block (
 
 ```table
 CREATE TABLE sentence (
-    id           int PRIMARY KEY,
-    uuid           CHAR (36) ,
-    parent       CHAR (36),
-    block_id     CHAR (36),
-    channel_id      CHAR (36),
+    id           SERIAL PRIMARY KEY,
+    parent_id    INTEGER,
+    block_id     INTEGER,
+    channel_id   INTEGER,
     book         INTEGER   NOT NULL,
     paragraph    INTEGER   NOT NULL,
-    start      INTEGER   NOT NULL,
-    end        INTEGER   NOT NULL,
+    start        INTEGER   NOT NULL,
+    end          INTEGER   NOT NULL,
     author       TEXT,
-    editor_id       CHAR (36),
+    editor_id    INTEGER,
+    owner_id     INTEGER,
     text         TEXT,
-    language     CHAR (8),
-    version      INTEGER,
+    language     VARCHAR (16),
     status       INTEGER,
     strlen       INTEGER,
-    create_at    BIGINT  NOT NULL,
-    update_at    BIGINT   NOT NULL,
-    delete_at    BIGINT,
+    created_at    TIMESTAMP  NOT NULL,
+    updated_at    TIMESTAMP   NOT NULL,
+    deleted_at    TIMESTAMP,
 
 );
 ```
@@ -82,7 +76,7 @@ CREATE TABLE sentence (
 
 ```table
 CREATE TABLE sent_pr (
-    id           INTEGER      PRIMARY KEY AUTOINCREMENT,
+    id           SERIAL      PRIMARY KEY AUTOINCREMENT,
     book         INTEGER      NOT NULL,
     paragraph    INTEGER      NOT NULL,
     start      INTEGER      NOT NULL,
@@ -108,7 +102,7 @@ CREATE TABLE sent_historay (
     sent_id  CHAR (36),
     user_id  CHAR (36),
     text     TEXT,
-    create_at     BIGINT NOT NULL,
+    created_at     BIGINT NOT NULL,
     landmark VARCHAR(32)
 );
 ```
