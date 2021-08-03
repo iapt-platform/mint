@@ -14,32 +14,38 @@ if(isset($_GET["author"])){
 else{
 	$_get_author="";
 }
+if(isset($_GET["active"])){
+	$_get_active=$_GET["active"];
+}
+else{
+	$_get_active="read";
+}
 ?>
 
-<body style="margin: 0;padding: 0;" class="reader_body" onload="<?php
-if(isset($_get_id)){
-echo "wiki_load_id('{$_get_id}')";
-}
-else if(isset($_get_word)){
-echo "wiki_load_word('{$_get_word}')";
-}
-?>">
+<body style="margin: 0;padding: 0;" class="reader_body" >
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="wiki.js"></script>
 	<script>
 	<?php
+	if(isset($_GET["id"])){
+		$_get_id=$_GET["id"];
+		echo "_id='".$_GET["id"]."';";
+	}
 	if(isset($_GET["word"])){
 		echo "_word='".$_GET["word"]."';";
 	}
-	if(isset($_GET["channal"])){
-		echo "_channal='".$_GET["channal"]."';";
+	if(isset($_GET["channel"])){
+		echo "_channel='".$_GET["channel"]."';";
 	}
 	if(isset($_GET["lang"])){
 		echo "_lang='".$_GET["lang"]."';";
 	}
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
+	}
+	if(isset($_GET["active"])){
+		echo "_active='".$_GET["active"]."';";
 	}
 	?>
 	</script>
@@ -290,8 +296,6 @@ echo "wiki_load_word('{$_get_word}')";
 </style>
 
 <script>
-
-
 term_word_link_fun("wiki_goto_word");
 </script>
 <style>
@@ -322,7 +326,7 @@ term_word_link_fun("wiki_goto_word");
 		</span>	
 		<span style="font-size: medium; margin: auto 1em auto auto;">
 			<button class="icon_btn"><a href="#"><?php echo $_local->gui->setting; ?></a></button>
-			<button class="icon_btn"><a href="wiki.php?word=:new"><?php echo $_local->gui->new_technic_term; ?></a></button>
+			<button class="icon_btn"><a href="wiki.php?word=&active=new"><?php echo $_local->gui->new_technic_term; ?></a></button>
 			<button class="icon_btn"><a href="#"><?php echo $_local->gui->help; ?></a></button>
 		</span>
 	</div>
@@ -357,7 +361,16 @@ term_word_link_fun("wiki_goto_word");
 	</div>
 </div>
 <script>
-	 window.addEventListener('scroll',winScroll);
+	window.addEventListener('scroll',winScroll);
+	<?php
+	if(isset($_get_id)){
+		echo "window.addEventListener('load',wiki_load_id('{$_get_id}'))";
+	}
+	else if(isset($_get_word)){
+		echo "window.addEventListener('load',wiki_load_word('{$_get_word}'))";
+	}
+	?>
+	
 	function winScroll(e){ 
 		if(GetPageScroll().y>220){
 

@@ -76,7 +76,9 @@ function note_sent_edit_dlg_init() {
 function note_init(input) {
 	if (input) {
 		let output = "<div>";
-		output += marked(input);
+		//output += marked(input);
+		output += marked(term_std_str_to_tran(input, "", "", "en"));
+
 		output += "</div>";
 
 		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note info="');

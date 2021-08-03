@@ -39,7 +39,7 @@ function lesson_show(id) {
                 html += '<div class="summary"  style="padding-bottom:5px;">' + replay + "</div>";
                 let attachment = "";
                 try {
-                    attachment = marked(lesson["attachment"], { renderer: renderer });
+                    attachment = note_init(lesson["attachment"]);
                 } catch {}
                 html += '<div class="summary"  style="padding-bottom:5px;">' + attachment + "</div>";
                 html += "</div>";
@@ -80,6 +80,7 @@ function lesson_show(id) {
                 html += "</div>";
             }
             $("#lesson_list").html(html);
+			note_refresh_new();
             mermaid.initialize();
         }
     );
