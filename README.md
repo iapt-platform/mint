@@ -3,22 +3,28 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+- Clone code
+  
+    ![git clone](documents/git-clone.png)
 
-* Ruby version
+- [System dependencies](docker/)
+  
+    ```bash
+    bundle install
+    ```
 
-* System dependencies
+- Database creation & initialization
+    ![create database](documents/create-db.png)
+  
+    ```bash
+    ```
 
-* Configuration
+- How to run the test suite
 
-* Database creation
+- Services (job queues, cache servers, search engines, etc.)
 
-* Database initialization
+- Deployment instructions
 
-* How to run the test suite
+## Documents
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- [A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for modern web app frameworks and ORMs](https://github.com/kaminari/kaminari)
