@@ -20,6 +20,13 @@ application up and running.
     rake db:migrate
     ```
 
+- Create a migration
+  
+    ```bash
+    rails generate model Item --no-fixture --no-test-framework
+    rails generate migration AddHiToUsers
+    ```
+
 - How to run the test suite
 
 - Services (job queues, cache servers, search engines, etc.)
