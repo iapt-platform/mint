@@ -10,6 +10,7 @@ application up and running.
 - [System dependencies](docker/)
   
     ```bash
+    # install gem dependencies
     bundle install
     ```
 
@@ -17,18 +18,20 @@ application up and running.
     ![create database](documents/create-db.png)
   
     ```bash
-    # Migrate the database to latest
+    # migrate the database to latest
     rake db:migrate    
-    # Rolls the schema back to the previous version
+    # rolls the schema back to the previous version
     rake db:rollback
-    # Loads the seed data
+    # loads the seed data
     rake db:seed
     ```
 
 - Create a model & migration
   
     ```bash
+    # plain model
     rails generate model Item --no-fixture --no-test-framework
+    # plain migration
     rails generate migration AddHiToUsers
     ```
 
