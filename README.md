@@ -14,24 +14,12 @@ application up and running.
     bundle install
     ```
 
-- Database creation & initialization
-    ![create database](documents/create-db.png)
+- Rails commands
   
     ```bash
-    # migrate the database to latest
-    rake db:migrate    
-    # rolls the schema back to the previous version
-    rake db:rollback
-    # loads the seed data
-    rake db:seed
-    ```
-
-- Create a model & migration
-  
-    ```bash
-    # plain model
+    # generate rails model
     rails generate model Item --no-fixture --no-test-framework
-    # plain migration
+    # generate rails migration
     rails generate migration AddHiToUsers
     ```
 
