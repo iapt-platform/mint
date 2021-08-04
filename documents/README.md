@@ -4,6 +4,7 @@
 
 - [Start container](../docker/)
 - [Dia Diagram Editor](http://dia-installer.de/index.html.en)
+- [GitHub Standard Fork & Pull Request Workflow](https://gist.github.com/Chaser324/ce0505fbed06b947d962)
 
 ## DAY 2
 
