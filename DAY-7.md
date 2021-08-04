@@ -2,11 +2,12 @@
 
 ## DAY 1
 
-- [Container tooling](docker/)
+- [Start container](docker/)
 - [Dia Diagram Editor](http://dia-installer.de/index.html.en)
 
 ## DAY 2
 
+- Install dependencies
 - Database creation & initialization
 - Create a model & migration
 - [Table definition demo](db/migrate/20210804025823_devise_create_users.rb)
