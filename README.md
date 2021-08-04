@@ -41,3 +41,4 @@ application up and running.
 ## Documents
 
 - [A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for modern web app frameworks and ORMs](https://github.com/kaminari/kaminari)
+- [Minimal authorization through OO design and pure Ruby classes](https://github.com/varvet/pundit)
