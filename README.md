@@ -17,10 +17,15 @@ application up and running.
     ![create database](documents/create-db.png)
   
     ```bash
-    rake db:migrate
+    # Migrate the database to latest
+    rake db:migrate    
+    # Rolls the schema back to the previous version
+    rake db:rollback
+    # Loads the seed data
+    rake db:seed
     ```
 
-- Create a migration
+- Create a model & migration
   
     ```bash
     rails generate model Item --no-fixture --no-test-framework
