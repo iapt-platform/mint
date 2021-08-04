@@ -9,4 +9,4 @@
 
 - Database creation & initialization
 - Create a model & migration
-- [Table definition demo](blob/ror/db/migrate/20210804025823_devise_create_users.rb)
+- [Table definition demo](db/migrate/20210804025823_devise_create_users.rb)
