@@ -17,6 +17,7 @@ application up and running.
     ![create database](documents/create-db.png)
   
     ```bash
+    rake db:migrate
     ```
 
 - How to run the test suite
