@@ -45,3 +45,39 @@ CREATE TABLE bookword (
     count     INTEGER
 );
 ```
+
+```
+CREATE TABLE pali_text (
+    id             SERIAL PRIMARY KEY AUTOINCREMENT
+                           NOT NULL,
+    book           INTEGER,
+    paragraph      INTEGER,
+    level          INTEGER,
+    class          VARCHAR(32),
+    toc            VARCHAR(255),
+    text           TEXT,
+    html           TEXT,
+    lenght         INTEGER,
+    album_index    INTEGER,
+    chapter_len    INTEGER,
+    next_chapter   INTEGER,
+    prev_chapter   INTEGER,
+    parent         INTEGER,
+    chapter_strlen INTEGER
+);
+```
+
+```
+CREATE TABLE wordindex (
+    id      SERIAL,
+    word    TEXT PRIMARY KEY ASC
+                 UNIQUE,
+    word_en TEXT,
+    count   INT,
+    normal  INT,
+    bold    INT,
+    is_base INT,
+    len     INT,
+    final   INT
+);
+```
