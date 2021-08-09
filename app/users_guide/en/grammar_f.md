@@ -1,0 +1,2 @@
+# feminine gender
+pāḷi：itthī
