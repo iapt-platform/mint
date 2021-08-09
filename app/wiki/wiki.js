@@ -1,29 +1,14 @@
-/*
-function wiki_load(word){
-	$("#wiki_contents").load("../term/term.php?op=search&word="+word,function(responseTxt,statusTxt,xhr){
-    if(statusTxt=="success"){
-		$(".note").each(function(index,element){
-			$(this).html(note_init($(this).html()));
-			$(this).attr("status",1);
-			note_refresh_new();
-		});	
-	}
-	else if(statusTxt=="error"){
-      console.error("Error: "+xhr.status+": "+xhr.statusText);
-	}
-  });
-}
-*/
-
+var _id = "";
 var _word = "";
-var _channal = "";
+var _channel = "";
 var _lang = "";
 var _author = "";
+var _active = "";
 var _term_list;
 
 function wiki_index_init() {}
 
-function term_get_word_to_div(strWord) {
+function term_render_word_to_div(strWord,eDiv) {
 	let word = [{ pali: strWord, channal: "", editor: "", lang: "" }];
 
 	$.post(
@@ -32,11 +17,10 @@ function term_get_word_to_div(strWord) {
 			words: JSON.stringify(word),
 		},
 		function (data, status) {
+			let html = "";			
 			if (status == "success") {
 				try {
 					let result = JSON.parse(data);
-
-					let html = "";
 					if (result.length > 0) {
 						_term_list = result;
 						//生成头部信息
@@ -143,16 +127,20 @@ function term_get_word_to_div(strWord) {
 
 						html += "</div>";
 						// end of term_list_div
-						$("#wiki_body_left").html(html);
+						
 					} else {
-						term_render_new_word("词条尚未创建", strWord);
+						if (_active != "new"){
+							html = "词条尚未创建 <a href='./wiki.php?word="+strWord+"&active=new'>现在创建</a>";
+						}
+						else{
+							html = "无";
+						}
 					}
-
+					$("#"+eDiv).html(html);
 					note_refresh_new();
-
-					$("#doc_title").text(result[0].word + "[" + result[0].meaning + "]-圣典百科");
+					document.title = result[0].word + "[" + result[0].meaning + "]-圣典百科";
 				} catch (e) {
-					console.error("term_get_word_to_div:" + e + " data:" + data);
+					console.error("term_render_word_to_div:" + e + " data:" + data);
 				}
 			} else {
 				console.error("term error:" + data);
@@ -216,7 +204,7 @@ function render_term_form(item) {
 	html += "<li ><span class='field'>" + gLocal.gui.channel + "</span>";
 	html +=
 		'<span class="input"><input type="input"  name="channal" value="' +
-		item.channal +
+		item.channel +
 		'" placeholder="' +
 		gLocal.gui.optional +
 		'"/></span></li>';
@@ -250,13 +238,15 @@ function term_render_new_word(title, word) {
 		meaning: "",
 		other_meaning: "",
 		owner: "",
-		channal: "",
+		channel: _channel,
 		language: "",
 		tag: "",
 		note: "",
 	});
-
+	html += "<h2 style='border-top: 1px solid var(--border-line-color);padding-top: 0.5em;'>其他解释</h2>"
+	html += "<div id='term_list'>loading……</div>"
 	$("#wiki_body_left").html(html);
+	term_render_word_to_div(word,"term_list");
 }
 
 function term_save() {
@@ -312,10 +302,10 @@ function wiki_load_id(guid) {
 
 function wiki_load_word(word) {
 	note_create();
-	if (word == ":new" || word == ":new") {
-		term_render_new_word(gLocal.gui.new_technic_term, "");
-	} else {
-		term_get_word_to_div(word);
+	if (_active == "new") {
+		term_render_new_word(gLocal.gui.new_technic_term, word);
+	}else{
+		term_render_word_to_div(word,"wiki_body_left");
 	}
 }
 function wiki_goto_word(guid, strWord) {
