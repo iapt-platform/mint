@@ -1649,10 +1649,30 @@ function sent_copy_meaning(book, para, begin, end) {
 	copy_to_clipboard(output);
 }
 
+function relaMoveSubgraph(seed,from,to){
+	let iFound = 0;
+	from.forEach(function(item,index,arr){
+		if(item.aid==seed || item.bid==seed){
+			to.push(item);
+			arr.splice(index,1);
+			iFound++;
+		}
+	})
+	if(iFound==0){
+		return;
+	}
+	to.forEach(function(item,index,arr){
+		relaMoveSubgraph(item.aid,from,to);
+	})
+
+}
 //根据relation 绘制关系图
 function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
+	let rListA = new Array();
+	let rListB = new Array();
+	let arrIti = new Array();
 
 	let idList = new Array();
 	$("#wbp" + book + "-" + para + "-" + begin)
@@ -1695,7 +1715,11 @@ function sent_show_rel_map(book, para, begin, end) {
 				} else {
 					dest = iterator.dest_id + '["' + dest + "<br>" + meanDest + '"]';
 				}
-				memind +=
+
+				if(iterator.dest_spell=="iti"){
+					arrIti.push(iterator.dest_id);
+				}
+				memind =
 					"p" +
 					iterator_wid +
 					'("' +
@@ -1709,9 +1733,25 @@ function sent_show_rel_map(book, para, begin, end) {
 					'" --> ' +
 					dest +
 					"\n";
+
+				rListA.push({a:real,aid:"p"+iterator_wid,b:iterator.dest_spell,bid:iterator.dest_id,str:memind});
 			}
 		}
 	}
+
+	if(arrIti.length>0){
+		relaMoveSubgraph(arrIti[0],rListA,rListB);
+		console.log("subgraph:",rListB);
+	}
+	memind = "graph LR\n";
+	for (const iterator of rListA) {
+		memind +=iterator.str;
+	}
+	memind += "subgraph iti\n";
+	for (const iterator of rListB) {
+		memind +=iterator.str;
+	}	
+	memind += "end";
 
 	let graph = mermaid.render("graphDiv", memind);
 	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
@@ -1721,6 +1761,7 @@ function sent_show_rel_map(book, para, begin, end) {
 	document.querySelector("#term_win").style.display = "flex";
 	document.querySelector(".win_body").style.display = "block";
 }
+
 
 //句子编辑块
 function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = true) {
