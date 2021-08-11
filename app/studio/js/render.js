@@ -1659,6 +1659,9 @@ function relaMoveSubgraph(seed,from,to){
 				arr.splice(index,1);
 				iFound++;
 			}
+			if( item.aid==seed && item.b=='iti'){
+				arr.splice(index,1);
+			}
 		}
 		else{
 			if(item.aid==seed || item.bid==seed){
@@ -1728,7 +1731,7 @@ function sent_show_rel_map(book, para, begin, end) {
 				}
 
 				if(iterator.dest_spell=="iti"){
-					arrIti.push("p"+iterator_wid);
+					arrIti.push({id:"p"+iterator_wid,dest_id:iterator.dest_id});
 				}
 				memind =
 					"p" +
@@ -1752,17 +1755,19 @@ function sent_show_rel_map(book, para, begin, end) {
 	let strSubgraph = "";
 	let subgraphTitle = 1;
 	for (const iti_id of arrIti) {
-		relaMoveSubgraph(iti_id,rListA,rListB);
+		relaSearchDeep = 0;
+		relaMoveSubgraph(iti_id.id,rListA,rListB);
 		strSubgraph += "\nsubgraph "+subgraphTitle+"\n";
 		for (const rb of rListB) {
 			strSubgraph +=rb.str;
 		}	
 		strSubgraph += "end\n";
+		strSubgraph += subgraphTitle + " --> " + iti_id.dest_id+ "\n";
 		rListB = [];
 		subgraphTitle++;
 	}
 
-	memind = "graph LR\n";
+	memind = "flowchart LR\n";
 	for (const iterator of rListA) {
 		memind +=iterator.str;
 	}
