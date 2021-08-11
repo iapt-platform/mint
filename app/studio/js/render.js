@@ -1649,21 +1649,32 @@ function sent_copy_meaning(book, para, begin, end) {
 	copy_to_clipboard(output);
 }
 
+var relaSearchDeep=0;
 function relaMoveSubgraph(seed,from,to){
 	let iFound = 0;
 	from.forEach(function(item,index,arr){
-		if(item.aid==seed || item.bid==seed){
-			to.push(item);
-			arr.splice(index,1);
-			iFound++;
+		if(relaSearchDeep==0){
+			if( item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
+		}
+		else{
+			if(item.aid==seed || item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
 		}
 	})
-	if(iFound==0){
-		return;
+	if(iFound>0){
+		to.forEach(function(item,index,arr){
+			relaSearchDeep++;
+			relaMoveSubgraph(item.aid,from,to);
+		})		
 	}
-	to.forEach(function(item,index,arr){
-		relaMoveSubgraph(item.aid,from,to);
-	})
+	relaSearchDeep--;
 
 }
 //根据relation 绘制关系图
@@ -1717,7 +1728,7 @@ function sent_show_rel_map(book, para, begin, end) {
 				}
 
 				if(iterator.dest_spell=="iti"){
-					arrIti.push(iterator.dest_id);
+					arrIti.push("p"+iterator_wid);
 				}
 				memind =
 					"p" +
@@ -1738,20 +1749,24 @@ function sent_show_rel_map(book, para, begin, end) {
 			}
 		}
 	}
-
-	if(arrIti.length>0){
-		relaMoveSubgraph(arrIti[0],rListA,rListB);
-		console.log("subgraph:",rListB);
+	let strSubgraph = "";
+	let subgraphTitle = 1;
+	for (const iti_id of arrIti) {
+		relaMoveSubgraph(iti_id,rListA,rListB);
+		strSubgraph += "\nsubgraph "+subgraphTitle+"\n";
+		for (const rb of rListB) {
+			strSubgraph +=rb.str;
+		}	
+		strSubgraph += "end\n";
+		rListB = [];
+		subgraphTitle++;
 	}
+
 	memind = "graph LR\n";
 	for (const iterator of rListA) {
 		memind +=iterator.str;
 	}
-	memind += "subgraph iti\n";
-	for (const iterator of rListB) {
-		memind +=iterator.str;
-	}	
-	memind += "end";
+	memind+=strSubgraph;
 
 	let graph = mermaid.render("graphDiv", memind);
 	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
