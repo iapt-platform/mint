@@ -1,0 +1,2 @@
+# neuter gender
+pāḷi：napuṃsaka

@@ -106,7 +106,7 @@ define("_TABLE_DICT_REGULAR_", "dict");
 define("_DICT_DB_COMP_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/comp.db");
 define("_TABLE_DICT_COMP_", "dict");
 
-define("_DIR_USERS_GUIDE_", __DIR__ . "/../documents/users_guide");
+define("_DIR_USERS_GUIDE_", __DIR__ . "/../app/users_guide");
 
 #参考字典
 define("_FILE_DB_REF_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/ref.db");

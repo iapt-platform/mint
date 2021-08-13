@@ -1649,10 +1649,44 @@ function sent_copy_meaning(book, para, begin, end) {
 	copy_to_clipboard(output);
 }
 
+var relaSearchDeep=0;
+function relaMoveSubgraph(seed,from,to){
+	let iFound = 0;
+	from.forEach(function(item,index,arr){
+		if(relaSearchDeep==0){
+			if( item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
+			if( item.aid==seed && item.b=='iti'){
+				arr.splice(index,1);
+			}
+		}
+		else{
+			if(item.aid==seed || item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
+		}
+	})
+	if(iFound>0){
+		to.forEach(function(item,index,arr){
+			relaSearchDeep++;
+			relaMoveSubgraph(item.aid,from,to);
+		})		
+	}
+	relaSearchDeep--;
+
+}
 //根据relation 绘制关系图
 function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
+	let rListA = new Array();
+	let rListB = new Array();
+	let arrIti = new Array();
 
 	let idList = new Array();
 	$("#wbp" + book + "-" + para + "-" + begin)
@@ -1695,7 +1729,11 @@ function sent_show_rel_map(book, para, begin, end) {
 				} else {
 					dest = iterator.dest_id + '["' + dest + "<br>" + meanDest + '"]';
 				}
-				memind +=
+
+				if(iterator.dest_spell=="iti"){
+					arrIti.push({id:"p"+iterator_wid,dest_id:iterator.dest_id});
+				}
+				memind =
 					"p" +
 					iterator_wid +
 					'("' +
@@ -1709,9 +1747,31 @@ function sent_show_rel_map(book, para, begin, end) {
 					'" --> ' +
 					dest +
 					"\n";
+
+				rListA.push({a:real,aid:"p"+iterator_wid,b:iterator.dest_spell,bid:iterator.dest_id,str:memind});
 			}
 		}
 	}
+	let strSubgraph = "";
+	let subgraphTitle = 1;
+	for (const iti_id of arrIti) {
+		relaSearchDeep = 0;
+		relaMoveSubgraph(iti_id.id,rListA,rListB);
+		strSubgraph += "\nsubgraph "+subgraphTitle+"\n";
+		for (const rb of rListB) {
+			strSubgraph +=rb.str;
+		}	
+		strSubgraph += "end\n";
+		strSubgraph += subgraphTitle + " --> " + iti_id.dest_id+ "\n";
+		rListB = [];
+		subgraphTitle++;
+	}
+
+	memind = "flowchart LR\n";
+	for (const iterator of rListA) {
+		memind +=iterator.str;
+	}
+	memind+=strSubgraph;
 
 	let graph = mermaid.render("graphDiv", memind);
 	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
@@ -1721,6 +1781,7 @@ function sent_show_rel_map(book, para, begin, end) {
 	document.querySelector("#term_win").style.display = "flex";
 	document.querySelector(".win_body").style.display = "block";
 }
+
 
 //句子编辑块
 function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = true) {
