@@ -124,6 +124,8 @@ var char_roman_to_tai = [
 	{ id: "rye", value: "ᩁᩮ᩠ᨿ" },
 	{ id: "vye", value: "ᩅᩮ᩠ᨿ" },
 	{ id: "yye", value: "ᨿᩮ᩠ᨿ" },
+	//{ id: "mmā", value: "ᨾᩜᩣ" },
+	//{ id: "mma", value: "ᨾᩜ" },
 		
 { id: "ss", value: "ᩔ᩠" },
 { id: "vh", value: "ᩅ᩠ᩉ᩠" },
