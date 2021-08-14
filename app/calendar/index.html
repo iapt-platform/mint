@@ -1029,11 +1029,13 @@
 </head>
 
 <body>
+	<title id="page_title"></title>
 	<div id="top" style="display: inline-flex;width: 100vw;">
 		<div class="left" style="display: inline-flex;height: 5vh;margin: auto 1em;">
 			<span style="line-height: 5vh;white-space: nowrap;">
 				<script>
 					document.write(localString[g_language].timezone + "：");
+					$("#page_title").html(localString[g_language].BE);
 				</script>
 			</span>
 			<select id="time-zone-selector">

@@ -474,16 +474,19 @@
 						<?php echo $_local->gui->more; ?>
 					</button>
 					<ul class="header-dropdown-content left-content" style="display: none;" id="nav-more">
-						<li><a href="../calendar/">
+					<li><a href="https://visuddhinanda.gitbook.io/pali-handbook/" target="_blank">
+								<div class="nav_link"><?php echo $_local->gui->palihandbook; ?></div>
+							</a></li>
+						<li><a href="../calendar/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
 							</a></li>
-						<li><a href="../tools/unicode.html">
+						<li><a href="../tools/unicode.html" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->code_convert; ?></div>
 							</a></li>
-						<li><a href="../statistics">
+						<li><a href="../statistics" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
 							</a></li>
-						<li><a href="../calendar/history.html">
+						<li><a href="../calendar/history.html" target="_blank">
 							<div class="nav_link"><?php echo $_local->gui->history; ?></div>
 						</a></li>
 					</ul>
