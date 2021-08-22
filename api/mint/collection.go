@@ -1,13 +1,14 @@
 package mint
 
 import (
-	"net/http"
-	"strconv"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
+	"net/http"
+	"strconv"
 	"time"
 )
+
 /*
     id SERIAL PRIMARY KEY,
     uuid         VARCHAR (36) ,
@@ -26,23 +27,24 @@ import (
 
 */
 type Collection struct {
-	Id     int `form:"id" json:"id" binding:"required"`
-	Title string `form:"title" json:"title" binding:"required"`
-	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
-	Summary string `form:"summary" json:"summary" binding:"required"`
+	Id          int    `form:"id" json:"id" binding:"required"`
+	Title       string `form:"title" json:"title" binding:"required"`
+	Subtitle    string `form:"subtitle" json:"subtitle" binding:"required"`
+	Summary     string `form:"summary" json:"summary" binding:"required"`
 	ArticleList string `form:"article_list" json:"article_list" binding:"required"`
-	CreatorId int
-	Lang string `form:"lang" json:"lang" binding:"required"`
-	Status int `form:"status" json:"status" binding:"required"`
-	Version int
-    DeletedAt time.Time
-    CreatedAt time.Time
-    UpdatedAt time.Time
+	CreatorId   int
+	Lang        string `form:"lang" json:"lang" binding:"required"`
+	Status      int    `form:"status" json:"status" binding:"required"`
+	Version     int
+	DeletedAt   time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
+
 //查询
 func GetCollection(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lid,err := strconv.Atoi(c.Param("cid"))
+		lid, err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}
@@ -50,11 +52,11 @@ func GetCollection(db *pg.DB) gin.HandlerFunc {
 		// TODO 在这里进行db操作
 		// Select user by primary key.
 		collection := &Collection{Id: int(lid)}
-		err = db.Model(collection).Column("title","subtitle","summary","status").WherePK().Select()
+		err = db.Model(collection).Column("title", "subtitle", "summary", "status").WherePK().Select()
 		if err != nil {
 			panic(err)
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": collection,
 		})
@@ -64,16 +66,16 @@ func GetCollection(db *pg.DB) gin.HandlerFunc {
 //查询
 func GetCollectionByTitle(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		title:= c.Param("ctitle")
+		title := c.Param("ctitle")
 
 		// TODO 在这里进行db操作
 		// Select user by primary key.
 		var collections []Collection
-		err := db.Model(&collections).Column("id","title","subtitle").Where("title like ?",title+"%").Select()
+		err := db.Model(&collections).Column("id", "title", "subtitle").Where("title like ?", title+"%").Select()
 		if err != nil {
 			panic(err)
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": collections,
 		})
@@ -82,19 +84,19 @@ func GetCollectionByTitle(db *pg.DB) gin.HandlerFunc {
 
 //新建-
 //PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&course_id=1&status=10
-func PutCollection(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-	
+func PutCollection(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
 		title := c.Query("title")
-		status1,err := strconv.Atoi(c.Query("status"))
+		status1, err := strconv.Atoi(c.Query("status"))
 		if err != nil {
 			panic(err)
 		}
 
 		newOne := &Collection{
-			Title:   title,
-			Status: int(status1),
-			CreatorId:1,
+			Title:     title,
+			Status:    int(status1),
+			CreatorId: 1,
 		}
 		_, err = db.Model(newOne).Insert()
 		if err != nil {
@@ -102,16 +104,15 @@ func PutCollection(db *pg.DB) gin.HandlerFunc{
 		}
 
 		//修改完毕
-		c.JSON(http.StatusOK,gin.H{
-			"message":"insert ok",
+		c.JSON(http.StatusOK, gin.H{
+			"message": "insert ok",
 		})
 	}
 }
 
-
 //改
-func PostCollection(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
+func PostCollection(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		var form Collection
 
 		if err := c.ShouldBindJSON(&form); err != nil {
@@ -119,35 +120,34 @@ func PostCollection(db *pg.DB) gin.HandlerFunc{
 			return
 		}
 
-		_,err := db.Model(&form).Column("title","subtitle","summary","status","article_list").WherePK().Update()
+		_, err := db.Model(&form).Column("title", "subtitle", "summary", "status", "article_list").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"update ok",
+		c.JSON(http.StatusOK, gin.H{
+			"message": "update ok",
 		})
 	}
 }
 
-
 //删
-func DeleteCollection(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-		id,err := strconv.Atoi(c.Param("cid"))
+func DeleteCollection(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}
 		collection := &Collection{
-			Id:int(id),
+			Id: int(id),
 		}
 		//删之前获取 course_id
 		_, err = db.Model(collection).WherePK().Delete()
 		if err != nil {
 			panic(err)
 		}
-		
-		c.JSON(http.StatusOK,gin.H{
-			"message":"deleted "+c.Param("cid"),
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "deleted " + c.Param("cid"),
 		})
 	}
 }

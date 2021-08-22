@@ -1,11 +1,11 @@
 package mint
 
 import (
-	"net/http"
-	"strconv"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
+	"net/http"
+	"strconv"
 )
 
 type Login struct {
@@ -13,13 +13,14 @@ type Login struct {
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
-type User struct{
-    Id     int64
-    Name   string
-    Emails []string
+type User struct {
+	Id     int64
+	Name   string
+	Emails []string
 }
+
 func LoginDemo(_db *pg.DB) gin.HandlerFunc {
-		
+
 	return func(c *gin.Context) {
 		// TODO 在这里进行db操作
 		var form Login
@@ -42,7 +43,7 @@ func LoginDemo(_db *pg.DB) gin.HandlerFunc {
 //查询
 func GetDemo(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userid,err := strconv.ParseInt(c.Param("id"),10,64)
+		userid, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			panic(err)
 		}
@@ -54,25 +55,25 @@ func GetDemo(db *pg.DB) gin.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
-			"message": "user-"+user.Name,
+			"message": "user-" + user.Name,
 		})
 	}
 }
-func PostDemo(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-		name := c.DefaultQuery("name","guest")
+func PostDemo(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		name := c.DefaultQuery("name", "guest")
 		password := c.Query("password")
-		c.JSON(http.StatusOK,gin.H{
-			"message": "name="+name+" password="+password,
+		c.JSON(http.StatusOK, gin.H{
+			"message": "name=" + name + " password=" + password,
 		})
 	}
 }
 
 //增加
-func PutDemo(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
+func PutDemo(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		name := c.Query("name")
 		email := c.Query("emails")
 
@@ -84,21 +85,22 @@ func PutDemo(db *pg.DB) gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"new-Ok- hello "+name,
+		c.JSON(http.StatusOK, gin.H{
+			"message": "new-Ok- hello " + name,
 		})
 	}
 }
+
 //改
-func PatchDemo(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-		userid,err := strconv.ParseInt(c.Param("id"),10,64)
+func PatchDemo(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userid, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			panic(err)
 		}
 		email := c.Query("emails")
 		user1 := &User{
-			Id:   userid,
+			Id:     userid,
 			Emails: []string{email},
 		}
 		//_, err = db.Model(user1).WherePK().Update()
@@ -106,27 +108,28 @@ func PatchDemo(db *pg.DB) gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"-patch="+email,
+		c.JSON(http.StatusOK, gin.H{
+			"message": "-patch=" + email,
 		})
 	}
 }
+
 //删
-func DeleteDemo(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-		userid,err := strconv.ParseInt(c.Param("id"),10,64)
+func DeleteDemo(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userid, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			panic(err)
 		}
 		user1 := &User{
-			Id:   userid,
+			Id: userid,
 		}
 		_, err = db.Model(user1).Where("id = ?", userid).Delete()
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"delete "+c.Param("id"),
+		c.JSON(http.StatusOK, gin.H{
+			"message": "delete " + c.Param("id"),
 		})
 	}
 }

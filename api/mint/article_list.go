@@ -1,32 +1,33 @@
 package mint
 
 import (
-	"net/http"
-	"strconv"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
-	"time"
-	"encoding/json"
 	"github.com/go-redis/redis/v8"
+	"net/http"
+	"strconv"
+	"time"
 )
 
-
 type ArticleList struct {
-	Id     int `form:"id" json:"id"`
+	Id           int `form:"id" json:"id"`
 	CollectionId int `form:"collection_id" json:"collection_id" binding:"required"`
-	ArticleId int `form:"article_id" json:"article_id" binding:"required"`
-    CreatedAt time.Time
+	ArticleId    int `form:"article_id" json:"article_id" binding:"required"`
+	CreatedAt    time.Time
 }
-type ArticleListHolder struct{
+type ArticleListHolder struct {
 	Items []ArticleList
 }
-func (i *ArticleListHolder) UnmarshalJSON(b []byte) error{
+
+func (i *ArticleListHolder) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &i.Items)
 }
+
 //查询
 func GetCollectionArticleList(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cid,err:= strconv.Atoi(c.Param("cid"))
+		cid, err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}
@@ -34,28 +35,26 @@ func GetCollectionArticleList(db *pg.DB) gin.HandlerFunc {
 		// TODO 在这里进行db操作
 		// Select user by primary key.
 		var articles []ArticleList
-		err = db.Model(&articles).Column("collection_id","article_id").Where("collection_id = ?",cid).Select()
+		err = db.Model(&articles).Column("collection_id", "article_id").Where("collection_id = ?", cid).Select()
 		if err != nil {
 			panic(err)
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": articles,
 		})
 	}
 }
 
-
-
 //修改
-func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-		aid,err:= strconv.Atoi(c.Param("aid"))
+func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		aid, err := strconv.Atoi(c.Param("aid"))
 		if err != nil {
 			panic(err)
 		}
 		//先删除
-		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?",aid).Delete()
+		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?", aid).Delete()
 		if err != nil {
 			panic(err)
 		}
@@ -76,63 +75,64 @@ func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc{
 			panic(err)
 		}
 		defer stmt.Close()
-		for _, value := range form.Items{
-			_, err = stmt.Exec(value.CollectionId,aid)
+		for _, value := range form.Items {
+			_, err = stmt.Exec(value.CollectionId, aid)
 			if err != nil {
 				panic(err)
 			}
-	
+
 		}
 		err = tx.Commit()
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"update ok",
+		c.JSON(http.StatusOK, gin.H{
+			"message": "update ok",
 		})
 	}
 }
 
 //删
-func DeleteArticleInList(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
-	return func(c *gin.Context){
-		id,err := strconv.Atoi(c.Param("aid"))
+func DeleteArticleInList(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("aid"))
 		if err != nil {
 			panic(err)
 		}
 		//删之前获取 course_id
-		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?",id).Delete()
+		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?", id).Delete()
 		if err != nil {
 			panic(err)
 		}
 		//TODO 删除article_list表相关项目
-		c.JSON(http.StatusOK,gin.H{
-			"message":"delete "+c.Param("aid"),
+		c.JSON(http.StatusOK, gin.H{
+			"message": "delete " + c.Param("aid"),
 		})
 
-		rkey := "article_list://"+c.Param("aid")
-		rdb.Del(ctx,rkey)
+		rkey := "article_list://" + c.Param("aid")
+		rdb.Del(ctx, rkey)
 
 	}
 }
+
 //删
-func DeleteCollectionInList(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
-	return func(c *gin.Context){
-		id,err := strconv.Atoi(c.Param("cid"))
+func DeleteCollectionInList(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("cid"))
 		if err != nil {
 			panic(err)
 		}
 		//删之前获取 course_id
-		_, err = db.Model((*ArticleList)(nil)).Where("collection_id = ?",id).Delete()
+		_, err = db.Model((*ArticleList)(nil)).Where("collection_id = ?", id).Delete()
 		if err != nil {
 			panic(err)
 		}
 		//TODO 删除article_list表相关项目
-		c.JSON(http.StatusOK,gin.H{
-			"message":"delete "+c.Param("cid"),
+		c.JSON(http.StatusOK, gin.H{
+			"message": "delete " + c.Param("cid"),
 		})
 
-		rkey := "article_list://collection_"+c.Param("cid")
-		rdb.Del(ctx,rkey)
+		rkey := "article_list://collection_" + c.Param("cid")
+		rdb.Del(ctx, rkey)
 	}
 }

@@ -1,0 +1,17 @@
+repos:
+-   repo: https://github.com/VitoVan/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+- repo: https://github.com/VitoVan/pre-commit-golang
+  rev: v0.4.1
+  hooks:
+    - id: go-fmt
+    - id: go-vet
+      entry: bash -c 'cd api && go vet'
+      language: system
+    - id: go-mod-tidy
+      entry: bash -c 'cd api && go mod tidy'
+      language: system

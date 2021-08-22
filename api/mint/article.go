@@ -1,17 +1,17 @@
 package mint
 
 import (
-	"net/http"
-	"strconv"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"github.com/go-redis/redis/v8"
-	"context"
+	"net/http"
+	"strconv"
 	"time"
 )
-var ctx = context.Background()
 
+var ctx = context.Background()
 
 /*
     id SERIAL PRIMARY KEY,
@@ -31,84 +31,85 @@ var ctx = context.Background()
 
 */
 type Article struct {
-	Id     int `form:"id" json:"id" binding:"required"`
-	Title string `form:"title" json:"title" binding:"required"`
-	Subtitle string `form:"subtitle" json:"subtitle"`
-	Summary string `form:"summary" json:"summary"`
-	Content string `form:"content" json:"content"`
-	OwnerId int
-	Setting string `form:"setting" json:"setting"`
-	Status int `form:"status" json:"status"`
-	Version int
-    DeletedAt time.Time
-    CreatedAt time.Time
-    UpdatedAt time.Time
+	Id        int    `form:"id" json:"id" binding:"required"`
+	Title     string `form:"title" json:"title" binding:"required"`
+	Subtitle  string `form:"subtitle" json:"subtitle"`
+	Summary   string `form:"summary" json:"summary"`
+	Content   string `form:"content" json:"content"`
+	OwnerId   int
+	Setting   string `form:"setting" json:"setting"`
+	Status    int    `form:"status" json:"status"`
+	Version   int
+	DeletedAt time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
+
 //查询
 func GetArticle(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lid,err := strconv.ParseInt(c.Param("aid"),10,64)
+		lid, err := strconv.ParseInt(c.Param("aid"), 10, 64)
 		if err != nil {
 			panic(err)
 		}
 		fmt.Println("get article")
-		rkey := "article://"+c.Param("aid")
-		n, err := rdb.Exists(ctx,rkey).Result()
-		if err != nil  {
+		rkey := "article://" + c.Param("aid")
+		n, err := rdb.Exists(ctx, rkey).Result()
+		if err != nil {
 			fmt.Println(err)
-		}else if n == 0 {
+		} else if n == 0 {
 			fmt.Println("redis key not exist")
-		}else{
+		} else {
 			fmt.Println("redis key exist")
 			val, err := rdb.HGetAll(ctx, rkey).Result()
 			if err != nil || val == nil {
 				//有错误或者没查到
 				fmt.Println("redis error")
-					
-			}else{
+
+			} else {
 				fmt.Println("redis no error")
 				c.JSON(http.StatusOK, gin.H{
 					"data": val,
 				})
 				return
-			}	
+			}
 		}
 
 		article := &Article{Id: int(lid)}
-		err = db.Model(article).Column("id","title","subtitle","content","owner_id","setting","status","version","updated_at").WherePK().Select()
+		err = db.Model(article).Column("id", "title", "subtitle", "content", "owner_id", "setting", "status", "version", "updated_at").WherePK().Select()
 		if err != nil {
 			panic(err)
-		}			
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"data": article,
 		})
 		//写入redis
-		rdb.HSet(ctx,rkey,"id",article.Id)
-		rdb.HSet(ctx,rkey,"title",article.Title)
-		rdb.HSet(ctx,rkey,"subtitle",article.Subtitle)
-		rdb.HSet(ctx,rkey,"content",article.Content)
-		rdb.HSet(ctx,rkey,"owner_id",article.OwnerId)
-		rdb.HSet(ctx,rkey,"setting",article.Setting)
-		rdb.HSet(ctx,rkey,"status",article.Status)
-		rdb.HSet(ctx,rkey,"version",article.Version)
-		rdb.HSet(ctx,rkey,"updated_at",article.UpdatedAt)
-			
+		rdb.HSet(ctx, rkey, "id", article.Id)
+		rdb.HSet(ctx, rkey, "title", article.Title)
+		rdb.HSet(ctx, rkey, "subtitle", article.Subtitle)
+		rdb.HSet(ctx, rkey, "content", article.Content)
+		rdb.HSet(ctx, rkey, "owner_id", article.OwnerId)
+		rdb.HSet(ctx, rkey, "setting", article.Setting)
+		rdb.HSet(ctx, rkey, "status", article.Status)
+		rdb.HSet(ctx, rkey, "version", article.Version)
+		rdb.HSet(ctx, rkey, "updated_at", article.UpdatedAt)
+
 	}
 }
 
 //查询
 func GetArticleByTitle(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		title:= c.Param("ltitle")
+		title := c.Param("ltitle")
 
 		// TODO 在这里进行db操作
 		// Select user by primary key.
 		var articles []Article
-		err := db.Model(&articles).Column("id","title","subtitle").Where("title like ?",title+"%").Select()
+		err := db.Model(&articles).Column("id", "title", "subtitle").Where("title like ?", title+"%").Select()
 		if err != nil {
 			panic(err)
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": articles,
 		})
@@ -117,19 +118,19 @@ func GetArticleByTitle(db *pg.DB) gin.HandlerFunc {
 
 //新建-
 //PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&status=10
-func PutArticle(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-	
+func PutArticle(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
 		title := c.Query("title")
-		status1,err := strconv.ParseInt(c.Query("status"),10,64)
+		status1, err := strconv.ParseInt(c.Query("status"), 10, 64)
 		if err != nil {
 			panic(err)
 		}
 
 		newArticle := &Article{
 			Title:   title,
-			Status: int(status1),
-			OwnerId:1,
+			Status:  int(status1),
+			OwnerId: 1,
 		}
 		_, err = db.Model(newArticle).Insert()
 		if err != nil {
@@ -137,16 +138,15 @@ func PutArticle(db *pg.DB) gin.HandlerFunc{
 		}
 
 		//修改完毕
-		c.JSON(http.StatusOK,gin.H{
-			"message":"",
+		c.JSON(http.StatusOK, gin.H{
+			"message": "",
 		})
 	}
 }
 
-
 //修改
-func PostAritcle(db *pg.DB,rdb *redis.Client) gin.HandlerFunc{
-	return func(c *gin.Context){
+func PostAritcle(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		var form Article
 
 		if err := c.ShouldBindJSON(&form); err != nil {
@@ -154,28 +154,27 @@ func PostAritcle(db *pg.DB,rdb *redis.Client) gin.HandlerFunc{
 			return
 		}
 
-		_,err := db.Model(&form).Column("title","subtitle","summary","status","content").WherePK().Update()
+		_, err := db.Model(&form).Column("title", "subtitle", "summary", "status", "content").WherePK().Update()
 		if err != nil {
 			panic(err)
 		}
-		c.JSON(http.StatusOK,gin.H{
-			"message":"update ok",
+		c.JSON(http.StatusOK, gin.H{
+			"message": "update ok",
 		})
-		rkey := "article://"+strconv.Itoa(form.Id)
-		rdb.Del(ctx,rkey)
+		rkey := "article://" + strconv.Itoa(form.Id)
+		rdb.Del(ctx, rkey)
 	}
 }
 
-
 //删
-func DeleteArticle(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
-	return func(c *gin.Context){
-		id,err := strconv.Atoi(c.Param("aid"))
+func DeleteArticle(db *pg.DB, rdb *redis.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("aid"))
 		if err != nil {
 			panic(err)
 		}
 		article := &Article{
-			Id:int(id),
+			Id: int(id),
 		}
 		//删之前获取 course_id
 		_, err = db.Model(article).WherePK().Delete()
@@ -183,12 +182,12 @@ func DeleteArticle(db *pg.DB ,rdb *redis.Client) gin.HandlerFunc{
 			panic(err)
 		}
 		//TODO 删除article_list表相关项目
-		c.JSON(http.StatusOK,gin.H{
-			"message":"delete "+c.Param("lid"),
+		c.JSON(http.StatusOK, gin.H{
+			"message": "delete " + c.Param("lid"),
 		})
 
-		rkey := "article://"+c.Param("aid")
-		rdb.Del(ctx,rkey)
+		rkey := "article://" + c.Param("aid")
+		rdb.Del(ctx, rkey)
 
 	}
 }
