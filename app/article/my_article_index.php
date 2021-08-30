@@ -40,16 +40,15 @@ require_once '../studio/index_head.php';
 			<div class="tool_bar">
 				<div><?php echo $_local->gui->text.$_local->gui->list ?></div>
 				<div>
-					<span class="icon_btn_div">
-						<span class="icon_btn_tip"></span>
-						<button id="file_add" type="button" class="icon_btn" title=" " onclick="article_add_dlg_show()">
+					<span class="icon_btn_div">				
+						<span class="icon_btn_tip"><?php echo $_local->gui->add ;?></span>
+						<button id="file_add" type="button" class="icon_btn" onclick="article_add_dlg_show()" title=" ">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
 							</svg>
 						</button>
 						<div id='article_add_div' class="float_dlg"></div>
-					</span>
-					
+					</span>					
 					<span class="icon_btn_div">				
 						<span class="icon_btn_tip"><?php echo $_local->gui->recycle_bin ;?></span>
 						<button id="to_recycle" type="button" class="icon_btn" onclick="file_del()" title=" ">
