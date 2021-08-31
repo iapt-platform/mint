@@ -79,7 +79,7 @@ function my_collect_edit(id) {
 					html += "</div></div>";
 
 					html += "<div style='display:flex;'>";
-					html += "<div style='flex:2;'>" + gLocal.gui.summary + "</div>";
+					html += "<div style='flex:2;'>" + gLocal.gui.introduction + "</div>";
 					html += "<div style='flex:8;'>";
 					html += "<input type='input' name='summary' value='" + result.summary + "'/>";
 					html += "</div></div>";
