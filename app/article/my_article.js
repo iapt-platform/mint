@@ -24,7 +24,6 @@ function my_article_list() {
 					html += "<div style='flex:0.5;'>No.</div>";
 					html += "<div style='flex:4;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
-					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.share_to + "</div>";
@@ -34,27 +33,17 @@ function my_article_list() {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
-						html += "<div style='flex:4;'>" + iterator.title + "</div>";
-						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
-							iterator.id +
-							"' title='" +
-							gLocal.gui.edit +
-							"'>";
-						html += "<button class='icon_btn'>";
-						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>";
-						html += "</svg>";
-						html += "</button>";
 
-						html += "</a></div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/?id=" +
-							iterator.id +
-							"' target='_blank' title='" +
-							gLocal.gui.preview +
-							"' >";
+						html += "<div style='flex:4;'>" ;
+						html += "<a href='../article/my_article_edit.php?id=" + iterator.id + "' title='" + gLocal.gui.edit + "'>";						
+						html += iterator.title ;
+						html += "</a>";
+						html += "</div>";
+
+						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
+						
+						html += "<div style='flex:1;'>";
+						html += "<a href='../article/?id=" + iterator.id + "' target='_blank' title='" + gLocal.gui.preview + "' >";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
 						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
