@@ -32,7 +32,7 @@ function my_article_list() {
 					for (const iterator of result) {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-						html += "<div style='flex:0.5;'>" + key++ + "</div>";
+						html += "<div style='flex:0.5;'>" + key + "</div>";
 
 						html += "<div style='flex:4;'>" ;
 						html += "<a href='../article/my_article_edit.php?id=" + iterator.id + "' title='" + gLocal.gui.edit + "'>";						

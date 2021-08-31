@@ -22,23 +22,18 @@ function my_collect_list() {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:1;'>" + key++ + "</div>";
-						html += "<div style='flex:2;'>" + iterator.title + "</div>";
+						html += "<div style='flex:2;'>" ;
+						html += "<a href='../article/my_collect_edit.php?id=" + iterator.id + "'>" ;
+						html += iterator.title ;
+						html += "</a>";
+						html += "</div>";
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/my_collect_edit.php?id=" +
-							iterator.id +
-							"'>" +
-							gLocal.gui.edit +
-							"</a></div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/?collect=" +
-							iterator.id +
-							"' target='_blank'>" +
-							gLocal.gui.preview +
-							"</a></div>";
+						//html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<a onclick=\"collection_share('" + iterator.id + "')\">share</a>";
+						html += "<a href='../article/?collect=" + iterator.id + "' target='_blank'>" + gLocal.gui.preview + "</a>";
+						html += "</div>";
+						html += "<div style='flex:1;'>";
+						html += "<a onclick=\"collection_share('" + iterator.id + "')\">"+gLocal.gui.share+"</a>";
 						html += "</div>";
 						html += "</div>";
 					}
