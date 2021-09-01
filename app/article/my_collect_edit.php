@@ -10,6 +10,10 @@ require_once '../studio/index_head.php';
 	<script language="javascript" src="../public/js/marked.js"></script>
 	<script language="javascript" src="../article/add_to_collect_dlg.js"></script>
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
+
+	<script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
+	<script src="../tree/jquery.fancytree.dnd.js" type="text/javascript"></script>
 
 	<script >
 	var gCurrPage="collect";

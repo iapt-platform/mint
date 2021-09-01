@@ -52,10 +52,10 @@ else{
     if(count($arrList)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
+        $query = "INSERT INTO article_list (collect_id, article_id,level,title,children) VALUES ( ? , ?, ?, ? , ? )";
         $sth = $PDO->prepare($query);
         foreach ($arrList as $row) {
-            $sth->execute(array($_POST["id"],$row->article,$row->level,$row->title));
+            $sth->execute(array($_POST["id"],$row->article,$row->level,$row->title,$row->children));
 			if($redis){
 				#删除article权限缓存
 				$redis->del("power://article/".$row->article);

@@ -14,6 +14,7 @@ require_once '../studio/index_head.php';
 	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
 	<script language="javascript" src="../lang/tran_lang_select.js"></script>
 
+
 	<script >
 	var gCurrPage="article";
 	</script>
