@@ -3139,7 +3139,11 @@ array("oti","ā",".2p.$.sg.$.aor."),
 array("oti","ttha",".2p.$.pl.$.aor."),
 array("oti","se",".2p.$.sg.$.aor."),
 array("oti","vhaṃ",".2p.$.pl.$.aor."),
-array("ati","ittha",".2p.$.pl.$.aor.")
+array("ati","ittha",".2p.$.pl.$.aor."),
+array("ati","ituṃ",".v:ind.$.inf."),
+array("ati","atuṃ",".v:ind.$.inf."),
+array("ati","itvā",".v:ind.$.abs."),
+array("ati","atvā",".v:ind.$.abs.")
 
 
 
