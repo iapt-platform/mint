@@ -22,7 +22,7 @@ require_once "../pcdl/html_head.php";
 		echo "_articel_id='".$_GET["id"]."';";
 	}
 	if(isset($_GET["collect"])){
-		echo "_collect_id='".$_GET["collect"]."';";
+		echo "_collection_id='".$_GET["collect"]."';";
 	}
 	if(isset($_GET["collection"])){
 		echo "_collection_id='".$_GET["collection"]."';";
@@ -101,16 +101,40 @@ require_once "../pcdl/html_head.php";
 
 
 <link type="text/css" rel="stylesheet" href="style.css"  />
+<link type="text/css" rel="stylesheet" href="pad.css" media="screen and (max-width:1280px)" />
 <link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)" />
 <link type="text/css" rel="stylesheet" href="print.css" media="print" />
 
+<link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
+<script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
+<script src="../article/my_collect.js" type="text/javascript"></script>
+
+<style>
+#toc_content ul.fancytree-container{
+	border:unset;
+}
+.fancytree-container .active {
+    font-weight: 700;
+    color: var(--main-color);
+	background: linear-gradient(to right, var(--link-color), var(--nocolor));
+    border-radius: 5px;
+}
+span.fancytree-title{
+	color: var(--main-color1);
+}
+span.fancytree-node{
+	display: flex;
+}
+</style>
 
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
 <div id="head_bar" >
-	<div id="pali_pedia" style="display:flex;">
-		<span><?php echo $_local->gui->anthology; ?></span>
+	<div style="display:flex;">
+	<div id="article_path" >
+	</div>
+	<div id="article_path_title"></div>
 	</div>
 
 	<div style="margin: auto 0;">
@@ -189,12 +213,14 @@ require_once "../pcdl/html_head.php";
 	click_dropdown_init();
 	note_create();
 	historay_init();
-	if(_collect_id==""){
-		articel_load(_articel_id,_collection_id);
-		articel_load_collect(_articel_id);
+	if(_articel_id==""){
+		collect_load(_collection_id);
 	}
 	else{
-		collect_load(_collect_id);
+		articel_load(_articel_id,_collection_id);
+		if(_collection_id!=""){
+			articel_load_article_list(_articel_id,_collection_id);
+		}
 	}
 	});
 

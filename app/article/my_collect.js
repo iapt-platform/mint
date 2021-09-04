@@ -107,38 +107,7 @@ function my_collect_edit(id) {
 					html += "</div>";
 					html += "<div style='display:flex;'>";
 					html += "<div style='flex:4;'>";
-
-					_arrArticleList = JSON.parse(result.article_list);
-					let treeData = new Array()
 					html += "<div id='ul_article_list'>";
-					let treeParents = [];
-					let rootNode = {key:0,title:"root",level:0};
-					treeData.push(rootNode);
-					let lastInsNode = rootNode;
-					let iLastParentNodeLevel = 0;
-					let iLastParentNode = 0;
-					let iCurrLevel = 0;
-					for (let index = 0; index < _arrArticleList.length; index++) {
-						const element = _arrArticleList[index];
-						let newNode = {key:element.article,title:element.title,level:element.level};
-						
-						if(newNode.level>iCurrLevel){
-							treeParents.push(lastInsNode);					
-							lastInsNode.children = new Array();
-							lastInsNode.children.push(newNode);
-						}
-						else if(newNode.level==iCurrLevel){
-							treeParents[treeParents.length-1].children.push(newNode);
-						}
-						else{
-							// 小于
-							treeParents.pop();
-							treeParents[treeParents.length-1].children.push(newNode);
-							iLastParentNodeLevel = treeParents[treeParents.length-1].level;	
-						}
-						lastInsNode = newNode;
-						iCurrLevel = newNode.level;
-					}
 					html += "</div>";
 
 					html += "</div>";
@@ -152,10 +121,13 @@ function my_collect_edit(id) {
 					$("#article_list").html(html);
 					$("#collection_title").html(result.title);
 
+					_arrArticleList = JSON.parse(result.article_list);
+
+
 					$("#ul_article_list").fancytree({
 						autoScroll: true,
 						extensions: ["dnd"],
-						source: treeData[0].children,
+						source: tocGetTreeData(_arrArticleList),
 						click: function(e, data) {
 							if( e.ctrlKey ){
 							  window.open("../article/?id="+data.node.key,"_blank");
@@ -207,7 +179,57 @@ function my_collect_edit(id) {
 		}
 	);
 }
+var tocActivePath;
+function tocGetTreeData(articles,active=""){
+	let treeData = new Array()
 
+	let treeParents = [];
+	let rootNode = {key:0,title:"root",level:0};
+	treeData.push(rootNode);
+	let lastInsNode = rootNode;
+	let iLastParentNodeLevel = 0;
+	let currParentNode = null;
+	let iCurrLevel = 0;
+	for (let index = 0; index < articles.length; index++) {
+		const element = articles[index];
+
+		let newNode = {key:element.article,title:element.title,level:element.level};
+		if(active==element.article){
+			newNode["extraClasses"]="active";
+		}
+		if(newNode.level>iCurrLevel){
+			treeParents.push(lastInsNode);					
+			lastInsNode.children = new Array();
+			lastInsNode.children.push(newNode);
+			currParentNode = lastInsNode;
+		}
+		else if(newNode.level==iCurrLevel){
+			currParentNode = treeParents[treeParents.length-1];
+			treeParents[treeParents.length-1].children.push(newNode);
+		}
+		else{
+			// 小于
+			do {
+				treeParents.pop();
+			} while (treeParents[treeParents.length-1].level>=newNode.level);
+			
+			currParentNode = treeParents[treeParents.length-1];
+			treeParents[treeParents.length-1].children.push(newNode);
+			iLastParentNodeLevel = treeParents[treeParents.length-1].level;	
+		}
+		lastInsNode = newNode;
+		iCurrLevel = newNode.level;
+
+		if(active==element.article){
+			tocActivePath = new Array();
+			for (let index = 1; index < treeParents.length; index++) {
+				treeParents[index]["expanded"]=true;
+				tocActivePath.push(treeParents[index]);				
+			}
+		}
+	}
+	return treeData[0].children;
+}
 function editNode(node){
 	var prevTitle = node.title,
 	  tree = node.tree;
@@ -254,7 +276,7 @@ function getTreeNodeData(node){
 	if( typeof node.children != "undefined"){
 		children = node.children.length;
 	}
-	arrTocTree.push({article:node.key,title:node.title,level:iTocTreeCurrLevel});
+	arrTocTree.push({article:node.key,title:node.title,level:iTocTreeCurrLevel,children:children});
 	if(children>0){
 		iTocTreeCurrLevel++;
 		for (const iterator of node.children) {

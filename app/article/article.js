@@ -26,6 +26,7 @@ function articel_load(id, collection_id) {
 					let result = JSON.parse(data);
 					if (result) {
 						$("#article_title").html(result.title);
+						$("#article_path_title").html(result.title);
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
@@ -67,7 +68,7 @@ function collect_load(id) {
 						$("#contents").html(marked(result.summary));
 
 						let article_list = JSON.parse(result.article_list);
-						render_article_list(article_list, id);
+						render_article_list(article_list);
 					}
 				} catch (e) {
 					console.error(e);
@@ -79,24 +80,26 @@ function collect_load(id) {
 	);
 }
 
-function articel_load_collect(article_id) {
+function articel_load_article_list(articleId,collectionId) {
 	$.get(
 		"../article/collect_get.php",
 		{
-			article: article_id,
+			id: collectionId,
 			setting: "",
 		},
 		function (data, status) {
 			if (status == "success") {
 				try {
 					let result = JSON.parse(data);
-					if (result && result.length > 0) {
-						//$("#collect_title").html(result[0].title);
-						let strTitle = "<a href='../article/?collect=" + result[0].id + "'>" + result[0].title + "</a>";
-						$("#pali_pedia").html(strTitle);
+					if (result) {
+						let article_list = JSON.parse(result.article_list);
+						render_article_list(article_list,collectionId,articleId);
 
-						let article_list = JSON.parse(result[0].article_list);
-						render_article_list(article_list, result[0].id);
+						let strTitle = "<a href='../article/?collection=" + result.id + "'>" + result.title + "</a> / ";
+						for (const iterator of tocActivePath) {
+							strTitle += "<a href='../article/?id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
+						}
+						$("#article_path").html(strTitle);						
 					}
 				} catch (e) {
 					console.error(e);
@@ -109,44 +112,15 @@ function articel_load_collect(article_id) {
 }
 
 //在collect 中 的article列表
-function render_article_list(article_list, collection_id) {
-	let html = "";
-	html += "<ul>";
-	let display = "";
-	if (_display == "para") {
-		display = "&display=para";
-	}
-	let prevArticle = "无";
-	let nextArticle = "无";
-	let urlCollection = "&collection=" + collection_id;
-	for (let index = 0; index < article_list.length; index++) {
-		const element = article_list[index];
-		if (element.article == _articel_id) {
-			if (index > 0) {
-				const prev = article_list[index - 1];
-				prevArticle = "<a onclick=\"gotoArticle('" + prev.article + "')\">" + prev.title + "</a>";
-			}
-			if (index < article_list.length - 1) {
-				const next = article_list[index + 1];
-				nextArticle = "<a onclick=\"gotoArticle('" + next.article + "')\">" + next.title + "</a>";
-			}
-			$("#contents_nav_left").html(prevArticle);
-			$("#contents_nav_right").html(nextArticle);
+function render_article_list(article_list,collectId="",articleId="") {
+	$("#toc_content").fancytree({
+		autoScroll: true,
+		source: tocGetTreeData(article_list,articleId),
+		activate: function(e, data) {
+			gotoArticle(data.node.key,collectId);
+			return false;
 		}
-		html +=
-			"<li class='level_" +
-			element.level +
-			"'>" +
-			"<a onclick=\"gotoArticle('" +
-			element.article +
-			"')\">" +
-			element.title +
-			"</a></li>";
-	}
-
-	html += "</ul>";
-
-	$("#toc_content").html(html);
+	});
 }
 
 function set_channal(channalid) {
@@ -188,6 +162,9 @@ function setMode(mode = "read") {
 //跳转到另外一个文章
 function gotoArticle(articleId) {
 	let url = "../article/index.php?id=" + articleId;
+	if (_collection_id != "") {
+		url += "&collection=" + _collection_id;
+	}
 	if (_channal != "") {
 		url += "&channal=" + _channal;
 	}
