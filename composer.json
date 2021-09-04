@@ -1,6 +1,8 @@
 {
 	"require": {
 		"elasticsearch/elasticsearch": "~7.0",
-		"guzzlehttp/guzzle": "7.0"
+		"guzzlehttp/guzzle": "7.0",
+		"catfan/medoo": "^2.1",
+		"casbin/casbin": "^3.9"
 	}
 }
