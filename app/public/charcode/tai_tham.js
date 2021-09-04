@@ -12,8 +12,8 @@ var char_roman_to_tai = [
 	{ id: "ntho", value: "ᨶᩮᩣ᩠ᨳ" },
 	{ id: "ndhā", value: "ᨶᩣ᩠ᨵ" },
 	{ id: "nthā", value: "ᨶᩣ᩠ᨳ" },
-	{ id: "ṅgho", value: "ᩘᩮ᩠ᨿᩣ" },
-	{ id: "ṅkho", value: "ᩘᩮ᩠ᨡᩣ" },
+	{ id: "ṅgho", value: "ᩘᨿᩮᩣ" },//  "ᩘᩮ᩠ᨿᩣ
+	{ id: "ṅkho", value: "ᩘᨡᩮᩣ" },// "ᩘᩮ᩠ᨡᩣ"
 	{ id: "ñcho", value: "ᨬᩮ᩠ᨨᩣ" },
 	{ id: "ñjho", value: "ᨬᩮ᩠ᨫᩣ" },
 	{ id: "ṇḍho", value: "ᨱᩮ᩠ᨰᩣ" },
@@ -30,11 +30,11 @@ var char_roman_to_tai = [
 	{ id: "ḍḍhe", value: "ᨯᩮ᩠ᨰ" },
 	{ id: "ṇḍhe", value: "ᨱᩮ᩠ᨰ" },
 	{ id: "gghe", value: "ᨣᩮ᩠ᨿ" },
-	{ id: "ṅghe", value: "ᩘᩮ᩠ᨿ" },
+	{ id: "ṅghe", value: "ᩘᨿᩮ" },//  "ᩘᩮ᩠ᨿ
+	{ id: "ṅkhe", value: "ᩘᨡᩮ" },// "ᩘᩮ᩠ᨡ
 	{ id: "jjhe", value: "ᨩᩮ᩠ᨫ" },
 	{ id: "ñjhe", value: "ᨬᩮ᩠ᨫ" },
 	{ id: "kkhe", value: "ᨠᩮ᩠ᨡ" },
-	{ id: "ṅkhe", value: "ᩘᩮ᩠ᨡ" },
 	{ id: "mphe", value: "ᨾᩮ᩠ᨹ" },
 	{ id: "pphe", value: "ᨷᩮ᩠ᨹ" },
 	{ id: "nthe", value: "ᨶᩮ᩠ᨳ" },
@@ -62,8 +62,8 @@ var char_roman_to_tai = [
 	{ id: "ndā", value: "ᨶᩣ᩠ᨴ" },
 	{ id: "nnā", value: "ᨶᩣ᩠ᨶ" },
 	{ id: "ntā", value: "ᨶᩣ᩠ᨲ" },
-	{ id: "ṅgo", value: "ᩘᩮ᩠ᨣᩣ" },
-	{ id: "ṅko", value: "ᩘᩮ᩠ᨠᩣ" },
+	{ id: "ṅgo", value: " ᩘᨣᩮᩣ" },//  ᩘᩮ᩠ᨣᩣ
+	{ id: "ṅko", value: "ᩘᨠᩮᩣ" },//  ᩘᩮ᩠ᨠᩣ
 	{ id: "ñco", value: "ᨬᩮ᩠ᨧᩣ" },
 	{ id: "ñjo", value: "ᨬᩮ᩠ᨩᩣ" },
 	{ id: "ñño", value: "ᨬᩮ᩠ᨬᩣ" },
@@ -93,14 +93,14 @@ var char_roman_to_tai = [
 	{ id: "ḍḍe", value: "ᨯᩮ᩠ᨯ" },
 	{ id: "ṇḍe", value: "ᨱᩮ᩠ᨯ" },
 	{ id: "gge", value: "ᨣᩮ᩠ᨣ" },
-	{ id: "ṅge", value: "ᩘᩮ᩠ᨣ" },
+	{ id: "ṅge", value: "ᩘᨣᩮ" }, // "ᩘᩮ᩠ᨣ
 	{ id: "rhe", value: "ᩁᩮ᩠ᩉ" },
 	{ id: "vhe", value: "ᩅᩮ᩠ᩉ" },
 	{ id: "yhe", value: "ᨿᩮ᩠ᩉ" },
 	{ id: "jje", value: "ᨩᩮ᩠ᨩ" },
 	{ id: "ñje", value: "ᨬᩮ᩠ᨩ" },
 	{ id: "kke", value: "ᨠᩮ᩠ᨠ" },
-	{ id: "ṅke", value: "ᩘᩮ᩠ᨠ" },
+	{ id: "ṅke", value: "ᩘᨠᩮ" },//  ᩘᩮ᩠ᨠ
 	{ id: "mme", value: "ᨾᩮ᩠ᨾ" },
 	{ id: "nne", value: "ᨶᩮ᩠ᨶ" },
 	{ id: "ññe", value: "ᨬᩮ᩠ᨬ" },
@@ -126,7 +126,8 @@ var char_roman_to_tai = [
 	{ id: "yye", value: "ᨿᩮ᩠ᨿ" },
 	//{ id: "mmā", value: "ᨾᩜᩣ" },
 	//{ id: "mma", value: "ᨾᩜ" },
-		
+	{ id: "by", value: "ᨻ᩠ᨿ᩠" },
+
 { id: "ss", value: "ᩔ᩠" },
 { id: "vh", value: "ᩅ᩠ᩉ᩠" },
 { id: "vy", value: "ᩅ᩠ᨿ᩠" },
@@ -201,7 +202,7 @@ var char_roman_to_tai = [
 { id: "o", value: "ᩒ" },
 { id: "᩠᩼ᩋ", value: "" },
 { id: "᩠ᩋ", value: "" },
-{ id: "ᨡᩮᩣ", value: "ᨡᩮᩤ" },
+//{ id: "ᨡᩮᩣ", value: "ᨡᩮᩤ" },
 { id: "ᨡᩣ", value: "ᨡᩤ" },
 { id: "ᨠ᩠ᨡᩮᩤ", value: "ᨠ᩠ᨡᩮᩤ" },
 { id: "က᩠ခါ", value: "ᨠ᩠ᨡᩤ" },
