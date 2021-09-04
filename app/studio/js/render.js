@@ -1652,6 +1652,7 @@ function sent_copy_meaning(book, para, begin, end) {
 var relaSearchDeep=0;
 function relaMoveSubgraph(seed,from,to){
 	let iFound = 0;
+	//查找与种子相连接的节点
 	from.forEach(function(item,index,arr){
 		if(relaSearchDeep==0){
 			if( item.bid==seed){
@@ -1659,9 +1660,12 @@ function relaMoveSubgraph(seed,from,to){
 				arr.splice(index,1);
 				iFound++;
 			}
+			//删除连接到iti的线
+			/*
 			if( item.aid==seed && item.b=='iti'){
 				arr.splice(index,1);
 			}
+			*/
 		}
 		else{
 			if(item.aid==seed || item.bid==seed){
@@ -1672,6 +1676,7 @@ function relaMoveSubgraph(seed,from,to){
 		}
 	})
 	if(iFound>0){
+		//找到了继续查找
 		to.forEach(function(item,index,arr){
 			relaSearchDeep++;
 			relaMoveSubgraph(item.aid,from,to);
@@ -1685,7 +1690,8 @@ function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
 	let rListA = new Array();
-	let rListB = new Array();
+	
+	let rListPool = new Array();
 	let arrIti = new Array();
 
 	let idList = new Array();
@@ -1752,26 +1758,37 @@ function sent_show_rel_map(book, para, begin, end) {
 			}
 		}
 	}
-	let strSubgraph = "";
+
 	let subgraphTitle = 1;
-	for (const iti_id of arrIti) {
-		relaSearchDeep = 0;
-		relaMoveSubgraph(iti_id.id,rListA,rListB);
-		strSubgraph += "\nsubgraph "+subgraphTitle+"\n";
-		for (const rb of rListB) {
-			strSubgraph +=rb.str;
-		}	
-		strSubgraph += "end\n";
-		strSubgraph += subgraphTitle + " --> " + iti_id.dest_id+ "\n";
-		rListB = [];
-		subgraphTitle++;
+	rListPool.push({id:0,value:rListA,parent:-1});
+
+	//倒序处理，能够处理iti嵌套
+	for (let index = arrIti.length-1; index >=0; index--) {
+		const element = arrIti[index];
+		let rListB = new Array();
+		for (let iPool = 0; iPool < rListPool.length; iPool++) {
+			;
+			relaSearchDeep = 0;
+			relaMoveSubgraph(element.id,rListPool[iPool].value,rListB);
+			if(rListB.length>0){
+				rListPool.push({id:subgraphTitle++,value:rListB,parent:rListPool[iPool].id});
+				console.log("找到：",element.id);
+				break;
+			}
+		}
 	}
+
 
 	memind = "flowchart LR\n";
 	for (const iterator of rListA) {
 		memind +=iterator.str;
 	}
-	memind+=strSubgraph;
+	//渲染subgraph
+	rListPool.forEach(function(item,index,arr){
+		if(item.parent==0){
+			memind += renderRelationSubgraph(rListPool,index);
+		}
+	});
 
 	let graph = mermaid.render("graphDiv", memind);
 	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
@@ -1782,6 +1799,23 @@ function sent_show_rel_map(book, para, begin, end) {
 	document.querySelector(".win_body").style.display = "block";
 }
 
+//用递归渲染，subgraph嵌套
+function renderRelationSubgraph(arrData,index){
+	let output = "";
+	output += "\nsubgraph "+arrData[index].id+"\n";
+	for (const rb of arrData[index].value) {
+		output +=rb.str;
+	}	
+
+	arrData.forEach(function(item,indexSub,arr){
+		if(item.parent==arrData[index].id){
+			output += renderRelationSubgraph(arrData,indexSub);
+		}
+	});
+	output += "end\n";
+	//output += subgraphTitle + " --> " + element.dest_id+ "\n";
+	return output;
+}
 
 //句子编辑块
 function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = true) {
