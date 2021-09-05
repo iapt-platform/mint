@@ -4,13 +4,14 @@
 	"dependencies": {
 		"diff": "^5.0.0",
 		"editor.md": "^1.5.0",
-		"fullcalendar": "^5.8.0",
-		"highcharts": "^9.1.0",
+		"fullcalendar": "^5.9.0",
+		"highcharts": "^9.2.2",
 		"jquery": "^3.6.0",
 		"jquery-ui": "^1.12.1",
-		"marked": "^2.0.6",
-		"mermaid": "^8.10.1",
+		"marked": "^2.1.3",
+		"mermaid": "^8.12.0",
 		"tributejs": "^5.1.3",
-		"vue": "^3.0.11"
+		"vue": "^3.2.8",
+		"jquery.fancytree": "^2.38.0"
 	}
 }
