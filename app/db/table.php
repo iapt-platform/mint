@@ -1,10 +1,10 @@
 <?php
 require_once "../redis/function.php";
 // Require Composer's autoloader.
-require '../../vendor/autoload.php';
+//require '../../vendor/autoload.php';
  
 // Using Medoo namespace.
-use Medoo\Medoo;
+//use Medoo\Medoo;
 
 
 class Table
@@ -20,6 +20,7 @@ class Table
     function __construct($db,$table,$user="",$password="",$redis=false) {
         $this->dbh = new PDO($db, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		/*
 		$database = new Medoo([
 			// Initialized and connected PDO object.
 			'pdo' => $this->dbh,
@@ -27,13 +28,15 @@ class Table
 			// [optional] Medoo will have different handle method according to different database type.
 			'type' => 'sqlite'
 		]);
+		
 		$this->medoo = $database;
+		*/
 		$this->redis = $redis;
 		$this->table = $table;
 		$this->result = ["ok"=>true,"message"=>"","data"=>array()];
 		$this->redisProfix = $table . "/:id";
     }
-	
+	/*
 	public function index($columns,$where){
 		$output = $this->medoo->select(
 			$this->table,
@@ -93,7 +96,7 @@ class Table
 		$this->result["data"] = $output->rowCount();
 		return $this->result;
 	}
-
+*/
 
 
 	protected function fetch($query,$params){
