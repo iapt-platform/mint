@@ -22,23 +22,18 @@ function my_collect_list() {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:1;'>" + key++ + "</div>";
-						html += "<div style='flex:2;'>" + iterator.title + "</div>";
+						html += "<div style='flex:2;'>" ;
+						html += "<a href='../article/my_collect_edit.php?id=" + iterator.id + "'>" ;
+						html += iterator.title ;
+						html += "</a>";
+						html += "</div>";
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/my_collect_edit.php?id=" +
-							iterator.id +
-							"'>" +
-							gLocal.gui.edit +
-							"</a></div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/?collect=" +
-							iterator.id +
-							"' target='_blank'>" +
-							gLocal.gui.preview +
-							"</a></div>";
+						//html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<a onclick=\"collection_share('" + iterator.id + "')\">share</a>";
+						html += "<a href='../article/?collect=" + iterator.id + "' target='_blank'>" + gLocal.gui.preview + "</a>";
+						html += "</div>";
+						html += "<div style='flex:1;'>";
+						html += "<a onclick=\"collection_share('" + iterator.id + "')\">"+gLocal.gui.share+"</a>";
 						html += "</div>";
 						html += "</div>";
 					}
@@ -63,9 +58,13 @@ function my_collect_edit(id) {
 		},
 		function (data, status) {
 			if (status == "success") {
-				try {
 					let html = "";
-					let result = JSON.parse(data);
+					let result;				
+				try {
+					result = JSON.parse(data);
+				} catch (e) {
+					console.error(e);
+				}
 					$("#article_collect").attr("a_id", result.id);
 					html += '<div class="" style="padding:5px;">';
 					html += '<div style="max-width:2em;flex:1;"></div>';
@@ -84,7 +83,7 @@ function my_collect_edit(id) {
 					html += "</div></div>";
 
 					html += "<div style='display:flex;'>";
-					html += "<div style='flex:2;'>" + gLocal.gui.summary + "</div>";
+					html += "<div style='flex:2;'>" + gLocal.gui.introduction + "</div>";
 					html += "<div style='flex:8;'>";
 					html += "<input type='input' name='summary' value='" + result.summary + "'/>";
 					html += "</div></div>";
@@ -108,16 +107,8 @@ function my_collect_edit(id) {
 					html += "</div>";
 					html += "<div style='display:flex;'>";
 					html += "<div style='flex:4;'>";
-
-					_arrArticleList = JSON.parse(result.article_list);
-					html += "<ul id='ul_article_list'>";
-					for (let index = 0; index < _arrArticleList.length; index++) {
-						const element = _arrArticleList[index];
-						html += my_collect_render_article(index, element);
-						_arrArticleOrder.push(index);
-					}
-
-					html += "</ul>";
+					html += "<div id='ul_article_list'>";
+					html += "</div>";
 
 					html += "</div>";
 
@@ -130,27 +121,170 @@ function my_collect_edit(id) {
 					$("#article_list").html(html);
 					$("#collection_title").html(result.title);
 
-					$("#ul_article_list").sortable({
-						update: function (event, ui) {
-							let sortedIDs = $("#ul_article_list").sortable("toArray");
-							_arrArticleOrder = new Array();
-							for (const iSorted of sortedIDs) {
-								let newindex = parseInt($("#" + iSorted).attr("article_index"));
-								_arrArticleOrder.push(_arrArticleList[newindex]);
+					_arrArticleList = JSON.parse(result.article_list);
+
+
+					$("#ul_article_list").fancytree({
+						autoScroll: true,
+						extensions: ["dnd"],
+						source: tocGetTreeData(_arrArticleList),
+						click: function(e, data) {
+							if( e.ctrlKey ){
+							  window.open("../article/?id="+data.node.key,"_blank");
+							  return false;
 							}
-							$("#form_article_list").val(JSON.stringify(_arrArticleOrder));
+						  },
+						  dblclick: function(e, data) {
+							editNode(data.node);
+							return false;
+						  },
+						  keydown: function(e, data) {
+							switch( e.which ) {
+							case 113: // [F2]
+							  editNode(data.node);
+							  return false;
+							case 13: // [enter]
+							  if( isMac ){
+								editNode(data.node);
+								return false;
+							  }
+							}
+						  },
+						dnd: {
+							preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+							preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
+							autoExpandMS: 400,
+							onDragStart: function(node) {
+								return true;
+							},
+							onDragEnter: function(node, sourceNode) {
+
+							   return true;
+							},
+							onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+
+								sourceNode.moveTo(node, hitMode);
+								node.setExpanded(true);
+							}
 						},
+						activate: function(e, data) {
+			//				alert("activate " + data.node);
+						}
 					});
-				} catch (e) {
-					console.error(e);
-				}
+				
+
 			} else {
 				console.error("ajex error");
 			}
 		}
 	);
 }
+var tocActivePath;
+function tocGetTreeData(articles,active=""){
+	let treeData = new Array()
 
+	let treeParents = [];
+	let rootNode = {key:0,title:"root",level:0};
+	treeData.push(rootNode);
+	let lastInsNode = rootNode;
+	let iLastParentNodeLevel = 0;
+	let currParentNode = null;
+	let iCurrLevel = 0;
+	for (let index = 0; index < articles.length; index++) {
+		const element = articles[index];
+
+		let newNode = {key:element.article,title:element.title,level:element.level};
+		if(active==element.article){
+			newNode["extraClasses"]="active";
+		}
+		if(newNode.level>iCurrLevel){
+			treeParents.push(lastInsNode);					
+			lastInsNode.children = new Array();
+			lastInsNode.children.push(newNode);
+			currParentNode = lastInsNode;
+		}
+		else if(newNode.level==iCurrLevel){
+			currParentNode = treeParents[treeParents.length-1];
+			treeParents[treeParents.length-1].children.push(newNode);
+		}
+		else{
+			// 小于
+			do {
+				treeParents.pop();
+			} while (treeParents[treeParents.length-1].level>=newNode.level);
+			
+			currParentNode = treeParents[treeParents.length-1];
+			treeParents[treeParents.length-1].children.push(newNode);
+			iLastParentNodeLevel = treeParents[treeParents.length-1].level;	
+		}
+		lastInsNode = newNode;
+		iCurrLevel = newNode.level;
+
+		if(active==element.article){
+			tocActivePath = new Array();
+			for (let index = 1; index < treeParents.length; index++) {
+				treeParents[index]["expanded"]=true;
+				tocActivePath.push(treeParents[index]);				
+			}
+		}
+	}
+	return treeData[0].children;
+}
+function editNode(node){
+	var prevTitle = node.title,
+	  tree = node.tree;
+	// Disable dynatree mouse- and key handling
+	tree.widget._unbind();
+	// Replace node with <input>
+	$(".fancytree-title", node.span).html("<input id='editNode' value='" + prevTitle + "'>");
+	// Focus <input> and bind keyboard handler
+	$("input#editNode")
+	  .focus()
+	  .keydown(function(event){
+		switch( event.which ) {
+		case 27: // [esc]
+		  // discard changes on [esc]
+		  $("input#editNode").val(prevTitle);
+		  $(this).blur();
+		  break;
+		case 13: // [enter]
+		  // simulate blur to accept new value
+		  $(this).blur();
+		  break;
+		}
+	  }).blur(function(event){
+		// Accept new value, when user leaves <input>
+		var title = $("input#editNode").val();
+		node.setTitle(title);
+		// Re-enable mouse and keyboard handlling
+		tree.widget._bind();
+		//node.focus();
+	  });
+  }
+
+var arrTocTree = new Array();
+var iTocTreeCurrLevel = 1;
+function getTocTreeData(){
+	let tree = $("#ul_article_list").fancytree("getTree");
+    let d = tree.toDict(false);
+	for (const iterator of d) {
+		getTreeNodeData(iterator);
+	}
+}
+function getTreeNodeData(node){
+	let children = 0;
+	if( typeof node.children != "undefined"){
+		children = node.children.length;
+	}
+	arrTocTree.push({article:node.key,title:node.title,level:iTocTreeCurrLevel,children:children});
+	if(children>0){
+		iTocTreeCurrLevel++;
+		for (const iterator of node.children) {
+			getTreeNodeData(iterator);
+		}
+		iTocTreeCurrLevel--;
+	}
+}
 function my_collect_render_article(index, article) {
 	let html = "";
 	html += "<li id='article_item_" + index + "' article_index='" + index + "' class='file_list_row'>";
@@ -202,6 +336,8 @@ function article_preview(id) {
 }
 
 function my_collect_save() {
+	getTocTreeData();
+	$("#form_article_list").val( JSON.stringify(arrTocTree))
 	$.ajax({
 		type: "POST", //方法类型
 		dataType: "json", //预期服务器返回的数据类型
