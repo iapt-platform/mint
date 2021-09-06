@@ -282,9 +282,10 @@ function removeTocNode(){
 	}
 	
   }
-var arrTocTree = new Array();
+var arrTocTree;
 var iTocTreeCurrLevel = 1;
 function getTocTreeData(){
+	arrTocTree = new Array();
 	let tree = $("#ul_article_list").fancytree("getTree");
     let d = tree.toDict(false);
 	for (const iterator of d) {
