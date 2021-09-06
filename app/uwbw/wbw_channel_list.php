@@ -14,7 +14,7 @@ $output["data"] = "";
 if (!isset($_COOKIE["userid"])) {
     $output["status"] = 1;
     $output["error"] = "#not_login";
-    echo json_encode(output, JSON_UNESCAPED_UNICODE);
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
