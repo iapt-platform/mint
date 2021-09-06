@@ -49,6 +49,7 @@ function my_collect_list() {
 }
 var _arrArticleList;
 var _arrArticleOrder = new Array();
+var currSelectNode;
 function my_collect_edit(id) {
 	$.get(
 		"../article/collect_get.php",
@@ -105,8 +106,14 @@ function my_collect_edit(id) {
 						result.article_list +
 						"'/>";
 					html += "</div>";
+
+					html += "<div>";
+					html += "<button onclick='removeTocNode()'>Delete</button>";
+					html += "</div>";
+
 					html += "<div style='display:flex;'>";
 					html += "<div style='flex:4;'>";
+
 					html += "<div id='ul_article_list'>";
 					html += "</div>";
 
@@ -126,6 +133,8 @@ function my_collect_edit(id) {
 
 					$("#ul_article_list").fancytree({
 						autoScroll: true,
+						selectMode: 1, // 1:single, 2:multi, 3:multi-hier
+						checkbox: false, // Show checkboxes.
 						extensions: ["dnd"],
 						source: tocGetTreeData(_arrArticleList),
 						click: function(e, data) {
@@ -168,8 +177,13 @@ function my_collect_edit(id) {
 							}
 						},
 						activate: function(e, data) {
-			//				alert("activate " + data.node);
-						}
+			//				alert("activate " + );
+							currSelectNode = data.node;
+						},
+						select: function(e, data) {
+							// Display list of selected nodes
+							currSelectNode = data.tree.getSelectedNodes();
+						  }
 					});
 				
 
@@ -262,6 +276,12 @@ function editNode(node){
 	  });
   }
 
+function removeTocNode(){
+	if(confirm("Delete article and the sub article?")){
+		currSelectNode.remove();
+	}
+	
+  }
 var arrTocTree = new Array();
 var iTocTreeCurrLevel = 1;
 function getTocTreeData(){

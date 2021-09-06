@@ -125,6 +125,10 @@ span.fancytree-title{
 span.fancytree-node{
 	display: flex;
 }
+#toc_content{
+	max-height: 25vw;
+    width: max-content;
+}
 </style>
 
 <?php
@@ -182,9 +186,9 @@ span.fancytree-node{
 		</div>
 	</div>
 	<div id="right_pannal">
-		<div class="fun_frame">
+		<div class="fun_frame" style="overflow-x: scroll;">
 			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-			<div id = "toc_content" class="content" style="max-height:25vw;">
+			<div id = "toc_content" class="content" >
 			</div>
 		</div>
 		<div class="fun_frame">
