@@ -23,8 +23,10 @@ class PaliSimSentence extends Table
 				$stmt->execute(array($id));
 				$simList = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				$output =  json_encode($simList, JSON_UNESCAPED_UNICODE);
+				if($this->redis){
+					$this->redis->hSet('pali://sim/id',$id, $output);
+				}
 				
-				$this->redis->hSet('pali://sim/id',$id, $output);
 				return $simList;
 			}
 			else{
