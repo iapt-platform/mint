@@ -8,9 +8,9 @@ define("MAX_LETTER" ,20000);
 
 $output["status"]=0;
 $output["error"]="";
-$output{"book"}="";
-$output{"para"}="";
-$output{"channel"}="";
+$output["book"]="";
+$output["para"]="";
+$output["channel"]="";
 
 if(isset($_POST["book"])){
     $_book = $_POST["book"];
@@ -39,9 +39,9 @@ else{
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
-$output{"book"}=$_book;
-$output{"para"}=$_para;
-$output{"channel"}=$_channel;
+$output["book"]=$_book;
+$output["para"]=$_para;
+$output["channel"]=$_channel;
 
 //判断单词数量 太大的不能加载
 PDO_Connect(""._FILE_DB_PALITEXT_);
