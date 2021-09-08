@@ -40,14 +40,14 @@ if (PHP_SAPI == "cli") {
 				}
 			}
 			fclose($fp);
-			echo "body load：";
+			echo "body loaded \n";
 		}
 		else{
-			echo "can not load body file. ";
+			echo "can not load body file. \n";
 		}
 
-		$strBody = str_replace("%SignUpLink%",$SignUpLink,$body);
-		$strBody = str_replace("%SignUpString%",$SignUpString,$body);
+		$strBody = str_replace("%SignUpLink%",$SignUpLink,$strBody);
+		$strBody = str_replace("%SignUpString%",$SignUpString,$strBody);
 
 		//TODO sendmail
 
