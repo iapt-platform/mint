@@ -6,8 +6,9 @@ require_once "../pcdl/html_head.php";
 <body style="margin: 0;padding: 0;" class="reader_body" >
 
 
-	<script src="./article.js"></script>
+	<script  src="./article.js"></script>
 
+	<script src="../widget/like.js"></script>
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
@@ -110,7 +111,7 @@ require_once "../pcdl/html_head.php";
 <script src="../article/my_collect.js" type="text/javascript"></script>
 
 <style>
-#toc_content ul.fancytree-container{
+ul.fancytree-container{
 	border:unset;
 }
 .fancytree-container .active {
@@ -128,6 +129,14 @@ span.fancytree-node{
 #toc_content{
 	max-height: 25vw;
     width: max-content;
+}
+like{
+    min-width: 40px;
+    border: 1px solid var(--border-line-color);
+    display: inline-block;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
 }
 </style>
 
@@ -165,15 +174,20 @@ span.fancytree-node{
 </div>
 <div id="main_view" class="main_view">
 <div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div id="article_subtitle"><?php echo $_local->gui->sub_title; ?></div>
-	<div id="article_author"><?php echo $_local->gui->author; ?></div>
+	<div id="article_title" class="term_word_head_pali"></div>
+	<div id="article_subtitle"></div>
+	<div id="article_author"></div>
+	<div id="like_div">
+		<like restype='article' resid='124'></like>
+		<watch restype='article' resid='124'></watch>
+	</div>
 </div>
+
 <div id="contents_view">
 	<div id="contents_div">
-	
+		<div id="summary"></div>
 		<div id="contents" class="<?php echo $contentClass;?>">
-		<?php echo $_local->gui->loading; ?>...
+			<?php echo $_local->gui->loading; ?>...
 		</div>
 		<div id="contents_foot">
 			<div id="contents_nav" style="display:flex;justify-content: space-between;">
