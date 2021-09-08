@@ -127,7 +127,9 @@ class Article extends Table
 		if($sharePowerCollection>$iPower){
 			$iPower=$sharePowerCollection;
 		}
-		$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+		if($this->redis!==false){
+			$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+		}
 		return $iPower;
 	}
 

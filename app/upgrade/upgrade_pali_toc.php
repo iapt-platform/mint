@@ -84,7 +84,9 @@ foreach ($result_lang as $lang) {
                 $para_strlen = 0;
             }
             if ($r_conn) {
-                $redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
+				if($redis){
+                	$redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
+				}
             } else {
                 $sth_toc->execute(array($para["book"], $para["paragraph"], $lang["language"], $para_strlen, 0));
             }

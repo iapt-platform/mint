@@ -116,7 +116,9 @@ class CollectInfo
 			if($sharePower>$iPower){
 				$iPower=$sharePower;
 			}
-			$this->_redis->hSet("power://collection/".$id,$userId,$iPower);			
+			if($this->_redis!==false){
+				$this->_redis->hSet("power://collection/".$id,$userId,$iPower);	
+			}		
 		}
 		return $iPower;
 	}
