@@ -1,12 +1,13 @@
 <?php
 require_once "../redis/function.php";
+/*
 // Require Composer's autoloader.
-//require '../../vendor/autoload.php';
+require '../../vendor/autoload.php';
  
 // Using Medoo namespace.
-//use Medoo\Medoo;
+use Medoo\Medoo;
 
-
+*/
 class Table
 {
     protected $dbh;
@@ -15,7 +16,7 @@ class Table
     protected $errorMessage;
 	protected $field_setting;
 	protected $result;
-	protected $medoo;
+	public $medoo;
 	protected $redisProfix;
     function __construct($db,$table,$user="",$password="",$redis=false) {
         $this->dbh = new PDO($db, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
@@ -36,8 +37,8 @@ class Table
 		$this->result = ["ok"=>true,"message"=>"","data"=>array()];
 		$this->redisProfix = $table . "/:id";
     }
-	/*
-	public function index($columns,$where){
+	
+	public function _index($columns,$where){
 		$output = $this->medoo->select(
 			$this->table,
 			$columns,
@@ -46,11 +47,12 @@ class Table
 		$this->result["data"] = $output;
 		return $this->result;
 	}
-	public function create($data,$columns){
+	public function _create($data,$columns){
 		foreach ($columns as $value) {
 			# code...
 			$updateDate[$value] = $data[$value];
 		}
+		$updateDate["created_at"] = mTime();
 		$this->medoo->insert(
 			$this->table,
 			$updateDate
@@ -60,11 +62,13 @@ class Table
 		$this->result["data"] = $newId;
 		return $this->result;
 	}
-	public function update($data,$columns,$where=null){
+	public function _update($data,$columns,$where=null){
 		foreach ($columns as $value) {
 			# code...
 			$updateDate[$value] = $data[$value];
 		}
+		$updateDate["updated_at"] = mTime();
+
 		if($where==null){
 			$where = ["id"=>$data["id"]];
 		}
@@ -77,18 +81,25 @@ class Table
 		return $this->result;
 	}
 
-	public function get($columns,$where){
+	public function _show($columns,$id){
 		$output = $this->medoo->get(
 			$this->table,
 			$columns,
-			$where
+			["id"=>$id]
 		);
 		$this->result["data"] = $output;
 		return $this->result;
-
 	}
 
-	public function delete($where){
+	public function _deleteId($id){
+		$output = $this->medoo->delete(
+			$this->table,
+			["id"=>$id]
+		);
+		$this->result["data"] = $output->rowCount();
+		return $this->result;
+	}
+	public function _delete($where){
 		$output = $this->medoo->delete(
 			$this->table,
 			$where
@@ -96,7 +107,7 @@ class Table
 		$this->result["data"] = $output->rowCount();
 		return $this->result;
 	}
-*/
+
 
 
 	protected function fetch($query,$params){
