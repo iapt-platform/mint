@@ -4,6 +4,7 @@
 		"guzzlehttp/guzzle": "7.0",
 		"catfan/medoo": "^2.1",
 		"casbin/casbin": "^3.9",
-		"phpmailer/phpmailer": "^6.5"
+		"phpmailer/phpmailer": "^6.5",
+		"illuminate/database": "^8.59"
 	}
 }
