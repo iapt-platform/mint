@@ -978,3 +978,7 @@ pali>p {
 .para_mode .palitext{
 	text-indent: 2em;
 }
+
+.sent_mode>div>p {
+    border-bottom: 0.5em solid var(--btn-color);
+}

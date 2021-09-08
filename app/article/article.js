@@ -125,6 +125,9 @@ function render_article_list(article_list,collectId="",articleId="") {
 
 function set_channal(channalid) {
 	let url = "../article/index.php?id=" + _articel_id;
+	if (_collection_id != "") {
+		url += "&collection=" + _collection_id;
+	}
 	if (channalid != "") {
 		url += "&channal=" + channalid;
 	}
@@ -141,6 +144,9 @@ function set_channal(channalid) {
 }
 function setMode(mode = "read") {
 	let url = "../article/index.php?id=" + _articel_id;
+	if (_collection_id != "") {
+		url += "&collection=" + _collection_id;
+	}
 	if (_channal != "") {
 		url += "&channal=" + _channal;
 	}
