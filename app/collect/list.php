@@ -7,7 +7,7 @@ require_once '../public/function.php';
 require_once '../ucenter/function.php';
 
 
-    $onepage = 40;
+    $onepage = 100;
     if(isset($_GET["page"])){
         $onepage = $_GET["page"];
     }
