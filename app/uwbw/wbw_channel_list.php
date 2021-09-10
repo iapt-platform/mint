@@ -14,7 +14,7 @@ $output["data"] = "";
 if (!isset($_COOKIE["userid"])) {
     $output["status"] = 1;
     $output["error"] = "#not_login";
-    echo json_encode(output, JSON_UNESCAPED_UNICODE);
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -32,7 +32,7 @@ $params[] = $_book;
 $channelList = array();
 
 PDO_Connect(_FILE_DB_CHANNAL_);
-$query = "SELECT id FROM channal WHERE owner = ?  LIMIT 0,100";
+$query = "SELECT id FROM channal WHERE owner = ? and status>0 LIMIT 0,100";
 $FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
 
 foreach ($FetchChannal as $key => $value) {

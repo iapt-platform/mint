@@ -26,7 +26,9 @@ class PaliSentence extends Table
 			if ($result) {
 				$id= $result["id"];
 			}
-			$output = $this->redis->hSet('pali://sent/' . $book . "_" . $para . "_" . $start . "_" . $end, "id",$id);
+			if($this->redis){
+				$this->redis->hSet('pali://sent/' . $book . "_" . $para . "_" . $start . "_" . $end, "id",$id);
+			}
 			return $id;
 		} else {
 			return 0;

@@ -42,7 +42,9 @@ class PaliText extends Table
 			} else {
 				$title= "";
 			}
-			$output = $this->redis->hSet("para_title://pali","{$book}-{$para}",$title);
+			if($this->redis){
+				$this->redis->hSet("para_title://pali","{$book}-{$para}",$title);
+			}
 			return $title;
 		} else {
 			$title= "";
