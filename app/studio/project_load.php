@@ -4,7 +4,7 @@ require_once "../path.php";
 require_once "../public/_pdo.php";
 
 PDO_Connect(_FILE_DB_FILEINDEX_);
-$query = "select file_name from fileindex where user_id='{$_COOKIE["user_id"]}' AND  id='{$_GET["id"]}'";
+$query = "select file_name from fileindex where user_id='{$_COOKIE["uid"]}' AND  id='{$_GET["id"]}'";
 $Fetch = PDO_FetchOne($query);
 $FileName = _DIR_USER_DOC_ . "/" . $userid . _DIR_MYDOCUMENT_ . "/" . $Fetch;
 if (file_exists($FileName)) {

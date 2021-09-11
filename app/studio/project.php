@@ -39,9 +39,9 @@ if (isset($_POST["data"])) {
 } else if (isset($_GET["data"])) {
     $data = $_GET["data"];
 }
-if ($_COOKIE["user_id"]) {
-    $uid = $_COOKIE["user_id"];
-    $USER_ID = $_COOKIE["user_uid"];
+if ($_COOKIE["uid"]) {
+    $uid = $_COOKIE["uid"];
+    $USER_ID = $_COOKIE["userid"];
     $USER_NAME = $_COOKIE["username"];
 } else {
     echo '<a href="../ucenter/index.php" target="_blank">' . $_local->gui->not_login . '</a>';
@@ -339,7 +339,7 @@ switch ($op) {
                 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
                 echo "<div>";
                 PDO_Connect(_FILE_DB_CHANNAL_);
-                $query = "select * from channal where owner = '{$_COOKIE["user_uid"]}'   limit 0,100";
+                $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
                 $Fetch = PDO_FetchAll($query);
                 $i = 0;
                 foreach ($Fetch as $row) {
@@ -839,8 +839,8 @@ switch ($op) {
             2.别人的共享文档，自己以前没有打开过。复制到自己的空间，再打开。
             3.别人的共享文档，自己以前打开过。直接打开
              */
-            if ($_COOKIE["user_id"]) {
-                $uid = $_COOKIE["user_id"];
+            if ($_COOKIE["uid"]) {
+                $uid = $_COOKIE["uid"];
             } else {
                 echo "<h3><a href='../ucenter/index.php?op=login'>{$_local->gui->login}</a>后才可以打开文档</h3>";
                 exit;
@@ -927,7 +927,7 @@ exit;
                                 $FetchUid = PDO_FetchOne($query);
                                 if ($FetchUid) {
                                     $source = _DIR_USER_DOC_ . "/" . $FetchUid . _DIR_MYDOCUMENT_ . "/" . $filename;
-                                    $dest = _DIR_USER_DOC_ . "/" . $_COOKIE["user_uid"] . _DIR_MYDOCUMENT_ . "/" . $filename;
+                                    $dest = _DIR_USER_DOC_ . "/" . $_COOKIE["userid"] . _DIR_MYDOCUMENT_ . "/" . $filename;
                                 }
                                 echo "<div>源文件{$source}</div>";
                                 echo "<div>目标文件{$dest}</div>";

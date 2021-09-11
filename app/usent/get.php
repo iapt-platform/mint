@@ -14,17 +14,17 @@ $redis = redis_connect();
 
 #查询有阅读权限的channel
 $channal_list = array();
-if (isset($_COOKIE["user_uid"])) {
+if (isset($_COOKIE["userid"])) {
     PDO_Connect(_FILE_DB_CHANNAL_);
     $query = "SELECT id from channal where owner = ?   limit 0,100";
-    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
+    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
         $channal_list[] = $value["id"];
     }
 
     # 找协作的
-	$coop_channal = share_res_list_get($_COOKIE["user_uid"],2);
+	$coop_channal = share_res_list_get($_COOKIE["userid"],2);
 	foreach ($coop_channal as $key => $value) {
 		# code...
 		$channal_list[] = $value["res_id"];

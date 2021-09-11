@@ -9,7 +9,7 @@ PDO_Connect("" . _FILE_DB_USERINFO_);
 $query = "UPDATE user SET  setting = ? where  userid = ?  ";
 $sth = $PDO->prepare($query);
 
-$sth->execute(array($_POST["data"], $_COOKIE["user_uid"]));
+$sth->execute(array($_POST["data"], $_COOKIE["userid"]));
 $respond = array("status" => 0, "message" => "");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
     $error = PDO_ErrorInfo();

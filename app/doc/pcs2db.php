@@ -13,8 +13,8 @@ echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
 echo "<h2>转换PCS 到数据库格式</h2>";
 
-if ($_COOKIE["user_id"]) {
-    $uid = $_COOKIE["user_id"];
+if ($_COOKIE["uid"]) {
+    $uid = $_COOKIE["uid"];
 } else {
     echo "尚未登录";
     echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
@@ -41,7 +41,7 @@ if (isset($_GET["channel"]) == false) {
     echo "<form action='pcs2db.php' method='get'>";
     echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
     PDO_Connect("" . _FILE_DB_CHANNAL_);
-    $query = "SELECT * from channal where owner = '{$_COOKIE["user_uid"]}'   limit 0,100";
+    $query = "SELECT * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
     $Fetch = PDO_FetchAll($query);
     $i = 0;
     foreach ($Fetch as $row) {
@@ -95,7 +95,7 @@ if (isset($_GET["channel"]) == false) {
     exit;
 }
 
-$dir = _DIR_USER_DOC_ . '/' . $_COOKIE["user_uid"] . _DIR_MYDOCUMENT_;
+$dir = _DIR_USER_DOC_ . '/' . $_COOKIE["userid"] . _DIR_MYDOCUMENT_;
 PDO_Connect("" . _FILE_DB_FILEINDEX_);
 $query = "SELECT file_name, doc_info, modify_time from fileindex where id=? ";
 $Fetch = PDO_FetchRow($query, array($_GET["doc_id"]));
@@ -188,7 +188,7 @@ $dataBlock = $xml->xpath('//block');
                         "",
                         $block->info->book,
                         $block->info->paragraph,
-                        $_COOKIE["user_uid"],
+                        $_COOKIE["userid"],
                         $block->info->language,
                         $block->info->author,
                         "",
@@ -223,7 +223,7 @@ $dataBlock = $xml->xpath('//block');
                                 $sent_end,
                                 "",
                                 $block->info->author,
-                                $_COOKIE["user_uid"],
+                                $_COOKIE["userid"],
                                 $paraText,
                                 mb_strlen($paraText, "UTF-8"),
                                 $block->info->language,
@@ -246,7 +246,7 @@ $dataBlock = $xml->xpath('//block');
                         array($blockid,
                             "",
                             $_GET["channel"],
-                            $_COOKIE["user_uid"],
+                            $_COOKIE["userid"],
                             $block->info->book,
                             $block->info->paragraph,
                             "",
@@ -278,7 +278,7 @@ $dataBlock = $xml->xpath('//block');
                                 $file_modify_time,
                                 mTime(),
                                 $currWordStatus,
-                                $_COOKIE["user_uid"],
+                                $_COOKIE["userid"],
                             ));
                             $sWordData = "";
                         }
@@ -328,7 +328,7 @@ $dataBlock = $xml->xpath('//block');
                         $file_modify_time,
                         mTime(),
                         $word->status,
-                        $_COOKIE["user_uid"],
+                        $_COOKIE["userid"],
                     ));
                 break;
             case 2:

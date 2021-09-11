@@ -108,7 +108,7 @@ class SentPr{
 		if ($this->dbh_sent) {
             $query = "UPDATE sent_pr set text=? ,modify_time=?  WHERE id = ? and editor= ? ";
             $stmt = $this->dbh_sent->prepare($query);
-            $stmt->execute(array($text,mTime(),$id,$_COOKIE["user_uid"]));
+            $stmt->execute(array($text,mTime(),$id,$_COOKIE["userid"]));
             
 			if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 				/*  识别错误  */

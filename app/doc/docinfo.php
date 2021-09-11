@@ -10,8 +10,8 @@ require_once "../ucenter/function.php";
 
 $userid = "";
 $isLogin = false;
-if ($_COOKIE["user_uid"]) {
-    $userid = $_COOKIE["user_uid"];
+if ($_COOKIE["userid"]) {
+    $userid = $_COOKIE["userid"];
     $isLogin = true;
 }
 

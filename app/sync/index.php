@@ -8,7 +8,7 @@ require_once "../pcdl/html_head.php";
 	<script language="javascript" src="sync.js"></script>
 
 <?php 
-	if(!isset($_COOKIE["user_uid"])){
+	if(!isset($_COOKIE["userid"])){
 		echo "没有登录，请在登录后执行同步操作";
 	}
 	else if(!isset($_COOKIE["sync_userid"])){

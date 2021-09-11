@@ -14,7 +14,7 @@ $message = "<h3>正在处理 {$path}</h3>";
 
 $redis=redis_connect();
 if($redis){
-	$sync_key = $redis->hget("sync://key",$_COOKIE["user_uid"]);
+	$sync_key = $redis->hget("sync://key",$_COOKIE["userid"]);
 	if($sync_key===FALSE){
 		$message.= "客户端没有钥匙"."<br>";
 		$output["message"]=$message;
@@ -31,13 +31,13 @@ else{
 
 $client = new \GuzzleHttp\Client();
 if($size<0){
-	$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync_count','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+	$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync_count','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 	$serverJson=(string)$response->getBody();
 	$serverData = json_decode($serverJson,true);
 	echo json_encode($serverData, JSON_UNESCAPED_UNICODE);
 	exit;	
 }
-$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','time'=>$time,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $serverJson=(string)$response->getBody();
 $serverData = json_decode($serverJson,true);
 if($serverData===NULL){
@@ -73,7 +73,7 @@ foreach($serverDBData as $sd){
 }
 $sIdlist = json_encode($aIdList, JSON_UNESCAPED_UNICODE);
 // 拉 id 列表
-$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'sync','id'=>$sIdlist,'size'=>$size,"key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 $strLocalData = (string)$response->getBody();
 $localData = json_decode($strLocalData,true);
 if($localData["error"]>0){
@@ -139,13 +139,13 @@ else{
 		
 		#提取数据
 		$idInServer = json_encode($insert_to_local, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$serverData=(string)$response->getBody();
 		$arrData = json_decode($serverData,true);
 		if($arrData["error"]==0){
 			$message .= "数据提取成功：{$arrData["message"]} | ";
 			$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
-			$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+			$response = $client->request('POST', $localhost.'/app/'.$path, ['verify' => false,'form_params'=>['op'=>'insert','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 			$insertMsg =  (string)$response->getBody();	
 			$arrInsertMsg = json_decode($insertMsg,true);	
 			$message .= $arrInsertMsg["message"] . " | ";
@@ -161,13 +161,13 @@ else{
 	if(count($update_to_local)>0){
 		$message .=  "需要更新到目标机".count($update_to_local)."条记录 | ";
 		$idInServer = json_encode($update_to_local, JSON_UNESCAPED_UNICODE);
-		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+		$response = $client->request('POST', $server.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'get','id'=>"{$idInServer}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 		$serverData=(string)$response->getBody();
 		$arrData = json_decode($serverData,true);
 		if($arrData["error"]==0){
 			$message .= "数据提取成功：{$arrData["message"]} | ";
 			$strData = json_encode($arrData["data"], JSON_UNESCAPED_UNICODE);
-			$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["user_uid"]]]);
+			$response = $client->request('POST', $localhost.'/app/'.$path,['verify' => false,'form_params'=>['op'=>'update','data'=>"{$strData}","key"=>$sync_key,"userid"=>$_COOKIE["userid"]]]);
 			$strMsgUpdate =  (string)$response->getBody();
 			$arrMsgUpdate = json_decode($strMsgUpdate,true);
 			$message .= $arrMsgUpdate["message"] . " | ";;

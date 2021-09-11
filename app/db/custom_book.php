@@ -36,7 +36,7 @@ class CustomBook extends Table
 
 			$query="INSERT INTO {$this->table} ('book_id','title','owner','lang','status','modify_time','create_time') VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-			$stmt = $this->execute($query,array($currBook,$title,$_COOKIE["user_uid"],$lang,10,mTime(),mTime()));
+			$stmt = $this->execute($query,array($currBook,$title,$_COOKIE["userid"],$lang,10,mTime(),mTime()));
 			if($stmt){
 				$CSent = new CustomBookSentence($this->redis);
 				$respond = $CSent->insert($currBook,$sent,$lang);
@@ -106,7 +106,7 @@ class CustomBookSentence extends Table
 							mb_strlen($data,"UTF-8"),
 							$data,
 							$lang,
-							$_COOKIE["user_uid"],
+							$_COOKIE["userid"],
 							10,
 							mTime(),
 							mTime()

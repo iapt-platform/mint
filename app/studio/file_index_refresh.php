@@ -3,7 +3,7 @@ include "../path.php";
 include "./_pdo.php";
 
 //获取服务器端文件列表
-$dir = _DIR_USER_DOC_ . '/' . $_COOKIE["user_uid"] . '/' . _DIR_MYDOCUMENT_ . "/";
+$dir = _DIR_USER_DOC_ . '/' . $_COOKIE["userid"] . '/' . _DIR_MYDOCUMENT_ . "/";
 
 PDO_Connect( _FILE_DB_FILEINDEX_);
 

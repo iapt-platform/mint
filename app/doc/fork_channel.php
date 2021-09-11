@@ -20,8 +20,8 @@ require_once '../studio/index_tool_bar.php';
 
 echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
-if ($_COOKIE["user_id"]) {
-    $uid = $_COOKIE["user_id"];
+if ($_COOKIE["uid"]) {
+    $uid = $_COOKIE["uid"];
 } else {
     echo "尚未登录";
     echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
@@ -53,7 +53,7 @@ if (isset($_GET["dest_channel"]) == false) {
     echo "<input type='hidden' name='para' value='{$_GET["para"]}' />";
     echo "<input type='hidden' name='src_channel' value='{$_GET["src_channel"]}' />";
     PDO_Connect(_FILE_DB_CHANNAL_);
-    $query = "select * from channal where owner = '{$_COOKIE["user_uid"]}'   limit 0,100";
+    $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
     $Fetch = PDO_FetchAll($query);
     $i = 0;
     PDO_Connect( _FILE_DB_USER_WBW_);	
@@ -111,7 +111,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
             //别人的文档
             //查询以前自己是否曾经复刻
             $query = "SELECT * from "._TABLE_USER_WBW_BLOCK_." where parent_channel=? and owner=? ";
-            $FetchSelf = PDO_FetchAll($query,array($_GET["src_channel"],$_COOKIE["user_uid"]));
+            $FetchSelf = PDO_FetchAll($query,array($_GET["src_channel"],$_COOKIE["userid"]));
             $iFetchSelf = count($FetchSelf);
             if ($iFetchSelf > 0) {
                 //以前打开过
@@ -166,7 +166,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 									"",
 									$_GET["dest_channel"],
 									$_GET["src_channel"],
-									$_COOKIE["user_uid"],
+									$_COOKIE["userid"],
 									$fBlock[0]["book"],
 									$fBlock[0]["paragraph"],
 									$fBlock[0]["style"],
@@ -194,7 +194,7 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 									mTime(),
 									mTime(),
 									$value["status"],
-									$_COOKIE["user_uid"],
+									$_COOKIE["userid"],
 								));
 
 						}

@@ -5,7 +5,7 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond = array("status" => 0, "message" => "");
-if (isset($_COOKIE["user_uid"])) {
+if (isset($_COOKIE["userid"])) {
     PDO_Connect(_FILE_DB_GROUP_);
 	#先查询是否有重复的组名
 	$query = "SELECT id FROM group_info  WHERE name = ? ";
@@ -20,7 +20,7 @@ if (isset($_COOKIE["user_uid"])) {
 	                       VALUES  ( ?, ? , ? , ? , ? , ?  ,? ) ";
     $sth = $PDO->prepare($query);
     $newid = UUID::v4();
-    $sth->execute(array($newid, $_POST["parent"], $_POST["name"], "", 1, $_COOKIE["user_uid"], mTime()));
+    $sth->execute(array($newid, $_POST["parent"], $_POST["name"], "", 1, $_COOKIE["userid"], mTime()));
     $respond = array("status" => 0, "message" => "");
     if (!$sth || ($sth && $sth->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
@@ -32,7 +32,7 @@ if (isset($_COOKIE["user_uid"])) {
     $query = "INSERT INTO group_member (  user_id  , group_id  , power , group_name , level ,  status )
 		VALUES  (  ? , ? , ? , ? , ?  ,? ) ";
     $sth = $PDO->prepare($query);
-    $sth->execute(array($_COOKIE["user_uid"], $newid, 0, $_POST["name"], 0, 1));
+    $sth->execute(array($_COOKIE["userid"], $newid, 0, $_POST["name"], 0, 1));
     $respond = array("status" => 0, "message" => "");
     if (!$sth || ($sth && $sth->errorCode() != 0)) {
         $error = PDO_ErrorInfo();

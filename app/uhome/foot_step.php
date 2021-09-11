@@ -2,8 +2,8 @@
 if(isset($_GET["userid"])){
 	$foot_set_userid = $_GET["userid"];
 }
-else if(isset($_COOKIE["user_uid"])){
-	$foot_set_userid = $_COOKIE["user_uid"];
+else if(isset($_COOKIE["userid"])){
+	$foot_set_userid = $_COOKIE["userid"];
 }
 else{
 	echo "no user id";

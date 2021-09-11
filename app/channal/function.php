@@ -48,8 +48,8 @@ class Channal extends Table
 	}
 	public function getPower($id){
 		#查询用户对此channel是否有权限
-		if(isset($_COOKIE["user_uid"])){
-			$userId = $_COOKIE["user_uid"];
+		if(isset($_COOKIE["userid"])){
+			$userId = $_COOKIE["userid"];
 		}
 		else{
 			$userId='0';
@@ -66,7 +66,7 @@ class Channal extends Table
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
-			if(!isset($_COOKIE["user_uid"])  ){
+			if(!isset($_COOKIE["userid"])  ){
 				#未登录用户
 				if($channel["status"]==30){
 					#全网公开有建议权限
@@ -78,7 +78,7 @@ class Channal extends Table
 				}
 				
 			}
-			if($channel["owner"]==$_COOKIE["user_uid"]){
+			if($channel["owner"]==$_COOKIE["userid"]){
 				return 30;
 			}
 			else if($channel["status"]>=30){
@@ -87,12 +87,12 @@ class Channal extends Table
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
-		$sharePower = share_get_res_power($_COOKIE["user_uid"],$id);
+		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
 		if($sharePower>$channelPower){
 			$channelPower=$sharePower;
 		}
 		if($this->redis){
-			$this->redis->hSet("power://channel/".$id,$_COOKIE["user_uid"],$channelPower);
+			$this->redis->hSet("power://channel/".$id,$_COOKIE["userid"],$channelPower);
 		}
 		
 		return $channelPower;

@@ -40,7 +40,7 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
-	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["user_uid"])){
+	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
 		#登录状态下 编辑模式
 		$_mode = "edit";
 		echo "_mode='edit';";

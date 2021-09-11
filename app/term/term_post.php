@@ -10,7 +10,7 @@ require_once "../redis/function.php";
 $redis = redis_connect();
 
 #未登录不能修改
-if (isset($_COOKIE["user_uid"]) == false) {
+if (isset($_COOKIE["userid"]) == false) {
     $respond['status'] = 1;
     $respond['message'] = "not yet log in";
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -28,7 +28,7 @@ if ($_POST["id"] != "") {
 	#先查询是否有权限
 	$query = "SELECT id from term where guid= ? and owner = ? ";
 	$stmt = $PDO->prepare($query);
-	$stmt->execute(array($_POST["id"],$_COOKIE["user_uid"]));
+	$stmt->execute(array($_POST["id"],$_COOKIE["userid"]));
 	if ($stmt) {
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 		if(!$Fetch){
@@ -49,7 +49,7 @@ if ($_POST["id"] != "") {
         					  mTime(),
         					  mTime(),
         					  $_POST["id"],
-        					  $_COOKIE["user_uid"],
+        					  $_COOKIE["userid"],
     ));
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
@@ -88,7 +88,7 @@ if ($_POST["id"] != "") {
     $parm[] = $_POST["channal"];
     $parm[] = $_POST["language"];
     $parm[] = $_POST["note"];
-    $parm[] = $_COOKIE["user_uid"];
+    $parm[] = $_COOKIE["userid"];
     $parm[] = 0;
     $parm[] = mTime();
     $parm[] = mTime();

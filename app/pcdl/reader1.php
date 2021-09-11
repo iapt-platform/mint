@@ -809,9 +809,9 @@ if ($currParaLevel == 1 || $currParaParentLevel == 1) {
                 $sentClass = "";
                 # 找出句子中 我贡献的，优先显示
                 if ($_view != "sent") {
-                    if (isset($_COOKIE["user_uid"])) {
-                        if ($thisSent["editor"] !== $_COOKIE["user_uid"]) {
-                            $query = "SELECT * FROM sentence WHERE parent = " . $PDO->quote($thisSent["id"]) . " AND editor = " . $PDO->quote($_COOKIE["user_uid"]) . " order by modify_time DESC limit 0,1";
+                    if (isset($_COOKIE["userid"])) {
+                        if ($thisSent["editor"] !== $_COOKIE["userid"]) {
+                            $query = "SELECT * FROM sentence WHERE parent = " . $PDO->quote($thisSent["id"]) . " AND editor = " . $PDO->quote($_COOKIE["userid"]) . " order by modify_time DESC limit 0,1";
                             $myText = PDO_FetchAll($query);
                             if (count($myText) > 0) {
                                 $thisSent = $myText[0];
@@ -914,7 +914,7 @@ function render_sent($sent_data, $sn, $display_mode, $sent_count, $class = "")
 
     if ($display_mode == "sent") {
         if ((isset($_GET["channal"]) || $_GET["view"] == "sent")) {
-            if ($sent_data["editor"] == $_COOKIE["user_uid"]) {
+            if ($sent_data["editor"] == $_COOKIE["userid"]) {
                 $output .= "<svg class='edit_icon'><use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use></svg>";
             }
 
@@ -934,14 +934,14 @@ function render_sent($sent_data, $sn, $display_mode, $sent_count, $class = "")
         $output .= "<div style='font-size:80%;color:gray;'>{$name["nickname"]} <span style='color:gray;'>@{$name["username"]} </span>· {$channalInfo["name"]}</div>";
         $output .= "<div class='sent_blcok_tools'>";
 
-        if ($sent_data["editor"] == $_COOKIE["user_uid"]) {
+        if ($sent_data["editor"] == $_COOKIE["userid"]) {
             $output .= "<span>{$_local_arr["gui"]["revise"]}</span>";
         } else {
             $output .= "<edit>{$_local_arr["gui"]["revise"]}</edit>";
         }
 
         $output .= "{$edit_count}  ";
-        if ($sent_data["editor"] != $_COOKIE["user_uid"]) {
+        if ($sent_data["editor"] != $_COOKIE["userid"]) {
             $output .= "<span onclick=\"sent_apply('{$sent_data["id"]}')\">采纳</span>";
         }
         $output .= '<svg t="1600445373282" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2368" width="16" height="16"><path fill="silver" d="M854.00064 412.66688h-275.99872v-35.99872c48-102.00064 35.99872-227.99872 0-288-12.00128-18.00192-35.99872-35.99872-54.00064-35.99872s-35.99872 6.00064-35.99872 54.00064c0 96-6.00064 137.99936-24.00256 179.99872-12.00128 29.99808-77.99808 96-156.00128 120.00256v480c12.00128 6.00064 35.99872 24.00256 54.00064 29.99808 18.00192 12.00128 48 18.00192 60.00128 18.00192h306.00192c77.99808 0 108.00128-29.99808 108.00128-66.00192 0-18.00192 0-29.99808-18.00192-35.99872V796.672c41.99936 0 83.99872-12.00128 83.99872-48 0-29.99808-12.00128-35.99872-18.00192-35.99872v-35.99872h6.00064c24.00256 0 60.00128-35.99872 60.00128-60.00128 0-18.00192-6.00064-35.99872-18.00192-41.99936-6.00064-6.00064-24.00256-6.00064-24.00256-6.00064v-35.99872s12.00128 0 24.00256-12.00128c18.00192-12.00128 18.00192-42.00448 18.00192-42.00448v-12.00128c0-29.99808-48-54.00064-96-54.00064zM67.99872 478.6688l35.99872 408.00256c6.00064 24.00256 24.00256 48 48 48h83.99872c6.00064 0 12.00128-6.00064 18.00192-12.00128s12.00128-6.00064 18.00192-12.00128V412.66688H128c-35.99872 0-60.00128 35.99872-60.00128 66.00192z" p-id="2369"></path></svg>';

@@ -6,7 +6,7 @@ require_once '../path.php';
 require_once "../public/function.php";
 require_once "../public/php/define.php";
 
-if (isset($_COOKIE["user_id"])) {
+if (isset($_COOKIE["uid"])) {
 
     $active_type[10] = "_CHANNEL_EDIT_";
     $active_type[11] = "_CHANNEL_NEW_";
@@ -27,7 +27,7 @@ if (isset($_COOKIE["user_id"])) {
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     $query = "SELECT time,active,content,timezone  FROM log WHERE user_id = ? ";
     $stmt = $dbh->prepare($query);
-    $stmt->execute(array($_COOKIE["user_id"]));
+    $stmt->execute(array($_COOKIE["uid"]));
     echo "<table>";
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

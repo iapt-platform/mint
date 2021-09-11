@@ -8,7 +8,7 @@ require_once "../ucenter/active.php";
 require_once "../share/function.php";
 
 #检查是否登陆
-if (!isset($_COOKIE["user_uid"])) {
+if (!isset($_COOKIE["userid"])) {
     $respond["status"] = 1;
     $respond["message"] = 'not login';
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -28,7 +28,7 @@ $respond['begin'] = $_POST["begin"];
 $respond['end'] = $_POST["end"];
 $respond['channal'] = $_POST["channal"];
 $respond['text'] = $_POST["text"];
-$respond['editor'] = $_COOKIE["user_uid"];
+$respond['editor'] = $_COOKIE["userid"];
 $respond['commit_type'] = 0; #0 未提交 1 插入 2 修改 3pr 
 
 add_edit_event(_SENT_EDIT_, "{$_POST["book"]}-{$_POST["para"]}-{$_POST["begin"]}-{$_POST["end"]}@{$_POST["channal"]}");
@@ -47,11 +47,11 @@ if (isset($_POST["channal"])) {
 		$channel_status = $fetch["status"];
     }
     $respond['lang'] = $text_lang;
-    if ($fetch && $fetch["owner"] == $_COOKIE["user_uid"]) {
+    if ($fetch && $fetch["owner"] == $_COOKIE["userid"]) {
         #自己的channal
         $cooperation = 30;
     } else {
-		$sharePower = share_get_res_power($_COOKIE["user_uid"],$_POST["channal"]);
+		$sharePower = share_get_res_power($_COOKIE["userid"],$_POST["channal"]);
 		$cooperation = $sharePower;
 		if($channel_status>=30 && $cooperation<10){
 			#全网公开的 可以提交pr
@@ -119,7 +119,7 @@ if ($_id == false) {
             $_POST["channal"],
             "",
             "[]",
-            $_COOKIE["user_uid"],
+            $_COOKIE["userid"],
             $_POST["text"],
             $text_lang,
             1,
@@ -141,7 +141,7 @@ if ($_id == false) {
             # 更新historay
 			#没错误 更新历史记录
 			$respond['commit_type'] = 1;
-            $respond['message'] = update_historay($newId, $_COOKIE["user_uid"], $_POST["text"], $_landmark);
+            $respond['message'] = update_historay($newId, $_COOKIE["userid"], $_POST["text"], $_landmark);
             if ($respond['message'] !== "") {
                 $respond['status'] = 1;
                 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -178,7 +178,7 @@ if ($_id == false) {
 							$_POST["channal"],
 							"",
 							"[]",
-							$_COOKIE["user_uid"],
+							$_COOKIE["userid"],
 							$_POST["text"],
 							$text_lang,
 							1,
@@ -210,7 +210,7 @@ if ($_id == false) {
         $stmt = PDO_Execute($query,
             array($_POST["text"],
                 mb_strlen($_POST["text"], "UTF-8"),
-                $_COOKIE["user_uid"],
+                $_COOKIE["userid"],
                 mTime(),
                 mTime(),
                 $_id));
@@ -224,7 +224,7 @@ if ($_id == false) {
         } else {
             #没错误 更新历史记录
 			$respond['commit_type'] = 2;
-            $respond['message'] = update_historay($_id, $_COOKIE["user_uid"], $_POST["text"], $_landmark);
+            $respond['message'] = update_historay($_id, $_COOKIE["userid"], $_POST["text"], $_landmark);
             if ($respond['message'] !== "") {
                 $respond['status'] = 1;
                 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -262,7 +262,7 @@ if ($_id == false) {
 							$_POST["channal"],
 							"",
 							"[]",
-							$_COOKIE["user_uid"],
+							$_COOKIE["userid"],
 							$_POST["text"],
 							$text_lang,
 							1,

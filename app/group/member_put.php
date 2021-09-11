@@ -4,11 +4,11 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond = array("status" => 0, "message" => "");
-if (isset($_COOKIE["user_uid"]) && isset($_POST["groupid"])) {
+if (isset($_COOKIE["userid"]) && isset($_POST["groupid"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
     #TODO 先查是否有加人权限
     $query = "SELECT power from group_member where user_id=? and group_id=? ";
-    $power = PDO_FetchRow($query, array($_COOKIE["user_uid"], $_POST["groupid"]));
+    $power = PDO_FetchRow($query, array($_COOKIE["userid"], $_POST["groupid"]));
     if ($power) {
         if ($power["power"] > 1) {
             $respond['status'] = 1;

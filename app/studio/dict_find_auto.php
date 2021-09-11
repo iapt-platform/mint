@@ -98,7 +98,7 @@ array_push($db_file_list, array(_DIR_DICT_3RD_ . "/concise.db", ""));
 array_push($db_file_list, array(_DIR_DICT_3RD_ . "/uhan_en.db", ""));
 */
 
-$db_file_list[] = array("","wbwdict://new/".$_COOKIE["user_uid"],true);	
+$db_file_list[] = array("","wbwdict://new/".$_COOKIE["userid"],true);	
 $db_file_list[] = array(_FILE_DB_TERM_,"dict://term",true);	
 $db_file_list[] = array(_FILE_DB_WBW1_,"dict://user",true);
 

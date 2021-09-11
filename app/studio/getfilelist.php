@@ -31,8 +31,8 @@ if (isset($_GET["order"])) {
     $order = "desc";
 }
 
-if ($_COOKIE["user_id"]) {
-    $uid = $_COOKIE["user_id"];
+if ($_COOKIE["uid"]) {
+    $uid = $_COOKIE["uid"];
 } else {
     echo "尚未登录";
     exit;

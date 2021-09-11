@@ -66,7 +66,7 @@ require_once '../public/function.php';
 </head>
 <body class="reader_body" >
 <?php
-if(!isset($_COOKIE["user_uid"])){
+if(!isset($_COOKIE["userid"])){
     echo "请您先登陆";
     exit;
 }

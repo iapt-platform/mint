@@ -40,8 +40,8 @@ if (isset($_POST["paragraph"])) {
 } else {
     $para = 0;
 }
-if (isset($_COOKIE["user_id"]) ) {
-    $uid = $_COOKIE["user_id"];
+if (isset($_COOKIE["uid"]) ) {
+    $uid = $_COOKIE["uid"];
     $username = $_COOKIE["username"];
 } else {
     echo "not login";

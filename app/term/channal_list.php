@@ -41,11 +41,11 @@ $channal = array();
 #查询有阅读权限的channel
 $channal_list = array();
 $channel_power=array();
-if (isset($_COOKIE["user_uid"])) {
+if (isset($_COOKIE["userid"])) {
 	//找自己的
     PDO_Connect(_FILE_DB_CHANNAL_);
     $query = "SELECT id from channal where owner = ? and status >0   limit 0,100";
-    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
+    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
 		$channal_list[] = $value["id"];
@@ -56,7 +56,7 @@ if (isset($_COOKIE["user_uid"])) {
 	$timeStart = $time;
 
 	# 找协作的
-	$coop_channal =  share_res_list_get($_COOKIE["user_uid"],2);
+	$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
 	foreach ($coop_channal as $key => $value) {
 		# return res_id,res_type,power res_title  res_owner_id
 		$channal_list[] = $value["res_id"];

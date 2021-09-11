@@ -78,7 +78,7 @@ PDO_Connect(_FILE_DB_TERM_);
 
 $query = "select count(*) as co  from term where owner= ? ";
 
-$allWord = PDO_FetchOne($query, array($_COOKIE["user_uid"]));
+$allWord = PDO_FetchOne($query, array($_COOKIE["userid"]));
 $iCountWords = $allWord;
 
 if ($iCountWords == 0) {
@@ -92,7 +92,7 @@ if ($iCountWords == 0) {
     $begin = $iCurrPage * $iOnePage;
 
     $query = "select *  from term where owner= ? ";
-    $allWords = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
+    $allWords = PDO_FetchAll($query, array($_COOKIE["userid"]));
 
     echo '<div id="setting_user_dict_nav">';
 

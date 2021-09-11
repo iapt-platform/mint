@@ -11,7 +11,7 @@ else{
 }
 	
 	//更新点击
-	$dir= $dir_user_base.$_COOKIE["user_uid"];
+	$dir= $dir_user_base.$_COOKIE["userid"];
 	$db_file = $dir.'my_data.db';
 	PDO_Connect("$db_file");
 

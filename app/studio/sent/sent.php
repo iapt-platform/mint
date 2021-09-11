@@ -13,7 +13,7 @@ if (isset($_POST["uid"])) {
     $UID = $_POST["uid"];
 } else {
     if (isset($_COOKIE["username"]) && !empty($_COOKIE["username"])) {
-        $UID = $_COOKIE["user_id"];
+        $UID = $_COOKIE["uid"];
     }
 }
 

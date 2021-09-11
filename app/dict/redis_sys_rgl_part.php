@@ -2,7 +2,7 @@
 require_once "../path.php";
 require_once "../redis/function.php";
 
-if (PHP_SAPI == "cli" || isset($_COOKIE["user_uid"])) 
+if (PHP_SAPI == "cli" || isset($_COOKIE["userid"])) 
 {
 	$redis = redis_connect();
 	if ($redis != false) {

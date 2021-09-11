@@ -9,7 +9,7 @@ require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
 
 $respond=array("status"=>0,"message"=>"");
-if(!isset($_COOKIE["user_uid"])){
+if(!isset($_COOKIE["userid"])){
 	#不登录不能新建
 	$respond['status']=1;
 	$respond['message']="no power create article";
@@ -31,7 +31,7 @@ $uuid = UUID::v4();
 //写入日志
 add_edit_event(_ARTICLE_NEW_,$uuid);
 #新建文章默认私有
-$sth->execute(array($uuid , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["user_uid"] , "{}" , 10 , mTime() ,  mTime() , mTime() ));
+$sth->execute(array($uuid , $_POST["title"] , "" ,"", "" , "" , $_COOKIE["userid"] , "{}" , 10 , mTime() ,  mTime() , mTime() ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

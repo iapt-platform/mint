@@ -27,8 +27,8 @@ require_once "../group/function.php";
 
 $userid = "";
 $isLogin = false;
-if ($_COOKIE["user_uid"]) {
-    $userid = $_COOKIE["user_uid"];
+if ($_COOKIE["userid"]) {
+    $userid = $_COOKIE["userid"];
     $isLogin = true;
 }
 if ($_GET["do"]) {
@@ -58,7 +58,7 @@ $iFetch = count($Fetch);
 if ($iFetch > 0) {
 
     $owner = $Fetch[0]["user_id"];
-    $uid = $_COOKIE["user_id"];
+    $uid = $_COOKIE["uid"];
     if ($owner == $uid) {
         //自己的文档
         switch ($_do) {

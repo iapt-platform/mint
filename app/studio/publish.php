@@ -33,9 +33,9 @@ if (isset($_GET["step"])) {
     $step = $_GET["step"];
 }
 
-if ($_COOKIE["user_id"]) {
-    $userid = $_COOKIE["user_uid"];
-    $uid = $_COOKIE["user_id"];
+if ($_COOKIE["uid"]) {
+    $userid = $_COOKIE["userid"];
+    $uid = $_COOKIE["uid"];
 } else {
     echo "尚未登录";
     exit;

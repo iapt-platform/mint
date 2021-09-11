@@ -3,7 +3,7 @@ require_once '../path.php';
 function get_setting()
 {
 
-    if (!isset($_COOKIE["user_uid"])) {
+    if (!isset($_COOKIE["userid"])) {
         $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
     } else {
         $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
@@ -14,7 +14,7 @@ function get_setting()
 
         $query = "select setting from user where userid = ? ";
         $stmt = $dbh->prepare($query);
-        $stmt->execute(array($_COOKIE["user_uid"]));
+        $stmt->execute(array($_COOKIE["userid"]));
         $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $dbh = null;
         if (isset($fUser[0]["setting"])) {

@@ -71,7 +71,7 @@
 <div class="dropdown" onmouseover="switchMenu(this,'user_info')" onmouseout="hideMenu()">
 
 	<?php
-	if (isset($_COOKIE["user_uid"])) {
+	if (isset($_COOKIE["userid"])) {
 	?>
 		<button class="dropbtn icon_btn" onClick="switchMenu(this,'user_info')" id="use_mode">
 			<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="ic_user_32px">
@@ -93,7 +93,7 @@
 						?>
 					</span>
 				</a>
-				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["user_uid"]; ?>'>
+				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"]; ?>'>
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#my_zone"></use>
 					</svg>

@@ -14,7 +14,7 @@ $respond['begin'] = $_POST["begin"];
 $respond['end'] = $_POST["end"];
 $respond['channal'] = $_POST["channel"];
 $respond['text'] = $_POST["text"];
-$respond['editor'] = $_COOKIE["user_uid"];
+$respond['editor'] = $_COOKIE["userid"];
 $respond['commit_type'] = 1;
 
 $redis = redis_connect();

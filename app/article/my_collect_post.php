@@ -8,7 +8,7 @@ require_once "../redis/function.php";
 
 
 $respond=array("status"=>0,"message"=>"");
-if(!isset($_COOKIE["user_uid"])){
+if(!isset($_COOKIE["userid"])){
 	#不登录不能新建
 	$respond['status']=1;
 	$respond['message']="no power create article";

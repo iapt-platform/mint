@@ -89,7 +89,7 @@ if (isset($_POST["words"])) {
             $userinfo = new UserInfo();
             foreach ($fetch as $key => $value) {
 				# code...
-				if($value["owner"]==$_COOKIE["user_uid"]){
+				if($value["owner"]==$_COOKIE["userid"]){
 					$fetch[$key]["readonly"]=false;
 				}
 				else{

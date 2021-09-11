@@ -98,7 +98,7 @@ if (count($aData) > 0) {
 									"my",
 									"none"
 					);
-					$redis->hSet("wbwdict://new/".$_COOKIE["user_uid"],$pali,json_encode($newword, JSON_UNESCAPED_UNICODE));
+					$redis->hSet("wbwdict://new/".$_COOKIE["userid"],$pali,json_encode($newword, JSON_UNESCAPED_UNICODE));
 				}
 			}
 
