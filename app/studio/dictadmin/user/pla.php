@@ -442,6 +442,43 @@ define('VERSION_CHECK_URL','https://www.phpliteadmin.org/current_version.php');
 define('PROJECT_BUGTRACKER_LINK','<a href="https://bitbucket.org/phpliteadmin/public/issues?status=new&status=open" target="_blank">https://bitbucket.org/phpliteadmin/public/issues?status=new&status=open</a>');
 define('PROJECT_INSTALL_LINK','<a href="https://bitbucket.org/phpliteadmin/public/wiki/Installation" target="_blank">https://bitbucket.org/phpliteadmin/public/wiki/Installation</a>');
 
+class MicroTimer {
+
+	private $startTime, $stopTime;
+
+	// creates and starts a timer
+	function __construct()
+	{
+		$this->startTime = microtime(true);
+	}
+
+	// stops a timer
+	public function stop()
+	{
+		$this->stopTime = microtime(true);
+	}
+
+	// returns the number of seconds from the timer's creation, or elapsed
+	// between creation and call to ->stop()
+	public function elapsed()
+	{
+		if ($this->stopTime)
+			return round($this->stopTime - $this->startTime, 4);
+
+		return round(microtime(true) - $this->startTime, 4);
+	}
+
+	// called when using a MicroTimer object as a string
+	public function __toString()
+	{
+		return (string) $this->elapsed();
+	}
+
+}
+//	class Resources (issue #157)
+//	outputs secondary files, such as css and javascript
+//	data is stored gzipped (gzencode) and encoded (base64_encode)
+//
 // up here, we don't output anything. debug output might appear here which is catched by ob and thrown later
 ob_start();
 
@@ -486,24 +523,7 @@ if($language != 'en') {
 	unset($temp_lang);
 }
 
-// stripslashes if MAGIC QUOTES is turned on
-// This is only a workaround. Please better turn off magic quotes!
-// This code is from http://php.net/manual/en/security.magicquotes.disabling.php
-if (get_magic_quotes_gpc()) {
-	$process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
-	while (list($key, $val) = each($process)) {
-		foreach ($val as $k => $v) {
-			unset($process[$key][$k]);
-			if (is_array($v)) {
-				$process[$key][stripslashes($k)] = $v;
-				$process[] = &$process[$key][stripslashes($k)];
-			} else {
-				$process[$key][stripslashes($k)] = stripslashes($v);
-			}
-		}
-	}
-	unset($process);
-}
+
 
 
 //data types array
@@ -5986,43 +6006,7 @@ class GetParameters
 }//	class MicroTimer (issue #146)
 //	wraps calls to microtime(), calculating the elapsed time and rounding output
 //
-class MicroTimer {
 
-	private $startTime, $stopTime;
-
-	// creates and starts a timer
-	function __construct()
-	{
-		$this->startTime = microtime(true);
-	}
-
-	// stops a timer
-	public function stop()
-	{
-		$this->stopTime = microtime(true);
-	}
-
-	// returns the number of seconds from the timer's creation, or elapsed
-	// between creation and call to ->stop()
-	public function elapsed()
-	{
-		if ($this->stopTime)
-			return round($this->stopTime - $this->startTime, 4);
-
-		return round(microtime(true) - $this->startTime, 4);
-	}
-
-	// called when using a MicroTimer object as a string
-	public function __toString()
-	{
-		return (string) $this->elapsed();
-	}
-
-}
-//	class Resources (issue #157)
-//	outputs secondary files, such as css and javascript
-//	data is stored gzipped (gzencode) and encoded (base64_encode)
-//
 class Resources {
 
 	// set this to the file containing getInternalResource;
