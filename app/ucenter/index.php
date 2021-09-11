@@ -28,6 +28,9 @@ switch ($op) {
 		setcookie("uid", "", time() - 60, "/");
 		setcookie("username", "", time() - 60, "/");
 		setcookie("userid", "", time() - 60, "/");
+		setcookie("nickname", "", time() - 60, "/");
+		setcookie("email", "", time() - 60, "/");
+
 		break;
     case "new":
 		$host = $_SERVER['HTTP_HOST'];
@@ -152,8 +155,12 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 				}
 				#给js用的
-                setcookie("username", $username, time() + 60 * 60 * 24 * 365, "/");
-                setcookie("userid", $user_uuid, time() + 60 * 60 * 24 * 365, "/");
+				setcookie("uid", $uid, time()+60*60*24*365,"/");
+				setcookie("username", $username, time()+60*60*24*365,"/");
+				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
+				setcookie("nickname", $nickname, time()+60*60*24*365,"/");
+				setcookie("email", $email, time()+60*60*24*365,"/");
+
                 if (isset($_POST["url"])) {
                     $goto_url = $_POST["url"];
                 }
