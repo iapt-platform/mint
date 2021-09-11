@@ -67,7 +67,10 @@ function collect_load(id) {
 							$("#article_subtitle").html(result.subtitle);
 						}
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
-						$("#like_div").html("<like restype='collection' resid='"+id+"'></like>");
+						let htmlLike = "";
+						htmlLike += "<like liketype='like' restype='collection' resid='"+id+"'></like>";
+						htmlLike += "<like liketype='favorite' restype='collection' resid='"+id+"'></like>";
+						$("#like_div").html(htmlLike);
 						$("#summary").html(result.summary);
 						$("#contents").html("<div id='content_text'></div><h3>目录</h3><div id='content_toc'></div>");
 
