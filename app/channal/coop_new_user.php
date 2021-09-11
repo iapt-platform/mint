@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond=array("status"=>0,"message"=>"");
-if(isset($_COOKIE["userid"]) && isset($_POST["channel_id"])){
+if(isset($_COOKIE["user_uid"]) && isset($_POST["channel_id"])){
 	PDO_Connect(""._FILE_DB_CHANNAL_);
 	$query="INSERT INTO cooperation ( channal_id , user_id  ,type  , power  )  
 	VALUES  (  ? , ? , ? , ? ) ";

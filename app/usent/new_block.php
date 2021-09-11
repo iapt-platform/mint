@@ -17,8 +17,8 @@ $query = "INSERT INTO sent_block ('id','book','paragraph','owner','lang','author
 $sth = $PDO->prepare($query);
 
 foreach ($aData as $data) {
-    if (isset($_COOKIE["userid"])) {
-        $userid = $_COOKIE["userid"];
+    if (isset($_COOKIE["user_uid"])) {
+        $userid = $_COOKIE["user_uid"];
     } else {
         $userid = $data->userid;
     }

@@ -90,7 +90,7 @@ foreach ($_para as $key => $para) {
         $block_data = array($block_id,
                                          "",
                                          $_channel,
-                                         $_COOKIE["userid"],
+                                         $_COOKIE["user_uid"],
                                          $_book,
                                          $para,
                                          "",
@@ -172,7 +172,7 @@ foreach ($_para as $key => $para) {
                                               mTime(),
                                               mTime(),
                                               1,
-                                              $_COOKIE["userid"]
+                                              $_COOKIE["user_uid"]
                                             );
         }
                 

@@ -4,15 +4,15 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond = array("status" => 0, "message" => "");
-if (isset($_COOKIE["userid"]) && isset($_POST["groupid"])) {
+if (isset($_COOKIE["user_uid"]) && isset($_POST["groupid"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
     #TODO 先查是否有删除权限
     $query = "SELECT parent from group_info where id=? and owner=? ";
-    $gInfo = PDO_FetchRow($query, array($_POST["groupid"], $_COOKIE["userid"]));
+    $gInfo = PDO_FetchRow($query, array($_POST["groupid"], $_COOKIE["user_uid"]));
     if ($gInfo) {
         #删除group info
         $query = "DELETE from group_info where id=? and owner=? ";
-        PDO_Execute($query, array($_POST["groupid"], $_COOKIE["userid"]));
+        PDO_Execute($query, array($_POST["groupid"], $_COOKIE["user_uid"]));
         #删除 组员
         $query = "DELETE from group_member where group_id=? ";
         PDO_Execute($query, array($_POST["groupid"]));

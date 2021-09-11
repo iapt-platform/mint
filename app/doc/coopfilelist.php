@@ -7,8 +7,8 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../ucenter/function.php";
 
-if($_COOKIE["uid"]){
-	$uid=$_COOKIE["uid"];
+if($_COOKIE["user_id"]){
+	$uid=$_COOKIE["user_id"];
 }
 else{
 	echo "尚未登录";
@@ -17,7 +17,7 @@ else{
 
     PDO_Connect(""._FILE_DB_FILEINDEX_);
     $query = "SELECT * from power where user = ? order by modify_time DESC";
-    $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
+    $Fetch = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
     $result=array();
     foreach($Fetch as $row){
         $query = "SELECT * from fileindex where id = ?  ";

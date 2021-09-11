@@ -11,7 +11,7 @@ $redis = redis_connect();
 $output["status"] = 0;
 $output["error"] = "";
 $output["data"] = "";
-if (!isset($_COOKIE["userid"])) {
+if (!isset($_COOKIE["user_uid"])) {
     $output["status"] = 1;
     $output["error"] = "#not_login";
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
@@ -33,7 +33,7 @@ $channelList = array();
 
 PDO_Connect(_FILE_DB_CHANNAL_);
 $query = "SELECT id FROM channal WHERE owner = ? and status>0 LIMIT 0,100";
-$FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
+$FetchChannal = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
 
 foreach ($FetchChannal as $key => $value) {
 	# code...
@@ -41,7 +41,7 @@ foreach ($FetchChannal as $key => $value) {
 }
 
 # 找协作的
-$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
+$coop_channal =  share_res_list_get($_COOKIE["user_uid"],2);
 foreach ($coop_channal as $key => $value) {
 	# return res_id,res_type,power res_title  res_owner_id
 	if(isset($channelList[$value["res_id"]])){

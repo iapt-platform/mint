@@ -22,8 +22,8 @@ if (isset($_POST["field"])) {
 if (isset($_POST["value"])) {
     $value = $_POST["value"];
 }
-if ($_COOKIE["uid"]) {
-    $uid = $_COOKIE["uid"];
+if ($_COOKIE["user_id"]) {
+    $uid = $_COOKIE["user_id"];
 } else {
     echo "尚未登录";
     exit;

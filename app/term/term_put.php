@@ -30,7 +30,7 @@
 			$parm[]=$_GET["channal"];			
 			$parm[]=$_GET["language"];			
 			$parm[]=$_GET["note"];
-			$parm[]=$_COOKIE["userid"];
+			$parm[]=$_COOKIE["user_uid"];
 			$parm[]=0;
 			$parm[]=mTime();
 			$parm[]=mTime();

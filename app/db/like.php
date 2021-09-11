@@ -25,8 +25,8 @@ class Like extends Table
 	}
 	
 	public function  list(){
-		if(!isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(!isset($_COOKIE["user_uid"])){
+			$userId = $_COOKIE["user_uid"];
 		}
 
 		$json = file_get_contents('php://input');
@@ -39,8 +39,8 @@ class Like extends Table
 											'resource_id'=>$value['resource_id'],
 											  ]);
 		}
-		if(isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(isset($_COOKIE["user_uid"])){
+			$userId = $_COOKIE["user_uid"];
 			foreach ($data as $key => $value) {
 				# code...
 				$data[$key]['me']=$this->medoo->count($this->table,[
@@ -61,12 +61,12 @@ class Like extends Table
 
 
 	public function  create(){
-		if(!isset($_COOKIE["userid"])){
+		if(!isset($_COOKIE["user_uid"])){
 			return;
 		}
 		$json = file_get_contents('php://input');
 		$data = json_decode($json,true);
-		$data["user_id"] = $_COOKIE["userid"];
+		$data["user_id"] = $_COOKIE["user_uid"];
 		$isExist = $this->medoo->has("likes",$data);
 		if(!$isExist){
 			echo json_encode($this->_create($data,["like_type","resource_type","resource_id","user_id"]), JSON_UNESCAPED_UNICODE);
@@ -79,13 +79,13 @@ class Like extends Table
 	}
 	
 	public function  delete(){
-		if(!isset($_COOKIE["userid"])){
+		if(!isset($_COOKIE["user_uid"])){
 			return;
 		}
 		$where["like_type"] = $_GET["like_type"];
 		$where["resource_type"] = $_GET["resource_type"];
 		$where["resource_id"] = $_GET["resource_id"];
-		$where["user_id"] = $_COOKIE["userid"];
+		$where["user_id"] = $_COOKIE["user_uid"];
 		$row = $this->_delete($where);
 		if($row["data"]>0){
 			$this->result["data"] = $where;

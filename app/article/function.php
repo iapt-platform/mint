@@ -73,8 +73,8 @@ class Article extends Table
 
 	public function getPower($id,$collectionId=""){
 		#查询用户对此是否有权限	
-		if(isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(isset($_COOKIE["user_uid"])){
+			$userId = $_COOKIE["user_uid"];
 		}
 		else{
 			$userId=0;
@@ -91,7 +91,7 @@ class Article extends Table
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
-			if(!isset($_COOKIE["userid"])){
+			if(!isset($_COOKIE["user_uid"])){
 				#未登录用户
 				if($channel["status"]==30){
 					#全网公开有读取和建议权限
@@ -103,7 +103,7 @@ class Article extends Table
 				}
 			}
 			else{
-				if($channel["owner"]==$_COOKIE["userid"]){
+				if($channel["owner"]==$_COOKIE["user_uid"]){
 					#自己的
 					return 30;
 				}
@@ -114,9 +114,9 @@ class Article extends Table
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
-		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		$sharePower = share_get_res_power($_COOKIE["user_uid"],$id);
 		if($collectionId!=""){
-			$sharePowerCollection = share_get_res_power($_COOKIE["userid"],$collectionId);
+			$sharePowerCollection = share_get_res_power($_COOKIE["user_uid"],$collectionId);
 		}
 		else{
 			$sharePowerCollection =0;
@@ -128,7 +128,7 @@ class Article extends Table
 			$iPower=$sharePowerCollection;
 		}
 		if($this->redis!==false){
-			$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+			$this->redis->hSet("power://article/".$id,$_COOKIE["user_uid"],$iPower);
 		}
 		return $iPower;
 	}

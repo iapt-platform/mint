@@ -3,7 +3,7 @@ include("../public/config.php");
 
 $USER_ID = "";
 if(isset($_COOKIE["username"]) && !empty($_COOKIE["username"])){
- $USER_ID = $_COOKIE["userid"];
+ $USER_ID = $_COOKIE["user_uid"];
 }
 
 if($USER_ID!=""){

@@ -15,8 +15,8 @@ require_once '../studio/index_tool_bar.php';
 
 echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
-if ($_COOKIE["uid"]) {
-    $uid = $_COOKIE["uid"];
+if ($_COOKIE["user_id"]) {
+    $uid = $_COOKIE["user_id"];
 } else {
     echo "尚未登录";
     echo "<h3><a href='../ucenter/index.php?op=login'>登录</a>后才可以打开文档 </h3>";
@@ -43,7 +43,7 @@ if (isset($_GET["channel"]) == false) {
     echo "<form action='fork.php' method='get'>";
     echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
     PDO_Connect("" . _FILE_DB_CHANNAL_);
-    $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
+    $query = "select * from channal where owner = '{$_COOKIE["user_uid"]}'   limit 0,100";
     $Fetch = PDO_FetchAll($query);
     $i = 0;
     foreach ($Fetch as $row) {
@@ -187,7 +187,7 @@ if (isset($_GET["channel"]) == false) {
                                             $fBlock[0]["id"],
                                             $fBlock[0]["book"],
                                             $fBlock[0]["paragraph"],
-                                            $_COOKIE["userid"],
+                                            $_COOKIE["user_uid"],
                                             $fBlock[0]["lang"],
                                             $fBlock[0]["author"],
                                             $fBlock[0]["editor"],
@@ -213,7 +213,7 @@ if (isset($_GET["channel"]) == false) {
                                             $value["channal"],
                                             $value["tag"],
                                             $value["author"],
-                                            $_COOKIE["userid"],
+                                            $_COOKIE["user_uid"],
                                             $value["text"],
                                             $value["language"],
                                             $value["ver"],
@@ -246,7 +246,7 @@ if (isset($_GET["channel"]) == false) {
                                         array($newBlockId,
                                             $fBlock[0]["id"],
                                             $_GET["channel"],
-                                            $_COOKIE["userid"],
+                                            $_COOKIE["user_uid"],
                                             $fBlock[0]["book"],
                                             $fBlock[0]["paragraph"],
                                             $fBlock[0]["style"],
@@ -273,7 +273,7 @@ if (isset($_GET["channel"]) == false) {
                                             mTime(),
                                             mTime(),
                                             $value["status"],
-                                            $_COOKIE["userid"],
+                                            $_COOKIE["user_uid"],
                                         ));
 
                                 }
@@ -400,7 +400,7 @@ if (isset($_GET["channel"]) == false) {
                     $newDocInfo = $orgFileInfo;
                     $newDocInfo["id"] = $newDocId;
                     $newDocInfo["parent_id"] = $orgFileInfo["id"];
-                    $newDocInfo["user_id"] = $_COOKIE["uid"];
+                    $newDocInfo["user_id"] = $_COOKIE["user_id"];
                     $newDocInfo["doc_block"] = json_encode($newDocBlockList, JSON_UNESCAPED_UNICODE);
                     $newData = array($newDocInfo["id"],
                         $newDocInfo["parent_id"],

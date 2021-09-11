@@ -97,7 +97,7 @@ switch ($op) {
     case "my":
         {
             $query = "select guid,word,meaning,other_meaning,language from term  where owner= ? ";
-            $Fetch = PDO_FetchAll($query, array($_COOKIE["userid"]));
+            $Fetch = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
                 echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
@@ -150,7 +150,7 @@ switch ($op) {
             //查本人数据
             echo "<div></div>"; //My Term
             $query = "select * from term  where word = ? AND  owner = ? limit 0,30";
-            $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["userid"]));
+            $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["user_uid"]));
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
                 for ($i = 0; $i < $iFetch; $i++) {
@@ -237,7 +237,7 @@ switch ($op) {
             //查他人数据
             $query = "SELECT * FROM term  WHERE word = ? AND owner <> ? LIMIT 0,30";
 
-            $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["userid"]));
+            $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["user_uid"]));
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
                 for ($i = 0; $i < $iFetch; $i++) {

@@ -103,16 +103,16 @@
 					</li>
 					<li>
 					<?php 
-						if(isset($_GET["userid"]) && isset($_COOKIE["userid"]) ){
-							if($_COOKIE["userid"]==$_GET["userid"]){
+						if(isset($_GET["userid"]) && isset($_COOKIE["user_uid"]) ){
+							if($_COOKIE["user_uid"]==$_GET["userid"]){
 								$id = $_GET["userid"];
 							}
 							else{
 								$id=false;
 							}
 						}
-						else if(isset($_COOKIE["userid"])){
-							$id=$_COOKIE["userid"];
+						else if(isset($_COOKIE["user_uid"])){
+							$id=$_COOKIE["user_uid"];
 						}
 						else{
 							$id = false;

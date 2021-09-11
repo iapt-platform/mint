@@ -2,7 +2,7 @@
 require_once '../path.php';
 require_once "../public/load_lang.php";
 
-if (!isset($_COOKIE["userid"])) {
+if (!isset($_COOKIE["user_uid"])) {
     echo "尚未登陆<a href='index.php'>登陆</a>";
 } else {
     if (isset($_POST["pwd_set"])) {
@@ -12,7 +12,7 @@ if (!isset($_COOKIE["userid"])) {
             $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
             $query = "UPDATE user SET password = ? WHERE userid = ? ";
             $stmt = $PDO->prepare($query);
-            $stmt->execute(array($md5_password, $_COOKIE["userid"]));
+            $stmt->execute(array($md5_password, $_COOKIE["user_uid"]));
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                 $error = $PDO->errorInfo();
                 echo "修改密码失败。错误信息：$error";

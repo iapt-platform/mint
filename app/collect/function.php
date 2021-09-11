@@ -72,8 +72,8 @@ class CollectInfo
 
 	public function getPower($id){
 		#查询用户对此是否有权限	
-		if(isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(isset($_COOKIE["user_uid"])){
+			$userId = $_COOKIE["user_uid"];
 		}
 		else{
 			$userId='0';
@@ -90,7 +90,7 @@ class CollectInfo
 		$stmt->execute(array($id));
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($result){
-			if(!isset($_COOKIE["userid"])){
+			if(!isset($_COOKIE["user_uid"])){
 				#未登录用户
 				if($result["status"]==30){
 					#全网公开有读取和建议权限
@@ -102,7 +102,7 @@ class CollectInfo
 				}
 			}
 			else{
-				if($result["owner"]==$_COOKIE["userid"]){
+				if($result["owner"]==$_COOKIE["user_uid"]){
 					#自己的
 					return 30;
 				}
@@ -217,7 +217,7 @@ class CollectInfo
 						$newData["owner"]=$data["owner"];
 					}
 					else{
-						$newData["owner"]=$_COOKIE["userid"];
+						$newData["owner"]=$_COOKIE["user_uid"];
 					}	
 					if(isset($data["lang"])){
 						$newData["lang"]=$data["lang"];

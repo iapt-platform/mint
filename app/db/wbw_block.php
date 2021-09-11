@@ -16,7 +16,7 @@ class WbwBlock extends Table
 		$row = $this->fetch($query,array($blockId));
 		if($row ){
 			if(empty($row["channal"])){
-				if($row["owner"]==$_COOKIE["userid"]){
+				if($row["owner"]==$_COOKIE["user_uid"]){
 					$power = 30;
 				}
 			}

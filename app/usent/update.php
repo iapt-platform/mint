@@ -10,7 +10,7 @@ require_once "../channal/function.php";
 require_once "../ucenter/active.php";
 
 #检查是否登陆
-if (!isset($_COOKIE["userid"])) {
+if (!isset($_COOKIE["user_uid"])) {
     $respond["status"] = 1;
     $respond["message"] = 'not login';
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -83,7 +83,7 @@ if (count($oldList) > 0) {
     } else {
         #没错误 添加log 更新历史记录
         foreach ($oldList as $data) {
-            $respond['message'] = update_historay($data["id"], $_COOKIE["userid"], $data["text"], $_landmark);
+            $respond['message'] = update_historay($data["id"], $_COOKIE["user_uid"], $data["text"], $_landmark);
             if ($respond['message'] !== "") {
                 $respond['status'] = 1;
                 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -154,7 +154,7 @@ if (count($newList) > 0) {
             $data["channal"],
             isset($data["tag"]) ? $data["tag"] : "",
             $data["author"],
-            $_COOKIE["userid"],
+            $_COOKIE["user_uid"],
             $data["text"],
             $lang,
             1,

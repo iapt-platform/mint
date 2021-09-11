@@ -10,7 +10,7 @@ function add_edit_event($type = 0, $data = null)
     define("MAX_INTERVAL", 600000);
     define("MIN_INTERVAL", 60000);
 
-    if (isset($_COOKIE["userid"])) {
+    if (isset($_COOKIE["user_uid"])) {
         $dns = "" . _FILE_DB_USER_ACTIVE_;
         $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -18,7 +18,7 @@ function add_edit_event($type = 0, $data = null)
         // 查询上次编辑活跃结束时间
         $query = "SELECT id, end, start,hit  FROM edit WHERE user_id = ? order by end DESC";
         $stmt = $dbh->prepare($query);
-        $stmt->execute(array($_COOKIE["userid"]));
+        $stmt->execute(array($_COOKIE["user_uid"]));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $new_record = false;
         $currTime = mTime();
@@ -53,7 +53,7 @@ function add_edit_event($type = 0, $data = null)
             $query = "INSERT INTO edit ( user_id, start , end  , duration , hit , timezone )  VALUES  ( ? , ? , ? , ? , ? ,?) ";
             $sth = $dbh->prepare($query);
             #最小思考时间
-            $sth->execute(array($_COOKIE["userid"], ($currTime - MIN_INTERVAL), $currTime, MIN_INTERVAL, 1, $client_timezone));
+            $sth->execute(array($_COOKIE["user_uid"], ($currTime - MIN_INTERVAL), $currTime, MIN_INTERVAL, 1, $client_timezone));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
@@ -78,7 +78,7 @@ function add_edit_event($type = 0, $data = null)
         #查询是否存在
         $query = "SELECT id,duration,hit  FROM active_index WHERE user_id = ? and date = ?";
         $sth = $dbh->prepare($query);
-        $sth->execute(array($_COOKIE["userid"], $client_date));
+        $sth->execute(array($_COOKIE["user_uid"], $client_date));
         $row = $sth->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             #更新
@@ -97,7 +97,7 @@ function add_edit_event($type = 0, $data = null)
             $query = "INSERT INTO active_index ( user_id, date , duration , hit )  VALUES  ( ? , ? , ? , ?  ) ";
             $sth = $dbh->prepare($query);
             #最小思考时间
-            $sth->execute(array($_COOKIE["userid"], $client_date, MIN_INTERVAL, 1));
+            $sth->execute(array($_COOKIE["user_uid"], $client_date, MIN_INTERVAL, 1));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
@@ -112,7 +112,7 @@ function add_edit_event($type = 0, $data = null)
 
             $query = "INSERT INTO log ( user_id, active , content , time , timezone )  VALUES  ( ? , ? , ? , ? ,? ) ";
             $sth = $dbh_log->prepare($query);
-            $sth->execute(array($_COOKIE["uid"], $type, $data, $currTime, $client_timezone));
+            $sth->execute(array($_COOKIE["user_id"], $type, $data, $currTime, $client_timezone));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }

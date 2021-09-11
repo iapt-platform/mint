@@ -42,7 +42,7 @@ echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
 echo "<div>";
 PDO_Connect(""._FILE_DB_CHANNAL_);
 $query = "SELECT * from channal where owner = ?   limit 0,100";
-$Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
+$Fetch = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
 $i=0;
 foreach($Fetch as $row){
     echo '<div class="file_list_row" style="padding:5px;">';

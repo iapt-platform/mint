@@ -6,8 +6,8 @@ require_once "../public/function.php";
 $output = array();
 if (isset($_GET["userid"])) {
     $userid = $_GET["userid"];
-} else if (isset($_COOKIE["userid"])) {
-    $userid = $_COOKIE["userid"];
+} else if (isset($_COOKIE["user_uid"])) {
+    $userid = $_COOKIE["user_uid"];
 } else {
     exit;
 }

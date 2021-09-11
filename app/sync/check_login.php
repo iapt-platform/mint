@@ -15,7 +15,7 @@ if(!isset($_COOKIE["sync_userid"])){
 	</div>
 	<h3>用户名：<?php echo $_COOKIE["username"];?></h3>
 	<div>
-	<input id="userid" type="hidden" name="userid"  value="<?php echo $_COOKIE["userid"];?>" style="width:30em;" />
+	<input id="userid" type="hidden" name="userid"  value="<?php echo $_COOKIE["user_uid"];?>" style="width:30em;" />
 	
 	<input id="password" type="password" name="password" placeholder="password" value="" style="width:30em;" />
 	<br>

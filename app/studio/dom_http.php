@@ -19,13 +19,13 @@ if (isset($_POST["xmldata"])) {
 }
 
 PDO_Connect( _FILE_DB_FILEINDEX_);
-$query = "select file_name from fileindex where user_id='{$_COOKIE["uid"]}' AND  id='{$fileid}'";
+$query = "select file_name from fileindex where user_id='{$_COOKIE["user_id"]}' AND  id='{$fileid}'";
 $Fetch = PDO_FetchOne($query);
 $purefilename = $Fetch;
-$FileName = _DIR_USER_DOC_ . "/" . $_COOKIE["userid"] . _DIR_MYDOCUMENT_ . "/" . $Fetch;
+$FileName = _DIR_USER_DOC_ . "/" . $_COOKIE["user_uid"] . _DIR_MYDOCUMENT_ . "/" . $Fetch;
 
-if ($_COOKIE["uid"]) {
-    $uid = $_COOKIE["uid"];
+if ($_COOKIE["user_id"]) {
+    $uid = $_COOKIE["user_id"];
 } else {
     echo "尚未登录";
     exit;

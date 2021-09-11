@@ -28,7 +28,7 @@ function user_db_is_exist()
 }
 
 if (user_db_is_exist()) {
-    if (!isset($_COOKIE["userid"])) {
+    if (!isset($_COOKIE["user_uid"])) {
         echo "请登陆后执行此操作";
         exit;
     }

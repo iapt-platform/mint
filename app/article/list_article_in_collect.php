@@ -22,7 +22,7 @@ if(isset($_GET["id"])){
     $output["exist"] = $exist;
 
     $query = "SELECT id,title from collect  where owner = ? AND status <> 0 order by modify_time DESC limit 0,15";
-    $others = PDO_FetchAll($query,array($_COOKIE["userid"])); 
+    $others = PDO_FetchAll($query,array($_COOKIE["user_uid"])); 
     foreach ($others as $key => $value) {
         # remove exist record
         if(!isset($exist_id[$value["id"]])){

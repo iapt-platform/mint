@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond = array("status" => 0, "message" => "");
-if (!isset($_COOKIE["userid"])) {
+if (!isset($_COOKIE["user_uid"])) {
     $respond['status'] = 1;
     $respond['message'] = "尚未登录";
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
@@ -18,13 +18,13 @@ if (isset($_POST["groupid"])) {
     $fc = PDO_FetchRow($query, array($_POST["groupid"]));
     if ($fc) {
         if ($fc["parent"] == 0) {
-            if ($fc["owner"] == $_COOKIE["userid"]) {
+            if ($fc["owner"] == $_COOKIE["user_uid"]) {
                 $mypower = 0;
             }
         } else {
             $query = "SELECT owner  from group_info where id=?";
             $g_parent = PDO_FetchRow($query, array($fc["parent"]));
-            if ($g_parent && $g_parent["owner"] == $_COOKIE["userid"]) {
+            if ($g_parent && $g_parent["owner"] == $_COOKIE["user_uid"]) {
                 $mypower = 0;
             }
         }
@@ -32,7 +32,7 @@ if (isset($_POST["groupid"])) {
     if ($mypower != 0) {
         #非拥有者，看看是不是管理员
         $query = "SELECT power from group_member where user_id=? and group_id=? ";
-        $power = PDO_FetchRow($query, array($_COOKIE["userid"], $_POST["groupid"]));
+        $power = PDO_FetchRow($query, array($_COOKIE["user_uid"], $_POST["groupid"]));
         if ($power) {
             $mypower = (int) $power["power"];
         }

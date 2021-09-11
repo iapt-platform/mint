@@ -19,8 +19,8 @@ foreach ($result as $key => $value) {
 	$result[$key]["para"]=$value["paragraph"];
 	$result[$key]["channalinfo"] = $channel_info->getChannal($value["channel"]);
 	$result[$key]["mypower"] = $channel_info->getPower($value["channel"]);
-	if(isset($_COOKIE["userid"])){
-		if($value["editor"]==$_COOKIE["userid"]){
+	if(isset($_COOKIE["user_uid"])){
+		if($value["editor"]==$_COOKIE["user_uid"]){
 			$result[$key]["is_pr_editor"] =true;
 		}
 		else{

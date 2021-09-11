@@ -27,7 +27,7 @@ $timezone = $_POST["lesson_timezone"];
 $datatime = ($data+$time+$timezone*60)*1000;
 $duration = strtotime($_POST["duration"]) - strtotime("today");
 
-$sth->execute(array(UUID::v4(), $_POST["course_id"] , $_POST["live"] , $_POST["replay"] ,$_POST["title"] , $_POST["subtitle"]  , $datatime  , $duration  , $_COOKIE["userid"] , $_POST["tag"] ,$_POST["summary"] , 1, $_POST["cover"] ,$_POST["teacher"] , $_POST["attachment"] , $_POST["lang"] , $_POST["speech_lang"] ,mTime() , mTime() ,  mTime() ));
+$sth->execute(array(UUID::v4(), $_POST["course_id"] , $_POST["live"] , $_POST["replay"] ,$_POST["title"] , $_POST["subtitle"]  , $datatime  , $duration  , $_COOKIE["user_uid"] , $_POST["tag"] ,$_POST["summary"] , 1, $_POST["cover"] ,$_POST["teacher"] , $_POST["attachment"] , $_POST["lang"] , $_POST["speech_lang"] ,mTime() , mTime() ,  mTime() ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

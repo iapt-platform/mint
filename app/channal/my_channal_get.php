@@ -36,7 +36,7 @@ if(isset($_GET["id"])){
 else{
     PDO_Connect(""._FILE_DB_CHANNAL_);
     $query = "SELECT * FROM channal  WHERE owner = ? ";
-    $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
+    $Fetch = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
     echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 }
 
