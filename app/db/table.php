@@ -75,7 +75,7 @@ class Table
 			$where
 		);
 
-		return $this->result;
+		return true;
 	}
 
 	public function _show($columns,$id){
