@@ -14,13 +14,14 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 /*
-CREATE TABLE likes (
+CREATE TABLE users (
     id            INTEGER      PRIMARY KEY AUTOINCREMENT,
     like_type     VARCHAR (16) NOT NULL,
     resource_type VARCHAR (32) NOT NULL,
     resource_id   CHAR (36)    NOT NULL,
     user_id       INTEGER      NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     NOT NULL //只做初始化,更新时不自动更新
+    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL //自动更新
 );
 */
 class User extends Table
