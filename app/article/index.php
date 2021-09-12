@@ -9,6 +9,8 @@ require_once "../pcdl/html_head.php";
 	<script  src="./article.js"></script>
 
 	<script src="../widget/like.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
+
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
 
@@ -130,14 +132,7 @@ span.fancytree-node{
 	max-height: 25vw;
     width: max-content;
 }
-like{
-    min-width: 40px;
-    border: 1px solid var(--border-line-color);
-    display: inline-block;
-    border-radius: 5px;
-    margin: 5px;
-    cursor: pointer;
-}
+
 </style>
 
 <?php

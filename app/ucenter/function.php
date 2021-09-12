@@ -44,7 +44,7 @@ class UserInfo
     private $buffer;
     public function __construct()
     {
-        $dns = "" . _FILE_DB_USERINFO_;
+        $dns = _FILE_DB_USERINFO_;
         $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $buffer = array();
@@ -73,6 +73,23 @@ class UserInfo
         } else {
             $buffer[$id] = array("nickname" => "", "username" => "");
             return $buffer[$id];
+        }
+	}
+	public function getId($uuid)
+    {
+        if (empty($uuid)) {
+            return 0;
+        }
+        if ($this->dbh) {
+            $query = "SELECT id FROM user WHERE  userid= ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($uuid));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                return $user["id"];
+            }
+        } else {
+            return 0;
         }
 	}
 	public function check_password($userid,$password){

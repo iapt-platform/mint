@@ -129,49 +129,7 @@ function group_list(id, list) {
 								result.parent.name +
 								"</a> "
 						);
-					} else {
-						/*
-						关闭子小组功能
-						if (result.info.owner == getCookie("userid")) {
-							$("#button_new_sub_group").show();
-						}
-						//子小组列表
-						html += "<div class='info_block'>";
-						html += "<h2>" + gLocal.gui.sub_group + "</h2>";
-						if (result.children && result.children.length > 0) {
-							for (const iterator of result.children) {
-								html += '<div class="file_list_row" style="padding:5px;">';
-								html += "<div style='flex:1;'>" + key++ + "</div>";
-								html += "<div style='flex:2;'>" + iterator.name + "</div>";
-								html += "<div style='flex:2;'>";
-								if (iterator.owner == getCookie("userid")) {
-									html += gLocal.gui.owner;
-								}
-								html += "</div>";
-								html +=
-									"<div style='flex:1;'><a href='../group/index.php?id=" +
-									iterator.id +
-									"&list=file'>" +
-									gLocal.gui.enter +
-									"</a></div>";
-								html += "<div style='flex:1;'><div class='hover_button'>";
-								if (iterator.owner == getCookie("userid")) {
-									html +=
-										"<button onclick=\"group_del('" +
-										iterator.id +
-										"')\">" +
-										gLocal.gui.delete +
-										"</button>";
-								}
-								html += "</div></div>";
-								html += "</div>";
-							}
-						} else {
-							html += "尚未设置小组";
-						}
-						html += "</div>";
-*/
-					}
+					} 
 
 					//共享文件列表
 					key = 1;

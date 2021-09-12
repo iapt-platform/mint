@@ -1,13 +1,13 @@
 <?php
 require_once "../redis/function.php";
-/*
+
 // Require Composer's autoloader.
 require '../../vendor/autoload.php';
  
 // Using Medoo namespace.
 use Medoo\Medoo;
 
-*/
+
 class Table
 {
     protected $dbh;
@@ -21,7 +21,6 @@ class Table
     function __construct($db,$table,$user="",$password="",$redis=false) {
         $this->dbh = new PDO($db, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		/*
 		$database = new Medoo([
 			// Initialized and connected PDO object.
 			'pdo' => $this->dbh,
@@ -31,7 +30,7 @@ class Table
 		]);
 		
 		$this->medoo = $database;
-		*/
+		
 		$this->redis = $redis;
 		$this->table = $table;
 		$this->result = ["ok"=>true,"message"=>"","data"=>array()];
@@ -52,14 +51,13 @@ class Table
 			# code...
 			$updateDate[$value] = $data[$value];
 		}
-		$updateDate["created_at"] = mTime();
 		$this->medoo->insert(
 			$this->table,
 			$updateDate
 		);
 
-		$newId = $database->id;
-		$this->result["data"] = $newId;
+		$updateDate["id"] = $this->medoo->id();
+		$this->result["data"] = $updateDate;
 		return $this->result;
 	}
 	public function _update($data,$columns,$where=null){
@@ -67,7 +65,6 @@ class Table
 			# code...
 			$updateDate[$value] = $data[$value];
 		}
-		$updateDate["updated_at"] = mTime();
 
 		if($where==null){
 			$where = ["id"=>$data["id"]];
@@ -78,7 +75,7 @@ class Table
 			$where
 		);
 
-		return $this->result;
+		return true;
 	}
 
 	public function _show($columns,$id){
@@ -90,6 +87,7 @@ class Table
 		$this->result["data"] = $output;
 		return $this->result;
 	}
+
 
 	public function _deleteId($id){
 		$output = $this->medoo->delete(
@@ -105,6 +103,10 @@ class Table
 			$where
 		);
 		$this->result["data"] = $output->rowCount();
+		if($this->result["data"]==0){
+			$this->result["ok"] = false;
+			$this->result["message"] = ":no delete";
+		}
 		return $this->result;
 	}
 

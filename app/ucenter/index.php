@@ -3,42 +3,57 @@ require_once '../path.php';
 require_once "../public/load_lang.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../redis/function.php";
 
-if (isset($_GET["op"])) {
-    $op = $_GET["op"];
+
+if (isset($_REQUEST["op"])) {
+    $op = $_REQUEST["op"];
 } else {
     $op = "login";
 }
 
 switch ($op) {
     case "login":
-        {
-            if (isset($_GET["url"])) {
-                $goto_url = $_GET["url"];
-            }
-            break;
-        }
+		if (isset($_GET["url"])) {
+			$goto_url = $_GET["url"];
+		}
+		break;
     case "logout":
-        {
-            if (isset($_COOKIE["nickname"])) {
-                $message_comm = $_local->gui->user . " " . $_COOKIE["nickname"] . " " . $_local->gui->loged_out;
-            }
-            setcookie("uid", "", time() - 60, "/");
-            setcookie("username", "", time() - 60, "/");
-            setcookie("userid", "", time() - 60, "/");
-            setcookie("nickname", "", time() - 60, "/");
-            setcookie("email", "", time() - 60, "/");
-            break;
-        }
+		if (isset($_COOKIE["username"])) {
+			$message_comm = $_local->gui->user . " " . $_COOKIE["username"] . " " . $_local->gui->loged_out;
+		}
+		setcookie("user_uid", "", time() - 60, "/");
+		setcookie("user_id", "", time() - 60, "/");
+
+		setcookie("uid", "", time() - 60, "/");
+		setcookie("username", "", time() - 60, "/");
+		setcookie("userid", "", time() - 60, "/");
+		setcookie("nickname", "", time() - 60, "/");
+		setcookie("email", "", time() - 60, "/");
+
+		break;
     case "new":
-        {
-            $host = $_SERVER['HTTP_HOST'];
-            if (strpos($host, "wikipali.org") !== false) {
-                echo "网站正处于开发阶段。目前不支持注册。";
-                exit;
-            }
-            break;
-        }
+		$host = $_SERVER['HTTP_HOST'];
+		//if (strpos($host, "wikipali.org") !== false) 
+		{
+			if(isset($_REQUEST["invite"])){
+				$redis = redis_connect();
+				if ($redis == false) {
+					echo "no redis connect\n";
+					exit;
+				}
+				$code = $redis->exists("invitecode://".$_REQUEST["invite"]);
+				if(!$code){
+					echo "无效的邀请码，或邀请码已经过期。";
+					exit;
+				}
+				$invite_email = $redis->get("invitecode://".$_REQUEST["invite"]);
+			}else{
+				echo "无邀请码";
+				exit;	
+			}
+		}
+		break;
 }
 
 $post_nickname = "";
@@ -46,55 +61,73 @@ $post_username = "";
 $post_password = "";
 $post_email = "";
 if (isset($_POST["op"]) && $_POST["op"] == "new") {
+	PDO_Connect( _FILE_DB_USERINFO_);
+	//建立账号
     $op = "new";
-    $post_username = $_POST["username"];
-    $post_password = $_POST["password"];
-    $post_nickname = $_POST["nickname"];
-    $post_email = $_POST["email"];
+    $post_username = trim($_POST["username"]);
+    $post_password = trim($_POST["password"]);
+    $post_nickname = trim($_POST["nickname"]);
+    $post_email = trim($_POST["email"]);
+	$post_error = false;
     if (empty($post_username)) {
         $error_username = $_local->gui->account . $_local->gui->cannot_empty;
+		$post_error = true;
     }
-    if (empty($post_password)) {
-        $error_password = $_local->gui->password . $_local->gui->cannot_empty;
-    }
-    if (empty($post_nickname)) {
-        $error_nickname = $_local->gui->nick_name . $_local->gui->cannot_empty;
-    }
-    if (!empty($post_username) && !empty($post_password) && !empty($post_nickname)) {
-        $md5_password = md5($post_password);
-        $new_userid = UUID::v4();
-        PDO_Connect("" . _FILE_DB_USERINFO_);
-        $query = "select * from user where \"username\"=" . $PDO->quote($post_username);
-        $Fetch = PDO_FetchAll($query);
-        $iFetch = count($Fetch);
+	else{
+        $query = "select count(*) as co from user where username = ?" ;
+        $iFetch = PDO_FetchOne($query,array($post_username));
         if ($iFetch > 0) { //username is existed
             $error_username = $_local->gui->account_existed;
-        } else {
-            $query = "INSERT INTO user ('id','userid','username','password','nickname','email') VALUES (NULL," . $PDO->quote($new_userid) . "," . $PDO->quote($post_username) . "," . $PDO->quote($md5_password) . "," . $PDO->quote($post_nickname) . "," . $PDO->quote($post_email) . ")";
-            $stmt = @PDO_Execute($query);
-            if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-                $error = PDO_ErrorInfo();
-                $error_comm = $error[2] . "抱歉！请再试一次";
-            } else {
-                //created user recorder
-                $newUserPath = _DIR_USER_DOC_ . '/' . $new_userid;
-                $userDirMyDocument = $newUserPath . _DIR_MYDOCUMENT_;
-                if (!file_exists($newUserPath)) {
-                    if (mkdir($newUserPath)) {
-                        mkdir($userDirMyDocument);
-                    } else {
-                        $error_comm = "建立用户目录失败，请联络网站管理员。";
-                    }
-                }
-                $message_comm = "新账户建立成功";
-                $op = "login";
-                unset($_POST["username"]);
-            }
+			$post_error = true;
         }
-    } else {
+	}
+	if (empty($post_email)) {
+        $error_email = $_local->gui->email . $_local->gui->cannot_empty;
+		$post_error = true;
+    }else{
+		$query = "select count(*) as co from user where email = ?" ;
+		$iFetch = PDO_FetchOne($query,array($post_email));
+		if ($iFetch > 0) { //username is existed
+			$error_email = $_local->gui->email . "已经存在";
+			$post_error = true;
+		} 
+	}
+    if (empty($post_password)) {
+        $error_password = $_local->gui->password . $_local->gui->cannot_empty;
+		$post_error = true;
+    }else{
+		if(strlen($post_password)<6){
+			$error_password = $_local->gui->password . "过短";
+			$post_error = true;
+		}
+	}
+
+    if (empty($post_nickname)) {
+        $error_nickname = $_local->gui->nick_name . $_local->gui->cannot_empty;
+		$post_error = true;
+    }
+
+    if (!$post_error) {
+        $md5_password = md5($post_password);
+        $new_userid = UUID::v4();
+ 
+				$query = "INSERT INTO user ('id','userid','username','password','nickname','email') VALUES (NULL," . $PDO->quote($new_userid) . "," . $PDO->quote($post_username) . "," . $PDO->quote($md5_password) . "," . $PDO->quote($post_nickname) . "," . $PDO->quote($post_email) . ")";
+				$stmt = @PDO_Execute($query);
+				if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+					$error = PDO_ErrorInfo();
+					$error_comm = $error[2] . "系统错误，抱歉！请再试一次";
+				} else {
+					$message_comm = "新账户建立成功";
+					$op = "login";
+					unset($_POST["username"]);
+					//TODO create channel
+					
+					//TODO create studio
+				}
 
     }
 } else {
+	//登录
     if (isset($_POST["username"])) {
         $_username_ok = true;
         if ($_POST["username"] == "") {
@@ -106,28 +139,37 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
             $query = "select * from user where (\"username\"=" . $PDO->quote($_POST["username"]) . " or \"email\"=" . $PDO->quote($_POST["username"]) . " ) and \"password\"=" . $PDO->quote($md5_password);
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
-            if ($iFetch > 0) { //username is exite
+            if ($iFetch > 0) { 
+				//username is exite
                 $uid = $Fetch[0]["id"];
                 $username = $Fetch[0]["username"];
-                $userid = $Fetch[0]["userid"];
+                $user_uuid = $Fetch[0]["userid"];
                 $nickname = $Fetch[0]["nickname"];
                 $email = $Fetch[0]["email"];
-                setcookie("uid", $uid, time() + 60 * 60 * 24 * 365, "/");
-                setcookie("username", $username, time() + 60 * 60 * 24 * 365, "/");
-                setcookie("userid", $userid, time() + 60 * 60 * 24 * 365, "/");
-                setcookie("nickname", $nickname, time() + 60 * 60 * 24 * 365, "/");
-                setcookie("email", $email, time() + 60 * 60 * 24 * 365, "/");
+				$ExpTime = time() + 60 * 60 * 24 * 365;
+				if(empty($_SERVER["HTTPS"])){
+					setcookie("user_uid", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+				}else{
+					setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+				}
+				#给js用的
+				setcookie("uid", $uid, time()+60*60*24*365,"/");
+				setcookie("username", $username, time()+60*60*24*365,"/");
+				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
+				setcookie("nickname", $nickname, time()+60*60*24*365,"/");
+				setcookie("email", $email, time()+60*60*24*365,"/");
+
                 if (isset($_POST["url"])) {
                     $goto_url = $_POST["url"];
                 }
+				#设置新密码
                 if (isset($_COOKIE["url"])) {
                     setcookie("pwd_set", "on", time() + 60, "/");
                 }
-                $newUserPath = _DIR_USER_DOC_ . '/' . $userid . '/';
-                if (!file_exists($newUserPath)) {
-                    echo "error:cannot find user dir:$newUserPath<br/>";
-                }
                 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -135,12 +177,12 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 
 		<title>wikipali starting</title>
 		<?php
-if (isset($goto_url)) {
+		if (isset($goto_url)) {
                     $goto = $goto_url;
                 } else {
                     $goto = "../studio/index.php";
                 }
-                ?>
+            ?>
 		<meta http-equiv="refresh" content="0,<?php echo $goto; ?>"/>
 	</head>
 
@@ -155,13 +197,14 @@ if (isset($goto_url)) {
 
                 exit;
             } else {
+				//用户名不存在
                 $_post_error = $_local->gui->incorrect_ID_PASS;
             }
         }
     }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -319,10 +362,7 @@ require_once '../lang/lang.php';
 		<div id = "login_form_div" class="fun_block" >
 
 		<?php
-$host = $_SERVER['HTTP_HOST'];
-if (strpos($host, "wikipali.org") !== false) {
-    echo "网站正处于开发阶段。目前不支持注册。";
-}
+
 if (isset($error_comm)) {
     echo '<div class="form_error">';
     echo $error_comm;
@@ -344,63 +384,90 @@ if ($op == "new") {
 			<div class="login_form" style="    padding: 3em 0 3em 0;">
 			<form action="index.php" method="post">
 				<div>
-				<div>
-				    <span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name; ?></span>
-					<input type="input" name="nickname" value="<?php echo $nickname; ?>" />
-				</div>
-					<div class="form_help">
-						<?php echo $_local->gui->name_for_show; ?>
-					</div>
 
-					<div id="error_nickname" class="form_error">
-						<?php
-if (isset($error_nickname)) {echo $error_nickname;}
-    ?>
+				<div>
+						<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
+						<input type="input" name="username"  value="<?php echo $post_username; ?>" />
 					</div>
-					<div>
-					<select name="language" style="width: 100%;">
-						<option><?php echo $_local->language->en; ?></option>
-						<option><?php echo $_local->language->zh_cn; ?></option>
-						<option><?php echo $_local->language->zh_tw; ?></option>
-						<option><?php echo $_local->language->my; ?></option>
-						<option><?php echo $_local->language->si; ?></option>
-					</select>
+					<div id="error_username" class="form_error">
+					<?php
+					if (isset($error_username)) {echo $error_username;}
+					?>
+					</div>
+					<div class="form_help">
+						<?php echo $_local->gui->account_demond; ?>
 					</div>
 
 					<div>
 						<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
 						<input type="input" name="email"  value="<?php echo $post_email; ?>" />
-					</div>
-
-					<div>
-						<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
-						<input type="input" name="username"  value="<?php echo $post_username; ?>" />
-					</div>
-
-					<div id="error_username" class="form_error">
+						<div id="error_email" class="form_error">
 						<?php
-if (isset($error_username)) {echo $error_username;}
-    ?>
+						if (isset($error_email)) {echo $error_email;}
+						?>
+						</div>
 					</div>
 
-					<div class="form_help">
-						<?php echo $_local->gui->account_demond; ?>
-					</div>
 					<div>
 						<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-						<input type="password" name="password"  value="<?php echo $post_password; ?>" />
-						<input type="password" name="repassword"  value="<?php echo $post_password; ?>" />
+						<input type="password" name="password" placeholder="密码" value="<?php echo $post_password; ?>" />
+						<input type="password" name="repassword" placeholder="再次输入密码" value="<?php echo $post_password; ?>" />
 					</div>
 					<div class="form_help">
 					<?php echo $_local->gui->password_demond; ?>
 					</div>
-
 					<div id="error_password" class="form_error">
 					<?php
-if (isset($error_password)) {echo $error_password;}
-    ?>
+					if (isset($error_password)) {echo $error_password;}
+					?>
 					</div>
+
+					<div>
+
+						<span id='tip_language' class='viewswitch_on'><?php echo "惯常使用的语言"; ?></span>
+						<select name="language" style="width: 100%;">
+						<?php
+						$currLang = $_COOKIE["language"];
+						$langList = [
+										"en"=>$_local->language->en,
+										"zh-cn"=>$_local->language->zh_cn,
+										"zh-tw"=>$_local->language->zh_tw,
+										"my"=>$_local->language->my,
+										"si"=>$_local->language->si,
+						];
+						foreach ($langList as $key => $value) {
+							# code...
+							if($currLang==$key){
+								$selected = " selected";
+							}else{
+								$selected = "";
+							}
+							echo "<option value='{$key}' {$selected}>{$value}</option>";
+						}
+						?>
+						</select>
+					</div>
+
+					<div>
+						<span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name; ?></span>
+						<input type="input" name="nickname" value="<?php echo $post_nickname; ?>" />
+					</div>
+					<?php
+						if (isset($error_nickname)) {
+							echo '<div id="error_nickname" class="form_error">';
+							echo $error_nickname;
+							echo '</div>';
+						}
+						else{
+							echo '<div class="form_help">';
+							echo $_local->gui->name_for_show;
+							echo '</div>';
+
+						}
+					?>
+
 					<input type="hidden" name="op" value="new" />
+					<input type="hidden" name="invite" value="<?php echo $_REQUEST["invite"]; ?>" />
 				</div>
 				<div id="button_area">
 					<input type="submit" value="<?php echo $_local->gui->continue; ?>" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
@@ -464,7 +531,8 @@ if (isset($goto_url)) {
 				</div>
 				</form>
 			</div>
-			<div id="login_shortcut">
+
+			<div id="login_shortcut" style="display:none;">
 				<button class="form_help"><?php echo $_local->gui->login_with_google; ?>&nbsp;
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#google_logo"></use>
@@ -481,6 +549,7 @@ if (isset($goto_url)) {
 					</svg>
 				</button>
 			</div>
+
 			<?php
 }
 ?>
