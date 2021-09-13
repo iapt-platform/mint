@@ -236,7 +236,7 @@ var char_myn_to_roman_1 = [
 	{ id: "khaၤ", value: "ṅkha" }, //后加
 	{ id: "ghaၤ", value: "ṅgha" }, //后加
 
-	{ id: "aှ္", value: "ha" },
+	{ id: "aှ", value: "ha" },
 	{ id: "aိံ", value: "iṃ" },
 	{ id: "aုံ", value: "uṃ" },
 	{ id: "aော", value: "o" },
