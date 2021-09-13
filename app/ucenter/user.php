@@ -80,7 +80,7 @@
 		<div class="header-dropdown-content right-content" id="user_info">
 			<div id="user_info_welcome">
 				<div id="user_info_welcome1"><?php echo $_local->gui->welcome; ?></div>
-				<div id="user_info_name"><?php echo $_COOKIE["nickname"]; ?></div>
+				<div id="user_info_name"><?php echo urldecode($_COOKIE["nickname"]); ?></div>
 				<div id="user_info_welcome2"><?php echo $_local->gui->to_the_dhamma; ?></div>
 			</div>
 			<div style="padding:10px; white-space:nowrap;">
@@ -93,17 +93,6 @@
 						?>
 					</span>
 				</a>
-				<!--
-				<a href="../sync" target="_blank" >
-					<span>
-						<svg class="icon">
-							<use xlink:href="../studio/svg/icon.svg#ic_autorenew_24px"></use>
-						</svg>
-						<?php echo $_local->gui->sync; //同步数据
-						?>
-					</span>
-				</a>
-				-->
 				<a href='../uhome/index.php?userid=<?php echo $_COOKIE["userid"]; ?>'>
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#my_zone"></use>

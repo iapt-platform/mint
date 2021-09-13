@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-define("Email", ["SMTPDebug"=>SMTP::DEBUG_SERVER,//Enable verbose debug output
+define("Email", ["SMTPDebug"=>SMTP::DEBUG_SERVER,//Enable verbose debug output DEBUG_OFF
 				 "Host"=>"smtp.gmail.com",//Set the SMTP server to send through
 				 "SMTPAuth"=>true,//Enable SMTP authentication
 				 "Username"=>'your@gmail.com',//SMTP username
