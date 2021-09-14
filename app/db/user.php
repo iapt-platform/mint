@@ -171,9 +171,9 @@ class User extends Table
 			if($ok){
 				#send email
 				$resetLink="https://www.wikipali.org/ucenter/reset.php?token=".$resetToken;
-				$resetString="https://www.wikipali.org/ucenter/reset.php?token=".$resetToken;
+				$resetString="https://www.wikipali.org/ucenter/reset.php";
 		
-					// 打开文件并读取数据
+				// 打开文件并读取数据
 				$irow=0;
 				$strSubject = "";
 				$strBody = "";
@@ -195,8 +195,8 @@ class User extends Table
 					return;
 				}
 		
-				$strBody = str_replace("%resetLink%",$resetLink,$strBody);
-				$strBody = str_replace("%resetString%",$resetString,$strBody);
+				$strBody = str_replace("%ResetLink%",$resetLink,$strBody);
+				$strBody = str_replace("%ResetString%",$resetString,$strBody);
 		
 				//TODO sendmail
 		
