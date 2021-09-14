@@ -1,8 +1,14 @@
 <?php
-#忘记
+#重置密码
 require_once '../path.php';
 require_once "../public/load_lang.php";
 require_once "../public/function.php";
+
+
+if (!isset($_GET["token"])) {
+    
+}
+
 
 ?>
 
@@ -159,52 +165,72 @@ require_once "../public/function.php";
 		<div id = "login_form_div" class="fun_block" >
 
 			<div class="title">
-			忘记密码？
+			重置密码
 			</div>
 			<div class="login_new">
 				<span class="form_help"><?php echo $_local->gui->have_account; ?> ？</span><a href="index.php?language=<?php echo $currLanguage; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_local->gui->login; //登入账户 ?></a>
 			</div>
+			<?php
+			if (!isset($_GET["token"])) {
+				echo '<div class="form_error">';
+				echo "无效的密钥";
+				echo '</div>';
+			}else{
+				?>
 
 			<div class="login_form" style="    padding: 3em 0 3em 0;">
-			<div class="form_help">
-				我们将向您的注册邮箱发送电子邮件。里面包含了重置密码链接。点击链接后按照提示操作，重置账户密码。
-			</div>
-			<div class="form_help" id="message"> </div>			
-				<form action="../api/user.php" method="get">
+			<div class="form_help" id="message"> </div>	
+				<form action="index.php" method="post">
 					<div>
 						<div>
-							<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
-							<input id="form_email" type="input" name="email"  value="" />
+							<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
+							<input type="input" id="username" name="username"  value="" />
 						</div>
-						<div id="error_email" class="form_error"> </div>
+						<div id="error_username" class="form_error"> </div>
 						<div class="form_help"></div>
 					</div>
 
-					<input type="hidden" name="_method" value="reset_email" />
+					<div>
+						<div>
+							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
+							<input type="password" id="password" name="password" placeholder="密码" value="" />
+							<input type="password" id="repassword" name="repassword" placeholder="再次输入密码" value="" />
+						</div>
+						<div class="form_help">至少6个字符</div>
+						<div id="error_password" class="form_error"></div>
+					</div>
 
-
+					<input type="hidden"  id="token" name="token" value="<?php echo $_REQUEST["token"]; ?>" />
 				</form>
 				<div id="button_area">
 					<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
 					<?php echo $_local->gui->continue; ?>
 					</button>
-				</div>				
+				</div>	
 			</div>
+			<?php
+			}
+			?>
 		</div>
 	</div>
 </div>
 
 	<script>
 	login_init();
-	
+
 	function submit(){
-			$.getJSON(
-		"../api/user.php",
-		{
-			_method:"reset_email",
-			email:$("#form_email").val()
-		}
-	).done(function (data) {
+		$.ajax({
+			type: 'POST',
+			url:"../api/user.php?_method=reset_pwd",
+			contentType:"application/json; charset=utf-8",
+			data:JSON.stringify(
+			{
+				username:$("#username").val(),
+				password:$("#password").val(),
+				reset_password_token:$("#token").val()
+			}),
+			dataType:"json"
+			}).done(function (data) {
 		$("#message").text(data.message);
 		if(data.ok){
 			$("#message").removeClass("form_error");
