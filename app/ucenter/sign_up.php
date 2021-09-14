@@ -4,13 +4,6 @@ require_once '../path.php';
 require_once "../public/load_lang.php";
 require_once "../public/function.php";
 require_once "../redis/function.php";
-
-
-if (!isset($_GET["token"])) {
-    
-}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -26,6 +19,9 @@ if (!isset($_GET["token"])) {
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
 		<script src="../ucenter/sign.js"></script>
+		<script>
+		<?php require_once '../public/load_lang_js.php'; ?>
+	</script>
 		<style>
 		#login_body{
 			display: flex;

@@ -245,7 +245,7 @@ class User extends Table
 			}
 		}else{
 			$this->result["ok"]=false;
-			$this->result["message"]="invalid email";
+			$this->result["message"]="::invalid_email";
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
@@ -272,7 +272,7 @@ class User extends Table
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}else{
 			$this->result["ok"]=false;
-			$this->result["message"]="invalid_token";
+			$this->result["message"]="::invalid_token";
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
@@ -280,17 +280,17 @@ class User extends Table
 	private function isValidPassword($password){
 		if(mb_strlen($password,"UTF-8")<6){
 			$this->result["ok"]=false;
-			$this->result["message"]="password_too_short";
+			$this->result["message"]="::password_too_short";
 			return false;
 		}
 		if(mb_strlen($password,"UTF-8")>32){
 			$this->result["ok"]=false;
-			$this->result["message"]="password_too_long";
+			$this->result["message"]="::password_too_long";
 			return false;
 		}
 		if(strpos($password," ")!==false){
 			$this->result["ok"]=false;
-			$this->result["message"]="can_not_space";
+			$this->result["message"]="::password_invaild_symbol";
 			return false;
 		}
 		return true;
@@ -298,17 +298,17 @@ class User extends Table
 	private function isValidUsername($username){
 		if(mb_strlen($username,"UTF-8")>32){
 			$this->result["ok"]=false;
-			$this->result["message"]="username_too_long";
+			$this->result["message"]="::username_too_long";
 			return false;
 		}
 		if(mb_strlen($username,"UTF-8")<4){
 			$this->result["ok"]=false;
-			$this->result["message"]="username_too_short";
+			$this->result["message"]="::username_too_short";
 			return false;
 		}
 		if(preg_match("/@|\s|\//",$username)!==0){
 			$this->result["ok"]=false;
-			$this->result["message"]="char_error";
+			$this->result["message"]="::username_invaild_symbol";
 			return false;
 		}
 		return true;
@@ -317,7 +317,7 @@ class User extends Table
 		$isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
 		if($isValid===false){
 			$this->result["ok"]=false;
-			$this->result["message"]="email_format_error";
+			$this->result["message"]="::invaild_email";
 		}
 		return $isValid;
 	}

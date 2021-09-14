@@ -32,11 +32,12 @@ function submit(){
 			if(data.ok){
 				$("#form_div").hide();
 				$("#message").removeClass("form_error");
-				$("#message").html("注册成功。<a href='index.php?op=login'>登录</a>");
+				$("#message").html("注册成功。<a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
 
 			}else{
 				$("#message").addClass("form_error");
-				$("#message").text(data.message);
+
+				$("#message").text(ConvertServerMsgToLocalString(data.message));
 			}
 	}).fail(function(jqXHR, textStatus, errorThrown){
 		$("#message").removeClass("form_error");
@@ -65,4 +66,14 @@ function submit(){
 		}
 		
 	});
+}
+
+function ConvertServerMsgToLocalString(str){
+	if(str.slice(0,2)=="::"){
+		let msg = str.slice(2);
+		if(gLocal.gui.hasOwnProperty(msg)){
+			return gLocal.gui[msg];
+		}
+	}
+	return str;
 }
