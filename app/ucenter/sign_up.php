@@ -224,7 +224,7 @@ if (!isset($_GET["token"])) {
 
 						<div>
 							<span id='tip_language' class='viewswitch_on'><?php echo "惯常使用的语言"; ?></span>
-							<select name="lang" name="language" style="width: 100%;">
+							<select id="lang" name="language" style="width: 100%;">
 							<?php
 							$currLang = $_COOKIE["language"];
 							$langList = [
