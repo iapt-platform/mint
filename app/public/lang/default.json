@@ -640,6 +640,12 @@
 		"original": "original",
 		"page_num": "page",
 		"palihandbook": "巴利手册",
+		"invalid_email": "invalid email",
+		"invalid_token": "invalid token",
+		"username_too_long": "username too long",
+		"username_too_short": "username too short",
+		"username_invaild_symbol": "username invaild symbol",
+		"password_invaild_symbol": "password invaild symbol",
 		"": ""
 	},
 	"grammastr": [
