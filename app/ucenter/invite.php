@@ -23,8 +23,8 @@ if (PHP_SAPI == "cli") {
 		$invitecode = "invitecode://".$uuid;
 		$redis->set($invitecode,$email);
 		$redis->expire($invitecode,7*20*3600);
-		$SignUpLink="https://www.wikipali.org/ucenter/index.php?op=new&invite=".$uuid;
-		$SignUpString="https://www.wikipali.org/ucenter/index.php?op=new&invite=".$uuid;
+		$SignUpLink="https://www.wikipali.org/ucenter/sign_up.php?invite=".$uuid;
+		$SignUpString="www.wikipali.org/ucenter/sign_up.php";
 
 			// 打开文件并读取数据
 		$irow=0;
