@@ -1,6 +1,7 @@
 <?php
 require_once "../path.php";
 require_once "../db/table.php";
+require_once "../db/channel.php";
 require_once "../public/function.php";
 // Require Composer's autoloader.
 require_once '../../vendor/autoload.php';
@@ -119,7 +120,29 @@ class User extends Table
 				$data["create_time"] = mTime();
 				$data["modify_time"] = mTime();
 				$data["setting"] = "{}";
-				echo json_encode($this->_create($data,["userid","username","email","password","nickname","setting","create_time","modify_time"]), JSON_UNESCAPED_UNICODE);
+				$result = $this->_create($data,["userid","username","email","password","nickname","setting","create_time","modify_time"]);
+				if($result["ok"]){
+					$channel = new Channel($this->redis);
+					$newChannel1 = $channel->create(["owner"=>$data["userid"],
+													"lang"=>$data["lang"],
+													"name"=>$data["username"],
+													"lang"=>$data["lang"],
+													"status"=>30,
+													"summary"=>""
+													]);
+					$newChannel2 = $channel->create(["owner"=>$data["userid"],
+													"lang"=>$data["lang"],
+													"name"=>"draft",
+													"lang"=>$data["lang"],
+													"status"=>10,
+													"summary"=>""
+													]);
+					echo json_encode($newChannel1, JSON_UNESCAPED_UNICODE);
+					
+				}else{
+					echo json_encode($result, JSON_UNESCAPED_UNICODE);
+				}
+				
 			}else{
 				$this->result["ok"]=false;
 				$this->result["message"]="email_is_exist";
