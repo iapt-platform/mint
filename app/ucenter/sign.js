@@ -3,6 +3,17 @@ function submit(){
 		$("#error_password").text("两次密码输入不一致");
 		return;
 	}
+	let nickname = $("#nickname").val();
+	if( nickname ==""){
+		nickname = $("#username").val();
+	}
+	let lang = $("#lang").val();
+	if(lang=="zh-cn"){
+		lang = "zh-hans";
+	}
+	if(lang == "zh-tw"){
+		lang = "zh-hant";
+	}
 	$.ajax({
 		type: 'POST',
 		url:"../api/user.php?_method=create",
