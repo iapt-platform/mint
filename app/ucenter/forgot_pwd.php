@@ -135,8 +135,14 @@ require_once "../public/function.php";
 	<link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)">
 	</head>
 	<body id="ucenter_body" onload="login_init()">
-
 	<div id="tool_bar">
+		<div>
+		</div>
+		<div>
+			<?php
+			require_once '../lang/lang.php';
+			?>
+		</div>
 	</div>
 <div id="login_body" >
 

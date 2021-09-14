@@ -145,6 +145,13 @@ if (!isset($_GET["token"])) {
 	<body id="ucenter_body" onload="login_init()">
 
 	<div id="tool_bar">
+		<div>
+		</div>
+		<div>
+			<?php
+			require_once '../lang/lang.php';
+			?>
+		</div>
 	</div>
 <div id="login_body" >
 
@@ -250,7 +257,7 @@ if (!isset($_GET["token"])) {
 						<div>
 							<div>
 								<span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name; ?></span>
-								<input type="input" id="nickname" name="nickname" value="" />
+								<input type="input" id="nickname" name="nickname" placehoder="" value="" />
 							</div>
 							<div class="form_help">
 							<?php echo $_local->gui->name_for_show; ?>
@@ -277,7 +284,9 @@ if (!isset($_GET["token"])) {
 <script>
 	login_init();
 
-
+	$("#username").on("keydown",function(){
+		$("#nickname").attr("placeholder",$("#username").val());
+	})
 	
 	
 	
