@@ -85,13 +85,15 @@ class User extends Table
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
 				return;	
 			}
-			$code = $this->redis->exists("invitecode://".$data["invite"]);
+			$redisKey = "invitecode://".$data["invite"];
+			$code = $this->redis->exists($redisKey);
 			if(!$code){
 				$this->result["ok"]=false;
 				$this->result["message"]="invite_code_invalid";
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
 				return;	
 			}
+			$data["email"] = $this->redis->get($redisKey);				
 		}else{
 			$this->result["ok"]=false;
 			$this->result["message"]="no_invite_code";
@@ -138,7 +140,8 @@ class User extends Table
 													"summary"=>""
 													]);
 					echo json_encode($newChannel1, JSON_UNESCAPED_UNICODE);
-					
+					//删除
+					$this->redis->del($redisKey);
 				}else{
 					echo json_encode($result, JSON_UNESCAPED_UNICODE);
 				}
@@ -296,6 +299,11 @@ class User extends Table
 		if(mb_strlen($username,"UTF-8")>32){
 			$this->result["ok"]=false;
 			$this->result["message"]="username_too_long";
+			return false;
+		}
+		if(mb_strlen($username,"UTF-8")<4){
+			$this->result["ok"]=false;
+			$this->result["message"]="username_too_short";
 			return false;
 		}
 		if(preg_match("/@|\s|\//",$username)!==0){
