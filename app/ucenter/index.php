@@ -472,7 +472,7 @@ if ($op == "new") {
 				<div id="button_area">
 					<input type="submit" value="<?php echo $_local->gui->continue; ?>" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
 				</div>
-				</form>
+			</form>
 			</div>
 
 		<?php
