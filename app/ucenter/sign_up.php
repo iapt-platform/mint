@@ -205,23 +205,23 @@ if (!isset($_GET["token"])) {
 					<div>
 						<div>
 							<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
-							<input type="input" id="username" name="username"  value="" />
+							<input type="input" id="username" name="username" maxlength="32" value="" />
 						</div>
 						<div id="error_username" class="form_error"> </div>
 						<div class="form_help"> <?php echo $_local->gui->account_demond; ?> </div>
 					</div>
 
 					<div>
-						<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
-						<input type="input" id="email" name="email"  value="<?php echo $invite_email; ?>" />
+						<span id='tip_email' class='viewswitch_on'><?php echo $_local->gui->email_address; ?></span>
+						<input type="input" id="email" name="email" disabled value="<?php echo $invite_email; ?>" />
 						<div id="error_email" class="form_error"> </div>
 					</div>
 
 					<div>
 						<div>
 							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-							<input type="password" id="password" name="password"  value="" />
-							<input type="password" id="repassword" name="repassword" placeholder="再次输入密码" value="" />
+							<input type="password" id="password"  maxlength="32"  name="password"  value="" />
+							<input type="password" id="repassword" maxlength="32"  name="repassword" placeholder="再次输入密码" value="" />
 						</div>
 						<div class="form_help">
 						<?php echo $_local->gui->password_demond; ?>
@@ -257,7 +257,7 @@ if (!isset($_GET["token"])) {
 						<div>
 							<div>
 								<span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name; ?></span>
-								<input type="input" id="nickname" name="nickname" placehoder="" value="" />
+								<input type="input" id="nickname"  maxlength="32"  name="nickname" placehoder="" value="" />
 							</div>
 							<div class="form_help">
 							<?php echo $_local->gui->name_for_show; ?>
@@ -284,7 +284,7 @@ if (!isset($_GET["token"])) {
 <script>
 	login_init();
 
-	$("#username").on("keydown",function(){
+	$("#username").on("change",function(){
 		$("#nickname").attr("placeholder",$("#username").val());
 	})
 	
