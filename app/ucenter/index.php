@@ -336,9 +336,9 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 		<div>
 		</div>
 		<div>
-		<?php
-require_once '../lang/lang.php';
-?>
+			<?php
+			require_once '../lang/lang.php';
+			?>
 		</div>
 	</div>
 	<div id="login_body" >
