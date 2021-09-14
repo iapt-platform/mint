@@ -180,6 +180,7 @@ if (!isset($_GET["token"])) {
 
 			<div class="login_form" style="    padding: 3em 0 3em 0;">
 			<div class="form_help" id="message"> </div>	
+				<div id="form_div">
 				<form action="index.php" method="post">
 					<div>
 						<div>
@@ -207,6 +208,7 @@ if (!isset($_GET["token"])) {
 					<?php echo $_local->gui->continue; ?>
 					</button>
 				</div>	
+				</div>
 			</div>
 			<?php
 			}
@@ -231,12 +233,15 @@ if (!isset($_GET["token"])) {
 			}),
 			dataType:"json"
 			}).done(function (data) {
-		$("#message").text(data.message);
-		if(data.ok){
-			$("#message").removeClass("form_error");
-		}else{
-			$("#message").addClass("form_error");
-		}
+				
+				if(data.ok){
+					$("#form_div").hide();
+					$("#message").removeClass("form_error");
+					$("#message").html("密码修改成功。<a href='index.php?op=login'>登录</a>");
+				}else{
+					$("#message").addClass("form_error");
+					$("#message").text(data.message);
+				}
 		}).fail(function(jqXHR, textStatus, errorThrown){
 			$("#message").removeClass("form_error");
 			$("#message").text(textStatus);				
