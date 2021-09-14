@@ -34,6 +34,10 @@ switch ($_REQUEST["_method"]) {
 		# get
 		$model->reset_password_send_email();
 		break;	
+	case 'reset_pwd':
+		# get
+		$model->reset_password();
+		break;	
 	default:
 		# code...
 		break;

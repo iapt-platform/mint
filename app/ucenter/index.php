@@ -336,9 +336,9 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 		<div>
 		</div>
 		<div>
-		<?php
-require_once '../lang/lang.php';
-?>
+			<?php
+			require_once '../lang/lang.php';
+			?>
 		</div>
 	</div>
 	<div id="login_body" >
@@ -472,7 +472,7 @@ if ($op == "new") {
 				<div id="button_area">
 					<input type="submit" value="<?php echo $_local->gui->continue; ?>" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
 				</div>
-				</form>
+			</form>
 			</div>
 
 		<?php

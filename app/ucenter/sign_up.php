@@ -1,8 +1,15 @@
 <?php
-#忘记
+#重置密码
 require_once '../path.php';
 require_once "../public/load_lang.php";
 require_once "../public/function.php";
+require_once "../redis/function.php";
+
+
+if (!isset($_GET["token"])) {
+    
+}
+
 
 ?>
 
@@ -18,6 +25,7 @@ require_once "../public/function.php";
 		<script src="../public/js/comm.js"></script>
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
+		<script src="../ucenter/sign.js"></script>
 		<style>
 		#login_body{
 			display: flex;
@@ -135,6 +143,7 @@ require_once "../public/function.php";
 	<link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)">
 	</head>
 	<body id="ucenter_body" onload="login_init()">
+
 	<div id="tool_bar">
 		<div>
 		</div>
@@ -165,87 +174,123 @@ require_once "../public/function.php";
 		<div id = "login_form_div" class="fun_block" >
 
 			<div class="title">
-			忘记密码？
+			注册wikipali账号
 			</div>
 			<div class="login_new">
 				<span class="form_help"><?php echo $_local->gui->have_account; ?> ？</span><a href="index.php?language=<?php echo $currLanguage; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_local->gui->login; //登入账户 ?></a>
 			</div>
-
-			<div class="login_form" style="    padding: 3em 0 3em 0;">
-			<div class="form_help">
-				我们将向您的注册邮箱发送电子邮件。里面包含了重置密码链接。点击链接后按照提示操作，重置账户密码。
+			<div class="form_error">
+			<?php
+			if (!isset($_GET["invite"])) {
+				echo "目前只支持邀请码注册。";
+				exit;
+			}else{
+				$redis = redis_connect();
+				if ($redis == false) {
+					echo "服务器故障，请稍后重试。<br> 错误代码：no_redis_connect";
+					exit;
+				}
+				$code = $redis->exists("invitecode://".$_REQUEST["invite"]);
+				if(!$code){
+					echo "无效的邀请码，或邀请码已经过期。";
+					exit;
+				}
+				$invite_email = $redis->get("invitecode://".$_REQUEST["invite"]);				
+			?>
 			</div>
-			<div class="form_help" id="message"> </div>			
-				<form action="../api/user.php" method="get">
+		<div class="login_form" style="    padding: 3em 0 3em 0;">
+			<div class="form_help" id="message"> </div>	
+			<div id="form_div">
+				<form id="user_create_form" action="#" method="post">
 					<div>
 						<div>
-							<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
-							<input id="form_email" type="input" name="email"  value="" />
+							<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
+							<input type="input" id="username" name="username" maxlength="32" value="" />
 						</div>
-						<div id="error_email" class="form_error"> </div>
-						<div class="form_help"></div>
+						<div id="error_username" class="form_error"> </div>
+						<div class="form_help"> <?php echo $_local->gui->account_demond; ?> </div>
 					</div>
 
-					<input type="hidden" name="_method" value="reset_email" />
+					<div>
+						<span id='tip_email' class='viewswitch_on'><?php echo $_local->gui->email_address; ?></span>
+						<input type="input" id="email" name="email" disabled value="<?php echo $invite_email; ?>" />
+						<div id="error_email" class="form_error"> </div>
+					</div>
 
+					<div>
+						<div>
+							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
+							<input type="password" id="password"  maxlength="32"  name="password"  value="" />
+							<input type="password" id="repassword" maxlength="32"  name="repassword" placeholder="再次输入密码" value="" />
+						</div>
+						<div class="form_help">
+						<?php echo $_local->gui->password_demond; ?>
+						</div>
+						<div id="error_password" class="form_error"> </div>
+					</div>
 
+						<div>
+							<span id='tip_language' class='viewswitch_on'><?php echo "惯常使用的语言"; ?></span>
+							<select id="lang" name="language" style="width: 100%;">
+							<?php
+							$currLang = $_COOKIE["language"];
+							$langList = [
+											"en"=>$_local->language->en,
+											"zh-cn"=>$_local->language->zh_cn,
+											"zh-tw"=>$_local->language->zh_tw,
+											"my"=>$_local->language->my,
+											"si"=>$_local->language->si,
+							];
+							foreach ($langList as $key => $value) {
+								# code...
+								if($currLang==$key){
+									$selected = " selected";
+								}else{
+									$selected = "";
+								}
+								echo "<option value='{$key}' {$selected}>{$value}</option>";
+							}
+							?>
+							</select>
+						</div>
+						
+						<div>
+							<div>
+								<span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name; ?></span>
+								<input type="input" id="nickname"  maxlength="32"  name="nickname" placehoder="" value="" />
+							</div>
+							<div class="form_help">
+							<?php echo $_local->gui->name_for_show; ?>
+							</div>
+							<div id="error_password" class="form_error"> </div>
+						</div>
+
+						<input type="hidden" id="invite" name="invite" value="<?php echo $_REQUEST["invite"]; ?>" />
 				</form>
 				<div id="button_area">
 					<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
 					<?php echo $_local->gui->continue; ?>
 					</button>
-				</div>				
-			</div>
+				</div>	
+			</div>	
+		</div>
+			<?php
+			}
+			?>
 		</div>
 	</div>
 </div>
 
-	<script>
+<script>
 	login_init();
+
+	$("#username").on("change",function(){
+		$("#nickname").attr("placeholder",$("#username").val());
+	})
 	
-	function submit(){
-			$.getJSON(
-		"../api/user.php",
-		{
-			_method:"reset_email",
-			email:$("#form_email").val()
-		}
-	).done(function (data) {
-		$("#message").text(data.message);
-		if(data.ok){
-			$("#message").removeClass("form_error");
-		}else{
-			$("#message").addClass("form_error");
-		}
-		}).fail(function(jqXHR, textStatus, errorThrown){
-			$("#message").removeClass("form_error");
-			$("#message").text(textStatus);				
-			switch (textStatus) {
-		
-				case "timeout":
-					break;
-				case "error":
-					switch (jqXHR.status) {
-						case 404:
-							break;
-						case 500:
-							break;				
-						default:
-							break;
-					}
-					break;
-				case "abort":
-					break;
-				case "parsererror":			
-					console.log("delete-parsererror",jqXHR.responseText);
-					break;
-				default:
-					break;
-			}
-			
-		});
-		}
-	</script>
+	
+	
+</script>
 
 	</body>
 </html>

@@ -133,6 +133,11 @@ span.fancytree-node{
     width: max-content;
 }
 
+#content_toc>ul>li>span.fancytree-node{
+	font-size: 120%;
+    font-weight: 900;
+}
+
 </style>
 
 <?php

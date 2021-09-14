@@ -23,8 +23,8 @@ if (PHP_SAPI == "cli") {
 		$invitecode = "invitecode://".$uuid;
 		$redis->set($invitecode,$email);
 		$redis->expire($invitecode,7*20*3600);
-		$SignUpLink="https://www.wikipali.org/ucenter/index.php?op=new&invite=".$uuid;
-		$SignUpString="https://www.wikipali.org/ucenter/index.php?op=new&invite=".$uuid;
+		$SignUpLink="https://www.wikipali.org/ucenter/sign_up.php?invite=".$uuid;
+		$SignUpString="www.wikipali.org/ucenter/sign_up.php";
 
 			// 打开文件并读取数据
 		$irow=0;
@@ -64,14 +64,11 @@ if (PHP_SAPI == "cli") {
 			$mail->Password   = Email["Password"];                               //SMTP password
 			$mail->SMTPSecure = Email["SMTPSecure"];            //Enable implicit TLS encryption
 			$mail->Port       = Email["Port"];                                    //TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
+			$mail->CharSet =  'UTF-8';
+			$mail->Encoding = 'base64';
 			//Recipients
 			$mail->setFrom(Email["From"], Email["Sender"]);
 			$mail->addAddress($email);     //Add a recipient Name is optional
-
-			//Attachments
-			//$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-			//$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
 			//Content
 			$mail->isHTML(true);                                  //Set email format to HTML
