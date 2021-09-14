@@ -254,7 +254,7 @@ class User extends Table
 		$isExist = $this->medoo->has($this->table,["username"=>$data["username"],"reset_password_token"=>$data["reset_password_token"]]);
 		if($isExist){
 			#reset password
-			if(!isValidPassword($data["password"])){
+			if(!$this->isValidPassword($data["password"])){
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 				return;
 			}
