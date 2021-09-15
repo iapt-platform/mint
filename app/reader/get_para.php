@@ -65,7 +65,7 @@ $paraBegin=0;
 $paraEnd=0;
 
 PDO_Connect(_FILE_DB_PALITEXT_);
-			$query = "SELECT level , parent, chapter_len FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
+			$query = "SELECT level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
 			$FetchParInfo = PDO_FetchRow($query, array($_book, $_para));
 if ($FetchParInfo) {
     switch ($_view) {

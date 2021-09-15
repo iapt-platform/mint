@@ -1,6 +1,7 @@
 <?php
 require_once "../path.php";
 require_once "../db/table.php";
+require_once "../db/channel.php";
 require_once "../public/function.php";
 // Require Composer's autoloader.
 require_once '../../vendor/autoload.php';
@@ -74,40 +75,91 @@ class User extends Table
 
 
 	public function  create(){
-		if(!isset($_COOKIE["userid"])){
-			return;
-		}
 		$json = file_get_contents('php://input');
 		$data = json_decode($json,true);
-		$data["user_id"] = $_COOKIE["userid"];
-		$isExist = $this->medoo->has("likes",$data);
+		//验证邀请码
+		if(isset($data["invite"])){
+			if ($this->redis == false) {
+				$this->result["ok"]=false;
+				$this->result["message"]="no_redis_connect";
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
+				return;	
+			}
+			$redisKey = "invitecode://".$data["invite"];
+			$code = $this->redis->exists($redisKey);
+			if(!$code){
+				$this->result["ok"]=false;
+				$this->result["message"]="invite_code_invalid";
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
+				return;	
+			}
+			$data["email"] = $this->redis->get($redisKey);				
+		}else{
+			$this->result["ok"]=false;
+			$this->result["message"]="no_invite_code";
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
+			return;	
+		}
+		//验证用户名有效性
+		if(!$this->isValidUsername($data["username"])){
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+			return;
+		}
+		$isExist = $this->medoo->has($this->table,["username"=>$data["username"]]);
 		if(!$isExist){
-			echo json_encode($this->_create($data,["like_type","resource_type","resource_id","user_id"]), JSON_UNESCAPED_UNICODE);
+			if(!$this->isValidEmail($data["email"])){
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+				return;
+			}
+			$isExist = $this->medoo->has($this->table,["email"=>$data["email"]]);
+			if(!$isExist){
+				if(!$this->isValidPassword($data["password"])){
+					echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+					return;
+				}
+				$data["userid"] = UUID::v4();
+				$data["password"] = md5($data["password"]);
+				$data["create_time"] = mTime();
+				$data["modify_time"] = mTime();
+				$data["setting"] = "{}";
+				$result = $this->_create($data,["userid","username","email","password","nickname","setting","create_time","modify_time"]);
+				if($result["ok"]){
+					$channel = new Channel($this->redis);
+					$newChannel1 = $channel->create(["owner"=>$data["userid"],
+													"lang"=>$data["lang"],
+													"name"=>$data["username"],
+													"lang"=>$data["lang"],
+													"status"=>30,
+													"summary"=>""
+													]);
+					$newChannel2 = $channel->create(["owner"=>$data["userid"],
+													"lang"=>$data["lang"],
+													"name"=>"draft",
+													"lang"=>$data["lang"],
+													"status"=>10,
+													"summary"=>""
+													]);
+					echo json_encode($newChannel1, JSON_UNESCAPED_UNICODE);
+					//删除
+					$this->redis->del($redisKey);
+				}else{
+					echo json_encode($result, JSON_UNESCAPED_UNICODE);
+				}
+				
+			}else{
+				$this->result["ok"]=false;
+				$this->result["message"]="email_is_exist";
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);				
+			}
 		}
 		else{
 			$this->result["ok"]=false;
-			$this->result["message"]="is exist";
+			$this->result["message"]="account_is_exist";
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
 	
-	public function  delete(){
-		if(!isset($_COOKIE["userid"])){
-			return;
-		}
-		$where["like_type"] = $_GET["like_type"];
-		$where["resource_type"] = $_GET["resource_type"];
-		$where["resource_id"] = $_GET["resource_id"];
-		$where["user_id"] = $_COOKIE["userid"];
-		$row = $this->_delete($where);
-		if($row["data"]>0){
-			$this->result["data"] = $where;
-		}else{
-			$this->result["ok"]=false;
-			$this->result["message"]="no delete";			
-		}
-		echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
-	}
+
 
 	#发送密码重置邮件
 	public function reset_password_send_email(){
@@ -118,10 +170,10 @@ class User extends Table
 			$ok = $this->_update(["reset_password_token"=>$resetToken],["reset_password_token"],["email"=>$email]);
 			if($ok){
 				#send email
-				$resetLink="https://www.wikipali.org/ucenter/reset.php?token=".$resetToken;
-				$resetString="https://www.wikipali.org/ucenter/reset.php?token=".$resetToken;
+				$resetLink="https://www.wikipali.org/app/ucenter/reset.php?token=".$resetToken;
+				$resetString="https://www.wikipali.org/app/ucenter/reset.php";
 		
-					// 打开文件并读取数据
+				// 打开文件并读取数据
 				$irow=0;
 				$strSubject = "";
 				$strBody = "";
@@ -143,8 +195,8 @@ class User extends Table
 					return;
 				}
 		
-				$strBody = str_replace("%resetLink%",$resetLink,$strBody);
-				$strBody = str_replace("%resetString%",$resetString,$strBody);
+				$strBody = str_replace("%ResetLink%",$resetLink,$strBody);
+				$strBody = str_replace("%ResetString%",$resetString,$strBody);
 		
 				//TODO sendmail
 		
@@ -193,29 +245,83 @@ class User extends Table
 			}
 		}else{
 			$this->result["ok"]=false;
-			$this->result["message"]="invalid email";
+			$this->result["message"]="::invalid_email";
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
 	#重置密码
-	public function reset_password($username,$password,$token){
-		$isExist = $this->medoo->has($this->table,["user_name"=>$username,"token"=>$token]);
+	public function reset_password(){
+		$json = file_get_contents('php://input');
+		$data = json_decode($json,true);
+		$isExist = $this->medoo->has($this->table,["username"=>$data["username"],"reset_password_token"=>$data["reset_password_token"]]);
 		if($isExist){
 			#reset password
-			$ok = $this->_update(["password"=>$password],"password",["user_name"=>$username]);
-			if($ok){
+			if(!$this->isValidPassword($data["password"])){
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
-				
-			}else{
-				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+				return;
 			}
+			$ok = $this->_update(["password"=>md5($data["password"])],["password"],["username"=>$data["username"]]);
+			if($ok){
+				#成功后删除reset_password_token
+				$ok = $this->_update(["reset_password_token"=>null,
+									  "reset_password_sent_at"=>null],
+									  null,
+									  ["username"=>$data["username"]]);	
+			}
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}else{
 			$this->result["ok"]=false;
-			$this->result["message"]="invalid token";
+			$this->result["message"]="::invalid_token";
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
+
+	private function isValidPassword($password){
+		if(mb_strlen($password,"UTF-8")<6){
+			$this->result["ok"]=false;
+			$this->result["message"]="::password_too_short";
+			return false;
+		}
+		if(mb_strlen($password,"UTF-8")>32){
+			$this->result["ok"]=false;
+			$this->result["message"]="::password_too_long";
+			return false;
+		}
+		if(strpos($password," ")!==false){
+			$this->result["ok"]=false;
+			$this->result["message"]="::password_invaild_symbol";
+			return false;
+		}
+		return true;
+	}
+	private function isValidUsername($username){
+		if(mb_strlen($username,"UTF-8")>32){
+			$this->result["ok"]=false;
+			$this->result["message"]="::username_too_long";
+			return false;
+		}
+		if(mb_strlen($username,"UTF-8")<4){
+			$this->result["ok"]=false;
+			$this->result["message"]="::username_too_short";
+			return false;
+		}
+		if(preg_match("/@|\s|\//",$username)!==0){
+			$this->result["ok"]=false;
+			$this->result["message"]="::username_invaild_symbol";
+			return false;
+		}
+		return true;
+	}
+	private function isValidEmail($email){	
+		$isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
+		if($isValid===false){
+			$this->result["ok"]=false;
+			$this->result["message"]="::invaild_email";
+		}
+		return $isValid;
+	}
+
 }
 
 ?>

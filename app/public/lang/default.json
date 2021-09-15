@@ -66,7 +66,7 @@
 		"delete": "Delete",
 		"departure_in_detail": "departure in detail",
 		"desc": "DESC",
-		"detaile": "Detaile",
+		"detaile": "Detail",
 		"dhamma_time": "5000 Years of the Buddha’s Dispensation ",
 		"dict": "Dict",
 		"dict_match": "Match the Dictionary and Document",
@@ -641,6 +641,12 @@
 		"page_num": "page",
 		"palihandbook": "巴利手册",
 		"viewer": "viewer",
+		"invalid_email": "invalid email",
+		"invalid_token": "invalid token",
+		"username_too_long": "username too long",
+		"username_too_short": "username too short",
+		"username_invaild_symbol": "username invaild symbol",
+		"password_invaild_symbol": "password invaild symbol",
 		"": ""
 	},
 	"grammastr": [

@@ -60,10 +60,14 @@ class Table
 		$this->result["data"] = $updateDate;
 		return $this->result;
 	}
-	public function _update($data,$columns,$where=null){
-		foreach ($columns as $value) {
-			# code...
-			$updateDate[$value] = $data[$value];
+	public function _update($data,$columns=null,$where=null){
+		if($columns==null){
+			$updateDate = $data;
+		}else{
+			foreach ($columns as $value) {
+				# code...
+				$updateDate[$value] = $data[$value];
+			}			
 		}
 
 		if($where==null){

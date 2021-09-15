@@ -108,7 +108,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 	</div>
 
 	<div>
-		<div id="main_view" class='section_inner'  style="background-color:white;color:black;">
+		<div id="main_view" class='section_inner' >
 			<div id='dict_list_shell' style="display:none" onclick='setNaviVisibility()'>
 				<div id='dict_list' class='dict_list_off'></div>
 			</div>

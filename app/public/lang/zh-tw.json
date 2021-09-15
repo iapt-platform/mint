@@ -642,6 +642,12 @@
 		"page_num": "頁碼",
 		"palihandbook": "巴利手冊",
 		"viewer": "查看者",
+		"invalid_email": "無效的電子郵件",
+		"invalid_token": "無效的密鑰",
+		"username_too_long": "用戶名過長",
+		"username_too_short": "用戶名過短",
+		"username_invaild_symbol": "用戶名包含無效字符",
+		"password_invaild_symbol": "密碼包含無效字符",
 		"": ""
 	},
 	"grammastr": [
