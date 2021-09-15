@@ -4,11 +4,12 @@ function wbw_channal_list_init() {
 		'<div id="wbw_channal_list_dlg" title=' +
 			gLocal.gui.open +
 			gLocal.gui.wbw +
-			'><div id="wbw_channal_list_dlg_content"></div></div>'
+			' style="overflow-y:scroll;"><div id="wbw_channal_list_dlg_content"></div></div>'
 	);
 	$("#wbw_channal_list_dlg").dialog({
 		autoOpen: false,
 		width: 550,
+		maxHeight: $(window).height()*0.7,
 		buttons: [
 			{
 				text: gLocal.gui.cancel,
@@ -53,7 +54,7 @@ function wbw_channal_list_open(book, paralist) {
 
 					if (parseInt(element.power) < 30) {
 						html += "<button onclick=\"wbw_fork('" + index + "')\">";
-						html += "复制到";
+						html += gLocal.gui.copy_to;
 						html += "</button>";
 					}
 
@@ -62,9 +63,9 @@ function wbw_channal_list_open(book, paralist) {
 					html += "<span style='flex:5'>" + element.name + "</span>";
 					html += "<span style='flex:1'>";
 					let power = [
-						{ id: 10, note: "查看者" },
-						{ id: 20, note: "编辑者" },
-						{ id: 30, note: "拥有者" },
+						{ id: 10, note: gLocal.gui.viewer },
+						{ id: 20, note: gLocal.gui.editor },
+						{ id: 30, note: gLocal.gui.owner },
 					];
 					for (const iterator of power) {
 						if (parseInt(element.power) == iterator.id) {
