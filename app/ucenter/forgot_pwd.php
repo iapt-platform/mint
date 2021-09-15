@@ -172,28 +172,29 @@ require_once "../public/function.php";
 			</div>
 
 			<div class="login_form" style="    padding: 3em 0 3em 0;">
-			<div class="form_help">
-				我们将向您的注册邮箱发送电子邮件。里面包含了重置密码链接。点击链接后按照提示操作，重置账户密码。
-			</div>
-			<div class="form_help" id="message"> </div>			
-				<form action="../api/user.php" method="get">
-					<div>
+				<div id="message" class="form_help">
+					我们将向您的注册邮箱发送电子邮件。里面包含了重置密码链接。点击链接后按照提示操作，重置账户密码。
+				</div>	
+				<div id="form_div">	
+					<form action="../api/user.php" method="get">
 						<div>
-							<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
-							<input id="form_email" type="input" name="email"  value="" />
+							<div>
+								<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address; ?></span>
+								<input id="form_email" type="input" name="email"  value="" />
+							</div>
+							<div id="error_email" class="form_error"> </div>
+							<div class="form_help"></div>
 						</div>
-						<div id="error_email" class="form_error"> </div>
-						<div class="form_help"></div>
+
+						<input type="hidden" name="_method" value="reset_email" />
+
+
+					</form>
+					<div id="button_area">
+						<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
+						<?php echo $_local->gui->continue; ?>
+						</button>
 					</div>
-
-					<input type="hidden" name="_method" value="reset_email" />
-
-
-				</form>
-				<div id="button_area">
-					<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
-					<?php echo $_local->gui->continue; ?>
-					</button>
 				</div>				
 			</div>
 		</div>
@@ -204,7 +205,9 @@ require_once "../public/function.php";
 	login_init();
 	
 	function submit(){
-			$.getJSON(
+		$("#message").text("正在发送...");
+		$(this).prop("disabled",true);
+	$.getJSON(
 		"../api/user.php",
 		{
 			_method:"reset_email",
@@ -214,14 +217,18 @@ require_once "../public/function.php";
 		$("#message").text(data.message);
 		if(data.ok){
 			$("#message").removeClass("form_error");
+			$("#form_div").hide();			
 		}else{
 			$("#message").addClass("form_error");
+			//发送失败enable发送按钮
+			$(this).prop("disabled",false);
 		}
 		}).fail(function(jqXHR, textStatus, errorThrown){
 			$("#message").removeClass("form_error");
-			$("#message").text(textStatus);				
+			$("#message").text(textStatus);	
+			//发送失败enable发送按钮
+			$(this).prop("disabled",false);		
 			switch (textStatus) {
-		
 				case "timeout":
 					break;
 				case "error":
