@@ -643,6 +643,8 @@
 		"reference": "reference",
 		"original": "original",
 		"page_num": "page",
+		"palihandbook": "巴利手册",
+		"viewer": "viewer",
 		"palihandbook": "pali handbook",
 		"invalid_email": "invalid email",
 		"invalid_token": "invalid token",
