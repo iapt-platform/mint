@@ -1,18 +1,37 @@
 function submit(){
+	let hasError = false;
 	if($("#password").val()!==$("#repassword").val()){
 		$("#error_password").text("两次密码输入不一致");
-		return;
+		hasError = true;
 	}
-	let nickname = $("#nickname").val();
+	let patt1=new RegExp(/\s|\//);
+	if(patt1.test($("#password").val())){
+		$("#error_password").text("密码包含无效字符。  / 空格 ");
+		hasError = true;
+	}
+
+
+	let username = $("#username").val();
+	let patt2=new RegExp(/@|\s|\//);
+	if(patt2.test(username)){
+		$("#error_username").text("用户名包含无效字符。@  / 空格 ");
+		hasError = true;
+	}
+
+	let nickname = $("#nickname").val();	
 	if( nickname ==""){
 		nickname = $("#username").val();
 	}
+
 	let lang = $("#lang").val();
 	if(lang=="zh-cn"){
 		lang = "zh-hans";
 	}
 	if(lang == "zh-tw"){
 		lang = "zh-hant";
+	}
+	if(hasError){
+		return;
 	}
 	$.ajax({
 		type: 'POST',
