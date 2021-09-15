@@ -256,7 +256,6 @@ require_once "../redis/function.php";
 								<input type="input" id="nickname"  maxlength="32"  name="nickname" placehoder="" value="" />
 							</div>
 							<div class="form_help">
-							<?php echo $_local->gui->name_for_show; ?>
 							</div>
 							<div id="error_password" class="form_error"> </div>
 						</div>
