@@ -3041,7 +3041,9 @@ function on_word_click(sWordId) {
 
 	//参考字典
 	if (mouse_action_lookup) {
-		dict_search(sReal);
+		//dict_search(sReal);
+		window.open("../dict/index.php?builtin=true&theme=dark&key="+sReal,target="dict");
+
 	}
 
 	//添加词到翻译框
@@ -3332,7 +3334,7 @@ function showModifyWin(sWordId) {
 		var eDetail = document.getElementById(sDetail);
 		eWord.insertBefore(eWin, eDetail);
 
-		document.getElementById("dict_ref_search_input").value = sReal;
+		//document.getElementById("dict_ref_search_input").value = sReal;
 
 		//editor_refresh_inline_dict(sReal);
 	}
