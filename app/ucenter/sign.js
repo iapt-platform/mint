@@ -23,7 +23,7 @@ function submit(){
 			username:$("#username").val(),
 			password:$("#password").val(),
 			email:$("#email").val(),
-			nickname:$("#nickname").val(),
+			nickname:nickname,
 			lang:$("#lang").val()
 		}),
 		dataType:"json"
