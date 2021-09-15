@@ -101,7 +101,14 @@ class User extends Table
 			return;	
 		}
 		//验证用户名有效性
+		$data["username"] = trim($data["username"]);
 		if(!$this->isValidUsername($data["username"])){
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+			return;
+		}
+		//验证昵称有效性
+		$data["nickname"] = trim($data["nickname"]);
+		if(!$this->isValidNickName($data["nickname"])){
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 			return;
 		}
@@ -309,6 +316,19 @@ class User extends Table
 		if(preg_match("/@|\s|\//",$username)!==0){
 			$this->result["ok"]=false;
 			$this->result["message"]="::username_invaild_symbol";
+			return false;
+		}
+		return true;
+	}
+	private function isValidNickName($nickname){
+		if(mb_strlen($username,"UTF-8")>32){
+			$this->result["ok"]=false;
+			$this->result["message"]="::nickname_too_long";
+			return false;
+		}
+		if(mb_strlen($username,"UTF-8")<1){
+			$this->result["ok"]=false;
+			$this->result["message"]="::nicknamename_too_short";
 			return false;
 		}
 		return true;
