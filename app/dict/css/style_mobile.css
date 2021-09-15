@@ -142,7 +142,9 @@ body {
 guide{
 	display:none;
 }
-
+.dict_find_gramma guide{
+	display:unset;
+}
 #search_info {
     display: block;
 }
