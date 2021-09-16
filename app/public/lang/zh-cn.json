@@ -649,6 +649,11 @@
 		"username_too_short": "用户名过短",
 		"username_invaild_symbol": "用户名包含无效字符",
 		"password_invaild_symbol": "密码包含无效字符",
+		"error_net_404": "网页不存在",
+		"error_net_500": "服务器内部错误",
+		"error_net_timeout": "请求超时",
+		"error_net_abort": "放弃",
+		"error_net_parsererror": "数据解析错误",
 		"": ""
 	},
 	"grammastr": [

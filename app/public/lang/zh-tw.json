@@ -648,6 +648,11 @@
 		"username_too_short": "用戶名過短",
 		"username_invaild_symbol": "用戶名包含無效字符",
 		"password_invaild_symbol": "密碼包含無效字符",
+		"error_net_404": "網頁不存在",
+		"error_net_500": "服務器內部錯誤",
+		"error_net_timeout": "請求超時",
+		"error_net_abort": "放棄",
+		"error_net_parsererror": "數據解析錯誤",
 		"": ""
 	},
 	"grammastr": [
