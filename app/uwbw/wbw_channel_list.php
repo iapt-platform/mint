@@ -4,6 +4,7 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../share/function.php';
 require_once '../channal/function.php';
+require_once '../ucenter/function.php';
 require_once '../redis/function.php';
 
 $redis = redis_connect();
@@ -30,7 +31,7 @@ $params[] = $_book;
 
 #查重复
 $channelList = array();
-
+#先查自己的
 PDO_Connect(_FILE_DB_CHANNAL_);
 $query = "SELECT id FROM channal WHERE owner = ? and status>0 LIMIT 0,100";
 $FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
@@ -66,6 +67,7 @@ foreach ($publicChannel as $key => $channel) {
 }
 
 $channelInfo = new Channal($redis);
+$userInfo = new UserInfo();
 $i = 0;
 $outputData = array();
 
@@ -81,6 +83,7 @@ foreach ($channelList as $key => $row) {
     $channelList[$key]["id"] = $info["id"];
     $channelList[$key]["name"] = $info["name"];
     $channelList[$key]["lang"] = $info["lang"];
+	$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
 	$outputData[]=$channelList[$key];
 }
 

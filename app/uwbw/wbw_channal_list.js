@@ -8,7 +8,8 @@ function wbw_channal_list_init() {
 	);
 	$("#wbw_channal_list_dlg").dialog({
 		autoOpen: false,
-		width: 550,
+		width: 700,
+		height:650,
 		buttons: [
 			{
 				text: gLocal.gui.cancel,
@@ -34,7 +35,7 @@ function wbw_channal_list_open(book, paralist) {
 				for (let index = 0; index < _wbw_channel.data.length; index++) {
 					const element = _wbw_channel.data[index];
 					html += "<div style='display:flex;line-height: 2.5em;border-bottom: 1px solid gray;'>";
-					html += "<span style='flex:4'>";
+					html += "<span style='flex:3'>";
 					let style = "";
 					let text = "";
 					if (parseInt(element.wbw_para) > 0) {
@@ -60,7 +61,7 @@ function wbw_channal_list_open(book, paralist) {
 					html += "</span>";
 					html += "<span  style='flex:1'>" + (index + 1) + "</span>";
 					html += "<span style='flex:5'>" + element.name + "</span>";
-					html += "<span style='flex:1'>";
+					html += "<span style='flex:2'>";
 					let power = [
 						{ id: 10, note: "查看者" },
 						{ id: 20, note: "编辑者" },
@@ -72,7 +73,10 @@ function wbw_channal_list_open(book, paralist) {
 						}
 					}
 					html += "</span>";
-					html += "<span style='flex:2'>" + element.lang + "</span>";
+					html += "<span style='flex:2'>";
+					html += element.user.nickname;
+					html += "</span>";
+					html += "<span style='flex:1;text-align: right;'>" + element.lang + "</span>";
 					html += "<span style='flex:2;display:none;'>" + element.wbw_para + "/" + element.count + "</span>";
 					html += "</div>";
 				}
