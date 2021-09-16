@@ -218,7 +218,8 @@ class User extends Table
 					$mail->Password   = Email["Password"];                               //SMTP password
 					$mail->SMTPSecure = Email["SMTPSecure"];            //Enable implicit TLS encryption
 					$mail->Port       = Email["Port"];                                    //TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-		
+					$mail->CharSet =  'UTF-8';
+					$mail->Encoding = 'base64';
 					//Recipients
 					$mail->setFrom(Email["From"], Email["Sender"]);
 					$mail->addAddress($email);     //Add a recipient Name is optional
