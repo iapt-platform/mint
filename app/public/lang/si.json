@@ -652,6 +652,11 @@
 		"username_too_short": "username too short",
 		"username_invaild_symbol": "username invaild symbol",
 		"password_invaild_symbol": "password invaild symbol",
+		"error_net_404": "Not Found",
+		"error_net_500": "Internal Server Error",
+		"error_net_timeout": "Timeout",
+		"error_net_abort": "abort",
+		"error_net_parsererror": "parser error",
 		"": ""
 	},
 	"grammastr": [
