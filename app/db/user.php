@@ -319,12 +319,12 @@ class User extends Table
 		return true;
 	}
 	private function isValidNickName($nickname){
-		if(mb_strlen($username,"UTF-8")>32){
+		if(mb_strlen($nickname,"UTF-8")>32){
 			$this->result["ok"]=false;
 			$this->result["message"]="::nickname_too_long";
 			return false;
 		}
-		if(mb_strlen($username,"UTF-8")<1){
+		if(mb_strlen($nickname,"UTF-8")<1){
 			$this->result["ok"]=false;
 			$this->result["message"]="::nicknamename_too_short";
 			return false;
