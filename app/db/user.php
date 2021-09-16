@@ -101,13 +101,11 @@ class User extends Table
 			return;	
 		}
 		//验证用户名有效性
-		$data["username"] = trim($data["username"]);
 		if(!$this->isValidUsername($data["username"])){
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 			return;
 		}
 		//验证昵称有效性
-		$data["nickname"] = trim($data["nickname"]);
 		if(!$this->isValidNickName($data["nickname"])){
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 			return;
