@@ -1,20 +1,32 @@
+function isValidPassword(str){
+	let patt=new RegExp(/\s|\//);
+	if(patt.test(str)){
+		return false;
+	}else{
+		return true;
+	}
+}
+function isValidUserName(str){
+	let patt=new RegExp(/@|\s|\//);
+	if(patt.test(str)){
+		return false;
+	}else{
+		return true;
+	}
+}
 function submit(){
 	let hasError = false;
 	if($("#password").val()!==$("#repassword").val()){
 		$("#error_password").text("两次密码输入不一致");
 		hasError = true;
 	}
-	let patt1=new RegExp(/\s|\//);
-	if(patt1.test($("#password").val())){
+	if(isValidPassword($("#password").val())==false){
 		$("#error_password").text("密码包含无效字符。  / 空格 ");
 		hasError = true;
 	}
 
-
-	let username = $("#username").val();
-	let patt2=new RegExp(/@|\s|\//);
-	if(patt2.test(username)){
-		$("#error_username").text("用户名包含无效字符。@  / 空格 ");
+	if(isValidUserName($("#username").val())==false){
+		$("#error_password").text("用户名包含无效字符。@  / 空格 ");
 		hasError = true;
 	}
 
