@@ -78,7 +78,7 @@ if ($FetchParInfo) {
 			}
             else{
 				$paraBegin = $FetchParInfo["parent"];
-				$query = "SELECT  chapter_len FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
+				$query = "SELECT  level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
 				$FetchParInfo = PDO_FetchRow($query, array($_book, $paraBegin));
             	$paraEnd = $paraBegin + $FetchParInfo["chapter_len"] - 1;
 			}
