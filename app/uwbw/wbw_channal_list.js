@@ -104,7 +104,7 @@ function wbw_create(index) {
 				let paralist = msg.para.join(",");
 				let channel = msg.channel;
 				let url =
-					"../studio/editor.php?op=openchannal&book=" + book + "&para=" + paralist + "&channal=" + channel;
+					"../studio/editor.php?op=openchannel&book=" + book + "&par=" + paralist + "&channel=" + channel;
 				window.open(url, "_blank");
 				$("#wbw_channal_list_dlg").dialog("close");
 			} else {

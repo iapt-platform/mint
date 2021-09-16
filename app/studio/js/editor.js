@@ -220,9 +220,11 @@ function editor_windowsInit() {
 					g_book = item[1];
 					break;
 				case "para":
+				case "par":
 					g_para = item[1];
 					break;
 				case "channal":
+				case "channel":
 					g_channal = item[1];
 					break;
 			}
@@ -268,6 +270,7 @@ function editor_windowsInit() {
 			}
 			break;
 		case "openchannal":
+		case "openchannel":
 			editor_openChannal(g_book, g_para, g_channal);
 			break;
 		case "import":
