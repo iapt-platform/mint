@@ -32,6 +32,10 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["para"])){
 		echo "_reader_para='".$_GET["para"]."';";
 	}
+	if(isset($_GET["par"])){
+		#为了避免 &para被urlencode替换问题
+		echo "_reader_para='".$_GET["par"]."';";
+	}
 	if(isset($_GET["begin"])){
 		echo "_reader_begin='".$_GET["begin"]."';";
 	}
@@ -41,6 +45,10 @@ require_once "../pcdl/html_head.php";
 	
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
+	}
+	if(isset($_GET["channel"])){
+		#纠正拼写错误
+		echo "_channal='".$_GET["channel"]."';";
 	}
 	if(isset($_GET["lang"])){
 		echo "_lang='".$_GET["lang"]."';";

@@ -1150,22 +1150,6 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "<div class='sent_wbw_trans_bar'>";
 	let sentIdString = abook + "-" + aparagraph + "-" + iBegin + "-" + iEnd;
 	let sentIdStringLink = "{{" + sentIdString + "}}";
-	let sentReaderLink = "";
-	if (_display_sbs == 0) {
-		//逐段模式
-		sentReaderLink = "https://www.wikipali.org/app/reader/?view=para&book=" + abook + "&para=" + aparagraph;
-	} else {
-		//逐句模式
-		sentReaderLink =
-			"https://www.wikipali.org/app/reader/?view=sent&book=" +
-			abook +
-			"&para=" +
-			aparagraph +
-			"&begin=" +
-			iBegin +
-			"&end=" +
-			iEnd;
-	}
 
 	output += "<span style='flex: 7;display: flex;'>";
 	output += "<div style='background-color: silver;'>";
@@ -1189,11 +1173,11 @@ function render_sent_tool_bar(elementBlock, begin) {
 	let reader_open_link = "";
 	if (_display_sbs == 0) {
 		//逐段模式
-		reader_open_link = "../reader/?view=para&book=" + abook + "&para=" + aparagraph;
+		reader_open_link = "../reader/?view=para&book=" + abook + "&par=" + aparagraph;
 	} else {
 		//逐句模式
 		reader_open_link =
-			"../reader/?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
+			"../reader/?view=sent&book=" + abook + "&par=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
 	}
 	output +=
 		"<button class='icon_btn'  onclick=\"window.open('" +
@@ -1528,7 +1512,7 @@ function renderWordParBlockInner(elementBlock) {
 				output +=
 					"<button class='icon_btn'  onclick=\"window.open('../reader/?view=sent&book=" +
 					book +
-					"&para=" +
+					"&par=" +
 					paragraph +
 					"&begin=" +
 					nextBegin +

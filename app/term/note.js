@@ -524,13 +524,13 @@ function note_ref_init() {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=chapter&book=" + bookid + "&para=" + para, "_blank");
+		window.open("../reader/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=para&book=" + bookid + "&para=" + para, "_blank");
+		window.open("../reader/?view=para&book=" + bookid + "&par=" + para, "_blank");
 	});
 }
 /*
@@ -1806,7 +1806,7 @@ function copy_ref(book, para, begin, end) {
 }
 
 function goto_nissaya(book, para, begin = 0, end = 0) {
-	window.open("../nissaya/index.php?book=" + book + "&para=" + para + "&begin=" + begin + "&end=" + end, "nissaya");
+	window.open("../nissaya/index.php?book=" + book + "&par=" + para + "&begin=" + begin + "&end=" + end, "nissaya");
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);

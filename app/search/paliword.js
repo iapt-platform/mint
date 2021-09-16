@@ -83,7 +83,7 @@ function render_word_result(worddata) {
 	html +=
 		"<a href='../reader/?view=chapter&book=" +
 		worddata.book +
-		"&para=" +
+		"&par=" +
 		worddata.para +
 		"&direction=col' target='_blank'>";
 	html += worddata.title + "</a></div>";

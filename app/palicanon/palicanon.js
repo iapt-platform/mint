@@ -191,7 +191,7 @@ function render_chapter_head(chapter_info, parent) {
 		parent +
 		"')\">back</span></div>";
 	html += "</div>";
-	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&para=" + chapter_info.paragraph;
+	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&par=" + chapter_info.paragraph;
 	html += "<div class='title'>";
 	if (typeof chapter_info.trans_title == "undefined") {
 		html += "	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.text + "</a></div>";
