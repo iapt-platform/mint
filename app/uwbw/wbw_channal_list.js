@@ -1,11 +1,30 @@
 var _wbw_channel;
 function wbw_channal_list_init() {
-	$("body").append(
-		'<div id="wbw_channal_list_dlg" title=' +
-			gLocal.gui.open +
-			gLocal.gui.wbw +
-			'><div id="wbw_channal_list_dlg_content"></div></div>'
-	);
+	let channelListHtml = "";
+	let style = "<style>";
+	style += "#wbw_channal_list_dlg_content .ui-widget-content{border:unset;} ";
+	style += "#wbw_channal_list_dlg_content .ui-widget-header{background:unset;border:unset;border-bottom: 1px solid #dddddd;} ";
+	style += "</style>";
+	channelListHtml += '<div id="wbw_channal_list_dlg" title=' + gLocal.gui.open + gLocal.gui.wbw + '>';
+	channelListHtml += style;
+	channelListHtml += '<div id="wbw_channal_list_dlg_content">';
+	channelListHtml += '<div id="tabs">';
+	channelListHtml += '<ul>';
+    channelListHtml += '<li><a href="#tabs-1">我的<span id="my-num" class="circle_num">3</span></a></li>';
+    channelListHtml += '<li><a href="#tabs-2">协作<span id="co-num"  class="circle_num">2</span></a></li>';
+    channelListHtml += '<li><a href="#tabs-3">网络公开<span id="pu-num"  class="circle_num">1</span></a></li>';
+	channelListHtml += '</ul>';
+	channelListHtml += '<div id="tabs-1">';
+	channelListHtml += '</div>';
+	channelListHtml += '<div id="tabs-2">';
+	channelListHtml += '</div>';
+	channelListHtml += '<div id="tabs-3">';
+	channelListHtml += '</div>';
+	channelListHtml += '</div>';
+	channelListHtml += '</div>';
+	channelListHtml += '</div>';
+
+	$("body").append(channelListHtml);
 	$("#wbw_channal_list_dlg").dialog({
 		autoOpen: false,
 		width: 700,
@@ -19,6 +38,7 @@ function wbw_channal_list_init() {
 			},
 		],
 	});
+	$( "#tabs" ).tabs();
 }
 
 function wbw_channal_list_open(book, paralist) {
@@ -31,9 +51,16 @@ function wbw_channal_list_open(book, paralist) {
 		function (data) {
 			_wbw_channel = JSON.parse(data);
 			if (_wbw_channel.status == 0) {
-				let html = "";
+				let htmlMy = "";
+				let htmlCollaborate = "";
+				let htmlPublic = "";
+				let myNum = 0;
+				let coNum = 0;
+				let puNum = 0;
+
 				for (let index = 0; index < _wbw_channel.data.length; index++) {
 					const element = _wbw_channel.data[index];
+					let html = "";
 					html += "<div style='display:flex;line-height: 2.5em;border-bottom: 1px solid gray;'>";
 					html += "<span style='flex:3'>";
 					let style = "";
@@ -79,9 +106,28 @@ function wbw_channal_list_open(book, paralist) {
 					html += "<span style='flex:1;text-align: right;'>" + element.lang + "</span>";
 					html += "<span style='flex:2;display:none;'>" + element.wbw_para + "/" + element.count + "</span>";
 					html += "</div>";
+					switch (element.type) {
+						case "my":
+							htmlMy +=html;
+							myNum++;
+							break;
+						case "collaborate":
+							htmlCollaborate +=html;
+							coNum++
+							break;	
+						case "public":
+							htmlPublic +=html;
+							puNum++
+							break;		
+					}
 				}
 
-				$("#wbw_channal_list_dlg_content").html(html);
+				$("#tabs-1").html(htmlMy);
+				$("#tabs-2").html(htmlCollaborate);
+				$("#tabs-3").html(htmlPublic);
+				$("#my-num").text(myNum);
+				$("#co-num").text(coNum);
+				$("#pu-num").text(puNum);
 				$("#wbw_channal_list_dlg").dialog("open");
 			} else {
 				ntf_show(_wbw_channel.error);

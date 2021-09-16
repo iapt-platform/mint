@@ -982,3 +982,13 @@ pali>p {
 .sent_mode>div>p {
     border-bottom: 0.5em solid var(--btn-color);
 }
+
+
+.circle_num { border: 1px solid var(--border-line-color);
+    border-radius: 99px;
+    line-height: 20px;
+    width: 22px;
+    text-align: center;
+    display: inline-block;
+    margin-left: 5px;
+}

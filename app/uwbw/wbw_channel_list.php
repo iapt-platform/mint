@@ -38,7 +38,7 @@ $FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
 
 foreach ($FetchChannal as $key => $value) {
 	# code...
-	$channelList[$value["id"]]=array("power"=>30);
+	$channelList[$value["id"]]=array("power"=>30,"type"=>"my");
 }
 
 # 找协作的
@@ -51,7 +51,7 @@ foreach ($coop_channal as $key => $value) {
 		}
 	}
 	else{
-		$channelList[$value["res_id"]]=array("power"=>(int)$value["power"]);
+		$channelList[$value["res_id"]]=array("power"=>(int)$value["power"],"type"=>"collaborate");
 	}
 }
 
@@ -62,7 +62,7 @@ $publicChannel = PDO_FetchAll($query, $params);
 foreach ($publicChannel as $key => $channel) {
 	# code...
 	if(!isset($channelList[$channel["channal"]])){
-		$channelList[$channel["channal"]]=array("power"=>10);
+		$channelList[$channel["channal"]]=array("power"=>10,"type"=>"public");
 	}
 }
 
