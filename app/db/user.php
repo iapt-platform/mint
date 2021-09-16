@@ -327,7 +327,7 @@ class User extends Table
 		}
 		if(mb_strlen($nickname,"UTF-8")<1){
 			$this->result["ok"]=false;
-			$this->result["message"]="::nicknamename_too_short";
+			$this->result["message"]="::nickname_too_short";
 			return false;
 		}
 		return true;
