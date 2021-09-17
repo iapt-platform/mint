@@ -18,6 +18,9 @@ require_once "../public/function.php";
 		<script src="../public/js/comm.js"></script>
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
+		<script>
+		<?php require_once '../public/load_lang_js.php'; ?>
+		</script>
 		<style>
 		#login_body{
 			display: flex;

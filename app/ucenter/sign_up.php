@@ -21,7 +21,7 @@ require_once "../redis/function.php";
 		<script src="../ucenter/sign.js"></script>
 		<script>
 		<?php require_once '../public/load_lang_js.php'; ?>
-	</script>
+		</script>
 		<style>
 		#login_body{
 			display: flex;
