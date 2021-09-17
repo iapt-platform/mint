@@ -150,7 +150,6 @@ function wbw_create(index) {
 		function (data) {
 			let msg = JSON.parse(data);
 			if (msg.status == 0) {
-				$("#wbw_channal_list_dlg_content").html("正在打开编辑窗口");
 				let book = msg.book;
 				let paralist = msg.para.join(",");
 				let channel = msg.channel;
