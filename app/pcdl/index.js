@@ -43,7 +43,7 @@ function index_load_collect_new() {
 					html += "<div class='subtitle'>" + iterator.subtitle + "</div>";
 				}
 				if (iterator.summary) {
-					html += "<div> class='summary'" + iterator.summary + "</div>";
+					html += "<div class='summary'>" + iterator.summary + "</div>";
 				}
 
 				html += "<div style='margin-top:1em;'>" + iterator.username.nickname + "</div>";
