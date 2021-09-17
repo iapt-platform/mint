@@ -232,7 +232,7 @@ function dict_lookup2($word){
 function dict_lookup($word)
 {
     if (strlen($word) <= 1) {
-        return 0;
+        return array(0,0);
     }
     global $case;
 	global $dbh;
