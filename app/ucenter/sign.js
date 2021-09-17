@@ -59,15 +59,12 @@ function submit(){
 		}),
 		dataType:"json"
 		}).done(function (data) {
-			
 			if(data.ok){
 				$("#form_div").hide();
 				$("#message").removeClass("form_error");
 				$("#message").html("注册成功。<a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
-
 			}else{
 				$("#message").addClass("form_error");
-
 				$("#message").text(ConvertServerMsgToLocalString(data.message));
 			}
 	}).fail(function(jqXHR, textStatus, errorThrown){
