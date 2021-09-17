@@ -25,7 +25,7 @@ class Article extends Table
 				return $output;
 			}
 		}
-        $query = "SELECT id,title,owner,summary,tag,status,create_time,modify_time FROM article WHERE id= ? ";
+        $query = "SELECT id,title,owner,subtitle,summary,tag,status,create_time,modify_time FROM article WHERE id= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +33,9 @@ class Article extends Table
 			if($this->redis!==false){
 				$this->redis->hSet("article://".$id,"id",$output["id"]);
 				$this->redis->hSet("article://".$id,"title",$output["title"]);
-				$this->redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				if(isset($output["subtitle"])){
+					$this->redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				}
 				$this->redis->hSet("article://".$id,"summary",$output["summary"]);
 				$this->redis->hSet("article://".$id,"owner",$output["owner"]);
 				$this->redis->hSet("article://".$id,"tag",$output["tag"]);
