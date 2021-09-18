@@ -4169,23 +4169,35 @@ function on_word_mouse_enter() {
 						url: "./dict_find_one.php",
 						dataType: "json",
 						data: "word=" + paliword,
-						success: function (response) {
-							inline_dict_parse(response);
-							render_word_menu(_curr_mouse_enter_wordid);
-						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							ntf_show(xhr.status + thrownError);
-						},
+					}).done(function (data) {
+						inline_dict_parse(data);
+						render_word_menu(_curr_mouse_enter_wordid);
+					}).fail(function(jqXHR, textStatus, errorThrown){
+						ntf_show(textStatus);
+						switch (textStatus) {
+							case "timeout":
+								break;
+							case "error":
+								switch (jqXHR.status) {
+									case 404:
+										break;
+									case 500:
+										break;				
+									default:
+										break;
+								}
+								break;
+							case "abort":
+								break;
+							case "parsererror":			
+								console.log("parsererror",jqXHR.responseText);
+								break;
+							default:
+								break;
+						}
+						
 					});
-					/*
-					$.get(
-						"dict_find_one.php",
-						{
-							word: paliword,
-						},
-						on_dict_lookup
-					);
-*/
+
 				}
 			}
 		}
