@@ -244,5 +244,18 @@ function str_diff(str1, str2) {
 	});
 	return output;
 }
+
+function testCJK(string){
+	/*
+	\u4e00-\u9fa5 (中文)
+	\x3130-\x318F (韩文
+	\xAC00-\xD7A3 (韩文)
+	\u0800-\u4e00 (日文)
+	*/
+	reg = /[\u4e00-\u9fa5]+/;//ja
+	return reg.test()
+
+}
+
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();
