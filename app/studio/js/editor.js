@@ -3603,30 +3603,6 @@ function getMeaningMenuList(index, word) {
 			"</a>";
 	}
 
-	//带字典名的菜单
-	/*
-	if(mDict[word]){
-		for(var j=0;j<mDict[word].length;j++){
-			//
-			output += "<div class='om_menu'>";
-			var dictName = mDict[word][j].dict_name;
-			if(dictName==""){
-				dictName="未知";
-			}
-			output += "<span>"+dictName+"</span>";
-			var currOM=mDict[word][j].mean.split("$");
-			for(var iMean in currOM){
-				if(currOM[iMean].length>0 && currOM[iMean]!="?"){
-					output +="<a  onclick='meaningPartChange("+index+",\""+currOM[iMean]+"\")'>"+currOM[iMean]+"</a>";
-				}
-			}
-			output +="</div>";			
-		}
-	}
-	else{
-		output += "未知";
-	}
-	*/
 	output += "</div>";
 	output += "</div>";
 	return output;
