@@ -3541,11 +3541,8 @@ function refreshPartMeaningSelect() {
 }
 //编辑窗口拆分意思复制到整体意思
 function copy_part_mean_to_mean() {
-	let isCJK = false;
-	for (const iterator of g_arrPartMean) {
-		isCJK = testCJK(iterator);
-	}
-	if(isCJK){
+	let meaning = g_arrPartMean.join("");
+	if(testCJK(meaning)){
 		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
 	}else{
 		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(" "), "[", "]"));
