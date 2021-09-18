@@ -26,7 +26,7 @@ if($power<20){
 $_content = $_POST["content"];
 
 
-if($_POST["import"]=='on'){
+if(isset($_POST["import"]) && $_POST["import"]=='on'){
 	#导入自定义书
 	$custom_book = new CustomBook($redis);
 	$_lang = explode("_",$_POST["lang"]);

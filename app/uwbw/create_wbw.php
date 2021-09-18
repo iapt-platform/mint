@@ -4,6 +4,8 @@
 require_once '../path.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
+require_once "../channal/function.php";
+require_once "../redis/function.php";
 define("MAX_LETTER" ,20000);
 
 $output["status"]=0;
@@ -75,6 +77,8 @@ $dbh_tpl->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $db_wbw = ""._FILE_DB_USER_WBW_;
 $dbh_wbw= new PDO($db_wbw, "", "");
 $dbh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$channelClass = new Channal(redis_connect());
+$channelInfo = $channelClass->getChannal($_channel);
 
 foreach ($_para as $key => $para) {
     # code...
@@ -94,8 +98,8 @@ foreach ($_para as $key => $para) {
                                          $_book,
                                          $para,
                                          "",
-                                         $_POST["lang"],
-                                         1,
+                                         $channelInfo["lang"],
+                                         $channelInfo["status"],
                                          mTime(),
                                          mTime()
                                         );

@@ -40,10 +40,10 @@ function index_load_collect_new() {
 				}
 				html += "</div>";
 				if (iterator.subtitle) {
-					html += "<div>" + iterator.subtitle + "</div>";
+					html += "<div class='subtitle'>" + iterator.subtitle + "</div>";
 				}
 				if (iterator.summary) {
-					html += "<div>" + iterator.summary + "</div>";
+					html += "<div class='summary'>" + iterator.summary + "</div>";
 				}
 
 				html += "<div style='margin-top:1em;'>" + iterator.username.nickname + "</div>";

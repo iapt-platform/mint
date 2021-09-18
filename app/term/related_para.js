@@ -49,7 +49,7 @@ function related_para_dlg_render(para) {
 			output +=
 				"<a href='../reader/?view=chapter&book=" +
 				paraList[0].book +
-				"&para=" +
+				"&par=" +
 				paraList[0].para +
 				"' target='_blank'>" +
 				iterator.title +

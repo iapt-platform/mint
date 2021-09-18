@@ -89,7 +89,7 @@ function reader_load() {
 					tocNextMenu +=
 						"<a href='../reader/?view=chapter&book=" +
 						_reader_book +
-						"&para=" +
+						"&par=" +
 						element.paragraph +
 						"'>" +
 						element.toc +
@@ -118,7 +118,7 @@ function reader_load() {
 							(element.level - firstLevel) +
 							"'><a href='../reader/?view=chapter&book=" +
 							_reader_book +
-							"&para=" +
+							"&par=" +
 							element.paragraph +
 							"&display=" +
 							_display +
@@ -172,7 +172,7 @@ function reader_draw_para_menu() {
 }
 
 function junp_to_para(book, para) {
-	let url = "../reader/?view=para&book=" + book + "&para=" + para + "&display=sent";
+	let url = "../reader/?view=para&book=" + book + "&par=" + para + "&display=sent";
 	location.assign(url);
 }
 
@@ -252,7 +252,7 @@ function set_channal(channalid) {
 		url += "&book=" + _reader_book;
 	}
 	if (_reader_para != -1) {
-		url += "&para=" + _reader_para;
+		url += "&par=" + _reader_para;
 	}
 	if (_reader_begin != -1) {
 		url += "&begin=" + _reader_begin;
@@ -289,7 +289,7 @@ function setMode(mode = "read") {
 		url += "&book=" + _reader_book;
 	}
 	if (_reader_para != -1) {
-		url += "&para=" + _reader_para;
+		url += "&par=" + _reader_para;
 	}
 	if (_reader_begin != -1) {
 		url += "&begin=" + _reader_begin;

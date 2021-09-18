@@ -24,6 +24,7 @@ if (!isset($_GET["token"])) {
 		<script src="../public/js/comm.js"></script>
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
+		<script src="../ucenter/sign.js"></script>
 		<style>
 		#login_body{
 			display: flex;
@@ -191,7 +192,7 @@ if (!isset($_GET["token"])) {
 					<div>
 						<div>
 							<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account; ?></span>
-							<input type="input" id="username" name="username"  value="" />
+							<input type="input" maxlength="32" id="username" name="username"  value="" />
 						</div>
 						<div id="error_username" class="form_error"> </div>
 						<div class="form_help"></div>
@@ -200,8 +201,8 @@ if (!isset($_GET["token"])) {
 					<div>
 						<div>
 							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-							<input type="password" id="password" name="password" placeholder="密码" value="" />
-							<input type="password" id="repassword" name="repassword" placeholder="再次输入密码" value="" />
+							<input type="password" id="password" maxlength="32" name="password" placeholder="密码" value="" />
+							<input type="password" id="repassword" maxlength="32" name="repassword" placeholder="再次输入密码" value="" />
 						</div>
 						<div class="form_help">至少6个字符</div>
 						<div id="error_password" class="form_error"></div>
@@ -210,7 +211,7 @@ if (!isset($_GET["token"])) {
 					<input type="hidden"  id="token" name="token" value="<?php echo $_REQUEST["token"]; ?>" />
 				</form>
 				<div id="button_area">
-					<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
+					<button  onclick="reset_submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
 					<?php echo $_local->gui->continue; ?>
 					</button>
 				</div>	
@@ -226,7 +227,19 @@ if (!isset($_GET["token"])) {
 	<script>
 	login_init();
 
-	function submit(){
+	function reset_submit(){
+		let hasError = false;
+		if($("#password").val()!==$("#repassword").val()){
+		$("#error_password").text("两次密码输入不一致");
+			hasError = true;
+		}
+		if(isValidPassword($("#password").val())==false){
+			$("#error_password").text("密码包含无效字符。 ' / , 空格 '");
+			hasError = true;
+		}
+		if(hasError){
+			return;
+		}
 		$.ajax({
 			type: 'POST',
 			url:"../api/user.php?_method=reset_pwd",

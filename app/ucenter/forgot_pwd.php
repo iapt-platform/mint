@@ -18,6 +18,9 @@ require_once "../public/function.php";
 		<script src="../public/js/comm.js"></script>
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
+		<script>
+		<?php require_once '../public/load_lang_js.php'; ?>
+		</script>
 		<style>
 		#login_body{
 			display: flex;
@@ -191,7 +194,7 @@ require_once "../public/function.php";
 
 					</form>
 					<div id="button_area">
-						<button  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
+						<button id="send"  onclick="submit()" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" >
 						<?php echo $_local->gui->continue; ?>
 						</button>
 					</div>
@@ -206,6 +209,7 @@ require_once "../public/function.php";
 	
 	function submit(){
 		$("#message").text("正在发送...");
+		$(this).text("正在发送...");
 		$(this).prop("disabled",true);
 	$.getJSON(
 		"../api/user.php",
@@ -222,16 +226,19 @@ require_once "../public/function.php";
 			$("#message").addClass("form_error");
 			//发送失败enable发送按钮
 			$(this).prop("disabled",false);
+			$(this).text("再次发送");
 		}
 		}).fail(function(jqXHR, textStatus, errorThrown){
-			$("#message").removeClass("form_error");
-			$("#message").text(textStatus);	
-			//发送失败enable发送按钮
-			$(this).prop("disabled",false);		
+			$("#message").addClass("form_error");
 			switch (textStatus) {
 				case "timeout":
+					$("#message").text(gLocal.gui["error_net_timeout"]);	
+					//发送失败enable发送按钮
+					$(this).prop("disabled",false);
+					$(this).text("再次发送");
 					break;
 				case "error":
+					$("#message").text(gLocal.gui["error_net_"+jqXHR.status]);
 					switch (jqXHR.status) {
 						case 404:
 							break;
@@ -242,8 +249,10 @@ require_once "../public/function.php";
 					}
 					break;
 				case "abort":
+					$("#message").text(gLocal.gui["error_net_abort"]);	
 					break;
-				case "parsererror":			
+				case "parsererror":
+					$("#message").text(gLocal.gui["error_net_parsererror"]);	
 					console.log("delete-parsererror",jqXHR.responseText);
 					break;
 				default:

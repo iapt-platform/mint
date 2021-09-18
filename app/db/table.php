@@ -78,8 +78,14 @@ class Table
 			$updateDate,
 			$where
 		);
-
-		return true;
+		if($this->medoo->error){
+			$this->result["ok"]=false;
+			$this->result["message"]=$this->medoo->error;
+			return false;
+		}else{
+			return true;
+		}
+		
 	}
 
 	public function _show($columns,$id){
@@ -88,7 +94,12 @@ class Table
 			$columns,
 			["id"=>$id]
 		);
-		$this->result["data"] = $output;
+		if($this->medoo->error){
+			$this->result["ok"]=false;
+			$this->result["message"]=$this->medoo->error;
+		}else{
+			$this->result["data"] = $output;
+		}
 		return $this->result;
 	}
 

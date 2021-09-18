@@ -1,0 +1,253 @@
+<!--键入[[显示术语下拉菜单-->
+<html>
+	<body>
+		<style>
+			.textarea,
+			textarea {
+				padding: 0;
+				font-family: inherit;
+				width: 100%;
+				height: 100px;
+				resize: vertical;
+				font-size: 14px;
+				line-height: 1;
+				border: 1px solid #ddd;
+				white-space: pre-wrap;
+				word-break: break-all;
+				z-index: 1;
+			}
+			#text_shadow{
+				position: absolute;
+				width: 300px;
+				visibility: hidden;
+			}
+			.cursor{
+				position: absolute;
+				border-left: 1px solid #000;
+			}
+			#menu{
+				width: 200px;
+				height:300px;
+				background-color: aqua;
+				box-shadow: #000;
+				position:absolute;
+				display: none;
+			}
+			#menu ul{
+				list-style-type: none;
+    margin: 0;
+    padding: 0;
+			}
+			#menu .focus{
+				color:red;
+			}
+		</style>
+
+<h2>术语输入测试</h2>
+<div style='width:300px;position: relative;'>
+<div id="menu"></div>
+<div class="textarea" id="text_shadow" >
+前端路迹<span class="cursor">&nbsp;</span>
+qinshenxue.com
+</div>
+<textarea>
+前端路迹
+qinshenxue.com
+</textarea>
+</div>
+
+<script>
+	var menuFocusIndex=0;
+	var data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+	var textarea = document.querySelector('textarea');
+	textarea.onkeydown = function (e) {
+		textarea.clientHeight
+		let menu = document.querySelector('#menu');
+		switch (e.key) {
+			case "ArrowDown"://down arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex++;
+					if(menuFocusIndex>5){
+						menuFocusIndex=5;
+					}
+					menu.innerHTML=renderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+				break;
+			case "ArrowUp"://up arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex--;
+					if(menuFocusIndex<0){
+						menuFocusIndex=0;
+					}
+					menu.innerHTML=renderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+			break;
+			case "Enter":
+				if(menu.style.display=="block"){
+					let value = textarea.value;
+					let selectionStart = textarea.selectionStart;
+					let str1 = value.slice(0, selectionStart)
+					let str2 = value.slice(selectionStart);
+					textarea.value = str1+data[menuFocusIndex]+"]]"+str2;
+					menu.style.display="none";
+					return false;
+				}
+				else{
+					if(!e.shiftKey){
+						return false;
+					}
+				}
+				
+				break;
+			case "Escape":
+				e.currentTarget.value="";
+				break;
+			default:
+				break;
+		}
+	}
+	textarea.onkeyup = function (e) {
+		let value = textarea.value
+		let selectionStart = textarea.selectionStart
+		let str1 = value.slice(0, selectionStart)
+		let str2 = value.slice(selectionStart)
+		let textNode1 = document.createTextNode(str1)
+		let textNode2 = document.createTextNode(str2)
+		let cursor = document.createElement('span')
+		cursor.innerHTML = '&nbsp;'
+		cursor.setAttribute('class','cursor')
+		let mirror = document.querySelector('.textarea')
+		mirror.innerHTML = ''
+		mirror.appendChild(textNode1)
+		mirror.appendChild(cursor)
+		mirror.appendChild(textNode2)
+		let menu = document.querySelector('#menu');		
+		if(str1.slice(-2)=="[[" && menu.style.display!="block"){
+			menuFocusIndex=0;
+			menu.innerHTML=renderMenu({focus:0});
+			menu.style.display="block";
+			menu.style.top=cursor.offsetTop+14;
+			menu.style.left=cursor.offsetLeft;
+		}
+
+		if(e.key=="Escape"){
+			menu.style.display="none";
+		}
+		
+		console.log(keynum);
+		console.log(cursor.offsetLeft,cursor.offsetTop)
+	}
+	function renderMenu(params) {
+		
+		let html="<ul>";
+		let index=0;
+		let focusIndex = params.focus%data.length;
+		for (const it of data) {
+			html +="<li ";
+			if(focusIndex==index){
+				html +="class='focus' "
+			}
+			index++;
+			html +=">"+index+ ". "+it+"<li>";
+		}
+		return html;
+	}
+	/*
+	// element:  t.refs.textarea
+function getCaretPosition(element) {
+  let left;
+  let top;
+  if (document.selection) {
+    element.focus();
+    const range = document.selection.createRange();
+    left = range.boundingLeft + element.scrollLeft;
+    top = range.boundingTop + element.scrollTop;
+  } else {
+    const SHADOWEDITOR = '__shadow_editor__';
+    const SHADOWEDITORTEXT = '__shadow_editor_text__';
+    const SHADOWEDITORCARET = '__shadow_editor_caret__';
+    const shadowEditor = element[SHADOWEDITOR] || document.createElement('div');
+    const shadowEditorCaret = element[SHADOWEDITORCARET] || document.createElement('span');
+    const shadowEditorText = element[SHADOWEDITORTEXT] || document.createElement('span');
+    let focusOffset = { left: 0, top: 0 };
+    if (!element[SHADOWEDITOR]) {
+      // add shadpw element to element's cache
+      element[SHADOWEDITOR] = shadowEditor;
+      element[SHADOWEDITORCARET] = shadowEditorCaret;
+      element[SHADOWEDITORTEXT] = shadowEditorText;
+      // append shadow to document body
+      shadowEditor.appendChild(shadowEditorText);
+      shadowEditor.appendChild(shadowEditorCaret);
+      document.body.appendChild(shadowEditor);
+      // set shadow element's style
+      const style = shadowEditor.style;
+      const computed = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+
+      if (element.nodeName != 'INPUT') {
+        // only for textarea
+        style.whiteSpace = 'pre-wrap';
+        style.wordWrap = 'break-word';
+      } else {
+        style.whiteSpace = 'nowrap';
+      }
+
+      style.position = 'absolute';
+      style.overflow = 'hidden';
+      style.visibility = 'hidden';
+      properties.forEach((prop) => {
+        style[prop] = computed[prop];
+      });
+
+      shadowEditorCaret.textContent = '|';
+      shadowEditorCaret.style.cssText = 'display:inline-block;width:0;overflow:hidden;word-wrap:break-word;word-break:break-all;';
+    }
+    const offset = getElementOffset(element);
+    shadowEditor.style.top = `${offset.top}px`;
+    shadowEditor.style.left = `${offset.left}px`;
+    const index = element.selectionEnd;
+    const SHADOWEDITORCONTENT = element.value.substring(0, index);
+    shadowEditorText.textContent = SHADOWEDITORCONTENT;
+
+    shadowEditorCaret.style.display = 'inline-block';
+    try { focusOffset = getElementOffset(shadowEditorCaret); } catch (e) { }
+    shadowEditorCaret.style.display = 'none';
+    left = focusOffset.left - element.scrollLeft;
+    top = focusOffset.top - element.scrollTop;
+    const winOffset = getScrollOffset();
+    left -= winOffset.x;
+    top -= winOffset.y;
+  }
+  return {
+    left,
+    top,
+  };
+}
+	*/
+
+	/*
+如果你只是想获得输入框中光标的 offset 的话, 你可以用从 At.js 剥离出来的 jQuery 插件: Caret.js
+
+可以是用AT-JS jquery插件来实现你需要的效果：
+
+下载地址：
+
+http://pan.baidu.com/share/link?shareid=495943&uk=386708086
+
+使用方法：
+
+$("input[name=message]").atWho("@",{
+tpl: "<li id='${uid}' data-value='${name}'>${name} <small>${spacenote}</small></li>",
+'data':friend_list
+});
+评论
+但是如果你想做，你题目描述的东西的话，还是建议用插件。 这里有一个不错的jquery插件： http://ichord.github.io/At.js/
+
+评论
+
+	*/
+</script>
+
+	</body>
+</html>

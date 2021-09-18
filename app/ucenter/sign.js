@@ -1,18 +1,49 @@
+function isValidPassword(str){
+	let patt=new RegExp(/\s|\//);
+	if(patt.test(str)){
+		return false;
+	}else{
+		return true;
+	}
+}
+function isValidUserName(str){
+	let patt=new RegExp(/@|\s|\//);
+	if(patt.test(str)){
+		return false;
+	}else{
+		return true;
+	}
+}
 function submit(){
+	let hasError = false;
 	if($("#password").val()!==$("#repassword").val()){
 		$("#error_password").text("两次密码输入不一致");
-		return;
+		hasError = true;
 	}
-	let nickname = $("#nickname").val();
+	if(isValidPassword($("#password").val())==false){
+		$("#error_password").text("密码包含无效字符。  / 空格 ");
+		hasError = true;
+	}
+
+	if(isValidUserName($("#username").val())==false){
+		$("#error_password").text("用户名包含无效字符。@  / 空格 ");
+		hasError = true;
+	}
+
+	let nickname = $("#nickname").val();	
 	if( nickname ==""){
 		nickname = $("#username").val();
 	}
+
 	let lang = $("#lang").val();
 	if(lang=="zh-cn"){
 		lang = "zh-hans";
 	}
 	if(lang == "zh-tw"){
 		lang = "zh-hant";
+	}
+	if(hasError){
+		return;
 	}
 	$.ajax({
 		type: 'POST',
@@ -23,20 +54,17 @@ function submit(){
 			username:$("#username").val(),
 			password:$("#password").val(),
 			email:$("#email").val(),
-			nickname:$("#nickname").val(),
+			nickname:nickname,
 			lang:$("#lang").val()
 		}),
 		dataType:"json"
 		}).done(function (data) {
-			
 			if(data.ok){
 				$("#form_div").hide();
 				$("#message").removeClass("form_error");
 				$("#message").html("注册成功。<a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
-
 			}else{
 				$("#message").addClass("form_error");
-
 				$("#message").text(ConvertServerMsgToLocalString(data.message));
 			}
 	}).fail(function(jqXHR, textStatus, errorThrown){

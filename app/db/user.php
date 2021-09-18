@@ -105,6 +105,11 @@ class User extends Table
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 			return;
 		}
+		//验证昵称有效性
+		if(!$this->isValidNickName($data["nickname"])){
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+			return;
+		}
 		$isExist = $this->medoo->has($this->table,["username"=>$data["username"]]);
 		if(!$isExist){
 			if(!$this->isValidEmail($data["email"])){
@@ -213,7 +218,8 @@ class User extends Table
 					$mail->Password   = Email["Password"];                               //SMTP password
 					$mail->SMTPSecure = Email["SMTPSecure"];            //Enable implicit TLS encryption
 					$mail->Port       = Email["Port"];                                    //TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-		
+					$mail->CharSet =  'UTF-8';
+					$mail->Encoding = 'base64';
 					//Recipients
 					$mail->setFrom(Email["From"], Email["Sender"]);
 					$mail->addAddress($email);     //Add a recipient Name is optional
@@ -309,6 +315,19 @@ class User extends Table
 		if(preg_match("/@|\s|\//",$username)!==0){
 			$this->result["ok"]=false;
 			$this->result["message"]="::username_invaild_symbol";
+			return false;
+		}
+		return true;
+	}
+	private function isValidNickName($nickname){
+		if(mb_strlen($nickname,"UTF-8")>32){
+			$this->result["ok"]=false;
+			$this->result["message"]="::nickname_too_long";
+			return false;
+		}
+		if(mb_strlen($nickname,"UTF-8")<1){
+			$this->result["ok"]=false;
+			$this->result["message"]="::nickname_too_short";
 			return false;
 		}
 		return true;
