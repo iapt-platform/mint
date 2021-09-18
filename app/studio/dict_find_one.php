@@ -44,6 +44,7 @@ if (isset($_GET["debug"])) {
 }
 
 if (mb_strlen($in_word) == 0) {
+	echo json_encode(array(), JSON_UNESCAPED_UNICODE);
     exit;
 }
 
