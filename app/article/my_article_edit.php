@@ -126,7 +126,7 @@ require_once '../studio/index_head.php';
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->scan_in_reader ;?></span>
 					<button type="button" class="icon_btn" >
-						<a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">
+						<a href="../article/index.php?view=article&id=<?php echo $_GET["id"];?>" target="_blank">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#library"></use>
 							</svg>

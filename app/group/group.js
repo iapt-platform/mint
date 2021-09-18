@@ -161,7 +161,7 @@ function group_list(id, list) {
 								case 3: //article
 									html += "<use xlink:href='../studio/svg/icon.svg#article_1'></use>";
 									cardUrl = "../article/card.php";
-									viewLink = "<a href='../article/?id=" + iterator.res_id + "' target='_blank'>";
+									viewLink = "<a href='../article/?view=article&id=" + iterator.res_id + "' target='_blank'>";
 									doing +=
 										"<a href='../article/my_article_edit.php?id=" +
 										iterator.res_id +
@@ -170,7 +170,7 @@ function group_list(id, list) {
 								case 4: //collection
 									html += "<use xlink:href='../studio/svg/icon.svg#collection'></use>";
 									cardUrl = "../collect/card.php";
-									viewLink ="<a href='../article/?collection=" + iterator.res_id + "' target='_blank'>";
+									viewLink ="<a href='../article/?view=collection&collection=" + iterator.res_id + "' target='_blank'>";
 									doing +=
 										"<a href='../article/my_collect_edit.php?id=" +
 										iterator.res_id +

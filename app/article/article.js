@@ -1,11 +1,11 @@
 //import {Like,LikeRefresh} from '../widget/like.js';
 var _view = "";
+var _id = "";
 var _articel_id = "";
 var _channal = "";
 var _lang = "";
 var _author = "";
 var _display = "";
-var _collect_id = "";
 var _collection_id = "";
 
 function article_onload() {
@@ -106,9 +106,9 @@ function articel_load_article_list(articleId,collectionId) {
 					if (result) {
 						let article_list = JSON.parse(result.article_list);
 						render_article_list(article_list,collectionId,articleId);
-						let strTitle = "<a href='../article/?collection=" + result.id + "'>" + result.title + "</a> / ";
+						let strTitle = "<a href='../article/?view=collection&collection=" + result.id + "'>" + result.title + "</a> / ";
 						for (const iterator of tocActivePath) {
-							strTitle += "<a href='../article/?id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
+							strTitle += "<a href='../article/?view=article&id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
 						}
 						$("#article_path").html(strTitle);						
 					}
@@ -145,7 +145,7 @@ function render_article_list_in_content(article_list,collectId="",articleId="") 
 	});
 }
 function set_channal(channalid) {
-	let url = "../article/index.php?id=" + _articel_id;
+	let url = "../article/index.php?view=article&id=" + _articel_id;
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}
@@ -164,7 +164,7 @@ function set_channal(channalid) {
 	location.assign(url);
 }
 function setMode(mode = "read") {
-	let url = "../article/index.php?id=" + _articel_id;
+	let url = "../article/index.php?view=article&id=" + _articel_id;
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}
@@ -188,7 +188,7 @@ function setMode(mode = "read") {
 }
 //跳转到另外一个文章
 function gotoArticle(articleId) {
-	let url = "../article/index.php?id=" + articleId;
+	let url = "../article/index.php?view=article&id=" + articleId;
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}

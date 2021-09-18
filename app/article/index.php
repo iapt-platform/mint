@@ -21,6 +21,13 @@ require_once "../pcdl/html_head.php";
 	$_channal  = "";
 	$_collect = "";
 
+	if(isset($_GET["view"])){
+		echo "_view='".$_GET["view"]."';";
+	}
+	else{
+		echo "_view='article';";
+	}
+
 	if(isset($_GET["id"])){
 		echo "_articel_id='".$_GET["id"]."';";
 	}
@@ -33,6 +40,9 @@ require_once "../pcdl/html_head.php";
 
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
+	}
+	if(isset($_GET["channel"])){
+		echo "_channal='".$_GET["channel"]."';";
 	}
 	if(isset($_GET["lang"])){
 		echo "_lang='".$_GET["lang"]."';";
@@ -231,15 +241,38 @@ span.fancytree-node{
 	click_dropdown_init();
 	note_create();
 	historay_init();
-	if(_articel_id==""){
-		collect_load(_collection_id);
+	switch (_view) {
+		case "article":
+			articel_load(_articel_id,_collection_id);
+			if(_collection_id!=""){
+				articel_load_article_list(_articel_id,_collection_id);
+			}
+			break;
+		case "collection":
+			collect_load(_collection_id);
+		break;
+		case "sent":
+		
+		break;
+		case "simsent":
+		
+		break;
+		case "para":
+		
+		break;
+		case "chapter":
+		
+		break;
+		case "book":
+		
+		break;
+		case "series":
+		
+		break;
+		default:
+			break;
 	}
-	else{
-		articel_load(_articel_id,_collection_id);
-		if(_collection_id!=""){
-			articel_load_article_list(_articel_id,_collection_id);
-		}
-	}
+
 	});
 
 	 window.addEventListener('scroll',winScroll);

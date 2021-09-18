@@ -43,7 +43,7 @@ function my_article_list() {
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
 						
 						html += "<div style='flex:1;'>";
-						html += "<a href='../article/?id=" + iterator.id + "' target='_blank' title='" + gLocal.gui.preview + "' >";
+						html += "<a href='../article/?view=article&id=" + iterator.id + "' target='_blank' title='" + gLocal.gui.preview + "' >";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
 						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
