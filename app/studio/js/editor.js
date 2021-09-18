@@ -3541,7 +3541,16 @@ function refreshPartMeaningSelect() {
 }
 //编辑窗口拆分意思复制到整体意思
 function copy_part_mean_to_mean() {
-	$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	let isCJK = false;
+	for (const iterator of g_arrPartMean) {
+		isCJK = testCJK(iterator);
+	}
+	if(isCJK){
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	}else{
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(" "), "[", "]"));
+	}
+	
 }
 //编辑窗口拆分意思下拉菜单
 function getMeaningMenuList(index, word) {
