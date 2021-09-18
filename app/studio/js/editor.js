@@ -4064,7 +4064,7 @@ function editor_parse_doc_xml(xmlText) {
 	updataToc();
 	//渲染数据块
 	blockShow(0);
-	refreshResource();
+	//refreshResource();
 	editro_layout_loadStyle();
 }
 
@@ -4832,8 +4832,8 @@ function editor_project_updataProjectInfo() {
 	strInfo += gLocal.gui.innerdict + "：" + iInlineDictCount + "<br />";
 	strInfo += gLocal.gui.vocabulary + CountVocabulary() + "<br />";
 
-	document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
-	document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
+	//document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
+	//document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("editor_doc_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("file_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 }
