@@ -259,6 +259,14 @@ else{$currDevice="computer";}
 		min-width: 1em;
 		min-height: 1.3em;
 	}
+
+	#word_mdf_parts_dropdown  a {
+		width: 100%;
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 	</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
 	<style id="display_set">
