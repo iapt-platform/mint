@@ -1,5 +1,16 @@
 var ntf_msg_list = new Array();
 var ntf_max_msg_line = 2;
+
+var ntf_time
+function removeFirst()
+{
+	ntf_msg_list.shift();
+	if(ntf_msg_list.length>0){
+		ntf_time=setTimeout("removeFirst()",5000);		
+	}
+
+}
+
 function ntf_init(lines = 5, style = "dialog") {
 	ntf_max_msg_line = lines;
 	var divNotify = document.createElement("div");
@@ -17,7 +28,7 @@ function ntf_init(lines = 5, style = "dialog") {
 	divNotify.style.display = "none";
 }
 var time_out_func;
-function ntf_show(msg, timeout = 8) {
+function ntf_show(msg, timeout = 5) {
 	if (ntf_msg_list.length < ntf_max_msg_line) {
 		ntf_msg_list.push(msg);
 	} else {
@@ -44,5 +55,6 @@ function ntf_show(msg, timeout = 8) {
 	}
 }
 function ntf_hide() {
+	removeFirst();
 	document.getElementById("id_pcd_notify").style.display = "none";
 }
