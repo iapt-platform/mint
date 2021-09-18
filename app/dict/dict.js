@@ -4,6 +4,7 @@ var dict_search_xml_http = null;
 var _autoSplit = true;
 
 function dict_search(word, autoSplit = true) {
+	word = word.replace(/[\[\]]/g,"");
 	_autoSplit = autoSplit;
 	$("#pre_search_result").hide();
 	if (!localStorage.searchword) {
