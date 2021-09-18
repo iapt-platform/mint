@@ -3566,7 +3566,7 @@ function getMeaningMenuList(index, word) {
 	if (part_mean_display_array.length - 1 >= index) {
 		currMeaningList.push(part_mean_display_array[index]);
 	} else {
-		currMeaningList.push("↓↓");
+		currMeaningList.push(" ");
 	}
 	for (const iterator of currMeaningList0) {
 		if (iterator != "") {
@@ -3586,7 +3586,7 @@ function getMeaningMenuList(index, word) {
 		currMean = g_arrPartMean[index];
 	}
 	if (currMean == "") {
-		currMean = "↓↓";
+		currMean = " ";
 	}
 	output += currMean + "</p>";
 
