@@ -3592,20 +3592,20 @@ function getMeaningMenuList(index, word) {
 
 	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
-	for (i in currMeaningList) {
-		output +=
-			"<a onclick='meaningPartChange(" +
-			index +
-			',"' +
-			currMeaningList[i] +
-			"\")'>" +
-			currMeaningList[i] +
-			"</a>";
+	output += "<a onclick='meaningPartLookup(\"" +word +"\")'>🔍" +gLocal.gui.dict +"</a>";	
+	for (const itMean of currMeaningList) {
+		if(itMean!="?"){
+			output += "<a onclick='meaningPartChange(" +index +	',"' +itMean +	"\")'>" +itMean +"</a>";					
+		}
+
 	}
 
 	output += "</div>";
 	output += "</div>";
 	return output;
+}
+function meaningPartLookup(word){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+word,target="dict");
 }
 function getWordMeaningList(word) {
 	var currOM = "";
