@@ -112,7 +112,7 @@
 	} else {
 	?>
 		<span style="display: flex;">
-			<div style="padding: 7px; margin-right: 10px;"><a href='../ucenter/'><?php echo $_local->gui->login; ?></a></div>
+			<div style="padding: 7px; margin-right: 10px;"><a href='../ucenter/index.php'><?php echo $_local->gui->login; ?></a></div>
 			<div class="new_account"><a href='../ucenter/index.php?op=new'><?php echo $_local->gui->new_account; ?></a></div>
 		</span>
 	<?php
