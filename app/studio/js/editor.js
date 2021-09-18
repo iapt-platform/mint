@@ -3541,7 +3541,13 @@ function refreshPartMeaningSelect() {
 }
 //编辑窗口拆分意思复制到整体意思
 function copy_part_mean_to_mean() {
-	$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	let meaning = g_arrPartMean.join("");
+	if(testCJK(meaning)){
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	}else{
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(" "), "[", "]"));
+	}
+	
 }
 //编辑窗口拆分意思下拉菜单
 function getMeaningMenuList(index, word) {
@@ -3557,7 +3563,7 @@ function getMeaningMenuList(index, word) {
 	if (part_mean_display_array.length - 1 >= index) {
 		currMeaningList.push(part_mean_display_array[index]);
 	} else {
-		currMeaningList.push("↓↓");
+		currMeaningList.push(" ");
 	}
 	for (const iterator of currMeaningList0) {
 		if (iterator != "") {
@@ -3577,50 +3583,26 @@ function getMeaningMenuList(index, word) {
 		currMean = g_arrPartMean[index];
 	}
 	if (currMean == "") {
-		currMean = "↓↓";
+		currMean = " ";
 	}
 	output += currMean + "</p>";
 
 	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
-	for (i in currMeaningList) {
-		output +=
-			"<a onclick='meaningPartChange(" +
-			index +
-			',"' +
-			currMeaningList[i] +
-			"\")'>" +
-			currMeaningList[i] +
-			"</a>";
+	output += "<a onclick='meaningPartLookup(\"" +word +"\")'>🔍" +gLocal.gui.dict +"</a>";	
+	for (const itMean of currMeaningList) {
+		if(itMean!="?"){
+			output += "<a onclick='meaningPartChange(" +index +	',"' +itMean +	"\")'>" +itMean +"</a>";					
+		}
+
 	}
 
-	//带字典名的菜单
-	/*
-	if(mDict[word]){
-		for(var j=0;j<mDict[word].length;j++){
-			//
-			output += "<div class='om_menu'>";
-			var dictName = mDict[word][j].dict_name;
-			if(dictName==""){
-				dictName="未知";
-			}
-			output += "<span>"+dictName+"</span>";
-			var currOM=mDict[word][j].mean.split("$");
-			for(var iMean in currOM){
-				if(currOM[iMean].length>0 && currOM[iMean]!="?"){
-					output +="<a  onclick='meaningPartChange("+index+",\""+currOM[iMean]+"\")'>"+currOM[iMean]+"</a>";
-				}
-			}
-			output +="</div>";			
-		}
-	}
-	else{
-		output += "未知";
-	}
-	*/
 	output += "</div>";
 	output += "</div>";
 	return output;
+}
+function meaningPartLookup(word){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+word,target="dict");
 }
 function getWordMeaningList(word) {
 	var currOM = "";
