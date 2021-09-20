@@ -4742,6 +4742,7 @@ function render_word_menu_parent(id) {
 	if (!str_in_array(word_real, sWord)) {
 		sWord.push(word_real);
 	}
+	output += "<a onclick=\"meaningPartLookup('" + word_parent + "')\">🔍" +gLocal.gui.dict +"</a>";
 
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
