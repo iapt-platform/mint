@@ -4742,7 +4742,7 @@ function render_word_menu_parent(id) {
 	if (!str_in_array(word_real, sWord)) {
 		sWord.push(word_real);
 	}
-	output += "<a onclick=\"meaningPartLookup('" + word_parent + "')\">🔍" +gLocal.gui.dict +"</a>";
+	output += "<a onclick=\"ParentLookup()\">🔍" +gLocal.gui.dict +"</a>";
 
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
@@ -4756,7 +4756,9 @@ function render_word_menu_parent(id) {
 	}
 	return output;
 }
-
+function ParentLookup(){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+$("#id_text_parent").val(),target="dict");
+}
 function show_word_menu_partmean(id) {
 	var word_partmean_div = document.getElementById("partmean_" + id);
 	if (word_partmean_div) {
