@@ -163,3 +163,14 @@ img {
 .tool_bar {
 	display: flex;
 }
+
+
+.page_number {
+    padding: 2px 2px;
+    position: absolute;
+    margin-top: 0;
+    margin-left: -30px;
+    font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
+    color: var(--main-color1);
+    font-size: 80%;
+}

@@ -30,6 +30,7 @@ require_once "../pcdl/html_head.php";
 
 	if(isset($_GET["id"])){
 		echo "_articel_id='".$_GET["id"]."';";
+		echo "_id='".$_GET["id"]."';";
 	}
 	if(isset($_GET["collect"])){
 		echo "_collection_id='".$_GET["collect"]."';";
@@ -50,6 +51,20 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
+
+	if(isset($_GET["book"])){
+		echo "_book=".$_GET["book"].";";
+	}
+	if(isset($_GET["par"])){
+		echo "_par=".$_GET["par"].";";
+	}
+	if(isset($_GET["start"])){
+		echo "_start=".$_GET["start"].";";
+	}
+	if(isset($_GET["end"])){
+		echo "_end=".$_GET["end"].";";
+	}
+
 	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
 		#登录状态下 编辑模式
 		$_mode = "edit";
@@ -147,7 +162,9 @@ span.fancytree-node{
 	font-size: 120%;
     font-weight: 900;
 }
-
+#article_path chapter{
+	display:unset;
+}
 </style>
 
 <?php
@@ -155,25 +172,47 @@ span.fancytree-node{
 ?>
 <div id="head_bar" >
 	<div style="display:flex;">
-	<div id="article_path" >
-	</div>
-	<div id="article_path_title"></div>
+	
 	</div>
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
 		<?php
 		
-		if(isset($_GET["id"])){
+		if(isset($_GET["view"]) && $_GET["view"]=="article"){
 			echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
-			
-			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
-			echo "<a href='../article/frame.php?id=".$_GET["id"];
-			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
-			
 		}
+			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+			echo "<a href='../article/frame.php?view=".$_GET["view"];
+			if(isset($_GET["id"])){
+				echo "&id=".$_GET["id"];
+			}
+			if(isset($_GET["collection"])){
+				echo "&collection=".$_GET["collection"];
+			}
+			if(isset($_GET["channel"])){
+				echo "&channel=".$_GET["channel"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
+			}
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["par"])){
+				echo "&par=".$_GET["par"];
+			}
+			if(isset($_GET["start"])){
+				echo "&start=".$_GET["start"];
+			}
+			if(isset($_GET["end"])){
+				echo "$end=".$_GET["end"];
+			}
+			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
+				
+		
 
 		?>
 		<span>
@@ -184,6 +223,10 @@ span.fancytree-node{
 </div>
 <div id="main_view" class="main_view">
 <div id="article_head" style="border-bottom: 1px solid gray;">
+	<div style="display:flex;">
+		<div id="article_path" class=""></div>
+		<div id="article_path_title"></div>
+	</div>
 	<div id="article_title" class="term_word_head_pali"></div>
 	<div id="article_subtitle"></div>
 	<div id="article_author"></div>
@@ -252,23 +295,17 @@ span.fancytree-node{
 			collect_load(_collection_id);
 		break;
 		case "sent":
-		
+		case "para":
+		case "chapter":
+		case "book":
+		case "series":
+			palicanon_load();
+			reader_get_path();
+			
 		break;
 		case "simsent":
-		
-		break;
-		case "para":
-		
-		break;
-		case "chapter":
-		
-		break;
-		case "book":
-		
-		break;
-		case "series":
-		
-		break;
+			palicanon_load();
+			break;
 		default:
 			break;
 	}
