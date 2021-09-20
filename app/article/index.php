@@ -136,6 +136,8 @@ require_once "../pcdl/html_head.php";
 <link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 <script src="../article/my_collect.js" type="text/javascript"></script>
+<script language="javascript" src="../article/article_add_dlg.js"></script>
+
 
 <style>
 ul.fancytree-container{
@@ -165,6 +167,29 @@ span.fancytree-node{
 #article_path chapter{
 	display:unset;
 }
+
+.float_dlg {
+	display: none;
+	width: 25em;
+	position: absolute;
+	right: 0;
+	background-color: var(--btn-hover-bg-color);
+	padding: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px var(--main-color);
+	z-index: 1;
+}
+
+.float_dlg_left {
+	display: none;
+	width: 25em;
+	position: absolute;
+	background-color: var(--btn-hover-bg-color);
+	padding: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px var(--main-color);
+	z-index: 200;
+}
 </style>
 
 <?php
@@ -172,7 +197,7 @@ span.fancytree-node{
 ?>
 <div id="head_bar" >
 	<div style="display:flex;">
-	
+
 	</div>
 
 	<div style="margin: auto 0;">
@@ -183,6 +208,19 @@ span.fancytree-node{
 			echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
+		}
+		if($_GET["view"]!=="article" || $_GET["view"]!=="collection"){
+?>
+	<span class="icon_btn_div">				
+		<button id="file_add" type="button" class="icon_btn" onclick="to_article()" title=" ">
+			<svg class="icon">
+				<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
+			</svg>
+			转换为文章
+		</button>
+		<div id='article_add_div' class="float_dlg"></div>
+	</span>	
+<?php
 		}
 			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
 			echo "<a href='../article/frame.php?view=".$_GET["view"];
@@ -280,6 +318,7 @@ span.fancytree-node{
 
 <script>
 	$(document).ready(function(){
+		article_add_dlg_init("article_add_div");
 	ntf_init();				
 	click_dropdown_init();
 	note_create();

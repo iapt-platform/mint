@@ -377,3 +377,10 @@ function copy_para_ref(book, para) {
 function edit_wbw(book, para) {
 	wbw_channal_list_open(book, [para]);
 }
+
+function to_article(){
+	article_add_dlg_show({
+		title:_sent_data.title,
+		content:_sent_data.content,
+	});
+}
