@@ -209,7 +209,7 @@ span.fancytree-node{
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
 		}
-		if($_GET["view"]!=="article" || $_GET["view"]!=="collection"){
+		if($_GET["view"]!=="article" && $_GET["view"]!=="collection"){
 ?>
 	<span class="icon_btn_div">				
 		<button id="file_add" type="button" class="icon_btn" onclick="to_article()" title=" ">
