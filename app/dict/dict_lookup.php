@@ -100,8 +100,7 @@ $right_word_list = "";
 					echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
 					$titleHas = true;
 				}
-				echo $userDictStr;
-				echo $termDictStr;
+
 				
                 $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
                 $Fetch = PDO_FetchAll($query, array($x));
@@ -119,6 +118,10 @@ $right_word_list = "";
                         $x_value = str_replace($gr->id, $gr->value, $x_value);
                     }
                     echo "<div class='dict_find_gramma'>" . $x_value . "</div>";
+					
+					echo $userDictStr;
+					echo $termDictStr;
+
                     for ($i = 0; $i < $iFetch; $i++) {
                         $mean = $Fetch[$i]["mean"];
                         $dictid = $Fetch[$i]["dict_id"];

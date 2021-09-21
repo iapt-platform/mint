@@ -4064,7 +4064,7 @@ function editor_parse_doc_xml(xmlText) {
 	updataToc();
 	//渲染数据块
 	blockShow(0);
-	refreshResource();
+	//refreshResource();
 	editro_layout_loadStyle();
 }
 
@@ -4169,23 +4169,35 @@ function on_word_mouse_enter() {
 						url: "./dict_find_one.php",
 						dataType: "json",
 						data: "word=" + paliword,
-						success: function (response) {
-							inline_dict_parse(response);
-							render_word_menu(_curr_mouse_enter_wordid);
-						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							ntf_show(xhr.status + thrownError);
-						},
+					}).done(function (data) {
+						inline_dict_parse(data);
+						render_word_menu(_curr_mouse_enter_wordid);
+					}).fail(function(jqXHR, textStatus, errorThrown){
+						ntf_show(textStatus);
+						switch (textStatus) {
+							case "timeout":
+								break;
+							case "error":
+								switch (jqXHR.status) {
+									case 404:
+										break;
+									case 500:
+										break;				
+									default:
+										break;
+								}
+								break;
+							case "abort":
+								break;
+							case "parsererror":			
+								console.log("parsererror",jqXHR.responseText);
+								break;
+							default:
+								break;
+						}
+						
 					});
-					/*
-					$.get(
-						"dict_find_one.php",
-						{
-							word: paliword,
-						},
-						on_dict_lookup
-					);
-*/
+
 				}
 			}
 		}
@@ -4730,6 +4742,7 @@ function render_word_menu_parent(id) {
 	if (!str_in_array(word_real, sWord)) {
 		sWord.push(word_real);
 	}
+	output += "<a onclick=\"ParentLookup()\">🔍" +gLocal.gui.dict +"</a>";
 
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
@@ -4743,7 +4756,9 @@ function render_word_menu_parent(id) {
 	}
 	return output;
 }
-
+function ParentLookup(){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+$("#id_text_parent").val(),target="dict");
+}
 function show_word_menu_partmean(id) {
 	var word_partmean_div = document.getElementById("partmean_" + id);
 	if (word_partmean_div) {
@@ -4832,8 +4847,8 @@ function editor_project_updataProjectInfo() {
 	strInfo += gLocal.gui.innerdict + "：" + iInlineDictCount + "<br />";
 	strInfo += gLocal.gui.vocabulary + CountVocabulary() + "<br />";
 
-	document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
-	document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
+	//document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
+	//document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("editor_doc_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("file_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 }

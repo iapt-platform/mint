@@ -1,4 +1,5 @@
 var _article_add_dlg_div;
+var _article_create_param;
 function article_add_dlg_init(div) {
 	_article_add_dlg_div = div;
 	let html = "";
@@ -18,7 +19,13 @@ function article_add_dlg_init(div) {
 	$("#" + div).append(html);
 }
 
-function article_add_dlg_show() {
+function article_add_dlg_show(param=null) {
+	_article_create_param=param;
+	if(param){
+		if(typeof param.title !="undefined"){
+			$("#article_add_title").val(param.title);
+		}
+	}
 	$("#" + _article_add_dlg_div).show();
 }
 function article_add_dlg_hide() {
@@ -30,19 +37,22 @@ function article_add_cancel() {
 }
 
 function article_add_new() {
+	if(typeof _article_create_param == "undefined"){
+		_article_create_param = {
+			title: $("#article_add_title").val(),
+		}
+	}
 	$.post(
 		"../article/my_article_put.php",
-		{
-			title: $("#article_add_title").val(),
-		},
+		_article_create_param,
 		function (data) {
-			let error = JSON.parse(data);
-			if (error.status == 0) {
+			let result = JSON.parse(data);
+			if (result.ok === true) {
 				alert("ok");
 				article_add_cancel();
-				window.location.reload();
+				window.open("../article/my_article_edit.php?id="+result.data.id);
 			} else {
-				alert(error.message);
+				alert(result.message);
 			}
 		}
 	);

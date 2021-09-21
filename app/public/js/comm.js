@@ -267,7 +267,7 @@ function testCJK(string){
 	U+3131－U+318E,
 	U+FFA1－U+FFDC
 
-	\u0800-\u4e00 (日文)ひらがな平仮名
+	\u3040-\u309f (日文)ひらがな平仮名
 	U+4E00–U+9FBF 汉字; U+3040–U+309F 平假名; U+30A0–U+30FF 片假名
 	*/
 	reg = /[\u4e00-\u9fa5]+/;//cn

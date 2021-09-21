@@ -11,7 +11,7 @@ function collect_load(begin = 0) {
                 html += "<div class='card_state'>" + gLocal.gui.ongoing + "</div>";
                 html += "<div class='card_info'>"; //卡片信息开始
                 html += "<div class='collect_title'>";
-                html += "<a href='../article/?collect=" + iterator.id + "'>" + iterator.title + "</a>";
+                html += "<a href='../article/?view=collection&collection=" + iterator.id + "'>" + iterator.title + "</a>";
                 html += "</div>";
 
                 if (iterator.subtitle && iterator.subtitle != "null") {
@@ -41,7 +41,7 @@ function collect_load(begin = 0) {
                     html += "<div style='padding:6px 0; border-top: #707070 1px solid;'>";
                     html += "<a class='article_title'";
 					html +=" style='color:var(--main_color);font-weight:700;'";
-					html +=" href='../article/?id=" + article.article +"&collection="+iterator.id+"' target='_blank'>" ;
+					html +=" href='../article/?view=article&id=" + article.article +"&collection="+iterator.id+"' target='_blank'>" ;
 					html += article.title ;
 					html += "</a>";
                     html += "</div>";

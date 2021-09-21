@@ -30,7 +30,7 @@ function my_collect_list() {
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
 						//html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 						html += "<div style='flex:1;'>";
-						html += "<a href='../article/?collect=" + iterator.id + "' target='_blank'>" + gLocal.gui.preview + "</a>";
+						html += "<a href='../article/?view=collection&collection=" + iterator.id + "' target='_blank'>" + gLocal.gui.preview + "</a>";
 						html += "</div>";
 						html += "<div style='flex:1;'>";
 						html += "<a onclick=\"collection_share('" + iterator.id + "')\">"+gLocal.gui.share+"</a>";
@@ -139,7 +139,7 @@ function my_collect_edit(id) {
 						source: tocGetTreeData(_arrArticleList),
 						click: function(e, data) {
 							if( e.ctrlKey ){
-							  window.open("../article/?id="+data.node.key,"_blank");
+							  window.open("../article/?view=article&id="+data.node.key,"_blank");
 							  return false;
 							}
 						  },

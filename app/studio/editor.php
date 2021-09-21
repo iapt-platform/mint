@@ -69,7 +69,8 @@ else{$currDevice="computer";}
 	<script language="javascript" src="../public/js/comm.js"></script>
 	<script language="javascript" src="../public/js/localforage.min.js"></script>
 	<script language="javascript" src="../public/script/my.js"></script>
-	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
+
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 

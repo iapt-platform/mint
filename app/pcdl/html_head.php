@@ -83,8 +83,8 @@ if (isset($_GET["language"])) {
 
 	<script src="../ucenter/setting.js"></script>
 
-	<script src="../public/js/marked.js"></script>
-	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../../node_modules/marked/marked.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
 
 	<script src="../public/js/notify.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css" />
