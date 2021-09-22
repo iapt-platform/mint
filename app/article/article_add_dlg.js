@@ -21,7 +21,7 @@ function article_add_dlg_init(div) {
 
 function article_add_dlg_show(param=null) {
 	_article_create_param=param;
-	if(param){
+	if(param!=null){
 		if(typeof param.title !="undefined"){
 			$("#article_add_title").val(param.title);
 		}
@@ -37,7 +37,7 @@ function article_add_cancel() {
 }
 
 function article_add_new() {
-	if(typeof _article_create_param == "undefined"){
+	if(_article_create_param == null){
 		_article_create_param = {
 			title: $("#article_add_title").val(),
 		}
