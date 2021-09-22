@@ -192,21 +192,34 @@ function my_article_edit(id) {
 					html += "</div>";
 
 					html += "<div>";
-					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
+
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
 					html += '<span id="article_title" style="flex:7;"></span>';
 					html += "</div>";
+
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:1;'>" + gLocal.gui.sub_title + "</span>";
+					html += '<span id="article_title" style="flex:7;">';
+					if(!result.subtitle){
+						result.subtitle="";
+					}
+					html += '<input type="input" name="subtitle" value="'+result.subtitle+'" />'
+					html += '</span>';
+					html += "</div>";
+
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
 					html += '<span id="aritcle_status" style="flex:7;"></span>';
 					html += "</div>";
-					html += '<div style="width:100%;" >';
+
+					html += '<div style="width:100%;display:flex;" >';
 					html +=
-						'<span style="flex:3;margin: auto;">' +
+						'<span style="flex:1;margin: auto;">' +
 						gLocal.gui.language_select +
-						'</span>	<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
+						'</span>';
+					html +='<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
 						gLocal.gui.input +
 						" & " +
 						gLocal.gui.language_select +
@@ -216,7 +229,10 @@ function my_article_edit(id) {
 						result.lang +
 						'" value="' +
 						result.lang +
-						'" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
+						'" >';
+					html +=' <input id="article_lang" type="hidden" name="lang" value="">';
+					html +='</div>';
+
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
 					html += "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
