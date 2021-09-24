@@ -193,3 +193,5 @@ define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
 
 
 define("_FILE_DB_USER_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/user/statistics.db3");
+
+define("_FILE_DB_USER_RBAC_",  __DIR__ . "/../tmp/user/rbac.db3");
