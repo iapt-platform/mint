@@ -789,6 +789,8 @@ foreach($plugin_list as $info){
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>
+								<a onclick="edit_parent_grammar_changed('.caus.')"><?php echo $_local->gui->caus; ?></a>
+								<a onclick="edit_parent_grammar_changed('.pass.')"><?php echo $_local->gui->pass; ?></a>
 							</div>
 						</div>
 						<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />
