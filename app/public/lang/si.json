@@ -657,6 +657,8 @@
 		"error_net_timeout": "Timeout",
 		"error_net_abort": "abort",
 		"error_net_parsererror": "parser error",
+		"caus": "caus.",
+		"pass": "pass.",
 		"": ""
 	},
 	"grammastr": [
