@@ -155,10 +155,7 @@ span.fancytree-title{
 span.fancytree-node{
 	display: flex;
 }
-#toc_content{
-	max-height: 25vw;
-    width: max-content;
-}
+
 
 #content_toc>ul>li>span.fancytree-node{
 	font-size: 120%;
@@ -259,6 +256,15 @@ span.fancytree-node{
 		</span>
 	</div>
 </div>
+
+<div id="left_pannal">
+	<div id="left_pannal_inner" class="fun_frame" >
+		<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
+		<div id = "toc_content" class="content" >
+		</div>
+	</div>
+</div>
+
 <div id="main_view" class="main_view">
 <div id="article_head" style="border-bottom: 1px solid gray;">
 	<div style="display:flex;">
@@ -291,11 +297,6 @@ span.fancytree-node{
 		</div>
 	</div>
 	<div id="right_pannal">
-		<div class="fun_frame" style="overflow-x: scroll;">
-			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-			<div id = "toc_content" class="content" >
-			</div>
-		</div>
 		<div class="fun_frame">
 			<div style="display:flex;justify-content: space-between;">
 				<div class="title"><?php echo $_local->gui->contributor; ?></div>
@@ -340,7 +341,7 @@ span.fancytree-node{
 		case "series":
 			palicanon_load();
 			reader_get_path();
-			
+			render_toc();
 		break;
 		case "simsent":
 			palicanon_load();

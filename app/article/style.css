@@ -39,8 +39,24 @@
 	padding: 0 1em;
 	padding-top: 7em;
 	max-width: 1280px;
-	margin-left: auto;
+	margin-left: 300px;
 	margin-right: auto;
+}
+
+#left_pannal_inner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 90px;
+    height: 100%;
+	width:300px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+#toc_content{
+	max-height: 100%;
+    width: max-content;
 }
 
 .fun_frame {

@@ -384,3 +384,50 @@ function to_article(){
 		content:_sent_data.content,
 	});
 }
+
+function render_toc(){
+	$.getJSON(
+		"../api/pali_text.php",
+		{
+			_method:"index",
+			view:"toc",
+			book: _book,
+			par: _par,
+		}
+	).done(function (data) {
+			let arrToc = new Array();
+			for (const it of data.data) {
+				arrToc.push({article:it.paragraph,title:it.toc,level:it.level});
+			}
+			$("#toc_content").fancytree({
+				autoScroll: true,
+				source: tocGetTreeData(arrToc,_par),
+				activate: function(e, data) {
+					gotoChapter(data.node.key);
+					return false;
+				}
+			});
+	});
+}
+
+//跳转到另外一个文章
+function gotoChapter(paragraph) {
+	let url = "../article/index.php?view=chapter";
+
+	url += "&book=" + _book;
+	url += "&par=" + paragraph;
+
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
