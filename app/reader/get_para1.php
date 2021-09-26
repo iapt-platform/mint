@@ -111,15 +111,20 @@ if ($FetchParInfo) {
 	if(count($toc)>0){
 		$output["title"] = $toc[0]["toc"];
 	}
+
 	if(count($toc)>1){
 		foreach ($toc as $key => $value) {
 			# code...
-			$output["content"] .= "- {$value["toc"]}\n";
+			for ($i=2; $i < $value["level"]; $i++) { 
+				# code...
+				$output["content"] .= "  ";
+			}
+			$output["content"] .= "- [{$value["toc"]}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}) \n";
 		}		
 	}
 
 
-    if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"]) > 1) {
+    if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($toc) > 1) {
         #文档过大，只加载目录
 		if ($toc[1]["paragraph"] - $_para > 1) {
             # 中间有间隔
