@@ -8,6 +8,32 @@ class PaliText extends Table
 		parent::__construct(_FILE_DB_PALITEXT_, "pali_text", "", "",$redis);
     }
 
+	public function index(){
+		$view = $_GET["view"];
+		switch ($view) {
+			case 'toc':
+				# code...
+				$book = $_GET["book"];
+				$par = $_GET["par"];
+
+				do {
+					# code...
+					$parent = $this->medoo->get(
+					$this->table,
+					["parent","paragraph","chapter_len"],
+					["book"=>$book,"paragraph"=>$par]
+					);
+					$par = $parent["parent"];
+				} while ($parent["parent"] > -1);
+				$this->_index(["book","paragraph","level","toc","next_chapter","parent"],["level[<]"=>8,"book"=>$book,"paragraph[>]"=>$parent["paragraph"],"paragraph[<]"=>$parent["paragraph"]+$parent["chapter_len"]]);
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
+
 	public function getTitle($book,$para)
 	{
 		if (isset($book) && isset($para)) {
