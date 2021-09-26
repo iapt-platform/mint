@@ -187,6 +187,12 @@ span.fancytree-node{
 	box-shadow: 0 0 10px var(--main-color);
 	z-index: 200;
 }
+
+#contents ul, li {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-left: 7px;
+}
 </style>
 
 <?php

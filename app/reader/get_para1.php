@@ -113,13 +113,22 @@ if ($FetchParInfo) {
 	}
 
 	if(count($toc)>1){
+		$currLevel = $toc[0]["level"];
+		$ulLevel = 0;
 		foreach ($toc as $key => $value) {
 			# code...
-			for ($i=2; $i < $value["level"]; $i++) { 
-				# code...
-				$output["content"] .= "  ";
+			if($value["level"] > $currLevel  ){
+				$ulLevel++;
 			}
-			$output["content"] .= "- [{$value["toc"]}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}) \n";
+			else if($value["level"] < $currLevel ){
+				$ulLevel--;		
+			}
+			$currLevel = $value["level"];
+			for ($i=0; $i < $ulLevel; $i++) { 
+				# code...
+				$output["content"] .= "    ";
+			}
+			$output["content"] .= "- [{$value["toc"]}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
 		}		
 	}
 
