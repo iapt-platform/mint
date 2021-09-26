@@ -746,22 +746,7 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p">
 					<guide gid="studio_parent"></guide>
 				<script>
-					function edit_show_prt_prt(obj){
-						let o = obj.getElementsByTagName("svg");
-						if(document.getElementById("edit_detail_prt_prt").style.display=="none"){
-							document.getElementById("edit_detail_prt_prt").style.display="block";
-							o[0].style.transform="rotate(90deg)";
-						}
-						else{
-							document.getElementById("edit_detail_prt_prt").style.display="none";
-							o[0].style.transform="rotate(0deg)";
-						}
-					}
-					
-					function edit_parent_grammar_changed(obj){
-						let val = obj;
-						document.getElementById("parent_grammar").innerHTML=val;
-					}
+
 				</script>
 				<span class="thin_icon_btn" onclick="edit_show_prt_prt(this)">
 					<svg id="svg_parent2" class="icon">
@@ -785,6 +770,7 @@ foreach($plugin_list as $info){
 						<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;">┕</span>
 							<span id="parent_grammar">.ppa.</span>
+							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
