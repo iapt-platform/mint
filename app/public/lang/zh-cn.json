@@ -654,6 +654,8 @@
 		"error_net_timeout": "请求超时",
 		"error_net_abort": "放弃",
 		"error_net_parsererror": "数据解析错误",
+		"caus": "使役",
+		"pass": "被动",
 		"": ""
 	},
 	"grammastr": [

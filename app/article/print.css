@@ -33,3 +33,10 @@ note > .tran {
 #contents_foot {
 	display: none;
 }
+#left_pannal{
+	display:none;
+}
+
+.main_view {
+	margin-left: auto;
+}

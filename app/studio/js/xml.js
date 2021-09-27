@@ -270,7 +270,7 @@ function modifyApply(sWordId, update_user_dict) {
 	}
 	setNodeAttr(x[wordIndex], "parent", "status", wordCurrStatus);
 
-	let sParentGrammar = document.getElementById("parent_grammar").innerHTML;
+	let sParentGrammar = document.getElementById("input_parent_grammar").value;
 	let oldParentGrammar = getNodeText(x[wordIndex], "pg");
 	if (sParentGrammar != oldParentGrammar) {
 		setNodeText(x[wordIndex], "pg", sParentGrammar);

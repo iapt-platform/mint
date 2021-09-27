@@ -5587,3 +5587,21 @@ function oldVerDataParse(oldXmlData) {
 function add_part(part) {
 	$("#input_org").val(part);
 }
+
+function edit_show_prt_prt(obj){
+	let o = obj.getElementsByTagName("svg");
+	if(document.getElementById("edit_detail_prt_prt").style.display=="none"){
+		document.getElementById("edit_detail_prt_prt").style.display="block";
+		o[0].style.transform="rotate(90deg)";
+	}
+	else{
+		document.getElementById("edit_detail_prt_prt").style.display="none";
+		o[0].style.transform="rotate(0deg)";
+	}
+}
+
+function edit_parent_grammar_changed(str){
+	document.getElementById("parent_grammar").innerHTML=getLocalGrammaStr(str);
+	document.getElementById("input_parent_grammar").value=str;
+	
+}

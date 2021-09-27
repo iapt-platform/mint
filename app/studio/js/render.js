@@ -2477,6 +2477,11 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		_txtOutDetail += "</div>";
 		_txtOutDetail += "</div>";
 
+		if(sParentGrammar && sParentGrammar!="" && sParentGrammar!=" "){
+			_txtOutDetail += "<span class='cell' style='outline: unset;background-color: wheat;' title='"+sParent2+"'>" + getLocalGrammaStr(sParentGrammar) + "</span>";
+		}
+		
+
 		//连读词按钮
 		if (mType == ".un." || mType == ".comp.") {
 			nextElement = com_get_nextsibling(xmlElement);

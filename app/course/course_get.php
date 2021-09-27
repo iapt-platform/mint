@@ -6,8 +6,8 @@ require_once "../public/_pdo.php";
 require_once "../ucenter/function.php";
 
 $userinfo = new UserInfo();
-PDO_Connect(""._FILE_DB_COURSE_);
-$query = "SELECT * from course where id = ?   limit 0,1";
+PDO_Connect(_FILE_DB_COURSE_);
+$query = "SELECT * from "._TABLE_COURSE_." where id = ? ";
 $fCourse = PDO_FetchRow($query,array($_GET["id"]));
 
 if ($fCourse) {
