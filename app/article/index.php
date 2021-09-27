@@ -350,6 +350,7 @@ span.fancytree-node{
 			render_toc();
 		break;
 		case "simsent":
+		case "sim":
 			palicanon_load();
 			break;
 		default:
