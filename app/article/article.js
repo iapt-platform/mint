@@ -1,16 +1,19 @@
 //import {Like,LikeRefresh} from '../widget/like.js';
 var _view = "";
+var _id = "";
 var _articel_id = "";
 var _channal = "";
 var _lang = "";
 var _author = "";
 var _display = "";
-var _collect_id = "";
 var _collection_id = "";
+var _book=0,_par=0,_start=0,_end=0;
+var _sent_data;
 
 function article_onload() {
 	historay_init();
 }
+
 function articel_load(id, collection_id) {
 	if (id == "") {
 		return;
@@ -106,9 +109,9 @@ function articel_load_article_list(articleId,collectionId) {
 					if (result) {
 						let article_list = JSON.parse(result.article_list);
 						render_article_list(article_list,collectionId,articleId);
-						let strTitle = "<a href='../article/?collection=" + result.id + "'>" + result.title + "</a> / ";
+						let strTitle = "<a href='../article/?view=collection&collection=" + result.id + "'>" + result.title + "</a> / ";
 						for (const iterator of tocActivePath) {
-							strTitle += "<a href='../article/?id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
+							strTitle += "<a href='../article/?view=article&id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
 						}
 						$("#article_path").html(strTitle);						
 					}
@@ -145,7 +148,25 @@ function render_article_list_in_content(article_list,collectId="",articleId="") 
 	});
 }
 function set_channal(channalid) {
-	let url = "../article/index.php?id=" + _articel_id;
+	let url = "../article/index.php?";
+	if (_view != "") {
+		url += "view=" + _view;
+	}	
+	if (_id != "") {
+		url += "&id=" + _id;
+	}	
+	if (_book != 0) {
+		url += "&book=" + _book;
+	}	
+	if (_par != 0) {
+		url += "&par=" + _par;
+	}	
+	if (_start != 0) {
+		url += "&start=" + _start;
+	}	
+	if (_end != 0) {
+		url += "&end=" + _end;
+	}	
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}
@@ -164,7 +185,25 @@ function set_channal(channalid) {
 	location.assign(url);
 }
 function setMode(mode = "read") {
-	let url = "../article/index.php?id=" + _articel_id;
+	let url = "../article/index.php?";
+	if (_view != "") {
+		url += "view=" + _view;
+	}	
+	if (_id != "") {
+		url += "&id=" + _id;
+	}	
+	if (_book != 0) {
+		url += "&book=" + _book;
+	}	
+	if (_par != 0) {
+		url += "&par=" + _par;
+	}	
+	if (_start != 0) {
+		url += "&start=" + _start;
+	}	
+	if (_end != 0) {
+		url += "&end=" + _end;
+	}
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}
@@ -188,10 +227,196 @@ function setMode(mode = "read") {
 }
 //跳转到另外一个文章
 function gotoArticle(articleId) {
-	let url = "../article/index.php?id=" + articleId;
+	let url = "../article/index.php?view=article&id=" + articleId;
 	if (_collection_id != "") {
 		url += "&collection=" + _collection_id;
 	}
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
+
+
+function palicanon_load() {
+	let param;
+	switch (_view) {
+		case "sent":
+		case "para":
+		case "chapter":
+			param = {
+				view: _view,
+				book: _book,
+				par: _par,
+				start: _start,
+				end: _end,
+			}
+			break;
+		case "simsent":
+			param = {view: _view,id:_id};
+			break;
+		default:
+			break;
+	}
+	$.get(
+		"../reader/get_para1.php",
+		param,
+		function (data, status) {
+			if (status == "success") {
+				try {
+					let result = JSON.parse(data);
+					if (result) {
+						_sent_data=result;
+						$("#article_title").html(result.title);
+						$("#article_path_title").html(result.title);
+						$("#page_title").text(result.title);
+						$("#article_subtitle").html(result.subtitle);
+						$("#article_author").html(result.username.nickname + "@" + result.username.username);
+						$("#contents").html(note_init(result.content));
+						note_refresh_new(function () {
+							document.querySelector("#para_focus").scrollIntoView({
+								block: "end",
+								behavior: "smooth",
+							});
+						});
+						reader_draw_para_menu();
+						guide_init();
+					}
+				} catch (e) {
+					console.error(e);
+				}
+			} else {
+				console.error("ajex error");
+			}
+		}
+	);
+}
+
+function reader_get_path() {
+	$.get(
+		"../reader/get_path.php",
+		{
+			book: _book,
+			para: _par,
+		},
+		function (data) {
+			$("#article_path").html(data);
+
+			var bookTitle = $("chapter").first().html();
+			let suttaTitle = $("chapter").last().html();
+
+			$("#pali_pedia").html(bookTitle);
+			$("#article_title").html(suttaTitle);
+			$("#page_title").text(suttaTitle);
+		}
+	);
+}
+
+function reader_draw_para_menu() {
+	$(".page_number").each(function () {
+		let strPara = $(this).text();
+		$(this).addClass("case_dropdown");
+		let html = "<a name='para_" + strPara + "'></a>";
+		html += "<div class='case_dropdown-content para_menu'>";
+		if (typeof _view != "undefined" && _view != "para") {
+			html += "<a onclick=\"junp_to_para('" + _book + "','" + strPara + "')\">仅显示此段</a>";
+		}
+		html += "<a onclick=\"edit_wbw('" + _book + "','" + strPara + "')\">" + gLocal.gui.edit_now + "</a>";
+		html += "<a  onclick='goto_nissaya(" + _book + "," + strPara + ")'>" + gLocal.gui.show_nissaya + "</a>";
+		html +=
+			"<a onclick=\"copy_para_ref('" + _book + "','" + strPara + "')\">" + gLocal.gui.copy_link + "</a>";
+		html +=
+			"<a onclick=\"copy_text('" +
+			_book +
+			"','" +
+			strPara +
+			"')\">" +
+			gLocal.gui.copy +
+			"“" +
+			gLocal.gui.pāli +
+			"”</a>";
+		html +=
+			"<a onclick=\"add_to_list('" +
+			_book +
+			"','" +
+			strPara +
+			"')\">" +
+			gLocal.gui.add_to_edit_list +
+			"</a>";
+		html += "</div>";
+		$(this).append(html);
+	});
+}
+
+
+function junp_to_para(book, para) {
+	let url = "../article/?view=para&book=" + book + "&par=" + para + "&display=sent";
+	location.assign(url);
+}
+
+function copy_para_ref(book, para) {
+	let output = "";
+	for (const iterator of _sent_data.sent_list) {
+		if (iterator.book == book && iterator.paragraph == para) {
+			output += "{{" + book + "-" + para + "-" + iterator.begin + "-" + iterator.end + "}}\n";
+		}
+	}
+	output += "\n";
+	copy_to_clipboard(output);
+}
+
+function edit_wbw(book, para) {
+	wbw_channal_list_open(book, [para]);
+}
+
+function to_article(){
+	article_add_dlg_show({
+		title:_sent_data.title,
+		content:_sent_data.content,
+	});
+}
+
+function render_toc(){
+	$.getJSON(
+		"../api/pali_text.php",
+		{
+			_method:"index",
+			view:"toc",
+			book: _book,
+			par: _par,
+		}
+	).done(function (data) {
+			let arrToc = new Array();
+			for (const it of data.data) {
+				arrToc.push({article:it.paragraph,title:it.toc,level:it.level});
+			}
+			$("#toc_content").fancytree({
+				autoScroll: true,
+				source: tocGetTreeData(arrToc,_par),
+				activate: function(e, data) {
+					gotoChapter(data.node.key);
+					return false;
+				}
+			});
+	});
+}
+
+//跳转到另外一个文章
+function gotoChapter(paragraph) {
+	let url = "../article/index.php?view=chapter";
+
+	url += "&book=" + _book;
+	url += "&par=" + paragraph;
+
 	if (_channal != "") {
 		url += "&channal=" + _channal;
 	}

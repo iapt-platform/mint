@@ -40,3 +40,11 @@
 }
 note:hover .ref {
 }
+
+#left_pannal{
+	display:none;
+}
+
+.main_view {
+	margin-left: auto;
+}

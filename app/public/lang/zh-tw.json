@@ -653,6 +653,8 @@
 		"error_net_timeout": "請求超時",
 		"error_net_abort": "放棄",
 		"error_net_parsererror": "數據解析錯誤",
+		"caus": "使役",
+		"pass": "被動",
 		"": ""
 	},
 	"grammastr": [

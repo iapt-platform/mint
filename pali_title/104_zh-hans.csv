@@ -1,0 +1,123 @@
+id,book,par_num,level,class,title,text,tran
+203443,104,3,1,book,(DN) Mahāvaggaṭṭhakathā,大品注,庄春江
+203444,104,4,2,chapter,1. Mahāpadānasuttavaṇṇanā,14、譬喻大经注,庄春江
+203512,104,72,4,subhead,Bodhisattadhammatāvaṇṇanā,菩萨常法注,庄春江
+203561,104,121,4,subhead,Dvattiṃsamahāpurisalakkhaṇavaṇṇanā,三十二大丈夫相注,庄春江
+203600,104,160,4,subhead,Vipassīsamaññāvaṇṇanā,毗婆尸的称呼注,庄春江
+203611,104,171,4,subhead,Jiṇṇapurisavaṇṇanā,老年人注,庄春江
+203615,104,175,4,subhead,Byādhipurisavaṇṇanā,病人注,庄春江
+203617,104,177,4,subhead,Kālaṅkatapurisavaṇṇanā,死人注,庄春江
+203619,104,179,4,subhead,Pabbajitavaṇṇanā,出家注,庄春江
+203621,104,181,4,subhead,Bodhisattapabbajjāvaṇṇanā,菩萨出家注,庄春江
+203628,104,188,4,subhead,Mahājanakāyaanupabbajjāvaṇṇanā,大群众跟随出家注,庄春江
+203636,104,196,4,subhead,Bodhisattaabhivesavaṇṇanā,菩萨-上安住注,庄春江
+203659,104,219,4,subhead,Brahmayācanakathāvaṇṇanā,梵天劝请的谈说注,庄春江
+203686,104,246,4,subhead,Aggasāvakayugavaṇṇanā,最上双弟子注,庄春江
+203698,104,258,4,subhead,Mahājanakāyapabbajjāvaṇṇanā,大群众的出家注,庄春江
+203715,104,275,4,subhead,Devatārocanavaṇṇanā,天神的告示注,庄春江
+203722,104,282,2,chapter,2. Mahānidānasuttavaṇṇanā,15、大因缘经注,庄春江
+203783,104,343,4,subhead,Paṭiccasamuppādavaṇṇanā,缘起注,庄春江
+203806,104,366,4,subhead,Attapaññattivaṇṇanā,真我之安立注,庄春江
+203811,104,371,4,subhead,Naattapaññattivaṇṇanā,真我之不安立注,庄春江
+203813,104,373,4,subhead,Attasamanupassanāvaṇṇanā,真我之认为注,庄春江
+203827,104,387,4,subhead,Sattaviññāṇaṭṭhitivaṇṇanā,七识住注,庄春江
+203860,104,420,2,chapter,3. Mahāparinibbānasuttavaṇṇanā,16、大般涅槃经注,庄春江
+203864,104,424,4,subhead,Rājaaparihāniyadhammavaṇṇanā,国王-不衰退法注,庄春江
+203881,104,441,4,subhead,Bhikkhuaparihāniyadhammavaṇṇanā,比丘-不衰退法注,庄春江
+203934,104,494,4,subhead,Dussīlaādīnavavaṇṇanā,破戒（坏品德）的过患注,庄春江
+203956,104,516,4,subhead,Ariyasaccakathāvaṇṇanā,圣谛的谈说注,庄春江
+203958,104,518,4,subhead,Anāvattidhammasambodhiparāyaṇavaṇṇanā,不还者与以正觉为彼岸注,庄春江
+203964,104,524,4,subhead,Dhammādāsadhammapariyāyavaṇṇanā,法镜法门注,庄春江
+203969,104,529,4,subhead,Ambapālīgaṇikāvatthuvaṇṇanā,艺妓蓭婆巴利注,庄春江
+203975,104,535,4,subhead,Veḷuvagāmavassūpagamanavaṇṇanā,在木瓜树村进入雨季安居注,庄春江
+203984,104,544,4,subhead,Nimittobhāsakathāvaṇṇanā,征相与暗示的谈说注,庄春江
+204003,104,563,4,subhead,Mārayācanakathāvaṇṇanā,魔请求的谈说注,庄春江
+204008,104,568,4,subhead,Āyusaṅkhāraossajjanavaṇṇanā,寿行的舍弃注,庄春江
+204013,104,573,4,subhead,Mahābhūmicālavaṇṇanā,大地震的原因注,庄春江
+204025,104,585,4,subhead,Aṭṭhaparisavaṇṇanā,八众注,庄春江
+204028,104,588,4,subhead,Aṭṭhaabhibhāyatanavaṇṇanā,八胜处注,庄春江
+204037,104,597,4,subhead,Aṭṭhavimokkhavaṇṇanā,八解脱注,庄春江
+204041,104,601,4,subhead,Ānandayācanakathā,阿难请求的谈说注,庄春江
+204047,104,607,4,subhead,Nāgāpalokitavaṇṇanā,龙象回顾注,庄春江
+204051,104,611,4,subhead,Catumahāpadesavaṇṇanā,四大法教注,庄春江
+204064,104,624,4,subhead,Kammāraputtacundavatthuvaṇṇanā,铁匠之子纯陀的事注,庄春江
+204069,104,629,4,subhead,Pānīyāharaṇavaṇṇanā,取水注,庄春江
+204071,104,631,4,subhead,Pukkusamallaputtavatthuvaṇṇanā,末罗人之子晡古色的事注,庄春江
+204087,104,647,4,subhead,Yamakasālāvaṇṇanā,双沙罗树注,庄春江
+204114,104,674,4,subhead,Upavāṇattheravaṇṇanā,优波哇那上座注,庄春江
+204123,104,683,4,subhead,Catusaṃvejanīyaṭhānavaṇṇanā,四个能激起宗教信仰心之处注,庄春江
+204129,104,689,4,subhead,Ānandapucchākathāvaṇṇanā,阿难问题的谈说注,庄春江
+204137,104,697,4,subhead,Thūpārahapuggalavaṇṇanā,值得领受塔的人注,庄春江
+204139,104,699,4,subhead,Ānandaacchariyadhammavaṇṇanā,阿难的未曾有法注,庄春江
+204147,104,707,4,subhead,Mahāsudassanasuttadesanāvaṇṇanā,大善见经的教导注,庄春江
+204153,104,713,4,subhead,Mallānaṃ vandanāvaṇṇanā,末罗人的礼拜注,庄春江
+204155,104,715,4,subhead,Subhaddaparibbājakavatthuvaṇṇanā,游行者须跋陀的事注,庄春江
+204166,104,726,4,subhead,Tathāgatapacchimavācāvaṇṇanā,如来最后的话注,庄春江
+204178,104,738,4,subhead,Parinibbutakathāvaṇṇanā,般涅槃的谈说注,庄春江
+204191,104,751,4,subhead,Buddhasarīrapūjāvaṇṇanā,世尊遗体供养注,庄春江
+204198,104,758,4,subhead,Mahākassapattheravatthuvaṇṇanā,大迦叶的事注,庄春江
+204225,104,785,4,subhead,Sarīradhātuvibhajanavaṇṇanā,遗骨塔的尊敬注,庄春江
+204257,104,817,2,chapter,4. Mahāsudassanasuttavaṇṇanā,17、大善见经注,庄春江
+204258,104,818,4,subhead,Kusāvatīrājadhānīvaṇṇanā,咕萨瓦帝王都注,庄春江
+204262,104,822,4,subhead,Cakkaratanavaṇṇanā,轮宝注,庄春江
+204289,104,849,4,subhead,Hatthiratanavaṇṇanā,象宝注,庄春江
+204292,104,852,4,subhead,Assaratanavaṇṇanā,马宝注,庄春江
+204294,104,854,4,subhead,Maṇiratanavaṇṇanā,珠宝注,庄春江
+204296,104,856,4,subhead,Itthiratanavaṇṇanā,女宝注,庄春江
+204304,104,864,4,subhead,Gahapatiratanavaṇṇanā,屋主宝注,庄春江
+204306,104,866,4,subhead,Pariṇāyakaratanavaṇṇanā,主兵臣宝注,庄春江
+204309,104,869,4,subhead,Catuiddhisamannāgatavaṇṇanā,具备四种成就注,庄春江
+204311,104,871,4,subhead,Dhammapāsādapokkharaṇivaṇṇanā,达摩宫殿的莲花池注,庄春江
+204323,104,883,4,subhead,Bodhisattapubbayogavaṇṇanā,到达禅注,庄春江
+204332,104,892,4,subhead,Caturāsītinagarasahassādivaṇṇanā,八万四千城市注,庄春江
+204335,104,895,4,subhead,Subhaddādeviupasaṅkamanavaṇṇanā,善吉祥皇后到来注,庄春江
+204340,104,900,4,subhead,Brahmalokūpagamavaṇṇanā,往梵天世界注,庄春江
+204351,104,911,2,chapter,5. Janavasabhasuttavaṇṇanā,18、人牛王经注,庄春江
+204352,104,912,4,subhead,Nātikiyādibyākaraṇavaṇṇanā,在那低葛的记说等等注,庄春江
+204355,104,915,4,subhead,Ānandaparikathāvaṇṇanā,阿难的委婉谈说注,庄春江
+204359,104,919,4,subhead,Janavasabhayakkhavaṇṇanā,人牛王夜叉注,庄春江
+204363,104,923,4,subhead,Devasabhāvaṇṇanā,诸天会堂注,庄春江
+204369,104,929,4,subhead,Sanaṅkumārakathāvaṇṇanā,常童子的谈说注,庄春江
+204374,104,934,4,subhead,Bhāvitaiddhipādavaṇṇanā,所修习的神足注,庄春江
+204382,104,942,4,subhead,Tividhaokāsādhigamavaṇṇanā,三种到达的空间注,庄春江
+204388,104,948,4,subhead,Catusatipaṭṭhānavaṇṇanā,四念住注,庄春江
+204390,104,950,4,subhead,Sattasamādhiparikkhāravaṇṇanā,七个定的资助注,庄春江
+204398,104,958,2,chapter,6. Mahāgovindasuttavaṇṇanā,19、大总管经注,庄春江
+204401,104,961,4,subhead,Devasabhāvaṇṇanā,诸天会堂注,庄春江
+204416,104,976,4,subhead,Aṭṭhayathābhuccavaṇṇanā,八种如实称赞注,庄春江
+204464,104,1024,4,subhead,Rajjasaṃvibhajanavaṇṇanā,统治权的分享注,庄春江
+204484,104,1044,4,subhead,Brahmunāsākacchāvaṇṇanā,梵天的交谈注,庄春江
+204496,104,1056,4,subhead,Reṇurājaāmantanāvaṇṇanā,雷奴国王的宣说注,庄春江
+204511,104,1071,4,subhead,Cha khattiyaāmantanāvaṇṇanā,六位刹帝利的宣说注,庄春江
+204516,104,1076,4,subhead,Brāhmaṇamahāsālādīnaṃ āmantanāvaṇṇanā,富有的婆罗门等的宣说注,庄春江
+204519,104,1079,4,subhead,Bhariyānaṃ āmantanāvaṇṇanā,妻子们的宣说注,庄春江
+204521,104,1081,4,subhead,Mahāgovindapabbajjāvaṇṇanā,大总管的出家注,庄春江
+204531,104,1091,2,chapter,7. Mahāsamayasuttavaṇṇanā,20、大集会经注,庄春江
+204557,104,1117,4,subhead,Devatāsannipātavaṇṇanā,天神的集合注,庄春江
+204641,104,1201,2,chapter,8. Sakkapañhasuttavaṇṇanā,21、帝释所问经注,庄春江
+204654,104,1214,4,subhead,Pañcasikhagītagāthāvaṇṇanā,五髻的歌唱偈颂注,庄春江
+204674,104,1234,4,subhead,Sakkūpasaṅkamavaṇṇanā,帝释前往注,庄春江
+204738,104,1298,4,subhead,Vedanākammaṭṭhānavaṇṇanā,受之业处注,庄春江
+204769,104,1329,4,subhead,Pātimokkhasaṃvaravaṇṇanā,巴帝摩卡自制注,庄春江
+204785,104,1345,4,subhead,Indriyasaṃvaravaṇṇanā,根自制注,庄春江
+204799,104,1359,4,subhead,Somanassapaṭilābhakathāvaṇṇanā,获得喜悦说注,庄春江
+204813,104,1373,2,chapter,9. Mahāsatipaṭṭhānasuttavaṇṇanā,22、大念住经注,庄春江
+204814,104,1374,4,subhead,Uddesavārakathāvaṇṇanā,总说注,庄春江
+204913,104,1473,4,subhead,Kāyānupassanā ānāpānapabbavaṇṇanā,随观身‧入出息节注,庄春江
+204935,104,1495,4,subhead,Iriyāpathapabbavaṇṇanā,随观身‧威仪路径（方法）节注,庄春江
+204951,104,1511,4,subhead,Catusampajaññapabbavaṇṇanā,随观身‧正知节注,庄春江
+204955,104,1515,4,subhead,Paṭikūlamanasikārapabbavaṇṇanā,随观身‧厌拒作意节注,庄春江
+204959,104,1519,4,subhead,Dhātumanasikārapabbavaṇṇanā,随观身‧四界作意节注,庄春江
+204964,104,1524,4,subhead,Navasivathikapabbavaṇṇanā,随观身‧九墓地节注,庄春江
+204974,104,1534,4,subhead,Vedanānupassanāvaṇṇanā,随观受注,庄春江
+204984,104,1544,4,subhead,Cittānupassanāvaṇṇanā,随观心注,庄春江
+204989,104,1549,4,subhead,Dhammānupassanā nīvaraṇapabbavaṇṇanā,随观法‧盖节注,庄春江
+205012,104,1572,4,subhead,Khandhapabbavaṇṇanā,随观法‧蕴节注,庄春江
+205017,104,1577,4,subhead,Āyatanapabbavaṇṇanā,随观法‧处节注,庄春江
+205023,104,1583,4,subhead,Bojjhaṅgapabbavaṇṇanā,随观法‧觉支节注,庄春江
+205062,104,1622,4,subhead,Catusaccapabbavaṇṇanā,随观法‧谛节注,庄春江
+205064,104,1624,4,subhead,Dukkhasaccaniddesavaṇṇanā,苦谛的说明注,庄春江
+205077,104,1637,4,subhead,Samudayasaccaniddesavaṇṇanā,集谛的说明注,庄春江
+205080,104,1640,4,subhead,Nirodhasaccaniddesavaṇṇanā,灭谛的说明注,庄春江
+205084,104,1644,4,subhead,Maggasaccaniddesavaṇṇanā,道谛的说明注,庄春江
+205106,104,1666,2,chapter,10. Pāyāsirājaññasuttavaṇṇanā,23、波亚西经注,庄春江

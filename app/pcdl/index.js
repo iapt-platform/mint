@@ -28,13 +28,13 @@ function index_load_collect_new() {
 				gLocal.gui.ongoing + "</div>";
 
 				html += "<div class='title'>";
-				html += "<a href='../article/?id=" + iterator.id + "'>" + iterator.title + "</a>";
+				html += "<a href='../article/?view=article&id=" + iterator.id + "'>" + iterator.title + "</a>";
 				html += "</div>";
 
 				html += "<div class='collect'>";
 				if (iterator.collect) {
 					html +=
-						"<a href='../article/?collect=" + iterator.collect.id + "'>" + iterator.collect.title + "</a>";
+						"<a href='../article/?view=collection&collection=" + iterator.collect.id + "'>" + iterator.collect.title + "</a>";
 				} else {
 					html += "unkow";
 				}

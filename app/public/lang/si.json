@@ -643,7 +643,6 @@
 		"reference": "reference",
 		"original": "original",
 		"page_num": "page",
-		"palihandbook": "巴利手册",
 		"viewer": "viewer",
 		"palihandbook": "pali handbook",
 		"invalid_email": "invalid email",
@@ -657,6 +656,8 @@
 		"error_net_timeout": "Timeout",
 		"error_net_abort": "abort",
 		"error_net_parsererror": "parser error",
+		"caus": "caus.",
+		"pass": "pass.",
 		"": ""
 	},
 	"grammastr": [

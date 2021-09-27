@@ -167,7 +167,9 @@ define("_FILE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
 # 逐词解析文件索引
 define("_FILE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
 # 课程
+//define("_FILE_DB_COURSE_", "pgsql:host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
+define("_TABLE_COURSE_","course");
 # 用户自定义书
 define("_FILE_DB_USER_CUSTOM_BOOK_", "sqlite:" . __DIR__ . "/../tmp/user/custom_book.db3");
 # 逐词译和译文编辑消息
@@ -193,3 +195,5 @@ define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
 
 
 define("_FILE_DB_USER_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/user/statistics.db3");
+
+define("_FILE_DB_USER_RBAC_",  __DIR__ . "/../tmp/user/rbac.db3");

@@ -1,9 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>wikipal</title>
+		<meta http-equiv="refresh" content="0,../article/index.php?<?php echo $_SERVER['QUERY_STRING'];?>"/>
+	</head>
+	
+	<body>
+		loading...
+    </body>
+</html>
+<?php
+exit;
+?>
+
 <?php
 require_once "../public/load_lang.php";
 require_once "../path.php";
 require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
+
+</body>
+</html>
 
 	<script src="../channal/channal.js"></script>
 	<script src="./reader.js"></script>
