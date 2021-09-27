@@ -200,7 +200,7 @@ span.fancytree-node{
 		</div>
 	</div>
 	<div id="right_pannal">
-		<div class="fun_frame" style="overflow-x: scroll;">
+		<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;">
 			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
 			<div id = "toc_content" class="content" >
 			</div>
