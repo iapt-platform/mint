@@ -195,7 +195,7 @@ require_once "../pcdl/html_head.php";
 				</div>
 			</div>
 			<div id="right_pannal">
-				<div class="fun_frame">
+				<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;">
 					<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
 					<div id = "toc_content" class="content" style="max-height:25vw;">
 					</div>

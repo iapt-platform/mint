@@ -303,7 +303,7 @@ span.fancytree-node{
 		</div>
 	</div>
 	<div id="right_pannal">
-		<div class="fun_frame">
+		<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;">
 			<div style="display:flex;justify-content: space-between;">
 				<div class="title"><?php echo $_local->gui->contributor; ?></div>
 				<div class="click_dropdown_div">
