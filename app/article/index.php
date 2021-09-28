@@ -198,9 +198,23 @@ span.fancytree-node{
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
+<script>
+var show_hide=0;
+function show_content(){
+		if(show_hide==0){
+			$("#left_pannal_inner").show();
+			show_hide=1;
+		}
+		else{
+			$("#left_pannal_inner").hide();
+			show_hide=0;
+		}
+	}
+
+</script>
 <div id="head_bar" >
 	<div style="display:flex;">
-
+	<button class="icon_btn" onclick="show_content()"><?php echo $_local->gui->contents; ?></button>
 	</div>
 
 	<div style="margin: auto 0;">
@@ -262,11 +276,10 @@ span.fancytree-node{
 		</span>
 	</div>
 </div>
-
 <div id="left_pannal">
-	<div id="left_pannal_inner" class="fun_frame" >
-		<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-		<div id = "toc_content" class="content" >
+	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;display:none;">
+		<!--<div id = "collect_title" class="title" style="text-align: right;background: #ffd70087;" onclick="show_content(this)"></div>-->
+		<div id = "toc_content" class="content" style="padding-top:0;">
 		</div>
 	</div>
 </div>
@@ -314,7 +327,7 @@ span.fancytree-node{
 				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
 				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
 			</div>
-			<div id="channal_list" class="content" style="max-height:25vw;">
+			<div id="channal_list" class="content" style="max-height:calc(100vh - 20em);">
 			</div>
 		</div>
 	</div>

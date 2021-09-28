@@ -39,7 +39,7 @@
 	padding: 0 1em;
 	padding-top: 7em;
 	max-width: 1280px;
-	margin-left: 300px;
+	/*margin-left: 300px;*/
 	margin-right: auto;
 }
 
@@ -49,14 +49,15 @@
     left: 0;
     padding-top: 90px;
     height: 100%;
-	width:300px;
+	/*width:300px;*/
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
 
 #toc_content{
-	max-height: 100%;
+	max-height: calc(100vh - 90px);
     width: max-content;
+	/*max-width:260px;*/
 }
 
 .fun_frame {
@@ -69,9 +70,10 @@
 	font-weight: 700;
 }
 .fun_frame > .content {
-	padding: 6px;
+	padding: 4em 6px 6px 6px;
 	max-height: 6em;
 	overflow-y: scroll;
+	/*max-width: 260px;*/
 }
 
 .fixed {
