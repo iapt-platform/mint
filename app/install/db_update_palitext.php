@@ -1,4 +1,5 @@
 ﻿<?php
+#根据pali_text 里面的*_title.csv数据更新数据库
 require_once "install_head.php";
 require_once "../public/_pdo.php";
 ?>
