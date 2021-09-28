@@ -45,7 +45,7 @@ if ($_view == "sent") {
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
-if ($_view == "simsent") {
+if ($_view == "simsent" || $_view == "sim") {
 	$mPaliSent = new PaliSentence($mRedis);
 	$mPaliSim = new PaliSimSentence($mRedis);
 	if(!isset($_GET["id"])){
