@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p99,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p99,2,100,nikaya,,Aṅguttaranikāye
 NULL,p99,3,1,book,Ekakanipāta-aṭṭhakathā,Ekakanipāta-aṭṭhakathā
-NULL,p99,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p99,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p99,5,100,gatha1,,"‘‘Karuṇāsītalahadayaṃ, paññāpajjotavihatamohatamaṃ;"
 NULL,p99,6,100,gathalast,,"Sanarāmaralokagaruṃ, vande sugataṃ gativimuttaṃ."
 NULL,p99,7,100,gatha1,,"‘‘Buddhopi buddhabhāvaṃ, bhāvetvā ceva sacchikatvā ca;"
@@ -41,7 +41,7 @@ NULL,p99,39,100,gatha1,,"‘‘Majjhe visuddhimaggo, esa catunnampi āgamānañh
 NULL,p99,40,100,gathalast,,"Ṭhatvā pakāsayissati, tattha yathābhāsitamatthaṃ."
 NULL,p99,41,100,gatha1,,"‘‘Icceva  kato tasmā, tampi gahetvāna saddhimetāya;"
 NULL,p99,42,100,gathalast,,"Aṭṭhakathāya vijānatha, aṅguttaranissitaṃ attha’’nti."
-NULL,p99,43,3,title,Saṃkhepakathā,Saṃkhepakathā
+NULL,p99,43,100,title,Saṃkhepakathā,Saṃkhepakathā
 NULL,p99,44,2,chapter,1. Rūpādivaggavaṇṇanā,1. Rūpādivaggavaṇṇanā
 NULL,p99,45,100,bodytext,,Tattha aṅguttarāgamo nāma ekakanipāto dukanipāto tikanipāto catukkanipāto pañcakanipāto chakkanipāto sattakanipāto aṭṭhakanipāto navakanipāto dasakanipāto ekādasakanipātoti ekādasa nipātā honti. Suttato –
 NULL,p99,46,100,gatha1,,"‘‘Nava suttasahassāni, pañca suttasatāni ca;"

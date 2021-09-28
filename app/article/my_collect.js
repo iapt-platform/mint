@@ -223,9 +223,14 @@ function tocGetTreeData(articles,active=""){
 		}
 		else{
 			// 小于
-			do {
-				treeParents.pop();
-			} while (treeParents[treeParents.length-1].level>=newNode.level);
+			try{
+				do {
+					treeParents.pop();
+				} while (treeParents[treeParents.length-1].level>=newNode.level);
+			}catch(e){
+				console.log("toc index:"+index,articles[index]);
+			}
+
 			
 			currParentNode = treeParents[treeParents.length-1];
 			treeParents[treeParents.length-1].children.push(newNode);
