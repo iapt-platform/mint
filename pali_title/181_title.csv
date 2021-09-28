@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p181,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p181,2,100,nikaya,,Aṅguttaranikāye
 NULL,p181,3,1,book,Ekakanipāta-ṭīkā,Ekakanipāta-ṭīkā
-NULL,p181,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p181,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p181,5,100,gatha1,,"Anantañāṇaṃ  karuṇāniketaṃ,"
 NULL,p181,6,100,gatha2,,Namāmi nāthaṃ jitapañcamāraṃ;
 NULL,p181,7,100,gatha3,,"Dhammaṃ visuddhaṃ bhavanāsahetuṃ,"
@@ -47,7 +47,7 @@ NULL,p181,45,100,gatha1,,"Tasmā  anuttānapadānamatthaṃ,"
 NULL,p181,46,100,gatha2,,Seṭṭhāya aṅguttaravaṇṇanāya;
 NULL,p181,47,100,gatha3,,"Sandassayissaṃ sakalaṃ suboddhuṃ,"
 NULL,p181,48,100,gathalast,,Nissāya pubbācariyappabhāvaṃ.
-NULL,p181,49,3,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
+NULL,p181,49,2,subsubhead,Ganthārambhakathāvaṇṇanā,Ganthārambhakathāvaṇṇanā
 NULL,p181,50,100,bodytext,,"1. Saṃvaṇṇanārambhe ratanattayaṃ namassitukāmo tassa visiṭṭhaguṇayogasandassanatthaṃ ‘‘karuṇāsītalahadaya’’ntiādimāha. Visiṭṭhaguṇayogena hi vandanārahabhāvo, vandanārahe ca katā vandanā yathādhippetamatthaṃ sādheti. Ettha ca saṃvaṇṇanārambhe ratanattayappaṇāmakaraṇappayojanaṃ tattha tattha bahudhā papañcenti ācariyā, mayaṃ pana idhādhippetameva payojanaṃ dassayissāma, tasmā saṃvaṇṇanārambhe ratanattayappaṇāmakaraṇaṃ yathāpaṭiññātasaṃvaṇṇanāya anantarāyena parisamāpanatthanti veditabbaṃ. Idameva hi payojanaṃ ācariyena idhādhippetaṃ. Tathā hi vakkhati –"
 NULL,p181,51,100,gatha1,,"‘‘Iti me pasannamatino, ratanattayavandanāmayaṃ puññaṃ;"
 NULL,p181,52,100,gathalast,,"Yaṃ suvihatantarāyo, hutvā tassānubhāvenā’’ti."
