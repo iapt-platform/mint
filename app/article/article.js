@@ -262,6 +262,7 @@ function palicanon_load() {
 			}
 			break;
 		case "simsent":
+		case "sim":
 			param = {view: _view,id:_id};
 			break;
 		default:
