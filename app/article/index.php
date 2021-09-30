@@ -277,7 +277,7 @@ function show_content(){
 	</div>
 </div>
 <div id="left_pannal">
-	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;display:block;">
+	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;display:none;">
 		<!--<div id = "collect_title" class="title" style="text-align: right;background: #ffd70087;" onclick="show_content(this)"></div>-->
 		<div id = "toc_content" class="content" style="padding-top:0;">
 		</div>
