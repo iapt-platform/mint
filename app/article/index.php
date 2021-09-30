@@ -199,7 +199,7 @@ span.fancytree-node{
     require_once("../pcdl/head_bar.php");
 ?>
 <script>
-var show_hide=1;
+var show_hide=0;
 function show_content(){
 		if(show_hide==0){
 			$("#left_pannal_inner").show();
