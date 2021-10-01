@@ -204,7 +204,6 @@ span.fancytree-node{
     require_once("../pcdl/head_bar.php");
 ?>
 <script>
-
 function show_content(){
 	$("#left_pannal").toggleClass("hidden");
 	if($("#left_pannal").hasClass("hidden")){
@@ -299,7 +298,7 @@ function set_toc_visible(isVisible){
 	</div>
 </div>
 <div id="left_pannal">
-	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;display:block;">
+	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;">
 		<!--<div id = "collect_title" class="title" style="text-align: right;background: #ffd70087;" onclick="show_content(this)"></div>-->
 		<div id = "toc_content" class="content" style="padding-top:0;">
 		</div>
