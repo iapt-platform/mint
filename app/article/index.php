@@ -65,14 +65,17 @@ require_once "../pcdl/html_head.php";
 		echo "_end=".$_GET["end"].";";
 	}
 
+	
 	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
 		#登录状态下 编辑模式
 		$_mode = "edit";
 		echo "_mode='edit';";
+		$classMode="edit_mode";
 	}
 	else{
 		$_mode = "read";
 		echo "_mode='read';";
+		$classMode="read_mode";
 	}
 	if(isset($_GET["display"])){
 		if($_mode == "edit"){
@@ -193,23 +196,35 @@ span.fancytree-node{
     margin-block-end: 0.5em;
     margin-left: 7px;
 }
+
+
 </style>
 
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
 <script>
-var show_hide=0;
 function show_content(){
-		if(show_hide==0){
-			$("#left_pannal_inner").show();
-			show_hide=1;
-		}
-		else{
-			$("#left_pannal_inner").hide();
-			show_hide=0;
-		}
+	$("#left_pannal").toggleClass("hidden");
+	if($("#left_pannal").hasClass("hidden")){
+		$("#main_view").css("margin-left","auto");
+		localStorage.setItem('article_show_toc_'+_mode, 'hide');
+	}else{
+		$("#main_view").css("margin-left","270px");
+		localStorage.setItem('article_show_toc_'+_mode, 'show');
 	}
+}
+function set_toc_visible(isVisible){
+	if(isVisible){
+		$("#left_pannal").removeClass("hidden");
+		$("#main_view").css("margin-left","270px");
+		localStorage.setItem('article_show_toc_'+_mode, 'show');
+	}else{
+		$("#left_pannal").addClass("hidden");
+		$("#main_view").css("margin-left","auto");
+		localStorage.setItem('article_show_toc_'+_mode, 'hide');
+	}
+}
 
 </script>
 <div id="head_bar" >
@@ -219,16 +234,22 @@ function show_content(){
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
+			<select id="select_lang" onchange="lang_changed(this)">
+					<option>全部语言</option>
+					<option>简体中文</option>
+					<option>繁体中文</option>
+					<option>英文</option>
+			</select>
 		<?php
 		
 		if(isset($_GET["view"]) && $_GET["view"]=="article"){
-			echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
+			echo "<button class='icon_btn show_pc'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
 		}
 		if($_GET["view"]!=="article" && $_GET["view"]!=="collection"){
 ?>
-	<span class="icon_btn_div">				
+	<span id="convert_article" class="icon_btn_div show_pc">				
 		<button id="file_add" type="button" class="icon_btn" onclick="to_article()" title=" ">
 			<svg class="icon">
 				<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
@@ -239,7 +260,7 @@ function show_content(){
 	</span>	
 <?php
 		}
-			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+			echo "<button class='icon_btn show_pc'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
 			echo "<a href='../article/frame.php?view=".$_GET["view"];
 			if(isset($_GET["id"])){
 				echo "&id=".$_GET["id"];
@@ -277,67 +298,83 @@ function show_content(){
 	</div>
 </div>
 <div id="left_pannal">
-	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;display:none;">
+	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;">
 		<!--<div id = "collect_title" class="title" style="text-align: right;background: #ffd70087;" onclick="show_content(this)"></div>-->
 		<div id = "toc_content" class="content" style="padding-top:0;">
 		</div>
 	</div>
 </div>
 
-<div id="main_view" class="main_view">
-<div id="article_head" style="border-bottom: 1px solid gray;">
-	<div style="display:flex;">
-		<div id="article_path" class=""></div>
-		<div id="article_path_title"></div>
-	</div>
-	<div id="article_title" class="term_word_head_pali"></div>
-	<div id="article_subtitle"></div>
-	<div id="article_author"></div>
-	<div id="like_div">
-		<like restype='article' resid='124'></like>
-		<watch restype='article' resid='124'></watch>
-	</div>
-</div>
-
-<div id="contents_view">
-	<div id="contents_div">
-		<div id="summary"></div>
-		<div id="contents" class="<?php echo $contentClass;?>">
-			<?php echo $_local->gui->loading; ?>...
-		</div>
-		<div id="contents_foot">
-			<div id="contents_nav" style="display:flex;justify-content: space-between;">
-				<div id="contents_nav_left"></div>
-				<div id="contents_nav_right"></div>
+<div id="main_view" class="main_view <?php echo $classMode;?>">
+	<div id="article_head" style="border-bottom: 1px solid gray;">
+		<div id="head_nav" >	
+			<div id="head_nav_left" >
+				<div id="article_path" class=""></div>
+				<div id="article_path_title"></div>
 			</div>
-			<div id="contents_dicuse">
-			
-			</div>
-		</div>
-	</div>
-	<div id="right_pannal">
-		<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;">
-			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor; ?></div>
-				<div class="click_dropdown_div">
-					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+			<div id="head_nav_right" >
+				<div id="article_edition" style="display:flex;">
+					<span  style='font-weight: 700;'>文章版本 </span>
+					<div id="edition_dropdown" class="case_dropdown">
+						<span></span>
+					</div>
 				</div>
 			</div>
-			<div class='channel_select'>
-				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
-				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+		</div>
+		<div id="article_title" class="term_word_head_pali"></div>
+		<div id="article_subtitle"></div>
+		<div id="article_author"></div>
+		<div id="like_div">
+			<like restype='article' resid='124'></like>
+			<watch restype='article' resid='124'></watch>
+		</div>
+	</div>
+
+	<div id="contents_view">
+		<div id="contents_div">
+			<div id="summary"></div>
+			<div id="contents" class="<?php echo $contentClass;?>">
+				<?php echo $_local->gui->loading; ?>...
 			</div>
-			<div id="channal_list" class="content" style="max-height:calc(100vh - 20em);">
+			<div id="contents_foot">
+				<div id="contents_nav" style="display:flex;justify-content: space-between;">
+					<div id="contents_nav_left"></div>
+					<div id="contents_nav_right"></div>
+				</div>
+				<div id="contents_dicuse">
+				
+				</div>
+			</div>
+		</div>
+		<div id="right_pannal">
+			<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;height: calc(100vh - 250px);">
+				<div style="display:flex;justify-content: space-between;">
+					<div class="title"><?php echo $_local->gui->contributor; ?></div>
+					<div class="click_dropdown_div">
+						<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+					</div>
+				</div>
+				<div class='channel_select'>
+					<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
+					<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+				</div>
+				<div id="channal_list" class="content" style="max-height:calc(100vh - 20em);">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 
 
 
 <script>
 	$(document).ready(function(){
+		if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
+			set_toc_visible(false);
+		}else{
+			set_toc_visible(true);
+		}
+		
 		article_add_dlg_init("article_add_div");
 	ntf_init();				
 	click_dropdown_init();

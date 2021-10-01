@@ -2229,7 +2229,9 @@
 		"my": "Brummese",
 		"zh": "Chinese",
 		"zh_cn": "Simple Chinese",
-		"zh_tw": "Traditional Chinese"
+		"zh_tw": "Traditional Chinese",
+		"zh-hans": "Simple Chinese",
+		"zh-hant": "Traditional Chinese"
 	},
 	"LogType": {
 		"10": "edit channel",

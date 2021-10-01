@@ -56,7 +56,7 @@
 	display: none;
 }
 	</style>
-			<select name="direction" onchange='setDirection(this)' >
+			<select name="direction" onchange='setDirection(this)' class="show_pc">
 			<option value="row"><?php echo $_local->gui->row_compare; ?></option>
 			<option value="column"><?php echo $_local->gui->column_compare; ?></option>
 		</select>

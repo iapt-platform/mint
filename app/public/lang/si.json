@@ -1930,7 +1930,9 @@
 		"my": "සුවණ‍්ණභූමි",
 		"zh": "චීන",
 		"zh_cn": "Simple චීන",
-		"zh_tw": "Traditional චීන"
+		"zh_tw": "Traditional චීන",
+		"zh-hans": "Simple චීන",
+		"zh-hant": "Traditional චීන"
 	},
 	"LogType": {
 		"10": "edit channel",

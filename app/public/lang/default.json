@@ -2046,7 +2046,9 @@
 		"my": "suvaṇṇabhūmi",
 		"zh": "cīna",
 		"zh_cn": "Simple cīna",
-		"zh_tw": "Traditional cīna"
+		"zh_tw": "Traditional cīna",
+		"zh-hans": "Simple cīna",
+		"zh-hant": "Traditional cīna"
 	},
 	"LogType": {
 		"10": "edit channel",

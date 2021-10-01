@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p162,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p162,2,100,nikaya,,Khuddakanikāye
 NULL,p162,3,1,book,Theragāthāpāḷi,Theragāthāpāḷi
-NULL,p162,4,5,subsubhead,Nidānagāthā,Nidānagāthā
+NULL,p162,4,2,subsubhead,Nidānagāthā,Nidānagāthā
 NULL,p162,5,100,gatha1,,"Sīhānaṃva  nadantānaṃ, dāṭhīnaṃ girigabbhare;"
 NULL,p162,6,100,gathalast,,"Suṇātha bhāvitattānaṃ, gāthā atthūpanāyikā [attūpanāyikā (sī. ka.)]."
 NULL,p162,7,100,gatha1,,"Yathānāmā yathāgottā, yathādhammavihārino;"
