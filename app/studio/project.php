@@ -275,7 +275,7 @@ switch ($op) {
                                 mTime(),
                                 mTime(),
                                 mTime(),
-                                $filesize,
+                                0,
                                 0,
                                 $doc_head,
                                 json_encode($block_list, JSON_UNESCAPED_UNICODE),
