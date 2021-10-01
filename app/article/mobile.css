@@ -16,9 +16,7 @@
 #contents_div {
 	padding: 0;
 }
-#head_bar {
-	flex-direction: column;
-}
+
 #main_view {
 	padding-top: 10em;
 }
@@ -34,7 +32,6 @@
 }
 #head_span {
 	width: 90vw;
-	display: inline-flex;
 	justify-content: space-between;
 	margin-top: 5px;
 }
@@ -47,4 +44,18 @@ note:hover .ref {
 
 .main_view {
 	margin-left: auto;
+}
+
+#head_nav {
+	flex-direction: column-reverse;
+}
+
+.show_pc{
+	display:none;
+}
+#left_pannal_inner{
+	width: 100%;
+}
+#toc_content{
+	width: 100%;
 }

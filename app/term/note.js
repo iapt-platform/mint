@@ -360,6 +360,36 @@ function note_channal_list() {
 
 						$("#channal_list").html(strHtml);
 						set_more_button_display();
+
+						let lang=new Object();
+						for (const iterator of _channalData) {
+							lang[iterator.lang]=1;
+						}
+						let htmlLangSelect="<option value='*'>全部语言</option>";
+						let currLang = getCookie("language");
+						if(currLang == "zh-cn"){
+							currLang = "zh-hans";
+						}
+						if(currLang == "zh-tw"){
+							currLang = "zh-hant";
+						}
+						let isLangMatched=false;
+						for (const key in lang) {
+							if (lang.hasOwnProperty.call(lang, key)) {
+								htmlLangSelect += "<option value='"+key+"' ";
+								if(currLang==key){
+									htmlLangSelect += "selected ";
+									isLangMatched = true;
+								}
+								htmlLangSelect +=">"+gLocal.language[key]+"</option>";	
+							}
+						}
+						$("#select_lang").html(htmlLangSelect);
+						if(isLangMatched){
+							render_edition_list(currLang);
+						}else{
+							render_edition_list("all");
+						}
 					} catch (e) {
 						console.error(e);
 					}
@@ -367,6 +397,25 @@ function note_channal_list() {
 			}
 		);
 	}
+}
+function lang_changed(obj){
+	render_edition_list($(obj).val());
+}
+function render_edition_list(lang,index=0){
+	let html = "";
+	html += "<div class='case_dropdown-content'>";
+	let firstChannel;
+	for (const iterator of _channalData) {
+		if(lang=="all" || (lang!="all" && lang==iterator.lang)){
+			if(typeof firstChannel == "undefined"){
+				firstChannel = "<span>"+iterator.name+"</span>";
+			}
+			html += "<a onclick=\"set_channal('"+iterator.id+"')\">"+iterator.name+"</a>";
+		}
+	}
+	html +="</div>";
+	html = firstChannel + html;
+	$("#edition_dropdown").html(html);
 }
 
 function find_channal(id) {
