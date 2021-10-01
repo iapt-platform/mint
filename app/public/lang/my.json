@@ -2037,7 +2037,9 @@
 		"my": "သုဝဏ္ဏဘူမိ",
 		"zh": "စီနဘာသ",
 		"zh_cn": "Simple စီနဘာသ",
-		"zh_tw": "Traditional စီနဘာသ"
+		"zh_tw": "Traditional စီနဘာသ",
+		"zh-hans": "Simple စီနဘာသ",
+		"zh-hant": "Traditional စီနဘာသ"
 	},
 	"LogType": {
 		"10": "edit channel",
