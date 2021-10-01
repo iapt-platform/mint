@@ -61,6 +61,9 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["start"])){
 		echo "_start=".$_GET["start"].";";
 	}
+	if(isset($_GET["begin"])){
+		echo "_start=".$_GET["begin"].";";
+	}
 	if(isset($_GET["end"])){
 		echo "_end=".$_GET["end"].";";
 	}
@@ -284,7 +287,7 @@ function set_toc_visible(isVisible){
 				echo "&start=".$_GET["start"];
 			}
 			if(isset($_GET["end"])){
-				echo "$end=".$_GET["end"];
+				echo "&end=".$_GET["end"];
 			}
 			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
 				
