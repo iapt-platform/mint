@@ -238,12 +238,7 @@ function set_toc_visible(isVisible){
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
-			<select id="select_lang" onchange="lang_changed(this)">
-					<option>全部语言</option>
-					<option>简体中文</option>
-					<option>繁体中文</option>
-					<option>英文</option>
-			</select>
+
 		<?php
 		
 		if(isset($_GET["view"]) && $_GET["view"]=="article"){
@@ -317,6 +312,12 @@ function set_toc_visible(isVisible){
 				<div id="article_path_title"></div>
 			</div>
 			<div id="head_nav_right" >
+				<select id="select_lang" onchange="lang_changed(this)">
+						<option>全部语言</option>
+						<option>简体中文</option>
+						<option>繁体中文</option>
+						<option>英文</option>
+				</select>
 				<div id="article_edition" style="display:flex;">
 					<span  style='font-weight: 700;'>文章版本 </span>
 					<div id="edition_dropdown" class="case_dropdown">

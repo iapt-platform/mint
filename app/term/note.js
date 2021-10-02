@@ -362,33 +362,38 @@ function note_channal_list() {
 						set_more_button_display();
 
 						let lang=new Object();
+						let currLang=_lang;
+						let firstChannel="";
+						if(_channal!=""){
+							firstChannel = _channal.split(",")[0];
+						}										
 						for (const iterator of _channalData) {
 							lang[iterator.lang]=1;
+							if(iterator.id==firstChannel){
+								currLang = iterator.lang;
+							}
 						}
-						let htmlLangSelect="<option value='*'>全部语言</option>";
-						let currLang = getCookie("language");
-						if(currLang == "zh-cn"){
-							currLang = "zh-hans";
-						}
-						if(currLang == "zh-tw"){
-							currLang = "zh-hant";
-						}
+						let htmlLangSelect="<option value=''>全部语言</option>";
 						let isLangMatched=false;
 						for (const key in lang) {
 							if (lang.hasOwnProperty.call(lang, key)) {
+								let strLang = key;
+								if(gLocal.language.hasOwnProperty.call(gLocal.language, key)){
+									strLang = gLocal.language[key];
+								}
 								htmlLangSelect += "<option value='"+key+"' ";
 								if(currLang==key){
 									htmlLangSelect += "selected ";
 									isLangMatched = true;
 								}
-								htmlLangSelect +=">"+gLocal.language[key]+"</option>";	
+								htmlLangSelect +=">"+strLang+"</option>";	
 							}
 						}
 						$("#select_lang").html(htmlLangSelect);
 						if(isLangMatched){
 							render_edition_list(currLang);
 						}else{
-							render_edition_list("all");
+							render_edition_list("");
 						}
 					} catch (e) {
 						console.error(e);
@@ -399,25 +404,36 @@ function note_channal_list() {
 	}
 }
 function lang_changed(obj){
-	render_edition_list($(obj).val());
+	_lang = $(obj).val();
+	render_edition_list(_lang);
 }
-function render_edition_list(lang,index=0){
+function render_edition_list(lang=""){
+	let firstChannel="";
+	if(_channal!=""){
+		firstChannel = _channal.split(",")[0];
+	}	
 	let html = "";
 	html += "<div class='case_dropdown-content'>";
-	let firstChannel;
+	let currChannel="选择一个版本";
 	for (const iterator of _channalData) {
-		if(lang=="all" || (lang!="all" && lang==iterator.lang)){
-			if(typeof firstChannel == "undefined"){
-				firstChannel = "<span>"+iterator.name+"</span>";
+		if(iterator.id==firstChannel){
+			currChannel = iterator.name;
+		}
+		if(lang=="" || (lang!="" && lang==iterator.lang)){
+			if (iterator["final"]){
+				html += "<a onclick=\"edition_list_changed('"+iterator.id+"')\">"+iterator.name+"</a>";
 			}
-			html += "<a onclick=\"set_channal('"+iterator.id+"')\">"+iterator.name+"</a>";
 		}
 	}
 	html +="</div>";
-	html = firstChannel + html;
+	html = "<span>"+currChannel+"▼</span>" + html;
 	$("#edition_dropdown").html(html);
 }
-
+function edition_list_changed(channelId){
+	_channal = channelId;
+	render_edition_list(_lang);
+	set_channal(channelId);
+}
 function find_channal(id) {
 	for (const iterator of _channalData) {
 		if (id == iterator.id) {
