@@ -39,7 +39,7 @@ note:hover .ref {
 }
 
 #left_pannal{
-	display:none;
+	/*display:none;*/
 }
 
 .main_view {
@@ -57,5 +57,22 @@ note:hover .ref {
 	width: 100%;
 }
 #toc_content{
-	width: 100%;
+    width: 100%;
+    max-width: unset;
+    max-height: unset;
+    height: 100%;
+}
+#right_float_pannal {
+	position: fixed;
+	height: 70%;
+	top: 100%;
+	left: 0;
+	width:100%
+}
+.right_float_min #right_float_pannal {
+    position: fixed;
+    top: 30%;
+    left: 0;
+    width: 100%;
+    height: 70%;
 }

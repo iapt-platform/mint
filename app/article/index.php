@@ -148,6 +148,7 @@ require_once "../pcdl/html_head.php";
 <style>
 ul.fancytree-container{
 	border:unset;
+	width: max-content;
 }
 .fancytree-container .active {
     font-weight: 700;
@@ -372,11 +373,16 @@ function set_toc_visible(isVisible){
 
 <script>
 	$(document).ready(function(){
-		if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
-			set_toc_visible(false);
+		if(window.innerWidth>800){
+			if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
+				set_toc_visible(false);
+			}else{
+				set_toc_visible(true);
+			}			
 		}else{
-			set_toc_visible(true);
+			set_toc_visible(false);
 		}
+
 		
 		article_add_dlg_init("article_add_div");
 	ntf_init();				
