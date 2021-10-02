@@ -3153,7 +3153,7 @@ function showModifyWin(sWordId) {
 			document.getElementById("edit_detail_prt_prt").style.display = "none";
 			document.getElementById("svg_parent2").style.transform = "rotate(0deg)";
 		}
-		document.getElementById("parent_grammar").innerHTML = sParentGrammar;
+		document.getElementById("parent_grammar").innerHTML = getLocalGrammaStr(sParentGrammar);
 		$("#id_text_prt_prt").val(sParent2);
 
 		//右侧修改菜单
@@ -3161,6 +3161,7 @@ function showModifyWin(sWordId) {
 		$("#word_mdf_parts_dropdown").html(render_word_menu_parts(sWordId, 1));
 		$("#word_mdf_case_dropdown").html(render_word_menu_gramma(sWordId, 1));
 		$("#word_mdf_parent_dropdown").html(render_word_menu_parent(sWordId));
+		$("#word_mdf_prt_prt_dropdown").html(render_word_menu_parent_parent(sWordId));
 
 		let typeAndGramma = sCase.split("#");
 		if (typeAndGramma.length > 1) {
@@ -4742,7 +4743,7 @@ function render_word_menu_parent(id) {
 	if (!str_in_array(word_real, sWord)) {
 		sWord.push(word_real);
 	}
-	output += "<a onclick=\"ParentLookup()\">🔍" +gLocal.gui.dict +"</a>";
+	output += "<a onclick=\"ParentLookup('"+$("#id_text_parent").val()+"')\">🔍" +gLocal.gui.dict +"</a>";
 
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
@@ -4756,8 +4757,70 @@ function render_word_menu_parent(id) {
 	}
 	return output;
 }
-function ParentLookup(){
-	window.open("../dict/index.php?builtin=true&theme=dark&key="+$("#id_text_parent").val(),target="dict");
+/*
+渲染单词语基下拉菜单
+id	单词id
+
+
+return	无
+*/
+function render_word_menu_parent_parent(id) {
+	let output = "";
+	let word_parent = doc_word("#" + id).val("parent");
+	let word_parent2 = doc_word("#" + id).val("parent2");
+	let word_pg = doc_word("#" + id).val("pg");
+	let arrParent = new Array();
+	//检索语基
+	if (word_parent2 != "") {
+		//arrParent[word_parent2+"#"+word_pg] = 1;
+	}
+	if (mDict[word_parent]) {
+		for (let i in mDict[word_parent]) {
+			if (mDict[word_parent][i].parent && mDict[word_parent][i].parent!=word_parent && mDict[word_parent][i].parent.length > 0) {
+				arrParent[mDict[word_parent][i].parent+"#"+mDict[word_parent][i].gramma] = 1;
+			}
+		}
+	}
+	let sWord = new Array();
+	for (const key in arrParent) {
+		if (arrParent.hasOwnProperty.call(arrParent, key)) {
+			sWord.push(key);
+		}
+	}
+
+
+	if($("#id_text_prt_prt").val()!=""){
+		output += "<a onclick=\"ParentLookup('"+$("#id_text_prt_prt").val()+"')\">🔍" +gLocal.gui.dict +"</a>";
+	}
+	output += "<a onclick=\"parent_parent_changed('','')\">清空</a>";
+
+	for (const it of sWord) {
+		let pali = it.split("#");
+		if(pali.length<2){
+			pali[1]="";
+		}
+		output += "<a onclick=\"parent_parent_changed('" + pali[0] + "','" + pali[1] + "')\" style='display:flex;justify-content: space-between;'>";
+		if (word_parent2 == pali[0]) {
+			output += "<b>" + pali[0] + "</b>";
+		} else {
+			output += "<span>" +pali[0]+ "</span>";
+		}
+		output += "<span style='background-color: wheat;'>" +pali[1]+ "</span>";
+		output += "</a>";		
+	}
+	for (let iWord in sWord) {
+
+	}
+	return output;
+}
+
+function parent_parent_changed(spell,grammar){
+	mdf_win_data_change('id_text_prt_prt',spell);
+	edit_parent_grammar_changed(grammar);
+}
+
+function ParentLookup(word){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+word,target="dict");
 }
 function show_word_menu_partmean(id) {
 	var word_partmean_div = document.getElementById("partmean_" + id);

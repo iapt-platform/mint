@@ -199,11 +199,14 @@ img {
 #article_edition {
     padding: 8px;
     margin: 0 4px;
-    border: 1px solid var(--border-line-color);
-    border-radius: 5px;
+    border-bottom: 1px solid var(--border-line-color);
+	display: flex;
+	min-width: 18em;
 }
 
-
+#edition_dropdown {
+    margin-left: 1em;
+}
 #head_nav {
     display: flex;
     justify-content: space-between;
@@ -267,4 +270,8 @@ img {
 	fill: var(--bg-color);
 	height: 2em;
 	width: 2em;
+}
+
+#head_nav_right{
+	display: flex;
 }
