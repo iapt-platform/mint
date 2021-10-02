@@ -23,6 +23,9 @@ if (isset($_GET["par"])) {
 if (isset($_GET["start"])) {
     $_start = $_GET["start"];
 }
+if (isset($_GET["begin"])) {
+    $_start = $_GET["begin"];
+}
 if (isset($_GET["end"])) {
     $_end = $_GET["end"];
 }
