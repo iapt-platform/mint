@@ -275,3 +275,25 @@ img {
 #head_nav_right{
 	display: flex;
 }
+
+.nav_bnt{
+	min-width: 20em;
+    padding: 15px;
+    border: 1px solid var(--border-line-color);
+    border-radius: 5px;
+	cursor: pointer;
+	margin: 10px;
+}
+.nav_right{
+	text-align: right;
+}
+
+.nav_bnt:hover {
+    background-color: var(--tool-link-hover-color);
+    color: var(--btn-hover-color);
+}
+
+#contents_nav{
+	display: flex;
+    justify-content: space-between;
+}
