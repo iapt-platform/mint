@@ -769,7 +769,7 @@ foreach($plugin_list as $info){
 						<guide gid="studio_parent2"></guide>
 						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;">┕</span>
-							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;">.ppa.</span>
+							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
 							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
