@@ -159,6 +159,7 @@ function goto_prev() {
 		break;
 		case "sent":
 		case "para":
+			gotoPara(_par-1);
 		case "chapter":
 			if(prevChapter>0){
 				gotoChapter(prevChapter);
@@ -189,6 +190,7 @@ function goto_next() {
 		break;
 		case "sent":
 		case "para":
+			gotoPara(_par+1);
 			break;
 		case "chapter":
 			if(nextChapter>0){
@@ -497,8 +499,33 @@ function render_toc(){
 					return false;
 				}
 			});
-			fill_chapter_nav();
+			switch (_view) {
+				case "chapter":
+					fill_chapter_nav();
+					break;
+				case "para":
+					fill_para_nav();
+					break;
+				case "sent":
+					fill_sent_nav();
+				default:
+					fill_default_nav();
+					break;
+			}
+			
 	});
+}
+function fill_sent_nav(){
+	$("#contents_nav_left").hide();
+	$("#contents_nav_right").hide();
+}
+function fill_sent_nav(){
+	$("#contents_nav_left").html("");
+	$("#contents_nav_right").html("");
+}
+function fill_para_nav(){
+	$("#contents_nav_left").html(_par-1);
+	$("#contents_nav_right").html(_par+1);
 }
 function fill_chapter_nav(){
 	if(prevChapter>0){
@@ -534,9 +561,30 @@ function fill_chapter_nav(){
 	}
 }
 
-//跳转到另外一个文章
+//跳转到另外一个章节
 function gotoChapter(paragraph) {
 	let url = "../article/index.php?view=chapter";
+
+	url += "&book=" + _book;
+	url += "&par=" + paragraph;
+
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
+//跳转到另外一个章节
+function gotoPara(paragraph) {
+	let url = "../article/index.php?view=para";
 
 	url += "&book=" + _book;
 	url += "&par=" + paragraph;
