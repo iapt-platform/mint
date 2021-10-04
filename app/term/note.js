@@ -407,6 +407,7 @@ function lang_changed(obj){
 	_lang = $(obj).val();
 	render_edition_list(_lang);
 }
+//顶部的版本列表
 function render_edition_list(lang=""){
 	let firstChannel="";
 	if(_channal!=""){
