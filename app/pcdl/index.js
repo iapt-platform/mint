@@ -28,7 +28,7 @@ function index_load_collect_new() {
 				gLocal.gui.ongoing + "</div>";
 
 				html += "<div class='title'>";
-				html += "<a href='../article/?view=article&id=" + iterator.id + "'>" + iterator.title + "</a>";
+				html += "<a href='../article/?view=article&id=" + iterator.id + "&collection=" + iterator.collect.id+"'>" + iterator.title + "</a>";
 				html += "</div>";
 
 				html += "<div class='collect'>";
