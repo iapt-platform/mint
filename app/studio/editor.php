@@ -85,13 +85,14 @@ else{$currDevice="computer";}
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
 
-
 	<script  src="../channal/channal.js"></script>
 	<script>
 		get_channel_list_callback = function(){
-			let html ="<ul>";
-			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
 
+			let html ="";
+			html += "<input type='checkbox' id='layout_channel_display_all' checked channel_id='-1' onclick=\"channelDisplayAll(this)\" />全选</li>"
+			html +="<ul id='layout_channel_display'>";
+			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
 			if (_my_channal != null) {
 				for (const iterator of _my_channal) {
 					html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
@@ -100,9 +101,9 @@ else{$currDevice="computer";}
 				$("#layout_channel").html(html);
 			}		
 		}
-	</script>	
-	
+	</script>
 
+	
 	<script language="javascript">
 	<?php 
 	//加载js语言包

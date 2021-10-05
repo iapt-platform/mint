@@ -85,3 +85,10 @@ note:hover .ref {
     border-radius: unset;
     border-bottom: 1px solid var(--border-line-color);
 }
+
+#contents_nav{
+	flex-direction: column-reverse;
+}
+.nav_bnt{
+	width: 100%;
+}

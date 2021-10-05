@@ -20,12 +20,12 @@ class PaliText extends Table
 					# code...
 					$parent = $this->medoo->get(
 					$this->table,
-					["parent","paragraph","chapter_len"],
+					["parent","paragraph","chapter_len","next_chapter","prev_chapter"],
 					["book"=>$book,"paragraph"=>$par]
 					);
 					$par = $parent["parent"];
 				} while ($parent["parent"] > -1);
-				$this->_index(["book","paragraph","level","toc","next_chapter","parent"],["level[<]"=>8,"book"=>$book,"paragraph[>]"=>$parent["paragraph"],"paragraph[<]"=>$parent["paragraph"]+$parent["chapter_len"]]);
+				$this->_index(["book","paragraph","level","toc","next_chapter","prev_chapter","parent"],["level[<]"=>8,"book"=>$book,"paragraph[>]"=>$parent["paragraph"],"paragraph[<]"=>$parent["paragraph"]+$parent["chapter_len"]]);
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 				break;
 			default:
@@ -33,7 +33,21 @@ class PaliText extends Table
 				break;
 		}
 	}
+	public function show(){
+		$output = $this->medoo->get(
+			$this->table,
+			["book","paragraph","level","toc","text"],
+			["book"=>$_GET["book"],"paragraph"=>$_GET["par"]]
+		);
+		if($this->medoo->error){
+			$this->result["ok"]=false;
+			$this->result["message"]=$this->medoo->error;
+		}else{
+			$this->result["data"] = $output;
+		}
+		echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 
+	}
 	public function getTitle($book,$para)
 	{
 		if (isset($book) && isset($para)) {

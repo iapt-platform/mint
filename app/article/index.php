@@ -343,8 +343,8 @@ function set_toc_visible(isVisible){
 			</div>
 			<div id="contents_foot">
 				<div id="contents_nav" style="display:flex;justify-content: space-between;">
-					<div id="contents_nav_left"></div>
-					<div id="contents_nav_right"></div>
+					<div id="contents_nav_left" class="nav_bnt nav_left" onclick="goto_prev()">上一个</div>
+					<div id="contents_nav_right"  class="nav_bnt nav_right" onclick="goto_next()">下一个</div>
 				</div>
 				<div id="contents_dicuse">
 				
