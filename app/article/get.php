@@ -1,6 +1,6 @@
 <?php
 //获取article内容
-
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -47,5 +47,5 @@ if(isset($_GET["id"])){
 }
 
 echo json_encode(array(), JSON_UNESCAPED_UNICODE);	
-
+PrefLog();
 ?>

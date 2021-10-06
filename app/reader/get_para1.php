@@ -1,4 +1,5 @@
 <?php
+include("../log/pref_log.php");
 require_once "../public/_pdo.php";
 require_once "../path.php";
 require_once "../redis/function.php";
@@ -185,3 +186,4 @@ if ($FetchParInfo) {
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
 
 }
+PrefLog();

@@ -1,5 +1,6 @@
 ﻿<?php
 //查询参考字典
+include("../log/pref_log.php");
 require_once '../path.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
@@ -354,7 +355,7 @@ $right_word_list = "";
 
         //查用户词典结束
 
-
+PrefLog();
 
 function lookup_user($word){
 	global $dict_list;
