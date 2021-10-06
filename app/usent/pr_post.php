@@ -1,5 +1,5 @@
 <?php
-
+include("../log/pref_log.php");
 require_once "../usent/function.php";
 require_once "../channal/function.php";
 require_once "../ucenter/function.php";
@@ -28,3 +28,5 @@ if(!$result){
 	$respond['message']="error";
 }
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+
+PrefLog();
