@@ -1,4 +1,5 @@
 <?php
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
@@ -515,3 +516,4 @@ if ($debug) {
     $queryTime = (microtime_float() - $time_start) * 1000;
     echo "<div >搜索时间：$queryTime 毫秒</div>";
 }
+PrefLog();
