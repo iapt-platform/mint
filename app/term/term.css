@@ -300,7 +300,7 @@ note > .tran .tran_text_tool_bar::after,
 
 note > .palitext,
 .palitext {
-	line-height: 1.5em;
+	line-height: 2em;
 	color: #9f3a01;
 	margin: 4px;
 }
