@@ -131,16 +131,16 @@ function articleFillFootNavButton(article_list,curr_article){
 		const element = article_list[index];
 		if(element.article==curr_article){
 			if(index!=0){
-				$("#contents_nav_left").html(article_list[index-1].title);
+				$("#contents_nav_left_inner").html(article_list[index-1].title);
 				prevArticle = article_list[index-1].article;
 			}else{
-				$("#contents_nav_left").html("无");
+				$("#contents_nav_left_inner").html("无");
 			}
 			if(index!=article_list.length-1){
-				$("#contents_nav_right").html(article_list[index+1].title);
+				$("#contents_nav_right_inner").html(article_list[index+1].title);
 				nextArticle = article_list[index+1].article;
 			}else{
-				$("#contents_nav_right").html("无");
+				$("#contents_nav_right_inner").html("无");
 			}
 		}
 	}
@@ -520,12 +520,12 @@ function fill_sent_nav(){
 	$("#contents_nav_right").hide();
 }
 function fill_sent_nav(){
-	$("#contents_nav_left").html("");
-	$("#contents_nav_right").html("");
+	$("#contents_nav_left_inner").html("");
+	$("#contents_nav_right_inner").html("");
 }
 function fill_para_nav(){
-	$("#contents_nav_left").html(_par-1);
-	$("#contents_nav_right").html(_par+1);
+	$("#contents_nav_left_inner").html(_par-1);
+	$("#contents_nav_right_inner").html(_par+1);
 }
 function fill_chapter_nav(){
 	if(prevChapter>0){
@@ -538,10 +538,10 @@ function fill_chapter_nav(){
 				par: prevChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_left").html(data.data.toc);
+			$("#contents_nav_left_inner").html(data.data.toc);
 		});		
 	}else{
-		$("#contents_nav_left").html("无");
+		$("#contents_nav_left_inner").html("无");
 	}
 	if(nextChapter>0){
 		$.getJSON(
@@ -553,10 +553,10 @@ function fill_chapter_nav(){
 				par: nextChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_right").html(data.data.toc);
+			$("#contents_nav_right_inner").html(data.data.toc);
 		});		
 	}else{
-		$("#contents_nav_right").html("无");
+		$("#contents_nav_right_inner").html("无");
 
 	}
 }
