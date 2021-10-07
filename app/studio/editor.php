@@ -85,24 +85,25 @@ else{$currDevice="computer";}
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
 
-
 	<script  src="../channal/channal.js"></script>
 	<script>
 		get_channel_list_callback = function(){
-			let html ="<ul>";
+
+			let html ="";
+			html += "<input type='checkbox' id='layout_channel_display_all' checked channel_id='-1' onclick=\"channelDisplayAll(this)\" />全选</li>"
+			html +="<ul id='layout_channel_display'>";
 			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
-
 			if (_my_channal != null) {
-			for (const iterator of _my_channal) {
-				html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
-			}
-			html +="</ul>";
-			$("#layout_channel").html(html);
-		}		
+				for (const iterator of _my_channal) {
+					html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
+				}
+				html +="</ul>";
+				$("#layout_channel").html(html);
+			}		
 		}
-	</script>	
-	
+	</script>
 
+	
 	<script language="javascript">
 	<?php 
 	//加载js语言包
@@ -767,11 +768,11 @@ foreach($plugin_list as $info){
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<span style="display:flex;">
 						<guide gid="studio_parent2"></guide>
-						<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
+						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;">┕</span>
-							<span id="parent_grammar">.ppa.</span>
+							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
 							<input type="hidden" id="input_parent_grammar" />
-							<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
+							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>

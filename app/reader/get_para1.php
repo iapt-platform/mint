@@ -1,4 +1,5 @@
 <?php
+include("../log/pref_log.php");
 require_once "../public/_pdo.php";
 require_once "../path.php";
 require_once "../redis/function.php";
@@ -22,6 +23,9 @@ if (isset($_GET["par"])) {
 
 if (isset($_GET["start"])) {
     $_start = $_GET["start"];
+}
+if (isset($_GET["begin"])) {
+    $_start = $_GET["begin"];
 }
 if (isset($_GET["end"])) {
     $_end = $_GET["end"];
@@ -182,3 +186,4 @@ if ($FetchParInfo) {
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
 
 }
+PrefLog();

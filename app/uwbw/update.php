@@ -2,6 +2,7 @@
 /*
 get xml doc from db
  */
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
@@ -113,3 +114,5 @@ if (count($aData) > 0) {
     $respond['message'] = "no data";
     echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 }
+
+PrefLog();

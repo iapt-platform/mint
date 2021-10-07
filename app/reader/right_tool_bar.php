@@ -1,45 +1,7 @@
 
 	<script src="../reader/right_tool_bar.js"></script>
 <style>
-	#right_float_pannal {
-	position: fixed;
-	height: calc(100% - 7.3em);
-	top: 7.3em;
-	left: 100%;
-	width: calc(30vw - 0.6em);
-	min-width: 20vw;
-	color: var(--btn-color);
-	background-color: var(--tool-bg-color);
-	z-index: 20;
-	-webkit-transition-duration: 0.4s;
-	transition-duration: 0.4s;
-	-webkit-contain: strict;
-	contain: strict;
-	z-index: 51;
-}
-#right_float_pannal > iframe {
-	width: 100%;
-	height: 100%;
-}
-.right_float_max #right_float_pannal {
-	left: 50%;
-	width: 50%;
-}
 
-.right_float_min #right_float_pannal {
-	left: calc(100% - 30vw + 0.6em);
-}
-#right_float_pannal > #tool_bar {
-	/*position: absolute;*/
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
-}
-#right_float_pannal > #tool_bar svg {
-	fill: var(--bg-color);
-	height: 2em;
-	width: 2em;
-}
 #min_right_float {
 	display: none;
 }

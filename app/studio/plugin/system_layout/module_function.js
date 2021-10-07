@@ -262,8 +262,29 @@ function layout_wbw_auto_cut() {
 		}
 	}
 }
-
+//channel显示隐藏
 function channelDisplay(obj) {
 	let id = $(obj).attr("channel_id");
 	$(".trans_text_block[channel_id='" + id + "']").toggle();
+	let allLen = $(obj).parent().parent().children("li").length;
+	let checkLen = $(obj).parent().parent().children("li").children("input:checked").length;
+	if(checkLen==0){
+		$("#layout_channel_display_all").prop("checked",false);
+
+	}else if(allLen===checkLen){
+		$("#layout_channel_display_all").prop("checked",true);
+	}else{
+		$("#layout_channel_display_all").prop({checked:false,indeterminate:true});
+	}
+}
+//全选或全不选
+function channelDisplayAll(obj) {
+	let all = $(obj).prop("checked");
+	if(all){
+		$("#layout_channel_display").children("li").children("input").prop("checked",true);
+		$(".trans_text_block").show();
+	}else{
+		$("#layout_channel_display").children("li").children("input").prop("checked",false);
+		$(".trans_text_block").hide();
+	}
 }

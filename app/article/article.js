@@ -109,6 +109,7 @@ function articel_load_article_list(articleId,collectionId) {
 					if (result) {
 						let article_list = JSON.parse(result.article_list);
 						render_article_list(article_list,collectionId,articleId);
+						articleFillFootNavButton(article_list,articleId);
 						let strTitle = "<a href='../article/?view=collection&collection=" + result.id + "'>" + result.title + "</a> / ";
 						for (const iterator of tocActivePath) {
 							strTitle += "<a href='../article/?view=article&id="+iterator.key+"&collection=" + result.id + "'>" + iterator.title + "</a> / ";
@@ -123,6 +124,91 @@ function articel_load_article_list(articleId,collectionId) {
 			}
 		}
 	);
+}
+var prevArticle=0,nextArticle=0;
+function articleFillFootNavButton(article_list,curr_article){
+	for (let index = 0; index < article_list.length; index++) {
+		const element = article_list[index];
+		if(element.article==curr_article){
+			if(index!=0){
+				$("#contents_nav_left").html(article_list[index-1].title);
+				prevArticle = article_list[index-1].article;
+			}else{
+				$("#contents_nav_left").html("无");
+			}
+			if(index!=article_list.length-1){
+				$("#contents_nav_right").html(article_list[index+1].title);
+				nextArticle = article_list[index+1].article;
+			}else{
+				$("#contents_nav_right").html("无");
+			}
+		}
+	}
+}
+function goto_prev() {
+	switch (_view) {
+		case "article":
+			if(prevArticle==0){
+				alert("已经到达开始");
+			}else{
+				gotoArticle(prevArticle);
+			}
+			break;
+		case "collection":
+
+		break;
+		case "sent":
+		case "para":
+			gotoPara(_par-1);
+		case "chapter":
+			if(prevChapter>0){
+				gotoChapter(prevChapter);
+			}else{
+				alert("已经到达开始");
+			}
+			break;
+		case "book":
+		case "series":
+		break;
+		case "simsent":
+		case "sim":
+			break;
+		default:
+			break;
+	}
+}
+function goto_next() {
+	switch (_view) {
+		case "article":
+			if(nextArticle==0){
+				alert("已经到达最后");
+			}else{
+				gotoArticle(nextArticle);
+			}
+			break;
+		case "collection":
+		break;
+		case "sent":
+		case "para":
+			gotoPara(_par+1);
+			break;
+		case "chapter":
+			if(nextChapter>0){
+				gotoChapter(nextChapter);
+			}else{
+				alert("已经到达最后");
+			}
+			
+			break;
+		case "book":
+		case "series":
+		break;
+		case "simsent":
+		case "sim":
+			break;
+		default:
+			break;
+	}
 }
 
 //在collect 中 的article列表
@@ -385,7 +471,8 @@ function to_article(){
 		content:_sent_data.content,
 	});
 }
-
+var prevChapter=0,nextChapter=0;
+var strPrevChapter,strNextChapter;
 function render_toc(){
 	$.getJSON(
 		"../api/pali_text.php",
@@ -398,6 +485,10 @@ function render_toc(){
 	).done(function (data) {
 			let arrToc = new Array();
 			for (const it of data.data) {
+				if(_par==it.paragraph){
+					nextChapter = it.next_chapter;
+					prevChapter = it.prev_chapter;
+				}
 				arrToc.push({article:it.paragraph,title:it.toc,level:it.level});
 			}
 			$("#toc_content").fancytree({
@@ -408,12 +499,92 @@ function render_toc(){
 					return false;
 				}
 			});
+			switch (_view) {
+				case "chapter":
+					fill_chapter_nav();
+					break;
+				case "para":
+					fill_para_nav();
+					break;
+				case "sent":
+					fill_sent_nav();
+				default:
+					fill_default_nav();
+					break;
+			}
+			
 	});
 }
+function fill_sent_nav(){
+	$("#contents_nav_left").hide();
+	$("#contents_nav_right").hide();
+}
+function fill_sent_nav(){
+	$("#contents_nav_left").html("");
+	$("#contents_nav_right").html("");
+}
+function fill_para_nav(){
+	$("#contents_nav_left").html(_par-1);
+	$("#contents_nav_right").html(_par+1);
+}
+function fill_chapter_nav(){
+	if(prevChapter>0){
+		$.getJSON(
+			"../api/pali_text.php",
+			{
+				_method:"show",
+				view:"toc",
+				book: _book,
+				par: prevChapter,
+			}
+		).done(function (data) {
+			$("#contents_nav_left").html(data.data.toc);
+		});		
+	}else{
+		$("#contents_nav_left").html("无");
+	}
+	if(nextChapter>0){
+		$.getJSON(
+			"../api/pali_text.php",
+			{
+				_method:"show",
+				view:"toc",
+				book: _book,
+				par: nextChapter,
+			}
+		).done(function (data) {
+			$("#contents_nav_right").html(data.data.toc);
+		});		
+	}else{
+		$("#contents_nav_right").html("无");
 
-//跳转到另外一个文章
+	}
+}
+
+//跳转到另外一个章节
 function gotoChapter(paragraph) {
 	let url = "../article/index.php?view=chapter";
+
+	url += "&book=" + _book;
+	url += "&par=" + paragraph;
+
+	if (_channal != "") {
+		url += "&channal=" + _channal;
+	}
+	if (_display != "") {
+		url += "&display=" + _display;
+	}
+	if (_mode != "") {
+		url += "&mode=" + _mode;
+	}
+	if (_direction != "") {
+		url += "&direction=" + _direction;
+	}
+	location.assign(url);
+}
+//跳转到另外一个章节
+function gotoPara(paragraph) {
+	let url = "../article/index.php?view=para";
 
 	url += "&book=" + _book;
 	url += "&par=" + paragraph;

@@ -61,6 +61,9 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["start"])){
 		echo "_start=".$_GET["start"].";";
 	}
+	if(isset($_GET["begin"])){
+		echo "_start=".$_GET["begin"].";";
+	}
 	if(isset($_GET["end"])){
 		echo "_end=".$_GET["end"].";";
 	}
@@ -145,6 +148,7 @@ require_once "../pcdl/html_head.php";
 <style>
 ul.fancytree-container{
 	border:unset;
+	width: max-content;
 }
 .fancytree-container .active {
     font-weight: 700;
@@ -234,12 +238,7 @@ function set_toc_visible(isVisible){
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
-			<select id="select_lang" onchange="lang_changed(this)">
-					<option>全部语言</option>
-					<option>简体中文</option>
-					<option>繁体中文</option>
-					<option>英文</option>
-			</select>
+
 		<?php
 		
 		if(isset($_GET["view"]) && $_GET["view"]=="article"){
@@ -284,7 +283,7 @@ function set_toc_visible(isVisible){
 				echo "&start=".$_GET["start"];
 			}
 			if(isset($_GET["end"])){
-				echo "$end=".$_GET["end"];
+				echo "&end=".$_GET["end"];
 			}
 			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
 				
@@ -313,6 +312,12 @@ function set_toc_visible(isVisible){
 				<div id="article_path_title"></div>
 			</div>
 			<div id="head_nav_right" >
+				<select id="select_lang" onchange="lang_changed(this)">
+						<option>全部语言</option>
+						<option>简体中文</option>
+						<option>繁体中文</option>
+						<option>英文</option>
+				</select>
 				<div id="article_edition" style="display:flex;">
 					<span  style='font-weight: 700;'>文章版本 </span>
 					<div id="edition_dropdown" class="case_dropdown">
@@ -338,8 +343,8 @@ function set_toc_visible(isVisible){
 			</div>
 			<div id="contents_foot">
 				<div id="contents_nav" style="display:flex;justify-content: space-between;">
-					<div id="contents_nav_left"></div>
-					<div id="contents_nav_right"></div>
+					<div id="contents_nav_left" class="nav_bnt nav_left" onclick="goto_prev()">上一个</div>
+					<div id="contents_nav_right"  class="nav_bnt nav_right" onclick="goto_next()">下一个</div>
 				</div>
 				<div id="contents_dicuse">
 				
@@ -369,11 +374,16 @@ function set_toc_visible(isVisible){
 
 <script>
 	$(document).ready(function(){
-		if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
-			set_toc_visible(false);
+		if(window.innerWidth>800){
+			if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
+				set_toc_visible(false);
+			}else{
+				set_toc_visible(true);
+			}			
 		}else{
-			set_toc_visible(true);
+			set_toc_visible(false);
 		}
+
 		
 		article_add_dlg_init("article_add_div");
 	ntf_init();				

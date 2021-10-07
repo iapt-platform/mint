@@ -1,6 +1,7 @@
 <?php
 //工程文件操作
 //建立，
+include("../log/pref_log.php");
 require_once '../path.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
@@ -271,5 +272,5 @@ foreach ($_para as $key => $para) {
 
 */
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
-
+PrefLog();
 ?>
