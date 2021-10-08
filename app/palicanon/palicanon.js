@@ -185,11 +185,11 @@ function render_chapter_head(chapter_info, parent) {
 		parent +
 		"')\">back</span></div>";
 	html +=
-		"<div><span class='chapter_close_button' id='chapter_close_" +
+		"<div><button class='chapter_close_button' id='chapter_close_" +
 		(parent + 1) +
 		"' onclick=\"chapter_back('" +
 		parent +
-		"')\">back</span></div>";
+		"')\">⬅</button></div>";
 	html += "</div>";
 	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&par=" + chapter_info.paragraph;
 	html += "<div class='title'>";
