@@ -62,7 +62,7 @@ var char_roman_to_tai = [
 	{ id: "ndā", value: "ᨶᩣ᩠ᨴ" },
 	{ id: "nnā", value: "ᨶᩣ᩠ᨶ" },
 	{ id: "ntā", value: "ᨶᩣ᩠ᨲ" },
-	{ id: "ṅgo", value: " ᩘᨣᩮᩣ" },//  ᩘᩮ᩠ᨣᩣ
+	{ id: "ṅgo", value: "ᩘ ᨣᩮᩤ" },//  ᩘᩮ᩠ᨣᩣ
 	{ id: "ṅko", value: "ᩘᨠᩮᩣ" },//  ᩘᩮ᩠ᨠᩣ
 	{ id: "ñco", value: "ᨬᩮ᩠ᨧᩣ" },
 	{ id: "ñjo", value: "ᨬᩮ᩠ᨩᩣ" },
@@ -218,6 +218,7 @@ var char_roman_to_tai = [
 { id: "ᨷᩣ", value: "ᨷᩤ" },
 { id: "ᩅᩣ", value: "ᩅᩤ" },
 { id: "ᨴ᩠ᩅᩣ", value: "ᨴ᩠ᩅᩤ" },
+{ id: "ᩘ ", value: "ᩘ" },
 
 
 
