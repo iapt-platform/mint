@@ -1031,11 +1031,13 @@ pali>p {
 .text_input>.menu{
 	width: 200px;
 	height:300px;
-	background-color: aqua;
+	background-color: var(--tool-bg-color);
+    color: var(--btn-color);
 	box-shadow: #000;
 	position:absolute;
 	display: none;
 	z-index: 100;
+	box-shadow: 0 5px 7px rgb(0 0 0 / 15%);
 }
 .text_input>.menu ul{
 	list-style-type: none;
@@ -1046,14 +1048,12 @@ pali>p {
 	cursor: pointer;
 }
 .text_input>.menu ul li:hover{
-	background-color: wheat;
+	background-color: var(--btn-border-color);
 }
-.text_input>.menu .focus{
-	color:red;
-}
+
 .term_at_menu_input{
-	height:1em;
-	border: 1px solid gray;
+	padding: 5px;
+    border-bottom: 1px solid gray;
 }
 .text_input{
 	width:100%;
@@ -1062,4 +1062,11 @@ pali>p {
 
 .term_mean {
     text-transform: capitalize;
+}
+.term_at_menu_ul>.trem_focus{
+	border-radius:unset;
+	box-shadow:unset;
+	margin:unset;
+	padding:unset;
+	background-color: var(--btn-border-color);
 }
