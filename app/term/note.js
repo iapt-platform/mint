@@ -714,9 +714,12 @@ function note_json_html(in_json) {
 		"<span class='other_tran_span' title='🧲" +
 		gLocal.gui.other +
 		gLocal.gui.translation +
-		"'><svg class='icon' style='fill: var(--box-bg-color1)'><use xlink:href=\"../studio/svg/icon.svg#more_tran\"></svg>" +
-		gLocal.gui.translation +
-		"</span>";
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
+	output += "</svg>" ;
+	output +=	gLocal.gui.translation ;
+	output += "</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
