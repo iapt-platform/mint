@@ -2153,7 +2153,7 @@ function term_set_word_list_data(el){
 			for (const key in parents) {
 				if (parents.hasOwnProperty.call(parents, key)) {		
 					//term_data.push({word:key,en:com_getPaliEn(key),weight:weight});
-					tmpWords[key]={word:key,en:com_getPaliEn(key),weight:3};
+					tmpWords[key]={word:key,en:com_getPaliEn(key),weight:3,exist:0};
 				}
 			}
 		}
@@ -2161,15 +2161,17 @@ function term_set_word_list_data(el){
 	for (const iterator of arrTermAllPali) {
 		if(tmpWords.hasOwnProperty(iterator.word)){
 			tmpWords[iterator.word].weight+=1;
+			tmpWords[iterator.word].exist=1;
 		}else{
-			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1};
+			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:1};
 		}
 	}	
 	for (const iterator of arrMyTerm) {
 		if(tmpWords.hasOwnProperty(iterator.word)){
 			tmpWords[iterator.word].weight+=1;
+			tmpWords[iterator.word].exist=2;
 		}else{
-			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1};
+			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:2};
 		}
 	}
 	for (const key in tmpWords) {
@@ -2216,15 +2218,9 @@ function text_input_textarea_focuse(el){
 			break;
 			case "Enter":
 				if(menu.style.display=="block"){
-					term_insert(term_filterd_data[menuFocusIndex]);
+					term_insert(term_filterd_data[menuFocusIndex-1]);
 					return false;
 				}
-				/*
-				else{
-					if(!e.shiftKey){
-						return false;
-					}
-				}*/
 				
 				break;
 			case "Escape":
@@ -2345,13 +2341,21 @@ function TermAtRenderMenu(params) {
 	let focusIndex = params.focus%term_data.length;
 	for (const it of term_data) {
 		if(term_input=="" || it.word.indexOf(term_input)==0 || it.en.indexOf(term_input)==0){
+			index++;
 			html +="<li ";
 			if(focusIndex==index){
 				html +="class='trem_focus' "
 			}
 			html += "onclick=\"term_insert('"+it.word+"')\" ";
-			index++;
-			html +=">"+index+ ". "+it.word+"<li>";
+			
+			html +=">";
+			html +=index+ ". ";
+			if(it.exist>0){
+				html += "<b>"+it.word+"</b>";
+			}else{
+				html +=it.word;
+			}
+			html +="<li>";
 			term_filterd_data.push(it.word);
 			if(index>_term_max_menu){
 				break;
