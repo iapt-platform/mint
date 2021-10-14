@@ -303,6 +303,7 @@ note > .palitext,
 	line-height: 2em;
 	color: #9f3a01;
 	margin: 4px;
+	overflow-wrap: anywhere;
 }
 h1 .palitext {
 	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
