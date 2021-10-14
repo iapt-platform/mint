@@ -103,12 +103,30 @@ function com_getPaliReal(inStr) {
 	inStr = inStr.toLowerCase();
 	inStr = inStr.replace(/ṁ/g, "ṃ");
 	inStr = inStr.replace(/ŋ/g, "ṃ");
-	for (x in inStr) {
-		if (paliletter.indexOf(inStr[x]) != -1) {
-			output += inStr[x];
-		}
+	for (const iterator of inStr) {
+		if (paliletter.indexOf(iterator) != -1) {
+			output += iterator;
+		}		
 	}
 	return output;
+}
+function com_getPaliEn(inStr) {
+	if (typeof inStr == "undefined") {
+		return "";
+	}
+	inStr = inStr.toLowerCase();
+	inStr = inStr.replace(/ā/g, "a");
+	inStr = inStr.replace(/ī/g, "i");
+	inStr = inStr.replace(/ū/g, "u");
+	inStr = inStr.replace(/ṅ/g, "n");
+	inStr = inStr.replace(/ñ/g, "n");
+	inStr = inStr.replace(/ṇ/g, "n");
+	inStr = inStr.replace(/ṭ/g, "t");
+	inStr = inStr.replace(/ḍ/g, "d");
+	inStr = inStr.replace(/ḷ/g, "l");
+	inStr = inStr.replace(/ṃ/g, "m");
+
+	return inStr;
 }
 
 function getCookie(c_name) {
