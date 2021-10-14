@@ -60,6 +60,9 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["par"])){
 		echo "_par=".$_GET["par"].";";
 	}
+	if(isset($_GET["para"])){
+		echo "_par=".$_GET["para"].";";
+	}
 	if(isset($_GET["start"])){
 		echo "_start=".$_GET["start"].";";
 	}
