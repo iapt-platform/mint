@@ -2221,9 +2221,19 @@ function text_input_textarea_focuse(el){
 					term_insert(term_filterd_data[menuFocusIndex-1]);
 					return false;
 				}
-				
+				if (e.ctrlKey) {
+					//回车存盘
+					tran_sent_save(e.currentTarget);
+					return false;
+				}
 				break;
 			case "Escape":
+				if(menu.style.display=="block"){
+					term_at_menu_hide();
+				}else{
+					tran_sent_edit_cancel(e.currentTarget);
+				}
+				
 				break;
 			default:
 				break;
@@ -2270,9 +2280,6 @@ function text_input_textarea_focuse(el){
 		}
 	}
 
-	if(e.key=="Escape"){
-		term_at_menu_hide();
-	}
 	
 	if(menu.style.display=="block"){
 		//term_input += e.key;
