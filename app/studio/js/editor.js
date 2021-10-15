@@ -4285,24 +4285,24 @@ function inline_dict_parse(data) {
 }
 //添加自动格位数据到内存字典
 function inline_dict_auto_case(paliword) {
-	for (let i in gCaseTable) {
-		if (gCaseTable[i].type != ".v.") {
-			let sEnd2 = gCurrLookupWord.slice(0 - gCaseTable[i].end2.length);
-			if (sEnd2 == gCaseTable[i].end2) {
-				let wordParent = gCurrLookupWord.slice(0, 0 - gCaseTable[i].end2.length) + gCaseTable[i].end1;
+	for (const it of gCaseTable) {
+		if (it.type != ".v.") {
+			let sEnd2 = gCurrLookupWord.slice(0 - it.end2.length);
+			if (sEnd2 == it.end2) {
+				let wordParent = gCurrLookupWord.slice(0, 0 - it.end2.length) + it.end1;
 				let newWord = new Object();
 				newWord.pali = gCurrLookupWord;
-				newWord.type = gCaseTable[i].type;
-				newWord.gramma = gCaseTable[i].gramma;
+				newWord.type = it.type;
+				newWord.gramma = it.gramma;
 				newWord.parent = wordParent;
 				newWord.mean = "";
 				newWord.note = "";
-				newWord.parts = wordParent + "+[" + gCaseTable[i].end2 + "]";
+				newWord.parts = wordParent + "+[" + it.end2 + "]";
 				newWord.partmean = "";
-				newWord.confidence = gCaseTable[i].confidence;
+				newWord.confidence = it.confidence;
 				mDict[paliword].push(newWord);
 			}
-		}
+		}		
 	}
 }
 

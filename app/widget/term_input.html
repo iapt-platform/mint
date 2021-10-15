@@ -2,9 +2,8 @@
 <html>
 	<body>
 		<style>
-			.textarea,
-			textarea {
-				padding: 0;
+			.text_input>.textarea{
+				padding: 5px;
 				font-family: inherit;
 				width: 100%;
 				height: 100px;
@@ -15,54 +14,87 @@
 				white-space: pre-wrap;
 				word-break: break-all;
 				z-index: 1;
+				resize: vertical;
 			}
-			#text_shadow{
+			.text_input>.text_shadow{
 				position: absolute;
-				width: 300px;
+				width: 100%;
 				visibility: hidden;
 			}
-			.cursor{
+			.text_input .cursor{
 				position: absolute;
 				border-left: 1px solid #000;
 			}
-			#menu{
+			.text_input>.menu{
 				width: 200px;
 				height:300px;
 				background-color: aqua;
 				box-shadow: #000;
 				position:absolute;
 				display: none;
+				z-index: 100;
 			}
-			#menu ul{
+			.text_input>.menu ul{
 				list-style-type: none;
-    margin: 0;
-    padding: 0;
+				margin: 0;
+				padding: 0;
 			}
-			#menu .focus{
+			.text_input>.menu ul li{
+				cursor: pointer;
+			}
+			.text_input>.menu ul li:hover{
+				background-color: wheat;
+			}
+			.text_input>.menu .focus{
 				color:red;
+			}
+			.term_at_menu_input{
+				height:1em;
+				border: 1px solid gray;
+			}
+			.text_input{
+				width:100%;
+				position: relative;
 			}
 		</style>
 
 <h2>术语输入测试</h2>
-<div style='width:300px;position: relative;'>
-<div id="menu"></div>
-<div class="textarea" id="text_shadow" >
-前端路迹<span class="cursor">&nbsp;</span>
-qinshenxue.com
-</div>
-<textarea>
-前端路迹
-qinshenxue.com
-</textarea>
-</div>
+<div id="kk" style="width:50%;"></div>
+
+<h2>术语输入测试</h2>
+<div id="mm" style="width:60%;"></div>
+
 
 <script>
 	var menuFocusIndex=0;
-	var data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
-	var textarea = document.querySelector('textarea');
-	textarea.onkeydown = function (e) {
-		textarea.clientHeight
-		let menu = document.querySelector('#menu');
+	var term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+	var term_input_text ;
+	var term_input="";
+	document.querySelector("#kk").innerHTML = term_render_text_input("test1 http://aa.org/?book=1&para=1");
+	document.querySelector("#mm").innerHTML =  term_render_text_input("test1 http://aa.org/?book=1&para=1");
+	function term_render_text_input(text){
+		let html ="";
+		html += '<div class="text_input" >';
+		html += '<div class="menu"></div>';
+		html += '<div class="textarea text_shadow"></div>';
+		html += '<textarea class="textarea tran_sent_textarea" onfocus="text_input_textarea_focuse(this)">';
+		html += text;
+		html += '</textarea> ';
+		html += '</div>';
+		return html;
+	}
+	function term_set_word_list_data(el){
+		term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+	}
+	function text_input_textarea_focuse(el){
+		term_set_word_list_data(el);
+		term_input_text = el;
+		term_input_text.onresize = function(){
+			term_input_text.parentElement.querySelector(".text_shadow").style.height=term_input_text.style.height;
+		}
+		term_input_text.onkeydown = function (e) {
+		term_input_text.style.height = term_input_text.parentElement.querySelector(".text_shadow").scrollHeight
+		let menu = term_input_text.parentElement.querySelector('.menu');
 		switch (e.key) {
 			case "ArrowDown"://down arrow
 				if(menu.style.display=="block"){
@@ -70,7 +102,7 @@ qinshenxue.com
 					if(menuFocusIndex>5){
 						menuFocusIndex=5;
 					}
-					menu.innerHTML=renderMenu({focus:menuFocusIndex});
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
 					return false;					
 				}
 				break;
@@ -80,80 +112,124 @@ qinshenxue.com
 					if(menuFocusIndex<0){
 						menuFocusIndex=0;
 					}
-					menu.innerHTML=renderMenu({focus:menuFocusIndex});
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
 					return false;					
 				}
 			break;
 			case "Enter":
 				if(menu.style.display=="block"){
-					let value = textarea.value;
-					let selectionStart = textarea.selectionStart;
-					let str1 = value.slice(0, selectionStart)
-					let str2 = value.slice(selectionStart);
-					textarea.value = str1+data[menuFocusIndex]+"]]"+str2;
-					menu.style.display="none";
+					term_insert(term_data[menuFocusIndex]);
 					return false;
 				}
+				/*
 				else{
 					if(!e.shiftKey){
 						return false;
 					}
-				}
+				}*/
 				
 				break;
 			case "Escape":
-				e.currentTarget.value="";
+				break;
+			case "ArrowLeft":
+				if(menu.style.display=="block"){
+					return false;
+				}
+				break;
+			case "ArrowRight":
+				if(menu.style.display=="block"){
+					return false;
+				}
+				break;
+			case "Backspace":
+				if(menu.style.display=="block"){
+					if(term_input.length>0){
+						term_input = term_input.slice(0,-1);
+						menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});						
+					}
+					return false;
+				}
 				break;
 			default:
+				if(menu.style.display=="block"){
+					term_input += e.key;
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;
+
+				}
 				break;
 		}
 	}
-	textarea.onkeyup = function (e) {
-		let value = textarea.value
-		let selectionStart = textarea.selectionStart
-		let str1 = value.slice(0, selectionStart)
-		let str2 = value.slice(selectionStart)
-		let textNode1 = document.createTextNode(str1)
-		let textNode2 = document.createTextNode(str2)
-		let cursor = document.createElement('span')
-		cursor.innerHTML = '&nbsp;'
-		cursor.setAttribute('class','cursor')
-		let mirror = document.querySelector('.textarea')
-		mirror.innerHTML = ''
-		mirror.appendChild(textNode1)
-		mirror.appendChild(cursor)
-		mirror.appendChild(textNode2)
-		let menu = document.querySelector('#menu');		
-		if(str1.slice(-2)=="[[" && menu.style.display!="block"){
-			menuFocusIndex=0;
-			menu.innerHTML=renderMenu({focus:0});
-			menu.style.display="block";
-			menu.style.top=cursor.offsetTop+14;
-			menu.style.left=cursor.offsetLeft;
-		}
-
-		if(e.key=="Escape"){
-			menu.style.display="none";
-		}
-		
-		console.log(keynum);
-		console.log(cursor.offsetLeft,cursor.offsetTop)
-	}
-	function renderMenu(params) {
-		
-		let html="<ul>";
-		let index=0;
-		let focusIndex = params.focus%data.length;
-		for (const it of data) {
-			html +="<li ";
-			if(focusIndex==index){
-				html +="class='focus' "
+		term_input_text.onkeyup = function (e) {
+			let value = term_input_text.value
+			let selectionStart = term_input_text.selectionStart
+			let str1 = value.slice(0, selectionStart)
+			let str2 = value.slice(selectionStart)
+			let textNode1 = document.createTextNode(str1)
+			let textNode2 = document.createTextNode(str2)
+			let cursor = document.createElement('span')
+			cursor.innerHTML = '&nbsp;'
+			cursor.setAttribute('class','cursor')
+			let mirror = term_input_text.parentElement.querySelector('.text_shadow')
+			mirror.innerHTML = ''
+			mirror.appendChild(textNode1)
+			mirror.appendChild(cursor)
+			mirror.appendChild(textNode2)
+			let menu = term_input_text.parentElement.querySelector('.menu');	
+			if(str1.slice(-2)=="[[" && menu.style.display!="block"){
+				menuFocusIndex=0;
+				menu.innerHTML=TermAtRenderMenu({focus:0});
+				menu.style.display="block";
+				menu.style.top=cursor.offsetTop+14;
+				menu.style.left=cursor.offsetLeft;
 			}
-			index++;
-			html +=">"+index+ ". "+it+"<li>";
+
+			if(e.key=="Escape"){
+				term_at_menu_hide();
+			}
+			
+			console.log(e);
+			console.log(cursor.offsetLeft,cursor.offsetTop)
+	}
+	
+	}
+
+	function term_at_menu_hide(){
+		let menu = term_input_text.parentElement.querySelector('.menu');
+		menu.style.display="none";
+		term_input="";
+	}
+	function term_insert(strTerm){
+		let value = term_input_text.value;
+		let selectionStart = term_input_text.selectionStart;
+		let str1 = value.slice(0, selectionStart)
+		let str2 = value.slice(selectionStart);
+		//TODO 光标会跑到最下面
+		term_input_text.value = str1+strTerm+"]]"+str2;
+		term_at_menu_hide();
+	}
+	function TermAtRenderMenu(params) {
+		
+		let html="";
+		html +="<div class='term_at_menu_input'>"+term_input+"|</div>";
+		html +="<ul class='term_at_menu_ul'>";
+		let index=0;
+		let focusIndex = params.focus%term_data.length;
+		for (const it of term_data) {
+			if(term_input=="" || it.indexOf(term_input)!=-1){
+				html +="<li ";
+				if(focusIndex==index){
+					html +="class='focus' "
+				}
+				html += "onclick=\"term_insert('"+it+"')\" ";
+				index++;
+				html +=">"+index+ ". "+it+"<li>";
+			}
+
 		}
 		return html;
 	}
+	
 	/*
 	// element:  t.refs.textarea
 function getCaretPosition(element) {

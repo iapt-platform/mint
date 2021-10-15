@@ -45,6 +45,7 @@ function note_create() {
 	term_edit_dlg_init();
 	pali_sim_dlg_init();
 	related_para_dlg_init();
+	term_get_all_pali();
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
@@ -851,7 +852,35 @@ function render_icon_button(icon_id, event, tiptitle) {
 	html += "</button>";
 	return html;
 }
+var menuFocusIndex=0;
+var term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+var term_filterd_data=[];
+var term_input_text ;
+var term_input="";
 
+function TermRenderSentTranTextarea(text,dbId,sentId,channelId,isPr){
+	let html="";
+	html += '<div class="text_input" >';
+	html += '<div class="menu"></div>';
+	html += '<div class="textarea text_shadow"></div>';
+
+	html += "<textarea class='textarea tran_sent_textarea' onfocus=\"text_input_textarea_focuse(this)\"";
+	html += " dbid='" + dbId + "' ";
+	html += "sid='" + sentId + "' ";
+	html += "channel='" + channelId + "' ";
+	if (typeof isPr != "undefined" && isPr == true) {
+		html += ' is_pr="true" "';
+	} else {
+		html += 'is_pr="false"';
+	}
+
+	html += ">" ;
+	html += text;
+	html += "</textarea>";
+
+	html += '</div>';
+	return html;
+}
 function render_one_sent_tran_a(iterator, diff = false) {
 	let mChannel = get_channel_by_id(iterator.channal);
 
@@ -1062,16 +1091,11 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	html += '<div class="edit">';
 	html += '<div class="input">';
-	html += "<textarea class='tran_sent_textarea' dbid='" + iterator.id + "' ";
-	html += "sid='" + sid + "' ";
-	html += "channel='" + iterator.channal + "' ";
-	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
-		html += ' is_pr="true" onchange1="note_pr_save(this)"';
-	} else {
-		html += 'is_pr="false" onchange1="note_sent_save_a(this)"';
-	}
 
-	html += ">" + iterator.text + "</textarea>";
+	//输入框
+	html += TermRenderSentTranTextarea(iterator.text,iterator.id,sid,iterator.channal,iterator.is_pr);
+
+
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	//html += ""
@@ -2102,4 +2126,257 @@ function setDisplay(obj) {
 //获取文章中H 并渲染为目录
 function render_heading_toc() {
 	//$(":header")
+}
+
+
+//术语输入At 
+const _term_max_menu=9;
+function term_set_word_list_data(el){
+	let sid = $(el).attr("sid");
+	let asid = sid.split("-");
+	let words=new Array();
+	let tmpWords = [];
+	term_data=[];
+	for (const it of _arrData) {
+		if(it.book==asid[0] && it.para==asid[1] && it.begin==asid[2] && it.end==asid[3]){
+			let palitext = it.palitext;
+			words = palitext.split(" ");
+		}
+	}
+	console.log("word",words);
+	//查询parent
+	for (let index = 0; index < words.length; index++) {
+		words[index] = com_getPaliReal(words[index]);
+		if(words[index]!=""){
+			let parents = term_parent(words[index]);
+
+			for (const key in parents) {
+				if (parents.hasOwnProperty.call(parents, key)) {		
+					//term_data.push({word:key,en:com_getPaliEn(key),weight:weight});
+					tmpWords[key]={word:key,en:com_getPaliEn(key),weight:3,exist:0};
+				}
+			}
+		}
+	}
+	for (const iterator of arrTermAllPali) {
+		if(tmpWords.hasOwnProperty(iterator.word)){
+			tmpWords[iterator.word].weight+=1;
+			tmpWords[iterator.word].exist=1;
+		}else{
+			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:1};
+		}
+	}	
+	for (const iterator of arrMyTerm) {
+		if(tmpWords.hasOwnProperty(iterator.word)){
+			tmpWords[iterator.word].weight+=1;
+			tmpWords[iterator.word].exist=2;
+		}else{
+			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:2};
+		}
+	}
+	for (const key in tmpWords) {
+		if (tmpWords.hasOwnProperty.call(tmpWords, key)) {
+			const element = tmpWords[key];
+			term_data.push(element);
+		}
+	}
+	term_data.sort(function(a,b){
+		return b.weight-a.weight;
+	});
+
+}
+
+function text_input_textarea_focuse(el){
+	term_set_word_list_data(el);
+	term_input_text = el;
+	term_input_text.onresize = function(){
+		term_input_text.parentElement.querySelector(".text_shadow").style.height=term_input_text.clientHeight+"px";
+	}
+	term_input_text.onkeydown = function (e) {
+	
+		let menu = term_input_text.parentElement.querySelector('.menu');
+		switch (e.key) {
+			case "ArrowDown"://down arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex++;
+					if(menuFocusIndex>_term_max_menu){
+						menuFocusIndex=_term_max_menu;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+				break;
+			case "ArrowUp"://up arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex--;
+					if(menuFocusIndex<0){
+						menuFocusIndex=0;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+			break;
+			case "Enter":
+				if(menu.style.display=="block"){
+					term_insert(term_filterd_data[menuFocusIndex-1]);
+					return false;
+				}
+				
+				break;
+			case "Escape":
+				break;
+			default:
+				break;
+		}
+	}
+	term_input_text.onkeyup = function (e) {
+		let textHeight = term_input_text.parentElement.querySelector(".text_shadow").scrollHeight;
+		let textHeight2 = term_input_text.clientHeight;
+		if(textHeight2>textHeight){
+			textHeight=textHeight2;
+		}
+		term_input_text.style.height = textHeight+"px";
+		console.log("text height",textHeight);
+
+	let value = term_input_text.value
+	let selectionStart = term_input_text.selectionStart
+	let str1 = value.slice(0, selectionStart)
+	let str2 = value.slice(selectionStart)
+	let textNode1 = document.createTextNode(str1)
+	let textNode2 = document.createTextNode(str2)
+	let cursor = document.createElement('span')
+	cursor.innerHTML = '&nbsp;'
+	cursor.setAttribute('class','cursor')
+	let mirror = term_input_text.parentElement.querySelector('.text_shadow')
+	mirror.innerHTML = ''
+	mirror.appendChild(textNode1)
+	mirror.appendChild(cursor)
+	mirror.appendChild(textNode2)
+	let menu = term_input_text.parentElement.querySelector('.menu');	
+	if(str1.slice(-2)=="[[" ){
+		if( menu.style.display!="block"){
+			menuFocusIndex=0;
+			menu.innerHTML=TermAtRenderMenu({focus:0});
+			term_at_menu_show(cursor);
+		}
+	}else{
+		if( menu.style.display=="block"){
+			let pos1=str1.lastIndexOf("[[");
+			let pos2=str1.lastIndexOf("]]");
+			if(pos1==-1 || (pos2!=-1 || pos2>pos1)){
+				//光标前没有[[ 光标在[[]] 之后
+				term_at_menu_hide();
+			}
+		}
+	}
+
+	if(e.key=="Escape"){
+		term_at_menu_hide();
+	}
+	
+	if(menu.style.display=="block"){
+		//term_input += e.key;
+		let value = term_input_text.value
+		let selectionStart = term_input_text.selectionStart
+		let str1 = value.slice(0, selectionStart)
+		let str2 = value.slice(selectionStart)
+		let pos1=str1.lastIndexOf("[[");
+		let pos2=str1.lastIndexOf("]]");
+		if(pos1!=-1){
+			if(pos2==-1 || pos2<pos1){
+				//光标
+				term_input = str1.slice(str1.lastIndexOf("[[")+2);
+			}
+		}
+		console.log("term_input",term_input);
+		menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+	}
+
+	console.log(e.key);
+	console.log(cursor.offsetLeft,cursor.offsetTop)
+}
+
+}
+function term_at_menu_show(cursor){
+	let menu = term_input_text.parentElement.querySelector('.menu');
+	menu.style.display="block";
+	menu.style.top=cursor.offsetTop+20+"px";
+	menu.style.left=cursor.offsetLeft+"px";
+	$(document).on("keyup", function (e) {
+		if(e.key=="Escape"){
+			term_at_menu_hide();
+		}
+	});
+}
+function term_at_menu_hide(){
+	let menu = term_input_text.parentElement.querySelector('.menu');
+	menu.style.display="none";
+	term_input="";
+}
+function term_insert(strTerm){
+	let value = term_input_text.value;
+	let selectionStart = term_input_text.selectionStart;
+	let str1 = value.slice(0, selectionStart)
+	let str2 = value.slice(selectionStart)
+	let pos1=str1.lastIndexOf("[[");
+	let pos2=str1.lastIndexOf("]]");
+	if(pos1!=-1){
+		//光标前有[[
+		if(pos2==-1 || pos2<pos1){
+			//光标在[[之间]]
+			str1 = str1.slice(0,str1.lastIndexOf("[[")+2);
+		}
+	}
+
+	//TODO 光标会跑到最下面
+	term_input_text.value = str1+strTerm+"]]"+str2;
+	term_at_menu_hide();
+}
+function TermAtRenderMenu(params) {
+	term_filterd_data=[];
+	let html="";
+	html +="<div class='term_at_menu_input'>"+term_input+"|</div>";
+	html +="<ul class='term_at_menu_ul'>";
+	let index=0;
+	let focusIndex = params.focus%term_data.length;
+	for (const it of term_data) {
+		if(term_input=="" || it.word.indexOf(term_input)==0 || it.en.indexOf(term_input)==0){
+			index++;
+			html +="<li ";
+			if(focusIndex==index){
+				html +="class='trem_focus' "
+			}
+			html += "onclick=\"term_insert('"+it.word+"')\" ";
+			
+			html +=">";
+			html +=index+ ". ";
+			if(it.exist>0){
+				html += "<b>"+it.word+"</b>";
+			}else{
+				html +=it.word;
+			}
+			html +="<li>";
+			term_filterd_data.push(it.word);
+			if(index>_term_max_menu){
+				break;
+			}
+		}
+
+	}
+	return html;
+}
+
+//添加自动格位数据到内存字典
+function term_parent(paliword) {
+	let output=[];
+	for (const it of gCaseTable) {
+		if (it.type != ".v.") {
+			let sEnd2 = paliword.slice(0 - it.end2.length);
+			if (sEnd2 == it.end2) {
+				let wordParent = paliword.slice(0, 0 - it.end2.length) + it.end1;
+				output[wordParent]=1;
+			}
+		}		
+	}
+	return output;
 }
