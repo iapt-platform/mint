@@ -2166,14 +2166,24 @@ function term_set_word_list_data(el){
 			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:1};
 		}
 	}	
+	//arrMyTerm 词头查重
+	let tmpMyTerm=[];
 	for (const iterator of arrMyTerm) {
-		if(tmpWords.hasOwnProperty(iterator.word)){
-			tmpWords[iterator.word].weight+=1;
-			tmpWords[iterator.word].exist=2;
-		}else{
-			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:2};
+		tmpMyTerm[iterator.word]=1;
+	}
+	//加入到列表
+	//在我的字典中的排名靠前
+	for (const key in tmpMyTerm) {
+		if (tmpMyTerm.hasOwnProperty.call(tmpMyTerm, key)) {
+			if(tmpWords.hasOwnProperty(key)){
+				tmpWords[key].weight+=1;
+				tmpWords[key].exist=2;
+			}else{
+				tmpWords[key]={word:key,en:com_getPaliEn(key),weight:1,exist:2};
+			}
 		}
 	}
+
 	for (const key in tmpWords) {
 		if (tmpWords.hasOwnProperty.call(tmpWords, key)) {
 			const element = tmpWords[key];
