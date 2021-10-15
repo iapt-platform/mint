@@ -4,7 +4,9 @@ require_once "../path.php";
 require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
-
+	<script>
+		var gCaseTable=<?php echo file_get_contents("../public/js/case.json"); ?>
+	</script>
 
 	<script  src="./article.js"></script>
 
@@ -57,6 +59,9 @@ require_once "../pcdl/html_head.php";
 	}
 	if(isset($_GET["par"])){
 		echo "_par=".$_GET["par"].";";
+	}
+	if(isset($_GET["para"])){
+		echo "_par=".$_GET["para"].";";
 	}
 	if(isset($_GET["start"])){
 		echo "_start=".$_GET["start"].";";
