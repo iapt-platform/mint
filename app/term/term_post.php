@@ -58,6 +58,17 @@ if ($_POST["id"] != "") {
     } else {
         $respond['status'] = 0;
         $respond['message'] = $_POST["word"];
+        $respond['data'] = ["guid"=>$_POST["id"],
+							"word"=>$_POST["word"],
+							"word_en"=>$_POST["word"],
+							"meaning"=>$_POST["mean"],
+							"other_meaning"=>$_POST["mean2"],
+							"tag"=>$_POST["tag"],
+							"channal"=>$_POST["channal"],
+							"language"=>$_POST["language"],
+							"note"=>$_POST["note"],
+							"owner"=>$_COOKIE["userid"]
+						];
     }
 } else {
 	#新建
@@ -78,6 +89,26 @@ if ($_POST["id"] != "") {
 		$respond['message'] = "language cannot be empty";
 		echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 		exit;
+	}
+	#先查询是否有重复数据
+	if($_POST["channal"]==""){
+		$query = "SELECT id from term where word= ? and  language=? and tag=? and owner = ? ";
+		$stmt = $PDO->prepare($query);
+		$stmt->execute(array($_POST["word"],$_POST["language"],$_POST["tag"],$_COOKIE["userid"]));
+	}else{
+		$query = "SELECT id from term where word= ? and channal=?  and tag=? and owner = ? ";
+		$stmt = $PDO->prepare($query);
+		$stmt->execute(array($_POST["word"],$_POST["channal"],$_POST["tag"],$_COOKIE["userid"]));
+	}
+	
+	if ($stmt) {
+		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+		if($Fetch){
+			$respond['status'] = 1;
+			$respond['message'] = "已经有同样的记录";
+			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+			exit;
+		}
 	}
     $parm[] = UUID::v4();
     $parm[] = $_POST["word"];
@@ -103,6 +134,18 @@ if ($_POST["id"] != "") {
     } else {
         $respond['status'] = 0;
         $respond['message'] = $_POST["word"];
+        $respond['data'] = ["guid"=>$parm[0],
+							"word"=>$parm[1],
+							"word_en"=>$parm[2],
+							"meaning"=>$parm[3],
+							"other_meaning"=>$parm[4],
+							"tag"=>$parm[5],
+							"channal"=>$parm[6],
+							"language"=>$parm[7],
+							"note"=>$parm[8],
+							"owner"=>$parm[9]
+						];
+
     }
 }
 

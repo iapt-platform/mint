@@ -420,7 +420,12 @@ function term_updata_translation() {
 	}
 	$("term").each(function () {
 		let status = $(this).attr("status");
-		let termText = $(this).text();
+
+		let termText;
+		termText = $(this).attr("pali");
+		if(typeof termText=="undefined"){
+			termText = $(this).text();
+		}
 
 		if (termText.slice(0, 1) == "#") {
 			if (status == 0) {
@@ -432,7 +437,8 @@ function term_updata_translation() {
 			$(this).html("<a onclick=\"alert('" + noteText + "')\">[" + noteCounter + "]</a>");
 			noteCounter++;
 		} else {
-			if (status == 0 || status == 2) {
+			//if (status == 0 || status == 2) 
+			{
 				let myterm = term_lookup_my(
 					termText,
 					$(this).attr("channal"),
@@ -457,6 +463,8 @@ function term_updata_translation() {
 			let mean = $(this).attr("mean");
 			let mean2 = $(this).attr("mean2");
 			let renderTo = $(this).attr("pos");
+			let channel = $(this).attr("channal");
+			let lang = $(this).attr("lang");
 			let noteText = "";
 
 			if (termCounter[guid]) {
@@ -504,7 +512,7 @@ function term_updata_translation() {
 						guid +
 						"','" +
 						pali +
-						"')\">"
+						"','"+channel+"','"+lang+"')\">"
 				);
 				noteText = noteText.replace("]", "</span>");
 				noteText = noteText.replace("%mean%", "<span class='term_mean'>" + mean + "</span>");
@@ -535,7 +543,7 @@ function term_updata_translation() {
 					str_term_fun_word_link +
 					"('','" +
 					termText +
-					"')\">" +
+					"','"+channel+"','"+lang+"')\">" +
 					termText +
 					"</span>";
 			}
@@ -545,10 +553,10 @@ function term_updata_translation() {
 	term_popup_init();
 }
 
-function term_show_win(guid, keyWord = "") {
+function term_show_win(guid, keyWord = "",channel="",lang="") {
 	if (guid == "") {
 		if (typeof term_body == "undefined") {
-			term_edit_dlg_open("", keyWord);
+			term_edit_dlg_open("", keyWord,channel,lang);
 		} else {
 			$(term_body).html(
 				"“" +
