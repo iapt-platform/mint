@@ -87,20 +87,12 @@ else{$currDevice="computer";}
 
 	<script  src="../channal/channal.js"></script>
 	<script>
-		get_channel_list_callback = function(){
 
-			let html ="";
-			html += "<input type='checkbox' id='layout_channel_display_all' checked channel_id='-1' onclick=\"channelDisplayAll(this)\" />全选</li>"
-			html +="<ul id='layout_channel_display'>";
-			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
-			if (_my_channal != null) {
-				for (const iterator of _my_channal) {
-					html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
-				}
-				html +="</ul>";
-				$("#layout_channel").html(html);
-			}		
-		}
+		window.addEventListener('load',(event)=>{
+			renderChannelList();
+
+		});
+
 	</script>
 
 	
