@@ -151,7 +151,7 @@ function term_edit_dlg_save() {
 				for (let index = 0; index < arrMyTerm.length; index++) {
 					const element = arrMyTerm[index];
 					if(element.guid==result.data.guid){
-						arrMyTerm.splice(index);
+						arrMyTerm.splice(index,1);
 						break;
 					}
 				}
