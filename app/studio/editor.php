@@ -87,7 +87,7 @@ else{$currDevice="computer";}
 
 	<script  src="../channal/channal.js"></script>
 	<script>
-
+		get_channel_list_callback=renderChannelList();
 		window.addEventListener('load',(event)=>{
 			renderChannelList();
 
