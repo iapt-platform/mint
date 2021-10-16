@@ -321,6 +321,10 @@ note n {
 	color: blue;
 }
 
+.palitext2 n {
+	/*display: none;*/
+}
+
 .term_word_head_pali {
 	text-transform: capitalize;
 	font-size: 200%;
