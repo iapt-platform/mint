@@ -22,7 +22,7 @@ function term_edit_dlg_init(title = gLocal.gui.dict_terms) {
 		],
 	});
 }
-function term_edit_dlg_open(id = "", word = "") {
+function term_edit_dlg_open(id = "", word = "",channel="",lang="") {
 	if (id == "") {
 		let newWord = new Object();
 		newWord.guid = "";
@@ -31,8 +31,8 @@ function term_edit_dlg_open(id = "", word = "") {
 		newWord.other_meaning = "";
 		newWord.tag = "";
 		newWord.note = "";
-		newWord.language = "zh";
-		newWord.channal = "";
+		newWord.language = lang;
+		newWord.channel = channel;
 		let html = term_edit_dlg_render(newWord);
 		$("#term_edit_dlg_content").html(html);
 		$("#term_edit_dlg").dialog("open");
@@ -117,22 +117,21 @@ function term_edit_dlg_render(word = "") {
 
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.channel + "</legend>";
-	output +=
-		"<input type='input' id='term_edit_form_channal' name='channal' value='" +
-		word.channal +
-		"' placeholder=" +
-		gLocal.gui.optional +
-		">";
+	output += "<select id='term_edit_form_channal' name='channal'>";
+	output += "<option value=''>通用于所有版本</option>";
+	for (const iterator of _my_channal) {
+		if(iterator.id==word.channel){
+		output += "<option value='"+iterator.id+"'>仅用于"+iterator.name+"</option>";
+		}
+	}
+	output += "</select>";
 	output += "</fieldset>";
 
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.encyclopedia + "</legend>";
-	output +=
-		"<textarea id='term_edit_form_note' name='note' placeholder=" +
-		gLocal.gui.optional +
-		">" +
-		word.note +
-		"</textarea>";
+	output += "<textarea id='term_edit_form_note' name='note' placeholder=" + gLocal.gui.optional +	">";
+	output += word.note ;
+	output += "</textarea>";
 	output += "</fieldset>";
 	output += "</form>";
 
@@ -149,6 +148,17 @@ function term_edit_dlg_save() {
 
 			if (result.status == 0) {
 				alert(result.message + gLocal.gui.saved + gLocal.gui.successful);
+				for (let index = 0; index < arrMyTerm.length; index++) {
+					const element = arrMyTerm[index];
+					if(element.guid==result.data.guid){
+						arrMyTerm.splice(index,1);
+						break;
+					}
+				}
+				arrMyTerm.push(result.data);
+				
+				term_updata_translation();
+
 			} else {
 				alert("error:" + result.message);
 			}

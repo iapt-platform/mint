@@ -288,3 +288,25 @@ function channelDisplayAll(obj) {
 		$(".trans_text_block").hide();
 	}
 }
+
+function renderChannelList(){
+	let html ="";
+	html += "<div>";
+	html +="<button onclick='renderChannelList()'>";
+	html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-clockwise'>";
+	html += "</svg>" ;
+	html += gLocal.gui.refresh;
+	html +="</button>";
+	html +="</div>";
+	html += "<input type='checkbox' id='layout_channel_display_all' checked channel_id='-1' onclick=\"channelDisplayAll(this)\" />全选</li>"
+	html +="<ul id='layout_channel_display'>";
+	html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
+	if (_my_channal != null) {
+		for (const iterator of _my_channal) {
+			html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
+		}
+		html +="</ul>";
+		$("#layout_channel").html(html);
+	}
+}
