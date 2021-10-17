@@ -2228,7 +2228,7 @@ function text_input_textarea_focuse(el){
 			break;
 			case "Enter":
 				if(menu.style.display=="block"){
-					term_insert(term_filterd_data[menuFocusIndex-1]);
+					term_insert(term_filterd_data[menuFocusIndex]);
 					return false;
 				}
 				if (e.ctrlKey) {
@@ -2283,8 +2283,8 @@ function text_input_textarea_focuse(el){
 		if( menu.style.display=="block"){
 			let pos1=str1.lastIndexOf("[[");
 			let pos2=str1.lastIndexOf("]]");
-			if(pos1==-1 || (pos2!=-1 || pos2>pos1)){
-				//光标前没有[[ 光标在[[]] 之后
+			if(pos1==-1 || (pos1!=-1 && pos2>pos1)){
+				//光标前没有[[ 或 光标在[[]] 之后
 				term_at_menu_hide();
 			}
 		}
@@ -2315,6 +2315,7 @@ function text_input_textarea_focuse(el){
 
 }
 function term_at_menu_show(cursor){
+	menuFocusIndex=0;
 	let menu = term_input_text.parentElement.querySelector('.menu');
 	menu.style.display="block";
 	menu.style.top=cursor.offsetTop+20+"px";
@@ -2358,7 +2359,7 @@ function TermAtRenderMenu(params) {
 	let focusIndex = params.focus%term_data.length;
 	for (const it of term_data) {
 		if(term_input=="" || it.word.indexOf(term_input)==0 || it.en.indexOf(term_input)==0){
-			index++;
+			
 			html +="<li ";
 			if(focusIndex==index){
 				html +="class='trem_focus' "
@@ -2366,7 +2367,7 @@ function TermAtRenderMenu(params) {
 			html += "onclick=\"term_insert('"+it.word+"')\" ";
 			
 			html +=">";
-			html +=index+ ". ";
+			html += (index+1)+ ". ";
 			if(it.exist>0){
 				html += "<b>"+it.word+"</b>";
 			}else{
@@ -2374,11 +2375,12 @@ function TermAtRenderMenu(params) {
 			}
 			html +="<li>";
 			term_filterd_data.push(it.word);
-			if(index>_term_max_menu){
+			if(index >= _term_max_menu){
 				break;
 			}
+			index++;
 		}
-
+		
 	}
 	return html;
 }
