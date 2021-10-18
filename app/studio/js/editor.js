@@ -185,7 +185,8 @@ function dict_active(obj, dictIndex) {
 }
 
 function editor_windowsInit() {
-	$("see").click(function () {
+	renderChannelList();
+	$("see").on("click",function () {
 		var to = $(this).attr("to");
 		var link;
 		if (to) {
