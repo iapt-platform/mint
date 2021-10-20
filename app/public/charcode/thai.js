@@ -31,7 +31,7 @@ var char_roman_to_thai = [
 	{ id: "te", value: "เต" },
 	{ id: "de", value: "เท" },
 	{ id: "ne", value: "เน" },
-	{ id: "pe", value: "เป" },
+	{ id: "pe", value: "เบ" },
 	{ id: "be", value: "เพ" },
 	{ id: "me", value: "เม" },
 	{ id: "le", value: "เล" },
@@ -53,7 +53,7 @@ var char_roman_to_thai = [
 	{ id: "to", value: "โต" },
 	{ id: "do", value: "โท" },
 	{ id: "no", value: "โน" },
-	{ id: "po", value: "โป" },
+	{ id: "po", value: "โบ" },
 	{ id: "bo", value: "โพ" },
 	{ id: "mo", value: "โม" },
 	{ id: "lo", value: "โล" },
@@ -85,7 +85,7 @@ var char_roman_to_thai = [
 	{ id: "t", value: "ตฺ" },
 	{ id: "d", value: "ทฺ" },
 	{ id: "n", value: "นฺ" },
-	{ id: "p", value: "ปฺ" },
+	{ id: "p", value: "บฺ" },
 	{ id: "b", value: "พฺ" },
 	{ id: "m", value: "มฺ" },
 	{ id: "l", value: "ลฺ" },
@@ -118,208 +118,160 @@ var char_roman_to_thai = [
 
 ];
 
-var char_tai_to_roman_1 = [
-{ id: "ႁႏၵ", value: "ndra" }, //後加
+var char_thai_to_roman = [
+	{ id: "ํ", value: "ฺaṃ" },
+	{ id: "ิํ", value: "ฺiṃ" },
+	{ id: "ุํ", value: "ฺuṃ" },
+	{ id: "า", value: "ฺā" },
+	{ id: "ิ", value: "ฺi" },
+	{ id: "ี", value: "ฺī" },
+	{ id: "ุ", value: "ฺu" },
+	{ id: "ู", value: "ฺū" },
 
-{ id: "ခ᩠", value: "kh" },
-{ id: "ဃ᩠", value: "gh" },
-{ id: "ဆ᩠", value: "ch" },
-{ id: "ဈ᩠", value: "jh" },
-{ id: "ည᩠", value: "ññ" },
-{ id: "ဌ᩠", value: "ṭh" },
-{ id: "ဎ᩠", value: "ḍh" },
-{ id: "ထ᩠", value: "th" },
-{ id: "ဓ᩠", value: "dh" },
-{ id: "ဖ᩠", value: "ph" },
-{ id: "ဘ᩠", value: "bh" },
-{ id: "က᩠", value: "k" },
-{ id: "ဂ᩠", value: "g" },
-{ id: "စ᩠", value: "c" },
-{ id: "ဇ᩠", value: "j" },
-{ id: "ဉ᩠", value: "ñ" },
-{ id: "ဠ᩠", value: "ḷ" },
-{ id: "ဋ᩠", value: "ṭ" },
-{ id: "ဍ᩠", value: "ḍ" },
-{ id: "ဏ᩠", value: "ṇ" },
-{ id: "တ᩠", value: "t" },
-{ id: "ဒ᩠", value: "d" },
-{ id: "န᩠", value: "n" },
-{ id: "ဟ᩠", value: "h" },
-{ id: "ပ᩠", value: "p" },
-{ id: "ဗ᩠", value: "b" },
-{ id: "မ᩠", value: "m" },
-{ id: "ယ᩠", value: "y" },
-{ id: "ရ᩠", value: "r" },
-{ id: "လ᩠", value: "l" },
-{ id: "ဝ᩠", value: "v" },
-{ id: "သ᩠", value: "s" },
-{ id: "င᩠", value: "ṅ" },
-{ id: "င်᩠", value: "ṅ" },
-{ id: "ဿ", value: "ssa" },
-{ id: "ခ", value: "kha" },
-{ id: "ဃ", value: "gha" },
-{ id: "ဆ", value: "cha" },
-{ id: "ဈ", value: "jha" },
-{ id: "ည", value: "ñña" },
-{ id: "ဌ", value: "ṭha" },
-{ id: "ဎ", value: "ḍha" },
-{ id: "ထ", value: "tha" },
-{ id: "ဓ", value: "dha" },
-{ id: "ဖ", value: "pha" },
-{ id: "ဘ", value: "bha" },
-{ id: "က", value: "ka" },
-{ id: "ဂ", value: "ga" },
-{ id: "စ", value: "ca" },
-{ id: "ဇ", value: "ja" },
-{ id: "ဉ", value: "ña" },
-{ id: "ဠ", value: "ḷa" },
-{ id: "ဋ", value: "ṭa" },
-{ id: "ဍ", value: "ḍa" },
-{ id: "ဏ", value: "ṇa" },
-{ id: "တ", value: "ta" },
-{ id: "ဒ", value: "da" },
-{ id: "န", value: "na" },
-{ id: "ဟ", value: "ha" },
-{ id: "ပ", value: "pa" },
-{ id: "ဗ", value: "ba" },
-{ id: "မ", value: "ma" },
-{ id: "ယ", value: "ya" },
-{ id: "ရ", value: "ra" },
-{ id: "႐", value: "ra" }, //后加
-{ id: "လ", value: "la" },
-{ id: "ဝ", value: "va" },
-{ id: "သ", value: "sa" },
-{ id: "aျ᩠", value: "ya" },
-{ id: "aွ᩠", value: "va" },
-{ id: "aြ᩠", value: "ra" },
+	{ id: "เข", value: "khe" },
+	{ id: "เฃ", value: "ghe" },
+	{ id: "เฉ", value: "che" },
+	{ id: "เณ", value: "jhe" },
+	{ id: "เฐ", value: "ṭhe" },
+	{ id: "เฒ", value: "ḍhe" },
+	{ id: "เถ", value: "the" },
+	{ id: "เธ", value: "dhe" },
+	{ id: "เผ", value: "phe" },
+	{ id: "เภ", value: "bhe" },
+	{ id: "โข", value: "kho" },
+	{ id: "โฃ", value: "gho" },
+	{ id: "โฉ", value: "cho" },
+	{ id: "โณ", value: "jho" },
+	{ id: "โฐ", value: "ṭho" },
+	{ id: "โฒ", value: "ḍho" },
+	{ id: "โถ", value: "tho" },
+	{ id: "โธ", value: "dho" },
+	{ id: "โผ", value: "pho" },
+	{ id: "โภ", value: "bho" },
+	{ id: "เก", value: "ke" },
+	{ id: "เค", value: "ge" },
+	{ id: "เจ", value: "ce" },
+	{ id: "เช", value: "je" },
+	{ id: "เญ", value: "ñe" },
+	{ id: "เฬ", value: "ḷe" },
+	{ id: "เฏ", value: "ṭe" },
+	{ id: "เฑ", value: "ḍe" },
+	{ id: "เฌ", value: "ṇe" },
+	{ id: "เต", value: "te" },
+	{ id: "เท", value: "de" },
+	{ id: "เน", value: "ne" },
+	{ id: "เบ", value: "pe" },
+	{ id: "เพ", value: "be" },
+	{ id: "เม", value: "me" },
+	{ id: "เล", value: "le" },
+	{ id: "เส", value: "se" },
+	{ id: "เง", value: "ṅe" },
+	{ id: "เห", value: "he" },
+	{ id: "เย", value: "ye" },
+	{ id: "เร", value: "re" },
+	{ id: "เว", value: "ve" },
+	{ id: "โก", value: "ko" },
+	{ id: "โค", value: "go" },
+	{ id: "โจ", value: "co" },
+	{ id: "โช", value: "jo" },
+	{ id: "โญ", value: "ño" },
+	{ id: "โฬ", value: "ḷo" },
+	{ id: "โฏ", value: "ṭo" },
+	{ id: "โฑ", value: "ḍo" },
+	{ id: "โฌ", value: "ṇo" },
+	{ id: "โต", value: "to" },
+	{ id: "โท", value: "do" },
+	{ id: "โน", value: "no" },
+	{ id: "โบ", value: "po" },
+	{ id: "โพ", value: "bo" },
+	{ id: "โม", value: "mo" },
+	{ id: "โล", value: "lo" },
+	{ id: "โส", value: "so" },
+	{ id: "โง", value: "ṅo" },
+	{ id: "โห", value: "ho" },
+	{ id: "โย", value: "yo" },
+	{ id: "โร", value: "ro" },
+	{ id: "โว", value: "vo" },
+	{ id: "ขฺ", value: "kh" },
+	{ id: "ฃฺ", value: "gh" },
+	{ id: "ฉฺ", value: "ch" },
+	{ id: "ณฺ", value: "jh" },
+	{ id: "ฐฺ", value: "ṭh" },
+	{ id: "ฒฺ", value: "ḍh" },
+	{ id: "ถฺ", value: "th" },
+	{ id: "ธฺ", value: "dh" },
+	{ id: "ผฺ", value: "ph" },
+	{ id: "ภฺ", value: "bh" },
+	{ id: "กฺ", value: "k" },
+	{ id: "คฺ", value: "g" },
+	{ id: "จฺ", value: "c" },
+	{ id: "ชฺ", value: "j" },
+	{ id: "ญฺ", value: "ñ" },
+	{ id: "ฬฺ", value: "ḷ" },
+	{ id: "ฏฺ", value: "ṭ" },
+	{ id: "ฑฺ", value: "ḍ" },
+	{ id: "ฌฺ", value: "ṇ" },
+	{ id: "ตฺ", value: "t" },
+	{ id: "ทฺ", value: "d" },
+	{ id: "นฺ", value: "n" },
+	{ id: "บฺ", value: "p" },
+	{ id: "พฺ", value: "b" },
+	{ id: "มฺ", value: "m" },
+	{ id: "ลฺ", value: "l" },
+	{ id: "สฺ", value: "s" },
+	{ id: "งฺ", value: "ṅ" },
+	{ id: "หฺ", value: "h" },
+	{ id: "ยฺ", value: "y" },
+	{ id: "รฺ", value: "r" },
+	{ id: "วฺ", value: "v" },
 
-{ id: "ၱ", value: "᩠ta" }, //后加
-{ id: "ၳ", value: "᩠tha" }, //后加
-{ id: "ၵ", value: "᩠da" }, //后加
-{ id: "ၶ", value: "᩠dha" }, //后加
+	{ id: "ข", value: "kha" },
+	{ id: "ฃ", value: "gha" },
+	{ id: "ฉ", value: "cha" },
+	{ id: "ณ", value: "jha" },
+	{ id: "ฐ", value: "ṭha" },
+	{ id: "ฒ", value: "ḍha" },
+	{ id: "ถ", value: "tha" },
+	{ id: "ธ", value: "dha" },
+	{ id: "ผ", value: "pha" },
+	{ id: "ภ", value: "bha" },
+	{ id: "ก", value: "ka" },
+	{ id: "ค", value: "ga" },
+	{ id: "จ", value: "ca" },
+	{ id: "ช", value: "ja" },
+	{ id: "ญ", value: "ña" },
+	{ id: "ฬ", value: "ḷa" },
+	{ id: "ฏ", value: "ṭa" },
+	{ id: "ฑ", value: "ḍa" },
+	{ id: "ฌ", value: "ṇa" },
+	{ id: "ต", value: "ta" },
+	{ id: "ท", value: "da" },
+	{ id: "น", value: "na" },
+	{ id: "บ", value: "pa" },
+	{ id: "พ", value: "ba" },
+	{ id: "ม", value: "ma" },
+	{ id: "ล", value: "la" },
+	{ id: "ส", value: "sa" },
+	{ id: "ง", value: "ṅa" },
+	{ id: "ห", value: "ha" },
+	{ id: "ย", value: "ya" },
+	{ id: "ร", value: "ra" },
+	{ id: "ว", value: "va" },
 
-{ id: "ၬ", value: "᩠ṭa" }, //后加
-{ id: "ၭ", value: "᩠ṭha" }, //后加
+	{ id: "อํ", value: "aṃ" },
+	{ id: "อิํ", value: "iṃ" },
+	{ id: "อุํ", value: "uṃ" },
+	{ id: "อ", value: "a" },
+	{ id: "อา", value: "ā" },
+	{ id: "อิ", value: "i" },
+	{ id: "อี", value: "ī" },
+	{ id: "อุ", value: "u" },
+	{ id: "อู", value: "ū" },
+	{ id: "เอ", value: "e" },
+	{ id: "โอ", value: "o" },
+	{ id: "eฺā", value: "o" },
+	{ id: "aฺ", value: "" },
 
-{ id: "ၠ", value: "᩠ka" }, //后加
-{ id: "ၡ", value: "᩠kha" }, //后加
-{ id: "ၢ", value: "᩠ga" }, //后加
-{ id: "ၣ", value: "᩠gha" }, //后加
-
-{ id: "ၸ", value: "᩠pa" }, //后加
-{ id: "ၹ", value: "᩠pha" }, //后加
-{ id: "ၺ", value: "᩠ba" }, //后加
-{ id: "႓", value: "᩠bha" }, //后加
-
-{ id: "ၥ", value: "᩠ca" }, //后加
-{ id: "ၧ", value: "᩠cha" }, //后加
-{ id: "ၨ", value: "᩠ja" }, //后加
-{ id: "ၩ", value: "᩠jha" }, //后加
-
-{ id: "်", value: "᩠ya" }, //后加
-{ id: "ႅ", value: "᩠la" }, //后加
-{ id: "ၼ", value: "᩠ma" }, //后加
-{ id: "ွ", value: "᩠ha" }, //后加
-{ id: "ႆ", value: "ssa" }, //后加
-{ id: "ၷ", value: "na" }, //后加
-{ id: "ၲ", value: "ta" }, //后加
-
-{ id: "႒", value: "ṭṭha" }, //后加
-{ id: "႗", value: "ṭṭa" }, //后加
-{ id: "ၯ", value: "ḍḍha" }, //后加
-{ id: "ၮ", value: "ḍḍa" }, //后加
-{ id: "႑", value: "ṇḍa" }, //后加
-
-{ id: "kaၤ", value: "ṅka" }, //后加
-{ id: "gaၤ", value: "ṅga" }, //后加
-{ id: "khaၤ", value: "ṅkha" }, //后加
-{ id: "ghaၤ", value: "ṅgha" }, //后加
-
-{ id: "aှ᩠", value: "ha" },
-{ id: "aိံ", value: "iṃ" },
-{ id: "aုံ", value: "uṃ" },
-{ id: "aော", value: "o" },
-{ id: "aေါ", value: "o" },
-{ id: "aအံ", value: "aṃ" },
-{ id: "aဣံ", value: "iṃ" },
-{ id: "aဥံ", value: "uṃ" },
-{ id: "aံ", value: "aṃ" },
-{ id: "aာ", value: "ā" },
-{ id: "aါ", value: "ā" },
-{ id: "aိ", value: "i" },
-{ id: "aီ", value: "ī" },
-{ id: "aု", value: "u" },
-{ id: "aဳ", value: "u" }, //後加
-{ id: "aူ", value: "ū" },
-{ id: "aေ", value: "e" },
-{ id: "အါ", value: "ā" },
-{ id: "အာ", value: "ā" },
-{ id: "အ", value: "a" },
-{ id: "ဣ", value: "i" },
-{ id: "ဤ", value: "ī" },
-{ id: "ဥ", value: "u" },
-{ id: "ဦ", value: "ū" },
-{ id: "ဧ", value: "e" },
-{ id: "ဩ", value: "o" },
-{ id: "ႏ", value: "n" }, //後加
-{ id: "ၪ", value: "ñ" }, //後加
-{ id: "a᩠", value: "" }, //後加
-{ id: "᩠", value: "" }, //後加
-
-{ id: "ေss", value: "sse" }, //后加
-{ id: "ေkh", value: "khe" }, //后加
-{ id: "ေgh", value: "ghe" }, //后加
-{ id: "ေch", value: "che" }, //后加
-{ id: "ေjh", value: "jhe" }, //后加
-{ id: "ေññ", value: "ññe" }, //后加
-{ id: "ေṭh", value: "ṭhe" }, //后加
-{ id: "ေḍh", value: "ḍhe" }, //后加
-{ id: "ေth", value: "the" }, //后加
-{ id: "ေdh", value: "dhe" }, //后加
-{ id: "ေph", value: "phe" }, //后加
-{ id: "ေbh", value: "bhe" }, //后加
-{ id: "ေk", value: "ke" }, //后加
-{ id: "ေg", value: "ge" }, //后加
-{ id: "ေc", value: "ce" }, //后加
-{ id: "ေj", value: "je" }, //后加
-{ id: "ေñ", value: "ñe" }, //后加
-{ id: "ေḷ", value: "ḷe" }, //后加
-{ id: "ေṭ", value: "ṭe" }, //后加
-{ id: "ေḍ", value: "ḍe" }, //后加
-{ id: "ေṇ", value: "ṇe" }, //后加
-{ id: "ေt", value: "te" }, //后加
-{ id: "ေd", value: "de" }, //后加
-{ id: "ေn", value: "ne" }, //后加
-{ id: "ေh", value: "he" }, //后加
-{ id: "ေp", value: "pe" }, //后加
-{ id: "ေb", value: "be" }, //后加
-{ id: "ေm", value: "me" }, //后加
-{ id: "ေy", value: "ye" }, //后加
-{ id: "ေr", value: "re" }, //后加
-{ id: "ေl", value: "le" }, //后加
-{ id: "ေv", value: "ve" }, //后加
-{ id: "ေs", value: "se" }, //后加
-{ id: "ေy", value: "ye" }, //后加
-{ id: "ေv", value: "ve" }, //后加
-{ id: "ေr", value: "re" }, //后加
-
-{ id: "ea", value: "e" }, //后加
-{ id: "eā", value: "o" }, //后加
-
-{ id: "၁", value: "1" },
-{ id: "၂", value: "2" },
-{ id: "၃", value: "3" },
-{ id: "၄", value: "4" },
-{ id: "၅", value: "5" },
-{ id: "၆", value: "6" },
-{ id: "၇", value: "7" },
-{ id: "၈", value: "8" },
-{ id: "၉", value: "9" },
-{ id: "၀", value: "0" },
-{ id: "း", value: "”" },
-{ id: "့", value: "’" },
-{ id: "။", value: "．" },
-{ id: "၊", value: "，" },
 ];
 
 var char_tai_to_roman_2 = [
