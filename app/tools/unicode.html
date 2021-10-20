@@ -227,7 +227,70 @@
 			document.getElementById("txtInput").value = txt;
 
 		}
+		function tai_tham_to_roman() {
+			var txt = document.getElementById("txtInput").value;
+			output = "";
 
+			try {
+				for (tai_to_r_i in char_tai_to_roman) {
+					eval("txt=txt.replace(/" + char_tai_to_roman[tai_to_r_i].id + "/g,char_tai_to_roman[tai_to_r_i].value);");
+				}
+			}
+
+			catch (err) {
+				//error
+				alert(err.message);
+			}
+			document.getElementById("txtOutput").value = document.getElementById("txtInput").value;
+			document.getElementById("txtInput").value = txt;
+			txt = document.getElementById("txtOutput").value;
+			u2u()
+			document.getElementById("txtInput").value = txt;
+
+		}
+		function tai_old_to_roman() {
+			var txt = document.getElementById("txtInput").value;
+			output = "";
+
+			try {
+				for (tai_o_to_r_i in char_tai_old_to_r) {
+					eval("txt=txt.replace(/" + char_tai_old_to_r[tai_o_to_r_i].id + "/g,char_tai_old_to_r[tai_o_to_r_i].value);");
+				}
+			}
+
+			catch (err) {
+				//error
+				alert(err.message);
+			}
+			document.getElementById("txtOutput").value = document.getElementById("txtInput").value;
+			document.getElementById("txtInput").value = txt;
+			txt = document.getElementById("txtOutput").value;
+			u2u()
+			document.getElementById("txtInput").value = txt;
+
+		}
+
+		function thai_to_roman() {
+			var txt = document.getElementById("txtInput").value;
+			output = "";
+
+			try {
+				for (thai_to_r_i in char_thai_to_roman) {
+					eval("txt=txt.replace(/" + char_thai_to_roman[thai_to_r_i].id + "/g,char_thai_to_roman[thai_to_r_i].value);");
+				}
+			}
+
+			catch (err) {
+				//error
+				alert(err.message);
+			}
+			document.getElementById("txtOutput").value = document.getElementById("txtInput").value;
+			document.getElementById("txtInput").value = txt;
+			txt = document.getElementById("txtOutput").value;
+			u2u()
+			document.getElementById("txtInput").value = txt;
+
+		}
 
 		function roman_to_myanmar() {
 			var txt = document.getElementById("txtInput").value;
@@ -392,9 +455,15 @@
 				case "4":
 					myanmar_to_roman_1()
 					break;
-				case "5":
-					myanmar_to_roman_2()
+				case "6":
+					tai_tham_to_roman()
 					break;
+				case "7":
+					thai_to_roman()
+				break;
+				case "8":
+					tai_old_to_roman()
+				break;
 			}
 			txt0 = document.getElementById("txtInput").value
 			document.getElementById("txtInput").value = document.getElementById("txtOutput").value
@@ -500,9 +569,12 @@
 				<option value="3">Sinhala</option>
 				<option value="4">Myanmar1</option>
 				<option value="5">Myanmar2</option>
+				<option value="6">经典傣文</option>
+				<option value="7">泰文</option>
+				<option value="8">非Unicode傣文</option>
 			</select></br>
 			<textarea id="txtInput" rows="30" cols=""
-				style="float:left; font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC','Noto Sans Tai Tham', 'ATaiThamKHNewV3-Normal', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; width:100%;height:100%;"></textarea>
+				style="float:left; font-family: 'Noto Sans','Noto Sans CJK TC', 'Noto Sans CJK SC', 'ATaiThamKHNewV3-Normal', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK', Verdana, sans-serif; font-size:16px; width:100%;height:100%;"></textarea>
 		</div>
 		<div style="text-align:center; float:left;width:15%;">
 			</br></br></br></br></br></br></br></br></br></br></br></br>
