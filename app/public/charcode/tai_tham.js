@@ -231,17 +231,6 @@ var char_roman_to_tai = [
 ];
 
 var char_tai_to_roman = [
-	{ id: "ᩴ", value: "᩠aṃ" },
-	{ id: "ᩥᩴ", value: "᩠iṃ" },
-	{ id: "ᩩᩴ", value: "᩠uṃ" },
-	{ id: "ᩣ", value: "᩠ā" },
-	{ id: "ᩤ", value: "᩠ā" },
-	{ id: "ᩥ", value: "᩠i" },
-	{ id: "ᩦ", value: "᩠ī" },
-	{ id: "ᩩ", value: "᩠u" },
-	{ id: "ᩪ", value: "᩠ū" },
-	{ id: "ᩮ", value: "᩠e" },
-	{ id: "ᩮᩣ", value: "᩠o" },
 
 	{ id: "ᨻᩮ᩠ᨽᩣ", value: "bbho" },
 	{ id: "ᨧᩮ᩠ᨨᩣ", value: "ccho" },
@@ -369,6 +358,21 @@ var char_tai_to_roman = [
 	{ id: "ᩅᩮ᩠ᨿ", value: "vye" },
 	{ id: "ᨿᩮ᩠ᨿ", value: "yye" },
 	{ id: "ᨾᩜᩣ", value: "mmā" },
+
+	{ id: "ᩴ", value: "᩠aṃ" },
+	{ id: "ᩥᩴ", value: "᩠iṃ" },
+	{ id: "ᩩᩴ", value: "᩠uṃ" },
+	{ id: "ᩣ", value: "᩠ā" },
+	{ id: "ᩤ", value: "᩠ā" },
+	{ id: "ᩥ", value: "᩠i" },
+	{ id: "ᩦ", value: "᩠ī" },
+	{ id: "ᩩ", value: "᩠u" },
+	{ id: "ᩪ", value: "᩠ū" },
+	{ id: "ᩮ", value: "᩠e" },
+	{ id: "ᩮᩣ", value: "᩠o" },
+
+
+
 	{ id: "ᨾᩜ", value: "mma" },
 	{ id: "ᨻ᩠ᨿ᩠", value: "by" },
 	{ id: "ᨭᩛ᩠", value: "ṭṭh" },
@@ -469,6 +473,9 @@ var char_tai_to_roman = [
 	{ id: "ᨿ᩠", value: "y" },
 	{ id: "ᨿ", value: "ya" },
 	{ id: "ᩕ᩠", value: "᩠r" },
+	{ id: "ᩕ᩠", value: "᩠r" },
+	{ id: "aᩕ", value: "ra" },
+	{ id: "ᩕ", value: "r" },
 	{ id: "ᩁ᩠", value: "r" },
 	{ id: "ᩁ", value: "ra" },
 	{ id: "᩠ᩅ᩠", value: "᩠v" },
@@ -487,6 +494,7 @@ var char_tai_to_roman = [
 	{ id: "ᩒ", value: "o" },
 	{ id: "e᩠ā", value: "o" },
 	{ id: "a᩠", value: "" },
+	{ id: "᩠a", value: "" },
 
 ];
 
