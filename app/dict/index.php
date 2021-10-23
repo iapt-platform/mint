@@ -13,7 +13,20 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
+<style>
+guide.grammar_tag {
+    display: unset;
+    background: unset;
+    color: unset;
+    background-color: var(--btn-color);
+    padding: 0 3px;
+    border-radius: 3px;
 
+}
+.dict_word:hover  guide.grammar_tag {
+	text-decoration: underline;
+}
+</style>
 
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
