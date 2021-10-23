@@ -1,0 +1,30 @@
+<?php 
+
+define("GRM_ABBR",[
+	["dictid"=>4,"abbr"=>"【过】","replace"=>"aor"],
+	["dictid"=>4,"abbr"=>"【过分】","replace"=>"pp"],
+	["dictid"=>4,"abbr"=>"【现分】","replace"=>"ppr"],
+	["dictid"=>4,"abbr"=>"【独】","replace"=>"abs"],
+	["dictid"=>4,"abbr"=>"【潜】","replace"=>"imp"],
+	["dictid"=>4,"abbr"=>"【不】","replace"=>"ind"],
+	["dictid"=>4,"abbr"=>"【形】","replace"=>"adj"],
+	["dictid"=>4,"abbr"=>"【三】","replace"=>"ti"],
+	["dictid"=>4,"abbr"=>"【阳】","replace"=>"m"],
+	["dictid"=>4,"abbr"=>"【中】","replace"=>"nt"],
+	["dictid"=>4,"abbr"=>"【阴】","replace"=>"f"],
+	["dictid"=>4,"abbr"=>"【副】","replace"=>"adv"],
+	["dictid"=>4,"abbr"=>"【祈】","replace"=>"opt"],
+	["dictid"=>4,"abbr"=>"【合】","replace"=>"comp"],
+	["dictid"=>4,"abbr"=>"【无】","replace"=>"ind"],
+	["dictid"=>18,"abbr"=>"m．","replace"=>"m"],
+	["dictid"=>18,"abbr"=>"f．","replace"=>"f"],
+	["dictid"=>18,"abbr"=>"n．","replace"=>"nt"],
+	["dictid"=>18,"abbr"=>"Sk．","replace"=>"sk"],
+	["dictid"=>18,"abbr"=>"BSk．","replace"=>"bsk"],
+	["dictid"=>18,"abbr"=>"a．","replace"=>"adj"],
+	["dictid"=>18,"abbr"=>"aor．","replace"=>"aor"],
+	["dictid"=>18,"abbr"=>"pp．","replace"=>"pp"],
+	["dictid"=>18,"abbr"=>"ger．","replace"=>"ger"],
+	["dictid"=>18,"abbr"=>"gen．","replace"=>"gen"],
+	["dictid"=>18,"abbr"=>"adv．","replace"=>"adv"]
+	]);
