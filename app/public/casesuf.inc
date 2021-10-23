@@ -5,6 +5,7 @@ $case = [
 ["ati","ituṃ",".v:ind.$.inf."],
 ["ati","itvā",".v:ind.$.abs."],
 ["ati","atvā",".v:ind.$.abs."],
+["ti","tvā",".v:ind.$.abs."],
 ["ant","antā",".m.$.pl.$.nom."],
 ["ant","antā",".m.$.pl.$.voc."],
 ["ant","antā",".m.$.sg.$.abl."],
