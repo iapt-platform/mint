@@ -2953,6 +2953,8 @@ $case = [
 ["ati","a",".3p.$.sg.$.aor."],
 ["ati","tthuṃ",".3p.$.pl.$.aor."],
 ["ati","atthuṃ",".3p.$.pl.$.aor."],
+["ati","āmi",".1p.$.sg.$.pres."],
+["ati","āma",".1p.$.pl.$.pres."],
 ["ati","e",".1p.$.sg.$.imp."],
 ["ati","āmase",".1p.$.pl.$.imp."],
 ["ati","eyyāmi",".1p.$.sg.$.opt."],
