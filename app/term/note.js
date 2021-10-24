@@ -74,11 +74,11 @@ function note_sent_edit_dlg_init() {
 		],
 	});
 }
-function note_init(input) {
+function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
 		//output += marked(input);
-		output += marked(term_std_str_to_tran(input, "", "", "en"));
+		output += marked(term_std_str_to_tran(input, channel, editor, lang));
 
 		output += "</div>";
 
@@ -203,7 +203,7 @@ function note_refresh_new(callback = null) {
 			}
 		);
 	} else {
-		//term_get_dict();
+		term_get_dict();
 	}
 }
 

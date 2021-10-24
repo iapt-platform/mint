@@ -56,9 +56,9 @@ if(isset($_POST["import"]) && $_POST["import"]=='on'){
 
 PDO_Connect(_FILE_DB_USER_ARTICLE_);
 
-$query="UPDATE article SET title = ? , subtitle = ? , summary = ?, content = ?  , tag = ? , setting = ? , status = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
+$query="UPDATE article SET title = ? , subtitle = ? , summary = ?, lang = ? , content = ?  , tag = ? , setting = ? , status = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
 $sth = $PDO->prepare($query);
-$sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$_POST["summary"], $_content , $_POST["tag"] , "{}" , $_POST["status"] ,   mTime() , mTime() , $_POST["id"]));
+$sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$_POST["summary"] ,$_POST["lang"], $_content , $_POST["tag"] , "{}" , $_POST["status"] ,   mTime() , mTime() , $_POST["id"]));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

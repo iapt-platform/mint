@@ -214,6 +214,14 @@ function my_article_edit(id) {
 					html += '<span id="aritcle_status" style="flex:7;"></span>';
 					html += "</div>";
 
+					let lang;
+					if(typeof result.lang == "undefined"){
+						lang = "en";
+						
+					}else{
+						lang = result.lang;
+					}
+					 
 					html += '<div style="width:100%;display:flex;" >';
 					html +=
 						'<span style="flex:1;margin: auto;">' +
@@ -226,11 +234,11 @@ function my_article_edit(id) {
 						"，" +
 						gLocal.gui.example +
 						'：Engilish" code="' +
-						result.lang +
+						lang +
 						'" value="' +
-						result.lang +
+						lang +
 						'" >';
-					html +=' <input id="article_lang" type="hidden" name="lang" value="">';
+					html +=' <input id="article_lang" type="hidden" name="lang" value="'+lang+'">';
 					html +='</div>';
 
 					html += "<div style='display:flex;'>";
@@ -273,7 +281,7 @@ function my_article_edit(id) {
 }
 function article_lang_change() {
 	let lang = $("#article_lang_select").val();
-	if (lang.split("-").length == 3) {
+	if (lang.split("_").length == 3) {
 		$("#article_lang").val(lang.split("_")[2]);
 	} else {
 		$("#article_lang").val(lang);
