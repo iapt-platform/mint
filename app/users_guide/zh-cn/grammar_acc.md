@@ -1,8 +1,7 @@
 # 宾格
-pāḷi：upayogavacana
 
-别名：业格，受格、对格
-```
-Upayogavacanaṃ nāma yo yaṃ karoti, tena tadupayuttaparidīpanattho.
-```
-例句：2000多年前的一个月圆夜，王子为了解脱烦恼，从祖国出发，策马前往**荒野**。
+|语种|缩写|全称|
+|-|-|-|
+|巴利|——|Upayoga-vacana\(常见于注释书\)<br>dutiyā-vibhatti\(常见于语法书\)|
+|汉|**宾**|宾格<br>业格<br>受格<br>对格<br>第二变格|
+|英|**acc.**|accusative case|

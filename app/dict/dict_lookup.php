@@ -12,6 +12,7 @@ require_once "../ucenter/active.php";
 require_once "../ucenter/function.php";
 require_once "../dict/p_ending.php";
 require_once "../redis/function.php";
+require_once "../dict/grm_abbr.php";
 
 global $redis;
 $redis = redis_connect();
@@ -48,7 +49,7 @@ $right_word_list = "";
 
         $Fetch = PDO_FetchAll($query, array($word));
         $iFetch = count($Fetch);
-		echo "直接查询{$iFetch}<br>";
+		echo "<div>直接查询{$iFetch}</div>";
         $count_return += $iFetch;
         if ($iFetch > 0) {
             for ($i = 0; $i < $iFetch; $i++) {
@@ -59,6 +60,7 @@ $right_word_list = "";
                 $outXml = "<div class='dict_word'>";
                 $outXml = $outXml . "<a name='ref_dict_$dictid'></a>";
                 $outXml = $outXml . "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
+				$mean = GrmAbbr($mean,$dictid);
                 $outXml = $outXml . "<div class='mean'>" . $mean . "</div>";
                 $outXml = $outXml . "</div>";
                 echo $outXml;
@@ -67,6 +69,7 @@ $right_word_list = "";
 		
 
         //去格位除尾查
+		echo "<div>去格位除尾查</div>";
         $newWord = array();
         for ($row = 0; $row < count($case); $row++) {
             $len = mb_strlen($case[$row][1], "UTF-8");
@@ -131,6 +134,7 @@ $right_word_list = "";
                         echo "<div class='dict_word'>";
                         echo "<a name='ref_dict_$dictid'></a>";
                         echo "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
+						$mean = GrmAbbr($mean,$dictid);
                         echo "<div class='mean'>" . $mean . "</div>";
                         echo "</div>";
                     }
@@ -140,6 +144,7 @@ $right_word_list = "";
 		//去除尾查结束
 
 		//去分词除尾查
+		echo "<div>去分词除尾查</div>";
         $arrBase = array();		
 		if (count($newWord) > 0) {
 			foreach ($newWord as $base => $grammar){
@@ -194,6 +199,7 @@ $right_word_list = "";
 							echo "<div class='dict_word'>";
 							echo "<a name='ref_dict_$dictid'></a>";
 							echo "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
+							$mean = GrmAbbr($mean,$dictid);
 							echo "<div class='mean'>" . $mean . "</div>";
 							echo "</div>";
 						}
@@ -581,4 +587,17 @@ function lookup_term($word){
 	
 	return $output;
 
+}
+
+function GrmAbbr($input,$dictid){
+	$mean = $input;
+
+	foreach (GRM_ABBR as $key => $value) {
+		# code...
+		if($value["dictid"]==$dictid ){
+			$mean = str_replace($value["abbr"],"<guide gid='grammar_{$value["replace"]}' class='grammar_tag' style='display:unset;'>{$value["abbr"]}</guide>",$mean);
+		}
+
+	}
+	return $mean;
 }
