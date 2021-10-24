@@ -9,6 +9,7 @@ var _display = "";
 var _collection_id = "";
 var _book=0,_par=0,_start=0,_end=0;
 var _sent_data;
+var _article_date;
 
 function article_onload() {
 	historay_init();
@@ -30,14 +31,20 @@ function articel_load(id, collection_id) {
 				try {
 					let result = JSON.parse(data);
 					if (result) {
+						_article_date = result;
 						$("#article_title").html(result.title);
 						$("#article_path_title").html(result.title);
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
 						let article_author = result.username.nickname + "@" + result.username.username;
-						article_author += result.lang;
+						if(result.lang !== "false"){
+							article_author += result.lang;
+						}else{
+							result.lang = "en";
+						}
+						
 						$("#article_author").html( article_author );
-						$("#contents").html(note_init(result.content));
+						$("#contents").html(note_init(result.content,"",result.owner,result.lang));
 						note_refresh_new();
 						guide_init();
 					}
