@@ -34,7 +34,9 @@ function articel_load(id, collection_id) {
 						$("#article_path_title").html(result.title);
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
-						$("#article_author").html(result.username.nickname + "@" + result.username.username);
+						let article_author = result.username.nickname + "@" + result.username.username;
+						article_author += result.lang;
+						$("#article_author").html( article_author );
 						$("#contents").html(note_init(result.content));
 						note_refresh_new();
 						guide_init();
