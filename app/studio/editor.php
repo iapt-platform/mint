@@ -88,10 +88,7 @@ else{$currDevice="computer";}
 	<script  src="../channal/channal.js"></script>
 	<script>
 		get_channel_list_callback=renderChannelList();
-		window.addEventListener('load',(event)=>{
-			renderChannelList();
-
-		});
+		
 
 	</script>
 
@@ -765,6 +762,7 @@ foreach($plugin_list as $info){
 							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
 							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
+								<a onclick="edit_parent_grammar_changed('')"><?php echo $_local->gui->empty; ?></a>
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>

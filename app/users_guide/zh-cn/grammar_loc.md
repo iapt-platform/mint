@@ -1,7 +1,7 @@
 # 处格
-pāḷi：bhummavacana
-别名：位置格，依格
-```
-Bhummavacanaṃ nāma tappatiṭṭhāparidīpanattho.
-```
-例句：2000多年前的**一个月圆夜**，王子为了解脱烦恼，从祖国出发，策马前往荒野。
+
+|语种|缩写|全称|
+|-|-|-|
+|巴利|——|Bhumma-vacana\(常见于注释书\)<br>sattamī-vibhatti\(常见于语法书\)|
+|汉|**处**|处格<br>位置格<br>位格<br>在格<br>于格<br>依格<br>第七变格|
+|英|**loc.**|locative case|

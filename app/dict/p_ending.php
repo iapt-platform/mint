@@ -15,6 +15,7 @@ array("eti","itabba",".ti.$.fpp."),
 array("oti","itabba",".ti.$.fpp."),
 array("ati","anīya",".ti.$.fpp."),
 array("eti","anīya",".ti.$.fpp."),
-array("oti","anīya",".ti.$.fpp.")
+array("oti","anīya",".ti.$.fpp."),
+array("ati","āpeti",".ti.$.caus.")
 )
 ?>
