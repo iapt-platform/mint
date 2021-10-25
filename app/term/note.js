@@ -1954,13 +1954,15 @@ function set_pali_script(pos, script) {
 			switch(script){
 				case "မြန်မာ":
 					return roman_to_my(oldcontent);
+				case "My2Roman":
+					return my_to_roman(oldcontent);
 				case "සිංහල":
 					return roman_to_si(oldcontent);
 				case "ᨲ᩠ᩅᩫᨴᩱ᩠ᨿᨵᨾ᩠ᨾ᩼":
 					return roman_to_tai(oldcontent);
 				case "อักษรไทย":
 					return roman_to_thai(oldcontent);
-					default:
+				default:
 					return(oldcontent);
 			}
 			

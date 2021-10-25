@@ -730,3 +730,18 @@ function roman_to_my(input) {
 	}
 	return txt;
 }
+
+function my_to_roman(input) {
+
+	let txt = input.toLowerCase();
+
+	try {
+		for (r_to_m_i in char_myn_to_roman_1) {
+			eval("txt=txt.replace(/" + char_myn_to_roman_1[r_to_m_i].id + "/g,char_myn_to_roman_1[r_to_m_i].value);");
+		}
+	} catch (err) {
+		//error
+		alert(err.message);
+	}
+	return txt;
+}
