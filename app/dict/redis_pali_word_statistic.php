@@ -2,7 +2,8 @@
 require_once "../path.php";
 require_once "../install/filelist.php";
 require_once "../redis/function.php";
-
+        $redis = redis_connect();
+		$strKey='pali://wordstatisitic.hash';		
 if (PHP_SAPI == "cli") {
     if ($argc >= 2) {
         $command = $argv[1];
@@ -10,12 +11,12 @@ if (PHP_SAPI == "cli") {
 		exit;
 	}
 	{
-        $redis = redis_connect();
+
         if ($redis == false) {
             echo "no redis connect\n";
             exit;
 		}
-		$strKey='pali://wordstatisitic.hash';
+
 		switch ($command) {
 			case 'init':
 				# code...
@@ -156,7 +157,94 @@ if (PHP_SAPI == "cli") {
 		}
    }
 } else {
-    echo "cli";
+    if($_GET["op"]==="ref"){
+		$dbh = new PDO(_DICT_DB_REGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		
+		$query = "SELECT pali from "._TABLE_DICT_REGULAR_." where 1  group by pali";
+		$stmt = $dbh->query($query);
+		$count = 0;
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			# code...
+			$word = $redis->hGet($strKey, $row["pali"]);
+			if($word){
+				$eWord = json_decode($word,true);
+				$eWord["ref"]=1;
+				$redis->hSet($strKey, $row["pali"],json_encode($eWord,JSON_UNESCAPED_UNICODE));
+				$count++;
+			}
+		}
+		echo "regular count:".$count.PHP_EOL;
+
+		$dbh = new PDO(_DICT_DB_IRREGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		
+		$query = "SELECT pali from "._TABLE_DICT_IRREGULAR_." where 1  group by pali";
+		$stmt = $dbh->query($query);
+		$count = 0;
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			# code...
+			$word = $redis->hGet($strKey, $row["pali"]);
+			if($word){
+				$eWord = json_decode($word,true);
+				$eWord["ref"]=1;
+				$redis->hSet($strKey, $row["pali"],json_encode($eWord,JSON_UNESCAPED_UNICODE));
+				$count++;
+			}
+		}
+		echo "irregular count:".$count.PHP_EOL;
+
+	}else if($_GET["op"]==="user"){
+		$dbh = new PDO(_FILE_DB_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+		
+		$query = "SELECT pali from dict where 1  group by pali";
+		$stmt = $dbh->query($query);
+		$count = 0;
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			# code...
+			$word = $redis->hGet($strKey, $row["pali"]);
+			if($word){
+				$eWord = json_decode($word,true);
+				$eWord["user"]=1;
+				$redis->hSet($strKey, $row["pali"],json_encode($eWord,JSON_UNESCAPED_UNICODE));
+				$count++;
+			}
+		}		
+		echo "user wbw count:".$count.PHP_EOL;
+		$start=1;
+		$all=0;
+		$ref=0;
+		$user=0;
+		$cover=0;
+
+		$all1=0;
+		$ref1=0;
+		$user1=0;
+		$cover1=0;
+		while($word = $redis->hGet("pali://wordindex.hash",$start)){
+			$eWord = $redis->hGet($strKey, $word);
+			$eWord = json_decode($eWord,true);
+			$all += $eWord["count"]*$eWord["len"];
+			$all1++;
+			$ref += $eWord["ref"]*$eWord["len"];
+			$ref1 += $eWord["ref"];
+			$user += $eWord["user"]*$eWord["len"];
+			$user1 += $eWord["user"];
+			if($eWord["ref"]==1 || $eWord["user"]==1){
+				$cover += $eWord["len"];
+				$cover1 += 1;
+			}
+			$start++;
+		}	
+		$file = fopen(_DIR_LOG_."/dict_cover.log","a");
+		if($file){
+			fputs($file,date("Y-m-d h:i:sa").sprintf("字符数 全部:{$all},参考:{$ref},用户字典:{$user},总和:{$cover},单词数 全部:{$all1},参考:{$ref1},用户字典:{$user1},总和:{$cover1}",$all,$ref,$user,$cover,$all1,$ref1,$user1,$cover1));
+			fclose($file);
+		}
+		echo "字符数 全部:{$all},参考:{$ref},用户字典:{$user},总和:{$cover}".PHP_EOL;
+		echo "单词数 全部:{$all1},参考:{$ref1},用户字典:{$user1},总和:{$cover1}".PHP_EOL;
+	}
 }
 
 echo "<h2>齐活！功德无量！all done!</h2>";
