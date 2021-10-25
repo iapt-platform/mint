@@ -4729,7 +4729,10 @@ note {
 }
 
 .file_list_row:hover {
-	background-color: gray;
+	background-color: var(--btn-hover-bg-color);
+}
+.file_list_row:hover a{
+	text-decoration:underline;
 }
 .file_list_row .hover_button {
 	visibility: hidden;
