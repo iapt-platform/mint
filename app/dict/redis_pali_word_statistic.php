@@ -2,7 +2,8 @@
 require_once "../path.php";
 require_once "../install/filelist.php";
 require_once "../redis/function.php";
-
+        $redis = redis_connect();
+		$strKey='pali://wordstatisitic.hash';		
 if (PHP_SAPI == "cli") {
     if ($argc >= 2) {
         $command = $argv[1];
@@ -10,12 +11,12 @@ if (PHP_SAPI == "cli") {
 		exit;
 	}
 	{
-        $redis = redis_connect();
+
         if ($redis == false) {
             echo "no redis connect\n";
             exit;
 		}
-		$strKey='pali://wordstatisitic.hash';
+
 		switch ($command) {
 			case 'init':
 				# code...
@@ -59,8 +60,9 @@ if (PHP_SAPI == "cli") {
 
 			}
 			echo "hash done".$redis->hLen($strKey).PHP_EOL;
-
-				$dbh = new PDO(_DICT_DB_REGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true));
+			break;
+			case "ref":
+				$dbh = new PDO(_DICT_DB_REGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true,PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY));
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from "._TABLE_DICT_REGULAR_." where 1  group by pali";
@@ -78,7 +80,7 @@ if (PHP_SAPI == "cli") {
 				}
 				echo "regular count:".$count.PHP_EOL;
 
-				$dbh = new PDO(_DICT_DB_IRREGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true));
+				$dbh = new PDO(_DICT_DB_IRREGULAR_, "", "", array(PDO::ATTR_PERSISTENT => true,PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY));
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from "._TABLE_DICT_IRREGULAR_." where 1  group by pali";
@@ -99,7 +101,7 @@ if (PHP_SAPI == "cli") {
 
 				break;
 			case 'update':
-				$dbh = new PDO(_FILE_DB_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true));
+				$dbh = new PDO(_FILE_DB_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true,PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY));
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from dict where 1  group by pali";
@@ -156,7 +158,8 @@ if (PHP_SAPI == "cli") {
 		}
    }
 } else {
-    echo "cli";
+		echo " null ".PHP_EOL;
+
 }
 
 echo "<h2>齐活！功德无量！all done!</h2>";
