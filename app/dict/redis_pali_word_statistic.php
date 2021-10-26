@@ -66,7 +66,8 @@ if (PHP_SAPI == "cli") {
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from "._TABLE_DICT_REGULAR_." where 1  group by pali";
-				$stmt = $dbh->query($query);
+				$stmt = $dbh->prepare($query);
+				$stmt->execute();
 				$count = 0;
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					# code...
@@ -84,7 +85,8 @@ if (PHP_SAPI == "cli") {
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from "._TABLE_DICT_IRREGULAR_." where 1  group by pali";
-				$stmt = $dbh->query($query);
+				$stmt = $dbh->prepare($query);
+				$stmt->execute();
 				$count = 0;
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					# code...
@@ -105,7 +107,8 @@ if (PHP_SAPI == "cli") {
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
 				$query = "SELECT pali from dict where 1  group by pali";
-				$stmt = $dbh->query($query);
+				$stmt = $dbh->prepare($query);
+				$stmt->execute();
 				$count = 0;
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					# code...
