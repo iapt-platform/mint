@@ -3,9 +3,9 @@
 require_once "../path.php";
 require_once "../public/_pdo.php";
 
-$get_book = $_GET["book"];
-$get_par_begin = $_GET["begin"];
-$get_par_end = $_GET["end"];
+$get_book = (int)$_GET["book"];
+$get_par_begin = (int)$_GET["begin"];
+$get_par_end = (int)$_GET["end"];
 
 $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $get_book . "_tpl.db3";
 
