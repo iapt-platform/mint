@@ -1,4 +1,4 @@
-.tran_sent code {
+.tran_sent,.sent_tran  code {
 	position: relative;
 	display: inline-block;
 	width: auto;
