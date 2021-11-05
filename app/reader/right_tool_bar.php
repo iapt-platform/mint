@@ -17,6 +17,14 @@
 .main_view_right_float_max #right_pannal {
 	display: none;
 }
+.btn_main {
+    background-color: var(--link-hover-color);
+    color: var(--btn-hover-color);
+}
+.btn_main:hover {
+    background-color: var(--link-color);
+}
+
 	</style>
 			<select name="direction" onchange='setDirection(this)' class="show_pc">
 			<option value="row"><?php echo $_local->gui->row_compare; ?></option>
@@ -30,25 +38,15 @@
 			echo "</select>";
 		}
 		if($_mode == "read"){
-			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
-			echo $_local->gui->read;
+			echo "<button class='icon_btn btn_main' onclick=\"setMode('edit')\" ";
+			echo " title='{$_local->gui->show} {$_local->gui->edit}'>";
+			echo $_local->gui->translate;
 			echo "</button>";
-
-			echo "<button class='icon_btn'>";
-			echo "<a onclick=\"setMode('edit')\"";
-
-			echo " title='{$_local->gui->show} {$_local->gui->edit}'>{$_local->gui->edit}</a></button>";
 		}
 		else{
-			echo "<button class='icon_btn'>";
-			echo "<a onclick=\"setMode('read')\"";
+			echo "<button class='icon_btn btn_main' onclick=\"setMode('read')\" ";
 			echo " title='{$_local->gui->show} {$_local->gui->read}'>";		
 			echo $_local->gui->read;
-			echo "</a>";
-			echo "</button>";
-
-			echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->edit}'>";
-			echo $_local->gui->edit;
 			echo "</button>";
 		}
 ?>
