@@ -34,7 +34,11 @@
 		if($_mode == "read"){
 			echo "<select onchange='setDisplay(this)'>";
 			echo "<option value='para'>{$_local->gui->each_paragraph}</option>";
-			echo "<option value='sent'>{$_local->gui->each_sentence}</option>";
+			echo "<option value='sent' ";
+			if($_display=="sent"){
+				echo "selected";
+			}
+			echo ">{$_local->gui->each_sentence}</option>";
 			echo "</select>";
 		}
 		if($_mode == "read"){
