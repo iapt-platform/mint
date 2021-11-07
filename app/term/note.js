@@ -255,7 +255,12 @@ function render_read_mode_sent(iterator) {
 			.parent()
 			.parent()
 			.prepend(
-				"<div class='para_div'><div class='palitext_div'><div class='palitext palitext1'></div><div class='palitext palitext2'></div></div><div class='para_tran_div'>" +
+				"<div class='para_div'>"+
+				"<div class='palitext_div'>"+
+				"<div class='palitext palitext1'></div>"+
+				"<div class='palitext palitext2'></div>"+
+				"</div>"+
+				"<div class='para_tran_div'>" +
 					tranDivHtml +
 					"</div></div>"
 			);
@@ -281,6 +286,10 @@ function render_read_mode_sent(iterator) {
 	htmlSent += "<div class='sent_tran_div'>";
 	for (const oneTran of iterator.translation) {
 		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
+
+		//将绝对链接转换为 用户连接的主机链接
+		oneTran.text = oneTran.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+
 		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
 		html += "</span>";
 		htmlSent += html;
@@ -886,6 +895,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	let tranText;
 	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
+
+	//将绝对链接转换为 用户连接的主机链接
+	let showText = iterator.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+
 	if (iterator.text == "") {
 		if (typeof iterator.channalinfo == "undefined") {
 			tranText =
@@ -924,7 +937,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			tranText = str_diff(orgText, iterator.text);
 		} else {
 			//note_init处理句子链接
-			tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			tranText = note_init(term_std_str_to_tran(showText, iterator.channal, iterator.editor, iterator.lang));
 		}
 	}
 	let html = "";
