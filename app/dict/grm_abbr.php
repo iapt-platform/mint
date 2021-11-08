@@ -108,10 +108,10 @@ define("GRM_ABBR",[
 	["dictid"=>3,"abbr"=>"pl．","replace"=>"pl"],
 	["dictid"=>3,"abbr"=>"sg．","replace"=>"sg"],
 	["dictid"=>3,"abbr"=>"pp.","replace"=>"pp"],
-	["dictid"=>3,"abbr"=>"m.","replace"=>"m"],
-	["dictid"=>3,"abbr"=>"f.","replace"=>"f"],
-	["dictid"=>3,"abbr"=>"n.","replace"=>"nt"],
-	["dictid"=>3,"abbr"=>"a.","replace"=>"adj"],
+	["dictid"=>3,"abbr"=>"m．","replace"=>"m"],
+	["dictid"=>3,"abbr"=>"f．","replace"=>"f"],
+	["dictid"=>3,"abbr"=>"n．","replace"=>"nt"],
+	["dictid"=>3,"abbr"=>"a．","replace"=>"adj"],
 	["dictid"=>6,"abbr"=>"imper.","replace"=>"imp"],
 	["dictid"=>6,"abbr"=>"denom.","replace"=>"denom"],
 	["dictid"=>6,"abbr"=>"prp.","replace"=>"prp"],
@@ -219,5 +219,6 @@ define("GRM_ABBR",[
 	["dictid"=>32,"abbr"=>"m.","replace"=>"m"],
 	["dictid"=>32,"abbr"=>"f.","replace"=>"f"],
 	["dictid"=>32,"abbr"=>"nt.","replace"=>"nt"],
+	["dictid"=>32,"abbr"=>"子音","replace"=>"consonant"],
 	["dictid"=>32,"abbr"=>"a.","replace"=>"adj"]
 	]);
