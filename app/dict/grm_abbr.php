@@ -10,7 +10,7 @@ define("GRM_ABBR",[
 	["dictid"=>2,"abbr"=>"（na，","replace"=>"nt"],
 	["dictid"=>2,"abbr"=>"，na）","replace"=>"nt"],
 	["dictid"=>2,"abbr"=>"（ti）","replace"=>"ti"],
-	["dictid"=>2,"abbr"=>"（kri）","replace"=>"ti"],
+	["dictid"=>2,"abbr"=>"（kri）","replace"=>"verb"],
 	["dictid"=>4,"abbr"=>"【过】","replace"=>"aor"],
 	["dictid"=>4,"abbr"=>"【过分】","replace"=>"pp"],
 	["dictid"=>4,"abbr"=>"【现分】","replace"=>"ppr"],

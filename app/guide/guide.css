@@ -30,7 +30,7 @@ guide ol {
 	border-radius: 5px;
 	top: 100%;
 	width: max-content;
-	min-width: 18em;
+	min-width: min-content;
 	max-width: max(25vw, 100%);
 	min-height: 15em;
 	padding: 10px;
