@@ -2342,7 +2342,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		renderMeaning = renderMeaning.replace(/\]/g, "</span>");
 		//格位公式结束
 		if (sMean.length == 0) {
-			renderMeaning = "<span class='word_space_holder'>meaning</span>";
+			renderMeaning = "<span class='word_space_holder'>"+gLocal.gui.meaning+"</span>";
 		}
 		//渲染下拉菜单
 		_txtOutDetail += "<div class='mean'>";
@@ -2431,7 +2431,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 			currOM = sOm;
 		}
 		if (currOM.length == 0) {
-			currOM = "<span class='word_space_holder''>part mean</span>";
+			currOM = "<span class='word_space_holder''>"+gLocal.gui.partmeaning+"</span>";
 		}
 
 		_txtOutDetail += currOM;
