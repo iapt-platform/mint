@@ -120,6 +120,7 @@ define("GRM_ABBR",[
 	["dictid"=>3,"abbr"=>"loc．","replace"=>"loc"],
 	["dictid"=>3,"abbr"=>"opt．","replace"=>"opt"],
 	["dictid"=>3,"abbr"=>"[adv．]","replace"=>"adv"],
+	["dictid"=>3,"abbr"=>"ind．]","replace"=>"ind"],
 	["dictid"=>3,"abbr"=>"[ind．]","replace"=>"ind"],
 	["dictid"=>3,"abbr"=>"cf．","replace"=>"cf"],
 	["dictid"=>3,"abbr"=>"pl．","replace"=>"pl"],
