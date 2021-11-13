@@ -86,6 +86,7 @@ define("GRM_ABBR",[
 	["dictid"=>8,"abbr"=>"aor．","replace"=>"aor"],
 	["dictid"=>8,"abbr"=>"ger．","replace"=>"ger"],
 	["dictid"=>8,"abbr"=>"nom．","replace"=>"nom"],
+	["dictid"=>8,"abbr"=>"num．","replace"=>"num"],
 	["dictid"=>8,"abbr"=>"acc．","replace"=>"acc"],
 	["dictid"=>8,"abbr"=>"voc．","replace"=>"voc"],
 	["dictid"=>8,"abbr"=>"abl．","replace"=>"abl"],
