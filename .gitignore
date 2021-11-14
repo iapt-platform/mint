@@ -19,3 +19,6 @@
 # dependencies
 /vendor/
 /node_modules/
+
+# vi
+.swap
