@@ -17,14 +17,19 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 guide.grammar_tag {
     display: unset;
     background: unset;
-    color: unset;
+    /*color: unset;*/
     background-color: var(--btn-color);
-    padding: 0 3px;
+    padding: 0;
     border-radius: 3px;
+	margin: 0;
 
 }
-.dict_word:hover  guide.grammar_tag {
+guide.grammar_tag:hover {
+	/*color: unset;*/
 	text-decoration: underline;
+}
+.dict_word:hover  guide.grammar_tag {
+	/*text-decoration: underline;*/
 }
 </style>
 
