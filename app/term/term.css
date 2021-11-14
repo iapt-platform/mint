@@ -306,12 +306,12 @@ note > .palitext,
 	overflow-wrap: anywhere;
 }
 h1 .palitext {
-	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	/*font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";*/
 	font-weight: 700;
 	font-size: 130%;
 }
 h2 .palitext {
-	font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";
+	/*font-family: "Noto Serif", "Noto Sans TC", "Noto Sans SC";*/
 	font-weight: 700;
 	font-size: 120%;
 }
