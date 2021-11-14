@@ -25,16 +25,20 @@ class PaliText extends Table
 			$stmt = $this->dbh->prepare($query);
 			$stmt->execute(array($book, $parent));
 			$FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($FetParent){
+				$toc =array("book"=>$book,"para"=>$parent,"level"=>$FetParent["level"],"title"=>$FetParent["toc"]);
 
-			$toc =array("book"=>$book,"para"=>$parent,"level"=>$FetParent["level"],"title"=>$FetParent["toc"]);
+				$path[] = $toc;
 
-			$path[] = $toc;
-
-			$parent = $FetParent["parent"];
-			$deep++;
-			if ($deep > 5) {
+				$parent = $FetParent["parent"];
+				$deep++;
+				if ($deep > 5) {
+					break;
+				}				
+			}else{
 				break;
 			}
+
 		}
 		if($this->redis){
 			$this->redis->hSet("pali_text://path",$book."-".$para,json_encode($path,JSON_UNESCAPED_UNICODE));

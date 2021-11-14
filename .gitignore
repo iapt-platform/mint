@@ -15,6 +15,7 @@
 /composer.lock
 /app/phpinfo.php
 /app/config.php
+/app/config.js
 # dependencies
 /vendor/
 /node_modules/
