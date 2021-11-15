@@ -434,7 +434,7 @@ var list_relation=[
     {
         "id": "SOE",
         "case": ".inst.",
-        "note": "伴随 -> 动词<带连词><br>跟XX一起",
+        "note": "<带连词>伴随关系<br>跟XX一起",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -461,7 +461,7 @@ var list_relation=[
     {
         "id": "SOI",
         "case": ".inst.",
-        "note": "伴随 -> 动词<无连词><br>与XX",
+        "note": "<无连词>伴随关系<br>与XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -515,7 +515,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".inst.",
-        "note": "因果<br>根据XX",
+        "note": "因 -> 果<br>根据XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -785,7 +785,7 @@ var list_relation=[
     {
         "id": "POS",
         "case": ".gen.",
-        "note": "从属<br>属于XX的",
+        "note": "所有 -> 被所有<br>属于XX的",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
