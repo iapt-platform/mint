@@ -102,6 +102,10 @@ define("_TABLE_DICT_PM_", "dict");
 define("_DICT_DB_REGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_regular.db");
 define("_TABLE_DICT_REGULAR_", "dict");
 
+#系统不规则
+define("_DICT_DB_IRREGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_irregular.db");
+define("_TABLE_DICT_IRREGULAR_", "dict");
+
 #自动compone
 define("_DICT_DB_COMP_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/comp.db");
 define("_TABLE_DICT_COMP_", "dict");
