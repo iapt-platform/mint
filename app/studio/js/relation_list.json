@@ -920,7 +920,7 @@ var list_relation=[
     {
         "id": "MOT",
         "case": ".loc.",
-        "note": "动机",
+        "note": "表现 -> 有表现",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
