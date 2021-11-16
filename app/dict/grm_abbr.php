@@ -57,6 +57,7 @@ define("GRM_ABBR",[
 	["dictid"=>6,"abbr"=>"cond.","replace"=>"cond"],
 	["dictid"=>6,"abbr"=>"pres.","replace"=>"pres"],
 	["dictid"=>6,"abbr"=>"fut.","replace"=>"fut"],
+	["dictid"=>6,"abbr"=>"fut.","replace"=>"fut"],
 	["dictid"=>19,"abbr"=>"pron．","replace"=>"pron"],
 	["dictid"=>19,"abbr"=>"pref．","replace"=>"pref"],
 	["dictid"=>19,"abbr"=>"aor．","replace"=>"aor"],
