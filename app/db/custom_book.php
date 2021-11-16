@@ -67,6 +67,8 @@ class CustomBookSentence extends Table
 		}
 	}
 
+	#将句子插入数据库
+	#包含句子识别算法，表格算一个句子，list算一个句子
 	public function insert($book,$content,$lang)
 	{
 		$respond['status']=0;
@@ -79,23 +81,66 @@ class CustomBookSentence extends Table
 		$sth = $this->dbh->prepare($query);
 		
 		$para = 1;
-		$sentNum = 0;
+		$sentNum = 1;
 		$newText =  "";
+		$isTable=false;
+		$isList=false;
+		$newSent="";		
 		foreach ($content as $data) {
-			$data = trim($data);
-			if($data==""){
-				$para++;
-				$sentNum = 0;
-				$newText .="\n";
+			$trimData = trim($data);
+			$newSent .= $data;
+
+			/*
+			$left2 = mb_substr($trimData,0,2,"UTF-8");
+			if($left2 == "- " || $left2 == "* " || $left2 == "+ "){
+				$isList=true;
+			}
+			*/
+			if(mb_substr($trimData,0,1,"UTF-8")=="|"){
+				$isTable=true;
+			}
+			if($trimData!="" && ($isTable == true || $isList == true)){
 				continue;
 			}
-			else{
+			#生成句子编号
+			if($trimData==""){
+				#空行
+				if(strlen($newSent)>0){
+					$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
+					$sth->execute(
+							array(
+								$book,
+								$para,
+								$sentNum,
+								$sentNum,
+								mb_strlen($data,"UTF-8"),
+								$newSent,
+								$lang,
+								$_COOKIE["userid"],
+								10,
+								mTime(),
+								mTime()
+							));  
+					$newSent="";       					
+				}
+				#新的段落 不插入数据库
+				$para++;
+				$sentNum = 1;
+				$newText .="\n";
+				$isTable = false;
+				$isList = false;			
+				continue;
+				
+				
+			}else{
 				$sentNum=$sentNum+10;
 			}
-			if(mb_substr($data,0,2,"UTF-8")=="{{"){
-				$newText .=$data."\n";
-			}
-			else{
+
+			if(mb_substr($trimData,0,2,"UTF-8")=="{{"){
+				#已经有的句子链接不处理
+				$newText .=$trimData."\n";
+			}else{
+				
 				$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 				$sth->execute(
 						array(
@@ -104,13 +149,14 @@ class CustomBookSentence extends Table
 							$sentNum,
 							$sentNum,
 							mb_strlen($data,"UTF-8"),
-							$data,
+							$newSent,
 							$lang,
 							$_COOKIE["userid"],
 							10,
 							mTime(),
 							mTime()
-						));                
+						));  
+				$newSent="";              
 			}
 
 		}

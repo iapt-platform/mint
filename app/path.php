@@ -26,6 +26,7 @@ define("_DIR_LOG_APP_", __DIR__ . "/../tmp/log/app.log");
 define("_DIR_TEMP_", __DIR__ . "/../tmp/temp");
 define("_DIR_TEMP_DICT_TEXT_", __DIR__ . "/../tmp/dict_text");
 define("_DIR_TMP_", __DIR__ . "/../tmp");
+define("_DIR_TMP_EXPORT", __DIR__ . "/../tmp/export");
 
 //dictionary
 define("_DIR_DICT_", __DIR__ . "/../tmp/appdata/dict");
@@ -190,7 +191,7 @@ define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.
 # 用户图片数据 尚未启用
 define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
 
-# 用户字典 尚未启用
+# 用户字典统计数据
 define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
 
 
