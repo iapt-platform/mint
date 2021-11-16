@@ -88,7 +88,7 @@ class CustomBookSentence extends Table
 		$newSent="";		
 		foreach ($content as $data) {
 			$trimData = trim($data);
-			$newSent .= $data;
+			$newSent .= $trimData;
 
 			/*
 			$left2 = mb_substr($trimData,0,2,"UTF-8");
@@ -100,12 +100,15 @@ class CustomBookSentence extends Table
 				$isTable=true;
 			}
 			if($trimData!="" && ($isTable == true || $isList == true)){
+				$newSent .= "\n";
 				continue;
 			}
 			#生成句子编号
 			if($trimData==""){
 				#空行
 				if(strlen($newSent)>0){
+					//之前有内容
+					{
 					$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 					$sth->execute(
 							array(
@@ -120,8 +123,9 @@ class CustomBookSentence extends Table
 								10,
 								mTime(),
 								mTime()
-							));  
-					$newSent="";       					
+							)); 
+						}
+					$newSent="";				
 				}
 				#新的段落 不插入数据库
 				$para++;
@@ -130,8 +134,6 @@ class CustomBookSentence extends Table
 				$isTable = false;
 				$isList = false;			
 				continue;
-				
-				
 			}else{
 				$sentNum=$sentNum+10;
 			}
@@ -159,6 +161,28 @@ class CustomBookSentence extends Table
 				$newSent="";              
 			}
 
+		}
+
+		if(strlen($newSent)>0){
+			//最后一行是表格结束
+			{
+			$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
+			$sth->execute(
+					array(
+						$book,
+						$para,
+						$sentNum,
+						$sentNum,
+						mb_strlen($data,"UTF-8"),
+						$newSent,
+						$lang,
+						$_COOKIE["userid"],
+						10,
+						mTime(),
+						mTime()
+					)); 
+				}
+			$newSent="";				
 		}
 		$this->dbh->commit();
 		
