@@ -34,7 +34,7 @@ function render_book_list($strWord, $booklist = null)
             $aInputBook["{$oneBook}"] = 1;
         }
     }
-    $query = "select book,count(book) as co from 'index' where \"title_en\" like '%{$strWord}%' or \"title\" like '%{$strWord}%' group by book order by co DESC";
+    $query = "SELECT book,count(book) as co FROM "._TABLE_RES_INDEX_." where title_en like '%{$strWord}%' or title like '%{$strWord}%' group by book order by co DESC";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     $newBookList = array();
@@ -128,7 +128,7 @@ switch ($op) {
                 }
                 echo "</div>";
             }
-            $query = "select title from 'index' where \"title_en\" like " . $PDO->quote("%" . $searching . '%') . " OR \"title\" like " . $PDO->quote("%" . $searching . '%') . " group by title limit 0,20";
+            $query = "SELECT title from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $searching . '%') . " OR title like " . $PDO->quote("%" . $searching . '%') . ") group by id , title limit 20";
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
             $iFetch = count($Fetch);
@@ -181,9 +181,9 @@ switch ($op) {
 
             PDO_Connect( _FILE_DB_RESRES_INDEX_);
             if (isset($_GET["booklist"])) {
-                $query = "select * from 'index' where (\"title_en\" like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR \"title\" like " . $PDO->quote("%" . $_GET["word"] . '%') . ") and book in {$_GET["booklist"]} limit 0,50";
+                $query = "SELECT * from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . ") and book in {$_GET["booklist"]} limit 50";
             } else {
-                $query = "select * from 'index' where \"title_en\" like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR \"title\" like " . $PDO->quote("%" . $_GET["word"] . '%') . " limit 0,50";
+                $query = "SELECT * from "._TABLE_RES_INDEX_." where title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . " limit 50";
             }
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -301,7 +301,7 @@ switch ($op) {
                         echo "<div class='dict'>《{$bookname}》 $c1 $c2 </div>";
                         echo "<div class='mean'>$paliword</div>";
 
-                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                        $query = "SELECT * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
                         $FetchPaliText = PDO_FetchAll($query);
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {
@@ -311,7 +311,7 @@ switch ($op) {
                                 $deep = 0;
                                 $sFirstParentTitle = "";
                                 while ($parent > -1) {
-                                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
+                                    $query = "SELECT * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
                                     $FetParent = PDO_FetchAll($query);
                                     if ($sFirstParentTitle == "") {
                                         $sFirstParentTitle = $FetParent[0]["toc"];

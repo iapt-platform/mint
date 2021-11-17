@@ -24,16 +24,16 @@ foreach ($arrBookTag as $bookkey => $bookvalue) {
     }
 }
 
-$dns = "" . _FILE_DB_PALI_TOC_;
-$dbh_toc = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_TOC_;
+$dbh_toc = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_toc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_PALITEXT_;
-$dbh_pali_text = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALITEXT_;
+$dbh_pali_text = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_pali_text->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_RESRES_INDEX_;
-$dbh_res = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_RESRES_INDEX_;
+$dbh_res = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_res->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 foreach ($output as $key => $value) {
@@ -72,7 +72,7 @@ foreach ($output as $key => $value) {
 
             #查标题
             if (isset($_GET["lang"])) {
-                $query = "SELECT title from 'index' where book=? and paragraph=? and language=?";
+                $query = "SELECT title from "._TABLE_RES_INDEX_." where book=? and paragraph=? and language=?";
                 $stmt = $dbh_res->prepare($query);
                 $sth_title = $dbh_res->prepare($query);
                 $sth_title->execute(array($book, $para, $_GET["lang"]));

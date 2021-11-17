@@ -94,10 +94,10 @@ switch ($op) {
         }
         PDO_Connect(_FILE_DB_RESRES_INDEX_);
         //查标签
-        $query = "select count(*) from 'index' where tag like '%$word%'";
+        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where tag like '%$word%'";
         $count = PDO_FetchOne($query);
 
-        $query = "select * from 'index' where tag like '%$word%' limit 0,10";
+        $query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$word%' limit 0,10";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -116,17 +116,17 @@ switch ($op) {
         echo "<div id='author_name'>$word</div>";
         echo "<div id='search_body'>";
         //author id
-        $query = "select id from 'author' where name = '$word'";
+        $query = "SELECT id from 'author' where name = '$word'";
         $arr_author = PDO_FetchAll($query);
         if (count($arr_author) > 0) {
             $author_id = $arr_author[0]["id"];
         }
 
         //查album
-        $query = "select count(*) from 'album' where author = '$author_id'";
+        $query = "SELECT count(*) from 'album' where author = '$author_id'";
         $count = PDO_FetchOne($query);
         if ($count > 0) {
-            $query = "select * from 'album' where author = '$author_id' limit 0,10";
+            $query = "SELECT * from 'album' where author = '$author_id' limit 0,10";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -139,10 +139,10 @@ switch ($op) {
         }
 
         //查资源
-        $query = "select count(*) from 'index' where author = '$author_id'";
+        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where author = '$author_id'";
         $count = PDO_FetchOne($query);
         if ($count > 0) {
-            $query = "select * from 'index' where author = '$author_id' limit 0,10";
+            $query = "SELECT * from "._TABLE_RES_INDEX_." where author = '$author_id' limit 0,10";
 
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
