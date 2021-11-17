@@ -12,7 +12,7 @@ if (isset($_COOKIE["language"])) {
 require_once "language/db_{$lang}.php";
 
 if (isset($_GET["book"])) {
-    $book = $_GET["book"];
+    $book = (int)$_GET["book"];
 } else {
     echo "no book id";
     exit;
@@ -28,7 +28,7 @@ if (isset($_GET["album"])) {
 }
 
 if (isset($_GET["paragraph"])) {
-    $paragraph = $_GET["paragraph"];
+    $paragraph = (int)$_GET["paragraph"];
 } else {
     $paragraph = -1;
 }
