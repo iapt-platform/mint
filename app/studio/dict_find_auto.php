@@ -18,10 +18,10 @@ set_error_handler(function(int $number, string $message) {
 $user_setting = get_setting();
 
 if (isset($_GET["book"])) {
-    $in_book = $_GET["book"];
+    $in_book = (int)$_GET["book"];
 }
 if (isset($_GET["para"])) {
-    $in_para = $_GET["para"];
+    $in_para = (int)$_GET["para"];
 }
 $para_list = str_getcsv($in_para);
 $strQueryPara = "("; //单词查询字串
@@ -51,10 +51,10 @@ global $PDO;
 
 //查询单词表
 $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $in_book . "_tpl.db3";
-PDO_Connect("sqlite:{$db_file}");
-$query = "SELECT paragraph,wid,real FROM \"main\" WHERE (\"paragraph\" in " . $strQueryPara . " ) and \"real\"<>\"\" and \"type\"<>'.ctl.' ";
+PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
+$query = "SELECT paragraph,wid,real FROM "._TABLE_PALICANON_TEMPLET_." WHERE ( book = ".$PDO->quote($in_book)." AND paragraph  in " . $strQueryPara . " ) and  real <> '' and  type <> '.ctl.' ";
 if ($debug) {
-    echo "filename:" . $db_file . "<br>";
+    
     echo $query . "<br>";
 }
 $FetchAllWord = PDO_FetchAll($query);
@@ -174,9 +174,9 @@ for ($i = 0; $i < $lookup_loop; $i++) {
         $strOrderby = $db["file"][1];
 
         if ($i == 0) {
-            $query = "select * from dict where \"pali\" in {$strQueryWord} AND ( type <> '.n:base.' AND  type <> '.ti:base.' AND  type <> '.adj:base.'  AND  type <> '.pron:base.'  AND  type <> '.v:base.'  AND  type <> '.part.' ) " . $strOrderby;
+            $query = "select * from dict where  pali  in {$strQueryWord} AND ( type <> '.n:base.' AND  type <> '.ti:base.' AND  type <> '.adj:base.'  AND  type <> '.pron:base.'  AND  type <> '.v:base.'  AND  type <> '.part.' ) " . $strOrderby;
         } else {
-            $query = "select * from dict where  \"pali\" in {$strQueryWord}  " . $strOrderby;
+            $query = "select * from dict where   pali  in {$strQueryWord}  " . $strOrderby;
         }
 
         if ($debug) {

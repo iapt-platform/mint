@@ -131,7 +131,7 @@ switch ($op) {
                             //获取段落层级和标题
                             $para_title = array();
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
+                            $query = "SELECT * FROM pali_text WHERE  book  = " . $PDO->quote($res_book) . " AND ( paragraph  in {$strQueryParaList} ) AND level>0 AND level<9";
                             $sth = $PDO->prepare($query);
                             $sth->execute();
                             while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
@@ -141,9 +141,9 @@ switch ($op) {
                             }
 
                             $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $res_book . "_tpl.db3";
-                            PDO_Connect("sqlite:{$db_file}");
+                            PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
                             foreach ($aParaList as $iPar) {
-                                $query = "SELECT * FROM 'main' WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) ";
+                                $query = "SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE ( book = ".$PDO->quote($res_book)." AND  paragraph  = " . $PDO->quote($iPar) . " ) ";
 
                                 $sth = $PDO->prepare($query);
                                 $sth->execute();
@@ -665,7 +665,7 @@ switch ($op) {
                             //获取段落层级和标题
                             $para_title = array();
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
+                            $query = "SELECT * FROM pali_text WHERE  book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
                             $sth = $PDO->prepare($query);
                             $sth->execute();
                             while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
@@ -675,9 +675,9 @@ switch ($op) {
                             }
 
                             $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $res_book . "_tpl.db3";
-                            PDO_Connect("sqlite:{$db_file}");
+                            PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
                             foreach ($aParaList as $iPar) {
-                                $query = "SELECT * FROM 'main' WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) ";
+                                $query = "SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE ( book = ".$PDO->quote($res_book)." AND   paragraph  = " . $PDO->quote($iPar) . " ) ";
 
                                 $sth = $PDO->prepare($query);
                                 $sth->execute();

@@ -70,8 +70,8 @@ if($sum_len>MAX_LETTER){
 PDO_Connect(""._FILE_DB_USER_WBW_);
 
 //模板库
-$db_tpl = "sqlite:"._DIR_PALICANON_TEMPLET_."/p".$_book."_tpl.db3";
-$dbh_tpl = new PDO($db_tpl, "", "");
+PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
+$dbh_tpl = $PDO;
 $dbh_tpl->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 #用户逐词译库
@@ -84,8 +84,16 @@ $channelInfo = $channelClass->getChannal($_channel);
 foreach ($_para as $key => $para) {
     # code...
     $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal = ? AND book= ? and paragraph = ? ";
-    $FetchWBW = PDO_FetchOne($query,array($_channel,$_book,$para));
-    if($FetchWBW==0){
+    //$FetchWBW = PDO_FetchOne($query,array($_channel,$_book,$para));
+	$stmt = $dbh_wbw->prepare($query);
+	$stmt->execute(array($_channel,$_book,$para));
+	$row = $stmt->fetch(PDO::FETCH_NUM);
+    if ($row) {
+        $FetchWBW = $row[0];
+    } else {
+        $FetchWBW =  0;
+    }
+    if($FetchWBW == 0){
         #建立
         //写入数据库
         // 开始一个事务，关闭自动提交
@@ -137,10 +145,10 @@ foreach ($_para as $key => $para) {
         }
 
         #逐词解析库
-        $query="SELECT * FROM 'main' WHERE paragraph = ? ";
+        $query="SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE book = ? AND paragraph = ? ";
         
         $sth = $dbh_tpl->prepare($query);
-        $sth->execute(array($para));
+        $sth->execute(array($_book,$para));
         
         $level=100;
         $title="";

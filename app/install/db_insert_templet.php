@@ -77,68 +77,49 @@ $xmlfile = $inputFileName;
 echo "doing:" . $xmlfile . "<br>";
 $log = $log . "$from,$FileName,open\r\n";
 
-$arrInserString = array();
 
-$db_file = _DIR_PALICANON_TEMPLET_ . "/" . $bookId . '_tpl.db3';
-PDO_Connect("sqlite:{$db_file}");
+PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
 
-PDO_Execute("DROP TABLE IF EXISTS main;");
-$query = "CREATE TABLE 'main' ( 'id' TEXT PRIMARY KEY NOT NULL,
-							'book' INTEGER,
-							'paragraph' INTEGER,
-							'wid' INTEGER,
-							'word' TEXT,
-							'real' TEXT,
-							'type' TEXT,
-							'gramma' TEXT,
-							'part' TEXT,
-							'style' TEXT)";
-$stmt = @PDO_Execute($query);
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = PDO_ErrorInfo();
-    print_r($error[2]);
+$row=0;
 
-}
-PDO_Execute("DROP INDEX IF EXISTS search;");
-
-$query = "CREATE INDEX 'search' ON \"main\" (\"book\", \"paragraph\", \"wid\" ASC)";
-$stmt = @PDO_Execute($query);
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = PDO_ErrorInfo();
-    print_r($error[2]);
-    $log = $log . "$from, $FileName, error, $error[2] \r\n";
-}
-
-// 打开文件并读取数据
-if (($fp = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !== false) {
-    while (($data = fgetcsv($fp, 0, ',')) !== false) {
-        //id,wid,book,paragraph,word,real,type,gramma,mean,note,part,partmean,bmc,bmt,un,style,vri,sya,si,ka,pi,pa,kam
-
-        $params = array($data[0],
-            mb_substr($data[2], 1),
-            $data[3],
-            $data[16],
-            $data[4],
-            $data[5],
-            $data[6],
-            $data[7],
-            $data[10],
-            $data[15]);
-        $arrInserString[] = $params;
-    }
-    fclose($fp);
-    echo "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv<br>";
-} else {
-    echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv";
-}
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "INSERT INTO main ('id','book','paragraph','wid','word','real','type','gramma','part','style') VALUES (?,?,?,?,?,?,?,?,?,?)";
+$query = "INSERT INTO "._TABLE_PALICANON_TEMPLET_." ( book , paragraph, wid , word , real , type , gramma , part , style ) VALUES (?,?,?,?,?,?,?,?,?)";
 $stmt = $PDO->prepare($query);
-foreach ($arrInserString as $oneParam) {
-    $stmt->execute($oneParam);
+if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+    $error = PDO_ErrorInfo();
+    echo "error - $error[2] <br>";
+
+    $log = $log . "$from, $FileName, error, $error[2] \r\n";
+	exit;
+} else {
+	// 打开文件并读取数据
+	if (($fp = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !== false) {
+		while (($data = fgetcsv($fp, 0, ',')) !== false) {
+			if($row>0){
+				$params = array(
+					mb_substr($data[2], 1),
+					$data[3],
+					$data[16],
+					$data[4],
+					$data[5],
+					$data[6],
+					$data[7],
+					$data[10],
+					$data[15]);		
+				$stmt->execute($params);	
+			}
+
+			$row++;
+		}
+		fclose($fp);
+		echo "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv<br>";
+	} else {
+		echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv";
+	}
 }
+
 // 提交更改
 $PDO->commit();
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -147,8 +128,8 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 
     $log = $log . "$from, $FileName, error, $error[2] \r\n";
 } else {
-    $count = count($arrInserString);
-    echo "updata $count recorders.";
+    
+    echo "updata $row recorders.";
 }
 
 $myLogFile = fopen($dirLog . "insert_db.log", "a");

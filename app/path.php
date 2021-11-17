@@ -66,7 +66,10 @@ define("_DB_NAME_", "mint");
 
 //语料库数据表 pali canon db file 
 //巴利语料模版表
-define("_FILE_DB_PALICANON_TEMPLET_", __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
+define("_FILE_DB_PALICANON_TEMPLET_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_FILE_DB_PALICANON_TEMPLET_","sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
+define("_TABLE_PALICANON_TEMPLET_","wbw_templet");
+
 //标题资源表
 define("_FILE_DB_RESRES_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/res.db3");
 //巴利语料段落表
