@@ -128,7 +128,7 @@ switch ($op) {
                 }
                 echo "</div>";
             }
-            $query = "SELECT title from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $searching . '%') . " OR title like " . $PDO->quote("%" . $searching . '%') . ") group by id , title limit 20";
+            $query = "SELECT title from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $searching . '%') . " OR title like " . $PDO->quote("%" . $searching . '%') . ") group by title limit 20";
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
             $iFetch = count($Fetch);
