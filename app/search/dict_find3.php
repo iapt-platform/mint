@@ -34,7 +34,7 @@ switch ($op) {
     case "pre": //预查询
         PDO_Connect(_FILE_DB_WORD_INDEX_);
         echo "<div>";
-        $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " limit 0,50";
+        $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " limit 50";
         echo $query;
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
@@ -141,7 +141,7 @@ switch ($op) {
 
         //查找这些词出现在哪些书中
         PDO_Connect(_FILE_DB_BOOK_WORD_);
-        $query = "SELECT book,sum(count) as co FROM "._TABLE_BOOK_WORD_." WHERE \"wordindex\" IN $strQueryWordId  GROUP BY book LIMIT 0,217";
+        $query = "SELECT book,sum(count) as co FROM "._TABLE_BOOK_WORD_." WHERE wordindex IN $strQueryWordId  GROUP BY book LIMIT 217";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -177,7 +177,7 @@ switch ($op) {
 
         PDO_Connect(_FILE_DB_WORD_INDEX_);
 
-        $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId LIMIT 0,20";
+        $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId LIMIT 20";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -195,7 +195,7 @@ switch ($op) {
                 echo "<div class='mean'>$paliword</div>";
 
                 {
-                    $query = "select * from vri_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,1";
+                    $query = "select * from vri_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 1";
                     $FetchPaliText = PDO_FetchAll($query);
                     $countPaliText = count($FetchPaliText);
                     if ($countPaliText > 0) {
@@ -238,7 +238,7 @@ switch ($op) {
                 }
 
                 //查找这些词出现在哪些书中
-                $query = "SELECT book,sum(count) as co from "._TABLE_BOOK_WORD_." where \"wordindex\" in $wordlist group by book order by co DESC";
+                $query = "SELECT book,sum(count) as co from "._TABLE_BOOK_WORD_." where wordindex in $wordlist group by book order by co DESC";
                 $Fetch = PDO_FetchAll($query);
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
@@ -307,7 +307,7 @@ switch ($op) {
                 //前20条记录
                 PDO_Connect(_FILE_DB_WORD_INDEX_);
 
-                $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
+                $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 20";
                 $Fetch = PDO_FetchAll($query);
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
@@ -324,7 +324,7 @@ switch ($op) {
                         echo "<div class='dict'>《{$bookname}》 $c1 $c2 </div>";
                         echo "<div class='mean'>$paliword</div>";
 
-                        $query = "select * from vri_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                        $query = "select * from vri_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 20";
                         $FetchPaliText = PDO_FetchAll($query);
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {

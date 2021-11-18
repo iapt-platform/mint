@@ -263,7 +263,7 @@ function countWordInPali($word, $sort = false, $limit = 0)
     if ($limit == 0) {
         $sSqlLimit = "";
     } else {
-        $sSqlLimit = "limit 0 , " . $limit;
+        $sSqlLimit = "limit " . $limit;
     }
     if ($sort) {
         $sSqlSort = "order by count DESC";
