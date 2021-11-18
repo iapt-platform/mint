@@ -206,11 +206,11 @@ $time_start = microtime_float();
 
 PDO_Connect(_FILE_DB_PALI_INDEX_);
 
-$query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) where 1 ";
+$query = "SELECT count(*) from (SELECT book FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) as qr where true ";
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
 
-$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT ? OFFSET ?";
+$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY wordindex,book,paragraph ORDER BY wt DESC LIMIT ? OFFSET ?";
 $Fetch = PDO_FetchAll($query,array($_pagesize , $_page * $_pagesize));
 $result["time"][] = array("event" => "查询结束", "time" => microtime(true) - $_start);
 $out_data = array();

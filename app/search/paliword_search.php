@@ -43,7 +43,7 @@ switch ($op) {
                 echo "</div>";
             }
 
-            $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 0,20";
+            $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 20";
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
 
@@ -163,7 +163,7 @@ switch ($op) {
 
             PDO_Connect(_FILE_DB_PALI_INDEX_);
 			//TODO 在没有查到书的时候$strFirstBookList为 (  需要修改
-            $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
+            $query = "SELECT book,paragraph, wordindex FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 20";
             $Fetch = PDO_FetchAll($query);
             //echo "<div>$query</div>";
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -267,7 +267,7 @@ switch ($op) {
                 $time_start = microtime_float();
                 PDO_Connect(_FILE_DB_PALI_INDEX_);
 
-                $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
+                $query = "SELECT * from "._TABLE_WORD_." where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 20";
                 $Fetch = PDO_FetchAll($query);
                 $queryTime = (microtime_float() - $time_start) * 1000;
                 //echo "<div >搜索时间：$queryTime </div>";

@@ -268,7 +268,7 @@ switch ($op) {
 
                 PDO_Connect(_FILE_DB_PALI_INDEX_);
 
-                $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
+                $query = "SELECT * from "._TABLE_WORD_." where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 20";
                 $Fetch = PDO_FetchAll($query);
                 //echo "<div>$query</div>";
                 $queryTime = (microtime_float() - $time_start) * 1000;
