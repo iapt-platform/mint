@@ -28,16 +28,22 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 				html += render_word_result(iterator);
 			}
 			$("#contents").html(html);
-			html = "";
 
-			html += "<div class='case_item'>";
-			html += "<div class='spell'><a onclick='case_filter_all()'>all</a> " + result.case_num + " Words</div>";
-			html += "<div class='tag'>" + result.case_count + "</div>";
-			html += "</div>";
-			for (const iterator of result.case) {
-				html += render_case(iterator);
+
+			if(result.case){
+				//所查单词格位变化表
+				html = "";
+
+				html += "<div class='case_item'>";
+				html += "<div class='spell'><a onclick='case_filter_all()'>all</a> " + result.case_num + " Words</div>";
+				html += "<div class='tag'>" + result.case_count + "</div>";
+				html += "</div>";
+				for (const iterator of result.case) {
+					html += render_case(iterator);
+				}
+				$("#case_content").html(html);			
 			}
-			$("#case_content").html(html);
+
 
 			html = "";
 			html += "<div class='book_tag_div filter'>";
