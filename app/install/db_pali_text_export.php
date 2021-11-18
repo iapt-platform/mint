@@ -34,8 +34,8 @@ if ($to == 0 || $to >= 217) {
 $book = $from + 1;
 if (($fp = fopen(_DIR_PALI_TITLE_ . "/" . $book . "_title.csv", "w")) !== false) {
     fputcsv($fp, array('id', 'book', 'par_num', 'level', 'class', 'title', 'text'));
-    PDO_Connect("" . _FILE_DB_PALITEXT_);
-    $query = "select id, book, paragraph, level, class, toc, text from pali_text where book = '$book' ";
+    PDO_Connect(_FILE_DB_PALITEXT_);
+    $query = "SELECT id, book, paragraph, level, class, toc, text from "._TABLE_PALI_TEXT_." where book = '$book' ";
     $title_data = PDO_FetchAll($query);
     foreach ($title_data as $value) {
         $value["id"] = "NULL";

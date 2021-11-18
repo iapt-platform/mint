@@ -77,7 +77,7 @@ $paraBegin=0;
 $paraEnd=0;
 
 PDO_Connect(_FILE_DB_PALITEXT_);
-$query = "SELECT level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
+$query = "SELECT level , parent, chapter_len,chapter_strlen FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND paragraph= ?";
 $FetchParInfo = PDO_FetchRow($query, array($_book, $_para));
 if ($FetchParInfo) {
     switch ($_view) {
@@ -92,7 +92,7 @@ if ($FetchParInfo) {
             else{
 				#不是标题，加载所在段落
 				$paraBegin = $FetchParInfo["parent"];
-				$query = "SELECT  level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
+				$query = "SELECT  level , parent, chapter_len,chapter_strlen FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND paragraph= ?";
 				$FetchParInfo = PDO_FetchRow($query, array($_book, $paraBegin));
             	$paraEnd = $paraBegin + $FetchParInfo["chapter_len"] - 1;
 			}
@@ -110,7 +110,7 @@ if ($FetchParInfo) {
     }
 
     //获取下级目录
-    $query = "SELECT level,paragraph,toc FROM 'pali_text'  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
+    $query = "SELECT level,paragraph,toc FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
     $toc = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 	if(count($toc)>0){
 		$output["title"] = $toc[0]["toc"];
@@ -153,7 +153,7 @@ if ($FetchParInfo) {
 
     PDO_Connect(_FILE_DB_PALI_SENTENCE_);
 
-    $query = "SELECT book,paragraph,begin, end FROM 'pali_sent' WHERE book= ? AND (paragraph BETWEEN ? AND ? ) ";
+    $query = "SELECT book,paragraph,begin, end FROM pali_sent WHERE book= ? AND (paragraph BETWEEN ? AND ? ) ";
     $sent_list = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 	$iCurrPara=0;
 	$output["sent_list"] = $sent_list;

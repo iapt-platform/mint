@@ -195,13 +195,10 @@ if (!file_exists($db[0])) {
 }
 echo "</div>";
 
-if (file_exists(_FILE_DB_PALITEXT_)) {
-    echo "Pali原文数据库已经存在<br>";
-    echo '<a href="db_insert_palitext.php" target="_blank">重新生成</a><br>';
-    echo '<a href="db_update_palitext.php" target="_blank">更新</a><br>';
-} else {
-    echo '<a href="db_insert_palitext.php">生成</a><br>';
-}
+
+echo '<a href="db_insert_palitext.php">生成</a><br>';
+echo '<a href="db_update_palitext.php" target="_blank">更新</a><br>';
+
 echo "<a href = '" . _DIR_LOG_ . "/db_update_palitext.log" . "' target='_blank'>view Log</a>"
 ?>
 </div>

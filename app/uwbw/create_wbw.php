@@ -47,12 +47,12 @@ $output["para"]=$_para;
 $output["channel"]=$_channel;
 
 //判断单词数量 太大的不能加载
-PDO_Connect(""._FILE_DB_PALITEXT_);
-$params = array(1, 21, 63, 171);
-/*  创建一个填充了和params相同数量占位符的字符串 */
+PDO_Connect(_FILE_DB_PALITEXT_);
+
+/*  创建一个填充了和 _para 相同数量占位符的字符串 */
 $place_holders = implode(',', array_fill(0, count($_para), '?'));
 
-$query = "SELECT sum(lenght) FROM pali_text WHERE   paragraph IN ($place_holders) AND book = ?";
+$query = "SELECT sum(lenght) FROM _TABLE_PALI_TEXT_ WHERE   paragraph IN ($place_holders) AND book = ?";
 $param_letter = $_para;
 $param_letter[] = $_book;
 $sum_len = PDO_FetchOne($query,$param_letter);
@@ -67,7 +67,7 @@ if($sum_len>MAX_LETTER){
 
 # 查询数据库是否有数据，没有就建立
 // 查询逐词解析库
-PDO_Connect(""._FILE_DB_USER_WBW_);
+//PDO_Connect(_FILE_DB_USER_WBW_);
 
 //模板库
 PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
@@ -75,8 +75,8 @@ $dbh_tpl = $PDO;
 $dbh_tpl->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 #用户逐词译库
-$db_wbw = ""._FILE_DB_USER_WBW_;
-$dbh_wbw= new PDO($db_wbw, "", "");
+$db_wbw = _FILE_DB_USER_WBW_;
+$dbh_wbw= new PDO($db_wbw, _DB_USERNAME_, _DB_PASSWORD_);
 $dbh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $channelClass = new Channal(redis_connect());
 $channelInfo = $channelClass->getChannal($_channel);

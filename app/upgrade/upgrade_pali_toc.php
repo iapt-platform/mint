@@ -5,20 +5,20 @@ require_once '../path.php';
 $redis = new redis();
 $r_conn = $redis->connect('127.0.0.1', 6379);
 
-$dns = "" . _FILE_DB_PALI_TOC_;
-$dbh_toc = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_TOC_;
+$dbh_toc = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_toc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_SENTENCE_;
-$dbh_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_SENTENCE_;
+$dbh_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_;
-$dbh_pali_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_SENTENCE_;
+$dbh_pali_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_PALITEXT_;
-$dbh_pali_text = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALITEXT_;
+$dbh_pali_text = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_pali_text->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 $valid_book = array();
@@ -110,7 +110,7 @@ $sth_toc = $dbh_toc->prepare($query);
 foreach ($valid_book as $key => $book) {
     echo "doing chapter in book " . $book["book"] . "\n";
     # code...
-    $query = "SELECT paragraph , chapter_len from pali_text where level < 8 and book = ?";
+    $query = "SELECT paragraph , chapter_len from "._TABLE_PALI_TEXT_." where level < 8 and book = ?";
     $stmt = $dbh_pali_text->prepare($query);
     $stmt->execute(array($book["book"]));
     $result_chapter = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -42,7 +42,7 @@ foreach ($output as $key => $value) {
     $para = (int) $value["para"];
     $level = (int) $value["level"];
     if (count($output) < 100 || (count($output) > 100 && $level == 1)) {
-        $query = "SELECT * FROM pali_text WHERE book = ? and paragraph = ?";
+        $query = "SELECT * FROM "._TABLE_PALI_TEXT_." WHERE book = ? and paragraph = ?";
         $stmt = $dbh_pali_text->prepare($query);
         $stmt->execute(array($book, $para));
         $paraInfo = $stmt->fetch(PDO::FETCH_ASSOC);

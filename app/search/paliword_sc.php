@@ -43,11 +43,12 @@ if (isset($_GET["page"])) {
 
 if (count($arrWordList) > 1) {
 	# 查询多个词
+	$out_data = array();
     PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
-    $query = "SELECT book,paragraph, text FROM pali_text WHERE text like ?  LIMIT ? , ?";
-    $Fetch1 = PDO_FetchAll($query, array("%{$words}%", $_page * $_pagesize, $_pagesize));
+    $query = "SELECT book,paragraph, text FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
+    $Fetch1 = PDO_FetchAll($query, array("%{$words}%", $_pagesize, $_page * $_pagesize));
 
     foreach ($Fetch1 as $key => $value) {
         # code...
@@ -101,8 +102,8 @@ if ($countWord == 0) {
     #没查到 模糊查询
 
     PDO_Connect(_FILE_DB_PALITEXT_);
-    $query = "SELECT book,paragraph, text FROM pali_text WHERE text like ?  LIMIT ? , ?";
-    $Fetch = PDO_FetchAll($query, array("%{$word}%", $_page * $_pagesize, $_pagesize));
+    $query = "SELECT book,paragraph, text FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
+    $Fetch = PDO_FetchAll($query, array("%{$word}%", $_pagesize, $_page * $_pagesize));
 
     $result["data"] = $Fetch;
     exit;
@@ -209,8 +210,8 @@ $query = "SELECT count(*) from (SELECT book FROM word WHERE \"wordindex\" in $st
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
 
-$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT ?,?";
-$Fetch = PDO_FetchAll($query,array($_page * $_pagesize, $_pagesize));
+$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM word WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT ? OFFSET ?";
+$Fetch = PDO_FetchAll($query,array($_pagesize , $_page * $_pagesize));
 $result["time"][] = array("event" => "查询结束", "time" => microtime(true) - $_start);
 $out_data = array();
 
@@ -240,8 +241,8 @@ if ($iFetch > 0) {
             $path_1 = $path_1 . $c3 . ">";
         }
         $path_1 = $path_1 . "《{$bookname}》>";
-        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,1";
-        $FetchPaliText = PDO_FetchAll($query);
+        $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+        $FetchPaliText = PDO_FetchAll($query,array($book,$paragraph));
         $countPaliText = count($FetchPaliText);
         if ($countPaliText > 0) {
             $path = "";
@@ -250,8 +251,8 @@ if ($iFetch > 0) {
             $sFirstParentTitle = "";
             //循环查找父标题 得到整条路径
             while ($parent > -1) {
-                $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
-                $FetParent = PDO_FetchAll($query);
+                $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                $FetParent = PDO_FetchAll($query,array($book,$parent));
                 $path = "{$FetParent[0]["toc"]}>{$path}";
                 if ($sFirstParentTitle == "") {
                     $sFirstParentTitle = $FetParent[0]["toc"];

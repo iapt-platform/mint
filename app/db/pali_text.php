@@ -5,7 +5,7 @@ require_once "../db/table.php";
 class PaliText extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_PALITEXT_, "pali_text", "", "",$redis);
+		parent::__construct(_FILE_DB_PALITEXT_, _TABLE_PALI_TEXT_, "", "",$redis);
     }
 
 	public function index(){

@@ -35,9 +35,9 @@ switch ($op) {
         }
 
         //查标题
-        $query = "select count(*) from 'index'  where  title_en like '%$word%' or title like '%$word%'";
+        $query = "select count(*) from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%'";
         $count = PDO_FetchOne($query);
-        $query = "select * from 'index'  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
+        $query = "select * from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -69,8 +69,8 @@ switch ($op) {
                 //循环查找父标题 得到整条路径
 
                 while ($parent > -1) {
-                    $query = "select * from pali_text where \"book\" = '{$bookid}' and \"paragraph\" = '{$parent}' limit 0,1";
-                    $FetParent = PDO_FetchAll($query);
+                    $query = "SELECT * FROM "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                    $FetParent = PDO_FetchAll($query,array($bookid,$parent));
                     if ($deep > 0) {
                         $path = "{$FetParent[0]["toc"]}>{$path}";
                     }
@@ -97,7 +97,7 @@ switch ($op) {
         $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where tag like '%$word%'";
         $count = PDO_FetchOne($query);
 
-        $query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$word%' limit 0,10";
+        $query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$word%' limit 10";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {

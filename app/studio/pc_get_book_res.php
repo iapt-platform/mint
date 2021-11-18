@@ -46,7 +46,7 @@ switch ($res_type) {
 }
 //open database
 //echo "$db_file";
-PDO_Connect("$db_file");
+PDO_Connect($db_file);
 switch ($res_type) {
     case "wbw":
         if ($author == "templet") {

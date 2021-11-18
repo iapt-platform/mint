@@ -69,7 +69,7 @@ switch ($op) {
                 }
                 $strQuery = substr($strQuery, 0, -3);
                 PDO_Connect(_FILE_DB_PALITEXT_);
-                $query = "SELECT book,paragraph, html FROM pali_text WHERE {$strQuery}  LIMIT 0,20";
+                $query = "SELECT book,paragraph, html FROM _TABLE_PALI_TEXT_ WHERE {$strQuery}  LIMIT 20";
                 $Fetch = PDO_FetchAll($query);
                 echo "<div>$query</div>";
                 $iFetch = count($Fetch);
@@ -192,8 +192,8 @@ switch ($op) {
                         $path_1 = $path_1 . $c3 . ">";
                     }
                     $path_1 = $path_1 . "《{$bookname}》>";
-                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,1";
-                    $FetchPaliText = PDO_FetchAll($query);
+                    $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                    $FetchPaliText = PDO_FetchAll($query,array($book,$paragraph));
                     $countPaliText = count($FetchPaliText);
                     if ($countPaliText > 0) {
                         $path = "";
@@ -202,8 +202,8 @@ switch ($op) {
                         $sFirstParentTitle = "";
                         //循环查找父标题 得到整条路径
                         while ($parent > -1) {
-                            $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
-                            $FetParent = PDO_FetchAll($query);
+                            $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                            $FetParent = PDO_FetchAll($query,array($book,$parent));
                             $path = "{$FetParent[0]["toc"]}>{$path}";
                             if ($sFirstParentTitle == "") {
                                 $sFirstParentTitle = $FetParent[0]["toc"];
@@ -302,8 +302,8 @@ switch ($op) {
                         echo "<div class='book' ><span style='font-size:110%;font-weight:700;'>《{$bookname}》</span> <tag>$c1</tag> <tag>$c2</tag> </div>";
                         echo "<div class='mean'>$paliword</div>";
 
-                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
-                        $FetchPaliText = PDO_FetchAll($query);
+                        $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 20";
+                        $FetchPaliText = PDO_FetchAll($query,array($book,$paragraph));
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {
                             for ($iPali = 0; $iPali < $countPaliText; $iPali++) {
@@ -312,8 +312,8 @@ switch ($op) {
                                 $deep = 0;
                                 $sFirstParentTitle = "";
                                 while ($parent > -1) {
-                                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
-                                    $FetParent = PDO_FetchAll($query);
+                                    $query = "select * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                                    $FetParent = PDO_FetchAll($query,array($book,$parent));
                                     if ($sFirstParentTitle == "") {
                                         $sFirstParentTitle = $FetParent[0]["toc"];
                                     }

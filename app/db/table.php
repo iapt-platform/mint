@@ -19,14 +19,14 @@ class Table
 	public $medoo;
 	protected $redisProfix;
     function __construct($db,$table,$user="",$password="",$redis=false) {
-        $this->dbh = new PDO($db, $user, $password,array(PDO::ATTR_PERSISTENT=>true));
+        $this->dbh = new PDO($db, _DB_USERNAME_, _DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 		$database = new Medoo([
 			// Initialized and connected PDO object.
 			'pdo' => $this->dbh,
 		 
 			// [optional] Medoo will have different handle method according to different database type.
-			'type' => 'sqlite'
+			'type' => _DB_ENGIN_
 		]);
 		
 		$this->medoo = $database;
