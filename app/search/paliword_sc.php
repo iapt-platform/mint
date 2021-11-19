@@ -113,9 +113,11 @@ $aQueryWordList = array(); //id 为键 拼写为值的数组
 $aInputWordList = array(); //id 为键 拼写为值的数组 该词是否被选择
 $aShowWordList = array(); //拼写为键 个数为值的数组
 $aShowWordIdList = array(); //拼写为键 值Id的数组
+$arrQueryId=array();
 for ($i = 0; $i < $countWord; $i++) {
     $value = $arrRealWordList[$i];
     $strQueryWordId .= "'{$value["id"]}',";
+	$arrQueryId[] = $value["id"];
     $aQueryWordList["{$value["id"]}"] = $value["word"];
     $aInputWordList["{$value["id"]}"] = false;
     $aShowWordList[$value["word"]] = $value["count"];
@@ -129,6 +131,7 @@ if (isset($_GET["words"])) {
         foreach ($word_selected as $key => $value) {
             $strQueryWordId .= "'{$value}',";
             $aInputWordList["{$value}"] = true;
+			$arrQueryId[] = $value;
         }
     }
 }
@@ -210,7 +213,7 @@ $query = "SELECT count(*) from (SELECT book FROM "._TABLE_WORD_." WHERE \"wordin
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
 
-$query = "SELECT book,paragraph, wordindex, sum(weight) as wt FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY wordindex,book,paragraph ORDER BY wt DESC LIMIT ? OFFSET ?";
+$query = "SELECT book,paragraph, sum(weight) as wt FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId $strQueryBookId GROUP BY book,paragraph ORDER BY wt DESC LIMIT ? OFFSET ?";
 $Fetch = PDO_FetchAll($query,array($_pagesize , $_page * $_pagesize));
 $result["time"][] = array("event" => "查询结束", "time" => microtime(true) - $_start);
 $out_data = array();
@@ -222,9 +225,11 @@ if ($iFetch > 0) {
     PDO_Connect(_FILE_DB_PALITEXT_);
     for ($i = 0; $i < $iFetch; $i++) {
         $newRecode = array();
-
-        $paliwordid = $Fetch[$i]["wordindex"];
-        $paliword = $aQueryWordList["{$paliwordid}"];
+		$paliword = array();
+		foreach ($arrQueryId as $value) {
+			# code...
+			$paliword[] = $aQueryWordList["{$value}"];
+		}
         $book = $Fetch[$i]["book"];
         $paragraph = $Fetch[$i]["paragraph"];
         $bookInfo = _get_book_info($book);
@@ -269,7 +274,7 @@ if ($iFetch > 0) {
             $newRecode["book"] = $book;
             $newRecode["para"] = $paragraph;
             $newRecode["palitext"] = $FetchPaliText[0]["html"];
-            $newRecode["keyword"] = array($paliword);
+            $newRecode["keyword"] = $paliword;
             $newRecode["wt"] = $Fetch[$i]["wt"];
             $out_data[] = $newRecode;
         }

@@ -95,9 +95,12 @@ switch ($op) {
             $aQueryWordList = array(); //id 为键 拼写为值的数组
             $aShowWordList = array(); //拼写为键 个数为值的数组
             $aShowWordIdList = array(); //拼写为键 值Id的数组
+
+			$arrQueryId=array();
             for ($i = 0; $i < $countWord; $i++) {
                 $value = $arrRealWordList[$i];
                 $strQueryWordId .= "'{$value["id"]}',";
+				$arrQueryId[] = $value["id"];
                 $aQueryWordList["{$value["id"]}"] = $value["word"];
                 $aShowWordList[$value["word"]] = $value["count"];
                 $aShowWordIdList[$value["word"]] = $value["id"];
@@ -163,7 +166,7 @@ switch ($op) {
 
             PDO_Connect(_FILE_DB_PALI_INDEX_);
 			//TODO 在没有查到书的时候$strFirstBookList为 (  需要修改
-            $query = "SELECT book,paragraph, wordindex FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 20";
+            $query = "SELECT book,paragraph  FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 20";
             $Fetch = PDO_FetchAll($query);
             //echo "<div>$query</div>";
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -171,8 +174,11 @@ switch ($op) {
             if ($iFetch > 0) {
                 PDO_Connect(_FILE_DB_PALITEXT_);
                 for ($i = 0; $i < $iFetch; $i++) {
-                    $paliwordid = $Fetch[$i]["wordindex"];
-                    $paliword = $aQueryWordList["{$paliwordid}"];
+					$paliword = array();
+					foreach ($arrQueryId as $value) {
+						# code...
+						$paliword[] = $aQueryWordList["{$value}"];
+					}
                     $book = $Fetch[$i]["book"];
                     $paragraph = $Fetch[$i]["paragraph"];
                     $bookInfo = _get_book_info($book);
@@ -182,7 +188,7 @@ switch ($op) {
                     $c3 = $bookInfo->c3;
 
                     echo "<div class='dict_word' style='margin: 10px 0;padding: 5px;border-bottom: 1px solid var(--border-line-color);'>";
-                    echo "<div style='font-size: 130%;font-weight: 700;'>$paliword</div>";
+                    echo "<div style='font-size: 130%;font-weight: 700;'>".$paliword[0]."</div>";
                     //echo "<div class='dict_word'>";
                     $path_1 = $c1 . ">";
                     if ($c2 !== "") {
@@ -218,11 +224,17 @@ switch ($op) {
                         echo "<div class='mean' style='font-size:120%'><a href='../reader/?view=para&book={$book}&para={$paragraph}&display=para' target='_blank'>$path</a></div>";
 
                         for ($iPali = 0; $iPali < $countPaliText; $iPali++) {
-                            if (substr($paliword, -1) == "n") {
-                                $paliword = substr($paliword, 0, -1);
-                            }
-                            $htmltext = $FetchPaliText[0]["html"];
-                            $light_text = str_replace($paliword, "<hl>{$paliword}</hl>", $htmltext);
+							foreach ($paliword as $qWord) {
+								# code...
+								$light_text = $htmltext;
+								if (substr($qWord, -1) == "n") {
+									$qWord = substr($qWord, 0, -1);
+								}
+								$htmltext = $FetchPaliText[0]["html"];
+								$light_text = str_replace($qWord, "<hl>{$qWord}</hl>", $light_text);								
+							}
+
+
                             echo "<div class='wizard_par_div'>{$light_text}</div>";
                         }
                         //echo  "<div class='wizard_par_div'>{$light_text}</div>";
