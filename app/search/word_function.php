@@ -255,10 +255,8 @@ function countWordInPali($word, $sort = false, $limit = 0)
 
     //查找实际出现的拼写
 
-    $dsn = "" . _FILE_DB_WORD_INDEX_;
-    $user = "";
-    $password = "";
-    $PDO = new PDO($dsn, $user, $password, array(PDO::ATTR_PERSISTENT => true));
+    $dsn = _FILE_DB_WORD_INDEX_;
+    $PDO = new PDO($dsn, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     if ($limit == 0) {
         $sSqlLimit = "";
@@ -271,7 +269,7 @@ function countWordInPali($word, $sort = false, $limit = 0)
         $sSqlSort = "";
     }
 
-    $query = "select id,word,count,bold,len from wordindex where \"word\" in  $strQueryWord " . $sSqlSort . " " . $sSqlLimit;
+    $query = "SELECT id,word,count,bold,len from "._TABLE_WORD_INDEX_." where \"word\" in  $strQueryWord " . $sSqlSort . " " . $sSqlLimit;
 
     $stmt = $PDO->query($query);
     $arrRealWordList = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -118,7 +118,7 @@ switch ($op) {
             $time_start = microtime_float();
 
             $searching = $arrWordList[count($arrWordList) - 1];
-            PDO_Connect(_FILE_DB_WORD_INDEX_);
+            PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
 
             if (count($arrWordList) > 1) {
                 echo "<div>";
@@ -128,7 +128,7 @@ switch ($op) {
                 echo "</div>";
             }
             echo "<div>";
-            $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 50";
+            $query = "SELECT word,count from "._TABLE_WORD_INDEX_." where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 50";
             echo $query;
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -210,8 +210,8 @@ switch ($op) {
             //查找实际出现的拼写
 
             $time_start = microtime_float();
-            PDO_Connect(_FILE_DB_WORD_INDEX_);
-            $query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
+            PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
+            $query = "SELECT id,word,count from "._TABLE_WORD_INDEX_." where \"word\" in  $strQueryWord";
             $arrRealWordList = PDO_FetchAll($query);
             $countWord = count($arrRealWordList);
             if ($countWord == 0) {

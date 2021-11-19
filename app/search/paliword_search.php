@@ -33,7 +33,7 @@ switch ($op) {
             $time_start = microtime_float();
 
             $searching = $arrWordList[count($arrWordList) - 1];
-            PDO_Connect(_FILE_DB_WORD_INDEX_);
+            PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
 
             if (count($arrWordList) > 1) {
                 echo "<div>";
@@ -43,7 +43,7 @@ switch ($op) {
                 echo "</div>";
             }
 
-            $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 20";
+            $query = "SELECT word,count from "._TABLE_WORD_INDEX_." where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 20";
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
 
@@ -69,7 +69,7 @@ switch ($op) {
                 }
                 $strQuery = substr($strQuery, 0, -3);
                 PDO_Connect(_FILE_DB_PALITEXT_);
-                $query = "SELECT book,paragraph, html FROM _TABLE_PALI_TEXT_ WHERE {$strQuery}  LIMIT 20";
+                $query = "SELECT book,paragraph, html FROM "._TABLE_PALI_TEXT_." WHERE {$strQuery}  LIMIT 20";
                 $Fetch = PDO_FetchAll($query);
                 echo "<div>$query</div>";
                 $iFetch = count($Fetch);

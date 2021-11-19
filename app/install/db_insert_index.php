@@ -74,11 +74,11 @@ $aNewWordIndex = array(); //词内容
 $sNewWord = array(); //词头索引
 
 global $dbh_word_index;
-$dns = "" . _FILE_DB_WORD_INDEX_;
+$dns = _FILE_DB_WORD_INDEX_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$query = "select id from wordindex where 1 order by id DESC ";
+$query = "SELECT id from "._TABLE_WORD_INDEX_." where true order by id DESC ";
 $stmt = $dbh_word_index->prepare($query);
 $stmt->execute(array());
 $id = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -89,7 +89,7 @@ if ($id === false) {
 }
 $db_file = _FILE_DB_PALI_INDEX_;
 PDO_Connect($db_file,_DB_USERNAME_,_DB_PASSWORD_);
-$query = "SELECT id from "._TABLE_WORD_." where 1 order by id DESC ";
+$query = "SELECT id from "._TABLE_WORD_." where true order by id DESC ";
 $stmt = $PDO->prepare($query);
 $stmt->execute(array());
 $id = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -246,7 +246,7 @@ $iFile = $from;
 //首先插入新的词
 // 开始一个事务，关闭自动提交
 $dbh_word_index->beginTransaction();
-$query = "INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO "._TABLE_WORD_INDEX_." ('id','word','word_en','count','normal','bold','is_base','len') VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $dbh_word_index->prepare($query);
 
 echo "INSERT:" . count($aNewWordIndex) . "words<br>";
@@ -278,7 +278,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 //然后修改已经有的词
 // 开始一个事务，关闭自动提交
 $dbh_word_index->beginTransaction();
-$query = "UPDATE wordindex SET count = ? , normal = ? , bold = ?   where  id = ?  ";
+$query = "UPDATE "._TABLE_WORD_INDEX_." SET count = ? , normal = ? , bold = ?   where  id = ?  ";
 $stmt = $dbh_word_index->prepare($query);
 
 echo "UPDATE:" . count($iAllWordIndex) . "words<br>";

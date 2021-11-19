@@ -82,7 +82,7 @@ for ($i = $from; $i <= $to; $i++) {
                     $bold_count = $end - $begin + 1;
                     if ($bold_count == 1) {
 
-                        $query = "SELECT * from wordindex where id=" . $fetch[$iWord]["wordindex"];
+                        $query = "SELECT * from "._TABLE_WORD_INDEX_." where id=" . $fetch[$iWord]["wordindex"];
                         $stmt_word = $dh_word->query($query);
                         $wordinfo = $stmt_word->fetch(PDO::FETCH_ASSOC);
                         $bookId = (int) $fetch[$iWord]["book"];
@@ -100,7 +100,7 @@ for ($i = $from; $i <= $to; $i++) {
                         for ($iBold = $begin; $iBold <= $end; $iBold++) {
                             # code...
                             $boldid = $fetch[$iBold]["wordindex"];
-                            $query = "SELECT len from wordindex where id=" . $boldid;
+                            $query = "SELECT len from "._TABLE_WORD_INDEX_." where id=" . $boldid;
                             $stmt_bold = $dh_word->query($query);
                             $wordbold = $stmt_bold->fetch(PDO::FETCH_ASSOC);
                             $len_sum += $wordbold["len"];

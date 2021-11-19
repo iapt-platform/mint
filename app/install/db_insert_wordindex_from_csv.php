@@ -24,15 +24,15 @@ $log = "";
 echo "<h2>doing : No.{$from}  </h2>";
 
 global $dbh_word_index;
-$dns = "" . _FILE_DB_WORD_INDEX_;
-$dbh_word_index = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_WORD_INDEX_;
+$dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_INDEX_ . "/{$from}.csv", "r")) !== false) {
 
     // 开始一个事务，关闭自动提交
     $dbh_word_index->beginTransaction();
-    $query = "INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES (?,?,?,?,?,?,?,?)";
+    $query = "INSERT INTO "._TABLE_WORD_INDEX_." (id , word , word_en , count , normal , bold , is_base , len ) VALUES (?,?,?,?,?,?,?,?)";
 
     $stmt = $dbh_word_index->prepare($query);
 
