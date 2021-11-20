@@ -17,6 +17,9 @@
 /app/config.php
 /app/config.js
 /app/path.php
+
+.env
+
 # dependencies
 /vendor/
 /node_modules/
