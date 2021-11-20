@@ -97,7 +97,7 @@ if (($inputRow - 1) != count($pali_text_array)) {
     $log = $log . "$from, $FileName,error,文件行数不匹配 inputRow=$inputRow pali_text_array=" . count($pali_text_array) . " \r\n";
 }
 
-$query = "DELETE FROM "._TABLE_PALI_TEXT_."WHERE book=?";
+$query = "DELETE FROM "._TABLE_PALI_TEXT_." WHERE book=?";
 PDO_Execute($query,array($from+1));
 
 // 开始一个事务，关闭自动提交
