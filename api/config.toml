@@ -1,0 +1,12 @@
+[postgresql]
+server = "127.0.0.1"
+port = 5432
+name = "mint"
+sslmode = "disable"
+user = "postgres"
+password = ""
+[redis]
+hosts = ["127.0.0.1:6376", "127.0.0.1:6377", "127.0.0.1:6378"]
+password = ""
+db = 0
+prefix="aaa://"

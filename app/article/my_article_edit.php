@@ -14,6 +14,7 @@ require_once '../studio/index_head.php';
 	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>
 	<script language="javascript" src="../lang/tran_lang_select.js"></script>
 
+
 	<script >
 	var gCurrPage="article";
 	</script>
@@ -55,9 +56,27 @@ require_once '../studio/index_head.php';
 #preview_inner{
 	background-color: var(--bg-color);
 	color: var(--main-color);
-	padding: 0.5em;
+	padding: 1em;
 }
 
+#preview_inner ul{
+	display: block;
+    list-style-type: none;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+	text-indent: -1em;
+
+}
+#preview_inner p{
+	text-indent: 2em;
+}
+#preview_inner h3 {
+    font-size: 110%;
+	text-align: center;
+}
 	</style>
 
 	<?php
@@ -107,7 +126,7 @@ require_once '../studio/index_head.php';
 				<span class="icon_btn_div">
 					<span class="icon_btn_tip"><?php echo $_local->gui->scan_in_reader ;?></span>
 					<button type="button" class="icon_btn" >
-						<a href="../article/index.php?id=<?php echo $_GET["id"];?>" target="_blank">
+						<a href="../article/index.php?view=article&id=<?php echo $_GET["id"];?>" target="_blank">
 							<svg class="icon">
 								<use xlink:href="../studio/svg/icon.svg#library"></use>
 							</svg>

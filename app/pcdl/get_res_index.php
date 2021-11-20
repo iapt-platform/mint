@@ -12,7 +12,7 @@ if (isset($_COOKIE["language"])) {
 require_once "language/db_{$lang}.php";
 
 if (isset($_GET["book"])) {
-    $book = $_GET["book"];
+    $book = (int)$_GET["book"];
 } else {
     echo "no book id";
     exit;
@@ -28,7 +28,7 @@ if (isset($_GET["album"])) {
 }
 
 if (isset($_GET["paragraph"])) {
-    $paragraph = $_GET["paragraph"];
+    $paragraph = (int)$_GET["paragraph"];
 } else {
     $paragraph = -1;
 }
@@ -90,9 +90,8 @@ if ($album == -1) {
             echo "</div>";
 
             //目录
-            $db_file = _FILE_DB_PALITEXT_;
-            PDO_Connect("$db_file");
-            $query = "select * from 'pali_text' where book = '{$book}' and ( level>'0' and level<8 ) ";
+            PDO_Connect(_FILE_DB_PALITEXT_);
+            $query = "SELECT * FROM "._TABLE_PALI_TEXT_." where book = '{$book}' and ( level>'0' and level<8 ) ";
             $Fetch_Toc = PDO_FetchAll($query);
             $iFetchToc = count($Fetch_Toc);
             if ($iFetchToc > 0) {
@@ -134,9 +133,9 @@ if ($album == -1) {
         }
     } else {
         //查书中的一个段
-        $db_file = _FILE_DB_PALITEXT_;
-        PDO_Connect("$db_file");
-        $query = "select text from 'pali_text' where book= '{$book}' and  paragraph= '{$paragraph}' ";
+
+        PDO_Connect(_FILE_DB_PALITEXT_);
+        $query = "SELECT text from "._TABLE_PALI_TEXT_." where book= '{$book}' and  paragraph= '{$paragraph}' ";
         $res_title = PDO_FetchOne($query);
         echo "<div id='album_info_head'>";
         echo "<h2>$res_title</h2>";
@@ -149,8 +148,8 @@ if ($album == -1) {
         echo "</div>";
         echo "</div>";
 
-        PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
-        $query = "select resindex.id,resindex.title,resindex.type,resindex.album,author.name from 'index' as resindex LEFT JOIN author ON resindex.author = author.id where resindex.book='$book' and resindex.paragraph=$paragraph and resindex.type<>7 group by resindex.album";
+        PDO_Connect(_FILE_DB_RESRES_INDEX_);
+        $query = "SELECT resindex.id,resindex.title,resindex.type,resindex.album,author.name from "._TABLE_RES_INDEX_." as resindex LEFT JOIN author ON resindex.author = author.id where resindex.book='$book' and resindex.paragraph=$paragraph and resindex.type<>7 group by resindex.album";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -188,11 +187,9 @@ if ($album == -1) {
         }
 
         //目录
-        $db_file = _FILE_DB_PALITEXT_;
-        PDO_Connect("$db_file");
-        $query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
-
-        $Fetch_Toc = PDO_FetchAll($query);
+        PDO_Connect(_FILE_DB_PALITEXT_);
+        $query = "SELECT * from "._TABLE_RES_INDEX_." where book = ? and level>'0' and level<8 and paragraph >= ? ";
+        $Fetch_Toc = PDO_FetchAll($query,array($book,$paragraph));
         $iFetchToc = count($Fetch_Toc);
         if ($iFetchToc > 1) {
             if ($Fetch_Toc[1]["level"] > $Fetch_Toc[0]["level"]) {
@@ -286,9 +283,8 @@ if ($album == -1) {
                 case 1:
                 case 2:
                 case 6:
-                    $db_file = _FILE_DB_PALITEXT_;
-                    PDO_Connect("$db_file");
-                    $query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 ";
+                    PDO_Connect(_FILE_DB_PALITEXT_);
+                    $query = "select * from "._TABLE_PALI_TEXT_." where book = '{$book}' and level>'0' and level<8 ";
                     break;
                 case 3:
                     $db_file = '../' . $album_file_name;
@@ -401,7 +397,7 @@ if ($album == -1) {
                 case 2:
                 case 6:
                     PDO_Connect(_FILE_DB_PALITEXT_);
-                    $query = "select * from 'pali_text' where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
+                    $query = "select * from "._TABLE_PALI_TEXT_." where book = '{$book}' and level>'0' and level<8 and paragraph>=$paragraph ";
                     break;
                 case 3:
                     $db_file = "../{$album_file_name}";

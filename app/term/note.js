@@ -45,6 +45,7 @@ function note_create() {
 	term_edit_dlg_init();
 	pali_sim_dlg_init();
 	related_para_dlg_init();
+	term_get_all_pali();
 }
 function note_sent_edit_dlg_init() {
 	$("body").append(
@@ -73,11 +74,11 @@ function note_sent_edit_dlg_init() {
 		],
 	});
 }
-function note_init(input) {
+function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
 		//output += marked(input);
-		output += marked(term_std_str_to_tran(input, "", "", "en"));
+		output += marked(term_std_str_to_tran(input, channel, editor, lang));
 
 		output += "</div>";
 
@@ -202,7 +203,7 @@ function note_refresh_new(callback = null) {
 			}
 		);
 	} else {
-		//term_get_dict();
+		term_get_dict();
 	}
 }
 
@@ -254,7 +255,12 @@ function render_read_mode_sent(iterator) {
 			.parent()
 			.parent()
 			.prepend(
-				"<div class='para_div'><div class='palitext_div'><div class='palitext palitext1'></div><div class='palitext palitext2'></div></div><div class='para_tran_div'>" +
+				"<div class='para_div'>"+
+				"<div class='palitext_div'>"+
+				"<div class='palitext palitext1'></div>"+
+				"<div class='palitext palitext2'></div>"+
+				"</div>"+
+				"<div class='para_tran_div'>" +
 					tranDivHtml +
 					"</div></div>"
 			);
@@ -280,6 +286,10 @@ function render_read_mode_sent(iterator) {
 	htmlSent += "<div class='sent_tran_div'>";
 	for (const oneTran of iterator.translation) {
 		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
+
+		//将绝对链接转换为 用户连接的主机链接
+		oneTran.text = oneTran.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+
 		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
 		html += "</span>";
 		htmlSent += html;
@@ -360,6 +370,41 @@ function note_channal_list() {
 
 						$("#channal_list").html(strHtml);
 						set_more_button_display();
+
+						let lang=new Object();
+						let currLang=_lang;
+						let firstChannel="";
+						if(_channal!=""){
+							firstChannel = _channal.split(",")[0];
+						}										
+						for (const iterator of _channalData) {
+							lang[iterator.lang]=1;
+							if(iterator.id==firstChannel){
+								currLang = iterator.lang;
+							}
+						}
+						let htmlLangSelect="<option value=''>全部语言</option>";
+						let isLangMatched=false;
+						for (const key in lang) {
+							if (lang.hasOwnProperty.call(lang, key)) {
+								let strLang = key;
+								if(gLocal.language.hasOwnProperty.call(gLocal.language, key)){
+									strLang = gLocal.language[key];
+								}
+								htmlLangSelect += "<option value='"+key+"' ";
+								if(currLang==key){
+									htmlLangSelect += "selected ";
+									isLangMatched = true;
+								}
+								htmlLangSelect +=">"+strLang+"</option>";	
+							}
+						}
+						$("#select_lang").html(htmlLangSelect);
+						if(isLangMatched){
+							render_edition_list(currLang);
+						}else{
+							render_edition_list("");
+						}
 					} catch (e) {
 						console.error(e);
 					}
@@ -368,7 +413,38 @@ function note_channal_list() {
 		);
 	}
 }
-
+function lang_changed(obj){
+	_lang = $(obj).val();
+	render_edition_list(_lang);
+}
+//顶部的版本列表
+function render_edition_list(lang=""){
+	let firstChannel="";
+	if(_channal!=""){
+		firstChannel = _channal.split(",")[0];
+	}	
+	let html = "";
+	html += "<div class='case_dropdown-content'>";
+	let currChannel="选择一个版本";
+	for (const iterator of _channalData) {
+		if(iterator.id==firstChannel){
+			currChannel = iterator.name;
+		}
+		if(lang=="" || (lang!="" && lang==iterator.lang)){
+			if (iterator["final"]){
+				html += "<a onclick=\"edition_list_changed('"+iterator.id+"')\">"+iterator.name+"</a>";
+			}
+		}
+	}
+	html +="</div>";
+	html = "<span>"+currChannel+"▼</span>" + html;
+	$("#edition_dropdown").html(html);
+}
+function edition_list_changed(channelId){
+	_channal = channelId;
+	render_edition_list(_lang);
+	set_channal(channelId);
+}
 function find_channal(id) {
 	for (const iterator of _channalData) {
 		if (id == iterator.id) {
@@ -524,13 +600,13 @@ function note_ref_init() {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=chapter&book=" + bookid + "&para=" + para, "_blank");
+		window.open("../reader/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=para&book=" + bookid + "&para=" + para, "_blank");
+		window.open("../reader/?view=para&book=" + bookid + "&par=" + para, "_blank");
 	});
 }
 /*
@@ -648,9 +724,12 @@ function note_json_html(in_json) {
 		"<span class='other_tran_span' title='🧲" +
 		gLocal.gui.other +
 		gLocal.gui.translation +
-		"'><svg class='icon' style='fill: var(--box-bg-color1)'><use xlink:href=\"../studio/svg/icon.svg#more_tran\"></svg>" +
-		gLocal.gui.translation +
-		"</span>";
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
+	output += "</svg>" ;
+	output +=	gLocal.gui.translation ;
+	output += "</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
 	output += "<span class='separate_line'></span>";
@@ -782,12 +861,44 @@ function render_icon_button(icon_id, event, tiptitle) {
 	html += "</button>";
 	return html;
 }
+var menuFocusIndex=0;
+var term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+var term_filterd_data=[];
+var term_input_text ;
+var term_input="";
 
+function TermRenderSentTranTextarea(text,dbId,sentId,channelId,isPr){
+	let html="";
+	html += '<div class="text_input" >';
+	html += '<div class="menu"></div>';
+	html += '<div class="textarea text_shadow"></div>';
+
+	html += "<textarea class='textarea tran_sent_textarea' onfocus=\"text_input_textarea_focuse(this)\"";
+	html += " dbid='" + dbId + "' ";
+	html += "sid='" + sentId + "' ";
+	html += "channel='" + channelId + "' ";
+	if (typeof isPr != "undefined" && isPr == true) {
+		html += ' is_pr="true" "';
+	} else {
+		html += 'is_pr="false"';
+	}
+
+	html += ">" ;
+	html += text;
+	html += "</textarea>";
+
+	html += '</div>';
+	return html;
+}
 function render_one_sent_tran_a(iterator, diff = false) {
 	let mChannel = get_channel_by_id(iterator.channal);
 
 	let tranText;
 	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
+
+	//将绝对链接转换为 用户连接的主机链接
+	let showText = iterator.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+
 	if (iterator.text == "") {
 		if (typeof iterator.channalinfo == "undefined") {
 			tranText =
@@ -826,7 +937,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			tranText = str_diff(orgText, iterator.text);
 		} else {
 			//note_init处理句子链接
-			tranText = note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+			tranText = note_init(term_std_str_to_tran(showText, iterator.channal, iterator.editor, iterator.lang));
 		}
 	}
 	let html = "";
@@ -993,16 +1104,11 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	html += '<div class="edit">';
 	html += '<div class="input">';
-	html += "<textarea class='tran_sent_textarea' dbid='" + iterator.id + "' ";
-	html += "sid='" + sid + "' ";
-	html += "channel='" + iterator.channal + "' ";
-	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
-		html += ' is_pr="true" onchange1="note_pr_save(this)"';
-	} else {
-		html += 'is_pr="false" onchange1="note_sent_save_a(this)"';
-	}
 
-	html += ">" + iterator.text + "</textarea>";
+	//输入框
+	html += TermRenderSentTranTextarea(iterator.text,iterator.id,sid,iterator.channal,iterator.is_pr);
+
+
 	html += "</div>";
 	html += '<div class="edit_tool">';
 	//html += ""
@@ -1806,7 +1912,7 @@ function copy_ref(book, para, begin, end) {
 }
 
 function goto_nissaya(book, para, begin = 0, end = 0) {
-	window.open("../nissaya/index.php?book=" + book + "&para=" + para + "&begin=" + begin + "&end=" + end, "nissaya");
+	window.open("../nissaya/index.php?book=" + book + "&par=" + para + "&begin=" + begin + "&end=" + end, "nissaya");
 }
 function edit_in_studio(book, para, begin, end) {
 	wbw_channal_list_open(book, [para]);
@@ -1861,13 +1967,15 @@ function set_pali_script(pos, script) {
 			switch(script){
 				case "မြန်မာ":
 					return roman_to_my(oldcontent);
+				case "My2Roman":
+					return my_to_roman(oldcontent);
 				case "සිංහල":
 					return roman_to_si(oldcontent);
 				case "ᨲ᩠ᩅᩫᨴᩱ᩠ᨿᨵᨾ᩠ᨾ᩼":
 					return roman_to_tai(oldcontent);
 				case "อักษรไทย":
 					return roman_to_thai(oldcontent);
-					default:
+				default:
 					return(oldcontent);
 			}
 			
@@ -2033,4 +2141,276 @@ function setDisplay(obj) {
 //获取文章中H 并渲染为目录
 function render_heading_toc() {
 	//$(":header")
+}
+
+
+//术语输入At 
+const _term_max_menu=9;
+function term_set_word_list_data(el){
+	let sid = $(el).attr("sid");
+	let asid = sid.split("-");
+	let words=new Array();
+	let tmpWords = [];
+	term_data=[];
+	for (const it of _arrData) {
+		if(it.book==asid[0] && it.para==asid[1] && it.begin==asid[2] && it.end==asid[3]){
+			let palitext = it.palitext;
+			words = palitext.split(" ");
+		}
+	}
+	console.log("word",words);
+	//查询parent
+	for (let index = 0; index < words.length; index++) {
+		words[index] = com_getPaliReal(words[index]);
+		if(words[index]!=""){
+			let parents = term_parent(words[index]);
+
+			for (const key in parents) {
+				if (parents.hasOwnProperty.call(parents, key)) {		
+					//term_data.push({word:key,en:com_getPaliEn(key),weight:weight});
+					tmpWords[key]={word:key,en:com_getPaliEn(key),weight:3,exist:0};
+				}
+			}
+		}
+	}
+	for (const iterator of arrTermAllPali) {
+		if(tmpWords.hasOwnProperty(iterator.word)){
+			tmpWords[iterator.word].weight+=1;
+			tmpWords[iterator.word].exist=1;
+		}else{
+			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:1};
+		}
+	}	
+	//arrMyTerm 词头查重
+	let tmpMyTerm=[];
+	for (const iterator of arrMyTerm) {
+		tmpMyTerm[iterator.word]=1;
+	}
+	//加入到列表
+	//在我的字典中的排名靠前
+	for (const key in tmpMyTerm) {
+		if (tmpMyTerm.hasOwnProperty.call(tmpMyTerm, key)) {
+			if(tmpWords.hasOwnProperty(key)){
+				tmpWords[key].weight+=1;
+				tmpWords[key].exist=2;
+			}else{
+				tmpWords[key]={word:key,en:com_getPaliEn(key),weight:1,exist:2};
+			}
+		}
+	}
+
+	for (const key in tmpWords) {
+		if (tmpWords.hasOwnProperty.call(tmpWords, key)) {
+			const element = tmpWords[key];
+			term_data.push(element);
+		}
+	}
+	term_data.sort(function(a,b){
+		return b.weight-a.weight;
+	});
+
+}
+
+function text_input_textarea_focuse(el){
+	term_set_word_list_data(el);
+	term_input_text = el;
+	term_input_text.onresize = function(){
+		term_input_text.parentElement.querySelector(".text_shadow").style.height=term_input_text.clientHeight+"px";
+	}
+	term_input_text.onkeydown = function (e) {
+	
+		let menu = term_input_text.parentElement.querySelector('.menu');
+		switch (e.key) {
+			case "ArrowDown"://down arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex++;
+					if(menuFocusIndex>_term_max_menu){
+						menuFocusIndex=_term_max_menu;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+				break;
+			case "ArrowUp"://up arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex--;
+					if(menuFocusIndex<0){
+						menuFocusIndex=0;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+			break;
+			case "Enter":
+				if(menu.style.display=="block"){
+					term_insert(term_filterd_data[menuFocusIndex]);
+					return false;
+				}
+				if (e.ctrlKey) {
+					//回车存盘
+					tran_sent_save(e.currentTarget);
+					return false;
+				}
+				break;
+			case "Escape":
+				if(menu.style.display=="block"){
+					term_at_menu_hide();
+				}else{
+					tran_sent_edit_cancel(e.currentTarget);
+				}
+				
+				break;
+			default:
+				break;
+		}
+	}
+	term_input_text.onkeyup = function (e) {
+		let textHeight = term_input_text.parentElement.querySelector(".text_shadow").scrollHeight;
+		let textHeight2 = term_input_text.clientHeight;
+		if(textHeight2>textHeight){
+			textHeight=textHeight2;
+		}
+		term_input_text.style.height = textHeight+"px";
+		console.log("text height",textHeight);
+
+	let value = term_input_text.value
+	let selectionStart = term_input_text.selectionStart
+	let str1 = value.slice(0, selectionStart)
+	let str2 = value.slice(selectionStart)
+	let textNode1 = document.createTextNode(str1)
+	let textNode2 = document.createTextNode(str2)
+	let cursor = document.createElement('span')
+	cursor.innerHTML = '&nbsp;'
+	cursor.setAttribute('class','cursor')
+	let mirror = term_input_text.parentElement.querySelector('.text_shadow')
+	mirror.innerHTML = ''
+	mirror.appendChild(textNode1)
+	mirror.appendChild(cursor)
+	mirror.appendChild(textNode2)
+	let menu = term_input_text.parentElement.querySelector('.menu');	
+	if(str1.slice(-2)=="[[" ){
+		if( menu.style.display!="block"){
+			menuFocusIndex=0;
+			menu.innerHTML=TermAtRenderMenu({focus:0});
+			term_at_menu_show(cursor);
+		}
+	}else{
+		if( menu.style.display=="block"){
+			let pos1=str1.lastIndexOf("[[");
+			let pos2=str1.lastIndexOf("]]");
+			if(pos1==-1 || (pos1!=-1 && pos2>pos1)){
+				//光标前没有[[ 或 光标在[[]] 之后
+				term_at_menu_hide();
+			}
+		}
+	}
+
+	
+	if(menu.style.display=="block"){
+		//term_input += e.key;
+		let value = term_input_text.value
+		let selectionStart = term_input_text.selectionStart
+		let str1 = value.slice(0, selectionStart)
+		let str2 = value.slice(selectionStart)
+		let pos1=str1.lastIndexOf("[[");
+		let pos2=str1.lastIndexOf("]]");
+		if(pos1!=-1){
+			if(pos2==-1 || pos2<pos1){
+				//光标
+				term_input = str1.slice(str1.lastIndexOf("[[")+2);
+			}
+		}
+		console.log("term_input",term_input);
+		menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+	}
+
+	console.log(e.key);
+	console.log(cursor.offsetLeft,cursor.offsetTop)
+}
+
+}
+function term_at_menu_show(cursor){
+	menuFocusIndex=0;
+	let menu = term_input_text.parentElement.querySelector('.menu');
+	menu.style.display="block";
+	menu.style.top=cursor.offsetTop+20+"px";
+	menu.style.left=cursor.offsetLeft+"px";
+	$(document).on("keyup", function (e) {
+		if(e.key=="Escape"){
+			term_at_menu_hide();
+		}
+	});
+}
+function term_at_menu_hide(){
+	let menu = term_input_text.parentElement.querySelector('.menu');
+	menu.style.display="none";
+	term_input="";
+}
+function term_insert(strTerm){
+	let value = term_input_text.value;
+	let selectionStart = term_input_text.selectionStart;
+	let str1 = value.slice(0, selectionStart)
+	let str2 = value.slice(selectionStart)
+	let pos1=str1.lastIndexOf("[[");
+	let pos2=str1.lastIndexOf("]]");
+	if(pos1!=-1){
+		//光标前有[[
+		if(pos2==-1 || pos2<pos1){
+			//光标在[[之间]]
+			str1 = str1.slice(0,str1.lastIndexOf("[[")+2);
+		}
+	}
+
+	//TODO 光标会跑到最下面
+	term_input_text.value = str1+strTerm+"]]"+str2;
+	term_at_menu_hide();
+}
+function TermAtRenderMenu(params) {
+	term_filterd_data=[];
+	let html="";
+	html +="<div class='term_at_menu_input'>"+term_input+"|</div>";
+	html +="<ul class='term_at_menu_ul'>";
+	let index=0;
+	let focusIndex = params.focus%term_data.length;
+	for (const it of term_data) {
+		if(term_input=="" || it.word.indexOf(term_input)==0 || it.en.indexOf(term_input)==0){
+			
+			html +="<li ";
+			if(focusIndex==index){
+				html +="class='trem_focus' "
+			}
+			html += "onclick=\"term_insert('"+it.word+"')\" ";
+			
+			html +=">";
+			html += (index+1)+ ". ";
+			if(it.exist>0){
+				html += "<b>"+it.word+"</b>";
+			}else{
+				html +=it.word;
+			}
+			html +="<li>";
+			term_filterd_data.push(it.word);
+			if(index >= _term_max_menu){
+				break;
+			}
+			index++;
+		}
+		
+	}
+	return html;
+}
+
+//添加自动格位数据到内存字典
+function term_parent(paliword) {
+	let output=[];
+	for (const it of gCaseTable) {
+		if (it.type != ".v.") {
+			let sEnd2 = paliword.slice(0 - it.end2.length);
+			if (sEnd2 == it.end2) {
+				let wordParent = paliword.slice(0, 0 - it.end2.length) + it.end1;
+				output[wordParent]=1;
+			}
+		}		
+	}
+	return output;
 }

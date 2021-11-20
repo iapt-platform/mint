@@ -1,5 +1,34 @@
 <?php
+/*
+用csv 单词列表文件更新 wordindex and word
+可以用 db_insert_word_from_csv.php取代
+*/
 require_once "install_head.php";
+
+function dict_lookup($word)
+{
+    global $dbh_word_index;
+    $query = "select * from wordindex where \"word\" = ? ";
+    $stmt = $dbh_word_index->prepare($query);
+    $stmt->execute(array($word));
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getWordEn($strIn)
+{
+    $out = $strIn;
+    $out = str_replace("ā", "a", $out);
+    $out = str_replace("ī", "i", $out);
+    $out = str_replace("ū", "u", $out);
+    $out = str_replace("ṅ", "n", $out);
+    $out = str_replace("ñ", "n", $out);
+    $out = str_replace("ṭ", "t", $out);
+    $out = str_replace("ḍ", "d", $out);
+    $out = str_replace("ṇ", "n", $out);
+    $out = str_replace("ḷ", "l", $out);
+    $out = str_replace("ṃ", "m", $out);
+    return ($out);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,11 +74,11 @@ $aNewWordIndex = array(); //词内容
 $sNewWord = array(); //词头索引
 
 global $dbh_word_index;
-$dns = "" . _FILE_DB_WORD_INDEX_;
-$dbh_word_index = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_WORD_INDEX_;
+$dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$query = "select id from wordindex where 1 order by id DESC ";
+$query = "SELECT id from "._TABLE_WORD_INDEX_." where true order by id DESC ";
 $stmt = $dbh_word_index->prepare($query);
 $stmt->execute(array());
 $id = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -59,8 +88,8 @@ if ($id === false) {
     $wordindex_max_index = $id["id"];
 }
 $db_file = _FILE_DB_PALI_INDEX_;
-PDO_Connect("$db_file");
-$query = "select id from word where 1 order by id DESC ";
+PDO_Connect($db_file,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT id from "._TABLE_WORD_." where true order by id DESC ";
 $stmt = $PDO->prepare($query);
 $stmt->execute(array());
 $id = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -69,30 +98,8 @@ if ($id === false) {
 } else {
     $g_wordCounter = $id["id"];
 }
-function dict_lookup($word)
-{
-    global $dbh_word_index;
-    $query = "select * from wordindex where \"word\" = ? ";
-    $stmt = $dbh_word_index->prepare($query);
-    $stmt->execute(array($word));
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
 
-function getWordEn($strIn)
-{
-    $out = $strIn;
-    $out = str_replace("ā", "a", $out);
-    $out = str_replace("ī", "i", $out);
-    $out = str_replace("ū", "u", $out);
-    $out = str_replace("ṅ", "n", $out);
-    $out = str_replace("ñ", "n", $out);
-    $out = str_replace("ṭ", "t", $out);
-    $out = str_replace("ḍ", "d", $out);
-    $out = str_replace("ṇ", "n", $out);
-    $out = str_replace("ḷ", "l", $out);
-    $out = str_replace("ṃ", "m", $out);
-    return ($out);
-}
+
 
 if (($handle = fopen("filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
@@ -103,7 +110,6 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-//for($iFile=$from;$iFile<=$to;$iFile++)
 $iFile = $from;
 {
 
@@ -140,7 +146,7 @@ $iFile = $from;
 
     // 开始一个事务，关闭自动提交
     $PDO->beginTransaction();
-    $query = "INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
+    $query = "INSERT INTO "._TABLE_WORD_." ( id , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
     $stmt = $PDO->prepare($query);
     $count = 0;
     $count1 = 0;
@@ -240,7 +246,7 @@ $iFile = $from;
 //首先插入新的词
 // 开始一个事务，关闭自动提交
 $dbh_word_index->beginTransaction();
-$query = "INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO "._TABLE_WORD_INDEX_." ('id','word','word_en','count','normal','bold','is_base','len') VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $dbh_word_index->prepare($query);
 
 echo "INSERT:" . count($aNewWordIndex) . "words<br>";
@@ -272,7 +278,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 //然后修改已经有的词
 // 开始一个事务，关闭自动提交
 $dbh_word_index->beginTransaction();
-$query = "UPDATE wordindex SET count = ? , normal = ? , bold = ?   where  id = ?  ";
+$query = "UPDATE "._TABLE_WORD_INDEX_." SET count = ? , normal = ? , bold = ?   where  id = ?  ";
 $stmt = $dbh_word_index->prepare($query);
 
 echo "UPDATE:" . count($iAllWordIndex) . "words<br>";

@@ -4,6 +4,7 @@ var dict_search_xml_http = null;
 var _autoSplit = true;
 
 function dict_search(word, autoSplit = true) {
+	word = word.replace(/[\[\]]/g,"");
 	_autoSplit = autoSplit;
 	$("#pre_search_result").hide();
 	if (!localStorage.searchword) {
@@ -338,4 +339,12 @@ function setNaviVisibility(strObjId = "") {
 		objblack.style.display = "block";
 		objNave.className = "dict_list_on";
 	}
+}
+
+function refDictShowTranslateDiv(obj){
+	$(this).parent().children().find(".tool_innter").slideToggle();
+}
+
+function SaveToMyDict(){
+
 }

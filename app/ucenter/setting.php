@@ -24,7 +24,6 @@ require_once '../public/function.php';
 		
 		var g_device="computer";
 		var strSertch = location.search;
-		var gConfigDirMydocument="<?php echo _DIR_USER_DOC_."/".$userid._DIR_MYDOCUMENT_; ?>/";
 		
 		if(strSertch.length>0){
 			strSertch = strSertch.substr(1);
@@ -253,7 +252,7 @@ para:hover{
 
             echo "{$_local->gui->username}：{$_COOKIE["username"]} <button>{$_local->gui->modify}</button><br />";
             echo "{$_local->gui->nick_name}：{$_COOKIE["nickname"]} <button>{$_local->gui->modify}</button><br />";
-            echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>{$_local->gui->modify}</button><br />";
+            //echo "{$_local->gui->e_mail}：{$_COOKIE["email"]}<button>{$_local->gui->modify}</button><br />";
             echo "<a href='../ucenter/pwd_set.php'>{$_local->gui->change_password}</a><br>";
 			echo "<a href='login.php?op=logout'>{$_local->gui->logout}</a>";
 			echo "</div>";

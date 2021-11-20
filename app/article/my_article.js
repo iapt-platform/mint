@@ -24,7 +24,6 @@ function my_article_list() {
 					html += "<div style='flex:0.5;'>No.</div>";
 					html += "<div style='flex:4;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
-					html += "<div style='flex:1;'>" + gLocal.gui.edit + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.share_to + "</div>";
@@ -33,28 +32,18 @@ function my_article_list() {
 					for (const iterator of result) {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
-						html += "<div style='flex:0.5;'>" + key++ + "</div>";
-						html += "<div style='flex:4;'>" + iterator.title + "</div>";
-						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/my_article_edit.php?id=" +
-							iterator.id +
-							"' title='" +
-							gLocal.gui.edit +
-							"'>";
-						html += "<button class='icon_btn'>";
-						html += "<svg class='icon'>";
-						html += "<use xlink:href='../studio/svg/icon.svg#ic_mode_edit'></use>";
-						html += "</svg>";
-						html += "</button>";
+						html += "<div style='flex:0.5;'>" + key + "</div>";
 
-						html += "</a></div>";
-						html +=
-							"<div style='flex:1;'><a href='../article/?id=" +
-							iterator.id +
-							"' target='_blank' title='" +
-							gLocal.gui.preview +
-							"' >";
+						html += "<div style='flex:4;'>" ;
+						html += "<a href='../article/my_article_edit.php?id=" + iterator.id + "' title='" + gLocal.gui.edit + "'>";						
+						html += iterator.title ;
+						html += "</a>";
+						html += "</div>";
+
+						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
+						
+						html += "<div style='flex:1;'>";
+						html += "<a href='../article/?view=article&id=" + iterator.id + "' target='_blank' title='" + gLocal.gui.preview + "' >";
 						html += "<button class='icon_btn'>";
 						html += "<svg class='icon'>";
 						html += "<use xlink:href='../studio/svg/icon.svg#preview'></use>";
@@ -63,7 +52,7 @@ function my_article_list() {
 						html += "</a></div>";
 						html += "<div style='flex:1;'>";
 						html +=
-							"<button class='icon_btn' onclick=\"copy_to_clipboard('www.wikipali.org/app/article/?id=" +
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('"+WWW_DOMAIN_NAME+"/app/article/?id=" +
 							iterator.id +
 							"')\" title='" +
 							gLocal.gui.copy_link +
@@ -203,31 +192,55 @@ function my_article_edit(id) {
 					html += "</div>";
 
 					html += "<div>";
-					//html += "<div id='article_collect' vui='collect-dlg' ></div>"
+
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
 					html += '<span id="article_title" style="flex:7;"></span>';
 					html += "</div>";
+
+					html += "<div style='display:flex;'>";
+					html += "<span style='flex:1;'>" + gLocal.gui.sub_title + "</span>";
+					html += '<span id="article_title" style="flex:7;">';
+					if(!result.subtitle){
+						result.subtitle="";
+					}
+					html += '<input type="input" name="subtitle" value="'+result.subtitle+'" />'
+					html += '</span>';
+					html += "</div>";
+
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
 					html += '<span id="aritcle_status" style="flex:7;"></span>';
 					html += "</div>";
-					html += '<div style="width:100%;" >';
+
+					let lang;
+					if(typeof result.lang == "undefined"){
+						lang = "en";
+						
+					}else{
+						lang = result.lang;
+					}
+					 
+					html += '<div style="width:100%;display:flex;" >';
 					html +=
-						'<span style="flex:3;margin: auto;">' +
+						'<span style="flex:1;margin: auto;">' +
 						gLocal.gui.language_select +
-						'</span>	<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
+						'</span>';
+					html +='<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
 						gLocal.gui.input +
 						" & " +
 						gLocal.gui.language_select +
 						"，" +
 						gLocal.gui.example +
 						'：Engilish" code="' +
-						result.lang +
+						lang +
 						'" value="' +
-						result.lang +
-						'" > <input id="article_lang" type="hidden" name="lang" value=""></div>';
+						lang +
+						'" >';
+					html +=' <input id="article_lang" type="hidden" name="lang" value="'+lang+'">';
+					html +='</div>';
+
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
 					html += "<textarea style='flex:7;' name='summary' >" + result.summary + "</textarea></div>";
@@ -268,7 +281,7 @@ function my_article_edit(id) {
 }
 function article_lang_change() {
 	let lang = $("#article_lang_select").val();
-	if (lang.split("-").length == 3) {
+	if (lang.split("_").length == 3) {
 		$("#article_lang").val(lang.split("_")[2]);
 	} else {
 		$("#article_lang").val(lang);

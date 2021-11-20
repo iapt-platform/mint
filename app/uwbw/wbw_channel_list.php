@@ -4,6 +4,7 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../share/function.php';
 require_once '../channal/function.php';
+require_once '../ucenter/function.php';
 require_once '../redis/function.php';
 
 $redis = redis_connect();
@@ -14,7 +15,7 @@ $output["data"] = "";
 if (!isset($_COOKIE["userid"])) {
     $output["status"] = 1;
     $output["error"] = "#not_login";
-    echo json_encode(output, JSON_UNESCAPED_UNICODE);
+    echo json_encode($output, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -30,14 +31,14 @@ $params[] = $_book;
 
 #查重复
 $channelList = array();
-
+#先查自己的
 PDO_Connect(_FILE_DB_CHANNAL_);
-$query = "SELECT id FROM channal WHERE owner = ?  LIMIT 0,100";
+$query = "SELECT id FROM channal WHERE owner = ? and status>0 LIMIT 0,100";
 $FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
 
 foreach ($FetchChannal as $key => $value) {
 	# code...
-	$channelList[$value["id"]]=array("power"=>30);
+	$channelList[$value["id"]]=array("power"=>30,"type"=>"my");
 }
 
 # 找协作的
@@ -50,7 +51,7 @@ foreach ($coop_channal as $key => $value) {
 		}
 	}
 	else{
-		$channelList[$value["res_id"]]=array("power"=>(int)$value["power"]);
+		$channelList[$value["res_id"]]=array("power"=>(int)$value["power"],"type"=>"collaborate");
 	}
 }
 
@@ -61,11 +62,12 @@ $publicChannel = PDO_FetchAll($query, $params);
 foreach ($publicChannel as $key => $channel) {
 	# code...
 	if(!isset($channelList[$channel["channal"]])){
-		$channelList[$channel["channal"]]=array("power"=>10);
+		$channelList[$channel["channal"]]=array("power"=>10,"type"=>"public");
 	}
 }
 
 $channelInfo = new Channal($redis);
+$userInfo = new UserInfo();
 $i = 0;
 $outputData = array();
 
@@ -81,6 +83,7 @@ foreach ($channelList as $key => $row) {
     $channelList[$key]["id"] = $info["id"];
     $channelList[$key]["name"] = $info["name"];
     $channelList[$key]["lang"] = $info["lang"];
+	$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
 	$outputData[]=$channelList[$key];
 }
 

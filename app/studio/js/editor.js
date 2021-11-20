@@ -185,7 +185,8 @@ function dict_active(obj, dictIndex) {
 }
 
 function editor_windowsInit() {
-	$("see").click(function () {
+	renderChannelList();
+	$("see").on("click",function () {
 		var to = $(this).attr("to");
 		var link;
 		if (to) {
@@ -220,9 +221,11 @@ function editor_windowsInit() {
 					g_book = item[1];
 					break;
 				case "para":
+				case "par":
 					g_para = item[1];
 					break;
 				case "channal":
+				case "channel":
 					g_channal = item[1];
 					break;
 			}
@@ -268,6 +271,7 @@ function editor_windowsInit() {
 			}
 			break;
 		case "openchannal":
+		case "openchannel":
 			editor_openChannal(g_book, g_para, g_channal);
 			break;
 		case "import":
@@ -3041,7 +3045,9 @@ function on_word_click(sWordId) {
 
 	//参考字典
 	if (mouse_action_lookup) {
-		dict_search(sReal);
+		//dict_search(sReal);
+		window.open("../dict/index.php?builtin=true&theme=dark&key="+sReal,target="dict");
+
 	}
 
 	//添加词到翻译框
@@ -3148,7 +3154,7 @@ function showModifyWin(sWordId) {
 			document.getElementById("edit_detail_prt_prt").style.display = "none";
 			document.getElementById("svg_parent2").style.transform = "rotate(0deg)";
 		}
-		document.getElementById("parent_grammar").innerHTML = sParentGrammar;
+		document.getElementById("parent_grammar").innerHTML = getLocalGrammaStr(sParentGrammar);
 		$("#id_text_prt_prt").val(sParent2);
 
 		//右侧修改菜单
@@ -3156,6 +3162,7 @@ function showModifyWin(sWordId) {
 		$("#word_mdf_parts_dropdown").html(render_word_menu_parts(sWordId, 1));
 		$("#word_mdf_case_dropdown").html(render_word_menu_gramma(sWordId, 1));
 		$("#word_mdf_parent_dropdown").html(render_word_menu_parent(sWordId));
+		$("#word_mdf_prt_prt_dropdown").html(render_word_menu_parent_parent(sWordId));
 
 		let typeAndGramma = sCase.split("#");
 		if (typeAndGramma.length > 1) {
@@ -3332,7 +3339,7 @@ function showModifyWin(sWordId) {
 		var eDetail = document.getElementById(sDetail);
 		eWord.insertBefore(eWin, eDetail);
 
-		document.getElementById("dict_ref_search_input").value = sReal;
+		//document.getElementById("dict_ref_search_input").value = sReal;
 
 		//editor_refresh_inline_dict(sReal);
 	}
@@ -3536,7 +3543,13 @@ function refreshPartMeaningSelect() {
 }
 //编辑窗口拆分意思复制到整体意思
 function copy_part_mean_to_mean() {
-	$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	let meaning = g_arrPartMean.join("");
+	if(testCJK(meaning)){
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(""), "[", "]"));
+	}else{
+		$("#input_meaning").val(removeFormulaB(g_arrPartMean.join(" "), "[", "]"));
+	}
+	
 }
 //编辑窗口拆分意思下拉菜单
 function getMeaningMenuList(index, word) {
@@ -3552,7 +3565,7 @@ function getMeaningMenuList(index, word) {
 	if (part_mean_display_array.length - 1 >= index) {
 		currMeaningList.push(part_mean_display_array[index]);
 	} else {
-		currMeaningList.push("↓↓");
+		currMeaningList.push(" ");
 	}
 	for (const iterator of currMeaningList0) {
 		if (iterator != "") {
@@ -3572,50 +3585,26 @@ function getMeaningMenuList(index, word) {
 		currMean = g_arrPartMean[index];
 	}
 	if (currMean == "") {
-		currMean = "↓↓";
+		currMean = " ";
 	}
 	output += currMean + "</p>";
 
 	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
 	//直列菜单
-	for (i in currMeaningList) {
-		output +=
-			"<a onclick='meaningPartChange(" +
-			index +
-			',"' +
-			currMeaningList[i] +
-			"\")'>" +
-			currMeaningList[i] +
-			"</a>";
+	output += "<a onclick='meaningPartLookup(\"" +word +"\")'>🔍" +gLocal.gui.dict +"</a>";	
+	for (const itMean of currMeaningList) {
+		if(itMean!="?"){
+			output += "<a onclick='meaningPartChange(" +index +	',"' +itMean +	"\")'>" +itMean +"</a>";					
+		}
+
 	}
 
-	//带字典名的菜单
-	/*
-	if(mDict[word]){
-		for(var j=0;j<mDict[word].length;j++){
-			//
-			output += "<div class='om_menu'>";
-			var dictName = mDict[word][j].dict_name;
-			if(dictName==""){
-				dictName="未知";
-			}
-			output += "<span>"+dictName+"</span>";
-			var currOM=mDict[word][j].mean.split("$");
-			for(var iMean in currOM){
-				if(currOM[iMean].length>0 && currOM[iMean]!="?"){
-					output +="<a  onclick='meaningPartChange("+index+",\""+currOM[iMean]+"\")'>"+currOM[iMean]+"</a>";
-				}
-			}
-			output +="</div>";			
-		}
-	}
-	else{
-		output += "未知";
-	}
-	*/
 	output += "</div>";
 	output += "</div>";
 	return output;
+}
+function meaningPartLookup(word){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+word,target="dict");
 }
 function getWordMeaningList(word) {
 	var currOM = "";
@@ -4077,7 +4066,7 @@ function editor_parse_doc_xml(xmlText) {
 	updataToc();
 	//渲染数据块
 	blockShow(0);
-	refreshResource();
+	//refreshResource();
 	editro_layout_loadStyle();
 }
 
@@ -4182,23 +4171,35 @@ function on_word_mouse_enter() {
 						url: "./dict_find_one.php",
 						dataType: "json",
 						data: "word=" + paliword,
-						success: function (response) {
-							inline_dict_parse(response);
-							render_word_menu(_curr_mouse_enter_wordid);
-						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							ntf_show(xhr.status + thrownError);
-						},
+					}).done(function (data) {
+						inline_dict_parse(data);
+						render_word_menu(_curr_mouse_enter_wordid);
+					}).fail(function(jqXHR, textStatus, errorThrown){
+						ntf_show(textStatus);
+						switch (textStatus) {
+							case "timeout":
+								break;
+							case "error":
+								switch (jqXHR.status) {
+									case 404:
+										break;
+									case 500:
+										break;				
+									default:
+										break;
+								}
+								break;
+							case "abort":
+								break;
+							case "parsererror":			
+								console.log("parsererror",jqXHR.responseText);
+								break;
+							default:
+								break;
+						}
+						
 					});
-					/*
-					$.get(
-						"dict_find_one.php",
-						{
-							word: paliword,
-						},
-						on_dict_lookup
-					);
-*/
+
 				}
 			}
 		}
@@ -4285,24 +4286,24 @@ function inline_dict_parse(data) {
 }
 //添加自动格位数据到内存字典
 function inline_dict_auto_case(paliword) {
-	for (let i in gCaseTable) {
-		if (gCaseTable[i].type != ".v.") {
-			let sEnd2 = gCurrLookupWord.slice(0 - gCaseTable[i].end2.length);
-			if (sEnd2 == gCaseTable[i].end2) {
-				let wordParent = gCurrLookupWord.slice(0, 0 - gCaseTable[i].end2.length) + gCaseTable[i].end1;
+	for (const it of gCaseTable) {
+		if (it.type != ".v.") {
+			let sEnd2 = gCurrLookupWord.slice(0 - it.end2.length);
+			if (sEnd2 == it.end2) {
+				let wordParent = gCurrLookupWord.slice(0, 0 - it.end2.length) + it.end1;
 				let newWord = new Object();
 				newWord.pali = gCurrLookupWord;
-				newWord.type = gCaseTable[i].type;
-				newWord.gramma = gCaseTable[i].gramma;
+				newWord.type = it.type;
+				newWord.gramma = it.gramma;
 				newWord.parent = wordParent;
 				newWord.mean = "";
 				newWord.note = "";
-				newWord.parts = wordParent + "+[" + gCaseTable[i].end2 + "]";
+				newWord.parts = wordParent + "+[" + it.end2 + "]";
 				newWord.partmean = "";
-				newWord.confidence = gCaseTable[i].confidence;
+				newWord.confidence = it.confidence;
 				mDict[paliword].push(newWord);
 			}
-		}
+		}		
 	}
 }
 
@@ -4743,6 +4744,7 @@ function render_word_menu_parent(id) {
 	if (!str_in_array(word_real, sWord)) {
 		sWord.push(word_real);
 	}
+	output += "<a onclick=\"ParentLookup('"+$("#id_text_parent").val()+"')\">🔍" +gLocal.gui.dict +"</a>";
 
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
@@ -4756,7 +4758,71 @@ function render_word_menu_parent(id) {
 	}
 	return output;
 }
+/*
+渲染单词语基下拉菜单
+id	单词id
 
+
+return	无
+*/
+function render_word_menu_parent_parent(id) {
+	let output = "";
+	let word_parent = doc_word("#" + id).val("parent");
+	let word_parent2 = doc_word("#" + id).val("parent2");
+	let word_pg = doc_word("#" + id).val("pg");
+	let arrParent = new Array();
+	//检索语基
+	if (word_parent2 != "") {
+		//arrParent[word_parent2+"#"+word_pg] = 1;
+	}
+	if (mDict[word_parent]) {
+		for (let i in mDict[word_parent]) {
+			if (mDict[word_parent][i].parent && mDict[word_parent][i].parent!=word_parent && mDict[word_parent][i].parent.length > 0) {
+				arrParent[mDict[word_parent][i].parent+"#"+mDict[word_parent][i].gramma] = 1;
+			}
+		}
+	}
+	let sWord = new Array();
+	for (const key in arrParent) {
+		if (arrParent.hasOwnProperty.call(arrParent, key)) {
+			sWord.push(key);
+		}
+	}
+
+
+	if($("#id_text_prt_prt").val()!=""){
+		output += "<a onclick=\"ParentLookup('"+$("#id_text_prt_prt").val()+"')\">🔍" +gLocal.gui.dict +"</a>";
+	}
+	output += "<a onclick=\"parent_parent_changed('','')\">清空</a>";
+
+	for (const it of sWord) {
+		let pali = it.split("#");
+		if(pali.length<2){
+			pali[1]="";
+		}
+		output += "<a onclick=\"parent_parent_changed('" + pali[0] + "','" + pali[1] + "')\" style='display:flex;justify-content: space-between;'>";
+		if (word_parent2 == pali[0]) {
+			output += "<b>" + pali[0] + "</b>";
+		} else {
+			output += "<span>" +pali[0]+ "</span>";
+		}
+		output += "<span style='background-color: wheat;'>" +pali[1]+ "</span>";
+		output += "</a>";		
+	}
+	for (let iWord in sWord) {
+
+	}
+	return output;
+}
+
+function parent_parent_changed(spell,grammar){
+	mdf_win_data_change('id_text_prt_prt',spell);
+	edit_parent_grammar_changed(grammar);
+}
+
+function ParentLookup(word){
+	window.open("../dict/index.php?builtin=true&theme=dark&key="+word,target="dict");
+}
 function show_word_menu_partmean(id) {
 	var word_partmean_div = document.getElementById("partmean_" + id);
 	if (word_partmean_div) {
@@ -4845,8 +4911,8 @@ function editor_project_updataProjectInfo() {
 	strInfo += gLocal.gui.innerdict + "：" + iInlineDictCount + "<br />";
 	strInfo += gLocal.gui.vocabulary + CountVocabulary() + "<br />";
 
-	document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
-	document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
+	//document.getElementById("id_editor_project_infomation").innerHTML = strInfo;
+	//document.getElementById("doc_info_title").value = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("editor_doc_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 	document.getElementById("file_title").innerHTML = getNodeText(gXmlBookDataHead, "doc_title");
 }
@@ -5584,4 +5650,22 @@ function oldVerDataParse(oldXmlData) {
 
 function add_part(part) {
 	$("#input_org").val(part);
+}
+
+function edit_show_prt_prt(obj){
+	let o = obj.getElementsByTagName("svg");
+	if(document.getElementById("edit_detail_prt_prt").style.display=="none"){
+		document.getElementById("edit_detail_prt_prt").style.display="block";
+		o[0].style.transform="rotate(90deg)";
+	}
+	else{
+		document.getElementById("edit_detail_prt_prt").style.display="none";
+		o[0].style.transform="rotate(0deg)";
+	}
+}
+
+function edit_parent_grammar_changed(str){
+	document.getElementById("parent_grammar").innerHTML=getLocalGrammaStr(str);
+	document.getElementById("input_parent_grammar").value=str;
+	
 }

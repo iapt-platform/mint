@@ -392,9 +392,9 @@ else{
 <div id="login_right">
 
 	<div class="help_div">
-		<div  class="htlp_title"><?php echo $_local->gui->preference;?></div>
+		<div  class="htlp_title"><?php echo $_local->gui->preference."(".$_local->gui->undone_function.")";?></div>
 		<div>
-			<div class="help_fun_block">
+			<div class="help_fun_block" style="display:none;">
 				<div class="title" ><?php echo $_local->gui->language;?></div>
 				<div >
 					<?php echo $_local->gui->interface;?>：<a>English</a> <a>简体中文</a> <a>繁體中文</a><a>සින්හල</a> <a>မြန်မာ</a> <a><?php echo $_local->gui->more;?></a>
@@ -423,7 +423,7 @@ else{
 
 	<div class="help_div">
 		<div  class="htlp_title">
-			<?php echo $_local->gui->statistical_data;?>
+			<?php echo $_local->gui->statistical_data."(".$_local->gui->undone_function.")";?>
 		</div>
 		<div>
 			<div class="help_fun_block">

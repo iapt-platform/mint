@@ -13,7 +13,7 @@
 	border-radius: 8px;
 	-webkit-transition-duration: 0.5s;
 	transition-duration: 0.5;
-	z-index: 2000;
+	z-index: 0;
 }
 .pcd_notify_bar {
 	position: fixed;

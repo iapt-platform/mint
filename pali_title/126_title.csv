@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p126,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p126,2,100,nikaya,,Khuddakanikāye
 NULL,p126,3,1,book,Vimānavatthu-aṭṭhakathā,Vimānavatthu-aṭṭhakathā
-NULL,p126,4,3,subsubhead,Ganthārambhakathā,Ganthārambhakathā
+NULL,p126,4,2,subsubhead,Ganthārambhakathā,Ganthārambhakathā
 NULL,p126,5,100,gatha1,,"Mahākāruṇikaṃ nāthaṃ, ñeyyasāgarapāraguṃ;"
 NULL,p126,6,100,gathalast,,"Vande nipuṇagambhīra-vicitranayadesanaṃ."
 NULL,p126,7,100,gatha1,,"Vijjācaraṇasampannā, yena niyyanti lokato;"

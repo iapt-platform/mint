@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p148,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p148,2,100,nikaya,,Khuddakanikāye
 NULL,p148,3,1,book,"Jātakapāḷi(Paṭhamo bhāgo)",Jātakapāḷi
-NULL,p148,4,3,title,"(Paṭhamo bhāgo)","(Paṭhamo bhāgo)"
+NULL,p148,4,100,title,"(Paṭhamo bhāgo)","(Paṭhamo bhāgo)"
 NULL,p148,5,2,chapter,"1. Ekakanipāto","1. Ekakanipāto"
 NULL,p148,6,3,title,"1. Apaṇṇakavaggo","1. Apaṇṇakavaggo"
 NULL,p148,7,4,subhead,"1. Apaṇṇakajātakaṃ","1. Apaṇṇakajātakaṃ"

@@ -66,7 +66,7 @@
 		"delete": "delete",
 		"departure_in_detail": "departure in detail",
 		"desc": "DESC",
-		"detaile": "Detaile",
+		"detaile": "Detail",
 		"dhamma_time": "5000 Years of the Buddha’s Dispensation ",
 		"dict": "Dict",
 		"dict_match": "Match the Dictionary and Document",
@@ -638,6 +638,21 @@
 		"reference": "reference",
 		"original": "original",
 		"page_num": "page",
+		"palihandbook": "巴利手册",
+		"viewer": "viewer",
+		"invalid_email": "invalid email",
+		"invalid_token": "invalid token",
+		"username_too_long": "username too long",
+		"username_too_short": "username too short",
+		"username_invaild_symbol": "username invaild symbol",
+		"password_invaild_symbol": "password invaild symbol",
+		"error_net_404": "Not Found",
+		"error_net_500": "Internal Server Error",
+		"error_net_timeout": "Timeout",
+		"error_net_abort": "abort",
+		"error_net_parsererror": "parser error",
+		"caus": "caus.",
+		"pass": "pass.",
 		"": ""
 	},
 	"grammastr": [
@@ -2214,7 +2229,9 @@
 		"my": "Brummese",
 		"zh": "Chinese",
 		"zh_cn": "Simple Chinese",
-		"zh_tw": "Traditional Chinese"
+		"zh_tw": "Traditional Chinese",
+		"zh-hans": "Simple Chinese",
+		"zh-hant": "Traditional Chinese"
 	},
 	"LogType": {
 		"10": "edit channel",

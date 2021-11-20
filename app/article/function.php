@@ -18,6 +18,7 @@ class Article extends Table
 				$output["subtitle"]=$this->redis->hGet("article://".$id,"subtitle");
 				$output["owner"]=$this->redis->hGet("article://".$id,"owner");
 				$output["summary"]=$this->redis->hGet("article://".$id,"summary");
+				$output["lang"]=$this->redis->hGet("article://".$id,"lang");
 				$output["tag"]=$this->redis->hGet("article://".$id,"tag");
 				$output["status"]=$this->redis->hGet("article://".$id,"status");
 				$output["create_time"]=$this->redis->hGet("article://".$id,"create_time");
@@ -25,7 +26,7 @@ class Article extends Table
 				return $output;
 			}
 		}
-        $query = "SELECT id,title,owner,summary,tag,status,create_time,modify_time FROM article WHERE id= ? ";
+        $query = "SELECT id,title,owner,subtitle,summary,lang,tag,status,create_time,modify_time FROM article WHERE id= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,8 +34,11 @@ class Article extends Table
 			if($this->redis!==false){
 				$this->redis->hSet("article://".$id,"id",$output["id"]);
 				$this->redis->hSet("article://".$id,"title",$output["title"]);
-				$this->redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				if(isset($output["subtitle"])){
+					$this->redis->hSet("article://".$id,"subtitle",$output["subtitle"]);
+				}
 				$this->redis->hSet("article://".$id,"summary",$output["summary"]);
+				$this->redis->hSet("article://".$id,"lang",$output["lang"]);
 				$this->redis->hSet("article://".$id,"owner",$output["owner"]);
 				$this->redis->hSet("article://".$id,"tag",$output["tag"]);
 				$this->redis->hSet("article://".$id,"status",$output["status"]);
@@ -127,7 +131,9 @@ class Article extends Table
 		if($sharePowerCollection>$iPower){
 			$iPower=$sharePowerCollection;
 		}
-		$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+		if($this->redis!==false){
+			$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+		}
 		return $iPower;
 	}
 

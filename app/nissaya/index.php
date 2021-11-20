@@ -23,8 +23,8 @@ if(isset($_GET["book"])){
 else{
 	$book = 0;
 }
-if(isset($_GET["para"])){
-	$para = $_GET["para"];
+if(isset($_GET["par"])){
+	$para = $_GET["par"];
 }
 else{
 	$para = 0;

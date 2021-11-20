@@ -1150,22 +1150,6 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "<div class='sent_wbw_trans_bar'>";
 	let sentIdString = abook + "-" + aparagraph + "-" + iBegin + "-" + iEnd;
 	let sentIdStringLink = "{{" + sentIdString + "}}";
-	let sentReaderLink = "";
-	if (_display_sbs == 0) {
-		//逐段模式
-		sentReaderLink = "https://www.wikipali.org/app/reader/?view=para&book=" + abook + "&para=" + aparagraph;
-	} else {
-		//逐句模式
-		sentReaderLink =
-			"https://www.wikipali.org/app/reader/?view=sent&book=" +
-			abook +
-			"&para=" +
-			aparagraph +
-			"&begin=" +
-			iBegin +
-			"&end=" +
-			iEnd;
-	}
 
 	output += "<span style='flex: 7;display: flex;'>";
 	output += "<div style='background-color: silver;'>";
@@ -1189,11 +1173,11 @@ function render_sent_tool_bar(elementBlock, begin) {
 	let reader_open_link = "";
 	if (_display_sbs == 0) {
 		//逐段模式
-		reader_open_link = "../reader/?view=para&book=" + abook + "&para=" + aparagraph;
+		reader_open_link = "../reader/?view=para&book=" + abook + "&par=" + aparagraph;
 	} else {
 		//逐句模式
 		reader_open_link =
-			"../reader/?view=sent&book=" + abook + "&para=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
+			"../reader/?view=sent&book=" + abook + "&par=" + aparagraph + "&begin=" + iBegin + "&end=" + iEnd;
 	}
 	output +=
 		"<button class='icon_btn'  onclick=\"window.open('" +
@@ -1528,7 +1512,7 @@ function renderWordParBlockInner(elementBlock) {
 				output +=
 					"<button class='icon_btn'  onclick=\"window.open('../reader/?view=sent&book=" +
 					book +
-					"&para=" +
+					"&par=" +
 					paragraph +
 					"&begin=" +
 					nextBegin +
@@ -1649,21 +1633,40 @@ function sent_copy_meaning(book, para, begin, end) {
 	copy_to_clipboard(output);
 }
 
+var relaSearchDeep=0;
 function relaMoveSubgraph(seed,from,to){
 	let iFound = 0;
+	//查找与种子相连接的节点
 	from.forEach(function(item,index,arr){
-		if(item.aid==seed || item.bid==seed){
-			to.push(item);
-			arr.splice(index,1);
-			iFound++;
+		if(relaSearchDeep==0){
+			if( item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
+			//删除连接到iti的线
+			/*
+			if( item.aid==seed && item.b=='iti'){
+				arr.splice(index,1);
+			}
+			*/
+		}
+		else{
+			if(item.aid==seed || item.bid==seed){
+				to.push(item);
+				arr.splice(index,1);
+				iFound++;
+			}
 		}
 	})
-	if(iFound==0){
-		return;
+	if(iFound>0){
+		//找到了继续查找
+		to.forEach(function(item,index,arr){
+			relaSearchDeep++;
+			relaMoveSubgraph(item.aid,from,to);
+		})		
 	}
-	to.forEach(function(item,index,arr){
-		relaMoveSubgraph(item.aid,from,to);
-	})
+	relaSearchDeep--;
 
 }
 //根据relation 绘制关系图
@@ -1671,7 +1674,8 @@ function sent_show_rel_map(book, para, begin, end) {
 	let memind = "graph LR\n";
 	let pali_text = "";
 	let rListA = new Array();
-	let rListB = new Array();
+	
+	let rListPool = new Array();
 	let arrIti = new Array();
 
 	let idList = new Array();
@@ -1717,7 +1721,7 @@ function sent_show_rel_map(book, para, begin, end) {
 				}
 
 				if(iterator.dest_spell=="iti"){
-					arrIti.push(iterator.dest_id);
+					arrIti.push({id:"p"+iterator_wid,dest_id:iterator.dest_id});
 				}
 				memind =
 					"p" +
@@ -1739,19 +1743,36 @@ function sent_show_rel_map(book, para, begin, end) {
 		}
 	}
 
-	if(arrIti.length>0){
-		relaMoveSubgraph(arrIti[0],rListA,rListB);
-		console.log("subgraph:",rListB);
+	let subgraphTitle = 1;
+	rListPool.push({id:0,value:rListA,parent:-1});
+
+	//倒序处理，能够处理iti嵌套
+	for (let index = arrIti.length-1; index >=0; index--) {
+		const element = arrIti[index];
+		let rListB = new Array();
+		for (let iPool = 0; iPool < rListPool.length; iPool++) {
+			;
+			relaSearchDeep = 0;
+			relaMoveSubgraph(element.id,rListPool[iPool].value,rListB);
+			if(rListB.length>0){
+				rListPool.push({id:subgraphTitle++,value:rListB,parent:rListPool[iPool].id});
+				console.log("找到：",element.id);
+				break;
+			}
+		}
 	}
-	memind = "graph LR\n";
+
+
+	memind = "flowchart LR\n";
 	for (const iterator of rListA) {
 		memind +=iterator.str;
 	}
-	memind += "subgraph iti\n";
-	for (const iterator of rListB) {
-		memind +=iterator.str;
-	}	
-	memind += "end";
+	//渲染subgraph
+	rListPool.forEach(function(item,index,arr){
+		if(item.parent==0){
+			memind += renderRelationSubgraph(rListPool,index);
+		}
+	});
 
 	let graph = mermaid.render("graphDiv", memind);
 	document.querySelector("#term_body_parent").innerHTML = '<div class="win_body_inner" id="term_body"></div>'; //清空之前的记录
@@ -1762,6 +1783,23 @@ function sent_show_rel_map(book, para, begin, end) {
 	document.querySelector(".win_body").style.display = "block";
 }
 
+//用递归渲染，subgraph嵌套
+function renderRelationSubgraph(arrData,index){
+	let output = "";
+	output += "\nsubgraph "+arrData[index].id+"\n";
+	for (const rb of arrData[index].value) {
+		output +=rb.str;
+	}	
+
+	arrData.forEach(function(item,indexSub,arr){
+		if(item.parent==arrData[index].id){
+			output += renderRelationSubgraph(arrData,indexSub);
+		}
+	});
+	output += "end\n";
+	//output += subgraphTitle + " --> " + element.dest_id+ "\n";
+	return output;
+}
 
 //句子编辑块
 function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = true) {
@@ -2304,7 +2342,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		renderMeaning = renderMeaning.replace(/\]/g, "</span>");
 		//格位公式结束
 		if (sMean.length == 0) {
-			renderMeaning = "<span class='word_space_holder'>meaning</span>";
+			renderMeaning = "<span class='word_space_holder'>"+gLocal.gui.meaning+"</span>";
 		}
 		//渲染下拉菜单
 		_txtOutDetail += "<div class='mean'>";
@@ -2393,7 +2431,7 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 			currOM = sOm;
 		}
 		if (currOM.length == 0) {
-			currOM = "<span class='word_space_holder''>part mean</span>";
+			currOM = "<span class='word_space_holder''>"+gLocal.gui.partmeaning+"</span>";
 		}
 
 		_txtOutDetail += currOM;
@@ -2438,6 +2476,11 @@ function renderWordDetailByElement_edit_a(xmlElement) {
 		_txtOutDetail += "<div id='gramma_" + sId + "'></div>";
 		_txtOutDetail += "</div>";
 		_txtOutDetail += "</div>";
+
+		if(sParentGrammar && sParentGrammar!="" && sParentGrammar!=" "){
+			_txtOutDetail += "<span class='cell' style='outline: unset;background-color: wheat;' title='"+sParent2+"'>" + getLocalGrammaStr(sParentGrammar) + "</span>";
+		}
+		
 
 		//连读词按钮
 		if (mType == ".un." || mType == ".comp.") {

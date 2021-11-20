@@ -118,7 +118,7 @@ switch ($op) {
             $time_start = microtime_float();
 
             $searching = $arrWordList[count($arrWordList) - 1];
-            PDO_Connect(_FILE_DB_WORD_INDEX_);
+            PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
 
             if (count($arrWordList) > 1) {
                 echo "<div>";
@@ -128,7 +128,7 @@ switch ($op) {
                 echo "</div>";
             }
             echo "<div>";
-            $query = "select word,count from wordindex where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 0,50";
+            $query = "SELECT word,count from "._TABLE_WORD_INDEX_." where \"word_en\" like " . $PDO->quote($searching . '%') . " OR \"word\" like " . $PDO->quote($searching . '%') . " limit 50";
             echo $query;
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -155,7 +155,7 @@ switch ($op) {
                 }
                 $strQuery = substr($strQuery, 0, -3);
                 PDO_Connect(_FILE_DB_PALITEXT_);
-                $query = "SELECT book,paragraph, html FROM pali_text WHERE {$strQuery}  LIMIT 0,20";
+                $query = "SELECT book,paragraph, html FROM "._TABLE_PALI_TEXT_." WHERE {$strQuery}  LIMIT 20";
                 $Fetch = PDO_FetchAll($query);
                 echo "<div>$query</div>";
                 $iFetch = count($Fetch);
@@ -210,8 +210,8 @@ switch ($op) {
             //查找实际出现的拼写
 
             $time_start = microtime_float();
-            PDO_Connect(_FILE_DB_WORD_INDEX_);
-            $query = "select id,word,count from wordindex where \"word\" in  $strQueryWord";
+            PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
+            $query = "SELECT id,word,count from "._TABLE_WORD_INDEX_." where \"word\" in  $strQueryWord";
             $arrRealWordList = PDO_FetchAll($query);
             $countWord = count($arrRealWordList);
             if ($countWord == 0) {
@@ -286,7 +286,7 @@ switch ($op) {
             //前20条记录
             $time_start = microtime_float();
             PDO_Connect(_FILE_DB_PALI_INDEX_);
-            $query = "SELECT book,paragraph, wordindex FROM word WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 0,20";
+            $query = "SELECT book,paragraph, wordindex FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId and book in $strFirstBookList group by book,paragraph LIMIT 20";
             $Fetch = PDO_FetchAll($query);
             //echo "<div>$query</div>";
             $queryTime = (microtime_float() - $time_start) * 1000;
@@ -314,8 +314,8 @@ switch ($op) {
                         $path_1 = $path_1 . $c3 . ">";
                     }
                     $path_1 = $path_1 . "《{$bookname}》>";
-                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,1";
-                    $FetchPaliText = PDO_FetchAll($query);
+                    $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                    $FetchPaliText = PDO_FetchAll($query,array($book,$paragraph));
                     $countPaliText = count($FetchPaliText);
                     if ($countPaliText > 0) {
                         $path = "";
@@ -324,8 +324,8 @@ switch ($op) {
                         $sFirstParentTitle = "";
                         //循环查找父标题 得到整条路径
                         while ($parent > -1) {
-                            $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
-                            $FetParent = PDO_FetchAll($query);
+                            $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                            $FetParent = PDO_FetchAll($query,array($book,$parent));
                             $path = "{$FetParent[0]["toc"]}>{$path}";
                             if ($sFirstParentTitle == "") {
                                 $sFirstParentTitle = $FetParent[0]["toc"];
@@ -385,7 +385,7 @@ switch ($op) {
                 $time_start = microtime_float();
                 PDO_Connect(_FILE_DB_PALI_INDEX_);
 
-                $query = "select * from word where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 0,20";
+                $query = "SELECT * from "._TABLE_WORD_." where \"wordindex\" in $wordlist and \"book\" in $booklist group by book,paragraph  limit 20";
                 $Fetch = PDO_FetchAll($query);
                 //echo "<div>$query</div>";
                 $queryTime = (microtime_float() - $time_start) * 1000;
@@ -418,8 +418,8 @@ switch ($op) {
                         echo "<div class='dict'>《{$bookname}》 $c1 $c2 </div>";
                         echo "<div class='mean'>$paliword</div>";
 
-                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
-                        $FetchPaliText = PDO_FetchAll($query);
+                        $query = "select * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 20";
+                        $FetchPaliText = PDO_FetchAll($query,array($book,$paragraph));
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {
                             for ($iPali = 0; $iPali < $countPaliText; $iPali++) {
@@ -428,8 +428,8 @@ switch ($op) {
                                 $deep = 0;
                                 $sFirstParentTitle = "";
                                 while ($parent > -1) {
-                                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
-                                    $FetParent = PDO_FetchAll($query);
+                                    $query = "select * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                                    $FetParent = PDO_FetchAll($query,array($book,$parent));
                                     if ($sFirstParentTitle == "") {
                                         $sFirstParentTitle = $FetParent[0]["toc"];
                                     }

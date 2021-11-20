@@ -129,49 +129,7 @@ function group_list(id, list) {
 								result.parent.name +
 								"</a> "
 						);
-					} else {
-						/*
-						关闭子小组功能
-						if (result.info.owner == getCookie("userid")) {
-							$("#button_new_sub_group").show();
-						}
-						//子小组列表
-						html += "<div class='info_block'>";
-						html += "<h2>" + gLocal.gui.sub_group + "</h2>";
-						if (result.children && result.children.length > 0) {
-							for (const iterator of result.children) {
-								html += '<div class="file_list_row" style="padding:5px;">';
-								html += "<div style='flex:1;'>" + key++ + "</div>";
-								html += "<div style='flex:2;'>" + iterator.name + "</div>";
-								html += "<div style='flex:2;'>";
-								if (iterator.owner == getCookie("userid")) {
-									html += gLocal.gui.owner;
-								}
-								html += "</div>";
-								html +=
-									"<div style='flex:1;'><a href='../group/index.php?id=" +
-									iterator.id +
-									"&list=file'>" +
-									gLocal.gui.enter +
-									"</a></div>";
-								html += "<div style='flex:1;'><div class='hover_button'>";
-								if (iterator.owner == getCookie("userid")) {
-									html +=
-										"<button onclick=\"group_del('" +
-										iterator.id +
-										"')\">" +
-										gLocal.gui.delete +
-										"</button>";
-								}
-								html += "</div></div>";
-								html += "</div>";
-							}
-						} else {
-							html += "尚未设置小组";
-						}
-						html += "</div>";
-*/
-					}
+					} 
 
 					//共享文件列表
 					key = 1;
@@ -180,12 +138,13 @@ function group_list(id, list) {
 					if (result.file && result.file.length > 0) {
 						for (const iterator of result.file) {
 							html += '<div class="file_list_row" style="padding:5px;">';
-							html += "<div style='flex:1;'>" + key++ + "</div>";
+							html += "<div style='flex:1;'>" + key+ "</div>";
 							html += "<div style='flex:1;'>";
 							//资源类型
 							html += "<svg class='icon'>";
 							let cardUrl = "";
 							let doing = "";
+							let viewLink = "<a>";
 							switch (parseInt(iterator.res_type)) {
 								case 1: //pcs
 									html += "<use xlink:href='../studio/svg/icon.svg#article'></use>";
@@ -193,7 +152,7 @@ function group_list(id, list) {
 									doing +=
 										"<a href='../studio/project.php?op=open&doc_id=" +
 										iterator.res_id +
-										"'>打开</a>";
+										"'>"+gLocal.gui.open+"</a>";
 									break;
 								case 2: //channel
 									html += "<use xlink:href='../studio/svg/icon.svg#channel_leaves'></use>";
@@ -202,24 +161,20 @@ function group_list(id, list) {
 								case 3: //article
 									html += "<use xlink:href='../studio/svg/icon.svg#article_1'></use>";
 									cardUrl = "../article/card.php";
+									viewLink = "<a href='../article/?view=article&id=" + iterator.res_id + "' target='_blank'>";
 									doing +=
-										"<a href='../article/?id=" + iterator.res_id + "' target='_blank'>查看</a>";
-									doing +=
-										"|<a href='../article/my_article_edit.php?id=" +
+										"<a href='../article/my_article_edit.php?id=" +
 										iterator.res_id +
-										"' target='_blank'>编辑</a>";
+										"' target='_blank'>"+gLocal.gui.edit+"</a>";
 									break;
 								case 4: //collection
 									html += "<use xlink:href='../studio/svg/icon.svg#collection'></use>";
 									cardUrl = "../collect/card.php";
+									viewLink ="<a href='../article/?view=collection&collection=" + iterator.res_id + "' target='_blank'>";
 									doing +=
-										"<a href='../article/?collect=" +
+										"<a href='../article/my_collect_edit.php?id=" +
 										iterator.res_id +
-										"' target='_blank'>查看</a>";
-									doing +=
-										"|<a href='../article/my_collect_edit.php?id=" +
-										iterator.res_id +
-										"' target='_blank'>编辑</a>";
+										"' target='_blank'>"+gLocal.gui.edit+"</a>";
 									break;
 								case 5: //channel片段
 									break;
@@ -231,8 +186,10 @@ function group_list(id, list) {
 							html += "</svg>";
 							html += "</div>";
 							html += "<div style='flex:2;'>";
-							html += "<guide url='" + cardUrl + "' gid='" + iterator.res_id + "'>";
-							html += iterator.res_title + "</guide></div>";
+							html += viewLink+iterator.res_title+"</a>" ;
+							html += "<guide url='" + cardUrl + "' gid='" + iterator.res_id + "'></guide>";
+							
+							html += "</div>";
 							html += "<div style='flex:2;'>";
 							switch (parseInt(iterator.power)) {
 								case 10:

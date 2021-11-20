@@ -103,12 +103,30 @@ function com_getPaliReal(inStr) {
 	inStr = inStr.toLowerCase();
 	inStr = inStr.replace(/ṁ/g, "ṃ");
 	inStr = inStr.replace(/ŋ/g, "ṃ");
-	for (x in inStr) {
-		if (paliletter.indexOf(inStr[x]) != -1) {
-			output += inStr[x];
-		}
+	for (const iterator of inStr) {
+		if (paliletter.indexOf(iterator) != -1) {
+			output += iterator;
+		}		
 	}
 	return output;
+}
+function com_getPaliEn(inStr) {
+	if (typeof inStr == "undefined") {
+		return "";
+	}
+	inStr = inStr.toLowerCase();
+	inStr = inStr.replace(/ā/g, "a");
+	inStr = inStr.replace(/ī/g, "i");
+	inStr = inStr.replace(/ū/g, "u");
+	inStr = inStr.replace(/ṅ/g, "n");
+	inStr = inStr.replace(/ñ/g, "n");
+	inStr = inStr.replace(/ṇ/g, "n");
+	inStr = inStr.replace(/ṭ/g, "t");
+	inStr = inStr.replace(/ḍ/g, "d");
+	inStr = inStr.replace(/ḷ/g, "l");
+	inStr = inStr.replace(/ṃ/g, "m");
+
+	return inStr;
 }
 
 function getCookie(c_name) {
@@ -244,5 +262,36 @@ function str_diff(str1, str2) {
 	});
 	return output;
 }
+
+function testCJK(string){
+	/*
+	\u4e00-\u9fa5 (中文)
+	U+4E00至U+9FFF[1]
+	U+3400至U+4DBF[2]（扩展A）
+	U+20000至U+2A6DF[3]（扩展B）
+	U+2A700至U+2B73F[4]（扩展C）
+	U+2B740至U+2B81F[5]（扩展D）
+	U+2B820至U+2CEAF[6]（扩展E）
+	U+F900至U+FAFF[7]（兼容）
+	U+2F800至U+2FA1F[8]（兼容补充）
+	U+2F00至U+2FDF[9]（康熙部首）
+	U+2E80至U+2EFF[10]（部首补充）
+	U+31C0至U+31EF[11]（笔画）
+
+	\x3130-\x318F (韩文
+	\xAC00-\xD7A3 (韩文)
+	Unicode范围	U+AC00－U+D7A3,
+	U+1100－U+11FF,
+	U+3131－U+318E,
+	U+FFA1－U+FFDC
+
+	\u3040-\u309f (日文)ひらがな平仮名
+	U+4E00–U+9FBF 汉字; U+3040–U+309F 平假名; U+30A0–U+30FF 片假名
+	*/
+	reg = /[\u4e00-\u9fa5]+/;//cn
+	return reg.test(string);
+
+}
+
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();

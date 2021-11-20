@@ -167,8 +167,8 @@ switch ($op) {
                     if (strlen($pali) > 1) {
                         echo "<div class='mean'>$pali</div>";
                     } else {
-                        PDO_Connect(_FILE_DB_PALITEXT_);
-                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                        //PDO_Connect(_FILE_DB_PALITEXT_);
+                        $query = "select * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
                         $FetchPaliText = PDO_FetchAll($query);
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {
@@ -324,7 +324,7 @@ switch ($op) {
                             echo "<div class='mean'>$pali</div>";
                         } else {
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                            $query = "select * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
                             $FetchPaliText = PDO_FetchAll($query);
                             $countPaliText = count($FetchPaliText);
                             if ($countPaliText > 0) {
@@ -335,7 +335,7 @@ switch ($op) {
                                     $deep = 0;
                                     $sFirstParentTitle = "";
                                     while ($parent > -1) {
-                                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
+                                        $query = "select * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
                                         $FetParent = PDO_FetchAll($query);
                                         if ($sFirstParentTitle == "") {
                                             $sFirstParentTitle = $FetParent[0]["toc"];

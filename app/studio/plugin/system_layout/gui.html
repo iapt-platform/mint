@@ -25,7 +25,17 @@
 				<use xlink:href="svg/icon.svg#ic_add"></use>
 			</svg>
 		</p>
-		<div id="layout_channel" class="submenu_details"></div>
+		<div id="layout_channel" class="submenu_details">
+			<div>
+				<button onclick='renderChannelList()'>
+				<svg class='icon' style='fill: var(--box-bg-color1)'>
+				<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-clockwise'>
+				</svg>
+				<?php echo $_local->gui->refresh; ?>
+				</button>
+			</div>
+			<div id="layout_channel_innter"></div>
+		</div>
 	</div>
 	<!--end of sandhi-->
 

@@ -84,7 +84,7 @@
 		"each_sentence": "逐句",
 		"eat": "进餐",
 		"edit": "编辑",
-		"edit_now": "译经楼中编辑",
+		"edit_now": "逐词解析",
 		"edit1": "编辑：",
 		"edition": "版本：",
 		"editor": "编辑者",
@@ -641,6 +641,21 @@
 		"reference": "引用",
 		"original": "原创",
 		"page_num": "页码",
+		"palihandbook": "巴利手册",
+		"viewer": "查看者",
+		"invalid_email": "无效的电子邮件",
+		"invalid_token": "无效的密钥",
+		"username_too_long": "用户名过长",
+		"username_too_short": "用户名过短",
+		"username_invaild_symbol": "用户名包含无效字符",
+		"password_invaild_symbol": "密码包含无效字符",
+		"error_net_404": "网页不存在",
+		"error_net_500": "服务器内部错误",
+		"error_net_timeout": "请求超时",
+		"error_net_abort": "放弃",
+		"error_net_parsererror": "数据解析错误",
+		"caus": "使役",
+		"pass": "被动",
 		"": ""
 	},
 	"grammastr": [
@@ -853,10 +868,6 @@
 			"value": "动原型"
 		},
 		{
-			"id": ".adj.",
-			"value": "形"
-		},
-		{
 			"id": ".ti.",
 			"value": "三性"
 		},
@@ -925,6 +936,10 @@
 			"value": "复合"
 		},
 		{
+			"id": ".adj.",
+			"value": "形"
+		},
+		{
 			"id": ".pre.",
 			"value": "前缀"
 		},
@@ -979,10 +994,6 @@
 			"value": "代"
 		},
 		{
-			"id": ".adj.",
-			"value": "形"
-		},
-		{
 			"id": ".v:ind.",
 			"value": "动不变"
 		},
@@ -1025,6 +1036,10 @@
 		{
 			"id": ".v:base.",
 			"value": "动原型"
+		},
+		{
+			"id": ".adj.",
+			"value": "形"
 		},
 		{
 			"id": ".pre.",
@@ -2090,7 +2105,7 @@
 		},
 		{
 			"id": "user",
-			"value": "我的词典"
+			"value": "社区词典"
 		},
 		{
 			"id": "co",
@@ -2201,7 +2216,9 @@
 		"my": "缅文",
 		"zh": "中文",
 		"zh_cn": "简体中文",
-		"zh_tw": "正体中文"
+		"zh_tw": "正体中文",
+		"zh-hans": "简体中文",
+		"zh-hant": "正体中文"
 	},
 	"LogType": {
 		"10": "修改版本风格",

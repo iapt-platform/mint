@@ -640,6 +640,21 @@
 		"reference": "引用",
 		"original": "原創",
 		"page_num": "頁碼",
+		"palihandbook": "巴利手冊",
+		"viewer": "查看者",
+		"invalid_email": "無效的電子郵件",
+		"invalid_token": "無效的密鑰",
+		"username_too_long": "用戶名過長",
+		"username_too_short": "用戶名過短",
+		"username_invaild_symbol": "用戶名包含無效字符",
+		"password_invaild_symbol": "密碼包含無效字符",
+		"error_net_404": "網頁不存在",
+		"error_net_500": "服務器內部錯誤",
+		"error_net_timeout": "請求超時",
+		"error_net_abort": "放棄",
+		"error_net_parsererror": "數據解析錯誤",
+		"caus": "使役",
+		"pass": "被動",
 		"": ""
 	},
 	"grammastr": [
@@ -844,10 +859,6 @@
 			"value": "動原型"
 		},
 		{
-			"id": ".adj.",
-			"value": "形"
-		},
-		{
 			"id": ".ti.",
 			"value": "三性"
 		},
@@ -906,6 +917,10 @@
 		{
 			"id": ".pron:base.",
 			"value": "代詞幹"
+		},
+		{
+			"id": ".adj.",
+			"value": "形"
 		},
 		{
 			"id": ".pre.",
@@ -974,10 +989,6 @@
 			"value": "代"
 		},
 		{
-			"id": ".adj.",
-			"value": "形"
-		},
-		{
 			"id": ".v:ind.",
 			"value": "動不變"
 		},
@@ -1020,6 +1031,10 @@
 		{
 			"id": ".v:base.",
 			"value": "動原型"
+		},
+		{
+			"id": ".adj.",
+			"value": "形"
 		},
 		{
 			"id": ".pre.",
@@ -2196,7 +2211,9 @@
 		"my": "緬文",
 		"zh": "中文",
 		"zh_cn": "簡體中文",
-		"zh_tw": "正體中文"
+		"zh_tw": "正體中文",
+		"zh-hans": "簡體中文",
+		"zh-hant": "正體中文"
 	},
 	"LogType": {
 		"10": "修改版本風格",

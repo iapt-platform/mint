@@ -225,7 +225,7 @@ function title_change(id, title) {
 	}
 }
 function share_link_copy_to_clipboard(id) {
-	copy_to_clipboard("https://www.wikipali.org/app/studio/project.php?op=open&doc_id=" + id);
+	copy_to_clipboard(WWW_DOMAIN_NAME+"/app/studio/project.php?op=open&doc_id=" + id);
 }
 function mydoc_file_select(doSelect) {
 	if (doSelect) {

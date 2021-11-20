@@ -1,6 +1,6 @@
 <?php
 //获取article内容
-
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -34,12 +34,7 @@ if(isset($_GET["id"])){
 		exit;
 	}
 	#查询权限结束
-	/*
-    PDO_Connect(""._FILE_DB_USER_ARTICLE_);
-    $id=$_GET["id"];
-    $query = "SELECT * FROM article  WHERE id = ? ";
-    $Fetch = PDO_FetchRow($query,array($id));
-	*/
+
 	$Fetch = $article->getInfo($_GET["id"]);
     if($Fetch){
 		$Fetch["content"] = $article->getContent($_GET["id"]);
@@ -52,5 +47,5 @@ if(isset($_GET["id"])){
 }
 
 echo json_encode(array(), JSON_UNESCAPED_UNICODE);	
-
+PrefLog();
 ?>

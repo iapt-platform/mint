@@ -69,7 +69,8 @@ else{$currDevice="computer";}
 	<script language="javascript" src="../public/js/comm.js"></script>
 	<script language="javascript" src="../public/js/localforage.min.js"></script>
 	<script language="javascript" src="../public/script/my.js"></script>
-	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
+
 	
 	<script language="javascript" src="module/editor/language/default.js"></script>	
 
@@ -84,24 +85,14 @@ else{$currDevice="computer";}
 	<script src="../usent/usent.js"></script>
 	<script src="../fileindex/file_info.js"></script>
 
-
 	<script  src="../channal/channal.js"></script>
 	<script>
-		get_channel_list_callback = function(){
-			let html ="<ul>";
-			html += "<li><input type='checkbox' checked channel_id='0' onclick=\"channelDisplay(this)\" />其他</li>"
+		get_channel_list_callback=renderChannelList();
+		
 
-			if (_my_channal != null) {
-			for (const iterator of _my_channal) {
-				html += "<li><input type='checkbox' checked channel_id='"+iterator.id+"' onclick=\"channelDisplay(this)\" />"+iterator.name+"</li>"
-			}
-			html +="</ul>";
-			$("#layout_channel").html(html);
-		}		
-		}
-	</script>	
+	</script>
+
 	
-
 	<script language="javascript">
 	<?php 
 	//加载js语言包
@@ -258,6 +249,14 @@ else{$currDevice="computer";}
 		border-radius: 4px;
 		min-width: 1em;
 		min-height: 1.3em;
+	}
+
+	#word_mdf_parts_dropdown  a {
+		width: 100%;
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 	</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
@@ -737,22 +736,7 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p">
 					<guide gid="studio_parent"></guide>
 				<script>
-					function edit_show_prt_prt(obj){
-						let o = obj.getElementsByTagName("svg");
-						if(document.getElementById("edit_detail_prt_prt").style.display=="none"){
-							document.getElementById("edit_detail_prt_prt").style.display="block";
-							o[0].style.transform="rotate(90deg)";
-						}
-						else{
-							document.getElementById("edit_detail_prt_prt").style.display="none";
-							o[0].style.transform="rotate(0deg)";
-						}
-					}
-					
-					function edit_parent_grammar_changed(obj){
-						let val = obj;
-						document.getElementById("parent_grammar").innerHTML=val;
-					}
+
 				</script>
 				<span class="thin_icon_btn" onclick="edit_show_prt_prt(this)">
 					<svg id="svg_parent2" class="icon">
@@ -773,13 +757,17 @@ foreach($plugin_list as $info){
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<span style="display:flex;">
 						<guide gid="studio_parent2"></guide>
-						<div class="case_dropdown" style="padding-left: 2em;width: 6em;display: flex;">
+						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;">┕</span>
-							<span id="parent_grammar">.ppa.</span>
-							<div id="word_mdf_prt_prt_grammar_dropdown" class="case_dropdown-content">
+							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
+							<input type="hidden" id="input_parent_grammar" />
+							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
+								<a onclick="edit_parent_grammar_changed('')"><?php echo $_local->gui->empty; ?></a>
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>
+								<a onclick="edit_parent_grammar_changed('.caus.')"><?php echo $_local->gui->caus; ?></a>
+								<a onclick="edit_parent_grammar_changed('.pass.')"><?php echo $_local->gui->pass; ?></a>
 							</div>
 						</div>
 						<input type="text" id="id_text_prt_prt" class="input_bar" onkeydown="match_key(this)" onkeyup="unicode_key(this)" />

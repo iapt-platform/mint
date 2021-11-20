@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once "../path.php";
 
 PDO_Connect(_FILE_DB_PALITEXT_);
-$query = "SELECT * from books where 1";
+$query = "SELECT * from "._TABLE_PALI_BOOK_NAME_." where 1";
 $books = PDO_FetchAll($query);
 
 PDO_Connect(_FILE_DB_PAGE_INDEX_);
@@ -13,7 +13,7 @@ $irow = 0;
 if (($fp = fopen("./cs6_para.csv", "r")) !== false) {
     // 开始一个事务，关闭自动提交
     $PDO->beginTransaction();
-    $query = "INSERT INTO cs6_para ('book','para','bookid','cspara','book_name') VALUES (  ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO cs6_para (book,para,bookid,cspara,book_name) VALUES (  ? , ? , ? , ? , ? )";
     $stmt = $PDO->prepare($query);
 
     // 提交更改

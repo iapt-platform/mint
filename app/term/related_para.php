@@ -49,8 +49,8 @@ if (count($fetch) > 0) {
 
     foreach ($aBookid as $bookkey => $bookvalue) {
         # code...
-        $query = "select * from books where id=" . $bookkey;
-        $book_list[] = PDO_FetchRow($query);
+        $query = "SELECT * from "._TABLE_PALI_BOOK_NAME_." where id = ? ";
+        $book_list[] = PDO_FetchRow($query,array($bookkey));
     }
     $result["book_list"] = $book_list;
 

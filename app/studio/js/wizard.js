@@ -428,7 +428,45 @@ function wizard_palicannon_index_render_c1(strSelected){
 		objC1.innerHTML += "<li class=\""+cssItem+"\" onclick=\"wizard_palicannon_index_changed_c1('"+list[index]+"')\">"+list[index]+"</li>"
 	}
 }
+function loadUserWBWList(){
+	$.getJSON(
+		"../uwbw/get_index.php"
+	).done(function (data) {
+		let html ="";
+		for (const it of data) {
+			html += "<div class='file_list_row'>";
+			link = "<a href='./editor.php?op=openchannel&book="+it.book+"&par="+it.paragraph+"&channel="+it.channal+"' target='_blank'>";
+			html += "<div style='flex:5;'>"+link+it.book+"-"+it.paragraph+"</a></div>";
+			html += "<div style='flex:2;'>"+getDataTime(it.modify_time)+"</div>";
+			html += "</div>"
+		}
+		$("#file_list").html(html);
 
+	}).fail(function(jqXHR, textStatus, errorThrown){
+		console.log("loadUserWBWList",textStatus);
+		switch (textStatus) {
+			case "timeout":
+				break;
+			case "error":
+				switch (jqXHR.status) {
+					case 404:
+						break;
+					case 500:
+						break;				
+					default:
+						break;
+				}
+				break;
+			case "abort":
+				break;
+			case "parsererror":
+				console.log("loadUserWBWList",jqXHR.responseText);
+				break;
+			default:
+				break;
+		}
+	});
+}
 function wizard_palicannon_index_changed_c1(indexSelected){
 	document.getElementById("id_wizard_palicannon_index_c2").style.display="none";
 	document.getElementById("id_wizard_palicannon_index_c3").style.display="none";
@@ -650,7 +688,7 @@ function explorer_show_res_list(book,para){
 			}
 			else{
 				arrResData[i].enable=true;
-				var read_link="../reader/?view=para&book="+arrResData[i].book+"&channal="+arrResData[i].album_id+"&para="+arrResData[i].paragraph;
+				var read_link="../reader/?view=para&book="+arrResData[i].book+"&channal="+arrResData[i].album_id+"&par="+arrResData[i].paragraph;
 				var check="<input type='checkbox' id='res_check_"+resCount+"' checked onclick=\"set_res_enable(this,"+i+")\" />";
 				html+=check+"["+arrResData[i].type+"]<a href='"+read_link+"' target='_blank'>"+arrResData[i].title+"</a>-"+arrResData[i].author;
 				resCount++;

@@ -47,6 +47,8 @@ require_once '../public/load_lang.php';
 	
 	<title id="page_title"><?php echo $_local->gui->pcd_studio; ?></title>
 
+	<script src="../config.js"></script>
+
 	<script src="../studio/js/common.js"></script>
 	<script src="../public/js/jquery.js"></script>	
 	<script src="../studio/js/fixedsticky.js"></script>	
@@ -67,8 +69,9 @@ require_once '../public/load_lang.php';
 	<script language="javascript" src="../guide/guide.js"></script>
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 
-	<script src="../public/js/marked.js"></script>
-	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../../node_modules/marked/marked.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
+
 
 	<script src="../widget/iframe_modal_win.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/iframe_modal_win.css"/>

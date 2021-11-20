@@ -8,12 +8,12 @@
  $UID = "";
  $USER_NAME = "";
  $NICK_NAME = "";
-if(isset($_COOKIE["username"]) && !empty($_COOKIE["username"])){
+if(isset($_COOKIE["userid"])){
 //已经登陆
  $USER_ID = $_COOKIE["userid"];
  $UID = $_COOKIE["uid"];
  $USER_NAME = $_COOKIE["username"];
- $NICK_NAME = $_COOKIE["nickname"];
+
  
  $username = $_COOKIE["username"];
  $userid = $_COOKIE["userid"];

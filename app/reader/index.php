@@ -1,9 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>wikipal</title>
+		<meta http-equiv="refresh" content="0,../article/index.php?<?php echo $_SERVER['QUERY_STRING'];?>"/>
+	</head>
+	
+	<body>
+		loading...
+    </body>
+</html>
+<?php
+exit;
+?>
+
 <?php
 require_once "../public/load_lang.php";
 require_once "../path.php";
 require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
+
+</body>
+</html>
 
 	<script src="../channal/channal.js"></script>
 	<script src="./reader.js"></script>
@@ -32,6 +50,10 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["para"])){
 		echo "_reader_para='".$_GET["para"]."';";
 	}
+	if(isset($_GET["par"])){
+		#为了避免 &para被urlencode替换问题
+		echo "_reader_para='".$_GET["par"]."';";
+	}
 	if(isset($_GET["begin"])){
 		echo "_reader_begin='".$_GET["begin"]."';";
 	}
@@ -41,6 +63,10 @@ require_once "../pcdl/html_head.php";
 	
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
+	}
+	if(isset($_GET["channel"])){
+		#纠正拼写错误
+		echo "_channal='".$_GET["channel"]."';";
 	}
 	if(isset($_GET["lang"])){
 		echo "_lang='".$_GET["lang"]."';";
@@ -169,7 +195,7 @@ require_once "../pcdl/html_head.php";
 				</div>
 			</div>
 			<div id="right_pannal">
-				<div class="fun_frame">
+				<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;">
 					<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
 					<div id = "toc_content" class="content" style="max-height:25vw;">
 					</div>

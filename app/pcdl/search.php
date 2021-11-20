@@ -35,9 +35,9 @@ switch ($op) {
         }
 
         //查标题
-        $query = "select count(*) from 'index'  where  title_en like '%$word%' or title like '%$word%'";
+        $query = "select count(*) from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%'";
         $count = PDO_FetchOne($query);
-        $query = "select * from 'index'  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
+        $query = "select * from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -69,8 +69,8 @@ switch ($op) {
                 //循环查找父标题 得到整条路径
 
                 while ($parent > -1) {
-                    $query = "select * from pali_text where \"book\" = '{$bookid}' and \"paragraph\" = '{$parent}' limit 0,1";
-                    $FetParent = PDO_FetchAll($query);
+                    $query = "SELECT * FROM "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+                    $FetParent = PDO_FetchAll($query,array($bookid,$parent));
                     if ($deep > 0) {
                         $path = "{$FetParent[0]["toc"]}>{$path}";
                     }
@@ -94,10 +94,10 @@ switch ($op) {
         }
         PDO_Connect(_FILE_DB_RESRES_INDEX_);
         //查标签
-        $query = "select count(*) from 'index' where tag like '%$word%'";
+        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where tag like '%$word%'";
         $count = PDO_FetchOne($query);
 
-        $query = "select * from 'index' where tag like '%$word%' limit 0,10";
+        $query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$word%' limit 10";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -116,17 +116,17 @@ switch ($op) {
         echo "<div id='author_name'>$word</div>";
         echo "<div id='search_body'>";
         //author id
-        $query = "select id from 'author' where name = '$word'";
+        $query = "SELECT id from 'author' where name = '$word'";
         $arr_author = PDO_FetchAll($query);
         if (count($arr_author) > 0) {
             $author_id = $arr_author[0]["id"];
         }
 
         //查album
-        $query = "select count(*) from 'album' where author = '$author_id'";
+        $query = "SELECT count(*) from 'album' where author = '$author_id'";
         $count = PDO_FetchOne($query);
         if ($count > 0) {
-            $query = "select * from 'album' where author = '$author_id' limit 0,10";
+            $query = "SELECT * from 'album' where author = '$author_id' limit 0,10";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -139,10 +139,10 @@ switch ($op) {
         }
 
         //查资源
-        $query = "select count(*) from 'index' where author = '$author_id'";
+        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where author = '$author_id'";
         $count = PDO_FetchOne($query);
         if ($count > 0) {
-            $query = "select * from 'index' where author = '$author_id' limit 0,10";
+            $query = "SELECT * from "._TABLE_RES_INDEX_." where author = '$author_id' limit 0,10";
 
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);

@@ -25,7 +25,20 @@ if (isset($_GET["language"])) {
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/font.css" />
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css" />
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/style.css" />
-	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
+	<?php 
+	if(isset($_GET["theme"]) && $_GET["theme"]==="dark"){
+		?>
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_night.css"  id="colorchange" />		
+		<?php
+	}else{
+		?>
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />		
+		<?php	
+	}
+	?>
+
+
+
 	<link type="text/css" rel="stylesheet" href="../pcdl/css/style_mobile.css" media="screen and (max-width:800px)">
 	<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 
@@ -62,6 +75,8 @@ if (isset($_GET["language"])) {
 
 	<title id="page_title">wikipāḷi</title>
 
+	<script src="../config.js"></script>
+
 	<script src="../../node_modules/jquery/dist/jquery.js"></script>
 	<script src="../public/js/comm.js"></script>
 	<script src="../studio/js/fixedsticky.js"></script>
@@ -70,8 +85,8 @@ if (isset($_GET["language"])) {
 
 	<script src="../ucenter/setting.js"></script>
 
-	<script src="../public/js/marked.js"></script>
-	<script src="../public/js/mermaid.min.js"></script>
+	<script src="../../node_modules/marked/marked.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
 
 	<script src="../public/js/notify.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/css/notify.css" />
@@ -125,6 +140,9 @@ if (isset($_GET["language"])) {
 	<script src="../../node_modules/diff/dist/diff.js"></script>
 	
 	<style>
+		body{
+			background-color: var(--bg-color);
+		}
 		.list_with_head {
 			display: flex;
 			margin: 3px 0;

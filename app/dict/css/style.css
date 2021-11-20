@@ -94,13 +94,12 @@ body {
 
 .dropdown_ctl > .menu {
 	position: absolute;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 	display: none;
+    background-color: var(--tool-bg-color);
+    box-shadow: 0 0 10px var(--border-shadow);
+    color: var(--tool-color);	
 }
 
-.dropdown_ctl > .menu {
-	background-color: white;
-}
 
 .dropdown_ctl > .content > .main_view > part {
 	margin: 0 0.5em;
@@ -114,7 +113,8 @@ body {
 }
 
 .dropdown_ctl > .menu > .part_list:hover {
-	background-color: azure;
+	background-color: var(--btn-hover-bg-color);
+    color: var(--btn-hover-color);
 }
 
 .dropdown_ctl > .content > .more_button {
@@ -298,6 +298,7 @@ input[type="submit"] {
 .dict_word .dict {
 	font-size: 100%;
 	font-style: normal;
+	color: var(--link-color);
 }
 
 .dict_word .mean {
@@ -321,8 +322,6 @@ textarea {
 	font-size: 130%;
 	font-weight: 500;
 	padding: 0.3em 0.6em;
-	color: var(--btn-hover-bg-color);
-	background-color: var(--btn-color);
 }
 #left_menu_button {
 	display: none;

@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p182,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p182,2,100,nikaya,,Aṅguttaranikāye
 NULL,p182,3,1,book,Dukanipāta-ṭīkā,Dukanipāta-ṭīkā
-NULL,p182,4,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p182,4,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p182,5,2,chapter,1. Kammakāraṇavaggo,1. Kammakāraṇavaggo
 NULL,p182,6,4,subhead,1. Vajjasuttavaṇṇanā,1. Vajjasuttavaṇṇanā
 NULL,p182,7,100,bodytext,,"1. Dukanipātassa  paṭhame pahārasādhanatthanti daṇḍappahārassa sukhasiddhi-atthaṃ. Kañjito nibbattaṃ kañjiyaṃ, āranālaṃ, yaṃ bilaṅgantipi vuccati, taṃ yattha siñcati, sā kañjiyaukkhalikā bilaṅgathālikā, taṃsadisaṃ kāraṇaṃ bilaṅgathālikaṃ. Sīsakaṭāhaṃ uppāṭetvāti ayoguḷappavesappamāṇaṃ chiddaṃ katvā. Saṅkhamuṇḍakammakāraṇanti saṅkhaṃ viya muṇḍakaraṇaṃ kammakāraṇaṃ. Rāhumukhakammakāraṇanti rāhumukhagatasūriyasadisakammakāraṇaṃ."
@@ -323,7 +323,7 @@ NULL,p182,321,100,centered,,Dukanipātavaṇṇanāya anuttānatthadīpanā sama
 NULL,p182,322,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p182,323,100,nikaya,,Aṅguttaranikāye
 NULL,p182,324,1,book,Tikanipāta-ṭīkā,Tikanipāta-ṭīkā
-NULL,p182,325,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p182,325,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p182,326,2,chapter,1. Bālavaggo,1. Bālavaggo
 NULL,p182,327,4,subhead,1. Bhayasuttavaṇṇanā,1. Bhayasuttavaṇṇanā
 NULL,p182,328,100,bodytext,,"1. Tikanipātassa  paṭhame bhayanti bhīti cetaso byadhoti āha ‘‘cittutrāso’’ti. Upaddavoti antarāyo. Tassa pana vikkhepakāraṇattā vuttaṃ ‘‘anekaggatākāro’’ti. Upasaggoti upasajjanaṃ, devatopapīḷādinā appaṭikāravighātāpatti. Sā pana yasmā paṭikārābhāvena vihaññamānassa kiñci kātuṃ asamatthassa osīdanakāraṇaṃ, tasmā vuttaṃ ‘‘tattha tattha lagganākāro’’ti. Yathāvutte divase anāgacchantesūti vañcetvā āgantuṃ niyamitadivase anāgacchantesu. Dvāre aggiṃ datvāti bahi anikkhamanatthāya dvāre aggiṃ datvā."
@@ -1022,7 +1022,7 @@ NULL,p182,1020,100,centered,,Tikanipātavaṇṇanāya anuttānatthadīpanā sam
 NULL,p182,1021,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p182,1022,100,nikaya,,Aṅguttaranikāye
 NULL,p182,1023,1,book,Catukkanipāta-ṭīkā,Catukkanipāta-ṭīkā
-NULL,p182,1024,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p182,1024,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p182,1025,2,chapter,1. Bhaṇḍagāmavaggo,1. Bhaṇḍagāmavaggo
 NULL,p182,1026,4,subhead,1-2. Anubuddhasuttādivaṇṇanā,1-2. Anubuddhasuttādivaṇṇanā
 NULL,p182,1027,100,bodytext,,"1-2. Catukkanipātassa  paṭhame anubodho pubbabhāgiyaṃ ñāṇaṃ, paṭivedho anubodhena abhisamayo. Tattha yasmā anubodhapubbako paṭivedho anubodhena vinā na hoti. Anubodho hi ekacco paṭivedhasambaddho, tadubhayābhāvahetukañca vaṭṭe saṃsaraṇaṃ, tasmā vuttaṃ pāḷiyaṃ ‘‘ananubodhā…pe… tumhākañcā’’ti. Paṭisandhiggahaṇavasena bhavato bhavantarūpagamanaṃ sandhāvanaṃ, aparāparaṃ cavanūpapajjanavasena sañcaraṇaṃ saṃsaraṇanti āha ‘‘bhavato’’tiādi. Sandhāvitasaṃsaritapadānaṃ kammasādhanataṃ sandhāyāha ‘‘mayā ca tumhehi cā’’ti paṭhamavikappe. Dutiyavikappe pana bhāvasādhanataṃ hadaye katvā ‘‘mamañceva tumhākañcā’’ti yathārutavaseneva vuttaṃ. Dīgharajjunā baddhasakuṇaṃ viya rajjuhattho puriso desantaraṃ taṇhārajjunā baddhaṃ sattasantānaṃ abhisaṅkhāro bhavantaraṃ neti etāyāti bhavanetti. Tenāha ‘‘bhavarajjū’’tiādī."

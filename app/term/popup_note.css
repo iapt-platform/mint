@@ -1,4 +1,4 @@
-note code {
+.tran_sent code ,.sent_tran  code {
 	position: relative;
 	display: inline-block;
 	width: auto;
@@ -62,7 +62,13 @@ code ol {
 	position: absolute;
 	top: -20px;
 }
-
+.popup_contence:before {
+	content: '';
+    position: absolute;
+    bottom: 100%;
+    width: 100%;
+    border: 6px solid transparent;
+}
 .popup_contence h1 {
 	font-size: 1.5em;
 	font-weight: 700;

@@ -1,4 +1,5 @@
 <?php
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
@@ -44,6 +45,7 @@ if (isset($_GET["debug"])) {
 }
 
 if (mb_strlen($in_word) == 0) {
+	echo json_encode(array(), JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -234,7 +236,6 @@ for ($i = 0; $i < $lookup_loop; $i++) {
 
 		
 
-        //$Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($debug) {
             echo "count:$iFetch<br>";
@@ -408,3 +409,6 @@ if ($debug) {
     $queryTime = (microtime_float() - $time_start) * 1000;
     echo "<div >搜索时间：$queryTime 毫秒</div>";
 }
+
+
+PrefLog();

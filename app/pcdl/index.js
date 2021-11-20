@@ -28,22 +28,22 @@ function index_load_collect_new() {
 				gLocal.gui.ongoing + "</div>";
 
 				html += "<div class='title'>";
-				html += "<a href='../article/?id=" + iterator.id + "'>" + iterator.title + "</a>";
+				html += "<a href='../article/?view=article&id=" + iterator.id + "&collection=" + iterator.collect.id+"'>" + iterator.title + "</a>";
 				html += "</div>";
 
 				html += "<div class='collect'>";
 				if (iterator.collect) {
 					html +=
-						"<a href='../article/?collect=" + iterator.collect.id + "'>" + iterator.collect.title + "</a>";
+						"<a href='../article/?view=collection&collection=" + iterator.collect.id + "'>" + iterator.collect.title + "</a>";
 				} else {
 					html += "unkow";
 				}
 				html += "</div>";
 				if (iterator.subtitle) {
-					html += "<div>" + iterator.subtitle + "</div>";
+					html += "<div class='subtitle'>" + iterator.subtitle + "</div>";
 				}
 				if (iterator.summary) {
-					html += "<div>" + iterator.summary + "</div>";
+					html += "<div class='summary'>" + iterator.summary + "</div>";
 				}
 
 				html += "<div style='margin-top:1em;'>" + iterator.username.nickname + "</div>";

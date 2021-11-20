@@ -2,7 +2,7 @@ id,book,par_num,level,class,title,text
 NULL,p100,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p100,2,100,nikaya,,Aṅguttaranikāye
 NULL,p100,3,1,book,Dukanipāta-aṭṭhakathā,Dukanipāta-aṭṭhakathā
-NULL,p100,4,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p100,4,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p100,5,2,chapter,1. Kammakāraṇavaggo,1. Kammakāraṇavaggo
 NULL,p100,6,4,subhead,1. Vajjasuttavaṇṇanā,1. Vajjasuttavaṇṇanā
 NULL,p100,7,100,bodytext,,"1. Dukanipātassa  paṭhame vajjānīti dosā aparādhā. Diṭṭhadhammikanti diṭṭheva dhamme imasmiṃyeva attabhāve uppannaphalaṃ. Samparāyikanti samparāye anāgate attabhāve uppannaphalaṃ. Āgucārinti pāpakāriṃ aparādhakārakaṃ. Rājāno gahetvā vividhā kammakāraṇā kārenteti coraṃ gahetvā vividhā kammakāraṇā rājapurisā karonti, rājāno pana tā kārenti nāma. Taṃ coraṃ evaṃ  kammakāraṇā kāriyamānaṃ esa passati. Tena vuttaṃ – ‘‘passati coraṃ āgucāriṃ rājāno gahetvā vividhā kammakāraṇā kārente’’ti. Addhadaṇḍakehīti muggarehi, pahārasādhanatthaṃ vā catuhatthadaṇḍaṃ dvedhā chetvā gahitadaṇḍakehi. Bilaṅgathālikanti kañjiyaukkhalikakammakāraṇaṃ. Taṃ karontā sīsakaṭāhaṃ uppāṭetvā tattaṃ ayoguḷaṃ saṇḍāsena gahetvā tattha pakkhipanti, tena matthaluṅgaṃ pakkuthitvā  uttarati. Saṅkhamuṇḍikanti saṅkhamuṇḍakammakāraṇaṃ. Taṃ karontā uttaroṭṭhaubhatokaṇṇacūḷikagalavāṭakaparicchedena  cammaṃ chinditvā sabbakese ekato gaṇṭhiṃ katvā daṇḍakena veṭhetvā uppāṭenti, saha kesehi cammaṃ uṭṭhahati. Tato sīsakaṭāhaṃ thūlasakkharāhi ghaṃsitvā dhovantā saṅkhavaṇṇaṃ karonti. Rāhumukhanti rāhumukhakammakāraṇaṃ. Taṃ karontā saṅkunā mukhaṃ vivaritvā antomukhe dīpaṃ jālenti, kaṇṇacūḷikāhi vā paṭṭhāya mukhaṃ nikhādanena khananti, lohitaṃ paggharitvā mukhaṃ pūreti."
@@ -324,7 +324,7 @@ NULL,p100,322,100,centered,,Dukanipātassa saṃvaṇṇanā niṭṭhitā.
 NULL,p100,323,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p100,324,100,nikaya,,Aṅguttaranikāye
 NULL,p100,325,1,book,Tikanipāta-aṭṭhakathā,Tikanipāta-aṭṭhakathā
-NULL,p100,326,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p100,326,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p100,327,2,chapter,1. Bālavaggo,1. Bālavaggo
 NULL,p100,328,4,subhead,1. Bhayasuttavaṇṇanā,1. Bhayasuttavaṇṇanā
 NULL,p100,329,100,bodytext,,1. Tikanipātassa  paṭhame bhayānītiādīsu bhayanti cittutrāso. Upaddavoti anekaggatākāro. Upasaggoti upasaṭṭhākāro tattha tattha lagganākāro.
@@ -879,7 +879,7 @@ NULL,p100,877,100,bodytext,,"Ukkaṃ bandheyyāti aṅgārakapallaṃ sajjeyya. 
 NULL,p100,878,100,bodytext,,Sammā samādhiyati āsavānaṃ khayāyāti arahattaphalatthāya sammā ṭhapīyati. Ettāvatā  hi vipassanaṃ vaḍḍhetvā arahattappatto bhikkhu dassito. Idāni tassa khīṇāsavassa abhiññāya paṭipadaṃ dassento yassa yassa cātiādimāha. Taṃ heṭṭhā vuttanayeneva veditabbaṃ.
 NULL,p100,879,100,centered,,Loṇakapallavaggo pañcamo.
 NULL,p100,880,100,centered,,Dutiyapaṇṇāsakaṃ niṭṭhitaṃ.
-NULL,p100,881,3,title,3. Tatiyapaṇṇāsakaṃ,3. Tatiyapaṇṇāsakaṃ
+NULL,p100,881,100,title,3. Tatiyapaṇṇāsakaṃ,3. Tatiyapaṇṇāsakaṃ
 NULL,p100,882,2,chapter,(11) 1. Sambodhavaggo,(11) 1. Sambodhavaggo
 NULL,p100,883,4,subhead,1. Pubbevasambodhasuttavaṇṇanā,1. Pubbevasambodhasuttavaṇṇanā
 NULL,p100,884,100,bodytext,,"104. Tatiyassa  paṭhame pubbeva sambodhāti sambodhito pubbeva, ariyamaggappattito aparabhāgeyevāti vuttaṃ hoti. Anabhisambuddhassāti appaṭividdhacatusaccassa. Bodhisattasseva satoti bujjhanakasattasseva sato, sammāsambodhiṃ adhigantuṃ ārabhantasseva sato, sambodhiyā vā sattasseva laggasseva sato. Dīpaṅkarassa hi bhagavato pādamūle aṭṭhadhammasamodhānena abhinīhārasamiddhito pabhuti tathāgato sammāsambodhiṃ satto laggo ‘‘pattabbā mayā esā’’ti tadadhigamāya parakkamaṃ amuñcantoyeva āgato, tasmā bodhisattoti vuccati. Ko nu khoti katamo nu kho. Lokoti saṅkhāraloko. Assādoti madhurākāro. Ādīnavoti anabhinanditabbākāro. Tassa mayhanti tassa evaṃ bodhisattasseva sato mayhaṃ. Chandarāgavinayo chandarāgappahānanti nibbānaṃ āgamma ārabbha paṭicca chandarāgo vinayaṃ gacchati pahīyati, tasmā nibbānaṃ ‘‘chandarāgavinayo chandarāgappahāna’’nti vuccati. Idaṃ lokanissaraṇanti idaṃ nibbānaṃ lokato nissaṭattā lokanissaraṇanti vuccati. Yāvakīvanti  yattakaṃ pamāṇaṃ kālaṃ. Abbhaññāsinti abhivisiṭṭhena ariyamaggañāṇena aññāsiṃ. Ñāṇañca pana me dassananti dvīhipi padehi paccavekkhaṇañāṇaṃ vuttaṃ. Sesamettha uttānamevāti."
@@ -996,7 +996,7 @@ NULL,p100,994,100,centered,,Tikanipātassa saṃvaṇṇanā niṭṭhitā.
 NULL,p100,995,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p100,996,100,nikaya,,Aṅguttaranikāye
 NULL,p100,997,1,book,Catukkanipāta-aṭṭhakathā,Catukkanipāta-aṭṭhakathā
-NULL,p100,998,3,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
+NULL,p100,998,100,title,1. Paṭhamapaṇṇāsakaṃ,1. Paṭhamapaṇṇāsakaṃ
 NULL,p100,999,2,chapter,1. Bhaṇḍagāmavaggo,1. Bhaṇḍagāmavaggo
 NULL,p100,1000,4,subhead,1. Anubuddhasuttavaṇṇanā,1. Anubuddhasuttavaṇṇanā
 NULL,p100,1001,100,bodytext,,"1. Catukkanipātassa  paṭhame ananubodhāti abujjhanena ajānanena. Appaṭivedhāti appaṭivijjhanena apaccakkhakiriyāya. Dīghamaddhānanti cirakālaṃ. Sandhāvitanti bhavato bhavaṃ gamanavasena sandhāvitaṃ. Saṃsaritanti punappunaṃ gamanāgamanavasena saṃsaritaṃ. Mamañceva tumhākañcāti mayā ca tumhehi ca. Atha vā sandhāvitaṃ saṃsaritanti sandhāvanaṃ saṃsaraṇaṃ mamañceva  tumhākañca ahosīti evamettha attho veditabbo. Ariyassāti niddosassa. Sīlaṃ samādhi paññāti ime pana tayo dhammā maggaphalasampayuttāva veditabbā, vimuttināmena phalameva niddiṭṭhaṃ. Bhavataṇhāti bhavesu taṇhā. Bhavanettīti  bhavarajju. Taṇhāya eva etaṃ nāmaṃ. Tāya hi sattā goṇā viya gīvāya bandhitvā taṃ taṃ bhavaṃ nīyanti, tasmā bhavanettīti vuccati."
@@ -1364,7 +1364,7 @@ NULL,p100,1362,4,subhead,10. Potaliyasuttavaṇṇanā,10. Potaliyasuttavaṇṇ
 NULL,p100,1363,100,bodytext,,100. Dasame kālenāti yuttappattakālena. Khamatīti ruccati. Yadidaṃ tattha tattha kālaññutāti yā esā tattha tattha kālaṃ jānanā. Taṃ taṃ kālaṃ ñatvā hi avaṇṇārahassa avaṇṇakathanaṃ vaṇṇārahassa ca vaṇṇakathanaṃ paṇḍitānaṃ pakatīti dasseti.
 NULL,p100,1364,100,centered,,Asuravaggo pañcamo.
 NULL,p100,1365,100,centered,,Dutiyapaṇṇāsakaṃ niṭṭhitaṃ.
-NULL,p100,1366,3,title,3. Tatiyapaṇṇāsakaṃ,3. Tatiyapaṇṇāsakaṃ
+NULL,p100,1366,100,title,3. Tatiyapaṇṇāsakaṃ,3. Tatiyapaṇṇāsakaṃ
 NULL,p100,1367,2,chapter,(11) 1. Valāhakavaggo,(11) 1. Valāhakavaggo
 NULL,p100,1368,4,subhead,1-2. Valāhakasuttadvayavaṇṇanā,1-2. Valāhakasuttadvayavaṇṇanā
 NULL,p100,1369,100,bodytext,,"101-2. Tatiyapaṇṇāsakassa  paṭhame valāhakāti meghā. Bhāsitā hoti no kattāti ‘‘idañcidañca karissāmī’’ti kevalaṃ bhāsatiyeva, na karoti. Kattā hoti no bhāsitāti akathetvāva ‘‘idañcidañca mayā kātuṃ vaṭṭatī’’ti kattā hoti. Evaṃ sabbattha attho veditabbo. Dutiyaṃ uttānatthameva."

@@ -1,5 +1,6 @@
 ﻿<?php
 //查询参考字典
+include("../log/pref_log.php");
 require_once '../path.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
@@ -11,6 +12,7 @@ require_once "../ucenter/active.php";
 require_once "../ucenter/function.php";
 require_once "../dict/p_ending.php";
 require_once "../redis/function.php";
+require_once "../dict/grm_abbr.php";
 
 global $redis;
 $redis = redis_connect();
@@ -47,7 +49,7 @@ $right_word_list = "";
 
         $Fetch = PDO_FetchAll($query, array($word));
         $iFetch = count($Fetch);
-		echo "直接查询{$iFetch}<br>";
+		echo "<div>直接查询{$iFetch}</div>";
         $count_return += $iFetch;
         if ($iFetch > 0) {
             for ($i = 0; $i < $iFetch; $i++) {
@@ -58,6 +60,7 @@ $right_word_list = "";
                 $outXml = "<div class='dict_word'>";
                 $outXml = $outXml . "<a name='ref_dict_$dictid'></a>";
                 $outXml = $outXml . "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
+				$mean = GrmAbbr($mean,$dictid);
                 $outXml = $outXml . "<div class='mean'>" . $mean . "</div>";
                 $outXml = $outXml . "</div>";
                 echo $outXml;
@@ -66,6 +69,7 @@ $right_word_list = "";
 		
 
         //去格位除尾查
+		echo "<div>去格位除尾查</div>";
         $newWord = array();
         for ($row = 0; $row < count($case); $row++) {
             $len = mb_strlen($case[$row][1], "UTF-8");
@@ -100,10 +104,9 @@ $right_word_list = "";
 					echo "<div class='pali_spell'><a name='word_$x'></a>" . $x . "</div>";
 					$titleHas = true;
 				}
-				echo $userDictStr;
-				echo $termDictStr;
+
 				
-                $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
+                $query = "SELECT dict.id,dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
                 $Fetch = PDO_FetchAll($query, array($x));
                 $iFetch = count($Fetch);
                 $count_return += $iFetch;
@@ -119,16 +122,16 @@ $right_word_list = "";
                         $x_value = str_replace($gr->id, $gr->value, $x_value);
                     }
                     echo "<div class='dict_find_gramma'>" . $x_value . "</div>";
+					
+					echo $userDictStr;
+					echo $termDictStr;
+
                     for ($i = 0; $i < $iFetch; $i++) {
                         $mean = $Fetch[$i]["mean"];
                         $dictid = $Fetch[$i]["dict_id"];
                         $dict_list[$dictid] = $Fetch[$i]["shortname"];
                         $dict_list_a[] = array("ref_dict_$dictid", $Fetch[$i]["shortname"]);
-                        echo "<div class='dict_word'>";
-                        echo "<a name='ref_dict_$dictid'></a>";
-                        echo "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
-                        echo "<div class='mean'>" . $mean . "</div>";
-                        echo "</div>";
+						RenderWordDiv($dictid,$Fetch[$i]["shortname"],$Fetch[$i]["id"],$x,$mean);
                     }
                 }
             }
@@ -136,6 +139,7 @@ $right_word_list = "";
 		//去除尾查结束
 
 		//去分词除尾查
+		echo "<div>去分词除尾查</div>";
         $arrBase = array();		
 		if (count($newWord) > 0) {
 			foreach ($newWord as $base => $grammar){
@@ -157,7 +161,6 @@ $right_word_list = "";
 							} else {
 								$arrBase[$newbase]['grammar'] = $thiscase;
 								$arrBase[$newbase]['parent'] = $base;
-
 							}
 						}
 					}
@@ -190,6 +193,7 @@ $right_word_list = "";
 							echo "<div class='dict_word'>";
 							echo "<a name='ref_dict_$dictid'></a>";
 							echo "<div class='dict'>" . $Fetch[$i]["shortname"] . "</div>";
+							$mean = GrmAbbr($mean,$dictid);
 							echo "<div class='mean'>" . $mean . "</div>";
 							echo "</div>";
 						}
@@ -318,40 +322,11 @@ $right_word_list = "";
         echo "<span>{$_local->gui->click_to_chart}</span></a></div>";
 		echo $right_word_list;
 		
-		/*
-        echo "<div class='dict_word' ><b>{$_local->gui->undone_function}</b>";
-        echo "<div class='' onclick=\"dict_show_edit()\">{$_local->gui->edit}</div>";
-        echo "<div class='pali'>{$word}</div>";
-
-        if ($iFetch > 0) {
-            echo "<div id='user_word_edit' style='display:none'>";
-        } else {
-            echo "<div id='user_word_edit'>";
-        }
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->wordtype}</legend>";
-        echo "<select id=\"id_type\" name=\"type\" >";
-        foreach ($_local->type_str as $type) {
-            echo "<option value=\"{$type->id}\" >{$type->value}</option>";
-        }
-        echo "</select>";
-        echo "</fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->gramma}</legend><input type='input' value=''/></fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->parent}</legend><input type='input' value=''/></fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->g_mean}</legend><input type='input' value=''/></fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->note}</legend><textarea></textarea></fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->factor}</legend><input type='input' value=''/></fieldset>";
-        echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->f_mean}</legend><input type='input' value=''/></fieldset>";
-        echo "<div class=''><button>{$_local->gui->add_to} {$_local->gui->my_dictionary}</button></div>";
-		echo "</div>";
-		
-
-		echo "</div>";
-		*/
 		echo "</div>";
 
         //查用户词典结束
 
-
+PrefLog();
 
 function lookup_user($word){
 	global $dict_list;
@@ -472,13 +447,13 @@ function lookup_user($word){
 				# code...
 				$strMean .=$mean . "; ";
 			}
-			$output .= "<div class='mean'><b>语法</b>:{$strCase}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->gramma}</b>:{$strCase}</div>";
 			if($key!=="_null_"){
-				$output .= "<div class='mean'><b>原型</b>:<a href='index.php?key={$key}'>{$key}</a></div>";				
+				$output .= "<div class='mean'><b>{$_local->gui->parent}</b>:<a href='index.php?key={$key}'>{$key}</a></div>";				
 			}
 
-			$output .= "<div class='mean'><b>意思</b>:{$strMean}</div>";
-			$output .= "<div class='mean'><b>组成</b>:{$strPart}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->g_mean}</b>:{$strMean}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->factor}</b>:{$strPart}</div>";
 		}
 		$output .= "<div><span>{$_local->gui->contributor}：</span>";
 		$userinfo = new UserInfo();
@@ -577,4 +552,75 @@ function lookup_term($word){
 	
 	return $output;
 
+}
+
+function GrmAbbr($input,$dictid){
+	$mean = $input;
+
+	foreach (GRM_ABBR as $key => $value) {
+		# code...
+		if($value["dictid"]==$dictid && strpos($input,$value["abbr"]."</guide>") == false){
+			$mean = str_ireplace($value["abbr"],"<guide gid='grammar_{$value["replace"]}' class='grammar_tag' style='display:unset;'>{$value["abbr"]}</guide>",$mean);
+		}
+	}
+	return $mean;
+}
+
+function RenderWordDiv($dictId,$dictName,$refWordId,$word,$meaning){
+	echo "<div class='dict_word'>";
+	echo "<a name='ref_dict_$dictId'></a>";
+	echo "<div class='dict'>" . $dictName . "</div>";
+	$mean = GrmAbbr($meaning,$dictId);
+	echo "<div class='mean'>" . $mean . "</div>";
+
+	/*
+	echo "<div class='tool'>";
+	echo "<button onclick='refDictShowTranslateDiv(this)'>我要翻译</button>";
+	echo "<div class='tool_innter'>";
+	RenderUserDictEdit($word,$dictId,$refWordId);
+	echo "</div>";
+	echo "</div>";
+*/
+	echo "</div>";
+}
+
+function RenderUserDictEdit($word,$dictId,$refWordId){
+	global $_local;
+	        //用户词典编辑窗口
+			echo "<div >";
+			echo "<form >";
+			echo "<input type='hidden' name='word' value='{$word}'/>";
+			echo "<input type='hidden' name='dictid' value='{$dictId}'/>";
+			echo "<input type='hidden' name='wordid' value='{$refWordId}'/>";
+			if ($dictId == 0) {
+				echo "<div id='user_word_edit'>";
+			} else {
+				echo "<div id='user_word_edit'>";
+			}
+			
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->language}</legend><input type='input' name='lang' value='zh-hans'/></fieldset>";
+
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->wordtype}</legend>";
+
+			echo "<select id=\"id_type\" name=\"type\" >";
+			foreach ($_local->type_str as $type) {
+				echo "<option value=\"{$type->id}\" >{$type->value}</option>";
+			}
+			echo "</select>";
+
+			echo "</fieldset>";
+
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->gramma}</legend><input type='input' name='grammar' value=''/></fieldset>";
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->parent}</legend><input type='input' name='parent' placeholder='{$word}' value=''/></fieldset>";
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->g_mean}</legend><input type='input' name='mean' value=''/></fieldset>";
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->note}</legend><textarea name='note'></textarea></fieldset>";
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->factor}</legend><input type='input' name='parts' value=''/></fieldset>";
+			echo "<fieldset class='broder-1 broder-r'><legend>{$_local->gui->f_mean}</legend><input type='input' name='part_mean' value=''/></fieldset>";
+			echo "</form>";
+			echo "<div class=''><button onclick='SaveToMyDict()'>{$_local->gui->save}</button></div>";
+			echo "</div>";
+			
+	
+			echo "</div>";
+	
 }

@@ -4,9 +4,14 @@ require_once "../path.php";
 require_once "../pcdl/html_head.php";
 ?>
 <body style="margin: 0;padding: 0;" class="reader_body" >
+	<script>
+		var gCaseTable=<?php echo file_get_contents("../public/js/case.json"); ?>
+	</script>
 
+	<script  src="./article.js"></script>
 
-	<script src="./article.js"></script>
+	<script src="../widget/like.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
 
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
@@ -18,11 +23,19 @@ require_once "../pcdl/html_head.php";
 	$_channal  = "";
 	$_collect = "";
 
+	if(isset($_GET["view"])){
+		echo "_view='".$_GET["view"]."';";
+	}
+	else{
+		echo "_view='article';";
+	}
+
 	if(isset($_GET["id"])){
 		echo "_articel_id='".$_GET["id"]."';";
+		echo "_id='".$_GET["id"]."';";
 	}
 	if(isset($_GET["collect"])){
-		echo "_collect_id='".$_GET["collect"]."';";
+		echo "_collection_id='".$_GET["collect"]."';";
 	}
 	if(isset($_GET["collection"])){
 		echo "_collection_id='".$_GET["collection"]."';";
@@ -31,20 +44,46 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["channal"])){
 		echo "_channal='".$_GET["channal"]."';";
 	}
+	if(isset($_GET["channel"])){
+		echo "_channal='".$_GET["channel"]."';";
+	}
 	if(isset($_GET["lang"])){
 		echo "_lang='".$_GET["lang"]."';";
 	}
 	if(isset($_GET["author"])){
 		echo "_author='".$_GET["author"]."';";
 	}
+
+	if(isset($_GET["book"])){
+		echo "_book=".$_GET["book"].";";
+	}
+	if(isset($_GET["par"])){
+		echo "_par=".$_GET["par"].";";
+	}
+	if(isset($_GET["para"])){
+		echo "_par=".$_GET["para"].";";
+	}
+	if(isset($_GET["start"])){
+		echo "_start=".$_GET["start"].";";
+	}
+	if(isset($_GET["begin"])){
+		echo "_start=".$_GET["begin"].";";
+	}
+	if(isset($_GET["end"])){
+		echo "_end=".$_GET["end"].";";
+	}
+
+	
 	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
 		#登录状态下 编辑模式
 		$_mode = "edit";
 		echo "_mode='edit';";
+		$classMode="edit_mode";
 	}
 	else{
 		$_mode = "read";
 		echo "_mode='read';";
+		$classMode="read_mode";
 	}
 	if(isset($_GET["display"])){
 		if($_mode == "edit"){
@@ -101,32 +140,159 @@ require_once "../pcdl/html_head.php";
 
 
 <link type="text/css" rel="stylesheet" href="style.css"  />
+<link type="text/css" rel="stylesheet" href="pad.css" media="screen and (max-width:1280px)" />
 <link type="text/css" rel="stylesheet" href="mobile.css" media="screen and (max-width:800px)" />
 <link type="text/css" rel="stylesheet" href="print.css" media="print" />
 
+<link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
+<script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
+<script src="../article/my_collect.js" type="text/javascript"></script>
+<script language="javascript" src="../article/article_add_dlg.js"></script>
+
+
+<style>
+ul.fancytree-container{
+	border:unset;
+	width: max-content;
+}
+.fancytree-container .active {
+    font-weight: 700;
+    color: var(--main-color);
+	background: linear-gradient(to right, var(--link-color), var(--nocolor));
+    border-radius: 5px;
+}
+span.fancytree-title{
+	color: var(--main-color1);
+}
+span.fancytree-node{
+	display: flex;
+}
+
+
+#content_toc>ul>li>span.fancytree-node{
+	font-size: 120%;
+    font-weight: 900;
+}
+#article_path chapter{
+	display:unset;
+}
+
+.float_dlg {
+	display: none;
+	width: 25em;
+	position: absolute;
+	right: 0;
+	background-color: var(--btn-hover-bg-color);
+	padding: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px var(--main-color);
+	z-index: 1;
+}
+
+.float_dlg_left {
+	display: none;
+	width: 25em;
+	position: absolute;
+	background-color: var(--btn-hover-bg-color);
+	padding: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px var(--main-color);
+	z-index: 200;
+}
+
+#contents ul, li {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-left: 7px;
+}
+
+
+</style>
 
 <?php
     require_once("../pcdl/head_bar.php");
 ?>
+<script>
+function show_content(){
+	$("#left_pannal").toggleClass("hidden");
+	if($("#left_pannal").hasClass("hidden")){
+		$("#main_view").css("margin-left","auto");
+		localStorage.setItem('article_show_toc_'+_mode, 'hide');
+	}else{
+		$("#main_view").css("margin-left","270px");
+		localStorage.setItem('article_show_toc_'+_mode, 'show');
+	}
+}
+function set_toc_visible(isVisible){
+	if(isVisible){
+		$("#left_pannal").removeClass("hidden");
+		$("#main_view").css("margin-left","270px");
+		localStorage.setItem('article_show_toc_'+_mode, 'show');
+	}else{
+		$("#left_pannal").addClass("hidden");
+		$("#main_view").css("margin-left","auto");
+		localStorage.setItem('article_show_toc_'+_mode, 'hide');
+	}
+}
+
+</script>
 <div id="head_bar" >
-	<div id="pali_pedia" style="display:flex;">
-		<span><?php echo $_local->gui->anthology; ?></span>
+	<div style="display:flex;">
+	<button class="icon_btn" onclick="show_content()"><?php echo $_local->gui->contents; ?></button>
 	</div>
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
+
 		<?php
 		
-		if(isset($_GET["id"])){
-			echo "<button class='icon_btn'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
+		if(isset($_GET["view"]) && $_GET["view"]=="article"){
+			echo "<button class='icon_btn show_pc'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
 			echo "' target='_blank'>{$_local->gui->modify}</a></button>";
-			
-			echo "<button class='icon_btn'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
-			echo "<a href='../article/frame.php?id=".$_GET["id"];
-			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
-			
 		}
+		if($_GET["view"]!=="article" && $_GET["view"]!=="collection"){
+?>
+	<span id="convert_article" class="icon_btn_div show_pc">				
+		<button id="file_add" type="button" class="icon_btn" onclick="to_article()" title=" ">
+			<svg class="icon">
+				<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
+			</svg>
+			转换为文章
+		</button>
+		<div id='article_add_div' class="float_dlg"></div>
+	</span>	
+<?php
+		}
+			echo "<button class='icon_btn show_pc'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
+			echo "<a href='../article/frame.php?view=".$_GET["view"];
+			if(isset($_GET["id"])){
+				echo "&id=".$_GET["id"];
+			}
+			if(isset($_GET["collection"])){
+				echo "&collection=".$_GET["collection"];
+			}
+			if(isset($_GET["channel"])){
+				echo "&channel=".$_GET["channel"];
+			}
+			if(isset($_GET["lang"])){
+				echo "&lang=".$_GET["lang"];
+			}
+			if(isset($_GET["book"])){
+				echo "&book=".$_GET["book"];
+			}
+			if(isset($_GET["par"])){
+				echo "&par=".$_GET["par"];
+			}
+			if(isset($_GET["start"])){
+				echo "&start=".$_GET["start"];
+			}
+			if(isset($_GET["end"])){
+				echo "&end=".$_GET["end"];
+			}
+			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
+				
+		
 
 		?>
 		<span>
@@ -135,67 +301,138 @@ require_once "../pcdl/html_head.php";
 		</span>
 	</div>
 </div>
-<div id="main_view" class="main_view">
-<div id="article_head" style="border-bottom: 1px solid gray;">
-	<div id="article_title" class="term_word_head_pali"><?php echo $_local->gui->title; ?></div>
-	<div id="article_subtitle"><?php echo $_local->gui->sub_title; ?></div>
-	<div id="article_author"><?php echo $_local->gui->author; ?></div>
-</div>
-<div id="contents_view">
-	<div id="contents_div">
-	
-		<div id="contents" class="<?php echo $contentClass;?>">
-		<?php echo $_local->gui->loading; ?>...
-		</div>
-		<div id="contents_foot">
-			<div id="contents_nav" style="display:flex;justify-content: space-between;">
-				<div id="contents_nav_left"></div>
-				<div id="contents_nav_right"></div>
-			</div>
-			<div id="contents_dicuse">
-			
-			</div>
+<div id="left_pannal">
+	<div id="left_pannal_inner" class="fun_frame" style="z-index: 99;">
+		<!--<div id = "collect_title" class="title" style="text-align: right;background: #ffd70087;" onclick="show_content(this)"></div>-->
+		<div id = "toc_content" class="content" style="padding-top:0;">
 		</div>
 	</div>
-	<div id="right_pannal">
-		<div class="fun_frame">
-			<div id = "collect_title" class="title"><?php echo $_local->gui->contents; ?></div>
-			<div id = "toc_content" class="content" style="max-height:25vw;">
+</div>
+
+<div id="main_view" class="main_view <?php echo $classMode;?>">
+	<div id="article_head" style="border-bottom: 1px solid gray;">
+		<div id="head_nav" >	
+			<div id="head_nav_left" >
+				<div id="article_path" class=""></div>
+				<div id="article_path_title"></div>
 			</div>
-		</div>
-		<div class="fun_frame">
-			<div style="display:flex;justify-content: space-between;">
-				<div class="title"><?php echo $_local->gui->contributor; ?></div>
-				<div class="click_dropdown_div">
-					<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+			<div id="head_nav_right" >
+				<select id="select_lang" onchange="lang_changed(this)">
+						<option>全部语言</option>
+						<option>简体中文</option>
+						<option>繁体中文</option>
+						<option>英文</option>
+				</select>
+				<div id="article_edition" style="display:flex;">
+					<span  style='font-weight: 700;'>文章版本 </span>
+					<div id="edition_dropdown" class="case_dropdown">
+						<span></span>
+					</div>
 				</div>
 			</div>
-			<div class='channel_select'>
-				<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
-				<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+		</div>
+		<div id="article_title" class="term_word_head_pali"></div>
+		<div id="article_subtitle"></div>
+		<div id="article_author"></div>
+		<div id="like_div">
+			<like restype='article' resid='124'></like>
+			<watch restype='article' resid='124'></watch>
+		</div>
+	</div>
+
+	<div id="contents_view">
+		<div id="contents_div">
+			<div id="summary"></div>
+			<div id="contents" class="<?php echo $contentClass;?>">
+				<?php echo $_local->gui->loading; ?>...
 			</div>
-			<div id="channal_list" class="content" style="max-height:25vw;">
+			<div id="contents_foot">
+				<div id="contents_nav" style="display:flex;justify-content: space-between;">
+					<div id="contents_nav_left" class="nav_bnt nav_left" onclick="goto_prev()">
+					<svg class='icon' style='fill: var(--box-bg-color1)'>
+						<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-left'>
+					</svg>
+					<span id="contents_nav_left_inner" ></span>
+					</div>
+					<div id="contents_nav_right"  class="nav_bnt nav_right" onclick="goto_next()">
+					<span id="contents_nav_right_inner" ></span>		
+					<svg class='icon' style='fill: var(--box-bg-color1)'>
+						<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-right'>
+					</svg>
+							
+					</div>
+				</div>
+				<div id="contents_dicuse">
+				
+				</div>
+			</div>
+		</div>
+		<div id="right_pannal">
+			<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;height: calc(100vh - 250px);">
+				<div style="display:flex;justify-content: space-between;">
+					<div class="title"><?php echo $_local->gui->contributor; ?></div>
+					<div class="click_dropdown_div">
+						<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+					</div>
+				</div>
+				<div class='channel_select'>
+					<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
+					<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
+				</div>
+				<div id="channal_list" class="content" style="max-height:calc(100vh - 20em);">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 
 
 
 <script>
 	$(document).ready(function(){
+		if(window.innerWidth>800){
+			if(localStorage.getItem('article_show_toc_'+_mode)=="hide"){
+				set_toc_visible(false);
+			}else{
+				set_toc_visible(true);
+			}			
+		}else{
+			set_toc_visible(false);
+		}
+
+		
+		article_add_dlg_init("article_add_div");
 	ntf_init();				
 	click_dropdown_init();
 	note_create();
 	historay_init();
-	if(_collect_id==""){
-		articel_load(_articel_id,_collection_id);
-		articel_load_collect(_articel_id);
+	switch (_view) {
+		case "article":
+			articel_load(_articel_id,_collection_id);
+			if(_collection_id!=""){
+				articel_load_article_list(_articel_id,_collection_id);
+			}
+			break;
+		case "collection":
+			collect_load(_collection_id);
+		break;
+		case "sent":
+		case "para":
+		case "chapter":
+		case "book":
+		case "series":
+			palicanon_load();
+			reader_get_path();
+			render_toc();
+		break;
+		case "simsent":
+		case "sim":
+			palicanon_load();
+			break;
+		default:
+			break;
 	}
-	else{
-		collect_load(_collect_id);
-	}
+
 	});
 
 	 window.addEventListener('scroll',winScroll);

@@ -22,7 +22,7 @@ $guid = GUIDv4();
 switch ($res_type) {
     case "wbw":
         if ($author == "templet") {
-            $db_file = _DIR_PALICANON_TEMPLET_ . "/" . $currBook . "_tpl.db3";
+            $db_file = _FILE_DB_PALICANON_TEMPLET_;
         } else {
             $db_file = "../appdata/palicanon/wbw/" . $currBook . "_wbw.db3";
         }
@@ -46,30 +46,30 @@ switch ($res_type) {
 }
 //open database
 //echo "$db_file";
-PDO_Connect("$db_file");
+PDO_Connect($db_file);
 switch ($res_type) {
     case "wbw":
         if ($author == "templet") {
-            $query = "SELECT * FROM \"main\" WHERE \"book\" = " . $PDO->quote($currBook) . " AND \"paragraph\" = " . $PDO->quote($currParagraph) . "  ORDER BY vri ";
+            $query = "SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE  book  = " . $PDO->quote($currBook) . " AND \"paragraph\" = " . $PDO->quote($currParagraph) . "  ORDER BY vri ";
         } else {
-            $query = "SELECT * FROM \"main\" WHERE \"book\" = " . $PDO->quote($currBook) . " AND \"paragraph\" = " . $PDO->quote($currParagraph) . " AND \"language\" = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver) . "  ORDER BY vri ";
+            $query = "SELECT * FROM  main  WHERE  book  = " . $PDO->quote($currBook) . " AND  paragraph  = " . $PDO->quote($currParagraph) . " AND language = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver) . "  ORDER BY vri ";
         }
         break;
     case "heading":
         if ($author == "templet") {
-            $query = "SELECT * FROM \"data\" WHERE \"book\" = " . $PDO->quote($currBook) . " AND \"paragraph\" = " . $PDO->quote($currParagraph);
+            $query = "SELECT * FROM  data  WHERE  book  = " . $PDO->quote($currBook) . " AND  paragraph  = " . $PDO->quote($currParagraph);
         } else {
-            $query = "SELECT * FROM \"data\" WHERE \"book\" = " . $PDO->quote($currBook) . " AND \"par_num\" = " . $PDO->quote($currParagraph) . " AND \"language\" = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
+            $query = "SELECT * FROM  data  WHERE  book  = " . $PDO->quote($currBook) . " AND  par_num  = " . $PDO->quote($currParagraph) . " AND language = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
         }
         break;
     case "translate":
-        $query = "SELECT * FROM \"data\" WHERE \"paragraph\" = " . $PDO->quote($currParagraph) . " AND \"language\" = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
+        $query = "SELECT * FROM  data  WHERE  paragraph  = " . $PDO->quote($currParagraph) . " AND  language  = " . $PDO->quote($language) . " AND  author  = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
         break;
     case "note":
-        $query = "SELECT * FROM \"data\" WHERE \"paragraph\" = " . $PDO->quote($currParagraph) . " AND \"language\" = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
+        $query = "SELECT * FROM  data  WHERE  paragraph  = " . $PDO->quote($currParagraph) . " AND  language  = " . $PDO->quote($language) . " AND  author  = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
         break;
     case "file":
-        $query = "SELECT * FROM \"data\" WHERE \"paragraph\" = " . $PDO->quote($currParagraph) . " AND \"language\" = " . $PDO->quote($language) . " AND \"author\" = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
+        $query = "SELECT * FROM  data  WHERE  paragraph  = " . $PDO->quote($currParagraph) . " AND  language  = " . $PDO->quote($language) . " AND author = " . $PDO->quote($author) . " AND \"editor\" = " . $PDO->quote($editor) . " AND \"edition\" = " . $PDO->quote($edition) . " AND \"subver\" = " . $PDO->quote($subver);
         break;
 }
 

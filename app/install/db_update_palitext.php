@@ -1,4 +1,5 @@
 ﻿<?php
+#根据pali_text 里面的*_title.csv数据更新数据库
 require_once "install_head.php";
 require_once "../public/_pdo.php";
 ?>
@@ -97,8 +98,8 @@ if ((count($arrInserString)) != count($pali_text_array) - 2) {
 $book = $from + 1;
 
 //计算段落信息，如上一段
-PDO_Connect("" . _FILE_DB_PALITEXT_);
-$query = "select * from pali_text where book = '$book' ";
+PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = '$book' ";
 $title_data = PDO_FetchAll($query);
 echo "Paragraph Count:" . count($title_data) . "<br>";
 
@@ -106,7 +107,7 @@ $paragraph_count = count($title_data);
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "UPDATE pali_text SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
+$query = "UPDATE "._TABLE_PALI_TEXT_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
 $stmt = $PDO->prepare($query);
 
 $paragraph_info = array();

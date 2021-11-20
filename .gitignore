@@ -14,7 +14,12 @@
 /yarn.lock
 /composer.lock
 /app/phpinfo.php
-
+/app/config.php
+/app/config.js
+/app/path.php
 # dependencies
 /vendor/
 /node_modules/
+
+# vi
+.swap

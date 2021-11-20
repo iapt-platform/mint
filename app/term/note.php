@@ -1,4 +1,5 @@
 <?php
+include("../log/pref_log.php");
 require_once "../path.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
@@ -314,3 +315,5 @@ foreach ($_data as $key => $value) {
 }
 
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
+
+PrefLog();

@@ -33,7 +33,7 @@ if (isset($_GET["step"])) {
     $step = $_GET["step"];
 }
 
-if ($_COOKIE["userid"]) {
+if ($_COOKIE["uid"]) {
     $userid = $_COOKIE["userid"];
     $uid = $_COOKIE["uid"];
 } else {

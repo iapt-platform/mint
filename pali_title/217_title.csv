@@ -1,3 +1,4 @@
+id,book,par_num,level,class,title,text
 NULL,p217,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p217,2,100,nikaya,,Vinayapiṭake
 NULL,p217,3,1,book,(VN)Parivārapāḷi,Parivārapāḷi
@@ -3643,4 +3644,3 @@ NULL,p217,3642,100,gatha1,,"Khandhā  ceva samuṭṭhānā, adhikaraṇameva ca
 NULL,p217,3643,100,gathalast,,"Samathā saṅgahā ceva, nāmaāpattikā tathāti."
 NULL,p217,3644,100,centered,,Parivāro niṭṭhito.
 NULL,p217,3645,100,centered,,Parivārapāḷi niṭṭhitā.
-id,book,par_num,level,class,title,text

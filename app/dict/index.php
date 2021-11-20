@@ -13,7 +13,25 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 
 	<link type="text/css" rel="stylesheet" href="./css/style.css" >
 	<link type="text/css" rel="stylesheet" href="./css/style_mobile.css" media="screen and (max-width:800px)">
+<style>
+guide.grammar_tag {
+    display: unset;
+    background: unset;
+    /*color: unset;*/
+    background-color: var(--btn-color);
+    padding: 0;
+    border-radius: 3px;
+	margin: 0;
 
+}
+guide.grammar_tag:hover {
+	/*color: unset;*/
+	text-decoration: underline;
+}
+.dict_word:hover  guide.grammar_tag {
+	/*text-decoration: underline;*/
+}
+</style>
 
 	<!-- tool bar begin-->
 	<div id='search_toolbar' class="search_toolbar">
@@ -108,7 +126,7 @@ if (!(isset($_GET["builtin"]) && $_GET["builtin"] == 'true')) {
 	</div>
 
 	<div>
-		<div id="main_view" class='section_inner'  style="background-color:white;color:black;">
+		<div id="main_view" class='section_inner' >
 			<div id='dict_list_shell' style="display:none" onclick='setNaviVisibility()'>
 				<div id='dict_list' class='dict_list_off'></div>
 			</div>

@@ -227,8 +227,8 @@ include "../pcdl/html_head.php";
 
     <div class="search_section">
         <div style='font-size:140%;'>
-            <span style="display:inline-block;max-width:20em;"><input type="input" placeholder=<?php echo $_local->gui->search . '：' . $_local->gui->title . '&nbsp;OR&nbsp;' . $_local->gui->author; ?> style="background-color:var(--new-tool-input-text-bg); border:solid 1px var(--new-tool-btn-border)" /></span>
-            <button class="icon_btn">
+            <span style="display:inline-block;max-width:20em;"><input class="disable" type="input" placeholder=<?php echo $_local->gui->search . '：' . $_local->gui->title . '&nbsp;OR&nbsp;' . $_local->gui->author; ?> style="background-color:var(--new-tool-input-text-bg); border:solid 1px var(--new-tool-btn-border)" /></span>
+            <button class="icon_btn disable">
                 <svg class="icon">
                     <use xlink:href="../studio/svg/icon.svg#ic_search"></use>
                 </svg>

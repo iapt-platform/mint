@@ -74,6 +74,13 @@ require_once '../pcdl/html_head.php';
 		.article_right a {
 			color: var(--main-color);
 		}
+		.summary{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+		}
 
 		.title a,
 		.course_right title {
