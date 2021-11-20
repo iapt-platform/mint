@@ -1,5 +1,5 @@
 -- This file should undo anything in `up.sql`
-
-DROP TYPE TActiveType ;
+-- 其他项目依赖
+-- DROP TYPE TActiveType ;
 
 DROP TABLE active_logs;
