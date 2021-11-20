@@ -38,7 +38,7 @@ var list_relation=[
     {
         "id": "ASV",
         "case": "",
-        "note": "施动者<主格> -> 动词<br>XX把...",
+        "note": "施动者<主格> -> 动词<br>XX把…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -65,7 +65,7 @@ var list_relation=[
     {
         "id": "AOV",
         "case": ".nom.",
-        "note": "受动者<主格> -> 动词<br>XX被...",
+        "note": "受动者<主格> -> 动词<br>XX被…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -92,7 +92,7 @@ var list_relation=[
     {
         "id": "DASO-P",
         "case": ".nom.",
-        "note": "<字面>主语 -> 系动词<br>XX是...",
+        "note": "<字面>主语 -> 系动词<br>XX是…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -119,7 +119,7 @@ var list_relation=[
     {
         "id": "DASO-S",
         "case": ".nom.",
-        "note": "<字面>表语 -> 系动词<br>...是XX",
+        "note": "<字面>表语 -> 系动词<br>…是XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -137,7 +137,7 @@ var list_relation=[
     {
         "id": "NIO",
         "case": ".nom.",
-        "note": "被描述 -> 定性<br>XX有...",
+        "note": "被描述 -> 定性<br>XX有…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -164,7 +164,7 @@ var list_relation=[
     {
         "id": "NID",
         "case": ".nom.",
-        "note": "待命名 -> 命名<br>XX叫做...",
+        "note": "待命名 -> 命名<br>XX叫做…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -191,7 +191,7 @@ var list_relation=[
     {
         "id": "DASD-P",
         "case": ".nom.",
-        "note": "<命名>主 -> 系<br>XX叫做...",
+        "note": "<命名>主 -> 系<br>XX叫做…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -218,7 +218,7 @@ var list_relation=[
     {
         "id": "DASD-S",
         "case": ".nom.",
-        "note": "<命名>表 -> 系<br>...叫做XX",
+        "note": "<命名>表 -> 系<br>…叫做XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -272,7 +272,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".acc.",
-        "note": "受动者<非主格> -> 动词<br>...把XX",
+        "note": "受动者<非主格> -> 动词<br>…把XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -434,7 +434,7 @@ var list_relation=[
     {
         "id": "SOE",
         "case": ".inst.",
-        "note": "伴随 -> 动词<带连词><br>跟XX一起",
+        "note": "<带连词>伴随关系<br>跟XX一起",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -461,7 +461,7 @@ var list_relation=[
     {
         "id": "SOI",
         "case": ".inst.",
-        "note": "伴随 -> 动词<无连词><br>与XX",
+        "note": "<无连词>伴随关系<br>与XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -515,7 +515,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".inst.",
-        "note": "因果<br>根据XX",
+        "note": "因 -> 果<br>根据XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -533,7 +533,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".inst.",
-        "note": "被使役宾语 -> 动词<br>令XX...",
+        "note": "被使役宾语 -> 动词<br>令XX…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -650,7 +650,7 @@ var list_relation=[
     {
         "id": "PUR",
         "case": ".dat.",
-        "note": "目的 -> 动词<br>为了...",
+        "note": "目的 -> 动词<br>为了…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -785,7 +785,7 @@ var list_relation=[
     {
         "id": "POS",
         "case": ".gen.",
-        "note": "从属<br>属于XX的",
+        "note": "所有 -> 被所有<br>属于XX的",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -839,7 +839,7 @@ var list_relation=[
     {
         "id": "ISV",
         "case": ".gen.",
-        "note": "施动者<非主格> -> 动词<br>XX的...<动作>",
+        "note": "施动者<非主格> -> 动词<br>XX的…<动作>",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -866,7 +866,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".gen.",
-        "note": "受动者<非主格> -> 动词<br>XX的被...",
+        "note": "受动者<非主格> -> 动词<br>XX的被…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -893,7 +893,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".loc.",
-        "note": "容纳 -> 被容纳<br>在...",
+        "note": "容器 -> 动词<br>在…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -920,7 +920,7 @@ var list_relation=[
     {
         "id": "MOT",
         "case": ".loc.",
-        "note": "动机",
+        "note": "表现 -> 有表现",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1244,7 +1244,7 @@ var list_relation=[
     {
         "id": "DEF",
         "case": "",
-        "note": "特征限定<br>当...",
+        "note": "特征限定<br>当…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1460,7 +1460,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".adv.",
-        "note": "容纳 -> 被容纳<br>在...",
+        "note": "容纳 -> 被容纳<br>在…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",

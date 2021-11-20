@@ -447,13 +447,13 @@ function lookup_user($word){
 				# code...
 				$strMean .=$mean . "; ";
 			}
-			$output .= "<div class='mean'><b>语法</b>:{$strCase}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->gramma}</b>:{$strCase}</div>";
 			if($key!=="_null_"){
-				$output .= "<div class='mean'><b>原型</b>:<a href='index.php?key={$key}'>{$key}</a></div>";				
+				$output .= "<div class='mean'><b>{$_local->gui->parent}</b>:<a href='index.php?key={$key}'>{$key}</a></div>";				
 			}
 
-			$output .= "<div class='mean'><b>意思</b>:{$strMean}</div>";
-			$output .= "<div class='mean'><b>组成</b>:{$strPart}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->g_mean}</b>:{$strMean}</div>";
+			$output .= "<div class='mean'><b>{$_local->gui->factor}</b>:{$strPart}</div>";
 		}
 		$output .= "<div><span>{$_local->gui->contributor}：</span>";
 		$userinfo = new UserInfo();

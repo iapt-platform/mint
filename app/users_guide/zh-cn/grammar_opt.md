@@ -9,3 +9,4 @@
 |汉|潜|潜能式<br>愿望式<br>祈愿式|
 |英|Opt.|Optative Tense|
 
+
