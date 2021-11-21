@@ -110,16 +110,8 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                PDO_Connect(_FILE_DB_RESRES_INDEX_);
-                $query = "select guid,owner from 'album' where id='{$res_album_id}'";
-                $Fetch = PDO_FetchAll($query);
-                if (count($Fetch) > 0) {
-                    $res_album_guid = $Fetch[0]["guid"];
-                    $res_album_owner = $Fetch[0]["owner"];
-                } else {
-                    $res_album_guid = UUID::v4();
-                    $res_album_owner = 0;
-                }
+                $res_album_guid = UUID::v4();
+                $res_album_owner = 0;
 
                 switch ($get_res_type) {
                     case "6": //逐词译模板
@@ -452,16 +444,8 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                PDO_Connect(_FILE_DB_RESRES_INDEX_);
-                $query = "select guid,owner from 'album' where id='{$res_album_id}'";
-                $Fetch = PDO_FetchAll($query);
-                if (count($Fetch) > 0) {
-                    $res_album_guid = $Fetch[0]["guid"];
-                    $res_album_owner = $Fetch[0]["owner"];
-                } else {
-                    $res_album_guid = UUID::v4();
-                    $res_album_owner = 0;
-                }
+                $res_album_guid = UUID::v4();
+                $res_album_owner = 0;
 
                 switch ($get_res_type) {
                     case "1": //pali text
