@@ -91,23 +91,7 @@ if (file_exists(_DIR_PALICANON_TEMPLET_)) {
 
 <div class="card">
 	<h4>单词索引表</h4>
-	<?php
-for ($i = 2; $i <= 4; $i++) {
-    $db = $dbfile[$i];
-    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-    echo '<div style="flex:3;">';
-    if (!file_exists($db[0])) {
-        echo "<span style='color:red;'>数据库不存在</span>";
-        echo "</div>";
-        echo '<div style="flex:2;"><a href="step4.php?index=' . $i . '">建立</a></div>';
-    } else {
-        echo "<span style='color:green;'>已存在</span>";
-        echo "</div>";
-        echo '<div style="flex:2;"><a href="step5.php?index=' . $i . '">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-    }
-    echo "</div>";
-}
-?>
+
 	
 	<div class="contence">
 	<!--
@@ -125,56 +109,23 @@ for ($i = 2; $i <= 4; $i++) {
 <div class="card">
 	<h4>黑体字数据库</h4>
 	<?php
-$db = $dbfile[0];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-echo '<div style="flex:3;">';
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
+    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;">';
+
     echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=0">建立</a></div>';
-} else {
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=0">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
-?>
+    ?>
 	<div class="contence">
 	<a href="db_insert_bold.php" target="_blank">生成</a>
 	</div>
 </div>
 
 <div class="card">
-<h4>Pali句子库</h4>
-<?php
-$db = $dbfile[5];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
+    <h4>Pali句子库</h4>
+    <div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">
 
-echo '<div style="flex:3;">';
-/*
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=5">建立</a></div>';
-} else 
-*/
-{
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=5">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
-
-//if (file_exists(_FILE_DB_PALI_SENTENCE_)) 
-{
-    echo "Pali句子数据库已经存在<br>";
-    echo '<a href="db_insert_sentence.php">重新生成</a>';
-} 
-//else {
-//    echo "Pali句子数据库不存在<br>";
-//    echo '<a href="db_insert_sentence.php">生成</a>';
-//}
-?>
+    </div>
+    <div class="contence">
+    <a href="db_insert_sentence.php">重新生成</a>
+    </div>
 </div>
 
 <div class="card">
@@ -182,19 +133,8 @@ echo "</div>";
 <div>
 <?php
 $db = $dbfile[6];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
+echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;">';
 
-echo '<div style="flex:3;">';
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=6">建立</a></div>';
-} else {
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=6">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
 
 
 echo '<a href="db_insert_palitext.php">生成</a><br>';
