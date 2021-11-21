@@ -99,9 +99,9 @@ $book = $from + 1;
 
 //计算段落信息，如上一段
 PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
-$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = '$book' ";
+$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = '$book'  order by paragraph asc";
 $title_data = PDO_FetchAll($query);
-echo "Paragraph Count:" . count($title_data) . "<br>";
+echo "Paragraph Count:" . count($title_data) . " arrInserString:".count($arrInserString)." <br>";
 
 $paragraph_count = count($title_data);
 
@@ -112,9 +112,12 @@ $stmt = $PDO->prepare($query);
 
 $paragraph_info = array();
 array_push($paragraph_info, array($from, -1, $paragraph_count, -1, -1, -1));
+
+
 for ($iPar = 0; $iPar < count($title_data); $iPar++) {
     $title_data[$iPar]["level"] = $arrInserString[$iPar][3];
 }
+
 
 for ($iPar = 0; $iPar < count($title_data); $iPar++) {
     $book = $from + 1;
@@ -125,8 +128,10 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
     }
 
     $curr_level = (int) $title_data[$iPar]["level"];
-    # j计算这个chapter的段落数量
+    # 计算这个chapter的段落数量
     $length = -1;
+   
+    
     for ($iPar1 = $iPar + 1; $iPar1 < count($title_data); $iPar1++) {
         $thislevel = (int) $title_data[$iPar1]["level"];
         if ($thislevel <= $curr_level) {
@@ -134,9 +139,11 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
             break;
         }
     }
+
     if ($length == -1) {
         $length = $paragraph_count - $paragraph + 1;
     }
+
 
     $prev = -1;
     if ($iPar > 0) {
@@ -169,9 +176,11 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
     }
     //计算章节包含总字符数
     $iChapter_strlen = 0;
+
     for ($i = $iPar; $i < $iPar + $length; $i++) {
         $iChapter_strlen += $title_data[$i]["lenght"];
     }
+    
     $newData = array(
         $arrInserString[$iPar][3],
         $arrInserString[$iPar][5],
