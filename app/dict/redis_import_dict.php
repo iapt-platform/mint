@@ -1,4 +1,9 @@
 <?php  
+/*
+将csv字典载入redis
+#例:
+# php redis_import_dict.php ../../dicttext/rich/rech.json
+*/
 require_once "../path.php";
 require_once "../install/filelist.php";
 require_once "../redis/function.php";
