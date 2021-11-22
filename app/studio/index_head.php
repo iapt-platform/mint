@@ -47,6 +47,8 @@ require_once '../public/load_lang.php';
 	
 	<title id="page_title"><?php echo $_local->gui->pcd_studio; ?></title>
 
+	<script src="../config.js"></script>
+
 	<script src="../studio/js/common.js"></script>
 	<script src="../public/js/jquery.js"></script>	
 	<script src="../studio/js/fixedsticky.js"></script>	

@@ -1,0 +1,30 @@
+- name: Add python3 repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:deadsnakes/ppa
+
+- name: make sure {{ app_downloads }} exists
+  become: true
+  file:
+    state: absent
+    path: "{{ app_downloads }}"
+
+# https://pip.pypa.io/en/stable/installation/
+- name: Download get-pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: "{{ app_downloads }}/get-pip.py"
+    mode: 0644
+
+- name: Run get-pip
+  ansible.builtin.command: "python3{{ app_python_version }} {{ app_downloads }}/get-pip.py"
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/pip"
+
+- name: Install python packages
+  pip:
+    name:
+      - cmake
+      - boto3
+    extra_args: --user
+    executable: "{{ ansible_env.HOME }}/.local/bin/pip"

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //查询参考字典
 include("../log/pref_log.php");
 require_once '../path.php';
@@ -594,7 +594,7 @@ function GrmAbbr($input,$dictid){
 
 	foreach (GRM_ABBR as $key => $value) {
 		# code...
-		if($value["dictid"]==$dictid ){
+		if($value["dictid"]==$dictid && strpos($input,$value["abbr"]."</guide>") == false){
 			$mean = str_replace($value["abbr"],"<guide gid='grammar_{$value["replace"]}' class='grammar_tag' style='display:unset;'>{$value["abbr"]}</guide>",$mean);
 		}
 

@@ -14,9 +14,9 @@
   # clear outdated images
   podman rmi -a -f
   # uncompress image files
-  cat palm.tar.xz.a* | tar xj
+  cat palm-spring.tar.xz.a* | tar xj
   # import new podman image
-  podman load -q -i mint-TIMESTAMP.tar  
+  podman load -q -i palm-spring-TIMESTAMP.tar  
   ```
 
 - Enjoy it!
@@ -25,11 +25,8 @@
   ![start](documents/start.png)
 
   ```bash
-  # for the first time start
-  ./docker/first.sh
-  # fot the next time start
-  ./docker/next.sh
-  
+  # start container
+  ./docker/start.sh
   # start servers
   > sudo supervisord -c /etc/supervisor/supervisord.conf
 

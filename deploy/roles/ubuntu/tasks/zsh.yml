@@ -1,0 +1,26 @@
+- name: Clone oh-my-zsh
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
+    dest: "{{ansible_env.HOME}}/.oh-my-zsh"
+
+# - name: Extract ohmyzsh
+#   unarchive:
+#     src: ohmyzsh-master.zip
+#     dest: "{{ansible_env.HOME}}/"
+
+# - name: Rename ohmyzsh
+#   command: mv ohmyzsh-master .oh-my-zsh
+#   args:
+#     chdir: "{{ansible_env.HOME}}"
+#     creates: .oh-my-zsh
+
+- name: Setup .zshrc
+  copy:
+    src: "{{ansible_env.HOME}}/.oh-my-zsh/templates/zshrc.zsh-template"
+    dest: "{{ansible_env.HOME}}/.zshrc"
+    remote_src: true
+    mode: 0600
+
+- name: Use zsh
+  become: true
+  shell: chsh -s /bin/zsh {{ansible_user}}

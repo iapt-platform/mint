@@ -2,6 +2,8 @@
 require_once '../studio/index_head.php';
 ?>
 <body id="file_list_body" onLoad="my_term_onload()">
+	<script src="../channal/channal.js"></script>
+
     <script src="../term/my_term.js"></script>
     <script src="../term/term_edit_dlg.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css"/>

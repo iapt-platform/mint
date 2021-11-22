@@ -2,7 +2,9 @@
 // Require Composer's autoloader.
 require_once '../../vendor/autoload.php';
 
-
+#域名设置
+define(WWW_DOMAIN_NAME,"sg.wikipali.org");
+define(RPC_DOMAIN_NAME,"rpc.wikipali.org");
 /*
 电子邮件设置
 PHPMailer

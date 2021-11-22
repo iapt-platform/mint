@@ -17,42 +17,69 @@
 .main_view_right_float_max #right_pannal {
 	display: none;
 }
+.btn_main {
+    background-color: var(--link-hover-color);
+    color: var(--btn-hover-color);
+}
+.btn_main:hover {
+    background-color: var(--link-color);
+}
+
+.btn_group {
+    display: inline-block;
+    background-color: var(--border-line-color);
+    border-radius: 4px;
+    padding: 3px 2px;
+    margin: 0 3px;
+}
+.btn_focus {
+    background-color: var(--bg-color);
+}
+
 	</style>
 			<select name="direction" onchange='setDirection(this)' class="show_pc">
 			<option value="row"><?php echo $_local->gui->row_compare; ?></option>
 			<option value="column"><?php echo $_local->gui->column_compare; ?></option>
 		</select>
+		
 <?php
 		if($_mode == "read"){
 			echo "<select onchange='setDisplay(this)'>";
 			echo "<option value='para'>{$_local->gui->each_paragraph}</option>";
-			echo "<option value='sent'>{$_local->gui->each_sentence}</option>";
+			echo "<option value='sent' ";
+			if($_display=="sent"){
+				echo "selected";
+			}
+			echo ">{$_local->gui->each_sentence}</option>";
 			echo "</select>";
 		}
+?>
+<div class="btn_group">
+<?php
 		if($_mode == "read"){
-			echo "<button class='icon_btn active' title='{$_local->gui->show} {$_local->gui->each_paragraph}'>";
+			echo "<span class='icon_btn btn_focus'  ";
+			echo " title='{$_local->gui->show} {$_local->gui->read}'>";
 			echo $_local->gui->read;
+			echo "</span>";
+
+			echo "<button class='icon_btn' onclick=\"setMode('edit')\" ";
+			echo " title='{$_local->gui->show} {$_local->gui->edit}'>";
+			echo $_local->gui->translate;
 			echo "</button>";
-
-			echo "<button class='icon_btn'>";
-			echo "<a onclick=\"setMode('edit')\"";
-
-			echo " title='{$_local->gui->show} {$_local->gui->edit}'>{$_local->gui->edit}</a></button>";
 		}
 		else{
-			echo "<button class='icon_btn'>";
-			echo "<a onclick=\"setMode('read')\"";
+			echo "<button class='icon_btn' onclick=\"setMode('read')\" ";
 			echo " title='{$_local->gui->show} {$_local->gui->read}'>";		
 			echo $_local->gui->read;
-			echo "</a>";
 			echo "</button>";
 
-			echo "<button class='icon_btn active'  title='{$_local->gui->show} {$_local->gui->edit}'>";
+			echo "<span class='icon_btn btn_focus'  ";
+			echo " title='{$_local->gui->show} {$_local->gui->edit}'>";
 			echo $_local->gui->edit;
-			echo "</button>";
+			echo "</span>";
 		}
 ?>
-
+</div>
 				<button id="btn_show_dict" class='icon_btn' onclick="show_dict(this)">
 				<?php echo $_local->gui->dict; ?>
 				</button>

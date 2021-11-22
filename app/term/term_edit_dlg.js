@@ -119,8 +119,9 @@ function term_edit_dlg_render(word = "") {
 	output += "<legend>" + gLocal.gui.channel + "</legend>";
 	output += "<select id='term_edit_form_channal' name='channal'>";
 	output += "<option value=''>通用于所有版本</option>";
+	word.channel = word.channal;
 	for (const iterator of _my_channal) {
-		if(iterator.id==word.channel){
+		if(word.channel=="" || (word.channel!="" && iterator.id==word.channel)){
 		output += "<option value='"+iterator.id+"'>仅用于"+iterator.name+"</option>";
 		}
 	}
