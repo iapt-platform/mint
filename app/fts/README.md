@@ -188,7 +188,7 @@ done
 
 数据插入时会同步创建索引，耗时较久，请耐心等待。
 
-### 查询数据：
+### 使用 SQL 查询数据：
 
 权重设置：
 
@@ -810,3 +810,16 @@ SELECT
 	</tr>
 </table>
 </details>
+
+### 使用 PHP 查询数据：
+
+可参考 [example.php](./example.php
+)，在当前目录下执行：
+
+```bash
+php -d memory_limit=1024M -S 127.0.0.1:8000
+```
+
+即可通过浏览器测试效果：
+
+![Example](./example.png "Example Screenshot")
