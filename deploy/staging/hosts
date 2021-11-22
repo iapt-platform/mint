@@ -1,0 +1,14 @@
+[www]
+
+[db]
+
+[cache]
+
+[mq]
+
+
+[all:vars]
+app_vendor="iapt-platform.mint"
+; openssl rand -base64 32
+app_secret_key="4i3WKUvKtSGl59htK7XjUNsjalhkG5s7RJCmZruT2m4="
+

@@ -1,0 +1,52 @@
+# https://www.raspberrypi.org/documentation/configuration/uart.md
+
+- name: backup /boot/config.txt
+  become: true
+  ansible.builtin.copy:
+    src: /boot/config.txt
+    dest: "{{ app_backup }}/boot_config_txt"
+    remote_src: yes
+    backup: yes
+
+- name: enable uart
+  become: true
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^enable_uart='
+    line: enable_uart=1
+
+- name: disable bluetooth
+  become: true
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^dtoverlay='
+    line: dtoverlay=disable-bt
+
+- name: hidden splash message
+  become: true
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^disable_splash='
+    line: disable_splash=1 
+
+- name: backup /boot/cmdline.txt
+  become: true
+  ansible.builtin.copy:
+    src: /boot/cmdline.txt
+    dest: "{{ app_backup }}/boot_cmdline_txt"
+    remote_src: yes
+    backup: yes
+
+- name: disable debug port & logo
+  become: true
+  ansible.builtin.replace:
+    path: /boot/cmdline.txt
+    regexp: 'console=serial0,115200'
+    replace: 'loglevel=3 logo.nologo'
+
+- name: disable hciuart service
+  become: true
+  ansible.builtin.systemd:
+    name: hciuart
+    enabled: no
+    masked: yes

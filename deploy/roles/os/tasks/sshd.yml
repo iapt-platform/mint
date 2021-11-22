@@ -1,0 +1,22 @@
+- name: Backup sshd_config
+  become: true
+  copy:
+    src: /etc/ssh/sshd_config
+    dest: "{{ app_backup }}/etc_sshd_config"
+    remote_src: yes
+    backup: yes
+
+- name: Disable dns for sshd
+  become: true
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^UseDNS '
+    line: UseDNS no
+
+- name: Disable GSS api auth for sshd
+  become: true
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^GSSAPIAuthentication '
+    line: GSSAPIAuthentication no
+
