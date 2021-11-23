@@ -1,0 +1,166 @@
+# - name: Remove postfix at first
+#   become: true
+#   apt:
+#     name: postfix
+#     state: absent
+#     purge: yes
+
+# - name: Backup /etc/apt/sources.list.d
+#   become: true
+#   copy:
+#     src: /etc/apt/sources.list.d
+#     dest: "{{ app_backup }}/etc_apt_sources_list_d"
+#     remote_src: yes
+#     backup: yes
+
+# - name: Delete /etc/apt/sources.list.d
+#   become: true
+#   file:
+#     state: absent
+#     path: /etc/apt/sources.list.d
+
+- name: add PPA for Ubuntu Toolchain
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:ubuntu-toolchain-r/test
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Update system
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install dependicy packages
+  become: true
+  apt:
+    pkg:
+      - apt-transport-https
+      - software-properties-common
+      - gnupg
+      - openssh-server
+      - openssh-client
+      - sshpass
+      - wpasupplicant
+      - rsync
+      - at
+      - sysstat
+      - libtool
+      - ethtool
+      - dnsutils
+      - dnsmasq
+      - uuid-runtime
+      - lshw
+      - tcpdump
+      - lm-sensors
+      - hddtemp
+      - dmidecode
+      - net-tools
+      - iputils-arping
+      - iputils-ping
+      - telnet
+      - vim
+      - git
+      - pwgen
+      - locales
+      - ntpdate
+      - imagemagick
+      - mpg123
+      - ffmpeg
+      - sqlite3
+      - tree
+      - alsa-utils
+      - pulseaudio
+      - zsh
+      - wget
+      - curl
+      - zip
+      - unzip
+      - nginx
+      - openvpn
+      - snmpd
+      - systemd-cron
+      - systemd-timesyncd
+      - screen
+      - tmux
+      - python3
+      - python3-pip
+      - python3-distutils
+      - python3-dev
+      - libpq5
+      
+
+- include: locales.yml
+
+- name: Set default editor to vim
+  become: true
+  shell: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: Set timezone
+  become: true
+  shell: timedatectl set-timezone Asia/Shanghai
+
+- name: Set git rebase mode
+  become: true
+  shell: git config --global pull.rebase false
+
+- include: zsh.yml
+
+# ---------------------------------------------------
+
+- name: check if friendlyelec
+  ansible.builtin.stat:
+    path: /etc/friendlyelec-release
+  register: app_os_friendlyelec
+
+- include: friendly-core.yml
+  when: app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg
+
+- name: check if armbian
+  ansible.builtin.stat:
+    path: /etc/armbian-release
+  register: app_os_armbian
+
+- include: armbian.yml
+  when: app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg
+
+- include: raspbian.yml
+  when: ansible_distribution == 'Raspbian'
+
+- include: pi.yml
+  when: ansible_distribution == 'Raspbian' or (app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg) or (app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg)
+
+# ---------------------------------------------------
+
+- name: enable nginx service
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+
+
+- name: enable cron service
+  become: true
+  ansible.builtin.systemd:
+    name: cron-target
+    enabled: yes
+    masked: no
+
+- name: enable ssh service
+  become: true
+  ansible.builtin.systemd:
+    name: ssh
+    enabled: yes
+    masked: no
+
+- name: enable systemd-timesyncd service
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: yes
+    masked: no
+
+
+- include: clean.yml

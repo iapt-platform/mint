@@ -1,0 +1,42 @@
+- include: init.yml
+- include: sshd.yml
+- include: ulimits.yml
+
+- name: Setup sudo without password 
+  become: true
+  ansible.builtin.template:
+    src: sudo.conf.j2
+    dest: /etc/sudoers.d/100-{{ ansible_user }}
+    owner: root
+    group: root
+    mode: 0440
+  when: ansible_distribution != 'Raspbian' and ansible_user != 'root'
+
+- name: Reset root password
+  become: true
+  shell: echo "root:$(pwgen 32 1)" | chpasswd
+
+- name: Reset {{ ansible_user }} password
+  become: true
+  shell: echo "{{ ansible_user }}:$(pwgen 32 1)" | chpasswd
+  when: ansible_user != 'root'
+
+- name: Set timezone
+  become: true
+  shell: timedatectl set-timezone UTC
+
+- name: Setup journald storage 
+  become: true
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#Storage='
+    line: Storage=persistent
+
+# https://www.linode.com/docs/quick-answers/linux/how-to-use-journalctl/
+- name: Setup journald storage keep-free
+  become: true
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    state: present
+    regexp: '^#SystemKeepFree='
+    line: SystemKeepFree=6%
