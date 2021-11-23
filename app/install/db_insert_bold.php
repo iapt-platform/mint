@@ -12,8 +12,8 @@ require_once "install_head.php";
 生成黑体字数据库。黑体字多数是义注复注里的单词（尤其是专有名词）解释。
 </div>
 <?php
-include "./_pdo.php";
-include "../path.php";
+require_once "./_pdo.php";
+require_once "../path.php";
 
 if (isset($_GET["from"]) == false) {
     ?>
@@ -26,8 +26,8 @@ To: <input type="text" name="to" value="216"><br>
 return;
 }
 
-$from = $_GET["from"];
-$to = $_GET["to"];
+$from = (int)$_GET["from"];
+$to = (int)$_GET["to"];
 $filelist = array();
 $fileNums = 0;
 $log = "";
@@ -84,8 +84,8 @@ echo "doing:" . $xmlfile . "<br>";
 $log = $log . "$from,$FileName,open\r\n";
 
 $arrInserString = array();
-$db_file = _FILE_DB_BOLD_;
-PDO_Connect("$db_file");
+
+
 
 // 打开文件并读取数据
 if (($fp = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !== false) {
@@ -95,73 +95,80 @@ if (($fp = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !==
     }
     fclose($fp);
     echo "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv<br>";
+
+	PDO_Connect(_FILE_DB_BOLD_);
+
+	$query = "DELETE FROM "._TABLE_WORD_BOLD_." WHERE book=?";
+	PDO_Execute($query,array($from+1));
+	// 开始一个事务，关闭自动提交
+	$PDO->beginTransaction();
+	$query = "INSERT INTO "._TABLE_WORD_BOLD_." (book , paragraph , word , word2 , word_en ) VALUES (?,?,?,?,?)";
+	$stmt = $PDO->prepare($query);
+	$allcount = 1;
+	$count = 0;
+	$count1 = 0;
+	$sen = "";
+	$sen1 = "";
+	$sen_en = "";
+	$sen_count = 0;
+	$book = "";
+	$paragraph = "";
+	foreach ($arrInserString as $oneParam) {
+		if ($oneParam[15] == "bld") {
+			if ($oneParam[5] != "") {
+				$sen_count++;
+			}
+			$sen .= $oneParam[4] . " ";
+			$sen1 .= $oneParam[5] . " ";
+			$book = substr($oneParam[2], 1);
+			$paragraph = $oneParam[3];
+			if ($oneParam[5] != "") {
+				$newWord = array($book, $paragraph, $oneParam[4], $oneParam[5], getWordEn($oneParam[5]));
+				$stmt->execute($newWord);
+				$count++;
+				$allcount++;
+			}
+		} else {
+			if ($sen_count > 1) {
+				$sen = rtrim($sen);
+				$sen1 = rtrim($sen1);
+				$sen_en = getWordEn($sen1);
+				$newWord = array($book, $paragraph, $sen, $sen1, $sen_en);
+				$stmt->execute($newWord);
+				$count1++;
+				$allcount++;
+				$sen = "";
+				$sen1 = "";
+				$sen_en = "";
+				$sen_count = 0;
+			} else {
+				$sen = "";
+				$sen1 = "";
+				$sen_en = "";
+				$sen_count = 0;
+			}
+		}
+	}
+	// 提交更改
+	$PDO->commit();
+	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+		$error = PDO_ErrorInfo();
+		echo "error - $error[2] <br>";
+
+		$log = $log . "$from, $FileName, error, $error[2] \r\n";
+	} else {
+		echo "updata $count-$count1 recorders.";
+	}
+
+	$myLogFile = fopen($dirLog . "insert_bold.log", "a");
+	fwrite($myLogFile, $log);
+	fclose($myLogFile);
+	
 } else {
     echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv";
 }
 
-// 开始一个事务，关闭自动提交
-$PDO->beginTransaction();
-$query = "INSERT INTO bold ('id','book','paragraph','word','word2','word_en') VALUES (NULL,?,?,?,?,?)";
-$stmt = $PDO->prepare($query);
-$allcount = 1;
-$count = 0;
-$count1 = 0;
-$sen = "";
-$sen1 = "";
-$sen_en = "";
-$sen_count = 0;
-$book = "";
-$paragraph = "";
-foreach ($arrInserString as $oneParam) {
-    if ($oneParam[15] == "bld") {
-        if ($oneParam[5] != "") {
-            $sen_count++;
-        }
-        $sen .= $oneParam[4] . " ";
-        $sen1 .= $oneParam[5] . " ";
-        $book = substr($oneParam[2], 1);
-        $paragraph = $oneParam[3];
-        if ($oneParam[5] != "") {
-            $newWord = array($book, $paragraph, $oneParam[4], $oneParam[5], getWordEn($oneParam[5]));
-            $stmt->execute($newWord);
-            $count++;
-            $allcount++;
-        }
-    } else {
-        if ($sen_count > 1) {
-            $sen = rtrim($sen);
-            $sen1 = rtrim($sen1);
-            $sen_en = getWordEn($sen1);
-            $newWord = array($book, $paragraph, $sen, $sen1, $sen_en);
-            $stmt->execute($newWord);
-            $count1++;
-            $allcount++;
-            $sen = "";
-            $sen1 = "";
-            $sen_en = "";
-            $sen_count = 0;
-        } else {
-            $sen = "";
-            $sen1 = "";
-            $sen_en = "";
-            $sen_count = 0;
-        }
-    }
-}
-// 提交更改
-$PDO->commit();
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = PDO_ErrorInfo();
-    echo "error - $error[2] <br>";
 
-    $log = $log . "$from, $FileName, error, $error[2] \r\n";
-} else {
-    echo "updata $count-$count1 recorders.";
-}
-
-$myLogFile = fopen($dirLog . "insert_bold.log", "a");
-fwrite($myLogFile, $log);
-fclose($myLogFile);
 ?>
 
 

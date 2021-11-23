@@ -71,10 +71,10 @@ note:hover .ref {
 }
 .right_float_min #right_float_pannal {
     position: fixed;
-    top: 30%;
+    top: 60%;
     left: 0;
     width: 100%;
-    height: 70%;
+    height: 40%;
 }
 #head_nav_right{
 	flex-direction: column;

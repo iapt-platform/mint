@@ -1,0 +1,12 @@
+- hosts: all
+  roles:
+    - os
+    - ubuntu
+    - python3
+    - php
+
+- hosts: db
+  roles:
+
+- hosts: www
+  roles:

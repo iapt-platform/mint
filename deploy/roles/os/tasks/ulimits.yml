@@ -1,0 +1,80 @@
+- name: Backup system.conf
+  become: true
+  copy:
+    src: /etc/systemd/system.conf
+    dest: "{{ app_backup }}/etc_systemd_system"
+    remote_src: yes
+    backup: yes
+
+- name: Setup nofile for system
+  become: true
+  lineinfile:
+    path: /etc/systemd/system.conf
+    regexp: "^DefaultLimitNOFILE="
+    line: DefaultLimitNOFILE=2097152
+
+- name: Setup nproc for system
+  become: true
+  lineinfile:
+    path: /etc/systemd/system.conf
+    regexp: "^DefaultLimitNPROC"
+    line: DefaultLimitNPROC=524288
+
+- name: Backup user.conf
+  become: true
+  copy:
+    src: /etc/systemd/user.conf
+    dest: "{{ app_backup }}/etc_systemd_user.conf"
+    remote_src: yes
+    backup: yes
+
+- name: Setup nofile for user
+  become: true
+  lineinfile:
+    path: /etc/systemd/user.conf
+    regexp: "^DefaultLimitNOFILE="
+    line: DefaultLimitNOFILE=1048576
+
+- name: Setup nproc for user
+  become: true
+  lineinfile:
+    path: /etc/systemd/user.conf
+    regexp: "^DefaultLimitNPROC"
+    line: DefaultLimitNPROC=262144
+
+- name: Backup limits.conf
+  become: true
+  copy:
+    src: /etc/security/limits.conf
+    dest: "{{ app_backup }}/etc_security_limits.conf"
+    remote_src: yes
+    backup: yes
+
+- name: Set user level ppen file limits for root
+  become: true
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: root        soft nofile 10240
+
+- name: Set user level ppen file limits for {{ansible_user}}
+  become: true
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "{{ansible_user}}        soft nofile 10240"
+
+# https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ladbi/changing-kernel-parameter-values.html#GUID-FB0CC366-61C9-4AA2-9BE7-233EB6810A31
+- name: Setup file max
+  become: true
+  lineinfile:
+    path: "/etc/sysctl.d/100-{{app_vendor}}.conf"
+    state: present
+    line: fs.file-max = 6815744
+    create: true
+
+- name: Setup file max
+  become: true
+  lineinfile:
+    path: "/etc/sysctl.d/100-{{app_vendor}}.conf"
+    state: present
+    line: fs.inotify.max_user_watches = 512000
+    create: true

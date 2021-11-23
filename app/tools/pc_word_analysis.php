@@ -90,16 +90,16 @@ for ($i = 0; $i < count($boolList); $i++) {
 //open database
 PDO_Connect(_FILE_DB_STATISTICS_);
 if ($col == "parent") {
-    $query = "SELECT count(*) FROM \"word\" WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
+    $query = "SELECT count(*) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
     $count_word = PDO_FetchOne($query);
-    $query = "SELECT sum(count) FROM \"word\" WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
+    $query = "SELECT sum(count) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
     $sum_word = PDO_FetchOne($query);
-    $query = "select count(*) from (SELECT count() FROM \"word\" WHERE (bookid in (" . $bookstring . ") and parent<>'') group by parent )"; /*查總數，并分類匯總*/
+    $query = "select count(*) from (SELECT count() FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and parent<>'') group by parent )"; /*查總數，并分類匯總*/
     $count_parent = PDO_FetchOne($query);
-    $query = "SELECT sum(count) FROM \"word\" WHERE (bookid in (" . $bookstring . ") and  parent<>'') "; /*查總數，并分類匯總*/
+    $query = "SELECT sum(count) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and  parent<>'') "; /*查總數，并分類匯總*/
     $sum_parent = PDO_FetchOne($query);
     echo "单词个数： $count_word<br>总词数： $sum_word<br> parent个数： $count_parent<br> 有parent的单词总数:$sum_parent <br>";
-    $query = "select * from (SELECT parent,sum(count) as wordsum FROM \"word\" WHERE (bookid in (" . $bookstring . ") and parent<>'') group by parent) order by wordsum DESC limit 0 ,2000"; /*查總數，并分類匯總*/
+    $query = "select * from (SELECT parent,sum(count) as wordsum FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and parent<>'') group by parent) order by wordsum DESC limit 0 ,2000"; /*查總數，并分類匯總*/
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     echo "<table>";
