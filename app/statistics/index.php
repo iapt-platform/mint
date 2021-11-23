@@ -1,3 +1,8 @@
+<?php
+require_once "../public/_pdo.php";
+require_once "../path.php";
+require_once "../public/load_lang.php";
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -27,11 +32,9 @@
 	</style>
 </head>
 <body>
-<?php require_once '../lang/lang.php';?>
 <?php
-require_once "../public/_pdo.php";
-require_once "../path.php";
-require_once "../public/load_lang.php";
+require_once '../lang/lang.php';
+
 
 if (isset($_GET["language"])) {
     $language = $_GET["language"];
@@ -143,20 +146,20 @@ for ($i = 0; $i < count($boolList); $i++) {
 }
 
 //open database
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_STATISTICS_,_DB_USERNAME_,_DB_PASSWORD_);
 if ($spell == "") {
     echo ("<h3>" . $gui['group_by'] . "：$groupby</h3>");
-    $query = "SELECT count(*) FROM \"word\" WHERE (bookid in (" . $bookstring . ")) "; /*查總數*/
+    $query = "SELECT count(*) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ")) "; /*查總數*/
     $count_word = PDO_FetchOne($query);
-    $query = "SELECT sum(count) FROM \"word\" WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
+    $query = "SELECT sum(count) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ")) "; /*查總數，并分類匯總*/
     $sum_word = PDO_FetchOne($query);
-    $query = "select count(*) from (SELECT count() FROM \"word\" WHERE (bookid in (" . $bookstring . ") and $groupby<>'') group by $groupby )"; /*查總數，并分類匯總*/
+    $query = "SELECT count(*) from (SELECT count() FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and $groupby<>'') group by $groupby ) as subtable"; /*查總數，并分類匯總*/
     $count_parent = PDO_FetchOne($query);
 
-    $query = "select sum(length) from (SELECT * FROM \"word\" WHERE (bookid in (" . $bookstring . ") and $groupby<>'') group by $groupby )"; /*查總數，并分類匯總*/
+    $query = "SELECT sum(length) from (SELECT * FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and $groupby<>'') group by $groupby ) as subtable"; /*查總數，并分類匯總*/
     $count_parent1 = PDO_FetchOne($query);
 
-    $query = "SELECT sum(count) FROM \"word\" WHERE (bookid in (" . $bookstring . ") and  $groupby<>'') "; /*查總數，并分類匯總*/
+    $query = "SELECT sum(count) FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and  $groupby<>'') "; /*查總數，并分類匯總*/
     $sum_parent = PDO_FetchOne($query);
     $format = number_format($count_word);
     echo $gui['vacab'] . "：$format<br>";
@@ -164,7 +167,7 @@ if ($spell == "") {
     echo "<b>$groupby</b>" . $gui['statistics'] . "：" . number_format($count_parent) . "<br> ";
     echo "<b>$groupby</b>字母" . $gui['statistics'] . "：" . number_format($count_parent1) . "<br> ";
     echo $gui['effective'] . "：" . number_format($sum_parent) . " <br>";
-    $query = "select * from (SELECT $groupby,sum(count) as wordsum FROM \"word\" WHERE (bookid in (" . $bookstring . ") and $groupby<>'') group by $groupby) order by wordsum DESC limit 0 ,4000"; /*查總數，并分類匯總*/
+    $query = "SELECT * from (SELECT $groupby,sum(count) as wordsum FROM "._TABLE_WORD_STATISTICS_." WHERE (bookid in (" . $bookstring . ") and $groupby<>'') as T group by $groupby) as T order by wordsum DESC limit 4000"; /*查總數，并分類匯總*/
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     echo "<table>";
@@ -188,18 +191,18 @@ if ($spell == "") {
 } else {
     echo ("<h3>Word: <spen style='color: var(--tool-link-hover-color);'>$spell</spen></h3>");
     $newSpell = $PDO->quote($spell);
-    $query = "SELECT count(*) FROM \"word\" WHERE (word $wordop $newSpell) "; /*查總词數*/
+    $query = "SELECT count(*) FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) "; /*查總词數*/
     $count_word = PDO_FetchOne($query);
-    $query = "SELECT sum(count) FROM \"word\" WHERE (word $wordop $newSpell) "; /*查總數，并分類匯總*/
+    $query = "SELECT sum(count) FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) "; /*查總數，并分類匯總*/
     $sum_word = PDO_FetchOne($query);
 
     echo "单词总个数：" . number_format($count_word) . "<br>";
     echo "单词总数：" . number_format($sum_word) . "<br>";
 
-    $query = "select count(*) from (SELECT bookid FROM \"word\" WHERE (word $wordop $newSpell) group by bookid) "; /*查總數，并分類匯總*/
+    $query = "SELECT count(*) from (SELECT bookid FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) group by bookid) as T "; /*查總數，并分類匯總*/
     $in_book_count = PDO_FetchOne($query);
     echo "<p>In $in_book_count Books</p>";
-    $query = "select bookid,co,su from (SELECT bookid,sum(count) as su,count(*) co FROM \"word\" WHERE (word $wordop $newSpell) group by bookid) order by co DESC  limit 0 ,20"; /*查總數，并分類匯總*/
+    $query = "SELECT bookid,co,su from (SELECT bookid,sum(count) as su,count(*) co FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) group by bookid) as T order by co DESC  limit 20"; /*查總數，并分類匯總*/
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     echo "<table>";
@@ -213,10 +216,10 @@ if ($spell == "") {
     }
     echo "</table>";
 
-    $query = "select count(*) from (SELECT bookid FROM \"word\" WHERE (word $wordop $newSpell) group by word) "; /*查總數，并分類匯總*/
+    $query = "SELECT count(*) from (SELECT word FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) group by word) as T "; /*查總數，并分類匯總*/
     $word_count = PDO_FetchOne($query);
     echo "<p>$word_count Words</p>";
-    $query = "select word,co from (SELECT word,sum(count) co FROM \"word\" WHERE (word $wordop $newSpell) group by word) order by co DESC  limit 0 ,100"; /*查總數，并分類匯總*/
+    $query = "SELECT word,co from (SELECT word,sum(count) co FROM "._TABLE_WORD_STATISTICS_." WHERE (word $wordop $newSpell) group by word) as T order by co DESC  limit 100"; /*查總數，并分類匯總*/
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     echo "<table>";
