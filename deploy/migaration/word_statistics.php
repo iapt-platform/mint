@@ -55,7 +55,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 		exit;
 	}			
 	$count++;
-	if($count%1000==0){
+	if($count%10000==0){
 		echo "finished $count".PHP_EOL;
 	}
 }
