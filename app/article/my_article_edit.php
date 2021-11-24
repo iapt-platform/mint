@@ -41,7 +41,7 @@ require_once '../studio/index_head.php';
 	.file_list_block {
     max-width: 100%;
 	margin-right: 1em;
-	max-height: 85vh;
+	height: calc(100vh - 7em);
 	}
 	.index_inner {
     margin-left: 16em;
@@ -50,8 +50,8 @@ require_once '../studio/index_head.php';
 #preview_div {
     flex: 6;
     overflow-y: scroll;
-	height: 550px;
-	max-height: 75vh;
+	height: calc(100vh - 7em - 60px);
+	
 }
 #preview_inner{
 	background-color: var(--bg-color);
@@ -153,7 +153,7 @@ require_once '../studio/index_head.php';
 				</span>	
 			</div>
 		</div>
-		<div id="article_list"  class="file_list_block" style="">
+		<div id="article_list" style="">
 
 		</div>
 
