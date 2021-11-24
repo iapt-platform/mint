@@ -63,41 +63,34 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 		</div>
 	</div>
 	<div class="item_block">
-		<h2>隐私设置</h2>
+		<h2><?php echo $_local->gui->privacy;?></h2>
 		<ul>
-			<li><input type="radio" name="list" checked />私有</li>
-			<li><input type="radio" name="list" />公开列出</li>
+			<li title="<?php echo $_local->gui->private_note;?>"><input type="radio" name="list" checked /><?php echo $_local->gui->private;?></li>
+			<li title="<?php echo $_local->gui->public_note;?>"><input type="radio" name="list" /><?php echo $_local->gui->public;?></li>
 		</ul>
 	</div>
-	<div class="item_block">
+	<div class="item_block" style="display:none;">
 		<h2>分享链接</h2>
-		<div><button>创建分享链接</button></div>
+		<div><button>创建</button></div>
 		<div id="share_link">
 			<button>关闭分享链接</button>
 			<div style="display:flex;"><span style="max-width:200px;"><input type="input" name="" /></span><button>复制分享链接</button></div>
 			<select>
-					<option value="10">查看者</option>
-					<option value="20">编辑者</option>
+					<option value="10">查看</option>
+					<option value="20">编辑</option>
 			</select>
 		</div>
 	</div>	
 	<div class="item_block">
-		<h2>协作</h2>
+		<h2><?php echo $_local->gui->collaborate;?></h2>
 		<div>
 			<div style="display:flex;">
 			<select id="user_type" >
-				<option value="1">👤个人</option>
-				<option value="2">👥工作组</option>
+				<option value="1">👤<?php echo $_local->gui->personal;?></option>
+				<option value="2">👥<?php echo $_local->gui->group;?></option>
 			</select>
-			<!--			
-			<span>
-				<svg class="icon">
-					<use xlink:href="../studio/svg/icon.svg#ic_add_person"></use>
-				</svg>
-			</span>
-			-->
 			<span style="max-width:200px;">
-			<input id="search_user" type="input" name="" placeholder="🔍输入用户名或组名" onkeyup="username_search_keyup(event,this)" />
+			<input id="search_user" type="input" name="" placeholder="🔍<?php echo $_local->gui->username . ' or ' . $_local->gui->group;?>" onkeyup="username_search_keyup(event,this)" />
 			</span>
 
 			</div>
@@ -108,16 +101,16 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 				</div>
 				<div id="coop_new_tools">
 					<select id="coop_new_power">
-						<option value="10">👁‍🗨查看者</option>
-						<option value="20">📝编辑者</option>
+						<option value="10">👁‍🗨<?php echo $_local->gui->viewer;?></option>
+						<option value="20">📝<?php echo $_local->gui->editor;?></option>
 					</select>
-					<button onclick="add_coop()">添加</button>
-					<button onclick="cancel_coop()">取消</button>
+					<button onclick="add_coop()"><?php echo $_local->gui->add;?></button>
+					<button onclick="cancel_coop()"><?php echo $_local->gui->cancel;?></button>
 				</div>
 			</div>
 		</div>
 		<div>
-		<h3>有权使用的人</h3>
+		<h3><?php echo $_local->gui->cooperators;?></h3>
 		<div id="coop_list">
 		</div>
 		</div>
