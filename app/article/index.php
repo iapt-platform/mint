@@ -367,7 +367,7 @@ function set_toc_visible(isVisible){
 				</div>
 			</div>
 		</div>
-		<div id="right_pannal">
+		<div id="right_pannal" style="max-width: unset;">
 			<div class="fun_frame" style="position: fixed;width: calc(100% - 70vw - 1em);height: calc(100vh - 250px);">
 				<div style="display:flex;justify-content: space-between;">
 					<div class="title"><?php echo $_local->gui->contributor; ?></div>
