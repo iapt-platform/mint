@@ -54,8 +54,8 @@ function render_coop_list(cooplist) {
 
 			html += "<div style='flex:3;'>";
 			let power = [
-				{ id: 10, string: "查看者" },
-				{ id: 20, string: "编辑者" },
+				{ id: 10, string: gLocal.gui.viewer },
+				{ id: 20, string: gLocal.gui.editor },
 			];
 			html += "<select onchange=\"coop_set_power('" + coop.cooperator_id + "',this)\">";
 			for (const iterator of power) {
@@ -137,7 +137,7 @@ function render_user_list() {
 		}
 		html += iterator.name;
 		html += "</span>";
-		html += "<a class='btn_del' onclick=\"userlist_del(' + arrIndex + ')\">删除</a>";
+		html += "<a class='btn_del' onclick=\"userlist_del(' + arrIndex + ')\">"+gLocal.gui.delete+"</a>";
 		html += "</li>";
 		arrIndex++;
 	}
