@@ -90,7 +90,7 @@ input[type="text"], input[type="input"], input[type="password"], textarea{
 				<option value="2">👥<?php echo $_local->gui->group;?></option>
 			</select>
 			<span style="max-width:200px;">
-			<input id="search_user" type="input" name="" placeholder="🔍输入用户名或组名" onkeyup="username_search_keyup(event,this)" />
+			<input id="search_user" type="input" name="" placeholder="🔍<?php echo $_local->gui->username . ' or ' . $_local->gui->group;?>" onkeyup="username_search_keyup(event,this)" />
 			</span>
 
 			</div>
