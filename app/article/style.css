@@ -167,8 +167,8 @@
 	display: block;
 }
 img {
-	width: 90vw;
-	max-width: 15vw;
+	width: 40%;
+	/*max-width: 40%;*/
 }
 
 /*
