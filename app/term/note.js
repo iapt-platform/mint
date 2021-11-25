@@ -82,7 +82,7 @@ function note_init(input,channel="",editor="",lang="en") {
 
 		output += "</div>";
 
-		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note info="');
+		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note style="border: solid 2px var(--btn-bg-color);" info="');
 		newString = newString.replace(/\}\}/g, '" ></note></span>');
 
 		return newString;
