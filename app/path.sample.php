@@ -134,7 +134,13 @@ define("_SRC_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/w
 define("_SRC_TABLE_WORD_STATISTICS_", "word");
 
 
-//巴利句子表
+/*
+巴利句子表
+数据迁移： php /deploy/migaration/20211125155700_pali_sent_org.php
+数据迁移： php /deploy/migaration/20211125156700_pali_sent_upgrade.php
+数据迁移： php /deploy/migaration/20211126220400-pali_sent_index-upgrade.php
+redis: app/pali_sent/redis_upgrade_pali_sent.php
+*/
 define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
 define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
