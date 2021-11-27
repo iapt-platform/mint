@@ -36,7 +36,7 @@ class PaliSentence extends Table
 	}
 	public function getInfo($id)
 	{
-		$query = "SELECT book,paragraph, word_begin as bebin ,word_end as end from ".$this->table." where id = ? ";
+		$query = "SELECT book,paragraph, word_begin as begin ,word_end as end from ".$this->table." where id = ? ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
