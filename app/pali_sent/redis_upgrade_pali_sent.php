@@ -11,27 +11,31 @@ require_once "../redis/function.php";
 
 if (isset($argv[1])) {
     if ($argv[1] == "del") {
-        $redis = new redis();
-        $r_conn = $redis->connect('127.0.0.1', 6379);
-		$keys = $redis->keys('pali_sent_*');
-		$count=0;
-		foreach ($keys as $key => $value) {
-			# code...
-			$deleted = $redis->del($value);
-			$count += $deleted;
+        $redis = redis_connect();
+        if($redis){
+			$keys = $redis->keys('pali_sent_*');
+			$count=0;
+			foreach ($keys as $key => $value) {
+				# code...
+				$deleted = $redis->del($value);
+				$count += $deleted;
+			}
+			
+			echo "delete ok ".$count;			
+		}else{
+			echo "redis connect error ".PHP_EOL;			
+
 		}
-		
-		echo "delete ok ".$count;
     }
 } else {
 
-    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, "", "", array(PDO::ATTR_PERSISTENT => true));
+	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-    $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
+    $query = "SELECT id, book,paragraph, word_begin as begin ,word_end as end ,html FROM "._TABLE_PALI_SENT_." WHERE 1 ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $redis = redis_connect();

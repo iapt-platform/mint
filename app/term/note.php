@@ -44,16 +44,16 @@ if (isset($_POST["setting"])) {
     $_setting["channal"] = "";
 }
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_;
-$db_pali_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_SENTENCE_;
+$db_pali_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_SIM_;
-$db_pali_sent_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_SENTENCE_SIM_;
+$db_pali_sent_sim = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_SENTENCE_;
-$db_trans_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_SENTENCE_;
+$db_trans_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 $output = array();
@@ -62,7 +62,7 @@ $output = array();
 $channal_list = array();
 if (isset($_COOKIE["userid"])) {
     PDO_Connect( _FILE_DB_CHANNAL_);
-    $query = "SELECT id from channal where owner = ?   limit 0,100";
+    $query = "SELECT id from channal where owner = ?   limit 100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
@@ -157,13 +157,13 @@ foreach ($_data as $key => $value) {
     try {
         if (empty($_setting["channal"])) {
             if ($sentChannal == "") {
-                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} )   order by modify_time DESC limit 0 ,1 ";
+                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} )   order by modify_time DESC limit 1 ";
                 $channal = "";
             } else {
-                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
+                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 1 ";
             }
         } else {
-            $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 0 ,1 ";
+            $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 1 ";
             $channal = $_setting["channal"];
         }
 

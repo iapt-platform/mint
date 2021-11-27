@@ -153,7 +153,7 @@ if ($FetchParInfo) {
 
     PDO_Connect(_FILE_DB_PALI_SENTENCE_);
 
-    $query = "SELECT book,paragraph,begin, end FROM pali_sent WHERE book= ? AND (paragraph BETWEEN ? AND ? ) ";
+    $query = "SELECT book,paragraph, word_begin as begin, word_end as end FROM "._TABLE_PALI_SENT_." WHERE book= ? AND (paragraph BETWEEN ? AND ? ) ";
     $sent_list = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 	$iCurrPara=0;
 	$output["sent_list"] = $sent_list;

@@ -323,7 +323,7 @@ if (($fp = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !==
 
 PDO_Connect("$db_file");
 $PDO->beginTransaction();
-$query = "INSERT INTO pali_sent ('id','book','paragraph','begin','end','length','count','text','html','real','real_en') VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+$query = "INSERT INTO "._TABLE_PALI_SENT_." (book , paragraph , begin , end , length , count , text , html , real , real_en ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 $stmt = $PDO->prepare($query);
 foreach ($arrSent as $oneParam) {
     $stmt->execute($oneParam);

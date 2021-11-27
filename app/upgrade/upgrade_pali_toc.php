@@ -52,14 +52,14 @@ foreach ($result_lang as $lang) {
     # 第二步 生成para progress 1,2,15,zh-tw
 
     #查询该语言有多少段
-    $query = "select book,paragraph from sentence where strlen>0 and language= ? and book<1000 group by book,paragraph";
+    $query = "SELECT book,paragraph from sentence where strlen>0 and language= ? and book<1000 group by book,paragraph";
     $stmt = $dbh_sent->prepare($query);
     $stmt->execute(array($lang["language"]));
     $result_para = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($result_para as $para) {
 
         # 查询每个段落的等效巴利语字符数
-        $query = "select begin from sentence where strlen>0 and language= ? and book = ? and paragraph = ? and begin<>'' group by begin,end";
+        $query = "SELECT begin from sentence where strlen>0 and language= ? and book = ? and paragraph = ? and begin<>'' group by begin,end";
         $stmt = $dbh_sent->prepare($query);
         $stmt->execute(array($lang["language"], $para["book"], $para["paragraph"]));
         $result_sent = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -67,7 +67,7 @@ foreach ($result_lang as $lang) {
             echo "book:{$para["book"]} para: {$para["paragraph"]}\n";
             #查询这些句子的总共等效巴利语字符数
             $place_holders = implode(',', array_fill(0, count($result_sent), '?'));
-            $query = "select sum(length) as strlen from pali_sent where book = ? and paragraph = ? and begin in ($place_holders)";
+            $query = "SELECT sum(length) as strlen from "._TABLE_PALI_SENT_." where book = ? and paragraph = ? and begin in ($place_holders)";
             $sth = $dbh_pali_sent->prepare($query);
             $param = array();
             $param[] = $para["book"];
@@ -116,7 +116,7 @@ foreach ($valid_book as $key => $book) {
     $result_chapter = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($result_chapter as $key => $chapter) {
         # 查询巴利字符数
-        $query = "SELECT sum(strlen) as pali_strlen from pali_sent_index where book = ? and para between ? and ? ";
+        $query = "SELECT sum(strlen) as pali_strlen from "._TABLE_PALI_SENT_INDEX_." where book = ? and para between ? and ? ";
         $stmt = $dbh_pali_sent->prepare($query);
         $stmt->execute(array($book["book"], $chapter["paragraph"], (int) $chapter["paragraph"] + (int) $chapter["chapter_len"] - 1));
         $result_chapter_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
