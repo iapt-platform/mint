@@ -1,5 +1,6 @@
 <?php
-require_once "./config.php";
+require_once __DIR__."/config.php";
+
 # 目录
 define("_DIR_APPDATA_", __DIR__ . "/../tmp/appdata");
 
@@ -58,18 +59,7 @@ define("_DIR_MYDOCUMENT_", "/my_document");
 # 逐词解析字典文件
 define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
 
-#数据库
-# 数据库基本参数 pgsql sqlite
-define("_DB_ENGIN_", "pgsql");
-
-define("_DB_HOST_", "localhost");
-define("_DB_PORT_", "5432");
-define("_DB_USERNAME_", "postgres");
-define("_DB_PASSWORD_", "");
-define("_DB_NAME_", "mint");
-
 //语料库数据表 pali canon db file 
-
 
 /*
 巴利语料模版表
@@ -109,8 +99,7 @@ define("_TABLE_BOOK_WORD_", "bookword");
 /*
 单词索引
 /app/install/db_insert_word_from_csv.php
- cli：
- /app/admin/word_index_weight_refresh.php 1 127
+/app/admin/word_index_weight_refresh.php
 */
 define("_FILE_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/paliindex.db3");
@@ -131,19 +120,32 @@ define("_FILE_DB_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbn
 //黑体字数据表
 //define("_FILE_DB_BOLD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
+define("_TABLE_WORD_BOLD_", "bold");
 
+/*
+单词分析表
+数据迁移： php /deploy/migaration/word_statistics.php
+*/
+define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
+define("_TABLE_WORD_STATISTICS_", "word_statistics");
 
-//单词分析表
-//define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
+define("_SRC_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
+define("_SRC_TABLE_WORD_STATISTICS_", "word");
+
 
 //巴利句子表
-//define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+define("_TABLE_PALI_SENT_", "pali_sent");
+define("_TABLE_PALI_SENT_ORG_", "pali_sent_org");
+define("_TABLE_PALI_SENT_INDEX_", "pali_sent_index");
 
 //相似句
 //define("_FILE_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
+
 
 //标题表
 //define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
