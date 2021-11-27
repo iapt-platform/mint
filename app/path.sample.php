@@ -109,7 +109,8 @@ define("_TABLE_BOOK_WORD_", "bookword");
 /*
 单词索引
 /app/install/db_insert_word_from_csv.php
-/app/admin/word_index_weight_refresh.php
+ cli：
+ /app/admin/word_index_weight_refresh.php 1 127
 */
 define("_FILE_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/paliindex.db3");
