@@ -141,7 +141,7 @@ foreach ($_data as $key => $value) {
 		//查询相似句
 
 
-			$query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
+			$query = "SELECT count FROM "._TABLE_SENT_SIM_INDEX_." WHERE sent_id = ? ";
 			$sth = $db_pali_sent_sim->prepare($query);
 			$sth->execute(array($pali_text_id));
 			$row = $sth->fetch(PDO::FETCH_ASSOC);

@@ -58,7 +58,7 @@ if (isset($argv[1])) {
 			}
 			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "id", $sent["id"]);	
 
-			$query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
+			$query = "SELECT count FROM "._TABLE_SENT_SIM_INDEX_." WHERE sent_id = ? ";
 			$sth = $db_pali_sent_sim->prepare($query);
 			$sth->execute(array($sent["id"]));
 			$row = $sth->fetch(PDO::FETCH_ASSOC);

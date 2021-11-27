@@ -10,9 +10,9 @@ require_once "../public/function.php";
 
 if (isset($_POST["sent_id"])) {
     $dns = _FILE_DB_PALI_SENTENCE_SIM_;
-    $dbh_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh_sim = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "SELECT sent2 FROM sent_sim WHERE  sent1 = ? limit 10";
+    $query = "SELECT sent2 FROM "._TABLE_SENT_SIM_." WHERE  sent1 = ? limit 10";
     $stmt = $dbh_sim->prepare($query);
     $stmt->execute(array($_POST["sent_id"]));
     $simList = $stmt->fetchAll(PDO::FETCH_ASSOC);
