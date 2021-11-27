@@ -37,7 +37,7 @@ if ($paraInfo) {
     $stmt->execute(array($book, $para + 1, $para + (int) $paraInfo["chapter_len"] - 1));
     $paraMax = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($paraMax) {
-        $query = "SELECT book, paragraph as para, level , toc as title FROM "._TABLE_PALI_TEXT_." WHERE book = ? and (paragraph between ? and ?) and level = ?  limit 1000";
+        $query = "SELECT book, paragraph as para, level , toc as title FROM "._TABLE_PALI_TEXT_." WHERE book = ? and (paragraph between ? and ?) and level = ? order by paragraph ASC limit 1000";
         $stmt = $dbh_pali_text->prepare($query);
         $stmt->execute(array($book, $para, $para + $paraInfo["chapter_len"], $paraMax["level"]));
         $paraList = $stmt->fetchAll(PDO::FETCH_ASSOC);
