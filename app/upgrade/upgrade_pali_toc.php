@@ -1,9 +1,9 @@
 <?php
 #升级段落完成度数据库
 require_once '../path.php';
+require_once '../redis/function.php';
 
-$redis = new redis();
-$r_conn = $redis->connect('127.0.0.1', 6379);
+$redis = redis_connect();
 
 $dns = _FILE_DB_PALI_TOC_;
 $dbh_toc = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
@@ -37,16 +37,16 @@ $stmt->execute();
 $result_lang = $stmt->fetchAll(PDO::FETCH_ASSOC);
 echo "lang:" . count($result_lang) . "<br>\n";
 
-$query = "DELETE FROM progress WHERE 1";
+$query = "DELETE FROM "._TABLE_PROGRESS_." WHERE true";
 $sth_toc = $dbh_toc->prepare($query);
 $sth_toc->execute();
-$query = "DELETE FROM progress_chapter WHERE 1";
+$query = "DELETE FROM "._TABLE_PROGRESS_CHAPTER_." WHERE true";
 $sth_toc = $dbh_toc->prepare($query);
 $sth_toc->execute();
 
 /* 开始一个事务，关闭自动提交 */
 $dbh_toc->beginTransaction();
-$query = "INSERT INTO progress (book, para , lang , all_strlen , public_strlen) VALUES (?, ?, ? , ? ,? )";
+$query = "INSERT INTO "._TABLE_PROGRESS_." (book, para , lang , all_strlen , public_strlen) VALUES (?, ?, ? , ? ,? )";
 $sth_toc = $dbh_toc->prepare($query);
 foreach ($result_lang as $lang) {
     # 第二步 生成para progress 1,2,15,zh-tw
@@ -67,7 +67,7 @@ foreach ($result_lang as $lang) {
             echo "book:{$para["book"]} para: {$para["paragraph"]}\n";
             #查询这些句子的总共等效巴利语字符数
             $place_holders = implode(',', array_fill(0, count($result_sent), '?'));
-            $query = "SELECT sum(length) as strlen from "._TABLE_PALI_SENT_." where book = ? and paragraph = ? and begin in ($place_holders)";
+            $query = "SELECT sum(length) as strlen from "._TABLE_PALI_SENT_." where book = ? and paragraph = ? and word_begin in ($place_holders)";
             $sth = $dbh_pali_sent->prepare($query);
             $param = array();
             $param[] = $para["book"];
@@ -83,13 +83,12 @@ foreach ($result_lang as $lang) {
             } else {
                 $para_strlen = 0;
             }
-            if ($r_conn) {
-				if($redis){
-                	$redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
-				}
-            } else {
-                $sth_toc->execute(array($para["book"], $para["paragraph"], $lang["language"], $para_strlen, 0));
-            }
+			if($redis){
+				$redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
+			}
+			{
+				$sth_toc->execute(array($para["book"], $para["paragraph"], $lang["language"], $para_strlen, 0));
+			}
         }
     }
 }
@@ -104,7 +103,7 @@ if (!$sth_toc || ($sth_toc && $sth_toc->errorCode() != 0)) {
 #第三步生成 段落完成度库
 /* 开始一个事务，关闭自动提交 */
 $dbh_toc->beginTransaction();
-$query = "INSERT INTO progress_chapter (book, para , lang , all_trans,public) VALUES (?, ?, ? , ? ,? )";
+$query = "INSERT INTO "._TABLE_PROGRESS_CHAPTER_." (book, para , lang , all_trans,public) VALUES (?, ?, ? , ? ,? )";
 $sth_toc = $dbh_toc->prepare($query);
 
 foreach ($valid_book as $key => $book) {
@@ -125,7 +124,7 @@ foreach ($valid_book as $key => $book) {
             # 译文等效字符数
             foreach ($result_lang as $lang) {
 
-                if ($r_conn) {
+                if ($redis) {
                     $tran_strlen = 0;
                     for ($i = $chapter["paragraph"]; $i < (int) $chapter["paragraph"] + (int) $chapter["chapter_len"]; $i++) {
                         # code...
@@ -138,8 +137,9 @@ foreach ($valid_book as $key => $book) {
                         $progress = $tran_strlen / $pali_strlen;
                         $redis->hSet("progress_chapter_{$book["book"]}_{$chapter["paragraph"]}", $lang["language"], $progress);
                     }
-                } else {
-                    $query = "SELECT sum(all_strlen) as all_strlen from progress where book = ? and (para between ? and ? )and lang = ?";
+                } 
+				{
+                    $query = "SELECT sum(all_strlen) as all_strlen from "._TABLE_PROGRESS_." where book = ? and (para between ? and ? )and lang = ?";
                     $stmt = $dbh_toc->prepare($query);
                     $stmt->execute(array($book["book"], $chapter["paragraph"], (int) $chapter["paragraph"] + (int) $chapter["chapter_len"] - 1, $lang["language"]));
                     $result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -45,7 +45,7 @@ if ($paraInfo) {
         }
 
     } else {
-        $query = "SELECT lang, all_trans from progress_chapter where book=? and para=?";
+        $query = "SELECT lang, all_trans from "._TABLE_PROGRESS_CHAPTER_." where book=? and para=?";
         $stmt = $dbh_toc->prepare($query);
         $sth_toc = $dbh_toc->prepare($query);
         $sth_toc->execute(array($book, $para));
