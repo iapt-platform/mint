@@ -6,8 +6,8 @@ pali
 id 
 sim_count
  */
-require_once "../path.php";
-require_once "../redis/function.php";
+require_once __DIR__."/../path.php";
+require_once __DIR__."/../redis/function.php";
 
 if (isset($argv[1])) {
     if ($argv[1] == "del") {
