@@ -29,14 +29,7 @@ define("Database",[
 	"password" => "123456"
 ]);
 
-#数据库
-# 数据库基本参数 pgsql sqlite
-define("_DB_ENGIN_", "pgsql");
-define("_DB_HOST_", "localhost");
-define("_DB_NAME_", "mint");
-define("_DB_PORT_", "5432");
-define("_DB_USERNAME_", "postgres");
-define("_DB_PASSWORD_", "123456");
+
 
 
 /*

@@ -59,6 +59,16 @@ define("_DIR_MYDOCUMENT_", "/my_document");
 # 逐词解析字典文件
 define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
 
+
+#数据库
+# 数据库基本参数 pgsql sqlite
+define("_DB_ENGIN_", "pgsql");
+define("_DB_HOST_", "localhost");
+define("_DB_NAME_", "mint");
+define("_DB_PORT_", "5432");
+define("_DB_USERNAME_", "postgres");
+define("_DB_PASSWORD_", "123456");
+
 //语料库数据表 pali canon db file 
 
 /*
@@ -124,7 +134,8 @@ define("_TABLE_WORD_BOLD_", "bold");
 
 /*
 单词分析表
-数据迁移： php /deploy/migaration/word_statistics.php
+数据迁移： 
+php ./deploy/migaration/20211125155600_word_statistics.php
 */
 define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
@@ -136,10 +147,13 @@ define("_SRC_TABLE_WORD_STATISTICS_", "word");
 
 /*
 巴利句子表
-数据迁移： php /deploy/migaration/20211125155700_pali_sent_org.php
-数据迁移： php /deploy/migaration/20211125156700_pali_sent_upgrade.php
-数据迁移： php /deploy/migaration/20211126220400-pali_sent_index-upgrade.php
-redis: app/pali_sent/redis_upgrade_pali_sent.php
+数据迁移： 
+php ./deploy/migaration/20211125155700_pali_sent_org.php
+php ./deploy/migaration/20211125165700-pali_sent-upgrade.php
+php ./deploy/migaration/20211126220400-pali_sent_index-upgrade.php
+
+redis: 
+./app/pali_sent/redis_upgrade_pali_sent.php
 */
 define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
