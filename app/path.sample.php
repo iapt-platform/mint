@@ -160,11 +160,13 @@ define("_SRC_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/pali
 define("_TABLE_SENT_SIM_", "sent_sim");
 define("_TABLE_SENT_SIM_INDEX_", "sent_sim_index");
 
-
-
-//完成度
-//define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_PALI_TOC_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_toc.db3");
+/*
+完成度
+数据迁移
+app\upgrade\upgrade_pali_toc.php
+*/
+define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_FILE_DB_PALI_TOC_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_toc.db3");
 define("_TABLE_PROGRESS_", "progress");
 define("_TABLE_PROGRESS_CHAPTER_", "progress_chapter");
 
