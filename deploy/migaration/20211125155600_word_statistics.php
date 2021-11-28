@@ -1,5 +1,5 @@
 <?php
-require_once "../../app/path.php";
+require_once __DIR__."/../../app/path.php";
 
 #打开源数据库
 $PDO_SRC = new PDO(_SRC_DB_STATISTICS_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));

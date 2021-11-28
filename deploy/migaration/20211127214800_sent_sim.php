@@ -1,5 +1,5 @@
 <?php
-require_once "../../app/path.php";
+require_once __DIR__."/../../app/path.php";
 
 $src_db=_SRC_DB_PALI_SENTENCE_SIM_;#源数据库
 $src_table=_TABLE_SENT_SIM_;#源表名
