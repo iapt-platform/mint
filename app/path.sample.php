@@ -152,8 +152,6 @@ php ./deploy/migaration/20211125155700_pali_sent_org.php
 php ./deploy/migaration/20211125165700-pali_sent-upgrade.php
 php ./deploy/migaration/20211126220400-pali_sent_index-upgrade.php
 
-redis: 
-./app/pali_sent/redis_upgrade_pali_sent.php
 */
 define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
@@ -167,6 +165,9 @@ define("_TABLE_PALI_SENT_INDEX_", "pali_sent_index");
 数据迁移 
 deploy\migaration\20211127214800_sent_sim.php
 deploy\migaration\20211127214900-sent_sim_index.php
+
+redis: 
+./app/pali_sent/redis_upgrade_pali_sent.php
 */
 define("_FILE_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 //define("_FILE_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
