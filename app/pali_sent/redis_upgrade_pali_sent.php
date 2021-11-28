@@ -35,7 +35,7 @@ if (isset($argv[1])) {
 	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-    $query = "SELECT id, book,paragraph, word_begin as begin ,word_end as end ,html FROM "._TABLE_PALI_SENT_." WHERE 1 ";
+    $query = "SELECT id, book,paragraph, word_begin as begin ,word_end as end ,html FROM "._TABLE_PALI_SENT_." WHERE true ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $redis = redis_connect();
