@@ -367,8 +367,8 @@ function set_toc_visible(isVisible){
 				</div>
 			</div>
 		</div>
-		<div id="right_pannal">
-			<div class="fun_frame" style="overflow-x: scroll;position: fixed;width: 18%;height: calc(100vh - 250px);">
+		<div id="right_pannal" style="max-width: unset;">
+			<div class="fun_frame" style="position: fixed;width: auto;height: calc(100vh - 250px);display: grid;">
 				<div style="display:flex;justify-content: space-between;">
 					<div class="title"><?php echo $_local->gui->contributor; ?></div>
 					<div class="click_dropdown_div">
@@ -379,7 +379,7 @@ function set_toc_visible(isVisible){
 					<button onclick='onChannelChange()'><?php echo $_local->gui->confirm; ?></button>
 					<button onclick='onChannelMultiSelectCancel()'><?php echo $_local->gui->cancel; ?></button>
 				</div>
-				<div id="channal_list" class="content" style="max-height:calc(100vh - 20em);">
+				<div id="channal_list" class="content" style="max-height:calc(100vh - 300px);">
 				</div>
 			</div>
 		</div>

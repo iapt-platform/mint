@@ -194,12 +194,12 @@ function my_article_edit(id) {
 					html += "<div>";
 
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:1;'>" + gLocal.gui.title + "</span>";
+					html += "<span style='flex:1;margin: auto;'>" + gLocal.gui.title + "</span>";
 					html += '<span id="article_title" style="flex:7;"></span>';
 					html += "</div>";
 
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:1;'>" + gLocal.gui.sub_title + "</span>";
+					html += "<span style='flex:1;margin: auto;'>" + gLocal.gui.sub_title + "</span>";
 					html += '<span id="article_title" style="flex:7;">';
 					if(!result.subtitle){
 						result.subtitle="";
@@ -210,9 +210,8 @@ function my_article_edit(id) {
 
 					html += "<div id='channal_selector' form_name='channal' style='display:none;'></div>";
 					html += "<div style='display:flex;'>";
-					html += "<span style='flex:1;'>" + gLocal.gui.status + "</span>";
-					html += '<span id="aritcle_status" style="flex:7;"></span>';
-					html += "</div>";
+					html += "<span style='flex:1;margin: auto;'>" + gLocal.gui.status + "</span>";
+					html += '<span id="aritcle_status" style="flex:1;"></span>';
 
 					let lang;
 					if(typeof result.lang == "undefined"){
@@ -222,12 +221,12 @@ function my_article_edit(id) {
 						lang = result.lang;
 					}
 					 
-					html += '<div style="width:100%;display:flex;" >';
+					//html += '<div style="width:100%;display:flex;" >';
 					html +=
-						'<span style="flex:1;margin: auto;">' +
+						'<span style="flex:2;margin: auto;text-align: center;">' +
 						gLocal.gui.language_select +
 						'</span>';
-					html +='<input id="article_lang_select"  style="flex:7;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
+					html +='<input id="article_lang_select"  style="flex:4;width:100%;" type="input" onchange="article_lang_change()"  placeholder="' +
 						gLocal.gui.input +
 						" & " +
 						gLocal.gui.language_select +
@@ -239,7 +238,8 @@ function my_article_edit(id) {
 						lang +
 						'" >';
 					html +=' <input id="article_lang" type="hidden" name="lang" value="'+lang+'">';
-					html +='</div>';
+					//html +='</div>';
+					html += "</div>";
 
 					html += "<div style='display:flex;'>";
 					html += "<span style='flex:1;margin:auto;'>" + gLocal.gui.introduction + "</span>";
@@ -248,7 +248,7 @@ function my_article_edit(id) {
 					html += "</div>";
 
 					html +=
-						"<textarea id='article_content' name='content' style='height:480px;resize: vertical;'>" +
+						"<textarea id='article_content' name='content' style='height:calc(100vh - 7em - 220px);resize: vertical;'>" +
 						result.content +
 						"</textarea>";
 					html += "</div>";
