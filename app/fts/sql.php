@@ -92,52 +92,72 @@ foreach($scan as $foldername) {
       $paragraph = 0;
       // 初始化当前段落的黑体字数组
       $bold_text = [];
+      
       if (($handle = fopen($csv_file, "r")) !== FALSE) {
+        $row=0;
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-          $current_word = $data[5];
-          $style = $data[15];
-          if ($style == 'paranum') {
-            // 如果是段落编号，则保留数字
-            $current_word = $data[4];
-          } else if (!is_pali_word($current_word)) {
-            /*
-             * 如果当前单词不是巴利语单词，则忽略，当作它不存在
-             * TODO 这样的处理方式，可能不合适，如下面场景：
-             *          bld1 - bld2
-             * bld1 和 bld2 是否应该分开对待呢？
-             */
-            continue;
-          }
-
-          if ($paragraph == $data[3]) {
-            // 如果是同一段落，那么合并段落中的内容，中间加入空格
-            $content .= ' ' . $current_word;
-
-            // wid 取最后一个不为空的值 TODO （不一定合适）
-            $wid =  empty($data[1]) ? $wid : $data[1];
-
-            array_push($bold_text, $style == 'bld' ? $current_word : '');
-          } else {
-            // 如果是不同段落
-            if ($paragraph !== 0) {
-              // 如果刚才已经记录有数据，则转换为 SQL
-              $bold_result = count_bld($bold_text);
-              $bold_single = $bold_result['bold_single'];
-              $bold_double = $bold_result['bold_double'];
-              $bold_multiple = $bold_result['bold_multiple'];
-              $sql_from_csv .=
-                "INSERT INTO fts VALUES ($paragraph, '$book', '$wid', '$bold_single', '$bold_double', '$bold_multiple', '$content');" . PHP_EOL;
-              // 转换后，重置黑体字数据
-              $bold_text = [];
+          #忽略第一行
+          if($row > 0){
+            $current_word = $data[5];
+            $style = $data[15];
+            if ($style == 'paranum') {
+              // 如果是段落编号，则保留数字
+              $current_word = $data[4];
+            } else if (!is_pali_word($current_word)) {
+              /*
+              * 如果当前单词不是巴利语单词，则忽略，当作它不存在
+              * TODO 这样的处理方式，可能不合适，如下面场景：
+              *          bld1 - bld2
+              * bld1 和 bld2 是否应该分开对待呢？
+              */
+              continue;
             }
-            // 如果是不同段落，则赋新的值
-            $content = $current_word;
-            $paragraph =  $data[3];
-            $book = $data[2];
-            $wid =  $data[1];
 
-            array_push($bold_text, $style == 'bld' ? $current_word : '');
+            if ($paragraph == $data[3]) {
+              // 如果是同一段落，那么合并段落中的内容，中间加入空格
+              $content .= ' ' . $current_word;
+
+              // wid 取最后一个不为空的值 TODO （不一定合适）
+              $wid =  empty($data[1]) ? $wid : $data[1];
+
+              array_push($bold_text, $style == 'bld' ? $current_word : '');
+            } else {
+              // 如果是不同段落
+              if ($paragraph !== 0) {
+                // 如果刚才已经记录有数据，则转换为 SQL
+                $bold_result = count_bld($bold_text);
+                if(isset($bold_result['bold_single'])){
+                  $bold_single = $bold_result['bold_single'];
+                }else{
+                  $bold_single = "";
+                }
+                if(isset($bold_result['bold_double'])){
+                  $bold_double = $bold_result['bold_double'];
+                }else{
+                  $bold_double = "";
+                }
+                if(isset($bold_result['bold_multiple'])){
+                  $bold_multiple = $bold_result['bold_multiple'];
+                }else{
+                  $bold_multiple = "";
+                }
+                
+                $sql_from_csv .=
+                  "INSERT INTO fts VALUES ($paragraph, '$book', '$wid', '$bold_single', '$bold_double', '$bold_multiple', '$content');" . PHP_EOL;
+                // 转换后，重置黑体字数据
+                $bold_text = [];
+              }
+              // 如果是不同段落，则赋新的值
+              $content = $current_word;
+              $paragraph =  $data[3];
+              $book = (int)mb_substr($data[2],1);
+              $wid =  $data[1];
+
+              array_push($bold_text, $style == 'bld' ? $current_word : '');
+            }
           }
+          $row++;
+
         }
         fclose($handle);
       }
