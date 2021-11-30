@@ -3147,7 +3147,7 @@ function showModifyWin(sWordId) {
 		$("#input_om").val(sOm);
 		$("#input_case").val(sCase);
 
-		if (sParentGrammar != "" || sParent2 != "") {
+		if (sParentGrammar != "" || sParent2 != "" || sParent2 != " ") {
 			document.getElementById("edit_detail_prt_prt").style.display = "block";
 			document.getElementById("svg_parent2").style.transform = "rotate(90deg)";
 		} else {
