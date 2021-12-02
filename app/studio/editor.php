@@ -148,16 +148,20 @@ else{$currDevice="computer";}
 		padding: 0.5em 0.5em 0.1em 0.5em;
 		padding-top:0;
 	}
-	.translate_sent_head_content{
-		max-height: 17em;
+	.translate_sent_head{
+		height: 17em;
 		overflow-y: scroll;
 	}
 	.translate_sent_head_content .readonly{
 		border-color: #d1d1d1;
-		background-color: #f1f1f1;		
+		background-color: #f1f1f1;
 	}
 	.trans_text_content{
 		color: unset;
+	}
+	.trans_text_content p{
+		margin-block-start: 0.3em;
+		margin-block-end: 0;
 	}
 	.trans_text_info{
 		font-size: 80%;

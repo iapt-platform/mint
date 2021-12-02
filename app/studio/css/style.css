@@ -4088,6 +4088,13 @@ border-bottom: 2px solid red;
 	/*overflow-y: auto;
     max-height: 35vh;*/
 	display: none;
+	/*margin-top: calc(-1em - 29px);*/
+	margin-top: -20px;
+
+}
+.trans_sent_edit{
+	height: auto;
+	min-height: unset;
 }
 
 .search_pali_text_prev {

@@ -133,6 +133,8 @@ function layout_wbw_auto_cut() {
 			var splited = getNodeText(xmlParInfo, "splited");
 			if (splited != 1) {
 				var Note_Mark = 0;
+				var Note_Mark1 = 0;
+				var Note_Mark2 = 0;
 				var sent_gramma_i = 0;
 				var word_length_count = 0;
 				var sent_num = 0;
@@ -152,7 +154,7 @@ function layout_wbw_auto_cut() {
 						wType = wCase.split("#")[0];
 					}
 					word_length_count += wPali.length;
-
+					
 					if (iWord >= 1) {
 						var pre_pali_spell = getNodeText(allWord[iWord - 1], "pali");
 						var pre_pali_type = getNodeText(allWord[iWord - 1], "type");
@@ -179,13 +181,19 @@ function layout_wbw_auto_cut() {
 							next_pali_Case = next_case_array[next_case_array.length - 1];
 						}
 					}
-					if (next_pali_spell == "(") {
-						Note_Mark = 1;
-					} else if (pre_pali_spell == ")" && Note_Mark == 1) {
-						Note_Mark = 0;
+					if (next_pali_spell == "(" || wPali == "(") {
+						Note_Mark1 = 1;
+					} else if ((pre_pali_spell == ")" || wPali == ")") && Note_Mark1 == 1) {
+						Note_Mark1 = 0;
 					} else {
 					}
-
+					if (next_pali_spell == "[" || wPali == "[") {
+						Note_Mark2 = 1;
+					} else if ((pre_pali_spell == "]" || wPali == "]") && Note_Mark2 == 1) {
+						Note_Mark2 = 0;
+					} else {
+					}
+					Note_Mark = Note_Mark1 + Note_Mark2
 					var isEndOfSen = false;
 					if (
 						wPali == "." &&
@@ -195,7 +203,7 @@ function layout_wbw_auto_cut() {
 						Note_Mark == 0
 					) {
 						//以.結尾且非註釋
-						if (next_pali_spell != "(") {
+						if (next_pali_spell != "(" && next_pali_spell != "[") {
 							isEndOfSen = true;
 						}
 					} else if (
@@ -212,7 +220,7 @@ function layout_wbw_auto_cut() {
 					} else if (allWord.length >= iWord + 2 && iWord != allWord.length - 1 && Note_Mark == 0) {
 						//以!或?或;結尾
 						if (/*wPali=="!" || */ wPali == ";" || wPali == "?") {
-							if (next_pali_spell != "(") {
+							if (next_pali_spell != "(" && next_pali_spell != "[") {
 								isEndOfSen = true;
 							}
 						}
