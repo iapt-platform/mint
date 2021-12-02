@@ -49,30 +49,31 @@ php /app/install/db_update_toc.php 1 217 zh-hant
 - 巴利语料段落表
 ```
 刷库 
-http://app/install/db_insert_palitext.php
+php /app/install/db_insert_palitext.php 1 217
 更新 
-http://app/install/db_update_palitext.php
+php /app/install/db_update_palitext.php 1 217
 ```
 
 - 以书为单位的单词汇总表
 ```
 填充 
-http://app/install/db_insert_bookword_from_csv.php
+php /app/install/db_insert_bookword_from_csv_cli.php 1 217
 ```
 
 - 单词索引
 ```
-http://app/install/db_insert_word_from_csv.php
-php ./app/admin/word_index_weight_refresh.php
+php /app/install/db_insert_word_from_csv_cli.php 1 217
+php /app/admin/word_index_weight_refresh.php
 ```
 
 - 92万词
 ```
-http://app/install/db_insert_wordindex_from_csv.php
+php /app/install/db_insert_wordindex_from_csv_cli.php
 ```
 
 - 单词分析表
 ```
+sqlite => pg： 
 php /deploy/migaration/word_statistics.php
 ```
 
@@ -80,7 +81,7 @@ php /deploy/migaration/word_statistics.php
 ```
 sqlite => pg： 
 php ./deploy/migaration/20211125155700_pali_sent_org.php
-消除错误切分： 
+消除错误切分 当 pali_sent_org 修改了句子合并 数据时运行 
 php ./deploy/migaration/20211125165700-pali_sent-upgrade.php
 生成索引： 
 php ./deploy/migaration/20211126220400-pali_sent_index-upgrade.php
