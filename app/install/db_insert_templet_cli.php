@@ -2,17 +2,17 @@
 /*
 用拆分好的三藏数据 生成模板库
  */
-require_once "../path.php";
-require_once '../public/_pdo.php';
+require_once __DIR__."../path.php";
+require_once __DIR__.'../public/_pdo.php';
 
 
 echo "Insert templet to DB".PHP_EOL;
 
 if ($argc != 3) {
-	echo "help".PHP_EOF;
-	echo "db_insert_templet.php from to".PHP_EOF;
-	echo "from = 1-217".PHP_EOF;
-	echo "to = 1-217".PHP_EOF;
+	echo "help".PHP_EOL;
+	echo "db_insert_templet.php from to".PHP_EOL;
+	echo "from = 1-217".PHP_EOL;
+	echo "to = 1-217".PHP_EOL;
 	exit;
 }
 $_from = (int) $argv[1];
