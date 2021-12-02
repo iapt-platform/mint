@@ -4,7 +4,7 @@ require_once "../public/_pdo.php";
 require_once "../path.php";
 
 PDO_Connect(_FILE_DB_PALITEXT_);
-$query = "SELECT * from "._TABLE_PALI_BOOK_NAME_." where 1";
+$query = "SELECT * from "._TABLE_PALI_BOOK_NAME_." where true";
 $books = PDO_FetchAll($query);
 
 PDO_Connect(_FILE_DB_PAGE_INDEX_);
