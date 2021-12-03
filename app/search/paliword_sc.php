@@ -44,12 +44,19 @@ if (isset($_GET["page"])) {
 if (count($arrWordList) > 1) {
 	# 查询多个词
 	$out_data = array();
+    /*
     PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
     $query = "SELECT book,paragraph, text FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
     $Fetch1 = PDO_FetchAll($query, array("%{$words}%", $_pagesize, $_page * $_pagesize));
+    */
+    $dns = _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";";
+    PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
+
+    $query = "SELECT ts_rank('{0.1, 0.2, 0.4, 1}', full_text_search_weighted, websearch_to_tsquery('pali', ?)) AS rank, book,paragraph,content as text FROM fts WHERE full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ORDER BY rank DESC LIMIT 20";
+    $Fetch1 = PDO_FetchAll($query, array($word, $word));    
     foreach ($Fetch1 as $key => $value) {
         # code...
         $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
@@ -61,7 +68,7 @@ if (count($arrWordList) > 1) {
         $newRecode["wt"] = 0;
         $out_data[] = $newRecode;
     }
-	$result["time"][] = array("event" => "精确匹配结束", "time" => microtime(true)-$_start);
+	$result["time"][] = array("event" => "fts精确匹配结束", "time" => microtime(true)-$_start);
 	/*
     #然后查分散的
     $strQuery = "";
