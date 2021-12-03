@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__."/../path.php";
 /*
  * 该脚本用于生成 SQL 语句, 将三藏语料 CSV 数据 (如：abh01a.att.csv)
  * 转换为 SQL 语句插入到 PostgreSQL 内，数据表结构参见 fts.sql
@@ -74,18 +74,25 @@ function count_bld ($bld_array) {
 }
 
 
+$dns = _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";";
+$dbh_fts = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+$dbh_fts->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
 // 查找 tmp/palicsv/ 目录下的语料数据
-$palicsv_path = '../../tmp/palicsv/';
+$palicsv_path = __DIR__.'/../../tmp/palicsv/';
 $scan = scandir($palicsv_path);
+$fileCounter = 0;
 foreach($scan as $foldername) {
   if (is_dir("$palicsv_path/$foldername")) {
+
     $csv_file = "$palicsv_path/$foldername/$foldername.csv";
 
     // DEBUG
     // if ($foldername != 'abh01m.mul') continue;
 
     if (is_file($csv_file)) {
-      echo '正在处理文件: ' . PHP_EOL . $csv_file . PHP_EOL;
+      $fileCounter++;      
+      echo "正在处理文件: $fileCounter" . PHP_EOL . $csv_file . PHP_EOL;
       // 存放当前正在处理的 CSV 文件生成的所有 SQL
       $sql_from_csv = '';
       // 初始化段落为 0 (没有这种段落)
@@ -94,6 +101,21 @@ foreach($scan as $foldername) {
       $bold_text = [];
       
       if (($handle = fopen($csv_file, "r")) !== FALSE) {
+        # 获取book id
+        $data = fgetcsv($handle, 1000, ",");
+        $data = fgetcsv($handle, 1000, ",");
+        $bookId = (int)mb_substr($data[2],1);
+        #删除旧数据
+        $query = "DELETE FROM "._TABLE_FTS_." WHERE book=?";
+        $stmt = $dbh_fts->prepare($query);
+        $stmt->execute(array($bookId));
+
+        // 开始一个事务，关闭自动提交
+        $dbh_fts->beginTransaction();
+        $query = "INSERT INTO "._TABLE_FTS_." (book , paragraph , wid,bold_single,bold_double,bold_multiple,content) VALUES ( ? , ? , ? , ? , ? , ? , ?  )";
+        $stmt = $dbh_fts->prepare($query);
+
+        rewind($handle);
         $row=0;
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
           #忽略第一行
@@ -142,14 +164,13 @@ foreach($scan as $foldername) {
                   $bold_multiple = "";
                 }
                 
-                $sql_from_csv .=
-                  "INSERT INTO fts VALUES ($paragraph, '$book', '$wid', '$bold_single', '$bold_double', '$bold_multiple', '$content');" . PHP_EOL;
-                // 转换后，重置黑体字数据
+                $stmt->execute(array($book, $paragraph, $wid,$bold_single,$bold_double,$bold_multiple,$content));
+                  // 转换后，重置黑体字数据
                 $bold_text = [];
               }
               // 如果是不同段落，则赋新的值
               $content = $current_word;
-              $paragraph =  $data[3];
+              $paragraph =  (int)$data[3];
               $book = (int)mb_substr($data[2],1);
               $wid =  $data[1];
 
@@ -160,6 +181,14 @@ foreach($scan as $foldername) {
 
         }
         fclose($handle);
+        // 提交更改
+        $dbh_fts->commit();
+        if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+            $error = $dbh_fts->errorInfo();
+            echo "error - $error[2]".PHP_EOL;
+        } else {
+            echo "updata $row recorders.".PHP_EOL;
+        }	
       }
 
       file_put_contents("./sql/$foldername.sql", $sql_from_csv);
