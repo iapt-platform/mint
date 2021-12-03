@@ -1,8 +1,8 @@
 -- 创建表结构
 
-CREATE TABLE fts (
+CREATE TABLE fts_texts (
        paragraph        integer,
-       book             varchar(10),
+       book             integer,
        wid              varchar(50),
        -- 单个出现的黑体字，权重较大
        bold_single      text,
@@ -47,7 +47,7 @@ ALTER TEXT SEARCH CONFIGURATION pali_unaccent
 
 -- 添加自动更新的 TSVECTOR 字段
 
-ALTER TABLE fts
+ALTER TABLE fts_texts
       ADD COLUMN full_text_search_weighted TSVECTOR
       GENERATED ALWAYS AS (
          setweight(to_tsvector('pali', coalesce(content,'')), 'A')  || ' ' ||
@@ -56,7 +56,7 @@ ALTER TABLE fts
          setweight(to_tsvector('pali', coalesce(bold_multiple,'')), 'D')
       ) STORED;
 
-ALTER TABLE fts
+ALTER TABLE fts_texts
       ADD COLUMN full_text_search_weighted_unaccent TSVECTOR
       GENERATED ALWAYS AS (
          setweight(to_tsvector('pali_unaccent', coalesce(content,'')), 'A')  || ' ' ||
@@ -68,10 +68,10 @@ ALTER TABLE fts
 -- 为该字段创建索引
 
 CREATE INDEX full_text_search_weighted_idx
-       ON fts USING GIN (full_text_search_weighted);
+       ON fts_texts USING GIN (full_text_search_weighted);
 
 CREATE INDEX full_text_search_weighted__unaccent_idx
-       ON fts USING GIN (full_text_search_weighted_unaccent);
+       ON fts_texts USING GIN (full_text_search_weighted_unaccent);
 
 -- 创建查询函数
 
@@ -96,7 +96,7 @@ AS $$
         websearch_to_tsquery('pali_unaccent', query_str)), -- AS rank
         paragraph, wid, bold_single, bold_double, bold_multiple, content,
         full_text_search_weighted, full_text_search_weighted_unaccent
-    FROM fts
+    FROM fts_texts
     WHERE
         full_text_search_weighted @@ websearch_to_tsquery('pali', query_str) OR
         full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', query_str);
