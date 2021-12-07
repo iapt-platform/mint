@@ -632,6 +632,7 @@ function tab_click(panalId, tabid, callback = null, parm = null) {
 		}
 	}
 	guide_init();
+	$(".translate_sent_head").each(function(){$(this).height($(this).parent()[0].scrollHeight+"px")})
 }
 
 /*

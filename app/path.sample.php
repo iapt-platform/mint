@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__."/config.php";
-
 # 目录
 define("_DIR_APPDATA_", __DIR__ . "/../tmp/appdata");
 

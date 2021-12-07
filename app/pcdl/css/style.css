@@ -2282,13 +2282,17 @@ th {
 	border-collapse: collapse;
 }
 
-.frame_table td,
-th {
-	border: 1px solid #fff;
+.frame_table td,th {
+	border: 1px solid #000;
 	font-size: 100%;
 	vertical-align: baseline;
 }
-
+.frame_table thead{
+	background: burlywood;
+}
+.frame_table tbody{
+	background: antiquewhite;
+}
 #id_wizard_palicannon_index_filelist p {
 	margin: 0;
 }

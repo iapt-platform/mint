@@ -598,6 +598,7 @@ function updateTranslationPreview(blockId, obj) {
 	}
 	$("#tran_pre_" + blockId).html(out);
 	term_updata_translation();
+	$(obj).css({'height': 'auto'}).height($(obj)[0].scrollHeight+"px");
 }
 
 function getSuperTranslateModifyString(inString, par_num, par_guid, language) {
@@ -1392,12 +1393,19 @@ function renderWordParBlockInner(elementBlock) {
 				next_pali_Case = next_case_array[next_case_array.length - 1];
 			}
 		}
-		if (next_pali_spell == "(") {
+		if (next_pali_spell == "(" || wPali == "(") {
 			Note_Mark = 1;
-		} else if (pre_pali_spell == ")" && Note_Mark == 1) {
+		} else if ((pre_pali_spell == ")" || wPali == ")") && Note_Mark == 1) {
 			Note_Mark = 0;
 		} else {
 		}
+		/*
+		if (next_pali_spell == "[" || curr_pali_spell == "[") {
+			Note_Mark2 = 1;
+		} else if ((pre_pali_spell == "]" || curr_pali_spell == "]") && Note_Mark2 == 1) {
+			Note_Mark2 = 0;
+		} else {
+		}*/
 
 		if (wEnter == 1) {
 			//句子末尾
@@ -1468,7 +1476,7 @@ function renderWordParBlockInner(elementBlock) {
 				//逐句翻译块内容结束
 				output += "<div class='translate_sent_foot'>";
 				output += "</div>";
-				output += "</div>";
+				//output += "</div>";
 				//逐句翻译块结束
 
 				output += "</div>"; //逐句块结束
@@ -2061,7 +2069,33 @@ function sent_edit_click(book, para, begin, end, channal) {
 	)
 		.parent()
 		.show();
-}
+		$(
+			".trans_sent_edit[book='" +
+				book +
+				"'][para='" +
+				para +
+				"'][begin='" +
+				begin +
+				"'][end='" +
+				end +
+				"'][channal='" +
+				channal +
+				"']"
+		).css({'height': 'auto'}).height($(
+			".trans_sent_edit[book='" +
+				book +
+				"'][para='" +
+				para +
+				"'][begin='" +
+				begin +
+				"'][end='" +
+				end +
+				"'][channal='" +
+				channal +
+				"']"
+		)[0].scrollHeight+"px");
+
+	}
 function magic_sentence_cut() {
 	var all_sent_array = document.getElementsByClassName("sent_wbw");
 	for (i_magic = 0; i_magic < all_sent_array.length; i_magic++) {

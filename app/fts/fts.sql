@@ -32,6 +32,7 @@ CREATE TEXT SEARCH DICTIONARY pali_stopwords (
 );
 
 -- 修改全文检索配置 pali 使用我们创建的字典
+
 ALTER TEXT SEARCH CONFIGURATION pali
     ADD MAPPING FOR asciiword, word, hword_part, hword_asciipart
     WITH pali_stem, pali_stopwords;
@@ -75,7 +76,7 @@ CREATE INDEX full_text_search_weighted__unaccent_idx
 
 -- 创建查询函数
 
-CREATE OR REPLACE FUNCTION query_pali(query_str TEXT) 
+CREATE OR REPLACE FUNCTION query_pali(query_str TEXT)
   RETURNS TABLE(
           rank NUMERIC,
           paragraph INTEGER,
@@ -85,7 +86,7 @@ CREATE OR REPLACE FUNCTION query_pali(query_str TEXT)
           bold_multiple TEXT,
           content TEXT,
           full_text_search_weighted TSVECTOR,
-          full_text_search_weighted_unaccent TSVECTOR) 
+          full_text_search_weighted_unaccent TSVECTOR)
 AS $$
     SELECT
     ts_rank('{0.1, 0.2, 0.4, 1}',
