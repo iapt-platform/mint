@@ -211,26 +211,28 @@ function tocGetTreeData(articles,active=""){
 		if(active==element.article){
 			newNode["extraClasses"]="active";
 		}
+
 		if(newNode.level>iCurrLevel){
+			//新的层级比较大，为上一个的子目录
 			treeParents.push(lastInsNode);					
 			lastInsNode.children = new Array();
 			lastInsNode.children.push(newNode);
 			currParentNode = lastInsNode;
 		}
 		else if(newNode.level==iCurrLevel){
+			//目录层级相同，为平级
 			currParentNode = treeParents[treeParents.length-1];
 			treeParents[treeParents.length-1].children.push(newNode);
 		}
 		else{
-			// 小于
-			try{
-				do {
-					treeParents.pop();
-				} while (treeParents[treeParents.length-1].level>=newNode.level);
-			}catch(e){
-				console.log("toc index:"+index,articles[index]);
-			}
+			// 小于 挂在上一个层级
 
+			while(treeParents.length>1){
+				treeParents.pop();
+				if(treeParents[treeParents.length-1].level<newNode.level){
+					break;
+				}
+			}
 			
 			currParentNode = treeParents[treeParents.length-1];
 			treeParents[treeParents.length-1].children.push(newNode);
