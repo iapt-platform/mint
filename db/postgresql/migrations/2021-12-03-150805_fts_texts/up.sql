@@ -1,3 +1,5 @@
+-- Your SQL goes here
+
 -- 创建表结构
 
 CREATE TABLE fts_texts (
