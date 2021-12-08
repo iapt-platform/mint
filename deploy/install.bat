@@ -1,6 +1,3 @@
-#!/bin/sh
-
-date
 
 php ../app/install/db_insert_templet_cli.php 1 217
 php ../app/install/db_update_toc_cli.php 1 217 pali
@@ -21,4 +18,4 @@ php ./migaration/20211126220400-pali_sent_index-upgrade.php
 php ./migaration/20211127214800_sent_sim.php
 php ./migaration/20211127214900-sent_sim_index.php
 
-date
+net time \\127.0.0.1
