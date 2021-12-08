@@ -34,7 +34,7 @@ $dns = _FILE_DB_PALI_INDEX_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-if (($handle = fopen("filelist.csv", 'r')) !== false) {
+if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
         $fileNums++;
     }

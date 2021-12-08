@@ -28,8 +28,7 @@ $filelist = array();
 $fileNums = 0;
 $log = "";
 
-
-if (($handle = fopen("filelist.csv", 'r')) !== false) {
+if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
         $fileNums++;
     }

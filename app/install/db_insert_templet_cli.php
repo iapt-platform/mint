@@ -2,8 +2,8 @@
 /*
 用拆分好的三藏数据 生成模板库
  */
-require_once __DIR__."../path.php";
-require_once __DIR__.'../public/_pdo.php';
+require_once __DIR__."/../path.php";
+require_once __DIR__.'/../public/_pdo.php';
 
 
 echo "Insert templet to DB".PHP_EOL;
@@ -25,7 +25,7 @@ if ($_to > 217) {
 
 $filelist = array();
 
-if (($handle = fopen("filelist.csv", 'r')) !== false) {
+if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[] = fgetcsv($handle, 0, ',')) !== false) {
     }
 }
@@ -76,7 +76,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$log =  "$from,$FileName,open\r\n";
 	//fwrite($myLogFile, $log);
 
-	#删除目标数据库中所有数据
+	#删除目标数据库中数据
 	$query = "DELETE FROM "._TABLE_PALICANON_TEMPLET_." WHERE book = ?";
 	$stmt = $PDO->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {

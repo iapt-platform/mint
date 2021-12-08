@@ -27,7 +27,7 @@ $fileNums = 0;
 $log = "";
 echo "doing $_from".PHP_EOL;
 
-if (($handle = fopen("filelist.csv", 'r')) !== false) {
+if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
         $fileNums++;
     }
