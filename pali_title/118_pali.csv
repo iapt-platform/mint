@@ -1,3 +1,4 @@
+id,book,par_num,level,class,title,"text"
 NULL,p118,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p118,2,100,nikaya,,"Khuddakanikāye"
 NULL,p118,3,1,book,Mahāniddesa-aṭṭhakathā,"Mahāniddesa-aṭṭhakathā"
@@ -1831,4 +1832,3 @@ NULL,p118,1830,100,centered,,"Saddhammappajjotikāya mahāniddesaṭṭhakathāy
 NULL,p118,1831,100,centered,,"Sāriputtasuttaniddesavaṇṇanā niṭṭhitā."
 NULL,p118,1832,100,centered,,"Aṭṭhakavaggavaṇṇanā niṭṭhitā."
 NULL,p118,1833,100,centered,,"Saddhammappajjotikā nāma mahāniddesa-aṭṭhakathā niṭṭhitā."
-id,book,par_num,level,class,title,"text"
