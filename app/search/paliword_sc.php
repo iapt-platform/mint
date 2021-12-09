@@ -63,8 +63,8 @@ if (count($arrWordList) > 1) {
         full_text_search_weighted_unaccent,
         websearch_to_tsquery('pali_unaccent', ?))
     AS rank,
-    ts_headline('simple', content,
-                 websearch_to_tsquery('simple', ?),
+    ts_headline('pali', content,
+                 websearch_to_tsquery('pali', ?),
                  'StartSel = <highlight>, StopSel = </highlight>')
     AS highlight,
     book,paragraph,content 
