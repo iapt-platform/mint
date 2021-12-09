@@ -55,7 +55,6 @@ if (count($arrWordList) > 1) {
     PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
 
-    //$query = "SELECT ts_rank('{0.1, 0.2, 0.4, 1}', full_text_search_weighted, websearch_to_tsquery('pali', ?)) AS rank, book,paragraph,content as text FROM fts WHERE full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ORDER BY rank DESC LIMIT 20";
     $query = "SELECT
     ts_rank('{0.1, 0.2, 0.4, 1}',
         full_text_search_weighted,
@@ -66,7 +65,7 @@ if (count($arrWordList) > 1) {
     AS rank,
     ts_headline('simple', content,
                  websearch_to_tsquery('simple', ?),
-                 'StartSel = <span>, StopSel = </span>')
+                 'StartSel = <highlight>, StopSel = </highlight>')
     AS highlight,
     book,paragraph,content 
     FROM fts_texts
