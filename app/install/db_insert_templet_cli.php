@@ -2,7 +2,7 @@
 /*
 用拆分好的三藏数据 生成模板库
  */
-require_once __DIR__."/../path.php";
+require_once __DIR__."/../config.php";
 require_once __DIR__.'/../public/_pdo.php';
 
 

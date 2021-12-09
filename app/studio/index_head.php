@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 require_once '../ucenter/login.php';
 require_once '../public/config.php';
 require_once '../public/load_lang.php';

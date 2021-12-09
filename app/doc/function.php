@@ -1,6 +1,6 @@
 <?php
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 function pcs_get_title($id)

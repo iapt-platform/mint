@@ -1,5 +1,5 @@
 <?php
-include "../path.php";
+include "../config.php";
 include "./_pdo.php";
 
 //获取服务器端文件列表

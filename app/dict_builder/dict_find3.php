@@ -1,7 +1,7 @@
 ﻿<?php
 //查询参考字典
 require_once 'casesuf.inc';
-require_once "../path.php";
+require_once "../config.php";
 require_once "./_pdo.php";
 
 

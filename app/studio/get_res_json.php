@@ -7,7 +7,7 @@ paragraph
 输出：资源列表的json数据
  */
 require_once "../studio/checklogin.inc";
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../studio/public.inc";
 

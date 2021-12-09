@@ -1,7 +1,7 @@
 <?php
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/load_lang.php"; //语言文件
 require_once "../public/function.php";

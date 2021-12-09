@@ -1,7 +1,7 @@
 <?php
 #将cscd4 段落编号插入数据库 用于义注跳转
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 
 PDO_Connect(_FILE_DB_PALITEXT_);
 $query = "SELECT * from "._TABLE_PALI_BOOK_NAME_." where true";

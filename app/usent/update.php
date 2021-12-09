@@ -3,7 +3,7 @@
 向句子库中插入或更新数据
  */
 include("../log/pref_log.php");
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../usent/function.php";

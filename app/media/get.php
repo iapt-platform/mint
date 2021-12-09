@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 //打开数据库
 $dns = "" . _FILE_DB_MEDIA_;
 $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));

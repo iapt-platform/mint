@@ -2,7 +2,7 @@
 header('Content-type: application/json; charset=utf8');
 
 //查询term字典
-require_once "../path.php";
+require_once "../config.php";
 
 $PDO = new PDO("" . _FILE_DB_TERM_, "", "", array(PDO::ATTR_PERSISTENT => true));
 $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);

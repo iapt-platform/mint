@@ -20,7 +20,7 @@ require_once "../pcdl/head_bar.php";
     <?php
 //
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../media/function.php';
 require_once '../public/function.php';

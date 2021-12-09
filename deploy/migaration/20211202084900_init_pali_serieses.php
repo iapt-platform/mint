@@ -2,7 +2,7 @@
 /*
 导入巴利书名
 */
-require_once __DIR__."/../../app/path.php";
+require_once __DIR__."/../../app/config.php";
 
 $src_file=_DIR_PALI_TITLE_."/pali_serieses.csv";#源数据
 

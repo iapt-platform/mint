@@ -1,5 +1,5 @@
 <?php
-require_once("../path.php");
+require_once("../config.php");
 $logstart = microtime(true)*1000;
 $strstart = date("h:i:sa");
 function PrefLog(){

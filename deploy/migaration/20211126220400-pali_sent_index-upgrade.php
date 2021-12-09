@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/../../app/path.php";
+require_once __DIR__."/../../app/config.php";
 
 
 $dest_db=_FILE_DB_PALI_SENTENCE_;#目标数据库

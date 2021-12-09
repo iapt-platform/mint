@@ -11,7 +11,7 @@ require_once "install_head.php";
 <p><a href="index.php">Home</a></p>
 <?php
 include "./_pdo.php";
-require_once '../path.php';
+require_once '../config.php';
 
 $db_file = _FILE_DB_PALI_SENTENCE_;
 $thisfile = '.' . mb_substr(__FILE__, mb_strlen(__DIR__));

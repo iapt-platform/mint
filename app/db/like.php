@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../db/table.php";
 /*
 CREATE TABLE likes (

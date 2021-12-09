@@ -1,6 +1,6 @@
 ﻿<?php
 //获取书的目录-索引 包含缩减的正文
-require_once "../path.php";
+require_once "../config.php";
 include "../public/_pdo.php";
 
 $currBook = $_GET["book"];

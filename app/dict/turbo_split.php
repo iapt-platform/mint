@@ -2,7 +2,7 @@
 require_once '../public/casesuf.inc';
 //require_once '../studio/dict_find_un.inc';
 //require_once '../studio/sandhi.php';
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 require_once "../redis/function.php";

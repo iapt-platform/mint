@@ -3,7 +3,7 @@
 require_once "../../public/_pdo.php";
 require_once "../../public/function.php";
 require_once '../../vendor/autoloader.php';
-require_once '../../path.php';
+require_once '../../config.php';
 
 $username = "";
 

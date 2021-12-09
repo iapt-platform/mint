@@ -1,6 +1,6 @@
 <?php
 #已经废弃
-require_once '../path.php';
+require_once '../config.php';
 
 date_default_timezone_set("UTC");
 $logfile = "update_user_active_time_last.txt";
