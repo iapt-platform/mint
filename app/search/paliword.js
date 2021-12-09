@@ -96,9 +96,16 @@ function render_word_result(worddata) {
 		"&direction=col' target='_blank'>";
 	html += worddata.title + "</a></div>";
 
-	let newStr = highlightWords(worddata.palitext, keyword);
+	let highlightStr;
 
-	html += "<div class='wizard_par_div'>" + newStr + "</div>";
+	if(typeof worddata.highlight=="undefined"){
+		highlightStr= highlightWords(worddata.palitext, keyword);
+	}else{
+		highlightStr= worddata.highlight;
+	}
+	
+
+	html += "<div class='wizard_par_div'>" + highlightStr + "</div>";
 	html += "<div class='path'>" + worddata.path + "</div>";
 	html += "<div class='path'>" + worddata.book + "-" + worddata.para + "-" + worddata.wt + "</div>";
 	html += "</div>";
