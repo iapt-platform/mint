@@ -215,60 +215,33 @@ define("_TABLE_PART_", "part");
 //读写频繁
 # 逐词解析表
 #sqlite
-//define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
-define("_SRC_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
+define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
 define("_TABLE_SRC_USER_WBW_", "wbw");
 define("_TABLE_SRC_USER_WBW_BLOCK_", "wbw_block");
 
-#pg
-define("_FILE_DB_USER_WBW_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_USER_WBW_", "wbws");
-define("_TABLE_USER_WBW_BLOCK_", "wbw_blocks");
 
 
 # 译文
 #sqlite
-//define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
-//define("_TABLE_SENTENCE_", "sentence");
-//define("_TABLE_SENTENCE_BLOCK_", "sent_block");
-//define("_TABLE_SENTENCE_PR_", "sent_pr");
-#数据迁移源数据表
-define("_SRC_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
-define("_TABLE_SRC_SENTENCE_", "sentence");
-define("_TABLE_SRC_SENTENCE_BLOCK_", "sent_block");
-define("_TABLE_SRC_SENTENCE_PR_", "sent_pr");
-#pg
-define("_FILE_DB_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_SENTENCE_", "sentences");
-define("_TABLE_SENTENCE_BLOCK_", "sent_blocks");
-define("_TABLE_SENTENCE_PR_", "sent_prs");
+define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
+define("_TABLE_SENTENCE_", "sentence");
+define("_TABLE_SENTENCE_BLOCK_", "sent_block");
+define("_TABLE_SENTENCE_PR_", "sent_pr");
 
 
 # 译文编辑历史
 #sqlite
-//define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
-//define("_TABLE_SENTENCE_HISTORAY_", "sent_historay");
-define("_SRC_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
-define("_TABLE_SRC_SENTENCE_HISTORAY_", "sent_historay");
+define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
+define("_TABLE_SENTENCE_HISTORAY_", "sent_historay");
 
-#pg
-define("_FILE_DB_USER_SENTENCE_HISTORAY_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_SENTENCE_HISTORAY_", "sent_historaies");
 
 
 # 逐词解析字典
 # sqlite
-#define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-#define("_TABLE_DICT_WBW_", "wbw");
-#define("_TABLE_DICT_WBW_INDEX_", "wbw_index");
+define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
+define("_TABLE_DICT_WBW_", "wbw");
+define("_TABLE_DICT_WBW_INDEX_", "wbw_index");
 
-#pg
-define("_SQLITE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-define("_SQLITE_TABLE_DICT_WBW_", "dict");
-define("_SQLITE_TABLE_DICT_WBW_INDEX_", "user_index");
-
-define("_FILE_DB_WBW_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_DICT_USER_", "user_dicts");
 
 //写入频繁 读取不频繁
 # 用户行为记录
