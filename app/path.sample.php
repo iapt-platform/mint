@@ -172,7 +172,7 @@ php ./deploy/migaration/20211125155600_word_statistics.php
 */
 #sqlite
 //define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
-//define("_TABLE_WORD_STATISTICS_", "word_statistics");
+//define("_TABLE_WORD_STATISTICS_", "word");
 
 #pg
 define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
