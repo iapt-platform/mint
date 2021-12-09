@@ -29,7 +29,12 @@ define("Database",[
 	"password" => "123456"
 ]);
 
-
+define("_DB_ENGIN_", Database["type"]);
+define("_DB_HOST_", Database["server"]);
+define("_DB_PORT_", Database["port"]);
+define("_DB_NAME_", Database["name"]);
+define("_DB_USERNAME_", Database["user"]);
+define("_DB_PASSWORD_", Database["password"]);
 
 
 /*

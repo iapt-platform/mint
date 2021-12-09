@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__.'/config.php';
+
 # 目录
 define("_DIR_APPDATA_", __DIR__ . "/../tmp/appdata");
 
@@ -57,15 +59,6 @@ define("_DIR_MYDOCUMENT_", "/my_document");
 # 逐词解析字典文件
 define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
 
-
-#数据库
-# 数据库基本参数 pgsql sqlite
-define("_DB_ENGIN_", "pgsql");
-define("_DB_HOST_", "localhost");
-define("_DB_NAME_", "mint");
-define("_DB_PORT_", "5432");
-define("_DB_USERNAME_", "postgres");
-define("_DB_PASSWORD_", "123456");
 
 //语料库数据表 pali canon db file 
 
