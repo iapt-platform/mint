@@ -55,17 +55,39 @@ if (count($arrWordList) > 1) {
     PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
 
-    $query = "SELECT ts_rank('{0.1, 0.2, 0.4, 1}', full_text_search_weighted, websearch_to_tsquery('pali', ?)) AS rank, book,paragraph,content as text FROM fts WHERE full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ORDER BY rank DESC LIMIT 20";
-    $Fetch1 = PDO_FetchAll($query, array($word, $word));    
+    //$query = "SELECT ts_rank('{0.1, 0.2, 0.4, 1}', full_text_search_weighted, websearch_to_tsquery('pali', ?)) AS rank, book,paragraph,content as text FROM fts WHERE full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ORDER BY rank DESC LIMIT 20";
+    $query = "SELECT
+    ts_rank('{0.1, 0.2, 0.4, 1}',
+        full_text_search_weighted,
+        websearch_to_tsquery('pali', ?)) +
+    ts_rank('{0.1, 0.2, 0.4, 1}',
+        full_text_search_weighted_unaccent,
+        websearch_to_tsquery('pali_unaccent', ?))
+    AS rank,
+    ts_headline('simple', content,
+                 websearch_to_tsquery('simple', ?),
+                 'StartSel = <span>, StopSel = </span>')
+    AS highlight,
+    book,paragraph,content 
+    FROM fts_texts
+    WHERE
+        full_text_search_weighted
+        @@ websearch_to_tsquery('pali', ?) OR
+        full_text_search_weighted_unaccent
+        @@ websearch_to_tsquery('pali_unaccent', ?)
+    ORDER BY rank DESC
+    LIMIT 20;";
+    $Fetch1 = PDO_FetchAll($query, array($word, $word, $word, $word, $word));    
     foreach ($Fetch1 as $key => $value) {
         # code...
         $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
         $newRecode["path"] = _get_para_path($value["book"], $value["paragraph"]);
         $newRecode["book"] = $value["book"];
         $newRecode["para"] = $value["paragraph"];
-        $newRecode["palitext"] = $value["text"];
+        $newRecode["palitext"] = $value["content"];
+        $newRecode["highlight"] = $value["highlight"];
         $newRecode["keyword"] = $arrWordList;
-        $newRecode["wt"] = 0;
+        $newRecode["wt"] = $value["rank"];;
         $out_data[] = $newRecode;
     }
 	$result["time"][] = array("event" => "fts精确匹配结束", "time" => microtime(true)-$_start);
