@@ -231,11 +231,22 @@ define("_TABLE_PART_", "part");
 # 用户数据表
 
 //读写频繁
+
 # 逐词解析表
-//define("_FILE_DB_USER_WBW_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+#sqlite
 define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
 define("_TABLE_USER_WBW_", "wbw");
 define("_TABLE_USER_WBW_BLOCK_", "wbw_block");
+
+#pg
+//define("_FILE_DB_USER_WBW_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_TABLE_USER_WBW_", "wbws");
+//define("_TABLE_USER_WBW_BLOCK_", "wbw_blocks");
+
+#数据迁移原始表
+define("_SRC_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
+define("_TABLE_SRC_USER_WBW_", "wbw");
+define("_TABLE_SRC_USER_WBW_BLOCK_", "wbw_block");
 
 # 译文
 //define("_FILE_DB_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
