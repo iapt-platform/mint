@@ -37,11 +37,13 @@
       <input type="submit">
     </form>
     <?php
+    require_once '../path.php';
+
     if (empty($q)) {
       echo "Query is empty";
     } else {
       // Connecting, selecting database
-      $dbconn = pg_connect("host=localhost dbname=pali user=postgres password=123456")
+      $dbconn = pg_connect("host="._DB_HOST_." dbname="._DB_NAME_." user="._DB_USERNAME_." password="._DB_PASSWORD_)
       or die('Could not connect: ' . pg_last_error());
 
       // Performing SQL query
@@ -58,7 +60,7 @@
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight,
                  *
-                 FROM fts
+                 FROM fts_texts
                  WHERE
                      full_text_search_weighted
                      @@ websearch_to_tsquery('pali', '$q') OR
