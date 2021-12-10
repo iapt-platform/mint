@@ -3,7 +3,7 @@
 require_once '../public/casesuf.inc';
 require_once 'dict_find_un.inc';
 require_once 'sandhi.php';
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 require_once '../public/load_lang.php';

@@ -39,7 +39,7 @@ function getWordEn($strIn)
 <p><a href="index.php">Home</a></p>
 <?php
 include "./_pdo.php";
-include "../path.php";
+include "../config.php";
 if (isset($_GET["from"]) == false) {
     ?>
 <form action="db_insert_index.php" method="get">

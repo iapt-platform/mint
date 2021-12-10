@@ -10,7 +10,7 @@ $revision = $_GET["revision"];
 $edition = $_GET["edition"];
 $subver = $_GET["subver"];
 
-include "../path.php";
+include "../config.php";
 include "./_pdo.php";
 include "./public.inc";
 

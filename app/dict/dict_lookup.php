@@ -1,7 +1,7 @@
 ﻿<?php
 //查询参考字典
 include("../log/pref_log.php");
-require_once '../path.php';
+require_once '../config.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
 require_once "../public/_pdo.php";

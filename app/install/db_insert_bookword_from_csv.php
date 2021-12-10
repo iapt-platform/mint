@@ -9,7 +9,7 @@ require_once "install_head.php";
 <h2>Insert to Index</h2>
 <?php
 require_once "./_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 if (isset($_GET["from"]) == false) {
     ?>
 <form action="db_insert_bookword_from_csv.php" method="get">

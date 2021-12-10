@@ -4,7 +4,7 @@
 ```
 cd app
 cp config.sample.php config.php
-cp path.sample.php path.php
+cp path.sample.php config.php
 cp config.sample.js config.js
 ```
 

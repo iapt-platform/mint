@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 
 //打开数据库
 

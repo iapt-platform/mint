@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/../path.php";
+require_once __DIR__."/../config.php";
 /*
  * 该脚本用于生成 SQL 语句, 将三藏语料 CSV 数据 (如：abh01a.att.csv)
  * 转换为 SQL 语句插入到 PostgreSQL 内，数据表结构参见 fts.sql

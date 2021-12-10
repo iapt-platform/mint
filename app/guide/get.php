@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 
 //获取用户界面语言
 if(isset($_COOKIE["language"])){

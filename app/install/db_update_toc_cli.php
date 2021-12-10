@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/../path.php";
+require_once __DIR__."/../config.php";
 require_once __DIR__.'/../public/_pdo.php';
 require_once __DIR__."/../public/function.php";
 

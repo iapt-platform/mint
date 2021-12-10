@@ -1,6 +1,6 @@
 <?php
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/load_lang.php";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

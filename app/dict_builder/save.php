@@ -1,5 +1,5 @@
 <?php
-include "../path.php";
+include "../config.php";
 include "../public/_pdo.php";
 
 if (isset($_POST['dict_id'])) {

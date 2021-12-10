@@ -1,6 +1,6 @@
 <?php
 //获取书的单词信息
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 $get_book = (int)$_GET["book"];

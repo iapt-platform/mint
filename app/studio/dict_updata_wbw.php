@@ -1,7 +1,7 @@
 ﻿<?php
 require_once 'checklogin.inc';
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once "../redis/function.php";
 
 $redis = redis_connect();

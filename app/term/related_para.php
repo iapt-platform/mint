@@ -4,7 +4,7 @@
 mula->attakhata->tika
  */
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 
 $result["error"] = "";
 $result["data"] = array();

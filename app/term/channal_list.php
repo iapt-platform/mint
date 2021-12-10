@@ -2,7 +2,7 @@
 #输入句子列表查询channel列表 和计算完成度
 require_once "../public/function.php";
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once '../channal/function.php';
 require_once '../ucenter/function.php';
 require_once '../share/function.php';

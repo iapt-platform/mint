@@ -1,6 +1,6 @@
 <?php
 #更新一个句子
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/function.php";
 require_once "../usent/function.php";
 require_once "../ucenter/active.php";

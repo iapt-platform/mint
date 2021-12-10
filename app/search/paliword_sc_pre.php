@@ -1,6 +1,6 @@
 <?php
 //全文搜索 预查询
-require_once '../path.php';
+require_once '../config.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
 require_once "../public/_pdo.php";

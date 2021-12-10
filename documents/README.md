@@ -95,7 +95,7 @@ wikipāḷi 的前身是 PCD-Suite，一个使用 PHP + JQuery + SQLite 架构�
 └── app
     ├── config.js
     ├── config.php
-    └── path.php
+    └── config.php
 
 ## sqlite 文件
 ```

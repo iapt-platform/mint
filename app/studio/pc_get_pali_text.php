@@ -2,7 +2,7 @@
 /*
 加载巴利原文
  */
-include "../path.php";
+include "../config.php";
 include "../public/_pdo.php";
 
 $get_book = $_GET["book"];

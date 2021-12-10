@@ -1,6 +1,6 @@
 <?php
 require_once "../public/load_lang.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once "../pcdl/html_head.php";
 if(isset($_GET["id"])){
 	$_get_id=$_GET["id"];

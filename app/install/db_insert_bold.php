@@ -13,7 +13,7 @@ require_once "install_head.php";
 </div>
 <?php
 require_once "./_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 
 if (isset($_GET["from"]) == false) {
     ?>

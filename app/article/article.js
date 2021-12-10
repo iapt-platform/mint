@@ -403,7 +403,7 @@ function palicanon_load() {
 
 function reader_get_path() {
 	$.get(
-		"../reader/get_path.php",
+		"../reader/get_config.php",
 		{
 			book: _book,
 			para: _par,

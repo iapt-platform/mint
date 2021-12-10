@@ -1,6 +1,6 @@
 <?php
 //查询term字典
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 //is login

@@ -2,7 +2,7 @@
 header('Content-type: application/json; charset=utf8');
 
 //查询term字典
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/function.php";
 
 $PDO = new PDO("" . _FILE_DB_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));

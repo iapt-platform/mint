@@ -2,7 +2,7 @@
 /*
 计算单词权重
  */
-require_once __DIR__.'/../path.php';
+require_once __DIR__.'/../config.php';
 require_once __DIR__.'/word_index_weight_table.php';
 
 if (isset($_GET["from"])) {

@@ -4,7 +4,7 @@
 输入单词列表
 输出查到的结果
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 $output["status"] = 0;

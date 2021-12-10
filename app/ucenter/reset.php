@@ -1,6 +1,6 @@
 <?php
 #重置密码
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/load_lang.php";
 require_once "../public/function.php";
 

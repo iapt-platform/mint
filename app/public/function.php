@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/casesuf.inc';
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../path.php';
+require_once __DIR__ . '/../config.php';
 $_book_index = null; //书的列表
 
 /*

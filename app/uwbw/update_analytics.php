@@ -2,7 +2,7 @@
 /*
 统计三十天内的逐词译创建与更新
 */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/load_lang.php';
 require_once '../public/function.php';

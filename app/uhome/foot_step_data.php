@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------------------------
 
 // Require our Event class and datetime utilities
-require_once '../path.php';
+require_once '../config.php';
 require_once '../lib/fullcalendar/php/utils.php';
 
 function covertTimeToString($time)

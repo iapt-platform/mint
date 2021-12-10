@@ -1,7 +1,7 @@
 <?php
 #从自动复合词数据库中提取数据到ridis
 #已经废弃
-require_once "../path.php";
+require_once "../config.php";
 require_once "../redis/function.php";
 
 if (PHP_SAPI == "cli") {
