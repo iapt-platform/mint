@@ -60,16 +60,24 @@ define("Redis",[
 巴利语料模版表
 运行app/install/db_insert_templet.php 刷库
 */
-define("_FILE_DB_PALICANON_TEMPLET_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+#sqlite
 //define("_FILE_DB_PALICANON_TEMPLET_","sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
+//define("_TABLE_PALICANON_TEMPLET_","wbw_templet");
+
+#pg
+define("_FILE_DB_PALICANON_TEMPLET_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_PALICANON_TEMPLET_","wbw_templet");
 
 /*
 标题资源表
 app/install/db_update_toc.php 刷库
 */
-define("_FILE_DB_RESRES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+#sqlite
 //define("_FILE_DB_RESRES_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/res.db3");
+//define("_TABLE_RES_INDEX_","res_index");
+
+#pg
+define("_FILE_DB_RESRES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_RES_INDEX_","res_index");
 
 /*
@@ -77,8 +85,13 @@ define("_TABLE_RES_INDEX_","res_index");
 刷库 app/install/db_insert_palitext.php
 更新 app/install/db_update_palitext.php
 */
-define("_FILE_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+#sqlite
 //define("_FILE_DB_PALITEXT_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_text.db3");
+//define("_TABLE_PALI_TEXT_","pali_text");
+//define("_TABLE_PALI_BOOK_NAME_","books");
+
+#pg
+define("_FILE_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_PALI_TEXT_","pali_text");
 define("_TABLE_PALI_BOOK_NAME_","books");
 
@@ -87,8 +100,12 @@ define("_TABLE_PALI_BOOK_NAME_","books");
 以书为单位的单词汇总表
 填充 /app/install/db_insert_bookword_from_csv.php
 */
-define("_FILE_DB_BOOK_WORD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_BOOK_WORD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bookword.db3");
+//define("_TABLE_BOOK_WORD_", "bookword");
+
+//PostgreSQL
+define("_FILE_DB_BOOK_WORD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_BOOK_WORD_", "bookword");
 
 /*
@@ -96,33 +113,51 @@ define("_TABLE_BOOK_WORD_", "bookword");
 /app/install/db_insert_word_from_csv.php
 /app/admin/word_index_weight_refresh.php
 */
-define("_FILE_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_PALI_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/paliindex.db3");
+//define("_TABLE_WORD_", "word");
+
+define("_FILE_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_WORD_", "word");
 
 /*
 92万词
 /app/install/db_insert_wordindex_from_csv.php
 */
-define("_FILE_DB_WORD_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_WORD_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/wordindex.db3");
+//define("_TABLE_WORD_INDEX_", "wordindex");
+
+//PostgreSQL
+define("_FILE_DB_WORD_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_WORD_INDEX_", "wordindex");
 
 //单词索引=92万词+单词索引
-define("_FILE_DB_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/index.db3");
 
+//PostgreSQL
+define("_FILE_DB_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+
 //黑体字数据表
-//define("_FILE_DB_BOLD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 define("_FILE_DB_BOLD_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/bold.db3");
 define("_TABLE_WORD_BOLD_", "bold");
+
+//PostgreSQL
+//define("_FILE_DB_BOLD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//define("_TABLE_WORD_BOLD_", "bold");
 
 /*
 单词分析表
 数据迁移： php /deploy/migaration/word_statistics.php
 */
-define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
+//define("_TABLE_WORD_STATISTICS_", "word_statistics");
+
+//PostgreSQL
+define("_FILE_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_WORD_STATISTICS_", "word_statistics");
 
 define("_SRC_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
@@ -136,12 +171,20 @@ define("_SRC_TABLE_WORD_STATISTICS_", "word");
 数据迁移： php ./deploy/migaration/20211126220400-pali_sent_index-upgrade.php
 
 */
-define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
-define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+//define("_TABLE_PALI_SENT_", "pali_sent");
+//define("_TABLE_PALI_SENT_ORG_", "pali_sent_org");
+//define("_TABLE_PALI_SENT_INDEX_", "pali_sent_index");
+
+//PostgreSQL
+define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_PALI_SENT_", "pali_sent");
 define("_TABLE_PALI_SENT_ORG_", "pali_sent_org");
 define("_TABLE_PALI_SENT_INDEX_", "pali_sent_index");
+
+define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+
 
 /*
 相似句
@@ -151,26 +194,41 @@ php ./deploy/migaration/20211127214900-sent_sim_index.php
 redis: 
 php ./app/pali_sent/redis_upgrade_pali_sent.php
 */
-define("_FILE_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
-define("_SRC_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
+//define("_TABLE_SENT_SIM_", "sent_sim");
+//define("_TABLE_SENT_SIM_INDEX_", "sent_sim_index");
+
+//PostgreSQL
+define("_FILE_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_SENT_SIM_", "sent_sim");
 define("_TABLE_SENT_SIM_INDEX_", "sent_sim_index");
+
+define("_SRC_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
+
 
 /*
 完成度
 数据迁移
 php ./app/upgrade/upgrade_pali_toc.php
 */
-define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 //define("_FILE_DB_PALI_TOC_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_toc.db3");
+//define("_TABLE_PROGRESS_", "progress");
+//define("_TABLE_PROGRESS_CHAPTER_", "progress_chapter");
+
+//PostgreSQL
+define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_PROGRESS_", "progress");
 define("_TABLE_PROGRESS_CHAPTER_", "progress_chapter");
 
 
 //页码对应
-//define("_FILE_DB_PAGE_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+//sqlite
 define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
+
+//PostgreSQL
+//define("_FILE_DB_PAGE_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 
 
 # 字典数据表 全部存入redis
