@@ -56,6 +56,58 @@ php -d memory_limit=1024M pali.syn.php
 
 将会在当前目录下生成 pali.syn 文件
 
+**注意 01**
+
+变更 pali.syn 词形转换词典后，有两种方式使其生效（任选其一）：
+
+1. 在当前会话 (session) 内执行下面语句：
+
+关于使用下面语句的原因，请参见：[PostgreSQL / Dictionaries / Simple Dictionary - Caution ("dummy" update)](https://www.postgresql.org/docs/14/textsearch-dictionaries.html#TEXTSEARCH-SIMPLE-DICTIONARY)
+
+```sql
+-- dummy update
+ALTER TEXT SEARCH DICTIONARY pali_stem (
+    SYNONYMS = pali
+);
+```
+
+2. 断开当前会话 (session)，重新连接。
+
+**注意 02**
+
+在 pali.syn 内添加词形转换时，请向文件末尾添加，实际测试发现在文件头部添加并未生效。
+
+**注意 03**
+
+更新 pali.syn 这个变更涉及到所有三藏文本中的词形转换，所以需要手动重建全文检索索引。
+
+两种方式（任选其一）：
+
+1. 你知道改变更会影响哪些记录（比如先进行搜索得出结果）
+
+```sql
+-- dummy update
+UPDATE fts SET content = content,
+               bold_single = bold_single,
+               bold_double = bold_double,
+               bold_multiple = bold_multiple
+               WHERE paragraph = 37 AND book = 'p180';
+```
+
+请将 paragraph 和 book 替换为目标值。
+
+2. 这是一个普遍的变更，会影响到很多记录
+
+```sql
+-- dummy update
+UPDATE fts SET content = content,
+               bold_single = bold_single,
+               bold_double = bold_double,
+               bold_multiple = bold_multiple;
+```
+
+移除掉 WHERE 条件，将会触发所有记录重新建立索引，会花上很长时间，执行之前请三思。
+
 #### pali.stop 停用词词典
 
 请熟悉巴利语的贤者依据巴利文法编辑 [pali.stop](./pali.stop) 文件，
@@ -136,7 +188,7 @@ done
 
 数据插入时会同步创建索引，耗时较久，请耐心等待。
 
-### 查询数据：
+### 使用 SQL 查询数据：
 
 权重设置：
 
@@ -758,3 +810,16 @@ SELECT
 	</tr>
 </table>
 </details>
+
+### 使用 PHP 查询数据：
+
+可参考 [example.php](./example.php
+)，在当前目录下执行：
+
+```bash
+php -d memory_limit=1024M -S 127.0.0.1:8000
+```
+
+即可通过浏览器测试效果：
+
+![Example](./example.png "Example Screenshot")
