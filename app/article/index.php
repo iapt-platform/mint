@@ -343,7 +343,7 @@ function set_toc_visible(isVisible){
 	<div id="contents_view">
 		<div id="contents_div">
 			<div id="summary"></div>
-			<div id="contents" class="<?php echo $contentClass;?>">
+			<div id="contents" class="content_inner <?php echo $contentClass;?>">
 				<?php echo $_local->gui->loading; ?>...
 			</div>
 			<div id="contents_foot">

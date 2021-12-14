@@ -49,8 +49,11 @@ function articel_load(id, collection_id) {
 						result.content = result.content.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
 
 						$("#contents").html(note_init(result.content,"",result.owner,result.lang));
+						//处理<code>标签作为气泡注释
+						popup_init();
+						guide_init();						
 						note_refresh_new();
-						guide_init();
+
 					}
 				} catch (e) {
 					console.error(e);
