@@ -3,8 +3,8 @@
 require_once __DIR__."/dir.php";
 
 #域名设置
-define(WWW_DOMAIN_NAME,"sg.wikipali.org");
-define(RPC_DOMAIN_NAME,"rpc.wikipali.org");
+define("WWW_DOMAIN_NAME","sg.wikipali.org");
+define("RPC_DOMAIN_NAME","rpc.wikipali.org");
 /*
 电子邮件设置
 PHPMailer
@@ -24,6 +24,7 @@ define("Email", [
 */
 define("Database",[
 	"type"=>"pgsql",
+	"server"=>"localhost",
 	"port"=>5432,
 	"name"=>"mint",
 	"sslmode" => "disable",
