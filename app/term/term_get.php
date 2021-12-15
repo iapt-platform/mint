@@ -4,7 +4,7 @@
 输入单词列表
 输出查到的结果
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
@@ -89,7 +89,12 @@ if (isset($_POST["words"])) {
             $userinfo = new UserInfo();
             foreach ($fetch as $key => $value) {
 				# code...
-				if($value["owner"]==$_COOKIE["userid"]){
+				if(isset($_COOKIE["userid"])){
+					$currUserUid = $_COOKIE["userid"];
+				}else{
+					$currUserUid = "";
+				}
+				if($value["owner"]==$currUserUid){
 					$fetch[$key]["readonly"]=false;
 				}
 				else{

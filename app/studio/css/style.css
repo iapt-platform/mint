@@ -4898,3 +4898,14 @@ note {
 	object-fit: cover;
 	background-size: contain;
 }
+
+#word_note_pop_content th{
+	border: 1px solid #000000;
+    font-size: 100%;
+	border-spacing: 0
+}
+#word_note_pop_content td{
+	border: 1px solid #000000;
+    font-size: 80%;
+	border-spacing: 0
+}

@@ -117,14 +117,35 @@ function term_edit_dlg_render(word = "") {
 
 	output += "<fieldset>";
 	output += "<legend>" + gLocal.gui.channel + "</legend>";
-	output += "<select id='term_edit_form_channal' name='channal'>";
-	output += "<option value=''>通用于所有版本</option>";
-	word.channel = word.channal;
+
+	let currChannel=null;
+	if(typeof word.channel == "undefined" && typeof word.channal != "undefined"){
+		word.channel = word.channal;
+	}
 	for (const iterator of _my_channal) {
-		if(word.channel=="" || (word.channel!="" && iterator.id==word.channel)){
-		output += "<option value='"+iterator.id+"'>仅用于"+iterator.name+"</option>";
+		if(iterator.id==word.channel){
+			currChannel = iterator;
 		}
 	}
+
+	output += "<select id='term_edit_form_channal' name='channal'>";
+	if(currChannel !== null){
+		if(currChannel.owner == getCookie("user_uid")){
+			//是自己的
+			output += "<option value=''>通用于所有版本</option>";
+			
+		}
+		output += "<option value='"+currChannel.id+"'>仅用于"+currChannel.name+"</option>";
+	}else{
+		output += "<option value=''>通用于所有版本</option>";
+	}
+	/*
+	for (const iterator of _my_channal) {
+		if(word.channel=="" || (word.channel!="" && iterator.id==word.channel)){
+			output += "<option value='"+iterator.id+"'>仅用于"+iterator.name+"</option>";
+		}
+	}
+	*/
 	output += "</select>";
 	output += "</fieldset>";
 
