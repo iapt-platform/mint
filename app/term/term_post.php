@@ -2,10 +2,11 @@
 /*
 修改术语
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once "../redis/function.php";
+require_once "../channal/function.php";
 
 $redis = redis_connect();
 
@@ -26,19 +27,34 @@ PDO_Connect("" . _FILE_DB_TERM_);
 if ($_POST["id"] != "") {
 	#更新
 	#先查询是否有权限
-	$query = "SELECT id from term where guid= ? and owner = ? ";
+	#是否这个术语的作者
+	$query = "SELECT id,channal,owner from term where guid= ? ";
 	$stmt = $PDO->prepare($query);
-	$stmt->execute(array($_POST["id"],$_COOKIE["userid"]));
+	$stmt->execute(array($_POST["id"]));
 	if ($stmt) {
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-		if(!$Fetch){
+		if($Fetch){
+			if($Fetch['owner']!=$_COOKIE["userid"]){
+				#不是这个术语的作者，查是否是channel的有编辑权限者	
+				$channelInfo = new Channal($redis);
+				$channelPower = $channelInfo->getPower($Fetch['channal']);
+				if($channelPower<20){
+					$respond['status'] = 1;
+					$respond['message'] = "no power";
+					echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+					exit;						
+				}
+			}
+			
+		
+		}else{
 			$respond['status'] = 1;
-			$respond['message'] = "no power";
+			$respond['message'] = "no word";
 			echo json_encode($respond, JSON_UNESCAPED_UNICODE);
-			exit;			
+			exit;				
 		}
 	}
-    $query = "UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? and owner = ? ";
+    $query = "UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
 	$stmt = @PDO_Execute($query, 
 						array($_POST["mean"],
         					  $_POST["mean2"],
@@ -49,7 +65,6 @@ if ($_POST["id"] != "") {
         					  mTime(),
         					  mTime(),
         					  $_POST["id"],
-        					  $_COOKIE["userid"],
     ));
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
