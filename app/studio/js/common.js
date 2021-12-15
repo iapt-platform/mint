@@ -248,6 +248,7 @@ function setSbs(mode) {
 			updateWordParBlockInnerAll();
 		}
 	}
+	refreshNoteNumber()//切换逐句后刷新note编号
 }
 
 //显示段对译模式
