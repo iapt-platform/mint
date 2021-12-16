@@ -205,7 +205,17 @@ span.fancytree-node{
     margin-block-end: 0.5em;
     margin-left: 7px;
 }
-
+.click_dropdown_div{
+	align-self: center;
+}
+.channel_select_button{
+	color: var(--link-color);
+	
+}
+.channel_select_button:hover{
+	text-decoration-line: underline;
+	
+}
 
 </style>
 
@@ -372,7 +382,7 @@ function set_toc_visible(isVisible){
 				<div style="display:flex;justify-content: space-between;">
 					<div class="title"><?php echo $_local->gui->contributor; ?></div>
 					<div class="click_dropdown_div">
-						<div class="channel_select_button" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select; ?></div>
+						<div class="channel_select_button" style="color: var(--link-color);" onclick="onChannelMultiSelectStart()"><?php echo $_local->gui->select.$_local->gui->space.$_local->gui->more.$_local->gui->space.$_local->gui->channel."⬇"; ?></div>
 					</div>
 				</div>
 				<div class='channel_select'>

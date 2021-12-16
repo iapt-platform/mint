@@ -6,7 +6,7 @@
 	display: none;
 }
 .main_view_right_float_min {
-	margin-right: calc(30vw - 0.6em);
+	margin-right: calc(30vw - 1.6em);
 }
 .main_view_right_float_max {
 	margin-right: 50%;
