@@ -658,6 +658,7 @@
 		"error_net_parsererror": "parser error",
 		"caus": "caus.",
 		"pass": "pass.",
+		"space": "&nbsp;",
 		"": ""
 	},
 	"grammastr": [

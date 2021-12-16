@@ -73,6 +73,7 @@
 .fun_frame .title {
 	padding: 6px;
 	font-weight: 700;
+	align-self: center;
 }
 .fun_frame > .content {
 	padding: 4em 6px 6px 6px;
