@@ -2883,6 +2883,7 @@ function modifyCancel() {
 	document.getElementById("debug").style.display = "-webkit-flex";
 	document.getElementById("debug").style.display = "-moz-flex";
 	document.getElementById("debug").style.display = "-webkit-flex";
+	refreshNoteNumber();
 }
 
 //获取某词的段落索引
