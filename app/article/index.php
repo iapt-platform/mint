@@ -226,10 +226,12 @@ span.fancytree-node{
 function show_content(){
 	$("#left_pannal").toggleClass("hidden");
 	if($("#left_pannal").hasClass("hidden")){
-		$("#main_view").css("margin-left","auto");
+		$("#main_view").css("margin-left","0");
+		$(".fun_frame").css("width","calc(30% - 1em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'hide');
 	}else{
 		$("#main_view").css("margin-left","270px");
+		$(".fun_frame").css("width","calc(30% - 81px - 1em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'show');
 	}
 }
@@ -237,10 +239,12 @@ function set_toc_visible(isVisible){
 	if(isVisible){
 		$("#left_pannal").removeClass("hidden");
 		$("#main_view").css("margin-left","270px");
+		$(".fun_frame").css("width","calc(30% - 81px - 1em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'show');
 	}else{
 		$("#left_pannal").addClass("hidden");
-		$("#main_view").css("margin-left","auto");
+		$("#main_view").css("margin-left","0");
+		$(".fun_frame").css("width","calc(30% - 1em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'hide');
 	}
 }
