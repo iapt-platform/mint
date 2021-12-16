@@ -27,7 +27,7 @@ function add_to_collect_dlg_init() {
 		html += "<div class='others' style='max-height: 60vh;overflow: scroll;'>";
 		html += "</div>";
 		html += "<div id='add_to_collection_msg'>";
-		html += "<a href='../article/my_collect_index.php' target='_blank'>"+gLocal.gui.cancel+"</a>";
+		html += "<a href='../article/my_collect_index.php' target='_blank'>"+gLocal.gui.add_to+" "+gLocal.gui.anthology+"</a>";
 		html += "</div>";
 		html += "</div>";
 		html += "<div style='display:flex;justify-content: space-between;'>";
