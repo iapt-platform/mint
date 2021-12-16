@@ -40,8 +40,8 @@
 .main_view {
 	padding: 0 1em;
 	padding-top: 7em;
-	max-width: 1280px;
-	margin-left: 270px;
+	/*max-width: 1280px;*/
+	/*margin-left: 270px;*/
 	margin-right: auto;
 }
 
@@ -69,6 +69,7 @@
 	border-bottom: 1px solid gray;
 	margin-right: 10px;
 	margin-bottom: 10px;
+	width: calc(30% - 1em)
 }
 .fun_frame .title {
 	padding: 6px;
@@ -167,8 +168,12 @@
 .userinfo_channal:hover {
 	display: block;
 }
-img {
+.sent_tran img{
 	width: 40%;
+	max-width: 40%;
+}
+img {
+	width: 90%;
 	/*max-width: 40%;*/
 }
 

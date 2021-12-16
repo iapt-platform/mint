@@ -53,6 +53,9 @@ require_once '../studio/index_head.php';
 	height: calc(100vh - 7em - 60px);
 	
 }
+#preview_div img{
+	width: 90%;
+}
 #preview_inner{
 	background-color: var(--bg-color);
 	color: var(--main-color);
