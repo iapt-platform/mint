@@ -45,12 +45,12 @@ guide.grammar_tag:hover {
 				</span>
 				</button>
 			</div>
-			<div >
-				<guide gid="dict_search_input"></guide>
-			</div>
 			<div style="flex:6;">
-				<div>
-					<div>
+				<div style="display:flex;">
+					<div style="align-self: center;">
+						<guide gid="dict_search_input"></guide>
+					</div>
+					<div style="width:90%;">
 						<input id="dict_ref_search_input" type="text" autocomplete="off" placeholder="<?php echo $_local->gui->dict_searching_placehold; ?> " onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
 					<div id="result_msg"></div>
@@ -125,7 +125,7 @@ guide.grammar_tag:hover {
 		</button>
 	</div>
 
-	<div>
+	<div style="margin-top:calc(39px + 0.6em);">
 		<div id="main_view" class='section_inner' >
 			<div id='dict_list_shell' style="display:none" onclick='setNaviVisibility()'>
 				<div id='dict_list' class='dict_list_off'></div>

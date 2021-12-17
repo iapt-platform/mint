@@ -11,6 +11,8 @@ body {
 	padding: 0.6em 1em 0.1em 1em;
 	background-color: var(--tool-bg-color1);
 	border-bottom: none;
+	position: fixed;
+    width: 100%;
 }
 
 .search_fixed {
@@ -273,7 +275,7 @@ input[type="submit"] {
 #word_parts {
 }
 #search_info {
-	display: flex;
+	/*display: flex;*/
 	justify-content: space-between;
 }
 #part_mean {
@@ -317,8 +319,8 @@ textarea {
 }
 
 #dict_ref_search_input {
-	margin-left: 0.5em;
-	max-width: 500px;
+	/*margin-left: 0.5em;*/
+	/*max-width: 500px;*/
 	font-size: 130%;
 	font-weight: 500;
 	padding: 0.3em 0.6em;
