@@ -130,6 +130,8 @@ body {
 .pre_serach_block {
 	border-bottom: 1px solid var(--shadow-color);
 	padding: 5px 0;
+	height: 60vh;
+    overflow: scroll;
 }
 
 .pre_serach_block_title {
@@ -207,11 +209,12 @@ input[type="submit"] {
 }
 
 #pre_search_result {
-	background-color: var(--tool-bg-color1);
+	background-color: silver;
 	z-index: 50;
 	display: none;
 	max-width: 1024px;
 	position: fixed;
+	color:black;
 }
 
 #dt_title {
