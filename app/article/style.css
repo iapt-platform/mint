@@ -43,6 +43,7 @@
 	/*max-width: 1280px;*/
 	/*margin-left: 270px;*/
 	margin-right: auto;
+	transition: all 0.5s ease;
 }
 
 #left_pannal_inner {
@@ -52,8 +53,8 @@
     padding-top: 90px;
     height: 100%;
 	/*width:300px;*/
-	overflow-x: hidden;
-	overflow-x: scroll;
+	/*overflow-x: hidden;*/
+	overflow: scroll;
 }
 
 #toc_content{
@@ -62,7 +63,8 @@
 	max-width:calc(20vw - 24px);
 	background-color: var(--bg-color);
     border-bottom: 1px solid var(--border-line-color);
-	overflow-y: scroll;
+	overflow-y: unset;
+	transition: all 0.5s ease;
 }
 
 .fun_frame {
@@ -70,6 +72,7 @@
 	margin-right: 10px;
 	margin-bottom: 10px;
 	width: calc(30% - 1em)
+	transition: all 0.5s ease;
 }
 .fun_frame .title {
 	padding: 6px;

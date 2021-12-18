@@ -34,6 +34,7 @@ else{
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
+	<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
 	<title><?php echo $_local->gui->pcd_studio; ?></title>
 	<script language="javascript" src="js/common.js"></script>
 	<script language="javascript" src="js/index_mydoc.js"></script>
