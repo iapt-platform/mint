@@ -125,7 +125,7 @@ guide.grammar_tag:hover {
 		</button>
 	</div>
 
-	<div style="margin-top:calc(39px + 0.6em);">
+	<div style="position: fixed;max-height: calc(100vh - 89px - 3.6em);width:100vw;overflow: scroll;">
 		<div id="main_view" class='section_inner' >
 			<div id='dict_list_shell' style="display:none" onclick='setNaviVisibility()'>
 				<div id='dict_list' class='dict_list_off'></div>

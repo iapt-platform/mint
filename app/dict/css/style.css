@@ -11,7 +11,7 @@ body {
 	padding: 0.6em 1em 0.1em 1em;
 	background-color: var(--tool-bg-color1);
 	border-bottom: none;
-	position: fixed;
+	/*position: fixed;*/
     width: 100%;
 }
 
@@ -207,9 +207,11 @@ input[type="submit"] {
 }
 
 #pre_search_result {
-	background-color: var(--bg-color);
+	background-color: var(--tool-bg-color1);
 	z-index: 50;
 	display: none;
+	max-width: 1024px;
+	position: fixed;
 }
 
 #dt_title {
