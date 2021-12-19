@@ -226,33 +226,45 @@ span.fancytree-node{
 function show_content(){
 	$("#left_pannal").toggleClass("hidden");
 	if($("#left_pannal").hasClass("hidden")){
-		$("#main_view").css("margin-left","0");
-		$(".fun_frame").css("width","30vw");
-		$("#contents_div").css("width","calc(70vw - 2em)");
+		$("#main_view").removeClass("main_view_narrow");
+		$(".fun_frame").removeClass("fun_frame_narrow");
+		$("#contents_div").removeClass("contents_div_narrow");
+		//$("#main_view").css("margin-left","0");
+		//$(".fun_frame").css("width","30vw");
+		//$("#contents_div").css("width","calc(70vw - 2em)");
 		$("#left_pannal_inner").css("width","unset");
 		localStorage.setItem('article_show_toc_'+_mode, 'hide');
 	}else{
-		$("#main_view").css("margin-left","20vw");
-		$(".fun_frame").css("width","20vw");
+		$("#main_view").toggleClass("main_view_narrow");
+		$(".fun_frame").toggleClass("fun_frame_narrow");
+		$("#contents_div").toggleClass("contents_div_narrow");
+		//$("#main_view").css("margin-left","20vw");
+		//$(".fun_frame").css("width","20vw");
+		//$("#contents_div").css("width","calc(60vw - 2em)");
 		$("#left_pannal_inner").css("width","unset");
-		$("#contents_div").css("width","calc(60vw - 2em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'show');
 	}
 }
 function set_toc_visible(isVisible){
 	if(isVisible){
 		$("#left_pannal").removeClass("hidden");
-		$("#main_view").css("margin-left","20vw");
-		$(".fun_frame").css("width","20vw");
+		$("#main_view").toggleClass("main_view_narrow");
+		//$("#main_view").css("margin-left","20vw");
+		$(".fun_frame").toggleClass("fun_frame_narrow");
+		//$(".fun_frame").css("width","20vw");
+		$("#contents_div").toggleClass("contents_div_narrow");
+		//$("#contents_div").css("width","calc(60vw - 2em)");
 		$("#left_pannal_inner").css("width","unset");
-		$("#contents_div").css("width","calc(60vw - 2em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'show');
 	}else{
 		$("#left_pannal").addClass("hidden");
-		$("#main_view").css("margin-left","0");
-		$(".fun_frame").css("width","30vw");
+		$("#main_view").removeClass("main_view_narrow");
+		//$("#main_view").css("margin-left","0");
+		$(".fun_frame").removeClass("fun_frame_narrow");
+		//$(".fun_frame").css("width","30vw");
+		$("#contents_div").removeClass("contents_div_narrow");
+		//$("#contents_div").css("width","calc(70vw - 2em)");
 		$("#left_pannal_inner").css("width","unset");
-		$("#contents_div").css("width","calc(70vw - 2em)");
 		localStorage.setItem('article_show_toc_'+_mode, 'hide');
 	}
 }
@@ -363,7 +375,7 @@ function set_toc_visible(isVisible){
 	</div>
 
 	<div id="contents_view">
-		<div id="contents_div">
+		<div id="contents_div" class="contents_div">
 			<div id="summary"></div>
 			<div id="contents" class="content_inner <?php echo $contentClass;?>">
 				<?php echo $_local->gui->loading; ?>...
