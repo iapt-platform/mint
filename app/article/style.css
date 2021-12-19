@@ -41,9 +41,16 @@
 	padding: 0 1em;
 	padding-top: 7em;
 	/*max-width: 1280px;*/
-	/*margin-left: 270px;*/
+	margin-left: 0;
 	margin-right: auto;
 	transition: all 0.5s ease;
+}
+.main_view_narrow{
+	margin-left:20vw;
+}
+
+.fun_frame_narrow{
+	width:20vw;
 }
 
 #left_pannal_inner {
@@ -71,7 +78,7 @@
 	border-bottom: 1px solid gray;
 	margin-right: 10px;
 	margin-bottom: 10px;
-	width: calc(30% - 1em)
+	width: 30vw
 	transition: all 0.5s ease;
 }
 .fun_frame .title {
@@ -98,10 +105,13 @@
 #contents_view {
 	display: flex;
 }
-#contents_div {
+.contents_div {
 	/*flex: 7;*/
 	padding: 0 1em 0 30px;
-	width: calc(70vw - 30px - 1em);
+	width: calc(70vw - 2em);
+}
+.contents_div_narrow{
+	width: calc(60vw - 2em);
 }
 #contents {
 	min-height: 400px;
