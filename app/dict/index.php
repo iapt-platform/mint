@@ -53,8 +53,6 @@ guide.grammar_tag:hover {
 					<div style="width:90%;">
 						<input id="dict_ref_search_input" type="text" autocomplete="off" placeholder="<?php echo $_local->gui->dict_searching_placehold; ?> " onkeyup="dict_input_keyup(event,this)" style="" onfocus="dict_input_onfocus()" />
 					</div>
-					<div id="result_msg"></div>
-					<div id="manual_split"></div>
 				</div>
 
 				<div id="pre_search_result" >
@@ -70,6 +68,7 @@ guide.grammar_tag:hover {
 					</div>
 				</div>
 			</div>
+
 			<span style="display:flex;">
 			<!--
 				<button id="trubo_split" onclick="trubo_split()" >
@@ -80,6 +79,8 @@ guide.grammar_tag:hover {
 			</span>
 			<div></div>
 		</div>
+		<div id="manual_split"></div>
+		<div id="result_msg"></div>
 		<div style="display:block;z-index: 5;text-align:center;">
 
 		</div>
