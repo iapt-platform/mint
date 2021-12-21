@@ -2204,9 +2204,9 @@ function renderWordHeadInner(element) {
 	output += "</span>";
 	output += "</a>";
 	if (wNote.length > 0) {
-		output += '<span id="wnote_root_' + wid + '"><wnh wid="' + wid + '">[1]</wnh></span>';
+		output += '<span id="wnote_root_' + wid + '" onclick="show_pop_note(\'' + wid + '\')"><wnh wid="' + wid + '">[1]</wnh></span>';
 	} else {
-		output += '<span id="wnote_root_' + wid + '"></span>';
+		output += '<span id="wnote_root_' + wid + '" onclick="show_pop_note(\'' + wid + '\')"></span>';
 	}
 	var newMsg = msg_word_msg_num(wid);
 	if (newMsg > 0) {
@@ -4387,7 +4387,7 @@ function refreshNoteNumber() {
 	$("wnh").each(function (index, element) {
 		let id = $(this).attr("wid");
 		//$(this).html("<a href='#word_note_"+id+"'  name=\"word_note_root_"+id+"\">"+(index+1)+"</a>");
-		$(this).html("<span onclick=\"show_pop_note('" + id + "')\">" + (index + 1) + "</span>");
+		$(this).html("<span>" + (index + 1) + "</span>");
 	});
 
 	$("wnc").each(function (index, element) {
