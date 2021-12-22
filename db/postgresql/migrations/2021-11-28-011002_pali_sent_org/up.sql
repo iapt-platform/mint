@@ -1,5 +1,5 @@
 -- 表：pali_sent
-CREATE TABLE pali_sent_org (
+CREATE TABLE pali_sent_orgs (
     id INTEGER PRIMARY KEY,
     book      INTEGER,
     paragraph INTEGER,
@@ -17,5 +17,5 @@ CREATE TABLE pali_sent_org (
 );
 
 -- 索引：sentId
-CREATE INDEX pali_sent_org_uid ON pali_sent_org (book, paragraph, word_begin, word_end);
+CREATE INDEX pali_sent_org_uid ON pali_sent_orgs (book, paragraph, word_begin, word_end);
 
