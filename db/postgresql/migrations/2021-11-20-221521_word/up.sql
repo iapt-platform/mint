@@ -1,6 +1,6 @@
 -- Your SQL goes here
 -- 表：word
-CREATE TABLE word 
+CREATE TABLE words
 (
 	id SERIAL PRIMARY KEY, 
 	sn INTEGER NOT NULL , 
@@ -13,7 +13,7 @@ CREATE TABLE word
 );
 
 -- 索引：pali
-CREATE INDEX word_book_paragraph ON word (book, paragraph);
+CREATE INDEX word_book_paragraph ON words (book, paragraph);
 
 -- 索引：wordindex1
-CREATE INDEX word_wordindex ON word (wordindex);
+CREATE INDEX word_wordindex ON words (wordindex);
