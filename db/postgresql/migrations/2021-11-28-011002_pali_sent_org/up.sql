@@ -1,6 +1,6 @@
 -- 表：pali_sent
 CREATE TABLE pali_sent_org (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     book      INTEGER,
     paragraph INTEGER,
     word_begin   INTEGER,
