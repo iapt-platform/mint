@@ -1,1 +1,1 @@
-DROP TABLE progress ;
+DROP TABLE progresss ;

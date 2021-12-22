@@ -220,8 +220,8 @@ php ./app/upgrade/upgrade_pali_toc.php
 
 //PostgreSQL
 define("_FILE_DB_PALI_TOC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_PROGRESS_", "progress");
-define("_TABLE_PROGRESS_CHAPTER_", "progress_chapter");
+define("_TABLE_PROGRESS_", "progresss");
+define("_TABLE_PROGRESS_CHAPTER_", "progress_chapters");
 
 
 //页码对应

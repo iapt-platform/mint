@@ -1,5 +1,5 @@
 -- 表：progress
-CREATE TABLE progress 
+CREATE TABLE progresss
 (
 	id SERIAL PRIMARY KEY,
 	book INTEGER, 
@@ -10,3 +10,5 @@ CREATE TABLE progress
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX progresss_book_para ON progresss (book,para);
+CREATE INDEX progresss_book_para_lang ON progresss (book,para,lang);
