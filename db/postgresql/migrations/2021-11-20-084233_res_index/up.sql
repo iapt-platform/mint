@@ -1,6 +1,6 @@
 -- Your SQL goes here
 
-CREATE TABLE res_index 
+CREATE TABLE res_indexs
 (
 	id SERIAL PRIMARY KEY,
 	book INTEGER, 
@@ -23,5 +23,5 @@ CREATE TABLE res_index
 );
 
 
-CREATE INDEX res_index_title ON res_index (title);
-CREATE INDEX res_index_title_en ON res_index (title_en);
+CREATE INDEX res_index_title ON res_indexs (title);
+CREATE INDEX res_index_title_en ON res_indexs (title_en);

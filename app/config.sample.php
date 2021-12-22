@@ -79,7 +79,7 @@ app/install/db_update_toc.php 刷库
 
 #pg
 define("_FILE_DB_RESRES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_RES_INDEX_","res_index");
+define("_TABLE_RES_INDEX_","res_indexs");
 
 /*
 巴利语料段落表
