@@ -63,11 +63,11 @@ define("Redis",[
 */
 #sqlite
 //define("_FILE_DB_PALICANON_TEMPLET_","sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/templet.db3");
-//define("_TABLE_PALICANON_TEMPLET_","wbw_templet");
+//define("_TABLE_PALICANON_TEMPLET_","wbw_templates");
 
 #pg
 define("_FILE_DB_PALICANON_TEMPLET_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_PALICANON_TEMPLET_","wbw_templet");
+define("_TABLE_PALICANON_TEMPLET_","wbw_templates");
 
 /*
 标题资源表

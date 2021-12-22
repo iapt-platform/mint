@@ -1,6 +1,6 @@
 -- Your SQL goes here
 
-CREATE TABLE wbw_templet 
+CREATE TABLE wbw_templates
 ( 
 	id SERIAL PRIMARY KEY,
 	book INTEGER  NOT NULL, 
@@ -15,5 +15,5 @@ CREATE TABLE wbw_templet
 );
 
 -- 索引：search
-CREATE INDEX wbw_templet_book ON wbw_templet ("book", "paragraph", "wid");
-CREATE INDEX wbw_templet_book1 ON wbw_templet ("book", "paragraph");
+CREATE INDEX wbw_templates_book ON wbw_templates ("book", "paragraph", "wid");
+CREATE INDEX wbw_templates_book1 ON wbw_templates ("book", "paragraph");
