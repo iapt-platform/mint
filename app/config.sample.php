@@ -93,7 +93,7 @@ define("_TABLE_RES_INDEX_","res_indexs");
 
 #pg
 define("_FILE_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_PALI_TEXT_","pali_text");
+define("_TABLE_PALI_TEXT_","pali_texts");
 define("_TABLE_PALI_BOOK_NAME_","books");
 
 #单词表部分

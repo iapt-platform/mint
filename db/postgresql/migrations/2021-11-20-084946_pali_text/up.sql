@@ -1,6 +1,6 @@
 -- Your SQL goes here
 
-CREATE TABLE pali_text 
+CREATE TABLE pali_texts
 (
 	id SERIAL PRIMARY KEY,
 	book INTEGER, 
@@ -21,4 +21,4 @@ CREATE TABLE pali_text
 );
 
 -- 索引
-CREATE INDEX pali_text_vri ON pali_text (book, paragraph );
+CREATE INDEX pali_text_vri ON pali_texts (book, paragraph );
