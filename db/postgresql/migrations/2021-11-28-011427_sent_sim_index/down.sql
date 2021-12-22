@@ -1,2 +1,2 @@
 
-DROP TABLE sent_sim_index ;
+DROP TABLE sent_sim_indexs ;
