@@ -1,7 +1,7 @@
 -- Your SQL goes here
 
 -- 表：wordindex
-CREATE TABLE wordindex 
+CREATE TABLE word_indexs
 (
 	id SERIAL PRIMARY KEY, 
 	word TEXT NOT NULL UNIQUE, 
@@ -16,5 +16,5 @@ CREATE TABLE wordindex
 );
 
 -- 索引：
-CREATE INDEX wordindex_worden ON wordindex (word_en);
-CREATE INDEX wordindex_word ON wordindex (word);
+CREATE INDEX word_indexs_worden ON word_indexs (word_en);
+CREATE INDEX word_indexs_word ON word_indexs (word);
