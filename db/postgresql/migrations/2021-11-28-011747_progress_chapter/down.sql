@@ -1,1 +1,1 @@
-DROP TABLE progress_chapter ;
+DROP TABLE progress_chapters ;
