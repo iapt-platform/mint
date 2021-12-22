@@ -1,6 +1,6 @@
 
 -- 表：sent_sim
-CREATE TABLE sent_sim 
+CREATE TABLE sent_sims 
 (
     id SERIAL PRIMARY KEY,
 	sent1 INTEGER, 
@@ -10,5 +10,5 @@ CREATE TABLE sent_sim
 );
 
 -- 索引：sent
-CREATE INDEX sent_sim_sent1 ON sent_sim (sent1);
+CREATE INDEX sent_sim_sent1 ON sent_sims (sent1);
 
