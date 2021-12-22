@@ -107,7 +107,7 @@ define("_TABLE_PALI_BOOK_NAME_","books");
 
 //PostgreSQL
 define("_FILE_DB_BOOK_WORD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_BOOK_WORD_", "bookword");
+define("_TABLE_BOOK_WORD_", "book_words");
 
 /*
 单词索引

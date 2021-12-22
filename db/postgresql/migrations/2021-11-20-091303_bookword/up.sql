@@ -1,6 +1,6 @@
 -- Your SQL goes here
 
-CREATE TABLE bookword 
+CREATE TABLE book_words
 (
 	id SERIAL PRIMARY KEY,
 	book INTEGER  NOT NULL, 
@@ -10,4 +10,4 @@ CREATE TABLE bookword
 );
 
 -- 索引：
-CREATE INDEX bookword_wordindex ON bookword (wordindex);
+CREATE INDEX bookword_wordindex ON book_words (wordindex);
