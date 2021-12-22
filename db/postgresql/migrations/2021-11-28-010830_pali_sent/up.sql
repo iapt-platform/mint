@@ -1,5 +1,5 @@
 -- 表：pali_sent
-CREATE TABLE pali_sent (
+CREATE TABLE pali_sentences (
     id INTEGER PRIMARY KEY,
     book      INTEGER,
     paragraph INTEGER,
@@ -16,5 +16,5 @@ CREATE TABLE pali_sent (
 );
 
 -- 索引：sentId
-CREATE INDEX palisentId ON pali_sent (book, paragraph, word_begin, word_end);
+CREATE UNIQUE INDEX palisentId ON pali_sentences (book, paragraph, word_begin, word_end);
 
