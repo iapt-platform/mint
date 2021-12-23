@@ -75,7 +75,7 @@
 
 			echo "<span class='icon_btn btn_focus'  ";
 			echo " title='{$_local->gui->show} {$_local->gui->edit}'>";
-			echo $_local->gui->edit;
+			echo $_local->gui->translate;
 			echo "</span>";
 		}
 ?>
