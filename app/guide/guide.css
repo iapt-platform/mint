@@ -29,9 +29,9 @@ guide ol {
 	border: 1px solid var(--border-line-color);
 	border-radius: 5px;
 	top: 100%;
-	width: max-content;
+	/*width: max-content;
 	min-width: min-content;
-	max-width: max(25vw, 100%);
+	max-width: min(80vw,20em);*/
 	min-height: 15em;
 	padding: 10px;
 	background-color: var(--drop-bg-color);
