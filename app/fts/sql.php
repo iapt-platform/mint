@@ -92,9 +92,7 @@ foreach($scan as $foldername) {
 
     if (is_file($csv_file)) {
       $fileCounter++;      
-      echo "正在处理文件: $fileCounter" . PHP_EOL . $csv_file . PHP_EOL;
-      // 存放当前正在处理的 CSV 文件生成的所有 SQL
-      $sql_from_csv = '';
+      echo "runing : $fileCounter" . PHP_EOL . $csv_file . PHP_EOL;
       // 初始化段落为 0 (没有这种段落)
       $paragraph = 0;
       // 初始化当前段落的黑体字数组
@@ -191,7 +189,6 @@ foreach($scan as $foldername) {
         }	
       }
 
-      file_put_contents("./sql/$foldername.sql", $sql_from_csv);
 
       // DEBUG 仅生成一个文件，测试用
       // exit;
