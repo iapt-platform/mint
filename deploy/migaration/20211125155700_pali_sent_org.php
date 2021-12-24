@@ -2,7 +2,7 @@
 require_once __DIR__."/../../app/config.php";
 
 $src_db=_SRC_DB_PALI_SENTENCE_;#源数据库
-$src_table=_TABLE_PALI_SENT_;#源表名
+$src_table=_TABLE_SRC_PALI_SENT_;#源表名
 $dest_db=_FILE_DB_PALI_SENTENCE_;#目标数据库
 $dest_table=_TABLE_PALI_SENT_ORG_;#目标表名
 

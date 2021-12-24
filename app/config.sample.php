@@ -185,7 +185,8 @@ define("_TABLE_PALI_SENT_ORG_", "pali_sent_orgs");
 define("_TABLE_PALI_SENT_INDEX_", "pali_sent_indexs");
 
 define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
-
+define("_TABLE_SRC_PALI_SENT_", "pali_sent");
+define("_TABLE_SRC_PALI_SENT_INDEX_", "pali_sent_index");
 
 /*
 相似句
@@ -206,7 +207,8 @@ define("_TABLE_SENT_SIM_", "sent_sims");
 define("_TABLE_SENT_SIM_INDEX_", "sent_sim_indexs");
 
 define("_SRC_DB_PALI_SENTENCE_SIM_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sim.db3");
-
+define("_TABLE_SRC_SENT_SIM_", "sent_sim");
+define("_TABLE_SRC_SENT_SIM_INDEX_", "sent_sim_index");
 
 /*
 完成度

@@ -2,7 +2,7 @@
 require_once __DIR__."/../../app/config.php";
 
 $src_db=_SRC_DB_PALI_SENTENCE_SIM_;#源数据库
-$src_table=_TABLE_SENT_SIM_;#源表名
+$src_table=_TABLE_SRC_SENT_SIM_;#源表名
 $dest_db=_FILE_DB_PALI_SENTENCE_SIM_;#目标数据库
 $dest_table=_TABLE_SENT_SIM_;#目标表名
 
