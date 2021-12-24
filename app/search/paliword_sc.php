@@ -65,7 +65,7 @@ if (count($arrWordList) > 1) {
     AS rank,
     ts_headline('pali', content,
                  websearch_to_tsquery('pali', ?),
-                 'StartSel = <highlight>, StopSel = </highlight>')
+                 'StartSel = <highlight>, StopSel = </highlight>,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
     AS highlight,
     book,paragraph,content 
     FROM fts_texts
@@ -75,7 +75,7 @@ if (count($arrWordList) > 1) {
         full_text_search_weighted_unaccent
         @@ websearch_to_tsquery('pali_unaccent', ?)
     ORDER BY rank DESC
-    LIMIT 20;";
+    LIMIT 40;";
     $Fetch1 = PDO_FetchAll($query, array($word, $word, $word, $word, $word));    
     foreach ($Fetch1 as $key => $value) {
         # code...
@@ -86,7 +86,7 @@ if (count($arrWordList) > 1) {
         $newRecode["palitext"] = $value["content"];
         $newRecode["highlight"] = $value["highlight"];
         $newRecode["keyword"] = $arrWordList;
-        $newRecode["wt"] = $value["rank"];;
+        $newRecode["wt"] = $value["rank"];
         $out_data[] = $newRecode;
     }
 	$result["time"][] = array("event" => "fts精确匹配结束", "time" => microtime(true)-$_start);
