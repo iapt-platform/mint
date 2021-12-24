@@ -3270,18 +3270,18 @@ function showModifyWin(sWordId) {
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',true)\"  title='Save and Favorite'>";
-		tApply += gLocal.gui.to_user_dictionary;
+		tApply += "💾&🌐";//gLocal.gui.to_user_dictionary+
 		tApply += "</button>";
 
 		tApply +=
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',false)\"  title='Save Draft'>";
-		tApply += gLocal.gui.save;
+		tApply += "💾";//gLocal.gui.save+
 		tApply += "</button>";
 
 		tApply += "<button class=' apply_to' onclick=\"modifyCancel()\">";
-		tApply += gLocal.gui.cancel;
+		tApply += "❌";//gLocal.gui.cancel+
 		tApply += "</button>";
 		tApply += "</div>";
 		eApply.innerHTML = tApply;
