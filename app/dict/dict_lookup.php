@@ -205,7 +205,7 @@ $right_word_list = "";
 
 
 		echo "<div id='search_summary'>";
-		echo "查询{$word} 共{$count_return}条 ";
+		echo "{$_local->gui->find_about}{$word} {$_local->gui->total}<b>{$count_return}</b>{$_local->gui->result} ";
 		if(count($base_list)>0){
 			echo "找到可能的拼写： ";
 			foreach ($base_list as $key => $value) {

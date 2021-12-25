@@ -1823,6 +1823,7 @@ function menu_file_tools_empty(opt) {
 			setNodeText(xDocWords[iword], "org", "?");
 			setNodeText(xDocWords[iword], "om", "?");
 			setNodeText(xDocWords[iword], "case", "?");
+			setNodeText(xDocWords[iword], "parent","?");
 			setNodeText(xDocWords[iword], "bmc", "");
 			setNodeText(xDocWords[iword], "bmt", "");
 			setNodeText(xDocWords[iword], "note", "");
@@ -2882,6 +2883,7 @@ function modifyCancel() {
 	document.getElementById("debug").style.display = "-webkit-flex";
 	document.getElementById("debug").style.display = "-moz-flex";
 	document.getElementById("debug").style.display = "-webkit-flex";
+	refreshNoteNumber();
 }
 
 //获取某词的段落索引
@@ -3268,18 +3270,18 @@ function showModifyWin(sWordId) {
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',true)\"  title='Save and Favorite'>";
-		tApply += gLocal.gui.to_user_dictionary;
+		tApply += "💾&🌐";//gLocal.gui.to_user_dictionary+
 		tApply += "</button>";
 
 		tApply +=
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',false)\"  title='Save Draft'>";
-		tApply += gLocal.gui.save;
+		tApply += "💾";//gLocal.gui.save+
 		tApply += "</button>";
 
 		tApply += "<button class=' apply_to' onclick=\"modifyCancel()\">";
-		tApply += gLocal.gui.cancel;
+		tApply += "❌";//gLocal.gui.cancel+
 		tApply += "</button>";
 		tApply += "</div>";
 		eApply.innerHTML = tApply;

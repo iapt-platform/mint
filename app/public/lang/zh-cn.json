@@ -656,6 +656,7 @@
 		"error_net_parsererror": "数据解析错误",
 		"caus": "使役",
 		"pass": "被动",
+		"space": "",
 		"": ""
 	},
 	"grammastr": [

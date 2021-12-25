@@ -11,6 +11,8 @@ body {
 	padding: 0.6em 1em 0.1em 1em;
 	background-color: var(--tool-bg-color1);
 	border-bottom: none;
+	/*position: fixed;*/
+    width: 100%;
 }
 
 .search_fixed {
@@ -128,6 +130,8 @@ body {
 .pre_serach_block {
 	border-bottom: 1px solid var(--shadow-color);
 	padding: 5px 0;
+	height: 60vh;
+    overflow: scroll;
 }
 
 .pre_serach_block_title {
@@ -205,9 +209,12 @@ input[type="submit"] {
 }
 
 #pre_search_result {
-	background-color: var(--bg-color);
+	background-color: silver;
 	z-index: 50;
 	display: none;
+	max-width: 1024px;
+	position: fixed;
+	color:black;
 }
 
 #dt_title {
@@ -273,7 +280,7 @@ input[type="submit"] {
 #word_parts {
 }
 #search_info {
-	display: flex;
+	/*display: flex;*/
 	justify-content: space-between;
 }
 #part_mean {
@@ -317,8 +324,8 @@ textarea {
 }
 
 #dict_ref_search_input {
-	margin-left: 0.5em;
-	max-width: 500px;
+	/*margin-left: 0.5em;*/
+	/*max-width: 500px;*/
 	font-size: 130%;
 	font-weight: 500;
 	padding: 0.3em 0.6em;

@@ -599,7 +599,7 @@ function modifyApply(sWordId, update_user_dict) {
 	}
 	refreshBookMark();
 	user_wbw_commit();
-
+	refreshNoteNumber();
 	//上传到用户字典
 	if (update_user_dict) {
 		upload_to_my_dict();

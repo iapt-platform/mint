@@ -33,8 +33,8 @@
     }
     ?>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      Name: <input type="text" name="q" value="<?php echo $q ?>">
-      <input type="submit">
+      Text: <input type="text" name="q" value="<?php echo $q ?>">
+      <input type="submit" value="Query">
     </form>
     <?php
     require_once '../path.php';
@@ -55,8 +55,8 @@
                      full_text_search_weighted_unaccent,
                      websearch_to_tsquery('pali_unaccent', '$q'))
                  AS rank,
-                 ts_headline('simple', content,
-                              websearch_to_tsquery('simple', '$q'),
+                 ts_headline('pali', content,
+                              websearch_to_tsquery('pali', '$q'),
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight,
                  *

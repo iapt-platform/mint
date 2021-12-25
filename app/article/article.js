@@ -54,6 +54,7 @@ function articel_load(id, collection_id) {
 						guide_init();						
 						note_refresh_new();
 
+
 					}
 				} catch (e) {
 					console.error(e);

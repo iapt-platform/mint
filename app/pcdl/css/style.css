@@ -3089,6 +3089,7 @@ th {
 	color: #b5b5b5;
 	position: absolute;
 	width: 100%;
+	margin-top: calc(100vh - 89px - 3.6em);
 }
 
 #search_div {

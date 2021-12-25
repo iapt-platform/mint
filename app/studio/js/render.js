@@ -1226,7 +1226,7 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "</div>";
 	output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 	output += "</span>";
-	output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+	output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin-left:100%;'></guide></span>";
 	output += "</div>";
 	return output;
 }
@@ -1566,7 +1566,7 @@ function renderWordParBlockInner(elementBlock) {
 				output += "</div>";
 				output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 				output += "</span>";
-				output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+				output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin-left:100%;'></guide></span>";
 				output += "</div>";
 
 				output += "<div class='sent_wbw'>";
@@ -2204,9 +2204,9 @@ function renderWordHeadInner(element) {
 	output += "</span>";
 	output += "</a>";
 	if (wNote.length > 0) {
-		output += '<span id="wnote_root_' + wid + '"><wnh wid="' + wid + '">[1]</wnh></span>';
+		output += '<span id="wnote_root_' + wid + '" onclick="show_pop_note(\'' + wid + '\')"><wnh wid="' + wid + '">[1]</wnh></span>';
 	} else {
-		output += '<span id="wnote_root_' + wid + '"></span>';
+		output += '<span id="wnote_root_' + wid + '" onclick="show_pop_note(\'' + wid + '\')"></span>';
 	}
 	var newMsg = msg_word_msg_num(wid);
 	if (newMsg > 0) {
@@ -4387,7 +4387,7 @@ function refreshNoteNumber() {
 	$("wnh").each(function (index, element) {
 		let id = $(this).attr("wid");
 		//$(this).html("<a href='#word_note_"+id+"'  name=\"word_note_root_"+id+"\">"+(index+1)+"</a>");
-		$(this).html("<span onclick=\"show_pop_note('" + id + "')\">" + (index + 1) + "</span>");
+		$(this).html("<span>" + (index + 1) + "</span>");
 	});
 
 	$("wnc").each(function (index, element) {

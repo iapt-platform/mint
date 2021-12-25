@@ -1254,6 +1254,7 @@ function menu_file_tools_empty(opt){
 			setNodeText(xDocWords[iword],"org","?");
 			setNodeText(xDocWords[iword],"om","?");
 			setNodeText(xDocWords[iword],"case","?");
+			setNodeText(xDocWords[iword],"parent","?");
 			setNodeText(xDocWords[iword],"bmc","");
 			setNodeText(xDocWords[iword],"bmt","");
 			setNodeText(xDocWords[iword],"note","");
