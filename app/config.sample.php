@@ -3,7 +3,8 @@
 require_once __DIR__."/dir.php";
 
 #域名设置
-define("WWW_DOMAIN_NAME","sg.wikipali.org");
+define("WWW_DOMAIN_PROTOCOL","https");
+define("WWW_DOMAIN_NAME","www.wikipali.org");
 define("RPC_DOMAIN_NAME","rpc.wikipali.org");
 /*
 电子邮件设置
