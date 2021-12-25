@@ -8,8 +8,8 @@ require_once "install_head.php";
 <body>
 <h2>Insert to Index</h2>
 <?php
-include "./_pdo.php";
-include "../path.php";
+require_once "./_pdo.php";
+require_once "../config.php";
 if (isset($_GET["from"]) == false) {
     ?>
 <form action="db_insert_bookword_from_csv.php" method="get">
@@ -33,8 +33,8 @@ $log = "";
 echo "<h2>doing : No.{$from} book </h2>";
 
 global $dbh_word_index;
-$dns = "" . _FILE_DB_BOOK_WORD_;
-$dbh_word_index = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_BOOK_WORD_;
+$dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 if (($handle = fopen("filelist.csv", 'r')) !== false) {
@@ -61,25 +61,35 @@ if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !
         $count++;
     }
 }
-
-// 开始一个事务，关闭自动提交
-$dbh_word_index->beginTransaction();
-$query = "INSERT INTO "._TABLE_BOOK_WORD_." ('book','wordindex','count') VALUES ( ? , ? , ?  )";
+#删除原来的数据
+$query = "DELETE FROM "._TABLE_BOOK_WORD_." WHERE book = ?";
 $stmt = $dbh_word_index->prepare($query);
-
-foreach ($bookword as $key => $value) {
-    $stmt->execute(array($book, $key, $value));
-}
-// 提交更改
-$dbh_word_index->commit();
+$stmt->execute(array($book));
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = $dbh_word_index->errorInfo();
+	$error = $dbh_word_index->errorInfo();
     echo "error - $error[2] <br>";
     $log .= "$from, $FileName, error, $error[2] \r\n";
-} else {
-    echo "updata $count recorders.<br />";
-    $log .= "updata $count recorders.\r\n";
+}else{
+	// 开始一个事务，关闭自动提交
+	$dbh_word_index->beginTransaction();
+	$query = "INSERT INTO "._TABLE_BOOK_WORD_." (book , wordindex , count) VALUES ( ? , ? , ?  )";
+	$stmt = $dbh_word_index->prepare($query);
+
+	foreach ($bookword as $key => $value) {
+		$stmt->execute(array($book, $key, $value));
+	}
+	// 提交更改
+	$dbh_word_index->commit();
+	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
+		$error = $dbh_word_index->errorInfo();
+		echo "error - $error[2] <br>";
+		$log .= "$from, $FileName, error, $error[2] \r\n";
+	} else {
+		echo "updata $count recorders.<br />";
+		$log .= "updata $count recorders.\r\n";
+	}	
 }
+
 
 $myLogFile = fopen($dirLog . "insert_index.log", "a");
 fwrite($myLogFile, $log);

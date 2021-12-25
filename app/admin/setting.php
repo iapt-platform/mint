@@ -1,6 +1,6 @@
 ﻿<?php
 
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/_pdo.php";
 
 if (isset($_GET["language"])) {$currLanguage = $_GET["language"];} else { $currLanguage = "en";}

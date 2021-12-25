@@ -1,6 +1,6 @@
 <?php
 #新增群组或项目
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 

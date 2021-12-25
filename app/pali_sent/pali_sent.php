@@ -1,6 +1,6 @@
 <?php
 //查询term字典
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 //is login
@@ -25,7 +25,7 @@ if (isset($_GET["id"])) {
 }
 
 global $PDO;
-PDO_Connect("" . _FILE_DB_PALI_SENTENCE_);
+PDO_Connect(_FILE_DB_PALI_SENTENCE_);
 
 if (isset($_GET["sent"])) {
     $_sent = mb_strtolower($_GET["sent"], 'UTF-8');

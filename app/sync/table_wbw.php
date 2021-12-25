@@ -1,6 +1,6 @@
 <?php
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../sync/function.php";
 
 $input = (object) [

@@ -1,6 +1,6 @@
 <?php
 //查询参考字典
-require_once '../path.php';
+require_once '../config.php';
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
 require_once "../public/_pdo.php";
@@ -21,7 +21,7 @@ switch ($op) {
     case "pre": //预查询
         PDO_Connect(_FILE_DB_REF_INDEX_);
         echo "<div>";
-        $query = "select word,count from dict where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . "  limit 0,20";
+        $query = "SELECT word,count from dict where \"eword\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . "  limit 20";
 
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
@@ -83,7 +83,7 @@ switch ($op) {
 
         PDO_Connect(_FILE_DB_BOLD_);
         //查询符合的记录数
-        $query = "select count(*) as co from bold where \"word2\" in  $strQueryWord";
+        $query = "SELECT count(*) as co from "._TABLE_WORD_BOLD_." where \"word2\" in  $strQueryWord";
         $Fetch = PDO_FetchOne($query);
         if ($Fetch > 0) {
             $strDictTab .= "<li id=\"dt_bold\"  onclick=\"tab_click('dict_bold','dt_bold')\">{$_local->gui->vannana}({$Fetch})</li>";
@@ -100,7 +100,7 @@ switch ($op) {
             $strQueryWord中是所有可能的拼写
              */
             $realQueryWord = "(";
-            $query = "select word2,count(word) as co from bold where \"word2\" in $strQueryWord group by word2 order by co DESC";
+            $query = "SELECT word2,count(word) as co from "._TABLE_WORD_BOLD_." where \"word2\" in $strQueryWord group by word2 order by co DESC";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -121,7 +121,7 @@ switch ($op) {
             }
 
             //查找这些词出现在哪些书中
-            $query = "select book,count(word) as co from bold where \"word2\" in $realQueryWord group by book order by co DESC";
+            $query = "SELECT book,count(word) as co from "._TABLE_WORD_BOLD_." where \"word2\" in $realQueryWord group by book order by co DESC";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -146,7 +146,7 @@ switch ($op) {
             //黑体字主显示区右侧开始
             echo "<div id=\"dict_bold_right\" style='flex:7;'>";
             //前20条记录
-            $query = "select * from bold where \"word2\" in $realQueryWord limit 0,20";
+            $query = "SELECT * from "._TABLE_WORD_BOLD_." where \"word2\" in $realQueryWord limit 20";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -167,8 +167,8 @@ switch ($op) {
                     if (strlen($pali) > 1) {
                         echo "<div class='mean'>$pali</div>";
                     } else {
-                        PDO_Connect(_FILE_DB_PALITEXT_);
-                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                        //PDO_Connect(_FILE_DB_PALITEXT_);
+                        $query = "SELECT * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 20";
                         $FetchPaliText = PDO_FetchAll($query);
                         $countPaliText = count($FetchPaliText);
                         if ($countPaliText > 0) {
@@ -179,7 +179,7 @@ switch ($op) {
                                 $deep = 0;
                                 $sFirstParentTitle = "";
                                 while ($parent > -1) {
-                                    $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
+                                    $query = "SELECT * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 1";
                                     $FetParent = PDO_FetchAll($query);
                                     if ($sFirstParentTitle == "") {
                                         $sFirstParentTitle = $FetParent[0]["toc"];
@@ -273,7 +273,7 @@ switch ($op) {
                 }
 
                 //查找这些词出现在哪些书中
-                $query = "select book,count(word) as co from bold where \"word2\" in $wordlist group by book order by co DESC";
+                $query = "SELECT book,count(word) as co from "._TABLE_WORD_BOLD_." where \"word2\" in $wordlist group by book order by co DESC";
                 $Fetch = PDO_FetchAll($query);
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
@@ -301,7 +301,7 @@ switch ($op) {
                 if ($booklist == "()") {
                     echo "<div>请选择书名</div>";
                 }
-                $query = "select * from bold where \"word2\" in $wordlist and \"book\" in $booklist  limit 0,20";
+                $query = "SELECT * from "._TABLE_WORD_BOLD_." where \"word2\" in $wordlist and \"book\" in $booklist  limit 20";
                 $Fetch = PDO_FetchAll($query);
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
@@ -324,7 +324,7 @@ switch ($op) {
                             echo "<div class='mean'>$pali</div>";
                         } else {
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 0,20";
+                            $query = "SELECT * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$paragraph}' limit 20";
                             $FetchPaliText = PDO_FetchAll($query);
                             $countPaliText = count($FetchPaliText);
                             if ($countPaliText > 0) {
@@ -335,7 +335,7 @@ switch ($op) {
                                     $deep = 0;
                                     $sFirstParentTitle = "";
                                     while ($parent > -1) {
-                                        $query = "select * from pali_text where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 0,1";
+                                        $query = "SELECT * from "._TABLE_PALI_TEXT_." where \"book\" = '{$book}' and \"paragraph\" = '{$parent}' limit 1";
                                         $FetParent = PDO_FetchAll($query);
                                         if ($sFirstParentTitle == "") {
                                             $sFirstParentTitle = $FetParent[0]["toc"];

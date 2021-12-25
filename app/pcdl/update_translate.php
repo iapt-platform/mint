@@ -123,13 +123,13 @@ echo "<h2>$from</h2>";
             //开始更新索引
             for ($iPar = 0; $iPar < count($paragraph_list); $iPar++) {
                 $oneTitle = $paragraph_list[$iPar];
-                $query = "select * from 'index' where album = '$album_index' and book='" . $book . "' and paragraph='" . $paragraph_list[$iPar]["paragraph"] . "'";
+                $query = "select * from "._TABLE_RES_INDEX_." where album = '$album_index' and book='" . $book . "' and paragraph='" . $paragraph_list[$iPar]["paragraph"] . "'";
                 $search_title = PDO_FetchAll($query);
                 $title_en = $oneTitle["text"];
 
                 //找到已有的记录  更新
                 if (count($search_title) != 0) {
-                    $query = "UPDATE 'index' SET title = '" . $oneTitle["text"] . "' ,
+                    $query = "UPDATE "._TABLE_RES_INDEX_." SET title = '" . $oneTitle["text"] . "' ,
 					                         title_en = '" . $title_en . "' ,
 											 language = '1' ,
 											 type = '$type',
@@ -144,11 +144,13 @@ echo "<h2>$from</h2>";
                         break;
                     }
 
-                } else { /*未找到 插入*/
+                } else { 
+					# 未找到 插入
                     if (substr($book, 0, 1) == "b") {
                         $book = substr($book, 1);
                     }
-                    $query = "INSERT INTO 'index' (id,
+                    $query = "INSERT INTO "._TABLE_RES_INDEX_." 
+					(id,
 					book,
 					paragraph,
 					title,

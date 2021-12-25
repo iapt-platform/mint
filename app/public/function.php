@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/casesuf.inc';
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../path.php';
+require_once __DIR__ . '/../config.php';
 $_book_index = null; //书的列表
 
 /*
@@ -69,8 +69,8 @@ function _get_book_path($index)
 function _get_para_path($book, $paragraph)
 {
 
-    $dns = "" . _FILE_DB_PALITEXT_;
-    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dns = _FILE_DB_PALITEXT_;
+    $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     $path = "";
@@ -79,7 +79,7 @@ function _get_para_path($book, $paragraph)
     $sFirstParentTitle = "";
     //循环查找父标题 得到整条路径
     while ($parent > -1) {
-        $query = "select * from pali_text where \"book\" = ? and \"paragraph\" = ? limit 0,1";
+        $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
         $stmt = $dbh->prepare($query);
         $stmt->execute(array($book, $parent));
         $FetParent = $stmt->fetch(PDO::FETCH_ASSOC);

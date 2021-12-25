@@ -24,20 +24,28 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 			let result = JSON.parse(data);
 			console.log(result.time);
 			let html = "";
+			let iTotleTime = result.time[result.time.length-1].time;
+			html += "<div>查询到 "+result.data.length+" 条结果 "+iTotleTime+"秒</div>";
 			for (const iterator of result.data) {
 				html += render_word_result(iterator);
 			}
 			$("#contents").html(html);
-			html = "";
 
-			html += "<div class='case_item'>";
-			html += "<div class='spell'><a onclick='case_filter_all()'>all</a> " + result.case_num + " Words</div>";
-			html += "<div class='tag'>" + result.case_count + "</div>";
-			html += "</div>";
-			for (const iterator of result.case) {
-				html += render_case(iterator);
+
+			if(result.case){
+				//所查单词格位变化表
+				html = "";
+
+				html += "<div class='case_item'>";
+				html += "<div class='spell'><a onclick='case_filter_all()'>all</a> " + result.case_num + " Words</div>";
+				html += "<div class='tag'>" + result.case_count + "</div>";
+				html += "</div>";
+				for (const iterator of result.case) {
+					html += render_case(iterator);
+				}
+				$("#case_content").html(html);			
 			}
-			$("#case_content").html(html);
+
 
 			html = "";
 			html += "<div class='book_tag_div filter'>";
@@ -88,9 +96,16 @@ function render_word_result(worddata) {
 		"&direction=col' target='_blank'>";
 	html += worddata.title + "</a></div>";
 
-	let newStr = highlightWords(worddata.palitext, keyword);
+	let highlightStr;
 
-	html += "<div class='wizard_par_div'>" + newStr + "</div>";
+	if(typeof worddata.highlight=="undefined"){
+		highlightStr= highlightWords(worddata.palitext, keyword);
+	}else{
+		highlightStr= worddata.highlight;
+	}
+	
+
+	html += "<div class='wizard_par_div'>" + highlightStr + "</div>";
 	html += "<div class='path'>" + worddata.path + "</div>";
 	html += "<div class='path'>" + worddata.book + "-" + worddata.para + "-" + worddata.wt + "</div>";
 	html += "</div>";

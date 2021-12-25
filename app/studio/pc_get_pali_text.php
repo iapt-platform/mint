@@ -2,7 +2,7 @@
 /*
 加载巴利原文
  */
-include "../path.php";
+include "../config.php";
 include "../public/_pdo.php";
 
 $get_book = $_GET["book"];
@@ -15,7 +15,7 @@ echo "book:$get_book<br />";
 //open database
 PDO_Connect(_FILE_DB_PALITEXT_);
 
-$query = "SELECT paragraph,html FROM pali_text WHERE book = ?";
+$query = "SELECT paragraph,html FROM "._TABLE_PALI_TEXT_." WHERE book = ?";
 $Fetch = PDO_FetchAll($query, array($get_book));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {

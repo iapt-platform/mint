@@ -1,7 +1,7 @@
 <?php
 require_once '../public/casesuf.inc';
 require_once '../public/union.inc';
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/load_lang.php"; //语言文件
 require_once "../public/function.php";
@@ -255,15 +255,13 @@ function countWordInPali($word, $sort = false, $limit = 0)
 
     //查找实际出现的拼写
 
-    $dsn = "" . _FILE_DB_WORD_INDEX_;
-    $user = "";
-    $password = "";
-    $PDO = new PDO($dsn, $user, $password, array(PDO::ATTR_PERSISTENT => true));
+    $dsn = _FILE_DB_WORD_INDEX_;
+    $PDO = new PDO($dsn, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     if ($limit == 0) {
         $sSqlLimit = "";
     } else {
-        $sSqlLimit = "limit 0 , " . $limit;
+        $sSqlLimit = "limit " . $limit;
     }
     if ($sort) {
         $sSqlSort = "order by count DESC";
@@ -271,7 +269,7 @@ function countWordInPali($word, $sort = false, $limit = 0)
         $sSqlSort = "";
     }
 
-    $query = "select id,word,count,bold,len from wordindex where \"word\" in  $strQueryWord " . $sSqlSort . " " . $sSqlLimit;
+    $query = "SELECT id,word,count,bold,len from "._TABLE_WORD_INDEX_." where \"word\" in  $strQueryWord " . $sSqlSort . " " . $sSqlLimit;
 
     $stmt = $PDO->query($query);
     $arrRealWordList = $stmt->fetchAll(PDO::FETCH_ASSOC);

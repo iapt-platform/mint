@@ -2,7 +2,7 @@
 #输入句子列表查询channel列表 和计算完成度
 require_once "../public/function.php";
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once '../channal/function.php';
 require_once '../ucenter/function.php';
 require_once '../share/function.php';
@@ -28,12 +28,12 @@ if (isset($_POST["data"])) {
 $_userinfo = new UserInfo();
 $_channal = new Channal();
 
-$dns = "" . _FILE_DB_SENTENCE_;
-$db_trans_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_SENTENCE_;
+$db_trans_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_;
-$db_pali_sent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_SENTENCE_;
+$db_pali_sent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_pali_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 $channal = array();
@@ -44,7 +44,7 @@ $channel_power=array();
 if (isset($_COOKIE["userid"])) {
 	//找自己的
     PDO_Connect(_FILE_DB_CHANNAL_);
-    $query = "SELECT id from channal where owner = ? and status >0   limit 0,100";
+    $query = "SELECT id from channal where owner = ? and status >0   limit 100";
     $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
@@ -103,7 +103,7 @@ foreach ($_data as $key => $value) {
         $pali_letter["id"] = $arrInfo[0];
 
 		if($bookId<1000){
-			$query = "SELECT length FROM pali_sent WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  ";
+			$query = "SELECT length FROM "._TABLE_PALI_SENT_." WHERE book= ? AND paragraph= ? AND word_begin= ? AND word_end= ?  ";
 			$stmt = $db_pali_sent->prepare($query);
 			$stmt->execute(array($bookId, $para, $begin, $end));
 			$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -122,7 +122,7 @@ foreach ($_data as $key => $value) {
 
 
         #公开 或 channel有权限的
-        $query = "SELECT channal FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} ) group by channal  limit 0 ,20 ";
+        $query = "SELECT channal FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} ) group by channal  limit 20 ";
         $stmt = $db_trans_sent->prepare($query);
         $parm = array($bookId, $para, $begin, $end);
         $parm = array_merge_recursive($parm, $channal_list);

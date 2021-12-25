@@ -189,7 +189,7 @@ function copy_para_ref(book, para) {
 }
 function reader_get_path() {
 	$.get(
-		"../reader/get_path.php",
+		"../reader/get_config.php",
 		{
 			book: _reader_book,
 			para: _reader_para,

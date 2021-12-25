@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../redis/function.php";
 
 if (PHP_SAPI == "cli" || isset($_COOKIE["userid"])) 

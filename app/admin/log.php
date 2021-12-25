@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 
 function mylog($message){
 	$fpLog = fopen(_DIR_LOG_APP_,"a");

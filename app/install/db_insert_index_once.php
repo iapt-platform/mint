@@ -72,8 +72,7 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-$db_file = _FILE_DB_INDEX_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_INDEX_);
 
 for ($iFile = $from; $iFile <= $to; $iFile++) {
     echo "<h3>{$iFile}</h3>";
@@ -110,7 +109,7 @@ for ($iFile = $from; $iFile <= $to; $iFile++) {
 
     // 开始一个事务，关闭自动提交
     $PDO->beginTransaction();
-    $query = "INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
+    $query = "INSERT INTO "._TABLE_WORD_." ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
     $stmt = $PDO->prepare($query);
     $count = 0;
     $count1 = 0;
@@ -182,7 +181,7 @@ for ($iFile = $from; $iFile <= $to; $iFile++) {
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "INSERT INTO wordindex ('id','word','word_en','count','normal','bold','is_base','len') VALUES (?,?,?,?,?,?,?,?)";
+$query = "INSERT INTO "._TABLE_WORD_INDEX_." ('id','word','word_en','count','normal','bold','is_base','len') VALUES (?,?,?,?,?,?,?,?)";
 $stmt = $PDO->prepare($query);
 
 echo count($iAllWordIndex) . "words<br>";

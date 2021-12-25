@@ -2,7 +2,7 @@
 /*
 get user sentence from db
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
@@ -10,9 +10,9 @@ require_once "../public/function.php";
 
 if (isset($_POST["sent_id"])) {
     $dns = _FILE_DB_PALI_SENTENCE_SIM_;
-    $dbh_sim = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh_sim = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "SELECT sent2 FROM sent_sim WHERE  sent1 = ? limit 0 , 10";
+    $query = "SELECT sent2 FROM "._TABLE_SENT_SIM_." WHERE  sent1 = ? limit 10";
     $stmt = $dbh_sim->prepare($query);
     $stmt->execute(array($_POST["sent_id"]));
     $simList = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -24,10 +24,10 @@ if (isset($_POST["sent_id"])) {
 $output = array();
 
 $dns = _FILE_DB_PALI_SENTENCE_;
-$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$query = "SELECT * FROM pali_sent WHERE  id = ? ";
+$query = "SELECT book,paragraph,word_begin as begin ,word_end as end,text ,html FROM "._TABLE_PALI_SENT_." WHERE  id = ? ";
 $stmt = $dbh->prepare($query);
 $count = 0;
 foreach ($simList as $value) {
