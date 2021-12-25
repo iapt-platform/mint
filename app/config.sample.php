@@ -279,8 +279,8 @@ define("_TABLE_PART_", "part");
 # 逐词解析表
 #sqlite
 define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
-define("_TABLE_SRC_USER_WBW_", "wbw");
-define("_TABLE_SRC_USER_WBW_BLOCK_", "wbw_block");
+define("_TABLE_USER_WBW_", "wbw");
+define("_TABLE_USER_WBW_BLOCK_", "wbw_block");
 
 
 
