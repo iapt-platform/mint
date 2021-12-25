@@ -52,7 +52,7 @@ PDO_Connect(_FILE_DB_PALITEXT_);
 /*  创建一个填充了和 _para 相同数量占位符的字符串 */
 $place_holders = implode(',', array_fill(0, count($_para), '?'));
 
-$query = "SELECT sum(lenght) FROM _TABLE_PALI_TEXT_ WHERE   paragraph IN ($place_holders) AND book = ?";
+$query = "SELECT sum(lenght) FROM "._TABLE_PALI_TEXT_." WHERE   paragraph IN ($place_holders) AND book = ?";
 $param_letter = $_para;
 $param_letter[] = $_book;
 $sum_len = PDO_FetchOne($query,$param_letter);
