@@ -1226,7 +1226,7 @@ function render_sent_tool_bar(elementBlock, begin) {
 	output += "</div>";
 	output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 	output += "</span>";
-	output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+	output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin-left:100%;'></guide></span>";
 	output += "</div>";
 	return output;
 }
@@ -1566,7 +1566,7 @@ function renderWordParBlockInner(elementBlock) {
 				output += "</div>";
 				output += "<guide gid='sent_func' style='margin:unset;'></guide>";
 				output += "</span>";
-				output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin:unset;'></guide></span>";
+				output += "<span style='flex: 3;'><guide gid='sent_trans' style='margin-left:100%;'></guide></span>";
 				output += "</div>";
 
 				output += "<div class='sent_wbw'>";

@@ -669,17 +669,17 @@ foreach($plugin_list as $info){
 		<div id="modifywin" style="">
 			<div>
 				<ul id="id_select_modyfy_type" class="common-tab">
-					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo $_local->gui->detaile;?></li>
-					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo $_local->gui->mark;?></li>
-					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo $_local->gui->note;?></li>
-					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo $_local->gui->source;?></li>
+					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo "📝".$_local->gui->detaile;?></li>
+					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo "🔖".$_local->gui->mark;?></li>
+					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo "📇".$_local->gui->note;?></li>
+					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo "🐛";//.$_local->gui->source?></li>
 					
 				</ul>
 			</div>
 			<div id="modify_detaile">
 				<!-- 意思 -->
 				<div class="edit_detail_p">
-					<guide gid="studio_general_meaning"></guide>
+					<guide gid="studio_general_meaning">⑤</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
@@ -692,7 +692,7 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 拆分 -->
 				<div class="edit_detail_p">
-					<guide gid="studio_break_down"></guide>
+					<guide gid="studio_break_down">②</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->part;?>：</span>
 					<input type="text" id="input_org" class="input_bar" value="" name="in_org" onkeydown="match_key(this)" onkeyup="unicode_key(this) " onchange="input_org_change()">
 					<div class="case_dropdown">
@@ -706,14 +706,14 @@ foreach($plugin_list as $info){
 				<!-- 拆分意思 -->
 
 				<div class="edit_detail_p" >
-					<guide gid="studio_part_meaning"></guide>
+					<guide gid="studio_part_meaning">④</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
 					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
-					<guide gid="grammar_abbr"></guide>
+					<guide gid="grammar_abbr">③</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->gramma;?>：</span>
 					<p><input type="text" id="input_case" value="" name="in_case" onblur="input_org_switch('input_case','input_select_case')" ></p>
 					<div id="input_select_case" class="input_bar" style="width:80%; display:inline-flex;">
@@ -738,7 +738,7 @@ foreach($plugin_list as $info){
 				</div>
 				<!-- 语基 -->
 				<div class="edit_detail_p">
-					<guide gid="studio_parent"></guide>
+					<guide gid="studio_parent">①</guide>
 				<script>
 
 				</script>
@@ -760,13 +760,13 @@ foreach($plugin_list as $info){
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<span style="display:flex;">
-						<guide gid="studio_parent2"></guide>
+						<guide gid="studio_parent2">🧬</guide>
 						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
-							<span style="padding-right: 4px;">┕</span>
+							<span style="padding-right: 4px;"></span>
 							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
 							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
-								<a onclick="edit_parent_grammar_changed('')"><?php echo $_local->gui->empty; ?></a>
+								<a onclick="edit_parent_grammar_changed('')"><?php echo "🗑".$_local->gui->empty; ?></a>
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>
@@ -784,9 +784,9 @@ foreach($plugin_list as $info){
 						</div>
 					</span>
 					<div>
-						<?php echo $_local->gui->relation; ?>
+						<?php echo "⛓".$_local->gui->relation; ?>
 						<imput type="hidden" id="id_relation_text" value="" />
-						<button onclick="rela_add_word()">+</button>
+						<button onclick="rela_add_word()">➕</button>
 						<div id="relation_div">
 						</div>
 					</div>
