@@ -3,6 +3,9 @@ require_once __DIR__."/../config.php";
 require_once __DIR__.'/../public/_pdo.php';
 require_once __DIR__."/../public/function.php";
 
+define("_DB_RES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_TABLE_","res_indexs");
+
 echo "Update toc to res_index".PHP_EOL;
 
 if ($argc != 4) {
@@ -36,7 +39,7 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-PDO_Connect(_FILE_DB_RESRES_INDEX_);
+PDO_Connect(_DB_RES_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
 
 for ($from=$_from-1; $from < $_to; $from++) { 
     # code...
@@ -88,13 +91,13 @@ for ($from=$_from-1; $from < $_to; $from++) {
     
     //删除已有标题
     
-    $query = "DELETE FROM \""._TABLE_RES_INDEX_."\" WHERE book = ?  AND  language = ?  ";
+    $query = "DELETE FROM \""._TABLE_."\" WHERE book = ?  AND  language = ?  ";
     PDO_Execute($query, array($book,$_lang));
     
     
     // 开始一个事务，关闭自动提交
     $PDO->beginTransaction();
-    $query = "INSERT INTO \""._TABLE_RES_INDEX_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
     $stmt = $PDO->prepare($query);
     if ($_lang == "pali") {
         $type = 1;

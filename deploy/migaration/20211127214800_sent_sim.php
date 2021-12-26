@@ -1,10 +1,14 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
+define("_PG_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_SENT_SIM_", "sent_sims");
+
 $src_db=_SRC_DB_PALI_SENTENCE_SIM_;#源数据库
 $src_table=_TABLE_SRC_SENT_SIM_;#源表名
-$dest_db=_FILE_DB_PALI_SENTENCE_SIM_;#目标数据库
-$dest_table=_TABLE_SENT_SIM_;#目标表名
+
+$dest_db=_PG_DB_PALI_SENTENCE_SIM_;#目标数据库
+$dest_table=_PG_TABLE_SENT_SIM_;#目标表名
 
 echo "migarate sent_sim".PHP_EOL;
 #打开源数据库

@@ -1,9 +1,12 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
+define("_PG_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_SENT_SIM_", "sent_sims");
+define("_PG_TABLE_SENT_SIM_INDEX_", "sent_sim_indexs");
 
-$dest_db=_FILE_DB_PALI_SENTENCE_SIM_;#目标数据库
-$dest_table=_TABLE_SENT_SIM_INDEX_;#目标表名
+$dest_db = _PG_DB_PALI_SENTENCE_SIM_;#目标数据库
+$dest_table = _PG_TABLE_SENT_SIM_INDEX_;#目标表名
 
 echo "migarate sent_sim_index".PHP_EOL;
 
@@ -14,7 +17,7 @@ $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 echo "open dest".PHP_EOL;
 
 #删除目标表中所有数据
-$query = "DELETE FROM ".$dest_table." WHERE true";
+$query = "DELETE FROM ".$dest_table;
 $stmt = $PDO_DEST->prepare($query);
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = $PDO_DEST->errorInfo();
@@ -25,7 +28,7 @@ $stmt->execute();
 echo "delete dest".PHP_EOL;
 
 #插入数据
-$query = "INSERT INTO ".$dest_table." (sent_id, count ) SELECT sent1,count(*) FROM "._TABLE_SENT_SIM_." where true group by sent1;";
+$query = "INSERT INTO ".$dest_table." (sent_id, count ) SELECT sent1,count(*) FROM "._PG_TABLE_SENT_SIM_." group by sent1;";
 $stmt = $PDO_DEST->prepare($query);
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = $PDO_DEST->errorInfo();

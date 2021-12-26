@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
+define("_PG_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_PALI_SENT_", "pali_sentences");
 
-$dest_db=_FILE_DB_PALI_SENTENCE_;#目标数据库
-$dest_table=_TABLE_PALI_SENT_INDEX_;#目标表名
+$dest_db = _PG_DB_PALI_SENTENCE_;#目标数据库
+$dest_table = _TABLE_PALI_SENT_INDEX_;#目标表名
 
 echo "migarate pali_sent_index".PHP_EOL;
 
@@ -25,7 +27,7 @@ $stmt->execute();
 echo "delete dest".PHP_EOL;
 
 #插入数据
-$query = "INSERT INTO ".$dest_table." (book, para, strlen ) SELECT book,paragraph,sum(length) FROM "._TABLE_PALI_SENT_." where true group by book,paragraph;";
+$query = "INSERT INTO ".$dest_table." (book, para, strlen ) SELECT book,paragraph,sum(length) FROM "._PG_TABLE_PALI_SENT_." where true group by book,paragraph;";
 $stmt = $PDO_DEST->prepare($query);
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = $PDO_DEST->errorInfo();

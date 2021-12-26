@@ -28,9 +28,11 @@ $filelist = array();
 $fileNums = 0;
 $log = "";
 
+define("_DB_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_TABLE_", "words");
 
 global $dbh_word_index;
-$dns = _FILE_DB_PALI_INDEX_;
+$dns = _DB_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -46,7 +48,7 @@ if ($_to == 0 || $_to >= $fileNums) {
 for ($from=$_from-1; $from < $_to; $from++) { 
     echo "doing ".($from+1).PHP_EOL;
     #删除
-    $query = "DELETE FROM "._TABLE_WORD_." WHERE book = ?";
+    $query = "DELETE FROM "._TABLE_." WHERE book = ?";
     $stmt = $dbh_word_index->prepare($query);
     $stmt->execute(array($from+1));
 
@@ -54,7 +56,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !== false) {
         // 开始一个事务，关闭自动提交
         $dbh_word_index->beginTransaction();
-        $query = "INSERT INTO "._TABLE_WORD_." ( sn , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_." ( sn , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
         $stmt = $dbh_word_index->prepare($query);
 
         $count = 0;
