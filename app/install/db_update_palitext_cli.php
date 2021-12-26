@@ -5,6 +5,8 @@
 require_once __DIR__."/../config.php";
 require_once __DIR__.'/../public/_pdo.php';
 
+define("_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_TABLE_","pali_texts");
 
 echo "Insert Pali Text To DB".PHP_EOL;
 
@@ -37,7 +39,9 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
+
+
+PDO_Connect(_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
 for ($from=$_from-1; $from < $to; $from++) { 
     echo "doing $from".PHP_EOL;
@@ -102,7 +106,7 @@ $book = $from + 1;
 
 //计算段落信息，如上一段
 
-$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = '$book'  order by paragraph asc";
+$query = "SELECT * from "._TABLE_." where book = '$book'  order by paragraph asc";
 $title_data = PDO_FetchAll($query);
 echo "Paragraph Count:" . count($title_data) . " arrInserString:".count($arrInserString). PHP_EOL;
 
@@ -110,7 +114,7 @@ $paragraph_count = count($title_data);
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "UPDATE "._TABLE_PALI_TEXT_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
+$query = "UPDATE "._TABLE_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
 $stmt = $PDO->prepare($query);
 
 $paragraph_info = array();

@@ -21,7 +21,11 @@ if ($_to > 217) {
 	$_to = 217;
 }
 
-//$myLogFile = fopen(_DIR_LOG_ . "insert_db.log", "a");
+
+#pg
+define("_DB_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_TABLE_","wbw_templates");
+
 
 $filelist = array();
 
@@ -32,7 +36,7 @@ if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
 echo "read file list".PHP_EOL;
 
 
-PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
+PDO_Connect(_DB_,_DB_USERNAME_,_DB_PASSWORD_);
 echo "db Connectd".PHP_EOL;
 
 
@@ -77,7 +81,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	//fwrite($myLogFile, $log);
 
 	#删除目标数据库中数据
-	$query = "DELETE FROM "._TABLE_PALICANON_TEMPLET_." WHERE book = ?";
+	$query = "DELETE FROM "._TABLE_." WHERE book = ?";
 	$stmt = $PDO->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 		$error = $PDO->errorInfo();
@@ -91,7 +95,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$row=0;
 	// 开始一个事务，关闭自动提交
 	$PDO->beginTransaction();
-	$query = "INSERT INTO "._TABLE_PALICANON_TEMPLET_." ( book , paragraph, wid , word , real , type , gramma , part , style ) VALUES (?,?,?,?,?,?,?,?,?)";
+	$query = "INSERT INTO "._TABLE_." ( book , paragraph, wid , word , real , type , gramma , part , style ) VALUES (?,?,?,?,?,?,?,?,?)";
 	$stmt = $PDO->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 		$error = PDO_ErrorInfo();

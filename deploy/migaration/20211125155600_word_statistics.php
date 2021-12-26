@@ -1,18 +1,21 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
+define("_PG_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_WORD_STATISTICS_", "word_statistics");
+
 #打开源数据库
 $PDO_SRC = new PDO(_SRC_DB_STATISTICS_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 echo "open src".PHP_EOL;
 
 #打开目标数据库
-$PDO_DEST = new PDO(_FILE_DB_STATISTICS_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
+$PDO_DEST = new PDO(_PG_DB_STATISTICS_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 echo "open dest".PHP_EOL;
 
 #删除目标数据库中所有数据
-$query = "DELETE FROM "._TABLE_WORD_STATISTICS_." WHERE true";
+$query = "DELETE FROM "._PG_TABLE_WORD_STATISTICS_." WHERE true";
 $stmt = $PDO_DEST->prepare($query);
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = $PDO_DEST->errorInfo();
@@ -29,7 +32,7 @@ echo "begin Transaction".PHP_EOL;
 
 $PDO_DEST->beginTransaction();
 
-$query = "INSERT INTO "._TABLE_WORD_STATISTICS_." ( bookid , word , count , base , end1 , end2 , type , length ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO "._PG_TABLE_WORD_STATISTICS_." ( bookid , word , count , base , end1 , end2 , type , length ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmtDEST = $PDO_DEST->prepare($query);
 
 #从源数据库中读取
