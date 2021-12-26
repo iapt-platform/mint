@@ -210,15 +210,20 @@ switch ($op) {
                         while ($parent > -1) {
                             $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
                             $FetParent = PDO_FetchAll($query,array($book,$parent));
-                            $path = "{$FetParent[0]["toc"]}>{$path}";
-                            if ($sFirstParentTitle == "") {
-                                $sFirstParentTitle = $FetParent[0]["toc"];
-                            }
-                            $parent = $FetParent[0]["parent"];
-                            $deep++;
-                            if ($deep > 5) {
-                                break;
-                            }
+							if($FetParent){
+								$path = "{$FetParent[0]["toc"]}>{$path}";
+								if ($sFirstParentTitle == "") {
+									$sFirstParentTitle = $FetParent[0]["toc"];
+								}
+								$parent = $FetParent[0]["parent"];
+								$deep++;
+								if ($deep > 5) {
+									break;
+								}
+							}else{
+								break;
+							}
+
                         }
                         $path = $path_1 . $path . "para. " . $paragraph;
                         echo "<div class='mean' style='font-size:120%'><a href='../reader/?view=para&book={$book}&para={$paragraph}&display=para' target='_blank'>$path</a></div>";
