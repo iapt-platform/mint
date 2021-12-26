@@ -21,6 +21,4 @@ php ./migaration/20211126220400-pali_sent_index-upgrade.php
 php ./migaration/20211127214800_sent_sim.php
 php ./migaration/20211127214900-sent_sim_index.php
 
-php ./../app/fts/sql.php
-
 date
