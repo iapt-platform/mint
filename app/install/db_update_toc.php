@@ -115,13 +115,13 @@ $book = $from + 1;
 
 //删除已有标题
 PDO_Connect(_FILE_DB_RESRES_INDEX_);
-$query = "DELETE FROM "._TABLE_RES_INDEX_." WHERE book = ?  AND  language = ?  ";
+$query = "DELETE FROM \""._TABLE_RES_INDEX_."\" WHERE book = ?  AND  language = ?  ";
 PDO_Execute($query, array($book,$_lang));
 
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "INSERT INTO "._TABLE_RES_INDEX_." (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO \""._TABLE_RES_INDEX_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $PDO->prepare($query);
 if ($_lang == "pali") {
     $type = 1;

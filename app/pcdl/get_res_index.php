@@ -149,7 +149,7 @@ if ($album == -1) {
         echo "</div>";
 
         PDO_Connect(_FILE_DB_RESRES_INDEX_);
-        $query = "SELECT resindex.id,resindex.title,resindex.type,resindex.album,author.name from "._TABLE_RES_INDEX_." as resindex LEFT JOIN author ON resindex.author = author.id where resindex.book='$book' and resindex.paragraph=$paragraph and resindex.type<>7 group by resindex.album";
+        $query = "SELECT resindex.id,resindex.title,resindex.type,resindex.album,author.name from \""._TABLE_RES_INDEX_."\" as resindex LEFT JOIN author ON resindex.author = author.id where resindex.book='$book' and resindex.paragraph=$paragraph and resindex.type<>7 group by resindex.album";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -188,7 +188,7 @@ if ($album == -1) {
 
         //目录
         PDO_Connect(_FILE_DB_PALITEXT_);
-        $query = "SELECT * from "._TABLE_RES_INDEX_." where book = ? and level>'0' and level<8 and paragraph >= ? ";
+        $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where book = ? and level>'0' and level<8 and paragraph >= ? ";
         $Fetch_Toc = PDO_FetchAll($query,array($book,$paragraph));
         $iFetchToc = count($Fetch_Toc);
         if ($iFetchToc > 1) {

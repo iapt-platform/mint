@@ -16,7 +16,7 @@ if (isset($_POST["order"])) {
 
 PDO_Connect(_FILE_DB_RESRES_INDEX_);
 $tag_string = '{' . $tag . '}';
-$query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$tag_string%' ";
+$query = "SELECT * from \""._TABLE_RES_INDEX_."\" where tag like '%$tag_string%' ";
 $Fetch = PDO_FetchAll($query);
 $iFetch = count($Fetch);
 if ($iFetch > 0) {

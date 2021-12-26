@@ -34,7 +34,7 @@ function render_book_list($strWord, $booklist = null)
             $aInputBook["{$oneBook}"] = 1;
         }
     }
-    $query = "SELECT book,count(book) as co FROM "._TABLE_RES_INDEX_." where title_en like '%{$strWord}%' or title like '%{$strWord}%' group by book order by co DESC";
+    $query = "SELECT book,count(book) as co FROM \""._TABLE_RES_INDEX_."\" where title_en like '%{$strWord}%' or title like '%{$strWord}%' group by book order by co DESC";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     $newBookList = array();
@@ -128,7 +128,7 @@ switch ($op) {
                 }
                 echo "</div>";
             }
-            $query = "SELECT title from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $searching . '%') . " OR title like " . $PDO->quote("%" . $searching . '%') . ") group by title limit 20";
+            $query = "SELECT title from \""._TABLE_RES_INDEX_."\" where (title_en like " . $PDO->quote("%" . $searching . '%') . " OR title like " . $PDO->quote("%" . $searching . '%') . ") group by title limit 20";
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
             $iFetch = count($Fetch);
@@ -181,9 +181,9 @@ switch ($op) {
 
             PDO_Connect( _FILE_DB_RESRES_INDEX_);
             if (isset($_GET["booklist"])) {
-                $query = "SELECT * from "._TABLE_RES_INDEX_." where (title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . ") and book in {$_GET["booklist"]} limit 50";
+                $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where (title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . ") and book in {$_GET["booklist"]} limit 50";
             } else {
-                $query = "SELECT * from "._TABLE_RES_INDEX_." where title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . " limit 50";
+                $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where title_en like " . $PDO->quote("%" . $_GET["word"] . '%') . " OR title like " . $PDO->quote("%" . $_GET["word"] . '%') . " limit 50";
             }
             $Fetch = PDO_FetchAll($query);
             $queryTime = (microtime_float() - $time_start) * 1000;
