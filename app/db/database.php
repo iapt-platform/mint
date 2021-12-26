@@ -7,9 +7,9 @@ class Database
 {
     // specify your own database credentials
     private $host = '127.0.0.1';
-    private $db_name = 'eloquent';
-    private $username = 'root';
-    private $password = 'password';
+    private $db_name = 'mint';
+    private $username = 'postgras';
+    private $password = '123456';
 	
     public $conn;
 	
@@ -19,14 +19,19 @@ class Database
     public function EloquentConnection()
     {
         return [
-            'driver' => 'mysql',
+            'driver' => 'pgsql',
             'host' => $this->host,
             'database' => $this->db_name,
             'username' => $this->username,
             'password' => $this->password,
             'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+			'options' => [
+				PDO::ATTR_PERSISTENT => true,
+			],
             'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
         ];
     }
 }

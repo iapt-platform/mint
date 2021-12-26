@@ -2,7 +2,7 @@
 <body>
 <?php
 //显示log
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/function.php";
 require_once "../public/php/define.php";
 

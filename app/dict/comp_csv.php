@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 
 require_once "../dict/turbo_split.php";
 require_once "../redis/function.php";
@@ -23,15 +23,8 @@ $myfile = fopen(_DIR_TEMP_DICT_TEXT_ . "/comp.csv", "a");
 $filefail = fopen(_DIR_TEMP_DICT_TEXT_ . "/comp_fail.txt", "a");
 $iMax = 2;//输出前三个结果
 /*
-$dns = "" . _FILE_DB_WORD_INDEX_;
-$dbh_word = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
-$dbh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-
-$query = "SELECT * from wordindex where 1";
-$stmt = $dbh_word->query($query);
-
-while ($word = $stmt->fetch(PDO::FETCH_ASSOC))
- */
+不用全pali单词表 用redis里的wordindex 原因是需要排除语法书中的特别的词
+*/
 $redis = redis_connect();
 if ($redis == false) {
     echo "no redis connect\n";

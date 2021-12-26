@@ -1,7 +1,7 @@
 <?php
 //工程文件操作
 //建立，
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../public/load_lang.php";
@@ -9,7 +9,7 @@ require_once "../public/load_lang.php";
 $_book = $_POST["book"];
 $_para = json_decode($_POST["para"]);
 //判断单词数量 太大的不能加载
-PDO_Connect(""._FILE_DB_PALITEXT_);
+PDO_Connect(_FILE_DB_PALITEXT_);
 $params = array(1, 21, 63, 171);
 /*  创建一个填充了和params相同数量占位符的字符串 */
 $place_holders = implode(',', array_fill(0, count($_para), '?'));

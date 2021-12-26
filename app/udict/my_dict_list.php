@@ -68,7 +68,7 @@ require_once '../studio/index_tool_bar.php';
 <?php
 //
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/load_lang.php';
 require_once '../ucenter/function.php';
@@ -143,7 +143,7 @@ if ($iCurrPage == 0) {
         </tr>
     <?php
 foreach ($allWords as $word) {
-        echo '<tr style="padding:5px;">';
+        echo '<tr class="file_list_row" style="padding:5px;display: table-row;">';
         echo "<td style=''><input type=\"checkbox\" /></td>";
         echo "<td style='max-width:12vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;'>{$word["pali"]}</td>";
         echo "<td style=''>".$word["type"]."</td>";
@@ -156,7 +156,7 @@ foreach ($allWords as $word) {
             echo "<td style=''>{$_local->gui->reference}</td>";
         }
         echo "<td style=''>{$word["ref_counter"]}</td>";
-        echo "<td style=''>...</td>";
+        echo "<td style=''><button>删除</button></td>";
         echo "</tr>";
     }
 }

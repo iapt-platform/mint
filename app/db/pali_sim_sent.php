@@ -1,11 +1,11 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../db/table.php";
 
 class PaliSimSentence extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_PALI_SENTENCE_SIM_, "sent_sim", "", "",$redis);
+		parent::__construct(_FILE_DB_PALI_SENTENCE_SIM_, _TABLE_SENT_SIM_, "", "",$redis);
     }
 
 	public function getSimById($id)
@@ -17,7 +17,7 @@ class PaliSimSentence extends Table
 					return  json_decode($result,true);
 				}
 			}
-			$query = "SELECT sent2 as id  FROM sent_sim WHERE  sent1 = ? ";
+			$query = "SELECT sent2 as id  FROM ".$this->table." WHERE  sent1 = ? ";
 			$stmt = $this->dbh->prepare($query);
 			if($stmt){
 				$stmt->execute(array($id));

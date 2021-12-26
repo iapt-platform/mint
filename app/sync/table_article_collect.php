@@ -1,7 +1,7 @@
 <?php
 //header('Content-type: application/json; charset=utf8');
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/function.php";
 require_once "../sync/function.php";
 require_once "../collect/function.php";

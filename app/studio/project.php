@@ -12,7 +12,7 @@
 <?php
 //工程文件操作
 //建立，
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../public/load_lang.php";
@@ -57,7 +57,7 @@ switch ($op) {
         $strQueryParaList = str_replace(",", "','", $paraList);
         $strQueryParaList = "('" . $strQueryParaList . "')";
         PDO_Connect(_FILE_DB_PALITEXT_);
-        $query = "SELECT sum(lenght) as sum_str FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) ";
+        $query = "SELECT sum(lenght) as sum_str FROM "._TABLE_PALI_TEXT_." WHERE book = " . $PDO->quote($res_book) . " AND (paragraph in {$strQueryParaList} ) ";
         $Fetch = PDO_FetchAll($query);
         if (count($Fetch) > 0) {
             if ($Fetch[0]["sum_str"] > 15000) {
@@ -110,16 +110,8 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                PDO_Connect(_FILE_DB_RESRES_INDEX_);
-                $query = "select guid,owner from 'album' where id='{$res_album_id}'";
-                $Fetch = PDO_FetchAll($query);
-                if (count($Fetch) > 0) {
-                    $res_album_guid = $Fetch[0]["guid"];
-                    $res_album_owner = $Fetch[0]["owner"];
-                } else {
-                    $res_album_guid = UUID::v4();
-                    $res_album_owner = 0;
-                }
+                $res_album_guid = UUID::v4();
+                $res_album_owner = 0;
 
                 switch ($get_res_type) {
                     case "6": //逐词译模板
@@ -131,7 +123,7 @@ switch ($op) {
                             //获取段落层级和标题
                             $para_title = array();
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
+                            $query = "SELECT * FROM "._TABLE_PALI_TEXT_." WHERE  book  = " . $PDO->quote($res_book) . " AND ( paragraph  in {$strQueryParaList} ) AND level>0 AND level<9";
                             $sth = $PDO->prepare($query);
                             $sth->execute();
                             while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
@@ -141,9 +133,9 @@ switch ($op) {
                             }
 
                             $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $res_book . "_tpl.db3";
-                            PDO_Connect("sqlite:{$db_file}");
+                            PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
                             foreach ($aParaList as $iPar) {
-                                $query = "SELECT * FROM 'main' WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) ";
+                                $query = "SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE ( book = ".$PDO->quote($res_book)." AND  paragraph  = " . $PDO->quote($iPar) . " ) ";
 
                                 $sth = $PDO->prepare($query);
                                 $sth->execute();
@@ -452,22 +444,14 @@ switch ($op) {
                 $language = $res[$iRes]->language;
                 $author = $res[$iRes]->author;
 
-                PDO_Connect(_FILE_DB_RESRES_INDEX_);
-                $query = "select guid,owner from 'album' where id='{$res_album_id}'";
-                $Fetch = PDO_FetchAll($query);
-                if (count($Fetch) > 0) {
-                    $res_album_guid = $Fetch[0]["guid"];
-                    $res_album_owner = $Fetch[0]["owner"];
-                } else {
-                    $res_album_guid = UUID::v4();
-                    $res_album_owner = 0;
-                }
+                $res_album_guid = UUID::v4();
+                $res_album_owner = 0;
 
                 switch ($get_res_type) {
                     case "1": //pali text
                         {
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) ";
+                            $query = "SELECT * FROM "._TABLE_PALI_TEXT_." WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) ";
 
                             $sth = $PDO->prepare($query);
                             $sth->execute();
@@ -665,7 +649,7 @@ switch ($op) {
                             //获取段落层级和标题
                             $para_title = array();
                             PDO_Connect(_FILE_DB_PALITEXT_);
-                            $query = "SELECT * FROM pali_text WHERE \"book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
+                            $query = "SELECT * FROM "._TABLE_PALI_TEXT_." WHERE  book\" = " . $PDO->quote($res_book) . " AND (\"paragraph\" in {$strQueryParaList} ) AND level>0 AND level<9";
                             $sth = $PDO->prepare($query);
                             $sth->execute();
                             while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
@@ -675,9 +659,9 @@ switch ($op) {
                             }
 
                             $db_file = _DIR_PALICANON_TEMPLET_ . "/p" . $res_book . "_tpl.db3";
-                            PDO_Connect("sqlite:{$db_file}");
+                            PDO_Connect(_FILE_DB_PALICANON_TEMPLET_);
                             foreach ($aParaList as $iPar) {
-                                $query = "SELECT * FROM 'main' WHERE (\"paragraph\" = " . $PDO->quote($iPar) . " ) ";
+                                $query = "SELECT * FROM "._TABLE_PALICANON_TEMPLET_." WHERE ( book = ".$PDO->quote($res_book)." AND   paragraph  = " . $PDO->quote($iPar) . " ) ";
 
                                 $sth = $PDO->prepare($query);
                                 $sth->execute();

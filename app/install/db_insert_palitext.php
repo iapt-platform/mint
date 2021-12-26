@@ -10,7 +10,7 @@ require_once "install_head.php";
 <p><a href="index.php">Home</a></p>
 <?php
 require_once "./_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 if (isset($_GET["from"]) == false) {
     ?>
 <form action="db_insert_palitext.php" method="get">
@@ -22,8 +22,8 @@ To: <input type="text" name="to" value="216"><br>
 return;
 }
 
-$from = $_GET["from"];
-$to = $_GET["to"];
+$from = (int)$_GET["from"];
+$to = (int)$_GET["to"];
 $filelist = array();
 $fileNums = 0;
 $log = "";
@@ -59,8 +59,7 @@ echo "doing:" . $xmlfile . "<br>";
 $log = $log . "$from,$FileName,open\r\n";
 
 $arrInserString = array();
-$db_file = _FILE_DB_PALITEXT_;
-PDO_Connect("$db_file");
+PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
 // 打开vri html文件并读取数据
 $pali_text_array = array();
@@ -98,10 +97,13 @@ if (($inputRow - 1) != count($pali_text_array)) {
     $log = $log . "$from, $FileName,error,文件行数不匹配 inputRow=$inputRow pali_text_array=" . count($pali_text_array) . " \r\n";
 }
 
+$query = "DELETE FROM "._TABLE_PALI_TEXT_." WHERE book=?";
+PDO_Execute($query,array($from+1));
+
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
 
-$query = "INSERT INTO pali_text ('id', 'book','paragraph','level','class','toc','text','html','lenght') VALUES (NULL, ? , ? , ? , ? , ? , ? , ?,? )";
+$query = "INSERT INTO "._TABLE_PALI_TEXT_." ( book , paragraph , level , class , toc , text , html , lenght ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $PDO->prepare($query);
 foreach ($arrInserString as $oneParam) {
     if ($oneParam[3] < 100) {

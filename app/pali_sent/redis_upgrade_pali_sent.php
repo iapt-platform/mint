@@ -6,32 +6,36 @@ pali
 id 
 sim_count
  */
-require_once "../path.php";
-require_once "../redis/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../redis/function.php";
 
 if (isset($argv[1])) {
     if ($argv[1] == "del") {
-        $redis = new redis();
-        $r_conn = $redis->connect('127.0.0.1', 6379);
-		$keys = $redis->keys('pali_sent_*');
-		$count=0;
-		foreach ($keys as $key => $value) {
-			# code...
-			$deleted = $redis->del($value);
-			$count += $deleted;
+        $redis = redis_connect();
+        if($redis){
+			$keys = $redis->keys('pali_sent_*');
+			$count=0;
+			foreach ($keys as $key => $value) {
+				# code...
+				$deleted = $redis->del($value);
+				$count += $deleted;
+			}
+			
+			echo "delete ok ".$count;			
+		}else{
+			echo "redis connect error ".PHP_EOL;			
+
 		}
-		
-		echo "delete ok ".$count;
     }
 } else {
 
-    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, "", "", array(PDO::ATTR_PERSISTENT => true));
+	$db_pali_sent_sim = new PDO(_FILE_DB_PALI_SENTENCE_SIM_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 	$db_pali_sent_sim->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-    $query = "SELECT id, book,paragraph, begin,end ,html FROM pali_sent WHERE 1 ";
+    $query = "SELECT id, book,paragraph, word_begin as begin ,word_end as end ,html FROM "._TABLE_PALI_SENT_." WHERE true ";
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $redis = redis_connect();
@@ -54,7 +58,7 @@ if (isset($argv[1])) {
 			}
 			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "id", $sent["id"]);	
 
-			$query = "SELECT count FROM 'sent_sim_index' WHERE sent_id = ? ";
+			$query = "SELECT count FROM "._TABLE_SENT_SIM_INDEX_." WHERE sent_id = ? ";
 			$sth = $db_pali_sent_sim->prepare($query);
 			$sth->execute(array($sent["id"]));
 			$row = $sth->fetch(PDO::FETCH_ASSOC);

@@ -1,6 +1,6 @@
 ﻿<?php
 //获取书的目录-索引 包含缩减的正文
-require_once "../path.php";
+require_once "../config.php";
 include "../public/_pdo.php";
 
 $currBook = $_GET["book"];
@@ -12,9 +12,9 @@ echo "<index>";
 
 //open database
 PDO_Connect(_FILE_DB_PALITEXT_);
-$query = "select * FROM pali_text where \"book\"=" . $PDO->quote($currBook);
+$query = "SELECT * FROM "._TABLE_PALI_TEXT_." where book = ? ";
 
-$Fetch = PDO_FetchAll($query);
+$Fetch = PDO_FetchAll($query,array($currBook));
 $iFetch = count($Fetch);
 
 if ($iFetch > 0) {

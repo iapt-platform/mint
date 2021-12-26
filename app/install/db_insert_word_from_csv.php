@@ -22,8 +22,8 @@ To: <input type="text" name="to" value="216"><br>
 return;
 }
 
-$from = $_GET["from"];
-$to = $_GET["to"];
+$from = (int)$_GET["from"];
+$to = (int)$_GET["to"];
 
 $dirLog = _DIR_LOG_ . "/";
 $dirXmlBase = _DIR_PALI_CSV_ . "/";
@@ -34,8 +34,8 @@ $log = "";
 echo "<h2>doing : No.{$from} book </h2>";
 
 global $dbh_word_index;
-$dns = "" . _FILE_DB_PALI_INDEX_;
-$dbh_word_index = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_INDEX_;
+$dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 if (($handle = fopen("filelist.csv", 'r')) !== false) {
@@ -47,10 +47,16 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
+#删除
+$query = "DELETE FROM "._TABLE_WORD_." WHERE book = ?";
+$stmt = $dbh_word_index->prepare($query);
+$stmt->execute(array($from+1));
+
+
 if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !== false) {
     // 开始一个事务，关闭自动提交
     $dbh_word_index->beginTransaction();
-    $query = "INSERT INTO word ('id','book','paragraph','wordindex','bold') VALUES (?,?,?,?,?)";
+    $query = "INSERT INTO "._TABLE_WORD_." ( sn , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
     $stmt = $dbh_word_index->prepare($query);
 
     $count = 0;

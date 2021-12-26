@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 function ucenter_get($userid, $fields = "username")
 {
     //打开数据库

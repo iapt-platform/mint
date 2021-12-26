@@ -18,7 +18,7 @@ del (doc_id, userid)
 set (doc_id ,userid ,value)
  *
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../public/load_lang.php";

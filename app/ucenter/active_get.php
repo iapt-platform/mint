@@ -1,6 +1,6 @@
 <?php
 //统计用户经验值
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/function.php";
 
 $output = array();

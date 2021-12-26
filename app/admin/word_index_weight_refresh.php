@@ -2,8 +2,14 @@
 /*
 计算单词权重
  */
-require_once '../path.php';
-require_once './word_index_weight_table.php';
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/word_index_weight_table.php';
+
+define("_PG_DB_WORD_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_WORD_INDEX_", "word_indexs");
+
+define("_PG_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_PG_TABLE_WORD_", "words");
 
 if (isset($_GET["from"])) {
     $from = (int)$_GET["from"];
@@ -20,30 +26,30 @@ if (isset($_GET["from"])) {
     }
 }
 
-$dh_word = new PDO( _FILE_DB_WORD_INDEX_, "", "");
+$dh_word = new PDO( _PG_DB_WORD_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
 $dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$dh_pali = new PDO( _FILE_DB_PALI_INDEX_, "", "");
+$dh_pali = new PDO( _PG_DB_PALI_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
 $dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 echo "from=$from to = $to \n";
 for ($i = $from; $i <= $to; $i++) {
     $time_start = microtime(true);
     echo "正在处理 book= $i ";
-    $query = "SELECT max(paragraph) from word where book=?";
+    $query = "SELECT max(paragraph) from "._PG_TABLE_WORD_." where book=?";
 	$stmt = $dh_pali->prepare($query);
     $stmt->execute(array($i));
     $row = $stmt->fetch(PDO::FETCH_NUM);
     if ($row) {
         $max_para = $row[0];
-        echo "段落数量：$max_para \n";
+        echo "段落数量：$max_para ";
         for ($j = 0; $j <= $max_para; $j++) {
             # code...
-            $query = "SELECT id,book,wordindex,bold from word where book={$i} and paragraph={$j} order by id ASC";
+            $query = "SELECT id,book,wordindex,bold from "._PG_TABLE_WORD_." where book={$i} and paragraph={$j} order by id ASC";
             $stmt = $dh_pali->query($query);
             $fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $query = "SELECT wordindex,count(*) as co from word where book={$i} and paragraph={$j} group by wordindex";
+            $query = "SELECT wordindex,count(*) as co from "._PG_TABLE_WORD_." where book={$i} and paragraph={$j} group by wordindex";
             $stmt = $dh_pali->query($query);
             $fetch_voc = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $vocabulary = array();
@@ -82,7 +88,7 @@ for ($i = $from; $i <= $to; $i++) {
                     $bold_count = $end - $begin + 1;
                     if ($bold_count == 1) {
 
-                        $query = "SELECT * from wordindex where id=" . $fetch[$iWord]["wordindex"];
+                        $query = "SELECT * from "._PG_TABLE_WORD_INDEX_." where id=" . $fetch[$iWord]["wordindex"];
                         $stmt_word = $dh_word->query($query);
                         $wordinfo = $stmt_word->fetch(PDO::FETCH_ASSOC);
                         $bookId = (int) $fetch[$iWord]["book"];
@@ -100,7 +106,7 @@ for ($i = $from; $i <= $to; $i++) {
                         for ($iBold = $begin; $iBold <= $end; $iBold++) {
                             # code...
                             $boldid = $fetch[$iBold]["wordindex"];
-                            $query = "SELECT len from wordindex where id=" . $boldid;
+                            $query = "SELECT len from "._PG_TABLE_WORD_INDEX_." where id=" . $boldid;
                             $stmt_bold = $dh_word->query($query);
                             $wordbold = $stmt_bold->fetch(PDO::FETCH_ASSOC);
                             $len_sum += $wordbold["len"];
@@ -116,7 +122,7 @@ for ($i = $from; $i <= $to; $i++) {
             }
             # 将整段权重写入据库
             $dh_pali->beginTransaction();
-            $query = "UPDATE word set weight = ? where id=? ";
+            $query = "UPDATE "._PG_TABLE_WORD_." set weight = ? where id=? ";
             $stmt_weight = $dh_pali->prepare($query);
             foreach ($fetch as $key => $value) {
                 $stmt_weight->execute(array($value["weight"], $value["id"]));
@@ -132,5 +138,5 @@ for ($i = $from; $i <= $to; $i++) {
     } else {
         echo "无法获取段落最大值";
     }
-    echo "处理时间 ：" . (microtime(true) - $time_start);
+    echo "处理时间 ：" . (microtime(true) - $time_start). "\n";
 }

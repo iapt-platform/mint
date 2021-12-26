@@ -41,6 +41,7 @@ $dbfile[] = array(_FILE_DB_RESRES_INDEX_, "res.sql");
 $dir = "./palicanon_db/";
 
 if (isset($_GET["index"])) {
+	/*
     echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;background-color:yellow;">';
     $index = $_GET["index"];
     $dns = "" . $dbfile[$index][0];
@@ -55,6 +56,7 @@ if (isset($_GET["index"])) {
     }
     echo $dns . "建立数据库成功";
     echo "</div>";
+	*/
 }
 ?>
 
@@ -89,30 +91,14 @@ if (file_exists(_DIR_PALICANON_TEMPLET_)) {
 
 <div class="card">
 	<h4>单词索引表</h4>
-	<?php
-for ($i = 2; $i <= 4; $i++) {
-    $db = $dbfile[$i];
-    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-    echo '<div style="flex:5;">' . $db[0] . '</div>';
-    echo '<div style="flex:3;">';
-    if (!file_exists($db[0])) {
-        echo "<span style='color:red;'>数据库不存在</span>";
-        echo "</div>";
-        echo '<div style="flex:2;"><a href="step4.php?index=' . $i . '">建立</a></div>';
-    } else {
-        echo "<span style='color:green;'>已存在</span>";
-        echo "</div>";
-        echo '<div style="flex:2;"><a href="step5.php?index=' . $i . '">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-    }
-    echo "</div>";
-}
-?>
-	?>
+
+	
 	<div class="contence">
+	<!--
 	<a href="db_insert_index.php" target="_blank">生成-一本书一次写入</a><br>
 	<a href="db_insert_index_once.php" target="_blank">一次生成所有的书</a><br>
-
 	<a href="db_insert_index_csv.php" target="_blank">生成中间csv文件（项目文档已经有了。无需生成）</a><br>
+-->
 	<a href="db_insert_bookword_from_csv.php" target="_blank">从csv文件导入书单词索引表（bookword）</a><br>
 	<a href="db_insert_word_from_csv.php" target="_blank">从csv文件导入单词表(paliindex)</a><br>
 	<a href="db_insert_wordindex_from_csv.php" target="_blank">从csv文件导入单词索引表(wordindex)</a><br>
@@ -123,57 +109,23 @@ for ($i = 2; $i <= 4; $i++) {
 <div class="card">
 	<h4>黑体字数据库</h4>
 	<?php
-$db = $dbfile[0];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-echo '<div style="flex:5;">' . $db[0] . '</div>';
-echo '<div style="flex:3;">';
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
+    echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;">';
+
     echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=0">建立</a></div>';
-} else {
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=0">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
-?>
+    ?>
 	<div class="contence">
 	<a href="db_insert_bold.php" target="_blank">生成</a>
 	</div>
 </div>
 
 <div class="card">
-<h4>Pali句子库</h4>
-<?php
-$db = $dbfile[5];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-echo '<div style="flex:5;">' . $db[0] . '</div>';
-echo '<div style="flex:3;">';
-/*
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=5">建立</a></div>';
-} else 
-*/
-{
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=5">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
+    <h4>Pali句子库</h4>
+    <div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">
 
-//if (file_exists(_FILE_DB_PALI_SENTENCE_)) 
-{
-    echo "Pali句子数据库已经存在<br>";
-    echo '<a href="db_insert_sentence.php">重新生成</a>';
-} 
-//else {
-//    echo "Pali句子数据库不存在<br>";
-//    echo '<a href="db_insert_sentence.php">生成</a>';
-//}
-?>
+    </div>
+    <div class="contence">
+    <a href="db_insert_sentence.php">重新生成</a>
+    </div>
 </div>
 
 <div class="card">
@@ -181,27 +133,13 @@ echo "</div>";
 <div>
 <?php
 $db = $dbfile[6];
-echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-echo '<div style="flex:5;">' . $db[0] . '</div>';
-echo '<div style="flex:3;">';
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=6">建立</a></div>';
-} else {
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=6">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
-echo "</div>";
+echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;">';
 
-if (file_exists(_FILE_DB_PALITEXT_)) {
-    echo "Pali原文数据库已经存在<br>";
-    echo '<a href="db_insert_palitext.php" target="_blank">重新生成</a><br>';
-    echo '<a href="db_update_palitext.php" target="_blank">更新</a><br>';
-} else {
-    echo '<a href="db_insert_palitext.php">生成</a><br>';
-}
+
+
+echo '<a href="db_insert_palitext.php">生成</a><br>';
+echo '<a href="db_update_palitext.php" target="_blank">更新</a><br>';
+
 echo "<a href = '" . _DIR_LOG_ . "/db_update_palitext.log" . "' target='_blank'>view Log</a>"
 ?>
 </div>
@@ -214,31 +152,11 @@ echo "<a href = '" . _DIR_LOG_ . "/db_update_palitext.log" . "' target='_blank'>
 <?php
 $db = $dbfile[7];
 echo '<div style="padding:10px;margin:5px;border-bottom: 1px solid gray;display:flex;">';
-echo '<div style="flex:5;">' . $db[0] . '</div>';
+
 echo '<div style="flex:3;">';
-if (!file_exists($db[0])) {
-    echo "<span style='color:red;'>数据库不存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=7">建立</a></div>';
-} else {
-    echo "<span style='color:green;'>已存在</span>";
-    echo "</div>";
-    echo '<div style="flex:2;"><a href="step5.php?index=7">清空</a><span style="color:red;">注意！此操作将删除原数据库中所有数据！</span></div>';
-}
+echo '<a href="db_update_toc.php" target="_blank">更新</a><br>';
 echo "</div>";
 
-//if (file_exists(_FILE_DB_PALITEXT_)) 
-{
-    echo "标题索引数据库已经存在<br>";
-    echo '<a href="db_update_toc.php" target="_blank">更新</a><br>';
-} 
-/*
-else 
-{
-    echo "标题索引数据库不存在<br>";
-    echo '<div style="flex:2;"><a href="step5.php?index=' . $i . '">建立</a></div>';
-}
-*/
 echo "<a href = '" . _DIR_LOG_ . "/db_update_title.log" . "' target='_blank'>view Log</a>"
 ?>
 </div>

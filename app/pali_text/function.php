@@ -1,11 +1,11 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../db/table.php";
 
 class PaliText extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_PALITEXT_, "pali_text", "", "",$redis);
+		parent::__construct(_FILE_DB_PALITEXT_, _TABLE_PALI_TEXT_, "", "",$redis);
     }
 	
 	public function getPath($book,$para){
@@ -21,7 +21,7 @@ class PaliText extends Table
 		$sFirstParentTitle = "";
 		//循环查找父标题 得到整条路径
 		while ($parent > -1) {
-			$query = "select * from pali_text where \"book\" = ? and \"paragraph\" = ? limit 0,1";
+			$query = "select * from pali_text where \"book\" = ? and \"paragraph\" = ? limit 1";
 			$stmt = $this->dbh->prepare($query);
 			$stmt->execute(array($book, $parent));
 			$FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -68,7 +68,7 @@ class PaliText extends Table
 class PaliBook extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_PALITEXT_, "books", "", "",$redis);
+		parent::__construct(_FILE_DB_PALITEXT_, _TABLE_PALI_BOOK_NAME_, "", "",$redis);
     }
 	
 	public function getBookTitle($book,$para){
@@ -80,7 +80,7 @@ class PaliBook extends Table
 			}
 		}
 		*/
-		$query = "select title from books where \"book\" = ? and \"paragraph\" = ? limit 0,1";
+		$query = "SELECT title from "._TABLE_PALI_BOOK_NAME_." where book = ? and paragraph = ? limit 1";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($book, $para));
 		$book = $stmt->fetch(PDO::FETCH_ASSOC);

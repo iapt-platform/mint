@@ -88,3 +88,83 @@ wikipāḷi 的前身是 PCD-Suite，一个使用 PHP + JQuery + SQLite 架构�
 # 部署方案
 
 在未完成部署自动化之前，一切部署工作由 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 负责。
+
+# 目录结构
+
+## 配置文件
+└── app
+    ├── config.js
+    ├── config.php
+    └── config.php
+
+## sqlite 文件
+```
+└── tmp
+    └── appdata
+    │   ├── dict
+    │   │   ├── 3rd
+    │   │   │   ├── bh.js
+    │   │   │   ├── bhmf.db
+    │   │   │   ├── concise.db
+    │   │   │   ├── pali_sinhala.db
+    │   │   │   ├── pm.db
+    │   │   │   ├── shuihan.db
+    │   │   │   ├── uhan.db
+    │   │   │   ├── uhan_en.db
+    │   │   │   └── uhau.db
+    │   │   └── system
+    │   │       ├── comp1.db
+    │   │       ├── comp.db
+    │   │       ├── part.db3
+    │   │       ├── ref1.db
+    │   │       ├── ref.db
+    │   │       ├── sys_irregular.db
+    │   │       ├── sys_regular.db
+    │   │       └── union.db
+    │   ├── dir.txt
+    │   ├── nissaya
+    │   │   └── attha_nsy.db
+    │   └── palicanon
+    │       ├── bold.db3
+    │       ├── bookword.db3
+    │       ├── index.db3
+    │       ├── pagemap.db3
+    │       ├── paliindex.db3
+    │       ├── pali_sent1.db3
+    │       ├── pali_sent_sim.db3
+    │       ├── pali_sim.db3
+    │       ├── pali_text.db3
+    │       ├── pali_toc.db3
+    │       ├── res.db3
+    │       ├── templet
+    │       │   ├── p1_tpl.db3
+    │       │   ├── p*_tpl.db3
+    │       │   └── p217_tpl.db3
+    │       ├── templet.db3
+    │       └── wordindex.db3
+    └── user
+        ├── article.db3
+        ├── channal.db3
+        ├── comments.db3
+        ├── course.db3
+        ├── custom_book.db3
+        ├── dhammaterm.db
+        ├── dighest.db3
+        ├── fileindex.db
+        ├── group.db3
+        ├── hostsetting.db3
+        ├── like.db3
+        ├── media
+        ├── message.db
+        ├── sentence.db3
+        ├── share.db3
+        ├── statistics.db3
+        ├── udict.db3
+        ├── usent_historay.db3
+        ├── user_active.db3
+        ├── user_active_index.db3
+        ├── user_active_log.db3
+        ├── userinfo.db3
+        ├── user_wbw.db3
+        └── wbw.db3
+```

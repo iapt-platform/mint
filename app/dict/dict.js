@@ -340,3 +340,11 @@ function setNaviVisibility(strObjId = "") {
 		objNave.className = "dict_list_on";
 	}
 }
+
+function refDictShowTranslateDiv(obj){
+	$(this).parent().children().find(".tool_innter").slideToggle();
+}
+
+function SaveToMyDict(){
+
+}

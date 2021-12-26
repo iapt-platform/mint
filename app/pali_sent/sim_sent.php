@@ -1,6 +1,6 @@
 <?php
 //计算句子相似度
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 global $PDO;

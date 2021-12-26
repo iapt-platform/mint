@@ -102,7 +102,8 @@ require_once '../studio/index_head.php';
 				<div class="enter"></div>
 			</div>
 		</div>
-			
+		<div id='file_list'>
+		</div>	
 			<div id="wizard_palicannon_par_select">
 				<a name="toc_root"></a>
 				<div id="wizard_palicannon_par_select_toc" class="fixedsticky" style="flex:2;">

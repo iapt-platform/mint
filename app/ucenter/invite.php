@@ -23,7 +23,7 @@ if (PHP_SAPI == "cli") {
 		$invitecode = "invitecode://".$uuid;
 		$redis->set($invitecode,$email);
 		$redis->expire($invitecode,7*20*3600);
-		$SignUpLink=WWW_DOMAIN_NAME . "/app/ucenter/sign_up.php?invite=".$uuid;
+		$SignUpLink=WWW_DOMAIN_PROTOCOL."://".WWW_DOMAIN_NAME . "/app/ucenter/sign_up.php?invite=".$uuid;
 		$SignUpString=WWW_DOMAIN_NAME . "/app/ucenter/sign_up.php";
 
 			// 打开文件并读取数据
@@ -62,7 +62,7 @@ if (PHP_SAPI == "cli") {
 			$mail->SMTPAuth   = Email["SMTPAuth"];                                   //Enable SMTP authentication
 			$mail->Username   = Email["Username"];                     //SMTP username
 			$mail->Password   = Email["Password"];                               //SMTP password
-			$mail->SMTPSecure = Email["SMTPSecure"];            //Enable implicit TLS encryption
+			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
 			$mail->Port       = Email["Port"];                                    //TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 			$mail->CharSet =  'UTF-8';
 			$mail->Encoding = 'base64';

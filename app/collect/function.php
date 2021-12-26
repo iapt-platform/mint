@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 require_once "../share/function.php";
 require_once "../db/table.php";
 require_once "../article/function.php";
