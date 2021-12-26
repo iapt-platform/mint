@@ -237,7 +237,7 @@ $time_start = microtime_float();
 
 PDO_Connect(_FILE_DB_PALI_INDEX_);
 
-$query = "SELECT count(*) from (SELECT book FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) as qr where true ";
+$query = "SELECT count(*) from (SELECT book FROM "._TABLE_WORD_." WHERE \"wordindex\" in $strQueryWordId  $strQueryBookId group by book,paragraph) as qr  ";
 $result["record_count"] = PDO_FetchOne($query);
 $result["time"][] = array("event" => "查询记录数", "time" => microtime(true) - $_start);
 
