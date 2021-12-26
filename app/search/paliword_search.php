@@ -226,11 +226,12 @@ switch ($op) {
                         for ($iPali = 0; $iPali < $countPaliText; $iPali++) {
 							foreach ($paliword as $qWord) {
 								# code...
-								$light_text = $htmltext;
+								
 								if (substr($qWord, -1) == "n") {
 									$qWord = substr($qWord, 0, -1);
 								}
 								$htmltext = $FetchPaliText[0]["html"];
+								$light_text = $htmltext;
 								$light_text = str_replace($qWord, "<hl>{$qWord}</hl>", $light_text);								
 							}
 
