@@ -44,16 +44,18 @@ if (isset($_GET["page"])) {
 if (count($arrWordList) > 1) {
 	# 查询多个词
 	$out_data = array();
-    /*
+    
     PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
-    $query = "SELECT book,paragraph, text FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
+    $query = "SELECT book,paragraph, text as content FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
     $Fetch1 = PDO_FetchAll($query, array("%{$words}%", $_pagesize, $_page * $_pagesize));
-    */
+    
+
+	/*
+	postgresql full text search
     $dns = _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";";
     PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
-
 
     $query = "SELECT
     ts_rank('{0.1, 0.2, 0.4, 1}',
@@ -76,7 +78,8 @@ if (count($arrWordList) > 1) {
         @@ websearch_to_tsquery('pali_unaccent', ?)
     ORDER BY rank DESC
     LIMIT 40;";
-    $Fetch1 = PDO_FetchAll($query, array($word, $word, $word, $word, $word));    
+    $Fetch1 = PDO_FetchAll($query, array($word, $word, $word, $word, $word));
+	*/    
     foreach ($Fetch1 as $key => $value) {
         # code...
         $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
@@ -84,9 +87,16 @@ if (count($arrWordList) > 1) {
         $newRecode["book"] = $value["book"];
         $newRecode["para"] = $value["paragraph"];
         $newRecode["palitext"] = $value["content"];
-        $newRecode["highlight"] = $value["highlight"];
+		if(isset($value["highlight"])){
+			$newRecode["highlight"] = $value["highlight"];
+		}
         $newRecode["keyword"] = $arrWordList;
-        $newRecode["wt"] = $value["rank"];
+		if(isset($value["rank"])){
+			$newRecode["wt"] = $value["rank"];
+		}else{
+			$newRecode["wt"] = 1;
+		}
+        
         $out_data[] = $newRecode;
     }
 	$result["time"][] = array("event" => "fts精确匹配结束", "time" => microtime(true)-$_start);
