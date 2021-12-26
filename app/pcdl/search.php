@@ -35,9 +35,9 @@ switch ($op) {
         }
 
         //查标题
-        $query = "select count(*) from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%'";
+        $query = "select count(*) from \""._TABLE_RES_INDEX_."\"  where  title_en like '%$word%' or title like '%$word%'";
         $count = PDO_FetchOne($query);
-        $query = "select * from "._TABLE_RES_INDEX_."  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
+        $query = "select * from \""._TABLE_RES_INDEX_."\"  where  title_en like '%$word%' or title like '%$word%' limit 0,20";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -94,10 +94,10 @@ switch ($op) {
         }
         PDO_Connect(_FILE_DB_RESRES_INDEX_);
         //查标签
-        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where tag like '%$word%'";
+        $query = "SELECT count(*) from \""._TABLE_RES_INDEX_."\" where tag like '%$word%'";
         $count = PDO_FetchOne($query);
 
-        $query = "SELECT * from "._TABLE_RES_INDEX_." where tag like '%$word%' limit 10";
+        $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where tag like '%$word%' limit 10";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
@@ -139,10 +139,10 @@ switch ($op) {
         }
 
         //查资源
-        $query = "SELECT count(*) from "._TABLE_RES_INDEX_." where author = '$author_id'";
+        $query = "SELECT count(*) from \""._TABLE_RES_INDEX_."\" where author = '$author_id'";
         $count = PDO_FetchOne($query);
         if ($count > 0) {
-            $query = "SELECT * from "._TABLE_RES_INDEX_." where author = '$author_id' limit 0,10";
+            $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where author = '$author_id' limit 0,10";
 
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);

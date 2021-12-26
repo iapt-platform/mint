@@ -66,7 +66,7 @@ if ($paraInfo) {
 
             #查标题
             if (isset($_GET["lang"])) {
-                $query = "SELECT title from "._TABLE_RES_INDEX_." where book=? and paragraph=? and language=?";
+                $query = "SELECT title from \""._TABLE_RES_INDEX_."\" where book=? and paragraph=? and language=?";
                 $stmt = $dbh_res->prepare($query);
                 $sth_title = $dbh_res->prepare($query);
                 $sth_title->execute(array($value["book"], $value["para"], $_GET["lang"]));

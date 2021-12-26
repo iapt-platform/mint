@@ -72,7 +72,7 @@ if ($paragraph == -1) {
 } else {
     //查书中的一个段
     PDO_Connect(_FILE_DB_RESRES_INDEX_);
-    $query = "SELECT * from "._TABLE_RES_INDEX_." where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
+    $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     if ($iFetch > 0) {
