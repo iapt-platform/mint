@@ -40,16 +40,24 @@ try{
 
                 // 开始一个事务，关闭自动提交
                 $dbh_word_index->beginTransaction();
-                $query = "INSERT INTO "._TABLE_." (id , word , word_en , count , normal , bold , is_base , len ) VALUES (?,?,?,?,?,?,?,?)";
-        
-                $stmt = $dbh_word_index->prepare($query);
+                $query = "INSERT INTO "._TABLE_." (id , word , word_en , count , normal , bold , is_base , len ) 
+				                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+				try{
+					$stmt = $dbh_word_index->prepare($query);
+				}catch(PDOException $e){
+					fwrite(STDERR,"error:".$e->getMessage()." At Line: ".$e->getLine().PHP_EOL);
+					exit;
+				}
+                
         
                 $count = 0;
                 while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
 					try{
 						$stmt->execute($data);
 					}catch(PDOException $e){
-						fwrite(STDERR,$e->getMessage());
+						fwrite(STDERR,"error:".$e->getMessage()." At Line: ".$e->getLine().PHP_EOL);
+						fwrite(STDERR,"error-data:".implode(",",$data).PHP_EOL);
+						exit;
 					}
                     
                     $count++;
