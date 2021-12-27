@@ -57,6 +57,7 @@ try{
 					}catch(PDOException $e){
 						fwrite(STDERR,"error:".$e->getMessage()." At Line: ".$e->getLine().PHP_EOL);
 						fwrite(STDERR,"error-data:".implode(",",$data).PHP_EOL);
+						fwrite(STDERR,"error-data-count:".count($data).PHP_EOL);
 						exit;
 					}
                     
