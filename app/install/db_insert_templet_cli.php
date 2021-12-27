@@ -30,7 +30,7 @@ if ($_to > 217) {
 
 #pg
 define("_DB_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_","wbw_template");
+define("_TABLE_","wbw_templates");
 
 
 $filelist = array();
