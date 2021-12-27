@@ -45,7 +45,8 @@ try{
 				try{
 					$stmt = $dbh_word_index->prepare($query);
 				}catch(PDOException $e){
-					fwrite(STDERR,"error:".$e->getMessage());
+					fwrite(STDERR,"error:".$e->getMessage()." At Line: ".$e->getLine().PHP_EOL);
+					exit;
 				}
                 
         
@@ -54,7 +55,9 @@ try{
 					try{
 						$stmt->execute($data);
 					}catch(PDOException $e){
-						fwrite(STDERR,"error:".$e->getMessage());
+						fwrite(STDERR,"error:".$e->getMessage()." At Line: ".$e->getLine().PHP_EOL);
+						fwrite(STDERR,"error-data:".implode(",",$data).PHP_EOL);
+						exit;
 					}
                     
                     $count++;
