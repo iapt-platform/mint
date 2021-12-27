@@ -27,19 +27,26 @@ if (isset($_GET["from"])) {
 }
 
 $dh_word = new PDO( _PG_DB_WORD_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
-$dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $dh_pali = new PDO( _PG_DB_PALI_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
-$dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 echo "from=$from to = $to \n";
 for ($i = $from; $i <= $to; $i++) {
     $time_start = microtime(true);
     echo "正在处理 book= $i ";
     $query = "SELECT max(paragraph) from "._PG_TABLE_WORD_." where book=?";
-	$stmt = $dh_pali->prepare($query);
-    $stmt->execute(array($i));
-    $row = $stmt->fetch(PDO::FETCH_NUM);
+	try {
+		//code...
+		$stmt = $dh_pali->prepare($query);
+		$stmt->execute(array($i));
+		$row = $stmt->fetch(PDO::FETCH_NUM);
+	}catch(PDOException $e){
+		fwrite(STDERR,"error:".$e->getMessage());
+		continue;
+	}
+
     if ($row) {
         $max_para = $row[0];
         echo "段落数量：$max_para ";
@@ -52,6 +59,7 @@ for ($i = $from; $i <= $to; $i++) {
             $query = "SELECT wordindex,count(*) as co from "._PG_TABLE_WORD_." where book={$i} and paragraph={$j} group by wordindex";
             $stmt = $dh_pali->query($query);
             $fetch_voc = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
             $vocabulary = array();
             foreach ($fetch_voc as $key => $value) {
                 $vocabulary[$value["wordindex"]] = $value["co"];

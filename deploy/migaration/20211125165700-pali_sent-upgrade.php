@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
+
 define("_PG_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_PG_TABLE_PALI_SENT_", "pali_sentences");
+define("_PG_TABLE_PALI_SENT_ORG_", "pali_sent_orgs");
 
-$src_db=_FILE_DB_PALI_SENTENCE_;#源数据库
-$src_table=_TABLE_PALI_SENT_ORG_;#源表名
+$src_db=_PG_DB_PALI_SENTENCE_;#源数据库
+$src_table=_PG_TABLE_PALI_SENT_ORG_;#源表名
 
 $dest_db=_PG_DB_PALI_SENTENCE_;#目标数据库
 $dest_table=_PG_TABLE_PALI_SENT_;#目标表名
@@ -13,25 +15,26 @@ $dest_table=_PG_TABLE_PALI_SENT_;#目标表名
 echo "migarate pali_sent_org".PHP_EOL;
 #打开源数据库
 $PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
-$PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 echo "open src".PHP_EOL;
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
-$PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 echo "open dest".PHP_EOL;
 
+
 #删除目标表中所有数据
-$query = "DELETE FROM ".$dest_table." WHERE true";
-$stmt = $PDO_DEST->prepare($query);
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = $PDO_DEST->errorInfo();
-    echo "error - $error[2] ";
+fwrite(STDOUT,"deleting date".PHP_EOL) ;
+try{
+	$query = "DELETE FROM ".$dest_table;
+	$stmt = $PDO_DEST->prepare($query);
+	$stmt->execute();
+}catch(PDOException $e){
+	fwrite(STDERR,"error:".$e->getMessage());
 	exit;
 }
-
-$stmt->execute();
-echo "delete dest".PHP_EOL;
+fwrite(STDOUT,"deleted date".PHP_EOL) ;
 
 // 开始一个事务，关闭自动提交
 $count = 0;
@@ -40,12 +43,22 @@ echo "begin Transaction".PHP_EOL;
 $PDO_DEST->beginTransaction();
 
 $query = "INSERT INTO ".$dest_table." (id, book , paragraph , word_begin , word_end , length , count , text , html,sim_sents ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? ,?)";
-$stmtDEST = $PDO_DEST->prepare($query);
+try{
+	$stmtDEST = $PDO_DEST->prepare($query);
+}catch(PDOException $e){
+	fwrite(STDERR,"error:".$e->getMessage());
+	exit;
+}
 
 #从源数据表中读取
 $query = "SELECT *  FROM ".$src_table." WHERE true order by id asc";
-$stmtSrc = $PDO_SRC->prepare($query);
-$stmtSrc->execute();
+try{
+	$stmtSrc = $PDO_SRC->prepare($query);
+	$stmtSrc->execute();
+}catch(PDOException $e){
+	fwrite(STDERR,"error:".$e->getMessage());
+	exit;
+}
 
 $data = array();
 $currMergeCell = 1;
@@ -75,15 +88,15 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 		$data["count"] += $srcData["count"];
 		$currMergeCell--;
 		if($currMergeCell==1){
-			$stmtDEST->execute($currData);
+			try{					
+				$stmtDEST->execute($currData);		
+			}catch(PDOException $e){
+				fwrite(STDERR,"error:".$e->getMessage().implode(',',$currData));
+				exit;
+			}
 		}
 	}
-    
-	if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-		$error = $PDO_DEST->errorInfo();
-		echo "error - $error[2] ";
-		exit;
-	}			
+    		
 	$count++;
 	if($count%10000==0){
 		echo "finished $count".PHP_EOL;

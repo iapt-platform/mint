@@ -12,29 +12,30 @@ echo "migarate pali_sent_index".PHP_EOL;
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
-$PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 echo "open dest".PHP_EOL;
 
 #删除目标表中所有数据
-$query = "DELETE FROM ".$dest_table." WHERE true";
-$stmt = $PDO_DEST->prepare($query);
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = $PDO_DEST->errorInfo();
-    echo "error - $error[2] ";
+fwrite(STDOUT,"deleting date".PHP_EOL) ;
+try{
+	$query = "DELETE FROM ".$dest_table;
+	$stmt = $PDO_DEST->prepare($query);
+	$stmt->execute();
+}catch(PDOException $e){
+	fwrite(STDERR,"error:".$e->getMessage());
 	exit;
 }
-$stmt->execute();
-echo "delete dest".PHP_EOL;
+fwrite(STDOUT,"deleted date".PHP_EOL) ;
 
 #插入数据
-$query = "INSERT INTO ".$dest_table." (book, para, strlen ) SELECT book,paragraph,sum(length) FROM "._PG_TABLE_PALI_SENT_." where true group by book,paragraph;";
-$stmt = $PDO_DEST->prepare($query);
-if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-    $error = $PDO_DEST->errorInfo();
-    echo "error - $error[2] ";
+$query = "INSERT INTO ".$dest_table." (book, para, strlen ) SELECT book,paragraph,sum(length) FROM "._PG_TABLE_PALI_SENT_." group by book,paragraph;";
+try{
+	$stmt = $PDO_DEST->prepare($query);
+	$stmt->execute();
+}catch(PDOException $e){
+	fwrite(STDERR,"error:".$e->getMessage());
 	exit;
 }
-$stmt->execute();
 echo "insert dest".PHP_EOL;
 
 echo "done".PHP_EOL;
