@@ -36,7 +36,7 @@ define("_TABLE_", "book_words");
 global $dbh_word_index;
 $dns = _DB_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
-$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
@@ -68,7 +68,13 @@ for ($from=$_from-1; $from < $_to; $from++) {
     #删除原来的数据
     $query = "DELETE FROM "._TABLE_." WHERE book = ?";
     $stmt = $dbh_word_index->prepare($query);
-    $stmt->execute(array($book));
+	try{
+		$stmt->execute(array($book));
+	}catch(PDOException $e){
+		fwrite(STDERR,"error:".$e->getMessage());
+		continue;
+	}
+    
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = $dbh_word_index->errorInfo();
         echo "error - $error[2]".PHP_EOL;
@@ -80,7 +86,12 @@ for ($from=$_from-1; $from < $_to; $from++) {
         $stmt = $dbh_word_index->prepare($query);
 
         foreach ($bookword as $key => $value) {
-            $stmt->execute(array($book, $key, $value));
+			try{
+			$stmt->execute(array($book, $key, $value));	
+			}catch(PDOException $e){
+				fwrite(STDERR,$e->getMessage());
+			}
+            
         }
         // 提交更改
         $dbh_word_index->commit();

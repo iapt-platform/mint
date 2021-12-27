@@ -39,7 +39,10 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-PDO_Connect(_DB_RES_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
+
+$dns = _DB_RES_INDEX_;
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 for ($from=$_from-1; $from < $_to; $from++) { 
     # code...
@@ -92,14 +95,24 @@ for ($from=$_from-1; $from < $_to; $from++) {
     //删除已有标题
     
     $query = "DELETE FROM \""._TABLE_."\" WHERE book = ?  AND  language = ?  ";
-    PDO_Execute($query, array($book,$_lang));
-    
+	try{
+		$stmt = $dbh->prepare($query);
+		$stmt->execute(array($book,$_lang));
+	}catch(PDOException $e){
+		fwrite(STDERR,"error:".$e->getMessage());
+		continue;
+	}
     
     // 开始一个事务，关闭自动提交
-    $PDO->beginTransaction();
+    $dbh->beginTransaction();
     $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
-    $stmt = $PDO->prepare($query);
-    if ($_lang == "pali") {
+    try{
+	$stmt = $dbh->prepare($query);
+	}catch(PDOException $e){
+		fwrite(STDERR,"error:".$e->getMessage());
+		break;
+	}
+	if ($_lang == "pali") {
         $type = 1;
     } else {
         $type = 2;
@@ -124,12 +137,18 @@ for ($from=$_from-1; $from < $_to; $from++) {
             mTime(),
             mTime(),
         );
-        $stmt->execute($newData);
+		try{
+			$stmt->execute($newData);
+		}catch(PDOException $e){
+			fwrite(STDERR,"error:".$e->getMessage());
+			fwrite(STDERR,implode(",",$newData));
+			break;
+		}
     }
     // 提交更改
-    $PDO->commit();
+    $dbh->commit();
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-        $error = PDO_ErrorInfo();
+        $error = $dbh->errorInfo();
         echo "error - $error[2] ".PHP_EOL;
         $log = $log . "$from, error, $error[2] \r\n";
     } else {

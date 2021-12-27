@@ -36,7 +36,10 @@ if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
 echo "read file list".PHP_EOL;
 
 
-PDO_Connect(_DB_,_DB_USERNAME_,_DB_PASSWORD_);
+
+$dns = _DB_;
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 echo "db Connectd".PHP_EOL;
 
 
@@ -82,23 +85,23 @@ for ($from=$_from; $from <=$_to ; $from++) {
 
 	#删除目标数据库中数据
 	$query = "DELETE FROM "._TABLE_." WHERE book = ?";
-	$stmt = $PDO->prepare($query);
-	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-		$error = $PDO->errorInfo();
-		echo "error - $error[2] ";
-		exit;
+	$stmt = $dbh->prepare($query);
+	try{
+		$stmt->execute(array($from));
+	}catch(PDOException $e){
+		fwrite(STDERR,$e->getMessage());
+		continue;
 	}
 
-	$stmt->execute(array($from));
 	echo "delete ".PHP_EOL;
 
 	$row=0;
 	// 开始一个事务，关闭自动提交
-	$PDO->beginTransaction();
+	$dbh->beginTransaction();
 	$query = "INSERT INTO "._TABLE_." ( book , paragraph, wid , word , real , type , gramma , part , style ) VALUES (?,?,?,?,?,?,?,?,?)";
-	$stmt = $PDO->prepare($query);
+	$stmt = $dbh->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-		$error = PDO_ErrorInfo();
+		$error = $dbh->errorInfo();
 		echo "error - $error[2]".PHP_EOL;
 
 		$log = "$from, $FileName, error, $error[2] \r\n";
@@ -120,7 +123,13 @@ for ($from=$_from; $from <=$_to ; $from++) {
 						$data[7],
 						$data[10],
 						$data[15]);		
-					$stmt->execute($params);	
+						try{
+							$stmt->execute($params);
+						}catch(PDOException $e){
+							fwrite(STDERR,$e->getMessage());
+							fwrite(STDERR,implode(",",$params));
+							break;
+						}
 				}
 
 				$row++;
@@ -133,9 +142,9 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	}
 
 	// 提交更改
-	$PDO->commit();
+	$dbh->commit();
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-		$error = PDO_ErrorInfo();
+		$error = $dbh->errorInfo();
 		echo "error - $error[2]".PHP_EOL;
 
 		$log = "$from, $FileName, error, $error[2] \r\n";

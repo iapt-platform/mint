@@ -40,7 +40,9 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-PDO_Connect(_PG_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
+$dns = _PG_DB_PALITEXT_;
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 for ($from=$_from-1; $from < $to; $from++) { 
     # code...
@@ -108,13 +110,20 @@ for ($from=$_from-1; $from < $to; $from++) {
     
     #删除 旧数据
     $query = "DELETE FROM "._PG_TABLE_PALI_TEXT_." WHERE book=?";
-    PDO_Execute($query,array($from+1));
+	$stmt = $dbh->prepare($query);
+	try{
+		$stmt->execute(array($from+1));
+	}catch(PDOException $e){
+		fwrite(STDERR,$e->getMessage());
+		continue;
+	}
+
     
     // 开始一个事务，关闭自动提交
-    $PDO->beginTransaction();
+    $dbh->beginTransaction();
     
     $query = "INSERT INTO "._PG_TABLE_PALI_TEXT_." ( book , paragraph , level , class , toc , text , html , lenght ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
-    $stmt = $PDO->prepare($query);
+    $stmt = $dbh->prepare($query);
     foreach ($arrInserString as $oneParam) {
         if ($oneParam[3] < 100) {
             $toc = $oneParam[6];
@@ -122,12 +131,19 @@ for ($from=$_from-1; $from < $to; $from++) {
             $toc = "";
         }
         $newData = array($from + 1, $oneParam[2], $oneParam[3], $oneParam[4], $toc, $oneParam[6], $oneParam[5], mb_strlen($oneParam[6], "UTF-8"));
-        $stmt->execute($newData);
+        try{
+			$stmt->execute($newData);
+		}catch(PDOException $e){
+			fwrite(STDERR,$e->getMessage());
+			fwrite(STDERR,implode(",",$newData));
+			break;
+		}
+		
     }
     // 提交更改
-    $PDO->commit();
+    $dbh->commit();
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-        $error = PDO_ErrorInfo();
+        $error = $dbh->errorInfo();
         echo "error - $error[2]".PHP_EOL;
     
         $log = $log . "$from, $FileName, error, $error[2] \r\n";
