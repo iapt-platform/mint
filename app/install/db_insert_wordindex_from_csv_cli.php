@@ -18,12 +18,18 @@ define("_TABLE_", "word_indexs");
 
 $dns = _DB_WORD_INDEX_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
-$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 #删除
 $query = "DELETE FROM "._TABLE_." WHERE true";
 $stmt = $dbh_word_index->prepare($query);
-$stmt->execute();
+try{
+	$stmt->execute();
+}catch(PDOException $e){
+	fwrite(STDERR,$e->getMessage());
+	exit;
+}
+
 
     $scan = scandir(_DIR_CSV_PALI_CANON_WORD_INDEX_);
     foreach($scan as $filename) {
@@ -40,7 +46,12 @@ $stmt->execute();
         
                 $count = 0;
                 while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
-                    $stmt->execute($data);
+					try{
+						$stmt->execute($data);
+					}catch(PDOException $e){
+						fwrite(STDERR,$e->getMessage());
+					}
+                    
                     $count++;
                 }
                 // 提交更改

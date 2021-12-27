@@ -8,7 +8,7 @@ require_once __DIR__.'/../public/_pdo.php';
 define("_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_","pali_texts");
 
-echo "Insert Pali Text To DB".PHP_EOL;
+echo "Update Pali Text ".PHP_EOL;
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -42,6 +42,7 @@ if ($to == 0 || $to >= $fileNums) {
 
 
 PDO_Connect(_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
+
 
 for ($from=$_from-1; $from < $to; $from++) { 
     echo "doing $from".PHP_EOL;

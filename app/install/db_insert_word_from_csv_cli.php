@@ -34,7 +34,7 @@ define("_TABLE_", "words");
 global $dbh_word_index;
 $dns = _DB_;
 $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
-$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
@@ -50,7 +50,13 @@ for ($from=$_from-1; $from < $_to; $from++) {
     #删除
     $query = "DELETE FROM "._TABLE_." WHERE book = ?";
     $stmt = $dbh_word_index->prepare($query);
-    $stmt->execute(array($from+1));
+	try{
+		$stmt->execute(array($from+1));
+	}catch(PDOException $e){
+		fwrite(STDERR,$e->getMessage());
+		continue;
+	}
+    
 
 
     if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !== false) {
@@ -61,7 +67,14 @@ for ($from=$_from-1; $from < $_to; $from++) {
 
         $count = 0;
         while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
-            $stmt->execute($data);
+			try{
+				$stmt->execute($data);
+			}catch(PDOException $e){
+				fwrite(STDERR,$e->getMessage());
+				fwrite(STDERR,implode(",",$data));
+				break;
+			}
+            
             $count++;
         }
         // 提交更改
