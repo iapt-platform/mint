@@ -21,9 +21,9 @@ $dbh_word_index = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PE
 $dbh_word_index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 #删除
-$query = "DELETE FROM "._TABLE_." WHERE true";
-$stmt = $dbh_word_index->prepare($query);
 try{
+	$query = "DELETE FROM "._TABLE_;
+	$stmt = $dbh_word_index->prepare($query);
 	$stmt->execute();
 }catch(PDOException $e){
 	fwrite(STDERR,$e->getMessage());
