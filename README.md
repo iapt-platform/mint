@@ -1,62 +1,66 @@
-# 巴利圣典教育开放平台 - IAPT Platform
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-IAPT = International Academy Of Pali Tipitaka - 国际巴利三藏学院
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-试运行地址：https://www.wikipali.org/
+## About Laravel
 
-# 平台愿景
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-让巴利圣典的学习变得更容易，人人都能从巴利圣典中受益。
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-了解更多：https://youtu.be/HMACYkZryJQ
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-# 当前功能
+## Learning Laravel
 
-- 巴利圣典阅读与翻译
-- 在线课程发布与学习
-- 在线巴利语学习工具
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-# 重构计划
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-随着平台功能的完善，以及用户量的增加，当前平台面临以下几个问题
+## Laravel Sponsors
 
-- 性能瓶颈
-  多用户并发操作以及全文检索效率低，难以支撑更多的用户
-- 代码维护
-  当前代码内含有相当量的冗余和临时解决方案，难以扩展和维护
-- 权限管理
-  权限管理模块有瑕疵，多人协作编辑功能有待优化
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-基于以上几个问题，现启动平台重构计划。
+### Premium Partners
 
-以解决问题为目标，细化任务，逐步实施。
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[CMS Max](https://www.cmsmax.com/)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
+- **[Romega Software](https://romegasoftware.com)**
 
-# 关于我们
+## Contributing
 
-国际巴利三藏学院，致力于让佛陀所揭示的真理可以平等的被所有族群方便的学习与运用。
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-希望在传统和现代、老师与学生、翻译者与读者之间假设桥梁。向他们提供教育平台，享受前沿的教学科技，实现各种信息及资源的有效共享。指导圣典在人类生命系统净化提升的实践与运用。让全世界所有族群都可以享受高品质的圣典教育，最终实现圣典教育全球化。
+## Code of Conduct
 
-- 巴利语文献语料库的建立
-- 相关参考文献的电子化
-- 巴利文献的整理翻译及研究
-- 基于项目培养相关人才，实现产学研一体化发展。
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-# 什么是巴利圣典？
+## Security Vulnerabilities
 
-巴利圣典乘载着佛陀的教导。
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-从佛陀入灭后一个月开始，五百位阿拉汉僧人作了集结会议，将佛陀所宣说的法完整的背诵了下来，在这2600多年中一共经历了六次的集结会议，将教法传承至今。因主要分为三个部分律藏、经藏、论藏，因此一般也称作巴利三藏。
+## License
 
-Pāli 即是圣典的意思，是以古印度语言为基础的文献，目前这种语言已不在于日常被使用，只用于传承佛法，因此也将此语言直接称作巴利语（Pāli language），为了避免混淆，通常在语言翻译上，会将「巴利」（表示语言）和「圣典」（表示典籍）分开，将它称作巴利圣典。
-
-# 参与开发
-
-- 关注 [项目看板](https://github.com/orgs/iapt-platform/projects/5)
-
-    发现有合适的待领取（To do 状态）任务时，可联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 加入。
-
-- 阅读 [开发文档](./documents/README.md
-)
-
-    开发文档尚未编写完毕，如有疑问，可参考代码，或联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 沟通。
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
