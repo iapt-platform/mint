@@ -18,13 +18,15 @@ class CreateWbwTemplatesTable extends Migration
             $table->integer('book');
             $table->integer('paragraph');
             $table->integer('wid');
-			$table->string('word',1024);
+			$table->string('word',1024)->index();
 			$table->string('real',1024);
 			$table->string('type',64);
 			$table->string('gramma',64);
 			$table->string('part',1024);
 			$table->string('style',64);
             $table->timestamps();
+            $table->index(["book", "paragraph", "wid"]);
+            $table->index(["book", "paragraph"]);
         });
     }
 
