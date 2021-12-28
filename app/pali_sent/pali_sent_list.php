@@ -2,7 +2,7 @@
 /*
 get user sentence from db
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
@@ -11,11 +11,11 @@ $para = $_POST["para"];
 $paraList = json_decode($para);
 $output = array();
 
-$dns = "" . _FILE_DB_PALI_SENTENCE_;
-$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_PALI_SENTENCE_;
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$query = "SELECT begin,end ,text FROM pali_sent WHERE (book = ?  AND paragraph = ?  ) ";
+$query = "SELECT word_begin as begin,word_end as end ,text FROM "._TABLE_PALI_SENT_." WHERE (book = ?  AND paragraph = ?  ) ";
 $stmt = $dbh->prepare($query);
 foreach ($paraList as $key => $value) {
     # code...

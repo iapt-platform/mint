@@ -1,6 +1,6 @@
 <?php
 require 'checklogin.inc';
-require '../path.php';
+require '../config.php';
 require "../public/_pdo.php";
 require "./public.inc";
 $type["pali"] = 1;

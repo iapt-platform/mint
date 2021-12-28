@@ -1,7 +1,7 @@
 <?php
 require_once "install_head.php";
 
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
@@ -114,14 +114,14 @@ if (($fp = fopen(_DIR_PALI_TITLE_ . "/" . ($from + 1) . "_{$_file}.csv", "r")) !
 $book = $from + 1;
 
 //删除已有标题
-PDO_Connect("" . _FILE_DB_RESRES_INDEX_);
-$query = " DELETE FROM 'index' WHERE book ='{$book}'  AND  language = '{$_lang}'  ";
+PDO_Connect(_FILE_DB_RESRES_INDEX_);
+$query = "DELETE FROM \""._TABLE_RES_INDEX_."\" WHERE book = ?  AND  language = ?  ";
+PDO_Execute($query, array($book,$_lang));
 
-$PDO->query($query);
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "INSERT INTO 'index' ('id','book','paragraph','title','title_en' ,'level','type','language','author','share','create_time','update_time' ) VALUES ( NULL , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO \""._TABLE_RES_INDEX_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
 $stmt = $PDO->prepare($query);
 if ($_lang == "pali") {
     $type = 1;
@@ -136,6 +136,7 @@ foreach ($arrInserString as $title) {
     } else {
         $author = "";
     }
+	$title[6] = mb_substr($title[6],0,1024);
     $newData = array(
         $book,
         $title[2],

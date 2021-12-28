@@ -4,7 +4,7 @@
 输入单词列表 channel 根据查找顺序设置返回最匹配的术语
 输出查到的结果
  */
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';

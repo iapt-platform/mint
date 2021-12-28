@@ -3,66 +3,37 @@ package mint
 import (
 	"net/http"
 	"strconv"
-	"fmt"
+	//"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"time"
 )
-/*
-    id SERIAL PRIMARY KEY,
-    uuid         VARCHAR (36) ,
-    title        VARCHAR (32) NOT NULL,
-    subtitle     VARCHAR (32),
-    summary      VARCHAR (255),
-    article_list TEXT,
-    status       INTEGER   NOT NULL DEFAULT (10),
-    creator_id   INTEGER,
-    owner        VARCHAR (36),
-    lang         CHAR (8),
-	version     INTEGER NOT NULL DEFAULT (1),
-    deleted_at  TIMESTAMP,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 
-*/
 type Collection struct {
-	Id     int `form:"id" json:"id" binding:"required"`
-	Title string `form:"title" json:"title" binding:"required"`
-	Subtitle string `form:"subtitle" json:"subtitle" binding:"required"`
-	Summary string `form:"summary" json:"summary" binding:"required"`
-	ArticleList string `form:"article_list" json:"article_list" binding:"required"`
-	CreatorId int
-	Lang string `form:"lang" json:"lang" binding:"required"`
-	Status int `form:"status" json:"status" binding:"required"`
+	Id     int `form:"id" json:"id" `
+	Uid string `form:"uid" json:"uid" `
+	ParentId int `form:"parent_id" json:"parent_id"`
+	PrParentId int `form:"pr_parent_id" json:"pr_parent_id" `
+
+	Title string `form:"title" json:"title" `
+	Subtitle string `form:"subtitle" json:"subtitle" `
+	Summary string `form:"summary" json:"summary"`
+	
+	ArticleList string `form:"article_list" json:"article_list" `
+	
+	Lang string `form:"lang" json:"lang" `
+	Setting string `form:"setting" json:"setting" `
+	Status string `form:"status" json:"status" `
+
+	OwnerId int
 	Version int
     DeletedAt time.Time
     CreatedAt time.Time
     UpdatedAt time.Time
 }
 //查询
-func GetCollection(db *pg.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		lid,err := strconv.Atoi(c.Param("cid"))
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("get lesson")
-		// TODO 在这里进行db操作
-		// Select user by primary key.
-		collection := &Collection{Id: int(lid)}
-		err = db.Model(collection).Column("title","subtitle","summary","status").WherePK().Select()
-		if err != nil {
-			panic(err)
-		}
-		
-		c.JSON(http.StatusOK, gin.H{
-			"message": collection,
-		})
-	}
-}
-
-//查询
-func GetCollectionByTitle(db *pg.DB) gin.HandlerFunc {
+	//display a list of all collections
+func CollectionsIndex(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		title:= c.Param("ctitle")
 
@@ -80,23 +51,54 @@ func GetCollectionByTitle(db *pg.DB) gin.HandlerFunc {
 	}
 }
 
-//新建-
-//PUT http://127.0.0.1:8080/api/lesson?title=lesson-one&course_id=1&status=10
-func PutCollection(db *pg.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
-	
-		title := c.Query("title")
-		status1,err := strconv.Atoi(c.Query("status"))
+//查询
+	//display a specific collections
+
+func CollectionsShow(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id,err := strconv.Atoi(c.Param("id"))
 		if err != nil {
 			panic(err)
 		}
+		// TODO 在这里进行db操作
+		// Select user by primary key.
+		collection := &Collection{Id: id}
+		err = db.Model(collection).Column("title","subtitle","summary","status").WherePK().Select()
+		if err != nil {
+			panic(err)
+		}
+		
+		c.JSON(http.StatusOK, gin.H{
+			"message": collection,
+		})
+	}
+}
+
+//return an HTML form for creating a new Courses
+func CollectionsNew(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//TODO 业务逻辑
+		c.HTML(http.StatusOK,"collections/new.html",gin.H{
+			"message":"ok",
+		})
+	}
+}
+
+//新建-
+	//create a new collections
+
+func CollectionsCreate(db *pg.DB) gin.HandlerFunc{
+	return func(c *gin.Context){
+	
+		title := c.Query("title")
+		status :=c.Query("status")
 
 		newOne := &Collection{
 			Title:   title,
-			Status: int(status1),
-			CreatorId:1,
+			Status: status,
+			OwnerId:1,
 		}
-		_, err = db.Model(newOne).Insert()
+		_, err := db.Model(newOne).Insert()
 		if err != nil {
 			panic(err)
 		}
@@ -107,10 +109,21 @@ func PutCollection(db *pg.DB) gin.HandlerFunc{
 		})
 	}
 }
+//return an HTML form for edit a Courses
+func CollectionsEdit(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//TODO 业务逻辑
+		c.HTML(http.StatusOK,"collections/edit.html",gin.H{
+			"message":"ok",
+		})
+	}
+}
+
 
 
 //改
-func PostCollection(db *pg.DB) gin.HandlerFunc{
+//update a specific collections
+func CollectionsUpdate(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
 		var form Collection
 
@@ -124,30 +137,32 @@ func PostCollection(db *pg.DB) gin.HandlerFunc{
 			panic(err)
 		}
 		c.JSON(http.StatusOK,gin.H{
-			"message":"update ok",
+			"message":form,
 		})
 	}
 }
 
 
 //删
-func DeleteCollection(db *pg.DB) gin.HandlerFunc{
+//delete a specific collections
+func CollectionsDestroy(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		id,err := strconv.Atoi(c.Param("cid"))
+		id,err := strconv.Atoi(c.Param("id"))
 		if err != nil {
 			panic(err)
 		}
 		collection := &Collection{
 			Id:int(id),
 		}
-		//删之前获取 course_id
-		_, err = db.Model(collection).WherePK().Delete()
+
+		_, err = db.Model(collection).WherePK().Where("parent_id = ?",id).Where("pr_parent_id = ?",id).Delete()
 		if err != nil {
 			panic(err)
 		}
+		//TODO redis delete
 		
 		c.JSON(http.StatusOK,gin.H{
-			"message":"deleted "+c.Param("cid"),
+			"message":c.Param("id"),
 		})
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../db/table.php";
 require_once "../db/channel.php";
 require_once "../public/function.php";
@@ -216,7 +216,7 @@ class User extends Table
 					$mail->SMTPAuth   = Email["SMTPAuth"];                                   //Enable SMTP authentication
 					$mail->Username   = Email["Username"];                     //SMTP username
 					$mail->Password   = Email["Password"];                               //SMTP password
-					$mail->SMTPSecure = Email["SMTPSecure"];            //Enable implicit TLS encryption
+					$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
 					$mail->Port       = Email["Port"];                                    //TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 					$mail->CharSet =  'UTF-8';
 					$mail->Encoding = 'base64';

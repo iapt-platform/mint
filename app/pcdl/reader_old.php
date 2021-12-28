@@ -1,6 +1,6 @@
 <?php
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 
 if (isset($_GET["album"])) {
     $album = $_GET["album"];

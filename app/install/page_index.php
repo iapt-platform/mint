@@ -13,7 +13,7 @@
 <p>用拆分好的三藏数据 导出cs6段落编号</p>
 <?php
 require_once '../public/_pdo.php';
-require_once '../path.php';
+require_once '../config.php';
 if (isset($_GET["run"]) == false) {
     ?>
 <form action="db_insert_templet.php" method="get">

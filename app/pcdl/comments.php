@@ -1,5 +1,5 @@
 <?php
-include "../path.php";
+include "../config.php";
 include "./_pdo.php";
 if (isset($_POST["album"])) {
     $album = $_POST["album"];

@@ -1,6 +1,6 @@
 <?php
 //显示log
-require_once '../path.php';
+require_once '../config.php';
 
 if (isset($_COOKIE["uid"]) && isset($_GET["start"]) && isset($_GET["end"])) {
 

@@ -1,5 +1,5 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 include "../public/_pdo.php";
 if (isset($_POST["op"])) {
     $op = $_POST["op"];

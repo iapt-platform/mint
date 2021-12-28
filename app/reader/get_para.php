@@ -1,6 +1,6 @@
 <?php
 require_once "../public/_pdo.php";
-require_once "../path.php";
+require_once "../config.php";
 require_once "../redis/function.php";
 require_once "../db/pali_sent.php";
 require_once "../db/pali_sim_sent.php";
@@ -65,8 +65,8 @@ $paraBegin=0;
 $paraEnd=0;
 
 PDO_Connect(_FILE_DB_PALITEXT_);
-			$query = "SELECT level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
-			$FetchParInfo = PDO_FetchRow($query, array($_book, $_para));
+$query = "SELECT level , parent, chapter_len,chapter_strlen FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND paragraph= ?";
+$FetchParInfo = PDO_FetchRow($query, array($_book, $_para));
 if ($FetchParInfo) {
     switch ($_view) {
         case 'chapter':
@@ -78,7 +78,7 @@ if ($FetchParInfo) {
 			}
             else{
 				$paraBegin = $FetchParInfo["parent"];
-				$query = "SELECT  level , parent, chapter_len,chapter_strlen FROM 'pali_text'  WHERE book= ? AND paragraph= ?";
+				$query = "SELECT  level , parent, chapter_len,chapter_strlen FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND paragraph= ?";
 				$FetchParInfo = PDO_FetchRow($query, array($_book, $paraBegin));
             	$paraEnd = $paraBegin + $FetchParInfo["chapter_len"] - 1;
 			}
@@ -99,7 +99,7 @@ if ($FetchParInfo) {
     }
 
     //获取下级目录
-    $query = "SELECT level,paragraph,toc FROM 'pali_text'  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
+    $query = "SELECT level,paragraph,toc FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 ";
     $output["toc"] = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 
     if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($output["toc"]) > 1) {
@@ -118,7 +118,7 @@ if ($FetchParInfo) {
 
     PDO_Connect(_FILE_DB_PALI_SENTENCE_);
 
-    $query = "SELECT book,paragraph,begin, end FROM 'pali_sent' WHERE book= ? AND (paragraph BETWEEN ?AND ? ) ";
+    $query = "SELECT book,paragraph,word_begin as begin, word_end as end FROM "._TABLE_PALI_SENT_." WHERE book= ? AND (paragraph BETWEEN ?AND ? ) ";
     $sent_list = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
     $output["sentences"] = $sent_list;
     echo json_encode($output, JSON_UNESCAPED_UNICODE);

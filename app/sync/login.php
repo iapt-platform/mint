@@ -7,7 +7,7 @@ $output["message"]="";
 
 
 if(isset($_POST["userid"]) && isset($_POST["password"]) ){
-	require_once "../path.php";
+	require_once "../config.php";
 	require_once "../public/load_lang.php";
 	require_once "../ucenter/function.php";	
 	require_once '../redis/function.php';

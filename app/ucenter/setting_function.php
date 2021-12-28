@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 function get_setting()
 {
 

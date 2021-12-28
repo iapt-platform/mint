@@ -1,7 +1,7 @@
 <?php
 //header('Content-type: application/json; charset=utf8');
 
-require_once "../path.php";
+require_once "../config.php";
 require_once "../sync/function.php";
 
 $input = (object) [

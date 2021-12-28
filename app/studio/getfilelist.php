@@ -2,7 +2,7 @@
 /*
 获取我的文档 文件列表
  */
-include "../path.php";
+include "../config.php";
 include "../public/_pdo.php";
 include "../public/function.php";
 

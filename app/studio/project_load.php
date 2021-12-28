@@ -1,6 +1,6 @@
 <?php
 require_once 'checklogin.inc';
-require_once "../path.php";
+require_once "../config.php";
 require_once "../public/_pdo.php";
 
 PDO_Connect(_FILE_DB_FILEINDEX_);

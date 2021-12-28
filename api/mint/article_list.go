@@ -24,17 +24,20 @@ func (i *ArticleListHolder) UnmarshalJSON(b []byte) error{
 	return json.Unmarshal(b, &i.Items)
 }
 //查询
-func GetCollectionArticleList(db *pg.DB) gin.HandlerFunc {
+func ArticleListIndex(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cid,err:= strconv.Atoi(c.Param("cid"))
-		if err != nil {
-			panic(err)
-		}
+		id := c.Query("id")
+		object := c.Query("object")
 
 		// TODO 在这里进行db操作
 		// Select user by primary key.
 		var articles []ArticleList
-		err = db.Model(&articles).Column("collection_id","article_id").Where("collection_id = ?",cid).Select()
+		var err error
+		if object == "article" {
+			err = db.Model(&articles).Column("collection_id","article_id").Where("article_id = ?",id).Select()
+		}else{
+			err = db.Model(&articles).Column("collection_id","article_id").Where("collection_id = ?",id).Select()
+		}
 		if err != nil {
 			panic(err)
 		}
@@ -48,14 +51,19 @@ func GetCollectionArticleList(db *pg.DB) gin.HandlerFunc {
 
 
 //修改
-func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc{
+func ArticleListUpdate(db *pg.DB) gin.HandlerFunc{
 	return func(c *gin.Context){
-		aid,err:= strconv.Atoi(c.Param("aid"))
-		if err != nil {
-			panic(err)
-		}
+		id := c.Query("id")
+		object := c.Query("object")
+
+
 		//先删除
-		_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?",aid).Delete()
+		var err error
+		if object == "article" {
+			_, err = db.Model((*ArticleList)(nil)).Where("article_id = ?",id).Delete()
+		}else{
+			_, err = db.Model((*ArticleList)(nil)).Where("collection_id = ?",id).Delete()
+		}
 		if err != nil {
 			panic(err)
 		}
@@ -77,7 +85,7 @@ func PostArticleListByArticle(db *pg.DB) gin.HandlerFunc{
 		}
 		defer stmt.Close()
 		for _, value := range form.Items{
-			_, err = stmt.Exec(value.CollectionId,aid)
+			_, err = stmt.Exec(value.CollectionId,id)
 			if err != nil {
 				panic(err)
 			}

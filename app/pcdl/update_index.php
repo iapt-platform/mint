@@ -211,12 +211,12 @@ switch ($res_type) {
                 //开始更新索引
                 foreach ($title_data as $oneTitle) {
                     if ($oneTitle["level"] > 0 && $oneTitle["level"] < 8) {
-                        $query = "select * from 'index' where album = '$album_index' and book='" . $oneTitle["book"] . "' and paragraph='" . $oneTitle["paragraph"] . "'";
+                        $query = "SELECT * FROM \""._TABLE_RES_INDEX_."\" where album = '$album_index' and book='" . $oneTitle["book"] . "' and paragraph='" . $oneTitle["paragraph"] . "'";
                         $search_title = PDO_FetchAll($query);
                         $title_en = pali2english($oneTitle["text"]);
                         //找到已有的记录  更新
                         if (count($search_title) != 0) {
-                            $query = "UPDATE 'index' SET title = '" . $oneTitle["text"] . "' ,
+                            $query = "UPDATE \""._TABLE_RES_INDEX_."\" SET title = '" . $oneTitle["text"] . "' ,
 												 title_en = '" . $title_en . "' ,
 												 language = '1' ,
 												 type = '$type',
@@ -237,7 +237,7 @@ switch ($res_type) {
                             if (substr($book, 0, 1) == "b") {
                                 $book = substr($book, 1);
                             }
-                            $query = "INSERT INTO 'index' (id,
+                            $query = "INSERT INTO \""._TABLE_RES_INDEX_."\" (id,
 						book,
 						paragraph,
 						title,
@@ -340,7 +340,7 @@ switch ($res_type) {
         $query = "select * from album where 1";
         $search_album = PDO_FetchAll($query);
         foreach ($search_album as $oneAlbum) {
-            $query = "select id from 'index' where album = '{$oneAlbum["id"]}' and
+            $query = "SELECT id FROM \""._TABLE_RES_INDEX_."\" where album = '{$oneAlbum["id"]}' and
 													   book='{$oneAlbum["book"]}' and
 													   paragraph='-1'";
             $id = PDO_FetchAll($query);
@@ -348,7 +348,7 @@ switch ($res_type) {
             //找到已有的记录  更新
             $title_en = pali2english($oneAlbum["title"]);
             if (count($id) > 0) {
-                $query = "UPDATE 'index' SET title = '{$oneAlbum["title"]}' ,
+                $query = "UPDATE \""._TABLE_RES_INDEX_."\" SET title = '{$oneAlbum["title"]}' ,
 										 title_en = '{$title_en}' ,
 										 language = '{$oneAlbum["language"]}' ,
 										 type = '{$oneAlbum["type"]}',
@@ -368,7 +368,7 @@ switch ($res_type) {
             } else {
                 /*未找到 插入*/
                 $book = $oneAlbum["book"];
-                $query = "INSERT INTO 'index' (id,
+                $query = "INSERT INTO \""._TABLE_RES_INDEX_."\" (id,
 				book,
 				paragraph,
 				title,

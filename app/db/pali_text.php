@@ -1,11 +1,11 @@
 <?php
-require_once "../path.php";
+require_once "../config.php";
 require_once "../db/table.php";
 
 class PaliText extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_PALITEXT_, "pali_text", "", "",$redis);
+		parent::__construct(_FILE_DB_PALITEXT_, _TABLE_PALI_TEXT_, "", "",$redis);
     }
 
 	public function index(){
@@ -25,7 +25,15 @@ class PaliText extends Table
 					);
 					$par = $parent["parent"];
 				} while ($parent["parent"] > -1);
-				$this->_index(["book","paragraph","level","toc","next_chapter","prev_chapter","parent"],["level[<]"=>8,"book"=>$book,"paragraph[>]"=>$parent["paragraph"],"paragraph[<]"=>$parent["paragraph"]+$parent["chapter_len"]]);
+				$this->_index(["book","paragraph","level","toc","next_chapter","prev_chapter","parent"],
+				              ["level[<]"=>8,
+							   "book"=>$book,
+							   "paragraph[>]"=>$parent["paragraph"],
+							   "paragraph[<]"=>$parent["paragraph"]+$parent["chapter_len"],
+							   "ORDER"=>[
+								   "paragraph"=>"ASC"
+							   ]
+							  ]);
 				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 				break;
 			default:

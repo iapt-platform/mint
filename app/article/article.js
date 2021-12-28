@@ -51,8 +51,10 @@ function articel_load(id, collection_id) {
 						$("#contents").html(note_init(result.content,"",result.owner,result.lang));
 						//处理<code>标签作为气泡注释
 						popup_init();
-						guide_init();
+						guide_init();						
 						note_refresh_new();
+
+
 					}
 				} catch (e) {
 					console.error(e);

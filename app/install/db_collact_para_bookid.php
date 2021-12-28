@@ -1,7 +1,7 @@
 ﻿<?php
 # 用拆分好的三藏数据 导出cs6段落编号
 require_once '../public/_pdo.php';
-require_once '../path.php';
+require_once '../config.php';
 if ($argc < 3){
 	echo "无效的参数 ";
 	exit;

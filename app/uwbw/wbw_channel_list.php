@@ -1,5 +1,5 @@
 <?php
-require_once '../path.php';
+require_once '../config.php';
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../share/function.php';
@@ -80,11 +80,14 @@ foreach ($channelList as $key => $row) {
     $channelList[$key]["wbw_para"] = $wbwCount;
     $channelList[$key]["count"] = count($_para);
 	$info = $channelInfo->getChannal($key);
-    $channelList[$key]["id"] = $info["id"];
-    $channelList[$key]["name"] = $info["name"];
-    $channelList[$key]["lang"] = $info["lang"];
-	$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
-	$outputData[]=$channelList[$key];
+	if($info){
+		$channelList[$key]["id"] = $info["id"];
+		$channelList[$key]["name"] = $info["name"];
+		$channelList[$key]["lang"] = $info["lang"];
+		$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
+		$outputData[]=$channelList[$key];
+	}
+	
 }
 
 
