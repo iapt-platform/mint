@@ -1,6 +1,6 @@
 <?php
-require_once '../config.php';
-require_once '../public/load_lang.php';
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../public/load_lang.php';
 
 if (isset($_GET["language"])) {
 	$currLanguage = $_GET["language"];
@@ -134,7 +134,7 @@ if (isset($_GET["language"])) {
 	<script src="../public/charcode/converter_tai_tham.js"></script>
 	<script src="../public/charcode/converter_thai.js"></script>
 	<script>
-		<?php require_once '../public/load_lang_js.php'; ?>
+		<?php require_once __DIR__.'/../public/load_lang_js.php'; ?>
 	</script>
 
 	<script src="../../node_modules/diff/dist/diff.js"></script>
