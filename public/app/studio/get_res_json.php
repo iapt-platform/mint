@@ -43,35 +43,7 @@ PDO_Connect(_FILE_DB_RESRES_INDEX_);
 
 $res = array();
 //查书
-if ($paragraph == -1) {
-    //相关专辑
-	/*
-    $query = "select * from album where album.book='$book' ";
-    $Fetch_ather = PDO_FetchAll($query);
-    $iFetchAther = count($Fetch_ather);
-    if ($iFetchAther > 0) {
-        foreach ($Fetch_ather as $one_album) {
-            array_push($res, array("book" => $book,
-                "album_id" => $one_album["id"],
-                "paragraph" => -1,
-                "type" => $one_album["type"],
-                "title" => $one_album["title"],
-                "author" => $one_album["author"],
-            ));
-            if ($one_album["type"] == 1) {
-                array_push($res, array("book" => $book,
-                    "album_id" => $one_album["id"],
-                    "paragraph" => -1,
-                    "type" => 6,
-                    "title" => $one_album["title"],
-                    "author" => $one_album["author"],
-                ));
-            }
-        }
-    }
-	*/
-    //相关专辑结束
-} else {
+if ($paragraph > 0) {
     //查书中的一个段
     PDO_Connect(_FILE_DB_RESRES_INDEX_);
     $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
