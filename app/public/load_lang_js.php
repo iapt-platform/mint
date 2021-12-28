@@ -1,5 +1,5 @@
 	<?php
-	require_once '../public/config.php';
+	require_once __DIR__.'/../public/config.php';
 	/*
 	加载js 语言包
 	范例

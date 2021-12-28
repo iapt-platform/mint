@@ -5,6 +5,12 @@
 require_once __DIR__."/../config.php";
 require_once __DIR__.'/../public/_pdo.php';
 
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
 echo "Insert templet to DB".PHP_EOL;
 
@@ -86,12 +92,8 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	#删除目标数据库中数据
 	$query = "DELETE FROM "._TABLE_." WHERE book = ?";
 	$stmt = $dbh->prepare($query);
-	try{
-		$stmt->execute(array($from));
-	}catch(PDOException $e){
-		fwrite(STDERR,$e->getMessage());
-		continue;
-	}
+	$stmt->execute(array($from));
+
 
 	echo "delete ".PHP_EOL;
 
@@ -126,8 +128,9 @@ for ($from=$_from; $from <=$_to ; $from++) {
 						try{
 							$stmt->execute($params);
 						}catch(PDOException $e){
-							fwrite(STDERR,$e->getMessage());
-							fwrite(STDERR,implode(",",$params));
+							fwrite(STDERR,$e->getMessage().PHP_EOL);
+							fwrite(STDERR,implode(",",$params).PHP_EOL);
+							fwrite(STDERR,$e->getLine().PHP_EOL);
 							break;
 						}
 				}

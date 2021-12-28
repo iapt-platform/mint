@@ -8,6 +8,12 @@ require_once __DIR__."/../config.php";
  *
  */
 
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
 function is_pali_word ($str) {
   $pali_word_exp = "/^[āīūṅñṭḍṇḷṃṁŋĀĪŪṄÑṬḌṆḶṂṀŊabcdefghijklmnoprstuvyABCDEFGHIJKLMNOPRSTUVY-]+$/";
@@ -76,7 +82,7 @@ function count_bld ($bld_array) {
 
 $dns = _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";";
 $dbh_fts = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
-$dbh_fts->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$dbh_fts->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // 查找 tmp/palicsv/ 目录下的语料数据
 $palicsv_path = __DIR__.'/../../tmp/palicsv/';
