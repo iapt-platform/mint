@@ -100,7 +100,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$row=0;
 	// 开始一个事务，关闭自动提交
 	$dbh->beginTransaction();
-	$query = "INSERT INTO "._TABLE_." ( book , paragraph, wid , word , real , type , gramma , part , style ) VALUES (?,?,?,?,?,?,?,?,?)";
+	$query = "INSERT INTO "._TABLE_." ( book , paragraph, wid , word , real , type , gramma , part , style, created_at,updated_at ) VALUES (?,?,?,?,?,?,?,?,?,now(),now())";
 	$stmt = $dbh->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 		$error = $dbh->errorInfo();
