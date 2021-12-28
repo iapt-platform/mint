@@ -6,8 +6,7 @@
 
 php ../../app/install/db_insert_palitext_cli.php 1 217
 php ../../app/install/db_update_palitext_cli.php 1 217
-
-::php ../../app/install/db_insert_bookword_from_csv_cli.php 1 217
+php ../../app/install/db_insert_bookword_from_csv_cli.php 1 217
 
 ::php ../../app/install/db_insert_word_from_csv_cli.php 1 217
 
