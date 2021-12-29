@@ -183,7 +183,7 @@ define("_SRC_TABLE_WORD_STATISTICS_", "word");
 define("_FILE_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_TABLE_PALI_SENT_", "pali_sentences");
 define("_TABLE_PALI_SENT_ORG_", "pali_sent_orgs");
-define("_TABLE_PALI_SENT_INDEX_", "pali_sent_indexs");
+define("_TABLE_PALI_SENT_INDEX_", "pali_sent_indices");
 
 define("_SRC_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
 define("_TABLE_SRC_PALI_SENT_", "pali_sent");
