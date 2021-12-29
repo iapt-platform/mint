@@ -22,13 +22,13 @@ class CreatePaliTextsTable extends Migration
             $table->text('toc');
             $table->text('text');
             $table->text('html');
-            $table->integer('lenght');
-            $table->integer('album_index');
-            $table->integer('chapter_len');
-            $table->integer('next_chapter');
-            $table->integer('prev_chapter');
-            $table->integer('parent');
-            $table->integer('chapter_strlen');
+            $table->integer('lenght')->nullable();
+            $table->integer('album_index')->nullable();
+            $table->integer('chapter_len')->nullable();
+            $table->integer('next_chapter')->nullable();
+            $table->integer('prev_chapter')->nullable();
+            $table->integer('parent')->nullable();
+            $table->integer('chapter_strlen')->nullable();
 
             $table->timestamps();
 

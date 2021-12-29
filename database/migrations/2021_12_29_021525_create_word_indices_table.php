@@ -22,7 +22,7 @@ class CreateWordIndicesTable extends Migration
             $table->integer('bold')->default(0);
             $table->integer('is_base')->default(0);
             $table->integer('len')->default(0);
-            $table->integer('final');
+            $table->integer('final')->default(0);
 			$table->timestamp('created_at')->useCurrent();
         });
     }

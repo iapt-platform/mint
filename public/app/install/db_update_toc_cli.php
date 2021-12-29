@@ -1,10 +1,16 @@
 <?php
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
 require_once __DIR__."/../public/function.php";
 
-define("_DB_RES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_","res_indexs");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+
+define("_DB_RES_INDEX_", _PG_DB_RESRES_INDEX_);
+define("_TABLE_",_PG_TABLE_RES_INDEX_);
 
 echo "Update toc to res_index".PHP_EOL;
 

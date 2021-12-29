@@ -3,7 +3,6 @@
 用拆分好的三藏数据 生成模板库
  */
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
 
 set_exception_handler(function($e){
 	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
@@ -29,8 +28,8 @@ if ($_to > 217) {
 
 
 #pg
-define("_DB_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_","wbw_templates");
+define("_DB_", _PG_DB_PALICANON_TEMPLET_);
+define("_TABLE_",_PG_TABLE_PALICANON_TEMPLET_);
 
 
 $filelist = array();

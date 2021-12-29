@@ -22,17 +22,19 @@ class CreateResIndicesTable extends Migration
             $table->integer('level');
             $table->integer('type');
             $table->string('language',16);
-            $table->string('author',256);
-            $table->integer('editor');
-            $table->integer('share');
+            $table->string('author',256)->nullable();
+            $table->integer('editor')->default(0);
+            $table->integer('share')->default(1);
             $table->integer('edition')->default(1);
             $table->integer('hit')->default(0);
-            $table->integer('album');
-            $table->string('tag',1024);
-            $table->string('summary',1024);
+            $table->integer('album')->nullable();
+            $table->string('tag',1024)->nullable();
+            $table->string('summary',1024)->nullable();
+            $table->bigInteger('create_time');
+            $table->bigInteger('update_time');
             
-			$table->timestamps('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamps('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
         });
     }
