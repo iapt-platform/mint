@@ -120,7 +120,7 @@ define("_TABLE_BOOK_WORD_", "book_words");
 //define("_TABLE_WORD_", "word");
 
 define("_FILE_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_WORD_", "words");
+define("_TABLE_WORD_", "word_lists");
 
 /*
 92万词
