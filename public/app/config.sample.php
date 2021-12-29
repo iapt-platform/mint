@@ -148,7 +148,7 @@ define("_TABLE_WORD_BOLD_", "bold");
 
 //PostgreSQL
 //define("_FILE_DB_BOLD_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-//define("_TABLE_WORD_BOLD_", "bold");
+//define("_TABLE_WORD_BOLD_", "bolds");
 
 /*
 单词分析表
