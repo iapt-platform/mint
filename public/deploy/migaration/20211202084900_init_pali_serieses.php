@@ -4,8 +4,12 @@
 */
 require_once __DIR__."/../../app/config.php";
 
-define("_PG_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_PALI_BOOK_NAME_","books");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
 $src_file=_DIR_PALI_TITLE_."/pali_serieses.csv";#源数据
 
@@ -43,7 +47,7 @@ echo "begin Transaction".PHP_EOL;
 
 $PDO_DEST->beginTransaction();
 
-$query = "INSERT INTO ".$dest_table." (id, book , paragraph , title ) VALUES ( ? , ? , ? , ? )";
+$query = "INSERT INTO ".$dest_table." ( book , paragraph , title ) VALUES (  ? , ? , ? )";
 try{
 	$stmtDEST = $PDO_DEST->prepare($query);
 }catch(PDOException $e){
@@ -58,16 +62,17 @@ $count = 0;
 while (($data = fgetcsv($fp, 0, ',')) !== false){
 	if($row>0){
 		#插入目标表
-		$date= array(
-			(int)$data[0],
-			(int)$data[1],
-			(int)$data[2],
-			$data[3],
+		$rowData= array(
+			$data[1],
+			$data[2],
+			$data[3]
 		);
 		try{					
-			$stmtDEST->execute($data);		
+			$stmtDEST->execute($rowData);		
 		}catch(PDOException $e){
-			fwrite(STDERR,"error:".$e->getMessage().implode(',',$data));
+			fwrite(STDERR,"error:".$e->getMessage().PHP_EOL);
+			fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+			fwrite(STDERR,"error-data:".implode(',',$rowData).PHP_EOL);
 			exit;
 		}
 		$count++;

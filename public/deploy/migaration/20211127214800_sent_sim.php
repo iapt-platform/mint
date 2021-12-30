@@ -1,14 +1,18 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
-define("_PG_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_SENT_SIM_", "sent_sims");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
-$src_db=_SRC_DB_PALI_SENTENCE_SIM_;#源数据库
-$src_table=_TABLE_SRC_SENT_SIM_;#源表名
+$src_db = _SQLITE_DB_PALI_SENTENCE_SIM_;#源数据库
+$src_table = _SQLITE_TABLE_SENT_SIM_;#源表名
 
-$dest_db=_PG_DB_PALI_SENTENCE_SIM_;#目标数据库
-$dest_table=_PG_TABLE_SENT_SIM_;#目标表名
+$dest_db = _PG_DB_PALI_SENTENCE_SIM_;#目标数据库
+$dest_table = _PG_TABLE_SENT_SIM_;#目标表名
 
 echo "migarate sent_sim".PHP_EOL;
 #打开源数据库
@@ -23,14 +27,11 @@ echo "open dest".PHP_EOL;
 
 #删除目标表中所有数据
 fwrite(STDOUT,"deleting date".PHP_EOL) ;
-try{
-	$query = "DELETE FROM ".$dest_table;
-	$stmt = $PDO_DEST->prepare($query);
-	$stmt->execute();
-}catch(PDOException $e){
-	fwrite(STDERR,"error:".$e->getMessage());
-	exit;
-}
+
+$query = "DELETE FROM ".$dest_table;
+$stmt = $PDO_DEST->prepare($query);
+$stmt->execute();
+
 fwrite(STDOUT,"deleted date".PHP_EOL) ;
 
 // 开始一个事务，关闭自动提交
@@ -48,12 +49,13 @@ try{
 }
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true ";
+$query = "SELECT *  FROM ".$src_table;
 try{
 	$stmtSrc = $PDO_SRC->prepare($query);
 	$stmtSrc->execute();
 }catch(PDOException $e){
-	fwrite(STDERR,"error:".$e->getMessage());
+	fwrite(STDERR,"error:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
 	exit;
 }
 
@@ -67,7 +69,9 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	try{					
 		$stmtDEST->execute($data);		
 	}catch(PDOException $e){
-		fwrite(STDERR,"error:".$e->getMessage().implode(',',$data));
+		fwrite(STDERR,"error:".$e->getMessage().PHP_EOL);
+		fwrite(STDERR,"error-data:".implode(',',$data).PHP_EOL);
+		fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
 		exit;
 	}
 		

@@ -1,9 +1,12 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
-define("_PG_DB_PALI_SENTENCE_SIM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_SENT_SIM_", "sent_sims");
-define("_PG_TABLE_SENT_SIM_INDEX_", "sent_sim_indexs");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
 $dest_db = _PG_DB_PALI_SENTENCE_SIM_;#目标数据库
 $dest_table = _PG_TABLE_SENT_SIM_INDEX_;#目标表名

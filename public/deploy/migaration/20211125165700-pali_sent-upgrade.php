@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__."/../../app/config.php";
 
-
-define("_PG_DB_PALI_SENTENCE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_PALI_SENT_", "pali_sentences");
-define("_PG_TABLE_PALI_SENT_ORG_", "pali_sent_orgs");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
 $src_db=_PG_DB_PALI_SENTENCE_;#源数据库
 $src_table=_PG_TABLE_PALI_SENT_ORG_;#源表名
@@ -51,7 +53,7 @@ try{
 }
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true order by id asc";
+$query = "SELECT *  FROM ".$src_table." order by id asc";
 try{
 	$stmtSrc = $PDO_SRC->prepare($query);
 	$stmtSrc->execute();
@@ -65,20 +67,20 @@ $currMergeCell = 1;
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	#插入目标表
 	$currData = array(
-					(int)$srcData["id"],
-					(int)$srcData["book"],
-					(int)$srcData["paragraph"],
-					(int)$srcData["word_begin"],
-					(int)$srcData["word_end"],
-					(int)$srcData["length"],
-					(int)$srcData["count"],
+					$srcData["id"],
+					$srcData["book"],
+					$srcData["paragraph"],
+					$srcData["word_begin"],
+					$srcData["word_end"],
+					$srcData["length"],
+					$srcData["count"],
 					$srcData["text"],
 					$srcData["html"],
 					$srcData["sim_sents"]);
-	if($srcData["cell"]==1 ){
+	if($srcData["merge"]==1 ){
 		$stmtDEST->execute($currData);
-	}else if($srcData["cell"]>1){
-		$currMergeCell = (int)$srcData["cell"];
+	}else if($srcData["merge"]>1){
+		$currMergeCell = $srcData["merge"];
 		$data = $currData;
 	}else{
 		$data["word_end"] = $srcData["word_end"];
