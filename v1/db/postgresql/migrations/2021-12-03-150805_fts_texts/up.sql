@@ -79,7 +79,7 @@ CREATE INDEX full_text_search_weighted__unaccent_idx
 
 CREATE OR REPLACE FUNCTION query_pali(query_str TEXT) 
   RETURNS TABLE(
-          rank NUMERIC,
+          rank REAL,
           paragraph INTEGER,
           wid VARCHAR,
           bold_single TEXT,
