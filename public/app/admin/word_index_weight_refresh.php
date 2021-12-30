@@ -138,7 +138,7 @@ for ($i = $from; $i <= $to; $i++) {
             }
             # 将整段权重写入据库
             $dh_pali->beginTransaction();
-            $query = "UPDATE ".__TABLE_WORD__." set weight = ? where id=? ";
+            $query = "UPDATE ".__TABLE_WORD__." set weight = ? , updated_at = now() where id=? ";
             $stmt_weight = $dh_pali->prepare($query);
             foreach ($fetch as $key => $value) {
                 $stmt_weight->execute(array($value["weight"], $value["id"]));
