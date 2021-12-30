@@ -45,7 +45,7 @@ fwrite(STDOUT,"begin Transaction".PHP_EOL);
 
 $PDO_DEST->beginTransaction();
 
-$query = "INSERT INTO ".$dest_table." ( bookid , word , count , base , end1 , end2 , type , length ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+$query = "INSERT INTO ".$dest_table." ( bookid , word , count , base , end1 , end2 , type , length , created_at, updated_at ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, now(),now() )";
 try{
 	$stmtDEST = $PDO_DEST->prepare($query);
 }catch(PDOException $e){
