@@ -20,8 +20,8 @@ class CreateProgressChaptersTable extends Migration
             $table->string('lang',16);
             $table->float('all_trans');
             $table->float('public');
-            $table->timestamp('created_at')->useCurrent();
-			
+			$table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

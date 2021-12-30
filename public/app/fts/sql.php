@@ -85,7 +85,7 @@ $dbh_fts = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTEN
 $dbh_fts->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // 查找 tmp/palicsv/ 目录下的语料数据
-$palicsv_path = __DIR__.'/../../tmp/palicsv/';
+$palicsv_path = __DIR__.'/../../tmp/palicsv';
 $scan = scandir($palicsv_path);
 $fileCounter = 0;
 foreach($scan as $foldername) {

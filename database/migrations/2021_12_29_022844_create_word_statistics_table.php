@@ -23,7 +23,7 @@ class CreateWordStatisticsTable extends Migration
             $table->string('end2',256)->index();
             $table->integer('type');
             $table->integer('length');
-			$table->timestamp('created_at')->useCurrent();
+			$table->timestamps();
 
         });
     }

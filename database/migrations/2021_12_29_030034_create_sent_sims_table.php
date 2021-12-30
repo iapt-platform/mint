@@ -19,6 +19,8 @@ class CreateSentSimsTable extends Migration
             $table->integer('sent2');
             $table->float('sim');
 			$table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
 
         });
     }

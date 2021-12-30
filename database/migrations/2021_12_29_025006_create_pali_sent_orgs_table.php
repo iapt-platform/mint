@@ -28,6 +28,7 @@ class CreatePaliSentOrgsTable extends Migration
             $table->text('sim_sents_count')->default(0);
 			$table->timestamp('created_at')->useCurrent();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
 			$table->index(['book','paragraph','word_begin','word_end']);
 
         });

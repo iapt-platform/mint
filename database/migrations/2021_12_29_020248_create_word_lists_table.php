@@ -21,7 +21,7 @@ class CreateWordListsTable extends Migration
             $table->integer('wordindex')->index();
             $table->integer('bold')->default(0);
             $table->integer('weight')->default(1);
-			$table->timestamp('created_at')->useCurrent();
+			$table->timestamps();
 
             $table->index(["book", "paragraph"]);
 

@@ -19,6 +19,8 @@ class CreatePaliSentIndicesTable extends Migration
 			$table->integer('para');
 			$table->integer('strlen');
 			$table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
 			$table->index(['book','para']);
         });
     }

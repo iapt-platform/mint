@@ -24,7 +24,7 @@ class CreateWbwTemplatesTable extends Migration
 			$table->string('gramma',64);
 			$table->string('part',1024);
 			$table->string('style',64);
-			$table->timestamp('created_at')->useCurrent();
+			$table->timestamps();
 
             $table->index(["book", "paragraph", "wid"]);
             $table->index(["book", "paragraph"]);

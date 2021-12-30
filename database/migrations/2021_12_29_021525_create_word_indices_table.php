@@ -14,7 +14,7 @@ class CreateWordIndicesTable extends Migration
     public function up()
     {
         Schema::create('word_indices', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->primary();
             $table->string('word',1024)->unique();
             $table->string('word_en',1024)->index();
             $table->integer('count')->default(0);
@@ -23,7 +23,7 @@ class CreateWordIndicesTable extends Migration
             $table->integer('is_base')->default(0);
             $table->integer('len')->default(0);
             $table->integer('final')->default(0);
-			$table->timestamp('created_at')->useCurrent();
+			$table->timestamps();
         });
     }
 

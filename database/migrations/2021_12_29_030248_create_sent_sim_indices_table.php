@@ -18,6 +18,8 @@ class CreateSentSimIndicesTable extends Migration
             $table->integer('sent_id')->index();
             $table->integer('count');
 			$table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
 
         });
     }

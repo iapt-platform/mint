@@ -18,10 +18,8 @@ class CreateBookTitlesTable extends Migration
 			$table->integer('book');
             $table->integer('paragraph')->index();
             $table->string('title',1024);
-            $table->timestamp('created_at')->useCurrent();
-			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->index(["book", "paragraph"]);
-
+            $table->timestamps();
+            $table->unique(["book", "paragraph"]);
         });
     }
 

@@ -21,6 +21,8 @@ class CreateProgressTable extends Migration
             $table->integer('all_strlen');
             $table->integer('public_strlen');
 			$table->timestamp('created_at')->useCurrent();
+			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
 			$table->index(['book','para']);
 			$table->index(['book','para','lang']);
         });
