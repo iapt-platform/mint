@@ -14,8 +14,6 @@ DROP TEXT SEARCH DICTIONARY pali_stem ;
 -- 删除巴利语停用词字典
 DROP TEXT SEARCH DICTIONARY pali_stopwords ;
 
-DROP EXTENSION "unaccent";
-
 -- 删除查询函数
 
 DROP  FUNCTION query_pali ;
