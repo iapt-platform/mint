@@ -102,7 +102,7 @@ define("_PG_TABLE_WORD_BOLD_", "bolds");
 */
 //sqlite
 define("_SQLITE_DB_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/word_statistics.db3");
-define("_SQLITE_TABLE_WORD_STATISTICS_", "word_statistics");
+define("_SQLITE_TABLE_WORD_STATISTICS_", "word");
 
 //PostgreSQL
 define("_PG_DB_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
@@ -118,7 +118,7 @@ define("_PG_TABLE_WORD_STATISTICS_", "word_statistics");
 
 */
 //sqlite
-define("_SQLITE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent1.db3");
+define("_SQLITE_DB_PALI_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pali_sent2.db3");
 define("_SQLITE_TABLE_PALI_SENT_", "pali_sent");
 define("_SQLITE_TABLE_PALI_SENT_ORG_", "pali_sent_org");
 define("_SQLITE_TABLE_PALI_SENT_INDEX_", "pali_sent_index");
