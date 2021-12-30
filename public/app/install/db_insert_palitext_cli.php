@@ -127,7 +127,7 @@ for ($from=$_from-1; $from < $to; $from++) {
     // 开始一个事务，关闭自动提交
     $dbh->beginTransaction();
     
-    $query = "INSERT INTO "._TABLE_." ( book , paragraph , level , class , toc , text , html , lenght ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO "._TABLE_." ( book , paragraph , level , class , toc , text , html , lenght , created_at,updated_at ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? ,now(),now() )";
     $stmt = $dbh->prepare($query);
     foreach ($arrInserString as $oneParam) {
         if ($oneParam[3] < 100) {

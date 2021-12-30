@@ -122,7 +122,7 @@ $paragraph_count = count($title_data);
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "UPDATE "._TABLE_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
+$query = "UPDATE "._TABLE_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ? , updated_at = now()  WHERE book=? and paragraph=?";
 $stmt = $PDO->prepare($query);
 
 $paragraph_info = array();

@@ -47,8 +47,8 @@ try{
 
                 // 开始一个事务，关闭自动提交
                 $dbh_word_index->beginTransaction();
-                $query = "INSERT INTO "._TABLE_." (id , word , word_en , count , normal , bold , is_base , len ) 
-				                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO "._TABLE_." (id , word , word_en , count , normal , bold , is_base , len , created_at,updated_at ) 
+				                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ? , now(), now())";
 				try{
 					$stmt = $dbh_word_index->prepare($query);
 				}catch(PDOException $e){

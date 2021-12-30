@@ -69,7 +69,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !== false) {
         // 开始一个事务，关闭自动提交
         $dbh_word_index->beginTransaction();
-        $query = "INSERT INTO "._TABLE_." ( sn , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_." ( sn , book , paragraph , wordindex , bold ,created_at,updated_at ) VALUES (?,?,?,?,?,now(),now())";
         $stmt = $dbh_word_index->prepare($query);
 
         $count = 0;

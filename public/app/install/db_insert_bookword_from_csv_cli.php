@@ -87,7 +87,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     }else{
         // 开始一个事务，关闭自动提交
         $dbh_word_index->beginTransaction();
-        $query = "INSERT INTO "._TABLE_." (book , wordindex , count) VALUES ( ? , ? , ?  )";
+        $query = "INSERT INTO "._TABLE_." (book , wordindex , count , created_at,updated_at) VALUES ( ? , ? , ? , now(),now() )";
         $stmt = $dbh_word_index->prepare($query);
 
         foreach ($bookword as $key => $value) {

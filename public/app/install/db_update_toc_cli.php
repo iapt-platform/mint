@@ -111,7 +111,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     
     // 开始一个事务，关闭自动提交
     $dbh->beginTransaction();
-    $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time,created_at,updated_at  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,now(),now())";
     try{
 	$stmt = $dbh->prepare($query);
 	}catch(PDOException $e){
