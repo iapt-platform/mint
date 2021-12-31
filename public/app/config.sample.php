@@ -52,6 +52,11 @@ define("Redis",[
 	"prefix"=>"aaa://"
 ]);
 				
+# 雪花id
+define("SnowFlake",[
+	"DatacenterId"=>1,
+	"WorkerId"=>1
+]);
 /*
 数据表
 */
@@ -96,7 +101,7 @@ define("_TABLE_PALI_BOOK_NAME_",_PG_TABLE_PALI_BOOK_NAME_);
 填充 /app/install/db_insert_bookword_from_csv.php
 */
 
-define("_FILE_DB_BOOK_WORD_", _PG_FILE_DB_BOOK_WORD_);
+define("_FILE_DB_BOOK_WORD_", _PG_DB_BOOK_WORD_);
 define("_TABLE_BOOK_WORD_", _PG_TABLE_BOOK_WORD_);
 
 /*
@@ -181,25 +186,6 @@ define("_FILE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/
 
 
 # 字典数据表 全部存入redis
-#巴缅字典
-//define("_DICT_DB_PM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_DICT_DB_PM_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/3rd/pm.db");
-define("_TABLE_DICT_PM_", "dict");
-
-#系统规则
-//define("_DICT_DB_REGULAR_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_DICT_DB_REGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_regular.db");
-define("_TABLE_DICT_REGULAR_", "dict");
-
-#系统不规则
-//define("_DICT_DB_IRREGULAR_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_DICT_DB_IRREGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_irregular.db");
-define("_TABLE_DICT_IRREGULAR_", "dict");
-
-#自动compone
-//define("_DICT_DB_COMP_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_DICT_DB_COMP_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/comp.db");
-define("_TABLE_DICT_COMP_", "dict");
 
 
 #参考字典
@@ -213,99 +199,94 @@ define("_TABLE_DICT_REF_NAME_LIST_", "info");
 define("_FILE_DB_REF_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/ref1.db");
 define("_TABLE_REF_INDEX_", "dict");
 
-#为了切分复合词 使用的词头表
-//define("_FILE_DB_PART_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_PART_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/part.db3");
-define("_TABLE_PART_", "part");
-
 
 # 用户数据表
 
-//读写频繁
-# 逐词解析表
 #sqlite
-define("_FILE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
-define("_TABLE_USER_WBW_", "wbw");
-define("_TABLE_USER_WBW_BLOCK_", "wbw_block");
-
+define("_FILE_DB_USER_WBW_", _SQLITE_DB_USER_WBW_);
+define("_TABLE_SRC_USER_WBW_", _SQLITE_TABLE_SRC_USER_WBW_);
+define("_TABLE_SRC_USER_WBW_BLOCK_", _SQLITE_TABLE_SRC_USER_WBW_BLOCK_);
 
 
 # 译文
 #sqlite
-define("_FILE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
-define("_TABLE_SENTENCE_", "sentence");
-define("_TABLE_SENTENCE_BLOCK_", "sent_block");
-define("_TABLE_SENTENCE_PR_", "sent_pr");
+define("_FILE_DB_SENTENCE_", _SQLITE_DB_SENTENCE_);
+define("_TABLE_SENTENCE_", _SQLITE_TABLE_SENTENCE_);
+define("_TABLE_SENTENCE_BLOCK_", _SQLITE_TABLE_SENTENCE_BLOCK_);
+define("_TABLE_SENTENCE_PR_", _SQLITE_TABLE_SENTENCE_PR_);
 
 
 # 译文编辑历史
 #sqlite
-define("_FILE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
-define("_TABLE_SENTENCE_HISTORAY_", "sent_historay");
-
+define("_FILE_DB_USER_SENTENCE_HISTORAY_", _SQLITE_DB_USER_SENTENCE_HISTORAY_);
+define("_TABLE_SENTENCE_HISTORAY_", _SQLITE_TABLE_SENTENCE_HISTORAY_);
 
 
 # 逐词解析字典
 # sqlite
-define("_FILE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-define("_TABLE_DICT_WBW_", "wbw");
-define("_TABLE_DICT_WBW_INDEX_", "wbw_index");
+define("_FILE_DB_WBW_", _SQLITE_DB_WBW_);
+define("_TABLE_DICT_WBW_", _SQLITE_TABLE_DICT_WBW_);
+define("_TABLE_DICT_WBW_INDEX_", _SQLITE_TABLE_DICT_WBW_INDEX_);
 
 
 //写入频繁 读取不频繁
 # 用户行为记录
-//define("_FILE_DB_PAGE_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_USER_ACTIVE_", "sqlite:" . __DIR__ . "/../tmp/user/user_active.db3");
+#sqlite
+define("_FILE_DB_USER_ACTIVE_", _SQLITE_DB_USER_ACTIVE_);
+define("_TABLE_USER_OPERATION_DAILY_", _SQLITE_TABLE_USER_OPERATION_DAILY_);
+define("_TABLE_USER_OPERATION_FRAME_", _SQLITE_TABLE_USER_OPERATION_FRAME_);
 
 
-//define("_FILE_DB_USER_ACTIVE_LOG_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_USER_ACTIVE_LOG_", "sqlite:" . __DIR__ . "/../tmp/user/user_active_log.db3");
+#sqlite
+define("_FILE_DB_USER_ACTIVE_LOG_", _SQLITE_DB_USER_ACTIVE_LOG_);
+define("_TABLE_USER_OPERATION_LOG_", _SQLITE_TABLE_USER_OPERATION_LOG_);
 
 
 //读取频繁 写入不频繁 
 # 用户账号
-//define("_FILE_DB_USERINFO_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
+#sqlite
+define("_FILE_DB_USERINFO_", _SQLITE_DB_USERINFO_);
+define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
+
 
 # 版本风格 
-//define("_FILE_DB_CHANNAL_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
+#sqlite
+define("_FILE_DB_CHANNAL_", _SQLITE_DB_CHANNAL_);
+define("_TABLE_CHANNEL_", _SQLITE_TABLE_CHANNEL_);
+
 
 # 文章 文集
-//define("_FILE_DB_USER_ARTICLE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_USER_ARTICLE_", "sqlite:" . __DIR__ . "/../tmp/user/article.db3");
+
+define("_FILE_DB_USER_ARTICLE_", _SQLITE_DB_USER_ARTICLE_);
+define("_TABLE_ARTICLE_", _SQLITE_TABLE_ARTICLE_);
+define("_TABLE_COLLECTION_", _SQLITE_TABLE_COLLECTION_);
+define("_TABLE_ARTICLE_COLLECTION_", _SQLITE_TABLE_ARTICLE_COLLECTION_);
+
+
 
 # 术语
-//define("_FILE_DB_TERM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
 
 # 协作
-//define("_FILE_DB_USER_SHARE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
 
 # 工作组
-//define("_FILE_DB_GROUP_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
 
 # 逐词解析文件索引
-//define("_FILE_DB_FILEINDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
 
 # 课程
-//define("_FILE_DB_COURSE_", "pgsql:host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
 define("_TABLE_COURSE_","course");
 
 # 用户自定义书
-//define("_FILE_DB_USER_CUSTOM_BOOK_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_USER_CUSTOM_BOOK_", "sqlite:" . __DIR__ . "/../tmp/user/custom_book.db3");
 
-# 逐词译和译文编辑消息
-//define("_FILE_DB_MESSAGE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+# 逐词译和译文编辑消息 无需迁移数据
 define("_FILE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
 
 #点赞
-//define("_FILE_DB_LIKE_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_LIKE_", "sqlite:" . __DIR__ . "/../tmp/user/like.db3");
 
 
@@ -315,7 +296,7 @@ define("_FILE_DB_LIKE_", "sqlite:" . __DIR__ . "/../tmp/user/like.db3");
 define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
 
 
-# 用户字典统计数据
+# 用户字典统计数据 刷库
 //define("_FILE_DB_USER_DICT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
 
@@ -324,13 +305,6 @@ define("_FILE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
 //define("_FILE_DB_MEDIA_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
 define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
 
-# 评论 尚未启用
-//define("_FILE_DB_COMMENTS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
-
-
-//define("_FILE_DB_USER_STATISTICS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_FILE_DB_USER_STATISTICS_", "sqlite:" . __DIR__ . "/../tmp/user/statistics.db3");
 
 #权限管理 casbin使用
 //define("_FILE_DB_USER_RBAC_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
