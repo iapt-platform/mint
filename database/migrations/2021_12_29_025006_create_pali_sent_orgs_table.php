@@ -14,7 +14,7 @@ class CreatePaliSentOrgsTable extends Migration
     public function up()
     {
         Schema::create('pali_sent_orgs', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->primary();
             $table->integer('book');
             $table->integer('paragraph');
             $table->integer('word_begin');

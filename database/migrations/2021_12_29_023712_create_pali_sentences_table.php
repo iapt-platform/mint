@@ -14,7 +14,7 @@ class CreatePaliSentencesTable extends Migration
     public function up()
     {
         Schema::create('pali_sentences', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->primary();
             $table->integer('book');
             $table->integer('paragraph');
             $table->integer('word_begin');
