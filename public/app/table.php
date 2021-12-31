@@ -1,6 +1,8 @@
 <?php 
 #表名设置，不能更改
 
+//PostgreSQL
+define("_PDO_DB_DSN_", Database["type"].":host=".Database["server"].";port=".Database["port"].";dbname=".Database["name"].";user=".Database["user"].";password=".Database["password"].";");
 
 //语料库数据表 pali canon db file 
 
@@ -165,7 +167,146 @@ define("_PG_TABLE_PROGRESS_", "progress");
 define("_PG_TABLE_PROGRESS_CHAPTER_", "progress_chapters");
 
 
+# 用户数据表
+
+//读写频繁
+# 逐词解析表
+#sqlite
+define("_SQLITE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
+define("_SQLITE_TABLE_SRC_USER_WBW_", "wbw");
+define("_SQLITE_TABLE_SRC_USER_WBW_BLOCK_", "wbw_block");
+
+//PostgreSQL
+define("_PG_DB_USER_WBW_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_WBW_", "wbws");
+define("_PG_TABLE_USER_WBW_BLOCK_", "wbw_blocks");
 
 
+# 译文
+#sqlite
+define("_SQLITE_DB_SENTENCE_", "sqlite:" . __DIR__ . "/../tmp/user/sentence.db3");
+define("_SQLITE_TABLE_SENTENCE_", "sentence");
+define("_SQLITE_TABLE_SENTENCE_BLOCK_", "sent_block");
+define("_SQLITE_TABLE_SENTENCE_PR_", "sent_pr");
+
+//PostgreSQL
+define("_PG_DB_SENTENCE_", _PDO_DB_DSN_);
+define("_PG_TABLE_SENTENCE_", "sentences");
+define("_PG_TABLE_SENTENCE_BLOCK_", "sent_blocks");
+define("_PG_TABLE_SENTENCE_PR_", "sent_prs");
+
+
+
+# 译文编辑历史
+#sqlite
+define("_SQLITE_DB_USER_SENTENCE_HISTORAY_", "sqlite:" . __DIR__ . "/../tmp/user/usent_historay.db3");
+define("_SQLITE_TABLE_SENTENCE_HISTORAY_", "sent_historay");
+
+//PostgreSQL
+define("_PG_DB_USER_SENTENCE_HISTORAY_", _PDO_DB_DSN_);
+define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_historaies");
+
+
+
+# 逐词解析字典
+# sqlite
+define("_SQLITE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
+define("_SQLITE_TABLE_DICT_WBW_", "wbw");
+define("_SQLITE_TABLE_DICT_WBW_INDEX_", "wbw_index");
+
+//PostgreSQL
+define("_PG_DB_WBW_", _PDO_DB_DSN_);
+define("_PG_TABLE_DICT_WBW_", "user_dicts");
+
+
+//写入频繁 读取不频繁
+# 用户行为记录
+#sqlite
+define("_SQLITE_DB_USER_ACTIVE_", "sqlite:" . __DIR__ . "/../tmp/user/user_active.db3");
+define("_SQLITE_TABLE_USER_OPERATION_DAILY_", "active_index");
+define("_SQLITE_TABLE_USER_OPERATION_FRAME_", "edit");
+
+//PostgreSQL
+define("_PG_DB_USER_ACTIVE_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_OPERATION_DAILY_", "user_operation_dailys");
+define("_PG_TABLE_USER_OPERATION_FRAME_", "user_operation_frames");
+
+#sqlite
+define("_SQLITE_DB_USER_ACTIVE_LOG_", "sqlite:" . __DIR__ . "/../tmp/user/user_active_log.db3");
+define("_SQLITE_TABLE_USER_OPERATION_LOG_", "log");
+
+#PostgreSQL
+define("_PG_DB_USER_ACTIVE_LOG_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_OPERATION_LOG_", "user_operation_logs");
+
+
+
+//读取频繁 写入不频繁 
+# 用户账号
+#sqlite
+define("_SQLITE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
+define("_SQLITE_TABLE_USER_INFO_", "user");
+
+#pg
+define("_PG_DB_USERINFO_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_INFO_", "user_infos");
+
+
+# 版本风格 
+#sqlite
+define("_SQLITE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
+define("_SQLITE_TABLE_CHANNEL_", "channal");
+
+#pg
+define("_PG_DB_CHANNAL_", _PDO_DB_DSN_);
+define("_PG_TABLE_CHANNEL_", "channels");
+
+
+# 文章 文集
+# sqlite
+define("_SQLITE_DB_USER_ARTICLE_", "sqlite:" . __DIR__ . "/../tmp/user/article.db3");
+define("_SQLITE_TABLE_ARTICLE_", "article");
+define("_SQLITE_TABLE_COLLECTION_", "collect");
+define("_SQLITE_TABLE_ARTICLE_COLLECTION_", "article_list");
+
+
+# pg
+define("_PG_DB_USER_ARTICLE_", _PDO_DB_DSN_);
+define("_PG_TABLE_ARTICLE_", "articles");
+define("_PG_TABLE_COLLECTION_", "collections");
+define("_PG_TABLE_ARTICLE_COLLECTION_", "article_collection");
+
+#无需迁移
+
+#巴缅字典
+//define("_DICT_DB_PM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_DICT_DB_PM_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/3rd/pm.db");
+define("_TABLE_DICT_PM_", "dict");
+
+#系统规则
+//define("_DICT_DB_REGULAR_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_DICT_DB_REGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_regular.db");
+define("_TABLE_DICT_REGULAR_", "dict");
+
+#系统不规则
+//define("_DICT_DB_IRREGULAR_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_DICT_DB_IRREGULAR_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/sys_irregular.db");
+define("_TABLE_DICT_IRREGULAR_", "dict");
+
+#自动compone
+//define("_DICT_DB_COMP_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_DICT_DB_COMP_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/comp.db");
+define("_TABLE_DICT_COMP_", "dict");
+
+
+
+#为了切分复合词 使用的词头表
+//define("_FILE_DB_PART_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_FILE_DB_PART_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/part.db3");
+define("_TABLE_PART_", "part");
+
+# 评论 已经废弃
+//define("_FILE_DB_COMMENTS_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
+define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
 
 ?>
