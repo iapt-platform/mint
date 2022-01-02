@@ -20,7 +20,7 @@ class InitDependence extends Command
      *
      * @var string
      */
-    protected $description = 'init dependence date - dictionay,pali sencence';
+    protected $description = 'init dependence date - pali sencence ect.';
 
     /**
      * Create a new command instance.
