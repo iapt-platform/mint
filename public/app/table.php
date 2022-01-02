@@ -276,7 +276,125 @@ define("_PG_TABLE_ARTICLE_", "articles");
 define("_PG_TABLE_COLLECTION_", "collections");
 define("_PG_TABLE_ARTICLE_COLLECTION_", "article_collection");
 
+# 术语
+define("_SQLITE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
+define("_SQLITE_TABLE_TERM_", "term");
+
+define("_PG_DB_TERM_", _PDO_DB_DSN_);
+define("_PG_TABLE_TERM_", "term");
+
+# 协作
+define("_SQLITE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
+define("_SQLITE_TABLE_USER_SHARE_", "share_cooperator");
+
+define("_PG_DB_USER_SHARE_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_SHARE_", "share_cooperator");
+
+# 工作组
+define("_SQLITE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
+define("_SQLITE_TABLE_GROUP_INFO_", "group_info");
+define("_SQLITE_TABLE_GROUP_MEMBER_", "group_member");
+
+define("_PG_DB_GROUP_", _PDO_DB_DSN_);
+define("_PG_TABLE_GROUP_INFO_", "group_info");
+define("_PG_TABLE_GROUP_MEMBER_", "group_member");
+
+# 逐词解析文件索引
+define("_SQLITE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
+define("_SQLITE_TABLE_FILEINDEX_", "fileindex");
+define("_SQLITE_TABLE_FILEINDEX_POWER_", "power");
+
+define("_PG_DB_FILEINDEX_", _PDO_DB_DSN_);
+define("_PG_TABLE_FILEINDEX_", "fileindex");
+define("_PG_TABLE_FILEINDEX_POWER_", "power");
+
+# 课程
+define("_SQLITE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
+define("_SQLITE_TABLE_COURSE_","course");
+define("_SQLITE_TABLE_LESSON_","lesson");
+
+define("_PG_DB_COURSE_", _PDO_DB_DSN_);
+define("_PG_TABLE_COURSE_","course");
+define("_PG_TABLE_LESSON_","lesson");
+
+# 用户自定义书
+define("_SQLITE_DB_USER_CUSTOM_BOOK_", "sqlite:" . __DIR__ . "/../tmp/user/custom_book.db3");
+define("_SQLITE_TABLE_CUSTOM_BOOK_", "custom_book");
+define("_SQLITE_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
+
+define("_PG_DB_USER_CUSTOM_BOOK_", _PDO_DB_DSN_);
+define("_PG_TABLE_CUSTOM_BOOK_", "custom_book");
+define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
+
+# 逐词译和译文编辑消息 无需迁移数据
+define("_SQLITE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
+define("_SQLITE_TABLE_MESSAGE_", "message");
+
+define("_PG_DB_MESSAGE_", _PDO_DB_DSN_);
+define("_PG_TABLE_MESSAGE_", "message");
+
+#点赞
+define("_SQLITE_DB_LIKE_", "sqlite:" . __DIR__ . "/../tmp/user/like.db3");
+define("_SQLITE_TABLE_LIKE_", "likes");
+
+define("_PG_DB_LIKE_", _PDO_DB_DSN_);
+define("_PG_TABLE_LIKE_", "likes");
+
+# 用户字典统计数据 刷库 - 无需迁移数据
+define("_SQLITE_DB_USER_DICT_", "sqlite:" . __DIR__ . "/../tmp/user/udict.db3");
+define("_SQLITE_TABLE_USER_DICT_", "udict");
+
+define("_PG_DB_USER_DICT_", _PDO_DB_DSN_);
+define("_PG_TABLE_USER_DICT_", "udict");
+
+# 页码对应
+define("_SQLITE_DB_PAGE_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/palicanon/pagemap.db3");
+define("_SQLITE_TABLE_PAGE_MATCH_", 'pagematch');
+define("_SQLITE_TABLE_BOOK_MATCH_", 'book_match');
+define("_SQLITE_TABLE_CS6_PARA_", 'cs6_para');
+define("_SQLITE_TABLE_MY_PAGE_", 'm');
+define("_SQLITE_TABLE_PAGE_NUMBER_", 'multi_edition_page_number');
+
+define("_PG_DB_PAGE_INDEX_", _PDO_DB_DSN_);
+define("_PG_TABLE_PAGE_MATCH_", 'pagematch');
+define("_PG_TABLE_BOOK_MATCH_", 'book_match');
+define("_PG_TABLE_CS6_PARA_", 'cs6_para');
+define("_PG_TABLE_MY_PAGE_", 'm');
+define("_PG_TABLE_PAGE_NUMBER_", 'multi_edition_page_number');
+
+
+#参考字典
+define("_SQLITE_DB_REF_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/ref.db");
+define("_SQLITE_TABLE_DICT_REF_", "dict");
+define("_SQLITE_TABLE_DICT_REF_NAME_", "info");
+
+define("_PG_DB_REF_", _PDO_DB_DSN_);
+define("_PG_TABLE_DICT_REF_", "dict");
+define("_PG_TABLE_DICT_REF_NAME_", "info");
+
+#参考字典索引
+define("_SQLITE_DB_REF_INDEX_", "sqlite:" . __DIR__ . "/../tmp/appdata/dict/system/ref1.db");
+define("_SQLITE_TABLE_REF_INDEX_", "dict");
+
+define("_PG_DB_REF_INDEX_", _PDO_DB_DSN_);
+define("_PG_TABLE_REF_INDEX_", "dict");
+
 #无需迁移
+
+# 用户图片数据 尚未启用
+define("_FILE_DB_MEDIA_", "sqlite:" . __DIR__ . "/../tmp/user/media.db3");
+
+
+#权限管理 casbin使用
+define("_FILE_DB_USER_RBAC_",  __DIR__ . "/../tmp/user/rbac.db3");
+
+
+# 全文搜索
+define("_TABLE_FTS_", "fts_texts");
+
+//很少使用
+# 网站设置
+define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
 
 #巴缅字典
 //define("_DICT_DB_PM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
