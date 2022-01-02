@@ -1,9 +1,0 @@
-[submodule "public/dependence/pali-similarity"]
-	path = public/dependence/pali-similarity
-	url = https://github.com/visuddhinanda/pali-similarity.git
-[submodule "public/dependence/word-statistics"]
-	path = public/dependence/word-statistics
-	url = https://github.com/visuddhinanda/word-statistics.git
-[submodule "public/dependence/pali-sentence"]
-	path = public/dependence/pali-sentence
-	url = https://github.com/visuddhinanda/pali-sentence.git
