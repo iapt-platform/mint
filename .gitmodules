@@ -4,3 +4,6 @@
 [submodule "public/dependence/word-statistics"]
 	path = public/dependence/word-statistics
 	url = https://github.com/visuddhinanda/word-statistics.git
+[submodule "public/dependence/pali-sentence"]
+	path = public/dependence/pali-sentence
+	url = https://github.com/visuddhinanda/pali-sentence.git
