@@ -40,21 +40,13 @@ class InitDependence extends Command
     public function handle()
     {
 		#克隆依赖的数据到本地
-		#巴利句子
-		$git['pali_sentence'] = env('DEPENDENCE_PALI_SENT', 'http://visuddhinanda.github.com/pali_sent/.git');
-		#巴利相似句
-		$git['pali_similarity'] = env('DEPENDENCE_PALI_SIM', 'http://visuddhinanda.github.com/pali_sim/.git');
-		#单词分析
-		$git['word_statistics'] = env('DEPENDENCE_WORD_STATI', 'http://visuddhinanda.github.com/word_statistics/.git');
-		foreach ($git as $key => $value) {
-			# clone repo to local
-			$process = new Process(['git','clone',$pali_sent,storage_path($key)]);
-			$process->run();
-			if(!$process->isSuccessful()){
-				throw new ProcessFailedException($process);
-			}
-			$this->info($process->getOutput());	
+
+		$process = new Process(['git','submodule','update','--remote']);
+		$process->run();
+		if(!$process->isSuccessful()){
+			throw new ProcessFailedException($process);
 		}
+		$this->info($process->getOutput());	
         return 0;
     }
 }
