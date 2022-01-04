@@ -24,7 +24,11 @@
 最小版本v12。下载链接
 https://www.postgresql.org/download/
 
->温馨提示：windows环境安装完之后 将 安装目录/bin加入环境变量 PATH。重启电脑。在命令行输入psql -v 查看版本号。
+>温馨提示：windows环境安装完之后 将 安装目录/bin加入环境变量 PATH。重启电脑。在命令行输入 psql -v 查看版本号。
+
+建立新的数据库，如：create database iapt
+
+![createdb](public/documents/imgs/createdb.jpg)
 
 #### PHP 8
 
@@ -44,12 +48,12 @@ git clone https://github.com/<your>/mint.git  --recurse-submodules
 
 复制 .env.example -> .env
 
-修改db配置
+修改为你的db配置
 ```
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=mint
+DB_DATABASE=iapt
 DB_USERNAME=postgres
 DB_PASSWORD=
 ```
