@@ -151,14 +151,15 @@ for ($from=$_from; $from <=$_to ; $from++) {
 
 		$log = "$from, $FileName, error, $error[2] \r\n";
 		//fwrite($myLogFile, $log);
+		exit(1);
 	} else {
 		
 		echo "updata $row recorders.".PHP_EOL;
+
 	}
-
-
-
 }
+
+exit();
 
 
 
