@@ -14,7 +14,7 @@ CREATE TABLE fts_texts (
 );
 
 -- 创建全文检索配置 pali
-CREATE TEXT SEARCH CONFIGURATION pali ( parser = pg_catalog.default );
+CREATE TEXT SEARCH CONFIGURATION  pali ( parser = pg_catalog.default );
 
 -- 创建全文检索配置 pali_unaccent 无标音符号版
 CREATE TEXT SEARCH CONFIGURATION pali_unaccent ( parser = pg_catalog.default );
@@ -78,7 +78,7 @@ CREATE INDEX full_text_search_weighted__unaccent_idx
 
 CREATE OR REPLACE FUNCTION query_pali(query_str TEXT)
   RETURNS TABLE(
-          rank NUMERIC,
+          rank REAL,
           paragraph INTEGER,
           wid VARCHAR,
           bold_single TEXT,
