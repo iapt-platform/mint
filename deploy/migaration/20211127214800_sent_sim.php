@@ -48,7 +48,7 @@ try{
 }
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true ";
+$query = "SELECT *  FROM ".$src_table;
 try{
 	$stmtSrc = $PDO_SRC->prepare($query);
 	$stmtSrc->execute();
