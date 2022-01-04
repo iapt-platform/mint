@@ -496,7 +496,7 @@ if (isset($_POST["username"]) && $_username_ok == true) {
     }
     ?>
 
-
+			<a href="forgot_pwd.php">忘记密码</a>
 			<div class="login_form" style="padding: 3em 0 3em 0;">
 			<form action="index.php" method="post">
 				<div>
