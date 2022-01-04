@@ -355,7 +355,7 @@ else{
 					</svg>
 				</a>
 			</li>
-			<li><a href="" target="_block">wikipali论坛（企劃中）</a></li>
+			<li><a href="https://iaptforum.top/" target="_block">wikipali论坛</a></li>
 			<li>
 				<!--<a href="https://github.com/iapt-platform/PCD-internet1.0#wikipali-demo" target="_block">-->
 				<?php echo $_local->gui->help_doc;?>

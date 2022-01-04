@@ -247,12 +247,21 @@ else{$currDevice="computer";}
 	.translate_sent_head_toolbar {
 		display: none;
 	}
+	div#input_org_select{
+		position: relative;
+	}
 	div#input_org_select .case_dropbtn {
-		background-color: rgb(127 127 127 / 20%);
 		padding: 0 6px;
 		border-radius: 4px;
 		min-width: 1em;
 		min-height: 1.3em;
+		background: url(../../node_modules/bootstrap-icons/icons/chevron-double-down.svg);
+		background-repeat: no-repeat;
+		background-position-x: center;
+		background-position-y: bottom;
+		background-origin: content-box;
+		background-color: var(--main-color1);
+		white-space: nowrap;
 	}
 
 	#word_mdf_parts_dropdown  a {
@@ -261,6 +270,25 @@ else{$currDevice="computer";}
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+	}
+	#merge_button{
+		position: absolute;
+		left: 7em;
+		border: unset;
+		height: 6em;
+		width: 3em;
+		padding: unset;
+		transform: scaleX(0.6);
+	}
+	#merge_button>.icon{
+		fill: var(--link-color);
+	}
+
+	#merge_button:hover{
+		background: unset;
+	}
+	#merge_button:hover>.icon{
+		fill: var(--link-hover-color);
 	}
 	</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
@@ -681,6 +709,11 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p">
 					<guide gid="studio_general_meaning">⑤</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
+					<button id="merge_button" onclick="copy_part_mean_to_mean()">
+						<svg class="icon" style="transform: rotate(315deg);height: 4em;width: 6em;">
+							<use xlink="http://www.w3.org/1999/xlink" href="../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-90deg-right">
+						</svg>
+					</button>
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
