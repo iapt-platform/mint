@@ -11,14 +11,14 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'install {--queue}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'install new host';
 
     /**
      * Create a new command instance.
@@ -37,6 +37,9 @@ class Install extends Command
      */
     public function handle()
     {
+		$this->call('install:wbwtemplate', [
+			'from' => 1, 'to' => 217
+		]);
         return 0;
     }
 }
