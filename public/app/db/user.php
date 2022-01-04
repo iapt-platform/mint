@@ -175,7 +175,7 @@ class User extends Table
 			$ok = $this->_update(["reset_password_token"=>$resetToken],["reset_password_token"],["email"=>$email]);
 			if($ok){
 				#send email
-				$resetLink=WWW_DOMAIN_NAME."/app/ucenter/reset.php?token=".$resetToken;
+				$resetLink='https://'.WWW_DOMAIN_NAME."/app/ucenter/reset.php?token=".$resetToken;
 				$resetString=WWW_DOMAIN_NAME."/app/ucenter/reset.php";
 		
 				// 打开文件并读取数据

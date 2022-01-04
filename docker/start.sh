@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=mint
+NAME=mint-laravel
 
 if podman container exists $NAME
 then
