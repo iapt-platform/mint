@@ -71,34 +71,6 @@ DB::connection()->getPdo()->exec($sql);
 $sql = "CREATE INDEX full_text_search_weighted__unaccent_idx ON fts_texts USING GIN (full_text_search_weighted_unaccent);";
 DB::connection()->getPdo()->exec($sql);
 
-
-$sql = "CREATE OR REPLACE FUNCTION query_pali(query_str TEXT) 
-  RETURNS TABLE(
-          rank REAL,
-          paragraph INTEGER,
-          wid VARCHAR,
-          bold_single TEXT,
-          bold_double TEXT,
-          bold_multiple TEXT,
-          content TEXT,
-          full_text_search_weighted TSVECTOR,
-          full_text_search_weighted_unaccent TSVECTOR) 
-AS $$
-    SELECT
-    ts_rank('{0.1, 0.2, 0.4, 1}',
-        full_text_search_weighted,
-        websearch_to_tsquery('pali', query_str)) +
-    ts_rank('{0.1, 0.2, 0.4, 1}',
-        full_text_search_weighted_unaccent,
-        websearch_to_tsquery('pali_unaccent', query_str)), -- AS rank
-        paragraph, wid, bold_single, bold_double, bold_multiple, content,
-        full_text_search_weighted, full_text_search_weighted_unaccent
-    FROM fts_texts
-    WHERE
-        full_text_search_weighted @@ websearch_to_tsquery('pali', query_str) OR
-        full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', query_str);
-$$ LANGUAGE SQL;";
-		DB::connection()->getPdo()->exec($sql);
 		
     }
 
@@ -131,12 +103,5 @@ $$ LANGUAGE SQL;";
 		DB::connection()->getPdo()->exec($sql);
 
 
-		$sql ='DROP EXTENSION "unaccent";';
-		DB::connection()->getPdo()->exec($sql);
-
-		# 删除查询函数
-
-		$sql ='DROP  FUNCTION query_pali ;';
-		DB::connection()->getPdo()->exec($sql);
     }
 }
