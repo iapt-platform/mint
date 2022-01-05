@@ -44,18 +44,18 @@ if (isset($_GET["page"])) {
 if (count($arrWordList) > 1) {
 	# 查询多个词
 	$out_data = array();
-    
+    /*
     PDO_Connect(_FILE_DB_PALITEXT_);
     # 首先精确匹配
     $words = implode(" ", $arrWordList);
     $query = "SELECT book,paragraph, text as content FROM "._TABLE_PALI_TEXT_." WHERE text like ?  LIMIT ? OFFSET ?";
     $Fetch1 = PDO_FetchAll($query, array("%{$words}%", $_pagesize, $_page * $_pagesize));
     
-
-	/*
-	postgresql full text search
+*/
+	
+	#postgresql full text search
     $dns = _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";";
-    PDO_Connect(_FILE_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
+    PDO_Connect($dns,_DB_USERNAME_,_DB_PASSWORD_);
 
     $query = "SELECT
     ts_rank('{0.1, 0.2, 0.4, 1}',
@@ -79,7 +79,7 @@ if (count($arrWordList) > 1) {
     ORDER BY rank DESC
     LIMIT 40;";
     $Fetch1 = PDO_FetchAll($query, array($word, $word, $word, $word, $word));
-	*/    
+	
     foreach ($Fetch1 as $key => $value) {
         # code...
         $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);

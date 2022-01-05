@@ -117,6 +117,14 @@ windows
 cp ./public/app/fts/pali.stop /usr/share/postgresql/14/tsearch_data/
 cp ./public/app/fts/pali.syn /usr/share/postgresql/14/tsearch_data/
 ```
+
+### application encryption key
+
+在<工程目录>下运行
+```
+php artisan key:generate
+```
+
 ### 数据库迁移
 
 在根目录下运行
