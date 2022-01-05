@@ -1,7 +1,7 @@
 <?php
-require_once "../config.php";
-require_once '../public/_pdo.php';
-require_once "../redis/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__.'/../public/_pdo.php';
+require_once __DIR__."/../redis/function.php";
 
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
