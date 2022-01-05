@@ -1,6 +1,6 @@
 <?php
-require_once "../config.php";
-require_once "../redis/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../redis/function.php";
 
 $rediskey = "dict://user";
 if (PHP_SAPI == "cli") {

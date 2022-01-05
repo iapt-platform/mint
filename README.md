@@ -13,22 +13,39 @@
 前端
 - jQuery
 
-
+工具
+- git
+- composer
+- npm or yarn
+- vscode
 
 ## 安装
 
-### 开发工具
+### 开发环境
+
+使用 Linux 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
 
 #### PostgreSQL
 
 最小版本v12。下载链接
 https://www.postgresql.org/download/
 
->温馨提示：windows环境安装完之后 将 安装目录/bin加入环境变量 PATH。重启电脑。在命令行输入psql -v 查看版本号。
+>温馨提示：windows环境安装完之后 将 安装目录/bin加入环境变量 PATH。重启电脑。在命令行输入 psql -v 查看版本号。
+
+建立新的数据库，如：create database iapt
+
+![createdb](public/documents/imgs/createdb.jpg)
 
 #### PHP 8
 
 #### Redis
+
+#### composer
+
+#### npm
+
+#### yarn
+
 
 ### Fork
 
@@ -40,16 +57,34 @@ Fork https://github.com/iapt-platform/mint 到你自己的仓库
 git clone https://github.com/<your>/mint.git  --recurse-submodules
 
 ```
+
+### 安装依赖
+
+项目根目录下运行
+
+```
+composer install
+npm install
+```
+
+/public 目录下运行
+
+```
+composer install
+npm install
+```
+
+
 ### 修改配置文件
 
 复制 .env.example -> .env
 
-修改db配置
+修改为你的db配置
 ```
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=mint
+DB_DATABASE=iapt
 DB_USERNAME=postgres
 DB_PASSWORD=
 ```
@@ -82,6 +117,14 @@ windows
 cp ./public/app/fts/pali.stop /usr/share/postgresql/14/tsearch_data/
 cp ./public/app/fts/pali.syn /usr/share/postgresql/14/tsearch_data/
 ```
+
+### application encryption key
+
+在<工程目录>下运行
+```
+php artisan key:generate
+```
+
 ### 数据库迁移
 
 在根目录下运行
@@ -92,13 +135,13 @@ php artisan migrate
 
 ### 语料数据库填充
 
-liunx
+**Liunx**
 ```
 cd public/deploy
 sh ./install.sh
 ```
 
-window
+**Window**
 ```
 cd public/deploy
 ./install.bat
