@@ -173,8 +173,8 @@ define("_PG_TABLE_PROGRESS_CHAPTER_", "progress_chapters");
 # 逐词解析表
 #sqlite
 define("_SQLITE_DB_USER_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/user_wbw.db3");
-define("_SQLITE_TABLE_SRC_USER_WBW_", "wbw");
-define("_SQLITE_TABLE_SRC_USER_WBW_BLOCK_", "wbw_block");
+define("_SQLITE_TABLE_USER_WBW_", "wbw");
+define("_SQLITE_TABLE_USER_WBW_BLOCK_", "wbw_block");
 
 //PostgreSQL
 define("_PG_DB_USER_WBW_", _PDO_DB_DSN_);
