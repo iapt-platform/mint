@@ -13,11 +13,17 @@
 前端
 - jQuery
 
-
+工具
+- git
+- composer
+- npm or yarn
+- vscode
 
 ## 安装
 
-### 开发工具
+### 开发环境
+
+使用 Linux 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
 
 #### PostgreSQL
 
@@ -34,6 +40,13 @@ https://www.postgresql.org/download/
 
 #### Redis
 
+#### composer
+
+#### npm
+
+#### yarn
+
+
 ### Fork
 
 Fork https://github.com/iapt-platform/mint 到你自己的仓库
@@ -44,6 +57,24 @@ Fork https://github.com/iapt-platform/mint 到你自己的仓库
 git clone https://github.com/<your>/mint.git  --recurse-submodules
 
 ```
+
+### 安装依赖
+
+项目根目录下运行
+
+```
+composer install
+npm install
+```
+
+/public 目录下运行
+
+```
+composer install
+npm install
+```
+
+
 ### 修改配置文件
 
 复制 .env.example -> .env
@@ -96,13 +127,13 @@ php artisan migrate
 
 ### 语料数据库填充
 
-liunx
+**Liunx**
 ```
 cd public/deploy
 sh ./install.sh
 ```
 
-window
+**Window**
 ```
 cd public/deploy
 ./install.bat
