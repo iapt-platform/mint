@@ -15,7 +15,7 @@ echo "book:$get_book<br />";
 //open database
 PDO_Connect(_FILE_DB_PALITEXT_);
 
-$query = "SELECT paragraph,html FROM "._TABLE_PALI_TEXT_." WHERE book = ?";
+$query = "SELECT paragraph,html FROM "._TABLE_PALI_TEXT_." WHERE book = ? order by paragraph asc";
 $Fetch = PDO_FetchAll($query, array($get_book));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {
