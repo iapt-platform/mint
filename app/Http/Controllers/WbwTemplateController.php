@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\WbwTemplate;
+use App\Http\Resources\WbwTemplateResource;
+
 
 class WbwTemplateController extends Controller
 {
@@ -11,9 +14,25 @@ class WbwTemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+		switch($request->get('view')){
+			case "para":
+				$wbw = WbwTemplate::where("book",$request->get('book'))
+									->where("paragraph",$request->get('paragraph'))
+									->get(['wid','word','real']);
+				return $this->sendResponse(WbwTemplateResource::collection($wbw),"ok");
+				break;
+			case "word":
+				$wbw = WbwTemplate::where("word",$request->get('word'))->get(['book','paragraph']);
+				return $this->sendResponse(WbwTemplateResource::collection($wbw),"ok");
+				break;
+			case "page":
+				$wbw = WbwTemplate::where("word","like","%".$request->get('num'))->get(['book','paragraph']);
+				return $this->sendResponse(WbwTemplateResource::collection($wbw),"ok");
+				break;
+		}
     }
 
     /**
@@ -36,6 +55,13 @@ class WbwTemplateController extends Controller
     public function show($id)
     {
         //
+		$para = explode('-',$id);
+		$wbw = WbwTemplate::where("book",$para[0])
+		->where("paragraph",$para[1])
+		->where("wid",$para[2])
+		->get();
+		return $this->sendResponse(WbwTemplateResource::collection($wbw),"ok");
+
     }
 
     /**

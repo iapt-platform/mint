@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\WbwTemplateController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v2'],function(){
-	Route::apiResource('wbw_templates','WbwTemplateController');
+	Route::apiResource('wbw_templates',WbwTemplateController::class);
 });
