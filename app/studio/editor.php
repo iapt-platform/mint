@@ -263,6 +263,19 @@ else{$currDevice="computer";}
 		background-color: var(--main-color1);
 		white-space: nowrap;
 	}
+	#parent_grammar{
+		padding: 0 6px;
+		border-radius: 4px;
+		min-width: 1em;
+		min-height: 1.3em;
+		background: url(../../node_modules/bootstrap-icons/icons/chevron-double-down.svg);
+		background-repeat: no-repeat;
+		background-position-x: center;
+		background-position-y: bottom;
+		background-origin: content-box;
+		background-color: var(--main-color1);
+		white-space: nowrap;
+	}
 
 	#word_mdf_parts_dropdown  a {
 		width: 100%;
@@ -793,10 +806,10 @@ foreach($plugin_list as $info){
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<span style="display:flex;">
-						<guide gid="studio_parent2">衍生原型</guide>
+						<guide gid="studio_parent2">原型</guide>
 						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;"></span>
-							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
+							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;">衍生</span>
 							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
 								<a onclick="edit_parent_grammar_changed('')"><?php echo $_local->gui->empty; ?></a>
