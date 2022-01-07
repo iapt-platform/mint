@@ -2,8 +2,8 @@
 /*
 加载巴利原文
  */
-include "../config.php";
-include "../public/_pdo.php";
+include __DIR__."/../config.php";
+include __DIR__."/../public/_pdo.php";
 
 $get_book = $_GET["book"];
 if (substr($get_book, 0, 1) == "p") {
