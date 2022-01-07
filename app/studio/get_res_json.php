@@ -43,7 +43,7 @@ PDO_Connect(_FILE_DB_RESRES_INDEX_);
 
 $res = array();
 //查书
-if ($paragraph > 0){
+if ($paragraph > 0) {
     //查书中的一个段
     PDO_Connect(_FILE_DB_RESRES_INDEX_);
     $query = "SELECT * from \""._TABLE_RES_INDEX_."\" where book='{$book}' and paragraph='{$paragraph}' and type < '5' ";
