@@ -3,10 +3,17 @@
 生成 巴利原文段落表
  */
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
+require_once __DIR__."/../public/_pdo.php";
 
-define("_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_","pali_texts");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+
+define("_DB_PALITEXT_", _PG_DB_PALITEXT_);
+define("_TABLE_",_PG_TABLE_PALI_TEXT_);
 
 echo "Update Pali Text ".PHP_EOL;
 
@@ -115,7 +122,7 @@ $paragraph_count = count($title_data);
 
 // 开始一个事务，关闭自动提交
 $PDO->beginTransaction();
-$query = "UPDATE "._TABLE_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ?  WHERE book=? and paragraph=?";
+$query = "UPDATE "._TABLE_." SET level = ? , toc = ? , chapter_len = ? , next_chapter = ?, prev_chapter=? , parent= ?  ,  chapter_strlen = ? , updated_at = now()  WHERE book=? and paragraph=?";
 $stmt = $PDO->prepare($query);
 
 $paragraph_info = array();

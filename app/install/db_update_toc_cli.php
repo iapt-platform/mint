@@ -1,10 +1,16 @@
 <?php
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
 require_once __DIR__."/../public/function.php";
 
-define("_DB_RES_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_","res_indexs");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+
+define("_DB_RES_INDEX_", _PG_DB_RESRES_INDEX_);
+define("_TABLE_",_PG_TABLE_RES_INDEX_);
 
 echo "Update toc to res_index".PHP_EOL;
 
@@ -105,7 +111,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     
     // 开始一个事务，关闭自动提交
     $dbh->beginTransaction();
-    $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO \""._TABLE_."\" (book , paragraph, title, title_en , level, type , language , author , share , create_time , update_time,created_at,updated_at  ) VALUES (  ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,now(),now())";
     try{
 	$stmt = $dbh->prepare($query);
 	}catch(PDOException $e){

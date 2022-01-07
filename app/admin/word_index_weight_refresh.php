@@ -5,11 +5,19 @@
 require_once __DIR__.'/../config.php';
 require_once __DIR__.'/word_index_weight_table.php';
 
-define("_PG_DB_WORD_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_WORD_INDEX_", "word_indexs");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
 
-define("_PG_DB_PALI_INDEX_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_WORD_", "words");
+
+define("__DB_WORD_INDEX__", _PG_DB_WORD_INDEX_);
+define("__TABLE_WORD_INDEX__", _PG_TABLE_WORD_INDEX_);
+
+define("__DB_PALI_INDEX__", _PG_DB_PALI_INDEX_);
+define("__TABLE_WORD__", _PG_TABLE_WORD_);
 
 if (isset($_GET["from"])) {
     $from = (int)$_GET["from"];
@@ -26,17 +34,17 @@ if (isset($_GET["from"])) {
     }
 }
 
-$dh_word = new PDO( _PG_DB_WORD_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
+$dh_word = new PDO( __DB_WORD_INDEX__, _DB_USERNAME_, _DB_PASSWORD_);
 $dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$dh_pali = new PDO( _PG_DB_PALI_INDEX_, _DB_USERNAME_, _DB_PASSWORD_);
+$dh_pali = new PDO( __DB_PALI_INDEX__, _DB_USERNAME_, _DB_PASSWORD_);
 $dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 echo "from=$from to = $to \n";
 for ($i = $from; $i <= $to; $i++) {
     $time_start = microtime(true);
     echo "正在处理 book= $i ";
-    $query = "SELECT max(paragraph) from "._PG_TABLE_WORD_." where book=?";
+    $query = "SELECT max(paragraph) from ".__TABLE_WORD__." where book=?";
 	try {
 		//code...
 		$stmt = $dh_pali->prepare($query);
@@ -52,11 +60,11 @@ for ($i = $from; $i <= $to; $i++) {
         echo "段落数量：$max_para ";
         for ($j = 0; $j <= $max_para; $j++) {
             # code...
-            $query = "SELECT id,book,wordindex,bold from "._PG_TABLE_WORD_." where book={$i} and paragraph={$j} order by id ASC";
+            $query = "SELECT id,book,wordindex,bold from ".__TABLE_WORD__." where book={$i} and paragraph={$j} order by id ASC";
             $stmt = $dh_pali->query($query);
             $fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $query = "SELECT wordindex,count(*) as co from "._PG_TABLE_WORD_." where book={$i} and paragraph={$j} group by wordindex";
+            $query = "SELECT wordindex,count(*) as co from ".__TABLE_WORD__." where book={$i} and paragraph={$j} group by wordindex";
             $stmt = $dh_pali->query($query);
             $fetch_voc = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			
@@ -96,7 +104,7 @@ for ($i = $from; $i <= $to; $i++) {
                     $bold_count = $end - $begin + 1;
                     if ($bold_count == 1) {
 
-                        $query = "SELECT * from "._PG_TABLE_WORD_INDEX_." where id=" . $fetch[$iWord]["wordindex"];
+                        $query = "SELECT * from ".__TABLE_WORD_INDEX__." where id=" . $fetch[$iWord]["wordindex"];
                         $stmt_word = $dh_word->query($query);
                         $wordinfo = $stmt_word->fetch(PDO::FETCH_ASSOC);
                         $bookId = (int) $fetch[$iWord]["book"];
@@ -114,7 +122,7 @@ for ($i = $from; $i <= $to; $i++) {
                         for ($iBold = $begin; $iBold <= $end; $iBold++) {
                             # code...
                             $boldid = $fetch[$iBold]["wordindex"];
-                            $query = "SELECT len from "._PG_TABLE_WORD_INDEX_." where id=" . $boldid;
+                            $query = "SELECT len from ".__TABLE_WORD_INDEX__." where id=" . $boldid;
                             $stmt_bold = $dh_word->query($query);
                             $wordbold = $stmt_bold->fetch(PDO::FETCH_ASSOC);
                             $len_sum += $wordbold["len"];
@@ -130,7 +138,7 @@ for ($i = $from; $i <= $to; $i++) {
             }
             # 将整段权重写入据库
             $dh_pali->beginTransaction();
-            $query = "UPDATE "._PG_TABLE_WORD_." set weight = ? where id=? ";
+            $query = "UPDATE ".__TABLE_WORD__." set weight = ? , updated_at = now() where id=? ";
             $stmt_weight = $dh_pali->prepare($query);
             foreach ($fetch as $key => $value) {
                 $stmt_weight->execute(array($value["weight"], $value["id"]));
