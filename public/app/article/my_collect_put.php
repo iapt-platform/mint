@@ -20,6 +20,8 @@ if(!isset($_POST["title"])){
 	echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 	exit;
 }
+
+$uuid = UUID::v4();
 add_edit_event(_COLLECTION_NEW_,$uuid);
 
 PDO_Connect(""._FILE_DB_USER_ARTICLE_);
