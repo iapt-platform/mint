@@ -12,7 +12,7 @@ $arrWordList = str_getcsv($word, " ");
 
 $searching = $arrWordList[count($arrWordList) - 1];
 PDO_Connect(_FILE_DB_WORD_INDEX_,_DB_USERNAME_,_DB_PASSWORD_);
-$Fetch = [];
+
 if (count($arrWordList) > 1) {
     //echo "<div>";
     foreach ($arrWordList as $oneword) {
@@ -29,6 +29,5 @@ if (count($arrWordList) > 1) {
             $Fetch[] = $value;
         }
     }
-    
+    echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 }
-echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
