@@ -216,6 +216,14 @@ span.fancytree-node{
 	text-decoration-line: underline;
 	
 }
+.sent_tran a{
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+.para_tran_div a{
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
 
 </style>
 
