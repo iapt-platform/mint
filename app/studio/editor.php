@@ -697,10 +697,10 @@ foreach($plugin_list as $info){
 		<div id="modifywin" style="">
 			<div>
 				<ul id="id_select_modyfy_type" class="common-tab">
-					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo "📝".$_local->gui->detaile;?></li>
-					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo "🔖".$_local->gui->mark;?></li>
-					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo "📇".$_local->gui->note;?></li>
-					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo "🐛";//.$_local->gui->source?></li>
+					<li id="detail_li" class="common-tab_li_act" onclick="select_modyfy_type('modify_detaile','detail_li')"><?php echo $_local->gui->detaile;?></li>
+					<li id="mark_li" class="common-tab_li" onclick="select_modyfy_type('modify_bookmark','mark_li')"><?php echo $_local->gui->mark;?></li>
+					<li id="note_li" class="common-tab_li" onclick="select_modyfy_type('modify_note','note_li')"><?php echo $_local->gui->note;?></li>
+					<li id="spell_li" class="common-tab_li" onclick="select_modyfy_type('modify_spell','spell_li')"><?php echo "高级";//.$_local->gui->source?></li>
 					
 				</ul>
 			</div>
@@ -709,11 +709,11 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p">
 					<guide gid="studio_general_meaning">⑤</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->meaning;?>：</span>
-					<button id="merge_button" onclick="copy_part_mean_to_mean()">
+					<!--<button id="merge_button" onclick="copy_part_mean_to_mean()">
 						<svg class="icon" style="transform: rotate(315deg);height: 4em;width: 6em;">
 							<use xlink="http://www.w3.org/1999/xlink" href="../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-90deg-right">
 						</svg>
-					</button>
+					</button>-->
 					<input type="text" id="input_meaning" class="input_bar" value="" name="in_meaning">
 					<div class="case_dropdown">
 						<svg class="edit_icon">
@@ -793,13 +793,13 @@ foreach($plugin_list as $info){
 				<!-- 词源 -->
 				<div id="edit_detail_prt_prt" class="edit_detail_p" style="display:none;">
 					<span style="display:flex;">
-						<guide gid="studio_parent2">🧬</guide>
+						<guide gid="studio_parent2">衍生原型</guide>
 						<div class="case_dropdown" style="padding-left: 0.5em;width: 6em;display: flex;">
 							<span style="padding-right: 4px;"></span>
 							<span id="parent_grammar" style="display: inline-block;min-width: 2em;border-radius: 4px;padding: 0 4px;background-color: #8484843d;"></span>
 							<input type="hidden" id="input_parent_grammar" />
 							<div id="word_mdf_prt_prt_grammar_dropdown" style="margin-top: 22px;" class="case_dropdown-content">
-								<a onclick="edit_parent_grammar_changed('')"><?php echo "🗑".$_local->gui->empty; ?></a>
+								<a onclick="edit_parent_grammar_changed('')"><?php echo $_local->gui->empty; ?></a>
 								<a onclick="edit_parent_grammar_changed('.pp.')"><?php echo $_local->gui->pp; ?></a>
 								<a onclick="edit_parent_grammar_changed('.prp.')"><?php echo $_local->gui->prp; ?></a>				
 								<a onclick="edit_parent_grammar_changed('.fpp.')"><?php echo $_local->gui->fpp; ?></a>
@@ -817,7 +817,7 @@ foreach($plugin_list as $info){
 						</div>
 					</span>
 					<div>
-						<?php echo "⛓".$_local->gui->relation; ?>
+						<?php echo $_local->gui->relation; ?>
 						<imput type="hidden" id="id_relation_text" value="" />
 						<button onclick="rela_add_word()">➕</button>
 						<div id="relation_div">
