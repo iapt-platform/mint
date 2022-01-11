@@ -2,7 +2,7 @@
 /*
 导入巴利书名
 */
-require_once __DIR__."/../../app/config.php";
+require_once __DIR__."/../../../public/app/config.php";
 
 set_exception_handler(function($e){
 	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
