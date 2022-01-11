@@ -30,3 +30,14 @@ peony -i staging pi.yml -l GROUP
 - [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/)
 - [Armbian](https://www.armbian.com/download/)
 - [wiringPi for Orange Pi](https://github.com/orangepi-xunlong/WiringOP)
+
+## Crontab
+
+### Daily
+
+```
+/public/app/upgrade/upgrade_pali_toc.php
+```
+
+time: 1:00am
+time zone: Asia/Shanghai
