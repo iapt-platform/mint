@@ -40,13 +40,16 @@ class InitDependence extends Command
     public function handle()
     {
 		#克隆依赖的数据到本地
-
-		$process = new Process(['git','submodule','update','--remote']);
-		$process->run();
-		if(!$process->isSuccessful()){
-			throw new ProcessFailedException($process);
+		$depDir = $this->info(config("app.path.dependence"));
+		foreach ($this->info(config("app.dependence")) as $key => $value) {
+			# code...
+			$process = new Process(['git','clone',$value->url,$depDir.'/'.$value->path]);
+			$process->run();
+			if(!$process->isSuccessful()){
+				throw new ProcessFailedException($process);
+			}
+			$this->info($process->getOutput());				
 		}
-		$this->info($process->getOutput());	
         return 0;
     }
 }

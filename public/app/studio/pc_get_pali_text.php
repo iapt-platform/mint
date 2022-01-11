@@ -2,8 +2,8 @@
 /*
 加载巴利原文
  */
-include "../config.php";
-include "../public/_pdo.php";
+include __DIR__."/../config.php";
+include __DIR__."/../public/_pdo.php";
 
 $get_book = $_GET["book"];
 if (substr($get_book, 0, 1) == "p") {
@@ -15,7 +15,7 @@ echo "book:$get_book<br />";
 //open database
 PDO_Connect(_FILE_DB_PALITEXT_);
 
-$query = "SELECT paragraph,html FROM "._TABLE_PALI_TEXT_." WHERE book = ?";
+$query = "SELECT paragraph,html FROM "._TABLE_PALI_TEXT_." WHERE book = ? order by paragraph asc";
 $Fetch = PDO_FetchAll($query, array($get_book));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {

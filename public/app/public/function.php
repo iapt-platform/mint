@@ -79,26 +79,30 @@ function _get_para_path($book, $paragraph)
     $sFirstParentTitle = "";
     //循环查找父标题 得到整条路径
     while ($parent > -1) {
-        $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ? limit 1";
+        $query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ?";
         $stmt = $dbh->prepare($query);
         $stmt->execute(array($book, $parent));
         $FetParent = $stmt->fetch(PDO::FETCH_ASSOC);
+		if($FetParent){
+			$toc = "<chapter book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$FetParent["toc"]}</chapter>";
 
-        $toc = "<chapter book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$FetParent["toc"]}</chapter>";
+			if ($path == "") {
+				if ($FetParent["level"] < 100) {
+					$path = $toc;
+				} else {
+					$path = "<para book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$paragraph}</para>";
+				}
+			} else {
+				$path = $toc . $path;
+			}
+			if ($sFirstParentTitle == "") {
+				$sFirstParentTitle = $FetParent["toc"];
+			}
+			$parent = $FetParent["parent"];			
+		}else{
+			break;
+		}
 
-        if ($path == "") {
-            if ($FetParent["level"] < 100) {
-                $path = $toc;
-            } else {
-                $path = "<para book='{$book}' para='{$parent}' title='{$FetParent["toc"]}'>{$paragraph}</para>";
-            }
-        } else {
-            $path = $toc . $path;
-        }
-        if ($sFirstParentTitle == "") {
-            $sFirstParentTitle = $FetParent["toc"];
-        }
-        $parent = $FetParent["parent"];
         $deep++;
         if ($deep > 5) {
             break;

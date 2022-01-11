@@ -232,4 +232,29 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | 另外增添的路径
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+	'path' => [
+		'dependence' => public_path('depandence'),
+	],
+
+	'dependence' =>[
+		[
+			'path' => 'pali-sentence',
+			'url' => 'https://github.com/iapt-platform/pali-sentence.git',
+		],
+		[
+			'path' => 'word-statistics',
+			'url' => 'https://github.com/iapt-platform/word-statistics.git',
+		],
+		[
+			'path' => 'pali-similarity',
+			'url' => 'https://github.com/iapt-platform/pali-similarity.git',
+		]
+	],
 ];

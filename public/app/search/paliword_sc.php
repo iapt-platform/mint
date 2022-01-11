@@ -100,31 +100,7 @@ if (count($arrWordList) > 1) {
         $out_data[] = $newRecode;
     }
 	$result["time"][] = array("event" => "fts精确匹配结束", "time" => microtime(true)-$_start);
-	/*
-    #然后查分散的
-    $strQuery = "";
-    foreach ($arrWordList as $oneword) {
-        $strQuery .= "\"text\" like \"% {$oneword} %\" AND";
-    }
-    $strQuery = substr($strQuery, 0, -3);
 
-    $query = "SELECT book,paragraph, html FROM pali_text WHERE {$strQuery}  LIMIT 0,20";
-    $Fetch2 = PDO_FetchAll($query);
-
-    foreach ($Fetch2 as $key => $value) {
-        # code...
-        $newRecode["title"] = $_dbPaliText->getTitle($value["book"], $value["paragraph"]);
-        $newRecode["path"] = _get_para_path($value["book"], $value["paragraph"]);
-        $newRecode["book"] = $value["book"];
-        $newRecode["para"] = $value["paragraph"];
-        $newRecode["palitext"] = $value["text"];
-        $newRecode["keyword"] = $arrWordList;
-        $newRecode["wt"] = 0;
-        $out_data[] = $newRecode;
-    }
-    
-	$result["time"][] = array("event" => "查分散的结束", "time" => microtime(true)-$_start);
-*/
 	$result["data"] = $out_data;
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     # 然后查特别不精确的

@@ -355,7 +355,7 @@ else{
 					</svg>
 				</a>
 			</li>
-			<li><a href="" target="_block">wikipali论坛（企劃中）</a></li>
+			<li><a href="https://iaptforum.top/" target="_block">wikipali论坛</a></li>
 			<li>
 				<!--<a href="https://github.com/iapt-platform/PCD-internet1.0#wikipali-demo" target="_block">-->
 				<?php echo $_local->gui->help_doc;?>
@@ -416,11 +416,11 @@ else{
 		</div>
 	</div>       
 
-	<script src="../../node_modules/highcharts/highcharts.js"></script>
-	<script src="../../node_modules/highcharts/modules/exporting.js"></script>
-	<script src="../../node_modules/highcharts/modules/data.js"></script>
-	<script src="../../node_modules/highcharts/modules/series-label.js"></script>
-	<script src="../../node_modules/highcharts/modules/oldie.js"></script>
+	<script src="../public/js/highcharts/highcharts.js"></script>
+	<script src="../public/js/highcharts/modules/exporting.js"></script>
+	<script src="../public/js/highcharts/modules/data.js"></script>
+	<script src="../public/js/highcharts/modules/series-label.js"></script>
+	<script src="../public/js/highcharts/modules/oldie.js"></script>
 
 	<div class="help_div">
 		<div  class="htlp_title">

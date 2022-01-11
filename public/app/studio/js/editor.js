@@ -3270,14 +3270,15 @@ function showModifyWin(sWordId) {
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',true)\"  title='Save and Favorite'>";
-		tApply += "💾&🌐";//gLocal.gui.to_user_dictionary+
+		tApply += "💾&🌐"+gLocal.gui.to_user_dictionary;
 		tApply += "</button>";
 
 		tApply +=
 			"<button class=' apply_to' id='apply_to_this' onclick=\"modifyApply('" +
 			sWordId +
 			"',false)\"  title='Save Draft'>";
-		tApply += "💾";//gLocal.gui.save+
+		tApply += "💾";//gLocal.gui.save
+		//tApply += '<svg class="icon" style="fill: var(--box-bg-color1)"><use xlink:href="../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate"></use></svg>'
 		tApply += "</button>";
 
 		tApply += "<button class=' apply_to' onclick=\"modifyCancel()\">";
@@ -3489,7 +3490,7 @@ function refreshPartMeaningSelect() {
 	if (g_initPartMeaning) {
 		g_arrPartMean = part.split("+");
 	}
-	var output = "";
+	var output = "<div style='overflow-x: scroll;white-space: nowrap;max-width: 13em;'>";
 	//output="<span style='width:90%' onclick=\"input_org_switch('input_org_select','input_om')\"></span><br/>"
 	for (iPart in arrPart) {
 		output += getMeaningMenuList(iPart, arrPart[iPart]);
@@ -3499,7 +3500,7 @@ function refreshPartMeaningSelect() {
 			output += "+";
 		}
 	}
-	output += "<div>";
+	output += "</div><div>";
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"copy_part_mean_to_mean()\">";
 	output += '<svg class="icon"><use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_vertical_align_top">';
 	output += "</button>";
@@ -3526,7 +3527,7 @@ function refreshPartMeaningSelect() {
 		}
 		if (part_mean_display_array.length < arrPart.length) {
 			for (i_display = part_mean_display_array.length; i_display < arrPart.length; i_display++) {
-				document.getElementById("org_part_mean_" + i_display).innerHTML = "↓↓";
+				//document.getElementById("org_part_mean_" + i_display).innerHTML = "⬇";
 			}
 		}
 	} else {
@@ -3591,7 +3592,7 @@ function getMeaningMenuList(index, word) {
 	}
 	output += currMean + "</p>";
 
-	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "'>";
+	output += '<div class="case_dropdown-content" id=\'part_mean_menu_' + index + "' style='left:0;right:0;'>";
 	//直列菜单
 	output += "<a onclick='meaningPartLookup(\"" +word +"\")'>🔍" +gLocal.gui.dict +"</a>";	
 	for (const itMean of currMeaningList) {

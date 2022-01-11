@@ -152,6 +152,7 @@ foreach ($_para as $key => $para) {
         
         $level=100;
         $title="";
+		#TODO 查不到数据报错
         while($result = $sth->fetch(PDO::FETCH_ASSOC))
         {
             if($result["gramma"]=="?"){
