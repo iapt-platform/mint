@@ -647,6 +647,14 @@ pw {
 	display: block;
 	flex: 20;
 }
+.sent_tran_div a{
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+.para_tran_div a{
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
 .preview {
 	font-size: 110%;
 }
