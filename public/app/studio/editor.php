@@ -263,6 +263,19 @@ else{$currDevice="computer";}
 		background-color: var(--main-color1);
 		white-space: nowrap;
 	}
+	#parent_grammar{
+		padding: 0 6px;
+		border-radius: 4px;
+		min-width: 1em;
+		min-height: 1.3em;
+		background: url(../../node_modules/bootstrap-icons/icons/chevron-double-down.svg);
+		background-repeat: no-repeat;
+		background-position-x: center;
+		background-position-y: bottom;
+		background-origin: content-box;
+		background-color: var(--main-color1);
+		white-space: nowrap;
+	}
 
 	#word_mdf_parts_dropdown  a {
 		width: 100%;
