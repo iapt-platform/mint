@@ -35,6 +35,7 @@ peony -i staging pi.yml -l GROUP
 
 ### Daily
 
+1. upgrade_pali_toc.php
 ```
 /public/app/upgrade/upgrade_pali_toc.php
 ```
