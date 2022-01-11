@@ -513,8 +513,8 @@
 				</svg>
 			</a>
 		</button>
-		<?php include "../ucenter/user.php"; ?>
-		<?php include "../lang/lang.php"; ?>
+		<?php include __DIR__."/../ucenter/user.php"; ?>
+		<?php include __DIR__."/../lang/lang.php"; ?>
 	</div>
 
 	<label for="nav-toggle" class="nav-toggle-label">

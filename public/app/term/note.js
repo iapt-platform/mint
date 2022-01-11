@@ -600,13 +600,13 @@ function note_ref_init() {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=para&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para, "_blank");
 	});
 }
 /*
