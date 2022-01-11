@@ -40,6 +40,4 @@ peony -i staging pi.yml -l GROUP
 /public/app/upgrade/upgrade_pali_toc.php
 ```
 
-time: 1:00am
-
-time zone: Asia/Shanghai
+time: 17:00 UTC
