@@ -450,7 +450,7 @@
 <header>
 	<div class="head-logo">
 		<svg>
-			<a href="../pcdl">
+			<a href="../pcdl/">
 				<use xlink:href="../public/images/svg/wikipali_logo.svg#wikipali_logo"></use>
 				<rect width="104" height="50" y="0" x="0" fill="rgba(0,0,0,0)" />
 			</a>
