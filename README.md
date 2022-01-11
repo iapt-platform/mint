@@ -1,62 +1,211 @@
-# 巴利圣典教育开放平台 - IAPT Platform
+# IAPT Pali Canon Platform
 
-IAPT = International Academy Of Pali Tipitaka - 国际巴利三藏学院
+## About
 
-试运行地址：https://www.wikipali.org/
+这是一个开放的基于语料库的巴利语学习和翻译平台。
 
-# 平台愿景
+后端：
+- PHP 8.0+
+- [laravel](https://laravel.com/docs) 8.x
+- PostgreSQL v12+
+- Redis
 
-让巴利圣典的学习变得更容易，人人都能从巴利圣典中受益。
+前端
+- jQuery
 
-了解更多：https://youtu.be/HMACYkZryJQ
+工具
+- git
+- composer
+- npm or yarn
+- vscode
 
-# 当前功能
+## 安装
 
-- 巴利圣典阅读与翻译
-- 在线课程发布与学习
-- 在线巴利语学习工具
+### 开发环境
 
-# 重构计划
+使用 Linux 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
 
-随着平台功能的完善，以及用户量的增加，当前平台面临以下几个问题
+#### PostgreSQL
 
-- 性能瓶颈
-  多用户并发操作以及全文检索效率低，难以支撑更多的用户
-- 代码维护
-  当前代码内含有相当量的冗余和临时解决方案，难以扩展和维护
-- 权限管理
-  权限管理模块有瑕疵，多人协作编辑功能有待优化
+最小版本v12。下载链接
+https://www.postgresql.org/download/
 
-基于以上几个问题，现启动平台重构计划。
+>温馨提示：windows环境安装完之后 将 安装目录/bin加入环境变量 PATH。重启电脑。在命令行输入 psql -v 查看版本号。
 
-以解决问题为目标，细化任务，逐步实施。
+建立新的数据库，例如 数据库名为iapt：
+在命令行输入
+```
+psql -U postgres -h localhost
+create database iapt
+```
 
-# 关于我们
+![createdb](public/documents/imgs/createdb.jpg)
 
-国际巴利三藏学院，致力于让佛陀所揭示的真理可以平等的被所有族群方便的学习与运用。
+`\q` 退出psql
 
-希望在传统和现代、老师与学生、翻译者与读者之间假设桥梁。向他们提供教育平台，享受前沿的教学科技，实现各种信息及资源的有效共享。指导圣典在人类生命系统净化提升的实践与运用。让全世界所有族群都可以享受高品质的圣典教育，最终实现圣典教育全球化。
+#### PHP 8
 
-- 巴利语文献语料库的建立
-- 相关参考文献的电子化
-- 巴利文献的整理翻译及研究
-- 基于项目培养相关人才，实现产学研一体化发展。
+#### Redis
 
-# 什么是巴利圣典？
+#### composer
 
-巴利圣典乘载着佛陀的教导。
+#### npm
 
-从佛陀入灭后一个月开始，五百位阿拉汉僧人作了集结会议，将佛陀所宣说的法完整的背诵了下来，在这2600多年中一共经历了六次的集结会议，将教法传承至今。因主要分为三个部分律藏、经藏、论藏，因此一般也称作巴利三藏。
+#### yarn
 
-Pāli 即是圣典的意思，是以古印度语言为基础的文献，目前这种语言已不在于日常被使用，只用于传承佛法，因此也将此语言直接称作巴利语（Pāli language），为了避免混淆，通常在语言翻译上，会将「巴利」（表示语言）和「圣典」（表示典籍）分开，将它称作巴利圣典。
 
-# 参与开发
+### Fork
 
-- 关注 [项目看板](https://github.com/orgs/iapt-platform/projects/5)
+Fork https://github.com/iapt-platform/mint 到你自己的仓库
 
-    发现有合适的待领取（To do 状态）任务时，可联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 加入。
+### Clone
 
-- 阅读 [开发文档](./documents/README.md
-)
+```
+git clone https://github.com/<your>/mint.git  --recurse-submodules
 
-    开发文档尚未编写完毕，如有疑问，可参考代码，或联系 [Visuddhinanda](mailto:visuddhinanda@gmail.com "Email") 沟通。
+```
+
+### 安装依赖
+
+项目根目录下运行
+
+```
+composer install
+npm install
+```
+
+/public 目录下运行
+
+```
+composer install
+npm install
+```
+
+
+### 修改配置文件
+
+#### .env
+
+复制 `<项目目录>/.env.example` 的一个副本。改文件名为 `.env`
+
+修改`.env`，为你的db配置
+```
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=你的数据库名
+DB_USERNAME=postgres
+DB_PASSWORD=你的数据库密码
+```
+
+#### public/app/config.php
+
+复制 `<项目目录>/public/app/config.example.php` 改文件名为`config.php`
+修改`config.php`，为你的db配置
+```
+define("Database",[
+	"type"=>"pgsql",
+	"server"=>"localhost",
+	"port"=>5432,
+	"name"=>"你的数据库名",
+	"sslmode" => "disable",
+	"user" => "postgres",
+	"password" => "你的数据库密码"
+]);
+```
+
+#### public/app/config.js
+
+复制 `<项目目录>/public/app/config.example.js` 改文件名为 `config.js`
+
+
+
+### 复制巴利语全文搜索单词表
+
+获取pg share dir
+在命令行窗口运行
+```
+pg_config --sharedir
+```
+程序会输出 shardir.
+![createdb](public/documents/imgs/pg-sharedir.png)
+
+**Liunx**
+把下面`/usr/share/postgresql/14`替换为你自己的shardir
+```bash
+sudo cp ./public/app/fts/pali.stop /usr/share/postgresql/14/tsearch_data/
+sudo cp ./public/app/fts/pali.syn /usr/share/postgresql/14/tsearch_data/
+```
+**Windows**
+
+复制
+- ./public/app/fts/pali.stop
+- ./public/app/fts/pali.syn
+
+到你的 shardir
+
+
+### application encryption key
+
+在<工程目录>下运行
+```dash
+php artisan key:generate
+```
+
+### 数据库迁移
+
+在根目录下运行
+
+```dash
+php artisan migrate
+```
+
+### 语料数据库填充
+
+**Liunx**
+```dash
+cd public/deploy
+sh ./install.sh
+```
+
+**Window**
+```dash
+cd public/deploy
+./install.bat
+```
+运行时间较长。本地开发环境大约4小时。
+
+### Redis数据库填充
+
+在命令行运行<项目目录>下面的命令
+
+**Liunx**
+```dash
+cd public/deploy
+sh ./redis_upgrade.sh
+```
+
+**Window**
+```dash
+cd public/deploy
+./redis_upgrade.bat
+```
+运行时间较长。本地开发环境大约4小时。
+
+
+
+### 运行dev server
+
+```dash
+php artisan serve
+```
+![createdb](public/documents/imgs/artisan-serve.png)
+
+在浏览器中访问
+
+http://127.0.0.1:8000
+
+应该出现网站首页
+
+![createdb](public/documents/imgs/home.jpg)
+

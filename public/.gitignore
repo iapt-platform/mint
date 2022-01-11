@@ -1,0 +1,22 @@
+# editors
+/.vscode/
+.DS_Store
+
+# misc
+/appdata/
+/log/
+/palicsv/
+/user/
+/.debug/
+/tmp/
+/.favorites.json
+/package-lock.json
+/yarn.lock
+/composer.lock
+# dependencies
+/vendor/
+/node_modules/
+
+# vi
+.swap
+.env
