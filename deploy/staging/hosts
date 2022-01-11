@@ -6,6 +6,9 @@
 
 [mq]
 
+[help]
+
+[grammar]
 
 [all:vars]
 app_vendor="iapt-platform.mint"

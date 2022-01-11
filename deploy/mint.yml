@@ -8,5 +8,12 @@
 - hosts: db
   roles:
 
+- hosts:
+    - www
+    - 
+  roles:
+    - wikipali
+
 - hosts: www
   roles:
+    - wikipali
