@@ -1,5 +1,11 @@
 <?php 
 #表名设置，不能更改
+define("_DB_ENGIN_", Database["type"]);
+define("_DB_HOST_", Database["server"]);
+define("_DB_PORT_", Database["port"]);
+define("_DB_NAME_", Database["name"]);
+define("_DB_USERNAME_", Database["user"]);
+define("_DB_PASSWORD_", Database["password"]);
 
 //PostgreSQL
 define("_PDO_DB_DSN_", Database["type"].":host=".Database["server"].";port=".Database["port"].";dbname=".Database["name"].";user=".Database["user"].";password=".Database["password"].";");

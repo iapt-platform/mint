@@ -5,7 +5,8 @@ function redis_connect()
 	try {
 		//code...
 		$redis = new redis();
-		$r_conn = $redis->connect('127.0.0.1', 6379);
+		$r_conn = $redis->connect(Redis["host"], Redis["port"]);
+		$redis->auth(Redis["password"]);
 		if ($r_conn) {
 			return $redis;
 		} else {
