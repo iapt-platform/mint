@@ -101,18 +101,32 @@ DB_PASSWORD=你的数据库密码
 #### public/app/config.php
 
 复制 `<项目目录>/public/app/config.example.php` 改文件名为`config.php`
-修改`config.php`，为你的db配置
+
+修改`config.php`
+
+**db 设置**
 ```
 define("Database",[
 	"type"=>"pgsql",
 	"server"=>"localhost",
 	"port"=>5432,
-	"name"=>"你的数据库名",
+	"name"=>"<database name>",
 	"sslmode" => "disable",
-	"user" => "postgres",
-	"password" => "你的数据库密码"
+	"user" => "<user name>",
+	"password" => "<your db password>"
 ]);
 ```
+
+**Redis 设置**
+```
+define("Redis",[
+	"host" => "<host ip>",
+	"port" => <port>,
+	"password" => "<redis password>",
+	"prefix"=>"aaa://"
+]);
+```
+
 
 #### public/app/config.migrate.php
 
