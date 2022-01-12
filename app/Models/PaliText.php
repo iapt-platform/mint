@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class PaliText extends Model
 {
     use HasFactory;
+	protected $fillable = ['book','paragraph','level','class','toc','text','html','lenght'];
 }
