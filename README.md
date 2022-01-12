@@ -61,7 +61,7 @@ Fork https://github.com/iapt-platform/mint 到你自己的仓库
 ### Clone
 
 ```
-git clone https://github.com/<your>/mint.git  --recurse-submodules
+git clone https://github.com/<your>/mint.git
 
 ```
 
