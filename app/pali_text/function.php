@@ -21,7 +21,7 @@ class PaliText extends Table
 		$sFirstParentTitle = "";
 		//循环查找父标题 得到整条路径
 		while ($parent > -1) {
-			$query = "select * from pali_text where \"book\" = ? and \"paragraph\" = ? limit 1";
+			$query = "SELECT * from "._TABLE_PALI_TEXT_." where \"book\" = ? and \"paragraph\" = ? ";
 			$stmt = $this->dbh->prepare($query);
 			$stmt->execute(array($book, $parent));
 			$FetParent = $stmt->fetch(PDO::FETCH_ASSOC);

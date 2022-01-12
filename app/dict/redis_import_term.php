@@ -1,12 +1,12 @@
 <?php
-require_once "../config.php";
-require_once "../redis/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../redis/function.php";
 
 $rediskey = "dict://term";
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
 	if ($redis != false) {
-		$dbh = new PDO(_FILE_DB_TERM_, "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbh = new PDO(_FILE_DB_TERM_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 		$query = "SELECT word from term where word !='' group by word";
 		$stmtPali = $dbh->query($query);

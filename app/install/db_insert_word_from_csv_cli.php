@@ -3,8 +3,16 @@
 生成 巴利原文段落表
  */
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
 
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+
+define("_DB_", _PG_DB_PALI_INDEX_);
+define("_TABLE_", _PG_TABLE_WORD_);
 
 echo "Insert Word To DB".PHP_EOL;
 
@@ -28,8 +36,7 @@ $filelist = array();
 $fileNums = 0;
 $log = "";
 
-define("_DB_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_TABLE_", "words");
+
 
 global $dbh_word_index;
 $dns = _DB_;
@@ -62,7 +69,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     if (($fpoutput = fopen(_DIR_CSV_PALI_CANON_WORD_ . "/{$from}_words.csv", "r")) !== false) {
         // 开始一个事务，关闭自动提交
         $dbh_word_index->beginTransaction();
-        $query = "INSERT INTO "._TABLE_." ( sn , book , paragraph , wordindex , bold ) VALUES (?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_." ( sn , book , paragraph , wordindex , bold ,created_at,updated_at ) VALUES (?,?,?,?,?,now(),now())";
         $stmt = $dbh_word_index->prepare($query);
 
         $count = 0;

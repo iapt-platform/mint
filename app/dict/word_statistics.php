@@ -49,11 +49,11 @@ require_once "../public/load_lang_js.php";//语言文件
                 font-size: small;
             }
 		</style>
-<script src="../public/js/highcharts/highcharts.js"></script>
-<script src="../public/js/highcharts/modules/sunburst.js"></script>
-<script src="../public/js/highcharts/modules/exporting.js"></script>
-<script src="../public/js/highcharts/modules/export-data.js"></script>
-<script src="../public/js/highcharts/modules/accessibility.js"></script>
+<script src="../../node_modules/highcharts/highcharts.js"></script>
+<script src="../../node_modules/highcharts/modules/sunburst.js"></script>
+<script src="../../node_modules/highcharts/modules/exporting.js"></script>
+<script src="../../node_modules/highcharts/modules/export-data.js"></script>
+<script src="../../node_modules/highcharts/modules/accessibility.js"></script>
 <?php
     require_once("../pcdl/head_bar.php");
 ?>

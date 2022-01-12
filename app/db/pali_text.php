@@ -66,7 +66,7 @@ class PaliText extends Table
 				}
 			}
 			$title="";
-			$query = "select * from pali_text where book = ? and paragraph = ?";
+			$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ?";
 			$stmt = $this->dbh->prepare($query);
 			$stmt->execute(array($book,$para));
 			$result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class PaliText extends Table
 					$title= $result["toc"];
 				}
 				else{
-					$query = "select * from pali_text where book = ? and paragraph = ?";
+					$query = "SELECT * from "._TABLE_PALI_TEXT_." where book = ? and paragraph = ?";
 					$stmt = $this->dbh->prepare($query);
 					$stmt->execute(array($book,$result["parent"]));
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);

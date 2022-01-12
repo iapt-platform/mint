@@ -82,15 +82,12 @@ if (isset($booklist)) {
 $query = "SELECT book, wordindex,count from "._TABLE_BOOK_WORD_." where \"wordindex\" in $strQueryWordId ";
 $Fetch = PDO_FetchAll($query);
 $iFetch = count($Fetch);
-$newBookList = array();
 
 $worddata = array();
 
 if ($iFetch > 0) {
     for ($i = 0; $i < $iFetch; $i++) {
         $book = $Fetch[$i]["book"];
-
-        array_push($newBookList, array($book, $sum));
 
         $t1 = $arrBookType[$book - 1]->c1;
         $t2 = $arrBookType[$book - 1]->c2;

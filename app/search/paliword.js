@@ -67,8 +67,29 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 			}
 			$("#book_list").html(html);
 			$("#contents_nav").html(render_nav(result));
+			//章节路径链接点击，弹出阅读章节窗口
+			chapter_onclick_init();
 		}
 	);
+}
+
+/*
+  |---------------------------------------
+  |章节路径链接点击，弹出阅读章节窗口
+  |---------------------------------------
+*/
+function chapter_onclick_init() {
+	$("chapter").click(function () {
+		let bookid = $(this).attr("book");
+		let para = $(this).attr("para");
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
+	});
+
+	$("para").click(function () {
+		let bookid = $(this).attr("book");
+		let para = $(this).attr("para");
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para, "_blank");
+	});
 }
 function highlightWords(line, word) {
 	if (line && line.length > 0) {

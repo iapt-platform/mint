@@ -237,13 +237,7 @@ include "../pcdl/html_head.php";
     search_show_history();
     guide_get("pali_search_index");
     </script>
-    <?php
-    if(!empty($_GET["key"])){
-        echo "<script>";
-        echo "dict_pre_word_click(\"{$_GET["key"]}\")";
-        echo "</script>";
-    }
-    ?>
+
 <?php
 include "../pcdl/html_foot.php";
 ?>

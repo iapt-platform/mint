@@ -3,10 +3,15 @@
 生成 巴利原文段落表
  */
 require_once __DIR__."/../config.php";
-require_once __DIR__.'/../public/_pdo.php';
 
-define("_PG_DB_PALITEXT_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
-define("_PG_TABLE_PALI_TEXT_","pali_texts");
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+define("_DB_", _PG_DB_PALITEXT_);
+define("_TABLE_",_PG_TABLE_PALI_TEXT_);
 
 echo "Insert Pali Text To DB".PHP_EOL;
 
@@ -40,7 +45,7 @@ if ($to == 0 || $to >= $fileNums) {
     $to = $fileNums - 1;
 }
 
-$dns = _PG_DB_PALITEXT_;
+$dns = _DB_;
 $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -109,7 +114,7 @@ for ($from=$_from-1; $from < $to; $from++) {
     }
     
     #删除 旧数据
-    $query = "DELETE FROM "._PG_TABLE_PALI_TEXT_." WHERE book=?";
+    $query = "DELETE FROM "._TABLE_." WHERE book=?";
 	$stmt = $dbh->prepare($query);
 	try{
 		$stmt->execute(array($from+1));
@@ -122,7 +127,7 @@ for ($from=$_from-1; $from < $to; $from++) {
     // 开始一个事务，关闭自动提交
     $dbh->beginTransaction();
     
-    $query = "INSERT INTO "._PG_TABLE_PALI_TEXT_." ( book , paragraph , level , class , toc , text , html , lenght ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+    $query = "INSERT INTO "._TABLE_." ( book , paragraph , level , class , toc , text , html , lenght , created_at,updated_at ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? ,now(),now() )";
     $stmt = $dbh->prepare($query);
     foreach ($arrInserString as $oneParam) {
         if ($oneParam[3] < 100) {

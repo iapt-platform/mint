@@ -68,11 +68,11 @@ include "../pcdl/html_head.php";
 	<?php
     require_once("../pcdl/head_bar.php");
 	?>
-        <script src="../public/js/highcharts/highcharts.js"></script>
-        <script src="../public/js/highcharts/modules/exporting.js"></script>
-        <script src="../public/js/highcharts/modules/data.js"></script>
-        <script src="../public/js/highcharts/modules/series-label.js"></script>
-        <script src="../public/js/highcharts/modules/oldie.js"></script>
+        <script src="../../node_modules/highcharts/highcharts.js"></script>
+        <script src="../../node_modules/highcharts/modules/exporting.js"></script>
+        <script src="../../node_modules/highcharts/modules/data.js"></script>
+        <script src="../../node_modules/highcharts/modules/series-label.js"></script>
+        <script src="../../node_modules/highcharts/modules/oldie.js"></script>
 		<script src="../term/term.js"></script>
 		<script src="../term/note.js"></script>
 		<script src="wiki.js"></script>
