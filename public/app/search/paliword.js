@@ -67,7 +67,7 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 			}
 			$("#book_list").html(html);
 			$("#contents_nav").html(render_nav(result));
-			//章节路径链接相应点击实践，弹出阅读章节窗口
+			//章节路径链接点击，弹出阅读章节窗口
 			chapter_onclick_init();
 		}
 	);
@@ -75,7 +75,7 @@ function paliword_search(keyword, words = new Array(), book = new Array()) {
 
 /*
   |---------------------------------------
-  |章节路径链接相应点击实践，弹出阅读章节窗口
+  |章节路径链接点击，弹出阅读章节窗口
   |---------------------------------------
 */
 function chapter_onclick_init() {

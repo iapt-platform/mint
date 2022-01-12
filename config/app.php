@@ -241,6 +241,9 @@ return [
     */
 	'path' => [
 		'dependence' => public_path('depandence'),
+		'palitext' => public_path('palihtml'),
+		'palitext_filelist' => public_path('palihtml').'/filelist.csv',
+		'palicsv' => public_path('tmp').'/palicsv',
 	],
 
 	'dependence' =>[
@@ -255,6 +258,6 @@ return [
 		[
 			'path' => 'pali-similarity',
 			'url' => 'https://github.com/iapt-platform/pali-similarity.git',
-		]
+		],
 	],
 ];

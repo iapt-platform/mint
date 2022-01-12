@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-//use Symfony\Component\Console\Helper\ProgressBar;
 use App\Models\WbwTemplate;
 use Illuminate\Support\Facades\DB;
 
@@ -41,7 +40,6 @@ class InstallWbwTemplate extends Command
     public function handle()
     {
 		$this->info("instert wbw template");
-		$GLOBALS['wbw'] = new WbwTemplate;
 
 
 		$_from = $this->argument('from');
@@ -73,7 +71,7 @@ class InstallWbwTemplate extends Command
 		
 		
 			#删除目标数据库中数据
-			$GLOBALS['wbw']->where('book', $from)->delete();
+			WbwTemplate::where('book', $from)->delete();
 
 
 			// 打开文件并读取数据
@@ -81,8 +79,6 @@ class InstallWbwTemplate extends Command
 			if (($GLOBALS["fp"] = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !== false) {
 				$GLOBALS["row"]=0;
 				DB::transaction(function () {
-					$query = "INSERT INTO wbw_templates ( book , paragraph, wid , word , real , type , gramma , part , style, created_at,updated_at ) VALUES (?,?,?,?,?,?,?,?,?,now(),now())";
-
 					while (($data = fgetcsv($GLOBALS["fp"], 0, ',')) !== false) {
 						$GLOBALS["row"]++;
 						if($GLOBALS["row"]==1){
@@ -100,18 +96,16 @@ class InstallWbwTemplate extends Command
 							'part'=>$data[10],
 							'style'=>$data[15]	
 						];
-						DB::table('wbw_templates')->insert($params);
-
+						WbwTemplate::insert($params);
 					}
-					
 				});
 				fclose($GLOBALS["fp"]);
 			} else {
 				$this->error("can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL) ;
+				Log::error("can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL) ;
 			}
 			
 			$bar->advance();
-			//$this->info("{$from}:updata {$GLOBALS["row"]} recorders.") ;
 		}
 		$bar->finish();
         return 0;

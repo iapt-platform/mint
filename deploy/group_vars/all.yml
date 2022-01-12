@@ -1,0 +1,10 @@
+ansible_user: "deploy"
+ansible_python_interpreter: /usr/bin/python3
+ansible_ssh_private_key_file: "{{inventory_dir}}/.ssh/id_ed25519"
+#ansible_ssh_private_key_file: "{{inventory_dir}}/.ssh/id_rsa"
+
+app_deploy_target: "/opt/{{ app_vendor }}/{{ ansible_date_time.iso8601_basic }}"
+app_downloads: "{{ ansible_env.HOME }}/downloads"
+app_backup: "{{ ansible_env.HOME }}/backup"
+app_python_version: "3.11"
+app_php_version: "8.0"
