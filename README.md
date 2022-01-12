@@ -170,13 +170,13 @@ php artisan migrate
 
 **Liunx**
 ```dash
-cd public/deploy
+cd ./v1/scripts
 sh ./install.sh
 ```
 
 **Window**
 ```dash
-cd public/deploy
+cd ./v1/scripts
 ./install.bat
 ```
 运行时间较长。本地开发环境大约4小时。
@@ -187,13 +187,13 @@ cd public/deploy
 
 **Liunx**
 ```dash
-cd public/deploy
+cd ./v1/scripts
 sh ./redis_upgrade.sh
 ```
 
 **Window**
 ```dash
-cd public/deploy
+cd ./v1/scripts
 ./redis_upgrade.bat
 ```
 运行时间较长。本地开发环境大约4小时。

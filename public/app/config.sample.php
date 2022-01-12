@@ -1,6 +1,6 @@
 <?php 
 #目录设置，不能更改
-require_once __DIR__."/dir.php";
+require_once __DIR__."/config.dir.php";
 
 #域名设置
 define("WWW_DOMAIN_PROTOCOL","https");
@@ -53,7 +53,7 @@ define("SnowFlake",[
 数据表
 */
 #表设置，此行不能更改
-require_once __DIR__."/table.php";
+require_once __DIR__."/config.table.php";
 
 #表名设置，此行不能更改
 require_once __DIR__."/config.migrate.php";
