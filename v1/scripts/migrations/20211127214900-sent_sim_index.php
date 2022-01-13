@@ -11,13 +11,13 @@ set_exception_handler(function($e){
 $dest_db = _PG_DB_PALI_SENTENCE_SIM_;#目标数据库
 $dest_table = _PG_TABLE_SENT_SIM_INDEX_;#目标表名
 
-echo "migarate sent_sim_index".PHP_EOL;
+fwrite(STDOUT, "migarate sent_sim_index".PHP_EOL);
 
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "open dest".PHP_EOL;
+fwrite(STDOUT, "open dest".PHP_EOL);
 
 #删除目标表中所有数据
 fwrite(STDOUT,"deleting date".PHP_EOL) ;
@@ -40,9 +40,9 @@ try{
 	fwrite(STDERR,"error:".$e->getMessage());
 	exit;
 }
-echo "insert dest".PHP_EOL;
+fwrite(STDOUT, "insert dest".PHP_EOL);
 
-echo "done".PHP_EOL;
+fwrite(STDOUT, "done".PHP_EOL);
 
 
 

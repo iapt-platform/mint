@@ -14,16 +14,16 @@ $src_table=_PG_TABLE_PALI_SENT_ORG_;#源表名
 $dest_db=_PG_DB_PALI_SENTENCE_;#目标数据库
 $dest_table=_PG_TABLE_PALI_SENT_;#目标表名
 
-echo "migarate pali_sent_org".PHP_EOL;
+fwrite(STDOUT, "migarate pali_sent_org".PHP_EOL);
 #打开源数据库
 $PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "open src".PHP_EOL;
+fwrite(STDOUT, "open src".PHP_EOL);
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "open dest".PHP_EOL;
+fwrite(STDOUT, "open dest".PHP_EOL);
 
 
 #删除目标表中所有数据
@@ -40,7 +40,7 @@ fwrite(STDOUT,"deleted date".PHP_EOL) ;
 
 // 开始一个事务，关闭自动提交
 $count = 0;
-echo "begin Transaction".PHP_EOL;
+fwrite(STDOUT, "begin Transaction".PHP_EOL);
 
 $PDO_DEST->beginTransaction();
 
@@ -101,13 +101,13 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
     		
 	$count++;
 	if($count%10000==0){
-		echo "finished $count".PHP_EOL;
+		fwrite(STDOUT, "finished $count".PHP_EOL);
 	}
 }
 
 // 提交更改
 $PDO_DEST->commit();
-echo "done".PHP_EOL;
+fwrite(STDOUT, "done".PHP_EOL);
 
 
 

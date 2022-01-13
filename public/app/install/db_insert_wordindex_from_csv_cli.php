@@ -15,7 +15,7 @@ set_exception_handler(function($e){
 define("_DB_", _PG_DB_WORD_INDEX_);
 define("_TABLE_", _PG_TABLE_WORD_INDEX_);
 
-echo "Insert Word Index To DB".PHP_EOL;
+fwrite(STDOUT, "Insert Word Index To DB".PHP_EOL);
 
 
 $dirLog = _DIR_LOG_ . "/";
@@ -42,7 +42,7 @@ try{
     foreach($scan as $filename) {
         $filename = _DIR_CSV_PALI_CANON_WORD_INDEX_."/".$filename;
         if (is_file($filename)) {
-            echo "doing ".$filename.PHP_EOL;
+            fwrite(STDOUT, "doing ".$filename.PHP_EOL);
             if (($fpoutput = fopen($filename, "r")) !== false) {
 
                 // 开始一个事务，关闭自动提交
@@ -74,20 +74,20 @@ try{
                 $dbh_word_index->commit();
                 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                     $error = $dbh_word_index->errorInfo();
-                    echo "error - $error[2]".PHP_EOL;
+                    fwrite(STDERR, "error - $error[2]".PHP_EOL);
                     $log .= "$filename, error, $error[2] \r\n";
                 } else {
-                    echo "updata $count recorders.".PHP_EOL;
+                    fwrite(STDOUT, "updata $count recorders.".PHP_EOL);
                     $log .= "updata $count recorders.\r\n";
                 }
             }else{
-                echo "open file error".PHP_EOL;
+                fwrite(STDERR, "open file error".PHP_EOL);
             }
         
         }
     }
 
-echo "齐活！功德无量！all done!".PHP_EOL;
+	fwrite(STDOUT, "齐活！功德无量！all done!".PHP_EOL);
 
 
 

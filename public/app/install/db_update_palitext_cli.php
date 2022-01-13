@@ -15,7 +15,7 @@ set_exception_handler(function($e){
 define("_DB_PALITEXT_", _PG_DB_PALITEXT_);
 define("_TABLE_",_PG_TABLE_PALI_TEXT_);
 
-echo "Update Pali Text ".PHP_EOL;
+fwrite(STDOUT, "Update Pali Text ".PHP_EOL);
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -52,7 +52,7 @@ PDO_Connect(_DB_PALITEXT_,_DB_USERNAME_,_DB_PASSWORD_);
 
 
 for ($from=$_from-1; $from < $to; $from++) { 
-    echo "doing $from".PHP_EOL;
+    fwrite(STDOUT, "doing $from".PHP_EOL);
 
 $FileName = $filelist[$from][1] . ".htm";
 $fileId = $filelist[$from][0];
@@ -72,7 +72,7 @@ $dirPaliTextBase = _DIR_PALI_HTML_ . "/";
 $dirXml = $outputFileNameHead . "/";
 
 $xmlfile = $inputFileName;
-echo "doing:" . $xmlfile . PHP_EOL;
+fwrite(STDOUT, "doing:" . $xmlfile . PHP_EOL);
 
 $log = $log . date("Y-m-d h:i:sa") . ",$from,$FileName,open\r\n";
 
@@ -85,9 +85,9 @@ if (($fpPaliText = fopen($dirPaliTextBase . $xmlfile, "r")) !== false) {
         array_push($pali_text_array, $data);
     }
     fclose($fpPaliText);
-    echo "pali text load：" . $dirPaliTextBase . $xmlfile . PHP_EOL;
+    fwrite(STDOUT, "pali text load：" . $dirPaliTextBase . $xmlfile . PHP_EOL);
 } else {
-    echo "can not pali text file. filename=" . $dirPaliTextBase . $xmlfile;
+    fwrite(STDERR, "can not pali text file. filename=" . $dirPaliTextBase . $xmlfile.PHP_EOL);
 }
 
 // 打开csv文件并读取数据
@@ -101,9 +101,9 @@ if (($fp = fopen(_DIR_PALI_TITLE_ . "/" . ($from + 1) . "_pali.csv", "r")) !== f
         $inputRow++;
     }
     fclose($fp);
-    echo "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv". PHP_EOL;
+    fwrite(STDOUT, "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv". PHP_EOL);
 } else {
-    echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv";
+    fwrite(STDERR, "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv" . PHP_EOL);
 }
 
 if ((count($arrInserString)) != count($pali_text_array) - 2) {
@@ -116,7 +116,7 @@ $book = $from + 1;
 
 $query = "SELECT * from "._TABLE_." where book = '$book'  order by paragraph asc";
 $title_data = PDO_FetchAll($query);
-echo "Paragraph Count:" . count($title_data) . " arrInserString:".count($arrInserString). PHP_EOL;
+fwrite(STDOUT, "Paragraph Count:" . count($title_data) . " arrInserString:".count($arrInserString). PHP_EOL);
 
 $paragraph_count = count($title_data);
 
@@ -218,21 +218,17 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
 $PDO->commit();
 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
     $error = PDO_ErrorInfo();
-    echo "error - $error[2]". PHP_EOL;
+    fwrite(STDERR, "error - $error[2]". PHP_EOL);
 
     $log = $log . "$from, $FileName, error, $error[2] \r\n";
 } else {
     $count = count($title_data);
-    echo "updata $count paragraph info recorders.". PHP_EOL;
-    echo count($paragraph_info) . " Heading". PHP_EOL;
+    fwrite(STDOUT, "updata $count paragraph info recorders.". PHP_EOL);
+    fwrite(STDOUT, count($paragraph_info) . " Heading". PHP_EOL);
 }
 //段落信息结束
-/*
-$myLogFile = fopen(_DIR_LOG_ . "/db_update_palitext.log", "a");
-fwrite($myLogFile, $log);
-fclose($myLogFile);
-*/
+
 }
-echo "all done!".PHP_EOL;
+fwrite(STDOUT, "all done!".PHP_EOL);
 ?>
 

@@ -14,10 +14,12 @@ $src_table=_SQLITE_TABLE_WORD_STATISTICS_;#源表名
 $dest_db=_PG_DB_STATISTICS_;#目标数据库
 $dest_table=_PG_TABLE_WORD_STATISTICS_;#目标表名
 
+fwrite(STDOUT,__FILE__." start ".PHP_EOL);
+
 #打开源数据库
 $PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "open src".PHP_EOL;
+
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
@@ -83,7 +85,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 
 	$count++;
 	if($count%10000==0){
-		echo "finished $count".PHP_EOL;
+		fwrite(STDOUT,"finished $count".PHP_EOL);
 	}
 }
 
@@ -91,7 +93,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 
 $PDO_DEST->commit();
 
-echo "done".PHP_EOL;
+fwrite(STDOUT,"done".PHP_EOL);
 
 
 

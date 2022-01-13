@@ -11,7 +11,7 @@ set_exception_handler(function($e){
 	exit;
 });
 
-echo "Insert templet to DB".PHP_EOL;
+fwrite(STDOUT, "Insert templet to DB".PHP_EOL);
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -38,21 +38,21 @@ if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[] = fgetcsv($handle, 0, ',')) !== false) {
     }
 }
-echo "read file list".PHP_EOL;
+fwrite(STDOUT, "read file list".PHP_EOL);
 
 
 
 $dns = _DB_;
 $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "db Connectd".PHP_EOL;
+fwrite(STDOUT, "db Connectd".PHP_EOL);
 
 
 for ($from=$_from; $from <=$_to ; $from++) { 
 	# code...
 	
 	$fileSn = $from-1;
-	echo "doing:".$from.PHP_EOL;
+	fwrite(STDOUT, "doing:".$from.PHP_EOL);
 	$FileName = $filelist[$fileSn][1] . ".htm";
 	$fileId = $filelist[$fileSn][0];
 
@@ -84,7 +84,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$g_paliWordCountCounter = 0;
 
 	$xmlfile = $inputFileName;
-	echo "doing:" . $xmlfile . PHP_EOL;
+	fwrite(STDOUT, "doing:" . $xmlfile . PHP_EOL);
 	$log =  "$from,$FileName,open\r\n";
 	//fwrite($myLogFile, $log);
 
@@ -94,7 +94,7 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$stmt->execute(array($from));
 
 
-	echo "delete ".PHP_EOL;
+	fwrite(STDOUT, "delete ".PHP_EOL);
 
 	$row=0;
 	// 开始一个事务，关闭自动提交
@@ -103,10 +103,8 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$stmt = $dbh->prepare($query);
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 		$error = $dbh->errorInfo();
-		echo "error - $error[2]".PHP_EOL;
-
+		fwrite(STDERR, "error - $error[2]".PHP_EOL);
 		$log = "$from, $FileName, error, $error[2] \r\n";
-		//fwrite($myLogFile, $log);
 		exit;
 	} else {
 		// 打开文件并读取数据
@@ -137,9 +135,9 @@ for ($from=$_from; $from <=$_to ; $from++) {
 				$row++;
 			}
 			fclose($fp);
-			echo "word loaded：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL;
+			fwrite(STDOUT, "word loaded：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL);
 		} else {
-			echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL;
+			fwrite(STDERR, "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL);
 		}
 	}
 
@@ -147,14 +145,11 @@ for ($from=$_from; $from <=$_to ; $from++) {
 	$dbh->commit();
 	if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 		$error = $dbh->errorInfo();
-		echo "error - $error[2]".PHP_EOL;
-
+		fwrite(STDERR, "error - $error[2]".PHP_EOL);
 		$log = "$from, $FileName, error, $error[2] \r\n";
-		//fwrite($myLogFile, $log);
 		exit(1);
 	} else {
-		
-		echo "updata $row recorders.".PHP_EOL;
+		fwrite(STDOUT, "updata $row recorders.".PHP_EOL);
 
 	}
 }
