@@ -19,7 +19,7 @@ if (PHP_SAPI == "cli") {
 		}
         $redis = redis_connect();
         if ($redis == false) {
-            echo "no redis connect\n";
+            fwrite(STDERR,"no redis connect\n") ;
             exit;
 		}
 		
@@ -36,7 +36,7 @@ if (PHP_SAPI == "cli") {
 				runTask($redis,$taskList[$tableNum],$dir);
 			}
 			else{
-				echo "wrong task number task length is ".count($taskList);
+				fwrite(STDERR, "wrong task number task length is ".count($taskList));
 			}
 		}
     }
@@ -48,7 +48,7 @@ function runTask($redis,$task,$dir){
 	foreach ($task->csv as $csv) {
 		$csvfile = $dir."/".$csv;
 		if (($fp = fopen($csvfile, "r")) !== false) {
-			echo "单词表load {$csvfile}\n";
+			fwrite(STDOUT, "单词表load {$csvfile}\n");
 			$row=0;
 			while (($data = fgetcsv($fp)) !== false) {
 				$row++;
@@ -69,20 +69,20 @@ function runTask($redis,$task,$dir){
 					$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));							
 				}
 				else{
-					echo "列不足够：行：{$row} 列：".count($data1)." 数据：{$data} \n";
+					//echo "列不足够：行：{$row} 列：".count($data1)." 数据：{$data} \n";
 				}
 				$count++;
 				if($count%50000==0){
 					sleep(1);
-					echo $count."\n";
+					fwrite(STDOUT, $count."\n");
 				}
 			}
 			fclose($fp);
 			sleep(1);
-			echo "task : {$task->rediskey}:".$redis->hLen($task->rediskey)."\n";
+			fwrite(STDOUT,  "task : {$task->rediskey}:".$redis->hLen($task->rediskey)."\n");
 			
 		} else {
-			echo "can not open csv file. ";
+			fwrite(STDERR,  "can not open csv file. ".PHP_EOL);
 		}	
 	}
 }

@@ -40,7 +40,7 @@ if (PHP_SAPI == "cli") {
 			}
 		}
 	}
-	echo "all done ".$redis->hLen($rediskey);
+	fwrite(STDOUT,  "all done ".$redis->hLen($rediskey).PHP_EOL);
 }
 
 ?>
