@@ -16,7 +16,7 @@ if (PHP_SAPI == "cli") {
 			$redis->hSet("dict://ref/has_mean",$row["word"],"1");
 		}
 	}
-	echo "all done ".$redis->hLen("dict://ref/has_mean");
+	fwrite(STDOUT,  "all done ".$redis->hLen("dict://ref/has_mean").PHP_EOL);
 }
 
 ?>

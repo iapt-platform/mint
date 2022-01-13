@@ -21,9 +21,9 @@ if (isset($argv[1])) {
 				$count += $deleted;
 			}
 			
-			echo "delete ok ".$count;			
+			fwrite(STDOUT,"delete ok ".$count.PHP_EOL) ;			
 		}else{
-			echo "redis connect error ".PHP_EOL;			
+			fwrite(STDERR, "redis connect error ".PHP_EOL);			
 
 		}
     }
@@ -50,11 +50,11 @@ if (isset($argv[1])) {
                 $stringSize = 0;  
 			}
 			if($count%10000==0){
-				echo $count . "-".$sent["book"] . "_" . $sent["paragraph"] . "\n";
+				fwrite(STDOUT, $count . "-".$sent["book"] . "_" . $sent["paragraph"] . "\n");
 			}
 			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "pali", $sent["html"]);
 			if($result===FALSE){
-				echo "hSet error \n";
+				fwrite(STDERR, "hSet error \n");
 			}
 			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "id", $sent["id"]);	
 
@@ -69,8 +69,8 @@ if (isset($argv[1])) {
 			}
 			$result = $redis->hSet('pali://sent/' . $sent["book"] . "_" . $sent["paragraph"] . "_" . $sent["begin"] . "_" . $sent["end"], "sim_count", $pali_sim);			
         }
-        echo "完成 ". count($redis->keys("pali://sent/*"));
+        fwrite(STDOUT, "完成 ". count($redis->keys("pali://sent/*")).PHP_EOL);
     } else {
-        echo "连接redis失败";
+        fwrite(STDERR, "连接redis失败".PHP_EOL);
     }
 }
