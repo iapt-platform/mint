@@ -19,6 +19,15 @@
 - npm or yarn
 - vscode
 
+## 目录
+
+目录遵从Laravel目录设置。有以下几点差别
+
+- public/ 包含旧版php程序的全部文件
+- public/tmp 旧版资源文件夹 对于旧版到新版的迁移。**应该将旧版 /tmp 拷贝到 /public**
+- v1 旧版数据迁移任务脚本
+- deploy 运维代码 
+
 ## 安装
 
 ### 开发环境
