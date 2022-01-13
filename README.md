@@ -180,21 +180,6 @@ php artisan key:generate
 php artisan migrate
 ```
 
-### 语料数据库填充
-
-**Liunx**
-```dash
-cd ./v1/scripts
-sh ./install.sh
-```
-
-**Window**
-```dash
-cd ./v1/scripts
-./install.bat
-```
-运行时间较长。本地开发环境大约4小时。
-
 ### Redis数据库填充
 
 在命令行运行<项目目录>下面的命令
@@ -210,6 +195,23 @@ sh ./redis_upgrade.sh
 cd ./v1/scripts
 ./redis_upgrade.bat
 ```
+
+### 语料数据库填充
+
+**Liunx**
+```dash
+cd ./v1/scripts
+sh ./install.sh
+```
+
+**Window**
+```dash
+cd ./v1/scripts
+./install.bat
+```
+运行时间较长。本地开发环境大约4小时。
+
+
 运行时间较长。本地开发环境大约4小时。
 
 
