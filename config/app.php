@@ -245,6 +245,7 @@ return [
 		'palitext_filelist' => public_path('palihtml').'/filelist.csv',
 		'palicsv' => public_path('tmp').'/palicsv',
 		'pali_title' => public_path('pali_title'),
-
+		'paliword' => public_path('paliword'),
+		'paliword_book' => public_path('paliword')."/book",
 	],
 ];
