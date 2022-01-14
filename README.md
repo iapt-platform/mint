@@ -143,12 +143,6 @@ define("Redis",[
 ```
 
 
-#### public/app/config.migrate.php
-
-复制 `<项目目录>/public/app/config.migrate.example.php` 改文件名为`config.migrate.php`
-通常这个文件无需修改。只在迁移出现问题，切换pg与sqlite的时候使用。
-
-
 #### public/app/config.js
 
 复制 `<项目目录>/public/app/config.example.js` 改文件名为`config.js`

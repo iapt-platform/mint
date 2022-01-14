@@ -59,8 +59,5 @@ require_once __DIR__."/config.dir.php";
 #表设置，此行不能更改
 require_once __DIR__."/config.table.php";
 
-#表名设置，此行不能更改
-require_once __DIR__."/config.migrate.php";
-
 
 ?>
