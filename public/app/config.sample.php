@@ -1,11 +1,11 @@
 <?php 
-#目录设置，不能更改
-require_once __DIR__."/config.dir.php";
+
 
 #域名设置
 define("WWW_DOMAIN_PROTOCOL","https");
 define("WWW_DOMAIN_NAME","www.wikipali.org");
 define("RPC_DOMAIN_NAME","rpc.wikipali.org");
+
 /*
 电子邮件设置
 PHPMailer
@@ -49,6 +49,10 @@ define("SnowFlake",[
 	"DatacenterId"=>1,
 	"WorkerId"=>1
 ]);
+
+#目录设置，不能更改
+require_once __DIR__."/config.dir.php";
+
 /*
 数据表
 */
