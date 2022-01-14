@@ -19,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - /public/app/config.sample.php 变更 移动 config.dir.php 到其他设置的下面 跟其他的 dev config 放在一起 看着比较整齐。
 - remove config.migrate in config.sample.php
 - remove file config.migrate.sample.php
+- finish command Install:wordbook
