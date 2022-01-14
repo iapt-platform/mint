@@ -12,3 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .env -> /.env in .gitignore
 - rename public/app/table.php to table.config.php
 - rename public/app/dir.php to dir.config.php
+- add ASSETS_SERVER to .env.sample
+- add ASSETS_SERVER to /public/app/config.sample.js
+
