@@ -30,6 +30,8 @@
 
 ## 安装
 
+>请注意。此安装方法**只针对开发人员**。生产线请参考[deploy/README.md](deploy/README.md)
+
 ### 开发环境
 
 使用 Linux 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
@@ -111,6 +113,13 @@ DB_PASSWORD=你的数据库密码
 
 **ASSETS_SERVER**
 
+ASSETS_SERVER ：网站资源文件，非用户的图片，音频，视频
+
+- 对应/public/tmp/ 目录 开发线可以设置为 http://127.0.0.1:8000/tmp（ip port根据你的dev server修改）
+- 所有文件存储在 https://drive.google.com/drive/folders/1-4dn4juD-0-lsKndDui2W9nT9wcS_Y33?usp=sharing
+- 开发线可自行下载放到/public/tmp/
+- 或直接引用离您最近的assets server
+
 
 #### public/app/config.php
 
@@ -150,21 +159,20 @@ define("Redis",[
 修改`config.js`
 
 **ASSETS_SERVER**
-```
-/*
-  |---------------
-  |网站资源文件，非用户的图片，音频，视频
-  |---------------
-  |对应/public/tmp/ 目录 开发线可以设置为 http://127.0.0.1:8000/tmp
-  |所有文件存储在 https://drive.google.com/drive/folders/1-4dn4juD-0-lsKndDui2W9nT9wcS_Y33?usp=sharing
-  |开发线可自行下载放到/public/tmp/
-  |或直接引用离您最近的assets server
-  |------------------------
-*/
-var ASSETS_SERVER = "https://assets-hk.wikipali.org";
-```
 
+ASSETS_SERVER ：网站资源文件，非用户的图片，音频，视频
 
+- 对应/public/tmp/ 目录
+- 所有文件存储在 https://drive.google.com/drive/folders/1-4dn4juD-0-lsKndDui2W9nT9wcS_Y33?usp=sharing
+- 开发线可自行下载放到/public/tmp/
+- 或直接引用离您最近的assets server
+
+范例：
+>ip port根据你的dev server修改
+
+```
+var ASSETS_SERVER = "http://127.0.0.1:8000/tmp";
+```
 
 ### 复制巴利语全文搜索单词表
 
