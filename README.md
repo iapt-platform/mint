@@ -97,7 +97,9 @@ npm install
 
 复制 `<项目目录>/.env.example` 的一个副本。改文件名为 `.env`
 
-修改`.env`，为你的db配置
+修改`.env`
+
+**db配置**
 ```
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
@@ -106,6 +108,9 @@ DB_DATABASE=你的数据库名
 DB_USERNAME=postgres
 DB_PASSWORD=你的数据库密码
 ```
+
+**ASSETS_SERVER**
+
 
 #### public/app/config.php
 
@@ -126,6 +131,7 @@ define("Database",[
 ]);
 ```
 
+
 **Redis 设置**
 ```
 define("Redis",[
@@ -145,7 +151,24 @@ define("Redis",[
 
 #### public/app/config.js
 
-复制 `<项目目录>/public/app/config.example.js` 改文件名为 `config.js`
+复制 `<项目目录>/public/app/config.example.js` 改文件名为`config.js`
+
+修改`config.js`
+
+**ASSETS_SERVER**
+```
+/*
+  |---------------
+  |网站资源文件，非用户的图片，音频，视频
+  |---------------
+  |对应/public/tmp/ 目录 开发线可以设置为 http://127.0.0.1:8000/tmp
+  |所有文件存储在 https://drive.google.com/drive/folders/1-4dn4juD-0-lsKndDui2W9nT9wcS_Y33?usp=sharing
+  |开发线可自行下载放到/public/tmp/
+  |或直接引用离您最近的assets server
+  |------------------------
+*/
+var ASSETS_SERVER = "https://assets-hk.wikipali.org";
+```
 
 
 
