@@ -3144,11 +3144,14 @@ function showModifyWin(sWordId) {
 	//showCurrWordTable(sReal);
 
 	if (g_useMode == "edit") {
+		//初始值
 		$("#input_meaning").val(sMeaning);
 		$("#input_org").val(sOrg);
 		$("#input_om").val(sOm);
 		$("#input_case").val(sCase);
-
+		$("#input_parent_grammar").val(sParentGrammar);
+		$("#id_text_prt_prt").val(sParent2);
+		
 		if (sParentGrammar != "" || sParent2 != "" || sParent2 != " ") {
 			document.getElementById("edit_detail_prt_prt").style.display = "block";
 			document.getElementById("svg_parent2").style.transform = "rotate(90deg)";
@@ -3157,7 +3160,7 @@ function showModifyWin(sWordId) {
 			document.getElementById("svg_parent2").style.transform = "rotate(0deg)";
 		}
 		document.getElementById("parent_grammar").innerHTML = getLocalGrammaStr(sParentGrammar);
-		$("#id_text_prt_prt").val(sParent2);
+
 
 		//右侧修改菜单
 		$("#word_mdf_mean_dropdown").html(render_word_menu_mean(g_currEditWord, 1));
