@@ -304,36 +304,27 @@ else{$currDevice="computer";}
 		fill: var(--link-hover-color);
 	}
 	#om_dropdown_area::-webkit-scrollbar {
-		width: 14px;
-		height: 14px;
+		width: 10px;
+		height: 10px;
 	}
 	#om_dropdown_area::-webkit-scrollbar-thumb {
 		background-color: var(--link-color);
 	}
+	#om_dropdown_area::-webkit-scrollbar-thumb:hover {
+		background-color:var(--tool-link-hover-color);
+	}
 	#om_dropdown_area::-webkit-scrollbar-button:single-button {
-		width: 14px
-		height: 14px;
+		width: 10px
+		height: 10px;
 		display: block;
 		background-color: var(--link-color);
-		background-repeat: no-repeat;
-		background-position-x: center;
-		background-position-y: bottom;
-		background-origin: content-box;
-		background-color: var(--main-color1);
 		border-radius: 10px;
 	}
-	#om_dropdown_area::-webkit-scrollbar-button:single-button:horizontal:decrement {
-		background: url(../../node_modules/bootstrap-icons/icons/chevron-left.svg);
+
+	#om_dropdown_area::-webkit-scrollbar-button:single-button:hover {
+		background-color:var(--tool-link-hover-color);
 	}
-	#om_dropdown_area::-webkit-scrollbar-button:single-button:horizontal:decrement:hover {
-		background-color:var(--link-color);
-	}
-	#om_dropdown_area::-webkit-scrollbar-button:single-button:horizontal:increment {
-		background: url(../../node_modules/bootstrap-icons/icons/chevron-right.svg);
-	}
-	#om_dropdown_area::-webkit-scrollbar-button:single-button:horizontal:increment:hover {
-		background-color:var(--link-color);
-	}
+
 		</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
 	<style id="display_set">
