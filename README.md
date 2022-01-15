@@ -151,7 +151,14 @@ define("Redis",[
 ]);
 ```
 
+**ASSETS_SERVER**
 
+**HELP_SERVER**
+
+**GRAMMAR_SERVER**
+
+参照下文 config.js
+ 
 #### public/app/config.js
 
 复制 `<项目目录>/public/app/config.example.js` 改文件名为`config.js`
@@ -172,6 +179,32 @@ ASSETS_SERVER ：网站资源文件，非用户的图片，音频，视频
 
 ```
 var ASSETS_SERVER = "http://127.0.0.1:8000/tmp";
+```
+
+**HELP_SERVER**
+
+网站帮助文档
+
+- 直接引用离您最近的 help server
+
+范例：
+>ip port根据你的 dev server 修改
+
+```
+var HELP_SERVER = "https://help-hk.wikipali.org";
+```
+
+**GRAMMAR_SERVER**
+
+语法手册文档
+
+- 直接引用离您最近的 help server
+
+范例：
+>ip port根据你的 dev server 修改
+
+```
+var GRAMMAR_SERVER = "https://grammar-hk.wikipali.org";
 ```
 
 ### 复制巴利语全文搜索单词表

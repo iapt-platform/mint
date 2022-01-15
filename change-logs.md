@@ -20,3 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove config.migrate in config.sample.php
 - remove file config.migrate.sample.php
 - finish command Install:wordbook
+
+## [1.0.1] - 2022-01-15
+
+- add HELP_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
+- add GRAMMAR_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
