@@ -11,4 +11,7 @@ var RPC_DOMAIN_NAME="rpc.wikipali.org";
   |或直接引用离您最近的assets server
   |------------------------
 */
-var ASSETS_SERVER = "https://assets-hk.wikipali.org";
+
+var ASSETS_SERVER = "https://assets-hk.wikipali.org"
+var HELP_SERVER = "https://help-hk.wikipali.org"
+var GRAMMAR_SERVER = "https://grammar-hk.wikipali.org"

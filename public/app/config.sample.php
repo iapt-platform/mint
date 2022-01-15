@@ -5,6 +5,9 @@
 define("WWW_DOMAIN_PROTOCOL","https");
 define("WWW_DOMAIN_NAME","www.wikipali.org");
 define("RPC_DOMAIN_NAME","rpc.wikipali.org");
+define("ASSETS_SERVER","https://assets-hk.wikipali.org");
+define("HELP_SERVER","https://help-hk.wikipali.org");
+define("GRAMMAR_SERVER","https://grammar-hk.wikipali.org");
 
 /*
 电子邮件设置
