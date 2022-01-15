@@ -3517,7 +3517,8 @@ function refreshPartMeaningSelect() {
 			output += "+";
 		}
 	}
-	output += "</div><div>";
+	output += "</div>";
+	output += "<div style='width: 5em;'>";
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"copy_part_mean_to_mean()\">";
 	output += '<svg class="icon"><use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_vertical_align_top">';
 	output += "</button>";
