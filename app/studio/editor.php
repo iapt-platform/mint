@@ -776,7 +776,7 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p" >
 					<guide gid="studio_part_meaning">④</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
-					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
+					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;justify-content: space-between;"></div>
 					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onchange='input_om_change(this)' onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
