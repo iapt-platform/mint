@@ -3450,6 +3450,16 @@ function load_my_formula() {
 		}
 	);
 }
+/*
+  |------------------------------------
+  |当人工输入拆分意思后，更新拆分意思数组
+  |------------------------------------
+  |obj : 输入框
+  |------------------------------------
+*/
+function input_om_change(obj){
+	g_arrPartMean = obj.value().split('+');
+}
 
 function part_mean_ok() {
 	var part_mean_ok_str = g_arrPartMean.join("+");
