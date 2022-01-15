@@ -3461,6 +3461,13 @@ function input_om_change(obj){
 	g_arrPartMean = obj.value().split('+');
 }
 
+/*
+  |------------------------------------
+  |当选择拆分意思菜单后，更新拆分意思输入框
+  |------------------------------------
+  | 
+  |------------------------------------
+*/
 function part_mean_ok() {
 	var part_mean_ok_str = g_arrPartMean.join("+");
 	part_mean_ok_str = "#" + part_mean_ok_str + "#";
