@@ -3507,7 +3507,7 @@ function refreshPartMeaningSelect() {
 	if (g_initPartMeaning) {
 		g_arrPartMean = part.split("+");
 	}
-	var output = "<div style='overflow-x: scroll;white-space: nowrap;max-width: 13em;'>";
+	var output = "<div id='om_dropdown_area' style='overflow-x: auto;white-space: nowrap;max-width: 13em;'>";
 	//output="<span style='width:90%' onclick=\"input_org_switch('input_org_select','input_om')\"></span><br/>"
 	for (iPart in arrPart) {
 		output += getMeaningMenuList(iPart, arrPart[iPart]);
@@ -3518,7 +3518,7 @@ function refreshPartMeaningSelect() {
 		}
 	}
 	output += "</div>";
-	output += "<div style='width: 6em;'>";
+	output += "<div style='width: 5.5em;'>";
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"copy_part_mean_to_mean()\">";
 	output += '<svg class="icon"><use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_vertical_align_top">';
 	output += "</button>";
