@@ -78,18 +78,22 @@
       - zip
       - unzip
       - nginx
+      - certbot
       - openvpn
       - snmpd
       - systemd-cron
       - systemd-timesyncd
       - screen
       - tmux
+      - hugo
       - python3
       - python3-pip
       - python3-distutils
       - python3-dev
-      - libpq5
-      
+      - libssl-dev
+      - libpq-dev
+      - libmysqlclient-dev
+
 
 - include: locales.yml
 
@@ -140,13 +144,18 @@
     enabled: yes
     masked: no
 
-
 - name: enable cron service
   become: true
   ansible.builtin.systemd:
     name: cron-target
     enabled: yes
     masked: no
+
+- name: enable certbot sync
+  ansible.builtin.cron:
+    name: "renew certbot"
+    special_time: monthly
+    job: "/usr/bin/certbot renew --force-renewal"
 
 - name: enable ssh service
   become: true

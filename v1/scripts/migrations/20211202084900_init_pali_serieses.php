@@ -16,18 +16,18 @@ $src_file=_DIR_PALI_TITLE_."/pali_serieses.csv";#源数据
 $dest_db=_PG_DB_PALITEXT_;#目标数据库
 $dest_table=_PG_TABLE_PALI_BOOK_NAME_;#目标表名
 
-echo "migarate pali_serieses".PHP_EOL;
+fwrite(STDOUT, "migarate pali_serieses".PHP_EOL);
 #打开源
 if (($fp = fopen($src_file, "r")) === FALSE) {
-	echo "open $src_file fail".PHP_EOL;
+	fwrite(STDERR, "open $src_file fail".PHP_EOL);
 	exit;
 }
-echo "open src".PHP_EOL;
+fwrite(STDOUT, "open src".PHP_EOL);
 
 #打开目标数据库
 $PDO_DEST = new PDO($dest_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-echo "open dest".PHP_EOL;
+fwrite(STDOUT, "open dest".PHP_EOL);
 
 #删除目标表中所有数据
 fwrite(STDOUT,"deleting date".PHP_EOL) ;
@@ -43,7 +43,7 @@ fwrite(STDOUT,"deleted date".PHP_EOL) ;
 
 // 开始一个事务，关闭自动提交
 $count = 0;
-echo "begin Transaction".PHP_EOL;
+fwrite(STDOUT, "begin Transaction".PHP_EOL);
 
 $PDO_DEST->beginTransaction();
 

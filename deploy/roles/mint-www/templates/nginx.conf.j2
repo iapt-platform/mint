@@ -1,0 +1,33 @@
+server {
+    listen 80;
+
+    gzip on;
+    server_name {{ inventory_hostname }};
+    root {{ app_www_deploy_target }};
+    client_max_body_size 16M;
+
+    access_log off;
+    error_log /var/log/nginx/{{ inventory_hostname }}.error.log warn;
+
+    location / {
+        index index.html index.php;
+    }
+
+    location ~ /.git/ {
+        deny all;
+    }
+
+    location ~ \.php$ {
+        try_files $fastcgi_script_name =404;
+
+        include fastcgi_params;
+
+        fastcgi_pass			unix:/run/php/php{{ app_php_version }}-fpm.sock;
+        fastcgi_index			index.php;
+        fastcgi_buffers			8 16k;
+        fastcgi_buffer_size		32k;
+
+        fastcgi_param DOCUMENT_ROOT     $realpath_root;
+        fastcgi_param SCRIPT_FILENAME   $realpath_root$fastcgi_script_name;
+    }
+}

@@ -11,7 +11,7 @@ set_exception_handler(function($e){
 	exit;
 });
 
-echo "Insert Pali Text To DB".PHP_EOL;
+fwrite(STDOUT, "Insert Pali Text To DB".PHP_EOL);
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -53,7 +53,7 @@ if ($_to == 0 || $_to >= $fileNums) {
 }
 
 for ($from=$_from-1; $from < $_to; $from++) { 
-    echo "doing ".($from+1).PHP_EOL;
+    fwrite(STDOUT, "doing ".($from+1).PHP_EOL);
 
     $bookword = array();
 
@@ -82,7 +82,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = $dbh_word_index->errorInfo();
-        echo "error - $error[2]".PHP_EOL;
+        fwrite(STDERR, "error - $error[2]".PHP_EOL);
         $log .= "$from, $FileName, error, $error[2] \r\n";
     }else{
         // 开始一个事务，关闭自动提交
@@ -102,10 +102,10 @@ for ($from=$_from-1; $from < $_to; $from++) {
         $dbh_word_index->commit();
         if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
             $error = $dbh_word_index->errorInfo();
-            echo "error - $error[2]".PHP_EOL;
+            fwrite(STDERR, "error - $error[2]".PHP_EOL);
             $log .= "$from, $FileName, error, $error[2] \r\n";
         } else {
-            echo "updata $count recorders.".PHP_EOL;
+            fwrite(STDOUT, "updata $count recorders.".PHP_EOL);
             $log .= "updata $count recorders.\r\n";
         }	
     }
@@ -116,6 +116,6 @@ for ($from=$_from-1; $from < $_to; $from++) {
     fclose($myLogFile);
     */
 }
-echo "齐活！功德无量！all done!".PHP_EOL;
+fwrite(STDOUT, "齐活！功德无量！all done!".PHP_EOL);
 
 ?>

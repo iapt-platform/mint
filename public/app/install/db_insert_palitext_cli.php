@@ -13,7 +13,7 @@ set_exception_handler(function($e){
 define("_DB_", _PG_DB_PALITEXT_);
 define("_TABLE_",_PG_TABLE_PALI_TEXT_);
 
-echo "Insert Pali Text To DB".PHP_EOL;
+fwrite(STDOUT, "Insert Pali Text To DB".PHP_EOL);
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -34,7 +34,7 @@ $to = $_to;
 $filelist = array();
 $fileNums = 0;
 $log = "";
-echo "doing $_from";
+fwrite(STDOUT, "doing $_from".PHP_EOL);
 
 if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
@@ -69,7 +69,7 @@ for ($from=$_from-1; $from < $to; $from++) {
     $dirXml = $outputFileNameHead . "/";
     
     $xmlfile = $inputFileName;
-    echo "doing:" . $xmlfile . PHP_EOL;
+    fwrite(STDOUT, "doing:" . $xmlfile . PHP_EOL);
     $log = $log . "$from,$FileName,open\r\n";
     
     $arrInserString = array();
@@ -85,9 +85,10 @@ for ($from=$_from-1; $from < $to; $from++) {
     
         }
         fclose($fpPaliText);
-        echo "pali text load：" . $dirPaliTextBase . $xmlfile . PHP_EOL;
+        fwrite(STDOUT, "pali text load：" . $dirPaliTextBase . $xmlfile . PHP_EOL);
     } else {
-        echo "can not pali text file. filename=" . $dirPaliTextBase . $xmlfile;
+        fwrite(STDERR, "can not pali text file. filename=" . $dirPaliTextBase . $xmlfile.PHP_EOL);
+		continue;
     }
     
     $inputRow = 0;
@@ -102,15 +103,16 @@ for ($from=$_from-1; $from < $to; $from++) {
             $inputRow++;
         }
         fclose($fp);
-        echo "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL;
+        fwrite(STDOUT, "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL);
     } else {
-        echo "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv";
+        fwrite(STDERR, "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL);
         continue;
     }
     
     if (($inputRow - 1) != count($pali_text_array)) {
-        $log = $log . "$from, $FileName,error,文件行数不匹配 inputRow=$inputRow pali_text_array=" . count($pali_text_array) . " \r\n";
-        echo "line count error".PHP_EOL;
+        $log = "$from, $FileName,error,文件行数不匹配 inputRow=$inputRow pali_text_array=" . count($pali_text_array) . PHP_EOL;
+        fwrite(STDERR, $log);
+		continue;
     }
     
     #删除 旧数据
@@ -149,12 +151,12 @@ for ($from=$_from-1; $from < $to; $from++) {
     $dbh->commit();
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = $dbh->errorInfo();
-        echo "error - $error[2]".PHP_EOL;
+        fwrite(STDERR, "error - $error[2]".PHP_EOL);
     
         $log = $log . "$from, $FileName, error, $error[2] \r\n";
     } else {
         $count = count($arrInserString);
-        echo "updata $count recorders.".PHP_EOL;
+        fwrite(STDOUT, "updata $count recorders.".PHP_EOL);
     }
     /*
     $myLogFile = fopen($dirLog . "db_insert_palitext.log", "a");
@@ -162,7 +164,7 @@ for ($from=$_from-1; $from < $to; $from++) {
     fclose($myLogFile);
     */
 }
-echo "all done!".PHP_EOL;
+fwrite(STDOUT, "all done!".PHP_EOL);
 
 
 

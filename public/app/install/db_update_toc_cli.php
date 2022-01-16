@@ -12,7 +12,7 @@ set_exception_handler(function($e){
 define("_DB_RES_INDEX_", _PG_DB_RESRES_INDEX_);
 define("_TABLE_",_PG_TABLE_RES_INDEX_);
 
-echo "Update toc to res_index".PHP_EOL;
+fwrite(STDOUT, "Update toc to res_index".PHP_EOL);
 
 if ($argc != 4) {
 	echo $argv[0]." help".PHP_EOL;
@@ -34,7 +34,7 @@ $_lang = $argv[3];
 $filelist = array();
 $fileNums = 0;
 $log = "";
-echo "doing $_from".PHP_EOL;
+fwrite(STDOUT, "doing $_from".PHP_EOL);
 
 if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
     while (($filelist[$fileNums] = fgetcsv($handle, 0, ',')) !== false) {
@@ -90,9 +90,9 @@ for ($from=$_from-1; $from < $_to; $from++) {
             $inputRow++;
         }
         fclose($fp);
-        echo "res load：" . _DIR_PALI_TITLE_ . "/" . ($from + 1) . "_title.csv".PHP_EOL;
+        fwrite(STDOUT, "res load：" . _DIR_PALI_TITLE_ . "/" . ($from + 1) . "_title.csv".PHP_EOL);
     } else {
-        echo "can not open csv ";
+        fwrite(STDOUT, "can not open csv ".PHP_EOL);
         continue;
     }
     
@@ -155,11 +155,11 @@ for ($from=$_from-1; $from < $_to; $from++) {
     $dbh->commit();
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = $dbh->errorInfo();
-        echo "error - $error[2] ".PHP_EOL;
+        fwrite(STDERR, "error - $error[2] ".PHP_EOL);
         $log = $log . "$from, error, $error[2] \r\n";
     } else {
         $count = count($arrInserString);
-        echo "updata $count title recorders.".PHP_EOL;
+        fwrite(STDOUT, "updata $count title recorders.".PHP_EOL);
     }
     //段落信息结束
     /*
@@ -168,7 +168,7 @@ for ($from=$_from-1; $from < $_to; $from++) {
     fclose($myLogFile);
     */
 }
- echo "<h2>齐活！功德无量！all done!</h2>";
+fwrite(STDOUT, "齐活！功德无量！all done!".PHP_EOL);
 
 
 

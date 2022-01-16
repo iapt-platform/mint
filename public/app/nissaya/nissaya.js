@@ -34,10 +34,11 @@ function render_on_page(params) {
 
 	html += "<div class='img_box' dir='" + params.dir + "' book='" + params.book + "' page='" + params.page + "'>";
 	html += "<div>" + filename + "</div>";
+	let filePath = ASSETS_SERVER + "/nissaya/";
 	if (params.show) {
-		html += "<img class='book_page' src='../../tmp/nissaya/" + filename + "' />";
+		html += "<img class='book_page' src='" + filePath + filename + "' />";
 	} else {
-		html += "<img class='book_page' data-src='../../tmp/nissaya/" + filename + "' />";
+		html += "<img class='book_page' data-src='" + filePath + filename + "' />";
 	}
 	html += "</div>";
 	return html;

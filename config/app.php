@@ -244,20 +244,8 @@ return [
 		'palitext' => public_path('palihtml'),
 		'palitext_filelist' => public_path('palihtml').'/filelist.csv',
 		'palicsv' => public_path('tmp').'/palicsv',
-	],
-
-	'dependence' =>[
-		[
-			'path' => 'pali-sentence',
-			'url' => 'https://github.com/iapt-platform/pali-sentence.git',
-		],
-		[
-			'path' => 'word-statistics',
-			'url' => 'https://github.com/iapt-platform/word-statistics.git',
-		],
-		[
-			'path' => 'pali-similarity',
-			'url' => 'https://github.com/iapt-platform/pali-similarity.git',
-		],
+		'pali_title' => public_path('pali_title'),
+		'paliword' => public_path('paliword'),
+		'paliword_book' => public_path('paliword')."/book",
 	],
 ];

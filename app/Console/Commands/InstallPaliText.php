@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\PaliText;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class InstallPaliText extends Command
 {
@@ -77,7 +78,6 @@ class InstallPaliText extends Command
 					if (substr($data, 0, 2) === "<p") {
 						array_push($pali_text_array, $data);
 					}
-			
 				}
 				fclose($fpPaliText);
 				//$this->info("pali text load：" . $htmlFile . PHP_EOL);
@@ -135,9 +135,9 @@ class InstallPaliText extends Command
 						'toc'=>$toc,
 						'text'=>$oneParam[6],
 						'html'=>$oneParam[5],
-						'lenght'=>mb_strlen($oneParam[6], "UTF-8")	
+						'lenght'=>mb_strlen($oneParam[6], "UTF-8"),
 					];
-					PaliText::insert($params);
+					PaliText::create($params);
 				}
 				
 			});

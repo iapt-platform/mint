@@ -4,16 +4,16 @@
     - ubuntu
     - python3
     - php
-
-- hosts: db
-  roles:
-
-- hosts:
-    - www
-    - 
-  roles:
-    - wikipali
+    - mint-clone
 
 - hosts: www
   roles:
-    - wikipali
+    - mint-www
+
+- hosts: assets
+  roles:
+    - mint-assets
+
+- hosts: db
+  roles:
+    - mint-db

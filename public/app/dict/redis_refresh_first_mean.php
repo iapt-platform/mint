@@ -20,14 +20,14 @@ if (PHP_SAPI == "cli") {
 			print_r($languages);
 			foreach ($languages as $thisLang) {
 				# code...
-				echo "runing $thisLang \n";
+				fwrite(STDOUT,  "runing $thisLang \n");
 				$query = "SELECT word,mean from " . _TABLE_DICT_REF_ . " where language = ? group by word";
 				$stmt = $PDO->prepare($query);
         		$stmt->execute(array($thisLang));
 				while($meaning=$stmt->fetch(PDO::FETCH_ASSOC)){
 					$redis->hSet("ref_first_mean://".$thisLang,$meaning["word"],$meaning["mean"]);
 				}
-				echo $thisLang.":".$redis->hLen("ref_first_mean://".$thisLang)."\n";
+				fwrite(STDOUT,  $thisLang.":".$redis->hLen("ref_first_mean://".$thisLang)."\n");
 			}
 
 			$query = "SELECT word,mean from " . _TABLE_DICT_REF_ . " where 1 group by word";
@@ -36,11 +36,11 @@ if (PHP_SAPI == "cli") {
 			while($meaning=$stmt->fetch(PDO::FETCH_ASSOC)){
 				$redis->hSet("ref_first_mean://com",$meaning["word"],$meaning["mean"]);
 			}
-			echo "com:".$redis->hLen("ref_first_mean://com")."\n";
+			fwrite(STDOUT,  "com:".$redis->hLen("ref_first_mean://com")."\n");
 		}
 	}
 	else{
-		echo "no redis server";
+		fwrite(STDERR,  "no redis server");
 	}
 
 }
