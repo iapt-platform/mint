@@ -21,7 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove file config.migrate.sample.php
 - finish command Install:wordbook
 
-## [1.0.1] - 2022-01-15
+## [1.0.2] - 2022-01-15
 
 - add HELP_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
 - add GRAMMAR_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
+
+## [1.0.3] - 2022-01-16
+
+- remove WWW_DOMAIN_PROTOCOL WWW_DOMAIN_NAME from config.sample.php
+- rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.php
+- remove WWW_DOMAIN_NAME  from config.sample.js
+- rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.js
