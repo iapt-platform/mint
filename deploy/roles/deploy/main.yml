@@ -1,5 +1,0 @@
-- name: Git checkout
-  ansible.builtin.git:
-    repo: 'https://foosball.example.org/path/to/repo.git'
-    dest: /srv/checkout
-    version: release-0.22
