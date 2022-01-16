@@ -12,7 +12,7 @@
     version: laravel
 
 - name: Install v2 php dependencies
-  ansible.builtin.shell: composer install
+  ansible.builtin.shell: "{{ ansible_env.HOME }}/.local/bin/composer install"
   args:
     chdir: "{{ app_deploy_target }}"
 
@@ -23,7 +23,7 @@
 
 # TODO will remove in future
 - name: Install v1 php dependencies
-  ansible.builtin.shell: composer install
+  ansible.builtin.shell: "{{ ansible_env.HOME }}/.local/bin/composer install"
   args:
     chdir: "{{ app_deploy_target }}/public"
 
@@ -34,7 +34,7 @@
     chdir: "{{ app_deploy_target }}/public"
 
 - name: .env(v2)
-  bacame: true
+  become: true
   ansible.builtin.template:
     src: env-v2.j2
     dest: "{{ app_deploy_target }}/.env"
@@ -44,7 +44,7 @@
 
 # TODO will remove in future
 - name: config.php(v1)
-  bacame: true
+  become: true
   ansible.builtin.template:
     src: config-v1.php.j2
     dest: "{{ app_deploy_target }}/public/app/config.php"
@@ -54,7 +54,7 @@
 
 # TODO will remove in future
 - name: config.js(v1)
-  bacame: true
+  become: true
   ansible.builtin.template:
     src: config-v1.js.j2
     dest: "{{ app_deploy_target }}/public/app/config.js"

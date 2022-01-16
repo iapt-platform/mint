@@ -1,4 +1,5 @@
 - name: Remove file nginx default host
+  become: true
   ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
     state: absent
@@ -6,7 +7,7 @@
 - name: add Let's Encrypt support
   become: true
   ansible.builtin.shell:
-    cmd: certbot --non-interactive --agree-tos -m {{ app_master_email }}
+    cmd: certbot --nginx --non-interactive --agree-tos -m {{ app_master_email }} --domains {{ inventory_hostname }}
 
 - name: restart nginx
   become: true

@@ -2,22 +2,22 @@ BASE_DIR="/workspace/.env.global"
 CACHE_DIR="${BASE_DIR}/cache"
 TMP_DIR="${BASE_DIR}/tmp"
 
-APP_NAME={{  }}
-APP_ENV=local
-APP_KEY=
+APP_NAME=mint
+APP_ENV=production
+APP_KEY={{ app_laravel_key }}
 APP_DEBUG=true
-APP_URL=http://localhost
+APP_URL=https://{{ inventory_hostname }}
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
+LOG_LEVEL=info
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
+DB_CONNECTION=postgresql
+DB_HOST={{ app_postgresql_host }}
+DB_PORT={{ app_postgresql_port }}
 DB_DATABASE=mint_new
-DB_USERNAME=root
-DB_PASSWORD=
+DB_USERNAME=www
+DB_PASSWORD={{ app_postgresql_password }}
 
 BROADCAST_DRIVER=log
 CACHE_DRIVER=file
@@ -28,7 +28,7 @@ SESSION_LIFETIME=120
 
 MEMCACHED_HOST=127.0.0.1
 
-REDIS_HOST=127.0.0.1
+REDIS_HOST={{ app_redis_host }}
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
@@ -56,3 +56,4 @@ MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
 MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
 ASSETS_SERVER="https://assets-{{ app_cluster_id }}.wikipali.org"
+RPC_SERVER="https://rpc.wikipali.org"
