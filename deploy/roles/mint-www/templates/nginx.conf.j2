@@ -3,7 +3,7 @@ server {
 
     gzip on;
     server_name {{ inventory_hostname }};
-    root {{ app_www_deploy_target }};
+    root {{ app_deploy_target }};
     client_max_body_size 16M;
 
     access_log off;

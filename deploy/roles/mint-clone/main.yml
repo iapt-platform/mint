@@ -1,4 +1,4 @@
-- name: Creates directory
+- name: Creates deploy directory
   become: true
   file:
     path: "/var/www/{{ inventory_hostname }}"
@@ -8,36 +8,36 @@
 - name: Git checkout source code
   ansible.builtin.git:
     repo: 'https://github.com/iapt-platform/mint.git'
-    dest: "{{ app_www_deploy_target }}"
+    dest: "{{ app_deploy_target }}"
     version: laravel
 
 - name: Install v2 php dependencies
   ansible.builtin.shell: composer install
   args:
-    chdir: "{{ app_www_deploy_target }}"
+    chdir: "{{ app_deploy_target }}"
 
 - name: Install v2 nodejs dependencies
   ansible.builtin.shell: npm install
   args:
-    chdir: "{{ app_www_deploy_target }}"
+    chdir: "{{ app_deploy_target }}"
 
 # TODO will remove in future
 - name: Install v1 php dependencies
   ansible.builtin.shell: composer install
   args:
-    chdir: "{{ app_www_deploy_target }}/public"
+    chdir: "{{ app_deploy_target }}/public"
 
 # TODO will remove in future
 - name: Install v1 nodejs dependencies
   ansible.builtin.shell: npm install
   args:
-    chdir: "{{ app_www_deploy_target }}/public"
+    chdir: "{{ app_deploy_target }}/public"
 
 - name: .env(v2)
   bacame: true
   ansible.builtin.template:
     src: env-v2.j2
-    dest: "{{ app_www_deploy_target }}/.env"
+    dest: "{{ app_deploy_target }}/.env"
     owner: www-data
     group: www-data
     mode: '0400'
@@ -47,7 +47,7 @@
   bacame: true
   ansible.builtin.template:
     src: config-v1.php.j2
-    dest: "{{ app_www_deploy_target }}/public/app/config.php"
+    dest: "{{ app_deploy_target }}/public/app/config.php"
     owner: www-data
     group: www-data
     mode: '0400'
@@ -57,7 +57,7 @@
   bacame: true
   ansible.builtin.template:
     src: config-v1.js.j2
-    dest: "{{ app_www_deploy_target }}/public/app/config.js"
+    dest: "{{ app_deploy_target }}/public/app/config.js"
     owner: www-data
     group: www-data
     mode: '0400'
