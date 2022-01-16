@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .env -> /.env in .gitignore
 - rename public/app/table.php to table.config.php
 - rename public/app/dir.php to dir.config.php
-- add ASSETS_SERVER to .env.sample
+- add ASSETS_SERVER to .env.example
 - add ASSETS_SERVER to /public/app/config.sample.js
 
 ## [1.0.1] - 2022-01-14
@@ -23,8 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.2] - 2022-01-15
 
-- add HELP_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
-- add GRAMMAR_SERVER to .env.sample /public/app/config.sample.js /public/app/config.sample.php
+- add HELP_SERVER to .env.example /public/app/config.sample.js /public/app/config.sample.php
+- add GRAMMAR_SERVER to .env.example /public/app/config.sample.js /public/app/config.sample.php
 
 ## [1.0.3] - 2022-01-16
 
@@ -32,3 +32,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.php
 - remove WWW_DOMAIN_NAME  from config.sample.js
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.js
+- add RPC_SERVER to .env.example
