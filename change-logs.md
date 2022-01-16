@@ -32,3 +32,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.php
 - remove WWW_DOMAIN_NAME  from config.sample.js
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.js
+- add RPC_SERVER to .env.example
