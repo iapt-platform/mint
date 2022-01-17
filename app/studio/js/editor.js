@@ -3144,11 +3144,14 @@ function showModifyWin(sWordId) {
 	//showCurrWordTable(sReal);
 
 	if (g_useMode == "edit") {
+		//初始值
 		$("#input_meaning").val(sMeaning);
 		$("#input_org").val(sOrg);
 		$("#input_om").val(sOm);
 		$("#input_case").val(sCase);
-
+		$("#input_parent_grammar").val(sParentGrammar);
+		$("#id_text_prt_prt").val(sParent2);
+		
 		if (sParentGrammar != "" || sParent2 != "" || sParent2 != " ") {
 			document.getElementById("edit_detail_prt_prt").style.display = "block";
 			document.getElementById("svg_parent2").style.transform = "rotate(90deg)";
@@ -3157,7 +3160,7 @@ function showModifyWin(sWordId) {
 			document.getElementById("svg_parent2").style.transform = "rotate(0deg)";
 		}
 		document.getElementById("parent_grammar").innerHTML = getLocalGrammaStr(sParentGrammar);
-		$("#id_text_prt_prt").val(sParent2);
+
 
 		//右侧修改菜单
 		$("#word_mdf_mean_dropdown").html(render_word_menu_mean(g_currEditWord, 1));
@@ -3450,7 +3453,24 @@ function load_my_formula() {
 		}
 	);
 }
+/*
+  |------------------------------------
+  |当人工输入拆分意思后，更新拆分意思数组
+  |------------------------------------
+  |obj : 输入框
+  |------------------------------------
+*/
+function input_om_change(obj){
+	g_arrPartMean = obj.value().split('+');
+}
 
+/*
+  |------------------------------------
+  |当选择拆分意思菜单后，更新拆分意思输入框
+  |------------------------------------
+  | 
+  |------------------------------------
+*/
 function part_mean_ok() {
 	var part_mean_ok_str = g_arrPartMean.join("+");
 	part_mean_ok_str = "#" + part_mean_ok_str + "#";
@@ -3490,7 +3510,7 @@ function refreshPartMeaningSelect() {
 	if (g_initPartMeaning) {
 		g_arrPartMean = part.split("+");
 	}
-	var output = "<div style='overflow-x: scroll;white-space: nowrap;max-width: 13em;'>";
+	var output = "<div id='om_dropdown_area' style='overflow-x: auto;white-space: nowrap;max-width: 13em;'>";
 	//output="<span style='width:90%' onclick=\"input_org_switch('input_org_select','input_om')\"></span><br/>"
 	for (iPart in arrPart) {
 		output += getMeaningMenuList(iPart, arrPart[iPart]);
@@ -3500,7 +3520,8 @@ function refreshPartMeaningSelect() {
 			output += "+";
 		}
 	}
-	output += "</div><div>";
+	output += "</div>";
+	output += "<div style='width: 5.5em;'>";
 	output += "<button style='margin-left:auto; padding: 1px 6px;' onclick=\"copy_part_mean_to_mean()\">";
 	output += '<svg class="icon"><use xlink="http://www.w3.org/1999/xlink" href="svg/icon.svg#ic_vertical_align_top">';
 	output += "</button>";

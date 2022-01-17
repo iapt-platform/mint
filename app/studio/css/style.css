@@ -4155,6 +4155,7 @@ border-bottom: 2px solid red;
 
 .edit_detail_p {
 	display: flex;
+	padding:2px 0;
 }
 
 .edit_detail_span {
