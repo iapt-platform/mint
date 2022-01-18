@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 require_once "../pcdl/html_head.php";
 ?>
 

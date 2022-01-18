@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once '../ucenter/login.php';
 require_once '../public/config.php';
 require_once '../public/load_lang.php';
