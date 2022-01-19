@@ -303,7 +303,29 @@ else{$currDevice="computer";}
 	#merge_button:hover>.icon{
 		fill: var(--link-hover-color);
 	}
-	</style>
+	#om_dropdown_area::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+	#om_dropdown_area::-webkit-scrollbar-thumb {
+		background-color: var(--link-color);
+	}
+	#om_dropdown_area::-webkit-scrollbar-thumb:hover {
+		background-color:var(--tool-link-hover-color);
+	}
+	#om_dropdown_area::-webkit-scrollbar-button:single-button {
+		width: 10px
+		height: 10px;
+		display: block;
+		background-color: var(--link-color);
+		border-radius: 10px;
+	}
+
+	#om_dropdown_area::-webkit-scrollbar-button:single-button:hover {
+		background-color:var(--tool-link-hover-color);
+	}
+
+		</style>
 	<link type="text/css" rel="stylesheet" href="css/print.css" media="print" />
 	<style id="display_set">
 	</style>
@@ -754,8 +776,8 @@ foreach($plugin_list as $info){
 				<div class="edit_detail_p" >
 					<guide gid="studio_part_meaning">④</guide>
 					<span class="edit_detail_span"><?php echo $_local->gui->partmeaning;?>：</span>
-					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;"></div>
-					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onblur="input_org_switch('input_om','input_org_select')">
+					<div id="input_org_select" class="input_bar" style="width:80%; display:inline-flex;justify-content: space-between;"></div>
+					<input type="text" id="input_om" class="input_bar" value="" name="in_om" onchange='input_om_change(this)' onblur="input_org_switch('input_om','input_org_select')">
 				</div>
 				<!-- 格位 -->
 				<div class="edit_detail_p">
