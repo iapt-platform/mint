@@ -98,7 +98,7 @@ foreach($scan as $foldername) {
 
     if (is_file($csv_file)) {
       $fileCounter++;      
-      echo "runing : $fileCounter" . PHP_EOL . $csv_file . PHP_EOL;
+      fwrite(STDOUT,"runing : $fileCounter" . PHP_EOL . $csv_file . PHP_EOL);
       // 初始化段落为 0 (没有这种段落)
       $paragraph = 0;
       // 初始化当前段落的黑体字数组
@@ -189,9 +189,9 @@ foreach($scan as $foldername) {
         $dbh_fts->commit();
         if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
             $error = $dbh_fts->errorInfo();
-            echo "error - $error[2]".PHP_EOL;
+            fwrite(STDERR, "error - $error[2]".PHP_EOL);
         } else {
-            echo "updata $row recorders.".PHP_EOL;
+            fwrite(STDOUT, "updata $row recorders.".PHP_EOL);
         }	
       }
 
@@ -202,5 +202,5 @@ foreach($scan as $foldername) {
   }
 }
 
-echo "Done. Amitābha \n";
+fwrite(STDOUT, "Done. Amitābha".PHP_EOL);
 ?>

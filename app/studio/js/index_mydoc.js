@@ -225,7 +225,9 @@ function title_change(id, title) {
 	}
 }
 function share_link_copy_to_clipboard(id) {
-	copy_to_clipboard(WWW_DOMAIN_NAME+"/app/studio/project.php?op=open&doc_id=" + id);
+	let host = location.protocol + '//' + location.host;
+
+	copy_to_clipboard(host+"/app/studio/project.php?op=open&doc_id=" + id);
 }
 function mydoc_file_select(doSelect) {
 	if (doSelect) {
