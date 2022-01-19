@@ -33,3 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove WWW_DOMAIN_NAME  from config.sample.js
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.js
 - add RPC_SERVER to .env.example
+
+## [1.0.4] - 2022-01-19
+
+- add SNOWFLAKE to .env.example
+- add snowflake to database.php
