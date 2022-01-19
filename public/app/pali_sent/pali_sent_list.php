@@ -1,6 +1,8 @@
 <?php
 /*
-get user sentence from db
+获取巴利句子列表
+输入参数
+para: json
  */
 require_once "../config.php";
 require_once "../public/_pdo.php";

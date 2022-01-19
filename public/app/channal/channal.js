@@ -118,18 +118,17 @@ function my_channal_list() {
 								html += "<div style='flex:1;'>";
 								html +=
 									"<a href='../channal/my_channal_edit.php?id=" +
-									iterator.id +
+									iterator.uid +
 									"'>✏️" +
 									gLocal.gui.edit +
 									"</a></div><div style='flex:1;'>";
-								html += " <a onclick=\"channel_share('" + iterator.id + "')\">🔑"+gLocal.gui.share_to+"</a>";
+								html += " <a onclick=\"channel_share('" + iterator.uid + "')\">🔑"+gLocal.gui.share_to+"</a>";
 								html += "</div>";
 
 								break;
 							default:
 								break;
 						}
-
 						html += "</div>";
 					}
 					$("#my_channal_list").html(html);

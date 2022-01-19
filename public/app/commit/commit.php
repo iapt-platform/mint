@@ -37,10 +37,26 @@ if($destChannelPower<10){
 	exit;		
 }
 
-$db_trans_sent = new PDO(_FILE_DB_SENTENCE_, "", "", array(PDO::ATTR_PERSISTENT => true));
+$db_trans_sent = new PDO(_FILE_DB_SENTENCE_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $db_trans_sent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-$query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND channal = ?  ";
+$query = "SELECT uid as id,
+parent_uid as parent,
+block_uid as block_id,
+channel_uid as channal,
+book_id as book,
+paragraph,
+word_start as begin,
+word_end as end,
+author,
+editor_uid as editor,
+content as text,
+language,
+version as ver,
+status,
+strlen,
+modify_time,
+create_time FROM "._TABLE_SENTENCE_." WHERE book_id= ? AND paragraph= ? AND word_start= ? AND word_end= ?  AND channel_uid = ?  ";
 $stmt = $db_trans_sent->prepare($query);
 
 if($stmt){

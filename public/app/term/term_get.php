@@ -23,7 +23,7 @@ if (isset($_POST["words"])) {
             # code...
             $info = $channal_info->getChannal($value);
             if ($info) {
-                $channal_owner[$info["owner"]] = 1;
+                $channal_owner[$info["owner_uid"]] = 1;
             }
         }
         /*  创建一个填充了和params相同数量占位符的字符串 */

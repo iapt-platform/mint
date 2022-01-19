@@ -25,13 +25,13 @@ if (isset($_POST["landmark"])) {
 
 $aData = json_decode($_POST["data"], true);
 
-PDO_Connect("" . _FILE_DB_SENTENCE_);
+PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_, _DB_PASSWORD_);
 
 //查询没有id的哪些是数据库里已经存在的，防止多次提交同一条记录造成一个句子 多个channal
 $newList = array();
 $new_id = array();
 $oldList = array();
-$query = "SELECT id FROM sentence WHERE book = ? and paragraph = ? and  begin = ? and end = ? and channal = ? limit 0 , 1 ";
+$query = "SELECT uid FROM "._TABLE_SENTENCE_." WHERE book_id = ? and paragraph = ? and  word_start = ? and word_end = ? and channel_uid = ? limit  1 ";
 foreach ($aData as $data) {
     if (!isset($data["id"]) || empty($data["id"])) {
         $id = PDO_FetchOne($query, array($data["book"],
@@ -57,7 +57,7 @@ if (count($oldList) > 0) {
     add_edit_event(_SENT_EDIT_, "{$oldList[0]["book"]}-{$oldList[0]["paragraph"]}-{$oldList[0]["begin"]}-{$oldList[0]["end"]}@{$oldList[0]["channal"]}");
 
     $PDO->beginTransaction();
-    $query = "UPDATE sentence SET text= ?  , status = ? , strlen = ? , receive_time= ?  , modify_time= ?   where  id= ?  ";
+    $query = "UPDATE "._TABLE_SENTENCE_." SET content= ?  , status = ? , strlen = ? , modify_time= ? , updated_at=now()   where  uid= ?  ";
     $sth = $PDO->prepare($query);
 
     foreach ($oldList as $data) {
@@ -67,7 +67,7 @@ if (count($oldList) > 0) {
             } else {
                 $modify_time = mTime();
             }
-            $sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"], "UTF-8"), mTime(), $modify_time, $data["id"]));
+            $sth->execute(array($data["text"], $data["status"], mb_strlen($data["text"], "UTF-8"), mTime(),  $data["id"]));
         }
     }
 
@@ -106,26 +106,24 @@ if (count($oldList) > 0) {
 if (count($newList) > 0) {
     add_edit_event(_SENT_NEW_, "{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}@{$newList[0]["channal"]}");
     $PDO->beginTransaction();
-    $query = "INSERT INTO sentence (id,
-									parent,
-									book,
+    $query = "INSERT INTO "._TABLE_SENTENCE_." (uid,
+									parent_uid,
+									book_id,
 									paragraph,
-									begin,
-									end,
-									channal,
-									tag,
+									word_start,
+									word_end,
+									channel_uid,
 									author,
-									editor,
-									text,
+									editor_uid,
+									content,
 									language,
-									ver,
+									version,
 									status,
 									strlen,
 									modify_time,
-									receive_time,
 									create_time
 									)
-						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
     $sth = $PDO->prepare($query);
 
     $channel_info = new Channal();
@@ -153,7 +151,6 @@ if (count($newList) > 0) {
             $data["begin"],
             $data["end"],
             $data["channal"],
-            isset($data["tag"]) ? $data["tag"] : "",
             $data["author"],
             $_COOKIE["userid"],
             $data["text"],
@@ -161,7 +158,6 @@ if (count($newList) > 0) {
             1,
             $status,
             mb_strlen($data["text"], "UTF-8"),
-            mTime(),
             mTime(),
             mTime(),
         ));

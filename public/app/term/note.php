@@ -61,30 +61,27 @@ $output = array();
 #查询有阅读权限的channel
 $channal_list = array();
 if (isset($_COOKIE["userid"])) {
-    PDO_Connect( _FILE_DB_CHANNAL_);
-    $query = "SELECT id from channal where owner = ?   limit 100";
-    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
+    PDO_Connect( _FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid from "._TABLE_CHANNEL_." where owner_uid = ?   limit 100";
+    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
-        $channal_list[] = $value["id"];
+        $channal_list[] = $value["uid"];
     }
 
     # 找协作的
-    $Fetch_coop = array();
-    $query = "SELECT channal_id FROM cooperation WHERE  user_id = ? ";
-    $coop_channal = PDO_FetchAll($query, array($_COOKIE["userid"]));
-    if (count($coop_channal) > 0) {
-        foreach ($coop_channal as $key => $value) {
-            # code...
-            $channal_list[] = $value["channal_id"];
-        }
-    }
+	$coop_channal = share_res_list_get($_COOKIE["user_uid"],2);
+	foreach ($coop_channal as $key => $value) {
+		# code...
+		$channal_list[] = $value["res_id"];
+	}
+	
     /*  创建一个填充了和params相同数量占位符的字符串 */
 
 }
 if (count($channal_list) > 0) {
     $channel_place_holders = implode(',', array_fill(0, count($channal_list), '?'));
-    $channel_query = " OR channal IN ($channel_place_holders)";
+    $channel_query = " OR channel_uid IN ($channel_place_holders)";
 } else {
     $channel_query = "";
 }
@@ -155,15 +152,16 @@ foreach ($_data as $key => $value) {
     $translation = array();
     $tran_channal = array();
     try {
+		$query_col = "uid,channel_uid,content,language,status,editor_uid,modify_time";
         if (empty($_setting["channal"])) {
             if ($sentChannal == "") {
-                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} )   order by modify_time DESC limit 1 ";
+                $query = "SELECT {$query_col} FROM "._TABLE_SENTENCE_." WHERE book_id= ? AND paragraph= ? AND word_start= ? AND word_end= ?  AND strlen >0 and (status = 30 {$channel_query} )   order by modify_time DESC limit 1 ";
                 $channal = "";
             } else {
-                $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 1 ";
+                $query = "SELECT {$query_col} FROM "._TABLE_SENTENCE_." WHERE book_id= ? AND paragraph= ? AND word_start= ? AND word_end= ?  AND strlen >0  AND channel_uid = ?  limit 1 ";
             }
         } else {
-            $query = "SELECT * FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0  AND channal = ?  limit 1 ";
+            $query = "SELECT {$query_col} FROM "._TABLE_SENTENCE_." WHERE book_id= ? AND paragraph= ? AND word_start= ? AND word_end= ?  AND strlen >0  AND channel_uid = ?  limit 1 ";
             $channal = $_setting["channal"];
         }
 
@@ -177,22 +175,22 @@ foreach ($_data as $key => $value) {
                 $stmt->execute($parm);
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
-                    $tran = $Fetch["text"];
-                    $translation[] = array("id" => $Fetch["id"], 
+                    $tran = $Fetch["content"];
+                    $translation[] = array("id" => $Fetch["uid"], 
 										   "book"=>$bookId,
 										   "para"=>$para,
 										   "begin"=>$begin,
 										   "end"=>$end,
-										   "text" => $Fetch["text"], 
+										   "text" => $Fetch["content"], 
 										   "lang" => $Fetch["language"], 
-										   "channal" => $Fetch["channal"], 
+										   "channal" => $Fetch["channel_uid"], 
 										   "status" => $Fetch["status"], 
-										   "editor" => $Fetch["editor"],
-										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "editor" => $Fetch["editor_uid"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor_uid"]),
 										   "update_time"=>$Fetch["modify_time"]
 										);
-                    if (!empty($Fetch["channal"])) {
-                        $tran_channal[$Fetch["channal"]] = $Fetch["channal"];
+                    if (!empty($Fetch["channel_uid"])) {
+                        $tran_channal[$Fetch["channel_uid"]] = $Fetch["channel_uid"];
                     }
                 }
             } else {
@@ -201,21 +199,21 @@ foreach ($_data as $key => $value) {
                 $stmt->execute(array($bookId, $para, $begin, $end, $sentChannal));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
-                    $tran = $Fetch["text"];
-                    $translation[] = array("id" => $Fetch["id"], 
+                    $tran = $Fetch["content"];
+                    $translation[] = array("id" => $Fetch["uid"], 
 											"book"=>$bookId,
 											"para"=>$para,
 											"begin"=>$begin,
 											"end"=>$end,
-										   "text" => $Fetch["text"], 
+										   "text" => $Fetch["content"], 
 										   "lang" => $Fetch["language"], 
-										   "channal" => $Fetch["channal"], 
+										   "channal" => $Fetch["channel_uid"], 
 										   "status" => $Fetch["status"], 
-										   "editor" => $Fetch["editor"],
-										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "editor" => $Fetch["editor_uid"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor_uid"]),
 										   "update_time"=>$Fetch["modify_time"]
 										);
-                    $tran_channal[$Fetch["channal"]] = $Fetch["channal"];
+                    $tran_channal[$Fetch["channel_uid"]] = $Fetch["channel_uid"];
                 }
             }
         } else {
@@ -226,17 +224,17 @@ foreach ($_data as $key => $value) {
                 $stmt->execute(array($bookId, $para, $begin, $end, $value));
                 $Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($Fetch) {
-                    $translation[] = array("id" => $Fetch["id"],
+                    $translation[] = array("id" => $Fetch["uid"],
 										   "book"=>$bookId,
 										   "para"=>$para,
 										   "begin"=>$begin,
 										   "end"=>$end,
-										   "text" => $Fetch["text"], 
+										   "text" => $Fetch["content"], 
 										   "lang" => $Fetch["language"], 
 										   "channal" => $value, 
 										   "status" => $Fetch["status"], 
-										   "editor" => $Fetch["editor"],
-										   "editor_name"=>$_userinfo->getName($Fetch["editor"]),
+										   "editor" => $Fetch["editor_uid"],
+										   "editor_name"=>$_userinfo->getName($Fetch["editor_uid"]),
 										   "update_time"=>$Fetch["modify_time"]
 										);
 

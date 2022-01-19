@@ -1,6 +1,8 @@
 <?php
 //添加文章到文集
-
+# TODO 需要判断文集的修改权限
+# TODO children >0 不能删除
+# TODO 因为要保证顺序不变，已经存在的不能删除
 require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
@@ -16,21 +18,21 @@ if(isset($_POST["id"])){
     $dirty_collect = array();
     $data = json_decode($_POST["data"]);
     $title = $_POST["title"];
-    PDO_Connect(_FILE_DB_USER_ARTICLE_);
+    PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
     $article_id=$_POST["id"];
     //找出脏的collect
-    $query = "SELECT collect_id FROM article_list  WHERE article_id = ? ";
+    $query = "SELECT collect_id FROM "._TABLE_ARTICLE_COLLECTION_."  WHERE article_id = ? ";
     $collect = PDO_FetchAll($query,array($article_id));
     foreach ($collect as $key => $value) {
         # code...
         $dirty_collect[$value["collect_id"]] = 1;
     }
-    $query = "DELETE FROM article_list WHERE article_id = ? ";
+    $query = "DELETE FROM "._TABLE_ARTICLE_COLLECTION_." WHERE article_id = ? ";
      PDO_Execute($query,array($article_id));
      if(count($data)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES (?, ?, ? , ?)";
+        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." (collect_id, article_id,level,title) VALUES (?, ?, ? , ?)";
         $sth = $PDO->prepare($query);
         foreach ($data as $row) {
             $sth->execute(array($row,$article_id,1,$title));
@@ -46,7 +48,7 @@ if(isset($_POST["id"])){
      }
 
      # 更新collect
-     $query = "SELECT collect_id FROM article_list WHERE article_id  = ?";
+     $query = "SELECT collect_id FROM "._TABLE_ARTICLE_COLLECTION_." WHERE article_id  = ?";
      $collect = PDO_FetchAll($query,array($article_id));
      foreach ($collect as $key => $value) {
         # code...
@@ -54,9 +56,9 @@ if(isset($_POST["id"])){
     }
      foreach ($dirty_collect as $key => $value) {
          # code...
-         $query = "SELECT level,article_id as article , title FROM article_list WHERE collect_id  = ?";
+         $query = "SELECT level,article_id as article , title FROM "._TABLE_ARTICLE_COLLECTION_." WHERE collect_id  = ? order by id ASC";
          $collect_info = PDO_FetchAll($query,array($key));
-         $query = "UPDATE collect SET article_list = ? WHERE id = ? ";
+         $query = "UPDATE "._TABLE_COLLECTION_." SET article_list = ? WHERE uid = ? ";
          $strArticleList = json_encode($collect_info, JSON_UNESCAPED_UNICODE);
          $stmt = PDO_Execute($query,array( $strArticleList ,$key));
          if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {

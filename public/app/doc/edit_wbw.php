@@ -40,15 +40,15 @@ echo "</fieldset>";
 echo "<fieldset>";
 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
 echo "<div>";
-PDO_Connect(""._FILE_DB_CHANNAL_);
-$query = "SELECT * from channal where owner = ?   limit 0,100";
-$Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
+PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT * from "._TABLE_CHANNEL_." where owner_uid = ?   limit 100";
+$Fetch = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
 $i=0;
 foreach($Fetch as $row){
     echo '<div class="file_list_row" style="padding:5px;">';
 
     echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
-    echo '<input name="channal" value="'.$row["id"].'" ';
+    echo '<input name="channal" value="'.$row["uid"].'" ';
     if($i==0){
         echo "checked";
     }
@@ -59,8 +59,9 @@ foreach($Fetch as $row){
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
     // 查询逐词解析库
     PDO_Connect(_FILE_DB_USER_WBW_);
-    $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
-    $FetchWBW = PDO_FetchOne($query);
+	#TODO $strQueryParaList 改为预处理
+    $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channel_uid = ? and book_id=? and paragraph in {$strQueryParaList}  limit 100";
+    $FetchWBW = PDO_FetchOne($query,array($row["uid"],$book));
     echo '</div>';
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
     if($FetchWBW==0){
@@ -69,14 +70,16 @@ foreach($Fetch as $row){
     }
     else{
         echo $FetchWBW.$_local->gui->para;
-        echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+        echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["uid"]}'>open</a>";
     }
     echo '</div>';
 
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-    PDO_Connect(""._FILE_DB_SENTENCE_);
-    $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
-    $FetchWBW = PDO_FetchOne($query);
+    PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_, _DB_PASSWORD_);
+	#TODO $strQueryParaList 改为预处理
+
+    $query = "SELECT count(*) from "._TABLE_SENTENCE_." where channel_uid = ? and book_id= ? and paragraph in {$strQueryParaList}  limit 100";
+    $FetchWBW = PDO_FetchOne($query,array($row["uid"],$book));
     echo '</div>';
     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
     if($FetchWBW==0){

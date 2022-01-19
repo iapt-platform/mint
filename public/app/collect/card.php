@@ -8,8 +8,8 @@ require_once '../ucenter/function.php';
 
 if (isset($_GET["id"])) {
 	$output["id"]=$_GET["id"];
-	PDO_Connect( _FILE_DB_USER_ARTICLE_);
-	$query = "SELECT title,create_time,owner,summary FROM collect  WHERE id = ? ";
+	PDO_Connect( _FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
+	$query = "SELECT title,create_time,owner,summary FROM "._TABLE_COLLECTION_."  WHERE uid = ? ";
 	$result = PDO_FetchRow($query, array($_GET["id"]));
 	$strData="";
 	if ($result) {

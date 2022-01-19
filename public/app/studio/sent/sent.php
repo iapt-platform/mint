@@ -63,7 +63,7 @@ if (isset($_POST["block_id"])) {
 
 global $PDO;
 
-PDO_Connect(_FILE_DB_SENTENCE_);
+PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_, _DB_PASSWORD_);
 
 switch ($op) {
     case "save":
@@ -92,7 +92,7 @@ switch ($op) {
         //echo $response->getBody();
          */
         if ($_id == 0) {
-            $query = "select * from sentence where
+            $query = "SELECT * from "._TABLE_SENTENCE_." where
 						book='{$_book}' and
 						paragraph='{$_para}' and
 						begin='{$_begin}' and

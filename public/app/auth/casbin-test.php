@@ -2,7 +2,6 @@
 
 require_once '../../vendor/autoload.php';
 require_once '../config.php';
-require_once '../config.php';
 
 use Casbin\Enforcer;
 use CasbinAdapter\Medoo\Adapter as DatabaseAdapter;

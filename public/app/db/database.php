@@ -6,7 +6,7 @@
 class Database
 {
     // specify your own database credentials
-    private $host = '127.0.0.1';
+    private $host = 'localhost';
     private $db_name = 'mint';
     private $username = 'postgras';
     private $password = '123456';
@@ -22,6 +22,7 @@ class Database
             'driver' => 'pgsql',
             'host' => $this->host,
             'database' => $this->db_name,
+            'port' => 5432,
             'username' => $this->username,
             'password' => $this->password,
             'charset' => 'utf8',

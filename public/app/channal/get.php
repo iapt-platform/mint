@@ -27,17 +27,18 @@ foreach ($my_group as $key => $value) {
 $channelList = array();
 
 //找自己的
-PDO_Connect(_FILE_DB_CHANNAL_);
-$query = "SELECT id,owner,name,status,lang FROM channal WHERE owner = ?  LIMIT 0,100";
-$Fetch_my = PDO_FetchAll($query,array($_COOKIE["userid"]));
+PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT uid,owner_uid,name,status,lang FROM "._TABLE_CHANNEL_." WHERE owner_uid = ?  LIMIT 100";
+$Fetch_my = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
 
+#去掉重复的
 foreach ($Fetch_my as $key => $value) {
 	# code...
-	$channelList[$value["id"]]=array("id"=>$value["id"],"owner"=>$value["owner"],"name"=>$value["name"],"power"=>30,"status"=>$value["status"],"lang"=>$value["lang"]);
+	$channelList[$value["uid"]]=array("uid"=>$value["uid"],"owner_uid"=>$value["owner_uid"],"name"=>$value["name"],"power"=>30,"status"=>$value["status"],"lang"=>$value["lang"]);
 }
 
 # 找协作的
-$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
+$coop_channal =  share_res_list_get($_COOKIE["user_uid"],2);
 foreach ($coop_channal as $key => $value) {
 	# return res_id,res_type,power res_title  res_owner_id
 	if(isset($channelList[$value["res_id"]])){
@@ -46,7 +47,7 @@ foreach ($coop_channal as $key => $value) {
 		}
 	}
 	else{
-		$channelList[$value["res_id"]]=array("id"=>$value["res_id"],"owner"=>$value["res_owner_id"],"name"=>$value["res_title"],"power"=>(int)$value["power"],"status"=>(int)$value["status"],"lang"=>(int)$value["lang"]);
+		$channelList[$value["res_id"]]=array("uid"=>$value["res_id"],"owner_uid"=>$value["res_owner_id"],"name"=>$value["res_title"],"power"=>(int)$value["power"],"status"=>(int)$value["status"],"lang"=>(int)$value["lang"]);
 	}
 }
 
@@ -56,11 +57,13 @@ $output = array();
 foreach ($channelList as $key => $value) {
     # code...
 	$new = $value;
-	$name = $_userinfo->getName($value["owner"]);	
+	$name = $_userinfo->getName($value["owner_uid"]);	
 	$new["username"] = $name["username"];
 	$new["nickname"] = $name["nickname"];	
 	$new["count"] = 0;
     $new["all"] = 1;
+    $new["owner"] = $value["owner_uid"];
+
     $output[]=$new;
 }
 

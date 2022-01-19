@@ -42,15 +42,15 @@ if (isset($_GET["channel"]) == false) {
     echo "<h2>选择一个空白的版风存储新的文档</h2>";
     echo "<form action='fork.php' method='get'>";
     echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
-    PDO_Connect("" . _FILE_DB_CHANNAL_);
-    $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
-    $Fetch = PDO_FetchAll($query);
+    PDO_Connect( _FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid,name,lang,status,create_time from "._TABLE_CHANNEL_." where owner_uid = ?   limit 100";
+    $Fetch = PDO_FetchAll($query,$_COOKIE["user_uid"]);
     $i = 0;
     foreach ($Fetch as $row) {
         echo '<div class="file_list_row" style="padding:5px;display:flex;">';
 
         echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
-        echo '<input name="channel" value="' . $row["id"] . '" ';
+        echo '<input name="channel" value="' . $row["uid"] . '" ';
         if ($i == 0) {
             echo "checked";
         }
@@ -60,7 +60,7 @@ if (isset($_GET["channel"]) == false) {
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
         PDO_Connect(_FILE_DB_USER_WBW_);
-        $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channel_uid = '{$row["uid"]}' and book_id='{$mbook}' and paragraph in ({$paragraph})  limit 100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -68,14 +68,14 @@ if (isset($_GET["channel"]) == false) {
             echo $_local->gui->blank;
         } else {
             echo $FetchWBW . $_local->gui->para;
-            echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+            echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["uid"]}'>open</a>";
         }
         echo '</div>';
 
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-        PDO_Connect(_FILE_DB_SENTENCE_);
-        $query = "SELECT count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
-        $FetchWBW = PDO_FetchOne($query);
+        PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_,_DB_PASSWORD_);
+        $query = "SELECT count(*) from "._TABLE_SENTENCE_." where channel_uid = ? and book_id=? and paragraph in ({$paragraph})  limit 1000";
+        $FetchWBW = PDO_FetchOne($query,array($row["uid"],$mbook));
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
         if ($FetchWBW == 0) {
@@ -99,7 +99,7 @@ if (isset($_GET["channel"]) == false) {
 
 //if(isset($_GET["doc_id"]))
 {
-    PDO_Connect("" . _FILE_DB_FILEINDEX_);
+    PDO_Connect( _FILE_DB_FILEINDEX_,_DB_USERNAME_,_DB_PASSWORD_);
     $doc_id = $_GET["doc_id"];
     $query = "SELECT * from fileindex where id= ? ";
     $Fetch = PDO_FetchAll($query, array($doc_id));
@@ -144,13 +144,13 @@ if (isset($_GET["channel"]) == false) {
                     //$dest=$dir_user_base.$userid.$dir_mydocument.$filename;
                     //复制数据
                     //打开逐词解析数据库
-                    $dns = "" . _FILE_DB_USER_WBW_;
-                    $dbhWBW = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+                    $dns = _FILE_DB_USER_WBW_;
+                    $dbhWBW = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
                     $dbhWBW->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
                     //打开译文数据库
-                    $dns = "" . _FILE_DB_SENTENCE_;
-                    $dbhSent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+                    $dns = _FILE_DB_SENTENCE_;
+                    $dbhSent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
                     $dbhSent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
                     //逐词解析新数据数组
@@ -173,7 +173,7 @@ if (isset($_GET["channel"]) == false) {
                             case 2:
                                 //译文
                                 $blockid = $blocks[$i]->block_id;
-                                $query = "select * from sent_block where id= ? ";
+                                $query = "SELECT * from "._TABLE_SENTENCE_BLOCK_." where uid= ? ";
                                 $stmt = $dbhSent->prepare($query);
                                 $stmt->execute(array($blockid));
                                 $fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -198,31 +198,6 @@ if (isset($_GET["channel"]) == false) {
                                         ));
                                 }
 
-                                $query = "select * from sentence where block_id= ? ";
-                                $stmtSent = $dbhSent->prepare($query);
-                                $stmtSent->execute(array($fBlock[0]["id"]));
-                                $fBlockData = $stmtSent->fetchAll(PDO::FETCH_ASSOC);
-                                foreach ($fBlockData as $value) {
-                                    array_push($arrSentNewBlockData,
-                                        array(UUID::V4(),
-                                            $arrSentBlockTransform[$value["block_id"]],
-                                            $value["book"],
-                                            $value["paragraph"],
-                                            $value["begin"],
-                                            $value["end"],
-                                            $value["channal"],
-                                            $value["tag"],
-                                            $value["author"],
-                                            $_COOKIE["userid"],
-                                            $value["text"],
-                                            $value["language"],
-                                            $value["ver"],
-                                            $value["status"],
-                                            mTime(),
-                                            mTime(),
-                                        ));
-
-                                }
 
                                 break;
                             case 3:
@@ -234,7 +209,7 @@ if (isset($_GET["channel"]) == false) {
                             case 6:
                                 #逐词解析
                                 $blockid = $blocks[$i]->block_id;
-                                $query = "select * from "._TABLE_USER_WBW_BLOCK_." where id= ? ";
+                                $query = "SELECT uid,book_id,paragraph,style,lang,status from "._TABLE_USER_WBW_BLOCK_." where uid= ? ";
                                 $stmt = $dbhWBW->prepare($query);
                                 $stmt->execute(array($blockid));
                                 $fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -244,16 +219,15 @@ if (isset($_GET["channel"]) == false) {
                                 if (count($fBlock) > 0) {
                                     array_push($arrNewBlock,
                                         array($newBlockId,
-                                            $fBlock[0]["id"],
+                                            $fBlock[0]["uid"],
                                             $_GET["channel"],
                                             $_COOKIE["userid"],
-                                            $fBlock[0]["book"],
+                                            $fBlock[0]["book_id"],
                                             $fBlock[0]["paragraph"],
                                             $fBlock[0]["style"],
                                             $fBlock[0]["lang"],
                                             $fBlock[0]["status"],
-                                            mTime(),
-                                            mTime(),
+                                            mTime()
                                         ));
                                 }
 
@@ -288,7 +262,18 @@ if (isset($_GET["channel"]) == false) {
 
                     if (count($arrNewBlock) > 0) {
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ( uid ,
+                                                                           parent_id ,
+                                                                           channel_uid ,
+                                                                           creator_uid ,
+                                                                           book_id ,
+                                                                           paragraph ,
+                                                                           style ,
+                                                                           lang ,
+                                                                           status ,
+                                                                           modify_time ,
+                                                                           updated_at)
+                                                                           VALUES (?,?,?,?,?,?,?,?,?,?,now())";
                         $stmtNewBlock = $dbhWBW->prepare($query);
                         foreach ($arrNewBlock as $oneParam) {
                             $stmtNewBlock->execute($oneParam);
@@ -327,50 +312,6 @@ if (isset($_GET["channel"]) == false) {
 
                     //不复刻译文
 
-                    //译文 block数据块
-                    /*
-                    if(count($arrSentNewBlock)>0){
-                    $dbhSent->beginTransaction();
-                    $query="INSERT INTO sent_block ('id','parent_id','book','paragraph','owner','lang','author','editor','tag','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-                    $stmtSentNewBlock = $dbhSent->prepare($query);
-                    foreach($arrSentNewBlock as $oneParam){
-                    //print_r($oneParam);
-                    $stmtSentNewBlock->execute($oneParam);
-                    }
-                    // 提交更改
-                    $dbhSent->commit();
-                    if (!$stmtSentNewBlock || ($stmtSentNewBlock && $stmtSentNewBlock->errorCode() != 0)) {
-                    $error = $dbhSent->errorInfo();
-                    echo "error - $error[2] <br>";
-                    }
-                    else{
-                    //译文 block块复刻成功
-                    $count=count($arrNewBlock);
-                    echo "wbw block $count recorders.<br/>";
-                    }
-                    }
-
-                    if(count($arrSentNewBlockData)>0){
-                    // 开始一个事务，逐词解析数据 关闭自动提交
-                    $dbhSent->beginTransaction();
-                    $query="INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','channal','tag','author','editor','text','language','ver','status','modify_time','receive_time') VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
-                    $stmtSentData = $dbhSent->prepare($query);
-                    foreach($arrSentNewBlockData as $oneParam){
-                    $stmtSentData->execute($oneParam);
-                    }
-                    // 提交更改
-                    $dbhSent->commit();
-                    if (!$stmtSentData || ($stmtSentData && $stmtSentData->errorCode() != 0)) {
-                    $error = $dbhSent->errorInfo();
-                    echo "error - $error[2] <br>";
-                    }
-                    else{
-                    //译文 数据 复刻成功
-                    $count=count($arrSentNewBlockData);
-                    echo "new translation $count recorders.";
-                    }
-                    }
-                     */
 
                     //插入记录到文件索引
                     $filesize = 0;

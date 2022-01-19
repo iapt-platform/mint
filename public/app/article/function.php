@@ -6,7 +6,7 @@ require_once "../db/table.php";
 class Article extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USER_ARTICLE_, "article", "", "",$redis);
+		parent::__construct(_FILE_DB_USER_ARTICLE_, _TABLE_ARTICLE_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
     public function getInfo($id){
@@ -19,14 +19,14 @@ class Article extends Table
 				$output["owner"]=$this->redis->hGet("article://".$id,"owner");
 				$output["summary"]=$this->redis->hGet("article://".$id,"summary");
 				$output["lang"]=$this->redis->hGet("article://".$id,"lang");
-				$output["tag"]=$this->redis->hGet("article://".$id,"tag");
+				$output["tag"]="";
 				$output["status"]=$this->redis->hGet("article://".$id,"status");
 				$output["create_time"]=$this->redis->hGet("article://".$id,"create_time");
 				$output["modify_time"]=$this->redis->hGet("article://".$id,"modify_time");
 				return $output;
 			}
 		}
-        $query = "SELECT id,title,owner,subtitle,summary,lang,tag,status,create_time,modify_time FROM article WHERE id= ? ";
+        $query = "SELECT uid as id,title,owner,subtitle,summary,lang,status,create_time,modify_time FROM "._TABLE_ARTICLE_." WHERE uid= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,7 +40,6 @@ class Article extends Table
 				$this->redis->hSet("article://".$id,"summary",$output["summary"]);
 				$this->redis->hSet("article://".$id,"lang",$output["lang"]);
 				$this->redis->hSet("article://".$id,"owner",$output["owner"]);
-				$this->redis->hSet("article://".$id,"tag",$output["tag"]);
 				$this->redis->hSet("article://".$id,"status",$output["status"]);
 				$this->redis->hSet("article://".$id,"create_time",$output["create_time"]);
 				$this->redis->hSet("article://".$id,"modify_time",$output["modify_time"]);
@@ -60,7 +59,7 @@ class Article extends Table
 				return $content;
 			}
 		}
-        $query = "SELECT content FROM article WHERE id= ? ";
+        $query = "SELECT content FROM ".$this->table." WHERE uid= ? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $output = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -77,39 +76,41 @@ class Article extends Table
 
 	public function getPower($id,$collectionId=""){
 		#查询用户对此是否有权限	
-		if(isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(isset($_COOKIE["user_uid"])){
+			$userId = $_COOKIE["user_uid"];
 		}
 		else{
 			$userId=0;
 		}
+
 		if($this->redis!==false){
 			$power = $this->redis->hGet("power://article/".$id,$userId);
 			if($power!==FALSE){
 				return $power;
 			}
 		}
+
 		$iPower = 0;
-		$query = "SELECT owner,status FROM article WHERE id=?  ";
+		$query = "SELECT owner,status FROM "._TABLE_ARTICLE_." WHERE uid=?  ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
-			if(!isset($_COOKIE["userid"])){
+			if(!isset($_COOKIE["user_uid"])){
 				#未登录用户
 				if($channel["status"]==30){
 					#全网公开有读取和建议权限
-					return 10;
+					$iPower =  10;
 				}
 				else{
 					#其他状态没有任何权限
-					return 0;
+					$iPower =  0;
 				}
 			}
 			else{
-				if($channel["owner"]==$_COOKIE["userid"]){
+				if($channel["owner"]==$_COOKIE["user_uid"]){
 					#自己的
-					return 30;
+					$iPower =  30;
 				}
 				else if($channel["status"]>=30){
 					#全网公开的 可以提交pr
@@ -118,9 +119,9 @@ class Article extends Table
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
-		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		$sharePower = share_get_res_power($_COOKIE["user_uid"],$id);
 		if($collectionId!=""){
-			$sharePowerCollection = share_get_res_power($_COOKIE["userid"],$collectionId);
+			$sharePowerCollection = share_get_res_power($_COOKIE["user_uid"],$collectionId);
 		}
 		else{
 			$sharePowerCollection =0;
@@ -132,7 +133,7 @@ class Article extends Table
 			$iPower=$sharePowerCollection;
 		}
 		if($this->redis!==false){
-			$this->redis->hSet("power://article/".$id,$_COOKIE["userid"],$iPower);
+			$this->redis->hSet("power://article/".$id,$_COOKIE["user_uid"],$iPower);
 		}
 		return $iPower;
 	}
@@ -143,12 +144,12 @@ class Article extends Table
 class ArticleList extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USER_ARTICLE_, "article_list", "", "",$redis);
+		parent::__construct(_FILE_DB_USER_ARTICLE_, _TABLE_ARTICLE_COLLECTION_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
 	function upgrade($collectionId,$articleList=array()){
 		# 更新 article_list 表
-		$query = "DELETE FROM article_list WHERE collect_id = ? ";
+		$query = "DELETE FROM ".$this->table." WHERE collect_id = ? ";
 		$stmt = $this->dbh->prepare($query);
 		if($stmt){
 			$stmt->execute(array($collectionId));
@@ -157,7 +158,7 @@ class ArticleList extends Table
 		if(count($articleList)>0){
 			/* 开始一个事务，关闭自动提交 */
 			$this->dbh->beginTransaction();
-			$query = "INSERT INTO article_list (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
+			$query = "INSERT INTO ".$this->table." (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
 			$sth = $this->dbh->prepare($query);
 			foreach ($articleList as $row) {
 				$sth->execute(array($collectionId,$row["article"],$row["level"],$row["title"]));

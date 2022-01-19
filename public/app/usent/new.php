@@ -8,11 +8,11 @@ require_once "../public/function.php";
 
 $aData = json_decode($_POST["data"]);
 
-PDO_Connect("" . _FILE_DB_SENTENCE_);
+PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_,_DB_PASSWORD_);
 
 /* 开始一个事务，关闭自动提交 */
 $PDO->beginTransaction();
-$query = "INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','language','ver','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+$query = "INSERT INTO "._TABLE_SENTENCE_." ( uid , block_uid , book_id , paragraph , word_start , word_end ,  author , editor_uid , content , language ,  modify_time ,  updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,now())";
 
 $sth = $PDO->prepare($query);
 
@@ -24,15 +24,11 @@ foreach ($aData as $data) {
             $data->paragraph,
             $data->begin,
             $data->end,
-            $data->tag,
             $data->author,
             $data->editor,
             $data->text,
             $data->lang,
-            1,
-            1,
-            mTime(),
-            mTime(),
+            mTime()
         ));
 }
 $PDO->commit();

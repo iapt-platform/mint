@@ -1,21 +1,15 @@
 <?php
+/*
+废弃
+*/
 require_once "../config.php";
 require_once "../db/table.php";
 require_once "../public/function.php";
-/*
-CREATE TABLE likes (
-    id            INTEGER      PRIMARY KEY AUTOINCREMENT,
-    like_type     VARCHAR (16) NOT NULL,
-    resource_type VARCHAR (32) NOT NULL,
-    resource_id   CHAR (36)    NOT NULL,
-    user_id       INTEGER      NOT NULL,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     NOT NULL //只做初始化,更新时不自动更新
-);
-*/
+
 class Channel extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_CHANNAL_, "channal", "", "",$redis);
+		parent::__construct(_FILE_DB_CHANNAL_, _TABLE_CHANNEL_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
 	public function  index(){

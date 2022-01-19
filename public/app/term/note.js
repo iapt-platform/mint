@@ -347,7 +347,7 @@ function note_channal_list() {
 						for (const iterator of _my_channal) {
 							let found = false;
 							for (const one of active) {
-								if (iterator.id == one.id) {
+								if (iterator.uid == one.uid) {
 									found = true;
 									break;
 								}
@@ -460,7 +460,7 @@ function render_channal_list(channalinfo) {
 	let output = "";
 	let checked = "";
 	let selected = "noselect";
-	if (_channal.indexOf(channalinfo.id) >= 0) {
+	if (_channal.indexOf(channalinfo.uid) >= 0) {
 		checked = "checked";
 		selected = "selected";
 	}
@@ -469,14 +469,14 @@ function render_channal_list(channalinfo) {
 	output += '<div class="tool_bar">';
 	output += '<div class="right">';
 	output += '<div class="pop_menu">';
-	output += render_icon_button("copy", "commit_init({src:'" + channalinfo.id + "'})", gLocal.gui.copy_to);
+	output += render_icon_button("copy", "commit_init({src:'" + channalinfo.uid + "'})", gLocal.gui.copy_to);
 	output += render_icon_button("ic_mode_edit", "", gLocal.gui.modify);
 	output += "</div>";
 	output += "</div>";
 	output += "</div>";
 
 	output +=
-		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.id + "'></div>";
+		'<div class="channel_select"><input type="checkbox" ' + checked + " channal_id='" + channalinfo.uid + "'></div>";
 	output += "<div class='head'>";
 	output += "<span class='head_img'>";
 	if (parseInt(channalinfo.power) == 30) {
@@ -493,7 +493,7 @@ function render_channal_list(channalinfo) {
 	output += "<div class='channal_list' >";
 
 	//  output += "<a href='../wiki/wiki.php?word=" + _word;
-	//  output += "&channal=" + channalinfo.id + "' >";
+	//  output += "&channal=" + channalinfo.uid + "' >";
 	switch (parseInt(channalinfo.status)) {
 		case 10:
 			output += "🔐";
@@ -514,7 +514,7 @@ function render_channal_list(channalinfo) {
 		}
 	}
 	//✋
-	output += "<a onclick=\"set_channal('" + channalinfo.id + "')\">";
+	output += "<a onclick=\"set_channal('" + channalinfo.uid + "')\">";
 
 	output += channalinfo["name"];
 

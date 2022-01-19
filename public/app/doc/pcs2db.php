@@ -40,15 +40,15 @@ if (isset($_GET["channel"]) == false) {
     echo "<h2>选择一个空白的版风存储新的文档</h2>";
     echo "<form action='pcs2db.php' method='get'>";
     echo "<input type='hidden' name='doc_id' value='{$_GET["doc_id"]}' />";
-    PDO_Connect("" . _FILE_DB_CHANNAL_);
-    $query = "SELECT * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
-    $Fetch = PDO_FetchAll($query);
+    PDO_Connect( _FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid,name,lang,status,create_time from "._TABLE_CHANNEL_." where owner_uid = ?   limit 100";
+    $Fetch = PDO_FetchAll($query,$_COOKIE["user_uid"]);
     $i = 0;
     foreach ($Fetch as $row) {
         echo '<div class="file_list_row" style="padding:5px;display:flex;">';
 
         echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
-        echo '<input name="channel" value="' . $row["id"] . '" ';
+        echo '<input name="channel" value="' . $row["uid"] . '" ';
         if ($i == 0) {
             echo "checked";
         }
@@ -58,7 +58,7 @@ if (isset($_GET["channel"]) == false) {
         echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
         PDO_Connect("" . _FILE_DB_USER_WBW_);
-        $query = "select count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
+        $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channel_uid = '{$row["uid"]}' and book_id='{$mbook}' and paragraph in ({$paragraph})  limit 100";
         $FetchWBW = PDO_FetchOne($query);
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
@@ -66,14 +66,14 @@ if (isset($_GET["channel"]) == false) {
             echo $_local->gui->blank;
         } else {
             echo $FetchWBW . $_local->gui->para;
-            echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>open</a>";
+            echo "<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["uid"]}'>open</a>";
         }
         echo '</div>';
 
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-        PDO_Connect("" . _FILE_DB_SENTENCE_);
-        $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$mbook}' and paragraph in ({$paragraph})  limit 0,100";
-        $FetchWBW = PDO_FetchOne($query);
+        PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_, _DB_PASSWORD_);
+        $query = "SELECT count(*) from "._TABLE_SENTENCE_." where channel_uid = ? and book_id= ?  and paragraph in ({$paragraph})  limit 100";
+        $FetchWBW = PDO_FetchOne($query,array($row["uid"],$mbook));
         echo '</div>';
         echo '<div class="title" style="flex:2;padding-bottom:5px;">';
         if ($FetchWBW == 0) {
@@ -141,13 +141,13 @@ $dataBlock = $xml->xpath('//block');
 
     //复制数据
     //打开逐词解析数据库
-    $dns = "" . _FILE_DB_USER_WBW_;
-    $dbhWBW = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dns = _FILE_DB_USER_WBW_;
+    $dbhWBW = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbhWBW->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     //打开译文数据库
-    $dns = "" . _FILE_DB_SENTENCE_;
-    $dbhSent = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dns = _FILE_DB_SENTENCE_;
+    $dbhSent = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbhSent->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
     //逐词解析新数据数组
@@ -221,7 +221,6 @@ $dataBlock = $xml->xpath('//block');
                                 $block->info->paragraph,
                                 $sent_begin,
                                 $sent_end,
-                                "",
                                 $block->info->author,
                                 $_COOKIE["userid"],
                                 $paraText,
@@ -230,7 +229,6 @@ $dataBlock = $xml->xpath('//block');
                                 "1",
                                 "7",
                                 $file_modify_time,
-                                mTime(),
                                 mTime(),
                                 $_GET["channel"],
                             ));
@@ -252,8 +250,7 @@ $dataBlock = $xml->xpath('//block');
                             "",
                             $block->info->language,
                             "",
-                            $file_modify_time,
-                            mTime(),
+                            $file_modify_time
                         ));
                 }
 
@@ -326,7 +323,6 @@ $dataBlock = $xml->xpath('//block');
                         $word->real,
                         $sWordData,
                         $file_modify_time,
-                        mTime(),
                         $word->status,
                         $_COOKIE["userid"],
                     ));
@@ -344,19 +340,19 @@ $dataBlock = $xml->xpath('//block');
     if (count($arrNewBlock) > 0) {
         $dbhWBW->beginTransaction();
         $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." (
-										'id',
-										'parent_id',
-										'channal',
-										'owner',
-										'book',
-										'paragraph',
-										'style',
-										'lang',
-										'status',
-										'modify_time',
-										'receive_time'
+										 uid ,
+										 parent_id ,
+										 channel_uid ,
+										 creator_uid ,
+										 book_id ,
+										 paragraph ,
+										 style ,
+										 lang ,
+										 status ,
+										 modify_time ,
+										updated_at
 										)
-										VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+										VALUES (?,?,?,?,?,?,?,?,?,?,now())";
         $stmtNewBlock = $dbhWBW->prepare($query);
         foreach ($arrNewBlock as $oneParam) {
             $stmtNewBlock->execute($oneParam);
@@ -376,7 +372,7 @@ $dataBlock = $xml->xpath('//block');
     if (count($arrNewBlockData) > 0) {
         // 开始一个事务，逐词解析数据 关闭自动提交
         $dbhWBW->beginTransaction();
-        $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_USER_WBW_." ( uid , block_uid , book_id , paragraph , wid , word , data , modify_time , status , creator_uid ,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,now())";
         $stmtWbwData = $dbhWBW->prepare($query);
         foreach ($arrNewBlockData as $oneParam) {
             $stmtWbwData->execute($oneParam);
@@ -397,7 +393,7 @@ $dataBlock = $xml->xpath('//block');
 
     if (count($arrSentNewBlock) > 0) {
         $dbhSent->beginTransaction();
-        $query = "INSERT INTO sent_block ('id','parent_id','book','paragraph','owner','lang','author','editor','tag','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO "._TABLE_SENTENCE_BLOCK_." (uid , parent_uid , book_id , paragraph , owner_uid , lang , author , editor_uid  , status , modify_time , create_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmtSentNewBlock = $dbhSent->prepare($query);
         foreach ($arrSentNewBlock as $oneParam) {
             //print_r($oneParam);
@@ -418,7 +414,7 @@ $dataBlock = $xml->xpath('//block');
     if (count($arrSentNewBlockData) > 0) {
         // 开始一个事务，逐词解析数据 关闭自动提交
         $dbhSent->beginTransaction();
-        $query = "INSERT INTO sentence ('id','block_id','book','paragraph','begin','end','tag','author','editor','text','strlen','language','ver','status','modify_time','receive_time','create_time','channal') VALUES (? , ? , ? , ? , ? ,?, ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? ,?)";
+        $query = "INSERT INTO "._TABLE_SENTENCE_." ( uid , block_uid , book_id , paragraph , word_start , word_end , author , editor_uid , content , strlen , language , version , status , modify_time , create_time , channel_uid') VALUES (?  , ? , ? , ? ,?, ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? ,?)";
         $stmtSentData = $dbhSent->prepare($query);
         foreach ($arrSentNewBlockData as $oneParam) {
             $stmtSentData->execute($oneParam);

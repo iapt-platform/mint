@@ -435,9 +435,9 @@ function loadUserWBWList(){
 		let html ="";
 		for (const it of data) {
 			html += "<div class='file_list_row'>";
-			link = "<a href='./editor.php?op=openchannel&book="+it.book+"&par="+it.paragraph+"&channel="+it.channal+"' target='_blank'>";
-			html += "<div style='flex:5;'>"+link+it.book+"-"+it.paragraph+"</a></div>";
-			html += "<div style='flex:2;'>"+getDataTime(it.modify_time)+"</div>";
+			link = "<a href='./editor.php?op=openchannel&book="+it.book+"&par="+it.paragraph+"&channel="+it.channel_uid+"' target='_blank'>";
+			html += "<div style='flex:5;'>"+link+it.book_id+"-"+it.paragraph+"</a></div>";
+			html += "<div style='flex:2;'>"+it.updated_at+"</div>";
 			html += "</div>"
 		}
 		$("#file_list").html(html);

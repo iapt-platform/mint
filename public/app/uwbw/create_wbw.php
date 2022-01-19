@@ -83,8 +83,7 @@ $channelInfo = $channelClass->getChannal($_channel);
 
 foreach ($_para as $key => $para) {
     # code...
-    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal = ? AND book= ? and paragraph = ? ";
-    //$FetchWBW = PDO_FetchOne($query,array($_channel,$_book,$para));
+    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channel_uid = ? AND book_id= ? and paragraph = ? ";
 	$stmt = $dbh_wbw->prepare($query);
 	$stmt->execute(array($_channel,$_book,$para));
 	$row = $stmt->fetch(PDO::FETCH_NUM);
@@ -109,7 +108,6 @@ foreach ($_para as $key => $para) {
                                          "",
                                          $channelInfo["lang"],
                                          $channelInfo["status"],
-                                         mTime(),
                                          mTime()
                                         );
         $block_list[] = array("channal"=>$_channel,
@@ -120,18 +118,18 @@ foreach ($_para as $key => $para) {
                                         "readonly"=>false
                                     );
         $dbh_wbw->beginTransaction();
-        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id',
-                                                                 'parent_id',
-                                                                 'channal',
-                                                                 'owner',
-                                                                 'book',
-                                                                 'paragraph',
-                                                                 'style',
-                                                                 'lang',
-                                                                 'status',
-                                                                 'modify_time',
-                                                                 'receive_time')
-                                                  VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." ( uid ,
+                                                        parent_id ,
+                                                        channel_uid ,
+                                                        creator_uid ,
+                                                        book_id ,
+                                                        paragraph ,
+                                                        style ,
+                                                        lang ,
+                                                        status ,
+                                                        modify_time ,
+                                                        updated_at )
+                                                  VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , now() )";
         $stmt_wbw = $dbh_wbw->prepare($query);
         $stmt_wbw->execute($block_data);
         // 提交更改 
@@ -141,7 +139,7 @@ foreach ($_para as $key => $para) {
             $output["status"]=1;
             $output["error"]=$error[2];
             echo json_encode($output, JSON_UNESCAPED_UNICODE);
-            eixt;
+            exit;
         }
 
         #逐词解析库
@@ -184,8 +182,7 @@ foreach ($_para as $key => $para) {
                                               $result["real"],
                                               $strXml,
                                               mTime(),
-                                              mTime(),
-                                              1,
+                                              10,
                                               $_COOKIE["userid"]
                                             );
         }
@@ -193,19 +190,19 @@ foreach ($_para as $key => $para) {
             // 开始一个事务，关闭自动提交
 
             $dbh_wbw->beginTransaction();
-            $query="INSERT INTO "._TABLE_USER_WBW_." ('id',
-                                                           'block_id',
-                                                           'book',
-                                                           'paragraph',
-                                                           'wid',
-                                                           'word',
-                                                           'data',
-                                                           'modify_time',
-                                                           'receive_time',
-                                                           'status',
-                                                           'owner'
+            $query="INSERT INTO "._TABLE_USER_WBW_." ( uid ,
+                                                       block_uid ,
+                                                       book_id ,
+                                                       paragraph ,
+                                                       wid ,
+                                                       word ,
+                                                       data ,
+                                                       modify_time ,
+                                                       status ,
+                                                       creator_uid ,
+                                                       updated_at
                                                            ) 
-                                           VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+                                           VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?  ,now())";
             $stmt_wbw = $dbh_wbw->prepare($query);
             foreach($wbw_data as $oneParam){
                 $stmt_wbw->execute($oneParam);
@@ -217,69 +214,12 @@ foreach ($_para as $key => $para) {
                 $output["status"]=1;
                 $output["error"]=$error[2];
                 echo json_encode($output, JSON_UNESCAPED_UNICODE);
-                eixt;
+                exit;
             }
 
     }
 }
 
-/*TO DO 
-            //更新服务器端文件列表
-            $db_file = _FILE_DB_FILEINDEX_;
-            PDO_Connect("$db_file");
-            $query="INSERT INTO fileindex ('id',
-                                        'parent_id',
-                                        'channal',
-                                        'user_id',
-                                        'book',
-                                        'paragraph',
-                                        'file_name',
-                                        'title',
-                                        'tag',
-                                        'status',
-                                        'create_time',
-                                        'modify_time',
-                                        'accese_time',
-                                        'file_size',
-                                        'share',
-                                        'doc_info',
-                                        'doc_block',
-                                        'receive_time'
-                                        ) 
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            $stmt = $PDO->prepare($query);
-            $doc_id=UUID::v4();
-            $file_name = $book . '_' . $create_para . '_' . time();
-            $newData=array(
-                           $doc_id,
-                           "",
-                           $_POST["channal"],
-                           $uid,
-                           $book,
-                           $create_para,
-                           $file_name,
-                           $user_title,
-                           $tag,
-                           1,
-                           mTime(),
-                           mTime(),
-                           mTime(),
-                           $filesize,
-                           0,
-                           $doc_head,
-                           json_encode($block_list, JSON_UNESCAPED_UNICODE),
-                           mTime()
-                           );
-            $stmt->execute($newData);
-            if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-                $error = PDO_ErrorInfo();
-                echo "error - $error[2] <br>";
-            }
-            else{
-                echo "成功新建一个文件.";
-            }
-
-*/
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
 PrefLog();
 ?>

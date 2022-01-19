@@ -43,20 +43,20 @@ $channal_list = array();
 $channel_power=array();
 if (isset($_COOKIE["userid"])) {
 	//找自己的
-    PDO_Connect(_FILE_DB_CHANNAL_);
-    $query = "SELECT id from channal where owner = ? and status >0   limit 100";
-    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["userid"]));
+    PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid from "._TABLE_CHANNEL_." where owner_uid = ? and status >0   limit 100";
+    $Fetch_my = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
     foreach ($Fetch_my as $key => $value) {
         # code...
-		$channal_list[] = $value["id"];
-		$channel_power[$value["id"]]=30;
+		$channal_list[] = $value["uid"];
+		$channel_power[$value["uid"]]=30;
     }
 	$time = microtime(true);
 	$log .= $time-$timeStart ." - 找自己的结束". PHP_EOL;
 	$timeStart = $time;
 
 	# 找协作的
-	$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
+	$coop_channal =  share_res_list_get($_COOKIE["user_uid"],2);
 	foreach ($coop_channal as $key => $value) {
 		# return res_id,res_type,power res_title  res_owner_id
 		$channal_list[] = $value["res_id"];
@@ -73,7 +73,7 @@ if (isset($_COOKIE["userid"])) {
 if (count($channal_list) > 0) {
 	#  创建一个填充了和params相同数量占位符的字符串 
     $channel_place_holders = implode(',', array_fill(0, count($channal_list), '?'));
-    $channel_query = " OR channal IN ($channel_place_holders)";
+    $channel_query = " OR channel_uid IN ($channel_place_holders)";
 } else {
     $channel_query = "";
 }
@@ -122,7 +122,7 @@ foreach ($_data as $key => $value) {
 
 
         #公开 或 channel有权限的
-        $query = "SELECT channal FROM sentence WHERE book= ? AND paragraph= ? AND begin= ? AND end= ?  AND strlen >0 and (status = 30 {$channel_query} ) group by channal  limit 20 ";
+        $query = "SELECT channel_uid FROM "._TABLE_SENTENCE_." WHERE book_id= ? AND paragraph= ? AND word_start= ? AND word_end= ?  AND strlen >0 and (status = 30 {$channel_query} ) group by channel_uid  limit 20 ";
         $stmt = $db_trans_sent->prepare($query);
         $parm = array($bookId, $para, $begin, $end);
         $parm = array_merge_recursive($parm, $channal_list);
@@ -130,11 +130,11 @@ foreach ($_data as $key => $value) {
         $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($Fetch as $key => $value) {
             # code...
-            $pali_letter[$value["channal"]] = 1;
-            if (isset($channal[$value["channal"]])) {
-                $channal[$value["channal"]]++;
+            $pali_letter[$value["channel_uid"]] = 1;
+            if (isset($channal[$value["channel_uid"]])) {
+                $channal[$value["channel_uid"]]++;
             } else {
-                $channal[$value["channal"]] = 1;
+                $channal[$value["channel_uid"]] = 1;
             }
         }
 
@@ -166,13 +166,17 @@ foreach ($channal as $key => $value) {
         $arr_sent_final[] = $sent_final;
     }
     $channalInfo = $_channal->getChannal($key);
-    $name = $_userinfo->getName($channalInfo["owner"]);
+	
+    $name = $_userinfo->getName($channalInfo["owner_uid"]);
     $channalInfo["username"] = $name["username"];
     $channalInfo["nickname"] = $name["nickname"];
     $channalInfo["count"] = $value;
     $channalInfo["all"] = count($_data);
     $channalInfo["final"] = $arr_sent_final;
 	$channalInfo["article_len"] = $article_len;
+	$channalInfo["id"] = $key;
+	$channalInfo["owner"] = $channalInfo["owner_uid"];
+
 	if(isset($channel_power[$key])){
 		$channalInfo["power"] =$channel_power[$key];
 	}

@@ -1,6 +1,6 @@
 <?php
-require "../vendor/autoload.php";
-require "../config/database.php";
+require_once '../../vendor/autoload.php';
+require "./database.php";
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $dbclass = new Database();
@@ -13,4 +13,6 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 
-$users = Capsule::table('user')->where('id', '=', 1)->get();
+$users = Capsule::table('wbw_blocks')->where('id', '=', 129195)->get();
+
+var_dump($users);
