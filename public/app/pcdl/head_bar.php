@@ -474,9 +474,12 @@
 						<?php echo $_local->gui->more; ?>
 					</button>
 					<ul class="header-dropdown-content left-content" style="display: none;" id="nav-more">
-					<li><a href="https://visuddhinanda.gitbook.io/pali-handbook/" target="_blank">
+					<li><a href="https://assets-hk.wikipali.org/pali-handbook/zh-Hans/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->palihandbook; ?></div>
 							</a></li>
+						<li><a href="https://assets-hk.wikipali.org/help/zh-Hans/" target="_blank">
+							<div class="nav_link"><?php echo $_local->gui->help_doc; ?></div>
+						</a></li>
 						<li><a href="../calendar/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
 							</a></li>
