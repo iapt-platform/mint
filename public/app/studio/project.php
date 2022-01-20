@@ -185,7 +185,7 @@ switch ($op) {
                                         $strXml .= "<style>{$result["style"]}</style>";
                                         $strXml .= "<status>0</status>";
                                         $strXml .= "</word>";
-                                        $wbw_data[] = array(UUID::v4(), $block_id, $book, $iPar, $result["wid"], $result["real"], $strXml, mTime(), 10, $USER_NAME);
+                                        $wbw_data[] = array(UUID::v4(), $block_id, $book, $iPar, $result["wid"], $result["real"], $strXml, mTime(), 10, $_COOKIE['userid']);
                                     }
                                 }
                             }
