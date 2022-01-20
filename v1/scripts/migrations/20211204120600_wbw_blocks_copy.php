@@ -34,9 +34,7 @@ fwrite(STDOUT, "migarate wbw_block".PHP_EOL);
 $PDO_USER = new PDO($user_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_USER->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 fwrite(STDOUT,"open user table".PHP_EOL);
-#从user数据表中读取
-$query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
-$stmtUser = $PDO_USER->prepare($query);
+
 
 
 #打开源数据库
@@ -84,9 +82,26 @@ $count = 0;
 $query = "SELECT *  FROM ".$src_table." WHERE true ";
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
+
+#从user数据表中读取
+$query = "SELECT id ,userid FROM ".$user_table." WHERE userid = ? or username = ? ";
+$stmtUser = $PDO_USER->prepare($query);
+
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$allSrcCount++;
-	$stmtUser->execute(array($srcData["owner"]));
+	if($srcData["owner"]=='test6'){
+		$srcData["owner"] = 'f81c7140-64b4-4025-b58c-45a3b386324a';
+	}
+	if($srcData["owner"]=='test28'){
+		$srcData["owner"] = 'df0ad9bc-c0cd-4cd9-af05-e43d23ed57f0';
+	}
+	if($srcData["owner"]=='290fd808-2f46-4b8c-b300-0367badd67ed'){
+		$srcData["owner"] = 'f81c7140-64b4-4025-b58c-45a3b386324a';
+	}
+	if($srcData["owner"]=='BA837178-9ABD-4DD4-96A0-D2C21B756DC4'){
+		$srcData["owner"] = 'ba5463f3-72d1-4410-858e-eadd10884713';
+	}
+	$stmtUser->execute(array($srcData["owner"],$srcData["owner"]));
 	$userId = $stmtUser->fetch(PDO::FETCH_ASSOC);
 	if(!$userId){
 		fwrite(STDERR,"no user id {$srcData["owner"]}".PHP_EOL);
@@ -94,6 +109,18 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	}
 
 	#插入目标表
+	if(empty($srcData["book"])){
+		fwrite(STDERR,"book is null {$uuid}".PHP_EOL);
+		continue;
+	}
+	if(substr($srcData["book"],0,1)==="p"){
+		$srcData["book"] = substr($srcData["book"],1);
+	}
+	if(empty($srcData["paragraph"])){
+		fwrite(STDERR,"paragraph is null {$uuid}".PHP_EOL);
+		continue;
+	}	
+
 	if(empty($srcData["parent_id"])){
 		$srcData["parent_id"] = NULL;
 	}
@@ -103,80 +130,74 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	if(empty($srcData["status"])){
 		$srcData["status"] = 10;
 	}
-	if(empty($srcData["book"])){
-		fwrite(STDERR, "book is null ".PHP_EOL);
-		continue;
-	}
-	if(substr($srcData["book"],0,1)==="p"){
-		$srcData["book"] = (int)substr($srcData["book"],1);
-	}
-	
-	if(strlen($srcData["id"])>10 && strlen($srcData["owner"])>30){
-		$uuid = $srcData["id"];
-		#查询目标表中是否有相同数据
-		$queryExsit = "SELECT id  FROM ".$dest_table." WHERE uid = ? ";
-		$getExist = $PDO_DEST->prepare($queryExsit);
-		$getExist->execute(array($uuid));
-		$exist = $getExist->fetch(PDO::FETCH_ASSOC);
-		if(!$exist){
-			#没有相同数据
-			if(strlen($srcData["parent_id"])>36){
-				fwrite(STDERR, "parent_id too long ".$srcData["parent_id"].PHP_EOL);
-				continue;
-			}
-			if(strlen($srcData["channal"])>36){
-				fwrite(STDERR, "channal too long ".$srcData["channal"].PHP_EOL);
-				continue;
-			}
-			if(strlen($srcData["parent_channel"])>36){
-				fwrite(STDERR, "parent_channel too long ".$srcData["parent_channel"].PHP_EOL);
-				continue;
-			}
-			if(strlen($srcData["owner"])>36){
-				fwrite(STDERR, "owner too long ".$srcData["owner"].PHP_EOL);
-				continue;
-			}
-			$commitData[] = array(
-					$snowflake->id(),
-					$uuid,
-					$srcData["parent_id"],
-					$srcData["channal"],
-					$srcData["parent_channel"],
-					$srcData["owner"],
-					$userId["id"],
-					$srcData["book"],
-					$srcData["paragraph"],
-					$srcData["style"],
-					$srcData["lang"],
-					$srcData["status"],
-					$srcData["create_time"],
-					$srcData["modify_time"],
-					$srcData["create_time"]/1000,
-					$srcData["modify_time"]/1000
-				);	
-			$count++;	
-			$allInsertCount++;
-		}
 
-		if($count ==10000){
-			#10000行插入一次
-			$PDO_DEST->beginTransaction();
-			$stmtDEST = $PDO_DEST->prepare($queryInsert);
-			foreach ($commitData as $key => $value) {
-				$stmtDEST->execute($value);
-				if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-					$error = $PDO_DEST->errorInfo();
-					fwrite(STDERR, "error - $error[2] ");
-					exit;
-				}
-			}
-			// 提交更改
-			$PDO_DEST->commit();
-			$commitData = [];
-			fwrite(STDOUT, "finished $count".PHP_EOL);
-			$count=0;
-		}	
+	if(empty($srcData["create_time"]) || $srcData["create_time"]<1532590551000){
+		$srcData["create_time"]=1532590551000;
 	}
+	if(empty($srcData["modify_time"]) || $srcData["modify_time"]<1532590551000){
+		$srcData["modify_time"]=1532590551000;
+	}
+
+	$uuid = $srcData["id"];
+	#查询目标表中是否有相同数据
+	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE uid = ? ";
+	$getExist = $PDO_DEST->prepare($queryExsit);
+	$getExist->execute(array($uuid));
+	$exist = $getExist->fetch(PDO::FETCH_ASSOC);
+	if(!$exist){
+		#没有相同数据
+		if(strlen($srcData["parent_id"])>36){
+			fwrite(STDERR, "parent_id too long ".$srcData["parent_id"].PHP_EOL);
+			continue;
+		}
+		if(strlen($srcData["channal"])>36){
+			fwrite(STDERR, "channal too long ".$srcData["channal"].PHP_EOL);
+			continue;
+		}
+		if(strlen($srcData["parent_channel"])>36){
+			fwrite(STDERR, "parent_channel too long ".$srcData["parent_channel"].PHP_EOL);
+			continue;
+		}
+		if(strlen($srcData["owner"])>36){
+			fwrite(STDERR, "owner too long ".$srcData["owner"].PHP_EOL);
+			continue;
+		}
+		$commitData[] = array(
+				$snowflake->id(),
+				$uuid,
+				$srcData["parent_id"],
+				$srcData["channal"],
+				$srcData["parent_channel"],
+				$userId["userid"],
+				$userId["id"],
+				$srcData["book"],
+				$srcData["paragraph"],
+				$srcData["style"],
+				$srcData["lang"],
+				$srcData["status"],
+				$srcData["create_time"],
+				$srcData["modify_time"],
+				$srcData["create_time"]/1000,
+				$srcData["modify_time"]/1000
+			);	
+		$count++;	
+		$allInsertCount++;
+	}
+
+	if($count ==10000){
+		#10000行插入一次
+		$PDO_DEST->beginTransaction();
+		$stmtDEST = $PDO_DEST->prepare($queryInsert);
+		foreach ($commitData as $key => $value) {
+			$stmtDEST->execute($value);
+		}
+		// 提交更改
+		$PDO_DEST->commit();
+		$commitData = [];
+		fwrite(STDOUT, "finished $count".PHP_EOL);
+		$count=0;
+	}	
+	
 }
 if($count>0){
 	#最后的剩余的数据插入
@@ -184,11 +205,6 @@ if($count>0){
 	$stmtDEST = $PDO_DEST->prepare($queryInsert);
 	foreach ($commitData as $key => $value) {
 		$stmtDEST->execute($value);
-		if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-			$error = $PDO_DEST->errorInfo();
-			fwrite(STDERR, "error - $error[2] ");
-			exit;
-		}
 	}
 	// 提交更改
 	$PDO_DEST->commit();
