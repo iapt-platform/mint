@@ -48,12 +48,12 @@ if (count($aData) > 0) {
 
     /* 开始一个事务，关闭自动提交 */
     $PDO->beginTransaction();
-    $query = "UPDATE "._TABLE_USER_WBW_." SET data= ?  ,  modify_time= ? , updated_at = now()  where block_uid= ?  and wid= ?  ";
+    $query = "UPDATE "._TABLE_USER_WBW_." SET data= ?  , editor_id = ? , modify_time= ? , updated_at = now()  where block_uid= ?  and wid= ?  ";
     $sth = $PDO->prepare($query);
 
     foreach ($aData as $data) {
 		if($listBlockId[$data->block_id]>=20){
-			$sth->execute(array($data->data, mTime(), $data->block_id, $data->word_id));
+			$sth->execute(array($data->data, $_COOKIE['uid'], mTime(), $data->block_id, $data->word_id));
 		}
     }
     $PDO->commit();
