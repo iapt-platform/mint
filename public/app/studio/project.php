@@ -12,14 +12,15 @@
 <?php
 //工程文件操作
 //建立，
-require_once '../config.php';
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
-require_once "../public/load_lang.php";
-require_once "./book_list_en.inc";
-require_once "../ucenter/function.php";
-require_once "../ucenter/setting_function.php";
-require_once "../lang/function.php";
+require_once __DIR__.'/../config.php';
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../public/load_lang.php";
+require_once __DIR__."/./book_list_en.inc";
+require_once __DIR__."/../ucenter/function.php";
+require_once __DIR__."/../ucenter/setting_function.php";
+require_once __DIR__."/../lang/function.php";
+require_once __DIR__."/../public/app/public/snowflakeid.php";
 
 $user_setting = get_setting();
 
