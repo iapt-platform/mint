@@ -9,6 +9,8 @@ require_once __DIR__."/../channal/function.php";
 require_once __DIR__."/../redis/function.php";
 require_once __DIR__."/../public/app/public/snowflakeid.php";
 
+# 雪花id
+$snowflake = new SnowFlakeId();
 
 define("MAX_LETTER" ,20000);
 
@@ -102,17 +104,22 @@ foreach ($_para as $key => $para) {
         #更新block库
         $block_id=UUID::v4();
         $trans_block_id = UUID::v4();
-        $block_data = array($block_id,
-                                         "",
-                                         $_channel,
-                                         $_COOKIE["userid"],
-                                         $_book,
-                                         $para,
-                                         "",
-                                         $channelInfo["lang"],
-                                         $channelInfo["status"],
-                                         mTime()
-                                        );
+        $block_data = array
+						(
+							$snowflake->id(),
+							$block_id,                 
+							"",            
+							$_channel,
+							$_COOKIE["userid"],
+							$_COOKIE["uid"],
+							$_book,
+							$para,
+							"",
+							$channelInfo["lang"],
+							$channelInfo["status"],
+							mTime(),
+							mTime()
+						);
         $block_list[] = array("channal"=>$_channel,
                                         "type"=>6,//word by word
                                         "book"=>$_book,
@@ -121,18 +128,23 @@ foreach ($_para as $key => $para) {
                                         "readonly"=>false
                                     );
         $dbh_wbw->beginTransaction();
-        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." ( uid ,
-                                                        parent_id ,
-                                                        channel_uid ,
-                                                        creator_uid ,
-                                                        book_id ,
-                                                        paragraph ,
-                                                        style ,
-                                                        lang ,
-                                                        status ,
-                                                        modify_time ,
-                                                        updated_at )
-                                                  VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , now() )";
+        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
+											( 
+												id,
+												uid ,
+                                                parent_id ,
+                                                channel_uid ,
+                                                creator_uid ,
+                                                editor_id ,
+                                                book_id ,
+                                                paragraph ,
+                                                style ,
+                                                lang ,
+                                                status ,
+                                                create_time ,
+                                                modify_time 
+											)
+                                            VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?  )";
         $stmt_wbw = $dbh_wbw->prepare($query);
         $stmt_wbw->execute($block_data);
         // 提交更改 
@@ -177,35 +189,45 @@ foreach ($_para as $key => $para) {
             $strXml.="<style>{$result["style"]}</style>";
             $strXml.="<status>0</status>";
             $strXml.="</word>";
-            $wbw_data[] = array(UUID::v4(),
-                                              $block_id,
-                                              $_book,
-                                              $para,
-                                              $result["wid"],
-                                              $result["real"],
-                                              $strXml,
-                                              mTime(),
-                                              10,
-                                              $_COOKIE["userid"]
-                                            );
+            $wbw_data[] = array
+			(
+				$snowflake->id(),
+				UUID::v4(),
+				$block_id,
+				$_book,
+				$para,
+				$result["wid"],
+				$result["real"],
+				$strXml,
+				mTime(),
+				mTime(),
+				$channelInfo["status"],
+				$_COOKIE["userid"],
+				$_COOKIE["uid"]
+			);
         }
                 
             // 开始一个事务，关闭自动提交
 
             $dbh_wbw->beginTransaction();
-            $query="INSERT INTO "._TABLE_USER_WBW_." ( uid ,
-                                                       block_uid ,
-                                                       book_id ,
-                                                       paragraph ,
-                                                       wid ,
-                                                       word ,
-                                                       data ,
-                                                       modify_time ,
-                                                       status ,
-                                                       creator_uid ,
-                                                       updated_at
-                                                           ) 
-                                           VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?  ,now())";
+            $query="INSERT INTO "._TABLE_USER_WBW_." 
+									( 
+										id,
+										uid ,
+										block_uid ,
+										book_id ,
+										paragraph ,
+										wid ,
+										word ,
+										data ,
+										create_time ,
+										modify_time ,
+										status ,
+										creator_uid ,
+										editor_id 
+
+									) 
+                                    VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?  , ?  , ?  , ? )";
             $stmt_wbw = $dbh_wbw->prepare($query);
             foreach($wbw_data as $oneParam){
                 $stmt_wbw->execute($oneParam);
