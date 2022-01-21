@@ -38,3 +38,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add SNOWFLAKE to .env.example
 - add SnowFlake to config.sample.php
+- add SnowFlakeDate to config.table.php
+- add dependency godruoyi/php-snowflake
