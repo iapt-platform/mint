@@ -1,7 +1,7 @@
 <!---->
 
 <div class="foot_div">
-	<div class="">
+	<div class="" style='display:none;'>
 		<div>
 			<div>联系我们</div>
 			<div>
