@@ -1,4 +1,4 @@
-﻿<?PHP
+<?PHP
 include "../pcdl/html_head.php";
 ?>
 
