@@ -5,10 +5,17 @@
 插入时用uuid判断是否曾经插入
 曾经插入就不插入了
 */
-require_once __DIR__.'/../../vendor/autoload.php';
-require_once __DIR__."/../../app/config.php";
-require_once __DIR__."/../../app/public/snowflakeid.php";
+require_once __DIR__.'/../../../public/vendor/autoload.php';
+require_once __DIR__."/../../../public/app/config.php";
+require_once __DIR__."/../../../public/app/public/snowflakeid.php";
 
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+$start = time();
 # 雪花id
 $snowflake = new SnowFlakeId();
 
@@ -18,11 +25,11 @@ $user_table=_TABLE_USER_INFO_;#user表名
 
 
 # 更新索引表
-$src_db = _FILE_SRC_CHANNEL_;#源数据库
-$src_table = _TABLE_SRC_CHANNEL_;#源表名
+$src_db = _SQLITE_DB_CHANNAL_;#源数据库
+$src_table = _SQLITE_TABLE_CHANNEL_;#源表名
 
-$dest_db = _FILE_DB_CHANNAL_;#目标数据库
-$dest_table = _TABLE_CHANNEL_;#目标表名
+$dest_db = _PG_DB_CHANNAL_;#目标数据库
+$dest_table = _PG_TABLE_CHANNEL_;#目标表名
 
 fwrite(STDOUT,"migarate channel".PHP_EOL);
 #打开user数据库
@@ -64,7 +71,7 @@ $allSrcCount = 0;
 $count = 0;
 
 #从user数据表中读取
-$query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
+$query = "SELECT id ,userid FROM ".$user_table." WHERE userid = ? or username = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
 #从源数据表中读取
@@ -73,12 +80,26 @@ $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$allSrcCount++;
-	$stmtUser->execute(array($srcData["owner"]));
+
+	if($srcData["owner"]=='test6'){
+		$srcData["owner"] = 'f81c7140-64b4-4025-b58c-45a3b386324a';
+	}
+	if($srcData["owner"]=='test28'){
+		$srcData["owner"] = 'df0ad9bc-c0cd-4cd9-af05-e43d23ed57f0';
+	}
+	if($srcData["owner"]=='290fd808-2f46-4b8c-b300-0367badd67ed'){
+		$srcData["owner"] = 'f81c7140-64b4-4025-b58c-45a3b386324a';
+	}
+	if($srcData["owner"]=='BA837178-9ABD-4DD4-96A0-D2C21B756DC4'){
+		$srcData["owner"] = 'ba5463f3-72d1-4410-858e-eadd10884713';
+	}
+	$stmtUser->execute(array($srcData["owner"],$srcData["owner"]));
 	$userId = $stmtUser->fetch(PDO::FETCH_ASSOC);
 	if(!$userId){
 		fwrite(STDERR,"no user id {$srcData["owner"]}".PHP_EOL);
 		continue;
 	}
+
 	if(strlen($srcData["owner"])>36){
 		fwrite(STDERR,"user id too long {$srcData["owner"]}".PHP_EOL);
 		continue;	
@@ -98,24 +119,19 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$commitData = array(
 			$snowflake->id(),
 			$srcData["id"],
-			$srcData["owner"],
+			$userId["userid"],
 			$userId["id"],
 			$srcData["name"],
 			$srcData["summary"],
 			$srcData["status"],
 			$srcData["lang"],
-			$srcData["setting"],
+			'',
 			$srcData["create_time"],
 			$srcData["modify_time"],
 			$srcData["create_time"]/1000,
 			$srcData["modify_time"]/1000
 		);	
 	$stmtDEST->execute($commitData);
-	if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-		$error = $PDO_DEST->errorInfo();
-		echo "error - $error[2] ";
-		exit;
-	}
 	$count++;	
 	$allInsertCount++;
 
