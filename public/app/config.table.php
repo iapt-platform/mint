@@ -1,4 +1,9 @@
 <?php 
+
+# 雪花算法id 起始日期2021-12-22 绝对不可修改！！！
+define("_SnowFlakeDate_","2021-12-22");
+
+
 #表名设置，不能更改
 define("_DB_ENGIN_", Database["type"]);
 define("_DB_HOST_", Database["server"]);
@@ -582,9 +587,9 @@ define("_TABLE_REF_INDEX_", _SQLITE_TABLE_REF_INDEX_);
 # 用户数据表
 
 #sqlite
-define("_FILE_DB_USER_WBW_", _SQLITE_DB_USER_WBW_);
-define("_TABLE_USER_WBW_", _SQLITE_TABLE_USER_WBW_);
-define("_TABLE_USER_WBW_BLOCK_", _SQLITE_TABLE_USER_WBW_BLOCK_);
+define("_FILE_DB_USER_WBW_", _PG_DB_USER_WBW_);
+define("_TABLE_USER_WBW_", _PG_TABLE_USER_WBW_);
+define("_TABLE_USER_WBW_BLOCK_", _PG_TABLE_USER_WBW_BLOCK_);
 
 
 # 译文
@@ -630,8 +635,8 @@ define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
 
 # 版本风格 
 #sqlite
-define("_FILE_DB_CHANNAL_", _SQLITE_DB_CHANNAL_);
-define("_TABLE_CHANNEL_", _SQLITE_TABLE_CHANNEL_);
+define("_FILE_DB_CHANNAL_", _PG_DB_CHANNAL_);
+define("_TABLE_CHANNEL_", _PG_TABLE_CHANNEL_);
 
 
 # 文章 文集
