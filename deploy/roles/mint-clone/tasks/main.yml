@@ -16,10 +16,15 @@
   args:
     chdir: "{{ app_deploy_target }}"
 
+# - name: Install v2 nodejs dependencies
+#   ansible.builtin.shell: npm install
+#   args:
+#     chdir: "{{ app_deploy_target }}"
 - name: Install v2 nodejs dependencies
-  ansible.builtin.shell: npm install
-  args:
-    chdir: "{{ app_deploy_target }}"
+  ansible.builtin.file:
+    src: "/var/www/{{ inventory_hostname }}/node_modules/v2"
+    dest: "{{ app_deploy_target }}/node_modules"
+    state: link
 
 # TODO will remove in future
 - name: Install v1 php dependencies
@@ -28,10 +33,27 @@
     chdir: "{{ app_deploy_target }}/public"
 
 # TODO will remove in future
+# - name: Install v1 nodejs dependencies
+#   ansible.builtin.shell: npm install
+#   args:
+#     chdir: "{{ app_deploy_target }}/public"
 - name: Install v1 nodejs dependencies
-  ansible.builtin.shell: npm install
-  args:
-    chdir: "{{ app_deploy_target }}/public"
+  ansible.builtin.file:
+    src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
+    dest: "{{ app_deploy_target }}/public/node_modules"
+    state: link
+
+- name: Install tmp
+  ansible.builtin.file:
+    src: "/var/www/{{ inventory_hostname }}/tmp"
+    dest: "{{ app_deploy_target }}/tmp"
+    state: link
+
+- name: Install tmp
+  ansible.builtin.file:
+    src: "/var/www/{{ inventory_hostname }}/tmp"
+    dest: "{{ app_deploy_target }}/public/tmp"
+    state: link
 
 - name: .env(v2)
   become: true
@@ -61,3 +83,9 @@
     owner: www-data
     group: www-data
     mode: '0400'
+
+# - name: Create a current link
+#   ansible.builtin.file:
+#     src: "{{ app_deploy_target }}"
+#     dest: /var/www/{{ inventory_hostname }}/current
+#     state: link
