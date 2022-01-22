@@ -11,8 +11,14 @@
     dest: "{{ app_deploy_target }}"
     version: laravel
 
+- name: Setup storage folder
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/storage"
+    owner: www-data
+    group: www-data
+
 - name: Install v2 php dependencies
-  ansible.builtin.shell: "{{ ansible_env.HOME }}/.local/bin/composer install"
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
   args:
     chdir: "{{ app_deploy_target }}"
 
@@ -28,7 +34,7 @@
 
 # TODO will remove in future
 - name: Install v1 php dependencies
-  ansible.builtin.shell: "{{ ansible_env.HOME }}/.local/bin/composer install"
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
   args:
     chdir: "{{ app_deploy_target }}/public"
 
@@ -43,13 +49,14 @@
     dest: "{{ app_deploy_target }}/public/node_modules"
     state: link
 
-- name: Install tmp
+- name: Install v2 tmp
   ansible.builtin.file:
     src: "/var/www/{{ inventory_hostname }}/tmp"
     dest: "{{ app_deploy_target }}/tmp"
     state: link
 
-- name: Install tmp
+# TODO will remove in future
+- name: Install v1 tmp
   ansible.builtin.file:
     src: "/var/www/{{ inventory_hostname }}/tmp"
     dest: "{{ app_deploy_target }}/public/tmp"
@@ -84,8 +91,8 @@
     group: www-data
     mode: '0400'
 
-# - name: Create a current link
-#   ansible.builtin.file:
-#     src: "{{ app_deploy_target }}"
-#     dest: /var/www/{{ inventory_hostname }}/current
-#     state: link
+- name: Create a current link
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}"
+    dest: /var/www/{{ inventory_hostname }}/current
+    state: link

@@ -7,4 +7,4 @@ app_deploy_target: "/var/www/{{ inventory_hostname }}/{{ ansible_date_time.iso86
 app_downloads: "{{ ansible_env.HOME }}/downloads"
 app_backup: "{{ ansible_env.HOME }}/backups"
 app_python_version: "3.11"
-app_php_version: "8.0"
+app_php_version: "8.1"

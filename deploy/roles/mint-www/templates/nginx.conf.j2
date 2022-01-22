@@ -9,7 +9,7 @@ server {
 
     gzip on;
     server_name {{ inventory_hostname }};
-    root {{ app_deploy_target }};
+    root {{ app_deploy_target }}/public;
     client_max_body_size 16M;
     index index.php;
     charset utf-8;
