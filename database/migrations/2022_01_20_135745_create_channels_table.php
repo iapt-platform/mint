@@ -13,19 +13,6 @@ class CreateChannelsTable extends Migration
      */
     public function up()
     {
-		/*
-			uid VARCHAR (36) NOT NULL, 
-			type TChannelType  NOT NULL DEFAULT('translation'),
-			owner_uid  VARCHAR (36) NOT NULL, 
-			editor_id BIGINT NOT NULL,
-			name VARCHAR (64), 
-			summary VARCHAR (1024),
-			status INTEGER  NOT NULL DEFAULT(10), 
-			lang VARCHAR (16), 
-			setting TEXT,
-			create_time BIGINT NOT NULL, 
-			modify_time BIGINT NOT NULL, 
-		*/
         Schema::create('channels', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
 			$table->string('uid',36)->uniqid()->index();
