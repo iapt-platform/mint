@@ -24,14 +24,17 @@
       - php{{ app_php_version }}-redis
       - php{{ app_php_version }}-bcmath
 
+- name: Creates composer install directory
+  file:
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    state: directory
+
 # https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
 - name: Download composer
   get_url:
     url: https://getcomposer.org/download/latest-stable/composer.phar
     dest: "{{ ansible_env.HOME }}/.local/bin/composer"
     mode: 0755
-  args:
-    creates: "{{ ansible_env.HOME }}/.local/bin/composer"
 
 - name: Restart php-fpm
   become: true

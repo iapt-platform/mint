@@ -1,8 +1,8 @@
-- include: init.yml
-- include: sshd.yml
-- include: ulimits.yml
+- import_tasks: init.yml
+- import_tasks: sshd.yml
+- import_tasks: ulimits.yml
 
-- name: Setup sudo without password 
+- name: Setup sudo without password
   become: true
   ansible.builtin.template:
     src: sudo.conf.j2
@@ -25,7 +25,7 @@
   become: true
   shell: timedatectl set-timezone UTC
 
-- name: Setup journald storage 
+- name: Setup journald storage
   become: true
   lineinfile:
     path: /etc/systemd/journald.conf

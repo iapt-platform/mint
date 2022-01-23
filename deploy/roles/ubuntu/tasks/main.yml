@@ -79,6 +79,7 @@
       - unzip
       - nginx
       - certbot
+      - python3-certbot-nginx
       - openvpn
       - snmpd
       - systemd-cron
@@ -90,12 +91,15 @@
       - python3-pip
       - python3-distutils
       - python3-dev
+      - nodejs
+      - npm
+      - yarnpkg
       - libssl-dev
       - libpq-dev
       - libmysqlclient-dev
 
 
-- include: locales.yml
+- import_tasks: locales.yml
 
 - name: Set default editor to vim
   become: true
@@ -109,7 +113,7 @@
   become: true
   shell: git config --global pull.rebase false
 
-- include: zsh.yml
+- import_tasks: zsh.yml
 
 # ---------------------------------------------------
 
@@ -118,7 +122,7 @@
     path: /etc/friendlyelec-release
   register: app_os_friendlyelec
 
-- include: friendly-core.yml
+- import_tasks: friendly-core.yml
   when: app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg
 
 - name: check if armbian
@@ -126,13 +130,13 @@
     path: /etc/armbian-release
   register: app_os_armbian
 
-- include: armbian.yml
+- import_tasks: armbian.yml
   when: app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg
 
-- include: raspbian.yml
+- import_tasks: raspbian.yml
   when: ansible_distribution == 'Raspbian'
 
-- include: pi.yml
+- import_tasks: pi.yml
   when: ansible_distribution == 'Raspbian' or (app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg) or (app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg)
 
 # ---------------------------------------------------
@@ -147,15 +151,9 @@
 - name: enable cron service
   become: true
   ansible.builtin.systemd:
-    name: cron-target
+    name: cron
     enabled: yes
     masked: no
-
-- name: enable certbot sync
-  ansible.builtin.cron:
-    name: "renew certbot"
-    special_time: monthly
-    job: "/usr/bin/certbot renew --force-renewal"
 
 - name: enable ssh service
   become: true
@@ -172,4 +170,4 @@
     masked: no
 
 
-- include: clean.yml
+- import_tasks: clean.yml
