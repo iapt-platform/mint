@@ -64,13 +64,13 @@ try{
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	#插入目标表
 	$data = array(
-					(int)$srcData["id"],
-					(int)$srcData["book"],
-					(int)$srcData["paragraph"],
-					(int)$srcData["begin"],
-					(int)$srcData["end"],
-					(int)$srcData["length"],
-					(int)$srcData["count"],
+					$srcData["id"],
+					$srcData["book"],
+					$srcData["paragraph"],
+					$srcData["begin"],
+					$srcData["end"],
+					$srcData["length"],
+					$srcData["count"],
 					$srcData["text"],
 					$srcData["html"],
 					$srcData["sim_sents"]

@@ -62,11 +62,11 @@ try{
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	#插入目标表
 	$data = array(
-					(int)$srcData["sent1"],
-					(int)$srcData["sent2"],
-					(int)$srcData["sim"]
-	);
-	try{					
+					$srcData["sent1"],
+					$srcData["sent2"],
+					$srcData["sim"]
+				);
+	try{
 		$stmtDEST->execute($data);		
 	}catch(PDOException $e){
 		fwrite(STDERR,"error:".$e->getMessage().PHP_EOL);
