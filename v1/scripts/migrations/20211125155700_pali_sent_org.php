@@ -89,7 +89,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 
 // 提交更改
 $PDO_DEST->commit();
-fwrite(STDOUT, "done".PHP_EOL);
+fwrite(STDOUT, "done insert {$count} rows".PHP_EOL);
 
 
 
