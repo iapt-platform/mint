@@ -487,21 +487,31 @@ switch($_COOKIE['language']){
 						<?php echo $_local->gui->more; ?>
 					</button>
 					<ul class="header-dropdown-content left-content" style="display: none;" id="nav-more">
-					<li><a href="<?php echo URL_PALI_HANDBOOK.'/'.$help_lang ?>" target="_blank">
+						<li>
+							<a href="<?php echo URL_PALI_HANDBOOK.'/'.$help_lang ?>" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->palihandbook; ?></div>
-							</a></li>
-						<li><a href="../calendar/" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../calendar/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
-							</a></li>
-						<li><a href="../tools/unicode.html" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../tools/unicode.html" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->code_convert; ?></div>
-							</a></li>
-						<li><a href="../statistics" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../statistics" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
-							</a></li>
-						<li><a href="../calendar/history.html" target="_blank">
-							<div class="nav_link"><?php echo $_local->gui->history; ?></div>
-						</a></li>
+							</a>
+						</li>
+						<li>
+							<a href="../calendar/history.html" target="_blank">
+								<div class="nav_link"><?php echo $_local->gui->history; ?></div>
+							</a>
+						</li>
 					</ul>
 			</li>
 			<li class="nav_link nav-mobile"><a href="../calendar/">
