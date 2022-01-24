@@ -1,4 +1,7 @@
 <?php 
+# 雪花算法id 起始日期2021-12-22 绝对不可修改！！！
+define("_SnowFlakeDate_","2021-12-22");
+
 #表名设置，不能更改
 define("_DB_ENGIN_", Database["type"]);
 define("_DB_HOST_", Database["server"]);

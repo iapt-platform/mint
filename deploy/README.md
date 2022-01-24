@@ -18,11 +18,11 @@ ssh-copy-id -i .ssh/id_ed25519 USER@HOST
 
 ```bash
 # test ssh connections
-peony -i staging ping.yml
+peony -i clients/CLUSTER ping.yml
 # run on all hosts
-peony -i staging pi.yml
+peony -i clients/CLUSTER ping.yml
 # run on only group
-peony -i staging pi.yml -l GROUP
+peony -i clients/CLUSTER ping.yml -l GROUP
 ```
 
 ## System image

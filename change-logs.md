@@ -33,3 +33,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove WWW_DOMAIN_NAME  from config.sample.js
 - rename RPC_DOMAIN_NAME -> RPC_SERVER in config.sample.js
 - add RPC_SERVER to .env.example
+
+## [1.0.4] - 2022-01-21
+
+- add SNOWFLAKE to .env.example
+- add SnowFlake to config.sample.php
+- add SnowFlakeDate to config.table.php
+- add dependency godruoyi/php-snowflake
+
+## [1.0.5] - 2022-01-24
+
+- add 帮助文件路径 URL_HELP to config.dir.php
+- add 巴利语手册路径 URL_PALI_HANDBOOK to config.dir.php
+- add help & handbook link 

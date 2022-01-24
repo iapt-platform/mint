@@ -1,12 +1,9 @@
 <?php
-require_once '../config.php';
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../redis/function.php';
 
-try {
-    $redis = new redis();
-    $r_conn = $redis->connect('127.0.0.1', 6379);
-} catch (Exception $e) {
-    $r_conn = false;
-}
+
+$redis = redis_connect();
 
 $dns = _FILE_DB_PALI_TOC_;
 $dbh_toc = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
@@ -44,7 +41,7 @@ if ($paraInfo) {
         foreach ($paraList as $key => $value) {
             # 查进度
             $paraProgress = false;
-            if ($r_conn) {
+            if ($redis) {
                 $count = $redis->hLen("progress_chapter_{$value["book"]}_{$value["para"]}");
                 if ($count > 0) {
                     $prog = $redis->hGetAll("progress_chapter_{$value["book"]}_{$value["para"]}");

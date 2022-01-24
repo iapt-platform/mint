@@ -20,5 +20,5 @@ php ./migrations/20211127214900-sent_sim_index.php
 php ../../public/app/fts/sql.php
 
 php ../../public/app/admin/word_index_weight_refresh.php 1 217
-
+php ./migrations/20211125155600_word_statistics.php
 net time \\127.0.0.1
