@@ -45,3 +45,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add 帮助文件路径 URL_HELP to config.dir.php
 - add 巴利语手册路径 URL_PALI_HANDBOOK to config.dir.php
+- add help & handbook link 

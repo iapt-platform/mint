@@ -289,7 +289,8 @@ else{
 		<div class="htlp_title"><?php echo $_local->gui->start;?></div>
 		<ul style="list-style-type: none;">
 			<li><a href="../studio/index_pc.php" target="_block"><?php echo $_local->gui->newproject;?></a></li>
-			<li><a href="" target="_block">自学教程（建設中）</a></li>
+			<li ><a href="<?php echo URL_PALI_HANDBOOK.'/zh-Hans' ?>" target="_blank"><?php echo $_local->gui->palihandbook; ?></a></li>
+			<li><a href="" target="_block">教程（建設中）</a></li>
 		</ul>
 	</div>
 	<div class="help_div">
@@ -304,6 +305,7 @@ else{
 		<?php echo $_local->gui->help;?>
 		</div>
 		<ul style="list-style-type: none;">
+		<li ><a href="<?php echo URL_HELP.'/zh-Hans' ?>" target="_blank"><?php echo $_local->gui->help; ?></a></li>
 			<li><?php echo $_local->gui->function_introduce;?>&nbsp;&nbsp;&nbsp;
 				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFFNLOaZh2u3VwDYUyJuK_xa" target="_block">
 					<svg class="icon">
