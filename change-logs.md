@@ -40,3 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add SnowFlake to config.sample.php
 - add SnowFlakeDate to config.table.php
 - add dependency godruoyi/php-snowflake
+
+## [1.0.5] - 2022-01-24
+
+- add 帮助文件路径 HELP to config.dir.php
+- add 巴利语手册路径 PALI_HANDBOOK to config.dir.php
