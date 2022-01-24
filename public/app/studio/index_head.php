@@ -61,6 +61,9 @@ require_once '../public/load_lang.php';
 	<script src="../public/js/jquery-ui-1.12.1/jquery-ui.js"></script>
 	<link type="text/css" rel="stylesheet" href="../public/js/jquery-ui-1.12.1/jquery-ui.css"/>	
 
+	<script src="../../node_modules/marked/marked.min.js"></script>
+	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
+
 	<script src="../term/term.js"></script>
 	<script src="../term/note.js"></script>
 	<script src="../term/term_popup.js"></script>
@@ -69,8 +72,7 @@ require_once '../public/load_lang.php';
 	<script language="javascript" src="../guide/guide.js"></script>
 	<link type="text/css" rel="stylesheet" href="../guide/guide.css"/>
 
-	<script src="../../node_modules/marked/marked.min.js"></script>
-	<script src="../../node_modules/mermaid/dist/mermaid.min.js"></script>
+
 
 
 	<script src="../widget/iframe_modal_win.js"></script>

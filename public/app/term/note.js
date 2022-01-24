@@ -12,6 +12,12 @@ var _channalData;
 var MAX_NOTE_NEST = 2;
 
 var gBuildinDictIsOpen = false;
+
+var note_renderer = new marked.Renderer();
+note_renderer.code = function(code, language) {
+    if (language == "mermaid") return '<pre class="mermaid">' + code + "</pre>";
+    else return "<pre><code>" + code + "</code></pre>";
+};
 /*
 {{203-1654-23-45@11@en@*}}
 <note>203-1654-23-45@11@en@*</note>
@@ -78,7 +84,7 @@ function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
 		//output += marked(input);
-		output += marked(term_std_str_to_tran(input, channel, editor, lang));
+		output += marked(term_std_str_to_tran(input, channel, editor, lang), { renderer: note_renderer });
 
 		output += "</div>";
 
@@ -193,6 +199,8 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
+						//初始化mermaid
+						mermaid.initialize();
 						if (callback) {
 							callback();
 						}
