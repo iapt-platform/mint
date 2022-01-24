@@ -1,18 +1,18 @@
 ﻿<?php
 //查询参考字典
 include("../log/pref_log.php");
-require_once '../config.php';
-require_once '../public/casesuf.inc';
-require_once '../public/union.inc';
-require_once "../public/_pdo.php";
-require_once "../public/load_lang.php"; //语言文件
-require_once "../public/function.php";
-require_once "../search/word_function.php";
-require_once "../ucenter/active.php";
-require_once "../ucenter/function.php";
-require_once "../dict/p_ending.php";
-require_once "../redis/function.php";
-require_once "../dict/grm_abbr.php";
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../public/casesuf.inc';
+require_once __DIR__.'/../public/union.inc';
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/load_lang.php"; //语言文件
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../search/word_function.php";
+require_once __DIR__."/../ucenter/active.php";
+require_once __DIR__."/../ucenter/function.php";
+require_once __DIR__."/../dict/p_ending.php";
+require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../dict/grm_abbr.php";
 
 global $redis;
 $redis = redis_connect();
@@ -45,7 +45,12 @@ $right_word_list = "";
 
         PDO_Connect("" . _FILE_DB_REF_);
         //直接查询
-        $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,100";
+		$query = "SELECT shortname from " . _TABLE_DICT_REF_NAME_ ;
+		$Fetch = PDO_FetchAll($query);
+		var_dump($Fetch);
+		return 0;
+
+        $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 100";
 
         $Fetch = PDO_FetchAll($query, array($word));
         $iFetch = count($Fetch);
