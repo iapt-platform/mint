@@ -1,6 +1,4 @@
 <?php
-#目录设置，不能更改
-require_once __DIR__."/config.dir.php";
 
 #域名设置
 define("RPC_SERVER","https://rpc.wikipali.org");
@@ -48,14 +46,15 @@ define("SnowFlake",[
 	"DatacenterId"=>1,
 	"WorkerId"=>1
 ]);
+
+#目录设置，不能更改
+require_once __DIR__."/config.dir.php";
+
 /*
 数据表
 */
 #表设置，此行不能更改
 require_once __DIR__."/config.table.php";
-
-#表名设置，此行不能更改
-require_once __DIR__."/config.migrate.php";
 
 
 ?>
