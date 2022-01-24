@@ -112,7 +112,7 @@ $right_word_list = "";
 				}
 
 				
-                $query = "SELECT dict.id,dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
+                $query = "SELECT dict.id,dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where word = ? limit 30";
                 $Fetch = PDO_FetchAll($query, array($x));
                 $iFetch = count($Fetch);
                 $count_return += $iFetch;
