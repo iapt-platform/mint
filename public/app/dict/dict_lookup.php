@@ -112,7 +112,7 @@ $right_word_list = "";
 				}
 
 				
-                $query = "SELECT dict.id,dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
+                $query = "SELECT dict.id,dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where word = ? limit 30";
                 $Fetch = PDO_FetchAll($query, array($x));
                 $iFetch = count($Fetch);
                 $count_return += $iFetch;
@@ -177,7 +177,7 @@ $right_word_list = "";
 			if (count($arrBase) > 0) {
 				foreach ($arrBase as $x => $x_value) {
 					
-					$query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where word = ? limit 0,30";
+					$query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where word = ? limit 30";
 					$Fetch = PDO_FetchAll($query, array($x));
 					$iFetch = count($Fetch);	
 					$count_return += $iFetch;
@@ -251,7 +251,7 @@ $right_word_list = "";
             $word1 = $org_word;
             $wordInMean = "%$org_word%";
             echo "包含 $org_word 的:<br />";
-            $query = "SELECT dict.dict_id,dict.word,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN info ON dict.dict_id = info.id where mean like ? limit 0,30";
+            $query = "SELECT dict.dict_id,dict.word,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where mean like ? limit 30";
             $Fetch = PDO_FetchAll($query, array($wordInMean));
             $iFetch = count($Fetch);
             $count_return += $iFetch;
