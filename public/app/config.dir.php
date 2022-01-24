@@ -59,6 +59,6 @@ define("_DIR_MYDOCUMENT_", "/my_document");
 define("_FILE_DB_WBW1_",  __DIR__ . "/../tmp/user/wbw.db3");
 
 # 帮助文件路径
-define("HELP",ASSETS_SERVER."/help");
+define("URL_HELP",ASSETS_SERVER."/help");
 # 巴利语手册路径
-define("PALI_HANDBOOK",ASSETS_SERVER."/pali_handbook");
+define("URL_PALI_HANDBOOK",ASSETS_SERVER."/pali_handbook");

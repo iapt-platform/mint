@@ -43,5 +43,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - 2022-01-24
 
-- add 帮助文件路径 HELP to config.dir.php
-- add 巴利语手册路径 PALI_HANDBOOK to config.dir.php
+- add 帮助文件路径 URL_HELP to config.dir.php
+- add 巴利语手册路径 URL_PALI_HANDBOOK to config.dir.php
