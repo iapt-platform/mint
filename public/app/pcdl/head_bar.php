@@ -480,7 +480,7 @@ switch($_COOKIE['language']){
 			<li class="nav_link"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
 			<li class="nav_link"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
 			<li class="nav_link"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
-			<li class="nav_link"><a href="<?php echo URL_HELP.'/'.$help_lang ?>"><?php echo $_local->gui->help; ?></a></li>
+			<li class="nav_link"><a href="<?php echo URL_HELP.'/'.$help_lang ?>"  target="_blank"><?php echo $_local->gui->help; ?></a></li>
 			<li class="nav_link more_btn">
 				<div id="more" class="dropdown" onmouseover="switchMenu(this,'nav-more')" onmouseout="hideMenu()">
 					<button class="dropbtn icon_btn" style="all:unset;" onClick="switchMenu(this,'nav-more')" id="more_button">
