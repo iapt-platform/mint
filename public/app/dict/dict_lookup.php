@@ -112,7 +112,7 @@ $right_word_list = "";
 				}
 
 				
-                $query = "SELECT dict.dict_id,dict.mean,dn.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as dn ON dict.dict_id = dn.id where word = ? limit 30";
+                //$query = "SELECT dict.dict_id,dict.mean,dn.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as dn ON dict.dict_id = dn.id where word = ? limit 30";
                 echo "<div>{$query}</div>";
                 echo "<div>word:{$x}</div>";
 				$Fetch = PDO_FetchAll($query, array($x));
