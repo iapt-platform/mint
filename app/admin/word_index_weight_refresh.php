@@ -40,10 +40,10 @@ $dh_word->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $dh_pali = new PDO( __DB_PALI_INDEX__, _DB_USERNAME_, _DB_PASSWORD_);
 $dh_pali->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-echo "from=$from to = $to \n";
+fwrite(STDOUT, "from=$from to = $to \n");
 for ($i = $from; $i <= $to; $i++) {
     $time_start = microtime(true);
-    echo "正在处理 book= $i ";
+    fwrite(STDOUT, "正在处理 book= $i ");
     $query = "SELECT max(paragraph) from ".__TABLE_WORD__." where book=?";
 	try {
 		//code...
@@ -57,7 +57,7 @@ for ($i = $from; $i <= $to; $i++) {
 
     if ($row) {
         $max_para = $row[0];
-        echo "段落数量：$max_para ";
+        fwrite(STDOUT, " paragraph ：$max_para ");
         for ($j = 0; $j <= $max_para; $j++) {
             # code...
             $query = "SELECT id,book,wordindex,bold from ".__TABLE_WORD__." where book={$i} and paragraph={$j} order by id ASC";
@@ -113,10 +113,8 @@ for ($i = $from; $i <= $to; $i++) {
                         } else {
                             $weight = 100 + $book_weight[$bookId];
                         }
-                        //echo "单独黑体 $weight \n";
                     } else {
                         #连续黑体字
-                        //echo "连续黑体字";
                         $len_sum = 0;
                         $len_curr = 0;
                         for ($iBold = $begin; $iBold <= $end; $iBold++) {
@@ -133,7 +131,6 @@ for ($i = $from; $i <= $to; $i++) {
                         $weight = 10 + $len_curr / $len_sum;
                     }
                 }
-                //echo $weight."\n";
                 $fetch[$iWord]["weight"] = (int) ($weight * 100);
             }
             # 将整段权重写入据库
@@ -146,13 +143,11 @@ for ($i = $from; $i <= $to; $i++) {
             $dh_pali->commit();
             if (!$stmt_weight || ($stmt_weight && $stmt_weight->errorCode() != 0)) {
                 $error = $dh_pali->errorInfo();
-                echo "error - $error[2]";
-            } else {
-                //echo "修改数据库成功 book={$i} paragraph={$j} \n";
+                fwrite(STDERR, "error - $error[2]".PHP_EOL);
             }
         }
     } else {
-        echo "无法获取段落最大值";
+        fwrite(STDERR, "无法获取段落最大值".PHP_EOL);
     }
-    echo "处理时间 ：" . (microtime(true) - $time_start). "\n";
+    fwrite(STDOUT, "处理时间 ：" . (microtime(true) - $time_start). "\n");
 }

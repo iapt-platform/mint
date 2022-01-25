@@ -39,8 +39,11 @@ if (PHP_SAPI == "cli") {
 				$redis->hSet($rediskey,$word["word"],json_encode($redisWord,JSON_UNESCAPED_UNICODE));
 			}
 		}
+		fwrite(STDOUT,  "all done ".$redis->hLen($rediskey).PHP_EOL);
+	}else{
+		fwrite(STDERR,"redis connect is fail".PHP_EOL);
 	}
-	echo "all done ".$redis->hLen($rediskey);
+	
 }
 
 ?>

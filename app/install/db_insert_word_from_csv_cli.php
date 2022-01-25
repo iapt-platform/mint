@@ -14,7 +14,7 @@ set_exception_handler(function($e){
 define("_DB_", _PG_DB_PALI_INDEX_);
 define("_TABLE_", _PG_TABLE_WORD_);
 
-echo "Insert Word To DB".PHP_EOL;
+fwrite(STDOUT, "Insert Word To DB".PHP_EOL);
 
 if ($argc != 3) {
 	echo "help".PHP_EOL;
@@ -53,7 +53,7 @@ if ($_to == 0 || $_to >= $fileNums) {
 }
 
 for ($from=$_from-1; $from < $_to; $from++) { 
-    echo "doing ".($from+1).PHP_EOL;
+    fwrite(STDOUT, "doing ".($from+1).PHP_EOL);
     #删除
     $query = "DELETE FROM "._TABLE_." WHERE book = ?";
     $stmt = $dbh_word_index->prepare($query);
@@ -88,19 +88,14 @@ for ($from=$_from-1; $from < $_to; $from++) {
         $dbh_word_index->commit();
         if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
             $error = $dbh_word_index->errorInfo();
-            echo "error - $error[2] ".PHP_EOL;
+            fwrite(STDERR, "error - $error[2] ".PHP_EOL);
             $log .= "$from, $FileName, error, $error[2] \r\n";
         } else {
-            echo "updata $count recorders.".PHP_EOL;
+            fwrite(STDOUT, "updata $count recorders.".PHP_EOL);
             $log .= "updata $count recorders.\r\n";
         }
     }
-/*
-    $myLogFile = fopen($dirLog . "insert_index.log", "a");
-    fwrite($myLogFile, $log);
-    fclose($myLogFile);
-    */
 }
-    echo "齐活！功德无量！all done!".PHP_EOL;
+fwrite(STDOUT, "齐活！功德无量！all done!".PHP_EOL);
 
 ?>

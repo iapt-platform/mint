@@ -51,8 +51,9 @@ function my_article_list() {
 						html += "</button>";
 						html += "</a></div>";
 						html += "<div style='flex:1;'>";
+						let host = location.protocol + '//' + location.host;
 						html +=
-							"<button class='icon_btn' onclick=\"copy_to_clipboard('"+WWW_DOMAIN_NAME+"/app/article/?id=" +
+							"<button class='icon_btn' onclick=\"copy_to_clipboard('"+host+"/app/article/?id=" +
 							iterator.id +
 							"')\" title='" +
 							gLocal.gui.copy_link +

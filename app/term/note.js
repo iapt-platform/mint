@@ -288,7 +288,7 @@ function render_read_mode_sent(iterator) {
 		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
 
 		//将绝对链接转换为 用户连接的主机链接
-		oneTran.text = oneTran.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+		oneTran.text = oneTran.text.replace(/[A-z]*.wikipali.org/g,location.host);
 
 		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
 		html += "</span>";
@@ -600,13 +600,13 @@ function note_ref_init() {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../reader/?view=para&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para, "_blank");
 	});
 }
 /*
@@ -897,7 +897,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
 
 	//将绝对链接转换为 用户连接的主机链接
-	let showText = iterator.text.replace(/[A-z]*.wikipali.org/g,WWW_DOMAIN_NAME);
+	let showText = iterator.text.replace(/[A-z]*.wikipali.org/g,location.host);
 
 	if (iterator.text == "") {
 		if (typeof iterator.channalinfo == "undefined") {
