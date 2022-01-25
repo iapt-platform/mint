@@ -66,6 +66,7 @@ function getData(filename){
 	  let api_delay = new Array();
 	  let ApiDelayInHour = new Array();
 	  let ApiTimesInHour = new Array();
+	  let ApiAverageInHour = new Array();
 	  let ohlc = new Array();
 	  let volume = new Array();
 	  for (const key in api) {
@@ -91,6 +92,10 @@ function getData(filename){
 				name:key,
 				data:element.timesHour
 			  });
+			  ApiAverageInHour.push({
+				name:key,
+				data:element.delayAverageHour
+			  });
 			  for (let index = 1; index < api[key].delayAverageHour.length; index++) {
 				api[key].delayAverageHour[index] = api[key].delayHour[index]/api[key].timesHour[index];
 				if(key=="/app/uwbw/update.php"){
@@ -115,6 +120,7 @@ function getData(filename){
 	  chart_1(api_timms);
 	  chart_2(api_delay);
 	  chart_3(ApiDelayInHour);
+	  chart_3a(ApiAverageInHour);
 	  chart_4(ApiTimesInHour);
 	  chart_5(ohlc,volume);
 	  chart_6(ohlc,volume);
@@ -322,7 +328,89 @@ function chart_3(data){
 	
 	});
 }
+function chart_3a(data){
+	Highcharts.chart('chart-3a', {
 
+		title: {
+			text: '按照小时计算的 API 平均执行时间'
+		},
+	
+		subtitle: {
+			text: '总执行时间/次数'
+		},
+	
+		yAxis: {
+			title: {
+				text: '执行时间'
+			}
+		},
+	
+		xAxis: {
+			categories: [
+				'8',
+				'9',
+				'10',
+				'11',
+				'12',
+				'13',
+				'14',
+				'15',
+				'16',
+				'17',
+				'18',
+				'19',
+				'20',
+				'21',
+				'22',
+				'23',
+				'0',
+				'1',
+				'2',
+				'3',
+				'4',
+				'5',
+				'6',
+				'7'
+			],
+			accessibility: {
+				rangeDescription: 'Range: 0 to 23'
+			}
+		},
+	
+		legend: {
+			layout: 'vertical',
+			align: 'right',
+			verticalAlign: 'middle'
+		},
+	
+		plotOptions: {
+			series: {
+				label: {
+					connectorAllowed: false
+				},
+				pointStart: 0
+			}
+		},
+	
+		series: data,
+	
+		responsive: {
+			rules: [{
+				condition: {
+					maxWidth: 500
+				},
+				chartOptions: {
+					legend: {
+						layout: 'horizontal',
+						align: 'center',
+						verticalAlign: 'bottom'
+					}
+				}
+			}]
+		}
+	
+	});
+}
 function chart_4(data){
 	Highcharts.chart('chart-4', {
 		chart: {
