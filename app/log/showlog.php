@@ -51,11 +51,10 @@
 		font-size: small;
 	}
 	</style>
-	<script src="../../node_modules/highcharts/highcharts.js"></script>
-	<script src="../../node_modules/highcharts/modules/sunburst.js"></script>
+
+	<script src="../../node_modules/highcharts/highstock.js"></script>
+	<script src="../../node_modules/highcharts/modules/data.js"></script>
 	<script src="../../node_modules/highcharts/modules/exporting.js"></script>
-	<script src="../../node_modules/highcharts/modules/export-data.js"></script>
-	<script src="../../node_modules/highcharts/modules/accessibility.js"></script>
 
 	<script src="./showlog.js"></script>
 
@@ -69,6 +68,15 @@
 <div id='chart-3'></div>
 <div id='chart-4'></div>
 <div id='chart-5'></div>
+
+<div id="chart-6"></div>
+
+
+
+
+<script>
+
+</script>
 
 <script type="text/javascript">
 getData('<?php echo $_GET['file'];?>');

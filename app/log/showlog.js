@@ -15,13 +15,20 @@ function getData(filename){
 	  
 	  //遍历所有数据
 	  for (const iterator of arrData) {
+		let delay = parseInt(iterator[2]);
 		if (api.hasOwnProperty.call(api, iterator[0])) {
 			let element = api[iterator[0]];
 			element.times++;
-			element.delay += parseInt(iterator[2]);
+			element.delay += delay;
 			try{
 				let hour = parseInt(iterator[1].split(':')[0]);
-				element.delayHour[hour] += parseInt(iterator[2]);
+				element.delayHour[hour] += delay;
+				if(delay>api[iterator[0]].delayMaxHour[hour]){
+					api[iterator[0]].delayMaxHour[hour] = delay;
+				}
+				if(delay < api[iterator[0]].delayMinHour[hour]){
+					api[iterator[0]].delayMinHour[hour] = delay;
+				}	
 				element.timesHour[hour] ++;
 				
 			}catch(e){
@@ -32,12 +39,22 @@ function getData(filename){
 			api[iterator[0]] = {
 				times:1,
 				timesHour:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				delay:parseInt(iterator[2]),
-				delayHour:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+				delay:delay,
+				//一小时总执行时间
+				delayHour:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				//一小时最高执行时间
+				delayMaxHour:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				//一小时最低执行时间
+				
+				delayMinHour:[30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+				//一小时平均执行时间
+				delayAverageHour:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			};
 			try{
 				let hour = parseInt(iterator[1].split(':')[0]);
 				api[iterator[0]].delayHour[hour] = parseInt(iterator[2]);
+				api[iterator[0]].delayMaxHour[hour] = parseInt(iterator[2]);
+				api[iterator[0]].delayMinHour[hour] = parseInt(iterator[2]);
 				api[iterator[0]].timesHour[hour] = 1;
 			}catch(e){
 
@@ -49,8 +66,14 @@ function getData(filename){
 	  let api_delay = new Array();
 	  let ApiDelayInHour = new Array();
 	  let ApiTimesInHour = new Array();
+	  let ohlc = new Array();
+	  let volume = new Array();
 	  for (const key in api) {
-		  if (Object.hasOwnProperty.call(api, key)) {
+		  if (api.hasOwnProperty.call(api, key)) {
+			  //计算每个小时的平均执行时间
+			  for (let index = 0; index < api[key].delayAverageHour.length; index++) {
+				  api[key].delayAverageHour[index] = api[key].delayHour[index]/api[key].timesHour[index];
+			  }
 			  const element = api[key];
 			  api_timms.push({
 				  name:key,
@@ -67,7 +90,25 @@ function getData(filename){
 			  ApiTimesInHour.push({
 				name:key,
 				data:element.timesHour
-			  })
+			  });
+			  for (let index = 1; index < api[key].delayAverageHour.length; index++) {
+				api[key].delayAverageHour[index] = api[key].delayHour[index]/api[key].timesHour[index];
+				if(key=="/app/uwbw/update.php"){
+					ohlc.push([
+						Date.UTC(2022,1,1,index,0,0,0), // the date
+						api[key].delayAverageHour[index-1], // open
+						api[key].delayMaxHour[index], // high
+						api[key].delayMinHour[index], // low
+						api[key].delayAverageHour[index] // close
+					]);
+			
+					volume.push([
+						Date.UTC(2022,1,1,index,0,0,0), // the date
+						element.timesHour[index] // the volume
+					]);
+				}				
+			  }
+
 		  }
 	  }
 
@@ -75,6 +116,8 @@ function getData(filename){
 	  chart_2(api_delay);
 	  chart_3(ApiDelayInHour);
 	  chart_4(ApiTimesInHour);
+	  chart_5(ohlc,volume);
+	  chart_6(ohlc,volume);
 	});
   
 }
@@ -347,4 +390,131 @@ function chart_4(data){
 		},
 		series: data
 	});
+}
+
+function chart_6(ohlc,volume){
+{
+
+    // create the chart
+    Highcharts.stockChart('chart-6', {
+
+
+        title: {
+            text: 'AAPL stock price by minute'
+        },
+
+        rangeSelector: {
+            buttons: [{
+                type: 'hour',
+                count: 1,
+                text: '1h'
+            }, {
+                type: 'day',
+                count: 1,
+                text: '1D'
+            }, {
+                type: 'all',
+                count: 1,
+                text: 'All'
+            }],
+            selected: 1,
+            inputEnabled: false
+        },
+
+        series: [{
+            name: 'AAPL',
+            type: 'candlestick',
+            data: ohlc,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }]
+    });
+}
+}
+
+function chart_5(ohlc,volume){
+	  // create the chart
+	  groupingUnits = [[
+		'week',                         // unit name
+		[1]                             // allowed multiples
+	], [
+		'month',
+		[1, 2, 3, 4, 6]
+	]];
+	  Highcharts.stockChart('chart-5', {
+
+
+		rangeSelector: {
+		  selected: 2
+		},
+	
+		title: {
+		  text: 'progress_curve'
+		},
+			yAxis: [{
+				labels: {
+					align: 'right',
+					x: -3
+				},
+				title: {
+					text: 'EXP'
+				},
+				height: '60%',
+				lineWidth: 2,
+				resize: {
+					enabled: true
+				}
+			}, {
+				labels: {
+					align: 'right',
+					x: -3
+				},
+				title: {
+					text: 'action'
+				},
+				top: '65%',
+				height: '35%',
+				offset: 0,
+				lineWidth: 2
+			}],
+	
+		tooltip: {
+				shared: false,
+				useHTML: true,
+				pointFormatter: function() {
+					if(this.high){
+						return '<b><a href="../">'+this.series.name + ' : ' + this.high + '&nbsp;' +'gLocal.gui.h'+ '</a><br><a href="../">' +'gLocal.gui.day_EXP' + ' : ' + Math.round((this.high - this.low)*100)/100 + '&nbsp;' +'gLocal.gui.h'+'</a></b><br/>'; 
+					}
+					else{
+						return '<b><a href="../">'+this.series.name + ' : ' + this.y + '&nbsp;' +'gLocal.gui.times'+'</a><span style="display:none;">'+this.x+'</span></b>'; 
+					}
+				},
+				valueDecimals: 2,//保留两位小數
+				split: true
+			},
+	
+		series: [{
+		  type: 'ohlc',
+		  name: 'gLocal.gui.EXP_in_total',
+		  data: ohlc,
+		  dataGrouping: {
+			units: [[
+			  'week', // unit name
+			  [1] // allowed multiples
+			], [
+			  'month',
+			  [1, 2, 3, 4, 6]
+			]]
+		  }
+			}, {
+				type: 'column',
+				name: 'gLocal.gui.day_action',
+				data: volume,
+				yAxis: 1,
+				dataGrouping: {
+					units: groupingUnits
+				}
+			}]
+	  });
 }
