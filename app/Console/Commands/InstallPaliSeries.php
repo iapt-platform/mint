@@ -40,7 +40,7 @@ class InstallPaliSeries extends Command
      */
     public function handle()
     {
-		$this->info("upgrade pali text");
+		$this->info("upgrade pali serieses");
 		$startTime = time();
 
 		DB::transaction(function () {
@@ -62,7 +62,7 @@ class InstallPaliSeries extends Command
 							'title'=>$data[3],
 						];
 
-						BookTitle::create($newData);									
+						BookTitle::create($newData);							
 					}
 					$inputRow++;
 				}
