@@ -247,5 +247,7 @@ return [
 		'pali_title' => public_path('pali_title'),
 		'paliword' => public_path('paliword'),
 		'paliword_book' => public_path('paliword')."/book",
+		'paliword_index' => public_path('paliword')."/index",
+		'word_statistics' => public_path('dependence')."/word_statistics/data",
 	],
 ];
