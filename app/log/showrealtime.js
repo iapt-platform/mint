@@ -147,7 +147,7 @@ function (chart) {
                 newVal = parseInt(data);
                 point.update(newVal);
             });
-        }, 2000);
+        }, 3000);
     }
 });
 
