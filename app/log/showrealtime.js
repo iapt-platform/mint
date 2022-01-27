@@ -1,7 +1,5 @@
-var defaultData = './pref_realtime_get.php?api=all&item=count';
-var urlInput = document.getElementById('fetchURL');
-var pollingCheckbox = document.getElementById('enablePolling');
-var pollingInput = document.getElementById('pollingTime');
+
+var apiName="all";
 
 function createChart(div,title,api,item) {
     Highcharts.chart(div, {
@@ -25,7 +23,7 @@ function createChart(div,title,api,item) {
         },
         data: {
             csvURL: './pref_realtime_get.php?api='+api+'&item='+item,
-            enablePolling: pollingCheckbox.checked === true,
+            enablePolling: true,
             dataRefreshRate: 60
         }
     });
@@ -34,16 +32,8 @@ function createChart(div,title,api,item) {
 }
 
 
-// We recreate instead of using chart update to make sure the loaded CSV
-// and such is completely gone.
-pollingCheckbox.onchange =  createChart;
 
-// Create the chart
-createChart("chart-1",'总请求次数/分钟','all','count');
-createChart("chart-2",'总执行时间(毫秒)/分钟','all','delay');
-createChart("chart-3",'平均执行时间（毫秒/API）','all','average');
-create_live("chart-4");
-function create_live(container){
+function create_live(container,title,api){
     Highcharts.chart(container, {
 
     chart: {
@@ -55,7 +45,7 @@ function create_live(container){
     },
 
     title: {
-        text: '实时平均执行时间'
+        text: title
     },
 
     pane: {
@@ -142,7 +132,7 @@ function create_live(container){
 function (chart) {
     if (!chart.renderer.forExport) {
         setInterval(function () {
-            $.get("./pref_live.php?api=all&item=average",function(data){
+            $.get("./pref_live.php?api="+api+"&item=average",function(data){
                 var point = chart.series[0].points[0];
                 newVal = parseInt(data);
                 point.update(newVal);
