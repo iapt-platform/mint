@@ -39,9 +39,9 @@ function createChart(div,title,api,item) {
 pollingCheckbox.onchange =  createChart;
 
 // Create the chart
-createChart("chart-1",'总请求数/分钟','all','count');
-createChart("chart-2",'总执行时间/分钟','all','delay');
-createChart("chart-3",'平均执行时间/分钟','all','average');
+createChart("chart-1",'总请求次数/分钟','all','count');
+createChart("chart-2",'总执行时间(毫秒)/分钟','all','delay');
+createChart("chart-3",'平均执行时间（毫秒/API）','all','average');
 create_live("chart-4");
 function create_live(container){
     Highcharts.chart(container, {
@@ -112,7 +112,7 @@ function create_live(container){
             rotation: 'auto'
         },
         title: {
-            text: '毫秒/秒'
+            text: '毫秒/API'
         },
         plotBands: [{
             from: 0,
