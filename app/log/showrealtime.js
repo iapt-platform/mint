@@ -39,9 +39,9 @@ function createChart(div,title,api,item) {
 pollingCheckbox.onchange =  createChart;
 
 // Create the chart
-createChart("chart-1",'总请求数','all','count');
-createChart("chart-2",'总执行时间','all','delay');
-createChart("chart-3",'平均执行时间','all','average');
+createChart("chart-1",'总请求数/分钟','all','count');
+createChart("chart-2",'总执行时间/分钟','all','delay');
+createChart("chart-3",'平均执行时间/分钟','all','average');
 create_live("chart-4");
 function create_live(container){
     Highcharts.chart(container, {
@@ -55,7 +55,7 @@ function create_live(container){
     },
 
     title: {
-        text: 'Speedometer'
+        text: '实时平均执行时间'
     },
 
     pane: {
@@ -112,7 +112,7 @@ function create_live(container){
             rotation: 'auto'
         },
         title: {
-            text: 'km/h'
+            text: '毫秒/秒'
         },
         plotBands: [{
             from: 0,
