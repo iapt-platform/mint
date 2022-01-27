@@ -12,17 +12,21 @@ function PrefLog(){
     $timeMinute = intval(time()/60);
     $timeSecond = time();
     if($redis){
-            $key= "pref/";
-            $keyAll = $key."all/".$timeMinute;
-            UpdateCache($redis,$keyAll,$delay);
-            $keyApi = $key.$_SERVER['PHP_SELF']."/".$timeMinute;
-            UpdateCache($redis,$keyApi,$delay);
+        $key= "pref/";
+        $keyAll = $key."all/".$timeMinute;
+        UpdateCache($redis,$keyAll,$delay);
+        $keyApi = $key.$_SERVER['PHP_SELF']."/".$timeMinute;
+        UpdateCache($redis,$keyApi,$delay);
 
-            $key= "pref-s/";
-            $keyAll = $key."all/".$timeSecond;
-            UpdateCache($redis,$keyAll,$delay,30);
-            $keyApi = $key.$_SERVER['PHP_SELF']."/".$timeSecond;
-            UpdateCache($redis,$keyApi,$delay,30);
+        $key= "pref-s/";
+        $keyAll = $key."all/".$timeSecond;
+        UpdateCache($redis,$keyAll,$delay,30);
+        $keyApi = $key.$_SERVER['PHP_SELF']."/".$timeSecond;
+        UpdateCache($redis,$keyApi,$delay,30);
+
+        $keyApiName = "pref-hour/api/".$_SERVER['PHP_SELF'];
+        $redis->set($keyApiName,1);
+        $redis->expire($keyApiName,3600);
     }
 	$file = fopen(_DIR_LOG_."/pref_".date("Y-m-d").".log","a");
 	if($file){

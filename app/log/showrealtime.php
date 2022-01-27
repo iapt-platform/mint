@@ -66,6 +66,22 @@
 </head>
 <body>
 <h2>实时监控</h2>
+<?php
+require_once(__DIR__."/../config.php");
+require_once(__DIR__."/../redis/function.php");
+$redis = redis_connect();
+if($redis){
+    $key="pref-hour/api/";
+    $apis = $redis->keys($key.'*');
+    echo "<ol>";
+    echo "<li><a href='showrealtime.php?api=all'>all</a></li>";
+    foreach ($apis as  $value) {
+        $api = substr($value,strlen($key));
+        echo "<li><a  href='showrealtime.php?api={$api}'>".$api."</a></li>";
+    }
+    echo "</ol>";
+}
+?>
 <div class="ld-row" style="display:none;">
 	<label class="ld-label">
 		Enable Polling
@@ -87,5 +103,22 @@
 
 
 <script src="./showrealtime.js"></script>
+
+<script>
+<?php 
+    if(isset($_GET["api"])){
+        echo "apiName = '{$_GET["api"]}';";
+    }else{
+         echo "apiName = 'all';";
+    }
+    
+?>
+
+// Create the chart
+createChart("chart-1",'总请求次数/分钟',apiName,'count');
+createChart("chart-2",'总响应时间(毫秒/分钟)',apiName,'delay');
+createChart("chart-3",'平均响应时间（毫秒/API）',apiName,'average');
+create_live("chart-4","实时响应时间（毫秒/API）",apiName);
+</script>
 </body>
 </html>
