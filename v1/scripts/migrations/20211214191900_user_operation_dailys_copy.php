@@ -113,7 +113,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 }
 
 fwrite(STDOUT,"insert done $allInsertCount in $allSrcCount ".PHP_EOL) ;
-fwrite(STDOUT,"all done".PHP_EOL);
+fwrite(STDOUT, "all done in ".(time()-$start)."s".PHP_EOL);
 
 
 
