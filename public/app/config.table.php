@@ -215,7 +215,7 @@ define("_SQLITE_TABLE_SENTENCE_HISTORAY_", "sent_historay");
 
 //PostgreSQL
 define("_PG_DB_USER_SENTENCE_HISTORAY_", _PDO_DB_DSN_);
-define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_historaies");
+define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_histories");
 
 
 
