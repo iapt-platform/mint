@@ -18,6 +18,7 @@ $start = time();
 # 雪花id
 $snowflake = new SnowFlakeId();
 
+$fpError = fopen(__DIR__.'/log/'.basename($_SERVER['PHP_SELF'],'.php').".err.data.csv",'w');
 
 # 更新数据表
 
@@ -26,7 +27,7 @@ $src_table=_SQLITE_TABLE_SENTENCE_;#源表名
 $dest_db=_PG_DB_SENTENCE_;#目标数据库
 $dest_table=_PG_TABLE_SENTENCE_;#目标表名
 
-$fpError = fopen(__DIR__.'/log/'.basename($_SERVER['PHP_SELF'],'.php').".err.data.csv",'w');
+
 echo "migarating sentence".PHP_EOL;
 
 #打开源数据库
