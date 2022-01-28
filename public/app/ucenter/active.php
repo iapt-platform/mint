@@ -110,10 +110,10 @@ $active_type[90] = "nissaya_open";
             }
         } else {
             #新建
-            $query = "INSERT INTO "._TABLE_USER_OPERATION_DAILY_." ( user_id, date_int , date_at, duration , hit )  VALUES  ( ? , ? ,to_timestamp(?), ? , ?  ) ";
+            $query = "INSERT INTO "._TABLE_USER_OPERATION_DAILY_." ( user_id, date_int , duration , hit )  VALUES  ( ? , ? , ? , ?  ) ";
             $sth = $dbh->prepare($query);
             #最小思考时间
-            $sth->execute(array($_COOKIE["user_id"], $client_date, $client_date/1000, MIN_INTERVAL, 1));
+            $sth->execute(array($_COOKIE["user_id"], $client_date,  MIN_INTERVAL, 1));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
