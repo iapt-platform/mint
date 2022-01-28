@@ -222,8 +222,8 @@ define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_histories");
 # 逐词解析字典
 # sqlite
 define("_SQLITE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-define("_SQLITE_TABLE_DICT_WBW_", "wbw");
-define("_SQLITE_TABLE_DICT_WBW_INDEX_", "wbw_index");
+define("_SQLITE_TABLE_DICT_WBW_", "dict");
+define("_SQLITE_TABLE_DICT_WBW_INDEX_", "user_index");
 
 //PostgreSQL
 define("_PG_DB_WBW_", _PDO_DB_DSN_);
