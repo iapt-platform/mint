@@ -194,11 +194,6 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 			foreach ($commitData as $key => $value) {
 				# code...
 				$stmtDEST->execute($value);
-				if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-					$error = $PDO_DEST->errorInfo();
-					echo "error - $error[2] ";
-					exit;
-				}	
 			}
 			// 提交更改
 			$PDO_DEST->commit();
@@ -217,12 +212,7 @@ if($count>0){
 	$stmtDEST = $PDO_DEST->prepare($queryInsert);
 	foreach ($commitData as $key => $value) {
 		# code...
-		$stmtDEST->execute($value);
-		if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-			$error = $PDO_DEST->errorInfo();
-			echo "error - $error[2] ";
-			exit;
-		}	
+		$stmtDEST->execute($value);	
 	}
 	// 提交更改
 	$PDO_DEST->commit();
