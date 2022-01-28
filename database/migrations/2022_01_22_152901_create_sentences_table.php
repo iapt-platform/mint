@@ -36,9 +36,9 @@ class CreateSentencesTable extends Migration
             $table->bigInteger('id')->primary();
 
 			$table->string('uid',36)->uniqid()->index();
-			$table->string('parent_uid',36)->nullable()->uniqid()->index();
-			$table->string('block_uid',36)->nullable()->uniqid()->index();
-			$table->string('channel_uid',36)->nullable()->uniqid()->index();
+			$table->string('parent_uid',36)->nullable()->index();
+			$table->string('block_uid',36)->nullable()->index();
+			$table->string('channel_uid',36)->nullable()->index();
 			$table->integer('book_id');
 			$table->integer('paragraph');
 			$table->integer('word_start');
