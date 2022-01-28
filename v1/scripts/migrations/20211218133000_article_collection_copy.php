@@ -5,24 +5,32 @@
 插入时用uuid判断是否曾经插入
 曾经插入就不插入了
 */
-require_once __DIR__."/../../app/config.php";
+require_once __DIR__."/../../../public/app/config.php";
+require_once __DIR__."/../../../public/app/public/snowflakeid.php";
 
-#user info
-$user_db=_FILE_DB_USERINFO_;#user数据库
-$user_table=_TABLE_USER_INFO_;#user表名
+set_exception_handler(function($e){
+	fwrite(STDERR,"error-msg:".$e->getMessage().PHP_EOL);
+	fwrite(STDERR,"error-file:".$e->getFile().PHP_EOL);
+	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+$start = time();
+# 雪花id
+$snowflake = new SnowFlakeId();
+
+$fpError = fopen(__DIR__.'/log/'.basename($_SERVER['PHP_SELF'],'.php').".err.data.csv",'w');
+
+
 
 # 
-$src_db = _FILE_SRC_USER_ARTICLE_;#源数据库
-$src_table = _TABLE_SRC_ARTICLE_COLLECTION_;#源表名
+$src_db = _SQLITE_DB_USER_ARTICLE_;#源数据库
+$src_table = _SQLITE_TABLE_ARTICLE_COLLECTION_;#源表名
 
-$dest_db = _FILE_DB_USER_ARTICLE_;#目标数据库
-$dest_table = _TABLE_ARTICLE_COLLECTION_;#目标表名
+$dest_db = _PG_DB_USER_ARTICLE_;#目标数据库
+$dest_table = _PG_TABLE_ARTICLE_COLLECTION_;#目标表名
 
 fwrite(STDOUT,"migarate _TABLE_ARTICLE_COLLECTION_".PHP_EOL);
-#打开user数据库
-$PDO_USER = new PDO($user_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
-$PDO_USER->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-fwrite(STDOUT,"open user table".PHP_EOL);
+
 
 #打开源数据库
 $PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
@@ -43,6 +51,7 @@ $stmtDest->execute();
 
 $queryInsert = "INSERT INTO ".$dest_table." 
 								(
+                                    id,
 									collect_id,
 									article_id,
 									level,
@@ -50,7 +59,7 @@ $queryInsert = "INSERT INTO ".$dest_table."
 									children,
 									updated_at,
 									created_at) 
-									VALUES ( ? , ? , ?, ? ,? , now(),now())";
+									VALUES ( ? , ? , ? , ?, ? ,? , now(),now())";
 $stmtDEST = $PDO_DEST->prepare($queryInsert);
 
 $commitData = [];
@@ -58,9 +67,7 @@ $allInsertCount = 0;
 $allSrcCount = 0;
 $count = 0;
 
-#从user数据表中读取
-$query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
-$stmtUser = $PDO_USER->prepare($query);
+
 
 #从源数据表中读取
 $query = "SELECT *  FROM ".$src_table." WHERE true order by id ASC";
@@ -71,6 +78,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 
 	#插入目标表
 	$commitData = array(
+            $snowflake->id(),
 			$srcData["collect_id"],
 			$srcData["article_id"],
 			$srcData["level"],
@@ -78,11 +86,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 			$srcData["children"]
 		);
 	$stmtDEST->execute($commitData);
-	if (!$stmtDEST || ($stmtDEST && $stmtDEST->errorCode() != 0)) {
-		$error = $PDO_DEST->errorInfo();
-		echo "error - $error[2] ";
-		exit;
-	}
+
 	$count++;	
 	$allInsertCount++;
 
@@ -95,7 +99,9 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 }
 
 fwrite(STDOUT,"insert done $allInsertCount in $allSrcCount ".PHP_EOL) ;
-fwrite(STDOUT,"all done".PHP_EOL);
+fwrite(STDOUT, "all done in ".(time()-$start)."s".PHP_EOL);
+
+fclose($fpError);
 
 
 
