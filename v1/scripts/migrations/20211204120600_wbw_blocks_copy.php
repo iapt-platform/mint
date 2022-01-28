@@ -15,6 +15,9 @@ set_exception_handler(function($e){
 	fwrite(STDERR,"error-line:".$e->getLine().PHP_EOL);
 	exit;
 });
+
+$fpError = fopen(__DIR__.'/log/'.basename($_SERVER['PHP_SELF'],'.php').".err.data.csv",'w');
+
 # 更新索引表
 #user info
 $user_db=_FILE_DB_USERINFO_;#user数据库
@@ -30,6 +33,7 @@ $dest_table=_PG_TABLE_USER_WBW_BLOCK_;#目标表名
 $snowflake = new SnowFlakeId();
 
 fwrite(STDOUT, "migarate wbw_block".PHP_EOL);
+
 #打开user数据库
 $PDO_USER = new PDO($user_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_USER->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -162,6 +166,16 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 			fwrite(STDERR, "owner too long ".$srcData["owner"].PHP_EOL);
 			continue;
 		}
+        if(empty($srcData["book"]) || !is_numeric($srcData["book"])){
+            fwrite(STDERR,"book is error id=".$uuid.PHP_EOL);
+            fputcsv($fpError,$srcData);
+            continue;
+        }
+        if(empty($srcData["paragraph"]) || !is_numeric($srcData["paragraph"])){
+            fwrite(STDERR,"paragraph is error id=".$uuid.PHP_EOL);
+            fputcsv($fpError,$srcData);
+            continue;
+        }
 		$commitData[] = array(
 				$snowflake->id(),
 				$uuid,
@@ -214,10 +228,9 @@ if($count>0){
 
 fwrite(STDOUT,"insert done $allInsertCount in $allSrcCount ".PHP_EOL);
 
-
-
 fwrite(STDOUT,"all done".PHP_EOL);
 
+fclose($fpError);
 
 
 
