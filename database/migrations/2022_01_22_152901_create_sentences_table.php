@@ -36,22 +36,22 @@ class CreateSentencesTable extends Migration
             $table->bigInteger('id')->primary();
 
 			$table->string('uid',36)->uniqid()->index();
-			$table->string('parent_uid',36)->uniqid()->index();
-			$table->string('block_uid',36)->uniqid()->index();
-			$table->string('channel_uid',36)->uniqid()->index();
+			$table->string('parent_uid',36)->nullable()->uniqid()->index();
+			$table->string('block_uid',36)->nullable()->uniqid()->index();
+			$table->string('channel_uid',36)->nullable()->uniqid()->index();
 			$table->integer('book_id');
 			$table->integer('paragraph');
 			$table->integer('word_start');
 			$table->integer('word_end');
-			$table->string('author',512);
+			$table->string('author',512)->nullable();
 
-			$table->string('owner_uid',36);
-            $table->bigInteger('editor_id');
-			$table->string('name',128)->index();
-			$table->string('summary',1024)->nullable();
-			$table->string('lang',16);
+			$table->string('editor_uid',36);
+            $table->text('content')->nullable();
+            $table->enum('content_type',['markdown','text','html'])->default('markdown');
+			$table->string('language',16);
+			$table->integer('version')->default(1);
+			$table->integer('strlen');
 			$table->integer('status')->default(10);
-			$table->text('setting')->nullable();
 
 			$table->bigInteger('create_time')->index();
             $table->bigInteger('modify_time')->index();
@@ -59,6 +59,10 @@ class CreateSentencesTable extends Migration
 			$table->timestamp('created_at')->useCurrent();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 			$table->timestamp('deleted_at')->nullable();
+
+			$table->index(['book_id','paragraph','word_start','word_end']);
+			$table->index(['book_id','paragraph','word_start','word_end','channel_uid']);
+
         });
     }
 
