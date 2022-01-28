@@ -239,7 +239,7 @@ define("_SQLITE_TABLE_USER_OPERATION_FRAME_", "edit");
 
 //PostgreSQL
 define("_PG_DB_USER_ACTIVE_", _PDO_DB_DSN_);
-define("_PG_TABLE_USER_OPERATION_DAILY_", "user_operation_dailys");
+define("_PG_TABLE_USER_OPERATION_DAILY_", "user_operation_dailies");
 define("_PG_TABLE_USER_OPERATION_FRAME_", "user_operation_frames");
 
 #sqlite
