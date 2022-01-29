@@ -7,7 +7,7 @@ require_once __DIR__."/../public/_pdo.php";
 require_once __DIR__."/../public/function.php";
 require_once __DIR__."/../channal/function.php";
 require_once __DIR__."/../redis/function.php";
-require_once __DIR__."/../public/app/public/snowflakeid.php";
+require_once __DIR__."/../public/snowflakeid.php";
 
 # 雪花id
 $snowflake = new SnowFlakeId();
