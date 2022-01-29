@@ -3,14 +3,26 @@ require_once "../config.php";
 require_once "../share/function.php";
 require_once "../channal/function.php";
 require_once "../db/table.php";
+require_once __DIR__."/../public/snowflakeid.php";
+
 
 function update_historay($sent_id, $user_id, $text, $landmark)
 {
     # 更新historay
-    PDO_Connect("" . _FILE_DB_USER_SENTENCE_HISTORAY_);
-    $query = "INSERT INTO "._TABLE_SENTENCE_HISTORAY_." (sent_uid,  user_uid,  content,  date, landmark) VALUES (? , ? , ? , ? , ? )";
+    $snowflake = new SnowFlakeId();
+    PDO_Connect(_FILE_DB_USER_SENTENCE_HISTORAY_);
+    $query = "INSERT INTO "._TABLE_SENTENCE_HISTORAY_." 
+    (
+        id,
+        sent_uid,  
+        user_uid,  
+        content,  
+        create_time, 
+        landmark) VALUES (? , ? , ? , ? , ? , ? )";
     $stmt = PDO_Execute($query,
-        array($sent_id,
+        array(
+            $snowflake->id(),
+            $sent_id,
             $user_id,
             $text,
             mTime(),
@@ -373,17 +385,28 @@ class Sent_DB
 			$this->errorMsg = "";
 			return true;
 		}
+        $snowflake = new SnowFlakeId();
 		$this->dbh_his->beginTransaction();
 		# 更新historay
-		$query = "INSERT INTO "._TABLE_SENTENCE_HISTORAY_." (sent_uid,  user_uid,  content,  date, landmark) VALUES (? , ? , ? , ? , ? )";
+		$query = "INSERT INTO "._TABLE_SENTENCE_HISTORAY_." 
+        (
+            id,
+            sent_uid,  
+            user_uid,  
+            content,  
+            create_time, 
+            landmark
+            ) VALUES (? , ? , ? , ? , ? , ? )";
 		$stmt = $this->dbh_his->prepare($query);
 
 		foreach ($arrData as $data) {
-			$stmt->execute(array($data["id"],
-							$data["editor"],
-							$data["text"],
-							mTime(),
-							$data["landmark"]));
+			$stmt->execute(
+                $snowflake->id(),
+                array($data["id"],
+                $data["editor"],
+                $data["text"],
+                mTime(),
+                $data["landmark"]));
 		}
 		$this->dbh_his->commit();
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {

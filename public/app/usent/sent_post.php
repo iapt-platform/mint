@@ -7,6 +7,8 @@ require_once "../public/function.php";
 require_once "../usent/function.php";
 require_once "../ucenter/active.php";
 require_once "../share/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 #检查是否登陆
 if (!isset($_COOKIE["userid"])) {
@@ -89,26 +91,30 @@ if ($_id == false) {
     # 没有id新建
     if ($cooperation >=20) {
         #有写入权限
-        $query = "INSERT INTO "._TABLE_SENTENCE_." (uid,
-		parent_uid,
-		book_id,
-                                        paragraph,
-                                        word_start,
-                                        word_end,
-                                        channel_uid,
-                                        author,
-                                        editor_uid,
-                                        content,
-                                        language,
-                                        status,
-                                        strlen,
-                                        modify_time,
-                                        create_time
-                                        )
-										VALUES (?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+        $query = "INSERT INTO "._TABLE_SENTENCE_." (
+            id,
+            uid,
+            parent_uid,
+            book_id,
+            paragraph,
+            word_start,
+            word_end,
+            channel_uid,
+            author,
+            editor_uid,
+            content,
+            language,
+            status,
+            strlen,
+            modify_time,
+            create_time
+            )
+            VALUES (? , ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
         $stmt = $PDO->prepare($query);
         $newId = UUID::v4();
-        $stmt->execute(array($newId,
+        $stmt->execute(array(
+            $snowflake->id(),
+            $newId,
             "",
             $_POST["book"],
             $_POST["para"],
@@ -145,38 +151,41 @@ if ($_id == false) {
         }
     } else {
 		#没写入权限 插入pr数据
-		$query = "INSERT INTO "._TABLE_SENTENCE_PR_." (
-										book_id,
-										paragraph,
-										word_start,
-										word_end,
-										channel_uid,
-										author,
-										editor_uid,
-										content,
-										language,
-										status,
-										strlen,
-										modify_time,
-										create_time
-										)
-										VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+		$query = "INSERT INTO "._TABLE_SENTENCE_PR_." 
+        (
+            id,
+            book_id,
+            paragraph,
+            word_start,
+            word_end,
+            channel_uid,
+            author,
+            editor_uid,
+            content,
+            language,
+            status,
+            strlen,
+            modify_time,
+            create_time
+            )
+            VALUES ( ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		$stmt = $PDO->prepare($query);
 		# 初始状态 1 未处理
 		$stmt->execute(array(
-							$_POST["book"],
-							$_POST["para"],
-							$_POST["begin"],
-							$_POST["end"],
-							$_POST["channal"],
-							"",
-							$_COOKIE["userid"],
-							$_POST["text"],
-							$text_lang,
-							1,
-							mb_strlen($_POST["text"], "UTF-8"),
-							mTime(),
-							mTime()
+            $snowflake->id(),
+            $_POST["book"],
+            $_POST["para"],
+            $_POST["begin"],
+            $_POST["end"],
+            $_POST["channal"],
+            "",
+            $_COOKIE["userid"],
+            $_POST["text"],
+            $text_lang,
+            1,
+            mb_strlen($_POST["text"], "UTF-8"),
+            mTime(),
+            mTime()
 							));
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			/*  识别错误  */
@@ -225,6 +234,7 @@ if ($_id == false) {
         #TO DO没权限 插入pr数据
 		#没写入权限 插入pr数据
 		$query = "INSERT INTO "._TABLE_SENTENCE_PR_." (
+            id,
 			book_id,
 			paragraph,
 			word_start,
@@ -239,24 +249,25 @@ if ($_id == false) {
 			modify_time,
 			create_time
 			)
-			VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		$stmt = $PDO->prepare($query);
 		# 初始状态 1 未处理
 		$stmt->execute(array(
-							$_POST["book"],
-							$_POST["para"],
-							$_POST["begin"],
-							$_POST["end"],
-							$_POST["channal"],
-							"",
-							$_COOKIE["userid"],
-							$_POST["text"],
-							$text_lang,
-							1,
-							mb_strlen($_POST["text"], "UTF-8"),
-							mTime(),
-							mTime()
-							));
+            $snowflake->id(),
+            $_POST["book"],
+            $_POST["para"],
+            $_POST["begin"],
+            $_POST["end"],
+            $_POST["channal"],
+            "",
+            $_COOKIE["userid"],
+            $_POST["text"],
+            $text_lang,
+            1,
+            mb_strlen($_POST["text"], "UTF-8"),
+            mTime(),
+            mTime()
+            ));
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 			/*  识别错误  */
 			$error = PDO_ErrorInfo();

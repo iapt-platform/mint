@@ -9,6 +9,8 @@ require_once "../public/function.php";
 require_once "../usent/function.php";
 require_once "../channal/function.php";
 require_once "../ucenter/active.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 #检查是否登陆
 if (!isset($_COOKIE["userid"])) {
@@ -106,24 +108,26 @@ if (count($oldList) > 0) {
 if (count($newList) > 0) {
     add_edit_event(_SENT_NEW_, "{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}@{$newList[0]["channal"]}");
     $PDO->beginTransaction();
-    $query = "INSERT INTO "._TABLE_SENTENCE_." (uid,
-									parent_uid,
-									book_id,
-									paragraph,
-									word_start,
-									word_end,
-									channel_uid,
-									author,
-									editor_uid,
-									content,
-									language,
-									version,
-									status,
-									strlen,
-									modify_time,
-									create_time
-									)
-						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+    $query = "INSERT INTO "._TABLE_SENTENCE_." (
+        id,
+        uid,
+        parent_uid,
+        book_id,
+        paragraph,
+        word_start,
+        word_end,
+        channel_uid,
+        author,
+        editor_uid,
+        content,
+        language,
+        version,
+        status,
+        strlen,
+        modify_time,
+        create_time
+        )
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? )";
     $sth = $PDO->prepare($query);
 
     $channel_info = new Channal();
@@ -144,7 +148,9 @@ if (count($newList) > 0) {
             $lang = $queryChannel["lang"];
             $status = $queryChannel["status"];
         }
-        $sth->execute(array($uuid,
+        $sth->execute(array(
+            $snowflake->id(),
+            $uuid,
             $parent,
             $data["book"],
             $data["paragraph"],
