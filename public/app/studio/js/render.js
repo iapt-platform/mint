@@ -1817,7 +1817,13 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 	let sChannalName = "";
 	let sent_text = "";
 	let sent_lang = "en";
-	let objSent;
+	let objSent = {
+                text:"",
+                language:"en",
+                id:"",
+                tag:"[]",
+                author:"{}"
+            };
 	let thischannal;
 	let shell_class = "";
 	if (channal == 0) {
@@ -1837,12 +1843,13 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		objSent = _user_sent_buffer.getSentText(book, para, begin, end, channal);
 		thischannal = channal_getById(channal);
 		if (objSent == false) {
-			objSent = new Object();
-			objSent.text = "";
-			objSent.language = thischannal.lang;
-			objSent.id = "";
-			objSent.tag = "[]";
-			objSent.author = "{}";
+			objSent = {
+                text:"",
+                language:thischannal.lang,
+                id:"",
+                tag:"[]",
+                author:"{}"
+            };
 			sent_text = "";
 		} else {
 			sent_text = objSent.text;
@@ -1908,14 +1915,17 @@ function render_tran_sent_block(book, para, begin, end, channal = 0, readonly = 
 		output += "<span id='" + id + "' ";
 		output += "onclick=\"sent_edit_click('";
 		output += book + "','" + para + "','" + begin + "','" + end + "','" + channal + "',)\">";
-		if (objSent.text == null || objSent.text == "") {
-			output += "<span style='color:gray;'>";
-			output += "<svg class='icon' style='fill: var(--detail-color);'>";
-			output += "<use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
-			output += "</span>";
-		} else {
-			output += note_init(term_std_str_to_tran(objSent.text, channal, getCookie("userid"), sent_lang));
-		}
+        if(typeof objSent !== 'undefined'){
+            if (objSent.text == null || objSent.text == "") {
+                output += "<span style='color:gray;'>";
+                output += "<svg class='icon' style='fill: var(--detail-color);'>";
+                output += "<use xlink='http://www.w3.org/1999/xlink' href='svg/icon.svg#ic_mode_edit'>";
+                output += "</span>";
+            } else {
+                output += note_init(term_std_str_to_tran(objSent.text, channal, getCookie("userid"), sent_lang));
+            }            
+        }
+
 
 		output += "</span>";
 	}
