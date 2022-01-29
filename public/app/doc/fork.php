@@ -158,11 +158,6 @@ if (isset($_GET["channel"]) == false) {
                     $arrNewBlockData = array();
                     $arrBlockTransform = array();
 
-                    //译文新数据数组
-                    $arrSentNewBlock = array();
-                    $arrSentNewBlockData = array();
-                    $arrSentBlockTransform = array();
-
                     $newDocBlockList = array();
 
                     $blocks = json_decode($Fetch[0]["doc_block"]);
@@ -171,34 +166,7 @@ if (isset($_GET["channel"]) == false) {
                             case 1:
                                 break;
                             case 2:
-                                //译文
-                                $blockid = $blocks[$i]->block_id;
-                                $query = "SELECT * from "._TABLE_SENTENCE_BLOCK_." where uid= ? ";
-                                $stmt = $dbhSent->prepare($query);
-                                $stmt->execute(array($blockid));
-                                $fBlock = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                $newBlockId = UUID::V4();
                                 //不复刻译文
-                                //$newDocBlockList[]=array('type' => 2,'block_id' => $newBlockId);
-                                $arrSentBlockTransform[$fBlock[0]["id"]] = $newBlockId;
-                                if (count($fBlock) > 0) {
-                                    array_push($arrSentNewBlock,
-                                        array($newBlockId,
-                                            $fBlock[0]["id"],
-                                            $fBlock[0]["book"],
-                                            $fBlock[0]["paragraph"],
-                                            $_COOKIE["userid"],
-                                            $fBlock[0]["lang"],
-                                            $fBlock[0]["author"],
-                                            $fBlock[0]["editor"],
-                                            $fBlock[0]["tag"],
-                                            $fBlock[0]["status"],
-                                            mTime(),
-                                            mTime(),
-                                        ));
-                                }
-
-
                                 break;
                             case 3:
                                 break;
