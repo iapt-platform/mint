@@ -1,11 +1,14 @@
 <?php
 //统计用户经验值
-require_once '../config.php';
-require_once "../public/function.php";
-require_once "../public/php/define.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../public/php/define.php";
+require_once __DIR__."/../public/snowflakeid.php";
 
 function add_edit_event($type = 0, $data = null)
 {
+    $snowflake = new SnowFlakeId();
+
 	$active_type[10] = "channel_update";
 $active_type[11] = "channel_create";
 $active_type[20] = "article_update";
@@ -66,10 +69,10 @@ $active_type[90] = "nissaya_open";
         $this_active_time = 0; //时间增量
         if ($new_record) {
             #新建
-            $query = "INSERT INTO "._TABLE_USER_OPERATION_FRAME_." ( user_id, op_start , op_end  , duration , hit , timezone,created_at )  VALUES  ( ? , ? , ? , ? , ? ,?,to_timestamp(?)) ";
+            $query = "INSERT INTO "._TABLE_USER_OPERATION_FRAME_." (id, user_id, op_start , op_end  , duration , hit , timezone,created_at )  VALUES  (?, ? , ? , ? , ? , ? ,?,to_timestamp(?)) ";
             $sth = $dbh->prepare($query);
             #最小思考时间
-            $sth->execute(array($_COOKIE["user_id"], ($currTime - MIN_INTERVAL), $currTime, MIN_INTERVAL, 1, $client_timezone,($currTime - MIN_INTERVAL)/1000));
+            $sth->execute(array($snowflake->id(),$_COOKIE["user_id"], ($currTime - MIN_INTERVAL), $currTime, MIN_INTERVAL, 1, $client_timezone,($currTime - MIN_INTERVAL)/1000));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
@@ -83,7 +86,6 @@ $active_type[90] = "nissaya_open";
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
-
         }
 
         #更新经验总量表
@@ -110,10 +112,10 @@ $active_type[90] = "nissaya_open";
             }
         } else {
             #新建
-            $query = "INSERT INTO "._TABLE_USER_OPERATION_DAILY_." ( user_id, date_int , duration , hit )  VALUES  ( ? , ? , ? , ?  ) ";
+            $query = "INSERT INTO "._TABLE_USER_OPERATION_DAILY_." (id, user_id, date_int , duration , hit )  VALUES  ( ? , ? , ? , ? , ?  ) ";
             $sth = $dbh->prepare($query);
             #最小思考时间
-            $sth->execute(array($_COOKIE["user_id"], $client_date,  MIN_INTERVAL, 1));
+            $sth->execute(array($snowflake->id(),$_COOKIE["user_id"], $client_date,  MIN_INTERVAL, 1));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
@@ -126,9 +128,9 @@ $active_type[90] = "nissaya_open";
             $dbh_log = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
             $dbh_log->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-            $query = "INSERT INTO "._TABLE_USER_OPERATION_LOG_." ( user_id, op_type_id ,op_type , content , create_time , timezone )  VALUES  ( ? , ? , ? , ? , ? ,? ) ";
+            $query = "INSERT INTO "._TABLE_USER_OPERATION_LOG_." (id, user_id, op_type_id ,op_type , content , create_time , timezone )  VALUES  (?, ? , ? , ? , ? , ? ,? ) ";
             $sth = $dbh_log->prepare($query);
-            $sth->execute(array($_COOKIE["user_id"], $type,$active_type[$type], $data, $currTime, $client_timezone));
+            $sth->execute(array($snowflake->id(),$_COOKIE["user_id"], $type,$active_type[$type], $data, $currTime, $client_timezone));
             if (!$sth || ($sth && $sth->errorCode() != 0)) {
                 $error = $dbh->errorInfo();
             }
