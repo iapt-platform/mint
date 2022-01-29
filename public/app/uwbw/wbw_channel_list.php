@@ -81,10 +81,10 @@ foreach ($channelList as $key => $row) {
     $channelList[$key]["count"] = count($_para);
 	$info = $channelInfo->getChannal($key);
 	if($info){
-		$channelList[$key]["id"] = $info["id"];
+		$channelList[$key]["id"] = $info["uid"];
 		$channelList[$key]["name"] = $info["name"];
 		$channelList[$key]["lang"] = $info["lang"];
-		$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
+		$channelList[$key]["user"] = $userInfo->getName($info["owner_uid"]);
 		$outputData[]=$channelList[$key];
 	}
 	
