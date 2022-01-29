@@ -3,15 +3,18 @@
  *
  *
  */
-require_once '../studio/index_head.php';
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
+require_once __DIR__.'/../studio/index_head.php';
+
 ?>
 <body id="file_list_body" >
 <?php
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
-require_once "../config.php";
 
-require_once '../studio/index_tool_bar.php';
+require_once __DIR__."/../studio/index_tool_bar.php";
 
 echo '<div class="index_inner" style="    margin-left: 18em;margin-top: 5em;">';
 
@@ -186,7 +189,9 @@ if (isset($_GET["channel"]) == false) {
                                 $arrBlockTransform[$fBlock[0]["id"]] = $newBlockId;
                                 if (count($fBlock) > 0) {
                                     array_push($arrNewBlock,
-                                        array($newBlockId,
+                                        array(
+                                            $snowflake->id(),
+                                            $newBlockId,
                                             $fBlock[0]["uid"],
                                             $_GET["channel"],
                                             $_COOKIE["userid"],
@@ -205,7 +210,9 @@ if (isset($_GET["channel"]) == false) {
                                 $fBlockData = $stmtWBW->fetchAll(PDO::FETCH_ASSOC);
                                 foreach ($fBlockData as $value) {
                                     array_push($arrNewBlockData,
-                                        array(UUID::V4(),
+                                        array(
+                                            $snowflake->id(),
+                                            UUID::V4(),
                                             $arrBlockTransform[$value["block_id"]],
                                             $value["book"],
                                             $value["paragraph"],
@@ -230,18 +237,22 @@ if (isset($_GET["channel"]) == false) {
 
                     if (count($arrNewBlock) > 0) {
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ( uid ,
-                                                                           parent_id ,
-                                                                           channel_uid ,
-                                                                           creator_uid ,
-                                                                           book_id ,
-                                                                           paragraph ,
-                                                                           style ,
-                                                                           lang ,
-                                                                           status ,
-                                                                           modify_time ,
-                                                                           updated_at)
-                                                                           VALUES (?,?,?,?,?,?,?,?,?,?,now())";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
+                                            ( 
+                                                id,
+                                                uid ,
+                                                parent_id ,
+                                                channel_uid ,
+                                                creator_uid ,
+                                                book_id ,
+                                                paragraph ,
+                                                style ,
+                                                lang ,
+                                                status ,
+                                                modify_time ,
+                                                updated_at
+                                            )
+                                            VALUES (?,?,?,?,?,?,?,?,?,?,?,now())";
                         $stmtNewBlock = $dbhWBW->prepare($query);
                         foreach ($arrNewBlock as $oneParam) {
                             $stmtNewBlock->execute($oneParam);
@@ -261,7 +272,21 @@ if (isset($_GET["channel"]) == false) {
                     if (count($arrNewBlockData) > 0) {
                         // 开始一个事务，逐词解析数据 关闭自动提交
                         $dbhWBW->beginTransaction();
-                        $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        $query = "INSERT INTO "._TABLE_USER_WBW_." 
+                                    (
+                                        'id',
+                                        'uid',
+                                        'block_id',
+                                        'book',
+                                        'paragraph',
+                                        'wid',
+                                        'word',
+                                        'data',
+                                        'create_time',
+                                        'update_time',
+                                        'status',
+                                        'owner'
+                                        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmtWbwData = $dbhWBW->prepare($query);
                         foreach ($arrNewBlockData as $oneParam) {
                             $stmtWbwData->execute($oneParam);
