@@ -18,7 +18,7 @@ class CreateSentPrsTable extends Migration
 			#使用雪花id
             $table->bigInteger('id')->primary();
             //用作数据迁移时的相同数据比对
-			$table->integer('old_id')->uniqid();
+			$table->integer('old_id')->nullable();
 
 			$table->integer('book_id');
 			$table->integer('paragraph');
