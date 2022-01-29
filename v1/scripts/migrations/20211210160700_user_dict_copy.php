@@ -48,7 +48,7 @@ $queryInsert = "INSERT INTO ".$dest_table."
                                     id,
 									word , 
 									type, 
-									gramma,
+									grammar,
 									parent,
 									mean,
 									note,

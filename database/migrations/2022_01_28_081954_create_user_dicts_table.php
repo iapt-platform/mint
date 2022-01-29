@@ -19,7 +19,7 @@ class CreateUserDictsTable extends Migration
 
 			$table->string('word',1024)->index();
 			$table->string('type',128)->nullable();
-			$table->string('gramma',128)->nullable();
+			$table->string('grammar',128)->nullable();
 			$table->string('parent',1024)->nullable();
 			$table->text('mean')->nullable();
 			$table->text('note')->nullable();
