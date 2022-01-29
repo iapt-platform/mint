@@ -1449,7 +1449,7 @@ function renderWordParBlockInner(elementBlock) {
 								paragraph,
 								sent_begin,
 								word_id,
-								iterator.id,
+								iterator.uid,
 								readonly
 							);
 						}
@@ -1607,7 +1607,7 @@ function renderWordParBlockInner(elementBlock) {
 				} else {
 					readonly = false;
 				}
-				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.id, readonly);
+				output += render_tran_sent_block(book, paragraph, sent_begin, word_id, iterator.uid, readonly);
 			}
 		}
 	}
