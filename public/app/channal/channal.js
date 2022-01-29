@@ -60,7 +60,7 @@ function my_channal_list() {
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>";
-						html += "<guide url='../channal/card.php' gid='" + iterator.id + "'>";
+						html += "<guide url='../channal/card.php' gid='" + iterator.uid + "'>";
 						html += iterator.name;
 						html += "</guide>";
 						html += "</div>";
