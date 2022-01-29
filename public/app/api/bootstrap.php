@@ -1,16 +1,17 @@
 <?php
-require "../../vendor/autoload.php";
+require __DIR__."/../../vendor/autoload.php";
+require_once __DIR__."/../config.php";
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 $capsule->addConnection([
-	'driver' => 'pgsql',
-	'host' => '127.0.0.1',
-	'port' => '5432',
-	'database' => 'mint',
-	'username' =>  'postgres',
-	'password' => '123456',
+	'driver' => Database["type"],
+	'host' => Database["server"],
+	'port' => Database["port"],
+	'database' => Database["name"],
+	'username' =>  Database["user"],
+	'password' => Database["password"],
 	'charset' => 'utf8',
 	'options' => [
 		PDO::ATTR_PERSISTENT => true,
