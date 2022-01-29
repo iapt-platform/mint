@@ -1764,6 +1764,7 @@ function sent_save_callback(data) {
 		result = JSON.parse(data);
 	} catch (e) {
 		alert(e.message);
+        console.error('sent_save_callback',data);
 		return;
 	}
 	if (result.status > 0) {
