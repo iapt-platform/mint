@@ -4,6 +4,8 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../hostsetting/function.php';
 require_once "../ucenter/active.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $respond=array("status"=>0,"message"=>"");
 if(!isset($_COOKIE["userid"])){
@@ -27,6 +29,7 @@ add_edit_event(_COLLECTION_NEW_,$uuid);
 
 PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
 $query="INSERT INTO "._TABLE_COLLECTION_." ( 
+        id,
 		uid ,  
 		title  , 
 		subtitle  , 
@@ -39,9 +42,23 @@ $query="INSERT INTO "._TABLE_COLLECTION_." (
 		status  , 
 		create_time , 
 		modify_time    
-		)  VALUES  (  ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
+		)  VALUES  ( ? , ? , ? , ?  , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
 $sth = $PDO->prepare($query);
-$sth->execute(array($uuid , $_POST["title"] , "" ,"", "[]" ,  $_COOKIE["user_uid"] ,  $_COOKIE["user_id"],  $_COOKIE["user_id"], "" , $_POST["status"] , mTime() ,  mTime() ));
+$sth->execute(array(
+                $snowflake->id() , 
+                $uuid , 
+                $_POST["title"] , 
+                "" ,
+                "",
+                 "[]" ,  
+                 $_COOKIE["user_uid"] ,  
+                 $_COOKIE["user_id"],  
+                 $_COOKIE["user_id"], 
+                 "" , 
+                 $_POST["status"] , 
+                 mTime() ,  
+                 mTime() 
+                 ));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

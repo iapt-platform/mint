@@ -8,6 +8,7 @@ require_once "../article/function.php";
 require_once "../redis/function.php";
 require_once "../db/custom_book.php";
 
+
 add_edit_event(_ARTICLE_EDIT_,$_POST["id"]);
 
 $respond=array("status"=>0,"message"=>"");

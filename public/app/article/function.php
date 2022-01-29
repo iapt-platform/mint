@@ -158,10 +158,17 @@ class ArticleList extends Table
 		if(count($articleList)>0){
 			/* 开始一个事务，关闭自动提交 */
 			$this->dbh->beginTransaction();
-			$query = "INSERT INTO ".$this->table." (collect_id, article_id,level,title) VALUES ( ?, ?, ? , ? )";
+			$query = "INSERT INTO ".$this->table." (id, collect_id, article_id,level,title) VALUES (?, ?, ?, ? , ? )";
 			$sth = $this->dbh->prepare($query);
 			foreach ($articleList as $row) {
-				$sth->execute(array($collectionId,$row["article"],$row["level"],$row["title"]));
+				$sth->execute(
+                    array(
+                        $this->SnowFlake->id(),
+                        $collectionId,
+                        $row["article"],
+                        $row["level"],
+                        $row["title"]
+                        ));
 				if($this->redis){
 					#删除article权限缓存
 					$this->redis->del("power://article/".$row["article"]);

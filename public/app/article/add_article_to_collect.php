@@ -7,6 +7,8 @@ require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once '../ucenter/function.php';
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $output  = array();
 $respond = array();
@@ -32,10 +34,23 @@ if(isset($_POST["id"])){
      if(count($data)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." (collect_id, article_id,level,title) VALUES (?, ?, ? , ?)";
+        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." 
+                    (
+                        id,
+                        collect_id, 
+                        article_id,
+                        level,
+                        title
+                    ) VALUES (? , ?, ?, ? , ?)";
         $sth = $PDO->prepare($query);
         foreach ($data as $row) {
-            $sth->execute(array($row,$article_id,1,$title));
+            $sth->execute(array(
+                        $snowflake->id() , 
+                        $row,
+                        $article_id,
+                        1,
+                        $title
+                        ));
         }
         $PDO->commit();
         if (!$sth || ($sth && $sth->errorCode() != 0)) {

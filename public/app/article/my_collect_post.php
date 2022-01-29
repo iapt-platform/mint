@@ -5,7 +5,8 @@ require_once '../public/function.php';
 require_once '../collect/function.php';
 require_once "../ucenter/active.php";
 require_once "../redis/function.php";
-
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $respond=array("status"=>0,"message"=>"");
 if(!isset($_COOKIE["userid"])){
@@ -52,10 +53,24 @@ else{
     if(count($arrList)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." (collect_id, article_id,level,title,children) VALUES ( ? , ?, ?, ? , ? )";
+        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." (
+                            id,
+                            collect_id, 
+                            article_id,
+                            level,
+                            title,
+                            children
+                            ) VALUES (?, ? , ?, ?, ? , ? )";
         $sth = $PDO->prepare($query);
         foreach ($arrList as $row) {
-            $sth->execute(array($_POST["id"],$row->article,$row->level,$row->title,$row->children));
+            $sth->execute(array(
+                            $snowflake->id(),
+                            $_POST["id"],
+                            $row->article,
+                            $row->level,
+                            $row->title,
+                            $row->children
+                            ));
 			if($redis){
 				#删除article权限缓存
 				$redis->del("power://article/".$row->article);
