@@ -12,11 +12,13 @@ require_once '../studio/index_head.php';
 ?>
 <body id="file_list_body" >
 <?php
-require_once "../config.php";
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
-require_once "../channal/function.php";
-require_once "../redis/function.php";
+require_once __DIR__."/../config.php";
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../channal/function.php";
+require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $redis = redis_connect();
 
@@ -130,13 +132,14 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 			$blocks = $_para;
 			for ($i = 0; $i < count($blocks); $i++) {
 				#查找是否有旧的wbw_block数据
-				$query = "SELECT uid from "._TABLE_USER_WBW_BLOCK_." where book_id= ? and paragraph = ? and channel_uid = ? ";
+				$query = "SELECT id,uid from "._TABLE_USER_WBW_BLOCK_." where book_id= ? and paragraph = ? and channel_uid = ? ";
 				$stmt = $dbhWBW->prepare($query);
 				$stmt->execute(array($_GET["book"],$blocks[$i],$_GET["dest_channel"]));
 				$fDest = $stmt->fetch(PDO::FETCH_ASSOC);
 				if($fDest){
 					#旧的逐词解析数据块wbw_block id 
-					$destId = $fDest["uid"];
+					$destUid = $fDest["uid"];
+					$destId = $fDest["id"];
 				}
 				#复制源wbw_block
 				$iPara = $blocks[$i];
@@ -147,19 +150,24 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 				if(isset($destId)){
 					#有旧的wbw_block uuid 使用旧的uuid
 					$newBlockId = $destId;
+					$newBlockUid = $destUid;
 				}
 				else{
-					$newBlockId = UUID::V4();
+					$newBlockId = $snowflake->id();
+					$newBlockUid = UUID::V4();
 				}
 				
 				if ($fSrcBlock) {
 					$arrBlockTransform[$fSrcBlock["uid"]] = $newBlockId;
 					array_push($arrNewBlock,
-						array($newBlockId,
+						array(
+                            $newBlockId,
+                            $newBlockUid,
 							"",
 							$_GET["dest_channel"],
 							$_GET["src_channel"],
-							$_COOKIE["userid"],
+							$_COOKIE["user_uid"],
+							$_COOKIE["user_id"],
 							$fSrcBlock["book_id"],
 							$fSrcBlock["paragraph"],
 							$fSrcBlock["style"],
@@ -176,8 +184,11 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 				$fBlockData = $stmtWBW->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($fBlockData as $value) {
 					array_push($arrNewBlockData,
-						array(UUID::V4(),
-							$arrBlockTransform[$value["block_uid"]],
+						array(
+                            $snowflake->id(),
+                            UUID::V4(),
+							$newBlockUid,
+							$newBlockId,
 							$value["book_id"],
 							$value["paragraph"],
 							$value["wid"],
@@ -186,7 +197,8 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 							mTime(),
 							mTime(),
 							$value["status"],
-							$_COOKIE["userid"],
+							$_COOKIE["user_uid"],
+                            $_COOKIE["user_id"],
 						));
 
 				}
@@ -203,7 +215,23 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 			//新增逐词解析block数据块
 			if (count($arrNewBlock) > 0) {
 				$dbhWBW->beginTransaction();
-				$query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." (uid , parent_id , channel_uid , parent_channel_uid , creator_uid , book_id , paragraph , style , lang , status , modify_time , create_time , updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,now())";
+				$query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
+                (
+                    id,
+                    uid , 
+                    parent_id , 
+                    channel_uid , 
+                    parent_channel_uid , 
+                    creator_uid , 
+                    editor_id , 
+                    book_id , 
+                    paragraph , 
+                    style , 
+                    lang , 
+                    status , 
+                    modify_time , 
+                    create_time 
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				$stmtNewBlock = $dbhWBW->prepare($query);
 				foreach ($arrNewBlock as $oneParam) {
 					$stmtNewBlock->execute($oneParam);
@@ -231,18 +259,23 @@ $srcPower = (int)$channelInfo->getPower($_GET["src_channel"]);
 			if (count($arrNewBlockData) > 0) {
 				// 开始一个事务，逐词解析数据 关闭自动提交
 				$dbhWBW->beginTransaction();
-				$query = "INSERT INTO "._TABLE_USER_WBW_." ( 
-															uid , 
-															block_uid , 
-															book_id , 
-															paragraph , 
-															wid , 
-															word , 
-															data , 
-															modify_time , 
-															create_time , 
-															status , 
-															creator_uid) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+				$query = "INSERT INTO "._TABLE_USER_WBW_." 
+                ( 
+                    id,
+                    uid , 
+                    block_uid , 
+                    block_id , 
+                    book_id , 
+                    paragraph , 
+                    wid , 
+                    word , 
+                    data , 
+                    modify_time , 
+                    create_time , 
+                    status , 
+                    creator_uid,
+                    editor_id
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				$stmtWbwData = $dbhWBW->prepare($query);
 				foreach ($arrNewBlockData as $oneParam) {
 					$stmtWbwData->execute($oneParam);
