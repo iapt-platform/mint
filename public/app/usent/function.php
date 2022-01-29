@@ -240,28 +240,30 @@ class Sent_DB
 
 	public function insert($arrData){
 		# 插入新数据 
-		
+		$snowflake = new SnowFlakeId();
 		if (count($arrData) > 0) {
 			//add_edit_event(_SENT_NEW_, "{$newList[0]["book"]}-{$newList[0]["paragraph"]}-{$newList[0]["begin"]}-{$newList[0]["end"]}@{$newList[0]["channal"]}");
 			$this->dbh_sent->beginTransaction();
-			$query = "INSERT INTO "._TABLE_SENTENCE_." (uid,
-											parent_uid,
-											book_id,
-											paragraph,
-											word_start,
-											word_end,
-											channel_uid,
-											author,
-											editor_uid,
-											content,
-											language,
-											version,
-											status,
-											strlen,
-											modify_time,
-											create_time
-											)
-								VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+			$query = "INSERT INTO "._TABLE_SENTENCE_." (
+                id,
+                uid,
+                parent_uid,
+                book_id,
+                paragraph,
+                word_start,
+                word_end,
+                channel_uid,
+                author,
+                editor_uid,
+                content,
+                language,
+                version,
+                status,
+                strlen,
+                modify_time,
+                create_time
+                )
+				VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 			$sth = $this->dbh_sent->prepare($query);
 
 			#查询channel语言
@@ -287,7 +289,9 @@ class Sent_DB
 					$lang = $queryChannel["lang"];
 					$status = $queryChannel["status"];
 				}
-				$sth->execute(array($data["id"],
+				$sth->execute(array(
+                    $snowflake->id(),
+                    $data["id"],
 					isset($data["parent"]) ? $data["parent"] : "",
 					$data["book"],
 					$data["paragraph"],
@@ -325,46 +329,49 @@ class Sent_DB
 	}
 
 	public function send_pr($arrData){
+        $snowflake = new SnowFlakeId();
 		if (count($arrData) ==0) {
 			$this->errorMsg = "";
 			return true;
 		}
 		$this->dbh_sent->beginTransaction();
 		$query = "INSERT INTO "._TABLE_SENTENCE_PR_." (
-							book_id,
-							paragraph,
-							word_start,
-							word_end,
-							channel_uid,
-							author,
-							editor_uid,
-							content,
-							language,
-							status,
-							strlen,
-							modify_time,
-							create_time
-							)
-							VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+            id,
+            book_id,
+            paragraph,
+            word_start,
+            word_end,
+            channel_uid,
+            author,
+            editor_uid,
+            content,
+            language,
+            status,
+            strlen,
+            modify_time,
+            create_time
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		$stmt = $this->dbh_sent->prepare($query);
 
 		foreach ($arrData as $data) {
 			# 初始状态 1 未处理
 			$stmt->execute(array(
-							$data["book"],
-							$data["para"],
-							$data["begin"],
-							$data["end"],
-							$data["channal"],
-							"",
-							$data["editor"],
-							$data["text"],
-							$data["language"],
-							1,
-							mb_strlen($data["text"], "UTF-8"),
-							mTime(),
-							mTime(),
-							));
+                $snowflake->id(),
+                $data["book"],
+                $data["para"],
+                $data["begin"],
+                $data["end"],
+                $data["channal"],
+                "",
+                $data["editor"],
+                $data["text"],
+                $data["language"],
+                1,
+                mb_strlen($data["text"], "UTF-8"),
+                mTime(),
+                mTime(),
+                ));
 		}
 		$this->dbh_sent->commit();
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -401,12 +408,13 @@ class Sent_DB
 
 		foreach ($arrData as $data) {
 			$stmt->execute(
-                $snowflake->id(),
-                array($data["id"],
-                $data["editor"],
-                $data["text"],
-                mTime(),
-                $data["landmark"]));
+                array(
+                    $snowflake->id(),
+                    $data["id"],
+                    $data["editor"],
+                    $data["text"],
+                    mTime(),
+                    $data["landmark"]));
 		}
 		$this->dbh_his->commit();
 		if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
