@@ -32,17 +32,17 @@ $params[] = $_book;
 #查重复
 $channelList = array();
 #先查自己的
-PDO_Connect(_FILE_DB_CHANNAL_);
-$query = "SELECT id FROM channal WHERE owner = ? and status>0 LIMIT 0,100";
-$FetchChannal = PDO_FetchAll($query, array($_COOKIE["userid"]));
+PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT uid FROM "._TABLE_CHANNEL_." WHERE owner_uid = ? and status>0 LIMIT 100";
+$FetchChannal = PDO_FetchAll($query, array($_COOKIE["user_uid"]));
 
 foreach ($FetchChannal as $key => $value) {
 	# code...
-	$channelList[$value["id"]]=array("power"=>30,"type"=>"my");
+	$channelList[$value["uid"]]=array("power"=>30,"type"=>"my");
 }
 
 # 找协作的
-$coop_channal =  share_res_list_get($_COOKIE["userid"],2);
+$coop_channal =  share_res_list_get($_COOKIE["user_uid"],2);
 foreach ($coop_channal as $key => $value) {
 	# return res_id,res_type,power res_title  res_owner_id
 	if(isset($channelList[$value["res_id"]])){
@@ -56,13 +56,13 @@ foreach ($coop_channal as $key => $value) {
 }
 
 # 查询全网公开 的
-PDO_Connect( _FILE_DB_USER_WBW_);
-$query = "SELECT  channal FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book = ? AND channal IS NOT NULL AND status = 30 group by channal ";
+PDO_Connect( _FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
+$query = "SELECT  channel_uid FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book_id = ? AND channel_uid IS NOT NULL AND status = 30 group by channel_uid ";
 $publicChannel = PDO_FetchAll($query, $params);
 foreach ($publicChannel as $key => $channel) {
 	# code...
-	if(!isset($channelList[$channel["channal"]])){
-		$channelList[$channel["channal"]]=array("power"=>10,"type"=>"public");
+	if(!isset($channelList[$channel["channel_uid"]])){
+		$channelList[$channel["channel_uid"]]=array("power"=>10,"type"=>"public");
 	}
 }
 
@@ -75,16 +75,16 @@ $outputData = array();
 foreach ($channelList as $key => $row) {
     $queryParam = $params;
     $queryParam[] = $key;
-    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book = ? AND channal = ? ";
+    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE  paragraph IN ($place_holders)  AND book_id = ? AND channel_uid = ? ";
     $wbwCount = PDO_FetchOne($query, $queryParam);
     $channelList[$key]["wbw_para"] = $wbwCount;
     $channelList[$key]["count"] = count($_para);
 	$info = $channelInfo->getChannal($key);
 	if($info){
-		$channelList[$key]["id"] = $info["id"];
+		$channelList[$key]["id"] = $info["uid"];
 		$channelList[$key]["name"] = $info["name"];
 		$channelList[$key]["lang"] = $info["lang"];
-		$channelList[$key]["user"] = $userInfo->getName($info["owner"]);
+		$channelList[$key]["user"] = $userInfo->getName($info["owner_uid"]);
 		$outputData[]=$channelList[$key];
 	}
 	

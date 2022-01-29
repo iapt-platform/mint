@@ -6,7 +6,7 @@ require_once '../config.php';
 require_once "../public/function.php";
 require_once "../public/php/define.php";
 
-if (isset($_COOKIE["uid"])) {
+if (isset($_COOKIE["user_id"])) {
 
     $active_type[10] = "_CHANNEL_EDIT_";
     $active_type[11] = "_CHANNEL_NEW_";
@@ -22,12 +22,12 @@ if (isset($_COOKIE["uid"])) {
     $active_type[81] = "_COLLECTION_NEW_";
     $active_type[90] = "_NISSAYA_FIND_";
 
-    $dns = "" . _FILE_DB_USER_ACTIVE_LOG_;
-    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dns = _FILE_DB_USER_ACTIVE_LOG_;
+    $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "SELECT time,active,content,timezone  FROM log WHERE user_id = ? ";
+    $query = "SELECT create_time,op_type_id,content,timezone  FROM "._TABLE_USER_OPERATION_LOG_." WHERE user_id = ? ";
     $stmt = $dbh->prepare($query);
-    $stmt->execute(array($_COOKIE["uid"]));
+    $stmt->execute(array($_COOKIE["user_id"]));
     echo "<table>";
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

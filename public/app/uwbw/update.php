@@ -30,7 +30,7 @@ if (isset($_POST["data"])) {
 if (count($aData) > 0) {
     add_edit_event(_WBW_EDIT_, "{$aData[0]->book}-{$aData[0]->para}-{$aData[0]->word_id}");
 
-    PDO_Connect(_FILE_DB_USER_WBW_);
+    PDO_Connect(_FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
 
 	#确定block id 的写入权限
 	$listBlockId=array();
@@ -48,12 +48,12 @@ if (count($aData) > 0) {
 
     /* 开始一个事务，关闭自动提交 */
     $PDO->beginTransaction();
-    $query = "UPDATE "._TABLE_USER_WBW_." SET data= ?  , receive_time= ?  , modify_time= ?   where block_id= ?  and wid= ?  ";
+    $query = "UPDATE "._TABLE_USER_WBW_." SET data= ?  , editor_id = ? , modify_time= ? , updated_at = now()  where block_uid= ?  and wid= ?  ";
     $sth = $PDO->prepare($query);
 
     foreach ($aData as $data) {
 		if($listBlockId[$data->block_id]>=20){
-			$sth->execute(array($data->data, mTime(), $data->time, $data->block_id, $data->word_id));
+			$sth->execute(array($data->data, $_COOKIE['uid'], mTime(), $data->block_id, $data->word_id));
 		}
     }
     $PDO->commit();

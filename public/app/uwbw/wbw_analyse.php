@@ -8,9 +8,9 @@ require_once '../public/load_lang.php';
 require_once '../public/function.php';
 
 global $PDO;
-PDO_Connect("" . _FILE_DB_USER_WBW_);
+PDO_Connect("" . _FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
 
-$query = "SELECT * from "._TABLE_USER_WBW_." where  1";
+$query = "SELECT book_id,paragraph,wid,data,modify_time, creator_uid from "._TABLE_USER_WBW_." where  true";
 
 $sth = $PDO->prepare($query);
 $sth->execute();
@@ -69,8 +69,8 @@ while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
                             break;
                     }
                     if ($iType > 0) {
-                        $wordData = array($result["owner"],
-                            $pali, $result["book"],
+                        $wordData = array($result["creator_uid"],
+                            $pali, $result["book_id"],
                             $result["paragraph"],
                             $result["wid"],
                             $iType,

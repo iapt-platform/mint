@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
 
 // Require Composer's autoloader.
 require '../../vendor/autoload.php';
@@ -19,6 +20,7 @@ class Table
 	protected $result;
 	public $medoo;
 	protected $redisProfix;
+    protected $SnowFlake;
     function __construct($db,$table,$user="",$password="",$redis=false) {
         $this->dbh = new PDO($db, _DB_USERNAME_, _DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -36,6 +38,7 @@ class Table
 		$this->table = $table;
 		$this->result = ["ok"=>true,"message"=>"","data"=>array()];
 		$this->redisProfix = $table . "/:id";
+        $this->SnowFlake = new SnowFlakeId();
     }
 	
 	public function _index($columns,$where){

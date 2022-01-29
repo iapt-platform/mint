@@ -1,5 +1,5 @@
 <?php
-//查询term字典
+//获取我的channel 列表，已经废弃
 
 require_once "../config.php";
 require_once "../public/_pdo.php";
@@ -9,12 +9,13 @@ require_once '../group/function.php';
 
 
 if(isset($_GET["id"])){
-    PDO_Connect(""._FILE_DB_CHANNAL_);
+    PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
     $id=$_GET["id"];
-    $query = "SELECT * FROM channal  WHERE id = ? ";
+    $query = "SELECT uid as id ,owner_uid as owner, name , summary , status , lang , create_time,modify_time  FROM "._TABLE_CHANNEL_."  WHERE uid=? ";
 	$Fetch = PDO_FetchRow($query,array($id));
 
-	#获取协作者
+	#TODO获取协作者
+	/*
 	if($Fetch){
 		$user_info = new UserInfo();
 		$group_info = new GroupInfo();
@@ -31,12 +32,13 @@ if(isset($_GET["id"])){
 		}
 		$Fetch["coop"]=$coop;
 	}
+	*/
     echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 }
 else{
-    PDO_Connect(""._FILE_DB_CHANNAL_);
-    $query = "SELECT * FROM channal  WHERE owner = ? ";
-    $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
+    PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid as id ,owner_uid as owner, name , summary , status , lang , create_time,modify_time FROM "._TABLE_CHANNEL_."  WHERE owner_uid = ? ";
+    $Fetch = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
     echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 }
 

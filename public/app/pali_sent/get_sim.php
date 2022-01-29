@@ -1,12 +1,12 @@
 <?php
 /*
-get user sentence from db
+获取相似句子列表
  */
 require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 
-//获取相似句子列表
+//
 
 if (isset($_POST["sent_id"])) {
     $dns = _FILE_DB_PALI_SENTENCE_SIM_;

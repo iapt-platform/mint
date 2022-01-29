@@ -103,20 +103,20 @@ if (PHP_SAPI == "cli") {
 
 				break;
 			case 'update':
-				$dbh = new PDO(_FILE_DB_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true,PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY));
+				$dbh = new PDO(_FILE_DB_WBW_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true,PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY));
 				$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 				
-				$query = "SELECT pali from dict where 1  group by pali";
+				$query = "SELECT word from "._TABLE_DICT_WBW_."  group by word";
 				$stmt = $dbh->prepare($query);
 				$stmt->execute();
 				$count = 0;
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					# code...
-					$word = $redis->hGet($strKey, $row["pali"]);
+					$word = $redis->hGet($strKey, $row["word"]);
 					if($word){
 						$eWord = json_decode($word,true);
 						$eWord["user"]=1;
-						$redis->hSet($strKey, $row["pali"],json_encode($eWord,JSON_UNESCAPED_UNICODE));
+						$redis->hSet($strKey, $row["word"],json_encode($eWord,JSON_UNESCAPED_UNICODE));
 						$count++;
 					}
 				}		

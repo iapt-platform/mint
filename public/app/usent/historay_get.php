@@ -10,7 +10,7 @@ $respond['status'] = 0;
 $respond['error'] = "";
 $respond['data'] = array();
 PDO_Connect("" . _FILE_DB_USER_SENTENCE_HISTORAY_);
-$query = "SELECT sent_id,  user_id,  text,  date, landmark FROM  sent_historay  WHERE sent_id = ? LIMIT 0,200";
+$query = "SELECT sent_uid as sent_id,  user_uid as user_id, content as  text,  create_time as date, landmark , created_at FROM  "._TABLE_SENTENCE_HISTORAY_."  WHERE sent_uid = ? LIMIT 200";
 $fetch = PDO_FetchAll($query, array($_GET["id"]));
 
 $_userinfo = new UserInfo();

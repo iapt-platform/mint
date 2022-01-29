@@ -36,6 +36,11 @@ define("Database",[
 ]);
 
 
+# 雪花id
+define("SnowFlake",[
+	"DatacenterId"=>1,
+	"WorkerId"=>1
+]);
 /*
 Redis 设置，
 */

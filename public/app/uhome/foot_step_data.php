@@ -45,19 +45,19 @@ if (isset($_GET['timeZone'])) {
 }
 
 // Read and parse our events JSON file into an array of event data arrays.
-$dns = "" . _FILE_DB_USER_ACTIVE_;
-$dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dns = _FILE_DB_USER_ACTIVE_;
+$dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-$query = "SELECT id , start, end,duration, hit  FROM edit WHERE user_id = ?";
+$query = "SELECT id , op_start, op_end , duration, hit  FROM "._TABLE_USER_OPERATION_FRAME_." WHERE user_id = ?";
 $stmt = $dbh->prepare($query);
-$stmt->execute(array($_GET["userid"]));
+$stmt->execute(array($_COOKIE["user_id"]));
 $allData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $input_arrays = array();
 foreach ($allData as $key => $value) {
     # code...
     $strDuration = covertTimeToString($value["duration"] / 1000) . "-" . $value["hit"] . "次操作";
-    $start = date("Y-m-d\TH:i:s+00:00", $value["start"] / 1000);
-    $end = date("Y-m-d\TH:i:s+00:00", $value["end"] / 1000);
+    $start = date("Y-m-d\TH:i:s+00:00", $value["op_start"] / 1000);
+    $end = date("Y-m-d\TH:i:s+00:00", $value["op_end"] / 1000);
     $input_arrays[] = array("id" => $value["id"],
         "title" => $strDuration,
         "start" => $start,
