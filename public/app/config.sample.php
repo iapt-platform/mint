@@ -48,12 +48,6 @@ define("Redis",[
 	"password" => "",
 	"prefix"=>"aaa://"
 ]);
-				
-# 雪花id
-define("SnowFlake",[
-	"DatacenterId"=>1,
-	"WorkerId"=>1
-]);
 
 #目录设置，不能更改
 require_once __DIR__."/config.dir.php";
