@@ -12,10 +12,14 @@
     version: laravel
 
 - name: Setup storage folder
+  become: true
   ansible.builtin.file:
     path: "{{ app_deploy_target }}/storage"
+    state: directory
+    recurse: true
     owner: www-data
     group: www-data
+
 
 - name: Install v2 php dependencies
   ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
@@ -47,12 +51,6 @@
   ansible.builtin.file:
     src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
     dest: "{{ app_deploy_target }}/public/node_modules"
-    state: link
-
-- name: Install v2 tmp
-  ansible.builtin.file:
-    src: "/var/www/{{ inventory_hostname }}/tmp"
-    dest: "{{ app_deploy_target }}/tmp"
     state: link
 
 # TODO will remove in future
