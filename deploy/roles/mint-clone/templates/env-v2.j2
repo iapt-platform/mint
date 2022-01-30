@@ -12,7 +12,7 @@ LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=info
 
-DB_CONNECTION=postgresql
+DB_CONNECTION=pgsql
 DB_HOST={{ app_postgresql_host }}
 DB_PORT={{ app_postgresql_port }}
 DB_DATABASE={{ app_postgresql_name }}
@@ -57,3 +57,5 @@ MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
 ASSETS_SERVER="https://assets-{{ app_cluster_id }}.wikipali.org"
 RPC_SERVER="https://rpc.wikipali.org"
+SNOWFLAKE_DATA_CENTER_ID=1
+SNOWFLAKE_WORKER_ID=1

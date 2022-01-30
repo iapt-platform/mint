@@ -26,15 +26,14 @@
   args:
     chdir: "{{ app_deploy_target }}"
 
-# - name: Install v2 nodejs dependencies
-#   ansible.builtin.shell: npm install
-#   args:
-#     chdir: "{{ app_deploy_target }}"
 - name: Install v2 nodejs dependencies
-  ansible.builtin.file:
-    src: "/var/www/{{ inventory_hostname }}/node_modules/v2"
-    dest: "{{ app_deploy_target }}/node_modules"
-    state: link
+  # ansible.builtin.file:
+  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v2"
+  #   dest: "{{ app_deploy_target }}/node_modules"
+  #   state: link
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}"
 
 # TODO will remove in future
 - name: Install v1 php dependencies
@@ -43,15 +42,14 @@
     chdir: "{{ app_deploy_target }}/public"
 
 # TODO will remove in future
-# - name: Install v1 nodejs dependencies
-#   ansible.builtin.shell: npm install
-#   args:
-#     chdir: "{{ app_deploy_target }}/public"
 - name: Install v1 nodejs dependencies
-  ansible.builtin.file:
-    src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
-    dest: "{{ app_deploy_target }}/public/node_modules"
-    state: link
+  # ansible.builtin.file:
+  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
+  #   dest: "{{ app_deploy_target }}/public/node_modules"
+  #   state: link
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}/public"
 
 # TODO will remove in future
 - name: Install v1 tmp

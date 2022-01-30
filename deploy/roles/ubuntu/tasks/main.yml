@@ -82,6 +82,7 @@
       - python3-certbot-nginx
       - openvpn
       - snmpd
+      - mutt
       - systemd-cron
       - systemd-timesyncd
       - screen

@@ -7,7 +7,7 @@
 - name: add Let's Encrypt support
   become: true
   ansible.builtin.shell:
-    cmd: certbot --nginx --non-interactive --agree-tos -m {{ app_master_email }} --domains {{ inventory_hostname }}
+    cmd: certbot --nginx --non-interactive --agree-tos -m {{ app_master_email }} --domains {{ inventory_hostname }} --redirect
 
 - name: restart nginx
   become: true
