@@ -27,7 +27,10 @@ $dest_table=_PG_TABLE_DICT_WBW_;#目标表名
 
 echo "migarate user dict".PHP_EOL;
 #打开源数据库
-$PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
+$PDO_SRC = new PDO($src_db,_DB_USERNAME_,_DB_PASSWORD_,array(
+                                PDO::ATTR_PERSISTENT=>true,
+                                PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY
+                                ));
 $PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 echo "open src".PHP_EOL;
 
