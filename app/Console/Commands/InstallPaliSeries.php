@@ -40,41 +40,39 @@ class InstallPaliSeries extends Command
      */
     public function handle()
     {
-		$this->info("upgrade pali text");
+		$this->info("upgrade pali serieses");
 		$startTime = time();
 
+		DB::transaction(function () {
+			#删除目标数据库中数据
+			BookTitle::where('book','>',0)->delete();
 
+		// 打开csv文件并读取数据										
+			$strFileName = config("app.path.pali_title") . "/pali_serieses.csv";
+			if(!file_exists($strFileName)){
+				return 1;
+			}		
+			$inputRow = 0;
+			if (($fp = fopen($strFileName, "r")) !== false) {
+				while (($data = fgetcsv($fp, 0, ',')) !== false) {
+					if($inputRow>0){
+						$newData = [
+							'book'=>$data[1],
+							'paragraph'=>$data[2],
+							'title'=>$data[3],
+						];
 
-					DB::transaction(function () {
-						#删除目标数据库中数据
-						BookTitle::where('book','>',0)->delete();
-
-					// 打开csv文件并读取数据										
-						$strFileName = config("app.path.pali_title") . "/pali_serieses.csv";
-						if(!file_exists($strFileName)){
-							return 1;
-						}						
-						$inputRow = 0;
-						if (($fp = fopen($strFileName, "r")) !== false) {
-							while (($data = fgetcsv($fp, 0, ',')) !== false) {
-								if($inputRow>0){
-									$newData = [
-										'book'=>$data[1],
-										'paragraph'=>$data[2],
-										'title'=>$data[3],
-									];
-		
-									BookTitle::create($newData);									
-								}
-								$inputRow++;
-							}
-							fclose($fp);
-							Log::info("res load：" .$strFileName);
-						} else {
-							$this->error("can not open csv $strFileName");
-							Log::error("can not open csv $strFileName");
-						}
-					});
+						BookTitle::create($newData);							
+					}
+					$inputRow++;
+				}
+				fclose($fp);
+				Log::info("res load：" .$strFileName);
+			} else {
+				$this->error("can not open csv $strFileName");
+				Log::error("can not open csv $strFileName");
+			}
+		});
 		$this->info("ok");
         return 0;
     }
