@@ -6,11 +6,11 @@ require_once "../db/table.php";
 class Channal extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_CHANNAL_, "channal", "", "",$redis);
+		parent::__construct(_FILE_DB_CHANNAL_, _TABLE_CHANNEL_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
     public function getChannal($id){
-        $query = "SELECT * FROM channal WHERE id= ? ";
+        $query = "SELECT * FROM ".$this->table." WHERE uid =? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
         $channal = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -24,7 +24,7 @@ class Channal extends Table
 	public function getTitle($id)
 	{
 		if (isset($id)) {
-			$query = "SELECT name FROM channal  WHERE id = ? ";
+			$query = "SELECT name FROM ".$this->table."  WHERE  uid = ? ";
 			$stmt = $this->dbh->prepare($query);
 			$stmt->execute(array($id));
 			$channal = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,8 +48,8 @@ class Channal extends Table
 	}
 	public function getPower($id){
 		#查询用户对此channel是否有权限
-		if(isset($_COOKIE["userid"])){
-			$userId = $_COOKIE["userid"];
+		if(isset($_COOKIE["user_id"])){
+			$userId = $_COOKIE["user_id"];
 		}
 		else{
 			$userId='0';
@@ -61,12 +61,12 @@ class Channal extends Table
 			}
 		}
 		$channelPower = 0;
-		$query = "SELECT owner,status FROM channal WHERE id=? and status>0 ";
+		$query = "SELECT owner_uid,status FROM "._TABLE_CHANNEL_." WHERE uid=? and status>0 ";
 		$stmt = $this->dbh->prepare($query);
 		$stmt->execute(array($id));
 		$channel = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($channel){
-			if(!isset($_COOKIE["userid"])  ){
+			if(!isset($_COOKIE["user_id"])  ){
 				#未登录用户
 				if($channel["status"]==30){
 					#全网公开有建议权限
@@ -78,7 +78,7 @@ class Channal extends Table
 				}
 				
 			}
-			if($channel["owner"]==$_COOKIE["userid"]){
+			if($channel["owner_uid"]==$_COOKIE["user_uid"]){
 				return 30;
 			}
 			else if($channel["status"]>=30){
@@ -87,12 +87,12 @@ class Channal extends Table
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
-		$sharePower = share_get_res_power($_COOKIE["userid"],$id);
+		$sharePower = share_get_res_power($_COOKIE["user_uid"],$id);
 		if($sharePower>$channelPower){
 			$channelPower=$sharePower;
 		}
 		if($this->redis){
-			$this->redis->hSet("power://channel/".$id,$_COOKIE["userid"],$channelPower);
+			$this->redis->hSet("power://channel/".$id,$_COOKIE["user_uid"],$channelPower);
 		}
 		
 		return $channelPower;

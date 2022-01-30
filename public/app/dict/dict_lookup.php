@@ -339,6 +339,7 @@ function lookup_user($word){
 
 	$output ="";
 	$Fetch=array();
+	
 	if($redis){
 		$wordData = $redis->hGet("dict://user",$word);
 			if($wordData){
@@ -349,7 +350,7 @@ function lookup_user($word){
 						$Fetch[] = array("id"=>$one[0],
 										"pali"=>$one[1],
 										"type"=>$one[2],
-										"gramma"=>$one[3],
+										"grammar"=>$one[3],
 										"parent"=>$one[4],
 										"mean"=>$one[5],
 										"note"=>$one[6],
@@ -357,8 +358,8 @@ function lookup_user($word){
 										"factormean"=>$one[8],
 										"status"=>$one[9],
 										"confidence"=>$one[10],
-										"creator"=>$one[11],
-										"dict_name"=>$one[12],
+										"creator_id"=>$one[11],
+										"source"=>$one[12],
 										"lang"=>$one[13],
 										);
 					}						
@@ -368,9 +369,10 @@ function lookup_user($word){
 				#  没找到就不找了
 			}
 	}
-	else{
-		PDO_Connect("" . _FILE_DB_WBW_);
-		$query = "SELECT *  from " . _TABLE_DICT_REF_ . " where pali = ? limit 0,100";
+	else
+	{
+		PDO_Connect(_FILE_DB_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
+		$query = "SELECT *  from " . _TABLE_DICT_WBW_ . " where word = ? and source='_SYS_USER_WBW_' limit 100";
 		$Fetch = PDO_FetchAll($query, array($word));
 	}
 	
@@ -380,12 +382,12 @@ function lookup_user($word){
 		$count_return++;
 		$userlist = array();
 		foreach ($Fetch as $value) {
-			if (isset($userlist[$value["creator"]])) {
-				$userlist[$value["creator"]] += 1;
+			if (isset($userlist[$value["creator_id"]])) {
+				$userlist[$value["creator_id"]] += 1;
 			} else {
-				$userlist[$value["creator"]] = 1;
+				$userlist[$value["creator_id"]] = 1;
 			}
-			$userwordcase = $value["type"] . "#" . $value["gramma"];
+			$userwordcase = $value["type"] . "#" . $value["grammar"];
 			$parent = $value["parent"];
 			if(empty($parent)){
 				$parent = "_null_";
@@ -510,7 +512,9 @@ function lookup_term($word){
 			}
 	}
 	else{
-		PDO_Connect("" . _FILE_DB_WBW_);
+		exit;
+		#TODO 查询term 表
+		PDO_Connect(_FILE_DB_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
 		$query = "SELECT *  from " . _TABLE_DICT_REF_ . " where pali = ? limit 0,100";
 		$Fetch = PDO_FetchAll($query, array($word));
 	}

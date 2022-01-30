@@ -23,7 +23,7 @@ function channal_list() {
 
 function channal_getById(id) {
 	for (const iterator of _my_channal) {
-		if (iterator.id == id) {
+		if (iterator.uid == id) {
 			return iterator;
 		}
 	}
@@ -60,7 +60,7 @@ function my_channal_list() {
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
 						html += "<div style='flex:2;'>";
-						html += "<guide url='../channal/card.php' gid='" + iterator.id + "'>";
+						html += "<guide url='../channal/card.php' gid='" + iterator.uid + "'>";
 						html += iterator.name;
 						html += "</guide>";
 						html += "</div>";
@@ -118,18 +118,17 @@ function my_channal_list() {
 								html += "<div style='flex:1;'>";
 								html +=
 									"<a href='../channal/my_channal_edit.php?id=" +
-									iterator.id +
+									iterator.uid +
 									"'>✏️" +
 									gLocal.gui.edit +
 									"</a></div><div style='flex:1;'>";
-								html += " <a onclick=\"channel_share('" + iterator.id + "')\">🔑"+gLocal.gui.share_to+"</a>";
+								html += " <a onclick=\"channel_share('" + iterator.uid + "')\">🔑"+gLocal.gui.share_to+"</a>";
 								html += "</div>";
 
 								break;
 							default:
 								break;
 						}
-
 						html += "</div>";
 					}
 					$("#my_channal_list").html(html);

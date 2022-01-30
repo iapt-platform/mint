@@ -28,7 +28,7 @@ function commit_render_channel_select() {
 		html += "<div class='channel'>";
 		let isFound = false;
 		for (const iterator of _my_channal) {
-			if (_commit_data.src == iterator.id) {
+			if (_commit_data.src == iterator.uid) {
 				html += iterator.name;
 				isFound = true;
 				break;
@@ -36,7 +36,7 @@ function commit_render_channel_select() {
 		}
 		if (!isFound) {
 			for (const iterator of _channalData) {
-				if (_commit_data.src == iterator.id) {
+				if (_commit_data.src == iterator.uid) {
 					html += iterator.name;
 					isFound = true;
 					break;
@@ -63,12 +63,12 @@ function commit_render_channel_select() {
 		}
 	}
 	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && _commit_data.src != iterator.id) {
-			html += "<option value='" + iterator.id + "' ";
-			if (_commit_data.dest == iterator.id) {
+		if (iterator.status > 0 && _commit_data.src != iterator.uid) {
+			html += "<option value='" + iterator.uid + "' ";
+			if (_commit_data.dest == iterator.uid) {
 				html += " selected ";
 			}
-			if (typeof _commit_data.src != "undefined" && _commit_data.src == iterator.id) {
+			if (typeof _commit_data.src != "undefined" && _commit_data.src == iterator.uid) {
 				html += "style:'display:none;' ";
 			}
 			html += " >" + iterator.name + "-";
@@ -145,10 +145,7 @@ function commit_preview_render() {
 				},
 				function (data, status) {
 					if (status == "success") {
-						try {
-							sentData = JSON.parse(data);
-						} catch (e) {}
-
+						sentData = JSON.parse(data);
 						previewWin.show(commit_render_comp(0));
 					}
 				}

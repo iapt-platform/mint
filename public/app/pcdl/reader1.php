@@ -743,8 +743,8 @@ if ($currParaLevel == 1 || $currParaParentLevel == 1) {
     //查询编辑者数量
 
     //查询句子译文内容
-    PDO_Connect(_FILE_DB_SENTENCE_);
-    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, "", "");
+    PDO_Connect(_FILE_DB_SENTENCE_,_DB_USERNAME_, _DB_PASSWORD_);
+    $dbh = new PDO(_FILE_DB_PALI_SENTENCE_, _DB_USERNAME_, _DB_PASSWORD_);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     //查询channal数量
     switch ($_view) {

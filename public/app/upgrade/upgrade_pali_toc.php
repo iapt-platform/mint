@@ -24,14 +24,14 @@ $dbh_pali_text->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $valid_book = array();
 
 #第一步 查询有多少书有译文
-$query = "SELECT book from sentence where strlen>0 and begin<>''  and language<>'' and book <1000  group by book";
+$query = "SELECT book_id as book from "._TABLE_SENTENCE_." where strlen>0 and word_start is not null  and language<>'' and book_id <1000  group by book_id";
 $stmt = $dbh_sent->prepare($query);
 $stmt->execute();
 $valid_book = $stmt->fetchAll(PDO::FETCH_ASSOC);
 echo "book:" . count($valid_book) . "<br>\n";
 
 #第一步 查询语言
-$query = "SELECT language from sentence where strlen>0 and begin<>''  and language<>'' and book <1000   group by language";
+$query = "SELECT language from "._TABLE_SENTENCE_." where strlen>0 and word_start is not null  and language<>'' and book_id <1000   group by language";
 $stmt = $dbh_sent->prepare($query);
 $stmt->execute();
 $result_lang = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,14 +52,14 @@ foreach ($result_lang as $lang) {
     # 第二步 生成para progress 1,2,15,zh-tw
 
     #查询该语言有多少段
-    $query = "SELECT book,paragraph from sentence where strlen>0 and language= ? and book<1000 group by book,paragraph";
+    $query = "SELECT book_id as book,paragraph from "._TABLE_SENTENCE_." where strlen>0 and language= ? and book<1000 group by book,paragraph";
     $stmt = $dbh_sent->prepare($query);
     $stmt->execute(array($lang["language"]));
     $result_para = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($result_para as $para) {
 
         # 查询每个段落的等效巴利语字符数
-        $query = "SELECT begin from sentence where strlen>0 and language= ? and book = ? and paragraph = ? and begin<>'' group by begin,end";
+        $query = "SELECT word_start from "._TABLE_SENTENCE_." where strlen>0 and language= ? and book_id = ? and paragraph = ? and word_start is not null group by word_start,word_end";
         $stmt = $dbh_sent->prepare($query);
         $stmt->execute(array($lang["language"], $para["book"], $para["paragraph"]));
         $result_sent = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -74,7 +74,7 @@ foreach ($result_lang as $lang) {
             $param[] = $para["paragraph"];
             foreach ($result_sent as $sent) {
                 # code...
-                $param[] = (int) $sent["begin"];
+                $param[] = (int) $sent["word_start"];
             }
             $sth->execute($param);
             $result_strlen = $sth->fetch(PDO::FETCH_ASSOC);

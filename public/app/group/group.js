@@ -31,7 +31,7 @@ function channal_list() {
 
 function channal_getById(id) {
 	for (const iterator of _my_channal) {
-		if (iterator.id == id) {
+		if (iterator.uid == id) {
 			return iterator;
 		}
 	}

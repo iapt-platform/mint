@@ -1,6 +1,8 @@
 <?php 
+
 # 雪花算法id 起始日期2021-12-22 绝对不可修改！！！
 define("_SnowFlakeDate_","2021-12-22");
+
 
 #表名设置，不能更改
 define("_DB_ENGIN_", Database["type"]);
@@ -213,20 +215,20 @@ define("_SQLITE_TABLE_SENTENCE_HISTORAY_", "sent_historay");
 
 //PostgreSQL
 define("_PG_DB_USER_SENTENCE_HISTORAY_", _PDO_DB_DSN_);
-define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_historaies");
+define("_PG_TABLE_SENTENCE_HISTORAY_", "sent_histories");
 
 
 
 # 逐词解析字典
 # sqlite
 define("_SQLITE_DB_WBW_", "sqlite:" . __DIR__ . "/../tmp/user/wbw.db3");
-define("_SQLITE_TABLE_DICT_WBW_", "wbw");
-define("_SQLITE_TABLE_DICT_WBW_INDEX_", "wbw_index");
+define("_SQLITE_TABLE_DICT_WBW_", "dict");
+define("_SQLITE_TABLE_DICT_WBW_INDEX_", "user_index");
 
 //PostgreSQL
 define("_PG_DB_WBW_", _PDO_DB_DSN_);
 define("_PG_TABLE_DICT_WBW_", "user_dicts");
-
+define("_PG_TABLE_DICT_WBW_INDEX_", "user_index");
 
 //写入频繁 读取不频繁
 # 用户行为记录
@@ -237,7 +239,7 @@ define("_SQLITE_TABLE_USER_OPERATION_FRAME_", "edit");
 
 //PostgreSQL
 define("_PG_DB_USER_ACTIVE_", _PDO_DB_DSN_);
-define("_PG_TABLE_USER_OPERATION_DAILY_", "user_operation_dailys");
+define("_PG_TABLE_USER_OPERATION_DAILY_", "user_operation_dailies");
 define("_PG_TABLE_USER_OPERATION_FRAME_", "user_operation_frames");
 
 #sqlite
@@ -283,7 +285,7 @@ define("_SQLITE_TABLE_ARTICLE_COLLECTION_", "article_list");
 define("_PG_DB_USER_ARTICLE_", _PDO_DB_DSN_);
 define("_PG_TABLE_ARTICLE_", "articles");
 define("_PG_TABLE_COLLECTION_", "collections");
-define("_PG_TABLE_ARTICLE_COLLECTION_", "article_collection");
+define("_PG_TABLE_ARTICLE_COLLECTION_", "article_collections");
 
 # 术语
 define("_SQLITE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
@@ -530,10 +532,10 @@ define("_TABLE_WORD_STATISTICS_", _PG_TABLE_WORD_STATISTICS_);
 
 */
 
-define("_FILE_DB_PALI_SENTENCE_", _SQLITE_DB_PALI_SENTENCE_);
-define("_TABLE_PALI_SENT_", _SQLITE_TABLE_PALI_SENT_);
-define("_TABLE_PALI_SENT_ORG_", _SQLITE_TABLE_PALI_SENT_ORG_);
-define("_TABLE_PALI_SENT_INDEX_", _SQLITE_TABLE_PALI_SENT_INDEX_);
+define("_FILE_DB_PALI_SENTENCE_", _PG_DB_PALI_SENTENCE_);
+define("_TABLE_PALI_SENT_", _PG_TABLE_PALI_SENT_);
+define("_TABLE_PALI_SENT_ORG_", _PG_TABLE_PALI_SENT_ORG_);
+define("_TABLE_PALI_SENT_INDEX_", _PG_TABLE_PALI_SENT_INDEX_);
 
 /*
 相似句
@@ -585,43 +587,43 @@ define("_TABLE_REF_INDEX_", _SQLITE_TABLE_REF_INDEX_);
 # 用户数据表
 
 #sqlite
-define("_FILE_DB_USER_WBW_", _SQLITE_DB_USER_WBW_);
-define("_TABLE_USER_WBW_", _SQLITE_TABLE_USER_WBW_);
-define("_TABLE_USER_WBW_BLOCK_", _SQLITE_TABLE_USER_WBW_BLOCK_);
+define("_FILE_DB_USER_WBW_", _PG_DB_USER_WBW_);
+define("_TABLE_USER_WBW_", _PG_TABLE_USER_WBW_);
+define("_TABLE_USER_WBW_BLOCK_", _PG_TABLE_USER_WBW_BLOCK_);
 
 
 # 译文
 #sqlite
-define("_FILE_DB_SENTENCE_", _SQLITE_DB_SENTENCE_);
-define("_TABLE_SENTENCE_", _SQLITE_TABLE_SENTENCE_);
-define("_TABLE_SENTENCE_BLOCK_", _SQLITE_TABLE_SENTENCE_BLOCK_);
-define("_TABLE_SENTENCE_PR_", _SQLITE_TABLE_SENTENCE_PR_);
+define("_FILE_DB_SENTENCE_", _PG_DB_SENTENCE_);
+define("_TABLE_SENTENCE_", _PG_TABLE_SENTENCE_);
+define("_TABLE_SENTENCE_BLOCK_", _PG_TABLE_SENTENCE_BLOCK_);
+define("_TABLE_SENTENCE_PR_", _PG_TABLE_SENTENCE_PR_);
 
 
 # 译文编辑历史
 #sqlite
-define("_FILE_DB_USER_SENTENCE_HISTORAY_", _SQLITE_DB_USER_SENTENCE_HISTORAY_);
-define("_TABLE_SENTENCE_HISTORAY_", _SQLITE_TABLE_SENTENCE_HISTORAY_);
+define("_FILE_DB_USER_SENTENCE_HISTORAY_", _PG_DB_USER_SENTENCE_HISTORAY_);
+define("_TABLE_SENTENCE_HISTORAY_", _PG_TABLE_SENTENCE_HISTORAY_);
 
 
 # 逐词解析字典
 # sqlite
-define("_FILE_DB_WBW_", _SQLITE_DB_WBW_);
-define("_TABLE_DICT_WBW_", _SQLITE_TABLE_DICT_WBW_);
-define("_TABLE_DICT_WBW_INDEX_", _SQLITE_TABLE_DICT_WBW_INDEX_);
+define("_FILE_DB_WBW_", _PG_DB_WBW_);
+define("_TABLE_DICT_WBW_", _PG_TABLE_DICT_WBW_);
+define("_TABLE_DICT_WBW_INDEX_", _PG_TABLE_DICT_WBW_INDEX_);
 
 
 //写入频繁 读取不频繁
 # 用户行为记录
 #sqlite
-define("_FILE_DB_USER_ACTIVE_", _SQLITE_DB_USER_ACTIVE_);
-define("_TABLE_USER_OPERATION_DAILY_", _SQLITE_TABLE_USER_OPERATION_DAILY_);
-define("_TABLE_USER_OPERATION_FRAME_", _SQLITE_TABLE_USER_OPERATION_FRAME_);
+define("_FILE_DB_USER_ACTIVE_", _PG_DB_USER_ACTIVE_);
+define("_TABLE_USER_OPERATION_DAILY_", _PG_TABLE_USER_OPERATION_DAILY_);
+define("_TABLE_USER_OPERATION_FRAME_", _PG_TABLE_USER_OPERATION_FRAME_);
 
 
 #sqlite
-define("_FILE_DB_USER_ACTIVE_LOG_", _SQLITE_DB_USER_ACTIVE_LOG_);
-define("_TABLE_USER_OPERATION_LOG_", _SQLITE_TABLE_USER_OPERATION_LOG_);
+define("_FILE_DB_USER_ACTIVE_LOG_", _PG_DB_USER_ACTIVE_LOG_);
+define("_TABLE_USER_OPERATION_LOG_", _PG_TABLE_USER_OPERATION_LOG_);
 
 
 //读取频繁 写入不频繁 
@@ -633,16 +635,16 @@ define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
 
 # 版本风格 
 #sqlite
-define("_FILE_DB_CHANNAL_", _SQLITE_DB_CHANNAL_);
-define("_TABLE_CHANNEL_", _SQLITE_TABLE_CHANNEL_);
+define("_FILE_DB_CHANNAL_", _PG_DB_CHANNAL_);
+define("_TABLE_CHANNEL_", _PG_TABLE_CHANNEL_);
 
 
 # 文章 文集
 
-define("_FILE_DB_USER_ARTICLE_", _SQLITE_DB_USER_ARTICLE_);
-define("_TABLE_ARTICLE_", _SQLITE_TABLE_ARTICLE_);
-define("_TABLE_COLLECTION_", _SQLITE_TABLE_COLLECTION_);
-define("_TABLE_ARTICLE_COLLECTION_", _SQLITE_TABLE_ARTICLE_COLLECTION_);
+define("_FILE_DB_USER_ARTICLE_", _PG_DB_USER_ARTICLE_);
+define("_TABLE_ARTICLE_", _PG_TABLE_ARTICLE_);
+define("_TABLE_COLLECTION_", _PG_TABLE_COLLECTION_);
+define("_TABLE_ARTICLE_COLLECTION_", _PG_TABLE_ARTICLE_COLLECTION_);
 
 
 

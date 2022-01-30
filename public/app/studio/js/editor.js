@@ -2148,6 +2148,8 @@ function editor_updataInlineDict(iword, newWord) {
 上传到我的字典
 */
 function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
+	let words = new Array();
+
 	let queryString = "<wordlist>";
 	let x = gXmlBookDataBody.getElementsByTagName("word");
 	let iCount = 0;
@@ -2293,6 +2295,18 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 			queryString += "<enable>" + d_enable + "</enable>";
 			queryString += "<language>" + d_language + "</language>";
 			queryString += "</word>";
+			words.push(
+				{
+					word:d_pali,
+					type:d_type,
+					grammar:d_gramma,
+					parent:d_parent,
+					mean:d_mean,
+					factors:d_factors,
+					factormean:d_fm,
+					language:d_language,
+				}
+			)
 			iCount++;
 
 			//formula
@@ -2315,6 +2329,18 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 				queryString += "<language>" + d_language + "</language>";
 				queryString += "</word>";
 				iCount++;
+				words.push(
+					{
+						word:"_formula_",
+						type:d_type,
+						grammar:d_gramma,
+						parent:"",
+						mean:formula,
+						factors:"",
+						factormean:"",
+						language:d_language,
+					}
+				);
 			}
 
 			//parent recorder
@@ -2343,6 +2369,18 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 				queryString += "<language>" + d_language + "</language>";
 				queryString += "</word>";
 				iCount++;
+				words.push(
+					{
+						word:d_parent,
+						type:d_parentType,
+						grammar:d_parentGramma,
+						parent:"",
+						mean:d_parentmean,
+						factors:fc.join("+"),
+						factormean:fm.join("+"),
+						language:d_language,
+					}
+				);
 			}
 
 			//part recorder
@@ -2372,6 +2410,18 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 						queryString += "<language>" + d_language + "</language>";
 						queryString += "</word>";
 						iCount++;
+						words.push(
+							{
+								word:arrPart[iPart],
+								type:".part.",
+								grammar:"",
+								parent:"",
+								mean:arrPartMean[iPart],
+								factors:"",
+								factormean:"",
+								language:d_language,
+							}
+						);
 					}
 				}
 			}
@@ -2382,9 +2432,26 @@ function upload_to_my_dict(wordIdFrom = -1, wordIdTo = -1) {
 	if (iCount == 0) {
 		ntf_show("no word update");
 	} else {
-		$.post("./dict_updata_wbw.php", queryString, function (data, status) {
-			ntf_show("Data: " + data + "\nStatus: " + status);
-		});
+		/*
+		$.post(
+			"./dict_updata_wbw.php", 
+			queryString, 
+			function (data, status) {
+				ntf_show("Data: " + data + "\nStatus: " + status);
+			}
+		);
+		*/
+		$.post(
+			"../api/user_dicts.php", 
+			{
+				op:'create',
+				view:'wbw',
+				data: JSON.stringify(words),
+			}, 
+			function (data, status) {
+				ntf_show("Data: " + data + "\nStatus: " + status);
+			}
+		);
 	}
 }
 

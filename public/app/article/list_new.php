@@ -24,8 +24,8 @@ require_once '../collect/function.php';
     else{
         $begin = 0;
     }
-    PDO_Connect(_FILE_DB_USER_ARTICLE_);
-    $query = "SELECT id,title,subtitle,summary,owner,modify_time from article  where status >= 30 ";
+    PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid as id,title,subtitle,summary,owner,modify_time from "._TABLE_ARTICLE_."  where status >= 30 ";
     
     if(isset($_GET["orderby"])){
         switch ($_GET["orderby"]) {
@@ -42,7 +42,7 @@ require_once '../collect/function.php';
     else{
         $query .="ORDER BY modify_time DESC";
     }
-    $query .=" LIMIT $begin , $onepage ";
+    $query .=" LIMIT $onepage OFFSET $begin  ";
     $Fetch = PDO_FetchAll($query);
     $collect_info = new CollectInfo();
     foreach ($Fetch as $key => $value) {
@@ -50,7 +50,7 @@ require_once '../collect/function.php';
         $userinfo = new UserInfo();
         $user = $userinfo->getName($value["owner"]);
         $Fetch[$key]["username"] = $user;
-        $query = "SELECT collect_id from article_list  where article_id = ? ";
+        $query = "SELECT collect_id from "._TABLE_ARTICLE_COLLECTION_."  where article_id = ? ";
         $collect = PDO_FetchRow($query,array($Fetch[$key]["id"]));
         if($collect){
             $Fetch[$key]["collect"] = $collect_info->get($collect["collect_id"]);

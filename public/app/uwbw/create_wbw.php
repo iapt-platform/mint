@@ -1,12 +1,17 @@
 <?php
 //工程文件操作
 //建立，
-include("../log/pref_log.php");
-require_once '../config.php';
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
-require_once "../channal/function.php";
-require_once "../redis/function.php";
+include __DIR__."/../log/pref_log.php";
+require_once __DIR__.'/../config.php';
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../channal/function.php";
+require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
+
+# 雪花id
+$snowflake = new SnowFlakeId();
+
 define("MAX_LETTER" ,20000);
 
 $output["status"]=0;
@@ -83,8 +88,7 @@ $channelInfo = $channelClass->getChannal($_channel);
 
 foreach ($_para as $key => $para) {
     # code...
-    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal = ? AND book= ? and paragraph = ? ";
-    //$FetchWBW = PDO_FetchOne($query,array($_channel,$_book,$para));
+    $query = "SELECT count(*) FROM "._TABLE_USER_WBW_BLOCK_." WHERE channel_uid = ? AND book_id= ? and paragraph = ? ";
 	$stmt = $dbh_wbw->prepare($query);
 	$stmt->execute(array($_channel,$_book,$para));
 	$row = $stmt->fetch(PDO::FETCH_NUM);
@@ -100,18 +104,22 @@ foreach ($_para as $key => $para) {
         #更新block库
         $block_id=UUID::v4();
         $trans_block_id = UUID::v4();
-        $block_data = array($block_id,
-                                         "",
-                                         $_channel,
-                                         $_COOKIE["userid"],
-                                         $_book,
-                                         $para,
-                                         "",
-                                         $channelInfo["lang"],
-                                         $channelInfo["status"],
-                                         mTime(),
-                                         mTime()
-                                        );
+        $block_data = array
+						(
+							$snowflake->id(),
+							$block_id,                 
+							"",            
+							$_channel,
+							$_COOKIE["userid"],
+							$_COOKIE["uid"],
+							$_book,
+							$para,
+							"",
+							$channelInfo["lang"],
+							$channelInfo["status"],
+							mTime(),
+							mTime()
+						);
         $block_list[] = array("channal"=>$_channel,
                                         "type"=>6,//word by word
                                         "book"=>$_book,
@@ -120,18 +128,23 @@ foreach ($_para as $key => $para) {
                                         "readonly"=>false
                                     );
         $dbh_wbw->beginTransaction();
-        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id',
-                                                                 'parent_id',
-                                                                 'channal',
-                                                                 'owner',
-                                                                 'book',
-                                                                 'paragraph',
-                                                                 'style',
-                                                                 'lang',
-                                                                 'status',
-                                                                 'modify_time',
-                                                                 'receive_time')
-                                                  VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+        $query="INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
+											( 
+												id,
+												uid ,
+                                                parent_id ,
+                                                channel_uid ,
+                                                creator_uid ,
+                                                editor_id ,
+                                                book_id ,
+                                                paragraph ,
+                                                style ,
+                                                lang ,
+                                                status ,
+                                                create_time ,
+                                                modify_time 
+											)
+                                            VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?  )";
         $stmt_wbw = $dbh_wbw->prepare($query);
         $stmt_wbw->execute($block_data);
         // 提交更改 
@@ -141,7 +154,7 @@ foreach ($_para as $key => $para) {
             $output["status"]=1;
             $output["error"]=$error[2];
             echo json_encode($output, JSON_UNESCAPED_UNICODE);
-            eixt;
+            exit;
         }
 
         #逐词解析库
@@ -176,36 +189,45 @@ foreach ($_para as $key => $para) {
             $strXml.="<style>{$result["style"]}</style>";
             $strXml.="<status>0</status>";
             $strXml.="</word>";
-            $wbw_data[] = array(UUID::v4(),
-                                              $block_id,
-                                              $_book,
-                                              $para,
-                                              $result["wid"],
-                                              $result["real"],
-                                              $strXml,
-                                              mTime(),
-                                              mTime(),
-                                              1,
-                                              $_COOKIE["userid"]
-                                            );
+            $wbw_data[] = array
+			(
+				$snowflake->id(),
+				UUID::v4(),
+				$block_id,
+				$_book,
+				$para,
+				$result["wid"],
+				$result["real"],
+				$strXml,
+				mTime(),
+				mTime(),
+				$channelInfo["status"],
+				$_COOKIE["userid"],
+				$_COOKIE["uid"]
+			);
         }
                 
             // 开始一个事务，关闭自动提交
 
             $dbh_wbw->beginTransaction();
-            $query="INSERT INTO "._TABLE_USER_WBW_." ('id',
-                                                           'block_id',
-                                                           'book',
-                                                           'paragraph',
-                                                           'wid',
-                                                           'word',
-                                                           'data',
-                                                           'modify_time',
-                                                           'receive_time',
-                                                           'status',
-                                                           'owner'
-                                                           ) 
-                                           VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )";
+            $query="INSERT INTO "._TABLE_USER_WBW_." 
+									( 
+										id,
+										uid ,
+										block_uid ,
+										book_id ,
+										paragraph ,
+										wid ,
+										word ,
+										data ,
+										create_time ,
+										modify_time ,
+										status ,
+										creator_uid ,
+										editor_id 
+
+									) 
+                                    VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?  , ?  , ?  , ? )";
             $stmt_wbw = $dbh_wbw->prepare($query);
             foreach($wbw_data as $oneParam){
                 $stmt_wbw->execute($oneParam);
@@ -217,69 +239,12 @@ foreach ($_para as $key => $para) {
                 $output["status"]=1;
                 $output["error"]=$error[2];
                 echo json_encode($output, JSON_UNESCAPED_UNICODE);
-                eixt;
+                exit;
             }
 
     }
 }
 
-/*TO DO 
-            //更新服务器端文件列表
-            $db_file = _FILE_DB_FILEINDEX_;
-            PDO_Connect("$db_file");
-            $query="INSERT INTO fileindex ('id',
-                                        'parent_id',
-                                        'channal',
-                                        'user_id',
-                                        'book',
-                                        'paragraph',
-                                        'file_name',
-                                        'title',
-                                        'tag',
-                                        'status',
-                                        'create_time',
-                                        'modify_time',
-                                        'accese_time',
-                                        'file_size',
-                                        'share',
-                                        'doc_info',
-                                        'doc_block',
-                                        'receive_time'
-                                        ) 
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            $stmt = $PDO->prepare($query);
-            $doc_id=UUID::v4();
-            $file_name = $book . '_' . $create_para . '_' . time();
-            $newData=array(
-                           $doc_id,
-                           "",
-                           $_POST["channal"],
-                           $uid,
-                           $book,
-                           $create_para,
-                           $file_name,
-                           $user_title,
-                           $tag,
-                           1,
-                           mTime(),
-                           mTime(),
-                           mTime(),
-                           $filesize,
-                           0,
-                           $doc_head,
-                           json_encode($block_list, JSON_UNESCAPED_UNICODE),
-                           mTime()
-                           );
-            $stmt->execute($newData);
-            if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-                $error = PDO_ErrorInfo();
-                echo "error - $error[2] <br>";
-            }
-            else{
-                echo "成功新建一个文件.";
-            }
-
-*/
 echo json_encode($output, JSON_UNESCAPED_UNICODE);
 PrefLog();
 ?>

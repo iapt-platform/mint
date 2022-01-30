@@ -23,8 +23,8 @@ require_once '../ucenter/function.php';
     else{
         $begin = 0;
     }
-    PDO_Connect(_FILE_DB_USER_ARTICLE_);
-    $query = "SELECT * FROM collect  where  status>=30 ";
+    PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
+    $query = "SELECT uid as id,title,subtitle,summary,owner,article_list FROM "._TABLE_COLLECTION_."  where  status>=30 ";
     if(isset($_GET["orderby"])){
         switch ($_GET["orderby"]) {
             case 'like':
@@ -40,8 +40,8 @@ require_once '../ucenter/function.php';
     else{
         $query .="ORDER BY modify_time DESC";
     }
-    $query .=" LIMIT ? , ? ";
-    $Fetch = PDO_FetchAll($query,array($begin,$onepage));
+    $query .=" LIMIT ? OFFSET ? ";
+    $Fetch = PDO_FetchAll($query,array($onepage,$begin));
     foreach ($Fetch as $key => $value) {
         # code...
         $userinfo = new UserInfo();

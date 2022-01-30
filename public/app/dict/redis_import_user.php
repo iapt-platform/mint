@@ -6,37 +6,38 @@ $rediskey = "dict://user";
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
 	if ($redis != false) {
-		$dbh = new PDO(_FILE_DB_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbh = new PDO(_FILE_DB_WBW_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$query = "SELECT pali from dict where pali !='' group by pali";
+		$query = "SELECT word from "._TABLE_DICT_WBW_." group by word";
 		$stmtPli = $dbh->query($query);
 		while ($word = $stmtPli->fetch(PDO::FETCH_ASSOC)) {
 			# code...
-			$query = "SELECT * from dict where pali = ? ";
+			$query = "SELECT * from "._TABLE_DICT_WBW_." where word = ? and source = '_USER_DATA_' ";
 			$stmt = $dbh->prepare($query);
-			$stmt->execute(array($word["pali"]));
+			$stmt->execute(array($word["word"]));
 			if ($stmt) {
 				$Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				$redisWord=array();
 				foreach ($Fetch as  $one) {
 					# code...
-					$redisWord[] = array($one["id"],
-										$one["pali"],
+					$redisWord[] = array(
+									$one["id"],
+									$one["word"],
 									$one["type"],
 									$one["gramma"],
-									$one["parent"],
+									$one["base"],
 									$one["mean"],
 									$one["note"],
 									$one["factors"],
 									$one["factormean"],
 									$one["status"],
 									$one["confidence"],
-									$one["creator"],
-									$one["dict_name"],
+									$one["creator_id"],
+									$one["source"],
 									$one["language"]
 									);
 				}
-				$redis->hSet($rediskey,$word["pali"],json_encode($redisWord,JSON_UNESCAPED_UNICODE));
+				$redis->hSet($rediskey,$word["word"],json_encode($redisWord,JSON_UNESCAPED_UNICODE));
 			}
 		}
 	}

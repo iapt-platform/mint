@@ -5,8 +5,6 @@
 
 define("RPC_SERVER","https://rpc.wikipali.org");
 define("ASSETS_SERVER","https://assets-hk.wikipali.org");
-define("HELP_SERVER","https://help-hk.wikipali.org");
-define("GRAMMAR_SERVER","https://grammar-hk.wikipali.org");
 
 /*
 电子邮件设置
@@ -36,6 +34,11 @@ define("Database",[
 ]);
 
 
+# 雪花id
+define("SnowFlake",[
+	"DatacenterId"=>1,
+	"WorkerId"=>1
+]);
 /*
 Redis 设置，
 */

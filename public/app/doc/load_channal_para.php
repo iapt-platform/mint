@@ -39,13 +39,13 @@ echo "\n<dict></dict>\n";
 echo "<message></message>\n";
 echo "<body>\n";
 
-$dh_wbw = new PDO("" . _FILE_DB_USER_WBW_, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dh_wbw = new PDO(_FILE_DB_USER_WBW_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dh_wbw->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 foreach ($paralist as $para) {
 
     $albumId = UUID::v4();
-    $query = "SELECT * FROM "._TABLE_USER_WBW_BLOCK_." WHERE channal=? AND book = ? AND paragraph = ?  ";
+    $query = "SELECT uid,creator_uid,lang FROM "._TABLE_USER_WBW_BLOCK_." WHERE channel_uid=? AND book_id = ? AND paragraph = ?  ";
     $stmt = $dh_wbw->prepare($query);
     $stmt->execute(array($channal, $book, $para));
     $FetchBlock = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -60,16 +60,16 @@ foreach ($paralist as $para) {
         echo "<title></title>";
         echo "<album_id></album_id>";
         echo "<album_guid></album_guid>";
-        echo "<author>{$FetchBlock["owner"]}</author>";
+        echo "<author>{$FetchBlock["creator_uid"]}</author>";
         echo "<language>{$FetchBlock["lang"]}</language>";
         echo "<version>1</version>";
         echo "<edition>1</edition>";
-        echo "<id>{$FetchBlock["id"]}</id>";
+        echo "<id>{$FetchBlock["uid"]}</id>";
         echo "</info>\n";
 
         echo "<data>\n";
-        $block_id = $FetchBlock["id"];
-        $query = "SELECT * from "._TABLE_USER_WBW_." where block_id= ? order by wid ASC";
+        $block_id = $FetchBlock["uid"];
+        $query = "SELECT data from "._TABLE_USER_WBW_." where block_uid= ? order by wid ASC";
         $stmt = $dh_wbw->prepare($query);
         $stmt->execute(array($block_id));
         $wbw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);

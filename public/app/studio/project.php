@@ -12,14 +12,20 @@
 <?php
 //工程文件操作
 //建立，
-require_once '../config.php';
-require_once "../public/_pdo.php";
-require_once "../public/function.php";
-require_once "../public/load_lang.php";
-require_once "./book_list_en.inc";
-require_once "../ucenter/function.php";
-require_once "../ucenter/setting_function.php";
-require_once "../lang/function.php";
+require_once __DIR__.'/../config.php';
+require_once __DIR__."/../public/_pdo.php";
+require_once __DIR__."/../public/function.php";
+require_once __DIR__."/../public/load_lang.php";
+require_once __DIR__."/./book_list_en.inc";
+require_once __DIR__."/../ucenter/function.php";
+require_once __DIR__."/../ucenter/setting_function.php";
+require_once __DIR__."/../lang/function.php";
+require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../channal/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
+
+# 雪花id
+$snowflake = new SnowFlakeId();
 
 $user_setting = get_setting();
 
@@ -47,6 +53,10 @@ if ($_COOKIE["uid"]) {
     echo '<a href="../ucenter/index.php" target="_blank">' . $_local->gui->not_login . '</a>';
     exit;
 }
+
+$channelClass = new Channal(redis_connect());
+$channelInfo = $channelClass->getChannal($_POST['channal']);
+
 switch ($op) {
     case "create":
         //判断单词数量 太大的不能加载
@@ -149,7 +159,22 @@ switch ($op) {
                                     }
                                     $block_id = UUID::v4();
                                     $trans_block_id = UUID::v4();
-                                    $block_data[] = array($block_id, "", $_POST["channal"], $USER_ID, $book, $iPar, "_none_", $_POST["lang"], 1);
+                                    $block_data[] = array
+									(
+										$snowflake->id(),
+										$block_id, 
+										"", 
+										$_POST["channal"], 
+										$_COOKIE['userid'], 
+										$_COOKIE['uid'], 
+										$book, 
+										$iPar, 
+										"_none_", 
+										$channelInfo["lang"],
+										$channelInfo["status"],
+										mTime(),
+										mTime()
+									);
                                     $block_list[] = array("channal" => $_POST["channal"],
                                         "type" => 6, //word by word
                                         "book" => $res_book,
@@ -185,7 +210,22 @@ switch ($op) {
                                         $strXml .= "<style>{$result["style"]}</style>";
                                         $strXml .= "<status>0</status>";
                                         $strXml .= "</word>";
-                                        $wbw_data[] = array(UUID::v4(), $block_id, $book, $iPar, $result["wid"], $result["real"], $strXml, mTime(), mTime(), 1, $USER_NAME);
+                                        $wbw_data[] = array
+										(
+											$snowflake->id(),
+											UUID::v4(), 
+											$block_id, 
+											$book, 
+											$iPar, 
+											$result["wid"], 
+											$result["real"], 
+											$strXml, 
+											mTime(), 
+											mTime(), 
+											$channelInfo["status"], 
+											$_COOKIE['userid'],
+											$_COOKIE['uid']
+										);
                                     }
                                 }
                             }
@@ -193,9 +233,26 @@ switch ($op) {
                             //写入数据库
                             // 开始一个事务，关闭自动提交
 
-                            PDO_Connect(_FILE_DB_USER_WBW_);
+                            PDO_Connect(_FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
                             $PDO->beginTransaction();
-                            $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." ('id','parent_id','channal','owner','book','paragraph','style','lang','status','modify_time','receive_time') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+                            $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
+									( 
+										id,
+										uid , 
+										parent_id , 
+										channel_uid , 
+									 	creator_uid , 
+										editor_id,
+										book_id , 
+										paragraph , 
+									  	style , 
+									  	lang , 
+									  	status , 
+									  	create_time ,
+									  	modify_time 
+									) 
+									  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
                             foreach ($block_data as $oneParam) {
                                 $stmt->execute($oneParam);
@@ -213,7 +270,23 @@ switch ($op) {
                             // 开始一个事务，关闭自动提交
 
                             $PDO->beginTransaction();
-                            $query = "INSERT INTO "._TABLE_USER_WBW_." ('id','block_id','book','paragraph','wid','word','data','modify_time','receive_time','status','owner') VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                            $query = "INSERT INTO "._TABLE_USER_WBW_." 
+										( 
+										  id,
+										  uid , 
+										  block_uid , 
+										  book_id , 
+										  paragraph , 
+										  wid , 
+										  word , 
+										  data , 
+										  create_time , 
+										  modify_time , 
+										  status , 
+										  creator_uid ,
+										  editor_id
+										)
+										  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
                             foreach ($wbw_data as $oneParam) {
                                 $stmt->execute($oneParam);
@@ -330,15 +403,15 @@ switch ($op) {
                 echo "<fieldset>";
                 echo "<legend>{$_local->gui->channel} ({$_local->gui->required})</legend>";
                 echo "<div>";
-                PDO_Connect(_FILE_DB_CHANNAL_);
-                $query = "select * from channal where owner = '{$_COOKIE["userid"]}'   limit 0,100";
-                $Fetch = PDO_FetchAll($query);
+                PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
+                $query = "SELECT uid,name,lang,status,create_time from "._TABLE_CHANNEL_." where owner_uid = ?  limit 100";
+                $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
                 $i = 0;
                 foreach ($Fetch as $row) {
                     echo '<div class="file_list_row" style="padding:5px;">';
 
                     echo '<div class="pd-10"  style="max-width:2em;flex:1;">';
-                    echo '<input name="channal" value="' . $row["id"] . '" ';
+                    echo '<input name="channal" value="' . $row["uid"] . '" ';
                     if ($i == 0) {
                         echo "checked";
                     }
@@ -347,24 +420,25 @@ switch ($op) {
                     echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["name"] . '</div>';
                     echo '<div class="title" style="flex:3;padding-bottom:5px;">' . $row["lang"] . '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-                    PDO_Connect( _FILE_DB_USER_WBW_);
-                    $query = "select count(*) from "._TABLE_USER_WBW_BLOCK_." where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
-                    $FetchWBW = PDO_FetchOne($query);
+                    PDO_Connect( _FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
+                    $query = "SELECT count(*) from "._TABLE_USER_WBW_BLOCK_." where channel_uid = ? and book_id= ? and paragraph in {$strQueryParaList}  limit 100";
+                    $FetchWBW = PDO_FetchOne($query,array($row["uid"],$book));
                     echo '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
                     if ($FetchWBW == 0) {
                         echo $_local->gui->blank;
-                        echo "&nbsp;<a></a>";//快捷编辑？
+                        echo "&nbsp;<a></a>";//??
                     } else {
+						#打开编辑窗口
                         echo $FetchWBW . $_local->gui->para;
-                        echo "&nbsp;<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["id"]}'>{$_local->gui->open}</a>";
+                        echo "&nbsp;<a href='../studio/editor.php?op=openchannal&book=$book&para={$paraList}&channal={$row["uid"]}'>{$_local->gui->open}</a>";
                     }
                     echo '</div>';
 
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
-                    PDO_Connect( _FILE_DB_SENTENCE_);
-                    $query = "select count(*) from sentence where channal = '{$row["id"]}' and book='{$book}' and paragraph in {$strQueryParaList}  limit 0,100";
-                    $FetchWBW = PDO_FetchOne($query);
+                    PDO_Connect( _FILE_DB_SENTENCE_,_DB_USERNAME_,_DB_PASSWORD_);
+                    $query = "SELECT count(*) from "._TABLE_SENTENCE_." where channel_uid = ? and book_id = ? and paragraph in {$strQueryParaList}  limit 100";
+                    $FetchWBW = PDO_FetchOne($query,array($row["uid"],$book));
                     echo '</div>';
                     echo '<div class="title" style="flex:2;padding-bottom:5px;">';
                     if ($FetchWBW == 0) {

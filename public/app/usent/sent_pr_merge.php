@@ -26,7 +26,7 @@ if($prData){
 		$newData = $prData;
 		if($dest){
 			#更新
-			$newData["id"]=$dest["id"];
+			$newData["id"]=$dest["uid"];
 			$newData["modify_time"]=mTime();
 			$newData["landmark"]="";
 			$updateDate[] = $newData;

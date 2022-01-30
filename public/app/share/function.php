@@ -80,7 +80,7 @@ function share_res_list_get($userid,$res_type=-1){
 				$channelInfo = $channel->getChannal($res["res_id"]);
 				if($channelInfo){
 					$resList[$key]["res_title"]=$channelInfo["name"];
-					$resList[$key]["res_owner_id"]=$channelInfo["owner"];
+					$resList[$key]["res_owner_id"]=$channelInfo["owner_uid"];
 					$resList[$key]["status"]=$channelInfo["status"];
 					$resList[$key]["lang"]=$channelInfo["lang"];
 				}

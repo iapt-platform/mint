@@ -5,7 +5,8 @@ require_once '../public/function.php';
 require_once '../collect/function.php';
 require_once "../ucenter/active.php";
 require_once "../redis/function.php";
-
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $respond=array("status"=>0,"message"=>"");
 if(!isset($_COOKIE["userid"])){
@@ -29,11 +30,11 @@ if($power<20){
 
 add_edit_event(_COLLECTION_EDIT_,$_POST["id"]);
 
-PDO_Connect(_FILE_DB_USER_ARTICLE_);
+PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
 
-$query="UPDATE collect SET title = ? , subtitle = ? , summary = ?, article_list = ?  ,  status = ? , lang = ? , receive_time= ?  , modify_time= ?   where  id = ?  ";
+$query="UPDATE "._TABLE_COLLECTION_." SET title = ? , subtitle = ? , summary = ?, article_list = ?  ,  status = ? , lang = ? , updated_at= now()  , modify_time= ?   where  uid = ?  ";
 $sth = $PDO->prepare($query);
-$sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$_POST["summary"], $_POST["article_list"] , $_POST["status"] , $_POST["lang"] ,  mTime() , mTime() , $_POST["id"]));
+$sth->execute(array($_POST["title"] , $_POST["subtitle"] ,$_POST["summary"], $_POST["article_list"] , $_POST["status"] , $_POST["lang"] ,  mTime() ,  $_POST["id"]));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();
@@ -46,16 +47,30 @@ else{
 		$redis->del("power://collection/".$_POST["id"]);
 	}
     # 更新 article_list 表
-    $query = "DELETE FROM article_list WHERE collect_id = ? ";
+    $query = "DELETE FROM "._TABLE_ARTICLE_COLLECTION_." WHERE collect_id = ? ";
     PDO_Execute($query,array($_POST["id"]));
     $arrList = json_decode($_POST["article_list"]);
     if(count($arrList)>0){
         /* 开始一个事务，关闭自动提交 */
         $PDO->beginTransaction();
-        $query = "INSERT INTO article_list (collect_id, article_id,level,title,children) VALUES ( ? , ?, ?, ? , ? )";
+        $query = "INSERT INTO "._TABLE_ARTICLE_COLLECTION_." (
+                            id,
+                            collect_id, 
+                            article_id,
+                            level,
+                            title,
+                            children
+                            ) VALUES (?, ? , ?, ?, ? , ? )";
         $sth = $PDO->prepare($query);
         foreach ($arrList as $row) {
-            $sth->execute(array($_POST["id"],$row->article,$row->level,$row->title,$row->children));
+            $sth->execute(array(
+                            $snowflake->id(),
+                            $_POST["id"],
+                            $row->article,
+                            $row->level,
+                            $row->title,
+                            $row->children
+                            ));
 			if($redis){
 				#删除article权限缓存
 				$redis->del("power://article/".$row->article);
