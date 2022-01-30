@@ -6,8 +6,10 @@ function redis_connect()
 		//code...
 		$redis = new redis();
 		$r_conn = $redis->connect(Redis["host"], Redis["port"]);
-		$redis->auth(Redis["password"]);
 		if ($r_conn) {
+			if(Redis["password"] !== ""){
+				$redis->auth(Redis["password"]);
+			}		
 			return $redis;
 		} else {
 			return false;

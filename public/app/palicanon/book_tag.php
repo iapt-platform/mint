@@ -1,12 +1,9 @@
 <?php
-require_once '../config.php';
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../redis/function.php';
 
-try {
-    $redis = new redis();
-    $r_conn = $redis->connect('127.0.0.1', 6379);
-} catch (Exception $e) {
-    $r_conn = false;
-}
+
+$redis = redis_connect();
 
 $tag = str_getcsv($_GET["tag"], ","); //
 $arrBookTag = json_decode(file_get_contents("../public/book_tag/en.json"), true);
@@ -50,7 +47,7 @@ foreach ($output as $key => $value) {
         if ($paraInfo) {
             # 查进度
             $paraProgress = false;
-            if ($r_conn) {
+            if ($redis) {
                 $count = $redis->hLen("progress_chapter_{$book}_{$para}");
                 if ($count > 0) {
                     $prog = $redis->hGetAll("progress_chapter_{$book}_{$para}");

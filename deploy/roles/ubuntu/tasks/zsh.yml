@@ -21,6 +21,11 @@
     remote_src: true
     mode: 0600
 
+- name: Enable $HOME/.local
+  ansible.builtin.lineinfile:
+    path: "{{ansible_env.HOME}}/.zshrc"
+    line: 'export PATH=$HOME/.local/bin:$PATH'
+
 - name: Use zsh
   become: true
   shell: chsh -s /bin/zsh {{ansible_user}}

@@ -445,7 +445,19 @@
 		}
 	}
 </style>
-
+<?php
+$help_lang = '';
+switch($_COOKIE['language']){
+	case "zh-cn":
+		$help_lang = "zh-Hans";
+		break;
+	case "zh-tw":
+		$help_lang = "zh-Hans";
+		break;
+	default:
+		$help_lang = "zh-Hans";
+}
+?>
 <!-- new tool bar begin-->
 <header>
 	<div class="head-logo">
@@ -468,27 +480,38 @@
 			<li class="nav_link"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
 			<li class="nav_link"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
 			<li class="nav_link"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
+			<li class="nav_link"><a href="<?php echo URL_HELP.'/'.$help_lang ?>"  target="_blank"><?php echo $_local->gui->help; ?></a></li>
 			<li class="nav_link more_btn">
 				<div id="more" class="dropdown" onmouseover="switchMenu(this,'nav-more')" onmouseout="hideMenu()">
 					<button class="dropbtn icon_btn" style="all:unset;" onClick="switchMenu(this,'nav-more')" id="more_button">
 						<?php echo $_local->gui->more; ?>
 					</button>
 					<ul class="header-dropdown-content left-content" style="display: none;" id="nav-more">
-					<li><a href="https://visuddhinanda.gitbook.io/pali-handbook/" target="_blank">
+						<li>
+							<a href="<?php echo URL_PALI_HANDBOOK.'/'.$help_lang ?>" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->palihandbook; ?></div>
-							</a></li>
-						<li><a href="../calendar/" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../calendar/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
-							</a></li>
-						<li><a href="../tools/unicode.html" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../tools/unicode.html" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->code_convert; ?></div>
-							</a></li>
-						<li><a href="../statistics" target="_blank">
+							</a>
+						</li>
+						<li>
+							<a href="../statistics" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
-							</a></li>
-						<li><a href="../calendar/history.html" target="_blank">
-							<div class="nav_link"><?php echo $_local->gui->history; ?></div>
-						</a></li>
+							</a>
+						</li>
+						<li>
+							<a href="../calendar/history.html" target="_blank">
+								<div class="nav_link"><?php echo $_local->gui->history; ?></div>
+							</a>
+						</li>
 					</ul>
 			</li>
 			<li class="nav_link nav-mobile"><a href="../calendar/">

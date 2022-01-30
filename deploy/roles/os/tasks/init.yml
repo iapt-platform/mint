@@ -1,10 +1,3 @@
-- name: create deploy folder
-  become: true
-  ansible.builtin.file:
-    path: "{{ app_deploy_target }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-
 - name: create downloads folder
   become: true
   ansible.builtin.file:
