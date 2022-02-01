@@ -98,3 +98,7 @@ code ol {
 	word-break: normal;
 	font-family: arial;
 }
+.guide_contence{
+    min-width: 20em;
+    max-width: 100%;
+}
