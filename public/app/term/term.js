@@ -719,13 +719,55 @@ function term_get_dict() {
 function term_get_used(){
     let output = [];
     $("term").each(function () {
-        output.push({
-            pali:$(this).attr("pali"),
-            meaning:$(this).attr("mean")
-        });
+        let word = $(this).attr("pali");
+        let meaning = $(this).attr("mean");
+        if(word !== ""){
+            output[word] = {
+                pali:word,
+                pali_en:com_getPaliEn(word),
+                meaning:meaning
+            };
+        }
+
     });
+
+    let arrWord=[];
+    for (const key in output) {
+        if (output.hasOwnProperty.call(output, key)) {
+            const element = output[key];
+            arrWord.push(element);
+        }
+    }
+    arrWord = arrWord.sort(function(a, b){
+	  var x = a.pali_en;
+	  var y = b.pali_en;
+	  if (x < y) {return -1;}
+	  if (x > y) {return 1;}
+	  return 0;
+        });
+
+    let arrMeaning=[];
+    for (const key in output) {
+        if (output.hasOwnProperty.call(output, key)) {
+            const element = output[key];
+            if(element.meaning != ""){
+                arrMeaning.push(element);
+            }
+        }
+    }
+    arrMeaning = arrMeaning.sort(function(a, b){
+	  var x = a.meaning;
+	  var y = b.meaning;
+	  if (x < y) {return -1;}
+	  if (x > y) {return 1;}
+	  return 0;
+        });
+
     return {
-        glossary:output
+        glossary:{
+            word:arrWord,
+            meaning:arrMeaning
+        }
     }
 }
 /*
