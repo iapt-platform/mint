@@ -52,3 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove HELP_SERVER GRAMMAR_SERVER from .env.example
 - remove HELP_SERVER GRAMMAR_SERVER from config.sample.php
 - remove HELP_SERVER GRAMMAR_SERVER from config.sample.php
+
+## [1.0.7] - 2022-02-01
+
+- add REDIS_NAMESPACE to .env.example
+- add redis namespace to config.sample.php
