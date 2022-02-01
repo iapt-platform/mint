@@ -9,7 +9,7 @@
   ansible.builtin.template:
     src: index.html.j2
     dest: "{{ app_deploy_target }}/index.html"
-    mode: '0400'
+    mode: '0444'
 
 - name: upload nginx.conf
   become: true
