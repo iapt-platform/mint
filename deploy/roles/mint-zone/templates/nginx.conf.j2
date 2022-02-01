@@ -11,15 +11,14 @@ server {
 
     gzip on;
     server_name {{ inventory_hostname }};
-    root {{ app_deploy_target }};
     client_max_body_size 16M;
-    index index.html;
     charset utf-8;
 
     access_log off;
     error_log /var/log/nginx/{{ inventory_hostname }}.error.log warn;
 
     location / {
+        proxy_set_header Host $host;
         proxy_pass http://{{ app_cluster_domain }};
     }
 }

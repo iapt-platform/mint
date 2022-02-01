@@ -92,6 +92,7 @@
       - zip
       - unzip
       - nginx
+      - libnginx-mod-http-upstream-fair
       - certbot
       - python3-certbot-nginx
       - openvpn
