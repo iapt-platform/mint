@@ -147,8 +147,8 @@ require_once "../pcdl/html_head.php";
 <link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 <script src="../article/my_collect.js" type="text/javascript"></script>
-<script language="javascript" src="../article/article_add_dlg.js"></script>
-
+<script src="../article/article_add_dlg.js"></script>
+<script src="../../node_modules/mustache/mustache.js"></script>
 
 <style>
 ul.fancytree-container{
@@ -388,6 +388,7 @@ function set_toc_visible(isVisible){
 			<div id="contents" class="content_inner <?php echo $contentClass;?>">
 				<?php echo $_local->gui->loading; ?>...
 			</div>
+            <div id="glossary"></div>
 			<div id="contents_foot">
 				<div id="contents_nav" style="display:flex;justify-content: space-between;">
 					<div id="contents_nav_left" class="nav_bnt nav_left" onclick="goto_prev()">

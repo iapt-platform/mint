@@ -199,11 +199,12 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
-						//初始化mermaid
-						mermaid.initialize();
 						if (callback) {
 							callback();
 						}
+						//初始化mermaid
+						mermaid.initialize();
+
 					} catch (e) {
 						console.error(e);
 					}

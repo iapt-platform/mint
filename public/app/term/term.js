@@ -716,6 +716,18 @@ function term_get_dict() {
 	);
 }
 
+function term_get_used(){
+    let output = [];
+    $("term").each(function () {
+        output.push({
+            pali:$(this).attr("pali"),
+            meaning:$(this).attr("mean")
+        });
+    });
+    return {
+        glossary:output
+    }
+}
 /*
 function term_popup_init() {
   $(".term_link").each(function () {
