@@ -203,7 +203,7 @@ function note_refresh_new(callback = null) {
 							callback();
 						}
 						//初始化mermaid
-						mermaid.initialize();
+						mermaid.initialize({startOnLoad:true});
 
 					} catch (e) {
 						console.error(e);

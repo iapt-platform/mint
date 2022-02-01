@@ -81,7 +81,7 @@ function lesson_show(id) {
             }
             $("#lesson_list").html(html);
 			note_refresh_new();
-            mermaid.initialize();
+            mermaid.initialize({startOnLoad:true});
         }
     );
 }

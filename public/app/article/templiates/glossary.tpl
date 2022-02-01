@@ -1,6 +1,13 @@
 <h2>Glossary</h2>
-{{#glossary}}
+{{#glossary.word}}
 <div>
 <b>{{pali}}</b>:{{meaning}}
 </div>
-{{/glossary}}
+{{/glossary.word}}
+
+<h2>术语表</h2>
+{{#glossary.meaning}}
+<div>
+<b>{{meaning}}</b>:{{pali}}
+</div>
+{{/glossary.meaning}}

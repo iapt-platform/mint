@@ -53,7 +53,7 @@ function articel_load(id, collection_id) {
 						popup_init();
 						guide_init();
 						note_refresh_new(function(){
-                            $.get('templiates/glossary.tpf',function(data){
+                            $.get('templiates/glossary.tpl',function(data){
                                 let TermData = term_get_used();
                                 let rendered = Mustache.render(data,TermData);
                                 $("#glossary").html(rendered);                                
