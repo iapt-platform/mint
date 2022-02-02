@@ -11,6 +11,12 @@
     dest: "{{ app_deploy_target }}/index.html"
     mode: '0444'
 
+- name: Create a current link
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}"
+    dest: /var/www/{{ inventory_hostname }}/current
+    state: link
+
 - name: upload nginx.conf
   become: true
   ansible.builtin.template:
