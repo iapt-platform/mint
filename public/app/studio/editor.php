@@ -58,7 +58,7 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/dict.js"></script>
 	<script language="javascript" src="js/relation.js"></script>
 
-	<script language="javascript" src="js/relation_list.json"></script>
+	<script language="javascript" src="js/relation_list.js"></script>
 	
 	<script language="javascript" src="sent/sent.js"></script>
 	<script language="javascript" src="../public/js/notify.js"></script>
