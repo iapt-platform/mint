@@ -15,7 +15,7 @@ class DhammaTermController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['guid','word','word_en','meaning','other_meaning','note','language','channal','updated_at'];
+		$indexCol = ['id','guid','word','word_en','meaning','other_meaning','note','language','channal','updated_at'];
 
 		switch ($request->get('view')) {
 			case 'user':
@@ -25,10 +25,11 @@ class DhammaTermController extends Controller
 				$table = DhammaTerm::select($indexCol)
 									->where('owner', $userUid);
 				if(!empty($search)){
-					$table->where('word', 'like', $search."%");
+					$table->where('word', 'like', $search."%")
+                          ->whereOr('word_en', 'like', $search."%");
 				}
 				if(!empty($request->get('order')) && !empty($request->get('dir'))){
-					$table->orderBy($request->get('order'),dir);
+					$table->orderBy($request->get('order'),$request->get('dir'));
 				}else{
 					$table->orderBy('updated_at','desc');
 				}
