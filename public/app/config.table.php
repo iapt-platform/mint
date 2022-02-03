@@ -292,7 +292,7 @@ define("_SQLITE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
 define("_SQLITE_TABLE_TERM_", "term");
 
 define("_PG_DB_TERM_", _PDO_DB_DSN_);
-define("_PG_TABLE_TERM_", "term");
+define("_PG_TABLE_TERM_", "dhamma_terms");
 
 # 协作
 define("_SQLITE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
@@ -643,8 +643,8 @@ define("_TABLE_COLLECTION_", _PG_TABLE_COLLECTION_);
 define("_TABLE_ARTICLE_COLLECTION_", _PG_TABLE_ARTICLE_COLLECTION_);
 
 # 术语
-define("_FILE_DB_TERM_", _SQLITE_DB_TERM_);
-define("_TABLE_TERM_", _SQLITE_TABLE_TERM_);
+define("_FILE_DB_TERM_", _PG_DB_TERM_);
+define("_TABLE_TERM_", _PG_TABLE_TERM_);
 
 # 协作
 define("_FILE_DB_USER_SHARE_", _SQLITE_DB_USER_SHARE_);
