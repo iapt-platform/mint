@@ -26,7 +26,8 @@ class DhammaTermController extends Controller
 									->where('owner', $userUid);
 				if(!empty($search)){
 					$table->where('word', 'like', $search."%")
-                          ->whereOr('word_en', 'like', $search."%");
+                          ->orWhere('word_en', 'like', $search."%")
+                          ->orWhere('meaning', 'like', "%".$search."%");
 				}
 				if(!empty($request->get('order')) && !empty($request->get('dir'))){
 					$table->orderBy($request->get('order'),$request->get('dir'));
@@ -100,8 +101,20 @@ class DhammaTermController extends Controller
      * @param  \App\Models\DhammaTerm  $dhammaTerm
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DhammaTerm $dhammaTerm)
+    public function destroy(DhammaTerm $dhammaTerm,Request $request)
     {
         //
+        $arrId = json_decode($request->get("id"),true) ;
+		$count = 0;
+		foreach ($arrId as $key => $id) {
+			# code...
+			$result = DhammaTerm::where('id', $id)
+							->where('owner', $_COOKIE["user_uid"])
+							->delete();
+            if($result){
+                $count++;
+            }
+		}
+		return $this->ok($count);
     }
 }

@@ -9,7 +9,7 @@ const grid = new gridjs.Grid({
 		   
 		   const col = columns[0];
 		   const dir = col.direction === 1 ? 'asc' : 'desc';
-		   let colName = ['id', 'word','word_en','meaning','other_meaning','updated_at'][col.index];
+		   let colName = ['Sel','id','guid', 'word','word_en','meaning','other_meaning','updated_at'][col.index];
 		   
 		   return `${prev}&order=${colName}&dir=${dir}`;
 		 }
@@ -38,6 +38,10 @@ const grid = new gridjs.Grid({
 			}, '');
 			}
       	},
+        {
+			name: 'id',
+			hidden: true
+		},
 		{
 			name: 'guid',
 			hidden: true
@@ -65,7 +69,7 @@ const grid = new gridjs.Grid({
 			return h('button', {
 				className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
 				onClick: () =>{
-                    let id = row.cells[1].data;
+                    let id = row.cells[2].data;
 					term_edit_dlg_open(id);
 				} 
 			}, 'Edit');
@@ -74,7 +78,7 @@ const grid = new gridjs.Grid({
 	],
 	server: {
 		url: '/api/v2/terms?view=user',
-		then: data => data.data.rows.map(card => [null,card.guid,card.word, card.word_en, card.meaning, card.other_meaning, card.updated_at,null]),
+		then: data => data.data.rows.map(card => [null,card.id,card.guid,card.word, card.word_en, card.meaning, card.other_meaning, card.updated_at,null]),
 		total: data => data.data.count
 	  },
 	pagination: {
@@ -98,17 +102,27 @@ const grid = new gridjs.Grid({
 document.querySelector("#to_recycle").onclick = function(){
 	if(_rowSelected.length>0){
 		if(confirm(`删除${_rowSelected.length}个单词，此操作不能恢复。`)){
-			$.getJSON("../api/user_dicts.php",
-			{
-				op:'delete',
-				id:JSON.stringify(_rowSelected)
-			},
-			function(data){
-				if(data.ok){
-					grid.forceRender();
-					alert(`delete ok `);
-				}
-			});			
+        $.ajax(
+        {
+            url: "/api/v2/terms/0",
+            type: 'DELETE',
+            data: {
+                id:JSON.stringify(_rowSelected),
+                "_token": 'token',
+            },
+            success: function (response){
+                if(response.ok){
+                    grid.forceRender();
+                    alert('delete ' + response.data + 'word ok');
+                }else{
+                    alert(`delete error `+response.message);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
 		}
 
 	}
