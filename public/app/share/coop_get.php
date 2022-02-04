@@ -8,10 +8,10 @@ require_once '../ucenter/function.php';
 require_once '../group/function.php';
 
 if(isset($_GET["res_id"])){
-    PDO_Connect(_FILE_DB_USER_SHARE_);
+    PDO_Connect(_FILE_DB_USER_SHARE_,_DB_USERNAME_, _DB_PASSWORD_);
     $id=$_GET["res_id"];
     $type=$_GET["res_type"];
-    $query = "SELECT * FROM share_cooperator  WHERE res_id = ? and res_type=? ";
+    $query = "SELECT * FROM "._TABLE_USER_SHARE_."  WHERE res_id = ? and res_type=? ";
 	$Fetch = PDO_FetchAll($query,array($id,$type));
 
 	#获取协作者名字
