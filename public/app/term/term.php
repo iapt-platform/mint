@@ -110,7 +110,7 @@ switch ($op) {
         }
     case "allpali":
         {
-            $query = "select word from "._TABLE_TERM_."  where 1 group by word";
+            $query = "select word from "._TABLE_TERM_." group by word";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
