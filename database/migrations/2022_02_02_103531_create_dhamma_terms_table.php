@@ -16,7 +16,7 @@ class CreateDhammaTermsTable extends Migration
         Schema::create('dhamma_terms', function (Blueprint $table) {
 			#使用雪花id
             $table->bigInteger('id')->primary();
-            $table->string('guid',36);
+            $table->string('guid',36)->uniqid();
 
             $table->string('word',1024)->index();
             $table->string('word_en',1024)->index();
