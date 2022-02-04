@@ -5,6 +5,8 @@ require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../public/load_lang.php';
 require_once '../public/function.php';
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 //is login
 if (isset($_COOKIE["username"])) {
@@ -41,7 +43,7 @@ if (isset($_GET["username"])) {
 }
 
 global $PDO;
-PDO_Connect("" . _FILE_DB_TERM_);
+PDO_Connect( _FILE_DB_TERM_);
 switch ($op) {
     case "pre": //预查询
         {
@@ -49,10 +51,10 @@ switch ($op) {
 				echo json_encode(array(), JSON_UNESCAPED_UNICODE);
             	break;
 			}
-            $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+            $query = "SELECT word,meaning from "._TABLE_TERM_." where \"word_en\" like " . $PDO->quote($word . '%') . " OR \"word\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
             $Fetch = PDO_FetchAll($query);
             if (count($Fetch) < 3) {
-                $query = "SELECT word,meaning from term where \"word_en\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+                $query = "SELECT word,meaning from "._TABLE_TERM_." where \"word_en\" like " . $PDO->quote('%' . $word . '%') . " OR \"word\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                 $Fetch2 = PDO_FetchAll($query);
                 //去掉重复的
                 foreach ($Fetch2 as $onerow) {
@@ -68,12 +70,12 @@ switch ($op) {
                     }
                 }
                 if (count($Fetch) < 8) {
-                    $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
+                    $query = "SELECT word,meaning from "._TABLE_TERM_." where \"meaning\" like " . $PDO->quote($word . '%') . " OR \"other_meaning\" like " . $PDO->quote($word . '%') . " group by word limit 0,10";
                     $Fetch3 = PDO_FetchAll($query);
 
                     $Fetch = array_merge($Fetch, $Fetch3);
                     if (count($Fetch) < 8) {
-                        $query = "SELECT word,meaning from term where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
+                        $query = "SELECT word,meaning from "._TABLE_TERM_." where \"meaning\" like " . $PDO->quote('%' . $word . '%') . " OR \"other_meaning\" like " . $PDO->quote('%' . $word . '%') . " group by word limit 0,10";
                         $Fetch4 = PDO_FetchAll($query);
                         //去掉重复的
                         foreach ($Fetch4 as $onerow) {
@@ -96,7 +98,7 @@ switch ($op) {
         }
     case "my":
         {
-            $query = "select guid,word,meaning,other_meaning,language from term  where owner= ? ";
+            $query = "select guid,word,meaning,other_meaning,language from "._TABLE_TERM_."  where owner= ? ";
             $Fetch = PDO_FetchAll($query, array($_COOKIE["userid"]));
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -108,7 +110,7 @@ switch ($op) {
         }
     case "allpali":
         {
-            $query = "select word from term  where 1 group by word";
+            $query = "select word from "._TABLE_TERM_."  where 1 group by word";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -118,7 +120,7 @@ switch ($op) {
         }
     case "allmean":
         {
-            $query = "select meaning from term  where \"word\" = " . $PDO->quote($word) . " group by meaning";
+            $query = "select meaning from "._TABLE_TERM_."  where \"word\" = " . $PDO->quote($word) . " group by meaning";
             $Fetch = PDO_FetchAll($query);
             foreach ($Fetch as $one) {
                 echo "<a>" . $one["meaning"] . "</a> ";
@@ -130,7 +132,7 @@ switch ($op) {
         {
             if (isset($_GET["id"])) {
                 $id = $_GET["id"];
-                $query = "select * from term  where \"guid\" = " . $PDO->quote($id);
+                $query = "select * from "._TABLE_TERM_."  where \"guid\" = " . $PDO->quote($id);
                 $Fetch = PDO_FetchAll($query);
                 echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
             } else {
@@ -149,7 +151,7 @@ switch ($op) {
             echo "<div class='pali'>{$word}</div>";
             //查本人数据
             echo "<div></div>"; //My Term
-            $query = "select * from term  where word = ? AND  owner = ? limit 0,30";
+            $query = "select * from "._TABLE_TERM_."  where word = ? AND  owner = ? limit 30";
             $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["userid"]));
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
@@ -235,7 +237,7 @@ switch ($op) {
             echo "</div>";
 
             //查他人数据
-            $query = "SELECT * FROM term  WHERE word = ? AND owner <> ? LIMIT 0,30";
+            $query = "SELECT * FROM "._TABLE_TERM_."  WHERE word = ? AND owner <> ? LIMIT 30";
 
             $Fetch = PDO_FetchAll($query, array($word, $_COOKIE["userid"]));
             $iFetch = count($Fetch);
@@ -262,23 +264,43 @@ switch ($op) {
         }
     case "copy": //拷贝到我的字典
         {
-            $query = "select * from term  where \"guid\" = " . $PDO->quote($_GET["wordid"]);
+            $query = "select * from "._TABLE_TERM_."  where \"guid\" = " . $PDO->quote($_GET["wordid"]);
 
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {
                 /* 开始一个事务，关闭自动提交 */
                 $PDO->beginTransaction();
-                $query = "INSERT INTO term ('id','guid','word','word_en','meaning','other_meaning','note','tag','create_time','owner','hit') VALUES (null,?,?,?,?,?,?,?," . time() . ",'$username',1)";
+                $query = "INSERT INTO "._TABLE_TERM_." 
+                (
+                    'id',
+                    'guid',
+                    'word',
+                    'word_en',
+                    'meaning',
+                    'other_meaning',
+                    'note',
+                    'tag',
+                    'owner',
+                    'editor_id',
+                    'create_time',
+                    'update_time',
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                 $stmt = $PDO->prepare($query);
                 {
-                    $stmt->execute(array(UUID::v4,
+                    $stmt->execute(array(
+                        $snowflake->id(),
+                        UUID::v4,
                         $Fetch[0]["word"],
                         $Fetch[0]["word_en"],
                         $Fetch[0]["meaning"],
                         $Fetch[0]["other_meaning"],
                         $Fetch[0]["note"],
                         $Fetch[0]["tag"],
+                        $_COOKIE['user_uid'],
+                        $_COOKIE['user_id'],
+                        mTime(),
+                        mTime()
                     ));
                 }
                 /* 提交更改 */
@@ -301,7 +323,7 @@ switch ($op) {
                 $authors = str_getcsv($_POST["authors"]);
             }
             $queryLang = $currLanguage . "%";
-            $query = "SELECT * from term  where \"word\" in {$words} AND language like ?  limit 0,1000";
+            $query = "SELECT * from "._TABLE_TERM_."  where \"word\" in {$words} AND language like ?  limit 1000";
             $Fetch = PDO_FetchAll($query, array($queryLang));
             $iFetch = count($Fetch);
             echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
@@ -310,7 +332,7 @@ switch ($op) {
     case "sync":
         {
             $time = $_GET["time"];
-            $query = "SELECT guid,modify_time from term  where receive_time>'{$time}'   limit 0,1000";
+            $query = "SELECT guid,modify_time from "._TABLE_TERM_."  where receive_time>'{$time}'   limit 1000";
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
@@ -320,9 +342,9 @@ switch ($op) {
         {
             $Fetch = array();
             if (isset($guid)) {
-                $query = "select * from term  where \"guid\" = '{$guid}'";
+                $query = "select * from "._TABLE_TERM_."  where \"guid\" = '{$guid}'";
             } else if (isset($word)) {
-                $query = "select * from term  where \"word\" = '{$word}'";
+                $query = "select * from "._TABLE_TERM_."  where \"word\" = '{$word}'";
             } else {
                 echo "[]";
                 return;
