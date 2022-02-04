@@ -30,6 +30,8 @@ class CreateSharesTable extends Migration
 
 			$table->timestamp('created_at')->useCurrent()->index();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->index();
+
+            $table->unique(['res_id','res_type','cooperator_id','cooperator_type']);
         });
     }
 
