@@ -70,7 +70,7 @@ $count = 0;
 
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true order by id ASC";
+$query = "SELECT *  FROM ".$src_table." order by id ASC";
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
