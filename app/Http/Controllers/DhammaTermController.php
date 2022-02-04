@@ -69,7 +69,53 @@ class DhammaTermController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                // validate
+        // read more on validation at http://laravel.com/docs/validation
+        $rules = array(
+            'word' => 'required',
+            'meaning' => 'required',
+            'language' => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return $this->error($validator);
+        } else {
+            #查询重复的
+            $table = DhammaTerm::where('owner', $_COOKIE["user_uid"])
+                    ->where('word',$request->get("word"))
+                    ->where('tag',$request->get("tag"));
+            if($request->get("channel")){
+                $isDoesntExist = $table->where('channel',$request->get("channel"))
+                      ->doesntExist();
+            }else{
+                $isDoesntExist = $table->where('language',$request->get("language"))
+                    ->doesntExist();
+            }
+	
+            if($isDoesntExist){
+                #不存在插入数据
+                $term = new DhammaTerm;
+                $term->id=$snowflake->id();
+                $term->guid=Str::uuid();
+                $term->word=$request->get("word");
+                $term->meaning=$request->get("meaning");
+                $term->save();
+                return $this->ok($data);
+
+            }else{
+                return $this->error("word existed");
+            }
+            // store
+            /*
+            $data = $request->all();
+            $data['id'] = $snowflake->id();
+            $data['guid'] = Str::uuid();
+            DhammaTerm::create($data);
+            */
+            
+        }
     }
 
     /**
