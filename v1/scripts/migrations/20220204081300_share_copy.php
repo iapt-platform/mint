@@ -85,6 +85,15 @@ $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$allSrcCount++;
 
+    $queryExist = "SELECT *  FROM ".$dest_table." where res_id=? and res_type=? and cooperator_id=? and cooperator_type=?";
+    $stmtExist = $PDO_DEST->prepare($queryExist);
+    $stmtExist->execute([$srcData["res_id"],$srcData["res_type"],$srcData["cooperator_id"],$srcData["cooperator_type"]]);
+    $isExist = $stmtExist->fetch(PDO::FETCH_ASSOC);
+	if($isExist){
+        echo "record is existed".PHP_EOL;
+        continue;
+    }
+
 if($srcData["cooperator_type"]==0){
     if($srcData["cooperator_id"]=='visuddhinanda'){
 		$srcData["cooperator_id"] = 'ba5463f3-72d1-4410-858e-eadd10884713';
@@ -154,7 +163,12 @@ if($srcData["cooperator_type"]==0){
 			$created_at,
 			$updated_at
 		);
-	$stmtDEST->execute($commitData);
+    try{
+        $stmtDEST->execute($commitData);
+    }catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+	
 
 	$count++;	
 	$allInsertCount++;
