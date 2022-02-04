@@ -141,7 +141,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	//查询是否已经插入
 	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE guid = ? ";
 	$getExist = $PDO_DEST->prepare($queryExsit);
-	$getExist->execute(array($srcData["id"]));
+	$getExist->execute(array($srcData["guid"]));
 	$exist = $getExist->fetch(PDO::FETCH_ASSOC);
 	if($exist){
 		continue;
