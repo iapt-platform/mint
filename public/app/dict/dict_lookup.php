@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //查询参考字典
 include("../log/pref_log.php");
 require_once __DIR__.'/../config.php';

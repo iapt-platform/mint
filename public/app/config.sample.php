@@ -46,13 +46,7 @@ define("Redis",[
 	"host" => "127.0.0.1",
 	"port" => 6379,
 	"password" => "",
-	"prefix"=>"aaa://"
-]);
-				
-# 雪花id
-define("SnowFlake",[
-	"DatacenterId"=>1,
-	"WorkerId"=>1
+	"namespace"=>"aaa://"
 ]);
 
 #目录设置，不能更改

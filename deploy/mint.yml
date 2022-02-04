@@ -19,3 +19,13 @@
 - hosts: db
   roles:
     - mint-db
+
+- hosts: zone
+  roles:
+    - mint-zone
+    - certbot-nginx
+
+- hosts: main
+  roles:
+    - mint-main
+    - certbot-nginx
