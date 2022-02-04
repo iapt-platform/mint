@@ -299,7 +299,7 @@ define("_SQLITE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3")
 define("_SQLITE_TABLE_USER_SHARE_", "share_cooperator");
 
 define("_PG_DB_USER_SHARE_", _PDO_DB_DSN_);
-define("_PG_TABLE_USER_SHARE_", "share_cooperator");
+define("_PG_TABLE_USER_SHARE_", "shares");
 
 # 工作组
 define("_SQLITE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
@@ -647,8 +647,8 @@ define("_FILE_DB_TERM_", _PG_DB_TERM_);
 define("_TABLE_TERM_", _PG_TABLE_TERM_);
 
 # 协作
-define("_FILE_DB_USER_SHARE_", _SQLITE_DB_USER_SHARE_);
-define("_TABLE_USER_SHARE_", _SQLITE_TABLE_USER_SHARE_);
+define("_FILE_DB_USER_SHARE_", _PG_DB_USER_SHARE_);
+define("_TABLE_USER_SHARE_", _PG_TABLE_USER_SHARE_);
 
 # 工作组
 define("_FILE_DB_GROUP_", _SQLITE_DB_GROUP_);

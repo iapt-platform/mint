@@ -14,8 +14,8 @@ $respond['message']="成功";
 if(isset($_POST["res_id"])){
 	$redis = redis_connect();
 
-	PDO_Connect(_FILE_DB_USER_SHARE_);
-    $query = "DELETE FROM share_cooperator WHERE res_id=? and cooperator_id = ? ";
+	PDO_Connect(_FILE_DB_USER_SHARE_,_DB_USERNAME_, _DB_PASSWORD_);
+    $query = "DELETE FROM "._TABLE_USER_SHARE_." WHERE res_id=? and cooperator_id = ? ";
 	$sth = $PDO->prepare($query);
 	if($sth)
 	{
