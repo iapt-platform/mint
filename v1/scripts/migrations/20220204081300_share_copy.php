@@ -71,13 +71,6 @@ $count = 0;
 $query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
-    #删除目标数据表中全部数据
-    fwrite(STDOUT,"delete dest".PHP_EOL);
-
-    $query = "delete from $dest_table ";
-    $stmtDest = $PDO_DEST->prepare($query);
-    $stmtDest->execute();
-    
 #从源数据表中读取
 $query = "SELECT *  FROM ".$src_table." order by id DESC";
 $stmtSrc = $PDO_SRC->prepare($query);
