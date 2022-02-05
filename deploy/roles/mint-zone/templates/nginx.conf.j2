@@ -1,0 +1,24 @@
+upstream {{ app_cluster_domain }} {
+{% for it in groups['www'] %}
+    server {{ it }};
+{% endfor %}
+    fair;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    gzip on;
+    server_name {{ inventory_hostname }};
+    client_max_body_size 16M;
+    charset utf-8;
+
+    access_log off;
+    error_log /var/log/nginx/{{ inventory_hostname }}.error.log warn;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_pass http://{{ app_cluster_domain }};
+    }
+}
