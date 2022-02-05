@@ -79,7 +79,7 @@ $stmtUser = $PDO_USER->prepare($query);
     $stmtDest->execute();
     
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table;
+$query = "SELECT *  FROM ".$src_table." order by id DESC";
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
@@ -90,7 +90,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
     $stmtExist->execute([$srcData["res_id"],$srcData["res_type"],$srcData["cooperator_id"],$srcData["cooperator_type"]]);
     $isExist = $stmtExist->fetch(PDO::FETCH_ASSOC);
 	if($isExist){
-        echo "record is existed".PHP_EOL;
+        echo "record is existed id=".$srcData['id'].PHP_EOL;
         continue;
     }
 
