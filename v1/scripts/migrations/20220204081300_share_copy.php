@@ -71,15 +71,9 @@ $count = 0;
 $query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
-    #删除目标数据表中全部数据
-    fwrite(STDOUT,"delete dest".PHP_EOL);
-
-    $query = "delete from $dest_table ";
-    $stmtDest = $PDO_DEST->prepare($query);
-    $stmtDest->execute();
     
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." order by id DESC";
+$query = "SELECT *  FROM ".$src_table;
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
@@ -91,7 +85,17 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
     $isExist = $stmtExist->fetch(PDO::FETCH_ASSOC);
 	if($isExist){
         echo "record is existed id=".$srcData['id'].PHP_EOL;
-        continue;
+            if($srcData["modify_time"]>$isExist['modify_time']){
+                #源数据新，删除旧数据
+                $query = "delete from $dest_table where id=?";
+                $stmtDest = $PDO_DEST->prepare($query);
+                $stmtDest->execute([$isExist['id']]);
+                echo "desc record is old delete id=".$isExist['id'].PHP_EOL;
+                $allInsertCount--;
+            }else{
+                echo "desc record is new id=".$isExist['id'].PHP_EOL;
+                continue;
+            }
     }
 
 if($srcData["cooperator_type"]==0){
