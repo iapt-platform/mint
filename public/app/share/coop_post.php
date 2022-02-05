@@ -13,8 +13,8 @@ $respond['status']=0;
 $respond['message']="成功";
 if(isset($_POST["res_id"])){
 	$redis = redis_connect();
-	PDO_Connect(_FILE_DB_USER_SHARE_);
-    $query = "UPDATE share_cooperator set power = ? WHERE res_id=? and cooperator_id = ? ";
+	PDO_Connect(_FILE_DB_USER_SHARE_,_DB_USERNAME_, _DB_PASSWORD_);
+    $query = "UPDATE "._TABLE_USER_SHARE_." set power = ? WHERE res_id=? and cooperator_id = ? ";
 	$sth = $PDO->prepare($query);
 	if($sth)
 	{

@@ -11,7 +11,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-	public function sendResponse($result,$message){
+	public function sendResponse($result,$message=""){
 		$response = [
 			'ok' => true,
 			'data'=>$result,
@@ -19,7 +19,9 @@ class Controller extends BaseController
 		];
 		return response()->json($response,200);
 	}
-
+    public function ok($result,$message=""){
+        return $this->sendResponse($result,$message);
+    }
 	public function sendError($error, $errorMessages = [], $code = 404){
 		$response = [
 			'ok' => false,
@@ -27,6 +29,9 @@ class Controller extends BaseController
 			'message'=> $error,
 		];
 		return response()->json($response,code);
-
 	}
+
+    public function error($error, $errorMessages, $code){
+        return $this->sendError($error, $errorMessages, $code);
+    }
 }
