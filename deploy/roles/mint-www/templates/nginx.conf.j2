@@ -8,7 +8,7 @@ server {
     add_header X-Content-Type-Options "nosniff";
 
     gzip on;
-    server_name {{ inventory_hostname }};
+    server_name {{ inventory_hostname }} {% for it in groups['zone'] %} {{ it }} {% endfor %};
     root {{ app_deploy_target }}/public;
     client_max_body_size 16M;
     index index.php;

@@ -1,4 +1,4 @@
-var RPC_SERVER="https://rpc.wikipali.org";
+var RPC_SERVER="https://{{ app_rpc_host }}";
 
 /*
   |---------------
@@ -11,4 +11,4 @@ var RPC_SERVER="https://rpc.wikipali.org";
   |------------------------
 */
 
-var ASSETS_SERVER = "https://assets-{{ app_cluster_id }}.wikipali.org"
+var ASSETS_SERVER = "https://assets-{{ app_cluster_domain }}"

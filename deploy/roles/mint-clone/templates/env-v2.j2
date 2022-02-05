@@ -31,6 +31,7 @@ MEMCACHED_HOST=127.0.0.1
 REDIS_HOST={{ app_redis_host }}
 REDIS_PASSWORD=null
 REDIS_PORT=6379
+REDIS_NAMESPACE="{{ app_redis_namespace }}"
 
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
@@ -55,7 +56,7 @@ PUSHER_APP_CLUSTER=mt1
 MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
 MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
-ASSETS_SERVER="https://assets-{{ app_cluster_id }}.wikipali.org"
-RPC_SERVER="https://rpc.wikipali.org"
+ASSETS_SERVER="https://assets-{{ app_cluster_domain }}"
+RPC_SERVER="https://{{ app_rpc_host }}"
 SNOWFLAKE_DATA_CENTER_ID=1
 SNOWFLAKE_WORKER_ID=1

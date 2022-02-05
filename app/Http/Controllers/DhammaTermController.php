@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\DhammaTerm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DhammaTermController extends Controller
 {
@@ -50,6 +52,37 @@ class DhammaTermController extends Controller
 									->orderBy('created_at','desc')
 									->get();
 				break;
+            case 'hot-meaning':
+                $key='term/hot_meaning';
+                $value = Cache::get($key, function()use($request) {
+                    $hotMeaning=[];
+                    $words = DhammaTerm::select('word')
+                                ->where('language',$request->get("language"))
+                                ->groupby('word')
+                                ->get();
+                    
+                    foreach ($words as $key => $word) {
+                        # code...
+                        $result = DhammaTerm::select(DB::raw('count(*) as word_count, meaning'))
+                                ->where('language',$request->get("language"))
+                                ->where('word',$word['word'])
+                                ->groupby('meaning')
+                                ->orderby('word_count','desc')
+                                ->first();
+                        if($result){
+                            $hotMeaning[]=[
+                                'word'=>$word['word'],
+                                'meaning'=>$result['meaning'],
+                                'language'=>$request->get("language"),
+                                'owner'=>'',
+                            ];
+                        }
+                    }
+                    Cache::put($key, $hotMeaning, 3600);
+                    return $hotMeaning;
+                });
+                return $this->ok(["rows"=>$value,"count"=>count($value)]);
+                break;
 			default:
 				# code...
 				break;

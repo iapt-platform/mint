@@ -1,4 +1,3 @@
-- import_tasks: init.yml
 - import_tasks: sshd.yml
 - import_tasks: ulimits.yml
 

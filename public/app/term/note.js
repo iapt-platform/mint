@@ -6,6 +6,7 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 
+
 var _arrData = new Array();
 var _channalData;
 
@@ -115,12 +116,17 @@ function note_update_background_style() {
 }
 //
 function note_refresh_new(callback = null) {
+    let Params={
+        maxSentenceOneRequest:100
+    };
 	note_update_background_style();
 	let objNotes = document.querySelectorAll("note");
 	let arrSentInfo = new Array();
+    let noteCounter = 0;
 	for (const iterator of objNotes) {
 		let id = iterator.id;
 		if (id == null || id == "") {
+            
 			//查看这个节点是第几层note嵌套。大于预定层数退出。
 			let layout = 1;
 			let parent = iterator.parentNode;
@@ -135,6 +141,7 @@ function note_refresh_new(callback = null) {
 				}
 				parent = parent.parentNode;
 			}
+            
 			id = com_guid();
 			iterator.id = id;
 			if (iterator.hasAttribute("info")) {
@@ -151,6 +158,10 @@ function note_refresh_new(callback = null) {
 					arrSentInfo.push({ id: id, data: info });
 				}
 			}
+            noteCounter++;
+            if(noteCounter>=Params.maxSentenceOneRequest){
+                break;
+            }
 		}
 	}
 	if (arrSentInfo.length > 0) {
@@ -190,7 +201,7 @@ function note_refresh_new(callback = null) {
 						_arrData = _arrData.concat(sentData);
 						note_ref_init();
 						//获取术语字典
-						term_get_dict();
+						term_get_dict(callback);
 						//刷新channel列表
 						note_channal_list();
 						//显示不同的巴利语脚本
@@ -199,9 +210,7 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
-						if (callback) {
-							callback();
-						}
+
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
@@ -214,6 +223,10 @@ function note_refresh_new(callback = null) {
 	} else {
 		term_get_dict();
 	}
+    if(arrSentInfo.length>0){
+        note_refresh_new(callback);
+    }
+    
 }
 
 //渲染巴利原文句子

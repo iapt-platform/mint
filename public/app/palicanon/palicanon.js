@@ -22,18 +22,30 @@ function palicanon_onload() {
 }
 
 function palicanon_load_term() {
-	$.post(
-		"../term/get_term_index.php",
+    let lang =getCookie("language");
+    switch (lang) {
+        case 'zh-cn':
+            lang = 'zh-hans';
+            break;
+        case 'zh-tw':
+            lang = 'zh-hant';
+            break;    
+        case '':
+            lang = 'en';
+            break;  
+    }
+	$.get(
+		"/api/v2/terms",
 		{
-			lang: getCookie("language"),
+            view:'hot-meaning',
+			language: lang,
 		},
 		function (data) {
-			let result = JSON.parse(data);
-			if (result.status == 0) {
-				arrMyTerm = result.data;
+			if (data.ok) {
+				arrMyTerm = data.data.rows;
 				render_main_tag();
 			} else {
-				alert(result.error);
+				alert(data.message);
 			}
 		}
 	);
