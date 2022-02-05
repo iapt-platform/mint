@@ -1,0 +1,27 @@
+- name: Creates deploy directory
+  become: true
+  file:
+    path: "{{ app_deploy_target }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: upload index.html
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ app_deploy_target }}/index.html"
+    mode: '0444'
+
+- name: Create a current link
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}"
+    dest: /var/www/{{ inventory_hostname }}/current
+    state: link
+
+- name: upload nginx.conf
+  become: true
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}.conf"
+    owner: www-data
+    group: www-data
+    mode: '0400'
