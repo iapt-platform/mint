@@ -26,6 +26,12 @@
     path: "{{ansible_env.HOME}}/.zshrc"
     line: 'export PATH=$HOME/.local/bin:$PATH'
 
+
+- name: Setup EDITOR
+  ansible.builtin.lineinfile:
+    path: "{{ansible_env.HOME}}/.zshrc"
+    line: 'export EDITOR=vim'
+
 - name: Use zsh
   become: true
   shell: chsh -s /bin/zsh {{ansible_user}}

@@ -83,7 +83,7 @@ $allSrcCount = 0;
 $count = 0;
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true ";
+$query = "SELECT *  FROM ".$src_table;
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 

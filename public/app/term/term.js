@@ -405,8 +405,12 @@ function term_array_updata() {
 		);
 	}
 }
-
-function term_updata_translation() {
+/*
+*-----------------------
+*更新术语显示
+*-----------------------
+*/
+function term_updata_translation(callback=null) {
 	termCounter = new Array();
 	noteCounter = 1;
 	//计算有效模版数量
@@ -551,6 +555,9 @@ function term_updata_translation() {
 		}
 	});
 	term_popup_init();
+    if(callback){
+        callback();
+    }
 }
 
 function term_show_win(guid, keyWord = "",channel="",lang="") {
@@ -674,9 +681,9 @@ function term_show_new() {
 	guide_init();
 }
 
-function term_get_dict() {
+function term_get_dict(callback=null) {
 	if (arrMyTerm.length > 0) {
-		term_updata_translation();
+		term_updata_translation(callback);
 		return;
 	}
 	let termwordlist = new Array();
@@ -707,7 +714,7 @@ function term_get_dict() {
 			if (data.length > 0) {
 				try {
 					arrMyTerm = JSON.parse(data);
-					term_updata_translation();
+					term_updata_translation(callback);
 				} catch (e) {
 					console.error(e.error + " data:" + data);
 				}
