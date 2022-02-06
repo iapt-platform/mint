@@ -171,9 +171,9 @@ if ($album == -1) {
 
         }
         //查共享文档
-        PDO_Connect("" . _FILE_DB_FILEINDEX_);
-        $query = "select * from fileindex where book='$book' and paragraph=$paragraph  and status>0 and share>0 order by create_time";
-        $Fetch = PDO_FetchAll($query);
+        PDO_Connect(_FILE_DB_FILEINDEX_);
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where book=? and paragraph=?  and status>0 and share>0 order by create_time";
+        $Fetch = PDO_FetchAll($query,array($book,$paragraph));
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
             echo "<ul class='search_list'>";

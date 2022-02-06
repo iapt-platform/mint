@@ -20,7 +20,7 @@ else{
     $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
     $result=array();
     foreach($Fetch as $row){
-        $query = "SELECT * from fileindex where id = ?  ";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where uid = ?  ";
         $FetchFile = PDO_FetchAll($query,array($row['doc_id']));
         if(count($FetchFile)>0){
             $FetchFile[0]["power"]=$row["power"];
@@ -28,7 +28,7 @@ else{
             $FetchFile[0]["power_create_time"]=$row["create_time"];
             $FetchFile[0]["power_modify_time"]=$row["modify_time"];
             $FetchFile[0]["user_name"]=ucenter_get($FetchFile[0]["user_id"],"");
-            $query = "SELECT id from fileindex where parent_id = ? and user_id = ? ";
+            $query = "SELECT uid from "._TABLE_FILEINDEX_." where parent_id = ? and user_id = ? ";
             $FetchFile[0]["my_doc_id"] = PDO_FetchOne($query,array($row['doc_id'],$uid));
             $FetchFile[0]["path"] = _get_para_path($FetchFile[0]["book"],$FetchFile[0]["paragraph"]);
             $result[] = $FetchFile[0];

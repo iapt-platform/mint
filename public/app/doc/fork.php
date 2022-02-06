@@ -29,9 +29,9 @@ if (isset($_GET["doc_id"]) == false) {
     echo "没有 文档编号";
     exit;
 }
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect( _FILE_DB_FILEINDEX_);
 $doc_id = $_GET["doc_id"];
-$query = "select * from fileindex where id= ? ";
+$query = "SELECT * from "._TABLE_FILEINDEX_." where uid= ? ";
 $Fetch = PDO_FetchAll($query, array($doc_id));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {
@@ -104,7 +104,7 @@ if (isset($_GET["channel"]) == false) {
 {
     PDO_Connect( _FILE_DB_FILEINDEX_,_DB_USERNAME_,_DB_PASSWORD_);
     $doc_id = $_GET["doc_id"];
-    $query = "SELECT * from fileindex where id= ? ";
+    $query = "SELECT * from "._TABLE_FILEINDEX_." where uid= ? ";
     $Fetch = PDO_FetchAll($query, array($doc_id));
     $iFetch = count($Fetch);
     if ($iFetch > 0) {
@@ -123,7 +123,7 @@ if (isset($_GET["channel"]) == false) {
         } else {
             //别人的文档
             //查询自己是否以前打开过
-            $query = "SELECT * from fileindex where parent_id='{$doc_id}' and user_id='{$uid}' ";
+            $query = "SELECT * from "._TABLE_FILEINDEX_." where parent_id='{$doc_id}' and user_id='{$uid}' ";
             $FetchSelf = PDO_FetchAll($query);
             $iFetchSelf = count($FetchSelf);
             if ($iFetchSelf > 0) {
@@ -139,8 +139,8 @@ if (isset($_GET["channel"]) == false) {
                 echo "<div style='display:none;'>";
                 //获取文件路径
 
-                PDO_Connect("" . _FILE_DB_USERINFO_);
-                $query = "select userid from user where id='{$owner}'";
+                PDO_Connect( _FILE_DB_USERINFO_);
+                $query = "SELECT userid from user where id='{$owner}'";
                 $FetchUid = PDO_FetchOne($query);
                 if ($FetchUid) {
                     //$source=$dir_user_base.$FetchUid.$dir_mydocument.$filename;
@@ -309,8 +309,10 @@ if (isset($_GET["channel"]) == false) {
                     //插入记录到文件索引
                     $filesize = 0;
                     //服务器端文件列表
-                    PDO_Connect("" . _FILE_DB_FILEINDEX_);
-                    $query = "INSERT INTO fileindex ('id',
+                    PDO_Connect(_FILE_DB_FILEINDEX_);
+                    $query = "INSERT INTO "._TABLE_FILEINDEX_." (
+                                                        'id',
+                                                        'uid',
                                                        'parent_id',
                                                        'user_id',
                                                        'book',
@@ -325,8 +327,7 @@ if (isset($_GET["channel"]) == false) {
                                                        'file_size',
                                                        'share',
                                                        'doc_info',
-                                                       'doc_block',
-                                                       'receive_time'
+                                                       'doc_block'
                                                        )
                                         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     $stmt = $PDO->prepare($query);
@@ -336,7 +337,9 @@ if (isset($_GET["channel"]) == false) {
                     $newDocInfo["parent_id"] = $orgFileInfo["id"];
                     $newDocInfo["user_id"] = $_COOKIE["uid"];
                     $newDocInfo["doc_block"] = json_encode($newDocBlockList, JSON_UNESCAPED_UNICODE);
-                    $newData = array($newDocInfo["id"],
+                    $newData = array(
+                        $snowflake->id(),
+                        $newDocInfo["id"],
                         $newDocInfo["parent_id"],
                         $newDocInfo["user_id"],
                         $newDocInfo["book"],
@@ -351,8 +354,7 @@ if (isset($_GET["channel"]) == false) {
                         $newDocInfo["file_size"],
                         $newDocInfo["share"],
                         $newDocInfo["doc_info"],
-                        $newDocInfo["doc_block"],
-                        mTime(),
+                        $newDocInfo["doc_block"]
                     );
                     $stmt->execute($newData);
                     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
