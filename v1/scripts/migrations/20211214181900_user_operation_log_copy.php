@@ -66,7 +66,7 @@ fwrite(STDOUT,"open dest table".PHP_EOL);
 #删除源数据表中全部数据
 fwrite(STDOUT,"delete dest".PHP_EOL);
 
-$query = "delete from $dest_table where true;";
+$query = "delete from $dest_table";
 $stmtDest = $PDO_DEST->prepare($query);
 $stmtDest->execute();
 
@@ -93,7 +93,7 @@ $query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true ";
+$query = "SELECT *  FROM ".$src_table;
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){

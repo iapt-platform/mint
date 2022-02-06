@@ -9,7 +9,7 @@ require_once '../ucenter/function.php';
 PDO_Connect(_FILE_DB_TERM_);
 $userInfo = new UserInfo();
 
-$query = "select word,meaning , owner from term where 1  order by create_time DESC limit 0,4";
+$query = "SELECT word,meaning , owner from "._TABLE_TERM_."  order by create_time DESC limit 4";
 $Fetch = PDO_FetchAll($query);
 
 foreach ($Fetch as $row) {

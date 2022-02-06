@@ -25,13 +25,13 @@ $user_db=_FILE_DB_USERINFO_;#user数据库
 $user_table=_TABLE_USER_INFO_;#user表名
 
 # 
-$src_db = _SQLITE_DB_USER_ARTICLE_;#源数据库
-$src_table = _SQLITE_TABLE_ARTICLE_;#源表名
+$src_db = _SQLITE_DB_TERM_;#源数据库
+$src_table = _SQLITE_TABLE_TERM_;#源表名
 
-$dest_db = _PG_DB_USER_ARTICLE_;#目标数据库
-$dest_table = _PG_TABLE_ARTICLE_;#目标表名
+$dest_db = _PG_DB_TERM_;#目标数据库
+$dest_table = _PG_TABLE_TERM_;#目标表名
 
-fwrite(STDOUT,"migarate article".PHP_EOL);
+fwrite(STDOUT,"migarate dhammaterm".PHP_EOL);
 #打开user数据库
 $PDO_USER = new PDO($user_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_USER->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -50,17 +50,17 @@ fwrite(STDOUT,"open dest table".PHP_EOL);
 $queryInsert = "INSERT INTO ".$dest_table." 
 								(
                                     id,
-									uid,
-									title,
-									subtitle,
-									summary,
-									content,
+									guid,
+									word,
+									word_en,
+									meaning,
+									other_meaning,
+									note,
+									tag,
+									channal,
+									language,
 									owner,
-									owner_id,
 									editor_id,
-									setting,
-									status,
-									lang,
 									create_time,
 									modify_time,
 									updated_at,
@@ -84,6 +84,24 @@ $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$allSrcCount++;
 
+    if($srcData["owner"]=='visuddhinanda'){
+		$srcData["owner"] = 'ba5463f3-72d1-4410-858e-eadd10884713';
+	}
+    if($srcData["owner"]=='test7'){
+		$srcData["owner"] = '6bd2f4d7-d970-419c-8ee5-f4bac42f4bc1';
+	}
+    if($srcData["owner"]=='Dhammadassi'){
+		$srcData["owner"] = 'd8538ebd-d369-4777-b99a-3ccb1aff8bfc';
+	}
+    if($srcData["owner"]=='pannava'){
+		$srcData["owner"] = '4db550c4-bc1b-43f2-a518-2740cb478f37';
+	}
+    if($srcData["owner"]=='NST'){
+		$srcData["owner"] = '5c23e629-56a3-48e9-97c7-2af73b59c3b9';
+	}
+    if($srcData["owner"]=='viranyani'){
+		$srcData["owner"] = 'C1AB2ABF-EAA8-4EEF-B4D9-3854321852B4';
+	}
     if($srcData["owner"]=='test6'){
 		$srcData["owner"] = 'f81c7140-64b4-4025-b58c-45a3b386324a';
 	}
@@ -106,13 +124,24 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 		fwrite(STDERR,time().",error,user id too long {$srcData["owner"]}".PHP_EOL);
 		continue;	
 	}
-    if(empty($srcData["lang"]) ){
-        $srcData["lang"]='none';
+    if(empty($srcData["word"])){
+		fwrite(STDERR,time().",error,word is empty {$srcData["id"]}".PHP_EOL);
+		continue;	
+	}
+    if(empty($srcData["language"]) ){
+        $srcData["language"]='zh-hans';
+    }
+
+    if($srcData["create_time"] < 15987088320){
+        $srcData["create_time"] *= 1000;
+    }
+    if($srcData["modify_time"] < 15987088320){
+        $srcData["modify_time"] *= 1000;
     }
 	//查询是否已经插入
-	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE uid = ? ";
+	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE guid = ? ";
 	$getExist = $PDO_DEST->prepare($queryExsit);
-	$getExist->execute(array($srcData["id"]));
+	$getExist->execute(array($srcData["guid"]));
 	$exist = $getExist->fetch(PDO::FETCH_ASSOC);
 	if($exist){
 		continue;
@@ -122,17 +151,17 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$updated_at = date("Y-m-d H:i:s.",$srcData["modify_time"]/1000).($srcData["modify_time"]%1000)." UTC";
 	$commitData = array(
             $snowflake->id(),
-			$srcData["id"],
-			$srcData["title"],
-			$srcData["subtitle"],
-			$srcData["summary"],
-			$srcData["content"],
+			$srcData["guid"],
+			$srcData["word"],
+			$srcData["word_en"],
+			$srcData["meaning"],
+			$srcData["other_meaning"],
+			$srcData["note"],
+			$srcData["tag"],
+			$srcData["channal"],
+			$srcData["language"],
 			$srcData["owner"],
-			$userId["id"],
-			$userId["id"],
-			$srcData["setting"],
-			$srcData["status"],
-			$srcData["lang"],
+            $userId["id"],
 			$srcData["create_time"],
 			$srcData["modify_time"],
 			$created_at,

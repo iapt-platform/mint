@@ -23,15 +23,15 @@ if (isset($_POST["lang"])) {
 
 if (isset($_POST["word"])) {
     $word = $_POST["word"];
-    $query = "select word,meaning,language,owner,count(*) as co from term where word=? and language=? group by word,meaning order by co DESC";
+    $query = "SELECT word,meaning,language,owner,count(*) as co from "._TABLE_TERM_." where word=? and language=? group by word,meaning order by co DESC";
     $output["data"] = PDO_FetchAll($query, array($word, $lang));
 } else {
-    $query = "select * from (select word,meaning,language,owner,count(*) as co from term where language=? group by word,meaning order by co DESC) where 1 group by word";
+    $query = "SELECT * from (SELECT word,meaning,language,owner,count(*) as co from "._TABLE_TERM_." where language=? group by word,meaning order by co DESC)  group by word";
     $output["data"] = PDO_FetchAll($query, array($lang));
     $pos = mb_strpos($lang, "-", 0, "UTF-8");
     if ($pos) {
         $lang_family = mb_substr($lang, 0, $pos, "UTF-8");
-        $query = "select * from (select word,meaning,language,owner,count(*) as co from term where language like ? group by word,meaning order by co DESC) where 1 group by word";
+        $query = "SELECT * from (SELECT word,meaning,language,owner,count(*) as co from "._TABLE_TERM_." where language like ? group by word,meaning order by co DESC)  group by word";
         $otherlang = PDO_FetchAll($query, array($lang_family . "%"));
         foreach ($otherlang as $key => $value) {
             $output["data"][] = $value;

@@ -77,7 +77,7 @@ $query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
 #从源数据表中读取
-$query = "SELECT *  FROM ".$src_table." WHERE true ";
+$query = "SELECT *  FROM ".$src_table;
 $stmtSrc = $PDO_SRC->prepare($query);
 $stmtSrc->execute();
 while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
