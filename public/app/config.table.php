@@ -307,8 +307,8 @@ define("_SQLITE_TABLE_GROUP_INFO_", "group_info");
 define("_SQLITE_TABLE_GROUP_MEMBER_", "group_member");
 
 define("_PG_DB_GROUP_", _PDO_DB_DSN_);
-define("_PG_TABLE_GROUP_INFO_", "group_info");
-define("_PG_TABLE_GROUP_MEMBER_", "group_member");
+define("_PG_TABLE_GROUP_INFO_", "group_infos");
+define("_PG_TABLE_GROUP_MEMBER_", "group_members");
 
 # 逐词解析文件索引
 define("_SQLITE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
@@ -651,9 +651,9 @@ define("_FILE_DB_USER_SHARE_", _PG_DB_USER_SHARE_);
 define("_TABLE_USER_SHARE_", _PG_TABLE_USER_SHARE_);
 
 # 工作组
-define("_FILE_DB_GROUP_", _SQLITE_DB_GROUP_);
-define("_TABLE_GROUP_INFO_", _SQLITE_TABLE_GROUP_INFO_);
-define("_TABLE_GROUP_MEMBER_", _SQLITE_TABLE_GROUP_MEMBER_);
+define("_FILE_DB_GROUP_", _PG_DB_GROUP_);
+define("_TABLE_GROUP_INFO_", _PG_TABLE_GROUP_INFO_);
+define("_TABLE_GROUP_MEMBER_", _PG_TABLE_GROUP_MEMBER_);
 
 # 逐词解析文件索引
 define("_FILE_DB_FILEINDEX_", _SQLITE_DB_FILEINDEX_);

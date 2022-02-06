@@ -117,7 +117,7 @@ function note_update_background_style() {
 //
 function note_refresh_new(callback = null) {
     let Params={
-        maxSentenceOneRequest:100
+        maxSentenceOneRequest:0
     };
 	note_update_background_style();
 	let objNotes = document.querySelectorAll("note");
@@ -159,7 +159,7 @@ function note_refresh_new(callback = null) {
 				}
 			}
             noteCounter++;
-            if(noteCounter>=Params.maxSentenceOneRequest){
+            if(Params.maxSentenceOneRequest>0 && noteCounter>=Params.maxSentenceOneRequest){
                 break;
             }
 		}
@@ -178,6 +178,7 @@ function note_refresh_new(callback = null) {
 				if (status == "success") {
 					try {
 						let sentData = JSON.parse(data);
+                        //开始渲染句子
 						for (const iterator of sentData) {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
@@ -191,6 +192,7 @@ function note_refresh_new(callback = null) {
 								$("#" + id).html(strHtml);
 							}
 						}
+                        //句子渲染完毕
 						//处理<code>标签作为气泡注释
 						popup_init();
 
@@ -218,15 +220,14 @@ function note_refresh_new(callback = null) {
 						console.error(e);
 					}
 				}
+                
 			}
 		);
 	} else {
-		term_get_dict();
+		term_get_dict(callback);
 	}
-    if(arrSentInfo.length>0){
-        note_refresh_new(callback);
-    }
-    
+
+    return arrSentInfo.length;
 }
 
 //渲染巴利原文句子
