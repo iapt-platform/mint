@@ -24,9 +24,9 @@ if (isset($_GET["doc_id"]) == false) {
     echo "没有 文档编号";
     exit;
 }
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect(_FILE_DB_FILEINDEX_);
 $doc_id = $_GET["doc_id"];
-$query = "SELECT * from fileindex where id= ? ";
+$query = "SELECT book,paragraph from "._TABLE_FILEINDEX_." where uid= ? ";
 $Fetch = PDO_FetchAll($query, array($doc_id));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {
@@ -96,8 +96,8 @@ if (isset($_GET["channel"]) == false) {
 }
 
 $dir = _DIR_USER_DOC_ . '/' . $_COOKIE["userid"] . _DIR_MYDOCUMENT_;
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
-$query = "SELECT file_name, doc_info, modify_time from fileindex where id=? ";
+PDO_Connect(_FILE_DB_FILEINDEX_);
+$query = "SELECT file_name, doc_info, modify_time from "._TABLE_FILEINDEX_." where uid=? ";
 $Fetch = PDO_FetchRow($query, array($_GET["doc_id"]));
 
 if ($Fetch === false) {
@@ -434,28 +434,9 @@ $dataBlock = $xml->xpath('//block');
     //插入记录到文件索引
     $filesize = 0;
     //服务器端文件列表
-    PDO_Connect("" . _FILE_DB_FILEINDEX_);
-    $query = "INSERT INTO fileindex ('id',
-                                   'parent_id',
-                                   'user_id',
-                                   'book',
-                                   'paragraph',
-                                   'file_name',
-                                   'title',
-                                   'tag',
-                                   'status',
-                                   'create_time',
-                                   'modify_time',
-                                   'accese_time',
-                                   'file_size',
-                                   'share',
-                                   'doc_info',
-                                   'doc_block',
-                                   'receive_time'
-                                   )
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    $stmt = $PDO->prepare($query);
-    $query = "UPDATE 'fileindex' SET 'doc_info' = ? , 'doc_block' = ?  WHERE id = ? ";
+    PDO_Connect( _FILE_DB_FILEINDEX_);
+
+    $query = "UPDATE "._TABLE_FILEINDEX_." SET 'doc_info' = ? , 'doc_block' = ?  WHERE id = ? ";
     $stmt = $PDO->prepare($query);
     $newData = array(
         $strHead,
