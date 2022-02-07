@@ -1,6 +1,7 @@
 <html>
   <head>
-    <title>Pali Full Text Search Example @ PostgreSQL</title>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+    <title>中文全文检索样例 @ PostgreSQL</title>
     <style>
      * {
          font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV3-Normal", Arial, Verdana;
@@ -24,7 +25,7 @@
      }
     </style>
   </head>
-  
+
   <body>
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -37,7 +38,7 @@
       <input type="submit" value="Query">
     </form>
     <?php
-    require_once '../path.php';
+    require_once '../../config.php';
 
     if (empty($q)) {
       echo "Query is empty";
@@ -48,42 +49,44 @@
 
       // Performing SQL query
       $query = "SELECT
-                 ts_rank('{0.1, 0.2, 0.4, 1}',
-                     full_text_search_weighted,
-                     websearch_to_tsquery('pali', '$q')) +
-                 ts_rank('{0.1, 0.2, 0.4, 1}',
-                     full_text_search_weighted_unaccent,
-                     websearch_to_tsquery('pali_unaccent', '$q'))
-                 AS rank,
-                 ts_headline('pali', content,
-                              websearch_to_tsquery('pali', '$q'),
+        ts_rank('{0.1, 0.2, 0.4, 1}',
+        full_text_search_weighted,
+        websearch_to_tsquery('jiebacfg', '$q')) as rank,
+        ts_headline('jiebacfg', author,
+                              websearch_to_tsquery('jiebacfg', '$q'),
                               'StartSel = <span>, StopSel = </span>')
-                 AS highlight,
-                 *
-                 FROM fts_texts
-                 WHERE
-                     full_text_search_weighted
-                     @@ websearch_to_tsquery('pali', '$q') OR
-                     full_text_search_weighted_unaccent
-                     @@ websearch_to_tsquery('pali_unaccent', '$q')
-                 ORDER BY rank DESC
-                 LIMIT 20;";
+                 AS highlight_author,
+        ts_headline('jiebacfg', title,
+                              websearch_to_tsquery('jiebacfg', '$q'),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_title,
+        ts_headline('jiebacfg', subtitle,
+                              websearch_to_tsquery('jiebacfg', '$q'),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_subtitle,
+        ts_headline('jiebacfg', content,
+                              websearch_to_tsquery('jiebacfg', '$q'),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_content,
+        author, title, subtitle, content, full_text_search_weighted
+        FROM sample
+        WHERE full_text_search_weighted @@ websearch_to_tsquery('jiebacfg', '$q')
+        ORDER BY rank DESC LIMIT 20;";
       $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
       // Printing results in HTML
       echo "<table>\n";
       echo "<tr>
                  <th>rank</th>
-                 <th>highlight</th>
-                 <th>paragraph</th>
-                 <th>book</th>
-                 <th>wid</th>
-                 <th>bold_single</th>
-                 <th>bold_double</th>
-                 <th>bold_multiple</th>
+                 <th>author (hl)</th>
+                 <th>title (hl)</th>
+                 <th>subtitle (hl)</th>
+                 <th>content (hl)</th>
+                 <th>author</th>
+                 <th>title</th>
+                 <th>subtitle</th>
                  <th>content</th>
                  <th>TSVECTOR</th>
-                 <th>TSVECTOR (unaccent)</th>
               </tr>";
       while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
         echo "\t<tr>\n";

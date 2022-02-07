@@ -142,7 +142,7 @@ sudo dnf install postgresql-contrib
 1. cp pali.syn /usr/share/pgsql/tsearch_data/pali.syn
 2. cp pali.stop /usr/share/pgsql/tsearch_data/pali.stop
 
-其中 `/usr/share/pgsql/tsearch_data/` 路径可通过 `pg_config --sharedir` 获得。
+其中 `/usr/share/pgsql/` 路径因服务器而异，请通过 `pg_config --sharedir` 获得。
 
 或者，直接执行下面语句，PSQL 会报错，告诉您应该放在哪里：
 
