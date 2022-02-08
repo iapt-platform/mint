@@ -9,8 +9,8 @@ require_once "../public/function.php";
 $id = $_GET["id"];
 
 PDO_Connect( _FILE_DB_FILEINDEX_);
-$query = "select * from fileindex where id=" . $PDO->quote($id);
-$Fetch = PDO_FetchAll($query);
+$query = "SELECT * from "._TABLE_FILEINDEX_." where uid=?";
+$Fetch = PDO_FetchAll($query,array($id));
 if (count($Fetch) > 0) {
     echo "<set>\n";
     echo $Fetch[0]["doc_info"];

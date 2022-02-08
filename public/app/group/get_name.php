@@ -9,7 +9,7 @@ require_once '../ucenter/function.php';
 $output = array();
 if (isset($_GET["name"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
-    $query = "SELECT * FROM group_info  WHERE name like ? and parent=0 limit 0,5";
+    $query = "SELECT * FROM "._TABLE_GROUP_INFO_."  WHERE name like ?  limit 50";
     $Fetch = PDO_FetchAll($query, array("%" . $_GET["name"] . "%"));
 
     $user_info = new UserInfo();

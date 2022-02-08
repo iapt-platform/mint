@@ -52,7 +52,7 @@ $powerlist["30"] = "可修改";
 PDO_Connect(_FILE_DB_FILEINDEX_);
 
 echo "<input id='doc_coop_docid' type='hidden' value='{$_doc_id}' />";
-$query = "SELECT * from fileindex where id = ? ";
+$query = "SELECT * from "._TABLE_FILEINDEX_." where uid = ? ";
 $Fetch = PDO_FetchAll($query, array($_doc_id));
 $iFetch = count($Fetch);
 if ($iFetch > 0) {

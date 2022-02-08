@@ -53,13 +53,13 @@ switch ($order_by) {
 
 switch ($status) {
     case "all":
-        $query = "select * from fileindex where user_id='$uid' AND title like '%$keyword%' and status>0 order by $order_by $order";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where user_id='$uid' AND title like '%$keyword%' and status>0 order by $order_by $order";
         break;
     case "share":
-        $query = "select * from fileindex where user_id='$uid' AND  title like '%$keyword%' and status>0 and share=1 order by $order_by $order";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where user_id='$uid' AND  title like '%$keyword%' and status>0 and share=1 order by $order_by $order";
         break;
     case "recycle":
-        $query = "select * from fileindex where user_id='$uid' AND  title like '%$keyword%' and status=0 order by $order_by $order";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where user_id='$uid' AND  title like '%$keyword%' and status=0 order by $order_by $order";
         break;
 }
 $Fetch = PDO_FetchAll($query);

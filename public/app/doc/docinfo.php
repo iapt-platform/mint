@@ -15,11 +15,11 @@ if ($_COOKIE["userid"]) {
     $isLogin = true;
 }
 
-PDO_Connect("" . _FILE_DB_FILEINDEX_);
+PDO_Connect(_FILE_DB_FILEINDEX_);
 if (isset($_GET["id"])) {
 
     $doc_id = $_GET["id"];
-    $query = "SELECT * from fileindex where id = ? ";
+    $query = "SELECT * from "._TABLE_FILEINDEX_." where uid = ? ";
     $Fetch = PDO_FetchAll($query, array($doc_id));
     $iFetch = count($Fetch);
     if ($iFetch > 0) {
