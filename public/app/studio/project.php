@@ -222,7 +222,7 @@ switch ($op) {
 											$strXml, 
 											mTime(), 
 											mTime(), 
-											$channelInfo["status"], 
+											0, 
 											$_COOKIE['userid'],
 											$_COOKIE['uid']
 										);
