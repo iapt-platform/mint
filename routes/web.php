@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\WbwAnalysisController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,3 +24,5 @@ Route::get('/user/{id}', function ($id) {
 Route::get('/home/{name}', function ($name) {
     return view('home', ['name' => $name]);
 });
+
+Route::get('/wbwanalyses', [WbwAnalysisController::class,'index']);
