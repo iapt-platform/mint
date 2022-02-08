@@ -39,7 +39,8 @@ class CreateWbwAnalysesTable extends Migration
             $table->string('lang',16);
             $table->text('d1')->nullable()->index();//备用数据
             $table->text('d2')->nullable()->index();//备用数据
-            $table->bigInteger('editor_id');//备用数据
+            $table->text('d3')->nullable()->index();//备用数据
+            $table->bigInteger('editor_id');
             $table->timestamps();
 
             $table->index(['type','data']);
