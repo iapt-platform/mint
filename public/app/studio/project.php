@@ -27,6 +27,13 @@ require_once __DIR__."/../public/snowflakeid.php";
 # 雪花id
 $snowflake = new SnowFlakeId();
 
+set_exception_handler(function($e){
+	echo("error-msg:".$e->getMessage().PHP_EOL);
+	echo("error-file:".$e->getFile().PHP_EOL);
+	echo("error-line:".$e->getLine().PHP_EOL);
+	exit;
+});
+
 $user_setting = get_setting();
 
 $sLang["1"] = "pali";
@@ -53,9 +60,11 @@ if ($_COOKIE["uid"]) {
     echo '<a href="../ucenter/index.php" target="_blank">' . $_local->gui->not_login . '</a>';
     exit;
 }
+if(isset($_POST["channal"])){
+    $channelClass = new Channal(redis_connect());
+    $channelInfo = $channelClass->getChannal($_POST["channal"]); 
+}
 
-$channelClass = new Channal(redis_connect());
-$channelInfo = $channelClass->getChannal($_POST['channal']);
 
 switch ($op) {
     case "create":
@@ -159,9 +168,10 @@ switch ($op) {
                                     }
                                     $block_id = UUID::v4();
                                     $trans_block_id = UUID::v4();
+                                    $snowId = $snowflake->id();
                                     $block_data[] = array
 									(
-										$snowflake->id(),
+										$snowId,
 										$block_id, 
 										"", 
 										$_POST["channal"], 
@@ -302,59 +312,75 @@ switch ($op) {
                             }
 
                             //服务器端文件列表
-                            PDO_Connect(_FILE_DB_FILEINDEX_);
-                            $query = "INSERT INTO fileindex ('id',
-												'parent_id',
-												'channal',
-												'user_id',
-												'book',
-												'paragraph',
-												'file_name',
-												'title',
-												'tag',
-												'status',
-												'create_time',
-												'modify_time',
-												'accese_time',
-												'file_size',
-												'share',
-												'doc_info',
-												'doc_block',
-												'receive_time'
-												)
-									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                            $stmt = $PDO->prepare($query);
-                            $doc_id = UUID::v4();
-                            $file_name = $book . '_' . $create_para . '_' . time();
-                            $newData = array(
-                                $doc_id,
-                                "",
-                                $_POST["channal"],
-                                $uid,
-                                $book,
-                                $create_para,
-                                $file_name,
-                                $user_title,
-                                $tag,
-                                1,
-                                mTime(),
-                                mTime(),
-                                mTime(),
-                                0,
-                                0,
-                                $doc_head,
-                                json_encode($block_list, JSON_UNESCAPED_UNICODE),
-                                mTime(),
-                            );
-                            $stmt->execute($newData);
-                            if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
-                                $error = PDO_ErrorInfo();
-                                echo "error - $error[2] <br>";
-                            } else {
-                                echo "成功新建一个文件.";
-                            }
+                            $PDO_File = new PDO(_FILE_DB_FILEINDEX_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
+                            $PDO_File->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                            echo "<a href=\"editor.php?op=opendb&doc_id={$doc_id}\">{$_local->gui->open}</a>";
+                            $queryInsert = "INSERT INTO \""._TABLE_FILEINDEX_."\"  
+ (
+                                    id,
+									uid,
+									parent_id,
+									user_id,
+									book,
+									paragraph,
+									channal,
+									file_name,
+									title,
+									tag,
+									status,
+									file_size,
+									share,
+									doc_info,
+									doc_block,
+									create_time,
+									modify_time,
+									accese_time,
+									accesed_at,
+									updated_at,
+									created_at) 
+									VALUES (? , ? , ? , ? , ?, ? ,? , ? , ? , ?, ? ,? , ? , ? , ?, ? ,? , ? , ? , ?, ? )";
+                            $stmtDEST = $PDO_File->prepare($queryInsert);
+                            $doc_id = UUID::v4();
+                            $file_name = $book . '_' . $create_para;
+
+                            $created_at = date("Y-m-d H:i:s.",mTime()/1000).(mTime()%1000)." UTC";
+
+                            $commitData = array(
+                                    $snowflake->id(),
+                                    $doc_id,
+                                    null,
+                                    $uid,
+                                    $book,
+                                    $create_para,
+                                    $_POST["channal"],
+                                    $file_name,
+                                    $user_title,
+                                    $tag,
+                                    1,
+                                    0,
+                                    0,
+                                    $doc_head,
+                                    json_encode($block_list, JSON_UNESCAPED_UNICODE),
+                                    mTime(),
+                                    mTime(),
+                                    mTime(),
+                                    $created_at,
+                                    $created_at,
+                                    $created_at
+                                );
+                            try{
+                                $stmtDEST->execute($commitData); 
+                                echo "成功新建一个文件.";
+                                echo "<a href=\"editor.php?op=opendb&doc_id={$doc_id}\">{$_local->gui->open}</a>";
+                            }catch(PDOException $e){
+                                echo($e->getMessage().PHP_EOL);
+                                echo "<pre>";
+                                print_r($commitData);
+                                echo "</pre>";                                
+                                exit;
+                            }
+                            
+
                         }
                         break;
                 }
@@ -837,7 +863,9 @@ switch ($op) {
             //服务器端文件列表
             PDO_Connect(_FILE_DB_FILEINDEX_);
 
-            $query = "INSERT INTO fileindex ('id',
+            $query = "INSERT INTO "._TABLE_FILEINDEX_." (
+                                            'id',
+                                            'uid',
 												'parent_id',
 												'user_id',
 												'book',
@@ -852,13 +880,14 @@ switch ($op) {
 												'file_size',
 												'share',
 												'doc_info',
-												'doc_block',
-												'receive_time'
+												'doc_block'
 												)
 									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $PDO->prepare($query);
             $doc_id = UUID::v4();
-            $newData = array($doc_id,
+            $newData = array(
+                $snowflake->id(),
+                $doc_id,
                 "",
                 $uid,
                 $book,
@@ -874,7 +903,6 @@ switch ($op) {
                 0,
                 "",
                 "",
-                mTime(),
             );
             $stmt->execute($newData);
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -906,8 +934,8 @@ switch ($op) {
             PDO_Connect(_FILE_DB_FILEINDEX_);
             if (isset($_GET["doc_id"])) {
                 $doc_id = $_GET["doc_id"];
-                $query = "select * from fileindex where id='$doc_id' ";
-                $Fetch = PDO_FetchAll($query);
+                $query = "SELECT * from "._TABLE_FILEINDEX_." where uid=? ";
+                $Fetch = PDO_FetchAll($query,array($doc_id));
                 $iFetch = count($Fetch);
                 if ($iFetch > 0) {
                     //文档信息
@@ -930,16 +958,16 @@ switch ($op) {
                     } else {
                         //别人的文档
                         //查询自己是否以前打开过
-                        $query = "select * from fileindex where parent_id='$doc_id' and user_id='$uid' ";
-                        $FetchSelf = PDO_FetchAll($query);
+                        $query = "SELECT * from "._TABLE_FILEINDEX_." where parent_id=? and user_id=? ";
+                        $FetchSelf = PDO_FetchAll($query,array($doc_id,$uid));
                         $iFetchSelf = count($FetchSelf);
                         if ($iFetchSelf > 0) {
                             //以前打开过
                             echo "已经复制的文档 Already Copy";
-                            $my_doc_id = $FetchSelf[0]["id"];
-                            echo "<a href='../studio/editor.php?op=opendb&fileid={$doc_id}'>{$_local->gui->edit_now}</a>";
+                            $my_doc_id = $FetchSelf[0]["uid"];
+                            echo "<a href='../studio/editor.php?op=opendb&fileid={$my_doc_id}'>{$_local->gui->edit_now}</a>";
                             echo "<script>";
-                            echo "window.location.assign(\"editor.php?op=opendb&fileid={$doc_id}\");";
+                            echo "window.location.assign(\"editor.php?op=opendb&fileid={$my_doc_id}\");";
                             echo "</script>";
                         } else {
                             //以前没打开过
@@ -1002,7 +1030,9 @@ exit;
                                     //$stmt = $PDO->prepare($query);
                                     //$newData=array($uid,$doc_id,UUID::v4(),$mbook,$paragraph,$filename,$title,$tag,time(),time(),time(),$filesize);
 
-                                    $query = "INSERT INTO fileindex ('id',
+                                    $query = "INSERT INTO "._TABLE_FILEINDEX_." (
+                                                'id',
+                                                'uid',
 												'parent_id',
 												'user_id',
 												'book',
@@ -1017,13 +1047,13 @@ exit;
 												'file_size',
 												'share',
 												'doc_info',
-												'doc_block',
-												'receive_time'
+												'doc_block'
 												)
 									VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                                     $stmt = $PDO->prepare($query);
                                     $newdoc_id = UUID::v4();
                                     $newData = array(
+                                        $snowflake->id(),
                                         $newdoc_id,
                                         $doc_id,
                                         $uid,
@@ -1040,7 +1070,6 @@ exit;
                                         0,
                                         "",
                                         "",
-                                        mTime(),
                                     );
 
                                     $stmt->execute($newData);

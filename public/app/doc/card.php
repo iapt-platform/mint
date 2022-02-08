@@ -9,7 +9,7 @@ require_once '../ucenter/function.php';
 if (isset($_GET["id"])) {
 	$output["id"]=$_GET["id"];
 	PDO_Connect( _FILE_DB_FILEINDEX_);
-	$query = "SELECT title,create_time,user_id as owner FROM fileindex  WHERE id = ? ";
+	$query = "SELECT title,create_time,user_id as owner FROM "._TABLE_FILEINDEX_."  WHERE uid = ? ";
 	$result = PDO_FetchRow($query, array($_GET["id"]));
 	$strData="";
 	if ($result) {

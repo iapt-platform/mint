@@ -17,7 +17,7 @@ function share_res_list_get($userid,$res_type=-1){
 	# 找我加入的群
 	$dbhGroup = new PDO(_FILE_DB_GROUP_, _DB_USERNAME_, _DB_PASSWORD_);
     $dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	$query = "SELECT group_id from group_member where user_id = ?  limit 200";
+	$query = "SELECT group_id from "._TABLE_GROUP_MEMBER_." where user_id = ?  limit 500";
 	$stmtGroup = $dbhGroup->prepare($query);
 	$stmtGroup->execute(array($userid));
 	$my_group = $stmtGroup->fetchAll(PDO::FETCH_ASSOC);
@@ -146,7 +146,7 @@ function share_get_res_power($userid,$res_id){
 		# 找我加入的群
 		$dbhGroup = new PDO(_FILE_DB_GROUP_, _DB_USERNAME_, _DB_PASSWORD_);
 		$dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$query = "SELECT group_id from group_member where user_id = ?  limit 100";
+		$query = "SELECT group_id from "._TABLE_GROUP_MEMBER_." where user_id = ?  limit 500";
 		$stmtGroup = $dbhGroup->prepare($query);
 		$stmtGroup->execute(array($userid));
 		$my_group = $stmtGroup->fetchAll(PDO::FETCH_ASSOC);

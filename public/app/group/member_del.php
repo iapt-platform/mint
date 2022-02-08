@@ -4,6 +4,13 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 $respond = array("status" => 0, "message" => "");
+set_exception_handler(function($e){
+    $respond['status'] = 1;
+    $respond['message'] = $e->getFile().$e->getLine().$e->getMessage();
+    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+	exit;
+});
+
 if (!isset($_COOKIE["userid"])) {
     $respond['status'] = 1;
     $respond['message'] = "尚未登录";
@@ -14,28 +21,22 @@ if (isset($_POST["groupid"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
     $mypower = 100;
     # 先查是否有删人权限
-    $query = "SELECT * from group_info where id=?";
+    #是否是拥有者
+    $query = "SELECT * from "._TABLE_GROUP_INFO_." where uid=?";
     $fc = PDO_FetchRow($query, array($_POST["groupid"]));
     if ($fc) {
-        if ($fc["parent"] == 0) {
-            if ($fc["owner"] == $_COOKIE["userid"]) {
-                $mypower = 0;
-            }
-        } else {
-            $query = "SELECT owner  from group_info where id=?";
-            $g_parent = PDO_FetchRow($query, array($fc["parent"]));
-            if ($g_parent && $g_parent["owner"] == $_COOKIE["userid"]) {
-                $mypower = 0;
-            }
+        if ($fc["owner"] == $_COOKIE["userid"]) {
+            $mypower = 0;
         }
     }
     if ($mypower != 0) {
         #非拥有者，看看是不是管理员
-        $query = "SELECT power from group_member where user_id=? and group_id=? ";
-        $power = PDO_FetchRow($query, array($_COOKIE["userid"], $_POST["groupid"]));
+        $query = "SELECT power from "._TABLE_GROUP_MEMBER_." where user_id=? and group_id=? ";
+        $power = PDO_FetchRow($query, array($_COOKIE["user_uid"], $_POST["groupid"]));
         if ($power) {
             $mypower = (int) $power["power"];
         }
+        #普通成员无权移除他人
         if ($mypower > 1) {
             $respond['status'] = 1;
             $respond['message'] = "no power to remove memeber";
@@ -45,7 +46,7 @@ if (isset($_POST["groupid"])) {
     }
 
     # 查询被删除人的权限
-    $query = "SELECT power from group_member where user_id=? and group_id=? ";
+    $query = "SELECT power from "._TABLE_GROUP_MEMBER_." where user_id=? and group_id=? ";
     $power = PDO_FetchRow($query, array($_POST["userid"], $_POST["groupid"]));
     $userpower = 0;
     if ($power) {
@@ -54,39 +55,16 @@ if (isset($_POST["groupid"])) {
     #操作人的权限不足
     if ($mypower >= $userpower) {
         $respond['status'] = 1;
-        $respond['message'] = "can not removed";
+        $respond['message'] = "can not removed 权限不足";
         echo json_encode($respond, JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $query = "SELECT * from group_info where id=?";
-    $fc = PDO_FetchRow($query, array($_POST["groupid"]));
-    if ($fc) {
-        $idList = array();
-        $idList[] = $_POST["userid"];
-        $idList[] = $_POST["groupid"];
-        if ($fc["parent"] == 0) {
-            //group
-            $level = 0;
-            #查询project
-            $query = "SELECT id from group_info where parent=?";
-            $g_project = PDO_FetchAll($query, array($_POST["groupid"]));
-            foreach ($g_project as $key => $parentid) {
-                # code...
-                $idList[] = $parentid["id"];
-            }
-        }
-    }
     #删除
-    $place_holders = implode(',', array_fill(0, count($idList), '?'));
-    $query = "DELETE from group_member where user_id=? and group_id IN ($place_holders)";
-    PDO_Execute($query, $idList);
 
-    if (!$sth || ($sth && $sth->errorCode() != 0)) {
-        $error = PDO_ErrorInfo();
-        $respond['status'] = 1;
-        $respond['message'] = $error[2];
-    }
+    $query = "DELETE from "._TABLE_GROUP_MEMBER_." where user_id=? and group_id =? ";
+    PDO_Execute($query, array($_POST["userid"], $_POST["groupid"]));
+
 } else {
     $respond['status'] = 1;
     $respond['message'] = "参数不足";

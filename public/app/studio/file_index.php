@@ -35,14 +35,14 @@ switch ($op) {
     case "list":
         break;
     case "get";
-        $query = "select * from fileindex where user_id='$uid' AND  id='{$doc_id}'";
-        $Fetch = PDO_FetchAll($query);
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where user_id=? AND  id=?";
+        $Fetch = PDO_FetchAll($query,[$uid,$doc_id]);
         echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
         break;
     case "getall";
         //
-        $query = "select * from fileindex where user_id='$uid' AND  id='{$_POST["doc_id"]}'";
-        $Fetch = PDO_FetchAll($query);
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where user_id=? AND  id=?";
+        $Fetch = PDO_FetchAll($query,[$uid,$_POST["doc_id"]]);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {
             echo json_encode($Fetch[0], JSON_UNESCAPED_UNICODE);
@@ -54,8 +54,8 @@ switch ($op) {
             $value = mTime();
         }
         $doc_id = $_POST["doc_id"];
-        $query = "UPDATE fileindex SET $field='$value' where user_id='$uid' AND  id='{$doc_id}'";
-        $stmt = @PDO_Execute($query);
+        $query = "UPDATE "._TABLE_FILEINDEX_." SET $field='$value' where user_id=? AND  uid=?";
+        $stmt = @PDO_Execute($query,array($uid,$doc_id));
         if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
             $error = PDO_ErrorInfo();
             echo json_encode(array("error" => $error[2], "message" => $query), JSON_UNESCAPED_UNICODE);
@@ -80,7 +80,7 @@ switch ($op) {
                 }
                 $strFileList = mb_substr($strFileList, 0, mb_strlen($strFileList, "UTF-8") - 1, "UTF-8");
                 $strFileList .= ")";
-                $query = "UPDATE fileindex SET share='$share' where user_id='$uid' AND   id in $strFileList";
+                $query = "UPDATE "._TABLE_FILEINDEX_." SET share='$share' where user_id='$uid' AND   uid in $strFileList";
                 $stmt = @PDO_Execute($query);
                 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                     $error = PDO_ErrorInfo();
@@ -105,7 +105,7 @@ switch ($op) {
                     $strFileList = mb_substr($strFileList, 0, mb_strlen($strFileList, "UTF-8") - 1, "UTF-8");
                     $strFileList .= ")";
 
-                    $query = "UPDATE fileindex SET status='0',share='0' where user_id='$uid' AND  id in $strFileList";
+                    $query = "UPDATE "._TABLE_FILEINDEX_." SET status='0',share='0' where user_id='$uid' AND  uid in $strFileList";
                     $stmt = @PDO_Execute($query);
                     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                         $error = PDO_ErrorInfo();
@@ -129,7 +129,7 @@ switch ($op) {
                 $strFileList = mb_substr($strFileList, 0, mb_strlen($strFileList, "UTF-8") - 1, "UTF-8");
                 $strFileList .= ")";
 
-                $query = "UPDATE fileindex SET status='1' where user_id='$uid' AND  id in $strFileList";
+                $query = "UPDATE "._TABLE_FILEINDEX_." SET status='1' where user_id='$uid' AND  uid in $strFileList";
                 $stmt = @PDO_Execute($query);
                 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                     $error = PDO_ErrorInfo();
@@ -157,7 +157,7 @@ switch ($op) {
                 $strFileList = mb_substr($strFileList, 0, mb_strlen($strFileList, "UTF-8") - 1, "UTF-8");
                 $strFileList .= ")";
                 //删除记录
-                $query = "DELETE FROM fileindex WHERE user_id='$uid' AND   id in $strFileList";
+                $query = "DELETE FROM "._TABLE_FILEINDEX_." WHERE user_id='$uid' AND   uid in $strFileList";
                 $stmt = @PDO_Execute($query);
                 if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
                     $error = PDO_ErrorInfo();

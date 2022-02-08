@@ -81,7 +81,7 @@ if ($paragraph > 0) {
     }
     //查共享文档
     PDO_Connect(_FILE_DB_FILEINDEX_);
-    $query = "select * from fileindex where book='$book' and paragraph=$paragraph  and status>0 and share>0 order by create_time";
+    $query = "SELECT * from "._TABLE_FILEINDEX_." where book='$book' and paragraph=$paragraph  and status>0 and share>0 order by create_time";
     $Fetch = PDO_FetchAll($query);
     $iFetch = count($Fetch);
     if ($iFetch > 0) {
@@ -95,7 +95,7 @@ if ($paragraph > 0) {
     }
     //查我的文档
     if ($UID != "") {
-        $query = "select * from fileindex where book='$book' and paragraph=$paragraph and status!=0 and user_id='{$UID}' order by create_time DESC";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where book='$book' and paragraph=$paragraph and status!=0 and user_id='{$UID}' order by create_time DESC";
         $Fetch = PDO_FetchAll($query);
         $iFetch = count($Fetch);
         if ($iFetch > 0) {

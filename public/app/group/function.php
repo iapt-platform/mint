@@ -8,8 +8,8 @@ require_once '../ucenter/function.php';
 function group_get_name($id)
 {
     if (isset($id)) {
-        PDO_Connect("" . _FILE_DB_GROUP_);
-        $query = "SELECT name FROM group_info  WHERE id=?";
+        PDO_Connect(_FILE_DB_GROUP_);
+        $query = "SELECT name FROM "._TABLE_GROUP_INFO_."  WHERE uid=?";
         $Fetch = PDO_FetchRow($query, array($id));
         if ($Fetch) {
             return $Fetch["name"];
@@ -27,9 +27,9 @@ class GroupInfo
     private $buffer;
     public function __construct()
     {
-        $dns = "" . _FILE_DB_GROUP_;
-        $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        $dns = _FILE_DB_GROUP_;
+        $this->dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $buffer = array();
         $parentId = array();
     }
@@ -43,7 +43,7 @@ class GroupInfo
             return $buffer[$id];
         }
         if ($this->dbh) {
-            $query = "SELECT name FROM group_info WHERE id= ? ";
+            $query = "SELECT name FROM "._TABLE_GROUP_INFO_." WHERE uid= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($id));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,6 +62,10 @@ class GroupInfo
 	
 	public function getParentId($id)
     {
+        /*
+        */
+        return 0;
+
         if (empty($id)) {
             return "";
         }
@@ -69,7 +73,7 @@ class GroupInfo
             return $parentId[$id];
         }
         if ($this->dbh) {
-            $query = "SELECT parent FROM group_info WHERE id= ? ";
+            $query = "SELECT parent FROM "._TABLE_GROUP_INFO_." WHERE uid= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($id));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
