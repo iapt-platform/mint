@@ -7,7 +7,7 @@ function user_wbw_push_word_element(xWord) {
 	let wId = wordid.split("-")[2];
 	let mWord = doc_word("#" + wordid);
 	let blockid = mWord.block.info("id");
-	user_wbw_push(blockid, wId, com_xmlToString(xWord));
+	user_wbw_push(blockid, wId, com_xmlToString(xWord),getNodeText(xWord,'status'));
 }
 
 function user_wbw_push_word(wordid) {
@@ -34,11 +34,11 @@ function user_wbw_push_word(wordid) {
 			}
 			wordData += com_xmlToString(xAllWord[i]);
 		}
-		user_wbw_push(blockid, wId, wordData);
+		user_wbw_push(blockid, wId, wordData,getNodeText(xAllWord[i],'status'));
 	}
 }
 
-function user_wbw_push(block_id, wid, data) {
+function user_wbw_push(block_id, wid, data,status=7) {
 	let d = new Date();
 	let objData = new Object();
 	objData.block_id = block_id;
@@ -47,6 +47,7 @@ function user_wbw_push(block_id, wid, data) {
 	objData.time = d.getTime();
 	objData.book = doc_block("#" + block_id).info("book");
 	objData.para = doc_block("#" + block_id).info("paragraph");
+	objData.status = status;
 	user_wbw_data_buffer.push(objData);
 }
 var commitTimes = 0;
