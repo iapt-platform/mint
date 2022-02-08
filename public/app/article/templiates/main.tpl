@@ -1,22 +1,19 @@
-<div>
-{{title}}
-</div>
-<div>
-{{subtitle}}
-</div>
-<div>
-{{editor.name}} at {{updated_at}}
-</div>
-<div class="content">
-{{content}}
+<div class="article">
+    {{#article}}
+        <div class="title heading{{article.level}}">{{article.title}}</div>
+        <div class="subtitle">{{article.subtitle}}</div>
+        <div class="editor">
+        {{article.editor.name}} at {{article.updated_at}}
+        </div>
+        <content>{{article.content}}</content>
+    {{/article}}
 </div>
 
 <h2>Glossary</h2>
-{{#glossary}}
-<b>{{pali}}</b>:{{meaning}}
-{{/glossary}}
+<glossary></glossary>
 
-<h2>ref</h2>
-{{#ref}}
-{{path}}
-{{/ref}}
+<h2>reference</h2>
+<reference></reference>
+
+<h2>footnote</h2>
+<footnote></footnote>
