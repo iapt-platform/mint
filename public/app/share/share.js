@@ -174,7 +174,7 @@ function username_search(keyword, type) {
 					for (const iterator of result) {
 						html +=
 							"<li onclick=\"user_selected('" +
-							iterator.uid +
+							iterator.id +
 							"','" +
 							iterator.username +
 							"',0)\">" +
