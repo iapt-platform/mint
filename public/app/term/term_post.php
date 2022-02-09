@@ -26,7 +26,7 @@ PDO_Connect( _FILE_DB_TERM_);
 
 
 
-if ($_POST["id"] != "") {
+if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 	#更新
 	#先查询是否有权限
 	#是否这个术语的作者
@@ -56,12 +56,11 @@ if ($_POST["id"] != "") {
 			exit;				
 		}
 	}
-    $query = "UPDATE "._TABLE_TERM_." SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? ,  modify_time= ? , updated_at = now()  where guid= ? ";
+    $query = "UPDATE "._TABLE_TERM_." SET meaning= ? ,other_meaning = ? , tag= ? ,  language = ? , note = ? ,  modify_time= ? , updated_at = now()  where guid= ? ";
 	$stmt = @PDO_Execute($query, 
 						array($_POST["mean"],
         					  $_POST["mean2"],
         					  $_POST["tag"],
-        					  $_POST["channal"],
         					  $_POST["language"],
         					  $_POST["note"],
         					  mTime(),
