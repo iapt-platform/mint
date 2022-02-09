@@ -24,7 +24,7 @@ if (isset($_COOKIE["userid"]) == false) {
 $respond = array("status" => 0, "message" => "");
 PDO_Connect( _FILE_DB_TERM_);
 
-
+$channelInfo = new Channal($redis);
 
 if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 	#更新
@@ -38,7 +38,7 @@ if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 		if($Fetch){
 			if($Fetch['owner']!=$_COOKIE["userid"]){
 				#不是这个术语的作者，查是否是channel的有编辑权限者	
-				$channelInfo = new Channal($redis);
+				
 				$channelPower = $channelInfo->getPower($Fetch['channal']);
 				if($channelPower<20){
 					$respond['status'] = 1;
@@ -111,11 +111,21 @@ if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["language"],$_POST["tag"],$_COOKIE["userid"]));
 	}else{
+        #TODO 
 		$query = "SELECT id from "._TABLE_TERM_." where word= ? and channal=?  and tag=? and owner = ? ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["channal"],$_POST["tag"],$_COOKIE["userid"]));
 	}
-	
+	if($_POST["channal"]==""){
+        $owner_uid = $_COOKIE["user_uid"];
+    }else{
+        $channel = $channelInfo->getChannal($_POST["channal"]);
+        if($channelInfo){
+            $owner_uid = $channel["owner_uid"];
+        }else{
+            $owner_uid = $_COOKIE["user_uid"];
+        }
+    }
 	if ($stmt) {
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($Fetch){
@@ -136,7 +146,7 @@ if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
         $_POST["channal"],
         $_POST["language"],
         $_POST["note"],
-        $_COOKIE["user_uid"],
+        $owner_uid,
         $_COOKIE["user_id"],
         mTime(),
         mTime()
