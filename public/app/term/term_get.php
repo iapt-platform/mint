@@ -10,12 +10,17 @@ require_once '../public/function.php';
 require_once '../ucenter/function.php';
 require_once '../channal/function.php';
 
+if(isset($_POST["readonly"])){
+    $readonly = $_POST["readonly"];
+}else{
+    $readonly = true;
+}
 PDO_Connect(_FILE_DB_TERM_);
 
 $output = array();
 if (isset($_POST["words"])) {
     $wordlist = json_decode($_POST["words"]);
-    if ($_POST["readonly"] == "false" && !empty($_POST["channal"])) {
+    if ($readonly == "false" && !empty($_POST["channal"])) {
         $channal = explode(",", $_POST["channal"]);
         $channal_info = new Channal();
         $channal_owner = array();
