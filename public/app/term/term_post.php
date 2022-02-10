@@ -24,9 +24,9 @@ if (isset($_COOKIE["userid"]) == false) {
 $respond = array("status" => 0, "message" => "");
 PDO_Connect( _FILE_DB_TERM_);
 
+$channelInfo = new Channal($redis);
 
-
-if ($_POST["id"] != "") {
+if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 	#更新
 	#先查询是否有权限
 	#是否这个术语的作者
@@ -38,7 +38,7 @@ if ($_POST["id"] != "") {
 		if($Fetch){
 			if($Fetch['owner']!=$_COOKIE["userid"]){
 				#不是这个术语的作者，查是否是channel的有编辑权限者	
-				$channelInfo = new Channal($redis);
+				
 				$channelPower = $channelInfo->getPower($Fetch['channal']);
 				if($channelPower<20){
 					$respond['status'] = 1;
@@ -56,12 +56,11 @@ if ($_POST["id"] != "") {
 			exit;				
 		}
 	}
-    $query = "UPDATE "._TABLE_TERM_." SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? ,  modify_time= ? , updated_at = now()  where guid= ? ";
+    $query = "UPDATE "._TABLE_TERM_." SET meaning= ? ,other_meaning = ? , tag= ? ,  language = ? , note = ? ,  modify_time= ? , updated_at = now()  where guid= ? ";
 	$stmt = @PDO_Execute($query, 
 						array($_POST["mean"],
         					  $_POST["mean2"],
         					  $_POST["tag"],
-        					  $_POST["channal"],
         					  $_POST["language"],
         					  $_POST["note"],
         					  mTime(),
@@ -112,11 +111,21 @@ if ($_POST["id"] != "") {
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["language"],$_POST["tag"],$_COOKIE["userid"]));
 	}else{
+        #TODO 
 		$query = "SELECT id from "._TABLE_TERM_." where word= ? and channal=?  and tag=? and owner = ? ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["channal"],$_POST["tag"],$_COOKIE["userid"]));
 	}
-	
+	if($_POST["channal"]==""){
+        $owner_uid = $_COOKIE["user_uid"];
+    }else{
+        $channel = $channelInfo->getChannal($_POST["channal"]);
+        if($channelInfo){
+            $owner_uid = $channel["owner_uid"];
+        }else{
+            $owner_uid = $_COOKIE["user_uid"];
+        }
+    }
 	if ($stmt) {
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($Fetch){
@@ -137,7 +146,7 @@ if ($_POST["id"] != "") {
         $_POST["channal"],
         $_POST["language"],
         $_POST["note"],
-        $_COOKIE["user_uid"],
+        $owner_uid,
         $_COOKIE["user_id"],
         mTime(),
         mTime()
@@ -170,8 +179,8 @@ if ($_POST["id"] != "") {
         $respond['message'] = $_POST["word"];
         $respond['data'] = [
             "id"=>$parm[0],
-            "guid"=>$parm[2],
-			"word"=>$parm[3],
+            "guid"=>$parm[1],
+			"word"=>$parm[2],
 			"word_en"=>$parm[3],
 			"meaning"=>$parm[4],
 			"other_meaning"=>$parm[5],
