@@ -124,6 +124,8 @@ class UpgradeWbwAnalyses extends Command
                                             $grm = explode('$',$word->gramma);
                                             if(count($grm)>0){
                                                 $newData['d1'] = $grm[count($grm)-1];
+                                            }else{
+                                                $newData['d1'] = $word->type;
                                             }
                                         }
                                         $newData['d2'] = (int)(explode('-',$rltValue->dest_id)[2]) - (int)(explode('-',$rltValue->sour_id)[2]) ;
