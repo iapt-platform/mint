@@ -46,7 +46,7 @@ function articel_load(id, collection_id) {
 						$("#article_author").html( article_author );
 
 						//将绝对链接转换为 用户连接的主机链接
-						result.content = result.content.replace(/[A-z]*.wikipali.org/g,location.host);
+						//result.content = result.content.replace(/www-[A-z]*.wikipali.org/g,location.host);
 
 						$("#contents").html(note_init(result.content,"",result.owner,result.lang));
 						//处理<code>标签作为气泡注释
