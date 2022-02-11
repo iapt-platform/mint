@@ -333,7 +333,7 @@ define("_SQLITE_TABLE_CUSTOM_BOOK_", "custom_book");
 define("_SQLITE_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
 
 define("_PG_DB_USER_CUSTOM_BOOK_", _PDO_DB_DSN_);
-define("_PG_TABLE_CUSTOM_BOOK_", "custom_book");
+define("_PG_TABLE_CUSTOM_BOOK_", "custom_books");
 define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
 
 # 逐词译和译文编辑消息 无需迁移数据

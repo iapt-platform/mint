@@ -25,13 +25,13 @@ $user_db=_FILE_DB_USERINFO_;#user数据库
 $user_table=_TABLE_USER_INFO_;#user表名
 
 # 
-$src_db = _SQLITE_DB_GROUP_;#源数据库
-$src_table = _SQLITE_TABLE_GROUP_INFO_;#源表名
+$src_db = _SQLITE_DB_USER_CUSTOM_BOOK_;#源数据库
+$src_table = _SQLITE_TABLE_CUSTOM_BOOK_;#源表名
 
-$dest_db = _PG_DB_GROUP_;#目标数据库
-$dest_table = _PG_TABLE_GROUP_INFO_;#目标表名
+$dest_db = _PG_DB_USER_CUSTOM_BOOK_;#目标数据库
+$dest_table = _PG_TABLE_CUSTOM_BOOK_;#目标表名
 
-fwrite(STDOUT,"migarate group info".PHP_EOL);
+fwrite(STDOUT,"migarate custom book".PHP_EOL);
 #打开user数据库
 $PDO_USER = new PDO($user_db,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
 $PDO_USER->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -50,16 +50,14 @@ fwrite(STDOUT,"open dest table".PHP_EOL);
 $queryInsert = "INSERT INTO ".$dest_table." 
 								(
                                     id,
-									uid,
-									name,
-									description,
-									status,
+									title,
 									owner,
-									create_time,
-									modify_time,
+									editor_id,
+									lang,
+									status,
 									updated_at,
 									created_at) 
-									VALUES (? , ? , ? , ?, ? , ? , ? , ? , ? , ? )";
+									VALUES (? , ? , ? , ?, ? , ? , ? , ? )";
 $stmtDEST = $PDO_DEST->prepare($queryInsert);
 
 $commitData = [];
@@ -68,7 +66,7 @@ $allSrcCount = 0;
 $count = 0;
 
 #从user数据表中读取
-$query = "SELECT id  FROM ".$user_table." WHERE userid = ? ";
+$query = "SELECT id,userid  FROM ".$user_table." WHERE userid = ? ";
 $stmtUser = $PDO_USER->prepare($query);
 
 #从源数据表中读取
@@ -118,10 +116,6 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 		fwrite(STDERR,time().",error,user id too long {$srcData["owner"]}".PHP_EOL);
 		continue;	
 	}
-    if(empty($srcData["name"])){
-		fwrite(STDERR,time().",error,name is empty {$srcData["id"]}".PHP_EOL);
-		continue;
-	}
 
     $srcData["status"] = 30;
 
@@ -136,7 +130,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
         $srcData["modify_time"] *= 1000;
     }
 	//查询是否已经插入
-	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE uid = ? ";
+	$queryExsit = "SELECT id  FROM ".$dest_table." WHERE id = ? ";
 	$getExist = $PDO_DEST->prepare($queryExsit);
 	$getExist->execute(array($srcData["id"]));
 	$exist = $getExist->fetch(PDO::FETCH_ASSOC);
@@ -147,14 +141,12 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$created_at = date("Y-m-d H:i:s.",$srcData["create_time"]/1000).($srcData["create_time"]%1000)." UTC";
 	$updated_at = date("Y-m-d H:i:s.",$srcData["modify_time"]/1000).($srcData["modify_time"]%1000)." UTC";
 	$commitData = array(
-            $snowflake->id(),
 			$srcData["id"],
-			$srcData["name"],
-			$srcData["description"],
-			$srcData["status"],
+			$srcData["title"],
 			$srcData["owner"],
-			$srcData["create_time"],
-			$srcData["modify_time"],
+			$userId["id"],
+			$srcData["lang"],
+			$srcData["status"],
 			$created_at,
 			$updated_at
 		);

@@ -22,7 +22,7 @@ class CreateCustomBooksTable extends Migration
             $table->string('lang',16);
             $table->integer('status');
 
-            $table->timestamp('accesed_at')->useCurrent()->index();
+            $table->timestamp('created_at')->useCurrent()->index();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->index();
         });
     }
