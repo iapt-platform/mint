@@ -7,7 +7,7 @@
         <tr>
         <td>{{ $row->d1 }}</td>
         <td>{{ $row->data }}</td>
-        <td>{{ $row->ct }}</td>
+        <td style='width:500px;'><span style='display:inline-block;width:{{ $row->ct }}px;background-color:green;'>{{ $row->ct }}</span></td>
         </tr>
         @endforeach
         </table>
