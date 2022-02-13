@@ -116,6 +116,10 @@ class DhammaTermController extends Controller
             return $this->error($validator);
         } else {
             #查询重复的
+            /*
+            重复判定：
+            一个channel下面word+tag+language 唯一
+            */
             $table = DhammaTerm::where('owner', $_COOKIE["user_uid"])
                     ->where('word',$request->get("word"))
                     ->where('tag',$request->get("tag"));
@@ -130,7 +134,7 @@ class DhammaTermController extends Controller
             if($isDoesntExist){
                 #不存在插入数据
                 $term = new DhammaTerm;
-                $term->id=$snowflake->id();
+                $term->id=app('snowflake')->id();
                 $term->guid=Str::uuid();
                 $term->word=$request->get("word");
                 $term->meaning=$request->get("meaning");
@@ -143,7 +147,7 @@ class DhammaTermController extends Controller
             // store
             /*
             $data = $request->all();
-            $data['id'] = $snowflake->id();
+            $data['id'] = app('snowflake')->id();
             $data['guid'] = Str::uuid();
             DhammaTerm::create($data);
             */
