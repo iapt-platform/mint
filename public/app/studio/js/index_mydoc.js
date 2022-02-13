@@ -59,7 +59,7 @@ function file_list_refresh() {
 
 					html += '<div class="file_list_col_1">';
 					html += "<input id='file_check_" + x + '\' type="checkbox" />';
-					html += "<input id='file_id_" + x + "' value='" + file_list[x].id + '\' type="hidden" />';
+					html += "<input id='file_id_" + x + "' value='" + file_list[x].uid + '\' type="hidden" />';
 					html += "</div>";
 
 					html += '<div class="file_list_col_2">';
@@ -68,7 +68,7 @@ function file_list_refresh() {
 						parseInt(file_list[x].share) == 1
 					) {
 						//shared
-						html += "<span onclick=\"file_show_coop_win('" + file_list[x].id + "')\">";
+						html += "<span onclick=\"file_show_coop_win('" + file_list[x].uid + "')\">";
 					} else {
 						html += "<span>";
 					}
@@ -89,16 +89,16 @@ function file_list_refresh() {
 					html += "</svg>";
 					html += "</span>";
 
-					html += "<div id='coop_show_" + file_list[x].id + "' style='display:inline;'></div>";
+					html += "<div id='coop_show_" + file_list[x].uid + "' style='display:inline;'></div>";
 
 					let $link;
 					if (file_list[x].doc_info && file_list[x].doc_info.length > 1) {
-						$link = "<a href='./editor.php?op=opendb&fileid=" + file_list[x].id + "' target='_blank'>";
+						$link = "<a href='./editor.php?op=opendb&fileid=" + file_list[x].uid + "' target='_blank'>";
 					} else {
-						$link = "<a href='./editor.php?op=open&fileid=" + file_list[x].id + "' target='_blank'>";
+						$link = "<a href='./editor.php?op=open&fileid=" + file_list[x].uid + "' target='_blank'>";
 					}
 
-					html += $link + "<span id='title_" + file_list[x].id + "'>" + file_list[x].title;
+					html += $link + "<span id='title_" + file_list[x].uid + "'>" + file_list[x].title;
 					html += "</span></a>";
 
 					//html +="<input type='input' style='diaplay:none;' id='input_title_"+file_list[x].id+"' value='"+file_list[x].title+"' />"
@@ -109,7 +109,7 @@ function file_list_refresh() {
 						"</span>";
 					html +=
 						"<button id='edit_title' type='button' class='icon_btn' onclick=\"title_change('" +
-						file_list[x].id +
+						file_list[x].uid +
 						"','" +
 						file_list[x].title +
 						"')\" >";
@@ -174,7 +174,7 @@ function file_list_refresh() {
 					if (!(file_list[x].doc_info && file_list[x].doc_info.length > 1)) {
 						html +=
 							"<a href='../doc/pcs2db.php?doc_id=" +
-							file_list[x].id +
+							file_list[x].uid +
 							"' target='_blank'>转数据库格式</a>";
 					}
 
@@ -185,7 +185,7 @@ function file_list_refresh() {
 					html += '<span class="icon_btn_tip">' + gLocal.gui.copy_share_link + "</span>";
 					html +=
 						"<button id='edit_title' type='button' class='icon_btn' onclick=\"share_link_copy_to_clipboard('" +
-						file_list[x].id +
+						file_list[x].uid +
 						"')\" >";
 					//html +='	<svg class="icon">';
 					//html +='		<use xlink:href="./svg/icon.svg#ic_rename"></use>';

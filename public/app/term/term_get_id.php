@@ -8,16 +8,16 @@ require_once "../config.php";
 require_once "../public/_pdo.php";
 require_once '../ucenter/function.php';
 
-PDO_Connect("" . _FILE_DB_TERM_);
+PDO_Connect( _FILE_DB_TERM_);
 
 $fetch = array();
 if (isset($_POST["id"])) {
-    $query = "SELECT * FROM term WHERE guid = ? ";
+    $query = "SELECT * FROM "._TABLE_TERM_." WHERE guid = ? ";
 
     $fetch = PDO_FetchRow($query, array($_POST["id"]));
-    $userinfo = new UserInfo();
     if ($fetch) {
         # code...
+        $userinfo = new UserInfo();
         $fetch["user"] = $userinfo->getName($fetch["owner"]);
     }
 }

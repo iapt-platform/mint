@@ -10,12 +10,17 @@ require_once '../public/function.php';
 require_once '../ucenter/function.php';
 require_once '../channal/function.php';
 
-PDO_Connect("" . _FILE_DB_TERM_);
+if(isset($_POST["readonly"])){
+    $readonly = $_POST["readonly"];
+}else{
+    $readonly = true;
+}
+PDO_Connect(_FILE_DB_TERM_);
 
 $output = array();
 if (isset($_POST["words"])) {
     $wordlist = json_decode($_POST["words"]);
-    if ($_POST["readonly"] == "false" && !empty($_POST["channal"])) {
+    if ($readonly == "false" && !empty($_POST["channal"])) {
         $channal = explode(",", $_POST["channal"]);
         $channal_info = new Channal();
         $channal_owner = array();
@@ -29,7 +34,7 @@ if (isset($_POST["words"])) {
         /*  创建一个填充了和params相同数量占位符的字符串 */
         $place_holders = implode(',', array_fill(0, count($channal), '?'));
         $owner_holders = implode(',', array_fill(0, count($channal_owner), '?'));
-        $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note  FROM term WHERE channal IN ($place_holders) OR owner IN ($owner_holders)";
+        $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note  FROM "._TABLE_TERM_." WHERE channal IN ($place_holders) OR owner IN ($owner_holders)";
         foreach ($channal_owner as $key => $value) {
             # code...
             $channal[] = $key;
@@ -80,9 +85,9 @@ if (isset($_POST["words"])) {
             }
 
             if ($otherCase == "") {
-                $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM term WHERE word = ? ";
+                $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM "._TABLE_TERM_." WHERE word = ? ";
             } else {
-                $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM term WHERE word = ? AND ( $otherCase )";
+                $query = "SELECT guid,word,meaning,other_meaning,owner,channal,language,tag ,note FROM "._TABLE_TERM_." WHERE word = ? AND ( $otherCase )";
             }
 
             $fetch = PDO_FetchAll($query, $parm);

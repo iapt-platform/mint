@@ -209,7 +209,7 @@ function username_search(keyword, type) {
 					for (const iterator of result) {
 						html +=
 							"<li onclick=\"user_selected('" +
-							iterator.id +
+							iterator.uid +
 							"','" +
 							iterator.name +
 							"',1)\">" +

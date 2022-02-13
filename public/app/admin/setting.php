@@ -124,11 +124,11 @@ foreach ($Fetch as $album) {
         echo "</table>";
         break;
     case "share":
-        PDO_Connect("" . _FILE_DB_FILEINDEX_);
-        $query = "SELECT count(*) from 'fileindex' where share=1";
+        PDO_Connect(_FILE_DB_FILEINDEX_);
+        $query = "SELECT count(*) from "._TABLE_FILEINDEX_." where share=1";
         $file_count = PDO_FetchOne($query);
         echo "共计：{$file_count} 个共享文件";
-        $query = "SELECT * from 'fileindex' where share=1 limit 0,100";
+        $query = "SELECT * from "._TABLE_FILEINDEX_." where share=1 limit 100";
         $file_share = PDO_FetchAll($query);
         echo "<table>";
         echo "<tr><th>id</th><th>user id</th><th>Title</th><th>Size</th><th></th></tr>";

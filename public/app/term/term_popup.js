@@ -57,7 +57,7 @@ function note_lookup_guid_json(guid) {
             "<div class='term_note' status='1'>" +
             note_init(result.note) +
             "</div>";
-          html += "<div >";
+          html += "<div class='term_popup_foot'>";
           html +=
             "<a href='../wiki/wiki.php?word=" +
             result.word +
@@ -65,7 +65,7 @@ function note_lookup_guid_json(guid) {
           html +=
             "<button onclick=\"term_edit_dlg_open('" +
             result.guid +
-            "')\">修改</button>";
+            "','','','',this)\">修改</button>";
           html += "</div>";
           html += "</div>";
           $("[term-popup='" + guid + "']").html(html);

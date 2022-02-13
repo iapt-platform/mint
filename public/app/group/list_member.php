@@ -10,7 +10,7 @@ $output = array();
 if (isset($_GET["id"])) {
     PDO_Connect("" . _FILE_DB_GROUP_);
     $id = $_GET["id"];
-    $query = "SELECT user_id FROM group_member  WHERE group_id = ? ";
+    $query = "SELECT user_id FROM "._TABLE_GROUP_MEMBER_."  WHERE group_id = ? ";
     $output = PDO_FetchAll($query, array($id));
     $userinfo = new UserInfo();
     foreach ($output as $key => $value) {

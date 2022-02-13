@@ -166,24 +166,26 @@ foreach ($channal as $key => $value) {
         $arr_sent_final[] = $sent_final;
     }
     $channalInfo = $_channal->getChannal($key);
-	
-    $name = $_userinfo->getName($channalInfo["owner_uid"]);
-    $channalInfo["username"] = $name["username"];
-    $channalInfo["nickname"] = $name["nickname"];
-    $channalInfo["count"] = $value;
-    $channalInfo["all"] = count($_data);
-    $channalInfo["final"] = $arr_sent_final;
-	$channalInfo["article_len"] = $article_len;
-	$channalInfo["id"] = $key;
-	$channalInfo["owner"] = $channalInfo["owner_uid"];
+	if($channalInfo){
+        $name = $_userinfo->getName($channalInfo["owner_uid"]);
+        $channalInfo["username"] = $name["username"];
+        $channalInfo["nickname"] = $name["nickname"];
+        $channalInfo["count"] = $value;
+        $channalInfo["all"] = count($_data);
+        $channalInfo["final"] = $arr_sent_final;
+        $channalInfo["article_len"] = $article_len;
+        $channalInfo["id"] = $key;
+        $channalInfo["owner"] = $channalInfo["owner_uid"];
 
-	if(isset($channel_power[$key])){
-		$channalInfo["power"] =$channel_power[$key];
-	}
-	else{
-		$channalInfo["power"] =10;
-	}
-    $output[] = $channalInfo;
+        if(isset($channel_power[$key])){
+            $channalInfo["power"] =$channel_power[$key];
+        }
+        else{
+            $channalInfo["power"] =10;
+        }
+        $output[] = $channalInfo;        
+    }
+
 }
 
 $time = microtime(true);

@@ -7,6 +7,8 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 require_once "../redis/function.php";
 require_once "../channal/function.php";
+require_once __DIR__."/../public/snowflakeid.php";
+$snowflake = new SnowFlakeId();
 
 $redis = redis_connect();
 
@@ -20,15 +22,15 @@ if (isset($_COOKIE["userid"]) == false) {
 
 
 $respond = array("status" => 0, "message" => "");
-PDO_Connect("" . _FILE_DB_TERM_);
+PDO_Connect( _FILE_DB_TERM_);
 
+$channelInfo = new Channal($redis);
 
-
-if ($_POST["id"] != "") {
+if ($_POST["id"] != "" && !isset($_POST['save_as'])) {
 	#更新
 	#先查询是否有权限
 	#是否这个术语的作者
-	$query = "SELECT id,channal,owner from term where guid= ? ";
+	$query = "SELECT id,channal,owner from "._TABLE_TERM_." where guid= ? ";
 	$stmt = $PDO->prepare($query);
 	$stmt->execute(array($_POST["id"]));
 	if ($stmt) {
@@ -36,7 +38,7 @@ if ($_POST["id"] != "") {
 		if($Fetch){
 			if($Fetch['owner']!=$_COOKIE["userid"]){
 				#不是这个术语的作者，查是否是channel的有编辑权限者	
-				$channelInfo = new Channal($redis);
+				
 				$channelPower = $channelInfo->getPower($Fetch['channal']);
 				if($channelPower<20){
 					$respond['status'] = 1;
@@ -54,15 +56,13 @@ if ($_POST["id"] != "") {
 			exit;				
 		}
 	}
-    $query = "UPDATE term SET meaning= ? ,other_meaning = ? , tag= ? ,channal = ? ,  language = ? , note = ? , receive_time= ?, modify_time= ?   where guid= ? ";
+    $query = "UPDATE "._TABLE_TERM_." SET meaning= ? ,other_meaning = ? , tag= ? ,  language = ? , note = ? ,  modify_time= ? , updated_at = now()  where guid= ? ";
 	$stmt = @PDO_Execute($query, 
 						array($_POST["mean"],
         					  $_POST["mean2"],
         					  $_POST["tag"],
-        					  $_POST["channal"],
         					  $_POST["language"],
         					  $_POST["note"],
-        					  mTime(),
         					  mTime(),
         					  $_POST["id"],
     ));
@@ -107,15 +107,25 @@ if ($_POST["id"] != "") {
 	}
 	#先查询是否有重复数据
 	if($_POST["channal"]==""){
-		$query = "SELECT id from term where word= ? and  language=? and tag=? and owner = ? ";
+		$query = "SELECT id from "._TABLE_TERM_." where word= ? and  language=? and tag=? and owner = ? ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["language"],$_POST["tag"],$_COOKIE["userid"]));
 	}else{
-		$query = "SELECT id from term where word= ? and channal=?  and tag=? and owner = ? ";
+        #TODO 
+		$query = "SELECT id from "._TABLE_TERM_." where word= ? and channal=?  and tag=? and owner = ? ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute(array($_POST["word"],$_POST["channal"],$_POST["tag"],$_COOKIE["userid"]));
 	}
-	
+	if($_POST["channal"]==""){
+        $owner_uid = $_COOKIE["user_uid"];
+    }else{
+        $channel = $channelInfo->getChannal($_POST["channal"]);
+        if($channelInfo){
+            $owner_uid = $channel["owner_uid"];
+        }else{
+            $owner_uid = $_COOKIE["user_uid"];
+        }
+    }
 	if ($stmt) {
 		$Fetch = $stmt->fetch(PDO::FETCH_ASSOC);
 		if($Fetch){
@@ -125,22 +135,40 @@ if ($_POST["id"] != "") {
 			exit;
 		}
 	}
-    $parm[] = UUID::v4();
-    $parm[] = $_POST["word"];
-    $parm[] = pali2english($_POST["word"]);
-    $parm[] = $_POST["mean"];
-    $parm[] = $_POST["mean2"];
-    $parm[] = $_POST["tag"];
-    $parm[] = $_POST["channal"];
-    $parm[] = $_POST["language"];
-    $parm[] = $_POST["note"];
-    $parm[] = $_COOKIE["userid"];
-    $parm[] = 0;
-    $parm[] = mTime();
-    $parm[] = mTime();
-    $parm[] = mTime();
-    $query = "INSERT INTO term (id, guid, word, word_en, meaning, other_meaning, tag, channal, language,note,owner,hit,create_time,modify_time,receive_time )
-	VALUES (NULL, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+    $parm = [
+        $snowflake->id(),
+        UUID::v4(),
+        $_POST["word"],
+        pali2english($_POST["word"]),
+        $_POST["mean"],
+        $_POST["mean2"],
+        $_POST["tag"],
+        $_POST["channal"],
+        $_POST["language"],
+        $_POST["note"],
+        $owner_uid,
+        $_COOKIE["user_id"],
+        mTime(),
+        mTime()
+        ];
+    $query = "INSERT INTO "._TABLE_TERM_." 
+    (
+        id, 
+        guid, 
+        word, 
+        word_en, 
+        meaning, 
+        other_meaning, 
+        tag, 
+        channal, 
+        language,
+        note,
+        owner,
+        editor_id,
+        create_time,
+        modify_time
+    )
+	VALUES (?, ? , ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?) ";
     $stmt = @PDO_Execute($query, $parm);
     if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
         $error = PDO_ErrorInfo();
@@ -149,17 +177,19 @@ if ($_POST["id"] != "") {
     } else {
         $respond['status'] = 0;
         $respond['message'] = $_POST["word"];
-        $respond['data'] = ["guid"=>$parm[0],
-							"word"=>$parm[1],
-							"word_en"=>$parm[2],
-							"meaning"=>$parm[3],
-							"other_meaning"=>$parm[4],
-							"tag"=>$parm[5],
-							"channal"=>$parm[6],
-							"language"=>$parm[7],
-							"note"=>$parm[8],
-							"owner"=>$parm[9]
-						];
+        $respond['data'] = [
+            "id"=>$parm[0],
+            "guid"=>$parm[1],
+			"word"=>$parm[2],
+			"word_en"=>$parm[3],
+			"meaning"=>$parm[4],
+			"other_meaning"=>$parm[5],
+			"tag"=>$parm[6],
+			"channal"=>$parm[7],
+			"language"=>$parm[8],
+			"note"=>$parm[9],
+			"owner"=>$parm[10]
+			];
 
     }
 }
@@ -168,7 +198,7 @@ if ($_POST["id"] != "") {
 	if ($redis != false) {
 		{
 			# code...
-			$query = "SELECT id,word,meaning,other_meaning,note,owner,language from term where word = ? ";
+			$query = "SELECT id,word,meaning,other_meaning,note,owner,language from "._TABLE_TERM_." where word = ? ";
 			$stmt = $PDO->prepare($query);
 			$stmt->execute(array($_POST["word"]));
 			if ($stmt) {

@@ -292,14 +292,14 @@ define("_SQLITE_DB_TERM_", "sqlite:" . __DIR__ . "/../tmp/user/dhammaterm.db");
 define("_SQLITE_TABLE_TERM_", "term");
 
 define("_PG_DB_TERM_", _PDO_DB_DSN_);
-define("_PG_TABLE_TERM_", "term");
+define("_PG_TABLE_TERM_", "dhamma_terms");
 
 # 协作
 define("_SQLITE_DB_USER_SHARE_", "sqlite:" . __DIR__ . "/../tmp/user/share.db3");
 define("_SQLITE_TABLE_USER_SHARE_", "share_cooperator");
 
 define("_PG_DB_USER_SHARE_", _PDO_DB_DSN_);
-define("_PG_TABLE_USER_SHARE_", "share_cooperator");
+define("_PG_TABLE_USER_SHARE_", "shares");
 
 # 工作组
 define("_SQLITE_DB_GROUP_", "sqlite:" . __DIR__ . "/../tmp/user/group.db3");
@@ -307,8 +307,8 @@ define("_SQLITE_TABLE_GROUP_INFO_", "group_info");
 define("_SQLITE_TABLE_GROUP_MEMBER_", "group_member");
 
 define("_PG_DB_GROUP_", _PDO_DB_DSN_);
-define("_PG_TABLE_GROUP_INFO_", "group_info");
-define("_PG_TABLE_GROUP_MEMBER_", "group_member");
+define("_PG_TABLE_GROUP_INFO_", "group_infos");
+define("_PG_TABLE_GROUP_MEMBER_", "group_members");
 
 # 逐词解析文件索引
 define("_SQLITE_DB_FILEINDEX_", "sqlite:" . __DIR__ . "/../tmp/user/fileindex.db");
@@ -316,8 +316,7 @@ define("_SQLITE_TABLE_FILEINDEX_", "fileindex");
 define("_SQLITE_TABLE_FILEINDEX_POWER_", "power");
 
 define("_PG_DB_FILEINDEX_", _PDO_DB_DSN_);
-define("_PG_TABLE_FILEINDEX_", "fileindex");
-define("_PG_TABLE_FILEINDEX_POWER_", "power");
+define("_PG_TABLE_FILEINDEX_", "file_indices");
 
 # 课程
 define("_SQLITE_DB_COURSE_", "sqlite:" . __DIR__ . "/../tmp/user/course.db3");
@@ -627,17 +626,13 @@ define("_TABLE_USER_OPERATION_LOG_", _PG_TABLE_USER_OPERATION_LOG_);
 
 
 //读取频繁 写入不频繁 
-# 用户账号
-#sqlite
-define("_FILE_DB_USERINFO_", _SQLITE_DB_USERINFO_);
-define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
+
 
 
 # 版本风格 
 #sqlite
 define("_FILE_DB_CHANNAL_", _PG_DB_CHANNAL_);
 define("_TABLE_CHANNEL_", _PG_TABLE_CHANNEL_);
-
 
 # 文章 文集
 
@@ -646,43 +641,46 @@ define("_TABLE_ARTICLE_", _PG_TABLE_ARTICLE_);
 define("_TABLE_COLLECTION_", _PG_TABLE_COLLECTION_);
 define("_TABLE_ARTICLE_COLLECTION_", _PG_TABLE_ARTICLE_COLLECTION_);
 
-
-
 # 术语
-define("_FILE_DB_TERM_", _SQLITE_DB_TERM_);
-define("_TABLE_TERM_", _SQLITE_TABLE_TERM_);
+define("_FILE_DB_TERM_", _PG_DB_TERM_);
+define("_TABLE_TERM_", _PG_TABLE_TERM_);
 
 # 协作
-define("_FILE_DB_USER_SHARE_", _SQLITE_DB_USER_SHARE_);
-define("_TABLE_USER_SHARE_", _SQLITE_TABLE_USER_SHARE_);
+define("_FILE_DB_USER_SHARE_", _PG_DB_USER_SHARE_);
+define("_TABLE_USER_SHARE_", _PG_TABLE_USER_SHARE_);
 
 # 工作组
-define("_FILE_DB_GROUP_", _SQLITE_DB_GROUP_);
-define("_TABLE_GROUP_INFO_", _SQLITE_TABLE_GROUP_INFO_);
-define("_TABLE_GROUP_MEMBER_", _SQLITE_TABLE_GROUP_MEMBER_);
+define("_FILE_DB_GROUP_", _PG_DB_GROUP_);
+define("_TABLE_GROUP_INFO_", _PG_TABLE_GROUP_INFO_);
+define("_TABLE_GROUP_MEMBER_", _PG_TABLE_GROUP_MEMBER_);
 
 # 逐词解析文件索引
-define("_FILE_DB_FILEINDEX_", _SQLITE_DB_FILEINDEX_);
-define("_TABLE_FILEINDEX_", _SQLITE_TABLE_FILEINDEX_);
-define("_TABLE_FILEINDEX_POWER_", _SQLITE_TABLE_FILEINDEX_POWER_);
+define("_FILE_DB_FILEINDEX_", _PG_DB_FILEINDEX_);
+define("_TABLE_FILEINDEX_", _PG_TABLE_FILEINDEX_);
 
-# 课程
-define("_FILE_DB_COURSE_", _SQLITE_DB_COURSE_);
-define("_TABLE_COURSE_",_SQLITE_TABLE_COURSE_);
-define("_TABLE_LESSON_",_SQLITE_TABLE_LESSON_);
 
 # 用户自定义书
 define("_FILE_DB_USER_CUSTOM_BOOK_", _SQLITE_DB_USER_CUSTOM_BOOK_);
 define("_TABLE_CUSTOM_BOOK_", _SQLITE_TABLE_CUSTOM_BOOK_);
 define("_TABLE_CUSTOM_BOOK_SENT_", _SQLITE_TABLE_CUSTOM_BOOK_SENT_);
 
-# 逐词译和译文编辑消息 无需迁移数据
-define("_FILE_DB_MESSAGE_", _SQLITE_DB_MESSAGE_);
-define("_TABLE_MESSAGE_", _SQLITE_TABLE_MESSAGE_);
-
 #点赞
 define("_FILE_DB_LIKE_", _SQLITE_DB_LIKE_);
 define("_TABLE_LIKE_", _SQLITE_TABLE_LIKE_);
+
+# 课程
+define("_FILE_DB_COURSE_", _SQLITE_DB_COURSE_);
+define("_TABLE_COURSE_",_SQLITE_TABLE_COURSE_);
+define("_TABLE_LESSON_",_SQLITE_TABLE_LESSON_);
+
+
+# 用户账号
+define("_FILE_DB_USERINFO_", _SQLITE_DB_USERINFO_);
+define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
+
+# 逐词译和译文编辑消息 无需迁移数据
+define("_FILE_DB_MESSAGE_", _SQLITE_DB_MESSAGE_);
+define("_TABLE_MESSAGE_", _SQLITE_TABLE_MESSAGE_);
 
 
 # 用户字典统计数据 刷库 - 无需迁移数据

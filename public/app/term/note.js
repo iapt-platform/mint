@@ -6,6 +6,7 @@ var _channal = "";
 var _lang = "";
 var _author = "";
 
+
 var _arrData = new Array();
 var _channalData;
 
@@ -115,12 +116,17 @@ function note_update_background_style() {
 }
 //
 function note_refresh_new(callback = null) {
+    let Params={
+        maxSentenceOneRequest:0
+    };
 	note_update_background_style();
 	let objNotes = document.querySelectorAll("note");
 	let arrSentInfo = new Array();
+    let noteCounter = 0;
 	for (const iterator of objNotes) {
 		let id = iterator.id;
 		if (id == null || id == "") {
+            
 			//查看这个节点是第几层note嵌套。大于预定层数退出。
 			let layout = 1;
 			let parent = iterator.parentNode;
@@ -135,6 +141,7 @@ function note_refresh_new(callback = null) {
 				}
 				parent = parent.parentNode;
 			}
+            
 			id = com_guid();
 			iterator.id = id;
 			if (iterator.hasAttribute("info")) {
@@ -151,6 +158,10 @@ function note_refresh_new(callback = null) {
 					arrSentInfo.push({ id: id, data: info });
 				}
 			}
+            noteCounter++;
+            if(Params.maxSentenceOneRequest>0 && noteCounter>=Params.maxSentenceOneRequest){
+                break;
+            }
 		}
 	}
 	if (arrSentInfo.length > 0) {
@@ -167,6 +178,7 @@ function note_refresh_new(callback = null) {
 				if (status == "success") {
 					try {
 						let sentData = JSON.parse(data);
+                        //开始渲染句子
 						for (const iterator of sentData) {
 							let id = iterator.id;
 							let strHtml = "<a name='" + id + "'></a>";
@@ -180,6 +192,7 @@ function note_refresh_new(callback = null) {
 								$("#" + id).html(strHtml);
 							}
 						}
+                        //句子渲染完毕
 						//处理<code>标签作为气泡注释
 						popup_init();
 
@@ -190,7 +203,7 @@ function note_refresh_new(callback = null) {
 						_arrData = _arrData.concat(sentData);
 						note_ref_init();
 						//获取术语字典
-						term_get_dict();
+						term_get_dict(callback);
 						//刷新channel列表
 						note_channal_list();
 						//显示不同的巴利语脚本
@@ -199,9 +212,7 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
-						if (callback) {
-							callback();
-						}
+
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
@@ -209,11 +220,14 @@ function note_refresh_new(callback = null) {
 						console.error(e);
 					}
 				}
+                
 			}
 		);
 	} else {
-		term_get_dict();
+		term_get_dict(callback);
 	}
+
+    return arrSentInfo.length;
 }
 
 //渲染巴利原文句子
@@ -297,7 +311,7 @@ function render_read_mode_sent(iterator) {
 		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
 
 		//将绝对链接转换为 用户连接的主机链接
-		oneTran.text = oneTran.text.replace(/[A-z]*.wikipali.org/g,location.host);
+		//oneTran.text = oneTran.text.replace(/www-[A-z]*.wikipali.org/g,location.host);
 
 		html += marked(term_std_str_to_tran(oneTran.text, oneTran.channal, oneTran.editor, oneTran.lang));
 		html += "</span>";
@@ -906,7 +920,8 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	let sid = iterator.book + "-" + iterator.para + "-" + iterator.begin + "-" + iterator.end;
 
 	//将绝对链接转换为 用户连接的主机链接
-	let showText = iterator.text.replace(/[A-z]*.wikipali.org/g,location.host);
+	//let showText = iterator.text.replace(/www-[A-z]*.wikipali.org/g,location.host);
+	let showText = iterator.text;
 
 	if (iterator.text == "") {
 		if (typeof iterator.channalinfo == "undefined") {

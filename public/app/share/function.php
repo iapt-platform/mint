@@ -15,9 +15,9 @@ $res_type 见readme.md#资源类型 -1全部类型资源
 function share_res_list_get($userid,$res_type=-1){
 	$redis = redis_connect();
 	# 找我加入的群
-	$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");
+	$dbhGroup = new PDO(_FILE_DB_GROUP_, _DB_USERNAME_, _DB_PASSWORD_);
     $dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	$query = "SELECT group_id from group_member where user_id = ?  limit 0,200";
+	$query = "SELECT group_id from "._TABLE_GROUP_MEMBER_." where user_id = ?  limit 500";
 	$stmtGroup = $dbhGroup->prepare($query);
 	$stmtGroup->execute(array($userid));
 	$my_group = $stmtGroup->fetchAll(PDO::FETCH_ASSOC);
@@ -30,11 +30,11 @@ function share_res_list_get($userid,$res_type=-1){
 	
 	$place_holders = implode(',', array_fill(0, count($userList), '?'));
 	$Fetch=array();
-	$PDO = new PDO(_FILE_DB_USER_SHARE_, "", "");
+	$PDO = new PDO(_FILE_DB_USER_SHARE_, _DB_USERNAME_, _DB_PASSWORD_);
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 	if($res_type==-1){
 		#所有类型资源
-		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND cooperator_id IN ($place_holders) ";
+		$query = "SELECT res_id,res_type,power FROM "._TABLE_USER_SHARE_."  WHERE  cooperator_id IN ($place_holders) ";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute($userList);
 		$Fetch =$stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ function share_res_list_get($userid,$res_type=-1){
 	else{
 		#指定类型资源
 		$userList[]=$res_type;
-		$query = "SELECT res_id,res_type,power FROM share_cooperator  WHERE is_deleted=0 AND  cooperator_id IN ($place_holders) AND res_type = ?";
+		$query = "SELECT res_id,res_type,power FROM "._TABLE_USER_SHARE_."  WHERE   cooperator_id IN ($place_holders) AND res_type = ?";
 		$stmt = $PDO->prepare($query);
 		$stmt->execute($userList);
 		$Fetch =$stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -144,9 +144,9 @@ function share_get_res_power($userid,$res_id){
 			return 0;
 		}
 		# 找我加入的群
-		$dbhGroup = new PDO(_FILE_DB_GROUP_, "", "");
+		$dbhGroup = new PDO(_FILE_DB_GROUP_, _DB_USERNAME_, _DB_PASSWORD_);
 		$dbhGroup->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$query = "SELECT group_id from group_member where user_id = ?  limit 0,100";
+		$query = "SELECT group_id from "._TABLE_GROUP_MEMBER_." where user_id = ?  limit 500";
 		$stmtGroup = $dbhGroup->prepare($query);
 		$stmtGroup->execute(array($userid));
 		$my_group = $stmtGroup->fetchAll(PDO::FETCH_ASSOC);
@@ -159,11 +159,11 @@ function share_get_res_power($userid,$res_id){
 		
 		$place_holders = implode(',', array_fill(0, count($userList), '?'));
 		$Fetch=array();
-		$PDO = new PDO(_FILE_DB_USER_SHARE_, "", "");
+		$PDO = new PDO(_FILE_DB_USER_SHARE_, _DB_USERNAME_, _DB_PASSWORD_);
 		$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 			$userList[]=$res_id;
-			$query = "SELECT power FROM share_cooperator  WHERE is_deleted=0 AND  cooperator_id IN ($place_holders) AND res_id = ? ";
+			$query = "SELECT power FROM "._TABLE_USER_SHARE_."  WHERE  cooperator_id IN ($place_holders) AND res_id = ? ";
 			$stmt = $PDO->prepare($query);
 			$stmt->execute($userList);
 			$Fetch =$stmt->fetchAll(PDO::FETCH_ASSOC);
