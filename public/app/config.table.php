@@ -334,7 +334,7 @@ define("_SQLITE_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
 
 define("_PG_DB_USER_CUSTOM_BOOK_", _PDO_DB_DSN_);
 define("_PG_TABLE_CUSTOM_BOOK_", "custom_books");
-define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
+define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentences");
 
 # 逐词译和译文编辑消息 无需迁移数据
 define("_SQLITE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
@@ -660,9 +660,9 @@ define("_TABLE_FILEINDEX_", _PG_TABLE_FILEINDEX_);
 
 
 # 用户自定义书
-define("_FILE_DB_USER_CUSTOM_BOOK_", _SQLITE_DB_USER_CUSTOM_BOOK_);
-define("_TABLE_CUSTOM_BOOK_", _SQLITE_TABLE_CUSTOM_BOOK_);
-define("_TABLE_CUSTOM_BOOK_SENT_", _SQLITE_TABLE_CUSTOM_BOOK_SENT_);
+define("_FILE_DB_USER_CUSTOM_BOOK_", _PG_DB_USER_CUSTOM_BOOK_);
+define("_TABLE_CUSTOM_BOOK_", _PG_TABLE_CUSTOM_BOOK_);
+define("_TABLE_CUSTOM_BOOK_SENT_", _PG_TABLE_CUSTOM_BOOK_SENT_);
 
 #点赞
 define("_FILE_DB_LIKE_", _SQLITE_DB_LIKE_);
