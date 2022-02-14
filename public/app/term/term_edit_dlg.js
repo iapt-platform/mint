@@ -174,6 +174,10 @@ function term_edit_dlg_render(word = null,obj=null) {
         output +="<div>当前：" ;
         if(word.channel === ''){
             output += "通用于<b>所有版本</b>";
+            //判断是否只读
+            if(sentChannel.power !== 30){
+                output += "(只读)";
+            }
         }else{
             output += "仅使用于版本<b>";
             if(currChannel !== null){
@@ -182,9 +186,11 @@ function term_edit_dlg_render(word = null,obj=null) {
             }else{
                 //我没有写权限 设置按钮为disable
                 output += word.channel;
+                output += "(只读)";
             }
             output += "</b>";
         }
+
         output += "</div>";
         output +="<div><input type='checkbox' name='save_as' onchange='term_save_as(this)' />另存为</div>";
     }

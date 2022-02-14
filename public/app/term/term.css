@@ -337,8 +337,18 @@ note n {
 	padding: 5px 0;
 }
 .term_block {
-	border-bottom: 1px solid #cecece;
-	padding: 5px 0;
+
+}
+.term_block h2{
+    margin: 0;
+}
+.term_popup_foot{
+    display: flex;
+    justify-content: space-between;
+}
+.guide_contence .term_note{
+    border-bottom: 1px solid var(--border-line-color);
+    min-height: 9em;
 }
 .term_word_head_authors a {
 	color: blue;
