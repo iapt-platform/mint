@@ -50,6 +50,7 @@ fwrite(STDOUT,"open dest table".PHP_EOL);
 $queryInsert = "INSERT INTO ".$dest_table." 
 								(
                                     id,
+                                    book_id,
 									title,
 									owner,
 									editor_id,
@@ -57,7 +58,7 @@ $queryInsert = "INSERT INTO ".$dest_table."
 									status,
 									updated_at,
 									created_at) 
-									VALUES (? , ? , ? , ?, ? , ? , ? , ? )";
+									VALUES (? , ? , ? , ? , ?, ? , ? , ? , ? )";
 $stmtDEST = $PDO_DEST->prepare($queryInsert);
 
 $commitData = [];
@@ -141,7 +142,8 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$created_at = date("Y-m-d H:i:s.",$srcData["create_time"]/1000).($srcData["create_time"]%1000)." UTC";
 	$updated_at = date("Y-m-d H:i:s.",$srcData["modify_time"]/1000).($srcData["modify_time"]%1000)." UTC";
 	$commitData = array(
-			$srcData["id"],
+            $snowflake->id(),
+			$srcData["book_id"],
 			$srcData["title"],
 			$srcData["owner"],
 			$userId["id"],

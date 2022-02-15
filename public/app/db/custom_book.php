@@ -37,17 +37,16 @@ class CustomBook extends Table
 
 			$query="INSERT INTO {$this->table} 
             (
-                'id',
-                'book_id',
-                'title',
-                'owner',
-                'lang',
-                'status',
-                'modify_time',
-                'create_time'
-                ) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
+                id,
+                book_id,
+                title,
+                owner,
+                editor_id,
+                lang,
+                status
+                ) VALUES (?,?, ?, ?, ?, ? , ?)";
 
-			$stmt = $this->execute($query,array($this->SnowFlake->id(),$currBook,$title,$_COOKIE["user_uid"],$lang,10,mTime(),mTime()));
+			$stmt = $this->execute($query,array($this->SnowFlake->id(),$currBook,$title,$_COOKIE["user_uid"],$_COOKIE["user_id"],$lang,10));
 			if($stmt){
 				$CSent = new CustomBookSentence($this->redis);
 				$respond = $CSent->insert($currBook,$sent,$lang);
@@ -89,18 +88,18 @@ class CustomBookSentence extends Table
 		$this->dbh->beginTransaction();
 		$query="INSERT INTO {$this->table} 
         (
-            'id',
-            'book',
-            'paragraph',
-            'begin',
-            'end',
-            'length',
-            'text',
-            'lang',
-            'owner',
-            'status',
-            'create_time',
-            'modify_time'
+            id,
+            book,
+            paragraph,
+            word_start,
+            word_end,
+            length,
+            content,
+            lang,
+            owner,
+            status,
+            create_time,
+            modify_time
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		$sth = $this->dbh->prepare($query);

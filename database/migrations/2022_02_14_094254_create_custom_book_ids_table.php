@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCustomBooksTable extends Migration
+class CreateCustomBookIdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreateCustomBooksTable extends Migration
      */
     public function up()
     {
-        Schema::create('custom_books', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
-            $table->integer('book_id')->uniqid();
-            $table->string('title',512)->index();
-            $table->string('owner',36)->index();
-            $table->bigInteger('editor_id')->index();
-            $table->string('lang',16);
-            $table->integer('status');
-
+        Schema::create('custom_book_ids', function (Blueprint $table) {
+            $table->id();
+            $table->string('key',32)->default('max_book_number');
+            $table->integer('value');
             $table->timestamp('created_at')->useCurrent()->index();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->index();
         });
@@ -34,6 +29,6 @@ class CreateCustomBooksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('custom_books');
+        Schema::dropIfExists('custom_book_ids');
     }
 }
