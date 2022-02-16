@@ -81,12 +81,14 @@ function share_res_list_get($userid,$res_type=-1){
 				if($channelInfo){
 					$resList[$key]["res_title"]=$channelInfo["name"];
 					$resList[$key]["res_owner_id"]=$channelInfo["owner_uid"];
+					$resList[$key]["type"]=$channelInfo["type"];
 					$resList[$key]["status"]=$channelInfo["status"];
 					$resList[$key]["lang"]=$channelInfo["lang"];
 				}
 				else{
 					$resList[$key]["res_title"]="_unkown_";
 					$resList[$key]["res_owner_id"]="_unkown_";
+					$resList[$key]["type"]=$channelInfo["type"];
 					$resList[$key]["status"]="0";
 					$resList[$key]["lang"]="unkow";
 				}
