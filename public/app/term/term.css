@@ -1093,3 +1093,15 @@ pali>p {
 	padding:unset;
 	background-color: var(--btn-border-color);
 }
+
+.preview .nissaya{
+    display:inline;
+}
+.preview .nissaya .org{
+    display:inline;
+    font-weight: 700;
+}
+.preview .nissaya .meaning{
+    display:inline;
+    font-weight: 500;
+}
