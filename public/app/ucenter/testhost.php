@@ -2,3 +2,6 @@
 
 echo "SERVER_NAME:".$_SERVER['SERVER_NAME'].PHP_EOL;
 echo "HTTP_HOST:".$_SERVER['HTTP_HOST'].PHP_EOL;
+
+echo "SERVER_NAME:".getenv('SERVER_NAME').PHP_EOL;
+echo "HTTP_HOST:".getenv('HTTP_HOST').PHP_EOL;
