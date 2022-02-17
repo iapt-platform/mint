@@ -3,10 +3,11 @@ require_once "../config.php";
 require_once "../db/table.php";
 require_once '../hostsetting/function.php';
 
+
 class CustomBook extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USER_CUSTOM_BOOK_, "custom_book", "", "",$redis);
+		parent::__construct(_FILE_DB_USER_CUSTOM_BOOK_, _TABLE_CUSTOM_BOOK_, "", "",$redis);
     }
 
 	public function new($title,$data,$lang)
@@ -34,9 +35,18 @@ class CustomBook extends Table
 				return $respond;
 			}
 
-			$query="INSERT INTO {$this->table} ('book_id','title','owner','lang','status','modify_time','create_time') VALUES (?, ?, ?, ?, ?, ?, ?)";
+			$query="INSERT INTO {$this->table} 
+            (
+                id,
+                book_id,
+                title,
+                owner,
+                editor_id,
+                lang,
+                status
+                ) VALUES (?,?, ?, ?, ?, ? , ?)";
 
-			$stmt = $this->execute($query,array($currBook,$title,$_COOKIE["userid"],$lang,10,mTime(),mTime()));
+			$stmt = $this->execute($query,array($this->SnowFlake->id(),$currBook,$title,$_COOKIE["user_uid"],$_COOKIE["user_id"],$lang,10));
 			if($stmt){
 				$CSent = new CustomBookSentence($this->redis);
 				$respond = $CSent->insert($currBook,$sent,$lang);
@@ -53,11 +63,11 @@ class CustomBook extends Table
 class CustomBookSentence extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USER_CUSTOM_BOOK_, "custom_book_sentence", "", "",$redis);
+		parent::__construct(_FILE_DB_USER_CUSTOM_BOOK_, _TABLE_CUSTOM_BOOK_SENT_, "", "",$redis);
     }
 
 	public function getAll($book,$para,$start,$end){
-		$query="SELECT text,length,lang,modify_time,create_time,owner FROM custom_book_sentence WHERE book = ? AND paragraph = ? AND begin=? AND end = ?";
+		$query="SELECT content as text,length,lang,modify_time,create_time,owner FROM {$this->table} WHERE book = ? AND paragraph = ? AND word_start = ? AND word_end = ?";
 		$result = $this->fetch($query,array($book,$para,$start,$end));
 		if($result){
 			return $result;
@@ -76,7 +86,21 @@ class CustomBookSentence extends Table
 		$respond['content']="";
 		# 开始一个事务，关闭自动提交 
 		$this->dbh->beginTransaction();
-		$query="INSERT INTO custom_book_sentence ('book','paragraph','begin','end','length','text','lang','owner','status','create_time','modify_time') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$query="INSERT INTO {$this->table} 
+        (
+            id,
+            book,
+            paragraph,
+            word_start,
+            word_end,
+            length,
+            content,
+            lang,
+            owner,
+            status,
+            create_time,
+            modify_time
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		$sth = $this->dbh->prepare($query);
 		
@@ -112,6 +136,7 @@ class CustomBookSentence extends Table
 					$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 					$sth->execute(
 							array(
+                                $this->SnowFlake->id(),
 								$book,
 								$para,
 								$sentNum,
@@ -146,6 +171,7 @@ class CustomBookSentence extends Table
 				$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 				$sth->execute(
 						array(
+                            $this->SnowFlake->id(),
 							$book,
 							$para,
 							$sentNum,
@@ -169,6 +195,7 @@ class CustomBookSentence extends Table
 			$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 			$sth->execute(
 					array(
+                        $this->SnowFlake->id(),
 						$book,
 						$para,
 						$sentNum,
@@ -204,10 +231,10 @@ class CustomBookSentence extends Table
 	}
 
 	public function getText($book,$para,$start,$end){
-		$query="SELECT text FROM custom_book_sentence WHERE book = ? AND paragraph = ? AND begin=? AND end = ?";
+		$query="SELECT content  FROM {$this->table} WHERE book = ? AND paragraph = ? AND word_start=? AND word_end = ?";
 		$result = $this->fetch($query,array($book,$para,$start,$end));
 		if($result){
-			return $result["text"];
+			return $result["content"];
 		}
 		else{
 			return "unkow";
