@@ -170,7 +170,7 @@ require_once "../redis/function.php";
 		<div id = "login_form_div" class="fun_block" >
 
 			<div class="title">
-			注册wikipali账号
+			wikipali sign up
 			</div>
 			<div class="login_new">
 				<span class="form_help"><?php echo $_local->gui->have_account; ?> ？</span><a href="index.php?language=<?php echo $currLanguage; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_local->gui->login; //登入账户 ?></a>
@@ -178,17 +178,17 @@ require_once "../redis/function.php";
 			<div class="form_error">
 			<?php
 			if (!isset($_GET["invite"])) {
-				echo "目前只支持邀请码注册。";
+				echo "Only for invited person";
 				exit;
 			}else{
 				$redis = redis_connect();
 				if ($redis == false) {
-					echo "服务器故障，请稍后重试。<br> 错误代码：no_redis_connect";
+					echo "Server Error，please try again.<br> no_redis_connect";
 					exit;
 				}
 				$code = $redis->exists("invitecode://".$_REQUEST["invite"]);
 				if(!$code){
-					echo "无效的邀请码，或邀请码已经过期。";
+					echo "Invalid invide code or code expired.";
 					exit;
 				}
 				$invite_email = $redis->get("invitecode://".$_REQUEST["invite"]);				
@@ -226,7 +226,7 @@ require_once "../redis/function.php";
 					</div>
 
 						<div>
-							<span id='tip_language' class='viewswitch_on'><?php echo "惯常使用的语言"; ?></span>
+							<span id='tip_language' class='viewswitch_on'><?php echo "惯常使用的语言 Usual Language"; ?></span>
 							<select id="lang" name="language" style="width: 100%;">
 							<?php
 							$currLang = $_COOKIE["language"];

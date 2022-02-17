@@ -21,12 +21,12 @@ function submit(){
 		hasError = true;
 	}
 	if(isValidPassword($("#password").val())==false){
-		$("#error_password").text("密码包含无效字符。  / 空格 ");
+		$("#error_password").text(gLocal.gui.password_invaild_symbol);
 		hasError = true;
 	}
 
 	if(isValidUserName($("#username").val())==false){
-		$("#error_password").text("用户名包含无效字符。@  / 空格 ");
+		$("#error_username").text(gLocal.gui.username_invaild_symbol);
 		hasError = true;
 	}
 
@@ -62,7 +62,7 @@ function submit(){
 			if(data.ok){
 				$("#form_div").hide();
 				$("#message").removeClass("form_error");
-				$("#message").html("注册成功。<a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
+				$("#message").html(gLocal.gui.successful+" <a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
 			}else{
 				$("#message").addClass("form_error");
 				$("#message").text(ConvertServerMsgToLocalString(data.message));
