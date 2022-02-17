@@ -75,6 +75,8 @@ CREATE INDEX full_text_search_weighted__unaccent_idx
        ON fts_texts USING GIN (full_text_search_weighted_unaccent);
 
 -- 创建查询函数
+-- 此函数完全没有必要，此处仅为演示
+-- 直接 PHP 拼接 SQL 查询语句即可
 
 CREATE OR REPLACE FUNCTION query_pali(query_str TEXT)
   RETURNS TABLE(
