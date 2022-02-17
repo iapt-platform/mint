@@ -129,15 +129,24 @@ class User extends Table
 				$data["setting"] = "{}";
 				$result = $this->_create($data,["userid","username","email","password","nickname","setting","create_time","modify_time"]);
 				if($result["ok"]){
+                    $newUserId = $this->medoo->get(
+                        $this->table,
+                        'id',
+                        ["userid"=>$data['userid']]
+                    );
 					$channel = new Channel($this->redis);
-					$newChannel1 = $channel->create(["owner"=>$data["userid"],
+					$newChannel1 = $channel->create([
+                                                    "owner_uid"=>$data["userid"],
+                                                    "editor_id"=>$newUserId,
 													"lang"=>$data["lang"],
 													"name"=>$data["username"],
 													"lang"=>$data["lang"],
 													"status"=>30,
 													"summary"=>""
 													]);
-					$newChannel2 = $channel->create(["owner"=>$data["userid"],
+					$newChannel2 = $channel->create([
+                                                    "owner_uid"=>$data["userid"],
+                                                    "editor_id"=>$newUserId,
 													"lang"=>$data["lang"],
 													"name"=>"draft",
 													"lang"=>$data["lang"],

@@ -410,8 +410,8 @@ if ($op == "new") {
 
 					<div>
 						<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-						<input type="password" name="password" placeholder="密码" value="<?php echo $post_password; ?>" />
-						<input type="password" name="repassword" placeholder="再次输入密码" value="<?php echo $post_password; ?>" />
+						<input type="password" name="password" placeholder="<?php echo $_local->gui->password; ?>" value="<?php echo $post_password; ?>" />
+						<input type="password" name="repassword" placeholder="<?php echo $_local->gui->password_again; ?>" value="<?php echo $post_password; ?>" />
 					</div>
 					<div class="form_help">
 					<?php echo $_local->gui->password_demond; ?>

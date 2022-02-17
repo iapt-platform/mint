@@ -216,8 +216,8 @@ require_once "../redis/function.php";
 					<div>
 						<div>
 							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-							<input type="password" id="password"  maxlength="32"  name="password"  value="" />
-							<input type="password" id="repassword" maxlength="32"  name="repassword" placeholder="再次输入密码" value="" />
+							<input type="password" id="password"  maxlength="32"  name="password" placeholder="<?php echo $_local->gui->password; ?>" value="" />
+							<input type="password" id="repassword" maxlength="32"  name="repassword" placeholder="<?php echo $_local->gui->password_again; ?>" value="" />
 						</div>
 						<div class="form_help">
 						<?php echo $_local->gui->password_demond; ?>
