@@ -7,7 +7,7 @@ function isValidPassword(str){
 	}
 }
 function isValidUserName(str){
-	let patt=new RegExp(/@|\s|\//);
+	let patt=new RegExp(/@|\s|\/|[A-Z]/);
 	if(patt.test(str)){
 		return false;
 	}else{
@@ -17,7 +17,7 @@ function isValidUserName(str){
 function submit(){
 	let hasError = false;
 	if($("#password").val()!==$("#repassword").val()){
-		$("#error_password").text("两次密码输入不一致");
+		$("#error_password").text("password and repassword is not match");
 		hasError = true;
 	}
 	if(isValidPassword($("#password").val())==false){

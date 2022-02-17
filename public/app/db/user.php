@@ -321,7 +321,7 @@ class User extends Table
 			$this->result["message"]="::username_too_short";
 			return false;
 		}
-		if(preg_match("/@|\s|\//",$username)!==0){
+		if(preg_match("/@|\s|\/|[A-Z]/",$username)!==0){
 			$this->result["ok"]=false;
 			$this->result["message"]="::username_invaild_symbol";
 			return false;
