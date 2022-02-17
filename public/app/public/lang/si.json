@@ -373,7 +373,7 @@
 		"nick_name": "nickname",
 		"name_for_show": "name showed for others",
 		"email_address": "E-mail address",
-		"account_demond": "Username may only contain alphanumeric characters, and try to avoid using ? : ! ; , -  etc.",
+		"account_demond": "Username may only contain alphanumeric lower case characters, and try to avoid using ? : ! ; , -  etc.",
 		"password_demond": "Make sure it's at least 5 characters including both numbers and letters",
 		"login_with_google": "Log in with Google",
 		"login_with_facebook": "Log in with Facebook",

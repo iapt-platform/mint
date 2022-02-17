@@ -60,7 +60,7 @@ class Table
 			$updateDate
 		);
 
-		$updateDate["id"] = $this->medoo->id();
+		//$updateDate["id"] = $newData;
 		$this->result["data"] = $updateDate;
 		return $this->result;
 	}

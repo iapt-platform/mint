@@ -37,15 +37,17 @@ class Channel extends Table
 			}
 			$json = file_get_contents('php://input');
 			$data = json_decode($json,true);
-			$data["owner"] = $_COOKIE["userid"];			
+			$data["owner_uid"] = $_COOKIE["user_uid"];
+			$data["editor_id"] = $_COOKIE["user_id"];
 		}
 
-		$isExist = $this->medoo->has($this->table,["owner"=>$data["owner"],"name"=>$data["name"]]);
+		$isExist = $this->medoo->has($this->table,["owner_uid"=>$data["owner_uid"],"name"=>$data["name"]]);
 		if(!$isExist){
-			$data["id"] = UUID::v4();
+			$data["id"] = $this->SnowFlake->id();
+			$data["uid"] = UUID::v4();
 			$data["create_time"] = mTime();
 			$data["modify_time"] = mTime();
-			$result =  $this->_create($data,["id","owner","lang","name","summary","status","create_time","modify_time"]);
+			$result =  $this->_create($data,["id","uid","owner_uid",'editor_id',"lang","name","summary","status","create_time","modify_time"]);
 		}
 		else{
 			$this->result["ok"]=false;

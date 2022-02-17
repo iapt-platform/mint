@@ -369,7 +369,7 @@
 		"nick_name": "称呼(昵称)",
 		"name_for_show": "给他人看的名字",
 		"email_address": "电子邮箱地址",
-		"account_demond": "请在半角下使用英文本母、数字、标点符号。并避免使用这些符号?:!;,",
+		"account_demond": "请在半角下使用小写英文字母和数字。并避免使用这些符号?:!;,",
 		"password_demond": "请混合使用五个字符以上的字母和数字",
 		"login_with_google": "使用谷歌登录",
 		"login_with_facebook": "使用脸书登录",
