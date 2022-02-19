@@ -1084,7 +1084,7 @@ pali>p {
 }
 
 .term_mean {
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 .term_at_menu_ul>.trem_focus{
 	border-radius:unset;
