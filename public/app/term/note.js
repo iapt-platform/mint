@@ -786,11 +786,16 @@ function note_json_html(in_json) {
 	output +=
 		"<span class='other_tran_span commentray' title='📔" +
 		gLocal.gui.vannana +
-		"'>🪔" +
-		gLocal.gui.commentary +
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../public/images/svg/oil-lamp.svg#oil-lamp'>";
+	output += "</svg>" ;
+	output += gLocal.gui.commentary +
 		"</span>";
-	output += "<span class='other_comm_num'></span>";
+	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
+
+    //分割线
 	output += "<span class='separate_line'></span>";
 
 	//第三个按钮 相似句
@@ -1626,10 +1631,10 @@ function set_more_button_display() {
 					const begin = sentid[2];
 					const end = sentid[3];
 					let sentId = $(this).attr("sent");
-					if ($(this).parent().parent().siblings(".other_tran").first().css("display") == "none") {
-						$(".other_tran_div[sent='" + sentId + "']")
-							.children(".other_tran")
-							.slideDown();
+                    let otherSentDiv = $(this).parent().parent().siblings(".other_tran").first();
+					if (otherSentDiv.css("display") == "none") {
+                        otherSentDiv.html("");
+						otherSentDiv.slideDown();
                         //加号复位
 						//$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
@@ -1643,7 +1648,7 @@ function set_more_button_display() {
 							},
 							function (data, status) {
 								let arrSent = JSON.parse(data);
-								let html = "<div class='compact'>";
+								let html = "<div class='compact "+channelType+"'>";
 								for (const iterator of arrSent) {
 									if (_channal.indexOf(iterator.channal) == -1) {
 										html += render_one_sent_tran_a(iterator);
@@ -1658,17 +1663,20 @@ function set_more_button_display() {
 									arrSent[0].begin +
 									"-" +
 									arrSent[0].end;
-								$(".other_tran_div[sent='" + sentId + "']")
-									.children(".other_tran")
-									.html(html);
+								otherSentDiv.html(html);
+                                if(channelType==='commentary'){
+                                    note_refresh_new(function(){
+                                        otherSentDiv.show();
+                                    });
+                                }
+                                //不知道为什么加上note_refresh_new后div下拉后会收回。所以加了这个弥补。但是视觉效果不好。数据加载后收回，然后再弹出。
+                                otherSentDiv.show();
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
-						$(".other_tran_div[sent='" + sentId + "']")
-							.children(".other_tran")
-							.slideUp();
+						otherSentDiv.slideUp();
 						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
 				});

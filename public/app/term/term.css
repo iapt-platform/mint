@@ -667,6 +667,7 @@ pw {
 }
 .preview {
 	font-size: 110%;
+    width: -webkit-fill-available;
 }
 .compact .body > .head_bar {
 	display: flex;
@@ -716,6 +717,11 @@ pw {
 	padding: 3px;
 	/*margin-right: 20px;*/
 }
+.commentary .tool_bar > .right{
+    left: 8em;
+    width: 8em;
+}
+
 .sent_tran_inner:hover .tool_bar > .right {
 	display: block;
 }
