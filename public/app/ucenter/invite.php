@@ -12,8 +12,13 @@ require_once "../redis/function.php";
 require_once "../public/function.php";
 
 if (PHP_SAPI == "cli") {
-	if ($argc == 2) {
+	if ($argc >= 2) {
 		$email = $argv[1];
+        if($argc > 2){
+            $lang = $argv[2];
+        }else{
+            $lang = "cn";
+        }
         $redis = redis_connect();
         if ($redis == false) {
             echo "no redis connect\n";
@@ -23,14 +28,15 @@ if (PHP_SAPI == "cli") {
 		$invitecode = "invitecode://".$uuid;
 		$redis->set($invitecode,$email);
 		$redis->expire($invitecode,7*20*3600);
-		$SignUpLink="https://".$_SERVER['SERVER_NAME'] . "/app/ucenter/sign_up.php?invite=".$uuid;
-		$SignUpString="https://".$_SERVER['SERVER_NAME'] . "/app/ucenter/sign_up.php";
+		$SignUpLink="https://www-hk.wikipali.org/app/ucenter/sign_up.php?invite=".$uuid;
+		$SignUpString="https://www-hk.wikipali.org/app/ucenter/sign_up.php";
 
-			// 打开文件并读取数据
+		// 打开文件并读取数据
 		$irow=0;
 		$strSubject = "";
 		$strBody = "";
-		if(($fp=fopen("invite_letter.html", "r"))!==FALSE){
+        $filename = "invite_letter_{$lang}.html";
+		if(($fp=fopen($filename, "r"))!==FALSE){
 			while(($data=fgets($fp))!==FALSE){
 				$irow++;
 				if($irow==1){

@@ -7,7 +7,7 @@ function isValidPassword(str){
 	}
 }
 function isValidUserName(str){
-	let patt=new RegExp(/@|\s|\//);
+	let patt=new RegExp(/@|\s|\/|[A-Z]/);
 	if(patt.test(str)){
 		return false;
 	}else{
@@ -17,16 +17,23 @@ function isValidUserName(str){
 function submit(){
 	let hasError = false;
 	if($("#password").val()!==$("#repassword").val()){
-		$("#error_password").text("两次密码输入不一致");
+		$("#error_password").text("password and repassword is not match");
 		hasError = true;
 	}
 	if(isValidPassword($("#password").val())==false){
-		$("#error_password").text("密码包含无效字符。  / 空格 ");
+		$("#error_password").text(gLocal.gui.password_invaild_symbol);
 		hasError = true;
 	}
-
+	if($("#password").val().length < 6){
+		$("#error_password").text('Password is too short');
+		hasError = true;
+	}
+    if($("#password").val().length > 31){
+		$("#error_password").text('Password is too long');
+		hasError = true;
+	}
 	if(isValidUserName($("#username").val())==false){
-		$("#error_password").text("用户名包含无效字符。@  / 空格 ");
+		$("#error_username").text(gLocal.gui.username_invaild_symbol);
 		hasError = true;
 	}
 
@@ -62,7 +69,7 @@ function submit(){
 			if(data.ok){
 				$("#form_div").hide();
 				$("#message").removeClass("form_error");
-				$("#message").html("注册成功。<a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
+				$("#message").html(gLocal.gui.successful+" <a href='index.php?op=login'>"+gLocal.gui.login+"</a>");
 			}else{
 				$("#message").addClass("form_error");
 				$("#message").text(ConvertServerMsgToLocalString(data.message));
