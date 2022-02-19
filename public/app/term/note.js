@@ -308,7 +308,7 @@ function render_read_mode_sent(iterator) {
 	htmlSent += "</div>";
 	htmlSent += "<div class='sent_tran_div'>";
 	for (const oneTran of iterator.translation) {
-		let html = "<span class='tran_sent' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
+		let html = "<span class='sent_tran' lang='" + oneTran.lang + "' channal='" + oneTran.channal + "'>";
 
 		//将绝对链接转换为 用户连接的主机链接
 		//oneTran.text = oneTran.text.replace(/www-[A-z]*.wikipali.org/g,location.host);

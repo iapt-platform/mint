@@ -292,6 +292,10 @@ function testCJK(string){
 	return reg.test(string);
 
 }
+//显示程序行号
+function get_line(){
+    return (new Error().stack.split(':')[7]);
+}
 
 //所有页面都需要在加载的的时候设置浏览器时区
 setTimeZone();
