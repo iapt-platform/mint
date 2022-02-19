@@ -668,6 +668,9 @@ pw {
 .preview {
 	font-size: 110%;
 }
+.preview::first-letter {
+	text-transform:uppercase;
+}
 .compact .body > .head_bar {
 	display: flex;
 }
