@@ -671,7 +671,7 @@ pw {
 .preview::first-letter {
 	text-transform:uppercase;
 }
-.sent_tran_div > .sent_tran > p::first-letter {
+.sent_tran > p::first-letter {
 	text-transform:uppercase;
 }
 .compact .body > .head_bar {
