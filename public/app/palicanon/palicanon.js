@@ -19,6 +19,7 @@ function palicanon_onload() {
 	$("#tag_input").keypress(function () {
 		tag_render_others();
 	});
+    render_main_tag();
 }
 
 function palicanon_load_term() {
@@ -32,7 +33,7 @@ function palicanon_load_term() {
             break;    
         case '':
             lang = 'en';
-            break;  
+            break;
     }
 	$.get(
 		"/api/v2/terms",
@@ -67,13 +68,17 @@ function tag_changed() {
 	}
 	console.log(strTags);
 	let lang = getCookie("language");
-	if (lang == "zh-cn") {
-		lang = "zh-hans";
-	} else if (lang == "zh-tw") {
-		lang = "zh-hant";
-	} else if (lang == "") {
-		lang = "en";
-	}
+    switch (lang) {
+        case 'zh-cn':
+            lang = 'zh-hans';
+            break;
+        case 'zh-tw':
+            lang = 'zh-hant';
+            break;    
+        case '':
+            lang = 'en';
+            break;
+    }
 	$.get(
 		"./book_tag.php",
 		{
@@ -206,7 +211,21 @@ function render_chapter_head(chapter_info, parent) {
 	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&par=" + chapter_info.paragraph;
 	html += "<div class='title'>";
 	if (typeof chapter_info.trans_title == "undefined") {
-		html += "	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.text + "</a></div>";
+		html += "	<div class='title_1'>";
+        html += "<a href='" + link + "' target='_blank'>" ;
+        switch (getCookie('language')) {
+            case 'my':
+                html += roman_to_my(chapter_info.text);
+                break;
+            case 'si':
+                html += roman_to_si(chapter_info.text);
+                break;        
+            default:
+                html += chapter_info.text ;
+                break;
+        }
+        html += "</a>";
+        html += "</div>";
 	} else {
 		html +=
 			"	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.trans_title + "</a></div>";
@@ -310,7 +329,20 @@ function palicanon_render_chapter_row(chapter) {
 	html += '<div class="title">';
 
 	if (typeof chapter.trans_title == "undefined") {
-		html += "	<div class='title_1'>" + chapter.title + "</div>";
+		html += "	<div class='title_1'>" ;
+        switch (getCookie('language')) {
+            case 'my':
+                html += roman_to_my(chapter.title);
+                break;
+            case 'si':
+                html += roman_to_si(chapter.title);
+                break;
+            default:
+                html += chapter.title ;
+                break;
+        }
+        
+        html += "</div>";
 	} else {
 		html += "	<div class='title_1'>" + chapter.trans_title + "</div>";
 	}
@@ -342,10 +374,18 @@ function palicanon_render_chapter_row(chapter) {
 }
 function tag_get_local_word(word) {
 	let termKey = term_lookup_my(word, "", getCookie("userid"), getCookie("language"));
-	if (termKey) {
-		return termKey.meaning;
+	if (typeof termKey == 'undefined' || termKey === false || termKey === '') {
+        switch (getCookie('language')) {
+            case 'my':
+                return roman_to_my(word);
+            case 'si':
+                return roman_to_si(word);
+            default:
+                return word;
+        }        
+		
 	} else {
-		return word;
+        return termKey.meaning;
 	}
 }
 function tag_render_others() {
