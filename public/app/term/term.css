@@ -669,6 +669,12 @@ pw {
 	font-size: 110%;
     width: -webkit-fill-available;
 }
+.preview::first-letter {
+	text-transform:uppercase;
+}
+.sent_tran > p::first-letter {
+	text-transform:uppercase;
+}
 .compact .body > .head_bar {
 	display: flex;
 }
@@ -893,7 +899,7 @@ w:hover {
 .sent_mode .note_shell {
 	display: block;
 }
-.tran_sent p {
+.sent_tran p {
 	display: inline;
 }
 .sent_tran li {
@@ -929,11 +935,11 @@ span.keybutton {
 	padding: 0.7rem;
 	word-break: break-word;
 }
-span.tran_sent {
+span.sent_tran {
 	line-height: 1.7em;
 }
-.tran_sent ul,
-.tran_sent li {
+.sent_tran ul,
+.sent_tran li {
 	list-style-type: unset;
 	margin-left: 1em;
 }
@@ -1090,7 +1096,7 @@ pali>p {
 }
 
 .term_mean {
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 .term_at_menu_ul>.trem_focus{
 	border-radius:unset;

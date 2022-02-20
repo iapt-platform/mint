@@ -333,8 +333,8 @@ define("_SQLITE_TABLE_CUSTOM_BOOK_", "custom_book");
 define("_SQLITE_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
 
 define("_PG_DB_USER_CUSTOM_BOOK_", _PDO_DB_DSN_);
-define("_PG_TABLE_CUSTOM_BOOK_", "custom_book");
-define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentence");
+define("_PG_TABLE_CUSTOM_BOOK_", "custom_books");
+define("_PG_TABLE_CUSTOM_BOOK_SENT_", "custom_book_sentences");
 
 # 逐词译和译文编辑消息 无需迁移数据
 define("_SQLITE_DB_MESSAGE_", "sqlite:" . __DIR__ . "/../tmp/user/message.db");
@@ -403,8 +403,13 @@ define("_FILE_DB_USER_RBAC_",  __DIR__ . "/../tmp/user/rbac.db3");
 define("_TABLE_FTS_", "fts_texts");
 
 //很少使用
-# 网站设置
-define("_FILE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
+
+
+define("_SQLITE_DB_HOSTSETTING_", "sqlite:" . __DIR__ . "/../tmp/user/hostsetting.db3");
+define("_SQLITE_TABLE_HOSTSETTING_", "setting");
+
+define("_PG_DB_CUSTOM_BOOK_ID_", _PDO_DB_DSN_);
+define("_PG_TABLE_CUSTOM_BOOK_ID_", "custom_book_ids");
 
 #巴缅字典
 //define("_DICT_DB_PM_", _DB_ENGIN_.":host="._DB_HOST_.";port="._DB_PORT_.";dbname="._DB_NAME_.";user="._DB_USERNAME_.";password="._DB_PASSWORD_.";");
@@ -660,9 +665,9 @@ define("_TABLE_FILEINDEX_", _PG_TABLE_FILEINDEX_);
 
 
 # 用户自定义书
-define("_FILE_DB_USER_CUSTOM_BOOK_", _SQLITE_DB_USER_CUSTOM_BOOK_);
-define("_TABLE_CUSTOM_BOOK_", _SQLITE_TABLE_CUSTOM_BOOK_);
-define("_TABLE_CUSTOM_BOOK_SENT_", _SQLITE_TABLE_CUSTOM_BOOK_SENT_);
+define("_FILE_DB_USER_CUSTOM_BOOK_", _PG_DB_USER_CUSTOM_BOOK_);
+define("_TABLE_CUSTOM_BOOK_", _PG_TABLE_CUSTOM_BOOK_);
+define("_TABLE_CUSTOM_BOOK_SENT_", _PG_TABLE_CUSTOM_BOOK_SENT_);
 
 #点赞
 define("_FILE_DB_LIKE_", _SQLITE_DB_LIKE_);
@@ -687,4 +692,7 @@ define("_TABLE_MESSAGE_", _SQLITE_TABLE_MESSAGE_);
 define("_FILE_DB_USER_DICT_", _SQLITE_DB_USER_DICT_);
 define("_TABLE_USER_DICT_", _SQLITE_TABLE_USER_DICT_);
 
+# 网站设置
+define("_FILE_DB_HOSTSETTING_", _PG_DB_CUSTOM_BOOK_ID_);
+define("_TABLE_HOSTSETTING_", _PG_TABLE_CUSTOM_BOOK_ID_);
 ?>
