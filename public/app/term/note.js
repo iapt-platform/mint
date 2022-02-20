@@ -1251,7 +1251,16 @@ function renderNissayaPreview(str){
     for (const iterator of sent) {
         const word =  iterator.split("=");
         if(word.length>1){
-            html += "<span class='org'>"+ my_to_roman(word[0])+"</span>";
+            html += "<span class='org'>";
+            switch (getCookie('language')) {
+                case 'my':
+                    html += '<b>' + word[0] + '</b>';
+                    break;
+                default:
+                    html += my_to_roman(word[0]);
+                    break;
+            }
+            html += "</span>";
             html += "<span class='meaning'>"+ word[1]+"</span>";
         }else{
             html += iterator;
