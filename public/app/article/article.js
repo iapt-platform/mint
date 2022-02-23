@@ -514,7 +514,19 @@ function render_toc(){
 					nextChapter = it.next_chapter;
 					prevChapter = it.prev_chapter;
 				}
-				arrToc.push({article:it.paragraph,title:it.toc,level:it.level});
+                let strTitle;
+                switch (getCookie('language')) {
+                    case 'my':
+                        strTitle = roman_to_my(it.toc);
+                        break;
+                    case 'si':
+                        strTitle = roman_to_si(it.toc);
+                        break;
+                    default:
+                        strTitle = it.toc;
+                        break;
+                }
+				arrToc.push({article:it.paragraph,title:strTitle,title_roman:it.toc,level:it.level});
 			}
 			$("#toc_content").fancytree({
 				autoScroll: true,
