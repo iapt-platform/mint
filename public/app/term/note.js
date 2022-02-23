@@ -995,7 +995,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			tranText = note_init(term_std_str_to_tran(showText, iterator.channal, iterator.editor, iterator.lang));
 		}
 	}
-    if(iterator.type=='nissaya'){
+    if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
         tranText = renderNissayaPreview(iterator.text);
     }
 	let html = "";
@@ -1869,19 +1869,15 @@ function sent_save_callback(data) {
 			ntf_show("成功修改");
 			if (sent_tran_div) {
 				let divPreview = sent_tran_div.find(".preview").first();
+                let thisChannel = find_channal(result.channal);
 				if (result.text == "") {
+                    //内容为空
 					let channel_info = "Empty";
-					let thisChannel = find_channal(result.channal);
 					if (thisChannel) {
 						channel_info = thisChannel.name + "-" + thisChannel.nickname;
 					}
 					divPreview.html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
 				} else {
-					divPreview.html(
-						marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
-					);
-					term_updata_translation();
-					popup_init();
 					for (const iterator of _arrData) {
 						if (
 							iterator.book == result.book &&
@@ -1897,6 +1893,20 @@ function sent_save_callback(data) {
 							}
 						}
 					}
+                    switch (thisChannel.type) {
+                        case 'nissaya':
+                            divPreview.html(renderNissayaPreview(result.text));
+                            break;
+                    
+                        default:
+                            divPreview.html(
+                                marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+                            );
+                            term_updata_translation();                        
+                            break;
+                    }
+
+					popup_init();
 				}
 			}
 		} else if (result.commit_type == 3) {
