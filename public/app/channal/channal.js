@@ -1,6 +1,12 @@
 var _my_channal = null;
 var gChannelId;
 var get_channel_list_callback = null;
+var enumChannelType = [
+    {id:'translation',title:'translation',icon:''},    
+    {id:'original',title:'original',icon:''},
+    {id:'nissaya',title:'nissaya',icon:''},
+    {id:'commentary',title:'commentary',icon:''},
+]
 channal_list();
 var share_win;
 function channal_list_init() {
@@ -47,6 +53,7 @@ function my_channal_list() {
 					html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 					html += "<div style='flex:0.5;'>No.</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.title + "</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.type + "</a></div>";                    
 					html += "<div style='flex:2;'>" + gLocal.gui.owner + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.privacy + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.permission + "</a></div>";
@@ -59,11 +66,17 @@ function my_channal_list() {
 						html += '<div class="file_list_row" style="padding:5px;">';
 						html += '<div style="max-width:2em;flex:1;"><input type="checkbox" /></div>';
 						html += "<div style='flex:0.5;'>" + key++ + "</div>";
+                        //title
 						html += "<div style='flex:2;'>";
 						html += "<guide url='../channal/card.php' gid='" + iterator.uid + "'>";
 						html += iterator.name;
 						html += "</guide>";
 						html += "</div>";
+                        //type
+						html += "<div style='flex:1;'>";
+						html += iterator.type;
+						html += "</div>";
+                        //owner
 						html += "<div style='flex:2;'>";
 						if (parseInt(iterator.power) == 30) {
 							html += gLocal.gui.your;
@@ -74,6 +87,7 @@ function my_channal_list() {
 						}
 
 						html += "</div>";
+                        //privacy
 						html += "<div style='flex:1;'>";
 						let arrStatus = [
 							{ id: 0, string: gLocal.gui.disable },
@@ -208,6 +222,21 @@ function my_channal_edit(id) {
 					html += '<div style="display:flex;line-height:32px;">';
 					html += '<div style="flex:2;">' + gLocal.gui.privacy + "</div>";
 					html += '<div style="flex:8;">';
+                    html += "<select id = 'type'  name = 'type'>";
+					for (const iterator of enumChannelType) {
+						html += "<option ";
+						if (result.type == iterator.id) {
+							html += " selected ";
+						}
+						html += " value='" + iterator.id + "'>" + iterator.title + "</option>";
+					}
+					html += "</select>";
+                    html += "</div>";
+                    html += "</div>";
+
+					html += '<div style="display:flex;line-height:32px;">';
+					html += '<div style="flex:2;">' + gLocal.gui.privacy + "</div>";
+					html += '<div style="flex:8;">';
 					let arrStatus = [
 						{ id: 0, string: gLocal.gui.disable, note: gLocal.gui.disable_note },
 						{ id: 10, string: gLocal.gui.private, note: gLocal.gui.private_note },
@@ -223,60 +252,22 @@ function my_channal_edit(id) {
 						}
 						html += " value='" + iterator.id + "'>" + iterator.string + "</option>";
 					}
-
 					html += "</select>";
 					html +=
 						"<span id = 'status_help' style='margin: 0 1em;'>" +
 						status_note +
-						"</span><a href='#' target='_blank'>[" +
+						"</span>"+
+                        "<a href='#' target='_blank'>[" +
 						gLocal.gui.infomation +
-						"]</a></li>";
+						"]</a>"+
+                        "</li>";
 					html += "</div>";
 					html += "</div>";
 					html += "</div>";
-					/*
-					旧的channel分享方式 删除
-					html += "<div id='coop_div' style='padding:5px;position: relative;'>";
-					html += "<h2>" + gLocal.gui.cooperators + "</h2>";
 
-					html +=
-						"<button onclick='add_coop_user()'>" + gLocal.gui.add + gLocal.gui.cooperators + "</button>";
-					html += "<div id='add_coop_user_dlg' class='float_dlg' style='left: 0;'></div>";
-
-					html +=
-						"<button onclick='add_coop_group()' >" +
-						gLocal.gui.add +
-						gLocal.gui.cooperate_group +
-						"</button>";
-					html += "<div id='add_coop_group_dlg' class='float_dlg' style='left: 0;'></div>";
-					html += "<div id='coop_inner' >";
-					if (typeof result.coop == "undefined" || result.coop.length == 0) {
-						html += gLocal.gui.empty_null_mark;
-					} else {
-						for (const coop of result.coop) {
-							html += '<div class="file_list_row" style="padding:5px;">';
-							if (coop.type == 0) {
-								html += '<div style="flex:1;">' + gLocal.gui.personal + "</div>";
-								html += "<div style='flex:3;'>" + coop.user_name.nickname + "</div>";
-							} else {
-								html += '<div style="flex:1;">' + gLocal.gui.group + "</div>";
-								html += "<div style='flex:3;'>" + coop.user_name.name + "</div>";
-							}
-
-							html += "<div style='flex:3;'>" + coop.power + "</div>";
-							html += "<div class='hover_button' style='flex:3;'>";
-							html += "<button>" + gLocal.gui.remove + "</button>";
-							html += "</div>";
-							html += "</div>";
-						}
-					}
-					html += "</div>";
-					html += "</div>";
-*/
 					$("#channal_info").html(html);
 					user_select_dlg_init("add_coop_user_dlg");
 					tran_lang_select_init("channal_lang_select");
-					//$("#aritcle_status").html(render_status(result.status));
 					$("#channal_title").html(result.name);
 					$("#preview_inner").html();
 				} catch (e) {

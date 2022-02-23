@@ -720,10 +720,9 @@ function note_json_html(in_json) {
 	output += "</div>"; /**note_body end */
 
 	//工具栏开始
-	output += "<div class='other_tran_div' sent='";
-	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
-	output += "<div class='tool_bar' sent='";
-	output += in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end + "' >";
+    let sent_id = in_json.book + "-" + in_json.para + "-" + in_json.begin + "-" + in_json.end;
+	output += "<div class='other_tran_div' sent='" + sent_id + "' >";
+	output += "<div class='tool_bar' sent='" + sent_id + "' >";
 	output += "<span class='tool_left'>";
 	//第一个按钮
 	//新增译文按钮开始
@@ -738,13 +737,17 @@ function note_json_html(in_json) {
 	output += "</div>";
 	output += "</span>";
 	//新增译文按钮结束
+
+    //分隔线
 	output += "<span class='separate_line'></span>";
-	//第二个按钮
+
+	
 	output += "<span class='more_tran icon_expand'></span>";
-	//其他译文工具条
-	output += "<span class='other_bar'  >";
+
+	//第二个按钮其他译文
+	output += "<span class='other_bar' sent='"+sent_id+"' channel_type='translation'>";
 	output +=
-		"<span class='other_tran_span' title='🧲" +
+		"<span class='other_tran_span' title='" +
 		gLocal.gui.other +
 		gLocal.gui.translation +
 		"'>";
@@ -755,37 +758,65 @@ function note_json_html(in_json) {
 	output += "</span>";
 	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
+    //第二个按钮结束
+
+    //分割线
+	output += "<span class='separate_line'></span>";
+
+    //nissaya
+	output += "<span class='other_bar' sent='"+sent_id+"' channel_type='nissaya' >";
+	output +=
+		"<span class='other_nissaya_span' title='" +
+		gLocal.gui.other +
+		gLocal.gui.translation +
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#sun'>";
+	output += "</svg>" ;
+	output += "Nissaya" ;
+	output += "</span>";
+	output += "<span class='other_tran_num'></span>";
+	output += "</span>";
+
+    //分割线
 	output += "<span class='separate_line'></span>";
 
 	//手工义注
-	output += "<span class='other_bar disable'>";
+	output += "<span class='other_bar'  sent='"+sent_id+"' channel_type='commentary' >";
 	output +=
 		"<span class='other_tran_span commentray' title='📔" +
 		gLocal.gui.vannana +
-		"'>🪔" +
-		gLocal.gui.commentary +
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../public/images/svg/oil-lamp.svg#oil-lamp'>";
+	output += "</svg>" ;
+	output += gLocal.gui.commentary +
 		"</span>";
-	output += "<span class='other_comm_num'></span>";
+	output += "<span class='other_tran_num'></span>";
 	output += "</span>";
+
+    //分割线
 	output += "<span class='separate_line'></span>";
 
 	//第三个按钮 相似句
 	if (parseInt(in_json.sim) > 0) {
-		output += "<span class='other_bar' >";
+		output += "<span class='sim_bar' >";
 		output +=
 			"<span class='similar_sent_span' onclick=\"note_show_pali_sim('" +
 			in_json.pali_sent_id +
 			"')\" title='" +
 			gLocal.gui.similar_sentences +
-			"'>🧬" +
-			gLocal.gui.similar +
-			"</span>";
+			"'>";
+        	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+            output += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#hdd-stack'>";
+            output += "</svg>" ;
+			output += gLocal.gui.similar + "</span>";
 		output += "<span class='similar_sent_num'>" + in_json.sim + "</span>";
 		output += "</span>";
 		output += "<span class='separate_line'></span>";
 	}
-
 	//第三个按钮 相似句结束
+
 	output += "</span>";
 
 	output += "<span class='tool_right'>";
@@ -964,6 +995,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			tranText = note_init(term_std_str_to_tran(showText, iterator.channal, iterator.editor, iterator.lang));
 		}
 	}
+    if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
+        tranText = renderNissayaPreview(iterator.text);
+    }
 	let html = "";
 	html += "<div class='sent_tran ";
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
@@ -1211,7 +1245,30 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	html += "</div>";
 	return html;
 }
-
+function renderNissayaPreview(str){
+    let html ="<div class='nissaya'>";
+    const sent = str.split("\n");
+    for (const iterator of sent) {
+        const word =  iterator.split("=");
+        if(word.length>1){
+            html += "<span class='org'>";
+            switch (getCookie('language')) {
+                case 'my':
+                    html += '<b>' + word[0] + '</b>';
+                    break;
+                default:
+                    html += my_to_roman(word[0]);
+                    break;
+            }
+            html += "</span>";
+            html += "<span class='meaning'>"+ word[1]+"</span>";
+        }else{
+            html += iterator;
+        }
+    }
+    html += "</div>";
+    return html;
+}
 function tran_sent_textarea_event_init() {
 	let textarea = document.querySelectorAll(".tran_sent_textarea");
 	for (let iterator of textarea) {
@@ -1550,8 +1607,9 @@ function new_sentence(book, para, begin, end, channel, obj) {
 
 //显示更多译文按钮动作
 function set_more_button_display() {
-	$(".other_tran_div").each(function () {
+	$(".other_bar").each(function () {
 		const sentid = $(this).attr("sent").split("-");
+		const channelType = $(this).attr("channel_type");
 
 		const book = sentid[0];
 		const para = sentid[1];
@@ -1559,7 +1617,7 @@ function set_more_button_display() {
 		const end = sentid[3];
 		let count = 0;
 		for (const iterator of _channalData) {
-			if (iterator.final) {
+			if (iterator.final && iterator.type==channelType) {
 				for (const onesent of iterator.final) {
 					let id = onesent.id.split("-");
 					if (book == id[0] && para == id[1] && begin == id[2] && end == id[3] && onesent.final) {
@@ -1574,19 +1632,20 @@ function set_more_button_display() {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
 			$(this)
-				.find(".other_bar")
 				.click(function () {
-					const sentid = $(this).parent().parent().attr("sent").split("-");
+					const sentid = $(this).attr("sent").split("-");
+		            const channelType = $(this).attr("channel_type");
 					const book = sentid[0];
 					const para = sentid[1];
 					const begin = sentid[2];
 					const end = sentid[3];
-					let sentId = $(this).parent().parent().attr("sent");
-					if ($(this).parent().parent().siblings(".other_tran").first().css("display") == "none") {
-						$(".other_tran_div[sent='" + sentId + "']")
-							.children(".other_tran")
-							.slideDown();
-						$(this).siblings(".more_tran ").css("transform", "unset");
+					let sentId = $(this).attr("sent");
+                    let otherSentDiv = $(this).parent().parent().siblings(".other_tran").first();
+					if (otherSentDiv.css("display") == "none") {
+                        otherSentDiv.html("");
+						otherSentDiv.slideDown();
+                        //加号复位
+						//$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
 							"../usent/get.php",
 							{
@@ -1594,10 +1653,11 @@ function set_more_button_display() {
 								para: para,
 								begin: begin,
 								end: end,
+                                type:channelType,
 							},
 							function (data, status) {
 								let arrSent = JSON.parse(data);
-								let html = "<div class='compact'>";
+								let html = "<div class='compact "+channelType+"'>";
 								for (const iterator of arrSent) {
 									if (_channal.indexOf(iterator.channal) == -1) {
 										html += render_one_sent_tran_a(iterator);
@@ -1612,24 +1672,27 @@ function set_more_button_display() {
 									arrSent[0].begin +
 									"-" +
 									arrSent[0].end;
-								$(".other_tran_div[sent='" + sentId + "']")
-									.children(".other_tran")
-									.html(html);
+								otherSentDiv.html(html);
+                                if(channelType==='commentary'){
+                                    note_refresh_new(function(){
+                                        otherSentDiv.show();
+                                    });
+                                }
+                                //不知道为什么加上note_refresh_new后div下拉后会收回。所以加了这个弥补。但是视觉效果不好。数据加载后收回，然后再弹出。
+                                otherSentDiv.show();
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
-						$(".other_tran_div[sent='" + sentId + "']")
-							.children(".other_tran")
-							.slideUp();
+						otherSentDiv.slideUp();
 						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
 				});
 		} else {
 			//隐藏自己
 			//$(this).hide();
-			$(this).find(".other_tran_span").addClass("disable"); //gLocal.gui.no + gLocal.gui.other + gLocal.gui.translation
+			$(this).addClass("disable");
 			//$(this).find(".more_tran").hide();
 		}
 	});
@@ -1806,19 +1869,15 @@ function sent_save_callback(data) {
 			ntf_show("成功修改");
 			if (sent_tran_div) {
 				let divPreview = sent_tran_div.find(".preview").first();
+                let thisChannel = find_channal(result.channal);
 				if (result.text == "") {
+                    //内容为空
 					let channel_info = "Empty";
-					let thisChannel = find_channal(result.channal);
 					if (thisChannel) {
 						channel_info = thisChannel.name + "-" + thisChannel.nickname;
 					}
 					divPreview.html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
 				} else {
-					divPreview.html(
-						marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
-					);
-					term_updata_translation();
-					popup_init();
 					for (const iterator of _arrData) {
 						if (
 							iterator.book == result.book &&
@@ -1834,6 +1893,20 @@ function sent_save_callback(data) {
 							}
 						}
 					}
+                    switch (thisChannel.type) {
+                        case 'nissaya':
+                            divPreview.html(renderNissayaPreview(result.text));
+                            break;
+                    
+                        default:
+                            divPreview.html(
+                                marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+                            );
+                            term_updata_translation();                        
+                            break;
+                    }
+
+					popup_init();
 				}
 			}
 		} else if (result.commit_type == 3) {

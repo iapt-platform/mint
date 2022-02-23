@@ -31,11 +31,18 @@ if($channelPower<30){
     exit;
 }
 
+if(!isset($_POST["type"])){
+    $respond["status"] = 1;
+    $respond["message"] = 'Error： no [type]  ';
+    echo json_encode($respond, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $channelOldInfo = $channel->getChannal($_POST["id"]);
 
-$query="UPDATE "._TABLE_CHANNEL_." SET editor_id=?, name = ? ,  summary = ?,  status = ? , lang = ? , updated_at = now()  , modify_time= ?   where uid = ?  ";
+$query="UPDATE "._TABLE_CHANNEL_." SET editor_id=?, name = ? ,  summary = ?, type = ?, status = ? , lang = ? , updated_at = now()  , modify_time= ?   where uid = ?  ";
 $sth = $PDO->prepare($query);
-$sth->execute(array($_COOKIE["user_id"],$_POST["name"] , $_POST["summary"], $_POST["status"] , $_POST["lang"] ,  mTime() , $_POST["id"]));
+$sth->execute(array($_COOKIE["user_id"],$_POST["name"] , $_POST["summary"], $_POST["type"], $_POST["status"] , $_POST["lang"] ,  mTime() , $_POST["id"]));
 $respond=array("status"=>0,"message"=>"");
 if (!$sth || ($sth && $sth->errorCode() != 0)) {
 	$error = PDO_ErrorInfo();

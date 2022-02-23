@@ -53,28 +53,41 @@ if (isset($_GET["sentences"])) {
     $stmt->execute($arrSent);
 } else {
     $book = $_GET["book"];
-    $para = $_GET["para"];
+    if(isset($_GET["par"])){
+        $para = $_GET["par"];
+    }
+    if(isset($_GET["para"])){
+        $para = $_GET["para"];
+    }
+    
     $begin = $_GET["begin"];
     $end = $_GET["end"];
-    $query = "SELECT uid as id,
-					parent_uid as parent,
-					block_uid as block_id,
-					channel_uid as channal,
-					book_id as book,
-					paragraph,
-					word_start as begin,
-					word_end as end,
-					author,
-					editor_uid as editor,
-					content as text,
-					language,
-					version as ver,
-					status,
-					strlen,
-					modify_time
-					FROM "._TABLE_SENTENCE_." WHERE (book_id = ?  AND paragraph = ? AND word_start = ? AND word_end = ? and strlen >0 and (status = 30 {$channel_query} ) ) order by modify_time DESC  ";
+    if(isset($_GET["type"])){
+        $type = $_GET["type"];
+    }else{
+        $type = "translation";
+    }
+    
+    $query = "SELECT sent.uid as id,
+					sent.parent_uid as parent,
+					sent.block_uid as block_id,
+					sent.channel_uid as channal,
+					sent.book_id as book,
+					sent.paragraph,
+					sent.word_start as begin,
+					sent.word_end as end,
+					sent.author,
+					sent.editor_uid as editor,
+					sent.content as text,
+					sent.language,
+					sent.version as ver,
+					sent.status,
+					sent.strlen,
+					sent.modify_time,
+                    channel.type
+					FROM "._TABLE_SENTENCE_. " as sent LEFT JOIN "._TABLE_CHANNEL_." as channel ON sent.channel_uid=channel.uid  WHERE (channel.type= ? AND sent.book_id = ?  AND sent.paragraph = ? AND sent.word_start = ? AND sent.word_end = ? and sent.strlen >0 and (sent.status = 30 {$channel_query} ) ) order by sent.modify_time DESC  ";
     $stmt = $dbh->prepare($query);
-    $parm = array($book, $para, $begin, $end);
+    $parm = array($type,$book, $para, $begin, $end);
     $parm = array_merge_recursive($parm, $channal_list);
     $stmt->execute($parm);
 }

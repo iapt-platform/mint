@@ -667,6 +667,7 @@ pw {
 }
 .preview {
 	font-size: 110%;
+    width: -webkit-fill-available;
 }
 .preview::first-letter {
 	text-transform:uppercase;
@@ -722,6 +723,11 @@ pw {
 	padding: 3px;
 	/*margin-right: 20px;*/
 }
+.commentary .tool_bar > .right{
+    left: 8em;
+    width: 8em;
+}
+
 .sent_tran_inner:hover .tool_bar > .right {
 	display: block;
 }
@@ -1098,4 +1104,16 @@ pali>p {
 	margin:unset;
 	padding:unset;
 	background-color: var(--btn-border-color);
+}
+
+.preview .nissaya{
+    display:inline;
+}
+.preview .nissaya .org{
+    display:inline;
+    font-weight: 700;
+}
+.preview .nissaya .meaning{
+    display:inline;
+    font-weight: 500;
 }
