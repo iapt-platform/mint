@@ -992,12 +992,15 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			tranText = str_diff(orgText, iterator.text);
 		} else {
 			//note_init处理句子链接
-			tranText = note_init(term_std_str_to_tran(showText, iterator.channal, iterator.editor, iterator.lang));
+            if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
+                tranText = renderNissayaPreview(iterator.text);
+            }else{
+                tranText = iterator.text;
+            }
+			tranText = note_init(term_std_str_to_tran(tranText, iterator.channal, iterator.editor, iterator.lang));
 		}
 	}
-    if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
-        tranText = renderNissayaPreview(iterator.text);
-    }
+
 	let html = "";
 	html += "<div class='sent_tran ";
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
