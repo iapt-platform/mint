@@ -712,12 +712,8 @@ function term_get_dict(callback=null) {
 		},
 		function (data, status) {
 			if (data.length > 0) {
-				try {
-					arrMyTerm = JSON.parse(data);
-					term_updata_translation(callback);
-				} catch (e) {
-					console.error(e.error + " data:" + data);
-				}
+				arrMyTerm = JSON.parse(data);
+				term_updata_translation(callback);
 			}
 		}
 	);
