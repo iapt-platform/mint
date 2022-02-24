@@ -396,10 +396,10 @@ function palicanon_load() {
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
                             if(document.querySelector("#para_focus")){
-							document.querySelector("#para_focus").scrollIntoView({
-								block: "end",
-								behavior: "smooth",
-							});
+                                document.querySelector("#para_focus").scrollIntoView({
+                                    block: "end",
+                                    behavior: "smooth",
+                                });                                
                             }
 
                             $.get('templiates/glossary.tpl',function(data){
