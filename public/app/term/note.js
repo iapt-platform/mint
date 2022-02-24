@@ -998,6 +998,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
                 tranText = iterator.text;
             }
 			tranText = note_init(term_std_str_to_tran(tranText, iterator.channal, iterator.editor, iterator.lang));
+            if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
+                tranText = "<div class='nissaya'>"+tranText+"</div>";
+            }
 		}
 	}
 
@@ -1249,15 +1252,17 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	return html;
 }
 function renderNissayaPreview(str){
-    let html ="<div class='nissaya'>";
+    let html ='';
+    //html +="<div class='nissaya'>";
     const sent = str.split("\n");
     for (const iterator of sent) {
         const word =  iterator.split("=");
-        if(word.length>1){
+        if(iterator.indexOf('=')>=0){
+            html += "<span class='nsy_word'>"
             html += "<span class='org'>";
             switch (getCookie('language')) {
                 case 'my':
-                    html += '<b>' + word[0] + '</b>';
+                    html +=  $.trim(word[0]) + "၊";
                     break;
                 default:
                     html += my_to_roman(word[0]);
@@ -1265,11 +1270,12 @@ function renderNissayaPreview(str){
             }
             html += "</span>";
             html += "<span class='meaning'>"+ word[1]+"</span>";
+            html += "</span>";
         }else{
             html += iterator;
         }
     }
-    html += "</div>";
+    //html += "</div>";
     return html;
 }
 function tran_sent_textarea_event_init() {
