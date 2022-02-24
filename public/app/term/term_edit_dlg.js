@@ -175,7 +175,7 @@ function term_edit_dlg_render(word = null,obj=null) {
         if(word.channel === ''){
             output += "通用于<b>所有版本</b>";
             //判断是否只读
-            if(sentChannel.power !== 30){
+            if(sentChannel !==null && sentChannel.power !== 30){
                 output += "(只读)";
             }
         }else{

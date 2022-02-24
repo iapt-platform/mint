@@ -712,12 +712,8 @@ function term_get_dict(callback=null) {
 		},
 		function (data, status) {
 			if (data.length > 0) {
-				try {
-					arrMyTerm = JSON.parse(data);
-					term_updata_translation(callback);
-				} catch (e) {
-					console.error(e.error + " data:" + data);
-				}
+				arrMyTerm = JSON.parse(data);
+				term_updata_translation(callback);
 			}
 		}
 	);
@@ -728,11 +724,13 @@ function term_get_used(){
     $("term").each(function () {
         let word = $(this).attr("pali");
         let meaning = $(this).attr("mean");
+        let meaning2 = $(this).attr("mean2");
         if(word !== ""){
             output[word] = {
                 pali:word,
                 pali_en:com_getPaliEn(word),
-                meaning:meaning
+                meaning:meaning,
+                meaning2:meaning2
             };
         }
 

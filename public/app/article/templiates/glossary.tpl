@@ -1,7 +1,7 @@
 <h2>Glossary</h2>
 {{#glossary.word}}
 <div>
-<b>{{pali}}</b>:{{meaning}}
+<b>{{pali}}</b>:{{meaning}}; {{meaning2}}
 </div>
 {{/glossary.word}}
 

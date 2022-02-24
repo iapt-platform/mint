@@ -201,8 +201,8 @@ if (!isset($_GET["token"])) {
 					<div>
 						<div>
 							<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password; ?></span>
-							<input type="password" id="password" maxlength="32" name="password" placeholder="密码" value="" />
-							<input type="password" id="repassword" maxlength="32" name="repassword" placeholder="再次输入密码" value="" />
+							<input type="password" id="password" maxlength="32" name="password" placeholder="<?php echo $_local->gui->password; ?>" value="" />
+							<input type="password" id="repassword" maxlength="32" name="repassword" placeholder="<?php echo $_local->gui->password_again; ?>" value="" />
 						</div>
 						<div class="form_help">至少6个字符</div>
 						<div id="error_password" class="form_error"></div>

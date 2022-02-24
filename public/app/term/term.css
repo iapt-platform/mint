@@ -404,6 +404,10 @@ note {
 	display: block;
 	background-color: #80808014;
 	position: relative;
+    border: solid 2px var(--btn-bg-color);
+}
+.read note {
+    border:unset;
 }
 note > .bottm_tool_button {
 	border-radius: 5px;
@@ -668,6 +672,12 @@ pw {
 .preview {
 	font-size: 110%;
 }
+.preview::first-letter {
+	text-transform:capitalize;
+}
+.sent_tran > p::first-letter {
+	text-transform:capitalize;
+}
 .compact .body > .head_bar {
 	display: flex;
 }
@@ -887,7 +897,7 @@ w:hover {
 .sent_mode .note_shell {
 	display: block;
 }
-.tran_sent p {
+.sent_tran p {
 	display: inline;
 }
 .sent_tran li {
@@ -923,11 +933,14 @@ span.keybutton {
 	padding: 0.7rem;
 	word-break: break-word;
 }
-span.tran_sent {
+span.sent_tran {
 	line-height: 1.7em;
 }
-.tran_sent ul,
-.tran_sent li {
+.sent_mode span.sent_tran {
+    display: inline-block;
+}
+.sent_tran ul,
+.sent_tran li {
 	list-style-type: unset;
 	margin-left: 1em;
 }
@@ -1084,7 +1097,7 @@ pali>p {
 }
 
 .term_mean {
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 .term_at_menu_ul>.trem_focus{
 	border-radius:unset;
@@ -1092,4 +1105,8 @@ pali>p {
 	margin:unset;
 	padding:unset;
 	background-color: var(--btn-border-color);
+}
+
+span.sent_tran::first-letter {
+    text-transform: capitalize;
 }

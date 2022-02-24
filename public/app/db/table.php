@@ -23,7 +23,7 @@ class Table
     protected $SnowFlake;
     function __construct($db,$table,$user="",$password="",$redis=false) {
         $this->dbh = new PDO($db, _DB_USERNAME_, _DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$database = new Medoo([
 			// Initialized and connected PDO object.
 			'pdo' => $this->dbh,
@@ -60,7 +60,7 @@ class Table
 			$updateDate
 		);
 
-		$updateDate["id"] = $this->medoo->id();
+		//$updateDate["id"] = $newData;
 		$this->result["data"] = $updateDate;
 		return $this->result;
 	}
