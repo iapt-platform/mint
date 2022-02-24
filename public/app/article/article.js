@@ -400,6 +400,13 @@ function palicanon_load() {
 								block: "end",
 								behavior: "smooth",
 							});
+                            }
+
+                            $.get('templiates/glossary.tpl',function(data){
+                                let TermData = term_get_used();
+                                let rendered = Mustache.render(data,TermData);
+                                $("#glossary").html(rendered);                                
+                            });
 						});
 						reader_draw_para_menu();
 						guide_init();
