@@ -724,11 +724,13 @@ function term_get_used(){
     $("term").each(function () {
         let word = $(this).attr("pali");
         let meaning = $(this).attr("mean");
+        let meaning2 = $(this).attr("mean2");
         if(word !== ""){
             output[word] = {
                 pali:word,
                 pali_en:com_getPaliEn(word),
-                meaning:meaning
+                meaning:meaning,
+                meaning2:meaning2
             };
         }
 
