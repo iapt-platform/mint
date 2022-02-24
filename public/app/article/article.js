@@ -395,6 +395,7 @@ function palicanon_load() {
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
+                            if(document.querySelector("#para_focus")){
 							document.querySelector("#para_focus").scrollIntoView({
 								block: "end",
 								behavior: "smooth",
