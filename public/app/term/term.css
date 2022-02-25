@@ -823,6 +823,7 @@ li.active {
 }
 .disable {
 	cursor: not-allowed;
+    filter: grayscale(100%);
 }
 .channel_name {
 	white-space: nowrap;
