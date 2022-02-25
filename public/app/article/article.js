@@ -395,10 +395,18 @@ function palicanon_load() {
 						$("#article_author").html(result.username.nickname + "@" + result.username.username);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
-							document.querySelector("#para_focus").scrollIntoView({
-								block: "end",
-								behavior: "smooth",
-							});
+                            if(document.querySelector("#para_focus")){
+                                document.querySelector("#para_focus").scrollIntoView({
+                                    block: "end",
+                                    behavior: "smooth",
+                                });                                
+                            }
+
+                            $.get('templiates/glossary.tpl',function(data){
+                                let TermData = term_get_used();
+                                let rendered = Mustache.render(data,TermData);
+                                $("#glossary").html(rendered);                                
+                            });
 						});
 						reader_draw_para_menu();
 						guide_init();
