@@ -713,7 +713,9 @@ function note_json_html(in_json) {
 	//译文开始
 	output += "<div class='sent_tran_div'>";
 	for (const iterator of in_json.translation) {
-		output += render_one_sent_tran_a(iterator);
+        if(iterator.channalinfo.type != "commentary"){
+            output += render_one_sent_tran_a(iterator);
+        }
 	}
 	output += "</div>";
 	//译文结束
@@ -1625,19 +1627,35 @@ function set_more_button_display() {
 		const begin = sentid[2];
 		const end = sentid[3];
 		let count = 0;
+        let commentaryChannel=0;
+        if(channelType=='commentary'){
+            for (const iterator of _channal.split(',')) {
+                let thisChannel = find_channal(iterator);
+                if(thisChannel && thisChannel.type=='commentary'){
+                    commentaryChannel++;
+                }
+            }            
+        }
+
+        
 		for (const iterator of _channalData) {
 			if (iterator.final && iterator.type==channelType) {
 				for (const onesent of iterator.final) {
 					let id = onesent.id.split("-");
 					if (book == id[0] && para == id[1] && begin == id[2] && end == id[3] && onesent.final) {
-						if (_channal.indexOf(iterator.id) == -1) {
-							count++;
-						}
+                        if(channelType=='commentary'){
+                            count++;
+                        }else{
+                            if (_channal.indexOf(iterator.id) == -1) {
+                                count++;
+                            }
+                        }
 					}
 				}
 			}
 		}
-		if (count > 0) {
+		if (count > 0 || commentaryChannel>0) 
+        {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
 			$(this)
@@ -1651,8 +1669,7 @@ function set_more_button_display() {
 					let sentId = $(this).attr("sent");
                     let otherSentDiv = $(this).parent().parent().siblings(".other_tran").first();
 					if (otherSentDiv.css("display") == "none") {
-                        otherSentDiv.html("");
-						otherSentDiv.slideDown();
+						otherSentDiv.show();
                         //加号复位
 						//$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
@@ -1667,20 +1684,31 @@ function set_more_button_display() {
 							function (data, status) {
 								let arrSent = JSON.parse(data);
 								let html = "<div class='compact "+channelType+"'>";
+                                if(channelType==='commentary'){
+                                    //先渲染被选择的channel
+                                    if (_channal != "") {
+                                        //for(const channel of _channal.split(","))
+                                        {
+                                            for (const sent of _arrData) {
+                                                if (sent.book == book && sent.para==para && sent.begin==begin && sent.end==end) {
+                                                    for (const tran of sent.translation) {
+                                                        if(tran.channalinfo.type=='commentary'){
+                                                            html += render_one_sent_tran_a(tran);
+                                                        }
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                //然后渲染没有被选择的
 								for (const iterator of arrSent) {
 									if (_channal.indexOf(iterator.channal) == -1) {
 										html += render_one_sent_tran_a(iterator);
 									}
 								}
 								html += "</div>";
-								let sentId =
-									arrSent[0].book +
-									"-" +
-									arrSent[0].paragraph +
-									"-" +
-									arrSent[0].begin +
-									"-" +
-									arrSent[0].end;
 								otherSentDiv.html(html);
                                 if(channelType==='commentary'){
                                     note_refresh_new(function(){
@@ -1694,11 +1722,12 @@ function set_more_button_display() {
 							}
 						);
 					} else {
-						otherSentDiv.slideUp();
+						otherSentDiv.hide();
 						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
 				});
-		} else {
+		}else 
+        {
 			//隐藏自己
 			//$(this).hide();
 			$(this).addClass("disable");
