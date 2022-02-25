@@ -171,12 +171,16 @@ function setArrange(mode) {
 		getStyleClass("trandiv").style.flex = "1";
 		getStyleClass("pardiv").style.flexDirection = "column";
 		getStyleClass("sent_wbw_trans").style.flexDirection = "column";
+        	$(".translate_sent_head").each(function(){
+                    $(this).height('auto')
+                });
 	} else if (_display_para_arrange == 0) {
 		/* 0 左右对读 */
 		getStyleClass("wbwdiv").style.flex = "7";
 		getStyleClass("trandiv").style.flex = "3";
 		getStyleClass("pardiv").style.flexDirection = "row";
 		getStyleClass("sent_wbw_trans").style.flexDirection = "row";
+	    $(".translate_sent_head").each(function(){$(this).height($(this).parent()[0].scrollHeight+"px")})
 	}
 	if (_display_sbs == 1) {
 		/* 逐句对读 */
@@ -633,7 +637,7 @@ function tab_click(panalId, tabid, callback = null, parm = null) {
 		}
 	}
 	guide_init();
-	$(".translate_sent_head").each(function(){$(this).height($(this).parent()[0].scrollHeight+"px")})
+
 }
 
 /*
