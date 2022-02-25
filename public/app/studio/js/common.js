@@ -172,15 +172,21 @@ function setArrange(mode) {
 		getStyleClass("pardiv").style.flexDirection = "column";
 		getStyleClass("sent_wbw_trans").style.flexDirection = "column";
         	$(".translate_sent_head").each(function(){
-                    $(this).height('auto')
+                    $(this).height('auto');
                 });
+            $('.translate_sent').css('margin-top','unset');
+        getStyleClass("sent_wbw_trans").style.margintop = '0';
 	} else if (_display_para_arrange == 0) {
 		/* 0 左右对读 */
 		getStyleClass("wbwdiv").style.flex = "7";
 		getStyleClass("trandiv").style.flex = "3";
 		getStyleClass("pardiv").style.flexDirection = "row";
 		getStyleClass("sent_wbw_trans").style.flexDirection = "row";
-	    $(".translate_sent_head").each(function(){$(this).height($(this).parent()[0].scrollHeight+"px")})
+	    $(".translate_sent_head").each(function(){
+            $(this).height($(this).parent()[0].scrollHeight+"px");
+            });
+        getStyleClass("sent_wbw_trans").style.margintop = '-20px';
+        $('.translate_sent').css('margin-top','-20px');
 	}
 	if (_display_sbs == 1) {
 		/* 逐句对读 */
