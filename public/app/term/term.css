@@ -404,6 +404,10 @@ note {
 	display: block;
 	background-color: #80808014;
 	position: relative;
+    border: solid 2px var(--btn-bg-color);
+}
+.read note {
+    border:unset;
 }
 note > .bottm_tool_button {
 	border-radius: 5px;
@@ -670,10 +674,10 @@ pw {
     width: -webkit-fill-available;
 }
 .preview::first-letter {
-	text-transform:uppercase;
+	text-transform:capitalize;
 }
 .sent_tran > p::first-letter {
-	text-transform:uppercase;
+	text-transform:capitalize;
 }
 .compact .body > .head_bar {
 	display: flex;
@@ -938,6 +942,9 @@ span.keybutton {
 span.sent_tran {
 	line-height: 1.7em;
 }
+.sent_mode span.sent_tran {
+    display: inline-block;
+}
 .sent_tran ul,
 .sent_tran li {
 	list-style-type: unset;
@@ -1119,4 +1126,7 @@ pali>p {
 .preview .nissaya .nsy_word .meaning{
     display:inline;
     font-weight: 500;
+}
+span.sent_tran::first-letter {
+    text-transform: capitalize;
 }

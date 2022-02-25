@@ -40,3 +40,18 @@ note > .tran {
 .main_view {
 	margin-left: auto;
 }
+
+note {
+    border: unset;
+}
+
+.contents_div {
+    width: auto;
+}
+
+#right_pannal {
+    display: none;
+}
+.note_foot{
+    display:none;
+}
