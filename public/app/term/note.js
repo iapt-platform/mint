@@ -1658,8 +1658,8 @@ function set_more_button_display() {
         {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
-			$(this)
-				.click(function () {
+			$(this).off('click')
+				.on('click',function () {
 					const sentid = $(this).attr("sent").split("-");
 		            const channelType = $(this).attr("channel_type");
 					const book = sentid[0];
@@ -1669,7 +1669,7 @@ function set_more_button_display() {
 					let sentId = $(this).attr("sent");
                     let otherSentDiv = $(this).parent().parent().siblings(".other_tran").first();
 					if (otherSentDiv.css("display") == "none") {
-						otherSentDiv.show();
+						otherSentDiv.slideDown();
                         //加号复位
 						//$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
@@ -1711,20 +1711,19 @@ function set_more_button_display() {
 								html += "</div>";
 								otherSentDiv.html(html);
                                 if(channelType==='commentary'){
-                                    note_refresh_new(function(){
-                                        otherSentDiv.show();
-                                    });
+                                    note_refresh_new();
                                 }
-                                //不知道为什么加上note_refresh_new后div下拉后会收回。所以加了这个弥补。但是视觉效果不好。数据加载后收回，然后再弹出。
-                                otherSentDiv.show();
+
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
-						otherSentDiv.hide();
+						otherSentDiv.slideUp();
 						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
+
+                    return false;    //  阻止事件冒泡
 				});
 		}else 
         {
