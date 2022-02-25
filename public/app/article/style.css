@@ -318,3 +318,15 @@ img {
 	display: flex;
     justify-content: space-between;
 }
+td, th {
+    border: unset;
+    vertical-align: baseline;
+    padding:6px;
+}
+table {
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  border-collapse: collapse;
+}
+tr {
+  border-bottom: 1px solid gray;
+}

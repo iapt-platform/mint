@@ -119,9 +119,9 @@ class Article extends Table
 			}
 		}
 		#查询共享权限，如果共享权限更大，覆盖上面的的
-		$sharePower = share_get_res_power($_COOKIE["user_uid"],$id);
+		$sharePower = share_get_res_power($userId,$id);
 		if($collectionId!=""){
-			$sharePowerCollection = share_get_res_power($_COOKIE["user_uid"],$collectionId);
+			$sharePowerCollection = share_get_res_power($userId,$collectionId);
 		}
 		else{
 			$sharePowerCollection =0;
@@ -133,7 +133,7 @@ class Article extends Table
 			$iPower=$sharePowerCollection;
 		}
 		if($this->redis!==false){
-			$this->redis->hSet("power://article/".$id,$_COOKIE["user_uid"],$iPower);
+			$this->redis->hSet("power://article/".$id,$userId,$iPower);
 		}
 		return $iPower;
 	}
