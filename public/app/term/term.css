@@ -728,15 +728,18 @@ pw {
 	/*margin-right: 20px;*/
 }
 .commentary .tool_bar > .right{
-    left: 8em;
+    /*left: 8em;*/
     width: 8em;
+}
+.translation>.sent_tran_inner>.tool_bar > .right{
+    right: 2em;
 }
 
 .sent_tran_inner:hover .tool_bar > .right {
-	display: block;
+	/*display: block;*/
 }
 .list_with_head:hover .tool_bar > .right {
-	display: block;
+	/*display: block;*/
 }
 .list_with_head {
 	position: relative;

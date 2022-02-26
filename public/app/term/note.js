@@ -212,7 +212,8 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
-
+                        //处理鼠标移入显示菜单消息
+                        setSentToolBarEvent();
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
@@ -1008,6 +1009,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	let html = "";
 	html += "<div class='sent_tran ";
+    html += iterator.channalinfo.type;
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
 		html += " pr ";
 	}
@@ -2553,4 +2555,13 @@ function term_parent(paliword) {
 		}		
 	}
 	return output;
+}
+
+function setSentToolBarEvent(){
+    $('.sent_tran_inner').off('mouseenter').on('mouseenter',function(){
+        $(this).children('.tool_bar').first().children('.right').show();
+    });
+    $('.sent_tran_inner').off('mouseleave').on('mouseleave',function(){
+        $(this).children('.tool_bar').first().children('.right').hide();
+    })
 }
