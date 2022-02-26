@@ -1781,7 +1781,8 @@ function tran_sent_edit_cancel(obj) {
 function tran_sent_save(obj) {
 	let sentDiv = find_sent_tran_div(obj);
 	if (sentDiv) {
-		let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
+		let textarea = $(sentDiv).children('.sent_tran_inner').first().children('.body').first().children('.edit').find(".tran_sent_textarea").first();
+		//let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
 		let isPr = $(textarea).attr("is_pr");
 		if (isPr == "true") {
 			note_pr_save(textarea);
@@ -1934,7 +1935,12 @@ function sent_save_callback(data) {
                         case 'nissaya':
                             divPreview.html(renderNissayaPreview(result.text));
                             break;
-                    
+                        case 'commentary':
+                            divPreview.html(
+                                note_init(result.text, result.channal, result.editor, result.lang)
+                            );
+                            note_refresh_new();
+                        break;
                         default:
                             divPreview.html(
                                 marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
@@ -1942,7 +1948,6 @@ function sent_save_callback(data) {
                             term_updata_translation();                        
                             break;
                     }
-
 					popup_init();
 				}
 			}
