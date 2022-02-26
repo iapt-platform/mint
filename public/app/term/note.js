@@ -212,7 +212,8 @@ function note_refresh_new(callback = null) {
 						splite_pali_word();
 						//处理编辑框消息
 						tran_sent_textarea_event_init();
-
+                        //处理鼠标移入显示菜单消息
+                        setSentToolBarEvent();
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
@@ -1008,6 +1009,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	let html = "";
 	html += "<div class='sent_tran ";
+    html += iterator.channalinfo.type;
 	if (typeof iterator.is_pr != "undefined" && iterator.is_pr == true) {
 		html += " pr ";
 	}
@@ -1658,8 +1660,8 @@ function set_more_button_display() {
         {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
-			$(this)
-				.click(function () {
+			$(this).off('click')
+				.on('click',function () {
 					const sentid = $(this).attr("sent").split("-");
 		            const channelType = $(this).attr("channel_type");
 					const book = sentid[0];
@@ -1669,7 +1671,7 @@ function set_more_button_display() {
 					let sentId = $(this).attr("sent");
                     let otherSentDiv = $(this).parent().parent().siblings(".other_tran").first();
 					if (otherSentDiv.css("display") == "none") {
-						otherSentDiv.show();
+						otherSentDiv.slideDown();
                         //加号复位
 						//$(this).siblings(".more_tran ").css("transform", "unset");
 						$.get(
@@ -1711,20 +1713,19 @@ function set_more_button_display() {
 								html += "</div>";
 								otherSentDiv.html(html);
                                 if(channelType==='commentary'){
-                                    note_refresh_new(function(){
-                                        otherSentDiv.show();
-                                    });
+                                    note_refresh_new();
                                 }
-                                //不知道为什么加上note_refresh_new后div下拉后会收回。所以加了这个弥补。但是视觉效果不好。数据加载后收回，然后再弹出。
-                                otherSentDiv.show();
+
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
 						);
 					} else {
-						otherSentDiv.hide();
+						otherSentDiv.slideUp();
 						$(this).siblings(".more_tran ").css("transform", "rotate(-90deg)");
 					}
+
+                    return false;    //  阻止事件冒泡
 				});
 		}else 
         {
@@ -1782,7 +1783,8 @@ function tran_sent_edit_cancel(obj) {
 function tran_sent_save(obj) {
 	let sentDiv = find_sent_tran_div(obj);
 	if (sentDiv) {
-		let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
+		let textarea = $(sentDiv).children('.sent_tran_inner').first().children('.body').first().children('.edit').find(".tran_sent_textarea").first();
+		//let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
 		let isPr = $(textarea).attr("is_pr");
 		if (isPr == "true") {
 			note_pr_save(textarea);
@@ -1935,7 +1937,12 @@ function sent_save_callback(data) {
                         case 'nissaya':
                             divPreview.html(renderNissayaPreview(result.text));
                             break;
-                    
+                        case 'commentary':
+                            divPreview.html(
+                                note_init(result.text, result.channal, result.editor, result.lang)
+                            );
+                            note_refresh_new();
+                        break;
                         default:
                             divPreview.html(
                                 marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
@@ -1943,7 +1950,6 @@ function sent_save_callback(data) {
                             term_updata_translation();                        
                             break;
                     }
-
 					popup_init();
 				}
 			}
@@ -2549,4 +2555,13 @@ function term_parent(paliword) {
 		}		
 	}
 	return output;
+}
+
+function setSentToolBarEvent(){
+    $('.sent_tran_inner').off('mouseenter').on('mouseenter',function(){
+        $(this).children('.tool_bar').first().children('.right').show();
+    });
+    $('.sent_tran_inner').off('mouseleave').on('mouseleave',function(){
+        $(this).children('.tool_bar').first().children('.right').hide();
+    })
 }
