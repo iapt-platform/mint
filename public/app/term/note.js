@@ -2558,10 +2558,10 @@ function term_parent(paliword) {
 }
 
 function setSentToolBarEvent(){
-    $('.sent_tran_inner').off('mouseenter').on('mouseenter',function(){
+    $('.sent_tran_inner').not('.commentary').off('mouseenter').on('mouseenter',function(){
         $(this).children('.tool_bar').first().children('.right').show();
     });
-    $('.sent_tran_inner').off('mouseleave').on('mouseleave',function(){
+    $('.sent_tran_inner').not('.commentary').off('mouseleave').on('mouseleave',function(){
         $(this).children('.tool_bar').first().children('.right').hide();
     })
 }

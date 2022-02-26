@@ -744,6 +744,15 @@ pw {
 .list_with_head {
 	position: relative;
 }
+
+.commentary>.sent_tran_inner>.tool_bar > .right {
+    display: block;
+    left:6.2em;
+    margin-top: calc(-2.1em - 8px);
+}
+.sent_tran.commentary>.sent_tran_inner{
+    padding-top: 2.2em;
+}
 .body > .edit {
 	display: none;
 }
