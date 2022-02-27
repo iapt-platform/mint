@@ -671,6 +671,7 @@ pw {
 }
 .preview {
 	font-size: 110%;
+    width: -webkit-fill-available;
 }
 .preview::first-letter {
 	text-transform:capitalize;
@@ -726,14 +727,31 @@ pw {
 	padding: 3px;
 	/*margin-right: 20px;*/
 }
+.commentary .tool_bar > .right{
+    /*left: 8em;*/
+    width: 8em;
+}
+.translation>.sent_tran_inner>.tool_bar > .right{
+    right: 2em;
+}
+
 .sent_tran_inner:hover .tool_bar > .right {
-	display: block;
+	/*display: block;*/
 }
 .list_with_head:hover .tool_bar > .right {
-	display: block;
+	/*display: block;*/
 }
 .list_with_head {
 	position: relative;
+}
+
+.commentary>.sent_tran_inner>.tool_bar > .right {
+    display: block;
+    left:6.2em;
+    margin-top: calc(-2.1em - 8px);
+}
+.sent_tran.commentary>.sent_tran_inner{
+    padding-top: 2.2em;
 }
 .body > .edit {
 	display: none;
@@ -817,6 +835,7 @@ li.active {
 }
 .disable {
 	cursor: not-allowed;
+    filter: grayscale(100%);
 }
 .channel_name {
 	white-space: nowrap;
@@ -1107,6 +1126,20 @@ pali>p {
 	background-color: var(--btn-border-color);
 }
 
+.preview .nissaya{
+    display:inline;
+}
+.preview .nissaya .nsy_word{
+    padding-right:10px;
+}
+.preview .nissaya .nsy_word .org{
+    display:inline;
+    font-weight: 700;
+}
+.preview .nissaya .nsy_word .meaning{
+    display:inline;
+    font-weight: 500;
+}
 span.sent_tran::first-letter {
     text-transform: capitalize;
 }
