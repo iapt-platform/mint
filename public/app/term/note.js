@@ -471,7 +471,7 @@ function edition_list_changed(channelId){
 }
 function find_channal(id) {
 	for (const iterator of _channalData) {
-		if (id == iterator.id) {
+		if (id == iterator.id || id == iterator.uid) {
 			return iterator;
 		}
 	}
