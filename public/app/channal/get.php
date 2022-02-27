@@ -28,13 +28,21 @@ $channelList = array();
 
 //找自己的
 PDO_Connect(_FILE_DB_CHANNAL_,_DB_USERNAME_,_DB_PASSWORD_);
-$query = "SELECT uid,owner_uid,name,status,lang FROM "._TABLE_CHANNEL_." WHERE owner_uid = ?  LIMIT 100";
+$query = "SELECT uid,owner_uid,name,status,lang,type FROM "._TABLE_CHANNEL_." WHERE owner_uid = ? order by updated_at DESC LIMIT 200";
 $Fetch_my = PDO_FetchAll($query,array($_COOKIE["user_uid"]));
 
 #去掉重复的
 foreach ($Fetch_my as $key => $value) {
 	# code...
-	$channelList[$value["uid"]]=array("uid"=>$value["uid"],"owner_uid"=>$value["owner_uid"],"name"=>$value["name"],"power"=>30,"status"=>$value["status"],"lang"=>$value["lang"]);
+	$channelList[$value["uid"]]=array(
+        "uid"=>$value["uid"],
+        "owner_uid"=>$value["owner_uid"],
+        "name"=>$value["name"],
+        "power"=>30,
+        "type"=>$value["type"],
+        "status"=>$value["status"],
+        "lang"=>$value["lang"]
+        );
 }
 
 # 找协作的
@@ -47,7 +55,15 @@ foreach ($coop_channal as $key => $value) {
 		}
 	}
 	else{
-		$channelList[$value["res_id"]]=array("uid"=>$value["res_id"],"owner_uid"=>$value["res_owner_id"],"name"=>$value["res_title"],"power"=>(int)$value["power"],"status"=>(int)$value["status"],"lang"=>(int)$value["lang"]);
+		$channelList[$value["res_id"]]=array(
+            "uid"=>$value["res_id"],
+            "owner_uid"=>$value["res_owner_id"],
+            "name"=>$value["res_title"],
+            "power"=>(int)$value["power"],
+            "type"=>(int)$value["type"],
+            "status"=>(int)$value["status"],
+            "lang"=>(int)$value["lang"]
+            );
 	}
 }
 
