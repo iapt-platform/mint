@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WbwTemplateController;
 use App\Http\Controllers\DhammaTermController;
 use App\Http\Controllers\SentenceController;
+use App\Http\Controllers\ProgressChapterController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,4 +25,5 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('wbw_templates',WbwTemplateController::class);
 	Route::apiResource('terms',DhammaTermController::class);
 	Route::apiResource('sentence',SentenceController::class);
+	Route::apiResource('progress',ProgressChapterController::class);
 });
