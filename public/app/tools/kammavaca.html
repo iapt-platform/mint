@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="./framework/jquery-3.3.1.min.js"></script>
+
+
+<script>
+var number_pali = [
+	{ id: "1", value: "ekāha-",},
+	{ id: "2", value: "dvīha-",},
+	{ id: "3", value: "tīha-",},
+	{ id: "4", value: "catūha-",},
+	{ id: "5", value: "Pañcāha-",},
+	{ id: "6", value: "chāha-",},
+	{ id: "7", value: "sattāha-",},
+	{ id: "8", value: "aṭṭhāha",},
+	{ id: "9", value: "navāha-",},
+	{ id: "10", value: "dasāha-",},
+	{ id: "11", value: "ekādasāha-",},
+	{ id: "12", value: "dvādasāha-",},
+	{ id: "13", value: "terasāha-",},
+	{ id: "14", value: "cuddasāha-",},
+	{ id: "15", value: "pakkha-",},
+];
+var number_pali_B = [
+	{ id: "1", value: "",},
+	{ id: "2", value: "dutiyampi ",},
+	{ id: "3", value: "tatiyampi ",},
+];
+
+function parivasa_known(day,nama){
+	var parivasa_string=new Object
+	var sg_des_pl_A ="Ahaṃ bhante "
+	var sg_des_pl_A1="sambahulā nānāvatthukā saṅghādisesā āpattiyo āpajjiṃ "
+	var sg_des_pl_B ="paṭicchannāyo."
+	var sg_des_pl_B1="So’haṃ "
+	var sg_des_pl_C ="bhante saṅghaṃ "
+	var sg_des_pl_C1="sambahulānaṃ nānāvatthukānaṃ saṅghādisesānaṃ āpattīnaṃ "
+	var sg_des_pl_D ="paṭicchannānaṃ "
+	var sg_des_pl_E ="parivāsaṃ "
+	var sg_des_pl_E1 ="yācāmi."
+	parivasa_string.yacana = new Array;
+	parivasa_string.yacana[1] = ""
+	parivasa_string.yacana[2] = ""
+	parivasa_string.yacana[3] = "";
+	for(var i=0;i<3;i++){
+		parivasa_string.yacana[i+1] += sg_des_pl_A + sg_des_pl_A1
+		parivasa_string.yacana[i+1] += number_pali[day-1].value
+		parivasa_string.yacana[i+1] += sg_des_pl_B +"<br>"+sg_des_pl_B1
+		parivasa_string.yacana[i+1] += number_pali_B[i].value
+		parivasa_string.yacana[i+1] += sg_des_pl_C
+		parivasa_string.yacana[i+1] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value + sg_des_pl_E
+		parivasa_string.yacana[i+1] += sg_des_pl_E1
+
+	};
+	parivasa_string.kammavaca = new Array;
+	parivasa_string.kammavaca[0] = "";
+	parivasa_string.kammavaca[1] = ""
+	parivasa_string.kammavaca[2] = ""
+	parivasa_string.kammavaca[3] = "";
+	parivasa_string.kammavaca[4] = "";
+
+	parivasa_string.kammavaca[0] += "Suṇātu me bhante saṅgho. Ayaṃ ";
+	parivasa_string.kammavaca[0] += nama.slice(0,length-1) + "o"
+	parivasa_string.kammavaca[0] += " bhikkhu " +sg_des_pl_A1
+	parivasa_string.kammavaca[0] += number_pali[day-1].value
+	parivasa_string.kammavaca[0] += sg_des_pl_B
+	parivasa_string.kammavaca[0] += "<br>So saṅghaṃ "
+	parivasa_string.kammavaca[0] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value + sg_des_pl_E
+	parivasa_string.kammavaca[0] += "yācati.<br>"
+	parivasa_string.kammavaca[0] += "Yadi saṅghassa pattakallaṃ, Saṅgho "+nama+"ssa bhikkhuno "
+	parivasa_string.kammavaca[0] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value
+	parivasa_string.kammavaca[0] += "parivāsaṃ dadeyya. Esā ñatti."
+
+	parivasa_string.kammavaca[1] += "Suṇātu me bhante saṅgho. Ayaṃ ";
+	parivasa_string.kammavaca[1] += nama.slice(0,length-1) + "o"
+	parivasa_string.kammavaca[1] += " bhikkhu " +sg_des_pl_A1
+	parivasa_string.kammavaca[1] += number_pali[day-1].value
+	parivasa_string.kammavaca[1] += sg_des_pl_B
+	parivasa_string.kammavaca[1] += "<br>So saṅghaṃ "
+	parivasa_string.kammavaca[1] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value + sg_des_pl_E
+	parivasa_string.kammavaca[1] += "yācati.<br>"
+	parivasa_string.kammavaca[1] += "Saṅgho "+nama+"ssa bhikkhuno "
+	parivasa_string.kammavaca[1] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value + sg_des_pl_E
+	parivasa_string.kammavaca[1] += " deti.<br>Yass’āyasmato khamati, "+nama+"ssa bhikkhuno "
+	parivasa_string.kammavaca[1] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value
+	parivasa_string.kammavaca[1] += "parivāsassa dānaṃ, so tuṇh’assa.<br>Yassa nakkhamati, so bhāseyya."
+
+	parivasa_string.kammavaca[2] += number_pali_B[2-1].value+"etam·atthaṃ vadāmi. "
+	parivasa_string.kammavaca[2] += parivasa_string.kammavaca[1]
+	parivasa_string.kammavaca[3] += number_pali_B[3-1].value+"etam·atthaṃ vadāmi. "
+	parivasa_string.kammavaca[3] += parivasa_string.kammavaca[1]
+
+	parivasa_string.kammavaca[4] += "Dinno saṅghena "+nama+"ssa bhikkhuno "
+	parivasa_string.kammavaca[4] += sg_des_pl_C1 + number_pali[day-1].value + sg_des_pl_D + number_pali[day-1].value
+	parivasa_string.kammavaca[4] += "parivāso. Khamati saṅghassa, tasmā tuṇhī. Evam·etaṃ dhārayāmi."
+
+	return parivasa_string;
+}
+function parivasa_unknown(){
+
+}
+function run(){
+	var parivasa = new Object
+	if(conceal_day.value>=1 && conceal_day.value<=15){
+		if(nama_str.value==""){
+			nama_str.value="itthannāma"
+		}
+		parivasa = parivasa_known(conceal_day.value,nama_str.value)
+	}
+	else if(conceal_day.value=="" || conceal_day.value==0){
+		$("#parivasa_yacana").html("无覆藏部分未完成")
+		$("#parivasa_kammavaca").html("")
+	}
+	else{
+		$("#parivasa_yacana").html("您的情况有些棘手，超出了本程序的能力范畴")
+		$("#parivasa_kammavaca").html("")
+	}
+	$("#parivasa_yacana").html(parivasa.yacana[1]+"<br>"+parivasa.yacana[2] + "<br>" + parivasa.yacana[3])
+	$("#parivasa_kammavaca").html(parivasa.kammavaca[0]+"<br>"+parivasa.kammavaca[1]+"<br>"+parivasa.kammavaca[2] + "<br>" + parivasa.kammavaca[3]+ "<br>" + parivasa.kammavaca[4])
+}
+</script>
+</head>
+<body>
+	覆藏<input id="conceal_day" type="number" min="1" max="15" />天<br>
+	法名<input id="nama_str" type="text"/><br>
+	<button onclick="run()">生成</button>
+	<div>
+		<span>
+			请求语：
+		</span>
+		<span id="parivasa_yacana">
+			
+		</span>
+	</div>
+	<div>
+		<span>
+			甘马语：
+		</span>
+		<span id="parivasa_kammavaca">
+			
+		</span>
+	</div>
+</body>

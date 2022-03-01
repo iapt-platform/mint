@@ -20,7 +20,7 @@ var list_relation=[
     {
         "id": "IAD",
         "case": "",
-        "note": "tulyādhikaraṇavisesana -> visesya",
+        "note": "tulyādhikaraṇavisesana ➡ visesya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -38,7 +38,7 @@ var list_relation=[
     {
         "id": "ASV",
         "case": "",
-        "note": "施动者<主格> -> 动词<br>XX把…",
+        "note": "施动者<主格> ➡ 动词<br>XX把…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -47,7 +47,7 @@ var list_relation=[
     {
         "id": "ASV",
         "case": "",
-        "note": "vuttakattar -> kiriyā",
+        "note": "vuttakattar ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -65,7 +65,7 @@ var list_relation=[
     {
         "id": "AOV",
         "case": ".nom.",
-        "note": "受动者<主格> -> 动词<br>XX被…",
+        "note": "受动者<主格> ➡ 动词<br>XX被…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -74,7 +74,7 @@ var list_relation=[
     {
         "id": "AOV",
         "case": ".nom.",
-        "note": "vuttakamma -> kiriyā",
+        "note": "vuttakamma ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -92,7 +92,7 @@ var list_relation=[
     {
         "id": "DASO-P",
         "case": ".nom.",
-        "note": "<字面>主语 -> 系动词<br>XX是…",
+        "note": "<字面>主语 ➡ 系动词<br>XX是…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -101,7 +101,7 @@ var list_relation=[
     {
         "id": "DASO-P",
         "case": ".nom.",
-        "note": "pakati <vuttakattar> -> kiriyā",
+        "note": "pakati <vuttakattar> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -119,7 +119,7 @@ var list_relation=[
     {
         "id": "DASO-S",
         "case": ".nom.",
-        "note": "<字面>表语 -> 系动词<br>…是XX",
+        "note": "<字面>表语 ➡ 系动词<br>…是XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -128,7 +128,7 @@ var list_relation=[
     {
         "id": "DASO-S",
         "case": ".nom.",
-        "note": "vikati <vuttakattar> -> kiriyā",
+        "note": "vikati <vuttakattar> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -137,7 +137,7 @@ var list_relation=[
     {
         "id": "NIO",
         "case": ".nom.",
-        "note": "被描述 -> 定性<br>XX有…",
+        "note": "被描述 ➡ 定性<br>XX有…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -146,7 +146,7 @@ var list_relation=[
     {
         "id": "NIO",
         "case": ".nom.",
-        "note": "tulyattha -> liṅgattha",
+        "note": "tulyattha ➡ liṅgattha",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -164,7 +164,7 @@ var list_relation=[
     {
         "id": "NID",
         "case": ".nom.",
-        "note": "待命名 -> 命名<br>XX叫做…",
+        "note": "待命名 ➡ 命名<br>XX叫做…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -173,7 +173,7 @@ var list_relation=[
     {
         "id": "NID",
         "case": ".nom.",
-        "note": "saññin <nāmin> -> saññā <nāma>",
+        "note": "saññin <nāmin> ➡ saññā <nāma>",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -191,7 +191,7 @@ var list_relation=[
     {
         "id": "DASD-P",
         "case": ".nom.",
-        "note": "<命名>主 -> 系<br>XX叫做…",
+        "note": "<命名>主 ➡ 系<br>XX叫做…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -200,7 +200,7 @@ var list_relation=[
     {
         "id": "DASD-P",
         "case": ".nom.",
-        "note": "pakati<saññin, nāmin> -> kiriyā",
+        "note": "pakati<saññin, nāmin> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -218,7 +218,7 @@ var list_relation=[
     {
         "id": "DASD-S",
         "case": ".nom.",
-        "note": "<命名>表 -> 系<br>…叫做XX",
+        "note": "<命名>表 ➡ 系<br>…叫做XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -227,7 +227,7 @@ var list_relation=[
     {
         "id": "DASD-S",
         "case": ".nom.",
-        "note": "vikati<saññā,nāma> -> kiriyā",
+        "note": "vikati<saññā,nāma> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -254,7 +254,7 @@ var list_relation=[
     {
         "id": "DAO",
         "case": ".nom.",
-        "note": "pakati <vuttakamma> -> vikati <vuttakamma>",
+        "note": "pakati <vuttakamma> ➡ vikati <vuttakamma>",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -272,7 +272,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".acc.",
-        "note": "受动者<非主格> -> 动词<br>…把XX",
+        "note": "受动者<非主格> ➡ 动词<br>…把XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -281,7 +281,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".acc.",
-        "note": "avuttakamma -> kiriyā",
+        "note": "avuttakamma ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -290,7 +290,7 @@ var list_relation=[
     {
         "id": "DIO-P",
         "case": ".acc.",
-        "note": "Double Inactive Object -> Verb Relation",
+        "note": "Double Inactive Object ➡ Verb Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -299,7 +299,7 @@ var list_relation=[
     {
         "id": "DIO-P",
         "case": ".acc.",
-        "note": "双宾语<主要> -> 动词",
+        "note": "双宾语<主要> ➡ 动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -308,7 +308,7 @@ var list_relation=[
     {
         "id": "DIO-P",
         "case": ".acc.",
-        "note": "pakati <avuttakamma> -> kiriyā",
+        "note": "pakati <avuttakamma> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -317,7 +317,7 @@ var list_relation=[
     {
         "id": "DIO-S",
         "case": ".acc.",
-        "note": "Double Inactive Object -> Verb Relation",
+        "note": "Double Inactive Object ➡ Verb Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -326,7 +326,7 @@ var list_relation=[
     {
         "id": "DIO-S",
         "case": ".acc.",
-        "note": "双宾语<次要> -> 动词",
+        "note": "双宾语<次要> ➡ 动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -335,7 +335,7 @@ var list_relation=[
     {
         "id": "DIO-S",
         "case": ".acc.",
-        "note": "vikati <avuttakamma> -> kiriyā",
+        "note": "vikati <avuttakamma> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -353,7 +353,7 @@ var list_relation=[
     {
         "id": "STC",
         "case": ".acc.",
-        "note": "时空连续 -> 持续动作",
+        "note": "时空连续 ➡ 持续动作",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -362,7 +362,7 @@ var list_relation=[
     {
         "id": "STC",
         "case": ".acc.",
-        "note": "accantasaṃyoga -> accantasaṃyogavant",
+        "note": "accantasaṃyoga ➡ accantasaṃyogavant",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -380,7 +380,7 @@ var list_relation=[
     {
         "id": "ADV",
         "case": ".acc.",
-        "note": "动词修饰词 -> 动词",
+        "note": "动词修饰词 ➡ 动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -389,7 +389,7 @@ var list_relation=[
     {
         "id": "ADV",
         "case": ".acc.",
-        "note": "kiriyāvisesana -> kiriyā",
+        "note": "kiriyāvisesana ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -407,7 +407,7 @@ var list_relation=[
     {
         "id": "IMP",
         "case": ".inst.",
-        "note": "方式 -> 动词<br>以XX",
+        "note": "方式 ➡ 动词<br>以XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -416,7 +416,7 @@ var list_relation=[
     {
         "id": "IMP",
         "case": ".inst.",
-        "note": "karaṇa -> kiriyā",
+        "note": "karaṇa ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -443,7 +443,7 @@ var list_relation=[
     {
         "id": "SOE",
         "case": ".inst.",
-        "note": "sahayoga <sahādiyoga> -> kiriyā",
+        "note": "sahayoga <sahādiyoga> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -488,7 +488,7 @@ var list_relation=[
     {
         "id": "ISV",
         "case": ".inst.",
-        "note": "非主格施动者 -> 动词<br>被XX",
+        "note": "非主格施动者 ➡ 动词<br>被XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -497,7 +497,7 @@ var list_relation=[
     {
         "id": "ISV",
         "case": ".inst.",
-        "note": "avuttakattar -> kiriyā",
+        "note": "avuttakattar ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -515,7 +515,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".inst.",
-        "note": "因 -> 果<br>根据XX",
+        "note": "因 ➡ 果<br>根据XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -524,7 +524,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".inst.",
-        "note": "hetu -> phala",
+        "note": "hetu ➡ phala",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -533,7 +533,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".inst.",
-        "note": "被使役宾语 -> 动词<br>令XX…",
+        "note": "被使役宾语 ➡ 动词<br>令XX…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -542,7 +542,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".inst.",
-        "note": "avuttakamma -> kiriyā",
+        "note": "avuttakamma ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -569,7 +569,7 @@ var list_relation=[
     {
         "id": "ADJ",
         "case": ".inst.",
-        "note": "名词的形容 -> 被形容",
+        "note": "名词的形容 ➡ 被形容",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -578,7 +578,7 @@ var list_relation=[
     {
         "id": "ADJ",
         "case": ".inst.",
-        "note": "nāmavisesana -> visesya",
+        "note": "nāmavisesana ➡ visesya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -596,7 +596,7 @@ var list_relation=[
     {
         "id": "ADV",
         "case": ".inst.",
-        "note": "修饰动作的副词 -> 动词",
+        "note": "修饰动作的副词 ➡ 动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -605,7 +605,7 @@ var list_relation=[
     {
         "id": "ADV",
         "case": ".inst.",
-        "note": "kiriyāvisesana -> kiriyā",
+        "note": "kiriyāvisesana ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -623,7 +623,7 @@ var list_relation=[
     {
         "id": "REC",
         "case": ".dat.",
-        "note": "接收者 -> 授予<br>向XX",
+        "note": "接收者 ➡ 授予<br>向XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -632,7 +632,7 @@ var list_relation=[
     {
         "id": "REC",
         "case": ".dat.",
-        "note": "sampadāna -> sampadānin",
+        "note": "sampadāna ➡ sampadānin",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -650,7 +650,7 @@ var list_relation=[
     {
         "id": "PUR",
         "case": ".dat.",
-        "note": "目的 -> 动词<br>为了…",
+        "note": "目的 ➡ 动词<br>为了…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -659,7 +659,7 @@ var list_relation=[
     {
         "id": "PUR",
         "case": ".dat.",
-        "note": "tadattha <tumattha> sampadāna -> kiriyā",
+        "note": "tadattha <tumattha> sampadāna ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -677,7 +677,7 @@ var list_relation=[
     {
         "id": "DET",
         "case": ".abl.",
-        "note": "出发地 -> 出发<br>从XX",
+        "note": "出发地 ➡ 出发<br>从XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -686,7 +686,7 @@ var list_relation=[
     {
         "id": "DET",
         "case": ".abl.",
-        "note": "apādāna -> apādānin",
+        "note": "apādāna ➡ apādānin",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -713,7 +713,7 @@ var list_relation=[
     {
         "id": "COC",
         "case": ".abl.",
-        "note": "Vibhattāpādāna -> Vibhattāpādānin",
+        "note": "Vibhattāpādāna ➡ Vibhattāpādānin",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -731,7 +731,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".abl.",
-        "note": "因 -> 果<br>由于XX",
+        "note": "因 ➡ 果<br>由于XX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -740,7 +740,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".abl.",
-        "note": "hetu -> phala",
+        "note": "hetu ➡ phala",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -758,7 +758,7 @@ var list_relation=[
     {
         "id": "ADJ",
         "case": ".abl.",
-        "note": "名词的形容 -> 被形容",
+        "note": "名词的形容 ➡ 被形容",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -767,7 +767,7 @@ var list_relation=[
     {
         "id": "ADJ",
         "case": ".abl.",
-        "note": "nāmavisesana -> visesya",
+        "note": "nāmavisesana ➡ visesya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -785,7 +785,7 @@ var list_relation=[
     {
         "id": "POS",
         "case": ".gen.",
-        "note": "所有 -> 被所有<br>属于XX的",
+        "note": "所有 ➡ 被所有<br>属于XX的",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -794,7 +794,7 @@ var list_relation=[
     {
         "id": "POS",
         "case": ".gen.",
-        "note": "sambandha -> sambandhin",
+        "note": "sambandha ➡ sambandhin",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -803,7 +803,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".gen.",
-        "note": "Collection -> Individual Relation",
+        "note": "Collection ➡ Individual Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -812,7 +812,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".gen.",
-        "note": "包含[全集] -> 被包含[子集]元素<br>XX中的",
+        "note": "包含[全集] ➡ 被包含[子集]元素<br>XX中的",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -821,7 +821,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".gen.",
-        "note": "niddhāraṇasamudāya -> niddhāraṇīya",
+        "note": "niddhāraṇasamudāya ➡ niddhāraṇīya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -839,7 +839,7 @@ var list_relation=[
     {
         "id": "ISV",
         "case": ".gen.",
-        "note": "施动者<非主格> -> 动词<br>XX的…<动作>",
+        "note": "施动者<非主格> ➡ 动词<br>XX的…<动作>",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -848,7 +848,7 @@ var list_relation=[
     {
         "id": "ISV",
         "case": ".gen.",
-        "note": "avuttakattar -> kiriyā",
+        "note": "avuttakattar ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -866,7 +866,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".gen.",
-        "note": "受动者<非主格> -> 动词<br>XX的被…",
+        "note": "受动者<非主格> ➡ 动词<br>XX的被…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -875,7 +875,7 @@ var list_relation=[
     {
         "id": "IOV",
         "case": ".gen.",
-        "note": "avuttakamma -> kiriyā",
+        "note": "avuttakamma ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -884,7 +884,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".loc.",
-        "note": "Locus -> Verb Relation",
+        "note": "Locus ➡ Verb Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -893,7 +893,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".loc.",
-        "note": "容器 -> 动词<br>在…",
+        "note": "容器 ➡ 动词<br>在…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -902,7 +902,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".loc.",
-        "note": "ādhāra -> ādheyya",
+        "note": "ādhāra ➡ ādheyya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -920,7 +920,7 @@ var list_relation=[
     {
         "id": "MOT",
         "case": ".loc.",
-        "note": "表现 -> 有表现",
+        "note": "表现 ➡ 有表现",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -929,7 +929,7 @@ var list_relation=[
     {
         "id": "MOT",
         "case": ".loc.",
-        "note": "nimitta -> nimittavant",
+        "note": "nimitta ➡ nimittavant",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -938,7 +938,7 @@ var list_relation=[
     {
         "id": "WHP",
         "case": ".loc.",
-        "note": "Whole -> Part Relation",
+        "note": "Whole ➡ Part Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -947,7 +947,7 @@ var list_relation=[
     {
         "id": "WHP",
         "case": ".loc.",
-        "note": "整体 -> 局部<br>XX中的",
+        "note": "整体 ➡ 局部<br>XX中的",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -956,7 +956,7 @@ var list_relation=[
     {
         "id": "WHP",
         "case": ".loc.",
-        "note": "samudāya -> samudāyin",
+        "note": "samudāya ➡ samudāyin",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -965,7 +965,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".loc.",
-        "note": "Collection -> Individual Relation",
+        "note": "Collection ➡ Individual Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -974,7 +974,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".loc.",
-        "note": "集合 -> 个体元素<br>XXX中的一个",
+        "note": "集合 ➡ 个体元素<br>XXX中的一个",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -983,7 +983,7 @@ var list_relation=[
     {
         "id": "COI",
         "case": ".loc.",
-        "note": "niddhāraṇasamudāya -> nidhāraṇīya",
+        "note": "niddhāraṇasamudāya ➡ nidhāraṇīya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1010,7 +1010,7 @@ var list_relation=[
     {
         "id": "IAD",
         "case": ".caus.",
-        "note": "tulyādhikaraṇavisesana -> visesya",
+        "note": "tulyādhikaraṇavisesana ➡ visesya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1055,7 +1055,7 @@ var list_relation=[
     {
         "id": "ASV",
         "case": ".inf.",
-        "note": "施动者<主格> -> 动词",
+        "note": "施动者<主格> ➡ 动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1064,7 +1064,7 @@ var list_relation=[
     {
         "id": "ASV",
         "case": ".inf.",
-        "note": "vuttakattar -> kiriyā",
+        "note": "vuttakattar ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1109,7 +1109,7 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".abs.",
-        "note": "使役",
+        "note": "因 ➡ 果",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1136,7 +1136,7 @@ var list_relation=[
     {
         "id": "DASO-P",
         "case": ".abs.",
-        "note": "<字面>主语 -> 系动词",
+        "note": "<字面>主语 ➡ 系动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1145,7 +1145,7 @@ var list_relation=[
     {
         "id": "DASO-P",
         "case": ".abs.",
-        "note": "pakati <vuttakattar> -> kiriyā",
+        "note": "pakati <vuttakattar> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1163,7 +1163,7 @@ var list_relation=[
     {
         "id": "DASO-S",
         "case": ".abs.",
-        "note": "<字面>表语 -> 系动词",
+        "note": "<字面>表语 ➡ 系动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1172,7 +1172,7 @@ var list_relation=[
     {
         "id": "DASO-S",
         "case": ".abs.",
-        "note": "vikati <vuttakattar> -> kiriyā",
+        "note": "vikati <vuttakattar> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1190,7 +1190,7 @@ var list_relation=[
     {
         "id": "DASD-P",
         "case": ".abs.",
-        "note": "<命名>主 -> 系",
+        "note": "<命名>主 ➡ 系",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1199,7 +1199,7 @@ var list_relation=[
     {
         "id": "DASD-P",
         "case": ".abs.",
-        "note": "pakati<saññin, nāmin> -> kiriyā",
+        "note": "pakati<saññin, nāmin> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1217,7 +1217,7 @@ var list_relation=[
     {
         "id": "DASD-S",
         "case": ".abs.",
-        "note": "<命名>表 -> 系",
+        "note": "<命名>表 ➡ 系",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1226,7 +1226,7 @@ var list_relation=[
     {
         "id": "DASD-S",
         "case": ".abs.",
-        "note": "vikati<saññā,nāma> -> kiriyā",
+        "note": "vikati<saññā,nāma> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1253,7 +1253,7 @@ var list_relation=[
     {
         "id": "DEF",
         "case": "",
-        "note": "lakkhaṇa -> lakkhya",
+        "note": "lakkhaṇa ➡ lakkhya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1352,7 +1352,7 @@ var list_relation=[
     {
         "id": "QUS",
         "case": "",
-        "note": "引号内 -> 引号",
+        "note": "引号内 ➡ 引号",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1361,7 +1361,7 @@ var list_relation=[
     {
         "id": "QUS",
         "case": "",
-        "note": "nidassetabba -> nidassana",
+        "note": "nidassetabba ➡ nidassana",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1379,7 +1379,7 @@ var list_relation=[
     {
         "id": "QUM",
         "case": "",
-        "note": "引号 -> 引号外",
+        "note": "引号 ➡ 引号外",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1388,7 +1388,7 @@ var list_relation=[
     {
         "id": "QUM",
         "case": "",
-        "note": "nidassana -> nidassanavant",
+        "note": "nidassana ➡ nidassanavant",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1406,7 +1406,7 @@ var list_relation=[
     {
         "id": "ENU",
         "case": ".adv.",
-        "note": "罗列 -> 破折号",
+        "note": "罗列 ➡ 破折号",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1433,7 +1433,7 @@ var list_relation=[
     {
         "id": "ENM",
         "case": ".adv.",
-        "note": "破折号 -> 被罗列<br>- XXX",
+        "note": "破折号 ➡ 被罗列<br>- XXX",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1451,7 +1451,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".adv.",
-        "note": "Locus -> Verb Relation",
+        "note": "Locus ➡ Verb Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1460,7 +1460,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".adv.",
-        "note": "容纳 -> 被容纳<br>在…",
+        "note": "容纳 ➡ 被容纳<br>在…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1469,7 +1469,7 @@ var list_relation=[
     {
         "id": "LOV",
         "case": ".adv.",
-        "note": "ādhāra -> ādheyya",
+        "note": "ādhāra ➡ ādheyya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",

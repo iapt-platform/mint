@@ -130,7 +130,7 @@
 
 - name: Set timezone
   become: true
-  shell: timedatectl set-timezone Asia/Shanghai
+  shell: timedatectl set-timezone UTC
 
 - name: Set git rebase mode
   become: true
