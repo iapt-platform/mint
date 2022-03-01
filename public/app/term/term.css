@@ -735,11 +735,11 @@ pw {
     right: 2em;
 }
 
-.sent_tran_inner:hover .tool_bar > .right {
+.sent_tran_inner:hover > .tool_bar > .right {
 	/*display: block;*/
 }
-.list_with_head:hover .tool_bar > .right {
-	/*display: block;*/
+.list_with_head:hover > .tool_bar > .right {
+	display: block;
 }
 .list_with_head {
 	position: relative;
