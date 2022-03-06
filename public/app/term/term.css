@@ -1129,14 +1129,18 @@ pali>p {
 .preview .nissaya{
     display:inline;
 }
+.preview .nsy_word{
+    display:inline;
+}
 .preview .nissaya .nsy_word{
     padding-right:10px;
 }
-.preview .nissaya .nsy_word .org{
+.nsy_word .org{
     display:inline;
     font-weight: 700;
+    padding-right: 0.5em;
 }
-.preview .nissaya .nsy_word .meaning{
+.nsy_word .meaning{
     display:inline;
     font-weight: 500;
 }

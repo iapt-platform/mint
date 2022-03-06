@@ -1384,7 +1384,7 @@ function myEndingTooltip(inStr){
 
     for (const iterator of myEnding) {
         if(inStr.indexOf(iterator.name)>=0){
-            inStr = inStr.replace(iterator.name,"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>"+iterator.name+"</guide>");
+			eval("inStr=inStr.replace(/" + iterator.name + "/g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide>\");");
             return inStr;
         }
     }
