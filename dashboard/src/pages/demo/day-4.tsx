@@ -1,9 +1,11 @@
-import { Affix, Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification, Anchor } from "antd";
+import React from 'react';
+import { Affix, Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification, Anchor,List, Avatar } from "antd";
 import { Row, Col } from "antd";
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
 import { useState } from 'react';
 import { WidgetCommitNofifiction } from '@/components/demo'
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 
 
 const { SubMenu } = Menu;
@@ -14,25 +16,40 @@ message.config({
 	maxCount: 4
 });
 
-//表头
-const columns = [
-	{
-		title: 'word',
-		dataIndex: 'word',
-		key: 'word',
-		render: text => <a>{text}</a>,
-	},
-	{
-		title: '意思',
-		dataIndex: 'meaning',
-		key: 'meaning',
-	},
-	{
-		title: "其他意思",
-		dataIndex: 'other_meaning',
-		key: 'other_meaning',
-	}
-]
+const data = [
+  {
+    title: '梵网经',
+  },
+  {
+    title: '沙门果经',
+  },
+  {
+    title: '盐块经',
+  },
+  {
+    title: '根修习经',
+  },
+];
+
+const listData = [];
+for (let i = 0; i < 23; i++) {
+  listData.push({
+    href: 'https://ant.design',
+    title: `ant design part ${i}`,
+    avatar: 'https://joeschmoe.io/api/v1/random',
+    description:
+      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    content:
+      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+  });
+}
+
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 function handleClick(e) {
 	console.log('click', e);
@@ -65,7 +82,7 @@ export default () => {
 
 	function getTableData(e){
         //let url='https://gorest.co.in/public-api/posts';
-        let url='http://127.0.0.1:8000/api/v2/terms?view=word&word=dhamma';
+        let url='http://127.0.0.1:8000/api/v2/progress?view=tag';
 		fetch(url)
 			.then(function (response) {
 				console.log("ajex:", response);
@@ -73,6 +90,14 @@ export default () => {
 			})
 			.then(function (myJson) {
 				console.log("ajex",myJson.data);
+                for (let iterator of myJson.data.rows) {
+                    if(iterator.title==''){
+                        iterator.title = iterator.toc;
+                    }
+                    iterator.description = iterator.toc;
+                    iterator.href="http://127.0.0.1:8000/app/article/?view=chapter&book="+iterator.book+"&par="+iterator.para+'&channel='+iterator.channel_id;
+                    iterator.avatar = 'https://joeschmoe.io/api/v1/random';
+                }
 				setTableData(myJson.data.rows);
 			});		
 	}
@@ -161,9 +186,10 @@ export default () => {
 
 				<Layout style={{ padding: '0 24px 24px' }}>
 					<Breadcrumb style={{ padding: '0 24px 24px' }}>
-						<Breadcrumb.Item>Home</Breadcrumb.Item>
-						<Breadcrumb.Item>List</Breadcrumb.Item>
-						<Breadcrumb.Item>App</Breadcrumb.Item>
+						<Breadcrumb.Item>全部</Breadcrumb.Item>
+						<Breadcrumb.Item>经藏</Breadcrumb.Item>
+						<Breadcrumb.Item>长部</Breadcrumb.Item>
+						<Breadcrumb.Item>……</Breadcrumb.Item>
 					</Breadcrumb>
 					<Content
 						className="site-layout-background"
@@ -174,19 +200,61 @@ export default () => {
 							width: "100%",
 							overflowX: "auto",
 						}}>
-						<Table dataSource={tableData} columns={columns} />
-						<div>搜索结果</div>
-						<Pagination defaultCurrent={1} total={54} onChange={pageChange} />
+<List
+    itemLayout="vertical"
+    size="large"
+    pagination={{
+      onChange: page => {
+        console.log(page);
+      },
+      pageSize: 10,
+    }}
+    dataSource={tableData}
+    footer={
+      <div>
+        <b>ant design</b> footer part
+      </div>
+    }
+    renderItem={item => (
+      <List.Item
+        key={item.title}
+        actions={[
+          <IconText icon={StarOutlined} text={item.progress} key="list-vertical-star-o" />,
+          <IconText icon={LikeOutlined} text={item.created_at} key="list-vertical-like-o" />,
+          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+        ]}
+
+      >
+        <List.Item.Meta
+          avatar={<Avatar src={item.avatar} />}
+          title={<a href={item.href} target='_blank'>{item.title}</a>}
+          description={item.description}
+        />
+      </List.Item>
+    )}
+  />
 					</Content>
 				</Layout>
 				<Affix offsetTop={top}>
-					<Sider>
-						<Anchor>
-							<Link href="#aa" title="aa" />
-							<Link href="#bb" title="bb" />
-							<Link href="#cc" title="cc" />
-							<Link href="#dd" title="dd" />
-						</Anchor>
+					<Sider
+                    className="site-layout-background"
+                        breakpoint="lg"
+                        collapsedWidth="0"
+                    >
+<List
+    header={<div>本周最新</div>}
+    itemLayout="horizontal"
+    dataSource={data}
+    renderItem={item => (
+      <List.Item>
+        <List.Item.Meta
+          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+          title={<a href="https://ant.design">{item.title}</a>}
+          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+        />
+      </List.Item>
+    )}
+  />
 					</Sider>
 				</Affix>
 			</Layout>
