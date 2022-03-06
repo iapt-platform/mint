@@ -1143,3 +1143,16 @@ pali>p {
 span.sent_tran::first-letter {
     text-transform: capitalize;
 }
+
+guide.grammar_tag {
+    display: unset;
+    background: unset;
+    background-color: var(--btn-color);
+    padding: 0;
+    border-radius: 3px;
+	margin: 0;
+
+}
+guide.grammar_tag:hover {
+	text-decoration: underline;
+}
