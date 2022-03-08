@@ -1279,7 +1279,9 @@ function renderNissayaPreview(str){
             html += "</span>";
             html += "<span class='meaning'>";
             if (getCookie('language') !="my") {
-                html += myEndingTooltip(word[1]);
+                let noPeriod = word[1].split('။');
+                noPeriod[0] = myEndingTooltip(noPeriod[0]);
+                html += noPeriod.join('။');
             }else{
                 html += word[1];
             }
@@ -1380,12 +1382,62 @@ function myEndingTooltip(inStr){
             name:"ကြောင့်",
             tooltip:'处格/因',
         },
+        {
+            id:"my_abs",
+            name:"၍",
+            tooltip:'连续体',
+        },
+        {
+            id:"my_pl",
+            name:"တို့",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"များ",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"ကုန်",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"ကြ",
+            tooltip:'复数',
+        },
+        {
+            id:"my_time",
+            name:"ပတ်လုံး",
+            tooltip:'时间的整数',
+        },
+        {
+            id:"my_time",
+            name:"လုံလုံး",
+            tooltip:'时间的整数',
+        },
+        {
+            id:"my_length",
+            name:"တိုင်တိုင်",
+            tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_length",
+            name:"တိုင်အောင်",
+            tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_def",
+            name:"နေစဉ်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
     ];
 
     for (const iterator of myEnding) {
         if(inStr.indexOf(iterator.name)>=0){
-			eval("inStr=inStr.replace(/" + iterator.name + "/g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide>\");");
-            return inStr;
+			eval("inStr=inStr.replace(/" + iterator.name + " /g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide> \");");
+			eval("inStr=inStr.replace(/" + iterator.name + "$/g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide>\");");
         }
     }
     return inStr;
