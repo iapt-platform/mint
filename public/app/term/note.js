@@ -217,6 +217,9 @@ function note_refresh_new(callback = null) {
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
+                        //初始化气泡
+                        guide_init();
+
 					} catch (e) {
 						console.error(e);
 					}
@@ -1255,6 +1258,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	html += "</div>";
 	return html;
 }
+//渲染nissaya单词
 function renderNissayaPreview(str){
     let html ='';
     //html +="<div class='nissaya'>";
@@ -1273,7 +1277,13 @@ function renderNissayaPreview(str){
                     break;
             }
             html += "</span>";
-            html += "<span class='meaning'>"+ word[1]+"</span>";
+            html += "<span class='meaning'>";
+            if (getCookie('language') !="my") {
+                html += myEndingTooltip(word[1]);
+            }else{
+                html += word[1];
+            }
+            html += "</span>";
             html += "</span>";
         }else{
             html += iterator;
@@ -1281,6 +1291,104 @@ function renderNissayaPreview(str){
     }
     //html += "</div>";
     return html;
+}
+//缅文语尾高亮和提示气泡
+function myEndingTooltip(inStr){
+    let myEnding=[
+        {
+            id:"my_nom1",
+            name:"သည်",
+            tooltip:'主语',
+        },
+        {
+            id:"my_nom2",
+            name:"ကား",
+            tooltip:'主格/主语',
+        },        
+        {
+            id:"my_nom3",
+            name:"က",
+            tooltip:'主格/主语',
+        },        
+        {
+            id:"my_acc1",
+            name:"ကို",
+            tooltip:'宾格/宾语',
+        },
+        {
+            id:"my_acc2",
+            name:"သို့",
+            tooltip:'宾格/趋向',
+        },
+        {
+            id:"my_inst1",
+            name:"ဖြင့်",
+            tooltip:'具格/用',
+        },
+        {
+            id:"my_inst2",
+            name:"နှင့်",
+            tooltip:'具格/与',
+        },
+        {
+            id:"my_inst3",
+            name:"ကြောင့်",
+            tooltip:'具格/凭借;从格/原因',
+        },
+        {
+            id:"my_dat1",
+            name:"အား",
+            tooltip:'为格/对象(间接宾语)',
+        },
+        {
+            id:"my_dat2",
+            name:"ငှာ",
+            tooltip:'为格/目的(为了)',
+        },
+        {
+            id:"my_abl1",
+            name:"မှ",
+            tooltip:'从格/从',
+        },
+        {
+            id:"my_abl2",
+            name:"အောက်",
+            tooltip:'从格/比……多',
+        },
+        {
+            id:"my_abl3",
+            name:"ထက်",
+            tooltip:'从格/比……少',
+        },
+        {
+            id:"my_gen1",
+            name:"၏",
+            tooltip:'属格/的',
+        },
+        {
+            id:"my_gen2",
+            name:"တွင်",
+            tooltip:'属格/处(范围)',
+        },
+        {
+            id:"my_loc1",
+            name:"၌",
+            tooltip:'处格/处(范围)',
+        },
+        {
+            id:"my_loc2",
+            name:"ကြောင့်",
+            tooltip:'处格/因',
+        },
+    ];
+
+    for (const iterator of myEnding) {
+        if(inStr.indexOf(iterator.name)>=0){
+			eval("inStr=inStr.replace(/" + iterator.name + "/g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide>\");");
+            return inStr;
+        }
+    }
+    return inStr;
 }
 function tran_sent_textarea_event_init() {
 	let textarea = document.querySelectorAll(".tran_sent_textarea");
