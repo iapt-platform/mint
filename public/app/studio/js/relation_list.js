@@ -1118,7 +1118,34 @@ var list_relation=[
     {
         "id": "CAU",
         "case": ".abs.",
+        "note": "hetu ➡ phala",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
+        "id": "CAU",
+        "case": ".ger.",
         "note": "Causality Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "CAU",
+        "case": ".ger.",
+        "note": "因 ➡ 果",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "CAU",
+        "case": ".ger.",
+        "note": "hetu ➡ phala",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
