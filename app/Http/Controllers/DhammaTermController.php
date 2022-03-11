@@ -51,6 +51,7 @@ class DhammaTermController extends Controller
 									->where('word', $request->get("word"))
 									->orderBy('created_at','desc')
 									->get();
+                $count = count($result);
 				break;
             case 'hot-meaning':
                 $key='term/hot_meaning';

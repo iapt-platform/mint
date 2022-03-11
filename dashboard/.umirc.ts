@@ -6,9 +6,5 @@ export default defineConfig({
 	},
 	base: '/my/',
 	fastRefresh: {},
-	layout: {
-		name: 'wikipali',
-		locale: true,
-		layout: 'side',
-	}
+
 });
