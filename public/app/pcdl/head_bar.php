@@ -518,6 +518,11 @@ switch($_COOKIE['language']){
 								<div class="nav_link"><?php echo $_local->gui->history; ?></div>
 							</a>
 						</li>
+						<li>
+							<a href="../tools/kammavaca.html" target="_blank">
+								<div class="nav_link"><?php echo "作持语"; ?></div>
+							</a>
+						</li>
 					</ul>
 			</li>
 			<li class="nav_link nav-mobile"><a href="../calendar/">
@@ -529,6 +534,9 @@ switch($_COOKIE['language']){
 			<li class="nav_link nav-mobile"><a href="../statistics/">
 					<?php echo $_local->gui->corpus_statistics; ?>
 				</a></li>
+			<li class="nav_link nav-mobile"><a href="../tools/kammavaca.html">
+			<?php echo "作持语"; ?>
+		</a></li>
 			<div>
 		</ul>
 	</nav>
