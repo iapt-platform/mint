@@ -180,6 +180,7 @@ var char_myn_to_roman_1 = [
 	{ id: "aျ္", value: "ya" },
 	{ id: "aွ္", value: "va" },
 	{ id: "aြ္", value: "ra" },
+	{ id: "aြ", value: "ra" },
 
 	{ id: "ၱ", value: "္ta" }, //后加
 	{ id: "ၳ", value: "္tha" }, //后加

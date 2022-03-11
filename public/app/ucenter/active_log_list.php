@@ -8,19 +8,19 @@ require_once "../public/php/define.php";
 
 if (isset($_COOKIE["user_id"])) {
 
-    $active_type[10] = "_CHANNEL_EDIT_";
-    $active_type[11] = "_CHANNEL_NEW_";
-    $active_type[20] = "_ARTICLE_EDIT_";
-    $active_type[21] = "_ARTICLE_NEW_";
-    $active_type[30] = "_DICT_LOOKUP_";
-    $active_type[40] = "_TERM_EDIT_";
-    $active_type[41] = "_TERM_LOOKUP_";
-    $active_type[60] = "_WBW_EDIT_";
-    $active_type[70] = "_SENT_EDIT_";
-    $active_type[71] = "_SENT_NEW_";
-    $active_type[80] = "_COLLECTION_EDIT_";
-    $active_type[81] = "_COLLECTION_NEW_";
-    $active_type[90] = "_NISSAYA_FIND_";
+    $active_type[10] = "_CHANNEL_EDIT_";//编辑channel信息——项目
+    $active_type[11] = "_CHANNEL_NEW_";//创建channel——项目
+    $active_type[20] = "_ARTICLE_EDIT_";//article编辑——项目
+    $active_type[21] = "_ARTICLE_NEW_";//article创建——项目
+    $active_type[30] = "_DICT_LOOKUP_";//查字典——通用
+    $active_type[40] = "_TERM_EDIT_";//编辑术语——研究
+    $active_type[41] = "_TERM_LOOKUP_";//术语查询——研究
+    $active_type[60] = "_WBW_EDIT_";//逐词解析编辑——基本功
+    $active_type[70] = "_SENT_EDIT_";//句子译文编辑——翻译
+    $active_type[71] = "_SENT_NEW_";//新建句子译文——翻译
+    $active_type[80] = "_COLLECTION_EDIT_";//文集编辑——项目
+    $active_type[81] = "_COLLECTION_NEW_";//文集编辑——项目
+    $active_type[90] = "_NISSAYA_FIND_";//找nissaya——研究
 
     $dns = _FILE_DB_USER_ACTIVE_LOG_;
     $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
