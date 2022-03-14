@@ -13,62 +13,24 @@ const { Link } = Anchor;
 message.config({
 	maxCount: 4
 });
-//表数据
-const dataSource = [
-	{
-		key: '1',
-		name: 'name1',
-		age: 32,
-		adress: "西湖南路"
-	},
-	{
-		key: '2',
-		name: 'name2',
-		age: 34,
-		adress: '西湖公园'
-	},
-	{
-		key: '3',
-		name: 'name1',
-		age: 32,
-		adress: "西湖南路"
-	},
-	{
-		key: '4',
-		name: 'name2',
-		age: 34,
-		adress: '西湖公园'
-	},
-	{
-		key: '5',
-		name: 'name1',
-		age: 32,
-		adress: "西湖南路"
-	},
-	{
-		key: '6',
-		name: 'name2',
-		age: 34,
-		adress: '西湖公园'
-	}
-]
+
 //表头
 const columns = [
 	{
-		title: 'Id',
-		dataIndex: 'id',
-		key: 'id',
+		title: 'word',
+		dataIndex: 'word',
+		key: 'word',
 		render: text => <a>{text}</a>,
 	},
 	{
-		title: 'user_id',
-		dataIndex: 'user_id',
-		key: 'user_id',
+		title: '意思',
+		dataIndex: 'meaning',
+		key: 'meaning',
 	},
 	{
-		title: "title",
-		dataIndex: 'title',
-		key: 'title',
+		title: "其他意思",
+		dataIndex: 'other_meaning',
+		key: 'other_meaning',
 	}
 ]
 
@@ -101,15 +63,17 @@ export default () => {
 	const [tableData, setTableData] = useState();
 
 
-	function getTableData(){
-		fetch('https://gorest.co.in/public-api/posts')
+	function getTableData(e){
+        //let url='https://gorest.co.in/public-api/posts';
+        let url='http://127.0.0.1:8000/api/v2/terms?view=word&word=dhamma';
+		fetch(url)
 			.then(function (response) {
 				console.log("ajex:", response);
 				return response.json();
 			})
 			.then(function (myJson) {
 				console.log("ajex",myJson.data);
-				setTableData(myJson.data);
+				setTableData(myJson.data.rows);
 			});		
 	}
 	function pageChange(page: number, pagesize?: number | undefined) {
@@ -125,14 +89,15 @@ export default () => {
 			<Header className="header">
 				<div className="logo" />
 
-				<Menu onClick={handleClick} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+				<Menu onClick={handleClick} theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
 					<Menu.Item key="0">
 						<WidgetCommitNofifiction time={commitTime} message={commitMsg} successful={commitStatus} />
 					</Menu.Item>
-					<Menu.Item key="1" onClick={getTableData}>Palicanon</Menu.Item>
-					<Menu.Item key="2">Course</Menu.Item>
-					<Menu.Item key="3">nav 3</Menu.Item>
-					<SubMenu key="submenu" icon={<UserOutlined />} title="Others">
+					<Menu.Item key="1" >圣典</Menu.Item>
+					<Menu.Item key="2">课程</Menu.Item>
+					<Menu.Item key="3">字典</Menu.Item>
+					<Menu.Item key="3">文集</Menu.Item>
+					<SubMenu key="submenu" icon={<UserOutlined />} title="更多">
 						<Menu.ItemGroup title="group1">
 							<Menu.Item key="4">option1</Menu.Item>
 							<Menu.Item key="5">option2</Menu.Item>
@@ -148,24 +113,47 @@ export default () => {
 			</Header>
 			<Layout>
 				<Affix offsetTop={top}>
-					<Sider className="site-layout-background">
+					<Sider 
+                        className="site-layout-background"
+                        breakpoint="lg"
+                        collapsedWidth="0"
+                        onBreakpoint={broken => {
+                            console.log(broken);
+                        }}
+                        onCollapse={(collapsed, type) => {
+                            console.log(collapsed, type);
+                        }}
+                    >
 						<Menu
 							mode="inline"
 							defaultSelectedKeys={['1']}
 							defaultOpenKeys={['sub1']}
 							style={{ height: '100%', borderRight: 0 }}
+                            onClick={getTableData}
 						>
-							<SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-								<Menu.Item key="1">option1</Menu.Item>
-								<Menu.Item key="2">option2</Menu.Item>
-								<Menu.Item key="3">option3</Menu.Item>
-								<Menu.Item key="4">option4</Menu.Item>
+							<SubMenu key="sutta" icon={<UserOutlined />} title="经藏">
+								<Menu.Item key="dn">长部</Menu.Item>
+								<Menu.Item key="mn">中部</Menu.Item>
+								<Menu.Item key="sn">相应部</Menu.Item>
+								<Menu.Item key="an">增支部</Menu.Item>
+								<Menu.Item key="kn">小部</Menu.Item>
 							</SubMenu>
-							<SubMenu key="sub2" icon={<UserOutlined />} title="subnav 2">
-								<Menu.Item key="5">option1</Menu.Item>
-								<Menu.Item key="6">option2</Menu.Item>
-								<Menu.Item key="7">option3</Menu.Item>
-								<Menu.Item key="8">option4</Menu.Item>
+							<SubMenu key="vinaya" icon={<UserOutlined />} title="律藏">
+								<Menu.Item key="6">分别</Menu.Item>
+								<Menu.Item key="7">篇章</Menu.Item>
+								<Menu.Item key="8">附录</Menu.Item>
+							</SubMenu>
+							<SubMenu key="abhidhamma" icon={<UserOutlined />} title="阿毗达摩藏">
+								<Menu.Item key="9">法集论</Menu.Item>
+								<Menu.Item key="10">option2</Menu.Item>
+								<Menu.Item key="11">option3</Menu.Item>
+								<Menu.Item key="12">option4</Menu.Item>
+							</SubMenu>
+							<SubMenu key="others" icon={<UserOutlined />} title="其他">
+								<Menu.Item key="9">法集论</Menu.Item>
+								<Menu.Item key="10">option2</Menu.Item>
+								<Menu.Item key="11">option3</Menu.Item>
+								<Menu.Item key="12">option4</Menu.Item>
 							</SubMenu>
 						</Menu>
 					</Sider>
