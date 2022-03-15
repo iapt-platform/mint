@@ -499,7 +499,7 @@ switch($_COOKIE['language']){
 							</a>
 						</li>
 						<li>
-							<a href="../calendar/" target="_blank">
+							<a href="../calendar/index.html" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->buddhist_calendar; ?></div>
 							</a>
 						</li>
