@@ -657,6 +657,7 @@
 		"caus": "使役",
 		"pass": "被动",
 		"space": "",
+		"channel_type": "资源类型",
 		"": ""
 	},
 	"grammastr": [
