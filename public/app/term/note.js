@@ -1003,7 +1003,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
             }else{
                 tranText = iterator.text;
             }
-			tranText = note_init(term_std_str_to_tran(tranText, iterator.channal, iterator.editor, iterator.lang));
+			tranText = note_init(tranText, iterator.channal, iterator.editor, iterator.lang);
             if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
                 tranText = "<div class='nissaya'>"+tranText+"</div>";
             }
