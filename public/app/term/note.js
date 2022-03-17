@@ -1003,7 +1003,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
             }else{
                 tranText = iterator.text;
             }
-			tranText = note_init(term_std_str_to_tran(tranText, iterator.channal, iterator.editor, iterator.lang));
+			tranText = note_init(tranText, iterator.channal, iterator.editor, iterator.lang);
             if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
                 tranText = "<div class='nissaya'>"+tranText+"</div>";
             }
@@ -1261,7 +1261,6 @@ function render_one_sent_tran_a(iterator, diff = false) {
 //渲染nissaya单词
 function renderNissayaPreview(str){
     let html ='';
-    //html +="<div class='nissaya'>";
     const sent = str.split("\n");
     for (const iterator of sent) {
         const word =  iterator.split("=");
@@ -1290,8 +1289,8 @@ function renderNissayaPreview(str){
         }else{
             html += iterator;
         }
+        html += "\n";
     }
-    //html += "</div>";
     return html;
 }
 //缅文语尾高亮和提示气泡
@@ -1553,7 +1552,7 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 			"</span>";
 	} else {
 		//note_init处理句子链接
-		output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		output += note_init(iterator.text, iterator.channal, iterator.editor, iterator.lang);
 	}
 	output += "</div>";
 	//译文正文结束
@@ -1875,7 +1874,8 @@ function set_more_button_display() {
                                 if(channelType==='commentary'){
                                     note_refresh_new();
                                 }
-
+                                popup_init();
+                                guide_init();
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
@@ -2095,7 +2095,9 @@ function sent_save_callback(data) {
 					}
                     switch (thisChannel.type) {
                         case 'nissaya':
-                            divPreview.html(renderNissayaPreview(result.text));
+                            divPreview.html(
+                                "<div class='nissaya'>"+note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang)+"</div>"
+                                );
                             break;
                         case 'commentary':
                             divPreview.html(
@@ -2105,12 +2107,14 @@ function sent_save_callback(data) {
                         break;
                         default:
                             divPreview.html(
-                                marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+                                note_init(result.text, result.channal, result.editor, result.lang)
                             );
                             term_updata_translation();                        
                             break;
                     }
 					popup_init();
+                    //初始化气泡
+                    guide_init();
 				}
 			}
 		} else if (result.commit_type == 3) {
