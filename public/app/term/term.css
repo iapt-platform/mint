@@ -916,7 +916,10 @@ w:hover {
 .sent_mode .note_shell {
 	display: block;
 }
-.sent_tran p {
+.preview p:first-child {
+	display: inline;
+}
+.sent_tran p:first-child {
 	display: inline;
 }
 .sent_tran li {
