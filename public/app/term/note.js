@@ -1290,6 +1290,7 @@ function renderNissayaPreview(str){
         }else{
             html += iterator;
         }
+        html += "\n";
     }
     //html += "</div>";
     return html;
