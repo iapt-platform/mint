@@ -1340,27 +1340,27 @@ function myEndingTooltip(inStr){
         {
             id:"my_dat1",
             name:"အား",
-            tooltip:'为格/对象(间接宾语)',
+            tooltip:'目的格/对象(间接宾语)，对……来说',
         },
         {
             id:"my_dat2",
             name:"ငှာ",
-            tooltip:'为格/目的(为了)',
+            tooltip:'目的格/表示目的，为了……',
         },
         {
             id:"my_abl1",
             name:"မှ",
-            tooltip:'从格/从',
+            tooltip:'从格/表示来源，从……',
         },
         {
             id:"my_abl2",
             name:"အောက်",
-            tooltip:'从格/比……多',
+            tooltip:'从格/表达比较，比……多',
         },
         {
             id:"my_abl3",
             name:"ထက်",
-            tooltip:'从格/比……少',
+            tooltip:'从格/表达比较，比……少',
         },
         {
             id:"my_gen1",
@@ -1370,7 +1370,7 @@ function myEndingTooltip(inStr){
         {
             id:"my_gen2",
             name:"တွင်",
-            tooltip:'属格/处(范围)',
+            tooltip:'属格/表达范围，……中的',
         },
         {
             id:"my_loc1",
@@ -1380,7 +1380,7 @@ function myEndingTooltip(inStr){
         {
             id:"my_loc2",
             name:"ကြောင့်",
-            tooltip:'处格/因',
+            tooltip:'处格/表达动机，因……，旨在……',
         },
         {
             id:"my_abs",

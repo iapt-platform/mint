@@ -12,6 +12,6 @@
 
 |将来时|单数|复数|
 | -- | -- | -- |
-|第三人称|~(i)ssati<br>TA**将**~|~(i)ssanti<br>TA们**将**~|
-|第二人称|~(i)ssasi<br>你**将**~|~(i)ssatha<br>你们**将**~|
-|第一人称|~(i)ssāmi<br>我**将**~|~(i)ssāma<br>我们**将**~|
+|第三人称|-(i)ssati<br>TA**将**…|-(i)ssanti<br>TA们**将**…|
+|第二人称|-(i)ssasi<br>你**将**…|-(i)ssatha<br>你们**将**…|
+|第一人称|-(i)ssāmi<br>我**将**…|-(i)ssāma<br>我们**将**…|
