@@ -916,7 +916,10 @@ w:hover {
 .sent_mode .note_shell {
 	display: block;
 }
-.sent_tran p {
+.preview p:first-child {
+	display: inline;
+}
+.sent_tran p:first-child {
 	display: inline;
 }
 .sent_tran li {
@@ -1143,6 +1146,9 @@ pali>p {
 .nsy_word .meaning{
     display:inline;
     font-weight: 500;
+}
+.nsy_word>.meaning>.grammar_tag{
+    background: unset;
 }
 span.sent_tran::first-letter {
     text-transform: capitalize;
