@@ -1,5 +1,7 @@
 var char_roman_to_tai = [
 	//{ id: "n’</w>ti<w>", value: "nti" },
+	{ id: "ndr", value: "nrd" },
+	{ id: "ntr", value: "nrt" },
 	{ id: "bbho", value: "ᨻᩮ᩠ᨽᩣ" },
 	{ id: "ccho", value: "ᨧᩮ᩠ᨨᩣ" },
 	{ id: "ddho", value: "ᨴᩮ᩠ᨵᩣ" },
@@ -493,6 +495,8 @@ var char_tai_to_roman = [
 	{ id: "e᩠ā", value: "o" },
 	{ id: "a᩠", value: "" },
 	{ id: "᩠a", value: "" },
+	{ id: "nrd", value: "ndr" },
+	{ id: "nrt", value: "ntr" },
 
 ];
 
