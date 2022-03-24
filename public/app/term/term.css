@@ -1166,3 +1166,10 @@ guide.grammar_tag {
 guide.grammar_tag:hover {
 	text-decoration: underline;
 }
+
+button.primary {
+    padding: 6px 32px;
+    background-color: var(--link-hover-color);
+    color: var(--btn-hover-color);
+    border-radius: 5px;
+}

@@ -5,7 +5,6 @@ require_once "../db/channel.php";
 require_once "../public/function.php";
 // Require Composer's autoloader.
 require_once '../../vendor/autoload.php';
-require_once '../config.php';
 
 // Using Medoo namespace.
 use Medoo\Medoo;
@@ -181,7 +180,11 @@ class User extends Table
 		$isExist = $this->medoo->has($this->table,["email"=>$email]);
 		if($isExist){
 			$resetToken = UUID::v4();
-			$ok = $this->_update(["reset_password_token"=>$resetToken],["reset_password_token"],["email"=>$email]);
+            $query = "UPDATE   ".$this->table." SET reset_password_token = ? WHERE email = ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($resetToken,$email));
+            $ok = true;
+			//$ok = $this->_update(["reset_password_token"=>$resetToken],["reset_password_token"],["email"=>$email]);
 			if($ok){
 				#send email
 				$resetLink="https://".$_SERVER['SERVER_NAME']."/app/ucenter/reset.php?token=".$resetToken;
