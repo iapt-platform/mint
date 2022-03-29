@@ -59,7 +59,6 @@ class SentenceInfoController extends Controller
                 ->where('book_id','>=',$request->get('book'))
                 ->where('paragraph','>=',$request->get('from'))
                 ->where('paragraph','<=',$request->get('to'))
-                ->whereDate('created_at','2020-11-07')
                 ->sum('strlen');
         if($request->get('type')==='page'){
             if(empty($request->get('strlen'))){
