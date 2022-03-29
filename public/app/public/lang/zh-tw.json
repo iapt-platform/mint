@@ -655,6 +655,7 @@
 		"error_net_parsererror": "數據解析錯誤",
 		"caus": "使役",
 		"pass": "被動",
+		"channel_type": "資源類型",
 		"space": "",
 		"": ""
 	},
