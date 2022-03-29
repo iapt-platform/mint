@@ -96,28 +96,16 @@ var char_roman_to_myn = [
 	{ id: "ငော", value: "ငေါ" },
 	{ id: "ဒော", value: "ဒေါ" },
 	{ id: "ပော", value: "ပေါ" },
-	{ id: "ဝော", value: "ဝေါ" },
-	{ id: "ဂာ", value: "ဂါ" }, //g
-	{ id: "ငာ", value: "ငါ" }, //ṅ
-	{ id: "ဒာ", value: "ဒါ" }, //d
-	{ id: "ပာ", value: "ပါ" }, //p
-	{ id: "ဝာ", value: "ဝါ" }, //v
+	{ id: "ဝော", value: "ဝေါ" },//vo
+	{ id: "ဂာ", value: "ဂါ" }, //gā
+	{ id: "ငာ", value: "ငါ" }, //ṅā
+	{ id: "ဒာ", value: "ဒါ" }, //dā
+	{ id: "ပာ", value: "ပါ" }, //pā
+	{ id: "ဝာ", value: "ဝါ" }, //vā
 	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
-	{ id: "1", value: "၁" },
-	{ id: "2", value: "၂" },
-	{ id: "3", value: "၃" },
-	{ id: "4", value: "၄" },
-	{ id: "5", value: "၅" },
-	{ id: "6", value: "၆" },
-	{ id: "7", value: "၇" },
-	{ id: "8", value: "၈" },
-	{ id: "9", value: "၉" },
-	{ id: "0", value: "၀" },
-	{ id: "．", value: "။" },
-	{ id: ";", value: "။" },
-	{ id: "，", value: "၊" },
-	{ id: ",", value: "၊" },
+	
 ];
+
 var char_myn_to_roman_1 = [
 	{ id: "ႁႏၵ", value: "ndra" }, //後加
 
@@ -192,6 +180,7 @@ var char_myn_to_roman_1 = [
 	{ id: "aျ္", value: "ya" },
 	{ id: "aွ္", value: "va" },
 	{ id: "aြ္", value: "ra" },
+	{ id: "aြ", value: "ra" },
 
 	{ id: "ၱ", value: "္ta" }, //后加
 	{ id: "ၳ", value: "္tha" }, //后加
@@ -220,7 +209,8 @@ var char_myn_to_roman_1 = [
 	{ id: "ျ", value: "္ya" }, //后加
 	{ id: "ႅ", value: "္la" }, //后加
 	{ id: "ၼ", value: "္ma" }, //后加
-	{ id: "ွ", value: "္ha" }, //后加
+	{ id: "ွ", value: "္va" }, //后加
+	{ id: "ႇ", value: "္ha" }, //后加
 	{ id: "ႆ", value: "ssa" }, //后加
 	{ id: "ၷ", value: "na" }, //后加
 	{ id: "ၲ", value: "ta" }, //后加
@@ -266,6 +256,7 @@ var char_myn_to_roman_1 = [
 	{ id: "ၪ", value: "ñ" }, //後加
 	{ id: "a္", value: "" }, //後加
 	{ id: "္", value: "" }, //後加
+	{ id: "aံ", value: "aṃ" },
 
 	{ id: "ေss", value: "sse" }, //后加
 	{ id: "ေkh", value: "khe" }, //后加
@@ -462,7 +453,7 @@ var char_myn_to_roman_2 = [
 	{ id: "ိႇ", value: "ႇိ" }, //后加
 
 	{ id: "ျ", value: "္ra" }, //后加
-	{ id: "ွ", value: "္ha" }, //后加
+	{ id: "ွ", value: "္va" }, //后加
 	{ id: "ှ", value: "္ha" }, //后加
 	{ id: "ႇ", value: "္ha" }, //后加
 	{ id: "ြ", value: "္va" }, //后加
@@ -493,7 +484,7 @@ var char_myn_to_roman_2 = [
 	{ id: "်", value: "္ya" }, //后加
 	{ id: "ႅ", value: "္la" }, //后加
 	{ id: "ၼ", value: "္ma" }, //后加
-	{ id: "ွ", value: "္ha" }, //后加
+	{ id: "ွ", value: "္va" }, //后加
 	{ id: "ၲ", value: "ta" }, //后加
 
 	{ id: "ႆ", value: "ssa" }, //后加

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SentenceInfoController;
+use App\Http\Controllers\WbwAnalysisController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,5 +27,8 @@ Route::get('/home/{name}', function ($name) {
     return view('home', ['name' => $name]);
 });
 
+
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);
+Route::get('/wbwanalyses', [WbwAnalysisController::class,'index']);
+
