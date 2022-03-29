@@ -1423,7 +1423,7 @@ var list_relation=[
     },
     {
         "id": "ENU",
-        "case": ".adv.",
+        "case": "",
         "note": "enumerative relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
@@ -1432,7 +1432,7 @@ var list_relation=[
     },
     {
         "id": "ENU",
-        "case": ".adv.",
+        "case": "",
         "note": "罗列 ➡ 破折号",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
@@ -1441,7 +1441,7 @@ var list_relation=[
     },
     {
         "id": "ENU",
-        "case": ".adv.",
+        "case": "",
         "note": "enumerative relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
