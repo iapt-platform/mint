@@ -140,7 +140,7 @@ class SentenceInfoController extends Controller
      *
      * @param  \App\Models\Sentence  $sentence
      * @return \Illuminate\Http\Response
-     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&type=page
+     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=page
      */
     public function showprogress(Request $request)
     {
@@ -160,7 +160,7 @@ class SentenceInfoController extends Controller
         ]);
     }
 
-    //http://127.0.0.1:8000/api/sentence/progress/daily/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&type=page
+    //http://127.0.0.1:8000/api/sentence/progress/daily/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=page
     public function showprogressdaily(Request $request)
     {
         $imgWidth = 300;
