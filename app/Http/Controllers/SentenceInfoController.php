@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sentence;
+use App\Models\PaliSentence;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -40,18 +42,7 @@ class SentenceInfoController extends Controller
         //
     }
 
-    /**
-    * 输出一张图片显示进度
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
-     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&type=page
-     */
-    public function showprogress(Request $request)
-    {
-        ob_clean();
-        ob_start();
+    private function getSentProgress(Request $request,$date=''){
         $channel = $request->get('channel');
         $from = $request->get('from');
         $to = $request->get('to');
@@ -82,15 +73,42 @@ class SentenceInfoController extends Controller
             $pageNumber =$request->get('pages');
         }
 
-        $strlen = Sentence::where('channel_uid',$request->get('channel'))
+        $db = Sentence::where('channel_uid',$request->get('channel'))
                 ->where('book_id','>=',$request->get('book'))
                 ->where('paragraph','>=',$request->get('from'))
-                ->where('paragraph','<=',$request->get('to'))
-                ->sum('strlen');
+                ->where('paragraph','<=',$request->get('to'));
+        if(!empty($date)){
+            $db = $db->whereDate('created_at','=',$date);
+        }
+        $strlen =$db->sum('strlen');
+        #计算已完成百分比
         $percent = 0;
         if(($view==='page' && !empty($request->get('pages'))) || $view==='percent' ){
             #计算完成的句子在巴利语句子表中的字符串长度百分比
-            
+            $db = Sentence::select(['paragraph','word_start'])
+                ->where('channel_uid',$request->get('channel'))
+                ->where('book_id','>=',$request->get('book'))
+                ->where('paragraph','>=',$request->get('from'))
+                ->where('paragraph','<=',$request->get('to'));
+            if(!empty($date)){
+                $db = $db->whereDate('created_at','=',$date);
+            }
+            $sentFinished = $db->get();
+            #查询这些句子的总共等效巴利语字符数
+            $allStrLen = PaliSentence::where('book',$request->get('book'))
+                            ->where('paragraph','>=',$request->get('from'))
+                            ->where('paragraph','<=',$request->get('to'))
+                            ->sum('length');            
+            $para_strlen = 0;
+            foreach ($sentFinished as $sent) {
+                # code...
+                $para_strlen += PaliSentence::where('book',$request->get('book'))
+                            ->where('paragraph',$sent->paragraph)
+                            ->where('word_begin',$sent->word_start)
+                            ->value('length');
+            }
+
+            $percent = $para_strlen / $allStrLen;
         }
         switch ($view) {
             case 'page':
@@ -113,8 +131,22 @@ class SentenceInfoController extends Controller
                 break;
         }
         #保留小数点后两位
-        $resulte = sprintf('0.2f',$resulte);
-
+        $resulte = sprintf('%.2f',$resulte);
+        return $resulte;
+    }
+    /**
+    * 输出一张图片显示进度
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Sentence  $sentence
+     * @return \Illuminate\Http\Response
+     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&type=page
+     */
+    public function showprogress(Request $request)
+    {
+        ob_clean();
+        ob_start();
+        $resulte = $this->getSentProgress($request);
         $img = imagecreate(strlen($resulte)*10,22) or die('create image fail ');
         imagecolorallocate($img,255,255,255);
         $color = imagecolorallocate($img,0,0,0);
@@ -150,20 +182,7 @@ class SentenceInfoController extends Controller
         if(!empty($request->get('type'))){
             $view =$request->get('type');
         }
-        #一页书中的字符数 以unicode 长度计算 默认2000
-        $pageStrLen = 2000;
-        if(!empty($request->get('strlen'))){
-            $pageStrLen =$request->get('strlen');
-        }
-        if(!empty($request->get('pagelen'))){
-            $pageStrLen =$request->get('pagelen');
-        }
 
-        # 页数
-        $pageNumber = 300;
-        if(!empty($request->get('pages'))){
-            $pageNumber =$request->get('pages');
-        }
 
 
         $pagePix = ($imgHeight-$xAxisOffset)/$maxPage;
@@ -206,24 +225,11 @@ class SentenceInfoController extends Controller
         }
 
         $last=0;
-        for($i = 0; $i < $maxDay; $i++){
+        for($i = 1; $i <= $maxDay; $i++){
             $day = strtotime("today -{$i} day");
             $date = date("Y-m-d",$day);
-            $strlen = Sentence::where('channel_uid',$request->get('channel'))
-                    ->where('book_id','>=',$request->get('book'))
-                    ->where('paragraph','>=',$request->get('from'))
-                    ->where('paragraph','<=',$request->get('to'))
-                    ->whereDate('created_at','=',$date)
-                    ->sum('strlen');
-            if($request->get('type')==='page'){
-                if(!empty($request->get('strlen'))){
-                    $pageStrLen = $request->get('strlen');
-                }
-                $resulte = $strlen / $pageStrLen * $pagePix;
-            }else{
-                $resulte = $strlen / 50;
-            }
-            
+
+            $resulte = $this->getSentProgress($request,$date)*$pagePix;
             if($i>0){
                 imageline($img,($imgWidth-$i*$dayPix),$imgHeight-$xAxisOffset-$resulte,($imgWidth-($i-1)*$dayPix),$imgHeight-$xAxisOffset-$last,$dataLineColor);
             }
