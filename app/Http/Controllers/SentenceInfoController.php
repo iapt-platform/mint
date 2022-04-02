@@ -41,6 +41,7 @@ class SentenceInfoController extends Controller
     }
 
     /**
+    * 输出一张图片显示进度
      * Display the specified resource.
      *
      * @param  \App\Models\Sentence  $sentence
@@ -55,21 +56,64 @@ class SentenceInfoController extends Controller
         $from = $request->get('from');
         $to = $request->get('to');
 
+        #默认完成度显示字符数
+        # strlen 
+        # page
+        # percent 
+        $view = 'strlen';
+        if(!empty($request->get('view'))){
+            $view =$request->get('view');
+        }
+        if(!empty($request->get('type'))){
+            $view =$request->get('type');
+        }
+        #一页书中的字符数
+        $pageStrLen = 2000;
+        if(!empty($request->get('strlen'))){
+            $pageStrLen =$request->get('strlen');
+        }
+        if(!empty($request->get('pagelen'))){
+            $pageStrLen =$request->get('pagelen');
+        }
+
+        # 页数
+        $pageNumber = 300;
+        if(!empty($request->get('pages'))){
+            $pageNumber =$request->get('pages');
+        }
+
         $strlen = Sentence::where('channel_uid',$request->get('channel'))
                 ->where('book_id','>=',$request->get('book'))
                 ->where('paragraph','>=',$request->get('from'))
                 ->where('paragraph','<=',$request->get('to'))
                 ->sum('strlen');
-        if($request->get('type')==='page'){
-            if(empty($request->get('strlen'))){
-                $pageStrLen = 500;
-            }else{
-                $pageStrLen = $request->get('strlen');
-            }
-            $resulte = $strlen / $pageStrLen;
-        }else{
-            $resulte = $strlen;
+        $percent = 0;
+        if(($view==='page' && !empty($request->get('pages'))) || $view==='percent' ){
+            #计算完成的句子在巴利语句子表中的字符串长度百分比
+            
         }
+        switch ($view) {
+            case 'page':
+                # 输出已经完成的页数
+                if(!empty($request->get('pages'))){
+                    #给了页码，用百分比计算
+                    $resulte = $percent * $request->get('pages');
+                }else{
+                    #没给页码，用每页字符数计算
+                    $resulte = $strlen / $pageStrLen;
+                }
+                break;
+            case 'percent':
+                $resulte = $percent;
+                break;
+            case 'strlen':
+            default:
+                # code...
+                $resulte = $strlen;
+                break;
+        }
+        #保留小数点后两位
+        $resulte = sprintf('0.2f',$resulte);
 
         $img = imagecreate(strlen($resulte)*10,22) or die('create image fail ');
         imagecolorallocate($img,255,255,255);
@@ -95,7 +139,32 @@ class SentenceInfoController extends Controller
         $maxPage = 20;
         $yLineSpace = 5;
 
-        $pageStrLen = 500;
+        #默认完成度显示字符数
+        # strlen 
+        # page
+        # percent 
+        $view = 'strlen';
+        if(!empty($request->get('view'))){
+            $view =$request->get('view');
+        }
+        if(!empty($request->get('type'))){
+            $view =$request->get('type');
+        }
+        #一页书中的字符数 以unicode 长度计算 默认2000
+        $pageStrLen = 2000;
+        if(!empty($request->get('strlen'))){
+            $pageStrLen =$request->get('strlen');
+        }
+        if(!empty($request->get('pagelen'))){
+            $pageStrLen =$request->get('pagelen');
+        }
+
+        # 页数
+        $pageNumber = 300;
+        if(!empty($request->get('pages'))){
+            $pageNumber =$request->get('pages');
+        }
+
 
         $pagePix = ($imgHeight-$xAxisOffset)/$maxPage;
         $dayPix = ($imgWidth-$yAxisOffset)/$maxDay;
