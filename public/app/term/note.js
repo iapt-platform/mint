@@ -1266,12 +1266,14 @@ function renderNissayaPreview(str){
         const word =  iterator.split("=");
         if(iterator.indexOf('=')>=0){
             html += "<span class='nsy_word'>"
-            html += "<span class='org'>";
+            html += "<span class='org' lang=";
             switch (getCookie('language')) {
                 case 'my':
+                    html += "'my' >";
                     html +=  $.trim(word[0]) + "၊";
                     break;
                 default:
+                    html += "'en' >";
                     html += my_to_roman(word[0]);
                     break;
             }
