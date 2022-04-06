@@ -1138,10 +1138,27 @@ pali>p {
 .preview .nissaya .nsy_word{
     padding-right:10px;
 }
-.nsy_word .org{
+.nsy_word{
+    padding-right:10px;
+    color: var(--main-color1);
+}
+.nsy_word>.org{
     display:inline;
     font-weight: 700;
     padding-right: 0.5em;
+    font-size: unset;
+    color: #9f3a01;
+}
+.nsy_word>.org:lang(en){
+    font-weight: unset;
+}
+.nsy_word>.org>strong {
+    color: black;
+    font-weight:900;
+}
+.nsy_word>.org>strong:lang(en) {
+    color: black;
+    font-weight:700;
 }
 .nsy_word .meaning{
     display:inline;
