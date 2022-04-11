@@ -1138,6 +1138,9 @@ pali>p {
 .preview .nissaya .nsy_word{
     padding-right:10px;
 }
+.preview .nissaya p{
+	white-space: pre-wrap;
+}
 .nsy_word .org{
     display:inline;
     font-weight: 700;
