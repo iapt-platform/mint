@@ -16,7 +16,7 @@ if (isset($_GET["userid"])) {
     $dns = _FILE_DB_USER_ACTIVE_;
     $dbh = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "SELECT date_int,duration,hit  FROM "._TABLE_USER_OPERATION_DAILY_." WHERE user_id = ? ";
+    $query = "SELECT date_int,duration,hit  FROM "._TABLE_USER_OPERATION_DAILY_." WHERE user_id = ? order by date_int asc";
     $sth = $dbh->prepare($query);
     $sth->execute(array($userid));
     $last = 0;

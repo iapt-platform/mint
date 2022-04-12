@@ -1141,10 +1141,20 @@ pali>p {
 .preview .nissaya p{
 	white-space: pre-wrap;
 }
-.nsy_word .org{
-    display:inline;
-    font-weight: 700;
-    padding-right: 0.5em;
+.nsy_word{
+    padding-right:10px;
+    color: var(--main-color1);
+}
+.nsy_word>.org:lang(en){
+    font-weight: unset;
+}
+.nsy_word>.org>strong {
+    color: black;
+    font-weight:900;
+}
+.nsy_word>.org>strong:lang(en) {
+    color: black;
+    font-weight:700;
 }
 .nsy_word .meaning{
     display:inline;
@@ -1168,4 +1178,11 @@ guide.grammar_tag {
 }
 guide.grammar_tag:hover {
 	text-decoration: underline;
+}
+
+button.primary {
+    padding: 6px 32px;
+    background-color: var(--link-hover-color);
+    color: var(--btn-hover-color);
+    border-radius: 5px;
 }
