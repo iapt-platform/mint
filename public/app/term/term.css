@@ -1138,16 +1138,12 @@ pali>p {
 .preview .nissaya .nsy_word{
     padding-right:10px;
 }
+.preview .nissaya p{
+	white-space: pre-wrap;
+}
 .nsy_word{
     padding-right:10px;
     color: var(--main-color1);
-}
-.nsy_word>.org{
-    display:inline;
-    font-weight: 700;
-    padding-right: 0.5em;
-    font-size: unset;
-    color: #9f3a01;
 }
 .nsy_word>.org:lang(en){
     font-weight: unset;
