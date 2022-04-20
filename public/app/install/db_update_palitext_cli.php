@@ -42,8 +42,8 @@ if (($handle = fopen(__DIR__."/filelist.csv", 'r')) !== false) {
         $fileNums++;
     }
 }
-if ($to == 0 || $to >= $fileNums) {
-    $to = $fileNums - 1;
+if ($to == 0 || $to > $fileNums) {
+    $to = $fileNums;
 }
 
 
