@@ -670,7 +670,8 @@ pw {
 	overflow-wrap: anywhere;
 }
 .preview {
-	font-size: 110%;
+	/*font-size: 110%;*/
+    line-height: 150%;
     width: -webkit-fill-available;
 }
 .preview::first-letter {
@@ -813,7 +814,7 @@ li.active {
 .sent_tran .preview p {
 	line-height: normal;
 	margin: 0;
-	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV3-Normal", "Arial",
+	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans Myanmar", "ATaiThamKHNewV3-Normal", "Arial",
 		"Verdana";
 }
 .pop_menu .icon {
@@ -1132,38 +1133,27 @@ pali>p {
 .preview .nissaya{
     display:inline;
 }
-.preview .nsy_word{
-    display:inline;
-}
-.preview .nissaya .nsy_word{
-    padding-right:10px;
-}
+
 .nsy_word{
+    display:inline;
     padding-right:10px;
-    color: var(--main-color1);
+    color: var(--main-color);
 }
 .nsy_word>.org{
     display:inline;
-    font-weight: 700;
+    font-weight: 600;
     padding-right: 0.5em;
     font-size: unset;
-    color: #9f3a01;
 }
-.nsy_word>.org:lang(en){
-    font-weight: unset;
+.nsy_word>.meaning{
+    display:inline;
+    font-weight: 400;
 }
 .nsy_word>.org>strong {
-    color: black;
     font-weight:900;
 }
-.nsy_word>.org>strong:lang(en) {
-    color: black;
-    font-weight:700;
-}
-.nsy_word .meaning{
-    display:inline;
-    font-weight: 500;
-}
+
+
 .nsy_word>.meaning>.grammar_tag{
     background: unset;
 }

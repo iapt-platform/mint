@@ -231,6 +231,87 @@
 	src: local("Padauk Bold"), url(../../../font/Padauk/Padauk-Bold.ttf) format("truetype");
 	font-display: fallback;
 }
+/*Noto Sans Myanmar*/
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 100;
+  src: local("Noto Sans Myanmar Thin"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Thin.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 200;
+  src: local("Noto Sans Myanmar ExtraLight"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-ExtraLight.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Noto Sans Myanmar Light"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Light.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Noto Sans Myanmar Regular"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Regular.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Noto Sans Myanmar Medium"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Medium.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Noto Sans Myanmar SemiBold"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-SemiBold.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Noto Sans Myanmar Bold"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Bold.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 800;
+  src: local("Noto Sans Myanmar ExtraBold"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-ExtraBold.ttf) format("truetype");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Noto Sans Myanmar";
+  font-style: normal;
+  font-weight: 900;
+  src: local("Noto Sans Myanmar Black"),
+    url(../../../font/Noto_Sans_Myanmar/NotoSansMyanmar-Black.ttf) format("truetype");
+  font-display: fallback;
+}
 /*傣仂文*/
 @font-face {
 	font-family: "ATaiThamKHNewV3-Normal";
