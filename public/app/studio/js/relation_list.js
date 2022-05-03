@@ -1082,11 +1082,20 @@ var list_relation=[
     {
         "id": "ADV",
         "case": ".abs.",
-        "note": "副词",
+        "note": "先动-后动",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
-        "language": "zh-cn"
+        "language": "zh ➡ cn"
+    },
+    {
+        "id": "ADV",
+        "case": ".ger.",
+        "note": "先动-后动",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh ➡ cn"
     },
     {
         "id": "ADV",
