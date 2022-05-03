@@ -330,3 +330,7 @@ table {
 tr {
   border-bottom: 1px solid gray;
 }
+
+#article_title{
+    font-family: noto serif;
+}

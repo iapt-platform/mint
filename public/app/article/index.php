@@ -203,7 +203,7 @@ span.fancytree-node{
 #contents ul, li {
     margin-block-start: 0.5em;
     margin-block-end: 0.5em;
-    margin-left: 7px;
+    margin-left: 18px;
 }
 .click_dropdown_div{
 	align-self: center;
