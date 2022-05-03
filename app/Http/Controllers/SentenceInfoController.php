@@ -81,6 +81,10 @@ class SentenceInfoController extends Controller
             $db = $db->whereDate('created_at','=',$date);
         }
         $strlen =$db->sum('strlen');
+
+        if(is_null($strlen) || $strlen===0){
+            return 0;
+        }
         #计算已完成百分比
         $percent = 0;
         if(($view==='page' && !empty($request->get('pages'))) || $view==='percent' ){
