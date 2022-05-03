@@ -1041,6 +1041,15 @@ pali>p {
 .para_mode .palitext{
 	text-indent: 2em;
 }
+.para_mode li .palitext{
+	text-indent: -1em;
+}
+
+ul {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-left: 18px;
+}
 
 .sent_mode>div>p {
     border-bottom: 0.5em solid var(--btn-color);
