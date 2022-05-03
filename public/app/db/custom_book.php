@@ -111,22 +111,42 @@ class CustomBookSentence extends Table
 		$isList=false;
 		$newSent="";		
 		foreach ($content as $data) {
-			$trimData = trim($data);
-			$newSent .= $trimData;
+            $listHead= "";
+            $isList = false;
 
-			/*
-			$left2 = mb_substr($trimData,0,2,"UTF-8");
-			if($left2 == "- " || $left2 == "* " || $left2 == "+ "){
-				$isList=true;
+			$trimData = trim($data);
+	
+            # 判断是否为list
+			$listLeft =strstr($data,"- ",true);
+			if($listLeft !== FALSE){
+                if(ctype_space($listLeft) || empty($listLeft)){
+                    # - 左侧是空，判定为list
+                    $isList=true;
+                    $iListPos = mb_strpos($data,'- ',0,"UTF-8");
+                    $listHead = mb_substr($data,0,$iListPos+2,"UTF-8");
+                    $listBody = mb_substr($data,$iListPos+2,mb_strlen($data,"UTF-8")-$iListPos+2,"UTF-8");
+                }
 			}
-			*/
+
+            # TODO 判断是否为标题
+            # [#]+\s
+			
 			if(mb_substr($trimData,0,1,"UTF-8")=="|"){
 				$isTable=true;
 			}
-			if($trimData!="" && ($isTable == true || $isList == true)){
+			if($trimData!="" && $isTable == true){
 				$newSent .= "\n";
 				continue;
 			}
+            if($isList == true){
+                $newSent .= $listBody;
+            }else{
+                $newSent .= $trimData;
+            }
+
+			
+
+		
 			#生成句子编号
 			if($trimData==""){
 				#空行
@@ -167,7 +187,7 @@ class CustomBookSentence extends Table
 				#已经有的句子链接不处理
 				$newText .=$trimData."\n";
 			}else{
-				
+                $newText .= $listHead;
 				$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 				$sth->execute(
 						array(
