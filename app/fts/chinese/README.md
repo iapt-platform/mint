@@ -460,11 +460,44 @@ php -d memory_limit=1024M -S 127.0.0.1:8000
 ```text
 龙树林
 异熟识
-鸠摩罗什 nr
-鳩摩羅什 nr
+鸠摩 nr
+罗什 nr
+鳩摩 nr
+羅什 nr
 祗陀林 nz
 我执 10 nz
 ```
+
+> `鸠摩罗什` 拆分为 `鸠摩` 和 `罗什` 加入字典，可以使用户搜索 `鸠摩` 或者 `罗什` 均可命中目标。
+
+更新字典这个变更涉及到所有的词形转换，所以需要手动重建全文检索索引。
+
+两种方式（任选其一）：
+
+1. 你知道改变更会影响哪些记录（比如先进行搜索得出结果）
+
+```sql
+-- dummy update
+UPDATE sample SET author = author,
+               title = title,
+               subtitle = subtitle,
+               content = content
+               WHERE author LIKE '%鸠摩%' OR author LIKE '%鳩摩%';
+```
+
+请依照需要替换查询条件。
+
+2. 这是一个普遍的变更，会影响到很多记录
+
+```sql
+-- dummy update
+UPDATE sample SET author = author,
+               title = title,
+               subtitle = subtitle,
+               content = content;
+```
+
+移除掉 WHERE 条件，将会触发所有记录重新建立索引，会花上很长时间，执行之前请三思。
 
 词性[一览表](https://github.com/fxsjy/jieba#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B)：
 
