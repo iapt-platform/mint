@@ -464,7 +464,7 @@ php -d memory_limit=1024M -S 127.0.0.1:8000
 罗什 nr
 鳩摩 nr
 羅什 nr
-祗陀林 nz
+祗陀林 ns
 我执 10 nz
 ```
 
