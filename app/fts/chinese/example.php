@@ -48,30 +48,69 @@
       or die('Could not connect: ' . pg_last_error());
 
       // Performing SQL query
-      $query = "SELECT
-        ts_rank('{0.1, 0.2, 0.4, 1}',
+      $query = "WITH queries AS (
+    SELECT
+    '$q' AS q1,
+    CASE
+        WHEN '$q' = opencc_t2s('$q') THEN opencc_s2t('$q')
+        ELSE opencc_t2s('$q')
+    END AS q2
+)
+
+SELECT
+    ts_rank('{0.1, 0.2, 0.4, 1}',
         full_text_search_weighted,
-        websearch_to_tsquery('jiebacfg', '$q')) as rank,
+        websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries))) AS rank,
         ts_headline('jiebacfg', author,
-                              websearch_to_tsquery('jiebacfg', '$q'),
+                              websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries)),
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight_author,
         ts_headline('jiebacfg', title,
-                              websearch_to_tsquery('jiebacfg', '$q'),
+                              websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries)),
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight_title,
         ts_headline('jiebacfg', subtitle,
-                              websearch_to_tsquery('jiebacfg', '$q'),
+                              websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries)),
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight_subtitle,
         ts_headline('jiebacfg', content,
-                              websearch_to_tsquery('jiebacfg', '$q'),
+                              websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries)),
                               'StartSel = <span>, StopSel = </span>')
                  AS highlight_content,
         author, title, subtitle, content, full_text_search_weighted
-        FROM sample
-        WHERE full_text_search_weighted @@ websearch_to_tsquery('jiebacfg', '$q')
-        ORDER BY rank DESC LIMIT 20;";
+    FROM sample
+    WHERE
+        full_text_search_weighted @@ websearch_to_tsquery('jiebacfg', (SELECT q1 FROM queries))
+
+UNION
+
+SELECT
+    ts_rank('{0.1, 0.2, 0.4, 1}',
+        full_text_search_weighted,
+        websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries))) - 0.1 AS rank,
+        ts_headline('jiebacfg', author,
+                              websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries)),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_author,
+        ts_headline('jiebacfg', title,
+                              websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries)),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_title,
+        ts_headline('jiebacfg', subtitle,
+                              websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries)),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_subtitle,
+        ts_headline('jiebacfg', content,
+                              websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries)),
+                              'StartSel = <span>, StopSel = </span>')
+                 AS highlight_content,        
+        author, title, subtitle, content, full_text_search_weighted
+    FROM sample
+    WHERE
+        full_text_search_weighted @@ websearch_to_tsquery('jiebacfg', (SELECT q2 FROM queries))
+
+ORDER BY rank DESC LIMIT 20;
+";
       $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
       // Printing results in HTML
