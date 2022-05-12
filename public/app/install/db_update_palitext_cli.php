@@ -92,7 +92,8 @@ if (($fpPaliText = fopen($dirPaliTextBase . $xmlfile, "r")) !== false) {
 
 // 打开csv文件并读取数据
 $inputRow = 0;
-if (($fp = fopen(_DIR_PALI_TITLE_ . "/" . ($from + 1) . "_pali.csv", "r")) !== false) {
+$tocFile = _DIR_PALI_TITLE_ . "/" . ($from + 1) . "_pali.csv";
+if (($fp = fopen($tocFile, "r")) !== false) {
     while (($data = fgetcsv($fp, 0, ',')) !== false) {
         if ($inputRow > 0) {
             $params = $data;
@@ -101,9 +102,9 @@ if (($fp = fopen(_DIR_PALI_TITLE_ . "/" . ($from + 1) . "_pali.csv", "r")) !== f
         $inputRow++;
     }
     fclose($fp);
-    fwrite(STDOUT, "单词表load：" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv". PHP_EOL);
+    fwrite(STDOUT, "Toc load：" . $tocFile. PHP_EOL);
 } else {
-    fwrite(STDERR, "can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv" . PHP_EOL);
+    fwrite(STDERR, "can not open csv file. filename=" . $tocFile . PHP_EOL);
 }
 
 if ((count($arrInserString)) != count($pali_text_array) - 2) {
