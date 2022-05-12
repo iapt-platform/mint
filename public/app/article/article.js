@@ -451,6 +451,7 @@ function reader_get_path() {
                 $("#article_title").html(suttaTitle);
                 $("#page_title").text(suttaTitle);
             }
+            note_ref_init('_self');
 		}
 	);
 }
