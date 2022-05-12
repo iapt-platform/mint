@@ -134,11 +134,12 @@ if ($FetchParInfo) {
 				$ulLevel--;
 			}
 			$currLevel = $value["level"];
-			for ($i=0; $i < $ulLevel; $i++) { 
+            $space = "";
+			for ($i=0; $i < $currLevel; $i++) { 
 				# code...
-				$output["content"] .= "    ";
+				$space .= "  ";
 			}
-			$output["content"] .= "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
+			$output["content"] .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
 		}		
 	}
 
