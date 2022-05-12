@@ -139,7 +139,10 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
     $book = $from + 1;
     $paragraph = $title_data[$iPar]["paragraph"];
 
-    if ((int) $title_data[$iPar]["level"] == 8) {
+/*
+level 8 为 偈诵编号。不当作标题
+*/
+    if ((int)$title_data[$iPar]["level"] == 8) {
         $title_data[$iPar]["level"] = 100;
     }
 
@@ -160,21 +163,29 @@ for ($iPar = 0; $iPar < count($title_data); $iPar++) {
         $length = $paragraph_count - $paragraph + 1;
     }
 
-
+    
+    /*
+    上一个段落
+    算法：查找上一个标题段落。而且该标题段落的下一个段落不是标题段落
+    */
     $prev = -1;
     if ($iPar > 0) {
         for ($iPar1 = $iPar - 1; $iPar1 >= 0; $iPar1--) {
-            if ($title_data[$iPar1]["level"] == $curr_level) {
+            if ($title_data[$iPar1]["level"] < 8 && $title_data[$iPar1+1]["level"]==100) {
                 $prev = $title_data[$iPar1]["paragraph"];
                 break;
             }
         }
     }
 
+    /*
+    上一个段落
+    算法：查找上一个标题段落。而且该标题段落的下一个段落不是标题段落
+    */
     $next = -1;
     if ($iPar < count($title_data) - 1) {
-        for ($iPar1 = $iPar + 1; $iPar1 < count($title_data); $iPar1++) {
-            if ($title_data[$iPar1]["level"] == $curr_level) {
+        for ($iPar1 = $iPar + 1; $iPar1 < count($title_data)-1; $iPar1++) {
+            if ($title_data[$iPar1]["level"] <8 && $title_data[$iPar1+1]["level"]==100) {
                 $next = $title_data[$iPar1]["paragraph"];
                 break;
             }
