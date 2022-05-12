@@ -121,18 +121,24 @@ if ($FetchParInfo) {
 		$ulLevel = 0;
 		foreach ($toc as $key => $value) {
 			# code...
+            if(empty($value["toc"])){
+                $sToc = "unnamed";
+            }else{
+                $sToc = $value["toc"];
+            }
+            $sToc = str_replace(['[',']'],[' [','] '],$sToc);
 			if($value["level"] > $currLevel  ){
 				$ulLevel++;
 			}
 			else if($value["level"] < $currLevel ){
-				$ulLevel--;		
+				$ulLevel--;
 			}
 			$currLevel = $value["level"];
 			for ($i=0; $i < $ulLevel; $i++) { 
 				# code...
 				$output["content"] .= "    ";
 			}
-			$output["content"] .= "- [{$value["toc"]}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
+			$output["content"] .= "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
 		}		
 	}
 

@@ -210,27 +210,32 @@ function render_chapter_head(chapter_info, parent) {
 	html += "</div>";
 	let link = "../reader/?view=chapter&book=" + chapter_info.book + "&par=" + chapter_info.paragraph;
 	html += "<div class='title'>";
+    let sToc = chapter_info.toc;
+    html += "	<div class='title_1'>";
 	if (typeof chapter_info.trans_title == "undefined") {
-		html += "	<div class='title_1'>";
         html += "<a href='" + link + "' target='_blank'>" ;
-        switch (getCookie('language')) {
-            case 'my':
-                html += roman_to_my(chapter_info.text);
-                break;
-            case 'si':
-                html += roman_to_si(chapter_info.text);
-                break;        
-            default:
-                html += chapter_info.text ;
-                break;
+        if(sToc == ""){
+            html += "[unnamed]" ;
+        }else{
+            switch (getCookie('language')) {
+                case 'my':
+                    html += roman_to_my(sToc);
+                    break;
+                case 'si':
+                    html += roman_to_si(sToc);
+                    break;        
+                default:
+                    html += sToc ;
+                    break;
+            }            
         }
+
         html += "</a>";
-        html += "</div>";
 	} else {
-		html +=
-			"	<div class='title_1'><a href='" + link + "' target='_blank'>" + chapter_info.trans_title + "</a></div>";
+        html += "<a href='" + link + "' target='_blank'>" + chapter_info.trans_title + "</a>";
 	}
-	html += "<div class='title_2'>" + chapter_info.text + "</div>";
+    html += "</div>";
+	html += "<div class='title_2'>" + sToc + "</div>";
 	html += "</div>";
 	html += "<div class='res res_more'>";
 	html += "<h2>译文</h2>";
@@ -327,18 +332,22 @@ function palicanon_render_chapter_row(chapter) {
 		chapter.para +
 		'" onclick="chapter_onclick(this)">';
 	html += '<div class="title">';
-
-	if (typeof chapter.trans_title == "undefined") {
+    
+    let sPaliTitle = chapter.title;
+    if(chapter.title==""){
+        sPaliTitle = "unnamed";
+    }
+	if (typeof chapter.trans_title == "undefined" ||  chapter.trans_title == "") {
 		html += "	<div class='title_1'>" ;
         switch (getCookie('language')) {
             case 'my':
-                html += roman_to_my(chapter.title);
+                html += roman_to_my(sPaliTitle);
                 break;
             case 'si':
-                html += roman_to_si(chapter.title);
+                html += roman_to_si(sPaliTitle);
                 break;
             default:
-                html += chapter.title ;
+                html += sPaliTitle ;
                 break;
         }
         
@@ -347,7 +356,7 @@ function palicanon_render_chapter_row(chapter) {
 		html += "	<div class='title_1'>" + chapter.trans_title + "</div>";
 	}
 
-	html += '	<div class="title_2" lang="pali">' + chapter.title + "</div>";
+	html += '	<div class="title_2" lang="pali">' + sPaliTitle + "</div>";
 	html += "</div>";
 	html += '<div class="resource">';
 	if (chapter.progress) {
