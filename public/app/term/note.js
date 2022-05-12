@@ -623,17 +623,17 @@ function onChannelChange() {
 	set_channal(channal_list.join());
 }
 //点击引用 需要响应的事件
-function note_ref_init() {
+function note_ref_init(target='_blank') {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, target);
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=para&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para, target);
 	});
 }
 /*

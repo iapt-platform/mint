@@ -116,26 +116,43 @@ if ($FetchParInfo) {
 		$output["title"] = $toc[0]["toc"];
 	}
 
+    /*
+    目录
+    */
+    $sTocOutput = "\n\n";
 	if(count($toc)>1){
 		$currLevel = $toc[0]["level"];
 		$ulLevel = 0;
+        $minLevel = 8;
+        foreach ($toc as $key => $value) {
+            if($value["level"] < $minLevel ){
+                $minLevel = $value["level"];
+            }
+        }
 		foreach ($toc as $key => $value) {
 			# code...
+            if(empty($value["toc"])){
+                $sToc = "unnamed";
+            }else{
+                $sToc = $value["toc"];
+            }
+            $sToc = str_replace(['[',']'],[' [','] '],$sToc);
 			if($value["level"] > $currLevel  ){
 				$ulLevel++;
 			}
 			else if($value["level"] < $currLevel ){
-				$ulLevel--;		
+				$ulLevel--;
 			}
 			$currLevel = $value["level"];
-			for ($i=0; $i < $ulLevel; $i++) { 
+            $space = "";
+			for ($i=$minLevel; $i < $currLevel; $i++) { 
 				# code...
-				$output["content"] .= "    ";
+				$space .= "  ";
 			}
-			$output["content"] .= "- [{$value["toc"]}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
+			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
 		}		
 	}
-
+$sTocOutput .= "\n\n";
 
     if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($toc) > 1) {
         #文档过大，只加载目录
@@ -146,6 +163,7 @@ if ($FetchParInfo) {
             $output["head"] = 1;
         } else {
             #中间无间隔
+            $output["content"] .= $sTocOutput;
             echo json_encode($output, JSON_UNESCAPED_UNICODE);
             exit;
         }
@@ -179,7 +197,7 @@ if ($FetchParInfo) {
 		$output["content"] .= "{{". $value["book"] . "-" . $value["paragraph"] . "-". $value["begin"] . "-" . $value["end"] . "}}";
 
 	}
-    
+    $output["content"] .= $sTocOutput;
     echo json_encode($output, JSON_UNESCAPED_UNICODE);
 
 } else {

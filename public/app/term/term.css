@@ -1148,6 +1148,7 @@ ul {
     padding-right:10px;
     color: var(--main-color);
 }
+
 .nsy_word>.org{
     display:inline;
     font-weight: 600;
@@ -1157,6 +1158,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
+
 }
 .nsy_word>.org>strong {
     font-weight:900;
