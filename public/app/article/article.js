@@ -162,7 +162,12 @@ function articleFillFootNavButton(article_list,curr_article){
 				$("#contents_nav_left_inner").html("无");
 			}
 			if(index!=article_list.length-1){
-				$("#contents_nav_right_inner").html(article_list[index+1].title);
+                if(article_list[index+1].title==""){
+                    $("#contents_nav_right_inner").html("[unnamed]");
+                }else{
+                    $("#contents_nav_right_inner").html(article_list[index+1].title);
+                }
+				
 				nextArticle = article_list[index+1].article;
 			}else{
 				$("#contents_nav_right_inner").html("无");
@@ -597,7 +602,12 @@ function fill_chapter_nav(){
 				par: prevChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_left_inner").html(data.data.toc);
+            if(data.data.toc==""){
+                $("#contents_nav_left_inner").html("[unnamed]");
+            }else{
+                $("#contents_nav_left_inner").html(data.data.toc);
+            }
+			
 		});		
 	}else{
 		$("#contents_nav_left_inner").html("无");
@@ -612,7 +622,12 @@ function fill_chapter_nav(){
 				par: nextChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_right_inner").html(data.data.toc);
+            if(data.data.toc==""){
+                $("#contents_nav_right_inner").html("[unnamed]");
+            }else{
+                $("#contents_nav_right_inner").html(data.data.toc);
+            }
+			
 		});		
 	}else{
 		$("#contents_nav_right_inner").html("无");
