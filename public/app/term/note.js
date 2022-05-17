@@ -1576,6 +1576,32 @@ function hidden_control(obj) {
 	}
 }
 
+function renderChannelButton(eChannel,obj){
+    let html="";
+    if (_channal.indexOf(eChannel.uid) < 0) {
+        html += '<li class="channel_name" onclick="';
+        html +=
+            "new_sentence('" +
+            $(obj).parent().attr("book") +
+            "' ,'" +
+            $(obj).parent().attr("para") +
+            "' ,'" +
+            $(obj).parent().attr("begin") +
+            "' ,'" +
+            $(obj).parent().attr("end") +
+            "' ,'" +
+            eChannel.uid +
+            "',this)";
+        html += '" title="' + eChannel.nickname;
+        html += '">' + eChannel.name;
+        if (parseInt(eChannel.power) < 20) {
+            html += "(建议)";
+        }
+        html += "</li>";
+    }
+    return html;
+}
+
 function add_new_tran_button_click(obj) {
 
 	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
@@ -1593,27 +1619,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+            html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "<li><a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a></li>"
@@ -1626,27 +1632,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1657,27 +1643,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == true) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1688,27 +1654,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1902,7 +1848,7 @@ function set_more_button_display() {
 function note_edit_sentence(book, para, begin, end, channal) {
 	let channalInfo;
 	for (const iterator of _channalData) {
-		if (iterator.id == channal) {
+		if (iterator.uid == channal) {
 			channalInfo = iterator;
 			break;
 		}
