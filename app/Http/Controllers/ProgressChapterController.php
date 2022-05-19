@@ -20,43 +20,53 @@ class ProgressChapterController extends Controller
         $chapters=false;
         switch ($request->get('view')) {
 			case 'studio':
-            #查询该studio的channel
-            $channels = Channel::where('owner_uid',$request->get('id'))->select('uid')->get();
-            $aChannel = [];
-            foreach ($channels as $channel) {
-                # code...
-                $aChannel[] = $channel->uid;
-            }
-            $chapters = ProgressChapter::select($selectCol)
-                                       ->whereIn('progress_chapters.channel_id', $aChannel)
-                                       ->leftJoin('pali_texts', function($join)
-                                            {
-                                                $join->on('progress_chapters.book', '=', 'pali_texts.book');
-                                                $join->on('progress_chapters.para','=','pali_texts.paragraph');
-                                            })
-                                       ->where('progress','>',0.85)
-                                       ->orderby('progress_chapters.created_at','desc')
-                                       ->get();
-
-            break;
+                #查询该studio的channel
+                $channels = Channel::where('owner_uid',$request->get('id'))->select('uid')->get();
+                $aChannel = [];
+                foreach ($channels as $channel) {
+                    # code...
+                    $aChannel[] = $channel->uid;
+                }
+                $chapters = ProgressChapter::select($selectCol)
+                                        ->whereIn('progress_chapters.channel_id', $aChannel)
+                                        ->leftJoin('pali_texts', function($join)
+                                                {
+                                                    $join->on('progress_chapters.book', '=', 'pali_texts.book');
+                                                    $join->on('progress_chapters.para','=','pali_texts.paragraph');
+                                                })
+                                        ->where('progress','>',0.85)
+                                        ->orderby('progress_chapters.created_at','desc')
+                                        ->get();
+                break;
             case 'tag':
-            $aChannel = [67,68,69,70];
-            $chapters = ProgressChapter::select($selectCol)
-                                       ->whereIn('progress_chapters.book', $aChannel)
-                                       ->leftJoin('pali_texts', function($join)
-                                            {
-                                                $join->on('progress_chapters.book', '=', 'pali_texts.book');
-                                                $join->on('progress_chapters.para','=','pali_texts.paragraph');
-                                            })
-                                       ->orderby('progress','desc')
-                                       ->get();
-            break;
+                $aChannel = [67,68,69,70];
+                $chapters = ProgressChapter::select($selectCol)
+                                        ->whereIn('progress_chapters.book', $aChannel)
+                                        ->leftJoin('pali_texts', function($join)
+                                                {
+                                                    $join->on('progress_chapters.book', '=', 'pali_texts.book');
+                                                    $join->on('progress_chapters.para','=','pali_texts.paragraph');
+                                                })
+                                        ->orderby('progress','desc')
+                                        ->get();
+                break;
+            case 'done':
+                $chapters = ProgressChapter::select($selectCol)
+                                        ->where('progress','>',0.85)
+                                        ->leftJoin('pali_texts', function($join)
+                                                {
+                                                    $join->on('progress_chapters.book', '=', 'pali_texts.book');
+                                                    $join->on('progress_chapters.para','=','pali_texts.paragraph');
+                                                })
+                                        ->orderby('progress_chapters.created_at','desc')
+                                        ->get();
+                break;
         }
-            if($chapters){
-                return $this->ok(["rows"=>$chapters,"count"=>count($chapters)]);
-            }else{
-                return $this->error("没有查询到数据");
-            }
+        if($chapters){
+            return $this->ok(["rows"=>$chapters,"count"=>count($chapters)]);
+        }else{
+            return $this->error("没有查询到数据");
+        }
     }
 
     /**
