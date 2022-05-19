@@ -114,7 +114,7 @@ class SentenceInfoController extends Controller
                             ->value('length');
                 */
                 $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-                $para_strlen += Cache::get(env('REDIS_NAMESPACE').'/pali/strlen/'.$key_sent_id, function() use($sent) {
+                $para_strlen += Cache::get(env('REDIS_NAMESPACE').'pali-sent/strlen/'.$key_sent_id, function() use($sent) {
                     return PaliSentence::where('book',$sent->book_id)
                             ->where('paragraph',$sent->paragraph)
                             ->where('word_begin',$sent->word_start)
