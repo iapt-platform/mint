@@ -162,7 +162,12 @@ function articleFillFootNavButton(article_list,curr_article){
 				$("#contents_nav_left_inner").html("无");
 			}
 			if(index!=article_list.length-1){
-				$("#contents_nav_right_inner").html(article_list[index+1].title);
+                if(article_list[index+1].title==""){
+                    $("#contents_nav_right_inner").html("[unnamed]");
+                }else{
+                    $("#contents_nav_right_inner").html(article_list[index+1].title);
+                }
+				
 				nextArticle = article_list[index+1].article;
 			}else{
 				$("#contents_nav_right_inner").html("无");
@@ -388,7 +393,11 @@ function palicanon_load() {
 					let result = JSON.parse(data);
 					if (result) {
 						_sent_data=result;
-						$("#article_title").html(result.title);
+                        if(result.title==""){
+                            $("#article_title").html("[unnamed]");
+                        }else{
+                            $("#article_title").html(result.title);
+                        }
 						$("#article_path_title").html(result.title);
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
@@ -435,8 +444,14 @@ function reader_get_path() {
 			let suttaTitle = $("chapter").last().html();
 
 			$("#pali_pedia").html(bookTitle);
-			$("#article_title").html(suttaTitle);
-			$("#page_title").text(suttaTitle);
+            if(suttaTitle==""){
+                $("#article_title").html("[unnamed]");
+                $("#page_title").text("[unnamed]");
+            }else{
+                $("#article_title").html(suttaTitle);
+                $("#page_title").text(suttaTitle);
+            }
+            note_ref_init('_self');
 		}
 	);
 }
@@ -523,17 +538,22 @@ function render_toc(){
 					prevChapter = it.prev_chapter;
 				}
                 let strTitle;
-                switch (getCookie('language')) {
-                    case 'my':
-                        strTitle = roman_to_my(it.toc);
-                        break;
-                    case 'si':
-                        strTitle = roman_to_si(it.toc);
-                        break;
-                    default:
-                        strTitle = it.toc;
-                        break;
+                if(it.toc==""){
+                    strTitle  = "[unnamed]";
+                }else{
+                    switch (getCookie('language')) {
+                        case 'my':
+                            strTitle = roman_to_my(it.toc);
+                            break;
+                        case 'si':
+                            strTitle = roman_to_si(it.toc);
+                            break;
+                        default:
+                            strTitle = it.toc;
+                            break;
+                    }                    
                 }
+
 				arrToc.push({article:it.paragraph,title:strTitle,title_roman:it.toc,level:it.level});
 			}
 			$("#toc_content").fancytree({
@@ -583,7 +603,12 @@ function fill_chapter_nav(){
 				par: prevChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_left_inner").html(data.data.toc);
+            if(data.data.toc==""){
+                $("#contents_nav_left_inner").html("[unnamed]");
+            }else{
+                $("#contents_nav_left_inner").html(data.data.toc);
+            }
+			
 		});		
 	}else{
 		$("#contents_nav_left_inner").html("无");
@@ -598,7 +623,12 @@ function fill_chapter_nav(){
 				par: nextChapter,
 			}
 		).done(function (data) {
-			$("#contents_nav_right_inner").html(data.data.toc);
+            if(data.data.toc==""){
+                $("#contents_nav_right_inner").html("[unnamed]");
+            }else{
+                $("#contents_nav_right_inner").html(data.data.toc);
+            }
+			
 		});		
 	}else{
 		$("#contents_nav_right_inner").html("无");

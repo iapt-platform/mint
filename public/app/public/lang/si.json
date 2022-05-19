@@ -233,7 +233,7 @@
 		"part": "Factors",
 		"partmeaning": "Factor-Meaning",
 		"password": "Password",
-		"password_again": "Password again",
+		"password_again": "Confirm Password",
 		"past": "අතික්කන්ත ",
 		"pcd_studio": "පාලි කැනොන් දත්තගබඩාව කලාකුටිය",
 		"piṭaka": "පිටක",
@@ -659,6 +659,7 @@
 		"caus": "caus.",
 		"pass": "pass.",
 		"space": "&nbsp;",
+		"channel_type": "channel type",
 		"": ""
 	},
 	"grammastr": [

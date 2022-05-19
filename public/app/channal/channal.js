@@ -220,7 +220,7 @@ function my_channal_edit(id) {
 					html += "</div>";
 
 					html += '<div style="display:flex;line-height:32px;">';
-					html += '<div style="flex:2;">' + gLocal.gui.privacy + "</div>";
+					html += '<div style="flex:2;">' + gLocal.gui.channel_type + "</div>";
 					html += '<div style="flex:8;">';
                     html += "<select id = 'type'  name = 'type'>";
 					for (const iterator of enumChannelType) {

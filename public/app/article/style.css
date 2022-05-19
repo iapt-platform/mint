@@ -39,7 +39,7 @@
 
 .main_view {
 	padding: 0 1em;
-	padding-top: 7em;
+	padding-top: calc(50px + 36px + 1vh);
 	/*max-width: 1280px;*/
 	margin-left: 0;
 	margin-right: auto;
@@ -78,7 +78,7 @@
 	border-bottom: 1px solid gray;
 	margin-right: 10px;
 	margin-bottom: 10px;
-	width: 30vw
+	width: 30vw;
 	transition: all 0.5s ease;
 }
 .fun_frame .title {
@@ -212,7 +212,7 @@ img {
     position: absolute;
     margin-top: 0;
     margin-left: -30px;
-    font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
+    font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans Myanmar", Arial, Verdana;
     color: var(--main-color1);
     font-size: 80%;
 }
@@ -329,4 +329,8 @@ table {
 }
 tr {
   border-bottom: 1px solid gray;
+}
+
+#article_title{
+    font-family: noto serif;
 }

@@ -670,7 +670,8 @@ pw {
 	overflow-wrap: anywhere;
 }
 .preview {
-	font-size: 110%;
+	/*font-size: 110%;*/
+    line-height: 150%;
     width: -webkit-fill-available;
 }
 .preview::first-letter {
@@ -813,7 +814,7 @@ li.active {
 .sent_tran .preview p {
 	line-height: normal;
 	margin: 0;
-	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", "ATaiThamKHNewV3-Normal", "Arial",
+	font-family: "Noto Sans", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans Myanmar", "ATaiThamKHNewV3-Normal", "Arial",
 		"Verdana";
 }
 .pop_menu .icon {
@@ -916,7 +917,10 @@ w:hover {
 .sent_mode .note_shell {
 	display: block;
 }
-.sent_tran p {
+.preview p:first-child {
+	display: inline;
+}
+.sent_tran p:first-child {
 	display: inline;
 }
 .sent_tran li {
@@ -1037,6 +1041,15 @@ pali>p {
 .para_mode .palitext{
 	text-indent: 2em;
 }
+.para_mode li .palitext{
+	text-indent: -1em;
+}
+
+ul {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-left: 18px;
+}
 
 .sent_mode>div>p {
     border-bottom: 0.5em solid var(--btn-color);
@@ -1129,17 +1142,52 @@ pali>p {
 .preview .nissaya{
     display:inline;
 }
-.preview .nissaya .nsy_word{
+
+.nsy_word{
+    display:inline;
     padding-right:10px;
+    color: var(--main-color);
 }
-.preview .nissaya .nsy_word .org{
+
+.nsy_word>.org{
     display:inline;
-    font-weight: 700;
+    font-weight: 600;
+    padding-right: 0.5em;
+    font-size: unset;
 }
-.preview .nissaya .nsy_word .meaning{
+.nsy_word>.meaning{
     display:inline;
-    font-weight: 500;
+    font-weight: 400;
+
+}
+.nsy_word>.org>strong {
+    font-weight:900;
+}
+
+
+.nsy_word>.meaning>.grammar_tag{
+    background: unset;
 }
 span.sent_tran::first-letter {
     text-transform: capitalize;
+}
+
+guide.grammar_tag {
+    display: unset;
+    background: unset;
+    background-color: var(--btn-color);
+    padding: 0;
+    border-radius: 3px;
+	margin: 0;
+
+}
+guide.grammar_tag:hover {
+	text-decoration: underline;
+}
+
+button.primary {
+    padding: 6px 32px;
+    background-color: var(--link-hover-color);
+    color: var(--btn-hover-color);
+    border-radius: 5px;
 }

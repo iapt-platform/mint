@@ -6,6 +6,8 @@ use App\Http\Controllers\WbwTemplateController;
 use App\Http\Controllers\DhammaTermController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\ProgressChapterController;
+use App\Http\Controllers\SentenceInfoController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes

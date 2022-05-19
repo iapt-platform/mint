@@ -569,7 +569,7 @@
 		"composition_intro": "依巴利而<b>著</b><br>为明法而<b>作</b>",
 		"jump_to_this_sent": "跳转到此句",
 		"show_nissaya": "显示nissaya",
-		"related_para": "相应段落",
+		"related_para": "相关根本与注释",
 		"disable": "停用",
 		"disable_note": "停用，即使自己也无法更新",
 		"not_found": "未找到",
@@ -657,6 +657,7 @@
 		"caus": "使役",
 		"pass": "被动",
 		"space": "",
+		"channel_type": "资源类型",
 		"": ""
 	},
 	"grammastr": [

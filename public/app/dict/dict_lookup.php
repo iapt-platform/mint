@@ -46,7 +46,7 @@ $right_word_list = "";
         PDO_Connect("" . _FILE_DB_REF_);
         //直接查询
 
-        $query = "SELECT dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where word = ? limit 100";
+        $query = "SELECT dict.id, dict.dict_id,dict.mean,info.shortname from " . _TABLE_DICT_REF_ . " LEFT JOIN "._TABLE_DICT_REF_NAME_." as info ON dict.dict_id = info.id where word = ? limit 100";
 
         $Fetch = PDO_FetchAll($query, array($word));
         $iFetch = count($Fetch);

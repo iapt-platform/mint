@@ -19,7 +19,7 @@
 }
 
 body {
-	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Padauk", Arial, Verdana;
+	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans Myanmar", Arial, Verdana;
 	font-style: normal;
 	color: var(--main-color);
 	font-weight: 400;
@@ -252,7 +252,7 @@ a:active {
 
 .mainview {
 	background-color: var(--bg-color);
-	padding: 0 50px;
+	padding-left: 50px;
 	z-index: 1;
 	float: left;
 	-webkit-transition-duration: 0.4s;
@@ -4090,6 +4090,7 @@ border-bottom: 2px solid red;
 	display: none;
 	/*margin-top: calc(-1em - 29px);*/
 	margin-top: -20px;
+	max-width: 30vw;
 
 }
 .trans_sent_edit{

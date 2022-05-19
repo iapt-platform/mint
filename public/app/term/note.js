@@ -217,6 +217,9 @@ function note_refresh_new(callback = null) {
 						//初始化mermaid
 						mermaid.initialize({startOnLoad:true});
 
+                        //初始化气泡
+                        guide_init();
+
 					} catch (e) {
 						console.error(e);
 					}
@@ -620,17 +623,17 @@ function onChannelChange() {
 	set_channal(channal_list.join());
 }
 //点击引用 需要响应的事件
-function note_ref_init() {
+function note_ref_init(target='_blank') {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, target);
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=para&book=" + bookid + "&par=" + para, "_blank");
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para, target);
 	});
 }
 /*
@@ -1000,7 +1003,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
             }else{
                 tranText = iterator.text;
             }
-			tranText = note_init(term_std_str_to_tran(tranText, iterator.channal, iterator.editor, iterator.lang));
+			tranText = note_init(tranText, iterator.channal, iterator.editor, iterator.lang);
             if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
                 tranText = "<div class='nissaya'>"+tranText+"</div>";
             }
@@ -1255,32 +1258,190 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	html += "</div>";
 	return html;
 }
+//渲染nissaya单词
 function renderNissayaPreview(str){
     let html ='';
-    //html +="<div class='nissaya'>";
     const sent = str.split("\n");
     for (const iterator of sent) {
         const word =  iterator.split("=");
         if(iterator.indexOf('=')>=0){
             html += "<span class='nsy_word'>"
-            html += "<span class='org'>";
+            html += "<span class='org' lang=";
             switch (getCookie('language')) {
                 case 'my':
+                    html += "'my' >";
                     html +=  $.trim(word[0]) + "၊";
                     break;
                 default:
+                    html += "'en' >";
                     html += my_to_roman(word[0]);
                     break;
             }
             html += "</span>";
-            html += "<span class='meaning'>"+ word[1]+"</span>";
+            html += "<span class='meaning'>";
+            if (getCookie('language') !="my") {
+                let noPeriod = word[1].split('။');
+                noPeriod[0] = myEndingTooltip(noPeriod[0]);
+                html += noPeriod.join('။');
+            }else{
+                html += word[1];
+            }
+            html += "</span>";
             html += "</span>";
         }else{
             html += iterator;
         }
+        html += "\n";
     }
-    //html += "</div>";
     return html;
+}
+//缅文语尾高亮和提示气泡
+function myEndingTooltip(inStr){
+    let myEnding=[
+        {
+            id:"my_nom1",
+            name:"သည်",
+            tooltip:'主语',
+        },
+        {
+            id:"my_nom2",
+            name:"ကား",
+            tooltip:'主格/主语',
+        },        
+        {
+            id:"my_nom3",
+            name:"က",
+            tooltip:'主格/主语',
+        },        
+        {
+            id:"my_acc1",
+            name:"ကို",
+            tooltip:'宾格/宾语',
+        },
+        {
+            id:"my_acc2",
+            name:"သို့",
+            tooltip:'宾格/趋向',
+        },
+        {
+            id:"my_inst1",
+            name:"ဖြင့်",
+            tooltip:'具格/用',
+        },
+        {
+            id:"my_inst2",
+            name:"နှင့်",
+            tooltip:'具格/与',
+        },
+        {
+            id:"my_inst3",
+            name:"ကြောင့်",
+            tooltip:'具格/凭借;从格/原因',
+        },
+        {
+            id:"my_dat1",
+            name:"အား",
+            tooltip:'目的格/对象(间接宾语)，对……来说',
+        },
+        {
+            id:"my_dat2",
+            name:"ငှာ",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_abl1",
+            name:"မှ",
+            tooltip:'从格/表示来源，从……',
+        },
+        {
+            id:"my_abl2",
+            name:"အောက်",
+            tooltip:'从格/表达比较，比……多',
+        },
+        {
+            id:"my_abl3",
+            name:"ထက်",
+            tooltip:'从格/表达比较，比……少',
+        },
+        {
+            id:"my_gen1",
+            name:"၏",
+            tooltip:'属格/的',
+        },
+        {
+            id:"my_gen2",
+            name:"တွင်",
+            tooltip:'属格/表达范围，……中的',
+        },
+        {
+            id:"my_loc1",
+            name:"၌",
+            tooltip:'处格/处(范围)',
+        },
+        {
+            id:"my_loc2",
+            name:"ကြောင့်",
+            tooltip:'处格/表达动机，因……，旨在……',
+        },
+        {
+            id:"my_abs",
+            name:"၍",
+            tooltip:'连续体',
+        },
+        {
+            id:"my_pl",
+            name:"တို့",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"များ",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"ကုန်",
+            tooltip:'复数',
+        },
+        {
+            id:"my_pl",
+            name:"ကြ",
+            tooltip:'复数',
+        },
+        {
+            id:"my_time",
+            name:"ပတ်လုံး",
+            tooltip:'时间的整数',
+        },
+        {
+            id:"my_time",
+            name:"လုံလုံး",
+            tooltip:'时间的整数',
+        },
+        {
+            id:"my_length",
+            name:"တိုင်တိုင်",
+            tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_length",
+            name:"တိုင်အောင်",
+            tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_def",
+            name:"နေစဉ်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
+    ];
+
+    for (const iterator of myEnding) {
+        if(inStr.indexOf(iterator.name)>=0){
+			eval("inStr=inStr.replace(/" + iterator.name + " /g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide> \");");
+			eval("inStr=inStr.replace(/" + iterator.name + "$/g,\"<guide gid='grammar_"+iterator.id+"' class='grammar_tag' style='display:unset;'>\"+iterator.name+\"</guide>\");");
+        }
+    }
+    return inStr;
 }
 function tran_sent_textarea_event_init() {
 	let textarea = document.querySelectorAll(".tran_sent_textarea");
@@ -1393,7 +1554,7 @@ function render_one_sent_tran(book, para, begin, end, iterator) {
 			"</span>";
 	} else {
 		//note_init处理句子链接
-		output += note_init(term_std_str_to_tran(iterator.text, iterator.channal, iterator.editor, iterator.lang));
+		output += note_init(iterator.text, iterator.channal, iterator.editor, iterator.lang);
 	}
 	output += "</div>";
 	//译文正文结束
@@ -1415,6 +1576,32 @@ function hidden_control(obj) {
 	}
 }
 
+function renderChannelButton(eChannel,obj){
+    let html="";
+    if (_channal.indexOf(eChannel.uid) < 0) {
+        html += '<li class="channel_name" onclick="';
+        html +=
+            "new_sentence('" +
+            $(obj).parent().attr("book") +
+            "' ,'" +
+            $(obj).parent().attr("para") +
+            "' ,'" +
+            $(obj).parent().attr("begin") +
+            "' ,'" +
+            $(obj).parent().attr("end") +
+            "' ,'" +
+            eChannel.uid +
+            "',this)";
+        html += '" title="' + eChannel.nickname;
+        html += '">' + eChannel.name;
+        if (parseInt(eChannel.power) < 20) {
+            html += "(建议)";
+        }
+        html += "</li>";
+    }
+    return html;
+}
+
 function add_new_tran_button_click(obj) {
 
 	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
@@ -1432,27 +1619,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+            html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "<li><a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a></li>"
@@ -1465,27 +1632,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1496,27 +1643,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == true) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1527,27 +1654,7 @@ function add_new_tran_button_click(obj) {
 	html += "</li>";
 	for (const iterator of _my_channal) {
 		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
-			if (_channal.indexOf(iterator.id) < 0) {
-				html += '<li class="channel_name" onclick="';
-				html +=
-					"new_sentence('" +
-					$(obj).parent().attr("book") +
-					"' ,'" +
-					$(obj).parent().attr("para") +
-					"' ,'" +
-					$(obj).parent().attr("begin") +
-					"' ,'" +
-					$(obj).parent().attr("end") +
-					"' ,'" +
-					iterator.id +
-					"',this)";
-				html += '" title="' + iterator.nickname;
-				html += '">' + iterator.name;
-				if (parseInt(iterator.power) < 20) {
-					html += "(建议)";
-				}
-				html += "</li>";
-			}
+			html += renderChannelButton(iterator,obj);
 		}
 	}
 	html += "</ul>";
@@ -1715,7 +1822,8 @@ function set_more_button_display() {
                                 if(channelType==='commentary'){
                                     note_refresh_new();
                                 }
-
+                                popup_init();
+                                guide_init();
 								//初始化文本编辑框消息处理
 								tran_sent_textarea_event_init();
 							}
@@ -1740,7 +1848,7 @@ function set_more_button_display() {
 function note_edit_sentence(book, para, begin, end, channal) {
 	let channalInfo;
 	for (const iterator of _channalData) {
-		if (iterator.id == channal) {
+		if (iterator.uid == channal) {
 			channalInfo = iterator;
 			break;
 		}
@@ -1935,7 +2043,9 @@ function sent_save_callback(data) {
 					}
                     switch (thisChannel.type) {
                         case 'nissaya':
-                            divPreview.html(renderNissayaPreview(result.text));
+                            divPreview.html(
+                                "<div class='nissaya'>"+note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang)+"</div>"
+                                );
                             break;
                         case 'commentary':
                             divPreview.html(
@@ -1945,12 +2055,14 @@ function sent_save_callback(data) {
                         break;
                         default:
                             divPreview.html(
-                                marked(term_std_str_to_tran(result.text, result.channal, result.editor, result.lang))
+                                note_init(result.text, result.channal, result.editor, result.lang)
                             );
                             term_updata_translation();                        
                             break;
                     }
 					popup_init();
+                    //初始化气泡
+                    guide_init();
 				}
 			}
 		} else if (result.commit_type == 3) {
