@@ -283,3 +283,16 @@ li.level_1.selected {
 	display: flex;
 	flex-flow: wrap;
 }
+
+.chapter_list .more_info{
+    display:none;
+}
+.head_bar{
+    display:flex;
+}
+.book_view .list li {
+    width: 180px;
+    height: unset;
+    margin: unset;
+    border: unset;
+}
