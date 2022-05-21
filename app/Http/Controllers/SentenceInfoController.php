@@ -106,21 +106,22 @@ class SentenceInfoController extends Controller
             $para_strlen = 0;
             foreach ($sentFinished as $sent) {
                 # code...
-                /*
-                $para_strlen += PaliSentence::where('book',$request->get('book'))
-                            ->where('paragraph',$sent->paragraph)
-                            ->where('word_begin',$sent->word_start)
-                            ->where('word_end',$sent->word_end)
-                            ->value('length');
-                */
-                $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-                $para_strlen += Cache::get(env('REDIS_NAMESPACE').'pali-sent/strlen/'.$key_sent_id, function() use($sent) {
-                    return PaliSentence::where('book',$sent->book_id)
-                            ->where('paragraph',$sent->paragraph)
-                            ->where('word_begin',$sent->word_start)
-                            ->where('word_end',$sent->word_end)
-                            ->value('length');
-                });
+                if($request->get('cache')=="1"){
+                    $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
+                    $para_strlen += Cache::get(env('REDIS_NAMESPACE').'pali-sent/strlen/'.$key_sent_id, function() use($sent) {
+                        return PaliSentence::where('book',$sent->book_id)
+                                ->where('paragraph',$sent->paragraph)
+                                ->where('word_begin',$sent->word_start)
+                                ->where('word_end',$sent->word_end)
+                                ->value('length');
+                    });
+                }else{
+                    $para_strlen += PaliSentence::where('book',$request->get('book'))
+                                ->where('paragraph',$sent->paragraph)
+                                ->where('word_begin',$sent->word_start)
+                                ->where('word_end',$sent->word_end)
+                                ->value('length');                    
+                }
             }
 
             $percent = $para_strlen / $allStrLen;
