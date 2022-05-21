@@ -3,6 +3,8 @@ var list_tag = new Array();
 var currTagLevel0 = new Array();
 var allTags = new Array();
 var arrMyTerm = new Array();
+var _listView="card";
+var gBreadCrumbs=['','','','','','','','',''];
 
 palicanon_load_term();
 
@@ -118,7 +120,7 @@ function tag_changed() {
 					}
 				}
 
-				if (arrBookList.length < 50 || (arrBookList.length > 50 && iterator.level == 1)) {
+				if (arrBookList.length < 20 || (arrBookList.length > 20 && iterator.level == 1)) {
 					arrChapter.push(iterator);
 				}
 			}
@@ -134,13 +136,24 @@ function tag_changed() {
 			tag_render_others();
 			palicanon_chapter_list_apply(0);
 			$("#list-1").html(render_chapter_list(arrChapter));
-			if (arrBookList.length < 50) {
-				$("#list_shell_1").removeClass("book_view");
-			} else {
-				$("#list_shell_1").addClass("book_view");
-			}
+
 		}
 	);
+}
+function viewChanged(obj){
+
+    _listView = $(obj).val();
+    updateFirstListView();
+}
+
+function updateFirstListView(){
+    if(_listView == "list"){
+        $("#list_shell_1").removeClass("book_view");
+        $("#list_shell_1").addClass("list_view");
+    }else{
+        $("#list_shell_1").addClass("book_view");
+        $("#list_shell_1").removeClass("list_view");
+    }
 }
 
 function palicanon_load_chapter(book, para, div_index = 1) {
@@ -294,6 +307,8 @@ function palicanon_chapter_list_apply(div_index) {
 	$("#list_shell_" + (iDiv + 1)).html(html);
 	$("#list_shell_" + (iDiv + 1)).removeClass();
 	$("#list_shell_" + (iDiv + 1)).addClass("show");
+	
+
 	//隐藏之后的列表
 	for (let index = iDiv + 2; index <= 8; index++) {
 		$("#list_shell_" + index).removeClass();
@@ -305,12 +320,17 @@ function palicanon_chapter_list_apply(div_index) {
 
 	$("#list_shell_" + iDiv).removeClass();
 	$("#list_shell_" + iDiv).addClass("list");
+
+    updateFirstListView();
 }
 
 function chapter_onclick(obj) {
 	let book = $(obj).attr("book");
 	let para = $(obj).attr("para");
-	let level = $(obj).parent().attr("level");
+	let level =  parseInt($(obj).parent().attr("level"));
+    let title1 = $(obj).find(".title_1").first().text();
+    gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
+    RenderBreadCrumbs();
 	$(obj).siblings().removeClass("selected");
 	$(obj).addClass("selected");
 	$("#tag_list").slideUp();
@@ -321,7 +341,7 @@ function palicanon_render_chapter_row(chapter) {
 	let html = "";
 	let levelClass = "";
 	if (chapter.level == 1) {
-		levelClass = " level_1";
+		//levelClass = " level_1";
 	}
 	html +=
 		'<li class="' +
@@ -331,7 +351,21 @@ function palicanon_render_chapter_row(chapter) {
 		'" para="' +
 		chapter.para +
 		'" onclick="chapter_onclick(this)">';
+    
+	html += '<div class="head_bar">';
+
+    html += '<span class="" style="margin-right: 1em;padding: 4px 0;">';
+    html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+    if (chapter.level == 1) {
+	    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+    }else{
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+    }
+	html += "</svg>" ;
+	html += "</span>";   
+
 	html += '<div class="title">';
+
     
     let sPaliTitle = chapter.title;
     if(chapter.title==""){
@@ -359,6 +393,8 @@ function palicanon_render_chapter_row(chapter) {
 	html += '	<div class="title_2" lang="pali">' + sPaliTitle + "</div>";
 	html += "</div>";
 	html += '<div class="resource">';
+    //绘制进度圈
+    /*
 	if (chapter.progress) {
 		let r = 12;
 		let perimeter = 2 * Math.PI * r;
@@ -374,9 +410,41 @@ function palicanon_render_chapter_row(chapter) {
 			'"></circle>';
 		html += "</svg>";
 	}
-	html += '<div class="res_more">';
-	html += " ";
-	html += "	</div>";
+    */
+	html += "</div>";
+	html += "</div>";//end of head bar
+
+
+    html += '<div class="more_info">';
+
+    html += "<span class='item'>";
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";
+	html += "</svg>" ;
+    html += "Saratadipani";
+    html += "</span>"
+    
+	html += "<span class='item'>";
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
+	html += "</svg>" ;
+    if(chapter.progress){
+        html += parseInt(chapter.progress.all_trans*100+1)+"%";
+    }else{
+         html += "无";
+    }
+    
+    html += "</span>";
+
+	html += "<span class='item'>";
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person'>";
+	html += "</svg>" ;
+    html += "简体中文(3)";
+    html += "</span>";
+
+
+
 	html += "</div>";
 	html += "</li>";
 	return html;
@@ -443,6 +511,12 @@ function tag_click(tag) {
 	tag_changed();
 }
 
+function tag_set(tag) {
+	list_tag = tag;
+	render_tag_list();
+	tag_changed();
+}
+
 function render_tag_list() {
 	$("#tag_list").slideDown();
 
@@ -484,8 +558,11 @@ function chapter_back(parent) {
 	let curr = parseInt(parent) + 1;
 	let prt = parseInt(parent);
 	//隐藏当前的
-	$("#list_shell_" + curr).removeClass();
-	$("#list_shell_" + curr).addClass("hidden");
+    for (let index = curr; index < 8; index++) {
+	    $("#list_shell_" + index).removeClass();
+	    $("#list_shell_" + index).addClass("hidden");        
+        gBreadCrumbs[index-1]='';
+    }
 
 	//展开上一个
 	$("#list-" + prt).removeClass();
@@ -493,4 +570,87 @@ function chapter_back(parent) {
 
 	$("#list_shell_" + prt).removeClass();
 	$("#list_shell_" + prt).addClass("show");
+
+    RenderBreadCrumbs();
+}
+
+
+function loadTagCategory(name="defualt"){
+    $.getJSON("./category/"+name+".json",function(result){
+        console.log(tocGetTagCategory(result));
+        $("#tag-category").html("");
+        $("#tag-category").fancytree({
+            autoScroll: true,
+            selectMode: 1, // 1:single, 2:multi, 3:multi-hier
+            checkbox: false, // Show checkboxes.
+            source: tocGetTagCategory(result),
+            click: function(e, data) {
+                    //tag_set([data.node.title]);
+                },
+            activate: function(e, data) {
+//				alert("activate " + );
+                //currSelectNode = data.node;
+                tag_set(arrTagCategory[data.node.key]);
+            },
+            select: function(e, data) {
+                // Display list of selected nodes
+                currSelectNode = data.tree.getSelectedNodes();
+                }
+        });
+
+  });
+
+}
+
+var arrTagCategory = new Array();
+function tocGetTagCategory(data){
+    let output = new Array();
+    for (const iterator of data) {
+        let item = {key:com_uuid(),title:iterator.name,tag:iterator.tag};
+        arrTagCategory[item.key] = iterator.tag;
+        if(typeof iterator.children !== "undefined"){
+            item.children = tocGetTagCategory(iterator.children);
+        }
+        output.push(item);
+    }
+    return output;
+}
+
+function loadTagCategoryIndex(){
+    $.getJSON("./category/index.json",function(result){
+            let indexFilename = localStorage.getItem('palicanon_tag_category');
+            if(!indexFilename){
+                indexFilename = "defualt";
+            }
+        let html="";
+        for (const iterator of result) {
+            html += "<option ";
+            if(indexFilename==iterator.file){
+                html += " selected ";
+            }
+            html += " value='"+iterator.file+"'>"+iterator.name+"</option>";
+        }
+        $("#tag_category_index").html(html);
+    });
+}
+
+function TagCategoryIndexchange(obj){
+    localStorage.setItem('palicanon_tag_category',$(obj).val());
+    //loadTagCategory($(obj).val());
+     location.reload();
+}
+
+function RenderBreadCrumbs(){
+    let html = "";
+    html += '<a onclick="chapter_back(1)">home</a>';
+    for (const iterator of gBreadCrumbs) {
+        if(iterator.title1){
+            html += " > ";
+            html += '<a onclick="chapter_back('+(iterator.level+1)+')">';
+            html += iterator.title1;
+            html += '</a>';
+        }
+    }
+
+    $("#bread-crumbs").html(html);
 }
