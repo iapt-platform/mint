@@ -8,6 +8,96 @@ var gBreadCrumbs=['','','','','','','','',''];
 
 palicanon_load_term();
 
+function community_onload() {
+	$("span[tag]").click(function () {
+		$(this).siblings().removeClass("select");
+		$(this).addClass("select");
+		main_tag = $(this).attr("tag");
+		list_tag = new Array();
+		tag_changed();
+		render_tag_list();
+	});
+
+	$("#tag_input").keypress(function () {
+		tag_render_others();
+	});
+    render_main_tag();
+
+    	$.getJSON(
+		"/api/v2/progress?view=done",
+		{
+			tag: '',
+			lang: '',
+            page: 0
+		},
+		function (data, status) {
+			let arrChapterData = data.data.rows;
+			let arrChapterList = new Array();
+			let html = "";
+			allTags = new Array();
+			let arrChapter = new Array();
+			for (const iterator of arrChapterData) {
+                arrChapterList.push({
+                    book:iterator.book,
+                    para:iterator.para,
+                    level:2,
+                    title:iterator.toc,
+                    progress:{lang:'en',all_trans:iterator.progress},
+                    tag:'',
+                    trans_title:iterator.title,
+                    channel_id:iterator.channel_id,
+                    type:'article',
+                    channel_info:iterator.channel_info
+                });
+            }
+			for (const iterator of arrChapterList) {
+                
+				let tag0 = "";
+				let tags = iterator.tag.split("::");
+				let currTag = new Array();
+				currTag[main_tag] = 1;
+				for (const scondTag of list_tag) {
+					currTag[scondTag] = 1;
+				}
+				for (let tag of tags) {
+					if (tag.slice(0, 1) == ":") {
+						tag = tag.slice(1);
+					}
+					if (tag.slice(-1) == ":") {
+						tag = tag.slice(0, -1);
+					}
+					if (currTagLevel0.hasOwnProperty(tag)) {
+						tag0 = tag;
+					}
+					if (!currTag.hasOwnProperty(tag)) {
+						if (allTags.hasOwnProperty(tag)) {
+							allTags[tag] += 1;
+						} else {
+							allTags[tag] = 1;
+						}
+					}
+				}
+
+                arrChapter.push(iterator);
+
+			}
+
+			let newTags = new Array();
+			for (const oneTag in allTags) {
+				if (allTags[oneTag] < arrBookList.length) {
+					newTags[oneTag] = allTags[oneTag];
+				}
+			}
+			allTags = newTags;
+			allTags.sort(sortNumber);
+			tag_render_others();
+			palicanon_chapter_list_apply(0);
+			$("#list-1").html(render_chapter_list(arrChapter));
+            
+		}
+	);
+}
+
 function palicanon_onload() {
 	$("span[tag]").click(function () {
 		$(this).siblings().removeClass("select");
@@ -303,6 +393,7 @@ function palicanon_chapter_list_apply(div_index) {
 	}
 */
 	html += "</ul>";
+	html += "<button>More</button>";
 
 	$("#list_shell_" + (iDiv + 1)).html(html);
 	$("#list_shell_" + (iDiv + 1)).removeClass();
@@ -327,14 +418,21 @@ function palicanon_chapter_list_apply(div_index) {
 function chapter_onclick(obj) {
 	let book = $(obj).attr("book");
 	let para = $(obj).attr("para");
+	let channel = $(obj).attr("channel");
+	let type = $(obj).attr("type");
 	let level =  parseInt($(obj).parent().attr("level"));
     let title1 = $(obj).find(".title_1").first().text();
-    gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
-    RenderBreadCrumbs();
-	$(obj).siblings().removeClass("selected");
-	$(obj).addClass("selected");
-	$("#tag_list").slideUp();
-	palicanon_load_chapter(book, para, level);
+    if(type=='article'){
+        window.open("../article/index.php?view=chapter&book="+book+"&par="+para+"&channel="+channel,);
+    }else{
+        gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
+        RenderBreadCrumbs();
+        $(obj).siblings().removeClass("selected");
+        $(obj).addClass("selected");
+        $("#tag_list").slideUp();
+        palicanon_load_chapter(book, para, level);
+    }
+
 }
 
 function palicanon_render_chapter_row(chapter) {
@@ -343,24 +441,26 @@ function palicanon_render_chapter_row(chapter) {
 	if (chapter.level == 1) {
 		//levelClass = " level_1";
 	}
-	html +=
-		'<li class="' +
-		levelClass +
-		'" book="' +
-		chapter.book +
-		'" para="' +
-		chapter.para +
-		'" onclick="chapter_onclick(this)">';
+	html +='<li class="' + 	levelClass +'" book="' + chapter.book + '" para="' + chapter.para + '"';
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += ' channel="' + chapter.channel_id + '" type="' + chapter.type + '"';
+    }
+    html += ' onclick="chapter_onclick(this)">';
     
 	html += '<div class="head_bar">';
 
     html += '<span class="" style="margin-right: 1em;padding: 4px 0;">';
     html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
-    if (chapter.level == 1) {
-	    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal-text'>";
     }else{
-        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+        if (chapter.level == 1) {
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+        }else{
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+        }
     }
+
 	html += "</svg>" ;
 	html += "</span>";   
 
@@ -419,7 +519,8 @@ function palicanon_render_chapter_row(chapter) {
 
     html += "<span class='item'>";
     html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";
+    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";
+	
 	html += "</svg>" ;
     html += "Saratadipani";
     html += "</span>"
@@ -440,7 +541,12 @@ function palicanon_render_chapter_row(chapter) {
     html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
 	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person'>";
 	html += "</svg>" ;
-    html += "简体中文(3)";
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += chapter.channel_info.name;
+    }else{
+        html += "简体中文(3)";
+    }
+    
     html += "</span>";
 
 

@@ -16,7 +16,15 @@ class ProgressChapterController extends Controller
     public function index(Request $request)
     {
         //
-        $selectCol = ['progress_chapters.book','progress_chapters.para','progress_chapters.channel_id','progress_chapters.title','pali_texts.toc','progress','progress_chapters.created_at','progress_chapters.updated_at'];
+        $selectCol = ['progress_chapters.book',
+                      'progress_chapters.para',
+                      'progress_chapters.channel_id',
+                      'progress_chapters.title',
+                      'pali_texts.toc',
+                      'progress',
+                      'progress_chapters.created_at',
+                      'progress_chapters.updated_at'
+                      ];
         $chapters=false;
         switch ($request->get('view')) {
 			case 'studio':
@@ -54,12 +62,17 @@ class ProgressChapterController extends Controller
                 $chapters = ProgressChapter::select($selectCol)
                                         ->where('progress','>',0.85)
                                         ->leftJoin('pali_texts', function($join)
-                                                {
-                                                    $join->on('progress_chapters.book', '=', 'pali_texts.book');
-                                                    $join->on('progress_chapters.para','=','pali_texts.paragraph');
-                                                })
+                                            {
+                                                $join->on('progress_chapters.book', '=', 'pali_texts.book');
+                                                $join->on('progress_chapters.para','=','pali_texts.paragraph');
+                                            })
                                         ->orderby('progress_chapters.created_at','desc')
+                                        ->skip(0)->take(20)
                                         ->get();
+                foreach ($chapters as $key => $value) {
+                    # code...
+                    $chapters[$key]['channel_info'] = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
+                }
                 break;
         }
         if($chapters){

@@ -30,8 +30,12 @@ require_once '../public/function.php';
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 
 <style>
+.chapter_list ul {
+    margin-left: 0;
+}
 .head_bar{
     display:flex;
+    max-width: 30vh;
 }
 .more_info{
     font-size:80%;
@@ -56,7 +60,7 @@ require_once '../public/function.php';
     height:90px;
 }
 .chapter_list .list {
-    width: 0;
+    display: none;
 }
 .chapter_list .show {
     display: block;
@@ -64,6 +68,10 @@ require_once '../public/function.php';
 }
 .chapter_list .grid {
     width: 100%;
+}
+.chapter_list > div {
+    max-height: unset;
+    overflow-y: unset; 
 }
 </style>
 
@@ -130,6 +138,7 @@ require_once '../public/function.php';
                     <div id="list_shell_1" class="show book_view" level="1">
                         <ul id="list-1" class="grid" level="1" >
                         </ul>
+                        <button>More</button>
                     </div>
 
                     <div id="list_shell_2" level="2">
@@ -172,7 +181,38 @@ require_once '../public/function.php';
         </div>
     </div>
     <div style="flex:2;">
-    right pannal
+    <div class='bangdan'>
+        <div class='title'>最新</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>新手区</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>周推荐</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>白金作者</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -193,10 +233,13 @@ require_once '../public/function.php';
                 $_view = "category";
             }
             switch ($_view) {
+                case 'community':
+                    echo "community_onload();";
+                    break;
                 case 'category':
                     echo "palicanon_onload();";
                     break;
-                
+                case 'my';
                 default:
                     # code...
                     break;
