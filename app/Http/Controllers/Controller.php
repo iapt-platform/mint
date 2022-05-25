@@ -28,10 +28,10 @@ class Controller extends BaseController
 			'data'=>$errorMessages,
 			'message'=> $error,
 		];
-		return response()->json($response,code);
+		return response()->json($response,$code);
 	}
 
-    public function error($error, $errorMessages, $code){
+    public function error($error, $errorMessages="", $code=404){
         return $this->sendError($error, $errorMessages, $code);
     }
 }
