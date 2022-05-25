@@ -8,6 +8,8 @@ use App\Models\PaliSentence;
 use App\Models\Progress;
 use App\Models\ProgressChapter;
 use App\Models\PaliText;
+use App\Models\Tag;
+use App\Models\TagMap;
 
 class UpgradeProgressChapter extends Command
 {
@@ -42,6 +44,7 @@ class UpgradeProgressChapter extends Command
      */
     public function handle()
     {
+        $tagCount=0;
         #第一步 查询有多少书有译文
 		$books = Sentence::where('strlen','>',0)
                           ->where('book_id','<',1000)
@@ -89,7 +92,9 @@ class UpgradeProgressChapter extends Command
                           ->where('paragraph',$chapter->paragraph)
                           ->where('channel_uid',$final->channel_id)
                           ->value('content');
-                    ProgressChapter::updateOrInsert(
+
+
+                    $chapterData = ProgressChapter::updateOrCreate(
                         [
                             'book'=>$book->book_id,
                             'para'=>$chapter->paragraph,
@@ -104,12 +109,53 @@ class UpgradeProgressChapter extends Command
                             'created_at'=>$finalAt,
                             'updated_at'=>$updateAt,
                         ]);
+                    
+                    #查询路径
+                    $path = json_decode(
+                                PaliText::where('book',$book->book_id)
+                                ->where('paragraph',$chapter->paragraph)
+                                ->value('path'));
+                    
+                    if($path){
+                        //查询标签
+                        $tags = [];
+                        foreach ($path as $key => $value) {
+                            # code...
+                            if($value->level>0){
+                                $paliTextUuid = PaliText::where('book',$value->book)
+                                                ->where('paragraph',$value->paragraph)
+                                                ->value('uid');
+                                $tagUuids = TagMap::where('table_name','pali_texts')
+                                                ->where('anchor_id',$paliTextUuid)
+                                                ->select(['tag_id'])
+                                                ->get();
+                                foreach ($tagUuids as $key => $taguuid) {
+                                    # code...
+                                    $tags[$taguuid['tag_id']]=1;
+                                }
+                                
+                            }
+                        }
+
+                        //更新标签映射表
+                        foreach ($tags as $key => $tag) {
+                            # code...
+                            $tagmap = TagMap::firstOrCreate([
+                                        'table_name' => 'progress_chapters',
+                                        'anchor_id' => $chapterData->uid,
+                                        'tag_id' => $key
+                                    ]);
+                            if($tagmap){
+                                $tagCount++;
+                            }
+                        }
+                    }
                 }
             }
             $bar->advance();
         }
         $bar->finish();
-        
+        $this->info("tag count:".$tagCount);
         return 0;
     }
 }
