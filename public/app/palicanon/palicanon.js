@@ -1,3 +1,4 @@
+var _view = "category";
 var main_tag = "";
 var list_tag = new Array();
 var currTagLevel0 = new Array();
@@ -22,80 +23,9 @@ function community_onload() {
 		tag_render_others();
 	});
     render_main_tag();
+    render_tag_list();
+    communityGetChapter();
 
-    	$.getJSON(
-		"/api/v2/progress?view=done",
-		{
-			tag: '',
-			lang: '',
-            page: 0
-		},
-		function (data, status) {
-			let arrChapterData = data.data.rows;
-			let arrChapterList = new Array();
-			let html = "";
-			allTags = new Array();
-			let arrChapter = new Array();
-			for (const iterator of arrChapterData) {
-                arrChapterList.push({
-                    book:iterator.book,
-                    para:iterator.para,
-                    level:2,
-                    title:iterator.toc,
-                    progress:{lang:'en',all_trans:iterator.progress},
-                    tag:'',
-                    trans_title:iterator.title,
-                    channel_id:iterator.channel_id,
-                    type:'article',
-                    channel_info:iterator.channel_info
-                });
-            }
-			for (const iterator of arrChapterList) {
-                
-				let tag0 = "";
-				let tags = iterator.tag.split("::");
-				let currTag = new Array();
-				currTag[main_tag] = 1;
-				for (const scondTag of list_tag) {
-					currTag[scondTag] = 1;
-				}
-				for (let tag of tags) {
-					if (tag.slice(0, 1) == ":") {
-						tag = tag.slice(1);
-					}
-					if (tag.slice(-1) == ":") {
-						tag = tag.slice(0, -1);
-					}
-					if (currTagLevel0.hasOwnProperty(tag)) {
-						tag0 = tag;
-					}
-					if (!currTag.hasOwnProperty(tag)) {
-						if (allTags.hasOwnProperty(tag)) {
-							allTags[tag] += 1;
-						} else {
-							allTags[tag] = 1;
-						}
-					}
-				}
-
-                arrChapter.push(iterator);
-
-			}
-
-			let newTags = new Array();
-			for (const oneTag in allTags) {
-				if (allTags[oneTag] < arrBookList.length) {
-					newTags[oneTag] = allTags[oneTag];
-				}
-			}
-			allTags = newTags;
-			allTags.sort(sortNumber);
-			tag_render_others();
-			palicanon_chapter_list_apply(0);
-			$("#list-1").html(render_chapter_list(arrChapter));
-            
-		}
-	);
 }
 
 function palicanon_onload() {
@@ -171,6 +101,83 @@ function tag_changed() {
             lang = 'en';
             break;
     }
+    switch (_view) {
+        case "community":
+            communityGetChapter(strTags,lang)
+            break;
+        case "category":
+            palicanonGetChapter(strTags,lang)
+            break;
+        case "my":
+            break;
+        default:
+            break;
+    }
+    
+}
+function communityGetChapter(strTags="",lang="",offset=0){
+    $.getJSON(
+		"/api/v2/progress?view=chapter",
+		{
+			tags: strTags,
+			lang: lang,
+            offset: offset
+		},
+		function (data, status) {
+			let arrChapterData = data.data.rows;
+			let arrChapterList = new Array();
+			let html = "";
+			allTags = new Array();
+			let arrChapter = new Array();
+			for (const iterator of arrChapterData) {
+                arrChapterList.push({
+                    book:iterator.book,
+                    para:iterator.para,
+                    level:2,
+                    title:iterator.toc,
+                    progress:{lang:'en',all_trans:iterator.progress},
+                    tag:'',
+                    trans_title:iterator.title,
+                    channel_id:iterator.channel_id,
+                    type:'article',
+                    channel_info:iterator.channel_info,
+                    path:JSON.parse(iterator.path)
+                });
+            }
+			for (const iterator of arrChapterList) {
+                arrChapter.push(iterator);
+			}
+
+			palicanon_chapter_list_apply(0);
+			$("#list-1").html(render_chapter_list(arrChapter));
+            
+		}
+	);
+
+    communityLoadChapterTag(strTags,lang);
+}
+
+function communityLoadChapterTag(strTags="",lang=""){
+    $.getJSON(
+		"/api/v2/progress?view=chapter-tag",
+		{
+			tags: strTags,
+			lang: lang,
+		},
+		function (data, status) {
+            let tagData = data.data.rows;
+            allTags = new Array();
+            let maxCount = tagData[0].count;
+            for (const tag of tagData) {
+                if(tag.count < maxCount){
+                    allTags[tag.name] = tag.count;
+                }
+            }
+			tag_render_others();
+
+        });
+}
+function palicanonGetChapter(strTags,lang){
 	$.get(
 		"./book_tag.php",
 		{
@@ -518,11 +525,12 @@ function palicanon_render_chapter_row(chapter) {
     html += '<div class="more_info">';
 
     html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";
-	
-	html += "</svg>" ;
-    html += "Saratadipani";
+    if(chapter.path){
+        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
+        html += "</svg>" ;
+        html += chapter.path[0].title;
+    }
     html += "</span>"
     
 	html += "<span class='item'>";
@@ -581,10 +589,11 @@ function tag_render_others() {
 
 	for (const key in allTags) {
 		if (allTags.hasOwnProperty(key)) {
+            let count = allTags[key]
 			if ($("#tag_input").val().length > 0) {
 				if (key.indexOf($("#tag_input").val()) >= 0) {
 					strOthersTag =
-						'<button class="canon-tag" onclick ="tag_click(\'' + key + "')\" >" + key + "</button>";
+						'<button class="canon-tag" onclick ="tag_click(\'' + key + "')\" >" + key + "("+count+ ")"+"</button>";
 				}
 			} else {
 				let keyname = tag_get_local_word(key);
@@ -594,7 +603,7 @@ function tag_render_others() {
 					'" onclick ="tag_click(\'' +
 					key +
 					"')\" >" +
-					keyname +
+					keyname + "("+count+ ")"+
 					"</button>";
 			}
 			let thisLevel = 100;

@@ -73,17 +73,36 @@ require_once '../public/function.php';
     max-height: unset;
     overflow-y: unset; 
 }
+.chapter_list .more_info {
+    display: block;
+}
 </style>
 
 <div style="display:flex;">
     <div id='left-bar' style="flex:2;">
         <div id='left-bar-inner'>
-            <div style="width:100%">
-                <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
-                </select>
+            <div class="filter">
+                <div class="title">分类标签</div>
+                <div style="width:100%">
+                    <span>风格</span>
+                    <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
+                    </select>
+                </div>
+                <div id='tag-category' >
+                
+                </div>
             </div>
-            <div id='tag-category' >
-            
+            <div class="filter">
+                <div class="title">作者</div>
+                <div id='filter-author' >
+                
+                </div>
+            </div>
+            <div class="filter">
+                <div class="title">语言</div>
+                <div id='filter-lang' >
+                
+                </div>
             </div>
         </div>
     </div>
@@ -229,6 +248,7 @@ require_once '../public/function.php';
             <?php
             if(isset($_GET["view"])){
                 $_view = $_GET["view"];
+                echo "_view = '{$_GET["view"]}';";
             }else{
                 $_view = "category";
             }
