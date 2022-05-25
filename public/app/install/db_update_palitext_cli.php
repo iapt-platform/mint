@@ -226,6 +226,12 @@ for ($from=$_from-1; $from < $to; $from++) {
             $currParent = $title_data[$currParent-1]["parent"];
             $iLoop++;
         }
+        # 将路径反向
+        $path1 = [];
+        for ($i=count($path)-1; $i >=0 ; $i--) { 
+            # code...
+            $path1[] = $path[$i];
+        }
 
     $newData = array(
         $arrInserString[$iPar][3],
@@ -235,7 +241,7 @@ for ($from=$_from-1; $from < $to; $from++) {
         $prev,
         $parent,
         $iChapter_strlen,
-        json_encode($path),
+        json_encode($path1),
         $book,
         $paragraph,
     );
