@@ -42,7 +42,7 @@ class UpgradePaliText extends Command
     {
 		$this->info("upgrade pali text");
 		$startTime = time();
-
+        
 		$_from = $this->argument('from');
 		$_to = $this->argument('to');
 		if(empty($_from) && empty($_to)){
@@ -196,7 +196,14 @@ class UpgradePaliText extends Command
                         $currParent = $title_data[$currParent-1]["parent"];
                         $iLoop++;
                     }
-                    $newData['path'] = $path;
+                    # 将路径反向
+                    $path1 = [];
+                    for ($i=count($path)-1; $i >=0 ; $i--) { 
+                        # code...
+                        $path1[] = $path[$i];
+                    }
+                    $newData['path'] = $path1;
+
 
 					PaliText::where('book',$book)
 							->where('paragraph',$paragraph)
