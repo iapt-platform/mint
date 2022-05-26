@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Command;
 use App\Models\Sentence;
 use App\Models\PaliSentence;
@@ -110,6 +111,19 @@ class UpgradeProgressChapter extends Command
                             'created_at'=>$finalAt,
                             'updated_at'=>$updateAt
                         ];
+                    
+                    $rules = array(
+                        'book' => 'integer',
+                        'para' => 'integer',
+                        'channel_id' => 'uuid'
+                    );
+
+                    $validator = Validator::make($attributes, $rules);
+                    if ($validator->fails()) {
+                        $this->error("Validator is fails");
+                        var_dump($attributes);
+                        return 0;
+                    }
                     $chapterData = ProgressChapter::firstOrNew($attributes);
                     $chapterData->lang = $lang;
                     $chapterData->all_trans = $final->cp_len/$chapter_strlen;
