@@ -1,10 +1,10 @@
-var _view = "category";
+var _view = "community";
 var main_tag = "";
 var list_tag = new Array();
 var currTagLevel0 = new Array();
 var allTags = new Array();
 var arrMyTerm = new Array();
-var _listView="card";
+var _listView="list";
 var gBreadCrumbs=['','','','','','','','',''];
 
 palicanon_load_term();
@@ -25,7 +25,8 @@ function community_onload() {
     render_main_tag();
     render_tag_list();
     communityGetChapter();
-
+    LoadAllChannel();
+    LoadAllLanguage();
 }
 
 function palicanon_onload() {
@@ -635,7 +636,10 @@ function tag_set(tag) {
 function render_tag_list() {
 	$("#tag_list").slideDown();
 
-	let strListTag = gLocal.gui.selected + "：";
+	let strListTag="";// = gLocal.gui.selected + "：";
+    strListTag += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+    strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tags'>";
+    strListTag += "</svg>" ;
 	for (const iterator of list_tag) {
 		strListTag += '<tag><span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
 		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
@@ -768,4 +772,63 @@ function RenderBreadCrumbs(){
     }
 
     $("#bread-crumbs").html(html);
+}
+
+function LoadAllChannel(){
+    $.getJSON(
+		"/api/v2/progress?view=channel",
+		{},
+		function (data, status) {
+            let html = "";
+            html += "<ul>"
+            for (const iterator of data.data.rows) {
+                if(iterator.channel){
+                    html += "<li>"
+                    html += iterator.channel.name+"("+iterator.count+")";
+                    html += "</li>"                    
+                }
+
+            }
+            html += "</ul>";
+            $("#filter-author").html(html);
+        }
+    );
+}
+
+function LoadAllLanguage(){
+    $.getJSON(
+		"/api/v2/progress?view=lang",
+		{},
+		function (data, status) {
+            let html = "";
+            html += "<ul>"
+            for (const iterator of data.data.rows) {
+                html += "<li>"
+                html += iterator.lang+"("+iterator.count+")";
+                html += "</li>"                    
+            }
+            html += "</ul>";
+            $("#filter-lang").html(html);
+        }
+    );
+}
+
+function ReanderMainMenu(){
+    let html ="";
+    html += "<span ";
+    if(_view=="community"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=community'>社区</a></span>";
+    html += "<span ";
+    if(_view=="category"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=category' >分类</a></span>";
+    html += "<span ";
+    if(_view=="my"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=my' >我的</a></span>";
+    $("#main_menu").html(html);
 }
