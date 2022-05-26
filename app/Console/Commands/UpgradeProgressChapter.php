@@ -10,6 +10,7 @@ use App\Models\ProgressChapter;
 use App\Models\PaliText;
 use App\Models\Tag;
 use App\Models\TagMap;
+use App\Models\Channel;
 
 class UpgradeProgressChapter extends Command
 {
@@ -93,23 +94,34 @@ class UpgradeProgressChapter extends Command
                           ->where('channel_uid',$final->channel_id)
                           ->value('content');
 
-
-                    $chapterData = ProgressChapter::updateOrCreate(
-                        [
+                    //查询语言
+                    $channelLang = Channel::where('uid',$final->channel_id)->value('lang');
+                    $lang = explode('-',$channelLang)[0];
+                    $attributes = [
                             'book'=>$book->book_id,
                             'para'=>$chapter->paragraph,
-                            'channel_id'=>$final->channel_id
-                        ],
-                        [
-                            'lang'=>'en',
+                            'channel_id'=>$final->channel_id];
+                    $value = [
+                            'lang'=>$lang,
                             'all_trans'=>$final->cp_len/$chapter_strlen,
                             'public'=>$final->cp_len/$chapter_strlen,
                             'progress'=>$final->cp_len/$chapter_strlen,
                             'title'=>mb_substr($title,0,255,"UTF-8"),
                             'created_at'=>$finalAt,
-                            'updated_at'=>$updateAt,
-                        ]);
-                    
+                            'updated_at'=>$updateAt
+                        ];
+                    $chapterData = ProgressChapter::firstOrNew($attributes);
+                    $chapterData->lang = $lang;
+                    $chapterData->all_trans = $final->cp_len/$chapter_strlen;
+                    $chapterData->public = $final->cp_len/$chapter_strlen;
+                    $chapterData->progress = $final->cp_len/$chapter_strlen;
+                    $chapterData->title = mb_substr($title,0,255,"UTF-8");
+                    $chapterData->created_at = $finalAt;
+                    $chapterData->updated_at = $updateAt;
+                    $chapterData->save();
+
+                    $wasCreated = $chapterData->wasRecentlyCreated; 
+                    $wasChanged = $chapterData->wasChanged();
                     #查询路径
                     $path = json_decode(
                                 PaliText::where('book',$book->book_id)
@@ -138,9 +150,13 @@ class UpgradeProgressChapter extends Command
                         }
 
                         //更新标签映射表
+                        //删除旧的标签映射表
+                        TagMap::where('table_name' , 'progress_chapters')
+                                ->where('anchor_id' , $chapterData->uid)
+                                ->delete();
                         foreach ($tags as $key => $tag) {
                             # code...
-                            $tagmap = TagMap::firstOrCreate([
+                            $tagmap = TagMap::create([
                                         'table_name' => 'progress_chapters',
                                         'anchor_id' => $chapterData->uid,
                                         'tag_id' => $key
