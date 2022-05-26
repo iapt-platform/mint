@@ -121,11 +121,17 @@ class UpgradeProgressChapter extends Command
                     $validator = Validator::make($attributes, $rules);
                     if ($validator->fails()) {
                         $this->error("Validator is fails");
-                        var_dump($attributes);
                         return 0;
                     }
-                    var_dump($attributes);
-                    $chapterData = ProgressChapter::firstOrNew($attributes);
+                    if(ProgressChapter::where($attributes)->exists()){
+                        $chapterData = ProgressChapter::where($attributes)->first();
+                    }else{
+                        $chapterData = new ProgressChapter;
+                        $chapterData->book = $attributes["book"];
+                        $chapterData->para = $attributes["para"];
+                        $chapterData->channel_id = $attributes["channel_id"];
+
+                    }
                     $chapterData->lang = $lang;
                     $chapterData->all_trans = $final->cp_len/$chapter_strlen;
                     $chapterData->public = $final->cp_len/$chapter_strlen;
