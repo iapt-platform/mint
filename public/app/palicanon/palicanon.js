@@ -638,10 +638,14 @@ function render_tag_list() {
 
 	let strListTag="";// = gLocal.gui.selected + "：";
     strListTag += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
-    strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tags'>";
+    strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>";
     strListTag += "</svg>" ;
 	for (const iterator of list_tag) {
-		strListTag += '<tag><span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
+		strListTag += '<tag>';
+        strListTag += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tag'>";
+        strListTag += "</svg>" 
+        strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
 		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
 	}
 	strListTag +=
