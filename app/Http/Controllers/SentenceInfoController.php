@@ -89,7 +89,7 @@ class SentenceInfoController extends Controller
         $percent = 0;
         if(($view==='page' && !empty($request->get('pages'))) || $view==='percent' ){
             #计算完成的句子在巴利语句子表中的字符串长度百分比
-            $db = Sentence::select(['paragraph','word_start'])
+            $db = Sentence::select(['book_id','paragraph','word_start','word_end'])
                 ->where('channel_uid',$request->get('channel'))
                 ->where('book_id','>=',$request->get('book'))
                 ->where('paragraph','>=',$request->get('from'))
@@ -106,10 +106,22 @@ class SentenceInfoController extends Controller
             $para_strlen = 0;
             foreach ($sentFinished as $sent) {
                 # code...
-                $para_strlen += PaliSentence::where('book',$request->get('book'))
-                            ->where('paragraph',$sent->paragraph)
-                            ->where('word_begin',$sent->word_start)
-                            ->value('length');
+                if($request->get('cache')=="1"){
+                    $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
+                    $para_strlen += Cache::get(env('REDIS_NAMESPACE').'pali-sent/strlen/'.$key_sent_id, function() use($sent) {
+                        return PaliSentence::where('book',$sent->book_id)
+                                ->where('paragraph',$sent->paragraph)
+                                ->where('word_begin',$sent->word_start)
+                                ->where('word_end',$sent->word_end)
+                                ->value('length');
+                    });
+                }else{
+                    $para_strlen += PaliSentence::where('book',$request->get('book'))
+                                ->where('paragraph',$sent->paragraph)
+                                ->where('word_begin',$sent->word_start)
+                                ->where('word_end',$sent->word_end)
+                                ->value('length');                    
+                }
             }
 
             $percent = $para_strlen / $allStrLen;

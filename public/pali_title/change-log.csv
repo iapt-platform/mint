@@ -1,0 +1,280 @@
+id,book,para,title,log
+2,1,2,Namakkārapāḷi
+159,1,159,Namakkāraṭīkā
+983,2,2,Mahāpaṇāmapāṭha
+1409,2,428,Tigumbacetiya thomanā
+1460,2,479,Vāsamālinīkya
+1828,3,2,Lakkhaṇāto
+2144,4,2,Suttavandanā
+2741,5,2,Jinālaṅkāra
+3766,6,2,Kamalāñjali
+4068,7,2,Pajjamadhu
+4594,8,2,Buddhaguṇagāthāvalī
+7052,9,2,Abhidhānappadīpikāṭīkā
+9766,10,2,Subodhālaṅkāro
+11086,11,2,Subodhālaṅkāraṭīkā
+13971,12,2,Bālāvatāra
+14818,13,2,Moggallānasuttapāṭho
+15921,13,1105,Moggallānabyākaraṇaṃ
+18080,14,2,Kaccāyanabyākaraṇaṃ
+18793,14,715,Mahākaccāyanasaddāpāṭha
+21566,15,2,Saddanītippakaraṇaṃ (padamālā)
+24546,16,2,Saddanītippakaraṇaṃ (dhātumālā)
+27947,17,2,Padarūpasiddhi
+32002,18,2,Moggallāna pañcikā ṭīkā
+33581,19,2,Payogasiddhipāḷi
+36074,20,2,Vuttodayaṃ
+36392,21,2,Abhidhānappadīpikā
+40355,22,2,Niruttidīpanīpāṭha
+46499,23,2,Paramatthadīpanī
+47997,24,2,Anudīpanīpāṭha
+48431,25,2,Paṭṭhānuddesa dīpanīpāṭha
+48680,26,2,Caturārakkhadīpanī
+50640,27,2,Kavidappaṇanīti
+51987,28,2,Nītimañjarī
+52230,29,2,Dhammanīti
+53563,30,2,Mahārahanīti
+54846,31,2,Lokanīti
+55722,32,2,Suttantanīti
+55854,32,134,Vasalasutta
+55988,33,2,Sūrassatīnīti
+56533,34,2,Cāṇakyanītipāḷi
+57085,35,2,Naradakkhadīpanī
+58932,36,2,Rasavāhinī
+61389,37,2,Sīmavisodhanī
+61822,38,2,Vessantarāgīti
+64436,39,3,(saṅgayana-puccha vissajjanā) Dīghanikāye
+64785,40,3,(saṅgayana-puccha vissajjanā) Majjhimanikāya
+65473,41,3,(saṅgayana-puccha vissajjanā) Saṃyuttanikāye
+66729,42,3,(saṅgayana-puccha vissajjanā) Aṅguttaranikāye
+67635,43,2,(saṅgayana-puccha vissajjanā) Vinayapiṭaka
+69189,44,2,(saṅgayana-puccha vissajjanā) Abhidhammapiṭaka
+69485,45,2,(saṅgayana-puccha vissajjanā) Aṭṭhakathā
+69987,46,1,Milidaṭīkā
+71227,47,1,Padamañjarī 
+72867,48,1,Padasādhanaṃ 
+73962,49,1,Saddabindu pakaraṇaṃ
+74045,50,1,Kaccāyana  dhātu mañjūsā
+74539,51,1,Samantakūṭavaṇṇanā 
+77596,52,1,Moggallāna vuttivivaraṇapañcikā. 
+79299,53,1,Thupavaṃso 
+80008,54,1,Dāṭhāvaṃso 
+81650,55,1,Dhātupāṭha  vilāsiniyā
+81768,56,1,Dhātuvaṃso 
+82259,57,1,Hatthavanagallavihāra  vaṃso
+82623,58,1,Jinacaritaya 
+84272,59,1,Jinavaṃsadīpaṃ 
+94179,60,1,Telakaṭāhagāthā 
+94681,61,2,Cūḷaganthavaṃsapāḷi
+94833,62,2,Sāsanavaṃsappadīpikā
+95804,63,2,Mahāvaṃsapāḷi
+111748,64,2,Visuddhimaggo(Paṭhamo bhāgo),22-5-12
+113988,65,2,Visuddhimaggo(Dutiyo bhāgo),22-5-12
+116180,66,2,Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo),22-5-13
+117793,67,2,Visuddhimagga-mahāṭīkā(Dutiyo bhāgo),22-5-13
+119644,68,2,Visuddhimagga nidānakathā
+120626,69,3,Paṭṭhānapāḷi(Dutiyo bhāgo)
+124867,70,3,Paṭṭhānapāḷi(Tatiyo bhāgo)
+130871,71,3,Paṭṭhānapāḷi(Catuttho bhāgo)
+138917,72,3,Paṭṭhānapāḷi(Pañcamo bhāgo)
+144086,73,3,Dhammasaṅgaṇīpāḷi,22-5-14
+146522,74,3,Vibhaṅgapāḷi
+149949,75,3,Dhātukathāpāḷi
+150622,76,3,Puggalapaññattipāḷi
+151183,77,3,Kathāvatthupāḷi,22-5-14
+154643,78,3,Yamakapāḷi (paṭhamo bhāgo)
+159417,79,3,Yamakapāḷi (dutiyo bhāgo),22-5-14
+163276,80,3,Yamakapāḷi (tatiyo bhāgo)
+168862,81,3,Paṭṭhānapāḷi(Paṭhamo bhāgo)
+173163,82,3,Dasakanipātapāḷi
+174767,83,3,Ekādasakanipātapāḷi
+175012,84,3,Ekakanipātapāḷi
+175412,85,3,Dukanipātapāḷi
+175730,86,3,Tikanipātapāḷi
+177066,87,3,Catukkanipātapāḷi
+179016,88,3,Pañcakanipātapāḷi
+180648,89,3,Chakkanipātapāḷi
+181505,90,3,Sattakanipātapāḷi
+182296,91,3,Aṭṭhakanipātapāḷi
+183337,92,3,Navakanipātapāḷi
+183839,93,3,(DN) Sīlakkhandhavaggapāḷi
+184913,94,3,(DN) Mahāvaggapāḷi
+186472,95,3,(DN) Pāthikavaggapāḷi
+188383,96,4,Dhammasaṅgaṇī-aṭṭhakathā,22-5-12
+190872,97,4,Vibhaṅga-aṭṭhakathā,22-5-12
+193218,98,4,Dhātukathā-aṭṭhakathā,22-5-12
+193387,98,173,Puggalapaññatti-aṭṭhakathā,22-5-12
+193688,98,474,Kathāvatthu-aṭṭhakathā,22-5-12
+194837,98,1623,Yamakappakaraṇa-aṭṭhakathā,22-5-12
+195094,98,1880,Paṭṭhānappakaraṇa-aṭṭhakathā,22-5-12
+195828,99,3,Ekakanipāta-aṭṭhakathā
+197452,100,3,Dukanipāta-aṭṭhakathā
+197774,100,325,Tikanipāta-aṭṭhakathā
+198446,100,997,Catukkanipāta-aṭṭhakathā
+199174,101,3,Pañcakanipāta-aṭṭhakathā
+199674,101,503,Chakkanipāta-aṭṭhakathā
+199963,101,792,Sattakanipāta-aṭṭhakathā
+200159,102,3,Aṭṭhakanipāta-aṭṭhakathā
+200431,102,275,Navakanipāta-aṭṭhakathā
+200565,102,409,Dasakanipāta-aṭṭhakathā
+200862,102,706,Ekādasakanipāta-aṭṭhakathā
+200955,103,3,(DN) Sīlakkhandhavaggaṭṭhakathā
+202462,104,3,(DN) Mahāvaggaṭṭhakathā
+204174,105,3,(DN) Pāthikavaggaṭṭhakathā
+205305,106,3,Therīgāthā-aṭṭhakathā
+209853,107,3,Apadāna-aṭṭhakathā
+213728,108,3,Buddhavaṃsa-aṭṭhakathā
+217865,109,3,Cariyāpiṭaka-aṭṭhakathā
+219992,110,4,Jātaka-aṭṭhakathā(Paṭhamo bhāgo)
+223108,111,3,Jātaka-aṭṭhakathā(Dutiyo bhāgo)
+226106,112,4,Jātaka-aṭṭhakathā(Tatiyo bhāgo)
+230974,113,4,Jātaka-aṭṭhakathā(Catuttho bhāgo)
+236282,113,5312,Jātaka-aṭṭhakathā(Pañcamo bhāgo 16)
+237709,114,1,Jātaka-aṭṭhakathā(Pañcamo bhāgo 17-21)
+242790,115,3,Jātaka-aṭṭhakathā(Chaṭṭho bhāgo)
+246478,116,3,Khuddakapāṭha-aṭṭhakathā
+247713,117,3,Jātaka-aṭṭhakathā(Sattamo bhāgo)
+254176,118,3,Mahāniddesa-aṭṭhakathā
+256009,119,3,Cūḷaniddesa-aṭṭhakathā
+256762,120,3,Paṭisambhidāmagga-aṭṭhakathā
+259288,121,3,Nettippakaraṇa-aṭṭhakathā
+260384,122,3,Dhammapada-aṭṭhakathā
+265615,123,3,Udāna-aṭṭhakathā
+267303,124,3,Itivuttaka-aṭṭhakathā
+269062,125,3,Suttanipāta-aṭṭhakathā
+271751,126,3,Vimānavatthu-aṭṭhakathā
+275768,127,3,Petavatthu-aṭṭhakathā
+279004,128,3,Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)
+284416,129,3,Theragāthā-aṭṭhakathā(Dutiyo bhāgo)
+291023,130,3,(MN) Mūlapaṇṇāsa-aṭṭhakathā
+293935,131,3,(MN) Majjhimapaṇṇāsa-aṭṭhakathā
+295274,132,3,(MN) Uparipaṇṇāsa-aṭṭhakathā
+296381,133,3,(SN) Sagāthāvagga-aṭṭhakathā
+297859,134,3,(SN) Nidānavagga-aṭṭhakathā
+298837,135,3,(SN) Khandhavagga-aṭṭhakathā
+299328,136,3,(SN) Saḷāyatanavagga-aṭṭhakathā
+300127,137,3,(SN) Mahāvagga-aṭṭhakathā
+301143,138,3,Pārājikakaṇḍa-aṭṭhakathā
+304117,139,3,(SP) Pācittiya-aṭṭhakathā
+305583,140,3,(SP) Mahāvagga-aṭṭhakathā
+306506,141,3,(SP) Cūḷavagga-aṭṭhakathā
+307175,142,3,(SP) Parivāra-aṭṭhakathā
+307836,143,3,Therāpadānapāḷi(Paṭhamo bhāgo)
+322482,144,3,Therāpadānapāḷi(Dutiyo bhāgo)
+329013,144,6534,Therīapadānapāḷi
+333155,145,3,Buddhavaṃsapāḷi
+336437,146,3,Cariyāpiṭakapāḷi
+337636,147,3,Jātakapāḷi(Dutiyo bhāgo)
+349164,148,3,Jātakapāḷi(Paṭhamo bhāgo)
+359670,149,3,Mahāniddesapāḷi
+362597,150,3,Cūḷaniddesapāḷi
+365368,151,3,Paṭisambhidāmaggapāḷi
+367412,152,3,Milindapañhapāḷi
+369905,153,3,Nettippakaraṇapāḷi
+371529,154,3,Khuddakapāṭhapāḷi
+371805,155,3,Peṭakopadesapāḷi
+373022,156,3,Dhammapadapāḷi
+374416,157,3,Udānapāḷi
+375381,158,3,Itivuttakapāḷi
+376575,159,3,Suttanipātapāḷi
+380626,160,3,Vimānavatthupāḷi
+383905,161,3,Petavatthupāḷi
+386560,162,3,Theragāthāpāḷi
+391229,163,3,Therīgāthāpāḷi
+393014,164,3,(MN)Mūlapaṇṇāsapāḷi
+394811,165,3,(MN)Majjhimapaṇṇāsapāḷi
+396501,166,3,(MN)Uparipaṇṇāsapāḷi
+397964,167,3,(SN)Sagāthāvaggo
+401462,168,3,(SN)Nidānavaggo
+402889,169,3,(SN)Khandhavaggo
+404356,170,3,(SN)Saḷāyatanavaggo
+406376,171,3,(SN)Mahāvaggo
+409228,172,3,Dhammasaṅgaṇī-mūlaṭīkā,22-5-13
+409950,173,3,Vibhaṅga-mūlaṭīkā,22-5-13
+411102,173,1155,Vibhaṅga-anuṭīkā,22-5-13
+412170,174,4,Dhātukathāpakaraṇa-mūlaṭīkā,22-5-13
+412266,174,100,Puggalapaññattipakaraṇa-mūlaṭīkā,22-5-13
+412367,174,201,Kathāvatthupakaraṇa-mūlaṭīkā,22-5-13
+413031,174,865,Yamakapakaraṇa-mūlaṭīkā,22-5-13
+413225,174,1059,Paṭṭhānapakaraṇa-mūlaṭīkā,22-5-13
+413656,175,3,Dhammasaṅgaṇī-anuṭīkā,22-5-13
+414382,176,4,Dhātukathāpakaraṇa-anuṭīkā,22-5-13
+414495,176,117,Puggalapaññattipakaraṇa-anuṭīkā,22-5-13
+414591,176,213,Kathāvatthupakaraṇa-anuṭīkā,22-5-13
+415295,176,917,Yamakapakaraṇa-anuṭīkā,22-5-13
+415517,176,1139,Paṭṭhānapakaraṇa-anuṭīkā,22-5-13
+415891,177,2,Abhidhammāvatāro
+420694,177,4805,Nāmarūpaparicchedo
+426516,177,10627,Paramatthavinicchayo
+430161,177,14272,Saccasaṅkhepo
+431390,178,2,Abhidhammatthasaṅgaho
+432263,178,875,Abhidhammatthavibhāvinīṭīkā
+433228,179,2,Abhidhammāvatāra-purāṇaṭīkā
+434098,179,872,Abhidhammāvatāra-abhinavaṭīkā
+435826,180,2,Abhidhammamātikāpāḷi
+437045,180,1221,Mohavicchedanī
+438653,181,3,Ekakanipāta-ṭīkā
+439826,182,3,Dukanipāta-ṭīkā
+440147,182,324,Tikanipāta-ṭīkā
+440846,182,1023,Catukkanipāta-ṭīkā
+441751,183,3,Pañcakanipāta-ṭīkā
+442218,183,470,Chakkanipāta-ṭīkā
+442541,183,793,Sattakanipāta-ṭīkā
+442777,184,3,Aṭṭhakanipāta-ṭīkā
+443052,184,278,Navakanipāta-ṭīkā
+443240,184,466,Dasakanipāta-ṭīkā
+443550,184,776,Ekādasakanipāta-ṭīkā
+443645,185,3,(DN)Sīlakkhandhavaggaṭīkā
+445036,186,3,(DN)Mahāvaggaṭīkā
+446531,187,3,(DN)Pāthikavaggaṭīkā
+447663,188,3,(DN)Sīlakkhandhavaggaabhinavaṭīkā
+449237,189,3,(DN)Sīlakkhandhavaggaabhinavaṭīkā
+450603,190,3,Nettippakaraṇa-ṭīkā
+451367,191,3,Nettivibhāvinī
+453037,192,3,(MN)Mūlapaṇṇāsa-ṭīkā
+455425,193,3,(MN)Majjhimapaṇṇāsa-ṭīkā
+456331,194,3,(MN)Uparipaṇṇāsa-ṭīkā
+457189,195,3,(SN)Sagāthāvagga-ṭīkā
+458894,196,3,(SN)Nidānavagga-ṭīkā
+459921,197,3,(SN)Khandhavagga-ṭīkā
+460441,198,3,(SN)Saḷāyatanavagga-ṭīkā
+461170,199,3,(SN)Mahāvagga-ṭīkā
+462019,200,2,Vinayavinicchayo
+472193,200,10176,Uttaravinicchayo
+475300,201,2,Vinayavinicchaya-ṭīkā
+479568,201,4270,Uttaravinicchaya-ṭīkā
+480425,202,3,Pācityādiyojanā
+483417,203,3,Khuddasikkhā
+485034,203,1620,Khuddasikkhā-purāṇaṭīkā
+485775,203,2361,Khuddasikkhā-abhinavaṭīkā
+486514,203,3100,Mūlasikkhā
+486895,203,3481,Mūlasikkhā-ṭīkā
+487048,204,3,Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)
+488707,205,3,(SAD) Pārājika-ṭīkā
+490367,206,3,(SAD) Pācittiya-ṭīkā
+491081,206,717,(SAD) Mahāvagga-ṭīkā
+492117,206,1753,(SAD) Cūḷavagga-ṭīkā
+492518,206,2154,(SAD) Parivāra-ṭīkā
+492768,207,3,Bhikkhupātimokkhapāḷi
+493289,207,524,Bhikkhunīpātimokkhapāḷi
+493980,207,1215,Kaṅkhāvitaraṇī-aṭṭhakathā
+495481,208,3,Vinayasaṅgaha-aṭṭhakathā
+497154,209,3,Vajirabuddhi-ṭīkā
+497317,209,166,Pārājikavaṇṇanā
+498143,209,992,Pācittiyavaṇṇanā
+498859,209,1708,Mahāvaggavaṇṇanā
+499368,209,2217,Cūḷavaggavaṇṇanā
+499579,209,2428,Parivāravaṇṇanā
+499827,210,3,Bhikkhuvibhaṅgavaṇṇanā
+501482,210,1658,Bhikkhunīvibhaṅgavaṇṇanā
+501603,210,1779,Mahāvaggavaṇṇanā
+502255,210,2431,Cūḷavaggavaṇṇanā
+502616,210,2792,Parivāravaṇṇanā
+502964,211,3,Vinayālaṅkāra-ṭīkā
+505377,212,2,Kaṅkhāvitaraṇīpurāṇa-ṭīkā
+506046,212,671,Kaṅkhāvitaraṇī-abhinavaṭīkā
+507895,213,3,(VN)Pārājikapāḷi
+510372,214,3,(VN)Pācittiyapāḷi,2022-5-19
+514062,215,3,(VN)Mahāvaggapāḷi
+516821,216,3,(VN)Cūḷavaggapāḷi
+519642,217,3,(VN)Parivārapāḷi
