@@ -85,8 +85,6 @@ class UpgradePaliText extends Command
 				continue;
 			}
 			$title_data = PaliText::where('book',$from)->orderby('paragraph','asc')->get();
-			//DB::transaction(
-                //function ()use($from,$arrInserString,$title_data) 
             {
 				$paragraph_count = count($title_data);
 				$paragraph_info = array();
@@ -214,7 +212,6 @@ class UpgradePaliText extends Command
 					}
 				}
 			}
-            //);
 
             
 			$bar->advance();
