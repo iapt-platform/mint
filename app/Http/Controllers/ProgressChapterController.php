@@ -125,10 +125,26 @@ class ProgressChapterController extends Controller
                     $all_count = count($chapters);
                 break;
             case 'lang':
+                $chapters = ProgressChapter::select('lang')
+                                            ->selectRaw('count(*) as count')
+                                            ->where("progress",">",$minProgress)
+                                            ->groupBy('lang')
+                                            ->get();
+                $all_count = count($chapters);
                 break;
             case 'channel-type':
                 break;
             case 'channel':
+                $chapters = ProgressChapter::select('channel_id')
+                                            ->selectRaw('count(*) as count')
+                                            ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                                                return $query->select('*');
+                                            }])
+                                            ->where("progress",">",$minProgress)
+                                            ->groupBy('channel_id')
+                                            ->orderBy('count','desc')
+                                            ->get();
+                $all_count = count($chapters);
                 break;
             case 'chapter':
                 $tm = (new TagMap)->getTable();
