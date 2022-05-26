@@ -21,7 +21,7 @@ class CreateTagMapsTable extends Migration
             $table->timestamp('created_at')->useCurrent()->index();
 			$table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->index();
 
-            $table->unique(['table_name','table_id','tag_id']);
+            $table->unique(['table_name','anchor_id','tag_id']);
 
         });
     }
