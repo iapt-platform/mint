@@ -1,12 +1,33 @@
+var _view = "community";
 var main_tag = "";
 var list_tag = new Array();
 var currTagLevel0 = new Array();
 var allTags = new Array();
 var arrMyTerm = new Array();
-var _listView="card";
+var _listView="list";
 var gBreadCrumbs=['','','','','','','','',''];
 
 palicanon_load_term();
+
+function community_onload() {
+	$("span[tag]").click(function () {
+		$(this).siblings().removeClass("select");
+		$(this).addClass("select");
+		main_tag = $(this).attr("tag");
+		list_tag = new Array();
+		tag_changed();
+		render_tag_list();
+	});
+
+	$("#tag_input").keypress(function () {
+		tag_render_others();
+	});
+    render_main_tag();
+    render_tag_list();
+    communityGetChapter();
+    LoadAllChannel();
+    LoadAllLanguage();
+}
 
 function palicanon_onload() {
 	$("span[tag]").click(function () {
@@ -81,6 +102,83 @@ function tag_changed() {
             lang = 'en';
             break;
     }
+    switch (_view) {
+        case "community":
+            communityGetChapter(strTags,lang)
+            break;
+        case "category":
+            palicanonGetChapter(strTags,lang)
+            break;
+        case "my":
+            break;
+        default:
+            break;
+    }
+    
+}
+function communityGetChapter(strTags="",lang="",offset=0){
+    $.getJSON(
+		"/api/v2/progress?view=chapter",
+		{
+			tags: strTags,
+			lang: lang,
+            offset: offset
+		},
+		function (data, status) {
+			let arrChapterData = data.data.rows;
+			let arrChapterList = new Array();
+			let html = "";
+			allTags = new Array();
+			let arrChapter = new Array();
+			for (const iterator of arrChapterData) {
+                arrChapterList.push({
+                    book:iterator.book,
+                    para:iterator.para,
+                    level:2,
+                    title:iterator.toc,
+                    progress:{lang:'en',all_trans:iterator.progress},
+                    tag:'',
+                    trans_title:iterator.title,
+                    channel_id:iterator.channel_id,
+                    type:'article',
+                    channel_info:iterator.channel_info,
+                    path:JSON.parse(iterator.path)
+                });
+            }
+			for (const iterator of arrChapterList) {
+                arrChapter.push(iterator);
+			}
+
+			palicanon_chapter_list_apply(0);
+			$("#list-1").html(render_chapter_list(arrChapter));
+            
+		}
+	);
+
+    communityLoadChapterTag(strTags,lang);
+}
+
+function communityLoadChapterTag(strTags="",lang=""){
+    $.getJSON(
+		"/api/v2/progress?view=chapter-tag",
+		{
+			tags: strTags,
+			lang: lang,
+		},
+		function (data, status) {
+            let tagData = data.data.rows;
+            allTags = new Array();
+            let maxCount = tagData[0].count;
+            for (const tag of tagData) {
+                if(tag.count < maxCount){
+                    allTags[tag.name] = tag.count;
+                }
+            }
+			tag_render_others();
+
+        });
+}
+function palicanonGetChapter(strTags,lang){
 	$.get(
 		"./book_tag.php",
 		{
@@ -303,6 +401,7 @@ function palicanon_chapter_list_apply(div_index) {
 	}
 */
 	html += "</ul>";
+	html += "<button>More</button>";
 
 	$("#list_shell_" + (iDiv + 1)).html(html);
 	$("#list_shell_" + (iDiv + 1)).removeClass();
@@ -327,14 +426,21 @@ function palicanon_chapter_list_apply(div_index) {
 function chapter_onclick(obj) {
 	let book = $(obj).attr("book");
 	let para = $(obj).attr("para");
+	let channel = $(obj).attr("channel");
+	let type = $(obj).attr("type");
 	let level =  parseInt($(obj).parent().attr("level"));
     let title1 = $(obj).find(".title_1").first().text();
-    gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
-    RenderBreadCrumbs();
-	$(obj).siblings().removeClass("selected");
-	$(obj).addClass("selected");
-	$("#tag_list").slideUp();
-	palicanon_load_chapter(book, para, level);
+    if(type=='article'){
+        window.open("../article/index.php?view=chapter&book="+book+"&par="+para+"&channel="+channel,);
+    }else{
+        gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
+        RenderBreadCrumbs();
+        $(obj).siblings().removeClass("selected");
+        $(obj).addClass("selected");
+        $("#tag_list").slideUp();
+        palicanon_load_chapter(book, para, level);
+    }
+
 }
 
 function palicanon_render_chapter_row(chapter) {
@@ -343,24 +449,26 @@ function palicanon_render_chapter_row(chapter) {
 	if (chapter.level == 1) {
 		//levelClass = " level_1";
 	}
-	html +=
-		'<li class="' +
-		levelClass +
-		'" book="' +
-		chapter.book +
-		'" para="' +
-		chapter.para +
-		'" onclick="chapter_onclick(this)">';
+	html +='<li class="' + 	levelClass +'" book="' + chapter.book + '" para="' + chapter.para + '"';
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += ' channel="' + chapter.channel_id + '" type="' + chapter.type + '"';
+    }
+    html += ' onclick="chapter_onclick(this)">';
     
 	html += '<div class="head_bar">';
 
     html += '<span class="" style="margin-right: 1em;padding: 4px 0;">';
     html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
-    if (chapter.level == 1) {
-	    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal-text'>";
     }else{
-        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+        if (chapter.level == 1) {
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+        }else{
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+        }
     }
+
 	html += "</svg>" ;
 	html += "</span>";   
 
@@ -418,10 +526,12 @@ function palicanon_render_chapter_row(chapter) {
     html += '<div class="more_info">';
 
     html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";
-	html += "</svg>" ;
-    html += "Saratadipani";
+    if(chapter.path){
+        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
+        html += "</svg>" ;
+        html += chapter.path[0].title;
+    }
     html += "</span>"
     
 	html += "<span class='item'>";
@@ -440,7 +550,12 @@ function palicanon_render_chapter_row(chapter) {
     html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
 	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person'>";
 	html += "</svg>" ;
-    html += "简体中文(3)";
+    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += chapter.channel_info.name;
+    }else{
+        html += "简体中文(3)";
+    }
+    
     html += "</span>";
 
 
@@ -475,10 +590,11 @@ function tag_render_others() {
 
 	for (const key in allTags) {
 		if (allTags.hasOwnProperty(key)) {
+            let count = allTags[key]
 			if ($("#tag_input").val().length > 0) {
 				if (key.indexOf($("#tag_input").val()) >= 0) {
 					strOthersTag =
-						'<button class="canon-tag" onclick ="tag_click(\'' + key + "')\" >" + key + "</button>";
+						'<button class="canon-tag" onclick ="tag_click(\'' + key + "')\" >" + key + "("+count+ ")"+"</button>";
 				}
 			} else {
 				let keyname = tag_get_local_word(key);
@@ -488,7 +604,7 @@ function tag_render_others() {
 					'" onclick ="tag_click(\'' +
 					key +
 					"')\" >" +
-					keyname +
+					keyname + "("+count+ ")"+
 					"</button>";
 			}
 			let thisLevel = 100;
@@ -520,7 +636,10 @@ function tag_set(tag) {
 function render_tag_list() {
 	$("#tag_list").slideDown();
 
-	let strListTag = gLocal.gui.selected + "：";
+	let strListTag="";// = gLocal.gui.selected + "：";
+    strListTag += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+    strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tags'>";
+    strListTag += "</svg>" ;
 	for (const iterator of list_tag) {
 		strListTag += '<tag><span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
 		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
@@ -653,4 +772,63 @@ function RenderBreadCrumbs(){
     }
 
     $("#bread-crumbs").html(html);
+}
+
+function LoadAllChannel(){
+    $.getJSON(
+		"/api/v2/progress?view=channel",
+		{},
+		function (data, status) {
+            let html = "";
+            html += "<ul>"
+            for (const iterator of data.data.rows) {
+                if(iterator.channel){
+                    html += "<li>"
+                    html += iterator.channel.name+"("+iterator.count+")";
+                    html += "</li>"                    
+                }
+
+            }
+            html += "</ul>";
+            $("#filter-author").html(html);
+        }
+    );
+}
+
+function LoadAllLanguage(){
+    $.getJSON(
+		"/api/v2/progress?view=lang",
+		{},
+		function (data, status) {
+            let html = "";
+            html += "<ul>"
+            for (const iterator of data.data.rows) {
+                html += "<li>"
+                html += iterator.lang+"("+iterator.count+")";
+                html += "</li>"                    
+            }
+            html += "</ul>";
+            $("#filter-lang").html(html);
+        }
+    );
+}
+
+function ReanderMainMenu(){
+    let html ="";
+    html += "<span ";
+    if(_view=="community"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=community'>社区</a></span>";
+    html += "<span ";
+    if(_view=="category"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=category' >分类</a></span>";
+    html += "<span ";
+    if(_view=="my"){
+        html += "class='select'";
+    }
+    html +="><a href='index1.php?view=my' >我的</a></span>";
+    $("#main_menu").html(html);
 }

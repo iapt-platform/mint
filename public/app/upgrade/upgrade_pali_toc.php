@@ -86,9 +86,9 @@ foreach ($result_lang as $lang) {
 			if($redis){
 				$redis->hSet("progress_{$para["book"]}-{$para["paragraph"]}", $lang["language"], $para_strlen);
 			}
-			{
-				$sth_toc->execute(array($para["book"], $para["paragraph"], $lang["language"], $para_strlen, 0));
-			}
+
+			$sth_toc->execute(array($para["book"], $para["paragraph"], $lang["language"], $para_strlen, 0));
+
         }
     }
 }
@@ -100,7 +100,7 @@ if (!$sth_toc || ($sth_toc && $sth_toc->errorCode() != 0)) {
     echo "error:" . $error[2] . "\n";
 }
 
-#第三步生成 段落完成度库
+#第三步生成 章节完成度库
 /* 开始一个事务，关闭自动提交 */
 $dbh_toc->beginTransaction();
 $query = "INSERT INTO "._TABLE_PROGRESS_CHAPTER_." (book, para , lang , all_trans,public) VALUES (?, ?, ? , ? ,? )";
@@ -138,19 +138,19 @@ foreach ($valid_book as $key => $book) {
                         $redis->hSet("progress_chapter_{$book["book"]}_{$chapter["paragraph"]}", $lang["language"], $progress);
                     }
                 } 
-				{
-                    $query = "SELECT sum(all_strlen) as all_strlen from "._TABLE_PROGRESS_." where book = ? and (para between ? and ? )and lang = ?";
-                    $stmt = $dbh_toc->prepare($query);
-                    $stmt->execute(array($book["book"], $chapter["paragraph"], (int) $chapter["paragraph"] + (int) $chapter["chapter_len"] - 1, $lang["language"]));
-                    $result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if ($result_chapter_trans_strlen) {
-                        $tran_strlen = (int) $result_chapter_trans_strlen["all_strlen"];
-                        if ($tran_strlen > 0) {
-                            $progress = $tran_strlen / $pali_strlen;
-                            $sth_toc->execute(array($book["book"], $chapter["paragraph"], $lang["language"], $progress, 0));
-                        }
+				
+                $query = "SELECT sum(all_strlen) as all_strlen from "._TABLE_PROGRESS_." where book = ? and (para between ? and ? )and lang = ?";
+                $stmt = $dbh_toc->prepare($query);
+                $stmt->execute(array($book["book"], $chapter["paragraph"], (int) $chapter["paragraph"] + (int) $chapter["chapter_len"] - 1, $lang["language"]));
+                $result_chapter_trans_strlen = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result_chapter_trans_strlen) {
+                    $tran_strlen = (int) $result_chapter_trans_strlen["all_strlen"];
+                    if ($tran_strlen > 0) {
+                        $progress = $tran_strlen / $pali_strlen;
+                        $sth_toc->execute(array($book["book"], $chapter["paragraph"], $lang["language"], $progress, 0));
                     }
                 }
+                
                 #插入段落数据
             }
         }

@@ -21,7 +21,7 @@ class UpgradePaliText extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'upgrade pali_texts paragraph infomation';
 
     /**
      * Create a new command instance.
@@ -42,7 +42,7 @@ class UpgradePaliText extends Command
     {
 		$this->info("upgrade pali text");
 		$startTime = time();
-
+        
 		$_from = $this->argument('from');
 		$_to = $this->argument('to');
 		if(empty($_from) && empty($_to)){
@@ -65,12 +65,12 @@ class UpgradePaliText extends Command
 
 		for ($from=$_from; $from <= $_to; $from++) {
 			$inputRow = 0;
-			
 			$arrInserString = array();
 			#载入csv数据
 			$FileName = $filelist[$from-1][1];
-			$csvFile = config("app.path.palicsv") .'/'. $FileName .'/'. $FileName.'_pali.csv';
+			$csvFile = config("app.path.pali_title") .'/'. $from.'_pali.csv';
 			if (($fp = fopen($csvFile, "r")) !== false) {
+                Log::info("csv load：" . $csvFile);
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {
 					if ($inputRow > 0) {
 						array_push($arrInserString, $data);
@@ -78,22 +78,22 @@ class UpgradePaliText extends Command
 					$inputRow++;
 				}
 				fclose($fp);
-				Log::info("csv load：" . $csvFile);
+				
 			} else {
 				$this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
 				Log::error( "can not open csv file. filename=" . $csvFile) ;
 				continue;
 			}
 			$title_data = PaliText::where('book',$from)->orderby('paragraph','asc')->get();
-			DB::transaction(function ()use($from,$arrInserString,$title_data) {
+            {
 				$paragraph_count = count($title_data);
 				$paragraph_info = array();
 				$paragraph_info[] = array($from, -1, $paragraph_count, -1, -1, -1);
 
 
-				for ($iPar = 0; $iPar < count($title_data); $iPar++) {
-					$title_data[$iPar]["level"] = $arrInserString[$iPar][3];
-				}
+                for ($iPar = 0; $iPar < count($title_data); $iPar++) {
+                    $title_data[$iPar]["level"] = $arrInserString[$iPar][3];
+                }
 
 
 				for ($iPar = 0; $iPar < count($title_data); $iPar++) {
@@ -163,7 +163,7 @@ class UpgradePaliText extends Command
 					for ($i = $iPar; $i < $iPar + $length; $i++) {
 						$iChapter_strlen += $title_data[$i]["lenght"];
 					}
-					
+
 					$newData = [
 						'level' => $arrInserString[$iPar][3],
 						'toc' => $arrInserString[$iPar][5],
@@ -173,6 +173,36 @@ class UpgradePaliText extends Command
 						'parent' => $parent,
 						'chapter_strlen'=> $iChapter_strlen,
 					];
+
+                    $path = [];
+
+                    $title_data[$iPar]["level"] = $newData["level"];
+                    $title_data[$iPar]["toc"] = $newData["toc"];
+                    $title_data[$iPar]["parent"] = $newData["parent"];
+
+					/*
+                    *获取路径
+                    */
+                    $currParent = $parent;
+                    
+                    $iLoop = 0;
+                    while ($currParent != -1 && $iLoop<7) {
+                        # code...
+                        $pathTitle = $title_data[$currParent-1]["toc"];
+                        $pathLevel = $title_data[$currParent-1]['level'];
+                        $path[] = ["book"=>$book,"paragraph"=>$currParent,"title"=>$pathTitle,"level"=>$pathLevel];
+                        $currParent = $title_data[$currParent-1]["parent"];
+                        $iLoop++;
+                    }
+                    # 将路径反向
+                    $path1 = [];
+                    for ($i=count($path)-1; $i >=0 ; $i--) { 
+                        # code...
+                        $path1[] = $path[$i];
+                    }
+                    $newData['path'] = $path1;
+
+
 					PaliText::where('book',$book)
 							->where('paragraph',$paragraph)
 							->update($newData);
@@ -181,7 +211,9 @@ class UpgradePaliText extends Command
 						$paragraph_info[] = array($book, $paragraph, $length, $prev, $next, $parent);
 					}
 				}
-			});
+			}
+
+            
 			$bar->advance();
 		}
 		$bar->finish();

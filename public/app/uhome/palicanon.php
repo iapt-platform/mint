@@ -15,7 +15,7 @@ include "../pcdl/html_head.php";
 ?>
 
 <div class='section_inner'>
-	<div id='bio' class='course_info_block'></div>
+	<div id='content' class='course_info_block'></div>
 	<div id='wikipali_step' class='course_info_block'></div>
 </div>
 
