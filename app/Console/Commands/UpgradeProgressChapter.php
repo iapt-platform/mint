@@ -124,6 +124,7 @@ class UpgradeProgressChapter extends Command
                         var_dump($attributes);
                         return 0;
                     }
+                    var_dump($attributes);
                     $chapterData = ProgressChapter::firstOrNew($attributes);
                     $chapterData->lang = $lang;
                     $chapterData->all_trans = $final->cp_len/$chapter_strlen;
