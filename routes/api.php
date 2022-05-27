@@ -8,6 +8,7 @@ use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\ProgressChapterController;
 use App\Http\Controllers\SentenceInfoController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ViewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,5 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('sentence',SentenceController::class);
 	Route::apiResource('progress',ProgressChapterController::class);
 	Route::apiResource('tag',TagController::class);
+	Route::apiResource('view',ViewController::class);
 });
