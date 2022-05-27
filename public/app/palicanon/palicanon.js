@@ -442,7 +442,11 @@ function chapter_onclick(obj) {
     }
 
 }
+function close_tag_list(){
+    $("#tag_list").slideUp();
+    $("#btn-filter").removeClass("active");
 
+}
 function palicanon_render_chapter_row(chapter) {
 	let html = "";
 	let levelClass = "";
@@ -634,12 +638,14 @@ function tag_set(tag) {
 }
 
 function render_tag_list() {
-	$("#tag_list").slideDown();
+	//$("#tag_list").slideDown();
 
 	let strListTag="";// = gLocal.gui.selected + "：";
+    strListTag += "<button id='btn-filter' onclick=\"tag_list_slide_toggle(this)\">"
     strListTag += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
     strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>";
     strListTag += "</svg>" ;
+    strListTag += "</button>"
 	for (const iterator of list_tag) {
 		strListTag += '<tag>';
         strListTag += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
@@ -648,10 +654,9 @@ function render_tag_list() {
         strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
 		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
 	}
-	strListTag +=
-		"<div style='display:inline-block;width:20em;'>" +
-		"<input id='tag_input' type='input' placeholder='tag' size='20'  />" +
-		"</div>";
+	strListTag +="<div style='display:inline-block;width:20em;'>";
+	//strListTag +="<input id='tag_input' type='input' placeholder='tag' size='20'  />";
+	strListTag +="</div>";
 	$("#tag_selected").html(strListTag);
 }
 
@@ -670,10 +675,10 @@ function sortNumber(a, b) {
 }
 
 function tag_list_slide_toggle(element) {
-	if ($(element).html().indexOf("⮟") != -1) {
-		$(element).html("⮝");
+	if ($("#tag_list").css("display") == 'none') {
+		$(element).addClass("active");
 	} else {
-		$(element).html("⮟");
+		$(element).removeClass("active");
 	}
 	$("#tag_list").slideToggle();
 }

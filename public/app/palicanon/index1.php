@@ -120,6 +120,9 @@ require_once '../public/function.php';
 select#tag_category_index option {
     background-color: gray;
 }
+button.active {
+    background-color: gray;
+}
 </style>
 
 <?php
@@ -167,9 +170,9 @@ select#tag_category_index option {
             </div>
         </div>
     </div>
-    <div id='course_head_bar' style='flex:6;background-color:var(--tool-bg-color1);padding:0 10px 10px 10px;'>
+    <div id='course_head_bar' style='flex:6;padding:0 10px 10px 10px;'>
         <div class='index_inner '>
-            <div style='display:flex;justify-content: space-between;'>
+            <div style='display:flex;justify-content: space-between;display:none;'>
                 <div> </div>
                 <div style=''>
                     <select onchange='viewChanged(this)'>
@@ -196,13 +199,18 @@ select#tag_category_index option {
             <div id="select_bar" >
                 <div id="tag_selected"></div>
                 <div>
-                    <button onclick="tag_list_slide_toggle(this)">
-                        ⮝
-                    </button>
                 </div>
             </div>
             <div>
-                <div id="tag_list">
+                <div id="tag_list" style='display:none;'>
+                    <div id="tag_list_head" style="display:flex;justify-content: space-between;border-bottom: 1px solid var(--border-line-color);">
+                        <div style='width:20em;'>
+                            <input id="tag_input" type="input" placeholder="tag search" size="20">
+                        </div>
+                        <div>
+                            <button id="btn-tag_list_close" onclick='close_tag_list()'>X</button>
+                        </div>
+                    </div>
                     <div level="0" class="tag_others"></div>
                     <div level="1" class="tag_others"></div>
                     <div level="2" class="tag_others"></div>
