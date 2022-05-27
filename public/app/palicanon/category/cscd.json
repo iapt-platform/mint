@@ -799,6 +799,72 @@
                         "tag":["añña","visuddhimagga","nidānakathā"]
                     }
                 ]
+            },
+            {
+                "name":"Saṃgāyanassa-Pucchā Vissajjanā",
+                "tag":["añña","saṃgāyanassa pucchā vissajjanā"],
+                "children":[
+                    {
+                        "name":"Dīghanikāya(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","dīghanikāya"]
+                    },
+                    {
+                        "name":"Majjhimanikāya(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","majjhimanikāya"]
+                    },
+                    {
+                        "name":"Saṃyuttanikāya(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","saṃyuttanikāya"]
+                    },
+                    {
+                        "name":"Aṅguttaranikāya(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","aṅguttaranikāya"]
+                    },
+                    {
+                        "name":"Vinayapiṭaka(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","vinayapiṭaka"]
+                    },
+                    {
+                        "name":"Abhidhammapiṭaka(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","abhidhammapiṭaka"]
+                    },
+                    {
+                        "name":"Aṭṭhakathā(Pu-Vi)",
+                        "tag":["añña","saṃgāyanassa pucchā vissajjanā","aṭṭhakathā"]
+                    }
+                ]
+            },
+            {
+                "name":"Leḍī Sayādo Gantha-Saṅgaho",
+                "tag":["añña","leḍī sayādo gantha-saṅgaho"],
+                "children":[
+                    {
+                        "name":"Niruttidīpanīpāṭha",
+                        "tag":["añña","leḍī sayādo gantha-saṅgaho","niruttidīpanīpāṭha"]
+                    },
+                    {
+                        "name":"Paramatthadīpanī",
+                        "tag":["añña","leḍī sayādo gantha-saṅgaho","paramatthadīpanī"]
+                    },
+                    {
+                        "name":"Anudīpanīpāṭha",
+                        "tag":["añña","leḍī sayādo gantha-saṅgaho","anudīpanīpāṭha"]
+                    },
+                    {
+                        "name":"Paṭṭhānuddesa dīpanīpāṭha",
+                        "tag":["añña","leḍī sayādo gantha-saṅgaho","paṭṭhānuddesa dīpanīpāṭha"]
+                    }
+                ]
+            },
+            {
+                "name":"Buddha-Vandana Gantha-Saṅgaho",
+                "tag":["añña","buddha-vandana"],
+                "children":[
+                    {
+                        "name":"Namakkāratīkā",
+                        "tag":["añña","buddha-vandana","namakkāra"]
+                    }
+                ]
             }
         ]
     }
