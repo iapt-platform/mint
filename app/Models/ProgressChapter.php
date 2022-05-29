@@ -15,6 +15,9 @@ class ProgressChapter extends Model
             'uid' => 'string'
         ];
     protected $primaryKey = 'uid';
+    
+    protected $dateFormat = 'U';
+
     public function tagid()
     {
         return $this->hasOne('App\Models\TagMap', 'anchor_id', 'uid'); //参数一:需要关联的子表类名,前面必须加上命名空间  参数二:子表关联父表的字段  参数三:父表关联子表的字段
