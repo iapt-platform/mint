@@ -150,6 +150,25 @@ class ProgressChapterController extends Controller
                                             ->get();
                 $all_count = count($chapters);
                 break;
+            case 'chapter_channels':
+            /*
+                某个章节 有多少channel
+            */
+                $chapters = ProgressChapter::select('book','para','progress_chapters.uid','progress_chapters.channel_id','progress','updated_at')
+                                            ->with(['channel' => function($query) {
+                                                return $query->select('*');
+                                            }])
+                                            ->where("book",$request->get('book'))
+                                            ->where("para",$request->get('par'))
+                                            ->orderBy('progress','desc')
+                                            ->get();
+                foreach ($chapters as $key => $value) {
+                    # code...
+                    $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                }
+                
+                $all_count = count($chapters);
+                break;
             case 'chapter':
                 $tm = (new TagMap)->getTable();
                 $pc =(new ProgressChapter)->getTable();

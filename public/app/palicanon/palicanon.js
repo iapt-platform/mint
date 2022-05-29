@@ -298,11 +298,24 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 				},
 				function (data, status) {
 					let arrChapterList = JSON.parse(data);
-					$("#list-" + (parseInt(div_index) + 1)).html(render_chapter_list(arrChapterList));
-
-					//palicanon_chapter_list_apply(arrChapterList, div_index);
+                    $("#list-" + (parseInt(div_index) + 1)).html(render_chapter_list(arrChapterList));
+					
 				}
 			);
+
+//获取章节的channel列表
+            $.getJSON(
+				"/api/v2/progress?view=chapter_channels",
+				{
+					book: book,
+					par: para,
+				},
+				function (data, status) {
+					let arrChannelList = data.data.rows;
+					$("#chapter_head_" + (parseInt(div_index) + 1)).find('.progress').first().html(render_chapter_progress_list(arrChannelList));
+				}
+			);
+
 		}
 	);
 }
@@ -354,7 +367,7 @@ function render_chapter_head(chapter_info, parent) {
 	html += "</div>";
 	html += "<div class='res res_more'>";
 	html += "<h2>译文</h2>";
-	html += "<div class='progress'>";
+	html += "<div class='progress' id='chapter_progress'>";
 	if (chapter_info.progress && chapter_info.progress.length > 0) {
 		let r = 12;
 		let perimeter = 2 * Math.PI * r;
@@ -392,7 +405,35 @@ function render_chapter_list(chapterList) {
 	}
 	return html;
 }
+function render_chapter_progress_list(chapterList) {
+	let html = "";
+    html += "<ul>";
 
+	for (const iterator of chapterList) {
+        if(iterator.channel){
+            html += "<li>";
+            html += "<span>";
+            html += "<a href='../article/?view=chapter&book="+iterator.book+"&par="+iterator.para+"&channel="+iterator.channel.uid+"' target='_blanck'>";
+            html += iterator.channel.name;
+            html += "</a>";
+            html += "</span>";
+            html += "<span>";
+            html += iterator.progress;
+            html += "</span>";
+            html += "<span>";
+            html += iterator.views;
+            html += "</span>";
+            html += "<span>";
+            html += iterator.updated_at;
+            html += "</span>";
+            html += "</li>";            
+        }
+
+	}
+    html += "</ul>";
+
+	return html;
+}
 function palicanon_chapter_list_apply(div_index) {
 	let iDiv = parseInt(div_index);
 	let html = "";
@@ -489,37 +530,33 @@ function palicanon_render_chapter_row(chapter) {
 
     html += "<div class='left_items'>";
 
-    html += "<div class='left_item'>";
 
+
+    if(chapter.views){
+    html += "<div class='left_item'>";        
     html += "<span class='item'>";
     html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
     html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
     html += "</svg>" ;
     html += "<span class='text'>";
-    if(chapter.views){
-        html += chapter.views;
-    }else{
-        html += "0";
-    }
+    html += chapter.views;
     html += "</span>";
     html += "</span>";
-
     html += "</div>"
+    }
 
-    html += "<div class='left_item'>";
-    html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#heart'>";
-    html += "</svg>" ;
-    html += "<span class='text'>";
     if(chapter.likes){
+        html += "<div class='left_item'>";
+        html += "<span class='item'>";
+        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#heart'>";
+        html += "</svg>" ;
+        html += "<span class='text'>";
         html += chapter.likes;
-    }else{
-        html += "0";
+        html += "</span>";
+        html += "</span>";
+        html += "</div>"
     }
-    html += "</span>";
-    html += "</span>";
-    html += "</div>"
 
     //完成度
     html += "<div class='left_item'>";
