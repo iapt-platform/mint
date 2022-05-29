@@ -362,6 +362,23 @@ function gotoArticle(articleId) {
 	location.assign(url);
 }
 
+function OneHitChapter(book,para,channel){
+    fetch('/api/v2/view',{
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            target_type:'chapter',
+            book:book,
+            para:para,
+            channel:channel
+        })
+    })
+  .then(response => response.json())
+  .then(data => console.log(data));
+}
 
 function palicanon_load() {
 	let param;
@@ -376,6 +393,11 @@ function palicanon_load() {
 				start: _start,
 				end: _end,
 			}
+            if(_channal !==""){
+                for (const iterator of _channal.split(",")) {
+                    OneHitChapter(_book,_par,iterator);
+                }
+            }
 			break;
 		case "simsent":
 		case "sim":

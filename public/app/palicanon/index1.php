@@ -34,20 +34,14 @@ require_once '../public/function.php';
     margin-left: 0;
 }
 .head_bar{
-    display:flex;
-    max-width: 30vh;
+    display: flex;
+    flex-direction: column;
 }
 #left-bar{
     flex: 2;
     background-color: var(--box-bg-color2);
 }
-.more_info{
-    font-size:80%;
-    color: var(--main-color1);
-}
-.more_info>.item{
-    margin-right:1em;
-}
+
 .chapter_list ul li{
     display:flex;
 }
@@ -77,10 +71,22 @@ require_once '../public/function.php';
     max-height: unset;
     overflow-y: unset; 
 }
-.chapter_list .more_info {
-    display: block;
+
+.chapter_list .more_info{
+    display:flex;
+    font-size:80%;
+    color: var(--main-color1);
+    justify-content: space-between;
 }
 
+
+}
+.more_info>.palicanon_chapter_info>.item{
+    margin-right:1em;
+}
+.left_item>.item{
+    margin-right:1em;
+}
 .filter>.inner {
     max-height: 200px;
     overflow-y: auto;
@@ -122,6 +128,34 @@ select#tag_category_index option {
 }
 button.active {
     background-color: gray;
+}
+
+.chapter_list ul li>.left{
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.chapter_list ul li>.right{
+    width:100%;
+}
+.chapter_tag {
+    width: 475px;
+    padding: 5px 0;
+    overflow-y: visible;
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.left_item {
+    margin: 4px 0;
+}
+.left_item>.item>.small_icon{
+    width:16px;
+    height:16px;
+}
+.left_item>.item>.text{
+    padding:5px;
 }
 </style>
 

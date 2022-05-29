@@ -141,8 +141,12 @@ function communityGetChapter(strTags="",lang="",offset=0){
                     trans_title:iterator.title,
                     channel_id:iterator.channel_id,
                     type:'article',
-                    channel_info:iterator.channel_info,
-                    path:JSON.parse(iterator.path)
+                    channel_info:iterator.channel,
+                    path:JSON.parse(iterator.path),
+                    views:iterator.views,
+                    tags:iterator.tags,
+                    summary:iterator.summary,
+                    created_at:iterator.created_at
                 });
             }
 			for (const iterator of arrChapterList) {
@@ -424,19 +428,20 @@ function palicanon_chapter_list_apply(div_index) {
 }
 
 function chapter_onclick(obj) {
-	let book = $(obj).attr("book");
-	let para = $(obj).attr("para");
-	let channel = $(obj).attr("channel");
-	let type = $(obj).attr("type");
-	let level =  parseInt($(obj).parent().attr("level"));
-    let title1 = $(obj).find(".title_1").first().text();
+    let objList = $(obj).parent().parent().parent();
+	let book = $(objList).attr("book");
+	let para = $(objList).attr("para");
+	let channel = $(objList).attr("channel");
+	let type = $(objList).attr("type");
+	let level =  parseInt($(objList).parent().attr("level"));
+    let title1 = $(objList).find(".title_1").first().text();
     if(type=='article'){
         window.open("../article/index.php?view=chapter&book="+book+"&par="+para+"&channel="+channel,);
     }else{
         gBreadCrumbs[level] = {title1:title1,book:book,para:para,level:level};
         RenderBreadCrumbs();
-        $(obj).siblings().removeClass("selected");
-        $(obj).addClass("selected");
+        $(objList).siblings().removeClass("selected");
+        $(objList).addClass("selected");
         $("#tag_list").slideUp();
         palicanon_load_chapter(book, para, level);
     }
@@ -446,6 +451,27 @@ function close_tag_list(){
     $("#tag_list").slideUp();
     $("#btn-filter").removeClass("active");
 
+}
+function renderProgress(progress=0,width=16,height=16){
+        //绘制进度圈
+    
+
+		let r = 12;
+		let perimeter = 2 * Math.PI * r;
+		let stroke1 = parseInt(perimeter * progress);
+		let stroke2 = perimeter - stroke1;
+        let html="";
+		html += '<svg class="progress_circle" width="16" height="16" viewbox="0,0,30,30">';
+		html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
+		html +=
+			'<circle class="progress_color" cx="15" cy="15" r="12" stroke-width="5" fill="none"  stroke-dasharray="' +
+			stroke1 +
+			" " +
+			stroke2 +
+			'"></circle>';
+		html += "</svg>";
+    return html;
+    
 }
 function palicanon_render_chapter_row(chapter) {
 	let html = "";
@@ -457,26 +483,88 @@ function palicanon_render_chapter_row(chapter) {
     if(typeof chapter.type !== "undefined" && chapter.type==='article'){
         html += ' channel="' + chapter.channel_id + '" type="' + chapter.type + '"';
     }
-    html += ' onclick="chapter_onclick(this)">';
+    html += ' >';
     
+	html += '<div class="left">';
+
+    html += "<div class='left_items'>";
+
+    html += "<div class='left_item'>";
+
+    html += "<span class='item'>";
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
+    html += "</svg>" ;
+    html += "<span class='text'>";
+    if(chapter.views){
+        html += chapter.views;
+    }else{
+        html += "0";
+    }
+    html += "</span>";
+    html += "</span>";
+
+    html += "</div>"
+
+    html += "<div class='left_item'>";
+    html += "<span class='item'>";
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#heart'>";
+    html += "</svg>" ;
+    html += "<span class='text'>";
+    if(chapter.likes){
+        html += chapter.likes;
+    }else{
+        html += "0";
+    }
+    html += "</span>";
+    html += "</span>";
+    html += "</div>"
+
+    //完成度
+    html += "<div class='left_item'>";
+	html += "<span class='item'>";
+    html += renderProgress(chapter.progress.all_trans);
+    /*
+    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
+	html += "</svg>" ;
+    */
+    html += "<span class='text'>";
+    if(chapter.progress){
+        html += parseInt(chapter.progress.all_trans*100+1)+"%";
+    }else{
+         html += "无";
+    }
+    html += "</span>";
+    html += "</span>";
+    html += "</div>"
+
+    html += "<div class='left_item'></div>"
+    html += "</div>";//end of left_items
+
+    html += "<div class='chapter_icon'>";
+        html += '<span class="" style="margin-right: 1em;padding: 4px 0;">';
+        html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+        if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal-text'>";
+        }else{
+            if (chapter.level == 1) {
+                html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
+            }else{
+                html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
+            }
+        }
+        html += "</svg>" ;
+        html += "</span>";
+    html += "</div>";
+	html += '</div>';//end of left
+
+	html += '<div class="right">';
+
 	html += '<div class="head_bar">';
 
-    html += '<span class="" style="margin-right: 1em;padding: 4px 0;">';
-    html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
-    if(typeof chapter.type !== "undefined" && chapter.type==='article'){
-        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal-text'>";
-    }else{
-        if (chapter.level == 1) {
-            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journal'>";
-        }else{
-            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder2-open'>";
-        }
-    }
-
-	html += "</svg>" ;
-	html += "</span>";   
-
-	html += '<div class="title">';
+	html += '<div class="title" onclick="chapter_onclick(this)">';
 
     
     let sPaliTitle = chapter.title;
@@ -502,69 +590,76 @@ function palicanon_render_chapter_row(chapter) {
 		html += "	<div class='title_1'>" + chapter.trans_title + "</div>";
 	}
 
-	html += '	<div class="title_2" lang="pali">' + sPaliTitle + "</div>";
-	html += "</div>";
-	html += '<div class="resource">';
-    //绘制进度圈
-    /*
-	if (chapter.progress) {
-		let r = 12;
-		let perimeter = 2 * Math.PI * r;
-		let stroke1 = parseInt(perimeter * chapter.progress.all_trans);
-		let stroke2 = perimeter - stroke1;
-		html += '<svg class="progress_circle" width="30" height="30" viewbox="0,0,30,30">';
-		html += '<circle class="progress_bg" cx="15" cy="15" r="12" stroke-width="5"  fill="none"></circle>';
-		html +=
-			'<circle class="progress_color" cx="15" cy="15" r="12" stroke-width="5" fill="none"  stroke-dasharray="' +
-			stroke1 +
-			" " +
-			stroke2 +
-			'"></circle>';
-		html += "</svg>";
-	}
-    */
-	html += "</div>";
-	html += "</div>";//end of head bar
-
-
-    html += '<div class="more_info">';
-
-    html += "<span class='item'>";
+	html += '<div class="title_2" lang="pali">' + sPaliTitle + "</div>";
+	html += '<div class="title_2" lang="pali">';
+//书名
     if(chapter.path){
+        html += "<span class='item'>";        
         html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
         html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
         html += "</svg>" ;
         html += chapter.path[0].title;
+        html += "</span>";        
     }
-    html += "</span>"
-    
-	html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
-	html += "</svg>" ;
-    if(chapter.progress){
-        html += parseInt(chapter.progress.all_trans*100+1)+"%";
-    }else{
-         html += "无";
+    html +=  "</div>";
+	html += "</div>";
+	html += '<div class="resource">';
+    if(chapter.summary){
+        html += chapter.summary;
+    }
+
+	html += "</div>";
+
+    html += '<div class="more_info">';
+    //最下面一栏，左侧的标签列表
+    html += "<div class='chapter_tag'>";
+
+
+    if(chapter.tags){
+        html += renderChapterTags(chapter.tags);
     }
     
-    html += "</span>";
+    html += "</div>";
+    html += "<div class='palicanon_chapter_info'>"
+
 
 	html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person'>";
+    html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person-circle'>";
 	html += "</svg>" ;
+	html += "<span class='text'>";
+
     if(typeof chapter.type !== "undefined" && chapter.type==='article'){
         html += chapter.channel_info.name;
     }else{
-        html += "简体中文(3)";
+        html += "EN(3)";
     }
-    
     html += "</span>";
+    html += "</span>";
+
+    if(chapter.created_at){
+        let time = new Date(chapter.created_at);
+        html += "<span class='item'>";
+        html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#clock'>";
+        html += "</svg>" ;
+        html += "<span class='text'>";
+        html += getPassDataTime(time);
+        html += "</span>";
+        html += "</span>";
+        html += "</div>";
+        html += "</div>";    
+    }
+
+
+
+	html += "</div>";//end of head bar
+
 
 
 
 	html += "</div>";
+
 	html += "</li>";
 	return html;
 }
@@ -632,9 +727,28 @@ function tag_click(tag) {
 }
 
 function tag_set(tag) {
-	list_tag = tag;
+    if(Array.isArray(tag)){
+        list_tag = tag;
+    }else{
+        list_tag = [tag];
+    }
+	
 	render_tag_list();
 	tag_changed();
+}
+
+function renderChapterTags(tags){
+    let html = "";
+    for (const iterator of tags) {
+		html += '<tag onclick="tag_set(\''+iterator.name+'\')">';
+        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tag'>";
+        html += "</svg>" 
+        html += '<span class="textt" title="' + iterator.name + '">' + tag_get_local_word(iterator.name) + "</span>";
+		//html += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span>";
+        html += "</tag>";
+	}
+    return html;
 }
 
 function render_tag_list() {

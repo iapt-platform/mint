@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\View;
+use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -17,6 +18,13 @@ class ViewController extends Controller
                 break;
             case 'chapter':
                 # code...
+                $channel = $request->get("channel");
+                $book = $request->get("book");
+                $para = $request->get("para");
+                $target_id = ProgressChapter::where("channel_id",$request->get("channel"))
+                                            ->where("book",$request->get("book"))
+                                            ->where("para",$request->get("para"))
+                                            ->value("uid");
                 break;
             case 'article-instance':
                 # code...
@@ -80,9 +88,9 @@ class ViewController extends Controller
             'target_id' => $target_id,
             'target_type' => $request->get("target_type"),
         ];
-        if(isset($GET['user_uid'])){
+        if(isset($_COOKIE['user_uid'])){
             //已经登陆
-            $user_id = $GET['user_uid'];
+            $user_id = $_COOKIE['user_uid'];
             $param['user_id'] = $user_id;
         }else{
             $param['user_ip'] = $clientIp;
@@ -90,8 +98,8 @@ class ViewController extends Controller
         $new = View::firstOrNew($param);
         $new->user_ip = $clientIp;
         $new->save();
-
-        return $this->ok($new);
+        $count = View::where("target_id",$new->target_id)->count();
+        return $this->ok($count);
     }
 
     /**

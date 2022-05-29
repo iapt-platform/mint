@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\PaliText;
+use App\Models\View;
 use Illuminate\Http\Request;
 
 class ProgressChapterController extends Controller
@@ -135,6 +136,9 @@ class ProgressChapterController extends Controller
             case 'channel-type':
                 break;
             case 'channel':
+            /*
+            总共有多少channel
+            */
                 $chapters = ProgressChapter::select('channel_id')
                                             ->selectRaw('count(*) as count')
                                             ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
@@ -174,7 +178,7 @@ class ProgressChapterController extends Controller
                 $param[] = $minProgress;
                 $param[] = $offset;
                 $query = "
-                select tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.created_at,tpc.updated_at 
+                select tpc.uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
                     from (
                         select * from (
                             select anchor_id as cid from (
@@ -196,7 +200,12 @@ class ProgressChapterController extends Controller
                 $chapters = DB::select($query,$param);
                 foreach ($chapters as $key => $value) {
                     # code...
-                    $chapters[$key]->channel_info = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
+                    $chapters[$key]->channel = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
+                    $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                    $chapters[$key]->tags = TagMap::where("anchor_id",$value->uid)
+                                                ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
+                                                ->select(['tags.id','tags.name','tags.description'])
+                                                ->get();
                 }
                 $all_count = 10;
                 break;

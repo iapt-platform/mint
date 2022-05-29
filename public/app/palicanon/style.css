@@ -38,9 +38,11 @@ tag {
 	margin: 2px;
 	padding: 2px 12px;
 	border-radius: 5px;
-	border: 1px solid #fe897c;
+    cursor: pointer;
 }
-
+tag:hover{
+    background-color: var(--border-line-color);
+}
 .tag-delete {
 	margin-left: 6px;
 	color: #f93e3e;
@@ -154,9 +156,6 @@ tag {
 	display: none;
 }
 .chapter_list ul {
-	background-color: antiquewhite;
-	border-left: 1px solid brown;
-	border-right: 1px solid brown;
 	padding: 0;
 }
 .chapter_list ul li {
@@ -165,20 +164,30 @@ tag {
 	padding: 8px;
 	white-space: nowrap;
 	overflow-x: hidden;
+    border-bottom: 1px solid var(--border-line-color);
 }
 .chapter_list ul li:hover {
-	background-color: darkorange;
-	cursor: pointer;
+	/*background-color: darkorange;*/
+	/*cursor: pointer;*/
 }
 .chapter_list .resource {
-	display: flex;
-	margin-top: auto;
-	margin-bottom: auto;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    white-space: pre-wrap;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
 }
 .chapter_list .title .title_1 {
-	color: var(--main-color);
+	color: var(--link-color);
 	font-weight: 700;
 	font-size: 110%;
+}
+.chapter_list .title .title_1:hover {
+	color: var(--link-hover-color);
+	cursor: pointer;
 }
 .chapter_list .title .title_2 {
 	font-size: 80%;
