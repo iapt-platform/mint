@@ -657,6 +657,8 @@
 		"pass": "被動",
 		"channel_type": "資源類型",
 		"space": "",
+		"master_copy": "巴利底本",
+		"nissaya": "依詞釋",
 		"": ""
 	},
 	"grammastr": [
