@@ -205,23 +205,23 @@
                 "children":[
                     {
                         "name":"pārājikapāḷi",
-                        "tag":["mūla","vinaya","pārājika"]
+                        "tag":["mūla","vinaya","pārājikapāḷi"]
                     },
                     {
                         "name":"pācittiyapāḷi",
-                        "tag":["mūla","vinaya","pācittiya"]
+                        "tag":["mūla","vinaya","pācittiyapāḷi"]
                     },
                     {
                         "name":"mahāvaggapāḷi",
-                        "tag":["mūla","vinaya","mahāvagga"]
+                        "tag":["mūla","vinaya","mahāvaggapāḷi"]
                     },
                     {
                         "name":"cūḷavaggapāḷi",
-                        "tag":["mūla","vinaya","cūḷavagga"]
+                        "tag":["mūla","vinaya","cūḷavaggapāḷi"]
                     },
                     {
                         "name":"parivārapāḷi",
-                        "tag":["mūla","vinaya","parivāra"]
+                        "tag":["mūla","vinaya","parivārapāḷi"]
                     }
                 ]
             },
@@ -863,6 +863,110 @@
                     {
                         "name":"Namakkāratīkā",
                         "tag":["añña","buddha-vandana","namakkāra"]
+                    },
+                    {
+                        "name":"Mahāpaṇāmapāṭha",
+                        "tag":["añña","buddha-vandana","mahāpaṇāmapāṭha"]
+                    },
+                    {
+                        "name":"Lakkhaṇāto Buddhathomanāgāthā",
+                        "tag":["añña","buddha-vandana","lakkhaṇāto"]
+                    },
+                    {
+                        "name":"Suttavandanā",
+                        "tag":["añña","buddha-vandana","suttavandanā"]
+                    },
+                    {
+                        "name":"Jinālaṅkāra",
+                        "tag":["añña","buddha-vandana","jinālaṅkāra"]
+                    },
+                    {
+                        "name":"Kamalāñjali",
+                        "tag":["añña","buddha-vandana","kamalāñjali"]
+                    },
+                    {
+                        "name":"Pajjamadhu",
+                        "tag":["añña","buddha-vandana","pajjamadhu"]
+                    },
+                    {
+                        "name":"Buddhaguṇagāthāvalī",
+                        "tag":["añña","buddha-vandana","buddhaguṇagāthāvalī"]
+                    }
+                ]
+            },
+            {
+                "name":"Vaṃsa Gantha-Saṅgaho",
+                "tag":["añña","vaṃsa"],
+                "children":[
+                    {
+                        "name":"Cūḷaganthavaṃsa",
+                        "tag":["añña","vaṃsa","Cūḷaganthavaṃsapāḷi"]
+                    },
+                    {
+                        "name":"sāsanavaṃsa",
+                        "tag":["añña","vaṃsa","sāsanavaṃsappadīpikā"]
+                    },
+                    {
+                        "name":"Mahāvaṃsa",
+                        "tag":["añña","vaṃsa","mahāvaṃsapāḷi"]
+                    }
+                ]
+            },
+            {
+                "name":"Byākaraṇa Gantha-Saṅgaho",
+                "tag":["añña","byākaraṇa"],
+                "children":[
+                    {
+                        "name":"Moggallānabyākaraṇa",
+                        "tag":["añña","byākaraṇa","moggallānasuttapāṭha"]
+                    },
+                    {
+                        "name":"Kaccāyanabyākaraṇaṃ",
+                        "tag":["añña","byākaraṇa","kaccāyanabyākaraṇa"]
+                    },
+                    {
+                        "name":"Saddanītippakaraṇaṃ (padamālā)",
+                        "tag":["añña","byākaraṇa","padamālā"]
+                    },
+                    {
+                        "name":"Saddanītippakaraṇaṃ (Dhātumālā)",
+                        "tag":["añña","byākaraṇa","dhātumālā"]
+                    },
+                    {
+                        "name":"Padarūpasiddhi",
+                        "tag":["añña","byākaraṇa","padarūpasiddhi"]
+                    },
+                    {
+                        "name":"Moggallānapañcikā",
+                        "tag":["añña","byākaraṇa","moggallānapañcikā"]
+                    },
+                    {
+                        "name":"Payogasiddhipāṭha",
+                        "tag":["añña","byākaraṇa","payogasiddhipāḷi"]
+                    },
+                    {
+                        "name":"Vuttodayapāṭha",
+                        "tag":["añña","byākaraṇa","vuttodaya"]
+                    },
+                    {
+                        "name":"Abhidhānappadīpikāpāṭha",
+                        "tag":["añña","byākaraṇa","abhidhānappadīpikā"]
+                    },
+                    {
+                        "name":"Abhidhānappadīpikāṭīkā",
+                        "tag":["añña","byākaraṇa","abhidhānappadīpikāṭīkā"]
+                    },
+                    {
+                        "name":"Subodhālaṅkārapāṭha",
+                        "tag":["añña","byākaraṇa","subodhālaṅkāra"]
+                    },
+                    {
+                        "name":"Subodhālaṅkāraṭīkā",
+                        "tag":["añña","byākaraṇa","subodhālaṅkāraṭīkā"]
+                    },
+                    {
+                        "name":"Bālāvatāra",
+                        "tag":["añña","byākaraṇa","bālāvatāra"]
                     }
                 ]
             }

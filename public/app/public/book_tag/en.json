@@ -4281,7 +4281,7 @@
 		"para": "3",
 		"level": "1",
 		"title": "mahāvaggapāḷi",
-		"tag": ":mahāvagga::mūla::vinaya::khandhaka::pāḷi:"
+		"tag": ":mahāvagga::mūla::vinaya::khandhaka::mahāvaggapāḷi::pāḷi:"
 	},
 	{
 		"book": "215",
@@ -4358,7 +4358,7 @@
 		"para": "3",
 		"level": "1",
 		"title": "cūḷavaggapāḷi",
-		"tag": ":cūḷavagga::mūla::vinaya::khandhaka::pāḷi:"
+		"tag": ":cūḷavagga::mūla::vinaya::khandhaka::cūḷavaggapāḷi::pāḷi:"
 	},
 	{
 		"book": "216",
@@ -4444,7 +4444,7 @@
 		"title": "12. sattasatikakkhandhakaṃ",
 		"tag": ":cūḷavagga::mūla::vinaya::khandhaka::pāḷi:"
 	},
-	{ "book": "217", "para": "3", "level": "1", "title": "parivārapāḷi", "tag": ":parivāra::mūla::vinaya::pāḷi:" },
+	{ "book": "217", "para": "3", "level": "1", "title": "parivārapāḷi", "tag": ":parivāra::mūla::vinaya::parivārapāḷi::pāḷi:" },
 	{ "book": "217", "para": "5", "level": "2", "title": "soḷasamahāvāro", "tag": ":parivāra::mūla::vinaya::pāḷi:" },
 	{
 		"book": "217",
@@ -5123,8 +5123,8 @@
 		"book": "81",
 		"para": "3",
 		"level": "1",
-		"title": "paṭṭhānapāḷi",
-		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:"
+		"title": "paṭṭhānapāḷi(Paṭhamo Bhāgo)",
+		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi::paṭhama bhāga:"
 	},
 	{
 		"book": "81",
@@ -5172,8 +5172,8 @@
 		"book": "69",
 		"para": "3",
 		"level": "1",
-		"title": "paṭṭhānapāḷi",
-		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:"
+		"title": "paṭṭhānapāḷi(Dutiyo Bhāgo)",
+		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi::dutiya bhāga:"
 	},
 	{
 		"book": "69",
@@ -5298,8 +5298,8 @@
 		"book": "70",
 		"para": "3",
 		"level": "1",
-		"title": "paṭṭhānapāḷi",
-		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:"
+		"title": "paṭṭhānapāḷi(Tatiyo Bhāgo)",
+		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi::tatiya bhāga:"
 	},
 	{
 		"book": "70",
@@ -5375,8 +5375,8 @@
 		"book": "71",
 		"para": "3",
 		"level": "1",
-		"title": "paṭṭhānapāḷi",
-		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:"
+		"title": "paṭṭhānapāḷi(Catuttho Bhāgo)",
+		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi::catuttha bhāga:"
 	},
 	{
 		"book": "71",
@@ -5529,8 +5529,8 @@
 		"book": "72",
 		"para": "3",
 		"level": "1",
-		"title": "paṭṭhānapāḷi",
-		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:"
+		"title": "paṭṭhānapāḷi(Pañcamo Bhāgo)",
+		"tag": ":paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi::pañcama bhāga:"
 	},
 	{
 		"book": "72",
