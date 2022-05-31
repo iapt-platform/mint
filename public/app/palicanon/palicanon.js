@@ -144,6 +144,7 @@ function communityGetChapter(strTags="",lang="",offset=0){
                     channel_info:iterator.channel,
                     path:JSON.parse(iterator.path),
                     views:iterator.views,
+                    likes:iterator.likes,
                     tags:iterator.tags,
                     summary:iterator.summary,
                     created_at:iterator.created_at
@@ -303,19 +304,12 @@ function palicanon_load_chapter(book, para, div_index = 1) {
 				}
 			);
 
-//获取章节的channel列表
-            $.getJSON(
-				"/api/v2/progress?view=chapter_channels",
-				{
-					book: book,
-					par: para,
-				},
-				function (data, status) {
-					let arrChannelList = data.data.rows;
-					$("#chapter_head_" + (parseInt(div_index) + 1)).find('.progress').first().html(render_chapter_progress_list(arrChannelList));
-				}
-			);
-
+            //获取章节的channel列表
+            loadChapterChannel({
+                book:book,
+                para:para,
+                target:$("#chapter_head_" + (parseInt(div_index) + 1)).find('.progress').first()
+            });
 		}
 	);
 }
@@ -405,35 +399,8 @@ function render_chapter_list(chapterList) {
 	}
 	return html;
 }
-function render_chapter_progress_list(chapterList) {
-	let html = "";
-    html += "<ul>";
 
-	for (const iterator of chapterList) {
-        if(iterator.channel){
-            html += "<li>";
-            html += "<span>";
-            html += "<a href='../article/?view=chapter&book="+iterator.book+"&par="+iterator.para+"&channel="+iterator.channel.uid+"' target='_blanck'>";
-            html += iterator.channel.name;
-            html += "</a>";
-            html += "</span>";
-            html += "<span>";
-            html += iterator.progress;
-            html += "</span>";
-            html += "<span>";
-            html += iterator.views;
-            html += "</span>";
-            html += "<span>";
-            html += iterator.updated_at;
-            html += "</span>";
-            html += "</li>";            
-        }
 
-	}
-    html += "</ul>";
-
-	return html;
-}
 function palicanon_chapter_list_apply(div_index) {
 	let iDiv = parseInt(div_index);
 	let html = "";
@@ -532,20 +499,20 @@ function palicanon_render_chapter_row(chapter) {
 
 
 
-    if(chapter.views){
-    html += "<div class='left_item'>";        
-    html += "<span class='item'>";
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-    html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
-    html += "</svg>" ;
-    html += "<span class='text'>";
-    html += chapter.views;
-    html += "</span>";
-    html += "</span>";
-    html += "</div>"
+    if(typeof chapter.views != "undefined"){
+        html += "<div class='left_item'>";        
+        html += "<span class='item'>";
+        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
+        html += "</svg>" ;
+        html += "<span class='text'>";
+        html += chapter.views;
+        html += "</span>";
+        html += "</span>";
+        html += "</div>"
     }
 
-    if(chapter.likes){
+    if(typeof chapter.likes != "undefined"){
         html += "<div class='left_item'>";
         html += "<span class='item'>";
         html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
@@ -675,13 +642,12 @@ function palicanon_render_chapter_row(chapter) {
     html += "</span>";
 
     if(chapter.created_at){
-        let time = new Date(chapter.created_at);
         html += "<span class='item'>";
         html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
         html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#clock'>";
         html += "</svg>" ;
         html += "<span class='text'>";
-        html += getPassDataTime(time);
+        html += getPassDataTime(new Date(chapter.created_at));
         html += "</span>";
         html += "</span>";
         html += "</div>";

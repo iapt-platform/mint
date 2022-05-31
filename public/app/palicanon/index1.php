@@ -29,6 +29,10 @@ require_once '../public/function.php';
 <link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 
+	<script src="../widget/like.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
+	<script src="../palicanon/chapter_channel.js"></script>
+
 <style>
 .chapter_list ul {
     margin-left: 0;
@@ -156,6 +160,12 @@ button.active {
 }
 .left_item>.item>.text{
     padding:5px;
+}
+
+div#tag_list {
+    background-color: var(--btn-color);
+    padding: 5px;
+    display: none;
 }
 </style>
 
