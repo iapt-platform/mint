@@ -9,6 +9,7 @@ use App\Http\Controllers\ProgressChapterController;
 use App\Http\Controllers\SentenceInfoController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\LikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,7 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('progress',ProgressChapterController::class);
 	Route::apiResource('tag',TagController::class);
 	Route::apiResource('view',ViewController::class);
+
+    Route::delete('like', [LikeController::class, 'delete']);
+    Route::apiResource('like',LikeController::class);
 });
