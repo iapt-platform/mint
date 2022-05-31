@@ -9,6 +9,7 @@ use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\PaliText;
 use App\Models\View;
+use App\Models\Like;
 use Illuminate\Http\Request;
 
 class ProgressChapterController extends Controller
@@ -35,6 +36,17 @@ class ProgressChapterController extends Controller
 
         $chapters=false;
         switch ($request->get('view')) {
+            case 'ids':
+                $aChannel = explode(',',$request->get('channel'));
+                $chapters = ProgressChapter::select("channel_id")->selectRaw("uid as id")
+                                         ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                                                return $query->select('*');
+                                            }])
+                                        ->where("book",$request->get('book'))
+                                        ->where("para",$request->get('par'))
+                                        ->whereIn('channel_id', $aChannel)->get();
+                $all_count = count($chapters);
+                break;
 			case 'studio':
                 #查询该studio的channel
                 $channels = Channel::where('owner_uid',$request->get('id'))->select('uid')->get();
@@ -165,6 +177,25 @@ class ProgressChapterController extends Controller
                 foreach ($chapters as $key => $value) {
                     # code...
                     $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                    
+                    $likes = Like::where("target_id",$value->uid)
+                                ->groupBy("type")
+                                ->select("type")
+                                ->selectRaw("count(*)")
+                                ->get();
+                    if(isset($_COOKIE["user_uid"])){
+                        foreach ($likes as $key1 => $like) {
+                            # 查看这些点赞里有没有我点的
+                            $myLikeId =Like::where(["target_id"=>$value->uid,
+                                            'type'=>$like->type,
+                                            'user_id'=>$_COOKIE["user_uid"]])->value('id');
+                            if($myLikeId){
+                                $likes[$key1]->selected = $myLikeId;
+                            }
+                        }
+                    }
+                    $chapters[$key]->likes = $likes;
+                    
                 }
                 
                 $all_count = count($chapters);
@@ -221,6 +252,7 @@ class ProgressChapterController extends Controller
                     # code...
                     $chapters[$key]->channel = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
                     $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                    $chapters[$key]->likes = Like::where(["type"=>"like","target_id"=>$value->uid])->count();
                     $chapters[$key]->tags = TagMap::where("anchor_id",$value->uid)
                                                 ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
                                                 ->select(['tags.id','tags.name','tags.description'])
