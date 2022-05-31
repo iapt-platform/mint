@@ -423,7 +423,8 @@ function palicanon_load() {
 						$("#article_path_title").html(result.title);
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
-						$("#article_author").html(result.username.nickname + "@" + result.username.username);
+						//$("#article_author").html(result.username.nickname + "@" + result.username.username);
+                        
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
                             if(document.querySelector("#para_focus")){
