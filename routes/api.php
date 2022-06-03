@@ -10,7 +10,8 @@ use App\Http\Controllers\SentenceInfoController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ViewController;
 use App\Http\Controllers\LikeController;
-
+use App\Http\Controllers\SentHistoryController;
+use App\Http\Controllers\PaliTextController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,4 +37,6 @@ Route::group(['prefix' => 'v2'],function(){
 
     Route::delete('like', [LikeController::class, 'delete']);
     Route::apiResource('like',LikeController::class);
+    Route::apiResource('sent_history',SentHistoryController::class);
+    Route::apiResource('palitext',PaliTextController::class);
 });
