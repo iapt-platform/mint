@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 class ViewController extends Controller
 {
     private function getTargetId($request){
+        /*
+        *根据target type 和不同类型的不同参数
+        */
         $target_id = FALSE;
         switch ($request->get("target_type")) {
             case 'chapter-instance':
@@ -52,14 +55,47 @@ class ViewController extends Controller
     public function index(Request $request)
     {
         //
-        //根据target type 获取 target id
-        $target_id = $this->getTargetId($request);
-        if($target_id){
-            $count = View::where("target_id",$target_id)->count();
-        }else{
-            $count = 0;
+        switch ($request->get("view")) {
+            case 'count':
+                #获取 target id
+                $target_id = $this->getTargetId($request);
+                if($target_id){
+                    $count = View::where("target_id",$target_id)->count();
+                }else{
+                    $count = 0;
+                }
+                return $this->ok($count);
+                break;
+            case 'user-recent':
+                if(!isset($_COOKIE["user_uid"])){
+                    return $this->error("no login");
+                }
+                $user_id = $_COOKIE["user_uid"];
+                $items =  View::where("user_id",$user_id)
+                ->orderBy('created_at','desc')
+                ->take(10)->get();
+                foreach ($items as $key => $item) {
+                    # 根据不同的资源类型查找标题
+                    switch ($item->target_type) {
+                        case 'chapter':
+                            # code...
+                            $items[$key]['title'] = ProgressChapter::where('uid',$item->target_id)
+                                                    ->value('title');
+                            break;
+                        default:
+                            # code...
+                            $items[$key]['title'] = "unknow";
+                            break;
+                    }
+                    
+                }
+                return $this->ok($items);
+                break;
+            default:
+                # code...
+                break;
         }
-        return $this->ok($count);
+        
     }
 
     /**
