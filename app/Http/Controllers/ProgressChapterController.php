@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProgressChapter;
 use App\Models\Channel;
@@ -225,7 +226,15 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
+                $channel_id = $request->get('channel');
+                if(Str::isUuid($channel_id)){
+                    $channel = "and where channel_id = '{$channel_id}'"; 
+                }else{
+                    $channel = "";
+                }
+
                 $param[] = $minProgress;
+                $param_count = $param;
                 $param[] = $offset;
                 $query = "
                 select tpc.uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
@@ -242,7 +251,8 @@ class ProgressChapterController extends Controller
                                 $where1 
                         ) CID 
                         left join $pc as pc on CID.cid = pc.uid 
-                        where pc.progress > ?
+                        where pc.progress > ? 
+                        $channel
                         order by created_at desc
                         limit 20 offset ?
                     ) tpc 
@@ -258,8 +268,29 @@ class ProgressChapterController extends Controller
                                                 ->select(['tags.id','tags.name','tags.description'])
                                                 ->get();
                 }
-                $all_count = 10;
+
+                //计算按照这个条件搜索到的总数
+                $query  = "
+                         select count(*) as count from (
+                            select anchor_id as cid from (
+                                select tm.anchor_id , count(*) as co 
+                                    from $tm as  tm
+                                    left join $tg as t on tm.tag_id = t.id
+                                    where tm.table_name  = 'progress_chapters'  
+                                    $in1
+                                    group by tm.anchor_id
+                            ) T 
+                                $where1 
+                        ) CID 
+                        left join $pc as pc on CID.cid = pc.uid 
+                        where pc.progress > ? 
+                        $channel
+                ";
+                $count = DB::select($query,$param_count);
+                $all_count = $count[0]->count;
                 break;
+            case 'top':
+            break;
         }
         if($chapters){
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
