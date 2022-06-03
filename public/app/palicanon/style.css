@@ -158,7 +158,7 @@ tag:hover{
 .chapter_list ul {
 	padding: 0;
 }
-.chapter_list ul li {
+.chapter_list ul li .main {
 	display: flex;
 	justify-content: space-between;
 	padding: 8px;
@@ -174,16 +174,20 @@ tag:hover{
 
     margin-top: auto;
     margin-bottom: auto;
-    white-space: pre-wrap;
+    white-space: normal;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
+    word-break: break-word;
+    word-wrap: break-word;
 }
 .chapter_list .title .title_1 {
 	color: var(--link-color);
 	font-weight: 700;
 	font-size: 110%;
+    width: 637px;
+    white-space: normal;
 }
 .chapter_list .title .title_1:hover {
 	color: var(--link-hover-color);
@@ -192,6 +196,12 @@ tag:hover{
 .chapter_list .title .title_2 {
 	font-size: 80%;
 	color: var(--main-color1);
+}
+.subchapter {
+    margin-left: 1.5em;
+    padding-left: 0.5em;
+    display: none;
+    border-left: 2px solid gray;
 }
 .selected .title_2 {
 	font-size: 80%;
@@ -205,8 +215,7 @@ tag:hover{
 }
 
 .chapter_list .selected {
-	background-color: chocolate;
-	color: whitesmoke;
+	background-color: var(--btn-color);
 }
 /*書標題特殊樣式*/
 .chapter_list .level_1 {

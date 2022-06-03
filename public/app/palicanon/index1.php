@@ -32,6 +32,7 @@ require_once '../public/function.php';
 	<script src="../widget/like.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
 	<script src="../palicanon/chapter_channel.js"></script>
+	<link type="text/css" rel="stylesheet" href="../palicanon/loading.css"/>
 
 <style>
 .chapter_list ul {
@@ -46,7 +47,7 @@ require_once '../public/function.php';
     background-color: var(--box-bg-color2);
 }
 
-.chapter_list ul li{
+.chapter_list ul li .main{
     display:flex;
 }
 .book_view  ul li{
@@ -134,13 +135,13 @@ button.active {
     background-color: gray;
 }
 
-.chapter_list ul li>.left{
+.chapter_list ul li>.main>.left{
     width: 100px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.chapter_list ul li>.right{
+.chapter_list ul li>.main>.right{
     width:100%;
 }
 .chapter_tag {
@@ -166,6 +167,25 @@ div#tag_list {
     background-color: var(--btn-color);
     padding: 5px;
     display: none;
+}
+div#info_bar_left {
+    font-size: 120%;
+}
+#more_chapter {
+    text-align: center;
+}
+#more_chapter_line {
+    border-bottom: 1px solid var(--border-line-color);
+    height: 1em;
+}
+#btn_more_chapter{
+        position: absolute;
+    margin-top: -1.1em;
+    background-color: var(--link-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 2px 40px;
+    margin-left: -5em;
 }
 </style>
 
@@ -266,6 +286,11 @@ div#tag_list {
                 </div>
             </div>
             <div id='bread-crumbs'></div>
+            <div id='info_bar'>
+            <div id='info_bar_left'>
+
+            </div>
+            </div>
             <div class='index_inner'>
                 <div id="chapter_shell" class="chapter_list" >
                     <div id="list_shell_1" class="show" level="1">
@@ -314,8 +339,8 @@ div#tag_list {
         </div>
     </div>
     <div style="flex:2;">
-    <div class='bangdan'>
-        <div class='title'>最新</div>
+    <div class='bangdan' id = "user_recent">
+        <div class='title'>最近阅读</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
@@ -323,7 +348,7 @@ div#tag_list {
         </div>
     </div>
     <div class='bangdan'>
-        <div class='title'>新手区</div>
+        <div class='title'>求助</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
@@ -331,15 +356,15 @@ div#tag_list {
         </div>
     </div>
     <div class='bangdan'>
-        <div class='title'>周推荐</div>
+        <div class='title'>社区推荐</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
             </ul>
         </div>
     </div>
-    <div class='bangdan'>
-        <div class='title'>白金作者</div>
+    <div class='bangdan' id='contribution'>
+        <div class='title'>月度贡献</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
@@ -380,6 +405,8 @@ div#tag_list {
             ?>
             ReanderMainMenu();
             updateFirstListView();
+            loadUserRecent();
+            loadContribution();
         });
     </script>
     <?php

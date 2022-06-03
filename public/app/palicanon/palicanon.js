@@ -6,6 +6,8 @@ var allTags = new Array();
 var arrMyTerm = new Array();
 var _listView="list";
 var gBreadCrumbs=['','','','','','','','',''];
+var _nextPageStart = 0;
+var _pageSize = 20;
 
 palicanon_load_term();
 
@@ -117,6 +119,7 @@ function tag_changed() {
     
 }
 function communityGetChapter(strTags="",lang="",offset=0){
+    next_page_loader_show();
     $.getJSON(
 		"/api/v2/progress?view=chapter",
 		{
@@ -125,6 +128,7 @@ function communityGetChapter(strTags="",lang="",offset=0){
             offset: offset
 		},
 		function (data, status) {
+            $("#info_bar_left").html(data.data.count+"个章节");
 			let arrChapterData = data.data.rows;
 			let arrChapterList = new Array();
 			let html = "";
@@ -154,9 +158,14 @@ function communityGetChapter(strTags="",lang="",offset=0){
                 arrChapter.push(iterator);
 			}
 
-			palicanon_chapter_list_apply(0);
-			$("#list-1").html(render_chapter_list(arrChapter));
-            
+			
+            if(_nextPageStart==0){
+                palicanon_chapter_list_apply(0);
+                $("#list-1").html(render_chapter_list(arrChapter));
+            }else{
+                $("#list-1").append(render_chapter_list(arrChapter));
+            }
+            next_page_loader_hide();
 		}
 	);
 
@@ -183,65 +192,76 @@ function communityLoadChapterTag(strTags="",lang=""){
 
         });
 }
-function palicanonGetChapter(strTags,lang){
-	$.get(
-		"./book_tag.php",
+
+function palitextGetChapter(strTags=""){
+    $.getJSON(
+		"/api/v2/palitext?view=chapter",
 		{
-			tag: strTags,
-			lang: lang,
+			tags: strTags
 		},
 		function (data, status) {
-			let arrBookList = JSON.parse(data);
-			let html = "";
-			allTags = new Array();
+			let arrChapterData = data.data.rows;
+			let arrChapterList = new Array();
 			let arrChapter = new Array();
+            let lastParent = -1;
+            for (let index = 0; index < arrChapterData.length; index++) {
+                arrChapterData[index].children = new Array();
+            }
+			for (const it of arrChapterData) {
+                if(arrChapterList.length==0){
+                    arrChapterList.push(it);
+                    continue;
+                }
+                if(lastParent>=0){
+                    //判断是否为这个章节的子章节
+                    if(arrChapterList[lastParent].book==it.book && arrChapterList[lastParent].paragraph == it.parent){
+                        arrChapterList[lastParent].children.push(it)
+                    }else{
+                        arrChapterList.push(it);
+                        lastParent = -1;
+                    }
+                }else{
+                    //判断是否为最末尾章节的子章节
+                    if(arrChapterList[arrChapterList.length-1].book==it.book && arrChapterList[arrChapterList.length-1].paragraph == it.parent){
+                        lastParent = arrChapterList.length-1;
+                        arrChapterList[arrChapterList.length-1].children.push(it);
+                    }else{
+                        arrChapterList.push(it);
+                    }
+                }
+            }
 
-			for (const iterator of arrBookList) {
-				let tag0 = "";
-				let tags = iterator.tag.split("::");
-				let currTag = new Array();
-				currTag[main_tag] = 1;
-				for (const scondTag of list_tag) {
-					currTag[scondTag] = 1;
-				}
-				for (let tag of tags) {
-					if (tag.slice(0, 1) == ":") {
-						tag = tag.slice(1);
-					}
-					if (tag.slice(-1) == ":") {
-						tag = tag.slice(0, -1);
-					}
-					if (currTagLevel0.hasOwnProperty(tag)) {
-						tag0 = tag;
-					}
-					if (!currTag.hasOwnProperty(tag)) {
-						if (allTags.hasOwnProperty(tag)) {
-							allTags[tag] += 1;
-						} else {
-							allTags[tag] = 1;
-						}
-					}
-				}
-
-				if (arrBookList.length < 20 || (arrBookList.length > 20 && iterator.level == 1)) {
-					arrChapter.push(iterator);
-				}
-			}
-
-			let newTags = new Array();
-			for (const oneTag in allTags) {
-				if (allTags[oneTag] < arrBookList.length) {
-					newTags[oneTag] = allTags[oneTag];
-				}
-			}
-			allTags = newTags;
-			allTags.sort(sortNumber);
-			tag_render_others();
 			palicanon_chapter_list_apply(0);
-			$("#list-1").html(render_chapter_list(arrChapter));
-
+			$("#list-1").html(render_chapter_list(arrChapterList));
+            
 		}
 	);
+
+    palitextLoadChapterTag(strTags);
+}
+
+function palitextLoadChapterTag(strTags=""){
+
+    $.getJSON(
+		"/api/v2/palitext?view=chapter-tag",
+		{
+			tags: strTags,
+		},
+		function (data, status) {
+            let tagData = data.data.rows;
+            allTags = new Array();
+            let maxCount = tagData[0].count;
+            for (const tag of tagData) {
+                if(tag.count < maxCount){
+                    allTags[tag.name] = tag.count;
+                }
+            }
+			tag_render_others();
+
+        });
+}
+function palicanonGetChapter(strTags,lang){
+    palitextGetChapter(strTags);
 }
 function viewChanged(obj){
 
@@ -400,6 +420,9 @@ function render_chapter_list(chapterList) {
 	return html;
 }
 
+function isChapterWithParent(list,item){
+
+}
 
 function palicanon_chapter_list_apply(div_index) {
 	let iDiv = parseInt(div_index);
@@ -407,14 +430,12 @@ function palicanon_chapter_list_apply(div_index) {
 	html += "<div id='chapter_head_" + (iDiv + 1) + "' class='chapter_head'></div>";
 
 	html += "<ul id='list-" + (iDiv + 1) + "' class='grid' level='" + (iDiv + 1) + "'>";
-	/*	
-	for (const iterator of chapterList) {
-		html += palicanon_render_chapter_row(iterator);
-	}
-*/
 	html += "</ul>";
-	html += "<button>More</button>";
-
+    html += "<div id='more_chapter'>";
+    html += '<div id="page_loader" class="lds-ellipsis" style="visibility: hidden;"><div></div><div></div><div></div><div></div></div>';
+    html += "<div id='more_chapter_line'></div>";
+	html += "<button id='btn_more_chapter' onclick='next_page()'>More</button>";
+    html += "</div>";
 	$("#list_shell_" + (iDiv + 1)).html(html);
 	$("#list_shell_" + (iDiv + 1)).removeClass();
 	$("#list_shell_" + (iDiv + 1)).addClass("show");
@@ -435,8 +456,18 @@ function palicanon_chapter_list_apply(div_index) {
     updateFirstListView();
 }
 
+function next_page_loader_show(){
+    $("#page_loader").css("visibility","visible");
+}
+function next_page_loader_hide(){
+    $("#page_loader").css("visibility","hidden");
+}
+function next_page(){
+    _nextPageStart += _pageSize;
+    communityGetChapter(list_tag.join(),'zh',_nextPageStart);
+}
 function chapter_onclick(obj) {
-    let objList = $(obj).parent().parent().parent();
+    let objList = $(obj).parent().parent().parent().parent();
 	let book = $(objList).attr("book");
 	let para = $(objList).attr("para");
 	let channel = $(objList).attr("channel");
@@ -487,12 +518,20 @@ function palicanon_render_chapter_row(chapter) {
 	if (chapter.level == 1) {
 		//levelClass = " level_1";
 	}
-	html +='<li class="' + 	levelClass +'" book="' + chapter.book + '" para="' + chapter.para + '"';
+    let para=0;
+    if(chapter.para){
+        para=chapter.para;
+    }else if(chapter.paragraph){
+        para=chapter.paragraph;
+    }
+	html +='<li class="' + 	levelClass +'" book="' + chapter.book + '" para="' + para + '"';
     if(typeof chapter.type !== "undefined" && chapter.type==='article'){
         html += ' channel="' + chapter.channel_id + '" type="' + chapter.type + '"';
     }
     html += ' >';
     
+	html += '<div class="main">';
+
 	html += '<div class="left">';
 
     html += "<div class='left_items'>";
@@ -526,23 +565,21 @@ function palicanon_render_chapter_row(chapter) {
     }
 
     //完成度
-    html += "<div class='left_item'>";
-	html += "<span class='item'>";
-    html += renderProgress(chapter.progress.all_trans);
-    /*
-    html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#translate'>";
-	html += "</svg>" ;
-    */
-    html += "<span class='text'>";
-    if(chapter.progress){
-        html += parseInt(chapter.progress.all_trans*100+1)+"%";
-    }else{
-         html += "无";
+    if(chapter.progress && chapter.progress.all_trans){
+        html += "<div class='left_item'>";
+        html += "<span class='item'>";
+        html += renderProgress(chapter.progress.all_trans);
+        html += "<span class='text'>";
+        if(chapter.progress){
+            html += parseInt(chapter.progress.all_trans*100+1)+"%";
+        }else{
+            html += "无";
+        }
+        html += "</span>";
+        html += "</span>";
+        html += "</div>"
     }
-    html += "</span>";
-    html += "</span>";
-    html += "</div>"
+
 
     html += "<div class='left_item'></div>"
     html += "</div>";//end of left_items
@@ -598,15 +635,23 @@ function palicanon_render_chapter_row(chapter) {
 	html += '<div class="title_2" lang="pali">';
 //书名
     if(chapter.path){
-        html += "<span class='item'>";        
-        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
-        html += "</svg>" ;
-        html += chapter.path[0].title;
-        html += "</span>";        
+        try{
+            chapter.path = JSON.parse(chapter.path);
+            if(chapter.path.length>0){
+                html += "<span class='item'>";        
+                html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+                html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
+                html += "</svg>" ;
+                html += chapter.path[0].title;
+                html += "</span>";
+            }
+        }catch(e){
+            console.error('json parse',chapter.path);
+        }
     }
     html +=  "</div>";
 	html += "</div>";
+
 	html += '<div class="resource">';
     if(chapter.summary){
         html += chapter.summary;
@@ -626,20 +671,17 @@ function palicanon_render_chapter_row(chapter) {
     html += "</div>";
     html += "<div class='palicanon_chapter_info'>"
 
-
-	html += "<span class='item'>";
-    html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
-	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person-circle'>";
-	html += "</svg>" ;
-	html += "<span class='text'>";
-
     if(typeof chapter.type !== "undefined" && chapter.type==='article'){
+        html += "<span class='item'>";
+        html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person-circle'>";
+        html += "</svg>" ;
+        html += "<span class='text'>";        
         html += chapter.channel_info.name;
-    }else{
-        html += "EN(3)";
+        html += "</span>";
+        html += "</span>";
     }
-    html += "</span>";
-    html += "</span>";
+
 
     if(chapter.created_at){
         html += "<span class='item'>";
@@ -650,21 +692,39 @@ function palicanon_render_chapter_row(chapter) {
         html += getPassDataTime(new Date(chapter.created_at));
         html += "</span>";
         html += "</span>";
-        html += "</div>";
-        html += "</div>";    
+
     }
-
-
+    if(chapter.children && chapter.children.length>0){
+        html += "<span class='item' onclick=\"subchapter_slideToggle(this)\">";
+        html += "<span class='text'>";
+        html += "展开折叠子章节 " + chapter.children.length;
+        html += "</span>";
+        html += "</span>";
+    }    
+    html += "</div>";
+    html += "</div>";        
 
 	html += "</div>";//end of head bar
 
-
-
-
 	html += "</div>";
 
+	html += "</div>";//end of main
+
+	html += "<div class='subchapter'>";
+    if(chapter.children){
+        html += "<ul class='subchapter_inner'>";
+        for (const subchapter of chapter.children) {
+            html +=palicanon_render_chapter_row(subchapter);
+        }
+        html += "</ul>";
+    }
+	html += "</div>";
 	html += "</li>";
 	return html;
+}
+
+function subchapter_slideToggle(obj){
+    $(obj).parent().parent().parent().parent().parent().siblings(".subchapter").slideToggle();
 }
 function tag_get_local_word(word) {
 	let termKey = term_lookup_my(word, "", getCookie("userid"), getCookie("language"));
@@ -735,7 +795,7 @@ function tag_set(tag) {
     }else{
         list_tag = [tag];
     }
-	
+	_nextPageStart= 0;
 	render_tag_list();
 	tag_changed();
 }
@@ -957,4 +1017,50 @@ function ReanderMainMenu(){
     }
     html +="><a href='index1.php?view=my' >我的</a></span>";
     $("#main_menu").html(html);
+}
+
+function loadUserRecent(){
+    $.getJSON(
+        "/api/v2/view?view=user-recent", function() {
+            console.log( "success" );
+            }
+    )
+    .done(function(data) {
+        let html = "";
+        html += "<ol>";
+        for (const item of data.data) {
+            html += "<li>";
+            html += item.title;
+            html += "</li>";
+        }
+        html += "</ol>";
+        $("#user_recent").find('.list').first().html(html);
+    })
+    .fail(function() {
+        console.log( "error" );
+    });
+}
+
+function loadContribution(){
+    $.getJSON(
+        "/api/v2/sent_history?view=contribution", function() {
+            console.log( "success" );
+            }
+    )
+    .done(function(data) {
+        let html = "";
+        html += "<ol>";
+        for (const item of data.data) {
+            html += "<li>";
+            html += item.username.nickname;
+            html += "—";
+            html += item.count;
+            html += "</li>";
+        }
+        html += "</ol>";
+        $("#contribution").find('.list').first().html(html);
+    })
+    .fail(function() {
+        console.log( "error" );
+    });
 }
