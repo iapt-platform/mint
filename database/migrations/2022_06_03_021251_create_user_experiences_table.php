@@ -17,12 +17,12 @@ class CreateUserExperiencesTable extends Migration
             $table->id();
             $table->uuid('user_id');
             $table->date('date');//统计日期
-            $table->integer('user_exp');//总分
-            $table->integer('user_level');//等级 1-60
-            $table->integer('edit_exp');//编辑总时长 小时
-            $table->integer('wbw_count');//逐词译个数
-            $table->integer('wbw_edit_time');//逐词译编辑次数
-            $table->integer('trans_chart');//译文字符数
+            $table->integer('user_exp')->default(0);//总分
+            $table->integer('user_level')->default(1);//等级 1-60
+            $table->integer('edit_exp')->default(0);//编辑总时长 小时
+            $table->integer('wbw_count')->default(0);//逐词译个数
+            $table->integer('wbw_edit_time')->default(0);//逐词译编辑次数
+            $table->integer('trans_chart')->default(0);//译文字符数
             $table->timestamps();
         });
     }
