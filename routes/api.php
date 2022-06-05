@@ -7,7 +7,9 @@ use App\Http\Controllers\DhammaTermController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\ProgressChapterController;
 use App\Http\Controllers\SentenceInfoController;
+use App\Http\Controllers\SentPrController;
 use App\Http\Controllers\TagController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,8 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('wbw_templates',WbwTemplateController::class);
 	Route::apiResource('terms',DhammaTermController::class);
 	Route::apiResource('sentence',SentenceController::class);
+	Route::apiResource('sentpr',SentPrController::class);
 	Route::apiResource('progress',ProgressChapterController::class);
 	Route::apiResource('tag',TagController::class);
+
 });
