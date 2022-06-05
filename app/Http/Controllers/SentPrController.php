@@ -30,6 +30,7 @@ class SentPrController extends Controller
         if(!isset($_COOKIE['user_uid'])){
             return $this->error('not login');
         }
+        
         $data = $request->all();
         if($data['channel'] == '7fea264d-7a26-40f8-bef7-bc95102760fb' && $data['book']==65 && $data['para']>2056 && $data['para']<2192){
             $url = "https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf";
@@ -39,7 +40,7 @@ class SentPrController extends Controller
                 "text"=> " wikipali: 来自{$_COOKIE['user_uid']}的修改建议：{$data['text']}", 
                 "btnOrientation"=> "0", 
                 "singleTitle" => "详情",
-                "singleURL"=>"https://www-hk.wikipali.org/app/artical/?view=para&book={$data['book']}&par={$data['para']}&channel={$data['channel']}"
+                "singleURL"=>"https://staging.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&channal={$data['channel']}&display=sent&mode=edit"
             ], 
             "msgtype"=>"actionCard"
             ];
