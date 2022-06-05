@@ -1930,6 +1930,7 @@ function note_pr_save(obj) {
 		sent_save_callback
 	);
 
+
 	if (sent_tran_div) {
 		$(sent_tran_div).addClass("loading");
 	}
@@ -1962,6 +1963,23 @@ function note_sent_save_a(obj) {
 		lang: "zh",
 	})
 		.done(function (data) {
+            let result = JSON.parse(data);
+            if(result.commit_type==3){
+                $.post(
+                    "/api/v2/sentpr",
+                    {
+                        book: book,
+                        para: para,
+                        begin: begin,
+                        end: end,
+                        channel: channal,
+                        text: text,
+                    },
+                    function(data){
+                        console.log('pr robot',data);
+                    }
+                );
+            }
 			sent_save_callback(data);
 		})
 		.fail(function (xhr, error, data) {
