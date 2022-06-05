@@ -168,9 +168,7 @@ div#tag_list {
     padding: 5px;
     display: none;
 }
-div#info_bar_left {
-    font-size: 120%;
-}
+
 #more_chapter {
     text-align: center;
 }
@@ -186,6 +184,24 @@ div#info_bar_left {
     border: none;
     padding: 2px 40px;
     margin-left: -5em;
+}
+#filter-author li.active{
+    background-color:gray;
+}
+
+#filter_bar {
+    display: flex;
+    justify-content: space-between;
+}
+div#filter_bar {
+    font-size: 120%;
+}
+
+span.channel:hover {
+    background-color: wheat;
+}
+span.channel {
+    cursor: pointer;
 }
 </style>
 
@@ -204,33 +220,24 @@ div#info_bar_left {
                 <div class="title submenu_title" style="flex;">
                     <span>分类标签</span>
                     <span>
-                            <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
-                            </select>
+                        <select id="tag_category_index" onchange="TagCategoryIndexchange(this)"></select>
                     </span>
                 </div>
-                <div class='inner' >
-                    <div id='tag-category' >
-                    
-                    </div>
+                <div class='inner' style='max-height: unset;'>
+                    <div id='tag-category' ></div>
                 </div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">作者</div>
-                <div class='inner' id='filter-author' >
-                
-                </div>
+                <div class='inner' id='filter-author' ></div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">语言</div>
-                <div class='inner' id='filter-lang' >
-                
-                </div>
+                <div class='inner' id='filter-lang' ></div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">类型</div>
-                <div class='inner' id='filter-type' >
-                
-                </div>
+                <div class='inner' id='filter-type' ></div>
             </div>
         </div>
     </div>
@@ -261,8 +268,19 @@ div#info_bar_left {
             </div>
 
             <div id="select_bar" >
+                <div id="channel_selected"></div>
                 <div id="tag_selected"></div>
-                <div>
+            </div>
+
+            <div id='bread-crumbs'></div>
+            <div id='filter_bar'>
+                <div id='filter_bar_left'></div>
+                <div id='filter_bar_right'>
+                    <button id='btn-filter' onclick="tag_list_slide_toggle(this)">
+                        <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div>
@@ -284,12 +302,6 @@ div#info_bar_left {
                     <div level="100" class="tag_others"></div>
                     <div level="8" class="tag_others"></div>
                 </div>
-            </div>
-            <div id='bread-crumbs'></div>
-            <div id='info_bar'>
-            <div id='info_bar_left'>
-
-            </div>
             </div>
             <div class='index_inner'>
                 <div id="chapter_shell" class="chapter_list" >

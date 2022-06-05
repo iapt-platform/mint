@@ -33,6 +33,9 @@ class ProgressChapterController extends Controller
         }else{
             $offset = 0;
         }
+
+        $channel_id = $request->get('channel');
+
         //
 
         $chapters=false;
@@ -109,6 +112,12 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
+                if(Str::isUuid($channel_id)){
+                    $channel = "and channel_id = '{$channel_id}' "; 
+                }else{
+                    $channel = "";
+                }
+
                 $query = "
                     select tags.id,tags.name,co as count 
                         from (
@@ -121,6 +130,7 @@ class ProgressChapterController extends Controller
                                         where tm.table_name  = 'progress_chapters' and 
                                               pc.progress  > ? 
                                         $in1
+                                        $channel
                                         group by tm.anchor_id
                                 ) T 
                                     $where1
@@ -226,9 +236,8 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
-                $channel_id = $request->get('channel');
                 if(Str::isUuid($channel_id)){
-                    $channel = "and where channel_id = '{$channel_id}'"; 
+                    $channel = "and channel_id = '{$channel_id}' "; 
                 }else{
                     $channel = "";
                 }

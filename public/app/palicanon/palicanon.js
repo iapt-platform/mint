@@ -8,6 +8,9 @@ var _listView="list";
 var gBreadCrumbs=['','','','','','','','',''];
 var _nextPageStart = 0;
 var _pageSize = 20;
+var _channel = "";
+var _lang = "";
+var _channelList;
 
 palicanon_load_term();
 
@@ -18,14 +21,14 @@ function community_onload() {
 		main_tag = $(this).attr("tag");
 		list_tag = new Array();
 		tag_changed();
-		render_tag_list();
+		render_selected_filter_list();
 	});
 
 	$("#tag_input").keypress(function () {
 		tag_render_others();
 	});
     render_main_tag();
-    render_tag_list();
+    render_selected_filter_list();
     communityGetChapter();
     LoadAllChannel();
     LoadAllLanguage();
@@ -38,7 +41,7 @@ function palicanon_onload() {
 		main_tag = $(this).attr("tag");
 		list_tag = new Array();
 		tag_changed();
-		render_tag_list();
+		render_selected_filter_list();
 	});
 
 	$("#tag_input").keypress(function () {
@@ -85,6 +88,7 @@ function render_main_tag() {
 		});
 }
 function tag_changed() {
+    _nextPageStart= 0;
 	let strTags = "";
 	if (list_tag.length > 0) {
 		strTags = main_tag + "," + list_tag.join();
@@ -106,7 +110,7 @@ function tag_changed() {
     }
     switch (_view) {
         case "community":
-            communityGetChapter(strTags,lang)
+            communityGetChapter()
             break;
         case "category":
             palicanonGetChapter(strTags,lang)
@@ -118,17 +122,37 @@ function tag_changed() {
     }
     
 }
-function communityGetChapter(strTags="",lang="",offset=0){
+function communityGetChapter(offset=0){
+    let strTags = "";
+	if (list_tag.length > 0) {
+		strTags = main_tag + "," + list_tag.join();
+	} else {
+		strTags = main_tag;
+	}
+	console.log(strTags);
+	let lang = getCookie("language");
+    switch (lang) {
+        case 'zh-cn':
+            lang = 'zh-hans';
+            break;
+        case 'zh-tw':
+            lang = 'zh-hant';
+            break;    
+        case '':
+            lang = 'en';
+            break;
+    }
     next_page_loader_show();
     $.getJSON(
 		"/api/v2/progress?view=chapter",
 		{
 			tags: strTags,
-			lang: lang,
+			lang: _lang,
+            channel: _channel,
             offset: offset
 		},
 		function (data, status) {
-            $("#info_bar_left").html(data.data.count+"个章节");
+            $("#filter_bar_left").html(data.data.count+"个章节");
 			let arrChapterData = data.data.rows;
 			let arrChapterList = new Array();
 			let html = "";
@@ -178,6 +202,7 @@ function communityLoadChapterTag(strTags="",lang=""){
 		{
 			tags: strTags,
 			lang: lang,
+            channel:_channel
 		},
 		function (data, status) {
             let tagData = data.data.rows;
@@ -464,7 +489,7 @@ function next_page_loader_hide(){
 }
 function next_page(){
     _nextPageStart += _pageSize;
-    communityGetChapter(list_tag.join(),'zh',_nextPageStart);
+    communityGetChapter(_nextPageStart);
 }
 function chapter_onclick(obj) {
     let objList = $(obj).parent().parent().parent().parent();
@@ -635,19 +660,25 @@ function palicanon_render_chapter_row(chapter) {
 	html += '<div class="title_2" lang="pali">';
 //书名
     if(chapter.path){
-        try{
-            chapter.path = JSON.parse(chapter.path);
-            if(chapter.path.length>0){
-                html += "<span class='item'>";        
-                html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-                html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
-                html += "</svg>" ;
-                html += chapter.path[0].title;
-                html += "</span>";
+        let arrPath=false;
+        if(Array.isArray(chapter.path)){
+            arrPath = chapter.path;
+        }else{
+            try{
+                arrPath = JSON.parse(chapter.path);
+            }catch(e){
+                console.error('json parse',chapter.path);
             }
-        }catch(e){
-            console.error('json parse',chapter.path);
         }
+        if(arrPath && arrPath.length>0){
+            html += "<span class='item'>";        
+            html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#journals'>";        
+            html += "</svg>" ;
+            html += arrPath[0].title;
+            html += "</span>";
+        }
+        
     }
     html +=  "</div>";
 	html += "</div>";
@@ -672,11 +703,11 @@ function palicanon_render_chapter_row(chapter) {
     html += "<div class='palicanon_chapter_info'>"
 
     if(typeof chapter.type !== "undefined" && chapter.type==='article'){
-        html += "<span class='item'>";
+        html += "<span class='item channel'>";
         html += "<svg class='small_icon' style='width:16px;height:16px;fill: var(--box-bg-color1)'>";
         html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#person-circle'>";
         html += "</svg>" ;
-        html += "<span class='text'>";        
+        html += "<span class='text' onclick=\"select_channel('"+chapter.channel_id+"')\">";
         html += chapter.channel_info.name;
         html += "</span>";
         html += "</span>";
@@ -785,7 +816,7 @@ function tag_render_others() {
 
 function tag_click(tag) {
 	list_tag.push(tag);
-	render_tag_list();
+	render_selected_filter_list();
 	tag_changed();
 }
 
@@ -795,8 +826,8 @@ function tag_set(tag) {
     }else{
         list_tag = [tag];
     }
-	_nextPageStart= 0;
-	render_tag_list();
+	
+	render_selected_filter_list();
 	tag_changed();
 }
 
@@ -814,15 +845,13 @@ function renderChapterTags(tags){
     return html;
 }
 
-function render_tag_list() {
-	//$("#tag_list").slideDown();
+function render_selected_filter_list() {
+    refresh_selected_tag();
+    refresh_selected_channel();
+}
 
-	let strListTag="";// = gLocal.gui.selected + "：";
-    strListTag += "<button id='btn-filter' onclick=\"tag_list_slide_toggle(this)\">"
-    strListTag += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
-    strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>";
-    strListTag += "</svg>" ;
-    strListTag += "</button>"
+function refresh_selected_tag(){
+	let strListTag="";
 	for (const iterator of list_tag) {
 		strListTag += '<tag>';
         strListTag += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
@@ -831,19 +860,44 @@ function render_tag_list() {
         strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
 		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
 	}
-	strListTag +="<div style='display:inline-block;width:20em;'>";
-	//strListTag +="<input id='tag_input' type='input' placeholder='tag' size='20'  />";
 	strListTag +="</div>";
 	$("#tag_selected").html(strListTag);
 }
+function refresh_selected_channel(){
+    let channels = _channel.split(",");
+	let html="";
+	for (const iterator of channels) {
+        if(_channelList){
+            let item = _channelList.find(element => element.channel_id == iterator);
+            if(item){
+                html += '<tag>';
+                html += '<span class="textt" title="">版本:' + item.channel.name + "</span>";
+                html += '<span class="tag-delete" onclick ="channel_tag_remove(\'' + item.channel_id + "')\">✕</span>";
+                html += "</tag>";
+            }            
+        }
+	}
+	html +="</div>";
+	$("#channel_selected").html(html);
+}
+function channel_tag_remove(channelId){
+    let channels = _channel.split(',');
+    if(channels.indexOf(channelId)>=0){
+        channels.splice(channels.indexOf(channelId),1);
+        _channel = channels.join();
+        refresh_selected_channel();
+        tag_changed();        
+    }
+    
 
+}
 function tag_remove(tag) {
 	for (let i = 0; i < list_tag.length; i++) {
 		if (list_tag[i] == tag) {
 			list_tag.splice(i, 1);
 		}
 	}
-	render_tag_list();
+	render_selected_filter_list();
 	tag_changed();
 }
 
@@ -959,7 +1013,14 @@ function RenderBreadCrumbs(){
 
     $("#bread-crumbs").html(html);
 }
-
+function select_channel(id,obj=null){
+    _channel = id;
+    communityGetChapter(_nextPageStart);
+    refresh_selected_channel();
+    console.log("change channel",_channel);
+    //$(obj).siblings.removeClass('active');
+    //$(obj).addClass('active');
+}
 function LoadAllChannel(){
     $.getJSON(
 		"/api/v2/progress?view=channel",
@@ -967,9 +1028,10 @@ function LoadAllChannel(){
 		function (data, status) {
             let html = "";
             html += "<ul>"
+            _channelList = data.data.rows;
             for (const iterator of data.data.rows) {
                 if(iterator.channel){
-                    html += "<li>"
+                    html += "<li onclick=\"select_channel('"+iterator.channel.uid+"',this)\">"
                     html += iterator.channel.name+"("+iterator.count+")";
                     html += "</li>"                    
                 }

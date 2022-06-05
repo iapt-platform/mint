@@ -118,9 +118,8 @@ tag:hover{
 	display: none;
 }
 
-#select_bar {
-	display: flex;
-	justify-content: space-between;
+#select_bar>div {
+    display:inline-block;
 }
 
 .chapter_list {
