@@ -250,4 +250,8 @@ return [
 		'paliword_index' => public_path('paliword')."/index",
 		'word_statistics' => public_path('dependence')."/word_statistics/data",
 	],
+
+	'admin' => [
+		'root_uuid' => '6e12f8ea-ee4d-4e0f-a6b0-472f2d99a814',
+	],
 ];

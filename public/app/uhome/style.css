@@ -13,3 +13,12 @@
 .user_home_category {
 	border-bottom: 1px solid var(--border-line-color);
 }
+
+.chapter_list {
+    border-bottom: 1px solid var(--border-line-color);
+    padding: 1em 1em;
+}
+.chapter_list>.title {
+    font-size: 1.8em;
+    padding: 10px 0;
+}
