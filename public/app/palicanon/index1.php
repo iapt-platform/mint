@@ -30,8 +30,16 @@ require_once '../public/function.php';
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 
 <style>
+.chapter_list ul {
+    margin-left: 0;
+}
 .head_bar{
     display:flex;
+    max-width: 30vh;
+}
+#left-bar{
+    flex: 2;
+    background-color: var(--box-bg-color2);
 }
 .more_info{
     font-size:80%;
@@ -56,7 +64,7 @@ require_once '../public/function.php';
     height:90px;
 }
 .chapter_list .list {
-    width: 0;
+    display: none;
 }
 .chapter_list .show {
     display: block;
@@ -65,33 +73,114 @@ require_once '../public/function.php';
 .chapter_list .grid {
     width: 100%;
 }
+.chapter_list > div {
+    max-height: unset;
+    overflow-y: unset; 
+}
+.chapter_list .more_info {
+    display: block;
+}
+
+.filter>.inner {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--input-bg-color);
+}
+
+.main_menu {
+    font-size: 100%;
+    text-align: center;
+    margin: 0 1em;
+    transition: all 600ms ease;
+    text-transform: capitalize;
+}
+.main_menu>span {
+    margin: 2px;
+    padding: 2px 12px;
+    font-weight: 500;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    font-size: 120%;
+    border: unset;
+    border-radius: 0;
+    border-bottom: 2px solid var(--nocolor);
+    display: inline-block;
+}
+.main_menu>.select {
+    border-bottom: 2px solid var(--link-color);
+}
+.main_menu>span>a {
+    color:unset;
+}
+.main_menu span:hover {
+    background-color: unset;
+    color: unset;
+    border-color: var(--link-hover-color);
+}
+select#tag_category_index option {
+    background-color: gray;
+}
 </style>
 
+<?php
+    if(isset($_GET["view"])){
+        $_view = $_GET["view"];
+    }else{
+        $_view = "community";
+    }
+?>
+
 <div style="display:flex;">
-    <div id='left-bar' style="flex:2;">
+    <div id='left-bar' >
         <div id='left-bar-inner'>
-            <div style="width:100%">
-                <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
-                </select>
+            <div class="filter submenu">
+                <div class="title submenu_title" style="flex;">
+                    <span>分类标签</span>
+                    <span>
+                            <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
+                            </select>
+                    </span>
+                </div>
+                <div class='inner' >
+                    <div id='tag-category' >
+                    
+                    </div>
+                </div>
             </div>
-            <div id='tag-category' >
-            
+            <div class="filter submenu">
+                <div class="title submenu_title">作者</div>
+                <div class='inner' id='filter-author' >
+                
+                </div>
+            </div>
+            <div class="filter submenu">
+                <div class="title submenu_title">语言</div>
+                <div class='inner' id='filter-lang' >
+                
+                </div>
+            </div>
+            <div class="filter submenu">
+                <div class="title submenu_title">类型</div>
+                <div class='inner' id='filter-type' >
+                
+                </div>
             </div>
         </div>
     </div>
-    <div id='course_head_bar' style='flex:6;background-color:var(--tool-bg-color1);padding:1em 10px 10px 10px;'>
+    <div id='course_head_bar' style='flex:6;background-color:var(--tool-bg-color1);padding:0 10px 10px 10px;'>
         <div class='index_inner '>
             <div style='display:flex;justify-content: space-between;'>
-                <div style=''>
-                    <a href='index1.php?view=community'>社区</a>
-                    <a href='index1.php?view=category'>分类</a>
-                    <a href='index1.php?view=my'>我的</a>
-                </div>
+                <div> </div>
                 <div style=''>
                     <select onchange='viewChanged(this)'>
+                        <option value='list'>列表</option>                    
                         <option value='card'>卡片</option>
-                        <option value='list'>列表</option>
                     </select>
+                </div>
+            </div>
+            <div>
+                <div class='main_menu' id = 'main_menu'>
+
                 </div>
             </div>
             <div id="main_tag"  style="display:none;">
@@ -127,9 +216,10 @@ require_once '../public/function.php';
             <div id='bread-crumbs'></div>
             <div class='index_inner'>
                 <div id="chapter_shell" class="chapter_list" >
-                    <div id="list_shell_1" class="show book_view" level="1">
+                    <div id="list_shell_1" class="show" level="1">
                         <ul id="list-1" class="grid" level="1" >
                         </ul>
+                        <button>More</button>
                     </div>
 
                     <div id="list_shell_2" level="2">
@@ -172,7 +262,38 @@ require_once '../public/function.php';
         </div>
     </div>
     <div style="flex:2;">
-    right pannal
+    <div class='bangdan'>
+        <div class='title'>最新</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>新手区</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>周推荐</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
+    <div class='bangdan'>
+        <div class='title'>白金作者</div>
+        <div class='list'>
+            <ul>
+                <li>zuixin-1</li>
+            </ul>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -180,6 +301,7 @@ require_once '../public/function.php';
 
     <script>
         $(document).ready(function() {
+            
             let indexFilename = localStorage.getItem('palicanon_tag_category');
             if(!indexFilename){
                 indexFilename = "defualt";
@@ -188,21 +310,23 @@ require_once '../public/function.php';
             loadTagCategoryIndex();
             <?php
             if(isset($_GET["view"])){
-                $_view = $_GET["view"];
-            }else{
-                $_view = "category";
+                echo "_view = '{$_GET["view"]}';";
             }
+            
             switch ($_view) {
+                case 'community':
+                    echo "community_onload();";
+                    break;
                 case 'category':
                     echo "palicanon_onload();";
                     break;
-                
+                case 'my';
                 default:
                     # code...
                     break;
             }
             ?>
-            
+            ReanderMainMenu();
             updateFirstListView();
         });
     </script>
