@@ -693,10 +693,6 @@
                         "tag":["ṭīkā","vinaya","uttaravinicchaya"]
                     },
                     {
-                        "name":"Vinayavinicchaya-Ṭīkā",
-                        "tag":["ṭīkā","vinaya","vinayavinicchayaṭīkā"]
-                    },
-                    {
                         "name":"Pācityādiyojanāpali",
                         "tag":["ṭīkā","vinaya","pācityādiyojanā"]
                     },
@@ -719,7 +715,7 @@
                         "tag":["ṭīkā","abhidhamma","dhammasaṅgaṇī","mūlaṭīkā"]
                     },
                     {
-                        "name":"Sammohavinodanī-Mūlaṭīkā",
+                        "name":"Vibhaṅga-Mūlaṭīkā",
                         "tag":["ṭīkā","abhidhamma","vibhaṅga","mūlaṭīkā"]
                     },
                     {
@@ -736,11 +732,19 @@
                     },
                     {
                         "name":"Abhidhammāvatāro",
-                        "tag":["ṭīkā","abhidhamma","abhidhammāvatāro"]
+                        "tag":["ṭīkā","abhidhamma","abhidhammāvatāra"]
                     },
                     {
                         "name":"Nāmarūpaparicchedo",
-                        "tag":["ṭīkā","abhidhamma","nāmarūpaparicchedo"]
+                        "tag":["ṭīkā","abhidhamma","nāmarūpapariccheda"]
+                    },
+                    {
+                        "name":"Paramatthavinicchayo",
+                        "tag":["ṭīkā","abhidhamma","paramatthavinicchaya"]
+                    },
+                    {
+                        "name":"Saccasaṅkhepo",
+                        "tag":["ṭīkā","abhidhamma","saccasaṅkhepa"]
                     },
                     {
                         "name":"Abhidhammatthasaṅgaho",
@@ -832,23 +836,23 @@
             },
             {
                 "name":"Leḍī Sayādo Gantha-Saṅgaho",
-                "tag":["añña","leḍī sayādo gantha-saṅgaho"],
+                "tag":["añña","leḍī sayādo"],
                 "children":[
                     {
                         "name":"Niruttidīpanīpāṭha",
-                        "tag":["añña","leḍī sayādo gantha-saṅgaho","niruttidīpanīpāṭha"]
+                        "tag":["añña","leḍī sayādo","niruttidīpanīpāṭha"]
                     },
                     {
                         "name":"Paramatthadīpanī",
-                        "tag":["añña","leḍī sayādo gantha-saṅgaho","paramatthadīpanī"]
+                        "tag":["añña","leḍī sayādo","paramatthadīpanī"]
                     },
                     {
                         "name":"Anudīpanīpāṭha",
-                        "tag":["añña","leḍī sayādo gantha-saṅgaho","anudīpanīpāṭha"]
+                        "tag":["añña","leḍī sayādo","anudīpanīpāṭha"]
                     },
                     {
                         "name":"Paṭṭhānuddesa dīpanīpāṭha",
-                        "tag":["añña","leḍī sayādo gantha-saṅgaho","paṭṭhānuddesa dīpanīpāṭha"]
+                        "tag":["añña","leḍī sayādo","paṭṭhānuddesa dīpanīpāṭha"]
                     }
                 ]
             },
@@ -910,59 +914,59 @@
             },
             {
                 "name":"Byākaraṇa Gantha-Saṅgaho",
-                "tag":["añña","byākaraṇa"],
+                "tag":["añña","byākaraṇa ganthasaṅgaha"],
                 "children":[
                     {
                         "name":"Moggallānabyākaraṇa",
-                        "tag":["añña","byākaraṇa","moggallānasuttapāṭha"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","moggallānasuttapāṭha"]
                     },
                     {
                         "name":"Kaccāyanabyākaraṇaṃ",
-                        "tag":["añña","byākaraṇa","kaccāyanabyākaraṇa"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","kaccāyanabyākaraṇa"]
                     },
                     {
                         "name":"Saddanītippakaraṇaṃ (padamālā)",
-                        "tag":["añña","byākaraṇa","padamālā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","padamālā"]
                     },
                     {
                         "name":"Saddanītippakaraṇaṃ (Dhātumālā)",
-                        "tag":["añña","byākaraṇa","dhātumālā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","dhātumālā"]
                     },
                     {
                         "name":"Padarūpasiddhi",
-                        "tag":["añña","byākaraṇa","padarūpasiddhi"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","padarūpasiddhi"]
                     },
                     {
                         "name":"Moggallānapañcikā",
-                        "tag":["añña","byākaraṇa","moggallānapañcikā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","moggallānapañcikā"]
                     },
                     {
                         "name":"Payogasiddhipāṭha",
-                        "tag":["añña","byākaraṇa","payogasiddhipāḷi"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","payogasiddhipāḷi"]
                     },
                     {
                         "name":"Vuttodayapāṭha",
-                        "tag":["añña","byākaraṇa","vuttodaya"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","vuttodaya"]
                     },
                     {
                         "name":"Abhidhānappadīpikāpāṭha",
-                        "tag":["añña","byākaraṇa","abhidhānappadīpikā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","abhidhānappadīpikā"]
                     },
                     {
                         "name":"Abhidhānappadīpikāṭīkā",
-                        "tag":["añña","byākaraṇa","abhidhānappadīpikāṭīkā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","abhidhānappadīpikāṭīkā"]
                     },
                     {
                         "name":"Subodhālaṅkārapāṭha",
-                        "tag":["añña","byākaraṇa","subodhālaṅkāra"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","subodhālaṅkāra"]
                     },
                     {
                         "name":"Subodhālaṅkāraṭīkā",
-                        "tag":["añña","byākaraṇa","subodhālaṅkāraṭīkā"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","subodhālaṅkāraṭīkā"]
                     },
                     {
                         "name":"Bālāvatāra",
-                        "tag":["añña","byākaraṇa","bālāvatāra"]
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","bālāvatāra"]
                     }
                 ]
             },
