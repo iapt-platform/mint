@@ -14,7 +14,7 @@ class CreateUserExperiencesTable extends Migration
     public function up()
     {
         Schema::create('user_experiences', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v1mc()'));
             $table->uuid('user_id');
             $table->date('date');//统计日期
             $table->integer('user_exp')->default(0);//总分
