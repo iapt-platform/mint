@@ -10,6 +10,7 @@ var _nextPageStart = 0;
 var _pageSize = 20;
 var _channel = "";
 var _lang = "";
+var _tags = "";
 var _channelList;
 
 palicanon_load_term();
@@ -91,11 +92,12 @@ function tag_changed() {
     _nextPageStart= 0;
 	let strTags = "";
 	if (list_tag.length > 0) {
-		strTags = main_tag + "," + list_tag.join();
+		_tags =  list_tag.join();
 	} else {
-		strTags = main_tag;
+		_tags = "";
 	}
-	console.log(strTags);
+
+	console.log(_tags);
 	let lang = getCookie("language");
     switch (lang) {
         case 'zh-cn':
@@ -113,15 +115,29 @@ function tag_changed() {
             communityGetChapter()
             break;
         case "category":
-            palicanonGetChapter(strTags,lang)
+            palicanonGetChapter(_tags,lang)
             break;
         case "my":
             break;
         default:
             break;
     }
-    
+    gBreadCrumbs =['','','','','','','','',''];
+    RenderBreadCrumbs();
+    updataHistory();
 }
+
+function updataHistory(){
+    let url = "?view="+_view;
+    if(_tags !== ""){
+        url += "&tag=" + _tags;
+    }
+    if(_channel !== ""){
+        url += "&channel=" + _channel;
+    }
+    history.pushState({view:_view,tag:_tags,channel:_channel}, 'title', url);
+}
+
 function communityGetChapter(offset=0){
     let strTags = "";
 	if (list_tag.length > 0) {
@@ -146,12 +162,13 @@ function communityGetChapter(offset=0){
     $.getJSON(
 		"/api/v2/progress?view=chapter",
 		{
-			tags: strTags,
+			tags: _tags,
 			lang: _lang,
             channel: _channel,
             offset: offset
-		},
-		function (data, status) {
+		}
+	)
+    .done(function (data, status) {
             $("#filter_bar_left").html(data.data.count+"个章节");
 			let arrChapterData = data.data.rows;
 			let arrChapterList = new Array();
@@ -190,8 +207,20 @@ function communityGetChapter(offset=0){
                 $("#list-1").append(render_chapter_list(arrChapter));
             }
             next_page_loader_hide();
-		}
-	);
+		})
+        .fail(function(jqXHR, textStatus, errorThrown){
+            switch (jqXHR.status) {
+                case 404:
+                    $("#list-1").html("未找到");
+                    next_page_loader_hide();
+                    break;
+                case 500:
+                    console.error('/api/v2/progress?view=chapter',textStatus);
+                    break;
+                default:
+                    break;
+            }
+        });
 
     communityLoadChapterTag(strTags,lang);
 }
@@ -222,9 +251,10 @@ function palitextGetChapter(strTags=""){
     $.getJSON(
 		"/api/v2/palitext?view=chapter",
 		{
-			tags: strTags
-		},
-		function (data, status) {
+			tags: _tags
+		}
+	)
+    .done(function (data, status) {
 			let arrChapterData = data.data.rows;
 			let arrChapterList = new Array();
 			let arrChapter = new Array();
@@ -259,8 +289,20 @@ function palitextGetChapter(strTags=""){
 			palicanon_chapter_list_apply(0);
 			$("#list-1").html(render_chapter_list(arrChapterList));
             
-		}
-	);
+		})
+    .fail(function(jqXHR, textStatus, errorThrown){
+            switch (jqXHR.status) {
+                case 404:
+                    $("#list-1").html("未找到");
+                    next_page_loader_hide();
+                    break;
+                case 500:
+                    console.error('/api/v2/progress?view=chapter',textStatus);
+                    break;
+                default:
+                    break;
+            }
+        });
 
     palitextLoadChapterTag(strTags);
 }
@@ -492,7 +534,7 @@ function next_page(){
     communityGetChapter(_nextPageStart);
 }
 function chapter_onclick(obj) {
-    let objList = $(obj).parent().parent().parent().parent();
+    let objList = $(obj).parent().parent().parent().parent().parent();
 	let book = $(objList).attr("book");
 	let para = $(objList).attr("para");
 	let channel = $(objList).attr("channel");
@@ -630,8 +672,8 @@ function palicanon_render_chapter_row(chapter) {
 
 	html += '<div class="head_bar">';
 
-	html += '<div class="title" onclick="chapter_onclick(this)">';
-
+	html += '<div class="title" >';
+	html += '<div class="title_left" onclick="chapter_onclick(this)">';
     
     let sPaliTitle = chapter.title;
     if(chapter.title==""){
@@ -680,7 +722,22 @@ function palicanon_render_chapter_row(chapter) {
         }
         
     }
+    let chapterPara;
+    if(chapter.paragraph){
+
+    }
     html +=  "</div>";
+	html += "</div>";
+	html += '<div class="title_right" >';
+    html += "<img class='chapter_dynamic_svg' src='/storage/images/chapter_dynamic/cd_";
+    html += chapter.book + "_";
+    if(chapter.paragraph){
+        html += chapter.paragraph;
+    }else{
+        html += chapter.para;
+    }
+    html += ".svg' />";
+	html += "</div>";
 	html += "</div>";
 
 	html += '<div class="resource">';
@@ -821,12 +878,15 @@ function tag_click(tag) {
 }
 
 function tag_set(tag) {
+    list_tag = new Array();
     if(Array.isArray(tag)){
-        list_tag = tag;
+        for (const iterator of tag) {
+            list_tag.push(iterator);
+        }
     }else{
-        list_tag = [tag];
+        list_tag.push(tag);
     }
-	
+	_tags = list_tag.join();
 	render_selected_filter_list();
 	tag_changed();
 }
@@ -853,12 +913,14 @@ function render_selected_filter_list() {
 function refresh_selected_tag(){
 	let strListTag="";
 	for (const iterator of list_tag) {
-		strListTag += '<tag>';
-        strListTag += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-        strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tag'>";
-        strListTag += "</svg>" 
-        strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
-		strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";
+        if(iterator!=''){
+            strListTag += '<tag>';
+            strListTag += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+            strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tag'>";
+            strListTag += "</svg>" 
+            strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
+            strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";            
+        }
 	}
 	strListTag +="</div>";
 	$("#tag_selected").html(strListTag);
@@ -886,7 +948,7 @@ function channel_tag_remove(channelId){
         channels.splice(channels.indexOf(channelId),1);
         _channel = channels.join();
         refresh_selected_channel();
-        tag_changed();        
+        tag_changed();
     }
     
 
@@ -943,12 +1005,10 @@ function loadTagCategory(name="defualt"){
             selectMode: 1, // 1:single, 2:multi, 3:multi-hier
             checkbox: false, // Show checkboxes.
             source: tocGetTagCategory(result),
-            click: function(e, data) {
-                    //tag_set([data.node.title]);
-                },
             activate: function(e, data) {
 //				alert("activate " + );
                 //currSelectNode = data.node;
+                console.log('tree',data);
                 tag_set(arrTagCategory[data.node.key]);
             },
             select: function(e, data) {
@@ -1015,7 +1075,8 @@ function RenderBreadCrumbs(){
 }
 function select_channel(id,obj=null){
     _channel = id;
-    communityGetChapter(_nextPageStart);
+    updataHistory();
+    communityGetChapter(0);
     refresh_selected_channel();
     console.log("change channel",_channel);
     //$(obj).siblings.removeClass('active');
@@ -1039,6 +1100,7 @@ function LoadAllChannel(){
             }
             html += "</ul>";
             $("#filter-author").html(html);
+            refresh_selected_channel();
         }
     );
 }

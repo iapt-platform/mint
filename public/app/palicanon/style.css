@@ -208,6 +208,8 @@ tag:hover{
 }
 .chapter_list .title {
 	text-transform: capitalize;
+    display: flex;
+    justify-content: space-between;
 }
 .chapter_list .title div:lang(pali) {
 	font-size: 80%;
@@ -312,4 +314,17 @@ li.level_1.selected {
     height: unset;
     margin: unset;
     border: unset;
+}
+
+.chapter_dynamic_svg{
+    width:150px;
+}
+
+.bangdan li{
+    list-style-type:unset;
+    white-space: nowrap;
+}
+.bangdan ol{
+    padding-left: 1.5em;
+    width: 200px;
 }
