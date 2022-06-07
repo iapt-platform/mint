@@ -91,9 +91,11 @@ class PaliTextController extends Controller
                     $a = implode(",",array_fill(0, count($tagNames), '?')) ;
                     $in1 = "and t.name in ({$a})";
                     $param = $tagNames;
+                    $where2 = "where level < 3";
                 }else{
                     $where1 = " ";
                     $in1 = " ";
+                    $where2 = "where level = 1";
                 }
                 $query = "
                         select uid as id,book,paragraph,level,toc as title,chapter_strlen,parent,path from (
@@ -108,7 +110,7 @@ class PaliTextController extends Controller
                                 $where1 
                         ) CID 
                         left join $pt as pt on CID.cid = pt.uid 
-                        where level < 3
+                        $where2
                         order by book,paragraph";
                         
                     if(isset($param)){
