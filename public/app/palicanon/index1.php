@@ -34,6 +34,9 @@ require_once '../public/function.php';
 	<script src="../palicanon/chapter_channel.js"></script>
 	<link type="text/css" rel="stylesheet" href="../palicanon/loading.css"/>
 
+    <script src="router.js"></script>
+    <script src="test.js"></script>
+
 <style>
 .chapter_list ul {
     margin-left: 0;
@@ -128,7 +131,7 @@ require_once '../public/function.php';
     color: unset;
     border-color: var(--link-hover-color);
 }
-select#tag_category_index option {
+.submenu select>option {
     background-color: gray;
 }
 button.active {
@@ -203,6 +206,13 @@ span.channel:hover {
 span.channel {
     cursor: pointer;
 }
+
+.settting-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+}
+
 </style>
 
 <?php
@@ -216,6 +226,43 @@ span.channel {
 <div style="display:flex;">
     <div id='left-bar' >
         <div id='left-bar-inner'>
+            <div class="filter submenu">
+                <div class="title submenu_title">设定</div>
+                <div class='inner' id='filter-setting' >
+                    <div class='settting-item'>
+                        <span>内容类型</span>
+                        <span>
+                            <select>
+                                <option value=''>全部</option>
+                                <option value='translation'>译文</option>
+                                <option value='nissaya'>Nissaya</option>
+                                <option value='commentray'>注疏</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class='settting-item'>
+                        <span>完成度阈值</span>
+                        <span>
+                            <select>
+                                <option value='0.9'>90</option>
+                                <option value='0.8'>80</option>
+                                <option value='0.7'>70</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class='settting-item'>
+                        <span>语言</span>
+                        <span>
+                            <select>
+                                <option value=''>全部</option>
+                                <option value='zh'>中文</option>
+                                <option value='en'>英文</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div><button>还原默认</button><button>应用</button></div>
+                </div>
+            </div>
             <div class="filter submenu">
                 <div class="title submenu_title" style="flex;">
                     <span>分类标签</span>
@@ -354,9 +401,7 @@ span.channel {
     <div class='bangdan' id = "user_recent">
         <div class='title'>最近阅读</div>
         <div class='list'>
-            <ul>
-                <li>zuixin-1</li>
-            </ul>
+            <div id="page_loader" class="lds-ellipsis" style="visibility: hidden;"><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
     <div class='bangdan'>
@@ -400,14 +445,24 @@ span.channel {
             <?php
             if(isset($_GET["view"])){
                 echo "_view = '{$_GET["view"]}';";
+            }else{
+                echo "_view = 'community';";
+                echo "updataHistory();";
+            }
+
+            if(isset($_GET["tag"])){
+                echo "_tags = '{$_GET["tag"]}';";
+            }
+            if(isset($_GET["channel"])){
+                echo "_channel = '{$_GET["channel"]}';";
             }
             
             switch ($_view) {
                 case 'community':
-                    echo "community_onload();";
+                    //echo "community_onload();";
                     break;
                 case 'category':
-                    echo "palicanon_onload();";
+                    //echo "palicanon_onload();";
                     break;
                 case 'my';
                 default:
@@ -415,8 +470,11 @@ span.channel {
                     break;
             }
             ?>
+            list_tag = _tags.split(',');
+            refresh_selected_tag();
             ReanderMainMenu();
             updateFirstListView();
+            //载入用户最近的阅读列表
             loadUserRecent();
             loadContribution();
         });
