@@ -21,8 +21,8 @@ class CreateUserExperiencesTable extends Migration
             $table->integer('user_level')->default(1);//等级 1-60
             $table->integer('edit_exp')->default(0);//编辑总时长 小时
             $table->integer('wbw_count')->default(0);//逐词译个数
-            $table->integer('wbw_edit_time')->default(0);//逐词译编辑次数
-            $table->integer('trans_chart')->default(0);//译文字符数
+            $table->integer('wbw_edit')->default(0);//逐词译编辑次数
+            $table->integer('trans_character')->default(0);//译文字符数
             $table->timestamps();
         });
     }
