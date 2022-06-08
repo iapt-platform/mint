@@ -729,12 +729,17 @@ function palicanon_render_chapter_row(chapter) {
     html +=  "</div>";
 	html += "</div>";
 	html += '<div class="title_right" >';
-    html += "<img class='chapter_dynamic_svg' src='/storage/images/chapter_dynamic/cd_";
-    html += chapter.book + "_";
+    html += "<img class='chapter_dynamic_svg' src='/storage/images/chapter_dynamic/";
+    html += chapter.book + "/";
     if(chapter.paragraph){
         html += chapter.paragraph;
     }else{
         html += chapter.para;
+    }
+    if(chapter.channel_id){
+        html += "/ch_" + chapter.channel_id;
+    }else{
+        html += "/globle";
     }
     html += ".svg' />";
 	html += "</div>";
