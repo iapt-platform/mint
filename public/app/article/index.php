@@ -449,6 +449,7 @@ function set_toc_visible(isVisible){
 	click_dropdown_init();
 	note_create();
 	historay_init();
+    chapter_dynamic_init();
 	switch (_view) {
 		case "article":
 			articel_load(_articel_id,_collection_id);
