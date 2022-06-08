@@ -113,6 +113,7 @@ if (isset($_GET["language"])) {
 	<link type="text/css" rel="stylesheet" href="../term/term_edit_dlg.css" />
 	<script src="../uwbw/wbw_channal_list.js"></script>
 	<script src="../usent/historay.js"></script>
+	<script src="../usent/chapter_dynamic.js"></script>
 	<script src="../term/pali_sim_sent.js"></script>
 	<link type="text/css" rel="stylesheet" href="../term/pali_sim_dlg.css" />
 	<script src="../term/related_para.js"></script>

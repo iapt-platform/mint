@@ -498,6 +498,9 @@ function render_channal_list(channalinfo) {
 	output += '<div class="pop_menu">';
 	output += render_icon_button("copy", "commit_init({src:'" + channalinfo.uid + "'})", gLocal.gui.copy_to);
 	output += render_icon_button("ic_mode_edit", "", gLocal.gui.modify);
+    if(_book && _par){
+        output += render_icon_button("graph-up", "chapter_dynamic_show("+_book+","+_par+",'"+channalinfo.uid+"')", "动态");
+    }
 	output += "</div>";
 	output += "</div>";
 	output += "</div>";
@@ -907,6 +910,10 @@ function sent_commit(src, id) {
 		sent: [id],
 		express: false,
 	});
+}
+
+function chapter_Dynamic_open(channel_id){
+
 }
 
 function render_icon_button(icon_id, event, tiptitle) {
