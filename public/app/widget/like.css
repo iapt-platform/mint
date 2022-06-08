@@ -13,3 +13,11 @@
 like{
     display: inline-block;
 }
+
+span.number {
+    border: 1px solid gray;
+    padding: 0px 5px;
+    border-radius: 99px;
+    margin-left: 5px;
+    font-size: 90%;
+}

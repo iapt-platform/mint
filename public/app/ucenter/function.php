@@ -1,5 +1,6 @@
 <?php
-require_once '../config.php';
+
+require_once __DIR__.'/../config.php';
 function ucenter_get($userid, $fields = "username")
 {
     //打开数据库
@@ -22,10 +23,10 @@ function ucenter_get($userid, $fields = "username")
 function ucenter_getA($userid, $fields = "nickname")
 {
     //打开数据库
-    $dns = "" . _FILE_DB_USERINFO_;
+    $dns = _FILE_DB_USERINFO_;
     $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "select username,nickname from user where userid= ? ";
+    $query = "SELECT username,nickname FROM user WHERE userid= ? ";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($userid));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);

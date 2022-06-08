@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProgressChapter;
 use App\Models\Channel;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\PaliText;
+use App\Models\View;
+use App\Models\Like;
 use Illuminate\Http\Request;
 
 class ProgressChapterController extends Controller
@@ -30,10 +33,24 @@ class ProgressChapterController extends Controller
         }else{
             $offset = 0;
         }
+
+        $channel_id = $request->get('channel');
+
         //
 
         $chapters=false;
         switch ($request->get('view')) {
+            case 'ids':
+                $aChannel = explode(',',$request->get('channel'));
+                $chapters = ProgressChapter::select("channel_id")->selectRaw("uid as id")
+                                         ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                                                return $query->select('*');
+                                            }])
+                                        ->where("book",$request->get('book'))
+                                        ->where("para",$request->get('par'))
+                                        ->whereIn('channel_id', $aChannel)->get();
+                $all_count = count($chapters);
+                break;
 			case 'studio':
                 #查询该studio的channel
                 $channels = Channel::where('owner_uid',$request->get('id'))->select('uid')->get();
@@ -95,6 +112,12 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
+                if(Str::isUuid($channel_id)){
+                    $channel = "and channel_id = '{$channel_id}' "; 
+                }else{
+                    $channel = "";
+                }
+
                 $query = "
                     select tags.id,tags.name,co as count 
                         from (
@@ -107,6 +130,7 @@ class ProgressChapterController extends Controller
                                         where tm.table_name  = 'progress_chapters' and 
                                               pc.progress  > ? 
                                         $in1
+                                        $channel
                                         group by tm.anchor_id
                                 ) T 
                                     $where1
@@ -135,6 +159,9 @@ class ProgressChapterController extends Controller
             case 'channel-type':
                 break;
             case 'channel':
+            /*
+            总共有多少channel
+            */
                 $chapters = ProgressChapter::select('channel_id')
                                             ->selectRaw('count(*) as count')
                                             ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
@@ -144,6 +171,44 @@ class ProgressChapterController extends Controller
                                             ->groupBy('channel_id')
                                             ->orderBy('count','desc')
                                             ->get();
+                $all_count = count($chapters);
+                break;
+            case 'chapter_channels':
+            /*
+                某个章节 有多少channel
+            */
+                $chapters = ProgressChapter::select('book','para','progress_chapters.uid','progress_chapters.channel_id','progress','updated_at')
+                                            ->with(['channel' => function($query) {
+                                                return $query->select('*');
+                                            }])
+                                            ->where("book",$request->get('book'))
+                                            ->where("para",$request->get('par'))
+                                            ->orderBy('progress','desc')
+                                            ->get();
+                foreach ($chapters as $key => $value) {
+                    # code...
+                    $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                    
+                    $likes = Like::where("target_id",$value->uid)
+                                ->groupBy("type")
+                                ->select("type")
+                                ->selectRaw("count(*)")
+                                ->get();
+                    if(isset($_COOKIE["user_uid"])){
+                        foreach ($likes as $key1 => $like) {
+                            # 查看这些点赞里有没有我点的
+                            $myLikeId =Like::where(["target_id"=>$value->uid,
+                                            'type'=>$like->type,
+                                            'user_id'=>$_COOKIE["user_uid"]])->value('id');
+                            if($myLikeId){
+                                $likes[$key1]->selected = $myLikeId;
+                            }
+                        }
+                    }
+                    $chapters[$key]->likes = $likes;
+                    
+                }
+                
                 $all_count = count($chapters);
                 break;
             case 'chapter':
@@ -171,10 +236,17 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
+                if(Str::isUuid($channel_id)){
+                    $channel = "and channel_id = '{$channel_id}' "; 
+                }else{
+                    $channel = "";
+                }
+
                 $param[] = $minProgress;
+                $param_count = $param;
                 $param[] = $offset;
                 $query = "
-                select tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.created_at,tpc.updated_at 
+                select tpc.uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
                     from (
                         select * from (
                             select anchor_id as cid from (
@@ -188,7 +260,8 @@ class ProgressChapterController extends Controller
                                 $where1 
                         ) CID 
                         left join $pc as pc on CID.cid = pc.uid 
-                        where pc.progress > ?
+                        where pc.progress > ? 
+                        $channel
                         order by created_at desc
                         limit 20 offset ?
                     ) tpc 
@@ -196,10 +269,37 @@ class ProgressChapterController extends Controller
                 $chapters = DB::select($query,$param);
                 foreach ($chapters as $key => $value) {
                     # code...
-                    $chapters[$key]->channel_info = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
+                    $chapters[$key]->channel = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
+                    $chapters[$key]->views = View::where("target_id",$value->uid)->count();
+                    $chapters[$key]->likes = Like::where(["type"=>"like","target_id"=>$value->uid])->count();
+                    $chapters[$key]->tags = TagMap::where("anchor_id",$value->uid)
+                                                ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
+                                                ->select(['tags.id','tags.name','tags.description'])
+                                                ->get();
                 }
-                $all_count = 10;
+
+                //计算按照这个条件搜索到的总数
+                $query  = "
+                         select count(*) as count from (
+                            select anchor_id as cid from (
+                                select tm.anchor_id , count(*) as co 
+                                    from $tm as  tm
+                                    left join $tg as t on tm.tag_id = t.id
+                                    where tm.table_name  = 'progress_chapters'  
+                                    $in1
+                                    group by tm.anchor_id
+                            ) T 
+                                $where1 
+                        ) CID 
+                        left join $pc as pc on CID.cid = pc.uid 
+                        where pc.progress > ? 
+                        $channel
+                ";
+                $count = DB::select($query,$param_count);
+                $all_count = $count[0]->count;
                 break;
+            case 'top':
+            break;
         }
         if($chapters){
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);

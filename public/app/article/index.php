@@ -12,6 +12,7 @@ require_once "../pcdl/html_head.php";
 
 	<script src="../widget/like.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
+	<script src="../palicanon/chapter_channel.js"></script>
 
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
@@ -476,7 +477,15 @@ function set_toc_visible(isVisible){
 		default:
 			break;
 	}
-
+    if(_view=='chapter'){
+        //获取章节的channel列表
+        loadChapterChannel({
+            book:_book,
+            para:_par,
+            target:$("#article_author"),
+            showchannel:_channal.split(',')
+        });
+    }
 	});
 
 	 window.addEventListener('scroll',winScroll);

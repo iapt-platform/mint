@@ -29,26 +29,28 @@ require_once '../public/function.php';
 <link href="../../node_modules/jquery.fancytree/dist/skin-win7/ui.fancytree.css" rel="stylesheet" type="text/css" class="skinswitcher">
 <script src="../tree/jquery.fancytree.js" type="text/javascript"></script>
 
+	<script src="../widget/like.js"></script>
+	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
+	<script src="../palicanon/chapter_channel.js"></script>
+	<link type="text/css" rel="stylesheet" href="../palicanon/loading.css"/>
+
+    <script src="router.js"></script>
+    <script src="test.js"></script>
+
 <style>
 .chapter_list ul {
     margin-left: 0;
 }
 .head_bar{
-    display:flex;
-    max-width: 30vh;
+    display: flex;
+    flex-direction: column;
 }
 #left-bar{
     flex: 2;
     background-color: var(--box-bg-color2);
 }
-.more_info{
-    font-size:80%;
-    color: var(--main-color1);
-}
-.more_info>.item{
-    margin-right:1em;
-}
-.chapter_list ul li{
+
+.chapter_list ul li .main{
     display:flex;
 }
 .book_view  ul li{
@@ -77,10 +79,22 @@ require_once '../public/function.php';
     max-height: unset;
     overflow-y: unset; 
 }
-.chapter_list .more_info {
-    display: block;
+
+.chapter_list .more_info{
+    display:flex;
+    font-size:80%;
+    color: var(--main-color1);
+    justify-content: space-between;
 }
 
+
+}
+.more_info>.palicanon_chapter_info>.item{
+    margin-right:1em;
+}
+.left_item>.item{
+    margin-right:1em;
+}
 .filter>.inner {
     max-height: 200px;
     overflow-y: auto;
@@ -117,9 +131,88 @@ require_once '../public/function.php';
     color: unset;
     border-color: var(--link-hover-color);
 }
-select#tag_category_index option {
+.submenu select>option {
     background-color: gray;
 }
+button.active {
+    background-color: gray;
+}
+
+.chapter_list ul li>.main>.left{
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.chapter_list ul li>.main>.right{
+    width:100%;
+}
+.chapter_tag {
+    width: 475px;
+    padding: 5px 0;
+    overflow-y: visible;
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.left_item {
+    margin: 4px 0;
+}
+.left_item>.item>.small_icon{
+    width:16px;
+    height:16px;
+}
+.left_item>.item>.text{
+    padding:5px;
+}
+
+div#tag_list {
+    background-color: var(--btn-color);
+    padding: 5px;
+    display: none;
+}
+
+#more_chapter {
+    text-align: center;
+}
+#more_chapter_line {
+    border-bottom: 1px solid var(--border-line-color);
+    height: 1em;
+}
+#btn_more_chapter{
+        position: absolute;
+    margin-top: -1.1em;
+    background-color: var(--link-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 2px 40px;
+    margin-left: -5em;
+}
+#filter-author li.active{
+    background-color:gray;
+}
+
+#filter_bar {
+    display: flex;
+    justify-content: space-between;
+}
+div#filter_bar {
+    font-size: 120%;
+}
+
+span.channel:hover {
+    background-color: wheat;
+}
+span.channel {
+    cursor: pointer;
+}
+
+.settting-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+}
+
 </style>
 
 <?php
@@ -134,42 +227,70 @@ select#tag_category_index option {
     <div id='left-bar' >
         <div id='left-bar-inner'>
             <div class="filter submenu">
+                <div class="title submenu_title">设定</div>
+                <div class='inner' id='filter-setting' >
+                    <div class='settting-item'>
+                        <span>内容类型</span>
+                        <span>
+                            <select>
+                                <option value=''>全部</option>
+                                <option value='translation'>译文</option>
+                                <option value='nissaya'>Nissaya</option>
+                                <option value='commentray'>注疏</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class='settting-item'>
+                        <span>完成度阈值</span>
+                        <span>
+                            <select>
+                                <option value='0.9'>90</option>
+                                <option value='0.8'>80</option>
+                                <option value='0.7'>70</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class='settting-item'>
+                        <span>语言</span>
+                        <span>
+                            <select>
+                                <option value=''>全部</option>
+                                <option value='zh'>中文</option>
+                                <option value='en'>英文</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div><button>还原默认</button><button>应用</button></div>
+                </div>
+            </div>
+            <div class="filter submenu">
                 <div class="title submenu_title" style="flex;">
                     <span>分类标签</span>
                     <span>
-                            <select id="tag_category_index" onchange="TagCategoryIndexchange(this)">
-                            </select>
+                        <select id="tag_category_index" onchange="TagCategoryIndexchange(this)"></select>
                     </span>
                 </div>
-                <div class='inner' >
-                    <div id='tag-category' >
-                    
-                    </div>
+                <div class='inner' style='max-height: unset;'>
+                    <div id='tag-category' ></div>
                 </div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">作者</div>
-                <div class='inner' id='filter-author' >
-                
-                </div>
+                <div class='inner' id='filter-author' ></div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">语言</div>
-                <div class='inner' id='filter-lang' >
-                
-                </div>
+                <div class='inner' id='filter-lang' ></div>
             </div>
             <div class="filter submenu">
                 <div class="title submenu_title">类型</div>
-                <div class='inner' id='filter-type' >
-                
-                </div>
+                <div class='inner' id='filter-type' ></div>
             </div>
         </div>
     </div>
-    <div id='course_head_bar' style='flex:6;background-color:var(--tool-bg-color1);padding:0 10px 10px 10px;'>
+    <div id='course_head_bar' style='flex:6;padding:0 10px 10px 10px;'>
         <div class='index_inner '>
-            <div style='display:flex;justify-content: space-between;'>
+            <div style='display:flex;justify-content: space-between;display:none;'>
                 <div> </div>
                 <div style=''>
                     <select onchange='viewChanged(this)'>
@@ -194,15 +315,31 @@ select#tag_category_index option {
             </div>
 
             <div id="select_bar" >
+                <div id="channel_selected"></div>
                 <div id="tag_selected"></div>
-                <div>
-                    <button onclick="tag_list_slide_toggle(this)">
-                        ⮝
+            </div>
+
+            <div id='bread-crumbs'></div>
+            <div id='filter_bar'>
+                <div id='filter_bar_left'></div>
+                <div id='filter_bar_right'>
+                    <button id='btn-filter' onclick="tag_list_slide_toggle(this)">
+                        <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>
+                        </svg>
                     </button>
                 </div>
             </div>
             <div>
-                <div id="tag_list">
+                <div id="tag_list" style='display:none;'>
+                    <div id="tag_list_head" style="display:flex;justify-content: space-between;border-bottom: 1px solid var(--border-line-color);">
+                        <div style='width:20em;'>
+                            <input id="tag_input" type="input" placeholder="tag search" size="20">
+                        </div>
+                        <div>
+                            <button id="btn-tag_list_close" onclick='close_tag_list()'>X</button>
+                        </div>
+                    </div>
                     <div level="0" class="tag_others"></div>
                     <div level="1" class="tag_others"></div>
                     <div level="2" class="tag_others"></div>
@@ -213,7 +350,6 @@ select#tag_category_index option {
                     <div level="8" class="tag_others"></div>
                 </div>
             </div>
-            <div id='bread-crumbs'></div>
             <div class='index_inner'>
                 <div id="chapter_shell" class="chapter_list" >
                     <div id="list_shell_1" class="show" level="1">
@@ -262,8 +398,14 @@ select#tag_category_index option {
         </div>
     </div>
     <div style="flex:2;">
+    <div class='bangdan' id = "user_recent">
+        <div class='title'>最近阅读</div>
+        <div class='list'>
+            <div id="page_loader" class="lds-ellipsis" style="visibility: hidden;"><div></div><div></div><div></div><div></div></div>
+        </div>
+    </div>
     <div class='bangdan'>
-        <div class='title'>最新</div>
+        <div class='title'>求助</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
@@ -271,23 +413,15 @@ select#tag_category_index option {
         </div>
     </div>
     <div class='bangdan'>
-        <div class='title'>新手区</div>
+        <div class='title'>社区推荐</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
             </ul>
         </div>
     </div>
-    <div class='bangdan'>
-        <div class='title'>周推荐</div>
-        <div class='list'>
-            <ul>
-                <li>zuixin-1</li>
-            </ul>
-        </div>
-    </div>
-    <div class='bangdan'>
-        <div class='title'>白金作者</div>
+    <div class='bangdan' id='contribution'>
+        <div class='title'>月度贡献</div>
         <div class='list'>
             <ul>
                 <li>zuixin-1</li>
@@ -311,14 +445,24 @@ select#tag_category_index option {
             <?php
             if(isset($_GET["view"])){
                 echo "_view = '{$_GET["view"]}';";
+            }else{
+                echo "_view = 'community';";
+                echo "updataHistory();";
+            }
+
+            if(isset($_GET["tag"])){
+                echo "_tags = '{$_GET["tag"]}';";
+            }
+            if(isset($_GET["channel"])){
+                echo "_channel = '{$_GET["channel"]}';";
             }
             
             switch ($_view) {
                 case 'community':
-                    echo "community_onload();";
+                    //echo "community_onload();";
                     break;
                 case 'category':
-                    echo "palicanon_onload();";
+                    //echo "palicanon_onload();";
                     break;
                 case 'my';
                 default:
@@ -326,8 +470,13 @@ select#tag_category_index option {
                     break;
             }
             ?>
+            list_tag = _tags.split(',');
+            refresh_selected_tag();
             ReanderMainMenu();
             updateFirstListView();
+            //载入用户最近的阅读列表
+            loadUserRecent();
+            loadContribution();
         });
     </script>
     <?php

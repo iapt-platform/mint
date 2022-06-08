@@ -89,6 +89,21 @@ class UpgradeProgressChapter extends Command
                                 ->whereBetween('para',[$chapter->paragraph,$chapter->paragraph+$chapter->chapter_len-1])
                                 ->where('channel_id',$final->channel_id)
                                 ->max('updated_at');
+                    $transTexts = Sentence::where('book_id',$book->book_id)
+                                ->whereBetween('paragraph',[$chapter->paragraph+1,$chapter->paragraph+$chapter->chapter_len-1])
+                                ->where('channel_uid',$final->channel_id)
+                                ->select('content')
+                                ->orderBy('paragraph')
+                                ->orderBy('word_start')
+                                ->get();
+                    $summaryText = "";
+                    foreach ($transTexts as $text) {
+                        # code...
+                        $summaryText .= str_replace("\n","",$text->content);
+                        if(mb_strlen($summaryText,"UTF-8")>255){
+                            break;
+                        }
+                    }
                     #查询标题
                     $title = Sentence::where('book_id',$book->book_id)
                           ->where('paragraph',$chapter->paragraph)
@@ -137,6 +152,7 @@ class UpgradeProgressChapter extends Command
                     $chapterData->public = $final->cp_len/$chapter_strlen;
                     $chapterData->progress = $final->cp_len/$chapter_strlen;
                     $chapterData->title = mb_substr($title,0,255,"UTF-8");
+                    $chapterData->summary = mb_substr($summaryText,0,255,"UTF-8");
                     $chapterData->created_at = $finalAt;
                     $chapterData->updated_at = $updateAt;
                     $chapterData->save();
