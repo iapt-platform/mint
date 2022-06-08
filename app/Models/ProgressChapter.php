@@ -16,7 +16,7 @@ class ProgressChapter extends Model
         ];
     protected $primaryKey = 'uid';
     
-    protected $dateFormat = 'U';
+    //protected $dateFormat = 'U';
 
     public function tagid()
     {
