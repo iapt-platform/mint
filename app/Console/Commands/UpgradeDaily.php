@@ -37,11 +37,18 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
-        $this->call('upgrade:palitext');
+        # 刷巴利语句子uuid 仅调用一次
         $this->call('upgrade:palitextid');
+        //巴利原文段落库目录结构改变时运行
+        $this->call('upgrade:palitext'); 
+        #巴利段落标签
         $this->call('upgrade:palitexttag');
+        #译文进度
         $this->call('upgrade:progress');
         $this->call('upgrade:progresschapter');
+        # 段落更新图
+        $this->call('upgrade:chapterdynamic');
+        # 逐词译数据库分析
         $this->call('upgrade:wbwanalyses');
         return 0;
     }
