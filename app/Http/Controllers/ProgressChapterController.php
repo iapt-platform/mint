@@ -149,6 +149,7 @@ class ProgressChapterController extends Controller
                     $all_count = count($chapters);
                 break;
             case 'lang':
+                
                 $chapters = ProgressChapter::select('lang')
                                             ->selectRaw('count(*) as count')
                                             ->where("progress",">",$minProgress)
@@ -163,12 +164,19 @@ class ProgressChapterController extends Controller
             总共有多少channel
             */
                 $chapters = ProgressChapter::select('channel_id')
-                                            ->selectRaw('count(*) as count')
-                                            ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                                           ->selectRaw('count(*) as count')
+                                           ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
                                                 return $query->select('*');
                                             }])
-                                            ->where("progress",">",$minProgress)
-                                            ->groupBy('channel_id')
+                                           ->leftJoin('channels','progress_chapters.channel_id', '=', 'channels.uid')
+                                           ->where("progress",">",$minProgress);
+                if(!empty($request->get('channel_type'))){
+                    $chapters =  $chapters->where('channels.type',$request->get('channel_type'));
+                }
+                if(!empty($request->get('lang'))){
+                    $chapters =  $chapters->where('progress_chapters.lang',$request->get('lang'));
+                }
+                $chapters =  $chapters->groupBy('channel_id')
                                             ->orderBy('count','desc')
                                             ->get();
                 $all_count = count($chapters);
@@ -242,9 +250,20 @@ class ProgressChapterController extends Controller
                     $channel = "";
                 }
 
+
+
                 $param[] = $minProgress;
+
+                if(!empty($request->get('lang'))){
+                    $whereLang = " and pc.lang = ? ";
+                    $param[] = $request->get('lang');
+                }else{
+                    $whereLang = "   ";
+                }                
                 $param_count = $param;
                 $param[] = $offset;
+
+
                 $query = "
                 select tpc.uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
                     from (
@@ -261,7 +280,7 @@ class ProgressChapterController extends Controller
                         ) CID 
                         left join $pc as pc on CID.cid = pc.uid 
                         where pc.progress > ? 
-                        $channel
+                        $channel  $whereLang
                         order by created_at desc
                         limit 20 offset ?
                     ) tpc 
@@ -293,7 +312,7 @@ class ProgressChapterController extends Controller
                         ) CID 
                         left join $pc as pc on CID.cid = pc.uid 
                         where pc.progress > ? 
-                        $channel
+                        $channel   $whereLang
                 ";
                 $count = DB::select($query,$param_count);
                 $all_count = $count[0]->count;

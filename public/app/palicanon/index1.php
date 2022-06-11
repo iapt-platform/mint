@@ -230,37 +230,39 @@ span.channel {
                 <div class="title submenu_title">设定</div>
                 <div class='inner' id='filter-setting' >
                     <div class='settting-item'>
-                        <span>内容类型</span>
-                        <span>
-                            <select>
-                                <option value=''>全部</option>
-                                <option value='translation'>译文</option>
-                                <option value='nissaya'>Nissaya</option>
-                                <option value='commentray'>注疏</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class='settting-item'>
-                        <span>完成度阈值</span>
-                        <span>
-                            <select>
-                                <option value='0.9'>90</option>
-                                <option value='0.8'>80</option>
-                                <option value='0.7'>70</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class='settting-item'>
                         <span>语言</span>
                         <span>
-                            <select>
+                            <select id='setting_lang'>
+                                <option value='auto'>自动</option>
                                 <option value=''>全部</option>
                                 <option value='zh'>中文</option>
                                 <option value='en'>英文</option>
                             </select>
                         </span>
                     </div>
-                    <div><button>还原默认</button><button>应用</button></div>
+                    <div class='settting-item'>
+                        <span>内容类型</span>
+                        <span>
+                            <select id='setting_channel_type'>
+                                <option value=''>全部</option>
+                                <option value='translation' selected >译文</option>
+                                <option value='nissaya'>Nissaya</option>
+                                <option value='commentray'>注疏</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class='settting-item'>
+                        <span>完成度</span>
+                        <span>
+                            <select id='setting_progress'>
+                                <option value='0.9'>90</option>
+                                <option value='0.8'>80</option>
+                                <option value='0.7'>70</option>
+                            </select>
+                        </span>
+                    </div>
+
+                    <div><button>还原默认</button><button onclick="updateSetting()">应用</button></div>
                 </div>
             </div>
             <div class="filter submenu">
@@ -275,16 +277,8 @@ span.channel {
                 </div>
             </div>
             <div class="filter submenu">
-                <div class="title submenu_title">作者</div>
+                <div class="title submenu_title"><span>作者</span><span><input type="input" placeholder="🔍" /></span></div>
                 <div class='inner' id='filter-author' ></div>
-            </div>
-            <div class="filter submenu">
-                <div class="title submenu_title">语言</div>
-                <div class='inner' id='filter-lang' ></div>
-            </div>
-            <div class="filter submenu">
-                <div class="title submenu_title">类型</div>
-                <div class='inner' id='filter-type' ></div>
             </div>
         </div>
     </div>

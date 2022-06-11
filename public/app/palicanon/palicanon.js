@@ -1,3 +1,7 @@
+var _lang = "";
+var _langsetting = "";
+var _channelType = 'translation'
+var  _progress = 0.9;
 var _view = "community";
 var main_tag = "";
 var list_tag = new Array();
@@ -9,12 +13,58 @@ var gBreadCrumbs=['','','','','','','','',''];
 var _nextPageStart = 0;
 var _pageSize = 20;
 var _channel = "";
-var _lang = "";
+
 var _tags = "";
 var _channelList;
 
 palicanon_load_term();
 
+function updateSetting(){
+    _langsetting = $("#setting_lang").val();
+    switch ($("#setting_lang").val()) {
+        case 'auto':
+            switch (getCookie("language")) {
+                case 'zh-cn':
+                    _lang = 'zh';
+                    break;
+                case 'zh-tw':
+                    _lang = 'zh';
+                    break;    
+                case '':
+                    lang = '';
+                    break;
+            }
+            break;
+        default:
+            _lang = $("#setting_lang").val();
+            break;
+    }
+    _channelType = $("#setting_channel_type").val();
+    _progress = $("#setting_progress").val();
+
+    localStorage.setItem("pc_filter_setting",{
+        lang : $("#setting_lang").val(),
+        channel_type : _channelType,
+        progress:_progress,
+    })
+
+    LoadAllChannel();
+}
+
+/*
+载入过滤器设置
+*/
+function loadFilterSetting(){
+    if (localStorage.getItem ("pc_filter_setting") !== null) {
+        let setting = localStorage.getItem("pc_filter_setting");
+        _lang = setting.lang;
+        _channel_type = setting.channel_type;
+        _progress = setting.progress;
+    }
+    _nextPageStart = 0;
+    communityGetChapter();
+    LoadAllChannel();
+}
 function community_onload() {
 	$("span[tag]").click(function () {
 		$(this).siblings().removeClass("select");
@@ -139,25 +189,6 @@ function updataHistory(){
 }
 
 function communityGetChapter(offset=0){
-    let strTags = "";
-	if (list_tag.length > 0) {
-		strTags = main_tag + "," + list_tag.join();
-	} else {
-		strTags = main_tag;
-	}
-	console.log(strTags);
-	let lang = getCookie("language");
-    switch (lang) {
-        case 'zh-cn':
-            lang = 'zh-hans';
-            break;
-        case 'zh-tw':
-            lang = 'zh-hant';
-            break;    
-        case '':
-            lang = 'en';
-            break;
-    }
     next_page_loader_show();
     $.getJSON(
 		"/api/v2/progress?view=chapter",
@@ -165,6 +196,7 @@ function communityGetChapter(offset=0){
 			tags: _tags,
 			lang: _lang,
             channel: _channel,
+            channel_type: _channelType,
             offset: offset
 		}
 	)
@@ -1090,7 +1122,11 @@ function select_channel(id,obj=null){
 function LoadAllChannel(){
     $.getJSON(
 		"/api/v2/progress?view=channel",
-		{},
+		{
+            lang:_lang,
+            channel_type: _channelType,
+            progress:_progress,
+        },
 		function (data, status) {
             let html = "";
             html += "<ul>"
@@ -1116,14 +1152,15 @@ function LoadAllLanguage(){
 		{},
 		function (data, status) {
             let html = "";
-            html += "<ul>"
+            html += "<option value=''>全部</option>";
             for (const iterator of data.data.rows) {
-                html += "<li>"
-                html += iterator.lang+"("+iterator.count+")";
-                html += "</li>"                    
+                if(iterator.lang!=''){
+                    html += "<option value='"+iterator.lang+"'>";
+                    html += iterator.lang+"("+iterator.count+")";
+                    html += "</option>"                          
+                }
             }
-            html += "</ul>";
-            $("#filter-lang").html(html);
+            $("#setting_lang").html(html);
         }
     );
 }
