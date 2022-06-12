@@ -16,6 +16,16 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->timezone('Asia/Shanghai')
+                 ->command('upgrade:daily')
+                 ->dailyAt('00:00')
+                 ->onSuccess(function () {
+                    // The task succeeded...
+                    
+                  })
+                 ->onFailure(function () {
+                    // The task failed...
+                 });
     }
 
     /**
