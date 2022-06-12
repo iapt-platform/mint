@@ -16,7 +16,7 @@ class UpgradeChapterDynamic extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:chapterdynamic {--one}';
+    protected $signature = 'upgrade:chapterdynamic {--test}';
 
     /**
      * The console command description.
@@ -84,7 +84,7 @@ class UpgradeChapterDynamic extends Command
             Storage::disk('local')->put("public/images/chapter_dynamic/{$filename}", $svg);
             $bar->advance();
 
-            if($this->option('one')){
+            if($this->option('test')){
                 break; //调试代码
             }
 
@@ -93,7 +93,7 @@ class UpgradeChapterDynamic extends Command
 
         $this->info('用时'.(time()-$start));
         $start = time();
-        
+
         $this->info('更新缺的章节空白图');
         // 更新缺的章节空白图
         $chapters = PaliText::select('book','paragraph')
@@ -108,7 +108,7 @@ class UpgradeChapterDynamic extends Command
             }
             $bar->advance();
 
-            if($this->option('one')){
+            if($this->option('test')){
                 break; //调试代码
             }
         }
@@ -148,7 +148,7 @@ class UpgradeChapterDynamic extends Command
             Storage::disk('local')->put("public/images/chapter_dynamic/{$filename}", $svg);
             $bar->advance();
 
-            if($this->option('one')){
+            if($this->option('test')){
                 break; //调试代码
             }
         }
