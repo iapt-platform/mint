@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class UpgradeDaily extends Command
 {
@@ -37,8 +39,9 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
+        $start = time();
         # 刷巴利语句子uuid 仅调用一次
-        $this->call('upgrade:palitextid');
+        //$this->call('upgrade:palitextid');
         //巴利原文段落库目录结构改变时运行
         $this->call('upgrade:palitext'); 
         #巴利段落标签
@@ -50,6 +53,19 @@ class UpgradeDaily extends Command
         $this->call('upgrade:chapterdynamic');
         # 逐词译数据库分析
         $this->call('upgrade:wbwanalyses');
+
+        $time = time()-$start;
+        $url = "https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf";
+        $param = [
+        "markdown"=> [
+            "title"=> "后台任务", 
+            "text"=> " wikipali: 后台任务成功执行。用时{$time}", 
+        ], 
+        "msgtype"=>"markdown"
+        ];
+
+        $response = Http::post($url, $param);
+
         return 0;
     }
 }
