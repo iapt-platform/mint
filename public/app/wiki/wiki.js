@@ -105,9 +105,10 @@ function term_render_word_to_div(strWord,eDiv) {
 									"</button>";
 							}
 
-							html += "<button class='icon_btn'><a href='#'>" + gLocal.gui.like + "</a></button>";
-							html +=
-								"<button class='icon_btn'><a href='#'>" + gLocal.gui.favorite + "</a></button></span>";
+							html += "<button class='icon_btn'><a href='../article/index.php?view=term&id="+iterator.guid+"&display=sent&mode=edit' target='_blank'>" + gLocal.gui.translate + "</a></button>";
+							//TODO 增加点赞按钮
+                            //html += "<button class='icon_btn'><a href='#'>" + gLocal.gui.like + "</a></button>";
+                            html += "</span>";
 							html += "</div>";
 
 							html += "</div>";

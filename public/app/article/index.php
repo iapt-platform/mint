@@ -9,6 +9,7 @@ require_once "../pcdl/html_head.php";
 	</script>
 
 	<script  src="./article.js"></script>
+	<script  src="./term.js"></script>
 
 	<script src="../widget/like.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
@@ -473,6 +474,9 @@ function set_toc_visible(isVisible){
 		case "sim":
 			palicanon_load();
 			break;
+        case 'term':
+            term_load();
+            break;
 		default:
 			break;
 	}
