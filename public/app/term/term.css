@@ -751,6 +751,11 @@ pw {
     left:6.2em;
     margin-top: calc(-2.1em - 8px);
 }
+
+.translation>.sent_tran_inner:hover>.tool_bar > .right {
+    display: block;
+}
+
 .sent_tran.commentary>.sent_tran_inner{
     padding-top: 2.2em;
 }
