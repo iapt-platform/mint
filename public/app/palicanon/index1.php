@@ -54,10 +54,6 @@ require_once '../public/function.php';
     <div id='left-bar' >
         <div id='left-bar-inner'>
             <div class="filter submenu">
-                <div class="title submenu_title">设定</div>
-
-            </div>
-            <div class="filter submenu">
                 <div class="title submenu_title" style="flex;">
                     <span>分类标签</span>
                     <span>
@@ -69,7 +65,7 @@ require_once '../public/function.php';
                 </div>
             </div>
             <div class="filter submenu">
-                <div class="title submenu_title"><span>作者</span><span><input type="input" placeholder="🔍" /></span></div>
+                <div class="title submenu_title"><span>作者</span></div>
                 <div class='inner' id='filter-author' >
                     <div  class="lds-ellipsis" ><div></div><div></div><div></div><div></div></div>
                 </div>
