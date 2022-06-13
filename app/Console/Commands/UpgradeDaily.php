@@ -40,6 +40,16 @@ class UpgradeDaily extends Command
     public function handle()
     {
         $start = time();
+        $url = "https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf";
+        $param = [
+        "markdown"=> [
+            "title"=> "后台任务", 
+            "text"=> " wikipali: 每日统计后台任务开始执行。", 
+        ], 
+        "msgtype"=>"markdown"
+        ];
+        $response = Http::post($url, $param);
+
         # 刷巴利语句子uuid 仅调用一次
         //$this->call('upgrade:palitextid');
         //巴利原文段落库目录结构改变时运行
@@ -55,11 +65,10 @@ class UpgradeDaily extends Command
         $this->call('upgrade:wbwanalyses');
 
         $time = time()-$start;
-        $url = "https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf";
         $param = [
         "markdown"=> [
             "title"=> "后台任务", 
-            "text"=> " wikipali: 后台任务成功执行。用时{$time}", 
+            "text"=> " wikipali: 每日统计后台任务执行完毕。用时{$time}", 
         ], 
         "msgtype"=>"markdown"
         ];
