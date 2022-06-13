@@ -2,6 +2,7 @@ var _lang = "";
 var _langsetting = "";
 var _channelType = 'translation'
 var  _progress = 0.9;
+
 var _view = "community";
 var main_tag = "";
 var list_tag = new Array();
@@ -19,34 +20,38 @@ var _channelList;
 
 palicanon_load_term();
 
-function updateSetting(){
-    _langsetting = $("#setting_lang").val();
-    switch ($("#setting_lang").val()) {
+function getLangSetting(setting){
+    switch (setting) {
         case 'auto':
             switch (getCookie("language")) {
                 case 'zh-cn':
-                    _lang = 'zh';
+                    return 'zh';
                     break;
                 case 'zh-tw':
-                    _lang = 'zh';
+                    return 'zh';
                     break;    
                 case '':
-                    lang = '';
+                    return '';
                     break;
             }
             break;
         default:
-            _lang = $("#setting_lang").val();
+            return  setting;
             break;
     }
+}
+function updateSetting(){
+    _langsetting = $("#setting_lang").val();
+    _lang = getLangSetting(_langsetting);
     _channelType = $("#setting_channel_type").val();
     _progress = $("#setting_progress").val();
 
-    localStorage.setItem("pc_filter_setting",{
-        lang : $("#setting_lang").val(),
+    localStorage.setItem("pc_filter_setting",JSON.stringify({
+        lang : _lang,
+        lang_setting: $("#setting_lang").val(),
         channel_type : _channelType,
         progress:_progress,
-    })
+    }))
 
     LoadAllChannel();
 }
@@ -55,15 +60,14 @@ function updateSetting(){
 载入过滤器设置
 */
 function loadFilterSetting(){
-    if (localStorage.getItem ("pc_filter_setting") !== null) {
-        let setting = localStorage.getItem("pc_filter_setting");
-        _lang = setting.lang;
+    if (localStorage.getItem ("pc_filter_setting")) {
+        let setting = JSON.parse(localStorage.getItem("pc_filter_setting"));
+        _langsetting = setting.lang_setting;
+        _lang = getLangSetting(_langsetting);
         _channel_type = setting.channel_type;
         _progress = setting.progress;
     }
     _nextPageStart = 0;
-    communityGetChapter();
-    LoadAllChannel();
 }
 function community_onload() {
 	$("span[tag]").click(function () {
@@ -254,15 +258,15 @@ function communityGetChapter(offset=0){
             }
         });
 
-    communityLoadChapterTag(strTags,lang);
+    communityLoadChapterTag();
 }
 
 function communityLoadChapterTag(strTags="",lang=""){
     $.getJSON(
 		"/api/v2/progress?view=chapter-tag",
 		{
-			tags: strTags,
-			lang: lang,
+			tags: _tags,
+			lang: _lang,
             channel:_channel
 		},
 		function (data, status) {
@@ -1152,10 +1156,15 @@ function LoadAllLanguage(){
 		{},
 		function (data, status) {
             let html = "";
+            html += "<option value='auto'>自动</option>";
             html += "<option value=''>全部</option>";
             for (const iterator of data.data.rows) {
                 if(iterator.lang!=''){
-                    html += "<option value='"+iterator.lang+"'>";
+                    html += "<option value='"+iterator.lang+"' ";
+                    if(_langsetting==iterator.lang){
+                        html +=" selected ";
+                    }
+                    html +=">";
                     html += iterator.lang+"("+iterator.count+")";
                     html += "</option>"                          
                 }

@@ -436,6 +436,8 @@ span.channel {
             }
             loadTagCategory(indexFilename);
             loadTagCategoryIndex();
+            loadFilterSetting();//载入上次的过滤器配置
+            LoadAllLanguage();
             <?php
             if(isset($_GET["view"])){
                 echo "_view = '{$_GET["view"]}';";
