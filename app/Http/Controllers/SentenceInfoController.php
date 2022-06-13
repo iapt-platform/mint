@@ -104,6 +104,7 @@ class SentenceInfoController extends Controller
                             ->where('paragraph','<=',$request->get('to'))
                             ->sum('length');            
             $para_strlen = 0;
+            
             foreach ($sentFinished as $sent) {
                 # code...
                 if($request->get('cache')=="1"){
@@ -120,7 +121,7 @@ class SentenceInfoController extends Controller
                                 ->where('paragraph',$sent->paragraph)
                                 ->where('word_begin',$sent->word_start)
                                 ->where('word_end',$sent->word_end)
-                                ->value('length');                    
+                                ->value('length');
                 }
             }
 
@@ -137,8 +138,8 @@ class SentenceInfoController extends Controller
                     $resulte = $strlen / $pageStrLen;
                 }
                 break;
-            case 'percent':
-                $resulte = $percent;
+            case 'percent': //百分比
+                $resulte = sprintf('%.2f',$percent);
                 break;
             case 'strlen':
             default:
@@ -156,23 +157,35 @@ class SentenceInfoController extends Controller
      *
      * @param  \App\Models\Sentence  $sentence
      * @return \Illuminate\Http\Response
-     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=page
+     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=percent
      */
     public function showprogress(Request $request)
     {
-        ob_clean();
-        ob_start();
         $resulte = $this->getSentProgress($request);
-        $img = imagecreate(strlen($resulte)*10,22) or die('create image fail ');
-        imagecolorallocate($img,255,255,255);
-        $color = imagecolorallocate($img,0,0,0);
-        imagestring($img,5,0,0,$resulte,$color);
-        imagegif($img);
-        imagedestroy($img);
+        $svg = "<svg  xmlns='http://www.w3.org/2000/svg'  xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 100 25'>";
 
-        $content = ob_get_clean();
-        return response($content,200,[
-            'Content-Type'=>'image/gif'
+        switch ($request->get('view')) {
+            case 'percent':
+                # code...
+                $resulte = $resulte*100;
+                $svg .= "<rect id='frontground' x='0' y='0' width='100' height='25' fill='#cccccc' ></rect>";
+                $svg .= "<text id='bg_text'  x='5' y='21' fill='#006600' style='font-size:25px;'>$resulte%</text>";
+                $svg .= "<rect id='background' x='0' y='0' width='100' height='25' fill='#006600' clip-path='url(#textClipPath)'></rect>";
+                $svg .= "<text id='bg_text'  x='5' y='21' fill='#ffffff' style='font-size:25px;' clip-path='url(#textClipPath)'>$resulte%</text>";
+                $svg .= "<clipPath id='textClipPath'>";
+                $svg .= "    <rect x='0' y='0' width='$resulte' height='25'></rect>";
+                $svg .= "</clipPath>";
+                break;
+            case 'strlen':
+            case 'page':
+            default:
+                $svg .= "<text id='bg_text'  x='5' y='21' fill='#006600' style='font-size:25px;'>$resulte</text>";
+                break;
+        }
+        $svg .= "</svg>";
+
+        return response($svg,200,[
+            'Content-Type'=>'image/svg+xml'
         ]);
     }
 
