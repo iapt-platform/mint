@@ -53,7 +53,19 @@ function updateSetting(){
         progress:_progress,
     }))
 
-    LoadAllChannel();
+    switch (_view) {
+        case 'community':
+            _nextPageStart = 0;
+            LoadAllChannel();
+            communityGetChapter();
+            break;
+        case 'category':
+            
+            break;    
+        default:
+            break;
+    }
+    
 }
 
 /*
