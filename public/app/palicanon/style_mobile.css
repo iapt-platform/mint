@@ -54,3 +54,24 @@
 #tag_list_setting_div {
     padding: 6px;
 }
+#palicanon-category{
+    display:block;
+}
+
+#palicanon-category>.chapter_list {
+    flex-direction: column;
+}
+
+#palicanon-category li{
+    display: flex;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+#palicanon-category .chapter_list .title .title_1 {
+    width: unset;
+}
+#palicanon-category .chapter_list .title{
+    width: -webkit-fill-available;
+    padding-left: 12px;
+}

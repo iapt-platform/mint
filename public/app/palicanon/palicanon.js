@@ -14,6 +14,7 @@ var gBreadCrumbs=['','','','','','','','',''];
 var _nextPageStart = 0;
 var _pageSize = 20;
 var _channel = "";
+var _palicanonCategory,_palicanonCategoryCurrent,_palicanonCategoryPath;
 
 var _tags = "";
 var _channelList;
@@ -1048,19 +1049,102 @@ function chapter_back(parent) {
     RenderBreadCrumbs();
 }
 
+function categoryGoHome(){
+    updatePalicanonCategoryList();
+    $("#palicanon-category").show();
+    $("#chapter_shell").hide();
+    tag_set([]);
+}
+
+function updatePalicanonCategoryList(name="__home__") {
+    switch (name) {
+        case '__home__':
+            _palicanonCategoryCurrent = _palicanonCategory.slice();
+            _palicanonCategoryPath = new Array();
+            _palicanonCategoryPath.push(_palicanonCategoryCurrent);
+            break;
+        case '__prev__':
+            _palicanonCategoryPath.pop();
+            _palicanonCategoryCurrent = _palicanonCategoryPath[_palicanonCategoryPath.length-1].slice();
+            break;
+        default:
+            if(_palicanonCategoryCurrent.length>0){
+                let next = _palicanonCategoryCurrent.find(element => element.name == name);
+                if(typeof next !== "undefined"){
+                    if(next.children && next.children.length>0){
+                        //有子目录
+                        _palicanonCategoryCurrent = next.children.slice();
+                        _palicanonCategoryPath.push(_palicanonCategoryCurrent.slice());
+                    }else{
+                        //没有子目录
+                        tag_set(next.tag);
+                        $("#palicanon-category").hide();
+                        $("#chapter_shell").show();
+                    }
+                }
+            }else{
+
+            }
+            
+            break;
+    }
+    $('#palicanon-category').html(renderPalicanonCategoryList());
+
+}
+
+function renderPalicanonCategoryList(){
+    let html = "<ul class='chapter_list'>";
+    if(_palicanonCategoryPath.length>1){
+        html += "<li onclick=\"updatePalicanonCategoryList('__prev__')\">";
+        html += "上一级";
+        html += "</li>";
+    }
+
+    for (const item of _palicanonCategoryCurrent) {
+        html += "<li onclick=\"updatePalicanonCategoryList('"+item.name+"')\">";
+        html += "<div class='left_icon'>";
+        html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#folder'>";
+        html += "</svg>" ;
+        html += "</div>";
+
+        html += "<div class='title'>";
+
+        html += '<div class="title_left" onclick="chapter_onclick(this)">';
+        html += '<div class="title_1">'+item.name+'</div>';
+        html += '<div class="title_2" lang="pali">'+item.name+'</div>';
+        html += "</div>";
+
+        html += '<div class="title_right">';
+        html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-right'>";
+        html += "</svg>" ;
+        html += '</div>';
+
+        html += "</div>";
+
+        html += "</li>";
+    }
+    html += "</ul>";
+    return html;
+}
 
 function loadTagCategory(name="defualt"){
     $.getJSON("./category/"+name+".json",function(result){
-        console.log(tocGetTagCategory(result));
+
+        _palicanonCategory = result;
+        _palicanonCategoryCurrent = _palicanonCategory.slice();
+        _palicanonCategoryPath = new Array();
+        _palicanonCategoryPath.push(_palicanonCategoryCurrent.slice());
+        updatePalicanonCategoryList();
+        
         $("#tag-category").html("");
         $("#tag-category").fancytree({
             autoScroll: true,
             selectMode: 1, // 1:single, 2:multi, 3:multi-hier
             checkbox: false, // Show checkboxes.
-            source: tocGetTagCategory(result),
+            source: tocGetTagCategory(result.slice()),
             activate: function(e, data) {
-//				alert("activate " + );
-                //currSelectNode = data.node;
                 console.log('tree',data);
                 tag_set(arrTagCategory[data.node.key]);
             },

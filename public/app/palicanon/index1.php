@@ -99,9 +99,23 @@ require_once '../public/function.php';
             </div>
 
             <div id="select_bar" >
+                <div id="select_bar_home" onclick='categoryGoHome()'>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#house'>
+                    </svg>
+                </span>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-compact-right'>
+                    </svg>
+                </span>
+                </div>
                 <div id="channel_selected"></div>
                 <div id="tag_selected"></div>
             </div>
+
+            <div id='palicanon-category'></div>
 
             <div id='bread-crumbs'></div>
             <div id='filter_bar'>
@@ -307,6 +321,7 @@ require_once '../public/function.php';
             //载入用户最近的阅读列表
             loadUserRecent();
             loadContribution();
+            
         });
     </script>
     <?php

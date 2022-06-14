@@ -39,6 +39,7 @@ tag {
 	padding: 2px 12px;
 	border-radius: 5px;
     cursor: pointer;
+    display: inline-block;
 }
 tag:hover{
     background-color: var(--border-line-color);
@@ -119,7 +120,7 @@ tag:hover{
 }
 
 #select_bar>div {
-    display:inline-block;
+    display:inline;
 }
 
 .chapter_list {
@@ -520,4 +521,11 @@ span.channel {
 #tag_list_setting_div {
     flex: 3;
     padding: 10px;
+}
+
+#palicanon-category{
+    display:none;
+}
+#select_bar_home{
+    display:none;
 }
