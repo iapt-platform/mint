@@ -38,180 +38,7 @@ require_once '../public/function.php';
     <script src="test.js"></script>
 
 <style>
-.chapter_list ul {
-    margin-left: 0;
-}
-.head_bar{
-    display: flex;
-    flex-direction: column;
-}
-#left-bar{
-    flex: 2;
-    background-color: var(--box-bg-color2);
-}
 
-.chapter_list ul li .main{
-    display:flex;
-}
-.book_view  ul li{
-    display:block;
-}
-.book_view .level_1{
-    background:unset;
-}
-
-.book_view ul li{
-    border:unset;
-    width: 30%;
-    height:90px;
-}
-.chapter_list .list {
-    display: none;
-}
-.chapter_list .show {
-    display: block;
-    width: 100%;
-}
-.chapter_list .grid {
-    width: 100%;
-}
-.chapter_list > div {
-    max-height: unset;
-    overflow-y: unset; 
-}
-
-.chapter_list .more_info{
-    display:flex;
-    font-size:80%;
-    color: var(--main-color1);
-    justify-content: space-between;
-}
-
-
-}
-.more_info>.palicanon_chapter_info>.item{
-    margin-right:1em;
-}
-.left_item>.item{
-    margin-right:1em;
-}
-.filter>.inner {
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: var(--input-bg-color);
-}
-
-.main_menu {
-    font-size: 100%;
-    text-align: center;
-    margin: 0 1em;
-    transition: all 600ms ease;
-    text-transform: capitalize;
-}
-.main_menu>span {
-    margin: 2px;
-    padding: 2px 12px;
-    font-weight: 500;
-    transition-duration: 0.2s;
-    cursor: pointer;
-    font-size: 120%;
-    border: unset;
-    border-radius: 0;
-    border-bottom: 2px solid var(--nocolor);
-    display: inline-block;
-}
-.main_menu>.select {
-    border-bottom: 2px solid var(--link-color);
-}
-.main_menu>span>a {
-    color:unset;
-}
-.main_menu span:hover {
-    background-color: unset;
-    color: unset;
-    border-color: var(--link-hover-color);
-}
-.submenu select>option {
-    background-color: gray;
-}
-button.active {
-    background-color: gray;
-}
-
-.chapter_list ul li>.main>.left{
-    width: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.chapter_list ul li>.main>.right{
-    width:100%;
-}
-.chapter_tag {
-    width: 475px;
-    padding: 5px 0;
-    overflow-y: visible;
-    overflow-x: auto;
-    display: flex;
-    flex-wrap: wrap;
-}
-.left_item {
-    margin: 4px 0;
-}
-.left_item>.item>.small_icon{
-    width:16px;
-    height:16px;
-}
-.left_item>.item>.text{
-    padding:5px;
-}
-
-div#tag_list {
-    background-color: var(--btn-color);
-    padding: 5px;
-    display: none;
-}
-
-#more_chapter {
-    text-align: center;
-}
-#more_chapter_line {
-    border-bottom: 1px solid var(--border-line-color);
-    height: 1em;
-}
-#btn_more_chapter{
-        position: absolute;
-    margin-top: -1.1em;
-    background-color: var(--link-color);
-    color: var(--bg-color);
-    border: none;
-    padding: 2px 40px;
-    margin-left: -5em;
-}
-#filter-author li.active{
-    background-color:gray;
-}
-
-#filter_bar {
-    display: flex;
-    justify-content: space-between;
-}
-div#filter_bar {
-    font-size: 120%;
-}
-
-span.channel:hover {
-    background-color: wheat;
-}
-span.channel {
-    cursor: pointer;
-}
-
-.settting-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 2px;
-}
 
 </style>
 
@@ -223,48 +50,9 @@ span.channel {
     }
 ?>
 
-<div style="display:flex;">
+<div id='main_view' >
     <div id='left-bar' >
         <div id='left-bar-inner'>
-            <div class="filter submenu">
-                <div class="title submenu_title">设定</div>
-                <div class='inner' id='filter-setting' >
-                    <div class='settting-item'>
-                        <span>语言</span>
-                        <span>
-                            <select id='setting_lang'>
-                                <option value='auto'>自动</option>
-                                <option value=''>全部</option>
-                                <option value='zh'>中文</option>
-                                <option value='en'>英文</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class='settting-item'>
-                        <span>内容类型</span>
-                        <span>
-                            <select id='setting_channel_type'>
-                                <option value=''>全部</option>
-                                <option value='translation' selected >译文</option>
-                                <option value='nissaya'>Nissaya</option>
-                                <option value='commentray'>注疏</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class='settting-item'>
-                        <span>完成度</span>
-                        <span>
-                            <select id='setting_progress'>
-                                <option value='0.9'>90</option>
-                                <option value='0.8'>80</option>
-                                <option value='0.7'>70</option>
-                            </select>
-                        </span>
-                    </div>
-
-                    <div><button>还原默认</button><button onclick="updateSetting()">应用</button></div>
-                </div>
-            </div>
             <div class="filter submenu">
                 <div class="title submenu_title" style="flex;">
                     <span>分类标签</span>
@@ -277,8 +65,10 @@ span.channel {
                 </div>
             </div>
             <div class="filter submenu">
-                <div class="title submenu_title"><span>作者</span><span><input type="input" placeholder="🔍" /></span></div>
-                <div class='inner' id='filter-author' ></div>
+                <div class="title submenu_title"><span>作者</span></div>
+                <div class='inner' id='filter-author' >
+                    <div  class="lds-ellipsis" ><div></div><div></div><div></div><div></div></div>
+                </div>
             </div>
         </div>
     </div>
@@ -309,9 +99,23 @@ span.channel {
             </div>
 
             <div id="select_bar" >
+                <div id="select_bar_home" onclick='categoryGoHome()'>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#house'>
+                    </svg>
+                </span>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-compact-right'>
+                    </svg>
+                </span>
+                </div>
                 <div id="channel_selected"></div>
                 <div id="tag_selected"></div>
             </div>
+
+            <div id='palicanon-category'></div>
 
             <div id='bread-crumbs'></div>
             <div id='filter_bar'>
@@ -328,20 +132,66 @@ span.channel {
                 <div id="tag_list" style='display:none;'>
                     <div id="tag_list_head" style="display:flex;justify-content: space-between;border-bottom: 1px solid var(--border-line-color);">
                         <div style='width:20em;'>
-                            <input id="tag_input" type="input" placeholder="tag search" size="20">
+                            
                         </div>
                         <div>
                             <button id="btn-tag_list_close" onclick='close_tag_list()'>X</button>
                         </div>
                     </div>
-                    <div level="0" class="tag_others"></div>
-                    <div level="1" class="tag_others"></div>
-                    <div level="2" class="tag_others"></div>
-                    <div level="3" class="tag_others"></div>
-                    <div level="4" class="tag_others"></div>
-                    <div level="5" class="tag_others"></div>
-                    <div level="100" class="tag_others"></div>
-                    <div level="8" class="tag_others"></div>
+
+                    <div id='tag_list_inner'>
+                        <div id='tag_list_tag_div'>
+                            <h2>标签</h2>
+                            <div><input id="tag_input" type="input" placeholder="tag search" size="20"></div>
+                            <div level="0" class="tag_others"></div>
+                            <div level="1" class="tag_others"></div>
+                            <div level="2" class="tag_others"></div>
+                            <div level="3" class="tag_others"></div>
+                            <div level="4" class="tag_others"></div>
+                            <div level="5" class="tag_others"></div>
+                            <div level="100" class="tag_others"></div>
+                            <div level="8" class="tag_others"></div>
+                        </div>
+                        <div id='tag_list_setting_div'>
+                            <h2>设定</h2>
+                            <div class='inner' id='filter-setting' >
+                                <div class='settting-item'>
+                                    <span>语言</span>
+                                    <span>
+                                        <select id='setting_lang'>
+                                            <option value='auto'>自动</option>
+                                            <option value=''>全部</option>
+                                            <option value='zh'>中文</option>
+                                            <option value='en'>英文</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <div class='settting-item'>
+                                    <span>内容类型</span>
+                                    <span>
+                                        <select id='setting_channel_type'>
+                                            <option value=''>全部</option>
+                                            <option value='translation' selected >译文</option>
+                                            <option value='nissaya'>Nissaya</option>
+                                            <option value='commentray'>注疏</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <div class='settting-item'>
+                                    <span>完成度</span>
+                                    <span>
+                                        <select id='setting_progress'>
+                                            <option value='0.9'>90</option>
+                                            <option value='0.8'>80</option>
+                                            <option value='0.5'>50</option>
+                                            <option value='0.2'>20</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <div style='display:flex;justify-content: space-between;'><button>还原默认</button><button onclick="updateSetting()">应用</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class='index_inner'>
@@ -395,7 +245,7 @@ span.channel {
     <div class='bangdan' id = "user_recent">
         <div class='title'>最近阅读</div>
         <div class='list'>
-            <div id="page_loader" class="lds-ellipsis" style="visibility: hidden;"><div></div><div></div><div></div><div></div></div>
+            <div class="lds-ellipsis" ><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
     <div class='bangdan'>
@@ -417,9 +267,7 @@ span.channel {
     <div class='bangdan' id='contribution'>
         <div class='title'>月度贡献</div>
         <div class='list'>
-            <ul>
-                <li>zuixin-1</li>
-            </ul>
+            <div class="lds-ellipsis" ><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
     </div>
@@ -473,6 +321,7 @@ span.channel {
             //载入用户最近的阅读列表
             loadUserRecent();
             loadContribution();
+            
         });
     </script>
     <?php
