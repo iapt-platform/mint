@@ -109,11 +109,12 @@ function renderChannelLikes(info,restype,resid){
 function renderProgressBar(progress){
 	let html = "<svg  xmlns='http://www.w3.org/2000/svg'  xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 100 25'>";
 	let resulte = Math.round(progress*100);
+	let clipPathId = "ClipPath_"+com_uuid();
 	html += "<rect id='frontground' x='0' y='0' width='100' height='25' fill='#cccccc' ></rect>";
 	html += "<text id='bg_text'  x='5' y='21' fill='#006600' style='font-size:25px;'>"+resulte+"%</text>";
-	html += "<rect id='background' x='0' y='0' width='100' height='25' fill='#006600' clip-path='url(#textClipPath)'></rect>";
-	html += "<text id='bg_text'  x='5' y='21' fill='#ffffff' style='font-size:25px;' clip-path='url(#textClipPath)'>"+resulte+"%</text>";
-	html += "<clipPath id='textClipPath'>";
+	html += "<rect id='background' x='0' y='0' width='100' height='25' fill='#006600' clip-path='url(#"+clipPathId+")'></rect>";
+	html += "<text id='bg_text'  x='5' y='21' fill='#ffffff' style='font-size:25px;' clip-path='url(#"+clipPathId+")'>"+resulte+"%</text>";
+	html += "<clipPath id='"+clipPathId+"'>";
 	html += "    <rect x='0' y='0' width='"+resulte+"' height='25'></rect>";
 	html += "</clipPath>";
 	html += "</svg>";
