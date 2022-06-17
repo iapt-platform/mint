@@ -19,13 +19,8 @@ class Kernel extends ConsoleKernel
         $schedule->timezone('Asia/Shanghai')
                  ->command('upgrade:daily')
                  ->dailyAt('00:00')
-                 ->onSuccess(function () {
-                    // The task succeeded...
-                    
-                  })
-                 ->onFailure(function () {
-                    // The task failed...
-                 });
+                 ->emailOutputTo('kosalla1987@126.com');
+				 //->emailOutputOnFailure()
     }
 
     /**
