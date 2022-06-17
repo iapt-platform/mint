@@ -75,3 +75,6 @@
     width: -webkit-fill-available;
     padding-left: 12px;
 }
+#course_head_bar{
+	padding:0 10px 10px 15px;
+}
