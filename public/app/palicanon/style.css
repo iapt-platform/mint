@@ -628,3 +628,7 @@ header {
 #chapter_progress li>.updated_at{
 	flex:3;
 }
+
+.category #btn_more_chapter{
+	display:none;
+}
