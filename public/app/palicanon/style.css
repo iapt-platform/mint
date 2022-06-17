@@ -340,7 +340,9 @@ li.level_1.selected {
 }
 #left-bar{
     flex: 2;
+	width: 300px;
     background-color: var(--box-bg-color2);
+	position: fixed;
 }
 
 .chapter_list ul li .main{
@@ -387,8 +389,8 @@ li.level_1.selected {
     margin-right:1em;
 }
 .filter>.inner {
-    max-height: 200px;
-    overflow-y: auto;
+    /*max-height: 200px;*/
+    /*overflow-y: auto;*/
     background-color: var(--input-bg-color);
 }
 
@@ -528,4 +530,101 @@ span.channel {
 }
 #select_bar_home{
     display:none;
+}
+
+#left-bar-inner {
+    height: calc(100vh - 50px);
+    overflow-y: scroll;
+}
+#palicanon-category{
+    display:block;
+}
+
+.community #palicanon-category{
+    display:none;
+}
+
+#palicanon-category>.chapter_list {
+    flex-direction: column;
+}
+
+#palicanon-category li{
+    display: flex;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+#palicanon-category .chapter_list .title .title_1 {
+    width: unset;
+}
+#palicanon-category .chapter_list .title{
+    width: -webkit-fill-available;
+    padding-left: 12px;
+}
+
+#course_head_bar{
+	flex:6;
+	padding:0 10px 10px 315px;
+}
+
+#bread-crumbs{
+	display: none;
+}
+.popup {
+    color: var(--tool-bt-color);
+}
+.popup #bread-crumbs{
+	display: block;
+}
+.popup #file_background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.85);
+	z-index: 200;
+}
+.popup #file_list_div {
+    position: fixed;
+    top: 4em;
+	z-index: 210;
+}
+.popup #index_inner {
+    height: calc(100vh - 4em);
+    overflow-y: auto;
+}
+.popup  .index_inner {
+    height: calc(100vh - 5em);
+    overflow-y: auto;
+}
+header {
+	z-index: 100;
+}
+
+#bread-crumbs>span{
+	padding: 0 4px;
+}
+
+.progress_bar>svg{
+	width:80px;
+}
+
+#chapter_progress li{
+	display:flex;
+}
+#chapter_progress li .channel_name{
+	flex:3;
+}
+#chapter_progress li .progress_bar{
+	flex:3;
+}
+#chapter_progress li .views{
+	flex:1;
+}
+#chapter_progress li .likes{
+	flex:1;
+}
+#chapter_progress li>.updated_at{
+	flex:3;
 }

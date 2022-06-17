@@ -1,3 +1,4 @@
+
 var _lang = "";
 var _langsetting = "";
 var _channelType = 'translation'
@@ -83,6 +84,7 @@ function loadFilterSetting(){
     _nextPageStart = 0;
 }
 function community_onload() {
+	$("#main_view").addClass("community");
 	$("span[tag]").click(function () {
 		$(this).siblings().removeClass("select");
 		$(this).addClass("select");
@@ -103,6 +105,7 @@ function community_onload() {
 }
 
 function palicanon_onload() {
+	$("#main_view").addClass("category");
 	$("span[tag]").click(function () {
 		$(this).siblings().removeClass("select");
 		$(this).addClass("select");
@@ -116,6 +119,8 @@ function palicanon_onload() {
 		tag_render_others();
 	});
     render_main_tag();
+	LoadAllChannel();
+	LoadAllLanguage();
 }
 
 function palicanon_load_term() {
@@ -182,7 +187,13 @@ function tag_changed() {
             communityGetChapter()
             break;
         case "category":
-            palicanonGetChapter(_tags,lang)
+			if(_tags == ""){
+				updatePalicanonCategoryList();
+				$("#palicanon-category").show();
+				$("#chapter_shell").hide();
+			}else{
+				palicanonGetChapter(_tags,lang);
+			}
             break;
         case "my":
             break;
@@ -297,6 +308,9 @@ function communityLoadChapterTag(strTags="",lang=""){
 }
 
 function palitextGetChapter(strTags=""){
+	if(_tags==""){
+		return;
+	}
     $.getJSON(
 		"/api/v2/palitext?view=chapter",
 		{
@@ -590,6 +604,10 @@ function chapter_onclick(obj) {
 	let type = $(objList).attr("type");
 	let level =  parseInt($(objList).parent().attr("level"));
     let title1 = $(objList).find(".title_1").first().text();
+
+	if(_view == "category" && level==1){
+		$("#index_div").addClass("popup");
+	}
     if(type=='article'){
         window.open("../article/index.php?view=chapter&book="+book+"&par="+para+"&channel="+channel,);
     }else{
@@ -1030,6 +1048,9 @@ function tag_list_slide_toggle(element) {
 	$("#tag_list").slideToggle();
 }
 function chapter_back(parent) {
+	if(_view == "category" && parent==1){
+		$("#index_div").removeClass("popup");
+	}
 	let curr = parseInt(parent) + 1;
 	let prt = parseInt(parent);
 	//隐藏当前的
@@ -1198,13 +1219,26 @@ function TagCategoryIndexchange(obj){
 
 function RenderBreadCrumbs(){
     let html = "";
-    html += '<a onclick="chapter_back(1)">home</a>';
+	html += "<span>";
+    html += '<a onclick="chapter_back(1)" title="'+gLocal.gui.close+'">';
+	html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-left-square'>";
+	html += "</svg>" ;	
+	html += '</a>';
+	html += "</span>";
     for (const iterator of gBreadCrumbs) {
         if(iterator.title1){
-            html += " > ";
+			html += "<span>";
+			html += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+			html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-right'>";
+			html += "</svg>" ;
+			html += "</span>";
+
+			html += "<span>";
             html += '<a onclick="chapter_back('+(iterator.level+1)+')">';
             html += iterator.title1;
             html += '</a>';
+			html += "</span>";
         }
     }
 
@@ -1335,3 +1369,4 @@ function loadContribution(){
         console.log( "error" );
     });
 }
+

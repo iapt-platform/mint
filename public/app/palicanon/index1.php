@@ -55,7 +55,7 @@ require_once '../public/function.php';
         <div id='left-bar-inner'>
             <div class="filter submenu">
                 <div class="title submenu_title" style="flex;">
-                    <span>分类标签</span>
+                    <span>分类</span>
                     <span>
                         <select id="tag_category_index" onchange="TagCategoryIndexchange(this)"></select>
                     </span>
@@ -72,7 +72,7 @@ require_once '../public/function.php';
             </div>
         </div>
     </div>
-    <div id='course_head_bar' style='flex:6;padding:0 10px 10px 10px;'>
+    <div id='course_head_bar' >
         <div class='index_inner '>
             <div style='display:flex;justify-content: space-between;display:none;'>
                 <div> </div>
@@ -117,7 +117,7 @@ require_once '../public/function.php';
 
             <div id='palicanon-category'></div>
 
-            <div id='bread-crumbs'></div>
+            
             <div id='filter_bar'>
                 <div id='filter_bar_left'></div>
                 <div id='filter_bar_right'>
@@ -194,51 +194,56 @@ require_once '../public/function.php';
                     </div>
                 </div>
             </div>
-            <div class='index_inner'>
-                <div id="chapter_shell" class="chapter_list" >
-                    <div id="list_shell_1" class="show" level="1">
-                        <ul id="list-1" class="grid" level="1" >
-                        </ul>
-                        <button>More</button>
-                    </div>
+			<div id="index_div">
+				<div id='file_background'></div>
+				<div id = "file_list_div">
+					<div id='bread-crumbs'></div>
+					<div class='index_inner'>
+						<div id="chapter_shell" class="chapter_list" >
+							<div id="list_shell_1" class="show" level="1">
+								<ul id="list-1" class="grid" level="1" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_2" level="2">
-                        <ul id="list-2" class="hidden" level="2"  >
-                        </ul>
-                    </div>
+							<div id="list_shell_2" level="2">
+								<ul id="list-2" class="hidden" level="2"  >
+								</ul>
+							</div>
 
-                    <div id="list_shell_3" level="3">
-                        <ul id="list-3" class="hidden" level="3" >
-                        </ul>
-                    </div>
+							<div id="list_shell_3" level="3">
+								<ul id="list-3" class="hidden" level="3" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_4" level="4">
-                        <ul id="list-4" class="hidden" level="4" >
-                        </ul>
-                    </div>
+							<div id="list_shell_4" level="4">
+								<ul id="list-4" class="hidden" level="4" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_5" level="5">
-                        <ul id="list-5" class="hidden" level="5" >
-                        </ul>
-                    </div>
+							<div id="list_shell_5" level="5">
+								<ul id="list-5" class="hidden" level="5" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_6" level="6">
-                        <ul id="list-6" class="hidden" level="6" >
-                        </ul>
-                    </div>
+							<div id="list_shell_6" level="6">
+								<ul id="list-6" class="hidden" level="6" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_7" level="7">
-                        <ul id="list-7" class="hidden" level="7" >
-                        </ul>
-                    </div>
+							<div id="list_shell_7" level="7">
+								<ul id="list-7" class="hidden" level="7" >
+								</ul>
+							</div>
 
-                    <div id="list_shell_8" level="8">
-                        <ul id="list-8" class="hidden" level="8" >
-                        </ul>
-                    </div>
+							<div id="list_shell_8" level="8">
+								<ul id="list-8" class="hidden" level="8" >
+								</ul>
+							</div>
 
-                </div>
-            </div>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
     <div style="flex:2;">
