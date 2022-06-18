@@ -32,6 +32,7 @@ require_once '../public/function.php';
 	<script src="../widget/like.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
 	<script src="../palicanon/chapter_channel.js"></script>
+	<link type="text/css" rel="stylesheet" href="../palicanon/chapter_channel.css"/>
 	<link type="text/css" rel="stylesheet" href="../palicanon/loading.css"/>
 
     <script src="router.js"></script>

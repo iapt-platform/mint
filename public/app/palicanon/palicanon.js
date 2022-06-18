@@ -458,6 +458,7 @@ function palicanon_load_chapter(book, para, div_index = 1) {
             loadChapterChannel({
                 book:book,
                 para:para,
+				readonly:true,
                 target:$("#chapter_head_" + (parseInt(div_index) + 1)).find('.progress').first()
             });
 		}

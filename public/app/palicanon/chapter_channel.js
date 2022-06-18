@@ -19,8 +19,12 @@ function loadChapterChannel(param){
     },
     function (data, status) {
         let arrChannelList = data.data.rows;
-        $(param.target).html(render_chapter_progress_list(arrChannelList,param));
-        Like();
+		if(typeof param.readonly != "undefined" && param.readonly == true){
+			$(param.target).html(render_chapter_progress_list_readonly(arrChannelList,param));
+		}else{
+			$(param.target).html(render_chapter_progress_list(arrChannelList,param));
+			Like();
+		}
     }
     );
 }
@@ -28,8 +32,45 @@ function loadChapterChannel(param){
 //章节已经有译文的channel 列表
 function render_chapter_progress_list(chapterList,param) {
 	let html = "";
-    html += "<ul>";
-	html += "<li >";
+    html += "<ul class='chapter_info_list'>";
+
+	for (const iterator of chapterList) {
+        if(iterator.channel){
+            if(param.showchannel){
+                if(!param.showchannel.includes(iterator.channel.uid)){
+                    continue;
+                }
+            }
+            html += "<li>";
+            html += "<span clsss='channel_name' style='flex:2;'>";
+            html += "<a href='../article/?view=chapter&book="+iterator.book+"&par="+iterator.para+"&channel="+iterator.channel.uid+"' target='_blanck'>";
+            html += iterator.channel.name;
+            html += "</a>";
+            html += "</span>";
+            html += "<span class='progress_bar'>";
+            html += renderProgressBar(iterator.progress);
+            html += "</span>";
+            html += "<span class='views' >";
+            html += iterator.views;
+            html += "</span>";
+            html += "<span class='likes' style='flex:5;'>";
+            html += renderChannelLikes(iterator.likes,'progress_chapter',iterator.uid);
+            html += "</span>";
+            html += "<span class='updated_at' title='"+iterator.updated_at+"' >";
+            html += getPassDataTime(new Date(iterator.updated_at));
+            html += "</span>";
+            html += "</li>";
+        }
+	}
+    html += "</ul>";
+
+	return html;
+}
+
+function render_chapter_progress_list_readonly(chapterList,param) {
+	let html = "";
+    html += "<ul class='chapter_info_list'>";
+	html += "<li>";
 	html += "<span clsss='channel_name' >版本</span>";
 	html += "<span clsss='progress_bar' >进度</span>";
 	html += "<span clsss='views' >阅读</span>";
@@ -69,6 +110,7 @@ function render_chapter_progress_list(chapterList,param) {
 
 	return html;
 }
+
 function getChapterLikeCount(info,likeType){
 	for (const item of info) {
 		if(item.type==likeType){
@@ -111,9 +153,9 @@ function renderProgressBar(progress){
 	let resulte = Math.round(progress*100);
 	let clipPathId = "ClipPath_"+com_uuid();
 	html += "<rect id='frontground' x='0' y='0' width='100' height='25' fill='#cccccc' ></rect>";
-	html += "<text id='bg_text'  x='5' y='21' fill='#006600' style='font-size:25px;'>"+resulte+"%</text>";
+	html += "<text id='bg_text'  x='5' y='19' fill='#006600' style='font-size:20px;'>"+resulte+"%</text>";
 	html += "<rect id='background' x='0' y='0' width='100' height='25' fill='#006600' clip-path='url(#"+clipPathId+")'></rect>";
-	html += "<text id='bg_text'  x='5' y='21' fill='#ffffff' style='font-size:25px;' clip-path='url(#"+clipPathId+")'>"+resulte+"%</text>";
+	html += "<text id='bg_text'  x='5' y='19' fill='#ffffff' style='font-size:20px;' clip-path='url(#"+clipPathId+")'>"+resulte+"%</text>";
 	html += "<clipPath id='"+clipPathId+"'>";
 	html += "    <rect x='0' y='0' width='"+resulte+"' height='25'></rect>";
 	html += "</clipPath>";
