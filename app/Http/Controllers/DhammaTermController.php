@@ -20,6 +20,9 @@ class DhammaTermController extends Controller
 		$indexCol = ['id','guid','word','word_en','meaning','other_meaning','note','language','channal','updated_at'];
 
 		switch ($request->get('view')) {
+            case 'show':
+                return $this->ok(DhammaTerm::find($request->get('id')));
+                break;
 			case 'user':
 				# code...
                 $userUid = $_COOKIE['user_uid'];
@@ -165,6 +168,7 @@ class DhammaTermController extends Controller
     public function show(DhammaTerm $dhammaTerm)
     {
         //
+        return $dhammaTerm;
     }
 
     /**

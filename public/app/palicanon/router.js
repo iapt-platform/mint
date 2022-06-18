@@ -19,7 +19,7 @@ Router.prototype.refresh = function() {
 };
 Router.prototype.init = function() {
     window.addEventListener('load', this.refresh.bind(this), false);
-    window.addEventListener('hashchange', this.refresh.bind(this), false);
+    //window.addEventListener('hashchange', this.refresh.bind(this), false);
     window.onpopstate = function(event) {
         console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
         _view = event.state.view;

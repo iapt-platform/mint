@@ -117,15 +117,6 @@ class UpgradeProgressChapter extends Command
                             'book'=>$book->book_id,
                             'para'=>$chapter->paragraph,
                             'channel_id'=>$final->channel_id];
-                    $value = [
-                            'lang'=>$lang,
-                            'all_trans'=>$final->cp_len/$chapter_strlen,
-                            'public'=>$final->cp_len/$chapter_strlen,
-                            'progress'=>$final->cp_len/$chapter_strlen,
-                            'title'=>mb_substr($title,0,255,"UTF-8"),
-                            'created_at'=>$finalAt,
-                            'updated_at'=>$updateAt
-                        ];
                     
                     $rules = array(
                         'book' => 'integer',

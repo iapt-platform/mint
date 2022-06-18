@@ -4,11 +4,11 @@
         "tag":["mūla"],
         "children":[
             {
-                "name":"sutta piṭaka",
+                "name":"Sutta Piṭaka",
                 "tag":["mūla","sutta"],
                 "children":[
                     {
-                        "name":"dīghanikāya",
+                        "name":"Dīghanikāya",
                         "tag":["mūla","sutta","dīghanikāya"],
                         "children":[
                             {
@@ -44,7 +44,7 @@
                         ]
                     },
                     {
-                        "name":"saṃyuttanikāya",
+                        "name":"Saṃyuttanikāya",
                         "tag":["mūla","sutta","saṃyuttanikāya"],
                         "children":[
                             {
@@ -70,7 +70,7 @@
                         ]
                     },
                     {
-                        "name":"aṅguttaranikāya",
+                        "name":"Aṅguttaranikāya",
                         "tag":["mūla","sutta","aṅguttaranikāya"],
                         "children":[
                             {
@@ -120,7 +120,7 @@
                         ]
                     },
                     {
-                        "name":"khuddakanikāya",
+                        "name":"Khuddakanikāya",
                         "tag":["mūla","sutta","khuddakanikāya"],
                         "children":[
                             {
@@ -200,7 +200,7 @@
                 ]
             },
             {
-                "name":"vinaya piṭaka",
+                "name":"Vinaya Piṭaka",
                 "tag":["mūla","vinaya"],
                 "children":[
                     {
@@ -226,7 +226,7 @@
                 ]
             },
             {
-                "name":"abhidhamma piṭaka",
+                "name":"Abhidhamma Piṭaka",
                 "tag":["mūla","abhidhamma"],
                 "children":[
                     {
