@@ -606,28 +606,6 @@ header {
 	padding: 0 4px;
 }
 
-.progress_bar>svg{
-	width:80px;
-}
-
-#chapter_progress li{
-	display:flex;
-}
-#chapter_progress li .channel_name{
-	flex:3;
-}
-#chapter_progress li .progress_bar{
-	flex:3;
-}
-#chapter_progress li .views{
-	flex:1;
-}
-#chapter_progress li .likes{
-	flex:1;
-}
-#chapter_progress li>.updated_at{
-	flex:3;
-}
 
 .category #btn_more_chapter{
 	display:none;

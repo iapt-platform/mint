@@ -13,6 +13,7 @@ require_once "../pcdl/html_head.php";
 	<script src="../widget/like.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/like.css"/>
 	<script src="../palicanon/chapter_channel.js"></script>
+	<link type="text/css" rel="stylesheet" href="../palicanon/chapter_channel.css"/>
 
 	<script src="../widget/click_dropdown.js"></script>
 	<link type="text/css" rel="stylesheet" href="../widget/click_dropdown.css"/>
