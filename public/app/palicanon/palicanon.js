@@ -1311,17 +1311,19 @@ function ReanderMainMenu(){
     if(_view=="community"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=community'>社区</a></span>";
+    html +="><a href='index.php?view=community'>"+gLocal.gui.community_new+"</a></span>";
+	
     html += "<span ";
     if(_view=="category"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=category' >分类</a></span>";
+    html +="><a href='index.php?view=category' >"+gLocal.gui.pali_text+"</a></span>";
+
     html += "<span ";
     if(_view=="my"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=my' >我的</a></span>";
+    html +="><a href='index.php?view=my' >"+gLocal.gui.my_space+"</a></span>";
     $("#main_menu").html(html);
 }
 
