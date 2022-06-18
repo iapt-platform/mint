@@ -1311,17 +1311,17 @@ function ReanderMainMenu(){
     if(_view=="community"){
         html += "class='select'";
     }
-    html +="><a href='index1.php?view=community'>社区</a></span>";
+    html +="><a href='index.php?view=community'>社区</a></span>";
     html += "<span ";
     if(_view=="category"){
         html += "class='select'";
     }
-    html +="><a href='index1.php?view=category' >分类</a></span>";
+    html +="><a href='index.php?view=category' >分类</a></span>";
     html += "<span ";
     if(_view=="my"){
         html += "class='select'";
     }
-    html +="><a href='index1.php?view=my' >我的</a></span>";
+    html +="><a href='index.php?view=my' >我的</a></span>";
     $("#main_menu").html(html);
 }
 
