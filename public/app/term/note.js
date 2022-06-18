@@ -1175,7 +1175,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.editor_name.nickname;
 	}
 	html += "</span>";
-	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
+	html += '<span class="date" title="' +
+	getFullDataTime(iterator.update_time) +
+	'">' + getPassDataTime(iterator.update_time) + "</span>";
+	html += '<span class="date" >' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
 	html += "<div class='preview'>" + tranText + "</div>";
 	html += "</div>";
@@ -1217,8 +1220,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	html += '<div class="info">';
 	if (iterator.id != "") {
-		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
-	}
+		html += '<span class="date" title="' +
+		getFullDataTime(iterator.update_time) +
+		'">' + getPassDataTime(iterator.update_time) + "</span>";
+}
 	if (iterator.id != "") {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}

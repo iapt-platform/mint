@@ -681,7 +681,7 @@ pw {
 	text-transform:capitalize;
 }
 .compact .body > .head_bar {
-	display: flex;
+	/*display: flex;*/
 }
 .compact .body > .head_bar > .date {
 	display: none;
@@ -1158,7 +1158,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-
+	white-space: pre-wrap;
 }
 .nsy_word>.org>strong {
     font-weight:900;

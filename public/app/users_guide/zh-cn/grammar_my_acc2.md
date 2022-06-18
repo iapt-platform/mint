@@ -1,3 +1,7 @@
 # 缅文语尾
 
-- 宾格/趋向
+- 趋向
+
+|格位|含义|翻译建议|关系|
+|-|-|-|-|
+|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达**副词**|……地|[副词 ➡ 动词<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|
