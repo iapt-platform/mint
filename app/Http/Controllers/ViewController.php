@@ -144,11 +144,11 @@ class ViewController extends Controller
 										->value("toc");
 				Log::info('获取标题 成功');
 
-				$new->meta = [
+				$new->meta = \json_encode([
 					"book"=>$request->get("book"),
 					"para"=>$request->get("para"),
 					"channel"=>$request->get("channel"),
-				];
+				]);
 				Log::info('获取meta数据成功');
 
 				break;
