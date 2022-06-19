@@ -610,3 +610,17 @@ header {
 .category #btn_more_chapter{
 	display:none;
 }
+
+.recent{
+	display:flex;
+}
+
+.recent>.title{
+	flex:5;
+}
+.recent>.count{
+	flex:1;
+}
+.recent>.update{
+	flex:3;
+}

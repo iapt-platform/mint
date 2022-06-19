@@ -85,19 +85,6 @@ function loadFilterSetting(){
 }
 function community_onload() {
 	$("#main_view").addClass("community");
-	$("span[tag]").click(function () {
-		$(this).siblings().removeClass("select");
-		$(this).addClass("select");
-		main_tag = $(this).attr("tag");
-		list_tag = new Array();
-		tag_changed();
-		render_selected_filter_list();
-	});
-
-	$("#tag_input").keypress(function () {
-		tag_render_others();
-	});
-    render_main_tag();
     render_selected_filter_list();
     communityGetChapter();
     LoadAllChannel();
@@ -106,19 +93,6 @@ function community_onload() {
 
 function palicanon_onload() {
 	$("#main_view").addClass("category");
-	$("span[tag]").click(function () {
-		$(this).siblings().removeClass("select");
-		$(this).addClass("select");
-		main_tag = $(this).attr("tag");
-		list_tag = new Array();
-		tag_changed();
-		render_selected_filter_list();
-	});
-
-	$("#tag_input").keypress(function () {
-		tag_render_others();
-	});
-    render_main_tag();
 	LoadAllChannel();
 	LoadAllLanguage();
 }
@@ -145,7 +119,6 @@ function palicanon_load_term() {
 		function (data) {
 			if (data.ok) {
 				arrMyTerm = data.data.rows;
-				render_main_tag();
 			} else {
 				alert(data.message);
 			}
@@ -153,13 +126,7 @@ function palicanon_load_term() {
 	);
 }
 
-function render_main_tag() {
-	$("#main_tag")
-		.children()
-		.each(function () {
-			$(this).html(tag_get_local_word($(this).attr("tag")));
-		});
-}
+
 function tag_changed() {
     _nextPageStart= 0;
 	let strTags = "";
@@ -992,10 +959,10 @@ function refresh_selected_tag(){
             strListTag += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#tag'>";
             strListTag += "</svg>" 
             strListTag += '<span class="textt" title="' + iterator + '">' + tag_get_local_word(iterator) + "</span>";
-            strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span></tag>";            
+            strListTag += '<span class="tag-delete" onclick ="tag_remove(\'' + iterator + "')\">✕</span>";
+			strListTag += "</tag>";            
         }
 	}
-	strListTag +="</div>";
 	$("#tag_selected").html(strListTag);
 }
 function refresh_selected_channel(){
@@ -1311,41 +1278,23 @@ function ReanderMainMenu(){
     if(_view=="community"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=community'>社区</a></span>";
+    html +="><a href='index.php?view=community'>"+gLocal.gui.community_new+"</a></span>";
+	
     html += "<span ";
     if(_view=="category"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=category' >分类</a></span>";
+    html +="><a href='index.php?view=category' >"+gLocal.gui.pali_text+"</a></span>";
+
     html += "<span ";
     if(_view=="my"){
         html += "class='select'";
     }
-    html +="><a href='index.php?view=my' >我的</a></span>";
+    html +="><a href='index.php?view=my' >"+gLocal.gui.my_read+"</a></span>";
     $("#main_menu").html(html);
 }
 
-function loadUserRecent(){
-    $.getJSON(
-        "/api/v2/view?view=user-recent", function() {
-            console.log( "success" );
-            }
-    )
-    .done(function(data) {
-        let html = "";
-        html += "<ol>";
-        for (const item of data.data) {
-            html += "<li>";
-            html += item.title;
-            html += "</li>";
-        }
-        html += "</ol>";
-        $("#user_recent").find('.list').first().html(html);
-    })
-    .fail(function() {
-        console.log( "error" );
-    });
-}
+
 
 function loadContribution(){
     $.getJSON(
