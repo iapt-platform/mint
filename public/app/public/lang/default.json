@@ -656,6 +656,9 @@
 		"pass": "pass.",
 		"space": "&nbsp;",
 		"channel_type": "channel type",
+		"community_new": "community new",
+		"pali_text": "pali text",
+		"my_read": "recent",
 		"": ""
 	},
 	"grammastr": [

@@ -37,6 +37,7 @@ require_once '../public/function.php';
 
     <script src="router.js"></script>
     <script src="test.js"></script>
+    <script src="my_space.js"></script>
 
 <style>
 
@@ -254,22 +255,6 @@ require_once '../public/function.php';
             <div class="lds-ellipsis" ><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
-    <div class='bangdan'>
-        <div class='title'>求助</div>
-        <div class='list'>
-            <ul>
-                <li>zuixin-1</li>
-            </ul>
-        </div>
-    </div>
-    <div class='bangdan'>
-        <div class='title'>社区推荐</div>
-        <div class='list'>
-            <ul>
-                <li>zuixin-1</li>
-            </ul>
-        </div>
-    </div>
     <div class='bangdan' id='contribution'>
         <div class='title'>月度贡献</div>
         <div class='list'>
@@ -327,7 +312,10 @@ require_once '../public/function.php';
             //载入用户最近的阅读列表
             loadUserRecent();
             loadContribution();
-            
+			//TODO 处理标签搜索
+			$("#tag_input").keypress(function () {
+				tag_render_others();
+			});
         });
     </script>
     <?php
