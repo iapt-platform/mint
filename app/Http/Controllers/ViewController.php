@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\View;
 use App\Models\ProgressChapter;
+use App\Models\PaliText;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -71,24 +72,14 @@ class ViewController extends Controller
                     return $this->error("no login");
                 }
                 $user_id = $_COOKIE["user_uid"];
-                $items =  View::where("user_id",$user_id)
-                ->orderBy('created_at','desc')
-                ->take(10)->get();
-                foreach ($items as $key => $item) {
-                    # 根据不同的资源类型查找标题
-                    switch ($item->target_type) {
-                        case 'chapter':
-                            # code...
-                            $items[$key]['title'] = ProgressChapter::where('uid',$item->target_id)
-                                                    ->value('title');
-                            break;
-                        default:
-                            # code...
-                            $items[$key]['title'] = "unknow";
-                            break;
-                    }
-                    
-                }
+				$views =  View::where("user_id",$user_id)->orderBy('created_at','desc');
+				if($request->has("take")){
+					$views = $views->take($request->get("take"));
+				}else{
+					$views = $views->take(10);
+				}
+                $items = $views->get();
+                
                 return $this->ok($items);
                 break;
             default:
@@ -133,6 +124,24 @@ class ViewController extends Controller
         }
         $new = View::firstOrNew($param);
         $new->user_ip = $clientIp;
+		//获取标题 和 meta数据
+		switch($request->get("target_type")){
+			case "chapter":
+				$new->title = ProgressChapter::where("channel_id",$request->get("channel"))
+                                            ->where("book",$request->get("book"))
+                                            ->where("para",$request->get("para"))
+                                            ->value("title");
+				$new->org_title = PaliText::where("book",$request->get("book"))
+										->where("paragraph",$request->get("para"))
+										->value("toc");
+				$new->meta = [
+					"book"=>$request->get("book"),
+					"para"=>$request->get("para"),
+					"channel"=>$request->get("channel"),
+				];
+				break;
+		}
+		$new->count = $new->count+1;
         $new->save();
         $count = View::where("target_id",$new->target_id)->count();
         return $this->ok($count);

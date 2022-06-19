@@ -23,9 +23,13 @@ Router.route('category', function () {
     palicanonGetChapter();
 });
 Router.route('my', function () {
-    
+	let params = new URLSearchParams(document.location.search);
+    if(params.get("tag")){
+        _tags = params.get("tag"); 
+    }
+    if(params.get("channel")){
+        _channel = params.get("channel"); 
+    }
+    list_tag = _tags.split(',');
+    my_space_onload();
 });
-
-function go(){
-    location.assign('index.html?view=one');
-}
