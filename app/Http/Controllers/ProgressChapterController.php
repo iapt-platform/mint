@@ -165,11 +165,12 @@ class ProgressChapterController extends Controller
             */
                 $chapters = ProgressChapter::select('channel_id')
                                            ->selectRaw('count(*) as count')
-                                           ->with(['channel' => function($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                                           ->with(['channel' => function($query) {  
                                                 return $query->select('*');
                                             }])
                                            ->leftJoin('channels','progress_chapters.channel_id', '=', 'channels.uid')
-                                           ->where("progress",">",$minProgress);
+                                           ->where("progress",">",$minProgress)
+										   ->where('channels.status','>=',30);
                 if(!empty($request->get('channel_type'))){
                     $chapters =  $chapters->where('channels.type',$request->get('channel_type'));
                 }
@@ -265,23 +266,30 @@ class ProgressChapterController extends Controller
 
 
                 $query = "
-                select tpc.uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
+                select tpc.pc_uid as uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
                     from (
-                        select * from (
-                            select anchor_id as cid from (
-                                select tm.anchor_id , count(*) as co 
-                                    from $tm as  tm
-                                    left join $tg as t on tm.tag_id = t.id
-                                    where tm.table_name  = 'progress_chapters'  
-                                    $in1
-                                    group by tm.anchor_id
-                            ) T 
-                                $where1 
-                        ) CID 
-                        left join $pc as pc on CID.cid = pc.uid 
-                        where pc.progress > ? 
-                        $channel  $whereLang
-                        order by created_at desc
+						select pcd.uid as pc_uid, ch.uid as ch_uid, book , para, channel_id,progress, title ,pcd.summary , pcd.created_at,pcd.updated_at
+							from (
+								select uid, book,para,lang,progress,channel_id,title,summary ,created_at ,updated_at
+									from (
+										select anchor_id as cid 
+											from (
+												select tm.anchor_id , count(*) as co 
+													from $tm as  tm
+													left join $tg as t on tm.tag_id = t.id
+													where tm.table_name  = 'progress_chapters'  
+													$in1
+													group by tm.anchor_id
+											) T 
+											$where1 
+									) CID 
+								left join $pc as pc on CID.cid = pc.uid 
+								where pc.progress > ? 
+								$channel  $whereLang
+							) pcd
+						left join channels as ch on pcd.channel_id = ch.uid
+						where ch.status >= 30
+                        order by pcd.created_at desc
                         limit 20 offset ?
                     ) tpc 
                     left join $pt as pt on tpc.book = pt.book and tpc.para = pt.paragraph;";
@@ -299,20 +307,28 @@ class ProgressChapterController extends Controller
 
                 //计算按照这个条件搜索到的总数
                 $query  = "
-                         select count(*) as count from (
-                            select anchor_id as cid from (
-                                select tm.anchor_id , count(*) as co 
-                                    from $tm as  tm
-                                    left join $tg as t on tm.tag_id = t.id
-                                    where tm.table_name  = 'progress_chapters'  
-                                    $in1
-                                    group by tm.anchor_id
-                            ) T 
-                                $where1 
-                        ) CID 
-                        left join $pc as pc on CID.cid = pc.uid 
-                        where pc.progress > ? 
-                        $channel   $whereLang
+                         select count(*) as count 
+							from (
+								select *
+								from (
+									select anchor_id as cid 
+										from (
+											select tm.anchor_id , count(*) as co 
+												from $tm as  tm
+												left join $tg as t on tm.tag_id = t.id
+												where tm.table_name  = 'progress_chapters'  
+												$in1
+												group by tm.anchor_id
+										) T 
+										$where1 
+								) CID 
+								left join $pc as pc on CID.cid = pc.uid 
+								where pc.progress > ? 
+								$channel   $whereLang
+							) pcd
+							left join channels as ch on pcd.channel_id = ch.uid
+							where ch.status >= 30
+
                 ";
                 $count = DB::select($query,$param_count);
                 $all_count = $count[0]->count;
