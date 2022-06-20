@@ -1,7 +1,46 @@
 var _nsy_book_dir = "";
 var _nsy_book_id = "";
 
-function nissaya_get(book, para, begin = 0, end = 0) {
+function nissaya_load(nsyid,book, para, begin = 0, end = 0){
+	if(nsyid==0){
+		nissaya_get_books(book, para);
+	}else{
+		nissaya_get(nsyid,book, para, begin, end );
+	}
+}
+function render_nissaya_books(list,book,para,begin=0,end=0){
+	let books = JSON.parse(list);
+	let html ="<ol>";
+	for (const iterator of books) {
+		html += "<li>";
+		html += "<a href='index.php?book="+book+"&par="+para+"&begin="+begin+"&end="+end+"&nsyid=a"+iterator.nsyid+"'>";
+		html +=  iterator.nsyid + "-" + iterator.name;
+		html += "</a>";
+		html += "</li>";
+	}
+	html += "</ol>";
+	return html;
+}
+function nissaya_get_books(book, para) {
+	$.get(
+		"../nissaya/get_book_list.php",
+		{
+			book: book,
+			para: para,
+		},
+		function (data) {
+			let result = JSON.parse(data);
+			if (result.error == "") {
+				if (result.data.length > 0) {
+					//找到的书的列表
+					$("#contence").html(render_nissaya_books(result.data,book,para));
+				}
+			}
+		}
+	);
+
+}
+function nissaya_get(nissayabook,book, para, begin = 0, end = 0) {
 	if (book == 0 || para == 0) {
 		return;
 	}
@@ -12,6 +51,7 @@ function nissaya_get(book, para, begin = 0, end = 0) {
 			para: para,
 			begin: begin,
 			end: end,
+			nsyid:nissayabook,
 		},
 		function (data) {
 			let result = JSON.parse(data);
@@ -29,7 +69,14 @@ function nissaya_get(book, para, begin = 0, end = 0) {
 }
 
 function render_on_page(params) {
-	let filename = params.dir + "/" + params.book + "_" + params.page + ".gif";
+	//加入前导零补足3位
+	let prefix='';
+	if(params.page < 10){
+		prefix='00';
+	}else if(params.page < 100){
+		prefix='0';
+	}
+	let filename = params.dir + "/" + params.book + "/" + prefix + params.page + ".png";
 	let html = "";
 
 	html += "<div class='img_box' dir='" + params.dir + "' book='" + params.book + "' page='" + params.page + "'>";

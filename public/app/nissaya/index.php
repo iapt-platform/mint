@@ -23,6 +23,12 @@ if(isset($_GET["book"])){
 else{
 	$book = 0;
 }
+if(isset($_GET["nsyid"])){
+	$nsyid = $_GET["nsyid"];
+}
+else{
+	$nsyid = 0;
+}
 if(isset($_GET["par"])){
 	$para = $_GET["par"];
 }
@@ -44,7 +50,7 @@ else{
 ?>
 <script>
 $(document).ready(function () {
-	nissaya_get(<?php echo "{$book},{$para},{$begin},{$end}";?>);
+	nissaya_load(<?php echo "'{$nsyid}',{$book},{$para},{$begin},{$end}";?>);
 });
 </script>
 
