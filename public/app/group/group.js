@@ -1,4 +1,4 @@
-var _my_channal = null;
+var _my_channal = new Array();
 var get_channel_list_callback = null;
 channal_list();
 
