@@ -1447,6 +1447,11 @@ function myEndingTooltip(inStr){
             name:"နေစဉ်",
             tooltip:'同时发生的时间状语(当……的时候)',
         },
+        {
+            id:"my_def",
+            name:"လျက်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
     ];
 
     for (const iterator of myEnding) {
