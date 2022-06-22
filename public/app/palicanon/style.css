@@ -340,7 +340,7 @@ li.level_1.selected {
 }
 #left-bar{
     flex: 2;
-	width: 300px;
+	width: 20vw;
     background-color: var(--box-bg-color2);
 	position: fixed;
 }
@@ -438,7 +438,7 @@ button.active {
     justify-content: space-between;
 }
 .chapter_list ul li>.main>.right{
-    width:100%;
+    width:calc(100% - 100px);
 }
 .chapter_tag {
     width: 475px;
@@ -564,7 +564,8 @@ span.channel {
 
 #course_head_bar{
 	flex:6;
-	padding:0 10px 10px 315px;
+	padding:0 10px 10px 20vw;
+	width: 80vw;
 }
 
 #bread-crumbs{
