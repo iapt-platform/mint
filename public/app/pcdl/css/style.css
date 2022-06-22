@@ -101,8 +101,8 @@ h3 {
 }
 
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+	/*width: 8px;*/
+	/*height: 8px;*/
 	/*display: none;*/
 }
 

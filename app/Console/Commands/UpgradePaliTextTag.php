@@ -15,7 +15,7 @@ class UpgradePaliTextTag extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:palitexttag';
+    protected $signature = 'upgrade:palitexttag {book?}';
 
     /**
      * The console command description.
@@ -69,6 +69,11 @@ class UpgradePaliTextTag extends Command
             }
             */
             $book = $data[0];
+            if(!empty($this->argument('book'))){
+                if($book != (int)$this->argument('book')){
+                    continue;
+                }
+            }
             $para = $data[1];
             $tags = explode(':',$data[4]);
             $paliTextUuid = PaliText::where("book",$book)->where("paragraph",$para)->value('uid');

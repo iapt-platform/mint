@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+
 
 class UpgradeDaily extends Command
 {
@@ -37,12 +39,42 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
-        $this->call('upgrade:palitext');
+        $start = time();
+		if(app()->isLocal()==false){
+			$this->call('message:webhook',[
+				'listener' => 'dingtalk',
+				'url' => 'dingtalk1',
+				'title' => "后台任务",
+				'message' => " wikipali: 每日统计后台任务开始执行。",
+			]);
+		}
+
+        # 刷巴利语句子uuid 仅调用一次
         $this->call('upgrade:palitextid');
+        //巴利原文段落库目录结构改变时运行
+        $this->call('upgrade:palitext'); 
+        #巴利段落标签
         $this->call('upgrade:palitexttag');
+        #译文进度
         $this->call('upgrade:progress');
         $this->call('upgrade:progresschapter');
+        # 段落更新图
+        $this->call('upgrade:chapterdynamic');
+        # 逐词译数据库分析
         $this->call('upgrade:wbwanalyses');
+
+        $time = time()-$start;
+
+		if(app()->isLocal()==false){
+			$this->call('message:webhook',[
+				'listener' => 'dingtalk',
+				'url' => 'dingtalk1',
+				'title' => "后台任务",
+				'message' => "wikipali: 每日统计后台任务执行完毕。用时{$time}",
+			]);			
+		}
+
+
         return 0;
     }
 }
