@@ -47,7 +47,7 @@ class WebHook extends Command
 				break;
 			case 'dingtalk':
 				# code...
-				$url = $url[$this->argument('url')];
+				$url = $this->url[$this->argument('url')];
 				$param = [
 				"markdown"=> [
 					"title"=> $this->argument('title'), 
