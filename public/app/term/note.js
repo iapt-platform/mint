@@ -371,16 +371,18 @@ function note_channal_list() {
 					try {
 						let active = JSON.parse(data);
 						_channalData = active;
-						for (const iterator of _my_channal) {
-							let found = false;
-							for (const one of active) {
-								if (iterator.uid == one.uid) {
-									found = true;
-									break;
+						if (Array.isArray(_my_channal)) {
+							for (const iterator of _my_channal) {
+								let found = false;
+								for (const one of active) {
+									if (iterator.uid == one.uid) {
+										found = true;
+										break;
+									}
 								}
-							}
-							if (found == false) {
-								_channalData.push(iterator);
+								if (found == false) {
+									_channalData.push(iterator);
+								}
 							}
 						}
 						let strHtml = "";
@@ -1618,10 +1620,12 @@ function add_new_tran_button_click(obj) {
 
 	let html = "<div style='display:flex; max-width: 70vw; white-space: normal;'>";
 	var first_lang = "";
-	for (const iterator of _my_channal) {
-		if (iterator.lang) {
-			first_lang = iterator.lang;
-			break;
+	if (Array.isArray(_my_channal)) {
+		for (const iterator of _my_channal) {
+			if (iterator.lang) {
+				first_lang = iterator.lang;
+				break;
+			}
 		}
 	}
 	//母语channel列表
@@ -1629,9 +1633,11 @@ function add_new_tran_button_click(obj) {
 	html += "<li>";
 	html += gLocal.language[first_lang];
 	html += "</li>";
-	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
-            html += renderChannelButton(iterator,obj);
+	if (Array.isArray(_my_channal)) {
+		for (const iterator of _my_channal) {
+			if (iterator.status > 0 && first_lang.indexOf(iterator.lang) != -1 && iterator.lang != 0) {
+				html += renderChannelButton(iterator,obj);
+			}
 		}
 	}
 	html += "<li><a href='../channal/my_channal_index.php' target='_blank'><button>" + gLocal.gui.new + "&nbsp;" + gLocal.gui.channel + "</button></a></li>"
@@ -1642,9 +1648,11 @@ function add_new_tran_button_click(obj) {
 	html += gLocal.gui.other;
 	html += "&nbsp;<button style='height: 1.8em;' onmouseover='hidden_control(this)'>➡</button>"
 	html += "</li>";
-	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
-			html += renderChannelButton(iterator,obj);
+	if (Array.isArray(_my_channal)) {
+		for (const iterator of _my_channal) {
+			if (iterator.status > 0 && first_lang.indexOf(iterator.lang) == -1 && iterator.lang != 0) {
+				html += renderChannelButton(iterator,obj);
+			}
 		}
 	}
 	html += "</ul>";
@@ -1664,9 +1672,11 @@ function add_new_tran_button_click(obj) {
 	html += "<li>";
 	html += "collaborate";
 	html += "</li>";
-	for (const iterator of _my_channal) {
-		if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
-			html += renderChannelButton(iterator,obj);
+	if (Array.isArray(_my_channal)) {
+		for (const iterator of _my_channal) {
+			if (iterator.status > 0 && iterator.lang == 0 && checkStringIsChinese(iterator.name) == false) {
+				html += renderChannelButton(iterator,obj);
+			}
 		}
 	}
 	html += "</ul>";
@@ -2381,14 +2391,14 @@ function note_get_pr(channel, id) {
 }
 
 function get_channel_by_id(id) {
-	if (typeof _channalData != "undefined") {
+	if (Array.isArray(_channalData)) {
 		for (const iterator of _channalData) {
 			if (iterator.id == id) {
 				return iterator;
 			}
 		}
 	}
-	if (typeof _my_channal != "undefined") {
+	if (Array.isArray(_my_channal)) {
 		for (const iterator of _my_channal) {
 			if (iterator.id == id) {
 				return iterator;
