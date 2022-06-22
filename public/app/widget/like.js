@@ -1,21 +1,26 @@
 var arrElement = new Array();
-function Like (){
+function Like(){
 	$("like").each(function(){
 		if($(this).attr("init")!="true"){
-			arrElement.push({
+            let likeItem = {
 							like_type:$(this).attr("liketype"),
 							resource_type:$(this).attr("restype"),
 							resource_id:$(this).attr("resid"),
-							like:0,
-							me:0,
+							like:$(this).attr("count"),
+							me:$(this).attr("mine"),
 							init:false
-						});
+						};
+			arrElement.push(likeItem);
 		}
 	});
 	$("like").on("click",function(){
 			let liketype = $(this).attr("liketype");
 			let rettype = $(this).attr("restype");
 			let resid = $(this).attr("resid");		
+			let readonly = $(this).attr("readonly");
+            if(readonly=='true'){
+                return;
+            }
 		let e = arrElement.find(function(item){
 
 			if(liketype===item.like_type && rettype===item.resource_type && resid===item.resource_id){
@@ -25,42 +30,73 @@ function Like (){
 				return false;
 			}
 		});
-		if(e.me==0 ){
-			add(e.like_type,e.resource_type,e.resource_id);				
+		if(e.me){
+            remove(e.me,e.like_type,e.resource_id);
 		}else{
-			remove(e.like_type,e.resource_type,e.resource_id);	
+			add(e.like_type,e.resource_type,e.resource_id);	
 		}
 	})
-	LikeRefreshAll();
+	Render();
 }
 function add(liketype,restype,resid) {
-	$.ajaxSetup({contentType: "application/json; charset=utf-8"});
-	$.post(
-		"../api/like.php?_method=create",
-		JSON.stringify({
-			like_type:liketype,
-			resource_type:restype,
-			resource_id:resid
-		})
-		
-	).done(function (data) {
-		console.log(data);
-		let result = JSON.parse(data);
-		if(result.ok==true){
+    fetch('/api/v2/like',{
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            type:liketype,
+            target_type:restype,
+			target_id:resid
+        })
+    })
+  .then(response => response.json())
+  .then(function(data){
+      console.log(data);
+		let result = data.data;
+		if(data.ok==true){
 			for (let it of arrElement) {
-				if(result["data"].resource_type===it.resource_type &&
-				result["data"].resource_id===it.resource_id &&
-				result["data"].like_type===it.like_type){
+				if(result.type===it.like_type &&
+				result.target_id===it.resource_id){
 					it.like++;
-					it.me=1;
+					it.me=result.id;
 				}
 			}
 			Render();
 		}
-		
-	});
+  });
+
 }
-function remove(liketype,restype,resid) {
+function remove(id,liketype,resid) {
+        fetch('/api/v2/like',{
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id:id,
+            type:liketype,
+			target_id:resid
+        })
+    })
+  .then(response => response.json())
+  .then(function(data){
+      console.log(data);
+		let result = data.data;
+		if(data.ok==true){
+			for (let it of arrElement) {
+				if(liketype===it.like_type &&
+				   resid===it.resource_id){
+					it.like = result.count;
+					it.me=false;
+				}
+			}
+			Render();
+		}
+  });
+/*
 	$.getJSON(
 		"../api/like.php",
 		{
@@ -98,6 +134,7 @@ function remove(liketype,restype,resid) {
 		}
 		
 	});
+    */
 }
 function LikeRefresh(data){
 	$.ajaxSetup({contentType: "application/json; charset=utf-8"});
@@ -138,21 +175,23 @@ function Render(){
 		let likeIcon="";
 		switch (it.like_type) {
 			case "like":
-				likeIcon = "👍";
+				likeIcon = "👍Like";
 				break;
 			case "favorite":
-				likeIcon = "⭐";
+				likeIcon = "⭐Favorite";
 				break;
 			case "watch":
-				likeIcon = "👁️";
+				likeIcon = "👁️Watch";
 				break;
 			default:
 				break;
 		}
-		if(it.me>0){
+		if(it.me){
 			meClass = " like_mine";
 		}
-		html +="<div class='like_inner "+meClass+"'>"+likeIcon+it.like+"</div>";
+		html +="<div class='like_inner "+meClass+"'>"+likeIcon;
+        html +="<span class='number'>"+it.like+"<span>";
+        html +="</div>";
 
 		$("like[liketype='"+it.like_type+"'][restype='"+it.resource_type+"'][resid='"+it.resource_id+"']").html(html);
 	}

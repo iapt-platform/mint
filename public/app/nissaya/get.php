@@ -31,6 +31,11 @@ if (isset($_GET["end"])) {
 } else {
     $end = 0;
 }
+if (isset($_GET["nsyid"])) {
+    $nsyid = substr($_GET["nsyid"],1) ;
+} else {
+    $nsyid = '';
+}
 add_edit_event(_NISSAYA_FIND_, "{$book}-{$para}-{$begin}-{$end}");
 
 PDO_Connect("" . _FILE_DB_PAGE_INDEX_);
@@ -42,8 +47,8 @@ foreach ($Fetch as $key => $value) {
     $Fetch_nsy_book = PDO_FetchRow($query, array($value["book"], $value["page1"]));
     if ($Fetch_nsy_book) {
         $prefix = $Fetch_nsy_book["table"];
-        $query = "SELECT * from {$prefix}_pagematch where bookid=? and bookpagenumber=?";
-        $Fetch_nsy_index = PDO_FetchRow($query, array($Fetch_nsy_book["bookid"], $value["page2"]));
+        $query = "SELECT * from {$prefix}_pagematch where bookid=? and bookpagenumber=? and nsyid = ?";
+        $Fetch_nsy_index = PDO_FetchRow($query, array($Fetch_nsy_book["bookid"], $value["page2"],$nsyid ));
         $Fetch_nsy_index["dir"] = $prefix;
         $result["data"][] = $Fetch_nsy_index;
     } else {

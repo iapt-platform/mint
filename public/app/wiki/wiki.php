@@ -284,6 +284,10 @@ else{
 		.wiki_search_list li:hover {
 			background-color: beige;
 		}
+
+    .note_shell{
+        display:none;
+    }
 	</style>
 
 <style media="screen and (max-width:800px)">

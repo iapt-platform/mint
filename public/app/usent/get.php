@@ -85,7 +85,7 @@ if (isset($_GET["sentences"])) {
 					sent.strlen,
 					sent.modify_time,
                     channel.type
-					FROM "._TABLE_SENTENCE_. " as sent LEFT JOIN "._TABLE_CHANNEL_." as channel ON sent.channel_uid=channel.uid  WHERE (channel.type= ? AND sent.book_id = ?  AND sent.paragraph = ? AND sent.word_start = ? AND sent.word_end = ? and sent.strlen >0 and (sent.status = 30 {$channel_query} ) ) order by sent.modify_time DESC  ";
+					FROM "._TABLE_SENTENCE_. " as sent LEFT JOIN "._TABLE_CHANNEL_." as channel ON uuid(sent.channel_uid)=channel.uid  WHERE (channel.type= ? AND sent.book_id = ?  AND sent.paragraph = ? AND sent.word_start = ? AND sent.word_end = ? and sent.strlen >0 and (sent.status = 30 {$channel_query} ) ) order by sent.modify_time DESC  ";
     $stmt = $dbh->prepare($query);
     $parm = array($type,$book, $para, $begin, $end);
     $parm = array_merge_recursive($parm, $channal_list);

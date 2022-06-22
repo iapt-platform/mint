@@ -10,6 +10,9 @@ class Channal extends Table
     }
 
     public function getChannal($id){
+        if(empty($id)){
+            return false;
+        }
         $query = "SELECT * FROM ".$this->table." WHERE uid =? ";
         $stmt = $this->dbh->prepare($query);
         $stmt->execute(array($id));
