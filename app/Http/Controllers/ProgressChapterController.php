@@ -251,6 +251,7 @@ class ProgressChapterController extends Controller
                     $channel = "";
                 }
 
+				
 
 
                 $param[] = $minProgress;
@@ -261,6 +262,14 @@ class ProgressChapterController extends Controller
                 }else{
                     $whereLang = "   ";
                 }                
+
+				if($request->has('channel_type') && !empty($request->get('channel_type'))){
+					$channel_type = "and ch.type = ? "; 
+					$param[] = $request->get('channel_type');
+				}else{
+					$channel_type = "";
+				}	
+
                 $param_count = $param;
                 $param[] = $offset;
 
@@ -288,7 +297,7 @@ class ProgressChapterController extends Controller
 								$channel  $whereLang
 							) pcd
 						left join channels as ch on pcd.channel_id = ch.uid
-						where ch.status >= 30
+						where ch.status >= 30 $channel_type
                         order by pcd.created_at desc
                         limit 20 offset ?
                     ) tpc 
@@ -327,7 +336,7 @@ class ProgressChapterController extends Controller
 								$channel   $whereLang
 							) pcd
 							left join channels as ch on pcd.channel_id = ch.uid
-							where ch.status >= 30
+							where ch.status >= 30 $channel_type
 
                 ";
                 $count = DB::select($query,$param_count);

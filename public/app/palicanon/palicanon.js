@@ -185,15 +185,17 @@ function updataHistory(){
 
 function communityGetChapter(offset=0){
     next_page_loader_show();
-    $.getJSON(
-		"/api/v2/progress?view=chapter",
-		{
+	let param = {
 			tags: _tags,
 			lang: _lang,
             channel: _channel,
             channel_type: _channelType,
             offset: offset
-		}
+		};
+	console.log("查询条件", param);
+    $.getJSON(
+		"/api/v2/progress?view=chapter",
+		param
 	)
     .done(function (data, status) {
             $("#filter_bar_left").html(data.data.count+"个章节");
