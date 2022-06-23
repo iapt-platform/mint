@@ -1,4 +1,4 @@
-var _my_channal = null;
+var _my_channal = new Array();
 var gChannelId;
 var get_channel_list_callback = null;
 var enumChannelType = [
@@ -7,7 +7,17 @@ var enumChannelType = [
     {id:'nissaya',title:'nissaya',icon:''},
     {id:'commentary',title:'commentary',icon:''},
 ]
-channal_list();
+
+$(document).ready(function() {
+	enumChannelType =
+		[
+			{id:'translation',title:gLocal.gui.translation,icon:''},    
+			{id:'original',title:gLocal.gui.master_copy,icon:''},
+			{id:'nissaya',title:gLocal.gui.nissaya,icon:''},
+			{id:'commentary',title:gLocal.gui.commentary,icon:''},
+		];
+    channal_list();
+});
 var share_win;
 function channal_list_init() {
 	my_channal_list();
