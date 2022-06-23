@@ -657,11 +657,11 @@
 		"pass": "被動",
 		"channel_type": "資源類型",
 		"space": "",
-		"master_copy": "巴利底本",
-		"nissaya": "依詞釋",
 		"community_new": "社區動態",
 		"pali_text": "聖典原文",
 		"my_read": "我的閱讀",
+		"master_copy": "巴利底本",
+		"nissaya": "依詞釋",
 		"": ""
 	},
 	"grammastr": [
