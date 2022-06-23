@@ -46,14 +46,18 @@ function related_para_dlg_render(para) {
 					paraList.push(ipara);
 				}
 			}
-			output +=
-				"<a href='../reader/?view=chapter&book=" +
-				paraList[0].book +
-				"&par=" +
-				paraList[0].para +
-				"' target='_blank'>" +
-				iterator.title +
-				"</a>";
+			if(paraList.length>0){
+				output +=
+					"<a href='../reader/?view=chapter&book=" +
+					paraList[0].book +
+					"&par=" +
+					paraList[0].para +
+					"' target='_blank'>" +
+					iterator.title +
+					"</a>";				
+			}else{
+				output += "no relation paragraph";
+			}
 		}
 		output += "</div>";
 	}
