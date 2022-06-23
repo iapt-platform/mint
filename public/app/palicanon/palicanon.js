@@ -1216,8 +1216,9 @@ function RenderBreadCrumbs(){
 }
 function select_channel(id,obj=null){
     _channel = id;
+	_nextPageStart = 0;
     updataHistory();
-    communityGetChapter(0);
+    communityGetChapter(_nextPageStart);
     refresh_selected_channel();
     console.log("change channel",_channel);
     //$(obj).siblings.removeClass('active');
