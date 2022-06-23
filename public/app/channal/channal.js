@@ -2,10 +2,10 @@ var _my_channal = new Array();
 var gChannelId;
 var get_channel_list_callback = null;
 var enumChannelType = [
-    {id:'translation',title:gLocal.gui.translation,icon:''},    
-    {id:'original',title:gLocal.gui.master_copy,icon:''},
-    {id:'nissaya',title:gLocal.gui.nissaya,icon:''},
-    {id:'commentary',title:gLocal.gui.commentary,icon:''},
+    {id:'translation',title:'translation',icon:''},    
+    {id:'original',title:'original',icon:''},
+    {id:'nissaya',title:'nissaya',icon:''},
+    {id:'commentary',title:'commentary',icon:''},
 ]
 
 $(document).ready(function() {
