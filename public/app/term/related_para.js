@@ -55,6 +55,8 @@ function related_para_dlg_render(para) {
 					"' target='_blank'>" +
 					iterator.title +
 					"</a>";				
+			}else{
+				output += "no relation paragraph";
 			}
 		}
 		output += "</div>";
