@@ -61,7 +61,7 @@ function related_para_dlg_render(para) {
 			output += "</div>";
 		}		
 	}else{
-		output += "no relation paragraph";
+		output += "no related paragraph";
 		output += "</div>";
 	}
 
