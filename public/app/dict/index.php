@@ -150,7 +150,7 @@ guide.grammar_tag:hover {
 	<script>	
 		$(document).ready(function() {
 			$("#nav_dict").addClass('active');
-		}
+		});
 <?php
 if (isset($_GET["key"]) && !empty($_GET["key"])) {
     echo "var _key='{$_GET["key"]}';\n";

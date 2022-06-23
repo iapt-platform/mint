@@ -244,8 +244,8 @@ include "../pcdl/html_head.php";
 		<script>
 			 $(document).ready(function() {
 				$("#nav_course").addClass('active');
-			 }
-			var speaker = "<?php echo $_local->gui->speaker . '：' . $row['teacher'] ?>";
+			 });
+
 			
 			$.get("../course/course_list.php", function(data, status) {
 				let arrData = JSON.parse(data);
