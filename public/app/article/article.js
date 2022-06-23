@@ -365,7 +365,7 @@ function gotoArticle(articleId) {
 function OneHitChapter(book,para,channel){
     fetch('/api/v2/view',{
         method: 'POST',
-        credentials: 'include',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },

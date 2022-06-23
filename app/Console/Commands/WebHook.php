@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class WebHook extends Command
 {
@@ -47,7 +48,7 @@ class WebHook extends Command
 				break;
 			case 'dingtalk':
 				# code...
-				$url = $url[$this->argument('url')];
+				$url = $this->url[$this->argument('url')];
 				$param = [
 				"markdown"=> [
 					"title"=> $this->argument('title'), 
