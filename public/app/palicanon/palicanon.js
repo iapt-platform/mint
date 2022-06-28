@@ -159,6 +159,8 @@ function tag_changed() {
 				$("#palicanon-category").show();
 				$("#chapter_shell").hide();
 			}else{
+				$("#palicanon-category").hide();
+				$("#chapter_shell").show();
 				palicanonGetChapter(_tags,lang);
 			}
             break;
