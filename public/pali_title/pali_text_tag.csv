@@ -1,9 +1,9 @@
 book,paragraph,level,title,tag
-1,2,1,namakkārapāḷi,:añña::buddha-vandanā ganthasaṅgaha::namakkārapāḷi:
-1,159,1,namakkāraṭīkā,:añña::ṭīkā::buddha-vandanā ganthasaṅgaha::namakkārapāḷi:
-2,2,1,mahāpaṇāmapāṭha,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha(buddhavandanā):
-2,428,1,tigumbacetiya thomanā,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha(buddhavandanā):
-2,479,1,vāsamālinīkya,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha(buddhavandanā):
+1,2,1,namakkārapāḷi,:añña::buddha-vandanā ganthasaṅgaha::namakkārapāḷi::namakkāra:
+1,159,1,namakkāraṭīkā,:añña::ṭīkā::buddha-vandanā ganthasaṅgaha::namakkāraṭīkā::namakkāra:
+2,2,1,mahāpaṇāmapāṭha,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha:
+2,428,1,tigumbacetiya thomanā,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha:
+2,479,1,vāsamālinīkya,:añña::buddha-vandanā ganthasaṅgaha::mahāpaṇāmapāṭha:
 3,2,1,lakkhaṇāto,:añña::buddha-vandanā ganthasaṅgaha::lakkhaṇāto:
 3,3,2,buddhathomanāgāthā,:añña::buddha-vandanā ganthasaṅgaha::lakkhaṇāto:
 3,268,2,buddhavandanā,:añña::buddha-vandanā ganthasaṅgaha::lakkhaṇāto:
@@ -43,10 +43,10 @@ book,paragraph,level,title,tag
 6,2,1,kamalāñjali,:añña::buddha-vandanā ganthasaṅgaha::kamalāñjali:
 7,2,1,pajjamadhu,:añña::buddha-vandanā ganthasaṅgaha::pajjamadhu:
 8,2,1,buddhaguṇagāthāvalī,:añña::buddha-vandanā ganthasaṅgaha::buddhaguṇagāthāvalī:
-9,2,1,abhidhānappadīpikāṭīkā,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::ṭīkā:
-9,37,2,1. saggakaṇḍavaṇṇanā,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::ṭīkā:
-9,546,2,2. bhūkaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::ṭīkā:
-9,1869,2,3. sāmaññakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::ṭīkā:
+9,2,1,abhidhānappadīpikāṭīkā,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::abhidhānappadīpikāṭīkā:
+9,37,2,1. saggakaṇḍavaṇṇanā,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::abhidhānappadīpikāṭīkā:
+9,546,2,2. bhūkaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::abhidhānappadīpikāṭīkā:
+9,1869,2,3. sāmaññakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti::abhidhānappadīpikāṭīkā:
 10,2,1,subodhālaṅkāro,:añña::byākaraṇa ganthasaṅgaha::subodhālaṅkāro::nirutti:
 10,3,2,1. dosāvabodha-paṭhamapariccheda,:añña::byākaraṇa ganthasaṅgaha::subodhālaṅkāro::nirutti:
 10,233,2,2. dosaparihārāvabodha-dutiyapariccheda,:añña::byākaraṇa ganthasaṅgaha::subodhālaṅkāro::nirutti:
@@ -66,47 +66,47 @@ book,paragraph,level,title,tag
 12,182,2,2. nāmakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::bālāvatāra::nirutti::avatāra:
 12,619,2,3. samāsakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::bālāvatāra::nirutti::avatāra:
 12,735,2,4. taddhitakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::bālāvatāra::nirutti::avatāra:
-13,2,1,moggallānasuttapāṭho,:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,1105,1,moggallānabyākaraṇaṃ,:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,1106,2,1. paṭhamo saññādikaṇḍo,:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,1236,2,2. dutiyo kaṇḍo (syādi),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,1738,2,(3) tatiyo kaṇḍo (samāso),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,1973,2,4. catuttho kaṇḍo (ṇādi),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,2250,2,5. pañcamo kaṇḍo (khādi),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,2609,2,6. chaṭṭho kaṇḍo (tyādi),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-13,2771,2,7. sattamo kaṇḍo (ṇvādi),:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭho::nirutti:
-14,2,1,kaccāyanabyākaraṇaṃ,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,715,1,mahākaccāyanasaddāpāṭha,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,716,2,1. sandhikappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,948,2,2. nāmakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,1883,2,3. kārakakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,2109,2,4. samāsakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,2249,2,5. taddhitakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,2520,2,6. ākhyātakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,2955,2,7. kibbidhānakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-14,3321,2,8. uṇādikappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇaṃ::nirutti:
-15,2,1,saddanītippakaraṇaṃ (padamālā),:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,3,2,ganthārambhakathā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,34,2,1. savikaraṇākhyātavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,212,2,2. bhavatikriyāpadamālāvibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,427,2,3. pakiṇṇakavinicchaya,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,840,2,4. bhūdhātumayanāmikarūpavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,1158,2,5. okārantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,1525,2,6. ākārantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,1736,2,7. niggahītantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,1992,2,8. itthiliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2194,2,9. napuṃsakaliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2262,2,10. liṅgattayamissakanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2365,2,11. vāccābhidheyyaliṅgādiparidīpananāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2538,2,12. sabbanāmataṃsadisanāmanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2823,2,13. savinicchayasaṅkhyānāmanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-15,2915,2,14. atthattikavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ (padamālā)::nirutti:
-16,2,1,saddanītippakaraṇaṃ,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
-16,4,2,15. saravaggapañcakantika suddhassaradhātu,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
-16,1176,2,16. bhūvādigaṇikapariccheda,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
-16,1898,2,17. rudhādichakka,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
-16,2395,2,18. curādigaṇaparidīpana,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
-16,3067,2,19. sabbagaṇavinicchaya,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇaṃ::nirutti:
+13,2,1,moggallānasuttapāṭho,:añña::byākaraṇa ganthasaṅgaha::moggallānasuttapāṭha::nirutti:
+13,1105,1,moggallānabyākaraṇaṃ,:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,1106,2,1. paṭhamo saññādikaṇḍo,:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,1236,2,2. dutiyo kaṇḍo (syādi),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,1738,2,(3) tatiyo kaṇḍo (samāso),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,1973,2,4. catuttho kaṇḍo (ṇādi),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,2250,2,5. pañcamo kaṇḍo (khādi),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,2609,2,6. chaṭṭho kaṇḍo (tyādi),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+13,2771,2,7. sattamo kaṇḍo (ṇvādi),:añña::byākaraṇa ganthasaṅgaha::moggallānabyākaraṇa::nirutti:
+14,2,1,kaccāyanabyākaraṇaṃ,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,715,1,mahākaccāyanasaddāpāṭha,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,716,2,1. sandhikappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,948,2,2. nāmakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,1883,2,3. kārakakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,2109,2,4. samāsakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,2249,2,5. taddhitakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,2520,2,6. ākhyātakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,2955,2,7. kibbidhānakappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+14,3321,2,8. uṇādikappa,:añña::byākaraṇa ganthasaṅgaha::kaccāyanabyākaraṇa::nirutti:
+15,2,1,saddanītippakaraṇaṃ (padamālā),:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,3,2,ganthārambhakathā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,34,2,1. savikaraṇākhyātavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,212,2,2. bhavatikriyāpadamālāvibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,427,2,3. pakiṇṇakavinicchaya,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,840,2,4. bhūdhātumayanāmikarūpavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,1158,2,5. okārantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,1525,2,6. ākārantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,1736,2,7. niggahītantapulliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,1992,2,8. itthiliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2194,2,9. napuṃsakaliṅganāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2262,2,10. liṅgattayamissakanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2365,2,11. vāccābhidheyyaliṅgādiparidīpananāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2538,2,12. sabbanāmataṃsadisanāmanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2823,2,13. savinicchayasaṅkhyānāmanāmikapadamālā,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+15,2915,2,14. atthattikavibhāga,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::padamālā::nirutti:
+16,2,1,saddanītippakaraṇaṃ(dhātumālā),:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
+16,4,2,15. saravaggapañcakantika suddhassaradhātu,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
+16,1176,2,16. bhūvādigaṇikapariccheda,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
+16,1898,2,17. rudhādichakka,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
+16,2395,2,18. curādigaṇaparidīpana,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
+16,3067,2,19. sabbagaṇavinicchaya,:añña::byākaraṇa ganthasaṅgaha::saddanītippakaraṇa::dhātumālā::nirutti:
 17,2,1,padarūpasiddhi,:añña::byākaraṇa ganthasaṅgaha::padarūpasiddhi::nirutti:
 17,14,2,1. sandhikaṇḍa,:añña::byākaraṇa ganthasaṅgaha::padarūpasiddhi::nirutti:
 17,697,2,2. nāmakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::padarūpasiddhi::nirutti:
@@ -131,13 +131,13 @@ book,paragraph,level,title,tag
 19,1465,2,5. ṇādikaṇḍa,:añña::byākaraṇa ganthasaṅgaha::payogasiddhipāḷi::nirutti:
 19,1774,2,6. tyādikaṇḍa,:añña::byākaraṇa ganthasaṅgaha::payogasiddhipāḷi::nirutti:
 19,2171,2,7. khādikaṇḍa,:añña::byākaraṇa ganthasaṅgaha::payogasiddhipāḷi::nirutti:
-20,2,1,vuttodayaṃ,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,3,2,1. saññāparibhāsāniddesa-paṭhamapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,61,2,2. mattāvuttiniddesa-dutiyapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,139,2,3. samavuttiniddesa-tatiyapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,224,2,4. aḍḍhasamavuttiniddesa-catutthapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,261,2,5. visamavuttiniddesa-pañcamapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
-20,278,2,6. chappaccayavibhāga-chaṭṭhapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodayaṃ::nirutti:
+20,2,1,vuttodayaṃ,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,3,2,1. saññāparibhāsāniddesa-paṭhamapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,61,2,2. mattāvuttiniddesa-dutiyapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,139,2,3. samavuttiniddesa-tatiyapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,224,2,4. aḍḍhasamavuttiniddesa-catutthapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,261,2,5. visamavuttiniddesa-pañcamapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
+20,278,2,6. chappaccayavibhāga-chaṭṭhapariccheda,:añña::byākaraṇa ganthasaṅgaha::vuttodaya::nirutti:
 21,2,1,abhidhānappadīpikā,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti:
 21,41,2,1. saggakaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti:
 21,619,2,2. bhūkaṇḍa,:añña::byākaraṇa ganthasaṅgaha::abhidhānappadīpikā::nirutti:
@@ -152,29 +152,29 @@ book,paragraph,level,title,tag
 22,2889,2,5. taddhita,:añña::niruttidīpanīpāṭha::nirutti::leḍī sayādo:
 22,3494,2,6. ākhyātakaṇḍa,:añña::niruttidīpanīpāṭha::nirutti::leḍī sayādo:
 22,5030,2,7. kitakaṇḍa,:añña::niruttidīpanīpāṭha::nirutti::leḍī sayādo:
-23,2,1,paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,29,2,pathamagāthā-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,96,2,dutīyagāthā-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,136,2,cittasaṅgaha-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,407,2,cetasikasaṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,530,2,pakiṇṇaka saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,650,2,vīthi saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,770,2,vīthimutta saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,987,2,rūpa saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,1203,2,samuccaya saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,1319,2,paccaya saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,1439,2,kammaṭṭhāna saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-23,1473,2,nigama paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::dīpanī::leḍī sayādo:
-24,2,1,anudīpanīpāṭha,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,3,2,1. cittasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,145,2,2. cetasikasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,206,2,3. pakiṇṇakasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,215,2,4. vīthisaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,239,2,5. vīthimuttasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,284,2,6. rūpasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,321,2,7. samuccayasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,355,2,8. paccayasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
-24,388,2,9. kammaṭṭhānasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanā::leḍī sayādo:
+23,2,1,paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,29,2,pathamagāthā-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,96,2,dutīyagāthā-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,136,2,cittasaṅgaha-paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,407,2,cetasikasaṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,530,2,pakiṇṇaka saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,650,2,vīthi saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,770,2,vīthimutta saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,987,2,rūpa saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,1203,2,samuccaya saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,1319,2,paccaya saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,1439,2,kammaṭṭhāna saṅgaha paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+23,1473,2,nigama paramatthadīpanī,:añña::abhidhamma::abhidhammatthasaṅgaha::paramatthadīpanī::leḍī sayādo:
+24,2,1,anudīpanīpāṭha,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,3,2,1. cittasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,145,2,2. cetasikasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,206,2,3. pakiṇṇakasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,215,2,4. vīthisaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,239,2,5. vīthimuttasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,284,2,6. rūpasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,321,2,7. samuccayasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,355,2,8. paccayasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
+24,388,2,9. kammaṭṭhānasaṅgahaanudīpanā,:añña::abhidhamma::abhidhammatthasaṅgaha::anudīpanīpāṭha::leḍī sayādo:
 25,2,1,paṭṭhānuddesa dīpanīpāṭha,:añña::abhidhamma::paṭṭhāna::paṭṭhānuddesa dīpanīpāṭha::leḍī sayādo:
 25,3,2,1. hetupaccayo,:añña::abhidhamma::paṭṭhāna::paṭṭhānuddesa dīpanīpāṭha::leḍī sayādo:
 25,14,2,2. ārammaṇapaccayo,:añña::abhidhamma::paṭṭhāna::paṭṭhānuddesa dīpanīpāṭha::leḍī sayādo:
@@ -272,27 +272,27 @@ book,paragraph,level,title,tag
 37,343,2,4. samasīsikaṇḍo,:añña::pakiṇṇaka-ganthasaṅgaha::sīmavisodhanī::pakiṇṇaka:
 37,361,2,pakiṇṇakakaṇḍo,:añña::pakiṇṇaka-ganthasaṅgaha::sīmavisodhanī::pakiṇṇaka:
 38,2,1,vessantarāgīti,:añña::pakiṇṇaka-ganthasaṅgaha::vessantarāgīti:
-39,3,1,dīghanikāye,:añña::sutta::saṅgayana-puccha vissajjanā:
-39,4,2,sīlakkhandhavaggasutta,:añña::sutta::saṅgayana-puccha vissajjanā:
-40,3,1,majjhimanikāya,:añña::sutta::saṅgayana-puccha vissajjanā:
-40,4,2,mūlapaṇṇāsapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-40,249,2,majjhimapaṇṇāsapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,3,1,saṃyuttanikāye,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,4,2,sagāthāvaggapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,636,2,nidānavaggapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,807,2,khandhavaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,916,2,saḷāyatanavaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-41,1101,2,mahāvaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā:
-42,3,1,aṅguttaranikāye,:añña::sutta::saṅgayana-puccha vissajjanā:
-43,2,1,vinayapiṭaka,:añña::vinaya::saṅgayana-puccha vissajjanā:
-43,270,2,saṅghādisesa sikkhāpucchā,:añña::vinaya::saṅgayana-puccha vissajjanā::saṅghādisesa:
-43,375,2,nissaggipācittiya,:añña::vinaya::saṅgayana-puccha vissajjanā::nissaggiya:
-43,987,2,mahāvaggapāḷi,:añña::vinaya::saṅgayana-puccha vissajjanā:
-43,1280,2,cūḷavaggapāḷi,:añña::vinaya::saṅgayana-puccha vissajjanā:
+39,3,1,dīghanikāye,:añña::sutta::saṅgayana-puccha vissajjanā::dīghanikāya:
+39,4,2,sīlakkhandhavaggasutta,
+40,3,1,majjhimanikāya,:añña::sutta::saṅgayana-puccha vissajjanā::majjhimanikāya:
+40,4,2,mūlapaṇṇāsapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::majjhimanikāya:
+40,249,2,majjhimapaṇṇāsapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::majjhimanikāya:
+41,3,1,saṃyuttanikāye,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+41,4,2,sagāthāvaggapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+41,636,2,nidānavaggapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+41,807,2,khandhavaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+41,916,2,saḷāyatanavaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+41,1101,2,mahāvaggasaṃyuttapāḷi,:añña::sutta::saṅgayana-puccha vissajjanā::saṃyuttanikāya:
+42,3,1,aṅguttaranikāye,:añña::sutta::saṅgayana-puccha vissajjanā::aṅguttaranikāya:
+43,2,1,vinayapiṭaka,:añña::vinaya::saṅgayana-puccha vissajjanā::vinayapiṭaka:
+43,270,2,saṅghādisesa sikkhāpucchā,:añña::vinaya::saṅgayana-puccha vissajjanā::saṅghādisesa::vinayapiṭaka:
+43,375,2,nissaggipācittiya,:añña::vinaya::saṅgayana-puccha vissajjanā::nissaggiya::vinayapiṭaka:
+43,987,2,mahāvaggapāḷi,:añña::vinaya::saṅgayana-puccha vissajjanā::vinayapiṭaka:
+43,1280,2,cūḷavaggapāḷi,:añña::vinaya::saṅgayana-puccha vissajjanā::vinayapiṭaka:
 44,2,1,abhidhammapiṭaka,:añña::abhidhamma::saṅgayana-puccha vissajjanā::abhidhammapiṭaka:
 45,2,1,aṭṭhakathā,:añña::saṅgayana-puccha vissajjanā::aṭṭhakathā:
 46,1,1,milidaṭīkā,:añña::sutta::khuddakanikāya::milindapañha::milidaṭīkā::ṭīkā::sihaḷa-ganthasaṅgaha:
-46,2,2,namo tassa bhagavato arahato sammāsambuddhassa,:añña::sutta::khuddakanikāya::milindapañha::milidaṭīkā::ṭīkā::sihaḷa-ganthasaṅgaha:
+46,2,2,,:añña::sutta::khuddakanikāya::milindapañha::milidaṭīkā::ṭīkā::sihaḷa-ganthasaṅgaha:
 46,18,2,pakiṇṇakathavivaraṇaṃ,:añña::sutta::khuddakanikāya::milindapañha::milidaṭīkā::ṭīkā::sihaḷa-ganthasaṅgaha:
 47,1,1,"padamañjarī ",:añña::sihaḷa-ganthasaṅgaha::padamañjarī::nirutti:
 48,1,1,"padasādhanaṃ ",:añña::sihaḷa-ganthasaṅgaha::padasādhanaṃ::nirutti:
@@ -307,114 +307,114 @@ book,paragraph,level,title,tag
 50,377,2,"tanādayo ",:añña::sihaḷa-ganthasaṅgaha::kaccāyana dhātu mañjūsā::nirutti:
 51,1,1,"samantakūṭavaṇṇanā ",:añña::sihaḷa-ganthasaṅgaha::samantakūṭavaṇṇanā:
 52,1,1,"moggallāna vuttivivaraṇapañcikā. ",:añña::sihaḷa-ganthasaṅgaha::vuttisametā:
-53,1,1,"thupavaṃso ",:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,46,2,abhinīhāra kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,199,2,cūḷāmaṇidussa thupadvayakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,248,2,dasathūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,256,2,dhātunidhāna kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,282,2,caturāsīti sahassa thūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,348,2,bodhi āgamanakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,354,2,yojanathūpa kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,356,2,tadatthadīpanatthaṃ ayamanupubbakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,382,2,mahiyaṅgana thūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,433,2,marīcavaṭṭi vihārakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,457,2,thūpasādhana lābhakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,479,2,thūpāramha kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-53,535,2,dhātugabba rūpavaṇṇanākathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso::vaṃsa:
-54,1,1,"dāṭhāvaṃso ",:añña::sihaḷa-ganthasaṅgaha::dāṭhāvaṃso::vaṃsa:
+53,1,1,"thupavaṃso ",:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,46,2,abhinīhāra kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,199,2,cūḷāmaṇidussa thupadvayakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,248,2,dasathūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,256,2,dhātunidhāna kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,282,2,caturāsīti sahassa thūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,348,2,bodhi āgamanakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,354,2,yojanathūpa kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,356,2,tadatthadīpanatthaṃ ayamanupubbakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,382,2,mahiyaṅgana thūpakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,433,2,marīcavaṭṭi vihārakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,457,2,thūpasādhana lābhakathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,479,2,thūpāramha kathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+53,535,2,dhātugabba rūpavaṇṇanākathā,:añña::sihaḷa-ganthasaṅgaha::thupavaṃso:
+54,1,1,"dāṭhāvaṃso ",:añña::sihaḷa-ganthasaṅgaha::dāṭhāvaṃso:
 55,1,1,dhātupāṭha  vilāsiniyā,:añña::sihaḷa-ganthasaṅgaha::dhātupāṭha vilāsiniyā:
-56,1,1,"dhātuvaṃso ",:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-56,3,2,1. tathāgatassāgamanakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-56,81,2,2.  parinibbānakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-56,246,2,3.  dhātuparamparākathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-56,307,2,4.  pakiṇṇakakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-56,358,2,5.  dhātunidhānādhikāro,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso::vaṃsa:
-57,1,1,hatthavanagallavihāra  vaṃso,:añña::sihaḷa-ganthasaṅgaha::hatthavanagallavihāra vaṃso::vaṃsa:
+56,1,1,"dhātuvaṃso ",:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+56,3,2,1. tathāgatassāgamanakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+56,81,2,2.  parinibbānakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+56,246,2,3.  dhātuparamparākathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+56,307,2,4.  pakiṇṇakakathā,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+56,358,2,5.  dhātunidhānādhikāro,:añña::sihaḷa-ganthasaṅgaha::dhātuvaṃso:
+57,1,1,hatthavanagallavihāra  vaṃso,:añña::sihaḷa-ganthasaṅgaha::hatthavanagallavihāra vaṃso:
 58,1,1,"jinacaritaya ",:añña::sihaḷa-ganthasaṅgaha::jinacaritaya:
 59,1,1,"jinavaṃsadīpaṃ ",:añña::sihaḷa-ganthasaṅgaha::jinavaṃsadīpaṃ:
 60,1,1,"telakaṭāhagāthā ",:añña::sihaḷa-ganthasaṅgaha::telakaṭāhagāthā:
-61,2,1,cūḷaganthavaṃsapāḷi,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-61,3,2,1. piṭakattayaparicchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-61,25,2,2. ganthakārakācariya-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-61,37,2,3. ācariyānaṃ sañjātaṭṭhānaparicchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-61,42,2,4. āyāyakācariya-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-61,66,2,5. pakiṇṇaka-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsa::vaṃsa:
-62,2,1,sāsanavaṃsappadīpikā,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,3,2,sāsanavaṃsappadīpikā,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,35,2,1. navaṭṭhānāgatasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,130,2,2. sīhaḷadīpikasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,244,2,3. suvaṇṇabhūmisāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,305,2,4. yonakaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,338,2,5. navavāsīraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,364,2,6. aparantaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,907,2,7. kasmiragandhāraraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,929,2,8. mahiṃsakaraṭṭhassāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,938,2,9. mahāraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-62,950,2,10. cinaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa:
-63,2,1,mahāvaṃsapāḷi,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,3,2,pathamapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,269,2,dutiyapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,375,2,tatiya pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,508,2,catuttha pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,717,2,pañcama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,1612,2,chaṭṭhapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,1760,2,sattama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,1997,2,aṭṭhama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2088,2,navama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2184,2,dasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2513,2,ekādasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2646,2,dvādasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2819,2,terasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,2891,2,cuddasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,3093,2,pañcadasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,3808,2,soḷasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,3869,2,sattarasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,4073,2,aṭṭhārasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,4284,2,ekūnavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,4545,2,vīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,4729,2,ekavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,4840,2,bāvīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,5113,2,tevīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,5439,2,catuvīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,5629,2,pañcavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,5992,2,chabbīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,6079,2,sattavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,6234,2,aṭṭhavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,6375,2,ekūnatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,6592,2,tiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,6903,2,ekatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,7285,2,dvattiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,7552,2,tettiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,7883,2,catuttiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,8172,2,pañcatiṃsatimapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,8562,2,chattiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,8972,2,sattatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,9728,2,aṭṭhatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,10082,2,ekūnacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,10268,2,cattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,10584,2,ekacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,10798,2,dvicattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,11270,2,tecattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,11523,2,catucattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,11673,2,pañcacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,11874,2,chacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,12362,2,sattacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,12651,2,aṭṭhacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,12921,2,ekūnapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,13338,2,paññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,13593,2,ekapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,13756,2,dvipaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,13983,2,tivaññāsatima paccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,14092,2,catupaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,14150,2,pañcapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,14385,2,chapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,14569,2,sattapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,14729,2,aṭṭhapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,15006,2,ekūnasaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,15233,2,saṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,15441,2,ekasaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,15607,2,dvisaṭṭhimapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
-63,15806,2,tisaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa:
+61,2,1,cūḷaganthavaṃsapāḷi,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+61,3,2,1. piṭakattayaparicchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+61,25,2,2. ganthakārakācariya-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+61,37,2,3. ācariyānaṃ sañjātaṭṭhānaparicchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+61,42,2,4. āyāyakācariya-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+61,66,2,5. pakiṇṇaka-paricchedo,:añña::vaṃsa-ganthasaṅgaha::cūḷaganthavaṃsapāḷi::vaṃsa ganthasaṅgaha:
+62,2,1,sāsanavaṃsappadīpikā,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,3,2,sāsanavaṃsappadīpikā,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,35,2,1. navaṭṭhānāgatasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,130,2,2. sīhaḷadīpikasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,244,2,3. suvaṇṇabhūmisāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,305,2,4. yonakaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,338,2,5. navavāsīraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,364,2,6. aparantaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,907,2,7. kasmiragandhāraraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,929,2,8. mahiṃsakaraṭṭhassāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,938,2,9. mahāraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+62,950,2,10. cinaraṭṭhasāsanavaṃsakathāmaggo,:añña::vaṃsa-ganthasaṅgaha::sāsanavaṃsappadīpikā::vaṃsa ganthasaṅgaha:
+63,2,1,mahāvaṃsapāḷi,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,3,2,pathamapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,269,2,dutiyapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,375,2,tatiya pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,508,2,catuttha pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,717,2,pañcama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,1612,2,chaṭṭhapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,1760,2,sattama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,1997,2,aṭṭhama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2088,2,navama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2184,2,dasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2513,2,ekādasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2646,2,dvādasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2819,2,terasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,2891,2,cuddasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,3093,2,pañcadasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,3808,2,soḷasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,3869,2,sattarasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,4073,2,aṭṭhārasama pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,4284,2,ekūnavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,4545,2,vīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,4729,2,ekavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,4840,2,bāvīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,5113,2,tevīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,5439,2,catuvīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,5629,2,pañcavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,5992,2,chabbīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,6079,2,sattavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,6234,2,aṭṭhavīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,6375,2,ekūnatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,6592,2,tiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,6903,2,ekatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,7285,2,dvattiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,7552,2,tettiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,7883,2,catuttiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,8172,2,pañcatiṃsatimapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,8562,2,chattiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,8972,2,sattatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,9728,2,aṭṭhatiṃsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,10082,2,ekūnacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,10268,2,cattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,10584,2,ekacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,10798,2,dvicattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,11270,2,tecattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,11523,2,catucattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,11673,2,pañcacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,11874,2,chacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,12362,2,sattacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,12651,2,aṭṭhacattālīsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,12921,2,ekūnapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,13338,2,paññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,13593,2,ekapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,13756,2,dvipaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,13983,2,tivaññāsatima paccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,14092,2,catupaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,14150,2,pañcapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,14385,2,chapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,14569,2,sattapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,14729,2,aṭṭhapaññāsatima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,15006,2,ekūnasaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,15233,2,saṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,15441,2,ekasaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,15607,2,dvisaṭṭhimapariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
+63,15806,2,tisaṭṭhima pariccheda,:añña::vaṃsa-ganthasaṅgaha::mahāvaṃsapāḷi::vaṃsa ganthasaṅgaha:
 64,2,1,visuddhimaggo,:visuddhimagga::añña::visuddhimagga::paṭhamo bhāgo::aṭṭhakathā:
 64,60,2,1. sīlaniddeso,:visuddhimagga::añña::visuddhimagga::paṭhamo bhāgo::aṭṭhakathā:
 64,417,2,2. dhutaṅganiddeso,:visuddhimagga::añña::visuddhimagga::paṭhamo bhāgo::aṭṭhakathā:
@@ -1193,36 +1193,36 @@ book,paragraph,level,title,tag
 107,3370,2,54. kaccāyanavaggo,:apadāna::aṭṭhakathā::sutta::khuddakanikāya::apadāna::therāpadāna:
 107,3501,2,55. bhaddiyavaggo,:apadāna::aṭṭhakathā::sutta::khuddakanikāya::apadāna::therāpadāna:
 107,3734,2,56. yasavaggo,:apadāna::aṭṭhakathā::sutta::khuddakanikāya::apadāna::therāpadāna:
-108,3,1,buddhavaṃsa-aṭṭhakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,4,2,ganthārambhakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,54,2,1. ratanacaṅkamanakaṇḍavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,695,2,2. sumedhapatthanākathāvaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,1487,2,3. dīpaṅkarabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,1686,2,4. koṇḍaññabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,1832,2,5. maṅgalabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,1956,2,6. sumanabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2081,2,7. revatabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2178,2,8. sobhitabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2264,2,9. anomadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2354,2,10. padumabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2437,2,11. nāradabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2543,2,12. padumuttarabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2647,2,13. sumedhabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2737,2,14. sujātabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2838,2,15. piyadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,2936,2,16. atthadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3009,2,17. dhammadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3078,2,18. siddhatthabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3145,2,19. tissabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3223,2,20. phussabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3283,2,21. vipassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3404,2,22. sikhībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3489,2,23. vessabhūbuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3581,2,24. kakusandhabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3657,2,25. koṇāgamanabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3742,2,26. kassapabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,3867,2,27. gotamabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
-108,4085,2,28. buddhapakiṇṇakakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa:
+108,3,1,buddhavaṃsa-aṭṭhakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,4,2,ganthārambhakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,54,2,1. ratanacaṅkamanakaṇḍavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,695,2,2. sumedhapatthanākathāvaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,1487,2,3. dīpaṅkarabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,1686,2,4. koṇḍaññabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,1832,2,5. maṅgalabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,1956,2,6. sumanabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2081,2,7. revatabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2178,2,8. sobhitabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2264,2,9. anomadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2354,2,10. padumabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2437,2,11. nāradabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2543,2,12. padumuttarabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2647,2,13. sumedhabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2737,2,14. sujātabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2838,2,15. piyadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,2936,2,16. atthadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3009,2,17. dhammadassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3078,2,18. siddhatthabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3145,2,19. tissabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3223,2,20. phussabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3283,2,21. vipassībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3404,2,22. sikhībuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3489,2,23. vessabhūbuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3581,2,24. kakusandhabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3657,2,25. koṇāgamanabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3742,2,26. kassapabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,3867,2,27. gotamabuddhavaṃsavaṇṇanā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
+108,4085,2,28. buddhapakiṇṇakakathā,:aṭṭhakathā::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha:
 109,3,1,cariyāpiṭaka-aṭṭhakathā,:aṭṭhakathā::sutta::khuddakanikāya::cariyāpiṭaka::carita:
 109,4,2,ganthārambhakathā,:aṭṭhakathā::sutta::khuddakanikāya::cariyāpiṭaka::carita:
 109,123,2,1. akittivaggo,:aṭṭhakathā::sutta::khuddakanikāya::cariyāpiṭaka::carita:
@@ -1599,36 +1599,36 @@ book,paragraph,level,title,tag
 144,6937,2,2. ekūposathikavaggo,:apadāna::mūla::sutta::khuddakanikāya::apadāna::therīapadāna::pāḷi:
 144,8479,2,3. kuṇḍalakesīvaggo,:apadāna::mūla::sutta::khuddakanikāya::apadāna::therīapadāna::pāḷi:
 144,9951,2,4. khattiyāvaggo,:apadāna::mūla::sutta::khuddakanikāya::apadāna::therīapadāna::pāḷi:
-145,3,1,buddhavaṃsapāḷi,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,4,2,1. ratanacaṅkamanakaṇḍaṃ,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,252,2,2. sumedhapatthanākathā,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,827,2,3. dīpaṅkarabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,922,2,4. koṇḍaññabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1040,2,5. maṅgalabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1138,2,6. sumanabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1241,2,7. revatabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1330,2,8. sobhitabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1421,2,9. anomadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1509,2,10. padumabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1597,2,11. nāradabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1697,2,12. padumuttarabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1791,2,13. sumedhabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1885,2,14. sujātabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,1994,2,15. piyadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2076,2,16. atthadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2155,2,17. dhammadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2231,2,18. siddhatthabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2304,2,19. tissabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2389,2,20. phussabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2465,2,21. vipassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2581,2,22. sikhībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2666,2,23. vessabhūbuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2758,2,24. kakusandhabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2840,2,25. koṇāgamanabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,2928,2,26. kassapabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,3087,2,27. gotamabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,3163,2,28. buddhapakiṇṇakakaṇḍaṃ,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
-145,3226,2,29. dhātubhājanīyakathā,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa::pāḷi:
+145,3,1,buddhavaṃsapāḷi,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,4,2,1. ratanacaṅkamanakaṇḍaṃ,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,252,2,2. sumedhapatthanākathā,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,827,2,3. dīpaṅkarabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,922,2,4. koṇḍaññabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1040,2,5. maṅgalabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1138,2,6. sumanabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1241,2,7. revatabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1330,2,8. sobhitabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1421,2,9. anomadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1509,2,10. padumabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1597,2,11. nāradabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1697,2,12. padumuttarabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1791,2,13. sumedhabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1885,2,14. sujātabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,1994,2,15. piyadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2076,2,16. atthadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2155,2,17. dhammadassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2231,2,18. siddhatthabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2304,2,19. tissabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2389,2,20. phussabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2465,2,21. vipassībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2581,2,22. sikhībuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2666,2,23. vessabhūbuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2758,2,24. kakusandhabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2840,2,25. koṇāgamanabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,2928,2,26. kassapabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,3087,2,27. gotamabuddhavaṃso,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,3163,2,28. buddhapakiṇṇakakaṇḍaṃ,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
+145,3226,2,29. dhātubhājanīyakathā,:buddhavaṃsa::mūla::sutta::khuddakanikāya::buddhavaṃsa::vaṃsa ganthasaṅgaha::pāḷi:
 146,3,1,cariyāpiṭakapāḷi,:cariyāpiṭaka::mūla::sutta::khuddakanikāya::cariyāpiṭaka::carita::pāḷi:
 146,4,2,1. akittivaggo,:cariyāpiṭaka::mūla::sutta::khuddakanikāya::cariyāpiṭaka::carita::pāḷi:
 146,467,2,2. hatthināgavaggo,:cariyāpiṭaka::mūla::sutta::khuddakanikāya::cariyāpiṭaka::carita::pāḷi:

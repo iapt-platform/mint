@@ -1,6 +1,6 @@
 id,book,par_num,level,class,title,text
 NULL,p46,1,1,chapter,Milidaṭīkā,Milidaṭīkā
-NULL,p46,2,2,centered,"Namo tassa bhagavato arahato sammāsambud…","Namo tassa bhagavato arahato sammāsambuddhassa"
+NULL,p46,2,2,centered,,"Namo tassa bhagavato arahato sammāsambuddhassa"
 NULL,p46,3,100,gatha1,,"Nirantaraṃ lokahitassa kārakaṃ"
 NULL,p46,4,100,gatha2,,"Nirantaraṃ lokahitassa desakaṃ,"
 NULL,p46,5,100,gatha3,,"Nirantaraṃ lokahitassa cintakaṃ"
