@@ -689,6 +689,18 @@ function note_json_html(in_json) {
 		"','" +
 		in_json.end +
 		"')\">" +
+		gLocal.gui.copy_to_clipboard +
+		"</a>";
+	output +=
+		"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
+		in_json.book +
+		"_" +
+		in_json.para +
+		"_" +
+		in_json.begin +
+		"_" +
+		in_json.end + 
+		"')\" >" +
 		gLocal.gui.copy_link +
 		"</a>";
 	output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
