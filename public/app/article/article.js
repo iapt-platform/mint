@@ -486,7 +486,7 @@ function reader_draw_para_menu() {
 		let html = "<a name='para_" + strPara + "'></a>";
 		html += "<div class='case_dropdown-content para_menu'>";
 		if (typeof _view != "undefined" && _view != "para") {
-			html += "<a onclick=\"junp_to_para('" + _book + "','" + strPara + "')\">仅显示此段</a>";
+			html += "<a onclick=\"junp_to_para('" + _book + "','" + strPara + "')\">" + gLocal.gui.show_this_para_only + "</a>";
 		}
 		html += "<a onclick=\"edit_wbw('" + _book + "','" + strPara + "')\">" + gLocal.gui.edit_now + "</a>";
 		html += "<a  onclick='goto_nissaya(" + _book + "," + strPara + ")'>" + gLocal.gui.show_nissaya + "</a>";
