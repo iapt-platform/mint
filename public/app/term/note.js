@@ -1259,6 +1259,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += "</span>";
 	}
 
+	html += "</div>"; //end of info
+
+	html += "</div>"; //end of foot bar
 	html += '<ul class="tag_list">';
 	if (iterator.pr_all && parseInt(iterator.pr_all) > 0) {
 		html +=
@@ -1273,9 +1276,6 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			"</span></li>";
 	}
 	html += "</ul>";
-	html += "</div>"; //end of info
-
-	html += "</div>"; //end of foot bar
 
 	html += "</div>";
 	html += "</div>";
