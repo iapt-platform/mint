@@ -268,6 +268,7 @@ require_once '../public/function.php';
 
     <script>
         $(document).ready(function() {
+			$("#nav_palicanon").addClass('active');
             
             let indexFilename = localStorage.getItem('palicanon_tag_category');
             if(!indexFilename){

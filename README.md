@@ -24,7 +24,7 @@
 目录遵从Laravel目录设置。有以下几点差别
 
 - public/ 包含旧版php程序的全部文件
-- public/tmp 旧版资源文件夹 对于旧版到新版的迁移。**应该将旧版 /tmp 拷贝到 /public**
+- public/tmp 旧版资源文件夹，含有sqlite数据文件 对于旧版到新版的迁移。**应该将旧版 /tmp 拷贝到 /public**
 - v1 旧版数据迁移任务脚本
 - deploy 运维代码 
 
@@ -55,14 +55,19 @@ create database iapt
 `\q` 退出psql
 
 #### PHP 8
+编辑 php.ini 文件，打开pgsql和sqlite的PDO扩展，以及fileinfo
+```
+extension=pdo_pgsql
+extension=pdo_sqlite
+extension=fileinfo
+```
 
 #### Redis
+最新版的Redis不支持Windows平台，可以安装第三方修改的[Windows版Redis5.0](https://github.com/tporadowski/redis)
 
 #### composer
 
 #### npm
-
-#### yarn
 
 
 ### Fork
@@ -229,7 +234,7 @@ sudo cp ./public/app/fts/pali.syn /usr/share/postgresql/14/tsearch_data/
 - ./public/app/fts/pali.stop
 - ./public/app/fts/pali.syn
 
-到你的 shardir
+到你的 shardir/tsearch_data 目录下
 
 
 ### application encryption key
@@ -281,7 +286,7 @@ cd ./v1/scripts
 
 运行时间较长。本地开发环境大约4小时。
 
-
+如果不想等待，可以导入其他人已经部署好的postgresql数据库
 
 ### 运行dev server
 
