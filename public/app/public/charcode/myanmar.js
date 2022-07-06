@@ -105,7 +105,18 @@ var char_roman_to_myn = [
 	{ id: "ပာ", value: "ပါ" }, //pā
 	{ id: "ဝာ", value: "ဝါ" }, //vā
 	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
-	
+//新增数字
+	{ id: "1", value: "၁" },
+	{ id: "2", value: "၂" },
+	{ id: "3", value: "၃" },
+	{ id: "4", value: "၄" },
+	{ id: "5", value: "၅" },
+	{ id: "6", value: "၆" },
+	{ id: "7", value: "၇" },
+	{ id: "8", value: "၈" },
+	{ id: "9", value: "၉" },
+	{ id: "0", value: "၀" },
+
 ];
 
 var char_myn_to_roman_1 = [
