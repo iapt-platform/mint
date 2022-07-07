@@ -14,6 +14,13 @@ var MAX_NOTE_NEST = 2;
 
 var gBuildinDictIsOpen = false;
 
+/*
+译文提交方式
+update 修改
+pr 修改建议
+*/
+var _edit_mode = "update"; 
+
 var note_renderer = new marked.Renderer();
 note_renderer.code = function(code, language) {
     if (language == "mermaid") return '<pre class="mermaid">' + code + "</pre>";
@@ -809,6 +816,23 @@ function note_json_html(in_json) {
     //分割线
 	output += "<span class='separate_line'></span>";
 
+	//巴利原文
+	output += "<span class='other_bar'  sent='"+sent_id+"' channel_type='original' >";
+	output +=
+		"<span class='other_tran_span original' title='原文" +
+		gLocal.gui.vannana +
+		"'>";
+	output += "<svg class='icon' style='fill: var(--box-bg-color1)'>";
+	output += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#file-ppt'>";
+	output += "</svg>" ;
+	output += gLocal.gui.original_text +
+		"</span>";
+	output += "<span class='other_tran_num'></span>";
+	output += "</span>";
+
+    //分割线
+	output += "<span class='separate_line'></span>";
+
 	//第三个按钮 相似句
 	if (parseInt(in_json.sim) > 0) {
 		output += "<span class='sim_bar' >";
@@ -873,7 +897,7 @@ function sent_tran_set_edit_mode(obj, isEditMode) {
 	}
 }
 
-function sent_tran_edit(obj) {
+function sent_tran_edit(obj,edit_mode) {
 	let jqObj = $(obj);
 	while (!jqObj.hasClass("sent_tran")) {
 		jqObj = jqObj.parent();
@@ -881,6 +905,7 @@ function sent_tran_edit(obj) {
 			return;
 		}
 	}
+	_edit_mode = edit_mode;
 	if (jqObj.hasClass("edit_mode")) {
 		jqObj.removeClass("edit_mode");
 	} else {
@@ -936,7 +961,7 @@ var term_filterd_data=[];
 var term_input_text ;
 var term_input="";
 
-function TermRenderSentTranTextarea(text,dbId,sentId,channelId,isPr){
+function TermRenderSentTranTextarea(text,dbId,sentId,channelId,isPr,channel_type){
 	let html="";
 	html += '<div class="text_input" >';
 	html += '<div class="menu"></div>';
@@ -946,6 +971,7 @@ function TermRenderSentTranTextarea(text,dbId,sentId,channelId,isPr){
 	html += " dbid='" + dbId + "' ";
 	html += "sid='" + sentId + "' ";
 	html += "channel='" + channelId + "' ";
+	html += "channel_type='" + channel_type + "' ";
 	if (typeof isPr != "undefined" && isPr == true) {
 		html += ' is_pr="true" "';
 	} else {
@@ -1009,6 +1035,18 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			//note_init处理句子链接
             if(iterator.type=='nissaya' || iterator.channalinfo.type=='nissaya'){
                 tranText = renderNissayaPreview(iterator.text);
+			}else if(iterator.type=='original' || iterator.channalinfo.type=='original'){
+				//原文需要按照语言设定转码
+				tranText = iterator.text;
+				switch (getCookie('language')) {
+					case 'my':
+						//缅文
+						tranText = roman_to_my(iterator.text);
+						break;
+					default:
+						tranText = iterator.text;
+						break;
+				}
             }else{
                 tranText = iterator.text;
             }
@@ -1037,7 +1075,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		if (typeof iterator.is_pr_editor != "undefined" && iterator.is_pr_editor == true) {
 			//提交人
 			//修改按钮
-			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this)", gLocal.gui.modify);
+			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this,'update')", gLocal.gui.modify);
 			//删除按钮
 			html += render_icon_button("ic_delete", "sent_pr_del(this)", gLocal.gui.delete);
 		} else {
@@ -1057,9 +1095,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		//非pr列表里的句子
 		//编辑按钮
 		if (parseInt(iterator.mypower) < 20) {
-			html += render_icon_button("my_idea", "sent_tran_edit(this)", gLocal.gui.suggest);
+			html += render_icon_button("my_idea", "sent_tran_edit(this,'pr')", gLocal.gui.suggest);
 		} else {
-			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this)", gLocal.gui.edit);
+			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this,'update')", gLocal.gui.edit);
+			html += render_icon_button("my_idea", "sent_tran_edit(this,'pr')", gLocal.gui.suggest);
 		}
 
 		//推送按钮
@@ -1186,7 +1225,24 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	html += '<div class="input">';
 
 	//输入框
-	html += TermRenderSentTranTextarea(iterator.text,iterator.id,sid,iterator.channal,iterator.is_pr);
+	let editText = iterator.text;
+	if(iterator.type=='original' || iterator.channalinfo.type=='original'){
+		//原文需要按照语言设定转码
+		editText = iterator.text;
+		switch (getCookie('language')) {
+			case 'my':
+				//缅文
+				editText = roman_to_my(iterator.text);
+				break;
+		}
+	}
+	let channel_type='';
+	if(iterator.type){
+		channel_type = iterator.type;
+	}else if(iterator.channalinfo.type){
+		channel_type = iterator.channalinfo.type;
+	}
+	html += TermRenderSentTranTextarea(editText,iterator.id,sid,iterator.channal,iterator.is_pr,channel_type);
 
 
 	html += "</div>";
@@ -1243,18 +1299,11 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	}
 
 	html += '<ul class="tag_list">';
+	html += "<li class='pr' onclick=\"note_pr_show('" + iterator.channal + "','" + sid + "')\">";	
 	if (iterator.pr_all && parseInt(iterator.pr_all) > 0) {
-		html +=
-			"<li onclick=\"note_pr_show('" +
-			iterator.channal +
-			"','" +
-			sid +
-			"')\"><span class='icon'>✋</span><span class='num'>" +
-			iterator.pr_new +
-			"/" +
-			iterator.pr_all +
-			"</span></li>";
+		html += render_pr_number(iterator.pr_new,iterator.pr_all);
 	}
+	html += "</li>";
 	html += "</ul>";
 	html += "</div>"; //end of info
 
@@ -1451,6 +1500,11 @@ function myEndingTooltip(inStr){
         }
     }
     return inStr;
+}
+//渲染pr按钮里面的数字
+function render_pr_number(pr_new,pr_all){
+ let html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
+ return html;	
 }
 function tran_sent_textarea_event_init() {
 	let textarea = document.querySelectorAll(".tran_sent_textarea");
@@ -1911,11 +1965,16 @@ function tran_sent_save(obj) {
 		let textarea = $(sentDiv).children('.sent_tran_inner').first().children('.body').first().children('.edit').find(".tran_sent_textarea").first();
 		//let textarea = $(sentDiv).children().find(".tran_sent_textarea").first();
 		let isPr = $(textarea).attr("is_pr");
-		if (isPr == "true") {
-			note_pr_save(textarea);
-		} else {
-			note_sent_save_a(textarea);
+		if(isPr=='true'){
+			note_pr_update(textarea);
+		}else{
+			if (_edit_mode == "pr" ) {
+				note_pr_create(textarea);
+			} else {
+				note_sent_save_a(textarea);
+			}
 		}
+
 		sent_tran_set_edit_mode(textarea, false);
 	} else {
 		console.error("sent div not found");
@@ -1923,8 +1982,11 @@ function tran_sent_save(obj) {
 }
 
 //保存pr句子 新
-function note_pr_save(obj) {
+function note_pr_create(obj) {
+	console.log("note_pr_create");
+
 	let id = $(obj).attr("dbid");
+	let channel_type = $(obj).attr("channel_type");
 	let sid = $(obj).attr("sid").split("-");
 	let book = sid[0];
 	let para = sid[1];
@@ -1933,8 +1995,19 @@ function note_pr_save(obj) {
 	let channel = $(obj).attr("channel");
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
+
+	if(channel_type=="original"){
+		//原文需要按照语言设定转码
+		switch (getCookie('language')) {
+			case 'my':
+				//缅文
+				text = my_to_roman(text);
+				break;
+		}
+	}
+
 	$.post(
-		"../usent/pr_post.php",
+		"/api/v2/sentpr",
 		{
 			id: id,
 			book: book,
@@ -1944,7 +2017,7 @@ function note_pr_save(obj) {
 			channel: channel,
 			text: text,
 		},
-		sent_save_callback
+		pr_create_callback
 	);
 
 
@@ -1953,9 +2026,55 @@ function note_pr_save(obj) {
 	}
 }
 
+//修改pr句子
+function note_pr_update(obj) {
+	console.log("note_pr_update ");
+
+	let id = $(obj).attr("dbid");
+	let channel_type = $(obj).attr("channel_type");
+	let sid = $(obj).attr("sid").split("-");
+	let book = sid[0];
+	let para = sid[1];
+	let begin = sid[2];
+	let end = sid[3];
+	let channel = $(obj).attr("channel");
+	let text = $(obj).val();
+	let sent_tran_div = find_sent_tran_div(obj);
+
+	if(channel_type=="original"){
+		//原文需要按照语言设定转码
+		switch (getCookie('language')) {
+			case 'my':
+				//缅文
+				text = my_to_roman(text);
+				break;
+		}
+	}
+    fetch('/api/v2/sentpr/'+id,{
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+			id: id,
+			text: text,
+		})
+    })
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+	if (sent_tran_div) {
+		$(sent_tran_div).addClass("loading");
+	}
+}
+
 //保存译文句子 新
 function note_sent_save_a(obj) {
+	console.log("note_sent_save_a");
+
 	let id = $(obj).attr("dbid");
+	let channel_type = $(obj).attr("channel_type");
 	let sid = $(obj).attr("sid").split("-");
 	let book = sid[0];
 	let para = sid[1];
@@ -1964,6 +2083,16 @@ function note_sent_save_a(obj) {
 	let channal = $(obj).attr("channel");
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
+
+	if(channel_type=="original"){
+		//原文需要按照语言设定转码
+		switch (getCookie('language')) {
+			case 'my':
+				//缅文
+				text = my_to_roman(text);
+				break;
+		}
+	}
 
 	$.ajaxSetup({
 		timeout: 5000,
@@ -2078,9 +2207,11 @@ function sent_save_callback(data) {
 					}
                     switch (thisChannel.type) {
                         case 'nissaya':
-                            divPreview.html(
-                                "<div class='nissaya'>"+note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang)+"</div>"
-                                );
+							let nissayaHtml = "";
+							nissayaHtml += "<div class='nissaya'>";
+							nissayaHtml += note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang);
+							nissayaHtml += "</div>";
+                            divPreview.html(nissayaHtml);
                             break;
                         case 'commentary':
                             divPreview.html(
@@ -2088,6 +2219,13 @@ function sent_save_callback(data) {
                             );
                             note_refresh_new();
                         break;
+						case 'original':
+							switch (getCookie('language')) {
+								case 'my':
+									//缅文
+									result.text = roman_to_my(result.text);
+									break;
+							}
                         default:
                             divPreview.html(
                                 note_init(result.text, result.channal, result.editor, result.lang)
@@ -2105,6 +2243,43 @@ function sent_save_callback(data) {
 		} else {
 			ntf_show("未提交");
 		}
+	}
+}
+
+function pr_create_callback(data) {
+	let response;
+	if(typeof data=="string"){
+		try {
+			response = JSON.parse(data);
+		} catch (e) {
+			alert(e.message);
+			console.error('pr_create_callback',data);
+			return;
+		}			
+		
+	}else{
+		response = data;
+	}
+
+	
+	if (!response.ok) {
+		ntf_show("修改建议提交失败");
+		console.log("pr_create_callback", response.message);
+		return;
+	}
+	let result = response.data.new;
+	{
+		let sid = result.book_id + "-" + result.paragraph + "-" + result.word_start + "-" + result.word_end;
+
+		let sent_tran_div = $(
+			".sent_tran[channel='" + result.channel_uid + "'][sid='" + sid + "']"
+		);
+		if (sent_tran_div) {
+			sent_tran_div.removeClass("loading");
+			sent_tran_div.find(".tag_list").first().children(".pr").first().html(render_pr_number(1,response.data.count));
+		}
+		
+		ntf_show("成功提交修改建议");
 	}
 }
 

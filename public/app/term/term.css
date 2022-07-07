@@ -737,7 +737,7 @@ pw {
 }
 
 .sent_tran_inner:hover > .tool_bar > .right {
-	/*display: block;*/
+	display: block;
 }
 .list_with_head:hover > .tool_bar > .right {
 	display: block;
@@ -799,17 +799,7 @@ pw {
 .pop_menu {
 	display: flex;
 }
-.tag_list {
-	display: flex;
-	list-style-type: none;
-}
-.tag_list li {
-	border-radius: 6px;
-	margin-right: 5px;
-	background-color: var(--bookx);
-	padding: 2px 5px;
-	cursor: pointer;
-}
+
 li.active {
 	background-color: var(--booka);
 }
@@ -972,6 +962,20 @@ span.sent_tran {
 	list-style-type: unset;
 	margin-left: 1em;
 }
+
+.tag_list {
+	display: flex;
+	list-style-type: none;
+}
+.tag_list li {
+	border-radius: 6px;
+	margin-right: 5px;
+	background-color: var(--bookx);
+	padding: 2px 5px;
+	cursor: pointer;
+	list-style: none;
+}
+
 .icon_sent_status {
 	display: none;
 	width: 22px;
