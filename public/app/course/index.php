@@ -242,8 +242,11 @@ include "../pcdl/html_head.php";
 		</div>
 
 		<script>
-			var speaker = "<?php echo $_local->gui->speaker . '：' . $row['teacher'] ?>";
+			 $(document).ready(function() {
+				$("#nav_course").addClass('active');
+			 });
 
+			
 			$.get("../course/course_list.php", function(data, status) {
 				let arrData = JSON.parse(data);
 				let html_complete = "";

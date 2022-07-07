@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SentPr;
+use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -29,32 +30,115 @@ class SentPrController extends Controller
         //
         if(!isset($_COOKIE['user_uid'])){
             return $this->error('not login');
-        }
-        
-        $data = $request->all();
-        if($data['channel'] == '7fea264d-7a26-40f8-bef7-bc95102760fb' && $data['book']==65 && $data['para']>2056 && $data['para']<2192){
-            $url = "https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf";
-            $param = [
-            "actionCard"=> [
-                "title"=> "说慧地品", 
-                "text"=> " wikipali: 来自{$_COOKIE['user_uid']}的修改建议：{$data['text']}", 
-                "btnOrientation"=> "0", 
-                "singleTitle" => "详情",
-                "singleURL"=>"https://staging.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&channal={$data['channel']}&display=sent&mode=edit"
-            ], 
-            "msgtype"=>"actionCard"
-            ];
-
-            $response = Http::post($url, $param);
-            if($response->successful()){
-                return $this->ok($response->body);
-            }else{
-                return $this->error($response->body);
-            }            
         }else{
-            return $this->ok();
-        }
+			$user_uid = $_COOKIE['user_uid'];
+		}
 
+        $data = $request->all();
+
+		
+		#新建
+		$exists = SentPr::where('book_id',$data['book'])
+						->where('paragraph',$data['para'])
+						->where('word_start',$data['begin'])
+						->where('word_end',$data['end'])
+						->where('content',$data['text'])
+						->where('channel_uid',$data['channel'])
+						->exists();
+		if(!$exists){
+			#不存在，新建
+			$new = new SentPr();
+			$new->id = app('snowflake')->id();
+			$new->book_id = $data['book'];
+			$new->paragraph = $data['para'];
+			$new->word_start = $data['begin'];
+			$new->word_end = $data['end'];
+			$new->channel_uid = $data['channel'];
+			$new->editor_uid = $user_uid;
+			$new->content = $data['text'];
+			$new->language = Channel::where('uid',$data['channel'])->value('lang');
+			$new->status = 1;//未处理状态
+			$new->strlen = mb_strlen($data['text'],"UTF-8");
+			$new->create_time = time()*1000;
+			$new->modify_time = time()*1000;
+			$new->save();			
+		}
+
+		
+		$webHookMessageOk=false;
+		$webHookMessage=false;
+		if(app()->isLocal()==false){
+			/*
+			初译：e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43
+			模版：#用户名 就“##该句子巴利前20字符##”提出了这样的修改建议：“##PR内容前20字##”，欢迎大家[点击链接](句子/段落链接)前往查看并讨论。
+
+			问题集：8622ad73-deef-4525-8e8e-ba3f1462724e
+			模版：#用户名 就 “##该句子巴利前20字符##”有这样的疑问：“##PR内容前20字##”，欢迎大家[点击链接](句子/段落链接)参与讨论。
+
+			初步答疑：5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8
+			模版：#用户名 就“##该句子巴利前20字符##”中的问题做了这样的回复：“##PR内容前20字##”，欢迎大家[点击链接](句子/段落链接)前往查看并讨论。
+
+			机器人地址：https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8
+
+			项目范围：
+			book65 par：829-1306
+			book67 par：759-1152
+			*/
+			$username = '';
+			$palitext = '';
+			$prtext = '';
+			$link = '';
+			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
+				switch ($data['channel']) {
+					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
+						$strMessage = "wikipali: {$username} 就“{$palitext}”提出了这样的修改建议：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						break;
+					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
+						$strMessage = "wikipali: {$username} 就“{$palitext}”有这样的疑问：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						break;
+					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
+						$strMessage = "wikipali: {$username} 就“{$palitext}”中的问题做了这样的回复：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						break;
+					default:
+						$strMessage = "";
+						break;
+				}		
+				$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8";
+				$param = [
+				"actionCard"=> [
+					"title"=> "修改建议", 
+					"text"=> " wikipali: 来自{$_COOKIE['user_uid']}的修改建议：{$data['text']}", 
+					"btnOrientation"=> "0", 
+					"singleTitle" => "详情",
+					"singleURL"=>"https://staging.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&channal={$data['channel']}&display=sent&mode=edit"
+				], 
+				"msgtype"=>"actionCard"
+				];
+
+				$response = Http::post($url, $param);
+				$webHookMessage = $response->body;
+				if($response->successful()){
+					$robotMessageOk = true;
+				}else{
+					$robotMessageOk = false;
+				}            
+
+			}
+
+		}
+		#同时返回此句子pr数量
+		$info['book_id'] = $data['book'];
+		$info['paragraph'] = $data['para'];
+		$info['word_start'] = $data['begin'];
+		$info['word_end'] = $data['end'];
+		$info['channel_uid'] = $data['channel'];
+		$count = SentPr::where('book_id' , $data['book'])
+						->where('paragraph' , $data['para'])
+						->where('word_start' , $data['begin'])
+						->where('word_end' , $data['end'])
+						->where('channel_uid' , $data['channel'])
+						->count();
+		return $this->ok(["new"=>$info,"count"=>$count]);
         
     }
 
@@ -79,6 +163,22 @@ class SentPrController extends Controller
     public function update(Request $request, SentPr $sentPr)
     {
         //
+		if(!isset($_COOKIE['user_uid'])){
+            return $this->error('not login');
+        }else{
+			$user_uid = $_COOKIE['user_uid'];
+		}
+		
+		if($sentPr->editor_uid==$user_uid){
+			$sentPr->update([
+				"content"=>$request->get('text'),
+				"modify_time"=>time()*1000,
+			]);
+			return $this->ok($sentPr);
+		}else{
+			return $this->error('not power');
+		}
+
     }
 
     /**

@@ -27,6 +27,7 @@
 	nav a:link,
 	nav a:visited {
 		color: unset;
+		
 	}
 
 	header ul,
@@ -127,6 +128,7 @@
 
 	nav li {
 		margin: 1rem;
+		line-height: 50px;
 	}
 
 	.icon_btn {
@@ -205,7 +207,6 @@
 		font-size: 14px;
 		opacity: 0;
 		transition: opacity 150ms ease-in-out;
-
 	}
 
 	.nav_link a:hover {
@@ -375,6 +376,11 @@
 		nav .nav_link {
 			opacity: 1;
 			color: var(--new-tool-btn);
+			margin: 0;
+			padding: 0 1em;
+		}
+		nav .active{
+			background-color: var(--tool-bt-bg-hover-color);
 		}
 
 		.header-dropdown-content li {
@@ -481,11 +487,11 @@ switch($_COOKIE['language']){
 	<input type="checkbox" id="nav-toggle" class="nav-toggle">
 	<nav>
 		<ul>
-			<li class="nav_link"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
-			<li class="nav_link"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
-			<li class="nav_link"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
-			<li class="nav_link"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
-			<li class="nav_link"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
+			<li class="nav_link" id="nav_palicanon"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
+			<li class="nav_link" id="nav_course"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
+			<li class="nav_link" id="nav_wiki"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
+			<li class="nav_link" id="nav_dict"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
+			<li class="nav_link" id="nav_collection"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
 			<li class="nav_link"><a href="<?php echo URL_HELP.'/'.$help_lang ?>"  target="_blank"><?php echo $_local->gui->help; ?></a></li>
 			<li class="nav_link more_btn">
 				<div id="more" class="dropdown" onmouseover="switchMenu(this,'nav-more')" onmouseout="hideMenu()">
