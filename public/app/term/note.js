@@ -2032,12 +2032,7 @@ function note_pr_update(obj) {
 
 	let id = $(obj).attr("dbid");
 	let channel_type = $(obj).attr("channel_type");
-	let sid = $(obj).attr("sid").split("-");
-	let book = sid[0];
-	let para = sid[1];
-	let begin = sid[2];
-	let end = sid[3];
-	let channel = $(obj).attr("channel");
+
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
 
@@ -2062,7 +2057,9 @@ function note_pr_update(obj) {
 		})
     })
   .then(response => response.json())
-  .then(data => console.log(data));
+  .then(function(data){
+	pr_update_callback(data);
+  });
 
 	if (sent_tran_div) {
 		$(sent_tran_div).addClass("loading");
@@ -2280,6 +2277,61 @@ function pr_create_callback(data) {
 		}
 		
 		ntf_show("成功提交修改建议");
+	}
+}
+
+function pr_update_callback(data) {
+	let response;
+	if(typeof data=="string"){
+		try {
+			response = JSON.parse(data);
+		} catch (e) {
+			alert(e.message);
+			console.error('pr_create_callback',data);
+			return;
+		}			
+		
+	}else{
+		response = data;
+	}
+
+	
+	if (!response.ok) {
+		ntf_show("修改建议更新失败");
+		console.log("pr_update_callback", response.message);
+		return;
+	}
+	let result = response.data;
+	{
+		let sid = result.book_id + "-" + result.paragraph + "-" + result.word_start + "-" + result.word_end;
+
+		let sent_tran_div = $(
+			".sent_tran[dbid='" + result.id + "']"
+		);
+		if (sent_tran_div) {
+			sent_tran_div.removeClass("loading");
+			let orgText = "";
+			for (const oneSent of _arrData) {
+				if (
+					oneSent.book == result.book_id &&
+					oneSent.para == result.paragraph &&
+					oneSent.begin == result.word_start &&
+					oneSent.end == result.word_end
+				) {
+					for (const tran of oneSent.translation) {
+						if (tran.channal == result.channel_uid) {
+							orgText = tran.text;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			let tranText = str_diff(orgText, result.content);
+			sent_tran_div.find(".preview").html(tranText);
+		}
+		
+		ntf_show("成功更新修改建议");
 	}
 }
 
@@ -2539,7 +2591,9 @@ function note_get_pr(channel, id) {
 			if (result.length > 0) {
 				let html = "<div class='compact pr'>";
 				for (const iterator of result) {
+					html += "<div class='pr_shell'>";
 					html += render_one_sent_tran_a(iterator, true);
+					html += "</div>";
 				}
 				html += "</div>";
 				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")

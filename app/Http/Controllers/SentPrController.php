@@ -37,7 +37,8 @@ class SentPrController extends Controller
         $data = $request->all();
 
 		
-		#新建
+		#查询是否存在 
+		#同样的内容只能提交一次
 		$exists = SentPr::where('book_id',$data['book'])
 						->where('paragraph',$data['para'])
 						->where('word_start',$data['begin'])
@@ -168,13 +169,20 @@ class SentPrController extends Controller
         }else{
 			$user_uid = $_COOKIE['user_uid'];
 		}
-		
-		if($sentPr->editor_uid==$user_uid){
-			$sentPr->update([
+		$sentPr = SentPr::where('id',$request->get('id'));
+		if($sentPr->value('editor_uid')==$user_uid){
+			$update = $sentPr->update([
 				"content"=>$request->get('text'),
 				"modify_time"=>time()*1000,
 			]);
-			return $this->ok($sentPr);
+			if($update >= 0){
+				$data = SentPr::where('id',$request->get('id'))->first();
+				$data->id = sprintf("%d",$data->id);
+				return $this->ok($data);
+			}else{
+				return $this->error('没有更新');
+			}
+			
 		}else{
 			return $this->error('not power');
 		}
