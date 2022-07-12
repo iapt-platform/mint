@@ -1077,7 +1077,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			//修改按钮
 			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this,'update')", gLocal.gui.modify);
 			//删除按钮
-			html += render_icon_button("ic_delete", "sent_pr_del(this)", gLocal.gui.delete);
+			html += render_icon_button("ic_delete", "note_pr_delete(this)", gLocal.gui.delete);
 		} else {
 			//非提交人
 			if (parseInt(iterator.mypower) >= 20) {
@@ -1503,7 +1503,10 @@ function myEndingTooltip(inStr){
 }
 //渲染pr按钮里面的数字
 function render_pr_number(pr_new,pr_all){
- let html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
+	let html = "";
+	if(pr_all > 0){
+		html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
+	}
  return html;	
 }
 function tran_sent_textarea_event_init() {
@@ -2059,6 +2062,42 @@ function note_pr_update(obj) {
   .then(response => response.json())
   .then(function(data){
 	pr_update_callback(data);
+  });
+
+	if (sent_tran_div) {
+		$(sent_tran_div).addClass("loading");
+	}
+}
+//修改pr句子
+function note_pr_delete(obj) {
+	if(!confirm("要删除此修改建议吗？此操作无法恢复。")){
+		return;
+	}
+
+	let sent_tran_div = find_sent_tran_div(obj);
+	let id = sent_tran_div.attr("dbid");
+
+    fetch('/api/v2/sentpr/'+id,{
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+			id: id,
+		})
+    })
+  .then(response => response.json())
+  .then(function(data){
+	console.log("note_pr_delete",data);
+	if(data.ok){
+		let sent_tran_parent = find_sent_tran_div(sent_tran_div.parent());
+		sent_tran_parent.find(".tag_list").first().children(".pr").first().html(render_pr_number(1,data.data));
+
+		sent_tran_div.removeClass("loading");
+		sent_tran_div.parent().html("");
+		ntf_show("删除成功");
+	}
   });
 
 	if (sent_tran_div) {

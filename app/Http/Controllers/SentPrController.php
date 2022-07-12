@@ -6,6 +6,7 @@ use App\Models\SentPr;
 use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SentPrController extends Controller
 {
@@ -192,11 +193,29 @@ class SentPrController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SentPr  $sentPr
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SentPr $sentPr)
+    public function destroy($id)
     {
         //
+		Log::info("user_uid=" .$_COOKIE['user_uid']);
+		$old = SentPr::where('id', $id)->first();
+		$result = SentPr::where('id', $id)
+							->where('editor_uid', $_COOKIE["user_uid"])
+							->delete();
+		Log::info("delete=" .$result);
+		if($result>0){
+					#同时返回此句子pr数量
+		$count = SentPr::where('book_id' , $old->book_id)
+						->where('paragraph' , $old->paragraph)
+						->where('word_start' , $old->word_start)
+						->where('word_end' , $old->word_end)
+						->where('channel_uid' , $old->channel_uid)
+						->count();
+			return $this->ok($count);
+		}else{
+			return $this->error('not power');
+		}
     }
 }
