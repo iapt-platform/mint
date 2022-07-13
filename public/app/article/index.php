@@ -374,6 +374,9 @@ function set_toc_visible(isVisible){
 						<span></span>
 					</div>
 				</div>
+				<div>
+					<button id="btn_show_channel" onclick='show_channel_detail_pannal()'>Details</button>
+				</div>
 			</div>
 		</div>
 		<div id="article_title" class="term_word_head_pali"></div>
