@@ -92,8 +92,13 @@ function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
 		//output += marked(input);
-		output += marked(term_std_str_to_tran(input, channel, editor, lang), { renderer: note_renderer });
-
+		//output += marked(term_std_str_to_tran(input, channel, editor, lang), { renderer: note_renderer });
+		let newText = input.replace(/\[\[/g,'“[[');
+		newText = newText.replace(/\]\]/g,']]”');
+		let markdown = marked(newText, { renderer: note_renderer });
+		markdown = markdown.replace(/“\[\[/g,'[[');
+		markdown = markdown.replace(/\]\]”/g,']]');
+		output += term_std_str_to_tran(markdown, channel, editor, lang);
 		output += "</div>";
 
 		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note style="" info="');
