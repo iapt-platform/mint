@@ -91,8 +91,11 @@ function note_sent_edit_dlg_init() {
 function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
-		//output += marked(input);
-		//output += marked(term_std_str_to_tran(input, channel, editor, lang), { renderer: note_renderer });
+		/*
+		 * **[[术语]]** marked不会渲染成黑体
+		 * 所以要在渲染markdown前先把[[]]两边加中文引号
+		 *  在渲染后再去掉中文引号
+		 */
 		let newText = input.replace(/\[\[/g,'“[[');
 		newText = newText.replace(/\]\]/g,']]”');
 		let markdown = marked(newText, { renderer: note_renderer });
