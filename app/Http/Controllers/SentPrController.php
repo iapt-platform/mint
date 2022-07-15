@@ -70,7 +70,8 @@ class SentPrController extends Controller
 		
 		$robotMessageOk=false;
 		$webHookMessage="";
-		if(app()->isLocal()==false){
+		if(app()->isLocal()==false)
+		{
 			/*
 			初译：e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43
 			模版：#用户名 就“##该句子巴利前20字符##”提出了这样的修改建议：“##PR内容前20字##”，欢迎大家[点击链接](句子/段落链接)前往查看并讨论。
@@ -96,6 +97,7 @@ class SentPrController extends Controller
 			$palitext = mb_substr($palitext,0,20,"UTF-8");
 			$prtext = mb_substr($data['text'],0,20,"UTF-8");
 			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
+			Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				switch ($data['channel']) {
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
@@ -130,6 +132,7 @@ class SentPrController extends Controller
 						"content"=> $strMessage, 
 					], 
 					];
+				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
 					$response = Http::post($url, $param);
 					$webHookMessage = $response->body;
@@ -147,6 +150,7 @@ class SentPrController extends Controller
 				$webHookMessage = "不在段落范围内";
 			}
 		}
+
 		#同时返回此句子pr数量
 		$info['book_id'] = $data['book'];
 		$info['paragraph'] = $data['para'];
@@ -159,6 +163,7 @@ class SentPrController extends Controller
 						->where('word_end' , $data['end'])
 						->where('channel_uid' , $data['channel'])
 						->count();
+		Log::info("count:{$count} webhook-ok={$robotMessageOk}");
 		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
         
     }
