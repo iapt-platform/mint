@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Models\SentPr;
@@ -8,6 +9,8 @@ use App\Models\PaliSentence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+
+require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
 class SentPrController extends Controller
 {
@@ -88,7 +91,9 @@ class SentPrController extends Controller
 			book65 par：829-1306
 			book67 par：759-1152
 			*/
-			$username = '';
+			$userinfo = new \UserInfo();
+
+			$username = $userinfo->getName($user_uid)['username'];
 			$palitext = PaliSentence::where('book',$data['book'])
 									->where('paragraph',$data['para'])
 									->where('word_begin',$data['begin'])
