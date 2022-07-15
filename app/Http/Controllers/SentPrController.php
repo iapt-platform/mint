@@ -135,9 +135,9 @@ class SentPrController extends Controller
 				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
 					$response = Http::post($url, $param);
-					$webHookMessage = $response->body;
 					if($response->successful()){
 						$robotMessageOk = true;
+						$webHookMessage = "消息发送成功";
 					}else{
 						$webHookMessage = "消息发送失败";
 						$robotMessageOk = false;
