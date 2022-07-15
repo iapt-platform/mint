@@ -91,9 +91,17 @@ function note_sent_edit_dlg_init() {
 function note_init(input,channel="",editor="",lang="en") {
 	if (input) {
 		let output = "<div>";
-		//output += marked(input);
-		output += marked(term_std_str_to_tran(input, channel, editor, lang), { renderer: note_renderer });
-
+		/*
+		 * **[[术语]]** marked不会渲染成黑体
+		 * 所以要在渲染markdown前先把[[]]两边加中文引号
+		 *  在渲染后再去掉中文引号
+		 */
+		let newText = input.replace(/\[\[/g,'“[[');
+		newText = newText.replace(/\]\]/g,']]”');
+		let markdown = marked(newText, { renderer: note_renderer });
+		markdown = markdown.replace(/“\[\[/g,'[[');
+		markdown = markdown.replace(/\]\]”/g,']]');
+		output += term_std_str_to_tran(markdown, channel, editor, lang);
 		output += "</div>";
 
 		let newString = output.replace(/\{\{/g, '<span class="note_shell"><note style="" info="');
@@ -1077,7 +1085,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			//修改按钮
 			html += render_icon_button("ic_mode_edit", "sent_tran_edit(this,'update')", gLocal.gui.modify);
 			//删除按钮
-			html += render_icon_button("ic_delete", "sent_pr_del(this)", gLocal.gui.delete);
+			html += render_icon_button("ic_delete", "note_pr_delete(this)", gLocal.gui.delete);
 		} else {
 			//非提交人
 			if (parseInt(iterator.mypower) >= 20) {
@@ -1513,7 +1521,10 @@ function myEndingTooltip(inStr){
 }
 //渲染pr按钮里面的数字
 function render_pr_number(pr_new,pr_all){
- let html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
+	let html = "";
+	if(pr_all > 0){
+		html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
+	}
  return html;	
 }
 function tran_sent_textarea_event_init() {
@@ -2042,12 +2053,7 @@ function note_pr_update(obj) {
 
 	let id = $(obj).attr("dbid");
 	let channel_type = $(obj).attr("channel_type");
-	let sid = $(obj).attr("sid").split("-");
-	let book = sid[0];
-	let para = sid[1];
-	let begin = sid[2];
-	let end = sid[3];
-	let channel = $(obj).attr("channel");
+
 	let text = $(obj).val();
 	let sent_tran_div = find_sent_tran_div(obj);
 
@@ -2072,7 +2078,45 @@ function note_pr_update(obj) {
 		})
     })
   .then(response => response.json())
-  .then(data => console.log(data));
+  .then(function(data){
+	pr_update_callback(data);
+  });
+
+	if (sent_tran_div) {
+		$(sent_tran_div).addClass("loading");
+	}
+}
+//修改pr句子
+function note_pr_delete(obj) {
+	if(!confirm("要删除此修改建议吗？此操作无法恢复。")){
+		return;
+	}
+
+	let sent_tran_div = find_sent_tran_div(obj);
+	let id = sent_tran_div.attr("dbid");
+
+    fetch('/api/v2/sentpr/'+id,{
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+			id: id,
+		})
+    })
+  .then(response => response.json())
+  .then(function(data){
+	console.log("note_pr_delete",data);
+	if(data.ok){
+		let sent_tran_parent = find_sent_tran_div(sent_tran_div.parent());
+		sent_tran_parent.find(".tag_list").first().children(".pr").first().html(render_pr_number(1,data.data));
+
+		sent_tran_div.removeClass("loading");
+		sent_tran_div.parent().html("");
+		ntf_show("删除成功");
+	}
+  });
 
 	if (sent_tran_div) {
 		$(sent_tran_div).addClass("loading");
@@ -2290,6 +2334,61 @@ function pr_create_callback(data) {
 		}
 		
 		ntf_show("成功提交修改建议");
+	}
+}
+
+function pr_update_callback(data) {
+	let response;
+	if(typeof data=="string"){
+		try {
+			response = JSON.parse(data);
+		} catch (e) {
+			alert(e.message);
+			console.error('pr_create_callback',data);
+			return;
+		}			
+		
+	}else{
+		response = data;
+	}
+
+	
+	if (!response.ok) {
+		ntf_show("修改建议更新失败");
+		console.log("pr_update_callback", response.message);
+		return;
+	}
+	let result = response.data;
+	{
+		let sid = result.book_id + "-" + result.paragraph + "-" + result.word_start + "-" + result.word_end;
+
+		let sent_tran_div = $(
+			".sent_tran[dbid='" + result.id + "']"
+		);
+		if (sent_tran_div) {
+			sent_tran_div.removeClass("loading");
+			let orgText = "";
+			for (const oneSent of _arrData) {
+				if (
+					oneSent.book == result.book_id &&
+					oneSent.para == result.paragraph &&
+					oneSent.begin == result.word_start &&
+					oneSent.end == result.word_end
+				) {
+					for (const tran of oneSent.translation) {
+						if (tran.channal == result.channel_uid) {
+							orgText = tran.text;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			let tranText = str_diff(orgText, result.content);
+			sent_tran_div.find(".preview").html(tranText);
+		}
+		
+		ntf_show("成功更新修改建议");
 	}
 }
 
@@ -2549,7 +2648,9 @@ function note_get_pr(channel, id) {
 			if (result.length > 0) {
 				let html = "<div class='compact pr'>";
 				for (const iterator of result) {
+					html += "<div class='pr_shell'>";
 					html += render_one_sent_tran_a(iterator, true);
+					html += "</div>";
 				}
 				html += "</div>";
 				$(".sent_tran[channel='" + channel + "'][sid='" + id + "']")

@@ -88,6 +88,11 @@ class SentPr{
             $stmt->execute(array($book,$para,$begin,$end,$channel));
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if($result){
+				foreach ($result as $key => $value) {
+					# code...
+					$result[$key]['id'] = sprintf('%d',$result[$key]['id']);
+				}
+				
 				return $result;
 			}
 			else{

@@ -16,7 +16,7 @@ class EnableCrossRequestMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-                $response = $next($request);
+        $response = $next($request);
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $allow_origin = [
             env("CROSS_REQUEST_ALLOW_ORIGIN",'http://localhost:8001'),
@@ -34,6 +34,7 @@ class EnableCrossRequestMiddleware
         转自链接：https://learnku.com/articles/6504/laravel-cross-domain-solution
         版权声明：著作权归作者所有。商业转载请联系作者获得授权，非商业转载请保留以上作者信息和原文链接。
         */
-        return $next($request);
+        //return $next($request);
+		return $response;
     }
 }
