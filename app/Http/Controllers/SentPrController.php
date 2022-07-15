@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SentPr;
 use App\Models\Channel;
+use App\Models\PaliSentence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -67,8 +68,8 @@ class SentPrController extends Controller
 		}
 
 		
-		$webHookMessageOk=false;
-		$webHookMessage=false;
+		$robotMessageOk=false;
+		$webHookMessage="";
 		if(app()->isLocal()==false){
 			/*
 			初译：e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43
@@ -87,9 +88,14 @@ class SentPrController extends Controller
 			book67 par：759-1152
 			*/
 			$username = '';
-			$palitext = '';
-			$prtext = '';
-			$link = '';
+			$palitext = PaliSentence::where('book',$data['book'])
+									->where('paragraph',$data['para'])
+									->where('word_begin',$data['begin'])
+									->where('word_end',$data['end'])
+									->value('text');
+			$palitext = mb_substr($palitext,0,20,"UTF-8");
+			$prtext = mb_substr($data['text'],0,20,"UTF-8");
+			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				switch ($data['channel']) {
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
@@ -98,7 +104,7 @@ class SentPrController extends Controller
 					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
 						$strMessage = "wikipali: {$username} 就“{$palitext}”有这样的疑问：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
 						break;
-					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
+					case '5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8':
 						$strMessage = "wikipali: {$username} 就“{$palitext}”中的问题做了这样的回复：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
 						break;
 					default:
@@ -106,6 +112,7 @@ class SentPrController extends Controller
 						break;
 				}		
 				$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8";
+				/*
 				$param = [
 				"actionCard"=> [
 					"title"=> "修改建议", 
@@ -116,17 +123,29 @@ class SentPrController extends Controller
 				], 
 				"msgtype"=>"actionCard"
 				];
-
-				$response = Http::post($url, $param);
-				$webHookMessage = $response->body;
-				if($response->successful()){
-					$robotMessageOk = true;
+				*/
+				$param = [
+					"msgtype"=>"markdown",
+					"markdown"=> [
+						"content"=> $strMessage, 
+					], 
+					];
+				if(!empty($strMessage)){
+					$response = Http::post($url, $param);
+					$webHookMessage = $response->body;
+					if($response->successful()){
+						$robotMessageOk = true;
+					}else{
+						$webHookMessage = "消息发送失败";
+						$robotMessageOk = false;
+					}         					
 				}else{
+					$webHookMessage = "channel不符";
 					$robotMessageOk = false;
-				}            
-
+				}
+			}else{
+				$webHookMessage = "不在段落范围内";
 			}
-
 		}
 		#同时返回此句子pr数量
 		$info['book_id'] = $data['book'];
@@ -140,7 +159,7 @@ class SentPrController extends Controller
 						->where('word_end' , $data['end'])
 						->where('channel_uid' , $data['channel'])
 						->count();
-		return $this->ok(["new"=>$info,"count"=>$count]);
+		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
         
     }
 
