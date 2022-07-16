@@ -57,6 +57,7 @@ var char_roman_to_tai = [
 	{ id: "kro", value: "ᨠᩮ᩠ᩕᩣ" },
 	{ id: "mbo", value: "ᨾᩮ᩠ᨻᩣ" },
 	{ id: "mmo", value: "ᨾᩮᩜᩣ" },
+	{ id: "llo", value: "ᩃᩮ᩠ᩃᩣ" },
 	{ id: "mpo", value: "ᨾᩮ᩠ᨷᩣ" },
 	{ id: "ndo", value: "ᨶᩮᩣ᩠ᨴ" },
 	{ id: "nno", value: "ᨶᩮᩣ᩠ᨶ" },
@@ -106,6 +107,7 @@ var char_roman_to_tai = [
 	{ id: "kke", value: "ᨠᩮ᩠ᨠ" },
 	{ id: "ṅke", value: "ᩘᨠᩮ" },//  ᩘᩮ᩠ᨠ
 	{ id: "mme", value: "ᨾᩮᩜ" },
+	{ id: "lle", value: "ᩃᩮ᩠ᩃ" },
 	{ id: "nne", value: "ᨶᩮ᩠ᨶ" },
 	{ id: "ññe", value: "ᨬᩮ᩠ᨬ" },
 	{ id: "ṇṇe", value: "ᨱᩮ᩠ᨱ" },

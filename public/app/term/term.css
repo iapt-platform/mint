@@ -681,7 +681,7 @@ pw {
 	text-transform:capitalize;
 }
 .compact .body > .head_bar {
-	display: flex;
+	/*display: flex;*/
 }
 .compact .body > .head_bar > .date {
 	display: none;
@@ -755,6 +755,10 @@ pw {
 .translation>.sent_tran_inner:hover>.tool_bar > .right {
     display: block;
 }
+.nissaya>.sent_tran_inner:hover>.tool_bar > .right {
+    display: block;
+}
+
 
 .sent_tran.commentary>.sent_tran_inner{
     padding-top: 2.2em;
@@ -787,6 +791,7 @@ pw {
 .compact .foot_bar {
 	display: none;
 }
+
 .edit_mode {
 	background-color: #fafafa;
 }
@@ -1167,7 +1172,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-
+	white-space: pre-wrap;
 }
 .nsy_word>.org>strong {
     font-weight:900;

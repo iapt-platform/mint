@@ -53,7 +53,7 @@
 		"content": "පටුන",
 		"contents": "අන්තර්ගතය",
 		"copy": "copy",
-		"copy_to_clipboard": "copy the link to clipboard",
+		"copy_to_clipboard": "copy the sent No. to clipboard",
 		"creat_a_new_file_by_yourself": "ඔබ කැමති පරදි නව ගොනුව සාදන්න",
 		"created": "සාදන ලදි",
 		"current": "අලුත්ම",
@@ -665,6 +665,7 @@
 		"my_read": "recent",
 		"master_copy": "පාලි",
 		"nissaya": "සන‍්න‍ය",
+		"show_this_para_only": "show this paragraph only",
 		"original_text":"original text",
 		"": ""
 	},

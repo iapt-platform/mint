@@ -704,6 +704,18 @@ function note_json_html(in_json) {
 		"','" +
 		in_json.end +
 		"')\">" +
+		gLocal.gui.copy_to_clipboard +
+		"</a>";
+	output +=
+		"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
+		in_json.book +
+		"_" +
+		in_json.para +
+		"_" +
+		in_json.begin +
+		"_" +
+		in_json.end + 
+		"')\" >" +
 		gLocal.gui.copy_link +
 		"</a>";
 	output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
@@ -1224,7 +1236,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += iterator.editor_name.nickname;
 	}
 	html += "</span>";
-	html += '<span class="date">' + getPassDataTime(iterator.update_time) + "</span>";
+	html += '<span class="date" title="' +
+	getFullDataTime(iterator.update_time) +
+	'">' + getPassDataTime(iterator.update_time) + "</span>";
+	html += '<span class="date" >' + getPassDataTime(iterator.update_time) + "</span>";
 	html += "</div>";
 	html += "<div class='preview'>" + tranText + "</div>";
 	html += "</div>";
@@ -1283,8 +1298,10 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	html += '<div class="info">';
 	if (iterator.id != "") {
-		html += '<span class="date"> ' + getPassDataTime(iterator.update_time) + "</span>";
-	}
+		html += '<span class="date" title="' +
+		getFullDataTime(iterator.update_time) +
+		'">' + getPassDataTime(iterator.update_time) + "</span>";
+}
 	if (iterator.id != "") {
 		html += '<span class="name">' + iterator.editor_name.nickname + "</span>";
 	}
@@ -1306,6 +1323,9 @@ function render_one_sent_tran_a(iterator, diff = false) {
 		html += "</span>";
 	}
 
+	html += "</div>"; //end of info
+
+	html += "</div>"; //end of foot bar
 	html += '<ul class="tag_list">';
 	html += "<li class='pr' onclick=\"note_pr_show('" + iterator.channal + "','" + sid + "')\">";	
 	if (iterator.pr_all && parseInt(iterator.pr_all) > 0) {
@@ -1313,9 +1333,6 @@ function render_one_sent_tran_a(iterator, diff = false) {
 	}
 	html += "</li>";
 	html += "</ul>";
-	html += "</div>"; //end of info
-
-	html += "</div>"; //end of foot bar
 
 	html += "</div>";
 	html += "</div>";
@@ -1497,6 +1514,11 @@ function myEndingTooltip(inStr){
         {
             id:"my_def",
             name:"နေစဉ်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
+        {
+            id:"my_def",
+            name:"လျက်",
             tooltip:'同时发生的时间状语(当……的时候)',
         },
     ];

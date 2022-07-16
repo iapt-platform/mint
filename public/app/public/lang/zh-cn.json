@@ -53,7 +53,7 @@
 		"content": "目录",
 		"contents": "目录",
 		"copy": "复制",
-		"copy_to_clipboard": "复制句子链接到剪切板",
+		"copy_to_clipboard": "复制句子编号",
 		"creat_a_new_file_by_yourself": "创建自定义文档",
 		"created": "创建",
 		"current": "当前",
@@ -663,6 +663,7 @@
 		"my_read": "我的阅读",
 		"master_copy": "巴利底本",
 		"nissaya": "依词释",
+		"show_this_para_only": "仅显示此段",
 		"original_text":"原文",
 		"": ""
 	},
