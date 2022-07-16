@@ -97,3 +97,7 @@ note:hover .ref {
 .nav_bnt{
 	width: 100%;
 }
+
+#btn_show_channel{
+	display:none;
+}

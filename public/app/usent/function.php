@@ -88,6 +88,11 @@ class SentPr{
             $stmt->execute(array($book,$para,$begin,$end,$channel));
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if($result){
+				foreach ($result as $key => $value) {
+					# code...
+					$result[$key]['id'] = sprintf('%d',$result[$key]['id']);
+				}
+				
 				return $result;
 			}
 			else{
@@ -118,9 +123,10 @@ class SentPr{
 
 	public function setPrData($id,$text){
 		if ($this->dbh_sent) {
+			#先查询有没有 没有就新建
             $query = "UPDATE "._TABLE_SENTENCE_PR_." set content=? ,modify_time=? , updated_at = now() WHERE id = ? and editor_uid= ? ";
             $stmt = $this->dbh_sent->prepare($query);
-            $stmt->execute(array($text,mTime(),$id,$_COOKIE["userid"]));
+            $stmt->execute(array($text,mTime(),$id,$_COOKIE["user_uid"]));
             
 			if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 				/*  识别错误  */
