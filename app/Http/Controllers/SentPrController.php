@@ -106,13 +106,13 @@ class SentPrController extends Controller
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				switch ($data['channel']) {
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
-						$strMessage = "wikipali: {$username} 就“{$palitext}”提出了这样的修改建议：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就“{$palitext}”提出了这样的修改建议：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
 						break;
 					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
-						$strMessage = "wikipali: {$username} 就“{$palitext}”有这样的疑问：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就“{$palitext}”有这样的疑问：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
 						break;
 					case '5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8':
-						$strMessage = "wikipali: {$username} 就“{$palitext}”中的问题做了这样的回复：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就“{$palitext}”中的问题做了这样的回复：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
 						break;
 					default:
 						$strMessage = "";
