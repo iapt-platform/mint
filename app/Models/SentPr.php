@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SentPr extends Model
 {
     use HasFactory;
+	protected $casts = [
+		'id' => 'string'
+	];
 }

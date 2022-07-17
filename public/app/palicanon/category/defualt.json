@@ -238,7 +238,8 @@
 							{
 								"name":"Vimativinodanī",
 								"tag":["vinaya","ṭīkā","vimativinodanī"]
-							},{
+							},
+							{
 								"name":"Vinayavinicchayo",
 								"tag":["vinaya","ṭīkā","vinayavinicchaya"]
 							},
@@ -455,12 +456,8 @@
                         "tag":["añña","byākaraṇa ganthasaṅgaha","kaccāyanabyākaraṇa"]
                     },
                     {
-                        "name":"Saddanītippakaraṇaṃ (padamālā)",
-                        "tag":["añña","byākaraṇa ganthasaṅgaha","saddanītippakaraṇa","padamālā"]
-                    },
-                    {
-                        "name":"Saddanītippakaraṇaṃ (Dhātumālā)",
-                        "tag":["añña","byākaraṇa ganthasaṅgaha","saddanītippakaraṇa","dhātumālā"]
+                        "name":"Saddanītippakaraṇaṃ",
+                        "tag":["añña","byākaraṇa ganthasaṅgaha","saddanītippakaraṇa"]
                     },
                     {
                         "name":"Padarūpasiddhi",
@@ -483,16 +480,8 @@
                         "tag":["añña","byākaraṇa ganthasaṅgaha","abhidhānappadīpikā"]
                     },
                     {
-                        "name":"Abhidhānappadīpikāṭīkā",
-                        "tag":["añña","byākaraṇa ganthasaṅgaha","abhidhānappadīpikāṭīkā"]
-                    },
-                    {
                         "name":"Subodhālaṅkārapāṭha",
                         "tag":["añña","byākaraṇa ganthasaṅgaha","subodhālaṅkāra"]
-                    },
-                    {
-                        "name":"Subodhālaṅkāraṭīkā",
-                        "tag":["añña","byākaraṇa ganthasaṅgaha","subodhālaṅkāraṭīkā"]
                     },
                     {
                         "name":"Bālāvatāra",
@@ -578,7 +567,7 @@
                     },
                     {
                         "name":"Dāṭhāvaṃsa",
-                        "tag":["añña","sihaḷa-ganthasaṅgaha","Dāṭhāvaṃsa"]
+                        "tag":["añña","sihaḷa-ganthasaṅgaha","dāṭhāvaṃsa"]
                     },
                     {
                         "name":"Dhātupāṭha vilāsiniyā",

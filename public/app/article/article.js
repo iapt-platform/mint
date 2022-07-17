@@ -701,3 +701,14 @@ function gotoPara(paragraph) {
 	}
 	location.assign(url);
 }
+
+function show_channel_detail_pannal(){
+	if($("#right_pannal").css("display")=="none"){
+		$("#right_pannal").show();
+		$(".contents_div").css("width","70%");
+	}else{
+		$("#right_pannal").hide();
+		$(".contents_div").css("width","100%");		
+	}
+
+}
