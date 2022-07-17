@@ -1360,6 +1360,11 @@ function myEndingTooltip(inStr){
             tooltip:'具格/与',
         },
         {
+            id:"my_inst2",
+            name:"နှင့်",
+            tooltip:'具格/与',
+        },
+        {
             id:"my_inst3",
             name:"ကြောင့်",
             tooltip:'具格/凭借;从格/原因',
