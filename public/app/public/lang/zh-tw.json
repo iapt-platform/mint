@@ -53,7 +53,7 @@
 		"content": "目錄",
 		"contents": "目錄",
 		"copy": "複製",
-		"copy_to_clipboard": "複製句子連結到剪下闆",
+		"copy_to_clipboard": "複製句子編號",
 		"creat_a_new_file_by_yourself": "新建自定檔案",
 		"created": "建立",
 		"current": "當前",
@@ -662,6 +662,7 @@
 		"my_read": "我的閱讀",
 		"master_copy": "巴利底本",
 		"nissaya": "依詞釋",
+		"show_this_para_only": "僅顯示此段",
 		"original_text":"原文",
 		"": ""
 	},

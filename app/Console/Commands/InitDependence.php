@@ -39,7 +39,7 @@ class InitDependence extends Command
      */
     public function handle()
     {
-		#克隆依赖的数据到本地
+		#克隆依赖的数据仓库到本地
 		$depDir = $this->info(config("app.path.dependence"));
 		foreach ($this->info(config("app.dependence")) as $key => $value) {
 			# code...

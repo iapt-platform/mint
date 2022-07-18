@@ -538,6 +538,8 @@ span.channel {
 }
 #palicanon-category{
     display:block;
+	border: 1px solid var(--border-line-color);
+    border-radius: 20px;
 }
 
 .community #palicanon-category{
@@ -546,14 +548,17 @@ span.channel {
 
 #palicanon-category>.chapter_list {
     flex-direction: column;
+	margin: 0;
 }
 
 #palicanon-category li{
     display: flex;
-    padding: 5px 0;
+    padding: 10px 16px;
     border-bottom: 1px solid var(--border-line-color);
 }
-
+#palicanon-category li:last-child{
+	border-bottom:none;
+}
 #palicanon-category .chapter_list .title .title_1 {
     width: unset;
 }

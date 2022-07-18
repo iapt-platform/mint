@@ -48,6 +48,7 @@
 		"content": "Content",
 		"contents": "Contents",
 		"copy": "copy",
+		"copy_to_clipboard": "copy the sent No. to clipboard",
 		"creat_a_new_file_by_yourself": "Creat a new file by yourself",
 		"created": "Created",
 		"current": "လက်ရှိ",
@@ -641,6 +642,7 @@
 		"my_read": "recent",
 		"master_copy": "ပါလိ",
 		"nissaya": "နိဿယ",
+		"show_this_para_only": "show this paragraph only",
 		"original_text":"original text",
 		"": ""
 	},

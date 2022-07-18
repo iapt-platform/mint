@@ -5,6 +5,29 @@ var char_roman_to_myn = [
 	{ id: "ddho", value: "ဒ္ဓေါ" },
 	{ id: "ddhā", value: "ဒ္ဓါ" },
 
+	{ id: "ndho", value: "န္ဓော" },//
+	{ id: "ndo", value: "န္ဒော" },//
+	{ id: "ndā", value: "န္ဒာ" }, //
+	{ id: "ndhā", value: "န္ဓာ" }, //
+	
+	{ id: "kho", value: "ခေါ" },//
+	{ id: "khā", value: "ခါ" }, //
+	{ id: "kkho", value: "က္ခော" }, //
+	{ id: "kkhā", value: "က္ခာ" }, //
+	{ id: "go", value: "ဂေါ" },//
+	{ id: "ṅo", value: "ငေါ" },//
+	{ id: "dho", value: "ဓေါ" },//
+	{ id: "do", value: "ဒေါ" },//
+	{ id: "po", value: "ပေါ" },//
+	{ id: "vo", value: "ဝေါ" },//
+	{ id: "gā", value: "ဂါ" }, //
+	{ id: "ṅā", value: "ငါ" }, //
+	{ id: "dā", value: "ဒါ" }, //
+	{ id: "dhā", value: "ဓါ" }, //
+	{ id: "pā", value: "ပါ" }, //
+	{ id: "vā", value: "ဝါ" }, //
+	{ id: "dvā", value: "ဒွါ" }, //
+
 	//{ id: "ppho", value: "ပ္ဖေါ" },
 	//{ id: "pphā", value: "ပ္ဖါ" },
 
@@ -88,6 +111,16 @@ var char_roman_to_myn = [
 	{ id: "o", value: "ဩ" },
 	{ id: "်္အ", value: "" },
 	{ id: "္အ", value: "" },
+	{ id: "1", value: "၁" },
+	{ id: "2", value: "၂" },
+	{ id: "3", value: "၃" },
+	{ id: "4", value: "၄" },
+	{ id: "5", value: "၅" },
+	{ id: "6", value: "၆" },
+	{ id: "7", value: "၇" },
+	{ id: "8", value: "၈" },
+	{ id: "9", value: "၉" },
+	{ id: "0", value: "၀" },
 	{ id: "ခော", value: "ခေါ" },
 	{ id: "ခာ", value: "ခါ" }, //kh
 	{ id: "က္ခေါ", value: "က္ခော" }, //kkho
@@ -105,7 +138,6 @@ var char_roman_to_myn = [
 	{ id: "ပာ", value: "ပါ" }, //pā
 	{ id: "ဝာ", value: "ဝါ" }, //vā
 	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
-	
 ];
 
 var char_myn_to_roman_1 = [

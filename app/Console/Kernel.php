@@ -15,12 +15,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->timezone('Asia/Shanghai')
                  ->command('upgrade:daily')
                  ->dailyAt('00:00')
-                 ->emailOutputTo('kosalla1987@126.com');
-				 //->emailOutputOnFailure()
+                 ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
+				 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
     }
 
     /**
