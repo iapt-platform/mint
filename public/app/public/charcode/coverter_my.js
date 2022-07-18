@@ -111,7 +111,6 @@ var char_roman_to_myn = [
 	{ id: "o", value: "ဩ" },
 	{ id: "်္အ", value: "" },
 	{ id: "္အ", value: "" },
-//新增数字
 	{ id: "1", value: "၁" },
 	{ id: "2", value: "၂" },
 	{ id: "3", value: "၃" },
@@ -122,8 +121,23 @@ var char_roman_to_myn = [
 	{ id: "8", value: "၈" },
 	{ id: "9", value: "၉" },
 	{ id: "0", value: "၀" },
-
-	
+	{ id: "ခော", value: "ခေါ" },
+	{ id: "ခာ", value: "ခါ" }, //kh
+	{ id: "က္ခေါ", value: "က္ခော" }, //kkho
+	{ id: "က္ခါ", value: "က္ခာ" }, //kkhā
+	{ id: "ဂော", value: "ဂေါ" },//go
+	{ id: "ငော", value: "ငေါ" },//ṅo
+	{ id: "ဓော", value: "ဓေါ" },//dho
+	{ id: "ဒော", value: "ဒေါ" },//do
+	{ id: "ပော", value: "ပေါ" },//po
+	{ id: "ဝော", value: "ဝေါ" },//vo
+	{ id: "ဂာ", value: "ဂါ" }, //gā
+	{ id: "ငာ", value: "ငါ" }, //ṅā
+	{ id: "ဒာ", value: "ဒါ" }, //dā
+	{ id: "ဓာ", value: "ဓါ" }, //dhā
+	{ id: "ပာ", value: "ပါ" }, //pā
+	{ id: "ဝာ", value: "ဝါ" }, //vā
+	{ id: "ဒွာ", value: "ဒွါ" }, //dvā
 ];
 
 var char_myn_to_roman_1 = [
