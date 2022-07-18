@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->timezone('Asia/Shanghai')
-                 ->command('upgrade:daily')
+        $schedule->command('upgrade:daily')
+				 ->timezone('Asia/Shanghai')
                  ->dailyAt('00:00')
                  ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
 				 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
