@@ -240,7 +240,7 @@ return [
     |
     */
 	'path' => [
-		'dependence' => public_path('depandence'),
+		'dependence' => storage_path('depandence'),
 		'palitext' => public_path('palihtml'),
 		'palitext_filelist' => public_path('palihtml').'/filelist.csv',
 		'palicsv' => public_path('tmp').'/palicsv',
@@ -256,4 +256,16 @@ return [
 		'robot_uuid' => '6e12f8ea-ee4d-4e0f-a6b0-472f2d99a814',
 		'cs6_channel' => '1e4b926d-54d7-4932-b8a6-7cdc65abd992',
 	],
+
+	'dependence' => [
+		[
+			'url' => 'https://www.github.com/iapt-platform/wipali-globle',
+			'path' => 'wipali-globle',
+		],
+	],
+
+	'email' => [
+		'ScheduleEmailOutputTo' => env('SCHEDULE_EMAIL_OUTPUTTO', 'kosalla1987@126.com'),
+		'ScheduleEmailOutputOnFailure' => env('SCHEDULE_EMAIL_OUTPUTONFAILURE', 'kosalla1987@126.com'),
+	]
 ];
