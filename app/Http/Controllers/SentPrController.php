@@ -93,7 +93,7 @@ class SentPrController extends Controller
 			*/
 			$userinfo = new \UserInfo();
 
-			$username = $userinfo->getName($user_uid)['username'];
+			$username = $userinfo->getName($user_uid)['nikename'];
 			$palitext = PaliSentence::where('book',$data['book'])
 									->where('paragraph',$data['para'])
 									->where('word_begin',$data['begin'])
