@@ -102,27 +102,29 @@ class SentPrController extends Controller
 			$palitext = mb_substr($palitext,0,20,"UTF-8");
 			$sent_num = $data['book']."-".$data['para']."-".$data['begin']."-".$data['end'];
 			$prtext = mb_substr($data['text'],0,140,"UTF-8");
-			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}";
+			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&mode=edit";
 			Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
-			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
+			//$palitext = str_replace("{","**",$palitext);
+			//$palitext = str_replace("}","**",$palitext);
+					if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				switch ($data['channel']) {
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
 						$strMessage = "{$username} 就文句`{$palitext}`提出了修改建议：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link}&channel=e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43,8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43,8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
 						$strMessage = "{$username} 就文句`{$palitext}`有疑问：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					case '5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8':
 						$strMessage = "{$username} 就文句`{$palitext}`中的疑问有这样的回复：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					default:
 						$strMessage = "";
