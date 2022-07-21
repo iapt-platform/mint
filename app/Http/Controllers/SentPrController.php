@@ -101,7 +101,7 @@ class SentPrController extends Controller
 									->value('text');
 			$palitext = mb_substr($palitext,0,20,"UTF-8");
 			$sent_num = $data['book']."-".$data['para']."-".$data['begin']."-".$data['end'];
-			$prtext = mb_substr($data['text'],0,20,"UTF-8");
+			$prtext = mb_substr($data['text'],0,140,"UTF-8");
 			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}";
 			Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
