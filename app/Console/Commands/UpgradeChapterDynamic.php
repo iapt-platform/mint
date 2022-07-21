@@ -42,15 +42,18 @@ class UpgradeChapterDynamic extends Command
      */
     public function handle()
     {
-        $start = time();
+		$this->info('upgrade:chapterdynamic start.');
+
+        $startAt = time();
         $img_width = 600;
         $img_height = 120;
         $days = 300; //统计多少天
         $min = 30;
         $linewidth = 2;
 
-        $this->info('更新总动态');
+        
 //更新总动态
+		$this->info("更新总动态");
         $chapters = ProgressChapter::select('book','para')
                                     ->groupBy('book','para')
                                     ->orderBy('book')
@@ -91,8 +94,10 @@ class UpgradeChapterDynamic extends Command
         }
         $bar->finish();
 
-        $this->info('用时'.(time()-$start));
-        $start = time();
+		$time = time()- $startAt;
+        $this->info("用时 {$time}");
+
+        $startAt = time();
 
         $this->info('更新缺的章节空白图');
         // 更新缺的章节空白图
@@ -113,8 +118,10 @@ class UpgradeChapterDynamic extends Command
             }
         }
         $bar->finish();
+		$time = time()- $startAt;
+        $this->info("用时 {$time}");
 
-
+		$startAt = time();
         //更新chennel动态
         $this->info('更新chennel动态');
         $bar = $this->output->createProgressBar(ProgressChapter::count());
@@ -153,6 +160,10 @@ class UpgradeChapterDynamic extends Command
             }
         }
         $bar->finish();
+		$time = time()- $startAt;
+        $this->info("用时 {$time}");
+
+        $this->info("upgrade:chapterdynamic done");
 
         return 0;
     }

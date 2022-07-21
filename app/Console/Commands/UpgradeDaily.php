@@ -50,7 +50,7 @@ class UpgradeDaily extends Command
 		}
 
         # 刷巴利语句子uuid 仅调用一次
-        $this->call('upgrade:palitextid');
+        //$this->call('upgrade:palitextid');
         //巴利原文段落库目录结构改变时运行
         $this->call('upgrade:palitext'); 
         #巴利段落标签
