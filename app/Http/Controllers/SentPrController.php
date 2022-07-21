@@ -110,19 +110,19 @@ class SentPrController extends Controller
 						$strMessage = "{$username} 就文句`{$palitext}`提出了修改建议：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link})查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43,8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
 						break;
 					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
 						$strMessage = "{$username} 就文句`{$palitext}`有疑问：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link})查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
 						break;
 					case '5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8':
 						$strMessage = "{$username} 就文句`{$palitext}`中的疑问有这样的回复：\n
 						>内容摘要：<font color=\"comment\">{$prtext}</font>，
 						>句子编号：<font color=\"info\">{$sent_num}</font>
-						欢迎大家[点击链接]({$link})查看并讨论。";
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8&mode=edit)查看并讨论。";
 						break;
 					default:
 						$strMessage = "";
