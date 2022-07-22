@@ -52,8 +52,9 @@ class WebHookArticleNew extends Command
 				$row = $data[$i];
 				$book = $row['book'];
                 $para = $row['para'];
+				$channel_id = $row['channel_id'];
                 $title = $row['toc'];
-				$link = env('APP_URL',"http://127.0.0.1:8000")."/app/article/index.php?view=chapter&book={$book}&par={$para}";
+				$link = env('APP_URL',"http://127.0.0.1:8000")."/app/article/index.php?view=chapter&book={$book}&par={$para}&channel={$channel_id}";
 				$message .= "1. [{$title}]({$link})\n";				
 			}
 			$this->info($message);
@@ -69,6 +70,12 @@ class WebHookArticleNew extends Command
 						];
 					break;
 				case "wechat":
+					$param = [
+						"msgtype"=>"markdown",
+						"markdown"=> [
+							"content"=> $message, 
+						], 
+						];
 					break;
 			}
 			$response = Http::post($url, $param);
