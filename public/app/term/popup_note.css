@@ -51,6 +51,9 @@ code ol {
 	z-index: 200;
 	/*font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", Arial, Verdana;*/
 }
+.translation .popup_contence{
+	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", Arial, Verdana;
+}
 
 .popup_contence:after {
 	content: "\00a0";
