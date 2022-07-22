@@ -71,7 +71,11 @@ class UpgradeDaily extends Command
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
 				'message' => "wikipali: 每日统计后台任务执行完毕。用时{$time}",
-			]);			
+			]);
+			$this->call('message:webhookarticlenew',[
+				'host' => 'https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf',
+				'type' => 'dingtalk',
+			]);
 		}
 
 
