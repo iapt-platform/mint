@@ -70,6 +70,12 @@ class WebHookArticleNew extends Command
 						];
 					break;
 				case "wechat":
+					$param = [
+						"msgtype"=>"markdown",
+						"markdown"=> [
+							"content"=> $message, 
+						], 
+						];
 					break;
 			}
 			$response = Http::post($url, $param);
