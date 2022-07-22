@@ -111,7 +111,7 @@ var char_roman_to_myn = [
 	{ id: "o", value: "ဩ" },
 	{ id: "်္အ", value: "" },
 	{ id: "္အ", value: "" },
-	{ id: "1", value: "၁" },
+	{ id: "1", value: "၁" },//新增数字
 	{ id: "2", value: "၂" },
 	{ id: "3", value: "၃" },
 	{ id: "4", value: "၄" },
@@ -121,7 +121,7 @@ var char_roman_to_myn = [
 	{ id: "8", value: "၈" },
 	{ id: "9", value: "၉" },
 	{ id: "0", value: "၀" },
-	{ id: "ခော", value: "ခေါ" },
+	{ id: "ခော", value: "ခေါ" },//矫正缅文转码错误
 	{ id: "ခာ", value: "ခါ" }, //kh
 	{ id: "က္ခေါ", value: "က္ခော" }, //kkho
 	{ id: "က္ခါ", value: "က္ခာ" }, //kkhā
@@ -142,7 +142,6 @@ var char_roman_to_myn = [
 
 var char_myn_to_roman_1 = [
 	{ id: "ႁႏၵ", value: "ndra" }, //後加
-
 	{ id: "ခ္", value: "kh" },
 	{ id: "ဃ္", value: "gh" },
 	{ id: "ဆ္", value: "ch" },

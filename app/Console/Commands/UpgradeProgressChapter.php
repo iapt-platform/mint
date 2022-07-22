@@ -46,6 +46,9 @@ class UpgradeProgressChapter extends Command
      */
     public function handle()
     {
+		$this->info("upgrade:progresschapter start.");
+		$startTime = time();
+
         $tagCount=0;
         #第一步 查询有多少书有译文
 		$books = Sentence::where('strlen','>',0)
@@ -199,7 +202,8 @@ class UpgradeProgressChapter extends Command
             $bar->advance();
         }
         $bar->finish();
-        $this->info("tag count:".$tagCount);
+		$time = time() - $startTime;
+		$this->info("upgrade:progresschapter finished in {$time}s tag count:{$tagCount}");
         return 0;
     }
 }
