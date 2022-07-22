@@ -730,7 +730,7 @@ pw {
 }
 .commentary .tool_bar > .right{
     /*left: 8em;*/
-    width: 8em;
+    width: fit-content;
 }
 .translation>.sent_tran_inner>.tool_bar > .right{
     right: 2em;
