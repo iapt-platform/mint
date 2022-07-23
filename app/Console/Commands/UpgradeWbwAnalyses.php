@@ -40,6 +40,9 @@ class UpgradeWbwAnalyses extends Command
      */
     public function handle()
     {
+		$startAt = time();
+		$this->info("upgrade:wbwanalyses start");
+
         $bar = $this->output->createProgressBar(Wbw::count());
         $counter =0;
         if(empty($this->argument('id'))){
@@ -140,7 +143,8 @@ class UpgradeWbwAnalyses extends Command
             $bar->advance();
         }
         $bar->finish();
-        $this->info("wbw analyses finished");
+		$time = time() - $startAt;
+        $this->info("wbw analyses done in {$time}");
         return 0;
     }
 }

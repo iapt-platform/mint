@@ -42,7 +42,8 @@ class UpgradeProgress extends Command
      */
     public function handle()
     {
-
+		$this->info('upgrade:progress start');
+		$startTime = time();
 
         $channels = Sentence::where('strlen','>',0)
                           ->where('book_id','<',1000)
@@ -101,6 +102,9 @@ class UpgradeProgress extends Command
             $bar->advance();
         }
         $bar->finish();
+
+		$time = time() - $startTime;
+		$this->info("upgrade progress finished in {$time}s");
 
         return 0;
     }
