@@ -1036,13 +1036,13 @@
 	<title id="page_title"></title>
 	<div id="top" style="display: inline-flex;width: 100vw;">
 		<div class="left" style="display: inline-flex;height: 5vh;margin: auto 1em;">
-			<span style="line-height: 5vh;white-space: nowrap;">
+			<span style="white-space: nowrap;max-height: 5vh;white-space: nowrap;margin: auto 0;">
 				<script>
 					document.write(localString[g_language].timezone + "：");
 					$("#page_title").html(localString[g_language].BE);
 				</script>
 			</span>
-			<select id="time-zone-selector">
+			<select id="time-zone-selector" style="max-height: 5vh;height: fit-content;margin: auto 0;">
 				<option value="local" selected>
 					<script>
 						document.write(localString[g_language].local);
