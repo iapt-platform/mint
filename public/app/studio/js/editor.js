@@ -273,6 +273,7 @@ function editor_windowsInit() {
 		case "openchannal":
 		case "openchannel":
 			editor_openChannal(g_book, g_para, g_channal);
+			render_channel_info(g_channal);
 			break;
 		case "import":
 			if (g_filename.length > 0) {
@@ -4098,6 +4099,24 @@ function editor_openChannal(book, para, channal) {
 			editor_parse_doc_xml(data);
 		}
 	);
+}
+
+function render_channel_info(channel_id){
+	fetch('/api/v2/channel/'+channel_id,{
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+  .then(response => response.json())
+  .then(function(data){
+      console.log(data);
+		let result = data.data;
+		if(data.ok==true){
+			$("#editor_doc_title").html("/" + data.data.owner_info.nickname + "/" + data.data.name);
+		}
+  });
 }
 //open project begin
 var editor_openProjectXmlHttp = null;
