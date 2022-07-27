@@ -76,7 +76,7 @@ const grid = new gridjs.Grid({
       	}
 	],
 	server: {
-		url: '../api/user_dicts.php?op=index&view=user',
+		url: '/api/v2/userdict?view=user',
 		then: data => data.data.rows.map(card => [null,card.id,card.word, card.type, card.grammar, card.mean, card.factors, card.confidence, card.updated_at,null]),
 		total: data => data.data.count
 	  },
@@ -101,18 +101,28 @@ const grid = new gridjs.Grid({
 document.querySelector("#to_recycle").onclick = function(){
 	if(_rowSelected.length>0){
 		if(confirm(`删除${_rowSelected.length}个单词，此操作不能恢复。`)){
-			$.getJSON("../api/user_dicts.php",
-			{
-				op:'delete',
+			let deleteId = JSON.stringify({
 				id:JSON.stringify(_rowSelected)
-			},
-			function(data){
-				if(data.ok){
-					grid.forceRender();
-					alert(`delete ok `);
-				}
-			});			
+			});
+			console.log("delete id:",deleteId);
+		fetch('/api/v2/userdict',{
+				method: 'DELETE',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: deleteId
+			})
+		  .then(response => response.json())
+		  .then(function(data){
+			  console.log(data);
+			  if(data.ok){
+				_rowSelected = new Array();
+				grid.forceRender();
+				alert(`delete ok `+data.data.deleted);
+			}
+		  });
+		
 		}
-
 	}
 }

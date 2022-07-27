@@ -13,6 +13,8 @@ use App\Http\Controllers\ViewController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SentHistoryController;
 use App\Http\Controllers\PaliTextController;
+use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\UserDictController;
 
 
 /*
@@ -43,5 +45,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('like',LikeController::class);
     Route::apiResource('sent_history',SentHistoryController::class);
     Route::apiResource('palitext',PaliTextController::class);
+    Route::apiResource('channel',ChannelController::class);
+    Route::delete('userdict', [UserDictController::class, 'delete']);
+    Route::apiResource('userdict',UserDictController::class);
 
 });

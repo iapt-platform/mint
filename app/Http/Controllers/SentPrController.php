@@ -70,7 +70,6 @@ class SentPrController extends Controller
 			$new->save();			
 		}
 
-		
 		$robotMessageOk=false;
 		$webHookMessage="";
 		if(app()->isLocal()==false)
@@ -91,19 +90,20 @@ class SentPrController extends Controller
 			book65 par：829-1306
 			book67 par：759-1152
 			*/
-			$userinfo = new \UserInfo();
-
-			$username = $userinfo->getName($user_uid)['username'];
-			$palitext = PaliSentence::where('book',$data['book'])
-									->where('paragraph',$data['para'])
-									->where('word_begin',$data['begin'])
-									->where('word_end',$data['end'])
-									->value('text');
-			$palitext = mb_substr($palitext,0,20,"UTF-8");
-			$prtext = mb_substr($data['text'],0,20,"UTF-8");
-			$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
-			Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
+				$userinfo = new \UserInfo();
+
+				$username = $userinfo->getName($user_uid)['nickname'];
+				$palitext = PaliSentence::where('book',$data['book'])
+										->where('paragraph',$data['para'])
+										->where('word_begin',$data['begin'])
+										->where('word_end',$data['end'])
+										->value('text');
+				$palitext = mb_substr($palitext,0,20,"UTF-8");
+				$prtext = mb_substr($data['text'],0,20,"UTF-8");
+				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
+				Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
+					
 				switch ($data['channel']) {
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
 						$strMessage = "{$username} 就“{$palitext}”提出了这样的修改建议：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
@@ -119,23 +119,11 @@ class SentPrController extends Controller
 						break;
 				}		
 				$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8";
-				/*
 				$param = [
-				"actionCard"=> [
-					"title"=> "修改建议", 
-					"text"=> " wikipali: 来自{$_COOKIE['user_uid']}的修改建议：{$data['text']}", 
-					"btnOrientation"=> "0", 
-					"singleTitle" => "详情",
-					"singleURL"=>"https://staging.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&channal={$data['channel']}&display=sent&mode=edit"
-				], 
-				"msgtype"=>"actionCard"
-				];
-				*/
-				$param = [
-					"msgtype"=>"markdown",
-					"markdown"=> [
-						"content"=> $strMessage, 
-					], 
+						"msgtype"=>"markdown",
+						"markdown"=> [
+							"content"=> $strMessage, 
+						], 
 					];
 				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
