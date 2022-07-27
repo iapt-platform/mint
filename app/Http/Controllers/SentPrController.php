@@ -100,6 +100,7 @@ class SentPrController extends Controller
 										->where('word_begin',$data['begin'])
 										->where('word_end',$data['end'])
 										->value('text');
+				$sent_num = "{$data['book']}-{$data['para']}-{$data['begin']}-{$data['end']}";
 				$palitext = mb_substr($palitext,0,20,"UTF-8");
 				$prtext = mb_substr($data['text'],0,20,"UTF-8");
 				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
