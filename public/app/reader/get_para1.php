@@ -174,8 +174,12 @@ if ($FetchParInfo) {
 				}else{
 					$progress = "";
 				}
+				$urlChannel = "&channel={$_channel}";
+			}else{
+				$urlChannel = "";
 			}
-			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}){$progress}\n";
+
+			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}{$urlChannel}){$progress}\n";
 		}		
 	}
 $sTocOutput .= "\n\n";
