@@ -47,17 +47,30 @@ class TestRedis extends Command
 		$this->info("redis hash get:".Redis::hGet("test-redis-hash",'hash'));
 
 		$this->info("test cache");
-		Cache::put('cache-key','cache value',10);
-		$this->info('catche test: ',Cache::get('cache-key'));
-		cache(["cache-key-2"=>'cache value 2']);
-		$this->info('cache() test',cache("cache-key-2"));
-		$value = Cache::get('cache-key-3',function(){
+		$this->info("cache put key=cache-key value=cache-value");
+		Cache::put('cache-key','cache-value',1000);
+		if(Cache::has('cache-key')){
+			$this->info('cache get: ',Cache::get('cache-key'));
+		}else{
+			$this->error('no key cache-key');
+		}
+		$this->info("test cache() function");
+		$this->info("cache() key=cache-key-2 value=cache-value-2");
+		cache(["cache-key-2"=>'cache-value-2']);
+		if(Cache::has('cache-key-2')){
+			$this->info('cache() get: ',Cache::get('cache-key-2'));
+		}else{
+			$this->error('no key cache-key-2');
+		}
+
+		$this->info("test cache remember()");
+		$value = Cache::remember('cache-key-3',600,function(){
 			return 'cache-value-3';
 		});
 		if(Cache::has('cache-key-3')){
-			$this->info("cache-key-3 exist");
+			$this->info("cache-key-3 exist value=",Cache::get('cache-key-3'));
 		}else{
-			$this->info("cache-key-3 no");
+			$this->error("cache::remember() fail.");
 		}
 
 
