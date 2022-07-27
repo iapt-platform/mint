@@ -639,11 +639,14 @@
 			solar_num = get_position(data_time).solar_station;
 			solar_num = Math.floor(solar_num);
 			lunar_num = get_position(data_time).lunar_station;
+			next_month = new Date()
+			next_month.setDate(data_time.getDate() + 30)
+			lunar_month_num = get_position(phaseRange(data_time, next_month, FULL)[0]).lunar_station
 			for (x_m in pali_month_name) {
-				if (lunar_num > pali_month_name[x_m].position && lunar_num < pali_month_name[Number(x_m) + 1].position) {
+				if (lunar_month_num > pali_month_name[x_m].position && lunar_month_num < pali_month_name[Number(x_m) + 1].position) {
 					result.month_name = pali_month_name[x_m]
 					break;
-				} else if (lunar_num < 1.25 || lunar_num >= 26) {
+				} else if (lunar_month_num < 1.25 || lunar_month_num >= 26) {
 					result.month_name = pali_month_name[0]
 					break;
 				}
@@ -653,6 +656,7 @@
 
 			result.solar = horoscope_name[solar_num]; //黄道十二宫星象名称
 			result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
+			result.nextfullmoon = phaseRange(data_time, next_month, FULL)[0]
 			return result;
 		}
 		function show_position() {
@@ -1032,13 +1036,13 @@
 	<title id="page_title"></title>
 	<div id="top" style="display: inline-flex;width: 100vw;">
 		<div class="left" style="display: inline-flex;height: 5vh;margin: auto 1em;">
-			<span style="line-height: 5vh;white-space: nowrap;">
+			<span style="white-space: nowrap;max-height: 5vh;white-space: nowrap;margin: auto 0;">
 				<script>
 					document.write(localString[g_language].timezone + "：");
 					$("#page_title").html(localString[g_language].BE);
 				</script>
 			</span>
-			<select id="time-zone-selector">
+			<select id="time-zone-selector" style="max-height: 5vh;height: fit-content;margin: auto 0;">
 				<option value="local" selected>
 					<script>
 						document.write(localString[g_language].local);
@@ -1119,6 +1123,26 @@
 			<div class="citySelector" style="position: absolute; left: 8px; top: 25.6px; z-index: 999999;">
 				<div class="cityBox hide" id="cityBox"></div>
 			</div>
+
+
+		</div>
+		<div style="display: inline-block; width: 50%; justify-content: center;">
+			<script>
+				//document.write(localString[g_language].location);
+				document.write("单日查询：");
+				function set_date_info(date_time_element){
+					var date_info = new Object();
+					date_info = get_station_name(new Date(date_time_element.value))
+					let string="";
+					string += "在" + date_info.month_name.season_icon + date_info.month_name.season + "的" + date_info.month_name.value + "月";
+					string +=  "<br>月亮星宿：" + date_info.lunar.value + date_info.lunar.name_zh + "<br>";
+					string += "太阳星宿：" + date_info.solar.value + date_info.solar.name_zh;
+					string += "<br>月圆时间：" + date_info.nextfullmoon.toLocaleString()
+					$("#date_info_indetal").html(string)
+				}
+			</script>
+			<input type="datetime-local" id="input_date" onblur="set_date_info(this)" style="display: block;">
+			<span id="date_info_indetal" ></span>
 
 
 		</div>
