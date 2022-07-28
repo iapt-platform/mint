@@ -30,6 +30,10 @@ if (isset($_GET["begin"])) {
 if (isset($_GET["end"])) {
     $_end = $_GET["end"];
 }
+if (isset($_GET["channel"])) {
+    $_channel = $_GET["channel"];
+}
+
 $_view = $_GET["view"];
 
 $output["toc"] = array();
@@ -43,6 +47,10 @@ $output["content"]="";
 $output["owner"]="";
 $output["username"]=array("username"=>"","nickname"=>"");
 $output["status"]="";
+
+$dns = _FILE_DB_PALI_TOC_;
+$dbh_toc = new PDO($dns, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
+$dbh_toc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 if ($_view == "sent") {
     $output["content"] = "{{". $_book . "-" . $_para . "-". $_start . "-" . $_end . "}}";
@@ -119,6 +127,9 @@ if ($FetchParInfo) {
     /*
     目录
     */
+	if(isset($_channel)){
+		$firstChannel = explode(',',$_channel)[0];
+	}
     $sTocOutput = "\n\n";
 	if(count($toc)>1){
 		$currLevel = $toc[0]["level"];
@@ -149,7 +160,26 @@ if ($FetchParInfo) {
 				# code...
 				$space .= "  ";
 			}
-			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]})\n";
+			//目录进度
+			if(isset($firstChannel)){
+				$query = "SELECT title , progress FROM "._TABLE_PROGRESS_CHAPTER_."  WHERE book= ? AND para= ?  AND channel_id=?";
+				$sth_title = $dbh_toc->prepare($query);
+				$sth_title->execute(array($_book, $value["paragraph"], $firstChannel));
+				$trans_title = $sth_title->fetch(PDO::FETCH_ASSOC);
+				if ($trans_title) {
+					if(!empty($trans_title['title'])){
+						$sToc = $trans_title['title'];
+					}
+					$progress = "＜".sprintf('%d',$trans_title['progress']*100)."%";
+				}else{
+					$progress = "";
+				}
+				$urlChannel = "&channel={$_channel}";
+			}else{
+				$urlChannel = "";
+			}
+
+			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}{$urlChannel}){$progress}\n";
 		}		
 	}
 $sTocOutput .= "\n\n";

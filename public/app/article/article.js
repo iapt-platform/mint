@@ -393,8 +393,10 @@ function palicanon_load() {
 				start: _start,
 				end: _end,
 			}
-            if(_channal !==""){
+            if(_channal !== ""){
+				param.channel = _channal;
                 for (const iterator of _channal.split(",")) {
+					//增加点击次数
                     OneHitChapter(_book,_par,iterator);
                 }
             }

@@ -90,6 +90,7 @@ class SentPrController extends Controller
 			book65 par：829-1306
 			book67 par：759-1152
 			*/
+
 			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				$userinfo = new \UserInfo();
 
@@ -99,20 +100,32 @@ class SentPrController extends Controller
 										->where('word_begin',$data['begin'])
 										->where('word_end',$data['end'])
 										->value('text');
+				$sent_num = "{$data['book']}-{$data['para']}-{$data['begin']}-{$data['end']}";
 				$palitext = mb_substr($palitext,0,20,"UTF-8");
 				$prtext = mb_substr($data['text'],0,20,"UTF-8");
 				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
 				Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
-					
 				switch ($data['channel']) {
+					//测试
+					//case '3b0cb0aa-ea88-4ce5-b67d-00a3e76220cc':
+					//正式
 					case 'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43':
-						$strMessage = "{$username} 就“{$palitext}”提出了这样的修改建议：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就文句`{$palitext}`提出了修改建议：
+						>内容摘要：<font color=\"comment\">{$prtext}</font>，\n
+						>句子编号：<font color=\"info\">{$sent_num}</font>\n
+						欢迎大家[点击链接]({$link}&channel=e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43,8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					case '8622ad73-deef-4525-8e8e-ba3f1462724e':
-						$strMessage = "{$username} 就“{$palitext}”有这样的疑问：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就文句`{$palitext}`有疑问：\n
+						>内容摘要：<font color=\"comment\">{$prtext}</font>，\n
+						>句子编号：<font color=\"info\">{$sent_num}</font>\n
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					case '5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8':
-						$strMessage = "{$username} 就“{$palitext}”中的问题做了这样的回复：“{$prtext}”，欢迎大家[点击链接]({$link})前往查看并讨论。";
+						$strMessage = "{$username} 就文句`{$palitext}`中的疑问有这样的回复：\n
+						>内容摘要：<font color=\"comment\">{$prtext}</font>，\n
+						>句子编号：<font color=\"info\">{$sent_num}</font>\n
+						欢迎大家[点击链接]({$link}&channel=8622ad73-deef-4525-8e8e-ba3f1462724e,5ab653d7-1ae3-40b0-ae07-c3d530a2a8f8)查看并讨论。";
 						break;
 					default:
 						$strMessage = "";
