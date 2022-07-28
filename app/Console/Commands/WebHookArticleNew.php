@@ -53,10 +53,17 @@ class WebHookArticleNew extends Command
 				$book = $row['book'];
                 $para = $row['para'];
 				$channel_id = $row['channel_id'];
-                $title = $row['toc'];
+				if(!empty($row['title'])){
+					$title = str_replace("\n","",$row['title']);
+				}else{
+					$title = $row['toc'];
+				}
+                
 				$link = env('APP_URL',"http://127.0.0.1:8000")."/app/article/index.php?view=chapter&book={$book}&par={$para}&channel={$channel_id}";
 				$message .= "1. [{$title}]({$link})\n";				
 			}
+			$link = env('APP_URL',"http://127.0.0.1:8000")."/app/palicanon";
+			$message .= "\n [更多]({$link})";
 			$this->info($message);
 			$url = $this->argument('host');
 			switch ($this->argument('type')) {
