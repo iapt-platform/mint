@@ -2,7 +2,7 @@
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../redis/function.php";
 
-$rediskey = "dict://user";
+$rediskey = Redis["prefix"]."dict/user";
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
 	if ($redis != false) {
@@ -12,7 +12,7 @@ if (PHP_SAPI == "cli") {
 		$stmtPli = $dbh->query($query);
 		while ($word = $stmtPli->fetch(PDO::FETCH_ASSOC)) {
 			# code...
-			$query = "SELECT * from "._TABLE_DICT_WBW_." where word = ? and source = '_USER_DATA_' ";
+			$query = "SELECT * from "._TABLE_DICT_WBW_." where word = ? and (source = '_USER_DATA_' or source = '_USER_WBW_') ";
 			$stmt = $dbh->prepare($query);
 			$stmt->execute(array($word["word"]));
 			if ($stmt) {
@@ -24,8 +24,8 @@ if (PHP_SAPI == "cli") {
 									$one["id"],
 									$one["word"],
 									$one["type"],
-									$one["gramma"],
-									$one["base"],
+									$one["grammar"],
+									$one["parent"],
 									$one["mean"],
 									$one["note"],
 									$one["factors"],
