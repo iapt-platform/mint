@@ -161,6 +161,8 @@ if ($FetchParInfo) {
 				$space .= "  ";
 			}
 			//目录进度
+			$progress = "";
+			$urlChannel = "";
 			if(isset($firstChannel)){
 				$query = "SELECT title , progress FROM "._TABLE_PROGRESS_CHAPTER_."  WHERE book= ? AND para= ?  AND channel_id=?";
 				$sth_title = $dbh_toc->prepare($query);
@@ -171,12 +173,8 @@ if ($FetchParInfo) {
 						$sToc = $trans_title['title'];
 					}
 					$progress = "＜".sprintf('%d',$trans_title['progress']*100)."%";
-				}else{
-					$progress = "";
 				}
 				$urlChannel = "&channel={$_channel}";
-			}else{
-				$urlChannel = "";
 			}
 
 			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}{$urlChannel}){$progress}\n";
@@ -187,7 +185,7 @@ $sTocOutput .= "\n\n";
     if ($FetchParInfo["chapter_strlen"] > _MAX_CHAPTER_LEN_ && $_view === "chapter" && count($toc) > 1) {
         #文档过大，只加载目录
 		if ($toc[1]["paragraph"] - $_para > 1) {
-            # 中间有间隔
+            # 最高级目录和下一个目录中间有正文层级的段落间隔
             $paraBegin = $_para;
             $paraEnd = $toc[1]["paragraph"] - 1;
             $output["head"] = 1;
