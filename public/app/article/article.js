@@ -416,6 +416,9 @@ function palicanon_load() {
 				try {
 					let result = JSON.parse(data);
 					if (result) {
+						if(result.debug){
+							console.log("debug:",result.debug);
+						}
 						_sent_data=result;
                         if(result.title==""){
                             $("#article_title").html("[unnamed]");
@@ -426,7 +429,7 @@ function palicanon_load() {
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
 						//$("#article_author").html(result.username.nickname + "@" + result.username.username);
-                        
+                        console.log("content:",result.content);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
                             if(document.querySelector("#para_focus")){
