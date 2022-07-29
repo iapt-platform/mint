@@ -42,6 +42,7 @@ if($prData){
 		}
 		if($db_sent->update($updateDate)){
 			$respond['update'] = count($updateDate);
+			$respond['data'] = $newData;
 		}
 		else{
 			$respond['message'] = $db_sent->getError();

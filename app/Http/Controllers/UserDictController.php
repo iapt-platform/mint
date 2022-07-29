@@ -295,34 +295,33 @@ class UserDictController extends Controller
 
 	private function update_redis($word){
 		#更新 redis
-
-		//if ($this->redis != false) 
-		{
-			{
-				$Fetch = UserDict::where(['word'=>$word['word'],"source"=>"_SYS_USER_WBW_"])->get();
-				$redisWord=array();
-				foreach ($Fetch as  $one) {
-					# code...
-					$redisWord[] = array(
-									$one["id"],
-									$one["word"],
-									$one["type"],
-									$one["grammar"],
-									$one["parent"],
-									$one["mean"],
-									$one["note"],
-									$one["factors"],
-									$one["factormean"],
-									$one["status"],
-									$one["confidence"],
-									$one["creator_id"],
-									$one["source"],
-									$one["language"]
-									);
-				}
-				Redis::hSet("dict://user",$word['word'],json_encode($redisWord,JSON_UNESCAPED_UNICODE));			
-			}
+		$Fetch = UserDict::where(['word'=>$word['word'],"source"=>"_USER_WBW_"])->get();
+		$redisWord=array();
+		foreach ($Fetch as  $one) {
+			# code...
+			$redisWord[] = array(
+							$one["id"],
+							$one["word"],
+							$one["type"],
+							$one["grammar"],
+							$one["parent"],
+							$one["mean"],
+							$one["note"],
+							$one["factors"],
+							$one["factormean"],
+							$one["status"],
+							$one["confidence"],
+							$one["creator_id"],
+							$one["source"],
+							$one["language"]
+							);
 		}
+		$redisData = json_encode($redisWord,JSON_UNESCAPED_UNICODE);
+		Log::info("word={$word['word']} redis-data={$redisData}");
+		Redis::hSet("dict/user",$word['word'],$redisData);
+		$redisData1 = Redis::hGet("dict/user",$word['word']);
+		Log::info("word={$word['word']} redis-data1={$redisData1}");
+
 		#更新redis结束
 	}
 
