@@ -485,7 +485,7 @@ function term_updata_translation(callback=null) {
 			let noteText = "";
 
 			let realMeaning = '';
-			if(meaningShow !== ""){
+			if(typeof meaningShow !== "undefined"){
 				//指定显示意思优先
 				realMeaning = meaningShow;
 			}else{
@@ -493,10 +493,11 @@ function term_updata_translation(callback=null) {
 			}
 
 			if (termCounter[guid]) {
-				termCounter[guid] = 2;
+				termCounter[guid]++;
 			} else {
 				termCounter[guid] = 1;
 			}
+			console.log("termCounter",termCounter[guid]);
 			myterm = term_lookup_my(pali, $(this).attr("channal"), $(this).attr("editor"), $(this).attr("lang")); //我的术语字典
 			let linkclass = "";
 			if (myterm) {
@@ -522,7 +523,7 @@ function term_updata_translation(callback=null) {
 						}
 					}
 				}
-
+				console.log("term temlate",noteText);
 				noteText = noteText.replace(
 					"[",
 					"<span class='" +
@@ -718,6 +719,7 @@ function term_get_dict(callback=null) {
 			$(this).attr("pali", word[0]);
 			if(word.length>1){
 				$(this).attr("show", word[1]);
+				$(this).text(word[0]);
 			}
 		}
 		let termword = new Object();
@@ -732,6 +734,7 @@ function term_get_dict(callback=null) {
 	if (_display == "sent") {
 		readonly = false;
 	}
+	console.log('term list',termwordlist);
 	$.post(
 		"../term/term_get.php",
 		{
