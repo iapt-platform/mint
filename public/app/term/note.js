@@ -647,13 +647,21 @@ function note_ref_init(target='_blank') {
 	$("chapter").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para, target);
+		let urlChannel='';
+		if(_channal !== ""){
+			urlChannel = "&channel=" + _channal;
+		}
+		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para + urlChannel, target);
 	});
 
 	$("para").click(function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
-		window.open("../article/?view=para&book=" + bookid + "&par=" + para, target);
+		let urlChannel='';
+		if(_channal !== ""){
+			urlChannel = "&channel=" + _channal;
+		}		
+		window.open("../article/?view=para&book=" + bookid + "&par=" + para + urlChannel, target);
 	});
 }
 /*

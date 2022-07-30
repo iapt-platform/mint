@@ -393,8 +393,10 @@ function palicanon_load() {
 				start: _start,
 				end: _end,
 			}
-            if(_channal !==""){
+            if(_channal !== ""){
+				param.channel = _channal;
                 for (const iterator of _channal.split(",")) {
+					//增加点击次数
                     OneHitChapter(_book,_par,iterator);
                 }
             }
@@ -414,6 +416,9 @@ function palicanon_load() {
 				try {
 					let result = JSON.parse(data);
 					if (result) {
+						if(result.debug){
+							console.log("debug:",result.debug);
+						}
 						_sent_data=result;
                         if(result.title==""){
                             $("#article_title").html("[unnamed]");
@@ -424,7 +429,7 @@ function palicanon_load() {
 						$("#page_title").text(result.title);
 						$("#article_subtitle").html(result.subtitle);
 						//$("#article_author").html(result.username.nickname + "@" + result.username.username);
-                        
+                        console.log("content:",result.content);
 						$("#contents").html(note_init(result.content));
 						note_refresh_new(function () {
                             if(document.querySelector("#para_focus")){

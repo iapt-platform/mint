@@ -1205,3 +1205,7 @@ button.primary {
     color: var(--btn-hover-color);
     border-radius: 5px;
 }
+
+.vertical .preview .popup_contence{
+    max-width: max(50vw, 100%);
+}
