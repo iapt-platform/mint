@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'checklogin.inc';
 require_once "../public/_pdo.php";
 require_once "../config.php";
@@ -35,7 +35,7 @@ foreach ($word as $x => $ws) {
 				 mean = ? AND
 				 base = ? AND
 				 factors = ? AND
-				 factormean = ? AND source = '_USER_DATA_'" ;
+				 factormean = ? AND source = '_USER_WBW_'" ;
     $Fetch = PDO_FetchAll($query,array($ws->pali,$ws->type,$ws->gramma,$ws->mean,$ws->parent,$ws->factors,$ws->fm));
     $FetchNum = count($Fetch);
 
@@ -54,7 +54,7 @@ foreach ($word as $x => $ws) {
             $ws->fm,
             $ws->status,
             $ws->language,
-			'_USER_DATA_',
+			'_USER_WBW_',
             mTime());
         array_push($arrInserString, $params);
 
@@ -136,7 +136,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 	if ($redis != false) {
 		foreach ($updateWord as $key => $value) {
 			# code...
-			$query = "SELECT * from "._TABLE_DICT_USER_." where word = ? ";
+			$query = "SELECT * from "._TABLE_DICT_USER_." where word = ? and source = '_USER_WBW_'";
 			$stmt = $PDO->prepare($query);
 			$stmt->execute(array($key));
 			if ($stmt) {
@@ -146,21 +146,21 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 					# code...
 					$redisWord[] = array($one["id"],
 										$one["pali"],
-									$one["type"],
-									$one["gramma"],
-									$one["parent"],
-									$one["mean"],
-									$one["note"],
-									$one["factors"],
-									$one["factormean"],
-									$one["status"],
-									$one["confidence"],
-									$one["creator"],
-									$one["dict_name"],
-									$one["language"]
+										$one["type"],
+										$one["gramma"],
+										$one["parent"],
+										$one["mean"],
+										$one["note"],
+										$one["factors"],
+										$one["factormean"],
+										$one["status"],
+										$one["confidence"],
+										$one["creator"],
+										$one["dict_name"],
+										$one["language"]
 									);
 				}
-				$redis->hSet("dict://user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
+				$redis->hSet(Redis["prefix"]."dict/user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
 			}				
 		}
 	}
