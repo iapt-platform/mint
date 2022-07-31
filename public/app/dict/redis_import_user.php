@@ -2,7 +2,7 @@
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../redis/function.php";
 
-$rediskey = Redis["prefix"]."dict/user";
+$rediskey = Redis["namespace"]."dict/user";
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
 	if ($redis != false) {

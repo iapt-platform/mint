@@ -160,7 +160,7 @@ if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 										$one["language"]
 									);
 				}
-				$redis->hSet(Redis["prefix"]."dict/user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
+				$redis->hSet(Redis["namespace"]."dict/user",$key,json_encode($redisWord,JSON_UNESCAPED_UNICODE));
 			}				
 		}
 	}

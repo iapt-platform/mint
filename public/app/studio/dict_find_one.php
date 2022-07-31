@@ -70,7 +70,7 @@ $db_file_list = array();
 //词典列表
 if ($dict_name == "") {
     $db_file_list[] = array(_FILE_DB_TERM_,"dict://term",true);	
-	$db_file_list[] = array(_FILE_DB_WBW1_,Redis["prefix"]."dict/user",true);
+	$db_file_list[] = array(_FILE_DB_WBW1_,Redis["namespace"]."dict/user",true);
 	
     $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_regular.db","dict://regular",true);
     $db_file_list[] = array( _DIR_DICT_SYSTEM_ . "/sys_irregular.db","dict://irregular",true);
