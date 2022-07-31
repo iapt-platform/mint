@@ -187,7 +187,7 @@ class UserDictController extends Controller
 		foreach ($arrId as $key => $id) {
 			$data = UserDict::where('id',$id)->first();
 			if($data){
-				# 找到对应数据
+				# 找到对应数据 
 				Log::info('creator_id:'.$data->creator_id);
 				$param = [
 					"id"=>$id,
