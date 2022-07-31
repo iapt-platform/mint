@@ -59,8 +59,7 @@ class ProgressChapterController extends Controller
                     # code...
                     $aChannel[] = $channel->uid;
                 }
-                $chapters = ProgressChapter::select($selectCol)
-                                        ->whereIn('progress_chapters.channel_id', $aChannel)
+                $chapters = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
                                         ->leftJoin('pali_texts', function($join)
                                                 {
                                                     $join->on('progress_chapters.book', '=', 'pali_texts.book');
@@ -69,6 +68,8 @@ class ProgressChapterController extends Controller
                                         ->where('progress','>',0.85)
                                         ->orderby('progress_chapters.created_at','desc')
                                         ->get();
+				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
+									->where('progress','>',0.85)->count();
                 break;
             case 'tag':
                 $tm = (new TagMap)->getTable();

@@ -46,7 +46,7 @@ define("Redis",[
 	"host" => "127.0.0.1",
 	"port" => 6379,
 	"password" => "",
-	"namespace"=>"aaa://"
+	"prefix="=>"localhost://"
 ]);
 
 #目录设置，不能更改
