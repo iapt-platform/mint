@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2022-07-31
+
+- rename REDIS_NAMESPACE to REDIS_PREFIX  .env.example
+- rename Redis['namespace'] to Redis['prefix'] config.sample.php
+
 ## [1.0.9] - 2022-02-24
 
 - add SCHEDULE_EMAIL_OUTPUTTO to .env
