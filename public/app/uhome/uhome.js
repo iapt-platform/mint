@@ -47,7 +47,7 @@ function render_palicanon_chapter_list(data){
                 title = 'unkow';
             }
             html += "<div class='title'>"+link+title+"</a>"+"<tag>"+"</tag></div>";
-            html += "<div class='path'>长部>沙门果经"+"</div>";
+            html += "<div class='path'>"+iterator.path+"</div>";
             html += "<div class='date'> 创建："+iterator.created_at+" 更新："+iterator.updated_at+"</div>";
             html += "</div>";
         }

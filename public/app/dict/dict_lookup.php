@@ -341,7 +341,7 @@ function lookup_user($word){
 	$Fetch=array();
 	
 	if($redis){
-		$rediskey = Redis["namespace"]."dict/user";
+		$rediskey = Redis["prefix"]."dict/user";
 		$wordData = $redis->hGet($rediskey,$word);
 			if($wordData){
 				if(!empty($wordData)){
