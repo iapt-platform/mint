@@ -179,25 +179,26 @@ class UserDictController extends Controller
 		return $this->ok([$count,$updateOk]);
     }
 	public function delete(Request $request){
-		Log::info("userDictController->destroy start");
+		Log::info("userDictController->delete start");
 		$arrId = json_decode($request->get("id"),true) ;
 		Log::info("id=".$request->get("id"));
 		$count = 0;
 		$updateOk = false;
 		foreach ($arrId as $key => $id) {
-			# 找到对应数据
 			$data = UserDict::where('id',$id)->first();
-			Log::info('creator_id:'.$data->creator_id);
-			$param = [
-				"id"=>$id,
-				'creator_id'=>$_COOKIE["user_id"]
-			];
-			Log::info($param);
-			$del = UserDict::where($param)->delete();
-			$count += $del;
-			$updateOk = $this->update_sys_wbw($data);
-			$this->update_redis($data);
-
+			if($data){
+				# 找到对应数据 
+				Log::info('creator_id:'.$data->creator_id);
+				$param = [
+					"id"=>$id,
+					'creator_id'=>$_COOKIE["user_id"]
+				];
+				Log::info($param);
+				$del = UserDict::where($param)->delete();
+				$count += $del;
+				$updateOk = $this->update_sys_wbw($data);
+				$this->update_redis($data);				
+			}
 		}
 		Log::info("delete:".$count);
 		return $this->ok(['deleted'=>$count]);
