@@ -1445,6 +1445,11 @@ function myEndingTooltip(inStr){
             tooltip:'目的格/表示目的，为了……',
         },
         {
+            id:"my_dat2",
+            name:"အတွက်",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
             id:"my_abl1",
             name:"မှ",
             tooltip:'从格/表示来源，从……',
