@@ -84,7 +84,7 @@ class UpgradePaliText extends Command
 				Log::error( "can not open csv file. filename=" . $csvFile) ;
 				continue;
 			}
-			$title_data = PaliText::select(['book','paragraph','level','parent','toc'])
+			$title_data = PaliText::select(['book','paragraph','level','parent','toc','lenght'])
 								->where('book',$from)->orderby('paragraph','asc')->get();
             {
 				$paragraph_count = count($title_data);

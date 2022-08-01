@@ -955,6 +955,16 @@ function sent_pr_merge(id) {
 				alert("error" + result.message);
 			} else {
 				ntf_show("成功采纳");
+				result.channal = result.channel;
+				let sent_tran_div = $(
+					".sent_tran[dbid='" + result.data.id + "']"
+				);
+				if (sent_tran_div) {
+					update_sent_text(sent_tran_div,result.data);
+				}else{
+					ntf_show("找不到句子容器");
+				}
+				
 			}
 		}
 	);
@@ -1108,16 +1118,16 @@ function render_one_sent_tran_a(iterator, diff = false) {
 			html += render_icon_button("ic_delete", "note_pr_delete(this)", gLocal.gui.delete);
 		} else {
 			//非提交人
-			if (parseInt(iterator.mypower) >= 20) {
-				//有权限 采纳按钮
-				html += render_icon_button(
-					"accept_copy",
-					"sent_pr_merge('" + iterator.id + "')",
-					gLocal.gui.accept_copy
-				);
-			}
 			//点赞按钮
 			html += render_icon_button("like", "sent_pr_like(this)", gLocal.gui.like);
+		}
+		if (parseInt(iterator.mypower) >= 20) {
+			//有权限 采纳按钮
+			html += render_icon_button(
+				"accept_copy",
+				"sent_pr_merge('" + iterator.id + "')",
+				gLocal.gui.accept_copy
+			);
 		}
 	} else {
 		//非pr列表里的句子
@@ -2264,69 +2274,76 @@ function sent_save_callback(data) {
 		if (result.commit_type == 1 || result.commit_type == 2) {
 			ntf_show("成功修改");
 			if (sent_tran_div) {
-				let divPreview = sent_tran_div.find(".preview").first();
-                let thisChannel = find_channal(result.channal);
-				if (result.text == "") {
-                    //内容为空
-					let channel_info = "Empty";
-					if (thisChannel) {
-						channel_info = thisChannel.name + "-" + thisChannel.nickname;
-					}
-					divPreview.html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
-				} else {
-					for (const iterator of _arrData) {
-						if (
-							iterator.book == result.book &&
-							iterator.para == result.para &&
-							iterator.begin == result.begin &&
-							iterator.end == result.end
-						) {
-							for (const tran of iterator.translation) {
-								if (tran.channal == result.channal) {
-									tran.text = result.text;
-									break;
-								}
-							}
-						}
-					}
-                    switch (thisChannel.type) {
-                        case 'nissaya':
-							let nissayaHtml = "";
-							nissayaHtml += "<div class='nissaya'>";
-							nissayaHtml += note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang);
-							nissayaHtml += "</div>";
-                            divPreview.html(nissayaHtml);
-                            break;
-                        case 'commentary':
-                            divPreview.html(
-                                note_init(result.text, result.channal, result.editor, result.lang)
-                            );
-                            note_refresh_new();
-                        break;
-						case 'original':
-							switch (getCookie('language')) {
-								case 'my':
-									//缅文
-									result.text = roman_to_my(result.text);
-									break;
-							}
-                        default:
-                            divPreview.html(
-                                note_init(result.text, result.channal, result.editor, result.lang)
-                            );
-                            term_updata_translation();                        
-                            break;
-                    }
-					popup_init();
-                    //初始化气泡
-                    guide_init();
-				}
+				update_sent_text(sent_tran_div,result);
 			}
 		} else if (result.commit_type == 3) {
 			ntf_show("已经提交修改建议");
 		} else {
 			ntf_show("未提交");
 		}
+	}
+}
+
+function update_sent_text(sent_tran_div,result){
+	let divPreview = sent_tran_div.find(".preview").first();
+	let objTextarea = sent_tran_div.find(".text_input").children("textarea").first();
+	let thisChannel = find_channal(result.channal);
+	objTextarea.val(result.text);
+	if (result.text == "") {
+		//内容为空
+		let channel_info = "Empty";
+		if (thisChannel) {
+			channel_info = thisChannel.name + "-" + thisChannel.nickname;
+		}
+		divPreview.html("<span style='color:var(--border-line-color);'>" + channel_info + "</span>");
+	} else {
+		for (const iterator of _arrData) {
+			if (
+				iterator.book == result.book &&
+				iterator.para == result.para &&
+				iterator.begin == result.begin &&
+				iterator.end == result.end
+			) {
+				for (const tran of iterator.translation) {
+					if (tran.channal == result.channal) {
+						tran.text = result.text;
+						break;
+					}
+				}
+			}
+		}
+		switch (thisChannel.type) {
+			case 'nissaya':
+				let nissayaHtml = "";
+				nissayaHtml += "<div class='nissaya'>";
+				nissayaHtml += note_init(renderNissayaPreview(result.text), result.channal, result.editor, result.lang);
+				nissayaHtml += "</div>";
+				divPreview.html(nissayaHtml);
+				break;
+			case 'commentary':
+				divPreview.html(
+					note_init(result.text, result.channal, result.editor, result.lang)
+				);
+				note_refresh_new();
+			break;
+			case 'original':
+				switch (getCookie('language')) {
+					case 'my':
+						//缅文
+						result.text = roman_to_my(result.text);
+						objTextarea.val(result.text);
+						break;
+				}
+			default:
+				divPreview.html(
+					note_init(result.text, result.channal, result.editor, result.lang)
+				);
+				term_updata_translation();                        
+				break;
+		}
+		popup_init();
+		//初始化气泡
+		guide_init();
 	}
 }
 

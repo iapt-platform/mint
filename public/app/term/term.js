@@ -407,7 +407,8 @@ function term_array_updata() {
 }
 /*
 *-----------------------
-*更新术语显示
+* 更新术语显示
+* 默认模版<a href='{{ link }}'>{{meaning}}</a>({{word}},{{meaning2}})
 *-----------------------
 */
 function term_updata_translation(callback=null) {
@@ -424,9 +425,18 @@ function term_updata_translation(callback=null) {
 	}
 	$("term").each(function () {
 		let status = $(this).attr("status");
+		let orgWord = $(this).text().split('|');
+		let termText;		
+		if(status == 0){
+			if(orgWord.length>1){
+				$(this).attr("pali",orgWord[0]) ;
+				$(this).attr("show",orgWord[1]) ;
+				$(this).text(orgWord[0]);
+			}
+		}
 
-		let termText;
 		termText = $(this).attr("pali");
+
 		if(typeof termText=="undefined"){
 			termText = $(this).text();
 		}
@@ -450,6 +460,7 @@ function term_updata_translation(callback=null) {
 					$(this).attr("lang")
 				); //我的术语字典
 				if (myterm) {
+					//查字典成功
 					$(this).attr("status", "1");
 					$(this).attr("type", "0");
 					$(this).attr("guid", myterm.guid);
@@ -458,12 +469,14 @@ function term_updata_translation(callback=null) {
 					$(this).attr("mean2", myterm.other_meaning);
 					$(this).attr("replace", myterm.meaning);
 				} else {
+					//没查到
 					$(this).attr("status", "2");
 					$(this).attr("pali", termText);
 				}
 			}
 			let guid = $(this).attr("guid");
 			let pali = $(this).attr("pali");
+			let meaningShow = $(this).attr("show");
 			let mean = $(this).attr("mean");
 			let mean2 = $(this).attr("mean2");
 			let renderTo = $(this).attr("pos");
@@ -471,11 +484,20 @@ function term_updata_translation(callback=null) {
 			let lang = $(this).attr("lang");
 			let noteText = "";
 
+			let realMeaning = '';
+			if(typeof meaningShow !== "undefined"){
+				//指定显示意思优先
+				realMeaning = meaningShow;
+			}else{
+				realMeaning = mean;
+			}
+
 			if (termCounter[guid]) {
-				termCounter[guid] = 2;
+				termCounter[guid]++;
 			} else {
 				termCounter[guid] = 1;
 			}
+			console.log("termCounter",termCounter[guid]);
 			myterm = term_lookup_my(pali, $(this).attr("channal"), $(this).attr("editor"), $(this).attr("lang")); //我的术语字典
 			let linkclass = "";
 			if (myterm) {
@@ -501,7 +523,7 @@ function term_updata_translation(callback=null) {
 						}
 					}
 				}
-
+				console.log("term temlate",noteText);
 				noteText = noteText.replace(
 					"[",
 					"<span class='" +
@@ -519,7 +541,7 @@ function term_updata_translation(callback=null) {
 						"','"+channel+"','"+lang+"')\">"
 				);
 				noteText = noteText.replace("]", "</span>");
-				noteText = noteText.replace("%mean%", "<span class='term_mean'>" + mean + "</span>");
+				noteText = noteText.replace("%mean%", "<span class='term_mean'>" + realMeaning + "</span>");
 				noteText = noteText.replace("%pali%", "<span class='term_pali'>" + pali + "</span>");
 				if (mean2 != "") {
 					noteText = noteText.replace("%mean2%", ", <span class='term_mean2'>" + mean2 + "</span>");
@@ -527,18 +549,22 @@ function term_updata_translation(callback=null) {
 					noteText = noteText.replace("%mean2%", "");
 				}
 				noteText = noteText.replace("%note%", "<span class='term_note'>" + "" + "</span>");
-				if (myterm) {
-					if (myterm.meaning != mean) {
-						noteText = noteText.replace(
-							"%mymean%",
-							"<span class='term_mean_my'>" + myterm.meaning + "</span>"
-						);
+				
+				{
+					if (myterm) {
+						//匹配术语成功
+						if (myterm.meaning != mean) {
+							realMeaning = "<span class='term_mean_my'>" + myterm.meaning + "</span>";
+						} else {
+							realMeaning = '';
+						}
 					} else {
-						noteText = noteText.replace("%mymean%", "");
-					}
-				} else {
-					noteText = noteText.replace("%mymean%", "");
+						realMeaning = '';
+						
+					}					
 				}
+				noteText = noteText.replace("%mymean%", realMeaning);
+
 			} else {
 				noteText =
 					"<span class='" +
@@ -689,7 +715,12 @@ function term_get_dict(callback=null) {
 	let termwordlist = new Array();
 	$("term").each(function () {
 		if ($(this).attr("status") == 0) {
-			$(this).attr("pali", $(this).text());
+			let word = $(this).text().split('|');
+			$(this).attr("pali", word[0]);
+			if(word.length>1){
+				$(this).attr("show", word[1]);
+				$(this).text(word[0]);
+			}
 		}
 		let termword = new Object();
 		termword.pali = $(this).attr("pali");
@@ -703,6 +734,7 @@ function term_get_dict(callback=null) {
 	if (_display == "sent") {
 		readonly = false;
 	}
+	console.log('term list',termwordlist);
 	$.post(
 		"../term/term_get.php",
 		{

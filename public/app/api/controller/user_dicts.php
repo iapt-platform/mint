@@ -250,7 +250,7 @@ Class CtlUserDict extends Controller{
 									$one["language"]
 									);
 				}
-				$this->redis->hSet("dict://user",$word['word'],json_encode($redisWord,JSON_UNESCAPED_UNICODE));			
+				$this->redis->hSet(Redis["prefix"]."dict/user",$word['word'],json_encode($redisWord,JSON_UNESCAPED_UNICODE));			
 			}
 		}
 		#更新redis结束
