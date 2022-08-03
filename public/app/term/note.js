@@ -1445,6 +1445,11 @@ function myEndingTooltip(inStr){
             tooltip:'具格/凭借;从格/原因',
         },
         {
+            id:"my_inst3",
+            name:"ကြောင်း",
+            tooltip:'具格/凭借;从格/原因',
+        },
+        {
             id:"my_dat1",
             name:"အား",
             tooltip:'目的格/对象(间接宾语)，对……来说',
