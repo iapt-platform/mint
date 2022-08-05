@@ -10,7 +10,7 @@ var _author = "";
 var _arrData = new Array();
 var _channalData;
 
-var MAX_NOTE_NEST = 2;
+var MAX_NOTE_NEST = 4;
 
 var gBuildinDictIsOpen = false;
 
