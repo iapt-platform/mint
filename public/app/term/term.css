@@ -639,8 +639,10 @@ pw {
 	flex: 1;
 	display: flex;
 	margin-right: 5px;
+}
+.other_tran_div .left_bar{
 	position: absolute;
-	right: 0;
+	right: 15px;
 }
 .sent_tran .left_bar > .face {
 	display: block;
@@ -1210,4 +1212,12 @@ button.primary {
 
 .vertical .preview .popup_contence{
     max-width: max(50vw, 100%);
+}
+.other_tran_div thead{
+	background: ivory;
+}
+.other_tran_div th{
+	background: ivory;
+	font-weight: unset;
+    text-align: inherit;
 }
