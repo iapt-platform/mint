@@ -80,7 +80,7 @@
 		}
 ?>
 </div>
-				<button id="btn_show_dict" class='icon_btn' onclick="show_dict(this)">
+				<button id="btn_show_dict" class='icon_btn' style="color: var(--main-color);" onclick="show_dict(this)">
 				<?php echo $_local->gui->dict; ?>
 				</button>
 <div id="main_view_shell">
