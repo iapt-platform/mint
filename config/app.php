@@ -249,6 +249,7 @@ return [
 		'paliword_book' => public_path('paliword')."/book",
 		'paliword_index' => public_path('paliword')."/index",
 		'word_statistics' => public_path('dependence')."/word_statistics/data",
+		'dict_text' => public_path('dicttext'),
 	],
 
 	'admin' => [
