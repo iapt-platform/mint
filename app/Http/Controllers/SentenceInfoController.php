@@ -127,22 +127,14 @@ class SentenceInfoController extends Controller
             
             foreach ($sentFinished as $sent) {
                 # code...
-                if($request->get('cache')=="1"){
-                    $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-                    $para_strlen += Cache::get(env('REDIS_NAMESPACE').'pali-sent/strlen/'.$key_sent_id, function() use($sent) {
-                        return PaliSentence::where('book',$sent->book_id)
-                                ->where('paragraph',$sent->paragraph)
-                                ->where('word_begin',$sent->word_start)
-                                ->where('word_end',$sent->word_end)
-                                ->value('length');
-                    });
-                }else{
-                    $para_strlen += PaliSentence::where('book',$request->get('book'))
-                                ->where('paragraph',$sent->paragraph)
-                                ->where('word_begin',$sent->word_start)
-                                ->where('word_end',$sent->word_end)
-                                ->value('length');
-                }
+				$key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
+				$para_strlen += Cache::remember('pali-sent/strlen/'.$key_sent_id, 6000000 , function() use($sent) {
+					return PaliSentence::where('book',$sent->book_id)
+							->where('paragraph',$sent->paragraph)
+							->where('word_begin',$sent->word_start)
+							->where('word_end',$sent->word_end)
+							->value('length');
+				});
             }
 
             $percent = $para_strlen / $allStrLen;
@@ -177,7 +169,7 @@ class SentenceInfoController extends Controller
      *
      * @param  \App\Models\Sentence  $sentence
      * @return \Illuminate\Http\Response
-     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=percent
+     * http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=page&pages=400
      */
     public function showprogress(Request $request)
     {
