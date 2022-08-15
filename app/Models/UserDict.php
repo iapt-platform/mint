@@ -11,5 +11,5 @@ class UserDict extends Model
 	protected $casts = [
 		'id' => 'string'
 	];
-	protected $fillable = ['id','word','type','grammar','parent','factors','source','create_time','creator_id'];
+	protected $fillable = ['id','word','type','grammar','parent','factors','source','create_time'];
 }
