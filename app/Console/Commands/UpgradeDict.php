@@ -21,7 +21,7 @@ class UpgradeDict extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '导入csv字典';
 
     /**
      * Create a new command instance.
