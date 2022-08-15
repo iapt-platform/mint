@@ -87,10 +87,8 @@ class UpgradeCompound extends Command
 		foreach ($words as $key => $word) {
 			# code...
 			$count++;
-			if($count>20) break;
 			$this->info("{$count}:{$word->real}");
 			$parts = $ts->splitA($word->real);
-			$this->info("parts:".count($parts));
 			foreach ($parts as $part) {
 				$new = UserDict::firstOrNew(
 					[
