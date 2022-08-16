@@ -175,10 +175,11 @@ class UpgradeRegular extends Command
 								'grammar' => $newGrammar,
 								'parent' => $word->word,
 								'factors' => "{$word->word}+[{$newEnding}]",
-								'source' => '_SYS_REGULAR_'
+								'dict_id' => '57afac99-0887-455c-b18e-67c8682158b0'
 							],
 							[
 								'id' => app('snowflake')->id(),
+								'source' => '_ROBOT_',
 								'create_time'=>(int)(microtime(true)*1000)
 							]
 						);
