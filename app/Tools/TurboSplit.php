@@ -291,7 +291,7 @@ class TurboSplit
 			for ($i = 0; $i < $deep; $i++) {
 				if (!empty($this->path[$i][0])) {
 					$word .= $this->path[$i][0] ;
-					if($isDebug) {
+					if($this->isDebug) {
 						$word .= "(" . $this->path[$i][1] . ")";
 					}
 					$word .= "+";
