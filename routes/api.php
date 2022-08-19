@@ -15,6 +15,7 @@ use App\Http\Controllers\SentHistoryController;
 use App\Http\Controllers\PaliTextController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserDictController;
+use App\Http\Controllers\WbwLookupController;
 
 
 /*
@@ -48,5 +49,6 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('channel',ChannelController::class);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
+    Route::apiResource('wbwlookup',WbwLookupController::class);
 
 });
