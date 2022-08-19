@@ -15,11 +15,8 @@ class TurboSplit
 	protected $isDebug = false;
 	#当前搜索路径信心指数，如果过低，马上终止这个路径的搜索
 	protected $currPathCf;
-	#内存信心指数表
-	protected $confidence = array();
 	//结果数组
 	protected $result = array();
-	protected $part = array();
 	//最大结果数量
 	protected $MAX_RESULT = 100;
 	protected $MAX_RESULT2 = 5;
@@ -224,41 +221,27 @@ class TurboSplit
 		$isFound = false;
 		$count = 0;
 		$cacheKey = "turbosplit/part/";
-		if (isset($this->part["{$word}"])) {
-			$word_count = $this->part["{$word}"][0];
-			$case_len = $this->part["{$word}"][1];
-			if ($word_count > 0) {
-				$this->log("查到：{$word}:{$word_count}个");
-				$isFound = true;
-				$count = $word_count + 1;
-			}
-		} else {
-			$db = $this->dict_lookup($word);
-			$word_count = $db[0];
-			$case_len = $db[1];
-			//加入查询缓存
-			$this->part["{$word}"] = $db;
-			if ($word_count > 0) {
-				Log::info("查到：{$word}:{$word_count}个");
-				$isFound = true;
-				$count = $word_count + 1;
-			}
-		}
+		$wordPart  = Cache::remember($cacheKey.$word,1000,function() use($word){
+			return implode(',',$this->dict_lookup($word));
+		});
+		$arrWordPart = explode(',',$wordPart);
+		$word_count = $arrWordPart[0];
+		$case_len = $arrWordPart[1];
+		if ($word_count > 0) {
+			$this->log("查到：{$word}:{$word_count}个");
+			$isFound = true;
+			$count = $word_count + 1;
+		}		
+
 		//fomular of confidence value 信心值计算公式
 		if ($isFound) {
-			if (isset($this->confidence["{$word}"])) {
-				$cf = $this->confidence["{$word}"];
-			} else {
+			$cf  = Cache::remember("turbosplit/confidence/".$word,1000,function() use($word,$count,$case_len){
 				$len = mb_strlen($word, "UTF-8") - $case_len;
 				$len_correct = 1.2;
 				$count2 = 1.1 + pow($count, 1.18);
 				$conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
-				$cf = round(1 / (1 + 640 * $conf_num), 9);
-				//$cf = round((1-0.02*$case_len) / (1 + 640 * $conf_num), 9);
-				$this->confidence["{$word}"] = $cf;
-				Log::info("信心指数：{$word}:{$cf}");
-
-			}
+				return round(1 / (1 + 640 * $conf_num), 9);
+			});
 			return ($cf);
 		} else {
 			return (-1);
@@ -314,12 +297,12 @@ class TurboSplit
 		//直接找到
 		$confidence = isExsit($strWord, $adj_len);
 		if ($confidence > $c_threshhold) {
-			$output[] = array($strWord, "", $confidence);
+			array_push($output, array($strWord, "", $confidence));
 		} 
 		else {
 			$confidence = isExsit("[" . $strWord . "]");
 			if ($confidence > $c_threshhold) {
-				$output[] = array("[" . $strWord . "]", "", $confidence);
+				array_push($output, array("[" . $strWord . "]", "", $confidence));
 			}
 		}
 
@@ -349,7 +332,7 @@ class TurboSplit
 							$confidence = isExsit($str1, $adj_len)*$row["cf"];
 							if ($confidence > $c_threshhold) {
 								//信心指数大于预设的阈值，插入
-								$output[] = array($str1, $str2, $confidence, $row["adj_len"]);
+								array_push($output, array($str1, $str2, $confidence, $row["adj_len"]));
 								$this->log("插入结构数组：{$str1} 剩余{$str2} 应用：{$row["a"]}-{$row["b"]}-{$row["c"]}");
 								if ($express) {
 									break;
@@ -370,7 +353,7 @@ class TurboSplit
 							$str2 = $row["b"] . mb_substr($strWord, $i + $row["len"], null, "UTF-8");
 							$confidence = isExsit($str2, $adj_len)*$row["cf"];
 							if ($confidence > $c_threshhold) {
-								$output[] = array($str2, $str1, $confidence, $row["adj_len"]);
+								array_push($output, array($str2, $str1, $confidence, $row["adj_len"]));
 								$this->log("将此次结果插入结果数组：剩余={$str2}");
 								if ($express) {
 									break;
@@ -516,11 +499,11 @@ class TurboSplit
 			}
 			if(mb_strlen($word,"UTF-8")>4){
 				# 先看有没有中文意思
-				Log::info("先看有没有中文意思");
+				//Log::info("先看有没有中文意思");
 				if(UserDict::where('word',$word)->where('mean','<>','')->where('language','<>','my')->exists()){
 					$newword[]=$word;
 				}else{
-					Log::info("如果没有查巴缅替换拆分");
+					//Log::info("如果没有查巴缅替换拆分");
 					#如果没有查巴缅替换拆分
 					if(UserDict::where('word',$word)->where('dict_id','61f23efb-b526-4a8e-999e-076965034e60')->exists()){
 						$pmPart = explode("+",UserDict::where('word',$word)->where('dict_id','61f23efb-b526-4a8e-999e-076965034e60')->value('factors')) ;
@@ -530,12 +513,12 @@ class TurboSplit
 						}
 					}
 					else{
-						Log::info("如果没有查规则变形");
+						//Log::info("如果没有查规则变形");
 						#如果没有查规则变形
 						if(UserDict::where('word',$word)->where('source','_SYS_REGULAR_')->exists()){
 							$rglPart = explode("+",UserDict::where('word',$word)->where('source','_SYS_REGULAR_')->value('factors')) ;
 							#看巴缅有没有第一部分
-							Log::info("看巴缅有没有第一部分");
+							//Log::info("看巴缅有没有第一部分");
 							if(UserDict::where('word',$rglPart[0])->where('dict_id','61f23efb-b526-4a8e-999e-076965034e60')->exists()){
 								$pmPart = explode("+",UserDict::where('word',$rglPart[0])->where('dict_id','61f23efb-b526-4a8e-999e-076965034e60')->value('factors')) ;
 								foreach ($pmPart as  $pm) {
@@ -551,7 +534,7 @@ class TurboSplit
 						}
 						else{
 							#还没有就认命了
-							Log::info("还没有就认命了");
+							//Log::info("还没有就认命了");
 							$newword[]=$word;
 						}
 					}
@@ -584,7 +567,7 @@ class TurboSplit
 					$newWord = $word2 . "-" .$newWord;
 					$firstWord = $word1;
 					$isFound=true;
-				break;
+					break;
 				}
 			}
 		} while ($isFound);
@@ -595,13 +578,12 @@ class TurboSplit
 	public function splitA($word){
 		$output = array();
 		//预处理连音词
-		$word = $this->splitSandhi($word);
-
+		$word1 = $this->splitSandhi($word);
 		# 处理双元音
 		Log::info("处理双元音");
-		$arrword = $this->splitDiphthong($word);
+		$arrword = $this->splitDiphthong($word1);
 		if (count($arrword) > 1) {
-			array_push($output,['word'=>$word,'factors'=>implode("+", $arrword),'confidence'=>0.9999]);
+			array_push($output,['word'=>$word,'type'=>'.un.','factors'=>implode("+", $arrword),'confidence'=>0.9999]);
 		}
 
 		foreach ($arrword as $oneword) {
