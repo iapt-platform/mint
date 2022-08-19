@@ -26,6 +26,9 @@ class UpgradeCompound extends Command
      */
     protected $description = 'Command description';
 
+	protected $dict_id = 'c42980f0-5967-4833-b695-84183344f68f';
+
+
     /**
      * Create a new command instance.
      *
@@ -43,11 +46,12 @@ class UpgradeCompound extends Command
      */
     public function handle()
     {
-		$ts = new TurboSplit();
+		
 		$start = \microtime(true);
 
 		$_word = $this->argument('word');
 		if(!empty($_word)){
+			$ts = new TurboSplit();
 			var_dump($ts->splitA($_word));
 			return 0;
 		}
@@ -69,7 +73,6 @@ class UpgradeCompound extends Command
 				foreach ($words as $word) {
 					$this->info($word->word);
 					Storage::disk('local')->append("tmp/compound.md", "## {$word->word}");
-
 					$parts = $ts->splitA($word->word);
 					foreach ($parts as $part) {
 						# code...
@@ -82,20 +85,21 @@ class UpgradeCompound extends Command
 			return 0;	
 		}
 
-		$words = WbwTemplate::select('real')->where('type','<>','.ctl.')->where('real','<>','')->groupBy('real')->cursor();
+		$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
+		//$words = WbwTemplate::select('real')->where('type','<>','.ctl.')->where('real','<>','')->groupBy('real')->cursor();
 		$count = 0;
 		foreach ($words as $key => $word) {
 			# code...
 			$count++;
-			$this->info("{$count}:{$word->real}");
-			$parts = $ts->splitA($word->real);
+			$this->info("{$count}:{$word->word}"); 
+			$ts = new TurboSplit();
+			$parts = $ts->splitA($word->word);
 			foreach ($parts as $part) {
 				$new = UserDict::firstOrNew(
 					[
 						'word' => $part['word'],
-						'type' => ".cp.",
 						'factors' => $part['factors'],
-						'dict_id' => 'c42980f0-5967-4833-b695-84183344f68f'
+						'dict_id' => $dict_id,
 					],
 					[
 						'id' => app('snowflake')->id(),
@@ -103,17 +107,21 @@ class UpgradeCompound extends Command
 						'create_time'=>(int)(microtime(true)*1000),
 					]
 				);
-				$new->confidence = 50;
+				if(isset($part['type'])){
+					$new->type = $part['type'];
+				}else{
+					$new->type = ".cp.";
+				}
+				$new->confidence = (int)(50*$part['confidence']);
 				$new->language = 'cm';
 				$new->creator_id = 1;
 				$new->flag = 1;
 				$new->save();
-
 			}
 		}
 		//删除旧数据
-		UserDict::where('flag',0)->delete();
-		UserDict::where('flag',1)->update(['flag'=>0]);
+		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
 	
         return 0;
     }

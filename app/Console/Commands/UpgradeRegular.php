@@ -24,7 +24,7 @@ class UpgradeRegular extends Command
      * @var string
      */
     protected $description = 'Command description';
-
+	protected $dict_id = '57afac99-0887-455c-b18e-67c8682158b0';
     /**
      * Create a new command instance.
      *
@@ -167,7 +167,6 @@ class UpgradeRegular extends Command
 						return WbwTemplate::where('real',$newword)->exists();
 					});
 					if($exist){
-						//$this->info("{$newword} exists");
 						$new = UserDict::firstOrNew(
 							[
 								'word' => $newword,
@@ -175,7 +174,7 @@ class UpgradeRegular extends Command
 								'grammar' => $newGrammar,
 								'parent' => $word->word,
 								'factors' => "{$word->word}+[{$newEnding}]",
-								'dict_id' => '57afac99-0887-455c-b18e-67c8682158b0'
+								'dict_id' => $this->dict_id,
 							],
 							[
 								'id' => app('snowflake')->id(),
@@ -186,6 +185,7 @@ class UpgradeRegular extends Command
 						$new->confidence = 80;
 						$new->language = 'cm';
 						$new->creator_id = 1;
+						$new->flag = 1;
 						$new->save();
 					}
 				}
@@ -193,6 +193,9 @@ class UpgradeRegular extends Command
 			$bar->advance();
 		}
 		$bar->finish();
+				//删除旧数据
+		UserDict::where('dict_id',$this->dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$this->dict_id)->where('flag',1)->update(['flag'=>0]);
         return 0;
     }
 }
