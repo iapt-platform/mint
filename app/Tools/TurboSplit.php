@@ -118,7 +118,7 @@ class TurboSplit
 	];
 
 	/**
-     * Create a new command instance.
+     * Create a new class instance.
      *
      * @return void
      */
@@ -614,8 +614,24 @@ class TurboSplit
 				arsort($this->result); //按信心指数排序
 				$iCount = 0;
 				foreach ($this->result as $row => $value) {
-					array_push($output,['word'=>$oneword,'factors'=>$row,'confidence'=>$value]);
-
+					if($iCount==0){
+						//后处理 找到base
+						$caseman = new CaseMan();
+						$parents = $caseman->WordToBase($oneword);
+						foreach ($parents as  $base) {
+							# code...
+							array_push($output,[
+								'word'=>$oneword,
+								'type'=>$base['type'],
+								'grammar'=>$base['grammar'],
+								'parent'=>$base['parent'],
+								'factors'=>$row,
+								'confidence'=>$value*$base['confidence'],
+							]);
+						}
+					}else{
+						array_push($output,['word'=>$oneword,'factors'=>$row,'confidence'=>$value]);
+					}
 					//后处理 进一步切分没有意思的长词
 					Log::info("后处理 进一步切分没有意思的长词");
 					$new = $this->split2($row);
