@@ -2,7 +2,7 @@
 /*
 将csv字典载入redis
 #例:
-# php redis_import_dict.php ../../dicttext/rich/rech.json
+# php redis_import_dict.php ../../dicttext/rich/rich.json
 */
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../install/filelist.php";
@@ -26,12 +26,14 @@ if (PHP_SAPI == "cli") {
 		$taskList = json_decode(file_get_contents(__DIR__."/".$list));
 		$dir = dirname(__DIR__."/".$list);
 		if($tableNum<0){
+			//全部都导入
 			foreach ($taskList as $key => $task) {
 				# code...
 				runTask($redis,$task,$dir);
 			}			
 		}
 		else{
+			//只导入指定的
 			if($tableNum<count($taskList)){
 				runTask($redis,$taskList[$tableNum],$dir);
 			}
