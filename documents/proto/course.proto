@@ -1,7 +1,9 @@
-syntax = "proto3"
-import "public.proto"
+syntax = "proto3";
+import "public.proto";
+
+package course;
 /*
- * 课程服务
+ * 课程服务 
  */
 service Course{
 	rpc GetCourseListForStudio (CourseListRequest) returns (CourseListReply){}
@@ -37,11 +39,11 @@ message CourseRequest{
 	string Summary   = 4;	
 	string Cover     = 5;	
 	string Content   = 6;	
-	EnumContentType ContentType = 6;
+	EnumContentType ContentType = 7;
 	string Html = 8;
-	string StartAt     = 7;
-	string EndAt       = 8;
-	repeated Tag Tags = 6;
+	string StartAt     = 9;
+	string EndAt       = 10;
+	repeated Tag Tags = 11;
 
 	string Lang = 51;
 	string EditorId = 52;
@@ -55,8 +57,8 @@ message CourseList{
 	string Title = 2;
 	string Subtitle = 3;
 	string Summary = 4;						
-	date   Start = 5;
-	date   End   = 6;
+	string   Start = 5;
+	string   End   = 6;
 	string Cover = 7;
 	int32  Children = 8;
 }

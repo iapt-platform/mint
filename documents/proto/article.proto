@@ -1,5 +1,5 @@
-syntax = "proto3"
-import "public.proto"
+syntax = "proto3";
+import "public.proto";
 /*
  * Article 服务
  * 
@@ -16,6 +16,7 @@ service Article{
 	rpc RemoveArticleFromAnthologye (ArticleRequest) returns (ArticleReply){}
 
 	rpc GetAnthologyListForStudio (ArticleListRequest) returns (AnthologyeListReply){}
+	rpc GetAnthologyListForArticle (ArticleListRequest) returns (AnthologyeListReply){}
 	rpc GetAnthologye (AnthologyeRequest) returns (AnthologyeReply){}
 	rpc SetAnthology (AnthologyeRequest) returns (AnthologyeReply){}
 	rpc AddAnthology (AnthologyeRequest) returns (AnthologyeReply){}

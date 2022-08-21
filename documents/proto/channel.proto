@@ -1,5 +1,7 @@
-syntax = "proto3"
-import "public.proto"
+syntax = "proto3";
+import "public.proto";
+
+package channel;
 /*
  * channel/版本 服务
  */
