@@ -25,7 +25,7 @@ function my_article_list() {
 					html += "<div style='flex:4;'>" + gLocal.gui.title + "</div>";
 					html += "<div style='flex:2;'>" + gLocal.gui.privacy + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.preview + "</a></div>";
-					html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
+					html += "<div style='flex:1;'>" + gLocal.gui.copy_to_clipboard + "</div>";
 					html += "<div style='flex:1;'>" + gLocal.gui.share_to + "</div>";
 					html += "</div>";
 					//列表
@@ -56,7 +56,7 @@ function my_article_list() {
 							"<button class='icon_btn' onclick=\"copy_to_clipboard('"+host+"/app/article/?id=" +
 							iterator.id +
 							"')\" title='" +
-							gLocal.gui.copy_link +
+							gLocal.gui.copy_to_clipboard +
 							"'>";
 						html += "<svg class='icon'>";
 						html += "<use xlink:href='../studio/svg/icon.svg#copy'></use>";
