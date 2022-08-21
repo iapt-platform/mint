@@ -1,6 +1,6 @@
 <?php
 include("../log/pref_log.php");
-require_once "../config.php";
+require_once __DIR__."/../config.php";
 require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once '../ucenter/setting_function.php';
@@ -82,6 +82,7 @@ if ($dict_name == "") {
     $db_file_list[] = array( _DIR_DICT_3RD_ . "/shuihan.db","dict://shuihan",true);
     $db_file_list[] = array( _DIR_DICT_3RD_ . "/concise.db","dict://concise",true);
     $db_file_list[] = array( _DIR_DICT_3RD_ . "/uhan_en.db","dict://uhan_en",true);
+    $db_file_list[] = array( _DIR_DICT_3RD_ . "/uhan_en.db","dict://uhausein",true);
 } else {
     $dict_list = str_getcsv($dict_name, ',');
     foreach ($dict_list as $dict) {

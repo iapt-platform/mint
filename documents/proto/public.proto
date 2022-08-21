@@ -1,0 +1,23 @@
+syntax = "proto3"
+
+enum EnumContentType{
+	ECT_MARKDOWN = 0;
+	ECT_HTML = 1;
+	ECT_TEXT = 2;
+}
+enum EnumPublicity{
+	EP_PRIVATE = 0;
+	EP_PUBLIC = 1;
+	EP_PUBLICEDIT = 2;
+	EP_DISABLE = 100;
+}
+
+message Tag{
+	string Id = 0;
+	string Name = 1;
+}
+
+message Channel{
+	string Id = 0;
+	string Name = 1;
+}
