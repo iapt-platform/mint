@@ -18,8 +18,8 @@ message CourseListRequest{
 	string Id = 1;
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
-	int32  PageNo = 5;
-	int32  PageSize = 6;
+	int32  CurrentPage = 5; //current page number
+	int32  PageSize = 6; //The number of items to be shown per page.
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }

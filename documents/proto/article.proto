@@ -27,7 +27,7 @@ message ArticleListRequest{
 	string Id = 1;
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
-	int32  PageNo = 5;
+	int32  CurrentPage = 5;
 	int32  PageSize = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
