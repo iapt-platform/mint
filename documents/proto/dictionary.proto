@@ -1,0 +1,148 @@
+syntax = "proto3";
+import "public.proto";
+
+package dictionary;
+
+/*
+ * dictionary 服务
+ * 逐词译数据推送到社区字典，当这个channel是公开channel的时候。以channel的名义公开。不是公开channel ，推送到该studio默认channel
+ * 每个channel对应一个且仅一个用户字典
+ * 协作用户使用公共channel干活。公开的社区词典数据进到这个channel ,以及自己的默认channel
+ */
+service Dictionary{
+	//词典管理
+	rpc GetDictListForStudio (DictListRequest) returns (DictListReply){} //列出 studio 里面的全部字典
+	rpc GetDictListForChannel (DictListRequest) returns (DictListReply){} //列出 channel 里面的全部字典
+	rpc GetDict (DictRequest) returns (DictReply){}
+	rpc SetDict (DictRequest) returns (DictReply){}
+	rpc AddDict (DictRequest) returns (DictReply){}
+	rpc DelDict (DictRequest) returns (DictReply){}
+
+	//单词管理
+	rpc GetWordListForStudio (WordListRequest) returns (WordListReply){}
+	rpc GetWordListForDict (WordListRequest) returns (WordListReply){}
+	rpc GetWordListForChannel (WordListRequest) returns (WordListReply){} //这个 channel 里面的全部术语
+	rpc GetWord (WordRequest) returns (DictReply){}
+	rpc SetWord (WordRequest) returns (DictReply){}
+	rpc AddWord (WordRequest) returns (DictReply){}
+	rpc DelWord (WordRequest) returns (DictReply){}
+}
+
+message DictListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PageSize = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_WORD = 0;
+	EAS_NOTE = 1;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATED_AT = 0;
+	EAO_UPDATED_AT = 0;
+	EAO_WORD       = 1;
+}
+
+message DictRequest{
+	string Id          = 1;
+	string Word        = 2;
+	string Tag         = 3;	
+	string Meaning     = 4;
+	string Meaning2    = 5;
+	string Note        = 6;
+	string Channel     = 7;
+	string Studio      = 8;
+
+	string Lang             = 51;
+	string EditorId         = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message DictReply{
+	bool ok          = 1;
+	string message   = 2;
+	DictRequest data = 3;
+}
+
+message DictListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated DictRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}
+
+
+
+message WordListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PageSize = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumWordAllowingSearch{
+	EWAS_WORD = 0;
+	EWAS_NOTE = 1;
+}
+enum EnumWordAllowingOrderby{
+	EWAO_UPDATED_AT = 0;	
+	EWAO_CREATED_AT = 1;
+	EWAO_WORD       = 2;
+}
+
+message WordRequest{
+	string Id            = 1;
+	string Word          = 2;
+	string Type          = 3;	
+	string Grammar       = 4;
+	string Parent        = 5;
+	string Meaning       = 6;
+	string Note          = 7;
+	string Factors       = 8;
+	string FactorMeaning = 9;
+	string Confidence    = 10;
+	string Meta          = 11;
+	string Channel       = 12;
+	string Studio        = 13;
+
+	string Lang             = 51;
+	string Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message WordReply{
+	bool ok          = 1;
+	string message   = 2;
+	WordRequest data = 3;
+}
+
+message WordListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated WordRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

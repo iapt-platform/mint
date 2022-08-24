@@ -1,4 +1,4 @@
-syntax = "proto3"
+syntax = "proto3";
 
 enum EnumContentType{
 	ECT_MARKDOWN = 0;
@@ -13,11 +13,21 @@ enum EnumPublicity{
 }
 
 message Tag{
-	string Id = 0;
-	string Name = 1;
+	string Id = 1;
+	string Name = 2;
 }
 
 message Channel{
-	string Id = 0;
-	string Name = 1;
+	string Id = 1;
+	string Name = 2;
+}
+
+message Studio{
+	string Id = 1;
+	string Name = 2;
+}
+message User{
+	string Id = 1;
+	string Name = 2;
+	string NickName = 3;
 }
