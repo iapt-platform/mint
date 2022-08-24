@@ -644,7 +644,7 @@ function onChannelChange() {
 }
 //点击引用 需要响应的事件
 function note_ref_init(target='_blank') {
-	$("chapter").click(function () {
+	$("chapter").off("click").on("click",function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
 		let urlChannel='';
@@ -654,7 +654,7 @@ function note_ref_init(target='_blank') {
 		window.open("../article/?view=chapter&book=" + bookid + "&par=" + para + urlChannel, target);
 	});
 
-	$("para").click(function () {
+	$("para").off("click").on("click",function () {
 		let bookid = $(this).attr("book");
 		let para = $(this).attr("para");
 		let urlChannel='';
