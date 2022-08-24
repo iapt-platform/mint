@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\WordPart;
 use App\Models\UserDict;
-
+use Illuminate\Support\Arr;
 
 class TurboSplit
 {
@@ -614,33 +614,65 @@ class TurboSplit
 				arsort($this->result); //按信心指数排序
 				$iCount = 0;
 				foreach ($this->result as $row => $value) {
+					$newword = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>$row,'confidence'=>$value];
+
 					if($iCount==0){
 						//后处理 找到base
-						$caseman = new CaseMan();
-						$parents = $caseman->WordToBase($oneword);
-						foreach ($parents as  $base) {
-							# code...
-							array_push($output,[
-								'word'=>$oneword,
-								'type'=>$base['type'],
-								'grammar'=>$base['grammar'],
-								'parent'=>$base['parent'],
-								'factors'=>$row,
-								'confidence'=>$value*$base['confidence'],
-							]);
+						if(\strpos($row,'[') !== FALSE){
+							$newword['type'] = '.un.';
+							array_push($output,$newword);
+						}else{
+							$factors = explode('+',$row);
+							$dictExist = UserDict::where('word',end($factors))
+												->where('dict_id','57afac99-0887-455c-b18e-67c8682158b0')
+												->select(['type','grammar','parent','factors'])
+												->get();
+							if(!$dictExist){
+								$dictExist = UserDict::where('word',end($factors))
+												->select(['type','grammar','parent','factors'])
+												->get();
+							}
+							if(isset($dictExist[0])){
+								$dictExitfactors = explode('+',$dictExist[0]->factors);
+								$dictWordEnding = substr(end($dictExitfactors),1) ;
+								//echo($dictWordEnding.PHP_EOL);
+								$caseman = new CaseMan();
+								$parents = $caseman->WordToBase($oneword);
+								foreach ($parents as $parent) {
+									# code...
+									$parentFactors = explode('+',$parent['factors']);
+									$parentFactorEnd = mb_substr(end($parentFactors),-mb_strlen($dictWordEnding,"UTF-8"));
+									//echo($parentFactorEnd.PHP_EOL);
+									if($parentFactorEnd == $dictWordEnding){
+										foreach ($dictExist as $dictExistWord) {
+											# code...
+											$newword['type'] = $dictExistWord->type;
+											$newword['grammar'] = $dictExistWord->grammar;
+											$newword['parent'] = $parent['parent'];
+											array_push($output,$newword);
+										}
+										break;
+									}
+								}
+							}else{
+								array_push($output,$newword);
+							}
 						}
+						
 					}else{
-						array_push($output,['word'=>$oneword,'factors'=>$row,'confidence'=>$value]);
+						array_push($output,$newword);
 					}
 					//后处理 进一步切分没有意思的长词
 					Log::info("后处理 进一步切分没有意思的长词");
 					$new = $this->split2($row);
 					if($new!==$row){
-						array_push($output,['word'=>$oneword,'factors'=>$new,'confidence'=>$value]);
+						$newword = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>$row,'confidence'=>$value];
+						array_push($output,$newword);
 						#再处理一次
 						$new2 = split2($new);
 						if($new2!==$new){
-							array_push($output,['word'=>$oneword,'factors'=>$new2,'confidence'=>$value]);
+							$newword['factors'] = $new2;
+							array_push($output,$newword);
 						}
 					}
 					$iCount++;

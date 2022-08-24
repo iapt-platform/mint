@@ -16,7 +16,7 @@ class UpgradeRegular extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:regular';
+    protected $signature = 'upgrade:regular {word?} {--debug}';
 
     /**
      * The console command description.
@@ -75,12 +75,21 @@ class UpgradeRegular extends Command
 		}
 		fclose($handle);
 
-		
-		$words = UserDict::where('type','.n:base.')
-						->orWhere('type','.v:base.')
-						->orWhere('type','.adj:base.')
-						->orWhere('type','.ti:base.')
-						->select(['word','type','grammar'])
+		if(empty($this->argument('word'))){
+			$words = UserDict::where('type','.n:base.')
+							->orWhere('type','.v:base.')
+							->orWhere('type','.adj:base.')
+							->orWhere('type','.ti:base.');	
+		}else{
+			$words = UserDict::where('word',$this->argument('word'))
+							->where(function($query) {
+								$query->where('type','.n:base.')
+								->orWhere('type','.v:base.')
+								->orWhere('type','.adj:base.')
+								->orWhere('type','.ti:base.');
+							});		
+		}
+		$words = $words->select(['word','type','grammar'])
 						->groupBy(['word','type','grammar'])
 						->orderBy('word');
 		$query = "
@@ -123,7 +132,7 @@ class UpgradeRegular extends Command
 			if($casetable === false){
 				continue;
 			}
-			//$this->info("{$word->word}:{$word->type}");
+			if($this->option('debug'))  $this->info("{$word->word}:{$word->type}");
 			foreach($casetable as $thiscase){
 				if($word->type==".v:base."){
 					$endLen = (int)$thiscase[0];
@@ -161,12 +170,13 @@ class UpgradeRegular extends Command
 				}
 
 				if($isMatch){
-					//$this->error($newword.':match');
+					if($this->option('debug'))  $this->error($newword.':match');
 					//查询这个词是否在三藏存在
 					$exist = Cache::remember('palicanon/word/exists/'.$newword, 10 , function() use($newword) {
 						return WbwTemplate::where('real',$newword)->exists();
 					});
 					if($exist){
+						if($this->option('debug'))  $this->info('exist');
 						$new = UserDict::firstOrNew(
 							[
 								'word' => $newword,
@@ -187,6 +197,8 @@ class UpgradeRegular extends Command
 						$new->creator_id = 1;
 						$new->flag = 1;
 						$new->save();
+					}else{
+						if($this->option('debug'))  $this->info('not exist');
 					}
 				}
 			}

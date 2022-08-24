@@ -44,6 +44,7 @@ class CaseMan
 					'type'=>$ending[2],
 					'grammar'=>$ending[3],
 					'parent'=>$base,
+					'factors'=>"{$base}+[{$ending[1]}]",
 					'confidence'=>$ending[4],
 				]);
 			}

@@ -52,7 +52,12 @@ class UpgradeCompound extends Command
 		$_word = $this->argument('word');
 		if(!empty($_word)){
 			$ts = new TurboSplit();
-			var_dump($ts->splitA($_word));
+			$results = $ts->splitA($_word);
+			Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
+			foreach ($results as $key => $value) {
+				# code...
+				Storage::disk('local')->append("tmp/compound1.csv", "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}");
+			}
 			return 0;
 		}
 
@@ -85,21 +90,38 @@ class UpgradeCompound extends Command
 			return 0;	
 		}
 
-		$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
-		//$words = WbwTemplate::select('real')->where('type','<>','.ctl.')->where('real','<>','')->groupBy('real')->cursor();
+		//$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
+		$words = WbwTemplate::select('real')
+						->where('book',118)
+						->whereBetween('paragraph',[1329,1367])
+						->where('type','<>','.ctl.')
+						->where('real','<>','')
+						->groupBy('real')->cursor();
 		$count = 0;
 		foreach ($words as $key => $word) {
+			//先看目前字典里有没有
+			$isExists = UserDict::where('word',$word->real)
+								->whereIn('dict_id',[
+									      '57afac99-0887-455c-b18e-67c8682158b0',
+								          '4d3a0d92-0adc-4052-80f5-512a2603d0e8'
+										  ])
+								->exists();
+
+			if($isExists){
+				$this->info("found:{$word->real}");
+				continue;
+			}
 			# code...
 			$count++;
-			$this->info("{$count}:{$word->word}"); 
+			$this->info("{$count}:{$word->real}"); 
 			$ts = new TurboSplit();
-			$parts = $ts->splitA($word->word);
+			$parts = $ts->splitA($word->real);
 			foreach ($parts as $part) {
 				$new = UserDict::firstOrNew(
 					[
 						'word' => $part['word'],
 						'factors' => $part['factors'],
-						'dict_id' => $dict_id,
+						'dict_id' => $this->dict_id,
 					],
 					[
 						'id' => app('snowflake')->id(),
@@ -112,7 +134,10 @@ class UpgradeCompound extends Command
 				}else{
 					$new->type = ".cp.";
 				}
+				if(isset($part['grammar'])) $new->parent = $part['grammar'];
+				if(isset($part['parent'])) $new->parent = $part['parent'];
 				$new->confidence = (int)(50*$part['confidence']);
+				$new->note = $part['confidence'];
 				$new->language = 'cm';
 				$new->creator_id = 1;
 				$new->flag = 1;
@@ -120,8 +145,8 @@ class UpgradeCompound extends Command
 			}
 		}
 		//删除旧数据
-		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
-		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
+		UserDict::where('dict_id',$this->dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$this->dict_id)->where('flag',1)->update(['flag'=>0]);
 	
         return 0;
     }
