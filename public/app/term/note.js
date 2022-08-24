@@ -714,6 +714,7 @@ function note_json_html(in_json) {
 		"')\">" +
 		gLocal.gui.copy_to_clipboard +
 		"</a>";
+	/*
 	output +=
 		"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
 		in_json.book +
@@ -725,7 +726,7 @@ function note_json_html(in_json) {
 		in_json.end + 
 		"')\" >" +
 		gLocal.gui.copy_link +
-		"</a>";
+		"</a>";*/
 	output += "<a onclick='copy_text(this)'>" + gLocal.gui.copy + "“" + gLocal.gui.pāli + "”</a>";
 	output +=
 		"<a onclick=\"edit_in_studio('" +
@@ -1445,6 +1446,11 @@ function myEndingTooltip(inStr){
             tooltip:'具格/凭借;从格/原因',
         },
         {
+            id:"my_inst3",
+            name:"ကြောင်း",
+            tooltip:'具格/凭借;从格/原因',
+        },
+        {
             id:"my_dat1",
             name:"အား",
             tooltip:'目的格/对象(间接宾语)，对……来说',
@@ -1452,6 +1458,11 @@ function myEndingTooltip(inStr){
         {
             id:"my_dat2",
             name:"ငှာ",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_dat2",
+            name:"အတွက်",
             tooltip:'目的格/表示目的，为了……',
         },
         {
