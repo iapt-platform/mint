@@ -714,6 +714,7 @@ function note_json_html(in_json) {
 		"')\">" +
 		gLocal.gui.copy_to_clipboard +
 		"</a>";
+	/*
 	output +=
 		/*"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
 		in_json.book +
