@@ -1,7 +1,9 @@
 syntax = "proto3";
 import "public.proto";
 
-package channel;
+package pcds.channel.v1;
+
+
 /*
  * channel/版本 服务
  * Studio 建立的时候会建立一个默认channel 
@@ -20,7 +22,7 @@ message ChannelListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }

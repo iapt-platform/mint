@@ -1,13 +1,14 @@
 syntax = "proto3";
 import "public.proto";
 
-package dictionary;
+package pcds.dictionary.v1;
+
 
 /*
  * dictionary 服务
- * 逐词译数据推送到社区字典，当这个channel是公开channel的时候。以channel的名义公开。不是公开channel ，推送到该studio默认channel
- * 每个channel对应一个且仅一个用户字典
- * 协作用户使用公共channel干活。公开的社区词典数据进到这个channel ,以及自己的默认channel
+ * 
+ * 
+ * 
  */
 service Dictionary{
 	//词典管理
@@ -33,7 +34,7 @@ message DictListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }
@@ -87,18 +88,21 @@ message DictListReply{
 
 
 message WordListRequest{
-	string Id = 1;
-	string Search = 3;
-	EnumAllowingSearch SearchCol = 4;
-	int32  CurrentPage = 5;
-	int32  PageSize = 6;
-	EnumAllowingOrderby OrderBy = 7;
-	bool   Desc = 8;
+	string Id       = 1;
+
+	EnumAllowingSearch SearchCol = 2;
+	string Search                = 3;
+	EnumAllowingOrderby OrderBy  = 4;
+	bool   Desc                  = 5;
+
+	int32  CurrentPage = 6;
+	int32  PerPage     = 7;
 }
 
 enum EnumWordAllowingSearch{
-	EWAS_WORD = 0;
-	EWAS_NOTE = 1;
+	EWAS_ALL = 0;
+	EWAS_WORD = 1;
+	EWAS_NOTE = 2;
 }
 enum EnumWordAllowingOrderby{
 	EWAO_UPDATED_AT = 0;	

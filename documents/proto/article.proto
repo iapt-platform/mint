@@ -1,5 +1,8 @@
 syntax = "proto3";
 import "public.proto";
+
+package pcds.article.v1;
+
 /*
  * Article 服务
  * 
@@ -28,7 +31,7 @@ message ArticleListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }

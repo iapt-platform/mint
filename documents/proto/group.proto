@@ -1,7 +1,8 @@
 syntax = "proto3";
 import "public.proto";
 
-package group;
+package pcds.group.v1;
+
 /*
  * Group/群组 服务
  */
@@ -23,7 +24,7 @@ message GroupListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5; //current page number
-	int32  PageSize = 6; //The number of items to be shown per page.
+	int32  PerPage = 6; //The number of items to be shown per page.
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }
@@ -63,8 +64,8 @@ message GroupListReply{
 	message data{
 		repeated GroupRequest rows = 1;
 		int32    Count = 2;
-		int32    PageNo = 3;
-		int32    PageSize = 4;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
 	}
 }
 message MemberReply{

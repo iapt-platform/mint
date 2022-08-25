@@ -1,6 +1,9 @@
 syntax = "proto3";
 import "public.proto";
 
+package pcds.studio.v1;
+
+
 /*
  * studio 服务
  * 每个用户注册时有一个默认studio。与用户名相同。
@@ -21,7 +24,7 @@ message StudioListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }
@@ -57,7 +60,7 @@ message StudioListReply{
 	message data{
 		repeated StudioRequest rows = 1;
 		int32    Count = 2;
-		int32    PageNo = 3;
-		int32    PageSize = 4;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
 	}
 }

@@ -1,7 +1,8 @@
 syntax = "proto3";
 import "public.proto";
 
-package term;
+package pcds.term.v1;
+
 
 /*
  * Term 服务
@@ -24,7 +25,7 @@ message TermListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }
@@ -70,7 +71,7 @@ message TermListReply{
 	message data{
 		repeated TermRequest rows = 1;
 		int32    Count = 2;
-		int32    PageNo = 3;
-		int32    PageSize = 4;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
 	}
 }

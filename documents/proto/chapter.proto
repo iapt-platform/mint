@@ -1,7 +1,8 @@
 syntax = "proto3";
 import "public.proto";
 
-package chapter;
+package pcds.chapter.v1;
+
 /*
  * channel/版本 服务
  */
@@ -21,7 +22,7 @@ message ChapterListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5;
-	int32  PageSize = 6;
+	int32  PerPage = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }
