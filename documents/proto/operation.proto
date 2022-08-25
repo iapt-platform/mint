@@ -1,0 +1,101 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.operation.v1;
+
+/*
+ * 用户编辑操作记录
+ * 
+ *  
+ * 
+ */
+service Operation{
+	rpc GetOperation (OperationListRequest) returns (OperationReply){}     //以操作为单位返回记录	
+	rpc GetOperationByFrame (OperationListRequest) returns (OperationReply){}     //以操作块为单位返回记录	
+	rpc GetOperationByDay (OperationListRequest) returns (OperationReply){}     //以天为单位返回记录
+}
+
+/**
+ *    $active_type[10] = "_CHANNEL_EDIT_";//编辑channel信息——项目
+    $active_type[11] = "_CHANNEL_NEW_";//创建channel——项目
+    $active_type[20] = "_ARTICLE_EDIT_";//article编辑——项目
+    $active_type[21] = "_ARTICLE_NEW_";//article创建——项目
+    $active_type[30] = "_DICT_LOOKUP_";//查字典——通用
+    $active_type[40] = "_TERM_EDIT_";//编辑术语——研究
+    $active_type[41] = "_TERM_LOOKUP_";//术语查询——研究
+    $active_type[60] = "_WBW_EDIT_";//逐词解析编辑——基本功
+    $active_type[70] = "_SENT_EDIT_";//句子译文编辑——翻译
+    $active_type[71] = "_SENT_NEW_";//新建句子译文——翻译
+    $active_type[80] = "_COLLECTION_EDIT_";//文集编辑——项目
+    $active_type[81] = "_COLLECTION_NEW_";//文集编辑——项目
+    $active_type[90] = "_NISSAYA_FIND_";//找nissaya——研究
+ */
+enum EnumOperationType{
+	EOT_UNKNOW =  0;
+
+	EAO_CHANNEL_ADD =  101;
+	EAO_CHANNEL_SET =  102;
+	EAO_CHANNEL_DEL =  199;
+
+	EAO_ARTICLE_ADD =  201;
+	EAO_ARTICLE_SET =  202;
+	EAO_ARTICLE_DEL =  299;
+
+	EAO_DICT_GET =  300;
+	EAO_DICT_ADD =  301;
+	EAO_DICT_SET =  302;
+	EAO_DICT_DEL =  399;
+
+	EAO_TERM_ADD =  401;
+	EAO_TERM_SET =  402;
+	EAO_TERM_DEL =  499;
+
+	EAO_WBW_ADD =  501;
+	EAO_WBW_SET =  502;
+	EAO_WBW_DEL =  599;
+
+	EAO_SENT_ADD =  601;
+	EAO_SENT_SET =  602;
+	EAO_SENT_DEL =  699;
+
+	EAO_COURSE_ADD =  701;
+	EAO_COURSEE_SET =  702;
+	EAO_COURSE_DEL =  799;
+
+	EAO_ANTHOLOGYE_ADD =  801;
+	EAO_ANTHOLOGYE_SET =  802;
+	EAO_ANTHOLOGYE_DEL =  899;
+
+	EAO_NISSAYA_GET =  900;
+
+}
+
+message OperationListRequest{
+	string UserId   = 1;
+	string Start    = 2;
+	string End      = 3;
+}
+
+/**
+编辑操作详情
+*/
+message OperationList{
+	string Id         = 1;
+	string StartAt    = 2;
+	string EndAt      = 3;
+	int32  OperationType   = 4;	
+	string Data          = 5;	
+
+	User   User           = 52;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message OperationReply{
+	bool ok          = 1;
+	string message   = 2;
+	repeated OperationList data = 3;
+}
+
