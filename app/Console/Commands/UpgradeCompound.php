@@ -136,7 +136,7 @@ class UpgradeCompound extends Command
 				}
 				if(isset($part['grammar'])) $new->parent = $part['grammar'];
 				if(isset($part['parent'])) $new->parent = $part['parent'];
-				$new->confidence = (int)(50*$part['confidence']);
+				$new->confidence = 50*$part['confidence'];
 				$new->note = $part['confidence'];
 				$new->language = 'cm';
 				$new->creator_id = 1;
