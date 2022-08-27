@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+
 use App\Models\UserDict;
 use App\Models\DictInfo;
 
@@ -14,7 +16,7 @@ class UpgradeDict extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:dict {uuid?}';
+    protected $signature = 'upgrade:dict {uuid?} {--part}';
 
     /**
      * The console command description.
@@ -77,9 +79,14 @@ class UpgradeDict extends Command
 								$tableDict->owner_id = config("app.admin.root_uuid");
 								$tableDict->meta = json_encode($this->dictInfo['meta']);
 								$tableDict->save();
+								
+								if($this->option('part')){
+									$this->info(" dict id = ".$this->dictInfo['meta']['uuid']);
+								}else{
+									$del = UserDict::where("dict_id",$this->dictInfo['meta']['uuid'])->delete();
+									$this->info("delete {$del} rows dict id = ".$this->dictInfo['meta']['uuid']);
+								}
 
-								$del = UserDict::where("dict_id",$this->dictInfo['meta']['uuid'])->delete();
-								$this->info("delete {$del} rows dict id = ".$this->dictInfo['meta']['uuid']);
 								$filename = $dir.'/'.pathinfo($infoFile,PATHINFO_FILENAME);
 								$csvFile = $filename . ".csv";
 								$count = 0;
@@ -97,24 +104,44 @@ class UpgradeDict extends Command
 													$this->cols[$colname] = $key;
 												}
 											}else{
-												$newDict = new UserDict();
-												$newDict->id = app('snowflake')->id();
-												$newDict->word = $data[$this->cols['word']];
-												$newDict->type = $this->get($data,'type');
-												$newDict->grammar = $this->get($data,'grammar');
-												$newDict->parent = $this->get($data,'parent');
-												$newDict->mean = $this->get($data,'mean');
-												$newDict->note = $this->get($data,'note');
-												$newDict->factors = $this->get($data,'factors');
-												$newDict->factormean = $this->get($data,'factormean');
-												$newDict->status = $this->get($data,'status');
-												$newDict->language = $this->get($data,'language');
-												$newDict->confidence = $this->get($data,'confidence');
-												$newDict->source = $this->get($data,'source');
-												$newDict->create_time =(int)(microtime(true)*1000);
-												$newDict->creator_id = 1;
-												$newDict->dict_id = $this->dictInfo['meta']['uuid'];
-												$newDict->save();
+												if($this->option('part')){
+													$factor1 = $this->get($data,'factors');
+													foreach (\explode('+',$factor1)  as $part) {
+														# code...
+														$partExists = Cache::remember('dict/part/'.$part,100,function() use($part){
+															return UserDict::where('word',$part)->exists();
+														});
+
+														if(!$partExists){
+															$count++;
+															$newPartKey = 'dict/part/new/'.$part;
+															if(!isset($newPart[$part])){
+																$newPart[$part] = $count;
+																$this->info("{$count}:{$part}");
+															}
+														}
+													}
+												}else{
+													$newDict = new UserDict();
+													$newDict->id = app('snowflake')->id();
+													$newDict->word = $data[$this->cols['word']];
+													$newDict->type = $this->get($data,'type');
+													$newDict->grammar = $this->get($data,'grammar');
+													$newDict->parent = $this->get($data,'parent');
+													$newDict->mean = $this->get($data,'mean');
+													$newDict->note = $this->get($data,'note');
+													$newDict->factors = $this->get($data,'factors');
+													$newDict->factormean = $this->get($data,'factormean');
+													$newDict->status = $this->get($data,'status');
+													$newDict->language = $this->get($data,'language');
+													$newDict->confidence = $this->get($data,'confidence');
+													$newDict->source = $this->get($data,'source');
+													$newDict->create_time =(int)(microtime(true)*1000);
+													$newDict->creator_id = 1;
+													$newDict->dict_id = $this->dictInfo['meta']['uuid'];
+													$newDict->save();											
+												}
+
 												$bar->advance();
 											}
 											$inputRow++;
