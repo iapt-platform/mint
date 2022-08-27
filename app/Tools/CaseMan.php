@@ -3,6 +3,8 @@ namespace App\Tools;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Models\UserDict;
+
 
 class CaseMan
 {
@@ -30,56 +32,106 @@ class CaseMan
      * 小蝌蚪找妈妈
      * @return void
      */
-	public function WordToBase($word,$deep=1){
+	public function WordToBase($word,$deep=1,$verify=true){
 		$newWords = array();
+		$newBase = array();
+		$input[$word] = true;
 		$case = new CaseEnding();
-		foreach ($case->ending as  $ending) {
+		for ($i=0; $i < $deep; $i++) {
 			# code...
-			$endingLen = mb_strlen($ending[1], "UTF-8");
-			$wordEnd = mb_substr($word, 0 - $endingLen, null, "UTF-8");
-			if ($wordEnd == $ending[1]) {
-				$base = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $endingLen, "UTF-8") . $ending[0];
-				array_push($newWords,[
-					'word'=>$word,
-					'type'=>$ending[2],
-					'grammar'=>$ending[3],
-					'parent'=>$base,
-					'factors'=>"{$base}+[{$ending[1]}]",
-					'confidence'=>$ending[4],
-				]);
-			}
-		}
-		if($deep==1){
-			return $newWords;
-		}
-		
-		//查询二次衍生
-		foreach ($newWords as  $new){
-			for ($row = 0; $row < count($this->derivatives); $row++) 
-			foreach ($this->derivatives as  $ending) {
+			foreach ($input as $currWord => $status) {
 				# code...
-				$len = mb_strlen($ending[1], "UTF-8");
-				$end = mb_substr($new, 0 - $len, null, "UTF-8");
-				if ($end == $ending[1]) {
-					$newbase = mb_substr($new, 0, mb_strlen($new, "UTF-8") - $len, "UTF-8") . $ending[0];
-					array_push($newWords,[
-						'word'=>$new,
-						'type'=>$ending[2],
-						'grammar'=>$ending[3],
-						'parent'=>$newbase,
-						'confidence'=>$ending[4]
-					]
-					);
-
+				if($status){
+					$input[$currWord] = false;
+					foreach ($case->ending as  $ending) {
+						# code...
+						$endingLen = mb_strlen($ending[1], "UTF-8");
+						$wordEnd = mb_substr($currWord, 0 - $endingLen, null, "UTF-8");
+						if ($wordEnd == $ending[1]) {
+							//匹配成功
+							$base = mb_substr($currWord, 0, mb_strlen($currWord, "UTF-8") - $endingLen, "UTF-8") . $ending[0];
+							if(!isset($newBase[$base])){
+								$newBase[$base] = array();
+							}
+							array_push($newBase[$base],[
+								'word'=>$currWord,
+								'type'=>$ending[2],
+								'grammar'=>$ending[3],
+								'parent'=>$base,
+								'factors'=>"{$base}+[{$ending[1]}]",
+								'confidence'=>$ending[4],
+							]);
+						}
+					}				
+				}
+			}
+			foreach ($newBase as $currWord => $value) {
+				# 把新词加入列表
+				if(!isset($input[$currWord])){
+					$input[$currWord] = true;
 				}
 			}
 		}
+
+		if($verify){
+			$output = array();
+			foreach ($newBase as $base => $rows) {
+				# code...
+				if(($verify = $this->VerifyBase($base,$rows)) !== false){
+					$output[$base] = $verify;
+				}
+			}
+			return $output;
+		}else{
+			return $newBase;
+		}
+
+		
 	}
-
-	public function Verify($words){
-		foreach ($words as $key => $word) {
-			# code...
-
+	/**
+	 * 验证base在字典中是否存在
+	 */
+	public function VerifyBase($base,$rows){
+		# 
+		$output = array();
+		$dictWords = UserDict::where('word',$base)->select(['type','grammar'])->groupBy(['type','grammar'])->get();
+		if(count($dictWords)>0){
+			$newBase[$base] = 1;
+			$case = array(); 
+			//字典中这个拼写的单词的语法信息
+			foreach ($dictWords as $value) {
+				# code...
+				$case["{$value->type}{$value->grammar}"] = 1;
+			}
+			foreach ($rows as $value) {
+				//根据输入的猜测的type,grammar拼接合理的 parent 语法信息 
+				switch ($value['type']) {
+					case '.n.':
+						$parentType = '.n:base.';
+						break;
+					case '.ti.':
+						$parentType = '.ti:base.';
+						break;
+					case '.v.':
+						$parentType = '.v:base.';
+						break;
+					default:
+						$parentType = '';
+						break;
+				}
+				if(!empty($value['grammar']) && $value['type'] !== ".v."){
+					$arrGrammar = explode('$',$value['grammar']);
+					$parentType .=  $arrGrammar[0];										
+				}
+				# 只保存语法信息合理的数据
+				if(isset($case[$parentType])){
+					Log::info("found:{$value['type']}-{$value['grammar']}-{$value['parent']}");
+					array_push($output,$value);
+				}
+			}
+			return $output;
+		}else{
+			return false;
 		}
 	}
 }
@@ -3232,7 +3284,26 @@ class CaseEnding{
 		["oti","se",".v.",".2p.$.sg.$.aor.",0.99],
 		["oti","vhaṃ",".v.",".2p.$.pl.$.aor.",0.99],
 		["ati","ittha",".v.",".2p.$.pl.$.aor.",0.99],
-				
+
+		["ti","māna",".ti:base.",".prp.",0.99],
+		["ati","anta",".ti:base.",".prp.",0.99],
+		["ti","ta",".ti:base.",".pp.",0.99],
+		["ti","na",".ti:base.",".pp.",0.99],
+		["eti","enta",".ti:base.",".prp.",0.99],
+		["ati","eyya",".ti:base.",".fpp.",0.99],
+		["eti","eyya",".ti:base.",".fpp.",0.99],
+		["oti","eyya",".ti:base.",".fpp.",0.99],
+		["ti","tabba",".ti:base.",".fpp.",0.99],
+		["ati","itabba",".ti:base.",".fpp.",0.99],
+		["eti","itabba",".ti:base.",".fpp.",0.99],
+		["oti","itabba",".ti:base.",".fpp.",0.99],
+		["ati","anīya",".ti:base.",".fpp.",0.99],
+		["eti","anīya",".ti:base.",".fpp.",0.99],
+		["oti","anīya",".ti:base.",".fpp.",0.99],
+		["ati","āpeti",".v:base.",".caus.",0.99],
+		["ati","yati",".v:base.",".pp.",0.99],
+		["oti","āpeti",".v:base.",".caus.",0.99],
+		["oti","yati",".v:base.",".pp.",0.99],
 	];
 		
 	public $derivatives = [
