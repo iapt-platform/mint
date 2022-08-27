@@ -1,10 +1,14 @@
-syntax = "proto3"
-import "public.proto"
+syntax = "proto3";
+import "public.proto";
+
+package channel;
 /*
  * channel/版本 服务
+ * Studio 建立的时候会建立一个默认channel 
+ * 默认channel 一定为公开channel
  */
 service Channel{
-	rpc GetChannelListForChannel (ChannelListRequest) returns (ChannelListReply){}
+	rpc GetChannelListForStudio (ChannelListRequest) returns (ChannelListReply){}
 	rpc GetChannel (ChannelRequest) returns (ChannelReply){}
 	rpc SetChannel (ChannelRequest) returns (ChannelReply){}
 	rpc AddChannel (ChannelRequest) returns (ChannelReply){}
@@ -15,7 +19,7 @@ message ChannelListRequest{
 	string Id = 1;
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
-	int32  PageNo = 5;
+	int32  CurrentPage = 5;
 	int32  PageSize = 6;
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
