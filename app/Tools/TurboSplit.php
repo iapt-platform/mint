@@ -638,22 +638,26 @@ class TurboSplit
 								//echo($dictWordEnding.PHP_EOL);
 								$caseman = new CaseMan();
 								$parents = $caseman->WordToBase($oneword);
-								foreach ($parents as $parent) {
+								foreach ($prents as $base) {
 									# code...
-									$parentFactors = explode('+',$parent['factors']);
-									$parentFactorEnd = mb_substr(end($parentFactors),-mb_strlen($dictWordEnding,"UTF-8"));
-									//echo($parentFactorEnd.PHP_EOL);
-									if($parentFactorEnd == $dictWordEnding){
-										foreach ($dictExist as $dictExistWord) {
-											# code...
-											$newword['type'] = $dictExistWord->type;
-											$newword['grammar'] = $dictExistWord->grammar;
-											$newword['parent'] = $parent['parent'];
-											array_push($output,$newword);
+									foreach ($base as $parent) {
+										# code...
+										$parentFactors = explode('+',$parent['factors']);
+										$parentFactorEnd = mb_substr(end($parentFactors),-mb_strlen($dictWordEnding,"UTF-8"));
+										//echo($parentFactorEnd.PHP_EOL);
+										if($parentFactorEnd == $dictWordEnding){
+											foreach ($dictExist as $dictExistWord) {
+												# code...
+												$newword['type'] = $dictExistWord->type;
+												$newword['grammar'] = $dictExistWord->grammar;
+												$newword['parent'] = $parent['parent'];
+												array_push($output,$newword);
+											}
+											break;
 										}
-										break;
 									}
 								}
+
 							}else{
 								array_push($output,$newword);
 							}
