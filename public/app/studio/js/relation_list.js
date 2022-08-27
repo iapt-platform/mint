@@ -234,27 +234,54 @@ var list_relation=[
         "language": "default"
     },
     {
-        "id": "DAO",
+        "id": "DAO-P",
         "case": ".nom.",
-        "note": "Double Active Object Relation",
+        "note": "Double Active Object primary Relation",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
         "language": "en"
     },
     {
-        "id": "DAO",
+        "id": "DAO-P",
         "case": ".nom.",
-        "note": "双宾语主动",
+        "note": "被动语态双宾语-首要",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
         "language": "zh-cn"
     },
     {
-        "id": "DAO",
+        "id": "DAO-P",
         "case": ".nom.",
-        "note": "pakati <vuttakamma> ➡ vikati <vuttakamma>",
+        "note": "pakati <vuttakamma> ➡ kiriya",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
+        "id": "DAO-S",
+        "case": ".nom.",
+        "note": "Double Active Object secondary Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "DAO-S",
+        "case": ".nom.",
+        "note": "被动语态双宾语-次要",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "DAO-S",
+        "case": ".nom.",
+        "note": "vikati <vuttakamma> ➡ kiriya",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
