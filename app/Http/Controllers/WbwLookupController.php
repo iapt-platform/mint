@@ -4,9 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\UserDict;
 use Illuminate\Http\Request;
+use App\Tools\CaseMan;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+
+
 
 class WbwLookupController extends Controller
 {
+	private $dictList = [
+		'57afac99-0887-455c-b18e-67c8682158b0',// system regular
+		'4d3a0d92-0adc-4052-80f5-512a2603d0e8',// system irregular
+		'8359757e-9575-455b-a772-cc6f036caea0',// system sandhi
+		'c42980f0-5967-4833-b695-84183344f68f',// robot compound
+		'61f23efb-b526-4a8e-999e-076965034e60',// pali myanmar grammar
+		'eae9fd6f-7bac-4940-b80d-ad6cd6f433bf',// Concise P-E Dict
+		'2f93d0fe-3d68-46ee-a80b-11fa445a29c6',// unity
+		'beb45062-7c20-4047-bcd4-1f636ba443d1',// U Hau Sein
+		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
+		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
+	];
     /**
      * Display a listing of the resource.
      * @param  \Illuminate\Http\Request  $request
@@ -16,40 +33,75 @@ class WbwLookupController extends Controller
     public function index(Request $request)
     {
         //
+		$startAt = microtime(true);
+		$caseman = new CaseMan();
 		$output  = array();
 		$wordPool = array();
 		$input = \explode(',',$request->get("words")); 
 		foreach ($input as $word) {
-			# 0 未处理 1 已处理
-			$wordPool[$word] = 0; 
+			$wordPool[$word] = ['base' => false,'done' => false,'apply' => false]; 
 		}
-		for ($i=0; $i < 3; $i++) { 
+		Log::info("query start ".$request->get("words"));
+
+		for ($i=0; $i < 2; $i++) { 
 			# code...
-			foreach ($wordPool as $word => $status) {
+			foreach ($wordPool as $word => $info) {
 				# code...
-				$wordPool[$word] = 1;
-				$result = UserDict::where('word',$word)->orderBy('confidence','desc')->get();
-				if(count($result)>0){
-					array_push($output,$result);
-				}else{
-					//没查到
-					if($i == 1){
-						//去尾查
+				if($info['done'] == false){
+					$wordPool[$word]['done'] = true;
+					foreach ($this->dictList as  $dictId) {
+						# code...
 					}
-				}
-				foreach ($result as $word2) {
-					# 将拆分放入池中
-					if(!empty($word2->factors)){
-						$factors = \explode('+',$word2->factors);
-						foreach ($factors as $factor) {
+					$result = Cache::remember("dict/".$word,60,function() use($word){
+						return UserDict::where('word',$word)->orderBy('confidence','desc')->get();
+					});
+					Log::info("query {$word} ".((microtime(true)-$startAt)*1000)."s.");
+					if(count($result)>0){
+						foreach ($result as  $dictword) {
 							# code...
-							if(!isset($wordPool[$factor])){
-								$wordPool[$factor] = 0;
+							array_push($output,$dictword);
+							if(!empty($dictword->factors)){
+								if(!isset($wordPool[$word]['factors'])){
+									//将第一个拆分作为最佳拆分存储
+									$wordPool[$word]['factors'] = $dictword->factors;
+								}
 							}
 						}
+					}else{
+						//没查到 去尾查
+						Log::info("没查到 去尾查");
+						$newBase = array();
+						$parents = $caseman->WordToBase($word);
+						foreach ($parents as $base => $rows) {
+							# 只保存语法信息合理的数据
+							if(count($rows)>0){
+								Log::info("found:{$value['type']}-{$value['grammar']}-{$value['parent']}");
+								array_push($output,$rows);
+							}
+						}
+						Log::info("去尾查结束");
 					}
 				}
 			}
+
+			//查询结果中的拆分信息
+			$newWordPart = array();
+			foreach ($wordPool as $word => $info) {
+				if(!empty($info['factors'])){
+					$factors = \explode('+',$info['factors']);
+					foreach ($factors as $factor) {
+						# 将没有的拆分放入单词查询列表
+						if(!isset($wordPool[$factor])){
+							$newWordPart[$factor] = 0;
+						}
+					}
+				}				
+			}
+			foreach ($newWordPart as $part => $value) {
+				# 将拆分放入池中
+				$wordPool[$part] = ['base' => false,'done' => false,'apply' => false]; 
+			}
+			Log::info("loop {$i} ".((microtime(true)-$startAt)*1000)."s.");
 		}
 
 		return $this->ok(["rows"=>$output]);
