@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\UserDict;
 use App\Models\DictInfo;
@@ -105,21 +106,28 @@ class UpgradeDict extends Command
 												}
 											}else{
 												if($this->option('part')){
+													//仅仅提取拆分零件
+													$word = $this->get($data,'word');
 													$factor1 = $this->get($data,'factors');
+													$factor1 = \str_replace([' ','(',')','=','-','$'],"+",$factor1);
 													foreach (\explode('+',$factor1)  as $part) {
 														# code...
-														$partExists = Cache::remember('dict/part/'.$part,100,function() use($part){
-															return UserDict::where('word',$part)->exists();
-														});
-
-														if(!$partExists){
+														if(empty($part)){
+															continue;
+														}		
+														if(isset($newPart[$part])){
+															$newPart[$part][0]++;
+														}else{
+															$partExists = Cache::remember('dict/part/'.$part,1000,function() use($part){
+																return UserDict::where('word',$part)->exists();
+															});
+															if(!$partExists){
 															$count++;
-															$newPartKey = 'dict/part/new/'.$part;
-															if(!isset($newPart[$part])){
-																$newPart[$part] = $count;
-																$this->info("{$count}:{$part}");
+															$newPart[$part] = [1,$word];
+															$this->info("{$count}:{$part}-{$word}");
 															}
 														}
+														
 													}
 												}else{
 													$newDict = new UserDict();
@@ -151,6 +159,11 @@ class UpgradeDict extends Command
 									$csvFile = $filename . "{$count}.csv";
 								}
 								$bar->finish();
+								Storage::disk('local')->put("tmp/pm-part.csv", "part,count,word");
+								foreach ($newPart as $part => $info) {
+									# 写入磁盘文件
+									Storage::disk('local')->append("tmp/pm-part.csv", "{$part},{$info[0]},{$info[1]}");
+								}
 								$this->info("done");
 							}
 							
