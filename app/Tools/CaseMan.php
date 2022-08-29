@@ -78,7 +78,25 @@ class CaseMan
 			foreach ($newBase as $base => $rows) {
 				# code...
 				if(($verify = $this->VerifyBase($base,$rows)) !== false){
-					$output[$base] = $verify;
+					if(count($verify)>0){
+						$output[$base] = $verify;
+					}
+				}
+			}
+			if(count($output)==0){
+				//如果验证失败 输出最可能的结果
+				$short = 10000;
+				$shortBase = "";
+				foreach ($newBase as $base => $rows) {
+					if(mb_strlen($base,"UTF-8") < $short){
+						$short = mb_strlen($base,"UTF-8");
+						$shortBase = $base;
+					}
+				}
+				foreach ($newBase as $base => $rows) {
+					if($base == $shortBase){
+						$output[$base] = $rows;
+					}
 				}
 			}
 			return $output;

@@ -17,8 +17,9 @@ class TurboSplit
 	protected $currPathCf;
 	//结果数组
 	protected $result = array();
-	//最大结果数量
+	//过程中最大结果数量
 	protected $MAX_RESULT = 100;
+	//返回值最大结果数量
 	protected $MAX_RESULT2 = 5;
 	//最大递归深度
 	protected $MAX_DEEP = 16;
@@ -56,12 +57,12 @@ class TurboSplit
 		["a" => "[ṃ]", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "[ṃ]", "b" => "a", "c" => "ma", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "ṃ", "b" => "a", "c" => "m", "len" => 1, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "[ṃ]", "b" => "ā", "c" => "mā", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "[ṃ]", "b" => "u", "c" => "mu", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "[ṃ]", "b" => "h", "c" => "ñh", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "ā", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "a", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
-		["a" => "ī", "b" => "[ṃ]", "c" => "im", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
+		["a" => "[ṃ]", "b" => "ā", "c" => "mā", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
+		["a" => "[ṃ]", "b" => "u", "c" => "mu", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
+		["a" => "[ṃ]", "b" => "h", "c" => "ñh", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
+		["a" => "ā", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
+		["a" => "a", "b" => "[ṃ]", "c" => "am", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
+		["a" => "ī", "b" => "[ṃ]", "c" => "im", "len" => 2, "adj_len" => 0, "advance" => false,"cf"=>0.8],
 		["a" => "ati", "b" => "tabba", "c" => "atabba", "len" => 6, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "ati", "b" => "tabba", "c" => "itabba", "len" => 6, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "iti", "b" => "a", "c" => "icca", "len" => 4, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
@@ -614,7 +615,14 @@ class TurboSplit
 				arsort($this->result); //按信心指数排序
 				$iCount = 0;
 				foreach ($this->result as $row => $value) {
-					$newword = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>$row,'confidence'=>$value];
+					$factors = $row;
+					if(strpos($row,'[') !== FALSE){
+						$type = '.un.';
+						$factors = \str_replace(['+[ṃ]+','[ṃ]+'],'ṃ+',$row);
+					}else{
+						$type = '.cp.';
+					}
+					$newword = ['word'=>$oneword,'type'=>$type,'grammar'=>'','parent'=>'','factors'=>$factors,'confidence'=>$value];
 
 					if($iCount==0){
 						//后处理 找到base
@@ -669,8 +677,8 @@ class TurboSplit
 					//后处理 进一步切分没有意思的长词
 					Log::info("后处理 进一步切分没有意思的长词");
 					$new = $this->split2($row);
-					if($new!==$row){
-						$newword = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>$row,'confidence'=>$value];
+					if($new !== $row){
+						$newword = ['word'=>$oneword,'type'=>$type,'grammar'=>'','parent'=>'','factors'=>$new,'confidence'=>$value];
 						array_push($output,$newword);
 						#再处理一次
 						$new2 = split2($new);
