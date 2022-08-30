@@ -1,0 +1,82 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.palicanon.v1;
+
+
+/*
+ * pali 语料库
+ * 段落
+ * 句子
+ */
+service Palicanon{
+	rpc GetChapter (ParagraphRequest) returns (ChapterReply){}  
+	rpc GetParagraph (ParagraphRequest) returns (ParagraphReply){}
+
+	rpc GetChapterListByTag (TagRequest) returns (ChapterReply){}  //查找包涵指定标签的章节
+	rpc GetTagListByTag (TagRequest) returns (TagListReply){}  
+
+	rpc GetSimilarList (SimilarRequest) returns (SimilarListReply){}  
+}
+
+message ParagraphRequest{
+	string Id           = 1;   //uuid
+	int32 Book          = 2;   //书号
+	int32 Paragraph     = 3;   //段落编号
+	int32 Level         = 4;   //目录层级 标题1-7 偈诵编号8 正文100
+	string Title        = 5;   //标题 
+	string Text         = 6;   //纯文本
+	string Html         = 7;   //vri原文
+	string StrLen       = 8;   //纯文本段落字符串长度
+	int32  ChapterLen   = 9;   //纯文本章节字符串长度
+	int32  NextChapter  = 10;   //上一个章节
+	int32  PrevChapter  = 11;  //下一个章节
+	int32  Parent       = 12;  //父层级段落
+	string  Path        = 13;  //该段落全路径
+	repeated Tag        = 14;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+message ChapterReply{
+	bool ok = 1;
+	string message = 2;
+	repeated ParagraphRequest data = 3;
+}
+
+message ParagraphReply{
+	bool ok = 1;
+	string message = 2;
+	ParagraphRequest data = 3;
+}
+
+message TagRequest{
+	repeated string TagName = 1;
+}
+message TagList {
+	Tag Tag = 1;
+	int32 Count = 2;
+};
+message TagListReply{
+	bool ok               = 1;
+	string message        = 2;
+	repeated TagList data = 3;
+}
+
+message SimilarRequest{
+	int32 Book = 1;
+	int32 Paragraph = 2;
+	int32 Start = 3;
+	int32 End = 4;
+	string Text = 5;
+	string Path = 6;
+	int32  Translation = 7;
+	int32  Nissaya = 8;
+	int32  Commentray = 9;
+}
+message SimilarListReply{
+	bool Ok                      = 1;
+	string Message               = 2;
+	repeated SimilarRequest Data = 3;
+}

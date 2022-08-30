@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.usersetting.v1;
+
+
+/*
+ * 用户设置
+ * 
+ * 
+ */
+service UserSetting{
+	rpc GetUserSetting (UserSettingRequest) returns (UserSettingReply){}
+	rpc SetUserSetting (UserSettingRequest) returns (UserSettingReply){}
+}
+
+
+message UserSettingRequest{
+	string UserId       = 1;
+	string Data         = 2;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message UserSettingReply{
+	bool ok = 1;
+	string message = 2;
+	UserSettingRequest data = 3;
+}
+
