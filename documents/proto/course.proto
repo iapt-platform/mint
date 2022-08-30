@@ -1,7 +1,8 @@
 syntax = "proto3";
 import "public.proto";
 
-package course;
+package pcds.course.v1;
+
 /*
  * 课程服务 
  */
@@ -19,7 +20,7 @@ message CourseListRequest{
 	string Search = 3;
 	EnumAllowingSearch SearchCol = 4;
 	int32  CurrentPage = 5; //current page number
-	int32  PageSize = 6; //The number of items to be shown per page.
+	int32  PerPage = 6; //The number of items to be shown per page.
 	EnumAllowingOrderby OrderBy = 7;
 	bool   Desc = 8;
 }

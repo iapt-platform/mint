@@ -1,0 +1,80 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.comment.v1;
+
+
+/*
+ * 评论(修改建议/问答/评论)
+ * 
+ * 
+ */
+service Comment{
+	rpc GetCommentList (CommentListRequest) returns (CommentListReply){}  
+	rpc GetComment (CommentRequest) returns (CommentReply){}    
+	rpc SetComment (CommentRequest) returns (CommentReply){}    
+	rpc AddComment (CommentRequest) returns (CommentReply){}    
+	rpc DelComment (CommentRequest) returns (CommentReply){}
+}
+
+message CommentListRequest{
+	string      ResId            = 1;
+	EnumResType ResType          = 2;
+	string Search                = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage           = 5;
+	int32  PerPage               = 6;
+	EnumAllowingOrderby OrderBy  = 7;
+	bool   Desc                  = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_CONTENT = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_UPDATED_AT =  0;
+}
+enum EnumCommentType{
+	ECT_MODIFY  = 0;
+	ECT_QA      = 1;
+	ECT_COMMENT = 2;
+}
+enum EnumResType{
+	ERT_CHAPTER = 0;
+	ERT_ARTICLE = 1;
+	ERT_COURSE = 2;
+}
+
+message CommentRequest{
+	string Id           = 1;
+	EnumCommentType Type   = 2;
+	string ResId        = 3;
+	EnumResType ResType = 4;
+	string ParentId     = 5;
+	string Content      = 6;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message CommentReply{
+	bool ok = 1;
+	string message = 2;
+	CommentRequest data = 3;
+}
+
+message CommentListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated CommentRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

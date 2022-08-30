@@ -1,0 +1,42 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.timeline.v1;
+
+
+/*
+ * 评论(修改建议/问答/评论)
+ * 
+ * 
+ */
+service Timeline{
+	rpc GetTimeline (TimelineRequest) returns (TimelineReply){}      
+	rpc AddTimeline (TimelineRequest) returns (TimelineReply){}    
+}
+
+enum EnumResType{
+	ERT_SENTENCE = 0;
+	ERT_ARTICLE  = 1;
+	ERT_COURSE   = 2;
+	ERT_WBW      = 3;
+}
+
+message TimelineRequest{
+	string Id           = 1;
+	string ResId        = 3;
+	EnumResType ResType = 4;
+	string Data         = 5;
+
+	User   Editor       = 52;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message TimelineReply{
+	bool ok = 1;
+	string message = 2;
+	repeated TimelineRequest data = 3;
+}
+
