@@ -905,6 +905,7 @@ w:hover {
 	flex: 5;
 	display: flex;
 	flex-direction: column;
+	max-width: 50%;
 }
 
 /*段落模式*/
@@ -1176,7 +1177,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-	white-space: pre-wrap;
+	/*white-space: pre-wrap;*/
 }
 .nsy_word>.org>strong {
     font-weight:900;
