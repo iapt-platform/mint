@@ -1,5 +1,6 @@
 ul.chapter_info_list>li{
 	display:flex;
+	white-space: nowrap;
 }
 ul.chapter_info_list>li .channel_name{
 	flex:3;
