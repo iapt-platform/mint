@@ -1655,3 +1655,9 @@ id,word,type,grammar,parent,meaning,note,factors,factor_meaning,status,confidenc
 1655,pañcahi,.num.,$.pl.$.abl.,pañca,,,,,1,100,7,vn,cm
 1656,pañcannaṃ,.num.,$.pl.$.gen.,pañca,,,,,1,100,9,vn,cm
 1657,pañcasu,.num.,$.pl.$.loc.,pañca,,,,,1,100,7,vn,cm
+1657,ādiṃ,.n.,.nt.$.sg.$.acc.,ādi,,,,,1,100,4,vn,cm
+1657,ādinā,.n.,.nt.$.sg.$.inst.,ādi,,,,,1,100,5,vn,cm
+1657,ādito,.n.,.nt.$.sg.$.abl.,ādi,,,,,1,100,5,vn,cm
+1657,ādimhi,.n.,.nt.$.sg.$.loc.,ādi,,,,,1,100,6,vn,cm
+1657,ādayo,.n.,.nt.$.pl.$.nom.,ādi,,,,,1,100,5,vn,cm
+1657,ādīni,.n.,.nt.$.pl.$.nom.,ādi,,,,,1,100,5,vn,cm
