@@ -172,7 +172,7 @@ class UpgradeRegular extends Command
 				if($isMatch){
 					if($this->option('debug'))  $this->error($newword.':match');
 					//查询这个词是否在三藏存在
-					$exist = Cache::remember('palicanon/word/exists/'.$newword, 10 , function() use($newword) {
+					$exist = Cache::remember('palicanon/word/exists/'.$newword, 100 , function() use($newword) {
 						return WbwTemplate::where('real',$newword)->exists();
 					});
 					if($exist){
@@ -184,7 +184,7 @@ class UpgradeRegular extends Command
 								'grammar' => $newGrammar,
 								'parent' => $word->word,
 								'factors' => "{$word->word}+[{$newEnding}]",
-								'dict_id' => $this->dict_id,
+								'dict_id' => $this->dict_id, 
 							],
 							[
 								'id' => app('snowflake')->id(),
@@ -205,9 +205,13 @@ class UpgradeRegular extends Command
 			$bar->advance();
 		}
 		$bar->finish();
-				//删除旧数据
-		UserDict::where('dict_id',$this->dict_id)->where('flag',0)->delete();
-		UserDict::where('dict_id',$this->dict_id)->where('flag',1)->update(['flag'=>0]);
+		//删除旧数据
+		$delOld = UserDict::where('dict_id',$this->dict_id);
+		if(!empty($this->argument('word'))){
+			$delOld = $delOld->where('word',$this->argument('word'));
+		}
+		$delOld->where('flag',0)->delete();
+		$delOld->where('flag',1)->update(['flag'=>0]);
         return 0;
     }
 }
