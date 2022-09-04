@@ -90,13 +90,15 @@ class TurboSplit
 	protected $sandhi2 = [
 		["a" => "ṃ", "b" => "ca", "c" => "ñca", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0],
 		["a" => "ṃ", "b" => "hi", "c" => "ñhi", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>1.0],
-		["a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "e", "b" => "iti", "c" => "eti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "i", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "o", "b" => "iti", "c" => "oti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "u", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.99999],
-		["a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
+		["a" => "ena", "b" => "iti", "c" => "enāti", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>1.0],
+		["a" => "a", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "ā", "b" => "iti", "c" => "āti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.6],
+		["a" => "e", "b" => "iti", "c" => "eti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "i", "b" => "iti", "c" => "īti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "o", "b" => "iti", "c" => "oti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "u", "b" => "iti", "c" => "ūti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "ṃ", "b" => "iti", "c" => "nti", "len" => 3, "adj_len" => 0, "advance" => false,"cf"=>0.9],
+		["a" => "ī", "b" => "eva", "c" => "iyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9],
 		["a" => "ī", "b" => "eva", "c" => "īyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "u", "b" => "eva", "c" => "uyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
 		["a" => "ṃ", "b" => "eva", "c" => "ṃyeva", "len" => 5, "adj_len" => 0, "advance" => false,"cf"=>0.9999],
@@ -289,19 +291,19 @@ class TurboSplit
 				$this->result[$word] = $cf;
 				return 0;
 			} else {
-				$reverseWord = word_reverse($word);
+				$reverseWord = $this->word_reverse($word);
 				$this->result[$reverseWord] = $cf;
 				return 0;
 			}
 			
 		}
 		//直接找到
-		$confidence = isExsit($strWord, $adj_len);
+		$confidence = $this->isExsit($strWord, $adj_len);
 		if ($confidence > $c_threshhold) {
 			array_push($output, array($strWord, "", $confidence));
 		} 
 		else {
-			$confidence = isExsit("[" . $strWord . "]");
+			$confidence = $this->isExsit("[" . $strWord . "]");
 			if ($confidence > $c_threshhold) {
 				array_push($output, array("[" . $strWord . "]", "", $confidence));
 			}
@@ -330,7 +332,7 @@ class TurboSplit
 						if (mb_substr($strWord, $i - $row["len"], $row["len"], "UTF-8") == $row["c"]) {
 							$str1 = mb_substr($strWord, 0, $i - $row["len"], "UTF-8") . $row["a"];
 							$str2 = $row["b"] . mb_substr($strWord, $i, null, "UTF-8");
-							$confidence = isExsit($str1, $adj_len)*$row["cf"];
+							$confidence = $this->isExsit($str1, $adj_len)*$row["cf"];
 							if ($confidence > $c_threshhold) {
 								//信心指数大于预设的阈值，插入
 								array_push($output, array($str1, $str2, $confidence, $row["adj_len"]));
@@ -352,7 +354,7 @@ class TurboSplit
 						if (mb_substr($strWord, $i, $row["len"], "UTF-8") == $row["c"]) {
 							$str1 = mb_substr($strWord, 0, $i, "UTF-8") . $row["a"];
 							$str2 = $row["b"] . mb_substr($strWord, $i + $row["len"], null, "UTF-8");
-							$confidence = isExsit($str2, $adj_len)*$row["cf"];
+							$confidence = $this->isExsit($str2, $adj_len)*$row["cf"];
 							if ($confidence > $c_threshhold) {
 								array_push($output, array($str2, $str1, $confidence, $row["adj_len"]));
 								$this->log("将此次结果插入结果数组：剩余={$str2}");
@@ -401,7 +403,7 @@ class TurboSplit
 							$this->result[$word] = $cf;
 							return 0;
 						} else {
-							$reverseWord = word_reverse($word);
+							$reverseWord = $this->word_reverse($word);
 							$this->result[$reverseWord] = $cf;
 							return 0;
 						}
@@ -457,7 +459,7 @@ class TurboSplit
 					return 0;
 				} 
 				else {
-					$reverseWord = word_reverse($word);
+					$reverseWord = $this->word_reverse($word);
 					$this->result[$reverseWord] = $cf;
 					return 0;
 				}
@@ -584,7 +586,7 @@ class TurboSplit
 		Log::info("处理双元音");
 		$arrword = $this->splitDiphthong($word1);
 		if (count($arrword) > 1) {
-			array_push($output,['word'=>$word,'type'=>'.un.','factors'=>implode("+", $arrword),'confidence'=>0.9999]);
+			array_push($output,['word'=>$word,'type'=>'.un.','grammar'=>'','parent'=>'','factors'=>implode("+", $arrword),'confidence'=>0.9999]);
 		}
 
 		foreach ($arrword as $oneword) {
@@ -610,7 +612,7 @@ class TurboSplit
 				}
 			}
 
-			//echo "{$start}-{$oneword}:" . count($result) . "\n";
+			Log::info("{$oneword}:" . count($this->result));
 			if (count($this->result) > 0) {
 				arsort($this->result); //按信心指数排序
 				$iCount = 0;
@@ -623,65 +625,69 @@ class TurboSplit
 						$type = '.cp.';
 					}
 					$newword = ['word'=>$oneword,'type'=>$type,'grammar'=>'','parent'=>'','factors'=>$factors,'confidence'=>$value];
+					array_push($output,$newword);
 
 					if($iCount==0){
-						//后处理 找到base
-						if(\strpos($row,'[') !== FALSE){
-							$newword['type'] = '.un.';
-							array_push($output,$newword);
-						}else{
-							$factors = explode('+',$row);
-							$dictExist = UserDict::where('word',end($factors))
-												->where('dict_id','57afac99-0887-455c-b18e-67c8682158b0')
-												->select(['type','grammar','parent','factors'])
-												->get();
-							if(!$dictExist){
-								$dictExist = UserDict::where('word',end($factors))
-												->select(['type','grammar','parent','factors'])
-												->get();
-							}
-							if(isset($dictExist[0])){
-								$dictExitfactors = explode('+',$dictExist[0]->factors);
-								$dictWordEnding = substr(end($dictExitfactors),1) ;
-								//echo($dictWordEnding.PHP_EOL);
-								$caseman = new CaseMan();
-								$parents = $caseman->WordToBase($oneword);
-								foreach ($prents as $base) {
-									# code...
-									foreach ($base as $parent) {
-										# code...
-										$parentFactors = explode('+',$parent['factors']);
-										$parentFactorEnd = mb_substr(end($parentFactors),-mb_strlen($dictWordEnding,"UTF-8"));
-										//echo($parentFactorEnd.PHP_EOL);
-										if($parentFactorEnd == $dictWordEnding){
-											foreach ($dictExist as $dictExistWord) {
+						//对于最优结果进行处理 找到base
+						$wordWithType = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>$factors,'confidence'=>$value];
+						
+						Log::info("查找base");
+						
+						$factors = explode('+',$row);
+						$endOfFactor = end($factors);
+
+						Log::info("结尾词：".$endOfFactor);
+						$caseman = new CaseMan();
+						//猜测单词的base
+						$parents = $caseman->WordToBase($oneword,1,false);
+						//找到结尾单词的base
+						$end_parents = $caseman->WordToBase($endOfFactor);
+
+						if(count($parents)>0){
+							foreach ($parents as $base=>$case) {
+								# code...
+								if(count($end_parents)>0){
+									foreach ($end_parents as $base2=>$case2) {
+										if(\mb_substr($base2,-2)===\mb_substr($base,-2)){
+											Log::info("{$base} ok");
+											foreach ($case as $value) {
 												# code...
-												$newword['type'] = $dictExistWord->type;
-												$newword['grammar'] = $dictExistWord->grammar;
-												$newword['parent'] = $parent['parent'];
-												array_push($output,$newword);
+												foreach ($case2 as $value2) {
+													//验证语法信息是否正确
+													if($value['type'] == $value2['type'] && $value['grammar'] == $value2['grammar']){
+														$wordWithType['type'] = $value['type'];
+														$wordWithType['grammar'] = $value['grammar'];
+														$wordWithType['factors'] = $value['factors'];
+														$wordWithType['parent'] = $base;
+														$wordWithType['confidence'] = $value2['confidence'];
+														Log::info("word:{$wordWithType['word']} ; type:{$wordWithType['type']}; grammar:{$wordWithType['grammar']};parent:{$wordWithType['parent']}");
+														array_push($output,$wordWithType);	
+													}
+												}
 											}
-											break;
 										}
 									}
+								}else{
+									foreach ($case as $value) {
+										$wordWithType['type'] = $value['type'];
+										$wordWithType['grammar'] = $value['grammar'];
+										$wordWithType['factors'] = $value['factors'];
+										$wordWithType['parent'] = $base;
+										$wordWithType['confidence'] = 0.1;
+										array_push($output,$wordWithType);	
+									}
 								}
-
-							}else{
-								array_push($output,$newword);
 							}
 						}
-						
-					}else{
-						array_push($output,$newword);
 					}
 					//后处理 进一步切分没有意思的长词
 					Log::info("后处理 进一步切分没有意思的长词");
 					$new = $this->split2($row);
 					if($new !== $row){
-						$newword = ['word'=>$oneword,'type'=>$type,'grammar'=>'','parent'=>'','factors'=>$new,'confidence'=>$value];
+						$newword['factors'] = $new;
 						array_push($output,$newword);
 						#再处理一次
-						$new2 = split2($new);
+						$new2 = $this->split2($new);
 						if($new2!==$new){
 							$newword['factors'] = $new2;
 							array_push($output,$newword);
