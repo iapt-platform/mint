@@ -1,8 +1,6 @@
 <?php
 namespace App\Console\Commands;
 
-require_once __DIR__."/../../../public/app/dict/turbo_split.php";
-
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\WordIndex;
@@ -101,10 +99,7 @@ class UpgradeCompound extends Command
 		foreach ($words as $key => $word) {
 			//先看目前字典里有没有
 			$isExists = UserDict::where('word',$word->real)
-								->whereIn('dict_id',[
-									      '57afac99-0887-455c-b18e-67c8682158b0',
-								          '4d3a0d92-0adc-4052-80f5-512a2603d0e8'
-										  ])
+								->where('dict_id',"<>",'8359757e-9575-455b-a772-cc6f036caea0')
 								->exists();
 
 			if($isExists){
