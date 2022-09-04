@@ -52,8 +52,8 @@ class WbwLookupController extends Controller
 					foreach ($this->dictList as  $dictId) {
 						# code...
 					}
-					$result = Cache::remember("dict/".$word,60,function() use($word){
-						return UserDict::where('word',$word)->orderBy('confidence','desc')->get();
+					$result = Cache::remember("dict/basic/".$word,60,function() use($word){
+						return UserDict::where('word',$word)->where('source','<>','_USER_WBW_')->where('source','<>','_PAPER_')->orderBy('confidence','desc')->get();
 					});
 					Log::info("query {$word} ".((microtime(true)-$startAt)*1000)."s.");
 					if(count($result)>0){
@@ -64,6 +64,7 @@ class WbwLookupController extends Controller
 								if(!isset($wordPool[$word]['factors'])){
 									//将第一个拆分作为最佳拆分存储
 									$wordPool[$word]['factors'] = $dictword->factors;
+									Log::info("best factor:{$dictword->factors}");
 								}
 							}
 						}
