@@ -53,6 +53,7 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/render.js"></script>	
 	<script language="javascript" src="js/xml.js"></script>
 	<script language="javascript" src="js/editor.js"></script>
+	<script language="javascript" src="js/wbw_dict.js"></script>
 	<script language="javascript" src="js/wizard.js"></script>
 	<script language="javascript" src="js/wordmap.js"></script>
 	<script language="javascript" src="js/dict.js"></script>

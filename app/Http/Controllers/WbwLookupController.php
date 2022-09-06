@@ -37,13 +37,17 @@ class WbwLookupController extends Controller
 		$caseman = new CaseMan();
 		$output  = array();
 		$wordPool = array();
-		$input = \explode(',',$request->get("words")); 
+		$input = \explode(',',$request->get("word")); 
 		foreach ($input as $word) {
 			$wordPool[$word] = ['base' => false,'done' => false,'apply' => false]; 
 		}
-		Log::info("query start ".$request->get("words"));
-
-		for ($i=0; $i < 2; $i++) { 
+		Log::info("query start ".$request->get("word"));
+		if(empty($request->get("deep"))){
+			$deep = 2;
+		}else{
+			$deep = $request->get("deep");
+		}
+		for ($i=0; $i < $deep; $i++) { 
 			# code...
 			foreach ($wordPool as $word => $info) {
 				# code...
