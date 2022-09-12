@@ -78,7 +78,7 @@ class WbwLookupController extends Controller
 						$newBase = array();
 						$parents = $caseman->WordToBase($word);
 						foreach ($parents as $base => $rows) {
-							Log::info("found:{$value['type']}-{$value['grammar']}-{$value['parent']}");
+							Log::info("found:{$base}");
 							array_push($output,$rows);
 						}
 						Log::info("去尾查结束");

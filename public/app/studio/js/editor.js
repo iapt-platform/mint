@@ -319,24 +319,7 @@ function editor_dict_one_dict_done(dictIndex) {
 	}
 }
 
-function menu_dict_match() {
-	g_dict_search_one_pass_done = null;
-	g_dict_search_one_dict_done = null;
-	g_dict_search_all_done = null;
 
-	currMatchingDictNum = 0;
-	g_dictFindParentLevel = 0;
-	g_dictFindAllDone = false;
-	g_dict_search_one_dict_done = editor_dict_one_dict_done;
-	g_dict_search_all_done = editor_dict_all_done;
-	dict_refresh_word_download_list();
-	var arrBuffer = dict_get_search_list();
-	g_CurrDictBuffer = JSON.stringify(arrBuffer);
-	dict_mark_word_list_done();
-	document.getElementById("id_dict_match_inner").innerHTML +=
-		"finding parent level " + g_dictFindParentLevel + " buffer:" + arrBuffer.length + "<br>";
-	editor_dict_match();
-}
 
 function editor_dict_match() {
 	if (currMatchingDictNum < g_dictList.length) {
@@ -3442,7 +3425,7 @@ function add_word_to_tran_win(sMeaning) {
 }
 
 function on_word_mouse_enter() {
-	var wordid = $(this).attr("id");
+	let wordid = $(this).attr("id");
 
 	if (gCurrMoseEnterWordId == wordid) {
 		return;
@@ -3454,12 +3437,16 @@ function on_word_mouse_enter() {
 
 	relation_link_show(_curr_mouse_enter_wordid);
 
-	var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
-	var iIndex = getWordIndex(_curr_mouse_enter_wordid);
+	let xAllWord = gXmlBookDataBody.getElementsByTagName("word");
+	let iIndex = getWordIndex(_curr_mouse_enter_wordid);
 	if (iIndex >= 0) {
-		var paliword = getNodeText(xAllWord[iIndex], "real");
-		//如果内存里有这个词，渲染单词下拉菜单
-		dictFetch([paliword],function(){
+		let paliword = getNodeText(xAllWord[iIndex], "real");
+		let factors = [];
+		if(getNodeText(xAllWord[iIndex], "org") != '?'){
+			factors = getNodeText(xAllWord[iIndex], "org").split('+');
+		}
+		//渲染单词下拉菜单
+		dictFetch([paliword].concat(factors),function(){
 			render_word_menu(_curr_mouse_enter_wordid);
 		})
 
@@ -4239,7 +4226,11 @@ var gCurrWordDivBorder = "none";
 var gWordHeadBarVisible = false;
 var gCurrMoseEnterWordId = "";
 
-
+/**
+ * 渲染单词意思，拆分，语法下拉菜单
+ * @param {string} id 单词id
+ * 
+ */
 function render_word_menu(id) {
 	$("#word_mean").html(render_word_menu_mean(id));
 	$("#word_parts").html(render_word_menu_parts(id));
@@ -4286,12 +4277,11 @@ function render_word_menu_mean(id, target = 0) {
 	}
 	sWord.unshift(word_real);
 
-	output +=
-		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
-		id +
-		'","mean","")\'>' +
-		gLocal.gui.empty1 +
-		"</button>";
+	output += "<button ";
+	output += "style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' ";
+	output += "onclick='fieldListChanged(\"" + id + '","mean","")\'>' ;
+	output += gLocal.gui.empty1 ;
+	output += "</button>";
 	output += '<div class="case_dropdown-org">';
 	for (var iWord in sWord) {
 		var pali = sWord[iWord];
@@ -4452,31 +4442,26 @@ function show_word_menu_mean(id) {
 	}
 }
 
-/*
-渲染单词拆分下拉菜单
-id	单词id
-target	默认渲染目标
-		0:主编辑窗口下拉菜
-		1:编辑窗口下拉菜单
-
-返回值	无
-*/
+/**
+ * 渲染单词拆分下拉菜单
+ * @param {string} id	单词id
+ * @param {string} target	默认渲染目标 0:主编辑窗口下拉菜 1:编辑窗口下拉菜单
+ * @return {void}
+ */
 function render_word_menu_parts(id, target = 0) {
 	let output = "";
 	let wordID = id;
 	output += "<div>";
-	output +=
-		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
-		wordID +
-		'","org","")\'>' +
-		gLocal.gui.empty1 +
-		"</button>";
-	output +=
-		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='show_word_map(\"" +
-		wordID +
-		"\")'>" +
-		gLocal.gui.wordmap +
-		"</button>";
+	output += "<button ";
+	output += "style='font-size:100%;display:inline-flex; padding:0.1em 0.5em'";
+	output += "onclick='fieldListChanged(\"" + wordID + '","org","")\'>' ;
+	output += gLocal.gui.empty1 ;
+	output += "</button>";
+	output += "<button ";
+	output += "style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' ";
+	output += "onclick='show_word_map(\"" + wordID + "\")'>" ;
+	output += gLocal.gui.wordmap ;
+	output += "</button>";
 	output += "</div>";
 	let pali = doc_word("#" + id).val("real");
 	let wParent = doc_word("#" + id).val("parent");
@@ -4489,25 +4474,25 @@ function render_word_menu_parts(id, target = 0) {
 	if (target == 1) {
 		arrParts[pali] = 1;
 	}
-	if (mDict[pali]) {
-		for (let iWord in mDict[pali]) {
-			if (mDict[pali][iWord].parts && mDict[pali][iWord].parts != "") {
-				arrParts[mDict[pali][iWord].parts] = 1;
+	if (typeof mDict[pali] !== "undefined") {
+		for (const word of mDict[pali]) {
+			if (!isEmpty(word.factors)) {
+				arrParts[word.factors] = 1;
 			}
-			if (mDict[pali][iWord].parent && mDict[pali][iWord].parent != "") {
-				arrParent[mDict[pali][iWord].parent] = 1;
-			}
+			if (!isEmpty(word.parent)) {
+				arrParent[word.parent] = 1;
+			}			
 		}
 	}
 	//加入base拆分
 	if (mDict[wParent]) {
 		let ending = getAutoEnding(pali, wParent);
-		for (let iWord in mDict[wParent]) {
-			if (mDict[wParent][iWord].parts && mDict[wParent][iWord].parts != "") {
-				arrParts[mDict[wParent][iWord].parts] = 1;
+		for (const word of mDict[wParent]) {
+			if (word.factors && word.factors != "") {
+				arrParts[word.factors] = 1;
 				{
 					for (let end in ending) {
-						arrParts[mDict[wParent][iWord].parts + "+[" + end + "]"] = 1;
+						arrParts[word.factors + "+[" + end + "]"] = 1;
 					}
 				}
 			}
@@ -4534,9 +4519,9 @@ function render_word_menu_parts(id, target = 0) {
 	for (let sParent in arrParent) {
 		if (mDict[sParent]) {
 			let arrParts = new Array();
-			for (let iWord in mDict[sParent]) {
-				if (mDict[sParent][iWord].parts && mDict[sParent][iWord].parts != "") {
-					arrParts[mDict[sParent][iWord].parts] = 1;
+			for (const word of mDict[sParent]) {
+				if (word.factors && word.factors != "") {
+					arrParts[word.factors] = 1;
 				}
 			}
 			if (arrParts.length > 0) {
@@ -4549,9 +4534,12 @@ function render_word_menu_parts(id, target = 0) {
 				output += "</div>";
 
 				output += "<div>";
-				for (let sPart in arrParts) {
-					output +=
-						"<a onclick='fieldListChanged(\"" + wordID + '","org","' + sPart + "\")'>" + sPart + "</a>";
+				for (const sPart in arrParts) {
+					if (Object.hasOwnProperty.call(arrParts, sPart)) {
+						output += "<a onclick='fieldListChanged(\"" + wordID + '","org","' + sPart + "\")'>";
+						output += sPart ;
+						output += "</a>";
+					}
 				}
 				output += "</div>";
 
@@ -4571,42 +4559,28 @@ function show_word_menu_parts(id) {
 		}
 	}
 }
-//渲染单词拆分意思下拉菜单
+
+/**
+ * 渲染单词拆分意思下拉菜单
+ * @param {string} id 单词id
+ * @returns {string} html string
+ */
 function render_word_menu_partmean(id) {
-	var wordID = id;
-	var sHtml = "";
-	var pali = doc_word("#" + id).val("real");
-	var sOrg = doc_word("#" + id).val("org");
-	var listFactorForFactorMean = sOrg.split("+");
-	var currDefualtFM = "";
-	for (iFactor in listFactorForFactorMean) {
-		currDefualtFM += findFirstMeanInDict(listFactorForFactorMean[iFactor]) + "+"; //拆分元素加号分隔
-	}
-	currDefualtFM = currDefualtFM.replace(/"  "/g, " ");
-	currDefualtFM = currDefualtFM.replace(/"+ "/g, "+");
-	currDefualtFM = currDefualtFM.replace(/" +"/g, "+");
-	currDefualtFM = currDefualtFM.substring(0, currDefualtFM.length - 1); //去掉尾部的加号 kosalla
-
-	if (currDefualtFM.slice(-1, -2) == "+") {
-		currDefualtFM = currDefualtFM.substring(0, currDefualtFM.length - 1);
-	}
-
-	sHtml +=
-		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
-		wordID +
-		'","om","")\'>' +
-		gLocal.gui.empty1 +
-		"</button>";
-	sHtml +=
-		"<a onclick='fieldListChanged(\"" +
-		wordID +
-		'","om","[a]' +
-		currDefualtFM +
-		"\")'>[" +
-		gLocal.gui.auto +
-		"]" +
-		currDefualtFM +
-		"</a>";
+	let wordID = id;
+	let sHtml = "";
+	let pali = doc_word("#" + id).val("real");
+	let sOrg = doc_word("#" + id).val("org");
+	let currDefualtFM = getAutoFactorMeaning(sOrg);
+	
+	sHtml += "<button ";
+	sHtml += "style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' ";
+	sHtml += "onclick='fieldListChanged(\"" + wordID + '","om","")\'>' ;
+	sHtml += gLocal.gui.empty1 ;
+	sHtml += "</button>";
+	sHtml += "<a onclick='fieldListChanged(\"" + wordID + '","om","[a]' + currDefualtFM + "\")'>";
+	sHtml += "[" + gLocal.gui.auto + "]" ;
+	sHtml += currDefualtFM ;
+	sHtml += "</a>";
 
 	var arrPartMean = new Array();
 	if (mDict[pali]) {
@@ -5054,11 +5028,16 @@ function win_close(id) {
 	document.getElementById(id).style.display = "none";
 }
 
-//利用下拉菜单修改单词信息
-
+/**
+ * 利用下拉菜单修改单词信息
+ * @param {string} inWordId 单词id
+ * @param {string} inField 要修改的字段名
+ * @param {string} inChangeTo 改为某个值
+ * @param {string} sParent 
+ */
 function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
-	var xAllWord = gXmlBookDataBody.getElementsByTagName("word");
-	var wordIndex = getWordIndex(inWordId);
+	let xAllWord = gXmlBookDataBody.getElementsByTagName("word");
+	let wordIndex = getWordIndex(inWordId);
 	let arr_id_word = inWordId.split("-");
 	let book = arr_id_word[0].slice(1);
 	let paragraph = arr_id_word[1];
@@ -5078,6 +5057,14 @@ function fieldListChanged(inWordId, inField, inChangeTo, sParent = null) {
 	//提交用户逐词解析数据库
 	user_wbw_push_word(inWordId);
 	user_wbw_commit();
+
+	//新的拆分查字典
+	if(inField == "org"){
+		let parts = inChangeTo.split('+');
+		dictFetch(parts,function(){
+			render_word_menu(inWordId);
+		})
+	}
 
 	//准备消息数据
 	let d = new Date();
@@ -5240,17 +5227,18 @@ function set_tran_show_mode(set, obj) {
 var _para_list = new Array();
 
 function menu_dict_match1() {
-	var book;
-	var para = new Array();
+	let book;
+	let para = new Array();
 	xBlock = gXmlBookDataBody.getElementsByTagName("block");
-	for (var iBlock = 0; iBlock < xBlock.length; iBlock++) {
-		xmlParInfo = xBlock[iBlock].getElementsByTagName("info")[0];
-		xmlParData = xBlock[iBlock].getElementsByTagName("data")[0];
+	for (const block of xBlock) {
+		xmlParInfo = block.getElementsByTagName("info")[0];
+		xmlParData = block.getElementsByTagName("data")[0];
 		book = getNodeText(xmlParInfo, "book");
 		paragraph = getNodeText(xmlParInfo, "paragraph");
 
-		para[book + "-" + paragraph] = { book: book, para: paragraph };
+		para[book + "-" + paragraph] = { book: book, para: paragraph };		
 	}
+
 	_para_list = new Array();
 	for (var i in para) {
 		_para_list.push(para[i]);
@@ -5340,7 +5328,18 @@ function auto_match_wbw(para_index) {
 	);
 }
 
-function MatchWord(){
+function isEmpty(val){
+	if(typeof val == "undefined" || val == null || val ==""){
+		return true;
+	}else{
+		return false;
+	}
+}
+/**
+ * 自动填充单词
+ * @param {string} word 需要自动填充的单词
+ */
+function FillAllWord(word=''){
 	let counter = 0;
 	let xAllWord = gXmlBookDataBody.getElementsByTagName("word");
 	for (let x = 0; x < xAllWord.length; x++) {
@@ -5351,40 +5350,128 @@ function MatchWord(){
 		}
 		let wid = getNodeText(xAllWord[x], "id");
 		let real = getNodeText(xAllWord[x], "real");
+		if(word !== ''){
+			if(word !== real){
+				continue;
+			}
+		}
 		let aid = wid.split("-");
 		let book = aid[0].substr(1);
 		let para = aid[1];
 		let num = aid[2];
 		if (mDict.hasOwnProperty(real)) {
+			setNodeText(xAllWord[x], "parent", "");			
+			console.log('setNodeAttr',setNodeAttr(xAllWord[x], "type",'status',0)) ;
+			setNodeAttr(xAllWord[x], "gramma",'status',0);
+			setNodeAttr(xAllWord[x], "case",'status',0);
+			setNodeAttr(xAllWord[x], "parent",'status',0);
+			setNodeAttr(xAllWord[x], "mean",'status',0);
+			setNodeAttr(xAllWord[x], "org",'status',0);
+			setNodeAttr(xAllWord[x], "om",'status',0);
+
 			for (const iterator of mDict[real]) {
-				   if (iterator.type) {
-					   setNodeText(xAllWord[x], "type", iterator.type);
-				   }
-				   if (iterator.gramma) {
-					   setNodeText(xAllWord[x], "gramma", iterator.gramma);
-				   }
-				   setNodeText(xAllWord[x], "case", iterator.type + "#" + iterator.gramma);
-				   if (iterator.mean) {
-					   setNodeText(xAllWord[x], "mean", iterator.mean);
-				   }
-				   if (iterator.parent) {
-					   setNodeText(xAllWord[x], "parent", iterator.parent);
-				   }
-				   if (iterator.parts) {
-					   setNodeText(xAllWord[x], "org", iterator.parts);
-				   }
-				   if (iterator.partmean) {
-					   setNodeText(xAllWord[x], "om", iterator.partmean);
-				   }
-				   setNodeText(xAllWord[x], "status", "3");
+				if (getNodeAttr(xAllWord[x], "type",'status') == '0' && !isEmpty(iterator.type)) {
+					setNodeText(xAllWord[x], "type", iterator.type);
+					setNodeAttr(xAllWord[x], "type",'status',3);
+					console.log('type:',iterator.type);
+
+					if (!isEmpty(iterator.grammar)) {
+						setNodeText(xAllWord[x], "gramma", iterator.grammar);
+						setNodeAttr(xAllWord[x], "gramma",'status',3);
+					}
+					setNodeText(xAllWord[x], "case", iterator.type + "#" + iterator.grammar);
+					setNodeAttr(xAllWord[x], "case",'status',3);
+					if (!isEmpty(iterator.parent)) {
+						setNodeText(xAllWord[x], "parent", iterator.parent);
+						setNodeAttr(xAllWord[x], "parent",'status',3);
+					}
+				}
+
+				if (getNodeAttr(xAllWord[x], "parent",'status') == '0' && !isEmpty(iterator.parent)) {
+					setNodeText(xAllWord[x], "parent", iterator.parent);
+					setNodeAttr(xAllWord[x], "parent",'status',3);
+					console.log('parent:',iterator.parent);
+
+				}
+
+				if (getNodeAttr(xAllWord[x], "mean",'status') == '0' && !isEmpty(iterator.mean)) {
+					setNodeText(xAllWord[x], "mean", iterator.mean);
+					setNodeAttr(xAllWord[x], "mean",'status',3);
+					console.log('mean:',iterator.mean);
+
+				}
+
+				if (getNodeAttr(xAllWord[x], "org",'status') == '0' && !isEmpty(iterator.factors)) {
+					setNodeText(xAllWord[x], "org", iterator.factors);
+					setNodeAttr(xAllWord[x], "org",'status',3);
+					console.log('org:',iterator.factors);
+				}
+				if (getNodeAttr(xAllWord[x], "om",'status') == '0' && !isEmpty(iterator.factormean)) {
+					setNodeText(xAllWord[x], "om", iterator.factormean);
+					setNodeAttr(xAllWord[x], "om",'status',3);
+				}
 				   counter++;
-				   modifyWordDetailByWordId(wid);
-				   user_wbw_push_word(wid);				
 			}
+			setNodeText(xAllWord[x], "status", "3");
+			//查看是否有没匹配上的项目
+			let parts = getNodeText(xAllWord[x], "org").split('+');
+			if(getNodeText(xAllWord[x], "type") == '.cp.'){
+				//复合词，猜测parent 和语法信息
+				if(parts.length>0){
+					let endOfParts = parts[parts.length-1];//末尾的一个单词
+					if(!isEmpty(endOfParts)){
+						if (mDict.hasOwnProperty(endOfParts) && mDict[endOfParts].length>0) {
+							setNodeText(xAllWord[x], "type", mDict[endOfParts][0].type);
+							setNodeText(xAllWord[x], "gramma", mDict[endOfParts][0].grammar);
+							setNodeText(xAllWord[x], "case", mDict[endOfParts][0].type + "#" + mDict[endOfParts][0].grammar);
+							setNodeAttr(xAllWord[x], "case",'status',3);
+							if(isEmpty(getNodeAttr(xAllWord[x], "parent"))){
+								inline_dict_auto_case(real);
+								for (const iterator of mDict[real]) {
+									if(iterator.type == mDict[endOfParts][0].type && 
+									   iterator.grammar == mDict[endOfParts][0].grammar){
+										setNodeText(xAllWord[x], "parent", iterator.parent);
+										setNodeAttr(xAllWord[x], "parent",'status',3);
+										break;
+									}
+								}
+							}	
+						}
+					}
+				}
+			}
+			let fm = "";
+			if(isEmpty(getNodeAttr(xAllWord[x], "om"))){
+				//根据拆分，自动给出拆分意思
+				fm = getAutoFactorMeaning(getNodeText(xAllWord[x], "org"));
+				setNodeText(xAllWord[x], "om", fm);
+				setNodeAttr(xAllWord[x], "om",'status',3);
+			}
+			if(isEmpty(getNodeAttr(xAllWord[x], "mean"))){
+				//根据拆分，自动给出整体意思
+				setNodeText(xAllWord[x], "mean", fm.replace(/\+/g,' '));
+				setNodeAttr(xAllWord[x], "mean",'status',3);
+			}
+			console.log('auto fill:'+real);
+			outputFilder('type:',getNodeText(xAllWord[x], "type"));
+			outputFilder('gramma:',getNodeText(xAllWord[x], "gramma"));
+			outputFilder('parent:',getNodeText(xAllWord[x], "parent"));
+			outputFilder('mean:',getNodeText(xAllWord[x], "mean"));
+			outputFilder('org:',getNodeText(xAllWord[x], "org"));
+			outputFilder('om:',getNodeText(xAllWord[x], "om"));
 
-
+			modifyWordDetailByWordId(wid);
+			user_wbw_push_word(wid);	
 		}
+	}
+}
 
+
+function outputFilder(filder,value){
+	if(isEmpty(value)){
+		console.log("%c"+filder+"empty" ,"color:red;");
+	}else{
+		console.log(filder,value);
 	}
 }
 

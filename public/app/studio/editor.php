@@ -84,6 +84,7 @@ else{$currDevice="computer";}
 	<script src="./js/message.js"></script>
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
+	<script src="../ucenter/setting.js"></script>
 	<script src="../fileindex/file_info.js"></script>
 
 	<script  src="../channal/channal.js"></script>
