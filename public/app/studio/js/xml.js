@@ -191,8 +191,8 @@ function findFirstMeanInDict(inWord) {
  * @returns 
  */
 function findFirstPartMeanInDict(inWord) {
-	let pali = com_getPaliReal(inWord);
-	if (mDict[pali]) {
+	let pali = inWord;
+	if (Object.hasOwnProperty.call(mDict, pali)) {
 		for (const iterator of mDict[pali]) {
 			if(LangInclude(setting['dict.lang'],iterator.language))
 			{

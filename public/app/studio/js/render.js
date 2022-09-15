@@ -4088,7 +4088,7 @@ function updataView() {
 	}
 	word_mouse_event();
 	//console.log("updataview");
-	console.log(topNewDivArray.toString());
+	//console.log(topNewDivArray.toString());
 }
 
 function render_word_mean_menu2(spell) {

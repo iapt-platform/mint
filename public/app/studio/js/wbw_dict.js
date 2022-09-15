@@ -414,3 +414,35 @@ function auto_lookup_wbw(para_index) {
 		}
 	);
 }
+
+/**
+ * 清空逐词译数据 
+ */
+function InitWbw(){
+	let xWord = gXmlBookDataBody.getElementsByTagName("word");
+	for (let index = 0; index < xWord.length; index++) {
+		let word = xWord[index];
+		setNodeText(word,'mean','');
+		setNodeText(word,'org','');
+		setNodeText(word,'om','');
+		setNodeText(word,'parent','');
+		setNodeText(word,'gramma','');
+		setNodeText(word,'type','');
+		setNodeText(word,'case','');
+		setNodeText(word,'status',0);
+
+		setNodeAttr(word,'org','status',0);
+		setNodeAttr(word,'om','status',0);
+		setNodeAttr(word,'parent','status',0);
+		setNodeAttr(word,'gramma','status',0);
+		setNodeAttr(word,'type','status',0);
+		setNodeAttr(word,'case','status',0);		
+		let wid = getNodeText(word, "id");
+		modifyWordDetailByWordId(wid);
+		user_wbw_push_word(wid);	
+	}
+		
+	user_wbw_commit();
+
+	return 'init wbw ' + xWord.length;
+}

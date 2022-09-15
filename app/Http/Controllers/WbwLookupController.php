@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Cache;
 class WbwLookupController extends Controller
 {
 	private $dictList = [
-		'57afac99-0887-455c-b18e-67c8682158b0',// system regular
+		'85dcc61c-c9e1-4ae0-9b44-cd6d9d9f0d01',//社区汇总
 		'4d3a0d92-0adc-4052-80f5-512a2603d0e8',// system irregular
+		'57afac99-0887-455c-b18e-67c8682158b0',// system regular
+		'ef620a93-a55d-4756-89c5-e188ab009e45',//社区字典
 		'8359757e-9575-455b-a772-cc6f036caea0',// system sandhi
 		'c42980f0-5967-4833-b695-84183344f68f',// robot compound
 		'61f23efb-b526-4a8e-999e-076965034e60',// pali myanmar grammar
@@ -22,7 +24,7 @@ class WbwLookupController extends Controller
 		'2f93d0fe-3d68-46ee-a80b-11fa445a29c6',// unity
 		'beb45062-7c20-4047-bcd4-1f636ba443d1',// U Hau Sein
 		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
-		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
+		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮			
 	];
     /**
      * Display a listing of the resource.
@@ -53,26 +55,28 @@ class WbwLookupController extends Controller
 				# code...
 				if($info['done'] == false){
 					$wordPool[$word]['done'] = true;
+					$count = 0;
 					foreach ($this->dictList as  $dictId) {
 						# code...
-					}
-					$result = Cache::remember("dict/basic/".$word,60,function() use($word){
-						return UserDict::where('word',$word)->where('source','<>','_USER_WBW_')->where('source','<>','_PAPER_')->orderBy('confidence','desc')->get();
-					});
-					Log::info("query {$word} ".((microtime(true)-$startAt)*1000)."s.");
-					if(count($result)>0){
-						foreach ($result as  $dictword) {
-							# code...
-							array_push($output,$dictword);
-							if(!empty($dictword->factors)){
-								if(!isset($wordPool[$word]['factors'])){
+						$result = Cache::remember("dict/{$dictId}/".$word,1000,function() use($word,$dictId){
+							return UserDict::where('word',$word)->where('dict_id',$dictId)->orderBy('confidence','desc')->get();
+						});	
+						$count += count($result);
+						if(count($result)>0){
+							foreach ($result as  $dictword) {
+								# code...
+								array_push($output,$dictword);
+								if(!isset($wordPool[$word]['factors']) && !empty($dictword->factors)){
 									//将第一个拆分作为最佳拆分存储
 									$wordPool[$word]['factors'] = $dictword->factors;
 									Log::info("best factor:{$dictword->factors}");
 								}
 							}
 						}
-					}else{
+					}
+
+					Log::info("query {$word} ".((microtime(true)-$startAt)*1000)."s.");
+					if($count == 0){
 						//没查到 去尾查
 						Log::info("没查到 去尾查");
 						$newBase = array();

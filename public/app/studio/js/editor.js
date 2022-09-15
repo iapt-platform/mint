@@ -5425,7 +5425,7 @@ function FillAllWord(word=''){
 							setNodeText(xAllWord[x], "gramma", mDict[endOfParts][0].grammar);
 							setNodeText(xAllWord[x], "case", mDict[endOfParts][0].type + "#" + mDict[endOfParts][0].grammar);
 							setNodeAttr(xAllWord[x], "case",'status',3);
-							if(isEmpty(getNodeAttr(xAllWord[x], "parent"))){
+							if(isEmpty(getNodeText(xAllWord[x], "parent"))){
 								inline_dict_auto_case(real);
 								for (const iterator of mDict[real]) {
 									if(iterator.type == mDict[endOfParts][0].type && 
@@ -5441,14 +5441,28 @@ function FillAllWord(word=''){
 				}
 			}
 			let fm = "";
-			if(isEmpty(getNodeAttr(xAllWord[x], "om"))){
+			if(isEmpty(getNodeText(xAllWord[x], "om"))){
 				//根据拆分，自动给出拆分意思
 				fm = getAutoFactorMeaning(getNodeText(xAllWord[x], "org"));
 				setNodeText(xAllWord[x], "om", fm);
 				setNodeAttr(xAllWord[x], "om",'status',3);
 			}
-			if(isEmpty(getNodeAttr(xAllWord[x], "mean"))){
+			if(isEmpty(getNodeText(xAllWord[x], "mean"))){
+				//先查parent
+				let parent = getNodeText(xAllWord[x], "parent");
+				if(!isEmpty(parent) && mDict.hasOwnProperty(parent)){
+					for (const iterator of mDict[parent]) {
+						if(!isEmpty(iterator.mean)){
+							setNodeText(xAllWord[x], "mean", iterator.mean);
+							setNodeAttr(xAllWord[x], "mean",'status',3);
+							break;
+						}
+					}
+				}
+			}
+			if(isEmpty(getNodeText(xAllWord[x], "mean"))){
 				//根据拆分，自动给出整体意思
+				console.log('meaning empty '+getNodeText(xAllWord[x], "mean"));
 				setNodeText(xAllWord[x], "mean", fm.replace(/\+/g,' '));
 				setNodeAttr(xAllWord[x], "mean",'status',3);
 			}
