@@ -1178,7 +1178,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-	white-space: 
+	white-space: nowrap;
 }
 .nsy_word>.org>strong {
     font-weight:900;
