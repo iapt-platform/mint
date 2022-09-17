@@ -936,6 +936,33 @@ var list_relation=[
         "language": "default"
     },
     {
+        "id": "LOV",
+        "case": ".acc.",
+        "note": "Locus ➡ Verb Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "LOV",
+        "case": ".acc.",
+        "note": "容器 ➡ 动词<br>在…",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "LOV",
+        "case": ".acc.",
+        "note": "ādhāra ➡ ādheyya",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
         "id": "MOT",
         "case": ".loc.",
         "note": "Motivational Relation",
