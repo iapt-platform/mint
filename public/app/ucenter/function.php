@@ -93,6 +93,23 @@ class UserInfo
             return 0;
         }
 	}
+	public function getUserByName($name)
+    {
+        if (empty($name)) {
+            return false;
+        }
+        if ($this->dbh) {
+            $query = "SELECT id,userid,nickname,username FROM user WHERE  username= ? ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($name));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                return $user;
+            }
+        } else {
+            return false;
+        }
+	}
 	public function check_password($userid,$password){
 		if ($this->dbh) {
             $query = "SELECT username FROM user WHERE  userid= ? and password = ? ";
