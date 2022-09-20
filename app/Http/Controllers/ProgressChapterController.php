@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+require_once __DIR__.'/../../../public/app/ucenter/function.php';
+
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProgressChapter;
@@ -53,7 +55,13 @@ class ProgressChapterController extends Controller
                 break;
 			case 'studio':
                 #查询该studio的channel
-                $channels = Channel::where('owner_uid',$request->get('id'))->select('uid')->get();
+				$name = $request->get('name');
+				$userinfo = new \UserInfo();
+				$studio = $userinfo->getUserByName($name);
+				if($studio == false){
+					return $this->error('no user');
+				}
+                $channels = Channel::where('owner_uid',$studio['userid'])->select('uid')->get();
                 $aChannel = [];
                 foreach ($channels as $channel) {
                     # code...
