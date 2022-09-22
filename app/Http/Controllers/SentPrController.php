@@ -91,7 +91,7 @@ class SentPrController extends Controller
 			book67 par：759-1152
 			*/
 
-			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
+			//if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				$userinfo = new \UserInfo();
 
 				$username = $userinfo->getName($user_uid)['nickname'];
@@ -152,9 +152,9 @@ class SentPrController extends Controller
 					$webHookMessage = "channel不符";
 					$robotMessageOk = false;
 				}
-			}else{
-				$webHookMessage = "不在段落范围内";
-			}
+			//}else{
+			//	$webHookMessage = "不在段落范围内";
+			//}
 		}
 
 		#同时返回此句子pr数量
