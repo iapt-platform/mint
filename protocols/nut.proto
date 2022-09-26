@@ -1,0 +1,703 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.saturn_xiv.palm.plugins.nut.v1";
+package palm.nut.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+// ----------------------------------------------------------------------------
+
+message IdRequest { int32 id = 1; }
+
+message Resource {
+  string type = 1;
+  optional int32 id = 2;
+}
+
+message Permission {
+  oneof subject {
+    string user = 1;
+    string role = 2;
+  }
+  string operation = 11;
+  Resource resource = 12;
+}
+
+// ----------------------------------------------------------------------------
+message Pager {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message Pagination {
+  int32 page = 1;
+  int32 size = 2;
+  int32 total = 3;
+  bool has_next = 11;
+  bool has_previous = 12;
+}
+
+// ----------------------------------------------------------------------------
+
+message MediaContent {
+  enum Editor {
+    TEXTAREA = 0;
+    QUILL = 1;
+  }
+
+  enum Status {
+    Publish = 0;
+    Draft = 1;
+    Pending = 2;
+    Private = 3;
+    Future = 4;
+    Trash = 99;
+  }
+  Editor editor = 1;
+  string body = 2;
+  Status status = 3;
+}
+
+// ----------------------------------------------------------------------------
+
+message SmsTask {
+  string from = 1;
+  repeated string to = 2;
+  string body = 3;
+}
+
+message EmailTask {
+  enum ContentType {
+    TEXT_PLAIN = 0;
+    TEXT_HTML = 1;
+  }
+  message Attachment {
+    string name = 1;
+    ContentType content_type = 2;
+    bytes payload = 11;
+  }
+  string subject = 1;
+  string body = 2;
+  ContentType content_type = 3;
+
+  string to = 11;
+  repeated string cc = 12;
+  repeated string bcc = 13;
+  repeated Attachment attachments = 21;
+}
+// ----------------------------------------------------------------------------
+
+message UserDetail {
+  string nick_name = 1;
+  string real_name = 2;
+
+  string home = 11;
+}
+
+service User {
+  rpc SignIn(UserSignInRequest) returns (UserSignInResponse) {}
+  rpc SignUp(UserSignUpRequest) returns (google.protobuf.Empty) {}
+  rpc ConfirmByEmail(UserEmailRequest) returns (google.protobuf.Empty) {}
+  rpc ConfirmByToken(UserTokenRequest) returns (google.protobuf.Empty) {}
+  rpc UnlockByEmail(UserEmailRequest) returns (google.protobuf.Empty) {}
+  rpc UnlockByToken(UserTokenRequest) returns (google.protobuf.Empty) {}
+  rpc ForgotPassword(UserEmailRequest) returns (google.protobuf.Empty) {}
+  rpc ResetPassword(UserResetPasswordRequest) returns (google.protobuf.Empty) {}
+
+  rpc Refresh(google.protobuf.Duration) returns (UserSignInResponse) {}
+  rpc Logs(UserLogsRequest) returns (UserLogsResponse) {}
+  rpc SetProfile(UserSetProfileRequest) returns (google.protobuf.Empty) {}
+  rpc ChangePassword(UserChangePasswordRequest)
+      returns (google.protobuf.Empty) {}
+  rpc SignOut(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc Index(Pager) returns (UserIndexResponse) {}
+  rpc Show(UserQueryRequest) returns (UserIndexResponse.Item) {}
+  rpc Disable(UserQueryRequest) returns (google.protobuf.Empty) {}
+  rpc Enable(UserQueryRequest) returns (google.protobuf.Empty) {}
+  rpc Lock(UserQueryRequest) returns (google.protobuf.Empty) {}
+  rpc Unlock(UserQueryRequest) returns (google.protobuf.Empty) {}
+  rpc Confirm(UserQueryRequest) returns (google.protobuf.Empty) {}
+  rpc SetPassword(UserSetPasswordRequest) returns (google.protobuf.Empty) {}
+}
+
+message UserQueryRequest {
+  message Provider {
+    enum Type {
+      EMAIL = 0;
+      GMAIL = 1;
+      WECHAT = 2;
+      FACEBOOK = 3;
+      GITHUB = 4;
+    }
+    Type type = 1;
+    string id = 2;
+  }
+  oneof who {
+    string uid = 1;
+    string nick_name = 2;
+    Provider provider = 3;
+  }
+}
+
+message UserSignInRequest {
+  UserQueryRequest query = 1;
+  string password = 2;
+  google.protobuf.Duration ttl = 11;
+}
+message UserSignInResponse {
+  string token = 1;
+  string real_name = 2;
+  repeated string roles = 11;
+  Permission permissions = 12;
+}
+
+message UserSignUpRequest {
+  string real_name = 1;
+  string nick_name = 2;
+  string email = 3;
+  string password = 4;
+  string lang = 11;
+  string time_zone = 12;
+  string home = 21;
+}
+
+message UserEmailRequest {
+  UserQueryRequest query = 1;
+  string home = 9;
+}
+
+message UserTokenRequest { string token = 1; }
+
+message UserResetPasswordRequest {
+  string token = 1;
+  string password = 2;
+}
+
+message UserSetPasswordRequest {
+  int32 user = 1;
+  string password = 2;
+}
+
+message UserSetProfileRequest {
+  string real_name = 1;
+  string avatar = 2;
+  string time_zone = 8;
+  string lang = 9;
+  string wechat = 11;
+  string phone = 12;
+}
+
+message UserGetProfileResponse {
+  string real_name = 1;
+  string avatar = 2;
+  string nick_name = 3;
+  string email = 4;
+  string time_zone = 8;
+  string lang = 9;
+  string wechat = 11;
+  string phone = 12;
+}
+
+message UserLogsRequest {
+  Pager pager = 1;
+
+  optional UserLogsResponse.Item.Level level = 11;
+  optional string ip = 12;
+}
+
+message UserLogsResponse {
+  message Item {
+    enum Level {
+      DEBUG = 0;
+      INFO = 1;
+      WARNING = 2;
+      ERROR = 3;
+      PANIC = 4;
+    }
+    int32 id = 1;
+    int32 user_id = 2;
+    string ip = 3;
+    Level level = 4;
+    string message = 5;
+    Resource resource = 6;
+    google.protobuf.Timestamp created_at = 11;
+  }
+
+  Pagination pagination = 1;
+  repeated Item items = 11;
+}
+message UserChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+message UserIndexResponse {
+  message Item {
+    int32 id = 1;
+    string uid = 2;
+    string email = 3;
+    string nick_name = 4;
+    string real_name = 5;
+    string provider_type = 6;
+    google.protobuf.Timestamp updated_at = 9;
+    optional google.protobuf.Timestamp last_sign_in_at = 11;
+    optional string last_sign_in_ip = 12;
+    optional google.protobuf.Timestamp current_sign_in_at = 13;
+    optional string current_sign_in_ip = 14;
+    int32 sign_in_count = 19;
+    string lang = 21;
+    string time_zone = 22;
+    string avatar = 23;
+    optional google.protobuf.Timestamp confirmed_at = 27;
+    optional google.protobuf.Timestamp locked_at = 28;
+    optional google.protobuf.Timestamp deleted_at = 29;
+  }
+
+  Pagination pagination = 1;
+  repeated Item items = 11;
+}
+
+// ----------------------------------------------------------------------------
+
+service Attachment {
+  rpc Index(Pager) returns (AttachmetIndexResponse) {}
+  rpc Destroy(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Show(AttachemtShowRequest) returns (AttachemtShowResponse) {}
+}
+message AttachemtShowRequest {
+  int32 id = 1;
+  google.protobuf.Duration ttl = 2;
+}
+message AttachemtShowResponse {
+  AttachmetIndexResponse.Item item = 1;
+  string url = 2;
+}
+
+message AttachmetIndexResponse {
+  message Item {
+
+    int32 id = 1;
+    string bucket = 2;
+    string name = 3;
+    string title = 4;
+    int64 size = 5;
+    string content_type = 6;
+    string region = 7;
+    MediaContent.Status status = 8;
+
+    google.protobuf.Timestamp updated_at = 11;
+  }
+  Pagination pagination = 1;
+  repeated Item items = 11;
+}
+
+// ----------------------------------------------------------------------------
+
+service Policy {
+  rpc GetAllRoles(google.protobuf.Empty) returns (PolicyRoleListResponse) {}
+  rpc GetAllUsers(google.protobuf.Empty) returns (PolicyUserListResponse) {}
+  rpc DeleteUser(PolicyUserRequest) returns (google.protobuf.Empty) {}
+  rpc DeleteRole(PolicyRoleRequest) returns (google.protobuf.Empty) {}
+  rpc GetRolesForUser(PolicyUserRequest) returns (PolicyRoleListResponse) {}
+  rpc GetUsersForRole(PolicyRoleRequest) returns (PolicyUserListResponse) {}
+  rpc AddRolesForUser(PolicyAddRolesForUserRequest)
+      returns (google.protobuf.Empty) {}
+  rpc DeleteRolesForUser(PolicyDeleteRolesForUserRequest)
+      returns (google.protobuf.Empty) {}
+  rpc GetImplicitRolesForUser(PolicyUserRequest)
+      returns (PolicyRoleListResponse) {}
+  rpc GetImplicitUsersForRole(PolicyRoleRequest)
+      returns (PolicyRoleListResponse) {}
+
+  rpc GetPermissionsForUser(PolicyUserRequest)
+      returns (PolicyPermissionsResponse) {}
+  rpc GetPermissionsForRole(PolicyRoleRequest)
+      returns (PolicyPermissionsResponse) {}
+  rpc GetImplicitPermissionsForUser(PolicyUserRequest)
+      returns (PolicyPermissionsResponse) {}
+  rpc GetImplicitPermissionsForRole(PolicyRoleRequest)
+      returns (PolicyPermissionsResponse) {}
+
+  rpc GetImplicitResourcesForUser(PolicyUserRequest)
+      returns (PolicyResourceResponse) {}
+  rpc GetImplicitResourcesForRole(PolicyRoleRequest)
+      returns (PolicyResourceResponse) {}
+
+  rpc AddPermissions(PolicyPermissionsRequest) returns (google.protobuf.Empty) {
+  }
+  rpc DeletePermissions(PolicyPermissionsRequest)
+      returns (google.protobuf.Empty) {}
+}
+
+message PolicyUserRequest { string code = 1; }
+
+message PolicyUserListResponse { repeated string items = 1; }
+
+message PolicyRoleRequest { string code = 1; }
+
+message PolicyRoleListResponse { repeated string items = 1; }
+
+message PolicyAddRolesForUserRequest {
+  string user = 1;
+  repeated string roles = 2;
+  google.protobuf.Timestamp not_before = 11;
+  google.protobuf.Timestamp expired_at = 12;
+}
+
+message PolicyDeleteRolesForUserRequest {
+  string user = 1;
+  repeated string roles = 2;
+}
+
+message PolicyPermissionsRequest { repeated Permission items = 1; }
+
+message PolicyPermissionsResponse { repeated Permission items = 1; }
+
+message PolicyResourceResponse { repeated Resource items = 1; }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+service Locale {
+  rpc Set(LocaleSetRequest) returns (google.protobuf.Empty) {}
+  rpc Get(LocaleGetRequest) returns (LocaleIndexResponse.Item) {}
+  rpc Index(Pager) returns (LocaleIndexResponse) {}
+  rpc Destroy(IdRequest) returns (google.protobuf.Empty) {}
+}
+
+message LocaleIndexResponse {
+  message Item {
+    int32 id = 1;
+    string lang = 2;
+    string code = 3;
+    string message = 4;
+    google.protobuf.Timestamp updated_at = 9;
+  }
+  repeated Item items = 1;
+  Pagination pagination = 9;
+}
+
+message LocaleGetRequest {
+  string lang = 1;
+  string code = 2;
+}
+message LocaleSetRequest {
+  string lang = 1;
+  string code = 2;
+  string message = 3;
+}
+
+// ----------------------------------------------------------------------------
+
+service Setting {
+  rpc Set(SettingSetRequest) returns (google.protobuf.Empty) {}
+  rpc Get(SettingGetRequest) returns (SettingGetResponse) {}
+}
+
+message SettingGetResponse { bytes value = 1; }
+
+message SettingGetRequest {
+  optional int32 user = 1;
+  string key = 2;
+}
+
+message SettingSetRequest {
+  optional int32 user = 1;
+  string key = 2;
+  bytes value = 3;
+  bool encrypt = 9;
+}
+
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+
+service Site {
+  rpc SetMaintenanceMode(SiteMaintenanceModeRequest)
+      returns (google.protobuf.Empty) {}
+
+  rpc Install(SiteInstallRequest) returns (google.protobuf.Empty) {}
+
+  rpc ClearCache(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc Layout(google.protobuf.Empty) returns (SiteLayoutResponse) {}
+  rpc SetAuthor(SiteLayoutResponse.Author) returns (google.protobuf.Empty) {}
+  rpc SetCopyright(SiteSetCopyrightRequest) returns (google.protobuf.Empty) {}
+  rpc SetKeywords(SiteSetKeywordsRequest) returns (google.protobuf.Empty) {}
+  rpc SetInfo(SiteSetInfoRequest) returns (google.protobuf.Empty) {}
+  rpc SetLogo(SiteSetLogoRequest) returns (google.protobuf.Empty) {}
+
+  rpc SetAws(AwsProfile) returns (google.protobuf.Empty) {}
+  rpc GetAws(google.protobuf.Empty) returns (AwsProfile) {}
+  rpc TestAwsS3(google.protobuf.Empty) returns (SiteAwsS3TestResponse) {}
+  rpc SetSmtp(SmtpProfile) returns (google.protobuf.Empty) {}
+  rpc GetSmtp(google.protobuf.Empty) returns (SmtpProfile) {}
+  rpc TestSmtp(SiteSmtpTestRequst) returns (google.protobuf.Empty) {}
+  rpc SetBing(BingProfile) returns (google.protobuf.Empty) {}
+  rpc GetBing(google.protobuf.Empty) returns (BingProfile) {}
+  rpc SetGoogle(GoogleProfile) returns (google.protobuf.Empty) {}
+  rpc GetGoogle(google.protobuf.Empty) returns (GoogleProfile) {}
+  rpc SetBaidu(BaiduProfile) returns (google.protobuf.Empty) {}
+  rpc GetBaidu(google.protobuf.Empty) returns (BaiduProfile) {}
+
+  rpc Status(google.protobuf.Empty) returns (SiteStatusResponse) {}
+
+  rpc NewLeaveWord(SiteNewLeaveWordRequest) returns (google.protobuf.Empty) {}
+  rpc IndexLeaveWord(Pager) returns (SiteIndexLeaveWordResponse) {}
+  rpc DestroyLeaveWord(IdRequest) returns (google.protobuf.Empty) {}
+
+  rpc IndexNotification(Pager) returns (SiteIndexNotificationResponse) {}
+}
+
+message SiteMaintenanceModeRequest {
+  message Item {
+    google.protobuf.Duration duration = 1;
+    string reason = 2;
+  }
+  optional Item item = 1;
+}
+
+message SiteInstallRequest { UserSignUpRequest user = 1; }
+
+message AwsProfile {
+  string region = 1;
+  optional string endpoint = 2;
+  string access_key_id = 3;
+  string secret_access_key = 4;
+}
+message SiteAwsS3TestResponse { repeated string buckets = 1; }
+
+message SiteSmtpTestRequst {
+  string to = 1;
+  string subject = 2;
+  string body = 3;
+}
+
+message SiteSetLogoRequest { string url = 1; }
+message SiteSetCopyrightRequest { string payload = 1; }
+message SiteSetKeywordsRequest { repeated string items = 1; }
+message SiteSetInfoRequest {
+  string title = 1;
+  string subhead = 2;
+  string description = 3;
+}
+
+message SiteLayoutResponse {
+  message Author {
+    string name = 1;
+    string email = 2;
+  }
+  string title = 1;
+  string subhead = 2;
+  repeated string keywords = 3;
+  string description = 4;
+  Author author = 5;
+  string copyright = 6;
+  string logo = 7;
+  repeated string languages = 9;
+}
+
+message SiteNewLeaveWordRequest { string body = 1; }
+message SiteIndexLeaveWordResponse {
+  message Item {
+    int32 id = 1;
+    string lang = 2;
+    string ip = 3;
+    string body = 4;
+    google.protobuf.Timestamp created_at = 9;
+  }
+  repeated Item items = 1;
+  Pagination pagination = 9;
+}
+
+message GoogleProfile {
+  // https://developers.google.com/recaptcha/intro
+  message ReCaptcha {
+    string site_key = 1;
+    string secret = 2;
+  }
+  optional string site_verify_id = 1;
+  optional ReCaptcha re_captcha = 2;
+}
+message BaiduProfile {
+  message SiteVerify {
+    string id = 1;
+    string content = 2;
+  }
+  optional SiteVerify site_verify = 1;
+}
+message BingProfile { optional string site_verify_id = 1; }
+
+message SmtpProfile {
+  string host = 1;
+  uint32 port = 2;
+  string user = 3;
+  string password = 4;
+  string cc = 5;
+  string bcc = 6;
+}
+
+message SiteIndexNotificationResponse {
+  message Item {
+    oneof message {
+      EmailTask email = 1;
+      SmsTask sms = 2;
+    }
+    google.protobuf.Timestamp created_at = 19;
+  }
+  repeated Item items = 1;
+  Pagination pagination = 9;
+}
+
+message SiteStatusResponse {
+  message Database {
+    string name = 1;
+    string size = 2;
+  }
+  message PostgreSql {
+    string version = 1;
+    google.protobuf.Timestamp now = 2;
+    repeated Database databases = 9;
+  }
+  message MySql {
+    uint64 size = 1;
+    string version = 2;
+  }
+  message Redis {
+    message Item {
+      string key = 1;
+      int64 ttl = 2;
+    };
+    string info = 1;
+    repeated Item items = 2;
+  }
+  message RabbitMq { string protocol = 1; }
+  message OpenSearch {
+    string url = 1;
+    string info = 2;
+  }
+  message Health {
+    string name = 1;
+    string status = 2;
+  }
+  message System {
+    string version = 1;
+    string cpu = 2;
+    string memory = 3;
+    string boot = 4;
+    string disk = 5;
+    string load = 6;
+    string fs = 7;
+    string swap = 8;
+    string uptime = 9;
+    string network = 10;
+  }
+
+  PostgreSql postgresql = 1;
+  MySql mysql = 2;
+  Redis redis = 3;
+  RabbitMq rabbitmq = 4;
+  OpenSearch opensearch = 5;
+  System system = 11;
+  repeated Health healthes = 21;
+}
+
+// ----------------------------------------------------------------------------
+
+service ShorterLink {
+  rpc Create(ShorterLinkCreateRequest) returns (google.protobuf.Empty) {}
+  rpc Update(ShorterLinkUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc Destroy(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Index(Pager) returns (ShorterLinkIndexResponse) {}
+}
+
+message ShorterLinkIndexResponse {
+  message Item {
+    int32 id = 1;
+    string url = 2;
+    string details = 3;
+
+    google.protobuf.Timestamp updated_at = 11;
+  }
+  Pagination pagination = 1;
+  repeated Item items = 11;
+}
+
+message ShorterLinkCreateRequest {
+  string url = 1;
+  string details = 2;
+}
+
+message ShorterLinkUpdateRequest {
+  int32 id = 1;
+  string url = 2;
+  string details = 3;
+}
+// ----------------------------------------------------------------------------
+
+service Tag {
+  rpc Create(TagCreateRequest) returns (google.protobuf.Empty) {}
+  rpc Update(TagUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc Destroy(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Index(google.protobuf.Empty) returns (TagIndexResponse) {}
+}
+
+message TagIndexResponse {
+  message Item {
+    int32 id = 1;
+    string code = 2;
+    int32 priority = 3;
+
+    google.protobuf.Timestamp updated_at = 11;
+  }
+  repeated Item items = 1;
+}
+
+message TagCreateRequest {
+  string code = 1;
+  int32 priority = 11;
+}
+
+message TagUpdateRequest {
+  int32 id = 1;
+  string code = 2;
+  int32 priority = 11;
+}
+// ----------------------------------------------------------------------------
+
+service Category {
+  rpc Create(CategoryCreateRequest) returns (google.protobuf.Empty) {}
+  rpc Update(CategoryUpdateRequest) returns (google.protobuf.Empty) {}
+  rpc Destroy(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Index(Pager) returns (CategoryIndexResponse) {}
+}
+message CategoryIndexResponse {
+  message Item {
+    int32 id = 1;
+    string code = 2;
+    optional int32 parent_id = 3;
+    int32 priority = 4;
+
+    google.protobuf.Timestamp updated_at = 11;
+  }
+  Pagination pagination = 1;
+  repeated Item items = 11;
+}
+message CategoryCreateRequest {
+  string lang = 1;
+  string code = 2;
+  optional int32 parent_id = 3;
+  int32 priority = 11;
+}
+
+message CategoryUpdateRequest {
+  int32 id = 1;
+  string code = 2;
+  optional int32 parent_id = 3;
+  int32 priority = 11;
+}
+
+// ----------------------------------------------------------------------------
