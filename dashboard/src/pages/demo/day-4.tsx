@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification, Anchor,List, Avatar } from "antd";
+import { Affix, Layout, Menu, Breadcrumb, Table, Tag, Space, Pagination, message, notification, Anchor, List, Avatar } from "antd";
 import { Row, Col } from "antd";
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
@@ -17,38 +17,38 @@ message.config({
 });
 
 const data = [
-  {
-    title: '梵网经',
-  },
-  {
-    title: '沙门果经',
-  },
-  {
-    title: '盐块经',
-  },
-  {
-    title: '根修习经',
-  },
+	{
+		title: '梵网经',
+	},
+	{
+		title: '沙门果经',
+	},
+	{
+		title: '盐块经',
+	},
+	{
+		title: '根修习经',
+	},
 ];
 
 const listData = [];
 for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://ant.design',
-    title: `ant design part ${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
+	listData.push({
+		href: 'https://ant.design',
+		title: `ant design part ${i}`,
+		avatar: 'https://joeschmoe.io/api/v1/random',
+		description:
+			'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+		content:
+			'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+	});
 }
 
 const IconText = ({ icon, text }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
+	<Space>
+		{React.createElement(icon)}
+		{text}
+	</Space>
 );
 
 function handleClick(e) {
@@ -80,26 +80,26 @@ export default () => {
 	const [tableData, setTableData] = useState();
 
 
-	function getTableData(e){
-        //let url='https://gorest.co.in/public-api/posts';
-        let url='http://127.0.0.1:8000/api/v2/progress?view=tag';
+	function getTableData(e) {
+		//let url='https://gorest.co.in/public-api/posts';
+		let url = 'http://127.0.0.1:8000/api/v2/progress?view=tag';
 		fetch(url)
 			.then(function (response) {
 				console.log("ajex:", response);
 				return response.json();
 			})
 			.then(function (myJson) {
-				console.log("ajex",myJson.data);
-                for (let iterator of myJson.data.rows) {
-                    if(iterator.title==''){
-                        iterator.title = iterator.toc;
-                    }
-                    iterator.description = iterator.toc;
-                    iterator.href="http://127.0.0.1:8000/app/article/?view=chapter&book="+iterator.book+"&par="+iterator.para+'&channel='+iterator.channel_id;
-                    iterator.avatar = 'https://joeschmoe.io/api/v1/random';
-                }
+				console.log("ajex", myJson.data);
+				for (let iterator of myJson.data.rows) {
+					if (iterator.title == '') {
+						iterator.title = iterator.toc;
+					}
+					iterator.description = iterator.toc;
+					iterator.href = "http://127.0.0.1:8000/app/article/?view=chapter&book=" + iterator.book + "&par=" + iterator.para + '&channel=' + iterator.channel_id;
+					iterator.avatar = 'https://joeschmoe.io/api/v1/random';
+				}
 				setTableData(myJson.data.rows);
-			});		
+			});
 	}
 	function pageChange(page: number, pagesize?: number | undefined) {
 		setcommitTime(page);
@@ -136,25 +136,26 @@ export default () => {
 					</SubMenu>
 				</Menu>
 			</Header>
+			
 			<Layout>
 				<Affix offsetTop={top}>
-					<Sider 
-                        className="site-layout-background"
-                        breakpoint="lg"
-                        collapsedWidth="0"
-                        onBreakpoint={broken => {
-                            console.log(broken);
-                        }}
-                        onCollapse={(collapsed, type) => {
-                            console.log(collapsed, type);
-                        }}
-                    >
+					<Sider
+						className="site-layout-background"
+						breakpoint="lg"
+						collapsedWidth="0"
+						onBreakpoint={broken => {
+							console.log(broken);
+						}}
+						onCollapse={(collapsed, type) => {
+							console.log(collapsed, type);
+						}}
+					>
 						<Menu
 							mode="inline"
 							defaultSelectedKeys={['1']}
 							defaultOpenKeys={['sub1']}
 							style={{ height: '100%', borderRight: 0 }}
-                            onClick={getTableData}
+							onClick={getTableData}
 						>
 							<SubMenu key="sutta" icon={<UserOutlined />} title="经藏">
 								<Menu.Item key="dn">长部</Menu.Item>
@@ -200,61 +201,45 @@ export default () => {
 							width: "100%",
 							overflowX: "auto",
 						}}>
-<List
-    itemLayout="vertical"
-    size="large"
-    pagination={{
-      onChange: page => {
-        console.log(page);
-      },
-      pageSize: 10,
-    }}
-    dataSource={tableData}
-    footer={
-      <div>
-        <b>ant design</b> footer part
-      </div>
-    }
-    renderItem={item => (
-      <List.Item
-        key={item.title}
-        actions={[
-          <IconText icon={StarOutlined} text={item.progress} key="list-vertical-star-o" />,
-          <IconText icon={LikeOutlined} text={item.created_at} key="list-vertical-like-o" />,
-          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-        ]}
+						<List
+							itemLayout="vertical"
+							size="large"
+							pagination={{
+								onChange: page => {
+									console.log(page);
+								},
+								pageSize: 10,
+							}}
+							dataSource={tableData}
+							footer={
+								<div>
+									<b>ant design</b> footer part
+								</div>
+							}
 
-      >
-        <List.Item.Meta
-          avatar={<Avatar src={item.avatar} />}
-          title={<a href={item.href} target='_blank'>{item.title}</a>}
-          description={item.description}
-        />
-      </List.Item>
-    )}
-  />
+						/>
 					</Content>
 				</Layout>
 				<Affix offsetTop={top}>
 					<Sider
-                    className="site-layout-background"
-                        breakpoint="lg"
-                        collapsedWidth="0"
-                    >
-<List
-    header={<div>本周最新</div>}
-    itemLayout="horizontal"
-    dataSource={data}
-    renderItem={item => (
-      <List.Item>
-        <List.Item.Meta
-          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-          title={<a href="https://ant.design">{item.title}</a>}
-          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-        />
-      </List.Item>
-    )}
-  />
+						className="site-layout-background"
+						breakpoint="lg"
+						collapsedWidth="0"
+					>
+						<List
+							header={<div>本周最新</div>}
+							itemLayout="horizontal"
+							dataSource={data}
+							renderItem={item => (
+								<List.Item>
+									<List.Item.Meta
+										avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+										title={<a href="https://ant.design">{item.title}</a>}
+										description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+									/>
+								</List.Item>
+							)}
+						/>
 					</Sider>
 				</Affix>
 			</Layout>

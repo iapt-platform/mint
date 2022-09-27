@@ -21,7 +21,6 @@ require_once "../pcdl/html_head.php";
 //
 
 require_once "../config.php";
-require_once "../public/_pdo.php";
 require_once '../media/function.php';
 require_once '../public/function.php';
 ?>
@@ -35,9 +34,9 @@ require_once '../public/function.php';
 	<link type="text/css" rel="stylesheet" href="../palicanon/chapter_channel.css"/>
 	<link type="text/css" rel="stylesheet" href="../palicanon/loading.css"/>
 
-    <script src="router.js"></script>
-    <script src="test.js"></script>
-    <script src="my_space.js"></script>
+    <script src="../palicanon/router.js"></script>
+    <script src="../palicanon/test.js"></script>
+    <script src="../palicanon/my_space.js"></script>
 
 <style>
 
@@ -85,10 +84,54 @@ require_once '../public/function.php';
                     </select>
                 </div>
             </div>
+			<div>
+				<div id='tag_list_setting_div'>
+                            
+                    <div class='inner' id='filter-setting' style='display: flex;'>
+							<button id='btn-filter' onclick="tag_list_slide_toggle(this)">
+								标签过滤
+                    		</button>
+							<div class='settting-item'>
+								<span></span>
+								<span>
+									<select id='setting_lang'>
+										<option value='auto'>自动选择语言</option>
+										<option value=''>全部语言</option>
+										<option value='zh'>中文</option>
+										<option value='en'>英文</option>
+									</select>
+								</span>
+							</div>
+                                <div class='settting-item'>
+                                    <span></span>
+                                    <span>
+                                        <select id='setting_channel_type'>
+                                            <option value=''>全部类型</option>
+                                            <option value='translation' selected >译文</option>
+                                            <option value='nissaya'>Nissaya</option>
+                                            <option value='commentray'>注疏</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <div class='settting-item'>
+                                    <span>完成度</span>
+                                    <span>
+                                        <select id='setting_progress'>
+                                            <option value='0.9'>90</option>
+                                            <option value='0.8'>80</option>
+                                            <option value='0.5'>50</option>
+                                            <option value='0.2'>20</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <div style='display:flex;justify-content: space-between;'><button>还原默认</button><button onclick="updateSetting()">应用</button></div>
+                            </div>
+                        </div>
+                </div>			
+			</div>
             <div>
                 <div class='main_menu' id = 'main_menu'>
 
-                </div>
             </div>
             <div id="main_tag"  style="display:none;">
                 <span tag="sutta" title="sutta"></span>
@@ -98,37 +141,6 @@ require_once '../public/function.php';
                 <span tag="aṭṭhakathā" title="aṭṭhakathā"></span>
                 <span tag="ṭīkā" title="ṭīkā"></span>
                 <span tag="añña" title="añña"></span>
-            </div>
-
-            <div id="select_bar" >
-                <div id="select_bar_home" onclick='categoryGoHome()'>
-                <span>
-                    <svg class='icon' style='fill: var(--box-bg-color1)'>
-                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#house'>
-                    </svg>
-                </span>
-                <span>
-                    <svg class='icon' style='fill: var(--box-bg-color1)'>
-                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-compact-right'>
-                    </svg>
-                </span>
-                </div>
-                <div id="channel_selected"></div>
-                <div id="tag_selected"></div>
-            </div>
-
-            <div id='palicanon-category'></div>
-
-            
-            <div id='filter_bar'>
-                <div id='filter_bar_left'></div>
-                <div id='filter_bar_right'>
-                    <button id='btn-filter' onclick="tag_list_slide_toggle(this)">
-                        <svg class='icon' style='fill: var(--box-bg-color1)'>
-                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#filter'>
-                        </svg>
-                    </button>
-                </div>
             </div>
             <div>
                 <div id="tag_list" style='display:none;'>
@@ -154,48 +166,37 @@ require_once '../public/function.php';
                             <div level="100" class="tag_others"></div>
                             <div level="8" class="tag_others"></div>
                         </div>
-                        <div id='tag_list_setting_div'>
-                            <h2>设定</h2>
-                            <div class='inner' id='filter-setting' >
-                                <div class='settting-item'>
-                                    <span>语言</span>
-                                    <span>
-                                        <select id='setting_lang'>
-                                            <option value='auto'>自动</option>
-                                            <option value=''>全部</option>
-                                            <option value='zh'>中文</option>
-                                            <option value='en'>英文</option>
-                                        </select>
-                                    </span>
-                                </div>
-                                <div class='settting-item'>
-                                    <span>内容类型</span>
-                                    <span>
-                                        <select id='setting_channel_type'>
-                                            <option value=''>全部</option>
-                                            <option value='translation' selected >译文</option>
-                                            <option value='nissaya'>Nissaya</option>
-                                            <option value='commentray'>注疏</option>
-                                        </select>
-                                    </span>
-                                </div>
-                                <div class='settting-item'>
-                                    <span>完成度</span>
-                                    <span>
-                                        <select id='setting_progress'>
-                                            <option value='0.9'>90</option>
-                                            <option value='0.8'>80</option>
-                                            <option value='0.5'>50</option>
-                                            <option value='0.2'>20</option>
-                                        </select>
-                                    </span>
-                                </div>
-                                <div style='display:flex;justify-content: space-between;'><button>还原默认</button><button onclick="updateSetting()">应用</button></div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
+            <div id="select_bar" >
+                <div id="select_bar_home" onclick='categoryGoHome()'>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#house'>
+                    </svg>
+                </span>
+                <span>
+                    <svg class='icon' style='fill: var(--box-bg-color1)'>
+                        <use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-compact-right'>
+                    </svg>
+                </span>
+                </div>
+                <div id="channel_selected"></div>
+                <div id="tag_selected"></div>
+            </div>
+
+            <div id='palicanon-category'></div>
+
+            
+            <div id='filter_bar'>
+                <div id='filter_bar_left'></div>
+                <div id='filter_bar_right'>
+
+                </div>
+            </div>
+
 			<div id="index_div">
 				<div id='file_background'></div>
 				<div id = "file_list_div">
@@ -268,7 +269,7 @@ require_once '../public/function.php';
 
     <script>
         $(document).ready(function() {
-			$("#nav_palicanon").addClass('active');
+			$("#nav_community").addClass('active');
             
             let indexFilename = localStorage.getItem('palicanon_tag_category');
             if(!indexFilename){
@@ -278,7 +279,7 @@ require_once '../public/function.php';
             loadTagCategoryIndex();
             loadFilterSetting();//载入上次的过滤器配置
             LoadAllLanguage();
-			_view = 'category';
+			_view = 'community';
             updataHistory();
             <?php
 
@@ -315,6 +316,6 @@ require_once '../public/function.php';
 			});
         });
     </script>
-    <?php
+<?php
 include "../pcdl/html_foot.php";
 ?>
