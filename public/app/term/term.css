@@ -640,6 +640,10 @@ pw {
 	display: flex;
 	margin-right: 5px;
 }
+.other_tran_div .left_bar{
+	position: absolute;
+	right: 15px;
+}
 .sent_tran .left_bar > .face {
 	display: block;
 	margin: 0 0.5em auto auto;
@@ -901,6 +905,7 @@ w:hover {
 	flex: 5;
 	display: flex;
 	flex-direction: column;
+	max-width: 50%;
 }
 
 /*段落模式*/
@@ -1144,6 +1149,7 @@ ul {
 
 .term_mean {
     /*text-transform: capitalize;*/
+	white-space: nowrap;
 }
 .term_at_menu_ul>.trem_focus{
 	border-radius:unset;
@@ -1172,7 +1178,7 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-	white-space: pre-wrap;
+	white-space: nowrap;
 }
 .nsy_word>.org>strong {
     font-weight:900;
@@ -1208,4 +1214,12 @@ button.primary {
 
 .vertical .preview .popup_contence{
     max-width: max(50vw, 100%);
+}
+.other_tran_div thead{
+	background: ivory;
+}
+.other_tran_div th{
+	background: ivory;
+	font-weight: unset;
+    text-align: inherit;
 }

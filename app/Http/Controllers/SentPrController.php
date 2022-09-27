@@ -91,7 +91,7 @@ class SentPrController extends Controller
 			book67 par：759-1152
 			*/
 
-			if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
+			//if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
 				$userinfo = new \UserInfo();
 
 				$username = $userinfo->getName($user_uid)['nickname'];
@@ -102,7 +102,7 @@ class SentPrController extends Controller
 										->value('text');
 				$sent_num = "{$data['book']}-{$data['para']}-{$data['begin']}-{$data['end']}";
 				$palitext = mb_substr($palitext,0,20,"UTF-8");
-				$prtext = mb_substr($data['text'],0,20,"UTF-8");
+				$prtext = mb_substr($data['text'],0,140,"UTF-8");
 				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
 				Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 				switch ($data['channel']) {
@@ -152,9 +152,9 @@ class SentPrController extends Controller
 					$webHookMessage = "channel不符";
 					$robotMessageOk = false;
 				}
-			}else{
-				$webHookMessage = "不在段落范围内";
-			}
+			//}else{
+			//	$webHookMessage = "不在段落范围内";
+			//}
 		}
 
 		#同时返回此句子pr数量

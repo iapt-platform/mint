@@ -716,7 +716,7 @@ function note_json_html(in_json) {
 		"</a>";
 	/*
 	output +=
-		"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
+		/*"<a onclick=\"copy_to_clipboard('"+ window.location.href +"#sent_" +
 		in_json.book +
 		"_" +
 		in_json.para +

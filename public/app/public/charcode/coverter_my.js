@@ -25,8 +25,9 @@ var char_roman_to_myn = [
 	{ id: "dā", value: "ဒါ" }, //
 	{ id: "dhā", value: "ဓါ" }, //
 	{ id: "pā", value: "ပါ" }, //
-	{ id: "vā", value: "ဝါ" }, //
 	{ id: "dvā", value: "ဒွါ" }, //
+	{ id: "tvā", value: "တွာ" }, //
+	{ id: "vā", value: "ဝါ" }, //
 
 	//{ id: "ppho", value: "ပ္ဖေါ" },
 	//{ id: "pphā", value: "ပ္ဖါ" },
