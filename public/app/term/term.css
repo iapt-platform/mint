@@ -489,6 +489,8 @@ note:hover .add_new {
 	min-height: 1em;
 	transition: all 0.2s ease;
 	display: none;
+	max-height: 50vh;
+	overflow: scroll;
 }
 .tool_bar {
 	display: flex;
@@ -722,7 +724,7 @@ pw {
 }
 .tool_bar > .right {
 	position: absolute;
-	right: 2em;
+	left: 2em;
 	margin-top: calc(-1.8em - 8px);
 	display: none;
 	width: auto;
@@ -737,7 +739,7 @@ pw {
     width: fit-content;
 }
 .translation>.sent_tran_inner>.tool_bar > .right{
-    right: 2em;
+    left: 2em;
 }
 
 .sent_tran_inner:hover > .tool_bar > .right {
@@ -766,6 +768,7 @@ pw {
 
 .sent_tran.commentary>.sent_tran_inner{
     padding-top: 2.2em;
+	position: relative;
 }
 .body > .edit {
 	display: none;

@@ -204,6 +204,7 @@ img {
 */
 .tool_bar {
 	display: flex;
+	position: relative;
 }
 
 
