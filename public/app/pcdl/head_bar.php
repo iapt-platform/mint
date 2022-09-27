@@ -516,7 +516,7 @@ switch($_COOKIE['language']){
 							</a>
 						</li>
 						<li>
-							<a href="../statistics" target="_blank">
+							<a href="../statistics/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
 							</a>
 						</li>
