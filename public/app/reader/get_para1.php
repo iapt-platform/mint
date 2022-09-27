@@ -178,10 +178,10 @@ if ($FetchParInfo) {
 				}
 				$urlChannel = "&channel={$_channel}";
 			}
-			$sToc = str_replace("[[","",$sToc);
-			$sToc = str_replace("]]","",$sToc);
+			$sToc = str_replace("[","",$sToc);
+			$sToc = str_replace("]","",$sToc);
 			$sTocOutput .= $space . "- [{$sToc}](../article/index.php?view=chapter&book={$_book}&par={$value["paragraph"]}{$urlChannel}){$progress}\n";
-		}		
+		}
 	}
 	$sTocOutput .= "\n\n";
 

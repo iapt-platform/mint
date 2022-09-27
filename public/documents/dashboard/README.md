@@ -91,8 +91,9 @@ term -->|嵌入| wbw
 
 ```mermaid
 graph LR
-
-subgraph 前端
+home --> api_course
+home --> api_term
+home --> api_article
 	subgraph 藏经阁-Libray
     	home[首页]
 		palicanon[三藏]
@@ -101,6 +102,23 @@ subgraph 前端
 		search[搜索]
 		myzone[个人空间]
 	end
+
+	subgraph API
+	api_user[用户]
+	api_channel[版本]
+	api_term[术语]
+	api_dict[字典]
+	api_course[课程]
+	api_group[工作组]
+	api_palicanon[语料库]
+	api_translation[译文]
+	api_article[文章文集]
+	api_wbw[逐词解析]
+	api_search[全文搜索]
+	api_history[浏览记录]
+	api_others[其他工具表]
+end
+
 	subgraph 译经楼-Studio
 		stu_home[首页]
 		stu_pali[三藏分类]
@@ -115,43 +133,14 @@ subgraph 前端
 		stu_article[文章]
 		stu_collection[文集]
 		统计数据
+		用户认证
 	end
-	subgraph 用户-User
-		sign_up[注册]
-		sign_in[登陆]
-		找回密码
-		个性化设置
-	end
+
 	subgraph 实用工具
 		佛历
 		圣典编码转换
 	end
-	subgraph 后台管理
-		栏目内容管理
-		用户管理
-		数据表管理
-	end
-end
 
-subgraph API
-	api_user(用户)
-	api_channel(版本)
-	api_term[术语]
-	api_dict[字典]
-	api_course[课程]
-	api_group[工作组]
-	api_palicanon[语料库]
-	api_translation[译文]
-	api_article[文章文集]
-	api_wbw[逐词解析]
-	api_search[全文搜索]
-	api_history[浏览记录]
-	api_others[其他工具表]
-end
-
-home --> api_course
-home --> api_term
-home --> api_article
 
 palicanon --> api_palicanon
 palicanon --> api_term

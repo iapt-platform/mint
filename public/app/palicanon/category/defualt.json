@@ -294,6 +294,40 @@
                     {
                         "name":"Paṭṭhāna",
                         "tag":["abhidhamma","paṭṭhāna"]
+                    },
+                    {
+                        "name":"Añña",
+                        "tag":[],
+						"children":[
+							{
+								"name":"Abhidhammatthasaṅgaho",
+								"tag":["abhidhamma","abhidhammatthasaṅgaha"]
+							},
+							{
+								"name":"Abhidhammāvatāra",
+								"tag":["abhidhamma","abhidhammāvatāra"]
+							},
+							{
+								"name":"Nāmarūpaparicchedo",
+								"tag":["abhidhamma","nāmarūpapariccheda"]
+							},
+							{
+								"name":"Paramatthavinicchayo",
+								"tag":["abhidhamma","paramatthavinicchaya"]
+							},
+							{
+								"name":"Saccasaṅkhepo",
+								"tag":["abhidhamma","saccasaṅkhepa"]
+							},
+							{
+								"name":"Abhidhammamātikāpāḷi",
+								"tag":["abhidhamma","abhidhammamātikāpāḷi"]
+							},
+							{
+								"name":"Mohavicchedanī",
+								"tag":["abhidhamma","mohavicchedanī"]
+							}
+						]
                     }
                 ]
             },

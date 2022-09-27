@@ -13,7 +13,6 @@ package pcds.dictionary.v1;
 service Dictionary{
 	//词典管理
 	rpc GetDictListForStudio (DictListRequest) returns (DictListReply){} //列出 studio 里面的全部字典
-	rpc GetDictListForChannel (DictListRequest) returns (DictListReply){} //列出 channel 里面的全部字典
 	rpc GetDict (DictRequest) returns (DictReply){}
 	rpc SetDict (DictRequest) returns (DictReply){}
 	rpc AddDict (DictRequest) returns (DictReply){}
@@ -22,7 +21,6 @@ service Dictionary{
 	//单词管理
 	rpc GetWordListForStudio (WordListRequest) returns (WordListReply){}
 	rpc GetWordListForDict (WordListRequest) returns (WordListReply){}
-	rpc GetWordListForChannel (WordListRequest) returns (WordListReply){} //这个 channel 里面的全部术语
 	rpc GetWord (WordRequest) returns (DictReply){}
 	rpc SetWord (WordRequest) returns (DictReply){}
 	rpc AddWord (WordRequest) returns (DictReply){}
