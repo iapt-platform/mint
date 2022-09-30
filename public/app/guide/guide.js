@@ -5,18 +5,32 @@ function guide_init() {
 				$(this).css("background", "unset");
 			}
 			if ($(this).offset().left < $(document.body).width() / 2) {
-				$(this).append('<div  class="guide_contence left" style="right: max('+($(this).offset().left+$(this).width()+30-$(document.body).width())+'px,-20em);left: -5px;"></div>');
+				$(this).append('<div class="guide_contence"></div>');
+				//$(this).append('<div  class="guide_contence left" style="right: max('+($(this).offset().left+$(this).width()+30-$(document.body).width())+'px,-20em);left: -5px;"></div>');
 				//$(this).after().css("left", +($(this).offset().left-$(this).parent().offset().left)+"px");
 			} else {
-				$(this).append('<div  class="guide_contence right" style="left: '+($(this).parent().offset().left-$(this).offset().left)+'px;right:-5px"></div>');
+				//$(this).append('<div  class="guide_contence"></div>');
+				$(this).append('<div  class="guide_contence right" style="right:-5px"></div>');
+				//$(this).append('<div  class="guide_contence right" style="left: '+($(this).parent().offset().left-$(this).offset().left)+'px;right:-5px"></div>');
 				//$(this).after().css("right", ($(this).parent().offset().left+$(this).parent().width()+13-$(this).offset().left-$(this).width())+"px");
 			}
 			$(this).attr("init", "1");
 		}
 	});
 
-	$("guide").mouseenter(function () {
-		if ($(this).children(".guide_contence").first().html().length > 0) {
+	$("guide").mouseenter(function (event) {
+		let mouse_x=event.clientX
+		let mouse_y=event.clientY
+	if ($(this).offset().left < $(document.body).width() / 2) {//左边
+		$(this).children(".guide_contence").first().css("left",(mouse_x-20)+"px")
+		$(this).children(".guide_contence").first().css("top",mouse_y+"px")
+		$(this).children(".guide_contence").first().css("max-width",($(document.body).width()-mouse_x-20)+"px")
+	} else {//右边
+		$(this).children(".guide_contence").first().css("right",($(document.body).width()-mouse_x-20)+"px")
+		$(this).children(".guide_contence").first().css("top",mouse_y+"px")
+		$(this).children(".guide_contence").first().css("max-width",(mouse_x-20)+"px")
+	}
+	if ($(this).children(".guide_contence").first().html().length > 0) {
 			return;
 		}
 		let gid = $(this).attr("gid");
