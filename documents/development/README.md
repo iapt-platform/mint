@@ -34,6 +34,10 @@ cd ~/workspace
   > /etc/redis/clusters-init.sh # 初始化redis集群
   ```
 
+  ![run.png](../assets/docker/run.png)
+
+  ![services.png](../assets/docker/services.png)
+
 ### 常见连接和测试
 
 - PostgreSql
