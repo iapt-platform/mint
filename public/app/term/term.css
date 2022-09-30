@@ -491,6 +491,7 @@ note:hover .add_new {
 	display: none;
 	max-height: 50vh;
 	overflow: scroll;
+	margin-top: 2em;
 }
 .tool_bar {
 	display: flex;
@@ -765,9 +766,13 @@ pw {
     display: block;
 }
 
+.other_tran .sent_tran_inner{
+    padding-top: calc(8px + 2.1em);
+	position: relative;
+}
 
 .sent_tran.commentary>.sent_tran_inner{
-    padding-top: 2.2em;
+    padding-top: calc(8px + 2.1em);
 	position: relative;
 }
 .body > .edit {
@@ -1181,7 +1186,6 @@ ul {
 .nsy_word>.meaning{
     display:inline;
     font-weight: 400;
-	white-space: nowrap;
 }
 .nsy_word>.org>strong {
     font-weight:900;
