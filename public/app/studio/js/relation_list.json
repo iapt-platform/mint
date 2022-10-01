@@ -153,6 +153,24 @@
         "language": "default"
     },
     {
+        "id": "NIO",
+        "case": ".inf.",
+        "note": "被描述(主) ➡ 定性(表)<br>XX即……",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "NIO",
+        "case": ".inf.",
+        "note": "tulyattha ➡ liṅgattha",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
         "id": "NID",
         "case": ".nom.",
         "note": "Nominal Identity <Denominative> Relation",
@@ -315,6 +333,33 @@
         "language": "default"
     },
     {
+        "id": "IOV",
+        "case": ".inf.",
+        "note": "Inactive Object Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "IOV",
+        "case": ".inf.",
+        "note": "受动者<非主格> ➡ 动词<br>…把XX",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "IOV",
+        "case": ".inf.",
+        "note": "avuttakamma ➡ kiriyā",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
         "id": "DIO-P",
         "case": ".acc.",
         "note": "Double Inactive Object ➡ Verb Relation",
@@ -362,6 +407,60 @@
     {
         "id": "DIO-S",
         "case": ".acc.",
+        "note": "vikati <avuttakamma> ➡ kiriyā",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
+        "id": "DIS-P",
+        "case": ".inst.",
+        "note": "Double Inactive Subject Primary ➡ Verb Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "DIS-P",
+        "case": ".inst.",
+        "note": "主 ➡ 系(被动)",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "DIS-P",
+        "case": ".inst.",
+        "note": "pakati <avuttakamma> ➡ kiriyā",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "default"
+    },
+    {
+        "id": "DIS-S",
+        "case": ".inst.",
+        "note": "Double Inactive Subject Primary ➡ Verb Relation",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "en"
+    },
+    {
+        "id": "DIS-S",
+        "case": ".inst.",
+        "note": "表 ➡ 系(被动)",
+        "sys_name": "Sadda Pan Goun",
+        "author": "Ven. Pandita Pariyatti Faculty ITBMU",
+        "editor": "Bhikkhu Kosalla sy1987",
+        "language": "zh-cn"
+    },
+    {
+        "id": "DIS-S",
+        "case": ".inst.",
         "note": "vikati <avuttakamma> ➡ kiriyā",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
