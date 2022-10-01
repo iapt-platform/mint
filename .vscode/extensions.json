@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools-extension-pack",
+    "ms-python.python",
+    "golang.go",
+    "rust-lang.rust-analyzer",
+    "redhat.ansible",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "bungcip.better-toml",
+    "gaborv.flatbuffers",
+    "yzhang.markdown-all-in-one",
+    "zxh404.vscode-proto3",
+    "ms-vscode-remote.remote-ssh",
+    "ms-azuretools.vscode-docker",
+    "vscode-icons-team.vscode-icons",
+    "akamud.vscode-theme-onedark",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "gruntfuggly.todo-tree"
+  ]
+}

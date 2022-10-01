@@ -4,6 +4,7 @@
 
 - 创建 ssh key `ssh-keygen -t ed25519 -C "your_email@example.com"`
 - 打开 github settings 页面 放置 `~/.ssh/id_ed25519.pub`
+
   ![ssh-key.png](ssh-key.png)
 
 ## 常见 git 设置
@@ -18,12 +19,20 @@ git config --global pull.rebase false
 
 - fork 项目
 
-  - 点击 fork 按钮 ![1.png](fork/1.png)
-  - 输入项目信息 ![2.png](fork/2.png)
+  - 点击 fork 按钮
+
+    ![1.png](fork/1.png)
+
+  - 输入项目信息
+
+    ![2.png](fork/2.png)
 
 - Clone 项目 `git clone git@github.com:YOUR_ID/mint.git ~/workspace/mint`
+
   ![clone.png](clone.png)
+
 - 设置 upstream
+
   ![set upstream](set-upstream.png)
 
 ## 日常工作流程
@@ -43,6 +52,9 @@ git config --global pull.rebase false
 ## 给主 repo 发 pr
 
 - 点击[pull requests](https://github.com/iapt-platform/mint/pulls)中的"New pull request"
+
   ![new pr](pull-request/new.png)
+
 - 选择主 repo 的 branch(agile)和自己的 branch
+
   ![comparing pr](pull-request/comparing.png)
