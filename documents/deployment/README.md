@@ -12,6 +12,8 @@
 ## 镜像准备
 
 ```bash
+# 解压镜像
+tar xf palm-alpine.tar.xz
 # 导入镜像
 podman load -i palm-alpine-TIMESTAMP.tar
 # 启动镜像
