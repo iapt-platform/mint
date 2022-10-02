@@ -20,7 +20,6 @@ yarn start
 ## Typescript
 
 - [Typescript 第一天](ts-day-1/)
-- [Typescript 第二天](ts-day-2/)
 
 ## React
 

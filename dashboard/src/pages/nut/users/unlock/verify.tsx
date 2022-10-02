@@ -1,5 +1,9 @@
+import { useParams } from "react-router-dom";
+
 const Widget = () => {
-  return <div>verify unlock token by email</div>;
+  const { token } = useParams();
+
+  return <div>verify unlock token by email({token})</div>;
 };
 
 export default Widget;
