@@ -1,6 +1,7 @@
 {
   "name": "dashboard",
   "version": "0.1.0",
+  "homepage": "/my",
   "private": true,
   "dependencies": {
     "@ant-design/pro-components": "^2.3.13",

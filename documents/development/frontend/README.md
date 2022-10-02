@@ -2,12 +2,26 @@
 
 ## 安装依赖包
 
+### offline
+
 ```bash
 # offline
 tar xf node_modules.tar.xz
-# online
+```
+
+### online
+
+```bash
+yarn config set registry 'https://registry.npmmirror.com/' --global # for China users
 yarn install
 ```
+
+- for windows user, download [Node.js](https://nodejs.org/en/download/current/) and then,
+
+  ```bash
+  npm config set registry 'https://registry.npmmirror.com/' --global # for China user
+  npm install -g yarn
+  ```
 
 ![dashboard.png](dashboard.png)
 
