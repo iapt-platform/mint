@@ -2,7 +2,6 @@
   "files.autoSave": "onFocusChange",
   "files.insertFinalNewline": true,
   "workbench.colorTheme": "Atom One Dark",
-  "window.zoomLevel": 2,
   "editor.formatOnSave": true,
   "editor.fontFamily": "source code pro",
   "editor.mouseWheelZoom": true,
