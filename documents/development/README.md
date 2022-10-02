@@ -1,5 +1,13 @@
 # 开发线培训文档
 
+## 编辑器设置
+
+### VS Code 配置文件
+
+- Windows `%APPDATA%\Code\User\settings.json`
+- macOS `$HOME/Library/Application Support/Code/User/settings.json`
+- Linux `$HOME/.config/Code/User/settings.json`
+
 ## 系统设置
 
 ### [操作系统准备](../deployment/)
