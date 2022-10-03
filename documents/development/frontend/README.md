@@ -37,8 +37,8 @@ yarn start
 
 ## React
 
-- [React 第一天](react-day-1/)
-- [React 第二天](react-day-2/)
-- [React 第三天](react-day-3/)
-- [React 第四天](react-day-4/)
-- [React 第五天](react-day-5/)
+- [React 第一天： router & layout](react-day-1/)
+- [React 第二天： i18n & form](react-day-2/)
+- [React 第三天： table](react-day-3/)
+- [React 第四天： http request](react-day-4/)
+- [React 第五天： page](react-day-5/)

@@ -47,7 +47,7 @@
 ## 作业
 
 - 每人把自己负责的子项目的所有 pages, components 规划一下 并写出 demo（`<div> bla </div>`即可）
-  - 参见`pages/nut/users/sign-in.tsx`创建`PROJECT_ID/blaA/blaB.tsx`页面 对应页面路径`/PROJECT_ID/blaA/blaB`
+  - 参见`pages/nut/users/sign-in.tsx`创建`PROJECT_ID/blaA/blaB.tsx`页面 对应页面路径`/my/PROJECT_ID/blaA/blaB`
   - 参见`components/nut/users/change-password.tsx`创建`PROJECT_ID/blaX/blaY.tsx`组件
   - 参见`Routes.tsx` 绑定路径和页面
 - 需要从 http url 中取参数的页面，要写好 params 并验证

@@ -1,5 +1,5 @@
-import ChangePassword from "../../../components/nut/users/change-password";
-import Profile from "../../../components/nut/users/profile";
+import ChangePassword from "../../../components/nut/users/ChangePassword";
+import Profile from "../../../components/nut/users/Profile";
 
 const Widget = () => {
   return (
