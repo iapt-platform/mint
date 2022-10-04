@@ -16,6 +16,8 @@ import NutForbidden from "./pages/nut/forbidden";
 import NutNotFound from "./pages/nut/not-found";
 import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
+import NutCommunity from "./pages/community";
+import NutCommunityMyread from "./pages/community/myread";
 
 const Widget = () => {
   return (
@@ -51,6 +53,8 @@ const Widget = () => {
       <Route path="forbidden" element={<NutForbidden />} />
       <Route path="" element={<NutHome />} />
       <Route path="*" element={<NutNotFound />} />
+	  <Route path="community" element={<NutCommunity />}></Route>
+	  <Route path="community/myread" element={<NutCommunityMyread />}></Route>
     </Routes>
   );
 };
