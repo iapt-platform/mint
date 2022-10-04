@@ -30,15 +30,15 @@
 
 ![form](form.png)
 
-## 参考文档
-
-- [ProForm](https://procomponents.ant.design/components/form/)
-
 ## 练习内容
 
 - 表单
-  - 从简单到复杂
+  - 从简单的 case 开始
   - 不考虑表单布局 全部用默认样式
   - 随便找个自己的页面 表单放进去 能够显示出来即可
   - 所有自定义的字符串都要放入国际化目录(比如中文在：locales/zh-Hans)
   - onFinish 里打印出表单值即可，标记为 todo
+
+## 参考文档
+
+- [ProForm](https://procomponents.ant.design/components/form/)
