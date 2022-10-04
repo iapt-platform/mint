@@ -6,7 +6,7 @@
 
 - 先决条件
 
-  ![install](wsl/install.png)
+  ![prerequisites](wsl/prerequisites.png)
 
 - 安装 wsl
 
@@ -15,6 +15,13 @@
 - 从[Windows Store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV)安装 ubuntu（版本不小于 22.04）
 
 ### 安装容器工具 `sudo apt install crun podman buildah`
+
+- 切换至镜像文件路径
+
+  ```bash
+  cd ~/tmp # for *nix, 镜像文件在 $HOME/tmp
+  cd /mnt/d/downloads # for windows, 镜像文件在 d:\downloads
+  ```
 
 ## 镜像准备
 
