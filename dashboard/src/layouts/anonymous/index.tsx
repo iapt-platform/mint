@@ -7,6 +7,7 @@ const Widget = () => {
       <div>anonymous layout header</div>
       <div>
         <Outlet />
+
         <div>
           <Space>
             <Link to="/anonymous/users/sign-in">Sign in</Link>
