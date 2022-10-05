@@ -35,19 +35,16 @@ const Widget = () => {
           />
           <Route path="forgot-password" element={<NutUsersForgotPassword />} />
         </Route>
-
-        <Route path="dashboard" element={<Dashboard />}>
-          <Route path="users">
-            <Route
-              path="change-password"
-              element={<NutUsersChangePassword />}
-            />
-            <Route path="logs" element={<NutUsersLogs />} />
-            <Route path="account-info" element={<NutUsersAccountInfo />} />
-          </Route>
-        </Route>
-        <Route path="switch-language" element={<NutSwitchLanguage />} />
       </Route>
+
+      <Route path="dashboard" element={<Dashboard />}>
+        <Route path="users">
+          <Route path="change-password" element={<NutUsersChangePassword />} />
+          <Route path="logs" element={<NutUsersLogs />} />
+          <Route path="account-info" element={<NutUsersAccountInfo />} />
+        </Route>
+      </Route>
+      <Route path="switch-language" element={<NutSwitchLanguage />} />
       <Route path="forbidden" element={<NutForbidden />} />
       <Route path="" element={<NutHome />} />
       <Route path="*" element={<NutNotFound />} />

@@ -43,4 +43,4 @@ yarn start
 - [React 第二天： i18n & form](react-day-2/)
 - [React 第三天： table](react-day-3/)
 - [React 第四天： http request](react-day-4/)
-- [React 第五天： page](react-day-5/)
+- [React 第五天： page & component & redux](react-day-5/)
