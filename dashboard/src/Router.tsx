@@ -17,7 +17,11 @@ import NutNotFound from "./pages/nut/not-found";
 import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 import NutCommunity from "./pages/community";
-import NutCommunityMyread from "./pages/community/myread";
+import NutCommunityRecent from "./pages/community/recent";
+//import NutStudio from "./pages/studio";
+import NutStudioChannel from "./pages/studio/channel";
+import NutStudioChannelCreate from "./pages/studio/channel/create";
+import NutStudioChannelEdit from "./pages/studio/channel/edit";
 
 const Widget = () => {
   return (
@@ -53,8 +57,16 @@ const Widget = () => {
       <Route path="forbidden" element={<NutForbidden />} />
       <Route path="" element={<NutHome />} />
       <Route path="*" element={<NutNotFound />} />
-	  <Route path="community" element={<NutCommunity />}></Route>
-	  <Route path="community/myread" element={<NutCommunityMyread />}></Route>
+	  <Route path="community" element={<NutCommunity />}>
+		<Route path="myread" element={<NutCommunityRecent />}></Route>
+	  </Route>
+	  <Route path="studio/:studioid" >
+	  	<Route path="channel" element={<NutStudioChannel />}>
+			
+	  	</Route>
+	  </Route>
+	  <Route path="studio/:studioid/channel/create" element={<NutStudioChannelCreate />}> </Route>
+	  <Route path="studio/:studioid/channel/edit" element={<NutStudioChannelEdit />}> </Route>
     </Routes>
   );
 };
