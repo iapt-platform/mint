@@ -12,15 +12,16 @@ tar xf node_modules.tar.xz
 ### online
 
 ```bash
-yarn config set registry 'https://registry.npmmirror.com/' --global # for China users
+cd dashboard
 yarn install
 ```
 
 - for windows user, download [Node.js](https://nodejs.org/en/download/current/) and then,
 
   ```bash
-  npm config set registry 'https://registry.npmmirror.com/' --global # for China user
+  npm config set registry 'https://registry.npmmirror.com/' --global # ONLY for China user
   npm install -g yarn
+  yarn config set registry 'https://registry.npmmirror.com/' --global # ONLY for China users
   ```
 
 ![dashboard.png](dashboard.png)
@@ -28,6 +29,7 @@ yarn install
 ## 开发模式启动 [dashboard](http://localhost:3000)
 
 ```bash
+cd dashboard
 yarn start
 ```
 
@@ -41,4 +43,4 @@ yarn start
 - [React 第二天： i18n & form](react-day-2/)
 - [React 第三天： table](react-day-3/)
 - [React 第四天： http request](react-day-4/)
-- [React 第五天： page](react-day-5/)
+- [React 第五天： page & component & redux](react-day-5/)

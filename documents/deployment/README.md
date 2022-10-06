@@ -2,12 +2,32 @@
 
 ## 操作系统准备
 
-### **仅** Windows 用户
+### For MacOS
 
-- [使用 WSL 在 Windows 上安装 Linux](https://learn.microsoft.com/zh-cn/windows/wsl/install)
-- 从[Windows Store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV)安装 ubuntu（版本不小于 22.04）
+- [安装 Homebrew](https://brew.sh/)
+- 安装 Podman
 
-### 安装容器工具 `sudo apt install crun podman buildah`
+  ```bash
+  brew install qemu
+  brew install podman
+  podman machine init # init the FIRST PODMAN MACHINE
+  ```
+
+- 启动 Podman `podman machine start`
+
+### For Windows 10+
+
+- 先决条件
+
+  ![prerequisites](wsl/prerequisites.png)
+
+- 安装 WSL
+
+  ![install](wsl/install.png)
+
+- 从[Windows Store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV)安装 ubuntu（版本不小于 **22.04**）
+
+## Ubuntu 内安装容器工具包 `sudo apt install crun podman buildah`
 
 ## 镜像准备
 
@@ -59,3 +79,7 @@ podman images
 # 列出所有容器
 podman ps -a
 ```
+
+## 参考文档
+
+- [Install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
