@@ -38,7 +38,7 @@ tar xf palm-alpine.tar.xz
 podman load -i palm-alpine-TIMESTAMP.tar
 # 启动镜像
 cd ~/workspace
-./PROJECT/scripts/docker/alpine.sh
+./PROJECT/docker/alpine/start.sh
 ```
 
 ## 部署

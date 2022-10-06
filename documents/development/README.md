@@ -28,7 +28,7 @@ cat palm-jammy.tar.xz.?? | tar jx
 podman load -i palm-jammy-TIMESTAMP.tar
 # 启动容器
 cd ~/workspace
-./PROJECT/scripts/docker/jammy.sh
+./PROJECT/docker/jammy/start.sh
 ```
 
 ### 容器准备
