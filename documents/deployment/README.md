@@ -33,12 +33,15 @@
 
 ```bash
 # 解压镜像
+sudo apt install -y bzip2
 tar xf palm-alpine.tar.xz
 # 导入镜像
 podman load -i palm-alpine-TIMESTAMP.tar
+# clone 代码
+git clone -b agile https://github.com/iapt-platform/mint.git ~/workspace/mint
 # 启动镜像
 cd ~/workspace
-./PROJECT/docker/alpine/start.sh
+./mint/docker/alpine/start.sh
 ```
 
 ## 部署
@@ -46,7 +49,7 @@ cd ~/workspace
 - 设置 client key
 
   ```bash
-  cd PROJECT/deploy
+  cd deploy
   mkdir -p clients/CLIENT_ID/.ssh
   cd clients/CLIENT_ID
   # 创建 ssh key
@@ -60,7 +63,7 @@ cd ~/workspace
 - 命令
 
   ```bash
-  cd PROJECT/deploy
+  cd deploy
   # 测试服务器状态
   peony -i clients/CLIENT_ID ping.yml
   # 全量部署
