@@ -1,9 +1,9 @@
 import { useParams ,Link} from "react-router-dom";
 import { useIntl } from "react-intl";
 import { Space } from "antd";
-import HeadBar from "../../components/studio/HeadBar";
-import LeftSider from "../../components/studio/LeftSider";
-import Footer from "../../components/studio/Footer";
+import HeadBar from "../../../components/studio/HeadBar";
+import LeftSider from "../../../components/studio/LeftSider";
+import Footer from "../../../components/studio/Footer";
 
 const Widget = () => {
 	const intl = useIntl();//i18n
@@ -12,7 +12,7 @@ const Widget = () => {
     <div>
 		<HeadBar/>
 		<LeftSider/>
-      <h2>studio/{studioname}/首页</h2>
+      <h2>studio/{studioname}/{intl.formatMessage({ id: "columns.studio.palicanon.title" })}</h2>
       <div>
 		<Space>
 			<Link to=""> </Link>

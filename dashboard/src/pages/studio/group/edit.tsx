@@ -15,12 +15,12 @@ interface IFormData {
   }
 const Widget = () => {
 	const intl = useIntl();
-	const { studioname,channelid } = useParams();//url 参数
+	const { studioname,groupid } = useParams();//url 参数
   return (
     <div>
 		<HeadBar/>
 		<LeftSider/>
-      <h2>studio/{studioname}/{intl.formatMessage({ id: "columns.studio.channel.title" })}/edit/{channelid}</h2>
+      <h2>studio/{studioname}/{intl.formatMessage({ id: "columns.studio.group.title" })}/edit/{groupid}</h2>
       <div>
 		
 		<div>

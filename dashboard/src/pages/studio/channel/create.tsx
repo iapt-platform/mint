@@ -9,15 +9,15 @@ interface IFormData {
   }
 const Widget = () => {
 	const intl = useIntl();
-	const { studioid } = useParams();
+	const { studioname } = useParams();
   return (
     <div>
-      <div>studio/{studioid}/{intl.formatMessage({ id: "title.channel" })}/create</div>
+      <div>studio/{studioname}/{intl.formatMessage({ id: "title.channel" })}/create</div>
       <div>
         <div>
           <Space>
             <Link to="/">Home</Link>
-            <Link to="/community/myread">{studioid}</Link>
+            <Link to="/community/myread">{studioname}</Link>
           </Space>
         </div>
 		
