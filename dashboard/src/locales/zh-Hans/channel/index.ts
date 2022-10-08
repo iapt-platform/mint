@@ -6,6 +6,10 @@ const items = {
   "channel.type.nissaya.title": "逐词解析",
   "channel.type.translation.title": "译文",
   "channel.lang": "语言",
+  "channel.fields.lang.label": "语言",
+  "channel.fields.type.label": "类型",
+  "channel.fields.name.label": "名称",
+
 };
 
 export default items;

@@ -7,7 +7,7 @@ const Widget = () => {
 	// TODO
   return (
     <div>
-		<HeadBar />
+		<HeadBar selectedKeys="course"/>
       <div>课程首页</div>
 	  <div>
 	  	<Space>

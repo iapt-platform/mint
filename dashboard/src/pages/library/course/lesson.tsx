@@ -9,7 +9,7 @@ const Widget = () => {
 
   return (
     <div>
-		<HeadBar />
+		<HeadBar  selectedKeys="course"/>
       <div>课 {lessonid} 详情</div>
       <div>
 		<Space>主显示区</Space>

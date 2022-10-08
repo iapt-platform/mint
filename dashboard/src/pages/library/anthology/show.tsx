@@ -9,7 +9,7 @@ const Widget = () => {
 	const { anthology_id } = useParams();//url 参数
   return (
     <div>
-		<HeadBar />
+		<HeadBar selectedKeys="anthology"/>
       <div>文集{anthology_id}详情</div>
       <div>
 		<Space>主显示区</Space>

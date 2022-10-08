@@ -9,7 +9,7 @@ const Widget = () => {
 	const { word } = useParams();//url 参数
   return (
     <div>
-		<HeadBar />
+		<HeadBar selectedKeys="dict"/>
       <div>字典-单词-{word}</div>
       <div>
 		<Space>主显示区</Space>

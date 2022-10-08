@@ -7,7 +7,7 @@ const Widget = () => {
 	const { courseid } = useParams();//url 参数
   return (
     <div>
-	<HeadBar />
+	<HeadBar  selectedKeys="course"/>
       <div>课程{courseid} 详情</div>
 	  <div>
 	  	<Space>

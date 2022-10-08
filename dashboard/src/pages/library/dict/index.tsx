@@ -6,7 +6,7 @@ const Widget = () => {
 	// TODO
   return (
     <div>
-		<HeadBar />
+		<HeadBar  selectedKeys="dict"/>
       <div>字典首页</div>
       <div>
 		<Space>主显示区</Space>

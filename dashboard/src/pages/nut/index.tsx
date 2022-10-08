@@ -4,7 +4,7 @@ import Footer from "../../components/library/Footer";
 const Widget = () => {
   return (
 	<div>
-		<HeadBar />
+		<HeadBar  />
 		<div>Home Page</div>
 		<Footer />
 	</div>

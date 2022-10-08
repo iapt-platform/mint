@@ -1,6 +1,6 @@
 import { Space } from "antd";
 import { useParams } from "react-router-dom";
-import HeadBar from "../../../components/blog/HeadBar";
+import HeadBar from "../../../components/library/blog/HeadBar";
 import Footer from "../../../components/library/Footer";
 
 const Widget = () => {

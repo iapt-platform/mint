@@ -8,7 +8,7 @@ const Widget = () => {
 	// TODO
   return (
     <div>
-		<HeadBar />
+		<HeadBar selectedKeys="anthology"/>
       <div>文集首页</div>
 	  <div>
 	  	<Space>
