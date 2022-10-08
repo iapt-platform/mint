@@ -38,10 +38,10 @@ tar xf palm-alpine.tar.xz
 # 导入镜像
 podman load -i palm-alpine-TIMESTAMP.tar
 # clone 代码
-git clone -b agile https://github.com/iapt-platform/mint.git ~/workspace/mint
+git clone -b agile https://github.com/iapt-platform/mint.git ~/workspace/YOUR_PROJECT
 # 启动镜像
 cd ~/workspace
-./mint/docker/alpine/start.sh
+./YOUR_PROJECT/docker/alpine/start.sh
 ```
 
 ## 部署
