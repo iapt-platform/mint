@@ -28,7 +28,7 @@ cat palm-jammy.tar.xz.?? | tar jx
 podman load -i palm-jammy-TIMESTAMP.tar
 # 启动容器
 cd ~/workspace
-./PROJECT/docker/jammy/start.sh
+./mint/docker/jammy/start.sh
 ```
 
 ### 容器准备
@@ -37,7 +37,7 @@ cd ~/workspace
 
   ```bash
   $ cd ~/workspace
-  $ ./saturn-xiv/palm/docker/jammy/start.sh
+  $ ./mint/docker/jammy/start.sh
   > supervisord -c /etc/supervisor/supervisord.conf # 启动服务
   > /etc/redis/clusters-init.sh # 初始化redis集群
   ```
