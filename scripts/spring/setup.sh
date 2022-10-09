@@ -37,12 +37,18 @@ then
     npm install yarn -g
 fi
 
+mkdir -p $HOME/.local/bin $HOME/tmp $HOME/local $HOME/downloads
+
 echo 'setup php'
+if [ ! -f "$HOME/downloads/composer" ]
+then
+    wget -O $HOME/downloads/composer https://getcomposer.org/installer
+fi
 if [ ! -f "$HOME/.local/bin/composer" ]
 then
-    mkdir -p  $HOME/.local/bin
-    wget -O $HOME/.local/bin/composer https://getcomposer.org/installer
-    chmod +x $HOME/.local/bin/composer
+    cd $HOME/downloads
+    php composer
+    mv composer.phar $HOME/.local/bin/composer
 fi
 
 echo 'setup ssh'
