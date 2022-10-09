@@ -29,6 +29,7 @@ switch ($op) {
 		}
 		setcookie("user_uid", "", time() - 60, "/");
 		setcookie("user_id", "", time() - 60, "/");
+		setcookie("token", "", time() - 60, "/");
 
 		setcookie("uid", "", time() - 60, "/");
 		setcookie("username", "", time() - 60, "/");
@@ -157,7 +158,8 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 $payload = [
                     'nbf' => time(),
                     'exp' => $ExpTime,
-                    'uid' => $user_uuid
+                    'uid' => $user_uuid,
+                    'id' => $uid
                 ];
                 $jwt = JWT::encode($payload,$key,'HS512');
                 //End of JWT

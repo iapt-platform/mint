@@ -2,6 +2,10 @@
 require_once __DIR__ . '/casesuf.inc';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../config.php';
+
+// Require Composer's autoloader.
+require_once  __DIR__ . '/../../vendor/autoload.php';
+
 $_book_index = null; //书的列表
 
 /*
@@ -98,7 +102,7 @@ function _get_para_path($book, $paragraph)
 			if ($sFirstParentTitle == "") {
 				$sFirstParentTitle = $FetParent["toc"];
 			}
-			$parent = $FetParent["parent"];			
+			$parent = $FetParent["parent"];
 		}else{
 			break;
 		}
@@ -112,6 +116,42 @@ function _get_para_path($book, $paragraph)
     return ($path);
 }
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+class USER
+{
+    public static function current(){
+        if(isset($_COOKIE['token'])){
+            $jwt = JWT::decode($_COOKIE['token'],new Key(APP_KEY,'HS512'));
+            if($jwt->exp < time()){
+                return [];
+            }else{
+                //有效的token
+                return ['user_uid'=>$jwt->uid,'user_id'=>$jwt->id];
+            }
+        }else if(isset($_COOKIE['user_uid'])){
+            return ['user_uid'=>$_COOKIE['user_uid'],'user_id'=>$_COOKIE['user_id']];
+        }else{
+            return [];
+        }
+    }
+    public static function isSignin(){
+        if(isset($_COOKIE['token'])){
+            $jwt = JWT::decode($_COOKIE['token'],new Key(APP_KEY,'HS512'));
+            if($jwt->exp < time()){
+                return false;
+            }else{
+                //有效的token
+                return true;
+            }
+        }else if(isset($_COOKIE['user_uid'])){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
 class UUID
 {
     public static function v3($namespace, $name)
