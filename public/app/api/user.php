@@ -21,11 +21,11 @@ switch ($_REQUEST["_method"]) {
 	case 'show':
 		# get
 		$model->show();
-		break;	
+		break;
 	case 'update':
 		# post
 		$model->update();
-		break;	
+		break;
 	case 'delete':
 		# get
 		$model->delete();
@@ -33,11 +33,15 @@ switch ($_REQUEST["_method"]) {
 	case 'reset_email':
 		# get
 		$model->reset_password_send_email();
-		break;	
+		break;
 	case 'reset_pwd':
 		# get
 		$model->reset_password();
-		break;	
+		break;
+    case 'signin':
+        # get
+        $model->signin();
+        break;
 	default:
 		# code...
 		break;
