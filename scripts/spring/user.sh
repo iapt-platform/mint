@@ -38,12 +38,13 @@ fi
 
 if [ ! -f /workspace/www/$1/nginx.conf ]
 then
+    # https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
     cat > /workspace/www/$1/nginx.conf <<EOF
 server {
   listen 80;
   root /workspace/www/$1/htdocs;
   index index.html index.php;
-  server_name $1.spring.wikipali.org;
+  server_name ${1//_/-}.spring.wikipali.org;
 
   access_log /workspace/www/$1/logs/access.org;
   error_log /workspace/www/$1/logs/error.log;

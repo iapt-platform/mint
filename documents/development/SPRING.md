@@ -8,7 +8,7 @@ ssh -i YOUR_KEY YOUR_ID@YOUR_ID.spring.wikipali.org
 
 ## PHP 开发（以用户 xxx 为例）
 
-- `~/www/htdocs/info.php` => `https://YOUR_ID.spring.wikipali.org/info.php`
+- `~/www/htdocs/info.php` => `https://YOUR_ID.spring.wikipali.org/info.php` (**如果您的 id 里面有'\_'，需要替换成'-'**)
 - 日志文件在 `~/www/logs/`
 - 其余参见[常见 PHP 设置](php/)
 
