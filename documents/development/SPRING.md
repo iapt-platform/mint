@@ -16,6 +16,7 @@ ssh -i YOUR_KEY YOUR_ID@YOUR_ID.spring.wikipali.org
 
 - PostgreSql 连接 `psql -h 127.0.0.1 -U xxx xxx_mint`
 - RabbitMQ 的 `virtual-host` 是`xxx-mint`
+- redis 的 namespace`xxx://YOUR_KEY`
 
 ## 常用工具
 
