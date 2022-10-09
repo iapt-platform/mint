@@ -44,3 +44,9 @@ yarn start
 - [React 第三天： table](react-day-3/)
 - [React 第四天： http request](react-day-4/)
 - [React 第五天： page & component & redux](react-day-5/)
+
+### 其它例子
+
+- img 组件
+
+  ![img](img.png)
