@@ -5,6 +5,11 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../redis/function.php";
 
+// Require Composer's autoloader.
+require_once '../../vendor/autoload.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 if (isset($_REQUEST["op"])) {
     $op = $_REQUEST["op"];
@@ -34,7 +39,7 @@ switch ($op) {
 		break;
     case "new":
 		$host = $_SERVER['HTTP_HOST'];
-		//if (strpos($host, "wikipali.org") !== false) 
+		//if (strpos($host, "wikipali.org") !== false)
 		{
 			if(isset($_REQUEST["invite"])){
 				$redis = redis_connect();
@@ -50,7 +55,7 @@ switch ($op) {
 				$invite_email = $redis->get("invitecode://".$_REQUEST["invite"]);
 			}else{
 				echo "无邀请码";
-				exit;	
+				exit;
 			}
 		}
 		break;
@@ -90,7 +95,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 		if ($iFetch > 0) { //username is existed
 			$error_email = $_local->gui->email . "已经存在";
 			$post_error = true;
-		} 
+		}
 	}
     if (empty($post_password)) {
         $error_password = $_local->gui->password . $_local->gui->cannot_empty;
@@ -110,7 +115,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
     if (!$post_error) {
         $md5_password = md5($post_password);
         $new_userid = UUID::v4();
- 
+
 				$query = "INSERT INTO user ('id','userid','username','password','nickname','email') VALUES (NULL," . $PDO->quote($new_userid) . "," . $PDO->quote($post_username) . "," . $PDO->quote($md5_password) . "," . $PDO->quote($post_nickname) . "," . $PDO->quote($post_email) . ")";
 				$stmt = @PDO_Execute($query);
 				if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
@@ -121,7 +126,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 					$op = "login";
 					unset($_POST["username"]);
 					//TODO create channel
-					
+
 					//TODO create studio
 				}
 
@@ -135,24 +140,38 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
             $_post_error = $_local->gui->account . $_local->gui->account_existed;
         } else if (isset($_POST["password"])) {
             $md5_password = md5($_POST["password"]);
-            PDO_Connect("" . _FILE_DB_USERINFO_);
+            PDO_Connect(_FILE_DB_USERINFO_);
             $query = "select * from user where (\"username\"=" . $PDO->quote($_POST["username"]) . " or \"email\"=" . $PDO->quote($_POST["username"]) . " ) and \"password\"=" . $PDO->quote($md5_password);
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
-            if ($iFetch > 0) { 
-				//username is exite
+            if ($iFetch > 0) {
+				//验证成功
                 $uid = $Fetch[0]["id"];
                 $username = $Fetch[0]["username"];
                 $user_uuid = $Fetch[0]["userid"];
                 $nickname = $Fetch[0]["nickname"];
                 $email = $Fetch[0]["email"];
 				$ExpTime = time() + 60 * 60 * 24 * 365;
+                //JWT
+                $key = APP_KEY;
+                $payload = [
+                    'nbf' => time(),
+                    'exp' => $ExpTime,
+                    'uid' => $user_uuid
+                ];
+                $jwt = JWT::encode($payload,$key,'HS512');
+                //End of JWT
+                // set cookie
 				if(empty($_SERVER["HTTPS"])){
+                    //本地开发
 					setcookie("user_uid", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 				}else{
+                    //服务器运行
 					setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 				}
 				#给js用的
 				setcookie("uid", $uid, time()+60*60*24*365,"/");
@@ -160,6 +179,8 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
 				setcookie("nickname", $nickname, time()+60*60*24*365,"/");
 				setcookie("email", $email, time()+60*60*24*365,"/");
+
+
 
                 if (isset($_POST["url"])) {
                     $goto_url = $_POST["url"];
@@ -184,6 +205,9 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 }
             ?>
 		<meta http-equiv="refresh" content="0,<?php echo $goto; ?>"/>
+        <script>
+            localStorage.setItem('token',"<?php echo $jwt; ?>");
+        </script>
 	</head>
 
 	<body>
@@ -191,6 +215,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 		<br>
 		<br>
 		<p align="center"><a href="../studio/index.php">Auto Redirecting to Homepage! IF NOT WORKING, CLICK HERE</a></p>
+
     </body>
 </html>
 <?php
@@ -374,6 +399,7 @@ if (isset($message_comm)) {
     echo '</div>';
 }
 if ($op == "new") {
+    //新建账号
     ?>
 			<div class="title">
 			<?php echo $_local->gui->join_wikipali; ?>
@@ -488,8 +514,9 @@ if (isset($_POST["username"]) && $_username_ok == true) {
     ?>
 			</div>
 			<div class="login_new">
-			<?php
-if (isset($_POST["username"]) && $_username_ok == true) {
+<?php
+    if (isset($_POST["username"]) && $_username_ok == true) {
+        //已经输入用户名
         echo '<a href="index.php?language=' . $currLanguage . '">切换账户</a>';
     } else {
         echo '<span class="form_help">' . $_local->gui->new_to_wikipali . ' ？</span><a href="index.php?language=' . $currLanguage . '&op=new">&nbsp;&nbsp;&nbsp;&nbsp;' . $_local->gui->create_account . '</a>';
@@ -500,8 +527,8 @@ if (isset($_POST["username"]) && $_username_ok == true) {
 			<div class="login_form" style="padding: 3em 0 3em 0;">
 			<form action="index.php" method="post">
 				<div>
-				<?php
-if (isset($goto_url)) {
+<?php
+    if (isset($goto_url)) {
         echo "<input type=\"hidden\" name=\"url\" value=\"{$goto_url}\"  />";
     } else if (isset($_POST["url"])) {
         echo "<input type=\"hidden\" name=\"url\" value=\"{$_POST["url"]}\"  />";
