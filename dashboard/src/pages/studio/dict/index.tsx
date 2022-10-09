@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Button,Layout } from "antd";
+import { Button,Layout,Space, Table  } from "antd";
 import {  PlusOutlined } from '@ant-design/icons';
 
 import HeadBar from "../../../components/studio/HeadBar";
@@ -119,6 +119,30 @@ const Widget = () => {
     	sorter: (a, b) => a.createdAt - b.createdAt,
         },
       ]}
+	  rowSelection={{
+        // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+        // 注释该行则默认不显示下拉选项
+        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+        defaultSelectedRowKeys: [1],
+      }}
+      tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+        <Space size={24}>
+          <span>
+            已选 {selectedRowKeys.length} 项
+            <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+              取消选择
+            </a>
+          </span>
+        </Space>
+      )}
+      tableAlertOptionRender={() => {
+        return (
+          <Space size={16}>
+            <a>批量删除</a>
+            <a>导出数据</a>
+          </Space>
+        );
+      }}
       request={async (params = {}, sorter, filter) => {
         // TODO
         console.log(params, sorter, filter);
