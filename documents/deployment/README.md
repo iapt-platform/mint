@@ -58,6 +58,11 @@ cd ~/workspace
 
 - 上传 `.ssh/id_ed25519.pub` 到服务器`/tmp`目录， 然后 `cat /tmp/id_ed25519.pub >> ~/.ssh/authorized_keys`
 - 测试 ssh 连接 `ssh -i .ssh/id_ed25519 deploy@HOST`
+
+  - Fix `Permissions xxxx for xxxx are too open`
+
+    ![too open](ssh/too-open.png)
+
 - 复制`cp ../../staging/hosts ./`并调整配置
 
 - 命令
