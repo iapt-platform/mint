@@ -8,9 +8,9 @@
 - macOS `$HOME/Library/Application Support/Code/User/settings.json`
 - Linux `$HOME/.config/Code/User/settings.json`
 
-## [Spring 开发环境](SPRING)
+## [Spring 开发环境](SPRING.md)
 
-## [Local 开发环境](LOCAL)
+## [Local 开发环境](LOCAL.md)
 
 ## [git pr 流程](git/)
 
