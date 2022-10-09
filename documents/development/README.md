@@ -1,12 +1,17 @@
 # 开发线培训文档
 
+## 常用工具
+
+- 文件传输[FileZilla](https://filezilla-project.org/download.php?type=client)
+- SSH 终端[Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+  - [Using SSH Keys with PuTTY](https://www.liquidweb.com/kb/putty-ssh-keys/)
+- Get that Linux feeling - on Windows [Cygwin](https://www.cygwin.com/install.html)
+
 ## 编辑器设置
 
-### VS Code 配置文件
+- [VSCode](vscode/)
 
-- Windows `%APPDATA%\Code\User\settings.json`
-- macOS `$HOME/Library/Application Support/Code/User/settings.json`
-- Linux `$HOME/.config/Code/User/settings.json`
+### VS Code 配置文件
 
 ## [Spring 开发环境](SPRING.md)
 

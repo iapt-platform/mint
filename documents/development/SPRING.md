@@ -18,11 +18,6 @@ ssh -i YOUR_KEY YOUR_ID@YOUR_ID.spring.wikipali.org
 - RabbitMQ 的 `virtual-host` 是`xxx-mint`
 - redis 的 namespace`xxx://YOUR_KEY`
 
-## 常用工具
-
-- 文件传输[FileZilla](https://filezilla-project.org/download.php?type=client)
-- 终端[Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
-
 ## VsCode 设置
 
 - [Remote Development using SSH](https://code.visualstudio.com/docs/remote/ssh)
