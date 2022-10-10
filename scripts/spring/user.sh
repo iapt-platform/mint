@@ -40,22 +40,40 @@ if [ ! -f /workspace/www/$1/nginx.conf ]
 then
     # https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
     cat > /workspace/www/$1/nginx.conf <<EOF
+# https://laravel.com/docs/9.x/deployment#nginx
+
 server {
   listen 80;
-  root /workspace/www/$1/htdocs;
-  index index.html index.php;
   server_name ${1//_/-}.spring.wikipali.org;
 
   access_log /workspace/www/$1/logs/access.org;
   error_log /workspace/www/$1/logs/error.log;
 
+  add_header X-Frame-Options "SAMEORIGIN";
+  add_header X-Content-Type-Options "nosniff";
+
+  root /workspace/www/$1/htdocs/public;
+  index index.html index.php;
+
+  charset utf-8;
+  gzip on;
+  client_max_body_size 16M;
+
   location / {
-    try_files \$uri \$uri/ =404;
+    try_files \$uri \$uri/ /index.php?\$query_string;
   }
+
+  location = /favicon.ico { access_log off; log_not_found off; }
+  location = /robots.txt  { access_log off; log_not_found off; }
+  error_page 404 /index.php;
   
   location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
     fastcgi_pass unix:/run/php/php-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
+    include fastcgi_params;
+  }
+  location ~ /\.(?!well-known).* {
+    deny all;
   }
 }
 EOF
