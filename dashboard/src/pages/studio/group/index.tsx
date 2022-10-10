@@ -1,8 +1,9 @@
 import { useParams,Link } from "react-router-dom";
 import { useIntl } from "react-intl";
+import { useState } from 'react';
 import { ProList } from '@ant-design/pro-components';
 import { Space, Tag, Button, Layout,Breadcrumb } from 'antd';
-import { useState } from 'react';
+
 
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
@@ -54,25 +55,22 @@ const Widget = () => {
 	const linkGroup = `${linkStudio}/group`;
   return (
     <Layout>
-		
 		<HeadBar/>
 		<Layout>
 			<LeftSider selectedKeys="group"/>
 			<Content>
-				<Layout>
-					<Breadcrumb>
-						<Breadcrumb.Item>
-							<Link to={linkStudio}>{intl.formatMessage({ id: "columns.studio.title" })}</Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Item>
-							{intl.formatMessage({ id: "columns.studio.collaboration.title" })}
-						</Breadcrumb.Item>
-						<Breadcrumb.Item >
-							<Link to={linkGroup}>{intl.formatMessage({ id: "columns.studio.group.title" })}</Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Item>列表</Breadcrumb.Item>
-					</Breadcrumb>
-				</Layout>
+				<Breadcrumb>
+					<Breadcrumb.Item>
+						<Link to={linkStudio}>{intl.formatMessage({ id: "columns.studio.title" })}</Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Item>
+						{intl.formatMessage({ id: "columns.studio.collaboration.title" })}
+					</Breadcrumb.Item>
+					<Breadcrumb.Item >
+						<Link to={linkGroup}>{intl.formatMessage({ id: "columns.studio.group.title" })}</Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Item>列表</Breadcrumb.Item>
+				</Breadcrumb>
 				<Layout>
 					<ProList<DataItem>
 					rowKey="id"
@@ -90,10 +88,8 @@ const Widget = () => {
 						title: {
 						dataIndex: 'name',
 						render: (text, row, index, action) => {
-							let link = `show/${row.id}`;
-
 							return (
-								<Link to ={link}>{row.name}</Link>
+								<Link to ={row.id}>{row.name}</Link>
 							);
 						},
 						},
@@ -137,7 +133,7 @@ const Widget = () => {
 				</Layout>				
 			</Content>
 		</Layout>
-      <Footer/>
+        <Footer/>
     </Layout>
   );
 };
