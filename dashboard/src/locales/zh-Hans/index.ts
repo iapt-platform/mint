@@ -4,6 +4,8 @@ import tables from "./tables";
 import nut from "./nut";
 import channel from "./channel";
 import dict from "./dict";
+import term from "./term";
+import group from "./group";
 
 const items = {
   "flashes.success": "操作成功",
@@ -39,6 +41,8 @@ const items = {
   ...nut,
   ...channel,
   ...dict,
+  ...term,
+  ...group,
 };
 
 export default items;

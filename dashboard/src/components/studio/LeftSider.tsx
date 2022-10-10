@@ -12,7 +12,7 @@ const onClick: MenuProps['onClick'] = e => {
     console.log('click ', e);
   };
 
-  type IWidgetHeadBar ={
+type IWidgetHeadBar ={
 	selectedKeys?: string
 }
 const Widget = ({selectedKeys = ''}: IWidgetHeadBar) => {
@@ -61,11 +61,11 @@ const items: MenuProps['items'] = [
 		icon: <AppstoreOutlined/>,
 		children:[
 			{
-				label: (<Link to = {linkUserdict}>{intl.formatMessage({ id: "columns.studio.term.title" })}</Link>),
+				label: (<Link to = {linkUserdict}>{intl.formatMessage({ id: "columns.studio.userdict.title" })}</Link>),
 				key: 'userdict',
 			  },
 			  {
-				label: (<Link to = {linkTerm}>{intl.formatMessage({ id: "columns.studio.userdict.title" })}</Link>),
+				label: (<Link to = {linkTerm}>{intl.formatMessage({ id: "columns.studio.term.title" })}</Link>),
 				key: 'term',
 			  },
 			  {
@@ -73,8 +73,8 @@ const items: MenuProps['items'] = [
 				key: 'article',
 			  },
 			  {
-				label: (<Link to = {linkAnthology}>{intl.formatMessage({ id: "columns.studio.authology.title" })}</Link>),
-				key: 'authology',
+				label: (<Link to = {linkAnthology}>{intl.formatMessage({ id: "columns.studio.anthology.title" })}</Link>),
+				key: 'anthology',
 			  },
 		
 		],

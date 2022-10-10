@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { ProForm, ProFormText , ProFormSelect,ProFormTextArea } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { message } from "antd";
+import { message,Layout,Space } from "antd";
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+
+const {  Content } = Layout;
 
 interface IFormData {
 	name: string;
@@ -15,15 +17,14 @@ interface IFormData {
   }
 const Widget = () => {
 	const intl = useIntl();
-	const { studioname,channelid } = useParams();//url 参数
+	const { channelid } = useParams();//url 参数
   return (
-    <div>
-		<HeadBar/>
-		<LeftSider/>
-      <h2>studio/{studioname}/{intl.formatMessage({ id: "columns.studio.channel.title" })}/edit/{channelid}</h2>
-      <div>
-		
-		<div>
+	<Layout>
+	<HeadBar/>
+	<Layout>
+		<LeftSider selectedKeys="channel"/>
+		<Content>
+		<Space>{channelid}</Space>
 		<ProForm<IFormData>
 		onFinish={async (values: IFormData) => {
 			// TODO
@@ -73,10 +74,10 @@ const Widget = () => {
 		</ProForm.Group>
 
 		</ProForm>
-		</div>
-      </div>
-      <Footer/>
-    </div>
+	  </Content>
+	</Layout>
+	<Footer/>
+</Layout>
   );
 };
 

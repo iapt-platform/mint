@@ -9,6 +9,8 @@ import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
 
+const {  Content } = Layout;
+
 interface IItem {
   id: number;
   word: string;
@@ -28,160 +30,165 @@ const valueEnum = {
 	3: 'ind',
   };
 
+
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
   return (
 	<Layout>
-		<HeadBar/>
-		<LeftSider/>
+	<HeadBar/>
+	<Layout>
+		<LeftSider selectedKeys="userdict"/>
+		<Content>
+
 		<Layout>{studioname}</Layout>
-    <ProTable<IItem>
-      columns={[
-        {
-          title: intl.formatMessage({ id: "dict.fields.sn.label" }),
-          dataIndex: "id",
-          key: "id",
-          width: 80,
-          search: false,
-        },
-        {
-          title: intl.formatMessage({ id: "dict.fields.word.label" }),
-          dataIndex: "word",
-          key: "word",
-		  render: (_) => <Link to="">{_}</Link>,
-		  tip: '单词过长会自动收缩',
-		  ellipsis: true,
-		  formItemProps: {
-			rules: [
-			  {
-				required: true,
-				message: '此项为必填项',
-			  },
-			],
-		  },
-        },
-		{
-			title: intl.formatMessage({ id: "dict.fields.type.label" }),
-			dataIndex: "type",
-			key: "type",
+		<ProTable<IItem>
+		columns={[
+			{
+			title: intl.formatMessage({ id: "dict.fields.sn.label" }),
+			dataIndex: "id",
+			key: "id",
+			width: 80,
 			search: false,
-			filters: true,
-			onFilter: true,
-			valueEnum: {
-			  all: { text: '全部', status: 'Default' },
-			  n: { text: '名词', status: 'Default' },
-			  ti: { text: '三性', status: 'Processing' },
-			  v: { text: '动词', status: 'Success' },
-			  ind: { text: '不变词', status: 'Success' },
 			},
-		},
-		{
-			title: intl.formatMessage({ id: "dict.fields.grammar.label" }),
-			dataIndex: "grammar",
-			key: "grammar",
-			search: false,
-		},
-		{
-			title: intl.formatMessage({ id: "dict.fields.parent.label" }),
-			dataIndex: "parent",
-			key: "parent",
-		},
-		{
-			title: intl.formatMessage({ id: "dict.fields.meaning.label" }),
-			dataIndex: "meaning",
-			key: "meaning",
-			tip: '意思过长会自动收缩',
+			{
+			title: intl.formatMessage({ id: "dict.fields.word.label" }),
+			dataIndex: "word",
+			key: "word",
+			render: (_) => <Link to="">{_}</Link>,
+			tip: '单词过长会自动收缩',
 			ellipsis: true,
-		},
-		{
-			title: intl.formatMessage({ id: "dict.fields.note.label" }),
-			dataIndex: "note",
-			key: "note",
-			search: false,
-			tip: '注释过长会自动收缩',
-			ellipsis: true,
-		},
-		{
-			title: intl.formatMessage({ id: "dict.fields.factors.label" }),
-			dataIndex: "factors",
-			key: "factors",
-			search: false,
-		},
-        {
-          title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
-          key: "created-at",
-          width: 200,
+			formItemProps: {
+				rules: [
+				{
+					required: true,
+					message: '此项为必填项',
+				},
+				],
+			},
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.type.label" }),
+				dataIndex: "type",
+				key: "type",
+				search: false,
+				filters: true,
+				onFilter: true,
+				valueEnum: {
+				all: { text: '全部', status: 'Default' },
+				n: { text: '名词', status: 'Default' },
+				ti: { text: '三性', status: 'Processing' },
+				v: { text: '动词', status: 'Success' },
+				ind: { text: '不变词', status: 'Success' },
+				},
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.grammar.label" }),
+				dataIndex: "grammar",
+				key: "grammar",
+				search: false,
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.parent.label" }),
+				dataIndex: "parent",
+				key: "parent",
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.meaning.label" }),
+				dataIndex: "meaning",
+				key: "meaning",
+				tip: '意思过长会自动收缩',
+				ellipsis: true,
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.note.label" }),
+				dataIndex: "note",
+				key: "note",
+				search: false,
+				tip: '注释过长会自动收缩',
+				ellipsis: true,
+			},
+			{
+				title: intl.formatMessage({ id: "dict.fields.factors.label" }),
+				dataIndex: "factors",
+				key: "factors",
+				search: false,
+			},
+			{
+			title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
+			key: "created-at",
+			width: 200,
 
-          search: false,
-		  dataIndex: 'createdAt',
-		  valueType: 'date',
-    	sorter: (a, b) => a.createdAt - b.createdAt,
-        },
-      ]}
-	  rowSelection={{
-        // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-        // 注释该行则默认不显示下拉选项
-        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        defaultSelectedRowKeys: [1],
-      }}
-      tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
-        <Space size={24}>
-          <span>
-            已选 {selectedRowKeys.length} 项
-            <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
-              取消选择
-            </a>
-          </span>
-        </Space>
-      )}
-      tableAlertOptionRender={() => {
-        return (
-          <Space size={16}>
-            <a>批量删除</a>
-            <a>导出数据</a>
-          </Space>
-        );
-      }}
-      request={async (params = {}, sorter, filter) => {
-        // TODO
-        console.log(params, sorter, filter);
+			search: false,
+			dataIndex: 'createdAt',
+			valueType: 'date',
+			sorter: (a, b) => a.createdAt - b.createdAt,
+			},
+		]}
+		rowSelection={{
+			// 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+			// 注释该行则默认不显示下拉选项
+			selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+		}}
+		tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+			<Space size={24}>
+			<span>
+				已选 {selectedRowKeys.length} 项
+				<a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+				取消选择
+				</a>
+			</span>
+			</Space>
+		)}
+		tableAlertOptionRender={() => {
+			return (
+			<Space size={16}>
+				<a>批量删除</a>
+				<a>导出数据</a>
+			</Space>
+			);
+		}}
+		request={async (params = {}, sorter, filter) => {
+			// TODO
+			console.log(params, sorter, filter);
 
-        const size = params.pageSize || 20;
-        return {
-          total: 1 << 12,
-          success: true,
-          data: Array.from(Array(size).keys()).map((x) => {
-            const id = ((params.current || 1) - 1) * size + x + 1;
-			
-            var it: IItem = {
-              id,
-              word: `word ${id}`,
-			  type: valueEnum[2],
-			  grammar: "阳-单-属",
-			  parent: `parent ${id}`,
-			  meaning: `meaning ${id}`,
-			  note: `note ${id}`,
-			  factors: `factors ${id}`,
-              createdAt: Date.now() - Math.floor(Math.random() * 200000),
-            };
-            return it;
-          }),
-        };
-      }}
-      rowKey="id"
-      bordered
-      pagination={{
-        showQuickJumper: true,
-        showSizeChanger: true,
-      }}
-      headerTitle={intl.formatMessage({ id: "dict" })}
-	  toolBarRender={() => [
-        <Button key="button" icon={<PlusOutlined />} type="primary">
-          新建
-        </Button>,
-      ]}
-    />
+			const size = params.pageSize || 20;
+			return {
+			total: 1 << 12,
+			success: true,
+			data: Array.from(Array(size).keys()).map((x) => {
+				const id = ((params.current || 1) - 1) * size + x + 1;
+				
+				var it: IItem = {
+				id,
+				word: `word ${id}`,
+				type: valueEnum[2],
+				grammar: "阳-单-属",
+				parent: `parent ${id}`,
+				meaning: `meaning ${id}`,
+				note: `note ${id}`,
+				factors: `factors ${id}`,
+				createdAt: Date.now() - Math.floor(Math.random() * 200000),
+				};
+				return it;
+			}),
+			};
+		}}
+		rowKey="id"
+		bordered
+		pagination={{
+			showQuickJumper: true,
+			showSizeChanger: true,
+		}}
+		headerTitle={intl.formatMessage({ id: "dict" })}
+		toolBarRender={() => [
+			<Button key="button" icon={<PlusOutlined />} type="primary">
+			新建
+			</Button>,
+		]}
+		/>
+	  	</Content>
+	</Layout>
 	<Footer/>
 	</Layout>
   );
