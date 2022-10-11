@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Layout } from 'antd';
+import { Layout, Space } from 'antd';
 import { useIntl } from "react-intl";
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
@@ -39,6 +39,28 @@ const Widget = ({selectedKeys = ''}: IWidgetHeadBar) => {
 		{
 			label: (<a href = "https://asset-hk.wikipali.org/help/zh-Hans" target="_blank" rel="noreferrer">{intl.formatMessage({ id: "columns.library.help.title" })}</a>),
 			key: 'help',
+		},
+		{
+			label: (<Space>{intl.formatMessage({ id: "columns.library.more.title" })}</Space>),
+			key: 'more',
+			children: [
+				{ 
+					label: (<a href = "https://asset-hk.wikipali.org/handbook/zh-Hans" target="_blank" rel="noreferrer">{intl.formatMessage({ id: "columns.library.palihandbook.title" })}</a>),
+					key: 'palihandbook',
+				},
+				{ 
+					label: (<Link to = "/calendar">{intl.formatMessage({ id: "columns.library.calendar.title" })}</Link>),
+					key: 'calendar', 
+				},
+				{ 
+					label: (<Link to = "/convertor">{intl.formatMessage({ id: "columns.library.convertor.title" })}</Link>),
+					key: 'convertor', 
+				},
+				{ 
+					label: (<Link to = "/statistics">{intl.formatMessage({ id: "columns.library.statistics.title" })}</Link>),
+					key: 'statistics', 
+				},
+			],
 		},
 	];
   return (

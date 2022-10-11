@@ -4,6 +4,8 @@ import tables from "./tables";
 import nut from "./nut";
 import channel from "./channel";
 import dict from "./dict";
+import term from "./term";
+import group from "./group";
 
 const items = {
   "flashes.success": "操作成功",
@@ -15,8 +17,11 @@ const items = {
   "columns.library.dict.title": "字典",
   "columns.library.anthology.title": "文集",
   "columns.library.help.title": "帮助",
+  "columns.library.more.title": "更多",
+  "columns.library.calendar.title": "佛历",
   "columns.library.convertor.title": "巴利字符转换器",
   "columns.library.palihandbook.title": "语法手册",
+  "columns.library.statistics.title": "单词统计",
   "columns.studio.title": "译经楼",
   "columns.studio.palicanon.title": "圣典",
   "columns.studio.recent.title": "最近编辑",
@@ -27,12 +32,17 @@ const items = {
   "columns.studio.article.title": "文章",
   "columns.studio.anthology.title": "文集",
   "columns.studio.analysis.title": "分析",
+  "columns.studio.collaboration.title": "协作",
+  "columns.studio.basic.title": "常用",
+  "columns.studio.advance.title": "高级",
   ...buttons,
   ...forms,
   ...tables,
   ...nut,
   ...channel,
   ...dict,
+  ...term,
+  ...group,
 };
 
 export default items;
