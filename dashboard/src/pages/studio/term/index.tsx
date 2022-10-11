@@ -22,13 +22,6 @@ interface IItem {
   createdAt: number;
 }
 
-const valueEnum = {
-	0: 'n',
-	1: 'ti',
-	2: 'v',
-	3: 'ind',
-  };
-
 
 const Widget = () => {
   const intl = useIntl();
@@ -67,9 +60,9 @@ const Widget = () => {
 			},
 			},
 			{
-				title: intl.formatMessage({ id: "term.fields.tag.label" }),
+				title: intl.formatMessage({ id: "term.fields.description.label" }),
 				dataIndex: "tag",
-				key: "tag",
+				key: "description",
 				search: false,
 			},
 			{
@@ -124,17 +117,17 @@ const Widget = () => {
 			<Space size={24}>
 			<span>
 				已选 {selectedRowKeys.length} 项
-				<a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+				<Button type="link" style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
 				取消选择
-				</a>
+				</Button>
 			</span>
 			</Space>
 		)}
 		tableAlertOptionRender={() => {
 			return (
 			<Space size={16}>
-				<a>批量删除</a>
-				<a>导出数据</a>
+				<Button type="link">批量删除</Button>
+				<Button type="link">导出数据</Button>
 			</Space>
 			);
 		}}
