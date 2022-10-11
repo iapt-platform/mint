@@ -37,11 +37,12 @@ sudo apt install -y bzip2
 tar xf palm-alpine.tar.xz
 # 导入镜像
 podman load -i palm-alpine-TIMESTAMP.tar
-# clone 代码
-git clone -b agile https://github.com/iapt-platform/mint.git ~/workspace/YOUR_PROJECT
+# clone 代码 PLEASE CHANGE IT TO YOUR REPO
+git clone -b agile https://github.com/iapt-platform/mint.git ~/workspace/iapt-platform/mint
+git clone -b laravel https://github.com/iapt-platform/mint.git ~/workspace/iapt-platform/mint-laravel
 # 启动镜像
 cd ~/workspace
-./YOUR_PROJECT/docker/alpine/start.sh
+./iapt-platform/mint/docker/alpine/start.sh
 ```
 
 ## 部署
