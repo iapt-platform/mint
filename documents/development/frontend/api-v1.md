@@ -2,7 +2,8 @@
 
 ```javascript
 /**
- * /api/v2/like
+ * add 添加一个点赞记录
+ * @api    /api/v2/like 
  * @method POST
  * @param {string} liketype 下列值之一 like,favorite,watch
  * @param {string} restype 资源类型 下列值之一 chapter,article,course
@@ -37,14 +38,7 @@ function add(liketype, restype, resid) {
             console.log(data);
             let result = data.data;
             if (data.ok == true) {
-                for (let it of arrElement) {
-                    if (result.type === it.like_type &&
-                        result.target_id === it.resource_id) {
-                        it.like++;
-                        it.me = result.id;
-                    }
-                }
-                Render();
+                // TODO
             }
         });
 }
