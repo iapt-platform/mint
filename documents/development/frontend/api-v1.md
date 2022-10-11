@@ -9,7 +9,7 @@
  * @param {string} restype 资源类型 下列值之一 chapter,article,course
  * @param {string} resid   资源 uuid
  *
- * @responce {json}
+ * @response {json}
  *          data{
                 ok: bool,
                 message: string,
