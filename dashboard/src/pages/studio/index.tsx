@@ -12,7 +12,9 @@ const Widget = () => {
 		<div>
 			<HeadBar />
 			<LeftSider />
-			<h2>studio/{studioname}/首页</h2>
+			<h2>
+				{intl.formatMessage({ id: "columns.studio.title" })}/{studioname}/首页
+			</h2>
 			<div>
 				<Space>
 					<Link to=""> </Link>

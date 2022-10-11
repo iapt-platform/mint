@@ -178,6 +178,9 @@ const Widget = () => {
 							showQuickJumper: true,
 							showSizeChanger: true,
 						}}
+						search={{
+							filterType: "light",
+						}}
 						headerTitle={intl.formatMessage({ id: "dict" })}
 						toolBarRender={() => [
 							<Button key="button" icon={<PlusOutlined />} type="primary">
