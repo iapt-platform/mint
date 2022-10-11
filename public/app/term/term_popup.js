@@ -27,11 +27,7 @@ function term_popup_init() {
   });
 
   $(".term_link").mouseenter(function (event) {
-	let mouse_x=event.clientX - 20
-	let mouse_y=event.clientY
-	$(this).children(".guide_contence").first().css("left",mouse_x+"px")
-	$(this).children(".guide_contence").first().css("top",mouse_y+"px")
-if ($(this).children(".guide_contence").first().html().length > 0) {
+    if ($(this).children(".guide_contence").first().html().length > 0) {
       return;
     }
     let gid = $(this).attr("gid");
