@@ -19,14 +19,17 @@ interface IFormData {
 
 const Widget = () => {
 	const intl = useIntl();
-	const { studioname, articleid } = useParams();//url 参数
+	const { studioname, articleid } = useParams(); //url 参数
 	return (
 		<Layout>
 			<HeadBar />
 			<Layout>
 				<LeftSider selectedKeys="article" />
 				<Content>
-					<h2>studio/{studioname}/{intl.formatMessage({ id: "columns.studio.article.title" })}/edit/{articleid}</h2>
+					<h2>
+						studio/{studioname}/{intl.formatMessage({ id: "columns.studio.article.title" })}/edit/
+						{articleid}
+					</h2>
 
 					<ProForm<IFormData>
 						onFinish={async (values: IFormData) => {
@@ -42,7 +45,12 @@ const Widget = () => {
 								name="title"
 								required
 								label={intl.formatMessage({ id: "forms.fields.title.label" })}
-								rules={[{ required: true, message: intl.formatMessage({ id: "forms.create.message.no.title" }) }]}
+								rules={[
+									{
+										required: true,
+										message: intl.formatMessage({ id: "forms.create.message.no.title" }),
+									},
+								]}
 							/>
 						</ProForm.Group>
 						<ProForm.Group>
@@ -53,33 +61,41 @@ const Widget = () => {
 							/>
 						</ProForm.Group>
 						<ProForm.Group>
-							<ProFormTextArea name="summary" label={intl.formatMessage({ id: "forms.fields.summary.label" })} />
+							<ProFormTextArea
+								name="summary"
+								label={intl.formatMessage({ id: "forms.fields.summary.label" })}
+							/>
 						</ProForm.Group>
 						<ProForm.Group>
 							<ProFormSelect
 								options={[
-									{ value: 'zh-Hans', label: "简体中文", },
-									{ value: 'zh-Hant', label: "繁体中文", },
-									{ value: 'en-US', label: "English", },
+									{ value: "zh-Hans", label: "简体中文" },
+									{ value: "zh-Hant", label: "繁体中文" },
+									{ value: "en-US", label: "English" },
 								]}
 								width="md"
 								name="lang"
-								rules={[{ required: true, message: intl.formatMessage({ id: "forms.create.message.no.lang" }) }]}
+								rules={[
+									{
+										required: true,
+										message: intl.formatMessage({ id: "forms.create.message.no.lang" }),
+									},
+								]}
 								label={intl.formatMessage({ id: "channel.lang" })}
 							/>
 						</ProForm.Group>
 
 						<ProForm.Group>
-							<ProFormTextArea name="content" label={intl.formatMessage({ id: "forms.fields.content.label" })} />
+							<ProFormTextArea
+								name="content"
+								label={intl.formatMessage({ id: "forms.fields.content.label" })}
+							/>
 						</ProForm.Group>
-
 					</ProForm>
-
 				</Content>
 			</Layout>
 			<Footer />
 		</Layout>
-
 	);
 };
 
