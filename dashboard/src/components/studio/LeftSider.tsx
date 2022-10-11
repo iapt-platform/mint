@@ -101,7 +101,7 @@ const items: MenuProps['items'] = [
 		   breakpoint="lg"
 		   className="site-layout-background">
 			<Menu
-			theme="dark"
+			theme="light"
 			onClick={onClick}
 			defaultSelectedKeys={[selectedKeys]}
 			defaultOpenKeys={['basic','advance','collaboration']}
