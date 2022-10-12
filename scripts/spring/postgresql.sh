@@ -8,7 +8,7 @@ then
     exit 1
 fi
 
-psql -h 127.0.0.1 -U postgres << EOF
+psql << EOF
 CREATE DATABASE $1_mint WITH ENCODING = 'UTF8';
 CREATE USER $1 WITH PASSWORD '$2';
 GRANT ALL PRIVILEGES ON DATABASE $1_mint TO $1;
