@@ -6,6 +6,7 @@
 - SSH 终端[Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
   - [Using SSH Keys with PuTTY](https://www.liquidweb.com/kb/putty-ssh-keys/)
 - Get that Linux feeling - on Windows [Cygwin](https://www.cygwin.com/install.html)
+- [GitHub Desktop: Focus on what matters instead of fighting with Git.](https://desktop.github.com/)
 
 ## 编辑器设置
 

@@ -1,5 +1,9 @@
 # SPRING 开发环境
 
+## 注意事项
+
+- A: 在 DB Name, Domain name 中， **如果 YOUR_ID 含'\_'，需要替换成'-'**
+
 ## ssh 登录
 
 ```bash
@@ -8,7 +12,7 @@ ssh -i YOUR_KEY YOUR_ID@YOUR_ID.spring.wikipali.org
 
 ## PHP 开发（以用户 xxx 为例）
 
-- `~/www/htdocs/info.php` => `https://YOUR_ID.spring.wikipali.org/info.php` (**如果您的 id 里面有'\_'，需要替换成'-'**)
+- `~/www/htdocs/info.php` => `https://YOUR_ID.spring.wikipali.org/info.php`
 - 日志文件在 `~/www/logs/`
 - 其余参见[常见 PHP 设置](php/)
 
