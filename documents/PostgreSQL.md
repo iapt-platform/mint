@@ -9,12 +9,14 @@
 - 导出数据库
 
   ```bash
-  pg_dump -Z 9 -h 127.0.0.1 -p 5432 -U www demo > $HOME/tmp/demo-20221009.sql.gz
+  pg_dump -O -s -h 127.0.0.1 -p 5432 -U www demo > $HOME/tmp/demo-schema-20221009.sql
+  pg_dump -Fc -O -a -h 127.0.0.1 -p 5432 -U www demo | gzip -9 > $HOME/tmp/demo-data-20221009.dump.gz
   ```
 
 - 导入数据库
 
   ```bash
-  gunzip demo-20221009.sql.gz
-  psql -h 127.0.0.1 -p 5432 -U www demo < demo-20221009.sql
+  psql -h 127.0.0.1 -p 5432 -U www demo < demo-schema-20221009.sql
+  gunzip demo-20221009.dump.gz
+  pg_restore -Fc -h 127.0.0.1 -p 5432 -U www -d demo < demo-20221009.dump
   ```
