@@ -10,6 +10,9 @@
 ## 常见 git 设置
 
 ```bash
+git config --global user.name "Who am I"
+git config --global user.email "who-am-i@change-me.com"
+
 git config --global core.quotepath false
 git config --global http.version HTTP/1.1
 git config --global pull.rebase false
