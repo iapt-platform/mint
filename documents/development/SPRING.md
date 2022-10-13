@@ -2,7 +2,7 @@
 
 ## 注意事项
 
-- A: 在 DB Name, Domain name 中， **如果 YOUR_ID 含'\_'，需要替换成'-'**
+- A: 在 Domain name 中， **如果 YOUR_ID 含'\_'，需要替换成'-'**
 
 ## ssh 登录
 
