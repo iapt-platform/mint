@@ -488,7 +488,7 @@ switch($_COOKIE['language']){
 	<input type="checkbox" id="nav-toggle" class="nav-toggle">
 	<nav>
 		<ul>
-			<li class="nav_link" id="nav_community"><a href="../community/"><?php echo "最新"; ?></a></li>
+			<li class="nav_link" id="nav_community"><a href="../community/"><?php echo $_local->gui->latest;; ?></a></li>
 			<li class="nav_link" id="nav_palicanon"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
 			<li class="nav_link" id="nav_course"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
 			<li class="nav_link" id="nav_dict"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
