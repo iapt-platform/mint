@@ -21,7 +21,7 @@ function Widget() {
       defaultLocale={DEFAULT_LOCALE}
     >
       <ConfigProvider locale={i18n.antd}>
-        <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Router />
         </BrowserRouter>
       </ConfigProvider>
