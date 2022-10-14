@@ -2,13 +2,15 @@ import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { useState } from "react";
 
-import { Space, Layout, Breadcrumb, Button, Tag } from "antd";
+import { Space, Layout, Breadcrumb, Button, Tag, Popover } from "antd";
 import { ProList } from "@ant-design/pro-components";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+import ArticleCreate from "../../../components/studio/article/ArticleCreate";
+
 const { Content } = Layout;
 
 const defaultData = [
@@ -47,7 +49,7 @@ const Widget = () => {
 	const intl = useIntl(); //i18n
 	const { studioname } = useParams(); //url 参数
 	const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
-
+	const articleCreate = <ArticleCreate studio={studioname} />;
 	const linkRead = `/article/show/12345`;
 	const linkStudio = `/studio/${studioname}`;
 
@@ -135,6 +137,13 @@ const Widget = () => {
 								showQuickJumper: true,
 								showSizeChanger: true,
 							}}
+							toolBarRender={() => [
+								<Popover content={articleCreate} title="new article" placement="bottomRight">
+									<Button key="button" icon={<PlusOutlined />} type="primary">
+										{intl.formatMessage({ id: "buttons.create" })}
+									</Button>
+								</Popover>,
+							]}
 						/>
 					</Layout>
 				</Content>
