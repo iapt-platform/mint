@@ -14,6 +14,8 @@ const items = {
 	"forms.fields.content.label": "内容",
 	"forms.fields.tag.label": "标签",
 	"forms.fields.power.label": "权限",
+	"forms.fields.type.label": "类型",
+	"forms.fields.publicity.label": "公开性",
 };
 
 export default items;
