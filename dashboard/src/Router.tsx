@@ -42,7 +42,6 @@ import StudioPalicanon from "./pages/studio/palicanon";
 import StudioRecent from "./pages/studio/recent";
 
 import StudioChannel from "./pages/studio/channel";
-import StudioChannelCreate from "./pages/studio/channel/create";
 import StudioChannelEdit from "./pages/studio/channel/edit";
 
 import StudioGroup from "./pages/studio/group";
@@ -61,82 +60,80 @@ import StudioAnthologyEdit from "./pages/studio/anthology/edit";
 import StudioAnalysis from "./pages/studio/analysis";
 
 const Widget = () => {
-  return (
-    <Routes>
-      <Route path="anonymous" element={<Anonymous />}>
-        <Route path="users">
-          <Route path="sign-in" element={<NutUsersSignIn />} />
-          <Route path="sign-up" element={<NutUsersSignUp />} />
+	return (
+		<Routes>
+			<Route path="anonymous" element={<Anonymous />}>
+				<Route path="users">
+					<Route path="sign-in" element={<NutUsersSignIn />} />
+					<Route path="sign-up" element={<NutUsersSignUp />} />
 
-          <Route path="unlock">
-            <Route path="new" element={<NutUsersUnlockNew />} />
-            <Route path="verify/:token" element={<NutUsersUnlockVerify />} />
-          </Route>
-          <Route path="reset-password/:token" element={<NutUsersResetPassword />} />
-          <Route path="forgot-password" element={<NutUsersForgotPassword />} />
-        </Route>
-      </Route>
+					<Route path="unlock">
+						<Route path="new" element={<NutUsersUnlockNew />} />
+						<Route path="verify/:token" element={<NutUsersUnlockVerify />} />
+					</Route>
+					<Route path="reset-password/:token" element={<NutUsersResetPassword />} />
+					<Route path="forgot-password" element={<NutUsersForgotPassword />} />
+				</Route>
+			</Route>
 
-      <Route path="dashboard" element={<Dashboard />}>
-        <Route path="users">
-          <Route path="change-password" element={<NutUsersChangePassword />} />
-          <Route path="logs" element={<NutUsersLogs />} />
-          <Route path="account-info" element={<NutUsersAccountInfo />} />
-        </Route>
-      </Route>
-      <Route path="switch-language" element={<NutSwitchLanguage />} />
-      <Route path="forbidden" element={<NutForbidden />} />
-      <Route path="" element={<NutHome />} />
-      <Route path="*" element={<NutNotFound />} />
+			<Route path="dashboard" element={<Dashboard />}>
+				<Route path="users">
+					<Route path="change-password" element={<NutUsersChangePassword />} />
+					<Route path="logs" element={<NutUsersLogs />} />
+					<Route path="account-info" element={<NutUsersAccountInfo />} />
+				</Route>
+			</Route>
+			<Route path="switch-language" element={<NutSwitchLanguage />} />
+			<Route path="forbidden" element={<NutForbidden />} />
+			<Route path="" element={<NutHome />} />
+			<Route path="*" element={<NutNotFound />} />
 
-	  <Route path="community" element={<LibraryCommunity />}></Route>
-	  <Route path="recent" element={<LibraryCommunityRecent />} />
-	  <Route path="palicanon" element={<LibraryPalicanon />} />
+			<Route path="community" element={<LibraryCommunity />}></Route>
+			<Route path="recent" element={<LibraryCommunityRecent />} />
+			<Route path="palicanon" element={<LibraryPalicanon />} />
 
-	  <Route path="course" element={<LibraryCourse />}></Route>
-      <Route path="course/show/:id" element={<LibraryCourseShow />}></Route>
-      <Route path="course/lesson/:id" element={<LibraryLessonShow />}></Route>
+			<Route path="course" element={<LibraryCourse />}></Route>
+			<Route path="course/show/:id" element={<LibraryCourseShow />}></Route>
+			<Route path="course/lesson/:id" element={<LibraryLessonShow />}></Route>
 
-	  <Route path="term/:word" element={<LibraryTerm />} />
+			<Route path="term/:word" element={<LibraryTerm />} />
 
-	  <Route path="dict" element={<LibraryDict />} />
-	  <Route path="dict/:word" element={<LibraryDictShow />} />
+			<Route path="dict" element={<LibraryDict />} />
+			<Route path="dict/:word" element={<LibraryDictShow />} />
 
-	  <Route path="anthology" element={<LibraryAnthology />} />
-	  <Route path="anthology/show/:id" element={<LibraryAnthologyShow />} />
-	  <Route path="article/show/:id" element={<LibraryArticle />} />
+			<Route path="anthology" element={<LibraryAnthology />} />
+			<Route path="anthology/show/:id" element={<LibraryAnthologyShow />} />
+			<Route path="article/show/:id" element={<LibraryArticle />} />
 
-	  <Route path="blog/:studioname" element={<LibraryBlog />} />
-	  <Route path="blog/:studioname/translation" element={<LibraryBlogTranslation />} />
-	  <Route path="blog/:studioname/course" element={<LibraryBlogCourse />} />
-	  <Route path="blog/:studioname/anthology" element={<LibraryBlogAnthology />} />
-	  <Route path="blog/:studioname/term" element={<LibraryBlogTerm />} />
+			<Route path="blog/:studioname" element={<LibraryBlog />} />
+			<Route path="blog/:studioname/translation" element={<LibraryBlogTranslation />} />
+			<Route path="blog/:studioname/course" element={<LibraryBlogCourse />} />
+			<Route path="blog/:studioname/anthology" element={<LibraryBlogAnthology />} />
+			<Route path="blog/:studioname/term" element={<LibraryBlogTerm />} />
 
-	  <Route path="studio/:studioname" element={<StudioHome />}></Route>
-	  <Route path="studio/:studioname/palicanon" element={<StudioPalicanon />}></Route>
-	  <Route path="studio/:studioname/recent" element={<StudioRecent />}></Route>
+			<Route path="studio/:studioname" element={<StudioHome />}></Route>
+			<Route path="studio/:studioname/palicanon" element={<StudioPalicanon />}></Route>
+			<Route path="studio/:studioname/recent" element={<StudioRecent />}></Route>
 
-	  <Route path="studio/:studioname/channel" element={<StudioChannel />}></Route>
-	  <Route path="studio/:studioname/channel/create" element={<StudioChannelCreate />} />
-	  <Route path="studio/:studioname/channel/edit/:channelid" element={<StudioChannelEdit />} />
+			<Route path="studio/:studioname/channel" element={<StudioChannel />}></Route>
+			<Route path="studio/:studioname/channel/edit/:channelid" element={<StudioChannelEdit />} />
 
-	  <Route path="studio/:studioname/group" element={<StudioGroup />}></Route>
-	  <Route path="studio/:studioname/group/:groupid" element={<StudioGroupShow />} />
-	  <Route path="studio/:studioname/group/edit/:groupid" element={<StudioGroupEdit />} />
+			<Route path="studio/:studioname/group" element={<StudioGroup />}></Route>
+			<Route path="studio/:studioname/group/:groupid" element={<StudioGroupShow />} />
+			<Route path="studio/:studioname/group/edit/:groupid" element={<StudioGroupEdit />} />
 
-	  <Route path="studio/:studioname/dict" element={<StudioDict />}> </Route>
-	  <Route path="studio/:studioname/term" element={<StudioTerm />}> </Route>
+			<Route path="studio/:studioname/dict" element={<StudioDict />} />
+			<Route path="studio/:studioname/term" element={<StudioTerm />} />
 
-	  <Route path="studio/:studioname/article" element={<StudioArticle />}></Route>
-	  <Route path="studio/:studioname/article/edit/:articleid" element={<StudioArticleEdit />} />
-	  
-	  <Route path="studio/:studioname/anthology" element={<StudioAnthology />}></Route>
-	  <Route path="studio/:studioname/anthology/edit/:anthology_id" element={<StudioAnthologyEdit />} />
+			<Route path="studio/:studioname/article" element={<StudioArticle />}></Route>
+			<Route path="studio/:studioname/article/edit/:articleid" element={<StudioArticleEdit />} />
 
-	  <Route path="studio/:studioname/analysis" element={<StudioAnalysis />}></Route>
+			<Route path="studio/:studioname/anthology" element={<StudioAnthology />}></Route>
+			<Route path="studio/:studioname/anthology/edit/:anthology_id" element={<StudioAnthologyEdit />} />
 
-    </Routes>
-  );
+			<Route path="studio/:studioname/analysis" element={<StudioAnalysis />}></Route>
+		</Routes>
+	);
 };
 
 export default Widget;
