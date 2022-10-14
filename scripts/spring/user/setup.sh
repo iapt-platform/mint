@@ -66,6 +66,18 @@ then
     ln -sf /workspace/www/$USER $HOME/www
 fi
 
+echo 'setup tmux'
+if [ ! -f $HOME/.tmux.conf ]
+then
+    echo 'set-option -g history-limit 102400' > $HOME/.tmux.conf
+    echo 'set-option -g default-shell "/bin/zsh"' >> $HOME/.tmux.conf
+fi
+
+echo 'setup git'
+git config --global core.quotepath false
+git config --global http.version HTTP/1.1
+git config --global pull.rebase false
+
 echo "done."
 
 exit 0
