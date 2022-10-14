@@ -1,4 +1,4 @@
-import { ProForm, ProFormText, ProFormSelect } from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { Cascader, Layout, Select } from "antd";
 import { useIntl } from "react-intl";
 import { message } from "antd";
@@ -114,7 +114,7 @@ const Widget = (param: IWidgetDictCreate) => {
 						width="md"
 						name="word"
 						required
-						label={intl.formatMessage({ id: "channel.name" })}
+						label={intl.formatMessage({ id: "dict.fields.word.label" })}
 						rules={[
 							{
 								required: true,
@@ -124,7 +124,7 @@ const Widget = (param: IWidgetDictCreate) => {
 					/>
 				</ProForm.Group>
 				<ProForm.Group>
-					<Cascader options={options} placeholder="Please select" />
+					<Cascader options={options} placeholder="Please select case" />
 				</ProForm.Group>
 
 				<ProForm.Group>
@@ -144,24 +144,6 @@ const Widget = (param: IWidgetDictCreate) => {
 						</OptGroup>
 						<OptGroup label="all">{langOptions}</OptGroup>
 					</Select>
-				</ProForm.Group>
-
-				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{
-								value: "zh-Hans",
-								label: intl.formatMessage({ id: "languages.zh-Hans" }),
-							},
-							{
-								value: "en-US",
-								label: intl.formatMessage({ id: "English" }),
-							},
-						]}
-						width="md"
-						name="lang"
-						label={intl.formatMessage({ id: "forms.fields.lang.label" })}
-					/>
 				</ProForm.Group>
 			</ProForm>
 		</Layout>
