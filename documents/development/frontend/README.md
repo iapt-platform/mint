@@ -2,36 +2,42 @@
 
 ## 安装依赖包
 
-### offline
+- [Windows 用户](./WINDOWS.md)
+
+### For linux 用户
+
+- offline
 
 ```bash
 # offline
 tar xf node_modules.tar.xz
 ```
 
-### online
+- online
 
 ```bash
 cd dashboard
 yarn install
 ```
 
-- for windows user, download [Node.js](https://nodejs.org/en/download/current/) and then,
+## 修改配置文件
 
-  ```bash
-  npm config set registry 'https://registry.npmmirror.com/' --global # ONLY for China user
-  npm install -g yarn
-  yarn config set registry 'https://registry.npmmirror.com/' --global # ONLY for China users
-  ```
+```bash
+cd dashboard
+cp .env.orig .env # 修改PORT 和 REACT_APP_API_HOST
+```
 
 ![dashboard.png](dashboard.png)
 
-## 开发模式启动 [dashboard](http://localhost:3000)
+## 开发模式启动
 
 ```bash
 cd dashboard
 yarn start
 ```
+
+- For Local: `http://localhost:YOUR_PORT/my`
+- For Spring: `http://YOUR_ID.spring.wikipali.org:YOUR_PORT/my`
 
 ## Typescript
 
