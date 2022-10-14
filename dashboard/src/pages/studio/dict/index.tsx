@@ -2,12 +2,13 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Button, Layout, Space, Table } from "antd";
+import { Button, Layout, Space, Table, Popover } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+import DictCreate from "../../../components/studio/dict/DictCreate";
 
 const { Content } = Layout;
 
@@ -33,6 +34,9 @@ const valueEnum = {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname } = useParams();
+
+	const dictCreate = <DictCreate studio={studioname} />;
+
 	return (
 		<Layout>
 			<HeadBar />
@@ -56,14 +60,6 @@ const Widget = () => {
 								render: (_) => <Link to="">{_}</Link>,
 								tip: "单词过长会自动收缩",
 								ellipsis: true,
-								formItemProps: {
-									rules: [
-										{
-											required: true,
-											message: "此项为必填项",
-										},
-									],
-								},
 							},
 							{
 								title: intl.formatMessage({ id: "dict.fields.type.label" }),
@@ -178,14 +174,17 @@ const Widget = () => {
 							showQuickJumper: true,
 							showSizeChanger: true,
 						}}
-						search={{
-							filterType: "light",
+						search={false}
+						options={{
+							search: true,
 						}}
-						headerTitle={intl.formatMessage({ id: "dict" })}
+						headerTitle=""
 						toolBarRender={() => [
-							<Button key="button" icon={<PlusOutlined />} type="primary">
-								新建
-							</Button>,
+							<Popover content={dictCreate} title="new channel" placement="bottomRight">
+								<Button key="button" icon={<PlusOutlined />} type="primary">
+									{intl.formatMessage({ id: "buttons.create" })}
+								</Button>
+							</Popover>,
 						]}
 					/>
 				</Content>
