@@ -2,15 +2,44 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Button, Layout, Space, Table } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { Layout, Space, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
+import type { MenuProps } from "antd";
+import { Button, Dropdown, Menu, Popover } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+import AnthologyCreate from "../../../components/studio/anthology/AnthologyCreate";
 
 const { Content } = Layout;
+
+const onMenuClick: MenuProps["onClick"] = (e) => {
+	console.log("click", e);
+};
+
+const menu = (
+	<Menu
+		onClick={onMenuClick}
+		items={[
+			{
+				key: "1",
+				label: "在藏经阁中打开",
+				icon: <SearchOutlined />,
+			},
+			{
+				key: "2",
+				label: "分享",
+				icon: <SearchOutlined />,
+			},
+			{
+				key: "3",
+				label: "详情",
+				icon: <SearchOutlined />,
+			},
+		]}
+	/>
+);
 
 interface IItem {
 	id: number;
@@ -24,6 +53,7 @@ interface IItem {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname } = useParams();
+	const anthologyCreate = <AnthologyCreate studio={studioname} />;
 	return (
 		<Layout>
 			<HeadBar />
@@ -37,7 +67,7 @@ const Widget = () => {
 								title: intl.formatMessage({ id: "dict.fields.sn.label" }),
 								dataIndex: "id",
 								key: "id",
-								width: 80,
+								width: 50,
 								search: false,
 							},
 							{
@@ -47,19 +77,21 @@ const Widget = () => {
 								tip: "过长会自动收缩",
 								ellipsis: true,
 								render: (text, row, index, action) => {
-									return <Link to="edit/12345">{row.title}</Link>;
+									return (
+										<div>
+											<div>
+												<Link to="edit/12345">{row.title}</Link>
+											</div>
+											<div>{row.subtitle}</div>
+										</div>
+									);
 								},
-							},
-							{
-								title: intl.formatMessage({ id: "forms.fields.subtitle.label" }),
-								dataIndex: "subtitle",
-								key: "type",
-								search: false,
 							},
 							{
 								title: intl.formatMessage({ id: "forms.fields.power.label" }),
 								dataIndex: "tag",
 								key: "tag",
+								width: 100,
 								search: false,
 								filters: true,
 								onFilter: true,
@@ -74,13 +106,14 @@ const Widget = () => {
 								title: intl.formatMessage({ id: "article.fields.article.count.label" }),
 								dataIndex: "articles",
 								key: "articles",
+								width: 100,
 								search: false,
 								sorter: (a, b) => a.articles - b.articles,
 							},
 							{
 								title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
 								key: "created-at",
-								width: 200,
+								width: 100,
 								search: false,
 								dataIndex: "createdAt",
 								valueType: "date",
@@ -92,10 +125,9 @@ const Widget = () => {
 								width: 120,
 								valueType: "option",
 								render: () => [
-									<Button key="link">编辑</Button>,
-									<Button key="more">
-										<EllipsisOutlined />
-									</Button>,
+									<Dropdown.Button type="link" overlay={menu}>
+										编辑
+									</Dropdown.Button>,
 								],
 							},
 						]}
@@ -154,11 +186,12 @@ const Widget = () => {
 						options={{
 							search: true,
 						}}
-						headerTitle={intl.formatMessage({ id: "dict" })}
 						toolBarRender={() => [
-							<Button key="button" icon={<PlusOutlined />} type="primary">
-								新建
-							</Button>,
+							<Popover content={anthologyCreate} title="new article" placement="bottomRight">
+								<Button key="button" icon={<PlusOutlined />} type="primary">
+									{intl.formatMessage({ id: "buttons.create" })}
+								</Button>
+							</Popover>,
 						]}
 					/>
 				</Content>
