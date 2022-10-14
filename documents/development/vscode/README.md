@@ -40,6 +40,10 @@
 
   ![trust](by-ssh/8.png)
 
+- 安装推荐插件(点击那个 Cloud 图表)
+
+  ![plugins](by-ssh/10.png)
+
 - 然后就可以欢快地写代码了 与 local 基本无差
 
   ![edit](by-ssh/9.png)
