@@ -1,7 +1,7 @@
 const items = {
 	dict: "字典",
 	"dict.fields.sn.label": "序号",
-	"dict.fields.word.label": "词头",
+	"dict.fields.word.label": "单词",
 	"dict.fields.type.label": "类型",
 	"dict.fields.grammar.label": "语法信息",
 	"dict.fields.parent.label": "词干",
@@ -18,10 +18,15 @@ const items = {
 	"dict.fields.type.m.label": "阳",
 	"dict.fields.type.nt.label": "中",
 	"dict.fields.type.f.label": "阴",
-	"dict.fields.type.sg.label": "单",
-	"dict.fields.type.pl.label": "复",
-	"dict.fields.type.nom.label": "主",
-	"dict.fields.type.acc.label": "宾",
+	"dict.fields.type.sg.label": "单数",
+	"dict.fields.type.pl.label": "复数",
+	"dict.fields.type.nom.label": "主格",
+	"dict.fields.type.acc.label": "宾格",
+	"dict.fields.type.gen.label": "属格",
+	"dict.fields.type.dat.label": "为格",
+	"dict.fields.type.inst.label": "工具格",
+	"dict.fields.type.voc.label": "呼格",
+	"dict.fields.type.abl.label": "来源格",
 };
 
 export default items;
