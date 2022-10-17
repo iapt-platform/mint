@@ -48,5 +48,9 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('channel',ChannelController::class);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
+    Route::get('palibook/{file}', function ($file) {
+        return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
+    });
+
 
 });
