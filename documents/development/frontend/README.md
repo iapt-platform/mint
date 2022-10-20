@@ -61,7 +61,13 @@ yarn start
 
   - Markdown
 
-    ![markdown viewer](demo/md-view.png)
+    - Viewer
+
+      ![markdown show](demo/md-show.png)
+
+    - Editor
+
+      ![markdown form](demo/md-form.png)
 
   - on click event
 
