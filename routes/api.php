@@ -15,7 +15,7 @@ use App\Http\Controllers\SentHistoryController;
 use App\Http\Controllers\PaliTextController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserDictController;
-
+use App\Http\Controllers\CollectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +51,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('palibook/{file}', function ($file) {
         return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
     });
+    Route::apiResource('anthology',CollectionController::class);
 
 
 });
