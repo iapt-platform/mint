@@ -27,7 +27,7 @@
 	nav a:link,
 	nav a:visited {
 		color: unset;
-		
+
 	}
 
 	header ul,
@@ -479,8 +479,8 @@ switch($_COOKIE['language']){
 				<span class="goto-platform"> ▸ <?php echo $_local->gui->studio; ?></span></a>
 		</div>
 	</div>
-    <?php 
-        $host = $_SERVER ['HTTP_HOST']; 
+    <?php
+        $host = $_SERVER ['HTTP_HOST'];
         if(stripos('staging',$host)>0){
             echo "<span style='backgroud-color:red;color:white;padding:0.5em;font-size:120%;' title='本服务器仅仅作为功能测试之用，所有用户数据均不保留。'>测试服务器</span>";
         }
