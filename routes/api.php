@@ -16,6 +16,7 @@ use App\Http\Controllers\PaliTextController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserDictController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\DictController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,16 @@ Route::group(['prefix' => 'v2'],function(){
         return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
     });
     Route::apiResource('anthology',CollectionController::class);
+    Route::apiResource('dict',DictController::class);
+    Route::get('guide/{lang}/{file}', function ($lang,$file) {
+        $filename = public_path("app/users_guide/{$lang}/{$file}.md");
+        if(file_exists($filename)){
+            return file_get_contents($filename);
+        }else{
+            return "no file {$lang}/{$file}";
+        }
+
+    });
 
 
 });
