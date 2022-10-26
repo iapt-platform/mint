@@ -53,6 +53,22 @@ yarn start
 
 ### 其它例子
 
-- img 组件
+- 常见组件
 
-  ![img](img.png)
+  - img
+
+    ![img](demo/img.png)
+
+  - Markdown
+
+    - Viewer
+
+      ![markdown show](demo/md-show.png)
+
+    - Editor
+
+      ![markdown form](demo/md-form.png)
+
+  - on click event
+
+    ![on click](demo/on-click.png)

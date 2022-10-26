@@ -37,7 +37,7 @@ then
     npm install yarn -g
 fi
 
-mkdir -p $HOME/.local/bin $HOME/tmp $HOME/local $HOME/downloads
+mkdir -p $HOME/.local/bin $HOME/local $HOME/downloads
 
 echo 'setup php'
 if [ ! -f "$HOME/downloads/composer" ]
@@ -60,10 +60,16 @@ then
 fi
 
 
-echo 'setup workspace'
+echo 'setup workspace folder'
 if [ ! -L $HOME/www ]
 then
     ln -sf /workspace/www/$USER $HOME/www
+fi
+
+echo 'setup tmp folder'
+if [ ! -L $HOME/tmp ]
+then
+    ln -sf /workspace/tmp/$USER $HOME/tmp
 fi
 
 echo 'setup tmux'

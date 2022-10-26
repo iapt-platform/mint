@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/charts": "^1.4.2",
-    "@ant-design/pro-components": "^2.3.25",
+    "@fluentui/react": "^8.98.7",
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.14.1",
@@ -21,7 +20,6 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-pdf": "^5.7.2",
     "@uiw/react-md-editor": "^3.19.1",
-    "antd": "^4.23.6",
     "dayjs": "^1.11.6",
     "dinero.js": "^2.0.0-alpha.8",
     "emoji-mart": "^5.2.2",
