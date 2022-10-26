@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { Layout } from "antd";
 import { useState, useEffect } from "react";

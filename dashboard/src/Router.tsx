@@ -18,14 +18,18 @@ import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
 import LibraryCommunity from "./pages/library/community";
+import LibraryCommunityList from "./pages/library/community/list";
 import LibraryCommunityRecent from "./pages/library/community/recent";
 import LibraryPalicanon from "./pages/library/palicanon";
+import LibraryPalicanonByPath from "./pages/library/palicanon/bypath";
+import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
 import LibraryCourse from "./pages/library/course";
 import LibraryCourseShow from "./pages/library/course/course";
 import LibraryLessonShow from "./pages/library/course/lesson";
 import LibraryTerm from "./pages/library/term/show";
 import LibraryDict from "./pages/library/dict";
 import LibraryDictShow from "./pages/library/dict/show";
+import LibraryDictRecent from "./pages/library/dict/recent";
 import LibraryAnthology from "./pages/library/anthology";
 import LibraryAnthologyShow from "./pages/library/anthology/show";
 import LibraryArticle from "./pages/library/anthology/article";
@@ -88,9 +92,18 @@ const Widget = () => {
 			<Route path="" element={<NutHome />} />
 			<Route path="*" element={<NutNotFound />} />
 
-			<Route path="community" element={<LibraryCommunity />}></Route>
-			<Route path="recent" element={<LibraryCommunityRecent />} />
-			<Route path="palicanon" element={<LibraryPalicanon />} />
+			<Route path="community" element={<LibraryCommunity />}>
+				<Route path="list" element={<LibraryCommunityList />} />
+				<Route path="recent" element={<LibraryCommunityRecent />} />
+			</Route>
+
+			<Route path="palicanon" element={<LibraryPalicanon />}>
+				<Route path="list" element={<LibraryPalicanonByPath />} />
+				<Route path="list/:root" element={<LibraryPalicanonByPath />} />
+				<Route path="list/:root/:path" element={<LibraryPalicanonByPath />} />
+				<Route path="list/:root/:path/:tag" element={<LibraryPalicanonByPath />} />
+				<Route path="chapter/:id" element={<LibraryPalicanonChapter />} />
+			</Route>
 
 			<Route path="course" element={<LibraryCourse />}></Route>
 			<Route path="course/show/:id" element={<LibraryCourseShow />}></Route>
@@ -98,11 +111,14 @@ const Widget = () => {
 
 			<Route path="term/:word" element={<LibraryTerm />} />
 
-			<Route path="dict" element={<LibraryDict />} />
-			<Route path="dict/:word" element={<LibraryDictShow />} />
+			<Route path="dict" element={<LibraryDict />}>
+				<Route path=":word" element={<LibraryDictShow />} />
+				<Route path="recent" element={<LibraryDictRecent />} />
+			</Route>
 
 			<Route path="anthology" element={<LibraryAnthology />} />
-			<Route path="anthology/show/:id" element={<LibraryAnthologyShow />} />
+			<Route path="anthology/:id" element={<LibraryAnthologyShow />} />
+			<Route path="anthology/:id/by_channel/:tags" element={<LibraryAnthologyShow />} />
 			<Route path="article/show/:id" element={<LibraryArticle />} />
 
 			<Route path="blog/:studioname" element={<LibraryBlog />} />

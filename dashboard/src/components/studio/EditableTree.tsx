@@ -9,7 +9,7 @@ type TreeNodeData = {
 	level: number;
 };
 export type ListNodeData = {
-	article: string;
+	key: string;
 	title: string;
 	level: number;
 };
@@ -27,7 +27,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 	for (let index = 0; index < articles.length; index++) {
 		const element = articles[index];
 
-		let newNode: TreeNodeData = { key: element.article, title: element.title, children: [], level: element.level };
+		let newNode: TreeNodeData = { key: element.key, title: element.title, children: [], level: element.level };
 		/*
 		if (active == element.article) {
 			newNode["extraClasses"] = "active";
@@ -53,7 +53,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 		lastInsNode = newNode;
 		iCurrLevel = newNode.level;
 
-		if (active === element.article) {
+		if (active === element.key) {
 			tocActivePath = [];
 			for (let index = 1; index < treeParents.length; index++) {
 				//treeParents[index]["expanded"] = true;
@@ -65,12 +65,14 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 }
 
 type IWidgetEditableTree = {
-	treeData?: ListNodeData[];
+	treeData: ListNodeData[];
 };
-const Widget = ({ treeData = [] }: IWidgetEditableTree) => {
-	const data = tocGetTreeData(treeData);
+const Widget = (prop: IWidgetEditableTree) => {
+	const data = tocGetTreeData(prop.treeData);
+	console.log("treedata", data);
 	const [gData, setGData] = useState(data);
-	const [expandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+
+	//const [expandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
 
 	const onDragEnter: TreeProps["onDragEnter"] = (info) => {
 		console.log(info);
@@ -141,19 +143,20 @@ const Widget = ({ treeData = [] }: IWidgetEditableTree) => {
 			}
 		}
 		setGData(data);
-		console.log(gData);
 	};
+
 	return (
-		<Tree
-			className="draggable-tree"
-			defaultExpandedKeys={expandedKeys}
-			draggable
-			blockNode
-			multiple
-			onDragEnter={onDragEnter}
-			onDrop={onDrop}
-			treeData={gData}
-		/>
+		<>
+			<Tree
+				rootClassName="draggable-tree"
+				//defaultExpandedKeys={expandedKeys}
+				draggable
+				blockNode
+				onDragEnter={onDragEnter}
+				onDrop={onDrop}
+				treeData={gData}
+			/>
+		</>
 	);
 };
 

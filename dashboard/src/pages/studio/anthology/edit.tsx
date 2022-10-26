@@ -26,11 +26,30 @@ interface IFormData {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname, anthology_id } = useParams(); //url 参数
+	/*
 	const listdata: ListNodeData[] = [
-		{ article: "1", title: "title1", level: 1 },
-		{ article: "2", title: "title2", level: 2 },
-		{ article: "3", title: "title3", level: 1 },
-		{ article: "4", title: "title4", level: 2 },
+		{ key: "1", title: "title1", level: 1 },
+		{ key: "2", title: "title2", level: 2 },
+		{ key: "3", title: "title3", level: 1 },
+		{ key: "4", title: "title4", level: 2 },
+	];
+	*/
+	const listdata: ListNodeData[] = [
+		{
+			key: "d391c9c4-60bc-4bf5-8f5a-65d55743904c",
+			title: "比库尼八敬法--Aṭṭhagarudhammā",
+			level: 1,
+		},
+		{
+			key: "4b741bea-811e-4053-a94c-852a58161b8f",
+			title: "逐出比库尼僧团之《第一极重罪》",
+			level: 1,
+		},
+		{
+			key: "33ff0ec7-2cf9-4e3a-b88f-e713c7a1eaa5",
+			title: "Aṭṭhagarudhammā",
+			level: 1,
+		},
 	];
 	return (
 		<Layout>

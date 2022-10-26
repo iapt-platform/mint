@@ -50,6 +50,10 @@ const Widget = () => {
 			label: intl.formatMessage({ id: "dict.fields.type.pl.label" }),
 			children: case8,
 		},
+		{
+			value: "base",
+			label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+		},
 	];
 	const case3 = [
 		{

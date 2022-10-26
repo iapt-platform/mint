@@ -27,6 +27,7 @@ const items = {
 	"dict.fields.type.inst.label": "工具格",
 	"dict.fields.type.voc.label": "呼格",
 	"dict.fields.type.abl.label": "来源格",
+	"dict.fields.type.base.label": "词干",
 };
 
 export default items;

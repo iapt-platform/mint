@@ -1,19 +1,18 @@
-import { Space } from "antd";
+import { Outlet } from "react-router-dom";
+import { Layout } from "antd";
+
 import HeadBar from "../../../components/library/HeadBar";
-import Footer from "../../../components/library/Footer";
+import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
 	// TODO
-  return (
-    <div>
-		<HeadBar  selectedKeys="dict"/>
-      <div>字典首页</div>
-      <div>
-		<Space>主显示区</Space>
-      </div>
-		<Footer />
-    </div>
-  );
+	return (
+		<Layout>
+			<HeadBar selectedKeys="dict" />
+			<Outlet />
+			<FooterBar />
+		</Layout>
+	);
 };
 
 export default Widget;

@@ -24,7 +24,7 @@ type IWidgetDictCreate = {
 };
 const Widget = (param: IWidgetDictCreate) => {
 	const intl = useIntl();
-
+	/*
 	const onLangChange = (value: string) => {
 		console.log(`selected ${value}`);
 	};
@@ -32,6 +32,7 @@ const Widget = (param: IWidgetDictCreate) => {
 	const onLangSearch = (value: string) => {
 		console.log("search:", value);
 	};
+	*/
 	return (
 		<Layout>
 			<ProForm<IFormData>

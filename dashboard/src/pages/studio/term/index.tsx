@@ -2,12 +2,13 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Button, Layout, Space, Table } from "antd";
+import { Button, Layout, Space, Table, Popover } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+import TermCreate from "../../../components/studio/term/TermCreate";
 
 const { Content } = Layout;
 
@@ -25,6 +26,7 @@ interface IItem {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname } = useParams();
+
 	return (
 		<Layout>
 			<HeadBar />
@@ -162,9 +164,11 @@ const Widget = () => {
 						}}
 						headerTitle={intl.formatMessage({ id: "dict" })}
 						toolBarRender={() => [
-							<Button key="button" icon={<PlusOutlined />} type="primary">
-								新建
-							</Button>,
+							<Popover content={<TermCreate studio={studioname} />} placement="bottomRight">
+								<Button key="button" icon={<PlusOutlined />} type="primary">
+									{intl.formatMessage({ id: "buttons.create" })}
+								</Button>
+							</Popover>,
 						]}
 						search={{
 							filterType: "light",

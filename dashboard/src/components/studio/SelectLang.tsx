@@ -19,7 +19,11 @@ const Widget = () => {
 		{ value: "zh-Hans", lable: intl.formatMessage({ id: "languages.zh-Hans" }) },
 		{ value: "zh-Hant", lable: intl.formatMessage({ id: "languages.zh-Hant" }) },
 	];
-	const langOptions = data.map((d) => <Option value={d.value}>{d.lable}</Option>);
+	const langOptions = data.map((d, id) => (
+		<Option key={id} value={d.value}>
+			{d.lable}
+		</Option>
+	));
 	return (
 		<Select
 			showSearch

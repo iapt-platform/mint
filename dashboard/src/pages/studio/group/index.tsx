@@ -2,11 +2,14 @@ import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { ProList } from "@ant-design/pro-components";
-import { Space, Tag, Button, Layout, Breadcrumb } from "antd";
+import { Space, Tag, Button, Layout, Breadcrumb, Popover } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import HeadBar from "../../../components/studio/HeadBar";
 import LeftSider from "../../../components/studio/LeftSider";
 import Footer from "../../../components/studio/Footer";
+import GroupCreate from "../../../components/studio/group/GroupCreate";
+
 const { Content } = Layout;
 
 const defaultData = [
@@ -91,6 +94,13 @@ const Widget = () => {
 								},
 							}}
 							onDataSourceChange={setDataSource}
+							toolBarRender={() => [
+								<Popover content={<GroupCreate studio={studioname} />} placement="bottomRight">
+									<Button key="button" icon={<PlusOutlined />} type="primary">
+										{intl.formatMessage({ id: "buttons.create" })}
+									</Button>
+								</Popover>,
+							]}
 							metas={{
 								title: {
 									dataIndex: "name",
@@ -111,8 +121,12 @@ const Widget = () => {
 								},
 								subTitle: {
 									render: (text, row, index, action) => {
-										const showtag = row.tag.map((item, key) => {
-											return <Tag color={item.color}>{item.title}</Tag>;
+										const showtag = row.tag.map((item, id) => {
+											return (
+												<Tag color={item.color} key={id}>
+													{item.title}
+												</Tag>
+											);
 										});
 										return <Space size={0}>{showtag}</Space>;
 									},
