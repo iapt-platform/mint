@@ -11,16 +11,29 @@ export const TO_PROFILE = "/dashboard/users/logs";
 const KEY = "token";
 export const DURATION = 60 * 60 * 24;
 
+const IS_LOCAL_ENABLE = process.env.REACT_APP_ENABLE_LOCAL_TOKEN === "true";
+
 export const get = (): string | null => {
-  return sessionStorage.getItem(KEY);
+  const token = sessionStorage.getItem(KEY);
+  if (token) {
+    return token;
+  }
+  if (IS_LOCAL_ENABLE) {
+    return localStorage.getItem(KEY);
+  }
+  return null;
 };
 
 const set = (token: string) => {
   sessionStorage.setItem(KEY, token);
+  if (IS_LOCAL_ENABLE) {
+    localStorage.setItem(KEY, token);
+  }
 };
 
 const remove = () => {
   sessionStorage.removeItem(KEY);
+  localStorage.removeItem(KEY);
 };
 
 export interface IUser {
