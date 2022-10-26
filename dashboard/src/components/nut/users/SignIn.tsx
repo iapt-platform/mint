@@ -1,6 +1,11 @@
 import { useIntl } from "react-intl";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+
+import { setTitle } from "../../../reducers/layout";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { signIn, TO_PROFILE } from "../../../reducers/current-user";
 
 interface IFormData {
   email: string;
@@ -8,12 +13,16 @@ interface IFormData {
 }
 const Widget = () => {
   const intl = useIntl();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
         // TODO
         console.log(values);
+        // dispatch(signIn([user, token]));
+        // navigate(TO_PROFILE);
         message.success(intl.formatMessage({ id: "flashes.success" }));
       }}
     >
