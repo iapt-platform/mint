@@ -36,6 +36,12 @@ then
     chown www-data:www-data /workspace/www/$1/logs
 fi
 
+if [ ! -d /workspace/www/$1/tmp ]
+then
+    mkdir -p /workspace/tmp/$1
+    chown $1:$1 /workspace/tmp/$1
+fi
+
 if [ ! -f /workspace/www/$1/nginx.conf ]
 then
     # https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
