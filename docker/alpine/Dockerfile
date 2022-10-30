@@ -21,6 +21,7 @@ RUN git config --global core.quotepath false
 RUN git config --global http.version HTTP/1.1
 RUN git config --global pull.rebase false
 RUN echo 'set-option -g history-limit 102400' > $HOME/.tmux.conf
+RUN echo 'set-option -g default-shell "/bin/zsh"' >> $HOME/.tmux.conf
 
 RUN sh -c ". $HOME/.profile \
     && pip install --user ansible paramiko"
