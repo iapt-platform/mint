@@ -31,7 +31,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 			key: "palicanon",
 		},
 		{
-			label: <Link to="/course">{intl.formatMessage({ id: "columns.library.course.title" })}</Link>,
+			label: <Link to="/course/list">{intl.formatMessage({ id: "columns.library.course.title" })}</Link>,
 			key: "course",
 		},
 		{

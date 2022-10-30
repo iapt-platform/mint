@@ -1,7 +1,4 @@
-import { Space } from "antd";
 import { useParams } from "react-router-dom";
-import HeadBar from "../../../components/library/HeadBar";
-import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
 	// TODO
@@ -9,12 +6,10 @@ const Widget = () => {
 
 	return (
 		<div>
-			<HeadBar selectedKeys="course" />
 			<div>课 {lessonid} 详情</div>
 			<div>
-				<Space>主显示区</Space>
+				主显示区
 			</div>
-			<FooterBar />
 		</div>
 	);
 };

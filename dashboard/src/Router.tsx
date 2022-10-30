@@ -24,6 +24,7 @@ import LibraryPalicanon from "./pages/library/palicanon";
 import LibraryPalicanonByPath from "./pages/library/palicanon/bypath";
 import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
 import LibraryCourse from "./pages/library/course";
+import LibraryCourseList from "./pages/library/course/list";
 import LibraryCourseShow from "./pages/library/course/course";
 import LibraryLessonShow from "./pages/library/course/lesson";
 import LibraryTerm from "./pages/library/term/show";
@@ -35,6 +36,7 @@ import LibraryAnthologyShow from "./pages/library/anthology/show";
 import LibraryArticle from "./pages/library/anthology/article";
 
 import LibraryBlog from "./pages/library/blog";
+import LibraryBlogOverview from "./pages/library/blog/overview";
 import LibraryBlogTranslation from "./pages/library/blog/translation";
 import LibraryBlogCourse from "./pages/library/blog/course";
 import LibraryBlogAnthology from "./pages/library/blog/anthology";
@@ -105,9 +107,12 @@ const Widget = () => {
 				<Route path="chapter/:id" element={<LibraryPalicanonChapter />} />
 			</Route>
 
-			<Route path="course" element={<LibraryCourse />}></Route>
-			<Route path="course/show/:id" element={<LibraryCourseShow />}></Route>
-			<Route path="course/lesson/:id" element={<LibraryLessonShow />}></Route>
+			<Route path="course" element={<LibraryCourse />}>
+				<Route path="show/:id" element={<LibraryCourseShow />}></Route>
+				<Route path="lesson/:id" element={<LibraryLessonShow />}></Route>
+				<Route path="course/:id" element={<LibraryLessonShow />}></Route>
+				<Route path="list" element={<LibraryCourseList />}></Route>
+			</Route>
 
 			<Route path="term/:word" element={<LibraryTerm />} />
 
@@ -121,11 +126,13 @@ const Widget = () => {
 			<Route path="anthology/:id/by_channel/:tags" element={<LibraryAnthologyShow />} />
 			<Route path="article/show/:id" element={<LibraryArticle />} />
 
-			<Route path="blog/:studioname" element={<LibraryBlog />} />
-			<Route path="blog/:studioname/translation" element={<LibraryBlogTranslation />} />
-			<Route path="blog/:studioname/course" element={<LibraryBlogCourse />} />
-			<Route path="blog/:studioname/anthology" element={<LibraryBlogAnthology />} />
-			<Route path="blog/:studioname/term" element={<LibraryBlogTerm />} />
+			<Route path="blog/:studio" element={<LibraryBlog />}>
+				<Route path="overview" element={<LibraryBlogOverview />} />
+				<Route path="palicanon" element={<LibraryBlogTranslation />} />
+				<Route path="course" element={<LibraryBlogCourse />} />
+				<Route path="anthology" element={<LibraryBlogAnthology />} />
+				<Route path="term" element={<LibraryBlogTerm />} />
+			</Route>
 
 			<Route path="studio/:studioname" element={<StudioHome />}></Route>
 			<Route path="studio/:studioname/palicanon" element={<StudioPalicanon />}></Route>
