@@ -1,21 +1,14 @@
-import { Space } from "antd";
 import { useParams } from "react-router-dom";
-import HeadBar from "../../../components/library/blog/HeadBar";
-import FooterBar from "../../../components/library/FooterBar";
+import BlogNav from "../../../components/library/blog/BlogNav";
 
 const Widget = () => {
 	// TODO
-	const { lessonid } = useParams(); //url 参数
+	const { studio } = useParams(); //url 参数
 
 	return (
-		<div>
-			<HeadBar />
-			<div>课 {lessonid} 详情</div>
-			<div>
-				<Space>主显示区</Space>
-			</div>
-			<FooterBar />
-		</div>
+		<>
+			<BlogNav selectedKey="term" studio={studio ? studio : ""} />
+		</>
 	);
 };
 
