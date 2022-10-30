@@ -54,7 +54,6 @@ const Widget = () => {
 	const { studioname } = useParams();
 	return (
 		<Layout>
-			<HeadBar />
 			<Layout>
 				<LeftSider selectedKeys="recent" />
 				<Content>
@@ -116,8 +115,8 @@ const Widget = () => {
 								key: "option",
 								width: 120,
 								valueType: "option",
-								render: () => [
-									<Dropdown.Button type="link" overlay={menu}>
+								render: (text, row, index, action) => [
+									<Dropdown.Button type="link" key={index} overlay={menu}>
 										{intl.formatMessage({ id: "buttons.edit" })}
 									</Dropdown.Button>,
 								],
@@ -180,7 +179,6 @@ const Widget = () => {
 					/>
 				</Content>
 			</Layout>
-			<Footer />
 		</Layout>
 	);
 };
