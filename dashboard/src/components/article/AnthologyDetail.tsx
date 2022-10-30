@@ -35,11 +35,11 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 
 	useEffect(() => {
 		console.log("useEffect");
-		fetchData();
-	}, [setTableData]);
+		fetchData(prop.aid);
+	}, [prop.aid]);
 
-	function fetchData() {
-		ApiFetch(`/anthology/${prop.aid}`)
+	function fetchData(id: string) {
+		ApiFetch(`/anthology/${id}`)
 			.then((response) => {
 				const json = response as unknown as IAnthologyListApiResponse2;
 
@@ -61,7 +61,6 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 					updated_at: item.updated_at,
 				};
 				setTableData(newTree);
-				//setTreeData(newTree.articles);
 				console.log("toc", newTree.articles);
 			})
 			.catch((error) => {

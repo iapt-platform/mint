@@ -40,7 +40,7 @@ const Widget = (prop: IWidgetAnthologyCard) => {
 		<>
 			<Card hoverable bordered={false} style={{ width: "100%" }}>
 				<Title level={4}>
-					<Link to={prop.data.id}>{prop.data.title}</Link>
+					<Link to={`/anthology/${prop.data.id}`}>{prop.data.title}</Link>
 				</Title>
 				<div>
 					<Text type="secondary">{prop.data.subTitle}</Text>
