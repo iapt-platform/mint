@@ -22,10 +22,10 @@ RUN apt -y upgrade
 RUN apt -y install zsh git locales locales-all rsync openssh-client sshpass \
     vim tzdata pwgen zip unzip tree tmux dialog \
     net-tools dnsutils net-tools iputils-arping iputils-ping telnet \
-    imagemagick ffmpeg fonts-dejavu-extra \
-    clang clang-format lldb lld \
+    imagemagick ffmpeg fonts-dejavu-extra texlive-full \
     build-essential cmake pkg-config libtool automake autoconf binutils cpio mold \
     debhelper bison flex ninja-build \
+    musl-tools musl-dev \
     crossbuild-essential-armhf crossbuild-essential-arm64 \
     python3 python3-distutils python3-dev python3-pip virtualenv \
     php-fpm php-mbstring php-json php-xml php-pear php-bcmath php-curl php-zip \
@@ -38,9 +38,10 @@ RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
 RUN apt update
 ENV GCC_VERSION 12
 RUN apt install -y g++-${GCC_VERSION} g++-${GCC_VERSION}-aarch64-linux-gnu g++-${GCC_VERSION}-arm-linux-gnueabihf
+RUN apt install -y libstdc++-${GCC_VERSION}-dev:amd64 libstdc++-${GCC_VERSION}-dev:arm64 libstdc++-${GCC_VERSION}-dev:armhf
 
 # https://apt.llvm.org/
-ENV CLANG_VERSION=14
+ENV CLANG_VERSION=15
 RUN echo "deb [arch=amd64] http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${CLANG_VERSION} main" > /etc/apt/sources.list.d/llvm.list
 RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
 RUN apt update
@@ -79,29 +80,28 @@ RUN mkdir -p $HOME/downloads $HOME/build $HOME/local $HOME/tmp
 # https://github.com/ohmyzsh/ohmyzsh
 RUN git clone https://github.com/ohmyzsh/ohmyzsh.git $HOME/.oh-my-zsh
 RUN cp $HOME/.oh-my-zsh/templates/zshrc.zsh-template $HOME/.zshrc
-RUN echo 'source $HOME/.profile' >> $HOME/.zshrc
-RUN echo 'export LANG=en_US.UTF-8' >> $HOME/.profile
-RUN echo 'export LC_ALL=en_US.UTF-8' >> $HOME/.profile
+RUN echo 'export LANG=en_US.UTF-8' >> $HOME/.zshrc
+RUN echo 'export LC_ALL=en_US.UTF-8' >> $HOME/.zshrc
+RUN echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.zshrc
 
 RUN git config --global core.quotepath false
 RUN git config --global http.version HTTP/1.1
 RUN git config --global pull.rebase false
 RUN echo 'set-option -g history-limit 102400' > $HOME/.tmux.conf
+RUN echo 'set-option -g default-shell "/bin/zsh"' >> $HOME/.tmux.conf
 
-RUN sh -c ". $HOME/.profile && pip3 install --user cmake"
-
-RUN sh -c ". $HOME/.profile \
+RUN zsh -c "source $HOME/.zshrc && pip3 install --user cmake"
+RUN zsh -c "source $HOME/.zshrc \
     && pip3 install --user ansible paramiko"
-RUN echo 'export ANSIBLE_HOST_KEY_CHECKING=False' >> $HOME/.profile
-RUN echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.profile
-RUN echo 'alias peony="ANSIBLE_LOG_PATH=$HOME/tmp/$(date +%Y%m%d%H%M%S).log ansible-playbook"' >> $HOME/.profile
+RUN echo 'export ANSIBLE_HOST_KEY_CHECKING=False' >> $HOME/.zshrc
+RUN echo 'alias peony="ANSIBLE_LOG_PATH=$HOME/tmp/$(date +%Y%m%d%H%M%S).log ansible-playbook"' >> $HOME/.zshrc
 
-RUN sh -c ". $HOME/.profile \
+RUN zsh -c "source $HOME/.zshrc \
     && pip3 install --user conan \
     && conan profile new default --detect \
     && conan profile update settings.compiler.libcxx=libstdc++11 default"
 
-RUN sh -c ". $HOME/.profile && pip3 install --user supervisor"
+RUN zsh -c "source $HOME/.zshrc && pip3 install --user supervisor"
 
 # https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
 RUN wget -q -O $HOME/downloads/composer https://getcomposer.org/installer
@@ -153,7 +153,7 @@ RUN echo 'export GOROOT=$HOME/local/go' >> $HOME/.zshrc
 RUN echo 'export PATH=$GOROOT/bin:$PATH' >> $HOME/.zshrc
 RUN echo 'export GOPATH=$HOME/go' >> $HOME/.zshrc
 
-ENV JDK_VERSION "19-open"
+ENV JDK_VERSION "19.0.1-open"
 RUN curl -s "https://get.sdkman.io" | zsh
 RUN sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
 RUN zsh -c "source $HOME/.zshrc \
@@ -162,21 +162,25 @@ RUN zsh -c "source $HOME/.zshrc \
     && sdk install gradle"
 
 # https://github.com/nvm-sh/nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | sh
-RUN sh -c ". $HOME/.profile \
+ENV NVM_VERSION "v0.39.2"
+RUN git clone -b ${NVM_VERSION} https://github.com/nvm-sh/nvm.git $HOME/.nvm
+RUN echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.zshrc
+RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $HOME/.zshrc
+RUN echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> $HOME/.zshrc
+RUN zsh -c "source $HOME/.zshrc \
     && nvm install node \
     && nvm use node \
     && npm i yarn -g"
-RUN sh -c ". $HOME/.profile \
+RUN zsh -c "source $HOME/.zshrc \
     && nvm install --lts \
     && nvm use --lts \
     && npm i yarn -g"
 # https://stackoverflow.com/questions/37324519/node-sass-does-not-yet-support-your-current-environment-linux-64-bit-with-false
-RUN sh -c ". $HOME/.profile \
+RUN zsh -c "source $HOME/.zshrc \
     && nvm install lts/fermium \
     && nvm use lts/fermium \
     && npm i yarn -g"
-RUN echo 'export PATH=$HOME/.yarn/bin:$PATH' >> $HOME/.profile
+RUN echo 'export PATH=$HOME/.yarn/bin:$PATH' >> $HOME/.zshrc
 
 # https://www.rust-lang.org/tools/install
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -184,7 +188,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN zsh -c "source $HOME/.cargo/env \
     && rustup component add rust-analyzer \
     && rustup target add armv7-unknown-linux-gnueabihf \
-    && rustup target add aarch64-unknown-linux-gnu"
+    && rustup target add aarch64-unknown-linux-gnu \
+    && rustup target add x86_64-unknown-linux-musl \
+    && rustup target add aarch64-unknown-linux-musl"
 
 
 RUN apt install -y libpq-dev libmysqlclient-dev libsqlite3-dev
@@ -193,12 +199,18 @@ RUN zsh -c "source $HOME/.zshrc \
     && cargo install --locked cargo-outdated \
     && cargo install mdbook"
 
-ADD conan /opt/conan
-RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh amd64"
-RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh arm64"
-RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh armhf"
+# https://opensearch.org/downloads.html#opensearch
+ENV OPENSEARCH_VERSION "2.3.0"
+RUN wget -q -P $HOME/downloads \
+    https://artifacts.opensearch.org/releases/bundle/opensearch/${OPENSEARCH_VERSION}/opensearch-${OPENSEARCH_VERSION}-linux-x64.tar.gz
+RUN tar xf $HOME/downloads/opensearch-${OPENSEARCH_VERSION}-linux-x64.tar.gz -C /opt
 
-ENV GRPC_VERSION "v1.49.1"
+# https://min.io/download#/linux
+RUN wget -q -O /usr/bin/minio \
+    https://dl.min.io/server/minio/release/linux-amd64/minio
+RUN chmod +x /usr/bin/minio
+
+ENV GRPC_VERSION "v1.50.1"
 RUN git clone --recurse-submodules -b $GRPC_VERSION https://github.com/grpc/grpc.git $HOME/downloads/grpc
 RUN zsh -c "source $HOME/.zshrc \
     && mkdir -pv $HOME/build/grpc \
@@ -211,37 +223,45 @@ RUN zsh -c "source $HOME/.zshrc \
     && make -j \
     && make install"
 
-# https://github.com/protocolbuffers/protobuf-javascript
-ENV GRPC_JS_PLUGIN_VERSION "3.21.2"
-RUN wget -P $HOME/downloads \
-    https://github.com/protocolbuffers/protobuf-javascript/releases/download/v${GRPC_JS_PLUGIN_VERSION}/protobuf-javascript-${GRPC_JS_PLUGIN_VERSION}-linux-x86_64.tar.gz
-RUN mkdir -p $HOME/build/protobuf-javascript \
-    cd $HOME/build/protobuf-javascript \
-    && tar xf $HOME/downloads/protobuf-javascript-${GRPC_JS_PLUGIN_VERSION}-linux-x86_64.tar.gz \
-    && cp bin/protoc-gen-js $HOME/.local/bin/
-
-# https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/
-ENV GRPC_JAVA_PLUGIN_VERSION "1.50.0"
-RUN wget -q -O $HOME/.local/bin/grpc_java_plugin \
-    https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/${GRPC_JAVA_PLUGIN_VERSION}/protoc-gen-grpc-java-${GRPC_JAVA_PLUGIN_VERSION}-linux-x86_64.exe
-RUN chmod +x $HOME/.local/bin/grpc_java_plugin
-
 # https://github.com/grpc/grpc-web#code-generator-plugin
-ENV GRPC_WEB_PLUGIN_VERSION "1.4.1"
+ENV GRPC_WEB_PLUGIN_VERSION "1.4.2"
 RUN wget -q -O $HOME/.local/bin/protoc-gen-grpc-web \
     https://github.com/grpc/grpc-web/releases/download/${GRPC_WEB_PLUGIN_VERSION}/protoc-gen-grpc-web-${GRPC_WEB_PLUGIN_VERSION}-linux-x86_64
 RUN chmod +x $HOME/.local/bin/protoc-gen-grpc-web
 
-# https://opensearch.org/downloads.html#opensearch
-ENV OPENSEARCH_VERSION "2.3.0"
+# https://github.com/protocolbuffers/protobuf-javascript
+ENV GRPC_JS_PLUGIN_VERSION "3.21.2"
 RUN wget -q -P $HOME/downloads \
-    https://artifacts.opensearch.org/releases/bundle/opensearch/${OPENSEARCH_VERSION}/opensearch-${OPENSEARCH_VERSION}-linux-x64.tar.gz
-RUN tar xf $HOME/downloads/opensearch-${OPENSEARCH_VERSION}-linux-x64.tar.gz -C /opt
+    https://github.com/protocolbuffers/protobuf-javascript/releases/download/v${GRPC_JS_PLUGIN_VERSION}/protobuf-javascript-${GRPC_JS_PLUGIN_VERSION}-linux-x86_64.tar.gz
+RUN mkdir -p $HOME/build/protobuf-javascript \
+    && cd $HOME/build/protobuf-javascript \
+    && tar xf $HOME/downloads/protobuf-javascript-${GRPC_JS_PLUGIN_VERSION}-linux-x86_64.tar.gz \
+    && cp bin/protoc-gen-js $HOME/.local/bin/
 
-# https://min.io/download#/linux
-RUN wget -q -O /usr/bin/minio \
-    https://dl.min.io/server/minio/release/linux-amd64/minio
-RUN chmod +x /usr/bin/minio
+# https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/
+ENV GRPC_JAVA_PLUGIN_VERSION "1.50.2"
+RUN wget -q -O $HOME/.local/bin/grpc_java_plugin \
+    https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/${GRPC_JAVA_PLUGIN_VERSION}/protoc-gen-grpc-java-${GRPC_JAVA_PLUGIN_VERSION}-linux-x86_64.exe
+RUN chmod +x $HOME/.local/bin/grpc_java_plugin
+
+ENV FLATBUFFERS_VERSION "v22.10.26"
+RUN git clone -b $FLATBUFFERS_VERSION https://github.com/google/flatbuffers.git $HOME/downloads/flatbuffers
+RUN zsh -c "source $HOME/.zshrc \
+    && mkdir -pv $HOME/build/flatbuffers \
+    && cd $HOME/build/flatbuffers \
+    && cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$HOME/.local $HOME/downloads/flatbuffers \
+    && make -j \
+    && make install"
+
+RUN git clone https://github.com/microsoft/vcpkg.git $HOME/local/vcpkg
+RUN $HOME/local/vcpkg/bootstrap-vcpkg.sh
+RUN echo 'export VCPKG_DISABLE_METRICS=1' >> $HOME/.zshrc
+
+ADD conan /opt/conan
+# RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh amd64"
+# RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh arm64"
+# RUN zsh -c "source $HOME/.zshrc && cd /opt/conan && ./install.sh armhf"
 
 # https://opensearch.org/docs/latest/opensearch/install/tar/
 RUN echo "network.host: 0.0.0.0" >> /opt/opensearch-${OPENSEARCH_VERSION}/config/opensearch.yml

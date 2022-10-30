@@ -3,7 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR armv7l)
 
 set(target arm-linux-gnueabihf)
 set(gcc_version 12)
-set(clang_version 14)
+set(clang_version 15)
 
 set(CMAKE_C_COMPILER clang-${clang_version})
 set(CMAKE_C_COMPILER_TARGET ${target})

@@ -1,5 +1,5 @@
 target=x86_64-linux-gnu
-clang_version=14
+clang_version=15
 
 [settings]
 os=Linux
