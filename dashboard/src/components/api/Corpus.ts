@@ -73,3 +73,38 @@ export interface IApiResponseChapterChannelList {
 	message: string;
 	data: { rows: IApiChapterChannels[]; count: number };
 }
+
+export interface IApiChapterTag {
+	id: string;
+	name: string;
+	count: number;
+}
+export interface IApiResponseChapterTagList {
+	ok: boolean;
+	message: string;
+	data: { rows: IApiChapterTag[]; count: number };
+}
+
+export interface IApiResponseChannelListData {
+	channel_id: string;
+	count: number;
+	channel: {
+		id: number;
+		type: string;
+		owner_uid: string;
+		editor_id: number;
+		name: string;
+		summary: string;
+		lang: string;
+		status: number;
+		setting: string;
+		created_at: string;
+		updated_at: string;
+		uid: string;
+	};
+}
+export interface IApiResponseChannelList {
+	ok: boolean;
+	message: string;
+	data: { rows: IApiResponseChannelListData[]; count: number };
+}
