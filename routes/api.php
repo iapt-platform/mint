@@ -54,14 +54,36 @@ Route::group(['prefix' => 'v2'],function(){
     });
     Route::apiResource('anthology',CollectionController::class);
     Route::apiResource('dict',DictController::class);
+    Route::apiResource('tag',TagController::class);
+
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
         if(file_exists($filename)){
-            return file_get_contents($filename);
+            return json_encode(['ok'=>true,'message'=>'','data'=>file_get_contents($filename)]);
         }else{
-            return "no file {$lang}/{$file}";
+            return json_encode(['ok'=>false,'message'=>"no file {$lang}/{$file}"]);
         }
+    });
 
+    Route::get('siteinfo/{locale}', function ($locale) {
+        if (! in_array($locale, ['en', 'zh-Hans', 'zh-Hant'])) {
+            App::setLocale('en');
+        }else{
+            App::setLocale($locale);
+        }
+        $site = [
+            'logo'=> __("site.logo"),
+            'title'=> __('site.title'),
+            'subhead'=> __('site.subhead'),
+            'keywords'=> __('site.keywords'),
+            'description'=> __('site.description'),
+            'copyright'=> __('site.copyright'),
+            'author'=> [
+                'name'=> __('site.author.name'),
+                'email'=> __('site.author.email'),
+                ],
+            ];
+        return json_encode($site);
     });
 
 
