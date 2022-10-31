@@ -1,12 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { message, Layout, Space } from "antd";
-import HeadBar from "../../../components/studio/HeadBar";
-import LeftSider from "../../../components/studio/LeftSider";
-import Footer from "../../../components/studio/Footer";
-
-const { Content } = Layout;
+import { message, Space } from "antd";
 
 interface IFormData {
 	name: string;
