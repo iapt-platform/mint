@@ -1,29 +1,31 @@
-import { BrowserRouter } from "react-router-dom";
+import { Suspense } from "react";
 import { IntlProvider } from "react-intl";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
+import store from "./store";
+import Loading from "./components/Loading";
 import Router from "./Router";
-import locales, {
-  get as getLocale,
-  DEFAULT as DEFAULT_LOCALE,
-} from "./locales";
+import { get as getLocale } from "./locales";
+
+import "react-quill/dist/quill.snow.css";
 
 import "./App.css";
 
 const lang = getLocale();
-const i18n = locales(lang);
 
-function Widget() {
+const Widget = () => {
   return (
-    <IntlProvider
-      messages={i18n.messages}
-      locale={lang}
-      defaultLocale={DEFAULT_LOCALE}
-    >
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <Router />
-      </BrowserRouter>
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider messages={{}} locale={lang} defaultLocale={"en-US"}>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <Suspense fallback={<Loading />}>
+            <Router />
+          </Suspense>
+        </BrowserRouter>
+      </IntlProvider>
+    </Provider>
   );
-}
+};
 
 export default Widget;

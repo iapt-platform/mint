@@ -1,5 +1,5 @@
 admin:
-  access_log_path: /tmp/admin_access.log
+  access_log_path: /tmp/admin.access.log
   address:
     socket_address: { address: 127.0.0.1, port_value: 9901 }
 
@@ -23,7 +23,7 @@ static_resources:
                       routes:
                         - match: { prefix: "/" }
                           route:
-                            cluster: echo_service
+                            cluster: palm_service
                             timeout: 0s
                             max_stream_duration:
                               grpc_timeout_header_max: 0s
@@ -45,7 +45,7 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
-    - name: echo_service
+    - name: palm_service
       connect_timeout: 0.25s
       type: logical_dns
       http2_protocol_options: {}
@@ -57,5 +57,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: node-server
-                      port_value: 11111
+                      address: 127.0.0.1
+                      port_value: 9999

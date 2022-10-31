@@ -27,7 +27,7 @@ EOF
 fi
 
 cd $HOME/.nvm
-git checkout v0.39.1
+git checkout v0.39.2
 . $HOME/.nvm/nvm.sh
 
 if ! [ -x "$(command -v yarn)" ]

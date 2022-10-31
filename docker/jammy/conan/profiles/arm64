@@ -1,6 +1,6 @@
 target=aarch64-linux-gnu
 gcc_version=12
-clang_version=14
+clang_version=15
 
 [settings]
 os=Linux
