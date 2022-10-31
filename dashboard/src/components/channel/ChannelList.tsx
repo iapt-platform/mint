@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { List } from "antd";
 import ChannelListItem from "./ChannelListItem";
 import type { ChannelInfoProps } from "../api/Channel";
-import { ApiFetch } from "../../utils";
 import { IApiResponseChannelList } from "../api/Corpus";
+import { get } from "../../request";
 
 export interface ChannelFilterProps {
 	chapterProgress: number;
@@ -25,8 +25,8 @@ const Widget = ({ filter = defaultChannelFilterProps }: IWidgetChannelList) => {
 
 	useEffect(() => {
 		console.log("palichapterlist useEffect");
-		let url = `/progress?view=channel&channel_type=${filter.channelType}&lang=${filter.lang}&progress=${filter.chapterProgress}`;
-		ApiFetch(url).then(function (myJson) {
+		let url = `/v2/progress?view=channel&channel_type=${filter.channelType}&lang=${filter.lang}&progress=${filter.chapterProgress}`;
+		get(url).then(function (myJson) {
 			console.log("ajex", myJson);
 			const data = myJson as unknown as IApiResponseChannelList;
 			const newData: ChannelInfoProps[] = data.data.rows.map((item) => {

@@ -4,7 +4,7 @@ import ChapterHead, { IChapterInfo } from "./ChapterHead";
 import { IParagraph } from "./BookViewer";
 import TocPath, { ITocPathNode } from "./TocPath";
 import { IApiResponcePaliChapter } from "../api/Corpus";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
 
 interface IWidgetPaliChapterHead {
 	para: IParagraph;
@@ -29,8 +29,8 @@ const Widget = (prop: IWidgetPaliChapterHead) => {
 	}, [prop.para]);
 
 	function fetchData(para: IParagraph) {
-		let url = `/palitext?view=paragraph&book=${para.book}&para=${para.para}`;
-		ApiFetch(url).then(function (myJson) {
+		let url = `/v2/palitext?view=paragraph&book=${para.book}&para=${para.para}`;
+		get(url).then(function (myJson) {
 			console.log("ajex", myJson);
 			const data = myJson as unknown as IApiResponcePaliChapter;
 			let path: ITocPathNode[] = JSON.parse(data.data.path);

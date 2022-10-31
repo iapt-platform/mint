@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
 import { IApiResponcePaliChapterList } from "../api/Corpus";
 import { IParagraph } from "./BookViewer";
 import { IPaliChapterData } from "./PaliChapterCard";
@@ -15,8 +15,8 @@ const Widget = (prop: IWidgetPaliChapterListByPara) => {
 
 	useEffect(() => {
 		console.log("palichapterlist useEffect");
-		let url = `/palitext?view=chapter_children&book=${prop.para.book}&para=${prop.para.para}`;
-		ApiFetch(url).then(function (myJson) {
+		let url = `/v2/palitext?view=chapter_children&book=${prop.para.book}&para=${prop.para.para}`;
+		get(url).then(function (myJson) {
 			console.log("ajex", myJson);
 			const data = myJson as unknown as IApiResponcePaliChapterList;
 			let newTree: IPaliChapterData[] = data.data.rows.map((item) => {
