@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import PaliChapterChannelList from "./PaliChapterChannelList";
 import PaliChapterListByPara from "./PaliChapterListByPara";
 import PaliChapterHead from "./PaliChapterHead";
-import { IPaliChapterData } from "./PaliChapterCard";
 import { IChapterClickEvent } from "./PaliChapterList";
 
 export interface IParagraph {
@@ -22,6 +21,7 @@ const Widget = (prop: IWidgetBookViewer) => {
 			prop.onChange(para);
 		}
 	}, [para]);
+
 	useEffect(() => {
 		setPara(prop.para);
 	}, [prop.para]);
