@@ -39,7 +39,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 			key: "dict",
 		},
 		{
-			label: <Link to="/anthology">{intl.formatMessage({ id: "columns.library.anthology.title" })}</Link>,
+			label: <Link to="/anthology/list">{intl.formatMessage({ id: "columns.library.anthology.title" })}</Link>,
 			key: "anthology",
 		},
 		{
