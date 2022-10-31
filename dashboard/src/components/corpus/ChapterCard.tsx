@@ -31,6 +31,15 @@ interface IWidgetChapterCard {
 const Widget = (prop: IWidgetChapterCard) => {
 	const path = JSON.parse(prop.data.Path);
 	const tags = prop.data.Tag;
+	const aa = {
+		marginTop: "auto",
+		marginBottom: "auto",
+		display: "-webkit-box",
+		//WebkitBoxOrient: "vertical",
+		//WebkitLineClamp: 3,
+		overflow: "hidden",
+	};
+
 	return (
 		<>
 			<Row>
@@ -58,7 +67,9 @@ const Widget = (prop: IWidgetChapterCard) => {
 					</Row>
 					<Row>
 						<Col>
-							<Paragraph>{prop.data.Summary}</Paragraph>
+							<Paragraph>
+								<div style={aa}>{prop.data.Summary}</div>
+							</Paragraph>
 						</Col>
 					</Row>
 					<Row>
