@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Typography } from "antd";
-import ReactMarkdown from "react-markdown";
 
 import type { IAnthologyData } from "./AnthologyCard";
 import type {
@@ -9,6 +8,7 @@ import type {
 } from "../api/Article";
 import TocTree from "./TocTree";
 import { get } from "../../request";
+import MDEditor from "@uiw/react-md-editor";
 
 const { Title, Text } = Typography;
 
@@ -77,7 +77,7 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 				<Text type="secondary">{tableData.subTitle}</Text>
 			</div>
 			<div>
-				<ReactMarkdown>{tableData.summary}</ReactMarkdown>
+				<MDEditor.Markdown source={tableData.summary} />
 			</div>
 			<Title level={5}>目录</Title>
 
