@@ -1,23 +1,28 @@
-import { Space } from "antd";
-import { Link } from "react-router-dom";
-import HeadBar from "../../../components/library/blog/HeadBar";
-import Footer from "../../../components/library/Footer";
+import { Outlet } from "react-router-dom";
+import { Col, Layout, Row } from "antd";
+
+import HeadBar from "../../../components/library/HeadBar";
+import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
 	// TODO
-  return (
-    <div>
-		<HeadBar />
-      <div>课程首页</div>
-	  <div>
-	  	<Space>
-			<Link to="/course/show/12345">课程1</Link>
-			<Link to="/course/show/23456">课程2</Link>
-		</Space>
-	  </div>
-		<Footer />
-    </div>
-  );
+	return (
+		<Layout>
+			<HeadBar />
+			<div>cover</div>
+			<Layout>
+				<Row>
+					<Col flex="auto"></Col>
+					<Col flex="1260px">
+						<Outlet />
+					</Col>
+					<Col flex="auto"></Col>
+				</Row>
+			</Layout>
+
+			<FooterBar />
+		</Layout>
+	);
 };
 
 export default Widget;

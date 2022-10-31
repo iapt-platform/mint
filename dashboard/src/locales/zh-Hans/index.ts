@@ -7,6 +7,8 @@ import dict from "./dict";
 import term from "./term";
 import group from "./group";
 import article from "./article";
+import utilities from "./utilities";
+import blog from "./blog";
 
 const items = {
 	"flashes.success": "操作成功",
@@ -45,6 +47,8 @@ const items = {
 	...term,
 	...group,
 	...article,
+	...utilities,
+	...blog,
 };
 
 export default items;

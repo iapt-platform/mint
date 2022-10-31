@@ -1,22 +1,46 @@
-import { Space } from "antd";
 import { useParams } from "react-router-dom";
+import { Layout, Affix, Col, Row } from "antd";
+import AnthologyDetail from "../../../components/article/AnthologyDetail";
 
-import HeadBar from "../../../components/library/HeadBar";
-import Footer from "../../../components/library/Footer";
+const { Content, Header } = Layout;
 
 const Widget = () => {
 	// TODO
-	const { anthology_id } = useParams();//url 参数
-  return (
-    <div>
-		<HeadBar selectedKeys="anthology"/>
-      <div>文集{anthology_id}详情</div>
-      <div>
-		<Space>主显示区</Space>
-      </div>
-		<Footer />
-    </div>
-  );
+	const { id, tags } = useParams(); //url 参数
+	let aid = id ? id : "";
+	let channel = tags ? tags : "";
+
+	const pageMaxWidth = "1260px";
+	return (
+		<Layout>
+			<Affix offsetTop={0}>
+				<Header style={{ backgroundColor: "gray", height: "3.5em" }}>
+					<Col flex="auto"></Col>
+					<Col flex={pageMaxWidth}>
+						<div>
+							{aid}@{channel}
+						</div>
+					</Col>
+					<Col flex="auto"></Col>
+				</Header>
+			</Affix>
+
+			<Content>
+				<Row>
+					<Col flex="auto"></Col>
+					<Col flex={pageMaxWidth}>
+						<Row>
+							<Col span="18">
+								<AnthologyDetail aid={aid} />
+							</Col>
+							<Col span="6"></Col>
+						</Row>
+					</Col>
+					<Col flex="auto"></Col>
+				</Row>
+			</Content>
+		</Layout>
+	);
 };
 
 export default Widget;

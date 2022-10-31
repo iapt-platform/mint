@@ -1,24 +1,17 @@
-import { Space } from "antd";
-import { Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { Layout } from "antd";
 
 import HeadBar from "../../../components/library/HeadBar";
-import Footer from "../../../components/library/Footer";
+import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
-	// TODO
-  return (
-    <div>
-		<HeadBar selectedKeys="anthology"/>
-      <div>文集首页</div>
-	  <div>
-	  	<Space>
-			<Link to="/anthology/show/12345">文集1</Link>
-			<Link to="/article/show/23456">文章1</Link>
-		</Space>
-	  </div>
-		<Footer />
-    </div>
-  );
+	return (
+		<Layout>
+			<HeadBar selectedKeys="anthology" />
+			<Outlet />
+			<FooterBar />
+		</Layout>
+	);
 };
 
 export default Widget;
