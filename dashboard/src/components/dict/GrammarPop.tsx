@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Popover } from "antd";
 import { ProCard } from "@ant-design/pro-components";
-import ReactMarkdown from "react-markdown";
 
 import { ApiGetText } from "../../utils";
+import MDEditor from "@uiw/react-md-editor";
 
 interface IWidgetGrammarPop {
 	text: string;
@@ -27,7 +27,7 @@ const Widget = (prop: IWidgetGrammarPop) => {
 	const userCard = (
 		<>
 			<ProCard style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
-				<ReactMarkdown>{guide}</ReactMarkdown>
+				<MDEditor.Markdown source={guide} />
 			</ProCard>
 		</>
 	);
