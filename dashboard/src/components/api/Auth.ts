@@ -1,12 +1,14 @@
 export interface IUserApiResponse {
 	id: string;
-	name: string;
+	userName: string;
+	nickName: string;
 	avatar: string;
 }
 
 export interface IStudioApiResponse {
 	id: string;
-	name: string;
+	nickName: string;
+	studioName: string;
 	avatar: string;
 	owner: IUserApiResponse;
 }

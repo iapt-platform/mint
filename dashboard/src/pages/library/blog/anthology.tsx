@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import AnthologyList from "../../../components/article/AnthologyList";
 import BlogNav from "../../../components/library/blog/BlogNav";
 
 const Widget = () => {
@@ -8,6 +9,7 @@ const Widget = () => {
 	return (
 		<>
 			<BlogNav selectedKey="anthology" studio={studio ? studio : ""} />
+			<AnthologyList view="public_studio" id={studio ? studio : ""} />
 		</>
 	);
 };

@@ -3,9 +3,12 @@ import { Typography } from "antd";
 import ReactMarkdown from "react-markdown";
 
 import type { IAnthologyData } from "./AnthologyCard";
-import type { IAnthologyListApiResponse, IAnthologyListApiResponse2 } from "../api/Article";
+import type {
+	IAnthologyListApiResponse,
+	IAnthologyListApiResponse2,
+} from "../api/Article";
 import TocTree from "./TocTree";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
 
 const { Title, Text } = Typography;
 
@@ -22,16 +25,16 @@ const defaultData: IAnthologyData = {
 	articles: [],
 	studio: {
 		id: "",
-		name: "",
+		studioName: "",
+		nickName: "",
 		avatar: "",
 	},
 	created_at: "",
 	updated_at: "",
 };
-//const defaultTreeData: ListNodeData[] = [];
+
 const Widget = (prop: IWidgetAnthologyDetail) => {
 	const [tableData, setTableData] = useState(defaultData);
-	//const [treeData, setTreeData] = useState(defaultTreeData);
 
 	useEffect(() => {
 		console.log("useEffect");
@@ -39,7 +42,7 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 	}, [prop.aid]);
 
 	function fetchData(id: string) {
-		ApiFetch(`/anthology/${id}`)
+		get(`/v2/anthology/${id}`)
 			.then((response) => {
 				const json = response as unknown as IAnthologyListApiResponse2;
 

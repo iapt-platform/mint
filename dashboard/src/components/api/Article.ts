@@ -23,7 +23,24 @@ export interface IAnthologyListApiResponse2 {
 	message: string;
 	data: IAnthologyListApiResponse;
 }
+export interface IAnthologyListApiResponse3 {
+	ok: boolean;
+	message: string;
+	data: {
+		rows: IAnthologyListApiResponse[];
+		count: number;
+	};
+}
+
 export interface IAnthologyStudioListApiResponse {
+	ok: boolean;
+	message: string;
+	data: {
+		count: number;
+		rows: IAnthologyStudioListDataApiResponse[];
+	};
+}
+export interface IAnthologyStudioListDataApiResponse {
 	count: number;
 	studio: IStudioApiResponse;
 }
