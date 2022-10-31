@@ -6,8 +6,6 @@ interface IAuthorTimeLine {
 	type: string;
 }
 const Widget = () => {
-	const a: string[] = new Array(10);
-
 	const data: IAuthorTimeLine[] = [
 		{
 			lable: "2015-09-1",
