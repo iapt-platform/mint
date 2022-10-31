@@ -1,17 +1,23 @@
-import { stringOrDate } from "react-big-calendar";
-
-export function ApiFetch(url: string, method = "GET", data: any = null): Promise<Response> {
+export function ApiFetch(url: string, method = "GET", data?: any): Promise<Response> {
 	const apiHost = process.env.REACT_APP_API_HOST;
-	let body: string = "{}";
-	if (data) {
-		body = JSON.stringify(data);
+	interface ajaxParam {
+		method: string;
+		body?: string;
+		headers?: any;
+	}
+	let param: ajaxParam = {
+		method: method,
+	};
+	if (typeof data !== "undefined") {
+		param.body = JSON.stringify(data);
+	}
+	if (localStorage.getItem("token")) {
+		param.headers = { token: localStorage.getItem("token") };
 	}
 	return new Promise((resolve, reject) => {
 		let apiUrl = apiHost + url;
 		console.log("api", apiUrl);
-		fetch(apiUrl, {
-			method: method,
-		})
+		fetch(apiUrl, param)
 			.then((response) => response.json())
 			.then((response) => {
 				resolve(response);
@@ -22,8 +28,8 @@ export function ApiFetch(url: string, method = "GET", data: any = null): Promise
 	});
 }
 
-export function ApiGetText(url: stringOrDate): Promise<String> {
-	const apiHost = "http://127.0.0.1:8000/api/";
+export function ApiGetText(url: string): Promise<String> {
+	const apiHost = process.env.REACT_APP_API_HOST ? process.env.REACT_APP_API_HOST : "http://localhost/api";
 	return new Promise((resolve, reject) => {
 		let apiUrl = apiHost + url;
 		console.log("api", apiUrl);
