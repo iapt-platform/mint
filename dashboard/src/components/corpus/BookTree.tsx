@@ -1,14 +1,12 @@
-import { useIntl } from "react-intl";
+//import { useIntl } from "react-intl";
 import { useState, useEffect } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Layout, Space, Tree } from "antd";
 import { Select } from "antd";
 import { Typography } from "antd";
 import type { TreeProps } from "antd/es/tree";
-import { Collapse } from "antd";
 import { ApiFetch } from "../../utils";
 
-const { Panel } = Collapse;
 const { Text } = Typography;
 
 const { Option } = Select;
@@ -18,7 +16,7 @@ interface IWidgetBookTree {
 }
 const Widget = (prop: IWidgetBookTree) => {
 	//Library foot bar
-	const intl = useIntl(); //i18n
+	//const intl = useIntl(); //i18n
 	const defaultTreeData: NewTree[] = [];
 	const [treeData, setTreeData] = useState(defaultTreeData);
 
@@ -66,24 +64,20 @@ const Widget = (prop: IWidgetBookTree) => {
 	// TODO
 	return (
 		<Layout>
-			<Collapse defaultActiveKey={["1"]} expandIconPosition="start">
-				<Panel header="目录" key="1">
-					<Space>
-						<Text>目录风格</Text>
-						<Select defaultValue={prop.root} loading={false} onChange={handleChange}>
-							<Option value="defualt">Defualt</Option>
-							<Option value="cscd">CSCD</Option>
-						</Select>
-					</Space>
-					<Tree
-						showLine
-						switcherIcon={<DownOutlined />}
-						defaultExpandedKeys={["sutta"]}
-						onSelect={onSelect}
-						treeData={treeData}
-					/>
-				</Panel>
-			</Collapse>
+			<Space>
+				<Text>目录风格</Text>
+				<Select defaultValue={prop.root} loading={false} onChange={handleChange}>
+					<Option value="defualt">Defualt</Option>
+					<Option value="cscd">CSCD</Option>
+				</Select>
+			</Space>
+			<Tree
+				showLine
+				switcherIcon={<DownOutlined />}
+				defaultExpandedKeys={["sutta"]}
+				onSelect={onSelect}
+				treeData={treeData}
+			/>
 		</Layout>
 	);
 };
