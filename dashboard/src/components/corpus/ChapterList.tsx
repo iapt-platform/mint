@@ -5,13 +5,14 @@ import type { ChapterData } from "./ChapterCard";
 import type { ChannelFilterProps } from "../channel/ChannelList";
 
 const defaultChannelFilterProps: ChannelFilterProps = {
-	ChapterProgress: 0.9,
+	chapterProgress: 0.9,
 	lang: "en",
-	ChannelType: "translation",
+	channelType: "translation",
 };
 
 interface IWidgetChannelList {
-	props?: ChannelFilterProps;
+	filter?: ChannelFilterProps;
+	tags?: string[];
 }
 const defaultData: ChapterData[] = [];
 
@@ -30,16 +31,19 @@ interface IChapterData {
 	updated_at: string;
 }
 
-const Widget = ({ props = defaultChannelFilterProps }: IWidgetChannelList) => {
+const Widget = ({ filter = defaultChannelFilterProps, tags = [] }: IWidgetChannelList) => {
 	const [tableData, setTableData] = useState(defaultData);
 
 	useEffect(() => {
 		console.log("useEffect");
-		fetchData();
-	}, [setTableData]);
 
-	function fetchData() {
-		let url = `http://127.0.0.1:8000/api/v2/progress?view=chapter`;
+		fetchData(filter, tags);
+	}, [tags, filter]);
+
+	function fetchData(filter: ChannelFilterProps, tags: string[]) {
+		const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
+		console.log("strtags", strTags);
+		let url = `http://127.0.0.1:8000/api/v2/progress?view=chapter${strTags}`;
 		fetch(url)
 			.then(function (response) {
 				console.log("ajex:", response);
