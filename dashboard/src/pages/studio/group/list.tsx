@@ -71,13 +71,23 @@ const Widget = () => {
 				<Content>
 					<Breadcrumb>
 						<Breadcrumb.Item>
-							<Link to={linkStudio}>{intl.formatMessage({ id: "columns.studio.title" })}</Link>
+							<Link to={linkStudio}>
+								{intl.formatMessage({
+									id: "columns.studio.title",
+								})}
+							</Link>
 						</Breadcrumb.Item>
 						<Breadcrumb.Item>
-							{intl.formatMessage({ id: "columns.studio.collaboration.title" })}
+							{intl.formatMessage({
+								id: "columns.studio.collaboration.title",
+							})}
 						</Breadcrumb.Item>
 						<Breadcrumb.Item>
-							<Link to={linkGroup}>{intl.formatMessage({ id: "columns.studio.group.title" })}</Link>
+							<Link to={linkGroup}>
+								{intl.formatMessage({
+									id: "columns.studio.group.title",
+								})}
+							</Link>
 						</Breadcrumb.Item>
 						<Breadcrumb.Item>列表</Breadcrumb.Item>
 					</Breadcrumb>
@@ -95,9 +105,20 @@ const Widget = () => {
 							}}
 							onDataSourceChange={setDataSource}
 							toolBarRender={() => [
-								<Popover content={<GroupCreate studio={studioname} />} placement="bottomRight">
-									<Button key="button" icon={<PlusOutlined />} type="primary">
-										{intl.formatMessage({ id: "buttons.create" })}
+								<Popover
+									content={
+										<GroupCreate studio={studioname} />
+									}
+									placement="bottomRight"
+								>
+									<Button
+										key="button"
+										icon={<PlusOutlined />}
+										type="primary"
+									>
+										{intl.formatMessage({
+											id: "buttons.create",
+										})}
 									</Button>
 								</Popover>,
 							]}
@@ -105,7 +126,9 @@ const Widget = () => {
 								title: {
 									dataIndex: "name",
 									render: (text, row, index, action) => {
-										return <Link to={row.id}>{row.name}</Link>;
+										return (
+											<Link to={row.id}>{row.name}</Link>
+										);
 									},
 								},
 								avatar: {
@@ -121,14 +144,21 @@ const Widget = () => {
 								},
 								subTitle: {
 									render: (text, row, index, action) => {
-										const showtag = row.tag.map((item, id) => {
-											return (
-												<Tag color={item.color} key={id}>
-													{item.title}
-												</Tag>
-											);
-										});
-										return <Space size={0}>{showtag}</Space>;
+										const showtag = row.tag.map(
+											(item, id) => {
+												return (
+													<Tag
+														color={item.color}
+														key={id}
+													>
+														{item.title}
+													</Tag>
+												);
+											}
+										);
+										return (
+											<Space size={0}>{showtag}</Space>
+										);
 									},
 								},
 								actions: {
@@ -139,7 +169,9 @@ const Widget = () => {
 											}}
 											key="link"
 										>
-											编辑
+											{intl.formatMessage({
+												id: "buttons.edit",
+											})}
 										</Button>,
 									],
 								},
