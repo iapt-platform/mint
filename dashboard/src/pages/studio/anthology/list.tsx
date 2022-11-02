@@ -122,7 +122,7 @@ const Widget = () => {
 						sorter: (a, b) => a.createdAt - b.createdAt,
 					},
 					{
-						title: "操作",
+						title: intl.formatMessage({ id: "buttons.option" }),
 						key: "option",
 						width: 120,
 						valueType: "option",
@@ -158,7 +158,7 @@ const Widget = () => {
 								style={{ marginInlineStart: 8 }}
 								onClick={onCleanSelected}
 							>
-								取消选择
+								{intl.formatMessage({ id: "buttons.unselect" })}
 							</Button>
 						</span>
 					</Space>

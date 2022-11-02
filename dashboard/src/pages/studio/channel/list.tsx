@@ -100,12 +100,42 @@ const Widget = () => {
 						filters: true,
 						onFilter: true,
 						valueEnum: {
-							all: { text: "全部", status: "Default" },
-							translation: { text: "译文", status: "Success" },
-							nissaya: { text: "逐词解析", status: "Processing" },
-							commentary: { text: "注疏", status: "Default" },
-							original: { text: "原文", status: "Default" },
-							general: { text: "通用", status: "Default" },
+							all: {
+								text: intl.formatMessage({
+									id: "channel.type.all.title",
+								}),
+								status: "Default",
+							},
+							translation: {
+								text: intl.formatMessage({
+									id: "channel.type.translation.title",
+								}),
+								status: "Success",
+							},
+							nissaya: {
+								text: intl.formatMessage({
+									id: "channel.type.nissaya.title",
+								}),
+								status: "Processing",
+							},
+							commentary: {
+								text: intl.formatMessage({
+									id: "channel.type.commentary.title",
+								}),
+								status: "Default",
+							},
+							original: {
+								text: intl.formatMessage({
+									id: "channel.type.original.title",
+								}),
+								status: "Default",
+							},
+							general: {
+								text: intl.formatMessage({
+									id: "channel.type.general.title",
+								}),
+								status: "Default",
+							},
 						},
 					},
 					{
@@ -119,12 +149,42 @@ const Widget = () => {
 						filters: true,
 						onFilter: true,
 						valueEnum: {
-							all: { text: "全部", status: "Default" },
-							0: { text: "禁用", status: "Success" },
-							10: { text: "私有", status: "Processing" },
-							20: { text: "链接阅读", status: "Default" },
-							30: { text: "公开阅读", status: "Default" },
-							40: { text: "公开可编辑", status: "Default" },
+							all: {
+								text: intl.formatMessage({
+									id: "tables.publicity.all",
+								}),
+								status: "Default",
+							},
+							0: {
+								text: intl.formatMessage({
+									id: "tables.publicity.disable",
+								}),
+								status: "Default",
+							},
+							10: {
+								text: intl.formatMessage({
+									id: "tables.publicity.private",
+								}),
+								status: "Processing",
+							},
+							20: {
+								text: intl.formatMessage({
+									id: "tables.publicity.public.bylink",
+								}),
+								status: "Processing",
+							},
+							30: {
+								text: intl.formatMessage({
+									id: "tables.publicity.public",
+								}),
+								status: "Success",
+							},
+							40: {
+								text: intl.formatMessage({
+									id: "tables.publicity.public.edit",
+								}),
+								status: "Success",
+							},
 						},
 					},
 					{
@@ -139,7 +199,7 @@ const Widget = () => {
 						//sorter: (a, b) => a.createdAt - b.createdAt,
 					},
 					{
-						title: "操作",
+						title: intl.formatMessage({ id: "buttons.option" }),
 						key: "option",
 						width: 120,
 						valueType: "option",
@@ -168,16 +228,14 @@ const Widget = () => {
 				}) => (
 					<Space size={24}>
 						<span>
-							{intl.formatMessage({
-								id: "buttons.selected",
-							})}
+							{intl.formatMessage({ id: "buttons.selected" })}
 							{selectedRowKeys.length}
 							<Button
 								type="link"
 								style={{ marginInlineStart: 8 }}
 								onClick={onCleanSelected}
 							>
-								取消选择
+								{intl.formatMessage({ id: "buttons.unselect" })}
 							</Button>
 						</span>
 					</Space>

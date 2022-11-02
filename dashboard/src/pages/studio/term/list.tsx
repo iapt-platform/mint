@@ -134,7 +134,7 @@ const Widget = () => {
 								style={{ marginInlineStart: 8 }}
 								onClick={onCleanSelected}
 							>
-								取消选择
+								{intl.formatMessage({ id: "buttons.unselect" })}
 							</Button>
 						</span>
 					</Space>
