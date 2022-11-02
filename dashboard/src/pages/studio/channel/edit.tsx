@@ -1,7 +1,14 @@
 import { useParams } from "react-router-dom";
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
+import {
+	ProForm,
+	ProFormText,
+	ProFormSelect,
+	ProFormTextArea,
+} from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { message, Space } from "antd";
+import { IApiResponseChannel } from "../../../components/api/Channel";
+import { get, put } from "../../../request";
 
 interface IFormData {
 	name: string;
@@ -13,6 +20,7 @@ interface IFormData {
 const Widget = () => {
 	const intl = useIntl();
 	const { channelid } = useParams(); //url 参数
+	const { studioname } = useParams();
 
 	return (
 		<>
@@ -20,9 +28,26 @@ const Widget = () => {
 			<ProForm<IFormData>
 				onFinish={async (values: IFormData) => {
 					// TODO
-					values.studio = "aaaa";
 					console.log(values);
-					message.success(intl.formatMessage({ id: "flashes.success" }));
+					const res = await put(`/v2/channel/${channelid}`, values);
+					console.log(res);
+					message.success(
+						intl.formatMessage({ id: "flashes.success" })
+					);
+				}}
+				formKey="channel_edit"
+				request={async () => {
+					// TODO
+					const res: IApiResponseChannel = await get(
+						`/v2/channel/${channelid}`
+					);
+					return {
+						name: res.data.name,
+						type: res.data.type,
+						lang: res.data.lang,
+						summary: res.data.summary,
+						studio: studioname ? studioname : "",
+					};
 				}}
 			>
 				<ProForm.Group>
@@ -34,7 +59,9 @@ const Widget = () => {
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
+								message: intl.formatMessage({
+									id: "channel.create.message.noname",
+								}),
 							},
 						]}
 					/>
@@ -45,11 +72,15 @@ const Widget = () => {
 						options={[
 							{
 								value: "translation",
-								label: intl.formatMessage({ id: "channel.type.translation.title" }),
+								label: intl.formatMessage({
+									id: "channel.type.translation.title",
+								}),
 							},
 							{
 								value: "nissaya",
-								label: intl.formatMessage({ id: "channel.type.nissaya.title" }),
+								label: intl.formatMessage({
+									id: "channel.type.nissaya.title",
+								}),
 							},
 						]}
 						width="md"
@@ -57,7 +88,9 @@ const Widget = () => {
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
+								message: intl.formatMessage({
+									id: "channel.create.message.noname",
+								}),
 							},
 						]}
 						label={intl.formatMessage({ id: "channel.type" })}
@@ -75,7 +108,9 @@ const Widget = () => {
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
+								message: intl.formatMessage({
+									id: "channel.create.message.noname",
+								}),
 							},
 						]}
 						label={intl.formatMessage({ id: "channel.lang" })}

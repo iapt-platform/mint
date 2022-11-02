@@ -9,6 +9,8 @@ import { Button, Dropdown, Menu, Popover } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import ChannelCreate from "../../../components/studio/channel/ChannelCreate";
+import { get } from "../../../request";
+import { IApiResponseChannelList } from "../../../components/api/Channel";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -37,15 +39,14 @@ const menu = (
 	/>
 );
 
-const EType = ["translation", "nissaya", "commentray", "original", "general"];
-
 interface IItem {
 	id: number;
+	uid: string;
 	title: string;
-	subtitle: string;
+	summary: string;
 	type: string;
 	publicity: number;
-	createdAt: number;
+	createdAt: string;
 }
 
 const Widget = () => {
@@ -75,16 +76,18 @@ const Widget = () => {
 						tip: "过长会自动收缩",
 						ellipsis: true,
 						render: (text, row, index, action) => {
-							const link = `/studio/${studioname}/channel/${row.id}/edit`;
-							return (
-								<div>
-									<div>
-										<Link to={link}>{row.title}</Link>
-									</div>
-									<div>{row.subtitle}</div>
-								</div>
-							);
+							const link = `/studio/${studioname}/channel/${row.uid}/edit`;
+							return <Link to={link}>{row.title}</Link>;
 						},
+					},
+					{
+						title: intl.formatMessage({
+							id: "forms.fields.summary.label",
+						}),
+						dataIndex: "summary",
+						key: "summary",
+						tip: "过长会自动收缩",
+						ellipsis: true,
 					},
 					{
 						title: intl.formatMessage({
@@ -100,7 +103,7 @@ const Widget = () => {
 							all: { text: "全部", status: "Default" },
 							translation: { text: "译文", status: "Success" },
 							nissaya: { text: "逐词解析", status: "Processing" },
-							commentray: { text: "注疏", status: "Default" },
+							commentary: { text: "注疏", status: "Default" },
 							original: { text: "原文", status: "Default" },
 							general: { text: "通用", status: "Default" },
 						},
@@ -133,7 +136,7 @@ const Widget = () => {
 						search: false,
 						dataIndex: "createdAt",
 						valueType: "date",
-						sorter: (a, b) => a.createdAt - b.createdAt,
+						//sorter: (a, b) => a.createdAt - b.createdAt,
 					},
 					{
 						title: "操作",
@@ -179,7 +182,11 @@ const Widget = () => {
 				tableAlertOptionRender={() => {
 					return (
 						<Space size={16}>
-							<Button type="link">批量删除</Button>
+							<Button type="link">
+								{intl.formatMessage({
+									id: "buttons.delete.all",
+								})}
+							</Button>
 						</Space>
 					);
 				}}
@@ -187,27 +194,24 @@ const Widget = () => {
 					// TODO
 					console.log(params, sorter, filter);
 
-					const size = params.pageSize || 20;
+					const res: IApiResponseChannelList = await get(
+						`/v2/channel?view=studio`
+					);
+					const items: IItem[] = res.data.rows.map((item, id) => {
+						return {
+							id: id,
+							uid: item.uid,
+							title: item.name,
+							summary: item.summary,
+							type: item.type,
+							publicity: item.status,
+							createdAt: item.created_at,
+						};
+					});
 					return {
-						total: 1 << 12,
-						success: true,
-						data: Array.from(Array(size).keys()).map((x) => {
-							const id =
-								((params.current || 1) - 1) * size + x + 1;
-
-							var it: IItem = {
-								id,
-								title: `title ${id}`,
-								subtitle: `subtitle ${id}`,
-								type: EType[Math.floor(Math.random() * 4)],
-								publicity:
-									(Math.floor(Math.random() * 3) + 1) * 10,
-								createdAt:
-									Date.now() -
-									Math.floor(Math.random() * 2000000000),
-							};
-							return it;
-						}),
+						total: res.data.count,
+						succcess: true,
+						data: items,
 					};
 				}}
 				rowKey="id"
