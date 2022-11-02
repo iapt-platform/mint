@@ -58,14 +58,18 @@ const Widget = () => {
 				<ProTable<IItem>
 					columns={[
 						{
-							title: intl.formatMessage({ id: "dict.fields.sn.label" }),
+							title: intl.formatMessage({
+								id: "dict.fields.sn.label",
+							}),
 							dataIndex: "id",
 							key: "id",
 							width: 50,
 							search: false,
 						},
 						{
-							title: intl.formatMessage({ id: "forms.fields.title.label" }),
+							title: intl.formatMessage({
+								id: "forms.fields.title.label",
+							}),
 							dataIndex: "title",
 							key: "title",
 							tip: "过长会自动收缩",
@@ -74,7 +78,9 @@ const Widget = () => {
 								return (
 									<div>
 										<div>
-											<Link to="edit/12345">{row.title}</Link>
+											<Link to="edit/12345">
+												{row.title}
+											</Link>
 										</div>
 										<div>{row.subtitle}</div>
 									</div>
@@ -82,7 +88,9 @@ const Widget = () => {
 							},
 						},
 						{
-							title: intl.formatMessage({ id: "forms.fields.publicity.label" }),
+							title: intl.formatMessage({
+								id: "forms.fields.publicity.label",
+							}),
 							dataIndex: "publicity",
 							key: "publicity",
 							width: 100,
@@ -99,7 +107,9 @@ const Widget = () => {
 							},
 						},
 						{
-							title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
+							title: intl.formatMessage({
+								id: "forms.fields.created-at.label",
+							}),
 							key: "created-at",
 							width: 100,
 							search: false,
@@ -113,7 +123,11 @@ const Widget = () => {
 							width: 120,
 							valueType: "option",
 							render: (text, row, index, action) => [
-								<Dropdown.Button type="link" key={index} overlay={menu}>
+								<Dropdown.Button
+									type="link"
+									key={index}
+									overlay={menu}
+								>
 									{intl.formatMessage({ id: "buttons.edit" })}
 								</Dropdown.Button>,
 							],
@@ -122,13 +136,25 @@ const Widget = () => {
 					rowSelection={{
 						// 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
 						// 注释该行则默认不显示下拉选项
-						selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+						selections: [
+							Table.SELECTION_ALL,
+							Table.SELECTION_INVERT,
+						],
 					}}
-					tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+					tableAlertRender={({
+						selectedRowKeys,
+						selectedRows,
+						onCleanSelected,
+					}) => (
 						<Space size={24}>
 							<span>
-								已选 {selectedRowKeys.length} 项
-								<Button type="link" style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+								{intl.formatMessage({ id: "buttons.selected" })}
+								{selectedRowKeys.length}
+								<Button
+									type="link"
+									style={{ marginInlineStart: 8 }}
+									onClick={onCleanSelected}
+								>
 									取消选择
 								</Button>
 							</span>
@@ -150,14 +176,19 @@ const Widget = () => {
 							total: 1 << 12,
 							success: true,
 							data: Array.from(Array(size).keys()).map((x) => {
-								const id = ((params.current || 1) - 1) * size + x + 1;
+								const id =
+									((params.current || 1) - 1) * size + x + 1;
 
 								var it: IItem = {
 									id,
 									title: `title ${id}`,
 									subtitle: `subtitle ${id}`,
-									publicity: (Math.floor(Math.random() * 3) + 1) * 10,
-									createdAt: Date.now() - Math.floor(Math.random() * 2000000000),
+									publicity:
+										(Math.floor(Math.random() * 3) + 1) *
+										10,
+									createdAt:
+										Date.now() -
+										Math.floor(Math.random() * 2000000000),
 								};
 								return it;
 							}),

@@ -28,14 +28,18 @@ const Widget = () => {
 			<ProTable<IItem>
 				columns={[
 					{
-						title: intl.formatMessage({ id: "term.fields.sn.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.sn.label",
+						}),
 						dataIndex: "id",
 						key: "id",
 						width: 80,
 						search: false,
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.word.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.word.label",
+						}),
 						dataIndex: "word",
 						key: "word",
 						render: (_) => <Link to="">{_}</Link>,
@@ -51,13 +55,17 @@ const Widget = () => {
 						},
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.description.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.description.label",
+						}),
 						dataIndex: "tag",
 						key: "description",
 						search: false,
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.channel.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.channel.label",
+						}),
 						dataIndex: "channel",
 						valueType: "select",
 						valueEnum: {
@@ -70,19 +78,25 @@ const Widget = () => {
 						},
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.meaning.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.meaning.label",
+						}),
 						dataIndex: "meaning",
 						key: "meaning",
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.meaning2.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.meaning2.label",
+						}),
 						dataIndex: "meaning2",
 						key: "meaning2",
 						tip: "意思过长会自动收缩",
 						ellipsis: true,
 					},
 					{
-						title: intl.formatMessage({ id: "term.fields.note.label" }),
+						title: intl.formatMessage({
+							id: "term.fields.note.label",
+						}),
 						dataIndex: "note",
 						key: "note",
 						search: false,
@@ -90,7 +104,9 @@ const Widget = () => {
 						ellipsis: true,
 					},
 					{
-						title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
+						title: intl.formatMessage({
+							id: "forms.fields.created-at.label",
+						}),
 						key: "created-at",
 						width: 200,
 						search: false,
@@ -104,11 +120,20 @@ const Widget = () => {
 					// 注释该行则默认不显示下拉选项
 					selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
 				}}
-				tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+				tableAlertRender={({
+					selectedRowKeys,
+					selectedRows,
+					onCleanSelected,
+				}) => (
 					<Space size={24}>
 						<span>
-							已选 {selectedRowKeys.length} 项
-							<Button type="link" style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+							{intl.formatMessage({ id: "buttons.selected" })}
+							{selectedRowKeys.length}
+							<Button
+								type="link"
+								style={{ marginInlineStart: 8 }}
+								onClick={onCleanSelected}
+							>
 								取消选择
 							</Button>
 						</span>
@@ -131,7 +156,8 @@ const Widget = () => {
 						total: 1 << 12,
 						success: true,
 						data: Array.from(Array(size).keys()).map((x) => {
-							const id = ((params.current || 1) - 1) * size + x + 1;
+							const id =
+								((params.current || 1) - 1) * size + x + 1;
 
 							var it: IItem = {
 								id,
@@ -141,7 +167,9 @@ const Widget = () => {
 								meaning: `parent ${id}`,
 								meaning2: `meaning ${id}`,
 								note: `note ${id}`,
-								createdAt: Date.now() - Math.floor(Math.random() * 200000),
+								createdAt:
+									Date.now() -
+									Math.floor(Math.random() * 200000),
 							};
 							return it;
 						}),
@@ -155,8 +183,15 @@ const Widget = () => {
 				}}
 				headerTitle={intl.formatMessage({ id: "dict" })}
 				toolBarRender={() => [
-					<Popover content={<TermCreate studio={studioname} />} placement="bottomRight">
-						<Button key="button" icon={<PlusOutlined />} type="primary">
+					<Popover
+						content={<TermCreate studio={studioname} />}
+						placement="bottomRight"
+					>
+						<Button
+							key="button"
+							icon={<PlusOutlined />}
+							type="primary"
+						>
 							{intl.formatMessage({ id: "buttons.create" })}
 						</Button>
 					</Popover>,

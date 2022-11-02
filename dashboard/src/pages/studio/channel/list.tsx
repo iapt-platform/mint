@@ -168,7 +168,10 @@ const Widget = () => {
 				}) => (
 					<Space size={24}>
 						<span>
-							已选 {selectedRowKeys.length} 项
+							{intl.formatMessage({
+								id: "buttons.selected",
+							})}
+							{selectedRowKeys.length}
 							<Button
 								type="link"
 								style={{ marginInlineStart: 8 }}
