@@ -46,7 +46,7 @@ interface IItem {
 	summary: string;
 	type: string;
 	publicity: number;
-	createdAt: string;
+	createdAt: number;
 }
 
 const Widget = () => {
@@ -76,8 +76,13 @@ const Widget = () => {
 						tip: "过长会自动收缩",
 						ellipsis: true,
 						render: (text, row, index, action) => {
-							const link = `/studio/${studioname}/channel/${row.uid}/edit`;
-							return <Link to={link}>{row.title}</Link>;
+							return (
+								<Link
+									to={`/studio/${studioname}/channel/${row.uid}/edit`}
+								>
+									{row.title}
+								</Link>
+							);
 						},
 					},
 					{
@@ -196,24 +201,30 @@ const Widget = () => {
 						search: false,
 						dataIndex: "createdAt",
 						valueType: "date",
-						//sorter: (a, b) => a.createdAt - b.createdAt,
+						sorter: (a, b) => a.createdAt - b.createdAt,
 					},
 					{
 						title: intl.formatMessage({ id: "buttons.option" }),
 						key: "option",
 						width: 120,
 						valueType: "option",
-						render: (text, row, index, action) => [
-							<Dropdown.Button
-								key={index}
-								type="link"
-								overlay={menu}
-							>
-								{intl.formatMessage({
-									id: "buttons.edit",
-								})}
-							</Dropdown.Button>,
-						],
+						render: (text, row, index, action) => {
+							return [
+								<Dropdown.Button
+									key={index}
+									type="link"
+									overlay={menu}
+								>
+									<Link
+										to={`/studio/${studioname}/channel/${row.uid}/edit`}
+									>
+										{intl.formatMessage({
+											id: "buttons.edit",
+										})}
+									</Link>
+								</Dropdown.Button>,
+							];
+						},
 					},
 				]}
 				rowSelection={{
@@ -256,9 +267,10 @@ const Widget = () => {
 					console.log(params, sorter, filter);
 
 					const res: IApiResponseChannelList = await get(
-						`/v2/channel?view=studio`
+						`/v2/channel?view=studio&name=${studioname}`
 					);
 					const items: IItem[] = res.data.rows.map((item, id) => {
+						const date = new Date(item.created_at);
 						return {
 							id: id,
 							uid: item.uid,
@@ -266,7 +278,7 @@ const Widget = () => {
 							summary: item.summary,
 							type: item.type,
 							publicity: item.status,
-							createdAt: item.created_at,
+							createdAt: date.getTime(),
 						};
 					});
 					return {
