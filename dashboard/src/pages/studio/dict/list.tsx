@@ -2,10 +2,49 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Button, Layout, Space, Table, Popover } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+	Button,
+	Layout,
+	Space,
+	Table,
+	Dropdown,
+	MenuProps,
+	Menu,
+	Drawer,
+} from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import DictCreate from "../../../components/studio/dict/DictCreate";
+import { IApiResponseDictList } from "../../../components/api/Dict";
+import { get } from "../../../request";
+import { useState } from "react";
+
+const onMenuClick: MenuProps["onClick"] = (e) => {
+	console.log("click", e);
+};
+
+const menu = (
+	<Menu
+		onClick={onMenuClick}
+		items={[
+			{
+				key: "1",
+				label: "在藏经阁中打开",
+				icon: <SearchOutlined />,
+			},
+			{
+				key: "2",
+				label: "分享",
+				icon: <SearchOutlined />,
+			},
+			{
+				key: "3",
+				label: "删除",
+				icon: <SearchOutlined />,
+			},
+		]}
+	/>
+);
 
 interface IItem {
 	id: number;
@@ -29,8 +68,8 @@ const valueEnum = {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname } = useParams();
-
-	const dictCreate = <DictCreate studio={studioname} />;
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const dictCreate = <DictCreate studio={studioname ? studioname : ""} />;
 
 	return (
 		<>
@@ -52,7 +91,6 @@ const Widget = () => {
 						}),
 						dataIndex: "word",
 						key: "word",
-						render: (_) => <Link to="">{_}</Link>,
 						tip: "单词过长会自动收缩",
 						ellipsis: true,
 					},
@@ -127,6 +165,29 @@ const Widget = () => {
 						valueType: "date",
 						sorter: (a, b) => a.createdAt - b.createdAt,
 					},
+					{
+						title: intl.formatMessage({ id: "buttons.option" }),
+						key: "option",
+						width: 120,
+						valueType: "option",
+						render: (text, row, index, action) => {
+							return [
+								<Dropdown.Button
+									key={index}
+									type="link"
+									overlay={menu}
+								>
+									<Link
+										to={`/studio/${studioname}/dict/${row.id}/edit`}
+									>
+										{intl.formatMessage({
+											id: "buttons.edit",
+										})}
+									</Link>
+								</Dropdown.Button>,
+							];
+						},
+					},
 				]}
 				rowSelection={{
 					// 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
@@ -163,30 +224,40 @@ const Widget = () => {
 				request={async (params = {}, sorter, filter) => {
 					// TODO
 					console.log(params, sorter, filter);
+					const offset =
+						((params.current ? params.current : 1) - 1) *
+						(params.pageSize ? params.pageSize : 20);
+					let url = `/v2/userdict?view=studio&name=${studioname}&limit=${params.pageSize}&offset=${offset}`;
+					if (typeof params.keyword !== "undefined") {
+						url +=
+							"&search=" + (params.keyword ? params.keyword : "");
+					}
+					console.log(url);
+					const res: IApiResponseDictList = await get(url);
 
-					const size = params.pageSize || 20;
+					const items: IItem[] = res.data.rows.map((item, id) => {
+						const date = new Date(item.updated_at);
+						const id2 =
+							((params.current || 1) - 1) *
+								(params.pageSize || 20) +
+							id +
+							1;
+						return {
+							id: id2,
+							word: item.word,
+							type: item.type,
+							grammar: item.grammar,
+							parent: item.parent,
+							meaning: item.mean,
+							note: item.note,
+							factors: item.factors,
+							createdAt: date.getTime(),
+						};
+					});
 					return {
-						total: 1 << 12,
+						total: res.data.count,
 						success: true,
-						data: Array.from(Array(size).keys()).map((x) => {
-							const id =
-								((params.current || 1) - 1) * size + x + 1;
-
-							var it: IItem = {
-								id,
-								word: `word ${id}`,
-								type: valueEnum[2],
-								grammar: "阳-单-属",
-								parent: `parent ${id}`,
-								meaning: `meaning ${id}`,
-								note: `note ${id}`,
-								factors: `factors ${id}`,
-								createdAt:
-									Date.now() -
-									Math.floor(Math.random() * 200000),
-							};
-							return it;
-						}),
+						data: items,
 					};
 				}}
 				rowKey="id"
@@ -201,21 +272,33 @@ const Widget = () => {
 				}}
 				headerTitle=""
 				toolBarRender={() => [
-					<Popover
-						content={dictCreate}
-						title="new channel"
-						placement="bottomRight"
+					<Button
+						key="button"
+						icon={<PlusOutlined />}
+						type="primary"
+						onClick={() => {
+							setIsModalOpen(true);
+						}}
 					>
-						<Button
-							key="button"
-							icon={<PlusOutlined />}
-							type="primary"
-						>
-							{intl.formatMessage({ id: "buttons.create" })}
-						</Button>
-					</Popover>,
+						{intl.formatMessage({ id: "buttons.create" })}
+					</Button>,
 				]}
 			/>
+
+			<Drawer
+				title="new word"
+				placement="right"
+				open={isModalOpen}
+				onClose={() => {
+					setIsModalOpen(false);
+				}}
+				size="large"
+				style={{ minWidth: 736, maxWidth: "100%" }}
+				contentWrapperStyle={{ overflowY: "auto" }}
+				footer={null}
+			>
+				{dictCreate}
+			</Drawer>
 		</>
 	);
 };
