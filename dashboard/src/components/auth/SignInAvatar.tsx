@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "antd";
 import { Avatar } from "antd";
@@ -11,10 +11,18 @@ import {
 	SettingOutlined,
 } from "@ant-design/icons";
 
+import { useAppSelector } from "../../hooks";
+import { currentUser as _currentUser } from "../../reducers/current-user";
+
 const Widget = () => {
 	// TODO
-	const [userName, setUserName] = useState("Kosalla_China");
-	const [nickName, setNickName] = useState("小僧善巧");
+	const [userName, setUserName] = useState("");
+	const [nickName, setNickName] = useState("");
+	const user = useAppSelector(_currentUser);
+	useEffect(() => {
+		setUserName(user ? user.realName : "");
+		setNickName(user ? user.nickName : "");
+	}, [user]);
 
 	const userCard = (
 		<>
@@ -56,3 +64,6 @@ const Widget = () => {
 };
 
 export default Widget;
+function currentUser(currentUser: any) {
+	throw new Error("Function not implemented.");
+}
