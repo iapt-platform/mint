@@ -9,12 +9,16 @@ import { useIntl } from "react-intl";
 import { message, Space } from "antd";
 import { IApiResponseChannel } from "../../../components/api/Channel";
 import { get, put } from "../../../request";
+import ChannelTypeSelect from "../../../components/studio/channel/ChannelTypeSelect";
+import LangSelect from "../../../components/studio/LangSelect";
+import PublicitySelect from "../../../components/studio/PublicitySelect";
 
 interface IFormData {
 	name: string;
 	type: string;
 	lang: string;
 	summary: string;
+	status: number;
 	studio: string;
 }
 const Widget = () => {
@@ -46,6 +50,7 @@ const Widget = () => {
 						type: res.data.type,
 						lang: res.data.lang,
 						summary: res.data.summary,
+						status: res.data.status,
 						studio: studioname ? studioname : "",
 					};
 				}}
@@ -68,57 +73,15 @@ const Widget = () => {
 				</ProForm.Group>
 
 				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{
-								value: "translation",
-								label: intl.formatMessage({
-									id: "channel.type.translation.title",
-								}),
-							},
-							{
-								value: "nissaya",
-								label: intl.formatMessage({
-									id: "channel.type.nissaya.title",
-								}),
-							},
-						]}
-						width="md"
-						name="type"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({
-									id: "channel.create.message.noname",
-								}),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.type" })}
-					/>
+					<ChannelTypeSelect />
+					<LangSelect />
 				</ProForm.Group>
 				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{ value: "zh-Hans", label: "简体中文" },
-							{ value: "zh-Hant", label: "繁体中文" },
-							{ value: "en-US", label: "English" },
-						]}
-						width="md"
-						name="lang"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({
-									id: "channel.create.message.noname",
-								}),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.lang" })}
-					/>
+					<PublicitySelect />
 				</ProForm.Group>
 
 				<ProForm.Group>
-					<ProFormTextArea name="summary" label="简介" />
+					<ProFormTextArea width="md" name="summary" label="简介" />
 				</ProForm.Group>
 			</ProForm>
 		</>
