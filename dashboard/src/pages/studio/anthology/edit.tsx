@@ -1,7 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
+import {
+	ProForm,
+	ProFormText,
+	ProFormSelect,
+	ProFormTextArea,
+} from "@ant-design/pro-components";
 import { message } from "antd";
 
 import EditableTree from "../../../components/studio/EditableTree";
@@ -47,7 +52,9 @@ const Widget = () => {
 	return (
 		<>
 			<h2>
-				studio/{studioname}/{intl.formatMessage({ id: "columns.studio.anthology.title" })}/anthology/
+				studio/{studioname}/
+				{intl.formatMessage({ id: "columns.studio.anthology.title" })}
+				/anthology/
 				{anthology_id}
 			</h2>
 
@@ -56,7 +63,9 @@ const Widget = () => {
 					// TODO
 					values.studio = "aaaa";
 					console.log(values);
-					message.success(intl.formatMessage({ id: "flashes.success" }));
+					message.success(
+						intl.formatMessage({ id: "flashes.success" })
+					);
 				}}
 			>
 				<ProForm.Group>
@@ -64,11 +73,15 @@ const Widget = () => {
 						width="md"
 						name="title"
 						required
-						label={intl.formatMessage({ id: "forms.fields.title.label" })}
+						label={intl.formatMessage({
+							id: "forms.fields.title.label",
+						})}
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.title" }),
+								message: intl.formatMessage({
+									id: "forms.message.title.required",
+								}),
 							},
 						]}
 					/>
@@ -77,11 +90,18 @@ const Widget = () => {
 					<ProFormText
 						width="md"
 						name="subtitle"
-						label={intl.formatMessage({ id: "forms.fields.subtitle.label" })}
+						label={intl.formatMessage({
+							id: "forms.fields.subtitle.label",
+						})}
 					/>
 				</ProForm.Group>
 				<ProForm.Group>
-					<ProFormTextArea name="summary" label={intl.formatMessage({ id: "forms.fields.summary.label" })} />
+					<ProFormTextArea
+						name="summary"
+						label={intl.formatMessage({
+							id: "forms.fields.summary.label",
+						})}
+					/>
 				</ProForm.Group>
 				<ProForm.Group>
 					<ProFormSelect
@@ -95,7 +115,9 @@ const Widget = () => {
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.lang" }),
+								message: intl.formatMessage({
+									id: "forms.create.message.no.lang",
+								}),
 							},
 						]}
 						label={intl.formatMessage({ id: "channel.lang" })}
@@ -103,7 +125,12 @@ const Widget = () => {
 				</ProForm.Group>
 
 				<ProForm.Group>
-					<ProFormTextArea name="toc" label={intl.formatMessage({ id: "forms.fields.content.label" })} />
+					<ProFormTextArea
+						name="toc"
+						label={intl.formatMessage({
+							id: "forms.fields.content.label",
+						})}
+					/>
 				</ProForm.Group>
 			</ProForm>
 

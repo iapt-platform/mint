@@ -1,15 +1,29 @@
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
+import {
+	ProForm,
+	ProFormText,
+	ProFormSelect,
+	ProFormTextArea,
+} from "@ant-design/pro-components";
 import { message } from "antd";
+import { get, put } from "../../../request";
+import {
+	IArticleDataRequest,
+	IArticleResponse,
+} from "../../../components/api/Article";
+import LangSelect from "../../../components/studio/LangSelect";
+import PublicitySelect from "../../../components/studio/PublicitySelect";
 
 interface IFormData {
+	uid: string;
 	title: string;
 	subtitle: string;
 	summary: string;
-	lang: string;
-	studio: string;
 	content: string;
+	content_type: string;
+	status: number;
+	lang: string;
 }
 
 const Widget = () => {
@@ -18,16 +32,54 @@ const Widget = () => {
 	return (
 		<>
 			<h2>
-				studio/{studioname}/{intl.formatMessage({ id: "columns.studio.article.title" })}/edit/
+				studio/{studioname}/
+				{intl.formatMessage({ id: "columns.studio.article.title" })}
+				/edit/
 				{articleid}
 			</h2>
 
 			<ProForm<IFormData>
 				onFinish={async (values: IFormData) => {
 					// TODO
-					values.studio = "aaaa";
-					console.log(values);
-					message.success(intl.formatMessage({ id: "flashes.success" }));
+
+					const request = {
+						uid: articleid ? articleid : "",
+						title: values.title,
+						subtitle: values.subtitle,
+						summary: values.summary,
+						content: values.content,
+						content_type: "markdown",
+						status: values.status,
+						lang: values.lang,
+					};
+					console.log(request);
+					const res = await put<
+						IArticleDataRequest,
+						IArticleResponse
+					>(`/v2/article/${articleid}`, request);
+					console.log(res);
+					if (res.ok) {
+						message.success(
+							intl.formatMessage({ id: "flashes.success" })
+						);
+					} else {
+						message.error(res.message);
+					}
+				}}
+				request={async () => {
+					const res = await get<IArticleResponse>(
+						`/v2/article/${articleid}`
+					);
+					return {
+						uid: res.data.uid,
+						title: res.data.title,
+						subtitle: res.data.subtitle,
+						summary: res.data.summary,
+						content: res.data.content,
+						content_type: res.data.content_type,
+						lang: res.data.lang,
+						status: res.data.status,
+					};
 				}}
 			>
 				<ProForm.Group>
@@ -35,11 +87,15 @@ const Widget = () => {
 						width="md"
 						name="title"
 						required
-						label={intl.formatMessage({ id: "forms.fields.title.label" })}
+						label={intl.formatMessage({
+							id: "forms.fields.title.label",
+						})}
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.title" }),
+								message: intl.formatMessage({
+									id: "forms.message.title.required",
+								}),
 							},
 						]}
 					/>
@@ -48,33 +104,34 @@ const Widget = () => {
 					<ProFormText
 						width="md"
 						name="subtitle"
-						label={intl.formatMessage({ id: "forms.fields.subtitle.label" })}
+						label={intl.formatMessage({
+							id: "forms.fields.subtitle.label",
+						})}
 					/>
 				</ProForm.Group>
 				<ProForm.Group>
-					<ProFormTextArea name="summary" label={intl.formatMessage({ id: "forms.fields.summary.label" })} />
-				</ProForm.Group>
-				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{ value: "zh-Hans", label: "简体中文" },
-							{ value: "zh-Hant", label: "繁体中文" },
-							{ value: "en-US", label: "English" },
-						]}
+					<ProFormTextArea
+						name="summary"
 						width="md"
-						name="lang"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.lang" }),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.lang" })}
+						label={intl.formatMessage({
+							id: "forms.fields.summary.label",
+						})}
 					/>
 				</ProForm.Group>
-
 				<ProForm.Group>
-					<ProFormTextArea name="content" label={intl.formatMessage({ id: "forms.fields.content.label" })} />
+					<LangSelect />
+				</ProForm.Group>
+				<ProForm.Group>
+					<PublicitySelect />
+				</ProForm.Group>
+				<ProForm.Group>
+					<ProFormTextArea
+						name="content"
+						width="md"
+						label={intl.formatMessage({
+							id: "forms.fields.content.label",
+						})}
+					/>
 				</ProForm.Group>
 			</ProForm>
 		</>
