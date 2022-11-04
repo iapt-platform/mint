@@ -1565,6 +1565,16 @@ function myEndingTooltip(inStr){
             name:"လည်း",
             tooltip:'也',
         },
+        {
+            id:"my_iad",
+            name:"သော",
+            tooltip:'的(同类修饰)',
+        },
+        {
+            id:"my_adv",
+            name:"စွာ",
+            tooltip:'副词',
+        },
     ];
 
     for (const iterator of myEnding) {
