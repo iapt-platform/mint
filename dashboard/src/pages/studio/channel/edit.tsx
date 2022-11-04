@@ -41,7 +41,6 @@ const Widget = () => {
 				}}
 				formKey="channel_edit"
 				request={async () => {
-					// TODO
 					const res: IApiResponseChannel = await get(
 						`/v2/channel/${channelid}`
 					);
