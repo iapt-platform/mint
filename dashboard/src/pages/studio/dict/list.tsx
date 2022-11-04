@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { Link } from "react-router-dom";
+
 import {
 	Button,
 	Layout,
@@ -18,6 +18,7 @@ import DictCreate from "../../../components/studio/dict/DictCreate";
 import { IApiResponseDictList } from "../../../components/api/Dict";
 import { get } from "../../../request";
 import { useState } from "react";
+import DictEdit from "../../../components/studio/dict/DictEdit";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -48,6 +49,7 @@ const menu = (
 
 interface IItem {
 	id: number;
+	wordId: number;
 	word: string;
 	type: string;
 	grammar: string;
@@ -68,8 +70,10 @@ const valueEnum = {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname } = useParams();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const dictCreate = <DictCreate studio={studioname ? studioname : ""} />;
+	const [isEditOpen, setIsEditOpen] = useState(false);
+	const [isCreateOpen, setIsCreateOpen] = useState(false);
+	const [wordId, setWordId] = useState(0);
+	const [drawerTitle, setDrawerTitle] = useState("New Word");
 
 	return (
 		<>
@@ -176,14 +180,15 @@ const Widget = () => {
 									key={index}
 									type="link"
 									overlay={menu}
+									onClick={() => {
+										setWordId(row.wordId);
+										setDrawerTitle(row.word);
+										setIsEditOpen(true);
+									}}
 								>
-									<Link
-										to={`/studio/${studioname}/dict/${row.id}/edit`}
-									>
-										{intl.formatMessage({
-											id: "buttons.edit",
-										})}
-									</Link>
+									{intl.formatMessage({
+										id: "buttons.edit",
+									})}
 								</Dropdown.Button>,
 							];
 						},
@@ -244,6 +249,7 @@ const Widget = () => {
 							1;
 						return {
 							id: id2,
+							wordId: item.id,
 							word: item.word,
 							type: item.type,
 							grammar: item.grammar,
@@ -277,7 +283,8 @@ const Widget = () => {
 						icon={<PlusOutlined />}
 						type="primary"
 						onClick={() => {
-							setIsModalOpen(true);
+							setDrawerTitle("New word");
+							setIsCreateOpen(true);
 						}}
 					>
 						{intl.formatMessage({ id: "buttons.create" })}
@@ -286,18 +293,32 @@ const Widget = () => {
 			/>
 
 			<Drawer
-				title="new word"
+				title={drawerTitle}
 				placement="right"
-				open={isModalOpen}
+				open={isCreateOpen}
 				onClose={() => {
-					setIsModalOpen(false);
+					setIsCreateOpen(false);
 				}}
-				size="large"
-				style={{ minWidth: 736, maxWidth: "100%" }}
+				key="create"
+				style={{ maxWidth: "100%" }}
 				contentWrapperStyle={{ overflowY: "auto" }}
 				footer={null}
 			>
-				{dictCreate}
+				<DictCreate studio={studioname ? studioname : ""} />
+			</Drawer>
+			<Drawer
+				title={drawerTitle}
+				placement="right"
+				open={isEditOpen}
+				onClose={() => {
+					setIsEditOpen(false);
+				}}
+				key="edit"
+				style={{ maxWidth: "100%" }}
+				contentWrapperStyle={{ overflowY: "auto" }}
+				footer={null}
+			>
+				<DictEdit wordId={wordId} />
 			</Drawer>
 		</>
 	);
