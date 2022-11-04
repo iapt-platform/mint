@@ -4,13 +4,11 @@ import {
 	ProFormText,
 	ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Layout } from "antd";
+
 import { useIntl } from "react-intl";
-import { message } from "antd";
 
 import LangSelect from "../LangSelect";
 import SelectCase from "../SelectCase";
-import Confidene from "../Confidence";
 import Confidence from "../Confidence";
 
 type IWidgetDictCreate = {
@@ -49,6 +47,22 @@ const Widget = (prop: IWidgetDictCreate) => {
 			<ProForm.Group>
 				<div>语法信息</div>
 				<SelectCase />
+			</ProForm.Group>
+			<ProForm.Group>
+				<ProFormText
+					width="md"
+					name="type"
+					label={intl.formatMessage({
+						id: "dict.fields.type.label",
+					})}
+				/>
+				<ProFormText
+					width="md"
+					name="grammar"
+					label={intl.formatMessage({
+						id: "dict.fields.grammar.label",
+					})}
+				/>
 			</ProForm.Group>
 			<ProForm.Group>
 				<ProFormText
