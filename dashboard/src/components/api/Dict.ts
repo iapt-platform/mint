@@ -1,3 +1,16 @@
+export interface IDictlDataRequest {
+	id: number;
+	word: string;
+	type: string;
+	grammar: string;
+	mean: string;
+	parent: string;
+	note: string;
+	factors: string;
+	factormean: string;
+	language: string;
+	confidence: number;
+}
 export interface IApiResponseDictlData {
 	id: number;
 	word: string;
@@ -7,6 +20,8 @@ export interface IApiResponseDictlData {
 	parent: string;
 	note: string;
 	factors: string;
+	factormean: string;
+	language: string;
 	confidence: number;
 	creator_id: number;
 	updated_at: string;
