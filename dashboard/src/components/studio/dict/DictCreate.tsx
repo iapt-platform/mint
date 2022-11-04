@@ -1,18 +1,12 @@
-import {
-	ProForm,
-	ProFormText,
-	ProFormTextArea,
-} from "@ant-design/pro-components";
-import { Layout } from "antd";
+import { ProForm } from "@ant-design/pro-components";
+
 import { useIntl } from "react-intl";
 import { message } from "antd";
 
-import SelectLang from "../SelectLang";
-import SelectCase from "../SelectCase";
-import Confidene from "../Confidence";
 import DictEditInner from "./DictEditInner";
 
-interface IFormData {
+export interface IDictFormData {
+	id: number;
 	word: string;
 	type: string;
 	grammar: string;
@@ -22,6 +16,7 @@ interface IFormData {
 	factors: string;
 	factormeaning: string;
 	lang: string;
+	confidence: number;
 }
 
 type IWidgetDictCreate = {
@@ -41,8 +36,8 @@ const Widget = (prop: IWidgetDictCreate) => {
 	*/
 	return (
 		<>
-			<ProForm<IFormData>
-				onFinish={async (values: IFormData) => {
+			<ProForm<IDictFormData>
+				onFinish={async (values: IDictFormData) => {
 					// TODO
 					console.log(values);
 					message.success(
