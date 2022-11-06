@@ -1,8 +1,4 @@
-import {
-	ProForm,
-	ProFormText,
-	ProFormSelect,
-} from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { message } from "antd";
 import LangSelect from "../LangSelect";
