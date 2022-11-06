@@ -19,6 +19,7 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ArticleCreate from "../../../components/studio/article/ArticleCreate";
 import { get } from "../../../request";
 import { IArticleListResponse } from "../../../components/api/Article";
+import { PublicityValueEnum } from "../../../components/studio/table";
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
 };
@@ -138,44 +139,7 @@ const Widget = () => {
 							search: false,
 							filters: true,
 							onFilter: true,
-							valueEnum: {
-								all: {
-									text: intl.formatMessage({
-										id: "tables.publicity.all",
-									}),
-									status: "Default",
-								},
-								0: {
-									text: intl.formatMessage({
-										id: "tables.publicity.disable",
-									}),
-									status: "Default",
-								},
-								10: {
-									text: intl.formatMessage({
-										id: "tables.publicity.private",
-									}),
-									status: "Processing",
-								},
-								20: {
-									text: intl.formatMessage({
-										id: "tables.publicity.public.bylink",
-									}),
-									status: "Processing",
-								},
-								30: {
-									text: intl.formatMessage({
-										id: "tables.publicity.public",
-									}),
-									status: "Success",
-								},
-								40: {
-									text: intl.formatMessage({
-										id: "tables.publicity.public.edit",
-									}),
-									status: "Success",
-								},
-							},
+							valueEnum: PublicityValueEnum(),
 						},
 						{
 							title: intl.formatMessage({

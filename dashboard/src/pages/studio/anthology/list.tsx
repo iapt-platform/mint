@@ -9,6 +9,9 @@ import { Button, Dropdown, Menu, Popover } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import AnthologyCreate from "../../../components/studio/anthology/AnthologyCreate";
+import { IAnthologyListResponse } from "../../../components/api/Article";
+import { get } from "../../../request";
+import { PublicityValueEnum } from "../../../components/studio/table";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -28,20 +31,16 @@ const menu = (
 				label: "分享",
 				icon: <SearchOutlined />,
 			},
-			{
-				key: "3",
-				label: "详情",
-				icon: <SearchOutlined />,
-			},
 		]}
 	/>
 );
 
 interface IItem {
-	id: number;
+	sn: number;
+	id: string;
 	title: string;
 	subtitle: string;
-	tag: string;
+	publicity: number;
 	articles: number;
 	createdAt: number;
 }
@@ -59,8 +58,8 @@ const Widget = () => {
 						title: intl.formatMessage({
 							id: "dict.fields.sn.label",
 						}),
-						dataIndex: "id",
-						key: "id",
+						dataIndex: "sn",
+						key: "sn",
 						width: 50,
 						search: false,
 					},
@@ -85,20 +84,15 @@ const Widget = () => {
 					},
 					{
 						title: intl.formatMessage({
-							id: "forms.fields.power.label",
+							id: "forms.fields.publicity.label",
 						}),
-						dataIndex: "tag",
-						key: "tag",
+						dataIndex: "publicity",
+						key: "publicity",
 						width: 100,
 						search: false,
 						filters: true,
 						onFilter: true,
-						valueEnum: {
-							all: { text: "全部", status: "Default" },
-							30: { text: "拥有者", status: "Success" },
-							20: { text: "可编辑", status: "Processing" },
-							10: { text: "只读", status: "Default" },
-						},
+						valueEnum: PublicityValueEnum(),
 					},
 					{
 						title: intl.formatMessage({
@@ -173,30 +167,34 @@ const Widget = () => {
 				request={async (params = {}, sorter, filter) => {
 					// TODO
 					console.log(params, sorter, filter);
+					let url = `/v2/anthology?view=studio&name=${studioname}`;
+					const offset =
+						((params.current ? params.current : 1) - 1) *
+						(params.pageSize ? params.pageSize : 20);
+					url += `&limit=${params.pageSize}&offset=${offset}`;
+					if (typeof params.keyword !== "undefined") {
+						url +=
+							"&search=" + (params.keyword ? params.keyword : "");
+					}
 
-					const size = params.pageSize || 20;
+					const res = await get<IAnthologyListResponse>(url);
+					const items: IItem[] = res.data.rows.map((item, id) => {
+						const date = new Date(item.created_at);
+						return {
+							sn: id + 1,
+							id: item.uid,
+							title: item.title,
+							subtitle: item.subtitle,
+							publicity: item.status,
+							articles: item.childrenNumber,
+							createdAt: date.getTime(),
+						};
+					});
+					console.log(items);
 					return {
-						total: 1 << 12,
-						success: true,
-						data: Array.from(Array(size).keys()).map((x) => {
-							const id =
-								((params.current || 1) - 1) * size + x + 1;
-
-							var it: IItem = {
-								id,
-								title: `title ${id}`,
-								subtitle: `subtitle ${id}`,
-								tag: (
-									(Math.floor(Math.random() * 3) + 1) *
-									10
-								).toString(),
-								articles: Math.floor(Math.random() * 40),
-								createdAt:
-									Date.now() -
-									Math.floor(Math.random() * 2000000000),
-							};
-							return it;
-						}),
+						total: res.data.count,
+						succcess: true,
+						data: items,
 					};
 				}}
 				rowKey="id"

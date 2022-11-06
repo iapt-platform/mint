@@ -11,6 +11,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import ChannelCreate from "../../../components/studio/channel/ChannelCreate";
 import { get } from "../../../request";
 import { IApiResponseChannelList } from "../../../components/api/Channel";
+import { PublicityValueEnum } from "../../../components/studio/table";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -104,44 +105,7 @@ const Widget = () => {
 						search: false,
 						filters: true,
 						onFilter: true,
-						valueEnum: {
-							all: {
-								text: intl.formatMessage({
-									id: "channel.type.all.title",
-								}),
-								status: "Default",
-							},
-							translation: {
-								text: intl.formatMessage({
-									id: "channel.type.translation.title",
-								}),
-								status: "Success",
-							},
-							nissaya: {
-								text: intl.formatMessage({
-									id: "channel.type.nissaya.title",
-								}),
-								status: "Processing",
-							},
-							commentary: {
-								text: intl.formatMessage({
-									id: "channel.type.commentary.title",
-								}),
-								status: "Default",
-							},
-							original: {
-								text: intl.formatMessage({
-									id: "channel.type.original.title",
-								}),
-								status: "Default",
-							},
-							general: {
-								text: intl.formatMessage({
-									id: "channel.type.general.title",
-								}),
-								status: "Default",
-							},
-						},
+						valueEnum: PublicityValueEnum(),
 					},
 					{
 						title: intl.formatMessage({
