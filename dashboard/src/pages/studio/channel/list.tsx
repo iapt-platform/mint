@@ -105,7 +105,44 @@ const Widget = () => {
 						search: false,
 						filters: true,
 						onFilter: true,
-						valueEnum: PublicityValueEnum(),
+						valueEnum: {
+							all: {
+								text: intl.formatMessage({
+									id: "channel.type.all.title",
+								}),
+								status: "Default",
+							},
+							translation: {
+								text: intl.formatMessage({
+									id: "channel.type.translation.title",
+								}),
+								status: "Success",
+							},
+							nissaya: {
+								text: intl.formatMessage({
+									id: "channel.type.nissaya.title",
+								}),
+								status: "Processing",
+							},
+							commentary: {
+								text: intl.formatMessage({
+									id: "channel.type.commentary.title",
+								}),
+								status: "Default",
+							},
+							original: {
+								text: intl.formatMessage({
+									id: "channel.type.original.title",
+								}),
+								status: "Default",
+							},
+							general: {
+								text: intl.formatMessage({
+									id: "channel.type.general.title",
+								}),
+								status: "Default",
+							},
+						},
 					},
 					{
 						title: intl.formatMessage({
@@ -117,44 +154,7 @@ const Widget = () => {
 						search: false,
 						filters: true,
 						onFilter: true,
-						valueEnum: {
-							all: {
-								text: intl.formatMessage({
-									id: "tables.publicity.all",
-								}),
-								status: "Default",
-							},
-							0: {
-								text: intl.formatMessage({
-									id: "tables.publicity.disable",
-								}),
-								status: "Default",
-							},
-							10: {
-								text: intl.formatMessage({
-									id: "tables.publicity.private",
-								}),
-								status: "Processing",
-							},
-							20: {
-								text: intl.formatMessage({
-									id: "tables.publicity.public.bylink",
-								}),
-								status: "Processing",
-							},
-							30: {
-								text: intl.formatMessage({
-									id: "tables.publicity.public",
-								}),
-								status: "Success",
-							},
-							40: {
-								text: intl.formatMessage({
-									id: "tables.publicity.public.edit",
-								}),
-								status: "Success",
-							},
-						},
+						valueEnum: PublicityValueEnum(),
 					},
 					{
 						title: intl.formatMessage({
