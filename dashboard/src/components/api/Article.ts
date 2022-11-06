@@ -88,3 +88,9 @@ export interface IArticleCreateRequest {
 	lang: string;
 	studio: string;
 }
+
+export interface IAnthologyCreateRequest {
+	title: string;
+	lang: string;
+	studio: string;
+}
