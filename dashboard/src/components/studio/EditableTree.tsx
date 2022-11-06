@@ -74,6 +74,36 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 	return treeData[0].children;
 }
 
+function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
+	let iTocTreeCurrLevel = 1;
+
+	let arrTocTree: ListNodeData[] = [];
+
+	for (const iterator of treeNode) {
+		getTreeNodeData(iterator);
+	}
+
+	function getTreeNodeData(node: TreeNodeData) {
+		let children = 0;
+		if (typeof node.children != "undefined") {
+			children = node.children.length;
+		}
+		arrTocTree.push({
+			key: node.key,
+			title: node.title,
+			level: iTocTreeCurrLevel,
+		});
+		if (children > 0) {
+			iTocTreeCurrLevel++;
+			for (const iterator of node.children) {
+				getTreeNodeData(iterator);
+			}
+			iTocTreeCurrLevel--;
+		}
+	}
+
+	return arrTocTree;
+}
 interface IWidgetEditableTree {
 	treeData: ListNodeData[];
 	onChange?: Function;
@@ -158,7 +188,7 @@ const Widget = (prop: IWidgetEditableTree) => {
 		}
 		setGData(data);
 		if (typeof prop.onChange !== "undefined") {
-			prop.onChange(data);
+			prop.onChange(treeToList(data));
 		}
 	};
 
