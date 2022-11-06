@@ -18,6 +18,7 @@ import {
 } from "../../../components/api/Article";
 import { get, put } from "../../../request";
 import { useState } from "react";
+import GoBack from "../../../components/studio/GoBack";
 
 interface IFormData {
 	title: string;
@@ -32,12 +33,19 @@ const Widget = () => {
 	const intl = useIntl();
 	const [tocData, setTocData] = useState(listdata);
 	const [title, setTitle] = useState("");
-	const { anthology_id } = useParams(); //url 参数
+	const { studioname, anthology_id } = useParams(); //url 参数
 	let treeList: ListNodeData[] = [];
 
 	return (
 		<>
-			<Card title={title} style={{ margin: "1em" }}>
+			<Card
+				title={
+					<GoBack
+						to={`/studio/${studioname}/anthology/list`}
+						title={title}
+					/>
+				}
+			>
 				<Row>
 					<Col>
 						<ProForm<IFormData>

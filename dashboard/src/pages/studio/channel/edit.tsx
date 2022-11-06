@@ -6,12 +6,14 @@ import {
 	ProFormTextArea,
 } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { message, Space } from "antd";
+import { Card, message, Space } from "antd";
 import { IApiResponseChannel } from "../../../components/api/Channel";
 import { get, put } from "../../../request";
 import ChannelTypeSelect from "../../../components/studio/channel/ChannelTypeSelect";
 import LangSelect from "../../../components/studio/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
+import GoBack from "../../../components/studio/GoBack";
+import { useState } from "react";
 
 interface IFormData {
 	name: string;
@@ -25,9 +27,17 @@ const Widget = () => {
 	const intl = useIntl();
 	const { channelid } = useParams(); //url 参数
 	const { studioname } = useParams();
+	const [title, setTitle] = useState("");
 
 	return (
-		<>
+		<Card
+			title={
+				<GoBack
+					to={`/studio/${studioname}/channel/list`}
+					title={title}
+				/>
+			}
+		>
 			<Space>{channelid}</Space>
 			<ProForm<IFormData>
 				onFinish={async (values: IFormData) => {
@@ -44,6 +54,7 @@ const Widget = () => {
 					const res: IApiResponseChannel = await get(
 						`/v2/channel/${channelid}`
 					);
+					setTitle(res.data.name);
 					return {
 						name: res.data.name,
 						type: res.data.type,
@@ -83,7 +94,7 @@ const Widget = () => {
 					<ProFormTextArea width="md" name="summary" label="简介" />
 				</ProForm.Group>
 			</ProForm>
-		</>
+		</Card>
 	);
 };
 

@@ -6,7 +6,7 @@ import {
 	ProFormSelect,
 	ProFormTextArea,
 } from "@ant-design/pro-components";
-import { message } from "antd";
+import { Card, message } from "antd";
 import { get, put } from "../../../request";
 import {
 	IArticleDataRequest,
@@ -14,6 +14,8 @@ import {
 } from "../../../components/api/Article";
 import LangSelect from "../../../components/studio/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
+import GoBack from "../../../components/studio/GoBack";
+import { useState } from "react";
 
 interface IFormData {
 	uid: string;
@@ -29,15 +31,16 @@ interface IFormData {
 const Widget = () => {
 	const intl = useIntl();
 	const { studioname, articleid } = useParams(); //url 参数
+	const [title, setTitle] = useState("loading");
 	return (
-		<>
-			<h2>
-				studio/{studioname}/
-				{intl.formatMessage({ id: "columns.studio.article.title" })}
-				/edit/
-				{articleid}
-			</h2>
-
+		<Card
+			title={
+				<GoBack
+					to={`/studio/${studioname}/article/list`}
+					title={title}
+				/>
+			}
+		>
 			<ProForm<IFormData>
 				onFinish={async (values: IFormData) => {
 					// TODO
@@ -70,6 +73,7 @@ const Widget = () => {
 					const res = await get<IArticleResponse>(
 						`/v2/article/${articleid}`
 					);
+					setTitle(res.data.title);
 					return {
 						uid: res.data.uid,
 						title: res.data.title,
@@ -134,7 +138,7 @@ const Widget = () => {
 					/>
 				</ProForm.Group>
 			</ProForm>
-		</>
+		</Card>
 	);
 };
 
