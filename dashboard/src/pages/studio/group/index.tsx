@@ -1,6 +1,7 @@
 import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import LeftSider from "../../../components/studio/LeftSider";
+import { styleStudioContent } from "../style";
 
 const { Content } = Layout;
 
@@ -9,7 +10,7 @@ const Widget = () => {
 		<Layout>
 			<Layout>
 				<LeftSider selectedKeys="group" />
-				<Content>
+				<Content style={styleStudioContent}>
 					<Outlet />
 				</Content>
 			</Layout>
