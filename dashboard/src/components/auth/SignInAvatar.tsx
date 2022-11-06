@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { Avatar } from "antd";
 import { Popover } from "antd";
@@ -16,6 +16,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 
 const Widget = () => {
 	// TODO
+	const navigate = useNavigate();
 	const [userName, setUserName] = useState("");
 	const [nickName, setNickName] = useState("");
 	const user = useAppSelector(_currentUser);
@@ -38,7 +39,14 @@ const Widget = () => {
 						</Link>
 					</Tooltip>,
 					<Tooltip title="退出登录">
-						<LogoutOutlined key="logout" />
+						<LogoutOutlined
+							key="logout"
+							onClick={() => {
+								sessionStorage.removeItem("token");
+								localStorage.removeItem("token");
+								navigate("/anonymous/users/sign-in");
+							}}
+						/>
 					</Tooltip>,
 				]}
 			>
@@ -49,18 +57,23 @@ const Widget = () => {
 			</ProCard>
 		</>
 	);
-	return (
-		<>
-			<Popover content={userCard} placement="bottomRight">
-				<Avatar
-					style={{ backgroundColor: "#87d068" }}
-					icon={<UserOutlined />}
-				>
-					{nickName.slice(0, 1)}
-				</Avatar>
-			</Popover>
-		</>
-	);
+
+	if (typeof user === "undefined") {
+		return <Link to="/anonymous/users/sign-in">登录</Link>;
+	} else {
+		return (
+			<>
+				<Popover content={userCard} placement="bottomRight">
+					<Avatar
+						style={{ backgroundColor: "#87d068" }}
+						icon={<UserOutlined />}
+					>
+						{nickName.slice(0, 1)}
+					</Avatar>
+				</Popover>
+			</>
+		);
+	}
 };
 
 export default Widget;
