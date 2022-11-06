@@ -1,187 +1,187 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { useState } from "react";
-import { ProList } from "@ant-design/pro-components";
-import { Space, Tag, Button, Layout, Breadcrumb, Popover } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { ProTable } from "@ant-design/pro-components";
 
-import HeadBar from "../../../components/studio/HeadBar";
-import LeftSider from "../../../components/studio/LeftSider";
-import Footer from "../../../components/studio/Footer";
+import { Button, Popover, Typography, Dropdown, Menu, MenuProps } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+
 import GroupCreate from "../../../components/studio/group/GroupCreate";
+import { RoleValueEnum } from "../../../components/studio/table";
+import { IGroupListResponse } from "../../../components/api/Group";
+import { get } from "../../../request";
 
-const { Content } = Layout;
+const { Text } = Typography;
 
-const defaultData = [
-	{
-		id: "1",
-		name: "IAPT巴利语学习营",
-		tag: [
-			{ title: "巴利语", color: "blue" },
-			{ title: "大金塔", color: "yellow" },
-			{ title: "拥有者", color: "success" },
-		],
-		image: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-		description: "我是一条测试的描述",
-	},
-	{
-		id: "2",
-		name: "初级巴利语入门",
-		tag: [
-			{ title: "巴利语", color: "blue" },
-			{ title: "管理员", color: "processing" },
-		],
-		image: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-		description: "我是一条测试的描述",
-	},
-	{
-		id: "3",
-		name: "大金塔寺学习小组",
-		tag: [
-			{ title: "大金塔", color: "yellow" },
-			{ title: "成员", color: "default" },
-		],
-		image: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-		description: "我是一条测试的描述",
-	},
-	{
-		id: "4",
-		name: "趣向涅槃之道第一册翻译组",
-		tag: [
-			{ title: "大金塔", color: "yellow" },
-			{ title: "成员", color: "default" },
-		],
-		image: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-		description: "我是一条测试的描述",
-	},
-];
-type DataItem = typeof defaultData[number];
+const onMenuClick: MenuProps["onClick"] = (e) => {
+	console.log("click", e);
+};
+const menu = (
+	<Menu
+		onClick={onMenuClick}
+		items={[
+			{
+				key: "1",
+				label: "在藏经阁中打开",
+				icon: <SearchOutlined />,
+			},
+			{
+				key: "2",
+				label: "分享",
+				icon: <SearchOutlined />,
+			},
+		]}
+	/>
+);
+
+interface DataItem {
+	sn: number;
+	id: string;
+	name: string;
+	description: string;
+	role: string;
+	createdAt: number;
+}
 
 const Widget = () => {
 	const intl = useIntl(); //i18n
 	const { studioname } = useParams(); //url 参数
-	const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
-	const linkStudio = `/studio/${studioname}`;
-	const linkGroup = `${linkStudio}/group`;
 	return (
-		<Layout>
-			<HeadBar />
-			<Layout>
-				<LeftSider selectedKeys="group" />
-				<Content>
-					<Breadcrumb>
-						<Breadcrumb.Item>
-							<Link to={linkStudio}>
-								{intl.formatMessage({
-									id: "columns.studio.title",
-								})}
-							</Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Item>
-							{intl.formatMessage({
-								id: "columns.studio.collaboration.title",
-							})}
-						</Breadcrumb.Item>
-						<Breadcrumb.Item>
-							<Link to={linkGroup}>
-								{intl.formatMessage({
-									id: "columns.studio.group.title",
-								})}
-							</Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Item>列表</Breadcrumb.Item>
-					</Breadcrumb>
-					<Layout>
-						<ProList<DataItem>
-							rowKey="id"
-							headerTitle="群组列表"
-							dataSource={dataSource}
-							showActions="hover"
-							editable={{
-								onSave: async (key, record, originRow) => {
-									console.log(key, record, originRow);
-									return true;
-								},
-							}}
-							onDataSourceChange={setDataSource}
-							toolBarRender={() => [
-								<Popover
-									content={
-										<GroupCreate studio={studioname} />
-									}
-									placement="bottomRight"
-								>
-									<Button
-										key="button"
-										icon={<PlusOutlined />}
-										type="primary"
-									>
-										{intl.formatMessage({
-											id: "buttons.create",
-										})}
-									</Button>
-								</Popover>,
-							]}
-							metas={{
-								title: {
-									dataIndex: "name",
-									render: (text, row, index, action) => {
-										return (
-											<Link to={row.id}>{row.name}</Link>
-										);
-									},
-								},
-								avatar: {
-									dataIndex: "image",
-									editable: false,
-								},
-								description: {
-									dataIndex: "description",
-								},
-								content: {
-									dataIndex: "content",
-									editable: false,
-								},
-								subTitle: {
-									render: (text, row, index, action) => {
-										const showtag = row.tag.map(
-											(item, id) => {
-												return (
-													<Tag
-														color={item.color}
-														key={id}
-													>
-														{item.title}
-													</Tag>
-												);
-											}
-										);
-										return (
-											<Space size={0}>{showtag}</Space>
-										);
-									},
-								},
-								actions: {
-									render: (text, row, index, action) => [
-										<Button
-											onClick={() => {
-												action?.startEditable(row.id);
-											}}
-											key="link"
+		<>
+			<ProTable<DataItem>
+				columns={[
+					{
+						title: intl.formatMessage({
+							id: "dict.fields.sn.label",
+						}),
+						dataIndex: "sn",
+						key: "sn",
+						width: 50,
+						search: false,
+					},
+					{
+						title: intl.formatMessage({
+							id: "forms.fields.name.label",
+						}),
+						dataIndex: "name",
+						key: "name",
+						tip: "过长会自动收缩",
+						ellipsis: true,
+						render: (text, row, index, action) => {
+							return (
+								<div>
+									<div>
+										<Link
+											to={`/studio/${studioname}/group/${row.id}/show`}
 										>
-											{intl.formatMessage({
-												id: "buttons.edit",
-											})}
-										</Button>,
-									],
-								},
-							}}
-						/>
-					</Layout>
-				</Content>
-			</Layout>
-			<Footer />
-		</Layout>
+											{row.name}
+										</Link>
+									</div>
+									<Text type="secondary">
+										{row.description}
+									</Text>
+								</div>
+							);
+						},
+					},
+					{
+						title: intl.formatMessage({
+							id: "forms.fields.role.label",
+						}),
+						dataIndex: "role",
+						key: "role",
+						width: 100,
+						search: false,
+						filters: true,
+						onFilter: true,
+						valueEnum: RoleValueEnum(),
+					},
+					{
+						title: intl.formatMessage({
+							id: "forms.fields.created-at.label",
+						}),
+						key: "created-at",
+						width: 100,
+						search: false,
+						dataIndex: "createdAt",
+						valueType: "date",
+						sorter: (a, b) => a.createdAt - b.createdAt,
+					},
+					{
+						title: intl.formatMessage({ id: "buttons.option" }),
+						key: "option",
+						width: 120,
+						valueType: "option",
+						render: (text, row, index, action) => [
+							<Dropdown.Button
+								type="link"
+								key={index}
+								overlay={menu}
+							>
+								{intl.formatMessage({
+									id: "buttons.edit",
+								})}
+							</Dropdown.Button>,
+						],
+					},
+				]}
+				request={async (params = {}, sorter, filter) => {
+					// TODO
+					console.log(params, sorter, filter);
+					let url = `/v2/group?view=studio&name=${studioname}`;
+					const offset =
+						((params.current ? params.current : 1) - 1) *
+						(params.pageSize ? params.pageSize : 20);
+					url += `&limit=${params.pageSize}&offset=${offset}`;
+					if (typeof params.keyword !== "undefined") {
+						url +=
+							"&search=" + (params.keyword ? params.keyword : "");
+					}
+
+					const res = await get<IGroupListResponse>(url);
+					const items: DataItem[] = res.data.rows.map((item, id) => {
+						const date = new Date(item.created_at);
+						return {
+							sn: id + 1,
+							id: item.uid,
+							name: item.name,
+							description: item.description,
+							role: item.role,
+							createdAt: date.getTime(),
+						};
+					});
+					console.log(items);
+					return {
+						total: res.data.count,
+						succcess: true,
+						data: items,
+					};
+				}}
+				rowKey="id"
+				bordered
+				pagination={{
+					showQuickJumper: true,
+					showSizeChanger: true,
+				}}
+				search={false}
+				options={{
+					search: true,
+				}}
+				toolBarRender={() => [
+					<Popover
+						content={<GroupCreate studio={studioname} />}
+						placement="bottomRight"
+					>
+						<Button
+							key="button"
+							icon={<PlusOutlined />}
+							type="primary"
+						>
+							{intl.formatMessage({ id: "buttons.create" })}
+						</Button>
+					</Popover>,
+				]}
+			/>
+		</>
 	);
 };
 
