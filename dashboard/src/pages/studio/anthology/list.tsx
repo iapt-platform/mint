@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Layout, Space, Table, Typography } from "antd";
+import { Space, Table, Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu, Popover } from "antd";
@@ -13,7 +13,7 @@ import { IAnthologyListResponse } from "../../../components/api/Article";
 import { get } from "../../../request";
 import { PublicityValueEnum } from "../../../components/studio/table";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -53,7 +53,6 @@ const Widget = () => {
 	const anthologyCreate = <AnthologyCreate studio={studioname} />;
 	return (
 		<>
-			<Layout>{studioname}</Layout>
 			<ProTable<IItem>
 				columns={[
 					{
