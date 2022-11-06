@@ -33,6 +33,7 @@ const Widget = () => {
 	const [tocData, setTocData] = useState(listdata);
 	const [title, setTitle] = useState("");
 	const { anthology_id } = useParams(); //url 参数
+	let treeList: ListNodeData[] = [];
 
 	return (
 		<>
@@ -43,29 +44,37 @@ const Widget = () => {
 							onFinish={async (values: IFormData) => {
 								// TODO
 								console.log(values);
-								/*
-					const request: IAnthologyDataRequest = {
-						title: values.title,
-						subtitle: values.subtitle,
-						summary: values.summary,
-						article_list:[];
-						status: values.status,
-						lang: values.lang,
-					};
-					console.log(request);
-					const res = await put<
-						IAnthologyDataRequest,
-						IAnthologyResponse
-					>(`/v2/article/${anthology_id}`, request);
-					console.log(res);
-					if (res.ok) {
-						message.success(
-							intl.formatMessage({ id: "flashes.success" })
-						);
-					} else {
-						message.error(res.message);
-					}
-					*/
+
+								const request: IAnthologyDataRequest = {
+									title: values.title,
+									subtitle: values.subtitle,
+									summary: values.summary,
+									article_list: treeList.map((item) => {
+										return {
+											article: item.key,
+											title: item.title,
+											level: item.level.toString(),
+											children: 0,
+										};
+									}),
+									status: values.status,
+									lang: values.lang,
+								};
+								console.log(request);
+								const res = await put<
+									IAnthologyDataRequest,
+									IAnthologyResponse
+								>(`/v2/anthology/${anthology_id}`, request);
+								console.log(res);
+								if (res.ok) {
+									message.success(
+										intl.formatMessage({
+											id: "flashes.success",
+										})
+									);
+								} else {
+									message.error(res.message);
+								}
 							}}
 							request={async () => {
 								const res = await get<IAnthologyResponse>(
@@ -80,6 +89,7 @@ const Widget = () => {
 										};
 									});
 								setTocData(toc);
+								treeList = toc;
 								setTitle(res.data.title);
 								return {
 									title: res.data.title,
@@ -136,7 +146,12 @@ const Widget = () => {
 						</ProForm>
 					</Col>
 					<Col>
-						<EditableTree treeData={tocData} />
+						<EditableTree
+							treeData={tocData}
+							onChange={(data: ListNodeData[]) => {
+								treeList = data;
+							}}
+						/>
 					</Col>
 				</Row>
 			</Card>
