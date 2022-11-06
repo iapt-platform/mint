@@ -1,16 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import {
-	Button,
-	Layout,
-	Space,
-	Table,
-	Popover,
-	Dropdown,
-	Menu,
-	MenuProps,
-} from "antd";
+import { Button, Space, Table, Popover, Dropdown, Menu, MenuProps } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import TermCreate from "../../../components/studio/term/TermCreate";
@@ -62,7 +53,6 @@ const Widget = () => {
 
 	return (
 		<>
-			<Layout>{studioname}</Layout>
 			<ProTable<IItem>
 				columns={[
 					{

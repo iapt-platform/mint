@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Layout, Space, Table } from "antd";
+import { Space, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu, Popover } from "antd";
@@ -56,7 +56,6 @@ const Widget = () => {
 	const channelCreate = <ChannelCreate studio={studioname} />;
 	return (
 		<>
-			<Layout>{studioname}</Layout>
 			<ProTable<IItem>
 				columns={[
 					{
