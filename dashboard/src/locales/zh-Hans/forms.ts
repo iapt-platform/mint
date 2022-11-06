@@ -26,6 +26,8 @@ const items = {
 	"forms.fields.confidence.50.label": "一般",
 	"forms.fields.confidence.75.label": "还可以",
 	"forms.fields.confidence.100.label": "有把握",
+	"forms.fields.role.label": "角色",
+	"forms.fields.name.label": "名称",
 };
 
 export default items;
