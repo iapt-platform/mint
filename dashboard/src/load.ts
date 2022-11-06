@@ -22,8 +22,7 @@ const init = () => {
 	const token = getToken();
 	if (token) {
 		// get current user profile & new token, SEE reducers/current-user/IUser
-		get("/v2/auth/current").then((json) => {
-			const user = json as IUserResponse;
+		get<IUserResponse>("/v2/auth/current").then((user) => {
 			if (user.ok) {
 				store.dispatch(signIn([user.data, token ? token : ""]));
 			} else {
