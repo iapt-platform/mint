@@ -85,18 +85,33 @@ const Widget = () => {
 
 					<Route path="unlock">
 						<Route path="new" element={<NutUsersUnlockNew />} />
-						<Route path="verify/:token" element={<NutUsersUnlockVerify />} />
+						<Route
+							path="verify/:token"
+							element={<NutUsersUnlockVerify />}
+						/>
 					</Route>
-					<Route path="reset-password/:token" element={<NutUsersResetPassword />} />
-					<Route path="forgot-password" element={<NutUsersForgotPassword />} />
+					<Route
+						path="reset-password/:token"
+						element={<NutUsersResetPassword />}
+					/>
+					<Route
+						path="forgot-password"
+						element={<NutUsersForgotPassword />}
+					/>
 				</Route>
 			</Route>
 
 			<Route path="dashboard" element={<Dashboard />}>
 				<Route path="users">
-					<Route path="change-password" element={<NutUsersChangePassword />} />
+					<Route
+						path="change-password"
+						element={<NutUsersChangePassword />}
+					/>
 					<Route path="logs" element={<NutUsersLogs />} />
-					<Route path="account-info" element={<NutUsersAccountInfo />} />
+					<Route
+						path="account-info"
+						element={<NutUsersAccountInfo />}
+					/>
 				</Route>
 			</Route>
 			<Route path="switch-language" element={<NutSwitchLanguage />} />
@@ -111,14 +126,26 @@ const Widget = () => {
 			<Route path="palicanon" element={<LibraryPalicanon />}>
 				<Route path="list" element={<LibraryPalicanonByPath />} />
 				<Route path="list/:root" element={<LibraryPalicanonByPath />} />
-				<Route path="list/:root/:path" element={<LibraryPalicanonByPath />} />
-				<Route path="list/:root/:path/:tag" element={<LibraryPalicanonByPath />} />
-				<Route path="chapter/:id" element={<LibraryPalicanonChapter />} />
+				<Route
+					path="list/:root/:path"
+					element={<LibraryPalicanonByPath />}
+				/>
+				<Route
+					path="list/:root/:path/:tag"
+					element={<LibraryPalicanonByPath />}
+				/>
+				<Route
+					path="chapter/:id"
+					element={<LibraryPalicanonChapter />}
+				/>
 			</Route>
 			<Route path="course" element={<LibraryCourse />}>
 				<Route path="list" element={<LibraryCourseList />}></Route>
 				<Route path="show/:id" element={<LibraryCourseShow />}></Route>
-				<Route path="lesson/:id" element={<LibraryLessonShow />}></Route>
+				<Route
+					path="lesson/:id"
+					element={<LibraryLessonShow />}
+				></Route>
 			</Route>
 
 			<Route path="term/:word" element={<LibraryTerm />} />
@@ -131,14 +158,23 @@ const Widget = () => {
 			<Route path="anthology" element={<LibraryAnthology />}>
 				<Route path="list" element={<LibraryAnthologyList />} />
 				<Route path=":id" element={<LibraryAnthologyShow />} />
-				<Route path=":id/by_channel/:tags" element={<LibraryAnthologyShow />} />
+				<Route
+					path=":id/by_channel/:tags"
+					element={<LibraryAnthologyShow />}
+				/>
 			</Route>
 
 			<Route path="article" element={<LibraryArticle />}>
 				<Route path=":type/:id" element={<LibraryArticle />} />
-				<Route path=":type/:id/param/:param" element={<LibraryArticle />} />
+				<Route
+					path=":type/:id/param/:param"
+					element={<LibraryArticle />}
+				/>
 				<Route path=":type/:id/tran" element={<LibraryArticle />} />
-				<Route path=":type/:id/tran/param/:param" element={<LibraryArticle />} />
+				<Route
+					path=":type/:id/tran/param/:param"
+					element={<LibraryArticle />}
+				/>
 			</Route>
 
 			<Route path="blog/:studio" element={<LibraryBlog />}>
@@ -155,12 +191,16 @@ const Widget = () => {
 				<Route path="recent" element={<StudioRecent />}></Route>
 				<Route path="channel" element={<StudioChannel />}>
 					<Route path="list" element={<StudioChannelList />} />
-					<Route path=":channelid/edit" element={<StudioChannelEdit />} />
+					<Route
+						path=":channelid/edit"
+						element={<StudioChannelEdit />}
+					/>
 				</Route>
 				<Route path="group" element={<StudioGroup />}>
 					<Route path="list" element={<StudioGroupList />} />
 					<Route path=":groupid" element={<StudioGroupShow />} />
 					<Route path=":groupid/edit" element={<StudioGroupEdit />} />
+					<Route path=":groupid/show" element={<StudioGroupShow />} />
 				</Route>
 				<Route path="dict" element={<StudioDict />}>
 					<Route path="list" element={<StudioDictList />} />
@@ -170,11 +210,20 @@ const Widget = () => {
 				</Route>
 				<Route path="article" element={<StudioArticle />}>
 					<Route path="list" element={<StudioArticleList />} />
-					<Route path=":articleid/edit" element={<StudioArticleEdit />} />
+					<Route
+						path=":articleid/edit"
+						element={<StudioArticleEdit />}
+					/>
 				</Route>
 				<Route path="anthology" element={<StudioAnthology />}>
-					<Route path="list" element={<StudioAnthologyList />}></Route>
-					<Route path=":anthology_id/edit" element={<StudioAnthologyEdit />} />
+					<Route
+						path="list"
+						element={<StudioAnthologyList />}
+					></Route>
+					<Route
+						path=":anthology_id/edit"
+						element={<StudioAnthologyEdit />}
+					/>
 				</Route>
 				<Route path="analysis" element={<StudioAnalysis />}>
 					<Route path="list" element={<StudioAnalysisList />} />
