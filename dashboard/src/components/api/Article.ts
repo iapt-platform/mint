@@ -6,8 +6,8 @@ export interface IArticleListApiResponse {
 	level: string;
 	children: number;
 }
-//'uid','title','subtitle','article_list','owner','lang','updated_at','created_at'
-export interface IAnthologyListApiResponse {
+
+export interface IAnthologyDataResponse {
 	uid: string;
 	title: string;
 	subtitle: string;
@@ -15,19 +15,21 @@ export interface IAnthologyListApiResponse {
 	article_list: IArticleListApiResponse[];
 	studio: IStudioApiResponse;
 	lang: string;
+	status: number;
+	childrenNumber: number;
 	created_at: string;
 	updated_at: string;
 }
-export interface IAnthologyListApiResponse2 {
+export interface IAnthologyResponse {
 	ok: boolean;
 	message: string;
-	data: IAnthologyListApiResponse;
+	data: IAnthologyDataResponse;
 }
-export interface IAnthologyListApiResponse3 {
+export interface IAnthologyListResponse {
 	ok: boolean;
 	message: string;
 	data: {
-		rows: IAnthologyListApiResponse[];
+		rows: IAnthologyDataResponse[];
 		count: number;
 	};
 }

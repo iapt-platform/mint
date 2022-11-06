@@ -3,8 +3,8 @@ import { Typography } from "antd";
 
 import type { IAnthologyData } from "./AnthologyCard";
 import type {
-	IAnthologyListApiResponse,
-	IAnthologyListApiResponse2,
+	IAnthologyDataResponse,
+	IAnthologyResponse,
 } from "../api/Article";
 import TocTree from "./TocTree";
 import { get } from "../../request";
@@ -42,11 +42,9 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 	}, [prop.aid]);
 
 	function fetchData(id: string) {
-		get(`/v2/anthology/${id}`)
+		get<IAnthologyResponse>(`/v2/anthology/${id}`)
 			.then((response) => {
-				const json = response as unknown as IAnthologyListApiResponse2;
-
-				const item: IAnthologyListApiResponse = json.data;
+				const item: IAnthologyDataResponse = response.data;
 				let newTree: IAnthologyData = {
 					id: item.uid,
 					title: item.title,

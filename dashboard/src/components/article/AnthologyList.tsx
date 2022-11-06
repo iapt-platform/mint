@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { List } from "antd";
 import AnthologyCard from "./AnthologyCard";
 import type { IAnthologyData } from "./AnthologyCard";
-import type { IAnthologyListApiResponse3 } from "../api/Article";
+import type { IAnthologyListResponse } from "../api/Article";
 import { get } from "../../request";
 
 const defaultData: IAnthologyData[] = [];
@@ -25,10 +25,9 @@ const Widget = (prop: IWidgetAnthologyList) => {
 	function fetchData(view: string, id?: string) {
 		let url = `/v2/anthology?view=${view}` + (id ? `&studio=${id}` : "");
 		console.log("get-url", url);
-		get(url).then(function (myJson) {
-			console.log("ajex", myJson);
-			const json = myJson as unknown as IAnthologyListApiResponse3;
-			let newTree: IAnthologyData[] = json.data.rows.map((item) => {
+		get<IAnthologyListResponse>(url).then(function (response) {
+			console.log("ajex", response);
+			let newTree: IAnthologyData[] = response.data.rows.map((item) => {
 				return {
 					id: item.uid,
 					title: item.title,
