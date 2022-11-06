@@ -6,7 +6,14 @@ export interface IArticleListApiResponse {
 	level: string;
 	children: number;
 }
-
+export interface IAnthologyDataRequest {
+	title: string;
+	subtitle: string;
+	summary: string;
+	article_list: IArticleListApiResponse[];
+	lang: string;
+	status: number;
+}
 export interface IAnthologyDataResponse {
 	uid: string;
 	title: string;
