@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'uid';
+    protected $casts = [
+        'uid' => 'string'
+    ];
+    public  $incrementing = false;
 }
