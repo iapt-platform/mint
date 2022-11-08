@@ -10,6 +10,7 @@ export interface ITermDataRequest {
 }
 export interface ITermDataResponse {
 	id: number;
+	guid: string;
 	word: string;
 	tag: string;
 	meaning: string;
