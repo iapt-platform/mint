@@ -18,9 +18,25 @@ class DhammaTermController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','guid','word','word_en','meaning','other_meaning','note','language','channal','updated_at'];
+		$indexCol = ['id','guid','word','meaning','other_meaning','note','language','channal','created_at','updated_at'];
 
 		switch ($request->get('view')) {
+            case 'studio':
+				# 获取studio内所有channel
+                $search = $request->get('search');
+                $user = \App\Http\Api\AuthApi::current($request);
+                if($user){
+                    //判断当前用户是否有指定的studio的权限
+                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                        $table = DhammaTerm::select($indexCol)
+                                    ->where('owner', $user["user_uid"]);
+                    }else{
+                        return $this->error(__('auth.failed'));
+                    }
+                }else{
+                    return $this->error(__('auth.failed'));
+                }
+				break;
             case 'show':
                 return $this->ok(DhammaTerm::find($request->get('id')));
                 break;
@@ -30,32 +46,10 @@ class DhammaTermController extends Controller
                 $search = $request->get('search');
 				$table = DhammaTerm::select($indexCol)
 									->where('owner', $userUid);
-				if(!empty($search)){
-					$table->where('word', 'like', $search."%")
-                          ->orWhere('word_en', 'like', $search."%")
-                          ->orWhere('meaning', 'like', "%".$search."%");
-				}
-				if(!empty($request->get('order')) && !empty($request->get('dir'))){
-					$table->orderBy($request->get('order'),$request->get('dir'));
-				}else{
-					$table->orderBy('updated_at','desc');
-				}
-				$count = $table->count();
-				if(!empty($request->get('limit'))){
-					$offset = 0;
-					if(!empty($request->get("offset"))){
-						$offset = $request->get("offset");
-					}
-					$table->skip($offset)->take($request->get('limit'));
-				}
-				$result = $table->get();
 				break;
 			case 'word':
-				$result = DhammaTerm::select($indexCol)
-									->where('word', $request->get("word"))
-									->orderBy('created_at','desc')
-									->get();
-                $count = count($result);
+				$table = DhammaTerm::select($indexCol)
+									->where('word', $request->get("word"));
 				break;
             case 'hot-meaning':
                 $key='term/hot_meaning';
@@ -65,7 +59,7 @@ class DhammaTermController extends Controller
                                 ->where('language',$request->get("language"))
                                 ->groupby('word')
                                 ->get();
-                    
+
                     foreach ($words as $key => $word) {
                         # code...
                         $result = DhammaTerm::select(DB::raw('count(*) as word_count, meaning'))
@@ -92,6 +86,26 @@ class DhammaTermController extends Controller
 				# code...
 				break;
 		}
+        if(!empty($search)){
+            $table->where('word', 'like', $search."%")
+                  ->orWhere('word_en', 'like', $search."%")
+                  ->orWhere('meaning', 'like', "%".$search."%");
+        }
+        if(!empty($request->get('order')) && !empty($request->get('dir'))){
+            $table->orderBy($request->get('order'),$request->get('dir'));
+        }else{
+            $table->orderBy('updated_at','desc');
+        }
+        $count = $table->count();
+        if(!empty($request->get('limit'))){
+            $offset = 0;
+            if(!empty($request->get("offset"))){
+                $offset = $request->get("offset");
+            }
+            $table->skip($offset)->take($request->get('limit'));
+        }
+        $result = $table->get();
+
 		if($result){
 			return $this->ok(["rows"=>$result,"count"=>$count]);
 		}else{
@@ -135,7 +149,7 @@ class DhammaTermController extends Controller
                 $isDoesntExist = $table->where('language',$request->get("language"))
                     ->doesntExist();
             }
-	
+
             if($isDoesntExist){
                 #不存在插入数据
                 $term = new DhammaTerm;
@@ -156,20 +170,28 @@ class DhammaTermController extends Controller
             $data['guid'] = Str::uuid();
             DhammaTerm::create($data);
             */
-            
+
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DhammaTerm  $dhammaTerm
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(DhammaTerm $dhammaTerm)
+    public function show(Request  $request,$id)
     {
         //
-        return $dhammaTerm;
+		$indexCol = ['id','guid','word','meaning','other_meaning','note','language','channal','created_at','updated_at'];
+
+		$result  = DhammaTerm::select($indexCol)->where('guid', $id)->first();
+		if($result){
+			return $this->ok($result);
+		}else{
+			return $this->error("没有查询到数据");
+		}
+
     }
 
     /**
