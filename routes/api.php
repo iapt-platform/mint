@@ -17,6 +17,9 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserDictController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\DictController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\GroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +58,11 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('anthology',CollectionController::class);
     Route::apiResource('dict',DictController::class);
     Route::apiResource('tag',TagController::class);
+    Route::apiResource('article',ArticleController::class);
+    Route::apiResource('group',GroupController::class);
+
+    Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
+    Route::post('auth/signin',[AuthController::class,'signIn']);
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
