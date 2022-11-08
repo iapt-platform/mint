@@ -6,6 +6,7 @@ use App\Models\UserDict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api;
 
 class UserDictController extends Controller
 {
@@ -18,41 +19,56 @@ class UserDictController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','word','type','grammar','mean','factors','confidence','updated_at','creator_id'];
+		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','updated_at','creator_id'];
 		switch ($request->get('view')) {
+            case 'studio':
+				# 获取studio内所有channel
+                $user = \App\Http\Api\AuthApi::current($request);
+                if($user){
+                    //判断当前用户是否有指定的studio的权限
+                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                        $table = UserDict::select($indexCol)
+                                    ->where('creator_id', $user["user_id"])
+                                    ->where('source', "_USER_WBW_");
+                    }else{
+                        return $this->error(__('auth.failed'));
+                    }
+                }else{
+                    return $this->error(__('auth.failed'));
+                }
+				break;
 			case 'user':
 				# code...
 				$table = UserDict::select($indexCol)
 									->where('creator_id', $_COOKIE["user_id"])
 									->where('source', '<>', "_SYS_USER_WBW_");
-				if(isset($_GET["search"])){
-					$table->where('word', 'like', $_GET["search"]."%");
-				}
-				if(isset($_GET["order"]) && isset($_GET["dir"])){
-					$table->orderBy($_GET["order"],$_GET["dir"]);
-				}else{
-					$table->orderBy('updated_at','desc');
-				}
-				$count = $table->count();
-				if(isset($_GET["limit"])){
-					$offset = 0;
-					if(isset($_GET["offset"])){
-						$offset = $_GET["offset"];
-					}
-					$table->skip($offset)->take($_GET["limit"]);
-				}			
-				$result = $table->get();
+
 				break;
 			case 'word':
-				$result = UserDict::select($indexCol)
-									->where('word', $_GET["word"])
-									->orderBy('created_at','desc')
-									->get();				
+				$table = UserDict::select($indexCol)
+									->where('word', $_GET["word"]);
 				break;
 			default:
 				# code...
 				break;
 		}
+        if(isset($_GET["search"])){
+            $table->where('word', 'like', $_GET["search"]."%");
+        }
+        if(isset($_GET["order"]) && isset($_GET["dir"])){
+            $table->orderBy($_GET["order"],$_GET["dir"]);
+        }else{
+            $table->orderBy('updated_at','desc');
+        }
+        $count = $table->count();
+        if(isset($_GET["limit"])){
+            $offset = 0;
+            if(isset($_GET["offset"])){
+                $offset = $_GET["offset"];
+            }
+            $table->skip($offset)->take($_GET["limit"]);
+        }
+        $result = $table->get();
 		if($result){
 			return $this->ok(["rows"=>$result,"count"=>$count]);
 		}else{
@@ -72,7 +88,6 @@ class UserDictController extends Controller
 		if(!isset($_COOKIE["user_id"])){
 			$this->error("not login");
 		}
-        $snowflake = new SnowFlakeId();
 
 		$_data = json_decode($_POST["data"],true);
 		switch($request->get('view')){
@@ -92,7 +107,7 @@ class UserDictController extends Controller
 										->where('factormean',$word["factormean"])
 										->where('source','_USER_WBW_')
 										->doesntExist();
-					
+
 					if($isDoesntExist){
 						#不存在插入数据
 						$word["id"]=app('snowflake')->id();
@@ -123,9 +138,9 @@ class UserDictController extends Controller
         //
 		$result = UserDict::find($id);
 		if($result){
-			$this->ok($result);
+			return $this->ok($result);
 		}else{
-			$this->error("没有查询到数据");
+			return $this->error("没有查询到数据");
 		}
     }
 
@@ -140,14 +155,16 @@ class UserDictController extends Controller
     {
         //
 		$newData = $request->all();
+        Log::info("id={$id}");
+        Log::info($newData);
 		$result = UserDict::where('id', $id)
 				->update($newData);
 		if($result){
 			$updateOk = $this->update_sys_wbw($newData);
 			$this->update_redis($newData);
-			$this->ok([$result,$updateOk]);
+			return $this->ok([$result,$updateOk]);
 		}else{
-		$this->error("没有查询到数据");
+		    return $this->error("没有查询到数据");
 		}
     }
 
@@ -187,7 +204,7 @@ class UserDictController extends Controller
 		foreach ($arrId as $key => $id) {
 			$data = UserDict::where('id',$id)->first();
 			if($data){
-				# 找到对应数据 
+				# 找到对应数据
 				Log::info('creator_id:'.$data->creator_id);
 				$param = [
 					"id"=>$id,
@@ -197,7 +214,7 @@ class UserDictController extends Controller
 				$del = UserDict::where($param)->delete();
 				$count += $del;
 				$updateOk = $this->update_sys_wbw($data);
-				$this->update_redis($data);				
+				$this->update_redis($data);
 			}
 		}
 		Log::info("delete:".$count);
