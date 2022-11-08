@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tag, Space, Button } from "antd";
 import lodash from "lodash";
+import { marked } from "marked";
 
 import FooterBar from "../../components/library/FooterBar";
 
@@ -20,6 +21,11 @@ const Widget = () => {
   return (
     <div>
       <HeadBar />
+      <div
+        dangerouslySetInnerHTML={{
+          __html: marked.parse("- [Google](https://www.google.com)"),
+        }}
+      ></div>
       <div>Home Page</div>
       <div>
         <h1>random</h1>
