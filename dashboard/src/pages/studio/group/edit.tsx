@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
 	ProForm,
 	ProFormText,
@@ -6,11 +6,10 @@ import {
 	ProFormTextArea,
 } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { message, Card, Button } from "antd";
+import { message, Card } from "antd";
 import { IGroupResponse } from "../../../components/api/Group";
 import { useEffect, useState } from "react";
 import { get } from "../../../request";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import GoBack from "../../../components/studio/GoBack";
 
 interface IFormData {

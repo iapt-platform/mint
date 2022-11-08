@@ -42,6 +42,7 @@ const Widget = () => {
 	};
 	return (
 		<>
+			{studioname}
 			<Line {...config} />
 
 			<Calendar

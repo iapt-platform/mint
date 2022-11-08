@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { useState } from "react";
 
 import { Space, Button, Popover, Dropdown, MenuProps, Menu, Table } from "antd";
 import { ProTable } from "@ant-design/pro-components";
@@ -48,10 +47,7 @@ interface DataItem {
 const Widget = () => {
 	const intl = useIntl(); //i18n
 	const { studioname } = useParams(); //url 参数
-
 	const articleCreate = <ArticleCreate studio={studioname} />;
-	const linkRead = `/article/show/12345`;
-	const linkStudio = `/studio/${studioname}`;
 
 	return (
 		<>

@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import {
 	ProForm,
 	ProFormText,
-	ProFormSelect,
 	ProFormTextArea,
 } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";

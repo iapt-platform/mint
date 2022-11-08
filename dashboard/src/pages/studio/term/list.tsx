@@ -1,8 +1,12 @@
 import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { Button, Space, Table, Popover, Dropdown, Menu, MenuProps } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Space, Table, Dropdown, Menu, MenuProps } from "antd";
+import {
+	SearchOutlined,
+	DeleteOutlined,
+	ShareAltOutlined,
+} from "@ant-design/icons";
 
 import TermCreate from "../../../components/studio/term/TermCreate";
 import { ITermListResponse } from "../../../components/api/Term";
@@ -18,18 +22,18 @@ const menu = (
 		items={[
 			{
 				key: "1",
-				label: "在藏经阁中打开",
+				label: "更多查询",
 				icon: <SearchOutlined />,
 			},
 			{
 				key: "2",
 				label: "分享",
-				icon: <SearchOutlined />,
+				icon: <ShareAltOutlined />,
 			},
 			{
 				key: "3",
 				label: "删除",
-				icon: <SearchOutlined />,
+				icon: <DeleteOutlined />,
 			},
 		]}
 	/>
@@ -37,7 +41,7 @@ const menu = (
 
 interface IItem {
 	sn: number;
-	id: number;
+	id: string;
 	word: string;
 	tag: string;
 	channel: string;
@@ -158,9 +162,11 @@ const Widget = () => {
 										//setIsEditOpen(true);
 									}}
 								>
-									{intl.formatMessage({
-										id: "buttons.edit",
-									})}
+									<TermCreate
+										studio={studioname}
+										edit={true}
+										wordId={row.id}
+									/>
 								</Dropdown.Button>,
 							];
 						},
@@ -221,7 +227,7 @@ const Widget = () => {
 							1;
 						return {
 							sn: id2,
-							id: item.id,
+							id: item.guid,
 							word: item.word,
 							tag: item.tag,
 							channel: item.channal,
@@ -243,20 +249,7 @@ const Widget = () => {
 					showQuickJumper: true,
 					showSizeChanger: true,
 				}}
-				toolBarRender={() => [
-					<Popover
-						content={<TermCreate studio={studioname} />}
-						placement="bottomRight"
-					>
-						<Button
-							key="button"
-							icon={<PlusOutlined />}
-							type="primary"
-						>
-							{intl.formatMessage({ id: "buttons.create" })}
-						</Button>
-					</Popover>,
-				]}
+				toolBarRender={() => [<TermCreate studio={studioname} />]}
 				search={false}
 				options={{
 					search: true,

@@ -3,7 +3,6 @@ import { useIntl } from "react-intl";
 import {
 	ProForm,
 	ProFormText,
-	ProFormSelect,
 	ProFormTextArea,
 } from "@ant-design/pro-components";
 import { Card, message } from "antd";
