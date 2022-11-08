@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserDict extends Model
 {
     use HasFactory;
-	protected $casts = [
-		'id' => 'string'
-	];
+    protected $primaryKey = 'id';
+    public  $incrementing = false;
 }
