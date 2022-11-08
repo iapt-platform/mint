@@ -125,4 +125,20 @@ class UserInfo
             return false;
         }
 	}
+
+    public function signIn($username,$password){
+		if ($this->dbh) {
+            $query = "SELECT userid,id FROM user WHERE  (username= ? and password = ?) or (email= ? and password = ?) ";
+            $stmt = $this->dbh->prepare($query);
+            $stmt->execute(array($username,md5($password),$username,md5($password)));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                return $user;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+	}
 }
