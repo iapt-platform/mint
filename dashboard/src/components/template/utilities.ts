@@ -2,6 +2,7 @@ import React from "react";
 import MdTpl from "./MdTpl";
 
 export function XmlToReact(text: string): React.ReactNode[] {
+	//console.log("html string:", text);
 	const parser = new DOMParser();
 	const xmlDoc = parser.parseFromString(
 		"<root><root>" + text + "</root></root>",
@@ -28,7 +29,7 @@ export function XmlToReact(text: string): React.ReactNode[] {
 
 		for (let i = 0; i < node.childNodes.length; i++) {
 			const value = node.childNodes[i];
-			console.log(value.nodeName, value.nodeType, value.nodeValue);
+			//console.log(value.nodeName, value.nodeType, value.nodeValue);
 
 			switch (value.nodeType) {
 				case 1: //element node
