@@ -1557,6 +1557,11 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_def",
+            name:"လျှင်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
+        {
+            id:"my_def",
             name:"သော်",
             tooltip:'同时发生的时间状语(当……的时候)',
         },
