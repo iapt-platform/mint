@@ -108,3 +108,27 @@ export interface IApiResponseChannelList {
 	message: string;
 	data: { rows: IApiResponseChannelListData[]; count: number };
 }
+
+export interface ISentenceRequst {
+	book: number;
+	para: number;
+	wordStart: number;
+	wordEnd: number;
+	channel: string;
+	content: string;
+}
+
+export interface ISentenceData {
+	book: number;
+	para: number;
+	word_start: number;
+	word_end: number;
+	channel_uid: string;
+	content: string;
+}
+
+export interface ISentenceResponse {
+	ok: boolean;
+	message: string;
+	data: ISentenceData;
+}

@@ -34,7 +34,8 @@ import LibraryDictRecent from "./pages/library/dict/recent";
 import LibraryAnthology from "./pages/library/anthology";
 import LibraryAnthologyShow from "./pages/library/anthology/show";
 import LibraryAnthologyList from "./pages/library/anthology/list";
-import LibraryArticle from "./pages/library/anthology/article";
+import LibraryArticle from "./pages/library/article";
+import LibraryArticleShow from "./pages/library/article/show";
 
 import LibraryBlog from "./pages/library/blog";
 import LibraryBlogOverview from "./pages/library/blog/overview";
@@ -165,15 +166,15 @@ const Widget = () => {
 			</Route>
 
 			<Route path="article" element={<LibraryArticle />}>
-				<Route path=":type/:id" element={<LibraryArticle />} />
+				<Route path=":type/:id" element={<LibraryArticleShow />} />
 				<Route
 					path=":type/:id/param/:param"
-					element={<LibraryArticle />}
+					element={<LibraryArticleShow />}
 				/>
-				<Route path=":type/:id/tran" element={<LibraryArticle />} />
+				<Route path=":type/:id/tran" element={<LibraryArticleShow />} />
 				<Route
 					path=":type/:id/tran/param/:param"
-					element={<LibraryArticle />}
+					element={<LibraryArticleShow />}
 				/>
 			</Route>
 

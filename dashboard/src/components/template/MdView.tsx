@@ -5,7 +5,7 @@ interface IWidget {
 }
 const Widget = ({ html }: IWidget) => {
 	const jsx = XmlToReact(html);
-	return <div>{jsx}</div>;
+	return <>{jsx}</>;
 };
 
 export default Widget;
