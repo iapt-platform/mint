@@ -113,31 +113,31 @@ const Widget = () => {
 							},
 							translation: {
 								text: intl.formatMessage({
-									id: "channel.type.translation.title",
+									id: "channel.type.translation.label",
 								}),
 								status: "Success",
 							},
 							nissaya: {
 								text: intl.formatMessage({
-									id: "channel.type.nissaya.title",
+									id: "channel.type.nissaya.label",
 								}),
 								status: "Processing",
 							},
 							commentary: {
 								text: intl.formatMessage({
-									id: "channel.type.commentary.title",
+									id: "channel.type.commentary.label",
 								}),
 								status: "Default",
 							},
 							original: {
 								text: intl.formatMessage({
-									id: "channel.type.original.title",
+									id: "channel.type.original.label",
 								}),
 								status: "Default",
 							},
 							general: {
 								text: intl.formatMessage({
-									id: "channel.type.general.title",
+									id: "channel.type.general.label",
 								}),
 								status: "Default",
 							},

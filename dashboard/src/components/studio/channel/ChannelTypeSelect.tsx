@@ -7,23 +7,23 @@ const Widget = () => {
 	const channelTypeOptions = [
 		{
 			value: "translation",
-			label: intl.formatMessage({ id: "channel.type.translation.title" }),
+			label: intl.formatMessage({ id: "channel.type.translation.label" }),
 		},
 		{
 			value: "nissaya",
-			label: intl.formatMessage({ id: "channel.type.nissaya.title" }),
+			label: intl.formatMessage({ id: "channel.type.nissaya.label" }),
 		},
 		{
 			value: "commentary",
-			label: intl.formatMessage({ id: "channel.type.commentary.title" }),
+			label: intl.formatMessage({ id: "channel.type.commentary.label" }),
 		},
 		{
 			value: "original",
-			label: intl.formatMessage({ id: "channel.type.original.title" }),
+			label: intl.formatMessage({ id: "channel.type.original.label" }),
 		},
 		{
 			value: "general",
-			label: intl.formatMessage({ id: "channel.type.general.title" }),
+			label: intl.formatMessage({ id: "channel.type.general.label" }),
 		},
 	];
 	return (

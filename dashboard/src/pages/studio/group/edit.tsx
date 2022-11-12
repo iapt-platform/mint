@@ -68,13 +68,13 @@ const Widget = () => {
 							{
 								value: "translation",
 								label: intl.formatMessage({
-									id: "channel.type.translation.title",
+									id: "channel.type.translation.label",
 								}),
 							},
 							{
 								value: "nissaya",
 								label: intl.formatMessage({
-									id: "channel.type.nissaya.title",
+									id: "channel.type.nissaya.label",
 								}),
 							},
 						]}
