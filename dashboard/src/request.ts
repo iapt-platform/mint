@@ -3,6 +3,20 @@ import { get as getLocale } from "./locales";
 
 import { get as getToken } from "./reducers/current-user";
 
+export interface IOkResponse {
+  createdAt: Date;
+}
+
+export type IErrorResponse = I422Response | I500Response;
+
+export interface I422Response {
+  errors: string[];
+}
+export interface I500Response {
+  code: number;
+  message: string;
+}
+
 export const backend = (u: string) => `${API_HOST}/api${u}`;
 
 export const GRPC_HOST: string =
