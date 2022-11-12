@@ -17,9 +17,17 @@ interface IUserResponse {
 export interface ISiteInfoResponse {
 	title: string;
 }
-export interface ITokenRefreshResponse {
+interface IUserData {
+	nickName: string;
 	realName: string;
+	avatar: string;
+	roles: string[];
 	token: string;
+}
+export interface ITokenRefreshResponse {
+	ok: boolean;
+	message: string;
+	data: IUserData;
 }
 
 const init = () => {
@@ -43,14 +51,15 @@ const init = () => {
 	if (token) {
 		get<ITokenRefreshResponse | IErrorResponse>("/v2/auth/current").then(
 			(response) => {
-				if ("realName" in response) {
+				console.log(response);
+				if ("data" in response) {
 					const it: IUser = {
-						nickName: "who-am-i",
-						realName: "Change me",
-						avatar: "/my.png",
-						roles: [],
+						nickName: response.data.nickName,
+						realName: response.data.realName,
+						avatar: response.data.avatar,
+						roles: response.data.roles,
 					};
-					store.dispatch(signIn([it, response.token]));
+					store.dispatch(signIn([it, response.data.token]));
 				}
 			}
 		);
