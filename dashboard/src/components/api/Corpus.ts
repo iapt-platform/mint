@@ -109,7 +109,7 @@ export interface IApiResponseChannelList {
 	data: { rows: IApiResponseChannelListData[]; count: number };
 }
 
-export interface ISentenceRequst {
+export interface ISentenceRequest {
 	book: number;
 	para: number;
 	wordStart: number;
