@@ -4,11 +4,7 @@ import TextArea from "antd/lib/input/TextArea";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { put } from "../../../request";
-import {
-  IErrorResponse,
-  ISentenceRequest,
-  ISentenceResponse,
-} from "../../api/Corpus";
+import { ISentenceRequest, ISentenceResponse } from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
 const { Text } = Typography;
 
