@@ -6,56 +6,69 @@ import { Typography } from "antd";
 const { Text, Link } = Typography;
 
 interface IWidgetTermCtl {
-	word?: string;
-	meaning?: string;
-	meaning2?: string;
-	channel?: string;
+  id?: string;
+  word?: string;
+  meaning?: string;
+  meaning2?: string;
+  channel?: string;
 }
-const TermCtl = ({ word, meaning, meaning2, channel }: IWidgetTermCtl) => {
-	const userCard = (
-		<>
-			<ProCard
-				title={word}
-				style={{ maxWidth: 500, minWidth: 300 }}
-				actions={[
-					<Button type="link" icon={<SearchOutlined />}>
-						更多
-					</Button>,
-					<Button type="link" icon={<SearchOutlined />}>
-						详情
-					</Button>,
-					<Button type="link" icon={<EditOutlined />}>
-						修改
-					</Button>,
-				]}
-			>
-				<div>详细内容</div>
-			</ProCard>
-		</>
-	);
-	const show = meaning ? meaning : word ? word : "unkow";
-	return (
-		<>
-			<Popover content={userCard} placement="bottom">
-				<Link>{show}</Link>
-			</Popover>
-			(<Text italic>{word}</Text>
-			{","}
-			<Text>{meaning2}</Text>)
-		</>
-	);
+const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
+  const show = meaning ? meaning : word ? word : "unknown";
+  let textShow = <></>;
+
+  if (typeof id === "undefined") {
+    console.log("danger");
+    textShow = <Text type="danger">{show}</Text>;
+  } else {
+    textShow = <Link>{show}</Link>;
+  }
+
+  const userCard = (
+    <>
+      <ProCard
+        title={word}
+        style={{ maxWidth: 500, minWidth: 300 }}
+        actions={[
+          <Button type="link" size="small" icon={<SearchOutlined />}>
+            更多
+          </Button>,
+          <Button type="link" size="small" icon={<SearchOutlined />}>
+            详情
+          </Button>,
+          <Button type="link" size="small" icon={<EditOutlined />}>
+            修改
+          </Button>,
+        ]}
+      >
+        <div>{id ? "" : <Button>新建</Button>}</div>
+      </ProCard>
+    </>
+  );
+  return (
+    <>
+      <Popover content={userCard} placement="bottom">
+        {textShow}
+      </Popover>
+      {"("}
+      <Text italic>{word}</Text>
+      {","}
+      <Text>{meaning2}</Text>
+      {")"}
+    </>
+  );
 };
 
 interface IWidgetTerm {
-	props: string;
+  props: string;
 }
 const Widget = ({ props }: IWidgetTerm) => {
-	const prop = JSON.parse(decodeURI(props)) as IWidgetTermCtl;
-	return (
-		<>
-			<TermCtl {...prop} />
-		</>
-	);
+  const prop = JSON.parse(atob(props)) as IWidgetTermCtl;
+  console.log(prop);
+  return (
+    <>
+      <TermCtl {...prop} />
+    </>
+  );
 };
 
 export default Widget;
