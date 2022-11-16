@@ -10,8 +10,10 @@ const { Text } = Typography;
 
 interface ISentCellEditable {
   data: ISentence;
+  onDataChange?: Function;
+  onClose?: Function;
 }
-const Widget = ({ data }: ISentCellEditable) => {
+const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
@@ -29,9 +31,25 @@ const Widget = ({ data }: ISentCellEditable) => {
       }
     )
       .then((json) => {
+        console.log(json);
         setSaving(false);
+
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onDataChange !== "undefined") {
+            const newData: ISentence = {
+              content: json.data.content,
+              html: json.data.html,
+              book: json.data.book,
+              para: json.data.paragraph,
+              wordStart: json.data.word_start,
+              wordEnd: json.data.word_end,
+              editor: json.data.editor,
+              channel: json.data.channel,
+              updateAt: json.data.updated_at,
+            };
+            onDataChange(newData);
+          }
         } else {
           message.error(json.message);
         }
@@ -54,7 +72,15 @@ const Widget = ({ data }: ISentCellEditable) => {
         <div>
           <span>
             <Text keyboard>esc</Text>=
-            <Button size="small" type="link">
+            <Button
+              size="small"
+              type="link"
+              onClick={(e) => {
+                if (typeof onClose !== "undefined") {
+                  onClose(e);
+                }
+              }}
+            >
               cancel
             </Button>
           </span>
