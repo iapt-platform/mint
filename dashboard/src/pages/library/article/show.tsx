@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { message, Switch } from "antd";
+import { Col, Row, Switch } from "antd";
 import { Button, Drawer, Space } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 
-import { IArticleResponse } from "../../../components/api/Article";
-import Article from "../../../components/article/Article";
-import { IWidgetArticleData } from "../../../components/article/ArticleView";
-
-import { get } from "../../../request";
+import Article, { ArticleMode } from "../../../components/article/Article";
+import ArticleCard from "../../../components/article/ArticleCard";
 
 /**
  * type:
@@ -21,74 +18,113 @@ import { get } from "../../../request";
  * @returns
  */
 const Widget = () => {
-	const { type, id, param } = useParams(); //url 参数
-	const [open, setOpen] = useState(false);
+  const { type, id, mode = "read" } = useParams(); //url 参数
+  const [open, setOpen] = useState(false);
+  const [articleMode, setArticleMode] = useState<ArticleMode>(
+    mode as ArticleMode
+  );
 
-	const showDrawer = () => {
-		setOpen(true);
-	};
+  const [articleMode2, setArticleMode2] = useState<ArticleMode>("read");
 
-	const onClose = () => {
-		setOpen(false);
-	};
+  const showDrawer = () => {
+    setOpen(true);
+  };
 
-	return (
-		<div
-			className="site-drawer-render-in-current-wrapper"
-			style={{ display: "flex" }}
-		>
-			<div
-				style={{ display: "flex", width: "100%", overflowX: "scroll" }}
-			>
-				<div>
-					<Article type={type} articleId={id} />
-				</div>
-			</div>
-			<div style={{ width: "2em" }}>
-				<Button
-					shape="circle"
-					icon={<SettingOutlined />}
-					onClick={showDrawer}
-				></Button>
-			</div>
-			<Drawer
-				title="Setting"
-				placement="right"
-				onClose={onClose}
-				open={open}
-				getContainer={false}
-				style={{ position: "absolute" }}
-			>
-				<Space>
-					保存到用户设置
-					<Switch
-						defaultChecked
-						onChange={(checked) => {
-							console.log(checked);
-						}}
-					/>
-				</Space>
-				<Space>
-					显示原文
-					<Switch
-						defaultChecked
-						onChange={(checked) => {
-							console.log(checked);
-						}}
-					/>
-				</Space>
-				<Space>
-					点词查询
-					<Switch
-						defaultChecked
-						onChange={(checked) => {
-							console.log(checked);
-						}}
-					/>
-				</Space>
-			</Drawer>
-		</div>
-	);
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div
+      className="site-drawer-render-in-current-wrapper"
+      style={{ display: "flex" }}
+    >
+      <Row>
+        <Col flex="auto">
+          <Row>
+            <Col span="11">
+              <div>
+                <ArticleCard
+                  onModeChange={(e: ArticleMode) => {
+                    setArticleMode(e);
+                  }}
+                >
+                  <Article
+                    active={true}
+                    type={`corpus/${type}`}
+                    articleId={id}
+                    mode={articleMode}
+                  />
+                </ArticleCard>
+              </div>
+            </Col>
+            <Col span="11">
+              <div>
+                <ArticleCard
+                  onModeChange={(e: ArticleMode) => {
+                    setArticleMode2(e);
+                  }}
+                >
+                  <div>
+                    <Article
+                      active={false}
+                      type={`corpus/${type}`}
+                      articleId={id}
+                      mode={articleMode2}
+                    />
+                  </div>
+                </ArticleCard>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col flex="24px">
+          <Button
+            shape="circle"
+            icon={<SettingOutlined />}
+            onClick={showDrawer}
+          />
+        </Col>
+      </Row>
+
+      <Drawer
+        title="Setting"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        getContainer={false}
+        style={{ position: "absolute" }}
+      >
+        <Space>
+          保存到用户设置
+          <Switch
+            defaultChecked
+            onChange={(checked) => {
+              console.log(checked);
+            }}
+          />
+        </Space>
+        <Space>
+          显示原文
+          <Switch
+            defaultChecked
+            onChange={(checked) => {
+              console.log(checked);
+            }}
+          />
+        </Space>
+        <Space>
+          点词查询
+          <Switch
+            defaultChecked
+            onChange={(checked) => {
+              console.log(checked);
+            }}
+          />
+        </Space>
+      </Drawer>
+    </div>
+  );
 };
 
 export default Widget;
