@@ -5,27 +5,27 @@ import { Typography } from "antd";
 const { Paragraph, Link } = Typography;
 
 interface IWidgetNoteCtl {
-	trigger?: string;
-	note?: string;
+  trigger?: string;
+  note?: string;
 }
 const NoteCtl = ({ trigger, note }: IWidgetNoteCtl) => {
-	const noteCard = <Paragraph copyable>{note}</Paragraph>;
-	const show = trigger ? trigger : <InfoCircleOutlined />;
-	return (
-		<>
-			<Popover content={noteCard} placement="bottom">
-				<Link>{show}</Link>
-			</Popover>
-		</>
-	);
+  const noteCard = <Paragraph copyable>{note}</Paragraph>;
+  const show = trigger ? trigger : <InfoCircleOutlined />;
+  return (
+    <>
+      <Popover content={noteCard} placement="bottom">
+        <Link>{show}</Link>
+      </Popover>
+    </>
+  );
 };
 
 interface IWidgetTerm {
-	props: string;
+  props: string;
 }
 const Widget = ({ props }: IWidgetTerm) => {
-	const prop = JSON.parse(decodeURI(props)) as IWidgetNoteCtl;
-	return <NoteCtl {...prop} />;
+  const prop = JSON.parse(atob(props)) as IWidgetNoteCtl;
+  return <NoteCtl {...prop} />;
 };
 
 export default Widget;

@@ -7,63 +7,67 @@ import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
 
 export interface ISentence {
-	content: string;
-	html: string;
-	book: number;
-	para: number;
-	wordStart: number;
-	wordEnd: number;
-	editor: IUser;
-	channel: IChannel;
-	updateAt: string;
+  content: string;
+  html: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
+  editor: IUser;
+  channel: IChannel;
+  updateAt: string;
 }
 
 export interface IWidgetSentEditInner {
-	origin?: ISentence[];
-	translation?: ISentence[];
-	layout?: "row" | "column";
-	tranNum?: number;
-	nissayaNum?: number;
-	commNum?: number;
-	originNum: number;
-	simNum?: number;
+  id: string;
+  channels?: string[];
+  origin?: ISentence[];
+  translation?: ISentence[];
+  layout?: "row" | "column";
+  tranNum?: number;
+  nissayaNum?: number;
+  commNum?: number;
+  originNum: number;
+  simNum?: number;
 }
 const SentEditInner = ({
-	origin,
-	translation,
-	layout = "column",
-	tranNum,
-	nissayaNum,
-	commNum,
-	originNum,
-	simNum,
+  id,
+  origin,
+  translation,
+  layout = "column",
+  tranNum,
+  nissayaNum,
+  commNum,
+  originNum,
+  simNum,
 }: IWidgetSentEditInner) => {
-	return (
-		<Card>
-			<SentMenu>
-				<SentContent
-					origin={origin}
-					translation={translation}
-					layout={layout}
-				/>
-				<SentTab
-					tranNum={tranNum}
-					nissayaNum={nissayaNum}
-					commNum={commNum}
-					originNum={originNum}
-					simNum={simNum}
-				/>
-			</SentMenu>
-		</Card>
-	);
+  return (
+    <Card>
+      <SentMenu>
+        <SentContent
+          origin={origin}
+          translation={translation}
+          layout={layout}
+        />
+        <SentTab
+          id={id}
+          tranNum={tranNum}
+          nissayaNum={nissayaNum}
+          commNum={commNum}
+          originNum={originNum}
+          simNum={simNum}
+        />
+      </SentMenu>
+    </Card>
+  );
 };
 
 interface IWidgetSentEdit {
-	props: string;
+  props: string;
 }
 const Widget = ({ props }: IWidgetSentEdit) => {
-	const prop = JSON.parse(atob(props)) as IWidgetSentEditInner;
-	return <SentEditInner {...prop} />;
+  const prop = JSON.parse(atob(props)) as IWidgetSentEditInner;
+  return <SentEditInner {...prop} />;
 };
 
 export default Widget;
