@@ -1,9 +1,24 @@
-import { Button, Card, Dropdown, Menu, Space, Segmented } from "antd";
-import { MoreOutlined, MenuOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Dropdown,
+  Menu,
+  Space,
+  Segmented,
+  Popover,
+  Tabs,
+} from "antd";
+import {
+  MoreOutlined,
+  MenuOutlined,
+  ReloadOutlined,
+  PushpinOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import ArticleView, { IWidgetArticleData } from "./ArticleView";
 import { useIntl } from "react-intl";
 import { useState } from "react";
+import { callbackify } from "util";
 
 interface IWidgetArticleCard {
   data?: IWidgetArticleData;
@@ -15,16 +30,7 @@ interface IWidgetArticleCard {
   onModeChange?: Function;
   openInCol?: Function;
 }
-const Widget = ({
-  data,
-  showModeSwitch = true,
-  showMainMenu = true,
-  showContextMenu = true,
-  showResTab = true,
-  children,
-  onModeChange,
-  openInCol,
-}: IWidgetArticleCard) => {
+const Widget = ({ data, children, onModeChange }: IWidgetArticleCard) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>("read");
 
@@ -65,7 +71,43 @@ const Widget = ({
       }}
     />
   );
-  const mainMenu = <Button size="small" icon={<MenuOutlined />} />;
+
+  const mainMenuContent = (
+    <Tabs
+      size="small"
+      defaultActiveKey="1"
+      tabBarExtraContent={{
+        right: <Button type="text" size="small" icon={<PushpinOutlined />} />,
+      }}
+      items={[
+        {
+          label: `目录`,
+          key: "1",
+          children: `Content of Tab Pane 1`,
+        },
+        {
+          label: `定位`,
+          key: "2",
+          children: `Content of Tab Pane 2`,
+        },
+        {
+          label: `搜索`,
+          key: "3",
+          children: `Content of Tab Pane 3`,
+        },
+      ]}
+    />
+  );
+  const mainMenu = (
+    <Popover
+      placement="bottomLeft"
+      arrowPointAtCenter
+      content={mainMenuContent}
+      trigger="click"
+    >
+      <Button size="small" icon={<MenuOutlined />} />
+    </Popover>
+  );
   const contextMenu = (
     <Dropdown overlay={menu} placement="bottomRight">
       <Button shape="circle" size="small" icon={<MoreOutlined />}></Button>
@@ -91,7 +133,7 @@ const Widget = ({
           {contextMenu}
         </Space>
       }
-      bodyStyle={{ height: 630, overflowY: "scroll" }}
+      bodyStyle={{ height: `calc(100vh-50px)`, overflowY: "scroll" }}
     >
       {children}
     </Card>
