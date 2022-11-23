@@ -97,10 +97,10 @@ class ChannelController extends Controller
     public function store(Request $request)
     {
         //
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if($user){
             //判断当前用户是否有指定的studio的权限
-            if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('studio'))){
+            if($user['user_uid'] === StudioApi::getIdByName($request->get('studio'))){
                 //查询是否重复
                 if(Channel::where('name',$request->get('name'))->where('owner_uid',$user['user_uid'])->exists()){
                     return $this->error(__('validation.exists',['name']));
