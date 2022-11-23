@@ -69,14 +69,14 @@ class InitCs6sentence extends Command
 						if(!$boldStart){
 							#黑体字开始
 							$boldStart = true;
-							$sent .= ' **';
+							$sent .= ' <b>';
 						}
 					}else{
 						if($boldStart){
 							#黑体字结束
 							$boldStart = false;
 							$boldCount = 0;
-							$sent .= '**';
+							$sent .= '</b>';
 						}
 					}
 					if($boldStart){
@@ -86,10 +86,11 @@ class InitCs6sentence extends Command
 						#如果不是标点符号，在词的前面加空格 。第一个黑体字前不加空格
 						$sent .= " ";
 					}
-					
+
 					if(strpos($word->word,'{') >=0 ){
-						$paliWord = \str_replace("{","",$word->word) ;
-						$paliWord = \str_replace("}","**",$paliWord) ;
+                        //一个单词里面含有黑体字的
+						$paliWord = \str_replace("{","<b>",$word->word) ;
+						$paliWord = \str_replace("}","</b>",$paliWord) ;
 					}else{
 						$paliWord = $word->word;
 					}
@@ -107,7 +108,7 @@ class InitCs6sentence extends Command
 			$sent = \str_replace('n’ ti','’nti',$sent);
 			$sent = \str_replace('**ti**','**ti',$sent);
 			$sent = \str_replace('‘ ','‘',$sent);
-			$sent = trim($sent);			
+			$sent = trim($sent);
 			$snowId = app('snowflake')->id();
 			$newRow = Sentence::updateOrCreate(
 				[
@@ -115,7 +116,7 @@ class InitCs6sentence extends Command
 					"paragraph" => $value->paragraph,
 					"word_start" => $value->word_begin,
 					"word_end" => $value->word_end,
-					"channel_uid" => config("app.admin.cs6_channel"),
+					"channel_uid" => config("app.admin.cs_channel"),
 				],
 				[
 					'id' =>$snowId,
