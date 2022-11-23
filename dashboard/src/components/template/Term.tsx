@@ -2,6 +2,7 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Popover } from "antd";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
+import TermCreate from "../studio/term/TermCreate";
 
 const { Text, Link } = Typography;
 
@@ -22,7 +23,14 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
   } else {
     textShow = <Link>{show}</Link>;
   }
-
+  const editButton = (
+    <TermCreate
+      isCreate={id ? false : true}
+      word={word}
+      studio=""
+      wordId={id ? id : undefined}
+    />
+  );
   const userCard = (
     <>
       <ProCard
@@ -35,12 +43,12 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
           <Button type="link" size="small" icon={<SearchOutlined />}>
             详情
           </Button>,
-          <Button type="link" size="small" icon={<EditOutlined />}>
-            修改
-          </Button>,
+          editButton,
         ]}
       >
-        <div>{id ? "" : <Button>新建</Button>}</div>
+        <div>
+          {id ? "" : <TermCreate isCreate={true} word={word} studio="" />}
+        </div>
       </ProCard>
     </>
   );
