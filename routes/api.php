@@ -20,6 +20,8 @@ use App\Http\Controllers\DictController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\CorpusController;
+;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +65,10 @@ Route::group(['prefix' => 'v2'],function(){
 
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
     Route::post('auth/signin',[AuthController::class,'signIn']);
+
+    Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
+    Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
+    Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
