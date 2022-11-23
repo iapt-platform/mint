@@ -1,6 +1,9 @@
 import { Tooltip, Button } from "antd";
 import MdView from "./MdView";
 import { ISentence } from "./SentEdit";
+import { useAppSelector } from "../../hooks";
+import { onChangeKey, onChangeValue } from "../../reducers/setting";
+import { useEffect, useRef } from "react";
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];
@@ -14,6 +17,33 @@ const SentReadFrame = ({
   layout = "column",
   sentId,
 }: IWidgetSentReadFrame) => {
+  const key = useAppSelector(onChangeKey);
+  const value = useAppSelector(onChangeValue);
+  const boxOrg = useRef<HTMLDivElement>(null);
+  const boxSent = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    switch (key) {
+      case "setting.display.original":
+        if (boxOrg.current) {
+          if (value === true) {
+            boxOrg.current.style.display = "block";
+          } else {
+            boxOrg.current.style.display = "none";
+          }
+        }
+        break;
+      case "setting.layout.direction":
+        if (boxSent.current) {
+          if (typeof value === "string") {
+            boxSent.current.style.flexDirection = value;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  }, [key, value]);
   return (
     <Tooltip
       placement="topLeft"
@@ -24,8 +54,8 @@ const SentReadFrame = ({
         </Button>
       }
     >
-      <div style={{ display: "flex", flexDirection: layout }}>
-        <div style={{ flex: "5", color: "#9f3a01" }}>
+      <div style={{ display: "flex", flexDirection: layout }} ref={boxSent}>
+        <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
           {origin?.map((item, id) => {
             return <MdView key={id} html={item.html} />;
           })}
