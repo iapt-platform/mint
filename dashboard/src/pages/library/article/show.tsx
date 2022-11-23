@@ -1,11 +1,34 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Col, Row, Switch } from "antd";
-import { Button, Drawer, Space } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { RadioChangeEvent, Switch } from "antd";
+import { Drawer, Space, Radio } from "antd";
+import {
+  AppstoreOutlined,
+  BorderOutlined,
+  SettingOutlined,
+  ProfileOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 
 import Article, { ArticleMode } from "../../../components/article/Article";
 import ArticleCard from "../../../components/article/ArticleCard";
+import ArticleTabs from "../../../components/article/ArticleTabs";
+import SettingArticle from "../../../components/auth/setting/SettingArticle";
+
+const setting = (
+  <>
+    <Space>
+      {"保存到用户设置"}
+      <Switch
+        defaultChecked
+        onChange={(checked) => {
+          console.log(checked);
+        }}
+      />
+    </Space>
+    <SettingArticle />
+  </>
+);
 
 /**
  * type:
@@ -23,9 +46,24 @@ const Widget = () => {
   const [articleMode, setArticleMode] = useState<ArticleMode>(
     mode as ArticleMode
   );
+  const [value, setValue] = useState(1);
+  const [value2, setValue2] = useState(0);
 
-  const [articleMode2, setArticleMode2] = useState<ArticleMode>("read");
+  const box = useRef<HTMLDivElement>(null);
 
+  const onChange = (e: RadioChangeEvent) => {
+    setValue(e.target.value);
+    if (e.target.value === 1) {
+      if (box.current) {
+        box.current.style.display = "none";
+      }
+    }
+    if (e.target.value === 2) {
+      if (box.current) {
+        box.current.style.display = "block";
+      }
+    }
+  };
   const showDrawer = () => {
     setOpen(true);
   };
@@ -33,59 +71,100 @@ const Widget = () => {
   const onClose = () => {
     setOpen(false);
   };
-
+  const rightBarWidth = "40px";
   return (
-    <div
-      className="site-drawer-render-in-current-wrapper"
-      style={{ display: "flex" }}
-    >
-      <Row>
-        <Col flex="auto">
-          <Row>
-            <Col span="11">
-              <div>
-                <ArticleCard
-                  onModeChange={(e: ArticleMode) => {
-                    setArticleMode(e);
-                  }}
-                >
-                  <Article
-                    active={true}
-                    type={`corpus/${type}`}
-                    articleId={id}
-                    mode={articleMode}
-                  />
-                </ArticleCard>
-              </div>
-            </Col>
-            <Col span="11">
-              <div>
-                <ArticleCard
-                  onModeChange={(e: ArticleMode) => {
-                    setArticleMode2(e);
-                  }}
-                >
-                  <div>
-                    <Article
-                      active={false}
-                      type={`corpus/${type}`}
-                      articleId={id}
-                      mode={articleMode2}
-                    />
-                  </div>
-                </ArticleCard>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col flex="24px">
-          <Button
-            shape="circle"
-            icon={<SettingOutlined />}
-            onClick={showDrawer}
-          />
-        </Col>
-      </Row>
+    <div className="site-drawer-render-in-current-wrapper">
+      <div style={{ width: "100%", display: "flex" }}>
+        <div style={{ width: `calc(100%-${rightBarWidth})`, display: "flex" }}>
+          <div style={{ flex: 5 }}>
+            <ArticleCard
+              onModeChange={(e: ArticleMode) => {
+                setArticleMode(e);
+              }}
+            >
+              <Article
+                active={true}
+                type={`corpus/${type}`}
+                articleId={id}
+                mode={articleMode}
+              />
+            </ArticleCard>
+          </div>
+          <div style={{ flex: 5 }} ref={box}>
+            <ArticleTabs />
+          </div>
+          <div style={{ width: 300, backgroundColor: "wheat" }}>{setting}</div>
+        </div>
+        <div
+          style={{
+            width: `${rightBarWidth}`,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Radio.Group
+            value={value}
+            onChange={onChange}
+            optionType="button"
+            buttonStyle="solid"
+          >
+            <Space direction="vertical">
+              <Radio value={1}>
+                <BorderOutlined />
+              </Radio>
+              <Radio value={2}>
+                <AppstoreOutlined />
+              </Radio>
+            </Space>
+          </Radio.Group>
+
+          <Radio.Group
+            value={value2}
+            optionType="button"
+            buttonStyle="solid"
+            onChange={(e) => {
+              console.log("radio change", e.target.value);
+              setValue2(e.target.value);
+            }}
+          >
+            <Space direction="vertical">
+              <Radio
+                value={3}
+                onClick={() => {
+                  if (value2 === 3) {
+                    setValue2(6);
+                  }
+                }}
+              >
+                <SettingOutlined />
+              </Radio>
+              <Radio
+                value={4}
+                onClick={() => {
+                  if (value2 === 4) {
+                    setValue2(6);
+                  }
+                }}
+              >
+                <ProfileOutlined />
+              </Radio>
+              <Radio
+                value={5}
+                onClick={() => {
+                  if (value2 === 5) {
+                    setValue2(6);
+                  }
+                }}
+              >
+                <ShoppingCartOutlined />
+              </Radio>
+              <Radio value={6} style={{ display: "none" }}>
+                <></>
+              </Radio>
+            </Space>
+          </Radio.Group>
+        </div>
+      </div>
 
       <Drawer
         title="Setting"
@@ -94,35 +173,7 @@ const Widget = () => {
         open={open}
         getContainer={false}
         style={{ position: "absolute" }}
-      >
-        <Space>
-          保存到用户设置
-          <Switch
-            defaultChecked
-            onChange={(checked) => {
-              console.log(checked);
-            }}
-          />
-        </Space>
-        <Space>
-          显示原文
-          <Switch
-            defaultChecked
-            onChange={(checked) => {
-              console.log(checked);
-            }}
-          />
-        </Space>
-        <Space>
-          点词查询
-          <Switch
-            defaultChecked
-            onChange={(checked) => {
-              console.log(checked);
-            }}
-          />
-        </Space>
-      </Drawer>
+      ></Drawer>
     </div>
   );
 };
