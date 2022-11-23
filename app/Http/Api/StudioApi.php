@@ -8,4 +8,14 @@ class StudioApi{
         $userinfo = new \UserInfo();
         return $userinfo->getUserByName($name)['userid'];
     }
+    public static function getById($id){
+        $userinfo = new \UserInfo();
+        $studio = $userinfo->getName($id);
+        return [
+            'id'=>$id,
+            'nickName'=>$studio['nickname'],
+            'realName'=>$studio['username'],
+            'avatar'=>'',
+        ];
+    }
 }
