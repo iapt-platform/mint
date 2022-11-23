@@ -40,16 +40,24 @@ class TestMq extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        //一对一
+		$connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
 		$channel = $connection->channel();
-		$channel->queue_declare('hello', false, false, false, false);
+		$channel->queue_declare('hello', false, true, false, false);
 
 		$msg = new AMQPMessage('Hello World!');
 		$channel->basic_publish($msg, '', 'hello');
-		
+
 		echo " [x] Sent 'Hello World!'\n";
 		$channel->close();
 		$connection->close();
+
+        //一对多
+        $connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
+        $channel->exchange_declare('hello_exchange','fanout',false,true);
+        $channel->queue_declare('hello', false, true, false, false);
+        $channel->exchange_bind('hello','exchange',"");
+
         return 0;
     }
 }
