@@ -1,7 +1,7 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
-import { IArticleResponse } from "../api/Article";
+import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView, { IWidgetArticleData } from "./ArticleView";
 
 export type ArticleMode = "read" | "edit";
@@ -10,20 +10,21 @@ interface IWidgetArticle {
   articleId?: string;
   mode?: ArticleMode;
   active?: boolean;
-  showModeSwitch?: boolean;
-  showMainMenu?: boolean;
-  showContextMenu?: boolean;
 }
 const Widget = ({
   type,
   articleId,
   mode = "read",
   active = false,
-  showModeSwitch = true,
-  showMainMenu = true,
-  showContextMenu = true,
 }: IWidgetArticle) => {
-  const [articleData, setArticleData] = useState<IWidgetArticleData>();
+  const [articleData, setArticleData] = useState<IArticleDataResponse>();
+  let channels: string[] = [];
+  if (typeof articleId !== "undefined") {
+    const aId = articleId.split("_");
+    if (aId.length > 1) {
+      channels = aId.slice(1);
+    }
+  }
 
   useEffect(() => {
     if (!active) {
@@ -39,7 +40,19 @@ const Widget = ({
       });
     }
   }, [active, type, articleId, mode]);
-  return <ArticleView {...articleData} />;
+  return (
+    <ArticleView
+      id={articleData?.uid}
+      title={articleData?.title}
+      subTitle={articleData?.subtitle}
+      summary={articleData?.summary}
+      content={articleData ? articleData.content : ""}
+      path={articleData?.path}
+      created_at={articleData?.created_at}
+      updated_at={articleData?.updated_at}
+      channels={channels}
+    />
+  );
 };
 
 export default Widget;
