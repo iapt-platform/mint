@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Tabs } from "antd";
+import { Tabs, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { useAppSelector } from "../../hooks";
 import { siteInfo as _siteInfo } from "../../reducers/open-article";
 import Article from "./Article";
@@ -10,8 +11,10 @@ const Test = () => {
   console.log("new");
   return <div>hello</div>;
 };
-
-const Widget = () => {
+interface IWidget {
+  onClose?: Function;
+}
+const Widget = ({ onClose }: IWidget) => {
   const [activeKey, setActiveKey] = useState("1");
   const [items, setItems] = useState(defaultPanes);
   const newTabIndex = useRef(0);
@@ -75,6 +78,17 @@ const Widget = () => {
       remove(targetKey);
     }
   };
+  const operations = (
+    <Button
+      icon={<CloseOutlined />}
+      shape="circle"
+      onClick={() => {
+        if (onClose) {
+          onClose(true);
+        }
+      }}
+    />
+  );
   return (
     <Tabs
       hideAdd
@@ -83,6 +97,7 @@ const Widget = () => {
       type="editable-card"
       onEdit={onEdit}
       items={items}
+      tabBarExtraContent={operations}
     />
   );
 };

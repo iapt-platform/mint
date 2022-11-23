@@ -1,13 +1,4 @@
-import {
-  Button,
-  Card,
-  Dropdown,
-  Menu,
-  Space,
-  Segmented,
-  Popover,
-  Tabs,
-} from "antd";
+import { Button, Card, Dropdown, Space, Segmented, Popover, Tabs } from "antd";
 import {
   MoreOutlined,
   MenuOutlined,
@@ -15,10 +6,9 @@ import {
   PushpinOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import ArticleView, { IWidgetArticleData } from "./ArticleView";
+import { IWidgetArticleData } from "./ArticleView";
 import { useIntl } from "react-intl";
 import { useState } from "react";
-import { callbackify } from "util";
 
 interface IWidgetArticleCard {
   data?: IWidgetArticleData;
@@ -29,26 +19,37 @@ interface IWidgetArticleCard {
   children?: React.ReactNode;
   onModeChange?: Function;
   openInCol?: Function;
+  showCol?: Function;
 }
-const Widget = ({ data, children, onModeChange }: IWidgetArticleCard) => {
+const Widget = ({
+  data,
+  children,
+  onModeChange,
+  showCol,
+}: IWidgetArticleCard) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>("read");
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
+    switch (e.key) {
+      case "showCol":
+        if (typeof showCol !== "undefined") {
+          showCol();
+        }
+        break;
+
+      default:
+        break;
+    }
   };
 
-  const menu = (
-    <Menu
-      onClick={onClick}
-      items={[
-        {
-          key: "close",
-          label: "关闭",
-        },
-      ]}
-    />
-  );
+  const items: MenuProps["items"] = [
+    {
+      key: "showCol",
+      label: "显示分栏",
+    },
+  ];
   const modeSwitch = (
     <Segmented
       size="middle"
@@ -109,7 +110,7 @@ const Widget = ({ data, children, onModeChange }: IWidgetArticleCard) => {
     </Popover>
   );
   const contextMenu = (
-    <Dropdown overlay={menu} placement="bottomRight">
+    <Dropdown menu={{ items, onClick }} placement="bottomRight">
       <Button shape="circle" size="small" icon={<MoreOutlined />}></Button>
     </Dropdown>
   );

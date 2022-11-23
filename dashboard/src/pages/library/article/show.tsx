@@ -51,21 +51,24 @@ const Widget = () => {
 
   const box = useRef<HTMLDivElement>(null);
 
+  const closeCol = () => {
+    if (box.current) {
+      box.current.style.display = "none";
+    }
+  };
+  const openCol = () => {
+    if (box.current) {
+      box.current.style.display = "block";
+    }
+  };
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     if (e.target.value === 1) {
-      if (box.current) {
-        box.current.style.display = "none";
-      }
+      closeCol();
     }
     if (e.target.value === 2) {
-      if (box.current) {
-        box.current.style.display = "block";
-      }
+      openCol();
     }
-  };
-  const showDrawer = () => {
-    setOpen(true);
   };
 
   const onClose = () => {
@@ -81,6 +84,7 @@ const Widget = () => {
               onModeChange={(e: ArticleMode) => {
                 setArticleMode(e);
               }}
+              showCol={openCol}
             >
               <Article
                 active={true}
@@ -91,7 +95,7 @@ const Widget = () => {
             </ArticleCard>
           </div>
           <div style={{ flex: 5 }} ref={box}>
-            <ArticleTabs />
+            <ArticleTabs onClose={closeCol} />
           </div>
           <div style={{ width: 300, backgroundColor: "wheat" }}>{setting}</div>
         </div>
@@ -102,22 +106,6 @@ const Widget = () => {
             flexDirection: "column",
           }}
         >
-          <Radio.Group
-            value={value}
-            onChange={onChange}
-            optionType="button"
-            buttonStyle="solid"
-          >
-            <Space direction="vertical">
-              <Radio value={1}>
-                <BorderOutlined />
-              </Radio>
-              <Radio value={2}>
-                <AppstoreOutlined />
-              </Radio>
-            </Space>
-          </Radio.Group>
-
           <Radio.Group
             value={value2}
             optionType="button"
