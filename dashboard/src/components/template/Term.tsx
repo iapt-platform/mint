@@ -1,6 +1,6 @@
 import { ProCard } from "@ant-design/pro-components";
 import { Button, Popover } from "antd";
-import { SearchOutlined, EditOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import TermCreate from "../studio/term/TermCreate";
 
