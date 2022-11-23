@@ -1,11 +1,14 @@
 import { Space } from "antd";
 import { useState } from "react";
+import { Typography } from "antd";
 import User from "../../auth/User";
 import TimeShow from "../../utilities/TimeShow";
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";
 import MdView from "../MdView";
+
+const { Text } = Typography;
 
 interface ISentCell {
   data: ISentence;
@@ -36,11 +39,13 @@ const Widget = ({ data }: ISentCell) => {
         />
       </div>
       <div>
-        <Space>
-          <User {...sentData.editor} />
-          <span>updated</span>
-          <TimeShow time={sentData.updateAt} title="UpdatedAt" />
-        </Space>
+        <Text type="secondary">
+          <Space>
+            <User {...sentData.editor} />
+            <span>updated</span>
+            <TimeShow time={sentData.updateAt} title="UpdatedAt" />
+          </Space>
+        </Text>
       </div>
     </SentEditMenu>
   );
