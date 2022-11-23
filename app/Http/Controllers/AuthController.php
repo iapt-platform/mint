@@ -92,7 +92,8 @@ class AuthController extends Controller
                 "nickName"=> $username['nickname'],
                 "realName"=> $username['username'],
                 "avatar"=> "",
-                "roles"=> []
+                "roles"=> [],
+                "token"=>\substr($request->header('Authorization'),7) ,
             ];
             return $this->ok($user);
         }else{
