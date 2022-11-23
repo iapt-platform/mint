@@ -1,10 +1,8 @@
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RadioChangeEvent, Switch } from "antd";
+import { Switch } from "antd";
 import { Drawer, Space, Radio } from "antd";
 import {
-  AppstoreOutlined,
-  BorderOutlined,
   SettingOutlined,
   ProfileOutlined,
   ShoppingCartOutlined,
@@ -46,7 +44,6 @@ const Widget = () => {
   const [articleMode, setArticleMode] = useState<ArticleMode>(
     mode as ArticleMode
   );
-  const [value, setValue] = useState(1);
   const [value2, setValue2] = useState(0);
 
   const box = useRef<HTMLDivElement>(null);
@@ -59,15 +56,6 @@ const Widget = () => {
   const openCol = () => {
     if (box.current) {
       box.current.style.display = "block";
-    }
-  };
-  const onChange = (e: RadioChangeEvent) => {
-    setValue(e.target.value);
-    if (e.target.value === 1) {
-      closeCol();
-    }
-    if (e.target.value === 2) {
-      openCol();
     }
   };
 
