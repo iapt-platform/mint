@@ -7,6 +7,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import SettingArticle from "../../auth/setting/SettingArticle";
+import DictComponent from "../../dict/DictComponent";
 
 const setting = (
   <>
@@ -40,12 +41,21 @@ const Widget = () => {
       divPanel.current.style.display = "block";
     }
   };
+  const headHeight = 64;
+  const stylePanel: React.CSSProperties = {
+    height: `calc(100vh - ${headHeight})`,
+    overflowY: "scroll",
+  };
   return (
     <div style={{ display: "flex" }}>
       <div ref={divPanel} style={{ width: 350, display: "none" }}>
-        <div ref={divSetting}>{setting}</div>
-        <div ref={divDict}></div>
-        <div ref={divTerm}></div>
+        <div ref={divSetting} style={stylePanel}>
+          {setting}
+        </div>
+        <div ref={divDict} style={stylePanel}>
+          <DictComponent />
+        </div>
+        <div ref={divTerm} style={stylePanel}></div>
       </div>
       <div
         style={{
