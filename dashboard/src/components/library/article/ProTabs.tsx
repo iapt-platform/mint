@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import SettingArticle from "../../auth/setting/SettingArticle";
 import DictComponent from "../../dict/DictComponent";
+import TermCreate from "../../studio/term/TermCreate";
 
 const setting = (
   <>
@@ -55,7 +56,9 @@ const Widget = () => {
         <div ref={divDict} style={stylePanel}>
           <DictComponent />
         </div>
-        <div ref={divTerm} style={stylePanel}></div>
+        <div ref={divTerm} style={stylePanel}>
+          <TermCreate type="inline" />
+        </div>
       </div>
       <div
         style={{
