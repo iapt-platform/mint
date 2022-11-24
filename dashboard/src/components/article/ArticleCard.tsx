@@ -134,7 +134,7 @@ const Widget = ({
           {contextMenu}
         </Space>
       }
-      bodyStyle={{ height: `calc(100vh-50px)`, overflowY: "scroll" }}
+      bodyStyle={{ height: `calc(100vh - 94px)`, overflowY: "scroll" }}
     >
       {children}
     </Card>
