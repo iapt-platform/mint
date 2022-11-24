@@ -1,14 +1,11 @@
 import { useRef, useState } from "react";
 import { Switch } from "antd";
 import { Radio, Space } from "antd";
-import {
-  SettingOutlined,
-  ProfileOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import SettingArticle from "../../auth/setting/SettingArticle";
 import DictComponent from "../../dict/DictComponent";
 import TermCreate from "../../studio/term/TermCreate";
+import { DictIcon, TermIcon } from "../../../assets/icon";
 
 const setting = (
   <>
@@ -30,6 +27,7 @@ const Widget = () => {
   const divSetting = useRef<HTMLDivElement>(null);
   const divDict = useRef<HTMLDivElement>(null);
   const divTerm = useRef<HTMLDivElement>(null);
+  const divCart = useRef<HTMLDivElement>(null);
   const divPanel = useRef<HTMLDivElement>(null);
   const rightBarWidth = "40px";
   const closeAll = () => {
@@ -37,7 +35,7 @@ const Widget = () => {
       divPanel.current.style.display = "none";
     }
   };
-  const openPannel = () => {
+  const openPanel = () => {
     if (divPanel.current) {
       divPanel.current.style.display = "block";
     }
@@ -59,6 +57,7 @@ const Widget = () => {
         <div ref={divTerm} style={stylePanel}>
           <TermCreate type="inline" />
         </div>
+        <div ref={divCart} style={stylePanel}></div>
       </div>
       <div
         style={{
@@ -82,25 +81,34 @@ const Widget = () => {
             if (divTerm.current) {
               divTerm.current.style.display = "none";
             }
+            if (divCart.current) {
+              divCart.current.style.display = "none";
+            }
             switch (e.target.value) {
               case "setting":
                 if (divSetting.current) {
                   divSetting.current.style.display = "block";
                 }
-                openPannel();
+                openPanel();
                 break;
               case "dict":
                 if (divDict.current) {
                   divDict.current.style.display = "block";
                 }
-                openPannel();
+                openPanel();
 
                 break;
               case "term":
                 if (divTerm.current) {
                   divTerm.current.style.display = "block";
                 }
-                openPannel();
+                openPanel();
+                break;
+              case "cart":
+                if (divCart.current) {
+                  divCart.current.style.display = "block";
+                }
+                openPanel();
                 break;
               default:
                 break;
@@ -129,12 +137,23 @@ const Widget = () => {
                 }
               }}
             >
-              <ProfileOutlined />
+              <DictIcon />
             </Radio>
             <Radio
               value="term"
               onClick={() => {
                 if (value2 === "term") {
+                  setValue2("close");
+                  closeAll();
+                }
+              }}
+            >
+              <TermIcon />
+            </Radio>
+            <Radio
+              value="cart"
+              onClick={() => {
+                if (value2 === "cart") {
                   setValue2("close");
                   closeAll();
                 }
