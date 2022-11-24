@@ -29,7 +29,7 @@ const Widget = () => {
   const divTerm = useRef<HTMLDivElement>(null);
   const divCart = useRef<HTMLDivElement>(null);
   const divPanel = useRef<HTMLDivElement>(null);
-  const rightBarWidth = "40px";
+  const rightBarWidth = "48px";
   const closeAll = () => {
     if (divPanel.current) {
       divPanel.current.style.display = "none";

@@ -35,33 +35,31 @@ const Widget = () => {
     }
   };
 
-  const rightBarWidth = "40px";
+  const rightBarWidth = "48px";
   return (
-    <div className="site-drawer-render-in-current-wrapper">
-      <div style={{ width: "100%", display: "flex" }}>
-        <div style={{ width: `calc(100%-${rightBarWidth})`, display: "flex" }}>
-          <div style={{ flex: 5 }}>
-            <ArticleCard
-              onModeChange={(e: ArticleMode) => {
-                setArticleMode(e);
-              }}
-              showCol={openCol}
-            >
-              <Article
-                active={true}
-                type={`corpus/${type}`}
-                articleId={id}
-                mode={articleMode}
-              />
-            </ArticleCard>
-          </div>
-          <div style={{ flex: 5 }} ref={box}>
-            <ArticleTabs onClose={closeCol} />
-          </div>
+    <div style={{ width: "100%", display: "flex" }}>
+      <div style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}>
+        <div style={{ flex: 5 }}>
+          <ArticleCard
+            onModeChange={(e: ArticleMode) => {
+              setArticleMode(e);
+            }}
+            showCol={openCol}
+          >
+            <Article
+              active={true}
+              type={`corpus/${type}`}
+              articleId={id}
+              mode={articleMode}
+            />
+          </ArticleCard>
         </div>
-        <div>
-          <ProTabs />
+        <div style={{ flex: 5 }} ref={box}>
+          <ArticleTabs onClose={closeCol} />
         </div>
+      </div>
+      <div>
+        <ProTabs />
       </div>
     </div>
   );
