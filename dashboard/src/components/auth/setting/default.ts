@@ -1,8 +1,9 @@
 import { useIntl } from "react-intl";
+import { ISettingItem } from "../../../reducers/setting";
 
 export interface ISettingItemOption {
   label: string;
-  key: string;
+  value: string;
 }
 export interface ISetting {
   key: string;
@@ -15,6 +16,23 @@ export interface ISetting {
   max?: number;
   min?: number;
 }
+
+export const GetUserSetting = (
+  key: string,
+  curr?: ISettingItem[]
+): string | number | boolean | undefined => {
+  const currSetting = curr?.find((element) => element.key === key);
+  if (typeof currSetting !== "undefined") {
+    return currSetting.value;
+  } else {
+    const defaultSetting = SettingFind(key);
+    if (typeof defaultSetting !== "undefined") {
+      return defaultSetting.defaultValue;
+    } else {
+      return undefined;
+    }
+  }
+};
 
 export const SettingFind = (key: string): ISetting | undefined => {
   return Settings().find((element) => element.key === key);
@@ -46,13 +64,13 @@ export const Settings = (): ISetting[] => {
       defaultValue: "column",
       options: [
         {
-          key: "column",
+          value: "column",
           label: intl.formatMessage({
             id: "setting.layout.direction.col.label",
           }),
         },
         {
-          key: "row",
+          value: "row",
           label: intl.formatMessage({
             id: "setting.layout.direction.row.label",
           }),
@@ -72,13 +90,13 @@ export const Settings = (): ISetting[] => {
       defaultValue: "sentence",
       options: [
         {
-          key: "sentence",
+          value: "sentence",
           label: intl.formatMessage({
             id: "setting.layout.paragraph.sentence.label",
           }),
         },
         {
-          key: "paragraph",
+          value: "paragraph",
           label: intl.formatMessage({
             id: "setting.layout.paragraph.paragraph.label",
           }),
@@ -95,31 +113,43 @@ export const Settings = (): ISetting[] => {
       description: intl.formatMessage({
         id: "setting.pali.script1.description",
       }),
-      defaultValue: "rome",
+      defaultValue: "roman",
       options: [
         {
-          key: "rome",
+          value: "roman",
           label: intl.formatMessage({
             id: "setting.pali.script.rome.label",
           }),
         },
         {
-          key: "my",
+          value: "roman_to_my",
           label: intl.formatMessage({
             id: "setting.pali.script.my.label",
           }),
         },
         {
-          key: "si",
+          value: "roman_to_si",
           label: intl.formatMessage({
             id: "setting.pali.script.si.label",
+          }),
+        },
+        {
+          value: "roman_to_thai",
+          label: intl.formatMessage({
+            id: "setting.pali.script.thai.label",
+          }),
+        },
+        {
+          value: "roman_to_taitham",
+          label: intl.formatMessage({
+            id: "setting.pali.script.tai.label",
           }),
         },
       ],
     },
     {
       /**
-       * 第一巴利脚本
+       * 第二巴利脚本
        */
       key: "setting.pali.script2",
       label: intl.formatMessage({ id: "setting.pali.script2.label" }),
@@ -129,25 +159,25 @@ export const Settings = (): ISetting[] => {
       defaultValue: "none",
       options: [
         {
-          key: "none",
+          value: "none",
           label: intl.formatMessage({
             id: "setting.pali.script.none.label",
           }),
         },
         {
-          key: "rome",
+          value: "roman",
           label: intl.formatMessage({
             id: "setting.pali.script.rome.label",
           }),
         },
         {
-          key: "my",
+          value: "roman_to_my",
           label: intl.formatMessage({
             id: "setting.pali.script.my.label",
           }),
         },
         {
-          key: "si",
+          value: "roman_to_si",
           label: intl.formatMessage({
             id: "setting.pali.script.si.label",
           }),

@@ -1,9 +1,15 @@
+import { useEffect, useRef, useState } from "react";
 import { Tooltip, Button } from "antd";
 import MdView from "./MdView";
 import { ISentence } from "./SentEdit";
 import { useAppSelector } from "../../hooks";
-import { onChangeKey, onChangeValue } from "../../reducers/setting";
-import { useEffect, useRef } from "react";
+import {
+  onChangeKey,
+  onChangeValue,
+  settingInfo,
+} from "../../reducers/setting";
+import { GetUserSetting } from "../auth/setting/default";
+import { TCodeConvertor } from "./utilities";
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];
@@ -17,8 +23,10 @@ const SentReadFrame = ({
   layout = "column",
   sentId,
 }: IWidgetSentReadFrame) => {
+  const [paliCode1, setPaliCode1] = useState<TCodeConvertor>("roman");
   const key = useAppSelector(onChangeKey);
   const value = useAppSelector(onChangeValue);
+  const settings = useAppSelector(settingInfo);
   const boxOrg = useRef<HTMLDivElement>(null);
   const boxSent = useRef<HTMLDivElement>(null);
 
@@ -43,7 +51,11 @@ const SentReadFrame = ({
       default:
         break;
     }
-  }, [key, value]);
+    const _paliCode1 = GetUserSetting("setting.pali.script1", settings);
+    if (typeof _paliCode1 !== "undefined") {
+      setPaliCode1(_paliCode1.toString() as TCodeConvertor);
+    }
+  }, [key, value, settings]);
   return (
     <Tooltip
       placement="topLeft"
@@ -57,7 +69,14 @@ const SentReadFrame = ({
       <div style={{ display: "flex", flexDirection: layout }} ref={boxSent}>
         <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
           {origin?.map((item, id) => {
-            return <MdView key={id} html={item.html} />;
+            return (
+              <MdView
+                key={id}
+                html={item.html}
+                wordWidget={true}
+                convertor={paliCode1}
+              />
+            );
           })}
         </div>
         <div style={{ flex: "5" }}>

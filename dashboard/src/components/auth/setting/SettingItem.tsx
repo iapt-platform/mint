@@ -1,4 +1,4 @@
-import { Switch, Typography, Radio, RadioChangeEvent } from "antd";
+import { Switch, Typography, Radio, RadioChangeEvent, Select } from "antd";
 import {
   onChange as onSettingChanged,
   settingInfo,
@@ -58,7 +58,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                   >
                     {data.options.map((item, id) => {
                       return (
-                        <Radio.Button key={item.key} value={item.key}>
+                        <Radio.Button key={id} value={item.value}>
                           {item.label}
                         </Radio.Button>
                       );
@@ -68,6 +68,29 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
               );
             }
 
+            break;
+          default:
+            if (typeof data.options !== "undefined") {
+              content = (
+                <div>
+                  <Select
+                    defaultValue={data.defaultValue}
+                    style={{ width: 120 }}
+                    onChange={(value: string) => {
+                      console.log(`selected ${value}`);
+                      store.dispatch(
+                        onSettingChanged({
+                          key: data.key,
+                          value: value,
+                        })
+                      );
+                    }}
+                    options={data.options}
+                  />
+                </div>
+              );
+            } else {
+            }
             break;
         }
         break;

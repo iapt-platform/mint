@@ -2,7 +2,9 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Popover } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
-import TermCreate from "../studio/term/TermCreate";
+import TermCreate, { IWidgetDictCreate } from "../studio/term/TermCreate";
+import { command } from "../../reducers/command";
+import store from "../../store";
 
 const { Text, Link } = Typography;
 
@@ -24,12 +26,20 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
     textShow = <Link>{show}</Link>;
   }
   const editButton = (
-    <TermCreate
-      isCreate={id ? false : true}
-      word={word}
-      studio=""
-      wordId={id ? id : undefined}
-    />
+    <Button
+      onClick={() => {
+        const it: IWidgetDictCreate = {
+          studio: "string",
+          isCreate: true,
+          word: word,
+          channel: channel,
+          type: "inline",
+        };
+        store.dispatch(command({ prop: it, type: "term" }));
+      }}
+    >
+      新建
+    </Button>
   );
   const userCard = (
     <>

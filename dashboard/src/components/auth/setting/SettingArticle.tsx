@@ -9,6 +9,8 @@ const Widget = () => {
       <SettingItem data={SettingFind("setting.display.original")} />
       <SettingItem data={SettingFind("setting.layout.direction")} />
       <SettingItem data={SettingFind("setting.layout.paragraph")} />
+      <SettingItem data={SettingFind("setting.pali.script1")} />
+      <SettingItem data={SettingFind("setting.pali.script2")} />
     </div>
   );
 };

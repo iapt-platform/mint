@@ -12,8 +12,9 @@ const { Text } = Typography;
 
 interface ISentCell {
   data: ISentence;
+  wordWidget?: boolean;
 }
-const Widget = ({ data }: ISentCell) => {
+const Widget = ({ data, wordWidget = false }: ISentCell) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
   return (
@@ -25,7 +26,10 @@ const Widget = ({ data }: ISentCell) => {
       }}
     >
       <div style={{ display: isEditMode ? "none" : "block" }}>
-        <MdView html={sentData.html !== "" ? sentData.html : "请输入"} />
+        <MdView
+          html={sentData.html !== "" ? sentData.html : "请输入"}
+          wordWidget={wordWidget}
+        />
       </div>
       <div style={{ display: isEditMode ? "block" : "none" }}>
         <SentCellEditable

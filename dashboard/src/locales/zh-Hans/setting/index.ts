@@ -16,6 +16,8 @@ const items = {
   "setting.pali.script.rome.label": "罗马巴利",
   "setting.pali.script.my.label": "缅文字母",
   "setting.pali.script.si.label": "新哈拉字母",
+  "setting.pali.script.thai.label": "泰文字母",
+  "setting.pali.script.tai.label": "傣仂文字母",
   "setting.pali.script.none.label": "不显示",
 };
 
