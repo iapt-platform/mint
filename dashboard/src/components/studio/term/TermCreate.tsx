@@ -1,9 +1,14 @@
 import { useIntl } from "react-intl";
+import { useRef } from "react";
 import { Button, Form, message } from "antd";
-import { ModalForm, ProForm } from "@ant-design/pro-components";
+import {
+  ModalForm,
+  ProForm,
+  ProFormInstance,
+} from "@ant-design/pro-components";
 import { PlusOutlined } from "@ant-design/icons";
 
-import { ITermResponse } from "../../api/Term";
+import { ITermResponse, ITermCreateResponse } from "../../api/Term";
 import { get } from "../../../request";
 
 import TermEditInner from "./TermEditInner";
@@ -18,14 +23,14 @@ interface IFormData {
   lang: string;
 }
 
-type IWidgetDictCreate = {
+export interface IWidgetDictCreate {
   studio?: string;
   isCreate?: boolean;
   wordId?: string;
   word?: string;
   channel?: string;
   type?: "inline" | "modal";
-};
+}
 const Widget = ({
   studio,
   isCreate,
@@ -36,7 +41,8 @@ const Widget = ({
 }: IWidgetDictCreate) => {
   const intl = useIntl();
   const [form] = Form.useForm<IFormData>();
-
+  const formRef = useRef<ProFormInstance>();
+  console.log("term render");
   const waitTime = (time: number = 100) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -66,17 +72,50 @@ const Widget = ({
     return true;
   };
   const request = async () => {
+    console.log("request");
     let url: string;
-
+    let data: IFormData = {
+      word: "",
+      tag: "",
+      meaning: "",
+      meaning2: "",
+      note: "",
+      lang: "",
+      channel: "",
+    };
     if (typeof isCreate !== "undefined" && isCreate === false) {
       // 如果是编辑，就从服务器拉取数据。
       url = "/v2/terms/" + (isCreate ? "" : wordId);
+      console.log(url);
+      const res = await get<ITermResponse>(url);
+      console.log(res);
+      return {
+        word: res.data.word,
+        tag: res.data.tag,
+        meaning: res.data.meaning,
+        meaning2: res.data.other_meaning,
+        note: res.data.note,
+        lang: res.data.language,
+        channel: res.data.channal,
+      };
     } else if (typeof channel !== "undefined") {
       //在channel新建
-      url = `/v2/terms?view=createByChannel&channel=${channel}&word=${word}`;
+      url = `/v2/terms?view=create-by-channel&channel=${channel}&word=${word}`;
+      const res = await get<ITermCreateResponse>(url);
+      console.log(res);
+      data = {
+        word: res.data.word,
+        tag: "",
+        meaning: "",
+        meaning2: "",
+        note: "",
+        lang: res.data.language,
+        channel: "",
+      };
+      return data;
     } else if (typeof studio !== "undefined") {
       //在studio新建
-      url = `/v2/terms?view=createByStudio&studio=${studio}&word=${word}`;
+      url = `/v2/terms?view=create-by-studio&studio=${studio}&word=${word}`;
     } else {
       return {
         word: "",
@@ -88,23 +127,12 @@ const Widget = ({
         channel: "",
       };
     }
-    console.log(url);
-    const res = await get<ITermResponse>(url);
-    console.log(res);
-    return {
-      word: res.data.word,
-      tag: res.data.tag,
-      meaning: res.data.meaning,
-      meaning2: res.data.other_meaning,
-      note: res.data.note,
-      lang: res.data.language,
-      channel: res.data.channal,
-    };
+    return data;
   };
+
   const formProps = {
     form: form,
     autoFocusFirstInput: true,
-    submitTimeout: 2000,
     onFinish: onFinish,
     request: request,
   };
@@ -114,6 +142,13 @@ const Widget = ({
     case "inline":
       formTerm = (
         <>
+          <Button
+            onClick={() => {
+              formRef?.current?.resetFields();
+            }}
+          >
+            {word}
+          </Button>
           <ProForm<IFormData> {...formProps}>
             <TermEditInner />
           </ProForm>
@@ -132,6 +167,7 @@ const Widget = ({
               destroyOnClose: true,
               onCancel: () => console.log("run"),
             }}
+            submitTimeout={2000}
             {...formProps}
           >
             <TermEditInner />

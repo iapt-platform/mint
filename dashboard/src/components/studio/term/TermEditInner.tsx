@@ -2,13 +2,19 @@ import { useIntl } from "react-intl";
 
 import {
   ProForm,
+  ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
 import LangSelect from "../LangSelect";
+import { DefaultOptionType } from "antd/lib/select";
 
-const Widget = () => {
+interface IWidget {
+  meaningList?: string[];
+  channelList?: DefaultOptionType[];
+}
+const Widget = ({ meaningList, channelList }: IWidget) => {
   const intl = useIntl();
   return (
     <>
@@ -18,16 +24,20 @@ const Widget = () => {
           name="word"
           required
           label={intl.formatMessage({
-            id: "dict.fields.word.label",
+            id: "term.fields.word.label",
           })}
           rules={[
             {
               required: true,
               message: intl.formatMessage({
-                id: "channel.create.message.noname",
+                id: "term.message.meaning.required",
               }),
             },
           ]}
+          fieldProps={{
+            showCount: true,
+            maxLength: 128,
+          }}
         />
         <ProFormText
           width="md"
@@ -48,18 +58,38 @@ const Widget = () => {
             id: "term.fields.meaning.tooltip",
           })}
           label={intl.formatMessage({
-            id: "term.fields.meaning.label",
+            id: "forms.fields.meaning.label",
           })}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: "forms.message.meaning.required",
+              }),
+            },
+          ]}
+          fieldProps={{
+            showCount: true,
+            maxLength: 128,
+          }}
         />
-        <ProFormText
+        <ProFormSelect
           width="md"
           name="meaning2"
-          tooltip={intl.formatMessage({
-            id: "term.fields.meaning2.tooltip",
-          })}
           label={intl.formatMessage({
             id: "term.fields.meaning2.label",
           })}
+          options={meaningList}
+          fieldProps={{
+            mode: "tags",
+            tokenSeparators: [",", "，"],
+          }}
+          placeholder="Please select other meanings"
+          rules={[
+            {
+              type: "array",
+            },
+          ]}
         />
       </ProForm.Group>
       <ProForm.Group>

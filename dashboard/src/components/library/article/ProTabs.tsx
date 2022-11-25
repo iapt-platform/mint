@@ -4,8 +4,8 @@ import { Radio, Space } from "antd";
 import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import SettingArticle from "../../auth/setting/SettingArticle";
 import DictComponent from "../../dict/DictComponent";
-import TermCreate from "../../studio/term/TermCreate";
 import { DictIcon, TermIcon } from "../../../assets/icon";
+import TermShell from "./TermShell";
 
 const setting = (
   <>
@@ -55,7 +55,7 @@ const Widget = () => {
           <DictComponent />
         </div>
         <div ref={divTerm} style={stylePanel}>
-          <TermCreate type="inline" />
+          <TermShell />
         </div>
         <div ref={divCart} style={stylePanel}></div>
       </div>

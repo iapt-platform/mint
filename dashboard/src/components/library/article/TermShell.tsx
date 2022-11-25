@@ -6,7 +6,7 @@ import TermCreate, { IWidgetDictCreate } from "../../studio/term/TermCreate";
 
 const Widget = () => {
   const [termProps, setTermProps] = useState<IWidgetDictCreate>();
-
+  //接收术语消息
   const commandMsg = useAppSelector(message);
   useEffect(() => {
     console.log("get command", commandMsg);
