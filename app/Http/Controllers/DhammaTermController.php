@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DhammaTerm;
+use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Api\AuthApi;
+use App\Http\Api\StudioApi;
 
 class DhammaTermController extends Controller
 {
@@ -21,13 +24,60 @@ class DhammaTermController extends Controller
 		$indexCol = ['id','guid','word','meaning','other_meaning','note','language','channal','created_at','updated_at'];
 
 		switch ($request->get('view')) {
+            case 'create-by-channel':
+                # 新建术语时。根据术语所在channel 给出新建术语所需数据。如语言，备选意思等。
+                #获取channel信息
+                $currChannel = Channel::where('uid',$request->get('channel'))->first();
+                if(!$currChannel){
+                    return $this->error(__('auth.failed'));
+                }
+                #TODO 查询studio信息
+                #获取同studio的channel列表
+                $studioChannels = Channel::where('owner_uid',$currChannel->owner_uid)
+                                        ->select(['name','uid'])
+                                        ->get();
+                #获取全网意思列表
+                $meanings = DhammaTerm::where('word',$request->get('word'))
+                                        ->where('language',$currChannel->lang)
+                                        ->select(['meaning','other_meaning'])
+                                        ->get();
+                $meaningList=[];
+                foreach ($meanings as $key => $value) {
+                    # code...
+                    $meaning1 = [$value->meaning];
+
+                    if(!empty($value->other_meaning)){
+                        $meaning2 = \explode(',',$value->other_meaning);
+                        $meaning1 = array_merge($meaning1,$meaning2);
+                    }
+                    foreach ($meaning1 as $key => $value) {
+                        # code...
+                        if(isset($meaningList[$value])){
+                            $meaningList[$value]++;
+                        }else{
+                            $meaningList[$value] = 1;
+                        }
+                    }
+                }
+                $meaningCount = [];
+                foreach ($meaningList as $key => $value) {
+                    # code...
+                    $meaningCount[] = ['meaning'=>$key,'count'=>$value];
+                }
+                return $this->ok([
+                    "word"=>$request->get('word'),
+                    "meaningCount"=>$meaningCount,
+                    "studioChannels"=>$studioChannels,
+                    "language"=>$currChannel->lang,
+                ]);
+                break;
             case 'studio':
 				# 获取studio内所有channel
                 $search = $request->get('search');
-                $user = \App\Http\Api\AuthApi::current($request);
+                $user = AuthApi::current($request);
                 if($user){
                     //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    if($user['user_uid'] === StudioApi::getIdByName($request->get('name'))){
                         $table = DhammaTerm::select($indexCol)
                                     ->where('owner', $user["user_uid"]);
                     }else{
