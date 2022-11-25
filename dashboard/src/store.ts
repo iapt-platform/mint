@@ -4,6 +4,7 @@ import currentUserReducer from "./reducers/current-user";
 import layoutReducer from "./reducers/layout";
 import openArticleReducer from "./reducers/open-article";
 import settingReducer from "./reducers/setting";
+import commandReducer from "./reducers/command";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     currentUser: currentUserReducer,
     openArticle: openArticleReducer,
     setting: settingReducer,
+    command: commandReducer,
   },
 });
 
