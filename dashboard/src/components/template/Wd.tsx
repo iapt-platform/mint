@@ -1,14 +1,36 @@
-import { Popover } from "antd";
+import { useState } from "react";
+import { command } from "../../reducers/command";
+import store from "../../store";
+import { IWidgetDict } from "../dict/DictComponent";
 
 interface IWidgetWdCtl {
   text?: string;
 }
-const WdCtl = ({ text }: IWidgetWdCtl) => {
-  const noteCard = "note";
+export const WdCtl = ({ text }: IWidgetWdCtl) => {
+  const [isHover, setIsHover] = useState(false);
   return (
-    <Popover content={noteCard} placement="bottom">
+    <span
+      onMouseEnter={() => {
+        setIsHover(true);
+      }}
+      onMouseLeave={() => {
+        setIsHover(false);
+      }}
+      onClick={() => {
+        //发送点词查询消息
+        const it: IWidgetDict = {
+          word: text,
+        };
+        store.dispatch(command({ prop: it, type: "dict" }));
+      }}
+      style={{
+        textDecoration: isHover ? "underline dotted" : "none",
+        textUnderlineOffset: 4,
+        cursor: "pointer",
+      }}
+    >
       {text}{" "}
-    </Popover>
+    </span>
   );
 };
 

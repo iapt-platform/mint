@@ -1,18 +1,34 @@
-import { Layout, Affix, Col, Row } from "antd";
+import { useState, useEffect } from "react";
+import { Affix, Col, Row } from "antd";
 import { Input } from "antd";
 
-import { useState } from "react";
 import DictSearch from "./DictSearch";
+
+import { useAppSelector } from "../../hooks";
+import { message } from "../../reducers/command";
+
 const { Search } = Input;
 
-const Widget = () => {
+export interface IWidgetDict {
+  word?: string;
+}
+const Widget = ({ word }: IWidgetDict) => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  const [wordSearch, setWordSearch] = useState("");
+  const [wordSearch, setWordSearch] = useState(word);
 
   const onSearch = (value: string) => {
     console.log("onSearch", value);
     setWordSearch(value);
   };
+
+  //接收查字典消息
+  const commandMsg = useAppSelector(message);
+  useEffect(() => {
+    console.log("get command", commandMsg);
+    if (commandMsg?.type === "dict") {
+      setWordSearch(commandMsg.prop?.word);
+    }
+  }, [commandMsg]);
 
   return (
     <div ref={setContainer}>
@@ -24,6 +40,7 @@ const Widget = () => {
               <Search
                 placeholder="input search text"
                 onSearch={onSearch}
+                value={wordSearch}
                 style={{ width: "100%" }}
               />
             </Col>
