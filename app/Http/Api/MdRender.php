@@ -4,6 +4,7 @@ namespace App\Http\Api;
 use Illuminate\Support\Str;
 use mustache\mustache;
 use App\Models\DhammaTerm;
+use App\Models\PaliText;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -84,6 +85,33 @@ class MdRender{
                     $Sent = new CorpusController();
                     $html = $Sent->getSentTpl($param[1],[$channelId]);
                     return $html;
+                    break;
+                case 'quote':
+                    $paraId = trim($param[1]);
+                    $props = Cache::remember("/quote/{$channelId}/{$paraId}",
+                          60,
+                          function() use($paraId,$channelId){
+                            $para = \explode('-',$paraId);
+                            $output = [
+                                "paraId" => $paraId,
+                                "channel" => $channelId,
+                                "innerString" => $paraId,
+                                ];
+                            if(count($para)<2){
+                                return $output;
+                            }
+                            $PaliText = PaliText::where("book",$para[0])
+                                                ->where("paragraph",$para[1])
+                                                ->select(['toc','path'])
+                                                ->first();
+
+                            if($PaliText){
+                                $output["pali"] = $PaliText->toc;
+                                $output["paliPath"] = \json_decode($PaliText->path);
+                                $innerString = $PaliText->toc;
+                            }
+                            return $output;
+                          });
                     break;
                 default:
                     break;
