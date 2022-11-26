@@ -17,18 +17,18 @@ export interface IApiPaliChapterList {
   path: string;
 }
 
-export interface IApiResponcePaliChapterList {
+export interface IApiResponsePaliChapterList {
   ok: boolean;
   message: string;
   data: { rows: IApiPaliChapterList[]; count: number };
 }
-export interface IApiResponcePaliChapter {
+export interface IApiResponsePaliChapter {
   ok: boolean;
   message: string;
   data: IApiPaliChapterList;
 }
 
-export interface IApiResponcePaliPara {
+export interface IApiResponsePaliPara {
   book: number;
   paragraph: number;
   level: number;
@@ -137,4 +137,18 @@ export interface ISentenceResponse {
   ok: boolean;
   message: string;
   data: ISentenceData;
+}
+
+export interface IPaliToc {
+  book: number;
+  paragraph: number;
+  level: string;
+  toc: string;
+  translation?: string;
+}
+
+export interface IPaliTocListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IPaliToc[]; count: number };
 }

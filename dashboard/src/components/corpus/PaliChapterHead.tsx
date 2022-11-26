@@ -3,7 +3,7 @@ import { message } from "antd";
 import ChapterHead, { IChapterInfo } from "./ChapterHead";
 import { IParagraph } from "./BookViewer";
 import TocPath, { ITocPathNode } from "./TocPath";
-import { IApiResponcePaliChapter } from "../api/Corpus";
+import { IApiResponsePaliChapter } from "../api/Corpus";
 import { get } from "../../request";
 
 interface IWidgetPaliChapterHead {
@@ -30,7 +30,7 @@ const Widget = (prop: IWidgetPaliChapterHead) => {
 
   function fetchData(para: IParagraph) {
     let url = `/v2/palitext?view=paragraph&book=${para.book}&para=${para.para}`;
-    get<IApiResponcePaliChapter>(url).then(function (myJson) {
+    get<IApiResponsePaliChapter>(url).then(function (myJson) {
       console.log("ajex", myJson);
       const data = myJson;
       let path: ITocPathNode[] = JSON.parse(data.data.path);
