@@ -1501,6 +1501,11 @@ function myEndingTooltip(inStr){
             tooltip:'处格/表达动机，因……，旨在……',
         },
         {
+            id:"my_loc2",
+            name:"အဖို့၌",
+            tooltip:'处格/表达动机，因……，旨在……',
+        },
+        {
             id:"my_abs",
             name:"၍",
             tooltip:'连续体',
