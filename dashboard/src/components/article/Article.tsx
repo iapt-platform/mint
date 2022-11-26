@@ -1,10 +1,18 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
-import ArticleView, { IWidgetArticleData } from "./ArticleView";
+import ArticleView from "./ArticleView";
 
 export type ArticleMode = "read" | "edit";
+export type ArticleType =
+  | "article"
+  | "chapter"
+  | "paragraph"
+  | "cs-paragraph"
+  | "sentence"
+  | "sim"
+  | "page";
 interface IWidgetArticle {
   type?: string;
   articleId?: string;
