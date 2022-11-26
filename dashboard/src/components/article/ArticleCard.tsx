@@ -1,27 +1,23 @@
-import { Button, Card, Dropdown, Space, Segmented, Popover, Tabs } from "antd";
-import {
-  MoreOutlined,
-  MenuOutlined,
-  ReloadOutlined,
-  PushpinOutlined,
-} from "@ant-design/icons";
+import { Button, Card, Dropdown, Space, Segmented } from "antd";
+import { MoreOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { IWidgetArticleData } from "./ArticleView";
 import { useIntl } from "react-intl";
 import { useState } from "react";
+import ArticleCardMainMenu from "./ArticleCardMainMenu";
 
 interface IWidgetArticleCard {
+  type?: string;
+  articleId?: string;
   data?: IWidgetArticleData;
-  showModeSwitch?: boolean;
-  showMainMenu?: boolean;
-  showContextMenu?: boolean;
-  showResTab?: boolean;
   children?: React.ReactNode;
   onModeChange?: Function;
   openInCol?: Function;
   showCol?: Function;
 }
 const Widget = ({
+  type,
+  articleId,
   data,
   children,
   onModeChange,
@@ -73,42 +69,6 @@ const Widget = ({
     />
   );
 
-  const mainMenuContent = (
-    <Tabs
-      size="small"
-      defaultActiveKey="1"
-      tabBarExtraContent={{
-        right: <Button type="text" size="small" icon={<PushpinOutlined />} />,
-      }}
-      items={[
-        {
-          label: `目录`,
-          key: "1",
-          children: `Content of Tab Pane 1`,
-        },
-        {
-          label: `定位`,
-          key: "2",
-          children: `Content of Tab Pane 2`,
-        },
-        {
-          label: `搜索`,
-          key: "3",
-          children: `Content of Tab Pane 3`,
-        },
-      ]}
-    />
-  );
-  const mainMenu = (
-    <Popover
-      placement="bottomLeft"
-      arrowPointAtCenter
-      content={mainMenuContent}
-      trigger="click"
-    >
-      <Button size="small" icon={<MenuOutlined />} />
-    </Popover>
-  );
   const contextMenu = (
     <Dropdown menu={{ items, onClick }} placement="bottomRight">
       <Button shape="circle" size="small" icon={<MoreOutlined />}></Button>
@@ -119,7 +79,7 @@ const Widget = ({
       size="small"
       title={
         <Space>
-          {mainMenu}
+          {<ArticleCardMainMenu type={type} articleId={articleId} />}
           {data?.title}
         </Space>
       }

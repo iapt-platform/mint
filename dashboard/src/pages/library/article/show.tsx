@@ -41,6 +41,8 @@ const Widget = () => {
       <div style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}>
         <div style={{ flex: 5 }}>
           <ArticleCard
+		  type={type}
+		  articleId={id}
             onModeChange={(e: ArticleMode) => {
               setArticleMode(e);
             }}
