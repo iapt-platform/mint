@@ -1,14 +1,10 @@
-import { Space } from "antd";
 import { useState } from "react";
-import { Typography } from "antd";
-import User from "../../auth/User";
-import TimeShow from "../../utilities/TimeShow";
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";
 import MdView from "../MdView";
-
-const { Text } = Typography;
+import SuggestionTabs from "./SuggestionTabs";
+import EditInfo from "./EditInfo";
 
 interface ISentCell {
   data: ISentence;
@@ -17,41 +13,40 @@ interface ISentCell {
 const Widget = ({ data, wordWidget = false }: ISentCell) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
+
   return (
-    <SentEditMenu
-      onModeChange={(mode: string) => {
-        if (mode === "edit") {
-          setIsEditMode(true);
-        }
-      }}
-    >
-      <div style={{ display: isEditMode ? "none" : "block" }}>
-        <MdView
-          html={sentData.html !== "" ? sentData.html : "请输入"}
-          wordWidget={wordWidget}
-        />
-      </div>
-      <div style={{ display: isEditMode ? "block" : "none" }}>
-        <SentCellEditable
-          data={sentData}
-          onClose={() => {
-            setIsEditMode(false);
-          }}
-          onDataChange={(data: ISentence) => {
-            setSentData(data);
-          }}
-        />
-      </div>
-      <div>
-        <Text type="secondary">
-          <Space>
-            <User {...sentData.editor} />
-            <span>updated</span>
-            <TimeShow time={sentData.updateAt} title="UpdatedAt" />
-          </Space>
-        </Text>
-      </div>
-    </SentEditMenu>
+    <div style={{ marginBottom: "8px" }}>
+      <SentEditMenu
+        onModeChange={(mode: string) => {
+          if (mode === "edit") {
+            setIsEditMode(true);
+          }
+        }}
+      >
+        <EditInfo data={data} />
+        <div style={{ display: isEditMode ? "none" : "block" }}>
+          <MdView
+            html={sentData.html !== "" ? sentData.html : "请输入"}
+            wordWidget={wordWidget}
+          />
+        </div>
+        <div style={{ display: isEditMode ? "block" : "none" }}>
+          <SentCellEditable
+            data={sentData}
+            onClose={() => {
+              setIsEditMode(false);
+            }}
+            onDataChange={(data: ISentence) => {
+              setSentData(data);
+            }}
+          />
+        </div>
+
+        <div>
+          <SuggestionTabs data={data} />
+        </div>
+      </SentEditMenu>
+    </div>
   );
 };
 
