@@ -1,5 +1,11 @@
 import { IStudioApiResponse } from "./Auth";
 
+export interface IChannelApiData {
+  id: string;
+  name: string;
+  type: string;
+}
+
 export type ChannelInfoProps = {
   channelName: string;
   channelId: string;
