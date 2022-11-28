@@ -1,25 +1,23 @@
-import { IStudioApiResponse } from "./Auth";
-
-export type Role = "owner" | "manager" | "editor" | "member";
+import { IStudioApiResponse, Role } from "./Auth";
 
 export interface IGroupDataRequest {
-	uid: string;
-	name: string;
-	description: string;
-	studio: IStudioApiResponse;
-	role: Role;
-	created_at: string;
+  uid: string;
+  name: string;
+  description: string;
+  studio: IStudioApiResponse;
+  role: Role;
+  created_at: string;
 }
 export interface IGroupResponse {
-	ok: boolean;
-	message: string;
-	data: IGroupDataRequest;
+  ok: boolean;
+  message: string;
+  data: IGroupDataRequest;
 }
 export interface IGroupListResponse {
-	ok: boolean;
-	message: string;
-	data: {
-		rows: IGroupDataRequest[];
-		count: number;
-	};
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IGroupDataRequest[];
+    count: number;
+  };
 }
