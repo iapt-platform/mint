@@ -47,7 +47,6 @@ export function XmlToReact(
     convertor?: TCodeConvertor
   ): React.ReactNode[] {
     let output: React.ReactNode[] = [];
-    console.log("wordWidget", wordWidget);
     for (let i = 0; i < node.childNodes.length; i++) {
       const value = node.childNodes[i];
       //console.log(value.nodeName, value.nodeType, value.nodeValue);
