@@ -3,6 +3,7 @@ import { ConfigProvider } from "antd";
 import { IntlProvider } from "react-intl";
 import { Provider } from "react-redux";
 import { pdfjs } from "react-pdf";
+import mermaid from "mermaid";
 
 import Router from "./Router";
 import store from "./store";
@@ -16,6 +17,7 @@ import onLoad from "./load";
 import "./App.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `${API_HOST}/assets/pdf.worker.min.js`;
+mermaid.initialize({ startOnLoad: true });
 
 onLoad();
 const lang = getLocale();

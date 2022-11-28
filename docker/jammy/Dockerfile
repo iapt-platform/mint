@@ -20,7 +20,7 @@ RUN apt update
 RUN apt -y upgrade
 
 RUN apt -y install zsh git locales locales-all rsync openssh-client sshpass \
-    vim tzdata pwgen zip unzip tree tmux dialog \
+    vim tzdata pwgen zip unzip tree tmux dialog asciidoc doxygen \
     net-tools dnsutils net-tools iputils-arping iputils-ping telnet \
     imagemagick ffmpeg fonts-dejavu-extra texlive-full \
     build-essential cmake pkg-config libtool automake autoconf autoconf-archive binutils cpio mold \
@@ -87,6 +87,7 @@ RUN echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.zshrc
 RUN git config --global core.quotepath false
 RUN git config --global http.version HTTP/1.1
 RUN git config --global pull.rebase false
+RUN git config --global url."https://".insteadOf git://
 RUN echo 'set-option -g history-limit 102400' > $HOME/.tmux.conf
 RUN echo 'set-option -g default-shell "/bin/zsh"' >> $HOME/.tmux.conf
 
@@ -109,6 +110,17 @@ RUN cd $HOME/downloads \
     && php composer \
     && mv composer.phar $HOME/.local/bin/composer
 
+# https://github.com/rui314/mold
+# RUN git clone -b v1.6.0 https://github.com/rui314/mold.git $HOME/downloads/mold
+# RUN apt install -y libssl-dev libxxhash-dev zlib1g-dev \
+#     file bsdmainutils
+# RUN zsh -c "source $HOME/.zshrc \
+#     && mkdir $HOME/build/mold \
+#     && cd $HOME/build/mold \
+#     && cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ $HOME/downloads/mold \
+#     && make -j \
+#     && make install "
+
 # https://github.com/richfelker/musl-cross-make
 RUN git clone https://github.com/richfelker/musl-cross-make.git $HOME/build/musl-cross-make
 RUN cd $HOME/build/musl-cross-make \
@@ -127,7 +139,7 @@ RUN cd $HOME/build/musl-cross-make \
     && make \
     && make install
 
-ENV BAZEL_VERSION "v1.14.0"
+ENV BAZEL_VERSION "v1.15.0"
 RUN wget -q -O $HOME/.local/bin/bazel \
     https://github.com/bazelbuild/bazelisk/releases/download/${BAZEL_VERSION}/bazelisk-linux-amd64
 RUN chmod +x $HOME/.local/bin/bazel
