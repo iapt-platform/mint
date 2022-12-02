@@ -1,5 +1,6 @@
 @import "~antd/dist/antd.min.css";
 @import "~react-quill/dist/quill.snow.css";
+@import "./assets/font/main.css";
 
 body {
   margin: 0;
