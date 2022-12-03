@@ -3,11 +3,14 @@ import code_png from "../../assets/nut/code.png";
 import MarkdownForm from "./MarkdownForm";
 import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
+import DemoForm from "./Form";
 
 const Widget = () => {
   return (
     <div>
       <h1>Home</h1>
+      <br />
+      <DemoForm />
       <br />
       <FontBox />
       <br />
