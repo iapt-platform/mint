@@ -1,4 +1,4 @@
-import { IStudioApiResponse } from "./Auth";
+import { IStudioApiResponse, Role } from "./Auth";
 
 export interface IChannelApiData {
   id: string;
@@ -15,6 +15,7 @@ export type ChannelInfoProps = {
   studioType: string;
 };
 
+export type IFinal = [number, boolean];
 export interface IApiResponseChannelData {
   uid: string;
   name: string;
@@ -25,6 +26,8 @@ export interface IApiResponseChannelData {
   status: number;
   created_at: string;
   updated_at: string;
+  role?: Role;
+  final?: IFinal[];
 }
 export interface IApiResponseChannel {
   ok: boolean;
