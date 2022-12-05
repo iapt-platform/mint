@@ -7,6 +7,8 @@ import WbwSent from "../template/WbwSent";
 
 import MarkdownForm from "./MarkdownForm";
 import MarkdownShow from "./MarkdownShow";
+import FontBox from "./FontBox";
+import DemoForm from "./Form";
 
 const Widget = () => {
   let wbwData: IWbw[] = [];
@@ -42,7 +44,13 @@ const Widget = () => {
       </div>
       <h2>MdView test</h2>
       <MdView html="<h1 name='h1'>hello<MdTpl name='term'/></h1>" />
+
       <br />
+      <DemoForm />
+      <br />
+      <FontBox />
+      <br />
+
       <MarkdownShow body="- Hello, **《mint》**!" />
       <br />
       <h3>Form</h3>
@@ -52,8 +60,6 @@ const Widget = () => {
       <div>
         <ReactMarkdown>*This* is text with `quote`</ReactMarkdown>
       </div>
-
-      <div style={{ height: 600 }}></div>
     </div>
   );
 };
