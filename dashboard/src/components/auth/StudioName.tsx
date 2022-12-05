@@ -1,30 +1,37 @@
 import { Avatar, Space } from "antd";
 
 export interface IStudio {
-	id: string;
-	nickName: string;
-	studioName: string;
-	avatar: string;
+  id: string;
+  nickName: string;
+  studioName: string;
+  avatar: string;
 }
 interface IWidghtStudio {
-	data: IStudio;
-	onClick?: Function;
+  data: IStudio;
+  showAvatar?: boolean;
+  showName?: boolean;
+  onClick?: Function;
 }
-const Widget = (prop: IWidghtStudio) => {
-	// TODO
-	const name = prop.data.nickName.slice(0, 1);
-	return (
-		<Space
-			onClick={() => {
-				if (typeof prop.onClick !== "undefined") {
-					prop.onClick(prop.data.studioName);
-				}
-			}}
-		>
-			<Avatar size="small">{name}</Avatar>
-			{prop.data.nickName}
-		</Space>
-	);
+const Widget = ({
+  data,
+  showAvatar = true,
+  showName = true,
+  onClick,
+}: IWidghtStudio) => {
+  // TODO
+  const avatar = <Avatar size="small">{data.nickName.slice(0, 1)}</Avatar>;
+  return (
+    <Space
+      onClick={() => {
+        if (typeof onClick !== "undefined") {
+          onClick(data.studioName);
+        }
+      }}
+    >
+      {showAvatar ? avatar : ""}
+      {showName ? data.nickName : ""}
+    </Space>
+  );
 };
 
 export default Widget;
