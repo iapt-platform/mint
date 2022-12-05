@@ -41,6 +41,18 @@ const SuggestionSvg = () => (
     <path d="m 204.2555,37.8645 c -4.39,-4.877 -13.898,-8.27125 -18.773,-3.88325 l -22.673,21.1075 c -4.876,4.389 -3.271,14.89825 1.117,19.77325 2.346,2.606 5.582,5.347663 8.832,5.347663 2.831,0 8.672,0.578587 10.941,-1.464413 l 22.673,-21.1065 c 4.876,-4.389 2.271,-14.89925 -2.117,-19.77425 z" />
   </svg>
 );
+
+const LockSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="currentColor"
+    viewBox="0 0 16 16"
+  >
+    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -50,4 +62,8 @@ export const TermIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const SuggestionIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SuggestionSvg} {...props} />
+);
+
+export const LockIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LockSvg} {...props} />
 );
