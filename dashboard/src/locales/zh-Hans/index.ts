@@ -10,6 +10,7 @@ import article from "./article";
 import utilities from "./utilities";
 import blog from "./blog";
 import setting from "./setting";
+import auth from "./auth";
 
 const items = {
   "flashes.success": "操作成功",
@@ -51,6 +52,7 @@ const items = {
   ...utilities,
   ...blog,
   ...setting,
+  ...auth,
 };
 
 export default items;
