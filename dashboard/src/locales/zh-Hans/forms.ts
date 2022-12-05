@@ -29,7 +29,16 @@ const items = {
   "forms.fields.role.label": "角色",
   "forms.fields.name.label": "名称",
   "forms.fields.meaning.label": "意思",
+  "forms.fields.meaning.tooltip": "最长为 256个字符",
   "forms.message.meaning.required": "请输入意思",
+  "forms.fields.factors.label": "组份",
+  "forms.fields.factors.tooltip": "最长为 256个字符",
+  "forms.fields.factor.meaning.label": "组份意思",
+  "forms.fields.factor.meaning.tooltip": "最长为 256个字符",
+  "forms.fields.parent.label": "词典原型",
+  "forms.fields.parent.tooltip": "最长为 256个字符",
+  "forms.fields.case.label": "格位",
+  "forms.fields.case.tooltip": "语法信息参见……",
 };
 
 export default items;
