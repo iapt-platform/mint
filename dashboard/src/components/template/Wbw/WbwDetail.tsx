@@ -5,7 +5,7 @@ import type { MenuProps } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 
 import { IWbw, IWbwField } from "./WbwWord";
-import WbwDetailBasic, { IWordBasic } from "./WbwDetailBasic";
+import WbwDetailBasic from "./WbwDetailBasic";
 import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
 import WbwDetailAdvance from "./WbwDetailAdvance";
@@ -18,7 +18,6 @@ interface IWidget {
 }
 const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
   const intl = useIntl();
-  const [basicSubmit, setBasicSubmit] = useState(false);
   const [currWbwData, setCurrWbwData] = useState(data);
   const fieldChanged = (value: IWbwField) => {
     let mData = currWbwData;
@@ -37,6 +36,21 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
         break;
       case "real":
         mData.real = { value: value.value, status: 5 };
+        break;
+      case "meaning":
+        mData.meaning = { value: value.value.split("$"), status: 5 };
+        break;
+      case "factors":
+        mData.factors = { value: value.value, status: 5 };
+        break;
+      case "factorMeaning":
+        mData.factorMeaning = { value: value.value, status: 5 };
+        break;
+      case "parent":
+        mData.parent = { value: value.value, status: 5 };
+        break;
+      case "case":
+        mData.case = { value: value.value, status: 5 };
         break;
       default:
         break;
@@ -70,13 +84,9 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
               <div>
                 <WbwDetailBasic
                   data={data}
-                  submit={basicSubmit}
-                  onSubmit={(e: IWordBasic) => {
+                  onChange={(e: IWbwField) => {
                     console.log(e);
-                    if (typeof onChange !== "undefined") {
-                      onChange(currWbwData);
-                    }
-                    setBasicSubmit(false);
+                    fieldChanged(e);
                   }}
                 />
               </div>
@@ -141,7 +151,6 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
           type="primary"
           menu={{ items, onClick: onMenuClick }}
           onClick={() => {
-            setBasicSubmit(true);
             console.log("data", currWbwData);
             if (typeof onSave !== "undefined") {
               onSave(currWbwData);
