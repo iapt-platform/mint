@@ -4,6 +4,7 @@
 import { get as getToken, IUser, signIn } from "./reducers/current-user";
 //import { DURATION } from "./reducers/current-user";
 import { ISite, refresh as refreshLayout } from "./reducers/layout";
+import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
 import { get, IErrorResponse } from "./request";
 //import { GRPC_HOST,  grpc_metadata } from "./request";
 import store from "./store";
@@ -17,9 +18,17 @@ interface IUserResponse {
 export interface ISiteInfoResponse {
   title: string;
 }
-export interface ITokenRefreshResponse {
+interface IUserData {
+  nickName: string;
   realName: string;
+  avatar: string;
+  roles: string[];
   token: string;
+}
+export interface ITokenRefreshResponse {
+  ok: boolean;
+  message: string;
+  data: IUserData;
 }
 
 const init = () => {
@@ -43,19 +52,27 @@ const init = () => {
   if (token) {
     get<ITokenRefreshResponse | IErrorResponse>("/v2/auth/current").then(
       (response) => {
-        if ("realName" in response) {
+        console.log(response);
+        if ("data" in response) {
           const it: IUser = {
-            nickName: "who-am-i",
-            realName: "Change me",
-            avatar: "/my.png",
-            roles: [],
+            nickName: response.data.nickName,
+            realName: response.data.realName,
+            avatar: response.data.avatar,
+            roles: response.data.roles,
           };
-          store.dispatch(signIn([it, response.token]));
+          store.dispatch(signIn([it, response.data.token]));
         }
       }
     );
   } else {
     console.log("no token");
+  }
+
+  //获取用户设置
+  const setting = localStorage.getItem("user-settings");
+  if (setting !== null) {
+    const json = JSON.parse(setting);
+    store.dispatch(refreshSetting(json as ISettingItem[]));
   }
 };
 

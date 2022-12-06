@@ -1,10 +1,7 @@
-import { Slider } from "antd";
+import { ProFormSlider } from "@ant-design/pro-components";
 import type { SliderMarks } from "antd/es/slider";
 import { useIntl } from "react-intl";
 
-const onChange = (value: string) => {
-	console.log(`selected ${value}`);
-};
 type IWidgetConfidence = {
 	defaultValue?: number;
 };
@@ -17,7 +14,14 @@ const Widget = ({ defaultValue = 75 }: IWidgetConfidence) => {
 		75: intl.formatMessage({ id: "forms.fields.confidence.75.label" }),
 		100: intl.formatMessage({ id: "forms.fields.confidence.100.label" }),
 	};
-	return <Slider marks={marks} defaultValue={defaultValue} />;
+	return (
+		<ProFormSlider
+			name="confidence"
+			label={intl.formatMessage({ id: "forms.fields.confidence.label" })}
+			width="xl"
+			marks={marks}
+		/>
+	);
 };
 
 export default Widget;

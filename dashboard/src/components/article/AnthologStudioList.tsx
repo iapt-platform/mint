@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { List, Space, Card } from "antd";
-import StudioNmae from "../auth/StudioName";
+import StudioName from "../auth/StudioName";
 import type { IAnthologyStudioListApiResponse } from "../api/Article";
 import type { IStudioApiResponse } from "../api/Auth";
+import { get } from "../../request";
+import { Link, useNavigate } from "react-router-dom";
 
 const defaultData: IAnthologyStudioData[] = [];
 
@@ -17,30 +19,25 @@ interface IWidgetAnthologyList {
 */
 const Widget = () => {
 	const [tableData, setTableData] = useState(defaultData);
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		console.log("useEffect");
 		fetchData();
-	}, [setTableData]);
+	}, []);
 
 	function fetchData() {
-		let url = `http://127.0.0.1:8000/api/v2/anthology?view=studio_list`;
-		fetch(url)
-			.then(function (response) {
-				console.log("ajex:", response);
-				return response.json();
-			})
-			.then(function (myJson) {
-				console.log("ajex", myJson);
-
-				let newTree: IAnthologyStudioData[] = myJson.data.rows.map((item: IAnthologyStudioListApiResponse) => {
-					return {
-						count: item.count,
-						studio: item.studio,
-					};
-				});
-				setTableData(newTree);
+		let url = `/v2/anthology?view=studio_list`;
+		get(url).then(function (myJson) {
+			console.log("ajex", myJson);
+			const json = myJson as unknown as IAnthologyStudioListApiResponse;
+			let newTree: IAnthologyStudioData[] = json.data.rows.map((item) => {
+				return {
+					count: item.count,
+					studio: item.studio,
+				};
 			});
+			setTableData(newTree);
+		});
 	}
 
 	return (
@@ -51,10 +48,12 @@ const Widget = () => {
 				dataSource={tableData}
 				renderItem={(item) => (
 					<List.Item>
-						<Space>
-							<StudioNmae data={item.studio} />
-							<span>({item.count})</span>
-						</Space>
+						<Link to={`/blog/${item.studio.studioName}/anthology`}>
+							<Space>
+								<StudioName data={item.studio} />
+								<span>({item.count})</span>
+							</Space>
+						</Link>
 					</List.Item>
 				)}
 			/>

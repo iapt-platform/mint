@@ -2,13 +2,16 @@ import { useParams } from "react-router-dom";
 import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Layout, Space, Table } from "antd";
+import { Space, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu, Popover } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import ChannelCreate from "../../../components/studio/channel/ChannelCreate";
+import { get } from "../../../request";
+import { IApiResponseChannelList } from "../../../components/api/Channel";
+import { PublicityValueEnum } from "../../../components/studio/table";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
 	console.log("click", e);
@@ -37,12 +40,11 @@ const menu = (
 	/>
 );
 
-const EType = ["translation", "nissaya", "commentray", "original", "general"];
-
 interface IItem {
 	id: number;
+	uid: string;
 	title: string;
-	subtitle: string;
+	summary: string;
 	type: string;
 	publicity: number;
 	createdAt: number;
@@ -54,36 +56,48 @@ const Widget = () => {
 	const channelCreate = <ChannelCreate studio={studioname} />;
 	return (
 		<>
-			<Layout>{studioname}</Layout>
 			<ProTable<IItem>
 				columns={[
 					{
-						title: intl.formatMessage({ id: "dict.fields.sn.label" }),
+						title: intl.formatMessage({
+							id: "dict.fields.sn.label",
+						}),
 						dataIndex: "id",
 						key: "id",
 						width: 50,
 						search: false,
 					},
 					{
-						title: intl.formatMessage({ id: "forms.fields.title.label" }),
+						title: intl.formatMessage({
+							id: "forms.fields.title.label",
+						}),
 						dataIndex: "title",
 						key: "title",
 						tip: "过长会自动收缩",
 						ellipsis: true,
 						render: (text, row, index, action) => {
-							const link = `/studio/${studioname}/channel/${row.id}/edit`;
 							return (
-								<div>
-									<div>
-										<Link to={link}>{row.title}</Link>
-									</div>
-									<div>{row.subtitle}</div>
-								</div>
+								<Link
+									to={`/studio/${studioname}/channel/${row.uid}/edit`}
+								>
+									{row.title}
+								</Link>
 							);
 						},
 					},
 					{
-						title: intl.formatMessage({ id: "forms.fields.type.label" }),
+						title: intl.formatMessage({
+							id: "forms.fields.summary.label",
+						}),
+						dataIndex: "summary",
+						key: "summary",
+						tip: "过长会自动收缩",
+						ellipsis: true,
+					},
+					{
+						title: intl.formatMessage({
+							id: "forms.fields.type.label",
+						}),
 						dataIndex: "type",
 						key: "type",
 						width: 100,
@@ -91,33 +105,60 @@ const Widget = () => {
 						filters: true,
 						onFilter: true,
 						valueEnum: {
-							all: { text: "全部", status: "Default" },
-							translation: { text: "译文", status: "Success" },
-							nissaya: { text: "逐词解析", status: "Processing" },
-							commentray: { text: "注疏", status: "Default" },
-							original: { text: "原文", status: "Default" },
-							general: { text: "通用", status: "Default" },
+							all: {
+								text: intl.formatMessage({
+									id: "channel.type.all.title",
+								}),
+								status: "Default",
+							},
+							translation: {
+								text: intl.formatMessage({
+									id: "channel.type.translation.label",
+								}),
+								status: "Success",
+							},
+							nissaya: {
+								text: intl.formatMessage({
+									id: "channel.type.nissaya.label",
+								}),
+								status: "Processing",
+							},
+							commentary: {
+								text: intl.formatMessage({
+									id: "channel.type.commentary.label",
+								}),
+								status: "Default",
+							},
+							original: {
+								text: intl.formatMessage({
+									id: "channel.type.original.label",
+								}),
+								status: "Default",
+							},
+							general: {
+								text: intl.formatMessage({
+									id: "channel.type.general.label",
+								}),
+								status: "Default",
+							},
 						},
 					},
 					{
-						title: intl.formatMessage({ id: "forms.fields.publicity.label" }),
+						title: intl.formatMessage({
+							id: "forms.fields.publicity.label",
+						}),
 						dataIndex: "publicity",
 						key: "publicity",
 						width: 100,
 						search: false,
 						filters: true,
 						onFilter: true,
-						valueEnum: {
-							all: { text: "全部", status: "Default" },
-							0: { text: "禁用", status: "Success" },
-							10: { text: "私有", status: "Processing" },
-							20: { text: "链接阅读", status: "Default" },
-							30: { text: "公开阅读", status: "Default" },
-							40: { text: "公开可编辑", status: "Default" },
-						},
+						valueEnum: PublicityValueEnum(),
 					},
 					{
-						title: intl.formatMessage({ id: "forms.fields.created-at.label" }),
+						title: intl.formatMessage({
+							id: "forms.fields.created-at.label",
+						}),
 						key: "created-at",
 						width: 100,
 						search: false,
@@ -126,15 +167,27 @@ const Widget = () => {
 						sorter: (a, b) => a.createdAt - b.createdAt,
 					},
 					{
-						title: "操作",
+						title: intl.formatMessage({ id: "buttons.option" }),
 						key: "option",
 						width: 120,
 						valueType: "option",
-						render: (text, row, index, action) => [
-							<Dropdown.Button key={index} type="link" overlay={menu}>
-								编辑
-							</Dropdown.Button>,
-						],
+						render: (text, row, index, action) => {
+							return [
+								<Dropdown.Button
+									key={index}
+									type="link"
+									overlay={menu}
+								>
+									<Link
+										to={`/studio/${studioname}/channel/${row.uid}/edit`}
+									>
+										{intl.formatMessage({
+											id: "buttons.edit",
+										})}
+									</Link>
+								</Dropdown.Button>,
+							];
+						},
 					},
 				]}
 				rowSelection={{
@@ -142,12 +195,21 @@ const Widget = () => {
 					// 注释该行则默认不显示下拉选项
 					selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
 				}}
-				tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+				tableAlertRender={({
+					selectedRowKeys,
+					selectedRows,
+					onCleanSelected,
+				}) => (
 					<Space size={24}>
 						<span>
-							已选 {selectedRowKeys.length} 项
-							<Button type="link" style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
-								取消选择
+							{intl.formatMessage({ id: "buttons.selected" })}
+							{selectedRowKeys.length}
+							<Button
+								type="link"
+								style={{ marginInlineStart: 8 }}
+								onClick={onCleanSelected}
+							>
+								{intl.formatMessage({ id: "buttons.unselect" })}
 							</Button>
 						</span>
 					</Space>
@@ -155,7 +217,11 @@ const Widget = () => {
 				tableAlertOptionRender={() => {
 					return (
 						<Space size={16}>
-							<Button type="link">批量删除</Button>
+							<Button type="link">
+								{intl.formatMessage({
+									id: "buttons.delete.all",
+								})}
+							</Button>
 						</Space>
 					);
 				}}
@@ -163,23 +229,25 @@ const Widget = () => {
 					// TODO
 					console.log(params, sorter, filter);
 
-					const size = params.pageSize || 20;
+					const res: IApiResponseChannelList = await get(
+						`/v2/channel?view=studio&name=${studioname}`
+					);
+					const items: IItem[] = res.data.rows.map((item, id) => {
+						const date = new Date(item.created_at);
+						return {
+							id: id,
+							uid: item.uid,
+							title: item.name,
+							summary: item.summary,
+							type: item.type,
+							publicity: item.status,
+							createdAt: date.getTime(),
+						};
+					});
 					return {
-						total: 1 << 12,
-						success: true,
-						data: Array.from(Array(size).keys()).map((x) => {
-							const id = ((params.current || 1) - 1) * size + x + 1;
-
-							var it: IItem = {
-								id,
-								title: `title ${id}`,
-								subtitle: `subtitle ${id}`,
-								type: EType[Math.floor(Math.random() * 4)],
-								publicity: (Math.floor(Math.random() * 3) + 1) * 10,
-								createdAt: Date.now() - Math.floor(Math.random() * 2000000000),
-							};
-							return it;
-						}),
+						total: res.data.count,
+						succcess: true,
+						data: items,
 					};
 				}}
 				rowKey="id"
@@ -193,8 +261,16 @@ const Widget = () => {
 					search: true,
 				}}
 				toolBarRender={() => [
-					<Popover content={channelCreate} title="new channel" placement="bottomRight">
-						<Button key="button" icon={<PlusOutlined />} type="primary">
+					<Popover
+						content={channelCreate}
+						title="new channel"
+						placement="bottomRight"
+					>
+						<Button
+							key="button"
+							icon={<PlusOutlined />}
+							type="primary"
+						>
 							{intl.formatMessage({ id: "buttons.create" })}
 						</Button>
 					</Popover>,

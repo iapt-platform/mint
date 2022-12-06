@@ -1,6 +1,6 @@
 import { message, Tag, Button } from "antd";
 import { useState, useEffect } from "react";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
 import { IApiChapterTag, IApiResponseChapterTagList } from "../api/Corpus";
 
 interface ITagData {
@@ -21,7 +21,7 @@ const Widget = (prop: IWidgetChapterTagList) => {
 	}, []);
 
 	function fetchData() {
-		ApiFetch(`/progress?view=chapter-tag`)
+		get(`/v2/progress?view=chapter-tag`)
 			.then((response) => {
 				const json = response as unknown as IApiResponseChapterTagList;
 				const tags: IApiChapterTag[] = json.data.rows;

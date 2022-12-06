@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-
 import DictContent from "./DictContent";
-import { ApiFetch } from "../../utils";
-import type { IWidgetDictContentData, IApiDictContentData } from "./DictContent";
+import type {
+	IWidgetDictContentData,
+	IApiDictContentData,
+} from "./DictContent";
+import { get } from "../../request";
 
 interface IWidgetDictSearch {
 	word: string | undefined;
@@ -18,9 +20,9 @@ const Widget = (prop: IWidgetDictSearch) => {
 
 	useEffect(() => {
 		console.log("useEffect");
-		const url = `/dict?word=${prop.word}`;
+		const url = `/v2/dict?word=${prop.word}`;
 		console.log("url", url);
-		ApiFetch(url)
+		get(url)
 			.then((response) => {
 				const json = response as unknown as IApiDictContentData;
 				console.log("data", json);

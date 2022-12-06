@@ -1,28 +1,67 @@
 import { useParams } from "react-router-dom";
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
+import {
+	ProForm,
+	ProFormText,
+	ProFormTextArea,
+} from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { message, Space } from "antd";
+import { Card, message, Space } from "antd";
+import { IApiResponseChannel } from "../../../components/api/Channel";
+import { get, put } from "../../../request";
+import ChannelTypeSelect from "../../../components/studio/channel/ChannelTypeSelect";
+import LangSelect from "../../../components/studio/LangSelect";
+import PublicitySelect from "../../../components/studio/PublicitySelect";
+import GoBack from "../../../components/studio/GoBack";
+import { useState } from "react";
 
 interface IFormData {
 	name: string;
 	type: string;
 	lang: string;
 	summary: string;
+	status: number;
 	studio: string;
 }
 const Widget = () => {
 	const intl = useIntl();
 	const { channelid } = useParams(); //url 参数
+	const { studioname } = useParams();
+	const [title, setTitle] = useState("");
 
 	return (
-		<>
+		<Card
+			title={
+				<GoBack
+					to={`/studio/${studioname}/channel/list`}
+					title={title}
+				/>
+			}
+		>
 			<Space>{channelid}</Space>
 			<ProForm<IFormData>
 				onFinish={async (values: IFormData) => {
 					// TODO
-					values.studio = "aaaa";
 					console.log(values);
-					message.success(intl.formatMessage({ id: "flashes.success" }));
+					const res = await put(`/v2/channel/${channelid}`, values);
+					console.log(res);
+					message.success(
+						intl.formatMessage({ id: "flashes.success" })
+					);
+				}}
+				formKey="channel_edit"
+				request={async () => {
+					const res: IApiResponseChannel = await get(
+						`/v2/channel/${channelid}`
+					);
+					setTitle(res.data.name);
+					return {
+						name: res.data.name,
+						type: res.data.type,
+						lang: res.data.lang,
+						summary: res.data.summary,
+						status: res.data.status,
+						studio: studioname ? studioname : "",
+					};
 				}}
 			>
 				<ProForm.Group>
@@ -34,59 +73,27 @@ const Widget = () => {
 						rules={[
 							{
 								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
+								message: intl.formatMessage({
+									id: "channel.create.message.noname",
+								}),
 							},
 						]}
 					/>
 				</ProForm.Group>
 
 				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{
-								value: "translation",
-								label: intl.formatMessage({ id: "channel.type.translation.title" }),
-							},
-							{
-								value: "nissaya",
-								label: intl.formatMessage({ id: "channel.type.nissaya.title" }),
-							},
-						]}
-						width="md"
-						name="type"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.type" })}
-					/>
+					<ChannelTypeSelect />
+					<LangSelect />
 				</ProForm.Group>
 				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{ value: "zh-Hans", label: "简体中文" },
-							{ value: "zh-Hant", label: "繁体中文" },
-							{ value: "en-US", label: "English" },
-						]}
-						width="md"
-						name="lang"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({ id: "channel.create.message.noname" }),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.lang" })}
-					/>
+					<PublicitySelect />
 				</ProForm.Group>
 
 				<ProForm.Group>
-					<ProFormTextArea name="summary" label="简介" />
+					<ProFormTextArea width="md" name="summary" label="简介" />
 				</ProForm.Group>
 			</ProForm>
-		</>
+		</Card>
 	);
 };
 

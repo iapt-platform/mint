@@ -1,24 +1,39 @@
-import { ProForm, ProFormText, ProFormSelect } from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { message } from "antd";
+import LangSelect from "../LangSelect";
+import { post } from "../../../request";
+import { IArticleCreateRequest, IArticleResponse } from "../../api/Article";
 
 interface IFormData {
 	title: string;
 	lang: string;
+	studio: string;
 }
 
 type IWidgetArticleCreate = {
-	studio: string | undefined;
+	studio?: string;
 };
-const Widget = (param: IWidgetArticleCreate) => {
+const Widget = (prop: IWidgetArticleCreate) => {
 	const intl = useIntl();
 
 	return (
 		<ProForm<IFormData>
 			onFinish={async (values: IFormData) => {
-				// TODO
 				console.log(values);
-				message.success(intl.formatMessage({ id: "flashes.success" }));
+				values.studio = prop.studio ? prop.studio : "";
+				const res = await post<IArticleCreateRequest, IArticleResponse>(
+					`/v2/article`,
+					values
+				);
+				console.log(res);
+				if (res.ok) {
+					message.success(
+						intl.formatMessage({ id: "flashes.success" })
+					);
+				} else {
+					message.error(res.message);
+				}
 			}}
 		>
 			<ProForm.Group>
@@ -30,27 +45,15 @@ const Widget = (param: IWidgetArticleCreate) => {
 					rules={[
 						{
 							required: true,
-							message: intl.formatMessage({ id: "channel.create.message.noname" }),
+							message: intl.formatMessage({
+								id: "channel.create.message.noname",
+							}),
 						},
 					]}
 				/>
 			</ProForm.Group>
 			<ProForm.Group>
-				<ProFormSelect
-					options={[
-						{
-							value: "zh-Hans",
-							label: intl.formatMessage({ id: "languages.zh-Hans" }),
-						},
-						{
-							value: "en-US",
-							label: intl.formatMessage({ id: "English" }),
-						},
-					]}
-					width="md"
-					name="lang"
-					label={intl.formatMessage({ id: "forms.fields.lang.label" })}
-				/>
+				<LangSelect />
 			</ProForm.Group>
 		</ProForm>
 	);

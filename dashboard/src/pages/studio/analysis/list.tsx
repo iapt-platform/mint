@@ -19,7 +19,9 @@ const Widget = () => {
 
 	const myEventsList = [{ start: "2022-10-1", end: "2022-10-2" }];
 	const asyncFetch = () => {
-		fetch("https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json")
+		fetch(
+			"https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
+		)
 			.then((response) => response.json())
 			.then((json) => setData(json))
 			.catch((error) => {
@@ -40,12 +42,15 @@ const Widget = () => {
 	};
 	return (
 		<>
-			<h2>
-				studio/{studioname}/{intl.formatMessage({ id: "columns.studio.analysis.title" })}/行为分析首页
-			</h2>
+			{studioname}
 			<Line {...config} />
 
-			<Calendar localizer={localizer} events={myEventsList} startAccessor="start" endAccessor="end" />
+			<Calendar
+				localizer={localizer}
+				events={myEventsList}
+				startAccessor="start"
+				endAccessor="end"
+			/>
 		</>
 	);
 };

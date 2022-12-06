@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
+import { useEffect } from "react";
 
 type TreeNodeData = {
 	key: string;
@@ -19,7 +20,12 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 	let treeData = [];
 
 	let treeParents = [];
-	let rootNode: TreeNodeData = { key: "0", title: "root", level: 0, children: [] };
+	let rootNode: TreeNodeData = {
+		key: "0",
+		title: "root",
+		level: 0,
+		children: [],
+	};
 	treeData.push(rootNode);
 	let lastInsNode: TreeNodeData = rootNode;
 
@@ -27,7 +33,12 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 	for (let index = 0; index < articles.length; index++) {
 		const element = articles[index];
 
-		let newNode: TreeNodeData = { key: element.key, title: element.title, children: [], level: element.level };
+		let newNode: TreeNodeData = {
+			key: element.key,
+			title: element.title,
+			children: [],
+			level: element.level,
+		};
 		/*
 		if (active == element.article) {
 			newNode["extraClasses"] = "active";
@@ -56,7 +67,6 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 		if (active === element.key) {
 			tocActivePath = [];
 			for (let index = 1; index < treeParents.length; index++) {
-				//treeParents[index]["expanded"] = true;
 				tocActivePath.push(treeParents[index]);
 			}
 		}
@@ -64,15 +74,48 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
 	return treeData[0].children;
 }
 
-type IWidgetEditableTree = {
+function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
+	let iTocTreeCurrLevel = 1;
+
+	let arrTocTree: ListNodeData[] = [];
+
+	for (const iterator of treeNode) {
+		getTreeNodeData(iterator);
+	}
+
+	function getTreeNodeData(node: TreeNodeData) {
+		let children = 0;
+		if (typeof node.children != "undefined") {
+			children = node.children.length;
+		}
+		arrTocTree.push({
+			key: node.key,
+			title: node.title,
+			level: iTocTreeCurrLevel,
+		});
+		if (children > 0) {
+			iTocTreeCurrLevel++;
+			for (const iterator of node.children) {
+				getTreeNodeData(iterator);
+			}
+			iTocTreeCurrLevel--;
+		}
+	}
+
+	return arrTocTree;
+}
+interface IWidgetEditableTree {
 	treeData: ListNodeData[];
-};
+	onChange?: Function;
+}
 const Widget = (prop: IWidgetEditableTree) => {
 	const data = tocGetTreeData(prop.treeData);
 	console.log("treedata", data);
 	const [gData, setGData] = useState(data);
-
-	//const [expandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+	useEffect(() => {
+		const data = tocGetTreeData(prop.treeData);
+		setGData(data);
+	}, [prop]);
 
 	const onDragEnter: TreeProps["onDragEnter"] = (info) => {
 		console.log(info);
@@ -85,7 +128,8 @@ const Widget = (prop: IWidgetEditableTree) => {
 		const dropKey = info.node.key;
 		const dragKey = info.dragNode.key;
 		const dropPos = info.node.pos.split("-");
-		const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
+		const dropPosition =
+			info.dropPosition - Number(dropPos[dropPos.length - 1]);
 
 		const loop = (
 			data: DataNode[],
@@ -143,13 +187,15 @@ const Widget = (prop: IWidgetEditableTree) => {
 			}
 		}
 		setGData(data);
+		if (typeof prop.onChange !== "undefined") {
+			prop.onChange(treeToList(data));
+		}
 	};
 
 	return (
 		<>
 			<Tree
 				rootClassName="draggable-tree"
-				//defaultExpandedKeys={expandedKeys}
 				draggable
 				blockNode
 				onDragEnter={onDragEnter}

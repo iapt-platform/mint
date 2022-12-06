@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Typography } from "antd";
-import ReactMarkdown from "react-markdown";
 
 import type { IAnthologyData } from "./AnthologyCard";
-import type { IAnthologyListApiResponse, IAnthologyListApiResponse2 } from "../api/Article";
+import type {
+	IAnthologyDataResponse,
+	IAnthologyResponse,
+} from "../api/Article";
 import TocTree from "./TocTree";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
+import MDEditor from "@uiw/react-md-editor";
 
 const { Title, Text } = Typography;
 
@@ -22,16 +25,16 @@ const defaultData: IAnthologyData = {
 	articles: [],
 	studio: {
 		id: "",
-		name: "",
+		studioName: "",
+		nickName: "",
 		avatar: "",
 	},
 	created_at: "",
 	updated_at: "",
 };
-//const defaultTreeData: ListNodeData[] = [];
+
 const Widget = (prop: IWidgetAnthologyDetail) => {
 	const [tableData, setTableData] = useState(defaultData);
-	//const [treeData, setTreeData] = useState(defaultTreeData);
 
 	useEffect(() => {
 		console.log("useEffect");
@@ -39,11 +42,9 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 	}, [prop.aid]);
 
 	function fetchData(id: string) {
-		ApiFetch(`/anthology/${id}`)
+		get<IAnthologyResponse>(`/v2/anthology/${id}`)
 			.then((response) => {
-				const json = response as unknown as IAnthologyListApiResponse2;
-
-				const item: IAnthologyListApiResponse = json.data;
+				const item: IAnthologyDataResponse = response.data;
 				let newTree: IAnthologyData = {
 					id: item.uid,
 					title: item.title,
@@ -74,7 +75,7 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
 				<Text type="secondary">{tableData.subTitle}</Text>
 			</div>
 			<div>
-				<ReactMarkdown>{tableData.summary}</ReactMarkdown>
+				<MDEditor.Markdown source={tableData.summary} />
 			</div>
 			<Title level={5}>目录</Title>
 

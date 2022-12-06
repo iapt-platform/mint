@@ -1,113 +1,168 @@
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
-import { message } from "antd";
+import {
+	ProForm,
+	ProFormText,
+	ProFormTextArea,
+} from "@ant-design/pro-components";
+import { Card, Col, message, Row } from "antd";
 
 import EditableTree from "../../../components/studio/EditableTree";
 import type { ListNodeData } from "../../../components/studio/EditableTree";
+import LangSelect from "../../../components/studio/LangSelect";
+import PublicitySelect from "../../../components/studio/PublicitySelect";
+import {
+	IAnthologyDataRequest,
+	IAnthologyResponse,
+} from "../../../components/api/Article";
+import { get, put } from "../../../request";
+import { useState } from "react";
+import GoBack from "../../../components/studio/GoBack";
 
 interface IFormData {
 	title: string;
 	subtitle: string;
 	summary: string;
 	lang: string;
-	studio: string;
-	toc: string;
+	status: number;
 }
 
 const Widget = () => {
+	const listdata: ListNodeData[] = [];
 	const intl = useIntl();
+	const [tocData, setTocData] = useState(listdata);
+	const [title, setTitle] = useState("");
 	const { studioname, anthology_id } = useParams(); //url 参数
-	/*
-	const listdata: ListNodeData[] = [
-		{ key: "1", title: "title1", level: 1 },
-		{ key: "2", title: "title2", level: 2 },
-		{ key: "3", title: "title3", level: 1 },
-		{ key: "4", title: "title4", level: 2 },
-	];
-	*/
-	const listdata: ListNodeData[] = [
-		{
-			key: "d391c9c4-60bc-4bf5-8f5a-65d55743904c",
-			title: "比库尼八敬法--Aṭṭhagarudhammā",
-			level: 1,
-		},
-		{
-			key: "4b741bea-811e-4053-a94c-852a58161b8f",
-			title: "逐出比库尼僧团之《第一极重罪》",
-			level: 1,
-		},
-		{
-			key: "33ff0ec7-2cf9-4e3a-b88f-e713c7a1eaa5",
-			title: "Aṭṭhagarudhammā",
-			level: 1,
-		},
-	];
+	let treeList: ListNodeData[] = [];
+
 	return (
 		<>
-			<h2>
-				studio/{studioname}/{intl.formatMessage({ id: "columns.studio.anthology.title" })}/anthology/
-				{anthology_id}
-			</h2>
-
-			<ProForm<IFormData>
-				onFinish={async (values: IFormData) => {
-					// TODO
-					values.studio = "aaaa";
-					console.log(values);
-					message.success(intl.formatMessage({ id: "flashes.success" }));
-				}}
+			<Card
+				title={
+					<GoBack
+						to={`/studio/${studioname}/anthology/list`}
+						title={title}
+					/>
+				}
 			>
-				<ProForm.Group>
-					<ProFormText
-						width="md"
-						name="title"
-						required
-						label={intl.formatMessage({ id: "forms.fields.title.label" })}
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.title" }),
-							},
-						]}
-					/>
-				</ProForm.Group>
-				<ProForm.Group>
-					<ProFormText
-						width="md"
-						name="subtitle"
-						label={intl.formatMessage({ id: "forms.fields.subtitle.label" })}
-					/>
-				</ProForm.Group>
-				<ProForm.Group>
-					<ProFormTextArea name="summary" label={intl.formatMessage({ id: "forms.fields.summary.label" })} />
-				</ProForm.Group>
-				<ProForm.Group>
-					<ProFormSelect
-						options={[
-							{ value: "zh-Hans", label: "简体中文" },
-							{ value: "zh-Hant", label: "繁体中文" },
-							{ value: "en-US", label: "English" },
-						]}
-						width="md"
-						name="lang"
-						rules={[
-							{
-								required: true,
-								message: intl.formatMessage({ id: "forms.create.message.no.lang" }),
-							},
-						]}
-						label={intl.formatMessage({ id: "channel.lang" })}
-					/>
-				</ProForm.Group>
+				<Row>
+					<Col>
+						<ProForm<IFormData>
+							onFinish={async (values: IFormData) => {
+								// TODO
+								console.log(values);
 
-				<ProForm.Group>
-					<ProFormTextArea name="toc" label={intl.formatMessage({ id: "forms.fields.content.label" })} />
-				</ProForm.Group>
-			</ProForm>
+								const request: IAnthologyDataRequest = {
+									title: values.title,
+									subtitle: values.subtitle,
+									summary: values.summary,
+									article_list: treeList.map((item) => {
+										return {
+											article: item.key,
+											title: item.title,
+											level: item.level.toString(),
+											children: 0,
+										};
+									}),
+									status: values.status,
+									lang: values.lang,
+								};
+								console.log(request);
+								const res = await put<
+									IAnthologyDataRequest,
+									IAnthologyResponse
+								>(`/v2/anthology/${anthology_id}`, request);
+								console.log(res);
+								if (res.ok) {
+									message.success(
+										intl.formatMessage({
+											id: "flashes.success",
+										})
+									);
+								} else {
+									message.error(res.message);
+								}
+							}}
+							request={async () => {
+								const res = await get<IAnthologyResponse>(
+									`/v2/anthology/${anthology_id}`
+								);
+								const toc: ListNodeData[] =
+									res.data.article_list.map((item) => {
+										return {
+											key: item.article,
+											title: item.title,
+											level: parseInt(item.level),
+										};
+									});
+								setTocData(toc);
+								treeList = toc;
+								setTitle(res.data.title);
+								return {
+									title: res.data.title,
+									subtitle: res.data.subtitle,
+									summary: res.data.summary,
+									lang: res.data.lang,
+									status: res.data.status,
+								};
+							}}
+						>
+							<ProForm.Group>
+								<ProFormText
+									width="md"
+									name="title"
+									required
+									label={intl.formatMessage({
+										id: "forms.fields.title.label",
+									})}
+									rules={[
+										{
+											required: true,
+											message: intl.formatMessage({
+												id: "forms.message.title.required",
+											}),
+										},
+									]}
+								/>
+							</ProForm.Group>
+							<ProForm.Group>
+								<ProFormText
+									width="md"
+									name="subtitle"
+									label={intl.formatMessage({
+										id: "forms.fields.subtitle.label",
+									})}
+								/>
+							</ProForm.Group>
+							<ProForm.Group>
+								<ProFormTextArea
+									name="summary"
+									width="md"
+									label={intl.formatMessage({
+										id: "forms.fields.summary.label",
+									})}
+								/>
+							</ProForm.Group>
 
-			<EditableTree treeData={listdata} />
+							<ProForm.Group>
+								<LangSelect />
+							</ProForm.Group>
+							<ProForm.Group>
+								<PublicitySelect />
+							</ProForm.Group>
+						</ProForm>
+					</Col>
+					<Col>
+						<EditableTree
+							treeData={tocData}
+							onChange={(data: ListNodeData[]) => {
+								treeList = data;
+							}}
+						/>
+					</Col>
+				</Row>
+			</Card>
 		</>
 	);
 };

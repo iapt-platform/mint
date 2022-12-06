@@ -1,16 +1,22 @@
-import { ProForm, ProFormText, ProFormSelect } from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { message } from "antd";
+import ChannelTypeSelect from "./ChannelTypeSelect";
+import { post } from "../../../request";
+import { IApiResponseChannel } from "../../api/Channel";
+import LangSelect from "../LangSelect";
 
 interface IFormData {
 	name: string;
 	type: string;
+	lang: string;
+	studio: string;
 }
 
 type IWidgetChannelCreate = {
 	studio: string | undefined;
 };
-const Widget = (param: IWidgetChannelCreate) => {
+const Widget = (prop: IWidgetChannelCreate) => {
 	const intl = useIntl();
 
 	return (
@@ -18,7 +24,19 @@ const Widget = (param: IWidgetChannelCreate) => {
 			onFinish={async (values: IFormData) => {
 				// TODO
 				console.log(values);
-				message.success(intl.formatMessage({ id: "flashes.success" }));
+				values.studio = prop.studio ? prop.studio : "";
+				const res: IApiResponseChannel = await post(
+					`/v2/channel`,
+					values
+				);
+				console.log(res);
+				if (res.ok) {
+					message.success(
+						intl.formatMessage({ id: "flashes.success" })
+					);
+				} else {
+					message.error(res.message);
+				}
 			}}
 		>
 			<ProForm.Group>
@@ -30,27 +48,16 @@ const Widget = (param: IWidgetChannelCreate) => {
 					rules={[
 						{
 							required: true,
-							message: intl.formatMessage({ id: "channel.create.message.noname" }),
+							message: intl.formatMessage({
+								id: "channel.create.message.noname",
+							}),
 						},
 					]}
 				/>
 			</ProForm.Group>
 			<ProForm.Group>
-				<ProFormSelect
-					options={[
-						{
-							value: "translation",
-							label: intl.formatMessage({ id: "channel.type.translation.title" }),
-						},
-						{
-							value: "nissaya",
-							label: intl.formatMessage({ id: "channel.type.nissaya.title" }),
-						},
-					]}
-					width="md"
-					name="type"
-					label={intl.formatMessage({ id: "channel.type" })}
-				/>
+				<ChannelTypeSelect />
+				<LangSelect />
 			</ProForm.Group>
 		</ProForm>
 	);

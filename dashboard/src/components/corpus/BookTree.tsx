@@ -5,7 +5,7 @@ import { Layout, Space, Tree } from "antd";
 import { Select } from "antd";
 import { Typography } from "antd";
 import type { TreeProps } from "antd/es/tree";
-import { ApiFetch } from "../../utils";
+import { get } from "../../request";
 
 const { Text } = Typography;
 
@@ -46,11 +46,12 @@ const Widget = (prop: IWidgetBookTree) => {
 				title: params.name,
 				key: params.tag.join(),
 				tag: params.tag,
-				children: Array.isArray(params.children) ? params.children.map(treeMap) : [],
+				children: Array.isArray(params.children)
+					? params.children.map(treeMap)
+					: [],
 			};
 		}
-		let url = `/palibook/${value}`;
-		ApiFetch(url).then((response) => {
+		get(`/v2/palibook/${value}`).then((response) => {
 			const myJson = response as unknown as OrgTree[];
 			let newTree = myJson.map(treeMap);
 			setTreeData(newTree);
@@ -66,7 +67,11 @@ const Widget = (prop: IWidgetBookTree) => {
 		<Layout>
 			<Space>
 				<Text>目录风格</Text>
-				<Select defaultValue={prop.root} loading={false} onChange={handleChange}>
+				<Select
+					defaultValue={prop.root}
+					loading={false}
+					onChange={handleChange}
+				>
 					<Option value="defualt">Defualt</Option>
 					<Option value="cscd">CSCD</Option>
 				</Select>

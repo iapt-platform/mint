@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { Col, Row, Input, Layout, Button } from "antd";
+import { Col, Row, Input, Layout, Space } from "antd";
 
 import img_banner from "../../assets/studio/images/wikipali_banner.svg";
 import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
+import ToLibaray from "../auth/ToLibaray";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -16,18 +17,26 @@ const Widget = () => {
 			<Row justify="space-between">
 				<Col flex="80px">
 					<Link to="/">
-						<img alt="code" style={{ height: "3em" }} src={img_banner} />
+						<img
+							alt="code"
+							style={{ height: "3em" }}
+							src={img_banner}
+						/>
 					</Link>
 				</Col>
 				<Col span={8}>
-					<Search placeholder="input search text" onSearch={onSearch} style={{ width: "100%" }} />
+					<Search
+						placeholder="input search text"
+						onSearch={onSearch}
+						style={{ width: "100%" }}
+					/>
 				</Col>
 				<Col span={4}>
-					<Link to="\">
-						<Button>藏经阁</Button>
-					</Link>
-					<SignInAvatar />
-					<UiLangSelect />
+					<Space>
+						<ToLibaray />
+						<SignInAvatar />
+						<UiLangSelect />
+					</Space>
 				</Col>
 			</Row>
 		</Header>
