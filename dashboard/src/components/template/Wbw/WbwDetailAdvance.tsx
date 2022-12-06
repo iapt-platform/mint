@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import type { RadioChangeEvent } from "antd";
-import { Radio } from "antd";
 import { Input } from "antd";
 
 import { IWbw } from "./WbwWord";
-
-const { TextArea } = Input;
 
 interface IWidget {
   data: IWbw;
