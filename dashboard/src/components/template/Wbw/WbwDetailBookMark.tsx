@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useIntl } from "react-intl";
+import { useState } from "react";
 import type { RadioChangeEvent } from "antd";
 import { Radio } from "antd";
 import { Input } from "antd";
@@ -8,18 +7,11 @@ import { IWbw } from "./WbwWord";
 
 const { TextArea } = Input;
 
-const onTextChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => {
-  console.log("Change:", e.target.value);
-};
-
 interface IWidget {
   data: IWbw;
   onChange?: Function;
 }
 const Widget = ({ data, onChange }: IWidget) => {
-  const intl = useIntl();
   const [value, setValue] = useState("none");
 
   const styleColor: React.CSSProperties = {
