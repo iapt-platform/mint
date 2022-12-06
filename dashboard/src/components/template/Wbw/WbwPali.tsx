@@ -57,7 +57,7 @@ const Widget = ({ data, onChange, onSave }: IWidget) => {
     <></>
   );
   return (
-    <div>
+    <div style={{ borderBottom: "1px solid gray" }}>
       <Popover
         content={wbwDetail}
         placement="bottom"
