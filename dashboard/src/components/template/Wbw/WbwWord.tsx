@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { onChange } from "../../../reducers/setting";
 import WbwCase from "./WbwCase";
 import WbwFactorMeaning from "./WbwFactorMeaning";
 import WbwFactors from "./WbwFactors";
@@ -26,6 +25,7 @@ export interface IWbwField {
   field: FieldName;
   value: string;
 }
+
 enum WbwStatus {
   initiate = 0,
   auto = 3,
