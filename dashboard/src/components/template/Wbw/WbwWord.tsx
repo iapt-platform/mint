@@ -93,12 +93,22 @@ const Widget = ({
           const newData: IWbw = JSON.parse(JSON.stringify(e));
           setWordData(newData);
           if (typeof onChange !== "undefined") {
-            //onChange(e);
+            onChange(e);
           }
         }}
       />
       <div style={{ backgroundColor: wordData.bookMarkColor?.value }}>
-        {fields?.meaning ? <WbwMeaning data={wordData} /> : undefined}
+        {fields?.meaning ? (
+          <WbwMeaning
+            data={wordData}
+            onChange={(e: string) => {
+              console.log("meaning change", e);
+              const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+              newData.meaning = { value: [e], status: 5 };
+              setWordData(newData);
+            }}
+          />
+        ) : undefined}
         {fields?.factors ? <WbwFactors data={wordData} /> : undefined}
         {fields?.factorMeaning ? (
           <WbwFactorMeaning data={wordData} />
