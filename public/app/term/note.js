@@ -1541,12 +1541,12 @@ function myEndingTooltip(inStr){
             tooltip:'时间的整数',
         },
         {
-            id:"my_length",
+            id:"my_time",
             name:"တိုင်တိုင်",
             tooltip:'距离,长度的整数',
         },
         {
-            id:"my_length",
+            id:"my_time",
             name:"တိုင်အောင်",
             tooltip:'距离,长度的整数',
         },
