@@ -1,7 +1,9 @@
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
+import { Typography } from "antd";
 
 import { IWbw } from "./WbwWord";
+const { Text } = Typography;
 
 const items: MenuProps["items"] = [
   {
@@ -24,9 +26,11 @@ interface IWidget {
 const Widget = ({ data }: IWidget) => {
   return (
     <div>
-      <Dropdown menu={{ items }} placement="bottomLeft">
-        <span>{data.factors ? data.factors?.value : "拆分"}</span>
-      </Dropdown>
+      <Text type="secondary">
+        <Dropdown menu={{ items }} placement="bottomLeft">
+          <span>{data.factors ? data.factors?.value : "拆分"}</span>
+        </Dropdown>
+      </Text>
     </div>
   );
 };
