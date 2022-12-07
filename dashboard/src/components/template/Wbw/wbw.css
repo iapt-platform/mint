@@ -1,0 +1,38 @@
+.wbw_word {
+  margin: 0 0 0.2em 0;
+  padding-right: 0;
+  max-width: 60vw;
+}
+.block .pali {
+  font-weight: 500;
+  font-size: 110%;
+  padding: 0px 2px;
+  margin: 0px;
+  line-height: 1.5em;
+}
+.block .pali_shell {
+  border-bottom: 1px solid gray;
+}
+.inline .pali {
+  color: brown;
+}
+.block .wbw_body {
+  padding-right: 0.5em;
+  padding-top: 0.2em;
+}
+.wbw_word_item {
+  min-width: 3em;
+  padding: 0;
+  cursor: pointer;
+}
+
+.case {
+  padding: 0 2px;
+  line-height: 1.5em;
+}
+.case:first-child {
+  outline: 1px solid;
+  outline-offset: -1px;
+  margin: 0 0.3em 0 1px;
+  padding: 0px 2px;
+}
