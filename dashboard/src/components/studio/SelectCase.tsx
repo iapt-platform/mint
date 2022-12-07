@@ -8,8 +8,9 @@ interface CascaderOption {
 }
 interface IWidget {
   defaultValue?: string[];
+  onCaseChange?: Function;
 }
-const Widget = ({ defaultValue }: IWidget) => {
+const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
   const intl = useIntl();
 
   const case8 = [
@@ -197,17 +198,17 @@ const Widget = ({ defaultValue }: IWidget) => {
   ];
   const options: CascaderOption[] = [
     {
-      value: ".n.",
+      value: "n",
       label: intl.formatMessage({ id: "dict.fields.type.n.label" }),
       children: case3,
     },
     {
-      value: ".ti.",
+      value: "ti",
       label: intl.formatMessage({ id: "dict.fields.type.ti.label" }),
       children: case3,
     },
     {
-      value: ".v.",
+      value: "v",
       label: intl.formatMessage({ id: "dict.fields.type.v.label" }),
       children: caseVerb1,
     },
@@ -226,9 +227,11 @@ const Widget = ({ defaultValue }: IWidget) => {
       children: case3,
     },
   ];
-  type SingleValueType = (string | number)[];
-  const onChange = (value: SingleValueType) => {
-    console.log(value);
+  const onChange = (value: (string | number)[]) => {
+    console.log("case changed", value);
+    if (typeof onCaseChange !== "undefined") {
+      onCaseChange(value);
+    }
   };
 
   return (
