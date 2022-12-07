@@ -8,6 +8,7 @@ use App\Models\PaliText;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\MdRender;
+use App\Http\Api\SuggestionApi;
 use Illuminate\Support\Facades\Log;
 
 class CorpusController extends Controller
@@ -252,7 +253,7 @@ class CorpusController extends Controller
 
             $newSent = [
                 "content"=>$value->content,
-                "html"=> Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",1,
+                "html"=> Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
                         function() use($value){
                             return MdRender::render($value->content,$value->channel_uid);
                         }),
@@ -271,6 +272,7 @@ class CorpusController extends Controller
 	                "id"=> $value->channel_uid,
                 ],
                 "updateAt"=> $value->updated_at,
+                "suggestionCount" => SuggestionApi::getCountBySent($value->book_id,$value->paragraph,$value->word_start,$value->word_end,$value->channel_uid),
             ];
 			switch ($indexChannel[$value->channel_uid]->type) {
 				case 'original';
