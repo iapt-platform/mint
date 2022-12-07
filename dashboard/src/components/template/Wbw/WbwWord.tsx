@@ -5,6 +5,7 @@ import WbwFactorMeaning from "./WbwFactorMeaning";
 import WbwFactors from "./WbwFactors";
 import WbwMeaning from "./WbwMeaning";
 import WbwPali from "./WbwPali";
+import WbwWord from "./WbwWord";
 import "./wbw.css";
 
 export type TFieldName =
@@ -74,12 +75,14 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
   onChange?: Function;
+  onSplit?: Function;
 }
 const Widget = ({
   data,
   display = "block",
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
   onChange,
+  onSplit,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
 
@@ -123,7 +126,17 @@ const Widget = ({
         {fields?.factorMeaning ? (
           <WbwFactorMeaning data={wordData} />
         ) : undefined}
-        {fields?.case ? <WbwCase data={wordData} /> : undefined}
+        {fields?.case ? (
+          <WbwCase
+            data={wordData}
+            onSplit={() => {
+              console.log("onSplit", wordData.factors?.value);
+              if (typeof onSplit !== "undefined") {
+                onSplit();
+              }
+            }}
+          />
+        ) : undefined}
       </div>
     </div>
   );
