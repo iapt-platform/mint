@@ -1,6 +1,5 @@
 import Icon from "@ant-design/icons";
 import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
-import { suggestion } from "../../reducers/suggestion";
 
 const DictSvg = () => (
   <svg
