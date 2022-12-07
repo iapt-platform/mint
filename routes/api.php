@@ -21,7 +21,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CorpusController;
-;
+use App\Http\Controllers\ArticleProgressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +69,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
     Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
     Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
+    Route::apiResource('article-progress',ArticleProgressController::class);
+
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
