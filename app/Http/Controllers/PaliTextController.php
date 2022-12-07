@@ -18,6 +18,7 @@ class PaliTextController extends Controller
     public function index(Request $request)
     {
         //
+        $all_count = 0;
         switch ($request->get('view')) {
             case 'chapter-tag':
                 $tm = (new TagMap)->getTable();
@@ -136,7 +137,39 @@ class PaliTextController extends Controller
                     return $this->error("no data");
                 }
                 break;
-        }
+
+            case 'book-toc':
+                //获取全书目录
+                $path = PaliText::where('book',$request->get('book'))
+                                ->where('paragraph',$request->get('para'))
+                                ->select('path')->first();
+                if(!$path){
+                    return $this->error("no data");
+                }
+                $json = \json_decode($path->path);
+                $root = null;
+                foreach ($json as $key => $value) {
+                    # code...
+                    if( $value->level == 1 ){
+                        $root = $value;
+                        break;
+                    }
+                }
+                if($root===null){
+                    return $this->error("no data");
+                }
+                //查询书起始段落
+                $rootPara = PaliText::where('book',$root->book)
+                                ->where('paragraph',$root->paragraph)
+                                ->first();
+
+                $table = PaliText::where('book',$rootPara->book)
+                                ->whereBetween('paragraph',[$rootPara->paragraph,($rootPara->paragraph+$rootPara->chapter_len-1)])
+                                ->where('level','<',8);
+                $all_count = $table->count();
+                $chapters = $table->select(['book','paragraph','toc','level'])->orderBy('paragraph')->get();
+                break;
+            }
         if($chapters){
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
