@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
 use App\Models\Channel;
+use App\Models\Sentence;
+use App\Models\PaliSentence;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Api;
+use App\Http\Api\AuthApi;
+use App\Http\Api\StudioApi;
+use App\Http\Api\ShareApi;
+use App\Http\Api\PaliTextApi;
+use Illuminate\Support\Arr;
 
 class ChannelController extends Controller
 {
@@ -26,7 +32,7 @@ class ChannelController extends Controller
 		switch ($request->get('view')) {
             case 'studio':
 				# 获取studio内所有channel
-                $user = \App\Http\Api\AuthApi::current($request);
+                $user = AuthApi::current($request);
                 if($user){
                     //判断当前用户是否有指定的studio的权限
                     if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
@@ -38,6 +44,46 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
 				break;
+            case 'user-in-chapter':
+                #获取user所有有权限的channel列表
+                $user = AuthApi::current($request);
+                if($user){
+                    $channelById = [];
+                    $channelId = [];
+                    //获取共享channel
+                    $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+                    foreach ($allSharedChannels as $key => $value) {
+                        # code...
+                        $channelId[] = $value['res_id'];
+                        $channelById[$value['res_id']] = $value;
+                    }
+                    //获取全网公开channel
+                    $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
+                    $publicChannelsWithContent = Sentence::where('book_id',$request->get('book'))
+                                                ->whereBetween('paragraph',$chapter)
+                                                ->where('strlen','>',0)
+                                                ->where('status',30)
+                                                ->groupBy('channel_uid')
+                                                ->select('channel_uid')
+                                                ->get();
+                    foreach ($publicChannelsWithContent as $key => $value) {
+                        # code...
+                        $value['res_id']=$value->channel_uid;
+                        $value['power'] = 10;
+                        $value['type'] = 2;
+                        if(!isset($channelById[$value['res_id']])){
+                            $channelId[] = $value['res_id'];
+                            $channelById[$value['res_id']] = $value;
+                        }
+                    }
+                    $table = Channel::select($indexCol)
+                            ->whereIn('uid', $channelId)
+                            ->orWhere('owner_uid',$user['user_uid']);
+                }else{
+                    return $this->error(__('auth.failed'));
+                }
+                break;
+
         }
         //处理搜索
         if(isset($_GET["search"])){
@@ -65,19 +111,74 @@ class ChannelController extends Controller
         //获取数据
         $result = $table->get();
         if($result){
+            if($request->has('progress')){
+                //获取进度
+                //获取单句长度
+                $sentLen = PaliSentence::where('book',$request->get('book'))
+                ->whereBetween('paragraph',$chapter)
+                ->orderBy('word_begin')
+                ->select(['book','paragraph','word_begin','word_end','length'])
+                ->get();
+            }
             foreach ($result as $key => $value) {
+                if($request->has('progress')){
+                    //获取进度
+                    $finalTable = Sentence::where('book_id',$request->get('book'))
+                    ->whereBetween('paragraph',$chapter)
+                    ->where('channel_uid',$value->uid)
+                    ->where('strlen','>',0)
+                    ->select(['strlen','book_id','paragraph','word_start','word_end']);
+                    if($finalTable->count()>0){
+                        $finished = $finalTable->get();
+                        $final=[];
+                        foreach ($sentLen as  $sent) {
+                            # code...
+                            $first = Arr::first($finished, function ($value, $key) use($sent) {
+                                return ($value->book_id==$sent->book &&
+                                        $value->paragraph==$sent->paragraph &&
+                                        $value->word_start==$sent->word_begin &&
+                                        $value->word_end==$sent->word_end);
+                            });
+                            $final[] = [$sent->length,$first?true:false];
+                        }
+                        $value['final'] = $final;
+                    }
+
+                }
+                if($value->owner_uid===$user['user_uid']){
+                    $value['role'] = 'owner';
+                }else{
+                    if(isset($channelById[$value->uid])){
+                        switch ($channelById[$value->uid]['power']) {
+                            case 10:
+                                # code...
+                                $value['role'] = 'member';
+                                break;
+                            case 20:
+                                $value['role'] = 'editor';
+                                break;
+                            case 30:
+                                $value['role'] = 'owner';
+                                break;
+                            default:
+                                # code...
+                                $value['role'] = $channelById[$value->uid]['power'];
+                                break;
+                        }
+                    }
+                }
                 # 获取studio信息
                 $studio = $userinfo->getName($value->owner_uid);
                 $value->studio = [
                     'id'=>$value->owner_uid,
                     'nickName'=>$studio['nickname'],
                     'studioName'=>$studio['username'],
-                    'avastar'=>'',
+                    'avatar'=>'',
                     'owner' => [
                         'id'=>$value->owner_uid,
                         'nickName'=>$studio['nickname'],
                         'userName'=>$studio['username'],
-                        'avastar'=>'',
+                        'avatar'=>'',
                     ]
                 ];
             }
