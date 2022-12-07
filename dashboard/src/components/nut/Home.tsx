@@ -38,12 +38,12 @@ const Widget = () => {
       <div style={{ width: 700 }}>
         <WbwSent
           data={wbwData}
-          display="block"
+          display="inline"
           fields={{
             meaning: true,
-            factors: true,
-            factorMeaning: true,
-            case: true,
+            factors: false,
+            factorMeaning: false,
+            case: false,
           }}
         />
       </div>

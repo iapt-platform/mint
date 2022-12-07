@@ -1,11 +1,13 @@
 import { useState } from "react";
 import WbwCase from "./WbwCase";
+import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwFactorMeaning from "./WbwFactorMeaning";
 import WbwFactors from "./WbwFactors";
 import WbwMeaning from "./WbwMeaning";
 import WbwPali from "./WbwPali";
+import "./wbw.css";
 
-type FieldName =
+export type TFieldName =
   | "word"
   | "real"
   | "meaning"
@@ -19,10 +21,11 @@ type FieldName =
   | "note"
   | "bookMarkColor"
   | "bookMarkText"
+  | "locked"
   | "confidence";
 
 export interface IWbwField {
-  field: FieldName;
+  field: TFieldName;
   value: string;
 }
 
@@ -39,6 +42,10 @@ interface WbwElement2 {
   value: string[];
   status: WbwStatus;
 }
+interface WbwElement3 {
+  value: number;
+  status: WbwStatus;
+}
 export interface IWbw {
   word: WbwElement;
   real?: WbwElement;
@@ -51,8 +58,9 @@ export interface IWbw {
   factorMeaning?: WbwElement;
   relation?: WbwElement;
   note?: WbwElement;
-  bookMarkColor?: WbwElement;
+  bookMarkColor?: WbwElement3;
   bookMarkText?: WbwElement;
+  locked?: boolean;
   confidence: number;
 }
 export interface IWbwFields {
@@ -78,16 +86,13 @@ const Widget = ({
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
   };
+  const color = wordData.bookMarkColor
+    ? bookMarkColor[wordData.bookMarkColor.value]
+    : "unset";
   return (
-    <div style={styleWbw}>
+    <div className={`wbw_word ${display}`} style={styleWbw}>
       <WbwPali
         data={wordData}
-        onChange={(e: IWbw) => {
-          //setWordData(e);
-          if (typeof onChange !== "undefined") {
-            // onChange(e);
-          }
-        }}
         onSave={(e: IWbw) => {
           console.log("save", e);
           const newData: IWbw = JSON.parse(JSON.stringify(e));
@@ -98,8 +103,9 @@ const Widget = ({
         }}
       />
       <div
+        className="wbw_body"
         style={{
-          background: `linear-gradient(90deg, rgba(255, 255, 255, 0), ${wordData.bookMarkColor?.value})`,
+          background: `linear-gradient(90deg, rgba(255, 255, 255, 0), ${color})`,
         }}
       >
         {fields?.meaning ? (

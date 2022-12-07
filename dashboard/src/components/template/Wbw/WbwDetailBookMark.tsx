@@ -7,6 +7,8 @@ import { IWbw } from "./WbwWord";
 
 const { TextArea } = Input;
 
+export const bookMarkColor = ["#fff", "#f99", "#ff9", "#9f9", "#9ff", "#99f"];
+
 interface IWidget {
   data: IWbw;
   onChange?: Function;
@@ -19,43 +21,21 @@ const Widget = ({ data, onChange }: IWidget) => {
     width: 28,
     height: 18,
   };
-  const options = [
-    {
+
+  const options = bookMarkColor.map((item, id) => {
+    return {
       label: (
         <span
           style={{
             ...styleColor,
-            backgroundColor: "white",
-          }}
-        >
-          none
-        </span>
-      ),
-      value: "unset",
-    },
-    {
-      label: (
-        <span
-          style={{
-            ...styleColor,
-            backgroundColor: "blue",
+            backgroundColor: item,
           }}
         ></span>
       ),
-      value: "blue",
-    },
-    {
-      label: (
-        <span
-          style={{
-            ...styleColor,
-            backgroundColor: "yellow",
-          }}
-        ></span>
-      ),
-      value: "yellow",
-    },
-  ];
+      value: id,
+    };
+  });
+
   const onColorChange = ({ target: { value } }: RadioChangeEvent) => {
     console.log("radio3 checked", value);
     setValue(value);

@@ -1,62 +1,68 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { Dropdown, Tabs, Divider, Button } from "antd";
+import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
 import type { MenuProps } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 
-import { IWbw, IWbwField } from "./WbwWord";
+import { IWbw, IWbwField, TFieldName } from "./WbwWord";
 import WbwDetailBasic from "./WbwDetailBasic";
 import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
 import WbwDetailAdvance from "./WbwDetailAdvance";
+import { LockIcon, UnLockIcon } from "../../../assets/icon";
 
 interface IWidget {
   data: IWbw;
   onClose?: Function;
-  onChange?: Function;
   onSave?: Function;
 }
-const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
+const Widget = ({ data, onClose, onSave }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
-  const fieldChanged = (value: IWbwField) => {
+  function fieldChanged(field: TFieldName, value: string) {
     let mData = currWbwData;
-    switch (value.field) {
+    switch (field) {
       case "note":
-        mData.note = { value: value.value, status: 5 };
+        mData.note = { value: value, status: 5 };
         break;
       case "bookMarkColor":
-        mData.bookMarkColor = { value: value.value, status: 5 };
+        mData.bookMarkColor = { value: parseInt(value), status: 5 };
         break;
       case "bookMarkText":
-        mData.bookMarkText = { value: value.value, status: 5 };
+        mData.bookMarkText = { value: value, status: 5 };
         break;
       case "word":
-        mData.word = { value: value.value, status: 5 };
+        mData.word = { value: value, status: 5 };
         break;
       case "real":
-        mData.real = { value: value.value, status: 5 };
+        mData.real = { value: value, status: 5 };
         break;
       case "meaning":
-        mData.meaning = { value: value.value.split("$"), status: 5 };
+        mData.meaning = { value: value.split("$"), status: 5 };
         break;
       case "factors":
-        mData.factors = { value: value.value, status: 5 };
+        mData.factors = { value: value, status: 5 };
         break;
       case "factorMeaning":
-        mData.factorMeaning = { value: value.value, status: 5 };
+        mData.factorMeaning = { value: value, status: 5 };
         break;
       case "parent":
-        mData.parent = { value: value.value, status: 5 };
+        mData.parent = { value: value, status: 5 };
         break;
       case "case":
-        mData.case = { value: value.value.split("$"), status: 5 };
+        mData.case = { value: value.split("$"), status: 5 };
+        break;
+      case "confidence":
+        mData.confidence = parseFloat(value);
+        break;
+      case "locked":
+        mData.locked = JSON.parse(value);
         break;
       default:
         break;
     }
     setCurrWbwData(mData);
-  };
+  }
   const onMenuClick: MenuProps["onClick"] = (e) => {
     console.log("click", e);
   };
@@ -86,7 +92,7 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
                   data={data}
                   onChange={(e: IWbwField) => {
                     console.log(e);
-                    fieldChanged(e);
+                    fieldChanged(e.field, e.value);
                   }}
                 />
               </div>
@@ -99,7 +105,7 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
               <WbwDetailBookMark
                 data={data}
                 onChange={(e: IWbwField) => {
-                  fieldChanged(e);
+                  fieldChanged(e.field, e.value);
                 }}
               />
             ),
@@ -111,7 +117,7 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
               <WbwDetailNote
                 data={data}
                 onChange={(e: IWbwField) => {
-                  fieldChanged(e);
+                  fieldChanged(e.field, e.value);
                 }}
               />
             ),
@@ -124,7 +130,7 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
                 <WbwDetailAdvance
                   data={currWbwData}
                   onChange={(e: IWbwField) => {
-                    fieldChanged(e);
+                    fieldChanged(e.field, e.value);
                   }}
                 />
               </div>
@@ -132,7 +138,21 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
           },
         ]}
       />
-      <Divider style={{ margin: "8px 0" }}></Divider>
+      <Divider style={{ margin: "4px 0" }}></Divider>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Switch
+          checkedChildren={<LockIcon />}
+          unCheckedChildren={<UnLockIcon />}
+        />
+        <Rate
+          allowHalf
+          defaultValue={5}
+          onChange={(value: number) => {
+            fieldChanged("confidence", (value / 5).toString());
+          }}
+        />
+      </div>
+      <Divider style={{ margin: "4px 0" }}></Divider>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           <Button

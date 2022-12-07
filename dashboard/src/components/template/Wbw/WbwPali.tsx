@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Popover } from "antd";
-import { TagFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { TagTwoTone, InfoCircleOutlined } from "@ant-design/icons";
 
 import WbwDetail from "./WbwDetail";
 import { IWbw } from "./WbwWord";
+import { bookMarkColor } from "./WbwDetailBookMark";
+import "./wbw.css";
 
 interface IWidget {
   data: IWbw;
-  onChange?: Function;
   onSave?: Function;
 }
-const Widget = ({ data, onChange, onSave }: IWidget) => {
+const Widget = ({ data, onSave }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const wbwDetail = (
@@ -19,11 +20,6 @@ const Widget = ({ data, onChange, onSave }: IWidget) => {
       onClose={() => {
         setPaliColor("unset");
         setOpen(false);
-      }}
-      onChange={(e: IWbw) => {
-        if (typeof onChange !== "undefined") {
-          onChange(e);
-        }
       }}
       onSave={(e: IWbw) => {
         if (typeof onSave !== "undefined") {
@@ -49,15 +45,19 @@ const Widget = ({ data, onChange, onSave }: IWidget) => {
   ) : (
     <></>
   );
+  const color = data.bookMarkColor
+    ? bookMarkColor[data.bookMarkColor.value]
+    : "white";
+
   const bookMarkIcon = data.bookMarkText ? (
     <Popover content={data.bookMarkText.value} placement="bottom">
-      <TagFilled style={{ color: data.bookMarkColor?.value }} />
+      <TagTwoTone twoToneColor={color} />
     </Popover>
   ) : (
     <></>
   );
   return (
-    <div style={{ borderBottom: "1px solid gray" }}>
+    <div className="pali_shell">
       <Popover
         content={wbwDetail}
         placement="bottom"
@@ -66,6 +66,7 @@ const Widget = ({ data, onChange, onSave }: IWidget) => {
         onOpenChange={handleClickChange}
       >
         <span
+          className="pali"
           style={{ backgroundColor: paliColor, padding: 4, borderRadius: 5 }}
         >
           {data.word.value}

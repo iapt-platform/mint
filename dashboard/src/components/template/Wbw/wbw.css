@@ -1,3 +1,25 @@
+.wbw_word {
+  margin: 0 0 0.2em 0;
+  padding-right: 0;
+  max-width: 60vw;
+}
+.block .pali {
+  font-weight: 500;
+  font-size: 110%;
+  padding: 0px 2px;
+  margin: 0px;
+  line-height: 1.5em;
+}
+.block .pali_shell {
+  border-bottom: 1px solid gray;
+}
+.inline .pali {
+  color: brown;
+}
+.block .wbw_body {
+  padding-right: 0.5em;
+  padding-top: 0.2em;
+}
 .wbw_word_item {
   min-width: 3em;
   padding: 0;
