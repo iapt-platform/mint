@@ -110,7 +110,13 @@ const Widget = ({ data, onChange }: IWidget) => {
           tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
           name="case"
         >
-          <SelectCase />
+          <SelectCase
+            onCaseChange={(value: (string | number)[]) => {
+              if (typeof onChange !== "undefined") {
+                onChange({ field: "case", value: value.join("$") });
+              }
+            }}
+          />
         </Form.Item>
         <Form.Item
           name="factorMeaning"

@@ -50,7 +50,7 @@ const Widget = ({ data, onClose, onChange, onSave }: IWidget) => {
         mData.parent = { value: value.value, status: 5 };
         break;
       case "case":
-        mData.case = { value: value.value, status: 5 };
+        mData.case = { value: value.value.split("$"), status: 5 };
         break;
       default:
         break;

@@ -45,7 +45,7 @@ export interface IWbw {
   meaning?: WbwElement2;
   type?: WbwElement;
   grammar?: WbwElement;
-  case?: WbwElement;
+  case?: WbwElement2;
   parent?: WbwElement;
   factors?: WbwElement;
   factorMeaning?: WbwElement;
@@ -97,7 +97,11 @@ const Widget = ({
           }
         }}
       />
-      <div style={{ backgroundColor: wordData.bookMarkColor?.value }}>
+      <div
+        style={{
+          background: `linear-gradient(90deg, rgba(255, 255, 255, 0), ${wordData.bookMarkColor?.value})`,
+        }}
+      >
         {fields?.meaning ? (
           <WbwMeaning
             data={wordData}

@@ -1,0 +1,16 @@
+.wbw_word_item {
+  min-width: 3em;
+  padding: 0;
+  cursor: pointer;
+}
+
+.case {
+  padding: 0 2px;
+  line-height: 1.5em;
+}
+.case:first-child {
+  outline: 1px solid;
+  outline-offset: -1px;
+  margin: 0 0.3em 0 1px;
+  padding: 0px 2px;
+}
