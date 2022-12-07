@@ -1,18 +1,18 @@
 import { useIntl } from "react-intl";
-import { Typography } from "antd";
+import { Typography, Button } from "antd";
+import { SwapOutlined } from "@ant-design/icons";
 
 import { IWbw } from "./WbwWord";
-import "./wbw.css"; // 告诉 umi 编译这个 css
+import "./wbw.css";
 
 const { Text } = Typography;
 
 interface IWidget {
   data: IWbw;
+  onSplit?: Function;
 }
-
-const Widget = ({ data }: IWidget) => {
+const Widget = ({ data, onSplit }: IWidget) => {
   const intl = useIntl();
-  console.log("case", data.case?.value);
   return (
     <div className="wbw_word_item" style={{ display: "flex" }}>
       <Text type="secondary">
@@ -24,6 +24,14 @@ const Widget = ({ data }: IWidget) => {
               </span>
             );
           })}
+          <Button
+            icon={<SwapOutlined />}
+            onClick={() => {
+              if (typeof onSplit !== "undefined") {
+                onSplit();
+              }
+            }}
+          />
         </div>
       </Text>
     </div>
