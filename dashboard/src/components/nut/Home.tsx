@@ -15,6 +15,9 @@ const Widget = () => {
   const valueMake = (value: string) => {
     return { value: value, status: 3 };
   };
+  const valueMake2 = (value: string[]) => {
+    return { value: value, status: 3 };
+  };
   for (let index = 0; index < 20; index++) {
     wbwData.push({
       word: valueMake("Word" + index),
@@ -24,6 +27,7 @@ const Widget = () => {
       factorMeaning: valueMake("mean+mean"),
       type: valueMake(".n."),
       grammar: valueMake(".m.$.sg.$.nom."),
+      case: valueMake2(["n", "m", "sg", "nom"]),
       confidence: 1,
     });
   }
@@ -34,8 +38,13 @@ const Widget = () => {
       <div style={{ width: 700 }}>
         <WbwSent
           data={wbwData}
-          display="inline"
-          fields={{ meaning: true, factors: false, case: false }}
+          display="block"
+          fields={{
+            meaning: true,
+            factors: true,
+            factorMeaning: true,
+            case: true,
+          }}
         />
       </div>
       <h2>channel picker</h2>
