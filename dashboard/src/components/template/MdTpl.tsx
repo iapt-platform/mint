@@ -3,6 +3,7 @@ import Quote from "./Quote";
 import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
 import Term from "./Term";
+import WbwSent from "./WbwSent";
 import Wd from "./Wd";
 
 interface IWidgetMdTpl {
@@ -19,6 +20,8 @@ const Widget = ({ tpl, props }: IWidgetMdTpl) => {
       return <SentRead props={props ? props : ""} />;
     case "sentedit":
       return <SentEdit props={props ? props : ""} />;
+	  case "wbw_sent":
+		return <WbwSent props={props ? props : ""} />;
     case "wd":
       return <Wd props={props ? props : ""} />;
     case "quote":

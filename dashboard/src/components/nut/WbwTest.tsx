@@ -1,5 +1,5 @@
 import { IWbw } from "../template/Wbw/WbwWord";
-import WbwSent from "../template/WbwSent";
+import { WbwSentCtl } from "../template/WbwSent";
 
 const Widget = () => {
   let wbwData: IWbw[] = [];
@@ -26,7 +26,7 @@ const Widget = () => {
   return (
     <div>
       <div style={{ width: 700 }}>
-        <WbwSent
+        <WbwSentCtl
           data={wbwData}
           display="block"
           fields={{

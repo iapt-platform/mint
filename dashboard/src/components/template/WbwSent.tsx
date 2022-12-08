@@ -6,7 +6,7 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
 }
-const Widget = ({ data, display, fields }: IWidget) => {
+export const WbwSentCtl = ({ data, display, fields }: IWidget) => {
   const [wordData, setWordData] = useState(data);
 
   return (
@@ -51,6 +51,14 @@ const Widget = ({ data, display, fields }: IWidget) => {
       })}
     </div>
   );
+};
+
+interface IWidgetWbwSent {
+  props: string;
+}
+const Widget = ({ props }: IWidgetWbwSent) => {
+  const prop = JSON.parse(atob(props)) as IWidget;
+  return <WbwSentCtl {...prop} />;
 };
 
 export default Widget;
