@@ -3,6 +3,12 @@
   padding-right: 0;
   max-width: 60vw;
 }
+.wbw_split {
+  visibility: hidden;
+}
+.wbw_word:hover .wbw_split {
+  visibility: visible;
+}
 .block .pali {
   font-weight: 500;
   font-size: 110%;
