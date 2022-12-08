@@ -23,24 +23,27 @@ const Widget = ({ data, display, fields }: IWidget) => {
               console.log("word id", id);
               //TODO update
             }}
-            onSplit={() => {
-              console.log("word id", id, wordData[id].factors?.value);
-              const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
-
-              const children: IWbw[] | undefined = wordData[id].factors?.value
-                .split("+")
-                .map((item, id) => {
-                  return {
-                    word: { value: item, status: 5 },
-                    real: { value: item, status: 5 },
-                    confidence: 1,
-                  };
-                });
-              if (typeof children !== "undefined") {
-                console.log("children", children);
-                newData.splice(id + 1, 0, ...children);
-                console.log("new-data", newData);
-                setWordData(newData);
+            onSplit={(isSplit: boolean) => {
+              if (isSplit) {
+                //拆分
+                const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+                const children: IWbw[] | undefined = wordData[id].factors?.value
+                  .split("+")
+                  .map((item) => {
+                    return {
+                      word: { value: item, status: 5 },
+                      real: { value: item, status: 5 },
+                      confidence: 1,
+                    };
+                  });
+                if (typeof children !== "undefined") {
+                  console.log("children", children);
+                  newData.splice(id + 1, 0, ...children);
+                  console.log("new-data", newData);
+                  setWordData(newData);
+                }
+              } else {
+                //合并
               }
             }}
           />
