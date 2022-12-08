@@ -22,6 +22,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CorpusController;
 use App\Http\Controllers\ArticleProgressController;
+use App\Http\Controllers\ExportWbwController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
     Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
     Route::apiResource('article-progress',ArticleProgressController::class);
+
+    Route::post('export_wbw',[ExportWbwController::class,'index']);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
