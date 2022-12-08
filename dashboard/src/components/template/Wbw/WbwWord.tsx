@@ -76,6 +76,7 @@ interface IWidget {
   fields?: IWbwFields;
   onChange?: Function;
   onSplit?: Function;
+  onShellClick?: Function;
 }
 const Widget = ({
   data,
@@ -83,6 +84,7 @@ const Widget = ({
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
   onChange,
   onSplit,
+  onShellClick,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
 
@@ -93,7 +95,15 @@ const Widget = ({
     ? bookMarkColor[wordData.bookMarkColor.value]
     : "unset";
   return (
-    <div className={`wbw_word ${display}`} style={styleWbw}>
+    <div
+      className={`wbw_word ${display}`}
+      style={styleWbw}
+      onClick={() => {
+        if (typeof onShellClick !== "undefined") {
+          onShellClick();
+        }
+      }}
+    >
       <WbwPali
         data={wordData}
         onSave={(e: IWbw) => {
