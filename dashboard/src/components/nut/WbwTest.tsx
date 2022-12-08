@@ -22,18 +22,21 @@ const Widget = () => {
       confidence: 1,
     });
   }
+
   return (
-    <div style={{ width: 700 }}>
-      <WbwSent
-        data={wbwData}
-        display="block"
-        fields={{
-          meaning: true,
-          factors: true,
-          factorMeaning: true,
-          case: true,
-        }}
-      />
+    <div>
+      <div style={{ width: 700 }}>
+        <WbwSent
+          data={wbwData}
+          display="block"
+          fields={{
+            meaning: true,
+            factors: true,
+            factorMeaning: true,
+            case: true,
+          }}
+        />
+      </div>
     </div>
   );
 };
