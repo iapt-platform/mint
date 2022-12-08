@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WbwCase from "./WbwCase";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwFactorMeaning from "./WbwFactorMeaning";
@@ -76,7 +76,6 @@ interface IWidget {
   fields?: IWbwFields;
   onChange?: Function;
   onSplit?: Function;
-  onShellClick?: Function;
 }
 const Widget = ({
   data,
@@ -84,10 +83,11 @@ const Widget = ({
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
   onChange,
   onSplit,
-  onShellClick,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
-
+  useEffect(() => {
+    setWordData(data);
+  }, [data]);
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
   };
@@ -95,15 +95,7 @@ const Widget = ({
     ? bookMarkColor[wordData.bookMarkColor.value]
     : "unset";
   return (
-    <div
-      className={`wbw_word ${display}`}
-      style={styleWbw}
-      onClick={() => {
-        if (typeof onShellClick !== "undefined") {
-          onShellClick();
-        }
-      }}
-    >
+    <div className={`wbw_word ${display}`} style={styleWbw}>
       <WbwPali
         data={wordData}
         onSave={(e: IWbw) => {
@@ -139,10 +131,10 @@ const Widget = ({
         {fields?.case ? (
           <WbwCase
             data={wordData}
-            onSplit={() => {
+            onSplit={(e: boolean) => {
               console.log("onSplit", wordData.factors?.value);
               if (typeof onSplit !== "undefined") {
-                onSplit();
+                onSplit(e);
               }
             }}
           />
