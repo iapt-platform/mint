@@ -10,6 +10,18 @@
 ssh -i YOUR_KEY YOUR_ID@YOUR_ID.spring.wikipali.org
 ```
 
+## 数据库设置
+
+![files](files.png)
+
+```bash
+cd /workspace/shared/db-TIMASTAMP/
+psql -q -h 127.0.0.1 -p 5432 -U YOUR_ID YOUR_ID_mint < schema.sql
+pg_restore -Fc -h 127.0.0.1 -p 5432 -U YOUR_ID -d YOUR_ID_mint < data.dump
+```
+
+![restore](restore.png)
+
 ## PHP 开发（以用户 xxx 为例）
 
 - `~/www/htdocs/info.php` => `https://YOUR_ID.spring.wikipali.org/info.php`
