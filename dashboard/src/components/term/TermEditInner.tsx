@@ -7,7 +7,7 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
-import LangSelect from "../LangSelect";
+import LangSelect from "../general/LangSelect";
 import { DefaultOptionType } from "antd/lib/select";
 
 interface IWidget {

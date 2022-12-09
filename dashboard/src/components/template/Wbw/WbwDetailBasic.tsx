@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import { Divider, Form, Select, Input } from "antd";
 import { Collapse } from "antd";
 
-import SelectCase from "../../studio/SelectCase";
+import SelectCase from "../../dict/SelectCase";
 import { IWbw } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 
