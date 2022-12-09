@@ -117,6 +117,7 @@ const items = {
   "dict.fields.type.interj.short.label": "感",
   "dict.fields.type.pre.label": "前缀",
   "dict.fields.type.pre.short.label": "前",
+  "dict.fields.type.suf.label": "后缀",
   "dict.fields.type.suf.short.label": "后",
   "dict.fields.type.end.label": "语尾",
   "dict.fields.type.end.short.label": "尾",
