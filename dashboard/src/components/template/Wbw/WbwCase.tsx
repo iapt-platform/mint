@@ -21,7 +21,9 @@ const Widget = ({ data, onSplit }: IWidget) => {
           {data.case?.value.map((item, id) => {
             return (
               <span key={id} className="case">
-                {intl.formatMessage({ id: `dict.fields.type.${item}.label` })}
+                {intl.formatMessage({
+                  id: `dict.fields.type.${item}.short.label`,
+                })}
               </span>
             );
           })}
