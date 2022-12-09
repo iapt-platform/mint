@@ -1,6 +1,6 @@
 import { Row, Col } from "antd";
 import { Typography } from "antd";
-import TimeShow from "../utilities/TimeShow";
+import TimeShow from "../general/TimeShow";
 import TocPath from "../corpus/TocPath";
 import TagArea from "../tag/TagArea";
 import type { TagNode } from "../tag/TagArea";

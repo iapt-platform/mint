@@ -1,5 +1,5 @@
 import { IWbw } from "../template/Wbw/WbwWord";
-import WbwSent from "../template/WbwSent";
+import { WbwSentCtl } from "../template/WbwSent";
 
 const Widget = () => {
   let wbwData: IWbw[] = [];
@@ -22,18 +22,21 @@ const Widget = () => {
       confidence: 1,
     });
   }
+
   return (
-    <div style={{ width: 700 }}>
-      <WbwSent
-        data={wbwData}
-        display="block"
-        fields={{
-          meaning: true,
-          factors: true,
-          factorMeaning: true,
-          case: true,
-        }}
-      />
+    <div>
+      <div style={{ width: 700 }}>
+        <WbwSentCtl
+          data={wbwData}
+          display="block"
+          fields={{
+            meaning: true,
+            factors: true,
+            factorMeaning: true,
+            case: true,
+          }}
+        />
+      </div>
     </div>
   );
 };

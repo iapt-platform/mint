@@ -13,6 +13,7 @@ interface IWidget {
 }
 const Widget = ({ data, onSplit }: IWidget) => {
   const intl = useIntl();
+  const showSplit: boolean = data.factors?.value.includes("+") ? true : false;
   return (
     <div className="wbw_word_item" style={{ display: "flex" }}>
       <Text type="secondary">
@@ -20,18 +21,27 @@ const Widget = ({ data, onSplit }: IWidget) => {
           {data.case?.value.map((item, id) => {
             return (
               <span key={id} className="case">
-                {intl.formatMessage({ id: `dict.fields.type.${item}.label` })}
+                {intl.formatMessage({
+                  id: `dict.fields.type.${item}.short.label`,
+                })}
               </span>
             );
           })}
-          <Button
-            icon={<SwapOutlined />}
-            onClick={() => {
-              if (typeof onSplit !== "undefined") {
-                onSplit();
-              }
-            }}
-          />
+          {showSplit ? (
+            <Button
+              className="wbw_split"
+              size="small"
+              shape="circle"
+              icon={<SwapOutlined />}
+              onClick={() => {
+                if (typeof onSplit !== "undefined") {
+                  onSplit(true);
+                }
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </Text>
     </div>

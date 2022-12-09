@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../../hooks";
-import { message } from "../../../reducers/command";
+import { useAppSelector } from "../../hooks";
+import { message } from "../../reducers/command";
 
-import TermCreate, { IWidgetDictCreate } from "../../studio/term/TermCreate";
+import TermCreate, { IWidgetDictCreate } from "../term/TermCreate";
 
 const Widget = () => {
   const [termProps, setTermProps] = useState<IWidgetDictCreate>();

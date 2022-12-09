@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WbwCase from "./WbwCase";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwFactorMeaning from "./WbwFactorMeaning";
@@ -85,7 +85,9 @@ const Widget = ({
   onSplit,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
-
+  useEffect(() => {
+    setWordData(data);
+  }, [data]);
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
   };
@@ -129,10 +131,10 @@ const Widget = ({
         {fields?.case ? (
           <WbwCase
             data={wordData}
-            onSplit={() => {
+            onSplit={(e: boolean) => {
               console.log("onSplit", wordData.factors?.value);
               if (typeof onSplit !== "undefined") {
-                onSplit();
+                onSplit(e);
               }
             }}
           />

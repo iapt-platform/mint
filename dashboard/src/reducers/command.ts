@@ -3,7 +3,7 @@
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IWidgetDict } from "../components/dict/DictComponent";
-import { IWidgetDictCreate } from "../components/studio/term/TermCreate";
+import { IWidgetDictCreate } from "../components/term/TermCreate";
 
 import type { RootState } from "../store";
 

@@ -8,7 +8,7 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 
-import TermCreate from "../../../components/studio/term/TermCreate";
+import TermCreate from "../../../components/term/TermCreate";
 import { ITermListResponse } from "../../../components/api/Term";
 import { get } from "../../../request";
 

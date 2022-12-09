@@ -1,9 +1,9 @@
-import { Col, Layout, Progress, Row, Space, Tabs } from "antd";
+import { Col, Progress, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
 import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
 import { ChannelInfoProps } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
-import TimeShow from "../utilities/TimeShow";
+import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 

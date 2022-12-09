@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Article, { ArticleMode } from "../../../components/article/Article";
 import ArticleCard from "../../../components/article/ArticleCard";
 import ArticleTabs from "../../../components/article/ArticleTabs";
-import ProTabs from "../../../components/library/article/ProTabs";
+import ProTabs from "../../../components/article/ProTabs";
 
 /**
  * type:
@@ -41,8 +41,8 @@ const Widget = () => {
       <div style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}>
         <div style={{ flex: 5 }}>
           <ArticleCard
-		  type={type}
-		  articleId={id}
+            type={type}
+            articleId={id}
             onModeChange={(e: ArticleMode) => {
               setArticleMode(e);
             }}

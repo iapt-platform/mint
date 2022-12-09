@@ -8,8 +8,8 @@ import {
 } from "@ant-design/pro-components";
 import { PlusOutlined } from "@ant-design/icons";
 
-import { ITermResponse, ITermCreateResponse } from "../../api/Term";
-import { get } from "../../../request";
+import { ITermResponse, ITermCreateResponse } from "../api/Term";
+import { get } from "../../request";
 
 import TermEditInner from "./TermEditInner";
 

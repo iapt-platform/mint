@@ -1,7 +1,7 @@
 import { Typography } from "antd";
 import { Space } from "antd";
 import User from "../../auth/User";
-import TimeShow from "../../utilities/TimeShow";
+import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";
 
 const { Text } = Typography;

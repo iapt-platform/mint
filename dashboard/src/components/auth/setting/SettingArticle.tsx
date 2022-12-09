@@ -5,12 +5,15 @@ import SettingItem from "./SettingItem";
 const Widget = () => {
   return (
     <div>
-      <Divider>翻译</Divider>
+      <Divider>阅读</Divider>
       <SettingItem data={SettingFind("setting.display.original")} />
       <SettingItem data={SettingFind("setting.layout.direction")} />
       <SettingItem data={SettingFind("setting.layout.paragraph")} />
       <SettingItem data={SettingFind("setting.pali.script1")} />
       <SettingItem data={SettingFind("setting.pali.script2")} />
+      <Divider>翻译</Divider>
+
+      <Divider>逐词解析</Divider>
     </div>
   );
 };

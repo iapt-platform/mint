@@ -2,9 +2,10 @@ import { useRef, useState } from "react";
 import { Switch } from "antd";
 import { Radio, Space } from "antd";
 import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import SettingArticle from "../../auth/setting/SettingArticle";
-import DictComponent from "../../dict/DictComponent";
-import { DictIcon, TermIcon } from "../../../assets/icon";
+
+import SettingArticle from "../auth/setting/SettingArticle";
+import DictComponent from "../dict/DictComponent";
+import { DictIcon, TermIcon } from "../../assets/icon";
 import TermShell from "./TermShell";
 
 const setting = (
