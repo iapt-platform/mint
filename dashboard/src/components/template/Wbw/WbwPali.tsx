@@ -56,6 +56,7 @@ const Widget = ({ data, onSave }: IWidget) => {
   ) : (
     <></>
   );
+  const classPali = data.style?.value === "note" ? "wbw_note" : "pali";
   return (
     <div className="pali_shell">
       <Popover
@@ -66,7 +67,7 @@ const Widget = ({ data, onSave }: IWidget) => {
         onOpenChange={handleClickChange}
       >
         <span
-          className="pali"
+          className={classPali}
           style={{ backgroundColor: paliColor, padding: 4, borderRadius: 5 }}
         >
           {data.word.value}

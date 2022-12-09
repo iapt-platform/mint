@@ -3,6 +3,13 @@
   padding-right: 0;
   max-width: 60vw;
 }
+.wbw_ctl {
+  display: none;
+}
+.wbw_anchor {
+  display: none;
+}
+
 .wbw_split {
   visibility: hidden;
 }
@@ -22,12 +29,14 @@
 .inline .pali {
   color: brown;
 }
+.wbw_note {
+  color: blue;
+}
 .block .wbw_body {
   padding-right: 0.5em;
   padding-top: 0.2em;
 }
 .wbw_word_item {
-  min-width: 3em;
   padding: 0;
   cursor: pointer;
 }

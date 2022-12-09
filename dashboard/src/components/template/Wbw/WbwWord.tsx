@@ -53,6 +53,7 @@ export interface IWbw {
   meaning?: WbwElement2;
   type?: WbwElement;
   grammar?: WbwElement;
+  style?: WbwElement;
   case?: WbwElement2;
   parent?: WbwElement;
   factors?: WbwElement;
@@ -94,8 +95,14 @@ const Widget = ({
   const color = wordData.bookMarkColor
     ? bookMarkColor[wordData.bookMarkColor.value]
     : "unset";
+  const wbwCtl = wordData.type?.value === ".ctl." ? "wbw_ctl" : "";
+  const wbwAnchor = wordData.grammar?.value === ".a." ? "wbw_anchor" : "";
+
   return (
-    <div className={`wbw_word ${display}`} style={styleWbw}>
+    <div
+      className={`wbw_word ${display} ${wbwCtl} ${wbwAnchor} `}
+      style={styleWbw}
+    >
       <WbwPali
         data={wordData}
         onSave={(e: IWbw) => {

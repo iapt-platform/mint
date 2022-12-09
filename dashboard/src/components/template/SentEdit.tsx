@@ -5,9 +5,8 @@ import { IChannel } from "../channel/Channel";
 import SentContent from "./SentEdit/SentContent";
 import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
-import { suggestion } from "../../reducers/suggestion";
 
-interface ISuggestiongCount {
+interface ISuggestionCount {
   suggestion?: number;
   qa?: number;
 }
@@ -21,7 +20,7 @@ export interface ISentence {
   editor: IUser;
   channel: IChannel;
   updateAt: string;
-  suggestionCount?: ISuggestiongCount;
+  suggestionCount?: ISuggestionCount;
 }
 
 export interface IWidgetSentEditInner {

@@ -6,7 +6,6 @@ interface IWidget {
   convertor?: TCodeConvertor;
 }
 const Widget = ({ html, wordWidget = false, convertor }: IWidget) => {
-  console.log("word", wordWidget);
   const jsx = XmlToReact(html, wordWidget, convertor);
   return <>{jsx}</>;
 };

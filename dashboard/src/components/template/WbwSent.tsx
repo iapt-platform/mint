@@ -6,7 +6,7 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
 }
-export const WbwSentCtl = ({ data, display, fields }: IWidget) => {
+export const WbwSentCtl = ({ data, display = "inline", fields }: IWidget) => {
   const [wordData, setWordData] = useState(data);
 
   return (
