@@ -1,19 +1,24 @@
 import { IStudioApiResponse, Role } from "./Auth";
-
+export type TChannelType =
+  | "translation"
+  | "nissaya"
+  | "original"
+  | "wbw"
+  | "commentary";
 export interface IChannelApiData {
   id: string;
   name: string;
-  type: string;
+  type: TChannelType;
 }
 
-export type ChannelInfoProps = {
+export interface ChannelInfoProps {
   channelName: string;
   channelId: string;
   channelType: string;
   studioName: string;
   studioId: string;
   studioType: string;
-};
+}
 
 export type IFinal = [number, boolean];
 export interface IApiResponseChannelData {
