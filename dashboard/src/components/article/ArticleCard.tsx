@@ -5,6 +5,9 @@ import { IWidgetArticleData } from "./ArticleView";
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import ArticleCardMainMenu from "./ArticleCardMainMenu";
+import store from "../../store";
+import { modeChange } from "../../reducers/article-mode";
+import { ArticleMode } from "./Article";
 
 interface IWidgetArticleCard {
   type?: string;
@@ -58,6 +61,10 @@ const Widget = ({
           label: intl.formatMessage({ id: "buttons.edit" }),
           value: "edit",
         },
+        {
+          label: intl.formatMessage({ id: "buttons.wbw" }),
+          value: "wbw",
+        },
       ]}
       value={mode}
       onChange={(value) => {
@@ -65,6 +72,8 @@ const Widget = ({
           onModeChange(value.toString());
         }
         setMode(value.toString());
+        //发布mode变更
+        store.dispatch(modeChange(value.toString() as ArticleMode));
       }}
     />
   );

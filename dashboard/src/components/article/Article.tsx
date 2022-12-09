@@ -4,7 +4,7 @@ import { get } from "../../request";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
 
-export type ArticleMode = "read" | "edit";
+export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
   | "article"
   | "chapter"
@@ -26,6 +26,7 @@ const Widget = ({
   active = false,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
+  const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
   let channels: string[] = [];
   if (typeof articleId !== "undefined") {
     const aId = articleId.split("_");
@@ -38,6 +39,11 @@ const Widget = ({
     if (!active) {
       return;
     }
+    if (mode !== "read" && articleMode !== "read") {
+      setArticleMode(mode);
+      return;
+    }
+    setArticleMode(mode);
     if (typeof type !== "undefined" && typeof articleId !== "undefined") {
       get<IArticleResponse>(`/v2/${type}/${articleId}/${mode}`).then((json) => {
         if (json.ok) {

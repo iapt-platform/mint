@@ -32,6 +32,9 @@
 .wbw_note {
   color: blue;
 }
+.block .wbw_note {
+  font-weight: 500;
+}
 .block .wbw_body {
   padding-right: 0.5em;
   padding-top: 0.2em;

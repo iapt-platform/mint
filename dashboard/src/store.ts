@@ -6,6 +6,7 @@ import openArticleReducer from "./reducers/open-article";
 import settingReducer from "./reducers/setting";
 import commandReducer from "./reducers/command";
 import suggestionReducer from "./reducers/suggestion";
+import articleModeReducer from "./reducers/article-mode";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     setting: settingReducer,
     command: commandReducer,
     suggestion: suggestionReducer,
+    articleMode: articleModeReducer,
   },
 });
 
