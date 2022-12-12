@@ -3,6 +3,13 @@
   padding-right: 0;
   max-width: 60vw;
 }
+.wbw_detail_basic .ant-form-item {
+  margin: 0 0 4px;
+}
+.wbw_detail_basic .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
 .wbw_ctl {
   display: none;
 }
@@ -16,9 +23,15 @@
 .wbw_word:hover .wbw_split {
   visibility: visible;
 }
+.pali:hover {
+  cursor: pointer;
+}
+.inline .pali:hover {
+  text-decoration-line: underline;
+  text-underline-offset: 5px;
+}
 .block .pali {
   font-weight: 500;
-  font-size: 110%;
   padding: 0px 2px;
   margin: 0px;
   line-height: 1.5em;
