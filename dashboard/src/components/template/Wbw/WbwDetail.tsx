@@ -91,7 +91,7 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
                 <WbwDetailBasic
                   data={data}
                   onChange={(e: IWbwField) => {
-                    console.log(e);
+                    console.log("WbwDetailBasic onchange", e);
                     fieldChanged(e.field, e.value);
                   }}
                 />
