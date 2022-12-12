@@ -41,6 +41,7 @@ const Widget = ({
     }
     if (mode !== "read" && articleMode !== "read") {
       setArticleMode(mode);
+      console.log("set mode", mode, articleMode);
       return;
     }
     setArticleMode(mode);
@@ -53,7 +54,7 @@ const Widget = ({
         }
       });
     }
-  }, [active, type, articleId, mode]);
+  }, [active, type, articleId, mode, articleMode]);
   return (
     <ArticleView
       id={articleData?.uid}
