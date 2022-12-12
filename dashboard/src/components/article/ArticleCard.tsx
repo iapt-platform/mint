@@ -69,7 +69,9 @@ const Widget = ({
       value={mode}
       onChange={(value) => {
         if (typeof onModeChange !== "undefined") {
-          onModeChange(value.toString());
+          if (mode === "read" || value.toString() === "read") {
+            onModeChange(value.toString());
+          }
         }
         setMode(value.toString());
         //发布mode变更
