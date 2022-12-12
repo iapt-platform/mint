@@ -30,11 +30,21 @@ const Widget = ({ data, onChange }: IWidget) => {
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
   };
-
+  const onMeaningChange = (value: string | string[]) => {
+    console.log(`Selected: ${value}`);
+    if (typeof onChange !== "undefined") {
+      if (typeof value === "string") {
+        onChange({ field: "meaning", value: value });
+      } else {
+        onChange({ field: "meaning", value: value.join("$") });
+      }
+    }
+  };
   return (
     <>
       <Form
         {...formItemLayout}
+        className="wbw_detail_basic"
         name="basic"
         form={form}
         initialValues={{
@@ -52,16 +62,7 @@ const Widget = ({ data, onChange }: IWidget) => {
           <Select
             allowClear
             mode="tags"
-            onChange={(value: string | string[]) => {
-              console.log(`Selected: ${value}`);
-              if (typeof onChange !== "undefined") {
-                if (typeof value === "string") {
-                  onChange({ field: "meaning", value: value });
-                } else {
-                  onChange({ field: "meaning", value: value.join("$") });
-                }
-              }
-            }}
+            onChange={onMeaningChange}
             style={{ width: "100%" }}
             placeholder={intl.formatMessage({
               id: "forms.fields.meaning.label",
@@ -87,6 +88,7 @@ const Widget = ({ data, onChange }: IWidget) => {
                     form.setFieldsValue({
                       meaning: currMeanings,
                     });
+                    onMeaningChange(currMeanings);
                   }}
                 />
               </>
