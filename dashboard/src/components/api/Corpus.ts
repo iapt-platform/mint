@@ -1,5 +1,6 @@
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { TagNode } from "../tag/TagArea";
 
 export interface IApiPaliChapterList {
   id: string;
@@ -151,4 +152,30 @@ export interface IPaliTocListResponse {
   ok: boolean;
   message: string;
   data: { rows: IPaliToc[]; count: number };
+}
+
+export interface IPaliBookListResponse {
+  name: string;
+  tag: string[];
+  children?: IPaliBookListResponse[];
+}
+
+export interface IChapterData {
+  title: string;
+  toc: string;
+  book: number;
+  para: number;
+  path: string;
+  tags: TagNode[];
+  channel: { name: string; owner_uid: string };
+  summary: string;
+  view: number;
+  like: number;
+  created_at: string;
+  updated_at: string;
+}
+export interface IChapterListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IChapterData[]; count: number };
 }
