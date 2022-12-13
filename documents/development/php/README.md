@@ -9,10 +9,7 @@
 - PHP-WEB 文件写入权限不足
 
 ```bash
-# for folder
-chmod 777 FOLDER_NAME
-# for file
-chmod 666 FILE_NAME
+XXX/mint/scrips/spring/laravel.sh
 ```
 
 ## Php-Nginx for local container
