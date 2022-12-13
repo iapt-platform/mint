@@ -12,14 +12,13 @@ interface IWidget {
 const Widget = ({ data }: IWidget) => {
   const [value, setValue] = useState("close");
   const [showPanel, setShowPanel] = useState("none");
-  const [showSuggestion, setShowSuggestion] = useState("none");
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
     console.log("radio1 checked", value);
     switch (value) {
       case "suggestion":
-        setShowSuggestion("block");
-        setShowPanel("block");
+        setShowSuggestion(true);
         break;
     }
     setValue(value);
@@ -60,15 +59,19 @@ const Widget = ({ data }: IWidget) => {
           <Radio value="close" style={{ display: "none" }}></Radio>
         </Radio.Group>
       </div>
-      <div style={{ display: showPanel }}>
-        <div style={{ display: showSuggestion, paddingLeft: "1em" }}>
-          <div>
-            <SuggestionAdd data={data} />
+      <div>
+        {showSuggestion ? (
+          <div style={{ paddingLeft: "1em" }}>
+            <div>
+              <SuggestionAdd data={data} />
+            </div>
+            <div>
+              <SuggestionList {...data} />
+            </div>
           </div>
-          <div>
-            <SuggestionList {...data} />
-          </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
