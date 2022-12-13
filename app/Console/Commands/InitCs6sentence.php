@@ -7,6 +7,8 @@ use App\Models\PaliSentence;
 use App\Models\WbwTemplate;
 use App\Models\Sentence;
 use Illuminate\Support\Str;
+use App\Http\Api\ChannelApi;
+
 
 class InitCs6sentence extends Command
 {
@@ -42,6 +44,11 @@ class InitCs6sentence extends Command
     public function handle()
     {
 		$start = time();
+        $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        if($channelId === false){
+            $this->error('no channel');
+            return 1;
+        }
 		$pali = new PaliSentence;
 		if(!empty($this->argument('book'))){
 			$pali = $pali->where('book',$this->argument('book'));
@@ -64,7 +71,9 @@ class InitCs6sentence extends Command
 			$boldCount = 0;
 			foreach ($words as $word) {
 				# code...
-				if($word->style != "note" && $word->type != '.ctl.'){
+				//if($word->style != "note" && $word->type != '.ctl.')
+				if( $word->type != '.ctl.')
+                {
 					if($word->style=='bld'){
 						if(!$boldStart){
 							#黑体字开始
@@ -103,11 +112,13 @@ class InitCs6sentence extends Command
 				$sent .= '** ';
 			}
 			#将wikipali风格的引用 改为缅文风格
+            /*
 			$sent = \str_replace('n’’’ ti','’’’nti',$sent);
 			$sent = \str_replace('n’’ ti','’’nti',$sent);
 			$sent = \str_replace('n’ ti','’nti',$sent);
 			$sent = \str_replace('**ti**','**ti',$sent);
 			$sent = \str_replace('‘ ','‘',$sent);
+            */
 			$sent = trim($sent);
 			$snowId = app('snowflake')->id();
 			$newRow = Sentence::updateOrCreate(
@@ -116,7 +127,7 @@ class InitCs6sentence extends Command
 					"paragraph" => $value->paragraph,
 					"word_start" => $value->word_begin,
 					"word_end" => $value->word_end,
-					"channel_uid" => config("app.admin.cs_channel"),
+					"channel_uid" => $channelId,
 				],
 				[
 					'id' =>$snowId,
