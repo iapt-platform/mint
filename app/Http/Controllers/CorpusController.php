@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\PaliText;
+use App\Models\WbwTemplate;
+use App\Models\WbwBlock;
+use App\Models\Wbw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
+use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\Log;
 
 class CorpusController extends Controller
@@ -26,6 +30,7 @@ class CorpusController extends Controller
         "created_at"=> "",
         "updated_at"=> "",
     ];
+    protected $wbwChannels = [];
     protected $selectCol = ['book_id','paragraph','word_start',"word_end",'channel_uid','content','updated_at'];
     public function __construct()
     {
@@ -66,7 +71,10 @@ class CorpusController extends Controller
     public function getSentTpl($id,$channels){
         $sent = [];
         $sentId = \explode('-',$id);
-        array_push($channels,config("app.admin.cs_channel"));
+        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        if($channelId !== false){
+            array_push($channels,$channelId);
+        }
         $record = Sentence::select($this->selectCol)
         ->where('book_id',$sentId[0])
         ->where('paragraph',$sentId[1])
@@ -151,7 +159,17 @@ class CorpusController extends Controller
         if(count($param)>1){
             $channels = array_slice($param,1);
         }
-		$channels[] = config("app.admin.cs_channel");
+        if($mode === 'read'){
+            //阅读模式加载md格式原文
+            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        }else{
+            //翻译模式加载json格式原文
+            $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        }
+
+        if($channelId !== false){
+            $channels[] = $channelId;
+        }
 
         $chapter = PaliText::where('book',$sentId[0])->where('paragraph',$sentId[1])->first();
         if(!$chapter){
@@ -190,7 +208,15 @@ class CorpusController extends Controller
                 $tranChannels[] = $value->uid;
             }
 		}
-
+        //获取wbw channel
+        //目前默认的 wbw channel 是第一个translation channel
+        foreach ($channels as $key => $value) {
+            # code...
+            if($indexChannel[$value]->type==='translation'){
+                $this->wbwChannels[] = $value;
+                break;
+            }
+        }
         $title = Sentence::select($this->selectCol)
                     ->where('book_id',$sentId[0])
                     ->where('paragraph',$sentId[1])
@@ -226,7 +252,13 @@ class CorpusController extends Controller
         }
         return $indexChannel;
     }
-
+/**
+ * 根据句子库数据生成文章内容
+ * $record 句子数据
+ * $mode read | edit | wbw
+ * $indexChannel channel索引
+ * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
+ */
     private function makeContent($record,$mode,$indexChannel,$indexedHeading=[]){
         $content = [];
 		$lastSent = "0-0";
@@ -250,13 +282,72 @@ class CorpusController extends Controller
 
 				$lastSent = $currSentId;
 			}
+			$sentContent=$value->content;
+			$channelType = $indexChannel[$value->channel_uid]->type;
+			if($indexChannel[$value->channel_uid]->type==="original" && $mode !== 'read'){
+                //非阅读模式下。原文使用逐词解析数据。优先加载第一个translation channel 如果没有。加载默认逐词解析。
+				$channelType = 'wbw';
+                $html = "";
+
+                if(count($this->wbwChannels)>0){
+                    //获取逐词解析数据
+                    $wbwBlock = WbwBlock::where('channel_uid',$this->wbwChannels[0])
+                                        ->where('book_id',$value->book_id)
+                                        ->where('paragraph',$value->paragraph)
+                                        ->select('uid')
+                                        ->first();
+                    if($wbwBlock){
+                        //找到逐词解析数据
+                        $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
+                                      ->whereBetween('wid',[$value->word_start,$value->word_end])
+                                      ->select('data')
+                                      ->orderBy('wid')
+                                      ->get();
+                        $wbwContent = [];
+                        foreach ($wbwData as $wbwrow) {
+                            $wbw = str_replace("&nbsp;",' ',$wbwrow->data);
+                            $wbw = str_replace("<br>",' ',$wbw);
+
+                            $xmlString = "<root>" . $wbw . "</root>";
+                            try{
+                                $xmlWord = simplexml_load_string($xmlString);
+                            }catch(Exception $e){
+                                continue;
+                            }
+                            $wordsList = $xmlWord->xpath('//word');
+                            foreach ($wordsList as $word) {
+                                $case = \str_replace(['#','.'],['$',''],$word->case->__toString());
+                                $case = \str_replace('$$','$',$case);
+                                $case = trim($case);
+                                $case = trim($case,"$");
+                                $wbwContent[] = [
+                                    'word'=>['value'=>$word->pali->__toString(),'status'=>0],
+                                    'real'=> ['value'=>$word->real->__toString(),'status'=>0],
+                                    'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
+                                    'type'=> ['value'=>$word->type->__toString(),'status'=>0],
+                                    'grammar'=> ['value'=>$word->gramma->__toString(),'status'=>0],
+                                    'case'=> ['value'=>\explode('$',$case),'status'=>0],
+                                    'parent'=> ['value'=>$word->parent->__toString(),'status'=>0],
+                                    'style'=> ['value'=>$word->style->__toString(),'status'=>0],
+                                    'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
+                                    'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
+                                    'confidence'=> 0.5
+                                ];
+                            }
+                        }
+                        $sentContent = \json_encode($wbwContent);
+                    }
+                }
+			}else{
+                $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
+                function() use($value){
+                    return MdRender::render($value->content,$value->channel_uid);
+                });
+            }
 
             $newSent = [
-                "content"=>$value->content,
-                "html"=> Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
-                        function() use($value){
-                            return MdRender::render($value->content,$value->channel_uid);
-                        }),
+                "content"=>$sentContent,
+                "html"=> $html,
                 "book"=> $value->book_id,
                 "para"=> $value->paragraph,
                 "wordStart"=> $value->word_start,
@@ -269,6 +360,7 @@ class CorpusController extends Controller
                 ],
                 "channel"=> [
                     "name"=>$indexChannel[$value->channel_uid]->name,
+                    "type"=>$channelType,
 	                "id"=> $value->channel_uid,
                 ],
                 "updateAt"=> $value->updated_at,
@@ -276,6 +368,7 @@ class CorpusController extends Controller
             ];
 			switch ($indexChannel[$value->channel_uid]->type) {
 				case 'original';
+				case 'wbw';
 					array_push($sent["origin"],$newSent);
 					break;
 				default:
@@ -289,8 +382,13 @@ class CorpusController extends Controller
         return \implode("",$content);
     }
 	private function pushSent($result,$sent,$level=0,$mode='read'){
+
 		$sentProps = base64_encode(\json_encode($sent)) ;
-		$sentWidget = "<MdTpl tpl='sent{$mode}' props='{$sentProps}' />";
+        if($mode === 'read'){
+            $sentWidget = "<MdTpl tpl='sentread' props='{$sentProps}' />";
+        }else{
+            $sentWidget = "<MdTpl tpl='sentedit' props='{$sentProps}' />";
+        }
 		//增加标题的html标记
 		if($level>0){
 			$sentWidget = "<h{$level}>".$sentWidget."</h{$level}>";
