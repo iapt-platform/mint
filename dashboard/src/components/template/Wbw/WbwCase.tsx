@@ -40,7 +40,9 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
   let caseElement: JSX.Element | JSX.Element[] | undefined;
   if (
     display === "block" &&
-    (typeof data.case === "undefined" || data.case.value.length === 0)
+    (typeof data.case === "undefined" ||
+      data.case.value.length === 0 ||
+      data.case.value[0] === "")
   ) {
     //空白的语法信息在逐词解析模式显示占位字符串
     caseElement = (
