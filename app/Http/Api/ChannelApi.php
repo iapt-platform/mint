@@ -19,4 +19,14 @@ class ChannelApi{
     public static function getListByUser(){
 
     }
+    public static function getSysChannel($channel_name){
+        $channel=  Channel::where('name',$channel_name)
+                    ->where('owner_uid',config("app.admin.root_uuid"))
+                    ->first();
+        if(!$channel){
+            return false;
+        }else{
+            return $channel->uid;
+        }
+    }
 }
