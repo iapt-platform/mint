@@ -23,6 +23,8 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CorpusController;
 use App\Http\Controllers\ArticleProgressController;
 use App\Http\Controllers\ExportWbwController;
+use App\Http\Controllers\WbwLookupController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -105,5 +107,6 @@ Route::group(['prefix' => 'v2'],function(){
         return json_encode($site);
     });
 
+    Route::apiResource('wbwlookup',WbwLookupController::class);
 
 });

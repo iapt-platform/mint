@@ -17,7 +17,8 @@ class Controller extends BaseController
 			'data'=>$result,
 			'message'=> $message,
 		];
-		return response()->json($response,200);
+		return response()->json($response,200,['Content-Type' => 'application/json;charset=UTF-8',
+	'Charset' => 'utf-8'],JSON_UNESCAPED_UNICODE);
 	}
     public function ok($result,$message=""){
         return $this->sendResponse($result,$message);
