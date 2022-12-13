@@ -82,14 +82,14 @@ function getNodeAttr(inNode, subTagName, attr) {
 }
 
 function setNodeAttr(inNode, subTagName, attr, strValue) {
-	if ( inNode == null || subTagName === "" || attr === "") {
+	if (!inNode || !strValue || !attr || attr == "") {
 		return;
 	}
 	let mValue = strValue.toString();
 	try {
 		if (inNode.getElementsByTagName(subTagName).length == 0) {
-			let newNode = gXmlBookData.createElement(subTagName);
-			let textnode = gXmlBookData.createTextNode(" ");
+			var newNode = gXmlBookData.createElement(subTagName);
+			var textnode = gXmlBookData.createTextNode(" ");
 			newNode.appendChild(textnode);
 			inNode.appendChild(newNode);
 		}
@@ -99,7 +99,7 @@ function setNodeAttr(inNode, subTagName, attr, strValue) {
 			newatt = gXmlBookData.createAttribute(attr);
 			newatt.nodeValue = mValue;
 			inNode.getElementsByTagName(subTagName)[0].setAttributeNode(newatt);
-			return true;
+			return mValue;
 		}
 	} catch (error) {
 		console.error(error);
@@ -153,64 +153,38 @@ function findFirstPartInDict(inWord) {
 	}
 	return output;
 }
-
-
-
-function LangInclude(lang,testLang){
-	if(lang.length>0){
-		return lang.includes(testLang);
-	}else{
-		return true;
-	}
-}
-
-
-/**
- * 查找某单词的意思
- * @param {string} inWord 要查找的单词拼写
- * @returns 
- */
-function findFirstMeanInDict(inWord) {
-	let output = "?";
-	let pali = com_getPaliReal(inWord);
+function findFirstPartMeanInDict(inWord) {
+	var output = "?";
+	var pali = com_getPaliReal(inWord);
 	if (mDict[pali]) {
-		for (const iterator of mDict[pali]) {
-			//if(dict_language_enable.indexOf(mDict[pali][iWord].language)>=0)
-			{
-				if (!isEmpty(iterator.mean)) {
-					return iterator.mean.split("$")[0];
+		for (var iWord in mDict[pali]) {
+			if (dict_language_enable.indexOf(mDict[pali][iWord].language) >= 0) {
+				if (mDict[pali][iWord].partmean) {
+					if (mDict[pali][iWord].partmean.length > 0) {
+						return mDict[pali][iWord].partmean;
+					}
 				}
 			}
 		}
 	}
 	return output;
 }
-/**
- * 查找某单词在复合词中的意思
- * @param {string} inWord 要查找的单词拼写
- * @returns 
- */
-function findFirstPartMeanInDict(inWord) {
-	let pali = inWord;
-	if (Object.hasOwnProperty.call(mDict, pali)) {
-		for (const iterator of mDict[pali]) {
-			if(LangInclude(setting['dict.lang'],iterator.language))
+function findFirstMeanInDict(inWord) {
+	var output = "?";
+	var pali = com_getPaliReal(inWord);
+	if (mDict[pali]) {
+		for (var iWord in mDict[pali]) {
+			//if(dict_language_enable.indexOf(mDict[pali][iWord].language)>=0)
 			{
-				if (iterator.type == ".part." && !isEmpty(iterator.mean)) {
-					return iterator.mean.split("$")[0];
-				}
-			}
-		}
-		for (const iterator of mDict[pali]) {
-			if(LangInclude(setting['dict.lang'],iterator.language))
-			{
-				if (!isEmpty(iterator.mean)) {
-					return iterator.mean.split("$")[0];
+				if (mDict[pali][iWord].mean) {
+					if (mDict[pali][iWord].mean.length > 0) {
+						return mDict[pali][iWord].mean.split("$")[0];
+					}
 				}
 			}
 		}
 	}
-	return "?";
+	return output;
 }
 
 function findAllMeanInDict(inWord, limit) {

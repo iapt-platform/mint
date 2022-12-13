@@ -4088,7 +4088,7 @@ function updataView() {
 	}
 	word_mouse_event();
 	//console.log("updataview");
-	//console.log(topNewDivArray.toString());
+	console.log(topNewDivArray.toString());
 }
 
 function render_word_mean_menu2(spell) {
@@ -4184,11 +4184,6 @@ function render_word_mean_menu2(spell) {
 	return output;
 }
 
-/**
- * 渲染单词意思下拉菜单
- * @param {xmlnode} xElement 单词xml节点
- * @returns 
- */
 function render_word_mean_menu(xElement) {
 	var wMean = getNodeText(xElement, "mean");
 	var wReal = getNodeText(xElement, "real");
@@ -4204,13 +4199,12 @@ function render_word_mean_menu(xElement) {
 	output += renderMeaning;
 	output += "</p>";
 	output += '<div class="case_dropdown-content">';
-	output += "<button ";
-	output += "style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' ";
-	output += "onclick='fieldListChanged(\"" + wId + '","mean","")\'>' ;
-	output +=  gLocal.gui.empty1 ;
-	output += '</button>';
-	
-	output += '<div class="case_dropdown-org">';
+	output +=
+		"<button style='font-size:100%;display:inline-flex; padding:0.1em 0.5em' onclick='fieldListChanged(\"" +
+		wId +
+		'","mean","")\'>' +
+		gLocal.gui.empty1 +
+		'</button><div class="case_dropdown-org">';
 
 	var sWord = new Array(wReal);
 	sWord = sWord.concat(render_get_word_parent_list(wReal));
@@ -4281,11 +4275,6 @@ function render_word_mean_menu(xElement) {
 	return output;
 }
 
-/**
- * 获取单词意思列表
- * @param {string} sWord 
- * @returns 
- */
 function render_get_word_mean_list(sWord) {
 	var wReal = sWord;
 
@@ -4293,7 +4282,6 @@ function render_get_word_mean_list(sWord) {
 
 	for (var x in g_DictWordList) {
 		if (g_DictWordList[x].Pali == wReal || g_DictWordList[x].Real == wReal) {
-			//用用户设置的语言过滤结果
 			if (dict_language_enable.indexOf(g_DictWordList[x].Language) >= 0) {
 				if (
 					g_DictWordList[x].Mean != "" &&

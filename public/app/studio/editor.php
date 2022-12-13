@@ -53,7 +53,6 @@ else{$currDevice="computer";}
 	<script language="javascript" src="js/render.js"></script>	
 	<script language="javascript" src="js/xml.js"></script>
 	<script language="javascript" src="js/editor.js"></script>
-	<script language="javascript" src="js/wbw_dict.js"></script>
 	<script language="javascript" src="js/wizard.js"></script>
 	<script language="javascript" src="js/wordmap.js"></script>
 	<script language="javascript" src="js/dict.js"></script>
@@ -84,7 +83,6 @@ else{$currDevice="computer";}
 	<script src="./js/message.js"></script>
 	<script src="../uwbw/update.js"></script>
 	<script src="../usent/usent.js"></script>
-	<script src="../ucenter/setting.js"></script>
 	<script src="../fileindex/file_info.js"></script>
 
 	<script  src="../channal/channal.js"></script>
