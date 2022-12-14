@@ -233,11 +233,10 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       onCaseChange(value);
     }
   };
-
+  console.log("case", defaultValue);
   return (
     <Cascader
       options={options}
-      defaultValue={defaultValue}
       placeholder="Please select case"
       onChange={onChange}
     />

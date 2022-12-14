@@ -5,7 +5,7 @@ import { message } from "antd";
 
 import DictEditInner from "./DictEditInner";
 import { IDictFormData } from "./DictCreate";
-import { IApiResponseDict, IDictlDataRequest } from "../api/Dict";
+import { IApiResponseDict, IDictDataRequest } from "../api/Dict";
 import { get, put } from "../../request";
 import { useEffect } from "react";
 
@@ -22,7 +22,7 @@ const Widget = (prop: IWidgetDictEdit) => {
         onFinish={async (values: IDictFormData) => {
           // TODO
           console.log(values);
-          const request: IDictlDataRequest = {
+          const request: IDictDataRequest = {
             id: values.id,
             word: values.word,
             type: values.type,
@@ -35,7 +35,7 @@ const Widget = (prop: IWidgetDictEdit) => {
             language: values.lang,
             confidence: values.confidence,
           };
-          const res = await put<IDictlDataRequest, IApiResponseDict>(
+          const res = await put<IDictDataRequest, IApiResponseDict>(
             `/v2/userdict/${prop.wordId}`,
             request
           );

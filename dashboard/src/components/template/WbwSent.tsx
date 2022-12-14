@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../../hooks";
+import { mode } from "../../reducers/article-mode";
 import WbwWord, { IWbw, IWbwFields } from "./Wbw/WbwWord";
 
 interface IWidget {
@@ -6,9 +8,33 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
 }
-export const WbwSentCtl = ({ data, display, fields }: IWidget) => {
+export const WbwSentCtl = ({ data, display = "inline", fields }: IWidget) => {
   const [wordData, setWordData] = useState(data);
-
+  const [wbwMode, setWbwMode] = useState(display);
+  const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const newMode = useAppSelector(mode);
+  useEffect(() => {
+    switch (newMode) {
+      case "edit":
+        setWbwMode("inline");
+        setFieldDisplay({
+          meaning: true,
+          factors: false,
+          factorMeaning: false,
+          case: false,
+        });
+        break;
+      case "wbw":
+        setWbwMode("block");
+        setFieldDisplay({
+          meaning: true,
+          factors: true,
+          factorMeaning: true,
+          case: true,
+        });
+        break;
+    }
+  }, [newMode]);
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
@@ -16,8 +42,8 @@ export const WbwSentCtl = ({ data, display, fields }: IWidget) => {
           <WbwWord
             data={item}
             key={id}
-            display={display}
-            fields={fields}
+            display={wbwMode}
+            fields={fieldDisplay}
             onChange={(e: IWbw) => {
               console.log("word changed", e);
               console.log("word id", id);

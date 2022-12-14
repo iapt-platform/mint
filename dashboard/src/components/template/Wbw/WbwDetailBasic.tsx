@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, Form, Select, Input } from "antd";
+import { Divider, Form, Select, Input, Cascader } from "antd";
 import { Collapse } from "antd";
 
 import SelectCase from "../../dict/SelectCase";
@@ -17,6 +17,13 @@ export interface IWordBasic {
   factorMeaning?: string;
   parent?: string;
 }
+
+interface CascaderOption {
+  value: string | number;
+  label: string;
+  children?: CascaderOption[];
+}
+
 interface IWidget {
   data: IWbw;
   onChange?: Function;
@@ -30,11 +37,49 @@ const Widget = ({ data, onChange }: IWidget) => {
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
   };
+  const onMeaningChange = (value: string | string[]) => {
+    console.log(`Selected: ${value}`);
+    if (typeof onChange !== "undefined") {
+      if (typeof value === "string") {
+        onChange({ field: "meaning", value: value });
+      } else {
+        onChange({ field: "meaning", value: value.join("$") });
+      }
+    }
+  };
+
+  const options: CascaderOption[] = [
+    {
+      value: "n",
+      label: intl.formatMessage({ id: "dict.fields.type.n.label" }),
+    },
+    {
+      value: "ti",
+      label: intl.formatMessage({ id: "dict.fields.type.ti.label" }),
+    },
+    {
+      value: "v",
+      label: intl.formatMessage({ id: "dict.fields.type.v.label" }),
+    },
+    {
+      value: "ind",
+      label: intl.formatMessage({ id: "dict.fields.type.ind.label" }),
+    },
+    {
+      value: "un",
+      label: intl.formatMessage({ id: "dict.fields.type.un.label" }),
+    },
+    {
+      value: "adj",
+      label: intl.formatMessage({ id: "dict.fields.type.adj.label" }),
+    },
+  ];
 
   return (
     <>
       <Form
         {...formItemLayout}
+        className="wbw_detail_basic"
         name="basic"
         form={form}
         initialValues={{
@@ -42,6 +87,8 @@ const Widget = ({ data, onChange }: IWidget) => {
           factors: data.factors?.value,
           factorMeaning: data.factorMeaning?.value,
           parent: data.parent?.value,
+          case: data.case?.value,
+          case1: data.case?.value,
         }}
       >
         <Form.Item
@@ -52,16 +99,7 @@ const Widget = ({ data, onChange }: IWidget) => {
           <Select
             allowClear
             mode="tags"
-            onChange={(value: string | string[]) => {
-              console.log(`Selected: ${value}`);
-              if (typeof onChange !== "undefined") {
-                if (typeof value === "string") {
-                  onChange({ field: "meaning", value: value });
-                } else {
-                  onChange({ field: "meaning", value: value.join("$") });
-                }
-              }
-            }}
+            onChange={onMeaningChange}
             style={{ width: "100%" }}
             placeholder={intl.formatMessage({
               id: "forms.fields.meaning.label",
@@ -69,7 +107,6 @@ const Widget = ({ data, onChange }: IWidget) => {
             options={items.map((item) => ({ label: item, value: item }))}
             dropdownRender={(menu) => (
               <>
-                {" "}
                 {menu}
                 <Divider style={{ margin: "8px 0" }}>更多</Divider>
                 <WbwMeaningSelect
@@ -87,6 +124,7 @@ const Widget = ({ data, onChange }: IWidget) => {
                     form.setFieldsValue({
                       meaning: currMeanings,
                     });
+                    onMeaningChange(currMeanings);
                   }}
                 />
               </>
@@ -109,6 +147,13 @@ const Widget = ({ data, onChange }: IWidget) => {
           label={intl.formatMessage({ id: "forms.fields.case.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
           name="case"
+        >
+          <Cascader options={options} placeholder="Please select case" />
+        </Form.Item>
+        <Form.Item
+          label={intl.formatMessage({ id: "forms.fields.case.label" })}
+          tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
+          name="case1"
         >
           <SelectCase
             onCaseChange={(value: (string | number)[]) => {
