@@ -20,7 +20,29 @@ psql -q -h 127.0.0.1 -p 5432 -U YOUR_ID YOUR_ID_mint < schema.sql
 pg_restore -Fc -h 127.0.0.1 -p 5432 -U YOUR_ID -d YOUR_ID_mint < data.dump
 ```
 
-![restore](restore.png)
+![restore](postgresql/restore.png)
+
+- Ssh PROXY 设置
+
+  - 开启端口转发（把 spring 的`5432`转发到 local 的`15432`）
+
+    ```bash
+    ssh -o ServerAliveInterval=600 -i YOUR_KEY_FILE -L 15432:localhost:5432 YOUR_ID@YOUR_ID.spring.wikipali.org
+    ```
+
+    ![ssh proxy](postgresql/ssh-proxy.png)
+
+  - psql 连接
+
+    ```bash
+    psql -h localhost -p 15432 -U YOUR_ID YOUR_ID_mint
+    ```
+
+    ![psql](postgresql/psql.png)
+
+  - Dbeaver 连接
+
+    ![dbeaver](postgresql/dbeaver.png)
 
 ## PHP 开发（以用户 xxx 为例）
 
