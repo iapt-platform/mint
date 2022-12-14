@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import WbwCase from "./WbwCase";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwFactorMeaning from "./WbwFactorMeaning";
@@ -8,6 +8,11 @@ import WbwPali from "./WbwPali";
 import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
+import { useAppSelector } from "../../../hooks";
+import { add, wordList } from "../../../reducers/inline-dict";
+import { get } from "../../../request";
+import { IApiResponseDictList } from "../../api/Dict";
+import store from "../../../store";
 
 export type TFieldName =
   | "word"
@@ -89,10 +94,12 @@ const Widget = ({
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const intervalRef = useRef<number | null>(null); //防抖计时器句柄
+  const inlineWords = useAppSelector(wordList);
+
   useEffect(() => {
     setWordData(data);
     setFieldDisplay(fields);
-    console.log("display change", fields);
   }, [data, fields]);
 
   const color = wordData.bookMarkColor
@@ -105,6 +112,35 @@ const Widget = ({
     display: display === "block" ? "block" : "flex",
   };
 
+  /**
+   * 停止查字典计时
+   * 在两种情况下停止计时
+   * 1. 开始查字典
+   * 2. 防抖时间内鼠标移出单词区
+   */
+  const stopLookup = () => {
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+  /**
+   * 查字典
+   * @param word 要查的单词
+   */
+  const lookup = (word: string) => {
+    stopLookup();
+    //查询这个词在内存字典里是否有
+    if (inlineWords.has(word)) {
+      //已经有了，退出
+      return;
+    }
+    get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
+      console.log("lookup ok", json.data.count);
+      store.dispatch(add([word, json.data.rows]));
+    });
+    console.log("lookup", word);
+  };
   if (wordData.type?.value === ".ctl.") {
     if (wordData.word.value.includes("para")) {
       return <WbwPara data={wordData} />;
@@ -116,6 +152,18 @@ const Widget = ({
       <div
         className={`wbw_word ${display} ${wbwCtl} ${wbwAnchor} `}
         style={styleWbw}
+        onMouseEnter={() => {
+          if (intervalRef.current === null) {
+            intervalRef.current = window.setInterval(
+              lookup,
+              200,
+              wordData.word.value
+            );
+          }
+        }}
+        onMouseLeave={() => {
+          stopLookup();
+        }}
       >
         <WbwPali
           data={wordData}
