@@ -4,6 +4,7 @@ import { IntlProvider } from "react-intl";
 import { Provider } from "react-redux";
 import { pdfjs } from "react-pdf";
 import mermaid from "mermaid";
+import { enableMapSet } from "immer";
 
 import Router from "./Router";
 import store from "./store";
@@ -18,6 +19,7 @@ import "./App.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `${API_HOST}/assets/pdf.worker.min.js`;
 mermaid.initialize({ startOnLoad: true });
+enableMapSet();
 
 onLoad();
 const lang = getLocale();

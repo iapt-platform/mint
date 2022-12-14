@@ -47,3 +47,17 @@
 - 然后就可以欢快地写代码了 与 local 基本无差
 
   ![edit](by-ssh/9.png)
+
+## ISSUES
+
+- Permissions for XXX are too open().
+
+  - For linux/macos user
+
+    ```bash
+    chmod 400 YOUR_PRIVATE_KEY_FILE
+    ```
+
+  - For windows user
+
+    ![too open](by-ssh/too-open.gif)

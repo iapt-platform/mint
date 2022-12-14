@@ -14,7 +14,7 @@
 
 ### VS Code 配置文件
 
-## [Spring 开发环境](SPRING.md)
+## [Spring 开发环境](spring/)
 
 ## [Local 开发环境](LOCAL.md)
 
