@@ -14,7 +14,7 @@ interface IWidget {
 }
 const Widget = ({ data, display = "block", onChange }: IWidget) => {
   const intl = useIntl();
-  console.log("meaning", data.meaning?.value);
+
   let meaning = <></>;
   if (
     display === "block" &&
