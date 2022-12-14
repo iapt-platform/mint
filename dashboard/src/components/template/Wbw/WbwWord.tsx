@@ -11,7 +11,7 @@ import WbwPage from "./WbwPage";
 import { useAppSelector } from "../../../hooks";
 import { add, wordList } from "../../../reducers/inline-dict";
 import { get } from "../../../request";
-import { IApiResponseDictList } from "../../api/Dict";
+import { IApiResponseDictList, IDictDataRequest } from "../../api/Dict";
 import store from "../../../store";
 
 export type TFieldName =
@@ -137,8 +137,25 @@ const Widget = ({
     }
     get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
       console.log("lookup ok", json.data.count);
-      store.dispatch(add([word, json.data.rows]));
+      //扫描结果将结果按照词头分开
+      /*
+      let wordList = new Map<string, IDictDataRequest[]>();
+      for (const word of json.data.rows) {
+        if (!wordList.has(word.word)) {
+          wordList.set(word.word, [word]);
+        } else {
+          const oldValue = wordList.get(word.word);
+          if (typeof oldValue === "undefined") {
+            wordList.set(word.word, [word]);
+          } else {
+            wordList.set(word.word, [...oldValue, word]);
+          }
+        }
+      }
+      store.dispatch(add(wordList));
+	  */
     });
+
     console.log("lookup", word);
   };
   if (wordData.type?.value === ".ctl.") {

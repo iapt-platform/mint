@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Popover } from "antd";
+import { Popover, Typography } from "antd";
 import { TagTwoTone, InfoCircleOutlined } from "@ant-design/icons";
 
 import WbwDetail from "./WbwDetail";
@@ -7,7 +7,7 @@ import { IWbw } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import "./wbw.css";
 import { PaliReal } from "../../../utils";
-
+const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
   onSave?: Function;
@@ -51,7 +51,10 @@ const Widget = ({ data, onSave }: IWidget) => {
     : "white";
 
   const bookMarkIcon = data.bookMarkText ? (
-    <Popover content={data.bookMarkText.value} placement="bottom">
+    <Popover
+      content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
+      placement="bottom"
+    >
       <TagTwoTone twoToneColor={color} />
     </Popover>
   ) : (

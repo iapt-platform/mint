@@ -22,8 +22,24 @@ export const slice = createSlice({
   name: "inline-dict",
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<[string, IDictDataRequest[]]>) => {
-      state.wordMap.set(action.payload[0], action.payload[1]);
+    add: (state, action: PayloadAction<IDictDataRequest[]>) => {
+      let words: string[] = [];
+      for (const iterator of action.payload) {
+        if (!words.includes(iterator.word)) {
+          words.push(iterator.word);
+        }
+      }
+      /*
+      const keys = action.payload.keys();
+      for (const key in keys) {
+        if (Object.prototype.hasOwnProperty.call(keys, key)) {
+          const value = action.payload.get(key);
+          if (typeof value !== "undefined") {
+            state.wordMap.set(key, value);
+          }
+        }
+      }
+*/
     },
   },
 });
