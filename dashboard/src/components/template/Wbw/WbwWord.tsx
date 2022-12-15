@@ -9,7 +9,7 @@ import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
 import { useAppSelector } from "../../../hooks";
-import { add, wordList } from "../../../reducers/inline-dict";
+import { add, wordList, wordIndex } from "../../../reducers/inline-dict";
 import { get } from "../../../request";
 import { IApiResponseDictList, IDictDataRequest } from "../../api/Dict";
 import store from "../../../store";
@@ -95,7 +95,8 @@ const Widget = ({
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
-  const inlineWords = useAppSelector(wordList);
+  const inlineWordList = useAppSelector(wordList);
+  const inlineWordIndex = useAppSelector(wordIndex);
 
   useEffect(() => {
     setWordData(data);
@@ -131,29 +132,14 @@ const Widget = ({
   const lookup = (word: string) => {
     stopLookup();
     //查询这个词在内存字典里是否有
-    if (inlineWords.has(word)) {
+    if (inlineWordIndex.includes(word)) {
       //已经有了，退出
       return;
     }
     get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
       console.log("lookup ok", json.data.count);
       //扫描结果将结果按照词头分开
-      /*
-      let wordList = new Map<string, IDictDataRequest[]>();
-      for (const word of json.data.rows) {
-        if (!wordList.has(word.word)) {
-          wordList.set(word.word, [word]);
-        } else {
-          const oldValue = wordList.get(word.word);
-          if (typeof oldValue === "undefined") {
-            wordList.set(word.word, [word]);
-          } else {
-            wordList.set(word.word, [...oldValue, word]);
-          }
-        }
-      }
-      store.dispatch(add(wordList));
-	  */
+      store.dispatch(add(json.data.rows));
     });
 
     console.log("lookup", word);

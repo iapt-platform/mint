@@ -1,26 +1,15 @@
 import { useIntl } from "react-intl";
+import { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
-import { Dropdown } from "antd";
-import { Typography } from "antd";
+import { Dropdown, Space, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { PaliReal } from "../../../utils";
-const { Text } = Typography;
+import { useAppSelector } from "../../../hooks";
+import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 
-const items: MenuProps["items"] = [
-  {
-    key: "factor1+意思",
-    label: "factor1+意思",
-  },
-  {
-    key: "factor2+意思",
-    label: "factor2+意思",
-  },
-  {
-    key: "factor3+意思",
-    label: "factor3+意思",
-  },
-];
+const { Text } = Typography;
 
 interface IWidget {
   data: IWbw;
@@ -29,6 +18,42 @@ interface IWidget {
 }
 const Widget = ({ data, display, onChange }: IWidget) => {
   const intl = useIntl();
+  const defaultMenu: MenuProps["items"] = [
+    {
+      key: "loading",
+      label: (
+        <Space>
+          <LoadingOutlined />
+          {"Loading"}
+        </Space>
+      ),
+    },
+  ];
+  const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+
+  const inlineDict = useAppSelector(_inlineDict);
+  useEffect(() => {
+    if (inlineDict.wordIndex.includes(data.word.value)) {
+      const result = inlineDict.wordList.filter(
+        (word) => word.word === data.word.value
+      );
+      //查重
+      //TODO 加入信心指数并排序
+      let myMap = new Map<string, number>();
+      let factors: string[] = [];
+      for (const iterator of result) {
+        myMap.set(iterator.factormean, 1);
+      }
+      myMap.forEach((value, key, map) => {
+        factors.push(key);
+      });
+
+      const menu = factors.map((item) => {
+        return { key: item, label: item };
+      });
+      setItems(menu);
+    }
+  }, [inlineDict]);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
