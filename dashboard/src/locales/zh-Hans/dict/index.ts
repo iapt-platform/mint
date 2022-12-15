@@ -132,6 +132,8 @@ const items = {
   "dict.fields.type.un.short.label": "连音",
   "dict.fields.type.none.label": "无",
   "dict.fields.type.none.short.label": "",
+  "dict.fields.type.?.label": "?",
+  "dict.fields.type.?.short.label": "?",
 };
 
 export default items;
