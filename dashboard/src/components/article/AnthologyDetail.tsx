@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Typography } from "antd";
+import MDEditor from "@uiw/react-md-editor";
 
-import type { IAnthologyData } from "./AnthologyCard";
+import { get } from "../../request";
 import type {
-	IAnthologyDataResponse,
-	IAnthologyResponse,
+  IAnthologyDataResponse,
+  IAnthologyResponse,
 } from "../api/Article";
+import type { IAnthologyData } from "./AnthologyCard";
 import TocTree from "./TocTree";
 import { get } from "../../request";
 import MDEditor from "@uiw/react-md-editor";
