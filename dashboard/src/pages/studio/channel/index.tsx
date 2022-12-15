@@ -10,11 +10,11 @@ const Widget = () => {
 	return (
 		<Layout>
 			<Layout>
-				<LeftSider selectedKeys="channel" />
-				<Content style={styleStudioContent}>
-					<Outlet />
-				</Content>
-			</Layout>
+      <LeftSider selectedKeys="channel" />
+      <Content style={styleStudioContent}>
+        <Outlet />
+      </Content>
+    </Layout>
 		</Layout>
 	);
 };

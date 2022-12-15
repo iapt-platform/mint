@@ -7,14 +7,14 @@ import { styleStudioContent } from "../style";
 const { Content } = Layout;
 
 const Widget = () => {
-	return (
-		<Layout>
+  return (
+    <Layout>
 			<Layout>
-				<LeftSider selectedKeys="userdict" />
-				<Content style={styleStudioContent}>
-					<Outlet />
-				</Content>
-			</Layout>
+      <LeftSider selectedKeys="userdict" />
+      <Content style={styleStudioContent}>
+        <Outlet />
+      </Content>
+    </Layout>
 		</Layout>
 	);
 };
