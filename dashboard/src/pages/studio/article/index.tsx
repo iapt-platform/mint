@@ -8,14 +8,13 @@ const { Content } = Layout;
 
 const Widget = () => {
 	return (
-		<Layout>
+			<Layout>
 			<Layout>
 				<LeftSider selectedKeys="article" />
 				<Content style={styleStudioContent}>
 					<Outlet />
 				</Content>
 			</Layout>
-		</Layout>
 	);
 };
 
