@@ -5,7 +5,7 @@ import { Input } from "antd";
 
 import { useState } from "react";
 import DictSearch from "../../../components/dict/DictSearch";
-const { Content, Header } = Layout;
+const { Content } = Layout;
 const { Search } = Input;
 
 const Widget = () => {

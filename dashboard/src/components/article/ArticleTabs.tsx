@@ -7,10 +7,6 @@ import Article from "./Article";
 
 const defaultPanes = [{ label: `Tab`, children: <></>, key: "1" }];
 
-const Test = () => {
-  console.log("new");
-  return <div>hello</div>;
-};
 interface IWidget {
   onClose?: Function;
 }

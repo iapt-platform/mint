@@ -32,11 +32,6 @@ const Widget = (prop: IWidgetBookTreeList) => {
     if (prop.root) fetchBookTree(prop.root);
   }, [prop.root]);
 
-  type OrgTree = {
-    name: string;
-    tag: string[];
-    children: OrgTree[];
-  };
   type NewTree = {
     title: string;
     dir: string;

@@ -9,12 +9,6 @@ import { get, IErrorResponse } from "./request";
 //import { GRPC_HOST,  grpc_metadata } from "./request";
 import store from "./store";
 
-interface IUserResponse {
-  ok: boolean;
-  message: string;
-  data: IUser;
-}
-
 export interface ISiteInfoResponse {
   title: string;
 }
