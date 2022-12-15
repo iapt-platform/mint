@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-
 import {
   ProForm,
   ProFormText,
@@ -8,16 +8,15 @@ import {
 } from "@ant-design/pro-components";
 import { Card, Col, message, Row } from "antd";
 
-import EditableTree from "../../../components/studio/EditableTree";
-import type { ListNodeData } from "../../../components/studio/EditableTree";
-import LangSelect from "../../../components/general/LangSelect";
-import PublicitySelect from "../../../components/studio/PublicitySelect";
+import { get, put } from "../../../request";
 import {
   IAnthologyDataRequest,
   IAnthologyResponse,
 } from "../../../components/api/Article";
-import { get, put } from "../../../request";
-import { useState } from "react";
+import EditableTree from "../../../components/studio/EditableTree";
+import type { ListNodeData } from "../../../components/studio/EditableTree";
+import LangSelect from "../../../components/general/LangSelect";
+import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
 
 interface IFormData {

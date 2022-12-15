@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RadioChangeEvent, Space } from "antd";
 import { Radio } from "antd";
+
 import { ISentence } from "../SentEdit";
 import { SuggestionIcon } from "../../../assets/icon";
 import SuggestionAdd from "./SuggestionAdd";

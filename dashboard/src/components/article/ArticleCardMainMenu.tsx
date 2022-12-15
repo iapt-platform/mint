@@ -1,5 +1,6 @@
 import { Tabs, Button, Popover } from "antd";
 import { MenuOutlined, PushpinOutlined } from "@ant-design/icons";
+
 import PaliTextToc from "./PaliTextToc";
 import Find from "./Find";
 import Nav from "./Nav";

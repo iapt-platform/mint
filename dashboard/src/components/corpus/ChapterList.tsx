@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { List } from "antd";
+
+import { get } from "../../request";
+import { IChapterData, IChapterListResponse } from "../api/Corpus";
 import ChapterCard from "./ChapterCard";
 import type { ChapterData } from "./ChapterCard";
 import type { ChannelFilterProps } from "../channel/ChannelList";
-import { IChapterData, IChapterListResponse } from "../api/Corpus";
-import { get } from "../../request";
 
 const defaultChannelFilterProps: ChannelFilterProps = {
   chapterProgress: 0.9,

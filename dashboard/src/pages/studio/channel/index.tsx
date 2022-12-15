@@ -7,16 +7,14 @@ import { styleStudioContent } from "../style";
 const { Content } = Layout;
 
 const Widget = () => {
-	return (
-		<Layout>
-			<Layout>
+  return (
+    <Layout>
       <LeftSider selectedKeys="channel" />
       <Content style={styleStudioContent}>
         <Outlet />
       </Content>
     </Layout>
-		</Layout>
-	);
+  );
 };
 
 export default Widget;

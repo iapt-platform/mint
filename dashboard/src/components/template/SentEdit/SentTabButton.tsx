@@ -1,5 +1,6 @@
 import { useIntl } from "react-intl";
 import { Badge, Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import {
   OneToOneOutlined,
   LinkOutlined,
@@ -11,7 +12,6 @@ import {
   ISite,
   refresh as refreshLayout,
 } from "../../../reducers/open-article";
-import type { MenuProps } from "antd";
 
 const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
   console.log("click left button", e);

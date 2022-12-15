@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 import { Layout } from "antd";
 
 import BookViewer, { IParagraph } from "../../../components/corpus/BookViewer";

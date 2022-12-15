@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Switch, Typography, Radio, RadioChangeEvent, Select } from "antd";
+
 import {
   onChange as onSettingChanged,
   settingInfo,
@@ -7,7 +9,6 @@ import {
 import { useAppSelector } from "../../../hooks";
 import store from "../../../store";
 import { ISetting } from "./default";
-import { useEffect, useState } from "react";
 
 const { Title, Text } = Typography;
 

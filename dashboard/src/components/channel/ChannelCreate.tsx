@@ -2,9 +2,9 @@ import { useIntl } from "react-intl";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
 
-import ChannelTypeSelect from "./ChannelTypeSelect";
 import { post } from "../../request";
 import { IApiResponseChannel } from "../api/Channel";
+import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../general/LangSelect";
 
 interface IFormData {

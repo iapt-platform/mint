@@ -9,14 +9,12 @@ const { Content } = Layout;
 const Widget = () => {
   return (
     <Layout>
-			<Layout>
       <LeftSider selectedKeys="userdict" />
       <Content style={styleStudioContent}>
         <Outlet />
       </Content>
     </Layout>
-		</Layout>
-	);
+  );
 };
 
 export default Widget;

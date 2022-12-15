@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Affix, Col, Row } from "antd";
 import { Input } from "antd";
 
-import DictSearch from "./DictSearch";
-
 import { useAppSelector } from "../../hooks";
 import { message } from "../../reducers/command";
+
+import DictSearch from "./DictSearch";
 
 const { Search } = Input;
 

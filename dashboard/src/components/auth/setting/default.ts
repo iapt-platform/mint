@@ -1,4 +1,5 @@
 import { useIntl } from "react-intl";
+
 import { ISettingItem } from "../../../reducers/setting";
 
 export interface ISettingItemOption {

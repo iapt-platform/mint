@@ -1,5 +1,5 @@
-import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
+import { ProFormSelect } from "@ant-design/pro-components";
 
 const Widget = () => {
   const intl = useIntl();

@@ -1,14 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { ProTable } from "@ant-design/pro-components";
-
 import { Button, Popover, Typography, Dropdown, Menu, MenuProps } from "antd";
+import { ProTable } from "@ant-design/pro-components";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
+import { get } from "../../../request";
+import { IGroupListResponse } from "../../../components/api/Group";
 import GroupCreate from "../../../components/group/GroupCreate";
 import { RoleValueEnum } from "../../../components/studio/table";
-import { IGroupListResponse } from "../../../components/api/Group";
-import { get } from "../../../request";
 
 const { Text } = Typography;
 
