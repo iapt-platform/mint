@@ -9,13 +9,13 @@ import { IDictDataRequest } from "../components/api/Dict";
  * value: 查询到的单词列表
  */
 interface IState {
-  wordMap: Map<string, IDictDataRequest[]>;
-  word?: string;
-  value?: IDictDataRequest[];
+  wordList: IDictDataRequest[];
+  wordIndex: string[];
 }
 
 const initialState: IState = {
-  wordMap: new Map<string, IDictDataRequest[]>([["word", []]]),
+  wordList: [],
+  wordIndex: [],
 };
 
 export const slice = createSlice({
@@ -24,22 +24,21 @@ export const slice = createSlice({
   reducers: {
     add: (state, action: PayloadAction<IDictDataRequest[]>) => {
       let words: string[] = [];
+      let newWordData = new Array(...state.wordList);
+      let newIndexData = new Array(...state.wordIndex);
+      //查询没有的词并添加
       for (const iterator of action.payload) {
-        if (!words.includes(iterator.word)) {
-          words.push(iterator.word);
-        }
-      }
-      /*
-      const keys = action.payload.keys();
-      for (const key in keys) {
-        if (Object.prototype.hasOwnProperty.call(keys, key)) {
-          const value = action.payload.get(key);
-          if (typeof value !== "undefined") {
-            state.wordMap.set(key, value);
+        if (!newIndexData.includes(iterator.word)) {
+          if (!words.includes(iterator.word)) {
+            words.push(iterator.word);
           }
+          newWordData.push(iterator);
         }
       }
-*/
+      newIndexData = [...newIndexData, ...words];
+      state.wordList = newWordData;
+      state.wordIndex = newIndexData;
+      console.log("add inline dict", words);
     },
   },
 });
@@ -48,7 +47,8 @@ export const { add } = slice.actions;
 
 export const inlineDict = (state: RootState): IState => state.inlineDict;
 
-export const wordList = (state: RootState): Map<string, IDictDataRequest[]> =>
-  state.inlineDict.wordMap;
-
+export const wordList = (state: RootState): IDictDataRequest[] =>
+  state.inlineDict.wordList;
+export const wordIndex = (state: RootState): string[] =>
+  state.inlineDict.wordIndex;
 export default slice.reducer;
