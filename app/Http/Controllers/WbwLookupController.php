@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserDict;
+use App\Models\WbwTemplate;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class WbwLookupController extends Controller
 		'2f93d0fe-3d68-46ee-a80b-11fa445a29c6',// unity
 		'beb45062-7c20-4047-bcd4-1f636ba443d1',// U Hau Sein
 		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
-		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮			
+		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
 	];
     /**
      * Display a listing of the resource.
@@ -39,9 +40,9 @@ class WbwLookupController extends Controller
 		$caseman = new CaseMan();
 		$output  = array();
 		$wordPool = array();
-		$input = \explode(',',$request->get("word")); 
+		$input = \explode(',',$request->get("word"));
 		foreach ($input as $word) {
-			$wordPool[$word] = ['base' => false,'done' => false,'apply' => false]; 
+			$wordPool[$word] = ['base' => false,'done' => false,'apply' => false];
 		}
 		Log::info("query start ".$request->get("word"));
 		if(empty($request->get("deep"))){
@@ -49,7 +50,7 @@ class WbwLookupController extends Controller
 		}else{
 			$deep = $request->get("deep");
 		}
-		for ($i=0; $i < $deep; $i++) { 
+		for ($i=0; $i < $deep; $i++) {
 			# code...
 			foreach ($wordPool as $word => $info) {
 				# code...
@@ -60,7 +61,7 @@ class WbwLookupController extends Controller
 						# code...
 						$result = Cache::remember("dict/{$dictId}/".$word,1000,function() use($word,$dictId){
 							return UserDict::where('word',$word)->where('dict_id',$dictId)->orderBy('confidence','desc')->get();
-						});	
+						});
 						$count += count($result);
 						if(count($result)>0){
 							foreach ($result as  $dictword) {
@@ -101,16 +102,16 @@ class WbwLookupController extends Controller
 							$newWordPart[$factor] = 0;
 						}
 					}
-				}				
+				}
 			}
 			foreach ($newWordPart as $part => $value) {
 				# 将拆分放入池中
-				$wordPool[$part] = ['base' => false,'done' => false,'apply' => false]; 
+				$wordPool[$part] = ['base' => false,'done' => false,'apply' => false];
 			}
 			Log::info("loop {$i} ".((microtime(true)-$startAt)*1000)."s.");
 		}
 
-		return $this->ok(["rows"=>$output]);
+		return $this->ok(["rows"=>$output,'count'=>count($output)]);
     }
 
     /**
@@ -125,14 +126,22 @@ class WbwLookupController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the words best match in specified sentence .
      *
-     * @param  \App\Models\UserDict  $userDict
+     * @param  string  $sentId
      * @return \Illuminate\Http\Response
      */
-    public function show(UserDict $userDict)
+    public function show(string $sentId)
     {
-        //
+        //查询句子中的单词
+        $sent = \explode('-',$sentId);
+        WbwTemplate::where('book',$sent[0])
+                ->where('paragraph',$sent[1])
+                ->whereBetween('wid',[$sent[2],$sent[3]])
+                ->orderBy('wid')
+                ->get();
+
+
     }
 
     /**
