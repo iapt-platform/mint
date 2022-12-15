@@ -132,15 +132,17 @@ class InitCs6sentence extends Command
 				[
 					'id' =>$snowId,
 					'uid' =>Str::uuid(),
-					'editor_uid'=>config("app.admin.root_uuid"),
-					'content'=>trim($sent),
-					'strlen'=>mb_strlen($sent,"UTF-8"),
-					'status' => 30,
-					'create_time'=>time()*1000,
-					'modify_time'=>time()*1000,
-					'language'=>'en'
 				]
 				);
+            $newRow->editor_uid = config("app.admin.root_uuid");
+            $newRow->content = trim($sent);
+            $newRow->strlen = mb_strlen($sent,"UTF-8");
+            $newRow->status = 30;
+            $newRow->create_time = time()*1000;
+            $newRow->modify_time = time()*1000;
+            $newRow->language = 'en';
+            $newRow->save();
+
 			$bar->advance();
 		}
 		$bar->finish();
