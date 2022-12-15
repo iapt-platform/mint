@@ -80,7 +80,7 @@ class UpgradeDict extends Command
 								$tableDict->owner_id = config("app.admin.root_uuid");
 								$tableDict->meta = json_encode($this->dictInfo['meta']);
 								$tableDict->save();
-								
+
 								if($this->option('part')){
 									$this->info(" dict id = ".$this->dictInfo['meta']['uuid']);
 								}else{
@@ -114,7 +114,7 @@ class UpgradeDict extends Command
 														# code...
 														if(empty($part)){
 															continue;
-														}		
+														}
 														if(isset($newPart[$part])){
 															$newPart[$part][0]++;
 														}else{
@@ -127,7 +127,7 @@ class UpgradeDict extends Command
 															$this->info("{$count}:{$part}-{$word}");
 															}
 														}
-														
+
 													}
 												}else{
 													$newDict = new UserDict();
@@ -147,7 +147,7 @@ class UpgradeDict extends Command
 													$newDict->create_time =(int)(microtime(true)*1000);
 													$newDict->creator_id = 1;
 													$newDict->dict_id = $this->dictInfo['meta']['uuid'];
-													$newDict->save();											
+													$newDict->save();
 												}
 
 												$bar->advance();
@@ -160,13 +160,15 @@ class UpgradeDict extends Command
 								}
 								$bar->finish();
 								Storage::disk('local')->put("tmp/pm-part.csv", "part,count,word");
-								foreach ($newPart as $part => $info) {
-									# 写入磁盘文件
-									Storage::disk('local')->append("tmp/pm-part.csv", "{$part},{$info[0]},{$info[1]}");
-								}
+                                if(isset($newPart)){
+                                    foreach ($newPart as $part => $info) {
+                                        # 写入磁盘文件
+                                        Storage::disk('local')->append("tmp/pm-part.csv", "{$part},{$info[0]},{$info[1]}");
+                                    }
+                                }
 								$this->info("done");
 							}
-							
+
 						}
 					}
 				}
