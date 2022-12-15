@@ -61,7 +61,7 @@ class DictController extends Controller
         $output['words'] = $wordDataOutput;
         $output['dictlist'] = $dictListOutput;
         $output['caselist'] = $caseListOutput;
-
+        //TODO 加变格查询
         //$result = UserDict::select('word')->where('word','like',"{$word}%")->groupBy('word')->get();
         //$output['like'] = $result;
 
