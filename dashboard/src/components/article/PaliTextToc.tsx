@@ -1,4 +1,3 @@
-import { parseInt } from "lodash";
 import { useState, useEffect } from "react";
 import { get } from "../../request";
 import { IPaliTocListResponse } from "../api/Corpus";
