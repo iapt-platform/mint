@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Row, Col } from "antd";
 import { Typography } from "antd";
 
@@ -8,21 +9,21 @@ import type { TagNode } from "../tag/TagArea";
 import type { ChannelInfoProps } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 
-const { Title, Paragraph, Link, Text } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 export interface ChapterData {
-  Title: string;
-  PaliTitle: string;
-  Path: string;
-  Book: number;
-  Paragraph: number;
-  Summary: string;
-  Tag: TagNode[];
-  Channel: ChannelInfoProps;
-  CreatedAt: string;
-  UpdatedAt: string;
-  Hit: number;
-  Like: number;
+  title: string;
+  paliTitle: string;
+  path: string;
+  book: number;
+  paragraph: number;
+  summary: string;
+  tag: TagNode[];
+  channel: ChannelInfoProps;
+  createdAt: string;
+  updatedAt: string;
+  hit: number;
+  like: number;
 }
 
 interface IWidgetChapterCard {
@@ -30,8 +31,8 @@ interface IWidgetChapterCard {
 }
 
 const Widget = ({ data }: IWidgetChapterCard) => {
-  const path = JSON.parse(data.Path);
-  const tags = data.Tag;
+  const path = JSON.parse(data.path);
+  const tags = data.tag;
   return (
     <>
       <Row>
@@ -39,9 +40,14 @@ const Widget = ({ data }: IWidgetChapterCard) => {
           <Row>
             <Col span={16}>
               <Title level={5}>
-                <Link>{data.Title}</Link>
+                <Link
+                  to={`/article/chapter/${data.book}-${data.paragraph}_${data.channel.channelId}`}
+                  target="_blank"
+                >
+                  {data.title}
+                </Link>
               </Title>
-              <Text type="secondary">{data.PaliTitle}</Text>
+              <Text type="secondary">{data.paliTitle}</Text>
               <TocPath data={path} />
             </Col>
             <Col span={8}>进度条</Col>
@@ -55,7 +61,7 @@ const Widget = ({ data }: IWidgetChapterCard) => {
                   symbol: "more",
                 }}
               >
-                {data.Summary}
+                {data.summary}
               </Paragraph>
             </Col>
           </Row>
@@ -64,10 +70,10 @@ const Widget = ({ data }: IWidgetChapterCard) => {
               <TagArea data={tags} />
             </Col>
             <Col span={5}>
-              <ChannelListItem data={data.Channel} />
+              <ChannelListItem data={data.channel} />
             </Col>
             <Col span={3}>
-              <TimeShow time={data.UpdatedAt} title="UpdatedAt" />
+              <TimeShow time={data.updatedAt} title="UpdatedAt" />
             </Col>
           </Row>
         </Col>
