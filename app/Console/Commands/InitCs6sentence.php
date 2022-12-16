@@ -121,7 +121,7 @@ class InitCs6sentence extends Command
             */
 			$sent = trim($sent);
 			$snowId = app('snowflake')->id();
-			$newRow = Sentence::updateOrCreate(
+			$newRow = Sentence::firstOrNew(
 				[
 					"book_id" => $value->book,
 					"paragraph" => $value->paragraph,
