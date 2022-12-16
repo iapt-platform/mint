@@ -2,6 +2,7 @@ const items = {
   "buttons.submit": "提交",
   "buttons.create": "新建",
   "buttons.edit": "编辑",
+  "buttons.translate": "翻译",
   "buttons.read": "阅读",
   "buttons.wbw": "逐词解析",
   "buttons.delete": "删除",
@@ -13,6 +14,10 @@ const items = {
   "buttons.save": "保存",
   "buttons.save.publish": "保存并公开",
   "buttons.cancel": "取消",
+  "buttons.setting": "设置",
+  "buttons.sign-in": "登录",
+  "buttons.sign-out": "退出登录",
+  "buttons.welcome": "欢迎遨游法的海洋",
 };
 
 export default items;

@@ -1,18 +1,19 @@
+import { useState } from "react";
+import { useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import {
   ProForm,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { useIntl } from "react-intl";
 import { Card, message, Space } from "antd";
+
 import { IApiResponseChannel } from "../../../components/api/Channel";
 import { get, put } from "../../../request";
 import ChannelTypeSelect from "../../../components/channel/ChannelTypeSelect";
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
-import { useState } from "react";
 
 interface IFormData {
   name: string;

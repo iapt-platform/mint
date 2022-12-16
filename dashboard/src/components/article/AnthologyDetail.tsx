@@ -1,87 +1,87 @@
 import { useState, useEffect } from "react";
 import { Typography } from "antd";
-
-import type { IAnthologyData } from "./AnthologyCard";
-import type {
-	IAnthologyDataResponse,
-	IAnthologyResponse,
-} from "../api/Article";
-import TocTree from "./TocTree";
-import { get } from "../../request";
 import MDEditor from "@uiw/react-md-editor";
+
+import { get } from "../../request";
+import type {
+  IAnthologyDataResponse,
+  IAnthologyResponse,
+} from "../api/Article";
+import type { IAnthologyData } from "./AnthologyCard";
+import TocTree from "./TocTree";
 
 const { Title, Text } = Typography;
 
 interface IWidgetAnthologyDetail {
-	aid: string;
-	channels?: string[];
+  aid: string;
+  channels?: string[];
 }
 
 const defaultData: IAnthologyData = {
-	id: "",
-	title: "",
-	subTitle: "",
-	summary: "",
-	articles: [],
-	studio: {
-		id: "",
-		studioName: "",
-		nickName: "",
-		avatar: "",
-	},
-	created_at: "",
-	updated_at: "",
+  id: "",
+  title: "",
+  subTitle: "",
+  summary: "",
+  articles: [],
+  studio: {
+    id: "",
+    studioName: "",
+    nickName: "",
+    avatar: "",
+  },
+  created_at: "",
+  updated_at: "",
 };
 
 const Widget = (prop: IWidgetAnthologyDetail) => {
-	const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState(defaultData);
 
-	useEffect(() => {
-		console.log("useEffect");
-		fetchData(prop.aid);
-	}, [prop.aid]);
+  useEffect(() => {
+    console.log("useEffect");
+    fetchData(prop.aid);
+  }, [prop.aid]);
 
-	function fetchData(id: string) {
-		get<IAnthologyResponse>(`/v2/anthology/${id}`)
-			.then((response) => {
-				const item: IAnthologyDataResponse = response.data;
-				let newTree: IAnthologyData = {
-					id: item.uid,
-					title: item.title,
-					subTitle: item.subtitle,
-					summary: item.summary,
-					articles: item.article_list.map((al) => {
-						return {
-							key: al.article,
-							title: al.title,
-							level: parseInt(al.level),
-						};
-					}),
-					studio: item.studio,
-					created_at: item.created_at,
-					updated_at: item.updated_at,
-				};
-				setTableData(newTree);
-				console.log("toc", newTree.articles);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}
-	return (
-		<>
-			<Title level={4}>{tableData.title}</Title>
-			<div>
-				<Text type="secondary">{tableData.subTitle}</Text>
-			</div>
-			<div>
-				<MDEditor.Markdown source={tableData.summary} />
-			</div>
-			<Title level={5}>目录</Title>
+  function fetchData(id: string) {
+    get<IAnthologyResponse>(`/v2/anthology/${id}`)
+      .then((response) => {
+        const item: IAnthologyDataResponse = response.data;
+        let newTree: IAnthologyData = {
+          id: item.uid,
+          title: item.title,
+          subTitle: item.subtitle,
+          summary: item.summary,
+          articles: item.article_list.map((al) => {
+            return {
+              key: al.article,
+              title: al.title,
+              level: parseInt(al.level),
+            };
+          }),
+          studio: item.studio,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        };
+        setTableData(newTree);
+        console.log("toc", newTree.articles);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  return (
+    <>
+      <Title level={4}>{tableData.title}</Title>
+      <div>
+        <Text type="secondary">{tableData.subTitle}</Text>
+      </div>
+      <div>
+        <MDEditor.Markdown source={tableData.summary} />
+      </div>
+      <Title level={5}>目录</Title>
 
-			<TocTree treeData={tableData.articles} />
-		</>
-	);
+      <TocTree treeData={tableData.articles} />
+    </>
+  );
 };
 
 export default Widget;

@@ -1,10 +1,9 @@
+import { useIntl } from "react-intl";
 import {
   ProForm,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-
-import { useIntl } from "react-intl";
 
 import LangSelect from "../general/LangSelect";
 import SelectCase from "./SelectCase";

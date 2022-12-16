@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Tooltip, Button } from "antd";
-import MdView from "./MdView";
-import { ISentence } from "./SentEdit";
+
 import { useAppSelector } from "../../hooks";
 import {
   onChangeKey,
@@ -10,6 +9,8 @@ import {
 } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { TCodeConvertor } from "./utilities";
+import { ISentence } from "./SentEdit";
+import MdView from "./MdView";
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];

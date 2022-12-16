@@ -1,16 +1,15 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useIntl } from "react-intl";
 import { Button, Card } from "antd";
 import { Col, Row } from "antd";
-import GroupFile from "../../../components/group/GroupFile";
-import GroupMember from "../../../components/group/GroupMember";
-import { useEffect, useState } from "react";
+
 import { get } from "../../../request";
 import { IGroupResponse } from "../../../components/api/Group";
+import GroupFile from "../../../components/group/GroupFile";
+import GroupMember from "../../../components/group/GroupMember";
 import GoBack from "../../../components/studio/GoBack";
 
 const Widget = () => {
-  const intl = useIntl();
   const { studioname, groupid } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
   useEffect(() => {

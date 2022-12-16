@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Layout, Affix, Col, Row } from "antd";
 import { Input } from "antd";
 
-import { useState } from "react";
 import DictSearch from "../../../components/dict/DictSearch";
-const { Content, Header } = Layout;
+
+const { Content } = Layout;
 const { Search } = Input;
 
 const Widget = () => {

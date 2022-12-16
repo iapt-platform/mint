@@ -2,9 +2,9 @@ import { useIntl } from "react-intl";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
 
-import LangSelect from "../general/LangSelect";
 import { post } from "../../request";
 import { IArticleCreateRequest, IArticleResponse } from "../api/Article";
+import LangSelect from "../general/LangSelect";
 
 interface IFormData {
   title: string;

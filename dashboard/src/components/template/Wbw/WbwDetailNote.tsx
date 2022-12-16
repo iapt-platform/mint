@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { Input } from "antd";
 
 import { IWbw } from "./WbwWord";
@@ -10,7 +9,6 @@ interface IWidget {
   onChange?: Function;
 }
 const Widget = ({ data, onChange }: IWidget) => {
-  const intl = useIntl();
   const onTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {

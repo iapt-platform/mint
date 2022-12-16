@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { command } from "../../reducers/command";
 import store from "../../store";
 import { IWidgetDict } from "../dict/DictComponent";

@@ -1,6 +1,7 @@
 import { ISentence } from "../SentEdit";
 import SentCell from "./SentCell";
 import { WbwSentCtl } from "../WbwSent";
+
 interface IWidgetSentContent {
   origin?: ISentence[];
   translation?: ISentence[];

@@ -1,13 +1,13 @@
-import { ProForm } from "@ant-design/pro-components";
-
+import { useEffect } from "react";
 import { useIntl } from "react-intl";
+import { ProForm } from "@ant-design/pro-components";
 import { message } from "antd";
+
+import { IApiResponseDict, IDictDataRequest } from "../api/Dict";
+import { get, put } from "../../request";
 
 import DictEditInner from "./DictEditInner";
 import { IDictFormData } from "./DictCreate";
-import { IApiResponseDict, IDictDataRequest } from "../api/Dict";
-import { get, put } from "../../request";
-import { useEffect } from "react";
 
 type IWidgetDictEdit = {
   wordId: number;

@@ -1,10 +1,8 @@
 import { Button } from "antd";
 import { useState } from "react";
-import { Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import { ISentence } from "../SentEdit";
-import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";
 
 interface ISentCell {

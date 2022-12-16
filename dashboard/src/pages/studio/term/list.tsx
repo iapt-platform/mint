@@ -8,9 +8,9 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 
-import TermCreate from "../../../components/term/TermCreate";
 import { ITermListResponse } from "../../../components/api/Term";
 import { get } from "../../../request";
+import TermCreate from "../../../components/term/TermCreate";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);

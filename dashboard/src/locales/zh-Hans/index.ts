@@ -27,6 +27,7 @@ const items = {
   "columns.library.convertor.title": "巴利字符转换器",
   "columns.library.palihandbook.title": "语法手册",
   "columns.library.statistics.title": "单词统计",
+  "columns.library.blog.label": "个人空间",
   "columns.studio.title": "译经楼",
   "columns.studio.palicanon.title": "圣典",
   "columns.studio.recent.title": "最近编辑",

@@ -2,9 +2,8 @@ import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Space, Table } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
-import { Button, Menu } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+
 import { PublicityValueEnum } from "../studio/table";
 import { IApiResponseChannelList, IFinal } from "../api/Channel";
 import { get } from "../../request";
@@ -12,33 +11,6 @@ import { LockIcon } from "../../assets/icon";
 import StudioName, { IStudio } from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
-
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "3",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 
 export interface IItem {
   id: number;

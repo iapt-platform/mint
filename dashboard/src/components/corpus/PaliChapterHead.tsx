@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { message } from "antd";
+
+import { IApiResponsePaliChapter } from "../api/Corpus";
+import { get } from "../../request";
 import ChapterHead, { IChapterInfo } from "./ChapterHead";
 import { IParagraph } from "./BookViewer";
 import TocPath, { ITocPathNode } from "./TocPath";
-import { IApiResponsePaliChapter } from "../api/Corpus";
-import { get } from "../../request";
 
 interface IWidgetPaliChapterHead {
   para: IParagraph;

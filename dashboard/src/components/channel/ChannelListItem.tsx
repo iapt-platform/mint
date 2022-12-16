@@ -1,5 +1,6 @@
 import { Space } from "antd";
 import { Avatar } from "antd";
+
 import type { ChannelInfoProps } from "../api/Channel";
 
 type IWidgetChannelListItem = {

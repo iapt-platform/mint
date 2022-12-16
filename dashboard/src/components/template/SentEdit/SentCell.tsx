@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";

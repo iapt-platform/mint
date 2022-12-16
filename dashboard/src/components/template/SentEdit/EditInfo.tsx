@@ -1,5 +1,6 @@
 import { Typography } from "antd";
 import { Space } from "antd";
+
 import User from "../../auth/User";
 import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";

@@ -1,12 +1,13 @@
+import { useIntl } from "react-intl";
+import { useState } from "react";
 import { Button, Card, Dropdown, Space, Segmented } from "antd";
 import { MoreOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { IWidgetArticleData } from "./ArticleView";
-import { useIntl } from "react-intl";
-import { useState } from "react";
-import ArticleCardMainMenu from "./ArticleCardMainMenu";
+
 import store from "../../store";
 import { modeChange } from "../../reducers/article-mode";
+import { IWidgetArticleData } from "./ArticleView";
+import ArticleCardMainMenu from "./ArticleCardMainMenu";
 import { ArticleMode } from "./Article";
 
 interface IWidgetArticleCard {

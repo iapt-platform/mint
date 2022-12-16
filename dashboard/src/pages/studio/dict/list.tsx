@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 
 import {
@@ -13,6 +12,7 @@ import {
   Drawer,
 } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { ProTable } from "@ant-design/pro-components";
 
 import DictCreate from "../../../components/dict/DictCreate";
 import { IApiResponseDictList } from "../../../components/api/Dict";

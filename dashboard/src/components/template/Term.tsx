@@ -1,7 +1,8 @@
-import { ProCard } from "@ant-design/pro-components";
 import { Button, Popover } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { ProCard } from "@ant-design/pro-components";
+
 import TermCreate, { IWidgetDictCreate } from "../term/TermCreate";
 import { command } from "../../reducers/command";
 import store from "../../store";

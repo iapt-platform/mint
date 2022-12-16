@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import {
 	ProForm,
@@ -5,8 +6,8 @@ import {
 	ProFormSelect,
 	ProFormTextArea,
 } from "@ant-design/pro-components";
-import { useIntl } from "react-intl";
 import { message, Card } from "antd";
+
 import { IGroupResponse } from "../../../components/api/Group";
 import { useEffect, useState } from "react";
 import { get } from "../../../request";

@@ -1,4 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+
+import { useAppSelector } from "../../../hooks";
+import { add, wordIndex } from "../../../reducers/inline-dict";
+import { get } from "../../../request";
+import store from "../../../store";
+
+import { IApiResponseDictList } from "../../api/Dict";
 import WbwCase from "./WbwCase";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwFactorMeaning from "./WbwFactorMeaning";
@@ -8,11 +15,6 @@ import WbwPali from "./WbwPali";
 import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
-import { useAppSelector } from "../../../hooks";
-import { add, wordList, wordIndex } from "../../../reducers/inline-dict";
-import { get } from "../../../request";
-import { IApiResponseDictList, IDictDataRequest } from "../../api/Dict";
-import store from "../../../store";
 
 export type TFieldName =
   | "word"
@@ -95,7 +97,6 @@ const Widget = ({
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
-  const inlineWordList = useAppSelector(wordList);
   const inlineWordIndex = useAppSelector(wordIndex);
 
   useEffect(() => {

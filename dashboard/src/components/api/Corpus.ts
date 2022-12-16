@@ -168,6 +168,7 @@ export interface IChapterData {
   path: string;
   tags: TagNode[];
   channel: { name: string; owner_uid: string };
+  channel_id: string;
   summary: string;
   view: number;
   like: number;

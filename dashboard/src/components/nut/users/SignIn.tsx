@@ -3,11 +3,9 @@ import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 
-import { setTitle } from "../../../reducers/layout";
-import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { useAppDispatch } from "../../../hooks";
 import { IUser, signIn, TO_HOME } from "../../../reducers/current-user";
 import { get, post } from "../../../request";
-import store from "../../../store";
 
 interface IFormData {
   email: string;
