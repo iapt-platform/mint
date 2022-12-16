@@ -34,31 +34,33 @@ const Widget = ({
     const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
     get<IChapterListResponse>(`/v2/progress?view=chapter${strTags}`).then(
       (json) => {
-        console.log("ajax", json);
-        let newTree = json.data.rows.map((item: IChapterData) => {
-          return {
-            Title: item.title,
-            PaliTitle: item.toc,
-            Path: item.path,
-            Book: item.book,
-            Paragraph: item.para,
-            Summary: item.summary,
-            Tag: item.tags,
-            Channel: {
-              channelName: item.channel.name,
-              channelId: "",
-              channelType: "translation",
-              studioName: item.channel.name,
-              studioId: item.channel.owner_uid,
-              studioType: "",
-            },
-            CreatedAt: item.created_at,
-            UpdatedAt: item.updated_at,
-            Hit: item.view,
-            Like: item.like,
-            ChannelInfo: "string",
-          };
-        });
+        console.log("chapter list ajax", json);
+        let newTree: ChapterData[] = json.data.rows.map(
+          (item: IChapterData) => {
+            return {
+              title: item.title,
+              paliTitle: item.toc,
+              path: item.path,
+              book: item.book,
+              paragraph: item.para,
+              summary: item.summary,
+              tag: item.tags,
+              channel: {
+                channelName: item.channel.name,
+                channelId: item.channel_id,
+                channelType: "translation",
+                studioName: item.channel.name,
+                studioId: item.channel.owner_uid,
+                studioType: "",
+              },
+              createdAt: item.created_at,
+              updatedAt: item.updated_at,
+              hit: item.view,
+              like: item.like,
+              channelInfo: "string",
+            };
+          }
+        );
         setTableData(newTree);
       }
     );
