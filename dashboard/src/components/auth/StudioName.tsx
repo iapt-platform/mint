@@ -1,5 +1,7 @@
 import { Avatar, Space } from "antd";
 
+import StudioCard from "./StudioCard";
+
 export interface IStudio {
   id: string;
   nickName: string;
@@ -21,16 +23,18 @@ const Widget = ({
   // TODO
   const avatar = <Avatar size="small">{data.nickName.slice(0, 1)}</Avatar>;
   return (
-    <Space
-      onClick={() => {
-        if (typeof onClick !== "undefined") {
-          onClick(data.studioName);
-        }
-      }}
-    >
-      {showAvatar ? avatar : ""}
-      {showName ? data.nickName : ""}
-    </Space>
+    <StudioCard studio={data}>
+      <Space
+        onClick={() => {
+          if (typeof onClick !== "undefined") {
+            onClick(data.studioName);
+          }
+        }}
+      >
+        {showAvatar ? avatar : ""}
+        {showName ? data.nickName : ""}
+      </Space>
+    </StudioCard>
   );
 };
 
