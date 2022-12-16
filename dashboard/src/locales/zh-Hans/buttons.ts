@@ -18,6 +18,7 @@ const items = {
   "buttons.sign-in": "登录",
   "buttons.sign-out": "退出登录",
   "buttons.welcome": "欢迎遨游法的海洋",
+  "buttons.click.upload": "点击上传",
 };
 
 export default items;

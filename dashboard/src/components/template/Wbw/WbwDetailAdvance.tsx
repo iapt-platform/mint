@@ -1,4 +1,5 @@
-import { Input } from "antd";
+import { Input, Divider } from "antd";
+import WbwDetailUpload from "./WbwDetailUpload";
 
 import { IWbw } from "./WbwWord";
 
@@ -39,6 +40,11 @@ const Widget = ({ data, onChange }: IWidget) => {
         defaultValue={data.real?.value}
         onChange={onRealChange}
       />
+      <Divider>附件</Divider>
+      <div></div>
+      <div>
+        <WbwDetailUpload />
+      </div>
     </>
   );
 };
