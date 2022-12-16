@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
@@ -16,6 +17,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 
 const Widget = () => {
   // TODO
+  const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [nickName, setNickName] = useState("");
@@ -30,15 +32,27 @@ const Widget = () => {
       <ProCard
         style={{ maxWidth: 500, minWidth: 300 }}
         actions={[
-          <Tooltip title="设置">
+          <Tooltip
+            title={intl.formatMessage({
+              id: "buttons.setting",
+            })}
+          >
             <SettingOutlined key="setting" />
           </Tooltip>,
-          <Tooltip title="个人空间">
+          <Tooltip
+            title={intl.formatMessage({
+              id: "columns.library.blog.label",
+            })}
+          >
             <Link to={`/blog/${userName}/overview`}>
               <HomeOutlined key="home" />
             </Link>
           </Tooltip>,
-          <Tooltip title="退出登录">
+          <Tooltip
+            title={intl.formatMessage({
+              id: "buttons.sign-out",
+            })}
+          >
             <LogoutOutlined
               key="logout"
               onClick={() => {
@@ -52,7 +66,11 @@ const Widget = () => {
       >
         <div>
           <h2>{nickName}</h2>
-          <div>欢迎遨游法的海洋</div>
+          <div style={{ textAlign: "right" }}>
+            {intl.formatMessage({
+              id: "buttons.welcome",
+            })}
+          </div>
         </div>
       </ProCard>
     </>
@@ -67,6 +85,7 @@ const Widget = () => {
           <Avatar
             style={{ backgroundColor: "#87d068" }}
             icon={<UserOutlined />}
+            size="small"
           >
             {nickName.slice(0, 1)}
           </Avatar>
