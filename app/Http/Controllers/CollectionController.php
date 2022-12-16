@@ -82,7 +82,12 @@ class CollectionController extends Controller
 		if($result){
             foreach ($result as $key => $value) {
                 # code...
-                $value->childrenNumber = count(\json_decode($value->article_list));
+                if(is_array(\json_decode($value->article_list))){
+                    $value->childrenNumber = count(\json_decode($value->article_list));
+                }else{
+                    $value->childrenNumber = 0;
+                }
+
                 if(isset($value->article_list)){
                     $result[$key]->article_list = array_slice(\json_decode($value->article_list),0,4);
                 }
