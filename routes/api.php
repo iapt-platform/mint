@@ -24,6 +24,7 @@ use App\Http\Controllers\CorpusController;
 use App\Http\Controllers\ArticleProgressController;
 use App\Http\Controllers\ExportWbwController;
 use App\Http\Controllers\WbwLookupController;
+use App\Http\Controllers\UploadController;
 
 
 /*
@@ -75,6 +76,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('article-progress',ArticleProgressController::class);
 
     Route::post('export_wbw',[ExportWbwController::class,'index']);
+    Route::post('upload',[UploadController::class,'uploadToServer']);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
