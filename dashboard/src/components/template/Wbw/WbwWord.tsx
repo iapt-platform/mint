@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import type { UploadFile } from "antd/es/upload/interface";
 
 import { useAppSelector } from "../../../hooks";
 import { add, wordIndex } from "../../../reducers/inline-dict";
@@ -72,6 +73,7 @@ export interface IWbw {
   bookMarkText?: WbwElement;
   locked?: boolean;
   confidence: number;
+  attachments?: UploadFile[];
 }
 export interface IWbwFields {
   meaning?: boolean;
