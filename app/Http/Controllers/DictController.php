@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserDict;
+use App\Models\DictInfo;
 use Illuminate\Http\Request;
 
 require_once __DIR__."/../../../public/app/dict/grm_abbr.php";
@@ -41,7 +42,7 @@ class DictController extends Controller
         ];
         foreach ($result as $key => $value) {
             # code...
-            $dictName= $value->dict_id;
+            $dictName= DictInfo::find($value->dict_id)->shortname;
             $anchor = "{$word}-$dictName";
             $wordData['dict'][] = [
                 'dictname'=> $dictName,
