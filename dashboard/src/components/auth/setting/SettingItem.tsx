@@ -48,9 +48,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                 <>
                   {title}
                   <div>
-                    <Text>
-                      {intl.formatMessage({ id: "data.description" })}
-                    </Text>
+                    <Text>{intl.formatMessage({ id: data.description })}</Text>
                   </div>
                   <Radio.Group
                     value={value}
