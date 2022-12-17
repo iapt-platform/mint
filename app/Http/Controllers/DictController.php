@@ -42,17 +42,18 @@ class DictController extends Controller
         ];
         foreach ($result as $key => $value) {
             # code...
-            $dictName= DictInfo::find($value->dict_id)->shortname;
-            $anchor = "{$word}-$dictName";
+            $dictInfo= DictInfo::find($value->dict_id);
+
+            $anchor = "{$word}-{$dictInfo->shortname}";
             $wordData['dict'][] = [
-                'dictname'=> $dictName,
+                'dictname'=> $dictInfo->name,
                 'word'=> $word,
                 'note'=> $this->GrmAbbr($value->note,0),
                 'anchor'=> $anchor,
             ];
             $dictList['children'][] = [
                 'href'=> '#'.$anchor,
-                'title'=> "{$dictName}",
+                'title'=> "{$dictInfo->shortname}",
             ];
         }
         $wordDataOutput[]=$wordData;
