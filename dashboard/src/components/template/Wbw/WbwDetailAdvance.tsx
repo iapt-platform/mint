@@ -43,7 +43,7 @@ const Widget = ({ data, onChange }: IWidget) => {
       <Divider>附件</Divider>
       <div></div>
       <div>
-        <WbwDetailUpload />
+        <WbwDetailUpload data={data} />
       </div>
     </>
   );
