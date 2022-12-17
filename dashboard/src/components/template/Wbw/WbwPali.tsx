@@ -7,6 +7,8 @@ import { IWbw } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import "./wbw.css";
 import { PaliReal } from "../../../utils";
+import WbwVideoButton from "./WbwVideoButton";
+import { IVideo } from "./WbwVideoButton";
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
@@ -49,6 +51,22 @@ const Widget = ({ data, onSave }: IWidget) => {
   const color = data.bookMarkColor
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
+
+  //生成视频播放按钮
+  const videoList = data.attachments?.filter((word) => word.type === "video");
+  const videoIcon = videoList ? (
+    <WbwVideoButton
+      video={videoList?.map((item) => {
+        return {
+          url: item.url ? item.url : "",
+          title: item.name,
+        };
+      })}
+    />
+  ) : undefined;
+
+  if (typeof data.attachments !== "undefined") {
+  }
 
   const bookMarkIcon = data.bookMarkText ? (
     <Popover
@@ -93,6 +111,7 @@ const Widget = ({ data, onSave }: IWidget) => {
         >
           {paliWord}
         </Popover>
+        {videoIcon}
         {noteIcon}
         {bookMarkIcon}
       </div>
