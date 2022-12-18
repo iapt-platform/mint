@@ -76,7 +76,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('article-progress',ArticleProgressController::class);
 
     Route::post('export_wbw',[ExportWbwController::class,'index']);
-    Route::post('upload',[UploadController::class,'uploadToServer']);
+    Route::apiResource('attachments',UploadController::class);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {

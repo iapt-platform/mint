@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class UploadController extends Controller
 {
@@ -16,31 +18,6 @@ class UploadController extends Controller
         //
     }
 
-    public function uploadToServer(Request $request)
-    {
-        $request->validate([
-            'file' => 'required',
-        ]);
-
-       $filename = time().'.'.request()->file->getClientOriginalExtension();
-
-       $request->file->move(public_path('uploads'), $filename);
-/*
-       $file = new FileUpload;
-       $file->name = $name;
-       $file->save();
-
-*/
-    $json['files'][] = array(
-        'name' => $filename,
-        'size' => $request->file->getSize(),
-        'type' => $request->file->getMimeType(),
-        'url' => '/uploads/files/'.$filename,
-        'deleteType' => 'DELETE',
-        'deleteUrl' => self::$route.'/deleteFile/'.$filename,
-        );
-        return Response::json($json);
-    }
     /**
      * Store a newly created resource in storage.
      *
@@ -50,6 +27,21 @@ class UploadController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'file' => 'required',
+        ]);
+        $file = $request->file('file');
+
+       //Move Uploaded File
+        $filename = $file->store('public/upload');
+
+        $json = array(
+            'name' => $filename,
+            'size' => $file->getSize(),
+            'type' => $file->getMimeType(),
+            'url' => $filename,
+            );
+        return $this->ok($json);
     }
 
     /**
