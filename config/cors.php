@@ -17,13 +17,13 @@ return [
 
     'paths' => ['api/*'],
 
-    'allowed_methods' => ['GET','POST','PUT','DELETE','PATCH'],
+    'allowed_methods' => ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
 
     'allowed_origins' => [env('ALLOWED_ORIGINS', 'http://127.0.0.1:3000')],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['content-type','cookie','authorization'],
+    'allowed_headers' => ['content-type','cookie','authorization','x-requested-with'],
 
     'exposed_headers' => [],
 
