@@ -1,15 +1,44 @@
+import { useRef } from "react";
+import videojs from "video.js";
+import VideoPlayer from "./VideoPlayer";
+
 interface IWidget {
   src?: string;
   type?: string;
 }
 export const Widget = ({ src, type }: IWidget) => {
+  const playerRef = useRef<videojs.Player>();
+
+  const handlePlayerReady = (player: videojs.Player) => {
+    if (playerRef.current) {
+      playerRef.current = player;
+      player.on("waiting", () => {
+        console.log("player is waiting");
+      });
+
+      player.on("dispose", () => {
+        console.log("player will dispose");
+      });
+    }
+  };
+
   return (
-    <div>
-      <video controls={true} autoPlay={true}>
-        <source src={src} type={type} />
-        Video not playing? <a href={type}>Download file</a> instead.
-      </video>
-    </div>
+    <VideoPlayer
+      options={{
+        autoplay: true,
+        controls: true,
+        responsive: true,
+        fluid: true,
+        poster: "https://vjs.zencdn.net/v/oceans.png",
+        sources: [
+          {
+            src: src ? src : "",
+            type: type ? type : "video/mp4",
+          },
+        ],
+      }}
+      onReady={handlePlayerReady}
+    />
   );
 };
 
