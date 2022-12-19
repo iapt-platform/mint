@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { Popover, Typography } from "antd";
-import { TagTwoTone, InfoCircleOutlined } from "@ant-design/icons";
+import { Popover, Typography, Button, Space } from "antd";
+import {
+  TagTwoTone,
+  InfoCircleOutlined,
+  QuestionOutlined,
+  CommentOutlined,
+} from "@ant-design/icons";
 
 import WbwDetail from "./WbwDetail";
 import { IWbw } from "./WbwWord";
@@ -8,39 +13,49 @@ import { bookMarkColor } from "./WbwDetailBookMark";
 import "./wbw.css";
 import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
-import { IVideo } from "./WbwVideoButton";
+
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
   onSave?: Function;
 }
 const Widget = ({ data, onSave }: IWidget) => {
-  const [open, setOpen] = useState(false);
+  const [click, setClicked] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-  const wbwDetail = (
-    <WbwDetail
-      data={data}
-      onClose={() => {
-        setPaliColor("unset");
-        setOpen(false);
-      }}
-      onSave={(e: IWbw) => {
-        if (typeof onSave !== "undefined") {
-          onSave(e);
-          setOpen(false);
-          setPaliColor("unset");
-        }
-      }}
-    />
-  );
+
+  const handleHoverChange = (open: boolean) => {
+    setHovered(open);
+    setClicked(false);
+  };
+
   const handleClickChange = (open: boolean) => {
-    setOpen(open);
     if (open) {
       setPaliColor("lightblue");
     } else {
       setPaliColor("unset");
     }
+    setClicked(open);
+    setHovered(false);
   };
+
+  const wbwDetail = (
+    <WbwDetail
+      data={data}
+      onClose={() => {
+        setPaliColor("unset");
+        setClicked(false);
+      }}
+      onSave={(e: IWbw) => {
+        if (typeof onSave !== "undefined") {
+          onSave(e);
+          setClicked(false);
+          setPaliColor("unset");
+        }
+      }}
+    />
+  );
+
   const noteIcon = data.note ? (
     <Popover content={data.note.value} placement="bottom">
       <InfoCircleOutlined style={{ color: "blue" }} />
@@ -53,12 +68,15 @@ const Widget = ({ data, onSave }: IWidget) => {
     : "white";
 
   //生成视频播放按钮
-  const videoList = data.attachments?.filter((word) => word.type === "video");
+  const videoList = data.attachments?.filter((item) =>
+    item.type?.includes("video")
+  );
   const videoIcon = videoList ? (
     <WbwVideoButton
       video={videoList?.map((item) => {
         return {
           url: item.url ? item.url : "",
+          type: item.type,
           title: item.name,
         };
       })}
@@ -97,19 +115,31 @@ const Widget = ({ data, onSave }: IWidget) => {
       {data.word.value}
     </span>
   );
-
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
       <div className="pali_shell">
         <Popover
-          content={wbwDetail}
-          placement="bottom"
-          trigger="click"
-          open={open}
-          onOpenChange={handleClickChange}
+          style={{ width: 500 }}
+          content={
+            <Space>
+              <Button icon={<QuestionOutlined />} size="small" />
+              <Button icon={<CommentOutlined />} size="small" />
+            </Space>
+          }
+          trigger="hover"
+          open={hovered}
+          onOpenChange={handleHoverChange}
         >
-          {paliWord}
+          <Popover
+            content={wbwDetail}
+            placement="bottom"
+            trigger="click"
+            open={click}
+            onOpenChange={handleClickChange}
+          >
+            {paliWord}
+          </Popover>
         </Popover>
         {videoIcon}
         {noteIcon}
