@@ -8,8 +8,9 @@ import TimeShow from "../general/TimeShow";
 interface IWidget {
   data: IComment;
   onEdit?: Function;
+  onSelect?: Function;
 }
-const Widget = ({ data, onEdit }: IWidget) => {
+const Widget = ({ data, onEdit, onSelect }: IWidget) => {
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
@@ -71,7 +72,15 @@ const Widget = ({ data, onEdit }: IWidget) => {
         }
         style={{ width: "auto" }}
       >
-        {data.content}
+        <span
+          onClick={(e) => {
+            if (typeof onSelect !== "undefined") {
+              onSelect();
+            }
+          }}
+        >
+          {data.content}
+        </span>
       </Card>
     </div>
   );

@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 
 interface IWidget {
   data: IComment[];
+  onSelect?: Function;
 }
-const Widget = ({ data }: IWidget) => {
+const Widget = ({ data, onSelect }: IWidget) => {
   return (
     <div>
       <List
@@ -30,9 +31,15 @@ const Widget = ({ data }: IWidget) => {
             <List.Item.Meta
               avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
               title={
-                <Link to={`/comment/${item.id}`}>
+                <span
+                  onClick={(e) => {
+                    if (typeof onSelect !== "undefined") {
+                      onSelect(e);
+                    }
+                  }}
+                >
                   {item.title ? item.title : item.content?.slice(0, 20)}
-                </Link>
+                </span>
               }
               description={item.content?.slice(0, 40)}
             />

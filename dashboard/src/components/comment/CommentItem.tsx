@@ -16,8 +16,9 @@ export interface IComment {
 interface IWidget {
   data: IComment;
   create?: boolean;
+  onSelect?: Function;
 }
-const Widget = ({ data, create = false }: IWidget) => {
+const Widget = ({ data, create = false, onSelect }: IWidget) => {
   const [edit, setEdit] = useState(false);
 
   return (

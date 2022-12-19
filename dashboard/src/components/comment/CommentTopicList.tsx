@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 
 interface IWidget {
   data: IComment[];
+  onSelect?: Function;
 }
-const Widget = ({ data }: IWidget) => {
+const Widget = ({ data, onSelect }: IWidget) => {
   return (
     <div>
       <List

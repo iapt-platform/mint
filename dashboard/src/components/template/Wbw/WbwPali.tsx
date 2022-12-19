@@ -13,6 +13,7 @@ import { bookMarkColor } from "./WbwDetailBookMark";
 import "./wbw.css";
 import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
+import ComentBox from "../../comment/ComentBox";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -123,7 +124,10 @@ const Widget = ({ data, onSave }: IWidget) => {
           style={{ width: 500 }}
           content={
             <Space>
-              <Button icon={<QuestionOutlined />} size="small" />
+              <ComentBox
+                trigger={<Button icon={<QuestionOutlined />} size="small" />}
+              />
+
               <Button icon={<CommentOutlined />} size="small" />
             </Space>
           }
