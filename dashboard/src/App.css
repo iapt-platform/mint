@@ -1,5 +1,6 @@
 @import "~antd/dist/antd.min.css";
 @import "~react-quill/dist/quill.snow.css";
+@import "~video.js/dist/video-js.css";
 @import "./assets/font/main.css";
 
 body {

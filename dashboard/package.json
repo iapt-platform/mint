@@ -23,6 +23,7 @@
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.0.0",
     "@types/react-pdf": "^5.7.4",
+    "@types/video.js": "^7.3.50",
     "@uiw/react-md-editor": "^3.19.7",
     "antd": "^4.24.2",
     "dayjs": "^1.11.6",
