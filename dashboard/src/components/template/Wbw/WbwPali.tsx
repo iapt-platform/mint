@@ -108,7 +108,7 @@ const Widget = ({ data, onSave }: IWidget) => {
   );
 
   const discussionIcon = isHover ? (
-    <CommentBox trigger={<CommentOutlined />} />
+    <CommentBox trigger={<CommentOutlined style={{ cursor: "pointer" }} />} />
   ) : (
     <></>
   );
