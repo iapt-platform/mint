@@ -1,5 +1,11 @@
 export type Role = "owner" | "manager" | "editor" | "member";
 
+export interface IUserRequest {
+  id?: string;
+  userName?: string;
+  nickName?: string;
+  avatar?: string;
+}
 export interface IUserApiResponse {
   id: string;
   userName: string;
