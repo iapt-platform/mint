@@ -10,6 +10,8 @@ import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
 import WbwDetailAdvance from "./WbwDetailAdvance";
 import { LockIcon, UnLockIcon } from "../../../assets/icon";
+import { UploadFile } from "antd/es/upload/interface";
+import { IAttachmentResponse } from "../../api/Attachments";
 
 interface IWidget {
   data: IWbw;
@@ -131,6 +133,19 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
                   data={currWbwData}
                   onChange={(e: IWbwField) => {
                     fieldChanged(e.field, e.value);
+                  }}
+                  onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {
+                    let mData = currWbwData;
+                    mData.attachments = fileList.map((item) => {
+                      return {
+                        uid: item.uid,
+                        name: item.name,
+                        size: item.size,
+                        type: item.type,
+                        url: item.response?.data.url,
+                      };
+                    });
+                    setCurrWbwData(mData);
                   }}
                 />
               </div>
