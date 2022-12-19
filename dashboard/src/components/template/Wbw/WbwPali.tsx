@@ -3,17 +3,16 @@ import { Popover, Typography, Button, Space } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
-  QuestionOutlined,
   CommentOutlined,
 } from "@ant-design/icons";
 
+import "./wbw.css";
 import WbwDetail from "./WbwDetail";
 import { IWbw } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
-import "./wbw.css";
 import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
-import ComentBox from "../../comment/ComentBox";
+import CommentBox from "../../comment/CommentBox";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -22,13 +21,8 @@ interface IWidget {
 }
 const Widget = ({ data, onSave }: IWidget) => {
   const [click, setClicked] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-
-  const handleHoverChange = (open: boolean) => {
-    setHovered(open);
-    setClicked(false);
-  };
+  const [isHover, setIsHover] = useState(false);
 
   const handleClickChange = (open: boolean) => {
     if (open) {
@@ -37,7 +31,6 @@ const Widget = ({ data, onSave }: IWidget) => {
       setPaliColor("unset");
     }
     setClicked(open);
-    setHovered(false);
   };
 
   const wbwDetail = (
@@ -84,9 +77,6 @@ const Widget = ({ data, onSave }: IWidget) => {
     />
   ) : undefined;
 
-  if (typeof data.attachments !== "undefined") {
-  }
-
   const bookMarkIcon = data.bookMarkText ? (
     <Popover
       content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
@@ -116,38 +106,37 @@ const Widget = ({ data, onSave }: IWidget) => {
       {data.word.value}
     </span>
   );
+
+  const discussionIcon = isHover ? (
+    <CommentBox trigger={<CommentOutlined />} />
+  ) : (
+    <></>
+  );
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
-      <div className="pali_shell">
+      <div
+        className="pali_shell"
+        onMouseEnter={() => {
+          setIsHover(true);
+        }}
+        onMouseLeave={() => {
+          setIsHover(false);
+        }}
+      >
         <Popover
-          style={{ width: 500 }}
-          content={
-            <Space>
-              <ComentBox
-                trigger={<Button icon={<QuestionOutlined />} size="small" />}
-              />
-
-              <Button icon={<CommentOutlined />} size="small" />
-            </Space>
-          }
-          trigger="hover"
-          open={hovered}
-          onOpenChange={handleHoverChange}
+          content={wbwDetail}
+          placement="bottom"
+          trigger="click"
+          open={click}
+          onOpenChange={handleClickChange}
         >
-          <Popover
-            content={wbwDetail}
-            placement="bottom"
-            trigger="click"
-            open={click}
-            onOpenChange={handleClickChange}
-          >
-            {paliWord}
-          </Popover>
+          {paliWord}
         </Popover>
         {videoIcon}
         {noteIcon}
         {bookMarkIcon}
+        {discussionIcon}
       </div>
     );
   } else {
