@@ -19,6 +19,7 @@ const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
+
   const save = () => {
     setSaving(true);
     put<ISentenceRequest, ISentenceResponse>(
@@ -62,6 +63,7 @@ const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
         message.error(e.message);
       });
   };
+
   return (
     <div>
       <TextArea
