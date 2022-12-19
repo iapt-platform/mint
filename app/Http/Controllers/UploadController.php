@@ -39,7 +39,8 @@ class UploadController extends Controller
             'name' => $filename,
             'size' => $file->getSize(),
             'type' => $file->getMimeType(),
-            'url' => $filename,
+            'url' => str_replace('public','storage',$filename),
+            'uid' => Str::uuid(),
             );
         return $this->ok($json);
     }
