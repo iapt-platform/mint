@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\StudioApi;
+use App\Http\Api\AuthApi;
 use App\Http\Api\ChannelApi;
 
 class SentPrResource extends JsonResource
@@ -17,7 +18,7 @@ class SentPrResource extends JsonResource
      */
     public function toArray($request)
     {
-        //判断权限
+        //获取用户信息
         $user = AuthApi::current($request);
         $role = 'reader';
         if($user && $user["user_uid"] === $this->editor_uid ){
