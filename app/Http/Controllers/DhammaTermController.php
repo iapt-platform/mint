@@ -183,45 +183,46 @@ class DhammaTermController extends Controller
         // process the login
         if ($validator->fails()) {
             return $this->error($validator);
-        } else {
-            #查询重复的
-            /*
-            重复判定：
-            一个channel下面word+tag+language 唯一
-            */
-            $table = DhammaTerm::where('owner', $_COOKIE["user_uid"])
-                    ->where('word',$request->get("word"))
-                    ->where('tag',$request->get("tag"));
-            if($request->get("channel")){
-                $isDoesntExist = $table->where('channel',$request->get("channel"))
-                      ->doesntExist();
-            }else{
-                $isDoesntExist = $table->where('language',$request->get("language"))
-                    ->doesntExist();
-            }
-
-            if($isDoesntExist){
-                #不存在插入数据
-                $term = new DhammaTerm;
-                $term->id=app('snowflake')->id();
-                $term->guid=Str::uuid();
-                $term->word=$request->get("word");
-                $term->meaning=$request->get("meaning");
-                $term->save();
-                return $this->ok($data);
-
-            }else{
-                return $this->error("word existed");
-            }
-            // store
-            /*
-            $data = $request->all();
-            $data['id'] = app('snowflake')->id();
-            $data['guid'] = Str::uuid();
-            DhammaTerm::create($data);
-            */
-
         }
+
+        #查询重复的
+        /*
+        重复判定：
+        一个channel下面word+tag+language 唯一
+        */
+        $table = DhammaTerm::where('owner', $_COOKIE["user_uid"])
+                ->where('word',$request->get("word"))
+                ->where('tag',$request->get("tag"));
+        if($request->get("channel")){
+            $isDoesntExist = $table->where('channel',$request->get("channel"))
+                    ->doesntExist();
+        }else{
+            $isDoesntExist = $table->where('language',$request->get("language"))
+                ->doesntExist();
+        }
+
+        if($isDoesntExist){
+            #不存在插入数据
+            $term = new DhammaTerm;
+            $term->id=app('snowflake')->id();
+            $term->guid=Str::uuid();
+            $term->word=$request->get("word");
+            $term->meaning=$request->get("meaning");
+            $term->save();
+            return $this->ok($data);
+
+        }else{
+            return $this->error("word existed");
+        }
+        // store
+        /*
+        $data = $request->all();
+        $data['id'] = app('snowflake')->id();
+        $data['guid'] = Str::uuid();
+        DhammaTerm::create($data);
+        */
+
+
     }
 
     /**
