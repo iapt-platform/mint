@@ -23,6 +23,7 @@ const Widget = ({ data, onSave }: IWidget) => {
   const [click, setClicked] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [isHover, setIsHover] = useState(false);
+  const [hasComment, setHasComment] = useState(data.hasComment);
 
   const handleClickChange = (open: boolean) => {
     if (open) {
@@ -106,12 +107,24 @@ const Widget = ({ data, onSave }: IWidget) => {
       {data.word.value}
     </span>
   );
-
-  const discussionIcon = isHover ? (
-    <CommentBox trigger={<CommentOutlined style={{ cursor: "pointer" }} />} />
-  ) : (
-    <></>
-  );
+  console.log(data);
+  const discussionIcon =
+    isHover || hasComment ? (
+      <CommentBox
+        resId={data.uid}
+        resType="wbw"
+        trigger={<CommentOutlined style={{ cursor: "pointer" }} />}
+        onCommentCountChange={(count: number) => {
+          if (count > 0) {
+            setHasComment(true);
+          } else {
+            setHasComment(false);
+          }
+        }}
+      />
+    ) : (
+      <></>
+    );
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (

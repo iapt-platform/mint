@@ -3,17 +3,24 @@ import { useIntl } from "react-intl";
 import { Button, Card } from "antd";
 import { Input, message } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import {
+  ProForm,
+  ProFormText,
+  ProFormTextArea,
+} from "@ant-design/pro-components";
+import { Col, Row, Space } from "antd";
 
 import { IComment } from "./CommentItem";
-import { put } from "../../request";
+import { post, put } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 
 const { TextArea } = Input;
 
 interface IWidget {
   data: IComment;
+  onCreated?: Function;
 }
-const Widget = ({ data }: IWidget) => {
+const Widget = ({ data, onCreated }: IWidget) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
 
@@ -21,7 +28,7 @@ const Widget = ({ data }: IWidget) => {
 
   const save = () => {
     setSaving(true);
-    put<ICommentRequest, ICommentResponse>(`/v2/comment/${data.id}`, {
+    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
       content: value,
     })
       .then((json) => {
@@ -40,9 +47,76 @@ const Widget = ({ data }: IWidget) => {
         message.error(e.message);
       });
   };
-
+  const formItemLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+  };
   return (
     <div>
+      <ProForm<IComment>
+        {...formItemLayout}
+        layout="horizontal"
+        submitter={{
+          render: (props, doms) => {
+            return (
+              <Row>
+                <Col span={14} offset={4}>
+                  <Space>{doms}</Space>
+                </Col>
+              </Row>
+            );
+          },
+        }}
+        onFinish={async (values) => {
+          if (typeof values.id === "undefined") {
+            //新建
+            post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
+              res_id: data.resId,
+              res_type: data.resType,
+              title: values.title,
+              content: values.content,
+            })
+              .then((json) => {
+                console.log(json);
+                if (json.ok) {
+                  message.success(
+                    intl.formatMessage({ id: "flashes.success" })
+                  );
+                  if (typeof onCreated !== "undefined") {
+                    onCreated(json.data);
+                  }
+                } else {
+                  message.error(json.message);
+                }
+              })
+              .catch((e) => {
+                message.error(e.message);
+              });
+          } else {
+            //修改
+          }
+        }}
+        params={{}}
+        request={async () => {
+          return data;
+        }}
+      >
+        <ProFormText
+          name="title"
+          label={intl.formatMessage({ id: "forms.fields.title.label" })}
+          tooltip="最长为 24 位"
+          placeholder={intl.formatMessage({
+            id: "forms.message.title.required",
+          })}
+        />
+        <ProFormTextArea
+          name="content"
+          label={intl.formatMessage({ id: "forms.fields.content.label" })}
+          placeholder={intl.formatMessage({
+            id: "forms.fields.content.placeholder",
+          })}
+        />
+      </ProForm>
       <Card
         title={<span>{data.user.nickName}</span>}
         extra={

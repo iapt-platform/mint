@@ -23,17 +23,17 @@ const defaultData: IComment[] = Array(5)
 
 interface IWidget {
   resId: string;
+  comment?: IComment;
 }
-const Widget = ({ resId }: IWidget) => {
+const Widget = ({ resId, comment }: IWidget) => {
   const [childrenData, setChildrenData] = useState<IComment[]>(defaultData);
-  const [data, setData] = useState<IComment>();
 
   return (
     <div>
-      <CommentTopicHead data={data} />
+      <CommentTopicHead data={comment} />
       <Divider />
       <CommentTopicList data={childrenData} />
-      {data ? <CommentItem data={data} create={true} /> : undefined}
+      {comment ? <CommentItem data={comment} create={true} /> : undefined}
     </div>
   );
 };

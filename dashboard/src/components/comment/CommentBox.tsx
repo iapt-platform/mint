@@ -1,15 +1,20 @@
 import { useState } from "react";
-import { Button, Drawer } from "antd";
+import { Drawer } from "antd";
 import CommentTopic from "./CommentTopic";
 import CommentListCard from "./CommentListCard";
+import { IComment } from "./CommentItem";
 
 interface IWidget {
   trigger?: JSX.Element;
+  resId?: string;
+  resType?: string;
+  onCommentCountChange?: Function;
 }
-const Widget = ({ trigger }: IWidget) => {
+const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [childrenDrawer, setChildrenDrawer] = useState(false);
-
+  const [topicComment, setTopicComment] = useState<IComment>();
+  console.log(resId, resType);
   const showDrawer = () => {
     setOpen(true);
   };
@@ -18,8 +23,12 @@ const Widget = ({ trigger }: IWidget) => {
     setOpen(false);
   };
 
-  const showChildrenDrawer = () => {
+  const showChildrenDrawer = (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    comment: IComment
+  ) => {
     setChildrenDrawer(true);
+    setTopicComment(comment);
   };
 
   const onChildrenDrawerClose = () => {
@@ -30,16 +39,22 @@ const Widget = ({ trigger }: IWidget) => {
     <>
       <span onClick={showDrawer}>{trigger}</span>
       <Drawer
-        title="Multi-level drawer"
+        title="Discussion"
         width={520}
         closable={false}
         onClose={onClose}
         open={open}
       >
-        <Button type="primary" onClick={showChildrenDrawer}>
-          Two-level drawer
-        </Button>
-        <CommentListCard resId="" onSelect={showChildrenDrawer} />
+        <CommentListCard
+          resId={resId}
+          resType={resType}
+          onSelect={showChildrenDrawer}
+          onItemCountChange={(count: number) => {
+            if (typeof onCommentCountChange !== "undefined") {
+              onCommentCountChange(count);
+            }
+          }}
+        />
         <Drawer
           title="Two-level Drawer"
           width={480}
@@ -47,7 +62,7 @@ const Widget = ({ trigger }: IWidget) => {
           onClose={onChildrenDrawerClose}
           open={childrenDrawer}
         >
-          <CommentTopic resId="" />
+          <CommentTopic comment={topicComment} resId="" />
         </Drawer>
       </Drawer>
     </>

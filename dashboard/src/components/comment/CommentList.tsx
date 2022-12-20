@@ -1,8 +1,7 @@
-import { Card, List, Avatar, Space } from "antd";
+import { List, Avatar, Space } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
 import { IComment } from "./CommentItem";
-import { Link } from "react-router-dom";
 
 interface IWidget {
   data: IComment[];
@@ -34,7 +33,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
                 <span
                   onClick={(e) => {
                     if (typeof onSelect !== "undefined") {
-                      onSelect(e);
+                      onSelect(e, item);
                     }
                   }}
                 >

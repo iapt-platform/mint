@@ -57,6 +57,7 @@ interface WbwElement3 {
   status: WbwStatus;
 }
 export interface IWbw {
+  uid?: string;
   word: WbwElement;
   real?: WbwElement;
   meaning?: WbwElement2;
@@ -74,6 +75,7 @@ export interface IWbw {
   locked?: boolean;
   confidence: number;
   attachments?: UploadFile[];
+  hasComment?: boolean;
 }
 export interface IWbwFields {
   meaning?: boolean;

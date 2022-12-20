@@ -6,7 +6,10 @@ import CommentEdit from "./CommentEdit";
 
 export interface IComment {
   id?: string; //id未提供为新建
+  resId?: string;
+  resType?: string;
   user: IUser;
+  parent?: string;
   title?: string;
   content?: string;
   children?: IComment[];
@@ -17,8 +20,9 @@ interface IWidget {
   data: IComment;
   create?: boolean;
   onSelect?: Function;
+  onCreated?: Function;
 }
-const Widget = ({ data, create = false, onSelect }: IWidget) => {
+const Widget = ({ data, create = false, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
 
   return (
@@ -28,7 +32,14 @@ const Widget = ({ data, create = false, onSelect }: IWidget) => {
       </div>
       <div style={{ flex: "auto" }}>
         {edit || create ? (
-          <CommentEdit data={data} />
+          <CommentEdit
+            data={data}
+            onCreated={(e: IComment) => {
+              if (typeof onCreated !== "undefined") {
+                onCreated(e);
+              }
+            }}
+          />
         ) : (
           <CommentShow
             data={data}

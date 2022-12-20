@@ -1,14 +1,11 @@
-import { Card, List, Avatar, Space } from "antd";
-import { MessageOutlined } from "@ant-design/icons";
+import { List } from "antd";
 
 import CommentItem, { IComment } from "./CommentItem";
-import { Link } from "react-router-dom";
 
 interface IWidget {
   data: IComment[];
-  onSelect?: Function;
 }
-const Widget = ({ data, onSelect }: IWidget) => {
+const Widget = ({ data }: IWidget) => {
   return (
     <div>
       <List
