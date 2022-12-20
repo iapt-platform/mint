@@ -8,6 +8,7 @@ use App\Models\PaliText;
 use App\Models\WbwTemplate;
 use App\Models\WbwBlock;
 use App\Models\Wbw;
+use App\Models\Discussion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\MdRender;
@@ -300,7 +301,7 @@ class CorpusController extends Controller
                         //找到逐词解析数据
                         $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
                                       ->whereBetween('wid',[$value->word_start,$value->word_end])
-                                      ->select('data')
+                                      ->select(['data','uid'])
                                       ->orderBy('wid')
                                       ->get();
                         $wbwContent = [];
@@ -321,6 +322,7 @@ class CorpusController extends Controller
                                 $case = trim($case);
                                 $case = trim($case,"$");
                                 $wbwContent[] = [
+                                    'uid'=>$wbwrow->uid,
                                     'word'=>['value'=>$word->pali->__toString(),'status'=>0],
                                     'real'=> ['value'=>$word->real->__toString(),'status'=>0],
                                     'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
@@ -331,7 +333,8 @@ class CorpusController extends Controller
                                     'style'=> ['value'=>$word->style->__toString(),'status'=>0],
                                     'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
                                     'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
-                                    'confidence'=> 0.5
+                                    'confidence'=> 0.5,
+                                    'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
                                 ];
                             }
                         }
