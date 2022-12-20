@@ -18,12 +18,15 @@ class ApiLog
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
-        $api = [];
-        $api[] = date("h:i:sa",LARAVEL_START);
-        $api[] = round((microtime(true) - LARAVEL_START)*1000,2);
-        $api[] = $request->method();
-        $api[] = $request->path();
-        Storage::disk('local')->append("logs/api/".date("Y-m-d").".log",\implode(',',$api) );
+        if (defined('LARAVEL_START'))
+        {
+            $api = [];
+            $api[] = date("h:i:sa",LARAVEL_START);
+            $api[] = round((microtime(true) - LARAVEL_START)*1000,2);
+            $api[] = $request->method();
+            $api[] = $request->path();
+            Storage::disk('local')->append("logs/api/".date("Y-m-d").".log",\implode(',',$api) );
+        }
         return $response;
     }
 }
