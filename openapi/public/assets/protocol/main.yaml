@@ -17,3 +17,5 @@ paths:
     $ref: "./resources/channel/index.yaml"
   /palitext:
     $ref: "./resources/corpus/pali-text/index.yaml"
+  /discussion:
+    $ref: "./resources/discussion/index.yaml"
