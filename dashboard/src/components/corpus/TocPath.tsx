@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Breadcrumb } from "antd";
+import PaliText from "../template/Wbw/PaliText";
 
 export interface ITocPathNode {
   book: number;
@@ -31,14 +32,15 @@ const Widget = ({
   const path = data.map((item, id) => {
     const linkChapter = `/article/chapter/${item.book}-${item.paragraph}${sChannel}`;
     let oneItem = <></>;
+    const title = <PaliText text={item.title} />;
     switch (link) {
       case "none":
-        oneItem = <>{item.title}</>;
+        oneItem = <>{title}</>;
         break;
       case "blank":
         oneItem = (
           <Link to={linkChapter} target="_blank">
-            {item.title}
+            {title}
           </Link>
         );
         break;
