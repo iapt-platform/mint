@@ -46,9 +46,9 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
       <Drawer
         title="Discussion"
         width={520}
-        closable={false}
         onClose={onClose}
         open={open}
+        maskClosable={false}
       >
         <CommentListCard
           resId={resId}
@@ -64,7 +64,6 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
         <Drawer
           title="回答"
           width={480}
-          closable={false}
           onClose={onChildrenDrawerClose}
           open={childrenDrawer}
         >
