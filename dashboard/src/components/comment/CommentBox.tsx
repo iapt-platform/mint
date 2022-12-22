@@ -4,6 +4,10 @@ import CommentTopic from "./CommentTopic";
 import CommentListCard from "./CommentListCard";
 import { IComment } from "./CommentItem";
 
+export interface IAnswerCount {
+  id: string;
+  count: number;
+}
 interface IWidget {
   trigger?: JSX.Element;
   resId?: string;
@@ -14,6 +18,7 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
+  const [answerCount, setAnswerCount] = useState<IAnswerCount>();
   console.log(resId, resType);
   const showDrawer = () => {
     setOpen(true);
@@ -49,6 +54,7 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
           resId={resId}
           resType={resType}
           onSelect={showChildrenDrawer}
+          changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
             if (typeof onCommentCountChange !== "undefined") {
               onCommentCountChange(count);
@@ -67,6 +73,9 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
               comment={topicComment}
               resId={resId}
               resType={resType}
+              onItemCountChange={(count: number, parent: string) => {
+                setAnswerCount({ id: parent, count: count });
+              }}
             />
           ) : (
             <></>

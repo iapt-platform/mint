@@ -57,7 +57,6 @@ const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
             .then((json) => {
               console.log("new discussion", json);
               if (json.ok) {
-                message.success(intl.formatMessage({ id: "flashes.success" }));
                 if (typeof onCreated !== "undefined") {
                   onCreated({
                     id: json.data.id,
@@ -76,6 +75,7 @@ const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
                         : "null",
                     },
                     title: json.data.title,
+                    parent: json.data.parent,
                     content: json.data.content,
                     createdAt: json.data.created_at,
                     updatedAt: json.data.updated_at,

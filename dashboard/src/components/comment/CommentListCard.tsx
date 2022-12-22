@@ -2,32 +2,47 @@ import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { Card, message } from "antd";
 
-import { useAppSelector } from "../../hooks";
-import { currentUser as _currentUser } from "../../reducers/current-user";
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
 import CommentCreate from "./CommentCreate";
 import { IComment } from "./CommentItem";
 import CommentList from "./CommentList";
+import { IAnswerCount } from "./CommentBox";
 
 interface IWidget {
   resId?: string;
   resType?: string;
+  changedAnswerCount?: IAnswerCount;
   onSelect?: Function;
   onItemCountChange?: Function;
 }
-const Widget = ({ resId, resType, onSelect, onItemCountChange }: IWidget) => {
+const Widget = ({
+  resId,
+  resType,
+  onSelect,
+  changedAnswerCount,
+  onItemCountChange,
+}: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
-
-  const _currUser = useAppSelector(_currentUser);
+  useEffect(() => {
+    console.log("changedAnswerCount", changedAnswerCount);
+    const newData = data.map((item) => {
+      const newItem = item;
+      if (newItem.id && changedAnswerCount?.id === newItem.id) {
+        newItem.childrenCount = changedAnswerCount.count;
+      }
+      return newItem;
+    });
+    setData(newData);
+  }, [changedAnswerCount]);
 
   useEffect(() => {
     get<ICommentListResponse>(`/v2/discussion?view=question&id=${resId}`)
       .then((json) => {
         console.log(json);
         if (json.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
+          console.log(intl.formatMessage({ id: "flashes.success" }));
           const discussions: IComment[] = json.data.rows.map((item) => {
             return {
               id: item.id,

@@ -39,7 +39,7 @@ const Widget = ({ resId, resType, comment, onItemCountChange }: IWidget) => {
       .then((json) => {
         console.log(json);
         if (json.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
+          console.log(intl.formatMessage({ id: "flashes.success" }));
           const discussions: IComment[] = json.data.rows.map((item) => {
             return {
               id: item.id,
@@ -79,7 +79,7 @@ const Widget = ({ resId, resType, comment, onItemCountChange }: IWidget) => {
           console.log("create", e);
           const newData = JSON.parse(JSON.stringify(e));
           if (typeof onItemCountChange !== "undefined") {
-            onItemCountChange(childrenData.length + 1);
+            onItemCountChange(childrenData.length + 1, e.parent);
           }
           setChildrenData([...childrenData, newData]);
         }}

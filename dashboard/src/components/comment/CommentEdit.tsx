@@ -36,7 +36,7 @@ const Widget = ({ data, onCreated }: IWidget) => {
         setSaving(false);
 
         if (json.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
+          console.log(intl.formatMessage({ id: "flashes.success" }));
         } else {
           message.error(json.message);
         }
@@ -79,9 +79,7 @@ const Widget = ({ data, onCreated }: IWidget) => {
               .then((json) => {
                 console.log(json);
                 if (json.ok) {
-                  message.success(
-                    intl.formatMessage({ id: "flashes.success" })
-                  );
+                  console.log(intl.formatMessage({ id: "flashes.success" }));
                   if (typeof onCreated !== "undefined") {
                     onCreated(json.data);
                   }
