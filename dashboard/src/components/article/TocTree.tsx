@@ -1,7 +1,8 @@
 import { Tree } from "antd";
 
-import type { TreeProps } from "antd/es/tree";
+import type { DataNode, TreeProps } from "antd/es/tree";
 import type { ListNodeData } from "../studio/EditableTree";
+import PaliText from "../template/Wbw/PaliText";
 
 type TreeNodeData = {
   key: string;
@@ -83,7 +84,19 @@ const Widget = ({ treeData }: IWidgetTocTree) => {
 
   return (
     <>
-      <Tree onSelect={onSelect} treeData={data} />
+      <Tree
+        onSelect={onSelect}
+        treeData={data}
+        blockNode
+        autoExpandParent
+        titleRender={(node: DataNode) => {
+          if (typeof node.title === "string") {
+            return <PaliText text={node.title} />;
+          } else {
+            return <></>;
+          }
+        }}
+      />
     </>
   );
 };
