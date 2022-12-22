@@ -107,7 +107,7 @@ const Widget = ({ data, onSave }: IWidget) => {
       {data.word.value}
     </span>
   );
-  console.log(data);
+
   const discussionIcon =
     isHover || hasComment ? (
       <CommentBox
