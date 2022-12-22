@@ -9,6 +9,7 @@ import FontBox from "./FontBox";
 import DemoForm from "./Form";
 import WbwTest from "./WbwTest";
 import CommentList from "../comment/CommentList";
+import TreeTest from "./TreeTest";
 
 const Widget = () => {
   const data = Array(100)
@@ -29,6 +30,7 @@ const Widget = () => {
   return (
     <div>
       <h1>Home</h1>
+      <TreeTest />
       <h2>comment</h2>
       <CommentList data={data} />
       <h2>wbw</h2>
