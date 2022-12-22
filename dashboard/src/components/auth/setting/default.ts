@@ -91,9 +91,9 @@ export const defaultSetting: ISetting[] = [
     /**
      * 第一巴利脚本
      */
-    key: "setting.pali.script1",
-    label: "setting.pali.script1.label",
-    description: "setting.pali.script1.description",
+    key: "setting.pali.script.primary",
+    label: "setting.pali.script.primary.label",
+    description: "setting.pali.script.primary.description",
     defaultValue: "roman",
     options: [
       {
@@ -122,9 +122,9 @@ export const defaultSetting: ISetting[] = [
     /**
      * 第二巴利脚本
      */
-    key: "setting.pali.script2",
-    label: "setting.pali.script2.label",
-    description: "setting.pali.script2.description",
+    key: "setting.pali.script.secondary",
+    label: "setting.pali.script.secondary.label",
+    description: "setting.pali.script.secondary.description",
     defaultValue: "none",
     options: [
       {
