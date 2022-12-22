@@ -18,10 +18,10 @@ class DiscussionController extends Controller
     {
         //
 		switch ($request->get('view')) {
-            case 'res_id':
-                $table = Discussion::where('res_id',$request->get('id'));
+            case 'question':
+                $table = Discussion::where('res_id',$request->get('id'))->where('parent',null);
                 break;
-            case 'parent':
+            case 'answer':
                 $table = Discussion::where('parent',$request->get('id'));
                 break;
         }
@@ -31,7 +31,7 @@ class DiscussionController extends Controller
         if(!empty($request->get('order')) && !empty($request->get('dir'))){
             $table->orderBy($request->get('order'),$request->get('dir'));
         }else{
-            $table->orderBy('updated_at','desc');
+            $table->orderBy('updated_at','asc');
         }
         $count = $table->count();
         if(!empty($request->get('limit'))){
@@ -82,6 +82,14 @@ class DiscussionController extends Controller
         $discussion->parent = $request->get('parent',null);
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
+        //更新parent children_count
+        if($request->has('parent')){
+            $parent = Discussion::find($request->get('parent'));
+            if($parent){
+                $parent->increment('children_count',1);
+                $parent->save();
+            }
+        }
         return $this->ok(new DiscussionResource($discussion));
     }
 
