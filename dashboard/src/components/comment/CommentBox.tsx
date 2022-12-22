@@ -56,13 +56,21 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
           }}
         />
         <Drawer
-          title="Two-level Drawer"
+          title="回答"
           width={480}
           closable={false}
           onClose={onChildrenDrawerClose}
           open={childrenDrawer}
         >
-          <CommentTopic comment={topicComment} resId="" />
+          {resId && resType ? (
+            <CommentTopic
+              comment={topicComment}
+              resId={resId}
+              resType={resType}
+            />
+          ) : (
+            <></>
+          )}
         </Drawer>
       </Drawer>
     </>
