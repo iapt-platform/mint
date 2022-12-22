@@ -1,6 +1,7 @@
 import { Tree } from "antd";
 
 import type { DataNode, TreeProps } from "antd/es/tree";
+import { useEffect, useState } from "react";
 import type { ListNodeData } from "../studio/EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 
@@ -11,10 +12,14 @@ type TreeNodeData = {
   level: number;
 };
 
-function tocGetTreeData(listData: ListNodeData[], active = "") {
-  let treeData = [];
+function tocGetTreeData(
+  listData: ListNodeData[],
+  active = ""
+): [TreeNodeData[], string] {
+  let treeData: TreeNodeData[] = [];
   let tocActivePath: TreeNodeData[] = [];
   let treeParents = [];
+  let defaultExpandedKey: string = "";
   let rootNode: TreeNodeData = {
     key: "0",
     title: "root",
@@ -34,11 +39,11 @@ function tocGetTreeData(listData: ListNodeData[], active = "") {
       children: [],
       level: element.level,
     };
-    /*
-		if (active == element.article) {
-			newNode["extraClasses"] = "active";
-		}
-*/
+
+    if (active === element.key) {
+      defaultExpandedKey = element.key;
+    }
+
     if (newNode.level > iCurrLevel) {
       //新的层级比较大，为上一个的子目录
       treeParents.push(lastInsNode);
@@ -67,37 +72,46 @@ function tocGetTreeData(listData: ListNodeData[], active = "") {
       }
     }
   }
-  return treeData[0].children;
+  return [treeData[0].children, defaultExpandedKey];
 }
 
-type IWidgetTocTree = {
+interface IWidgetTocTree {
   treeData: ListNodeData[];
-};
-const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-  //let aaa: NewTree = info.node;
-  console.log("selected", selectedKeys);
-};
-const Widget = ({ treeData }: IWidgetTocTree) => {
-  const data = tocGetTreeData(treeData);
+  expandedKey?: string;
+}
 
-  //const [expandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+const Widget = ({ treeData, expandedKey }: IWidgetTocTree) => {
+  const [tree, setTree] = useState<TreeNodeData[]>();
+  const [expanded, setExpanded] = useState<string>("");
+
+  useEffect(() => {
+    if (treeData.length > 0) {
+      const [data, key] = tocGetTreeData(treeData, expandedKey);
+      setTree(data);
+      setExpanded(key);
+      console.log("create tree", treeData.length, expandedKey, key);
+    }
+  }, [treeData, expandedKey]);
+  const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
+    //let aaa: NewTree = info.node;
+    console.log("selected", selectedKeys);
+  };
 
   return (
-    <>
-      <Tree
-        onSelect={onSelect}
-        treeData={data}
-        blockNode
-        autoExpandParent
-        titleRender={(node: DataNode) => {
-          if (typeof node.title === "string") {
-            return <PaliText text={node.title} />;
-          } else {
-            return <></>;
-          }
-        }}
-      />
-    </>
+    <Tree
+      onSelect={onSelect}
+      treeData={tree}
+      defaultExpandedKeys={[expanded]}
+      defaultSelectedKeys={[expanded]}
+      blockNode
+      titleRender={(node: DataNode) => {
+        if (typeof node.title === "string") {
+          return <PaliText text={node.title} />;
+        } else {
+          return <></>;
+        }
+      }}
+    />
   );
 };
 
