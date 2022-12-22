@@ -109,23 +109,27 @@ const Widget = ({ data, onSave }: IWidget) => {
     </span>
   );
 
-  const discussionIcon =
-    isHover || hasComment ? (
-      <CommentBox
-        resId={data.uid}
-        resType="wbw"
-        trigger={<CommentOutlined style={{ cursor: "pointer" }} />}
-        onCommentCountChange={(count: number) => {
-          if (count > 0) {
-            setHasComment(true);
-          } else {
-            setHasComment(false);
-          }
-        }}
-      />
-    ) : (
-      <></>
-    );
+  const discussionIcon = (
+    <CommentBox
+      resId={data.uid}
+      resType="wbw"
+      trigger={
+        <CommentOutlined
+          style={{
+            cursor: "pointer",
+            visibility: isHover || hasComment ? "visible" : "hidden",
+          }}
+        />
+      }
+      onCommentCountChange={(count: number) => {
+        if (count > 0) {
+          setHasComment(true);
+        } else {
+          setHasComment(false);
+        }
+      }}
+    />
+  );
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
