@@ -12,14 +12,27 @@ export interface ICommentRequest {
   updated_at?: string;
 }
 
+export interface ICommentApiData {
+  id: string;
+  res_id: string;
+  res_type: string;
+  title?: string;
+  content?: string;
+  parent?: string;
+  children_count: number;
+  editor: IUserRequest;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface ICommentResponse {
   ok: boolean;
   message: string;
-  data: ICommentRequest;
+  data: ICommentApiData;
 }
 
 export interface ICommentListResponse {
   ok: boolean;
   message: string;
-  data: { rows: ICommentRequest[]; count: number };
+  data: { rows: ICommentApiData[]; count: number };
 }
