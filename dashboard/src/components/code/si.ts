@@ -319,8 +319,8 @@ const char_unicode_to_si = [
   { id: "o", value: "ඔ" },
 ];
 
-export const roman_to_si = (input: string | null): string | null => {
-  if (input === null) {
+export const roman_to_si = (input: string | undefined): string | undefined => {
+  if (typeof input === "undefined") {
     return input;
   }
   let txt = input.toLowerCase();

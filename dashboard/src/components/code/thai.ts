@@ -117,8 +117,10 @@ const char_roman_to_thai = [
   { id: "ฺอ", value: "" },
 ];
 
-export const roman_to_thai = (input: string | null): string | null => {
-  if (input === null) {
+export const roman_to_thai = (
+  input: string | undefined
+): string | undefined => {
+  if (typeof input === "undefined") {
     return input;
   }
   let txt = input.toLowerCase();

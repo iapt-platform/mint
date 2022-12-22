@@ -659,8 +659,10 @@ const char_tai_old_to_r = [
   { id: "aฺ", value: "" },
 ];
 */
-export const roman_to_taitham = (input: string | null): string | null => {
-  if (input === null) {
+export const roman_to_taitham = (
+  input: string | undefined
+): string | undefined => {
+  if (typeof input === "undefined") {
     return input;
   }
   let txt = input.toLowerCase();
