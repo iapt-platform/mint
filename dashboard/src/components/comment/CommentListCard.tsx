@@ -1,12 +1,12 @@
-import { Card, message } from "antd";
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
+import { Card, message } from "antd";
+
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
 import CommentCreate from "./CommentCreate";
-
 import { IComment } from "./CommentItem";
 import CommentList from "./CommentList";
 
@@ -21,8 +21,9 @@ const Widget = ({ resId, resType, onSelect, onItemCountChange }: IWidget) => {
   const [data, setData] = useState<IComment[]>([]);
 
   const _currUser = useAppSelector(_currentUser);
+
   useEffect(() => {
-    get<ICommentListResponse>(`/v2/discussion?view=res_id&id=${resId}`)
+    get<ICommentListResponse>(`/v2/discussion?view=question&id=${resId}`)
       .then((json) => {
         console.log(json);
         if (json.ok) {
@@ -40,6 +41,7 @@ const Widget = ({ resId, resType, onSelect, onItemCountChange }: IWidget) => {
               },
               title: item.title,
               content: item.content,
+              childrenCount: item.children_count,
               createdAt: item.created_at,
               updatedAt: item.updated_at,
             };
@@ -52,7 +54,7 @@ const Widget = ({ resId, resType, onSelect, onItemCountChange }: IWidget) => {
       .catch((e) => {
         message.error(e.message);
       });
-  }, [intl]);
+  }, [resId]);
 
   if (typeof resId === "undefined") {
     return <div>该资源尚未创建，不能发表讨论。</div>;
@@ -72,27 +74,22 @@ const Widget = ({ resId, resType, onSelect, onItemCountChange }: IWidget) => {
           }}
           data={data}
         />
-        {
+        {resId && resType ? (
           <CommentCreate
-            data={{
-              resId: resId,
-              resType: resType,
-              user: {
-                id: "string",
-                nickName: _currUser ? _currUser.nickName : "Visuddhinanda",
-                realName: _currUser ? _currUser.realName : "Visuddhinanda",
-                avatar: _currUser ? _currUser.avatar : "",
-              },
-            }}
+            resId={resId}
+            resType={resType}
             onCreated={(e: IComment) => {
-              // const orgData = JSON.parse(JSON.stringify(data));
+              const newData = JSON.parse(JSON.stringify(e));
+              console.log("create", e);
               if (typeof onItemCountChange !== "undefined") {
                 onItemCountChange(data.length + 1);
               }
-              setData([...data, e]);
+              setData([...data, newData]);
             }}
           />
-        }
+        ) : (
+          <></>
+        )}
       </Card>
     </div>
   );

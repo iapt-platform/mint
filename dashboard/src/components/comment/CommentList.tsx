@@ -22,9 +22,13 @@ const Widget = ({ data, onSelect }: IWidget) => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Space>
-                <MessageOutlined /> {"5"}
-              </Space>,
+              item.childrenCount ? (
+                <Space>
+                  <MessageOutlined /> {item.childrenCount}
+                </Space>
+              ) : (
+                <></>
+              ),
             ]}
           >
             <List.Item.Meta

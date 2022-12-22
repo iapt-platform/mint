@@ -13,25 +13,25 @@ export interface IComment {
   title?: string;
   content?: string;
   children?: IComment[];
+  childrenCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
 interface IWidget {
   data: IComment;
-  create?: boolean;
   onSelect?: Function;
   onCreated?: Function;
 }
-const Widget = ({ data, create = false, onSelect, onCreated }: IWidget) => {
+const Widget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
-
+  console.log(data);
   return (
     <div style={{ display: "flex" }}>
       <div style={{ width: "auto", padding: 8 }}>
-        <Avatar>{data.user.nickName.slice(0, 1)}</Avatar>
+        <Avatar>{data.user?.nickName?.slice(0, 1)}</Avatar>
       </div>
       <div style={{ flex: "auto" }}>
-        {edit || create ? (
+        {edit ? (
           <CommentEdit
             data={data}
             onCreated={(e: IComment) => {

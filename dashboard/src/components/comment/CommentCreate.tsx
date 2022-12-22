@@ -10,20 +10,25 @@ import { Col, Row, Space } from "antd";
 import { IComment } from "./CommentItem";
 import { post } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
+import { useAppSelector } from "../../hooks";
+import { currentUser as _currentUser } from "../../reducers/current-user";
 
 interface IWidget {
-  data: IComment;
+  resId: string;
+  resType: string;
+  parent?: string;
   onCreated?: Function;
 }
-const Widget = ({ data, onCreated }: IWidget) => {
+const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
   const intl = useIntl();
-
+  const _currUser = useAppSelector(_currentUser);
   const formItemLayout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
   };
   return (
     <div>
+      <div>{_currUser?.nickName}:</div>
       <ProForm<IComment>
         {...formItemLayout}
         layout="horizontal"
@@ -40,18 +45,41 @@ const Widget = ({ data, onCreated }: IWidget) => {
         }}
         onFinish={async (values) => {
           //新建
+          console.log("create", resId, resType, parent);
+
           post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
-            res_id: data.resId,
-            res_type: data.resType,
+            res_id: resId,
+            res_type: resType,
+            parent: parent,
             title: values.title,
             content: values.content,
           })
             .then((json) => {
-              console.log(json);
+              console.log("new discussion", json);
               if (json.ok) {
                 message.success(intl.formatMessage({ id: "flashes.success" }));
                 if (typeof onCreated !== "undefined") {
-                  onCreated(json.data);
+                  onCreated({
+                    id: json.data.id,
+                    resId: json.data.res_id,
+                    resType: json.data.res_type,
+                    user: {
+                      id: json.data.editor?.id ? json.data.editor.id : "null",
+                      nickName: json.data.editor?.nickName
+                        ? json.data.editor.nickName
+                        : "null",
+                      realName: json.data.editor?.userName
+                        ? json.data.editor.userName
+                        : "null",
+                      avatar: json.data.editor?.avatar
+                        ? json.data.editor.avatar
+                        : "null",
+                    },
+                    title: json.data.title,
+                    content: json.data.content,
+                    createdAt: json.data.created_at,
+                    updatedAt: json.data.updated_at,
+                  });
                 }
               } else {
                 message.error(json.message);
@@ -62,11 +90,8 @@ const Widget = ({ data, onCreated }: IWidget) => {
             });
         }}
         params={{}}
-        request={async () => {
-          return data;
-        }}
       >
-        {data.parent ? (
+        {parent ? (
           <></>
         ) : (
           <ProFormText
