@@ -9,7 +9,7 @@ const items = {
   "setting.layout.paragraph.description": "逐段或逐句对照（仅阅读模式）",
   "setting.layout.paragraph.paragraph.label": "逐段",
   "setting.layout.paragraph.sentence.label": "逐句",
-  "setting.pali.script.primary.label": "第一巴利脚本",
+  "setting.pali.script.primary.label": "巴利脚本",
   "setting.pali.script.primary.description": "首要的巴利语脚本",
   "setting.pali.script.secondary.label": "第二巴利脚本",
   "setting.pali.script.secondary.description": "第二个巴利语脚本",
