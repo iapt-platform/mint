@@ -24,6 +24,7 @@ class DiscussionResource extends JsonResource
             "title"=> $this->title,
             "content"=> $this->content,
             "parent"=> $this->parent,
+            "children_count"=> $this->children_count,
             "editor"=> StudioApi::getById($this->editor_uid),
             "res_id"=>$this->res_id,
             "res_type"=> $this->res_type,
