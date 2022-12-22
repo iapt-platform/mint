@@ -13,6 +13,7 @@ import { bookMarkColor } from "./WbwDetailBookMark";
 import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../comment/CommentBox";
+import PaliText from "./PaliText";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -104,7 +105,7 @@ const Widget = ({ data, onSave }: IWidget) => {
         borderRadius: 5,
       }}
     >
-      {data.word.value}
+      {<PaliText text={data.word.value} />}
     </span>
   );
 
