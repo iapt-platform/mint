@@ -20,6 +20,9 @@ const Widget = () => {
 
     formRef.current?.setFieldsValue({ sv: it });
   };
+  const onReset = () => {
+    formRef.current?.resetFields();
+  };
   return (
     <ProForm<IFormData>
       name="demo"
@@ -31,6 +34,9 @@ const Widget = () => {
             <Button.Group key="refs" style={{ display: "block" }}>
               <Button htmlType="button" onClick={onWhat} key="what">
                 What?
+              </Button>
+              <Button htmlType="button" onClick={onReset} key="reset">
+                Reset
               </Button>
             </Button.Group>,
           ];
