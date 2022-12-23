@@ -143,7 +143,7 @@ const Widget = ({
     }
     get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
       console.log("lookup ok", json.data.count);
-      //扫描结果将结果按照词头分开
+      //存储到redux
       store.dispatch(add(json.data.rows));
     });
 
@@ -241,7 +241,7 @@ const Widget = ({
               }}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.case = { value: e.split("+"), status: 5 };
+                newData.case = { value: e.split("$"), status: 5 };
                 setWordData(newData);
               }}
             />
