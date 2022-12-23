@@ -1,7 +1,9 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
+import { modeChange } from "../../reducers/article-mode";
 
 import { get } from "../../request";
+import store from "../../store";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
 
@@ -28,6 +30,7 @@ const Widget = ({
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
+
   let channels: string[] = [];
   if (typeof articleId !== "undefined") {
     const aId = articleId.split("_");
@@ -37,15 +40,19 @@ const Widget = ({
   }
 
   useEffect(() => {
+    console.log("mode", mode, articleMode);
     if (!active) {
       return;
     }
-    if (mode !== "read" && articleMode !== "read") {
-      setArticleMode(mode);
+    setArticleMode(mode);
+    //发布mode变更
+    store.dispatch(modeChange(mode));
+
+    if (mode !== articleMode && mode !== "read" && articleMode !== "read") {
       console.log("set mode", mode, articleMode);
       return;
     }
-    setArticleMode(mode);
+
     if (typeof type !== "undefined" && typeof articleId !== "undefined") {
       get<IArticleResponse>(`/v2/${type}/${articleId}/${mode}`).then((json) => {
         if (json.ok) {

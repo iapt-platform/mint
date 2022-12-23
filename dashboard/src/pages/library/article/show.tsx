@@ -18,6 +18,7 @@ import ProTabs from "../../../components/article/ProTabs";
  */
 const Widget = () => {
   const { type, id, mode = "read" } = useParams(); //url 参数
+  console.log("mode", mode);
   const [articleMode, setArticleMode] = useState<ArticleMode>(
     mode as ArticleMode
   );

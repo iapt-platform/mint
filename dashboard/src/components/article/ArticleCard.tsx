@@ -59,7 +59,7 @@ const Widget = ({
           value: "read",
         },
         {
-          label: intl.formatMessage({ id: "buttons.edit" }),
+          label: intl.formatMessage({ id: "buttons.translate" }),
           value: "edit",
         },
         {
