@@ -175,6 +175,7 @@ const Widget = ({
       >
         <WbwPali
           data={wordData}
+          display={display}
           onSave={(e: IWbw) => {
             console.log("save", e);
             const newData: IWbw = JSON.parse(JSON.stringify(e));

@@ -8,7 +8,7 @@ import {
 
 import "./wbw.css";
 import WbwDetail from "./WbwDetail";
-import { IWbw } from "./WbwWord";
+import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
@@ -18,9 +18,10 @@ import PaliText from "./PaliText";
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
+  display?: TWbwDisplayMode;
   onSave?: Function;
 }
-const Widget = ({ data, onSave }: IWidget) => {
+const Widget = ({ data, display, onSave }: IWidget) => {
   const [click, setClicked] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [isHover, setIsHover] = useState(false);
@@ -109,27 +110,51 @@ const Widget = ({ data, onSave }: IWidget) => {
     </span>
   );
 
+  let commentShellStyle: React.CSSProperties = {
+    display: "inline-block",
+  };
+  let commentIconStyle: React.CSSProperties = {
+    cursor: "pointer",
+  };
+
+  if (display === "block") {
+    commentIconStyle = {
+      cursor: "pointer",
+      visibility: isHover || hasComment ? "visible" : "hidden",
+    };
+  } else {
+    if (!hasComment) {
+      commentShellStyle = {
+        display: "inline-block",
+        position: "absolute",
+        padding: 8,
+        marginTop: "-1.5em",
+        marginLeft: "-2em",
+      };
+      commentShellStyle = {
+        visibility: isHover ? "visible" : "hidden",
+        cursor: "pointer",
+      };
+    }
+  }
+
   const discussionIcon = (
-    <CommentBox
-      resId={data.uid}
-      resType="wbw"
-      trigger={
-        <CommentOutlined
-          style={{
-            cursor: "pointer",
-            visibility: isHover || hasComment ? "visible" : "hidden",
-          }}
-        />
-      }
-      onCommentCountChange={(count: number) => {
-        if (count > 0) {
-          setHasComment(true);
-        } else {
-          setHasComment(false);
-        }
-      }}
-    />
+    <div style={commentShellStyle}>
+      <CommentBox
+        resId={data.uid}
+        resType="wbw"
+        trigger={<CommentOutlined style={commentIconStyle} />}
+        onCommentCountChange={(count: number) => {
+          if (count > 0) {
+            setHasComment(true);
+          } else {
+            setHasComment(false);
+          }
+        }}
+      />
+    </div>
   );
+
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
