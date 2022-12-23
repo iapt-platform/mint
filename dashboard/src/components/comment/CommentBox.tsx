@@ -19,7 +19,7 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
-  console.log(resId, resType);
+  //console.log(resId, resType);
   const showDrawer = () => {
     setOpen(true);
   };
