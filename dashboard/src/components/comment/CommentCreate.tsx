@@ -2,6 +2,7 @@ import { useIntl } from "react-intl";
 import { message } from "antd";
 import {
   ProForm,
+  ProFormInstance,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
@@ -12,6 +13,7 @@ import { post } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
+import { useRef } from "react";
 
 interface IWidget {
   resId: string;
@@ -21,6 +23,7 @@ interface IWidget {
 }
 const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
   const formItemLayout = {
     labelCol: { span: 4 },
@@ -32,6 +35,7 @@ const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
       <ProForm<IComment>
         {...formItemLayout}
         layout="horizontal"
+        formRef={formRef}
         submitter={{
           render: (props, doms) => {
             return (
@@ -57,6 +61,7 @@ const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
             .then((json) => {
               console.log("new discussion", json);
               if (json.ok) {
+                formRef.current?.resetFields();
                 if (typeof onCreated !== "undefined") {
                   onCreated({
                     id: json.data.id,
