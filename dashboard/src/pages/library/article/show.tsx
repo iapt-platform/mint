@@ -57,7 +57,7 @@ const Widget = () => {
             />
           </ArticleCard>
         </div>
-        <div style={{ flex: 5 }} ref={box}>
+        <div style={{ flex: 5, display: "none" }} ref={box}>
           <ArticleTabs onClose={closeCol} />
         </div>
       </div>
