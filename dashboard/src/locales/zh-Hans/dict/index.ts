@@ -136,6 +136,14 @@ const items = {
   "dict.fields.type.null.short.label": "",
   "dict.fields.type.?.label": "?",
   "dict.fields.type.?.short.label": "?",
+  "dict.fields.type.ti:base.label": "三性词干",
+  "dict.fields.type.ti:base.short.label": "三性词干",
+  "dict.fields.type.n:base.label": "名词干",
+  "dict.fields.type.n:base.short.label": "名词干",
+  "dict.fields.type.v:base.label": "动词干",
+  "dict.fields.type.v:base.short.label": "动词干",
+  "dict.fields.type.adj:base.label": "形词干",
+  "dict.fields.type.ajd:base.short.label": "形词干",
 };
 
 export default items;
