@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Card } from "antd";
 
 interface IWidgetExerciseCtl {
   id?: string;
@@ -7,10 +7,13 @@ interface IWidgetExerciseCtl {
 }
 const ExerciseCtl = ({ id, channel, children }: IWidgetExerciseCtl) => {
   return (
-    <>
-      <div>{children}</div>
-      <Button type="primary">做练习</Button>
-    </>
+    <Card
+      title="练习"
+      extra={<Button type="primary">做练习</Button>}
+      style={{ backgroundColor: "wheat" }}
+    >
+      {children}
+    </Card>
   );
 };
 
