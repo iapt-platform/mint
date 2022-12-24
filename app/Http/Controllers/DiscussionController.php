@@ -90,6 +90,41 @@ class DiscussionController extends Controller
                 $parent->save();
             }
         }
+
+        $end_point = 'https://api.webpushr.com/v1/notification/send/all';
+
+        $http_header = array(
+            "Content-Type: Application/Json",
+            "webpushrKey: 90ce3ace1b8e6cc7ea90cb810880b4de",
+            "webpushrAuthToken: 63019"
+        );
+
+        $req_data = array(
+            'title' 		=> "提问", //required
+            'message' 		=> "问题：".$request->get('title',""), //required
+            'target_url'	=> 'https://www.webpushr.com', //required
+
+            //following parameters are optional
+            //'name'		=> 'Test campaign',
+            //'icon'		=> 'https://cdn.webpushr.com/siteassets/wSxoND3TTb.png',
+            //'image'		=> 'https://cdn.webpushr.com/siteassets/aRB18p3VAZ.jpeg',
+            //'auto_hide'	=> 1,
+            //'expire_push'	=> '5m',
+            //'send_at'		=> '2022-01-04 10:47 +5:30',
+            'action_buttons'=> array(
+                array('title'=> '查看', 'url' => 'https://visuddhinanda.spring.wikipali.org'),
+            )
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $http_header);
+        curl_setopt($ch, CURLOPT_URL, $end_point );
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($req_data) );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
         return $this->ok(new DiscussionResource($discussion));
     }
 
