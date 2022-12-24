@@ -113,6 +113,27 @@ class MdRender{
                             return $output;
                           });
                     break;
+                case 'exercise':
+                    $exeId = trim($param[1]);
+                    $exeContent = trim($param[2]);
+                    $props = Cache::remember("/quote/{$channelId}/{$exeId}",
+                          60,
+                          function() use($exeId,$channelId){
+                            $output = [
+                                "id" => $exeId,
+                                "channel" => $channelId,
+                                ];
+                            return $output;
+                          });
+                    #替换句子
+                    $pattern = "/\(\((.+?)\)\)/";
+                    $replacement = '{{sent|$1}}';
+                    Log::info("content{$exeContent}");
+
+                    $exeContent = preg_replace($pattern,$replacement,$exeContent);
+                    Log::info("content{$exeContent}");
+                    $innerString = MdRender::render($exeContent,$channelId);
+                    break;
                 default:
                     break;
             }

@@ -45,6 +45,7 @@ class TestMdRender extends Command
         $markdown .= "content **content**\n";
         $markdown .= "```\n\n";
         $markdown .= "{{168-916-10-37}}";
+        $markdown .= "{{exercise|1|((168-916-10-37))}}";
 
         echo MdRender::render($markdown,'00ae2c48-c204-4082-ae79-79ba2740d506');
         return 0;
