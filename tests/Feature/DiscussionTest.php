@@ -18,7 +18,7 @@ class DiscussionTest extends TestCase
     {
         $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2NjgyMzE3MTksImV4cCI6MTY5OTc2NzcxOSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOiI0In0.LV4ItC5VCqXpbKIXT1zePcnfi-heCf3Df63w7qbXsT1i5KJtwJJC938CLgANjqwcQFa3lrR5TqvT1kkqD-Mmgg';
         //testing index
-        $response = $this->get('/api/v2/discussion?view=res_id&id=eae9fd6f-7bac-4940-b80d-ad6cd6f433bf');
+        $response = $this->get('/api/v2/discussion?view=question&id=eae9fd6f-7bac-4940-b80d-ad6cd6f433bf');
 
         $response->assertStatus(200);
 
