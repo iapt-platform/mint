@@ -26,6 +26,7 @@ use App\Http\Controllers\ExportWbwController;
 use App\Http\Controllers\WbwLookupController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -79,6 +80,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::post('export_wbw',[ExportWbwController::class,'index']);
     Route::apiResource('attachments',UploadController::class);
     Route::apiResource('discussion',DiscussionController::class);
+    Route::apiResource('user',UserController::class);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
