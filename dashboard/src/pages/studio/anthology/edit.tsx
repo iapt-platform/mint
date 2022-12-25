@@ -13,8 +13,8 @@ import {
   IAnthologyDataRequest,
   IAnthologyResponse,
 } from "../../../components/api/Article";
-import EditableTree from "../../../components/studio/EditableTree";
-import type { ListNodeData } from "../../../components/studio/EditableTree";
+import EditableTree from "../../../components/article/EditableTree";
+import type { ListNodeData } from "../../../components/article/EditableTree";
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
