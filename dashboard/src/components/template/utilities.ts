@@ -89,9 +89,9 @@ export function XmlToReact(
         case 2: //attribute node
           return [];
         case 3: //text node
-          let textValue = value.nodeValue;
+          let textValue = value.nodeValue ? value.nodeValue : undefined;
           //编码转换
-          if (typeof convertor !== "undefined") {
+          if (typeof convertor !== "undefined" && textValue !== null) {
             switch (convertor) {
               case "roman_to_my":
                 textValue = roman_to_my(textValue);

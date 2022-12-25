@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { IDictDataRequest } from "../components/api/Dict";
+import { IApiResponseDictData } from "../components/api/Dict";
 
 /**
  * 在查询字典后，将查询结果放入map
@@ -9,7 +9,7 @@ import { IDictDataRequest } from "../components/api/Dict";
  * value: 查询到的单词列表
  */
 interface IState {
-  wordList: IDictDataRequest[];
+  wordList: IApiResponseDictData[];
   wordIndex: string[];
 }
 
@@ -22,7 +22,7 @@ export const slice = createSlice({
   name: "inline-dict",
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<IDictDataRequest[]>) => {
+    add: (state, action: PayloadAction<IApiResponseDictData[]>) => {
       let words: string[] = [];
       let newWordData = new Array(...state.wordList);
       let newIndexData = new Array(...state.wordIndex);
@@ -47,7 +47,7 @@ export const { add } = slice.actions;
 
 export const inlineDict = (state: RootState): IState => state.inlineDict;
 
-export const wordList = (state: RootState): IDictDataRequest[] =>
+export const wordList = (state: RootState): IApiResponseDictData[] =>
   state.inlineDict.wordList;
 export const wordIndex = (state: RootState): string[] =>
   state.inlineDict.wordIndex;

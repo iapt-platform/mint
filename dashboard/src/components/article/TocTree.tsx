@@ -1,17 +1,22 @@
 import { Tree } from "antd";
 
-import type { TreeProps } from "antd/es/tree";
-import type { ListNodeData } from "../studio/EditableTree";
+import type { DataNode, TreeProps } from "antd/es/tree";
+import { useEffect, useState } from "react";
+import type { ListNodeData } from "./EditableTree";
+import PaliText from "../template/Wbw/PaliText";
 
 type TreeNodeData = {
   key: string;
   title: string;
-  children: TreeNodeData[];
+  children?: TreeNodeData[];
   level: number;
 };
 
-function tocGetTreeData(listData: ListNodeData[], active = "") {
-  let treeData = [];
+function tocGetTreeData(
+  listData: ListNodeData[],
+  active = ""
+): TreeNodeData[] | undefined {
+  let treeData: TreeNodeData[] = [];
   let tocActivePath: TreeNodeData[] = [];
   let treeParents = [];
   let rootNode: TreeNodeData = {
@@ -30,21 +35,25 @@ function tocGetTreeData(listData: ListNodeData[], active = "") {
     let newNode: TreeNodeData = {
       key: element.key,
       title: element.title,
-      children: [],
       level: element.level,
     };
-    /*
-		if (active == element.article) {
-			newNode["extraClasses"] = "active";
-		}
-*/
+
     if (newNode.level > iCurrLevel) {
       //新的层级比较大，为上一个的子目录
       treeParents.push(lastInsNode);
+      if (typeof lastInsNode.children === "undefined") {
+        lastInsNode.children = [];
+      }
       lastInsNode.children.push(newNode);
     } else if (newNode.level === iCurrLevel) {
       //目录层级相同，为平级
-      treeParents[treeParents.length - 1].children.push(newNode);
+      const parentNode = treeParents[treeParents.length - 1];
+      if (typeof parentNode !== "undefined") {
+        if (typeof parentNode.children === "undefined") {
+          parentNode.children = [];
+        }
+        parentNode.children.push(newNode);
+      }
     } else {
       // 小于 挂在上一个层级
       while (treeParents.length > 1) {
@@ -53,7 +62,13 @@ function tocGetTreeData(listData: ListNodeData[], active = "") {
           break;
         }
       }
-      treeParents[treeParents.length - 1].children.push(newNode);
+      const parentNode = treeParents[treeParents.length - 1];
+      if (typeof parentNode !== "undefined") {
+        if (typeof parentNode.children === "undefined") {
+          parentNode.children = [];
+        }
+        parentNode.children.push(newNode);
+      }
     }
     lastInsNode = newNode;
     iCurrLevel = newNode.level;
@@ -66,25 +81,50 @@ function tocGetTreeData(listData: ListNodeData[], active = "") {
       }
     }
   }
+
   return treeData[0].children;
 }
 
-type IWidgetTocTree = {
+interface IWidgetTocTree {
   treeData: ListNodeData[];
-};
-const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-  //let aaa: NewTree = info.node;
-  console.log("selected", selectedKeys);
-};
-const Widget = ({ treeData }: IWidgetTocTree) => {
-  const data = tocGetTreeData(treeData);
+  expandedKey?: string[];
+  onSelect?: Function;
+}
 
-  //const [expandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
+  const [tree, setTree] = useState<TreeNodeData[]>();
+  const [expanded, setExpanded] = useState(expandedKey);
+
+  useEffect(() => {
+    if (treeData.length > 0) {
+      const data = tocGetTreeData(treeData);
+      setTree(data);
+      setExpanded(expandedKey);
+      console.log("create tree", treeData.length, expandedKey);
+    }
+  }, [treeData, expandedKey]);
+  const onNodeSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
+    console.log("selected", selectedKeys);
+    if (typeof onSelect !== "undefined") {
+      onSelect(selectedKeys);
+    }
+  };
 
   return (
-    <>
-      <Tree onSelect={onSelect} treeData={data} />
-    </>
+    <Tree
+      onSelect={onNodeSelect}
+      treeData={tree}
+      defaultExpandedKeys={expanded}
+      defaultSelectedKeys={expanded}
+      blockNode
+      titleRender={(node: DataNode) => {
+        if (typeof node.title === "string") {
+          return <PaliText text={node.title} />;
+        } else {
+          return <></>;
+        }
+      }}
+    />
   );
 };
 

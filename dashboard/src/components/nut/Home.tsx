@@ -8,11 +8,31 @@ import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
 import DemoForm from "./Form";
 import WbwTest from "./WbwTest";
+import CommentList from "../comment/CommentList";
+import TreeTest from "./TreeTest";
 
 const Widget = () => {
+  const data = Array(100)
+    .fill(4)
+    .map((item, id) => {
+      return {
+        id: "dd",
+        content: "评论内容",
+        title: "评论标题" + id,
+        user: {
+          id: "string",
+          nickName: "Visuddhinanda",
+          realName: "Visuddhinanda",
+          avatar: "",
+        },
+      };
+    });
   return (
     <div>
       <h1>Home</h1>
+      <TreeTest />
+      <h2>comment</h2>
+      <CommentList data={data} />
       <h2>wbw</h2>
       <WbwTest />
       <h2>channel picker</h2>

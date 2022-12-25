@@ -1,25 +1,18 @@
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Typography, Button } from "antd";
+import { Typography, Button, Space } from "antd";
 import { SwapOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { PaliReal } from "../../../utils";
 import "./wbw.css";
+import { useAppSelector } from "../../../hooks";
+import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 
 const { Text } = Typography;
-
-const items: MenuProps["items"] = [
-  {
-    key: "n+m+sg+nom",
-    label: "n+m+sg+nom",
-  },
-  {
-    key: "un",
-    label: "un",
-  },
-];
 
 interface IWidget {
   data: IWbw;
@@ -29,6 +22,50 @@ interface IWidget {
 }
 const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
   const intl = useIntl();
+  const defaultMenu: MenuProps["items"] = [
+    {
+      key: "loading",
+      label: (
+        <Space>
+          <LoadingOutlined />
+          {"Loading"}
+        </Space>
+      ),
+    },
+  ];
+  const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+
+  const inlineDict = useAppSelector(_inlineDict);
+  useEffect(() => {
+    if (inlineDict.wordIndex.includes(data.word.value)) {
+      const result = inlineDict.wordList.filter(
+        (word) => word.word === data.word.value
+      );
+      //查重
+      //TODO 加入信心指数并排序
+      let myMap = new Map<string, number>();
+      let factors: string[] = [];
+      for (const iterator of result) {
+        myMap.set(iterator.type + "$" + iterator.grammar, 1);
+      }
+      myMap.forEach((value, key, map) => {
+        factors.push(key);
+      });
+
+      const menu = factors.map((item) => {
+        const arrItem: string[] = item.replaceAll(".", "").split("$");
+        let noNull = arrItem.filter((item) => item !== "");
+        const key = noNull.join("$");
+        noNull.forEach((item, index, arr) => {
+          arr[index] = intl.formatMessage({
+            id: `dict.fields.type.${item}.short.label`,
+          });
+        });
+        return { key: key, label: noNull.join(" ") };
+      });
+      setItems(menu);
+    }
+  }, [inlineDict]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {

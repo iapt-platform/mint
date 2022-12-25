@@ -349,8 +349,8 @@ const char_myn_to_roman_1 = [
   { id: "၊", value: "，" },
 ];
 
-export const roman_to_my = (input: string | null): string | null => {
-  if (input === null) {
+export const roman_to_my = (input: string | undefined): string | undefined => {
+  if (typeof input === "undefined") {
     return input;
   }
   let txt = input.toLowerCase();
@@ -366,8 +366,8 @@ export const roman_to_my = (input: string | null): string | null => {
   return txt;
 };
 
-export const my_to_roman = (input: string | null): string | null => {
-  if (input === null) {
+export const my_to_roman = (input: string | undefined): string | undefined => {
+  if (typeof input === "undefined") {
     return input;
   }
   let txt = input.toLowerCase();

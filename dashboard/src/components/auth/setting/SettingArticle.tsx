@@ -10,8 +10,8 @@ const Widget = () => {
       <SettingItem data={SettingFind("setting.display.original")} />
       <SettingItem data={SettingFind("setting.layout.direction")} />
       <SettingItem data={SettingFind("setting.layout.paragraph")} />
-      <SettingItem data={SettingFind("setting.pali.script1")} />
-      <SettingItem data={SettingFind("setting.pali.script2")} />
+      <SettingItem data={SettingFind("setting.pali.script.primary")} />
+      <SettingItem data={SettingFind("setting.pali.script.secondary")} />
       <Divider>翻译</Divider>
 
       <Divider>逐词解析</Divider>

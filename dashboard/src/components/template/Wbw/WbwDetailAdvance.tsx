@@ -1,4 +1,6 @@
 import { Input, Divider } from "antd";
+import { UploadFile } from "antd/es/upload/interface";
+import { IAttachmentResponse } from "../../api/Attachments";
 import WbwDetailUpload from "./WbwDetailUpload";
 
 import { IWbw } from "./WbwWord";
@@ -6,8 +8,9 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   data: IWbw;
   onChange?: Function;
+  onUpload?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const Widget = ({ data, onChange, onUpload }: IWidget) => {
   const onWordChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -43,7 +46,14 @@ const Widget = ({ data, onChange }: IWidget) => {
       <Divider>附件</Divider>
       <div></div>
       <div>
-        <WbwDetailUpload />
+        <WbwDetailUpload
+          data={data}
+          onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {
+            if (typeof onUpload !== "undefined") {
+              onUpload(fileList);
+            }
+          }}
+        />
       </div>
     </>
   );

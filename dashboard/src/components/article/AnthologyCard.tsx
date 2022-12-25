@@ -5,7 +5,7 @@ import { Typography } from "antd";
 
 import StudioName from "../auth/StudioName";
 import type { IStudio } from "../auth/StudioName";
-import type { ListNodeData } from "../studio/EditableTree";
+import type { ListNodeData } from "./EditableTree";
 
 const { Title, Text } = Typography;
 

@@ -52,7 +52,7 @@ const SentReadFrame = ({
       default:
         break;
     }
-    const _paliCode1 = GetUserSetting("setting.pali.script1", settings);
+    const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
     if (typeof _paliCode1 !== "undefined") {
       setPaliCode1(_paliCode1.toString() as TCodeConvertor);
     }

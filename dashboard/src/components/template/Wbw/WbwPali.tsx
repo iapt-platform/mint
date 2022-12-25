@@ -1,44 +1,58 @@
 import { useState } from "react";
-import { Popover, Typography } from "antd";
-import { TagTwoTone, InfoCircleOutlined } from "@ant-design/icons";
+import { Popover, Typography, Button, Space } from "antd";
+import {
+  TagTwoTone,
+  InfoCircleOutlined,
+  CommentOutlined,
+} from "@ant-design/icons";
 
-import WbwDetail from "./WbwDetail";
-import { IWbw } from "./WbwWord";
-import { bookMarkColor } from "./WbwDetailBookMark";
 import "./wbw.css";
+import WbwDetail from "./WbwDetail";
+import { IWbw, TWbwDisplayMode } from "./WbwWord";
+import { bookMarkColor } from "./WbwDetailBookMark";
 import { PaliReal } from "../../../utils";
+import WbwVideoButton from "./WbwVideoButton";
+import CommentBox from "../../comment/CommentBox";
+import PaliText from "./PaliText";
+
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
+  display?: TWbwDisplayMode;
   onSave?: Function;
 }
-const Widget = ({ data, onSave }: IWidget) => {
-  const [open, setOpen] = useState(false);
+const Widget = ({ data, display, onSave }: IWidget) => {
+  const [click, setClicked] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-  const wbwDetail = (
-    <WbwDetail
-      data={data}
-      onClose={() => {
-        setPaliColor("unset");
-        setOpen(false);
-      }}
-      onSave={(e: IWbw) => {
-        if (typeof onSave !== "undefined") {
-          onSave(e);
-          setOpen(false);
-          setPaliColor("unset");
-        }
-      }}
-    />
-  );
+  const [isHover, setIsHover] = useState(false);
+  const [hasComment, setHasComment] = useState(data.hasComment);
+
   const handleClickChange = (open: boolean) => {
-    setOpen(open);
     if (open) {
       setPaliColor("lightblue");
     } else {
       setPaliColor("unset");
     }
+    setClicked(open);
   };
+
+  const wbwDetail = (
+    <WbwDetail
+      data={data}
+      onClose={() => {
+        setPaliColor("unset");
+        setClicked(false);
+      }}
+      onSave={(e: IWbw) => {
+        if (typeof onSave !== "undefined") {
+          onSave(e);
+          setClicked(false);
+          setPaliColor("unset");
+        }
+      }}
+    />
+  );
+
   const noteIcon = data.note ? (
     <Popover content={data.note.value} placement="bottom">
       <InfoCircleOutlined style={{ color: "blue" }} />
@@ -49,6 +63,22 @@ const Widget = ({ data, onSave }: IWidget) => {
   const color = data.bookMarkColor
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
+
+  //生成视频播放按钮
+  const videoList = data.attachments?.filter((item) =>
+    item.type?.includes("video")
+  );
+  const videoIcon = videoList ? (
+    <WbwVideoButton
+      video={videoList?.map((item) => {
+        return {
+          url: item.url ? item.url : "",
+          type: item.type,
+          title: item.name,
+        };
+      })}
+    />
+  ) : undefined;
 
   const bookMarkIcon = data.bookMarkText ? (
     <Popover
@@ -76,25 +106,80 @@ const Widget = ({ data, onSave }: IWidget) => {
         borderRadius: 5,
       }}
     >
-      {data.word.value}
+      {<PaliText text={data.word.value} />}
     </span>
+  );
+
+  let commentShellStyle: React.CSSProperties = {
+    display: "inline-block",
+  };
+  let commentIconStyle: React.CSSProperties = {
+    cursor: "pointer",
+  };
+
+  if (display === "block") {
+    commentIconStyle = {
+      cursor: "pointer",
+      visibility: isHover || hasComment ? "visible" : "hidden",
+    };
+  } else {
+    if (!hasComment) {
+      commentShellStyle = {
+        display: "inline-block",
+        position: "absolute",
+        padding: 8,
+        marginTop: "-1.5em",
+        marginLeft: "-2em",
+      };
+      commentShellStyle = {
+        visibility: isHover ? "visible" : "hidden",
+        cursor: "pointer",
+      };
+    }
+  }
+
+  const discussionIcon = (
+    <div style={commentShellStyle}>
+      <CommentBox
+        resId={data.uid}
+        resType="wbw"
+        trigger={<CommentOutlined style={commentIconStyle} />}
+        onCommentCountChange={(count: number) => {
+          if (count > 0) {
+            setHasComment(true);
+          } else {
+            setHasComment(false);
+          }
+        }}
+      />
+    </div>
   );
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
-      <div className="pali_shell">
+      <div
+        className="pali_shell"
+        onMouseEnter={() => {
+          setIsHover(true);
+        }}
+        onMouseLeave={() => {
+          setIsHover(false);
+        }}
+      >
         <Popover
           content={wbwDetail}
           placement="bottom"
           trigger="click"
-          open={open}
+          open={click}
           onOpenChange={handleClickChange}
         >
           {paliWord}
         </Popover>
+        {videoIcon}
         {noteIcon}
         {bookMarkIcon}
+        {discussionIcon}
       </div>
     );
   } else {

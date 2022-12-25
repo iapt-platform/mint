@@ -18,6 +18,7 @@ import ProTabs from "../../../components/article/ProTabs";
  */
 const Widget = () => {
   const { type, id, mode = "read" } = useParams(); //url 参数
+  console.log("mode", mode);
   const [articleMode, setArticleMode] = useState<ArticleMode>(
     mode as ArticleMode
   );
@@ -56,7 +57,7 @@ const Widget = () => {
             />
           </ArticleCard>
         </div>
-        <div style={{ flex: 5 }} ref={box}>
+        <div style={{ flex: 5, display: "none" }} ref={box}>
           <ArticleTabs onClose={closeCol} />
         </div>
       </div>

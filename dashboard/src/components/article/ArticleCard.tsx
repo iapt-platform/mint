@@ -9,6 +9,7 @@ import { modeChange } from "../../reducers/article-mode";
 import { IWidgetArticleData } from "./ArticleView";
 import ArticleCardMainMenu from "./ArticleCardMainMenu";
 import { ArticleMode } from "./Article";
+import { useNavigate } from "react-router-dom";
 
 interface IWidgetArticleCard {
   type?: string;
@@ -29,6 +30,7 @@ const Widget = ({
 }: IWidgetArticleCard) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>("read");
+  const navigate = useNavigate();
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -59,7 +61,7 @@ const Widget = ({
           value: "read",
         },
         {
-          label: intl.formatMessage({ id: "buttons.edit" }),
+          label: intl.formatMessage({ id: "buttons.translate" }),
           value: "edit",
         },
         {
@@ -69,14 +71,17 @@ const Widget = ({
       ]}
       value={mode}
       onChange={(value) => {
+        const newMode = value.toString();
         if (typeof onModeChange !== "undefined") {
-          if (mode === "read" || value.toString() === "read") {
-            onModeChange(value.toString());
+          if (mode === "read" || newMode === "read") {
+            onModeChange(newMode);
           }
         }
-        setMode(value.toString());
+        setMode(newMode);
         //发布mode变更
-        store.dispatch(modeChange(value.toString() as ArticleMode));
+        store.dispatch(modeChange(newMode as ArticleMode));
+        //修改url
+        navigate(`/article/${type}/${articleId}/${newMode}`);
       }}
     />
   );

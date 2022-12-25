@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { get } from "../../request";
 import { IPaliTocListResponse } from "../api/Corpus";
-import { ListNodeData } from "../studio/EditableTree";
+import { ListNodeData } from "./EditableTree";
 import TocTree from "./TocTree";
 
 interface IWidget {
@@ -26,7 +26,7 @@ const Widget = ({ book, para, channel }: IWidget) => {
       setTocList(toc);
     });
   }, [book, para]);
-  return <TocTree treeData={tocList} />;
+  return <TocTree treeData={tocList} expandedKey={[`${book}-${para}`]} />;
 };
 
 export default Widget;

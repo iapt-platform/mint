@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Switch, Typography, Radio, RadioChangeEvent, Select } from "antd";
 
@@ -17,9 +18,14 @@ interface IWidgetSettingItem {
   onChange?: Function;
 }
 const Widget = ({ data, onChange }: IWidgetSettingItem) => {
+  const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
-  const title = <Title level={5}>{data?.label}</Title>;
+  const title = (
+    <Title level={5}>
+      {data?.label ? intl.formatMessage({ id: data.label }) : ""}
+    </Title>
+  );
   console.log(data);
   useEffect(() => {
     const currSetting = settings?.find((element) => element.key === data?.key);
@@ -42,7 +48,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                 <>
                   {title}
                   <div>
-                    <Text>{data.description}</Text>
+                    <Text>{intl.formatMessage({ id: data.description })}</Text>
                   </div>
                   <Radio.Group
                     value={value}
@@ -60,7 +66,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                     {data.options.map((item, id) => {
                       return (
                         <Radio.Button key={id} value={item.value}>
-                          {item.label}
+                          {intl.formatMessage({ id: item.label })}
                         </Radio.Button>
                       );
                     })}
@@ -86,7 +92,12 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                         })
                       );
                     }}
-                    options={data.options}
+                    options={data.options.map((item) => {
+                      return {
+                        value: item.value,
+                        label: intl.formatMessage({ id: item.label }),
+                      };
+                    })}
                   />
                 </div>
               );
@@ -110,7 +121,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                 );
               }}
             />
-            <Text>{data.description}</Text>
+            <Text>{intl.formatMessage({ id: data.description })}</Text>
           </div>
         );
         break;
@@ -120,7 +131,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
 
     return (
       <div>
-        <Title level={5}>{data.label}</Title>
+        <Title level={5}>{intl.formatMessage({ id: data.label })}</Title>
         {content}
       </div>
     );

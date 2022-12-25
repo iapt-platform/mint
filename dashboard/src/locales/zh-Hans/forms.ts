@@ -12,6 +12,7 @@ const items = {
   "forms.fields.subtitle.label": "副标题",
   "forms.fields.summary.label": "简介",
   "forms.fields.content.label": "内容",
+  "forms.fields.content.placeholder": "请输入内容",
   "forms.fields.tag.label": "标签",
   "forms.fields.power.label": "权限",
   "forms.fields.type.label": "类型",

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import type { UploadFile } from "antd/es/upload/interface";
 
 import { useAppSelector } from "../../../hooks";
 import { add, wordIndex } from "../../../reducers/inline-dict";
@@ -56,6 +57,7 @@ interface WbwElement3 {
   status: WbwStatus;
 }
 export interface IWbw {
+  uid?: string;
   word: WbwElement;
   real?: WbwElement;
   meaning?: WbwElement2;
@@ -72,6 +74,8 @@ export interface IWbw {
   bookMarkText?: WbwElement;
   locked?: boolean;
   confidence: number;
+  attachments?: UploadFile[];
+  hasComment?: boolean;
 }
 export interface IWbwFields {
   meaning?: boolean;
@@ -139,7 +143,7 @@ const Widget = ({
     }
     get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
       console.log("lookup ok", json.data.count);
-      //扫描结果将结果按照词头分开
+      //存储到redux
       store.dispatch(add(json.data.rows));
     });
 
@@ -171,6 +175,7 @@ const Widget = ({
       >
         <WbwPali
           data={wordData}
+          display={display}
           onSave={(e: IWbw) => {
             console.log("save", e);
             const newData: IWbw = JSON.parse(JSON.stringify(e));
@@ -236,7 +241,7 @@ const Widget = ({
               }}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.case = { value: e.split("+"), status: 5 };
+                newData.case = { value: e.split("$"), status: 5 };
                 setWordData(newData);
               }}
             />
