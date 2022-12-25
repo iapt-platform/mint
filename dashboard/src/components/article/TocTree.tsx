@@ -2,7 +2,7 @@ import { Tree } from "antd";
 
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { useEffect, useState } from "react";
-import type { ListNodeData } from "../studio/EditableTree";
+import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 
 type TreeNodeData = {
@@ -78,9 +78,10 @@ function tocGetTreeData(
 interface IWidgetTocTree {
   treeData: ListNodeData[];
   expandedKey?: string;
+  onSelect?: Function;
 }
 
-const Widget = ({ treeData, expandedKey }: IWidgetTocTree) => {
+const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState<string>("");
 
@@ -92,14 +93,16 @@ const Widget = ({ treeData, expandedKey }: IWidgetTocTree) => {
       console.log("create tree", treeData.length, expandedKey, key);
     }
   }, [treeData, expandedKey]);
-  const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-    //let aaa: NewTree = info.node;
+  const onNodeSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
     console.log("selected", selectedKeys);
+    if (typeof onSelect !== "undefined") {
+      onSelect(selectedKeys);
+    }
   };
 
   return (
     <Tree
-      onSelect={onSelect}
+      onSelect={onNodeSelect}
       treeData={tree}
       defaultExpandedKeys={[expanded]}
       defaultSelectedKeys={[expanded]}
