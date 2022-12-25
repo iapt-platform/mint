@@ -1,37 +1,27 @@
-import React from "react";
-import { Tree } from "antd";
-import type { DataNode, TreeProps } from "antd/es/tree";
+import type { TreeProps } from "antd/es/tree";
+import TocTree from "../article/TocTree";
+import { ListNodeData } from "../article/EditableTree";
 
-const treeData: DataNode[] = [
+const treeData: ListNodeData[] = [
   {
-    title: "parent 1",
-    key: "0-0",
-    children: [
-      {
-        title: "parent 1-0",
-        key: "0-0-0",
-        children: [
-          {
-            title: "leaf",
-            key: "0-0-0-0",
-          },
-          {
-            title: "leaf",
-            key: "0-0-0-1",
-          },
-        ],
-      },
-      {
-        title: "parent 1-1",
-        key: "0-0-1",
-        children: [
-          {
-            title: <span style={{ color: "#1890ff" }}>sss</span>,
-            key: "0-0-1-0",
-          },
-        ],
-      },
-    ],
+    title: "title 1",
+    key: "0-1",
+    level: 1,
+  },
+  {
+    title: "title 2",
+    key: "0-2",
+    level: 2,
+  },
+  {
+    title: "title 1",
+    key: "0-3",
+    level: 2,
+  },
+  {
+    title: "title 1",
+    key: "1-0",
+    level: 1,
   },
 ];
 
@@ -41,11 +31,7 @@ const Widget = () => {
   };
 
   return (
-    <Tree
-      defaultExpandedKeys={["0-0-1-0"]}
-      onSelect={onSelect}
-      treeData={treeData}
-    />
+    <TocTree onSelect={onSelect} treeData={treeData} expandedKey={["0-3"]} />
   );
 };
 

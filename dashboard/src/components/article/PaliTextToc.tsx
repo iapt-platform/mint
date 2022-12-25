@@ -26,7 +26,7 @@ const Widget = ({ book, para, channel }: IWidget) => {
       setTocList(toc);
     });
   }, [book, para]);
-  return <TocTree treeData={tocList} expandedKey={`${book}-${para}`} />;
+  return <TocTree treeData={tocList} expandedKey={[`${book}-${para}`]} />;
 };
 
 export default Widget;
