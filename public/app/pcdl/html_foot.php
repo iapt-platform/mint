@@ -34,7 +34,6 @@
 	guide_init();
 </script>
 
-<!-- start webpushr code --> <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.async=1;js.src = "https://cdn.webpushr.com/app.min.js";fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk'));webpushr('setup',{'key':'BIsBVIlhOM7SHtE-ty8pZpylJYwzD_iwutNoonk9FfwtkP7weyFmO1y6h5OrSEBuwuUqCWboh4120R_X_kAil5Y' });</script><!-- end webpushr code -->
 </body>
 
 </html>
