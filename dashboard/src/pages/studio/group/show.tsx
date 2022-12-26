@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Card } from "antd";
@@ -10,6 +11,7 @@ import GroupMember from "../../../components/group/GroupMember";
 import GoBack from "../../../components/studio/GoBack";
 
 const Widget = () => {
+  const intl = useIntl();
   const { studioname, groupid } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
   useEffect(() => {
@@ -22,7 +24,7 @@ const Widget = () => {
       title={<GoBack to={`/studio/${studioname}/group/list`} title={title} />}
       extra={
         <Button type="link" danger>
-          退群
+          {intl.formatMessage({ id: "buttons.group.exit" })}
         </Button>
       }
     >
@@ -31,7 +33,7 @@ const Widget = () => {
           <GroupFile groupid={groupid} />
         </Col>
         <Col flex="400px">
-          <GroupMember groupid={groupid} />
+          <GroupMember groupId={groupid} />
         </Col>
       </Row>
     </Card>

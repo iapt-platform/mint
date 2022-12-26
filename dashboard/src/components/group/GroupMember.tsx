@@ -1,7 +1,9 @@
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { ProList } from "@ant-design/pro-components";
+import { UserAddOutlined } from "@ant-design/icons";
 import { Space, Tag, Button, Layout } from "antd";
+import GroupAddMember from "./AddMember";
 
 const { Content } = Layout;
 
@@ -50,19 +52,22 @@ const defaultData = [
   },
 ];
 type DataItem = typeof defaultData[number];
-type IWidgetGroupFile = {
-  groupid?: string;
-};
-const Widget = ({ groupid = "" }: IWidgetGroupFile) => {
+interface IWidgetGroupFile {
+  groupId?: string;
+}
+const Widget = ({ groupId }: IWidgetGroupFile) => {
   const intl = useIntl(); //i18n
   const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
 
   return (
     <Content>
-      <Space>{groupid}</Space>
+      <Space>{groupId}</Space>
       <ProList<DataItem>
         rowKey="id"
         headerTitle={intl.formatMessage({ id: "group.member" })}
+        toolBarRender={() => {
+          return [<GroupAddMember groupId={groupId} />];
+        }}
         dataSource={dataSource}
         showActions="hover"
         onDataSourceChange={setDataSource}
@@ -89,12 +94,15 @@ const Widget = ({ groupid = "" }: IWidgetGroupFile) => {
           actions: {
             render: (text, row, index, action) => [
               <Button
+                style={{ padding: 0, margin: 0 }}
+                type="link"
+                danger
                 onClick={() => {
                   action?.startEditable(row.id);
                 }}
                 key="link"
               >
-                删除
+                {intl.formatMessage({ id: "buttons.remove" })}
               </Button>,
             ],
           },
