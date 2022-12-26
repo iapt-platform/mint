@@ -6,6 +6,7 @@ const items = {
   "buttons.read": "阅读",
   "buttons.wbw": "逐词解析",
   "buttons.delete": "删除",
+  "buttons.remove": "移除",
   "buttons.delete.all": "批量删除",
   "buttons.selected": "已经选择",
   "buttons.select": "选择",
@@ -19,6 +20,8 @@ const items = {
   "buttons.sign-out": "退出登录",
   "buttons.welcome": "欢迎遨游法的海洋",
   "buttons.click.upload": "点击上传",
+  "buttons.group.exit": "退群",
+  "buttons.group.add.member": "加人",
 };
 
 export default items;

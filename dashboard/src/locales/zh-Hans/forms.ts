@@ -40,6 +40,8 @@ const items = {
   "forms.fields.parent.tooltip": "最长为 256个字符",
   "forms.fields.case.label": "格位",
   "forms.fields.case.tooltip": "语法信息参见……",
+  "forms.fields.user.label": "用户",
+  "forms.message.user.required": "请选择用户",
 };
 
 export default items;
