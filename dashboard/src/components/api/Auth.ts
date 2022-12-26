@@ -6,6 +6,21 @@ export interface IUserRequest {
   nickName?: string;
   avatar?: string;
 }
+export interface IUserApiData {
+  id?: string;
+  userName?: string;
+  nickName?: string;
+  avatar?: string;
+}
+export interface IUserListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IUserApiData[];
+    count: number;
+  };
+}
+
 export interface IUserApiResponse {
   id: string;
   userName: string;
