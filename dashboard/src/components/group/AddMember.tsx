@@ -6,8 +6,9 @@ import {
 } from "@ant-design/pro-components";
 import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
-import { get } from "../../request";
+import { get, post } from "../../request";
 import { IUserListResponse } from "../api/Auth";
+import { IGroupMemberData, IGroupMemberResponse } from "../api/Group";
 
 interface IFormData {
   userId: string;
@@ -24,7 +25,16 @@ const Widget = ({ groupId }: IWidget) => {
       onFinish={async (values: IFormData) => {
         // TODO
         console.log(values);
-        message.success(intl.formatMessage({ id: "flashes.success" }));
+        if (typeof groupId !== "undefined") {
+          post<IGroupMemberData, IGroupMemberResponse>("/v2/group-member", {
+            user_id: values.userId,
+            group_id: groupId,
+          }).then((json) => {
+            if (json.ok) {
+              message.success(intl.formatMessage({ id: "flashes.success" }));
+            }
+          });
+        }
       }}
     >
       <ProForm.Group>
@@ -33,9 +43,11 @@ const Widget = ({ groupId }: IWidget) => {
           label={intl.formatMessage({ id: "forms.fields.user.label" })}
           showSearch
           debounceTime={300}
-          request={async ({ keyWord }) => {
-            console.log("keyWord", keyWord);
-            const json = await get<IUserListResponse>(`/v2/user?view=key&key=`);
+          request={async ({ keyWords }) => {
+            console.log("keyWord", keyWords);
+            const json = await get<IUserListResponse>(
+              `/v2/user?view=key&key=${keyWords}`
+            );
             const userList = json.data.rows.map((item) => {
               return {
                 value: item.id,
@@ -45,7 +57,9 @@ const Widget = ({ groupId }: IWidget) => {
             console.log("json", userList);
             return userList;
           }}
-          placeholder={intl.formatMessage({ id: "forms.fields.user.required" })}
+          placeholder={intl.formatMessage({
+            id: "forms.message.user.required",
+          })}
           rules={[
             {
               required: true,
