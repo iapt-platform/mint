@@ -22,6 +22,7 @@ const items = {
   "buttons.click.upload": "点击上传",
   "buttons.group.exit": "退群",
   "buttons.group.add.member": "加人",
+  "buttons.ok": "确定",
 };
 
 export default items;
