@@ -42,6 +42,8 @@ const items = {
   "forms.fields.case.tooltip": "语法信息参见……",
   "forms.fields.user.label": "用户",
   "forms.message.user.required": "请选择用户",
+  "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
+  "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
 };
 
 export default items;
