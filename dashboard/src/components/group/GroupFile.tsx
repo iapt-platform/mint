@@ -1,61 +1,38 @@
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { ProList } from "@ant-design/pro-components";
-import { Space, Tag, Button, Layout } from "antd";
+import { Space, Tag, Button, Layout, Popconfirm } from "antd";
+import { get } from "../../request";
+import { IShareListResponse } from "../api/Share";
 
 const { Content } = Layout;
 
-const defaultData = [
-  {
-    id: "1",
-    name: "庄春江工作站",
-    tag: [{ title: "可编辑", color: "success" }],
-    image:
-      "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-    description: "IAPT|2022-1-3",
-  },
-  {
-    id: "2",
-    name: "元亨寺·CBETA",
-    tag: [{ title: "可编辑", color: "success" }],
-    image:
-      "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-    description: "我是一条测试的描述",
-  },
-  {
-    id: "3",
-    name: "叶均居士",
-    tag: [{ title: "只读", color: "default" }],
-    image:
-      "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-    description: "我是一条测试的描述",
-  },
-  {
-    id: "4",
-    name: "玛欣德尊者",
-    tag: [{ title: "只读", color: "default" }],
-    image:
-      "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-    description: "我是一条测试的描述",
-  },
-];
-type DataItem = typeof defaultData[number];
-type IWidgetGroupFile = {
-  groupid?: string;
-};
-const Widget = ({ groupid = "" }: IWidgetGroupFile) => {
+interface IRoleTag {
+  title: string;
+  color: string;
+}
+interface DataItem {
+  id: string;
+  name?: string;
+  tag: IRoleTag[];
+  image: string;
+  description?: string;
+}
+interface IWidget {
+  groupId?: string;
+}
+const Widget = ({ groupId }: IWidget) => {
   const intl = useIntl(); //i18n
-  const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
-
+  const [canDelete, setCanDelete] = useState(false);
+  const [resCount, setResCount] = useState(0);
   return (
     <Content>
-      <Space>{groupid}</Space>
       <ProList<DataItem>
         rowKey="id"
-        headerTitle={intl.formatMessage({ id: "group.files" })}
-        dataSource={dataSource}
+        headerTitle={
+          intl.formatMessage({ id: "group.files" }) + "-" + resCount.toString()
+        }
         showActions="hover"
-        onDataSourceChange={setDataSource}
         metas={{
           title: {
             dataIndex: "name",
@@ -85,16 +62,86 @@ const Widget = ({ groupid = "" }: IWidgetGroupFile) => {
           },
           actions: {
             render: (text, row, index, action) => [
-              <Button
-                onClick={() => {
-                  action?.startEditable(row.id);
-                }}
-                key="link"
-              >
-                删除
-              </Button>,
+              canDelete ? (
+                <Popconfirm
+                  title={intl.formatMessage({
+                    id: "forms.message.member.delete",
+                  })}
+                  onConfirm={(
+                    e?: React.MouseEvent<HTMLElement, MouseEvent>
+                  ) => {
+                    console.log("delete", row.id);
+                  }}
+                  okText={intl.formatMessage({ id: "buttons.ok" })}
+                  cancelText={intl.formatMessage({ id: "buttons.cancel" })}
+                >
+                  <Button size="small" type="link" danger key="link">
+                    {intl.formatMessage({ id: "buttons.remove" })}
+                  </Button>
+                </Popconfirm>
+              ) : (
+                <></>
+              ),
             ],
           },
+        }}
+        request={async (params = {}, sorter, filter) => {
+          // TODO
+          console.log(params, sorter, filter);
+
+          let url = `/v2/share?view=group&id=${groupId}`;
+          const offset =
+            ((params.current ? params.current : 1) - 1) *
+            (params.pageSize ? params.pageSize : 20);
+          url += `&limit=${params.pageSize}&offset=${offset}`;
+          if (typeof params.keyword !== "undefined") {
+            url += "&search=" + (params.keyword ? params.keyword : "");
+          }
+          const res = await get<IShareListResponse>(url);
+          if (res.ok) {
+            console.log(res.data.rows);
+            setResCount(res.data.count);
+            switch (res.data.role) {
+              case "owner":
+                setCanDelete(true);
+                break;
+              case "manager":
+                setCanDelete(true);
+                break;
+            }
+            const items: DataItem[] = res.data.rows.map((item, id) => {
+              let member: DataItem = {
+                id: item.res_id,
+                name: item.res_name,
+                tag: [],
+                image: "",
+                description: item.owner?.nickName,
+              };
+              switch (item.power) {
+                case 0:
+                  member.tag.push({ title: "拥有者", color: "success" });
+                  break;
+                case 1:
+                  member.tag.push({ title: "管理员", color: "default" });
+                  break;
+              }
+
+              return member;
+            });
+            console.log(items);
+            return {
+              total: res.data.count,
+              succcess: true,
+              data: items,
+            };
+          } else {
+            console.error(res.message);
+            return {
+              total: 0,
+              succcess: false,
+              data: [],
+            };
+          }
         }}
         pagination={{
           showQuickJumper: true,
