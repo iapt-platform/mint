@@ -1,13 +1,14 @@
 import { useIntl } from "react-intl";
-import { useEffect, useState } from "react";
-import { ProList } from "@ant-design/pro-components";
+import { useRef, useState } from "react";
+import { ActionType, ProList } from "@ant-design/pro-components";
 import { UserAddOutlined } from "@ant-design/icons";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
 import GroupAddMember from "./AddMember";
-import { get } from "../../request";
-import { IGroupMemberListResponse } from "../api/Group";
-import { useAppSelector } from "../../hooks";
-import { currentUser as _currentUser } from "../../reducers/current-user";
+import { delete_, get } from "../../request";
+import {
+  IGroupMemberDeleteResponse,
+  IGroupMemberListResponse,
+} from "../api/Group";
 
 const { Content } = Layout;
 
@@ -16,7 +17,8 @@ interface IRoleTag {
   color: string;
 }
 interface DataItem {
-  id: string;
+  id: number;
+  userId: string;
   name?: string;
   tag: IRoleTag[];
   image: string;
@@ -29,17 +31,26 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
   const [canDelete, setCanDelete] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
 
+  const ref = useRef<ActionType>();
   return (
     <Content>
       <ProList<DataItem>
         rowKey="id"
+        actionRef={ref}
         headerTitle={
           intl.formatMessage({ id: "group.member" }) +
           "-" +
           memberCount?.toString()
         }
         toolBarRender={() => {
-          return [<GroupAddMember groupId={groupId} />];
+          return [
+            <GroupAddMember
+              groupId={groupId}
+              onCreated={() => {
+                ref.current?.reload();
+              }}
+            />,
+          ];
         }}
         showActions="hover"
         request={async (params = {}, sorter, filter) => {
@@ -68,7 +79,8 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
             }
             const items: DataItem[] = res.data.rows.map((item, id) => {
               let member: DataItem = {
-                id: item.user_id,
+                id: item.id ? item.id : 0,
+                userId: item.user_id,
                 name: item.user?.nickName,
                 tag: [],
                 image: "",
@@ -134,6 +146,14 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
                     e?: React.MouseEvent<HTMLElement, MouseEvent>
                   ) => {
                     console.log("delete", row.id);
+                    delete_<IGroupMemberDeleteResponse>(
+                      "/v2/group-member/" + row.id
+                    ).then((json) => {
+                      if (json.ok) {
+                        console.log("delete ok");
+                        ref.current?.reload();
+                      }
+                    });
                   }}
                   okText={intl.formatMessage({ id: "buttons.ok" })}
                   cancelText={intl.formatMessage({ id: "buttons.cancel" })}
