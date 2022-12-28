@@ -14,11 +14,7 @@ const Widget = () => {
     return (
       <>
         <Link to={`/studio/${user.realName}/home`}>
-          <Button
-            type="primary"
-            size="small"
-            style={{ paddingLeft: 18, paddingRight: 18 }}
-          >
+          <Button type="primary" style={{ paddingLeft: 18, paddingRight: 18 }}>
             {intl.formatMessage({
               id: "columns.studio.title",
             })}
