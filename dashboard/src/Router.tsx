@@ -59,6 +59,11 @@ import StudioGroupList from "./pages/studio/group/list";
 import StudioGroupEdit from "./pages/studio/group/edit";
 import StudioGroupShow from "./pages/studio/group/show";
 
+import StudioCourse from "./pages/studio/course";
+import StudioCourseList from "./pages/studio/course/list";
+import StudioCourseEdit from "./pages/studio/course/edit";
+import StudioCourseShow from "./pages/studio/course/show";
+
 import StudioDict from "./pages/studio/dict";
 import StudioDictList from "./pages/studio/dict/list";
 
@@ -159,30 +164,44 @@ const Widget = () => {
         <Route path="home" element={<StudioHome />} />
         <Route path="palicanon" element={<StudioPalicanon />}></Route>
         <Route path="recent" element={<StudioRecent />}></Route>
+
         <Route path="channel" element={<StudioChannel />}>
           <Route path="list" element={<StudioChannelList />} />
           <Route path=":channelid/edit" element={<StudioChannelEdit />} />
         </Route>
+
         <Route path="group" element={<StudioGroup />}>
           <Route path="list" element={<StudioGroupList />} />
           <Route path=":groupid" element={<StudioGroupShow />} />
           <Route path=":groupid/edit" element={<StudioGroupEdit />} />
           <Route path=":groupid/show" element={<StudioGroupShow />} />
         </Route>
+
+        <Route path="course" element={<StudioCourse />}>
+          <Route path="list" element={<StudioCourseList />} />
+          <Route path=":courseId" element={<StudioCourseShow />} />
+          <Route path=":courseId/edit" element={<StudioCourseEdit />} />
+          <Route path=":courseId/show" element={<StudioCourseShow />} />
+        </Route>
+
         <Route path="dict" element={<StudioDict />}>
           <Route path="list" element={<StudioDictList />} />
         </Route>
+
         <Route path="term" element={<StudioTerm />}>
           <Route path="list" element={<StudioTermList />} />
         </Route>
+
         <Route path="article" element={<StudioArticle />}>
           <Route path="list" element={<StudioArticleList />} />
           <Route path=":articleid/edit" element={<StudioArticleEdit />} />
         </Route>
+
         <Route path="anthology" element={<StudioAnthology />}>
           <Route path="list" element={<StudioAnthologyList />}></Route>
           <Route path=":anthology_id/edit" element={<StudioAnthologyEdit />} />
         </Route>
+
         <Route path="analysis" element={<StudioAnalysis />}>
           <Route path="list" element={<StudioAnalysisList />} />
         </Route>
