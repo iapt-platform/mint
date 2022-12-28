@@ -47,3 +47,9 @@ export interface IGroupMemberListResponse {
     count: number;
   };
 }
+
+export interface IGroupMemberDeleteResponse {
+  ok: boolean;
+  message: string;
+  data: boolean;
+}
