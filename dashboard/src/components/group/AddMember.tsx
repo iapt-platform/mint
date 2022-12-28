@@ -1,14 +1,11 @@
 import { useIntl } from "react-intl";
-import {
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-} from "@ant-design/pro-components";
+import { ProForm, ProFormSelect } from "@ant-design/pro-components";
 import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { get, post } from "../../request";
 import { IUserListResponse } from "../api/Auth";
 import { IGroupMemberData, IGroupMemberResponse } from "../api/Group";
+import { useState } from "react";
 
 interface IFormData {
   userId: string;
@@ -16,9 +13,11 @@ interface IFormData {
 
 interface IWidget {
   groupId?: string;
+  onCreated?: Function;
 }
-const Widget = ({ groupId }: IWidget) => {
+const Widget = ({ groupId, onCreated }: IWidget) => {
   const intl = useIntl();
+  const [open, setOpen] = useState(false);
 
   const form = (
     <ProForm<IFormData>
@@ -30,8 +29,13 @@ const Widget = ({ groupId }: IWidget) => {
             user_id: values.userId,
             group_id: groupId,
           }).then((json) => {
+            console.log("add member", json);
             if (json.ok) {
               message.success(intl.formatMessage({ id: "flashes.success" }));
+              setOpen(false);
+              if (typeof onCreated !== "undefined") {
+                onCreated();
+              }
             }
           });
         }
@@ -72,12 +76,17 @@ const Widget = ({ groupId }: IWidget) => {
       </ProForm.Group>
     </ProForm>
   );
+  const handleClickChange = (open: boolean) => {
+    setOpen(open);
+  };
   return (
     <Popover
       placement="bottom"
       arrowPointAtCenter
       content={form}
       trigger="click"
+      open={open}
+      onOpenChange={handleClickChange}
     >
       <Button icon={<UserAddOutlined />} key="add" type="primary">
         {intl.formatMessage({ id: "buttons.group.add.member" })}
