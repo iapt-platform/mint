@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 use App\Http\Api\StudioApi;
-use App\Http\Api\AuthApi;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,9 +15,6 @@ class DiscussionResource extends JsonResource
      */
     public function toArray($request)
     {
-        //获取用户信息
-        $user = AuthApi::current($request);
-
         return [
             "id"=>$this->id,
             "title"=> $this->title,
