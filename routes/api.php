@@ -27,6 +27,8 @@ use App\Http\Controllers\WbwLookupController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupMemberController;
+use App\Http\Controllers\ShareController;
 
 
 /*
@@ -81,6 +83,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('attachments',UploadController::class);
     Route::apiResource('discussion',DiscussionController::class);
     Route::apiResource('user',UserController::class);
+    Route::apiResource('group-member',GroupMemberController::class);
+    Route::apiResource('share',ShareController::class);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
