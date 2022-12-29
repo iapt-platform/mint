@@ -253,18 +253,20 @@ class CorpusController extends Controller
         }
         return $indexChannel;
     }
-/**
- * 根据句子库数据生成文章内容
- * $record 句子数据
- * $mode read | edit | wbw
- * $indexChannel channel索引
- * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
- */
+    /**
+     * 根据句子库数据生成文章内容
+     * $record 句子数据
+     * $mode read | edit | wbw
+     * $indexChannel channel索引
+     * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
+     */
     private function makeContent($record,$mode,$indexChannel,$indexedHeading=[]){
         $content = [];
 		$lastSent = "0-0";
 		$sentCount = 0;
-
+        $sent = [];
+        $sent["origin"] = [];
+        $sent["translation"] = [];
         foreach ($record as $key => $value) {
             # 遍历结果生成html文件
             $currSentId = $value->book_id.'-'.$value->paragraph.'-'.$value->word_start.'-'.$value->word_end;
