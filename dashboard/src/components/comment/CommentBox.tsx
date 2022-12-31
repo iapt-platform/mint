@@ -67,18 +67,12 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
           onClose={onChildrenDrawerClose}
           open={childrenDrawer}
         >
-          {resId && resType ? (
-            <CommentTopic
-              comment={topicComment}
-              resId={resId}
-              resType={resType}
-              onItemCountChange={(count: number, parent: string) => {
-                setAnswerCount({ id: parent, count: count });
-              }}
-            />
-          ) : (
-            <></>
-          )}
+          <CommentTopic
+            topicId={topicComment?.id}
+            onItemCountChange={(count: number, parent: string) => {
+              setAnswerCount({ id: parent, count: count });
+            }}
+          />
         </Drawer>
       </Drawer>
     </>

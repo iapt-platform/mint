@@ -36,3 +36,8 @@ export interface ICommentListResponse {
   message: string;
   data: { rows: ICommentApiData[]; count: number };
 }
+export interface ICommentAnchorResponse {
+  ok: boolean;
+  message: string;
+  data: string;
+}

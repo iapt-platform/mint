@@ -25,6 +25,9 @@ const Widget = ({
   const [nissayaActive, setNissayaActive] = useState<boolean>(false);
   const [commentaryActive, setCommentaryActive] = useState<boolean>(false);
   const [originalActive, setOriginalActive] = useState<boolean>(false);
+  if (typeof id === "undefined") {
+    return <></>;
+  }
   const sentId = id.split("_");
 
   const onChange = (key: string) => {
