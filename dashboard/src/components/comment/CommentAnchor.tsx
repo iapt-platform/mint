@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICommentAnchorResponse } from "../api/Comment";
 import MdView from "../template/MdView";
+import AnchorCard from "./AnchorCard";
 
 interface IWidget {
   id?: string;
@@ -22,7 +23,9 @@ const Widget = ({ id }: IWidget) => {
   }, [id]);
   return (
     <div>
-      <MdView html={content} />
+      <AnchorCard>
+        <MdView html={content} />
+      </AnchorCard>
     </div>
   );
 };
