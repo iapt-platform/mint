@@ -1,20 +1,13 @@
-import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Button, Card } from "antd";
-import { Input, message } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
-import {
-  ProForm,
-  ProFormText,
-  ProFormTextArea,
-} from "@ant-design/pro-components";
+import { message } from "antd";
+
+import { ProForm, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Row, Space } from "antd";
 
 import { IComment } from "./CommentItem";
-import { post, put } from "../../request";
+import { put } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
-
-const { TextArea } = Input;
 
 interface IWidget {
   data: IComment;
