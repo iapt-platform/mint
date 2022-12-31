@@ -1,11 +1,15 @@
 import { TCodeConvertor, XmlToReact } from "./utilities";
 
 interface IWidget {
-  html: string;
+  html?: string;
   wordWidget?: boolean;
   convertor?: TCodeConvertor;
 }
-const Widget = ({ html, wordWidget = false, convertor }: IWidget) => {
+const Widget = ({
+  html = "<div></div>",
+  wordWidget = false,
+  convertor,
+}: IWidget) => {
   const jsx = XmlToReact(html, wordWidget, convertor);
   return <>{jsx}</>;
 };
