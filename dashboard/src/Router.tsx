@@ -44,6 +44,10 @@ import LibraryBlogCourse from "./pages/library/blog/course";
 import LibraryBlogAnthology from "./pages/library/blog/anthology";
 import LibraryBlogTerm from "./pages/library/blog/term";
 
+import LibraryDiscussion from "./pages/library/discussion";
+import LibraryDiscussionList from "./pages/library/discussion/list";
+import LibraryDiscussionTopic from "./pages/library/discussion/topic";
+
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
@@ -150,6 +154,12 @@ const Widget = () => {
         <Route path=":type/:id" element={<LibraryArticleShow />} />
         <Route path=":type/:id/:mode" element={<LibraryArticleShow />} />
         <Route path=":type/:id/:mode/:param" element={<LibraryArticleShow />} />
+      </Route>
+
+      <Route path="discussion" element={<LibraryDiscussion />}>
+        <Route path="list" element={<LibraryDiscussionList />} />
+        <Route path="topic/:id" element={<LibraryDiscussionTopic />} />
+        <Route path="discussion/:id" element={<LibraryDiscussion />} />
       </Route>
 
       <Route path="blog/:studio" element={<LibraryBlog />}>
