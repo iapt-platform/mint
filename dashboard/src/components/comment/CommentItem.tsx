@@ -1,4 +1,4 @@
-import { Avatar } from "antd";
+import { Avatar, Col, Row } from "antd";
 import { useState } from "react";
 import { IUser } from "../auth/User";
 import CommentShow from "./CommentShow";
@@ -26,11 +26,11 @@ const Widget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
   console.log(data);
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ width: "auto", padding: 8 }}>
+    <Row>
+      <Col flex={"2em"} style={{ padding: 8 }}>
         <Avatar>{data.user?.nickName?.slice(0, 1)}</Avatar>
-      </div>
-      <div style={{ flex: "auto" }}>
+      </Col>
+      <Col flex={"auto"}>
         {edit ? (
           <CommentEdit
             data={data}
@@ -48,8 +48,8 @@ const Widget = ({ data, onSelect, onCreated }: IWidget) => {
             }}
           />
         )}
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
