@@ -29,6 +29,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 	const linkGroup = "/studio/" + studioname + "/group/list";
 	const linkUserdict = "/studio/" + studioname + "/dict/list";
 	const linkTerm = "/studio/" + studioname + "/term/list";
+	const linkCourse = "/studio/" + studioname + "/course/list";
 	const linkArticle = "/studio/" + studioname + "/article/list";
 	const linkAnthology = "/studio/" + studioname + "/anthology/list";
 	const linkAnalysis = "/studio/" + studioname + "/analysis/list";
@@ -105,6 +106,16 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 						</Link>
 					),
 					key: "term",
+				},
+				{
+					label: (
+						<Link to={linkCourse}>
+							{intl.formatMessage({
+								id: "columns.studio.course.title",
+							})}
+						</Link>
+					),
+					key: "course",
 				},
 				{
 					label: (
