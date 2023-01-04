@@ -33,12 +33,19 @@ const menu = (
 );
 interface DataItem {
   sn: number;
-  id: string;
-  title: string;
-  subtitle: string;
-  summary: string;
-  publicity: number;
-  createdAt: number;
+  id: string;//课程ID
+  title: string;//标题
+  subtitle: string;//副标题
+  teacher: string;//UserID
+  //course_count: number;//课程数
+  type: number;//类型-公开/内部
+  createdAt: number;//创建时间
+  //updated_at: number;//修改时间
+  //article_id: number;//文集ID
+  //course_start_at: string;//课程开始时间
+  //course_end_at: string;//课程结束时间
+  //intro_markdown: string;//简介
+  //cover_img_name: string;//封面图片文件名
 }
 
 const renderBadge = (count: number, active = false) => {
@@ -57,7 +64,7 @@ const renderBadge = (count: number, active = false) => {
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
-  const articleCreate = <CourseCreate studio={studioname} />;
+  const courseCreate = <CourseCreate studio={studioname} />;
   const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
   return (
 
@@ -85,7 +92,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
+                <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
                   {row.title}
                 </Link>
               );
@@ -146,7 +153,7 @@ const Widget = () => {
             render: (text, row, index, action) => {
               return [
                 <Dropdown.Button key={index} type="link" overlay={menu}>
-                  <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
+                  <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
                     {intl.formatMessage({
                       //编辑
                       id: "buttons.edit",
@@ -195,10 +202,11 @@ const Widget = () => {
             </Space>
           );
         }}
+        //从服务端获取数据
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url = `/v2/article?view=studio&name=${studioname}`;
+          let url = `/v2/course?view=studio&name=${studioname}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -207,7 +215,7 @@ const Widget = () => {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
 
-          const res = await get<ICourseListResponse>(url);
+          /*const res = await get<ICourseListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
@@ -215,13 +223,41 @@ const Widget = () => {
               id: item.uid,
               title: item.title,
               subtitle: item.subtitle,
-              summary: item.summary,
-              publicity: item.status,
+              teacher: item.teacher,
+              type: item.type,
               createdAt: date.getTime(),
             };
-          });
+          });*/
+          
+          //const items = Array.from({ length: 23 }).map((_, i) => ({
+            const items: DataItem[] = [
+              {
+              sn: 1,
+              id: "1",
+              title: "课程"+1,
+              subtitle: "课程副标题"+1,
+              teacher: "小僧善巧",
+              type: 30,
+              createdAt: 20020202,
+              //updated_at: 123,
+              //article_id: 123,
+              //course_start_at: 123,
+              //course_end_at: 123,
+              //intro_markdown: 123,
+              //cover_img_name: 123,
+            },
+            {
+              sn: 2,
+              id: "2",
+              title: "课程"+2,
+              subtitle: "课程副标题"+2,
+              teacher: "小僧善巧",
+              type: 30,
+              createdAt: 20020202,
+            }
+          ];
           return {
-            total: res.data.count,
+            total: items.length,//res.data.count,
             succcess: true,
             data: items,
           };
@@ -239,7 +275,7 @@ const Widget = () => {
         
         toolBarRender={() => [
           <Popover
-            content={articleCreate}
+            content={courseCreate}
             title="Create"
             placement="bottomRight"
           >
