@@ -68,6 +68,7 @@ import StudioTermList from "./pages/studio/term/list";
 
 import StudioCourse from "./pages/studio/course";
 import StudioCourseList from "./pages/studio/course/list";
+import StudioCourseEdit from "./pages/studio/course/edit";
 
 import StudioArticle from "./pages/studio/article";
 import StudioArticleList from "./pages/studio/article/list";
@@ -181,6 +182,7 @@ const Widget = () => {
         </Route>
         <Route path="course" element={<StudioCourse />}>
           <Route path="list" element={<StudioCourseList />} />
+          <Route path=":courseid/edit" element={<StudioCourseEdit />} />
         </Route>
         <Route path="article" element={<StudioArticle />}>
           <Route path="list" element={<StudioArticleList />} />

@@ -9,14 +9,23 @@ export interface ICourseListApiResponse {
 }
 
 export interface ICourseDataRequest {
-  uid: string;
-  title: string;
-  subtitle: string;
-  summary: string;
-  content: string;
-  content_type: string;
-  status: number;
-  lang: string;
+  uid: string;//课程ID
+  title: string;//标题
+  subtitle: string;//副标题
+  teacher: number;//UserID
+  course_count: number;//课程数
+  //content: string;
+  //content_type: string;
+  //path?: ITocPathNode[];
+  type: number;//类型-公开/内部
+  //lang: string;
+  created_at: string;//创建时间
+  updated_at: string;//修改时间
+  article_id: number;//文集ID
+  course_start_at: string;//课程开始时间
+  course_end_at: string;//课程结束时间
+  intro_markdown: string;//简介
+  cover_img_name: string;//封面图片文件名
 }
 export interface ICourseDataResponse {
   uid: string;//课程ID
