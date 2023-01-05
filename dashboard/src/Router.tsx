@@ -57,6 +57,7 @@ import StudioRecent from "./pages/studio/recent";
 import StudioChannel from "./pages/studio/channel";
 import StudioChannelList from "./pages/studio/channel/list";
 import StudioChannelEdit from "./pages/studio/channel/edit";
+import StudioChannelShow from "./pages/studio/channel/show";
 
 import StudioGroup from "./pages/studio/group";
 import StudioGroupList from "./pages/studio/group/list";
@@ -178,6 +179,7 @@ const Widget = () => {
         <Route path="channel" element={<StudioChannel />}>
           <Route path="list" element={<StudioChannelList />} />
           <Route path=":channelid/edit" element={<StudioChannelEdit />} />
+          <Route path=":channelId" element={<StudioChannelShow />} />
         </Route>
 
         <Route path="group" element={<StudioGroup />}>
