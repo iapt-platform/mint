@@ -3,10 +3,9 @@ import { ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { Space, Table } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu, Popover } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
 import ChannelCreate from "../../../components/channel/ChannelCreate";
 import { get } from "../../../request";
@@ -77,7 +76,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/channel/${row.uid}/edit`}>
+                <Link to={`/studio/${studioname}/channel/${row.uid}`}>
                   {row.title}
                 </Link>
               );
