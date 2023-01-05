@@ -172,6 +172,8 @@ export interface IChapterData {
   summary: string;
   view: number;
   like: number;
+  status?: number;
+  progress: number;
   created_at: string;
   updated_at: string;
 }
