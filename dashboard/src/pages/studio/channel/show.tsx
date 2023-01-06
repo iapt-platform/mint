@@ -202,7 +202,7 @@ const Widget = () => {
             const createdAt = new Date(item.created_at);
             const updatedAt = new Date(item.updated_at);
             return {
-              sn: id,
+              sn: id + offset + 1,
               book: item.book,
               paragraph: item.para,
               view: item.view,
