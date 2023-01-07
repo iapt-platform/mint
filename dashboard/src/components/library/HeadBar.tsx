@@ -81,59 +81,54 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
       ),
       key: "help",
     },
+
     {
       label: (
-        <Space>
-          {intl.formatMessage({ id: "columns.library.more.title" })}
-        </Space>
+        <a
+          href="https://asset-hk.wikipali.org/handbook/zh-Hans"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {intl.formatMessage({
+            id: "columns.library.palihandbook.title",
+          })}
+        </a>
       ),
-      key: "more",
-      children: [
-        {
-          label: (
-            <a
-              href="https://asset-hk.wikipali.org/handbook/zh-Hans"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {intl.formatMessage({
-                id: "columns.library.palihandbook.title",
-              })}
-            </a>
-          ),
-          key: "palihandbook",
-        },
-        {
-          label: (
-            <Link to="/calendar">
-              {intl.formatMessage({
-                id: "columns.library.calendar.title",
-              })}
-            </Link>
-          ),
-          key: "calendar",
-        },
-        {
-          label: (
-            <Link to="/convertor">
-              {intl.formatMessage({
-                id: "columns.library.convertor.title",
-              })}
-            </Link>
-          ),
-          key: "convertor",
-        },
-        {
-          label: (
-            <Link to="/statistics">
-              {intl.formatMessage({
-                id: "columns.library.statistics.title",
-              })}
-            </Link>
-          ),
-          key: "statistics",
-        },
-      ],
+      key: "palihandbook",
+    },
+    {
+      label: (
+        <Link to="/calendar">
+          {intl.formatMessage({
+            id: "columns.library.calendar.title",
+          })}
+        </Link>
+      ),
+      key: "calendar",
+    },
+    {
+      label: (
+        <Link to="/convertor">
+          {intl.formatMessage({
+            id: "columns.library.convertor.title",
+          })}
+        </Link>
+      ),
+      key: "convertor",
+    },
+    {
+      label: (
+        <Link to="/statistics">
+          {intl.formatMessage({
+            id: "columns.library.statistics.title",
+          })}
+        </Link>
+      ),
+      key: "statistics",
+    },
+    {
+      label: <Link to="/discussion/list">Discussion(alpha)</Link>,
+      key: "discussion",
     },
   ];
   return (
