@@ -7,8 +7,6 @@ import type { IAnthologyStudioListApiResponse } from "../api/Article";
 import type { IStudioApiResponse } from "../api/Auth";
 import { get } from "../../request";
 
-const defaultData: IAnthologyStudioData[] = [];
-
 interface IAnthologyStudioData {
   count: number;
   studio: IStudioApiResponse;
@@ -19,7 +17,7 @@ interface IWidgetAnthologyList {
 }
 */
 const Widget = () => {
-  const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState<IAnthologyStudioData[]>([]);
   useEffect(() => {
     console.log("useEffect");
     fetchData();
