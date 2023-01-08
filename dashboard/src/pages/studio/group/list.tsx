@@ -108,9 +108,11 @@ const Widget = () => {
             valueType: "option",
             render: (text, row, index, action) => [
               <Dropdown.Button type="link" key={index} overlay={menu}>
-                {intl.formatMessage({
-                  id: "buttons.edit",
-                })}
+                <Link to={`/studio/${studioname}/group/${row.id}/edit`}>
+                  {intl.formatMessage({
+                    id: "buttons.edit",
+                  })}
+                </Link>
               </Dropdown.Button>,
             ],
           },
