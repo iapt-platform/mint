@@ -12,13 +12,13 @@ import GoBack from "../../../components/studio/GoBack";
 
 const Widget = () => {
   const intl = useIntl();
-  const { studioname, groupid } = useParams(); //url 参数
+  const { studioname, groupId } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
   useEffect(() => {
-    get<IGroupResponse>(`/v2/group/${groupid}`).then((json) => {
+    get<IGroupResponse>(`/v2/group/${groupId}`).then((json) => {
       setTitle(json.data.name);
     });
-  }, [groupid]);
+  }, [groupId]);
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/group/list`} title={title} />}
@@ -30,10 +30,10 @@ const Widget = () => {
     >
       <Row>
         <Col flex="auto">
-          <GroupFile groupId={groupid} />
+          <GroupFile groupId={groupId} />
         </Col>
         <Col flex="400px">
-          <GroupMember groupId={groupid} />
+          <GroupMember groupId={groupId} />
         </Col>
       </Row>
     </Card>

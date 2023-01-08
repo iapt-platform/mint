@@ -184,9 +184,9 @@ const Widget = () => {
 
         <Route path="group" element={<StudioGroup />}>
           <Route path="list" element={<StudioGroupList />} />
-          <Route path=":groupid" element={<StudioGroupShow />} />
-          <Route path=":groupid/edit" element={<StudioGroupEdit />} />
-          <Route path=":groupid/show" element={<StudioGroupShow />} />
+          <Route path=":groupId" element={<StudioGroupShow />} />
+          <Route path=":groupId/edit" element={<StudioGroupEdit />} />
+          <Route path=":groupId/show" element={<StudioGroupShow />} />
         </Route>
 
         <Route path="course" element={<StudioCourse />}>
