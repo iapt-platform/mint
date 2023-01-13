@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Discussion;
+use App\Models\Wbw;
+use App\Models\WbwBlock;
+use App\Models\PaliSentence;
 use Illuminate\Http\Request;
 use App\Http\Resources\DiscussionResource;
-
+use App\Http\Api\MdRender;
 
 class DiscussionController extends Controller
 {
@@ -18,11 +21,21 @@ class DiscussionController extends Controller
     {
         //
 		switch ($request->get('view')) {
+            case 'question-by-topic':
+                $topic = Discussion::where('id',$request->get('id'))->select('res_id')->first();
+                if(!$topic){
+			        return $this->error("无效的id");
+                }
+                $table = Discussion::where('res_id',$topic->res_id)->where('parent',null);
+                break;
             case 'question':
                 $table = Discussion::where('res_id',$request->get('id'))->where('parent',null);
                 break;
             case 'answer':
                 $table = Discussion::where('parent',$request->get('id'));
+                break;
+            case 'all':
+                $table = Discussion::where('parent',null);
                 break;
         }
         if(!empty($search)){
@@ -107,6 +120,48 @@ class DiscussionController extends Controller
 
     }
 
+        /**
+     * 获取discussion 锚点的数据。以句子为最小单位，逐词解析也要显示单词所在的句子
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anchor($id)
+    {
+        //
+        $discussion = Discussion::find($id);
+        switch ($discussion->res_type) {
+            case 'wbw':
+                # 从逐词解析表获取逐词解析数据
+                $wbw = Wbw::where('uid',$discussion->res_id)->first();
+                if(!$wbw){
+                    return $this->error('no wbw data');
+                }
+                $wbwBlock = WbwBlock::where('uid',$wbw->block_uid)->first();
+                if(!$wbwBlock){
+                    return $this->error('no wbwBlock data');
+                }
+                $sent = PaliSentence::where('book',$wbw->book_id)
+                                    ->where('paragraph',$wbw->paragraph)
+                                    ->where('word_begin','<=',$wbw->wid)
+                                    ->where('word_end','>=',$wbw->wid)
+                                    ->first();
+                if(!$sent){
+                    return $this->error('no sent data');
+                }
+                $sentId = "{$sent['book']}-{$sent['paragraph']}-{$sent['word_begin']}-{$sent['word_end']}";
+                $channel = $wbwBlock->channel_uid;
+                $content = MdRender::render("{{".$sentId."}}",$channel);
+                return $this->ok($content);
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        return $this->ok();
+
+    }
     /**
      * Update the specified resource in storage.
      *
