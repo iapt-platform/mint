@@ -1406,9 +1406,9 @@ function myEndingTooltip(inStr){
             tooltip:'主语',
         },
         {
-            id:"my_nom2",
+            id:"my_nama1",
             name:"ကား",
-            tooltip:'主格/主语',
+            tooltip:'位于名词、代词、成分助词之后，起强调和对比的作用',
         },
         {
             id:"my_nom3",
@@ -1458,6 +1458,16 @@ function myEndingTooltip(inStr){
         {
             id:"my_dat2",
             name:"ငှာ",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_dat3",
+            name:"အကျိုးငှာ",
+            tooltip:'atthāya和atthaṃ',
+        },
+        {
+            id:"my_dat2",
+            name:"ငှါ",
             tooltip:'目的格/表示目的，为了……',
         },
         {
@@ -1549,6 +1559,11 @@ function myEndingTooltip(inStr){
             id:"my_time",
             name:"တိုင်အောင်",
             tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_def",
+            name:"စဉ်",
+            tooltip:'同时发生的时间状语(当……的时候)',
         },
         {
             id:"my_def",
