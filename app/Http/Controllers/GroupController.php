@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\GroupInfo;
+use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Http\Api\AuthApi;
+use App\Http\Api\StudioApi;
+
 
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
 class GroupController extends Controller
@@ -24,10 +29,10 @@ class GroupController extends Controller
 		switch ($request->get('view')) {
             case 'studio':
 	            # 获取studio内所有channel
-                $user = \App\Http\Api\AuthApi::current($request);
+                $user = AuthApi::current($request);
                 if($user){
                     //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    if($user['user_uid'] === StudioApi::getIdByName($request->get('name'))){
                         $table = GroupInfo::select($indexCol)->where('owner', $user["user_uid"]);
                     }else{
                         return $this->error(__('auth.failed'));
@@ -92,6 +97,27 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+            return $this->error(__('auth.failed'));
+        }
+        //查询是否重复
+        if(GroupInfo::where('name',$request->get('name'))->where('owner',$user['user_uid'])->exists()){
+            return $this->error(__('validation.exists',['name']));
+        }
+
+        $group = new GroupInfo;
+        $group->id = app('snowflake')->id();
+        $group->name = $request->get('name');
+        $group->owner = $user['user_uid'];
+        $group->create_time = time()*1000;
+        $group->modify_time = time()*1000;
+        $group->save();
+        return $this->ok($group);
     }
 
     /**
@@ -106,25 +132,23 @@ class GroupController extends Controller
 		$indexCol = ['uid','name','description','owner','updated_at','created_at'];
 
 		$result  = GroupInfo::select($indexCol)->where('uid', $id)->first();
-		if($result){
-            if($result->status<30){
-                //私有，判断权限
-                $user = \App\Http\Api\AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] !== $result->owner){
-                        //非所有者
-                        //TODO 判断是否协作
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
-                    return $this->error(__('auth.failed'));
-                }
-            }
-			return $this->ok($result);
-		}else{
-			return $this->error("没有查询到数据");
+		if(!$result){
+            return $this->error("没有查询到数据");
 		}
+        if($result->status<30){
+            //私有，判断权限
+            $user = AuthApi::current($request);
+            if(!$user){
+                return $this->error(__('auth.failed'));
+            }
+            //判断当前用户是否有指定的studio的权限
+            if($user['user_uid'] !== $result->owner){
+                //非所有者
+                //TODO 判断是否协作
+                return $this->error(__('auth.failed'));
+            }
+        }
+        return $this->ok($result);
     }
 
     /**
@@ -137,6 +161,21 @@ class GroupController extends Controller
     public function update(Request $request, Group $group)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+            return $this->error(__('auth.failed'));
+        }
+        $group->name = $request->get('name');
+        $group->description = $request->get('description');
+        $group->status = $request->get('status');
+        $group->create_time = time()*1000;
+        $group->modify_time = time()*1000;
+        $group->save();
+        return $this->ok($group);
     }
 
     /**
@@ -148,5 +187,20 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+            return $this->error(__('auth.failed'));
+        }
+        DB::transaction(function(){
+            //删除group member
+            $memberDelete = GroupMember::where('group_id',$group->uid)->delete();
+            $delete = $group->delete();
+        });
+
+        $this->ok('ok');
     }
 }
