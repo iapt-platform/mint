@@ -1621,6 +1621,21 @@ function myEndingTooltip(inStr){
             tooltip:'和',
         },
         {
+            id:"my_ca",
+            name:"၎င်း",
+            tooltip:'和',
+        },
+        {
+            id:"my_ca",
+            name:"ရယ်",
+            tooltip:'和',
+        },
+        {
+            id:"my_ca",
+            name:"လည်း",
+            tooltip:'和',
+        },
+        {
             id:"my_adv",
             name:"စွာ",
             tooltip:'副词',
