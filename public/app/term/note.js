@@ -1406,6 +1406,11 @@ function myEndingTooltip(inStr){
             tooltip:'主语',
         },
         {
+            id:"my_nom2",
+            name:"တည်း",
+            tooltip:'就是，表示强调',
+        },
+        {
             id:"my_nama1",
             name:"ကား",
             tooltip:'位于名词、代词、成分助词之后，起强调和对比的作用',
