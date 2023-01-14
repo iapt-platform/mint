@@ -1431,11 +1431,6 @@ function myEndingTooltip(inStr){
             tooltip:'宾格/趋向',
         },
         {
-            id:"my_inst1",
-            name:"ဖြင့်",
-            tooltip:'具格/用',
-        },
-        {
             id:"my_inst_imp",
             name:"အစွမ်းဖြင့်",
             tooltip:'vasena',
@@ -1444,6 +1439,11 @@ function myEndingTooltip(inStr){
             id:"my_inst_imp",
             name:"အစွမ်းအားဖြင့်",
             tooltip:'vasena',
+        },
+        {
+            id:"my_inst1",
+            name:"ဖြင့်",
+            tooltip:'具格/用',
         },
         {
             id:"my_inst2",
@@ -1466,6 +1466,11 @@ function myEndingTooltip(inStr){
             tooltip:'具格/凭借;从格/原因',
         },
         {
+            id:"my_dat3",
+            name:"အကျိုးငှာ",
+            tooltip:'atthāya和atthaṃ',
+        },
+        {
             id:"my_dat1",
             name:"အား",
             tooltip:'目的格/对象(间接宾语)，对……来说',
@@ -1474,11 +1479,6 @@ function myEndingTooltip(inStr){
             id:"my_dat2",
             name:"ငှာ",
             tooltip:'目的格/表示目的，为了……',
-        },
-        {
-            id:"my_dat3",
-            name:"အကျိုးငှာ",
-            tooltip:'atthāya和atthaṃ',
         },
         {
             id:"my_dat2",
