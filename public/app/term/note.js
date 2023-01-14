@@ -1431,6 +1431,16 @@ function myEndingTooltip(inStr){
             tooltip:'具格/用',
         },
         {
+            id:"my_inst_imp",
+            name:"အစွမ်းဖြင့်",
+            tooltip:'vasena',
+        },
+        {
+            id:"my_inst_imp",
+            name:"အစွမ်းအားဖြင့်",
+            tooltip:'vasena',
+        },
+        {
             id:"my_inst2",
             name:"နှင့်",
             tooltip:'具格/与',
@@ -1599,6 +1609,11 @@ function myEndingTooltip(inStr){
             id:"my_iad",
             name:"သော",
             tooltip:'的(同类修饰)',
+        },
+        {
+            id:"my_ca",
+            name:"လည်းကောင်း",
+            tooltip:'和',
         },
         {
             id:"my_adv",
