@@ -16,10 +16,10 @@ class CreateCourseMembersTable extends Migration
         Schema::create('course_members', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v1mc()'));
             $table->uuid('user_id')->index();
-            $table->string('role')->index();
+            $table->string('role',32)->index();
             $table->uuid('course_id')->index();
             $table->uuid('channel_id')->nullable()->index();
-            $table->string('status')->default('normal')->index();
+            $table->string('status',32)->default('normal')->index();
             $table->timestamps();
         });
     }
