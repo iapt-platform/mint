@@ -16,12 +16,12 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useRef } from "react";
 
 interface IWidget {
-  resId: string;
-  resType: string;
+  resId?: string;
+  resType?: string;
   parent?: string;
   onCreated?: Function;
 }
-const Widget = ({ resId, resType, parent, onCreated }: IWidget) => {
+const Widget = ({ resId = "", resType = "", parent, onCreated }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);

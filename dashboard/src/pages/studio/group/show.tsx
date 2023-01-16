@@ -30,7 +30,7 @@ const Widget = () => {
     >
       <Row>
         <Col flex="auto">
-          <GroupFile groupid={groupid} />
+          <GroupFile groupId={groupid} />
         </Col>
         <Col flex="400px">
           <GroupMember groupId={groupid} />

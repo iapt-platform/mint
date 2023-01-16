@@ -5,19 +5,19 @@ import type { MenuProps } from "antd";
 import { Affix, Layout } from "antd";
 import { Menu } from "antd";
 import {
-	AppstoreOutlined,
-	HomeOutlined,
-	TeamOutlined,
+  AppstoreOutlined,
+  HomeOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 
 const { Sider } = Layout;
 
 const onClick: MenuProps["onClick"] = (e) => {
-	console.log("click ", e);
+  console.log("click ", e);
 };
 
 type IWidgetHeadBar = {
-	selectedKeys?: string;
+  selectedKeys?: string;
 };
 const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 	//Library head bar
@@ -158,24 +158,21 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 		},
 	];
 
-	return (
-		<Affix offsetTop={0}>
-			<Sider
-				width={200}
-				breakpoint="lg"
-				className="site-layout-background"
-			>
-				<Menu
-					theme="light"
-					onClick={onClick}
-					defaultSelectedKeys={[selectedKeys]}
-					defaultOpenKeys={["basic", "advance", "collaboration"]}
-					mode="inline"
-					items={items}
-				/>
-			</Sider>
-		</Affix>
-	);
+
+  return (
+    <Affix offsetTop={0}>
+      <Sider width={200} breakpoint="lg" className="site-layout-background">
+        <Menu
+          theme="light"
+          onClick={onClick}
+          defaultSelectedKeys={[selectedKeys]}
+          defaultOpenKeys={["basic", "advance", "collaboration"]}
+          mode="inline"
+          items={items}
+        />
+      </Sider>
+    </Affix>
+  );
 };
 
 export default Widget;

@@ -1,5 +1,6 @@
 const items = {
   "forms.fields.email.label": "电子邮箱",
+  "forms.fields.email.or.username.label": "电子邮箱/用户名",
   "forms.fields.password.label": "密码",
   "forms.fields.id.label": "ID",
   "forms.fields.message.label": "消息",
@@ -49,6 +50,8 @@ const items = {
   "forms.fields.case.tooltip": "语法信息参见……",
   "forms.fields.user.label": "用户",
   "forms.message.user.required": "请选择用户",
+  "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
+  "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
 };
 
 export default items;

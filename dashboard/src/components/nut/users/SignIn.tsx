@@ -66,7 +66,7 @@ const Widget = () => {
           name="email"
           required
           label={intl.formatMessage({
-            id: "forms.fields.email.label",
+            id: "forms.fields.email.or.username.label",
           })}
           rules={[{ required: true, max: 255, min: 6 }]}
         />

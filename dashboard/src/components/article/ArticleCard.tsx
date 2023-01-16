@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { Button, Card, Dropdown, Space, Segmented } from "antd";
@@ -9,7 +10,6 @@ import { modeChange } from "../../reducers/article-mode";
 import { IWidgetArticleData } from "./ArticleView";
 import ArticleCardMainMenu from "./ArticleCardMainMenu";
 import { ArticleMode } from "./Article";
-import { useNavigate } from "react-router-dom";
 
 interface IWidgetArticleCard {
   type?: string;

@@ -23,6 +23,7 @@ const items = {
   "buttons.group.exit": "退群",
   "buttons.group.add.member": "加人",
   "buttons.lesson.add.lesson": "加入",
+  "buttons.ok": "确定",
 };
 
 export default items;
