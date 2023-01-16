@@ -76,10 +76,6 @@ import StudioDictList from "./pages/studio/dict/list";
 import StudioTerm from "./pages/studio/term";
 import StudioTermList from "./pages/studio/term/list";
 
-import StudioCourse from "./pages/studio/course";
-import StudioCourseList from "./pages/studio/course/list";
-import StudioCourseEdit from "./pages/studio/course/edit";
-
 import StudioArticle from "./pages/studio/article";
 import StudioArticleList from "./pages/studio/article/list";
 import StudioArticleEdit from "./pages/studio/article/edit";
