@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'uid';
+    protected $casts = [
+        'uid' => 'string'
+    ];
+    public  $incrementing = false;
 }

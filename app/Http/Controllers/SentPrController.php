@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\SentPr;
 use App\Models\Channel;
 use App\Models\PaliSentence;
+use App\Http\Resources\SentPrResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +20,25 @@ class SentPrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        switch ($request->get('view')) {
+            case 'sent-info':
+                $table = SentPr::where('book_id',$request->get('book'))
+                                ->where('paragraph',$request->get('para'))
+                                ->where('word_start',$request->get('start'))
+                                ->where('word_end',$request->get('end'))
+                                ->where('channel_uid',$request->get('channel'));
+                $all_count = $table->count();
+                $chapters = $table->orderBy('paragraph')->get();
+                break;
+        }
+        if($chapters){
+            return $this->ok(["rows"=>SentPrResource::collection($chapters),"count"=>$all_count]);
+        }else{
+            return $this->error("no data");
+        }
     }
 
     /**
@@ -41,8 +58,8 @@ class SentPrController extends Controller
 
         $data = $request->all();
 
-		
-		#查询是否存在 
+
+		#查询是否存在
 		#同样的内容只能提交一次
 		$exists = SentPr::where('book_id',$data['book'])
 						->where('paragraph',$data['para'])
@@ -67,7 +84,7 @@ class SentPrController extends Controller
 			$new->strlen = mb_strlen($data['text'],"UTF-8");
 			$new->create_time = time()*1000;
 			$new->modify_time = time()*1000;
-			$new->save();			
+			$new->save();
 		}
 
 		$robotMessageOk=false;
@@ -130,13 +147,13 @@ class SentPrController extends Controller
 					default:
 						$strMessage = "";
 						break;
-				}		
+				}
 				$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8";
 				$param = [
 						"msgtype"=>"markdown",
 						"markdown"=> [
-							"content"=> $strMessage, 
-						], 
+							"content"=> $strMessage,
+						],
 					];
 				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
@@ -147,7 +164,7 @@ class SentPrController extends Controller
 					}else{
 						$webHookMessage = "消息发送失败";
 						$robotMessageOk = false;
-					}         					
+					}
 				}else{
 					$webHookMessage = "channel不符";
 					$robotMessageOk = false;
@@ -171,7 +188,7 @@ class SentPrController extends Controller
 						->count();
 		Log::info("count:{$count} webhook-ok={$robotMessageOk}");
 		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
-        
+
     }
 
     /**
@@ -213,7 +230,7 @@ class SentPrController extends Controller
 			}else{
 				return $this->error('没有更新');
 			}
-			
+
 		}else{
 			return $this->error('not power');
 		}

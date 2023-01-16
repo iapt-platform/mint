@@ -31,4 +31,7 @@ Route::get('/home/{name}', function ($name) {
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);
 Route::get('/wbwanalyses', [WbwAnalysisController::class,'index']);
+Route::get('/export/wbw', function (){
+    return view('export_wbw',['sentences' => []]);
+});
 

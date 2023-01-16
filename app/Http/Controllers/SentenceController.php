@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sentence;
+use App\Models\Channel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Http\Resources\SentResource;
 
 class SentenceController extends Controller
 {
@@ -84,7 +87,7 @@ class SentenceController extends Controller
                                 ->where('language',$request->get("language"))
                                 ->groupby('word')
                                 ->get();
-                    
+
                     foreach ($words as $key => $word) {
                         # code...
                         $result = Sentence::select(DB::raw('count(*) as word_count, meaning'))
@@ -165,12 +168,44 @@ class SentenceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sentence  $sentence
+     * @param  string  $id book_para_start_end_channel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sentence $sentence)
+    public function update(Request $request,  $id)
     {
         //
+        $param = \explode('_',$id);
+
+        //鉴权
+        $user = \App\Http\Api\AuthApi::current($request);
+        if($user ){
+            $channel = Channel::where('uid',$param[4])->first();
+            if($channel && $channel->owner_uid === $user["user_uid"]){
+                $sent = Sentence::firstOrNew([
+                    "book_id"=>$param[0],
+                    "paragraph"=>$param[1],
+                    "word_start"=>$param[2],
+                    "word_end"=>$param[3],
+                    "channel_uid"=>$param[4],
+                ],[
+                    "id"=>app('snowflake')->id(),
+                    "uid"=>Str::orderedUuid(),
+                ]);
+                $sent->content = $request->get('content');
+                $sent->language = $channel->lang;
+                $sent->status = $channel->status;
+                $sent->editor_uid = $user["user_uid"];
+                $sent->save();
+                return $this->ok(new SentResource($sent));
+            }else{
+                //TODO 判断是否为协作
+                return $this->error(__('auth.failed'));
+            }
+        }else{
+            //非所有者鉴权失败
+
+            return $this->error(__('auth.failed'));
+        }
     }
 
     /**

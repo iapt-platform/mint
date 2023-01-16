@@ -19,7 +19,7 @@
 			<div>
 				<div>github</div>
 				<div>https://www.github.com/iapt-platform/mint</div>
-			</div>		
+			</div>
 		</div>
 		<div>
 			<div>您的建议是我们宝贵的财富</div>
@@ -33,6 +33,7 @@
 <script>
 	guide_init();
 </script>
+
 </body>
 
 </html>

@@ -10,9 +10,9 @@ class DhammaTerm extends Model
     use HasFactory;
 
     protected $primaryKey = 'guid';
-    public  $incrementing = false;
-    //protected $keyType = "string";
     protected $casts = [
         'guid' => 'string'
     ];
+    public  $incrementing = false;
+
 }

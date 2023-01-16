@@ -15,7 +15,22 @@ use App\Http\Controllers\SentHistoryController;
 use App\Http\Controllers\PaliTextController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserDictController;
-
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\DictController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\CorpusController;
+use App\Http\Controllers\ArticleProgressController;
+use App\Http\Controllers\ExportWbwController;
+use App\Http\Controllers\WbwLookupController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupMemberController;
+use App\Http\Controllers\ShareController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,5 +63,64 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('channel',ChannelController::class);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
+    Route::get('palibook/{file}', function ($file) {
+        return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
+    });
+    Route::apiResource('anthology',CollectionController::class);
+    Route::apiResource('dict',DictController::class);
+    Route::apiResource('tag',TagController::class);
+    Route::apiResource('article',ArticleController::class);
+    Route::apiResource('group',GroupController::class);
+
+    Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
+    Route::post('auth/signin',[AuthController::class,'signIn']);
+
+    Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
+    Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
+    Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
+    Route::apiResource('article-progress',ArticleProgressController::class);
+
+    Route::post('export_wbw',[ExportWbwController::class,'index']);
+    Route::apiResource('attachments',UploadController::class);
+    Route::apiResource('discussion',DiscussionController::class);
+    Route::get('discussion-anchor/{id}',[DiscussionController::class,'anchor']);
+    Route::apiResource('user',UserController::class);
+    Route::apiResource('group-member',GroupMemberController::class);
+    Route::apiResource('share',ShareController::class);
+    Route::apiResource('wbwlookup',WbwLookupController::class);
+    Route::apiResource('course',CourseController::class);
+    Route::apiResource('course-member',CourseMemberController::class);
+
+
+    Route::get('guide/{lang}/{file}', function ($lang,$file) {
+        $filename = public_path("app/users_guide/{$lang}/{$file}.md");
+        if(file_exists($filename)){
+            return json_encode(['ok'=>true,'message'=>'','data'=>file_get_contents($filename)]);
+        }else{
+            return json_encode(['ok'=>false,'message'=>"no file {$lang}/{$file}"]);
+        }
+    });
+
+    Route::get('siteinfo/{locale}', function ($locale) {
+        if (! in_array($locale, ['en', 'zh-Hans', 'zh-Hant'])) {
+            App::setLocale('en');
+        }else{
+            App::setLocale($locale);
+        }
+        $site = [
+            'logo'=> __("site.logo"),
+            'title'=> __('site.title'),
+            'subhead'=> __('site.subhead'),
+            'keywords'=> __('site.keywords'),
+            'description'=> __('site.description'),
+            'copyright'=> __('site.copyright'),
+            'author'=> [
+                'name'=> __('site.author.name'),
+                'email'=> __('site.author.email'),
+                ],
+            ];
+        return json_encode($site);
+    });
+
 
 });

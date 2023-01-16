@@ -18,11 +18,12 @@ class PaliTextController extends Controller
     public function index(Request $request)
     {
         //
+        $all_count = 0;
         switch ($request->get('view')) {
             case 'chapter-tag':
                 $tm = (new TagMap)->getTable();
-                $tg = (new Tag)->getTable();     
-                $pt = (new PaliText)->getTable();  
+                $tg = (new Tag)->getTable();
+                $pt = (new PaliText)->getTable();
                 if($request->get('tags') && $request->get('tags')!==''){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
@@ -32,7 +33,7 @@ class PaliTextController extends Controller
                         }
                     }
                 }
-                
+
                 if(isset($tagNames)){
                     $where1 = " where co = ".count($tagNames);
                     $a = implode(",",array_fill(0, count($tagNames), '?')) ;
@@ -43,7 +44,7 @@ class PaliTextController extends Controller
                     $in1 = " ";
                 }
                 $query = "
-                    select tags.id,tags.name,co as count 
+                    select tags.id,tags.name,co as count
                         from (
                             select tm.tag_id,count(*) as co from (
                                 select anchor_id as id from (
@@ -51,13 +52,13 @@ class PaliTextController extends Controller
                                         from $tm as  tm
                                         left join $tg as t on tm.tag_id = t.id
                                         left join $pt as pc on tm.anchor_id = pc.uid
-                                        where tm.table_name  = 'pali_texts' 
+                                        where tm.table_name  = 'pali_texts'
                                         $in1
                                         group by tm.anchor_id
-                                ) T 
+                                ) T
                                     $where1
-                            ) CID 
-                            left join $tm as tm on tm.anchor_id = CID.id 
+                            ) CID
+                            left join $tm as tm on tm.anchor_id = CID.id
                             group by tm.tag_id
                         ) tid
                         left join $tg on $tg.id = tid.tag_id
@@ -73,8 +74,8 @@ class PaliTextController extends Controller
 
             case 'chapter':
                 $tm = (new TagMap)->getTable();
-                $tg = (new Tag)->getTable();     
-                $pt = (new PaliText)->getTable();  
+                $tg = (new Tag)->getTable();
+                $pt = (new PaliText)->getTable();
                 if($request->get('tags') && $request->get('tags')!==''){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
@@ -84,8 +85,8 @@ class PaliTextController extends Controller
                         }
                     }
                 }
-                
-                
+
+
                 if(isset($tagNames)){
                     $where1 = " where co = ".count($tagNames);
                     $a = implode(",",array_fill(0, count($tagNames), '?')) ;
@@ -100,19 +101,19 @@ class PaliTextController extends Controller
                 $query = "
                         select uid as id,book,paragraph,level,toc as title,chapter_strlen,parent,path from (
                             select anchor_id as cid from (
-                                select tm.anchor_id , count(*) as co 
+                                select tm.anchor_id , count(*) as co
                                     from $tm as  tm
                                     left join $tg as t on tm.tag_id = t.id
                                     where tm.table_name  = 'pali_texts'
                                     $in1
                                     group by tm.anchor_id
-                            ) T 
-                                $where1 
-                        ) CID 
-                        left join $pt as pt on CID.cid = pt.uid 
+                            ) T
+                                $where1
+                        ) CID
+                        left join $pt as pt on CID.cid = pt.uid
                         $where2
                         order by book,paragraph";
-                        
+
                     if(isset($param)){
                         $chapters = DB::select($query,$param);
                     }else{
@@ -121,7 +122,54 @@ class PaliTextController extends Controller
 
                 $all_count = count($chapters);
                 break;
-        }
+            case 'chapter_children':
+                $table = PaliText::where('book',$request->get('book'))
+                                ->where('parent',$request->get('para'))
+                                ->where('level','<',8);
+                $all_count = $table->count();
+                $chapters = $table->orderBy('paragraph')->get();
+                break;
+            case 'paragraph':
+                $result = PaliText::where('book',$request->get('book'))->where('paragraph',$request->get('para'))->first();
+                if($result){
+                    return $this->ok($result);
+                }else{
+                    return $this->error("no data");
+                }
+                break;
+
+            case 'book-toc':
+                //获取全书目录
+                $path = PaliText::where('book',$request->get('book'))
+                                ->where('paragraph',$request->get('para'))
+                                ->select('path')->first();
+                if(!$path){
+                    return $this->error("no data");
+                }
+                $json = \json_decode($path->path);
+                $root = null;
+                foreach ($json as $key => $value) {
+                    # code...
+                    if( $value->level == 1 ){
+                        $root = $value;
+                        break;
+                    }
+                }
+                if($root===null){
+                    return $this->error("no data");
+                }
+                //查询书起始段落
+                $rootPara = PaliText::where('book',$root->book)
+                                ->where('paragraph',$root->paragraph)
+                                ->first();
+
+                $table = PaliText::where('book',$rootPara->book)
+                                ->whereBetween('paragraph',[$rootPara->paragraph,($rootPara->paragraph+$rootPara->chapter_len-1)])
+                                ->where('level','<',8);
+                $all_count = $table->count();
+                $chapters = $table->select(['book','paragraph','toc','level'])->orderBy('paragraph')->get();
+                break;
+            }
         if($chapters){
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
@@ -143,12 +191,13 @@ class PaliTextController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PaliText  $paliText
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(PaliText $paliText)
+    public function show(Request $request)
     {
         //
+
     }
 
     /**

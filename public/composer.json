@@ -10,6 +10,7 @@
 		"casbin/medoo-adapter": "^1.7",
 		"phpoffice/phpword": "^0.18.2",
 		"godruoyi/php-snowflake": "^2.0",
-		"erusev/parsedown": "^1.7"
+		"erusev/parsedown": "^1.7",
+		"firebase/php-jwt": "^6.2"
 	}
 }
