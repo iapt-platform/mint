@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class CourseMember extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id';
+    protected $casts = [
+        'id' => 'string'
+    ];
+    public  $incrementing = false;
 }
