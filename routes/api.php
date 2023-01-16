@@ -29,7 +29,8 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\ShareController;
-
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,9 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('user',UserController::class);
     Route::apiResource('group-member',GroupMemberController::class);
     Route::apiResource('share',ShareController::class);
+    Route::apiResource('wbwlookup',WbwLookupController::class);
+    Route::apiResource('course',CourseController::class);
+    Route::apiResource('course-member',CourseMemberController::class);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
@@ -118,6 +122,5 @@ Route::group(['prefix' => 'v2'],function(){
         return json_encode($site);
     });
 
-    Route::apiResource('wbwlookup',WbwLookupController::class);
 
 });
