@@ -37,7 +37,7 @@ let groupid = "1";
 
 const Widget = () => {
   const intl = useIntl();
-  const { studioname, courseid } = useParams(); //url 参数
+  const { studioname, courseId } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
 
   return (
@@ -61,9 +61,9 @@ const Widget = () => {
                 onFinish={async (values: IFormData) => {
                   // TODO
                   let request = {
-                    uid: courseid?.toString,
-                    title: "课程" + courseid,
-                    subtitle: "课程副标题" + courseid,
+                    uid: courseId?.toString,
+                    title: "课程" + courseId,
+                    subtitle: "课程副标题" + courseId,
                     teacher: 1,
                     course_count: 2,
                     type: 30,
@@ -235,7 +235,6 @@ request={async () => {
         },
       ]}
     />
-
   );
 };
 
