@@ -35,6 +35,7 @@ const items = {
   "columns.studio.group.title": "群组",
   "columns.studio.userdict.title": "用户字典",
   "columns.studio.term.title": "术语",
+  "columns.studio.course.title": "课程",
   "columns.studio.article.title": "文章",
   "columns.studio.anthology.title": "文集",
   "columns.studio.analysis.title": "分析",
