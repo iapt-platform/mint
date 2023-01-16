@@ -1,8 +1,17 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import React, { useState } from 'react';
-import { Space, Badge,Button, Popover, Dropdown, MenuProps, Menu, Table } from "antd";
-import { ProTable,ProList  } from "@ant-design/pro-components";
+import React, { useState } from "react";
+import {
+  Space,
+  Badge,
+  Button,
+  Popover,
+  Dropdown,
+  MenuProps,
+  Menu,
+  Table,
+} from "antd";
+import { ProTable, ProList } from "@ant-design/pro-components";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import CourseCreate from "../../../components/library/course/CourseCreate";
@@ -17,7 +26,6 @@ const menu = (
   <Menu
     onClick={onMenuClick}
     items={[
-
       {
         key: "1",
         label: "分享",
@@ -33,13 +41,13 @@ const menu = (
 );
 interface DataItem {
   sn: number;
-  id: string;//课程ID
-  title: string;//标题
-  subtitle: string;//副标题
-  teacher: string;//UserID
+  id: string; //课程ID
+  title: string; //标题
+  subtitle: string; //副标题
+  teacher: string; //UserID
   //course_count: number;//课程数
-  type: number;//类型-公开/内部
-  createdAt: number;//创建时间
+  type: number; //类型-公开/内部
+  createdAt: number; //创建时间
   //updated_at: number;//修改时间
   //article_id: number;//文集ID
   //course_start_at: string;//课程开始时间
@@ -55,8 +63,8 @@ const renderBadge = (count: number, active = false) => {
       style={{
         marginBlockStart: -2,
         marginInlineStart: 4,
-        color: active ? '#1890FF' : '#999',
-        backgroundColor: active ? '#E6F7FF' : '#eee',
+        color: active ? "#1890FF" : "#999",
+        backgroundColor: active ? "#E6F7FF" : "#eee",
       }}
     />
   );
@@ -65,10 +73,8 @@ const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
   const courseCreate = <CourseCreate studio={studioname} />;
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("tab1");
   return (
-
-    
     <>
       <ProTable<DataItem>
         columns={[
@@ -185,7 +191,6 @@ const Widget = () => {
               >
                 {intl.formatMessage({
                   id: "buttons.unselect",
-                  
                 })}
               </Button>
             </span>
@@ -228,14 +233,14 @@ const Widget = () => {
               createdAt: date.getTime(),
             };
           });*/
-          
+
           //const items = Array.from({ length: 23 }).map((_, i) => ({
-            const items: DataItem[] = [
-              {
+          const items: DataItem[] = [
+            {
               sn: 1,
               id: "1",
-              title: "课程"+1,
-              subtitle: "课程副标题"+1,
+              title: "课程" + 1,
+              subtitle: "课程副标题" + 1,
               teacher: "小僧善巧",
               type: 30,
               createdAt: 20020202,
@@ -249,15 +254,15 @@ const Widget = () => {
             {
               sn: 2,
               id: "2",
-              title: "课程"+2,
-              subtitle: "课程副标题"+2,
+              title: "课程" + 2,
+              subtitle: "课程副标题" + 2,
               teacher: "小僧善巧",
               type: 30,
               createdAt: 20020202,
-            }
+            },
           ];
           return {
-            total: items.length,//res.data.count,
+            total: items.length, //res.data.count,
             succcess: true,
             data: items,
           };
@@ -272,7 +277,6 @@ const Widget = () => {
         options={{
           search: true,
         }}
-        
         toolBarRender={() => [
           <Popover
             content={courseCreate}
@@ -289,24 +293,36 @@ const Widget = () => {
             activeKey,
             items: [
               {
-                key: 'tab1',
-                label: <span>我建立的课程{renderBadge(99, activeKey === 'tab1')}</span>,
+                key: "create",
+                label: (
+                  <span>
+                    我建立的课程{renderBadge(99, activeKey === "create")}
+                  </span>
+                ),
               },
               {
-                key: 'tab2',
-                label: <span>我参加的课程{renderBadge(99, activeKey === 'tab1')}</span>,
+                key: "study",
+                label: (
+                  <span>
+                    我参加的课程{renderBadge(99, activeKey === "study")}
+                  </span>
+                ),
               },
               {
-                key: 'tab3',
-                label: <span>我主讲的课程{renderBadge(32, activeKey === 'tab2')}</span>,
+                key: "teach",
+                label: (
+                  <span>
+                    我任教的课程{renderBadge(32, activeKey === "teach")}
+                  </span>
+                ),
               },
             ],
             onChange(key) {
               setActiveKey(key);
             },
-          }
+          },
         }}
-/*
+        /*
         toolbar={{
           menu: {
             activeKey,
@@ -338,7 +354,6 @@ const Widget = () => {
       />
     </>
   );
-
 };
 
 export default Widget;
