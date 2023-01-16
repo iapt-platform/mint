@@ -1,4 +1,4 @@
-import { IUserRequest } from "./Auth";
+import { IUserApiData } from "./Auth";
 
 export interface ICommentRequest {
   id?: string;
@@ -7,7 +7,7 @@ export interface ICommentRequest {
   title?: string;
   content?: string;
   parent?: string;
-  editor?: IUserRequest;
+  editor?: IUserApiData;
   created_at?: string;
   updated_at?: string;
 }
@@ -20,7 +20,7 @@ export interface ICommentApiData {
   content?: string;
   parent?: string;
   children_count: number;
-  editor: IUserRequest;
+  editor: IUserApiData;
   created_at?: string;
   updated_at?: string;
 }

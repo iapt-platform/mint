@@ -12,6 +12,7 @@ import { IAnswerCount } from "./CommentBox";
 interface IWidget {
   resId?: string;
   resType?: string;
+  topicId?: string;
   changedAnswerCount?: IAnswerCount;
   onSelect?: Function;
   onItemCountChange?: Function;
@@ -19,6 +20,7 @@ interface IWidget {
 const Widget = ({
   resId,
   resType,
+  topicId,
   onSelect,
   changedAnswerCount,
   onItemCountChange,
@@ -38,7 +40,17 @@ const Widget = ({
   }, [changedAnswerCount]);
 
   useEffect(() => {
-    get<ICommentListResponse>(`/v2/discussion?view=question&id=${resId}`)
+    let url: string = "";
+    if (typeof topicId !== "undefined") {
+      url = `/v2/discussion?view=question-by-topic&id=${topicId}`;
+    }
+    if (typeof resId !== "undefined") {
+      url = `/v2/discussion?view=question&id=${resId}`;
+    }
+    if (url === "") {
+      return;
+    }
+    get<ICommentListResponse>(url)
       .then((json) => {
         console.log(json);
         if (json.ok) {
@@ -69,9 +81,9 @@ const Widget = ({
       .catch((e) => {
         message.error(e.message);
       });
-  }, [resId]);
+  }, [resId, topicId]);
 
-  if (typeof resId === "undefined") {
+  if (typeof resId === "undefined" && typeof topicId === "undefined") {
     return <div>该资源尚未创建，不能发表讨论。</div>;
   }
 

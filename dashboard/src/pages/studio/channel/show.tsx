@@ -1,16 +1,18 @@
-import { useParams } from "react-router-dom";
-import { ProTable } from "@ant-design/pro-components";
+import { useState } from "react";
 import { useIntl } from "react-intl";
+import { useParams } from "react-router-dom";
+import { Card, Progress } from "antd";
+import { ProTable } from "@ant-design/pro-components";
 import { Link } from "react-router-dom";
 import { Space, Table } from "antd";
 import type { MenuProps } from "antd";
-import { Button, Dropdown, Menu, Popover } from "antd";
-import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Menu } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
-import ChannelCreate from "../../../components/channel/ChannelCreate";
 import { get } from "../../../request";
-import { IApiResponseChannelList } from "../../../components/api/Channel";
-import { PublicityValueEnum } from "../../../components/studio/table";
+
+import GoBack from "../../../components/studio/GoBack";
+import { IChapterListResponse } from "../../../components/api/Corpus";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
@@ -21,17 +23,12 @@ const menu = (
     onClick={onMenuClick}
     items={[
       {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
+        key: "share",
         label: "分享",
         icon: <SearchOutlined />,
       },
       {
-        key: "3",
+        key: "delete",
         label: "删除",
         icon: <SearchOutlined />,
       },
@@ -40,29 +37,36 @@ const menu = (
 );
 
 interface IItem {
-  id: number;
-  uid: string;
+  sn: number;
   title: string;
+  subTitle: string;
   summary: string;
-  type: string;
-  publicity: number;
+  book: number;
+  paragraph: number;
+  path: string;
+  progress: number;
+  view: number;
   createdAt: number;
+  updatedAt: number;
 }
-
 const Widget = () => {
   const intl = useIntl();
+  const { channelId } = useParams(); //url 参数
   const { studioname } = useParams();
-  const channelCreate = <ChannelCreate studio={studioname} />;
+  const [title, setTitle] = useState("");
+
   return (
-    <>
+    <Card
+      title={<GoBack to={`/studio/${studioname}/channel/list`} title={title} />}
+    >
       <ProTable<IItem>
         columns={[
           {
             title: intl.formatMessage({
               id: "dict.fields.sn.label",
             }),
-            dataIndex: "id",
-            key: "id",
+            dataIndex: "sn",
+            key: "sn",
             width: 50,
             search: false,
           },
@@ -76,9 +80,16 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/channel/${row.uid}`}>
-                  {row.title}
-                </Link>
+                <div>
+                  <div>
+                    <Link
+                      to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}`}
+                    >
+                      {row.title}
+                    </Link>
+                  </div>
+                  <div>{row.subTitle}</div>
+                </div>
               );
             },
           },
@@ -93,64 +104,25 @@ const Widget = () => {
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.type.label",
+              id: "forms.fields.publicity.label",
             }),
-            dataIndex: "type",
-            key: "type",
+            dataIndex: "progress",
+            key: "progress",
             width: 100,
             search: false,
-            filters: true,
-            onFilter: true,
-            valueEnum: {
-              all: {
-                text: intl.formatMessage({
-                  id: "channel.type.all.title",
-                }),
-                status: "Default",
-              },
-              translation: {
-                text: intl.formatMessage({
-                  id: "channel.type.translation.label",
-                }),
-                status: "Success",
-              },
-              nissaya: {
-                text: intl.formatMessage({
-                  id: "channel.type.nissaya.label",
-                }),
-                status: "Processing",
-              },
-              commentary: {
-                text: intl.formatMessage({
-                  id: "channel.type.commentary.label",
-                }),
-                status: "Default",
-              },
-              original: {
-                text: intl.formatMessage({
-                  id: "channel.type.original.label",
-                }),
-                status: "Default",
-              },
-              general: {
-                text: intl.formatMessage({
-                  id: "channel.type.general.label",
-                }),
-                status: "Default",
-              },
+            render: (text, row, index, action) => {
+              const per = Math.round(row.progress * 100);
+              return <Progress percent={per} size="small" />;
             },
           },
           {
             title: intl.formatMessage({
               id: "forms.fields.publicity.label",
             }),
-            dataIndex: "publicity",
-            key: "publicity",
+            dataIndex: "view",
+            key: "view",
             width: 100,
             search: false,
-            filters: true,
-            onFilter: true,
-            valueEnum: PublicityValueEnum(),
           },
           {
             title: intl.formatMessage({
@@ -171,7 +143,9 @@ const Widget = () => {
             render: (text, row, index, action) => {
               return [
                 <Dropdown.Button key={index} type="link" overlay={menu}>
-                  <Link to={`/studio/${studioname}/channel/${row.uid}/edit`}>
+                  <Link
+                    to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}/edit`}
+                  >
                     {intl.formatMessage({
                       id: "buttons.edit",
                     })}
@@ -219,20 +193,26 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-
-          const res: IApiResponseChannelList = await get(
-            `/v2/channel?view=studio&name=${studioname}`
+          const offset = (params.current || 1 - 1) * (params.pageSize || 20);
+          const res = await get<IChapterListResponse>(
+            `/v2/progress?view=chapter&channel=${channelId}&progress=0.01&offset=${offset}`
           );
+          console.log(res.data.rows);
           const items: IItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
+            const createdAt = new Date(item.created_at);
+            const updatedAt = new Date(item.updated_at);
             return {
-              id: id,
-              uid: item.uid,
-              title: item.name,
+              sn: id + offset + 1,
+              book: item.book,
+              paragraph: item.para,
+              view: item.view,
+              title: item.title,
+              subTitle: item.toc,
               summary: item.summary,
-              type: item.type,
-              publicity: item.status,
-              createdAt: date.getTime(),
+              path: item.path,
+              progress: item.progress,
+              createdAt: createdAt.getTime(),
+              updatedAt: updatedAt.getTime(),
             };
           });
           return {
@@ -251,19 +231,8 @@ const Widget = () => {
         options={{
           search: true,
         }}
-        toolBarRender={() => [
-          <Popover
-            content={channelCreate}
-            title="new channel"
-            placement="bottomRight"
-          >
-            <Button key="button" icon={<PlusOutlined />} type="primary">
-              {intl.formatMessage({ id: "buttons.create" })}
-            </Button>
-          </Popover>,
-        ]}
       />
-    </>
+    </Card>
   );
 };
 

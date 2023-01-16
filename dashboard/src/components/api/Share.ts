@@ -1,12 +1,21 @@
 import { IUser } from "../auth/User";
 import { Role } from "./Auth";
 
+export interface IShareRequest {
+  res_id: string;
+  res_type: string;
+  role: Role;
+  user_id: string;
+  user_type: string;
+}
+
 export interface IShareData {
   id?: number;
   res_id: string;
   res_type: string;
   power?: number;
   res_name: string;
+  user?: IUser;
   owner?: IUser;
   created_at?: string;
   updated_at?: string;

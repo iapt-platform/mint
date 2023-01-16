@@ -4,7 +4,7 @@ export interface IUser {
   id: string;
   nickName: string;
   realName: string;
-  avatar: string;
+  avatar?: string;
 }
 const Widget = ({ nickName, realName, avatar }: IUser) => {
   return (

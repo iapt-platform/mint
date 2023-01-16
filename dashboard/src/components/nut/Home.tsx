@@ -10,6 +10,7 @@ import DemoForm from "./Form";
 import WbwTest from "./WbwTest";
 import CommentList from "../comment/CommentList";
 import TreeTest from "./TreeTest";
+import Share from "../share/Share";
 
 const Widget = () => {
   const data = Array(100)
@@ -30,6 +31,9 @@ const Widget = () => {
   return (
     <div>
       <h1>Home</h1>
+      <div>
+        <Share resId="dd" resType="dd" />
+      </div>
       <TreeTest />
       <h2>comment</h2>
       <CommentList data={data} />

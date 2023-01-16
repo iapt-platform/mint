@@ -58,6 +58,7 @@ import StudioRecent from "./pages/studio/recent";
 import StudioChannel from "./pages/studio/channel";
 import StudioChannelList from "./pages/studio/channel/list";
 import StudioChannelEdit from "./pages/studio/channel/edit";
+import StudioChannelShow from "./pages/studio/channel/show";
 
 import StudioGroup from "./pages/studio/group";
 import StudioGroupList from "./pages/studio/group/list";
@@ -74,10 +75,6 @@ import StudioDictList from "./pages/studio/dict/list";
 
 import StudioTerm from "./pages/studio/term";
 import StudioTermList from "./pages/studio/term/list";
-
-import StudioCourse from "./pages/studio/course";
-import StudioCourseList from "./pages/studio/course/list";
-import StudioCourseEdit from "./pages/studio/course/edit";
 
 import StudioArticle from "./pages/studio/article";
 import StudioArticleList from "./pages/studio/article/list";
@@ -183,13 +180,14 @@ const Widget = () => {
         <Route path="channel" element={<StudioChannel />}>
           <Route path="list" element={<StudioChannelList />} />
           <Route path=":channelid/edit" element={<StudioChannelEdit />} />
+          <Route path=":channelId" element={<StudioChannelShow />} />
         </Route>
 
         <Route path="group" element={<StudioGroup />}>
           <Route path="list" element={<StudioGroupList />} />
-          <Route path=":groupid" element={<StudioGroupShow />} />
-          <Route path=":groupid/edit" element={<StudioGroupEdit />} />
-          <Route path=":groupid/show" element={<StudioGroupShow />} />
+          <Route path=":groupId" element={<StudioGroupShow />} />
+          <Route path=":groupId/edit" element={<StudioGroupEdit />} />
+          <Route path=":groupId/show" element={<StudioGroupShow />} />
         </Route>
 
         <Route path="course" element={<StudioCourse />}>

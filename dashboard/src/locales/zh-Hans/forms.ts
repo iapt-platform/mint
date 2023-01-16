@@ -52,6 +52,7 @@ const items = {
   "forms.message.user.required": "请选择用户",
   "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
   "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
+  "forms.fields.description.label": "简介",
 };
 
 export default items;

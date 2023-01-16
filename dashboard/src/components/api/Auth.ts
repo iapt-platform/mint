@@ -7,9 +7,9 @@ export interface IUserRequest {
   avatar?: string;
 }
 export interface IUserApiData {
-  id?: string;
-  userName?: string;
-  nickName?: string;
+  id: string;
+  userName: string;
+  nickName: string;
   avatar?: string;
 }
 export interface IUserListResponse {

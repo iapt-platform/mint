@@ -33,7 +33,6 @@ const Widget = () => {
     <Card
       title={<GoBack to={`/studio/${studioname}/channel/list`} title={title} />}
     >
-      <Space>{channelid}</Space>
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
           // TODO
