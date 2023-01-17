@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Popover, Typography } from "antd";
 
@@ -14,7 +15,7 @@ interface IWidget {
 }
 const Widget = ({ data, display = "block", onChange }: IWidget) => {
   const intl = useIntl();
-
+  const [open, setOpen] = useState(false);
   let meaning = <></>;
   if (
     display === "block" &&
@@ -31,16 +32,26 @@ const Widget = ({ data, display = "block", onChange }: IWidget) => {
   } else {
     meaning = <span>{data.meaning?.value}</span>;
   }
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
       <div>
         <Popover
+          open={open}
+          onOpenChange={handleOpenChange}
           content={
-            <div style={{ width: 500 }}>
+            <div style={{ width: 500, height: "60vh", overflow: "auto" }}>
               <WbwMeaningSelect
                 data={data}
                 onSelect={(e: string) => {
+                  hide();
                   if (typeof onChange !== "undefined") {
                     onChange(e);
                   }
