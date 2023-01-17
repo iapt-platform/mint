@@ -26,6 +26,7 @@ export interface IApiResponseDictData {
   language: string;
   dict_id: string;
   dict_name?: string;
+  dict_shortname?: string;
   confidence: number;
   creator_id: number;
   updated_at: string;
