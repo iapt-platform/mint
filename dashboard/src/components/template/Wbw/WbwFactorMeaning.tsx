@@ -13,10 +13,11 @@ const { Text } = Typography;
 
 interface IWidget {
   data: IWbw;
+  factors?: string;
   display?: TWbwDisplayMode;
   onChange?: Function;
 }
-const Widget = ({ data, display, onChange }: IWidget) => {
+const Widget = ({ data, display, onChange, factors }: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -55,6 +56,10 @@ const Widget = ({ data, display, onChange }: IWidget) => {
     }
   }, [inlineDict]);
 
+  useEffect(() => {
+    if (typeof factors !== "undefined") {
+    }
+  }, [factors]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {
