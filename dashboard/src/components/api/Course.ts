@@ -1,5 +1,4 @@
-import { ITocPathNode } from "../corpus/TocPath";
-import type { IStudioApiResponse } from "./Auth";
+import { IUser } from "../auth/User";
 
 export interface ICourseListApiResponse {
   article: string;
@@ -9,42 +8,31 @@ export interface ICourseListApiResponse {
 }
 
 export interface ICourseDataRequest {
-  uid: string;//课程ID
-  title: string;//标题
-  subtitle: string;//副标题
-  teacher: number;//UserID
-  course_count: number;//课程数
-  //content: string;
-  //content_type: string;
-  //path?: ITocPathNode[];
-  type: number;//类型-公开/内部
-  //lang: string;
-  created_at: string;//创建时间
-  updated_at: string;//修改时间
-  article_id: number;//文集ID
-  course_start_at: string;//课程开始时间
-  course_end_at: string;//课程结束时间
-  intro_markdown: string;//简介
-  cover_img_name: string;//封面图片文件名
+  id?: string; //课程ID
+  title: string; //标题
+  subtitle?: string; //副标题
+  content: string;
+  cover?: string; //封面图片文件名
+  teacher_id?: string; //UserID
+  type: number; //类型-公开/内部
+  anthology_id?: string; //文集ID
+  start_at?: string; //课程开始时间
+  end_at?: string; //课程结束时间
 }
 export interface ICourseDataResponse {
-  uid: string;//课程ID
-  title: string;//标题
-  subtitle: string;//副标题
-  teacher: number;//UserID
-  course_count: number;//课程数
-  //content: string;
-  //content_type: string;
-  //path?: ITocPathNode[];
-  type: number;//类型-公开/内部
-  //lang: string;
-  created_at: string;//创建时间
-  updated_at: string;//修改时间
-  article_id: number;//文集ID
-  course_start_at: string;//课程开始时间
-  course_end_at: string;//课程结束时间
-  intro_markdown: string;//简介
-  cover_img_name: string;//封面图片文件名
+  id: string; //课程ID
+  title: string; //标题
+  subtitle: string; //副标题
+  teacher: IUser; //UserID
+  course_count: number; //课程数
+  type: number; //类型-公开/内部
+  anthology_id: string; //文集ID
+  start_at: string; //课程开始时间
+  end_at: string; //课程结束时间
+  content: string; //简介
+  cover: string; //封面图片文件名
+  created_at: string; //创建时间
+  updated_at: string; //修改时间
 }
 export interface ICourseResponse {
   ok: boolean;
@@ -70,4 +58,13 @@ export interface IAnthologyCreateRequest {
   title: string;
   lang: string;
   studio: string;
+}
+export interface ICourseNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    create: number;
+    teach: number;
+    study: number;
+  };
 }
