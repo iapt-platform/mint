@@ -66,9 +66,6 @@ const Widget = () => {
             rules={[
               {
                 required: true,
-                message: intl.formatMessage({
-                  id: "channel.create.message.noname",
-                }),
               },
             ]}
           />
