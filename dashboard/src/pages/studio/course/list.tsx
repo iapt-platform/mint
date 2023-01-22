@@ -10,12 +10,13 @@ import {
   MenuProps,
   Menu,
   Table,
+  Image,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import CourseCreate from "../../../components/course/CourseCreate";
-import { get } from "../../../request";
+import { API_HOST, get } from "../../../request";
 import {
   ICourseListResponse,
   ICourseNumberResponse,
@@ -129,7 +130,21 @@ const Widget = () => {
             tip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
-              return <Link to={`/course/${row.id}`}>{row.title}</Link>;
+              return (
+                <Space>
+                  <Image
+                    src={`${API_HOST}/${row.cover_img_name}`}
+                    width="64"
+                    fallback={`${API_HOST}/app/course/img/default.jpg`}
+                  />
+                  <div>
+                    <div>
+                      <Link to={`/course/${row.id}`}>{row.title}</Link>
+                    </div>
+                    <div>{row.subtitle}</div>
+                  </div>
+                </Space>
+              );
             },
           },
           {
@@ -258,6 +273,7 @@ const Widget = () => {
               title: item.title,
               subtitle: item.subtitle,
               teacher: item.teacher.nickName,
+              cover_img_name: item.cover,
               type: item.type,
               createdAt: date.getTime(),
             };
