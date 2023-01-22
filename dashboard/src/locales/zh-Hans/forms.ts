@@ -23,7 +23,7 @@ const items = {
   "forms.fields.publicity.public.label": "公开",
   "forms.fields.teacher.label": "主讲人",
   "forms.fields.studentsassistant.label": "学生与助教",
-  "forms.fields.students.label": "学生",
+  "forms.fields.student.label": "学生",
   "forms.fields.assistant.label": "助教",
   "forms.fields.lesson.label": "讲",
   "forms.fields.note.label": "注解",
