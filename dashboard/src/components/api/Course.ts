@@ -1,4 +1,5 @@
 import { IUser } from "../auth/User";
+import { IUserRequest, Role } from "./Auth";
 
 export interface ICourseListApiResponse {
   article: string;
@@ -67,4 +68,34 @@ export interface ICourseNumberResponse {
     teach: number;
     study: number;
   };
+}
+
+export interface ICourseMemberData {
+  id?: number;
+  user_id: string;
+  course_id: string;
+  role?: string;
+  user?: IUserRequest;
+  created_at?: string;
+  updated_at?: string;
+}
+export interface ICourseMemberResponse {
+  ok: boolean;
+  message: string;
+  data: ICourseMemberData;
+}
+export interface ICourseMemberListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: ICourseMemberData[];
+    role: Role;
+    count: number;
+  };
+}
+
+export interface ICourseMemberDeleteResponse {
+  ok: boolean;
+  message: string;
+  data: boolean;
 }
