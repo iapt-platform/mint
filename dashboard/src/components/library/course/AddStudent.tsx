@@ -15,10 +15,10 @@ interface IFormData {
 }
 
 interface IWidget {
-  groupId?: string;
+  courseId?: string;
 }
 
-const Widget = ({ groupId }: IWidget) => {
+const Widget = ({ courseId }: IWidget) => {
   const intl = useIntl();
 
   const form = (
@@ -62,7 +62,7 @@ const Widget = ({ groupId }: IWidget) => {
           name="userType"
           label={intl.formatMessage({ id: "forms.fields.type.label" })}
           valueEnum={{
-            1: intl.formatMessage({ id: "forms.fields.students.label" }),
+            3: intl.formatMessage({ id: "forms.fields.student.label" }),
             2: intl.formatMessage({ id: "forms.fields.assistant.label" }),
           }}
         />
