@@ -1,8 +1,8 @@
 import { useIntl } from "react-intl";
 import { useRef, useState } from "react";
 import { ActionType, ProList } from "@ant-design/pro-components";
-import { UserAddOutlined } from "@ant-design/icons";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
+
 import GroupAddMember from "./AddMember";
 import { delete_, get } from "../../request";
 import {
