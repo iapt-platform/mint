@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('wbwlookup',WbwLookupController::class);
     Route::apiResource('course',CourseController::class);
     Route::apiResource('course-member',CourseMemberController::class);
+    Route::get('course-my-course', [CourseController::class, 'showMyCourseNumber']);
 
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
