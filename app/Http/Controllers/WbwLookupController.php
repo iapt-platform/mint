@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserDict;
+use App\Models\DictInfo;
 use App\Models\WbwTemplate;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
@@ -37,6 +38,16 @@ class WbwLookupController extends Controller
     {
         //
 		$startAt = microtime(true);
+
+        /**
+         * 先查询字典名称
+         */
+        $dict_info = DictInfo::whereIn('id',$this->dictList)->select('id','shortname')->get();
+        $dict_name = [];
+        foreach ($dict_info as $key => $value) {
+            # code...
+            $dict_name[$value->id] = $value->shortname;
+        }
 		$caseman = new CaseMan();
 		$output  = array();
 		$wordPool = array();
@@ -51,16 +62,21 @@ class WbwLookupController extends Controller
 			$deep = $request->get("deep");
 		}
 		for ($i=0; $i < $deep; $i++) {
-			# code...
+			# 查询深度
 			foreach ($wordPool as $word => $info) {
 				# code...
-				if($info['done'] == false){
+				if($info['done'] === false){
 					$wordPool[$word]['done'] = true;
 					$count = 0;
 					foreach ($this->dictList as  $dictId) {
 						# code...
-						$result = Cache::remember("dict/{$dictId}/".$word,1000,function() use($word,$dictId){
-							return UserDict::where('word',$word)->where('dict_id',$dictId)->orderBy('confidence','desc')->get();
+						$result = Cache::remember("dict/{$dictId}/".$word,10,function() use($word,$dictId,$dict_name){
+                            $data = UserDict::where('word',$word)->where('dict_id',$dictId)->orderBy('confidence','desc')->get();
+                            foreach ($data as $key => $value) {
+                                # code...
+                                $value->dict_shortname  = $dict_name[$dictId];
+                            }
+							return $data;
 						});
 						$count += count($result);
 						if(count($result)>0){
