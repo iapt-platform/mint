@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseMember;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Resources\CourseMemberResource;
 use App\Http\Api\AuthApi;
+use Illuminate\Support\Facades\Log;
 
 class CourseMemberController extends Controller
 {
@@ -18,12 +20,12 @@ class CourseMemberController extends Controller
     {
         //
         $result=false;
-		$indexCol = ['id','user_id','course_id','role','status','updated_at','created_at'];
+		$indexCol = ['id','user_id','course_id','role','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'course':
 	            # 获取 course 内所有 成员
                 $user = AuthApi::current($request);
-                if($user){
+                if(!$user){
                     return $this->error(__('auth.failed'));
                 }
                 //TODO 判断当前用户是否有指定的 course 的权限
@@ -49,8 +51,30 @@ class CourseMemberController extends Controller
         }
         $result = $table->get();
 
+        //获取当前用户角色
+        $isOwner = Course::where('id',$request->get('id'))->where('studio_id',$user["user_uid"])->exists();
+        $role = 'unknown';
+        if($isOwner){
+            $role = 'owner';
+        }else{
+            foreach ($result as $key => $value) {
+            # 找到当前用户
+            if($user["user_uid"]===$value->user_id){
+                switch ($value->role) {
+                    case 'assistant':
+                        $role = 'manager';
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+                break;
+            }
+        }
+        }
+
 		if($result){
-			return $this->ok(["rows"=>GroupMemberResource::collection($result),"count"=>$count]);
+			return $this->ok(["rows"=>CourseMemberResource::collection($result),'role'=>$role,"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -119,17 +143,24 @@ class CourseMemberController extends Controller
     {
         //查看删除者有没有删除权限
         //查询删除者的权限
-        $currUser = AuthApi::current($request);
-        if(!$currUser){
+        $user = AuthApi::current($request);
+        if(!$user){
             return $this->error(__('auth.failed'));
         }
 
-        $currUser = CourseMember::where('course_id',$courseMember->course_id)
-                        ->where('user_id',$currUser["user_uid"])
-                        ->select('role')->first();
-        if(!$currUser || $currUser->role ==="member"){
-            //普通成员没有删除权限
-            return $this->error(__('auth.failed'));
+
+        Log::info('course'.$courseMember->course_id);
+        Log::info('user id'.$user["user_uid"]);
+
+        $isOwner = Course::where('id',$courseMember->course_id)->where('studio_id',$user["user_uid"])->exists();
+        if(!$isOwner){
+            $courseUser = CourseMember::where('course_id',$courseMember->course_id)
+                ->where('user_id',$user["user_uid"])
+                ->select('role')->first();
+           if(!$courseUser || $courseUser->role ==="student"){
+                //普通成员没有删除权限
+                return $this->error(__('auth.failed'));
+            }
         }
 
         $delete = $courseMember->delete();
