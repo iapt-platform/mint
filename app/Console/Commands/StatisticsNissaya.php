@@ -61,8 +61,25 @@ class StatisticsNissaya extends Command
                     ->whereDate('created_at','=',$date)
                     ->groupBy('editor_uid')
                     ->select('editor_uid')->get();
-            $this->info($date.','.$strlen.','.count($editor));
-            Storage::disk('local')->append($file, $date.','.$strlen.','.count($editor));
+            $info = $date.','.$strlen.','.count($editor);
+            $this->info($info);
+            Storage::disk('local')->append($file, $info);
+        }
+        $file = "public/export/nissaya-week.csv";
+        Storage::disk('local')->put($file, "");
+        for($i = 1; $i <= $maxDay; $i=$i+7){
+            $day1 = strtotime("today -{$i} day");
+            $date1 = date("Y-m-d",$day1);
+            $j = $i - 7;
+            $date2 = date("Y-m-d",strtotime("today -{$j} day"));
+            $editor = Sentence::whereIn('channel_uid',$channels)
+                    ->whereDate('created_at','>',$date1)
+                    ->whereDate('created_at','<=',$date2)
+                    ->groupBy('editor_uid')
+                    ->select('editor_uid')->get();
+            $info = $date2.','.$date1.','.count($editor);
+            $this->info($info);
+            Storage::disk('local')->append($file, $info);
         }
         return 0;
     }
