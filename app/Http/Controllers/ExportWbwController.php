@@ -57,14 +57,15 @@ class ExportWbwController extends Controller
                     $style = $word->style->__toString();
                     if($type !== '.ctl.' && $style !== 'note'){
                         $sent['data'][]=[
-                        'pali'=>$word->real->__toString(),
-                    'mean' => $word->mean->__toString(),
-                    'type' => ltrim($type,'.'),
-                    'grammar' => ltrim(str_replace('$.',',',$word->gramma->__toString()),'.') ,
-                    'parent' => $word->parent->__toString(),
-                    'factors' => $word->org->__toString(),
-                    'factormeaning' => $word->om->__toString()
-                    ];
+                            'pali'=>$word->real->__toString(),
+                            'mean' => $word->mean->__toString(),
+                            'type' => ltrim($type,'.'),
+                            'grammar' => ltrim(str_replace('$.',',',$word->gramma->__toString()),'.') ,
+                            'case' => ltrim(str_replace(['$.','#.'],[' ',' '],$word->case->__toString()),'.') ,
+                            'parent' => $word->parent->__toString(),
+                            'factors' => $word->org->__toString(),
+                            'factormeaning' => $word->om->__toString()
+                        ];
                     }
 
                 }

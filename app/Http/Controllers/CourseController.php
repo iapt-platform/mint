@@ -7,6 +7,7 @@ use App\Models\CourseMember;
 use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
+use App\Http\Resources\CourseResource;
 
 class CourseController extends Controller
 {
@@ -28,18 +29,39 @@ class CourseController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))){
+                if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
                     return $this->error(__('auth.failed'));
                 }
 
                 $table = Course::where('studio_id', $user["user_uid"]);
 				break;
             case 'study':
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
                 //我学习的课程
                 $course = CourseMember::where('user_id',$user["user_uid"])
                                       ->where('role','member')
                                       ->select('course_id')
                                       ->get();
+                $courseId = [];
+                foreach ($course as $key => $value) {
+                    # code...
+                    $courseId[] = $value->course_id;
+                }
+                $table = Course::whereIn('id', $courseId);
+                break;
+            case 'teach':
+                //我任教的课程
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $course = CourseMember::where('user_id',$user["user_uid"])
+                ->where('role','manager')
+                ->select('course_id')
+                ->get();
                 $courseId = [];
                 foreach ($course as $key => $value) {
                     # code...
@@ -72,12 +94,29 @@ class CourseController extends Controller
         }
         $result = $table->get();
 		if($result){
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+			return $this->ok(["rows"=>CourseResource::collection($result),"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
     }
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showMyCourseNumber(Request $request){
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //我建立的课程
+        $create = Course::where('studio_id', $user["user_uid"])->count();
+        //我学习的课程
+        $study = CourseMember::where('user_id',$user["user_uid"])
+        ->where('role','member')
+        ->count();
+        return $this->ok(['create'=>$create,'teach'=>0,'study'=>$study]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -92,7 +131,8 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        $studio_id = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studio_id){
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
@@ -102,9 +142,9 @@ class CourseController extends Controller
 
         $course = new Course;
         $course->title = $request->get('title');
-        $course->studio_id = $user['user_uid'];
+        $course->studio_id = $studio_id;
         $course->save();
-        return $this->ok($course);
+        return $this->ok(new CourseResource($course));
     }
 
     /**
@@ -116,7 +156,7 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         //
-        return $this->ok($course);
+        return $this->ok(new CourseResource($course));
 
     }
 
@@ -135,18 +175,20 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        if($user['user_uid'] !== $course->studio_id){
             return $this->error(__('auth.failed'));
         }
         //查询标题是否重复
         if(Course::where('title',$request->get('title'))->where('studio_id',$user['user_uid'])->exists()){
-            return $this->error(__('validation.exists',['name']));
+            if($course->title !== $request->get('title')){
+                return $this->error(__('validation.exists',['name']));
+            }
         }
         $course->title = $request->get('title');
         $course->subtitle = $request->get('subtitle');
         $course->cover = $request->get('cover');
         $course->content = $request->get('content');
-        $course->teacher = $request->get('teacher');
+        $course->teacher = $request->get('teacher_id');
         $course->start_at = $request->get('start_at');
         $course->end_at = $request->get('end_at');
         $course->save();

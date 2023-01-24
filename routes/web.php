@@ -19,15 +19,6 @@ Route::redirect('/', '/app/pcdl/index.php');
 Route::redirect('/app', '/app/pcdl/index.php');
 Route::redirect('/app/pcdl', '/app/pcdl/index.php');
 
-Route::get('/user/{id}', function ($id) {
-    return 'User '.$id;
-});
-
-Route::get('/home/{name}', function ($name) {
-    return view('home', ['name' => $name]);
-});
-
-
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);
 Route::get('/wbwanalyses', [WbwAnalysisController::class,'index']);

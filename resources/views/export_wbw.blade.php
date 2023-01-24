@@ -22,6 +22,7 @@
             <b>{{$wbw["pali"]}}</b>
             <span>{{$wbw["type"]}}</span>
             <span>{{$wbw["grammar"]}}</span>
+            <span>{{$wbw["case"]}}</span>
             <span> of </span>
             <span>{{$wbw["parent"]}}</span>
             <span>{{$wbw["mean"]}}</span>

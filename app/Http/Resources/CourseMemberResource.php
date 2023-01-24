@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Api\UserApi;
 
 class CourseMemberResource extends JsonResource
 {
@@ -14,6 +15,14 @@ class CourseMemberResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            "id"=>$this->id,
+            "user_id"=> $this->user_id,
+            "course_id"=> $this->course_id,
+            "role"=> $this->role,
+            "user"=> UserApi::getById($this->user_id),
+            "created_at"=> $this->created_at,
+            "updated_at"=> $this->updated_at,
+        ];
     }
 }
