@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Sentence;
+use App\Models\Channel;
 
 class ExportSentence extends Command
 {
@@ -13,7 +14,7 @@ class ExportSentence extends Command
      *
      * @var string
      */
-    protected $signature = 'export:sentence';
+    protected $signature = 'export:sentence {--channel=} {--type=translation}';
 
     /**
      * The console command description.
@@ -39,20 +40,37 @@ class ExportSentence extends Command
      */
     public function handle()
     {
-        Storage::disk('local')->put("public/export/sentence.csv", "");
-        $file = fopen(storage_path('app/public/export/sentence.csv'),"w");
+        $channels = [];
+        $channel_id = $this->option('channel');
+        if($channel_id){
+            $file_suf = $channel_id;
+            $channels[] = $channel_id;
+        }else{
+            $file_suf = $channel_type;
+            $channel_type = $this->option('type');
+            $nissaya_channel = Channel::where('type',$channel_type)->where('status',30)->select('uid')->get();
+            foreach ($nissaya_channel as $key => $value) {
+                # code...
+                $channels[] = $value->uid;
+            }
+        }
+        $db = Sentence::whereIn('channel_uid',$channels);
+        $file_name = "public/export/sentence_{$file_suf}.csv";
+        Storage::disk('local')->put($file_name, "");
+        $file = fopen(storage_path("app/{$file_name}"),"w");
         fputcsv($file,['id','book','paragraph','word_start','word_end','content','content_type','html','channel_id','editor_id','language','updated_at']);
-        $bar = $this->output->createProgressBar(Sentence::where('status',30)->count());
-        foreach (Sentence::where('status',30)->select(['uid','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','language','updated_at'])->cursor() as $chapter) {
+        $bar = $this->output->createProgressBar($db->count());
+        foreach ($db->select(['uid','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','language','updated_at'])->cursor() as $chapter) {
+            $content = str_replace("\n","<br />",$chapter->content);
             fputcsv($file,[
                             $chapter->uid,
                             $chapter->book_id,
                             $chapter->paragraph,
                             $chapter->word_start,
                             $chapter->word_end,
-                            $chapter->content,
+                            $content,
                             $chapter->content_type,
-                            $chapter->content,
+                            $content,
                             $chapter->channel_uid,
                             $chapter->editor_uid,
                             $chapter->language,
