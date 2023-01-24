@@ -47,7 +47,7 @@ class StatisticsNissaya extends Command
             $channels[] = $value->uid;
         }
         $this->info('channel:'.count($channels));
-        $maxDay = 300;
+        $maxDay = 360;
         $file = "public/export/nissaya-daily.csv";
         Storage::disk('local')->put($file, "");
         #按天获取数据
