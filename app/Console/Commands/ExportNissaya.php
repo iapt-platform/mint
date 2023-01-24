@@ -60,9 +60,9 @@ class ExportNissaya extends Command
                     $nissaya_str = explode('=',$line);
                     $pali = $this->my2en($nissaya_str[0]);
                     fputcsv($file,[$pali,$nissaya_str[1]]);
-                    $bar->advance();
                 }
             }
+            $bar->advance();
         }
         fclose($file);
         $bar->finish();
