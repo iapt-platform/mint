@@ -57,8 +57,12 @@ class StatisticsNissaya extends Command
             $strlen = Sentence::whereIn('channel_uid',$channels)
                     ->whereDate('created_at','=',$date)
                     ->sum('strlen');
-            $this->info($date.','.$strlen);
-            Storage::disk('local')->append($file, $date.','.$strlen);
+            $editor = Sentence::whereIn('channel_uid',$channels)
+                    ->whereDate('created_at','=',$date)
+                    ->groupBy('editor_uid')
+                    ->select('editor_uid')->get();
+            $this->info($date.','.$strlen.','.count($editor));
+            Storage::disk('local')->append($file, $date.','.$strlen.','.count($editor));
         }
         return 0;
     }
