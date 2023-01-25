@@ -53,6 +53,7 @@ const items = {
   "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
   "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
   "forms.fields.description.label": "简介",
+  "forms.fields.textbook.label": "课本",
 };
 
 export default items;
