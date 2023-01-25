@@ -30,6 +30,7 @@ import { IAttachmentResponse } from "../../../components/api/Attachments";
 import StudentsSelect from "../../../components/library/course/StudentsSelect";
 import CourseMember from "../../../components/course/CourseMember";
 import { IAnthologyListResponse } from "../../../components/api/Article";
+import { IApiResponseChannelList } from "../../../components/api/Channel";
 
 interface IFormData {
   title: string;
@@ -38,7 +39,9 @@ interface IFormData {
   cover?: UploadFile<IAttachmentResponse>[];
   teacherId?: string;
   anthologyId?: string;
+  channelId?: string;
   dateRange?: Date[];
+  status: number;
 }
 
 const Widget = () => {
@@ -50,6 +53,8 @@ const Widget = () => {
   const [currTeacher, setCurrTeacher] = useState<RequestOptionsType>();
   const [textbookOption, setTextbookOption] = useState<DefaultOptionType[]>([]);
   const [currTextbook, setCurrTextbook] = useState<RequestOptionsType>();
+  const [channelOption, setChannelOption] = useState<DefaultOptionType[]>([]);
+  const [currChannel, setCurrChannel] = useState<RequestOptionsType>();
   const [openMember, setOpenMember] = useState(false);
   const [courseData, setCourseData] = useState<ICourseDataResponse>();
 
@@ -109,8 +114,9 @@ const Widget = () => {
                 content: contentValue, //简介
                 cover: _cover, //封面图片文件名
                 teacher_id: values.teacherId, //UserID
-                publicity: 10, //类型-公开/内部
+                publicity: values.status, //类型-公开/内部
                 anthology_id: values.anthologyId, //文集ID
+                channel_id: values.channelId,
                 start_at: startAt, //课程开始时间
                 end_at: endAt, //课程结束时间
               }
@@ -130,29 +136,30 @@ const Widget = () => {
             setContentValue(res.data.content);
             if (res.data.teacher) {
               console.log("teacher", res.data.teacher);
-              setCurrTeacher({
+              const teacher = {
                 value: res.data.teacher.id,
                 label: res.data.teacher.nickName,
-              });
-              setTeacherOption([
-                {
-                  value: res.data.teacher.id,
-                  label: res.data.teacher.nickName,
-                },
-              ]);
-              setCurrTextbook({
+              };
+              setCurrTeacher(teacher);
+              setTeacherOption([teacher]);
+              const textbook = {
                 value: res.data.anthology_id,
-                label: res.data.anthology_title,
-              });
-              setTextbookOption([
-                {
-                  value: res.data.anthology_id,
-                  label:
-                    res.data.anthology_owner?.nickName +
-                    "/" +
-                    res.data.anthology_title,
-                },
-              ]);
+                label:
+                  res.data.anthology_owner?.nickName +
+                  "/" +
+                  res.data.anthology_title,
+              };
+              setCurrTextbook(textbook);
+              setTextbookOption([textbook]);
+              const channel = {
+                value: res.data.channel_id,
+                label:
+                  res.data.channel_owner?.nickName +
+                  "/" +
+                  res.data.channel_name,
+              };
+              setCurrChannel(channel);
+              setChannelOption([channel]);
             }
             return {
               title: res.data.title,
@@ -169,10 +176,12 @@ const Widget = () => {
                 : [],
               teacherId: res.data.teacher?.id,
               anthologyId: res.data.anthology_id,
+              channelId: res.data.channel_id,
               dateRange:
                 res.data.start_at && res.data.end_at
                   ? [new Date(res.data.start_at), new Date(res.data.end_at)]
                   : undefined,
+              status: res.data.publicity,
             };
           }}
         >
@@ -250,7 +259,6 @@ const Widget = () => {
           </ProForm.Group>
 
           <ProForm.Group>
-            <PublicitySelect />
             <ProFormSelect
               options={textbookOption}
               width="md"
@@ -276,8 +284,35 @@ const Widget = () => {
                 return textbookList;
               }}
             />
+            <ProFormSelect
+              options={channelOption}
+              width="md"
+              name="channelId"
+              label={"标准答案"}
+              showSearch
+              debounceTime={300}
+              request={async ({ keyWords }) => {
+                console.log("keyWord", keyWords);
+                if (typeof keyWords === "undefined") {
+                  return currChannel ? [currChannel] : [];
+                }
+                const json = await get<IApiResponseChannelList>(
+                  `/v2/channel?view=studio&name=${studioname}`
+                );
+                const textbookList = json.data.rows.map((item) => {
+                  return {
+                    value: item.uid,
+                    label: `${item.studio.nickName}/${item.name}`,
+                  };
+                });
+                console.log("json", textbookList);
+                return textbookList;
+              }}
+            />
           </ProForm.Group>
-
+          <ProForm.Group>
+            <PublicitySelect />
+          </ProForm.Group>
           <ProForm.Group>
             <Form.Item
               name="content"
