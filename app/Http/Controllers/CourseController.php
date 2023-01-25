@@ -186,11 +186,13 @@ class CourseController extends Controller
         }
         $course->title = $request->get('title');
         $course->subtitle = $request->get('subtitle');
-        $course->cover = $request->get('cover');
+        if($request->has('cover')) {$course->cover = $request->get('cover');}
         $course->content = $request->get('content');
-        $course->teacher = $request->get('teacher_id');
-        $course->start_at = $request->get('start_at');
-        $course->end_at = $request->get('end_at');
+        if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
+        if($request->has('anthology_id')) {$course->anthology_id = $request->get('anthology_id');}
+        if($request->has('publicity')) {$course->publicity = $request->get('publicity');}
+        if($request->has('start_at')) {$course->start_at = $request->get('start_at');}
+        if($request->has('end_at')) {$course->end_at = $request->get('end_at');}
         $course->save();
         return $this->ok($course);
     }
