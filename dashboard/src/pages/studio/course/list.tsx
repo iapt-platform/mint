@@ -48,12 +48,13 @@ interface DataItem {
   id: string; //课程ID
   title: string; //标题
   subtitle: string; //副标题
-  teacher: string; //UserID
+  teacher?: string; //UserID
   course_count?: number; //课程数
+  member_count: number; //成员数量
   type: number; //类型-公开/内部
   createdAt: number; //创建时间
-  updated_at?: number; //修改时间
-  article_id?: number; //文集ID
+  updatedAt?: number; //修改时间
+  article_id?: string; //文集ID
   course_start_at?: string; //课程开始时间
   course_end_at?: string; //课程结束时间
   intro_markdown?: string; //简介
@@ -97,6 +98,9 @@ const Widget = () => {
     />
   );
   useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
     const url = `/v2/course-my-course?studio=${studioname}`;
     get<ICourseNumberResponse>(url).then((json) => {
       if (json.ok) {
@@ -134,28 +138,20 @@ const Widget = () => {
                 <Space>
                   <Image
                     src={`${API_HOST}/${row.cover_img_name}`}
-                    width="64"
+                    width={64}
                     fallback={`${API_HOST}/app/course/img/default.jpg`}
                   />
                   <div>
                     <div>
-                      <Link to={`/course/${row.id}`}>{row.title}</Link>
+                      <Link to={`/course/show/${row.id}`} target="_blank">
+                        {row.title}
+                      </Link>
                     </div>
                     <div>{row.subtitle}</div>
                   </div>
                 </Space>
               );
             },
-          },
-          {
-            //副标题
-            title: intl.formatMessage({
-              id: "forms.fields.subtitle.label",
-            }),
-            dataIndex: "subtitle",
-            key: "subtitle",
-            tip: "过长会自动收缩",
-            ellipsis: true,
           },
           {
             //主讲人
@@ -166,6 +162,12 @@ const Widget = () => {
             key: "teacher",
             //tip: "过长会自动收缩",
             ellipsis: true,
+          },
+          {
+            title: "成员",
+            dataIndex: "member_count",
+            key: "member_count",
+            width: 80,
           },
           {
             //类型
@@ -265,6 +267,7 @@ const Widget = () => {
           }
 
           const res = await get<ICourseListResponse>(url);
+          console.log("api data", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
@@ -272,13 +275,14 @@ const Widget = () => {
               id: item.id,
               title: item.title,
               subtitle: item.subtitle,
-              teacher: item.teacher.nickName,
+              teacher: item.teacher?.nickName,
               cover_img_name: item.cover,
-              type: item.type,
+              type: item.publicity,
+              member_count: item.member_count,
               createdAt: date.getTime(),
             };
           });
-
+          console.log(items);
           return {
             total: res.data.count,
             succcess: true,
