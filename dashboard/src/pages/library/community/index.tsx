@@ -5,21 +5,21 @@ import HeadBar from "../../../components/library/HeadBar";
 import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
-	// TODO
-	return (
-		<Layout>
-			<HeadBar selectedKeys="community" />
-			<Row>
-				<Col flex="auto"></Col>
+  // TODO
+  return (
+    <Layout>
+      <HeadBar selectedKeys="community" />
+      <Row>
+        <Col flex="auto"></Col>
 
-				<Col flex="1260px">
-					<Outlet />
-				</Col>
-				<Col flex="auto"></Col>
-			</Row>
-			<FooterBar />
-		</Layout>
-	);
+        <Col flex="1260px">
+          <Outlet />
+        </Col>
+        <Col flex="auto"></Col>
+      </Row>
+      <FooterBar />
+    </Layout>
+  );
 };
 
 export default Widget;
