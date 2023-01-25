@@ -158,7 +158,7 @@ class CollectionController extends Controller
     public function show(Request  $request,$id)
     {
         //
-		$indexCol = ['uid','title','subtitle','summary','article_list','owner','lang','updated_at','created_at'];
+		$indexCol = ['uid','title','subtitle','summary','article_list','status','owner','lang','updated_at','created_at'];
 
 		$result  = Collection::select($indexCol)->where('uid', $id)->first();
 		if($result){
