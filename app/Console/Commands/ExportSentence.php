@@ -55,7 +55,7 @@ class ExportSentence extends Command
             }
         }
         $db = Sentence::whereIn('channel_uid',$channels);
-        $file_name = "public/export/sentence_{$file_suf}.csv";
+        $file_name = "public/export/offline/sentence_{$file_suf}.csv";
         Storage::disk('local')->put($file_name, "");
         $file = fopen(storage_path("app/{$file_name}"),"w");
         fputcsv($file,['id','book','paragraph','word_start','word_end','content','content_type','html','channel_id','editor_id','language','updated_at']);

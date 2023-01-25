@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 导出离线用的channel数据
+ */
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -20,7 +22,7 @@ class ExportChannel extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '导出离线用的channel数据';
 
     /**
      * Create a new command instance.
@@ -39,8 +41,9 @@ class ExportChannel extends Command
      */
     public function handle()
     {
-        Storage::disk('local')->put("public/export/channel.csv", "");
-        $file = fopen(storage_path('app/public/export/channel.csv'),"w");
+        $filename = "public/export/offline/channel.csv";
+        Storage::disk('local')->put($filename, "");
+        $file = fopen(storage_path("app/{$filename}"),"w");
         fputcsv($file,['id','name','type','language','summary','owner_id','setting','created_at']);
         $bar = $this->output->createProgressBar(Channel::where('status',30)->count());
         foreach (Channel::where('status',30)->select(['uid','name','type','lang','summary','owner_uid','setting','created_at'])->cursor() as $chapter) {
