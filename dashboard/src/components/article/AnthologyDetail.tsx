@@ -12,11 +12,6 @@ import TocTree from "./TocTree";
 
 const { Title, Text } = Typography;
 
-interface IWidgetAnthologyDetail {
-  aid: string;
-  channels?: string[];
-}
-
 const defaultData: IAnthologyData = {
   id: "",
   title: "",
@@ -32,7 +27,10 @@ const defaultData: IAnthologyData = {
   created_at: "",
   updated_at: "",
 };
-
+interface IWidgetAnthologyDetail {
+  aid?: string;
+  channels?: string[];
+}
 const Widget = (prop: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState(defaultData);
 
@@ -41,7 +39,7 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
     fetchData(prop.aid);
   }, [prop.aid]);
 
-  function fetchData(id: string) {
+  function fetchData(id?: string) {
     get<IAnthologyResponse>(`/v2/anthology/${id}`)
       .then((response) => {
         const item: IAnthologyDataResponse = response.data;
