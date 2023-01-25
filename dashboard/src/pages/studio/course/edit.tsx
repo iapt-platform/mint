@@ -15,6 +15,7 @@ import { Card, message, Form, Button, Drawer } from "antd";
 import { API_HOST, get, put } from "../../../request";
 import {
   ICourseDataRequest,
+  ICourseDataResponse,
   ICourseResponse,
 } from "../../../components/api/Course";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
@@ -28,14 +29,15 @@ import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../../components/api/Attachments";
 import StudentsSelect from "../../../components/library/course/StudentsSelect";
 import CourseMember from "../../../components/course/CourseMember";
+import { IAnthologyListResponse } from "../../../components/api/Article";
 
 interface IFormData {
   title: string;
   subtitle: string;
-  content: string;
-  cover: UploadFile<IAttachmentResponse>[];
-  teacherId: string;
-  anthologyId: string;
+  content?: string;
+  cover?: UploadFile<IAttachmentResponse>[];
+  teacherId?: string;
+  anthologyId?: string;
   dateRange?: Date[];
 }
 
@@ -43,10 +45,14 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname, courseId } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
-  const [contentValue, setContentValue] = useState("");
+  const [contentValue, setContentValue] = useState<string>();
   const [teacherOption, setTeacherOption] = useState<DefaultOptionType[]>([]);
   const [currTeacher, setCurrTeacher] = useState<RequestOptionsType>();
+  const [textbookOption, setTextbookOption] = useState<DefaultOptionType[]>([]);
+  const [currTextbook, setCurrTextbook] = useState<RequestOptionsType>();
   const [openMember, setOpenMember] = useState(false);
+  const [courseData, setCourseData] = useState<ICourseDataResponse>();
+
   return (
     <>
       <Card
@@ -68,27 +74,45 @@ const Widget = () => {
           formKey="course_edit"
           onFinish={async (values: IFormData) => {
             console.log("all data", values);
-            console.log(
-              "start",
-              values.dateRange ? values.dateRange[0].toString() : ""
-            );
-            console.log(values.cover);
+            let startAt: string, endAt: string;
+            let _cover: string = "";
+            switch (typeof values.dateRange) {
+              case "undefined":
+                startAt = "";
+                endAt = "";
+                break;
+              case "string":
+                startAt = values.dateRange[0];
+                endAt = values.dateRange[1];
+                break;
+              default:
+                startAt = courseData ? courseData.start_at : "";
+                endAt = courseData ? courseData.end_at : "";
+                break;
+            }
+            if (
+              typeof values.cover === "undefined" ||
+              values.cover.length === 0
+            ) {
+              _cover = "";
+            } else if (typeof values.cover[0].response === "undefined") {
+              _cover = values.cover[0].uid;
+            } else {
+              _cover = values.cover[0].response.data.url;
+            }
+
             const res = await put<ICourseDataRequest, ICourseResponse>(
               `/v2/course/${courseId}`,
               {
                 title: values.title, //标题
                 subtitle: values.subtitle, //副标题
                 content: contentValue, //简介
-                cover: values.cover[0].response?.data.url, //封面图片文件名
+                cover: _cover, //封面图片文件名
                 teacher_id: values.teacherId, //UserID
-                type: 1, //类型-公开/内部
+                publicity: 10, //类型-公开/内部
                 anthology_id: values.anthologyId, //文集ID
-                start_at: values.dateRange
-                  ? values.dateRange[0].toString()
-                  : undefined, //课程开始时间
-                end_at: values.dateRange
-                  ? values.dateRange[1].toString()
-                  : undefined, //课程结束时间
+                start_at: startAt, //课程开始时间
+                end_at: endAt, //课程结束时间
               }
             );
             console.log(res);
@@ -100,6 +124,7 @@ const Widget = () => {
           }}
           request={async () => {
             const res = await get<ICourseResponse>(`/v2/course/${courseId}`);
+            setCourseData(res.data);
             setTitle(res.data.title);
             console.log(res.data);
             setContentValue(res.data.content);
@@ -115,6 +140,19 @@ const Widget = () => {
                   label: res.data.teacher.nickName,
                 },
               ]);
+              setCurrTextbook({
+                value: res.data.anthology_id,
+                label: res.data.anthology_title,
+              });
+              setTextbookOption([
+                {
+                  value: res.data.anthology_id,
+                  label:
+                    res.data.anthology_owner?.nickName +
+                    "/" +
+                    res.data.anthology_title,
+                },
+              ]);
             }
             return {
               title: res.data.title,
@@ -123,7 +161,7 @@ const Widget = () => {
               cover: res.data.cover
                 ? [
                     {
-                      uid: "1",
+                      uid: res.data.cover,
                       name: "cover",
                       thumbUrl: API_HOST + "/" + res.data.cover,
                     },
@@ -131,9 +169,10 @@ const Widget = () => {
                 : [],
               teacherId: res.data.teacher?.id,
               anthologyId: res.data.anthology_id,
-              dateRange: res.data.start_at
-                ? [new Date(res.data.start_at), new Date(res.data.end_at)]
-                : undefined,
+              dateRange:
+                res.data.start_at && res.data.end_at
+                  ? [new Date(res.data.start_at), new Date(res.data.end_at)]
+                  : undefined,
             };
           }}
         >
@@ -212,6 +251,31 @@ const Widget = () => {
 
           <ProForm.Group>
             <PublicitySelect />
+            <ProFormSelect
+              options={textbookOption}
+              width="md"
+              name="anthologyId"
+              label={intl.formatMessage({ id: "forms.fields.textbook.label" })}
+              showSearch
+              debounceTime={300}
+              request={async ({ keyWords }) => {
+                console.log("keyWord", keyWords);
+                if (typeof keyWords === "undefined") {
+                  return currTextbook ? [currTextbook] : [];
+                }
+                const json = await get<IAnthologyListResponse>(
+                  `/v2/anthology?view=public`
+                );
+                const textbookList = json.data.rows.map((item) => {
+                  return {
+                    value: item.uid,
+                    label: `${item.studio.nickName}/${item.title}`,
+                  };
+                });
+                console.log("json", textbookList);
+                return textbookList;
+              }}
+            />
           </ProForm.Group>
 
           <ProForm.Group>
