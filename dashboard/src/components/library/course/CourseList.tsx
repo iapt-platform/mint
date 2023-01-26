@@ -1,62 +1,72 @@
 //课程列表
-import React from 'react';
-import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, List, Space } from 'antd';
+import React, { useEffect, useState } from "react";
+import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
+import { Avatar, List, message, Space, Typography } from "antd";
+import { ICourseListResponse } from "../../api/Course";
+import { ICourse } from "../../../pages/library/course/course";
+import { Link, useNavigate } from "react-router-dom";
+import { API_HOST, get } from "../../../request";
 
-const data = Array.from({ length: 23 }).map((_, i) => ({
-  href: '../course/show',
-  title: `课程 ${i}`,
-  avatar: 'https://joeschmoe.io/api/v1/random',
-  description:
-    '主讲人: 小僧善巧',
-  content:
-    '一年之计在于春，新春佳节修善行； 一周学习与精进，法为伊始吉祥年',
-}));
+const { Paragraph } = Typography;
 
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
-);
+interface IWidget {
+  type: "open" | "close";
+}
+const Widget = ({ type }: IWidget) => {
+  const [data, setData] = useState<ICourse[]>();
+  const navigate = useNavigate();
 
-const App: React.FC = () => (
-  <List
-    itemLayout="vertical"
-    size="large"
-    pagination={{
-      onChange: (page) => {
-        console.log(page);
-      },
-      pageSize: 5,
-    }}
-    dataSource={data}
-    footer={
-      <div>
-        <b>ant design</b> footer part
-      </div>
-    }
-    renderItem={(item) => (
-      <List.Item
-        key={item.title}
+  useEffect(() => {
+    get<ICourseListResponse>(`/v2/course?view=${type}`).then((json) => {
+      if (json.ok) {
+        console.log(json.data);
+        const course: ICourse[] = json.data.rows.map((item) => {
+          return {
+            id: item.id,
+            title: item.title,
+            subtitle: item.subtitle,
+            teacher: item.teacher,
+            intro: item.content,
+            coverUrl: item.cover,
+          };
+        });
+        setData(course);
+      } else {
+        message.error(json.message);
+      }
+    });
+  }, []);
 
-        extra={
-          <img
-            width={272}
-            alt="logo"
-            src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg95.699pic.com%2Fxsj%2F0g%2Fk2%2F7d.jpg%21%2Ffw%2F700%2Fwatermark%2Furl%2FL3hzai93YXRlcl9kZXRhaWwyLnBuZw%2Falign%2Fsoutheast&refer=http%3A%2F%2Fimg95.699pic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673839902&t=d8f4306ddd6935313c66efb936cbe268"
+  return (
+    <List
+      itemLayout="vertical"
+      size="default"
+      pagination={{
+        onChange: (page) => {
+          console.log(page);
+        },
+        pageSize: 5,
+      }}
+      dataSource={data}
+      renderItem={(item) => (
+        <List.Item
+          key={item.title}
+          extra={
+            <img width={128} alt="logo" src={API_HOST + "/" + item.coverUrl} />
+          }
+        >
+          <List.Item.Meta
+            avatar={<Avatar />}
+            title={<Link to={`/course/show/${item.id}`}>{item.title}</Link>}
+            description={<div>主讲：{item.teacher?.nickName}</div>}
           />
-        }
-      >
-        <List.Item.Meta
-          avatar={<Avatar src={item.avatar} />}
-          title={<a href={item.href}>{item.title}</a>}
-          description={item.description}
-        />
-        {item.content}
-      </List.Item>
-    )}
-  />
-);
+          <Paragraph ellipsis={{ rows: 2, expandable: false }}>
+            {item.intro}
+          </Paragraph>
+        </List.Item>
+      )}
+    />
+  );
+};
 
-export default App;
+export default Widget;
