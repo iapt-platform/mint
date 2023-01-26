@@ -22,6 +22,7 @@ import {
   ICourseNumberResponse,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
+
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
 };
@@ -31,12 +32,12 @@ const menu = (
     onClick={onMenuClick}
     items={[
       {
-        key: "1",
-        label: "分享",
+        key: "manage",
+        label: "管理",
         icon: <SearchOutlined />,
       },
       {
-        key: "2",
+        key: "delete",
         label: "删除",
         icon: <SearchOutlined />,
       },
