@@ -25,9 +25,8 @@ const Widget = () => {
 
   function fetchData() {
     let url = `/v2/anthology?view=studio_list`;
-    get(url).then(function (myJson) {
-      console.log("ajex", myJson);
-      const json = myJson as unknown as IAnthologyStudioListApiResponse;
+    get<IAnthologyStudioListApiResponse>(url).then(function (json) {
+      console.log("ajex", json);
       let newTree: IAnthologyStudioData[] = json.data.rows.map((item) => {
         return {
           count: item.count,

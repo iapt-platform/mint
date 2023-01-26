@@ -1,12 +1,28 @@
+/**
+ * 逐词解析意思选择菜单
+ * 基本算法：
+ * 从redux 获取单词列表。找到与拼写完全相同的单词。按照词典渲染单词意思列表
+ * 词典相同语法信息不同的单独一行
+ * 在上面的单词数据里面 找到 base 列表，重复上面的步骤
+ * 菜单显示结构：
+ * 拼写1
+ *    词典1  词性  意思1 意思2
+ *    词典2  词性  意思1 意思2
+ * 拼写2
+ *    词典1  词性  意思1 意思2
+ *    词典2  词性  意思1 意思2
+ *
+ */
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Collapse, Tag } from "antd";
+import { Collapse, Space, Tag, Typography } from "antd";
 
 import { IWbw } from "./WbwWord";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 
 const { Panel } = Collapse;
+const { Text } = Typography;
 
 interface IMeaning {
   text: string;
@@ -14,10 +30,12 @@ interface IMeaning {
 }
 interface ICase {
   name: string;
+  local: string;
   meaning: IMeaning[];
 }
 interface IDict {
-  name: string;
+  id: string;
+  name?: string;
   case: ICase[];
 }
 interface IParent {
@@ -35,95 +53,105 @@ const Widget = ({ data, onSelect }: IWidget) => {
   const [parent, setParent] = useState<IParent[]>();
 
   useEffect(() => {
+    //判断单词列表里面是否有这个词
     if (inlineDict.wordIndex.includes(data.word.value)) {
+      let baseRemind: string[] = [];
+      let baseDone: string[] = [];
+      baseRemind.push(data.word.value);
       let mParent: IParent[] = [];
-      const word1 = data.word.value;
-      const result1 = inlineDict.wordList.filter((word) => word.word === word1);
-      mParent.push({ word: word1, dict: [] });
-      const indexParent = mParent.findIndex((item) => item.word === word1);
-      result1.forEach((value, index, array) => {
-        let indexDict = mParent[indexParent].dict.findIndex(
-          (item) => item.name === value.dict_id
-        );
-        if (indexDict === -1) {
-          //没找到，添加一个dict
-          mParent[indexParent].dict.push({ name: value.dict_id, case: [] });
-          indexDict = mParent[indexParent].dict.findIndex(
-            (item) => item.name === value.dict_id
-          );
+      while (baseRemind.length > 0) {
+        const word1 = baseRemind.pop();
+        if (typeof word1 === "undefined") {
+          break;
         }
-        const wordType = value.type === "" ? "null" : value.type;
-        let indexCase = mParent[indexParent].dict[indexDict].case.findIndex(
-          (item) => item.name === wordType
+        baseDone.push(word1);
+        const result1 = inlineDict.wordList.filter(
+          (word) => word.word === word1
         );
-        if (indexCase === -1) {
-          mParent[indexParent].dict[indexDict].case.push({
-            name: wordType,
-            meaning: [],
-          });
-          indexCase = mParent[indexParent].dict[indexDict].case.findIndex(
+        mParent.push({ word: word1, dict: [] });
+        const indexParent = mParent.findIndex((item) => item.word === word1);
+        result1.forEach((value, index, array) => {
+          if (
+            value.parent !== "" &&
+            !baseRemind.includes(value.parent) &&
+            !baseDone.includes(value.parent)
+          ) {
+            baseRemind.push(value.parent);
+          }
+          let indexDict = mParent[indexParent].dict.findIndex(
+            (item) => item.id === value.dict_id
+          );
+          if (indexDict === -1) {
+            //没找到，添加一个dict
+            mParent[indexParent].dict.push({
+              id: value.dict_id,
+              name: value.dict_shortname,
+              case: [],
+            });
+            indexDict = mParent[indexParent].dict.findIndex(
+              (item) => item.id === value.dict_id
+            );
+          }
+          const wordType =
+            value.type === "" ? "null" : value.type.replaceAll(".", "");
+          let indexCase = mParent[indexParent].dict[indexDict].case.findIndex(
             (item) => item.name === wordType
           );
-        }
-        console.log("indexCase", indexCase, value.mean);
-        if (value.mean && value.mean.trim() !== "") {
-          for (const valueMeaning of value.mean.trim().split("$")) {
-            if (valueMeaning.trim() !== "") {
-              const mValue = valueMeaning.trim();
-              console.log("meaning", mValue);
-              console.log(
-                "in",
-                mParent[indexParent].dict[indexDict].case[indexCase].meaning
-              );
-              let indexMeaning = mParent[indexParent].dict[indexDict].case[
-                indexCase
-              ].meaning.findIndex((itemMeaning) => itemMeaning.text === mValue);
-
-              console.log("indexMeaning", indexMeaning);
-              let indexM: number;
-              const currMeanings =
-                mParent[indexParent].dict[indexDict].case[indexCase].meaning;
-              for (indexM = 0; indexM < currMeanings.length; indexM++) {
-                console.log("index", indexM);
-                console.log("array", currMeanings);
-                console.log("word1", currMeanings[indexM].text);
-                console.log("word2", mValue);
-                if (currMeanings[indexM].text === mValue) {
-                  break;
-                }
-              }
-              console.log("new index", indexM);
-              if (indexMeaning === -1) {
-                mParent[indexParent].dict[indexDict].case[
+          if (indexCase === -1) {
+            //没找到，新建
+            mParent[indexParent].dict[indexDict].case.push({
+              name: wordType,
+              local: intl.formatMessage({
+                id: `dict.fields.type.${wordType}.short.label`,
+              }),
+              meaning: [],
+            });
+            indexCase = mParent[indexParent].dict[indexDict].case.findIndex(
+              (item) => item.name === wordType
+            );
+          }
+          console.log("indexCase", indexCase, value.mean);
+          if (value.mean && value.mean.trim() !== "") {
+            for (const valueMeaning of value.mean.trim().split("$")) {
+              if (valueMeaning.trim() !== "") {
+                const mValue = valueMeaning.trim();
+                let indexMeaning = mParent[indexParent].dict[indexDict].case[
                   indexCase
-                ].meaning.push({
-                  text: mValue,
-                  count: 1,
-                });
-              } else {
-                mParent[indexParent].dict[indexDict].case[indexCase].meaning[
-                  indexMeaning
-                ].count++;
+                ].meaning.findIndex(
+                  (itemMeaning) => itemMeaning.text === mValue
+                );
+
+                let indexM: number;
+                const currMeanings =
+                  mParent[indexParent].dict[indexDict].case[indexCase].meaning;
+                for (indexM = 0; indexM < currMeanings.length; indexM++) {
+                  if (currMeanings[indexM].text === mValue) {
+                    break;
+                  }
+                }
+
+                if (indexMeaning === -1) {
+                  mParent[indexParent].dict[indexDict].case[
+                    indexCase
+                  ].meaning.push({
+                    text: mValue,
+                    count: 1,
+                  });
+                } else {
+                  mParent[indexParent].dict[indexDict].case[indexCase].meaning[
+                    indexMeaning
+                  ].count++;
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
 
       setParent(mParent);
     }
   }, [inlineDict]);
-  /*
-  const meaning: IMeaning[] = Array.from(Array(10).keys()).map((item) => {
-    return { text: "意思" + item, count: item };
-  });
-  const dict: IDict[] = Array.from(Array(3).keys()).map((item) => {
-    return { name: "字典" + item, meaning: meaning };
-  });
-  const parent: IParent[] = Array.from(Array(3).keys()).map((item) => {
-    return { word: data.word.value + item, dict: dict };
-  });
-  */
+
   return (
     <div>
       <Collapse defaultActiveKey={["0"]}>
@@ -132,34 +160,40 @@ const Widget = ({ data, onSelect }: IWidget) => {
             <Panel header={item.word} style={{ padding: 0 }} key={id}>
               {item.dict.map((itemDict, idDict) => {
                 return (
-                  <div key={idDict}>
-                    <div>{itemDict.name}</div>
-                    {itemDict.case.map((itemCase, idCase) => {
-                      return (
-                        <div key={idCase}>
-                          <div>{itemCase.name}</div>
-                          <div>
-                            {itemCase.meaning.map((itemMeaning, idMeaning) => {
-                              return (
-                                <Tag
-                                  key={idMeaning}
-                                  onClick={(
-                                    e: React.MouseEvent<HTMLAnchorElement>
-                                  ) => {
-                                    e.preventDefault();
-                                    if (typeof onSelect !== "undefined") {
-                                      onSelect(itemMeaning.text);
-                                    }
-                                  }}
-                                >
-                                  {itemMeaning.text}-{itemMeaning.count}
-                                </Tag>
-                              );
-                            })}
+                  <div key={idDict} style={{ display: "flex" }}>
+                    <Text keyboard strong style={{ whiteSpace: "nowrap" }}>
+                      {itemDict.name}
+                    </Text>
+                    <div>
+                      {itemDict.case.map((itemCase, idCase) => {
+                        return (
+                          <div key={idCase}>
+                            <Text italic>{itemCase.local}</Text>
+                            <span>
+                              {itemCase.meaning.map(
+                                (itemMeaning, idMeaning) => {
+                                  return (
+                                    <Tag
+                                      key={idMeaning}
+                                      onClick={(
+                                        e: React.MouseEvent<HTMLAnchorElement>
+                                      ) => {
+                                        e.preventDefault();
+                                        if (typeof onSelect !== "undefined") {
+                                          onSelect(itemMeaning.text);
+                                        }
+                                      }}
+                                    >
+                                      {itemMeaning.text}-{itemMeaning.count}
+                                    </Tag>
+                                  );
+                                }
+                              )}
+                            </span>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })}

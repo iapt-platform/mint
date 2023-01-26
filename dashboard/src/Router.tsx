@@ -27,7 +27,7 @@ import LibraryCourse from "./pages/library/course";
 import LibraryCourseList from "./pages/library/course/list";
 import LibraryCourseShow from "./pages/library/course/course";
 import LibraryLessonShow from "./pages/library/course/lesson";
-//import LibraryCourseManage from "./pages/library/course/courseManage";
+
 import LibraryTerm from "./pages/library/term/show";
 import LibraryDict from "./pages/library/dict";
 import LibraryDictShow from "./pages/library/dict/show";
@@ -135,7 +135,7 @@ const Widget = () => {
       </Route>
       <Route path="course" element={<LibraryCourse />}>
         <Route path="list" element={<LibraryCourseList />}></Route>
-        <Route path="show" element={<LibraryCourseShow />}></Route>
+        <Route path="show/:id" element={<LibraryCourseShow />}></Route>
         <Route path="lesson" element={<LibraryLessonShow />}></Route>
       </Route>
 

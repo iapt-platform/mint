@@ -60,8 +60,8 @@ export interface IArticleDataRequest {
   title: string;
   subtitle: string;
   summary: string;
-  content: string;
-  content_type: string;
+  content?: string;
+  content_type?: string;
   status: number;
   lang: string;
 }
@@ -70,8 +70,9 @@ export interface IArticleDataResponse {
   title: string;
   subtitle: string;
   summary: string;
-  content: string;
-  content_type: string;
+  content?: string;
+  content_type?: string;
+  html?: string;
   path?: ITocPathNode[];
   status: number;
   lang: string;

@@ -1,0 +1,31 @@
+import { Col, Row } from "antd";
+import { useNavigate } from "react-router-dom";
+import AnthologyDetail from "../article/AnthologyDetail";
+
+interface IWidget {
+  anthologyId?: string;
+  courseId?: string;
+}
+const Widget = ({ anthologyId, courseId }: IWidget) => {
+  const navigate = useNavigate();
+
+  console.log("anthologyId", anthologyId);
+  return (
+    <div style={{ backgroundColor: "#f5f5f5" }}>
+      <Row>
+        <Col flex="auto"></Col>
+        <Col flex="960px">
+          <AnthologyDetail
+            aid={anthologyId}
+            onArticleSelect={(keys: string[]) => {
+              navigate(`/article/textbook/${courseId}/${keys[0]}`);
+            }}
+          />
+        </Col>
+        <Col flex="auto"></Col>
+      </Row>
+    </div>
+  );
+};
+
+export default Widget;

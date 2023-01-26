@@ -54,7 +54,20 @@ const Widget = ({
     }
 
     if (typeof type !== "undefined" && typeof articleId !== "undefined") {
-      get<IArticleResponse>(`/v2/${type}/${articleId}/${mode}`).then((json) => {
+      let url = "";
+      switch (type) {
+        case "corpus/article":
+          url = `/v2/article/${articleId}?mode=${mode}`;
+          break;
+        case "corpus/textbook":
+          url = `/v2/article/${mode}?mode=read`;
+          break;
+        default:
+          url = `/v2/${type}/${articleId}/${mode}`;
+          break;
+      }
+      get<IArticleResponse>(url).then((json) => {
+        console.log("article", json);
         if (json.ok) {
           setArticleData(json.data);
         } else {
@@ -63,6 +76,7 @@ const Widget = ({
       });
     }
   }, [active, type, articleId, mode, articleMode]);
+
   return (
     <ArticleView
       id={articleData?.uid}
@@ -70,6 +84,7 @@ const Widget = ({
       subTitle={articleData?.subtitle}
       summary={articleData?.summary}
       content={articleData ? articleData.content : ""}
+      html={articleData?.html}
       path={articleData?.path}
       created_at={articleData?.created_at}
       updated_at={articleData?.updated_at}

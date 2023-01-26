@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Space,
   Badge,
@@ -10,14 +10,19 @@ import {
   MenuProps,
   Menu,
   Table,
+  Image,
 } from "antd";
-import { ProTable, ProList } from "@ant-design/pro-components";
+import { ProTable, ActionType } from "@ant-design/pro-components";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
-import CourseCreate from "../../../components/library/course/CourseCreate";
-import { get } from "../../../request";
-import { ICourseListResponse } from "../../../components/api/Course";
+import CourseCreate from "../../../components/course/CourseCreate";
+import { API_HOST, get } from "../../../request";
+import {
+  ICourseListResponse,
+  ICourseNumberResponse,
+} from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
+
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
 };
@@ -27,12 +32,12 @@ const menu = (
     onClick={onMenuClick}
     items={[
       {
-        key: "1",
-        label: "分享",
+        key: "manage",
+        label: "管理",
         icon: <SearchOutlined />,
       },
       {
-        key: "2",
+        key: "delete",
         label: "删除",
         icon: <SearchOutlined />,
       },
@@ -44,16 +49,17 @@ interface DataItem {
   id: string; //课程ID
   title: string; //标题
   subtitle: string; //副标题
-  teacher: string; //UserID
-  //course_count: number;//课程数
+  teacher?: string; //UserID
+  course_count?: number; //课程数
+  member_count: number; //成员数量
   type: number; //类型-公开/内部
   createdAt: number; //创建时间
-  //updated_at: number;//修改时间
-  //article_id: number;//文集ID
-  //course_start_at: string;//课程开始时间
-  //course_end_at: string;//课程结束时间
-  //intro_markdown: string;//简介
-  //cover_img_name: string;//封面图片文件名
+  updatedAt?: number; //修改时间
+  article_id?: string; //文集ID
+  course_start_at?: string; //课程开始时间
+  course_end_at?: string; //课程结束时间
+  intro_markdown?: string; //简介
+  cover_img_name?: string; //封面图片文件名
 }
 
 const renderBadge = (count: number, active = false) => {
@@ -72,11 +78,43 @@ const renderBadge = (count: number, active = false) => {
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
-  const courseCreate = <CourseCreate studio={studioname} />;
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>("tab1");
+
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("create");
+  const [createNumber, setCreateNumber] = useState<number>(0);
+  const [teachNumber, setTeachNumber] = useState<number>(0);
+  const [studyNumber, setStudyNumber] = useState<number>(0);
+  const ref = useRef<ActionType>();
+  const [openCreate, setOpenCreate] = useState(false);
+
+  const courseCreate = (
+    <CourseCreate
+      studio={studioname}
+      onCreate={() => {
+        //新建课程成功后刷新
+        setActiveKey("create");
+        setCreateNumber(createNumber + 1);
+        ref.current?.reload();
+        setOpenCreate(false);
+      }}
+    />
+  );
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/course-my-course?studio=${studioname}`;
+    get<ICourseNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setCreateNumber(json.data.create);
+        setTeachNumber(json.data.teach);
+        setStudyNumber(json.data.study);
+      }
+    });
+  }, [studioname]);
   return (
     <>
       <ProTable<DataItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
@@ -98,21 +136,23 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
-                  {row.title}
-                </Link>
+                <Space>
+                  <Image
+                    src={`${API_HOST}/${row.cover_img_name}`}
+                    width={64}
+                    fallback={`${API_HOST}/app/course/img/default.jpg`}
+                  />
+                  <div>
+                    <div>
+                      <Link to={`/course/show/${row.id}`} target="_blank">
+                        {row.title}
+                      </Link>
+                    </div>
+                    <div>{row.subtitle}</div>
+                  </div>
+                </Space>
               );
             },
-          },
-          {
-            //副标题
-            title: intl.formatMessage({
-              id: "forms.fields.subtitle.label",
-            }),
-            dataIndex: "subtitle",
-            key: "subtitle",
-            tip: "过长会自动收缩",
-            ellipsis: true,
           },
           {
             //主讲人
@@ -123,6 +163,12 @@ const Widget = () => {
             key: "teacher",
             //tip: "过长会自动收缩",
             ellipsis: true,
+          },
+          {
+            title: "成员",
+            dataIndex: "member_count",
+            key: "member_count",
+            width: 80,
           },
           {
             //类型
@@ -211,7 +257,8 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url = `/v2/course?view=studio&name=${studioname}`;
+          console.log(activeKey);
+          let url = `/v2/course?view=${activeKey}&studio=${studioname}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -220,49 +267,25 @@ const Widget = () => {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
 
-          /*const res = await get<ICourseListResponse>(url);
+          const res = await get<ICourseListResponse>(url);
+          console.log("api data", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
               sn: id + 1,
-              id: item.uid,
+              id: item.id,
               title: item.title,
               subtitle: item.subtitle,
-              teacher: item.teacher,
-              type: item.type,
+              teacher: item.teacher?.nickName,
+              cover_img_name: item.cover,
+              type: item.publicity,
+              member_count: item.member_count,
               createdAt: date.getTime(),
             };
-          });*/
-
-          //const items = Array.from({ length: 23 }).map((_, i) => ({
-          const items: DataItem[] = [
-            {
-              sn: 1,
-              id: "1",
-              title: "课程" + 1,
-              subtitle: "课程副标题" + 1,
-              teacher: "小僧善巧",
-              type: 30,
-              createdAt: 20020202,
-              //updated_at: 123,
-              //article_id: 123,
-              //course_start_at: 123,
-              //course_end_at: 123,
-              //intro_markdown: 123,
-              //cover_img_name: 123,
-            },
-            {
-              sn: 2,
-              id: "2",
-              title: "课程" + 2,
-              subtitle: "课程副标题" + 2,
-              teacher: "小僧善巧",
-              type: 30,
-              createdAt: 20020202,
-            },
-          ];
+          });
+          console.log(items);
           return {
-            total: items.length, //res.data.count,
+            total: res.data.count,
             succcess: true,
             data: items,
           };
@@ -282,6 +305,11 @@ const Widget = () => {
             content={courseCreate}
             title="Create"
             placement="bottomRight"
+            trigger="click"
+            open={openCreate}
+            onOpenChange={(newOpen: boolean) => {
+              setOpenCreate(newOpen);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}
@@ -296,7 +324,8 @@ const Widget = () => {
                 key: "create",
                 label: (
                   <span>
-                    我建立的课程{renderBadge(99, activeKey === "create")}
+                    我建立的课程
+                    {renderBadge(createNumber, activeKey === "create")}
                   </span>
                 ),
               },
@@ -304,7 +333,8 @@ const Widget = () => {
                 key: "study",
                 label: (
                   <span>
-                    我参加的课程{renderBadge(99, activeKey === "study")}
+                    我参加的课程
+                    {renderBadge(studyNumber, activeKey === "study")}
                   </span>
                 ),
               },
@@ -312,45 +342,19 @@ const Widget = () => {
                 key: "teach",
                 label: (
                   <span>
-                    我任教的课程{renderBadge(32, activeKey === "teach")}
+                    我任教的课程
+                    {renderBadge(teachNumber, activeKey === "teach")}
                   </span>
                 ),
               },
             ],
             onChange(key) {
+              console.log("show course", key);
               setActiveKey(key);
+              ref.current?.reload();
             },
           },
         }}
-        /*
-        toolbar={{
-          menu: {
-            activeKey,
-            items: [
-              {
-                key: 'tab1',
-                label: <span>全部实验室{renderBadge(99, activeKey === 'tab1')}</span>,
-              },
-              {
-                key: 'tab2',
-                label: <span>我创建的实验室{renderBadge(32, activeKey === 'tab2')}</span>,
-              },
-            ],
-            onChange(key) {
-              setActiveKey(key);
-            },
-          },
-          search: {
-            onSearch: (value: string) => {
-              alert(value);
-            },
-          },
-          actions: [
-            <Button type="primary" key="primary">
-              新建实验
-            </Button>,
-          ],
-        }}*/
       />
     </>
   );

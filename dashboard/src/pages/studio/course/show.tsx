@@ -1,12 +1,22 @@
-import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Card } from "antd";
+import { Card, Col, Row } from "antd";
 
 import GoBack from "../../../components/studio/GoBack";
+import { ProForm } from "@ant-design/pro-components";
+import LessonTreeShow from "../../../components/course/LessonTreeShow";
+import StudentsSelect from "../../../components/course/StudentsSelect";
+
+interface IFormData {
+  uid: string;
+  title: string;
+
+  t_type: string;
+  status: number;
+  lang: string;
+}
 
 const Widget = () => {
-  const intl = useIntl();
   const { studioname, courseId } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
   useEffect(() => {
@@ -15,12 +25,20 @@ const Widget = () => {
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/course/list`} title={title} />}
-      extra={
-        <Button type="link" danger>
-          {intl.formatMessage({ id: "buttons.group.exit" })}
-        </Button>
-      }
-    ></Card>
+    >
+      <ProForm<IFormData> onFinish={async (values: IFormData) => {}}>
+        <ProForm.Group>
+          <LessonTreeShow />
+        </ProForm.Group>
+        <ProForm.Group></ProForm.Group>
+
+        <Row>
+          <Col flex="400px">
+            <StudentsSelect />
+          </Col>
+        </Row>
+      </ProForm>
+    </Card>
   );
 };
 

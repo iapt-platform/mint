@@ -33,23 +33,22 @@ const defaultData = [
   },
 ];
 type DataItem = typeof defaultData[number];
-interface IWidgetGroupFile {
-  groupId?: string;
+interface IWidge {
+  courseId?: string;
 }
-const Widget = ({ groupId }: IWidgetGroupFile) => {
+const Widget = ({ courseId }: IWidge) => {
   const intl = useIntl(); //i18n
   const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
 
   return (
-    <Content>
-      <Space>{groupId}</Space>
+    <>
       <ProList<DataItem>
         rowKey="id"
         headerTitle={intl.formatMessage({
           id: "forms.fields.studentsassistant.label",
         })}
         toolBarRender={() => {
-          return [<AddStudent groupId={groupId} />];
+          return [<AddStudent courseId={courseId} />];
         }}
         dataSource={dataSource}
         showActions="hover"
@@ -77,12 +76,10 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
           actions: {
             render: (text, row, index, action) => [
               <Button
-                style={{ padding: 0, margin: 0 }}
+                size="small"
                 type="link"
                 danger
-                onClick={() => {
-                  action?.startEditable(row.id);
-                }}
+                onClick={() => {}}
                 key="link"
               >
                 {intl.formatMessage({ id: "buttons.remove" })}
@@ -91,7 +88,7 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
           },
         }}
       />
-    </Content>
+    </>
   );
 };
 

@@ -1,83 +1,72 @@
 //课程详情页面
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Layout, Col, Row, Divider } from "antd";
-import CourseShow from "../../../components/library/course/CourseShow";
-import CourseIntro from "../../../components/library/course/CourseIntro";
-import TocTree from "../../../components/article/TocTree";
-import { ListNodeData } from "../../../components/article/EditableTree";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import { marked } from "marked";
-const { Content, Header } = Layout;
+import { useEffect, useState } from "react";
+import { Divider, message } from "antd";
 
-let arrTocTree: ListNodeData[] = [];
-let i = 0;
-do {
-  ++i;
-  arrTocTree.push({
-    key: i.toString(),
-    title: `课程 ${i}`,
-    level: 1,
-  });
-} while (i < 10); // 在循环的尾部检查条件
+import CourseShow from "../../../components/course/CourseShow";
+import CourseIntro from "../../../components/course/CourseIntro";
+import TextBook from "../../../components/course/TextBook";
 
-let markdown =
-  "# 这是标题\n" +
-  "[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n" +
-  "> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n" +
-  "**这是加粗的文字**\n\n" +
-  "*这是倾斜的文字*`\n\n" +
-  "***这是斜体加粗的文字***\n\n" +
-  "~~这是加删除线的文字~~ \n\n" +
-  "\n\n" +
-  "|表格头1|表格头2|表格头3| \n\n" +
-  "|------|------|------| \n\n" +
-  "| 文本 | 文本 | 文本 |\n\n" +
-  "\n\n" +
-  "```const a=2; ```";
+import { IUser } from "../../../components/auth/User";
+import { get } from "../../../request";
+import { ICourseResponse } from "../../../components/api/Course";
 
+export interface ICourse {
+  id: string; //课程ID
+  title: string; //标题
+  subtitle?: string; //副标题
+  teacher?: IUser; //UserID
+  privacy?: number; //公开性-公开/内部
+  createdAt?: string; //创建时间
+  updatedAt?: string; //修改时间
+  anthologyId?: string; //文集ID
+  channelId?: string;
+  startAt?: string; //课程开始时间
+  endAt?: string; //课程结束时间
+  intro?: string; //简介
+  coverUrl?: string; //封面图片文件名
+}
 const Widget = () => {
   // TODO
-  const { courseid } = useParams(); //url 参数
-
+  const { id } = useParams(); //url 参数
+  const [courseInfo, setCourseInfo] = useState<ICourse>();
+  useEffect(() => {
+    get<ICourseResponse>(`/v2/course/${id}`).then((json) => {
+      if (json.ok) {
+        console.log(json.data);
+        const course: ICourse = {
+          id: json.data.id,
+          title: json.data.title,
+          subtitle: json.data.subtitle,
+          teacher: json.data.teacher,
+          privacy: json.data.publicity,
+          createdAt: json.data.created_at,
+          updatedAt: json.data.updated_at,
+          anthologyId: json.data.anthology_id,
+          channelId: json.data.channel_id,
+          startAt: json.data.start_at,
+          endAt: json.data.end_at,
+          intro: json.data.content,
+          coverUrl: json.data.cover,
+        };
+        setCourseInfo(course);
+      } else {
+        message.error(json.message);
+      }
+    });
+  }, [id]);
   return (
-    <Layout>
-      <Content>
-        <Row>
-          <Col flex="auto"></Col>
-          <Col flex="1760px">
-            <div>
-              <div>
-                <CourseShow />
-                <Divider />
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: marked.parse(markdown),
-                  }}
-                ></div>
-                <CourseIntro />
-                <Divider />
-                <TocTree treeData={arrTocTree} />
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </Content>
-    </Layout>
+    <div>
+      <CourseShow {...courseInfo} />
+      <Divider />
+      <CourseIntro {...courseInfo} />
+      <Divider />
+      <TextBook
+        anthologyId={courseInfo?.anthologyId}
+        courseId={courseInfo?.id}
+      />
+    </div>
   );
 };
 
 export default Widget;
-
-/*
-  return (
-    <div>
-      <div>课程{courseid} 详情</div>
-      <div>
-        <Link to="/course/lesson/12345">lesson 1</Link>
-        <Link to="/course/lesson/23456">lesson 2</Link>
-      </div>
-    </div>
-  );
-*/

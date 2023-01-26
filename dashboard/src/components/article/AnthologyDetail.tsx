@@ -12,11 +12,6 @@ import TocTree from "./TocTree";
 
 const { Title, Text } = Typography;
 
-interface IWidgetAnthologyDetail {
-  aid: string;
-  channels?: string[];
-}
-
 const defaultData: IAnthologyData = {
   id: "",
   title: "",
@@ -32,16 +27,20 @@ const defaultData: IAnthologyData = {
   created_at: "",
   updated_at: "",
 };
-
-const Widget = (prop: IWidgetAnthologyDetail) => {
+interface IWidgetAnthologyDetail {
+  aid?: string;
+  channels?: string[];
+  onArticleSelect?: Function;
+}
+const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState(defaultData);
 
   useEffect(() => {
     console.log("useEffect");
-    fetchData(prop.aid);
-  }, [prop.aid]);
+    fetchData(aid);
+  }, [aid]);
 
-  function fetchData(id: string) {
+  function fetchData(id?: string) {
     get<IAnthologyResponse>(`/v2/anthology/${id}`)
       .then((response) => {
         const item: IAnthologyDataResponse = response.data;
@@ -79,7 +78,14 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
       </div>
       <Title level={5}>目录</Title>
 
-      <TocTree treeData={tableData.articles} />
+      <TocTree
+        treeData={tableData.articles}
+        onSelect={(keys: string[]) => {
+          if (typeof onArticleSelect !== "undefined") {
+            onArticleSelect(keys);
+          }
+        }}
+      />
     </>
   );
 };

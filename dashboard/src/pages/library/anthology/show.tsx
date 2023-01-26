@@ -8,7 +8,6 @@ const { Content, Header } = Layout;
 const Widget = () => {
   // TODO
   const { id, tags } = useParams(); //url 参数
-  let aid = id ? id : "";
   let channel = tags ? tags : "";
 
   const pageMaxWidth = "1260px";
@@ -19,7 +18,7 @@ const Widget = () => {
           <Col flex="auto"></Col>
           <Col flex={pageMaxWidth}>
             <div>
-              {aid}@{channel}
+              {id}@{channel}
             </div>
           </Col>
           <Col flex="auto"></Col>
@@ -32,7 +31,7 @@ const Widget = () => {
           <Col flex={pageMaxWidth}>
             <Row>
               <Col span="18">
-                <AnthologyDetail aid={aid} />
+                <AnthologyDetail aid={id} />
               </Col>
               <Col span="6"></Col>
             </Row>

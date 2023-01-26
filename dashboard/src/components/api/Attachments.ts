@@ -8,8 +8,8 @@ export interface IAttachmentRequest {
   uid: string;
   name?: string;
   size?: number;
-  type?: string;
-  url?: string;
+  type: string;
+  url: string;
 }
 export interface IAttachmentResponse {
   ok: boolean;

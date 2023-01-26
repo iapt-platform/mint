@@ -37,7 +37,11 @@ export function XmlToReact(
     for (let i = 0; i < attr.length; i++) {
       if (attr[i].nodeType === 2) {
         let key: string = attr[i].nodeName;
-        output[key] = attr[i].nodeValue;
+        if (key !== "style") {
+          output[key] = attr[i].nodeValue;
+        } else {
+          //TODO 把css style 转换为react style
+        }
       }
     }
     return output;

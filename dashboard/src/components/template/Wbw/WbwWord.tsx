@@ -100,6 +100,7 @@ const Widget = ({
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const [newFactors, setNewFactors] = useState<string>();
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
   const inlineWordIndex = useAppSelector(wordIndex);
 
@@ -214,6 +215,7 @@ const Widget = ({
                 console.log("factor change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factors = { value: e, status: 5 };
+                setNewFactors(e);
                 setWordData(newData);
               }}
             />
@@ -222,6 +224,7 @@ const Widget = ({
             <WbwFactorMeaning
               data={wordData}
               display={display}
+              factors={newFactors}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = { value: e, status: 5 };

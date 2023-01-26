@@ -3,12 +3,13 @@ import { useRef, useState } from "react";
 import { ActionType, ProList } from "@ant-design/pro-components";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
 
-import GroupAddMember from "./AddMember";
+import CourseAddMember from "./AddMember";
 import { delete_, get } from "../../request";
+
 import {
-  IGroupMemberDeleteResponse,
-  IGroupMemberListResponse,
-} from "../api/Group";
+  ICourseMemberDeleteResponse,
+  ICourseMemberListResponse,
+} from "../api/Course";
 
 const { Content } = Layout;
 
@@ -23,10 +24,10 @@ interface DataItem {
   tag: IRoleTag[];
   image: string;
 }
-interface IWidgetGroupFile {
-  groupId?: string;
+interface IWidget {
+  courseId?: string;
 }
-const Widget = ({ groupId }: IWidgetGroupFile) => {
+const Widget = ({ courseId }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
@@ -44,12 +45,16 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
         }
         toolBarRender={() => {
           return [
-            <GroupAddMember
-              groupId={groupId}
-              onCreated={() => {
-                ref.current?.reload();
-              }}
-            />,
+            canDelete ? (
+              <CourseAddMember
+                courseId={courseId}
+                onCreated={() => {
+                  ref.current?.reload();
+                }}
+              />
+            ) : (
+              <></>
+            ),
           ];
         }}
         showActions="hover"
@@ -57,7 +62,7 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
           // TODO
           console.log(params, sorter, filter);
 
-          let url = `/v2/group-member?view=group&id=${groupId}`;
+          let url = `/v2/course-member?view=course&id=${courseId}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -65,9 +70,9 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
-          const res = await get<IGroupMemberListResponse>(url);
+          const res = await get<ICourseMemberListResponse>(url);
           if (res.ok) {
-            console.log(res.data.rows);
+            console.log(res.data);
             setMemberCount(res.data.count);
             switch (res.data.role) {
               case "owner":
@@ -85,14 +90,12 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
                 tag: [],
                 image: "",
               };
-              switch (item.power) {
-                case 0:
-                  member.tag.push({ title: "拥有者", color: "success" });
-                  break;
-                case 1:
-                  member.tag.push({ title: "管理员", color: "default" });
-                  break;
-              }
+              member.tag.push({
+                title: intl.formatMessage({
+                  id: "forms.fields." + item.role + ".label",
+                }),
+                color: "default",
+              });
 
               return member;
             });
@@ -139,6 +142,7 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
             render: (text, row, index, action) => [
               canDelete ? (
                 <Popconfirm
+                  placement="bottomLeft"
                   title={intl.formatMessage({
                     id: "forms.message.member.delete",
                   })}
@@ -146,8 +150,8 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
                     e?: React.MouseEvent<HTMLElement, MouseEvent>
                   ) => {
                     console.log("delete", row.id);
-                    delete_<IGroupMemberDeleteResponse>(
-                      "/v2/group-member/" + row.id
+                    delete_<ICourseMemberDeleteResponse>(
+                      "/v2/course-member/" + row.id
                     ).then((json) => {
                       if (json.ok) {
                         console.log("delete ok");
