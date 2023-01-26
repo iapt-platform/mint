@@ -9,7 +9,7 @@ const Widget = ({ intro }: IWidget) => {
   return (
     <Row>
       <Col flex="auto"></Col>
-      <Col flex="1260px">
+      <Col flex="960px">
         <div
           dangerouslySetInnerHTML={{
             __html: marked.parse(intro ? intro : ""),
