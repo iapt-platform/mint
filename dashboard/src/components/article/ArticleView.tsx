@@ -11,7 +11,8 @@ export interface IWidgetArticleData {
   title?: string;
   subTitle?: string;
   summary?: string;
-  content: string;
+  content?: string;
+  html?: string;
   path?: ITocPathNode[];
   created_at?: string;
   updated_at?: string;
@@ -24,6 +25,7 @@ const Widget = ({
   subTitle,
   summary,
   content,
+  html,
   path = [],
   created_at,
   updated_at,
@@ -54,7 +56,7 @@ const Widget = ({
         <Divider />
       </div>
       <div>
-        <MdView html={content} />
+        <MdView html={html ? html : content} />
       </div>
     </>
   );
