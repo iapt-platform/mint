@@ -22,8 +22,8 @@ interface IFormData {
   title: string;
   subtitle: string;
   summary: string;
-  content: string;
-  content_type: string;
+  content?: string;
+  content_type?: string;
   status: number;
   lang: string;
 }
