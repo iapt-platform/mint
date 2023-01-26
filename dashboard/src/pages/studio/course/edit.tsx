@@ -81,20 +81,20 @@ const Widget = () => {
             console.log("all data", values);
             let startAt: string, endAt: string;
             let _cover: string = "";
-            switch (typeof values.dateRange) {
-              case "undefined":
-                startAt = "";
-                endAt = "";
-                break;
-              case "string":
-                startAt = values.dateRange[0];
-                endAt = values.dateRange[1];
-                break;
-              default:
-                startAt = courseData ? courseData.start_at : "";
-                endAt = courseData ? courseData.end_at : "";
-                break;
+            if (typeof values.dateRange === "undefined") {
+              startAt = "";
+              endAt = "";
+            } else if (
+              typeof values.dateRange[0] === "string" &&
+              typeof values.dateRange[1] === "string"
+            ) {
+              startAt = values.dateRange[0];
+              endAt = values.dateRange[1];
+            } else {
+              startAt = courseData ? courseData.start_at : "";
+              endAt = courseData ? courseData.end_at : "";
             }
+
             if (
               typeof values.cover === "undefined" ||
               values.cover.length === 0
