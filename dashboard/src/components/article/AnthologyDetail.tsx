@@ -30,14 +30,15 @@ const defaultData: IAnthologyData = {
 interface IWidgetAnthologyDetail {
   aid?: string;
   channels?: string[];
+  onArticleSelect?: Function;
 }
-const Widget = (prop: IWidgetAnthologyDetail) => {
+const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState(defaultData);
 
   useEffect(() => {
     console.log("useEffect");
-    fetchData(prop.aid);
-  }, [prop.aid]);
+    fetchData(aid);
+  }, [aid]);
 
   function fetchData(id?: string) {
     get<IAnthologyResponse>(`/v2/anthology/${id}`)
@@ -77,7 +78,14 @@ const Widget = (prop: IWidgetAnthologyDetail) => {
       </div>
       <Title level={5}>目录</Title>
 
-      <TocTree treeData={tableData.articles} />
+      <TocTree
+        treeData={tableData.articles}
+        onSelect={(keys: string[]) => {
+          if (typeof onArticleSelect !== "undefined") {
+            onArticleSelect(keys);
+          }
+        }}
+      />
     </>
   );
 };
