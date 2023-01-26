@@ -130,26 +130,23 @@ class ArticleController extends Controller
     public function show(Request  $request,Article $article)
     {
         //
-        if($article){
-            if($article->status<30){
-                //私有文章，判断权限
-                $user = \App\Http\Api\AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] !== $article->owner){
-                        //非所有者
-                        //TODO 判断是否协作
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
-                    return $this->error(__('auth.failed'));
-                }
-            }
-            return $this->ok($article);
-        }else{
+        if(!$article){
             return $this->error("no recorder");
         }
-
+        if($article->status<30){
+            //私有文章，判断权限
+            $user = \App\Http\Api\AuthApi::current($request);
+            if($user){
+                //判断当前用户是否有指定的studio的权限
+                return $this->error(__('auth.failed'));
+            }
+            if($user['user_uid'] !== $article->owner){
+                //非所有者
+                //TODO 判断是否协作
+                return $this->error(__('auth.failed'));
+            }
+        }
+        return $this->ok($article);
     }
 
     /**
