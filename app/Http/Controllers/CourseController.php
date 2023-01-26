@@ -20,7 +20,7 @@ class CourseController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','title','subtitle','cover','content','content_type','teacher','start_at','end_at','updated_at','created_at'];
+		$indexCol = ['id','title','subtitle','cover','content','content_type','teacher','start_at','end_at','publicity','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'create':
 	            # 获取 studio 建立的所有 course
@@ -190,6 +190,7 @@ class CourseController extends Controller
         $course->content = $request->get('content');
         if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
         if($request->has('anthology_id')) {$course->anthology_id = $request->get('anthology_id');}
+        $course->channel_id = $request->get('channel_id');
         if($request->has('publicity')) {$course->publicity = $request->get('publicity');}
         if($request->has('start_at')) {$course->start_at = $request->get('start_at');}
         if($request->has('end_at')) {$course->end_at = $request->get('end_at');}
