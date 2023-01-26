@@ -1,8 +1,8 @@
 //课程主页
 import { Layout, Col, Row, Divider } from "antd";
 
-import LecturerList from "../../../components/library/course/LecturerList";
-import CourseList from "../../../components/library/course/CourseList";
+import LecturerList from "../../../components/course/LecturerList";
+import CourseList from "../../../components/course/CourseList";
 const { Content, Header } = Layout;
 
 const Widget = () => {

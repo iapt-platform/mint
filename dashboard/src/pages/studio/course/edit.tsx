@@ -21,13 +21,11 @@ import {
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
 
-import LessonSelect from "../../../components/library/course/LessonSelect";
 import { IUserListResponse } from "../../../components/api/Auth";
 import MDEditor from "@uiw/react-md-editor";
 import { DefaultOptionType } from "antd/lib/select";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../../components/api/Attachments";
-import StudentsSelect from "../../../components/library/course/StudentsSelect";
 import CourseMember from "../../../components/course/CourseMember";
 import { IAnthologyListResponse } from "../../../components/api/Article";
 import { IApiResponseChannelList } from "../../../components/api/Channel";

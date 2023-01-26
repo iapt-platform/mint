@@ -4,8 +4,8 @@ import { Card, Col, Row } from "antd";
 
 import GoBack from "../../../components/studio/GoBack";
 import { ProForm } from "@ant-design/pro-components";
-import LessonTreeShow from "../../../components/library/course/LessonTreeShow";
-import StudentsSelect from "../../../components/library/course/StudentsSelect";
+import LessonTreeShow from "../../../components/course/LessonTreeShow";
+import StudentsSelect from "../../../components/course/StudentsSelect";
 
 interface IFormData {
   uid: string;

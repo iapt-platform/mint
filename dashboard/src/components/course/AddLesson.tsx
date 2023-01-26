@@ -4,21 +4,20 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components";
-import { Button, message, Popover, MenuProps } from "antd";
+import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
-import { get } from "../../../request";
+import { get } from "../../request";
 
-import { IUserListResponse } from "../../api/Auth";
+import { IUserListResponse } from "../api/Auth";
 
 interface IFormData {
   userId: string;
 }
 
 interface IWidget {
-  courseId?: string;
+  groupId?: string;
 }
-
-const Widget = ({ courseId }: IWidget) => {
+const Widget = ({ groupId }: IWidget) => {
   const intl = useIntl();
 
   const form = (
@@ -57,15 +56,6 @@ const Widget = ({ courseId }: IWidget) => {
             },
           ]}
         />
-        <ProFormSelect
-          colProps={{ xl: 8, md: 12 }}
-          name="userType"
-          label={intl.formatMessage({ id: "forms.fields.type.label" })}
-          valueEnum={{
-            3: intl.formatMessage({ id: "forms.fields.student.label" }),
-            2: intl.formatMessage({ id: "forms.fields.assistant.label" }),
-          }}
-        />
       </ProForm.Group>
     </ProForm>
   );
@@ -77,7 +67,7 @@ const Widget = ({ courseId }: IWidget) => {
       trigger="click"
     >
       <Button icon={<UserAddOutlined />} key="add" type="primary">
-        {intl.formatMessage({ id: "buttons.group.add.member" })}
+        {intl.formatMessage({ id: "buttons.lesson.add.lesson" })}
       </Button>
     </Popover>
   );

@@ -1,14 +1,10 @@
 import { useIntl } from "react-intl";
-import {
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-} from "@ant-design/pro-components";
+import { ProForm, ProFormSelect } from "@ant-design/pro-components";
 import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
-import { get } from "../../../request";
+import { get } from "../../request";
 
-import { IUserListResponse } from "../../api/Auth";
+import { IUserListResponse } from "../api/Auth";
 
 interface IFormData {
   userId: string;
@@ -67,7 +63,7 @@ const Widget = ({ groupId }: IWidget) => {
       trigger="click"
     >
       <Button icon={<UserAddOutlined />} key="add" type="primary">
-        {intl.formatMessage({ id: "buttons.lesson.add.lesson" })}
+        {intl.formatMessage({ id: "buttons.group.add.member" })}
       </Button>
     </Popover>
   );

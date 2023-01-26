@@ -1,10 +1,10 @@
 //课程详情页面
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Breadcrumb, Divider, message } from "antd";
+import { Divider, message } from "antd";
 
-import CourseShow from "../../../components/library/course/CourseShow";
-import CourseIntro from "../../../components/library/course/CourseIntro";
+import CourseShow from "../../../components/course/CourseShow";
+import CourseIntro from "../../../components/course/CourseIntro";
 import TextBook from "../../../components/course/TextBook";
 
 import { IUser } from "../../../components/auth/User";

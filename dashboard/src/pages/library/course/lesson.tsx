@@ -1,15 +1,11 @@
 //讲页面
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { Layout, Col, Row, Divider } from "antd";
-import CourseShow from "../../../components/library/course/CourseShow";
-import CourseIntro from "../../../components/library/course/CourseIntro";
+
 import TocTree from "../../../components/article/TocTree";
 import { ListNodeData } from "../../../components/article/EditableTree";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
+
 import { marked } from "marked";
-const { Content, Header } = Layout;
+const { Content } = Layout;
 
 let arrTocTree: ListNodeData[] = [];
 let i = 0;
@@ -38,8 +34,7 @@ let markdown =
   "```const a=2; ```";
 
 const Widget = () => {
-  // TODO
-  const { courseid } = useParams(); //url 参数
+  // TODO delete
 
   return (
     <Layout>
