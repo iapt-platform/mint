@@ -79,8 +79,8 @@ class CorpusController extends Controller
         $record = Sentence::select($this->selectCol)
         ->where('book_id',$sentId[0])
         ->where('paragraph',$sentId[1])
-        ->where('word_start',$sentId[2])
-        ->where('word_end',$sentId[3])
+        ->where('word_start',(int)$sentId[2])
+        ->where('word_end',(int)$sentId[3])
         ->whereIn('channel_uid',$channels)
         ->get();
         Log::info("sent count:".count($record));
