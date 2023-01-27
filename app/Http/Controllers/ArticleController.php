@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Resources\ArticleResource;
 
 class ArticleController extends Controller
 {
@@ -146,7 +147,7 @@ class ArticleController extends Controller
                 return $this->error(__('auth.failed'));
             }
         }
-        return $this->ok($article);
+        return $this->ok(new ArticleResource($article));
     }
 
     /**
