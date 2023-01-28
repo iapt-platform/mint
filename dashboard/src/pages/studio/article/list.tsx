@@ -72,7 +72,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
+                <Link to={`/article/article/${row.id}`} target="_blank">
                   {row.title}
                 </Link>
               );
