@@ -78,6 +78,15 @@ export function XmlToReact(
                 )
               );
               break;
+            case "param":
+              output.push(
+                React.createElement(
+                  "span",
+                  getAttr(value, i),
+                  convert(value, wordWidget, convertor)
+                )
+              );
+              break;
             default:
               output.push(
                 React.createElement(
