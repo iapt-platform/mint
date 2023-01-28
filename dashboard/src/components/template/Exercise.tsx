@@ -2,13 +2,15 @@ import { Button, Card } from "antd";
 
 interface IWidgetExerciseCtl {
   id?: string;
+  title?: string;
   channel?: string;
   children?: React.ReactNode;
 }
-const ExerciseCtl = ({ id, channel, children }: IWidgetExerciseCtl) => {
+const ExerciseCtl = ({ id, title, channel, children }: IWidgetExerciseCtl) => {
+  const cardTitle = title ? title : "练习";
   return (
     <Card
-      title="练习"
+      title={cardTitle}
       extra={<Button type="primary">做练习</Button>}
       style={{ backgroundColor: "wheat" }}
     >
