@@ -14,6 +14,7 @@ import ProTabs from "../../../components/article/ProTabs";
  *   page  页码
  *   chapter 段落
  *   article 文章
+ *   textbook 课本
  * @returns
  */
 const Widget = () => {
@@ -51,7 +52,7 @@ const Widget = () => {
           >
             <Article
               active={true}
-              type={`corpus/${type}`}
+              type={type}
               articleId={id}
               mode={articleMode}
             />
