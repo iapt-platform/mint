@@ -1616,6 +1616,11 @@ function myEndingTooltip(inStr){
             tooltip:'的(同类修饰)',
         },
         {
+            id:"my_va",
+            name:"သော်၎င်း",
+            tooltip:'或',
+        },
+        {
             id:"my_ca",
             name:"လည်းကောင်း",
             tooltip:'和',
