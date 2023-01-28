@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import { useNavigate } from "react-router-dom";
+import { NavigateOptions, useNavigate } from "react-router-dom";
 import AnthologyDetail from "../article/AnthologyDetail";
 
 interface IWidget {
@@ -18,7 +18,7 @@ const Widget = ({ anthologyId, courseId }: IWidget) => {
           <AnthologyDetail
             aid={anthologyId}
             onArticleSelect={(keys: string[]) => {
-              navigate(`/article/textbook/${courseId}/${keys[0]}`);
+              navigate(`/article/textbook/${courseId}_${keys[0]}/read`);
             }}
           />
         </Col>
