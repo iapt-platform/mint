@@ -130,6 +130,43 @@ class CourseMemberController extends Controller
     public function update(Request $request, CourseMember $courseMember)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+
+        if($request->has('channel_id')) {
+            if($courseMember->user_id !== $user['user_uid']){
+                return $this->error(__('auth.failed'));
+            }
+            $courseMember->channel_id = $request->get('channel_id');
+        }
+        $courseMember->save();
+        return $this->ok(new CourseMemberResource($courseMember));
+
+    }
+    public function set_channel(Request $request)
+    {
+        //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+
+        if($request->has('channel_id')) {
+            $courseMember = CourseMember::where('course_id',$request->get('course_id'))
+                                        ->where('user_id',$user['user_uid'])
+                                        ->first();
+            if($courseMember){
+                $courseMember->channel_id = $request->get('channel_id');
+                $courseMember->save();
+                return $this->ok(new CourseMemberResource($courseMember));
+            }else{
+                return $this->error(__('auth.failed'));
+            }
+        }
+
+
     }
 
     /**
@@ -165,5 +202,27 @@ class CourseMemberController extends Controller
 
         $delete = $courseMember->delete();
         return $this->ok($delete);
+    }
+
+    /**
+     * 获取当前用户权限
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function curr(Request $request)
+    {
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $courseUser = CourseMember::where('course_id',$request->get("course_id"))
+                ->where('user_id',$user["user_uid"])
+                ->select(['role','channel_id'])->first();
+        if($courseUser){
+            return $this->ok($courseUser);
+        }else{
+            return $this->error("not member");
+        }
     }
 }
