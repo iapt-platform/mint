@@ -66,7 +66,7 @@ class CourseController extends Controller
                 }
                 //我学习的课程
                 $course = CourseMember::where('user_id',$user["user_uid"])
-                                      ->where('role','member')
+                                      ->where('role','student')
                                       ->select('course_id')
                                       ->get();
                 $courseId = [];
@@ -83,7 +83,7 @@ class CourseController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 $course = CourseMember::where('user_id',$user["user_uid"])
-                ->where('role','manager')
+                ->where('role','assistant')
                 ->select('course_id')
                 ->get();
                 $courseId = [];
@@ -133,9 +133,13 @@ class CourseController extends Controller
         $create = Course::where('studio_id', $user["user_uid"])->count();
         //我学习的课程
         $study = CourseMember::where('user_id',$user["user_uid"])
-        ->where('role','member')
+        ->where('role','student')
         ->count();
-        return $this->ok(['create'=>$create,'teach'=>0,'study'=>$study]);
+        //我任教的课程
+        $teach = CourseMember::where('user_id',$user["user_uid"])
+        ->where('role','assistant')
+        ->count();
+        return $this->ok(['create'=>$create,'teach'=>$teach,'study'=>$study]);
     }
     /**
      * Store a newly created resource in storage.
