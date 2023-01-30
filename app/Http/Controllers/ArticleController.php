@@ -137,14 +137,15 @@ class ArticleController extends Controller
         if($article->status<30){
             //私有文章，判断权限
             $user = \App\Http\Api\AuthApi::current($request);
-            if($user){
+            if(!$user){
                 //判断当前用户是否有指定的studio的权限
                 return $this->error(__('auth.failed'));
             }
             if($user['user_uid'] !== $article->owner){
                 //非所有者
-                //TODO 判断是否协作
                 return $this->error(__('auth.failed'));
+            }else{
+                //TODO 判断是否协作
             }
         }
         return $this->ok(new ArticleResource($article));
