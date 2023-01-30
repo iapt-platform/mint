@@ -19,12 +19,12 @@ const Widget = () => {
   // TODO
   const intl = useIntl();
   const navigate = useNavigate();
-  const [userName, setUserName] = useState("");
-  const [nickName, setNickName] = useState("");
+  const [userName, setUserName] = useState<string>();
+  const [nickName, setNickName] = useState<string>();
   const user = useAppSelector(_currentUser);
   useEffect(() => {
-    setUserName(user ? user.realName : "");
-    setNickName(user ? user.nickName : "");
+    setUserName(user?.realName);
+    setNickName(user?.nickName);
   }, [user]);
 
   const userCard = (
@@ -87,7 +87,7 @@ const Widget = () => {
             icon={<UserOutlined />}
             size="small"
           >
-            {nickName.slice(0, 1)}
+            {nickName?.slice(0, 1)}
           </Avatar>
         </Popover>
       </>
