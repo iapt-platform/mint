@@ -82,6 +82,7 @@ export interface ICourseMemberData {
   id?: number;
   user_id: string;
   course_id: string;
+  channel_id?: string;
   role?: string;
   user?: IUserRequest;
   created_at?: string;
@@ -106,4 +107,29 @@ export interface ICourseMemberDeleteResponse {
   ok: boolean;
   message: string;
   data: boolean;
+}
+
+export interface ICourseCurrUserResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    role: string;
+    channel_id: string;
+  };
+}
+
+export interface IExerciseListData {
+  user: IUser;
+  wbw: number;
+  translation: number;
+  question: number;
+  html: string;
+}
+export interface ICourseExerciseResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IExerciseListData[];
+    count: number;
+  };
 }
