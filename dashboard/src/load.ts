@@ -13,6 +13,7 @@ export interface ISiteInfoResponse {
   title: string;
 }
 interface IUserData {
+  id: string;
   nickName: string;
   realName: string;
   avatar: string;
@@ -49,6 +50,7 @@ const init = () => {
         console.log(response);
         if ("data" in response) {
           const it: IUser = {
+            id: response.data.id,
             nickName: response.data.nickName,
             realName: response.data.realName,
             avatar: response.data.avatar,
