@@ -6,6 +6,12 @@ import { get } from "../../request";
 import store from "../../store";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
+import { ICourseCurrUserResponse } from "../api/Course";
+import { ICourseUser, signIn } from "../../reducers/course-user";
+import { ICourse } from "../../pages/library/course/course";
+import { ITextbook, refresh } from "../../reducers/current-course";
+import ExerciseList from "./ExerciseList";
+import ExerciseAnswer from "../course/ExerciseAnswer";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -16,7 +22,9 @@ export type ArticleType =
   | "sent"
   | "sim"
   | "page"
-  | "textbook";
+  | "textbook"
+  | "exercise"
+  | "exercise-list";
 interface IWidgetArticle {
   type?: string;
   articleId?: string;
@@ -31,6 +39,7 @@ const Widget = ({
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
+  const [extra, setExtra] = useState(<></>);
 
   let channels: string[] = [];
   if (typeof articleId !== "undefined") {
@@ -39,7 +48,40 @@ const Widget = ({
       channels = aId.slice(1);
     }
   }
-
+  useEffect(() => {
+    /**
+     * 由课本进入插叙当前用户的权限和channel
+     */
+    if (
+      type === "textbook" ||
+      type === "exercise" ||
+      type === "exercise-list"
+    ) {
+      if (typeof articleId !== "undefined") {
+        const id = articleId.split("_");
+        get<ICourseCurrUserResponse>(`/v2/course-curr?course_id=${id[0]}`).then(
+          (response) => {
+            console.log("course user", response);
+            if (response.ok) {
+              const it: ICourseUser = {
+                channelId: response.data.channel_id,
+                role: response.data.role,
+              };
+              store.dispatch(signIn(it));
+              /**
+               * redux发布课程信息
+               */
+              const ic: ITextbook = {
+                courseId: id[0],
+                articleId: id[1],
+              };
+              store.dispatch(refresh(ic));
+            }
+          }
+        );
+      }
+    }
+  }, [articleId, type]);
   useEffect(() => {
     console.log("mode", mode, articleMode);
     if (!active) {
@@ -71,20 +113,29 @@ const Widget = ({
             message.error("文章id期待2个，实际只给了一个");
             return;
           }
-          url = `/v2/article/${id[1]}?mode=${mode}&course=${id[0]}`;
+          url = `/v2/article/${id[1]}?mode=${mode}&view=textbook&course=${id[0]}`;
           break;
         case "exercise":
           /**
            * 从练习进入
-           * id 由3部分组成
-           * 课程id_文章id_练习id
+           * id 由4部分组成
+           * 课程id_文章id_练习id_username
            */
           const exerciseId = articleId.split("_");
           if (exerciseId.length < 3) {
             message.error("练习id期待3个");
             return;
           }
-          url = `/v2/article/${exerciseId[1]}?mode=${mode}&course=${exerciseId[0]}&exercise=${exerciseId[2]}`;
+          console.log("exe", exerciseId);
+          url = `/v2/article/${exerciseId[1]}?mode=${mode}&course=${exerciseId[0]}&exercise=${exerciseId[2]}&user=${exerciseId[3]}`;
+
+          setExtra(
+            <ExerciseAnswer
+              courseId={exerciseId[0]}
+              articleId={exerciseId[1]}
+              exerciseId={exerciseId[2]}
+            />
+          );
           break;
         case "exercise-list":
           /**
@@ -97,12 +148,22 @@ const Widget = ({
             message.error("练习id期待3个");
             return;
           }
-          url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}&list=true`;
+          url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}`;
+
+          //url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}&list=true`;
+          setExtra(
+            <ExerciseList
+              courseId={exerciseListId[0]}
+              articleId={exerciseListId[1]}
+              exerciseId={exerciseListId[2]}
+            />
+          );
           break;
         default:
           url = `/v2/corpus/${type}/${articleId}/${mode}`;
           break;
       }
+      console.log("url", url);
       get<IArticleResponse>(url).then((json) => {
         console.log("article", json);
         if (json.ok) {
@@ -115,18 +176,21 @@ const Widget = ({
   }, [active, type, articleId, mode, articleMode]);
 
   return (
-    <ArticleView
-      id={articleData?.uid}
-      title={articleData?.title}
-      subTitle={articleData?.subtitle}
-      summary={articleData?.summary}
-      content={articleData ? articleData.content : ""}
-      html={articleData?.html}
-      path={articleData?.path}
-      created_at={articleData?.created_at}
-      updated_at={articleData?.updated_at}
-      channels={channels}
-    />
+    <>
+      <ArticleView
+        id={articleData?.uid}
+        title={articleData?.title}
+        subTitle={articleData?.subtitle}
+        summary={articleData?.summary}
+        content={articleData ? articleData.content : ""}
+        html={articleData?.html}
+        path={articleData?.path}
+        created_at={articleData?.created_at}
+        updated_at={articleData?.updated_at}
+        channels={channels}
+      />
+      {extra}
+    </>
   );
 };
 
