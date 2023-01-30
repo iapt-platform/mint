@@ -88,8 +88,11 @@ class CollectionController extends Controller
                     $value->childrenNumber = 0;
                 }
 
-                if(isset($value->article_list)){
-                    $result[$key]->article_list = array_slice(\json_decode($value->article_list),0,4);
+                if(isset($value->article_list) && !empty($value->article_list) ){
+                    $arrList = \json_decode($value->article_list);
+                    if(is_array($arrList)){
+                        $result[$key]->article_list = array_slice($arrList,0,4);
+                    }
                 }
                 $value->studio = [
                     'id'=>$value->owner,
