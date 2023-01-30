@@ -4,7 +4,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 import MdView from "../template/MdView";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
 
-const { Paragraph, Title } = Typography;
+const { Paragraph, Title, Text } = Typography;
 
 export interface IWidgetArticleData {
   id?: string;
@@ -39,17 +39,15 @@ const Widget = ({
       </Button>
       <div>
         <TocPath data={path} channel={channels} />
-        <Title type="secondary" level={5}>
-          {subTitle}
-        </Title>
-        <Title level={3}>
+
+        <Title level={4}>
           <div
             dangerouslySetInnerHTML={{
               __html: title ? title : "",
             }}
           ></div>
         </Title>
-
+        <Text type="secondary">{subTitle}</Text>
         <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "more" }}>
           {summary}
         </Paragraph>
