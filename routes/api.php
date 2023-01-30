@@ -31,6 +31,7 @@ use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseMemberController;
+use App\Http\Controllers\ExerciseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,8 +91,11 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('wbwlookup',WbwLookupController::class);
     Route::apiResource('course',CourseController::class);
     Route::apiResource('course-member',CourseMemberController::class);
+    Route::put('course-member_set-channel',[CourseMemberController::class,'set_channel']);
     Route::get('course-my-course', [CourseController::class, 'showMyCourseNumber']);
+    Route::get('course-curr', [CourseMemberController::class, 'curr']);
 
+    Route::apiResource('exercise',ExerciseController::class);
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
