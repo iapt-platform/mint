@@ -94,8 +94,6 @@ const Widget = () => {
               },
             ]}
           />
-        </ProForm.Group>
-        <ProForm.Group>
           <ProFormText
             width="md"
             name="subtitle"
@@ -104,25 +102,26 @@ const Widget = () => {
             })}
           />
         </ProForm.Group>
+
+        <ProForm.Group>
+          <LangSelect width="md" />
+          <PublicitySelect width="md" />
+        </ProForm.Group>
+
         <ProForm.Group>
           <ProFormTextArea
             name="summary"
-            width="md"
+            width="lg"
             label={intl.formatMessage({
               id: "forms.fields.summary.label",
             })}
           />
         </ProForm.Group>
-        <ProForm.Group>
-          <LangSelect />
-        </ProForm.Group>
-        <ProForm.Group>
-          <PublicitySelect />
-        </ProForm.Group>
+
         <ProForm.Group>
           <ProFormTextArea
             name="content"
-            width="md"
+            width="lg"
             label={intl.formatMessage({
               id: "forms.fields.content.label",
             })}
