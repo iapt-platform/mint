@@ -55,9 +55,19 @@ class ExportWbwController extends Controller
                 foreach ($wordsList as $word) {
                     $pali = $word->real->__toString();
                     $case = explode("#",$word->case->__toString()) ;
-                    $type = $case[0];
-                    $grammar = $case[1];
-                    $grammar = str_replace("null","",$grammar);
+                    if(isset($case[0])){
+                        $type = $case[0];
+                    }else{
+                        $type = "";
+                    }
+
+                    if(isset($case[1])){
+                        $grammar = $case[1];
+                        $grammar = str_replace("null","",$grammar);
+                    }else{
+                        $grammar = "";
+                    }
+
                     $style = $word->style->__toString();
                     $factormeaning = str_replace(" ","",$word->om->__toString());
                     $factormeaning = str_replace("↓↓","",$factormeaning);
