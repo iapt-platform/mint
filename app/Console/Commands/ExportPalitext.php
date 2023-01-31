@@ -42,13 +42,14 @@ class ExportPalitext extends Command
         $filename = "public/export/offline/pali_text.csv";
         Storage::disk('local')->put($filename, "");
         $file = fopen(storage_path("app/{$filename}"),"w");
-        fputcsv($file,['book','paragraph','level','toc','length','chapter_len','next_chapter','prev_chapter','parent','chapter_strlen','path']);
+        fputcsv($file,['id','book','paragraph','level','toc','length','chapter_len','next_chapter','prev_chapter','parent','chapter_strlen']);
         $bar = $this->output->createProgressBar(PaliText::count());
-        foreach (PaliText::select(['book','paragraph','level','toc','lenght','chapter_len','next_chapter','prev_chapter','parent','chapter_strlen','path'])
+        foreach (PaliText::select(['uid','book','paragraph','level','toc','lenght','chapter_len','next_chapter','prev_chapter','parent','chapter_strlen'])
                     ->orderBy('book')
                     ->orderBy('paragraph')
                     ->cursor() as $chapter) {
             fputcsv($file,[
+                            $chapter->uid,
                             $chapter->book,
                             $chapter->paragraph,
                             $chapter->level,
@@ -59,7 +60,6 @@ class ExportPalitext extends Command
                             $chapter->prev_chapter,
                             $chapter->parent,
                             $chapter->chapter_strlen,
-                            $chapter->path,
                             ]);
             $bar->advance();
         }
