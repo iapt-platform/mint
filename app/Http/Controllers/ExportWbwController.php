@@ -53,18 +53,23 @@ class ExportWbwController extends Controller
 
                 $wordsList = $xmlWord->xpath('//word');
                 foreach ($wordsList as $word) {
-                    $type = $word->type->__toString();
+                    $pali = $word->real->__toString();
+                    $case = explode("#",$word->case->__toString()) ;
+                    $type = $case[0];
+                    $grammar = $case[1];
+                    $grammar = str_replace("null","",$grammar);
                     $style = $word->style->__toString();
-                    if($type !== '.ctl.' && $style !== 'note'){
+                    $factormeaning = str_replace(" ","",$word->om->__toString());
+                    $factormeaning = str_replace("↓↓","",$factormeaning);
+                    if($type !== '.ctl.' && $style !== 'note' && !empty($pali)){
                         $sent['data'][]=[
                             'pali'=>$word->real->__toString(),
-                            'mean' => $word->mean->__toString(),
+                            'mean' => str_replace(" ","",$word->mean->__toString()),
                             'type' => ltrim($type,'.'),
-                            'grammar' => ltrim(str_replace('$.',',',$word->gramma->__toString()),'.') ,
-                            'case' => ltrim(str_replace(['$.','#.'],[' ',' '],$word->case->__toString()),'.') ,
+                            'grammar' => ltrim(str_replace('$.',',',$grammar),'.') ,
                             'parent' => $word->parent->__toString(),
                             'factors' => $word->org->__toString(),
-                            'factormeaning' => $word->om->__toString()
+                            'factormeaning' => $factormeaning
                         ];
                     }
 

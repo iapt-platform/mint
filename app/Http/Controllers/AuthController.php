@@ -89,6 +89,7 @@ class AuthController extends Controller
             $userinfo = new \UserInfo();
 		    $username = $userinfo->getName($curr['user_uid']);
             $user = [
+                "id"=>$curr['user_uid'],
                 "nickName"=> $username['nickname'],
                 "realName"=> $username['username'],
                 "avatar"=> "",

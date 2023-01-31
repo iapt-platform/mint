@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Support\Str;
 use App\Http\Api\MdRender;
 use Illuminate\Http\Resources\Json\JsonResource;
 

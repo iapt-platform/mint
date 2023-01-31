@@ -88,8 +88,11 @@ class CollectionController extends Controller
                     $value->childrenNumber = 0;
                 }
 
-                if(isset($value->article_list)){
-                    $result[$key]->article_list = array_slice(\json_decode($value->article_list),0,4);
+                if(isset($value->article_list) && !empty($value->article_list) ){
+                    $arrList = \json_decode($value->article_list);
+                    if(is_array($arrList)){
+                        $result[$key]->article_list = array_slice($arrList,0,4);
+                    }
                 }
                 $value->studio = [
                     'id'=>$value->owner,
@@ -158,7 +161,7 @@ class CollectionController extends Controller
     public function show(Request  $request,$id)
     {
         //
-		$indexCol = ['uid','title','subtitle','summary','article_list','owner','lang','updated_at','created_at'];
+		$indexCol = ['uid','title','subtitle','summary','article_list','status','owner','lang','updated_at','created_at'];
 
 		$result  = Collection::select($indexCol)->where('uid', $id)->first();
 		if($result){
