@@ -19,16 +19,18 @@
             <h3>{{ $sent["sid"] }}</h3>
             <div>
             @foreach ($sent["data"] as $wbw)
-            <b>{{$wbw["pali"]}}</b>
-            <span>{{$wbw["type"]}}</span>
-            <span>{{$wbw["grammar"]}}</span>
-            <span>{{$wbw["case"]}}</span>
-            <span> of </span>
-            <span>{{$wbw["parent"]}}</span>
-            <span>{{$wbw["mean"]}}</span>
-            <span style="color:gray;">
-            <span>({{$wbw["factors"]}}</span>
-            <span>{{$wbw["factormeaning"]}})</span>
+            <b>{{$wbw["pali"]}}:</b>
+            <span class='type' style="font-style: italic;">{{$wbw["type"]}}</span>
+            <span class='grammar' style="font-style: italic;">{{$wbw["grammar"]}}</span>
+            @if(!empty($wbw["grammar"]) && !empty($wbw["parent"]))
+                <span class='of'> of </span>
+            @endif
+            <span class="parent" >{{$wbw["parent"]}} / </span>
+
+            <span class='meaning'>{{$wbw["mean"]}}</span>
+            <span class="factors" style="color:gray;">
+                <span>({{$wbw["factors"]}}</span>
+                <span>{{$wbw["factormeaning"]}})</span>
             </span>
             @endforeach
             </div>
