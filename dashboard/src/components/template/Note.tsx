@@ -7,25 +7,27 @@ const { Paragraph, Link } = Typography;
 interface IWidgetNoteCtl {
   trigger?: string;
   note?: string;
+  children?: React.ReactNode;
 }
-const NoteCtl = ({ trigger, note }: IWidgetNoteCtl) => {
-  const noteCard = <Paragraph copyable>{note}</Paragraph>;
+const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
+  const noteCard = children ? children : <Paragraph copyable>{note}</Paragraph>;
   const show = trigger ? trigger : <InfoCircleOutlined />;
   return (
     <>
-      <Popover content={noteCard} placement="bottom">
+      <Popover content={children} placement="bottom">
         <Link>{show}</Link>
       </Popover>
     </>
   );
 };
 
-interface IWidgetTerm {
+interface IWidget {
   props: string;
+  children?: React.ReactNode;
 }
-const Widget = ({ props }: IWidgetTerm) => {
+const Widget = ({ props, children }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetNoteCtl;
-  return <NoteCtl {...prop} />;
+  return <NoteCtl {...prop}>{children}</NoteCtl>;
 };
 
 export default Widget;

@@ -17,7 +17,7 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
     case "term":
       return <Term props={props ? props : ""} />;
     case "note":
-      return <Note props={props ? props : ""} />;
+      return <Note props={props ? props : ""}>{children}</Note>;
     case "sentread":
       return <SentRead props={props ? props : ""} />;
     case "sentedit":
