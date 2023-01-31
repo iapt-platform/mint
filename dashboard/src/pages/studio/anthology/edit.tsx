@@ -6,7 +6,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Card, Col, message, Row, Tabs } from "antd";
+import { Card, Form, message, Tabs } from "antd";
 
 import { get, put } from "../../../request";
 import {
@@ -18,6 +18,7 @@ import type { ListNodeData } from "../../../components/article/EditableTree";
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
+import MDEditor from "@uiw/react-md-editor";
 
 interface IFormData {
   title: string;
@@ -33,6 +34,7 @@ const Widget = () => {
   const [tocData, setTocData] = useState(listdata);
   const [title, setTitle] = useState("");
   const { studioname, anthology_id } = useParams(); //url 参数
+  const [contentValue, setContentValue] = useState<string>("ddd");
   let treeList: ListNodeData[] = [];
 
   const edit = (
@@ -44,7 +46,7 @@ const Widget = () => {
         const request: IAnthologyDataRequest = {
           title: values.title,
           subtitle: values.subtitle,
-          summary: values.summary,
+          summary: contentValue,
           article_list: treeList.map((item) => {
             return {
               article: item.key,
@@ -83,9 +85,11 @@ const Widget = () => {
             level: parseInt(item.level),
           };
         });
+        console.log(res.data);
         setTocData(toc);
         treeList = toc;
         setTitle(res.data.title);
+        setContentValue(res.data.summary);
         return {
           title: res.data.title,
           subtitle: res.data.subtitle,
@@ -125,15 +129,20 @@ const Widget = () => {
         <LangSelect width="md" />
         <PublicitySelect width="md" />
       </ProForm.Group>
-
       <ProForm.Group>
-        <ProFormTextArea
+        <Form.Item
           name="summary"
-          width="md"
-          label={intl.formatMessage({
-            id: "forms.fields.summary.label",
-          })}
-        />
+          label={intl.formatMessage({ id: "forms.fields.summary.label" })}
+        >
+          <MDEditor
+            value={contentValue}
+            onChange={(value: string | undefined) => {
+              if (value) {
+                setContentValue(value);
+              }
+            }}
+          />
+        </Form.Item>
       </ProForm.Group>
     </ProForm>
   );
