@@ -80,6 +80,7 @@ echo 'setup git'
 git config --global core.quotepath false
 git config --global http.version HTTP/1.1
 git config --global pull.rebase false
+git config --global http.proxy socks5h://0:8000
 
 echo "done."
 
