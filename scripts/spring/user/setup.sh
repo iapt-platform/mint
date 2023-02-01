@@ -27,6 +27,12 @@ export NVM_DIR="\$HOME/.nvm"
 EOF
     echo 'export PATH=$HOME/.yarn/bin:$PATH' >> $HOME/.profile
     echo 'export EDITOR=vim' >> $HOME/.profile
+
+    echo 'export http_proxy=socks5h://0:8000' >> $HOME/.profile
+    echo 'export https_proxy=socks5h://0:8000' >> $HOME/.profile
+    echo 'export ftp_proxy=socks5h://0:8000' >> $HOME/.profile
+    
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.profile
 fi
 
 # cd $HOME/.nvm
@@ -52,7 +58,6 @@ then
     # cd $HOME/downloads
     # php composer
     cp composer.phar $HOME/.local/bin/composer
-    echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.profile
 fi
 
 echo 'setup ssh'
