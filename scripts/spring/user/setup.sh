@@ -52,6 +52,7 @@ then
     # cd $HOME/downloads
     # php composer
     cp composer.phar $HOME/.local/bin/composer
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.profile
 fi
 
 echo 'setup ssh'
