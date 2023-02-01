@@ -41,6 +41,12 @@ const ExerciseCtl = ({ id, title, channel, children }: IWidgetExerciseCtl) => {
         default:
           exeButton = (
             <Space>
+              问题筛选
+              <Switch
+                onChange={(checked: boolean) => {
+                  console.log(`switch to ${checked}`);
+                }}
+              />
               对答案
               <Switch
                 onChange={(checked: boolean) => {
