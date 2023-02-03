@@ -69,7 +69,7 @@ class CorpusController extends Controller
     {
         //
     }
-    public function getSentTpl($id,$channels){
+    public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
         $sent = [];
         $sentId = \explode('-',$id);
         $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
@@ -79,15 +79,25 @@ class CorpusController extends Controller
         $record = Sentence::select($this->selectCol)
         ->where('book_id',$sentId[0])
         ->where('paragraph',$sentId[1])
-        ->where('word_start',$sentId[2])
-        ->where('word_end',$sentId[3])
+        ->where('word_start',(int)$sentId[2])
+        ->where('word_end',(int)$sentId[3])
         ->whereIn('channel_uid',$channels)
         ->get();
         Log::info("sent count:".count($record));
+
+
         $channelIndex = $this->getChannelIndex($channels);
 
-        $content = $this->makeContent($record,"edit",$channelIndex);
-        return $content;
+        //获取wbw channel
+        //目前默认的 wbw channel 是第一个translation channel
+        foreach ($channels as  $channel) {
+            # code...
+            if($channelIndex[$channel]->type==='translation'){
+                $this->wbwChannels[] = $channel;
+                break;
+            }
+        }
+        return $this->makeContent($record,$mode,$channelIndex,[],$onlyProps);
     }
     /**
      * Display the specified resource.
@@ -260,7 +270,7 @@ class CorpusController extends Controller
      * $indexChannel channel索引
      * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
      */
-    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[]){
+    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false){
         $content = [];
 		$lastSent = "0-0";
 		$sentCount = 0;
@@ -383,9 +393,14 @@ class CorpusController extends Controller
 
 			$sentCount++;
         }
+        if($onlyProps){
+            return $sent;
+        }
 		$content = $this->pushSent($content,$sent,0,$mode);
-        return \implode("",$content);
+        $output = \implode("",$content);
+        return "<xml>{$output}</xml>";
     }
+
 	private function pushSent($result,$sent,$level=0,$mode='read'){
 
 		$sentProps = base64_encode(\json_encode($sent)) ;

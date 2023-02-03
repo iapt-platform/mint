@@ -49,8 +49,9 @@ class ExportNissaya extends Command
             $channels[] = $value->uid;
         }
         $this->info('channel:'.count($channels));
-        Storage::disk('local')->put("public/export/nissaya.csv", "");
-        $file = fopen(storage_path('app/public/export/nissaya.csv'),"w");
+        $filename = "public/export/nissaya.csv";
+        Storage::disk('local')->put($filename, "");
+        $file = fopen(storage_path("app/$filename"),"w");
         $bar = $this->output->createProgressBar(Sentence::whereIn('channel_uid',$channels)->count());
         foreach (Sentence::whereIn('channel_uid',$channels)->select('content')->cursor() as $sent) {
             $lines = explode("\n",$sent->content);

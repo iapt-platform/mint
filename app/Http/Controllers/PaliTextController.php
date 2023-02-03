@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\PaliText;
+use App\Models\BookTitle;
 use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
@@ -139,7 +140,17 @@ class PaliTextController extends Controller
                 break;
 
             case 'book-toc':
-                //获取全书目录
+                /**
+                 * 获取全书目录
+                 * 2023-1-25 改进算法
+                 * 需求：目录显示丛书以及此丛书下面的所有书。比如，选择清净道论的一个章节。显示清净道论两本书的目录
+                 * 算法：
+                 * 1. 查询这个目录的顶级目录
+                 * 2. 查询book-title 获取丛书名
+                 * 3. 根据从书名找到全部的书
+                 * 4. 获取全部书的目录
+                 */
+
                 $path = PaliText::where('book',$request->get('book'))
                                 ->where('paragraph',$request->get('para'))
                                 ->select('path')->first();
@@ -162,12 +173,26 @@ class PaliTextController extends Controller
                 $rootPara = PaliText::where('book',$root->book)
                                 ->where('paragraph',$root->paragraph)
                                 ->first();
+                $book_title = BookTitle::where('book',$rootPara->book)->where('paragraph',$rootPara->paragraph)->value('title');
+                $books = BookTitle::where('title',$book_title)->get();
+                $chapters = [];
+                $chapters[] = ['book'=>0,'paragraph'=>0,'toc'=>$book_title,'level'=>1];
+                foreach ($books as  $book) {
+                    # code...
+                    $rootPara = PaliText::where('book',$book->book)
+                                ->where('paragraph',$book->paragraph)
+                                ->first();
+                    $table = PaliText::where('book',$rootPara->book)
+                                    ->whereBetween('paragraph',[$rootPara->paragraph,($rootPara->paragraph+$rootPara->chapter_len-1)])
+                                    ->where('level','<',8);
+                    $all_count = $table->count();
+                    $curr_chapters = $table->select(['book','paragraph','toc','level'])->orderBy('paragraph')->get();
+                    foreach ($curr_chapters as  $chapter) {
+                        # code...
+                        $chapters[] = ['book'=>$chapter->book,'paragraph'=>$chapter->paragraph,'toc'=>$chapter->toc,'level'=>($chapter->level+1)];
+                    }
+                }
 
-                $table = PaliText::where('book',$rootPara->book)
-                                ->whereBetween('paragraph',[$rootPara->paragraph,($rootPara->paragraph+$rootPara->chapter_len-1)])
-                                ->where('level','<',8);
-                $all_count = $table->count();
-                $chapters = $table->select(['book','paragraph','toc','level'])->orderBy('paragraph')->get();
                 break;
             }
         if($chapters){

@@ -20,8 +20,32 @@ class CourseController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','title','subtitle','cover','content','content_type','teacher','start_at','end_at','updated_at','created_at'];
+		$indexCol = ['id','title','subtitle','cover','content','content_type','teacher','start_at','end_at','publicity','updated_at','created_at'];
 		switch ($request->get('view')) {
+            case 'new':
+                //最新公开课程列表
+                $table = Course::where('publicity', 30);
+                break;
+            case 'open':
+                /**
+                 * 开放课程列表
+                 * 开放规则：
+                 * 1. 公开
+                 * 2. 课程开始时间比现在时间晚
+                 */
+                $table = Course::where('publicity', 30)
+                            ->whereDate('start_at',">",date("Y-m-d",strtotime("today")));
+                break;
+            case 'close':
+                /**
+                 * 已经关闭课程列表
+                 * 判定规则：
+                 * 1. 公开
+                 * 2. 课程开始时间比现在时间早
+                 */
+                $table = Course::where('publicity', 30)
+                        ->whereDate('start_at',"<=",date("Y-m-d",strtotime("today")));
+                break;
             case 'create':
 	            # 获取 studio 建立的所有 course
                 $user = AuthApi::current($request);
@@ -42,7 +66,7 @@ class CourseController extends Controller
                 }
                 //我学习的课程
                 $course = CourseMember::where('user_id',$user["user_uid"])
-                                      ->where('role','member')
+                                      ->where('role','student')
                                       ->select('course_id')
                                       ->get();
                 $courseId = [];
@@ -59,7 +83,7 @@ class CourseController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 $course = CourseMember::where('user_id',$user["user_uid"])
-                ->where('role','manager')
+                ->where('role','assistant')
                 ->select('course_id')
                 ->get();
                 $courseId = [];
@@ -78,11 +102,7 @@ class CourseController extends Controller
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table = $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
-            if($request->get('view') === 'studio_list'){
-                $table = $table->orderBy('count','desc');
-            }else{
-                $table = $table->orderBy('updated_at','desc');
-            }
+            $table = $table->orderBy('updated_at','desc');
         }
 
         if(isset($_GET["limit"])){
@@ -113,9 +133,13 @@ class CourseController extends Controller
         $create = Course::where('studio_id', $user["user_uid"])->count();
         //我学习的课程
         $study = CourseMember::where('user_id',$user["user_uid"])
-        ->where('role','member')
+        ->where('role','student')
         ->count();
-        return $this->ok(['create'=>$create,'teach'=>0,'study'=>$study]);
+        //我任教的课程
+        $teach = CourseMember::where('user_id',$user["user_uid"])
+        ->where('role','assistant')
+        ->count();
+        return $this->ok(['create'=>$create,'teach'=>$teach,'study'=>$study]);
     }
     /**
      * Store a newly created resource in storage.
@@ -186,9 +210,12 @@ class CourseController extends Controller
         }
         $course->title = $request->get('title');
         $course->subtitle = $request->get('subtitle');
-        $course->cover = $request->get('cover');
+        if($request->has('cover')) {$course->cover = $request->get('cover');}
         $course->content = $request->get('content');
-        $course->teacher = $request->get('teacher_id');
+        if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
+        if($request->has('anthology_id')) {$course->anthology_id = $request->get('anthology_id');}
+        $course->channel_id = $request->get('channel_id');
+        if($request->has('publicity')) {$course->publicity = $request->get('publicity');}
         $course->start_at = $request->get('start_at');
         $course->end_at = $request->get('end_at');
         $course->save();

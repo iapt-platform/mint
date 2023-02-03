@@ -39,8 +39,9 @@ class ExportChapterIndex extends Command
      */
     public function handle()
     {
-        Storage::disk('local')->put("public/export/chapter.csv", "");
-        $file = fopen(storage_path('app/public/export/chapter.csv'),"w");
+        $filename = "public/export/offline/chapter.csv";
+        Storage::disk('local')->put($filename, "");
+        $file = fopen(storage_path("app/{$filename}"),"w");
         fputcsv($file,['id','book','paragraph','language','title','channel_id','progress','updated_at']);
         $bar = $this->output->createProgressBar(ProgressChapter::count());
         foreach (ProgressChapter::select(['uid','book','para','lang','title','channel_id','progress','updated_at'])->cursor() as $chapter) {
