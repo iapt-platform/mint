@@ -210,6 +210,7 @@ class CourseController extends Controller
         }
         $course->title = $request->get('title');
         $course->subtitle = $request->get('subtitle');
+        $course->summary = $request->get('summary');
         if($request->has('cover')) {$course->cover = $request->get('cover');}
         $course->content = $request->get('content');
         if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
@@ -218,6 +219,8 @@ class CourseController extends Controller
         if($request->has('publicity')) {$course->publicity = $request->get('publicity');}
         $course->start_at = $request->get('start_at');
         $course->end_at = $request->get('end_at');
+        $course->join = $request->get('join');
+        $course->request_exp = $request->get('request_exp');
         $course->save();
         return $this->ok($course);
     }
