@@ -23,6 +23,7 @@ class CourseResource extends JsonResource
             "id"=>$this->id,
             "title"=> $this->title,
             "subtitle"=> $this->subtitle,
+            "summary"=> $this->summary,
             "teacher"=> UserApi::getById($this->teacher),
             "course_count"=>10,
             "member_count"=>CourseMember::where('course_id',$this->id)->count(),
@@ -33,6 +34,8 @@ class CourseResource extends JsonResource
             "content_type"=> $this->content_type,
             "cover"=> $this->cover,
             "channel_id"=>$this->channel_id,
+            "join"=> $this->join,
+            "request_exp"=> $this->request_exp,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
