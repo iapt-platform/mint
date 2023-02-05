@@ -1,15 +1,15 @@
 <?php
 // Require Composer's autoloader.
-require_once '../../vendor/autoload.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
 // Require Composer's autoloader.
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require_once '../config.php';
-require_once "../redis/function.php";
-require_once "../public/function.php";
+require_once __DIR__.'/../config.php';
+require_once __DIR__."/../redis/function.php";
+require_once __DIR__."/../public/function.php";
 
 if (PHP_SAPI == "cli") {
 	if ($argc >= 2) {
@@ -40,9 +40,9 @@ if (PHP_SAPI == "cli") {
 			while(($data=fgets($fp))!==FALSE){
 				$irow++;
 				if($irow==1){
-					$strSubject = $data; 
+					$strSubject = $data;
 				}else{
-					$strBody .= $data; 
+					$strBody .= $data;
 				}
 			}
 			fclose($fp);
