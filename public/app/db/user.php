@@ -27,7 +27,7 @@ CREATE TABLE users (
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL //自动更新
 );
 */
-class User extends Table
+class PCD_User extends Table
 {
     function __construct($redis=false) {
 		parent::__construct(_FILE_DB_USERINFO_, "user", "", "",$redis);
