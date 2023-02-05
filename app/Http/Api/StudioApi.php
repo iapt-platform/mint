@@ -20,7 +20,7 @@ class StudioApi{
     }
     public static function getById($id){
         //TODO 改为studio table
-        if(empty($name)){
+        if(empty($id)){
             return false;
         }
         $userinfo = new \UserInfo();

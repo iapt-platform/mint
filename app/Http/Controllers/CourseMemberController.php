@@ -31,6 +31,16 @@ class CourseMemberController extends Controller
                 //TODO 判断当前用户是否有指定的 course 的权限
                 $table = CourseMember::where('course_id', $request->get('id'));
 				break;
+            case 'user':
+                //获取某个用户的角色
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                //TODO 判断当前用户是否有指定的 course 的权限
+                $table = CourseMember::where('course_id', $request->get('course'))
+                                    ->where('user_id', $user['user_uid']);
+                break;
         }
         if(isset($_GET["search"])){
             $table = $table->where('title', 'like', $_GET["search"]."%");
@@ -104,7 +114,30 @@ class CourseMemberController extends Controller
         $newMember->user_id = $validated['user_id'];
         $newMember->course_id = $validated['course_id'];
         $newMember->role = $validated['role'];
+        /**
+         * 查找course 信息，根据加入方式设置状态
+         * open : accepted
+         * manual: progressing
+         */
+        $course  = Course::find($validated['course_id']);
+        if($course){
+            switch ($course->join) {
+                case 'open':
+                    $newMember->status = 'accepted';
+                    break;
+                case 'manual':
+                    $newMember->status = 'progressing';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }else{
+            return $this->error('invalid course');
+        }
+
         $newMember->save();
+
         return $this->ok(new CourseMemberResource($newMember));
 
     }
@@ -140,6 +173,9 @@ class CourseMemberController extends Controller
                 return $this->error(__('auth.failed'));
             }
             $courseMember->channel_id = $request->get('channel_id');
+        }
+        if($request->has('status')) {
+            $courseMember->status = $request->get('status');
         }
         $courseMember->save();
         return $this->ok(new CourseMemberResource($courseMember));
@@ -194,6 +230,8 @@ class CourseMemberController extends Controller
             $courseUser = CourseMember::where('course_id',$courseMember->course_id)
                 ->where('user_id',$user["user_uid"])
                 ->select('role')->first();
+            //open 课程 可以删除自己
+
            if(!$courseUser || $courseUser->role ==="student"){
                 //普通成员没有删除权限
                 return $this->error(__('auth.failed'));

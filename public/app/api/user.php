@@ -3,7 +3,7 @@ require_once "../db/user.php";
 require_once "../redis/function.php";
 require_once "../public/function.php";
 
-$model = new User(redis_connect());
+$model = new PCD_User(redis_connect());
 
 switch ($_REQUEST["_method"]) {
 	case 'index':
