@@ -13,7 +13,7 @@ class ExportPalitext extends Command
      *
      * @var string
      */
-    protected $signature = 'export:palitext';
+    protected $signature = 'export:pali.text';
 
     /**
      * The console command description.
