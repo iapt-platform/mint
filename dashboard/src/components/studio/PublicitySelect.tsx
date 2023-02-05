@@ -29,7 +29,6 @@ const Widget = ({ width }: IWidget) => {
   return (
     <ProFormSelect
       options={options}
-      initialValue={10}
       width={width}
       name="status"
       allowClear={false}
