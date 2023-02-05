@@ -1,4 +1,11 @@
-export type Role = "owner" | "manager" | "editor" | "member" | "unknown";
+export type Role =
+  | "owner"
+  | "manager"
+  | "editor"
+  | "member"
+  | "student"
+  | "assistant"
+  | "unknown";
 
 export interface IUserRequest {
   id?: string;
