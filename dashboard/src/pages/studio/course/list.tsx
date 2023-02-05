@@ -20,6 +20,7 @@ import { API_HOST, get } from "../../../request";
 import {
   ICourseListResponse,
   ICourseNumberResponse,
+  TCourseMemberStatus,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
 
@@ -60,6 +61,8 @@ interface DataItem {
   course_end_at?: string; //课程结束时间
   intro_markdown?: string; //简介
   cover_img_name?: string; //封面图片文件名
+  myStatus?: TCourseMemberStatus;
+  countProgressing?: number;
 }
 
 const renderBadge = (count: number, active = false) => {
@@ -103,6 +106,7 @@ const Widget = () => {
      * 获取各种课程的数量
      */
     const url = `/v2/course-my-course?studio=${studioname}`;
+    console.log("url", url);
     get<ICourseNumberResponse>(url).then((json) => {
       if (json.ok) {
         setCreateNumber(json.data.create);
@@ -161,14 +165,23 @@ const Widget = () => {
             }),
             dataIndex: "teacher",
             key: "teacher",
-            //tip: "过长会自动收缩",
-            ellipsis: true,
           },
           {
-            title: "成员",
+            title: intl.formatMessage({
+              id: "course.table.count.member.title",
+            }),
             dataIndex: "member_count",
             key: "member_count",
             width: 80,
+          },
+          {
+            title: intl.formatMessage({
+              id: "course.table.count.progressing.title",
+            }),
+            dataIndex: "countProgressing",
+            key: "countProgressing",
+            width: 80,
+            hideInTable: activeKey === "study" ? true : false,
           },
           {
             //类型
@@ -203,14 +216,35 @@ const Widget = () => {
             width: 120,
             valueType: "option",
             render: (text, row, index, action) => {
+              let mainButton = <></>;
+              switch (activeKey) {
+                case "create":
+                  mainButton = (
+                    <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
+                      {intl.formatMessage({
+                        //编辑
+                        id: "buttons.edit",
+                      })}
+                    </Link>
+                  );
+                  break;
+                case "study":
+                  mainButton = (
+                    <span>
+                      {intl.formatMessage({
+                        id: `course.member.status.${row.myStatus}.label`,
+                      })}
+                    </span>
+                  );
+                  break;
+                case "teach":
+                  break;
+                default:
+                  break;
+              }
               return [
-                <Dropdown.Button key={index} type="link" overlay={menu}>
-                  <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
-                    {intl.formatMessage({
-                      //编辑
-                      id: "buttons.edit",
-                    })}
-                  </Link>
+                <Dropdown.Button key={index} type="text" overlay={menu}>
+                  {mainButton}
                 </Dropdown.Button>,
               ];
             },
@@ -266,6 +300,7 @@ const Widget = () => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
+          console.log("url", url);
 
           const res = await get<ICourseListResponse>(url);
           console.log("api data", res);
@@ -280,6 +315,8 @@ const Widget = () => {
               cover_img_name: item.cover,
               type: item.publicity,
               member_count: item.member_count,
+              myStatus: item.my_status,
+              countProgressing: item.count_progressing,
               createdAt: date.getTime(),
             };
           });
