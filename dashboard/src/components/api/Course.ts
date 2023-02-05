@@ -13,6 +13,7 @@ export interface ICourseDataRequest {
   id?: string; //课程ID
   title: string; //标题
   subtitle?: string; //副标题
+  summary?: string; //副标题
   content?: string;
   cover?: string; //封面图片文件名
   teacher_id?: string; //UserID
@@ -21,11 +22,16 @@ export interface ICourseDataRequest {
   channel_id?: string; //标准答案channel
   start_at?: string; //课程开始时间
   end_at?: string; //课程结束时间
+  join: string;
+  request_exp: string;
 }
+export type TCourseJoinMode = "invite" | "manual" | "open";
+export type TCourseExpRequest = "none" | "begin-end" | "daily";
 export interface ICourseDataResponse {
   id: string; //课程ID
   title: string; //标题
   subtitle: string; //副标题
+  summary?: string; //副标题
   teacher?: IUser; //UserID
   course_count?: number; //课程数
   publicity: number; //类型-公开/内部
@@ -40,6 +46,10 @@ export interface ICourseDataResponse {
   content: string; //简介
   cover: string; //封面图片文件名
   member_count: number;
+  join: TCourseJoinMode;
+  request_exp: TCourseExpRequest;
+  my_status: TCourseMemberStatus;
+  count_progressing?: number;
   created_at: string; //创建时间
   updated_at: string; //修改时间
 }
@@ -78,13 +88,21 @@ export interface ICourseNumberResponse {
   };
 }
 
+export type TCourseMemberStatus =
+  | "normal"
+  | "progressing"
+  | "accepted"
+  | "rejected"
+  | "left"
+  | "blocked";
 export interface ICourseMemberData {
-  id?: number;
+  id?: string;
   user_id: string;
   course_id: string;
   channel_id?: string;
   role?: string;
   user?: IUserRequest;
+  status?: TCourseMemberStatus;
   created_at?: string;
   updated_at?: string;
 }
