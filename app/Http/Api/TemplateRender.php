@@ -90,6 +90,7 @@ class TemplateRender{
 
         $props = ["note" => $this->get_param($this->param,"text",1)];
         $trigger = $this->get_param($this->param,"trigger",2);
+        $innerString = "";
         if(!empty($trigger)){
             $props["trigger"] = $trigger;
             $innerString = $props["trigger"];
