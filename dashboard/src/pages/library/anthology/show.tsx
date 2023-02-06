@@ -10,36 +10,22 @@ const Widget = () => {
   const { id, tags } = useParams(); //url 参数
   let channel = tags ? tags : "";
 
-  const pageMaxWidth = "1260px";
+  const pageMaxWidth = "960px";
   return (
-    <Layout>
-      <Affix offsetTop={0}>
-        <Header style={{ backgroundColor: "gray", height: "3.5em" }}>
-          <Col flex="auto"></Col>
-          <Col flex={pageMaxWidth}>
-            <div>
-              {id}@{channel}
-            </div>
-          </Col>
-          <Col flex="auto"></Col>
-        </Header>
-      </Affix>
-
-      <Content>
-        <Row>
-          <Col flex="auto"></Col>
-          <Col flex={pageMaxWidth}>
-            <Row>
-              <Col span="18">
-                <AnthologyDetail aid={id} />
-              </Col>
-              <Col span="6"></Col>
-            </Row>
-          </Col>
-          <Col flex="auto"></Col>
-        </Row>
-      </Content>
-    </Layout>
+    <>
+      <Row>
+        <Col flex="auto"></Col>
+        <Col flex={pageMaxWidth}>
+          <Row>
+            <Col span="18">
+              <AnthologyDetail aid={id} />
+            </Col>
+            <Col span="6"></Col>
+          </Row>
+        </Col>
+        <Col flex="auto"></Col>
+      </Row>
+    </>
   );
 };
 
