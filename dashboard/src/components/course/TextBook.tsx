@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import { NavigateOptions, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AnthologyDetail from "../article/AnthologyDetail";
 
 interface IWidget {
