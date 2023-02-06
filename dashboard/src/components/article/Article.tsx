@@ -100,7 +100,12 @@ const Widget = ({
       let url = "";
       switch (type) {
         case "article":
-          url = `/v2/article/${articleId}?mode=${mode}`;
+          const aIds = articleId.split("_");
+          url = `/v2/article/${aIds[0]}?mode=${mode}`;
+          if (aIds.length > 1) {
+            const channels = aIds.slice(1);
+            url += "&channel=" + channels.join();
+          }
           break;
         case "textbook":
           /**
