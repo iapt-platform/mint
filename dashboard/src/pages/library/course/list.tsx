@@ -30,14 +30,14 @@ const Widget = () => {
             </Row>
             <Divider />
             <Row>
-              <h1>正在进行</h1>
+              <h1>开放报名</h1>
             </Row>
             <Row>
               <CourseList type="open" />
             </Row>
             <Divider />
             <Row>
-              <h1>已经结束</h1>
+              <h1>历史课程</h1>
             </Row>
             <Row>
               <CourseList type="close" />
