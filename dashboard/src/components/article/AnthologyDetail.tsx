@@ -9,6 +9,7 @@ import type {
 } from "../api/Article";
 import type { IAnthologyData } from "./AnthologyCard";
 import TocTree from "./TocTree";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -34,6 +35,7 @@ interface IWidgetAnthologyDetail {
 }
 const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState(defaultData);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("useEffect");
@@ -83,6 +85,8 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
         onSelect={(keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(keys);
+          } else {
+            navigate(`/article/article/${keys[0]}/read`);
           }
         }}
       />
