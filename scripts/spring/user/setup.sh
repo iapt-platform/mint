@@ -68,6 +68,16 @@ then
     cat $USER.pub > $HOME/.ssh/authorized_keys    
 fi
 
+echo 'setup vnc'
+mkdir -p $HOME/.vnc
+cat > $HOME/.vnc/xstartup <<EOF
+#!/bin/sh
+
+unset SESSION_MANAGER
+exec openbox-session &
+startlxqt &
+EOF
+
 
 echo 'setup workspace folder'
 if [ ! -L $HOME/www ]
