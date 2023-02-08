@@ -24,6 +24,7 @@ const Widget = (prop: IWidgetPaliChapterListByTag) => {
         return {
           Title: item.title,
           PaliTitle: item.title,
+          level: item.level,
           Path: item.path,
           Book: item.book,
           Paragraph: item.paragraph,
@@ -37,6 +38,7 @@ const Widget = (prop: IWidgetPaliChapterListByTag) => {
     <>
       <PaliChapterList
         data={tableData}
+        maxLevel={1}
         onChapterClick={(e: IChapterClickEvent) => {
           if (typeof prop.onChapterClick !== "undefined") {
             prop.onChapterClick(e);
