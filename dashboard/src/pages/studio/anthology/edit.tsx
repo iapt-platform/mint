@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import {
-  ProForm,
-  ProFormText,
-  ProFormTextArea,
-} from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { Card, Form, message, Tabs } from "antd";
 
 import { get, put } from "../../../request";
@@ -78,25 +74,37 @@ const Widget = () => {
         const res = await get<IAnthologyResponse>(
           `/v2/anthology/${anthology_id}`
         );
-        const toc: ListNodeData[] = res.data.article_list.map((item) => {
+        console.log("文集get", res);
+        if (res.ok) {
+          setTitle(res.data.title);
+
+          if (res.data.article_list) {
+            const toc: ListNodeData[] = res.data.article_list.map((item) => {
+              return {
+                key: item.article,
+                title: item.title,
+                level: parseInt(item.level),
+              };
+            });
+            setTocData(toc);
+            treeList = toc;
+          }
           return {
-            key: item.article,
-            title: item.title,
-            level: parseInt(item.level),
+            title: res.data.title,
+            subtitle: res.data.subtitle,
+            summary: res.data.summary,
+            lang: res.data.lang,
+            status: res.data.status,
           };
-        });
-        console.log(res.data);
-        setTocData(toc);
-        treeList = toc;
-        setTitle(res.data.title);
-        setContentValue(res.data.summary);
-        return {
-          title: res.data.title,
-          subtitle: res.data.subtitle,
-          summary: res.data.summary,
-          lang: res.data.lang,
-          status: res.data.status,
-        };
+        } else {
+          return {
+            title: "",
+            subtitle: "",
+            summary: "",
+            lang: "",
+            status: 0,
+          };
+        }
       }}
     >
       <ProForm.Group>
