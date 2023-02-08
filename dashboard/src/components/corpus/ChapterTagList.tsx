@@ -1,20 +1,21 @@
-import { message, Tag, Button } from "antd";
+import { message, Tag } from "antd";
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
 import { IApiChapterTag, IApiResponseChapterTagList } from "../api/Corpus";
 
-interface ITagData {
+export interface ITagData {
   title: string;
   key: string;
+  color?: string;
+  description?: string;
 }
-interface IWidgetChapterTagList {
+interface IWidget {
   max?: number;
-  onTagClick: Function;
+  onTagClick?: Function;
 }
-const Widget = (prop: IWidgetChapterTagList) => {
-  const defaultData: ITagData[] = [];
-  const [tableData, setTableData] = useState(defaultData);
+const Widget = ({ max, onTagClick }: IWidget) => {
+  const [tableData, setTableData] = useState<ITagData[]>([]);
 
   useEffect(() => {
     console.log("useEffect");
@@ -38,7 +39,7 @@ const Widget = (prop: IWidgetChapterTagList) => {
         message.error(error);
       });
   }
-  let iTag = prop.max ? prop.max : tableData.length;
+  let iTag = max ? max : tableData.length;
   if (iTag > tableData.length) {
     iTag = tableData.length;
   }
@@ -48,13 +49,14 @@ const Widget = (prop: IWidgetChapterTagList) => {
         return (
           <Tag
             key={id}
+            style={{ cursor: "pointer" }}
             onClick={() => {
-              if (typeof prop.onTagClick !== "undefined") {
-                prop.onTagClick(item.key);
+              if (typeof onTagClick !== "undefined") {
+                onTagClick(item.key);
               }
             }}
           >
-            <Button type="link">{item.title}</Button>
+            {item.title}
           </Tag>
         );
       })}
