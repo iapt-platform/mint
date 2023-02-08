@@ -1,6 +1,8 @@
+import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { TagNode } from "../tag/TagArea";
+import { TChannelType } from "./Channel";
+import { TagNode } from "./Tag";
 
 export interface IApiPaliChapterList {
   id: string;
@@ -59,7 +61,7 @@ export interface IApiChapterChannels {
   views: number;
   likes: number[];
   channel: {
-    type: string;
+    type: TChannelType;
     owner_uid: string;
     editor_id: number;
     name: string;
@@ -70,6 +72,7 @@ export interface IApiChapterChannels {
     updated_at: string;
     uid: string;
   };
+  studio: IStudio;
 }
 
 export interface IApiResponseChapterChannelList {
@@ -94,7 +97,7 @@ export interface IApiResponseChannelListData {
   count: number;
   channel: {
     id: number;
-    type: string;
+    type: TChannelType;
     owner_uid: string;
     editor_id: number;
     name: string;
@@ -106,6 +109,7 @@ export interface IApiResponseChannelListData {
     updated_at: string;
     uid: string;
   };
+  studio: IStudio;
 }
 export interface IApiResponseChannelList {
   ok: boolean;
@@ -168,6 +172,7 @@ export interface IChapterData {
   path: string;
   tags: TagNode[];
   channel: { name: string; owner_uid: string };
+  studio: IStudio;
   channel_id: string;
   summary: string;
   view: number;
@@ -181,4 +186,14 @@ export interface IChapterListResponse {
   ok: boolean;
   message: string;
   data: { rows: IChapterData[]; count: number };
+}
+
+export interface ILangList {
+  lang: string;
+  count: number;
+}
+export interface IChapterLangListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: ILangList[]; count: number };
 }
