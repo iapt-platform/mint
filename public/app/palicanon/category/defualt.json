@@ -1,6 +1,6 @@
 [
            {
-                "name":"Sutta Piṭaka",
+                "name":"Suttapiṭaka",
                 "tag":["sutta"],
                 "children":[
                     {
@@ -200,7 +200,7 @@
                 ]
             },
             {
-                "name":"Vinaya Piṭaka",
+                "name":"Vinayapiṭaka",
                 "tag":["vinaya"],
                 "children":[
                     {
@@ -276,7 +276,7 @@
                 ]
             },
             {
-                "name":"Abhidhamma Piṭaka",
+                "name":"Abhidhammapiṭaka",
                 "tag":["abhidhamma"],
                 "children":[
                     {
