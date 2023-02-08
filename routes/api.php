@@ -65,6 +65,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
     Route::get('palibook/{file}', function ($file) {
+        if($file==='default'){$file="defualt";}
         return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
     });
     Route::apiResource('anthology',CollectionController::class);
