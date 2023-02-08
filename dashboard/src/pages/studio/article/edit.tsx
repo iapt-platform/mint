@@ -6,7 +6,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Card, message } from "antd";
+import { Button, Card, message, Space, Tabs } from "antd";
 
 import { get, put } from "../../../request";
 import {
@@ -77,56 +77,77 @@ const Widget = () => {
           };
         }}
       >
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="title"
-            required
-            label={intl.formatMessage({
-              id: "forms.fields.title.label",
-            })}
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: "forms.message.title.required",
-                }),
-              },
-            ]}
-          />
-          <ProFormText
-            width="md"
-            name="subtitle"
-            label={intl.formatMessage({
-              id: "forms.fields.subtitle.label",
-            })}
-          />
-        </ProForm.Group>
-
-        <ProForm.Group>
-          <LangSelect width="md" />
-          <PublicitySelect width="md" />
-        </ProForm.Group>
-
-        <ProForm.Group>
-          <ProFormTextArea
-            name="summary"
-            width="lg"
-            label={intl.formatMessage({
-              id: "forms.fields.summary.label",
-            })}
-          />
-        </ProForm.Group>
-
-        <ProForm.Group>
-          <ProFormTextArea
-            name="content"
-            width="lg"
-            label={intl.formatMessage({
-              id: "forms.fields.content.label",
-            })}
-          />
-        </ProForm.Group>
+        <Tabs
+          items={[
+            {
+              key: "info",
+              label: intl.formatMessage({ id: "course.basic.info.label" }),
+              children: (
+                <>
+                  {" "}
+                  <ProForm.Group>
+                    <ProFormText
+                      width="md"
+                      name="title"
+                      required
+                      label={intl.formatMessage({
+                        id: "forms.fields.title.label",
+                      })}
+                      rules={[
+                        {
+                          required: true,
+                          message: intl.formatMessage({
+                            id: "forms.message.title.required",
+                          }),
+                        },
+                      ]}
+                    />
+                    <ProFormText
+                      width="md"
+                      name="subtitle"
+                      label={intl.formatMessage({
+                        id: "forms.fields.subtitle.label",
+                      })}
+                    />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <LangSelect width="md" />
+                    <PublicitySelect width="md" />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <ProFormTextArea
+                      name="summary"
+                      width="lg"
+                      label={intl.formatMessage({
+                        id: "forms.fields.summary.label",
+                      })}
+                    />
+                  </ProForm.Group>
+                </>
+              ),
+            },
+            {
+              key: "content",
+              label: intl.formatMessage({ id: "forms.fields.content.label" }),
+              children: (
+                <ProForm.Group>
+                  <ProFormTextArea
+                    name="content"
+                    width="lg"
+                    label={
+                      <Space>
+                        {intl.formatMessage({
+                          id: "forms.fields.content.label",
+                        })}
+                        <Button>预览</Button>
+                      </Space>
+                    }
+                  />
+                </ProForm.Group>
+              ),
+            },
+          ]}
+        />
       </ProForm>
     </Card>
   );
