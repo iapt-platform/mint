@@ -2,17 +2,18 @@ import { Col, Progress, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
 import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
 
-import { ChannelInfoProps } from "../api/Channel";
+import { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+import { IStudio } from "../auth/StudioName";
 
 const { Text } = Typography;
 
 export interface IChapterChannelData {
-  channel: ChannelInfoProps;
-
+  channel: IChannelApiData;
+  studio: IStudio;
   progress: number;
   hit: number;
   like: number;
@@ -27,16 +28,19 @@ const Widget = ({ data, book, para }: IWidgetChapterInChannel) => {
   const intl = useIntl(); //i18n
   function getTab(type: string): JSX.Element[] {
     const output = data.map((item, id) => {
-      if (item.channel.channelType === type) {
+      if (item.channel.type === type) {
         return (
           <div key={id}>
             <Row>
               <Col span={5}>
                 <Link
-                  to={`/article/chapter/${book}-${para}_${item.channel.channelId}`}
+                  to={`/article/chapter/${book}-${para}_${item.channel.id}`}
                   target="_blank"
                 >
-                  <ChannelListItem data={item.channel} />
+                  <ChannelListItem
+                    channel={item.channel}
+                    studio={item.studio}
+                  />
                 </Link>
               </Col>
               <Col span={5}>
