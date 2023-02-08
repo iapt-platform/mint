@@ -37,23 +37,6 @@ const Widget = ({
 }: IWidget) => {
   const intl = useIntl();
 
-  const today = new Date();
-  const courseStart = new Date(startAt ? startAt : 0);
-
-  let labelJoin = "";
-  switch (join) {
-    case "open":
-      labelJoin = "公开课程，开放报名。";
-      break;
-    case "manual":
-      labelJoin = "报名后需要组织者审核。";
-      break;
-    case "invite":
-      labelJoin = "内部邀请课程";
-      break;
-    default:
-      break;
-  }
   return (
     <>
       <Row>
