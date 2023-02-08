@@ -81,7 +81,7 @@ const Widget = ({ groupId, onCreated }: IWidget) => {
   };
   return (
     <Popover
-      placement="bottom"
+      placement="bottomLeft"
       arrowPointAtCenter
       content={form}
       trigger="click"
