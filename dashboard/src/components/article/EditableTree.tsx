@@ -108,14 +108,14 @@ interface IWidgetEditableTree {
   treeData: ListNodeData[];
   onChange?: Function;
 }
-const Widget = (prop: IWidgetEditableTree) => {
-  const data = tocGetTreeData(prop.treeData);
+const Widget = ({ treeData, onChange }: IWidgetEditableTree) => {
+  const data = tocGetTreeData(treeData);
   console.log("treedata", data);
   const [gData, setGData] = useState(data);
   useEffect(() => {
-    const data = tocGetTreeData(prop.treeData);
+    const data = tocGetTreeData(treeData);
     setGData(data);
-  }, [prop]);
+  }, [treeData]);
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -187,8 +187,8 @@ const Widget = (prop: IWidgetEditableTree) => {
       }
     }
     setGData(data);
-    if (typeof prop.onChange !== "undefined") {
-      prop.onChange(treeToList(data));
+    if (typeof onChange !== "undefined") {
+      onChange(treeToList(data));
     }
   };
 
