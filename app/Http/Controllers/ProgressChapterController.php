@@ -14,6 +14,7 @@ use App\Models\PaliText;
 use App\Models\View;
 use App\Models\Like;
 use Illuminate\Http\Request;
+use App\Http\Api\StudioApi;
 
 class ProgressChapterController extends Controller
 {
@@ -24,7 +25,7 @@ class ProgressChapterController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         if($request->get('progress')){
             $minProgress = (float)$request->get('progress');
         }else{
@@ -82,11 +83,11 @@ class ProgressChapterController extends Controller
             case 'tag':
                 $tm = (new TagMap)->getTable();
                 $pc =(new ProgressChapter)->getTable();
-                $t = (new Tag)->getTable();            
+                $t = (new Tag)->getTable();
                 $query = "select t.name,count(*) from $tm  tm
                             join tags as t on tm.tag_id = t.id
                             join progress_chapters as pc on tm.anchor_id = pc.uid
-                            where tm.table_name  = 'progress_chapters' and 
+                            where tm.table_name  = 'progress_chapters' and
                             pc.progress > ?
                             group by t.name;";
                 $chapters = DB::select($query, [$minProgress]);
@@ -99,8 +100,8 @@ class ProgressChapterController extends Controller
             case 'chapter-tag':
                 $tm = (new TagMap)->getTable();
                 $pc =(new ProgressChapter)->getTable();
-                $tg = (new Tag)->getTable();     
-                $pt = (new PaliText)->getTable();  
+                $tg = (new Tag)->getTable();
+                $pt = (new PaliText)->getTable();
                 if($request->get('tags') && $request->get('tags')!==''){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
@@ -110,7 +111,7 @@ class ProgressChapterController extends Controller
                         }
                     }
                 }
-                
+
                 $param[] = $minProgress;
                 if(isset($tagNames)){
                     $where1 = " where co = ".count($tagNames);
@@ -122,13 +123,13 @@ class ProgressChapterController extends Controller
                     $in1 = " ";
                 }
                 if(Str::isUuid($channel_id)){
-                    $channel = "and channel_id = '{$channel_id}' "; 
+                    $channel = "and channel_id = '{$channel_id}' ";
                 }else{
                     $channel = "";
                 }
 
                 $query = "
-                    select tags.id,tags.name,co as count 
+                    select tags.id,tags.name,co as count
                         from (
                             select tm.tag_id,count(*) as co from (
                                 select anchor_id as id from (
@@ -136,15 +137,15 @@ class ProgressChapterController extends Controller
                                         from $tm as  tm
                                         left join $tg as t on tm.tag_id = t.id
                                         left join $pc as pc on tm.anchor_id = pc.uid
-                                        where tm.table_name  = 'progress_chapters' and 
-                                              pc.progress  > ? 
+                                        where tm.table_name  = 'progress_chapters' and
+                                              pc.progress  > ?
                                         $in1
                                         $channel
                                         group by tm.anchor_id
-                                ) T 
+                                ) T
                                     $where1
-                            ) CID 
-                            left join $tm as tm on tm.anchor_id = CID.id 
+                            ) CID
+                            left join $tm as tm on tm.anchor_id = CID.id
                             group by tm.tag_id
                         ) tid
                         left join $tg on $tg.id = tid.tag_id
@@ -158,7 +159,7 @@ class ProgressChapterController extends Controller
                     $all_count = count($chapters);
                 break;
             case 'lang':
-                
+
                 $chapters = ProgressChapter::select('lang')
                                             ->selectRaw('count(*) as count')
                                             ->where("progress",">",$minProgress)
@@ -174,7 +175,7 @@ class ProgressChapterController extends Controller
             */
                 $chapters = ProgressChapter::select('channel_id')
                                            ->selectRaw('count(*) as count')
-                                           ->with(['channel' => function($query) {  
+                                           ->with(['channel' => function($query) {
                                                 return $query->select('*');
                                             }])
                                            ->leftJoin('channels','progress_chapters.channel_id', '=', 'channels.uid')
@@ -189,6 +190,9 @@ class ProgressChapterController extends Controller
                 $chapters =  $chapters->groupBy('channel_id')
                                             ->orderBy('count','desc')
                                             ->get();
+                foreach ($chapters as $key => $chapter) {
+                    $chapter->studio = StudioApi::getById($chapter->channel->owner_uid);
+                }
                 $all_count = count($chapters);
                 break;
             case 'chapter_channels':
@@ -206,7 +210,7 @@ class ProgressChapterController extends Controller
                 foreach ($chapters as $key => $value) {
                     # code...
                     $chapters[$key]->views = View::where("target_id",$value->uid)->count();
-                    
+
                     $likes = Like::where("target_id",$value->uid)
                                 ->groupBy("type")
                                 ->select("type")
@@ -224,16 +228,16 @@ class ProgressChapterController extends Controller
                         }
                     }
                     $chapters[$key]->likes = $likes;
-                    
+                    $chapters[$key]->studio = StudioApi::getById($value->channel->owner_uid);
                 }
-                
+
                 $all_count = count($chapters);
                 break;
             case 'chapter':
                 $tm = (new TagMap)->getTable();
                 $pc =(new ProgressChapter)->getTable();
-                $tg = (new Tag)->getTable();     
-                $pt = (new PaliText)->getTable();  
+                $tg = (new Tag)->getTable();
+                $pt = (new PaliText)->getTable();
                 if($request->get('tags') && $request->get('tags')!==''){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
@@ -243,8 +247,6 @@ class ProgressChapterController extends Controller
                         }
                     }
                 }
-                
-                
                 if(isset($tagNames)){
                     $where1 = " where co = ".count($tagNames);
                     $a = implode(",",array_fill(0, count($tagNames), '?')) ;
@@ -255,12 +257,12 @@ class ProgressChapterController extends Controller
                     $in1 = " ";
                 }
                 if(Str::isUuid($channel_id)){
-                    $channel = "and channel_id = '{$channel_id}' "; 
+                    $channel = "and channel_id = '{$channel_id}' ";
                 }else{
                     $channel = "";
                 }
 
-				
+
 
 
                 $param[] = $minProgress;
@@ -270,54 +272,55 @@ class ProgressChapterController extends Controller
                     $param[] = $request->get('lang');
                 }else{
                     $whereLang = "   ";
-                }                
+                }
 
 				if($request->has('channel_type') && !empty($request->get('channel_type'))){
-					$channel_type = "and ch.type = ? "; 
+					$channel_type = "and ch.type = ? ";
 					$param[] = $request->get('channel_type');
 				}else{
 					$channel_type = "";
-				}	
+				}
 
                 $param_count = $param;
                 $param[] = $offset;
 
 
                 $query = "
-                select tpc.pc_uid as uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at 
+                select tpc.pc_uid as uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at
                     from (
 						select pcd.uid as pc_uid, ch.uid as ch_uid, book , para, channel_id,progress, title ,pcd.summary , pcd.created_at,pcd.updated_at
 							from (
 								select uid, book,para,lang,progress,channel_id,title,summary ,created_at ,updated_at
 									from (
-										select anchor_id as cid 
+										select anchor_id as cid
 											from (
-												select tm.anchor_id , count(*) as co 
+												select tm.anchor_id , count(*) as co
 													from $tm as  tm
 													left join $tg as t on tm.tag_id = t.id
-													where tm.table_name  = 'progress_chapters'  
+													where tm.table_name  = 'progress_chapters'
 													$in1
 													group by tm.anchor_id
-											) T 
-											$where1 
-									) CID 
-								left join $pc as pc on CID.cid = pc.uid 
-								where pc.progress > ? 
+											) T
+											$where1
+									) CID
+								left join $pc as pc on CID.cid = pc.uid
+								where pc.progress > ?
 								$channel  $whereLang
 							) pcd
 						left join channels as ch on pcd.channel_id = ch.uid
 						where ch.status >= 30 $channel_type
                         order by pcd.created_at desc
                         limit 20 offset ?
-                    ) tpc 
+                    ) tpc
                     left join $pt as pt on tpc.book = pt.book and tpc.para = pt.paragraph;";
                 $chapters = DB::select($query,$param);
-                foreach ($chapters as $key => $value) {
+                foreach ($chapters as $key => $chapter) {
                     # code...
-                    $chapters[$key]->channel = Channel::where('uid',$value->channel_id)->select(['name','owner_uid'])->first();
-                    $chapters[$key]->views = View::where("target_id",$value->uid)->count();
-                    $chapters[$key]->likes = Like::where(["type"=>"like","target_id"=>$value->uid])->count();
-                    $chapters[$key]->tags = TagMap::where("anchor_id",$value->uid)
+                    $chapter->channel = Channel::where('uid',$chapter->channel_id)->select(['name','owner_uid'])->first();
+                    $chapter->studio = StudioApi::getById($chapter->channel["owner_uid"]);
+                    $chapter->views = View::where("target_id",$chapter->uid)->count();
+                    $chapter->likes = Like::where(["type"=>"like","target_id"=>$chapter->uid])->count();
+                    $chapter->tags = TagMap::where("anchor_id",$chapter->uid)
                                                 ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
                                                 ->select(['tags.id','tags.name','tags.description'])
                                                 ->get();
@@ -325,23 +328,23 @@ class ProgressChapterController extends Controller
 
                 //计算按照这个条件搜索到的总数
                 $query  = "
-                         select count(*) as count 
+                         select count(*) as count
 							from (
 								select *
 								from (
-									select anchor_id as cid 
+									select anchor_id as cid
 										from (
-											select tm.anchor_id , count(*) as co 
+											select tm.anchor_id , count(*) as co
 												from $tm as  tm
 												left join $tg as t on tm.tag_id = t.id
-												where tm.table_name  = 'progress_chapters'  
+												where tm.table_name  = 'progress_chapters'
 												$in1
 												group by tm.anchor_id
-										) T 
-										$where1 
-								) CID 
-								left join $pc as pc on CID.cid = pc.uid 
-								where pc.progress > ? 
+										) T
+										$where1
+								) CID
+								left join $pc as pc on CID.cid = pc.uid
+								where pc.progress > ?
 								$channel   $whereLang
 							) pcd
 							left join channels as ch on pcd.channel_id = ch.uid
@@ -354,6 +357,7 @@ class ProgressChapterController extends Controller
             case 'top':
             break;
         }
+
         if($chapters){
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
