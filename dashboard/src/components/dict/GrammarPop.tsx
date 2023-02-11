@@ -4,20 +4,21 @@ import { ProCard } from "@ant-design/pro-components";
 import MDEditor from "@uiw/react-md-editor";
 
 import { ApiGetText } from "../../utils";
+import { get } from "../../request";
+import { IGuideResponse } from "../api/Guide";
 
-interface IWidgetGrammarPop {
+interface IWidget {
   text: string;
   gid: string;
 }
-const Widget = (prop: IWidgetGrammarPop) => {
+const Widget = ({ text, gid }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
   const grammarProfix = "guide-grammar-";
   const handleMouseMouseEnter = () => {
-    console.log("mouseenter", prop.gid);
     //sessionStorage缓存
-    const value = sessionStorage.getItem(grammarProfix + prop.gid);
+    const value = sessionStorage.getItem(grammarProfix + gid);
     if (value === null) {
-      fetchData(prop.gid);
+      fetchData(gid);
     } else {
       const sGuide: string = value ? value : "";
       setGuide(sGuide);
@@ -31,17 +32,18 @@ const Widget = (prop: IWidgetGrammarPop) => {
     </>
   );
   function fetchData(key: string) {
-    const url = `/guide/zh-cn/${key}`;
-    ApiGetText(url).then((response: String) => {
-      const text = response as unknown as string;
-      sessionStorage.setItem(grammarProfix + key, text);
-      setGuide(text);
+    const url = `/v2/guide/zh-cn/${key}`;
+    get<IGuideResponse>(url).then((json) => {
+      if (json.ok) {
+        sessionStorage.setItem(grammarProfix + key, json.data);
+        setGuide(json.data);
+      }
     });
   }
   return (
     <Popover content={userCard} placement="bottom">
       <a href="#" onMouseEnter={handleMouseMouseEnter}>
-        {prop.text}
+        {text}
       </a>
     </Popover>
   );
