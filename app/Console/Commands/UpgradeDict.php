@@ -87,7 +87,11 @@ class UpgradeDict extends Command
 									$del = UserDict::where("dict_id",$this->dictInfo['meta']['uuid'])->delete();
 									$this->info("delete {$del} rows dict id = ".$this->dictInfo['meta']['uuid']);
 								}
-
+                                /**
+                                 * 允许一个字典拆成若干个小文件
+                                 * 文件名 为 ***.csv , ***-1.csv , ***-2.csv
+                                 *
+                                 */
 								$filename = $dir.'/'.pathinfo($infoFile,PATHINFO_FILENAME);
 								$csvFile = $filename . ".csv";
 								$count = 0;
@@ -156,7 +160,7 @@ class UpgradeDict extends Command
 										}
 									}
 									$count++;
-									$csvFile = $filename . "{$count}.csv";
+									$csvFile = $filename . "-{$count}.csv";
 								}
 								$bar->finish();
 								Storage::disk('local')->put("tmp/pm-part.csv", "part,count,word");
