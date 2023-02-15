@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
+import { Key } from "antd/lib/table/interface";
+import {
+  FileAddOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import { Button, Divider, Space } from "antd";
 
-type TreeNodeData = {
+interface TreeNodeData {
   key: string;
   title: string;
   children: TreeNodeData[];
   level: number;
-};
+}
 export type ListNodeData = {
   key: string;
   title: string;
@@ -107,13 +114,15 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
 interface IWidgetEditableTree {
   treeData: ListNodeData[];
   onChange?: Function;
+  onSelect?: Function;
+  onSave?: Function;
 }
-const Widget = ({ treeData, onChange }: IWidgetEditableTree) => {
-  const data = tocGetTreeData(treeData);
-  console.log("treedata", data);
-  const [gData, setGData] = useState(data);
+const Widget = ({ treeData, onChange, onSelect }: IWidgetEditableTree) => {
+  const [gData, setGData] = useState<TreeNodeData[]>([]);
+  const [keys, setKeys] = useState<Key>("");
   useEffect(() => {
     const data = tocGetTreeData(treeData);
+    console.log("tree data", data);
     setGData(data);
   }, [treeData]);
 
@@ -194,12 +203,58 @@ const Widget = ({ treeData, onChange }: IWidgetEditableTree) => {
 
   return (
     <>
+      <Space>
+        <Button icon={<FileAddOutlined />}>添加</Button>
+        <Button
+          icon={<DeleteOutlined />}
+          danger
+          onClick={() => {
+            const delTree = (node: TreeNodeData[]): boolean => {
+              for (let index = 0; index < node.length; index++) {
+                if (node[index].key === keys) {
+                  node.splice(index, 1);
+                  return true;
+                } else {
+                  const cf = delTree(node[index].children);
+                  if (cf) {
+                    return cf;
+                  }
+                }
+              }
+              return false;
+            };
+            const tmp = [...gData];
+            const find = delTree(tmp);
+
+            console.log("delete", keys, find, tmp);
+            setGData(tmp);
+          }}
+        >
+          删除
+        </Button>
+        <Button icon={<SaveOutlined />} type="primary">
+          保存
+        </Button>
+      </Space>
+      <Divider></Divider>
       <Tree
         rootClassName="draggable-tree"
         draggable
         blockNode
         onDragEnter={onDragEnter}
         onDrop={onDrop}
+        onSelect={(selectedKeys: Key[]) => {
+          if (selectedKeys.length > 0) {
+            setKeys(selectedKeys[0]);
+          } else {
+            setKeys("");
+          }
+
+          console.log(selectedKeys);
+          if (typeof onSelect !== "undefined") {
+            onSelect(selectedKeys);
+          }
+        }}
         treeData={gData}
       />
     </>
