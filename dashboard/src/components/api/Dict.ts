@@ -44,3 +44,17 @@ export interface IApiResponseDictList {
     count: number;
   };
 }
+
+export interface IVocabularyData {
+  word: string;
+  count: number;
+  meaning?: string;
+}
+export interface IVocabularyListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IVocabularyData[];
+    count: number;
+  };
+}
