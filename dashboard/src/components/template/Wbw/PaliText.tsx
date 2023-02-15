@@ -13,8 +13,12 @@ interface IWidget {
   primary?: boolean;
 }
 const Widget = ({ text, primary = true }: IWidget) => {
-  const [paliText, setPaliText] = useState(text);
+  const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
+
+  useEffect(() => {
+    setPaliText(text);
+  }, [text]);
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
     if (typeof _paliCode1 === "string") {
@@ -23,22 +27,22 @@ const Widget = ({ text, primary = true }: IWidget) => {
 
       switch (paliConvertor) {
         case "roman_to_my":
-          setPaliText(roman_to_my(text));
+          setPaliText(roman_to_my(paliText));
           break;
         case "my_to_roman":
-          setPaliText(my_to_roman(text));
+          setPaliText(my_to_roman(paliText));
           break;
         case "roman_to_si":
-          setPaliText(roman_to_si(text));
+          setPaliText(roman_to_si(paliText));
           break;
         case "roman_to_thai":
-          setPaliText(roman_to_thai(text));
+          setPaliText(roman_to_thai(paliText));
           break;
         case "roman_to_taitham":
-          setPaliText(roman_to_taitham(text));
+          setPaliText(roman_to_taitham(paliText));
           break;
         default:
-          setPaliText(text);
+          setPaliText(paliText);
           break;
       }
     }
