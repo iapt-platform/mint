@@ -13,28 +13,13 @@ import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
-const defaultData: IAnthologyData = {
-  id: "",
-  title: "",
-  subTitle: "",
-  summary: "",
-  articles: [],
-  studio: {
-    id: "",
-    studioName: "",
-    nickName: "",
-    avatar: "",
-  },
-  created_at: "",
-  updated_at: "",
-};
 interface IWidgetAnthologyDetail {
   aid?: string;
   channels?: string[];
   onArticleSelect?: Function;
 }
 const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
-  const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState<IAnthologyData>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,17 +56,17 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   }
   return (
     <>
-      <Title level={4}>{tableData.title}</Title>
+      <Title level={4}>{tableData?.title}</Title>
       <div>
-        <Text type="secondary">{tableData.subTitle}</Text>
+        <Text type="secondary">{tableData?.subTitle}</Text>
       </div>
       <div>
-        <MDEditor.Markdown source={tableData.summary} />
+        <MDEditor.Markdown source={tableData?.summary} />
       </div>
       <Title level={5}>目录</Title>
 
       <TocTree
-        treeData={tableData.articles}
+        treeData={tableData?.articles}
         onSelect={(keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(keys);
