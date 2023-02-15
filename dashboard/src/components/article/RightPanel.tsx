@@ -1,3 +1,4 @@
+import { Affix } from "antd";
 import { useEffect, useState } from "react";
 
 import DictComponent from "../dict/DictComponent";
@@ -27,12 +28,30 @@ const Widget = ({ curr = "close" }: IWidget) => {
     }
   }, [curr]);
   return (
-    <div>
-      <div style={{ width: 350, display: dict }}>
-        <DictComponent />
+    <Affix offsetTop={44}>
+      <div>
+        <div
+          style={{
+            width: 350,
+            height: `calc(100vh - 44px)`,
+            overflowY: "scroll",
+            display: dict,
+          }}
+        >
+          <DictComponent />
+        </div>
+        <div
+          style={{
+            width: 350,
+            height: `calc(100vh - 44px)`,
+            overflowY: "scroll",
+            display: channel,
+          }}
+        >
+          channel
+        </div>
       </div>
-      <div style={{ width: 350, display: channel }}>channel</div>
-    </div>
+    </Affix>
   );
 };
 
