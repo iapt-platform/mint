@@ -87,22 +87,13 @@ const Widget = () => {
         <div
           style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}
         >
-          <div style={{ flex: 5 }}>
-            <ArticleCard
+          <div>
+            <Article
+              active={true}
               type={type}
               articleId={id}
-              onModeChange={(e: ArticleMode) => {
-                setArticleMode(e);
-              }}
-              showCol={openCol}
-            >
-              <Article
-                active={true}
-                type={type}
-                articleId={id}
-                mode={articleMode}
-              />
-            </ArticleCard>
+              mode={articleMode}
+            />
           </div>
           <div>
             <RightPanel curr={rightPanel} />
