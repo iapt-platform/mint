@@ -13,7 +13,10 @@ const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
   const show = trigger ? trigger : <InfoCircleOutlined />;
   return (
     <>
-      <Popover content={children} placement="bottom">
+      <Popover
+        content={<div style={{ width: 500 }}>{children}</div>}
+        placement="bottom"
+      >
         <Link>{show}</Link>
       </Popover>
     </>
