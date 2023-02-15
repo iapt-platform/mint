@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Layout, Space, Tree } from "antd";
-import { Select } from "antd";
 import { Typography } from "antd";
 import type { TreeProps } from "antd/es/tree";
 
@@ -14,7 +13,6 @@ import { PaliToEn } from "../../utils";
 
 const { Text } = Typography;
 
-const { Option } = Select;
 interface IWidgetBookTree {
   root?: string;
   path?: string[];
