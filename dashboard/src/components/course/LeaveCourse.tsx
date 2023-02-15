@@ -2,7 +2,6 @@ import { Button, message, Modal, Typography } from "antd";
 import { useIntl } from "react-intl";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
-import { currentUser as _currentUser } from "../../reducers/current-user";
 import { delete_, put } from "../../request";
 import {
   ICourseMemberData,

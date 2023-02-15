@@ -3,7 +3,7 @@ import type { MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { set, get } from "../../locales";
 import { GlobalOutlined } from "@ant-design/icons";
-import { ItemType } from "antd/lib/menu/hooks/useItems";
+
 const Widget = () => {
   // TODO
   const [curr, setCurr] = useState<string>();

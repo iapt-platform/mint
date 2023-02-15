@@ -60,13 +60,6 @@ interface IItem {
   createdAt: number;
 }
 
-const valueEnum = {
-  0: "n",
-  1: "ti",
-  2: "v",
-  3: "ind",
-};
-
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();

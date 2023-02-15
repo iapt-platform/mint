@@ -6,7 +6,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Card, message, Space } from "antd";
+import { Card, message } from "antd";
 
 import { IApiResponseChannel } from "../../../components/api/Channel";
 import { get, put } from "../../../request";
@@ -43,7 +43,7 @@ const Widget = () => {
         }}
         formKey="channel_edit"
         request={async () => {
-          const res: IApiResponseChannel = await get(
+          const res = await get<IApiResponseChannel>(
             `/v2/channel/${channelid}`
           );
           setTitle(res.data.name);

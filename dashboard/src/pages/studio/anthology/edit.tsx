@@ -9,12 +9,12 @@ import {
   IAnthologyDataRequest,
   IAnthologyResponse,
 } from "../../../components/api/Article";
-import EditableTree from "../../../components/article/EditableTree";
 import type { ListNodeData } from "../../../components/article/EditableTree";
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
 import MDEditor from "@uiw/react-md-editor";
+import TocTree from "../../../components/anthology/TocTree";
 
 interface IFormData {
   title: string;
@@ -25,9 +25,7 @@ interface IFormData {
 }
 
 const Widget = () => {
-  const listdata: ListNodeData[] = [];
   const intl = useIntl();
-  const [tocData, setTocData] = useState(listdata);
   const [title, setTitle] = useState("");
   const { studioname, anthology_id } = useParams(); //url 参数
   const [contentValue, setContentValue] = useState<string>("ddd");
@@ -86,7 +84,6 @@ const Widget = () => {
                 level: parseInt(item.level),
               };
             });
-            setTocData(toc);
             treeList = toc;
           }
           return {
@@ -171,14 +168,7 @@ const Widget = () => {
             {
               key: "toc",
               label: `目录`,
-              children: (
-                <EditableTree
-                  treeData={tocData}
-                  onChange={(data: ListNodeData[]) => {
-                    treeList = data;
-                  }}
-                />
-              ),
+              children: <TocTree anthologyId={anthology_id} />,
             },
           ]}
         />

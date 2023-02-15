@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Layout, Affix, Drawer, Row, Col } from "antd";
+import { Affix, Drawer, Row, Col } from "antd";
 import { message } from "antd";
 
 import BookTree from "../../../components/corpus/BookTree";

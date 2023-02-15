@@ -1,10 +1,8 @@
-import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { ProList } from "@ant-design/pro-components";
 import { message, Space, Tag } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
-import { IComment } from "../../../components/comment/CommentItem";
 import { ICommentListResponse } from "../../../components/api/Comment";
 import { get } from "../../../request";
 import { IUser } from "../../../components/auth/User";
@@ -21,7 +19,6 @@ interface IDiscussion {
 }
 const Widget = () => {
   // TODO
-  const intl = useIntl();
 
   return (
     <div>

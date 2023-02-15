@@ -7,12 +7,6 @@ import ChapterCard from "./ChapterCard";
 import type { ChapterData } from "./ChapterCard";
 import type { ChannelFilterProps } from "../channel/ChannelList";
 
-const defaultFilterProps: ChannelFilterProps = {
-  chapterProgress: 0.9,
-  lang: "en",
-  channelType: "translation",
-};
-
 interface IWidget {
   filter?: ChannelFilterProps;
   progress?: number;

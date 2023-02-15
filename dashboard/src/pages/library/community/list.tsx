@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Layout, Affix, Row, Col, Divider, Space } from "antd";
+import { Affix, Row, Col, Divider, Space } from "antd";
 import { Typography } from "antd";
 import { TagOutlined } from "@ant-design/icons";
 import ChannelList from "../../../components/channel/ChannelList";
@@ -12,8 +11,6 @@ import ChapterTagList from "../../../components/corpus/ChapterTagList";
 const { Title } = Typography;
 const Widget = () => {
   // TODO
-  const navigate = useNavigate();
-
   const defaultTags: string[] = [];
   const [tags, setTags] = useState(defaultTags);
   const [progress, setProgress] = useState(0.9);
@@ -24,7 +21,7 @@ const Widget = () => {
     <Row>
       <Col xs={0} sm={6} md={5}>
         <Affix offsetTop={0}>
-          <Layout style={{ height: "100vh", overflowY: "scroll" }}>
+          <div style={{ height: "100vh", overflowY: "scroll" }}>
             <BookTree
               onChange={(key: string, path: string[]) => {
                 /*
@@ -37,7 +34,7 @@ const Widget = () => {
                 console.log(key);
               }}
             />
-          </Layout>
+          </div>
         </Affix>
       </Col>
       <Col xs={24} sm={18} md={14}>

@@ -8,7 +8,6 @@ import TagArea from "../tag/TagArea";
 import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import { IStudio } from "../auth/StudioName";
-import { TagNode } from "../api/Tag";
 import { ITagData } from "./ChapterTagList";
 
 const { Title, Paragraph, Text } = Typography;
@@ -37,6 +36,7 @@ interface IWidgetChapterCard {
 
 const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
+  console.log("path", data.path);
   return (
     <>
       <Row>

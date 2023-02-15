@@ -2,7 +2,7 @@ import { Popover } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 
-const { Paragraph, Link } = Typography;
+const { Link } = Typography;
 
 interface IWidgetNoteCtl {
   trigger?: string;
@@ -10,7 +10,6 @@ interface IWidgetNoteCtl {
   children?: React.ReactNode;
 }
 const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
-  const noteCard = children ? children : <Paragraph copyable>{note}</Paragraph>;
   const show = trigger ? trigger : <InfoCircleOutlined />;
   return (
     <>

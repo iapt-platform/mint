@@ -5,7 +5,7 @@
  */
 import { Button, message, Modal, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";

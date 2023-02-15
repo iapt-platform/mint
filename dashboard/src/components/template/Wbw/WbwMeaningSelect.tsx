@@ -15,7 +15,7 @@
  */
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Collapse, Space, Tag, Typography } from "antd";
+import { Collapse, Tag, Typography } from "antd";
 
 import { IWbw } from "./WbwWord";
 import { useAppSelector } from "../../../hooks";

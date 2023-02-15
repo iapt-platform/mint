@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import { Card, Progress } from "antd";
@@ -13,6 +13,7 @@ import { get } from "../../../request";
 
 import GoBack from "../../../components/studio/GoBack";
 import { IChapterListResponse } from "../../../components/api/Corpus";
+import { IApiResponseChannel } from "../../../components/api/Channel";
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
@@ -55,6 +56,11 @@ const Widget = () => {
   const { studioname } = useParams();
   const [title, setTitle] = useState("");
 
+  useEffect(() => {
+    get<IApiResponseChannel>(`/v2/channel/${channelId}`).then((json) => {
+      setTitle(json.data.name);
+    });
+  }, [channelId]);
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/channel/list`} title={title} />}
