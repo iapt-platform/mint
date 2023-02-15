@@ -104,3 +104,20 @@ export interface IAnthologyCreateRequest {
   lang: string;
   studio: string;
 }
+
+export interface IArticleMapRequest {
+  id?: string;
+  collect_id: string;
+  article_id: string;
+  level: number;
+  title: string;
+  children: number;
+}
+export interface IArticleMapListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IArticleMapRequest[];
+    count: number;
+  };
+}
