@@ -32,26 +32,29 @@ const SentReadFrame = ({
   const boxSent = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    switch (key) {
-      case "setting.display.original":
-        if (boxOrg.current) {
-          if (value === true) {
-            boxOrg.current.style.display = "block";
-          } else {
-            boxOrg.current.style.display = "none";
-          }
+    const displayOriginal = GetUserSetting(
+      "setting.display.original",
+      settings
+    );
+    if (typeof displayOriginal === "boolean") {
+      if (boxOrg.current) {
+        if (displayOriginal === true) {
+          boxOrg.current.style.display = "block";
+        } else {
+          boxOrg.current.style.display = "none";
         }
-        break;
-      case "setting.layout.direction":
-        if (boxSent.current) {
-          if (typeof value === "string") {
-            boxSent.current.style.flexDirection = value;
-          }
-        }
-        break;
-      default:
-        break;
+      }
     }
+    const layoutDirection = GetUserSetting(
+      "setting.layout.direction",
+      settings
+    );
+    if (typeof layoutDirection === "string") {
+      if (boxSent.current) {
+        boxSent.current.style.flexDirection = layoutDirection;
+      }
+    }
+
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
     if (typeof _paliCode1 !== "undefined") {
       setPaliCode1(_paliCode1.toString() as TCodeConvertor);
