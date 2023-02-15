@@ -6,13 +6,12 @@ import type { IAnthologyListResponse } from "../api/Article";
 import AnthologyCard from "./AnthologyCard";
 import type { IAnthologyData } from "./AnthologyCard";
 
-const defaultData: IAnthologyData[] = [];
 interface IWidgetAnthologyList {
   view: string;
   id?: string;
 }
 const Widget = (prop: IWidgetAnthologyList) => {
-  const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState<IAnthologyData[]>([]);
 
   useEffect(() => {
     console.log("useEffect", prop);
