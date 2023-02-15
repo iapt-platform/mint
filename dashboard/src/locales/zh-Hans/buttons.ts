@@ -24,6 +24,7 @@ const items = {
   "buttons.group.add.member": "加人",
   "buttons.lesson.add.lesson": "加入",
   "buttons.ok": "确定",
+  "buttons.close": "关闭",
 };
 
 export default items;
