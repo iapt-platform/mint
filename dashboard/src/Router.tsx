@@ -123,6 +123,7 @@ const Widget = () => {
         <Route path="list" element={<LibraryCommunityList />} />
         <Route path="recent" element={<LibraryCommunityRecent />} />
       </Route>
+
       <Route path="palicanon" element={<LibraryPalicanon />}>
         <Route path="list" element={<LibraryPalicanonByPath />} />
         <Route path="list/:root" element={<LibraryPalicanonByPath />} />
@@ -133,6 +134,7 @@ const Widget = () => {
         />
         <Route path="chapter/:id" element={<LibraryPalicanonChapter />} />
       </Route>
+
       <Route path="course" element={<LibraryCourse />}>
         <Route path="list" element={<LibraryCourseList />}></Route>
         <Route path="show/:id" element={<LibraryCourseShow />}></Route>
@@ -143,7 +145,7 @@ const Widget = () => {
 
       <Route path="dict" element={<LibraryDict />}>
         <Route path=":word" element={<LibraryDictShow />} />
-        <Route path="recent" element={<LibraryDictRecent />} />
+        <Route path="recent" element={<LibraryDictShow />} />
       </Route>
 
       <Route path="anthology" element={<LibraryAnthology />}>
