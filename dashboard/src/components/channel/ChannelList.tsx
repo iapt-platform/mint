@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { List, message, Space, Tag } from "antd";
 
-import type { ChannelInfoProps, IChannelApiData } from "../api/Channel";
+import type { IChannelApiData } from "../api/Channel";
 import { IApiResponseChannelList } from "../api/Corpus";
 import { get } from "../../request";
 import ChannelListItem from "./ChannelListItem";
