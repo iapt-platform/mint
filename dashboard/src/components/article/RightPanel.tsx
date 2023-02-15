@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+
 import DictComponent from "../dict/DictComponent";
-import Dictionary from "../dict/Dictionary";
 
 export type TPanelName = "dict" | "channel" | "close";
 interface IWidget {
