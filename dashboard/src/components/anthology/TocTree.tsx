@@ -7,8 +7,9 @@ import EditableTree, { ListNodeData } from "../article/EditableTree";
 
 interface IWidget {
   anthologyId?: string;
+  onSelect?: Function;
 }
-const Widget = ({ anthologyId }: IWidget) => {
+const Widget = ({ anthologyId, onSelect }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [keys, setKeys] = useState<Key[]>();
 
