@@ -18,7 +18,11 @@ const Widget = ({ word }: IWidgetDict) => {
     }
   }, [commandMsg]);
 
-  return <Dictionary word={wordSearch} compact={true} />;
+  return (
+    <div style={{ height: `calc(100vh - 44px)`, overflowY: "scroll" }}>
+      <Dictionary word={wordSearch} compact={true} />
+    </div>
+  );
 };
 
 export default Widget;
