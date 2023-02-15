@@ -45,7 +45,7 @@ const Widget = ({
         );
         break;
       case "self":
-        oneItem = <Link to={linkChapter}>{item.title}</Link>;
+        oneItem = <Link to={linkChapter}>{title}</Link>;
         break;
     }
     return (
