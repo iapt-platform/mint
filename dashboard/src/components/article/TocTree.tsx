@@ -86,7 +86,7 @@ function tocGetTreeData(
 }
 
 interface IWidgetTocTree {
-  treeData: ListNodeData[];
+  treeData?: ListNodeData[];
   expandedKey?: string[];
   onSelect?: Function;
 }
@@ -96,7 +96,7 @@ const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
   const [expanded, setExpanded] = useState(expandedKey);
 
   useEffect(() => {
-    if (treeData.length > 0) {
+    if (treeData && treeData.length > 0) {
       const data = tocGetTreeData(treeData);
       setTree(data);
       setExpanded(expandedKey);
