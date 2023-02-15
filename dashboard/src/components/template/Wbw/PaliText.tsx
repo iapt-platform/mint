@@ -15,10 +15,8 @@ interface IWidget {
 const Widget = ({ text, primary = true }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
+  console.log("pali", text);
 
-  useEffect(() => {
-    setPaliText(text);
-  }, [text]);
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
     if (typeof _paliCode1 === "string") {
@@ -27,26 +25,26 @@ const Widget = ({ text, primary = true }: IWidget) => {
 
       switch (paliConvertor) {
         case "roman_to_my":
-          setPaliText(roman_to_my(paliText));
+          setPaliText(roman_to_my(text));
           break;
         case "my_to_roman":
-          setPaliText(my_to_roman(paliText));
+          setPaliText(my_to_roman(text));
           break;
         case "roman_to_si":
-          setPaliText(roman_to_si(paliText));
+          setPaliText(roman_to_si(text));
           break;
         case "roman_to_thai":
-          setPaliText(roman_to_thai(paliText));
+          setPaliText(roman_to_thai(text));
           break;
         case "roman_to_taitham":
-          setPaliText(roman_to_taitham(paliText));
+          setPaliText(roman_to_taitham(text));
           break;
         default:
-          setPaliText(paliText);
+          setPaliText(text);
           break;
       }
     }
-  }, [settings]);
+  }, [text, settings]);
   return text ? <span>{paliText}</span> : <></>;
 };
 
