@@ -31,7 +31,6 @@ import LibraryLessonShow from "./pages/library/course/lesson";
 import LibraryTerm from "./pages/library/term/show";
 import LibraryDict from "./pages/library/dict";
 import LibraryDictShow from "./pages/library/dict/show";
-import LibraryDictRecent from "./pages/library/dict/recent";
 import LibraryAnthology from "./pages/library/anthology";
 import LibraryAnthologyShow from "./pages/library/anthology/show";
 import LibraryAnthologyList from "./pages/library/anthology/list";
@@ -68,7 +67,6 @@ import StudioGroupShow from "./pages/studio/group/show";
 import StudioCourse from "./pages/studio/course";
 import StudioCourseList from "./pages/studio/course/list";
 import StudioCourseEdit from "./pages/studio/course/edit";
-import StudioCourseShow from "./pages/studio/course/show";
 
 import StudioDict from "./pages/studio/dict";
 import StudioDictList from "./pages/studio/dict/list";
@@ -194,9 +192,7 @@ const Widget = () => {
 
         <Route path="course" element={<StudioCourse />}>
           <Route path="list" element={<StudioCourseList />} />
-          <Route path=":courseId" element={<StudioCourseShow />} />
           <Route path=":courseId/edit" element={<StudioCourseEdit />} />
-          <Route path=":courseId/show" element={<StudioCourseShow />} />
         </Route>
 
         <Route path="dict" element={<StudioDict />}>
