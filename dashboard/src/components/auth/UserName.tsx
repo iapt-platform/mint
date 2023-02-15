@@ -1,5 +1,3 @@
-import { Avatar } from "antd";
-
 export interface IUser {
   id?: string;
   nickName?: string;
