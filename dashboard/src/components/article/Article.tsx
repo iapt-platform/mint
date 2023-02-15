@@ -8,7 +8,6 @@ import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
 import { ICourseCurrUserResponse } from "../api/Course";
 import { ICourseUser, signIn } from "../../reducers/course-user";
-import { ICourse } from "../../pages/library/course/course";
 import { ITextbook, refresh } from "../../reducers/current-course";
 import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
