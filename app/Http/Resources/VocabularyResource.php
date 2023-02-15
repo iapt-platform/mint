@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 
 class VocabularyResource extends JsonResource
 {
@@ -14,6 +15,15 @@ class VocabularyResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $key = "dict_first_mean/";
+        $meaning = Cache::get($key."zh-Hans/{$this['word']}");
+        if(empty($meaning)){
+            $meaning = Cache::get($key."com/{$this['word']}");
+        }
+        return [
+            "word"=>$this['word'],
+            "count"=> $this['count'],
+            "meaning"=> $meaning,
+        ];
     }
 }
