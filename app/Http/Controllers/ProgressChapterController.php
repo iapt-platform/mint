@@ -170,9 +170,9 @@ class ProgressChapterController extends Controller
             case 'channel-type':
                 break;
             case 'channel':
-            /*
-            总共有多少channel
-            */
+            /**
+             * 总共有多少channel
+             */
                 $chapters = ProgressChapter::select('channel_id')
                                            ->selectRaw('count(*) as count')
                                            ->with(['channel' => function($query) {
@@ -196,9 +196,10 @@ class ProgressChapterController extends Controller
                 $all_count = count($chapters);
                 break;
             case 'chapter_channels':
-            /*
-                某个章节 有多少channel
-            */
+            /**
+             * 某个章节 有多少channel
+             */
+
                 $chapters = ProgressChapter::select('book','para','progress_chapters.uid','progress_chapters.channel_id','progress','updated_at')
                                             ->with(['channel' => function($query) {
                                                 return $query->select('*');
