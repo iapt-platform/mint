@@ -10,7 +10,7 @@ class CaseMan
 {
 	/**
      * Create a new class instance.
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -20,7 +20,7 @@ class CaseMan
 
 	/**
      * 从词干到单词的变化
-     * 
+     *
      * @return void
      */
 	public function BaseToWord($base){
@@ -62,7 +62,7 @@ class CaseMan
 								'confidence'=>$ending[4],
 							]);
 						}
-					}				
+					}
 				}
 			}
 			foreach ($newBase as $currWord => $value) {
@@ -104,25 +104,25 @@ class CaseMan
 			return $newBase;
 		}
 
-		
+
 	}
 	/**
 	 * 验证base在字典中是否存在
 	 */
 	public function VerifyBase($base,$rows){
-		# 
+		#
 		$output = array();
 		$dictWords = UserDict::where('word',$base)->select(['type','grammar'])->groupBy(['type','grammar'])->get();
 		if(count($dictWords)>0){
 			$newBase[$base] = 1;
-			$case = array(); 
+			$case = array();
 			//字典中这个拼写的单词的语法信息
 			foreach ($dictWords as $value) {
 				# code...
 				$case["{$value->type}{$value->grammar}"] = 1;
 			}
 			foreach ($rows as $value) {
-				//根据输入的猜测的type,grammar拼接合理的 parent 语法信息 
+				//根据输入的猜测的type,grammar拼接合理的 parent 语法信息
 				switch ($value['type']) {
 					case '.n.':
 						$parentType = '.n:base.';
@@ -139,7 +139,7 @@ class CaseMan
 				}
 				if(!empty($value['grammar']) && $value['type'] !== ".v."){
 					$arrGrammar = explode('$',$value['grammar']);
-					$parentType .=  $arrGrammar[0];										
+					$parentType .=  $arrGrammar[0];
 				}
 				# 只保存语法信息合理的数据
 				if(isset($case[$parentType])){
@@ -2515,7 +2515,7 @@ class CaseEnding{
 		["ar","āhi",".n.",".nt.$.pl.$.abl.",0.99],
 		["ar","esu",".n.",".nt.$.pl.$.loc.",0.99],
 		["ar","āsu",".n.",".nt.$.pl.$.loc.",0.99],
-		["a","e",".n.",".m.$.sg.$.nom.",0.99],
+		["a","e",".n.",".m.$.sg.$.nom.",0.3],
 		["a","ā",".n.",".m.$.sg.$.inst.",0.99],
 		["a","asā",".n.",".m.$.sg.$.inst.",0.99],
 		["a","ā",".n.",".m.$.sg.$.dat.",0.99],
@@ -2526,7 +2526,7 @@ class CaseEnding{
 		["a","āse",".n.",".m.$.pl.$.nom.",0.99],
 		["a","o",".n.",".m.$.pl.$.nom.",0.3],
 		["a","ān",".n.",".m.$.pl.$.acc.",0.99],
-		["a","e",".n.",".m.$.pl.$.inst.",0.99],
+		["a","e",".n.",".m.$.pl.$.inst.",0.3],
 		["a","ato",".n.",".m.$.pl.$.abl.",0.99],
 		["a","e",".n.",".nt.$.sg.$.nom.",0.99],
 		["a","ā",".n.",".nt.$.sg.$.inst.",0.99],
@@ -2537,7 +2537,7 @@ class CaseEnding{
 		["a","aṃ",".n.",".nt.$.sg.$.voc.",0.3],
 		["a","āya",".n.",".nt.$.sg.$.gen.",0.99],
 		["a","ā",".n.",".nt.$.sg.$.gen.",0.99],
-		["a","o",".n.",".nt.$.pl.$.acc.",0.99],
+		["a","o",".n.",".nt.$.pl.$.acc.",0.3],
 		["a","ato",".n.",".nt.$.pl.$.abl.",0.99],
 		["ā","ā",".n.",".f.$.sg.$.inst.",0.99],
 		["ā","āto",".n.",".f.$.sg.$.abl.",0.99],
@@ -3319,7 +3319,7 @@ class CaseEnding{
 		["oti","āpeti",".v:base.",".caus.",0.99],
 		["oti","yati",".v:base.",".pp.",0.99],
 	];
-		
+
 	public $derivatives = [
 		["ti","māna",".ti:base.",".prp.",0.99],
 		["ati","anta",".ti:base.",".prp.",0.99],

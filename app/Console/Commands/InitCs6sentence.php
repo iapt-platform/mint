@@ -74,43 +74,27 @@ class InitCs6sentence extends Command
 				//if($word->style != "note" && $word->type != '.ctl.')
 				if( $word->type != '.ctl.')
                 {
-					if($word->style=='bld'){
-						if(!$boldStart){
-							#黑体字开始
-							$boldStart = true;
-							$sent .= ' <b>';
-						}
+					if(strpos($word->word,'{') >=0 ){
+                        //一个单词里面含有黑体字的
+						$paliWord = \str_replace("{","<strong>",$word->word) ;
+						$paliWord = \str_replace("}","</strong>",$paliWord) ;
+                        $sent .= $paliWord;
 					}else{
-						if($boldStart){
-							#黑体字结束
-							$boldStart = false;
-							$boldCount = 0;
-							$sent .= '</b>';
-						}
+                        if($word->style=='bld'){
+                            $sent .= "<strong>{$word->word}</strong>";
+                        }else{
+                            $sent .= $word->word;
+                        }
 					}
-					if($boldStart){
-						$boldCount++;
-					}
-					if(!empty($word->real) && $boldCount != 1){
-						#如果不是标点符号，在词的前面加空格 。第一个黑体字前不加空格
+
+					if(!empty($word->real) ){
+						#如果不是标点符号，在词的前面加空格 。
 						$sent .= " ";
 					}
 
-					if(strpos($word->word,'{') >=0 ){
-                        //一个单词里面含有黑体字的
-						$paliWord = \str_replace("{","<b>",$word->word) ;
-						$paliWord = \str_replace("}","</b>",$paliWord) ;
-					}else{
-						$paliWord = $word->word;
-					}
-					$sent .= $paliWord;
 				}
 			}
-			if($boldStart){
-				#句子结尾是黑体字 加黑体结束符号
-				$boldStart = false;
-				$sent .= '** ';
-			}
+
 			#将wikipali风格的引用 改为缅文风格
             /*
 			$sent = \str_replace('n’’’ ti','’’’nti',$sent);
@@ -119,8 +103,6 @@ class InitCs6sentence extends Command
 			$sent = \str_replace('**ti**','**ti',$sent);
 			$sent = \str_replace('‘ ','‘',$sent);
             */
-			$sent = trim($sent);
-			$snowId = app('snowflake')->id();
 			$newRow = Sentence::firstOrNew(
 				[
 					"book_id" => $value->book,
@@ -130,14 +112,15 @@ class InitCs6sentence extends Command
 					"channel_uid" => $channelId,
 				],
 				[
-					'id' =>$snowId,
+					'id' =>app('snowflake')->id(),
 					'uid' =>Str::uuid(),
 				]
 				);
             $newRow->editor_uid = config("app.admin.root_uuid");
-            $newRow->content = trim($sent);
+            $newRow->content = "<span>{$sent}</span>";
             $newRow->strlen = mb_strlen($sent,"UTF-8");
-            $newRow->status = 30;
+            $newRow->status = 10;
+            $newRow->content_type = "html";
             $newRow->create_time = time()*1000;
             $newRow->modify_time = time()*1000;
             $newRow->language = 'en';

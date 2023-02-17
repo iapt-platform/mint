@@ -44,7 +44,7 @@ class DiscussionController extends Controller
         if(!empty($request->get('order')) && !empty($request->get('dir'))){
             $table->orderBy($request->get('order'),$request->get('dir'));
         }else{
-            $table->orderBy('updated_at','asc');
+            $table->orderBy('updated_at','desc');
         }
         $count = $table->count();
         if(!empty($request->get('limit'))){

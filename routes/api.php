@@ -32,6 +32,8 @@ use App\Http\Controllers\ShareController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseMemberController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\ArticleMapController;
+use App\Http\Controllers\VocabularyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +67,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
     Route::get('palibook/{file}', function ($file) {
+        if($file==='default'){$file="defualt";}
         return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
     });
     Route::apiResource('anthology',CollectionController::class);
@@ -96,6 +99,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('course-curr', [CourseMemberController::class, 'curr']);
 
     Route::apiResource('exercise',ExerciseController::class);
+    Route::apiResource('article-map',ArticleMapController::class);
+    Route::apiResource('vocabulary',VocabularyController::class);
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");

@@ -79,13 +79,15 @@ class MdRender{
         }
         return $output;
     }
-    public static function xml2tpl(string $xml, $channelId=""):string{
+    public static function xml2tpl(string $xml, $channelId="",$mode='read'):string{
         /**
          * 解析xml
          * 获取模版参数
          * 生成react 组件参数
          */
+        //$xml = str_replace(['<b>','</b>'],['',''],$xml);
         $dom = simplexml_load_string($xml);
+
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             /**
@@ -114,7 +116,7 @@ class MdRender{
             /**
              * 生成模版参数
              */
-            $tplRender = new TemplateRender($props,$channelId,'edit');
+            $tplRender = new TemplateRender($props,$channelId,$mode);
             $tplProps = $tplRender->render($tpl_name);
             if($tplProps){
                 $tpl->addAttribute("props",$tplProps['props']);
@@ -127,13 +129,13 @@ class MdRender{
         return $html;
     }
 
-    public static function render2($markdown,$channelId='',$queryId=null){
+    public static function render2($markdown,$channelId='',$queryId=null,$mode='read'){
         $wiki = MdRender::markdown2wiki($markdown);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
-        $tpl = MdRender::xml2tpl($html,$channelId);
+        $tpl = MdRender::xml2tpl($html,$channelId,$mode);
         return $tpl;
     }
     public static function markdown2wiki(string $markdown): string{
@@ -170,8 +172,8 @@ class MdRender{
     /**
      *
      */
-    public static function render($markdown,$channelId,$queryId=null){
-        return MdRender::render2($markdown,$channelId,$queryId);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read'){
+        return MdRender::render2($markdown,$channelId,$queryId,$mode);
 
         $html = MdRender::markdown2wiki($markdown);
 

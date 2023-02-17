@@ -7,6 +7,7 @@ use App\Models\WordIndex;
 use App\Models\WbwTemplate;
 use App\Models\UserDict;
 use App\Tools\TurboSplit;
+use App\Http\Api\DictApi;
 
 class UpgradeCompound extends Command
 {
@@ -24,7 +25,6 @@ class UpgradeCompound extends Command
      */
     protected $description = 'Command description';
 
-	protected $dict_id = 'c42980f0-5967-4833-b695-84183344f68f';
 
 
     /**
@@ -44,7 +44,12 @@ class UpgradeCompound extends Command
      */
     public function handle()
     {
-		
+        $dict_id = DictApi::getSysDict('robot_compound');
+        if(!$dict_id){
+            $this->error('没有找到 robot_compound 字典');
+            return 1;
+        }
+
 		$start = \microtime(true);
 
 		$_word = $this->argument('word');
@@ -62,6 +67,7 @@ class UpgradeCompound extends Command
 		//
 		if($this->option('test')){
 			//调试代码
+            $ts = new TurboSplit();
 			Storage::disk('local')->put("tmp/compound.md", "# Turbo Split");
 			//获取需要拆的词
 			$list = [
@@ -83,15 +89,13 @@ class UpgradeCompound extends Command
 						Storage::disk('local')->append("tmp/compound.md", "- `{$part['word']}`,{$part['factors']},{$part['confidence']}");
 					}
 				}
-			}		
-			$this->info("耗时：".\microtime(true)-$start);		
-			return 0;	
+			}
+			$this->info("耗时：".\microtime(true)-$start);
+			return 0;
 		}
 
 		//$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
 		$words = WbwTemplate::select('real')
-						->where('book',118)
-						->whereBetween('paragraph',[1329,1367])
 						->where('type','<>','.ctl.')
 						->where('real','<>','')
 						->groupBy('real')->cursor();
@@ -99,7 +103,7 @@ class UpgradeCompound extends Command
 		foreach ($words as $key => $word) {
 			//先看目前字典里有没有
 			$isExists = UserDict::where('word',$word->real)
-								->where('dict_id',"<>",'8359757e-9575-455b-a772-cc6f036caea0')
+								->where('dict_id',"<>",$dict_id)
 								->exists();
 
 			if($isExists){
@@ -108,7 +112,7 @@ class UpgradeCompound extends Command
 			}
 			# code...
 			$count++;
-			$this->info("{$count}:{$word->real}"); 
+			$this->info("{$count}:{$word->real}");
 			$ts = new TurboSplit();
 			$parts = $ts->splitA($word->real);
 			foreach ($parts as $part) {
@@ -116,7 +120,7 @@ class UpgradeCompound extends Command
 					[
 						'word' => $part['word'],
 						'factors' => $part['factors'],
-						'dict_id' => $this->dict_id,
+						'dict_id' => $dict_id,
 					],
 					[
 						'id' => app('snowflake')->id(),
@@ -140,9 +144,9 @@ class UpgradeCompound extends Command
 			}
 		}
 		//删除旧数据
-		UserDict::where('dict_id',$this->dict_id)->where('flag',0)->delete();
-		UserDict::where('dict_id',$this->dict_id)->where('flag',1)->update(['flag'=>0]);
-	
+		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
+
         return 0;
     }
 }

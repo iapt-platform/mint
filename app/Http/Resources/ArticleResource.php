@@ -73,7 +73,12 @@ class ArticleResource extends JsonResource
             }
             Log::info("channel:{$channel}");
             Log::info("query_id:{$query_id}");
-            $data["html"] = MdRender::render($this->content,$channel,$query_id);
+            if($request->has('mode')){
+                $mode = $request->get('mode');
+            }else{
+                $mode = 'read';
+            }
+            $data["html"] = MdRender::render($this->content,$channel,$query_id,$mode);
         }
         return $data;
     }

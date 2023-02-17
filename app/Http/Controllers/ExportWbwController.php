@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wbw;
 use App\Models\WbwBlock;
+use App\Models\PaliSentence;
 use Illuminate\Http\Request;
 
 class ExportWbwController extends Controller
@@ -38,6 +39,11 @@ class ExportWbwController extends Controller
                         ->where('block_uid',$block->uid)
                         ->get();
             $sent['sid']=$value;
+            $sent['text'] = PaliSentence::where('book',$sentId[0])
+                                        ->where('paragraph',$sentId[1])
+                                        ->where('word_begin',$sentId[2])
+                                        ->where('word_end','<=',$sentId[3])
+                                        ->value('html');
             $sent['data']=[];
             foreach ($wbwdata as  $wbw) {
                 # code...

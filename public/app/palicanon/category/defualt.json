@@ -1,6 +1,6 @@
 [
            {
-                "name":"Sutta Piṭaka",
+                "name":"Suttapiṭaka",
                 "tag":["sutta"],
                 "children":[
                     {
@@ -200,7 +200,7 @@
                 ]
             },
             {
-                "name":"Vinaya Piṭaka",
+                "name":"Vinayapiṭaka",
                 "tag":["vinaya"],
                 "children":[
                     {
@@ -247,6 +247,14 @@
 								"name":"Vinayavinicchayo",
 								"tag":["vinaya","ṭīkā","vinayavinicchaya"]
 							},
+                            {
+								"name":"Vinayasaṅgaha",
+								"tag":["vinaya","ṭīkā","vinayasaṅgaha"]
+							},
+                            {
+								"name":"Vinayālaṅkāra",
+								"tag":["vinaya","ṭīkā","vinayālaṅkāra"]
+							},
 							{
 								"name":"Uttaravinicchaya",
 								"tag":["vinaya","ṭīkā","uttaravinicchaya"]
@@ -268,7 +276,7 @@
                 ]
             },
             {
-                "name":"Abhidhamma Piṭaka",
+                "name":"Abhidhammapiṭaka",
                 "tag":["abhidhamma"],
                 "children":[
                     {

@@ -16,7 +16,8 @@
         </div>
 
         @foreach ($sentences as $sent)
-            <h3>{{ $sent["sid"] }}</h3>
+            <h3>{{ $sent["text"] }}</h3>
+            <div>{{ $sent["sid"] }}</div>
             <div>
             @foreach ($sent["data"] as $wbw)
             <b>{{$wbw["pali"]}}:</b>
