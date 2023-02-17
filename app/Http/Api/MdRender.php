@@ -85,12 +85,8 @@ class MdRender{
          * 获取模版参数
          * 生成react 组件参数
          */
-        try{
-            $xml = str_replace(['<b>','</b>'],['',''],$xml);
-            $dom = simplexml_load_string($xml);
-        }catch(Exception $e){
-            return "<span>{$xml}</span>";
-        }
+        //$xml = str_replace(['<b>','</b>'],['',''],$xml);
+        $dom = simplexml_load_string($xml);
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
