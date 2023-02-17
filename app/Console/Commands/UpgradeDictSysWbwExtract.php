@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * 将用户词典中的数据进行汇总。
+ * 算法：
+ * 同样词性的合并为一条记录。意思按照出现的次数排序
+ */
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -38,7 +42,17 @@ class UpgradeDictSysWbwExtract extends Command
      */
     public function handle()
     {
-		$dict  = UserDict::select('word')->where('word','!=','')->where('dict_id','ef620a93-a55d-4756-89c5-e188ab009e45')->groupBy('word');
+        $user_dict_id = DictApi::getSysDict('community');
+        if(!$user_dict_id){
+            $this->error('没有找到 community 字典');
+            return 1;
+        }
+        $user_dict_extract_id = DictApi::getSysDict('community_extract');
+        if(!$user_dict_extract_id){
+            $this->error('没有找到 community_extract 字典');
+            return 1;
+        }
+		$dict  = UserDict::select('word')->where('word','!=','')->where('dict_id',$user_dict_id)->groupBy('word');
 		$bar = $this->output->createProgressBar($dict->count());
 		foreach ($dict->cursor() as  $word) {
 			# code...
@@ -50,7 +64,7 @@ class UpgradeDictSysWbwExtract extends Command
 
 			$case = UserDict::selectRaw('type,grammar, sum(confidence)')
 					->where('word',$word->word)
-					->where('dict_id','ef620a93-a55d-4756-89c5-e188ab009e45')
+					->where('dict_id',$user_dict_id)
 					->where('type','!=','.part.')
 					->where('type','<>','')
 					->whereNotNull('type')
@@ -59,13 +73,13 @@ class UpgradeDictSysWbwExtract extends Command
 					->first();
 			if($case){
 				$wordtype = $case->type;
-				$wordgrammar = $case->grammar;			
+				$wordgrammar = $case->grammar;
 			}
 
 			//parent
 			$parent = UserDict::selectRaw('parent, sum(confidence)')
 					->where('word',$word->word)
-					->where('dict_id','ef620a93-a55d-4756-89c5-e188ab009e45')
+					->where('dict_id',$user_dict_id)
 					->where('type','!=','.part.')
 					->where('parent','!=','')
 					->whereNotNull('parent')
@@ -73,14 +87,14 @@ class UpgradeDictSysWbwExtract extends Command
 					->orderBy('sum','desc')
 					->first();
 			if($parent){
-				$wordparent = $parent->parent;			
+				$wordparent = $parent->parent;
 			}
 
 
 				//factors
 				$factor = UserDict::selectRaw('factors, sum(confidence)')
 						->where('word',$word->word)
-						->where('dict_id','ef620a93-a55d-4756-89c5-e188ab009e45')
+						->where('dict_id',$user_dict_id)
 						->where('type','!=','.part.')
 						->where('factors','<>','')
 						->whereNotNull('factors')
@@ -97,7 +111,7 @@ class UpgradeDictSysWbwExtract extends Command
 						'grammar' => $wordgrammar,
 						'parent' => $wordparent,
 						'factors' => $wordfactors,
-						'dict_id' => '85dcc61c-c9e1-4ae0-9b44-cd6d9d9f0d01', 
+						'dict_id' => $user_dict_extract_id,
 					],
 					[
 						'id' => app('snowflake')->id(),
