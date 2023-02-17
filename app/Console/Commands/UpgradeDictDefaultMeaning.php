@@ -21,7 +21,7 @@ class UpgradeDictDefaultMeaning extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '找出单词的首选意思。用于搜索列表';
 
     /**
      * Create a new command instance.
