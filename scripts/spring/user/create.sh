@@ -43,6 +43,12 @@ then
     chown $1:$1 /workspace/tmp/$1
 fi
 
+if [ ! -d $WORKSPACE/dashboard ]
+then
+    mkdir -p /workspace/dashboard/$1
+    chown $1:$1 /workspace/dashboard/$1
+fi
+
 if [ ! -f $WORKSPACE/nginx.conf ]
 then
     # https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
@@ -68,6 +74,16 @@ server {
 
   location / {
     try_files \$uri \$uri/ /index.php?\$query_string;
+  }
+
+  location /my/ {
+    alias $WORKSPACE/dashboard/;
+    try_files \$uri \$uri/ /my/index.html;
+    
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+      access_log off;
+      expires max;
+    }
   }
 
   location = /favicon.ico { access_log off; log_not_found off; }
