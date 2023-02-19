@@ -1,4 +1,4 @@
-import { Col, Progress, Row, Space, Tabs } from "antd";
+import { Button, Col, List, Modal, Progress, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
 import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
 
@@ -8,6 +8,7 @@ import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { IStudio } from "../auth/StudioName";
+import { useState } from "react";
 
 const { Text } = Typography;
 
@@ -23,19 +24,46 @@ interface IWidgetChapterInChannel {
   data: IChapterChannelData[];
   book: number;
   para: number;
+  channelId?: string[];
+  openTarget?: React.HTMLAttributeAnchorTarget;
 }
-const Widget = ({ data, book, para }: IWidgetChapterInChannel) => {
+const Widget = ({
+  data,
+  book,
+  para,
+  channelId,
+  openTarget = "_blank",
+}: IWidgetChapterInChannel) => {
   const intl = useIntl(); //i18n
-  function getTab(type: string): JSX.Element[] {
-    const output = data.map((item, id) => {
-      if (item.channel.type === type) {
-        return (
-          <div key={id}>
+  const [open, setOpen] = useState(false);
+  const ChannelList = (channels: IChapterChannelData[]): JSX.Element => {
+    return (
+      <List
+        style={{ maxWidth: 500 }}
+        itemLayout="vertical"
+        size="small"
+        dataSource={channels}
+        pagination={
+          channelId
+            ? undefined
+            : {
+                showQuickJumper: false,
+                showSizeChanger: false,
+                pageSize: 5,
+                total: channels.length,
+                position: "bottom",
+                showTotal: (total) => {
+                  return `结果: ${total}`;
+                },
+              }
+        }
+        renderItem={(item, id) => (
+          <List.Item key={id}>
             <Row>
-              <Col span={5}>
+              <Col span={12}>
                 <Link
                   to={`/article/chapter/${book}-${para}_${item.channel.id}`}
-                  target="_blank"
+                  target={openTarget}
                 >
                   <ChannelListItem
                     channel={item.channel}
@@ -43,10 +71,9 @@ const Widget = ({ data, book, para }: IWidgetChapterInChannel) => {
                   />
                 </Link>
               </Col>
-              <Col span={5}>
+              <Col span={12}>
                 <Progress percent={item.progress} size="small" />
               </Col>
-              <Col span={8}></Col>
             </Row>
 
             <Text type="secondary">
@@ -57,38 +84,79 @@ const Widget = ({ data, book, para }: IWidgetChapterInChannel) => {
                 <TimeShow time={item.updatedAt} title={item.updatedAt} />
               </Space>
             </Text>
-          </div>
-        );
-      } else {
-        return <></>;
-      }
-    });
-    return output;
-  }
+          </List.Item>
+        )}
+      />
+    );
+  };
 
-  const items = [
-    {
-      label: intl.formatMessage({ id: "channel.type.translation.label" }),
-      key: "translation",
-      children: getTab("translation"),
-    },
-    {
-      label: intl.formatMessage({ id: "channel.type.nissaya.label" }),
-      key: "nissaya",
-      children: getTab("nissaya"),
-    },
-    {
-      label: intl.formatMessage({ id: "channel.type.commentary.label" }),
-      key: "commentary",
-      children: getTab("commentary"),
-    },
-    {
-      label: intl.formatMessage({ id: "channel.type.original.label" }),
-      key: "original",
-      children: getTab("original"),
-    },
-  ];
-  return <Tabs items={items} />;
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  if (typeof channelId !== "undefined") {
+    const channelList = ChannelList(
+      data.filter((item) => channelId.includes(item.channel.id))
+    );
+    return (
+      <div>
+        <div>{channelList}</div>
+        <div>
+          <Button
+            type="link"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            更多
+          </Button>
+        </div>
+        <Modal
+          title="版本选择"
+          open={open}
+          onCancel={handleCancel}
+          onOk={handleCancel}
+        >
+          <div>{ChannelList(data)}</div>
+        </Modal>
+      </div>
+    );
+  } else {
+    return (
+      <Tabs
+        items={[
+          {
+            label: intl.formatMessage({ id: "channel.type.translation.label" }),
+            key: "translation",
+            children: ChannelList(
+              data.filter((item) => item.channel.type === "translation")
+            ),
+          },
+          {
+            label: intl.formatMessage({ id: "channel.type.nissaya.label" }),
+            key: "nissaya",
+            children: ChannelList(
+              data.filter((item) => item.channel.type === "nissaya")
+            ),
+          },
+          {
+            label: intl.formatMessage({ id: "channel.type.commentary.label" }),
+            key: "commentary",
+            children: ChannelList(
+              data.filter((item) => item.channel.type === "commentary")
+            ),
+          },
+          {
+            label: intl.formatMessage({ id: "channel.type.original.label" }),
+            key: "original",
+            children: ChannelList(
+              data.filter((item) => item.channel.type === "original")
+            ),
+          },
+        ]}
+      />
+    );
+  }
 };
 
 export default Widget;
