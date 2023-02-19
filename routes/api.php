@@ -54,6 +54,7 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('wbw_templates',WbwTemplateController::class);
 	Route::apiResource('terms',DhammaTermController::class);
 	Route::apiResource('sentence',SentenceController::class);
+	Route::post('sent-in-channel',[SentenceController::class,"sent_in_channel"]);
 	Route::apiResource('sentpr',SentPrController::class);
 	Route::apiResource('progress',ProgressChapterController::class);
 	Route::apiResource('tag',TagController::class);
