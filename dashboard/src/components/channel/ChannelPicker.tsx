@@ -3,12 +3,14 @@ import { Button, Modal } from "antd";
 
 import ChannelPickerTable from "./ChannelPickerTable";
 import { IChannel } from "./Channel";
+import { ArticleType } from "../article/Article";
 
 interface IWidget {
-  type: string;
-  articleId: string;
+  type?: ArticleType | "editable";
+  articleId?: string;
+  multiSelect?: boolean;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const Widget = ({ type, articleId, multiSelect }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -38,6 +40,7 @@ const Widget = ({ type, articleId }: IWidget) => {
         <ChannelPickerTable
           type={type}
           articleId={articleId}
+          multiSelect={multiSelect}
           onSelect={(e: IChannel) => {
             console.log(e);
             handleCancel();

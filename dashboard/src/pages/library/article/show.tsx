@@ -1,10 +1,13 @@
 import { Affix, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import Article, { ArticleMode } from "../../../components/article/Article";
-import ArticleCard from "../../../components/article/ArticleCard";
+import Article, {
+  ArticleMode,
+  ArticleType,
+} from "../../../components/article/Article";
+
 import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
@@ -13,6 +16,7 @@ import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
 import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
+import { IChannel } from "../../../components/channel/Channel";
 
 /**
  * type:
@@ -27,21 +31,16 @@ import ToolButtonToc from "../../../components/article/ToolButtonToc";
  */
 const Widget = () => {
   const { type, id, mode = "read" } = useParams(); //url 参数
+  const navigate = useNavigate();
   console.log("mode", mode);
   const [articleMode, setArticleMode] = useState<ArticleMode>(
     mode as ArticleMode
   );
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
 
-  const box = useRef<HTMLDivElement>(null);
-
-  const openCol = () => {
-    if (box.current) {
-      box.current.style.display = "block";
-    }
-  };
   //const right = <ProTabs />;
   const rightBarWidth = "48px";
+  const channelId = id?.split("_").slice(1);
   return (
     <div>
       <Affix offsetTop={0}>
@@ -57,7 +56,7 @@ const Widget = () => {
           <div>
             <MainMenu />
           </div>
-          <div>tools</div>
+          <div></div>
           <div style={{ display: "flex" }}>
             <ModeSwitch
               onModeChange={(e: ArticleMode) => {
@@ -90,13 +89,26 @@ const Widget = () => {
           <div>
             <Article
               active={true}
-              type={type}
+              type={type as ArticleType}
               articleId={id}
               mode={articleMode}
             />
           </div>
           <div>
-            <RightPanel curr={rightPanel} />
+            <RightPanel
+              curr={rightPanel}
+              type={type as ArticleType}
+              articleId={id ? id : ""}
+              selectedChannelKeys={channelId}
+              onChannelSelect={(e: IChannel[]) => {
+                const oldId = id?.split("_");
+                const newId = [
+                  oldId ? oldId[0] : undefined,
+                  ...e.map((item) => item.id),
+                ];
+                navigate(`/article/${type}/${newId.join("_")}/${mode}`);
+              }}
+            />
           </div>
         </div>
       </div>

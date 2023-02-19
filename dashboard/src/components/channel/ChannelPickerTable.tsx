@@ -1,23 +1,30 @@
-import { ProTable } from "@ant-design/pro-components";
+import { ProList } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { Space, Table } from "antd";
-import { GlobalOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Table } from "antd";
+import {
+  GlobalOutlined,
+  EditOutlined,
+  MoreOutlined,
+  CopyOutlined,
+} from "@ant-design/icons";
 import { Button } from "antd";
 
-import { PublicityValueEnum } from "../studio/table";
-import { IApiResponseChannelList, IFinal } from "../api/Channel";
+import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
 import { get } from "../../request";
 import { LockIcon } from "../../assets/icon";
 import StudioName, { IStudio } from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
+import { ArticleType } from "../article/Article";
+import CopyToModal from "./CopyToModal";
+import { useState } from "react";
 
 export interface IItem {
   id: number;
   uid: string;
   title: string;
   summary: string;
-  type: string;
+  type: TChannelType;
   studio: IStudio;
   shareType: string;
   role?: string;
@@ -26,229 +33,104 @@ export interface IItem {
   final?: IFinal[];
 }
 interface IWidget {
-  type: string;
-  articleId: string;
+  type?: ArticleType | "editable";
+  articleId?: string;
+  multiSelect?: boolean;
+  selectedKeys?: string[];
   onSelect?: Function;
 }
-const Widget = ({ type, articleId, onSelect }: IWidget) => {
+const Widget = ({
+  type,
+  articleId,
+  multiSelect = true,
+  selectedKeys = [],
+  onSelect,
+}: IWidget) => {
   const intl = useIntl();
-
+  const [selectedRowKeys, setSelectedRowKeys] =
+    useState<React.Key[]>(selectedKeys);
   return (
     <>
-      <ProTable<IItem>
-        columns={[
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.name.label",
-            }),
-            dataIndex: "title",
-            key: "title",
-            search: false,
-            tip: "过长会自动收缩",
-            ellipsis: true,
-            valueType: "text",
-            render: (text, row, index, action) => {
-              let pIcon = <></>;
-              switch (row.publicity) {
-                case 10:
-                  pIcon = <LockIcon />;
-                  break;
-                case 30:
-                  pIcon = <GlobalOutlined />;
-                  break;
+      <ProList<IItem>
+        rowSelection={
+          multiSelect
+            ? {
+                // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+                // 注释该行则默认不显示下拉选项
+                selectedRowKeys,
+                selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
               }
-              return (
-                <Button
-                  type="link"
-                  onClick={() => {
-                    if (typeof onSelect !== "undefined") {
-                      const e: IChannel = { name: row.title, id: row.uid };
-                      onSelect(e);
-                    }
-                  }}
-                >
-                  <Space>
-                    {pIcon}
-                    {row.title}
+            : undefined
+        }
+        tableAlertRender={
+          multiSelect
+            ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+                <Space size={24}>
+                  <span>
+                    {intl.formatMessage({ id: "buttons.selected" })}
+                    {selectedRowKeys.length}
+                    <Button
+                      type="link"
+                      style={{ marginInlineStart: 8 }}
+                      onClick={onCleanSelected}
+                    >
+                      {intl.formatMessage({ id: "buttons.unselect" })}
+                    </Button>
+                  </span>
+                </Space>
+              )
+            : undefined
+        }
+        tableAlertOptionRender={
+          multiSelect
+            ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => {
+                return (
+                  <Space size={16}>
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        console.log("select", selectedRowKeys);
+                        if (typeof onSelect !== "undefined") {
+                          onSelect(
+                            selectedRows.map((item) => {
+                              return {
+                                id: item.uid,
+                                name: item.title,
+                              };
+                            })
+                          );
+                        }
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: "buttons.select",
+                      })}
+                    </Button>
                   </Space>
-                </Button>
-              );
-            },
-          },
-          {
-            title: intl.formatMessage({
-              id: "channel.title",
-            }),
-            render: (text, row, index, action) => {
-              return <StudioName data={row.studio} />;
-            },
-            key: "studio",
-            search: false,
-          },
-          {
-            title: intl.formatMessage({
-              id: "tables.progress.label",
-            }),
-            width: 210,
-            render: (text, row, index, action) => {
-              return <ProgressSvg data={row.final} width={200} />;
-            },
-            key: "progress",
-            search: false,
-          },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.type.label",
-            }),
-            dataIndex: "type",
-            key: "type",
-            width: 100,
-            search: false,
-            filters: true,
-            onFilter: true,
-            valueEnum: {
-              all: {
-                text: intl.formatMessage({
-                  id: "channel.type.all.title",
-                }),
-                status: "Default",
-              },
-              translation: {
-                text: intl.formatMessage({
-                  id: "channel.type.translation.label",
-                }),
-                status: "Success",
-              },
-              nissaya: {
-                text: intl.formatMessage({
-                  id: "channel.type.nissaya.label",
-                }),
-                status: "Processing",
-              },
-              commentary: {
-                text: intl.formatMessage({
-                  id: "channel.type.commentary.label",
-                }),
-                status: "Default",
-              },
-              original: {
-                text: intl.formatMessage({
-                  id: "channel.type.original.label",
-                }),
-                status: "Default",
-              },
-              general: {
-                text: intl.formatMessage({
-                  id: "channel.type.general.label",
-                }),
-                status: "Default",
-              },
-            },
-          },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.publicity.label",
-            }),
-            dataIndex: "publicity",
-            key: "publicity",
-            width: 100,
-            search: false,
-            filters: true,
-            hideInTable: true,
-            onFilter: true,
-            valueEnum: PublicityValueEnum(),
-          },
-          {
-            title: intl.formatMessage({ id: "buttons.option" }),
-            key: "option",
-            width: 120,
-            valueType: "option",
-            render: (text, row, index, action) => {
-              return [
-                intl.formatMessage({
-                  id: "buttons.edit",
-                }),
-              ];
-            },
-          },
-          {
-            title: "类型",
-            dataIndex: "shareType",
-            valueType: "select",
-            hideInTable: true,
-            width: 120,
-            valueEnum: {
-              all: { text: "全部" },
-              my: { text: "我的" },
-              share: { text: "协作" },
-              public: { text: "全网公开" },
-            },
-          },
-          {
-            title: intl.formatMessage({ id: "auth.role.label" }),
-            dataIndex: "role",
-            valueType: "select",
-            width: 120,
-            valueEnum: {
-              all: { text: "全部" },
-              owner: { text: intl.formatMessage({ id: "auth.role.owner" }) },
-              manager: {
-                text: intl.formatMessage({ id: "auth.role.manager" }),
-              },
-              editor: { text: intl.formatMessage({ id: "auth.role.editor" }) },
-              member: { text: intl.formatMessage({ id: "auth.role.member" }) },
-            },
-          },
-        ]}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
-        tableAlertRender={({
-          selectedRowKeys,
-          selectedRows,
-          onCleanSelected,
-        }) => (
-          <Space size={24}>
-            <span>
-              {intl.formatMessage({ id: "buttons.selected" })}
-              {selectedRowKeys.length}
-              <Button
-                type="link"
-                style={{ marginInlineStart: 8 }}
-                onClick={onCleanSelected}
-              >
-                {intl.formatMessage({ id: "buttons.unselect" })}
-              </Button>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button type="link">
-                {intl.formatMessage({
-                  id: "buttons.select",
-                })}
-              </Button>
-            </Space>
-          );
-        }}
+                );
+              }
+            : undefined
+        }
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
           let url: string = "";
           switch (type) {
+            case "editable":
+              url = `/v2/channel?view=user-edit`;
+              break;
             case "chapter":
-              const [book, para] = articleId.split("-");
-              url = `/v2/channel?view=user-in-chapter&book=${book}&para=${para}&progress=sent`;
+              if (typeof articleId !== "undefined") {
+                const id = articleId.split("_");
+                const [book, para] = id[0].split("-");
+                url = `/v2/channel?view=user-in-chapter&book=${book}&para=${para}&progress=sent`;
+              }
+
               break;
           }
           const res: IApiResponseChannelList = await get(url);
           console.log("data", res.data.rows);
           const items: IItem[] = res.data.rows.map((item, id) => {
-            console.log("final", item.final);
             const date = new Date(item.created_at);
             return {
               id: id,
@@ -269,25 +151,131 @@ const Widget = ({ type, articleId, onSelect }: IWidget) => {
               final: item.final,
             };
           });
-
+          setSelectedRowKeys(selectedRowKeys);
           return {
             total: res.data.count,
             succcess: true,
             data: items,
           };
         }}
-        rowKey="id"
+        rowKey="uid"
         bordered
-        pagination={{
-          showQuickJumper: true,
-          showSizeChanger: false,
-          pageSize: 5,
-        }}
         options={false}
         search={{
           filterType: "light",
         }}
-        toolBarRender={() => [<></>]}
+        showActions="hover"
+        metas={{
+          title: {
+            render(dom, entity, index, action, schema) {
+              let pIcon = <></>;
+              switch (entity.publicity) {
+                case 10:
+                  pIcon = <LockIcon />;
+                  break;
+                case 30:
+                  pIcon = <GlobalOutlined />;
+                  break;
+              }
+
+              return (
+                <div key={index}>
+                  <div key="info">
+                    <Space>
+                      {pIcon}
+                      {entity.role !== "member" ? <EditOutlined /> : undefined}
+                    </Space>
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        if (typeof onSelect !== "undefined") {
+                          const e: IChannel = {
+                            name: entity.title,
+                            id: entity.uid,
+                          };
+                          onSelect([e]);
+                        }
+                      }}
+                    >
+                      <Space>
+                        <StudioName data={entity.studio} showName={false} />
+                        {entity.title}
+                      </Space>
+                    </Button>
+                  </div>
+                  <div key="progress">
+                    <ProgressSvg data={entity.final} width={200} />
+                  </div>
+                </div>
+              );
+            },
+            search: false,
+          },
+          actions: {
+            render: (dom, entity, index, action, schema) => {
+              return (
+                <Dropdown
+                  key={index}
+                  trigger={["click"]}
+                  menu={{
+                    items: [
+                      {
+                        key: "copy_to",
+                        label: (
+                          <CopyToModal
+                            trigger={intl.formatMessage({
+                              id: "buttons.copy.to",
+                            })}
+                            channel={{
+                              id: entity.uid,
+                              name: entity.title,
+                              type: entity.type,
+                            }}
+                          />
+                        ),
+                        icon: <CopyOutlined />,
+                      },
+                    ],
+                    onClick: (e) => {
+                      console.log("click ", e);
+                      switch (e.key) {
+                        case "copy_to":
+                          break;
+
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                  placement="bottomRight"
+                >
+                  <Button
+                    type="link"
+                    size="small"
+                    icon={<MoreOutlined />}
+                  ></Button>
+                </Dropdown>
+              );
+            },
+          },
+          status: {
+            // 自己扩展的字段，主要用于筛选，不在列表中显示
+            title: "筛选",
+            valueType: "select",
+            valueEnum: {
+              all: { text: "全部", status: "Default" },
+              my: {
+                text: "我的",
+              },
+              closed: {
+                text: "协作",
+              },
+              processing: {
+                text: "社区公开",
+              },
+            },
+          },
+        }}
       />
     </>
   );

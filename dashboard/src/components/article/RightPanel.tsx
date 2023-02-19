@@ -1,13 +1,26 @@
 import { Affix } from "antd";
 import { useEffect, useState } from "react";
+import { IChannel } from "../channel/Channel";
+import ChannelPickerTable from "../channel/ChannelPickerTable";
 
 import DictComponent from "../dict/DictComponent";
+import { ArticleType } from "./Article";
 
 export type TPanelName = "dict" | "channel" | "close";
 interface IWidget {
   curr?: TPanelName;
+  type: ArticleType;
+  articleId: string;
+  selectedChannelKeys?: string[];
+  onChannelSelect?: Function;
 }
-const Widget = ({ curr = "close" }: IWidget) => {
+const Widget = ({
+  curr = "close",
+  type,
+  articleId,
+  onChannelSelect,
+  selectedChannelKeys,
+}: IWidget) => {
   const [dict, setDict] = useState("none");
   const [channel, setChannel] = useState("none");
 
@@ -48,7 +61,17 @@ const Widget = ({ curr = "close" }: IWidget) => {
             display: channel,
           }}
         >
-          channel
+          <ChannelPickerTable
+            type={type}
+            articleId={articleId}
+            selectedKeys={selectedChannelKeys}
+            onSelect={(e: IChannel[]) => {
+              console.log(e);
+              if (typeof onChannelSelect !== "undefined") {
+                onChannelSelect(e);
+              }
+            }}
+          />
         </div>
       </div>
     </Affix>
