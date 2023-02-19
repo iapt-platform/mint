@@ -5,15 +5,16 @@ import { IApiResponseChapterChannelList } from "../api/Corpus";
 import { IChapter } from "./BookViewer";
 import ChapterInChannel, { IChapterChannelData } from "./ChapterInChannel";
 
-interface IWidgetPaliChapterChannelList {
+interface IWidget {
   para: IChapter;
+  channelId?: string[];
+  openTarget?: React.HTMLAttributeAnchorTarget;
 }
-const defaultData: IChapterChannelData[] = [];
-const Widget = ({ para }: IWidgetPaliChapterChannelList) => {
-  const [tableData, setTableData] = useState(defaultData);
+
+const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
+  const [tableData, setTableData] = useState<IChapterChannelData[]>([]);
 
   useEffect(() => {
-    console.log("palichapterlist useEffect");
     let url = `/v2/progress?view=chapter_channels&book=${para.book}&par=${para.para}`;
     get<IApiResponseChapterChannelList>(url).then(function (json) {
       const newData: IChapterChannelData[] = json.data.rows.map((item) => {
@@ -36,7 +37,13 @@ const Widget = ({ para }: IWidgetPaliChapterChannelList) => {
 
   return (
     <>
-      <ChapterInChannel data={tableData} book={para.book} para={para.para} />
+      <ChapterInChannel
+        data={tableData}
+        book={para.book}
+        para={para.para}
+        channelId={channelId}
+        openTarget={openTarget}
+      />
     </>
   );
 };
