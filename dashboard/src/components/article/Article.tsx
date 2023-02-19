@@ -23,9 +23,13 @@ export type ArticleType =
   | "page"
   | "textbook"
   | "exercise"
-  | "exercise-list";
+  | "exercise-list"
+  | "corpus_sent/original"
+  | "corpus_sent/commentary"
+  | "corpus_sent/nissaya"
+  | "corpus_sent/translation";
 interface IWidgetArticle {
-  type?: string;
+  type?: ArticleType;
   articleId?: string;
   mode?: ArticleMode;
   active?: boolean;
@@ -192,6 +196,8 @@ const Widget = ({
         created_at={articleData?.created_at}
         updated_at={articleData?.updated_at}
         channels={channels}
+        type={type}
+        articleId={articleId}
       />
       {extra}
     </>
