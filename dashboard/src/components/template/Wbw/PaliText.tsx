@@ -15,7 +15,6 @@ interface IWidget {
 const Widget = ({ text, primary = true }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
-  console.log("pali", text);
 
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
