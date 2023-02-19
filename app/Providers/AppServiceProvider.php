@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use Godruoyi\Snowflake\Snowflake;
 use Godruoyi\Snowflake\LaravelSequenceResolver;
-
+use App\Tools\QueryBuilderMacro;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //雪花算法
-		
+
 		$this->app->singleton('snowflake', function () {
             return (new Snowflake(env('SNOWFLAKE_DATA_CENTER_ID'),env('SNOWFLAKE_WORKER_ID')))
                 ->setStartTimeStamp(strtotime(config('database.snowflake.start'))*1000)
@@ -25,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
                     new LaravelSequenceResolver($this->app->get('cache')->store()
                 ));
         });
-		
+
     }
 
     /**
@@ -36,5 +39,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        QueryBuilder::mixin($queryBuilderMacro = $this->app->make(QueryBuilderMacro::class));
+        EloquentBuilder::mixin($queryBuilderMacro);
+        Relation::mixin($queryBuilderMacro);
     }
 }
