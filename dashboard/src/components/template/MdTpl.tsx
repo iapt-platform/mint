@@ -1,3 +1,4 @@
+import Article from "./Article";
 import Exercise from "./Exercise";
 import Note from "./Note";
 import Quote from "./Quote";
@@ -30,6 +31,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Quote props={props ? props : ""} />;
     case "exercise":
       return <Exercise props={props ? props : ""}>{children}</Exercise>;
+    case "article":
+      return <Article props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
