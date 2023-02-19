@@ -67,8 +67,8 @@ const init = () => {
   //获取用户设置
   const setting = localStorage.getItem("user-settings");
   if (setting !== null) {
-    const json = JSON.parse(setting);
-    store.dispatch(refreshSetting(json as ISettingItem[]));
+    const json: ISettingItem[] = JSON.parse(setting);
+    store.dispatch(refreshSetting(json));
   }
 };
 
