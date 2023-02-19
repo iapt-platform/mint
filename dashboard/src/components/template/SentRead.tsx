@@ -11,6 +11,8 @@ import { GetUserSetting } from "../auth/setting/default";
 import { TCodeConvertor } from "./utilities";
 import { ISentence } from "./SentEdit";
 import MdView from "./MdView";
+import store from "../../store";
+import { push } from "../../reducers/sentence";
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];
@@ -30,7 +32,15 @@ const SentReadFrame = ({
   const settings = useAppSelector(settingInfo);
   const boxOrg = useRef<HTMLDivElement>(null);
   const boxSent = useRef<HTMLDivElement>(null);
-
+  useEffect(() => {
+    if (origin && origin.length > 0) {
+      store.dispatch(
+        push(
+          `${origin[0].book}-${origin[0].para}-${origin[0].wordStart}-${origin[0].wordEnd}`
+        )
+      );
+    }
+  }, [origin]);
   useEffect(() => {
     const displayOriginal = GetUserSetting(
       "setting.display.original",
@@ -70,7 +80,10 @@ const SentReadFrame = ({
         </Button>
       }
     >
-      <div style={{ display: "flex", flexDirection: layout }} ref={boxSent}>
+      <div
+        style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
+        ref={boxSent}
+      >
         <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
           {origin?.map((item, id) => {
             return (

@@ -56,7 +56,13 @@ const Widget = ({
     }
   }, [newMode]);
   return (
-    <div style={{ display: "flex", flexDirection: layoutDirection }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: layoutDirection,
+        marginBottom: 10,
+      }}
+    >
       <div style={{ flex: layoutFlex.left, color: "#9f3a01" }}>
         {origin?.map((item, id) => {
           if (item.channel.type === "wbw") {

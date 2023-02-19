@@ -22,7 +22,12 @@ export interface ISentence {
   updateAt: string;
   suggestionCount?: ISuggestionCount;
 }
-
+export interface ISentenceId {
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
+}
 export interface IWidgetSentEditInner {
   id: string;
   channels?: string[];
