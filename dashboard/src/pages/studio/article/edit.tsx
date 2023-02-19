@@ -129,6 +129,7 @@ const Widget = () => {
             {
               key: "content",
               label: intl.formatMessage({ id: "forms.fields.content.label" }),
+              forceRender: true,
               children: (
                 <ProForm.Group>
                   <ProFormTextArea
