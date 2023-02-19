@@ -72,7 +72,12 @@ class CorpusController extends Controller
     public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
         $sent = [];
         $sentId = \explode('-',$id);
-        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        if($mode==='read'){
+            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        }else{
+            $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        }
+
         if($channelId !== false){
             array_push($channels,$channelId);
         }
