@@ -44,8 +44,32 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
 				break;
-            case 'user-in-chapter':
+            case 'user-edit':
+                /**
+                 * 某用户有编辑权限的
+                 */
                 #获取user所有有权限的channel列表
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $channelById = [];
+                $channelId = [];
+                //获取共享channel
+                $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+                foreach ($allSharedChannels as $key => $value) {
+                    # code...
+                    if($value['power']>=20){
+                        $channelId[] = $value['res_id'];
+                        $channelById[$value['res_id']] = $value;
+                    }
+                }
+                $table = Channel::select($indexCol)
+                            ->whereIn('uid', $channelId)
+                            ->orWhere('owner_uid',$user['user_uid']);
+                break;
+            case 'user-in-chapter':
+                #获取user 在某章节 所有有权限的channel列表
                 $user = AuthApi::current($request);
                 if($user){
                     $channelById = [];
@@ -110,6 +134,7 @@ class ChannelController extends Controller
         }
         //获取数据
         $result = $table->get();
+//TODO 将下面代码转移到resource
         if($result){
             if($request->has('progress')){
                 //获取进度
