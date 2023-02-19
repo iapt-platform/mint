@@ -10,6 +10,7 @@ import suggestionReducer from "./reducers/suggestion";
 import articleModeReducer from "./reducers/article-mode";
 import inlineDictReducer from "./reducers/inline-dict";
 import currentCourseReducer from "./reducers/current-course";
+import sentenceReducer from "./reducers/sentence";
 
 const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
     articleMode: articleModeReducer,
     inlineDict: inlineDictReducer,
     currentCourse: currentCourseReducer,
+    sentence: sentenceReducer,
   },
 });
 
