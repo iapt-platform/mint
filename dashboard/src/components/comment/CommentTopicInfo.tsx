@@ -49,18 +49,23 @@ const Widget = ({ topicId }: IWidget) => {
   }, [topicId]);
   return (
     <div>
-      <Title editable level={1} style={{ margin: 0 }}>
+      <Title editable level={3} style={{ margin: 0 }}>
         {data?.title}
       </Title>
       <div>
         <Text type="secondary">
           <Space>
-            {" "}
-            {data?.user.nickName}{" "}
+            {data?.user.nickName}
             <TimeShow time={data?.createdAt} title="创建" />
           </Space>
         </Text>
       </div>
+      <div
+        style={{ maxWidth: 800, overflow: "auto" }}
+        dangerouslySetInnerHTML={{
+          __html: data?.content ? data?.content : "",
+        }}
+      />
     </div>
   );
 };

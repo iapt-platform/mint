@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { message } from "antd";
+import { Form, message } from "antd";
 import {
   ProForm,
   ProFormInstance,
@@ -7,6 +7,8 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 import { Col, Row, Space } from "antd";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { IComment } from "./CommentItem";
 import { post } from "../../request";
@@ -15,13 +17,22 @@ import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useRef } from "react";
 
+export type TContentType = "text" | "markdown" | "html";
+
 interface IWidget {
   resId?: string;
   resType?: string;
   parent?: string;
   onCreated?: Function;
+  editor?: TContentType;
 }
-const Widget = ({ resId = "", resType = "", parent, onCreated }: IWidget) => {
+const Widget = ({
+  resId = "",
+  resType = "",
+  editor = "html",
+  parent,
+  onCreated,
+}: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
@@ -51,7 +62,7 @@ const Widget = ({ resId = "", resType = "", parent, onCreated }: IWidget) => {
           onFinish={async (values) => {
             //新建
             console.log("create", resId, resType, parent);
-
+            console.log("value", values);
             post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
               res_id: resId,
               res_type: resType,
@@ -110,14 +121,25 @@ const Widget = ({ resId = "", resType = "", parent, onCreated }: IWidget) => {
               rules={[{ required: true, message: "这是必填项" }]}
             />
           )}
-
-          <ProFormTextArea
-            name="content"
-            label={intl.formatMessage({ id: "forms.fields.content.label" })}
-            placeholder={intl.formatMessage({
-              id: "forms.fields.content.placeholder",
-            })}
-          />
+          {editor === "text" ? (
+            <ProFormTextArea
+              name="content"
+              label={intl.formatMessage({ id: "forms.fields.content.label" })}
+              placeholder={intl.formatMessage({
+                id: "forms.fields.content.placeholder",
+              })}
+            />
+          ) : editor === "html" ? (
+            <Form.Item
+              name="content"
+              label={intl.formatMessage({ id: "forms.fields.content.label" })}
+              tooltip="可以直接粘贴屏幕截图"
+            >
+              <ReactQuill theme="snow" style={{ height: 220 }} />
+            </Form.Item>
+          ) : (
+            <></>
+          )}
         </ProForm>
       </div>
     </div>

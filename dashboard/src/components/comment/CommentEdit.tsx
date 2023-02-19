@@ -8,6 +8,7 @@ import { Col, Row, Space } from "antd";
 import { IComment } from "./CommentItem";
 import { put } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
+import Editor from "@uiw/react-md-editor/lib/Editor";
 
 interface IWidget {
   data: IComment;
