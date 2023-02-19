@@ -25,6 +25,7 @@ const items = {
   "buttons.lesson.add.lesson": "加入",
   "buttons.ok": "确定",
   "buttons.close": "关闭",
+  "buttons.copy.to": "复制到",
 };
 
 export default items;
