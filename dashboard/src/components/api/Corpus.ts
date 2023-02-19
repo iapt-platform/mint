@@ -117,6 +117,23 @@ export interface IApiResponseChannelList {
   data: { rows: IApiResponseChannelListData[]; count: number };
 }
 
+export interface ISentenceDiffRequest {
+  sentences: string[];
+  channel: string;
+}
+export interface ISentenceDiffData {
+  book_id: number;
+  paragraph: number;
+  word_start: number;
+  word_end: number;
+  content: string;
+}
+export interface ISentenceDiffResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: ISentenceDiffData[]; count: number };
+}
+
 export interface ISentenceRequest {
   book: number;
   para: number;
@@ -143,7 +160,15 @@ export interface ISentenceResponse {
   message: string;
   data: ISentenceData;
 }
-
+export interface ISentenceNewRequest {
+  sentences: ISentenceDiffData[];
+  channel?: string;
+}
+export interface ISentenceNewMultiResponse {
+  ok: boolean;
+  message: string;
+  data: number;
+}
 export interface IPaliToc {
   book: number;
   paragraph: number;
