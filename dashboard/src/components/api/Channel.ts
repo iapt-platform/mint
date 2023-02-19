@@ -23,7 +23,7 @@ export interface IApiResponseChannelData {
   uid: string;
   name: string;
   summary: string;
-  type: string;
+  type: TChannelType;
   studio: IStudioApiResponse;
   lang: string;
   status: number;
