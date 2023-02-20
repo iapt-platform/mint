@@ -8,7 +8,14 @@ const Widget = () => {
   return (
     <>
       <Link to="/palicanon/list">
-        <Button type="primary">
+        <Button
+          type="primary"
+          style={{
+            paddingLeft: 18,
+            paddingRight: 18,
+            backgroundColor: "#52974e",
+          }}
+        >
           {intl.formatMessage({
             id: "columns.library.title",
           })}
