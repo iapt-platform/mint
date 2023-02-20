@@ -1,6 +1,6 @@
 import { Badge, Card, List, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { get } from "../../request";
 import { IChapterData, IChapterListResponse } from "../api/Corpus";
 import StudioName from "../auth/StudioName";
@@ -9,6 +9,7 @@ const { Title, Text, Paragraph } = Typography;
 
 const Widget = () => {
   const [listData, setListData] = useState<ChapterData[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     get<IChapterListResponse>(`/v2/progress?view=chapter&limit=4&lang=zh`).then(
       (json) => {
@@ -59,11 +60,15 @@ const Widget = () => {
               hoverable
               bordered={false}
               style={{ width: "100%", borderRadius: 20 }}
+              onClick={(e) => {
+                navigate(
+                  `/article/chapter/${item.book}-${item.paragraph}_${item.channel.id}`
+                );
+              }}
             >
               <Title level={5}>
                 <Link
                   to={`/article/chapter/${item.book}-${item.paragraph}_${item.channel.id}`}
-                  target="_blank"
                 >
                   {item.title ? item.title : item.paliTitle}
                 </Link>
