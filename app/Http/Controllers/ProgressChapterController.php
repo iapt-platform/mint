@@ -36,7 +36,11 @@ class ProgressChapterController extends Controller
         }else{
             $offset = 0;
         }
-
+        if($request->has('limit')){
+            $limit = (int)$request->get('limit');
+        }else{
+            $limit = 20;
+        }
         $channel_id = $request->get('channel');
 
         //
@@ -311,7 +315,7 @@ class ProgressChapterController extends Controller
 						left join channels as ch on pcd.channel_id = ch.uid
 						where ch.status >= 30 $channel_type
                         order by pcd.created_at desc
-                        limit 20 offset ?
+                        limit {$limit} offset ?
                     ) tpc
                     left join $pt as pt on tpc.book = pt.book and tpc.para = pt.paragraph;";
                 $chapters = DB::select($query,$param);
