@@ -17,6 +17,7 @@ import NutNotFound from "./pages/nut/not-found";
 import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
+import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
 import LibraryCommunityRecent from "./pages/library/community/recent";
@@ -114,7 +115,8 @@ const Widget = () => {
       </Route>
       <Route path="switch-language" element={<NutSwitchLanguage />} />
       <Route path="forbidden" element={<NutForbidden />} />
-      <Route path="" element={<NutHome />} />
+      <Route path="nut" element={<NutHome />} />
+      <Route path="" element={<LibraryHome />} />
       <Route path="*" element={<NutNotFound />} />
 
       <Route path="community" element={<LibraryCommunity />}>
