@@ -86,7 +86,7 @@ class UpgradeWbwTemplate extends Command
                 ];
 
             }
-            $sent = \json_encode($wbwContent);
+            $sent = \json_encode($wbwContent,JSON_UNESCAPED_UNICODE);
 
 			$newRow = Sentence::firstOrNew(
 				[
