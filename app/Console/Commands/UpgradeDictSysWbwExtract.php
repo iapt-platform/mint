@@ -8,6 +8,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\UserDict;
+use App\Http\Api\DictApi;
 
 class UpgradeDictSysWbwExtract extends Command
 {
