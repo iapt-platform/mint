@@ -32,7 +32,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
             ]}
           >
             <List.Item.Meta
-              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+              avatar={<></>}
               title={
                 <span
                   onClick={(e) => {
