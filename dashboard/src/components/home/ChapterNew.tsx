@@ -1,4 +1,5 @@
 import { Col, Row } from "antd";
+import { Link } from "react-router-dom";
 import img_book from "../../assets/library/images/books.svg";
 import ChapterNewList from "./ChapterNewList";
 
@@ -19,10 +20,10 @@ const Widget = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div style={{ flex: 4 }}>
-          <h3 style={{ fontSize: "250%" }}>圣典</h3>
+        <div style={{ flex: 4, margin: "2em" }}>
+          <span style={{ fontSize: "250%", fontWeight: 700 }}>圣典</span>
           <span style={{ position: "absolute", right: 30, bottom: 0 }}>
-            <a href="../collect">更多</a>
+            <Link to="community/list">更多</Link>
           </span>
         </div>
         <div style={{ flex: 9 }}>
