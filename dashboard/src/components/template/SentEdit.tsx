@@ -77,7 +77,7 @@ interface IWidgetSentEdit {
 }
 const Widget = ({ props }: IWidgetSentEdit) => {
   const prop = JSON.parse(atob(props)) as IWidgetSentEditInner;
-  console.log("sent data", prop);
+  //console.log("sent data", prop);
   return <SentEditInner {...prop} />;
 };
 
