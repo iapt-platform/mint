@@ -14,7 +14,7 @@ export interface IDictDataRequest {
   confidence: number;
 }
 export interface IApiResponseDictData {
-  id: number;
+  id: string;
   word: string;
   type: string;
   grammar: string;
