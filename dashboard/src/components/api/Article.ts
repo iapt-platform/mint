@@ -11,7 +11,7 @@ export interface IAnthologyDataRequest {
   title: string;
   subtitle: string;
   summary: string;
-  article_list: IArticleListApiResponse[];
+  article_list?: IArticleListApiResponse[];
   lang: string;
   status: number;
 }
