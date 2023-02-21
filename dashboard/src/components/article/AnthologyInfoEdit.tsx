@@ -23,7 +23,6 @@ interface IWidget {
 }
 const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
   const intl = useIntl();
-  const [contentValue, setContentValue] = useState<string>("ddd");
 
   return anthologyId ? (
     <ProForm<IFormData>
@@ -36,7 +35,7 @@ const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
           {
             title: values.title,
             subtitle: values.subtitle,
-            summary: contentValue,
+            summary: values.summary,
             status: values.status,
             lang: values.lang,
           }
@@ -118,14 +117,7 @@ const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
           name="summary"
           label={intl.formatMessage({ id: "forms.fields.summary.label" })}
         >
-          <MDEditor
-            value={contentValue}
-            onChange={(value: string | undefined) => {
-              if (value) {
-                setContentValue(value);
-              }
-            }}
-          />
+          <MDEditor />
         </Form.Item>
       </ProForm.Group>
     </ProForm>
