@@ -102,7 +102,7 @@ class GroupController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio_name'))){
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
@@ -112,6 +112,7 @@ class GroupController extends Controller
 
         $group = new GroupInfo;
         $group->id = app('snowflake')->id();
+        $group->uid = Str::uuid();
         $group->name = $request->get('name');
         $group->owner = $user['user_uid'];
         $group->create_time = time()*1000;
@@ -180,27 +181,28 @@ class GroupController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Group  $group
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\GroupInfo  $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Group $group)
+    public function destroy(Request $request,GroupInfo $group)
     {
         //
         $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        //判断当前用户是否有指定的 group 的删除权限
+        if($user['user_uid'] !== $group->owner){
             return $this->error(__('auth.failed'));
         }
-        DB::transaction(function(){
+        $delete = 0;
+        DB::transaction(function() use($group,$delete){
             //删除group member
             $memberDelete = GroupMember::where('group_id',$group->uid)->delete();
             $delete = $group->delete();
         });
 
-        $this->ok('ok');
+        return $this->ok($delete);
     }
 }
