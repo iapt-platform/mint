@@ -74,7 +74,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <div>
+                <div key={index}>
                   <div>
                     <Link to={`/anthology/${row.id}`} target="_blank">
                       {row.title}
