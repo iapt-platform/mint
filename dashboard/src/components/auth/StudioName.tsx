@@ -9,7 +9,7 @@ export interface IStudio {
   avatar: string;
 }
 interface IWidghtStudio {
-  data: IStudio;
+  data?: IStudio;
   showAvatar?: boolean;
   showName?: boolean;
   onClick?: Function;
@@ -21,18 +21,18 @@ const Widget = ({
   onClick,
 }: IWidghtStudio) => {
   // TODO
-  const avatar = <Avatar size="small">{data.nickName.slice(0, 1)}</Avatar>;
+  const avatar = <Avatar size="small">{data?.nickName.slice(0, 1)}</Avatar>;
   return (
     <StudioCard studio={data}>
       <Space
         onClick={() => {
           if (typeof onClick !== "undefined") {
-            onClick(data.studioName);
+            onClick(data?.studioName);
           }
         }}
       >
         {showAvatar ? avatar : ""}
-        {showName ? data.nickName : ""}
+        {showName ? data?.nickName : ""}
       </Space>
     </StudioCard>
   );
