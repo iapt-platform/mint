@@ -54,3 +54,8 @@ export interface ITermCreateResponse {
   message: string;
   data: ITermCreate;
 }
+
+export interface ITermDeleteRequest {
+  uuid: boolean;
+  id: string[];
+}
