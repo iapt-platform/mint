@@ -13,12 +13,7 @@ const Widget = () => {
       <Row>
         <Col flex="auto"></Col>
         <Col flex={pageMaxWidth}>
-          <Row>
-            <Col span="18">
-              <AnthologyDetail aid={id} />
-            </Col>
-            <Col span="6"></Col>
-          </Row>
+          <AnthologyDetail aid={id} />
         </Col>
         <Col flex="auto"></Col>
       </Row>
