@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography } from "antd";
+import { Space, Typography } from "antd";
 import MDEditor from "@uiw/react-md-editor";
 
 import { get } from "../../request";
@@ -10,6 +10,8 @@ import type {
 import type { IAnthologyData } from "./AnthologyCard";
 import TocTree from "./TocTree";
 import { useNavigate } from "react-router-dom";
+import StudioName from "../auth/StudioName";
+import TimeShow from "../general/TimeShow";
 
 const { Title, Text } = Typography;
 
@@ -60,6 +62,14 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
       <div>
         <Text type="secondary">{tableData?.subTitle}</Text>
       </div>
+      <Space>
+        <StudioName data={tableData?.studio} />
+        <TimeShow
+          time={tableData?.updated_at}
+          title="updated"
+          showTitle={true}
+        />
+      </Space>
       <div>
         <MDEditor.Markdown source={tableData?.summary} />
       </div>
