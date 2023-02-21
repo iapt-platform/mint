@@ -1,44 +1,35 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
 
-import { Space, Button, Popover, Dropdown, MenuProps, Menu, Table } from "antd";
-import { ProTable } from "@ant-design/pro-components";
+import {
+  Space,
+  Button,
+  Popover,
+  Dropdown,
+  Table,
+  Typography,
+  Modal,
+  message,
+} from "antd";
+import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
-  SearchOutlined,
   DeleteOutlined,
+  TeamOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
 import ArticleCreate from "../../../components/article/ArticleCreate";
-import { get } from "../../../request";
-import { IArticleListResponse } from "../../../components/api/Article";
+import { delete_, get } from "../../../request";
+import {
+  IArticleListResponse,
+  IDeleteResponse,
+} from "../../../components/api/Article";
 import { PublicityValueEnum } from "../../../components/studio/table";
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
+import { useRef } from "react";
 
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "delete",
-        label: "删除",
-        icon: <DeleteOutlined />,
-      },
-    ]}
-  />
-);
+const { Text } = Typography;
+
 interface DataItem {
   sn: number;
   id: string;
@@ -53,9 +44,46 @@ const Widget = () => {
   const { studioname } = useParams(); //url 参数
   const articleCreate = <ArticleCreate studio={studioname} />;
 
+  const showDeleteConfirm = (id: string, title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_<IDeleteResponse>(`/v2/article/${id}`)
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
+  const ref = useRef<ActionType>();
   return (
     <>
       <ProTable<DataItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
@@ -135,7 +163,48 @@ const Widget = () => {
             valueType: "option",
             render: (text, row, index, action) => {
               return [
-                <Dropdown.Button key={index} type="link" overlay={menu}>
+                <Dropdown.Button
+                  key={index}
+                  type="link"
+                  menu={{
+                    items: [
+                      {
+                        key: "share",
+                        label: intl.formatMessage({
+                          id: "buttons.share",
+                        }),
+                        icon: <TeamOutlined />,
+                        disabled: true,
+                      },
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "share":
+                          break;
+                        case "remove":
+                          showDeleteConfirm(row.id, row.title);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
                   <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
                     {intl.formatMessage({
                       id: "buttons.edit",

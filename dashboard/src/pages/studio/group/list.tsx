@@ -1,36 +1,21 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Button, Popover, Typography, Dropdown, Menu, MenuProps } from "antd";
-import { ProTable } from "@ant-design/pro-components";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Popover, Typography, Dropdown, Modal, message } from "antd";
+import { ActionType, ProTable } from "@ant-design/pro-components";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 
-import { get } from "../../../request";
+import { delete_, get } from "../../../request";
 import { IGroupListResponse } from "../../../components/api/Group";
 import GroupCreate from "../../../components/group/GroupCreate";
 import { RoleValueEnum } from "../../../components/studio/table";
+import { IDeleteResponse } from "../../../components/api/Article";
+import { useRef } from "react";
 
 const { Text } = Typography;
-
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 
 interface DataItem {
   sn: number;
@@ -44,9 +29,48 @@ interface DataItem {
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
+
+  const showDeleteConfirm = (id: string, title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_<IDeleteResponse>(`/v2/group/${id}`)
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
+  const ref = useRef<ActionType>();
+
   return (
     <>
       <ProTable<DataItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
@@ -107,7 +131,40 @@ const Widget = () => {
             width: 120,
             valueType: "option",
             render: (text, row, index, action) => [
-              <Dropdown.Button type="link" key={index} overlay={menu}>
+              <Dropdown.Button
+                key={index}
+                type="link"
+                menu={{
+                  items: [
+                    {
+                      key: "remove",
+                      label: (
+                        <Text type="danger">
+                          {intl.formatMessage({
+                            id: "buttons.delete",
+                          })}
+                        </Text>
+                      ),
+                      icon: (
+                        <Text type="danger">
+                          <DeleteOutlined />
+                        </Text>
+                      ),
+                    },
+                  ],
+                  onClick: (e) => {
+                    switch (e.key) {
+                      case "share":
+                        break;
+                      case "remove":
+                        showDeleteConfirm(row.id, row.name);
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                }}
+              >
                 <Link to={`/studio/${studioname}/group/${row.id}/edit`}>
                   {intl.formatMessage({
                     id: "buttons.edit",
@@ -160,7 +217,14 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={<GroupCreate studio={studioname} />}
+            content={
+              <GroupCreate
+                studio={studioname}
+                onCreate={() => {
+                  ref.current?.reload();
+                }}
+              />
+            }
             placement="bottomRight"
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">

@@ -11,40 +11,30 @@ import {
   Menu,
   Table,
   Image,
+  message,
+  Modal,
+  Typography,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  TeamOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 
 import CourseCreate from "../../../components/course/CourseCreate";
-import { API_HOST, get } from "../../../request";
+import { API_HOST, delete_, get } from "../../../request";
 import {
   ICourseListResponse,
   ICourseNumberResponse,
   TCourseMemberStatus,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
+import { IDeleteResponse } from "../../../components/api/Article";
 
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
+const { Text } = Typography;
 
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "manage",
-        label: "管理",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "delete",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 interface DataItem {
   sn: number;
   id: string; //课程ID
@@ -115,6 +105,42 @@ const Widget = () => {
       }
     });
   }, [studioname]);
+
+  const showDeleteConfirm = (id: string, title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_<IDeleteResponse>(`/v2/course/${id}`)
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
   return (
     <>
       <ProTable<DataItem>
@@ -246,7 +272,38 @@ const Widget = () => {
                   break;
               }
               return [
-                <Dropdown.Button key={index} type="text" overlay={menu}>
+                <Dropdown.Button
+                  key={index}
+                  type="link"
+                  menu={{
+                    items: [
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "remove":
+                          showDeleteConfirm(row.id, row.title);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
                   {mainButton}
                 </Dropdown.Button>,
               ];
