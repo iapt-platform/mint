@@ -26,6 +26,7 @@ const items = {
   "buttons.ok": "确定",
   "buttons.close": "关闭",
   "buttons.copy.to": "复制到",
+  "buttons.basic.information": "基本信息",
 };
 
 export default items;
