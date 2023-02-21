@@ -121,3 +121,9 @@ export interface IArticleMapListResponse {
     count: number;
   };
 }
+
+export interface IDeleteResponse {
+  ok: boolean;
+  message: string;
+  data: number;
+}
