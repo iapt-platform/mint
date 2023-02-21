@@ -26,11 +26,6 @@ const menu = (
         icon: <SearchOutlined />,
       },
       {
-        key: "2",
-        label: "分享",
-        icon: <ShareAltOutlined />,
-      },
-      {
         key: "3",
         label: "删除",
         icon: <DeleteOutlined />,

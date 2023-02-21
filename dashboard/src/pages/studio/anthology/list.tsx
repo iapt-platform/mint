@@ -6,7 +6,7 @@ import { Space, Table, Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu, Popover } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import AnthologyCreate from "../../../components/anthology/AnthologyCreate";
 import { IAnthologyListResponse } from "../../../components/api/Article";
@@ -24,14 +24,14 @@ const menu = (
     onClick={onMenuClick}
     items={[
       {
-        key: "1",
-        label: "在藏经阁中打开",
+        key: "share",
+        label: "分享",
         icon: <SearchOutlined />,
       },
       {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
+        key: "delete",
+        label: "删除",
+        icon: <DeleteOutlined />,
       },
     ]}
   />
@@ -76,7 +76,7 @@ const Widget = () => {
               return (
                 <div>
                   <div>
-                    <Link to={`/studio/${studioname}/anthology/${row.id}/edit`}>
+                    <Link to={`/anthology/${row.id}`} target="_blank">
                       {row.title}
                     </Link>
                   </div>
@@ -125,9 +125,11 @@ const Widget = () => {
             valueType: "option",
             render: (text, row, index, action) => [
               <Dropdown.Button type="link" key={index} overlay={menu}>
-                {intl.formatMessage({
-                  id: "buttons.edit",
-                })}
+                <Link to={`/studio/${studioname}/anthology/${row.id}/edit`}>
+                  {intl.formatMessage({
+                    id: "buttons.edit",
+                  })}
+                </Link>
               </Dropdown.Button>,
             ],
           },
@@ -208,8 +210,8 @@ const Widget = () => {
         toolBarRender={() => [
           <Popover
             content={anthologyCreate}
-            title="new article"
             placement="bottomRight"
+            trigger="click"
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

@@ -3,7 +3,11 @@ import { useIntl } from "react-intl";
 
 import { Space, Button, Popover, Dropdown, MenuProps, Menu, Table } from "antd";
 import { ProTable } from "@ant-design/pro-components";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  SearchOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 
 import ArticleCreate from "../../../components/article/ArticleCreate";
 import { get } from "../../../request";
@@ -28,9 +32,9 @@ const menu = (
         icon: <SearchOutlined />,
       },
       {
-        key: "3",
+        key: "delete",
         label: "删除",
-        icon: <SearchOutlined />,
+        icon: <DeleteOutlined />,
       },
     ]}
   />
@@ -72,7 +76,11 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/article/article/${row.id}`} target="_blank">
+                <Link
+                  key={index}
+                  to={`/article/article/${row.id}`}
+                  target="_blank"
+                >
                   {row.title}
                 </Link>
               );

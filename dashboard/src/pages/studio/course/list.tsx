@@ -140,7 +140,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Space>
+                <Space key={index}>
                   <Image
                     src={`${API_HOST}/${row.cover_img_name}`}
                     width={64}
@@ -220,7 +220,10 @@ const Widget = () => {
               switch (activeKey) {
                 case "create":
                   mainButton = (
-                    <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
+                    <Link
+                      to={`/studio/${studioname}/course/${row.id}/edit`}
+                      key={index}
+                    >
                       {intl.formatMessage({
                         //编辑
                         id: "buttons.edit",
@@ -230,7 +233,7 @@ const Widget = () => {
                   break;
                 case "study":
                   mainButton = (
-                    <span>
+                    <span key={index}>
                       {intl.formatMessage({
                         id: `course.member.status.${row.myStatus}.label`,
                       })}
