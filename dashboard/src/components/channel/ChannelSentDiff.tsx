@@ -1,5 +1,5 @@
 import { Button, Col, List, message, Row, Space, Typography } from "antd";
-import { diffWords } from "diff";
+import { diffChars } from "diff";
 import { useEffect, useState } from "react";
 import { SwapRightOutlined } from "@ant-design/icons";
 
@@ -113,7 +113,7 @@ const Widget = ({
           element.wordStart === parseInt(id[2]) &&
           element.wordEnd === parseInt(id[3])
       );
-      const diff = diffWords(
+      const diff = diffChars(
         destContent ? destContent.content : "",
         srcContent ? srcContent.content : ""
       );
