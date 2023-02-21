@@ -12,7 +12,7 @@ import blog from "./blog";
 import setting from "./setting";
 import auth from "./auth";
 import course from "./course";
-
+import message from "./message";
 const items = {
   "flashes.success": "操作成功",
   "columns.library.title": "藏经阁",
@@ -57,6 +57,7 @@ const items = {
   ...setting,
   ...auth,
   ...course,
+  ...message,
 };
 
 export default items;
