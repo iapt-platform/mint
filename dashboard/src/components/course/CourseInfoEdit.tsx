@@ -51,7 +51,6 @@ interface IWidget {
 }
 const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
   const intl = useIntl();
-  const [contentValue, setContentValue] = useState<string>();
   const [teacherOption, setTeacherOption] = useState<DefaultOptionType[]>([]);
   const [currTeacher, setCurrTeacher] = useState<RequestOptionsType>();
   const [textbookOption, setTextbookOption] = useState<DefaultOptionType[]>([]);
@@ -99,7 +98,7 @@ const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
               title: values.title, //标题
               subtitle: values.subtitle, //副标题
               summary: values.summary,
-              content: contentValue, //简介
+              content: values.content, //简介
               cover: _cover, //封面图片文件名
               teacher_id: values.teacherId, //UserID
               publicity: values.status, //类型-公开/内部
@@ -126,7 +125,6 @@ const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
             onTitleChange(res.data.title);
           }
           console.log(res.data);
-          setContentValue(res.data.content);
           if (res.data.teacher) {
             console.log("teacher", res.data.teacher);
             const teacher = {
@@ -397,14 +395,7 @@ const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
             name="content"
             label={intl.formatMessage({ id: "forms.fields.content.label" })}
           >
-            <MDEditor
-              value={contentValue}
-              onChange={(value: string | undefined) => {
-                if (value) {
-                  setContentValue(value);
-                }
-              }}
-            />
+            <MDEditor />
           </Form.Item>
         </ProForm.Group>
       </ProForm>
