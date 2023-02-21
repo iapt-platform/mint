@@ -359,10 +359,8 @@ class CorpusController extends Controller
                                                 function() use($row){
                                                     return MdRender::render($row->content,$row->channel_uid);
                                                 });
-
                             break;
                     }
-
                 }
                 switch ($info->type) {
                     case 'wbw':

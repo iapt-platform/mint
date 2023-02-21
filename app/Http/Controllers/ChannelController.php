@@ -6,6 +6,8 @@ require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
 use App\Models\Channel;
 use App\Models\Sentence;
+use App\Models\DhammaTerm;
+use App\Models\WbwBlock;
 use App\Models\PaliSentence;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\PaliTextApi;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ChannelController extends Controller
 {
@@ -310,12 +313,37 @@ class ChannelController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Channel $channel)
+    public function destroy(Request $request,Channel $channel)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== $channel->owner_uid){
+            return $this->error(__('auth.failed'));
+        }
+        //查询其他资源
+        if(Sentence::where("channel_uid",$channel->uid)->exists()){
+            return $this->error("译文有数据无法删除");
+        }
+        if(DhammaTerm::where("channal",$channel->uid)->exists()){
+            return $this->error("术语有数据无法删除");
+        }
+        if(WbwBlock::where("channel_uid",$channel->uid)->exists()){
+            return $this->error("逐词解析有数据无法删除");
+        }
+        $delete = 0;
+        DB::transaction(function() use($channel,$delete){
+            //TODO 删除相关资源
+            $delete = $channel->delete();
+        });
+
+        return $this->ok($delete);
     }
 }
