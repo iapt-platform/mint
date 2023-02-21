@@ -39,7 +39,7 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
 
-  const showDeleteConfirm = (id: string, title: string) => {
+  const showDeleteConfirm = (id: string[], title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title:
@@ -64,7 +64,7 @@ const Widget = () => {
           `/v2/terms/${id}`,
           {
             uuid: true,
-            id: [id],
+            id: id,
           }
         )
           .then((json) => {
@@ -204,7 +204,7 @@ const Widget = () => {
                     onClick: (e) => {
                       switch (e.key) {
                         case "remove":
-                          showDeleteConfirm(row.id, row.word);
+                          showDeleteConfirm([row.id], row.word);
                           break;
                         default:
                           break;
@@ -246,11 +246,27 @@ const Widget = () => {
             </span>
           </Space>
         )}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({
+          intl,
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => {
           return (
             <Space size={16}>
-              <Button type="link">批量删除</Button>
-              <Button type="link">导出数据</Button>
+              <Button
+                type="link"
+                onClick={() => {
+                  console.log(selectedRowKeys);
+                  showDeleteConfirm(
+                    selectedRowKeys.map((item) => item.toString()),
+                    selectedRowKeys.length + "个单词"
+                  );
+                  onCleanSelected();
+                }}
+              >
+                批量删除
+              </Button>
             </Space>
           );
         }}
