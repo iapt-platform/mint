@@ -4,7 +4,7 @@ import { IStudio } from "./StudioName";
 import { Link } from "react-router-dom";
 
 interface IWidget {
-  studio: IStudio;
+  studio?: IStudio;
   children?: JSX.Element;
 }
 const Widget = ({ studio, children }: IWidget) => {
@@ -18,15 +18,15 @@ const Widget = ({ studio, children }: IWidget) => {
             <div style={{ display: "flex" }}>
               <div style={{ paddingRight: 8 }}>
                 <Avatar style={{ backgroundColor: "#87d068" }} size="small">
-                  {studio.nickName.slice(0, 1)}
+                  {studio?.nickName.slice(0, 1)}
                 </Avatar>
               </div>
               <div>
-                <div>{studio.nickName}</div>
+                <div>{studio?.nickName}</div>
                 <div>译文(2) | 课程(3)</div>
                 <div>
                   <Link
-                    to={`/blog/${studio.studioName}/overview`}
+                    to={`/blog/${studio?.studioName}/overview`}
                     target="_blank"
                   >
                     {intl.formatMessage({
