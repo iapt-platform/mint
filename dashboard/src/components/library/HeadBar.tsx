@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Layout, Col, Row, Space } from "antd";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 
@@ -14,125 +14,118 @@ const { Header } = Layout;
 const onClick: MenuProps["onClick"] = (e) => {
   console.log("click ", e);
 };
+export const mainMenuItems: MenuProps["items"] = [
+  {
+    label: (
+      <Link to="/community/list">
+        <FormattedMessage id="columns.library.community.title" />
+      </Link>
+    ),
+    key: "community",
+  },
+  {
+    label: (
+      <Link to="/palicanon/list">
+        <FormattedMessage id="columns.library.palicanon.title" />
+      </Link>
+    ),
+    key: "palicanon",
+  },
+  {
+    label: (
+      <Link to="/course/list">
+        <FormattedMessage id="columns.library.course.title" />
+      </Link>
+    ),
+    key: "course",
+  },
+  {
+    label: (
+      <Link to="/dict/recent">
+        <FormattedMessage id="columns.library.dict.title" />
+      </Link>
+    ),
+    key: "dict",
+  },
+  {
+    label: (
+      <Link to="/anthology/list">
+        <FormattedMessage id="columns.library.anthology.title" />
+      </Link>
+    ),
+    key: "anthology",
+  },
+  {
+    label: (
+      <a
+        href="https://asset-hk.wikipali.org/help/zh-Hans"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <FormattedMessage id="columns.library.help.title" />
+      </a>
+    ),
+    key: "help",
+  },
 
+  {
+    label: (
+      <a
+        href="https://asset-hk.wikipali.org/handbook/zh-Hans"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <FormattedMessage id="columns.library.palihandbook.title" />
+      </a>
+    ),
+    key: "palihandbook",
+  },
+  {
+    label: (
+      <Link to="/calendar">
+        <FormattedMessage id="columns.library.calendar.title" />
+      </Link>
+    ),
+    key: "calendar",
+  },
+  {
+    label: (
+      <Link to="/convertor">
+        <FormattedMessage id="columns.library.convertor.title" />
+      </Link>
+    ),
+    key: "convertor",
+  },
+  {
+    label: (
+      <Link to="/statistics">
+        <FormattedMessage id="columns.library.statistics.title" />
+      </Link>
+    ),
+    key: "statistics",
+  },
+  {
+    label: <Link to="/discussion/list">Discussion(alpha)</Link>,
+    key: "discussion",
+  },
+];
 type IWidgetHeadBar = {
   selectedKeys?: string;
 };
 const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
-  const intl = useIntl(); //i18n
   // TODO
-  const items: MenuProps["items"] = [
-    {
-      label: (
-        <Link to="/community/list">
-          {intl.formatMessage({
-            id: "columns.library.community.title",
-          })}
-        </Link>
-      ),
-      key: "community",
-    },
-    {
-      label: (
-        <Link to="/palicanon/list">
-          {intl.formatMessage({
-            id: "columns.library.palicanon.title",
-          })}
-        </Link>
-      ),
-      key: "palicanon",
-    },
-    {
-      label: (
-        <Link to="/course/list">
-          {intl.formatMessage({ id: "columns.library.course.title" })}
-        </Link>
-      ),
-      key: "course",
-    },
-    {
-      label: (
-        <Link to="/dict/recent">
-          {intl.formatMessage({ id: "columns.library.dict.title" })}
-        </Link>
-      ),
-      key: "dict",
-    },
-    {
-      label: (
-        <Link to="/anthology/list">
-          {intl.formatMessage({
-            id: "columns.library.anthology.title",
-          })}
-        </Link>
-      ),
-      key: "anthology",
-    },
-    {
-      label: (
-        <a
-          href="https://asset-hk.wikipali.org/help/zh-Hans"
-          target="_blank"
-          rel="noreferrer"
-        >
-          {intl.formatMessage({ id: "columns.library.help.title" })}
-        </a>
-      ),
-      key: "help",
-    },
 
-    {
-      label: (
-        <a
-          href="https://asset-hk.wikipali.org/handbook/zh-Hans"
-          target="_blank"
-          rel="noreferrer"
-        >
-          {intl.formatMessage({
-            id: "columns.library.palihandbook.title",
-          })}
-        </a>
-      ),
-      key: "palihandbook",
-    },
-    {
-      label: (
-        <Link to="/calendar">
-          {intl.formatMessage({
-            id: "columns.library.calendar.title",
-          })}
-        </Link>
-      ),
-      key: "calendar",
-    },
-    {
-      label: (
-        <Link to="/convertor">
-          {intl.formatMessage({
-            id: "columns.library.convertor.title",
-          })}
-        </Link>
-      ),
-      key: "convertor",
-    },
-    {
-      label: (
-        <Link to="/statistics">
-          {intl.formatMessage({
-            id: "columns.library.statistics.title",
-          })}
-        </Link>
-      ),
-      key: "statistics",
-    },
-    {
-      label: <Link to="/discussion/list">Discussion(alpha)</Link>,
-      key: "discussion",
-    },
-  ];
   return (
-    <Header className="header" style={{ lineHeight: "44px", height: 44 }}>
+    <Header
+      className="header"
+      style={{
+        lineHeight: "44px",
+        height: 44,
+        paddingLeft: 10,
+        paddingRight: 10,
+      }}
+    >
       <Row justify="space-between">
         <Col flex="100px">
           <Link to="/">
@@ -145,7 +138,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             selectedKeys={[selectedKeys]}
             mode="horizontal"
             theme="dark"
-            items={items}
+            items={mainMenuItems}
           />
         </Col>
         <Col span={4}>
