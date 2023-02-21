@@ -27,6 +27,9 @@ const items = {
   "buttons.close": "关闭",
   "buttons.copy.to": "复制到",
   "buttons.basic.information": "基本信息",
+  "buttons.share": "分享",
+  "buttons.yes": "是",
+  "buttons.no": "否",
 };
 
 export default items;
