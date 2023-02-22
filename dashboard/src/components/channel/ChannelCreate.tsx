@@ -1,11 +1,16 @@
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormInstance,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { message } from "antd";
 
 import { post } from "../../request";
 import { IApiResponseChannel } from "../api/Channel";
 import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../general/LangSelect";
+import { useRef } from "react";
 
 interface IFormData {
   name: string;
@@ -14,22 +19,29 @@ interface IFormData {
   studio: string;
 }
 
-type IWidgetChannelCreate = {
-  studio: string | undefined;
-};
-const Widget = (prop: IWidgetChannelCreate) => {
+interface IWidget {
+  studio?: string;
+  onSuccess?: Function;
+}
+const Widget = ({ studio, onSuccess }: IWidget) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   return (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
-        // TODO
-        console.log(values);
-        values.studio = prop.studio ? prop.studio : "";
+        if (typeof studio === "undefined") {
+          return;
+        }
+        values.studio = studio;
         const res: IApiResponseChannel = await post(`/v2/channel`, values);
-        console.log(res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onSuccess !== "undefined") {
+            onSuccess();
+            formRef.current?.resetFields(["name"]);
+          }
         } else {
           message.error(res.message);
         }

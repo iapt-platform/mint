@@ -1,8 +1,13 @@
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormInstance,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { message } from "antd";
 import { post } from "../../request";
 import { IGroupRequest, IGroupResponse } from "../api/Group";
+import { useRef } from "react";
 
 interface IFormData {
   name: string;
@@ -14,9 +19,11 @@ interface IWidgetGroupCreate {
 }
 const Widget = ({ studio, onCreate }: IWidgetGroupCreate) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   return (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
         // TODO
         if (typeof studio === "undefined") {
@@ -32,6 +39,7 @@ const Widget = ({ studio, onCreate }: IWidgetGroupCreate) => {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onCreate !== "undefined") {
             onCreate();
+            formRef.current?.resetFields();
           }
         } else {
           message.error(res.message);
