@@ -16,7 +16,7 @@ import {
   ITermDeleteRequest,
   ITermListResponse,
 } from "../../../components/api/Term";
-import { delete_, delete_2, get } from "../../../request";
+import { delete_2, get } from "../../../request";
 import TermCreate from "../../../components/term/TermCreate";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { useRef } from "react";
