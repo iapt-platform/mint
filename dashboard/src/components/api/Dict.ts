@@ -58,3 +58,7 @@ export interface IVocabularyListResponse {
     count: number;
   };
 }
+
+export interface IUserDictDeleteRequest {
+  id: string;
+}

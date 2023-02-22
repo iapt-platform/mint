@@ -19,8 +19,11 @@ import {
 import { ActionType, ProTable } from "@ant-design/pro-components";
 
 import DictCreate from "../../../components/dict/DictCreate";
-import { IApiResponseDictList } from "../../../components/api/Dict";
-import { delete_, get } from "../../../request";
+import {
+  IApiResponseDictList,
+  IUserDictDeleteRequest,
+} from "../../../components/api/Dict";
+import { delete_, delete_2, get } from "../../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../../components/api/Article";
@@ -48,7 +51,7 @@ const Widget = () => {
   const [wordId, setWordId] = useState<string>();
   const [drawerTitle, setDrawerTitle] = useState("New Word");
 
-  const showDeleteConfirm = (id: string, title: string) => {
+  const showDeleteConfirm = (id: string[], title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title:
@@ -69,7 +72,12 @@ const Widget = () => {
       }),
       onOk() {
         console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/userdict/${id}`)
+        return delete_2<IUserDictDeleteRequest, IDeleteResponse>(
+          `/v2/userdict/${id}`,
+          {
+            id: JSON.stringify(id),
+          }
+        )
           .then((json) => {
             if (json.ok) {
               message.success("删除成功");
@@ -212,7 +220,7 @@ const Widget = () => {
                         case "share":
                           break;
                         case "remove":
-                          showDeleteConfirm(row.wordId, row.word);
+                          showDeleteConfirm([row.wordId], row.word);
                           break;
                         default:
                           break;
@@ -260,10 +268,27 @@ const Widget = () => {
             </span>
           </Space>
         )}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({
+          intl,
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => {
           return (
             <Space size={16}>
-              <Button type="link">批量删除</Button>
+              <Button
+                type="link"
+                onClick={() => {
+                  console.log(selectedRowKeys);
+                  showDeleteConfirm(
+                    selectedRowKeys.map((item) => item.toString()),
+                    selectedRowKeys.length + "个单词"
+                  );
+                  onCleanSelected();
+                }}
+              >
+                批量删除
+              </Button>
             </Space>
           );
         }}
@@ -303,7 +328,7 @@ const Widget = () => {
             data: items,
           };
         }}
-        rowKey="sn"
+        rowKey="wordId"
         bordered
         pagination={{
           showQuickJumper: true,
