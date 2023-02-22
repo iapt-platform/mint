@@ -180,6 +180,16 @@ class UserDictController extends Controller
         //
 		Log::info("userDictController->destroy start");
 		Log::info("userDictController->destroy id= {$id}");
+
+        if(isset($_COOKIE["user_id"])){
+            $user_id = $_COOKIE["user_id"];
+        }else{
+            $user = AuthApi::current($request);
+            if(!$user){
+                return $this->error(__('auth.failed'));
+            }
+            $user_id = $user['user_id'];
+        }
         if($request->has("id")){
             $arrId = json_decode($request->get("id"),true) ;
             $count = 0;
@@ -187,7 +197,7 @@ class UserDictController extends Controller
                 # 找到对应数据
                 $data = UserDict::find($id);
                 //查看是否有权限删除
-                if($data->creator_id == $_COOKIE["user_id"]){
+                if($data->creator_id == $user_id){
                     $result = UserDict::where('id', $id)
                                     ->delete();
                     $count += $result;
@@ -198,13 +208,9 @@ class UserDictController extends Controller
             return $this->ok([$count,$updateOk]);
         }else{
             //删除单个单词
-            $user = AuthApi::current($request);
-            if(!$user){
-                return $this->error(__('auth.failed'));
-            }
             $userDict = UserDict::find($id);
             //判断当前用户是否有指定的studio的权限
-            if((int)$user['user_id'] !== $userDict->creator_id){
+            if((int)$user_id !== $userDict->creator_id){
                 return $this->error(__('auth.failed'));
             }
             $delete = $userDict->delete();
