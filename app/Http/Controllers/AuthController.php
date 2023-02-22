@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Http\Api;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -66,8 +67,8 @@ class AuthController extends Controller
         //
     }
     public function signIn(Request $request){
-        $userinfo = new \UserInfo();
-        $user = $userinfo->signIn($request->get('username'),$request->get('password'));
+        $userInfo = new \UserInfo();
+        $user = $userInfo->signIn($request->get('username'),$request->get('password'));
         if($user){
             $ExpTime = time() + 60 * 60 * 24 * 365;
             $key = env('APP_KEY');
@@ -80,6 +81,7 @@ class AuthController extends Controller
             $jwt = JWT::encode($payload,$key,'HS512');
             return $this->ok($jwt);
         }else{
+            Log::info($userInfo->getLog());
             return $this->error('invalid token');
         }
     }
