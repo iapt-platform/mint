@@ -25,7 +25,7 @@ import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../../components/api/Article";
 
-const { Text } = Typography;
+const { Link, Text } = Typography;
 
 interface IItem {
   sn: number;
@@ -220,9 +220,7 @@ const Widget = () => {
                     },
                   }}
                 >
-                  <Button
-                    type="link"
-                    size="small"
+                  <Link
                     onClick={() => {
                       setWordId(row.wordId);
                       setDrawerTitle(row.word);
@@ -232,7 +230,7 @@ const Widget = () => {
                     {intl.formatMessage({
                       id: "buttons.edit",
                     })}
-                  </Button>
+                  </Link>
                 </Dropdown.Button>,
               ];
             },
@@ -266,7 +264,6 @@ const Widget = () => {
           return (
             <Space size={16}>
               <Button type="link">批量删除</Button>
-              <Button type="link">导出数据</Button>
             </Space>
           );
         }}
@@ -306,7 +303,7 @@ const Widget = () => {
             data: items,
           };
         }}
-        rowKey="id"
+        rowKey="sn"
         bordered
         pagination={{
           showQuickJumper: true,
@@ -326,6 +323,7 @@ const Widget = () => {
               setDrawerTitle("New word");
               setIsCreateOpen(true);
             }}
+            disabled={true}
           >
             {intl.formatMessage({ id: "buttons.create" })}
           </Button>,

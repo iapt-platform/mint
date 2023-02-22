@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { message, Modal, Space, Table, Typography } from "antd";
+import { message, Modal, Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Popover } from "antd";
 import {
@@ -18,7 +18,7 @@ import {
 } from "../../../components/api/Article";
 import { delete_, get } from "../../../request";
 import { PublicityValueEnum } from "../../../components/studio/table";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const { Text } = Typography;
 
@@ -35,7 +35,8 @@ interface IItem {
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
-  const anthologyCreate = <AnthologyCreate studio={studioname} />;
+  const [openCreate, setOpenCreate] = useState(false);
+
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
@@ -196,37 +197,6 @@ const Widget = () => {
             ],
           },
         ]}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
-        tableAlertRender={({
-          selectedRowKeys,
-          selectedRows,
-          onCleanSelected,
-        }) => (
-          <Space size={24}>
-            <span>
-              {intl.formatMessage({ id: "buttons.selected" })}{" "}
-              {selectedRowKeys.length}
-              <Button
-                type="link"
-                style={{ marginInlineStart: 8 }}
-                onClick={onCleanSelected}
-              >
-                {intl.formatMessage({ id: "buttons.unselect" })}
-              </Button>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button type="link">批量删除</Button>
-            </Space>
-          );
-        }}
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
@@ -271,9 +241,21 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={anthologyCreate}
+            content={
+              <AnthologyCreate
+                studio={studioname}
+                onSuccess={() => {
+                  setOpenCreate(false);
+                  ref.current?.reload();
+                }}
+              />
+            }
             placement="bottomRight"
             trigger="click"
+            open={openCreate}
+            onOpenChange={(open: boolean) => {
+              setOpenCreate(open);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

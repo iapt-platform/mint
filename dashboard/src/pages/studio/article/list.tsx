@@ -1,16 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-
-import {
-  Space,
-  Button,
-  Popover,
-  Dropdown,
-  Table,
-  Typography,
-  Modal,
-  message,
-} from "antd";
+import { Button, Popover, Dropdown, Typography, Modal, message } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -26,7 +16,7 @@ import {
   IDeleteResponse,
 } from "../../../components/api/Article";
 import { PublicityValueEnum } from "../../../components/studio/table";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const { Text } = Typography;
 
@@ -42,7 +32,7 @@ interface DataItem {
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
-  const articleCreate = <ArticleCreate studio={studioname} />;
+  const [openCreate, setOpenCreate] = useState(false);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -215,45 +205,7 @@ const Widget = () => {
             },
           },
         ]}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
-        tableAlertRender={({
-          selectedRowKeys,
-          selectedRows,
-          onCleanSelected,
-        }) => (
-          <Space size={24}>
-            <span>
-              {intl.formatMessage({ id: "buttons.selected" })}
-              {selectedRowKeys.length}
-              <Button
-                type="link"
-                style={{ marginInlineStart: 8 }}
-                onClick={onCleanSelected}
-              >
-                {intl.formatMessage({
-                  id: "buttons.unselect",
-                })}
-              </Button>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button type="link">
-                {intl.formatMessage({
-                  id: "buttons.delete.all",
-                })}
-              </Button>
-            </Space>
-          );
-        }}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           let url = `/v2/article?view=studio&name=${studioname}`;
           const offset =
@@ -295,9 +247,21 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={articleCreate}
-            title="Create"
+            content={
+              <ArticleCreate
+                studio={studioname}
+                onSuccess={() => {
+                  setOpenCreate(false);
+                  ref.current?.reload();
+                }}
+              />
+            }
             placement="bottomRight"
+            trigger="click"
+            open={openCreate}
+            onOpenChange={(open: boolean) => {
+              setOpenCreate(open);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

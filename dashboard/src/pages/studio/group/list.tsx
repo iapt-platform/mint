@@ -13,7 +13,7 @@ import { IGroupListResponse } from "../../../components/api/Group";
 import GroupCreate from "../../../components/group/GroupCreate";
 import { RoleValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const { Text } = Typography;
 
@@ -29,6 +29,7 @@ interface DataItem {
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
+  const [openCreate, setOpenCreate] = useState(false);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -221,11 +222,17 @@ const Widget = () => {
               <GroupCreate
                 studio={studioname}
                 onCreate={() => {
+                  setOpenCreate(false);
                   ref.current?.reload();
                 }}
               />
             }
             placement="bottomRight"
+            trigger="click"
+            open={openCreate}
+            onOpenChange={(open: boolean) => {
+              setOpenCreate(open);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

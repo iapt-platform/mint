@@ -16,7 +16,7 @@ import { delete_, get } from "../../../request";
 import { IApiResponseChannelList } from "../../../components/api/Channel";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 const { Text } = Typography;
 
 interface IItem {
@@ -32,7 +32,7 @@ interface IItem {
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
-  const channelCreate = <ChannelCreate studio={studioname} />;
+  const [openCreate, setOpenCreate] = useState(false);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -316,9 +316,21 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={channelCreate}
-            title="new channel"
+            content={
+              <ChannelCreate
+                studio={studioname}
+                onSuccess={() => {
+                  setOpenCreate(false);
+                  ref.current?.reload();
+                }}
+              />
+            }
             placement="bottomRight"
+            trigger="click"
+            open={openCreate}
+            onOpenChange={(open: boolean) => {
+              setOpenCreate(open);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

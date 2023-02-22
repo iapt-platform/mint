@@ -7,8 +7,6 @@ import {
   Button,
   Popover,
   Dropdown,
-  MenuProps,
-  Menu,
   Table,
   Image,
   message,
@@ -19,7 +17,6 @@ import { ProTable, ActionType } from "@ant-design/pro-components";
 import {
   PlusOutlined,
   DeleteOutlined,
-  TeamOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
@@ -79,18 +76,6 @@ const Widget = () => {
   const ref = useRef<ActionType>();
   const [openCreate, setOpenCreate] = useState(false);
 
-  const courseCreate = (
-    <CourseCreate
-      studio={studioname}
-      onCreate={() => {
-        //新建课程成功后刷新
-        setActiveKey("create");
-        setCreateNumber(createNumber + 1);
-        ref.current?.reload();
-        setOpenCreate(false);
-      }}
-    />
-  );
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -399,7 +384,18 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={courseCreate}
+            content={
+              <CourseCreate
+                studio={studioname}
+                onCreate={() => {
+                  //新建课程成功后刷新
+                  setActiveKey("create");
+                  setCreateNumber(createNumber + 1);
+                  ref.current?.reload();
+                  setOpenCreate(false);
+                }}
+              />
+            }
             title="Create"
             placement="bottomRight"
             trigger="click"
