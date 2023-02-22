@@ -1,6 +1,15 @@
 import { useParams, Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Button, Popover, Dropdown, Typography, Modal, message } from "antd";
+import {
+  Button,
+  Popover,
+  Dropdown,
+  Typography,
+  Modal,
+  message,
+  Space,
+  Table,
+} from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -10,13 +19,16 @@ import {
 } from "@ant-design/icons";
 
 import ArticleCreate from "../../../components/article/ArticleCreate";
-import { delete_, get } from "../../../request";
+import { delete_, get, post } from "../../../request";
 import {
   IArticleListResponse,
+  IArticleMapAddRequest,
+  IArticleMapAddResponse,
   IDeleteResponse,
 } from "../../../components/api/Article";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { useRef, useState } from "react";
+import AnthologyModal from "../../../components/anthology/AnthologyModal";
 
 const { Text } = Typography;
 
@@ -205,6 +217,65 @@ const Widget = () => {
             },
           },
         ]}
+        rowSelection={{
+          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+          // 注释该行则默认不显示下拉选项
+          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+        }}
+        tableAlertRender={({
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => (
+          <Space size={24}>
+            <span>
+              {intl.formatMessage({ id: "buttons.selected" })}
+              {selectedRowKeys.length}
+              <Button type="link" onClick={onCleanSelected}>
+                {intl.formatMessage({ id: "buttons.unselect" })}
+              </Button>
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={({
+          intl,
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => {
+          return (
+            <Space size={16}>
+              <AnthologyModal
+                studioName={studioname}
+                trigger={<Button type="link">加入文集</Button>}
+                onSelect={(id: string) => {
+                  console.log(selectedRowKeys);
+                  post<IArticleMapAddRequest, IArticleMapAddResponse>(
+                    "/v2/article-map",
+                    {
+                      anthology_id: id,
+                      article_id: selectedRowKeys.map((item) =>
+                        item.toString()
+                      ),
+                      operation: "add",
+                    }
+                  )
+                    .finally(() => {
+                      onCleanSelected();
+                    })
+                    .then((json) => {
+                      if (json.ok) {
+                        message.success(json.data);
+                      } else {
+                        message.error(json.message);
+                      }
+                    })
+                    .catch((e) => console.error(e));
+                }}
+              />
+            </Space>
+          );
+        }}
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
           let url = `/v2/article?view=studio&name=${studioname}`;
