@@ -59,8 +59,8 @@ class CollectionController extends Controller
 			    return $this->error("没有查询到数据");
 				break;
 		}
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has("search") && !empty($request->has("search"))){
+            $table = $table->where('title', 'like', "%".$request->get("search")."%");
         }
         $count = $table->count();
         if(isset($_GET["order"]) && isset($_GET["dir"])){
