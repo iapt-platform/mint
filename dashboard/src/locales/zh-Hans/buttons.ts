@@ -30,6 +30,7 @@ const items = {
   "buttons.share": "分享",
   "buttons.yes": "是",
   "buttons.no": "否",
+  "buttons.open.in.library": "在藏经阁中打开",
 };
 
 export default items;
