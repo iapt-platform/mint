@@ -37,8 +37,8 @@ class ArticleController extends Controller
 				break;
         }
         //处理搜索
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has("search") && !empty($request->has("search"))){
+            $table = $table->where('title', 'like', "%".$request->get("search")."%");
         }
         //获取记录总条数
         $count = $table->count();
