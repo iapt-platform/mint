@@ -1,8 +1,13 @@
+import { message } from "antd";
 import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 
-import { get } from "../../request";
-import { IArticleMapListResponse } from "../api/Article";
+import { get, post, put } from "../../request";
+import {
+  IArticleMapAddResponse,
+  IArticleMapListResponse,
+  IArticleMapUpdateRequest,
+} from "../api/Article";
 import EditableTree, { ListNodeData } from "../article/EditableTree";
 
 interface IWidget {
@@ -21,7 +26,7 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
       if (json.ok) {
         const toc: ListNodeData[] = json.data.rows.map((item) => {
           return {
-            key: item.id ? item.id : item.title,
+            key: item.article_id ? item.article_id : item.title,
             title: item.title,
             level: item.level,
           };
@@ -35,7 +40,33 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
       <EditableTree
         treeData={tocData}
         onChange={(data: ListNodeData[]) => {
-          setTocData(data);
+          console.log("onChange", data);
+        }}
+        onSave={(data: ListNodeData[]) => {
+          console.log("onSave", data);
+          put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
+            `/v2/article-map/${anthologyId}`,
+            {
+              data: data.map((item) => {
+                return {
+                  article_id: item.key,
+                  level: item.level,
+                  title: item.title,
+                  children: item.children,
+                };
+              }),
+              operation: "anthology",
+            }
+          )
+            .finally(() => {})
+            .then((json) => {
+              if (json.ok) {
+                message.success(json.data);
+              } else {
+                message.error(json.message);
+              }
+            })
+            .catch((e) => console.error(e));
         }}
         onSelect={(selectedKeys: Key[]) => {
           setKeys(selectedKeys);
