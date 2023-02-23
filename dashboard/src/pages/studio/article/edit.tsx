@@ -6,7 +6,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Button, Card, message, Space, Tabs } from "antd";
+import { Button, Card, Form, message, Space, Tabs } from "antd";
 
 import { get, put } from "../../../request";
 import {
@@ -16,6 +16,8 @@ import {
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
+import MDEditor from "@uiw/react-md-editor";
+import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 
 interface IFormData {
   uid: string;
@@ -32,9 +34,18 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname, articleid } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
+
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/article/list`} title={title} />}
+      extra={
+        <ArticleTplMaker
+          title={title}
+          type="article"
+          id={articleid}
+          trigger={<Button>模版</Button>}
+        />
+      }
     >
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
@@ -84,7 +95,6 @@ const Widget = () => {
               label: intl.formatMessage({ id: "course.basic.info.label" }),
               children: (
                 <>
-                  {" "}
                   <ProForm.Group>
                     <ProFormText
                       width="md"
@@ -132,9 +142,8 @@ const Widget = () => {
               forceRender: true,
               children: (
                 <ProForm.Group>
-                  <ProFormTextArea
+                  <Form.Item
                     name="content"
-                    width="lg"
                     label={
                       <Space>
                         {intl.formatMessage({
@@ -143,7 +152,9 @@ const Widget = () => {
                         <Button>预览</Button>
                       </Space>
                     }
-                  />
+                  >
+                    <MDEditor />
+                  </Form.Item>
                 </ProForm.Group>
               ),
             },
