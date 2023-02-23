@@ -107,11 +107,11 @@ export interface IAnthologyCreateRequest {
 
 export interface IArticleMapRequest {
   id?: string;
-  collect_id: string;
-  article_id: string;
+  collect_id?: string;
+  article_id?: string;
   level: number;
   title: string;
-  children: number;
+  children?: number;
 }
 export interface IArticleMapListResponse {
   ok: boolean;
@@ -121,7 +121,20 @@ export interface IArticleMapListResponse {
     count: number;
   };
 }
-
+export interface IArticleMapAddRequest {
+  anthology_id: string;
+  article_id: string[];
+  operation: string;
+}
+export interface IArticleMapUpdateRequest {
+  data: IArticleMapRequest[];
+  operation: string;
+}
+export interface IArticleMapAddResponse {
+  ok: boolean;
+  message: string;
+  data: number;
+}
 export interface IDeleteResponse {
   ok: boolean;
   message: string;
