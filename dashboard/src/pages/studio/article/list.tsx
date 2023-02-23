@@ -29,6 +29,7 @@ import {
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { useRef, useState } from "react";
 import AnthologyModal from "../../../components/anthology/AnthologyModal";
+import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 
 const { Text } = Typography;
 
@@ -170,6 +171,18 @@ const Widget = () => {
                   type="link"
                   menu={{
                     items: [
+                      {
+                        key: "tpl",
+                        label: (
+                          <ArticleTplMaker
+                            title={row.title}
+                            type="article"
+                            id={row.id}
+                            trigger={<>模版</>}
+                          />
+                        ),
+                        icon: <TeamOutlined />,
+                      },
                       {
                         key: "share",
                         label: intl.formatMessage({
