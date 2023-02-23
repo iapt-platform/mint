@@ -127,7 +127,7 @@ class TemplateRender{
 
         $type = $this->get_param($this->param,"type",1);
         $id = $this->get_param($this->param,"id",2);
-        $text = $this->get_param($this->param,"text",3);
+        $title = $this->get_param($this->param,"title",3);
         $channel = $this->get_param($this->param,"channel",4);
         $props = [
                     "type" => $type,
@@ -137,8 +137,8 @@ class TemplateRender{
         if(empty($channel)){
             $props['channel'] = $this->channel_id;
         }
-        if(!empty($text)){
-            $props['text'] = $text;
+        if(!empty($title)){
+            $props['title'] = $title;
         }
         return [
             'props'=>base64_encode(\json_encode($props)),
