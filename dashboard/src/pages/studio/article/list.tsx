@@ -107,11 +107,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link
-                  key={index}
-                  to={`/article/article/${row.id}`}
-                  target="_blank"
-                >
+                <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
                   {row.title}
                 </Link>
               );
@@ -220,9 +216,13 @@ const Widget = () => {
                     },
                   }}
                 >
-                  <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
+                  <Link
+                    key={index}
+                    to={`/article/article/${row.id}`}
+                    target="_blank"
+                  >
                     {intl.formatMessage({
-                      id: "buttons.edit",
+                      id: "buttons.view",
                     })}
                   </Link>
                 </Dropdown.Button>,
