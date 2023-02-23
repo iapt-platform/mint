@@ -213,9 +213,9 @@ const Widget = ({
                   },
                 }}
               >
-                <Link to={`/studio/${studioName}/anthology/${row.id}/edit`}>
+                <Link to={`/anthology/${row.id}`} target="_blank">
                   {intl.formatMessage({
-                    id: "buttons.edit",
+                    id: "buttons.view",
                   })}
                 </Link>
               </Dropdown.Button>,
