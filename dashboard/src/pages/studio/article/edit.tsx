@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import {
   ProForm,
@@ -39,12 +39,17 @@ const Widget = () => {
     <Card
       title={<GoBack to={`/studio/${studioname}/article/list`} title={title} />}
       extra={
-        <ArticleTplMaker
-          title={title}
-          type="article"
-          id={articleid}
-          trigger={<Button>模版</Button>}
-        />
+        <Space>
+          <Link to={`/article/article/${articleid}`} target="_blank">
+            {intl.formatMessage({ id: "buttons.open.in.library" })}
+          </Link>
+          <ArticleTplMaker
+            title={title}
+            type="article"
+            id={articleid}
+            trigger={<Button>获取模版</Button>}
+          />
+        </Space>
       }
     >
       <ProForm<IFormData>
