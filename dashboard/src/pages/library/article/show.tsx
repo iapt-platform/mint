@@ -86,7 +86,9 @@ const Widget = () => {
         <div
           style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}
         >
-          <div>
+          <div
+            style={{ marginLeft: "auto", marginRight: "auto", maxWidth: 960 }}
+          >
             <Article
               active={true}
               type={type as ArticleType}
