@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
-import { Card, Progress } from "antd";
+import { Card, Progress, Typography } from "antd";
 import { ProTable } from "@ant-design/pro-components";
 import { Link } from "react-router-dom";
 import { Space, Table } from "antd";
@@ -14,6 +14,7 @@ import { get } from "../../../request";
 import GoBack from "../../../components/studio/GoBack";
 import { IChapterListResponse } from "../../../components/api/Corpus";
 import { IApiResponseChannel } from "../../../components/api/Channel";
+const { Text } = Typography;
 
 const onMenuClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
@@ -91,10 +92,10 @@ const Widget = () => {
                     <Link
                       to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}`}
                     >
-                      {row.title}
+                      {row.title ? row.title : row.subTitle}
                     </Link>
                   </div>
-                  <div>{row.subTitle}</div>
+                  <Text type="secondary">{row.subTitle}</Text>
                 </div>
               );
             },
