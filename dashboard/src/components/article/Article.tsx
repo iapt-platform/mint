@@ -11,6 +11,7 @@ import { ICourseUser, signIn } from "../../reducers/course-user";
 import { ITextbook, refresh } from "../../reducers/current-course";
 import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
+import "./article.css";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -184,7 +185,7 @@ const Widget = ({
   }, [active, type, articleId, mode, articleMode]);
 
   return (
-    <>
+    <div>
       <ArticleView
         id={articleData?.uid}
         title={articleData?.title}
@@ -200,7 +201,7 @@ const Widget = ({
         articleId={articleId}
       />
       {extra}
-    </>
+    </div>
   );
 };
 
