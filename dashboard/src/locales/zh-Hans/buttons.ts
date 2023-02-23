@@ -31,6 +31,8 @@ const items = {
   "buttons.yes": "是",
   "buttons.no": "否",
   "buttons.open.in.library": "在藏经阁中打开",
+  "buttons.preview": "预览",
+  "buttons.view": "查看",
 };
 
 export default items;
