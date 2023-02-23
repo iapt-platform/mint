@@ -1,0 +1,32 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
+h2 {
+  margin-top: 1em;
+  font-size: 180%;
+  border-bottom: 1px solid gray;
+}
+h3 {
+  margin-top: 0.5em;
+  font-size: 150%;
+}
+h4 {
+  font-size: 120%;
+}
+h5 {
+  font-size: 110%;
+}
+h6 {
+  font-size: 100%;
+}
+blockquote {
+  margin-left: 1em;
+  border-left: 4px solid #dad9d9;
+  padding-left: 0.5em;
+  color: gray;
+}
