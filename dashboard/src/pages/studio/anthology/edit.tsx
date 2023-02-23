@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Card, Tabs } from "antd";
+import { Button, Card, Space, Tabs } from "antd";
 
 import GoBack from "../../../components/studio/GoBack";
 
 import TocTree from "../../../components/anthology/TocTree";
 import AnthologyInfoEdit from "../../../components/article/AnthologyInfoEdit";
+import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 
 const Widget = () => {
   const intl = useIntl();
@@ -18,6 +19,13 @@ const Widget = () => {
       <Card
         title={
           <GoBack to={`/studio/${studioname}/anthology/list`} title={title} />
+        }
+        extra={
+          <Space>
+            <Link to={`/anthology/${anthology_id}`} target="_blank">
+              {intl.formatMessage({ id: "buttons.open.in.library" })}
+            </Link>
+          </Space>
         }
       >
         <Tabs
