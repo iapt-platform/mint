@@ -20,6 +20,7 @@ export type ListNodeData = {
   key: string;
   title: string;
   level: number;
+  children?: number;
 };
 
 var tocActivePath: TreeNodeData[] = [];
@@ -99,6 +100,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
       key: node.key,
       title: node.title,
       level: iTocTreeCurrLevel,
+      children: children,
     });
     if (children > 0) {
       iTocTreeCurrLevel++;
@@ -117,8 +119,15 @@ interface IWidgetEditableTree {
   onSelect?: Function;
   onSave?: Function;
 }
-const Widget = ({ treeData, onChange, onSelect }: IWidgetEditableTree) => {
+const Widget = ({
+  treeData,
+  onChange,
+  onSelect,
+  onSave,
+}: IWidgetEditableTree) => {
   const [gData, setGData] = useState<TreeNodeData[]>([]);
+  const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
+
   const [keys, setKeys] = useState<Key>("");
   useEffect(() => {
     const data = tocGetTreeData(treeData);
@@ -197,7 +206,9 @@ const Widget = ({ treeData, onChange, onSelect }: IWidgetEditableTree) => {
     }
     setGData(data);
     if (typeof onChange !== "undefined") {
-      onChange(treeToList(data));
+      const list = treeToList(data);
+      onChange(list);
+      setListTreeData(list);
     }
   };
 
@@ -232,7 +243,15 @@ const Widget = ({ treeData, onChange, onSelect }: IWidgetEditableTree) => {
         >
           删除
         </Button>
-        <Button icon={<SaveOutlined />} type="primary">
+        <Button
+          icon={<SaveOutlined />}
+          onClick={() => {
+            if (typeof onSave !== "undefined") {
+              onSave(listTreeData);
+            }
+          }}
+          type="primary"
+        >
           保存
         </Button>
       </Space>
