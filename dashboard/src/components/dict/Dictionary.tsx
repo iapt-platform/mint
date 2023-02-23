@@ -17,13 +17,15 @@ const Widget = ({ word, compact = false }: IWidget) => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setWordSearch(word);
+    setWordSearch(word?.toLowerCase());
   }, [word]);
+
   const onSearch = (value: string) => {
     console.log("onSearch", value);
-    setWordSearch(value);
+    const word = value.toLowerCase();
+    setWordSearch(word);
     if (compact === false) {
-      navigate("/dict/" + value);
+      navigate("/dict/" + word);
     }
   };
   return (
