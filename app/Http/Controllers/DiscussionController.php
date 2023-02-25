@@ -92,6 +92,7 @@ class DiscussionController extends Controller
         $discussion->res_type = $request->get('res_type');
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
+        $discussion->content_type = $request->get('content_type',"markdown");
         $discussion->parent = $request->get('parent',null);
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
