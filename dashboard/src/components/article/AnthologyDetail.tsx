@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Space, Typography } from "antd";
-import MDEditor from "@uiw/react-md-editor";
 
 import { get } from "../../request";
 import type {
@@ -8,10 +8,10 @@ import type {
   IAnthologyResponse,
 } from "../api/Article";
 import type { IAnthologyData } from "./AnthologyCard";
-import TocTree from "./TocTree";
-import { useNavigate } from "react-router-dom";
 import StudioName from "../auth/StudioName";
 import TimeShow from "../general/TimeShow";
+import Marked from "../general/Marked";
+import AnthologyTocTree from "../anthology/AnthologyTocTree";
 
 const { Title, Text } = Typography;
 
@@ -71,12 +71,12 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
         />
       </Space>
       <div>
-        <MDEditor.Markdown source={tableData?.summary} />
+        <Marked text={tableData?.summary} />
       </div>
       <Title level={5}>目录</Title>
 
-      <TocTree
-        treeData={tableData?.articles}
+      <AnthologyTocTree
+        anthologyId={aid}
         onSelect={(keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(keys);
