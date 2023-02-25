@@ -1,10 +1,10 @@
 import { get } from "../../request";
 import { IVocabularyListResponse } from "../api/Dict";
-import { useState } from "react";
-import { AutoComplete, Input, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { AutoComplete, Input, Space, Typography } from "antd";
 import { DictIcon } from "../../assets/icon";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 interface ValueType {
   key?: string;
@@ -13,11 +13,20 @@ interface ValueType {
 }
 interface IWidget {
   onSearch?: Function;
+  value?: string;
 }
-const Widget = ({ onSearch }: IWidget) => {
+const Widget = ({ value, onSearch }: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [searchKey, setSearchKey] = useState<string>("");
+
+  const [input, setInput] = useState<string>();
+  const [factors, setFactors] = useState<string[]>([]);
+  const intervalRef = useRef<number | null>(null); //防抖计时器句柄
+
+  useEffect(() => {
+    setInput(value);
+    console.log("dict input", value);
+  }, [value]);
 
   const renderItem = (title: string, count: number, meaning?: string) => ({
     value: title,
@@ -41,8 +50,22 @@ const Widget = ({ onSearch }: IWidget) => {
     ),
   });
 
+  /**
+   * 停止查字典计时
+   * 在两种情况下停止计时
+   * 1. 开始查字典
+   * 2. 防抖时间内鼠标移出单词区
+   */
+  const stopLookup = () => {
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
   const search = (value: string) => {
     console.log("search", value);
+    stopLookup();
     if (value === "") {
       return;
     }
@@ -55,31 +78,44 @@ const Widget = ({ onSearch }: IWidget) => {
         setOptions(words);
       })
       .finally(() => {
-        console.log("finally", searchKey);
+        console.log("finally");
         setFetching(false);
-        if (searchKey !== "") {
-          //setSearchKey("");
-          //setFetching(true);
-          //search(searchKey);
-        }
       });
+  };
+
+  const startLookup = (value: string) => {
+    //开始计时，计时结束查字典
+    console.log("开始计时");
+    intervalRef.current = window.setInterval(search, 500, value);
   };
   return (
     <div style={{ width: "100%" }}>
       <AutoComplete
+        value={input}
         style={{ width: "100%" }}
         popupClassName="certain-category-search-dropdown"
         dropdownMatchSelectWidth={400}
         options={options}
+        onChange={(value: string, option: ValueType | ValueType[]) => {
+          console.log("input", value);
+          setInput(value);
+
+          const strFactors = value.replaceAll("+", "-");
+          if (strFactors.indexOf("-") >= 0) {
+            setFactors(strFactors.split("-"));
+          } else {
+            setFactors([]);
+          }
+        }}
         onSearch={(value: string) => {
           console.log("auto complete on search", value);
           if (fetching) {
             console.log("fetching");
-            setSearchKey(value);
           } else {
             setFetching(true);
-            setSearchKey("");
             search(value);
+            //stopLookup();
+            //startLookup(value);
           }
         }}
         onSelect={(value: string, option: ValueType) => {
@@ -99,6 +135,22 @@ const Widget = ({ onSearch }: IWidget) => {
           }}
         />
       </AutoComplete>
+      <Space>
+        {factors.map((item, id) => {
+          return (
+            <Link
+              key={id}
+              onClick={() => {
+                if (typeof onSearch !== "undefined") {
+                  onSearch(item, true);
+                }
+              }}
+            >
+              {item}
+            </Link>
+          );
+        })}
+      </Space>
     </div>
   );
 };
