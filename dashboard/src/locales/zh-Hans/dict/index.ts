@@ -144,6 +144,8 @@ const items = {
   "dict.fields.type.v:base.short.label": "动词干",
   "dict.fields.type.adj:base.label": "形词干",
   "dict.fields.type.adj:base.short.label": "形词干",
+  "dict.fields.type.fpp.label": "未来被动分词",
+  "dict.fields.type.fpp.short": "未被分",
 };
 
 export default items;
