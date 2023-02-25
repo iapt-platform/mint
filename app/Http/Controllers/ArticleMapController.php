@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArticleCollection;
+use App\Models\Article;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleMapResource;
 
@@ -37,6 +39,37 @@ class ArticleMapController extends Controller
     public function store(Request $request)
     {
         //
+        $validated = $request->validate([
+                'anthology_id' => 'required',
+                'operation' => 'required'
+            ]);
+        switch ($validated['operation']) {
+            case 'add':
+                # code...
+                $count=0;
+                foreach ($request->get('article_id') as $key => $article) {
+                    # code...
+
+                    if(!ArticleCollection::where('article_id',$article)
+                                        ->where('collect_id',$request->get('anthology_id'))
+                                        ->exists())
+                    {
+                        $new = new ArticleCollection;
+                        $new->id = app('snowflake')->id();
+                        $new->article_id = $article;
+                        $new->collect_id = $request->get('anthology_id');
+                        $new->title = Article::find($article)->title;
+                        $new->level = 1;
+                        $new->save();
+                        $count++;
+                    }
+                }
+                return $this->ok($count);
+                break;
+            default:
+                # code...
+                break;
+        }
     }
 
     /**
@@ -54,12 +87,34 @@ class ArticleMapController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ArticleCollection  $articleCollection
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ArticleCollection $articleCollection)
+    public function update(Request $request, string $id)
     {
         //
+        $validated = $request->validate([
+            'operation' => 'required'
+        ]);
+        switch ($validated['operation']) {
+            case 'anthology':
+                $delete = ArticleCollection::where('collect_id',$id)->delete();
+                $count=0;
+                foreach ($request->get('data') as $key => $row) {
+                    # code...
+                    $new = new ArticleCollection;
+                    $new->id = app('snowflake')->id();
+                    $new->article_id = $row["article_id"];
+                    $new->collect_id = $id;
+                    $new->title = $row["title"];
+                    $new->level = $row["level"];
+                    $new->children = $row["children"];
+                    $new->save();
+                    $count++;
+                }
+                return $this->ok($count);
+                break;
+        }
     }
 
     /**

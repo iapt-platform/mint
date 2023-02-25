@@ -12,5 +12,6 @@ class Collection extends Model
     protected $casts = [
         'uid' => 'string'
     ];
+    protected $keyType = 'string';
     public  $incrementing = false;
 }

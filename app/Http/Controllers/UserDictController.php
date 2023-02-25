@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api;
+use App\Http\Api\AuthApi;
 
 class UserDictController extends Controller
 {
@@ -179,21 +180,43 @@ class UserDictController extends Controller
         //
 		Log::info("userDictController->destroy start");
 		Log::info("userDictController->destroy id= {$id}");
-		$arrId = json_decode($request->get("id"),true) ;
-		$count = 0;
-		foreach ($arrId as $key => $id) {
-			# 找到对应数据
-			$data = UserDict::find($id);
-			//查看是否有权限删除
-			if($data->creator_id == $_COOKIE["user_id"]){
-				$result = UserDict::where('id', $id)
-								->delete();
-				$count += $result;
-				$updateOk = $this->update_sys_wbw($data);
-				$this->update_redis($data);
-			}
-		}
-		return $this->ok([$count,$updateOk]);
+
+        if(isset($_COOKIE["user_id"])){
+            $user_id = $_COOKIE["user_id"];
+        }else{
+            $user = AuthApi::current($request);
+            if(!$user){
+                return $this->error(__('auth.failed'));
+            }
+            $user_id = $user['user_id'];
+        }
+        if($request->has("id")){
+            $arrId = json_decode($request->get("id"),true) ;
+            $count = 0;
+            foreach ($arrId as $key => $id) {
+                # 找到对应数据
+                $data = UserDict::find($id);
+                //查看是否有权限删除
+                if($data->creator_id == $user_id){
+                    $result = UserDict::where('id', $id)
+                                    ->delete();
+                    $count += $result;
+                    $updateOk = $this->update_sys_wbw($data);
+                    $this->update_redis($data);
+                }
+            }
+            return $this->ok([$count,$updateOk]);
+        }else{
+            //删除单个单词
+            $userDict = UserDict::find($id);
+            //判断当前用户是否有指定的studio的权限
+            if((int)$user_id !== $userDict->creator_id){
+                return $this->error(__('auth.failed'));
+            }
+            $delete = $userDict->delete();
+            return $this->ok($delete);
+        }
+
     }
 	public function delete(Request $request){
 		Log::info("userDictController->delete start");

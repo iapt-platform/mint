@@ -6,6 +6,8 @@ use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\AuthApi;
+use Illuminate\Support\Facades\DB;
 
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
@@ -57,8 +59,8 @@ class CollectionController extends Controller
 			    return $this->error("没有查询到数据");
 				break;
 		}
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has("search") && !empty($request->has("search"))){
+            $table = $table->where('title', 'like', "%".$request->get("search")."%");
         }
         $count = $table->count();
         if(isset($_GET["order"]) && isset($_GET["dir"])){
@@ -195,10 +197,10 @@ class CollectionController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         //
-        $collection  = Collection::where('uid', $id)->first();
+        $collection  = Collection::find($id);
         if($collection){
             //鉴权
             Log::info("找到文集");
@@ -207,7 +209,9 @@ class CollectionController extends Controller
                 $collection->title = $request->get('title');
                 $collection->subtitle = $request->get('subtitle');
                 $collection->summary = $request->get('summary');
-                $collection->article_list = \json_encode($request->get('aritcle_list')) ;
+                if($request->has('aritcle_list')){
+                    $collection->article_list = \json_encode($request->get('aritcle_list'));
+                } ;
                 $collection->lang = $request->get('lang');
                 $collection->status = $request->get('status');
                 $collection->modify_time = time()*1000;
@@ -228,12 +232,28 @@ class CollectionController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Collection  $collection
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Collection $collection)
+    public function destroy(Request $request,string $id)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        $collection = Collection::find($id);
+        if($user['user_uid'] !== $collection['owner']){
+            return $this->error(__('auth.failed'));
+        }
+        $delete = 0;
+        DB::transaction(function() use($collection,$delete){
+            //TODO 删除文集中的文章
+            $delete = $collection->delete();
+        });
+
+        return $this->ok($delete);
     }
 }

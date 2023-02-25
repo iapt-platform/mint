@@ -265,18 +265,38 @@ class DhammaTermController extends Controller
      */
     public function destroy(DhammaTerm $dhammaTerm,Request $request)
     {
-        //
-        $arrId = json_decode($request->get("id"),true) ;
-		$count = 0;
-		foreach ($arrId as $key => $id) {
-			# code...
-			$result = DhammaTerm::where('id', $id)
-							->where('owner', $_COOKIE["user_uid"])
-							->delete();
-            if($result){
-                $count++;
+        /**
+         * 一次删除多个单词
+         */
+        if(isset($_COOKIE["user_uid"])){
+            $user_uid = $_COOKIE["user_uid"];
+        }else{
+            $user = AuthApi::current($request);
+            if(!$user){
+                return $this->error(__('auth.failed'));
             }
-		}
+            $user_uid = $user['user_uid'];
+        }
+
+        if($request->has("uuid")){
+            $count = DhammaTerm::whereIn('guid', $request->get("id"))
+                            ->where('owner', $user_uid)
+                            ->delete();
+        }else{
+            $arrId = json_decode($request->get("id"),true) ;
+            $count = 0;
+
+            foreach ($arrId as $key => $id) {
+                # code...
+                $result = DhammaTerm::where('id', $id)
+                                ->where('owner', $user_uid)
+                                ->delete();
+                if($result){
+                    $count++;
+                }
+            }
+        }
+
 		return $this->ok($count);
     }
 }

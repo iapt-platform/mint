@@ -43,12 +43,15 @@ class UserInfo
 {
     private $dbh;
     private $buffer;
+    private $log;
+
     public function __construct()
     {
         $dns = _FILE_DB_USERINFO_;
         $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $buffer = array();
+        $this->buffer = array();
+        $this->log = "";
     }
 
     public function getName($id)
@@ -56,8 +59,8 @@ class UserInfo
         if (empty($id)) {
             return array("nickname" => "", "username" => "");
         }
-        if (isset($buffer[$id])) {
-            return $buffer[$id];
+        if (isset($this->buffer[$id])) {
+            return $this->buffer[$id];
         }
         if ($this->dbh) {
             $query = "SELECT nickname,username FROM user WHERE id = ? or userid= ? ";
@@ -65,15 +68,15 @@ class UserInfo
             $stmt->execute(array($id,$id));
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($user) > 0) {
-                $buffer[$id] = array("nickname" => $user[0]["nickname"], "username" => $user[0]["username"]);
-                return $buffer[$id];
+                $this->buffer[$id] = array("nickname" => $user[0]["nickname"], "username" => $user[0]["username"]);
+                return $this->buffer[$id];
             } else {
-                $buffer[$id] = array("nickname" => "", "username" => "");
-                return $buffer[$id];
+                $this->buffer[$id] = array("nickname" => "", "username" => "");
+                return $this->buffer[$id];
             }
         } else {
-            $buffer[$id] = array("nickname" => "", "username" => "");
-            return $buffer[$id];
+            $this->buffer[$id] = array("nickname" => "", "username" => "");
+            return $this->buffer[$id];
         }
 	}
 	public function getId($uuid)
@@ -88,6 +91,8 @@ class UserInfo
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($user) {
                 return $user["id"];
+            }else{
+                return 0;
             }
         } else {
             return 0;
@@ -105,6 +110,8 @@ class UserInfo
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($user) {
                 return $user;
+            }else{
+                return false;
             }
         } else {
             return false;
@@ -148,10 +155,23 @@ class UserInfo
             if ($user) {
                 return $user;
             } else {
+                $query = "SELECT userid,id,password FROM user WHERE  username= ?";
+                $stmt = $this->dbh->prepare($query);
+                $stmt->execute(array($username));
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($user){
+                    $this->log .=  "username:{$username},pwd:{$user['password']}-".md5($password)."\n";
+                }else{
+                    $this->log .= "no user:{$username}\n";
+                }
                 return false;
             }
         } else {
             return false;
         }
 	}
+
+    public function getLog(){
+        return $this->log;
+    }
 }

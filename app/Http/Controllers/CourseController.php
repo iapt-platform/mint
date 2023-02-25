@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CourseResource;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -227,11 +228,11 @@ class CourseController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Course $course)
+    public function destroy(Request $request,Course $course)
     {
         //
         $user = AuthApi::current($request);
@@ -239,16 +240,16 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        if($user['user_uid'] !== $course->studio_id){
             return $this->error(__('auth.failed'));
         }
         $delete = 0;
-        DB::transaction(function() use($delete){
+        DB::transaction(function() use($delete,$course){
             //删除group member
             $memberDelete = CourseMember::where('course_id',$course->id)->delete();
             $delete = $course->delete();
         });
 
-        $this->ok($delete);
+        return $this->ok($delete);
     }
 }
