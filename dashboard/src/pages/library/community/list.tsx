@@ -21,7 +21,7 @@ const Widget = () => {
     <Row>
       <Col xs={0} sm={6} md={5}>
         <Affix offsetTop={0}>
-          <div style={{ height: "100vh", overflowY: "scroll" }}>
+          <div style={{ height: "100vh", overflowY: "auto" }}>
             <BookTree
               onChange={(key: string, path: string[]) => {
                 /*

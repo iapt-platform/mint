@@ -48,7 +48,7 @@ const Widget = () => {
           <Row>
             <Col xs={0} sm={6} md={6}>
               <Affix offsetTop={0}>
-                <div style={{ height: "100vh", overflowY: "scroll" }}>
+                <div style={{ height: "100vh", overflowY: "auto" }}>
                   <BookTree
                     root={bookRoot}
                     path={bookPath}
