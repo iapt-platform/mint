@@ -1,17 +1,21 @@
 import { useNavigate } from "react-router-dom";
-import { Layout, Affix, Col, Row } from "antd";
-import { Input } from "antd";
+import { Layout, Col, Row } from "antd";
 import Dictionary from "../../../components/dict/Dictionary";
 
-const { Content, Header } = Layout;
-const { Search } = Input;
+const { Content } = Layout;
 
 const Widget = () => {
   const navigate = useNavigate();
 
   return (
     <div>
-      <Dictionary />
+      <Dictionary
+        onSearch={(value: string, isFactor?: boolean) => {
+          if (!isFactor) {
+            navigate("/dict/" + value);
+          }
+        }}
+      />
       <Content>
         <Row>
           <Col flex="auto"></Col>
