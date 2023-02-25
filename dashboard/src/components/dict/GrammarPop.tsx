@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Popover } from "antd";
+import { Popover, Typography } from "antd";
 import { ProCard } from "@ant-design/pro-components";
-import MDEditor from "@uiw/react-md-editor";
 
-import { ApiGetText } from "../../utils";
 import { get } from "../../request";
 import { IGuideResponse } from "../api/Guide";
+import Marked from "../general/Marked";
+
+const { Link } = Typography;
 
 interface IWidget {
   text: string;
@@ -27,7 +28,7 @@ const Widget = ({ text, gid }: IWidget) => {
   const userCard = (
     <>
       <ProCard style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
-        <MDEditor.Markdown source={guide} />
+        <Marked text={guide} />
       </ProCard>
     </>
   );
@@ -42,9 +43,7 @@ const Widget = ({ text, gid }: IWidget) => {
   }
   return (
     <Popover content={userCard} placement="bottom">
-      <a href="#" onMouseEnter={handleMouseMouseEnter}>
-        {text}
-      </a>
+      <Link onMouseEnter={handleMouseMouseEnter}>{text}</Link>
     </Popover>
   );
 };
