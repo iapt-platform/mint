@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Sentence;
 use App\Models\Channel;
+use App\Http\Api\ChannelApi;
 
 class ExportSentence extends Command
 {
@@ -46,12 +47,20 @@ class ExportSentence extends Command
             $file_suf = $channel_id;
             $channels[] = $channel_id;
         }else{
-            $file_suf = $channel_type;
             $channel_type = $this->option('type');
-            $nissaya_channel = Channel::where('type',$channel_type)->where('status',30)->select('uid')->get();
-            foreach ($nissaya_channel as $key => $value) {
-                # code...
-                $channels[] = $value->uid;
+            $file_suf = $channel_type;
+            if($channel_type === "original"){
+                $pali_channel = ChannelApi::getSysChannel("_System_Pali_VRI_");
+                if($pali_channel === false){
+                    return 0;
+                }
+                $channels[] = $pali_channel;
+            }else{
+                $nissaya_channel = Channel::where('type',$channel_type)->where('status',30)->select('uid')->get();
+                foreach ($nissaya_channel as $key => $value) {
+                    # code...
+                    $channels[] = $value->uid;
+                }
             }
         }
         $db = Sentence::whereIn('channel_uid',$channels);
