@@ -37,7 +37,7 @@ const Widget = ({ word, compact = false }: IWidget) => {
 
   return (
     <>
-      <DictContent data={tableData} compact={compact} />
+      <DictContent word={word} data={tableData} compact={compact} />
     </>
   );
 };
