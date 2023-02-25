@@ -2,6 +2,8 @@
 @import "~react-quill/dist/quill.snow.css";
 @import "~video.js/dist/video-js.css";
 @import "./assets/font/main.css";
+@import "./theme/antd.dark.css";
+@import "./theme/antpro.dark.css";
 
 body {
   margin: 0;
