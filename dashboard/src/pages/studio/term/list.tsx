@@ -93,7 +93,7 @@ const Widget = () => {
             }),
             dataIndex: "sn",
             key: "sn",
-            width: 30,
+            width: 80,
             search: false,
           },
           {
