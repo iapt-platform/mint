@@ -20,11 +20,12 @@ export interface IApiDictContentData {
 }
 
 interface IWidget {
+  word?: string;
   data: IWidgetDictContentData;
   compact?: boolean;
 }
 
-const Widget = ({ data, compact }: IWidget) => {
+const Widget = ({ word, data, compact }: IWidget) => {
   return (
     <>
       <Row>
@@ -37,7 +38,7 @@ const Widget = ({ data, compact }: IWidget) => {
           })}
         </Col>
         <Col flex="200px">
-          <CaseList data={data.caselist} />
+          <CaseList word={word} />
         </Col>
       </Row>
     </>

@@ -1,3 +1,5 @@
+import { ICaseListData } from "../dict/CaseList";
+
 export interface IDictDataRequest {
   id: number;
   word: string;
@@ -61,4 +63,13 @@ export interface IVocabularyListResponse {
 
 export interface IUserDictDeleteRequest {
   id: string;
+}
+
+export interface ICaseListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: ICaseListData[];
+    count: number;
+  };
 }
