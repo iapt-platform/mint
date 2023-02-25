@@ -11,7 +11,7 @@ const items = {
   "forms.fields.title.label": "标题",
   "forms.message.title.required": "请输入标题",
   "forms.fields.subtitle.label": "副标题",
-  "forms.fields.summary.label": "简介",
+  "forms.fields.summary.label": "摘要",
   "forms.fields.content.label": "内容",
   "forms.fields.content.placeholder": "请输入内容",
   "forms.fields.tag.label": "标签",
