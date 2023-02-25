@@ -163,6 +163,7 @@ const Widget = ({
         style={styleWbw}
         onMouseEnter={() => {
           if (intervalRef.current === null) {
+            //开始计时，计时结束查字典
             intervalRef.current = window.setInterval(
               lookup,
               200,
