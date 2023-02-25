@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Button, Card, Space, Tabs } from "antd";
+import { Card, Space, Tabs } from "antd";
 
 import GoBack from "../../../components/studio/GoBack";
-
-import TocTree from "../../../components/anthology/TocTree";
+import TocTree from "../../../components/anthology/EditableTocTree";
 import AnthologyInfoEdit from "../../../components/article/AnthologyInfoEdit";
-import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 
 const Widget = () => {
   const intl = useIntl();
