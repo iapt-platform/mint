@@ -48,7 +48,7 @@ class ExportOffline extends Command
         //导出译文
         $this->call('export:sentence');
         //导出原文
-        $this->call('export:sentence',['type'=>'original']);
+        $this->call('export:sentence',['--type'=>'original']);
         shell_exec("XZ_OPT=-9 tar jcvf ".storage_path("app/public/export/offline.tar.xz")." ".storage_path("app/public/export/offline"));
         return 0;
     }
