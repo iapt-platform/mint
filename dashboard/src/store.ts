@@ -11,6 +11,7 @@ import articleModeReducer from "./reducers/article-mode";
 import inlineDictReducer from "./reducers/inline-dict";
 import currentCourseReducer from "./reducers/current-course";
 import sentenceReducer from "./reducers/sentence";
+import themeReducer from "./reducers/theme";
 
 const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ const store = configureStore({
     inlineDict: inlineDictReducer,
     currentCourse: currentCourseReducer,
     sentence: sentenceReducer,
+    theme: themeReducer,
   },
 });
 

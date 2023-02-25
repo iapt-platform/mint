@@ -5,6 +5,7 @@ import img_banner from "../../assets/studio/images/wikipali_banner.svg";
 import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
 import ToLibaray from "../auth/ToLibaray";
+import ThemeSelect from "../general/ThemeSelect";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -13,28 +14,44 @@ const onSearch = (value: string) => console.log(value);
 
 const Widget = () => {
   return (
-    <Header className="header" style={{ lineHeight: "44px", height: 44 }}>
-      <Row justify="space-between">
-        <Col flex="80px">
+    <Header
+      className="header"
+      style={{
+        lineHeight: "44px",
+        height: 44,
+        paddingLeft: 10,
+        paddingRight: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ width: 80 }}>
           <Link to="/">
             <img alt="code" style={{ height: 36 }} src={img_banner} />
           </Link>
-        </Col>
-        <Col span={8}>
+        </div>
+        <div style={{ width: 500, lineHeight: 44 }}>
           <Search
+            disabled
             placeholder="input search text"
             onSearch={onSearch}
             style={{ width: "100%" }}
           />
-        </Col>
-        <Col span={4}>
+        </div>
+        <div>
           <Space>
             <ToLibaray />
             <SignInAvatar />
             <UiLangSelect />
+            <ThemeSelect />
           </Space>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </Header>
   );
 };

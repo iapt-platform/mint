@@ -5,6 +5,7 @@ import { get as getToken, IUser, signIn } from "./reducers/current-user";
 //import { DURATION } from "./reducers/current-user";
 import { ISite, refresh as refreshLayout } from "./reducers/layout";
 import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
+import { refresh as refreshTheme } from "./reducers/theme";
 import { get, IErrorResponse } from "./request";
 //import { GRPC_HOST,  grpc_metadata } from "./request";
 import store from "./store";
@@ -69,6 +70,14 @@ const init = () => {
   if (setting !== null) {
     const json: ISettingItem[] = JSON.parse(setting);
     store.dispatch(refreshSetting(json));
+  }
+
+  //获取用户选择的主题
+  const theme = localStorage.getItem("theme");
+  if (theme === "dark") {
+    store.dispatch(refreshTheme("dark"));
+  } else {
+    store.dispatch(refreshTheme("ant"));
   }
 };
 

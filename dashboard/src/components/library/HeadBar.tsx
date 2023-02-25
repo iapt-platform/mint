@@ -8,6 +8,7 @@ import img_banner from "../../assets/library/images/wikipali_logo_library.svg";
 import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
 import ToStudio from "../auth/ToStudio";
+import ThemeSelect from "../general/ThemeSelect";
 
 const { Header } = Layout;
 
@@ -126,13 +127,19 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         paddingRight: 10,
       }}
     >
-      <Row justify="space-between">
-        <Col flex="100px">
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ width: 100 }}>
           <Link to="/">
             <img alt="code" style={{ height: "3em" }} src={img_banner} />
           </Link>
-        </Col>
-        <Col span={8}>
+        </div>
+        <div style={{ width: 500 }}>
           <Menu
             onClick={onClick}
             selectedKeys={[selectedKeys]}
@@ -140,15 +147,16 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             theme="dark"
             items={mainMenuItems}
           />
-        </Col>
-        <Col span={4}>
+        </div>
+        <div>
           <Space>
             <ToStudio />
             <SignInAvatar />
             <UiLangSelect />
+            <ThemeSelect />
           </Space>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </Header>
   );
 };
