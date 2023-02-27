@@ -73,3 +73,13 @@ export interface ICaseListResponse {
     count: number;
   };
 }
+
+export interface IFirstMeaning {
+  word?: string;
+  meaning?: string;
+}
+export interface IDictFirstMeaningResponse {
+  ok: boolean;
+  message: string;
+  data: IFirstMeaning[];
+}
