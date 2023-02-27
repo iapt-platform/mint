@@ -120,34 +120,41 @@ class UpgradeCompound extends Command
 			$count++;
 			$this->info("{$count}:{$word->real}");
 			$ts = new TurboSplit();
-			$parts = $ts->splitA($word->real);
-			foreach ($parts as $part) {
-				$new = UserDict::firstOrNew(
-					[
-						'word' => $part['word'],
-						'factors' => $part['factors'],
-						'dict_id' => $dict_id,
-					],
-					[
-						'id' => app('snowflake')->id(),
-						'source' => '_ROBOT_',
-						'create_time'=>(int)(microtime(true)*1000),
-					]
-				);
-				if(isset($part['type'])){
-					$new->type = $part['type'];
-				}else{
-					$new->type = ".cp.";
-				}
-				if(isset($part['grammar'])) $new->parent = $part['grammar'];
-				if(isset($part['parent'])) $new->parent = $part['parent'];
-				$new->confidence = 50*$part['confidence'];
-				$new->note = $part['confidence'];
-				$new->language = 'cm';
-				$new->creator_id = 1;
-				$new->flag = 1;
-				$new->save();
-			}
+
+            $parts = $ts->splitA($word->real);
+            foreach ($parts as $part) {
+                if(isset($part['type']) && $part['type'] === ".v."){
+                    continue;
+                }
+                $new = UserDict::firstOrNew(
+                    [
+                        'word' => $part['word'],
+                        'factors' => $part['factors'],
+                        'dict_id' => $dict_id,
+                    ],
+                    [
+                        'id' => app('snowflake')->id(),
+                        'source' => '_ROBOT_',
+                        'create_time'=>(int)(microtime(true)*1000),
+                    ]
+                );
+                if(isset($part['type'])){
+                    $new->type = $part['type'];
+                }else{
+                    $new->type = ".cp.";
+                }
+                if(isset($part['grammar'])) $new->grammar = $part['grammar'];
+                if(isset($part['parent'])) $new->parent = $part['parent'];
+                $new->confidence = 50*$part['confidence'];
+                $new->note = $part['confidence'];
+                $new->language = 'cm';
+                $new->creator_id = 1;
+                $new->flag = 1;
+                $new->save();
+            }
+
+
+
 		}
 		//删除旧数据
 		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
