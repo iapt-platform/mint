@@ -2,17 +2,25 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
+import { Key } from "antd/lib/table/interface";
+import {
+  FileAddOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import { Button, Divider, Space } from "antd";
 
-type TreeNodeData = {
+interface TreeNodeData {
   key: string;
   title: string;
   children: TreeNodeData[];
   level: number;
-};
+}
 export type ListNodeData = {
   key: string;
   title: string;
   level: number;
+  children?: number;
 };
 
 var tocActivePath: TreeNodeData[] = [];
@@ -92,6 +100,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
       key: node.key,
       title: node.title,
       level: iTocTreeCurrLevel,
+      children: children,
     });
     if (children > 0) {
       iTocTreeCurrLevel++;
@@ -107,15 +116,24 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
 interface IWidgetEditableTree {
   treeData: ListNodeData[];
   onChange?: Function;
+  onSelect?: Function;
+  onSave?: Function;
 }
-const Widget = (prop: IWidgetEditableTree) => {
-  const data = tocGetTreeData(prop.treeData);
-  console.log("treedata", data);
-  const [gData, setGData] = useState(data);
+const Widget = ({
+  treeData,
+  onChange,
+  onSelect,
+  onSave,
+}: IWidgetEditableTree) => {
+  const [gData, setGData] = useState<TreeNodeData[]>([]);
+  const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
+
+  const [keys, setKeys] = useState<Key>("");
   useEffect(() => {
-    const data = tocGetTreeData(prop.treeData);
+    const data = tocGetTreeData(treeData);
+    console.log("tree data", data);
     setGData(data);
-  }, [prop]);
+  }, [treeData]);
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -187,19 +205,75 @@ const Widget = (prop: IWidgetEditableTree) => {
       }
     }
     setGData(data);
-    if (typeof prop.onChange !== "undefined") {
-      prop.onChange(treeToList(data));
+    if (typeof onChange !== "undefined") {
+      const list = treeToList(data);
+      onChange(list);
+      setListTreeData(list);
     }
   };
 
   return (
     <>
+      <Space>
+        <Button icon={<FileAddOutlined />}>添加</Button>
+        <Button
+          icon={<DeleteOutlined />}
+          danger
+          onClick={() => {
+            const delTree = (node: TreeNodeData[]): boolean => {
+              for (let index = 0; index < node.length; index++) {
+                if (node[index].key === keys) {
+                  node.splice(index, 1);
+                  return true;
+                } else {
+                  const cf = delTree(node[index].children);
+                  if (cf) {
+                    return cf;
+                  }
+                }
+              }
+              return false;
+            };
+            const tmp = [...gData];
+            const find = delTree(tmp);
+
+            console.log("delete", keys, find, tmp);
+            setGData(tmp);
+          }}
+        >
+          删除
+        </Button>
+        <Button
+          icon={<SaveOutlined />}
+          onClick={() => {
+            if (typeof onSave !== "undefined") {
+              onSave(listTreeData);
+            }
+          }}
+          type="primary"
+        >
+          保存
+        </Button>
+      </Space>
+      <Divider></Divider>
       <Tree
         rootClassName="draggable-tree"
         draggable
         blockNode
         onDragEnter={onDragEnter}
         onDrop={onDrop}
+        onSelect={(selectedKeys: Key[]) => {
+          if (selectedKeys.length > 0) {
+            setKeys(selectedKeys[0]);
+          } else {
+            setKeys("");
+          }
+
+          console.log(selectedKeys);
+          if (typeof onSelect !== "undefined") {
+            onSelect(selectedKeys);
+          }
+        }}
         treeData={gData}
       />
     </>

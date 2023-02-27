@@ -1,26 +1,38 @@
 import { Link } from "react-router-dom";
 import { Layout, Row, Col } from "antd";
-import { useIntl } from "react-intl";
+import CreateFeedback from "../feedback/CreateFeedback";
 
 const { Footer } = Layout;
 
 const Widget = () => {
-	//Library foot bar
-	const intl = useIntl(); //i18n
-	// TODO
-	return (
-		<Footer>
-			<Row>
-				<Col span={8}>相关链接</Col>
-				<Col span={16}>
-					问题收集<Link to="/">{intl.formatMessage({ id: "columns.library.palicanon.title" })}</Link>
-				</Col>
-			</Row>
-			<Row>
-				<Col>Powered by PCDS</Col>
-			</Row>
-		</Footer>
-	);
+  //Library foot bar
+  // TODO
+  return (
+    <Footer>
+      <Row>
+        <Col span={8}>
+          <h3>相关链接</h3>
+          <ul>
+            <li>
+              <Link to="www.github.com/iapt-platform/mint" target="_blank">
+                wikipali in github
+              </Link>
+            </li>
+            <li>nissaya project</li>
+          </ul>
+        </Col>
+        <Col span={16}>
+          <h3>问题反馈</h3>
+          <div>
+            <CreateFeedback />
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col>Powered by PCDS</Col>
+      </Row>
+    </Footer>
+  );
 };
 
 export default Widget;

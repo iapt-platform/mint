@@ -4,32 +4,23 @@ import { message } from "antd";
 import { IApiResponsePaliChapter } from "../api/Corpus";
 import { get } from "../../request";
 import ChapterHead, { IChapterInfo } from "./ChapterHead";
-import { IParagraph } from "./BookViewer";
+import { IChapter } from "./BookViewer";
 import TocPath, { ITocPathNode } from "./TocPath";
 
-interface IWidgetPaliChapterHead {
-  para: IParagraph;
+interface IWidget {
+  para: IChapter;
   onChange?: Function;
 }
 
-const Widget = (prop: IWidgetPaliChapterHead) => {
-  const defaultPathData: ITocPathNode[] = [
-    {
-      book: 98,
-      paragraph: 55,
-      title: "string;",
-      paliTitle: "string;",
-      level: 2,
-    },
-  ];
-  const [pathData, setPathData] = useState(defaultPathData);
+const Widget = ({ para, onChange }: IWidget) => {
+  const [pathData, setPathData] = useState<ITocPathNode[]>([]);
   const [chapterData, setChapterData] = useState<IChapterInfo>({ title: "" });
   useEffect(() => {
     console.log("palichapterlist useEffect");
-    fetchData(prop.para);
-  }, [prop.para]);
+    fetchData(para);
+  }, [para]);
 
-  function fetchData(para: IParagraph) {
+  function fetchData(para: IChapter) {
     let url = `/v2/palitext?view=paragraph&book=${para.book}&para=${para.para}`;
     get<IApiResponsePaliChapter>(url).then(function (myJson) {
       console.log("ajex", myJson);
@@ -56,11 +47,11 @@ const Widget = (prop: IWidgetPaliChapterHead) => {
     <>
       <TocPath
         data={pathData}
-        onChange={(e: IParagraph) => {
+        onChange={(e: IChapter) => {
           message.success(e.book + ":" + e.para);
           fetchData(e);
-          if (typeof prop.onChange !== "undefined") {
-            prop.onChange(e);
+          if (typeof onChange !== "undefined") {
+            onChange(e);
           }
         }}
         link={"none"}

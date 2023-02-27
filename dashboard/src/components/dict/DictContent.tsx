@@ -19,24 +19,26 @@ export interface IApiDictContentData {
   data: IWidgetDictContentData;
 }
 
-interface IWidgetDictContent {
+interface IWidget {
+  word?: string;
   data: IWidgetDictContentData;
+  compact?: boolean;
 }
 
-const Widget = (prop: IWidgetDictContent) => {
+const Widget = ({ word, data, compact }: IWidget) => {
   return (
     <>
       <Row>
         <Col flex="200px">
-          <DictList data={prop.data.dictlist} />
+          {compact ? <></> : <DictList data={data.dictlist} />}
         </Col>
         <Col flex="760px">
-          {prop.data.words.map((it, id) => {
+          {data.words.map((it, id) => {
             return <WordCard key={id} data={it} />;
           })}
         </Col>
         <Col flex="200px">
-          <CaseList data={prop.data.caselist} />
+          <CaseList word={word} />
         </Col>
       </Row>
     </>

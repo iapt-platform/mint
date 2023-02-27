@@ -8,11 +8,12 @@ import { get } from "../../request";
 
 import DictContent from "./DictContent";
 
-interface IWidgetDictSearch {
+interface IWidget {
   word: string | undefined;
+  compact?: boolean;
 }
 
-const Widget = (prop: IWidgetDictSearch) => {
+const Widget = ({ word, compact = false }: IWidget) => {
   const defaultData: IWidgetDictContentData = {
     dictlist: [],
     words: [],
@@ -21,23 +22,22 @@ const Widget = (prop: IWidgetDictSearch) => {
   const [tableData, setTableData] = useState(defaultData);
 
   useEffect(() => {
-    console.log("useEffect");
-    const url = `/v2/dict?word=${prop.word}`;
-    console.log("url", url);
-    get(url)
-      .then((response) => {
-        const json = response as unknown as IApiDictContentData;
-        console.log("data", json);
+    if (typeof word === "undefined") {
+      return;
+    }
+    const url = `/v2/dict?word=${word}`;
+    get<IApiDictContentData>(url)
+      .then((json) => {
         setTableData(json.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [prop.word, setTableData]);
+  }, [word, setTableData]);
 
   return (
     <>
-      <DictContent data={tableData} />
+      <DictContent word={word} data={tableData} compact={compact} />
     </>
   );
 };

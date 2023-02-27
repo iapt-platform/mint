@@ -1,33 +1,48 @@
-import { Dropdown, Button } from "antd";
-import { GlobalOutlined } from "@ant-design/icons";
+import { Button, Dropdown } from "antd";
 import type { MenuProps } from "antd";
+import { useEffect, useState } from "react";
+import { set, get } from "../../locales";
+import { GlobalOutlined } from "@ant-design/icons";
 
-const items: MenuProps["items"] = [
-  {
-    key: "en",
-    label: "English",
-  },
-  {
-    key: "zh-Hans",
-    label: "简体中文",
-  },
-  {
-    key: "zh-Hant",
-    label: "繁体中文",
-  },
-];
 const Widget = () => {
   // TODO
+  const [curr, setCurr] = useState<string>();
+
+  interface IUiLang {
+    key: string;
+    label: string;
+  }
+  const uiLang: IUiLang[] = [
+    {
+      key: "en-US",
+      label: "English",
+    },
+    {
+      key: "zh-Hans",
+      label: "简体中文",
+    },
+    {
+      key: "zh-Hant",
+      label: "繁体中文",
+    },
+  ];
+  const items: MenuProps["items"] = uiLang;
+
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    set(key, true);
+  };
+
+  useEffect(() => {
+    const currLang = get();
+    console.log("lang", currLang);
+    const find = uiLang.find((item) => item?.key === currLang);
+    setCurr(find?.label);
+  }, []);
+
   return (
-    <Dropdown menu={{ items }} placement="bottomRight">
-      <Button
-        ghost
-        icon={<GlobalOutlined />}
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        简体中文
+    <Dropdown menu={{ items, onClick }} placement="bottomRight">
+      <Button ghost icon={<GlobalOutlined />}>
+        {curr}
       </Button>
     </Dropdown>
   );

@@ -1,3 +1,5 @@
+import { ICaseListData } from "../dict/CaseList";
+
 export interface IDictDataRequest {
   id: number;
   word: string;
@@ -14,7 +16,7 @@ export interface IDictDataRequest {
   confidence: number;
 }
 export interface IApiResponseDictData {
-  id: number;
+  id: string;
   word: string;
   type: string;
   grammar: string;
@@ -43,4 +45,41 @@ export interface IApiResponseDictList {
     rows: IApiResponseDictData[];
     count: number;
   };
+}
+
+export interface IVocabularyData {
+  word: string;
+  count: number;
+  meaning?: string;
+}
+export interface IVocabularyListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IVocabularyData[];
+    count: number;
+  };
+}
+
+export interface IUserDictDeleteRequest {
+  id: string;
+}
+
+export interface ICaseListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: ICaseListData[];
+    count: number;
+  };
+}
+
+export interface IFirstMeaning {
+  word?: string;
+  meaning?: string;
+}
+export interface IDictFirstMeaningResponse {
+  ok: boolean;
+  message: string;
+  data: IFirstMeaning[];
 }

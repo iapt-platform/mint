@@ -22,7 +22,12 @@ export interface ISentence {
   updateAt: string;
   suggestionCount?: ISuggestionCount;
 }
-
+export interface ISentenceId {
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
+}
 export interface IWidgetSentEditInner {
   id: string;
   channels?: string[];
@@ -72,7 +77,7 @@ interface IWidgetSentEdit {
 }
 const Widget = ({ props }: IWidgetSentEdit) => {
   const prop = JSON.parse(atob(props)) as IWidgetSentEditInner;
-  console.log("sent data", prop);
+  //console.log("sent data", prop);
   return <SentEditInner {...prop} />;
 };
 

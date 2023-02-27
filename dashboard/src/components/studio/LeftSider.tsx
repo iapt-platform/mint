@@ -49,6 +49,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "palicanon",
+          disabled: true,
         },
         {
           label: (
@@ -59,6 +60,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "recent",
+          disabled: true,
         },
         {
           label: (
@@ -79,6 +81,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "analysis",
+          disabled: true,
         },
       ],
     },

@@ -1,29 +1,42 @@
 import { Select } from "antd";
-import React from "react";
+import { DefaultOptionType } from "antd/lib/select";
+import { useEffect, useState } from "react";
 
-const { Option } = Select;
+import { get } from "../../request";
+import { IChapterLangListResponse } from "../api/Corpus";
 
-const children: React.ReactNode[] = [];
-for (let i = 10; i < 36; i++) {
-	children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+interface IWidget {
+  onSelect?: Function;
 }
-
-const handleChange = (value: string[]) => {
-	console.log(`selected ${value}`);
-};
-const Widget = () => {
-	return (
-		<Select
-			mode="multiple"
-			allowClear
-			style={{ minWidth: 100 }}
-			placeholder="Language"
-			defaultValue={[]}
-			onChange={handleChange}
-		>
-			{children}
-		</Select>
-	);
+const Widget = ({ onSelect }: IWidget) => {
+  const [lang, setLang] = useState<DefaultOptionType[]>([]);
+  useEffect(() => {
+    get<IChapterLangListResponse>(`/v2/progress?view=lang`).then((json) => {
+      if (json.ok) {
+        const langs = json.data.rows.map((item) => {
+          return {
+            value: item.lang,
+            label: `${item.lang}-${item.count}`,
+          };
+        });
+        setLang(langs);
+      }
+    });
+  }, []);
+  return (
+    <Select
+      style={{ minWidth: 100 }}
+      placeholder="Language"
+      defaultValue={["zh"]}
+      onChange={(value: string[]) => {
+        console.log(`selected ${value}`);
+        if (typeof onSelect !== "undefined") {
+          onSelect(value);
+        }
+      }}
+      options={lang}
+    />
+  );
 };
 
 export default Widget;

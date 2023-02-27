@@ -1,22 +1,43 @@
 import { Select } from "antd";
-import React from "react";
+import { useIntl } from "react-intl";
 
-const { Option } = Select;
-
-const children: React.ReactNode[] = [];
-for (let i = 1; i < 5; i++) {
-	children.push(<Option key={i.toString(5) + i}>{i.toString(5) + i}</Option>);
+interface IWidget {
+  onSelect?: Function;
 }
+const Widget = ({ onSelect }: IWidget) => {
+  const intl = useIntl();
 
-const handleChange = (value: string[]) => {
-	console.log(`selected ${value}`);
-};
-const Widget = () => {
-	return (
-		<Select style={{ width: 100 }} allowClear placeholder="Type" defaultValue={[]} onChange={handleChange}>
-			{children}
-		</Select>
-	);
+  return (
+    <Select
+      style={{ minWidth: 100 }}
+      placeholder="Type"
+      defaultValue={["translation"]}
+      onChange={(value: string[]) => {
+        console.log(`selected ${value}`);
+        if (typeof onSelect !== "undefined") {
+          onSelect(value);
+        }
+      }}
+      options={[
+        {
+          value: "translation",
+          label: intl.formatMessage({ id: "channel.type.translation.label" }),
+        },
+        {
+          value: "nissaya",
+          label: intl.formatMessage({ id: "channel.type.nissaya.label" }),
+        },
+        {
+          value: "commentary",
+          label: intl.formatMessage({ id: "channel.type.commentary.label" }),
+        },
+        {
+          value: "original",
+          label: intl.formatMessage({ id: "channel.type.original.label" }),
+        },
+      ]}
+    />
+  );
 };
 
 export default Widget;

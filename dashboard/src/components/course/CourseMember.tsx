@@ -9,6 +9,7 @@ import { delete_, get } from "../../request";
 import {
   ICourseMemberDeleteResponse,
   ICourseMemberListResponse,
+  TCourseMemberStatus,
 } from "../api/Course";
 
 const { Content } = Layout;
@@ -17,12 +18,20 @@ interface IRoleTag {
   title: string;
   color: string;
 }
-interface DataItem {
-  id: number;
+
+export interface ICourseMember {
+  sn?: number;
+  id?: string;
   userId: string;
   name?: string;
   tag: IRoleTag[];
   image: string;
+  role?: string;
+  startExp?: number;
+  endExp?: number;
+  currentExp?: number;
+  expByDay?: number;
+  status?: TCourseMemberStatus;
 }
 interface IWidget {
   courseId?: string;
@@ -35,7 +44,7 @@ const Widget = ({ courseId }: IWidget) => {
   const ref = useRef<ActionType>();
   return (
     <Content>
-      <ProList<DataItem>
+      <ProList<ICourseMember>
         rowKey="id"
         actionRef={ref}
         headerTitle={
@@ -82,9 +91,9 @@ const Widget = ({ courseId }: IWidget) => {
                 setCanDelete(true);
                 break;
             }
-            const items: DataItem[] = res.data.rows.map((item, id) => {
-              let member: DataItem = {
-                id: item.id ? item.id : 0,
+            const items: ICourseMember[] = res.data.rows.map((item, id) => {
+              let member: ICourseMember = {
+                id: item.id ? item.id : "",
                 userId: item.user_id,
                 name: item.user?.nickName,
                 tag: [],

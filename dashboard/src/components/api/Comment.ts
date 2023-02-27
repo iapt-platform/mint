@@ -1,3 +1,4 @@
+import { TContentType } from "../comment/CommentCreate";
 import { IUserApiData } from "./Auth";
 
 export interface ICommentRequest {
@@ -6,6 +7,7 @@ export interface ICommentRequest {
   res_type?: string;
   title?: string;
   content?: string;
+  content_type?: TContentType;
   parent?: string;
   editor?: IUserApiData;
   created_at?: string;
@@ -18,6 +20,7 @@ export interface ICommentApiData {
   res_type: string;
   title?: string;
   content?: string;
+  content_type?: TContentType;
   parent?: string;
   children_count: number;
   editor: IUserApiData;

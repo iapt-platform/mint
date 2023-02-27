@@ -2,28 +2,27 @@ import { useState, useEffect } from "react";
 
 import { get } from "../../request";
 import { IApiResponsePaliChapterList } from "../api/Corpus";
-import { IParagraph } from "./BookViewer";
+import { IChapter } from "./BookViewer";
 import { IPaliChapterData } from "./PaliChapterCard";
 import PaliChapterList, { IChapterClickEvent } from "./PaliChapterList";
 
-interface IWidgetPaliChapterListByPara {
-  para: IParagraph;
+interface IWidget {
+  chapter: IChapter;
   onChapterClick?: Function;
 }
-const defaultData: IPaliChapterData[] = [];
-const Widget = (prop: IWidgetPaliChapterListByPara) => {
-  const [tableData, setTableData] = useState(defaultData);
+const Widget = ({ chapter, onChapterClick }: IWidget) => {
+  const [tableData, setTableData] = useState<IPaliChapterData[]>([]);
 
   useEffect(() => {
     console.log("palichapterlist useEffect");
-    let url = `/v2/palitext?view=chapter_children&book=${prop.para.book}&para=${prop.para.para}`;
-    get(url).then(function (myJson) {
-      console.log("ajex", myJson);
-      const data = myJson as unknown as IApiResponsePaliChapterList;
-      let newTree: IPaliChapterData[] = data.data.rows.map((item) => {
+    let url = `/v2/palitext?view=chapter_children&book=${chapter.book}&para=${chapter.para}`;
+    get<IApiResponsePaliChapterList>(url).then(function (json) {
+      console.log("chapter ajex", json);
+      const newTree: IPaliChapterData[] = json.data.rows.map((item) => {
         return {
           Title: item.toc,
           PaliTitle: item.toc,
+          level: item.level,
           Path: item.path,
           Book: item.book,
           Paragraph: item.paragraph,
@@ -31,14 +30,14 @@ const Widget = (prop: IWidgetPaliChapterListByPara) => {
       });
       setTableData(newTree);
     });
-  }, [prop.para]);
+  }, [chapter]);
 
   return (
     <>
       <PaliChapterList
         onChapterClick={(e: IChapterClickEvent) => {
-          if (prop.onChapterClick) {
-            prop.onChapterClick(e);
+          if (onChapterClick) {
+            onChapterClick(e);
           }
         }}
         data={tableData}

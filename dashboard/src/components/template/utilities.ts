@@ -24,11 +24,11 @@ export function XmlToReact(
   //console.log("html string:", text);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(
-    "<root><root>" + text + "</root></root>",
+    "<root>" + text + "</root>",
     "text/xml"
   );
-  const x = xmlDoc.documentElement.childNodes;
-  return convert(x[0], wordWidget, convertor);
+  const x = xmlDoc.documentElement;
+  return convert(x, wordWidget, convertor);
 
   function getAttr(node: ChildNode, key: number): Object {
     const ele = node as Element;
@@ -73,6 +73,15 @@ export function XmlToReact(
               output.push(
                 React.createElement(
                   Divider,
+                  getAttr(value, i),
+                  convert(value, wordWidget, convertor)
+                )
+              );
+              break;
+            case "param":
+              output.push(
+                React.createElement(
+                  "span",
                   getAttr(value, i),
                   convert(value, wordWidget, convertor)
                 )

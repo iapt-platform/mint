@@ -3,53 +3,36 @@ import { useIntl } from "react-intl";
 
 import {
   Button,
-  Layout,
   Space,
   Table,
   Dropdown,
-  MenuProps,
-  Menu,
   Drawer,
+  message,
+  Modal,
+  Typography,
 } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { ProTable } from "@ant-design/pro-components";
+import {
+  PlusOutlined,
+  ExclamationCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { ActionType, ProTable } from "@ant-design/pro-components";
 
 import DictCreate from "../../../components/dict/DictCreate";
-import { IApiResponseDictList } from "../../../components/api/Dict";
-import { get } from "../../../request";
-import { useState } from "react";
+import {
+  IApiResponseDictList,
+  IUserDictDeleteRequest,
+} from "../../../components/api/Dict";
+import { delete_, delete_2, get } from "../../../request";
+import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
+import { IDeleteResponse } from "../../../components/api/Article";
 
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "3",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
+const { Link, Text } = Typography;
 
 interface IItem {
-  id: number;
-  wordId: number;
+  sn: number;
+  wordId: string;
   word: string;
   type: string;
   grammar: string;
@@ -60,32 +43,67 @@ interface IItem {
   createdAt: number;
 }
 
-const valueEnum = {
-  0: "n",
-  1: "ti",
-  2: "v",
-  3: "ind",
-};
-
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [wordId, setWordId] = useState(0);
+  const [wordId, setWordId] = useState<string>();
   const [drawerTitle, setDrawerTitle] = useState("New Word");
+
+  const showDeleteConfirm = (id: string[], title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_2<IUserDictDeleteRequest, IDeleteResponse>(
+          `/v2/userdict/${id}`,
+          {
+            id: JSON.stringify(id),
+          }
+        )
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
+  const ref = useRef<ActionType>();
 
   return (
     <>
-      <Layout>{studioname}</Layout>
       <ProTable<IItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
               id: "dict.fields.sn.label",
             }),
-            dataIndex: "id",
-            key: "id",
+            dataIndex: "sn",
+            key: "sn",
             width: 80,
             search: false,
           },
@@ -179,16 +197,48 @@ const Widget = () => {
                 <Dropdown.Button
                   key={index}
                   type="link"
-                  overlay={menu}
-                  onClick={() => {
-                    setWordId(row.wordId);
-                    setDrawerTitle(row.word);
-                    setIsEditOpen(true);
+                  menu={{
+                    items: [
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "share":
+                          break;
+                        case "remove":
+                          showDeleteConfirm([row.wordId], row.word);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
                   }}
                 >
-                  {intl.formatMessage({
-                    id: "buttons.edit",
-                  })}
+                  <Link
+                    onClick={() => {
+                      setWordId(row.wordId);
+                      setDrawerTitle(row.word);
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    {intl.formatMessage({
+                      id: "buttons.edit",
+                    })}
+                  </Link>
                 </Dropdown.Button>,
               ];
             },
@@ -218,11 +268,27 @@ const Widget = () => {
             </span>
           </Space>
         )}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({
+          intl,
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => {
           return (
             <Space size={16}>
-              <Button type="link">批量删除</Button>
-              <Button type="link">导出数据</Button>
+              <Button
+                type="link"
+                onClick={() => {
+                  console.log(selectedRowKeys);
+                  showDeleteConfirm(
+                    selectedRowKeys.map((item) => item.toString()),
+                    selectedRowKeys.length + "个单词"
+                  );
+                  onCleanSelected();
+                }}
+              >
+                批量删除
+              </Button>
             </Space>
           );
         }}
@@ -237,14 +303,14 @@ const Widget = () => {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
           console.log(url);
-          const res: IApiResponseDictList = await get(url);
+          const res = await get<IApiResponseDictList>(url);
 
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.updated_at);
             const id2 =
               ((params.current || 1) - 1) * (params.pageSize || 20) + id + 1;
             return {
-              id: id2,
+              sn: id2,
               wordId: item.id,
               word: item.word,
               type: item.type,
@@ -262,7 +328,7 @@ const Widget = () => {
             data: items,
           };
         }}
-        rowKey="id"
+        rowKey="wordId"
         bordered
         pagination={{
           showQuickJumper: true,
@@ -282,6 +348,7 @@ const Widget = () => {
               setDrawerTitle("New word");
               setIsCreateOpen(true);
             }}
+            disabled={true}
           >
             {intl.formatMessage({ id: "buttons.create" })}
           </Button>,

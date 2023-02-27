@@ -1,43 +1,23 @@
 import { useParams } from "react-router-dom";
-import { ProTable } from "@ant-design/pro-components";
+import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Space, Table } from "antd";
-import type { MenuProps } from "antd";
-import { Button, Dropdown, Menu, Popover } from "antd";
-import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import { message, Modal, Space, Table, Typography } from "antd";
+import { Button, Dropdown, Popover } from "antd";
+import {
+  PlusOutlined,
+  ExclamationCircleOutlined,
+  DeleteOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 
 import ChannelCreate from "../../../components/channel/ChannelCreate";
-import { get } from "../../../request";
+import { delete_, get } from "../../../request";
 import { IApiResponseChannelList } from "../../../components/api/Channel";
 import { PublicityValueEnum } from "../../../components/studio/table";
-
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "3",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
+import { IDeleteResponse } from "../../../components/api/Article";
+import { useRef, useState } from "react";
+const { Text } = Typography;
 
 interface IItem {
   id: number;
@@ -52,10 +32,49 @@ interface IItem {
 const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
-  const channelCreate = <ChannelCreate studio={studioname} />;
+  const [openCreate, setOpenCreate] = useState(false);
+
+  const showDeleteConfirm = (id: string, title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_<IDeleteResponse>(`/v2/channel/${id}`)
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
+  const ref = useRef<ActionType>();
+
   return (
     <>
       <ProTable<IItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
@@ -76,7 +95,10 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/channel/${row.uid}`}>
+                <Link
+                  to={`/studio/${studioname}/channel/${row.uid}`}
+                  key={index}
+                >
                   {row.title}
                 </Link>
               );
@@ -170,7 +192,48 @@ const Widget = () => {
             valueType: "option",
             render: (text, row, index, action) => {
               return [
-                <Dropdown.Button key={index} type="link" overlay={menu}>
+                <Dropdown.Button
+                  key={index}
+                  type="link"
+                  menu={{
+                    items: [
+                      {
+                        key: "share",
+                        label: intl.formatMessage({
+                          id: "buttons.share",
+                        }),
+                        icon: <TeamOutlined />,
+                        disabled: true,
+                      },
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "share":
+                          break;
+                        case "remove":
+                          showDeleteConfirm(row.uid, row.title);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
                   <Link to={`/studio/${studioname}/channel/${row.uid}/edit`}>
                     {intl.formatMessage({
                       id: "buttons.edit",
@@ -253,9 +316,21 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={channelCreate}
-            title="new channel"
+            content={
+              <ChannelCreate
+                studio={studioname}
+                onSuccess={() => {
+                  setOpenCreate(false);
+                  ref.current?.reload();
+                }}
+              />
+            }
             placement="bottomRight"
+            trigger="click"
+            open={openCreate}
+            onOpenChange={(open: boolean) => {
+              setOpenCreate(open);
+            }}
           >
             <Button key="button" icon={<PlusOutlined />} type="primary">
               {intl.formatMessage({ id: "buttons.create" })}

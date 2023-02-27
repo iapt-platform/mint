@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useIntl } from "react-intl";
 import { ProForm } from "@ant-design/pro-components";
 import { message } from "antd";
@@ -9,12 +8,11 @@ import { get, put } from "../../request";
 import DictEditInner from "./DictEditInner";
 import { IDictFormData } from "./DictCreate";
 
-type IWidgetDictEdit = {
-  wordId: number;
-};
-const Widget = (prop: IWidgetDictEdit) => {
+interface IWidget {
+  wordId?: string;
+}
+const Widget = ({ wordId }: IWidget) => {
   const intl = useIntl();
-  useEffect(() => {});
 
   return (
     <>
@@ -36,7 +34,7 @@ const Widget = (prop: IWidgetDictEdit) => {
             confidence: values.confidence,
           };
           const res = await put<IDictDataRequest, IApiResponseDict>(
-            `/v2/userdict/${prop.wordId}`,
+            `/v2/userdict/${wordId}`,
             request
           );
           console.log(res);
@@ -48,11 +46,9 @@ const Widget = (prop: IWidgetDictEdit) => {
         }}
         formKey="dict_edit"
         request={async () => {
-          const res: IApiResponseDict = await get(
-            `/v2/userdict/${prop.wordId}`
-          );
+          const res: IApiResponseDict = await get(`/v2/userdict/${wordId}`);
           return {
-            id: res.data.id,
+            id: 1,
             wordId: res.data.id,
             word: res.data.word,
             type: res.data.type,

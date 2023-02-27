@@ -24,6 +24,15 @@ const items = {
   "buttons.group.add.member": "加人",
   "buttons.lesson.add.lesson": "加入",
   "buttons.ok": "确定",
+  "buttons.close": "关闭",
+  "buttons.copy.to": "复制到",
+  "buttons.basic.information": "基本信息",
+  "buttons.share": "分享",
+  "buttons.yes": "是",
+  "buttons.no": "否",
+  "buttons.open.in.library": "在藏经阁中打开",
+  "buttons.preview": "预览",
+  "buttons.view": "查看",
 };
 
 export default items;

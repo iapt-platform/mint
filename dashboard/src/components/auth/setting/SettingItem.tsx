@@ -34,9 +34,11 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
     }
   }, [data?.key, settings]);
   let content: JSX.Element = <></>;
+
   if (typeof data === "undefined") {
     return content;
   } else {
+    const description: string = intl.formatMessage({ id: data.description });
     switch (typeof data.defaultValue) {
       case "number":
         break;
@@ -44,12 +46,8 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
         switch (data.widget) {
           case "radio-button":
             if (typeof data.options !== "undefined") {
-              return (
+              content = (
                 <>
-                  {title}
-                  <div>
-                    <Text>{intl.formatMessage({ id: data.description })}</Text>
-                  </div>
                   <Radio.Group
                     value={value}
                     buttonStyle="solid"
@@ -121,7 +119,6 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                 );
               }}
             />
-            <Text>{intl.formatMessage({ id: data.description })}</Text>
           </div>
         );
         break;
@@ -130,9 +127,12 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
     }
 
     return (
-      <div>
-        <Title level={5}>{intl.formatMessage({ id: data.label })}</Title>
-        {content}
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Text>{intl.formatMessage({ id: data.label })}</Text>
+          {content}
+        </div>
+        <Text type="secondary">{description}</Text>
       </div>
     );
   }

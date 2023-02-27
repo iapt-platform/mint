@@ -63,7 +63,13 @@ export const delete_ = async <R>(path: string): Promise<R> => {
   const res: R = await response.json();
   return res;
 };
-
+export const delete_2 = async <Q, R>(path: string, body: Q): Promise<R> => {
+  const data = options("DELETE");
+  data.body = JSON.stringify(body);
+  const response = await fetch(backend(path), data);
+  const res: R = await response.json();
+  return res;
+};
 // https://github.github.io/fetch/#options
 export const post = async <Q, R>(path: string, body: Q): Promise<R> => {
   const data = options("POST");

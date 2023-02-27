@@ -7,43 +7,31 @@ import {
   Button,
   Popover,
   Dropdown,
-  MenuProps,
-  Menu,
   Table,
   Image,
+  message,
+  Modal,
+  Typography,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 
 import CourseCreate from "../../../components/course/CourseCreate";
-import { API_HOST, get } from "../../../request";
+import { API_HOST, delete_, get } from "../../../request";
 import {
   ICourseListResponse,
   ICourseNumberResponse,
+  TCourseMemberStatus,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
+import { IDeleteResponse } from "../../../components/api/Article";
 
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
+const { Text } = Typography;
 
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "manage",
-        label: "管理",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "delete",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 interface DataItem {
   sn: number;
   id: string; //课程ID
@@ -60,6 +48,8 @@ interface DataItem {
   course_end_at?: string; //课程结束时间
   intro_markdown?: string; //简介
   cover_img_name?: string; //封面图片文件名
+  myStatus?: TCourseMemberStatus;
+  countProgressing?: number;
 }
 
 const renderBadge = (count: number, active = false) => {
@@ -86,23 +76,12 @@ const Widget = () => {
   const ref = useRef<ActionType>();
   const [openCreate, setOpenCreate] = useState(false);
 
-  const courseCreate = (
-    <CourseCreate
-      studio={studioname}
-      onCreate={() => {
-        //新建课程成功后刷新
-        setActiveKey("create");
-        setCreateNumber(createNumber + 1);
-        ref.current?.reload();
-        setOpenCreate(false);
-      }}
-    />
-  );
   useEffect(() => {
     /**
      * 获取各种课程的数量
      */
     const url = `/v2/course-my-course?studio=${studioname}`;
+    console.log("url", url);
     get<ICourseNumberResponse>(url).then((json) => {
       if (json.ok) {
         setCreateNumber(json.data.create);
@@ -111,6 +90,42 @@ const Widget = () => {
       }
     });
   }, [studioname]);
+
+  const showDeleteConfirm = (id: string, title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_<IDeleteResponse>(`/v2/course/${id}`)
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
   return (
     <>
       <ProTable<DataItem>
@@ -136,7 +151,7 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Space>
+                <Space key={index}>
                   <Image
                     src={`${API_HOST}/${row.cover_img_name}`}
                     width={64}
@@ -161,14 +176,23 @@ const Widget = () => {
             }),
             dataIndex: "teacher",
             key: "teacher",
-            //tip: "过长会自动收缩",
-            ellipsis: true,
           },
           {
-            title: "成员",
+            title: intl.formatMessage({
+              id: "course.table.count.member.title",
+            }),
             dataIndex: "member_count",
             key: "member_count",
             width: 80,
+          },
+          {
+            title: intl.formatMessage({
+              id: "course.table.count.progressing.title",
+            }),
+            dataIndex: "countProgressing",
+            key: "countProgressing",
+            width: 80,
+            hideInTable: activeKey === "study" ? true : false,
           },
           {
             //类型
@@ -203,14 +227,69 @@ const Widget = () => {
             width: 120,
             valueType: "option",
             render: (text, row, index, action) => {
+              let mainButton = <></>;
+              switch (activeKey) {
+                case "create":
+                  mainButton = (
+                    <Link
+                      to={`/studio/${studioname}/course/${row.id}/edit`}
+                      key={index}
+                    >
+                      {intl.formatMessage({
+                        //编辑
+                        id: "buttons.edit",
+                      })}
+                    </Link>
+                  );
+                  break;
+                case "study":
+                  mainButton = (
+                    <span key={index}>
+                      {intl.formatMessage({
+                        id: `course.member.status.${row.myStatus}.label`,
+                      })}
+                    </span>
+                  );
+                  break;
+                case "teach":
+                  break;
+                default:
+                  break;
+              }
               return [
-                <Dropdown.Button key={index} type="link" overlay={menu}>
-                  <Link to={`/studio/${studioname}/course/${row.id}/edit`}>
-                    {intl.formatMessage({
-                      //编辑
-                      id: "buttons.edit",
-                    })}
-                  </Link>
+                <Dropdown.Button
+                  key={index}
+                  type="link"
+                  menu={{
+                    items: [
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "remove":
+                          showDeleteConfirm(row.id, row.title);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
+                  {mainButton}
                 </Dropdown.Button>,
               ];
             },
@@ -266,6 +345,7 @@ const Widget = () => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
+          console.log("url", url);
 
           const res = await get<ICourseListResponse>(url);
           console.log("api data", res);
@@ -280,6 +360,8 @@ const Widget = () => {
               cover_img_name: item.cover,
               type: item.publicity,
               member_count: item.member_count,
+              myStatus: item.my_status,
+              countProgressing: item.count_progressing,
               createdAt: date.getTime(),
             };
           });
@@ -302,7 +384,18 @@ const Widget = () => {
         }}
         toolBarRender={() => [
           <Popover
-            content={courseCreate}
+            content={
+              <CourseCreate
+                studio={studioname}
+                onCreate={() => {
+                  //新建课程成功后刷新
+                  setActiveKey("create");
+                  setCreateNumber(createNumber + 1);
+                  ref.current?.reload();
+                  setOpenCreate(false);
+                }}
+              />
+            }
             title="Create"
             placement="bottomRight"
             trigger="click"

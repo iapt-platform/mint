@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import {
   ProForm,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Card, message } from "antd";
+import { Button, Card, Form, message, Space, Tabs } from "antd";
 
 import { get, put } from "../../../request";
 import {
@@ -16,6 +16,8 @@ import {
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
+import MDEditor from "@uiw/react-md-editor";
+import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 
 interface IFormData {
   uid: string;
@@ -32,9 +34,23 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname, articleid } = useParams(); //url 参数
   const [title, setTitle] = useState("loading");
+
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/article/list`} title={title} />}
+      extra={
+        <Space>
+          <Link to={`/article/article/${articleid}`} target="_blank">
+            {intl.formatMessage({ id: "buttons.open.in.library" })}
+          </Link>
+          <ArticleTplMaker
+            title={title}
+            type="article"
+            id={articleid}
+            trigger={<Button>获取模版</Button>}
+          />
+        </Space>
+      }
     >
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
@@ -77,57 +93,78 @@ const Widget = () => {
           };
         }}
       >
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="title"
-            required
-            label={intl.formatMessage({
-              id: "forms.fields.title.label",
-            })}
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: "forms.message.title.required",
-                }),
-              },
-            ]}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="subtitle"
-            label={intl.formatMessage({
-              id: "forms.fields.subtitle.label",
-            })}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormTextArea
-            name="summary"
-            width="md"
-            label={intl.formatMessage({
-              id: "forms.fields.summary.label",
-            })}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <LangSelect />
-        </ProForm.Group>
-        <ProForm.Group>
-          <PublicitySelect />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormTextArea
-            name="content"
-            width="md"
-            label={intl.formatMessage({
-              id: "forms.fields.content.label",
-            })}
-          />
-        </ProForm.Group>
+        <Tabs
+          items={[
+            {
+              key: "info",
+              label: intl.formatMessage({ id: "course.basic.info.label" }),
+              children: (
+                <>
+                  <ProForm.Group>
+                    <ProFormText
+                      width="md"
+                      name="title"
+                      required
+                      label={intl.formatMessage({
+                        id: "forms.fields.title.label",
+                      })}
+                      rules={[
+                        {
+                          required: true,
+                          message: intl.formatMessage({
+                            id: "forms.message.title.required",
+                          }),
+                        },
+                      ]}
+                    />
+                    <ProFormText
+                      width="md"
+                      name="subtitle"
+                      label={intl.formatMessage({
+                        id: "forms.fields.subtitle.label",
+                      })}
+                    />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <LangSelect width="md" />
+                    <PublicitySelect width="md" />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <ProFormTextArea
+                      name="summary"
+                      width="lg"
+                      label={intl.formatMessage({
+                        id: "forms.fields.summary.label",
+                      })}
+                    />
+                  </ProForm.Group>
+                </>
+              ),
+            },
+            {
+              key: "content",
+              label: intl.formatMessage({ id: "forms.fields.content.label" }),
+              forceRender: true,
+              children: (
+                <ProForm.Group>
+                  <Form.Item
+                    name="content"
+                    label={
+                      <Space>
+                        {intl.formatMessage({
+                          id: "forms.fields.content.label",
+                        })}
+                        <Button>预览</Button>
+                      </Space>
+                    }
+                  >
+                    <MDEditor />
+                  </Form.Item>
+                </ProForm.Group>
+              ),
+            },
+          ]}
+        />
       </ProForm>
     </Card>
   );

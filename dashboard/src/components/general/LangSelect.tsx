@@ -1,7 +1,10 @@
 import { useIntl } from "react-intl";
 import { ProFormSelect } from "@ant-design/pro-components";
 
-const Widget = () => {
+interface IWidget {
+  width?: number | "md" | "sm" | "xl" | "xs" | "lg";
+}
+const Widget = ({ width }: IWidget) => {
   const intl = useIntl();
 
   const langOptions = [
@@ -21,7 +24,7 @@ const Widget = () => {
   return (
     <ProFormSelect
       options={langOptions}
-      width="sm"
+      width={width}
       name="lang"
       showSearch
       debounceTime={300}

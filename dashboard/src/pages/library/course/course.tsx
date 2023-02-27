@@ -3,18 +3,22 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Divider, message } from "antd";
 
-import CourseShow from "../../../components/course/CourseShow";
 import CourseIntro from "../../../components/course/CourseIntro";
 import TextBook from "../../../components/course/TextBook";
-
 import { IUser } from "../../../components/auth/User";
 import { get } from "../../../request";
-import { ICourseResponse } from "../../../components/api/Course";
+import {
+  ICourseResponse,
+  TCourseExpRequest,
+  TCourseJoinMode,
+} from "../../../components/api/Course";
+import CourseHead from "../../../components/course/CourseHead";
 
 export interface ICourse {
   id: string; //课程ID
   title: string; //标题
   subtitle?: string; //副标题
+  summary?: string;
   teacher?: IUser; //UserID
   privacy?: number; //公开性-公开/内部
   createdAt?: string; //创建时间
@@ -25,6 +29,8 @@ export interface ICourse {
   endAt?: string; //课程结束时间
   intro?: string; //简介
   coverUrl?: string; //封面图片文件名
+  join?: TCourseJoinMode;
+  exp?: TCourseExpRequest;
 }
 const Widget = () => {
   // TODO
@@ -48,6 +54,8 @@ const Widget = () => {
           endAt: json.data.end_at,
           intro: json.data.content,
           coverUrl: json.data.cover,
+          join: json.data.join,
+          exp: json.data.request_exp,
         };
         setCourseInfo(course);
       } else {
@@ -57,7 +65,7 @@ const Widget = () => {
   }, [id]);
   return (
     <div>
-      <CourseShow {...courseInfo} />
+      <CourseHead {...courseInfo} />
       <Divider />
       <CourseIntro {...courseInfo} />
       <Divider />

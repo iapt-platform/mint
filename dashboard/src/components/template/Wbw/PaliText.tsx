@@ -13,8 +13,9 @@ interface IWidget {
   primary?: boolean;
 }
 const Widget = ({ text, primary = true }: IWidget) => {
-  const [paliText, setPaliText] = useState(text);
+  const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
+
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
     if (typeof _paliCode1 === "string") {
@@ -42,7 +43,7 @@ const Widget = ({ text, primary = true }: IWidget) => {
           break;
       }
     }
-  }, [settings]);
+  }, [text, settings]);
   return text ? <span>{paliText}</span> : <></>;
 };
 

@@ -1,43 +1,27 @@
 import { useParams } from "react-router-dom";
-import { ProTable } from "@ant-design/pro-components";
+import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import { Button, Space, Table, Dropdown, Menu, MenuProps } from "antd";
 import {
-  SearchOutlined,
-  DeleteOutlined,
-  ShareAltOutlined,
-} from "@ant-design/icons";
+  Button,
+  Space,
+  Table,
+  Dropdown,
+  Typography,
+  Modal,
+  message,
+} from "antd";
+import { ExclamationCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { ITermListResponse } from "../../../components/api/Term";
-import { get } from "../../../request";
+import {
+  ITermDeleteRequest,
+  ITermListResponse,
+} from "../../../components/api/Term";
+import { delete_2, get } from "../../../request";
 import TermCreate from "../../../components/term/TermCreate";
+import { IDeleteResponse } from "../../../components/api/Article";
+import { useRef } from "react";
 
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "更多查询",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <ShareAltOutlined />,
-      },
-      {
-        key: "3",
-        label: "删除",
-        icon: <DeleteOutlined />,
-      },
-    ]}
-  />
-);
+const { Text } = Typography;
 
 interface IItem {
   sn: number;
@@ -55,9 +39,53 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
 
+  const showDeleteConfirm = (id: string[], title: string) => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title:
+        intl.formatMessage({
+          id: "message.delete.sure",
+        }) +
+        intl.formatMessage({
+          id: "message.irrevocable",
+        }),
+
+      content: title,
+      okText: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      okType: "danger",
+      cancelText: intl.formatMessage({
+        id: "buttons.no",
+      }),
+      onOk() {
+        console.log("delete", id);
+        return delete_2<ITermDeleteRequest, IDeleteResponse>(
+          `/v2/terms/${id}`,
+          {
+            uuid: true,
+            id: id,
+          }
+        )
+          .then((json) => {
+            if (json.ok) {
+              message.success("删除成功");
+              ref.current?.reload();
+            } else {
+              message.error(json.message);
+            }
+          })
+          .catch((e) => console.log("Oops errors!", e));
+      },
+    });
+  };
+
+  const ref = useRef<ActionType>();
+
   return (
     <>
       <ProTable<IItem>
+        actionRef={ref}
         columns={[
           {
             title: intl.formatMessage({
@@ -65,7 +93,7 @@ const Widget = () => {
             }),
             dataIndex: "sn",
             key: "sn",
-            width: 30,
+            width: 80,
             search: false,
           },
           {
@@ -155,11 +183,33 @@ const Widget = () => {
                 <Dropdown.Button
                   key={index}
                   type="link"
-                  overlay={menu}
-                  onClick={() => {
-                    //setWordId(row.wordId);
-                    //setDrawerTitle(row.word);
-                    //setIsEditOpen(true);
+                  menu={{
+                    items: [
+                      {
+                        key: "remove",
+                        label: (
+                          <Text type="danger">
+                            {intl.formatMessage({
+                              id: "buttons.delete",
+                            })}
+                          </Text>
+                        ),
+                        icon: (
+                          <Text type="danger">
+                            <DeleteOutlined />
+                          </Text>
+                        ),
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "remove":
+                          showDeleteConfirm([row.id], row.word);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
                   }}
                 >
                   <TermCreate
@@ -196,11 +246,27 @@ const Widget = () => {
             </span>
           </Space>
         )}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({
+          intl,
+          selectedRowKeys,
+          selectedRows,
+          onCleanSelected,
+        }) => {
           return (
             <Space size={16}>
-              <Button type="link">批量删除</Button>
-              <Button type="link">导出数据</Button>
+              <Button
+                type="link"
+                onClick={() => {
+                  console.log(selectedRowKeys);
+                  showDeleteConfirm(
+                    selectedRowKeys.map((item) => item.toString()),
+                    selectedRowKeys.length + "个单词"
+                  );
+                  onCleanSelected();
+                }}
+              >
+                批量删除
+              </Button>
             </Space>
           );
         }}

@@ -1,23 +1,49 @@
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormInstance,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { message } from "antd";
+import { post } from "../../request";
+import { IGroupRequest, IGroupResponse } from "../api/Group";
+import { useRef } from "react";
 
 interface IFormData {
   name: string;
 }
 
-type IWidgetGroupCreate = {
-  studio: string | undefined;
-};
-const Widget = (param: IWidgetGroupCreate) => {
+interface IWidgetGroupCreate {
+  studio?: string;
+  onCreate?: Function;
+}
+const Widget = ({ studio, onCreate }: IWidgetGroupCreate) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   return (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
         // TODO
+        if (typeof studio === "undefined") {
+          return;
+        }
         console.log(values);
-        message.success(intl.formatMessage({ id: "flashes.success" }));
+        const res = await post<IGroupRequest, IGroupResponse>(`/v2/group`, {
+          name: values.name,
+          studio_name: studio,
+        });
+        console.log(res);
+        if (res.ok) {
+          message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onCreate !== "undefined") {
+            onCreate();
+            formRef.current?.resetFields();
+          }
+        } else {
+          message.error(res.message);
+        }
       }}
     >
       <ProForm.Group>

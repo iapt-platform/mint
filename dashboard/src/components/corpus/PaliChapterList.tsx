@@ -2,36 +2,47 @@ import { List } from "antd";
 
 import PaliChapterCard, { IPaliChapterData } from "./PaliChapterCard";
 
-interface IWidgetPaliChapterList {
-  data: IPaliChapterData[];
-  onChapterClick?: Function;
-}
-
 export interface IChapterClickEvent {
   para: IPaliChapterData;
   event: React.MouseEvent<HTMLDivElement, MouseEvent>;
 }
-const Widget = (prop: IWidgetPaliChapterList) => {
+
+interface IWidgetPaliChapterList {
+  data: IPaliChapterData[];
+  maxLevel?: number;
+  onChapterClick?: Function;
+}
+const Widget = ({
+  data,
+  maxLevel = 8,
+  onChapterClick,
+}: IWidgetPaliChapterList) => {
   return (
     <List
       itemLayout="vertical"
       size="large"
-      dataSource={prop.data}
-      renderItem={(item) => (
-        <List.Item>
-          <PaliChapterCard
-            onTitleClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-              if (typeof prop.onChapterClick !== "undefined") {
-                prop.onChapterClick({
-                  para: item,
-                  event: e,
-                });
-              }
-            }}
-            data={item}
-          />
-        </List.Item>
-      )}
+      dataSource={data}
+      renderItem={(item) =>
+        item.level <= maxLevel ? (
+          <List.Item>
+            <PaliChapterCard
+              onTitleClick={(
+                e: React.MouseEvent<HTMLDivElement, MouseEvent>
+              ) => {
+                if (typeof onChapterClick !== "undefined") {
+                  onChapterClick({
+                    para: item,
+                    event: e,
+                  });
+                }
+              }}
+              data={item}
+            />
+          </List.Item>
+        ) : (
+          <></>
+        )
+      }
     />
   );
 };

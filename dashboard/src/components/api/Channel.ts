@@ -1,3 +1,4 @@
+import { IStudio } from "../auth/StudioName";
 import { IStudioApiResponse, Role } from "./Auth";
 export type TChannelType =
   | "translation"
@@ -8,16 +9,13 @@ export type TChannelType =
 export interface IChannelApiData {
   id: string;
   name: string;
-  type: TChannelType;
+  type?: TChannelType;
 }
 
 export interface ChannelInfoProps {
-  channelName: string;
-  channelId: string;
-  channelType: string;
-  studioName: string;
-  studioId: string;
-  studioType: string;
+  channel: IChannelApiData;
+  studio: IStudio;
+  count?: number;
 }
 
 export type IFinal = [number, boolean];
@@ -25,7 +23,7 @@ export interface IApiResponseChannelData {
   uid: string;
   name: string;
   summary: string;
-  type: string;
+  type: TChannelType;
   studio: IStudioApiResponse;
   lang: string;
   status: number;

@@ -1,10 +1,15 @@
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormInstance,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { message } from "antd";
 
 import { post } from "../../request";
 import { IArticleCreateRequest, IArticleResponse } from "../api/Article";
 import LangSelect from "../general/LangSelect";
+import { useRef } from "react";
 
 interface IFormData {
   title: string;
@@ -12,17 +17,23 @@ interface IFormData {
   studio: string;
 }
 
-type IWidgetArticleCreate = {
+interface IWidget {
   studio?: string;
-};
-const Widget = (prop: IWidgetArticleCreate) => {
+  onSuccess?: Function;
+}
+const Widget = ({ studio, onSuccess }: IWidget) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   return (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
         console.log(values);
-        values.studio = prop.studio ? prop.studio : "";
+        if (typeof studio === "undefined") {
+          return;
+        }
+        values.studio = studio;
         const res = await post<IArticleCreateRequest, IArticleResponse>(
           `/v2/article`,
           values
@@ -30,6 +41,10 @@ const Widget = (prop: IWidgetArticleCreate) => {
         console.log(res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onSuccess !== "undefined") {
+            onSuccess();
+            formRef.current?.resetFields(["title"]);
+          }
         } else {
           message.error(res.message);
         }

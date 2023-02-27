@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Typography } from "antd";
-import MDEditor from "@uiw/react-md-editor";
+import { Space, Typography } from "antd";
 
 import { get } from "../../request";
 import type {
@@ -8,32 +8,21 @@ import type {
   IAnthologyResponse,
 } from "../api/Article";
 import type { IAnthologyData } from "./AnthologyCard";
-import TocTree from "./TocTree";
+import StudioName from "../auth/StudioName";
+import TimeShow from "../general/TimeShow";
+import Marked from "../general/Marked";
+import AnthologyTocTree from "../anthology/AnthologyTocTree";
 
 const { Title, Text } = Typography;
 
-const defaultData: IAnthologyData = {
-  id: "",
-  title: "",
-  subTitle: "",
-  summary: "",
-  articles: [],
-  studio: {
-    id: "",
-    studioName: "",
-    nickName: "",
-    avatar: "",
-  },
-  created_at: "",
-  updated_at: "",
-};
 interface IWidgetAnthologyDetail {
   aid?: string;
   channels?: string[];
   onArticleSelect?: Function;
 }
 const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
-  const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState<IAnthologyData>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("useEffect");
@@ -69,20 +58,30 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   }
   return (
     <>
-      <Title level={4}>{tableData.title}</Title>
+      <Title level={4}>{tableData?.title}</Title>
       <div>
-        <Text type="secondary">{tableData.subTitle}</Text>
+        <Text type="secondary">{tableData?.subTitle}</Text>
       </div>
+      <Space>
+        <StudioName data={tableData?.studio} />
+        <TimeShow
+          time={tableData?.updated_at}
+          title="updated"
+          showTitle={true}
+        />
+      </Space>
       <div>
-        <MDEditor.Markdown source={tableData.summary} />
+        <Marked text={tableData?.summary} />
       </div>
       <Title level={5}>目录</Title>
 
-      <TocTree
-        treeData={tableData.articles}
+      <AnthologyTocTree
+        anthologyId={aid}
         onSelect={(keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(keys);
+          } else {
+            navigate(`/article/article/${keys[0]}/read`);
           }
         }}
       />

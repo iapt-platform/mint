@@ -1,21 +1,23 @@
 import { Space } from "antd";
 import { Avatar } from "antd";
 
-import type { ChannelInfoProps } from "../api/Channel";
+import type { IChannelApiData } from "../api/Channel";
+import { IStudio } from "../auth/StudioName";
 
-type IWidgetChannelListItem = {
-  data: ChannelInfoProps;
+interface IWidget {
+  channel: IChannelApiData;
+  studio: IStudio;
   showProgress?: boolean;
   showLike?: boolean;
-};
+}
 
-const Widget = ({ data, showProgress, showLike }: IWidgetChannelListItem) => {
-  const studioName = data.studioName.slice(0, 2);
+const Widget = ({ channel, studio, showProgress, showLike }: IWidget) => {
+  const studioName = studio.nickName.slice(0, 2);
   return (
     <>
       <Space>
         <Avatar size="small">{studioName}</Avatar>
-        {data.channelName}@{data.studioName}
+        {channel.name}
       </Space>
     </>
   );

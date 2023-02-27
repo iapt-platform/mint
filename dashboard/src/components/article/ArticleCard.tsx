@@ -1,15 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useIntl } from "react-intl";
-import { useState } from "react";
-import { Button, Card, Dropdown, Space, Segmented } from "antd";
+import { Button, Card, Dropdown, Space } from "antd";
 import { MoreOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
-import store from "../../store";
-import { modeChange } from "../../reducers/article-mode";
 import { IWidgetArticleData } from "./ArticleView";
 import ArticleCardMainMenu from "./ArticleCardMainMenu";
-import { ArticleMode } from "./Article";
+import ModeSwitch from "./ModeSwitch";
 
 interface IWidgetArticleCard {
   type?: string;
@@ -28,8 +24,6 @@ const Widget = ({
   onModeChange,
   showCol,
 }: IWidgetArticleCard) => {
-  const intl = useIntl();
-  const [mode, setMode] = useState<string>("read");
   const navigate = useNavigate();
 
   const onClick: MenuProps["onClick"] = (e) => {
@@ -52,39 +46,6 @@ const Widget = ({
       label: "显示分栏",
     },
   ];
-  const modeSwitch = (
-    <Segmented
-      size="middle"
-      options={[
-        {
-          label: intl.formatMessage({ id: "buttons.read" }),
-          value: "read",
-        },
-        {
-          label: intl.formatMessage({ id: "buttons.translate" }),
-          value: "edit",
-        },
-        {
-          label: intl.formatMessage({ id: "buttons.wbw" }),
-          value: "wbw",
-        },
-      ]}
-      value={mode}
-      onChange={(value) => {
-        const newMode = value.toString();
-        if (typeof onModeChange !== "undefined") {
-          if (mode === "read" || newMode === "read") {
-            onModeChange(newMode);
-          }
-        }
-        setMode(newMode);
-        //发布mode变更
-        store.dispatch(modeChange(newMode as ArticleMode));
-        //修改url
-        navigate(`/article/${type}/${articleId}/${newMode}`);
-      }}
-    />
-  );
 
   const contextMenu = (
     <Dropdown menu={{ items, onClick }} placement="bottomRight">
@@ -102,7 +63,14 @@ const Widget = ({
       }
       extra={
         <Space>
-          {modeSwitch}
+          <ModeSwitch
+            onModeChange={(mode: string) => {
+              if (typeof onModeChange !== "undefined") {
+                onModeChange(mode);
+              }
+              navigate(`/article/${type}/${articleId}/${mode}`);
+            }}
+          />
           <Button
             shape="circle"
             size="small"

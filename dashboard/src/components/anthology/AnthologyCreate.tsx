@@ -1,10 +1,15 @@
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormInstance,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { message } from "antd";
 
 import LangSelect from "../general/LangSelect";
 import { IAnthologyCreateRequest, IAnthologyResponse } from "../api/Article";
 import { post } from "../../request";
+import { useRef } from "react";
 
 interface IFormData {
   title: string;
@@ -12,17 +17,22 @@ interface IFormData {
   studio: string;
 }
 
-type IWidgetAnthologyCreate = {
+interface IWidget {
   studio?: string;
-};
-const Widget = (prop: IWidgetAnthologyCreate) => {
+  onSuccess?: Function;
+}
+const Widget = ({ studio, onSuccess }: IWidget) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   return (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
-        // TODO
-        values.studio = prop.studio ? prop.studio : "";
+        if (typeof studio === "undefined") {
+          return;
+        }
+        values.studio = studio;
         console.log(values);
         const res = await post<IAnthologyCreateRequest, IAnthologyResponse>(
           `/v2/anthology`,
@@ -31,6 +41,10 @@ const Widget = (prop: IWidgetAnthologyCreate) => {
         console.log(res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onSuccess !== "undefined") {
+            onSuccess();
+            formRef.current?.resetFields(["title"]);
+          }
         } else {
           message.error(res.message);
         }

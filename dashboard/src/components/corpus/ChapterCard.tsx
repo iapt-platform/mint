@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
-import { Row, Col } from "antd";
+import { Row, Col, Progress, Space } from "antd";
 import { Typography } from "antd";
 
 import TimeShow from "../general/TimeShow";
 import TocPath from "../corpus/TocPath";
 import TagArea from "../tag/TagArea";
-import type { TagNode } from "../tag/TagArea";
-import type { ChannelInfoProps } from "../api/Channel";
+import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
+import { IStudio } from "../auth/StudioName";
+import { ITagData } from "./ChapterTagList";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -18,8 +19,10 @@ export interface ChapterData {
   book: number;
   paragraph: number;
   summary: string;
-  tag: TagNode[];
-  channel: ChannelInfoProps;
+  tag: ITagData[];
+  channel: IChannelApiData;
+  studio: IStudio;
+  progress: number;
   createdAt: string;
   updatedAt: string;
   hit: number;
@@ -28,11 +31,12 @@ export interface ChapterData {
 
 interface IWidgetChapterCard {
   data: ChapterData;
+  onTagClick?: Function;
 }
 
-const Widget = ({ data }: IWidgetChapterCard) => {
+const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
-  const tags = data.tag;
+  console.log("path", data.path);
   return (
     <>
       <Row>
@@ -41,16 +45,18 @@ const Widget = ({ data }: IWidgetChapterCard) => {
             <Col span={16}>
               <Title level={5}>
                 <Link
-                  to={`/article/chapter/${data.book}-${data.paragraph}_${data.channel.channelId}`}
+                  to={`/article/chapter/${data.book}-${data.paragraph}_${data.channel.id}`}
                   target="_blank"
                 >
-                  {data.title}
+                  {data.title ? data.title : data.paliTitle}
                 </Link>
               </Title>
               <Text type="secondary">{data.paliTitle}</Text>
               <TocPath data={path} />
             </Col>
-            <Col span={8}>进度条</Col>
+            <Col span={8}>
+              <Progress percent={data.progress} size="small" />
+            </Col>
           </Row>
           <Row>
             <Col>
@@ -65,17 +71,22 @@ const Widget = ({ data }: IWidgetChapterCard) => {
               </Paragraph>
             </Col>
           </Row>
-          <Row>
-            <Col span={16}>
-              <TagArea data={tags} />
-            </Col>
-            <Col span={5}>
-              <ChannelListItem data={data.channel} />
-            </Col>
-            <Col span={3}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              <TagArea
+                data={data.tag}
+                onTagClick={(tag: string) => {
+                  if (typeof onTagClick !== "undefined") {
+                    onTagClick(tag);
+                  }
+                }}
+              />
+            </div>
+            <Space>
+              <ChannelListItem channel={data.channel} studio={data.studio} />
               <TimeShow time={data.updatedAt} title="UpdatedAt" />
-            </Col>
-          </Row>
+            </Space>
+          </div>
         </Col>
       </Row>
     </>

@@ -76,17 +76,17 @@ const Widget = ({ groupId, onCreated }: IWidget) => {
       </ProForm.Group>
     </ProForm>
   );
-  const handleClickChange = (open: boolean) => {
-    setOpen(open);
-  };
+
   return (
     <Popover
-      placement="bottom"
+      placement="bottomLeft"
       arrowPointAtCenter
       content={form}
       trigger="click"
       open={open}
-      onOpenChange={handleClickChange}
+      onOpenChange={(open: boolean) => {
+        setOpen(open);
+      }}
     >
       <Button icon={<UserAddOutlined />} key="add" type="primary">
         {intl.formatMessage({ id: "buttons.group.add.member" })}

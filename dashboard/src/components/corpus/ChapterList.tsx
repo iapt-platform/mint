@@ -7,34 +7,41 @@ import ChapterCard from "./ChapterCard";
 import type { ChapterData } from "./ChapterCard";
 import type { ChannelFilterProps } from "../channel/ChannelList";
 
-const defaultChannelFilterProps: ChannelFilterProps = {
-  chapterProgress: 0.9,
-  lang: "en",
-  channelType: "translation",
-};
-
-interface IWidgetChannelList {
+interface IWidget {
   filter?: ChannelFilterProps;
+  progress?: number;
+  lang?: string;
+  type?: string;
   tags?: string[];
+  onTagClick?: Function;
 }
 
 const Widget = ({
-  filter = defaultChannelFilterProps,
+  progress = 0.9,
+  lang = "zh",
+  type = "translation",
   tags = [],
-}: IWidgetChannelList) => {
+  onTagClick,
+}: IWidget) => {
   const [tableData, setTableData] = useState<ChapterData[]>([]);
-
+  const [total, setTotal] = useState<number>();
+  const [currPage, setCurrPage] = useState<number>(1);
   useEffect(() => {
-    console.log("useEffect");
+    fetchData(
+      { chapterProgress: progress, lang: lang, channelType: type },
+      tags,
+      currPage
+    );
+  }, [progress, lang, type, tags, currPage]);
 
-    fetchData(filter, tags);
-  }, [tags, filter]);
-
-  function fetchData(filter: ChannelFilterProps, tags: string[]) {
+  function fetchData(filter: ChannelFilterProps, tags: string[], page = 1) {
     const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
-    get<IChapterListResponse>(`/v2/progress?view=chapter${strTags}`).then(
-      (json) => {
-        console.log("chapter list ajax", json);
+    const offset = (page - 1) * 20;
+    get<IChapterListResponse>(
+      `/v2/progress?view=chapter${strTags}&offset=${offset}&progress=${filter.chapterProgress}&lang=${filter.lang}&channel_type=${filter.channelType}`
+    ).then((json) => {
+      console.log("chapter list ajax", json);
+      if (json.ok) {
         let newTree: ChapterData[] = json.data.rows.map(
           (item: IChapterData) => {
             return {
@@ -44,15 +51,16 @@ const Widget = ({
               book: item.book,
               paragraph: item.para,
               summary: item.summary,
-              tag: item.tags,
+              tag: item.tags.map((item) => {
+                return { title: item.name, key: item.name };
+              }),
               channel: {
-                channelName: item.channel.name,
-                channelId: item.channel_id,
-                channelType: "translation",
-                studioName: item.channel.name,
-                studioId: item.channel.owner_uid,
-                studioType: "",
+                name: item.channel.name,
+                id: item.channel_id,
+                type: "translation",
               },
+              studio: item.studio,
+              progress: Math.round(item.progress * 100),
               createdAt: item.created_at,
               updatedAt: item.updated_at,
               hit: item.view,
@@ -61,19 +69,44 @@ const Widget = ({
             };
           }
         );
+        setTotal(json.data.count);
         setTableData(newTree);
+      } else {
+        setTotal(0);
+        setTableData([]);
       }
-    );
+    });
   }
 
   return (
     <List
       itemLayout="vertical"
-      size="large"
+      size="small"
       dataSource={tableData}
+      pagination={{
+        onChange: (page) => {
+          console.log(page);
+          setCurrPage(page);
+        },
+        showQuickJumper: true,
+        showSizeChanger: false,
+        pageSize: 20,
+        total: total,
+        position: "both",
+        showTotal: (total) => {
+          return `结果: ${total}`;
+        },
+      }}
       renderItem={(item) => (
         <List.Item>
-          <ChapterCard data={item} />
+          <ChapterCard
+            data={item}
+            onTagClick={(tag: string) => {
+              if (typeof onTagClick !== "undefined") {
+                onTagClick(tag);
+              }
+            }}
+          />
         </List.Item>
       )}
     />

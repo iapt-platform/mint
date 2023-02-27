@@ -1,22 +1,42 @@
 //课程详情图片标题按钮主讲人组合
 import { Link } from "react-router-dom";
-import { Image, Button, Space, Col, Row, Breadcrumb } from "antd";
+import { Image, Space, Col, Row, Breadcrumb } from "antd";
 import { Typography } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
 import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
+import JoinCourse from "./JoinCourse";
+import { TCourseExpRequest, TCourseJoinMode } from "../api/Course";
+import { useIntl } from "react-intl";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 interface IWidget {
+  id?: string;
   title?: string;
   subtitle?: string;
   coverUrl?: string;
+  startAt?: string;
+  endAt?: string;
   teacher?: IUser;
+  join?: TCourseJoinMode;
+  exp?: TCourseExpRequest;
 }
-const Widget = ({ title, subtitle, coverUrl, teacher }: IWidget) => {
+const Widget = ({
+  id,
+  title,
+  subtitle,
+  coverUrl,
+  teacher,
+  startAt,
+  endAt,
+  join,
+  exp,
+}: IWidget) => {
+  const intl = useIntl();
+
   return (
     <>
       <Row>
@@ -42,7 +62,21 @@ const Widget = ({ title, subtitle, coverUrl, teacher }: IWidget) => {
               <Space direction="vertical">
                 <Title level={3}>{title}</Title>
                 <Title level={5}>{subtitle}</Title>
-                <Button type="primary">关注</Button>
+
+                <Text>
+                  {startAt}——{endAt}
+                </Text>
+                <Text>
+                  {intl.formatMessage({
+                    id: `course.join.mode.${join}.message`,
+                  })}
+                </Text>
+                <JoinCourse
+                  courseId={id ? id : ""}
+                  expRequest={exp}
+                  joinMode={join}
+                  startAt={startAt}
+                />
               </Space>
             </Space>
             <div>

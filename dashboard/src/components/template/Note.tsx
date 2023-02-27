@@ -2,30 +2,34 @@ import { Popover } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 
-const { Paragraph, Link } = Typography;
+const { Link } = Typography;
 
 interface IWidgetNoteCtl {
   trigger?: string;
   note?: string;
+  children?: React.ReactNode;
 }
-const NoteCtl = ({ trigger, note }: IWidgetNoteCtl) => {
-  const noteCard = <Paragraph copyable>{note}</Paragraph>;
+const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
   const show = trigger ? trigger : <InfoCircleOutlined />;
   return (
     <>
-      <Popover content={noteCard} placement="bottom">
+      <Popover
+        content={<div style={{ width: 500 }}>{children}</div>}
+        placement="bottom"
+      >
         <Link>{show}</Link>
       </Popover>
     </>
   );
 };
 
-interface IWidgetTerm {
+interface IWidget {
   props: string;
+  children?: React.ReactNode;
 }
-const Widget = ({ props }: IWidgetTerm) => {
+const Widget = ({ props, children }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetNoteCtl;
-  return <NoteCtl {...prop} />;
+  return <NoteCtl {...prop}>{children}</NoteCtl>;
 };
 
 export default Widget;

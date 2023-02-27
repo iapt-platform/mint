@@ -131,9 +131,9 @@ const items = {
   "dict.fields.type.un.label": "连音",
   "dict.fields.type.un.short.label": "连音",
   "dict.fields.type.none.label": "无",
-  "dict.fields.type.none.short.label": "",
+  "dict.fields.type.none.short.label": "_",
   "dict.fields.type.null.label": "空",
-  "dict.fields.type.null.short.label": "",
+  "dict.fields.type.null.short.label": "_",
   "dict.fields.type.?.label": "?",
   "dict.fields.type.?.short.label": "?",
   "dict.fields.type.ti:base.label": "三性词干",
@@ -144,6 +144,8 @@ const items = {
   "dict.fields.type.v:base.short.label": "动词干",
   "dict.fields.type.adj:base.label": "形词干",
   "dict.fields.type.adj:base.short.label": "形词干",
+  "dict.fields.type.fpp.label": "未来被动分词",
+  "dict.fields.type.fpp.short": "未被分",
 };
 
 export default items;
