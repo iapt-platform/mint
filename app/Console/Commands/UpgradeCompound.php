@@ -16,7 +16,7 @@ class UpgradeCompound extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:compound {word?} {--test}';
+    protected $signature = 'upgrade:compound {word?} {--debug} {--test}';
 
     /**
      * The console command description.
@@ -55,11 +55,16 @@ class UpgradeCompound extends Command
 		$_word = $this->argument('word');
 		if(!empty($_word)){
 			$ts = new TurboSplit();
+            if($this->option('debug')){
+                $ts->debug(true);
+            }
 			$results = $ts->splitA($_word);
 			Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
 			foreach ($results as $key => $value) {
 				# code...
-				Storage::disk('local')->append("tmp/compound1.csv", "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}");
+                $output = "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}";
+                $this->info($output);
+				Storage::disk('local')->append("tmp/compound1.csv", $output);
 			}
 			return 0;
 		}
@@ -85,8 +90,9 @@ class UpgradeCompound extends Command
 					$parts = $ts->splitA($word->word);
 					foreach ($parts as $part) {
 						# code...
-						$this->info("{$part['word']},{$part['factors']},{$part['confidence']}");
-						Storage::disk('local')->append("tmp/compound.md", "- `{$part['word']}`,{$part['factors']},{$part['confidence']}");
+                        $info = "`{$part['word']}`,{$part['factors']},{$part['confidence']}";
+						$this->info($info);
+						Storage::disk('local')->append("tmp/compound.md", "- {$info}");
 					}
 				}
 			}
