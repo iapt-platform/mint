@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\DictMeaningController;
 
 class VocabularyResource extends JsonResource
 {
@@ -15,15 +16,11 @@ class VocabularyResource extends JsonResource
      */
     public function toArray($request)
     {
-        $key = "dict_first_mean/";
-        $meaning = Cache::get($key."zh-Hans/{$this['word']}");
-        if(empty($meaning)){
-            $meaning = Cache::get($key."com/{$this['word']}");
-        }
+        $dictMeaning = new DictMeaningController();
         return [
             "word"=>$this['word'],
             "count"=> $this['count'],
-            "meaning"=> $meaning,
+            "meaning"=> $dictMeaning->get($this['word'],$request->get("lang","zh-Hans")),
         ];
     }
 }
