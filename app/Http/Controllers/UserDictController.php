@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api;
 use App\Http\Api\AuthApi;
+use App\Http\Api\DictApi;
 
 class UserDictController extends Controller
 {
@@ -49,6 +50,13 @@ class UserDictController extends Controller
 				$table = UserDict::select($indexCol)
 									->where('word', $_GET["word"]);
 				break;
+            case 'compound':
+                $dict_id = DictApi::getSysDict('robot_compound');
+                if($dict_id===false){
+                    $this->error('no robot_compound');
+                }
+                $table = UserDict::where("dict_id",$dict_id)->where("word",$request->get('word'));
+                break;
 			default:
 				# code...
 				break;
@@ -59,7 +67,11 @@ class UserDictController extends Controller
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
-            $table->orderBy('updated_at','desc');
+            if($request->get('view') === "compound"){
+                $table->orderBy('confidence','desc');
+            }else{
+                $table->orderBy('updated_at','desc');
+            }
         }
         $count = $table->count();
         if(isset($_GET["limit"])){
