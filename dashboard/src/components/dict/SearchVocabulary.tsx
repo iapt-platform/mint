@@ -12,10 +12,11 @@ interface ValueType {
   value: string | number;
 }
 interface IWidget {
-  onSearch?: Function;
   value?: string;
+  onSearch?: Function;
+  onSplit?: Function;
 }
-const Widget = ({ value, onSearch }: IWidget) => {
+const Widget = ({ value, onSplit, onSearch }: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -103,6 +104,9 @@ const Widget = ({ value, onSearch }: IWidget) => {
           const strFactors = value.replaceAll("+", "-");
           if (strFactors.indexOf("-") >= 0) {
             setFactors(strFactors.split("-"));
+            if (typeof onSplit !== "undefined") {
+              onSplit(strFactors.replaceAll("-", "+"));
+            }
           } else {
             setFactors([]);
           }

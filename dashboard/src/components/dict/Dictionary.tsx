@@ -4,6 +4,7 @@ import { Layout, Affix, Col, Row } from "antd";
 
 import DictSearch from "./DictSearch";
 import SearchVocabulary from "./SearchVocabulary";
+import Compound from "./Compound";
 
 const { Content } = Layout;
 
@@ -14,6 +15,7 @@ interface IWidget {
 }
 const Widget = ({ word, compact = false, onSearch }: IWidget) => {
   const navigate = useNavigate();
+  const [split, setSplit] = useState<string>();
   const [wordSearch, setWordSearch] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
@@ -43,6 +45,9 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
                     onSearch(value, isFactor);
                   }
                 }}
+                onSplit={(word: string | undefined) => {
+                  setSplit(word);
+                }}
               />
             </Col>
             {compact ? <></> : <Col flex="auto"></Col>}
@@ -53,6 +58,7 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
         <Row>
           {compact ? <></> : <Col flex="auto"></Col>}
           <Col flex="1260px">
+            <Compound word={wordSearch} add={split} />
             <DictSearch word={wordSearch} compact={compact} />
           </Col>
           {compact ? <></> : <Col flex="auto"></Col>}
