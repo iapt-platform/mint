@@ -35,6 +35,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ArticleMapController;
 use App\Http\Controllers\VocabularyController;
 use App\Http\Controllers\CaseController;
+use App\Http\Controllers\DictMeaningController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +105,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('article-map',ArticleMapController::class);
     Route::apiResource('vocabulary',VocabularyController::class);
     Route::apiResource('case',CaseController::class);
+    Route::apiResource('dict-meaning',DictMeaningController::class);
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
