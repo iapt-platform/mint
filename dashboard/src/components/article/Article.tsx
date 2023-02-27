@@ -12,6 +12,7 @@ import { ITextbook, refresh } from "../../reducers/current-course";
 import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
 import "./article.css";
+import CommentListCard from "../comment/CommentListCard";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -201,6 +202,7 @@ const Widget = ({
         articleId={articleId}
       />
       {extra}
+      <CommentListCard resId={articleData?.uid} resType="article" />
     </div>
   );
 };
