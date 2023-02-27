@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Drawer } from "antd";
 import CommentTopic from "./CommentTopic";
-import CommentListCard from "./CommentListCard";
+import CommentListCard, { TResType } from "./CommentListCard";
 import { IComment } from "./CommentItem";
 
 export interface IAnswerCount {
@@ -11,7 +11,7 @@ export interface IAnswerCount {
 interface IWidget {
   trigger?: JSX.Element;
   resId?: string;
-  resType?: string;
+  resType?: TResType;
   onCommentCountChange?: Function;
 }
 const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
@@ -19,7 +19,7 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
-  //console.log(resId, resType);
+
   const showDrawer = () => {
     setOpen(true);
   };

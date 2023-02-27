@@ -9,9 +9,10 @@ import { IComment } from "./CommentItem";
 import CommentList from "./CommentList";
 import { IAnswerCount } from "./CommentBox";
 
+export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 interface IWidget {
   resId?: string;
-  resType?: string;
+  resType?: TResType;
   topicId?: string;
   changedAnswerCount?: IAnswerCount;
   onSelect?: Function;
@@ -89,18 +90,21 @@ const Widget = ({
 
   return (
     <div>
-      <Card title="问题列表" extra={<a href="#">More</a>}>
-        <CommentList
-          onSelect={(
-            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-            comment: IComment
-          ) => {
-            if (typeof onSelect !== "undefined") {
-              onSelect(e, comment);
-            }
-          }}
-          data={data}
-        />
+      <Card title="问答" extra={<a href="#">More</a>}>
+        {data.length > 0 ? (
+          <CommentList
+            onSelect={(
+              e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+              comment: IComment
+            ) => {
+              if (typeof onSelect !== "undefined") {
+                onSelect(e, comment);
+              }
+            }}
+            data={data}
+          />
+        ) : undefined}
+
         {resId && resType ? (
           <CommentCreate
             resId={resId}
@@ -114,9 +118,7 @@ const Widget = ({
               setData([...data, newData]);
             }}
           />
-        ) : (
-          <></>
-        )}
+        ) : undefined}
       </Card>
     </div>
   );
