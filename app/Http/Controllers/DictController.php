@@ -74,6 +74,7 @@ class DictController extends Controller
                 $dictList=[
                     'href'=> '#'.$anchor,
                     'title'=> "{$word}",
+                    'children' => [],
                 ];
                 foreach ($result as $key => $value) {
                     # code...
@@ -98,11 +99,6 @@ class DictController extends Controller
                     }else{
                         array_push($wordDict['others']['others'],$currData);
                     }
-
-                    $dictList['children'][] = [
-                        'href'=> '#'.$anchor,
-                        'title'=> "{$dictInfo->shortname}",
-                    ];
                 }
                 /**
                  * 把树状数据变为扁平数据
@@ -114,6 +110,18 @@ class DictController extends Controller
                         foreach ($dictId as $oneData) {
                             # code...
                             $wordData['dict'][] = $oneData;
+                            if(isset($dictList['children']) && count($dictList['children'])>0){
+                                $lastHref = end($dictList['children'])['href'];
+                            }else{
+                                $lastHref = '';
+                            }
+                            $currHref = '#'.$oneData['anchor'];
+                            if($lastHref !== $currHref){
+                                $dictList['children'][] = [
+                                    'href'=> $currHref,
+                                    'title'=> $oneData['shortname'],
+                                ];
+                            }
                         }
                     }
                 }
