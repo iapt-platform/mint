@@ -164,7 +164,6 @@ const Widget = ({
         search={{
           filterType: "light",
         }}
-        showActions="hover"
         metas={{
           title: {
             render(dom, entity, index, action, schema) {
@@ -260,7 +259,7 @@ const Widget = ({
           },
           status: {
             // 自己扩展的字段，主要用于筛选，不在列表中显示
-            title: "筛选",
+            title: "版本筛选",
             valueType: "select",
             valueEnum: {
               all: { text: "全部", status: "Default" },
