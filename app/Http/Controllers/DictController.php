@@ -7,6 +7,7 @@ use App\Models\DictInfo;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\DictApi;
 
 require_once __DIR__."/../../../public/app/dict/grm_abbr.php";
 
@@ -30,6 +31,8 @@ class DictController extends Controller
         $word_base = [];
         $searched = [];
         $words[$request->get('word')] = [];
+        $userLang = $request->get('lang',"zh");
+
         for ($i=0; $i < 2; $i++) {
             # code...
             $word_base = [];
@@ -47,6 +50,27 @@ class DictController extends Controller
                     'anchor'=> $anchor,
                     'dict' => [],
                 ];
+                /**
+                 * 按照语言调整词典顺序
+                 * 算法：准备理想的词典顺序容器。
+                 * 将查询的结果放置在对应的容器中。
+                 * 最后将结果扁平化
+                 * 准备字典容器
+                * $wordDict = [
+                *    "zh"=>[
+                *        "0d79e8e8-1430-4c99-a0f1-b74f2b4b26d8"=>[];
+                *    ]
+                * ]
+                 */
+
+                foreach (DictApi::langOrder($userLang) as  $langId) {
+                    # code...
+                    $dictContainer = [];
+                    foreach (DictApi::dictOrder($langId) as $dictId) {
+                        $dictContainer[$dictId] = [];
+                    }
+                    $wordDict[$langId] = $dictContainer;
+                }
                 $dictList=[
                     'href'=> '#'.$anchor,
                     'title'=> "{$word}",
@@ -54,19 +78,46 @@ class DictController extends Controller
                 foreach ($result as $key => $value) {
                     # code...
                     $dictInfo= DictInfo::find($value->dict_id);
-
+                    $dict_lang = explode('-',$dictInfo->dest_lang);
                     $anchor = "{$word}-{$dictInfo->shortname}";
-                    $wordData['dict'][] = [
-                        'dictname'=> $dictInfo->name,
-                        'word'=> $word,
-                        'note'=> $this->GrmAbbr($value->note,0),
-                        'anchor'=> $anchor,
+                    $currData = [
+                            'dictname'=> $dictInfo->name,
+                            'shortname'=> $dictInfo->shortname,
+                            'dict_id' => $value->dict_id,
+                            'lang' => $dict_lang[0],
+                            'word'=> $word,
+                            'note'=> $this->GrmAbbr($value->note,0),
+                            'anchor'=> $anchor,
                     ];
+                    if(isset($wordDict[$dict_lang[0]])){
+                        if(isset($wordDict[$dict_lang[0]][$value->dict_id])){
+                            array_push($wordDict[$dict_lang[0]][$value->dict_id],$currData);
+                        }else{
+                            array_push($wordDict[$dict_lang[0]]["others"],$currData);
+                        }
+                    }else{
+                        array_push($wordDict['others']['others'],$currData);
+                    }
+
                     $dictList['children'][] = [
                         'href'=> '#'.$anchor,
                         'title'=> "{$dictInfo->shortname}",
                     ];
                 }
+                /**
+                 * 把树状数据变为扁平数据
+                 */
+                foreach ($wordDict as $oneLang) {
+                    # code...
+                    foreach ($oneLang as $langId => $dictId) {
+                        # code...
+                        foreach ($dictId as $oneData) {
+                            # code...
+                            $wordData['dict'][] = $oneData;
+                        }
+                    }
+                }
+
                 $wordDataOutput[]=$wordData;
                 $dictListOutput[]=$dictList;
 
