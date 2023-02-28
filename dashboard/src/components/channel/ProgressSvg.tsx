@@ -28,6 +28,7 @@ const Widget = ({ data, width = 300 }: IWidget) => {
     finished += item[1] ? stroke_width : 0;
     return (
       <rect
+        key={id}
         x={curr_x - stroke_width}
         y={0}
         height={svg_height}
@@ -38,6 +39,7 @@ const Widget = ({ data, width = 300 }: IWidget) => {
   });
   const finishedBar = (
     <rect
+      key="2"
       x={0}
       y={svg_height / 2 - svg_height / 20}
       width={finished}
@@ -48,30 +50,36 @@ const Widget = ({ data, width = 300 }: IWidget) => {
   const progress = (
     <svg viewBox={`0 0 ${svg_width} ${svg_height} `} width={"100%"}>
       <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient key="1" id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop
+            key="1"
             offset="0%"
             style={{ stopColor: "rgb(0,180,0)", stopOpacity: 1 }}
           />
           <stop
+            key="2"
             offset="50%"
             style={{ stopColor: "rgb(255,255,255)", stopOpacity: 0.5 }}
           />
           <stop
+            key="3"
             offset="100%"
             style={{ stopColor: "rgb(0,180,0)", stopOpacity: 1 }}
           />
         </linearGradient>
-        <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient key="2" id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop
+            key="1"
             offset="0%"
             style={{ stopColor: "rgb(180,180,180)", stopOpacity: 1 }}
           />
           <stop
+            key="2"
             offset="50%"
             style={{ stopColor: "rgb(255,255,255)", stopOpacity: 0.5 }}
           />
           <stop
+            key="3"
             offset="100%"
             style={{ stopColor: "rgb(180,180,180)", stopOpacity: 1 }}
           />
@@ -81,23 +89,6 @@ const Widget = ({ data, width = 300 }: IWidget) => {
       {finishedBar}
     </svg>
   );
-  /*
-			output +=
-				"<rect  x='0' y='0'  width='" + svg_width + "' height='" + svg_height / 5 + "' class='progress_bar_bg' />";
-			output +=
-				"<rect  x='0' y='0'  width='" +
-				allFinal +
-				"' height='" +
-				svg_height / 5 +
-				"' class='progress_bar_percent' style='stroke-width: 0; fill: rgb(100, 228, 100);'/>";
-			output += '<text x="0" y="' + svg_height + '" font-size="' + svg_height * 0.8 + '">';
-			output += channalinfo["count"] + "/" + channalinfo["all"] + "@" + curr_x;
-			output += "</text>";
-			output += "<svg>";
-			output += "</div>";
-*/
-  //进度结束
-
   return <div style={{ width: width }}>{progress}</div>;
 };
 
