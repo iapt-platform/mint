@@ -66,7 +66,14 @@ const Widget = ({ word, add, split }: IWidget) => {
     );
   }, [word]);
   return (
-    <div>
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 560,
+        marginLeft: "auto",
+        marginRight: "auto",
+      }}
+    >
       <Select
         value={currValue}
         style={{ width: "100%" }}
