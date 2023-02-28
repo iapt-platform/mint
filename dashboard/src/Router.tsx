@@ -83,6 +83,8 @@ import StudioAnthology from "./pages/studio/anthology";
 import StudioAnthologyList from "./pages/studio/anthology/list";
 import StudioAnthologyEdit from "./pages/studio/anthology/edit";
 
+import StudioSetting from "./pages/studio/setting";
+
 import StudioAnalysis from "./pages/studio/analysis";
 import StudioAnalysisList from "./pages/studio/analysis/list";
 import { ConfigProvider } from "antd";
@@ -234,6 +236,7 @@ const Widget = () => {
               element={<StudioAnthologyEdit />}
             />
           </Route>
+          <Route path="setting" element={<StudioSetting />} />
 
           <Route path="analysis" element={<StudioAnalysis />}>
             <Route path="list" element={<StudioAnalysisList />} />
