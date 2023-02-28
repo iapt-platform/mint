@@ -43,6 +43,7 @@ const items = {
   "columns.studio.collaboration.title": "协作",
   "columns.studio.basic.title": "常用",
   "columns.studio.advance.title": "高级",
+  "columns.studio.setting.title": "设置",
   ...buttons,
   ...forms,
   ...tables,
