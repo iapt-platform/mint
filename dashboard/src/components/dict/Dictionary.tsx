@@ -46,6 +46,7 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
                   }
                 }}
                 onSplit={(word: string | undefined) => {
+                  console.log("onSplit", word);
                   setSplit(word);
                 }}
               />

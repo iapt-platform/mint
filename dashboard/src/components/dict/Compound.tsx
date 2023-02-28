@@ -23,19 +23,30 @@ const Widget = ({ word, add, split }: IWidget) => {
   const [factors, setFactors] = useState<IOptions[]>([]);
   const [meaningData, setMeaningData] = useState<IFirstMeaning[]>();
   const [currValue, setCurrValue] = useState<string>();
-  const onSelectChange = (value: string) => {
+  const onSelectChange = (value?: string) => {
     console.log("selected", value);
-    get<IDictFirstMeaningResponse>(
-      `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-")
-    ).then((json) => {
-      if (json.ok) {
-        setMeaningData(json.data);
-      }
-    });
+    if (typeof value === "undefined") {
+      setMeaningData(undefined);
+    } else {
+      get<IDictFirstMeaningResponse>(
+        `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-")
+      ).then((json) => {
+        if (json.ok) {
+          setMeaningData(json.data);
+        }
+      });
+    }
   };
   useEffect(() => {
+    console.log("compound changed", add);
+  }, [add]);
+  useEffect(() => {
+    console.log("compound changed", add, compound);
     if (typeof add === "undefined") {
       setFactors(compound);
+      const value = compound.length > 0 ? compound[0].value : undefined;
+      setCurrValue(value);
+      onSelectChange(value);
     } else {
       setFactors([{ value: add, label: add }, ...compound]);
       setCurrValue(add);
@@ -62,18 +73,20 @@ const Widget = ({ word, add, split }: IWidget) => {
         onChange={onSelectChange}
         options={factors}
       />
-      <List
-        size="small"
-        dataSource={meaningData}
-        renderItem={(item) => (
-          <List.Item>
-            <div>
-              <Text strong>{item.word}</Text>{" "}
-              <Text type="secondary">{item.meaning}</Text>
-            </div>
-          </List.Item>
-        )}
-      />
+      {meaningData ? (
+        <List
+          size="small"
+          dataSource={meaningData}
+          renderItem={(item) => (
+            <List.Item>
+              <div>
+                <Text strong>{item.word}</Text>{" "}
+                <Text type="secondary">{item.meaning}</Text>
+              </div>
+            </List.Item>
+          )}
+        />
+      ) : undefined}
     </div>
   );
 };
