@@ -1656,6 +1656,11 @@ function myEndingTooltip(inStr){
             tooltip:'和',
         },
         {
+            id:"my_eyya",
+            name:"ကောင်း",
+            tooltip:'也许',
+        },
+        {
             id:"my_adv",
             name:"စွာ",
             tooltip:'副词',
