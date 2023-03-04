@@ -9,6 +9,7 @@ import {
   SaveOutlined,
 } from "@ant-design/icons";
 import { Button, Divider, Space } from "antd";
+import { useIntl } from "react-intl";
 
 interface TreeNodeData {
   key: string;
@@ -125,6 +126,8 @@ const Widget = ({
   onSelect,
   onSave,
 }: IWidgetEditableTree) => {
+  const intl = useIntl();
+
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
 
@@ -241,7 +244,7 @@ const Widget = ({
             setGData(tmp);
           }}
         >
-          删除
+          {intl.formatMessage({ id: "buttons.remove" })}
         </Button>
         <Button
           icon={<SaveOutlined />}
@@ -252,7 +255,7 @@ const Widget = ({
           }}
           type="primary"
         >
-          保存
+          {intl.formatMessage({ id: "buttons.save" })}
         </Button>
       </Space>
       <Divider></Divider>
