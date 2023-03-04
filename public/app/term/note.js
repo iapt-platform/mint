@@ -1591,6 +1591,16 @@ function myEndingTooltip(inStr){
             tooltip:'同时发生的时间状语(当……的时候)',
         },
         {
+            id:"my_def_eva",
+            name:"မှသာ",
+            tooltip:'只有……才……',
+        },
+        {
+            id:"my_def_eva",
+            name:"မှသာလျှင်",
+            tooltip:'只有……才……',
+        },
+        {
             id:"my_eva",
             name:"သာလျှင်",
             tooltip:'就，只是',
