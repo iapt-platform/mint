@@ -107,7 +107,7 @@ class UpgradeCompound extends Command
 								->exists();
 
 			if($isExists){
-				$this->info("found:{$word->real}");
+				$this->info("Exists:{$word->real}");
 				continue;
 			}
 			# code...

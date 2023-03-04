@@ -4,6 +4,7 @@ namespace App\Tools;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserDict;
+use App\Models\WordIndex;
 
 
 class CaseMan
@@ -24,7 +25,33 @@ class CaseMan
      * @return void
      */
 	public function BaseToWord($base){
-
+        $newWord = array();
+        $case = new CaseEnding();
+        foreach ($case->ending as  $ending) {
+            # code...
+            $endingLen = mb_strlen($ending[0], "UTF-8");
+            $wordEnd = mb_substr($base, 0 - $endingLen, null, "UTF-8");
+            if ($wordEnd === $ending[0]) {
+                //匹配成功
+                $word = mb_substr($base, 0, mb_strlen($base, "UTF-8") - $endingLen, "UTF-8") . $ending[1];
+                if(!isset($newWord[$word])){
+                    $count = WordIndex::where('word',$word)->select(['count','bold'])->first();
+                    if($count){
+                        $newWord[$word] = ["count"=>$count->count,"bold"=>$count->bold];
+                    }else{
+                        $newWord[$word] = false;
+                    }
+                }
+            }
+        }
+        $result = [];
+        foreach ($newWord as $key => $value) {
+            # code...
+            if($value !== false){
+                $result[] = ['word'=>$key,"count"=>$value["count"],"bold"=>$value["bold"]];
+            }
+        }
+        return $result;
 	}
 
 	/**
@@ -47,7 +74,7 @@ class CaseMan
 						# code...
 						$endingLen = mb_strlen($ending[1], "UTF-8");
 						$wordEnd = mb_substr($currWord, 0 - $endingLen, null, "UTF-8");
-						if ($wordEnd == $ending[1]) {
+						if ($wordEnd === $ending[1]) {
 							//匹配成功
 							$base = mb_substr($currWord, 0, mb_strlen($currWord, "UTF-8") - $endingLen, "UTF-8") . $ending[0];
 							if(!isset($newBase[$base])){
@@ -3337,9 +3364,9 @@ class CaseEnding{
 		["eti","anīya",".ti:base.",".fpp.",0.99],
 		["oti","anīya",".ti:base.",".fpp.",0.99],
 		["ati","āpeti",".v:base.",".caus.",0.99],
-		["ati","yati",".v:base.",".caus.",0.99],
-		["oti","āpeti",".v:base.",".pp.",0.99],
-		["oti","yati",".v:base.",".pp.",0.99],
+		["ati","yati",".v:base.",".pass.",0.99],
+		["oti","āpeti",".v:base.",".caus.",0.99],
+		["oti","yati",".v:base.",".pass.",0.99],
 	];
 	public $union = [
 		["ssa","ssāpi"],

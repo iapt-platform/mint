@@ -42,6 +42,9 @@ class TemplateRender{
             case 'exercise':
                 $result = $this->render_exercise();
                 break;
+            case 'article':
+                $result = $this->render_article();
+                break;
             default:
                 # code...
                 $result = [
@@ -120,7 +123,30 @@ class TemplateRender{
             'tpl'=>'exercise',
             ];
     }
+    private  function render_article(){
 
+        $type = $this->get_param($this->param,"type",1);
+        $id = $this->get_param($this->param,"id",2);
+        $title = $this->get_param($this->param,"title",3);
+        $channel = $this->get_param($this->param,"channel",4);
+        $props = [
+                    "type" => $type,
+                    "id" => $id,
+                    "channel" => $channel,
+                ];
+        if(empty($channel)){
+            $props['channel'] = $this->channel_id;
+        }
+        if(!empty($title)){
+            $props['title'] = $title;
+        }
+        return [
+            'props'=>base64_encode(\json_encode($props)),
+            'html'=>"",
+            'tag'=>'span',
+            'tpl'=>'article',
+            ];
+    }
     private  function render_quote(){
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id;

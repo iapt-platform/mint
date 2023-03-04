@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\UserApi;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Arr;
 
 class CorpusController extends Controller
 {
@@ -72,7 +74,12 @@ class CorpusController extends Controller
     public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
         $sent = [];
         $sentId = \explode('-',$id);
-        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        if($mode==='read'){
+            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        }else{
+            $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        }
+
         if($channelId !== false){
             array_push($channels,$channelId);
         }
@@ -161,6 +168,7 @@ class CorpusController extends Controller
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel);
         return $this->ok($this->result);
     }
+
     public function showChapter($id,$mode='read')
     {
         //
@@ -198,10 +206,10 @@ class CorpusController extends Controller
         $paraTo = $sentId[1]+$chapter->chapter_len-1;
         //获取标题
         $heading = PaliText::select(["book","paragraph","level"])
-        ->where('book',$sentId[0])
-        ->whereBetween('paragraph',[$paraFrom,$paraTo])
-        ->where('level','<',8)
-        ->get();
+                            ->where('book',$sentId[0])
+                            ->whereBetween('paragraph',[$paraFrom,$paraTo])
+                            ->where('level','<',8)
+                            ->get();
         //将标题段落转成索引数组 以便输出标题层级
         $indexedHeading = [];
         foreach ($heading as $key => $value) {
@@ -277,6 +285,100 @@ class CorpusController extends Controller
         $sent = [];
         $sent["origin"] = [];
         $sent["translation"] = [];
+        //获取句子编号列表
+
+        $sentList = [];
+        foreach ($record as $key => $value) {
+            $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
+            $sentList[$currSentId]=[$value->book_id ,$value->paragraph,$value->word_start,$value->word_end];
+            $value['sid'] = "{$currSentId}_{$value->channel_uid}";
+        }
+        //遍历列表查找每个句子的所有channel的数据，并填充
+        foreach ($sentList as $currSentId => $arrSentId) {
+            # code...
+            $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
+            $sent["origin"] = [];
+            $sent["translation"] = [];
+            foreach ($indexChannel as $channelId => $info) {
+                # code...
+                $sid = "{$currSentId}_{$channelId}";
+                $newSent = [
+                    "content"=>"",
+                    "html"=> "",
+                    "book"=> $arrSentId[0],
+                    "para"=> $arrSentId[1],
+                    "wordStart"=> $arrSentId[2],
+                    "wordEnd"=> $arrSentId[3],
+                    "channel"=> [
+                        "name"=>$info->name,
+                        "type"=>$info->type,
+                        "id"=> $info->uid,
+                    ],
+                    "updateAt"=> "",
+                    "suggestionCount" => SuggestionApi::getCountBySent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId),
+                ];
+
+                $row = Arr::first($record,function($value,$key) use($sid){
+                    return $value['sid']===$sid;
+                });
+                if($row){
+                    $newSent['content'] = $row->content;
+                    $newSent['html'] = "";
+                    $newSent["editor"]=UserApi::getById($row->editor_uid);
+                    $newSent['updateAt'] = $row->updated_at;
+                    switch ($info->type) {
+                        case 'wbw':
+                        case 'original':
+                            //
+                                // 在编辑模式下。
+                                // 如果是原文，查看是否有逐词解析数据，
+                                // 有的话优先显示。
+                                // 阅读模式直接显示html原文
+                                // 传过来的数据一定有一个原文channel
+                                //
+                            if($mode !== "read"){
+                                $newSent['channel']['type'] = "wbw";
+                                if(isset($this->wbwChannels[0])){
+                                    //存在一个translation channel
+                                    //尝试查找逐词解析数据。找到，替换现有数据
+                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId);
+                                    if($wbwData){
+                                        $newSent['content'] = $wbwData;
+                                        $newSent['html'] = "";
+                                    }
+                                }
+                            }else{
+                                $newSent['html'] = $row->content;
+                                $newSent['content'] = "";
+                            }
+
+                            break;
+                        default:
+                            //译文需要markdown渲染
+                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
+                                                function() use($row){
+                                                    return MdRender::render($row->content,$row->channel_uid);
+                                                });
+                            break;
+                    }
+                }
+                switch ($info->type) {
+                    case 'wbw':
+                    case 'original':
+                        array_push($sent["origin"],$newSent);
+                        break;
+                    default:
+                        array_push($sent["translation"],$newSent);
+                        break;
+                }
+            }
+            if($onlyProps){
+                return $sent;
+            }
+            $content = $this->pushSent($content,$sent,0,$mode);
+        }
+
+/*
         foreach ($record as $key => $value) {
             # 遍历结果生成html文件
             $currSentId = $value->book_id.'-'.$value->paragraph.'-'.$value->word_start.'-'.$value->word_end;
@@ -354,10 +456,19 @@ class CorpusController extends Controller
                     }
                 }
 			}else{
-                $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
-                function() use($value){
-                    return MdRender::render($value->content,$value->channel_uid);
-                });
+                if($indexChannel[$value->channel_uid]->type==="original"){
+                    //原文直接使用
+                    $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
+                            function() use($value){
+                                return $value->content;
+                            });
+                }else{
+                    //译文需要markdown渲染
+                    $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
+                            function() use($value){
+                                return MdRender::render($value->content,$value->channel_uid);
+                            });
+                }
             }
 
             $newSent = [
@@ -396,11 +507,72 @@ class CorpusController extends Controller
         if($onlyProps){
             return $sent;
         }
-		$content = $this->pushSent($content,$sent,0,$mode);
+        $content = $this->pushSent($content,$sent,0,$mode);
+*/
         $output = \implode("",$content);
-        return "<xml>{$output}</xml>";
+        return "<div>{$output}</div>";
     }
+    private function getWbw($book,$para,$start,$end,$channel){
+        /**
+         * 非阅读模式下。原文使用逐词解析数据。
+         * 优先加载第一个translation channel 如果没有。加载默认逐词解析。
+         */
 
+        //获取逐词解析数据
+        $wbwBlock = WbwBlock::where('channel_uid',$channel)
+                            ->where('book_id',$book)
+                            ->where('paragraph',$para)
+                            ->select('uid')
+                            ->first();
+        if(!$wbwBlock){
+            return false;
+        }
+        //找到逐词解析数据
+        $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
+                      ->whereBetween('wid',[$start,$end])
+                      ->select(['data','uid'])
+                      ->orderBy('wid')
+                      ->get();
+        $wbwContent = [];
+        foreach ($wbwData as $wbwrow) {
+            $wbw = str_replace("&nbsp;",' ',$wbwrow->data);
+            $wbw = str_replace("<br>",' ',$wbw);
+
+            $xmlString = "<root>" . $wbw . "</root>";
+            try{
+                $xmlWord = simplexml_load_string($xmlString);
+            }catch(Exception $e){
+                continue;
+            }
+            $wordsList = $xmlWord->xpath('//word');
+            foreach ($wordsList as $word) {
+                $case = \str_replace(['#','.'],['$',''],$word->case->__toString());
+                $case = \str_replace('$$','$',$case);
+                $case = trim($case);
+                $case = trim($case,"$");
+                $wbwContent[] = [
+                    'uid'=>$wbwrow->uid,
+                    'word'=>['value'=>$word->pali->__toString(),'status'=>0],
+                    'real'=> ['value'=>$word->real->__toString(),'status'=>0],
+                    'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
+                    'type'=> ['value'=>$word->type->__toString(),'status'=>0],
+                    'grammar'=> ['value'=>$word->gramma->__toString(),'status'=>0],
+                    'case'=> ['value'=>\explode('$',$case),'status'=>0],
+                    'parent'=> ['value'=>$word->parent->__toString(),'status'=>0],
+                    'style'=> ['value'=>$word->style->__toString(),'status'=>0],
+                    'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
+                    'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
+                    'confidence'=> 0.5,
+                    'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
+                ];
+            }
+        }
+        return \json_encode($wbwContent,JSON_UNESCAPED_UNICODE);
+
+    }
+    /**
+     * 将句子放进结果列表
+     */
 	private function pushSent($result,$sent,$level=0,$mode='read'){
 
 		$sentProps = base64_encode(\json_encode($sent)) ;

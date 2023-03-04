@@ -6,6 +6,8 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\ArticleResource;
+use App\Http\Api\AuthApi;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -35,8 +37,8 @@ class ArticleController extends Controller
 				break;
         }
         //处理搜索
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has("search") && !empty($request->has("search"))){
+            $table = $table->where('title', 'like', "%".$request->get("search")."%");
         }
         //获取记录总条数
         $count = $table->count();
@@ -188,12 +190,27 @@ class ArticleController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy(Request $request,Article $article)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== $article->owner){
+            return $this->error(__('auth.failed'));
+        }
+        $delete = 0;
+        DB::transaction(function() use($article,$delete){
+            //TODO 删除文集中的文章
+            $delete = $article->delete();
+        });
+
+        return $this->ok($delete);
     }
 }
