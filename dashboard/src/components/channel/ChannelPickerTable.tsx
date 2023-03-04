@@ -1,24 +1,33 @@
-import { ProList } from "@ant-design/pro-components";
+import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import { Dropdown, Space, Table } from "antd";
+import { ActionType, ProList } from "@ant-design/pro-components";
+import { Button } from "antd";
+import { Badge, Dropdown, Space, Table, Typography } from "antd";
 import {
   GlobalOutlined,
   EditOutlined,
   MoreOutlined,
   CopyOutlined,
 } from "@ant-design/icons";
-import { Button } from "antd";
 
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
-import { get } from "../../request";
+import { get, post } from "../../request";
 import { LockIcon } from "../../assets/icon";
 import StudioName, { IStudio } from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
 import { ArticleType } from "../article/Article";
 import CopyToModal from "./CopyToModal";
-import { useState } from "react";
 
+import { useAppSelector } from "../../hooks";
+import { currentUser as _currentUser } from "../../reducers/current-user";
+import { sentenceList } from "../../reducers/sentence";
+
+const { Link } = Typography;
+
+interface IProgressRequest {
+  sentence: string[];
+}
 export interface IItem {
   id: number;
   uid: string;
@@ -31,12 +40,14 @@ export interface IItem {
   publicity: number;
   createdAt: number;
   final?: IFinal[];
+  progress: number;
 }
 interface IWidget {
   type?: ArticleType | "editable";
   articleId?: string;
-  multiSelect?: boolean;
+  multiSelect?: boolean /*是否支持多选*/;
   selectedKeys?: string[];
+  reload?: boolean;
   onSelect?: Function;
 }
 const Widget = ({
@@ -45,49 +56,62 @@ const Widget = ({
   multiSelect = true,
   selectedKeys = [],
   onSelect,
+  reload = false,
 }: IWidget) => {
   const intl = useIntl();
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
+  const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
+  const user = useAppSelector(_currentUser);
+  const ref = useRef<ActionType>();
+  const sentences = useAppSelector(sentenceList);
+
+  useEffect(() => {
+    if (reload) {
+      ref.current?.reload();
+    }
+  }, [reload]);
+
   return (
     <>
       <ProList<IItem>
+        actionRef={ref}
         rowSelection={
-          multiSelect
+          showCheckBox
             ? {
                 // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
                 // 注释该行则默认不显示下拉选项
-                selectedRowKeys,
+                alwaysShowAlert: true,
+                selectedRowKeys: selectedRowKeys,
+                onChange: (selectedRowKeys: React.Key[]) => {
+                  setSelectedRowKeys(selectedRowKeys);
+                },
                 selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
               }
             : undefined
         }
         tableAlertRender={
-          multiSelect
-            ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => (
-                <Space size={24}>
-                  <span>
+          showCheckBox
+            ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => {
+                console.log(selectedRowKeys);
+                return (
+                  <Space>
                     {intl.formatMessage({ id: "buttons.selected" })}
-                    {selectedRowKeys.length}
-                    <Button
-                      type="link"
-                      style={{ marginInlineStart: 8 }}
-                      onClick={onCleanSelected}
-                    >
-                      {intl.formatMessage({ id: "buttons.unselect" })}
-                    </Button>
-                  </span>
-                </Space>
-              )
+                    <Badge color="geekblue" count={selectedRowKeys.length} />
+                    <Link onClick={onCleanSelected}>
+                      {intl.formatMessage({ id: "buttons.empty" })}
+                    </Link>
+                  </Space>
+                );
+              }
             : undefined
         }
         tableAlertOptionRender={
-          multiSelect
+          showCheckBox
             ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => {
                 return (
-                  <Space size={16}>
-                    <Button
-                      type="link"
+                  <Space>
+                    <Link
                       onClick={() => {
                         console.log("select", selectedRowKeys);
                         if (typeof onSelect !== "undefined") {
@@ -99,13 +123,25 @@ const Widget = ({
                               };
                             })
                           );
+                          setShowCheckBox(false);
+                          ref.current?.reload();
                         }
                       }}
                     >
                       {intl.formatMessage({
-                        id: "buttons.select",
+                        id: "buttons.ok",
                       })}
-                    </Button>
+                    </Link>
+                    <Link
+                      type="danger"
+                      onClick={() => {
+                        setShowCheckBox(false);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: "buttons.cancel",
+                      })}
+                    </Link>
                   </Space>
                 );
               }
@@ -115,47 +151,67 @@ const Widget = ({
           // TODO
           console.log(params, sorter, filter);
           let url: string = "";
-          switch (type) {
-            case "editable":
-              url = `/v2/channel?view=user-edit`;
-              break;
-            case "chapter":
-              if (typeof articleId !== "undefined") {
-                const id = articleId.split("_");
-                const [book, para] = id[0].split("-");
-                url = `/v2/channel?view=user-in-chapter&book=${book}&para=${para}&progress=sent`;
-              }
-
-              break;
+          if (typeof articleId !== "undefined") {
+            const id = articleId.split("_");
+            const [book, para] = id[0].split("-");
+            url = `/v2/channel-progress?view=user-in-chapter&book=${book}&para=${para}&progress=sent`;
           }
-          const res: IApiResponseChannelList = await get(url);
+          const res = await post<IProgressRequest, IApiResponseChannelList>(
+            url,
+            {
+              sentence: sentences,
+            }
+          );
           console.log("data", res.data.rows);
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
+            let all: number = 0;
+            let finished: number = 0;
+            item.final?.forEach((value) => {
+              all += value[0];
+              finished += value[1] ? value[0] : 0;
+            });
+            const progress = finished / all;
             return {
               id: id,
               uid: item.uid,
               title: item.name,
               summary: item.summary,
-              studio: {
-                id: item.studio.id,
-                nickName: item.studio.nickName,
-                studioName: item.studio.studioName,
-                avatar: item.studio.avatar,
-              },
+              studio: item.studio,
               shareType: "my",
               role: item.role,
               type: item.type,
               publicity: item.status,
               createdAt: date.getTime(),
               final: item.final,
+              progress: progress,
             };
           });
+          //当前被选择的
+          const currChannel = items.filter((value) =>
+            selectedRowKeys.includes(value.uid)
+          );
+          let show = selectedRowKeys;
+          //有进度的
+          const progressing = items.filter(
+            (value) => value.progress > 0 && !show.includes(value.uid)
+          );
+          show = [...show, ...progressing.map((item) => item.uid)];
+          //我自己的
+          const myChannel = items.filter(
+            (value) => value.role === "owner" && !show.includes(value.uid)
+          );
+          show = [...show, ...myChannel.map((item) => item.uid)];
+          //其他的
+          const others = items.filter(
+            (value) => !show.includes(value.uid) && value.role !== "member"
+          );
+          console.log("user:", user);
           setSelectedRowKeys(selectedRowKeys);
           return {
             total: res.data.count,
             succcess: true,
-            data: items,
+            data: [...currChannel, ...progressing, ...myChannel, ...others],
           };
         }}
         rowKey="uid"
@@ -164,6 +220,25 @@ const Widget = ({
         search={{
           filterType: "light",
         }}
+        toolBarRender={() => [
+          <Button
+            onClick={() => {
+              ref.current?.reload();
+            }}
+          >
+            reload
+          </Button>,
+          multiSelect ? (
+            <Button
+              onClick={() => {
+                setShowCheckBox(true);
+                console.log("user:", user);
+              }}
+            >
+              选择
+            </Button>
+          ) : undefined,
+        ]}
         metas={{
           title: {
             render(dom, entity, index, action, schema) {
@@ -178,8 +253,22 @@ const Widget = ({
               }
 
               return (
-                <div key={index}>
-                  <div key="info">
+                <div
+                  key={index}
+                  style={{
+                    width: "100%",
+                    borderRadius: 5,
+                    padding: "0 5px",
+                    background:
+                      selectedKeys.includes(entity.uid) && !showCheckBox
+                        ? "linear-gradient(to right,#006112,rgba(0,0,0,0))"
+                        : undefined,
+                  }}
+                >
+                  <div
+                    key="info"
+                    style={{ overflowX: "clip", display: "flex" }}
+                  >
                     <Space>
                       {pIcon}
                       {entity.role !== "member" ? <EditOutlined /> : undefined}
