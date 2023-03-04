@@ -1,5 +1,5 @@
 import { IStudio } from "../auth/StudioName";
-import { IStudioApiResponse, Role } from "./Auth";
+import { IStudioApiResponse, TRole } from "./Auth";
 export type TChannelType =
   | "translation"
   | "nissaya"
@@ -17,19 +17,23 @@ export interface ChannelInfoProps {
   studio: IStudio;
   count?: number;
 }
-
+/**
+ * 句子完成情况
+ * [句子字符数，是否完成]
+ *
+ */
 export type IFinal = [number, boolean];
 export interface IApiResponseChannelData {
   uid: string;
   name: string;
   summary: string;
   type: TChannelType;
-  studio: IStudioApiResponse;
+  studio: IStudio;
   lang: string;
   status: number;
   created_at: string;
   updated_at: string;
-  role?: Role;
+  role?: TRole;
   final?: IFinal[];
 }
 export interface IApiResponseChannel {
