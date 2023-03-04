@@ -14,6 +14,9 @@ import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
+import store from "../../../store";
+import { command } from "../../../reducers/command";
+import { IWidgetDict } from "../../dict/DictComponent";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -165,6 +168,17 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         }}
         onMouseLeave={() => {
           setIsHover(false);
+        }}
+        onClick={() => {
+          //发送点词查询消息
+          store.dispatch(
+            command({
+              prop: {
+                word: data.word.value,
+              },
+              type: "dict",
+            })
+          );
         }}
       >
         <Popover
