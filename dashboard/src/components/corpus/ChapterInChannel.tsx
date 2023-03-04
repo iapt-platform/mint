@@ -37,7 +37,7 @@ const Widget = ({
   const intl = useIntl(); //i18n
   const [open, setOpen] = useState(false);
   const ChannelList = (channels: IChapterChannelData[]): JSX.Element => {
-    return (
+    return channels.length ? (
       <List
         style={{ maxWidth: 500 }}
         itemLayout="vertical"
@@ -87,6 +87,8 @@ const Widget = ({
           </List.Item>
         )}
       />
+    ) : (
+      <></>
     );
   };
 
