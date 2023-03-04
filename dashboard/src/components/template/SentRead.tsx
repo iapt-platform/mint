@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Tooltip, Button } from "antd";
+import { Tooltip, Button, Typography } from "antd";
 
 import { useAppSelector } from "../../hooks";
 import {
@@ -13,6 +13,7 @@ import { ISentence } from "./SentEdit";
 import MdView from "./MdView";
 import store from "../../store";
 import { push } from "../../reducers/sentence";
+const { Text } = Typography;
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];
@@ -99,7 +100,11 @@ const SentReadFrame = ({
         <div style={{ flex: "5" }}>
           {translation?.map((item, id) => {
             if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
-            return <MdView key={id} html={item.html} />;
+            return (
+              <Text key={id}>
+                <MdView html={item.html} />
+              </Text>
+            );
           })}
         </div>
       </div>
