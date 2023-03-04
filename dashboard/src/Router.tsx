@@ -17,6 +17,7 @@ import NutNotFound from "./pages/nut/not-found";
 import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
+import AdminHome from "./pages/admin";
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
@@ -96,6 +97,7 @@ const Widget = () => {
   return (
     <ConfigProvider prefixCls={theme}>
       <Routes>
+        <Route path="admin" element={<AdminHome />} />
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">
             <Route path="sign-in" element={<NutUsersSignIn />} />
