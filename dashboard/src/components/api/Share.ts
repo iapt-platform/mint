@@ -1,10 +1,10 @@
 import { IUser } from "../auth/User";
-import { Role } from "./Auth";
+import { TRole } from "./Auth";
 
 export interface IShareRequest {
   res_id: string;
   res_type: string;
-  role: Role;
+  role: TRole;
   user_id: string;
   user_type: string;
 }
@@ -30,7 +30,7 @@ export interface IShareListResponse {
   message: string;
   data: {
     rows: IShareData[];
-    role: Role;
+    role: TRole;
     count: number;
   };
 }
