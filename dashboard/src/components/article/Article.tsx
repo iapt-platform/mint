@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { message } from "antd";
+import { Divider, message, Tag } from "antd";
 
 import { modeChange } from "../../reducers/article-mode";
 import { get } from "../../request";
@@ -13,6 +13,9 @@ import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
 import "./article.css";
 import CommentListCard from "../comment/CommentListCard";
+import TocTree from "./TocTree";
+import PaliText from "../template/Wbw/PaliText";
+import ArticleSkeleton from "./ArticleSkeleton";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -35,16 +38,21 @@ interface IWidgetArticle {
   articleId?: string;
   mode?: ArticleMode;
   active?: boolean;
+  onArticleChange?: Function;
+  onFinal?: Function;
 }
 const Widget = ({
   type,
   articleId,
   mode = "read",
   active = false,
+  onArticleChange,
+  onFinal,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
   const [extra, setExtra] = useState(<></>);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   let channels: string[] = [];
   if (typeof articleId !== "undefined") {
@@ -55,7 +63,7 @@ const Widget = ({
   }
   useEffect(() => {
     /**
-     * 由课本进入插叙当前用户的权限和channel
+     * 由课本进入查询当前用户的权限和channel
      */
     if (
       type === "textbook" ||
@@ -87,6 +95,7 @@ const Widget = ({
       }
     }
   }, [articleId, type]);
+
   useEffect(() => {
     console.log("mode", mode, articleMode);
     if (!active) {
@@ -170,14 +179,53 @@ const Widget = ({
           );
           break;
         default:
-          url = `/v2/corpus/${type}/${articleId}/${mode}`;
+          const aid = articleId.split("_");
+
+          url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
+          if (aid.length > 0) {
+            const channels = aid.slice(1).join();
+            url += `&channels=${channels}`;
+          }
           break;
       }
       console.log("url", url);
+      setShowSkeleton(true);
       get<IArticleResponse>(url).then((json) => {
         console.log("article", json);
         if (json.ok) {
           setArticleData(json.data);
+          setShowSkeleton(false);
+
+          setExtra(
+            <TocTree
+              treeData={json.data.toc?.map((item) => {
+                const strTitle = item.title ? item.title : item.pali_title;
+                const progress = item.progress?.map((item, id) => (
+                  <Tag key={id}>{Math.round(item * 100)}</Tag>
+                ));
+
+                return {
+                  key: `${item.book}-${item.paragraph}`,
+                  title: (
+                    <>
+                      <PaliText text={strTitle} />
+                      {progress}
+                    </>
+                  ),
+                  level: item.level,
+                };
+              })}
+              onSelect={(keys: string[]) => {
+                console.log(keys);
+                if (typeof onArticleChange !== "undefined" && keys.length > 0) {
+                  const aid = articleId.split("_");
+                  const channels =
+                    aid.length > 1 ? "_" + aid.slice(1).join("_") : undefined;
+                  onArticleChange(keys[0] + channels);
+                }
+              }}
+            />
+          );
         } else {
           message.error(json.message);
         }
@@ -187,21 +235,27 @@ const Widget = ({
 
   return (
     <div>
-      <ArticleView
-        id={articleData?.uid}
-        title={articleData?.title}
-        subTitle={articleData?.subtitle}
-        summary={articleData?.summary}
-        content={articleData ? articleData.content : ""}
-        html={articleData?.html}
-        path={articleData?.path}
-        created_at={articleData?.created_at}
-        updated_at={articleData?.updated_at}
-        channels={channels}
-        type={type}
-        articleId={articleId}
-      />
+      {showSkeleton ? (
+        <ArticleSkeleton />
+      ) : (
+        <ArticleView
+          id={articleData?.uid}
+          title={articleData?.title}
+          subTitle={articleData?.subtitle}
+          summary={articleData?.summary}
+          content={articleData ? articleData.content : ""}
+          html={articleData?.html}
+          path={articleData?.path}
+          created_at={articleData?.created_at}
+          updated_at={articleData?.updated_at}
+          channels={channels}
+          type={type}
+          articleId={articleId}
+        />
+      )}
+
       {extra}
+      <Divider />
       <CommentListCard resId={articleData?.uid} resType="article" />
     </div>
   );
