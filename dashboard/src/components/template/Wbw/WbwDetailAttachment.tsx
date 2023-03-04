@@ -28,7 +28,7 @@ const Widget = ({ data, onChange, onUpload }: IWidget) => {
     }
   };
   return (
-    <div style={{ minHeight: 270 }}>
+    <div>
       <WbwDetailUpload
         data={data}
         onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {

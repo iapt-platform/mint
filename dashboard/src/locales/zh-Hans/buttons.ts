@@ -34,6 +34,11 @@ const items = {
   "buttons.preview": "预览",
   "buttons.view": "查看",
   "buttons.empty": "清空",
+  "buttons.basic": "基本",
+  "buttons.bookmark": "书签",
+  "buttons.note": "注解",
+  "buttons.advance": "高级",
+  "buttons.attachments": "附件",
 };
 
 export default items;
