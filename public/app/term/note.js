@@ -1482,6 +1482,11 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_dat2",
+            name:"ဖို့",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_dat2",
             name:"ငှါ",
             tooltip:'目的格/表示目的，为了……',
         },
@@ -1629,6 +1634,16 @@ function myEndingTooltip(inStr){
             id:"my_iad",
             name:"သော",
             tooltip:'的(同类修饰)',
+        },
+        {
+            id:"my_pl_fut",
+            name:"ကုန်လတ္တံ့",
+            tooltip:'复数将来式',
+        },
+        {
+            id:"my_fut",
+            name:"လတ္တံ့",
+            tooltip:'将来式',
         },
         {
             id:"my_va",
