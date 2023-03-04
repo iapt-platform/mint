@@ -1,12 +1,16 @@
-import { Input } from "antd";
+import { Input, Divider } from "antd";
+import { UploadFile } from "antd/es/upload/interface";
+import { IAttachmentResponse } from "../../api/Attachments";
+import WbwDetailUpload from "./WbwDetailUpload";
 
 import { IWbw } from "./WbwWord";
 
 interface IWidget {
   data: IWbw;
   onChange?: Function;
+  onUpload?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const Widget = ({ data, onChange, onUpload }: IWidget) => {
   const onWordChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -24,22 +28,16 @@ const Widget = ({ data, onChange }: IWidget) => {
     }
   };
   return (
-    <>
-      <div>显示</div>
-      <Input
-        showCount
-        maxLength={512}
-        defaultValue={data.word.value}
-        onChange={onWordChange}
+    <div style={{ minHeight: 270 }}>
+      <WbwDetailUpload
+        data={data}
+        onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {
+          if (typeof onUpload !== "undefined") {
+            onUpload(fileList);
+          }
+        }}
       />
-      <div>拼写</div>
-      <Input
-        showCount
-        maxLength={512}
-        defaultValue={data.real?.value}
-        onChange={onRealChange}
-      />
-    </>
+    </div>
   );
 };
 

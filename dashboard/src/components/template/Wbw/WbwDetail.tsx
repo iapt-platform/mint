@@ -12,6 +12,7 @@ import WbwDetailAdvance from "./WbwDetailAdvance";
 import { LockIcon, UnLockIcon } from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
+import WbwDetailAttachment from "./WbwDetailAttachment";
 
 interface IWidget {
   data: IWbw;
@@ -130,6 +131,20 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
             children: (
               <div>
                 <WbwDetailAdvance
+                  data={currWbwData}
+                  onChange={(e: IWbwField) => {
+                    fieldChanged(e.field, e.value);
+                  }}
+                />
+              </div>
+            ),
+          },
+          {
+            label: `attachments`,
+            key: "attachments",
+            children: (
+              <div>
+                <WbwDetailAttachment
                   data={currWbwData}
                   onChange={(e: IWbwField) => {
                     fieldChanged(e.field, e.value);
