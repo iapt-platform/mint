@@ -12,13 +12,13 @@ import { Button, Divider, Space } from "antd";
 
 interface TreeNodeData {
   key: string;
-  title: string;
+  title: string | React.ReactNode;
   children: TreeNodeData[];
   level: number;
 }
 export type ListNodeData = {
   key: string;
-  title: string;
+  title: string | React.ReactNode;
   level: number;
   children?: number;
 };

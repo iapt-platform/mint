@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 
-type TreeNodeData = {
+interface TreeNodeData {
   key: string;
-  title: string;
+  title: string | React.ReactNode;
   children?: TreeNodeData[];
   level: number;
-};
+}
 
 function tocGetTreeData(
   listData: ListNodeData[],
@@ -94,13 +94,15 @@ interface IWidgetTocTree {
 const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState(expandedKey);
-
+  console.log("new tree data", treeData);
   useEffect(() => {
     if (treeData && treeData.length > 0) {
       const data = tocGetTreeData(treeData);
       setTree(data);
       setExpanded(expandedKey);
       console.log("create tree", treeData.length, expandedKey);
+    } else {
+      setTree([]);
     }
   }, [treeData, expandedKey]);
   const onNodeSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
@@ -121,7 +123,7 @@ const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
         if (typeof node.title === "string") {
           return <PaliText text={node.title} />;
         } else {
-          return <></>;
+          return <>{node.title}</>;
         }
       }}
     />
