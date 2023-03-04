@@ -7,6 +7,7 @@ const items = {
   "auth.role.student": "学生",
   "auth.role.assistant": "助理老师",
   "auth.role.unknown": "未知",
+  "auth.role.delete": "删除",
   "auth.type.user": "用户",
   "auth.type.group": "群组",
 };
