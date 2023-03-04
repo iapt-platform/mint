@@ -65,6 +65,14 @@ export interface IArticleDataRequest {
   status: number;
   lang: string;
 }
+export interface IChapterToc {
+  book: number;
+  paragraph: number;
+  level: number;
+  pali_title: string /**巴利文标题 */;
+  title?: string /**译文文标题 */;
+  progress?: number[];
+}
 export interface IArticleDataResponse {
   uid: string;
   title: string;
@@ -72,6 +80,7 @@ export interface IArticleDataResponse {
   summary: string;
   content?: string;
   content_type?: string;
+  toc?: IChapterToc[];
   html?: string;
   path?: ITocPathNode[];
   status: number;
