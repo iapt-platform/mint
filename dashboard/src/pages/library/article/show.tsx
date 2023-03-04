@@ -1,4 +1,4 @@
-import { Affix, Space } from "antd";
+import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
 import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
+import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
 
 /**
@@ -53,16 +54,15 @@ const Widget = () => {
             padding: "5px",
           }}
         >
-          <div>
-            <MainMenu />
-          </div>
+          <MainMenu />
           <div></div>
-          <div style={{ display: "flex" }}>
+          <div key="right" style={{ display: "flex" }}>
             <ModeSwitch
               onModeChange={(e: ArticleMode) => {
                 setArticleMode(e);
               }}
             />
+            <Divider type="vertical" />
             <RightToolsSwitch
               onModeChange={(open: TPanelName) => {
                 setRightPanel(open);
@@ -73,30 +73,50 @@ const Widget = () => {
       </Affix>
       <div style={{ width: "100%", display: "flex" }}>
         <Affix offsetTop={44}>
-          <div style={{ height: `calc(100% - 44px)`, padding: 10 }}>
-            <Space direction="vertical">
-              <ToolButtonToc type={type} articleId={id} />
-              <ToolButtonTag type={type} articleId={id} />
-              <ToolButtonSearch type={type} articleId={id} />
-              <ToolButtonSetting type={type} articleId={id} />
-              <ToolButtonTag type={type} articleId={id} />
-            </Space>
+          <div
+            style={{
+              height: `calc(100% - 44px)`,
+              padding: 8,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <Space direction="vertical">
+                <ToolButtonToc type={type} articleId={id} />
+                <ToolButtonTag type={type} articleId={id} />
+                <ToolButtonSearch type={type} articleId={id} />
+                <ToolButtonSetting type={type} articleId={id} />
+              </Space>
+            </div>
+            <div>
+              <Space direction="vertical">
+                <Avatar placement="rightBottom" />
+              </Space>
+            </div>
           </div>
         </Affix>
         <div
+          key="main"
           style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}
         >
           <div
-            style={{ marginLeft: "auto", marginRight: "auto", maxWidth: 960 }}
+            key="Article"
+            style={{ marginLeft: "auto", marginRight: "auto", width: 960 }}
           >
             <Article
               active={true}
               type={type as ArticleType}
               articleId={id}
               mode={articleMode}
+              onArticleChange={(article: string) => {
+                console.log("article change", article);
+                navigate(`/article/${type}/${article}/${articleMode}`);
+              }}
             />
           </div>
-          <div>
+          <div key="RightPanel">
             <RightPanel
               curr={rightPanel}
               type={type as ArticleType}
@@ -108,7 +128,7 @@ const Widget = () => {
                   oldId ? oldId[0] : undefined,
                   ...e.map((item) => item.id),
                 ];
-                navigate(`/article/${type}/${newId.join("_")}/${mode}`);
+                navigate(`/article/${type}/${newId.join("_")}/${articleMode}`);
               }}
             />
           </div>
