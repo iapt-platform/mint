@@ -82,7 +82,6 @@ interface IWidgetTerm {
 }
 const Widget = ({ props }: IWidgetTerm) => {
   const prop = JSON.parse(atob(props)) as IWidgetTermCtl;
-  console.log(prop);
   return (
     <>
       <TermCtl {...prop} />
