@@ -22,7 +22,14 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
   useEffect(() => {
     setWordSearch(word?.toLowerCase());
   }, [word]);
-
+  const dictSearch = (value: string, isFactor?: boolean) => {
+    console.log("onSearch", value);
+    const word = value.toLowerCase();
+    setWordSearch(word);
+    if (typeof onSearch !== "undefined") {
+      onSearch(value, isFactor);
+    }
+  };
   return (
     <div ref={setContainer}>
       <Affix offsetTop={0} target={compact ? () => container : undefined}>
@@ -37,14 +44,7 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
             <Col flex="560px">
               <SearchVocabulary
                 value={word}
-                onSearch={(value: string, isFactor?: boolean) => {
-                  console.log("onSearch", value);
-                  const word = value.toLowerCase();
-                  setWordSearch(word);
-                  if (typeof onSearch !== "undefined") {
-                    onSearch(value, isFactor);
-                  }
-                }}
+                onSearch={dictSearch}
                 onSplit={(word: string | undefined) => {
                   console.log("onSplit", word);
                   setSplit(word);
@@ -59,7 +59,7 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
         <Row>
           {compact ? <></> : <Col flex="auto"></Col>}
           <Col flex="1260px">
-            <Compound word={wordSearch} add={split} />
+            <Compound word={wordSearch} add={split} onSearch={dictSearch} />
             <DictSearch word={wordSearch} compact={compact} />
           </Col>
           {compact ? <></> : <Col flex="auto"></Col>}
