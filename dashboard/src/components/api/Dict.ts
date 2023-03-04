@@ -1,20 +1,36 @@
+import { IStudio } from "../auth/StudioName";
+import { IUser } from "../auth/User";
 import { ICaseListData } from "../dict/CaseList";
 
-export interface IDictDataRequest {
-  id: number;
+export interface IDictRequest {
+  id?: number;
   word: string;
-  type: string;
-  grammar: string;
-  mean: string;
-  parent: string;
-  note: string;
-  factors: string;
-  factormean: string;
-  dictId?: string;
-  dictName?: string;
-  language: string;
+  type?: string;
+  grammar?: string;
+  mean?: string;
+  parent?: string;
+  note?: string;
+  factors?: string;
+  factormean?: string;
   confidence: number;
+  dict_id?: string;
+  dict_name?: string;
+  language?: string;
+  creator_id?: number;
+  editor?: IUser;
+  studio?: IStudio;
+  updated_at?: string;
 }
+export interface IUserDictCreate {
+  data: string;
+  view: string;
+}
+export interface IDictResponse {
+  ok: boolean;
+  message: string;
+  data: number[];
+}
+
 export interface IApiResponseDictData {
   id: string;
   word: string;
