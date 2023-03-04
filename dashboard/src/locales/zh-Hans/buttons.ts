@@ -10,7 +10,7 @@ const items = {
   "buttons.delete.all": "批量删除",
   "buttons.selected": "已选择",
   "buttons.select": "选择",
-  "buttons.unselect": "不选",
+  "buttons.unselect": "全不选",
   "buttons.option": "操作",
   "buttons.save": "保存",
   "buttons.save.publish": "保存并公开",
