@@ -7,7 +7,7 @@ import {
   IFirstMeaning,
 } from "../api/Dict";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 interface IOptions {
   value: string;
@@ -17,8 +17,9 @@ interface IWidget {
   word?: string;
   add?: string;
   split?: string;
+  onSearch?: Function;
 }
-const Widget = ({ word, add, split }: IWidget) => {
+const Widget = ({ word, add, split, onSearch }: IWidget) => {
   const [compound, setCompound] = useState<IOptions[]>([]);
   const [factors, setFactors] = useState<IOptions[]>([]);
   const [meaningData, setMeaningData] = useState<IFirstMeaning[]>();
@@ -87,7 +88,16 @@ const Widget = ({ word, add, split }: IWidget) => {
           renderItem={(item) => (
             <List.Item>
               <div>
-                <Text strong>{item.word}</Text>{" "}
+                <Link
+                  strong
+                  onClick={() => {
+                    if (typeof onSearch !== "undefined") {
+                      onSearch(item.word, true);
+                    }
+                  }}
+                >
+                  {item.word}
+                </Link>{" "}
                 <Text type="secondary">{item.meaning}</Text>
               </div>
             </List.Item>
