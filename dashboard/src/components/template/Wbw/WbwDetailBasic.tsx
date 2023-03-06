@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, Form, Select, Input, Cascader } from "antd";
+import { Divider, Form, Select, Input, Cascader, AutoComplete } from "antd";
 import { Collapse } from "antd";
 
 import SelectCase from "../../dict/SelectCase";
 import { IWbw } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
+import { useAppSelector } from "../../../hooks";
+import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import { getFactorsInDict } from "./WbwFactors";
 
 const { Option } = Select;
 const { Panel } = Collapse;
+
+interface ValueType {
+  key?: string;
+  label: React.ReactNode;
+  value: string | number;
+}
 
 export interface IWordBasic {
   meaning?: string[];
@@ -31,12 +40,9 @@ interface IWidget {
 const Widget = ({ data, onChange }: IWidget) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const [items, setItems] = useState(["jack", "lucy"]);
-
-  const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
-  };
+  const [items, setItems] = useState<string[]>([]);
+  const inlineDict = useAppSelector(_inlineDict);
+  const [factorOptions, setFactorOptions] = useState<ValueType[]>([]);
   const onMeaningChange = (value: string | string[]) => {
     console.log(`Selected: ${value}`);
     if (typeof onChange !== "undefined") {
@@ -48,37 +54,26 @@ const Widget = ({ data, onChange }: IWidget) => {
     }
   };
 
-  const options: CascaderOption[] = [
-    {
-      value: "n",
-      label: intl.formatMessage({ id: "dict.fields.type.n.label" }),
-    },
-    {
-      value: "ti",
-      label: intl.formatMessage({ id: "dict.fields.type.ti.label" }),
-    },
-    {
-      value: "v",
-      label: intl.formatMessage({ id: "dict.fields.type.v.label" }),
-    },
-    {
-      value: "ind",
-      label: intl.formatMessage({ id: "dict.fields.type.ind.label" }),
-    },
-    {
-      value: "un",
-      label: intl.formatMessage({ id: "dict.fields.type.un.label" }),
-    },
-    {
-      value: "adj",
-      label: intl.formatMessage({ id: "dict.fields.type.adj.label" }),
-    },
-  ];
+  useEffect(() => {
+    const factors = getFactorsInDict(
+      data.word.value,
+      inlineDict.wordIndex,
+      inlineDict.wordList
+    );
+    const options = factors.map((item) => {
+      return {
+        label: item,
+        value: item,
+      };
+    });
+    setFactorOptions(options);
+  }, [inlineDict, data]);
 
   return (
     <>
       <Form
-        {...formItemLayout}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 20 }}
         className="wbw_detail_basic"
         name="basic"
         form={form}
@@ -88,10 +83,10 @@ const Widget = ({ data, onChange }: IWidget) => {
           factorMeaning: data.factorMeaning?.value,
           parent: data.parent?.value,
           case: data.case?.value,
-          case1: data.case?.value,
         }}
       >
         <Form.Item
+          style={{ marginBottom: 6 }}
           name="meaning"
           label={intl.formatMessage({ id: "forms.fields.meaning.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.meaning.tooltip" })}
@@ -132,38 +127,22 @@ const Widget = ({ data, onChange }: IWidget) => {
           />
         </Form.Item>
         <Form.Item
+          style={{ marginBottom: 6 }}
           name="factors"
           label={intl.formatMessage({ id: "forms.fields.factors.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.factors.tooltip" })}
         >
-          <Input
-            allowClear
-            placeholder={intl.formatMessage({
-              id: "forms.fields.factors.label",
-            })}
-          />
+          <AutoComplete options={factorOptions}>
+            <Input
+              allowClear
+              placeholder={intl.formatMessage({
+                id: "forms.fields.factors.label",
+              })}
+            />
+          </AutoComplete>
         </Form.Item>
         <Form.Item
-          label={intl.formatMessage({ id: "forms.fields.case.label" })}
-          tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
-          name="case"
-        >
-          <Cascader options={options} placeholder="Please select case" />
-        </Form.Item>
-        <Form.Item
-          label={intl.formatMessage({ id: "forms.fields.case.label" })}
-          tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
-          name="case1"
-        >
-          <SelectCase
-            onCaseChange={(value: (string | number)[]) => {
-              if (typeof onChange !== "undefined") {
-                onChange({ field: "case", value: value.join("$") });
-              }
-            }}
-          />
-        </Form.Item>
-        <Form.Item
+          style={{ marginBottom: 6 }}
           name="factorMeaning"
           label={intl.formatMessage({
             id: "forms.fields.factor.meaning.label",
@@ -180,6 +159,21 @@ const Widget = ({ data, onChange }: IWidget) => {
           />
         </Form.Item>
         <Form.Item
+          style={{ marginBottom: 6 }}
+          label={intl.formatMessage({ id: "forms.fields.case.label" })}
+          tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
+          name="case"
+        >
+          <SelectCase
+            onCaseChange={(value: (string | number)[]) => {
+              if (typeof onChange !== "undefined") {
+                onChange({ field: "case", value: value.join("$") });
+              }
+            }}
+          />
+        </Form.Item>
+        <Form.Item
+          style={{ marginBottom: 6 }}
           name="parent"
           label={intl.formatMessage({
             id: "forms.fields.parent.label",
