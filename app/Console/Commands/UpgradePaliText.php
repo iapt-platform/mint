@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 计算章节的父子，前后关系
+ * 输入： csv文件
+ */
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -42,7 +45,7 @@ class UpgradePaliText extends Command
     {
 		$this->info("upgrade pali text");
 		$startTime = time();
-        
+
 		$_from = $this->argument('from');
 		$_to = $this->argument('to');
 		if(empty($_from) && empty($_to)){
@@ -78,7 +81,7 @@ class UpgradePaliText extends Command
 					$inputRow++;
 				}
 				fclose($fp);
-				
+
 			} else {
 				$this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
 				Log::error( "can not open csv file. filename=" . $csvFile) ;
@@ -108,8 +111,8 @@ class UpgradePaliText extends Command
 					$curr_level = (int) $title_data[$iPar]["level"];
 					# 计算这个chapter的段落数量
 					$length = -1;
-				
-					
+
+
 					for ($iPar1 = $iPar + 1; $iPar1 < count($title_data); $iPar1++) {
 						$thislevel = (int) $title_data[$iPar1]["level"];
 						if ($thislevel <= $curr_level) {
@@ -185,7 +188,7 @@ class UpgradePaliText extends Command
                     *获取路径
                     */
                     $currParent = $parent;
-                    
+
                     $iLoop = 0;
                     while ($currParent != -1 && $iLoop<7) {
                         # code...
@@ -197,7 +200,7 @@ class UpgradePaliText extends Command
                     }
                     # 将路径反向
                     $path1 = [];
-                    for ($i=count($path)-1; $i >=0 ; $i--) { 
+                    for ($i=count($path)-1; $i >=0 ; $i--) {
                         # code...
                         $path1[] = $path[$i];
                     }
@@ -214,12 +217,12 @@ class UpgradePaliText extends Command
 				}
 			}
 
-            
+
 			$bar->advance();
 		}
 		$bar->finish();
-	
-		$this->info("instert pali text finished. in ". time()-$startTime . "s" .PHP_EOL);
+
+		$this->info("instert pali text finished. in ". time()-$startTime . "s" );
 		Log::info("instert pali text finished. in ". time()-$startTime . "s");
         return 0;
     }
