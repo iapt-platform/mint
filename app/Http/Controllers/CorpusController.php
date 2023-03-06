@@ -17,6 +17,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\UserApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
+use App\Http\Resources\TocResource;
 
 class CorpusController extends Controller
 {
@@ -28,6 +29,7 @@ class CorpusController extends Controller
         "summary"=> '',
         "content"=> '',
         "content_type"=> "html",
+        "toc" => [],
         "status"=>30,
         "lang"=> "",
         "created_at"=> "",
@@ -169,7 +171,15 @@ class CorpusController extends Controller
         return $this->ok($this->result);
     }
 
-    public function showChapter($id,$mode='read')
+    /**
+     * Store a newly created resource in storage.
+
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $id
+     * @param string $mode
+     * @return \Illuminate\Http\Response
+     */
+    public function showChapter(Request $request, string $id,string $mode='read')
     {
         //
         $param = \explode('_',$id);
@@ -179,7 +189,7 @@ class CorpusController extends Controller
             $channels = array_slice($param,1);
         }
         if($mode === 'read'){
-            //阅读模式加载md格式原文
+            //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }else{
             //翻译模式加载json格式原文
@@ -245,7 +255,45 @@ class CorpusController extends Controller
             $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
         }
 
-		//获取句子数据
+        /**
+         * 获取句子数据
+         * 算法：
+         * 1. 如果标题和下一级第一个标题之间有段落。只输出这些段落和子目录
+         * 2. 如果标题和下一级第一个标题之间没有间隔 且 chapter 长度大于10000个字符 且有子目录，只输出子目录
+         * 3. 如果二者都不是，lazy load
+         */
+		//1. 计算 标题和下一级第一个标题之间 是否有间隔
+        $nextChapter =  PaliText::where('book',$sentId[0])
+                                ->where('paragraph',">",$sentId[1])
+                                ->where('level','<',8)
+                                ->orderBy('paragraph')
+                                ->value('paragraph');
+        $between = $nextChapter - $sentId[1];
+        //输出子目录
+        $chapterLen = $chapter->chapter_len;
+        $toc = PaliText::where('book',$sentId[0])
+                        ->whereBetween('paragraph',[$paraFrom+1,$paraFrom+$chapterLen-1])
+                        ->where('level','<',8)
+                        ->orderBy('paragraph')
+                        ->select(['book','paragraph','level','toc'])
+                        ->get();
+
+        if($between > 1){
+            //有间隔
+            $paraTo = $nextChapter - 1;
+        }else{
+            if($chapter->chapter_strlen>15000){
+                if(count($toc)>0){
+                    //有子目录只输出标题和目录
+                    $paraTo = $paraFrom;
+                }else{
+                    //没有子目录 全部输出
+                }
+            }else{
+                //章节小。全部输出 不输出章节
+                $toc = [];
+            }
+        }
         $record = Sentence::select($this->selectCol)
                     ->where('book_id',$sentId[0])
                     ->whereBetween('paragraph',[$paraFrom,$paraTo])
@@ -258,6 +306,8 @@ class CorpusController extends Controller
         }
 
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading);
+        $this->result['toc'] = TocResource::collection($toc);
+
         return $this->ok($this->result);
     }
 
