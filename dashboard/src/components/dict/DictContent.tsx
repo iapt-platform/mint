@@ -38,7 +38,7 @@ const Widget = ({ word, data, compact }: IWidget) => {
             size="small"
             items={[
               {
-                label: `结果`,
+                label: `查询结果`,
                 key: "result",
                 children: (
                   <div>
@@ -49,7 +49,7 @@ const Widget = ({ word, data, compact }: IWidget) => {
                 ),
               },
               {
-                label: `单词本`,
+                label: `添加`,
                 key: "my",
                 children: (
                   <div>
