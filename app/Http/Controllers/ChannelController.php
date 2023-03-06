@@ -173,6 +173,7 @@ class ChannelController extends Controller
                     }
 
                 }
+
                 if($value->owner_uid===$user['user_uid']){
                     $value['role'] = 'owner';
                 }else{
@@ -196,19 +197,7 @@ class ChannelController extends Controller
                     }
                 }
                 # 获取studio信息
-                $studio = $userinfo->getName($value->owner_uid);
-                $value->studio = [
-                    'id'=>$value->owner_uid,
-                    'nickName'=>$studio['nickname'],
-                    'studioName'=>$studio['username'],
-                    'avatar'=>'',
-                    'owner' => [
-                        'id'=>$value->owner_uid,
-                        'nickName'=>$studio['nickname'],
-                        'userName'=>$studio['username'],
-                        'avatar'=>'',
-                    ]
-                ];
+                $value->studio = \App\Http\Api\StudioApi::getById($value->owner_uid);
             }
 			return $this->ok(["rows"=>$result,"count"=>$count]);
 		}else{
@@ -216,7 +205,132 @@ class ChannelController extends Controller
 		}
 
     }
+    /**
+     * 获取章节的进度
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function progress(Request $request){
+		$indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
 
+        $sent = $request->get('sentence') ;
+        $query = [];
+        $sentContainer = [];
+        $sentLenContainer = [];
+
+        foreach ($sent as $value) {
+            $sentContainer[$value] = false;
+            $ids = explode('-',$value);
+            $query[] = $ids;
+        }
+        //获取单句长度
+        if(count($query)>0){
+            $sentLen = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$query)
+                                    ->select(['book','paragraph','word_begin','word_end','length'])
+                                    ->get();
+
+            foreach ($sentLen as $value) {
+                $sentLenContainer["{$value->book}-{$value->paragraph}-{$value->word_begin}-{$value->word_end}"] = $value->length;
+            }
+        }
+
+        #获取 user 在某章节 所有有权限的 channel 列表
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $channelById = [];
+        $channelId = [];
+        //获取共享channel
+        $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+        foreach ($allSharedChannels as $key => $value) {
+            # code...
+            $channelId[] = $value['res_id'];
+            $channelById[$value['res_id']] = $value;
+        }
+        //获取全网公开channel
+        $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
+        $publicChannelsWithContent = Sentence::where('book_id',$request->get('book'))
+                                    ->whereBetween('paragraph',$chapter)
+                                    ->where('strlen','>',0)
+                                    ->where('status',30)
+                                    ->groupBy('channel_uid')
+                                    ->select('channel_uid')
+                                    ->get();
+        foreach ($publicChannelsWithContent as $key => $value) {
+            # code...
+            $value['res_id']=$value->channel_uid;
+            $value['power'] = 10;
+            $value['type'] = 2;
+            if(!isset($channelById[$value['res_id']])){
+                $channelId[] = $value['res_id'];
+                $channelById[$value['res_id']] = $value;
+            }
+        }
+        $table = Channel::select($indexCol)
+                        ->whereIn('uid', $channelId)
+                        ->orWhere('owner_uid',$user['user_uid']);
+        $result = $table->get();
+
+
+
+        foreach ($result as $key => $value) {
+            if($value->owner_uid===$user['user_uid']){
+                $value['role'] = 'owner';
+            }else{
+                if(isset($channelById[$value->uid])){
+                    switch ($channelById[$value->uid]['power']) {
+                        case 10:
+                            # code...
+                            $value['role'] = 'member';
+                            break;
+                        case 20:
+                            $value['role'] = 'editor';
+                            break;
+                        case 30:
+                            $value['role'] = 'owner';
+                            break;
+                        default:
+                            # code...
+                            $value['role'] = $channelById[$value->uid]['power'];
+                            break;
+                    }
+                }
+            }
+            # 获取studio信息
+            $result[$key]["studio"] = \App\Http\Api\StudioApi::getById($value->owner_uid);
+
+            //获取进度
+            if(count($query)>0){
+                $finalTable = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
+                                        ->where('channel_uid',$value->uid)
+                                        ->where('strlen','>',0)
+                                        ->select(['strlen','book_id','paragraph','word_start','word_end']);
+                if($finalTable->count()>0){
+                    $finished = $finalTable->get();
+                    $currChannel = [];
+                    foreach ($finished as $key => $value) {
+                        $currChannel["{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}"] = 1;
+                    }
+                    $final=[];
+                    foreach ($sentContainer as $sentId=>$value) {
+                        # code...
+                        if(isset($currChannel[$sentId])){
+                            $final[] = [$sentLenContainer[$sentId],true];
+                        }else{
+                            $final[] = [$sentLenContainer[$sentId],false];
+                        }
+                    }
+                    $result[$key]['final'] = $final;
+                }
+            }
+
+        }
+
+        return $this->ok(["rows"=>$result,count($result)]);
+
+    }
     /**
      * Store a newly created resource in storage.
      *
