@@ -108,6 +108,18 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         padding: padding,
         borderRadius: 5,
       }}
+      onClick={() => {
+        //发送点词查询消息
+
+        store.dispatch(
+          command({
+            prop: {
+              word: data.word.value,
+            },
+            type: "dict",
+          })
+        );
+      }}
     >
       {<PaliText text={data.word.value} />}
     </span>
@@ -168,17 +180,6 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         }}
         onMouseLeave={() => {
           setIsHover(false);
-        }}
-        onClick={() => {
-          //发送点词查询消息
-          store.dispatch(
-            command({
-              prop: {
-                word: data.word.value,
-              },
-              type: "dict",
-            })
-          );
         }}
       >
         <Popover
