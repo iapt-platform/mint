@@ -14,3 +14,6 @@
 .dark-pro-table-alert-info {
   color: unset;
 }
+.dark-pro-card-statistic .dark-statistic-title {
+  color: rgba(100, 100, 100, 0.88);
+}
