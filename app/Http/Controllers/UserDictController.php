@@ -25,7 +25,7 @@ class UserDictController extends Controller
 		switch ($request->get('view')) {
             case 'studio':
 				# 获取studio内所有channel
-                $user = \App\Http\Api\AuthApi::current($request);
+                $user = AuthApi::current($request);
                 if($user){
                     //判断当前用户是否有指定的studio的权限
                     if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
@@ -98,46 +98,47 @@ class UserDictController extends Controller
     public function store(Request $request)
     {
         //
-		if(!isset($_COOKIE["user_id"])){
+        $user  = AuthApi::current($request);
+		if(!$user){
 			$this->error("not login");
 		}
 
-		$_data = json_decode($_POST["data"],true);
+		$_data = json_decode($request->get("data"),true);
 		switch($request->get('view')){
+            case "dict":
+                $src = "_USER_DICT_";
 			case "wbw":
+                $src = "_USER_WBW_";
 				#查询用户重复的数据
 				$iOk = 0;
 				$updateOk=0;
 				foreach ($_data as $key => $word) {
 					# code...
-					$isDoesntExist = UserDict::where('creator_id', $_COOKIE["user_id"])
-										->where('word',$word["word"])
-										->where('type',$word["type"])
-										->where('grammar',$word["grammar"])
-										->where('parent',$word["parent"])
-										->where('mean',$word["mean"])
-										->where('factors',$word["factors"])
-										->where('factormean',$word["factormean"])
-										->where('source','_USER_WBW_')
-										->doesntExist();
+					$table = UserDict::where('creator_id', $user["user_id"])
+										->where('word',$word["word"]);
+                    if(isset($word["type"])){$table = $table->where('type',$word["type"]);}
+                    if(isset($word["grammar"])){$table = $table->where('grammar',$word["grammar"]);}
+                    if(isset($word["parent"])){$table = $table->where('parent',$word["parent"]);}
+                    if(isset($word["mean"])){$table = $table->where('mean',$word["mean"]);}
+                    if(isset($word["factors"])){$table = $table->where('factors',$word["factors"]);}
+					$isDoesntExist = $table->doesntExist();
 
 					if($isDoesntExist){
 						#不存在插入数据
 						$word["id"]=app('snowflake')->id();
-						$word["source"]='_USER_WBW_';
-						$word["create_time"]=mTime();
-						$word["creator_id"]=$_COOKIE["user_id"];
+						$word["source"] = $src;
+						$word["create_time"] = time()*1000;
+						$word["creator_id"]=$user["user_id"];
 						$id = UserDict::insert($word);
 						$updateOk = $this->update_sys_wbw($word);
 						$this->update_redis($word);
 						$iOk++;
 					}
 				}
-				$this->ok([$iOk,$updateOk]);
-				break;
-			case "dict":
+
 				break;
 		}
+        return $this->ok([$iOk,$updateOk]);
     }
 
     /**
@@ -262,15 +263,22 @@ class UserDictController extends Controller
 	private function update_sys_wbw($data){
 
 		#查询用户重复的数据
+        if(!isset($data["type"])){$data["type"]='';}
+        if(!isset($data["grammar"])){$data["grammar"]='';}
+        if(!isset($data["parent"])){$data["parent"]='';}
+        if(!isset($data["mean"])){$data["mean"]='';}
+        if(!isset($data["factors"])){$data["factors"]='';}
+        if(!isset($data["factormean"])){$data["factormean"]='';}
+
 		$count = UserDict::where('word',$data["word"])
-		->where('type',$data["type"])
-		->where('grammar',$data["grammar"])
-		->where('parent',$data["parent"])
-		->where('mean',$data["mean"])
-		->where('factors',$data["factors"])
-		->where('factormean',$data["factormean"])
-		->where('source','_USER_WBW_')
-		->count();
+                        ->where('type',$data["type"])
+                        ->where('grammar',$data["grammar"])
+                        ->where('parent',$data["parent"])
+                        ->where('mean',$data["mean"])
+                        ->where('factors',$data["factors"])
+                        ->where('factormean',$data["factormean"])
+                        ->where('source','_USER_WBW_')
+                        ->count();
 
 		if($count==0){
             # 没有任何用户有这个数据
