@@ -240,7 +240,7 @@ const Widget = () => {
           </Route>
           <Route path="setting" element={<StudioSetting />} />
 
-          <Route path="analysis" element={<StudioAnalysis />}>
+          <Route path="exp" element={<StudioAnalysis />}>
             <Route path="list" element={<StudioAnalysisList />} />
           </Route>
         </Route>
