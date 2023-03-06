@@ -11,6 +11,14 @@ use Illuminate\Support\Arr;
 
 class TurboSplit
 {
+    protected $options = [
+        "express" => false,
+        "c_threshhold" => 0.8,
+        "w_threshhold" => 0.8,
+        "forward" => true,
+        "sandhi_advance" => false,
+        "lookup_express" => true,/**快速查字典-不去尾 */
+    ];
     protected $node = [];
 	protected $path = array();
 	protected $isDebug = false;
@@ -166,17 +174,7 @@ class TurboSplit
 			return array(0,0);
 		}
         $search = $word;
-		//去掉单词首尾的 []
-		/*
-        if(mb_substr($word,0,1) !== "[")
-        {
-			$search = $word;
-		}
-		else{
-			$search = str_replace("[","",$word);
-			$search = str_replace("]","",$search);
-		}
-        */
+
 		//获取单词权重
 		$row = Cache::remember('palicanon/wordpart/weight/'.$search, 10 , function() use($search) {
 			return WordPart::where('word',$search)->value('weight');
@@ -185,6 +183,9 @@ class TurboSplit
 			//找到
 			return array($row,0);
 		} else {
+            if($this->options["lookup_express"]){
+                return array(0,0);
+            }
 			//去除尾查
 			$newWord = array();
 			for ($row = 0; $row < count($case); $row++) {
