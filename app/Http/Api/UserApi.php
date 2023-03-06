@@ -8,6 +8,10 @@ class UserApi{
         $userinfo = new \UserInfo();
         return $userinfo->getUserByName($name)['userid'];
     }
+    public static function getIntIdByName($name){
+        $userinfo = new \UserInfo();
+        return $userinfo->getUserByName($name)['id'];
+    }
     public static function getById($id){
         $userinfo = new \UserInfo();
         $studio = $userinfo->getName($id);
