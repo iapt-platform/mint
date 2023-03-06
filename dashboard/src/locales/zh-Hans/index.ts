@@ -13,8 +13,8 @@ import setting from "./setting";
 import auth from "./auth";
 import course from "./course";
 import message from "./message";
+import label from "./label";
 const items = {
-  "flashes.success": "操作成功",
   "columns.library.title": "藏经阁",
   "columns.library.community.title": "社区",
   "columns.library.palicanon.title": "圣典",
@@ -44,6 +44,7 @@ const items = {
   "columns.studio.basic.title": "常用",
   "columns.studio.advance.title": "高级",
   "columns.studio.setting.title": "设置",
+  "columns.exp.title": "经验",
   ...buttons,
   ...forms,
   ...tables,
@@ -59,6 +60,7 @@ const items = {
   ...auth,
   ...course,
   ...message,
+  ...label,
 };
 
 export default items;
