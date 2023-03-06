@@ -36,6 +36,8 @@ use App\Http\Controllers\ArticleMapController;
 use App\Http\Controllers\VocabularyController;
 use App\Http\Controllers\CaseController;
 use App\Http\Controllers\DictMeaningController;
+use App\Http\Controllers\UserOperationDailyController;
+use App\Http\Controllers\UserStatisticController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,12 +69,10 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('sent_history',SentHistoryController::class);
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
+    Route::post('channel-progress',[ChannelController::class,"progress"]);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
-    Route::get('palibook/{file}', function ($file) {
-        if($file==='default'){$file="defualt";}
-        return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
-    });
+
     Route::apiResource('anthology',CollectionController::class);
     Route::apiResource('dict',DictController::class);
     Route::apiResource('tag',TagController::class);
@@ -106,6 +106,14 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('vocabulary',VocabularyController::class);
     Route::apiResource('case',CaseController::class);
     Route::apiResource('dict-meaning',DictMeaningController::class);
+    Route::apiResource('user-operation-daily',UserOperationDailyController::class);
+    Route::apiResource('user-statistic',UserStatisticController::class);
+
+
+    Route::get('palibook/{file}', function ($file) {
+        if($file==='default'){$file="defualt";}
+        return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
+    });
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
         $filename = public_path("app/users_guide/{$lang}/{$file}.md");
