@@ -4,15 +4,13 @@ import { FieldTimeOutlined } from "@ant-design/icons";
 
 interface IWidgetTimeShow {
   showIcon?: boolean;
-  showTitle?: boolean;
   showTooltip?: boolean;
   time?: string;
-  title: string;
+  title?: string;
 }
 
 const Widget = ({
   showIcon = true,
-  showTitle = false,
   showTooltip = true,
   time,
   title,
@@ -22,7 +20,6 @@ const Widget = ({
     return <></>;
   }
   const icon = showIcon ? <FieldTimeOutlined /> : <></>;
-  const strTitle = showTitle ? title : "";
 
   const passTime: string = getPassDataTime(time);
   const tooltip: string = getFullDataTime(time);
@@ -83,7 +80,7 @@ const Widget = ({
     <Tooltip title={tooltip} color={color} key={color}>
       <Space>
         {icon}
-        {strTitle}
+        {title}
         {passTime}
       </Space>
     </Tooltip>

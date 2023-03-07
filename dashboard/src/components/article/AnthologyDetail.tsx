@@ -64,11 +64,7 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
       </div>
       <Space>
         <StudioName data={tableData?.studio} />
-        <TimeShow
-          time={tableData?.updated_at}
-          title="updated"
-          showTitle={true}
-        />
+        <TimeShow time={tableData?.updated_at} title="updated" />
       </Space>
       <div>
         <Marked text={tableData?.summary} />
