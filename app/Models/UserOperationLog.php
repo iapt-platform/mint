@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class UserOperationLog extends Model
 {
     use HasFactory;
+    const UPDATED_AT = null;
 }
