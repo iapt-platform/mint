@@ -69,10 +69,11 @@ class UserStatisticController extends Controller
                     return Wbw::where('editor_id',$queryUserId)
                         ->count();
                         });
-        //查字典
+        //查字典次数
         $lookupCount = Cache::remember("user/{$userName}/lookup/count",$cacheExpiry,function() use($queryUserId){
-                            return UserOperationDaily::where('user_id',$queryUserId)
-                                    ->count();
+                            return UserOperationLog::where('user_id',$queryUserId)
+                                                    ->where('op_type','dict_lookup')
+                                                    ->count();
                                 });
         //译文
         //TODO 判断是否是译文channel
