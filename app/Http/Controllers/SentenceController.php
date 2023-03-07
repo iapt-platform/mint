@@ -7,6 +7,7 @@ use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\SentResource;
+use App\Http\Api\AuthApi;
 
 class SentenceController extends Controller
 {
@@ -110,7 +111,7 @@ class SentenceController extends Controller
     public function store(Request $request)
     {
         //鉴权
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if(!$user ){
             //未登录用户
             return $this->error(__('auth.failed'));
@@ -185,7 +186,7 @@ class SentenceController extends Controller
         $param = \explode('_',$id);
 
         //鉴权
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if($user ){
             $channel = Channel::where('uid',$param[4])->first();
             if($channel && $channel->owner_uid === $user["user_uid"]){
@@ -198,11 +199,14 @@ class SentenceController extends Controller
                 ],[
                     "id"=>app('snowflake')->id(),
                     "uid"=>Str::orderedUuid(),
+                    "create_time"=>time()*1000,
                 ]);
                 $sent->content = $request->get('content');
                 $sent->language = $channel->lang;
                 $sent->status = $channel->status;
                 $sent->editor_uid = $user["user_uid"];
+                $sent->strlen = mb_strlen($request->get('content'),"UTF-8");
+                $sent->modify_time = time()*1000;
                 $sent->save();
                 return $this->ok(new SentResource($sent));
             }else{
