@@ -36,7 +36,7 @@ class CorpusController extends Controller
         "updated_at"=> "",
     ];
     protected $wbwChannels = [];
-    protected $selectCol = ['book_id','paragraph','word_start',"word_end",'channel_uid','content','updated_at'];
+    protected $selectCol = ['book_id','paragraph','word_start',"word_end",'channel_uid','content','editor_uid','updated_at'];
     public function __construct()
     {
 
