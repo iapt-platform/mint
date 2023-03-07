@@ -1,17 +1,17 @@
-import { Avatar } from "antd";
+import { Avatar, Space } from "antd";
 
 export interface IUser {
   id: string;
   nickName: string;
-  realName: string;
+  userName: string;
   avatar?: string;
 }
-const Widget = ({ nickName, realName, avatar }: IUser) => {
+const Widget = ({ nickName, userName, avatar }: IUser) => {
   return (
-    <>
+    <Space>
       <Avatar size="small">{nickName?.slice(0, 1)}</Avatar>
       {nickName}
-    </>
+    </Space>
   );
 };
 

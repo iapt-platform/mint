@@ -27,12 +27,7 @@ const Widget = ({ book, para, wordStart, wordEnd, channel }: IWidget) => {
           para: item.paragraph,
           wordStart: item.word_start,
           wordEnd: item.word_end,
-          editor: {
-            id: item.editor.id,
-            nickName: item.editor.nickName,
-            realName: item.editor.userName,
-            avatar: item.editor.avatar,
-          },
+          editor: item.editor,
           channel: { name: item.channel.name, id: item.channel.id },
           updateAt: item.updated_at,
         };

@@ -61,12 +61,7 @@ const Widget = ({
               id: item.id,
               resId: item.res_id,
               resType: item.res_type,
-              user: {
-                id: item.editor?.id ? item.editor.id : "",
-                nickName: item.editor?.nickName ? item.editor.nickName : "",
-                realName: item.editor?.userName ? item.editor.userName : "",
-                avatar: item.editor?.avatar ? item.editor.avatar : "",
-              },
+              user: item.editor,
               title: item.title,
               content: item.content,
               childrenCount: item.children_count,
