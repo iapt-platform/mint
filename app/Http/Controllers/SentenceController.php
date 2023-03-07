@@ -102,8 +102,8 @@ class SentenceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * 新建多个句子
+     * 如果句子存在，修改
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -173,7 +173,7 @@ class SentenceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 修改单个句子
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $id book_para_start_end_channel
