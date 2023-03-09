@@ -1,6 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { ISuggestionCount } from "../template/SentEdit";
 import { TChannelType } from "./Channel";
 import { TagNode } from "./Tag";
 
@@ -141,9 +142,13 @@ export interface ISentenceRequest {
   wordEnd: number;
   channel: string;
   content: string;
+  prEditor?: string;
+  prId?: string;
+  prEditAt?: string;
 }
 
 export interface ISentenceData {
+  id?: string;
   book: number;
   paragraph: number;
   word_start: number;
@@ -153,6 +158,9 @@ export interface ISentenceData {
   editor: IUser;
   channel: IChannel;
   updated_at: string;
+  acceptor?: IUser;
+  pr_edit_at?: string;
+  suggestionCount?: ISuggestionCount;
 }
 
 export interface ISentenceResponse {
@@ -221,4 +229,29 @@ export interface IChapterLangListResponse {
   ok: boolean;
   message: string;
   data: { rows: ILangList[]; count: number };
+}
+
+export interface ISentencePrRequest {
+  book: number;
+  para: number;
+  begin: number;
+  end: number;
+  channel: string;
+  text: string;
+}
+export interface ISentencePrResponseData {
+  book_id: number;
+  paragraph: number;
+  word_start: number;
+  word_end: number;
+  channel_uid: string;
+}
+export interface ISentencePrResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    new: ISentencePrResponseData;
+    count: number;
+    webhook: { message: string; ok: boolean };
+  };
 }
