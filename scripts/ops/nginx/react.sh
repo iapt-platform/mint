@@ -12,7 +12,7 @@ fi
 echo "check /etc/nginx/sites-enabled/$1.conf"
 if [ ! -f /etc/nginx/sites-enabled/$1.conf ]
 then
-    cat > aaa.confg <<EOF
+    cat > /etc/nginx/sites-enabled/$1.conf <<EOF
 server {
 
   server_name $1;
