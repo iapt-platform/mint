@@ -6,11 +6,12 @@ import SentContent from "./SentEdit/SentContent";
 import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
 
-interface ISuggestionCount {
+export interface ISuggestionCount {
   suggestion?: number;
-  qa?: number;
+  discussion?: number;
 }
 export interface ISentence {
+  id?: string;
   content: string;
   html: string;
   book: number;
@@ -18,6 +19,8 @@ export interface ISentence {
   wordStart: number;
   wordEnd: number;
   editor: IUser;
+  acceptor?: IUser;
+  prEditAt?: string;
   channel: IChannel;
   updateAt: string;
   suggestionCount?: ISuggestionCount;
