@@ -1,4 +1,5 @@
 import { Card } from "antd";
+import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
@@ -22,6 +23,7 @@ export interface ISentence {
   acceptor?: IUser;
   prEditAt?: string;
   channel: IChannel;
+  studio?: IStudio;
   updateAt: string;
   suggestionCount?: ISuggestionCount;
 }

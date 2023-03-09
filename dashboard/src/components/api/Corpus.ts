@@ -157,6 +157,7 @@ export interface ISentenceData {
   html: string;
   editor: IUser;
   channel: IChannel;
+  studio: IStudio;
   updated_at: string;
   acceptor?: IUser;
   pr_edit_at?: string;
