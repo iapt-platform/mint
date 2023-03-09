@@ -1,4 +1,6 @@
+import { Typography } from "antd";
 import { TCodeConvertor, XmlToReact } from "./utilities";
+const { Text } = Typography;
 
 interface IWidget {
   html?: string;
@@ -11,7 +13,7 @@ const Widget = ({
   convertor,
 }: IWidget) => {
   const jsx = XmlToReact(html, wordWidget, convertor);
-  return <>{jsx}</>;
+  return <Text>{jsx}</Text>;
 };
 
 export default Widget;
