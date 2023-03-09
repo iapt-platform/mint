@@ -21,6 +21,7 @@ const Widget = ({ book, para, wordStart, wordEnd, channel }: IWidget) => {
     ).then((json) => {
       const newData: ISentence[] = json.data.rows.map((item) => {
         return {
+          id: item.id,
           content: item.content,
           html: item.html,
           book: item.book,
@@ -38,7 +39,7 @@ const Widget = ({ book, para, wordStart, wordEnd, channel }: IWidget) => {
   return (
     <div>
       {sentData.map((item, id) => {
-        return <SentCell data={item} key={id} />;
+        return <SentCell data={item} key={id} isPr={true} />;
       })}
     </div>
   );
