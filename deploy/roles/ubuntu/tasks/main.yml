@@ -1,0 +1,196 @@
+# - name: Remove postfix at first
+#   become: true
+#   apt:
+#     name: postfix
+#     state: absent
+#     purge: yes
+
+# - name: Backup /etc/apt/sources.list.d
+#   become: true
+#   copy:
+#     src: /etc/apt/sources.list.d
+#     dest: "{{ app_backup }}/etc_apt_sources_list_d"
+#     remote_src: yes
+#     backup: yes
+
+# - name: Delete /etc/apt/sources.list.d
+#   become: true
+#   file:
+#     state: absent
+#     path: /etc/apt/sources.list.d
+
+- import_tasks: init.yml
+
+# https://github.com/nodesource/distributions#deb
+# - name: Download nodejs-ppa installer
+#   get_url:
+#     url: https://deb.nodesource.com/setup_lts.x
+#     dest: "{{ app_downloads }}/setup_node_lts.sh"
+#     mode: '0755'
+
+# - name: Install nodejs ppa
+#   become: true
+#   ansible.builtin.shell: "{{ app_downloads }}/setup_node_lts.sh"
+
+
+- name: add PPA for Ubuntu Toolchain
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:ubuntu-toolchain-r/test
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Update system
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install dependicy packages
+  become: true
+  apt:
+    pkg:
+      - apt-transport-https
+      - software-properties-common
+      - gnupg
+      - openssh-server
+      - openssh-client
+      - sshpass
+      - wpasupplicant
+      - rsync
+      - at
+      - sysstat
+      - libtool
+      - ethtool
+      - dnsutils
+      - dnsmasq
+      - uuid-runtime
+      - lshw
+      - tcpdump
+      - lm-sensors
+      - hddtemp
+      - dmidecode
+      - net-tools
+      - iputils-arping
+      - iputils-ping
+      - telnet
+      - vim
+      - git
+      - pwgen
+      - locales
+      - ntpdate
+      - imagemagick
+      - mpg123
+      - ffmpeg
+      - sqlite3
+      - tree
+      - alsa-utils
+      - pulseaudio
+      - zsh
+      - wget
+      - curl
+      - zip
+      - unzip
+      - nginx
+      - libnginx-mod-http-upstream-fair
+      - certbot
+      - python3-certbot-nginx
+      - openvpn
+      - snmpd
+      - mutt
+      - systemd-cron
+      - screen
+      - tmux
+      - hugo
+      - nodejs
+      - python3
+      - python3-pip
+      - python3-distutils
+      - python3-dev
+      - libssl-dev
+      - libpq-dev
+      - libmysqlclient-dev
+
+- name: Install dependicy packages(>bionic)
+  become: true
+  apt:
+    pkg:
+      - systemd-timesyncd
+      - yarnpkg
+  # ansible_facts['distribution'] == "Ubuntu"
+  when: ansible_facts['distribution_major_version'] | int >= 20
+
+
+
+- import_tasks: locales.yml
+
+- name: Set default editor to vim
+  become: true
+  shell: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: Set timezone
+  become: true
+  shell: timedatectl set-timezone UTC
+
+- name: Set git rebase mode
+  become: true
+  shell: git config --global pull.rebase false
+
+- import_tasks: zsh.yml
+
+# ---------------------------------------------------
+
+- name: check if friendlyelec
+  ansible.builtin.stat:
+    path: /etc/friendlyelec-release
+  register: app_os_friendlyelec
+
+- import_tasks: friendly-core.yml
+  when: app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg
+
+- name: check if armbian
+  ansible.builtin.stat:
+    path: /etc/armbian-release
+  register: app_os_armbian
+
+- import_tasks: armbian.yml
+  when: app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg
+
+- import_tasks: raspbian.yml
+  when: ansible_distribution == 'Raspbian'
+
+- import_tasks: pi.yml
+  when: ansible_distribution == 'Raspbian' or (app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg) or (app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg)
+
+# ---------------------------------------------------
+
+- name: enable nginx service
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+
+- name: enable cron service
+  become: true
+  ansible.builtin.systemd:
+    name: cron
+    enabled: yes
+    masked: no
+
+- name: enable ssh service
+  become: true
+  ansible.builtin.systemd:
+    name: ssh
+    enabled: yes
+    masked: no
+
+- name: enable systemd-timesyncd service
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: yes
+    masked: no
+
+
+- import_tasks: clean.yml
