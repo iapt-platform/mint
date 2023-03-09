@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Drawer } from "antd";
+import { Button, Card, Drawer, Space } from "antd";
 
 import SuggestionList from "./SuggestionList";
 import SuggestionAdd from "./SuggestionAdd";
 import { ISentence } from "../SentEdit";
+import Marked from "../../general/Marked";
 
 export interface IAnswerCount {
   id: string;
@@ -42,7 +43,7 @@ const Widget = ({ trigger, data }: IWidget) => {
         open={open}
         maskClosable={false}
       >
-        <div>
+        <Space direction="vertical">
           <Card
             title="温馨提示"
             size="small"
@@ -51,7 +52,10 @@ const Widget = ({ trigger, data }: IWidget) => {
               display: openNotification ? "block" : "none",
             }}
           >
-            <p>此处专为提交修改建议译文。如果有问题，请在讨论页面提交。</p>
+            <Marked
+              text="此处专为提交修改建议译文。您输入的应该是**译文**
+              而不是评论和问题。其他内容，请在讨论页面提交。"
+            />
             <p style={{ textAlign: "center" }}>
               <Button
                 onClick={() => {
@@ -63,13 +67,9 @@ const Widget = ({ trigger, data }: IWidget) => {
               </Button>
             </p>
           </Card>
-          <div>
-            <SuggestionAdd data={data} />
-          </div>
-          <div>
-            <SuggestionList {...data} />
-          </div>
-        </div>
+          <SuggestionAdd data={data} />
+          <SuggestionList {...data} />
+        </Space>
       </Drawer>
     </>
   );
