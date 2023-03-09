@@ -37,7 +37,7 @@ const Widget = ({ data, isPr = false, onAccept }: IWidget) => {
       <SuggestionBox data={data} trigger={<HandOutlinedIcon />} />
       {data.suggestionCount?.suggestion} <Divider type="vertical" />
       <CommentBox
-        resId={`data.book`}
+        resId={data.id}
         resType="sentence"
         trigger={<CommentOutlined />}
         onCommentCountChange={(count: number) => {
