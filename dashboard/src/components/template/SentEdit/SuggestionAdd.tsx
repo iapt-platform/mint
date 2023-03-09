@@ -29,11 +29,9 @@ const Widget = ({ data }: ISentCell) => {
       <div style={{ display: isEditMode ? "block" : "none" }}>
         <SentCellEditable
           data={sentData}
+          isPr={true}
           onClose={() => {
             setIsEditMode(false);
-          }}
-          onDataChange={(data: ISentence) => {
-            setSentData(data);
           }}
         />
       </div>
