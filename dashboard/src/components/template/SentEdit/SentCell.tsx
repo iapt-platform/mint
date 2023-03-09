@@ -20,6 +20,9 @@ const Widget = ({ data, wordWidget = false, isPr = false }: ISentCell) => {
   const [sentData, setSentData] = useState<ISentence>(data);
   const acceptPr = useAppSelector(sentence);
   useEffect(() => {
+    setSentData(data);
+  }, [data]);
+  useEffect(() => {
     if (typeof acceptPr !== "undefined" && !isPr) {
       if (
         acceptPr.book === data.book &&
