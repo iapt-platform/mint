@@ -19,12 +19,14 @@ interface ISentCellEditable {
   data: ISentence;
   onDataChange?: Function;
   onClose?: Function;
+  onCreate?: Function;
   isPr?: boolean;
 }
 const Widget = ({
   data,
   onDataChange,
   onClose,
+  onCreate,
   isPr = false,
 }: ISentCellEditable) => {
   const intl = useIntl();
@@ -47,7 +49,8 @@ const Widget = ({
 
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onDataChange !== "undefined") {
+          if (typeof onCreate !== "undefined") {
+            onCreate();
           }
         } else {
           message.error(json.message);

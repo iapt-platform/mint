@@ -5,10 +5,11 @@ import { PlusOutlined } from "@ant-design/icons";
 import { ISentence } from "../SentEdit";
 import SentCellEditable from "./SentCellEditable";
 
-interface ISentCell {
+interface IWidget {
   data: ISentence;
+  onCreate?: Function;
 }
-const Widget = ({ data }: ISentCell) => {
+const Widget = ({ data, onCreate }: IWidget) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
 
@@ -32,6 +33,11 @@ const Widget = ({ data }: ISentCell) => {
           isPr={true}
           onClose={() => {
             setIsEditMode(false);
+          }}
+          onCreate={() => {
+            if (typeof onCreate !== "undefined") {
+              onCreate();
+            }
           }}
         />
       </div>
