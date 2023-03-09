@@ -1,6 +1,7 @@
 import { Space, Tooltip } from "antd";
 import { useIntl } from "react-intl";
 import { FieldTimeOutlined } from "@ant-design/icons";
+import { useEffect, useRef, useState } from "react";
 
 interface IWidgetTimeShow {
   showIcon?: boolean;
@@ -16,12 +17,24 @@ const Widget = ({
   title,
 }: IWidgetTimeShow) => {
   const intl = useIntl(); //i18n
-  if (typeof time === "undefined") {
+  const [passTime, setPassTime] = useState<string>();
+  console.log("time", time);
+  const updateTime = () => {
+    console.log("timer", time);
+    if (typeof time !== "undefined" && time !== "") {
+      setPassTime(getPassDataTime(time));
+    }
+  };
+
+  useEffect(() => {
+    updateTime();
+  }, [time]);
+
+  if (typeof time === "undefined" || time === "") {
     return <></>;
   }
   const icon = showIcon ? <FieldTimeOutlined /> : <></>;
 
-  const passTime: string = getPassDataTime(time);
   const tooltip: string = getFullDataTime(time);
   const color = "lime";
   function getPassDataTime(t: string): string {
