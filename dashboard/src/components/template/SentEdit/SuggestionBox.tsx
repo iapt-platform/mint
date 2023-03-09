@@ -16,6 +16,7 @@ interface IWidget {
 }
 const Widget = ({ trigger, data }: IWidget) => {
   const [open, setOpen] = useState(false);
+  const [reload, setReload] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const Widget = ({ trigger, data }: IWidget) => {
         open={open}
         maskClosable={false}
       >
-        <Space direction="vertical">
+        <Space direction="vertical" style={{ width: "100%" }}>
           <Card
             title="温馨提示"
             size="small"
@@ -67,8 +68,17 @@ const Widget = ({ trigger, data }: IWidget) => {
               </Button>
             </p>
           </Card>
-          <SuggestionAdd data={data} />
-          <SuggestionList {...data} />
+          <SuggestionAdd
+            data={data}
+            onCreate={() => {
+              setReload(true);
+            }}
+          />
+          <SuggestionList
+            {...data}
+            reload={reload}
+            onReload={() => setReload(false)}
+          />
         </Space>
       </Drawer>
     </>
