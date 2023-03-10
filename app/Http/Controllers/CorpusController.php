@@ -15,6 +15,7 @@ use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\UserApi;
+use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use App\Http\Resources\TocResource;
@@ -36,7 +37,20 @@ class CorpusController extends Controller
         "updated_at"=> "",
     ];
     protected $wbwChannels = [];
-    protected $selectCol = ['book_id','paragraph','word_start',"word_end",'channel_uid','content','editor_uid','updated_at'];
+    //句子需要查询的列
+    protected $selectCol = [
+        'uid',
+        'book_id',
+        'paragraph',
+        'word_start',
+        "word_end",
+        'channel_uid',
+        'content',
+        'editor_uid',
+        'acceptor_uid',
+        'pr_edit_at',
+        'updated_at'
+    ];
     public function __construct()
     {
 
@@ -229,14 +243,14 @@ class CorpusController extends Controller
 		#获取channel索引表
         $tranChannels = [];
 		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
-		$indexChannel = [];
 		foreach ($channelInfo as $key => $value) {
 			# code...
-			$indexChannel[$value->uid] = $value;
             if($value->type==="translation" ){
                 $tranChannels[] = $value->uid;
             }
 		}
+        $indexChannel = [];
+        $indexChannel = $this->getChannelIndex($channels);
         //获取wbw channel
         //目前默认的 wbw channel 是第一个translation channel
         foreach ($channels as $key => $value) {
@@ -311,13 +325,20 @@ class CorpusController extends Controller
         return $this->ok($this->result);
     }
 
-    private function getChannelIndex($channels){
+    private function getChannelIndex($channels,$type=null){
         #获取channel索引表
-        $channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+        $channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name','owner_uid'])->get();
         $indexChannel = [];
         foreach ($channelInfo as $key => $value) {
             # code...
+            if($type !== null && $value->type !== $type){
+                continue;
+            }
             $indexChannel[$value->uid] = $value;
+        }
+        foreach ($indexChannel as $uid => $value) {
+            # 查询studio
+            $indexChannel[$uid]['studio'] = StudioApi::getById($value->owner_uid);
         }
         return $indexChannel;
     }
@@ -364,6 +385,7 @@ class CorpusController extends Controller
                         "type"=>$info->type,
                         "id"=> $info->uid,
                     ],
+                    "studio" => $info['studio'],
                     "updateAt"=> "",
                     "suggestionCount" => SuggestionApi::getCountBySent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId),
                 ];
@@ -372,10 +394,17 @@ class CorpusController extends Controller
                     return $value['sid']===$sid;
                 });
                 if($row){
+                    $newSent['id'] = $row->uid;
                     $newSent['content'] = $row->content;
                     $newSent['html'] = "";
                     $newSent["editor"]=UserApi::getById($row->editor_uid);
                     $newSent['updateAt'] = $row->updated_at;
+                    if($mode !== "read"){
+                        if(isset($row->acceptor_uid) && !empty($row->acceptor_uid)){
+                            $newSent["acceptor"]=UserApi::getById($row->acceptor_uid);
+                            $newSent["prEditAt"]=$row->pr_edit_at;
+                        }
+                    }
                     switch ($info->type) {
                         case 'wbw':
                         case 'original':
