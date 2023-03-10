@@ -12,6 +12,7 @@ import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
+import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
 import ToolButtonTag from "../../../components/article/ToolButtonTag";
@@ -86,6 +87,7 @@ const Widget = () => {
               <Space direction="vertical">
                 <ToolButtonToc type={type} articleId={id} />
                 <ToolButtonTag type={type} articleId={id} />
+                <ToolButtonPr type={type} articleId={id} />
                 <ToolButtonSearch type={type} articleId={id} />
                 <ToolButtonSetting type={type} articleId={id} />
               </Space>
