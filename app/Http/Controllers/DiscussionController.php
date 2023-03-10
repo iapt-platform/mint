@@ -6,6 +6,7 @@ use App\Models\Discussion;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\PaliSentence;
+use App\Models\Sentence;
 use Illuminate\Http\Request;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
@@ -62,6 +63,36 @@ class DiscussionController extends Controller
 		}
     }
 
+    public function discussion_tree(Request $request){
+        $output = [];
+        $sentences = $request->get("data");
+        foreach ($sentences as $key => $sentence) {
+            # 先查句子信息
+            $sentInfo = Sentence::where('book_id',$sentence['book'])
+                                ->where('paragraph',$sentence['paragraph'])
+                                ->where('word_start',$sentence['word_start'])
+                                ->where('word_end',$sentence['word_end'])
+                                ->where('channel_uid',$sentence['channel_id'])
+                                ->first();
+            $sentPr = Discussion::where('res_id',$sentInfo['uid'])
+                            ->whereNull('parent')
+                            ->select('title','children_count','editor_uid')
+                            ->orderBy('created_at','desc')->get();
+            $output[] = [
+                'sentence' => [
+                    'book' => $sentInfo->book_id,
+                    'paragraph' => $sentInfo->paragraph,
+                    'word_start' => $sentInfo->word_start,
+                    'word_end' => $sentInfo->word_end,
+                    'channel_id' => $sentInfo->channel_uid,
+                    'content' => $sentInfo->content,
+                    'pr_count' => count($sentPr),
+                ],
+                'pr' => $sentPr,
+            ];
+        }
+        return $this->ok(['rows'=>$output,'count'=>count($output)]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -77,19 +108,31 @@ class DiscussionController extends Controller
         //
         // validate
         // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
+
+        if($request->has('parent')){
+            $rules = [];
+            $parentInfo = Discussion::find($request->get('parent'));
+            if(!$parentInfo){
+                return $this->error('no record');
+            }
+        }else{
+            $rules = array(
             'res_id' => 'required',
             'res_type' => 'required',
+            'title' => 'required',
         );
-        if(!$request->has('parent')){
-            $rules['title'] = 'required';
         }
 
         $validated = $request->validate($rules);
 
         $discussion = new Discussion;
-        $discussion->res_id = $request->get('res_id');
-        $discussion->res_type = $request->get('res_type');
+        if($request->has('parent')){
+            $discussion->res_id = $parentInfo->res_id;
+            $discussion->res_type = $parentInfo->res_type;
+        }else{
+            $discussion->res_id = $request->get('res_id');
+            $discussion->res_type = $request->get('res_type');
+        }
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
         $discussion->content_type = $request->get('content_type',"markdown");
@@ -98,11 +141,8 @@ class DiscussionController extends Controller
         $discussion->save();
         //更新parent children_count
         if($request->has('parent')){
-            $parent = Discussion::find($request->get('parent'));
-            if($parent){
-                $parent->increment('children_count',1);
-                $parent->save();
-            }
+            $parentInfo->increment('children_count',1);
+            $parentInfo->save();
         }
 
         return $this->ok(new DiscussionResource($discussion));
