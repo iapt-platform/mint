@@ -27,7 +27,7 @@ class UserOperation
         $response = $next($request);
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $response;
         }
 
         $method = $request->method();
