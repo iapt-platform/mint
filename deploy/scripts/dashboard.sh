@@ -10,7 +10,8 @@ then
     yarn install
 fi
 
-GENERATE_SOURCEMAP=false BUILD_PATH=$WORKSPACE/deploy/roles/mint/files/dashboard PUBLIC_URL=/pcd yarn build
+# GENERATE_SOURCEMAP=false 
+BUILD_PATH=$WORKSPACE/deploy/roles/mint/files/dashboard PUBLIC_URL=/pcd yarn build
 
 echo 'done.'
 
