@@ -1,6 +1,6 @@
 # 表示原因状语
 
-|格位|含义|翻译建议|关系|
+|语法特征|含义|翻译建议|关系|
 |-|-|-|-|
 |[**具**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/instr.html)|表达**因果**关系|根据……|[原因 ➡ 动词<br>CAU](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-cau.html)|
 |[来**源**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/cau.html)|表达**因果**关系|由于……|[原因 ➡ 动词<br>CAU](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/abl/abl-cau.html)|

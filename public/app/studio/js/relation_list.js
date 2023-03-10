@@ -1433,7 +1433,7 @@ var list_relation=[
     {
         "id": "DEF",
         "case": "",
-        "note": "特征限定<br>当…",
+        "note": "时间/条件状语 ➡ 动词<br>当…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1514,7 +1514,7 @@ var list_relation=[
     {
         "id": "ADV",
         "case": "",
-        "note": "副词",
+        "note": "副词/前生动词 ➡ 动词/后生动词",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",

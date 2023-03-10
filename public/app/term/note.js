@@ -1521,6 +1521,16 @@ function myEndingTooltip(inStr){
             tooltip:'属格/表达范围，……中的',
         },
         {
+            id:"my_gen2",
+            name:"အနက်",
+            tooltip:'属格/表达范围，……中的',
+        },
+        {
+            id:"my_gen2",
+            name:"ထဲမှ",
+            tooltip:'属格/表达范围，……中的',
+        },
+        {
             id:"my_loc1",
             name:"၌",
             tooltip:'处格/处(范围)',
@@ -1611,6 +1621,11 @@ function myEndingTooltip(inStr){
             tooltip:'就，只是',
         },
         {
+            id:"my_eva",
+            name:"ပင်လျှင်",
+            tooltip:'就，只是',
+        },
+        {
             id:"my_def",
             name:"လျှင်",
             tooltip:'同时发生的时间状语(当……的时候)',
@@ -1679,6 +1694,16 @@ function myEndingTooltip(inStr){
             id:"my_adv",
             name:"စွာ",
             tooltip:'副词',
+        },
+        {
+            id:"my_num1",
+            name:"လုံး",
+            tooltip:'整体性',
+        },
+        {
+            id:"my_num1",
+            name:"စလုံး",
+            tooltip:'整体性',
         },
     ];
 
