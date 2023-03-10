@@ -26,11 +26,11 @@ const Widget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
   console.log(data);
   return (
-    <Row>
-      <Col flex={"2em"} style={{ padding: 8 }}>
-        <Avatar>{data.user?.nickName?.slice(0, 1)}</Avatar>
-      </Col>
-      <Col flex={"auto"}>
+    <div style={{ display: "flex" }}>
+      <div style={{ width: "2em" }}>
+        <Avatar size="small">{data.user?.nickName?.slice(0, 1)}</Avatar>
+      </div>
+      <div style={{ width: "100%" }}>
         {edit ? (
           <CommentEdit
             data={data}
@@ -48,8 +48,8 @@ const Widget = ({ data, onSelect, onCreated }: IWidget) => {
             }}
           />
         )}
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
