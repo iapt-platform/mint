@@ -19,7 +19,6 @@ const Widget = ({
   const intl = useIntl(); //i18n
   const [passTime, setPassTime] = useState<string>();
   const updateTime = () => {
-    console.log("timer", time);
     if (typeof time !== "undefined" && time !== "") {
       setPassTime(getPassDataTime(time));
     }
