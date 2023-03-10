@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\SentPr;
 use App\Models\Channel;
 use App\Models\PaliSentence;
+use App\Models\Sentence;
 use App\Http\Resources\SentPrResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -31,7 +32,8 @@ class SentPrController extends Controller
                                 ->where('word_end',$request->get('end'))
                                 ->where('channel_uid',$request->get('channel'));
                 $all_count = $table->count();
-                $chapters = $table->orderBy('paragraph')->get();
+                $chapters = $table->orderBy('created_at','desc')->get();
+
                 break;
         }
         if($chapters){
@@ -41,6 +43,39 @@ class SentPrController extends Controller
         }
     }
 
+    public function pr_tree(Request $request){
+        $output = [];
+        $sentences = $request->get("data");
+        foreach ($sentences as $key => $sentence) {
+            # 先查句子信息
+            $sentInfo = Sentence::where('book_id',$sentence['book'])
+                                ->where('paragraph',$sentence['paragraph'])
+                                ->where('word_start',$sentence['word_start'])
+                                ->where('word_end',$sentence['word_end'])
+                                ->where('channel_uid',$sentence['channel_id'])
+                                ->first();
+            $sentPr = SentPr::where('book_id',$sentence['book'])
+                            ->where('paragraph',$sentence['paragraph'])
+                            ->where('word_start',$sentence['word_start'])
+                            ->where('word_end',$sentence['word_end'])
+                            ->where('channel_uid',$sentence['channel_id'])
+                            ->select('content','editor_uid')
+                            ->orderBy('created_at','desc')->get();
+            $output[] = [
+                'sentence' => [
+                    'book' => $sentInfo->book_id,
+                    'paragraph' => $sentInfo->paragraph,
+                    'word_start' => $sentInfo->word_start,
+                    'word_end' => $sentInfo->word_end,
+                    'channel_id' => $sentInfo->channel_uid,
+                    'content' => $sentInfo->content,
+                    'pr_count' => count($sentPr),
+                ],
+                'pr' => $sentPr,
+            ];
+        }
+        return $this->ok(['rows'=>$output,'count'=>count($output)]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -50,11 +85,11 @@ class SentPrController extends Controller
     public function store(Request $request)
     {
         //
-        if(!isset($_COOKIE['user_uid'])){
-            return $this->error('not login');
-        }else{
-			$user_uid = $_COOKIE['user_uid'];
-		}
+        $user = \App\Http\Api\AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $user_uid = $user['user_uid'];
 
         $data = $request->all();
 
