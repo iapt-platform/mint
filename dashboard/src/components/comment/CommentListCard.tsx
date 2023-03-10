@@ -85,7 +85,7 @@ const Widget = ({
 
   return (
     <div>
-      <Card title="问答" extra={<a href="#">More</a>}>
+      <Card title="讨论" extra={<a href="#">More</a>}>
         {data.length > 0 ? (
           <CommentList
             onSelect={(
@@ -102,6 +102,7 @@ const Widget = ({
 
         {resId && resType ? (
           <CommentCreate
+            contentType="markdown"
             resId={resId}
             resType={resType}
             onCreated={(e: IComment) => {
