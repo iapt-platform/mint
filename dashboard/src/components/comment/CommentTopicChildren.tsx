@@ -62,6 +62,7 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
         )}
       />
       <CommentCreate
+        contentType="markdown"
         parent={topicId}
         onCreated={(e: IComment) => {
           console.log("create", e);
