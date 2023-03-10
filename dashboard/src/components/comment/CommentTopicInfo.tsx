@@ -44,7 +44,7 @@ const Widget = ({ topicId }: IWidget) => {
   }, [topicId]);
   return (
     <div>
-      <Title editable level={3} style={{ margin: 0 }}>
+      <Title editable level={5} style={{ margin: 0 }}>
         {data?.title}
       </Title>
       <div>
