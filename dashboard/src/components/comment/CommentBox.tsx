@@ -26,6 +26,9 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
 
   const onClose = () => {
     setOpen(false);
+    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+      document.getElementsByTagName("body")[0].removeAttribute("style");
+    }
   };
 
   const showChildrenDrawer = (
