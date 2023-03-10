@@ -60,6 +60,7 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('sentence',SentenceController::class);
 	Route::post('sent-in-channel',[SentenceController::class,"sent_in_channel"]);
 	Route::apiResource('sentpr',SentPrController::class);
+	Route::post('sent-pr-tree',[SentPrController::class,"pr_tree"]);
 	Route::apiResource('progress',ProgressChapterController::class);
 	Route::apiResource('tag',TagController::class);
 	Route::apiResource('view',ViewController::class);
