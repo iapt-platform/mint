@@ -91,6 +91,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::post('export_wbw',[ExportWbwController::class,'index']);
     Route::apiResource('attachments',UploadController::class);
     Route::apiResource('discussion',DiscussionController::class);
+    Route::post('sent-discussion-tree',[DiscussionController::class,"discussion_tree"]);
     Route::get('discussion-anchor/{id}',[DiscussionController::class,'anchor']);
     Route::apiResource('user',UserController::class);
     Route::apiResource('group-member',GroupMemberController::class);
