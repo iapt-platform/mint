@@ -1,5 +1,5 @@
 import { Button, Dropdown } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { mainMenuItems } from "../library/HeadBar";
 
 const Widget = () => {
@@ -10,9 +10,9 @@ const Widget = () => {
       trigger={["click"]}
     >
       <Button
+        type="text"
         style={{ display: "block" }}
-        size="small"
-        icon={<MenuOutlined />}
+        icon={<AppstoreOutlined />}
       ></Button>
     </Dropdown>
   );
