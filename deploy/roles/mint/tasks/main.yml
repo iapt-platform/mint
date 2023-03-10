@@ -88,7 +88,11 @@
   args:
     chdir: "{{ app_deploy_target }}/agile/dashboard"
 
-- name: Build dashboard (agile)
-  ansible.builtin.shell: BUILD_PATH={{ app_deploy_target }}/dashboard PUBLIC_URL=/pcd yarn build
-  args:
-    chdir: "{{ app_deploy_target }}/agile/dashboard"
+- name: Upload dashboard folder
+  ansible.builtin.copy:
+    src: dashboard
+    dest: "{{ app_deploy_target }}/"
+# - name: Build dashboard (agile)
+#   ansible.builtin.shell: NODE_OPTIONS=--max-old-space-size=1024 GENERATE_SOURCEMAP=false BUILD_PATH={{ app_deploy_target }}/dashboard PUBLIC_URL=/pcd yarn build
+#   args:
+#     chdir: "{{ app_deploy_target }}/agile/dashboard"
