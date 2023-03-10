@@ -16,6 +16,7 @@ import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useRef } from "react";
+import MDEditor from "@uiw/react-md-editor";
 
 export type TContentType = "text" | "markdown" | "html";
 
@@ -24,12 +25,12 @@ interface IWidget {
   resType?: string;
   parent?: string;
   onCreated?: Function;
-  editor?: TContentType;
+  contentType?: TContentType;
 }
 const Widget = ({
-  resId = "",
-  resType = "",
-  editor = "html",
+  resId,
+  resType,
+  contentType = "html",
   parent,
   onCreated,
 }: IWidget) => {
@@ -72,6 +73,7 @@ const Widget = ({
                 parent: parent,
                 title: values.title,
                 content: values.content,
+                content_type: contentType,
               })
                 .then((json) => {
                   console.log("new discussion", json);
@@ -126,7 +128,7 @@ const Widget = ({
                 rules={[{ required: true, message: "这是必填项" }]}
               />
             )}
-            {editor === "text" ? (
+            {contentType === "text" ? (
               <ProFormTextArea
                 name="content"
                 label={intl.formatMessage({ id: "forms.fields.content.label" })}
@@ -134,13 +136,21 @@ const Widget = ({
                   id: "forms.fields.content.placeholder",
                 })}
               />
-            ) : editor === "html" ? (
+            ) : contentType === "html" ? (
               <Form.Item
                 name="content"
                 label={intl.formatMessage({ id: "forms.fields.content.label" })}
                 tooltip="可以直接粘贴屏幕截图"
               >
-                <ReactQuill theme="snow" style={{ height: 220 }} />
+                <ReactQuill theme="snow" style={{ height: 180 }} />
+              </Form.Item>
+            ) : contentType === "markdown" ? (
+              <Form.Item
+                name="content"
+                label={intl.formatMessage({ id: "forms.fields.content.label" })}
+                tooltip="可以直接粘贴屏幕截图"
+              >
+                <MDEditor />
               </Form.Item>
             ) : (
               <></>
