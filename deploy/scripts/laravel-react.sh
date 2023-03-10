@@ -41,9 +41,9 @@ server {
   client_max_body_size 128M;
   
 
-  location /my/ {
-    alias /var/www/$1/current/dashboard/;
-    try_files \$uri \$uri/ /my/index.html;
+  location /pcd/ {
+    alias /var/www/$1/dashboard/;
+    try_files \$uri \$uri/ /pcd/index.html;
     
     location ~* \\.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)\$ {
       access_log off;

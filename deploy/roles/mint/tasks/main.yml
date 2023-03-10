@@ -1,10 +1,50 @@
-- name: Git checkout source code
+- name: Git checkout source code(laravel)
   ansible.builtin.git:
     repo: "https://github.com/iapt-platform/mint.git"
     dest: "{{ app_deploy_target }}/htdocs"
     version: laravel
+    force: true
 
-- name: Setup storage folder
+- name: Install v2 nodejs dependencies(laravel)
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}/htdocs"
+
+# TODO will remove in future
+- name: Install v1 php dependencies(laravel)
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
+  args:
+    chdir: "{{ app_deploy_target }}/htdocs/public"
+
+# TODO will remove in future
+- name: Install v1 nodejs dependencies(laravel)
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}/htdocs/public"
+
+# TODO will remove in future
+- name: Setup tmp folder(laravel)
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/tmp"
+    state: directory
+    recurse: true
+    owner: www-data
+    group: www-data
+
+# TODO will remove in future
+- name: Install v1 tmp(laravel)
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}/tmp"
+    dest: "{{ app_deploy_target }}/htdocs/public/tmp"
+    state: link
+
+- name: Install v2 php dependencies
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
+  args:
+    chdir: "{{ app_deploy_target }}/htdocs"
+
+- name: Setup storage folder(laravel)
   become: true
   ansible.builtin.file:
     path: "{{ app_deploy_target }}/storage"
@@ -13,74 +53,42 @@
     owner: www-data
     group: www-data
 
-- name: Install v2 php dependencies
-  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
-  args:
-    chdir: "{{ app_deploy_target }}"
-
-- name: Install v2 nodejs dependencies
-  # ansible.builtin.file:
-  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v2"
-  #   dest: "{{ app_deploy_target }}/node_modules"
-  #   state: link
-  ansible.builtin.shell: npm install
-  args:
-    chdir: "{{ app_deploy_target }}"
-
-# TODO will remove in future
-- name: Install v1 php dependencies
-  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
-  args:
-    chdir: "{{ app_deploy_target }}/public"
-
-# TODO will remove in future
-- name: Install v1 nodejs dependencies
-  # ansible.builtin.file:
-  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
-  #   dest: "{{ app_deploy_target }}/public/node_modules"
-  #   state: link
-  ansible.builtin.shell: npm install
-  args:
-    chdir: "{{ app_deploy_target }}/public"
-
-# TODO will remove in future
-- name: Install v1 tmp
+- name: Delete repo's storage folder(laravel)
   ansible.builtin.file:
-    src: "/var/www/{{ inventory_hostname }}/tmp"
-    dest: "{{ app_deploy_target }}/public/tmp"
+    path: "{{ app_deploy_target }}/htdocs/storage"
+    state: absent
+
+- name: create storage link(laravel)
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}/storage"
+    dest: "{{ app_deploy_target }}/htdocs/storage"
     state: link
 
-- name: .env(v2)
-  become: true
-  ansible.builtin.template:
-    src: env-v2.j2
-    dest: "{{ app_deploy_target }}/.env"
-    owner: www-data
-    group: www-data
-    mode: "0400"
-
-# TODO will remove in future
-- name: config.php(v1)
-  become: true
-  ansible.builtin.template:
-    src: config-v1.php.j2
-    dest: "{{ app_deploy_target }}/public/app/config.php"
-    owner: www-data
-    group: www-data
-    mode: "0400"
-
-# TODO will remove in future
-- name: config.js(v1)
-  become: true
-  ansible.builtin.template:
-    src: config-v1.js.j2
-    dest: "{{ app_deploy_target }}/public/app/config.js"
-    owner: www-data
-    group: www-data
-    mode: "0400"
-
-- name: Create a current link
+- name: create v2 config file(laravel)
   ansible.builtin.file:
-    src: "{{ app_deploy_target }}"
-    dest: /var/www/{{ inventory_hostname }}/current
+    src: "{{ app_deploy_target }}/etc/v2.env"
+    dest: "{{ app_deploy_target }}/htdocs/.env"
     state: link
+
+# FIXME
+- name: create v1 config file(laravel)
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}/etc/v1.php"
+    dest: "{{ app_deploy_target }}/htdocs/public/app/config.php"
+    state: link
+
+- name: Git checkout source code(agile)
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_deploy_target }}/agile"
+    version: agile
+
+- name: Install dashboard dependencies(agile)
+  ansible.builtin.shell: yarn install
+  args:
+    chdir: "{{ app_deploy_target }}/agile/dashboard"
+
+- name: Build dashboard (agile)
+  ansible.builtin.shell: BUILD_PATH={{ app_deploy_target }}/dashboard PUBLIC_URL=/pcd yarn build
+  args:
+    chdir: "{{ app_deploy_target }}/agile/dashboard"
