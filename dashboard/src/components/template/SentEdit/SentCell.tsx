@@ -34,8 +34,18 @@ const Widget = ({ data, wordWidget = false, isPr = false }: ISentCell) => {
         setSentData(acceptPr);
     }
   }, [acceptPr, data, isPr]);
+  const sid = `${sentData.book}_${sentData.para}_${sentData.wordStart}_${sentData.wordEnd}_${sentData.channel.id}`;
+  const hasPr = sentData.suggestionCount?.suggestion ? "true" : "false";
+  const hasDiscussion = sentData.suggestionCount?.discussion ? "true" : "false";
   return (
     <div style={{ marginBottom: "8px" }}>
+      {isPr ? undefined : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `<div class="pr_icon" id="${sid}" has-pr="${hasPr}" has-disc="${hasDiscussion}" data-pr="${data.suggestionCount?.suggestion}"></div>`,
+          }}
+        />
+      )}
       <SentEditMenu
         onModeChange={(mode: string) => {
           if (mode === "edit") {
