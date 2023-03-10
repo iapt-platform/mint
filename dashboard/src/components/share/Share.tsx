@@ -3,12 +3,12 @@ import { Divider, List, message, Select } from "antd";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { get, post } from "../../request";
-import { IUserApiData, IUserListResponse, Role } from "../api/Auth";
+import { IUserApiData, IUserListResponse, TRole } from "../api/Auth";
 import { IShareData, IShareRequest, IShareResponse } from "../api/Share";
 
 interface IShareUserList {
   user: IUserApiData;
-  role: Role;
+  role: TRole;
 }
 interface IWidget {
   resId: string;
@@ -21,7 +21,7 @@ const Widget = ({ resId, resType }: IWidget) => {
   interface IFormData {
     userId: string;
     userType: string;
-    role: Role;
+    role: TRole;
   }
   return (
     <div>

@@ -39,12 +39,7 @@ const Widget = () => {
             return {
               id: item.id,
               resType: item.res_type,
-              user: {
-                id: item.editor.id,
-                nickName: item.editor.nickName,
-                realName: item.editor.userName,
-                avatar: item.editor.avatar,
-              },
+              user: item.editor,
               title: item.title,
               childrenCount: item.children_count,
               createdAt: item.created_at,

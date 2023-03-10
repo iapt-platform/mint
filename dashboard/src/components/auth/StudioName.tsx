@@ -6,7 +6,7 @@ export interface IStudio {
   id: string;
   nickName: string;
   studioName: string;
-  avatar: string;
+  avatar?: string;
 }
 interface IWidghtStudio {
   data?: IStudio;

@@ -1,6 +1,6 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
-import { IUserRequest, Role } from "./Auth";
+import { IUserRequest, TRole } from "./Auth";
 
 export interface ICourseListApiResponse {
   article: string;
@@ -116,7 +116,7 @@ export interface ICourseMemberListResponse {
   message: string;
   data: {
     rows: ICourseMemberData[];
-    role: Role;
+    role: TRole;
     count: number;
   };
 }

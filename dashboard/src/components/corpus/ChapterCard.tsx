@@ -36,7 +36,6 @@ interface IWidgetChapterCard {
 
 const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
-  console.log("path", data.path);
   return (
     <>
       <Row>

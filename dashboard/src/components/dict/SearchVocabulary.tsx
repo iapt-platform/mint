@@ -109,6 +109,9 @@ const Widget = ({ value, onSplit, onSearch }: IWidget) => {
             }
           } else {
             setFactors([]);
+            if (typeof onSplit !== "undefined") {
+              onSplit();
+            }
           }
         }}
         onSearch={(value: string) => {

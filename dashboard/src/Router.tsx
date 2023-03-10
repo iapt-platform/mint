@@ -17,6 +17,7 @@ import NutNotFound from "./pages/nut/not-found";
 import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
+import AdminHome from "./pages/admin";
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
@@ -83,6 +84,8 @@ import StudioAnthology from "./pages/studio/anthology";
 import StudioAnthologyList from "./pages/studio/anthology/list";
 import StudioAnthologyEdit from "./pages/studio/anthology/edit";
 
+import StudioSetting from "./pages/studio/setting";
+
 import StudioAnalysis from "./pages/studio/analysis";
 import StudioAnalysisList from "./pages/studio/analysis/list";
 import { ConfigProvider } from "antd";
@@ -94,6 +97,7 @@ const Widget = () => {
   return (
     <ConfigProvider prefixCls={theme}>
       <Routes>
+        <Route path="admin" element={<AdminHome />} />
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">
             <Route path="sign-in" element={<NutUsersSignIn />} />
@@ -234,8 +238,9 @@ const Widget = () => {
               element={<StudioAnthologyEdit />}
             />
           </Route>
+          <Route path="setting" element={<StudioSetting />} />
 
-          <Route path="analysis" element={<StudioAnalysis />}>
+          <Route path="exp" element={<StudioAnalysis />}>
             <Route path="list" element={<StudioAnalysisList />} />
           </Route>
         </Route>

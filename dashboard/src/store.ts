@@ -12,6 +12,7 @@ import inlineDictReducer from "./reducers/inline-dict";
 import currentCourseReducer from "./reducers/current-course";
 import sentenceReducer from "./reducers/sentence";
 import themeReducer from "./reducers/theme";
+import acceptPrReducer from "./reducers/accept-pr";
 
 const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ const store = configureStore({
     currentCourse: currentCourseReducer,
     sentence: sentenceReducer,
     theme: themeReducer,
+    acceptPr: acceptPrReducer,
   },
 });
 

@@ -63,9 +63,15 @@ const Widget = ({
   }
   return (
     <>
-      <Button shape="round" size="small" icon={<ReloadOutlined />}>
-        刷新
-      </Button>
+      <div style={{ textAlign: "right" }}>
+        <Button
+          type="link"
+          shape="round"
+          size="small"
+          icon={<ReloadOutlined />}
+        />
+      </div>
+
       <div>
         <TocPath data={path} channel={channels} />
 

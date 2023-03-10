@@ -7,7 +7,7 @@ import {
   IFirstMeaning,
 } from "../api/Dict";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 interface IOptions {
   value: string;
@@ -17,25 +17,37 @@ interface IWidget {
   word?: string;
   add?: string;
   split?: string;
+  onSearch?: Function;
 }
-const Widget = ({ word, add, split }: IWidget) => {
+const Widget = ({ word, add, split, onSearch }: IWidget) => {
   const [compound, setCompound] = useState<IOptions[]>([]);
   const [factors, setFactors] = useState<IOptions[]>([]);
   const [meaningData, setMeaningData] = useState<IFirstMeaning[]>();
   const [currValue, setCurrValue] = useState<string>();
-  const onSelectChange = (value: string) => {
+  const onSelectChange = (value?: string) => {
     console.log("selected", value);
-    get<IDictFirstMeaningResponse>(
-      `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-")
-    ).then((json) => {
-      if (json.ok) {
-        setMeaningData(json.data);
-      }
-    });
+    if (typeof value === "undefined") {
+      setMeaningData(undefined);
+    } else {
+      get<IDictFirstMeaningResponse>(
+        `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-")
+      ).then((json) => {
+        if (json.ok) {
+          setMeaningData(json.data);
+        }
+      });
+    }
   };
   useEffect(() => {
+    console.log("compound changed", add);
+  }, [add]);
+  useEffect(() => {
+    console.log("compound changed", add, compound);
     if (typeof add === "undefined") {
       setFactors(compound);
+      const value = compound.length > 0 ? compound[0].value : undefined;
+      setCurrValue(value);
+      onSelectChange(value);
     } else {
       setFactors([{ value: add, label: add }, ...compound]);
       setCurrValue(add);
@@ -55,25 +67,43 @@ const Widget = ({ word, add, split }: IWidget) => {
     );
   }, [word]);
   return (
-    <div>
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 560,
+        marginLeft: "auto",
+        marginRight: "auto",
+      }}
+    >
       <Select
         value={currValue}
         style={{ width: "100%" }}
         onChange={onSelectChange}
         options={factors}
       />
-      <List
-        size="small"
-        dataSource={meaningData}
-        renderItem={(item) => (
-          <List.Item>
-            <div>
-              <Text strong>{item.word}</Text>{" "}
-              <Text type="secondary">{item.meaning}</Text>
-            </div>
-          </List.Item>
-        )}
-      />
+      {meaningData ? (
+        <List
+          size="small"
+          dataSource={meaningData}
+          renderItem={(item) => (
+            <List.Item>
+              <div>
+                <Link
+                  strong
+                  onClick={() => {
+                    if (typeof onSearch !== "undefined") {
+                      onSearch(item.word, true);
+                    }
+                  }}
+                >
+                  {item.word}
+                </Link>{" "}
+                <Text type="secondary">{item.meaning}</Text>
+              </div>
+            </List.Item>
+          )}
+        />
+      ) : undefined}
     </div>
   );
 };

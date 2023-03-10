@@ -2,7 +2,7 @@ import { useIntl } from "react-intl";
 import { ProForm } from "@ant-design/pro-components";
 import { message } from "antd";
 
-import { IApiResponseDict, IDictDataRequest } from "../api/Dict";
+import { IApiResponseDict, IDictRequest } from "../api/Dict";
 import { get, put } from "../../request";
 
 import DictEditInner from "./DictEditInner";
@@ -20,7 +20,7 @@ const Widget = ({ wordId }: IWidget) => {
         onFinish={async (values: IDictFormData) => {
           // TODO
           console.log(values);
-          const request: IDictDataRequest = {
+          const request: IDictRequest = {
             id: values.id,
             word: values.word,
             type: values.type,
@@ -33,7 +33,7 @@ const Widget = ({ wordId }: IWidget) => {
             language: values.lang,
             confidence: values.confidence,
           };
-          const res = await put<IDictDataRequest, IApiResponseDict>(
+          const res = await put<IDictRequest, IApiResponseDict>(
             `/v2/userdict/${wordId}`,
             request
           );

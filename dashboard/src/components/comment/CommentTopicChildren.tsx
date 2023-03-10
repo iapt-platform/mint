@@ -28,12 +28,7 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
               id: item.id,
               resId: item.res_id,
               resType: item.res_type,
-              user: {
-                id: item.editor?.id ? item.editor.id : "null",
-                nickName: item.editor?.nickName ? item.editor.nickName : "null",
-                realName: item.editor?.userName ? item.editor.userName : "null",
-                avatar: item.editor?.avatar ? item.editor.avatar : "null",
-              },
+              user: item.editor,
               title: item.title,
               content: item.content,
               createdAt: item.created_at,

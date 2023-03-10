@@ -8,9 +8,9 @@ const items = {
   "buttons.delete": "删除",
   "buttons.remove": "移除",
   "buttons.delete.all": "批量删除",
-  "buttons.selected": "已经选择",
+  "buttons.selected": "已选择",
   "buttons.select": "选择",
-  "buttons.unselect": "取消选择",
+  "buttons.unselect": "全不选",
   "buttons.option": "操作",
   "buttons.save": "保存",
   "buttons.save.publish": "保存并公开",
@@ -33,6 +33,12 @@ const items = {
   "buttons.open.in.library": "在藏经阁中打开",
   "buttons.preview": "预览",
   "buttons.view": "查看",
+  "buttons.empty": "清空",
+  "buttons.basic": "基本",
+  "buttons.bookmark": "书签",
+  "buttons.note": "注解",
+  "buttons.advance": "高级",
+  "buttons.attachments": "附件",
 };
 
 export default items;

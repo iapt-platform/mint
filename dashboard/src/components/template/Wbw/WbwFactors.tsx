@@ -8,8 +8,32 @@ import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { PaliReal } from "../../../utils";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import { IApiResponseDictData } from "../../api/Dict";
 
 const { Text } = Typography;
+
+export const getFactorsInDict = (
+  wordIn: string,
+  wordIndex: string[],
+  wordList: IApiResponseDictData[]
+): string[] => {
+  if (wordIndex.includes(wordIn)) {
+    const result = wordList.filter((word) => word.word === wordIn);
+    //查重
+    //TODO 加入信心指数并排序
+    let myMap = new Map<string, number>();
+    let factors: string[] = [];
+    for (const iterator of result) {
+      myMap.set(iterator.factors, 1);
+    }
+    myMap.forEach((value, key, map) => {
+      factors.push(key);
+    });
+    return factors;
+  } else {
+    return [];
+  }
+};
 
 interface IWidget {
   data: IWbw;

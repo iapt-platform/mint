@@ -33,8 +33,6 @@ const Widget = () => {
   return (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
-        console.log(values);
         const user = {
           username: values.email,
           password: values.password,
@@ -44,7 +42,6 @@ const Widget = () => {
           user
         );
         if (signin.ok) {
-          console.log("token", signin.data);
           localStorage.setItem("token", signin.data);
           get<IUserResponse>("/v2/auth/current").then((json) => {
             if (json.ok) {
@@ -54,6 +51,7 @@ const Widget = () => {
               console.error(json.message);
             }
           });
+
           message.success(intl.formatMessage({ id: "flashes.success" }));
         } else {
           message.error(signin.message);
@@ -68,7 +66,7 @@ const Widget = () => {
           label={intl.formatMessage({
             id: "forms.fields.email.or.username.label",
           })}
-          rules={[{ required: true, max: 255, min: 6 }]}
+          rules={[{ required: true, max: 255, min: 4 }]}
         />
       </ProForm.Group>
       <ProForm.Group>

@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../../request";
@@ -11,41 +12,66 @@ interface IWidget {
   wordStart: number;
   wordEnd: number;
   channel: IChannel;
+  reload?: boolean;
+  onReload?: Function;
 }
-const Widget = ({ book, para, wordStart, wordEnd, channel }: IWidget) => {
+const Widget = ({
+  book,
+  para,
+  wordStart,
+  wordEnd,
+  channel,
+  reload = false,
+  onReload,
+}: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
 
-  useEffect(() => {
+  const load = () => {
     get<ISuggestionListResponse>(
       `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`
-    ).then((json) => {
-      const newData: ISentence[] = json.data.rows.map((item) => {
-        return {
-          content: item.content,
-          html: item.html,
-          book: item.book,
-          para: item.paragraph,
-          wordStart: item.word_start,
-          wordEnd: item.word_end,
-          editor: {
-            id: item.editor.id,
-            nickName: item.editor.nickName,
-            realName: item.editor.userName,
-            avatar: item.editor.avatar,
-          },
-          channel: { name: item.channel.name, id: item.channel.id },
-          updateAt: item.updated_at,
-        };
+    )
+      .then((json) => {
+        if (json.ok) {
+          console.log("pr load", json.data.rows);
+          const newData: ISentence[] = json.data.rows.map((item) => {
+            return {
+              id: item.id,
+              content: item.content,
+              html: item.html,
+              book: item.book,
+              para: item.paragraph,
+              wordStart: item.word_start,
+              wordEnd: item.word_end,
+              editor: item.editor,
+              channel: { name: item.channel.name, id: item.channel.id },
+              updateAt: item.updated_at,
+            };
+          });
+          setSentData(newData);
+        } else {
+          message.error(json.message);
+        }
+      })
+      .finally(() => {
+        if (reload && typeof onReload !== "undefined") {
+          onReload();
+        }
       });
-      setSentData(newData);
-    });
-  }, [book, para, wordStart, wordEnd, channel]);
+  };
+  useEffect(() => {
+    load();
+  }, []);
+  useEffect(() => {
+    if (reload) {
+      load();
+    }
+  }, [reload]);
   return (
-    <div>
+    <>
       {sentData.map((item, id) => {
-        return <SentCell data={item} key={id} />;
+        return <SentCell data={item} key={id} isPr={true} />;
       })}
-    </div>
+    </>
   );
 };
 

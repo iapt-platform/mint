@@ -28,6 +28,7 @@ const items = {
   "columns.studio.collaboration.title": "Collaboration",
   "columns.studio.basic.title": "Basic",
   "columns.studio.advance.title": "Advance",
+  "columns.exp.title": "exp",
 };
 
 export default items;

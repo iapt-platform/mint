@@ -12,6 +12,7 @@ import WbwDetailAdvance from "./WbwDetailAdvance";
 import { LockIcon, UnLockIcon } from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
+import WbwDetailAttachment from "./WbwDetailAttachment";
 
 interface IWidget {
   data: IWbw;
@@ -86,7 +87,7 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
         type="card"
         items={[
           {
-            label: `basic`,
+            label: intl.formatMessage({ id: "buttons.basic" }),
             key: "basic",
             children: (
               <div>
@@ -101,35 +102,53 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
             ),
           },
           {
-            label: `bookmark`,
+            label: intl.formatMessage({ id: "buttons.bookmark" }),
             key: "bookmark",
             children: (
-              <WbwDetailBookMark
-                data={data}
-                onChange={(e: IWbwField) => {
-                  fieldChanged(e.field, e.value);
-                }}
-              />
+              <div style={{ minHeight: 270 }}>
+                <WbwDetailBookMark
+                  data={data}
+                  onChange={(e: IWbwField) => {
+                    fieldChanged(e.field, e.value);
+                  }}
+                />
+              </div>
             ),
           },
           {
-            label: `Note`,
+            label: intl.formatMessage({ id: "buttons.note" }),
             key: "note",
             children: (
-              <WbwDetailNote
-                data={data}
-                onChange={(e: IWbwField) => {
-                  fieldChanged(e.field, e.value);
-                }}
-              />
+              <div style={{ minHeight: 270 }}>
+                <WbwDetailNote
+                  data={data}
+                  onChange={(e: IWbwField) => {
+                    fieldChanged(e.field, e.value);
+                  }}
+                />
+              </div>
             ),
           },
           {
-            label: `advance`,
+            label: intl.formatMessage({ id: "buttons.advance" }),
             key: "advance",
             children: (
-              <div>
+              <div style={{ minHeight: 270 }}>
                 <WbwDetailAdvance
+                  data={currWbwData}
+                  onChange={(e: IWbwField) => {
+                    fieldChanged(e.field, e.value);
+                  }}
+                />
+              </div>
+            ),
+          },
+          {
+            label: intl.formatMessage({ id: "buttons.attachments" }),
+            key: "attachments",
+            children: (
+              <div style={{ minHeight: 270 }}>
+                <WbwDetailAttachment
                   data={currWbwData}
                   onChange={(e: IWbwField) => {
                     fieldChanged(e.field, e.value);

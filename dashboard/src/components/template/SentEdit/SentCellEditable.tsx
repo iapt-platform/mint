@@ -4,8 +4,13 @@ import { Button, message, Typography } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 
-import { put } from "../../../request";
-import { ISentenceRequest, ISentenceResponse } from "../../api/Corpus";
+import { post, put } from "../../../request";
+import {
+  ISentencePrRequest,
+  ISentencePrResponse,
+  ISentenceRequest,
+  ISentenceResponse,
+} from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
 
 const { Text } = Typography;
@@ -14,11 +19,49 @@ interface ISentCellEditable {
   data: ISentence;
   onDataChange?: Function;
   onClose?: Function;
+  onCreate?: Function;
+  isPr?: boolean;
 }
-const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
+const Widget = ({
+  data,
+  onDataChange,
+  onClose,
+  onCreate,
+  isPr = false,
+}: ISentCellEditable) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
+
+  const savePr = () => {
+    setSaving(true);
+    post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, {
+      book: data.book,
+      para: data.para,
+      begin: data.wordStart,
+      end: data.wordEnd,
+      channel: data.channel.id,
+      text: value,
+    })
+      .then((json) => {
+        console.log(json);
+        setSaving(false);
+
+        if (json.ok) {
+          message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onCreate !== "undefined") {
+            onCreate();
+          }
+        } else {
+          message.error(json.message);
+        }
+      })
+      .catch((e) => {
+        setSaving(false);
+        console.error("catch", e);
+        message.error(e.message);
+      });
+  };
 
   const save = () => {
     setSaving(true);
@@ -85,7 +128,7 @@ const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
                 }
               }}
             >
-              cancel
+              {intl.formatMessage({ id: "buttons.cancel" })}
             </Button>
           </span>
           <span>
@@ -102,9 +145,9 @@ const Widget = ({ data, onDataChange, onClose }: ISentCellEditable) => {
             type="primary"
             icon={<SaveOutlined />}
             loading={saving}
-            onClick={() => save()}
+            onClick={() => (isPr ? savePr() : save())}
           >
-            Save
+            {intl.formatMessage({ id: "buttons.save" })}
           </Button>
         </div>
       </div>

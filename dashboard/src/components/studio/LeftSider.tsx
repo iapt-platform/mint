@@ -31,8 +31,9 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   const linkTerm = "/studio/" + studioname + "/term/list";
   const linkArticle = "/studio/" + studioname + "/article/list";
   const linkAnthology = "/studio/" + studioname + "/anthology/list";
-  const linkAnalysis = "/studio/" + studioname + "/analysis/list";
+  const linkAnalysis = "/studio/" + studioname + "/exp/list";
   const linkCourse = "/studio/" + studioname + "/course/list";
+  const linkSetting = "/studio/" + studioname + "/setting";
 
   const items: MenuProps["items"] = [
     {
@@ -76,12 +77,11 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           label: (
             <Link to={linkAnalysis}>
               {intl.formatMessage({
-                id: "columns.studio.analysis.title",
+                id: "columns.exp.title",
               })}
             </Link>
           ),
           key: "analysis",
-          disabled: true,
         },
       ],
     },
@@ -139,6 +139,26 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "anthology",
+        },
+        {
+          label: (
+            <Link to={linkSetting}>
+              {intl.formatMessage({
+                id: "columns.studio.setting.title",
+              })}
+            </Link>
+          ),
+          key: "setting",
+          children: [
+            {
+              label: "账户",
+              key: "account",
+            },
+            {
+              label: "显示",
+              key: "display",
+            },
+          ],
         },
       ],
     },

@@ -1,55 +1,28 @@
+import { Space, Statistic } from "antd";
 import { useParams } from "react-router-dom";
+import Heatmap from "../../../components/exp/Heatmap";
+import ExpStatisticCard from "../../../components/exp/ExpStatisticCard";
 
-import { useState, useEffect } from "react";
-import { Line } from "@ant-design/plots";
+import StudyTimeDualAxes from "../../../components/exp/StudyTimeDualAxes";
+import { StatisticCard } from "@ant-design/pro-components";
 
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-
-const localizer = momentLocalizer(moment); // or globalizeLocalizer
 const Widget = () => {
   const { studioname } = useParams(); //url 参数
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    asyncFetch();
-  }, []);
-
-  const myEventsList = [{ start: "2022-10-1", end: "2022-10-2" }];
-  const asyncFetch = () => {
-    fetch(
-      "https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
-    )
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => {
-        console.log("fetch data failed", error);
-      });
-  };
-  const config = {
-    data,
-    xField: "Date",
-    yField: "scales",
-    xAxis: {
-      tickCount: 5,
-    },
-    slider: {
-      start: 0.1,
-      end: 0.5,
-    },
-  };
   return (
-    <>
-      {studioname}
-      <Line {...config} />
-
-      <Calendar
-        localizer={localizer}
-        events={myEventsList}
-        startAccessor="start"
-        endAccessor="end"
-      />
-    </>
+    <div style={{ padding: "1em" }}>
+      <Space direction="vertical">
+        <ExpStatisticCard studioName={studioname} />
+        <StatisticCard
+          title="进步曲线"
+          chart={<StudyTimeDualAxes studioName={studioname} />}
+        />
+        <StatisticCard
+          title="进步日历"
+          chart={<Heatmap studioName={studioname} />}
+        />
+      </Space>
+    </div>
   );
 };
 

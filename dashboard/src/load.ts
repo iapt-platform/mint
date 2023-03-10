@@ -79,6 +79,22 @@ const init = () => {
   } else {
     store.dispatch(refreshTheme("ant"));
   }
+
+  //设置时区到cookie
+  function setCookie(c_name: string, value: string, expiredays: number) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + expiredays);
+    document.cookie =
+      c_name +
+      "=" +
+      escape(value) +
+      (expiredays == null
+        ? ""
+        : "; expires=" + exdate.toUTCString() + ";path=/");
+  }
+  const date = new Date();
+  const timezone = date.getTimezoneOffset();
+  setCookie("timezone", timezone.toString(), 10);
 };
 
 export default init;

@@ -48,10 +48,15 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
             `/v2/article-map/${anthologyId}`,
             {
               data: data.map((item) => {
+                let title = "";
+                if (typeof item.title === "string") {
+                  title = item.title;
+                }
+                //TODO 整一个string title
                 return {
                   article_id: item.key,
                   level: item.level,
-                  title: item.title,
+                  title: title,
                   children: item.children,
                 };
               }),

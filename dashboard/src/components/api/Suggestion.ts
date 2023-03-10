@@ -2,7 +2,7 @@ import { IUserApiResponse } from "./Auth";
 import { IChannelApiData } from "./Channel";
 
 export interface ISuggestionData {
-  id: number;
+  id: string;
   book: number;
   paragraph: number;
   word_start: number;

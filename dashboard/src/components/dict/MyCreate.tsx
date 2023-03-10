@@ -1,0 +1,147 @@
+import { Button, Col, Divider, Input, message, Row } from "antd";
+import { useState } from "react";
+import { useIntl } from "react-intl";
+import { SaveOutlined } from "@ant-design/icons";
+
+import WbwDetailBasic from "../template/Wbw/WbwDetailBasic";
+import WbwDetailNote from "../template/Wbw/WbwDetailNote";
+import { IWbw, IWbwField, TFieldName } from "../template/Wbw/WbwWord";
+import { post } from "../../request";
+import { IDictResponse, IUserDictCreate } from "../api/Dict";
+
+interface IWidget {
+  word?: string;
+}
+const Widget = ({ word }: IWidget) => {
+  const intl = useIntl();
+  const [wordSpell, setWordSpell] = useState(word);
+  const [editWord, setEditWord] = useState<IWbw>({
+    word: { value: word ? word : "", status: 1 },
+    confidence: 100,
+  });
+  const [loading, setLoading] = useState(false);
+
+  function fieldChanged(field: TFieldName, value: string) {
+    let mData = JSON.parse(JSON.stringify(editWord));
+    switch (field) {
+      case "note":
+        mData.note = { value: value, status: 5 };
+        break;
+      case "word":
+        mData.word = { value: value, status: 5 };
+        break;
+      case "meaning":
+        mData.meaning = { value: value.split("$"), status: 5 };
+        break;
+      case "factors":
+        mData.factors = { value: value, status: 5 };
+        break;
+      case "factorMeaning":
+        mData.factorMeaning = { value: value, status: 5 };
+        break;
+      case "parent":
+        mData.parent = { value: value, status: 5 };
+        break;
+      case "case":
+        mData.case = { value: value.split("$"), status: 5 };
+        break;
+      case "confidence":
+        mData.confidence = parseFloat(value);
+        break;
+      default:
+        break;
+    }
+    setEditWord(mData);
+  }
+  return (
+    <div style={{ padding: "0 5px" }}>
+      <Row>
+        <Col
+          span={4}
+          style={{
+            display: "inline-block",
+            flexGrow: 0,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textAlign: "right",
+            verticalAlign: "middle",
+            padding: 5,
+          }}
+        >
+          拼写
+        </Col>
+        <Col span={20}>
+          <Input
+            value={wordSpell}
+            placeholder="Basic usage"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setWordSpell(event.target.value);
+              fieldChanged("word", event.target.value);
+              fieldChanged("real", event.target.value);
+            }}
+          />
+        </Col>
+      </Row>
+
+      <WbwDetailBasic
+        data={editWord}
+        onChange={(e: IWbwField) => {
+          console.log("WbwDetailBasic onchange", e);
+          fieldChanged(e.field, e.value);
+        }}
+      />
+      <Divider>{intl.formatMessage({ id: "buttons.note" })}</Divider>
+      <WbwDetailNote
+        data={editWord}
+        onChange={(e: IWbwField) => {
+          fieldChanged(e.field, e.value);
+        }}
+      />
+      <Divider></Divider>
+      <div
+        style={{ display: "flex", justifyContent: "space-between", padding: 5 }}
+      >
+        <Button>重置</Button>
+        <Button
+          loading={loading}
+          icon={<SaveOutlined />}
+          onClick={() => {
+            console.log("edit word", editWord);
+            setLoading(true);
+            post<IUserDictCreate, IDictResponse>("/v2/userdict", {
+              view: "dict",
+              data: JSON.stringify([
+                {
+                  word: editWord.word.value,
+                  type: editWord.type?.value,
+                  grammar: editWord.grammar?.value,
+                  mean: editWord.meaning?.value.join("$"),
+                  parent: editWord.parent?.value,
+                  note: editWord.note?.value,
+                  factors: editWord.factors?.value,
+                  factormean: editWord.factorMeaning?.value,
+                  confidence: editWord.confidence,
+                },
+              ]),
+            })
+              .finally(() => {
+                setLoading(false);
+              })
+              .then((json) => {
+                if (json.ok) {
+                  message.success("成功");
+                } else {
+                  message.error(json.message);
+                }
+              });
+          }}
+          type="primary"
+        >
+          {intl.formatMessage({ id: "buttons.save" })}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Widget;

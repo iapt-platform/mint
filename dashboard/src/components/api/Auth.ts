@@ -1,4 +1,4 @@
-export type Role =
+export type TRole =
   | "owner"
   | "manager"
   | "editor"
@@ -39,6 +39,6 @@ export interface IStudioApiResponse {
   id: string;
   nickName: string;
   studioName: string;
-  avatar: string;
+  avatar?: string;
   owner: IUserApiResponse;
 }

@@ -1,5 +1,5 @@
 import { IStudio } from "../auth/StudioName";
-import { IStudioApiResponse, IUserRequest, Role } from "./Auth";
+import { IStudioApiResponse, IUserRequest, TRole } from "./Auth";
 
 export interface IGroupRequest {
   name: string;
@@ -11,7 +11,7 @@ export interface IGroupDataRequest {
   name: string;
   description: string;
   studio: IStudioApiResponse;
-  role: Role;
+  role: TRole;
   created_at: string;
 }
 export interface IGroupResponse {
@@ -49,7 +49,7 @@ export interface IGroupMemberListResponse {
   message: string;
   data: {
     rows: IGroupMemberData[];
-    role: Role;
+    role: TRole;
     count: number;
   };
 }

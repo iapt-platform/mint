@@ -32,11 +32,12 @@ const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
         };
       });
       setTableData(newData);
+      console.log("chapter", newData);
     });
   }, [para]);
 
-  return (
-    <>
+  if (tableData.length > 0) {
+    return (
       <ChapterInChannel
         data={tableData}
         book={para.book}
@@ -44,8 +45,10 @@ const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
         channelId={channelId}
         openTarget={openTarget}
       />
-    </>
-  );
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default Widget;

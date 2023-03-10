@@ -28,7 +28,6 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
 
   return (
     <Content>
-      <Space>{groupId}</Space>
       <ProList<DataItem>
         rowKey="id"
         headerTitle={intl.formatMessage({ id: "forms.fields.lesson.label" })}

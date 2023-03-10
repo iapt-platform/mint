@@ -13,6 +13,7 @@ interface IWidget {
   articleId: string;
   selectedChannelKeys?: string[];
   onChannelSelect?: Function;
+  channelReload?: boolean;
 }
 const Widget = ({
   curr = "close",
@@ -20,6 +21,7 @@ const Widget = ({
   articleId,
   onChannelSelect,
   selectedChannelKeys,
+  channelReload = false,
 }: IWidget) => {
   const [dict, setDict] = useState("none");
   const [channel, setChannel] = useState("none");
@@ -42,8 +44,9 @@ const Widget = ({
   }, [curr]);
   return (
     <Affix offsetTop={44}>
-      <div>
+      <div key="panel">
         <div
+          key="DictComponent"
           style={{
             width: 350,
             height: `calc(100vh - 44px)`,
@@ -54,6 +57,7 @@ const Widget = ({
           <DictComponent />
         </div>
         <div
+          key="ChannelPickerTable"
           style={{
             width: 350,
             height: `calc(100vh - 44px)`,
