@@ -33,10 +33,16 @@ const Widget = ({ trigger, data }: IWidget) => {
   const onClose = () => {
     setOpen(false);
   };
-
+  const sid = `${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
+  const hasPr = data.suggestionCount?.suggestion ? "true" : "false";
   return (
     <>
       <span onClick={showDrawer}>{trigger}</span>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `<div class="pr_icon" id="${sid}" has-pr="${hasPr}" data-pr="${data.suggestionCount?.suggestion}"></div>`,
+        }}
+      />
       <Drawer
         title="修改建议"
         width={520}
