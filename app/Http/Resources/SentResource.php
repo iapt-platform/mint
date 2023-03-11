@@ -32,14 +32,15 @@ class SentResource extends JsonResource
                 "channel"=> $channel,
                 "studio" => StudioApi::getById($channel["studio_id"]),
                 "updated_at"=> $this->updated_at,
-                "suggestionCount" => SuggestionApi::getCountBySent($this->book_id,
+            ];
+        if($request->get('mode')==="edit" || $request->get('mode')==="wbw"){
+            $data['suggestionCount'] = SuggestionApi::getCountBySent($this->book_id,
                                                                    $this->paragraph,
                                                                    $this->word_start,
                                                                    $this->word_end,
                                                                    $this->channel_uid
-                                                                ),
-            ];
-
+                                                                );
+        }
         if(isset($this->acceptor_uid) && !empty($this->acceptor_uid)){
             $data["acceptor"]=UserApi::getById($this->acceptor_uid);
             $data["pr_edit_at"]=$this->pr_edit_at;
