@@ -8,10 +8,12 @@ use App\Models\Collection;
 
 class ShareApi{
 
-    /*
-    获取某用户的可见的协作资源
-    $res_type 见readme.md#资源类型 -1全部类型资源
-    */
+    /**
+     * 获取某用户的可见的协作资源
+     * $res_type 见readme.md#资源类型 -1全部类型资源
+     * power 权限 10: 只读  20：编辑 30： 拥有者
+     */
+
     public static function getResList($user_uid,$res_type=-1){
         # 找我加入的群
         $my_group = GroupMember::where("user_id",$user_uid)->select('group_id')->get();
