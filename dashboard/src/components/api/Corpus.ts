@@ -169,6 +169,11 @@ export interface ISentenceResponse {
   message: string;
   data: ISentenceData;
 }
+export interface ISentenceListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: ISentenceData[]; count: number };
+}
 export interface ISentenceNewRequest {
   sentences: ISentenceDiffData[];
   channel?: string;
