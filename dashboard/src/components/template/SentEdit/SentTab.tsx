@@ -9,6 +9,7 @@ import {
 import { IWidgetSentEditInner } from "../SentEdit";
 import Article from "../../article/Article";
 import SentTabButton from "./SentTabButton";
+import SentCanRead from "./SentCanRead";
 
 const { Text } = Typography;
 
@@ -29,6 +30,7 @@ const Widget = ({
     return <></>;
   }
   const sentId = id.split("_");
+  const sId = sentId[0].split("-");
 
   const onChange = (key: string) => {
     switch (key) {
@@ -49,6 +51,7 @@ const Widget = ({
   return (
     <>
       <Tabs
+        style={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
         onChange={onChange}
@@ -76,11 +79,12 @@ const Widget = ({
             ),
             key: "translation",
             children: (
-              <Article
-                active={translationActive}
-                type="corpus_sent/translation"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="translation"
               />
             ),
           },
@@ -95,11 +99,12 @@ const Widget = ({
             ),
             key: "nissaya",
             children: (
-              <Article
-                active={nissayaActive}
-                type="corpus_sent/nissaya"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="nissaya"
               />
             ),
           },
@@ -114,11 +119,12 @@ const Widget = ({
             ),
             key: "commentary",
             children: (
-              <Article
-                active={commentaryActive}
-                type="corpus_sent/commentary"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="commentary"
               />
             ),
           },
@@ -132,6 +138,7 @@ const Widget = ({
               />
             ),
             key: "original",
+            disabled: true,
             children: (
               <Article
                 active={originalActive}
