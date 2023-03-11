@@ -1,5 +1,5 @@
 import { IStudio } from "../auth/StudioName";
-import { IStudioApiResponse, TRole } from "./Auth";
+import { TRole } from "./Auth";
 export type TChannelType =
   | "translation"
   | "nissaya"
