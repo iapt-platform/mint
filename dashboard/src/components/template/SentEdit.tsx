@@ -57,7 +57,7 @@ const SentEditInner = ({
   simNum,
 }: IWidgetSentEditInner) => {
   return (
-    <Card>
+    <Card bodyStyle={{ paddingBottom: 0 }} size="small">
       <SentMenu>
         <SentContent
           origin={origin}
