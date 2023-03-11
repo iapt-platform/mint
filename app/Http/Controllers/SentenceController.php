@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
+use App\Http\Api\ShareApi;
 
 class SentenceController extends Controller
 {
@@ -19,7 +20,7 @@ class SentenceController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','channel_uid','updated_at'];
+		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'fulltext':
@@ -47,6 +48,62 @@ class SentenceController extends Controller
                                 ->where('channel_uid', $request->get('channel'))
                                 ->whereIns(['book_id','paragraph','word_start','word_end'],$query);
                 break;
+            case 'sent-can-read':
+                /**
+                 * 某句的全部译文
+                 */
+                //获取用户有阅读权限的所有channel
+                //全网公开
+                $type = $request->get('type','translation');
+                $channelTable = Channel::where("type",$type)->select(['uid','name']);
+                $channelPub = $channelTable->where('status',30)->get();
+
+                $user = AuthApi::current($request);
+                if($user){
+                    //自己的
+                    $channelMy = $channelTable->where('owner_uid',$user['user_uid'])->get();
+                    //协作
+                    $channelShare = ShareApi::getResList($user['user_uid'],2);
+                }
+                $channelCanRead = [];
+                foreach ($channelPub as $key => $value) {
+                    $channelCanRead[$value->uid] = [
+                        'id' => $value->uid,
+                        'role' => 'member',
+                        'name' => $value->name,
+                    ];
+                }
+                foreach ($channelShare as $key => $value) {
+                    if($value['type'] === $type){
+                        $channelCanRead[$value['res_id']] = [
+                            'id' => $value['res_id'],
+                            'role' => 'member',
+                            'name' => $value['res_title'],
+                        ];
+                        if($value['power']>=20){
+                            $channelCanRead[$value['res_id']]['role'] = "editor";
+                        }
+                    }
+                }
+                foreach ($channelMy as $key => $value) {
+                    $channelCanRead[$value->uid] = [
+                        'id' => $value->uid,
+                        'role' => 'owner',
+                        'name' => $value->name,
+                    ];
+                }
+                $channels = [];
+                foreach ($channelCanRead as $key => $value) {
+                    # code...
+                    $channels[] = $key;
+                }
+                $sent = explode('-',$request->get('sentence')) ;
+                $table = Sentence::select($indexCol)
+                                ->whereIn('channel_uid', $channels)
+                                ->where('book_id',$sent[0])
+                                ->where('paragraph',$sent[1])
+                                ->where('word_start',$sent[2])
+                                ->where('word_end',$sent[3]);
 			default:
 				# code...
 				break;
@@ -65,8 +122,14 @@ class SentenceController extends Controller
             $table->skip($offset)->take($request->get('limit'));
         }
         $result = $table->get();
+
 		if($result){
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+            if($request->get('view') === 'sent-can-read'){
+			    return $this->ok(["rows"=>SentResource::collection($result),"count"=>$count]);
+            }else{
+                return $this->ok(["rows"=>$result,"count"=>$count]);
+            }
+
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -162,16 +225,6 @@ class SentenceController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Sentence $sentence)
-    {
-        //
-    }
 
     /**
      * 修改单个句子
