@@ -9,6 +9,9 @@ use App\Models\WbwTemplate;
 use App\Models\WbwBlock;
 use App\Models\Wbw;
 use App\Models\Discussion;
+use App\Models\PaliSentence;
+use App\Models\SentSimIndex;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\MdRender;
@@ -676,6 +679,8 @@ class CorpusController extends Controller
 
 		#生成channel 数量列表
 		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
+        $channelCount = CorpusController::sentResCount($book,$para,$word_start,$word_end);
+        /*
 		$channelCount = Cache::remember("/sent1/{$sentId}/channels/count",
                           60,
                           function() use($book,$para,$word_start,$word_end){
@@ -716,14 +721,74 @@ class CorpusController extends Controller
 			return $output;
 
 		});
+        */
 
 		$sent["tranNum"] = $channelCount['tranNum'];
 		$sent["nissayaNum"] = $channelCount['nissayaNum'];
 		$sent["commNum"] = $channelCount['commNum'];
 		$sent["originNum"] = $channelCount['originNum'];
+		$sent["simNum"] = $channelCount['simNum'];
 		return $sent;
 	}
 
+    /**
+     * 获取某个句子的相关资源的句子数量
+     */
+    public static function sentResCount($book,$para,$start,$end){
+		$sentId = "{$book}-{$para}-{$start}-{$end}";
+		$channelCount = Cache::remember("/sentence/{$sentId}/channels/count",
+                          60,
+                          function() use($book,$para,$start,$end){
+			$channels =  Sentence::where('book_id',$book)
+							->where('paragraph',$para)
+							->where('word_start',$start)
+							->where('word_end',$end)
+							->select('channel_uid')
+                            ->groupBy('channel_uid')
+							->get();
+            $channelList = [];
+            foreach ($channels as $key => $value) {
+                # code...
+                $channelList[] = $value->channel_uid;
+            }
+            $simId = PaliSentence::where('book',$book)
+                                 ->where('paragraph',$para)
+                                 ->where('word_begin',$start)
+                                 ->where('word_end',$end)
+                                 ->value('id');
+            if($simId){
+                $output["simNum"]=SentSimIndex::where('sent_id',$simId)->value('count');
+            }else{
+                $output["simNum"]=0;
+            }
+            $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
+            $output["tranNum"]=0;
+            $output["nissayaNum"]=0;
+            $output["commNum"]=0;
+            $output["originNum"]=0;
+
+            foreach ($channelInfo as $key => $value) {
+                # code...
+                switch($value->type){
+                    case "translation":
+                        $output["tranNum"]++;
+                        break;
+                    case "nissaya":
+                        $output["nissayaNum"]++;
+                        break;
+                    case "commentary":
+                        $output["commNum"]++;
+                        break;
+                    case "original":
+                        $output["originNum"]++;
+                        break;
+                }
+            }
+			return $output;
+
+		});
+        return $channelCount;
+    }
     private function markdownRender($input){
 
     }
