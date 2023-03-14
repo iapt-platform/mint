@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vocabulary;
 use Illuminate\Http\Request;
 use App\Http\Resources\VocabularyResource;
+use Illuminate\Support\Facades\Cache;
 
 class VocabularyController extends Controller
 {
@@ -18,7 +19,10 @@ class VocabularyController extends Controller
         //
         switch ($request->get("view")) {
             case 'key':
-                $result = Vocabulary::where('word_en','like',$request->get("key")."%")->take(20)->get();
+                $key = $request->get("key");
+                $result = Cache::remember("/dict_vocabulary/{$key}",60,function() use($key){
+                    return Vocabulary::where('word_en','like',$key."%")->take(10)->get();
+                });
                 if($result){
                     return $this->ok(['rows'=>VocabularyResource::collection($result),'count'=>count($result)]);
                 }else{
