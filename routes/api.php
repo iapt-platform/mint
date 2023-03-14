@@ -38,6 +38,7 @@ use App\Http\Controllers\CaseController;
 use App\Http\Controllers\DictMeaningController;
 use App\Http\Controllers\UserOperationDailyController;
 use App\Http\Controllers\UserStatisticController;
+use App\Http\Controllers\SentSimController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +111,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('dict-meaning',DictMeaningController::class);
     Route::apiResource('user-operation-daily',UserOperationDailyController::class);
     Route::apiResource('user-statistic',UserStatisticController::class);
+    Route::apiResource('sent-sim',SentSimController::class);
 
 
     Route::get('palibook/{file}', function ($file) {
