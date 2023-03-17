@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { ICaseListData } from "../dict/CaseList";
