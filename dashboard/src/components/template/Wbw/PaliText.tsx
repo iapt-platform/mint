@@ -10,9 +10,10 @@ import { roman_to_taitham } from "../../code/tai-tham";
 
 interface IWidget {
   text?: string;
+  code?: string;
   primary?: boolean;
 }
-const Widget = ({ text, primary = true }: IWidget) => {
+const Widget = ({ text, code = "roman", primary = true }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
 
@@ -39,7 +40,12 @@ const Widget = ({ text, primary = true }: IWidget) => {
           setPaliText(roman_to_taitham(text));
           break;
         default:
-          setPaliText(text);
+          if (code === "my") {
+            setPaliText(my_to_roman(text));
+          } else {
+            setPaliText(text);
+          }
+
           break;
       }
     }
