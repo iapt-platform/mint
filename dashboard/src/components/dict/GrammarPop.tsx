@@ -3,6 +3,7 @@ import { Popover, Typography } from "antd";
 import { ProCard } from "@ant-design/pro-components";
 
 import { get } from "../../request";
+import { get as getLang } from "../../locales";
 import { IGuideResponse } from "../api/Guide";
 import Marked from "../general/Marked";
 
@@ -33,7 +34,8 @@ const Widget = ({ text, gid }: IWidget) => {
     </>
   );
   function fetchData(key: string) {
-    const url = `/v2/guide/zh-cn/${key}`;
+    const uiLang = getLang();
+    const url = `/v2/guide/${uiLang}/${key}`;
     get<IGuideResponse>(url).then((json) => {
       if (json.ok) {
         sessionStorage.setItem(grammarProfix + key, json.data);
