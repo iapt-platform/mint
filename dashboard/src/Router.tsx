@@ -18,6 +18,11 @@ import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
 import AdminHome from "./pages/admin";
+import AdminRelation from "./pages/admin/relation";
+import AdminRelationList from "./pages/admin/relation/list";
+import AdminNissayaEnding from "./pages/admin/nissaya-ending";
+import AdminNissayaEndingList from "./pages/admin/nissaya-ending/list";
+
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
@@ -97,7 +102,15 @@ const Widget = () => {
   return (
     <ConfigProvider prefixCls={theme}>
       <Routes>
-        <Route path="admin" element={<AdminHome />} />
+        <Route path="admin" element={<AdminHome />}>
+          <Route path="relation" element={<AdminRelation />}>
+            <Route path="list" element={<AdminRelationList />} />
+          </Route>
+          <Route path="nissaya-ending" element={<AdminNissayaEnding />}>
+            <Route path="list" element={<AdminNissayaEndingList />} />
+            <Route path="list/:relation" element={<AdminNissayaEndingList />} />
+          </Route>
+        </Route>
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">
             <Route path="sign-in" element={<NutUsersSignIn />} />
