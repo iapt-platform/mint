@@ -1,6 +1,28 @@
 import { useIntl } from "react-intl";
 import { ProFormSelect } from "@ant-design/pro-components";
 
+export const LangValueEnum = () => {
+  const intl = useIntl();
+  return {
+    all: {
+      text: intl.formatMessage({
+        id: "tables.publicity.all",
+      }),
+      status: "Default",
+    },
+    en: {
+      text: "English",
+    },
+    "zh-Hans": { text: "简体中文" },
+    "zh-Hant": {
+      text: "繁体中文",
+    },
+    my: {
+      text: "缅文",
+    },
+  };
+};
+
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
 }
@@ -19,6 +41,10 @@ const Widget = ({ width }: IWidget) => {
     {
       value: "zh-Hant",
       label: "繁体中文 zh-Hant",
+    },
+    {
+      value: "my",
+      label: "缅文 my",
     },
   ];
   return (
