@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Badge, Tabs, Typography } from "antd";
 import {
   TranslationOutlined,
@@ -7,9 +6,10 @@ import {
 } from "@ant-design/icons";
 
 import { IWidgetSentEditInner } from "../SentEdit";
-import Article from "../../article/Article";
 import SentTabButton from "./SentTabButton";
 import SentCanRead from "./SentCanRead";
+import SentSim from "./SentSim";
+import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
@@ -20,41 +20,22 @@ const Widget = ({
   nissayaNum,
   commNum,
   originNum,
-  simNum,
+  simNum = 0,
 }: IWidgetSentEditInner) => {
-  const [translationActive, setTranslationActive] = useState<boolean>(false);
-  const [nissayaActive, setNissayaActive] = useState<boolean>(false);
-  const [commentaryActive, setCommentaryActive] = useState<boolean>(false);
-  const [originalActive, setOriginalActive] = useState<boolean>(false);
+  const intl = useIntl();
+
   if (typeof id === "undefined") {
     return <></>;
   }
   const sentId = id.split("_");
   const sId = sentId[0].split("-");
 
-  const onChange = (key: string) => {
-    switch (key) {
-      case "translation":
-        setTranslationActive(true);
-        break;
-      case "nissaya":
-        setNissayaActive(true);
-        break;
-      case "commentary":
-        setCommentaryActive(true);
-        break;
-      case "original":
-        setOriginalActive(true);
-        break;
-    }
-  };
   return (
     <>
       <Tabs
         style={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
-        onChange={onChange}
         tabBarExtraContent={
           <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
         }
@@ -75,6 +56,9 @@ const Widget = ({
                 type="translation"
                 sentId={id}
                 count={tranNum}
+                title={intl.formatMessage({
+                  id: "channel.type.translation.label",
+                })}
               />
             ),
             key: "translation",
@@ -95,6 +79,9 @@ const Widget = ({
                 type="nissaya"
                 sentId={id}
                 count={nissayaNum}
+                title={intl.formatMessage({
+                  id: "channel.type.nissaya.label",
+                })}
               />
             ),
             key: "nissaya",
@@ -115,6 +102,9 @@ const Widget = ({
                 type="commentary"
                 sentId={id}
                 count={commNum}
+                title={intl.formatMessage({
+                  id: "channel.type.commentary.label",
+                })}
               />
             ),
             key: "commentary",
@@ -135,16 +125,43 @@ const Widget = ({
                 type="original"
                 sentId={id}
                 count={originNum}
+                title={intl.formatMessage({
+                  id: "channel.type.original.label",
+                })}
               />
             ),
             key: "original",
             disabled: true,
             children: (
-              <Article
-                active={originalActive}
-                type="corpus_sent/original"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="original"
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButton
+                icon={<BlockOutlined />}
+                type="original"
+                sentId={id}
+                count={simNum}
+                title={intl.formatMessage({
+                  id: "buttons.sim",
+                })}
+              />
+            ),
+            key: "sim",
+            children: (
+              <SentSim
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                limit={5}
               />
             ),
           },
