@@ -1,5 +1,6 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import { useEffect, useState } from "react";
+import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 import { TChannelType } from "../../api/Channel";
@@ -70,6 +71,15 @@ const Widget = ({
   }, [reload]);
   return (
     <>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span></span>
+        <Button
+          type="link"
+          shape="round"
+          icon={<ReloadOutlined />}
+          onClick={() => load()}
+        />
+      </div>
       {sentData.map((item, id) => {
         return <SentCell data={item} key={id} isPr={true} />;
       })}
