@@ -1,7 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { ISuggestionCount } from "../template/SentEdit";
+import { ISuggestionCount, IWidgetSentEditInner } from "../template/SentEdit";
 import { TChannelType } from "./Channel";
 import { TagNode } from "./Tag";
 
@@ -260,4 +260,10 @@ export interface ISentencePrResponse {
     count: number;
     webhook: { message: string; ok: boolean };
   };
+}
+
+export interface ISentenceSimListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IWidgetSentEditInner[]; count: number };
 }
