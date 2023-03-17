@@ -45,7 +45,7 @@ export interface IWidgetSentEditInner {
   originNum: number;
   simNum?: number;
 }
-const SentEditInner = ({
+export const SentEditInner = ({
   id,
   origin,
   translation,
