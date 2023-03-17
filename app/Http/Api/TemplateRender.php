@@ -45,6 +45,9 @@ class TemplateRender{
             case 'article':
                 $result = $this->render_article();
                 break;
+            case 'nissaya':
+                $result = $this->render_nissaya();
+                break;
             default:
                 # code...
                 $result = [
@@ -105,7 +108,22 @@ class TemplateRender{
             'tpl'=>'note',
             ];
     }
+    private  function render_nissaya(){
 
+        $pali =  $this->get_param($this->param,"pali",1);
+        $meaning = $this->get_param($this->param,"meaning",2);
+        $innerString = "";
+        $props = [
+            "pali" => $pali,
+            "meaning" => $meaning,
+        ];
+        return [
+            'props'=>base64_encode(\json_encode($props)),
+            'html'=>$innerString,
+            'tag'=>'span',
+            'tpl'=>'nissaya',
+            ];
+    }
     private  function render_exercise(){
 
         $id = $this->get_param($this->param,"id",1);
@@ -219,7 +237,7 @@ class TemplateRender{
         if(isset($param[$name])){
             return trim($param[$name]);
         }else if(isset($param["{$id}"])){
-            return trim($param["1"]);
+            return trim($param["{$id}"]);
         }else{
             return $default;
         }
