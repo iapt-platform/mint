@@ -17,20 +17,16 @@ const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
   console.log("click left button", e);
 };
 
-interface IWidgetSentTabButton {
+interface IWidget {
   icon?: JSX.Element;
   type: string;
   sentId: string;
   count?: number;
+  title?: string;
 }
-const Widget = ({ icon, type, sentId, count = 0 }: IWidgetSentTabButton) => {
+const Widget = ({ icon, type, sentId, title, count = 0 }: IWidget) => {
   const intl = useIntl();
   const items: MenuProps["items"] = [
-    {
-      label: "在分栏中打开",
-      key: "openInCol",
-      icon: <OneToOneOutlined />,
-    },
     {
       label: "在新标签页中打开",
       key: "openInWin",
@@ -69,9 +65,7 @@ const Widget = ({ icon, type, sentId, count = 0 }: IWidgetSentTabButton) => {
       menu={menuProps}
       onClick={handleButtonClick}
     >
-      {intl.formatMessage({
-        id: `channel.type.${type}.label`,
-      })}
+      {title}
       <Badge size="small" color="geekblue" count={count}></Badge>
     </Dropdown.Button>
   );
