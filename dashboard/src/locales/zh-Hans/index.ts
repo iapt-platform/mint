@@ -14,6 +14,7 @@ import auth from "./auth";
 import course from "./course";
 import message from "./message";
 import label from "./label";
+import relation from "./relation";
 const items = {
   "columns.library.title": "藏经阁",
   "columns.library.community.title": "社区",
@@ -61,6 +62,7 @@ const items = {
   ...course,
   ...message,
   ...label,
+  ...relation,
 };
 
 export default items;
