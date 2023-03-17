@@ -51,14 +51,16 @@ class TestMdRender extends Command
         $markdown2 .= "{{exercise\n|id=1\n|content={{168-916-10-37}}}}";
         $markdown2 .= "{{exercise\n|id=2\n|content=# ddd}}";
 
-        $markdown2 = "{{note|trigger=kacayana|text={{99-556-8-12}}}}";
+        $markdown2 .= "{{note|trigger=kacayana|text={{99-556-8-12}}}}";
+        $markdown2 = "aaa=bbb\n";
+        $markdown2 .= "ccc=ddd\n";
         //echo MdRender::render($markdown,'00ae2c48-c204-4082-ae79-79ba2740d506');
         //$wiki = MdRender::markdown2wiki($markdown2);
         //$xml = MdRender::wiki2xml($wiki);
         //$html = MdRender::xmlQueryId($xml, "1");
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
-        echo MdRender::render2($markdown2,'00ae2c48-c204-4082-ae79-79ba2740d506');
+        echo MdRender::render2($markdown2,'00ae2c48-c204-4082-ae79-79ba2740d506',null,'read','nissaya');
         return 0;
     }
 }
