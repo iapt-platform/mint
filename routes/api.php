@@ -39,6 +39,8 @@ use App\Http\Controllers\DictMeaningController;
 use App\Http\Controllers\UserOperationDailyController;
 use App\Http\Controllers\UserStatisticController;
 use App\Http\Controllers\SentSimController;
+use App\Http\Controllers\NissayaEndingController;
+use App\Http\Controllers\RelationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +114,9 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('user-operation-daily',UserOperationDailyController::class);
     Route::apiResource('user-statistic',UserStatisticController::class);
     Route::apiResource('sent-sim',SentSimController::class);
+    Route::apiResource('nissaya-ending',NissayaEndingController::class);
+    Route::get('nissaya-ending-card',[NissayaEndingController::class,"nissaya_card"]);
+    Route::apiResource('relation',RelationController::class);
 
 
     Route::get('palibook/{file}', function ($file) {
