@@ -54,7 +54,7 @@ const Widget = ({ data, display, onChange, factors }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [inlineDict]);
+  }, [data.word.value, inlineDict]);
 
   useEffect(() => {
     if (typeof factors !== "undefined") {

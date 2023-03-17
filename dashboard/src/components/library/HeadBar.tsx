@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { Layout, Col, Row, Space } from "antd";
-import { FormattedMessage, useIntl } from "react-intl";
+import { Layout, Space } from "antd";
+import { FormattedMessage } from "react-intl";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 

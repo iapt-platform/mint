@@ -150,7 +150,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
 
       setParent(mParent);
     }
-  }, [inlineDict]);
+  }, [data.word.value, inlineDict, intl]);
 
   return (
     <div>

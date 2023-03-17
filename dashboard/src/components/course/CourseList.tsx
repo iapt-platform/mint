@@ -34,7 +34,7 @@ const Widget = ({ type }: IWidget) => {
         message.error(json.message);
       }
     });
-  }, []);
+  }, [type]);
 
   return (
     <List

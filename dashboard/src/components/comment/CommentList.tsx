@@ -1,4 +1,4 @@
-import { List, Avatar, Space } from "antd";
+import { List, Space } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
 import { IComment } from "./CommentItem";

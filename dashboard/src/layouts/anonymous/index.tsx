@@ -1,5 +1,5 @@
-import { Outlet, Link } from "react-router-dom";
-import { Col, Layout, Row, Space } from "antd";
+import { Outlet } from "react-router-dom";
+import { Col, Layout, Row } from "antd";
 import UiLangSelect from "../../components/general/UiLangSelect";
 import img_banner from "../../assets/library/images/wikipali_logo_library.svg";
 

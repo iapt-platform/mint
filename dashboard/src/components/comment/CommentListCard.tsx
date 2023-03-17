@@ -38,7 +38,7 @@ const Widget = ({
       return newItem;
     });
     setData(newData);
-  }, [changedAnswerCount]);
+  }, [changedAnswerCount, data]);
 
   useEffect(() => {
     let url: string = "";
@@ -77,7 +77,7 @@ const Widget = ({
       .catch((e) => {
         message.error(e.message);
       });
-  }, [resId, topicId]);
+  }, [intl, resId, topicId]);
 
   if (typeof resId === "undefined" && typeof topicId === "undefined") {
     return <div>该资源尚未创建，不能发表讨论。</div>;
@@ -85,7 +85,7 @@ const Widget = ({
 
   return (
     <div>
-      <Card title="讨论" extra={<a href="#">More</a>}>
+      <Card title="讨论" extra={"More"}>
         {data.length > 0 ? (
           <CommentList
             onSelect={(

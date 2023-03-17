@@ -43,7 +43,7 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
       .catch((e) => {
         message.error(e.message);
       });
-  }, [topicId]);
+  }, [intl, topicId]);
   return (
     <div>
       <List

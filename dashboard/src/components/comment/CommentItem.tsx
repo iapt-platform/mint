@@ -1,4 +1,4 @@
-import { Avatar, Col, Row } from "antd";
+import { Avatar } from "antd";
 import { useState } from "react";
 import { IUser } from "../auth/User";
 import CommentShow from "./CommentShow";

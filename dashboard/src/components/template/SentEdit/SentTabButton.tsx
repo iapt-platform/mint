@@ -1,11 +1,7 @@
 import { useIntl } from "react-intl";
 import { Badge, Dropdown } from "antd";
 import type { MenuProps } from "antd";
-import {
-  OneToOneOutlined,
-  LinkOutlined,
-  CalendarOutlined,
-} from "@ant-design/icons";
+import { LinkOutlined, CalendarOutlined } from "@ant-design/icons";
 
 import store from "../../../store";
 import {

@@ -1,4 +1,4 @@
-import { List, Select, Space, Typography } from "antd";
+import { List, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import {

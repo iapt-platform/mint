@@ -16,7 +16,6 @@ import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
 import store from "../../../store";
 import { command } from "../../../reducers/command";
-import { IWidgetDict } from "../../dict/DictComponent";
 
 const { Paragraph } = Typography;
 interface IWidget {

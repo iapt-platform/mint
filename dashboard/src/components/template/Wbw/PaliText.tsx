@@ -49,7 +49,7 @@ const Widget = ({ text, code = "roman", primary = true }: IWidget) => {
           break;
       }
     }
-  }, [text, settings]);
+  }, [text, settings, code]);
   return text ? <span>{paliText}</span> : <></>;
 };
 

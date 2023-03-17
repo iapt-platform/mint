@@ -11,7 +11,7 @@ import { useAppSelector } from "../../../hooks";
 import store from "../../../store";
 import { ISetting } from "./default";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface IWidgetSettingItem {
   data?: ISetting;
@@ -21,12 +21,7 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
   const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
-  const title = (
-    <Title level={5}>
-      {data?.label ? intl.formatMessage({ id: data.label }) : ""}
-    </Title>
-  );
-  console.log(data);
+
   useEffect(() => {
     const currSetting = settings?.find((element) => element.key === data?.key);
     if (typeof currSetting !== "undefined") {

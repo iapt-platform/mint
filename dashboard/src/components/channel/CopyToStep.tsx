@@ -55,6 +55,7 @@ const Widget = ({
           onSelect={(e: IChannel) => {
             console.log(e);
             setDestChannel(e);
+            setCopyPercent(100);
             next();
           }}
         />

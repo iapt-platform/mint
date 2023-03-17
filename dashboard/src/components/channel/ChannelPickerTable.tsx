@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
-import { get, post } from "../../request";
+import { post } from "../../request";
 import { LockIcon } from "../../assets/icon";
 import StudioName, { IStudio } from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";

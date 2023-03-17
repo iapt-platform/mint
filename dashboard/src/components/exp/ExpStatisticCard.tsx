@@ -83,7 +83,7 @@ const Widget = ({ studioName }: IWidget) => {
       <StatisticCard
         statistic={{
           title: "译文",
-          value: translationCount,
+          value: translationPubCount + "/" + translationCount,
           suffix: "句",
         }}
         chart={<ExpPie data={translationPieData} />}

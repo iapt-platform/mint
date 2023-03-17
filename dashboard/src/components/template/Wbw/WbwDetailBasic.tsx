@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, Form, Select, Input, Cascader, AutoComplete } from "antd";
+import { Divider, Form, Select, Input, AutoComplete } from "antd";
 import { Collapse } from "antd";
 
 import SelectCase from "../../dict/SelectCase";
@@ -25,12 +25,6 @@ export interface IWordBasic {
   factors?: string;
   factorMeaning?: string;
   parent?: string;
-}
-
-interface CascaderOption {
-  value: string | number;
-  label: string;
-  children?: CascaderOption[];
 }
 
 interface IWidget {

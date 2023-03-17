@@ -1,4 +1,4 @@
-import { List, Card, Tag, Typography } from "antd";
+import { List, Tag, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICaseListResponse } from "../api/Dict";

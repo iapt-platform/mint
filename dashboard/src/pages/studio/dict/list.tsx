@@ -23,7 +23,7 @@ import {
   IApiResponseDictList,
   IUserDictDeleteRequest,
 } from "../../../components/api/Dict";
-import { delete_, delete_2, get } from "../../../request";
+import { delete_2, get } from "../../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../../components/api/Article";

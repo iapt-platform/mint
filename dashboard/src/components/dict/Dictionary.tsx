@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Layout, Affix, Col, Row } from "antd";
 
 import DictSearch from "./DictSearch";
@@ -14,7 +13,6 @@ interface IWidget {
   onSearch?: Function;
 }
 const Widget = ({ word, compact = false, onSearch }: IWidget) => {
-  const navigate = useNavigate();
   const [split, setSplit] = useState<string>();
   const [wordSearch, setWordSearch] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
