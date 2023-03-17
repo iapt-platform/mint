@@ -129,8 +129,8 @@ class MdRender{
         return $html;
     }
 
-    public static function render2($markdown,$channelId='',$queryId=null,$mode='read'){
-        $wiki = MdRender::markdown2wiki($markdown);
+    public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType){
+        $wiki = MdRender::markdown2wiki($markdown,$channelType);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
@@ -138,7 +138,25 @@ class MdRender{
         $tpl = MdRender::xml2tpl($html,$channelId,$mode);
         return $tpl;
     }
-    public static function markdown2wiki(string $markdown): string{
+    public static function markdown2wiki(string $markdown,$channelType): string{
+                /**
+         * nissaya
+         * aaa=bbb\n
+         * {{nissaya|aaa|bbb}}
+         */
+        if($channelType==='nissaya'){
+            $pattern = '/(.+?)=(.+?)\n/';
+            $replacement = '{{nissaya|$1|$2}}';
+            $markdown = preg_replace($pattern,$replacement,$markdown);
+            $pattern = '/(.+?)=(.?)\n/';
+            $replacement = '{{nissaya|$1|$2}}';
+            $markdown = preg_replace($pattern,$replacement,$markdown);
+            $pattern = '/(.?)=(.+?)\n/';
+            $replacement = '{{nissaya|$1|$2}}';
+            $markdown = preg_replace($pattern,$replacement,$markdown);
+        }
+
+
         /**
          * 替换换行符
          * react 无法处理 <br> 替换为<div></div>代替换行符作用
@@ -162,18 +180,21 @@ class MdRender{
 
         #替换注释
         #<code>bla</code>
-        #{{note:bla}}
+        #{{note|bla}}
         $pattern = '/<code>(.+?)<\/code>/';
         $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
+
+
+
         return $html;
     }
 
     /**
      *
      */
-    public static function render($markdown,$channelId,$queryId=null,$mode='read'){
-        return MdRender::render2($markdown,$channelId,$queryId,$mode);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation'){
+        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType);
     }
 
 }
