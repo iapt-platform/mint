@@ -24,6 +24,7 @@ class SentPrResource extends JsonResource
         if($user && $user["user_uid"] === $this->editor_uid ){
             $role = 'owner';
         }
+        $channel = ChannelApi::getById($this->channel_uid);
         return [
             "id"=>$this->id,
             "book"=> $this->book_id,
@@ -31,9 +32,9 @@ class SentPrResource extends JsonResource
             "word_start"=> $this->word_start,
             "word_end"=> $this->word_end,
             "editor"=> StudioApi::getById($this->editor_uid),
-            "channel"=> ChannelApi::getById($this->channel_uid),
+            "channel"=> $channel,
             "content"=>$this->content,
-            "html"=> MdRender::render($this->content,$this->channel_uid),
+            "html"=> MdRender::render($this->content,$this->channel_uid,null,$mode,$channel['type']),
             "role"=>$role,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
