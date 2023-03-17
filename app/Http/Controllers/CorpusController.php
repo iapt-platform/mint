@@ -435,6 +435,12 @@ class CorpusController extends Controller
                             }
 
                             break;
+                        case 'nissaya':
+                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
+                            function() use($row,$mode){
+                                return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya");
+                            });
+                            break;
                         default:
                             //译文需要markdown渲染
                             $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
