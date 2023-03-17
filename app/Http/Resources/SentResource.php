@@ -20,10 +20,15 @@ class SentResource extends JsonResource
     public function toArray($request)
     {
         $channel = ChannelApi::getById($this->channel_uid);
+        if($request->get('mode','read')==="read"){
+            $mode = 'read';
+        }else{
+            $mode = 'edit';
+        }
         $data = [
                 "id" => $this->uid,
                 "content"=>$this->content,
-                "html"=> MdRender::render($this->content,$this->channel_uid),
+                "html"=> MdRender::render($this->content,$this->channel_uid,null,$mode,$channel['type']),
                 "book"=> $this->book_id,
                 "paragraph"=> $this->paragraph,
                 "word_start"=> $this->word_start,
