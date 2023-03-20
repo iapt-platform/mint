@@ -36,7 +36,7 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
     };
   });
 
-  const _verb = ["pass", "v", "caus", "abs"];
+  const _verb = ["v", "pass", "caus", "abs"];
   const verbOptions = _verb.map((item) => {
     return {
       value: item,
@@ -117,9 +117,6 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
       <ProForm.Group>
         <ProFormSelect
           options={caseOptions}
-          fieldProps={{
-            mode: "tags",
-          }}
           width="md"
           name="case"
           allowClear={false}
