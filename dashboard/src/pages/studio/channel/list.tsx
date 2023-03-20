@@ -17,6 +17,7 @@ import { IApiResponseChannelList } from "../../../components/api/Channel";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { useRef, useState } from "react";
+import { TRole } from "../../../components/api/Auth";
 const { Text } = Typography;
 
 interface IItem {
@@ -25,6 +26,7 @@ interface IItem {
   title: string;
   summary: string;
   type: string;
+  role?: TRole;
   publicity: number;
   createdAt: number;
 }
@@ -112,6 +114,45 @@ const Widget = () => {
             key: "summary",
             tip: "过长会自动收缩",
             ellipsis: true,
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.role.label",
+            }),
+            dataIndex: "role",
+            key: "role",
+            width: 100,
+            search: false,
+            filters: true,
+            onFilter: true,
+            valueEnum: {
+              all: {
+                text: intl.formatMessage({
+                  id: "channel.type.all.title",
+                }),
+                status: "Default",
+              },
+              owner: {
+                text: intl.formatMessage({
+                  id: "auth.role.owner",
+                }),
+              },
+              manager: {
+                text: intl.formatMessage({
+                  id: "auth.role.manager",
+                }),
+              },
+              editor: {
+                text: intl.formatMessage({
+                  id: "auth.role.editor",
+                }),
+              },
+              member: {
+                text: intl.formatMessage({
+                  id: "auth.role.member",
+                }),
+              },
+            },
           },
           {
             title: intl.formatMessage({
@@ -284,7 +325,7 @@ const Widget = () => {
           console.log(params, sorter, filter);
 
           const res: IApiResponseChannelList = await get(
-            `/v2/channel?view=studio&name=${studioname}`
+            `/v2/channel?view=studio-all&name=${studioname}`
           );
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
@@ -294,6 +335,7 @@ const Widget = () => {
               title: item.name,
               summary: item.summary,
               type: item.type,
+              role: item.role,
               publicity: item.status,
               createdAt: date.getTime(),
             };
