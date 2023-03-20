@@ -5,9 +5,11 @@ import {
   PlusOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  ImportOutlined,
+  ExportOutlined,
 } from "@ant-design/icons";
 
-import { delete_, get } from "../../../request";
+import { API_HOST, delete_, get } from "../../../request";
 import { IDeleteResponse } from "../../../components/api/Article";
 
 import { useRef } from "react";
@@ -16,6 +18,7 @@ import { IUser } from "../../../reducers/current-user";
 import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingEdit";
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
+import DataImport from "../../../components/admin/relation/DataImport";
 
 const { Text } = Typography;
 export interface INissayaEndingRequest {
@@ -254,7 +257,22 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
+          <DataImport
+            url="/v2/nissaya-ending-import"
+            trigger={<Button icon={<ImportOutlined />}>Import</Button>}
+          />,
+          <Button icon={<ExportOutlined />}>
+            <a
+              href={`${API_HOST}/api/v2/nissaya-ending-export`}
+              target="_blank"
+              key="export"
+              rel="noreferrer"
+            >
+              Export
+            </a>
+          </Button>,
           <NissayaEndingEdit
+            key="add"
             trigger={
               <Button key="button" icon={<PlusOutlined />} type="primary">
                 {intl.formatMessage({ id: "buttons.create" })}

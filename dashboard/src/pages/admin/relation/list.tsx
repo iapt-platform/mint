@@ -5,15 +5,18 @@ import {
   PlusOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  ImportOutlined,
+  ExportOutlined,
 } from "@ant-design/icons";
 
-import { delete_, get } from "../../../request";
+import { API_HOST, delete_, get } from "../../../request";
 import { IDeleteResponse } from "../../../components/api/Article";
 
 import { useRef } from "react";
 
 import { IUser } from "../../../reducers/current-user";
 import RelationEdit from "../../../components/admin/relation/RelationEdit";
+import DataImport from "../../../components/admin/relation/DataImport";
 
 const { Text } = Typography;
 
@@ -187,15 +190,6 @@ const Widget = () => {
             key: "case",
             filters: true,
             valueEnum: CaseValueEnum(),
-            render: (text, row, index, action) => {
-              return row.case?.map((item, id) => (
-                <Tag key={id}>
-                  {intl.formatMessage({
-                    id: `dict.fields.type.${item}.label`,
-                  })}
-                </Tag>
-              ));
-            },
           },
           {
             title: intl.formatMessage({
@@ -204,7 +198,13 @@ const Widget = () => {
             dataIndex: "to",
             key: "to",
             render: (text, row, index, action) => {
-              return row.to?.join();
+              return row.to?.map((item, id) => (
+                <Tag key={id}>
+                  {intl.formatMessage({
+                    id: `dict.fields.type.${item}.label`,
+                  })}
+                </Tag>
+              ));
             },
           },
 
@@ -313,6 +313,20 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
+          <DataImport
+            url="/v2/relation-import"
+            trigger={<Button icon={<ImportOutlined />}>Import</Button>}
+          />,
+          <Button icon={<ExportOutlined />}>
+            <a
+              href={`${API_HOST}/api/v2/relation-export`}
+              target="_blank"
+              key="export"
+              rel="noreferrer"
+            >
+              Export
+            </a>
+          </Button>,
           <RelationEdit
             trigger={
               <Button key="button" icon={<PlusOutlined />} type="primary">
