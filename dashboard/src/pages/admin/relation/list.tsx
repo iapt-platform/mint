@@ -271,7 +271,7 @@ const Widget = () => {
           },
         ]}
         request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
+          console.log("request", params, sorter, filter);
           let url = `/v2/relation?view=a`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
@@ -280,7 +280,10 @@ const Widget = () => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
-
+          if (filter.case) {
+            url += `&case=${filter.case.join()}`;
+          }
+          console.log("url", url);
           const res = await get<IRelationListResponse>(url);
           const items: IRelation[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at ? item.created_at : 0);
@@ -316,6 +319,9 @@ const Widget = () => {
           <DataImport
             url="/v2/relation-import"
             trigger={<Button icon={<ImportOutlined />}>Import</Button>}
+            onSuccess={() => {
+              ref.current?.reload();
+            }}
           />,
           <Button icon={<ExportOutlined />}>
             <a
