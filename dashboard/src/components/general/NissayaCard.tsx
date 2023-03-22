@@ -33,6 +33,7 @@ export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnClose
       >
         <Widget text={text} />
       </Modal>
@@ -45,6 +46,7 @@ interface IWidget {
 }
 const Widget = ({ text }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
+
   useEffect(() => {
     const uiLang = getLang();
     const url = `/v2/nissaya-ending-card?lang=${uiLang}&ending=${text}`;
