@@ -36,17 +36,41 @@ class ChannelController extends Controller
             case 'studio':
 				# 获取studio内所有channel
                 $user = AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
-                        $table = Channel::select($indexCol)->where('owner_uid', $user["user_uid"]);
-                    }else{
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
+                if(!$user){
                     return $this->error(__('auth.failed'));
                 }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = Channel::select($indexCol)->where('owner_uid', $user["user_uid"]);
 				break;
+            case 'studio-all':
+                /**
+                 * studio 的和协作的
+                 */
+                #获取user所有有权限的channel列表
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    return $this->error(__('auth.failed'));
+                }
+                $channelById = [];
+                $channelId = [];
+                //获取共享channel
+                $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+                foreach ($allSharedChannels as $key => $value) {
+                    # code...
+                    $channelId[] = $value['res_id'];
+                    $channelById[$value['res_id']] = $value;
+                }
+                $table = Channel::select($indexCol)
+                            ->whereIn('uid', $channelId)
+                            ->orWhere('owner_uid',$user['user_uid']);
+                break;
             case 'user-edit':
                 /**
                  * 某用户有编辑权限的
@@ -127,7 +151,6 @@ class ChannelController extends Controller
         }
         //处理分页
         if($request->has("limit")){
-
             if($request->has("offset")){
                 $offset = $request->get("offset");
             }else{
@@ -173,7 +196,7 @@ class ChannelController extends Controller
                     }
 
                 }
-
+                //角色
                 if($value->owner_uid===$user['user_uid']){
                     $value['role'] = 'owner';
                 }else{
