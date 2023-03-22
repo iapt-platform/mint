@@ -60,6 +60,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('wbw_templates',WbwTemplateController::class);
 	Route::apiResource('terms',DhammaTermController::class);
+	Route::get('terms-export',[DhammaTermController::class,"export"]);
+    Route::get('terms-import',[DhammaTermController::class,"import"]);
 	Route::apiResource('sentence',SentenceController::class);
 	Route::post('sent-in-channel',[SentenceController::class,"sent_in_channel"]);
 	Route::apiResource('sentpr',SentPrController::class);
@@ -116,8 +118,19 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('sent-sim',SentSimController::class);
     Route::apiResource('nissaya-ending',NissayaEndingController::class);
     Route::get('nissaya-ending-card',[NissayaEndingController::class,"nissaya_card"]);
+    Route::get('nissaya-ending-export',[NissayaEndingController::class,"export"]);
+    Route::get('nissaya-ending-import',[NissayaEndingController::class,"import"]);
     Route::apiResource('relation',RelationController::class);
+    Route::get('relation-export',[RelationController::class,"export"]);
+    Route::get('relation-import',[RelationController::class,"import"]);
 
+    Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
+
+        header("Content-Type: {$type1}/{$type1}");
+        header("Content-Disposition: attachment; filename=\"{$filename}\"");
+        $content = Cache::get("download/tmp/{$uuid}");
+        file_put_contents("php://output",$content);
+    });
 
     Route::get('palibook/{file}', function ($file) {
         if($file==='default'){$file="defualt";}
