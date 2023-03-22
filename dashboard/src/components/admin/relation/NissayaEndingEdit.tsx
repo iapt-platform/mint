@@ -10,6 +10,7 @@ import {
 } from "../../../pages/admin/nissaya-ending/list";
 import { get, post, put } from "../../../request";
 import LangSelect from "../../general/LangSelect";
+import CaseSelect from "./CaseSelect";
 
 interface IWidget {
   trigger?: JSX.Element;
@@ -98,6 +99,9 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
           name="relation"
           label={intl.formatMessage({ id: "forms.fields.relation.label" })}
         />
+      </ProForm.Group>
+      <ProForm.Group>
+        <CaseSelect width="md" name="case" />
         <LangSelect width="md" />
       </ProForm.Group>
     </ModalForm>
