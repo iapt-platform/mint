@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\NissayaEnding;
 use App\Models\Relation;
+use App\Models\DhammaTerm;
 use Illuminate\Http\Request;
 use App\Http\Resources\NissayaEndingResource;
 use App\Http\Api\AuthApi;
+use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\App;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use mustache\mustache;
 
 class NissayaEndingController extends Controller
 {
@@ -19,7 +24,20 @@ class NissayaEndingController extends Controller
     public function index(Request $request)
     {
         //
-        $table = NissayaEnding::select(['id','ending','lang','relation','editor_id','updated_at']);
+        $table = NissayaEnding::select(['id','ending','lang','relation','case','editor_id','updated_at']);
+
+        if(($request->has('case'))){
+            $table->whereIn('case', explode(",",$request->get('case')) );
+        }
+
+        if(($request->has('lang'))){
+            $table->whereIn('lang', explode(",",$request->get('lang')) );
+        }
+
+        if(($request->has('relation'))){
+            $table->where('relation', $request->get('relation'));
+        }
+
         if(($request->has('search'))){
             $table->where('ending', 'like', $request->get('search')."%");
         }
@@ -63,12 +81,13 @@ class NissayaEndingController extends Controller
         $validated = $request->validate([
             'ending' => 'required',
             'lang' => 'required',
-            'relation' => 'required'
         ]);
         $new = new NissayaEnding;
         $new->ending = $validated['ending'];
+        $new->strlen = mb_strlen($validated['ending'],"UTF-8") ;
         $new->lang = $validated['lang'];
-        $new->relation = $validated['relation'];
+        $new->relation = $request->get('relation');
+        $new->case = $request->get('case');
         $new->editor_id = $user['user_uid'];
         $new->save();
         return $this->ok(new NissayaEndingResource($new));
@@ -90,49 +109,86 @@ class NissayaEndingController extends Controller
     public function nissaya_card(Request $request)
     {
         //
+        $cardData = [];
         App::setLocale($request->get('lang'));
+        $localTerm = ChannelApi::getSysChannel(
+                                "_System_Grammar_Term_".strtolower($request->get('lang'))."_",
+                                "_System_Grammar_Term_en_"
+                            );
+        if(!$localTerm){
+            return $this->error('no term channel');
+        }
+        $termTable = DhammaTerm::where('channal',$localTerm);
+        $cardData['ending'] = $request->get('ending');
+        $endingTerm = $termTable->where('word',$request->get('ending'))->first();
+        if($endingTerm){
+            $cardData['ending_tag'] = $endingTerm->tag;
+            $cardData['ending_meaning'] = $endingTerm->meaning;
+            $cardData['ending_note'] = $endingTerm->note;
+        }
 
         $myEnding = NissayaEnding::where('ending',$request->get('ending'))
-                                ->groupBy('relation')
-                                ->select('relation')->get();
+                                 ->groupBy('relation')
+                                 ->select('relation')->get();
         if(count($myEnding) === 0){
-            return $this->ok("# no record\n".$request->get('ending'));
+            if(!isset($cardData['ending_note'])){
+                $cardData['ending_note'] = "no record\n";
+            }
         }
 
         $relations = Relation::whereIn('name',$myEnding)->get();
-
         if(count($relations) === 0){
             return $this->ok("# no relation\n".$request->get('ending'));
         }
-        $output = "# 缅文语尾\n\n";
-        $output .= "|格位|含义|翻译建议|关系|关系|\n";
-        $output .= "|-|-|-|-|-|\n";
+        $cardData['title_case'] = "格位";
+        $cardData['title_content'] = "含义";
+        $cardData['title_local_ending'] = "翻译建议";
+        $cardData['title_local_relation'] = "关系";
+        $cardData['title_relation'] = "关系";
         foreach ($relations as $key => $relation) {
+            $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
             if(empty($relation->case)){
-                $output .= "|-|-|-|-|{$relation->name}|\n";
+                $cardData['row'][] = ["relation"=>$relation->name];
                 continue;
             }
-            $cases = json_decode($relation->case);
-            foreach ($cases as $key => $case) {
-                # code...
-                $output .= "|".__("grammar.".$case);
-                $output .= "|";
-                //本地语言用法
-                $output .= "|";
-                $localLangs = NissayaEnding::where('relation',$relation['name'])
-                                    ->where('lang',$request->get('lang'))->get();
-                foreach ($localLangs as $localLang) {
-                    # code...
-                    $output .= $localLang->ending.",";
+            $case = $relation->case;
+            # 格位
+            $newLine['case'] = __("grammar.".$case);
+            //含义
+            if($relationInTerm){
+                $newLine['other_meaning'] = $relationInTerm->other_meaning;
+                $newLine['note'] = $relationInTerm->note;
+                if(!empty($relationInTerm->note)){
+                    $newLine['summary'] = explode("\n",$relationInTerm->note)[0];
                 }
-                $output .= "|".__("grammar.relations.{$relation['name']}.label");
-                $output .= "|".strtoupper($relation['name']);
-                $output .= "|\n";
             }
+            //翻译建议
+            $localEnding = '';
+            $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
+                                              ->where('lang',$request->get('lang'));
+            if(!empty($case)){
+                $localEndingRecord = $localEndingRecord->where('case',$case);
+            }
+            $localLangs = $localEndingRecord->get();
+            foreach ($localLangs as $localLang) {
+                # code...
+                $localEnding .= $localLang->ending.",";
+            }
+            $newLine['local_ending'] = $localEnding;
+
+            //本地语言 关系名称
+            if($relationInTerm){
+                $newLine['local_relation'] =  $relationInTerm->meaning;
+            }
+            //关系名称
+            $newLine['relation'] =  strtoupper($relation['name']);
+            $cardData['row'][] = $newLine;
         }
 
-        return $this->ok($output);
-
+        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES));
+        $tpl = file_get_contents(resource_path("mustache/nissaya_ending_card.tpl"));
+        $md = $m->render($tpl,$cardData);
+        return $this->ok($md);
     }
 
     /**
@@ -153,12 +209,15 @@ class NissayaEndingController extends Controller
         if(NissayaEnding::where('ending',$request->get('ending'))
                  ->where('lang',$request->get('lang'))
                  ->where('relation',$request->get('relation'))
+                 ->where('case',$request->get('case'))
                  ->exists()){
             return $this->error(__('validation.exists',['name']));
         }
         $nissayaEnding->ending = $request->get('ending');
+        $nissayaEnding->strlen = mb_strlen($request->get('ending'),"UTF-8") ;
         $nissayaEnding->lang = $request->get('lang');
         $nissayaEnding->relation = $request->get('relation');
+        $nissayaEnding->case = $request->get('case');
         $nissayaEnding->editor_id = $user['user_uid'];
         $nissayaEnding->save();
         return $this->ok(new NissayaEndingResource($nissayaEnding));
@@ -184,5 +243,66 @@ class NissayaEndingController extends Controller
         $delete = $nissayaEnding->delete();
 
         return $this->ok($delete);
+    }
+
+    public function export(){
+        $spreadsheet = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $activeWorksheet->setCellValue('A1', 'id');
+        $activeWorksheet->setCellValue('B1', 'ending');
+        $activeWorksheet->setCellValue('C1', 'lang');
+        $activeWorksheet->setCellValue('D1', 'relation');
+
+        $nissaya = NissayaEnding::cursor();
+        $currLine = 2;
+        foreach ($nissaya as $key => $row) {
+            # code...
+            $activeWorksheet->setCellValue("A{$currLine}", $row->id);
+            $activeWorksheet->setCellValue("B{$currLine}", $row->ending);
+            $activeWorksheet->setCellValue("C{$currLine}", $row->lang);
+            $activeWorksheet->setCellValue("D{$currLine}", $row->relation);
+            $activeWorksheet->setCellValue("E{$currLine}", $row->case);
+            $currLine++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="nissaya-ending.xlsx"');
+        $writer->save("php://output");
+    }
+
+    public function import(Request $request){
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+
+        $filename = $request->get('filename');
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($filename);
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $currLine = 2;
+        do {
+            # code...
+            $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
+            $ending = $activeWorksheet->getCell("B{$currLine}")->getValue();
+            $lang = $activeWorksheet->getCell("C{$currLine}")->getValue();
+            $relation = $activeWorksheet->getCell("D{$currLine}")->getValue();
+            $case = $activeWorksheet->getCell("E{$currLine}")->getValue();
+            if(!empty($ending)){
+                $row = NissayaEnding::firstOrNew(['ending'=>$ending,'relation'=>$relation,'case'=>$case]);
+                $row->ending = $ending;
+                $row->strlen = mb_strlen($ending,"UTF-8") ;
+                $row->lang = $lang;
+                $row->relation = $relation;
+                $row->case = $case;
+                $row->editor_id = $user['user_uid'];
+                $row->save();
+            }else{
+                break;
+            }
+            $currLine++;
+        } while (!empty($ending));
+        return $this->ok($currLine-2);
     }
 }
