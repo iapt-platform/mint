@@ -19,6 +19,7 @@ const Widget = ({ meaningList, channelList }: IWidget) => {
   return (
     <>
       <ProForm.Group>
+        <ProFormText width="md" name="id" hidden />
         <ProFormText
           width="md"
           name="word"
