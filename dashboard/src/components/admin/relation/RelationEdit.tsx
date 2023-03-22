@@ -15,6 +15,7 @@ import {
   IRelationResponse,
 } from "../../../pages/admin/relation/list";
 import { get, post, put } from "../../../request";
+import CaseSelect from "./CaseSelect";
 
 interface IWidget {
   trigger?: JSX.Element;
@@ -26,17 +27,8 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
   const [form] = Form.useForm<IRelation>();
   const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
-  const _case = ["nom", "acc", "gen", "dat", "inst", "abl", "loc"];
-  const caseOptions = _case.map((item) => {
-    return {
-      value: item,
-      label: intl.formatMessage({
-        id: `dict.fields.type.${item}.label`,
-      }),
-    };
-  });
 
-  const _verb = ["v", "pass", "caus", "abs"];
+  const _verb = ["v", "pass", "caus", "abs", "fpp", "pp", "n", "adv"];
   const verbOptions = _verb.map((item) => {
     return {
       value: item,
@@ -115,13 +107,7 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
         />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormSelect
-          options={caseOptions}
-          width="md"
-          name="case"
-          allowClear={false}
-          label={intl.formatMessage({ id: "forms.fields.case.label" })}
-        />
+        <CaseSelect width="md" name="case" />
 
         <ProFormSelect
           options={verbOptions}
