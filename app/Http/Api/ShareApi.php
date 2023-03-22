@@ -114,12 +114,12 @@ class ShareApi{
      * 获取对某个共享资源的权限
      */
     public static function getResPower($user_uid,$res_id){
-            if($userid==='0'){
+            if(empty($user_uid)){
                 #未登录用户 没有共享资源
                 return 0;
             }
             # 找我加入的群
-            $my_group = Group::where("user_id",$user_uid)->select('group_id')->get();
+            $my_group = GroupMember::where("user_id",$user_uid)->select('group_id')->get();
             $userList[] = $user_uid;
             foreach ($my_group as $key => $value) {
                 $userList[]=$value["group_id"];
