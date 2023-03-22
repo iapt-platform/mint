@@ -57,9 +57,7 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
           editButton,
         ]}
       >
-        <div>
-          {id ? "" : <TermCreate isCreate={true} word={word} studio="" />}
-        </div>
+        <div>{id ? "" : <TermCreate isCreate={true} word={word} />}</div>
       </ProCard>
     </>
   );
