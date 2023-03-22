@@ -439,6 +439,7 @@ class DhammaTermController extends Controller
             $tag = $activeWorksheet->getCell("F{$currLine}")->getValue();
             $language = $activeWorksheet->getCell("G{$currLine}")->getValue();
             $query = ['word'=>$word,'tag'=>$tag];
+            $channelId = null;
             switch ($request->get('view')) {
                 case 'channel':
                     # code...
@@ -446,6 +447,7 @@ class DhammaTermController extends Controller
                     $channel = ChannelApi::getById($request->get('id'));
                     $owner_id = $channel['studio_id'];
                     $lang = $channel['lang'];
+                    $channelId = $request->get('id');
                     break;
                 case 'studio':
                     # code...
@@ -456,20 +458,30 @@ class DhammaTermController extends Controller
             }
 
             if(!empty($word)){
-                $row = DhammaTerm::firstOrNew($query);
+                $row = DhammaTerm::where($query)->first();
+                if(!$row){
+                    $row = new DhammaTerm();
+                    $row->id = app('snowflake')->id();
+                    $row->guid = Str::uuid();
+                    $row->word = $word;
+                    $row->create_time = time()*1000;
+                }
                 $row->word_en = Tools::getWordEn($word);
                 $row->meaning = $meaning;
                 $row->other_meaning = $other_meaning;
                 $row->note = $note;
                 $row->language = $lang;
+                $row->channal = $channelId;
                 $row->owner = $owner_id;
                 $row->editor_id = $user['user_id'];
+                $row->owner = $owner_id;
+                $row->modify_time = time()*1000;
                 $row->save();
             }else{
                 break;
             }
             $currLine++;
-        } while (!empty($ending));
+        } while (!empty($word));
         return $this->ok($currLine-2);
     }
 }
