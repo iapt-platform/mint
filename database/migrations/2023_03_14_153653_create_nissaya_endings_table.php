@@ -17,9 +17,12 @@ class CreateNissayaEndingsTable extends Migration
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v1mc()'));
             $table->string('ending',256)->index();
             $table->string('lang',16)->index();
-            $table->string('relation',32)->index();
+            $table->string('relation',32)->nullable()->index();
+            $table->string('case',32)->nullable()->index();
+            $table->integer('strlen')->index()->default(0);
             $table->uuid('editor_id');
             $table->timestamps();
+            $table->unique(["ending", "relation","case"]);
         });
     }
 
