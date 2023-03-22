@@ -16,10 +16,16 @@ export interface INissayaEndingImportResponse {
 
 interface IWidget {
   url: string;
+  urlExtra?: string;
   trigger?: JSX.Element;
   onSuccess?: Function;
 }
-const Widget = ({ url, trigger = <>{"trigger"}</>, onSuccess }: IWidget) => {
+const Widget = ({
+  url,
+  urlExtra,
+  trigger = <>{"trigger"}</>,
+  onSuccess,
+}: IWidget) => {
   const [form] = Form.useForm<INissayaEndingUpload>();
 
   return (
@@ -48,9 +54,9 @@ const Widget = ({ url, trigger = <>{"trigger"}</>, onSuccess }: IWidget) => {
           _filename = values.filename[0].response.data.url;
         }
 
-        const res = await get<INissayaEndingImportResponse>(
-          `${url}?filename=${_filename}&tmp=true`
-        );
+        const queryUrl = `${url}?filename=${_filename}&${urlExtra}`;
+        console.log("url", queryUrl);
+        const res = await get<INissayaEndingImportResponse>(queryUrl);
 
         console.log(res);
         if (res.ok) {
