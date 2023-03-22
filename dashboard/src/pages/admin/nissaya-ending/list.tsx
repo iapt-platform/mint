@@ -19,6 +19,7 @@ import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingE
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
+import { CaseValueEnum } from "../relation/list";
 
 const { Text } = Typography;
 export interface INissayaEndingRequest {
@@ -26,6 +27,7 @@ export interface INissayaEndingRequest {
   ending?: string;
   lang?: string;
   relation?: string;
+  case?: string;
   editor?: IUser;
   updated_at?: string;
   created_at?: string;
@@ -49,6 +51,7 @@ export interface INissayaEnding {
   ending?: string;
   lang?: string;
   relation?: string;
+  case?: string;
   updatedAt?: number;
   createdAt?: number;
 }
@@ -95,6 +98,12 @@ const Widget = () => {
     <>
       <ProTable<INissayaEnding>
         actionRef={ref}
+        search={{
+          filterType: "light",
+        }}
+        options={{
+          search: true,
+        }}
         columns={[
           {
             title: intl.formatMessage({
@@ -111,6 +120,7 @@ const Widget = () => {
             }),
             dataIndex: "ending",
             key: "ending",
+            search: false,
             render: (text, row, index, action) => {
               return (
                 <NissayaEndingEdit
@@ -133,6 +143,7 @@ const Widget = () => {
             }),
             dataIndex: "lang",
             key: "lang",
+            search: false,
             filters: true,
             valueEnum: LangValueEnum(),
           },
@@ -142,6 +153,16 @@ const Widget = () => {
             }),
             dataIndex: "relation",
             key: "relation",
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.case.label",
+            }),
+            dataIndex: "case",
+            key: "case",
+            search: false,
+            filters: true,
+            valueEnum: CaseValueEnum(),
           },
           {
             title: intl.formatMessage({
@@ -225,7 +246,15 @@ const Widget = () => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
-
+          if (params.relation) {
+            url += `&relation=${params.relation}`;
+          }
+          if (filter.case) {
+            url += `&case=${filter.case.join()}`;
+          }
+          if (filter.lang) {
+            url += `&lang=${filter.lang.join()}`;
+          }
           const res = await get<INissayaEndingListResponse>(url);
           const items: INissayaEnding[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at ? item.created_at : 0);
@@ -236,6 +265,7 @@ const Widget = () => {
               ending: item.ending,
               lang: item.lang,
               relation: item.relation,
+              case: item.case,
               createdAt: date.getTime(),
               updatedAt: date2.getTime(),
             };
@@ -252,14 +282,13 @@ const Widget = () => {
           showQuickJumper: true,
           showSizeChanger: true,
         }}
-        search={false}
-        options={{
-          search: true,
-        }}
         toolBarRender={() => [
           <DataImport
             url="/v2/nissaya-ending-import"
             trigger={<Button icon={<ImportOutlined />}>Import</Button>}
+            onSuccess={() => {
+              ref.current?.reload();
+            }}
           />,
           <Button icon={<ExportOutlined />}>
             <a
