@@ -28,7 +28,7 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
   const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
 
-  const _verb = ["v", "pass", "caus", "abs", "fpp", "pp", "n", "adv"];
+  const _verb = ["v", "pass", "caus", "ger", "fpp", "pp", "n", "adv"];
   const verbOptions = _verb.map((item) => {
     return {
       value: item,

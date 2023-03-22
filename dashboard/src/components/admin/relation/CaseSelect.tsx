@@ -16,7 +16,7 @@ const Widget = ({ name = "case", width = "md" }: IWidget) => {
     "inst",
     "abl",
     "loc",
-    "abs",
+    "ger",
     "adv",
   ];
   const caseOptions = _case.map((item) => {
