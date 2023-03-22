@@ -12,5 +12,6 @@ class Relation extends Model
     protected $casts = [
         'id' => 'string'
     ];
+	protected $fillable = ['id','name','case','to'];
 
 }

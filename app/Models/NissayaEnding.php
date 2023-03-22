@@ -11,4 +11,6 @@ class NissayaEnding extends Model
     protected $casts = [
         'id' => 'string'
     ];
+	protected $fillable = ['id','ending','lang','relation'];
+
 }
