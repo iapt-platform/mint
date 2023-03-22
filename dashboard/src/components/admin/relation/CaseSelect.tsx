@@ -8,7 +8,17 @@ interface IWidget {
 }
 const Widget = ({ name = "case", width = "md" }: IWidget) => {
   const intl = useIntl();
-  const _case = ["nom", "acc", "gen", "dat", "inst", "abl", "loc"];
+  const _case = [
+    "nom",
+    "acc",
+    "gen",
+    "dat",
+    "inst",
+    "abl",
+    "loc",
+    "abs",
+    "adv",
+  ];
   const caseOptions = _case.map((item) => {
     return {
       value: item,
