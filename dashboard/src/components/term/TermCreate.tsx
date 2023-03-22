@@ -8,16 +8,21 @@ import {
 } from "@ant-design/pro-components";
 import { PlusOutlined } from "@ant-design/icons";
 
-import { ITermResponse, ITermCreateResponse } from "../api/Term";
-import { get } from "../../request";
+import {
+  ITermResponse,
+  ITermCreateResponse,
+  ITermDataRequest,
+} from "../api/Term";
+import { get, post, put } from "../../request";
 
 import TermEditInner from "./TermEditInner";
 
 interface IFormData {
+  id?: string;
   word: string;
   tag: string;
   meaning: string;
-  meaning2: string;
+  meaning2: string[];
   note: string;
   channel: string;
   lang: string;
@@ -30,6 +35,7 @@ export interface IWidgetDictCreate {
   word?: string;
   channel?: string;
   type?: "inline" | "modal";
+  onUpdate?: Function;
 }
 const Widget = ({
   studio,
@@ -38,18 +44,11 @@ const Widget = ({
   word,
   channel,
   type = "modal",
+  onUpdate,
 }: IWidgetDictCreate) => {
   const intl = useIntl();
   const [form] = Form.useForm<IFormData>();
   const formRef = useRef<ProFormInstance>();
-  console.log("term render");
-  const waitTime = (time: number = 100) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, time);
-    });
-  };
   const editTrigger = (
     <span>
       {intl.formatMessage({
@@ -66,19 +65,50 @@ const Widget = ({
   );
 
   const onFinish = async (values: IFormData) => {
-    await waitTime(2000);
     console.log(values.word);
-    message.success("提交成功");
+    const newValue = {
+      id: values.id,
+      word: values.word,
+      tag: values.tag,
+      meaning: values.meaning,
+      other_meaning: values.meaning2.join(),
+      note: values.note,
+      channal: values.channel,
+      studioName: studio,
+      language: values.lang,
+    };
+    console.log(newValue);
+    let res: ITermResponse;
+    if (typeof values.id === "undefined") {
+      console.log("post", values);
+      res = await post<ITermDataRequest, ITermResponse>(`/v2/terms`, newValue);
+    } else {
+      console.log("put", values);
+
+      res = await put<ITermDataRequest, ITermResponse>(
+        `/v2/terms/${values.id}`,
+        newValue
+      );
+    }
+    console.log(res);
+    if (res.ok) {
+      message.success("提交成功");
+      if (typeof onUpdate !== "undefined") {
+        onUpdate();
+      }
+    } else {
+      message.error(res.message);
+    }
+
     return true;
   };
   const request = async () => {
-    console.log("request");
     let url: string;
     let data: IFormData = {
       word: "",
       tag: "",
       meaning: "",
-      meaning2: "",
+      meaning2: [],
       note: "",
       lang: "",
       channel: "",
@@ -86,14 +116,19 @@ const Widget = ({
     if (typeof isCreate !== "undefined" && isCreate === false) {
       // 如果是编辑，就从服务器拉取数据。
       url = "/v2/terms/" + (isCreate ? "" : wordId);
-      console.log(url);
+      console.log("url", url);
       const res = await get<ITermResponse>(url);
-      console.log(res);
+      console.log("request", res);
+      let meaning2: string[] = [];
+      if (res.data.other_meaning) {
+        meaning2 = res.data.other_meaning.split(",");
+      }
       return {
+        id: res.data.guid,
         word: res.data.word,
         tag: res.data.tag,
         meaning: res.data.meaning,
-        meaning2: res.data.other_meaning,
+        meaning2: meaning2,
         note: res.data.note,
         lang: res.data.language,
         channel: res.data.channal,
@@ -107,10 +142,10 @@ const Widget = ({
         word: res.data.word,
         tag: "",
         meaning: "",
-        meaning2: "",
+        meaning2: [],
         note: "",
         lang: res.data.language,
-        channel: "",
+        channel: channel,
       };
       return data;
     } else if (typeof studio !== "undefined") {
@@ -121,7 +156,7 @@ const Widget = ({
         word: "",
         tag: "",
         meaning: "",
-        meaning2: "",
+        meaning2: [],
         note: "",
         lang: "",
         channel: "",
@@ -165,7 +200,6 @@ const Widget = ({
             trigger={isCreate ? createTrigger : editTrigger}
             modalProps={{
               destroyOnClose: true,
-              onCancel: () => console.log("run"),
             }}
             submitTimeout={2000}
             {...formProps}
