@@ -10,6 +10,7 @@ class ChannelApi{
                     'id'=>$id,
                     'name'=>$channel['name'],
                     'type'=>$channel['type'],
+                    'lang'=>$channel['lang'],
                     'studio_id'=>$channel['owner_uid'],
                 ];
         }else{
@@ -19,11 +20,21 @@ class ChannelApi{
     public static function getListByUser(){
 
     }
-    public static function getSysChannel($channel_name){
+    public static function getSysChannel($channel_name,$fallback=""){
         $channel=  Channel::where('name',$channel_name)
                     ->where('owner_uid',config("app.admin.root_uuid"))
                     ->first();
         if(!$channel){
+            if(!empty($fallback)){
+                $channel = Channel::where('name',$fallback)
+                                  ->where('owner_uid',config("app.admin.root_uuid"))
+                                  ->first();
+                if(!$channel){
+                    return false;
+                }else{
+                    return $channel->uid;
+                }
+            }
             return false;
         }else{
             return $channel->uid;
