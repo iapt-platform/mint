@@ -1,11 +1,16 @@
+import { IStudio } from "../auth/StudioName";
+import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
+
 export interface ITermDataRequest {
-  id: number;
+  id?: string;
   word: string;
-  tag: string;
+  tag?: string;
   meaning: string;
-  other_meaning: string;
-  note: string;
-  channal: string;
+  other_meaning?: string;
+  note?: string;
+  channal?: string;
+  studioName?: string;
   language: string;
 }
 export interface ITermDataResponse {
@@ -17,6 +22,9 @@ export interface ITermDataResponse {
   other_meaning: string;
   note: string;
   channal: string;
+  channel?: IChannel;
+  studio: IStudio;
+  editor: IUser;
   language: string;
   created_at: string;
   updated_at: string;
