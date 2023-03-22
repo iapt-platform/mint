@@ -32,6 +32,21 @@ class InitSystemChannel extends Command
             'type'=>'original',
             'lang'=>'pali',
         ],
+        [
+            "name"=>'_System_Grammar_Term_zh-hans_',
+            'type'=>'translation',
+            'lang'=>'zh-Hans',
+        ],
+        [
+            "name"=>'_System_Grammar_Term_zh-hant_',
+            'type'=>'translation',
+            'lang'=>'zh-Hant',
+        ],
+        [
+            "name"=>'_System_Grammar_Term_en_',
+            'type'=>'translation',
+            'lang'=>'en',
+        ],
     ];
 
     /**
