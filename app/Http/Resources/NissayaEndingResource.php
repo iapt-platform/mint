@@ -20,6 +20,7 @@ class NissayaEndingResource extends JsonResource
             "ending"=> $this->ending,
             "lang"=> $this->lang,
             "relation"=> $this->relation,
+            "case"=> $this->case,
             "editor"=> UserApi::getById($this->editor_id),
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
