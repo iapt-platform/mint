@@ -7,8 +7,10 @@ import { ISite, refresh as refreshLayout } from "./reducers/layout";
 import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
 import { refresh as refreshTheme } from "./reducers/theme";
 import { get, IErrorResponse } from "./request";
-//import { GRPC_HOST,  grpc_metadata } from "./request";
+import { get as getLang } from "./locales";
+
 import store from "./store";
+import { ITerm, push } from "./reducers/term-vocabulary";
 
 export interface ISiteInfoResponse {
   title: string;
@@ -27,6 +29,14 @@ export interface ITokenRefreshResponse {
   data: IUserData;
 }
 
+interface ITermResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: ITerm[];
+    count: number;
+  };
+}
 const init = () => {
   get<ISiteInfoResponse | IErrorResponse>("/v2/siteinfo/en").then(
     (response) => {
@@ -71,7 +81,14 @@ const init = () => {
     const json: ISettingItem[] = JSON.parse(setting);
     store.dispatch(refreshSetting(json));
   }
-
+  //获取术语表
+  get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
+    (json) => {
+      if (json.ok) {
+        store.dispatch(push(json.data.rows));
+      }
+    }
+  );
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");
   if (theme === "dark") {
