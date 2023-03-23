@@ -41,6 +41,7 @@ use App\Http\Controllers\UserStatisticController;
 use App\Http\Controllers\SentSimController;
 use App\Http\Controllers\NissayaEndingController;
 use App\Http\Controllers\RelationController;
+use App\Http\Controllers\TermVocabularyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +124,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('relation',RelationController::class);
     Route::get('relation-export',[RelationController::class,"export"]);
     Route::get('relation-import',[RelationController::class,"import"]);
+    Route::apiResource('term-vocabulary',TermVocabularyController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
 
