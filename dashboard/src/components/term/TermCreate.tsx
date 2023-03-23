@@ -77,14 +77,10 @@ const Widget = ({
       studioName: studio,
       language: values.lang,
     };
-    console.log(newValue);
     let res: ITermResponse;
     if (typeof values.id === "undefined") {
-      console.log("post", values);
       res = await post<ITermDataRequest, ITermResponse>(`/v2/terms`, newValue);
     } else {
-      console.log("put", values);
-
       res = await put<ITermDataRequest, ITermResponse>(
         `/v2/terms/${values.id}`,
         newValue
