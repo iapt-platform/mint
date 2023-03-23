@@ -263,7 +263,7 @@ class DhammaTermController extends Controller
     public function show(Request  $request,$id)
     {
         //
-		$indexCol = ['id','guid','word','meaning','other_meaning','note','language','channal','created_at','updated_at'];
+		$indexCol = ['id','guid','word','meaning','other_meaning','tag','note','language','channal','created_at','updated_at'];
 
 		$result  = DhammaTerm::select($indexCol)->where('guid', $id)->first();
 		if($result){
@@ -470,6 +470,7 @@ class DhammaTermController extends Controller
                 $row->meaning = $meaning;
                 $row->other_meaning = $other_meaning;
                 $row->note = $note;
+                $row->tag = $tag;
                 $row->language = $lang;
                 $row->channal = $channelId;
                 $row->owner = $owner_id;
