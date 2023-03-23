@@ -17,6 +17,8 @@ import { useRef } from "react";
 import { IUser } from "../../../reducers/current-user";
 import RelationEdit from "../../../components/admin/relation/RelationEdit";
 import DataImport from "../../../components/admin/relation/DataImport";
+import { useAppSelector } from "../../../hooks";
+import { getTerm } from "../../../reducers/term-vocabulary";
 
 const { Text } = Typography;
 
@@ -97,6 +99,7 @@ export interface IRelation {
 }
 const Widget = () => {
   const intl = useIntl(); //i18n
+  const terms = useAppSelector(getTerm);
 
   const showDeleteConfirm = (id?: string, title?: string) => {
     Modal.confirm({
@@ -177,9 +180,10 @@ const Widget = () => {
             dataIndex: "name1",
             key: "name1",
             render: (text, row, index, action) => {
-              return intl.formatMessage({
-                id: `relations.${row.name}.label`,
-              });
+              const localName = terms?.find(
+                (item) => item.word === row.name
+              )?.meaning;
+              return localName;
             },
           },
           {
