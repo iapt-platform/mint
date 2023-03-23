@@ -1622,6 +1622,11 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_eva",
+            name:"ပင်",
+            tooltip:'就，只是',
+        },
+        {
+            id:"my_eva",
             name:"ပင်လျှင်",
             tooltip:'就，只是',
         },
