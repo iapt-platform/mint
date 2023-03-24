@@ -33,7 +33,6 @@ const Widget = ({ name = "case", width = "md" }: IWidget) => {
       options={caseOptions}
       width={width}
       name={name}
-      allowClear={false}
       label={intl.formatMessage({ id: "forms.fields.case.label" })}
     />
   );
