@@ -25,6 +25,7 @@ class SentPrResource extends JsonResource
             $role = 'owner';
         }
         $channel = ChannelApi::getById($this->channel_uid);
+        $mode = $request->get("mode",'read');
         return [
             "id"=>$this->id,
             "book"=> $this->book_id,
