@@ -288,6 +288,8 @@ class NissayaEndingController extends Controller
         $spreadsheet = $reader->load($filename);
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $currLine = 2;
+        $countFail = 0;
+        $error = "";
         do {
             # code...
             $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
@@ -296,7 +298,31 @@ class NissayaEndingController extends Controller
             $relation = $activeWorksheet->getCell("D{$currLine}")->getValue();
             $case = $activeWorksheet->getCell("E{$currLine}")->getValue();
             if(!empty($ending)){
-                $row = NissayaEnding::firstOrNew(['ending'=>$ending,'relation'=>$relation,'case'=>$case]);
+                //查询是否有冲突数据
+                //查询此id是否有旧数据
+                if(!empty($id)){
+                    $oldRow = NissayaEnding::find($id);
+                }
+                //查询是否跟已有数据重复
+                $row = NissayaEnding::where(['ending'=>$ending,'relation'=>$relation,'case'=>$case])->first();
+                if(!$row){
+                    //不重复
+                    if(isset($oldRow) && $oldRow){
+                        //有旧的记录-修改旧数据
+                        $row = $oldRow;
+                    }else{
+                        //没找到旧的记录-新建
+                        $row = new NissayaEnding();
+                    }
+                }else{
+                    //重复-如果与旧的id不同旧报错
+                    if(isset($oldRow) && $oldRow && $row->id !== $id){
+                        $error .= "重复的数据：{$id} - {$word}\n";
+                        $currLine++;
+                        $countFail++;
+                        continue;
+                    }
+                }
                 $row->ending = $ending;
                 $row->strlen = mb_strlen($ending,"UTF-8") ;
                 $row->lang = $lang;
@@ -308,7 +334,7 @@ class NissayaEndingController extends Controller
                 break;
             }
             $currLine++;
-        } while (!empty($ending));
-        return $this->ok($currLine-2);
+        } while (true);
+        return $this->ok(["success"=>$currLine-2-$countFail,'fail'=>($countFail)],$error);
     }
 }
