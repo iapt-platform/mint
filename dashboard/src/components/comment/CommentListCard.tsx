@@ -38,7 +38,7 @@ const Widget = ({
       return newItem;
     });
     setData(newData);
-  }, [changedAnswerCount, data]);
+  }, [changedAnswerCount]);
 
   useEffect(() => {
     let url: string = "";
