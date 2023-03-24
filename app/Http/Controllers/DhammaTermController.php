@@ -28,7 +28,7 @@ class DhammaTermController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','guid','word','meaning','other_meaning','note','language','channal','owner','editor_id','created_at','updated_at'];
+		$indexCol = ['id','guid','word','meaning','other_meaning','note','tag','language','channal','owner','editor_id','created_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'create-by-channel':
