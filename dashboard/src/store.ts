@@ -14,6 +14,7 @@ import sentenceReducer from "./reducers/sentence";
 import themeReducer from "./reducers/theme";
 import acceptPrReducer from "./reducers/accept-pr";
 import termVocabularyReducer from "./reducers/term-vocabulary";
+import nissayaEndingVocabularyReducer from "./reducers/nissaya-ending-vocabulary";
 
 const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ const store = configureStore({
     theme: themeReducer,
     acceptPr: acceptPrReducer,
     termVocabulary: termVocabularyReducer,
+    nissayaEndingVocabulary: nissayaEndingVocabularyReducer,
   },
 });
 

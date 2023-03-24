@@ -11,6 +11,7 @@ import { get as getLang } from "./locales";
 
 import store from "./store";
 import { ITerm, push } from "./reducers/term-vocabulary";
+import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 
 export interface ISiteInfoResponse {
   title: string;
@@ -34,6 +35,17 @@ interface ITermResponse {
   message: string;
   data: {
     rows: ITerm[];
+    count: number;
+  };
+}
+interface INissayaEnding {
+  ending: string;
+}
+interface INissayaEndingResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: INissayaEnding[];
     count: number;
   };
 }
@@ -86,6 +98,15 @@ const init = () => {
     (json) => {
       if (json.ok) {
         store.dispatch(push(json.data.rows));
+      }
+    }
+  );
+  //获取nissaya ending 表
+  get<INissayaEndingResponse>(`/v2/nissaya-ending-vocabulary?lang=my`).then(
+    (json) => {
+      if (json.ok) {
+        const nissayaEnding = json.data.rows.map((item) => item.ending);
+        store.dispatch(nissayaEndingPush(nissayaEnding));
       }
     }
   );
