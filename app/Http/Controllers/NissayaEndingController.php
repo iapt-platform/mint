@@ -63,7 +63,13 @@ class NissayaEndingController extends Controller
 		}
     }
 
-
+    public function vocabulary(Request $request){
+        $result = NissayaEnding::select(['ending'])
+                              ->where('lang', $request->get('lang') )
+                              ->groupBy('ending')
+                              ->get();
+        return $this->ok(["rows"=>$result,"count"=>count($result)]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -137,53 +143,53 @@ class NissayaEndingController extends Controller
         }
 
         $relations = Relation::whereIn('name',$myEnding)->get();
-        if(count($relations) === 0){
-            return $this->ok("# no relation\n".$request->get('ending'));
-        }
-        $cardData['title_case'] = "格位";
-        $cardData['title_content'] = "含义";
-        $cardData['title_local_ending'] = "翻译建议";
-        $cardData['title_local_relation'] = "关系";
-        $cardData['title_relation'] = "关系";
-        foreach ($relations as $key => $relation) {
-            $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
-            if(empty($relation->case)){
-                $cardData['row'][] = ["relation"=>$relation->name];
-                continue;
-            }
-            $case = $relation->case;
-            # 格位
-            $newLine['case'] = __("grammar.".$case);
-            //含义
-            if($relationInTerm){
-                $newLine['other_meaning'] = $relationInTerm->other_meaning;
-                $newLine['note'] = $relationInTerm->note;
-                if(!empty($relationInTerm->note)){
-                    $newLine['summary'] = explode("\n",$relationInTerm->note)[0];
+        if(count($relations) > 0){
+            $cardData['title_case'] = "格位";
+            $cardData['title_content'] = "含义";
+            $cardData['title_local_ending'] = "翻译建议";
+            $cardData['title_local_relation'] = "关系";
+            $cardData['title_relation'] = "关系";
+            foreach ($relations as $key => $relation) {
+                $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
+                if(empty($relation->case)){
+                    $cardData['row'][] = ["relation"=>$relation->name];
+                    continue;
                 }
-            }
-            //翻译建议
-            $localEnding = '';
-            $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
-                                              ->where('lang',$request->get('lang'));
-            if(!empty($case)){
-                $localEndingRecord = $localEndingRecord->where('case',$case);
-            }
-            $localLangs = $localEndingRecord->get();
-            foreach ($localLangs as $localLang) {
-                # code...
-                $localEnding .= $localLang->ending.",";
-            }
-            $newLine['local_ending'] = $localEnding;
+                $case = $relation->case;
+                # 格位
+                $newLine['case'] = __("grammar.".$case);
+                //含义
+                if($relationInTerm){
+                    $newLine['other_meaning'] = $relationInTerm->other_meaning;
+                    $newLine['note'] = $relationInTerm->note;
+                    if(!empty($relationInTerm->note)){
+                        $newLine['summary'] = explode("\n",$relationInTerm->note)[0];
+                    }
+                }
+                //翻译建议
+                $localEnding = '';
+                $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
+                                                ->where('lang',$request->get('lang'));
+                if(!empty($case)){
+                    $localEndingRecord = $localEndingRecord->where('case',$case);
+                }
+                $localLangs = $localEndingRecord->get();
+                foreach ($localLangs as $localLang) {
+                    # code...
+                    $localEnding .= $localLang->ending.",";
+                }
+                $newLine['local_ending'] = $localEnding;
 
-            //本地语言 关系名称
-            if($relationInTerm){
-                $newLine['local_relation'] =  $relationInTerm->meaning;
+                //本地语言 关系名称
+                if($relationInTerm){
+                    $newLine['local_relation'] =  $relationInTerm->meaning;
+                }
+                //关系名称
+                $newLine['relation'] =  strtoupper($relation['name']);
+                $cardData['row'][] = $newLine;
             }
-            //关系名称
-            $newLine['relation'] =  strtoupper($relation['name']);
-            $cardData['row'][] = $newLine;
         }
+
 
         $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES));
         $tpl = file_get_contents(resource_path("mustache/nissaya_ending_card.tpl"));
