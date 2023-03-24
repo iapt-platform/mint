@@ -121,6 +121,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('nissaya-ending-card',[NissayaEndingController::class,"nissaya_card"]);
     Route::get('nissaya-ending-export',[NissayaEndingController::class,"export"]);
     Route::get('nissaya-ending-import',[NissayaEndingController::class,"import"]);
+    Route::get('nissaya-ending-vocabulary',[NissayaEndingController::class,"vocabulary"]);
     Route::apiResource('relation',RelationController::class);
     Route::get('relation-export',[RelationController::class,"export"]);
     Route::get('relation-import',[RelationController::class,"import"]);
