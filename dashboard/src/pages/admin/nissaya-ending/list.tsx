@@ -29,6 +29,7 @@ export interface INissayaEndingRequest {
   relation?: string;
   case?: string;
   editor?: IUser;
+  count?: number;
   updated_at?: string;
   created_at?: string;
 }
@@ -52,6 +53,7 @@ export interface INissayaEnding {
   lang?: string;
   relation?: string;
   case?: string;
+  count?: number;
   updatedAt?: number;
   createdAt?: number;
 }
@@ -166,6 +168,16 @@ const Widget = () => {
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.count.label",
+            }),
+            key: "count",
+            width: 100,
+            search: false,
+            dataIndex: "count",
+            sorter: (a, b) => (a.count && b.count ? a.count - b.count : 0),
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
             key: "created-at",
@@ -266,6 +278,7 @@ const Widget = () => {
               lang: item.lang,
               relation: item.relation,
               case: item.case,
+              count: item.count,
               createdAt: date.getTime(),
               updatedAt: date2.getTime(),
             };

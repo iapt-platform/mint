@@ -59,6 +59,7 @@ const items = {
   "forms.fields.relation.label": "关系",
   "forms.fields.from.label": "从",
   "forms.fields.to.label": "连接到",
+  "forms.fields.count.label": "计数",
 };
 
 export default items;
