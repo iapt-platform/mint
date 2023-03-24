@@ -422,14 +422,16 @@ class DhammaTermController extends Controller
         if(!$user){
             return $this->error(__('auth.failed'));
         }
-
+        $message = "";
         $filename = $request->get('filename');
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setReadDataOnly(true);
         $spreadsheet = $reader->load($filename);
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $currLine = 2;
+        $count = 0;
         do {
+            $count++;
             # code...
             $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
             $word = $activeWorksheet->getCell("B{$currLine}")->getValue();
@@ -458,13 +460,31 @@ class DhammaTermController extends Controller
             }
 
             if(!empty($word)){
+                //查询此id是否有旧数据
+                if(!empty($id)){
+                    $oldRow = DhammaTerm::find($id);
+                }
+                //查询是否跟已有数据重复
                 $row = DhammaTerm::where($query)->first();
                 if(!$row){
-                    $row = new DhammaTerm();
-                    $row->id = app('snowflake')->id();
-                    $row->guid = Str::uuid();
-                    $row->word = $word;
-                    $row->create_time = time()*1000;
+                    //不重复
+                    if(isset($oldRow) && $oldRow){
+                            //找到旧的记录-修改旧数据
+                            $row = $oldRow;
+                    }else{
+                            //没找到旧的记录-新建
+                            $row = new DhammaTerm();
+                            $row->id = app('snowflake')->id();
+                            $row->guid = Str::uuid();
+                            $row->word = $word;
+                            $row->create_time = time()*1000;
+                    }
+                }else{
+                    //重复-如果与旧的id不同旧报错
+                    if(isset($oldRow) && $oldRow && $oldRow->guid !== $id){
+                        $message .= "重复的数据：{$id}\n";
+                        continue;
+                    }
                 }
                 $row->word_en = Tools::getWordEn($word);
                 $row->meaning = $meaning;
@@ -482,7 +502,7 @@ class DhammaTermController extends Controller
                 break;
             }
             $currLine++;
-        } while (!empty($word));
+        } while (true);
         return $this->ok($currLine-2);
     }
 }
