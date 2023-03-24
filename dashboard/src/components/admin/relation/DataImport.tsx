@@ -4,6 +4,7 @@ import { Form, message } from "antd";
 import { API_HOST, get } from "../../../request";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
+import modal from "antd/lib/modal";
 
 interface INissayaEndingUpload {
   filename: UploadFile<IAttachmentResponse>[];
@@ -11,7 +12,10 @@ interface INissayaEndingUpload {
 export interface INissayaEndingImportResponse {
   ok: boolean;
   message: string;
-  data: number;
+  data: {
+    success: number;
+    fail: number;
+  };
 }
 
 interface IWidget {
@@ -58,9 +62,15 @@ const Widget = ({
         console.log("url", queryUrl);
         const res = await get<INissayaEndingImportResponse>(queryUrl);
 
-        console.log(res);
+        console.log("import", res);
         if (res.ok) {
-          message.success(`导入数据${res.data}`);
+          if (res.data.fail > 0) {
+            modal.info({
+              title: "error",
+              content: `成功${res.data.success}-失败${res.data.fail}\n${res.message}`,
+            });
+          }
+          message.success(`成功导入${res.data.success}`);
           if (typeof onSuccess !== "undefined") {
             onSuccess();
           }
