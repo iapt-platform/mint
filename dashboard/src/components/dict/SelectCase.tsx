@@ -54,10 +54,6 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       label: intl.formatMessage({ id: "dict.fields.type.pl.label" }),
       children: case8,
     },
-    {
-      value: "base",
-      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
-    },
   ];
   const case3 = [
     {
@@ -74,6 +70,56 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       value: "f",
       label: intl.formatMessage({ id: "dict.fields.type.f.label" }),
       children: case2,
+    },
+  ];
+  const case3_ti = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+    },
+  ];
+  const case3_pron = [
+    ...case3,
+    {
+      value: "1p",
+      label: intl.formatMessage({ id: "dict.fields.type.1p.label" }),
+      children: case2,
+    },
+    {
+      value: "2p",
+      label: intl.formatMessage({ id: "dict.fields.type.2p.label" }),
+      children: case2,
+    },
+    {
+      value: "3p",
+      label: intl.formatMessage({ id: "dict.fields.type.3p.label" }),
+      children: case2,
+    },
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+    },
+  ];
+  const case3_n = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+      children: [
+        {
+          value: "m",
+          label: intl.formatMessage({ id: "dict.fields.type.m.label" }),
+        },
+        {
+          value: "nt",
+          label: intl.formatMessage({ id: "dict.fields.type.nt.label" }),
+        },
+        {
+          value: "f",
+          label: intl.formatMessage({ id: "dict.fields.type.f.label" }),
+        },
+      ],
     },
   ];
   const caseVerb3 = [
@@ -200,12 +246,12 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "n",
       label: intl.formatMessage({ id: "dict.fields.type.n.label" }),
-      children: case3,
+      children: case3_n,
     },
     {
       value: "ti",
       label: intl.formatMessage({ id: "dict.fields.type.ti.label" }),
-      children: case3,
+      children: case3_ti,
     },
     {
       value: "v",
@@ -224,7 +270,17 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "adj",
       label: intl.formatMessage({ id: "dict.fields.type.adj.label" }),
-      children: case3,
+      children: case3_ti,
+    },
+    {
+      value: "pron",
+      label: intl.formatMessage({ id: "dict.fields.type.pron.label" }),
+      children: case3_pron,
+    },
+    {
+      value: "num",
+      label: intl.formatMessage({ id: "dict.fields.type.num.label" }),
+      children: case3_ti,
     },
   ];
   const onChange = (value: (string | number)[]) => {
