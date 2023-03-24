@@ -429,9 +429,8 @@ class DhammaTermController extends Controller
         $spreadsheet = $reader->load($filename);
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $currLine = 2;
-        $count = 0;
+        $countFail = 0;
         do {
-            $count++;
             # code...
             $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
             $word = $activeWorksheet->getCell("B{$currLine}")->getValue();
@@ -481,8 +480,10 @@ class DhammaTermController extends Controller
                     }
                 }else{
                     //重复-如果与旧的id不同旧报错
-                    if(isset($oldRow) && $oldRow && $oldRow->guid !== $id){
-                        $message .= "重复的数据：{$id}\n";
+                    if(isset($oldRow) && $oldRow && $row->guid !== $id){
+                        $message .= "重复的数据：{$id} - {$word}\n";
+                        $currLine++;
+                        $countFail++;
                         continue;
                     }
                 }
@@ -503,6 +504,6 @@ class DhammaTermController extends Controller
             }
             $currLine++;
         } while (true);
-        return $this->ok($currLine-2);
+        return $this->ok(["success"=>$currLine-2-$countFail,'fail'=>($countFail)],$message);
     }
 }
