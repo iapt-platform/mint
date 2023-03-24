@@ -20,6 +20,7 @@ class CreateNissayaEndingsTable extends Migration
             $table->string('relation',32)->nullable()->index();
             $table->string('case',32)->nullable()->index();
             $table->integer('strlen')->index()->default(0);
+            $table->integer('count')->index()->default(0);
             $table->uuid('editor_id');
             $table->timestamps();
             $table->unique(["ending", "relation","case"]);

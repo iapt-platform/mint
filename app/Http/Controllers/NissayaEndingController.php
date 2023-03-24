@@ -24,7 +24,7 @@ class NissayaEndingController extends Controller
     public function index(Request $request)
     {
         //
-        $table = NissayaEnding::select(['id','ending','lang','relation','case','editor_id','updated_at']);
+        $table = NissayaEnding::select(['id','ending','lang','relation','case','count','editor_id','updated_at']);
 
         if(($request->has('case'))){
             $table->whereIn('case', explode(",",$request->get('case')) );
