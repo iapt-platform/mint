@@ -69,8 +69,10 @@ const Widget = ({
               title: "error",
               content: `成功${res.data.success}-失败${res.data.fail}\n${res.message}`,
             });
+          } else {
+            message.success(`成功导入${res.data.success}`);
           }
-          message.success(`成功导入${res.data.success}`);
+
           if (typeof onSuccess !== "undefined") {
             onSuccess();
           }
