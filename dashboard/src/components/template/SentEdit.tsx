@@ -3,6 +3,7 @@ import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
@@ -38,6 +39,7 @@ export interface IWidgetSentEditInner {
   channels?: string[];
   origin?: ISentence[];
   translation?: ISentence[];
+  path?: ITocPathNode[];
   layout?: "row" | "column";
   tranNum?: number;
   nissayaNum?: number;
@@ -49,6 +51,7 @@ export const SentEditInner = ({
   id,
   origin,
   translation,
+  path,
   layout = "column",
   tranNum,
   nissayaNum,
@@ -66,6 +69,7 @@ export const SentEditInner = ({
         />
         <SentTab
           id={id}
+          path={path}
           tranNum={tranNum}
           nissayaNum={nissayaNum}
           commNum={commNum}

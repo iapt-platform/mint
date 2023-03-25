@@ -1,4 +1,4 @@
-import { Badge, Tabs, Typography } from "antd";
+import { Badge, Space, Tabs, Typography } from "antd";
 import {
   TranslationOutlined,
   CloseOutlined,
@@ -10,12 +10,14 @@ import SentTabButton from "./SentTabButton";
 import SentCanRead from "./SentCanRead";
 import SentSim from "./SentSim";
 import { useIntl } from "react-intl";
+import TocPath from "../../corpus/TocPath";
 
 const { Text } = Typography;
 
 const Widget = ({
   id,
   channels,
+  path,
   tranNum,
   nissayaNum,
   commNum,
@@ -37,7 +39,10 @@ const Widget = ({
         size="small"
         tabBarGutter={0}
         tabBarExtraContent={
-          <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+          <Space>
+            <TocPath data={path} trigger={path ? path[0].paliTitle : <></>} />
+            <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+          </Space>
         }
         items={[
           {
