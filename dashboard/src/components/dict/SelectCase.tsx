@@ -283,18 +283,16 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       children: case3_ti,
     },
   ];
-  const onChange = (value: (string | number)[]) => {
-    console.log("case changed", value);
-    if (typeof onCaseChange !== "undefined") {
-      onCaseChange(value);
-    }
-  };
-  console.log("case", defaultValue);
   return (
     <Cascader
       options={options}
       placeholder="Please select case"
-      onChange={onChange}
+      onChange={(value: (string | number)[]) => {
+        console.log("case changed", value);
+        if (typeof onCaseChange !== "undefined") {
+          onCaseChange(value);
+        }
+      }}
     />
   );
 };
