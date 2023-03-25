@@ -686,49 +686,13 @@ class CorpusController extends Controller
 		#生成channel 数量列表
 		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
         $channelCount = CorpusController::sentResCount($book,$para,$word_start,$word_end);
-        /*
-		$channelCount = Cache::remember("/sent1/{$sentId}/channels/count",
-                          60,
-                          function() use($book,$para,$word_start,$word_end){
-			$channels =  Sentence::where('book_id',$book)
-							->where('paragraph',$para)
-							->where('word_start',$word_start)
-							->where('word_end',$word_end)
-							->select('channel_uid')
-                            ->groupBy('channel_uid')
-							->get();
-            $channelList = [];
-            foreach ($channels as $key => $value) {
-                # code...
-                $channelList[] = $value->channel_uid;
-            }
-            $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
-            $output["tranNum"]=0;
-            $output["nissayaNum"]=0;
-            $output["commNum"]=0;
-            $output["originNum"]=0;
-            foreach ($channelInfo as $key => $value) {
-                # code...
-                switch($value->type){
-                    case "translation":
-                        $output["tranNum"]++;
-                        break;
-                    case "nissaya":
-                        $output["nissayaNum"]++;
-                        break;
-                    case "commentary":
-                        $output["commNum"]++;
-                        break;
-                    case "original":
-                        $output["originNum"]++;
-                        break;
-                }
-            }
-			return $output;
-
-		});
-        */
-
+        $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
+        $sent["path"] = [];
+        foreach ($path as $key => $value) {
+            # code...
+            $value['paliTitle'] = $value['title'];
+            $sent["path"][] = $value;
+        }
 		$sent["tranNum"] = $channelCount['tranNum'];
 		$sent["nissayaNum"] = $channelCount['nissayaNum'];
 		$sent["commNum"] = $channelCount['commNum'];
