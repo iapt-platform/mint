@@ -63,6 +63,7 @@ export const SentEditInner = ({
     <Card bodyStyle={{ paddingBottom: 0 }} size="small">
       <SentMenu>
         <SentContent
+          sid={id}
           origin={origin}
           translation={translation}
           layout={layout}

@@ -13,11 +13,13 @@ interface ILayoutFlex {
 }
 type TDirection = "row" | "column";
 interface IWidgetSentContent {
+  sid?: string;
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: TDirection;
 }
 const Widget = ({
+  sid,
   origin,
   translation,
   layout = "column",
@@ -63,6 +65,11 @@ const Widget = ({
         marginBottom: 10,
       }}
     >
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `<div class="pcd_sent" id="sent_${sid}"></div>`,
+        }}
+      />
       <div style={{ flex: layoutFlex.left, color: "#9f3a01" }}>
         {origin?.map((item, id) => {
           if (item.channel.type === "wbw") {
