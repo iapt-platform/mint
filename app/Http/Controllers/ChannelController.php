@@ -243,15 +243,18 @@ class ChannelController extends Controller
         $sentLenContainer = [];
 
         foreach ($sent as $value) {
-            $sentContainer[$value] = false;
             $ids = explode('-',$value);
-            $query[] = $ids;
+            if(count($ids)===4){
+                $sentContainer[$value] = false;
+                $query[] = $ids;
+            }
         }
         //获取单句长度
         if(count($query)>0){
-            $sentLen = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$query)
-                                    ->select(['book','paragraph','word_begin','word_end','length'])
-                                    ->get();
+            $table = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$query)
+                                    ->select(['book','paragraph','word_begin','word_end','length']);
+            Log::info($table->toSql());
+            $sentLen = $table->get();
 
             foreach ($sentLen as $value) {
                 $sentLenContainer["{$value->book}-{$value->paragraph}-{$value->word_begin}-{$value->word_end}"] = $value->length;
@@ -272,10 +275,8 @@ class ChannelController extends Controller
             $channelId[] = $value['res_id'];
             $channelById[$value['res_id']] = $value;
         }
-        //获取全网公开channel
-        $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
-        $publicChannelsWithContent = Sentence::where('book_id',$request->get('book'))
-                                    ->whereBetween('paragraph',$chapter)
+        //获取全网公开的有译文的channel
+        $publicChannelsWithContent = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
                                     ->where('strlen','>',0)
                                     ->where('status',30)
                                     ->groupBy('channel_uid')
@@ -291,14 +292,21 @@ class ChannelController extends Controller
                 $channelById[$value['res_id']] = $value;
             }
         }
-        $table = Channel::select($indexCol)
+        //所有有这些句子译文的channel
+        $allChannels = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
+                                    ->where('strlen','>',0)
+                                    ->groupBy('channel_uid')
+                                    ->select('channel_uid')
+                                    ->get();
+
+        //所有需要查询的channel
+        $result = Channel::select(['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'])
                         ->whereIn('uid', $channelId)
-                        ->orWhere('owner_uid',$user['user_uid']);
-        $result = $table->get();
-
-
+                        ->orWhere('owner_uid',$user['user_uid'])
+                        ->get();
 
         foreach ($result as $key => $value) {
+            //角色
             if($value->owner_uid===$user['user_uid']){
                 $value['role'] = 'owner';
             }else{
@@ -325,19 +333,23 @@ class ChannelController extends Controller
             $result[$key]["studio"] = \App\Http\Api\StudioApi::getById($value->owner_uid);
 
             //获取进度
-            if(count($query)>0){
+            $currChannelId = $value->uid;
+            $hasContent = Arr::first($allChannels, function ($value, $key) use($currChannelId) {
+                    return ($value->channel_uid===$currChannelId);
+                });
+            if($hasContent && count($query)>0){
                 $finalTable = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
-                                        ->where('channel_uid',$value->uid)
+                                        ->where('channel_uid',$currChannelId)
                                         ->where('strlen','>',0)
                                         ->select(['strlen','book_id','paragraph','word_start','word_end']);
                 if($finalTable->count()>0){
                     $finished = $finalTable->get();
                     $currChannel = [];
-                    foreach ($finished as $key => $value) {
-                        $currChannel["{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}"] = 1;
+                    foreach ($finished as $rowFinish) {
+                        $currChannel["{$rowFinish->book_id}-{$rowFinish->paragraph}-{$rowFinish->word_start}-{$rowFinish->word_end}"] = 1;
                     }
                     $final=[];
-                    foreach ($sentContainer as $sentId=>$value) {
+                    foreach ($sentContainer as $sentId=>$rowSent) {
                         # code...
                         if(isset($currChannel[$sentId])){
                             $final[] = [$sentLenContainer[$sentId],true];
@@ -350,7 +362,6 @@ class ChannelController extends Controller
             }
 
         }
-
         return $this->ok(["rows"=>$result,count($result)]);
 
     }
