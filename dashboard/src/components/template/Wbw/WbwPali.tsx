@@ -145,7 +145,7 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         marginTop: "-1.5em",
         marginLeft: "-2em",
       };
-      commentShellStyle = {
+      commentIconStyle = {
         visibility: isHover ? "visible" : "hidden",
         cursor: "pointer",
       };
