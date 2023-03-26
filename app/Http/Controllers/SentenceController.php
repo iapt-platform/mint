@@ -143,7 +143,9 @@ class SentenceController extends Controller
         foreach ($sent as $value) {
             # code...
             $ids = explode('-',$value);
-            $query[] = $ids;
+            if(count($ids)===4){
+                $query[] = $ids;
+            }
         }
         $table = Sentence::select(['id','book_id','paragraph','word_start','word_end','content','channel_uid','updated_at'])
                         ->where('channel_uid', $request->get('channel'))
