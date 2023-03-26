@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { ArticleType } from "../article/Article";
 import { IChannel } from "./Channel";
 import ChannelPickerTable from "./ChannelPickerTable";
-import { useAppSelector } from "../../hooks";
-import { sentenceList } from "../../reducers/sentence";
 import ChannelSentDiff from "./ChannelSentDiff";
 import CopyToResult from "./CopyToResult";
 
@@ -31,8 +29,13 @@ const Widget = ({
   const [destChannel, setDestChannel] = useState<IChannel>();
   const [copyPercent, setCopyPercent] = useState<number>();
 
-  const sentences = useAppSelector(sentenceList);
-
+  let sentList: string[] = [];
+  const sentElement = document.querySelectorAll(".pcd_sent");
+  for (let index = 0; index < sentElement.length; index++) {
+    const element = sentElement[index];
+    const id = element.id.split("_")[1];
+    sentList.push(id);
+  }
   useEffect(() => {
     setCurrent(initStep);
   }, [initStep]);
@@ -44,73 +47,76 @@ const Widget = ({
   const prev = () => {
     setCurrent(current - 1);
   };
-  const steps = [
-    {
-      title: "选择目标版本",
-      key: "channel",
-      content: (
-        <ChannelPickerTable
-          type="editable"
-          multiSelect={false}
-          onSelect={(e: IChannel) => {
-            console.log(e);
-            setDestChannel(e);
-            setCopyPercent(100);
-            next();
-          }}
-        />
-      ),
-    },
-    {
-      title: "文本比对",
-      key: "diff",
-      content: (
-        <div>
-          <ChannelSentDiff
-            srcChannel={channel}
-            destChannel={destChannel}
-            sentences={sentences}
-            goPrev={() => {
-              prev();
-            }}
-            onSubmit={() => {
-              next();
-            }}
-          />
-        </div>
-      ),
-    },
-    {
-      title: "完成",
-      key: "finish",
-      content: (
-        <CopyToResult
-          onClose={() => {
-            if (typeof onClose !== "undefined") {
-              onClose();
-            }
-          }}
-          onInit={() => {
-            setCurrent(0);
-          }}
-        />
-      ),
-    },
-  ];
-  const items = steps.map((item) => ({ key: item.key, title: item.title }));
-
   const contentStyle: React.CSSProperties = {
-    backgroundColor: "#fafafa",
     borderRadius: 5,
     border: `1px dashed gray`,
     marginTop: 16,
     height: 400,
     overflowY: "scroll",
   };
+  const steps = [
+    {
+      title: "选择目标版本",
+      key: "channel",
+      content: (
+        <div style={contentStyle}>
+          <ChannelPickerTable
+            type="editable"
+            multiSelect={false}
+            onSelect={(e: IChannel[]) => {
+              console.log("channel", e);
+              if (e.length > 0) {
+                setDestChannel(e[0]);
+                setCopyPercent(100);
+                next();
+              }
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      title: "文本比对",
+      key: "diff",
+      content: (
+        <ChannelSentDiff
+          srcChannel={channel}
+          destChannel={destChannel}
+          sentences={sentList}
+          goPrev={() => {
+            prev();
+          }}
+          onSubmit={() => {
+            next();
+          }}
+        />
+      ),
+    },
+    {
+      title: "完成",
+      key: "finish",
+      content: (
+        <div style={contentStyle}>
+          <CopyToResult
+            onClose={() => {
+              if (typeof onClose !== "undefined") {
+                onClose();
+              }
+            }}
+            onInit={() => {
+              setCurrent(0);
+            }}
+          />
+        </div>
+      ),
+    },
+  ];
+  const items = steps.map((item) => ({ key: item.key, title: item.title }));
+
   return (
     <div>
       <Steps current={current} items={items} percent={copyPercent} />
-      <div style={contentStyle}>{steps[current].content}</div>
+      {steps[current].content}
     </div>
   );
 };
