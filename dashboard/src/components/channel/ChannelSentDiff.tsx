@@ -187,20 +187,21 @@ const Widget = ({
           开始复制
         </Button>
       </div>
-      <List
-        header={<div>Header</div>}
-        footer={<div>Footer</div>}
-        bordered
-        dataSource={diffData}
-        renderItem={(item) => (
-          <List.Item>
-            <Row style={{ width: "100%" }}>
-              <Col span={12}>{item.srcContent}</Col>
-              <Col span={12}>{item.destContent}</Col>
-            </Row>
-          </List.Item>
-        )}
-      />
+      <div style={{ height: 400, overflowY: "scroll" }}>
+        <List
+          footer={<div style={{ textAlign: "center" }}>到底了</div>}
+          bordered
+          dataSource={diffData}
+          renderItem={(item) => (
+            <List.Item>
+              <Row style={{ width: "100%" }}>
+                <Col span={12}>{item.srcContent}</Col>
+                <Col span={12}>{item.destContent}</Col>
+              </Row>
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 };
