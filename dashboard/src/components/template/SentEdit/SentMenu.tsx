@@ -2,20 +2,30 @@ import { useState } from "react";
 import { Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import RelatedPara from "../../corpus/RelatedPara";
 
 const onClick: MenuProps["onClick"] = ({ key }) => {
   console.log(`Click on item ${key}`);
+  switch (key) {
+    case "show-commentary":
+      break;
+
+    default:
+      break;
+  }
 };
 
 interface ISentMenu {
+  book?: number;
+  para?: number;
   children?: React.ReactNode;
 }
-const Widget = ({ children }: ISentMenu) => {
+const Widget = ({ book, para, children }: ISentMenu) => {
   const [isHover, setIsHover] = useState(false);
   const items: MenuProps["items"] = [
     {
       key: "show-commentary",
-      label: "相关段落",
+      label: <RelatedPara book={book} para={para} />,
     },
     {
       key: "show-nissaya",

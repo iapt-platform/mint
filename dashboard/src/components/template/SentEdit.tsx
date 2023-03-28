@@ -59,9 +59,10 @@ export const SentEditInner = ({
   originNum,
   simNum,
 }: IWidgetSentEditInner) => {
+  const sid = id.split("-");
   return (
     <Card bodyStyle={{ paddingBottom: 0 }} size="small">
-      <SentMenu>
+      <SentMenu book={parseInt(sid[0])} para={parseInt(sid[1])}>
         <SentContent
           sid={id}
           origin={origin}
