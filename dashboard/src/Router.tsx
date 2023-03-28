@@ -186,6 +186,7 @@ const Widget = () => {
         </Route>
 
         <Route path="article" element={<LibraryArticle />}>
+          <Route path=":type" element={<LibraryArticleShow />} />
           <Route path=":type/:id" element={<LibraryArticleShow />} />
           <Route path=":type/:id/:mode" element={<LibraryArticleShow />} />
           <Route
