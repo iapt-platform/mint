@@ -1,7 +1,8 @@
 import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
+import { channel } from "diagnostics_channel";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import Article, {
   ArticleMode,
@@ -40,6 +41,7 @@ const Widget = () => {
     mode as ArticleMode
   );
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   //const right = <ProTabs />;
   const rightBarWidth = "48px";
@@ -112,6 +114,9 @@ const Widget = () => {
             <Article
               active={true}
               type={type as ArticleType}
+              book={searchParams.get("book")}
+              para={searchParams.get("par")}
+              channelId={searchParams.get("channel")}
               articleId={id}
               mode={articleMode}
               onArticleChange={(article: string) => {

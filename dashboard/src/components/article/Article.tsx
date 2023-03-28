@@ -21,7 +21,7 @@ export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
   | "article"
   | "chapter"
-  | "paragraph"
+  | "para"
   | "cs-para"
   | "sent"
   | "sim"
@@ -35,6 +35,10 @@ export type ArticleType =
   | "corpus_sent/translation";
 interface IWidgetArticle {
   type?: ArticleType;
+  id?: string;
+  book?: string | null;
+  para?: string | null;
+  channelId?: string | null;
   articleId?: string;
   mode?: ArticleMode;
   active?: boolean;
@@ -43,6 +47,10 @@ interface IWidgetArticle {
 }
 const Widget = ({
   type,
+  id,
+  book,
+  para,
+  channelId,
   articleId,
   mode = "read",
   active = false,
@@ -110,16 +118,25 @@ const Widget = ({
       return;
     }
 
-    if (typeof type !== "undefined" && typeof articleId !== "undefined") {
+    if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
-        case "article":
-          const aIds = articleId.split("_");
-          url = `/v2/article/${aIds[0]}?mode=${mode}`;
-          if (aIds.length > 1) {
-            const channels = aIds.slice(1);
-            url += "&channel=" + channels.join();
+        case "para":
+          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+          if (channelId) {
+            url += `&channel=${channelId}`;
           }
+          break;
+        case "article":
+          if (typeof articleId !== "undefined") {
+            const aIds = articleId.split("_");
+            url = `/v2/article/${aIds[0]}?mode=${mode}`;
+            if (aIds.length > 1) {
+              const channels = aIds.slice(1);
+              url += "&channel=" + channels.join();
+            }
+          }
+
           break;
         case "textbook":
           /**
@@ -127,12 +144,15 @@ const Widget = ({
            * id两部分组成
            * 课程id_文章id
            */
-          const id = articleId.split("_");
-          if (id.length < 2) {
-            message.error("文章id期待2个，实际只给了一个");
-            return;
+          if (typeof articleId !== "undefined") {
+            const id = articleId.split("_");
+            if (id.length < 2) {
+              message.error("文章id期待2个，实际只给了一个");
+              return;
+            }
+            url = `/v2/article/${id[1]}?mode=${mode}&view=textbook&course=${id[0]}`;
           }
-          url = `/v2/article/${id[1]}?mode=${mode}&view=textbook&course=${id[0]}`;
+
           break;
         case "exercise":
           /**
@@ -140,21 +160,24 @@ const Widget = ({
            * id 由4部分组成
            * 课程id_文章id_练习id_username
            */
-          const exerciseId = articleId.split("_");
-          if (exerciseId.length < 3) {
-            message.error("练习id期待3个");
-            return;
-          }
-          console.log("exe", exerciseId);
-          url = `/v2/article/${exerciseId[1]}?mode=${mode}&course=${exerciseId[0]}&exercise=${exerciseId[2]}&user=${exerciseId[3]}`;
+          if (typeof articleId !== "undefined") {
+            const exerciseId = articleId.split("_");
+            if (exerciseId.length < 3) {
+              message.error("练习id期待3个");
+              return;
+            }
+            console.log("exe", exerciseId);
+            url = `/v2/article/${exerciseId[1]}?mode=${mode}&course=${exerciseId[0]}&exercise=${exerciseId[2]}&user=${exerciseId[3]}`;
 
-          setExtra(
-            <ExerciseAnswer
-              courseId={exerciseId[0]}
-              articleId={exerciseId[1]}
-              exerciseId={exerciseId[2]}
-            />
-          );
+            setExtra(
+              <ExerciseAnswer
+                courseId={exerciseId[0]}
+                articleId={exerciseId[1]}
+                exerciseId={exerciseId[2]}
+              />
+            );
+          }
+
           break;
         case "exercise-list":
           /**
@@ -162,30 +185,35 @@ const Widget = ({
            * id 由3部分组成
            * 课程id_文章id_练习id
            */
-          const exerciseListId = articleId.split("_");
-          if (exerciseListId.length < 3) {
-            message.error("练习id期待3个");
-            return;
-          }
-          url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}`;
+          if (typeof articleId !== "undefined") {
+            const exerciseListId = articleId.split("_");
+            if (exerciseListId.length < 3) {
+              message.error("练习id期待3个");
+              return;
+            }
+            url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}`;
 
-          //url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}&list=true`;
-          setExtra(
-            <ExerciseList
-              courseId={exerciseListId[0]}
-              articleId={exerciseListId[1]}
-              exerciseId={exerciseListId[2]}
-            />
-          );
+            setExtra(
+              <ExerciseList
+                courseId={exerciseListId[0]}
+                articleId={exerciseListId[1]}
+                exerciseId={exerciseListId[2]}
+              />
+            );
+          }
+
           break;
         default:
-          const aid = articleId.split("_");
+          if (typeof articleId !== "undefined") {
+            const aid = articleId.split("_");
 
-          url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
-          if (aid.length > 0) {
-            const channels = aid.slice(1).join();
-            url += `&channels=${channels}`;
+            url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
+            if (aid.length > 0) {
+              const channels = aid.slice(1).join();
+              url += `&channels=${channels}`;
+            }
           }
+
           break;
       }
       console.log("url", url);
@@ -217,7 +245,11 @@ const Widget = ({
               })}
               onSelect={(keys: string[]) => {
                 console.log(keys);
-                if (typeof onArticleChange !== "undefined" && keys.length > 0) {
+                if (
+                  typeof onArticleChange !== "undefined" &&
+                  keys.length > 0 &&
+                  typeof articleId !== "undefined"
+                ) {
                   const aid = articleId.split("_");
                   const channels =
                     aid.length > 1 ? "_" + aid.slice(1).join("_") : undefined;
