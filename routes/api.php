@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
     Route::post('auth/signin',[AuthController::class,'signIn']);
 
+    Route::apiResource('corpus',CorpusController::class);
     Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
     Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
     Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
