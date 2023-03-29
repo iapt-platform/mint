@@ -64,9 +64,17 @@ class CorpusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        switch ($request->get('view')) {
+            case 'para':
+                return $this->showPara($request);
+                break;
+            default:
+                # code...
+                break;
+        }
     }
 
     /**
@@ -187,7 +195,99 @@ class CorpusController extends Controller
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel);
         return $this->ok($this->result);
     }
+    /**
+     * Store a newly created resource in storage.
 
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $id
+     * @param string $mode
+     * @return \Illuminate\Http\Response
+     */
+    public function showPara(Request $request)
+    {
+        //
+        $channels = [];
+        if($request->get('mode') === 'edit'){
+            //翻译模式加载json格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        }else{
+            //阅读模式加载html格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        }
+
+        if($request->has('channel')){
+            $channels = array_merge($channels,explode(",",$request->get('channel')) );
+        }
+        $para = explode(",",$request->get('par'));
+
+        //段落所在章节
+        $parent = PaliText::where('book',$request->get('book'))
+                            ->where('paragraph',$para[0])->first();
+        $chapter = PaliText::where('book',$request->get('book'))
+                            ->where('paragraph',$parent->parent)->first();
+        if($chapter){
+            if(empty($chapter->toc)){
+                $this->result['title'] = "unknown";
+            }else{
+                $this->result['title'] = $chapter->toc;
+                $this->result['sub_title'] = $chapter->toc;
+                $this->result['path'] = json_decode($chapter->path);
+            }
+        }
+
+        $paraFrom = $para[0];
+        $paraTo = end($para);
+
+        $indexedHeading = [];
+
+		#获取channel索引表
+        $tranChannels = [];
+		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		foreach ($channelInfo as $key => $value) {
+			# code...
+            if($value->type==="translation" ){
+                $tranChannels[] = $value->uid;
+            }
+		}
+        $indexChannel = [];
+        $indexChannel = $this->getChannelIndex($channels);
+        //获取wbw channel
+        //目前默认的 wbw channel 是第一个translation channel
+        foreach ($channels as $key => $value) {
+            # code...
+            if($indexChannel[$value]->type==='translation'){
+                $this->wbwChannels[] = $value;
+                break;
+            }
+        }
+        //章节译文标题
+        $title = Sentence::select($this->selectCol)
+                    ->where('book_id',$parent->book)
+                    ->where('paragraph',$parent->paragraph)
+                    ->whereIn('channel_uid',$tranChannels)
+                    ->first();
+        if($title){
+            $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
+        }
+
+        /**
+         * 获取句子数据
+         */
+        $record = Sentence::select($this->selectCol)
+                    ->where('book_id',$request->get('book'))
+                    ->whereIn('paragraph',$para)
+                    ->whereIn('channel_uid',$channels)
+                    ->orderBy('paragraph')
+                    ->orderBy('word_start')
+                    ->get();
+        if(count($record) ===0){
+            $this->result['content'] = "<span>No Data</span>";
+        }else{
+            $this->result['content'] = $this->makeContent($record,$request->get('mode','read'),$indexChannel,$indexedHeading);
+        }
+
+        return $this->ok($this->result);
+    }
     /**
      * Store a newly created resource in storage.
 
