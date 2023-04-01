@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { List, Breadcrumb, Card, Row, Col } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import { PaliToEn } from "../../utils";
 import { get } from "../../request";
 import { IPaliBookListResponse } from "../api/Corpus";
 import TocStyleSelect from "./TocStyleSelect";
+import FullSearchInput from "../fts/FullSearchInput";
 
 export interface IEventBookTreeOnchange {
   path: string[];
@@ -27,14 +28,16 @@ interface pathData {
 interface IWidgetBookTreeList {
   root?: string;
   path?: string[];
+  tags?: string[];
   onChange?: Function;
 }
-const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
+const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
   console.log("path", path);
   let currRoot = root;
   const [tocData, setTocData] = useState<ITocTree[]>([]);
   const [currData, setCurrData] = useState<ITocTree[]>([]);
   const [bookPath, setBookPath] = useState<pathData[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newPath: pathData[] = path
@@ -126,7 +129,11 @@ const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
   return (
     <>
       <Row style={{ padding: 10 }}>
-        <Col xs={18} sm={24}>
+        <Col
+          xs={18}
+          sm={24}
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Breadcrumb>
             <Breadcrumb.Item>
               <Link to={`/palicanon/list/${currRoot}`}>
@@ -143,6 +150,12 @@ const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
               );
             })}
           </Breadcrumb>
+          <FullSearchInput
+            tags={tags}
+            onSearch={(value: string) => {
+              navigate(`/search/key/${value}?tags=${tags}`);
+            }}
+          />
         </Col>
         <Col xs={6} sm={0} style={{ textAlign: "right" }}>
           <TocStyleSelect style={root} onChange={handleChange} />
