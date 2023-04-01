@@ -15,13 +15,16 @@ const { Text } = Typography;
 
 interface IWidgetSettingItem {
   data?: ISetting;
+  autoSave?: boolean;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidgetSettingItem) => {
+const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
   const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
-
+  useEffect(() => {
+    setValue(data?.defaultValue);
+  }, [data?.defaultValue]);
   useEffect(() => {
     const currSetting = settings?.find((element) => element.key === data?.key);
     if (typeof currSetting !== "undefined") {
@@ -33,7 +36,9 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
   if (typeof data === "undefined") {
     return content;
   } else {
-    const description: string = intl.formatMessage({ id: data.description });
+    const description: string | undefined = data.description
+      ? intl.formatMessage({ id: data.description })
+      : undefined;
     switch (typeof data.defaultValue) {
       case "number":
         break;
@@ -48,12 +53,17 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                     buttonStyle="solid"
                     onChange={(e: RadioChangeEvent) => {
                       setValue(e.target.value);
-                      store.dispatch(
-                        onSettingChanged({
-                          key: data.key,
-                          value: e.target.value,
-                        })
-                      );
+                      if (autoSave) {
+                        store.dispatch(
+                          onSettingChanged({
+                            key: data.key,
+                            value: e.target.value,
+                          })
+                        );
+                      }
+                      if (typeof onChange !== "undefined") {
+                        onChange(data.key, e.target.value);
+                      }
                     }}
                   >
                     {data.options.map((item, id) => {
@@ -78,12 +88,17 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                     style={{ width: 120 }}
                     onChange={(value: string) => {
                       console.log(`selected ${value}`);
-                      store.dispatch(
-                        onSettingChanged({
-                          key: data.key,
-                          value: value,
-                        })
-                      );
+                      if (autoSave) {
+                        store.dispatch(
+                          onSettingChanged({
+                            key: data.key,
+                            value: value,
+                          })
+                        );
+                      }
+                      if (typeof onChange !== "undefined") {
+                        onChange(data.key, value);
+                      }
                     }}
                     options={data.options.map((item) => {
                       return {
@@ -105,13 +120,15 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
             <Switch
               defaultChecked={value as boolean}
               onChange={(checked) => {
-                if (typeof onChange !== "undefined") {
-                  onChange(checked);
-                }
                 console.log("setting changed", data.key, checked);
-                store.dispatch(
-                  onSettingChanged({ key: data.key, value: checked })
-                );
+                if (autoSave) {
+                  store.dispatch(
+                    onSettingChanged({ key: data.key, value: checked })
+                  );
+                }
+                if (typeof onChange !== "undefined") {
+                  onChange(data.key, checked);
+                }
               }}
             />
           </div>
