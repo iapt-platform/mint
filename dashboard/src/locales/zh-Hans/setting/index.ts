@@ -19,6 +19,13 @@ const items = {
   "setting.pali.script.thai.label": "泰文字母",
   "setting.pali.script.tai.label": "傣仂文字母",
   "setting.pali.script.none.label": "不显示",
+  "setting.search.match.label": "单词匹配",
+  "setting.search.match.complete.label": "精确",
+  "setting.search.match.case.label": "变格",
+  "setting.search.match.similar.label": "形似",
+  "setting.search.orderby.label": "排序",
+  "setting.search.orderby.rank.label": "相关度",
+  "setting.search.orderby.paragraph.label": "段落",
 };
 
 export default items;
