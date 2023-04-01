@@ -55,6 +55,9 @@ import LibraryDiscussion from "./pages/library/discussion";
 import LibraryDiscussionList from "./pages/library/discussion/list";
 import LibraryDiscussionTopic from "./pages/library/discussion/topic";
 
+import LibrarySearch from "./pages/library/search";
+import LibrarySearchKey from "./pages/library/search/search";
+
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
@@ -207,6 +210,11 @@ const Widget = () => {
           <Route path="course" element={<LibraryBlogCourse />} />
           <Route path="anthology" element={<LibraryBlogAnthology />} />
           <Route path="term" element={<LibraryBlogTerm />} />
+        </Route>
+
+        <Route path="search" element={<LibrarySearch />}>
+          <Route path="home" element={<LibrarySearchKey />} />
+          <Route path="key/:key" element={<LibrarySearchKey />} />
         </Route>
 
         <Route path="studio/:studioname" element={<Studio />}>
