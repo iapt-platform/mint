@@ -17,7 +17,7 @@ const Widget = () => {
   const defaultPath: string[] = path ? path.split("-") : [];
   const [bookRoot, setBookRoot] = useState(root);
   const [bookPath, setBookPath] = useState(defaultPath);
-  const [bookTag, setBookTag] = useState([""]);
+  const [bookTag, setBookTag] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openPara, setOpenPara] = useState({ book: 0, para: 0 });
   const [drawerTitle, setDrawerTitle] = useState("");
@@ -52,13 +52,16 @@ const Widget = () => {
                   <BookTree
                     root={bookRoot}
                     path={bookPath}
+                    onRootChange={(root: string) =>
+                      navigate("/palicanon/list/" + root)
+                    }
                     onChange={(key: string, path: string[]) => {
                       navigate(
                         `/palicanon/list/${bookRoot}/${path
                           .join("-")
                           .toLowerCase()}`
                       );
-                      console.log(key);
+                      console.log("key", key);
                       setBookTag(key.split(","));
                       setBookPath(path);
                     }}
@@ -68,6 +71,7 @@ const Widget = () => {
             </Col>
             <Col xs={24} sm={18} md={14}>
               <BookTreeList
+                tags={bookTag}
                 root={bookRoot}
                 path={bookPath}
                 onChange={(e: IEventBookTreeOnchange) => {

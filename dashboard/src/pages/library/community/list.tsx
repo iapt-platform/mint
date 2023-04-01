@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Affix, Row, Col, Divider, Space } from "antd";
 import { Typography } from "antd";
 import { TagOutlined } from "@ant-design/icons";
+
 import ChannelList from "../../../components/channel/ChannelList";
 import BookTree from "../../../components/corpus/BookTree";
 import ChapterFilter from "../../../components/corpus/ChapterFilter";
@@ -16,21 +18,18 @@ const Widget = () => {
   const [progress, setProgress] = useState(0.9);
   const [lang, setLang] = useState("zh");
   const [type, setType] = useState("translation");
-
+  const navigate = useNavigate();
   return (
     <Row>
       <Col xs={0} sm={6} md={5}>
         <Affix offsetTop={0}>
           <div style={{ height: "100vh", overflowY: "auto" }}>
             <BookTree
+              onRootChange={(root: string) =>
+                navigate("/palicanon/list/" + root)
+              }
               onChange={(key: string, path: string[]) => {
-                /*
-                navigate(
-                  `/community/list/${key.split(",").join("-").toLowerCase()}`
-                );
-                */
                 setTags(key.split(","));
-
                 console.log(key);
               }}
             />
