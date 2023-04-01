@@ -17,10 +17,8 @@ const Widget = (prop: IWidgetPaliChapterListByTag) => {
     console.log("palichapterlist useEffect");
     let url = `/v2/palitext?view=chapter&tags=${prop.tag.join()}`;
     console.log("tag url", url);
-    get(url).then(function (myJson) {
-      console.log("ajex", myJson);
-      const data = myJson as unknown as IApiResponsePaliChapterList;
-      let newTree: IPaliChapterData[] = data.data.rows.map((item) => {
+    get<IApiResponsePaliChapterList>(url).then((json) => {
+      let newTree: IPaliChapterData[] = json.data.rows.map((item) => {
         return {
           Title: item.title,
           PaliTitle: item.title,
