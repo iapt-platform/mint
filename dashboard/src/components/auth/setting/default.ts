@@ -7,7 +7,7 @@ export interface ISettingItemOption {
 export interface ISetting {
   key: string;
   label: string;
-  description: string;
+  description?: string;
   defaultValue: string | number | boolean;
   value?: string | number | boolean;
   widget?: "input" | "select" | "radio" | "radio-button";
