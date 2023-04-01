@@ -21,13 +21,11 @@ class VocabularyController extends Controller
             case 'key':
                 $key = $request->get("key");
                 $result = Cache::remember("/dict_vocabulary/{$key}",60,function() use($key){
-                    return Vocabulary::where('word_en','like',$key."%")->take(10)->get();
+                    return Vocabulary::where('word','like',$key."%")
+                                    ->whereOr('word_en','like',$key."%")
+                                    ->take(10)->get();
                 });
-                if($result){
-                    return $this->ok(['rows'=>VocabularyResource::collection($result),'count'=>count($result)]);
-                }else{
-                    return $this->error();
-                }
+                return $this->ok(['rows'=>VocabularyResource::collection($result),'count'=>count($result)]);
                 break;
         }
     }
