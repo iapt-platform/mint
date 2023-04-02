@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\BookTitle;
 use App\Models\FtsText;
+use App\Models\WbwTemplate;
 
 class UpgradeFts extends Command
 {
@@ -13,7 +14,7 @@ class UpgradeFts extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:fts {--book}';
+    protected $signature = 'upgrade:fts {--book} {--content} {para?} {--test}';
 
     /**
      * The console command description.
@@ -50,8 +51,57 @@ class UpgradeFts extends Command
                 $bar->advance();
             }
             $bar->finish();
-            return 0;
+        }
+
+        if($this->option('content')){
+            if(!empty($this->argument('para'))){
+                $para = explode('-',$this->argument('para'));
+                $content = $this->getContent($para[0],$para[1]);
+                if($this->option('test')){
+                    $this->info($content);
+                }else{
+                    FtsText::where('book',$para[0])->where('paragraph',$para[1])->update(['content'=>$content]);
+                }
+            }else{
+                for ($iBook=1; $iBook <= 217; $iBook++) {
+                    # code...
+                    $this->info('book:'.$iBook);
+                    $maxParagraph = WbwTemplate::where('book',$iBook)->max('paragraph');
+                    $bar = $this->output->createProgressBar($maxParagraph-1);
+                    for($iPara=1; $iPara <= $maxParagraph; $iPara++){
+                        $content = $this->getContent($iBook,$iPara);
+                        FtsText::where('book',$iBook)->where('paragraph',$iPara)->update(['content'=>$content]);
+                        $bar->advance();
+                    }
+                    $bar->finish();
+                    $this->info('done');
+                }
+            }
+
+
         }
         return 0;
     }
+
+    private function getContent($book,$para){
+        $words = WbwTemplate::where('book',$book)
+                            ->where('paragraph',$para)
+                            ->where('type',"<>",".ctl.")
+                            ->orderBy('wid')->get();
+        $content = '';
+        foreach ($words as  $word) {
+            if($word->style === 'bld'){
+                if(strpos($word->word,"{")===FALSE){
+                    $content .= "**{$word->word}** ";
+                }else{
+                    $content .= str_replace(['{','}'],['**','** '],$word->word);
+                }
+            }else{
+                $content .= $word->word . " ";
+            }
+        }
+        return $content;
+    }
 }
+
+
