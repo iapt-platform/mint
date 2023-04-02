@@ -6,6 +6,8 @@ use App\Models\WordIndex;
 use Illuminate\Http\Request;
 use App\Http\Resources\WordIndexResource;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class WordIndexController extends Controller
 {
@@ -20,13 +22,23 @@ class WordIndexController extends Controller
         switch ($request->get("view")) {
             case 'key':
                 $key = $request->get("key");
-                $result = Cache::remember("/word_index/{$key}",120,function() use($key){
+                /*
+                $result = Cache::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")
                                     ->whereOr('word_en','like',$key."%")
-                                    ->orderBy('word')
+                                    ->orderBy('word_en')
                                     ->take(10)->get();
                 });
-                return $this->ok(['rows'=>WordIndexResource::collection($result),'count'=>count($result)]);
+                $table = WordIndex::where('word',$key)
+                                   ->whereOr('word_en',$key)
+                                   ->orderBy('word_en')
+                                   ->take(10);
+                Log::info($table->toSql());
+                $result = $table->get();
+*/
+                $result = DB::select("SELECT * from  word_indices where word like ? or word_en like ? order by len, word_en limit 10",[$key."%",$key."%"]);
+
+                return $this->ok(['rows'=>$result,'count'=>count($result)]);
                 break;
             default:
                 return $this->error('view error');
