@@ -85,7 +85,7 @@ const Widget = ({
             paragraph: item.paragraph,
             title: item.title ? item.title : item.paliTitle,
             paliTitle: item.paliTitle,
-            content: item.highlight,
+            content: item.highlight.replaceAll("** ti ", "**ti "),
             path: item.path,
           };
         });
