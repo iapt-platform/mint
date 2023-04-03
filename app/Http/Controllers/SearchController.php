@@ -36,38 +36,7 @@ class SearchController extends Controller
         }else if($request->has('tags')){
             //查询搜索范围
             $tags = explode(',',$request->get('tags'));
-            $tagIds = Tag::whereIn('name',$tags)->select('id')->get();
-            $paliTextIds = TagMap::where('table_name','pali_texts')->whereIn('tag_id',$tagIds)->select('anchor_id')->get();
-            $paliPara=[];
-            foreach ($paliTextIds as $key => $value) {
-                # code...
-                if(isset($paliPara[$value->anchor_id])){
-                    $paliPara[$value->anchor_id]++;
-                }else{
-                    $paliPara[$value->anchor_id]=1;
-                }
-            }
-            $paliId=[];
-            foreach ($paliPara as $key => $value) {
-                # code...
-                if($value===count($tags)){
-                    $paliId[] = $key;
-                }
-            }
-            $para = PaliText::where('level',1)->whereIn('uid',$paliId)->get();
-            Log::info($para);
-
-            if(count($para)>0){
-                foreach ($para as $key => $value) {
-                    # code...
-                    $book_id = BookTitle::where('book',$value['book'])->where('paragraph',$value['paragraph'])->value('id');
-                    if(!empty($book_id)){
-                        $searchBookId[] = $book_id;
-                    }
-                    $searchChapters[] = ['book'=>$value['book'],'paragraph'=>$value['paragraph']];
-                }
-                $queryBookId = ' AND pcd_book_id in ('.implode(',',$searchBookId).') ';
-            }
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$this->getBookIdByTags($tags)).') ';
         }
 
         $key = explode(';',$request->get('key')) ;
@@ -75,19 +44,6 @@ class SearchController extends Controller
         $countParam = [];
         switch ($request->get('match','case')) {
             case 'complete':
-                # code...
-                $querySelect_rank = "
-                ts_rank('{0.1, 0.2, 0.4, 1}',
-                    full_text_search_weighted,
-                    websearch_to_tsquery('pali', ?))
-                AS rank, ";
-                $querySelect_highlight = " ts_headline('pali', content,
-                websearch_to_tsquery('pali', ?),
-                'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
-                AS highlight,";
-                $queryWhere = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
-                $param = [$key[0],$key[0],$key[0]];
-                break;
             case 'case':
                 # code...
                 $querySelect_rank_base = " ts_rank('{0.1, 0.2, 0.4, 1}',
@@ -101,33 +57,31 @@ class SearchController extends Controller
                                             'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
                                             AS highlight,";
                 array_push($param,implode(' ',$key));
-                $queryWhereBase = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
-                $queryWhereBody = implode(' or ', array_fill(0, count($key), $queryWhereBase));
-                $queryWhere = " ({$queryWhereBody}) ";
-                $param = array_merge($param,$key);
                 break;
             case 'similar':
                 # 形似，去掉变音符号
+                $key = Tools::getWordEn($key[0]);
                 $querySelect_rank = "
                     ts_rank('{0.1, 0.2, 0.4, 1}',
                         full_text_search_weighted_unaccent,
                         websearch_to_tsquery('pali_unaccent', ?))
                     AS rank, ";
-                    $querySelect_highlight = " ts_headline('pali_unaccent', content,
+                    $param[] = $key;
+                $querySelect_highlight = " ts_headline('pali_unaccent', content,
                         websearch_to_tsquery('pali_unaccent', ?),
                         'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
                         AS highlight,";
-                $queryWhere = " full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', ?) ";
-                $key = Tools::getWordEn($key);
-                $param = [$key,$key,$key];
+                $param[] = $key;
                 break;
         }
-
+        $_queryWhere = $this->getQueryWhere($request->get('key'),$request->get('match','case'));
+        $queryWhere = $_queryWhere['query'];
+        $param = array_merge($param,$_queryWhere['param']);
 
         $querySelect_2 = "  book,paragraph,content ";
 
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
-        $resultCount = DB::select($queryCount, $key);
+        $resultCount = DB::select($queryCount, $_queryWhere['param']);
 
         $limit = $request->get('limit',10);
         $offset = $request->get('offset',0);
@@ -167,54 +121,84 @@ class SearchController extends Controller
     public function book_list(Request $request){
         $searchChapters = [];
         $searchBooks = [];
-        $searchBookId = [];
         $queryBookId = '';
 
         if($request->has('tags')){
             //查询搜索范围
             $tags = explode(',',$request->get('tags'));
-            $tagIds = Tag::whereIn('name',$tags)->select('id')->get();
-            $paliTextIds = TagMap::where('table_name','pali_texts')->whereIn('tag_id',$tagIds)->select('anchor_id')->get();
-            $paliPara=[];
-            foreach ($paliTextIds as $key => $value) {
-                # code...
-                if(isset($paliPara[$value->anchor_id])){
-                    $paliPara[$value->anchor_id]++;
-                }else{
-                    $paliPara[$value->anchor_id]=1;
-                }
-            }
-            $paliId=[];
-            foreach ($paliPara as $key => $value) {
-                # code...
-                if($value===count($tags)){
-                    $paliId[] = $key;
-                }
-            }
-            $para = PaliText::where('level',1)->whereIn('uid',$paliId)->get();
-            Log::info($para);
-
-            if(count($para)>0){
-                foreach ($para as $key => $value) {
-                    # code...
-                    $book_id = BookTitle::where('book',$value['book'])->where('paragraph',$value['paragraph'])->value('id');
-                    if(!empty($book_id)){
-                        $searchBookId[] = $book_id;
-                    }
-                    $searchChapters[] = ['book'=>$value['book'],'paragraph'=>$value['paragraph']];
-                }
-                $queryBookId = ' AND pcd_book_id in ('.implode(',',$searchBookId).') ';
-            }
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$this->getBookIdByTags($tags)).') ';
         }
         $key = $request->get('key');
 
-        $queryWhere = "( full_text_search_weighted @@ websearch_to_tsquery('pali', ?) OR
-        full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', ?) )";
+        $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
 
-        $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-        $result = DB::select($query, [$key,$key]);
+        $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+        $result = DB::select($query, $queryWhere['param']);
 
         return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
+    }
+
+    private function getQueryWhere($key,$match){
+        $key = explode(';',$key) ;
+        $param = [];
+        $queryWhere = '';
+        switch ($match) {
+            case 'complete':
+            case 'case':
+                # code...
+                $queryWhereBase = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
+                $queryWhereBody = implode(' or ', array_fill(0, count($key), $queryWhereBase));
+                $queryWhere = " ({$queryWhereBody}) ";
+                $param = array_merge($param,$key);
+                break;
+            case 'similar':
+                # 形似，去掉变音符号
+                $queryWhere = " full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', ?) ";
+                $key = Tools::getWordEn($key[0]);
+                $param = [$key];
+                break;
+        };
+        return (['query'=>$queryWhere,'param'=>$param]);
+    }
+
+    private function getBookIdByTags($tags){
+        $searchBookId = [];
+        if(empty($tags)){
+            return $searchBookId;
+        }
+
+        //查询搜索范围
+        $tagIds = Tag::whereIn('name',$tags)->select('id')->get();
+        $paliTextIds = TagMap::where('table_name','pali_texts')->whereIn('tag_id',$tagIds)->select('anchor_id')->get();
+        $paliPara=[];
+        foreach ($paliTextIds as $key => $value) {
+            # code...
+            if(isset($paliPara[$value->anchor_id])){
+                $paliPara[$value->anchor_id]++;
+            }else{
+                $paliPara[$value->anchor_id]=1;
+            }
+        }
+        $paliId=[];
+        foreach ($paliPara as $key => $value) {
+            # code...
+            if($value===count($tags)){
+                $paliId[] = $key;
+            }
+        }
+        $para = PaliText::where('level',1)->whereIn('uid',$paliId)->get();
+
+        if(count($para)>0){
+            foreach ($para as $key => $value) {
+                # code...
+                $book_id = BookTitle::where('book',$value['book'])->where('paragraph',$value['paragraph'])->value('id');
+                if(!empty($book_id)){
+                    $searchBookId[] = $book_id;
+                }
+            }
+        }
+        return $searchBookId;
+
     }
     /**
      * Store a newly created resource in storage.
