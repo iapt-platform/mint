@@ -35,8 +35,14 @@ class SearchController extends Controller
             $queryBookId = ' AND pcd_book_id = ' . (int)$request->get('book');
         }else if($request->has('tags')){
             //查询搜索范围
-            $tags = explode(',',$request->get('tags'));
-            $queryBookId = ' AND pcd_book_id in ('.implode(',',$this->getBookIdByTags($tags)).') ';
+            //查询搜索范围
+            $tagItems = explode(';',$request->get('tags'));
+            $bookId = [];
+            foreach ($tagItems as $tagItem) {
+                # code...
+                $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
+            }
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
         }
 
         $key = explode(';',$request->get('key')) ;
@@ -125,8 +131,13 @@ class SearchController extends Controller
 
         if($request->has('tags')){
             //查询搜索范围
-            $tags = explode(',',$request->get('tags'));
-            $queryBookId = ' AND pcd_book_id in ('.implode(',',$this->getBookIdByTags($tags)).') ';
+            $tagItems = explode(';',$request->get('tags'));
+            $bookId = [];
+            foreach ($tagItems as $tagItem) {
+                # code...
+                $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
+            }
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
         }
         $key = $request->get('key');
 
