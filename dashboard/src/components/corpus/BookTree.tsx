@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Key } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Space, Tree } from "antd";
+import { Button, Space, Tree } from "antd";
 import { Typography } from "antd";
 
 import { get } from "../../request";
@@ -28,7 +28,7 @@ const Widget = ({
   onRootChange,
 }: IWidgetBookTree) => {
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
-
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   useEffect(() => {
     if (typeof root !== "undefined") fetchBookTree(root);
   }, [root]);
@@ -76,15 +76,32 @@ const Widget = ({
           }}
         />
       </Space>
+      <Button
+        onClick={() => {
+          setSelectedKeys([]);
+          if (typeof onChange !== "undefined") {
+            onChange([], []);
+          }
+        }}
+      >
+        清除选择
+      </Button>
       <Tree
+        selectedKeys={selectedKeys}
         multiple={multiSelect}
         showLine
         switcherIcon={<DownOutlined />}
         defaultExpandedKeys={["sutta"]}
+        onCheck={(checkedKeysValue, info) => {
+          console.log("onCheck", checkedKeysValue);
+          //setCheckedKeys(checkedKeysValue);
+        }}
         onSelect={(selectedKeys, info) => {
+          console.log("tree selected", selectedKeys, info);
+          setSelectedKeys(selectedKeys);
           //let aaa: NewTree = info.node;
           const node: ITocTree = info.node as unknown as ITocTree;
-          console.log("tree selected", selectedKeys, node.path);
+
           if (typeof onChange !== "undefined") {
             onChange(selectedKeys, node.path);
           }
