@@ -28,9 +28,10 @@ const Widget = () => {
               onRootChange={(root: string) =>
                 navigate("/palicanon/list/" + root)
               }
-              onChange={(key: string, path: string[]) => {
-                setTags(key.split(","));
-                console.log(key);
+              onChange={(key: string[], path: string[]) => {
+                if (key.length > 0) {
+                  setTags(key[0].split(","));
+                }
               }}
             />
           </div>

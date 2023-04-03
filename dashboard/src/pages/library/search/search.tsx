@@ -33,14 +33,15 @@ const Widget = () => {
           <Row>
             <Col xs={0} sm={6} md={5}>
               <BookTree
+                multiSelect={true}
                 root={bookRoot}
                 path={bookPath}
-                onChange={(key: string, path: string[]) => {
+                onChange={(key: string[], path: string[]) => {
                   console.log("key", key);
-                  if (key === "") {
+                  if (key.length === 0) {
                     searchParams.delete("tags");
                   } else {
-                    searchParams.set("tags", key);
+                    searchParams.set("tags", key.join(";"));
                   }
                   searchParams.delete("book");
                   setSearchParams(searchParams);

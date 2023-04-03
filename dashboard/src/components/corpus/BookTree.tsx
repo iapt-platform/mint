@@ -14,6 +14,7 @@ const { Text } = Typography;
 interface IWidgetBookTree {
   root?: string;
   path?: string[];
+  multiSelect?: boolean;
   onChange?: Function;
   onSelect?: Function;
   onRootChange?: Function;
@@ -21,6 +22,7 @@ interface IWidgetBookTree {
 const Widget = ({
   root = "default",
   path,
+  multiSelect = false,
   onChange,
   onSelect,
   onRootChange,
@@ -75,6 +77,7 @@ const Widget = ({
         />
       </Space>
       <Tree
+        multiple={multiSelect}
         showLine
         switcherIcon={<DownOutlined />}
         defaultExpandedKeys={["sutta"]}
@@ -83,11 +86,7 @@ const Widget = ({
           const node: ITocTree = info.node as unknown as ITocTree;
           console.log("tree selected", selectedKeys, node.path);
           if (typeof onChange !== "undefined") {
-            if (selectedKeys.length > 0) {
-              onChange(selectedKeys[0], node.path);
-            } else {
-              onChange("", []);
-            }
+            onChange(selectedKeys, node.path);
           }
           if (typeof onSelect !== "undefined") {
             onSelect(selectedKeys.length > 0 ? selectedKeys[0] : undefined);

@@ -55,14 +55,16 @@ const Widget = () => {
                     onRootChange={(root: string) =>
                       navigate("/palicanon/list/" + root)
                     }
-                    onChange={(key: string, path: string[]) => {
+                    onChange={(key: string[], path: string[]) => {
                       navigate(
                         `/palicanon/list/${bookRoot}/${path
                           .join("-")
                           .toLowerCase()}`
                       );
                       console.log("key", key);
-                      setBookTag(key.split(","));
+                      if (key.length > 0) {
+                        setBookTag(key[0].split(","));
+                      }
                       setBookPath(path);
                     }}
                   />
