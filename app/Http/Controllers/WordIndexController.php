@@ -29,8 +29,9 @@ class WordIndexController extends Controller
                                     ->orderBy('word_en')
                                     ->take(10)->get();
                 });
-                $table = WordIndex::where('word',$key)
-                                   ->whereOr('word_en',$key)
+                $table = WordIndex::where('word','like',$key."%")
+                                   ->whereOr('word_en','like',$key."%")
+                                   ->orderBy('len')
                                    ->orderBy('word_en')
                                    ->take(10);
                 Log::info($table->toSql());
