@@ -70,8 +70,9 @@ class SearchController extends Controller
             }
         }
 
-        $key = $request->get('key');
+        $key = explode(';',$request->get('key')) ;
         $param = [];
+        $countParam = [];
         switch ($request->get('match','case')) {
             case 'complete':
                 # code...
@@ -85,25 +86,28 @@ class SearchController extends Controller
                 'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
                 AS highlight,";
                 $queryWhere = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
-                $param = [$key,$key,$key];
+                $param = [$key[0],$key[0],$key[0]];
                 break;
             case 'case':
                 # code...
-                $querySelect_rank = "
-                ts_rank('{0.1, 0.2, 0.4, 1}',
-                    full_text_search_weighted,
-                    websearch_to_tsquery('pali', ?))
-                AS rank, ";
+                $querySelect_rank_base = " ts_rank('{0.1, 0.2, 0.4, 1}',
+                                                full_text_search_weighted,
+                                                websearch_to_tsquery('pali', ?)) ";
+                $querySelect_rank_head = implode('+', array_fill(0, count($key), $querySelect_rank_base));
+                $param = array_merge($param,$key);
+                $querySelect_rank = " {$querySelect_rank_head} AS rank, ";
                 $querySelect_highlight = " ts_headline('pali', content,
-                websearch_to_tsquery('pali', ?),
-                'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
-                AS highlight,";
-                $queryWhere = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
-                $param = [$key,$key,$key];
+                                            websearch_to_tsquery('pali', ?),
+                                            'StartSel = ~~, StopSel = ~~,MaxWords=3500, MinWords=3500,HighlightAll=TRUE')
+                                            AS highlight,";
+                array_push($param,implode(' ',$key));
+                $queryWhereBase = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
+                $queryWhereBody = implode(' or ', array_fill(0, count($key), $queryWhereBase));
+                $queryWhere = " ({$queryWhereBody}) ";
+                $param = array_merge($param,$key);
                 break;
             case 'similar':
                 # 形似，去掉变音符号
-
                 $querySelect_rank = "
                     ts_rank('{0.1, 0.2, 0.4, 1}',
                         full_text_search_weighted_unaccent,
@@ -122,10 +126,8 @@ class SearchController extends Controller
 
         $querySelect_2 = "  book,paragraph,content ";
 
-
-
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
-        $resultCount = DB::select($queryCount, [$key]);
+        $resultCount = DB::select($queryCount, $key);
 
         $limit = $request->get('limit',10);
         $offset = $request->get('offset',0);
