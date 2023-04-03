@@ -90,11 +90,32 @@ const Widget = ({
         }}
         onSearch={(value: string) => {
           console.log("auto complete on search", value, tags);
-          search(value);
+          if (value.indexOf(" ") >= 0 || value.indexOf(";") >= 0) {
+            const valueLast = value.split(/[ ]|;/).slice(-1);
+            search(valueLast[0]);
+          } else {
+            search(value);
+          }
         }}
         onSelect={(value: string, option: ValueType) => {
           if (typeof onSearch !== "undefined") {
-            onSearch(value);
+            if (
+              typeof input === "string" &&
+              (input.indexOf(" ") >= 0 || input.indexOf(";") >= 0)
+            ) {
+              const last1 = input.lastIndexOf(" ");
+              const last2 = input.lastIndexOf(";");
+              let searchString = "";
+              if (last1 > last2) {
+                searchString = input.slice(0, last1 + 1) + value;
+              } else {
+                searchString = input.slice(0, last2 + 1) + value;
+              }
+              onSearch(searchString);
+              setInput(searchString);
+            } else {
+              onSearch(value);
+            }
           }
         }}
       >
