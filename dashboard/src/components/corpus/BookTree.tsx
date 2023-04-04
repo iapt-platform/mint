@@ -76,16 +76,19 @@ const Widget = ({
           }}
         />
       </Space>
-      <Button
-        onClick={() => {
-          setSelectedKeys([]);
-          if (typeof onChange !== "undefined") {
-            onChange([], []);
-          }
-        }}
-      >
-        清除选择
-      </Button>
+      {multiSelect ? (
+        <Button
+          onClick={() => {
+            setSelectedKeys([]);
+            if (typeof onChange !== "undefined") {
+              onChange([], []);
+            }
+          }}
+        >
+          清除选择
+        </Button>
+      ) : undefined}
+
       <Tree
         selectedKeys={selectedKeys}
         multiple={multiSelect}
