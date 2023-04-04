@@ -14,6 +14,7 @@ use App\Http\Resources\SearchResource;
 use App\Http\Resources\SearchBookResource;
 use Illuminate\Support\Facades\Log;
 use App\Tools\Tools;
+use App\Models\WbwTemplate;
 
 
 class SearchController extends Controller
@@ -23,7 +24,20 @@ class SearchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request){
+        switch ($request->get('view','pali')) {
+            case 'pali':
+                return $this->pali($request);
+                break;
+            case 'page':
+                return $this->page($request);
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
+    public function pali(Request $request)
     {
         //
         $searchChapters = [];
@@ -123,6 +137,39 @@ class SearchController extends Controller
 
         return $this->ok(["rows"=>SearchResource::collection($result),"count"=>$resultCount[0]->co]);
     }
+    public function page(Request $request)
+    {
+        //
+        $searchChapters = [];
+        $searchBooks = [];
+        $searchBookId = [];
+        $queryBookId = '';
+        $bookId = [];
+        if($request->has('book')){
+            $bookId[] = $request->get('book');
+        }else if($request->has('tags')){
+            //查询搜索范围
+            //查询搜索范围
+            $tagItems = explode(';',$request->get('tags'));
+            foreach ($tagItems as $tagItem) {
+                # code...
+                $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
+            }
+        }
+
+//type='.ctl.' and word like 'P%038'
+        $table = WbwTemplate::where('type','.ctl.')
+                            ->where('word','like',$request->get('type')."%0".$request->get('key'));
+        if(count($bookId)>0){
+            $table = $table->whereIn('pcd_book_id',$bookId);
+        }
+        $count = $table->count();
+        $table = $table->select(['book','paragraph']);
+        $table->skip($request->get("offset",0))->take($request->get('limit',10));
+        $result = $table->get();
+
+        return $this->ok(["rows"=>SearchResource::collection($result),"count"=>$count]);
+    }
 
     public function book_list(Request $request){
         $searchChapters = [];
@@ -140,11 +187,26 @@ class SearchController extends Controller
             $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
         }
         $key = $request->get('key');
+        switch ($request->get('view','pali')) {
+            case 'pali':
+                # code...
+                $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
+                $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                $result = DB::select($query, $queryWhere['param']);
+                break;
+            case 'page';
+                $type = $request->get('type','P');
+                $word = "{$type}%0{$key}";
+                $queryWhere = "type='.ctl.' AND word like ?";
+                $query = "SELECT pcd_book_id, count(*) as co FROM wbw_templates WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                $result = DB::select($query, [$word]);
+                break;
+            default:
+                # code...
+                return $this->error('unknown view');
+                break;
+        }
 
-        $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
-
-        $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-        $result = DB::select($query, $queryWhere['param']);
 
         return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
     }
@@ -211,6 +273,7 @@ class SearchController extends Controller
         return $searchBookId;
 
     }
+
     /**
      * Store a newly created resource in storage.
      *
