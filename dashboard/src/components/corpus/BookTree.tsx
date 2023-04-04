@@ -1,6 +1,6 @@
 import { useState, useEffect, Key } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Space, Tree } from "antd";
+import { Button, Space, Switch, Tree } from "antd";
 import { Typography } from "antd";
 
 import { get } from "../../request";
@@ -29,6 +29,10 @@ const Widget = ({
 }: IWidgetBookTree) => {
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
+  const [isMultiSelect, setIsMultiSelect] = useState(multiSelect);
+  useEffect(() => {
+    setIsMultiSelect(multiSelect);
+  }, [multiSelect]);
   useEffect(() => {
     if (typeof root !== "undefined") fetchBookTree(root);
   }, [root]);
@@ -76,7 +80,7 @@ const Widget = ({
           }}
         />
       </Space>
-      {multiSelect ? (
+      <Space style={{ display: "flex", justifyContent: "space-between" }}>
         <Button
           onClick={() => {
             setSelectedKeys([]);
@@ -87,11 +91,21 @@ const Widget = ({
         >
           清除选择
         </Button>
-      ) : undefined}
 
+        <span>
+          {"多选"}
+          <Switch
+            size="small"
+            defaultChecked={multiSelect}
+            onChange={(checked) => {
+              setIsMultiSelect(checked);
+            }}
+          />
+        </span>
+      </Space>
       <Tree
         selectedKeys={selectedKeys}
-        multiple={multiSelect}
+        multiple={isMultiSelect}
         showLine
         switcherIcon={<DownOutlined />}
         defaultExpandedKeys={["sutta"]}
