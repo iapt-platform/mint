@@ -14,7 +14,7 @@ class UpgradeFts extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:fts {--book} {--content} {para?} {--test}';
+    protected $signature = 'upgrade:fts {--content} {para?} {--test}';
 
     /**
      * The console command description.
@@ -40,18 +40,6 @@ class UpgradeFts extends Command
      */
     public function handle()
     {
-        if($this->option('book')){
-            $bookTitles = BookTitle::orderBy('id')->get();
-            $bar = $this->output->createProgressBar(count($bookTitles));
-            foreach ($bookTitles as $key => $value) {
-                # code...
-                FtsText::where('book',$value->book)
-                        ->where('paragraph','>=',$value->paragraph)
-                        ->update(['pcd_book_id'=>$value->id]);
-                $bar->advance();
-            }
-            $bar->finish();
-        }
 
         if($this->option('content')){
             if(!empty($this->argument('para'))){
@@ -96,6 +84,8 @@ class UpgradeFts extends Command
                 }else{
                     $content .= str_replace(['{','}'],['**','** '],$word->word);
                 }
+            }else if($word->style === 'note'){
+                $content .= " _{$word->word}_ ";
             }else{
                 $content .= $word->word . " ";
             }
