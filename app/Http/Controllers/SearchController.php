@@ -27,7 +27,13 @@ class SearchController extends Controller
     public function index(Request $request){
         switch ($request->get('view','pali')) {
             case 'pali':
-                return $this->pali($request);
+                $pageHead = ['M','P','T','V','O'];
+                $key = $request->get('key');
+                if(substr($key,0,4) === 'para' || in_array(substr($key,0,1),$pageHead)){
+                    return $this->page($request);
+                }else{
+                    return $this->pali($request);
+                }
                 break;
             case 'page':
                 return $this->page($request);
@@ -158,8 +164,15 @@ class SearchController extends Controller
         }
 
 //type='.ctl.' and word like 'P%038'
-        $table = WbwTemplate::where('type','.ctl.')
-                            ->where('word','like',$request->get('type')."%0".$request->get('key'));
+        $key = $request->get('key');
+        $searchKey = '';
+        $table = WbwTemplate::where('type','.ctl.');
+        if(is_numeric($key)){
+            $table = $table->where('word','like',$request->get('type')."%0".$key);
+        }else{
+            $table = $table->where('word',$key);
+        }
+
         if(count($bookId)>0){
             $table = $table->whereIn('pcd_book_id',$bookId);
         }
@@ -190,9 +203,16 @@ class SearchController extends Controller
         switch ($request->get('view','pali')) {
             case 'pali':
                 # code...
-                $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
-                $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-                $result = DB::select($query, $queryWhere['param']);
+                $pageHead = ['M','P','T','V','O'];
+                if(substr($key,0,4) === 'para' || in_array(substr($key,0,1),$pageHead)){
+                    $queryWhere = "type='.ctl.' AND word = ?";
+                    $query = "SELECT pcd_book_id, count(*) as co FROM wbw_templates WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                    $result = DB::select($query, [$key]);
+                }else{
+                    $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
+                    $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                    $result = DB::select($query, $queryWhere['param']);
+                }
                 break;
             case 'page';
                 $type = $request->get('type','P');
