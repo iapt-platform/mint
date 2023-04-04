@@ -36,7 +36,7 @@ const Widget = () => {
           <Row>
             <Col xs={0} sm={6} md={5}>
               <BookTree
-                multiSelect={true}
+                multiSelect={false}
                 root={bookRoot}
                 path={bookPath}
                 onChange={(key: string[], path: string[]) => {
