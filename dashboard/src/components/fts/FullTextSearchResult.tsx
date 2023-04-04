@@ -10,11 +10,11 @@ import "./search.css";
 const { Title, Text } = Typography;
 
 interface IFtsData {
-  rank: number;
-  highlight: string;
+  rank?: number;
+  highlight?: string;
   book: number;
   paragraph: number;
-  content: string;
+  content?: string;
   title?: string;
   paliTitle?: string;
   path?: ITocPathNode[];
@@ -44,6 +44,8 @@ interface IWidget {
   orderBy?: string | null;
   match?: string | null;
   keyWord2?: string;
+  view?: string;
+  pageType?: string;
 }
 const Widget = ({
   keyWord,
@@ -54,6 +56,8 @@ const Widget = ({
   orderBy,
   match,
   keyWord2,
+  view = "pali",
+  pageType,
 }: IWidget) => {
   const [ftsData, setFtsData] = useState<IFtsItem[]>();
 
@@ -61,7 +65,7 @@ const Widget = ({
   const [currPage, setCurrPage] = useState<number>(1);
 
   useEffect(() => {
-    let url = `/v2/search?key=${keyWord}`;
+    let url = `/v2/search?view=${view}&key=${keyWord}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
     }
@@ -74,6 +78,9 @@ const Widget = ({
     if (match) {
       url += `&match=${match}`;
     }
+    if (pageType) {
+      url += `&type=${pageType}`;
+    }
     const offset = (currPage - 1) * 10;
     url += `&limit=10&offset=${offset}`;
     console.log("fetch url", url);
@@ -85,7 +92,9 @@ const Widget = ({
             paragraph: item.paragraph,
             title: item.title ? item.title : item.paliTitle,
             paliTitle: item.paliTitle,
-            content: item.highlight.replaceAll("** ti ", "**ti "),
+            content: item.highlight
+              ? item.highlight.replaceAll("** ti ", "**ti ")
+              : item.content,
             path: item.path,
           };
         });
@@ -93,7 +102,7 @@ const Widget = ({
         setTotal(json.data.count);
       }
     });
-  }, [bookId, currPage, keyWord, match, orderBy, tags]);
+  }, [bookId, currPage, keyWord, match, orderBy, pageType, tags, view]);
   return (
     <List
       itemLayout="vertical"

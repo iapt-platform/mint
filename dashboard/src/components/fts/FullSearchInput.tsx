@@ -1,9 +1,10 @@
-import { AutoComplete, Badge, Input, Typography } from "antd";
+import { AutoComplete, Badge, Input, Select, Space, Typography } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import { useState } from "react";
 import { get } from "../../request";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 export interface IWordIndexData {
   word: string;
@@ -31,8 +32,10 @@ interface IWidget {
   para?: number;
   size?: SizeType;
   width?: string | number;
+  searchPage?: boolean;
   onSearch?: Function;
   onSplit?: Function;
+  onPageTypeChange?: Function;
 }
 const Widget = ({
   value,
@@ -41,6 +44,8 @@ const Widget = ({
   size = "middle",
   width,
   onSearch,
+  searchPage = false,
+  onPageTypeChange,
 }: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
   const [input, setInput] = useState<string | undefined>(value);
@@ -76,8 +81,28 @@ const Widget = ({
       setOptions(words);
     });
   };
+
+  const selectBefore = (
+    <Select
+      defaultValue="P"
+      size="large"
+      style={{ width: 120 }}
+      onChange={(value: string) => {
+        if (typeof onPageTypeChange !== "undefined") {
+          onPageTypeChange(value);
+        }
+      }}
+    >
+      <Option value="P">PTS</Option>
+      <Option value="M">Myanmar</Option>
+      <Option value="T">Thai</Option>
+      <Option value="V">VRI</Option>
+      <Option value="O">Other</Option>
+    </Select>
+  );
   return (
-    <>
+    <Space>
+      {searchPage ? selectBefore : undefined}
       <AutoComplete
         style={{ width: width }}
         value={input}
@@ -131,7 +156,7 @@ const Widget = ({
           }}
         />
       </AutoComplete>
-    </>
+    </Space>
   );
 };
 

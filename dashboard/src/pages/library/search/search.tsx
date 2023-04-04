@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Row, Col, Breadcrumb, Space } from "antd";
+import { Row, Col, Breadcrumb, Space, Tabs } from "antd";
 import FullSearchInput from "../../../components/fts/FullSearchInput";
 import BookTree from "../../../components/corpus/BookTree";
 import FullTextSearchResult from "../../../components/fts/FullTextSearchResult";
@@ -12,7 +12,10 @@ const Widget = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [bookRoot, setBookRoot] = useState("default");
   const [bookPath, setBookPath] = useState<string[]>([]);
+  const [searchPage, setSearchPage] = useState(false);
   const navigate = useNavigate();
+  const [pageType, setPageType] = useState("P");
+  const [view, setView] = useState("pali");
 
   useEffect(() => {}, [key, searchParams]);
 
@@ -56,9 +59,13 @@ const Widget = () => {
                     size="large"
                     width={"500px"}
                     value={key}
+                    searchPage={searchPage}
                     tags={searchParams.get("tags")?.split(",")}
                     onSearch={(value: string) => {
                       navigate(`/search/key/${value}`);
+                    }}
+                    onPageTypeChange={(value: string) => {
+                      setPageType(value);
                     }}
                   />
                   <FtsSetting
@@ -79,7 +86,44 @@ const Widget = () => {
                     <Breadcrumb.Item key={id}>{item}</Breadcrumb.Item>
                   ))}
                 </Breadcrumb>
+                <Tabs
+                  onChange={(activeKey: string) => {
+                    setView(activeKey);
+                    searchParams.set(view, activeKey);
+                    setSearchParams(searchParams);
+                    switch (activeKey) {
+                      case "pali":
+                        setSearchPage(false);
+                        break;
+                      case "page":
+                        setSearchPage(true);
+                        break;
+                      default:
+                        break;
+                    }
+                  }}
+                  size="small"
+                  items={[
+                    {
+                      label: `巴利原文`,
+                      key: "pali",
+                      children: <></>,
+                    },
+                    {
+                      label: `标题`,
+                      key: "title",
+                      children: <div></div>,
+                    },
+                    {
+                      label: `页码`,
+                      key: "page",
+                      children: <></>,
+                    },
+                  ]}
+                />
                 <FullTextSearchResult
+                  view={view}
+                  pageType={pageType}
                   keyWord={key}
                   tags={searchParams.get("tags")?.split(",")}
                   bookId={searchParams.get("book")}
@@ -90,6 +134,7 @@ const Widget = () => {
             </Col>
             <Col xs={0} sm={0} md={5}>
               <FtsBookList
+                view={view}
                 keyWord={key}
                 tags={searchParams.get("tags")?.split(",")}
                 match={searchParams.get("match")}

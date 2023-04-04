@@ -35,6 +35,7 @@ interface IWidget {
   para?: number;
   match?: string | null;
   keyWord2?: string;
+  view?: string;
   onSelect?: Function;
 }
 
@@ -46,13 +47,14 @@ const Widget = ({
   para,
   keyWord2,
   match,
+  view = "pali",
   onSelect,
 }: IWidget) => {
   const [ftsData, setFtsData] = useState<IFtsItem[]>();
   const [total, setTotal] = useState<number>();
 
   useEffect(() => {
-    let url = `/v2/search-book-list?key=${keyWord}`;
+    let url = `/v2/search-book-list?view=${view}&key=${keyWord}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
     }
