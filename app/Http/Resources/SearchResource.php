@@ -18,14 +18,21 @@ class SearchResource extends JsonResource
         $data = [
             "book"=>$this->book,
             "paragraph"=> $this->paragraph,
-            "content"=> $this->content,
-            "rank"=> $this->rank,
-            "highlight"=> $this->highlight,
         ];
-
+        if(isset($this->rank)){
+            $data["rank"] = $this->rank;
+        }
         $paliText = PaliText::where('book',$this->book)
                             ->where('paragraph',$this->paragraph)
                             ->first();
+        if(isset($this->highlight)){
+            $data["highlight"] = $this->highlight;
+        }else if(isset($this->content)){
+            $data["content"] = $this->content;
+        }else{
+            $data["content"] = $paliText->html;
+        }
+
         if($paliText){
             $data['path'] = json_decode($paliText->path);
             if($paliText->level<100){
