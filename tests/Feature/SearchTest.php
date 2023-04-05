@@ -18,6 +18,14 @@ class SearchTest extends TestCase
         $response = $this->get('/api/v2/search?key=samānasaṃvāsa&tags=sutta');
 
         $response->assertStatus(200);
+
+        $response = $this->get('/api/v2/search?key=samānasaṃvāsa;vāsa&tags=sutta');
+
+        $response->assertStatus(200);
+
+        $response = $this->get('/api/v2/search?view=page&type=P&key=34&tags=sutta');
+
+        $response->assertStatus(200);
     }
     public function test_book_list()
     {
