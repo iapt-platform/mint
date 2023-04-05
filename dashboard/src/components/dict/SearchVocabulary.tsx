@@ -116,14 +116,8 @@ const Widget = ({ value, onSplit, onSearch }: IWidget) => {
         }}
         onSearch={(value: string) => {
           console.log("auto complete on search", value);
-          if (fetching) {
-            console.log("fetching");
-          } else {
-            setFetching(true);
-            search(value);
-            //stopLookup();
-            //startLookup(value);
-          }
+          setFetching(true);
+          search(value);
         }}
         onSelect={(value: string, option: ValueType) => {
           if (typeof onSearch !== "undefined") {
