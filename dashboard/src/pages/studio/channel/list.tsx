@@ -18,6 +18,8 @@ import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { useRef, useState } from "react";
 import { TRole } from "../../../components/api/Auth";
+import ShareModal from "../../../components/share/ShareModal";
+import { EResType } from "../../../components/share/Share";
 const { Text } = Typography;
 
 interface IItem {
@@ -236,15 +238,21 @@ const Widget = () => {
                 <Dropdown.Button
                   key={index}
                   type="link"
+                  trigger={["click"]}
                   menu={{
                     items: [
                       {
                         key: "share",
-                        label: intl.formatMessage({
-                          id: "buttons.share",
-                        }),
+                        label: (
+                          <ShareModal
+                            trigger={intl.formatMessage({
+                              id: "buttons.share",
+                            })}
+                            resId={row.uid}
+                            resType={EResType.channel}
+                          />
+                        ),
                         icon: <TeamOutlined />,
-                        disabled: true,
                       },
                       {
                         key: "remove",
