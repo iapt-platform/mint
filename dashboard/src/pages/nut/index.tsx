@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tag, Space, Button } from "antd";
+import { Space, Button } from "antd";
 import lodash from "lodash";
 import { marked } from "marked";
 
@@ -79,16 +79,7 @@ const Widget = () => {
           </Button>
         </div>
       </div>
-      <br />
-      <div>
-        <Tag
-          onClick={() => {
-            console.log("test tag was clicked");
-          }}
-        >
-          Test
-        </Tag>
-      </div>
+
       <div>
         <Home />
       </div>
