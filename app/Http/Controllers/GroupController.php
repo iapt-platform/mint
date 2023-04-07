@@ -28,19 +28,20 @@ class GroupController extends Controller
 		$indexCol = ['uid','name','description','owner','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'studio':
-	            # 获取studio内所有channel
+	            # 获取studio内所有group
                 $user = AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === StudioApi::getIdByName($request->get('name'))){
-                        $table = GroupInfo::select($indexCol)->where('owner', $user["user_uid"]);
-                    }else{
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
+                if(!$user){
                     return $this->error(__('auth.failed'));
                 }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = GroupInfo::select($indexCol)->where('owner', $user["user_uid"]);
 				break;
+            case 'key':
+                $table = GroupInfo::select($indexCol)->where('name','like', $request->get('key')."%");
+                break;
         }
         if(isset($_GET["search"])){
             $table = $table->where('title', 'like', $_GET["search"]."%");
