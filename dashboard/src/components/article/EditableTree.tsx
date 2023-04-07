@@ -242,6 +242,11 @@ const Widget = ({
 
             console.log("delete", keys, find, tmp);
             setGData(tmp);
+            const list = treeToList(tmp);
+            setListTreeData(list);
+            if (typeof onChange !== "undefined") {
+              onChange(list);
+            }
           }}
         >
           {intl.formatMessage({ id: "buttons.remove" })}
