@@ -1,4 +1,3 @@
-import { IStudio } from "../auth/StudioName";
 import { IStudioApiResponse, IUserRequest, TRole } from "./Auth";
 
 export interface IGroupRequest {
