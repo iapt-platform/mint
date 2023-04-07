@@ -20,3 +20,6 @@
 .dark-pro-card .dark-pro-card-title {
   color: rgba(150, 150, 150, 0.88);
 }
+.dark-pro-table-list-toolbar-title {
+  color: unset;
+}
