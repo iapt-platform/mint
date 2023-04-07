@@ -6,7 +6,7 @@ import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
 import DemoForm from "./Form";
 import TreeTest from "./TreeTest";
-import Share from "../share/Share";
+import Share, { EResType } from "../share/Share";
 import ChannelPicker from "../channel/ChannelPicker";
 import { Layout } from "antd";
 
@@ -19,7 +19,10 @@ const Widget = () => {
         articleId="168-867_7fea264d-7a26-40f8-bef7-bc95102760fb"
       />
       <div>
-        <Share resId="dd" resType="dd" />
+        <Share
+          resId="466a625f-971f-4d8f-899a-80e2c516ffeb"
+          resType={EResType.channel}
+        />
       </div>
       <h2>TreeTest</h2>
       <TreeTest />
