@@ -253,7 +253,6 @@ class ChannelController extends Controller
         if(count($query)>0){
             $table = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$query)
                                     ->select(['book','paragraph','word_begin','word_end','length']);
-            Log::info($table->toSql());
             $sentLen = $table->get();
 
             foreach ($sentLen as $value) {
