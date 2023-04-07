@@ -5,7 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Channel;
 use App\Models\Article;
+use App\Models\Collection;
 use App\Http\Api\StudioApi;
+use App\Http\Api\GroupApi;
+use App\Http\Api\UserApi;
 
 class ShareResource extends JsonResource
 {
@@ -28,7 +31,7 @@ class ShareResource extends JsonResource
                 # Channel 版本
                 $res = Channel::where('uid',$this->res_id)->first();
                 if($res){
-                    $res_name = $channel->name;
+                    $res_name = $res->name;
                     $owner = StudioApi::getById($res->owner_uid);
                 }
                 break;
@@ -55,15 +58,27 @@ class ShareResource extends JsonResource
                 # code...
                 break;
         }
-        return [
+        $data = [
             "id"=>$this->id,
             "res_id"=> $this->res_id,
             "res_type"=> $this->res_type,
+            "collaborator_type"=> $this->cooperator_type,
             "power"=> $this->power,
             'res_name'=>$res_name,
             'owner'=>$owner,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        switch ($this->cooperator_type) {
+            case 0:
+                # user
+                $data['user'] = UserApi::getById($this->cooperator_id);
+                break;
+            case 1:
+                # code...
+                $data['group'] = GroupApi::getById($this->cooperator_id);
+                break;
+            }
+        return $data;
     }
 }
