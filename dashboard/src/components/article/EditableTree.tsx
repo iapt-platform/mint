@@ -130,8 +130,8 @@ const Widget = ({
 
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
-
   const [keys, setKeys] = useState<Key>("");
+
   useEffect(() => {
     const data = tocGetTreeData(treeData);
     console.log("tree data", data);
@@ -208,10 +208,10 @@ const Widget = ({
       }
     }
     setGData(data);
+    const list = treeToList(data);
+    setListTreeData(list);
     if (typeof onChange !== "undefined") {
-      const list = treeToList(data);
       onChange(list);
-      setListTreeData(list);
     }
   };
 
