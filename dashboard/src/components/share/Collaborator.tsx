@@ -48,7 +48,7 @@ const Widget = ({ resId, load = false, onReload }: IWidget) => {
     }
   }, [load, onReload]);
   const ref = useRef<ActionType>();
-  const roleList: TRole[] = ["manager", "editor", "reader"];
+  const roleList: TRole[] = ["editor", "reader"];
 
   return (
     <ProList<ICollaborator>
