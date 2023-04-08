@@ -1,5 +1,5 @@
 import { ITocPathNode } from "../corpus/TocPath";
-import type { IStudioApiResponse } from "./Auth";
+import type { IStudioApiResponse, TRole } from "./Auth";
 
 export interface IArticleListApiResponse {
   article: string;
@@ -85,6 +85,9 @@ export interface IArticleDataResponse {
   path?: ITocPathNode[];
   status: number;
   lang: string;
+  anthology_count?: number;
+  anthology_first?: { title: string };
+  role?: TRole;
   created_at: string;
   updated_at: string;
 }
