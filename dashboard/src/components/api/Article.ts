@@ -1,3 +1,5 @@
+import { IStudio } from "../auth/StudioName";
+import { IUser } from "../auth/User";
 import { ITocPathNode } from "../corpus/TocPath";
 import type { IStudioApiResponse, TRole } from "./Auth";
 
@@ -88,6 +90,8 @@ export interface IArticleDataResponse {
   anthology_count?: number;
   anthology_first?: { title: string };
   role?: TRole;
+  studio?: IStudio;
+  editor?: IUser;
   created_at: string;
   updated_at: string;
 }

@@ -18,9 +18,13 @@ import {
 } from "../../components/api/Article";
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ShareModal from "../share/ShareModal";
 import { EResType } from "../share/Share";
+import {
+  IResNumberResponse,
+  renderBadge,
+} from "../../pages/studio/channel/list";
 
 const { Text } = Typography;
 
@@ -51,6 +55,24 @@ const Widget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [openCreate, setOpenCreate] = useState(false);
+
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/anthology-my-number?studio=${studioName}`;
+    console.log("url", url);
+    get<IResNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioName]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -243,7 +265,7 @@ const Widget = ({
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url = `/v2/anthology?view=studio&name=${studioName}`;
+          let url = `/v2/anthology?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -308,6 +330,39 @@ const Widget = ({
             </Popover>
           ) : undefined,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { message, Modal, Space, Table, Typography } from "antd";
+import { Badge, message, Modal, Space, Table, Typography } from "antd";
 import { Button, Dropdown, Popover } from "antd";
 import {
   PlusOutlined,
@@ -16,11 +16,35 @@ import { delete_, get } from "../../../request";
 import { IApiResponseChannelList } from "../../../components/api/Channel";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TRole } from "../../../components/api/Auth";
 import ShareModal from "../../../components/share/ShareModal";
 import { EResType } from "../../../components/share/Share";
+import StudioName, { IStudio } from "../../../components/auth/StudioName";
 const { Text } = Typography;
+
+export interface IResNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
+
+export const renderBadge = (count: number, active = false) => {
+  return (
+    <Badge
+      count={count}
+      style={{
+        marginBlockStart: -2,
+        marginInlineStart: 4,
+        color: active ? "#1890FF" : "#999",
+        backgroundColor: active ? "#E6F7FF" : "#eee",
+      }}
+    />
+  );
+};
 
 interface IItem {
   id: number;
@@ -29,6 +53,7 @@ interface IItem {
   summary: string;
   type: string;
   role?: TRole;
+  studio?: IStudio;
   publicity: number;
   createdAt: number;
 }
@@ -37,6 +62,24 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
   const [openCreate, setOpenCreate] = useState(false);
+
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/channel-my-number?studio=${studioname}`;
+    console.log("url", url);
+    get<IResNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioname]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -99,12 +142,23 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link
-                  to={`/studio/${studioname}/channel/${row.uid}`}
-                  key={index}
-                >
-                  {row.title}
-                </Link>
+                <>
+                  <div key={1}>
+                    <Link
+                      to={`/studio/${studioname}/channel/${row.uid}`}
+                      key={index}
+                    >
+                      {row.title}
+                    </Link>
+                  </div>
+                  {activeKey !== "my" ? (
+                    <div key={3}>
+                      <Text type="secondary">
+                        <StudioName data={row.studio} />
+                      </Text>
+                    </div>
+                  ) : undefined}
+                </>
               );
             },
           },
@@ -333,7 +387,7 @@ const Widget = () => {
           console.log(params, sorter, filter);
 
           const res: IApiResponseChannelList = await get(
-            `/v2/channel?view=studio-all&name=${studioname}`
+            `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`
           );
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
@@ -344,6 +398,7 @@ const Widget = () => {
               summary: item.summary,
               type: item.type,
               role: item.role,
+              studio: item.studio,
               publicity: item.status,
               createdAt: date.getTime(),
             };
@@ -387,6 +442,39 @@ const Widget = () => {
             </Button>
           </Popover>,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

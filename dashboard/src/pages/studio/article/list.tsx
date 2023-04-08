@@ -28,14 +28,39 @@ import {
   IDeleteResponse,
 } from "../../../components/api/Article";
 import { PublicityValueEnum } from "../../../components/studio/table";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
 import ShareModal from "../../../components/share/ShareModal";
 import { EResType } from "../../../components/share/Share";
 import AddToAnthology from "../../../components/article/AddToAnthology";
 import AnthologySelect from "../../../components/anthology/AnthologySelect";
+import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import { IUser } from "../../../components/auth/User";
 
 const { Text } = Typography;
+
+interface IArticleNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
+
+const renderBadge = (count: number, active = false) => {
+  return (
+    <Badge
+      count={count}
+      style={{
+        marginBlockStart: -2,
+        marginInlineStart: 4,
+        color: active ? "#1890FF" : "#999",
+        backgroundColor: active ? "#E6F7FF" : "#eee",
+      }}
+    />
+  );
+};
 
 interface DataItem {
   sn: number;
@@ -47,12 +72,31 @@ interface DataItem {
   anthologyTitle?: string;
   publicity: number;
   createdAt: number;
+  studio?: IStudio;
+  editor?: IUser;
 }
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
   const [openCreate, setOpenCreate] = useState(false);
   const [anthologyId, setAnthologyId] = useState<string>();
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/article-my-number?studio=${studioname}`;
+    console.log("url", url);
+    get<IArticleNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioname]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -114,12 +158,21 @@ const Widget = () => {
             render: (text, row, index, action) => {
               return (
                 <>
-                  <div>
+                  <div key={1}>
                     <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
                       {row.title}
                     </Link>
                   </div>
-                  <Text type="secondary">{row.subtitle}</Text>
+                  <div key={2}>
+                    <Text type="secondary">{row.subtitle}</Text>
+                  </div>
+                  {activeKey !== "my" ? (
+                    <div key={3}>
+                      <Text type="secondary">
+                        <StudioName data={row.studio} />
+                      </Text>
+                    </div>
+                  ) : undefined}
                 </>
               );
             },
@@ -304,10 +357,10 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
           console.log("anthology", anthologyId);
-          let url = `/v2/article?view=studio&name=${studioname}`;
+          let url = `/v2/article?view=studio&view2=${activeKey}&name=${studioname}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
+            (params.pageSize ? params.pageSize : 10);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
@@ -329,6 +382,8 @@ const Widget = () => {
               anthologyTitle: item.anthology_first?.title,
               publicity: item.status,
               createdAt: date.getTime(),
+              studio: item.studio,
+              editor: item.editor,
             };
           });
           return {
@@ -378,6 +433,39 @@ const Widget = () => {
             </Button>
           </Popover>,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );
