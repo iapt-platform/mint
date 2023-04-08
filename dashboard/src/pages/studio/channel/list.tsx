@@ -238,7 +238,7 @@ const Widget = () => {
                 <Dropdown.Button
                   key={index}
                   type="link"
-                  trigger={["click"]}
+                  trigger={["click", "contextMenu"]}
                   menu={{
                     items: [
                       {
