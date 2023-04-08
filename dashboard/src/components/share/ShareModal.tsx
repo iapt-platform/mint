@@ -9,7 +9,6 @@ interface IWidget {
 }
 const Widget = ({ resId, resType, trigger }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const showModal = () => {
     setIsModalOpen(true);
   };
