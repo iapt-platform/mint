@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Space, Table } from "antd";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Menu } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 
@@ -76,15 +76,17 @@ const Widget = ({ channelId }: IWidget) => {
           ellipsis: true,
           render: (text, row, index, action) => {
             return (
-              <div>
-                <div>
+              <div key={index}>
+                <div key={1}>
                   <Link
                     to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}`}
                   >
                     {row.title ? row.title : row.subTitle}
                   </Link>
                 </div>
-                <Text type="secondary">{row.subTitle}</Text>
+                <Text type="secondary" key={2}>
+                  {row.subTitle}
+                </Text>
               </div>
             );
           },
@@ -108,7 +110,7 @@ const Widget = ({ channelId }: IWidget) => {
           search: false,
           render: (text, row, index, action) => {
             const per = Math.round(row.progress * 100);
-            return <Progress percent={per} size="small" />;
+            return <Progress percent={per} size="small" key={index} />;
           },
         },
         {
@@ -138,7 +140,38 @@ const Widget = ({ channelId }: IWidget) => {
           valueType: "option",
           render: (text, row, index, action) => {
             return [
-              <Dropdown.Button key={index} type="link" overlay={menu}>
+              <Dropdown.Button
+                key={index}
+                type="link"
+                menu={{
+                  items: [
+                    {
+                      key: "remove",
+                      disabled: true,
+                      label: (
+                        <Text type="danger">
+                          {intl.formatMessage({
+                            id: "buttons.delete",
+                          })}
+                        </Text>
+                      ),
+                      icon: (
+                        <Text type="danger">
+                          <DeleteOutlined />
+                        </Text>
+                      ),
+                    },
+                  ],
+                  onClick: (e) => {
+                    switch (e.key) {
+                      case "remove":
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                }}
+              >
                 <Link
                   to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}/edit`}
                 >
