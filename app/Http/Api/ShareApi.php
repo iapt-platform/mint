@@ -12,6 +12,12 @@ class ShareApi{
     /**
      * 获取某用户的可见的协作资源
      * $res_type 见readme.md#资源类型 -1全部类型资源
+     * ## 资源类型
+     *  1 PCS 文档
+     *  2 Channel 版本
+     *  3 Article 文章
+     *  4 Collection 文集
+     *  5 版本片段
      * power 权限 10: 只读  20：编辑 30： 拥有者
      */
 
