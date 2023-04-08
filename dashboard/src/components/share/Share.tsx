@@ -1,6 +1,5 @@
 import { Divider } from "antd";
 import { useState } from "react";
-import { useIntl } from "react-intl";
 
 import Collaborator from "./Collaborator";
 import CollaboratorAdd from "./CollaboratorAdd";
@@ -23,7 +22,6 @@ interface IWidget {
   resType: EResType;
 }
 const Widget = ({ resId, resType }: IWidget) => {
-  const intl = useIntl();
   const [reload, setReload] = useState(false);
   return (
     <div>
