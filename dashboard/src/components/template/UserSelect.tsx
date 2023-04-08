@@ -30,17 +30,22 @@ const Widget = ({
       }}
       request={async ({ keyWords }) => {
         console.log("keyWord", keyWords);
-        const json = await get<IUserListResponse>(
-          `/v2/user?view=key&key=${keyWords}`
-        );
-        const userList = json.data.rows.map((item) => {
-          return {
-            value: item.id,
-            label: `${item.userName}-${item.nickName}`,
-          };
-        });
-        console.log("json", userList);
-        return userList;
+
+        if (typeof keyWords === "string") {
+          const json = await get<IUserListResponse>(
+            `/v2/user?view=key&key=${keyWords}`
+          );
+          const userList = json.data.rows.map((item) => {
+            return {
+              value: item.id,
+              label: `${item.userName}-${item.nickName}`,
+            };
+          });
+          console.log("json", userList);
+          return userList;
+        } else {
+          return [];
+        }
       }}
       rules={[
         {
