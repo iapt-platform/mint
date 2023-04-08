@@ -3,14 +3,117 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleCollection;
+use App\Models\Collection;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\ArticleResource;
 use App\Http\Api\AuthApi;
+use App\Http\Api\ShareApi;
+use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
+    public static function userCanRead($user_uid,Article $article){
+        if($article->status === 30 ){
+            return true;
+        }
+        if(empty($user_uid)){
+            return false;
+        }
+            //私有文章，判断是否为所有者
+        if($user_uid === $article->owner){
+            return true;
+        }
+        //非所有者
+        //判断是否为文章协作者
+        $power = ShareApi::getResPower($user_uid,$article->uid);
+        if($power >= 10 ){
+            return true;
+        }
+        //无读取权限
+        //判断文集是否有读取权限
+        $inCollection = ArticleCollection::where('article_id',$article->uid)
+                                        ->select('collect_id')
+                                        ->groupBy('collect_id')->get();
+        if(!$inCollection){
+            return false;
+        }
+        //查找与文章同主人的文集
+        $collections = Collection::whereIn('uid',$inCollection)
+                                    ->where('owner',$article->owner)
+                                    ->select('uid')
+                                    ->get();
+        if(!$collections){
+            return false;
+        }
+        //查找与文章同主人的文集是否是共享的
+        $power = 0;
+        foreach ($collections as $collection) {
+            # code...
+            $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+            if($currPower >= 10){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function userCanEdit($user_uid,$article){
+        if(empty($user_uid)){
+            return false;
+        }
+        //私有文章，判断是否为所有者
+        if($user_uid === $article->owner){
+            return true;
+        }
+        //非所有者
+        //判断是否为文章协作者
+        $power = ShareApi::getResPower($user_uid,$article->uid);
+        if($power >= 20 ){
+            return true;
+        }
+        //无读取权限
+        //判断文集是否有读取权限
+        $inCollection = ArticleCollection::where('article_id',$article->uid)
+                                        ->select('collect_id')
+                                        ->groupBy('collect_id')->get();
+        if(!$inCollection){
+            return false;
+        }
+        //查找与文章同主人的文集
+        $collections = Collection::whereIn('uid',$inCollection)
+                                    ->where('owner',$article->owner)
+                                    ->select('uid')
+                                    ->get();
+        if(!$collections){
+            return false;
+        }
+        //查找与文章同主人的文集是否是共享的
+        $power = 0;
+        foreach ($collections as $collection) {
+            # code...
+            $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+            if($currPower >= 20){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function userCanManage($user_uid,$studioName){
+        if(empty($user_uid)){
+            return false;
+        }
+        //判断是否为所有者
+        if($user_uid === StudioApi::getIdByName($studioName)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,15 +127,35 @@ class ArticleController extends Controller
             case 'studio':
 				# 获取studio内所有channel
                 $user = \App\Http\Api\AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
-                        $table = Article::select($indexCol)->where('owner', $user["user_uid"]);
-                    }else{
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
+                if(!$user){
                     return $this->error(__('auth.failed'));
+                }
+                //判断当前用户是否有指定的studio的权限
+                $studioId = StudioApi::getIdByName($request->get('name'));
+                if($user['user_uid'] !== $studioId){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = Article::select($indexCol)->where('owner', $studioId);
+                //根据anthology过滤
+                if($request->has('anthology')){
+                    switch ($request->get('anthology')) {
+                        case 'all':
+                            break;
+                        case 'none':
+                            # 我的文集
+                            $myCollection = Collection::where('owner',$studioId)->select('uid')->get();
+                            //收录在我的文集里面的文章
+                            $articles = ArticleCollection::whereIn('collect_id',$myCollection)
+                                                         ->select('article_id')->groupBy('article_id')->get();
+                            //不在这些范围之内的文章
+                            $table =  $table->whereNotIn('uid',$articles);
+                            break;
+                        default:
+                            $articles = ArticleCollection::where('collect_id',$request->get('anthology'))
+                                                         ->select('article_id')->get();
+                            $table =  $table->whereIn('uid',$articles);
+                            break;
+                    }
                 }
 				break;
         }
@@ -62,24 +185,7 @@ class ArticleController extends Controller
         //获取数据
         $result = $table->get();
         if($result){
-            /*
-            foreach ($result as $key => $value) {
-                # 获取studio信息
-                $studio = $userinfo->getName($value->owner_uid);
-                $value->studio = [
-                    'id'=>$value->owner_uid,
-                    'nickName'=>$studio['nickname'],
-                    'studioName'=>$studio['username'],
-                    'avastar'=>'',
-                    'owner' => [
-                        'id'=>$value->owner_uid,
-                        'nickName'=>$studio['nickname'],
-                        'userName'=>$studio['username'],
-                        'avastar'=>'',
-                    ]
-                ];
-            }*/
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+			return $this->ok(["rows"=>ArticleResource::collection($result),"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -93,35 +199,38 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $user = \App\Http\Api\AuthApi::current($request);
-        if($user){
-            //判断当前用户是否有指定的studio的权限
-            if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('studio'))){
-                //查询是否重复
-                if(Article::where('title',$request->get('title'))->where('owner',$user['user_uid'])->exists()){
-                    return $this->error(__('validation.exists'));
-                }else{
-
-                    $newOne = new Article;
-                    $newOne->id = app('snowflake')->id();
-                    $newOne->uid = Str::uuid();
-                    $newOne->title = $request->get('title');
-                    $newOne->lang = $request->get('lang');
-                    $newOne->owner = $user['user_uid'];
-                    $newOne->owner_id = $user['user_id'];
-                    $newOne->editor_id = $user['user_id'];
-                    $newOne->create_time = time()*1000;
-                    $newOne->modify_time = time()*1000;
-                    $newOne->save();
-                    return $this->ok($newOne);
-                }
-            }else{
-                return $this->error(__('auth.failed'));
-            }
+        //判断权限
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],401);
         }else{
-            return $this->error(__('auth.failed'));
+            $user_uid=$user['user_uid'];
         }
+
+        $canManage = ArticleController::userCanManage($user_uid,$request->get('studio'));
+        if(!$canManage){
+            return $this->error(__('auth.failed'),[],403);
+        }
+        //权限判断结束
+        $studioUuid = StudioApi::getIdByName($request->get('studio'));
+        //查询标题是否重复
+        /*
+        if(Article::where('title',$request->get('title'))->where('owner',$studioUuid)->exists()){
+            return $this->error(__('validation.exists'));
+        }*/
+
+        $newOne = new Article;
+        $newOne->id = app('snowflake')->id();
+        $newOne->uid = Str::uuid();
+        $newOne->title = $request->get('title');
+        $newOne->lang = $request->get('lang');
+        $newOne->owner = $studioUuid;
+        $newOne->owner_id = $user['user_id'];
+        $newOne->editor_id = $user['user_id'];
+        $newOne->create_time = time()*1000;
+        $newOne->modify_time = time()*1000;
+        $newOne->save();
+        return $this->ok($newOne);
     }
 
     /**
@@ -136,19 +245,17 @@ class ArticleController extends Controller
         if(!$article){
             return $this->error("no recorder");
         }
-        if($article->status<30){
-            //私有文章，判断权限
-            $user = \App\Http\Api\AuthApi::current($request);
-            if(!$user){
-                //判断当前用户是否有指定的studio的权限
-                return $this->error(__('auth.failed'));
-            }
-            if($user['user_uid'] !== $article->owner){
-                //非所有者
-                return $this->error(__('auth.failed'));
-            }else{
-                //TODO 判断是否协作
-            }
+        //判断权限
+        $user = AuthApi::current($request);
+        if(!$user){
+            $user_uid="";
+        }else{
+            $user_uid=$user['user_uid'];
+        }
+
+        $canRead = ArticleController::userCanRead($user_uid,$article);
+        if(!$canRead){
+            return $this->error(__('auth.failed'),[],401);
         }
         return $this->ok(new ArticleResource($article));
     }
@@ -163,28 +270,41 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
-        if($article){
-            //鉴权
-            $user = \App\Http\Api\AuthApi::current($request);
-            if($user && $article->owner === $user["user_uid"]){
-                $article->title = $request->get('title');
-                $article->subtitle = $request->get('subtitle');
-                $article->summary = $request->get('summary');
-                $article->content = $request->get('content');
-                $article->lang = $request->get('lang');
-                $article->status = $request->get('status');
-                $article->modify_time = time()*1000;
-                $article->save();
-                return $this->ok($article);
-            }else{
-                //鉴权失败
-                //TODO 判断是否为协作
-                return $this->error(__('auth.failed'));
-            }
-
-        }else{
+        if(!$article){
             return $this->error("no recorder");
         }
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],401);
+        }else{
+            $user_uid=$user['user_uid'];
+        }
+
+        $canEdit = ArticleController::userCanEdit($user_uid,$article);
+        if(!$canEdit){
+            return $this->error(__('auth.failed'),[],401);
+        }
+
+        /*
+        //查询标题是否重复
+        if(Article::where('title',$request->get('title'))
+                  ->where('owner',$article->owner)
+                  ->where('uid',"<>",$article->uid)
+                  ->exists()){
+            return $this->error(__('validation.exists'));
+        }*/
+
+        $article->title = $request->get('title');
+        $article->subtitle = $request->get('subtitle');
+        $article->summary = $request->get('summary');
+        $article->content = $request->get('content');
+        $article->lang = $request->get('lang');
+        $article->status = $request->get('status',10);
+        $article->editor_id = $user['user_id'];
+        $article->modify_time = time()*1000;
+        $article->save();
+        return $this->ok($article);
 
     }
 
