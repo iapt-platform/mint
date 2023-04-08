@@ -8,6 +8,7 @@ import {
   ExclamationCircleOutlined,
   TeamOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 
 import AnthologyCreate from "../../components/anthology/AnthologyCreate";
@@ -18,6 +19,8 @@ import {
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useRef, useState } from "react";
+import ShareModal from "../share/ShareModal";
+import { EResType } from "../share/Share";
 
 const { Text } = Typography;
 
@@ -31,15 +34,19 @@ interface IItem {
   createdAt: number;
 }
 interface IWidget {
+  title?: string;
   studioName?: string;
   showCol?: string[];
   showCreate?: boolean;
+  showOption?: boolean;
   onTitleClick?: Function;
 }
 const Widget = ({
+  title,
   studioName,
   showCol,
   showCreate = true,
+  showOption = true,
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
@@ -83,6 +90,7 @@ const Widget = ({
   return (
     <>
       <ProTable<IItem>
+        headerTitle={title}
         actionRef={ref}
         columns={[
           {
@@ -158,28 +166,38 @@ const Widget = ({
             title: intl.formatMessage({ id: "buttons.option" }),
             key: "option",
             width: 120,
+            hideInTable: !showOption,
             valueType: "option",
             render: (text, row, index, action) => [
               <Dropdown.Button
                 key={index}
                 type="link"
+                trigger={["click", "contextMenu"]}
                 menu={{
                   items: [
                     {
                       key: "open",
-                      label: intl.formatMessage({
-                        id: "buttons.open.in.library",
-                      }),
-                      icon: <TeamOutlined />,
-                      disabled: true,
+                      label: (
+                        <Link to={`/anthology/${row.id}`}>
+                          {intl.formatMessage({
+                            id: "buttons.open.in.library",
+                          })}
+                        </Link>
+                      ),
+                      icon: <EyeOutlined />,
                     },
                     {
                       key: "share",
-                      label: intl.formatMessage({
-                        id: "buttons.share",
-                      }),
+                      label: (
+                        <ShareModal
+                          trigger={intl.formatMessage({
+                            id: "buttons.share",
+                          })}
+                          resId={row.id}
+                          resType={EResType.collection}
+                        />
+                      ),
                       icon: <TeamOutlined />,
-                      disabled: true,
                     },
                     {
                       key: "remove",
@@ -259,6 +277,7 @@ const Widget = ({
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
+          pageSize: 10,
         }}
         search={false}
         options={{

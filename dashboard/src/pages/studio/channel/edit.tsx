@@ -6,7 +6,8 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Card, message } from "antd";
+import { TeamOutlined } from "@ant-design/icons";
+import { Button, Card, message } from "antd";
 
 import { IApiResponseChannel } from "../../../components/api/Channel";
 import { get, put } from "../../../request";
@@ -14,6 +15,8 @@ import ChannelTypeSelect from "../../../components/channel/ChannelTypeSelect";
 import LangSelect from "../../../components/general/LangSelect";
 import PublicitySelect from "../../../components/studio/PublicitySelect";
 import GoBack from "../../../components/studio/GoBack";
+import ShareModal from "../../../components/share/ShareModal";
+import { EResType } from "../../../components/share/Share";
 
 interface IFormData {
   name: string;
@@ -28,10 +31,25 @@ const Widget = () => {
   const { channelid } = useParams(); //url 参数
   const { studioname } = useParams();
   const [title, setTitle] = useState("");
-
+  console.log("channel", channelid);
   return (
     <Card
       title={<GoBack to={`/studio/${studioname}/channel/list`} title={title} />}
+      extra={
+        channelid ? (
+          <ShareModal
+            trigger={
+              <Button icon={<TeamOutlined />}>
+                {intl.formatMessage({
+                  id: "buttons.share",
+                })}
+              </Button>
+            }
+            resId={channelid}
+            resType={EResType.channel}
+          />
+        ) : undefined
+      }
     >
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {

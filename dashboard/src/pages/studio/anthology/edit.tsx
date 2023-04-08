@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Card, Space, Tabs } from "antd";
+import { Button, Card, Space, Tabs } from "antd";
+import { TeamOutlined } from "@ant-design/icons";
 
 import GoBack from "../../../components/studio/GoBack";
 import TocTree from "../../../components/anthology/EditableTocTree";
 import AnthologyInfoEdit from "../../../components/article/AnthologyInfoEdit";
+import ShareModal from "../../../components/share/ShareModal";
+import { EResType } from "../../../components/share/Share";
 
 const Widget = () => {
   const intl = useIntl();
@@ -20,6 +23,19 @@ const Widget = () => {
         }
         extra={
           <Space>
+            {anthology_id ? (
+              <ShareModal
+                trigger={
+                  <Button icon={<TeamOutlined />}>
+                    {intl.formatMessage({
+                      id: "buttons.share",
+                    })}
+                  </Button>
+                }
+                resId={anthology_id}
+                resType={EResType.collection}
+              />
+            ) : undefined}
             <Link to={`/anthology/${anthology_id}`} target="_blank">
               {intl.formatMessage({ id: "buttons.open.in.library" })}
             </Link>
