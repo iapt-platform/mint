@@ -4,7 +4,7 @@ import AnthologyList from "./AnthologyList";
 
 interface IWidget {
   studioName?: string;
-  trigger?: JSX.Element;
+  trigger?: React.ReactNode;
   onSelect?: Function;
   onCancel?: Function;
 }
@@ -28,14 +28,16 @@ const Widget = ({ studioName, trigger, onSelect, onCancel }: IWidget) => {
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={"80%"}
-        title="选择文集"
+        title="加入文集"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <AnthologyList
+          title={"选择文集"}
           studioName={studioName}
           showCreate={false}
+          showOption={false}
           onTitleClick={(id: string) => {
             if (typeof onSelect !== "undefined") {
               onSelect(id);
