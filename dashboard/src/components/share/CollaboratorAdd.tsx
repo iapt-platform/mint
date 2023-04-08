@@ -21,7 +21,7 @@ interface IWidget {
   onSuccess?: Function;
 }
 const Widget = ({ resId, resType, onSuccess }: IWidget) => {
-  const roleList = ["manager", "editor", "reader"];
+  const roleList = ["editor", "reader"];
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   interface IFormData {
@@ -35,25 +35,29 @@ const Widget = ({ resId, resType, onSuccess }: IWidget) => {
       formRef={formRef}
       onFinish={async (values: IFormData) => {
         // TODO
-        console.log(values);
+
         if (typeof resId !== "undefined") {
-          post<IShareRequest, IShareResponse>("/v2/share", {
+          const postData: IShareRequest = {
             user_id:
               values.userType === "user" ? values.userId : values.groupId,
             user_type: values.userType,
             role: values.role,
             res_id: resId,
             res_type: resType,
-          }).then((json) => {
-            console.log("add member", json);
-            if (json.ok) {
-              if (typeof onSuccess !== "undefined") {
-                onSuccess();
+          };
+          console.log("create share", postData);
+          post<IShareRequest, IShareResponse>("/v2/share", postData).then(
+            (json) => {
+              console.log("add member", json);
+              if (json.ok) {
+                if (typeof onSuccess !== "undefined") {
+                  onSuccess();
+                }
+                formRef.current?.resetFields(["userId"]);
+                message.success(intl.formatMessage({ id: "flashes.success" }));
               }
-              formRef.current?.resetFields(["userId"]);
-              message.success(intl.formatMessage({ id: "flashes.success" }));
             }
-          });
+          );
         }
       }}
     >
