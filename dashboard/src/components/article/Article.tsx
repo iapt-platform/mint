@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Divider, message, Tag } from "antd";
+import { Divider, message, Result, Tag } from "antd";
 
 import { modeChange } from "../../reducers/article-mode";
 import { get } from "../../request";
@@ -61,6 +61,7 @@ const Widget = ({
   const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
   const [extra, setExtra] = useState(<></>);
   const [showSkeleton, setShowSkeleton] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   let channels: string[] = [];
   if (typeof articleId !== "undefined") {
@@ -218,50 +219,56 @@ const Widget = ({
       }
       console.log("url", url);
       setShowSkeleton(true);
-      get<IArticleResponse>(url).then((json) => {
-        console.log("article", json);
-        if (json.ok) {
-          setArticleData(json.data);
-          setShowSkeleton(false);
+      get<IArticleResponse>(url)
+        .then((json) => {
+          console.log("article", json);
+          if (json.ok) {
+            setArticleData(json.data);
+            setShowSkeleton(false);
 
-          setExtra(
-            <TocTree
-              treeData={json.data.toc?.map((item) => {
-                const strTitle = item.title ? item.title : item.pali_title;
-                const progress = item.progress?.map((item, id) => (
-                  <Tag key={id}>{Math.round(item * 100)}</Tag>
-                ));
+            setExtra(
+              <TocTree
+                treeData={json.data.toc?.map((item) => {
+                  const strTitle = item.title ? item.title : item.pali_title;
+                  const progress = item.progress?.map((item, id) => (
+                    <Tag key={id}>{Math.round(item * 100)}</Tag>
+                  ));
 
-                return {
-                  key: `${item.book}-${item.paragraph}`,
-                  title: (
-                    <>
-                      <PaliText text={strTitle} />
-                      {progress}
-                    </>
-                  ),
-                  level: item.level,
-                };
-              })}
-              onSelect={(keys: string[]) => {
-                console.log(keys);
-                if (
-                  typeof onArticleChange !== "undefined" &&
-                  keys.length > 0 &&
-                  typeof articleId !== "undefined"
-                ) {
-                  const aid = articleId.split("_");
-                  const channels =
-                    aid.length > 1 ? "_" + aid.slice(1).join("_") : undefined;
-                  onArticleChange(keys[0] + channels);
-                }
-              }}
-            />
-          );
-        } else {
-          message.error(json.message);
-        }
-      });
+                  return {
+                    key: `${item.book}-${item.paragraph}`,
+                    title: (
+                      <>
+                        <PaliText text={strTitle} />
+                        {progress}
+                      </>
+                    ),
+                    level: item.level,
+                  };
+                })}
+                onSelect={(keys: string[]) => {
+                  console.log(keys);
+                  if (
+                    typeof onArticleChange !== "undefined" &&
+                    keys.length > 0 &&
+                    typeof articleId !== "undefined"
+                  ) {
+                    const aid = articleId.split("_");
+                    const channels =
+                      aid.length > 1 ? "_" + aid.slice(1).join("_") : undefined;
+                    onArticleChange(keys[0] + channels);
+                  }
+                }}
+              />
+            );
+          } else {
+            setShowSkeleton(false);
+            setUnauthorized(true);
+            message.error(json.message);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
   }, [active, type, articleId, mode, articleMode]);
 
@@ -269,6 +276,13 @@ const Widget = ({
     <div>
       {showSkeleton ? (
         <ArticleSkeleton />
+      ) : unauthorized ? (
+        <Result
+          status="403"
+          title="无权访问"
+          subTitle="您无权访问该内容。您可能没有登录，或者内容的所有者没有给您所需的权限。"
+          extra={<></>}
+        />
       ) : (
         <ArticleView
           id={articleData?.uid}
