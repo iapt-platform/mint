@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Api\StudioApi;
 
 class ChannelResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class ChannelResource extends JsonResource
             "name" => $this->name,
             "summary" => $this->summary,
             "type" => $this->type,
-            "studio" => \App\Http\Api\StudioApi::getById($this->owner_uid),
+            "studio" => StudioApi::getById($this->owner_uid),
             "lang" => $this->lang,
             "status" => $this->status,
             "created_at" => $this->created_at,

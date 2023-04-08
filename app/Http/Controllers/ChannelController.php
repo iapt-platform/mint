@@ -40,10 +40,23 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                $studioId = StudioApi::getIdByName($request->get('name'));
+                if($user['user_uid'] !== $studioId){
                     return $this->error(__('auth.failed'));
                 }
-                $table = Channel::select($indexCol)->where('owner_uid', $user["user_uid"]);
+
+                $table = Channel::select($indexCol);
+                if($request->get('view2','my')==='my'){
+                    $table = $table->where('owner_uid', $studioId);
+                }else{
+                    //协作
+                    $resList = ShareApi::getResList($studioId,2);
+                    $resId=[];
+                    foreach ($resList as $res) {
+                        $resId[] = $res['res_id'];
+                    }
+                    $table = $table->whereIn('uid', $resId)->where('owner_uid','<>', $studioId);
+                }
 				break;
             case 'studio-all':
                 /**
@@ -227,6 +240,34 @@ class ChannelController extends Controller
 			return $this->error("没有查询到数据");
 		}
 
+    }
+
+    /**
+     * 获取我的，和协作channel数量
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showMyNumber(Request $request){
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'));
+        }
+        //我的
+        $my = Channel::where('owner_uid', $studioId)->count();
+        //协作
+        $resList = ShareApi::getResList($studioId,2);
+        $resId=[];
+        foreach ($resList as $res) {
+            $resId[] = $res['res_id'];
+        }
+        $collaboration = Channel::whereIn('uid', $resId)->where('owner_uid','<>', $studioId)->count();
+
+        return $this->ok(['my'=>$my,'collaboration'=>$collaboration]);
     }
     /**
      * 获取章节的进度

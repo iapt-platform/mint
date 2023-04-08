@@ -135,7 +135,19 @@ class ArticleController extends Controller
                 if($user['user_uid'] !== $studioId){
                     return $this->error(__('auth.failed'));
                 }
-                $table = Article::select($indexCol)->where('owner', $studioId);
+                $table = Article::select($indexCol);
+                if($request->get('view2','my')==='my'){
+                    $table = $table->where('owner', $studioId);
+                }else{
+                    //协作
+                    $resList = ShareApi::getResList($studioId,3);
+                    $resId=[];
+                    foreach ($resList as $res) {
+                        $resId[] = $res['res_id'];
+                    }
+                    $table = $table->whereIn('uid', $resId)->where('owner','<>', $studioId);
+                }
+
                 //根据anthology过滤
                 if($request->has('anthology')){
                     switch ($request->get('anthology')) {
@@ -189,6 +201,34 @@ class ArticleController extends Controller
 		}else{
 			return $this->error("没有查询到数据");
 		}
+    }
+
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showMyNumber(Request $request){
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'));
+        }
+        //我的
+        $my = Article::where('owner', $studioId)->count();
+        //协作
+        $resList = ShareApi::getResList($studioId,3);
+        $resId=[];
+        foreach ($resList as $res) {
+            $resId[] = $res['res_id'];
+        }
+        $collaboration = Article::whereIn('uid', $resId)->where('owner','<>', $studioId)->count();
+
+        return $this->ok(['my'=>$my,'collaboration'=>$collaboration]);
     }
 
     /**

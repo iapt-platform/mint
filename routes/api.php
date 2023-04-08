@@ -79,14 +79,17 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('sent_history',SentHistoryController::class);
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
+    Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
     Route::post('channel-progress',[ChannelController::class,"progress"]);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict',UserDictController::class);
 
     Route::apiResource('anthology',CollectionController::class);
+    Route::get('anthology-my-number', [CollectionController::class, 'showMyNumber']);
     Route::apiResource('dict',DictController::class);
     Route::apiResource('tag',TagController::class);
     Route::apiResource('article',ArticleController::class);
+    Route::get('article-my-number', [ArticleController::class, 'showMyNumber']);
     Route::apiResource('group',GroupController::class);
 
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
