@@ -483,6 +483,7 @@ const Widget = () => {
             onChange(key) {
               console.log("show course", key);
               setActiveKey(key);
+              setCollaborator(undefined);
               ref.current?.reload();
             },
           },
