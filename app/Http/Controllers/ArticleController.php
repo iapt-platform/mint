@@ -387,6 +387,7 @@ class ArticleController extends Controller
         DB::transaction(function() use($article,$delete){
             //TODO 删除文集中的文章
             $delete = $article->delete();
+            ArticleMapController::deleteArticle($article->uid);
         });
 
         return $this->ok($delete);
