@@ -1,15 +1,18 @@
-import { Tree } from "antd";
-
-import type { DataNode, TreeProps } from "antd/es/tree";
+import { Tree, Typography } from "antd";
+import type { TreeProps } from "antd/es/tree";
 import { useEffect, useState } from "react";
+
 import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 
-interface TreeNodeData {
+const { Text } = Typography;
+
+export interface TreeNodeData {
   key: string;
   title: string | React.ReactNode;
   children?: TreeNodeData[];
   level: number;
+  deletedAt?: string;
 }
 
 function tocGetTreeData(
@@ -36,6 +39,7 @@ function tocGetTreeData(
       key: element.key,
       title: element.title,
       level: element.level,
+      deletedAt: element.deletedAt,
     };
 
     if (newNode.level > iCurrLevel) {
@@ -119,12 +123,20 @@ const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
       defaultExpandedKeys={expanded}
       defaultSelectedKeys={expanded}
       blockNode
-      titleRender={(node: DataNode) => {
-        if (typeof node.title === "string") {
-          return <PaliText text={node.title} />;
-        } else {
-          return <>{node.title}</>;
-        }
+      titleRender={(node: TreeNodeData) => {
+        const currNode =
+          typeof node.title === "string" ? (
+            <PaliText text={node.title} />
+          ) : (
+            <>{node.title}</>
+          );
+        return node.deletedAt ? (
+          <Text delete disabled>
+            {currNode}
+          </Text>
+        ) : (
+          <>{currNode}</>
+        );
       }}
     />
   );

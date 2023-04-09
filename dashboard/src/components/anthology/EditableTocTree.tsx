@@ -27,6 +27,7 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
             key: item.article_id ? item.article_id : item.title,
             title: item.title,
             level: item.level,
+            deletedAt: item.deleted_at,
           };
         });
         setTocData(toc);

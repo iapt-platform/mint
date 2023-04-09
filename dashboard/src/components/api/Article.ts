@@ -128,6 +128,7 @@ export interface IArticleMapRequest {
   level: number;
   title: string;
   children?: number;
+  deleted_at?: string;
 }
 export interface IArticleMapListResponse {
   ok: boolean;
