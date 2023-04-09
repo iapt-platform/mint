@@ -404,13 +404,15 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
-          <AnthologySelect
-            studioName={studioname}
-            onSelect={(value: string) => {
-              setAnthologyId(value);
-              ref.current?.reload();
-            }}
-          />,
+          activeKey === "my" ? (
+            <AnthologySelect
+              studioName={studioname}
+              onSelect={(value: string) => {
+                setAnthologyId(value);
+                ref.current?.reload();
+              }}
+            />
+          ) : undefined,
           <Popover
             content={
               <ArticleCreate
@@ -463,6 +465,7 @@ const Widget = () => {
             onChange(key) {
               console.log("show course", key);
               setActiveKey(key);
+              setAnthologyId(undefined);
               ref.current?.reload();
             },
           },
