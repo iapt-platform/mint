@@ -415,6 +415,7 @@ const Widget = () => {
             content={
               <ArticleCreate
                 studio={studioname}
+                anthologyId={anthologyId}
                 onSuccess={() => {
                   setOpenCreate(false);
                   ref.current?.reload();
