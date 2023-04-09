@@ -45,6 +45,7 @@ use App\Http\Controllers\TermVocabularyController;
 use App\Http\Controllers\RelatedParagraphController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\WordIndexController;
+use App\Http\Controllers\StudioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +138,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('search',SearchController::class);
     Route::get('search-book-list',[SearchController::class,'book_list']);
     Route::apiResource('pali-word-index',WordIndexController::class);
+    Route::apiResource('studio',StudioController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
 

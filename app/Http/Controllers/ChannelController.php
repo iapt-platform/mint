@@ -55,7 +55,12 @@ class ChannelController extends Controller
                     foreach ($resList as $res) {
                         $resId[] = $res['res_id'];
                     }
-                    $table = $table->whereIn('uid', $resId)->where('owner_uid','<>', $studioId);
+                    $table = $table->whereIn('uid', $resId);
+                    if($request->get('collaborator','all') !== 'all'){
+                        $table = $table->where('owner_uid', $request->get('collaborator'));
+                    }else{
+                        $table = $table->where('owner_uid','<>', $studioId);
+                    }
                 }
 				break;
             case 'studio-all':
