@@ -21,6 +21,7 @@ import { TRole } from "../../../components/api/Auth";
 import ShareModal from "../../../components/share/ShareModal";
 import { EResType } from "../../../components/share/Share";
 import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import StudioSelect from "../../../components/channel/StudioSelect";
 const { Text } = Typography;
 
 export interface IResNumberResponse {
@@ -66,7 +67,7 @@ const Widget = () => {
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-
+  const [collaborator, setCollaborator] = useState<string>();
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -385,10 +386,12 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-
-          const res: IApiResponseChannelList = await get(
-            `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`
-          );
+          let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`;
+          if (typeof collaborator === "string") {
+            url = url + "&collaborator=" + collaborator;
+          }
+          console.log("url", url);
+          const res: IApiResponseChannelList = await get(url);
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
@@ -420,6 +423,15 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
+          activeKey !== "my" ? (
+            <StudioSelect
+              studioName={studioname}
+              onSelect={(value: string) => {
+                setCollaborator(value);
+                ref.current?.reload();
+              }}
+            />
+          ) : undefined,
           <Popover
             content={
               <ChannelCreate
