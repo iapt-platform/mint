@@ -252,25 +252,43 @@ class ArticleController extends Controller
             return $this->error(__('auth.failed'),[],403);
         }
         //权限判断结束
-        $studioUuid = StudioApi::getIdByName($request->get('studio'));
+
         //查询标题是否重复
         /*
         if(Article::where('title',$request->get('title'))->where('owner',$studioUuid)->exists()){
             return $this->error(__('validation.exists'));
         }*/
+        $newArticle = new Article;
+        DB::transaction(function() use($user,$request,$newArticle){
+            $studioUuid = StudioApi::getIdByName($request->get('studio'));
+            //新建文章，加入文集必须都成功。否则回滚
+            $newArticle->id = app('snowflake')->id();
+            $newArticle->uid = Str::uuid();
+            $newArticle->title = $request->get('title');
+            $newArticle->lang = $request->get('lang');
+            $newArticle->owner = $studioUuid;
+            $newArticle->owner_id = $user['user_id'];
+            $newArticle->editor_id = $user['user_id'];
+            $newArticle->create_time = time()*1000;
+            $newArticle->modify_time = time()*1000;
+            $newArticle->save();
 
-        $newOne = new Article;
-        $newOne->id = app('snowflake')->id();
-        $newOne->uid = Str::uuid();
-        $newOne->title = $request->get('title');
-        $newOne->lang = $request->get('lang');
-        $newOne->owner = $studioUuid;
-        $newOne->owner_id = $user['user_id'];
-        $newOne->editor_id = $user['user_id'];
-        $newOne->create_time = time()*1000;
-        $newOne->modify_time = time()*1000;
-        $newOne->save();
-        return $this->ok($newOne);
+            if(Str::isUuid($request->get('anthologyId'))){
+                $articleMap = new ArticleCollection();
+                $articleMap->id = app('snowflake')->id();
+                $articleMap->article_id = $newArticle->uid;
+                $articleMap->collect_id = $request->get('anthologyId');
+                $articleMap->title = Article::find($newArticle->uid)->title;
+                $articleMap->level = 1;
+                $articleMap->save();
+            }
+        });
+        if(Str::isUuid($newArticle->uid)){
+            return $this->ok($newArticle);
+        }else{
+            return $this->error('fail');
+        }
+
     }
 
     /**
