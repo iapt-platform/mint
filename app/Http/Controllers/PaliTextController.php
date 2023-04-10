@@ -8,6 +8,7 @@ use App\Models\BookTitle;
 use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PaliTextController extends Controller
 {
@@ -196,6 +197,9 @@ class PaliTextController extends Controller
                 break;
             }
         if($chapters){
+            foreach ($chapters as $key => $value) {
+                $chapters[$key]->progress_line = Cache::get("/chapter_dynamic/{$value->book}/{$value->paragraph}/global");
+            }
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
             return $this->error("no data");
