@@ -23,6 +23,7 @@ export interface ChapterData {
   channel: IChannelApiData;
   studio: IStudio;
   progress: number;
+  progressLine?: number[];
   createdAt: string;
   updatedAt: string;
   hit: number;

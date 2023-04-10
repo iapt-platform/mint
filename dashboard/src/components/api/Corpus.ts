@@ -19,6 +19,7 @@ export interface IApiPaliChapterList {
   parent: number;
   chapter_strlen: number;
   path: string;
+  progress_line?: number[];
 }
 
 export interface IApiResponsePaliChapterList {
@@ -218,6 +219,7 @@ export interface IChapterData {
   like: number;
   status?: number;
   progress: number;
+  progress_line?: number[];
   created_at: string;
   updated_at: string;
 }

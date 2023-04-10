@@ -1,7 +1,7 @@
 import { Row, Col } from "antd";
 import { Typography } from "antd";
 import { API_HOST } from "../../request";
-
+import { TinyLine } from "@ant-design/plots";
 import TocPath from "./TocPath";
 
 const { Title, Link } = Typography;
@@ -13,6 +13,7 @@ export interface IPaliChapterData {
   Path: string;
   Book: number;
   Paragraph: number;
+  progressLine?: number[];
 }
 
 interface IWidget {
@@ -54,11 +55,17 @@ const Widget = ({ data, onTitleClick }: IWidget) => {
               </Row>
             </Col>
             <Col span={8}>
-              <img
-                src={`${API_HOST}/storage/images/chapter_dynamic/${data.Book}/${data.Paragraph}/globle.svg`}
-                width={200}
-                alt="章节动态"
-              />
+              {data.progressLine ? (
+                <TinyLine
+                  height={60}
+                  width={200}
+                  autoFit={false}
+                  data={data.progressLine}
+                  smooth={true}
+                />
+              ) : (
+                <></>
+              )}
             </Col>
           </Row>
           <Row>

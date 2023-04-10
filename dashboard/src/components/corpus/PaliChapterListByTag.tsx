@@ -26,6 +26,7 @@ const Widget = (prop: IWidgetPaliChapterListByTag) => {
           Path: item.path,
           Book: item.book,
           Paragraph: item.paragraph,
+          progressLine: item.progress_line,
         };
       });
       setTableData(newTree);
