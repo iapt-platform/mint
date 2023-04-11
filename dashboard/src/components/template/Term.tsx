@@ -3,9 +3,10 @@ import { Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
 
-import TermCreate, { IWidgetDictCreate } from "../term/TermCreate";
 import { command } from "../../reducers/command";
 import store from "../../store";
+import TermModal from "../term/TermModal";
+import { ITerm } from "../term/TermEdit";
 
 const { Text, Link } = Typography;
 
@@ -29,12 +30,9 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
   const editButton = (
     <Button
       onClick={() => {
-        const it: IWidgetDictCreate = {
-          studio: "string",
-          isCreate: true,
+        const it: ITerm = {
           word: word,
-          channel: channel,
-          type: "inline",
+          channelId: channel,
         };
         store.dispatch(command({ prop: it, type: "term" }));
       }}
@@ -57,7 +55,7 @@ const TermCtl = ({ id, word, meaning, meaning2, channel }: IWidgetTermCtl) => {
           editButton,
         ]}
       >
-        <div>{id ? "" : <TermCreate isCreate={true} word={word} />}</div>
+        <div>{id ? "" : <TermModal trigger="新建" word={word} />}</div>
       </ProCard>
     </>
   );

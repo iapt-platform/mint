@@ -3,12 +3,14 @@
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IWidgetDict } from "../components/dict/DictComponent";
-import { IWidgetDictCreate } from "../components/term/TermCreate";
+import { ITerm } from "../components/term/TermEdit";
 
 import type { RootState } from "../store";
 
+export interface ITermCommand {}
+
 export interface ICommand {
-  prop?: IWidgetDictCreate | IWidgetDict;
+  prop?: ITerm | IWidgetDict;
   type?: "term" | "dict";
 }
 interface IState {
