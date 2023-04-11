@@ -34,6 +34,14 @@ class TermVocabularyController extends Controller
             case "user":
                 break;
             case "community":
+                $localTerm = ChannelApi::getSysChannel(
+                    "_community_term_".strtolower($request->get('lang'))."_",
+                    "_community_term_en_"
+                );
+                if(!$localTerm){
+                    return $this->error('no term channel');
+                }
+                $table = $table->where('channal',$localTerm);
                 break;
         }
         $result = $table->get();
