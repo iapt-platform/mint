@@ -59,8 +59,6 @@ class UpgradeChapterDynamicWeekly extends Command
         $chapters = $table->get();
         $bar = $this->output->createProgressBar(count($chapters));
         foreach ($chapters as $key => $chapter) {
-            # code...
-            $max=0;
             #章节长度
             $paraEnd = PaliText::where('book',$chapter->book)
                             ->where('paragraph',$chapter->para)
