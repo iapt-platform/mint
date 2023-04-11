@@ -9,12 +9,12 @@ import BookTree from "../../../components/corpus/BookTree";
 import ChapterFilter from "../../../components/corpus/ChapterFilter";
 import ChapterList from "../../../components/corpus/ChapterList";
 import ChapterTagList from "../../../components/corpus/ChapterTagList";
+import ChapterTag from "../../../components/corpus/ChapterTag";
+import ChapterAppendTag from "../../../components/corpus/ChapterAppendTag";
 
 const { Title } = Typography;
 const Widget = () => {
-  // TODO
-  const defaultTags: string[] = [];
-  const [tags, setTags] = useState(defaultTags);
+  const [tags, setTags] = useState<string[]>([]);
   const [progress, setProgress] = useState(0.9);
   const [lang, setLang] = useState("zh");
   const [type, setType] = useState("translation");
@@ -57,7 +57,26 @@ const Widget = () => {
         <Title level={3}>
           <Space>
             <TagOutlined />
-            {tags}
+            {tags.map((item, id) => {
+              return (
+                <ChapterTag
+                  data={{
+                    key: item,
+                    title: item,
+                  }}
+                  key={id}
+                />
+              );
+            })}
+            <ChapterAppendTag
+              tags={tags}
+              progress={progress}
+              lang={lang}
+              type={type}
+              onTagClick={(tag: string) => {
+                setTags([...tags, tag]);
+              }}
+            />
           </Space>
         </Title>
 
