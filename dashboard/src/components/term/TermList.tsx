@@ -324,7 +324,7 @@ const Widget = ({ studioName, channelId }: IWidget) => {
               ref.current?.reload();
             }}
           />,
-          <TermExport channelId={channelId} />,
+          <TermExport channelId={channelId} studioName={studioName} />,
           <TermModal
             trigger={
               <Button key="button" icon={<PlusOutlined />} type="primary">

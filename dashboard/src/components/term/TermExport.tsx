@@ -27,6 +27,8 @@ const Widget = ({ channelId, studioName }: IWidget) => {
         let url = `/v2/terms-export?view=`;
         if (typeof channelId !== "undefined") {
           url += `channel&id=${channelId}`;
+        } else if (typeof studioName !== "undefined") {
+          url += `studio&name=${studioName}`;
         }
         setLoading(true);
         get<IExportResponse>(url)
