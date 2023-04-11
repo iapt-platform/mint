@@ -19,14 +19,15 @@ import {
 } from "../api/Term";
 import { get, post, put } from "../../request";
 
-interface ITerm {
+export interface ITerm {
   id?: string;
-  word: string;
-  tag: string;
-  meaning: string;
+  word?: string;
+  tag?: string;
+  meaning?: string;
   meaning2?: string[];
   note?: string;
   channel?: string[];
+  channelId?: string;
   lang?: string;
 }
 
@@ -48,6 +49,12 @@ const Widget = ({ id, word, channelId, studioName, onUpdate }: IWidget) => {
       autoFocusFirstInput={true}
       onFinish={async (values: ITerm) => {
         console.log(values.word);
+        if (
+          typeof values.word === "undefined" ||
+          typeof values.meaning === "undefined"
+        ) {
+          return;
+        }
         const newValue = {
           id: values.id,
           word: values.word,
