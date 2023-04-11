@@ -8,6 +8,7 @@ import TocStyleSelect from "./TocStyleSelect";
 import { IPaliBookListResponse } from "../api/Corpus";
 import { ITocTree } from "./BookTreeList";
 import { PaliToEn } from "../../utils";
+import PaliText from "../template/Wbw/PaliText";
 
 const { Text } = Typography;
 
@@ -127,6 +128,9 @@ const Widget = ({
           }
         }}
         treeData={treeData}
+        titleRender={(node: ITocTree) => {
+          return <PaliText text={node.title} />;
+        }}
       />
     </Space>
   );

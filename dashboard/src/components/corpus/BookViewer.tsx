@@ -4,6 +4,7 @@ import PaliChapterChannelList from "./PaliChapterChannelList";
 import PaliChapterListByPara from "./PaliChapterListByPara";
 import PaliChapterHead from "./PaliChapterHead";
 import { IChapterClickEvent } from "./PaliChapterList";
+import { Tabs } from "antd";
 
 export interface IChapter {
   book: number;
@@ -15,31 +16,46 @@ interface IWidget {
   onChange?: Function;
 }
 const Widget = ({ chapter, onChange }: IWidget) => {
-  const [currChapter, setCurrChpater] = useState(chapter);
+  const [currChapter, setCurrChapter] = useState(chapter);
   useEffect(() => {
     if (typeof onChange !== "undefined") {
       onChange(currChapter);
     }
-  }, [currChapter]);
+  }, [currChapter, onChange]);
 
   useEffect(() => {
-    setCurrChpater(chapter);
+    setCurrChapter(chapter);
   }, [chapter]);
   return (
     <>
       <PaliChapterHead
         onChange={(e: IChapter) => {
-          setCurrChpater(e);
+          setCurrChapter(e);
         }}
         para={currChapter}
       />
-      <PaliChapterChannelList para={currChapter} />
-      <PaliChapterListByPara
-        chapter={currChapter}
-        onChapterClick={(e: IChapterClickEvent) => {
-          setCurrChpater({ book: e.para.Book, para: e.para.Paragraph });
-          console.log("PaliChapterListByPara", "onchange", e);
-        }}
+      <Tabs
+        size="small"
+        items={[
+          {
+            label: `目录`,
+            key: "toc",
+            children: (
+              <PaliChapterListByPara
+                chapter={currChapter}
+                onChapterClick={(e: IChapterClickEvent) => {
+                  setCurrChapter({ book: e.para.Book, para: e.para.Paragraph });
+                  console.log("PaliChapterListByPara", "onchange", e);
+                }}
+              />
+            ),
+          },
+          {
+            label: `资源`,
+            key: "res",
+            children: <PaliChapterChannelList para={currChapter} />,
+          },
+        ]}
       />
     </>
   );

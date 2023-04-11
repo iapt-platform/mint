@@ -101,6 +101,13 @@ const init = () => {
       }
     }
   );
+  get<ITermResponse>(
+    `/v2/term-vocabulary?view=community&lang=` + getLang()
+  ).then((json) => {
+    if (json.ok) {
+      store.dispatch(push(json.data.rows));
+    }
+  });
   //获取nissaya ending 表
   get<INissayaEndingResponse>(`/v2/nissaya-ending-vocabulary?lang=my`).then(
     (json) => {

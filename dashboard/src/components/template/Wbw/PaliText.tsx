@@ -7,6 +7,7 @@ import { roman_to_my, my_to_roman } from "../../code/my";
 import { roman_to_si } from "../../code/si";
 import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
+import { getTerm } from "../../../reducers/term-vocabulary";
 
 interface IWidget {
   text?: string;
@@ -16,6 +17,15 @@ interface IWidget {
 const Widget = ({ text, code = "roman", primary = true }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
+  const terms = useAppSelector(getTerm);
+
+  useEffect(() => {
+    const lowerCase = paliText?.toLowerCase();
+    const localName = terms?.find((item) => item.word === lowerCase)?.meaning;
+    if (localName) {
+      setPaliText(localName);
+    }
+  }, [paliText, terms]);
 
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
