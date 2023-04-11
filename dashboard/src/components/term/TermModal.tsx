@@ -48,7 +48,12 @@ const Widget = ({
           word={word}
           studioName={studioName}
           channelId={channelId}
-          onUpdate={handleOk}
+          onUpdate={() => {
+            setIsModalOpen(false);
+            if (typeof onUpdate !== "undefined") {
+              onUpdate();
+            }
+          }}
         />
       </Modal>
     </>
