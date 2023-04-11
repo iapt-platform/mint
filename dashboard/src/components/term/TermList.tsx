@@ -13,6 +13,7 @@ import {
   ExclamationCircleOutlined,
   DeleteOutlined,
   ImportOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -20,12 +21,12 @@ import {
   ITermListResponse,
 } from "../../components/api/Term";
 import { delete_2, get } from "../../request";
-import TermCreate from "../../components/term/TermCreate";
 import { IDeleteResponse } from "../../components/api/Article";
 import { useRef } from "react";
 import { IChannel } from "../channel/Channel";
 import TermExport from "./TermExport";
 import DataImport from "../admin/relation/DataImport";
+import TermModal from "./TermModal";
 
 const { Text } = Typography;
 
@@ -208,12 +209,7 @@ const Widget = ({ studioName, channelId }: IWidget) => {
                     },
                   }}
                 >
-                  <TermCreate
-                    studio={studioName}
-                    channel={channelId}
-                    isCreate={false}
-                    wordId={row.id}
-                  />
+                  <TermModal trigger={"编辑"} id={row.id} />
                 </Dropdown.Button>,
               ];
             },
@@ -329,10 +325,14 @@ const Widget = ({ studioName, channelId }: IWidget) => {
             }}
           />,
           <TermExport channelId={channelId} />,
-          <TermCreate
-            isCreate={true}
-            studio={studioName}
-            channel={channelId}
+          <TermModal
+            trigger={
+              <Button key="button" icon={<PlusOutlined />} type="primary">
+                {intl.formatMessage({ id: "buttons.create" })}
+              </Button>
+            }
+            studioName={studioName}
+            channelId={channelId}
             onUpdate={() => ref.current?.reload()}
           />,
         ]}
