@@ -1,15 +1,11 @@
-import { message, Tag } from "antd";
+import { message } from "antd";
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
 import { IApiChapterTag, IApiResponseChapterTagList } from "../api/Corpus";
 
-export interface ITagData {
-  title: string;
-  key: string;
-  color?: string;
-  description?: string;
-}
+import ChapterTag, { ITagData } from "./ChapterTag";
+
 interface IWidget {
   max?: number;
   onTagClick?: Function;
@@ -30,7 +26,8 @@ const Widget = ({ max, onTagClick }: IWidget) => {
         let newTags: ITagData[] = tags.map((item) => {
           return {
             key: item.name,
-            title: `${item.name}(${item.count})`,
+            title: item.name,
+            count: item.count,
           };
         });
         setTableData(newTags);
@@ -47,17 +44,15 @@ const Widget = ({ max, onTagClick }: IWidget) => {
     <>
       {tableData.map((item, id) => {
         return (
-          <Tag
+          <ChapterTag
+            data={item}
             key={id}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
+            onTagClick={(key: string) => {
               if (typeof onTagClick !== "undefined") {
-                onTagClick(item.key);
+                onTagClick(key);
               }
             }}
-          >
-            {item.title}
-          </Tag>
+          />
         );
       })}
     </>

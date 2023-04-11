@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { Button, List, Popover } from "antd";
+import { Button, Popover } from "antd";
 
 import { get } from "../../request";
-import { IChapterData, IChapterListResponse } from "../api/Corpus";
-import ChapterCard from "./ChapterCard";
-import type { ChapterData } from "./ChapterCard";
 import type { ChannelFilterProps } from "../channel/ChannelList";
 import { ITagData } from "./ChapterTag";
 import TagArea from "../tag/TagArea";

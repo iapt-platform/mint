@@ -1,5 +1,4 @@
-import { Tag } from "antd";
-import { ITagData } from "../corpus/ChapterTagList";
+import ChapterTag, { ITagData } from "../corpus/ChapterTag";
 
 interface IWidget {
   data: ITagData[];
@@ -9,18 +8,16 @@ const Widget = ({ data, onTagClick }: IWidget) => {
   // TODO
   const tags = data.map((item, id) => {
     return (
-      <Tag
+      <ChapterTag
         color="green"
         key={id}
-        style={{ cursor: "pointer" }}
-        onClick={() => {
+        data={item}
+        onTagClick={(key: string) => {
           if (typeof onTagClick !== "undefined") {
-            onTagClick(item.key);
+            onTagClick(key);
           }
         }}
-      >
-        {item.title}
-      </Tag>
+      />
     );
   });
   return <>{tags}</>;

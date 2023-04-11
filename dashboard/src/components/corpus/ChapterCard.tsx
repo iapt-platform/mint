@@ -8,7 +8,7 @@ import TagArea from "../tag/TagArea";
 import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import { IStudio } from "../auth/StudioName";
-import { ITagData } from "./ChapterTagList";
+import { ITagData } from "./ChapterTag";
 
 const { Title, Paragraph, Text } = Typography;
 
