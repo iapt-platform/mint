@@ -1,7 +1,6 @@
 const items = {
   "term.fields.sn.label": "序号",
   "term.fields.word.label": "词头",
-  "term.message.meaning.required": "请输入词头",
   "term.fields.description.label": "标签",
   "term.fields.description.tooltip":
     "单词说明，可以用来区分相同拼写的不同单词。",
