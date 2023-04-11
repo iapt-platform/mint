@@ -62,6 +62,7 @@ class UpgradeDaily extends Command
         #译文进度
         $this->call('upgrade:progress');
         $this->call('upgrade:progresschapter');
+        $this->call('upgrade:community.term',['zh-Hans']);
 
         # 逐词译数据库分析
         $this->call('upgrade:wbwanalyses');
