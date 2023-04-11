@@ -62,8 +62,7 @@ class UpgradeDaily extends Command
         #译文进度
         $this->call('upgrade:progress');
         $this->call('upgrade:progresschapter');
-        # 段落更新图
-        $this->call('upgrade:chapterdynamic');
+
         # 逐词译数据库分析
         $this->call('upgrade:wbwanalyses');
 
