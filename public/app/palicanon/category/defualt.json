@@ -22,7 +22,7 @@
                         ]
                     },
                     {
-                        "name":"Majjhima Nikāya",
+                        "name":"Majjhimanikāya",
                         "tag":["sutta","majjhimanikāya"],
                         "children":[
                             {
@@ -312,7 +312,7 @@
                         "tag":[],
 						"children":[
 							{
-								"name":"Abhidhammatthasaṅgaho",
+								"name":"Abhidhammatthasaṅgaha",
 								"tag":["abhidhamma","abhidhammatthasaṅgaha"]
 							},
 							{
@@ -352,20 +352,12 @@
                 "tag":["añña","visuddhimagga"],
                 "children":[
                     {
-                        "name":"Visuddhimagga-1",
-                        "tag":["añña","visuddhimagga","aṭṭhakathā","paṭhamo bhāgo"]
+                        "name":"Visuddhimagga",
+                        "tag":["añña","visuddhimagga","aṭṭhakathā"]
                     },
                     {
-                        "name":"Visuddhimagga-2",
-                        "tag":["añña","visuddhimagga","aṭṭhakathā","dutiyo bhāgo"]
-                    },
-                    {
-                        "name":"Visuddhimagga-mahāṭīkā-1",
-                        "tag":["añña","visuddhimagga","ṭīkā","paṭhamo bhāgo"]
-                    },
-                    {
-                        "name":"Visuddhimagga-mahāṭīkā-2",
-                        "tag":["añña","visuddhimagga","ṭīkā","dutiyo bhāgo"]
+                        "name":"Visuddhimagga-mahāṭīkā",
+                        "tag":["añña","visuddhimagga","ṭīkā","visuddhimaggamahāṭīkā"]
                     },
                     {
                         "name":"Visuddhimagga-nidānakathā",
