@@ -209,7 +209,13 @@ const Widget = ({ studioName, channelId }: IWidget) => {
                     },
                   }}
                 >
-                  <TermModal trigger={"编辑"} id={row.id} />
+                  <TermModal
+                    trigger={"编辑"}
+                    id={row.id}
+                    studioName={studioName}
+                    channelId={channelId}
+                    onUpdate={() => ref.current?.reload()}
+                  />
                 </Dropdown.Button>,
               ];
             },
