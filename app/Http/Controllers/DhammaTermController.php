@@ -76,6 +76,7 @@ class DhammaTermController extends Controller
                     "meaningCount"=>$meaningCount,
                     "studioChannels"=>$studioChannels,
                     "language"=>$currChannel->lang,
+                    'studio'=>StudioApi::getById($currChannel->owner_uid),
                 ]);
                 break;
             case 'studio':
@@ -377,7 +378,8 @@ class DhammaTermController extends Controller
                 break;
             case 'studio':
                 # code...
-                $rows = DhammaTerm::where('channal',$request->get("name"))->cursor();
+                $studioId = StudioApi::getIdByName($request->get("name"));
+                $rows = DhammaTerm::where('owner',$studioId)->cursor();
                 break;
             default:
                 $this->error('no view');
