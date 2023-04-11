@@ -11,7 +11,7 @@ export interface ITermDataRequest {
   note?: string;
   channal?: string;
   studioName?: string;
-  language: string;
+  language?: string;
 }
 export interface ITermDataResponse {
   id: number;
@@ -56,6 +56,7 @@ export interface ITermCreate {
   meaningCount: IMeaningCount[];
   studioChannels: IStudioChannel[];
   language: string;
+  studio: IStudio;
 }
 export interface ITermCreateResponse {
   ok: boolean;
