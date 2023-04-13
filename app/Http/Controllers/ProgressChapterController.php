@@ -26,21 +26,12 @@ class ProgressChapterController extends Controller
     public function index(Request $request)
     {
 
-        if($request->get('progress')){
-            $minProgress = (float)$request->get('progress');
-        }else{
-            $minProgress = 0.8;
-        }
-        if($request->get('offset')){
-            $offset = (int)$request->get('offset');
-        }else{
-            $offset = 0;
-        }
-        if($request->has('limit')){
-            $limit = (int)$request->get('limit');
-        }else{
-            $limit = 20;
-        }
+        $minProgress = (float)$request->get('progress',0.8);
+
+        $offset = (int)$request->get('offset',0);
+
+        $limit = (int)$request->get('limit',20);
+
         $channel_id = $request->get('channel');
 
         //
@@ -243,6 +234,8 @@ class ProgressChapterController extends Controller
                 $pc =(new ProgressChapter)->getTable();
                 $tg = (new Tag)->getTable();
                 $pt = (new PaliText)->getTable();
+
+                //标签过滤
                 if($request->get('tags') && $request->get('tags')!==''){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
@@ -266,19 +259,17 @@ class ProgressChapterController extends Controller
                 }else{
                     $channel = "";
                 }
-
-
-
-
+                //完成度过滤
                 $param[] = $minProgress;
 
+                //语言过滤
                 if(!empty($request->get('lang'))){
                     $whereLang = " and pc.lang = ? ";
                     $param[] = $request->get('lang');
                 }else{
                     $whereLang = "   ";
                 }
-
+                //channel type过滤
 				if($request->has('channel_type') && !empty($request->get('channel_type'))){
 					$channel_type = "and ch.type = ? ";
 					$param[] = $request->get('channel_type');
@@ -361,6 +352,58 @@ class ProgressChapterController extends Controller
                 break;
             case 'top':
             break;
+            case 'search':
+                $key = $request->get('key');
+                $table = ProgressChapter::where('title','like',"%{$key}%");
+                //获取记录总条数
+                $all_count = $table->count();
+                //处理排序
+                if($request->has("order") && $request->has("dir")){
+                    $table = $table->orderBy($request->get("order"),$request->get("dir"));
+                }else{
+                    //默认排序
+                    $table = $table->orderBy('updated_at','desc');
+                }
+                //处理分页
+                if($request->has("limit")){
+                    if($request->has("offset")){
+                        $offset = $request->get("offset");
+                    }else{
+                        $offset = 0;
+                    }
+                    $table = $table->skip($offset)->take($request->get("limit"));
+                }
+                //获取数据
+                $chapters = $table->get();
+                //TODO 移到resource
+                foreach ($chapters as $key => $chapter) {
+                    # code...
+                    $chapter->toc = PaliText::where('book',$chapter->book)->where('paragraph',$chapter->para)->value('toc');
+                    $chapter->path = PaliText::where('book',$chapter->book)->where('paragraph',$chapter->para)->value('path');
+                    $chapter->channel = Channel::where('uid',$chapter->channel_id)->select(['name','owner_uid'])->first();
+                    if($chapter->channel){
+                        $chapter->studio = StudioApi::getById($chapter->channel["owner_uid"]);
+                    }else{
+                        $chapter->channel = [
+                            'name'=>"unknown",
+                            'owner_uid'=>"unknown",
+                        ];
+                        $chapter->studio = [
+                            'id'=>"",
+                            'nickName'=>"unknown",
+                            'realName'=>"unknown",
+                            'avatar'=>'',
+                        ];
+                    }
+
+                    $chapter->views = View::where("target_id",$chapter->uid)->count();
+                    $chapter->likes = Like::where(["type"=>"like","target_id"=>$chapter->uid])->count();
+                    $chapter->tags = TagMap::where("anchor_id",$chapter->uid)
+                                                ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
+                                                ->select(['tags.id','tags.name','tags.description'])
+                                                ->get();
+                }
+                break;
         }
 
         if($chapters){
