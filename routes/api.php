@@ -88,7 +88,6 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('anthology',CollectionController::class);
     Route::get('anthology-my-number', [CollectionController::class, 'showMyNumber']);
     Route::apiResource('dict',DictController::class);
-    Route::apiResource('tag',TagController::class);
     Route::apiResource('article',ArticleController::class);
     Route::get('article-my-number', [ArticleController::class, 'showMyNumber']);
     Route::apiResource('group',GroupController::class);
