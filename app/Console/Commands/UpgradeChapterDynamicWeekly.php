@@ -77,10 +77,13 @@ class UpgradeChapterDynamicWeekly extends Command
                              ->count();
                 $progress[] = $count;
             }
-            Cache::put("/chapter_dynamic/{$chapter->book}/{$chapter->para}/global",$progress,3600*24*7);
+            $key="/chapter_dynamic/{$chapter->book}/{$chapter->para}/global";
+            Cache::put($key,$progress,3600*24*7);
             $bar->advance();
 
             if($this->option('test')){
+                $this->info("key:{$key}");
+                print_r($progress);
                 break; //调试代码
             }
         }
@@ -122,10 +125,13 @@ class UpgradeChapterDynamicWeekly extends Command
                              ->count();
                 $progress[] = $count;
             }
-            Cache::put("/chapter_dynamic/{$chapter->book}/{$chapter->para}/ch_{$chapter->channel_id}",$progress,3600*24*7);
+            $key="/chapter_dynamic/{$chapter->book}/{$chapter->para}/ch_{$chapter->channel_id}";
+            Cache::put($key,$progress,3600*24*7);
             $bar->advance();
 
             if($this->option('test')){
+                $this->info("key:{$key}");
+                print_r($progress);
                 break; //调试代码
             }
         }
