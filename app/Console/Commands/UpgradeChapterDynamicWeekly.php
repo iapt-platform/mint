@@ -83,7 +83,9 @@ class UpgradeChapterDynamicWeekly extends Command
 
             if($this->option('test')){
                 $this->info("key:{$key}");
-                print_r($progress);
+                if(Cache::has($key)){
+                    $this->info('has key '.$key);
+                }
                 break; //调试代码
             }
         }
@@ -131,7 +133,9 @@ class UpgradeChapterDynamicWeekly extends Command
 
             if($this->option('test')){
                 $this->info("key:{$key}");
-                print_r($progress);
+                if(Cache::has($key)){
+                    $this->info('has key '.$key);
+                }
                 break; //调试代码
             }
         }
