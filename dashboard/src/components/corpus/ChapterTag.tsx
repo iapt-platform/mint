@@ -12,14 +12,42 @@ export interface ITagData {
 interface IWidget {
   data?: ITagData;
   color?: string;
+  closable?: boolean;
+  onTagClose?: Function;
   onTagClick?: Function;
 }
-const Widget = ({ data, color, onTagClick }: IWidget) => {
+const Widget = ({
+  data,
+  color,
+  closable = false,
+  onTagClick,
+  onTagClose,
+}: IWidget) => {
   return (
     <Tooltip placement="top" title={data?.title}>
       <Tag
-        color={color}
-        style={{ cursor: "pointer" }}
+        color={
+          data?.title === "sutta"
+            ? "gold"
+            : data?.title === "vinaya"
+            ? "green"
+            : data?.title === "abhidhamma"
+            ? "blue"
+            : data?.title === "mūla"
+            ? "#c4b30c"
+            : data?.title === "aṭṭhakathā"
+            ? "#79bb5c"
+            : data?.title === "ṭīkā"
+            ? "#2db7f5"
+            : color
+        }
+        closable={closable}
+        onClose={() => {
+          if (typeof onTagClose !== "undefined") {
+            onTagClose(data?.key);
+          }
+        }}
+        style={{ cursor: "pointer", borderRadius: 6 }}
         onClick={() => {
           if (typeof onTagClick !== "undefined") {
             onTagClick(data?.key);

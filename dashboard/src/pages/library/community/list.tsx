@@ -15,6 +15,7 @@ import ChapterAppendTag from "../../../components/corpus/ChapterAppendTag";
 const { Title } = Typography;
 const Widget = () => {
   const [tags, setTags] = useState<string[]>([]);
+  const [searchKey, setSearchKey] = useState<string>();
   const [progress, setProgress] = useState(0.9);
   const [lang, setLang] = useState("zh");
   const [type, setType] = useState("translation");
@@ -39,6 +40,10 @@ const Widget = () => {
       </Col>
       <Col xs={24} sm={18} md={14}>
         <ChapterFilter
+          onSearch={(value: string) => {
+            console.log("search change", value);
+            setSearchKey(value);
+          }}
           onProgressChange={(value: string) => {
             console.log("progress change", value);
             setProgress(parseFloat(value));
@@ -65,6 +70,11 @@ const Widget = () => {
                     title: item,
                   }}
                   key={id}
+                  closable={true}
+                  onTagClose={() => {
+                    console.log("tag change");
+                    setTags(tags.filter((x) => x !== item));
+                  }}
                 />
               );
             })}
@@ -74,6 +84,7 @@ const Widget = () => {
               lang={lang}
               type={type}
               onTagClick={(tag: string) => {
+                console.log("tag change");
                 setTags([...tags, tag]);
               }}
             />
@@ -81,21 +92,18 @@ const Widget = () => {
         </Title>
 
         <ChapterList
+          searchKey={searchKey}
           tags={tags}
           progress={progress}
           lang={lang}
           type={type}
           onTagClick={(tag: string) => {
+            console.log("tag change");
             setTags([tag]);
           }}
         />
       </Col>
-      <Col xs={0} sm={0} md={5}>
-        <ChapterTagList
-          onTagClick={(key: string) => {
-            setTags([key]);
-          }}
-        />
+      <Col xs={0} sm={0} md={5} style={{ padding: 5 }}>
         <ChannelList />
       </Col>
     </Row>
