@@ -13,10 +13,12 @@ interface IWidget {
   lang?: string;
   type?: string;
   tags?: string[];
+  searchKey?: string;
   onTagClick?: Function;
 }
 
 const Widget = ({
+  searchKey,
   progress = 0.9,
   lang = "zh",
   type = "translation",
@@ -27,19 +29,16 @@ const Widget = ({
   const [total, setTotal] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   useEffect(() => {
-    fetchData(
-      { chapterProgress: progress, lang: lang, channelType: type },
-      tags,
-      currPage
-    );
-  }, [progress, lang, type, tags, currPage]);
-
-  function fetchData(filter: ChannelFilterProps, tags: string[], page = 1) {
-    const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
-    const offset = (page - 1) * 20;
-    get<IChapterListResponse>(
-      `/v2/progress?view=chapter${strTags}&offset=${offset}&progress=${filter.chapterProgress}&lang=${filter.lang}&channel_type=${filter.channelType}`
-    ).then((json) => {
+    let url: string;
+    if (typeof searchKey === "string" && searchKey.length > 0) {
+      url = `/v2/progress?view=search&key=${searchKey}`;
+    } else {
+      const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
+      const offset = (currPage - 1) * 20;
+      url = `/v2/progress?view=chapter${strTags}&offset=${offset}&progress=${progress}&lang=${lang}&channel_type=${type}`;
+    }
+    console.log("url", url);
+    get<IChapterListResponse>(url).then((json) => {
       console.log("chapter list ajax", json);
       if (json.ok) {
         let newTree: ChapterData[] = json.data.rows.map(
@@ -76,7 +75,7 @@ const Widget = ({
         setTableData([]);
       }
     });
-  }
+  }, [progress, lang, type, tags, currPage, searchKey]);
 
   return (
     <List
