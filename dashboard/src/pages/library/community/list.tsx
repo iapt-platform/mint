@@ -26,6 +26,7 @@ const Widget = () => {
         <Affix offsetTop={0}>
           <div style={{ height: "100vh", overflowY: "auto" }}>
             <BookTree
+              multiSelectable={false}
               onRootChange={(root: string) =>
                 navigate("/palicanon/list/" + root)
               }

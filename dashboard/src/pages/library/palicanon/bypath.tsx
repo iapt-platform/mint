@@ -14,7 +14,7 @@ import { IChapterClickEvent } from "../../../components/corpus/PaliChapterList";
 const Widget = () => {
   const { root, path, tag } = useParams();
   const navigate = useNavigate();
-  const defaultPath: string[] = path ? path.split("-") : [];
+  const defaultPath: string[] = path ? path.split("_") : [];
   const [bookRoot, setBookRoot] = useState(root);
   const [bookPath, setBookPath] = useState(defaultPath);
   const [bookTag, setBookTag] = useState<string[]>([]);
@@ -33,7 +33,7 @@ const Widget = () => {
     } else {
       currRoot = root;
     }
-    const arrPath = path ? path.split("-") : [];
+    const arrPath = path ? path.split("_") : [];
     setBookPath(arrPath);
     setBookRoot(currRoot);
     console.log("index-load", root);
@@ -50,6 +50,7 @@ const Widget = () => {
               <Affix offsetTop={0}>
                 <div style={{ height: "100vh", overflowY: "auto" }}>
                   <BookTree
+                    multiSelectable={false}
                     root={bookRoot}
                     path={bookPath}
                     onRootChange={(root: string) =>
@@ -58,7 +59,7 @@ const Widget = () => {
                     onChange={(key: string[], path: string[]) => {
                       navigate(
                         `/palicanon/list/${bookRoot}/${path
-                          .join("-")
+                          .join("_")
                           .toLowerCase()}`
                       );
                       console.log("key", key);
@@ -77,8 +78,7 @@ const Widget = () => {
                 root={bookRoot}
                 path={bookPath}
                 onChange={(e: IEventBookTreeOnchange) => {
-                  navigate(`/palicanon/list/${bookRoot}/${e.path.join("-")}`);
-                  message.info(e.tag.join());
+                  navigate(`/palicanon/list/${bookRoot}/${e.path.join("_")}`);
                   setBookTag(e.tag);
                 }}
               />
