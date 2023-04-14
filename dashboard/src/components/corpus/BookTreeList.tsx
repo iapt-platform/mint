@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import { List, Breadcrumb, Card, Row, Col } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
-import { PaliToEn } from "../../utils";
 import { get } from "../../request";
 import { IPaliBookListResponse } from "../api/Corpus";
 import TocStyleSelect from "./TocStyleSelect";
 import FullSearchInput from "../fts/FullSearchInput";
+import PaliText from "../template/Wbw/PaliText";
 
 export interface IEventBookTreeOnchange {
   path: string[];
@@ -31,13 +31,21 @@ interface IWidgetBookTreeList {
   tags?: string[];
   onChange?: Function;
 }
-const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
-  console.log("path", path);
-  let currRoot = root;
+const Widget = ({
+  root = "default",
+  path,
+  tags,
+  onChange,
+}: IWidgetBookTreeList) => {
   const [tocData, setTocData] = useState<ITocTree[]>([]);
   const [currData, setCurrData] = useState<ITocTree[]>([]);
   const [bookPath, setBookPath] = useState<pathData[]>([]);
+  const [currRoot, setCurrRoot] = useState<string>(root);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setCurrRoot(root);
+  }, [root]);
 
   useEffect(() => {
     const newPath: pathData[] = path
@@ -46,17 +54,35 @@ const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
         })
       : [];
     setBookPath(newPath);
-    //TODO 找到路径
     const currPath = getListCurrRoot(tocData, newPath);
-    console.log("curr path", currPath);
     setCurrData(currPath);
-  }, [path]);
+  }, [path, tocData]);
 
   useEffect(() => {
-    if (root) {
-      fetchBookTree(root);
+    function treeMap(params: IPaliBookListResponse): ITocTree {
+      return {
+        title: params.name,
+        dir: params.name.toLowerCase(),
+        key: params.tag.join(),
+        tag: params.tag,
+        children: Array.isArray(params.children)
+          ? params.children.map(treeMap)
+          : [],
+      };
     }
-  }, [root]);
+    if (currRoot) {
+      get<IPaliBookListResponse[]>(`/v2/palibook/${currRoot}`).then((json) => {
+        console.log("Book List ajax", json);
+        const treeData = json.map(treeMap);
+        setTocData(treeData);
+      });
+    }
+  }, [currRoot]);
+
+  useEffect(() => {
+    const currPath = getListCurrRoot(tocData, bookPath);
+    setCurrData(currPath);
+  }, [bookPath, tocData]);
 
   function getListCurrRoot(
     allTocData: ITocTree[],
@@ -84,48 +110,25 @@ const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
     }
     return curr;
   }
-  function fetchBookTree(category: string) {
-    function treeMap(params: IPaliBookListResponse): ITocTree {
-      return {
-        title: params.name,
-        dir: PaliToEn(params.name),
-        key: params.tag.join(),
-        tag: params.tag,
-        children: Array.isArray(params.children)
-          ? params.children.map(treeMap)
-          : [],
-      };
-    }
-
-    get<IPaliBookListResponse[]>(`/v2/palibook/${category}`).then((json) => {
-      console.log("ajax", json);
-      const treeData = json.map(treeMap);
-      setTocData(treeData);
-      const currPath = getListCurrRoot(treeData, bookPath);
-      console.log("curr path", currPath);
-      setCurrData(currPath);
-    });
-  }
 
   function pushDir(dir: string, title: string, tag: string[]): void {
-    const newPath: string =
-      bookPath.length > 0 ? bookPath.slice(-1)[0].to + "-" + dir : dir;
+    console.log("push dir", dir, title);
+
+    const newPath: string = [...bookPath.map((item) => item.title), dir].join(
+      "_"
+    );
     bookPath.push({ to: newPath, title: title });
+    console.log("book Path", bookPath);
+
     setBookPath(bookPath);
     if (typeof onChange !== "undefined") {
       onChange({
-        path: newPath.split("-"),
+        path: newPath.split("_"),
         tag: tag,
       });
     }
   }
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-    fetchBookTree(value);
-    currRoot = value;
-    setBookPath([]);
-  };
-  // TODO
+
   return (
     <>
       <Row style={{ padding: 10 }}>
@@ -144,7 +147,7 @@ const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
               return (
                 <Breadcrumb.Item key={id}>
                   <Link to={`/palicanon/list/${currRoot}/${item.to}`}>
-                    {item.title}
+                    <PaliText text={item.title} />
                   </Link>
                 </Breadcrumb.Item>
               );
@@ -158,21 +161,29 @@ const Widget = ({ root, path, tags, onChange }: IWidgetBookTreeList) => {
           />
         </Col>
         <Col xs={6} sm={0} style={{ textAlign: "right" }}>
-          <TocStyleSelect style={root} onChange={handleChange} />
+          <TocStyleSelect
+            style={currRoot}
+            onChange={(value: string) => {
+              setCurrRoot(value);
+            }}
+          />
         </Col>
       </Row>
-      <Card>
+      <Card style={{ display: currData.length === 0 ? "none" : "block" }}>
         <List
           dataSource={currData}
           renderItem={(item) => (
             <List.Item
               onClick={() => {
-                console.log("click", item.title);
                 setCurrData(item.children);
-                pushDir(item.dir, item.title, item.tag);
+                pushDir(
+                  item.title.toLowerCase(),
+                  item.title.toLowerCase(),
+                  item.tag
+                );
               }}
             >
-              {item.title}
+              <PaliText text={item.title} />
             </List.Item>
           )}
         />
