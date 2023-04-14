@@ -16,6 +16,7 @@ interface IWidgetBookTree {
   root?: string;
   path?: string[];
   multiSelect?: boolean;
+  multiSelectable?: boolean;
   onChange?: Function;
   onSelect?: Function;
   onRootChange?: Function;
@@ -24,6 +25,7 @@ const Widget = ({
   root = "default",
   path,
   multiSelect = false,
+  multiSelectable = true,
   onChange,
   onSelect,
   onRootChange,
@@ -81,6 +83,7 @@ const Widget = ({
           }}
         />
       </Space>
+
       <Space style={{ display: "flex", justifyContent: "space-between" }}>
         <Button
           onClick={() => {
@@ -92,18 +95,20 @@ const Widget = ({
         >
           清除选择
         </Button>
-
-        <span>
-          {"多选"}
-          <Switch
-            size="small"
-            defaultChecked={multiSelect}
-            onChange={(checked) => {
-              setIsMultiSelect(checked);
-            }}
-          />
-        </span>
+        {multiSelectable ? (
+          <Space>
+            {"多选"}
+            <Switch
+              size="small"
+              defaultChecked={multiSelect}
+              onChange={(checked) => {
+                setIsMultiSelect(checked);
+              }}
+            />
+          </Space>
+        ) : undefined}
       </Space>
+
       <Tree
         selectedKeys={selectedKeys}
         multiple={isMultiSelect}
