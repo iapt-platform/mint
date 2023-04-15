@@ -2,7 +2,7 @@
 import { Space, Typography } from "antd";
 
 import type { IWordByDict } from "./WordCardByDict";
-import IWidgetGrammarPop from "./GrammarPop";
+import GrammarPop from "./GrammarPop";
 import WordCardByDict from "./WordCardByDict";
 import { useIntl } from "react-intl";
 
@@ -34,7 +34,7 @@ const Widget = ({ data }: IWidgetWordCard) => {
     return element.split("|").map((it, id) => {
       if (it.slice(0, 1) === "@") {
         const [showText, keyText] = it.slice(1).split("-");
-        return <IWidgetGrammarPop key={id} gid={keyText} text={showText} />;
+        return <GrammarPop key={id} gid={keyText} text={showText} />;
       } else {
         return <span key={id * 200}>{it}</span>;
       }
@@ -60,9 +60,9 @@ const Widget = ({ data }: IWidgetWordCard) => {
             const grammarGuide = grammar.map((item, id) => {
               const strCase = item.replaceAll(".", "");
               return (
-                <IWidgetGrammarPop
+                <GrammarPop
                   key={id}
-                  gid={`grammar_${strCase}`}
+                  gid={strCase}
                   text={intl.formatMessage({
                     id: `dict.fields.type.${strCase}.label`,
                   })}
