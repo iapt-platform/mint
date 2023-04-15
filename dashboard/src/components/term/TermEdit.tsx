@@ -122,6 +122,9 @@ const Widget = ({ id, word, channelId, studioName, onUpdate }: IWidget) => {
             meaning2: meaning2,
             note: res.data.note,
             lang: res.data.language,
+            channel: res.data.channel
+              ? [res.data.studio.id, res.data.channel?.id]
+              : undefined,
           };
         } else if (typeof channelId !== "undefined") {
           //在channel新建
