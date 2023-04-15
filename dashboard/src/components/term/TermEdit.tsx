@@ -5,7 +5,6 @@ import {
   ProFormInstance,
   ProFormSelect,
   ProFormText,
-  ProFormTextArea,
 } from "@ant-design/pro-components";
 
 import LangSelect from "../general/LangSelect";
