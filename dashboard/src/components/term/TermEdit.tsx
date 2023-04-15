@@ -18,6 +18,7 @@ import {
   ITermResponse,
 } from "../api/Term";
 import { get, post, put } from "../../request";
+import MDEditor from "@uiw/react-md-editor";
 
 export interface ITerm {
   id?: string;
@@ -245,13 +246,13 @@ const Widget = ({ id, word, channelId, studioName, onUpdate }: IWidget) => {
         <LangSelect />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormTextArea
+        <Form.Item
+          style={{ width: "100%" }}
           name="note"
-          width="xl"
-          label={intl.formatMessage({
-            id: "forms.fields.note.label",
-          })}
-        />
+          label={intl.formatMessage({ id: "forms.fields.note.label" })}
+        >
+          <MDEditor />
+        </Form.Item>
       </ProForm.Group>
     </ProForm>
   );
