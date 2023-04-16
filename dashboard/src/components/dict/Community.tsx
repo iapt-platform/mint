@@ -41,7 +41,8 @@ const Widget = ({ word }: IWidget) => {
         let meaning = new Map<string, number>();
         let grammar = new Map<string, number>();
         let parent = new Map<string, number>();
-        let editor = new Map<IUser, number>();
+        let editorId = new Map<string, number>();
+        let editor = new Map<string, IUser>();
         for (const it of json.data.rows) {
           let score: number | undefined;
           if (it.exp) {
@@ -49,8 +50,10 @@ const Widget = ({ word }: IWidget) => {
             const currScore = Math.floor(
               (it.exp * it.confidence) / (3600 * 100)
             );
+
             score = meaning.get(it.mean);
             meaning.set(it.mean, score ? score + currScore : currScore);
+
             if (it.type || it.grammar) {
               const strCase = it.type + "$" + it.grammar;
               score = grammar.get(strCase);
@@ -59,9 +62,11 @@ const Widget = ({ word }: IWidget) => {
 
             score = parent.get(it.parent);
             parent.set(it.parent, score ? score + currScore : currScore);
+
             if (it.editor) {
-              score = editor.get(it.editor);
-              editor.set(it.editor, score ? score + currScore : currScore);
+              score = editorId.get(it.editor.id);
+              editorId.set(it.editor.id, score ? score + currScore : currScore);
+              editor.set(it.editor.id, it.editor);
             }
           }
         }
@@ -92,8 +97,11 @@ const Widget = ({ word }: IWidget) => {
         });
         _data.parent.sort((a, b) => b.count - a.count);
 
-        editor.forEach((value, key, map) => {
-          _data.editor.push({ value: key, count: value });
+        editorId.forEach((value, key, map) => {
+          const currEditor = editor.get(key);
+          if (currEditor) {
+            _data.editor.push({ value: currEditor, count: value });
+          }
         });
         _data.editor.sort((a, b) => b.count - a.count);
         setWordData(_data);
