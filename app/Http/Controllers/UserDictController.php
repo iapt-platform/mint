@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Api;
 use App\Http\Api\AuthApi;
 use App\Http\Api\DictApi;
+use App\Http\Resources\UserDictResource;
 
 class UserDictController extends Controller
 {
@@ -26,30 +27,32 @@ class UserDictController extends Controller
             case 'studio':
 				# 获取studio内所有channel
                 $user = AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
-                        $table = UserDict::select($indexCol)
-                                    ->where('creator_id', $user["user_id"])
-                                    ->where('source', "_USER_WBW_");
-                    }else{
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
+                if(!$user){
                     return $this->error(__('auth.failed'));
                 }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = UserDict::select($indexCol)
+                            ->where('creator_id', $user["user_id"])
+                            ->where('source', "_USER_WBW_");
 				break;
 			case 'user':
 				# code...
 				$table = UserDict::select($indexCol)
 									->where('creator_id', $_COOKIE["user_id"])
 									->where('source', '<>', "_SYS_USER_WBW_");
-
 				break;
 			case 'word':
 				$table = UserDict::select($indexCol)
-									->where('word', $_GET["word"]);
+								 ->where('word', $request->get("word"));
 				break;
+            case 'community':
+                $table = UserDict::select($indexCol)
+                                ->where('word', $request->get("word"))
+                                ->where('source', "_USER_WBW_");;
+                break;
             case 'compound':
                 $dict_id = DictApi::getSysDict('robot_compound');
                 if($dict_id===false){
@@ -83,7 +86,7 @@ class UserDictController extends Controller
         }
         $result = $table->get();
 		if($result){
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+			return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
