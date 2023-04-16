@@ -9,7 +9,7 @@ import CaseList from "./CaseList";
 import DictList from "./DictList";
 import MyCreate from "./MyCreate";
 
-export interface IWidgetDictContentData {
+export interface IDictContentData {
   dictlist: IAnchorData[];
   words: IWidgetWordCardData[];
   caselist: ICaseListData[];
@@ -17,12 +17,12 @@ export interface IWidgetDictContentData {
 export interface IApiDictContentData {
   ok: boolean;
   message: string;
-  data: IWidgetDictContentData;
+  data: IDictContentData;
 }
 
 interface IWidget {
   word?: string;
-  data: IWidgetDictContentData;
+  data: IDictContentData;
   compact?: boolean;
 }
 
