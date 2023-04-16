@@ -264,11 +264,9 @@ class DhammaTermController extends Controller
     public function show(Request  $request,$id)
     {
         //
-		$indexCol = ['id','guid','word','meaning','other_meaning','tag','note','language','channal','created_at','updated_at'];
-
-		$result  = DhammaTerm::select($indexCol)->where('guid', $id)->first();
+		$result  = DhammaTerm::where('guid', $id)->first();
 		if($result){
-			return $this->ok($result);
+			return $this->ok(new TermResource($result));
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -453,6 +451,10 @@ class DhammaTermController extends Controller
                     $channelId = $request->get('id');
                     break;
                 case 'studio':
+                    $owner_id = StudioApi::getIdByName($request->get('name'));
+                    if(!$owner_id){
+                        return $this->error('no studio name');
+                    }
                     # code...
                     break;
                 default:
@@ -460,50 +462,51 @@ class DhammaTermController extends Controller
                     break;
             }
 
-            if(!empty($word)){
-                //查询此id是否有旧数据
-                if(!empty($id)){
-                    $oldRow = DhammaTerm::find($id);
-                }
-                //查询是否跟已有数据重复
-                $row = DhammaTerm::where($query)->first();
-                if(!$row){
-                    //不重复
-                    if(isset($oldRow) && $oldRow){
-                            //找到旧的记录-修改旧数据
-                            $row = $oldRow;
-                    }else{
-                            //没找到旧的记录-新建
-                            $row = new DhammaTerm();
-                            $row->id = app('snowflake')->id();
-                            $row->guid = Str::uuid();
-                            $row->word = $word;
-                            $row->create_time = time()*1000;
-                    }
-                }else{
-                    //重复-如果与旧的id不同旧报错
-                    if(isset($oldRow) && $oldRow && $row->guid !== $id){
-                        $message .= "重复的数据：{$id} - {$word}\n";
-                        $currLine++;
-                        $countFail++;
-                        continue;
-                    }
-                }
-                $row->word_en = Tools::getWordEn($word);
-                $row->meaning = $meaning;
-                $row->other_meaning = $other_meaning;
-                $row->note = $note;
-                $row->tag = $tag;
-                $row->language = $lang;
-                $row->channal = $channelId;
-                $row->owner = $owner_id;
-                $row->editor_id = $user['user_id'];
-                $row->owner = $owner_id;
-                $row->modify_time = time()*1000;
-                $row->save();
-            }else{
+            if(empty($word)){
                 break;
             }
+            //查询此id是否有旧数据
+            if(!empty($id)){
+                $oldRow = DhammaTerm::find($id);
+            }else{
+                $oldRow = null;
+            }
+            //查询是否跟已有数据重复
+            $row = DhammaTerm::where($query)->first();
+            if(!$row){
+                //不重复
+                if(isset($oldRow) && $oldRow){
+                    //找到旧的记录-修改旧数据
+                    $row = $oldRow;
+                }else{
+                    //没找到旧的记录-新建
+                    $row = new DhammaTerm();
+                    $row->id = app('snowflake')->id();
+                    $row->guid = Str::uuid();
+                    $row->word = $word;
+                    $row->create_time = time()*1000;
+                }
+            }else{
+                //重复-如果与旧的id不同,报错
+                if(isset($oldRow) && $oldRow && $row->guid !== $id){
+                    $message .= "重复的数据：{$id} - {$word}\n";
+                    $currLine++;
+                    $countFail++;
+                    continue;
+                }
+            }
+            $row->word_en = Tools::getWordEn($word);
+            $row->meaning = $meaning;
+            $row->other_meaning = $other_meaning;
+            $row->note = $note;
+            $row->tag = $tag;
+            $row->language = $lang;
+            $row->channal = $channelId;
+            $row->editor_id = $user['user_id'];
+            $row->owner = $owner_id;
+            $row->modify_time = time()*1000;
+            $row->save();
+
             $currLine++;
         } while (true);
         return $this->ok(["success"=>$currLine-2-$countFail,'fail'=>($countFail)],$message);
