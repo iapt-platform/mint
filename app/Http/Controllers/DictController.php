@@ -212,11 +212,11 @@ class DictController extends Controller
             # code...
             if($dictid !== 0){
                 if($value["dictid"]=== $dictid && strpos($input,$value["abbr"]."|") == false){
-                    $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-grammar_{$value["replace"]}",$mean);
+                    $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-{$value["replace"]}",$mean);
                 }
             }else{
                 if( strpos($mean,"|@".$value["abbr"]) == false){
-                    $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-grammar_{$value["replace"]}|",$mean);
+                    $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-{$value["replace"]}|",$mean);
                 }
             }
 
