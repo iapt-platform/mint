@@ -157,23 +157,23 @@ class GroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Group  $group
+     * @param  \App\Models\GroupInfo  $group
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Group $group)
+    public function update(Request $request, GroupInfo $group)
     {
         //
         $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        //判断当前用户是否有修改权限
+        if($user['user_uid'] !== $group->owner){
             return $this->error(__('auth.failed'));
         }
         $group->name = $request->get('name');
         $group->description = $request->get('description');
-        $group->status = $request->get('status');
+        if($request->has('status')) { $group->status = $request->get('status'); }
         $group->create_time = time()*1000;
         $group->modify_time = time()*1000;
         $group->save();
