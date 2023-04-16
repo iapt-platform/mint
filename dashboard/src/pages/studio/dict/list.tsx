@@ -30,7 +30,7 @@ import { IDeleteResponse } from "../../../components/api/Article";
 
 const { Link, Text } = Typography;
 
-interface IItem {
+export interface IWord {
   sn: number;
   wordId: string;
   word: string;
@@ -95,7 +95,7 @@ const Widget = () => {
 
   return (
     <>
-      <ProTable<IItem>
+      <ProTable<IWord>
         actionRef={ref}
         columns={[
           {
@@ -305,7 +305,7 @@ const Widget = () => {
           console.log(url);
           const res = await get<IApiResponseDictList>(url);
 
-          const items: IItem[] = res.data.rows.map((item, id) => {
+          const items: IWord[] = res.data.rows.map((item, id) => {
             const date = new Date(item.updated_at);
             const id2 =
               ((params.current || 1) - 1) * (params.pageSize || 20) + id + 1;
