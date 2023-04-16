@@ -49,7 +49,7 @@ const Widget = ({ word, data, compact }: IWidget) => {
                 ),
               },
               {
-                label: `添加`,
+                label: `单词本`,
                 key: "my",
                 children: (
                   <div>
