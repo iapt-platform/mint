@@ -49,6 +49,8 @@ export interface IApiResponseDictData {
   confidence: number;
   creator_id: number;
   updated_at: string;
+  exp?: number;
+  editor?: IUser;
 }
 export interface IApiResponseDict {
   ok: boolean;
