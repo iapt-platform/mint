@@ -57,13 +57,18 @@ const Widget = ({ groupId }: IWidget) => {
                   </Tag>
                 );
               });
-              return <Space size={0}>{showtag}</Space>;
+              return (
+                <Space size={0} key={index}>
+                  {showtag}
+                </Space>
+              );
             },
           },
           actions: {
             render: (text, row, index, action) => [
               canDelete ? (
                 <Popconfirm
+                  key={index}
                   title={intl.formatMessage({
                     id: "forms.message.member.delete",
                   })}
