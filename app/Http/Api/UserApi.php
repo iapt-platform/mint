@@ -22,4 +22,14 @@ class UserApi{
             'avatar'=>'',
         ];
     }
+    public static function getByUuid($id){
+        $userinfo = new \UserInfo();
+        $studio = $userinfo->getName($id);
+        return [
+            'id'=>$id,
+            'nickName'=>$studio['nickname'],
+            'userName'=>$studio['username'],
+            'avatar'=>'',
+        ];
+    }
 }
