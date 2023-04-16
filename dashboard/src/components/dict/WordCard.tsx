@@ -5,6 +5,7 @@ import type { IWordByDict } from "./WordCardByDict";
 import GrammarPop from "./GrammarPop";
 import WordCardByDict from "./WordCardByDict";
 import { useIntl } from "react-intl";
+import Community from "./Community";
 
 const { Title, Text } = Typography;
 
@@ -79,6 +80,7 @@ const Widget = ({ data }: IWidgetWordCard) => {
       <div>
         <Text>{caseList}</Text>
       </div>
+      <Community word={data.word} />
       <div>
         {data.dict.map((it, id) => {
           return <WordCardByDict key={id} data={it} />;
