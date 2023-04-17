@@ -92,6 +92,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('article',ArticleController::class);
     Route::get('article-my-number', [ArticleController::class, 'showMyNumber']);
     Route::apiResource('group',GroupController::class);
+    Route::get('group-my-number', [GroupController::class, 'showMyNumber']);
 
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
     Route::post('auth/signin',[AuthController::class,'signIn']);
