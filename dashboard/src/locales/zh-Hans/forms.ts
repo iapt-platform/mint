@@ -60,6 +60,7 @@ const items = {
   "forms.fields.from.label": "从",
   "forms.fields.to.label": "连接到",
   "forms.fields.count.label": "计数",
+  "forms.fields.owner.label": "拥有者",
 };
 
 export default items;
