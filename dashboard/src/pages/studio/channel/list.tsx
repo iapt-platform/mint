@@ -47,7 +47,7 @@ export const renderBadge = (count: number, active = false) => {
   );
 };
 
-interface IItem {
+interface IChannelItem {
   id: number;
   uid: string;
   title: string;
@@ -121,7 +121,7 @@ const Widget = () => {
 
   return (
     <>
-      <ProTable<IItem>
+      <ProTable<IChannelItem>
         actionRef={ref}
         columns={[
           {
@@ -392,7 +392,7 @@ const Widget = () => {
           }
           console.log("url", url);
           const res: IApiResponseChannelList = await get(url);
-          const items: IItem[] = res.data.rows.map((item, id) => {
+          const items: IChannelItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
               id: id,
