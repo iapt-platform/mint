@@ -67,9 +67,6 @@ const Widget = ({ groupId, onCreated }: IWidget) => {
           rules={[
             {
               required: true,
-              message: intl.formatMessage({
-                id: "forms.message.user.required",
-              }),
             },
           ]}
         />
