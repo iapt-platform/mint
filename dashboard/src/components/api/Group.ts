@@ -1,3 +1,4 @@
+import { IStudio } from "../auth/StudioName";
 import { IStudioApiResponse, IUserRequest, TRole } from "./Auth";
 
 export interface IGroupRequest {
@@ -12,7 +13,7 @@ export interface IGroupDataRequest {
   name: string;
   description: string;
   owner: string;
-  studio: IStudioApiResponse;
+  studio: IStudio;
   role: TRole;
   created_at: string;
 }
