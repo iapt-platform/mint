@@ -127,15 +127,26 @@ class GroupController extends Controller
         if(GroupInfo::where('name',$request->get('name'))->where('owner',$user['user_uid'])->exists()){
             return $this->error(__('validation.exists',['name']));
         }
-
+        $studioId = StudioApi::getIdByName($request->get('studio_name'));
         $group = new GroupInfo;
-        $group->id = app('snowflake')->id();
-        $group->uid = Str::uuid();
-        $group->name = $request->get('name');
-        $group->owner = $user['user_uid'];
-        $group->create_time = time()*1000;
-        $group->modify_time = time()*1000;
-        $group->save();
+        DB::transaction(function() use($group,$request,$user,$studioId){
+            $group->id = app('snowflake')->id();
+            $group->uid = Str::uuid();
+            $group->name = $request->get('name');
+            $group->owner = $studioId;
+            $group->create_time = time()*1000;
+            $group->modify_time = time()*1000;
+            $group->save();
+
+            $newMember = new GroupMember();
+            $newMember->id=app('snowflake')->id();
+            $newMember->user_id = $studioId;
+            $newMember->group_id = $group->uid;
+            $newMember->power = 0;
+            $newMember->group_name = $request->get('name');
+            $newMember->save();
+        });
+
         return $this->ok($group);
     }
 
