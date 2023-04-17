@@ -62,3 +62,8 @@ export interface IGroupMemberDeleteResponse {
   message: string;
   data: boolean;
 }
+export interface IDeleteResponse {
+  ok: boolean;
+  message: string;
+  data: number;
+}
