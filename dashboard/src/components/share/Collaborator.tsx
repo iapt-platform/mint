@@ -191,7 +191,7 @@ const Widget = ({ resId, load = false, onReload }: IWidget) => {
                 key={index}
                 placement="bottomLeft"
                 title={intl.formatMessage({
-                  id: "forms.message.member.delete",
+                  id: "forms.message.member.remove",
                 })}
                 onConfirm={(e?: React.MouseEvent<HTMLElement, MouseEvent>) => {
                   console.log("delete", row.id);

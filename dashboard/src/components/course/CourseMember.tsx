@@ -153,7 +153,7 @@ const Widget = ({ courseId }: IWidget) => {
                 <Popconfirm
                   placement="bottomLeft"
                   title={intl.formatMessage({
-                    id: "forms.message.member.delete",
+                    id: "forms.message.member.remove",
                   })}
                   onConfirm={(
                     e?: React.MouseEvent<HTMLElement, MouseEvent>

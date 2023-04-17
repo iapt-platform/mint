@@ -147,7 +147,7 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
                 <Popconfirm
                   key={index}
                   title={intl.formatMessage({
-                    id: "forms.message.member.delete",
+                    id: "forms.message.member.remove",
                   })}
                   onConfirm={(
                     e?: React.MouseEvent<HTMLElement, MouseEvent>

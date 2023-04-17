@@ -51,7 +51,7 @@ const items = {
   "forms.fields.user.label": "用户",
   "forms.message.user.required": "请选择用户",
   "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
-  "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
+  "forms.message.member.remove": "移除此成员吗？此操作无法恢复。",
   "forms.fields.description.label": "简介",
   "forms.fields.textbook.label": "课本",
   "forms.fields.status.label": "状态",
@@ -61,6 +61,7 @@ const items = {
   "forms.fields.to.label": "连接到",
   "forms.fields.count.label": "计数",
   "forms.fields.owner.label": "拥有者",
+  "forms.message.res.remove": "将此此资源从群中移除吗？",
 };
 
 export default items;
