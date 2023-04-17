@@ -1,9 +1,10 @@
 import { useIntl } from "react-intl";
-import { useState } from "react";
-import { ProList } from "@ant-design/pro-components";
+import { useRef, useState } from "react";
+import { ActionType, ProList } from "@ant-design/pro-components";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
-import { get } from "../../request";
+import { delete_, get } from "../../request";
 import { IShareListResponse } from "../api/Share";
+import { IDeleteResponse, IGroupMemberDeleteResponse } from "../api/Group";
 
 const { Content } = Layout;
 
@@ -12,7 +13,7 @@ interface IRoleTag {
   color: string;
 }
 interface DataItem {
-  id: string;
+  id?: string;
   name?: string;
   tag: IRoleTag[];
   image: string;
@@ -25,10 +26,12 @@ const Widget = ({ groupId }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const [resCount, setResCount] = useState(0);
+  const ref = useRef<ActionType>();
   return (
     <Content>
       <ProList<DataItem>
         rowKey="id"
+        actionRef={ref}
         headerTitle={
           intl.formatMessage({ id: "group.files" }) + "-" + resCount.toString()
         }
@@ -70,12 +73,20 @@ const Widget = ({ groupId }: IWidget) => {
                 <Popconfirm
                   key={index}
                   title={intl.formatMessage({
-                    id: "forms.message.member.delete",
+                    id: "forms.message.res.remove",
                   })}
                   onConfirm={(
                     e?: React.MouseEvent<HTMLElement, MouseEvent>
                   ) => {
                     console.log("delete", row.id);
+                    delete_<IDeleteResponse>("/v2/share/" + row.id).then(
+                      (json) => {
+                        if (json.ok) {
+                          console.log("delete ok");
+                          ref.current?.reload();
+                        }
+                      }
+                    );
                   }}
                   okText={intl.formatMessage({ id: "buttons.ok" })}
                   cancelText={intl.formatMessage({ id: "buttons.cancel" })}
@@ -116,7 +127,7 @@ const Widget = ({ groupId }: IWidget) => {
             }
             const items: DataItem[] = res.data.rows.map((item, id) => {
               let member: DataItem = {
-                id: item.res_id,
+                id: item.id,
                 name: item.res_name,
                 tag: [],
                 image: "",
