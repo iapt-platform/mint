@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
+use App\Http\Resources\GroupResource;
 
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
 class GroupController extends Controller
 {
     /**
@@ -23,7 +23,6 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         //
-        $userinfo = new \UserInfo();
 		$result=false;
 		$indexCol = ['uid','name','description','owner','updated_at','created_at'];
 		switch ($request->get('view')) {
@@ -34,10 +33,23 @@ class GroupController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))){
+                $studioId = StudioApi::getIdByName($request->get('name'));
+                if($user['user_uid'] !== $studioId){
                     return $this->error(__('auth.failed'));
                 }
-                $table = GroupInfo::select($indexCol)->where('owner', $user["user_uid"]);
+
+                $table = GroupInfo::select($indexCol);
+                if($request->get('view2','my')==='my'){
+                    $table = $table->where('owner', $studioId);
+                }else{
+                    //我参加的group
+                    $groupId = GroupMember::where('user_id',$studioId)
+                                          ->groupBy('group_id')
+                                          ->select('group_id')
+                                          ->get();
+                    $table = $table->whereIn('uid', $groupId);
+                    $table = $table->where('owner','<>', $studioId);
+                }
 				break;
             case 'key':
                 $table = GroupInfo::select($indexCol)->where('name','like', $request->get('key')."%");
@@ -66,29 +78,34 @@ class GroupController extends Controller
         }
         $result = $table->get();
 		if($result){
-            foreach ($result as $key => $value) {
-                # code...
-                $value->role = 'owner';
-                $value->studio = [
-                    'id'=>$value->owner,
-                    'nickName'=>$userinfo->getName($value->owner)['nickname'],
-                    'studioName'=>$userinfo->getName($value->owner)['username'],
-                    'avastar'=>'',
-                    'owner' => [
-                        'id'=>$value->owner,
-                        'nickName'=>$userinfo->getName($value->owner)['nickname'],
-                        'userName'=>$userinfo->getName($value->owner)['username'],
-                        'avastar'=>'',
-                    ]
-                ];
-            }
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+			return $this->ok(["rows"=>GroupResource::collection($result),"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
 
     }
+    /**
+     * 获取我的，和协作channel数量
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showMyNumber(Request $request){
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'));
+        }
+        //我的
+        $my = GroupMember::where('user_id', $studioId)->where('power',0)->count();
+        //协作
+        $collaboration = GroupMember::where('user_id', $studioId)->where('power','<>',0)->count();
 
+        return $this->ok(['my'=>$my,'collaboration'=>$collaboration]);
+    }
     /**
      * Store a newly created resource in storage.
      *
