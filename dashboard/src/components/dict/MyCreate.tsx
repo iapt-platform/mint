@@ -1,13 +1,20 @@
 import { Button, Col, Divider, Input, message, Row } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { SaveOutlined } from "@ant-design/icons";
 
 import WbwDetailBasic from "../template/Wbw/WbwDetailBasic";
 import WbwDetailNote from "../template/Wbw/WbwDetailNote";
 import { IWbw, IWbwField, TFieldName } from "../template/Wbw/WbwWord";
-import { post } from "../../request";
-import { IDictResponse, IUserDictCreate } from "../api/Dict";
+import { get, post } from "../../request";
+import {
+  IApiResponseDictList,
+  IDictResponse,
+  IUserDictCreate,
+} from "../api/Dict";
+import { useAppSelector } from "../../hooks";
+import { add, wordIndex } from "../../reducers/inline-dict";
+import store from "../../store";
 
 interface IWidget {
   word?: string;
@@ -20,9 +27,28 @@ const Widget = ({ word }: IWidget) => {
     confidence: 100,
   });
   const [loading, setLoading] = useState(false);
+  const inlineWordIndex = useAppSelector(wordIndex);
+
+  useEffect(() => {
+    //查询这个词在内存字典里是否有
+    if (typeof wordSpell === "undefined") {
+      return;
+    }
+    if (inlineWordIndex.includes(wordSpell)) {
+      //已经有了，退出
+      return;
+    }
+    get<IApiResponseDictList>(`/v2/wbwlookup?word=${wordSpell}`).then(
+      (json) => {
+        console.log("lookup ok", json.data.count);
+        //存储到redux
+        store.dispatch(add(json.data.rows));
+      }
+    );
+  }, [inlineWordIndex, wordSpell]);
 
   function fieldChanged(field: TFieldName, value: string) {
-    let mData = JSON.parse(JSON.stringify(editWord));
+    let mData: IWbw = JSON.parse(JSON.stringify(editWord));
     switch (field) {
       case "note":
         mData.note = { value: value, status: 5 };
@@ -43,6 +69,17 @@ const Widget = ({ word }: IWidget) => {
         mData.parent = { value: value, status: 5 };
         break;
       case "case":
+        const _case = value
+          .replaceAll("n$base", "n.:.base")
+          .replaceAll("ti$base", "ti.:.base")
+          .split("$");
+        const _type = "." + _case[0] + ".";
+        const _grammar = _case
+          .slice(1)
+          .map((item) => `.${item}.`)
+          .join("$");
+        mData.type = { value: _type, status: 7 };
+        mData.grammar = { value: _grammar, status: 7 };
         mData.case = { value: value.split("$"), status: 5 };
         break;
       case "confidence":
@@ -85,6 +122,7 @@ const Widget = ({ word }: IWidget) => {
 
       <WbwDetailBasic
         data={editWord}
+        showRelation={false}
         onChange={(e: IWbwField) => {
           console.log("WbwDetailBasic onchange", e);
           fieldChanged(e.field, e.value);
@@ -108,21 +146,23 @@ const Widget = ({ word }: IWidget) => {
           onClick={() => {
             console.log("edit word", editWord);
             setLoading(true);
+            const data = [
+              {
+                word: editWord.word.value,
+                type: editWord.type?.value,
+                grammar: editWord.grammar?.value,
+                mean: editWord.meaning?.value.join("$"),
+                parent: editWord.parent?.value,
+                note: editWord.note?.value,
+                factors: editWord.factors?.value,
+                factormean: editWord.factorMeaning?.value,
+                confidence: editWord.confidence,
+              },
+            ];
+            console.log("wbw data", data);
             post<IUserDictCreate, IDictResponse>("/v2/userdict", {
               view: "dict",
-              data: JSON.stringify([
-                {
-                  word: editWord.word.value,
-                  type: editWord.type?.value,
-                  grammar: editWord.grammar?.value,
-                  mean: editWord.meaning?.value.join("$"),
-                  parent: editWord.parent?.value,
-                  note: editWord.note?.value,
-                  factors: editWord.factors?.value,
-                  factormean: editWord.factorMeaning?.value,
-                  confidence: editWord.confidence,
-                },
-              ]),
+              data: JSON.stringify(data),
             })
               .finally(() => {
                 setLoading(false);
