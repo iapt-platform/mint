@@ -26,7 +26,6 @@ import AdminNissayaEndingList from "./pages/admin/nissaya-ending/list";
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
-import LibraryCommunityRecent from "./pages/library/community/recent";
 import LibraryPalicanon from "./pages/library/palicanon";
 import LibraryPalicanonByPath from "./pages/library/palicanon/bypath";
 import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
@@ -152,7 +151,6 @@ const Widget = () => {
 
         <Route path="community" element={<LibraryCommunity />}>
           <Route path="list" element={<LibraryCommunityList />} />
-          <Route path="recent" element={<LibraryCommunityRecent />} />
         </Route>
 
         <Route path="palicanon" element={<LibraryPalicanon />}>
