@@ -22,7 +22,7 @@ interface IWidgetBookTree {
   onRootChange?: Function;
 }
 const Widget = ({
-  root = "default",
+  root,
   path,
   multiSelect = false,
   multiSelectable = true,
@@ -33,11 +33,24 @@ const Widget = ({
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const [isMultiSelect, setIsMultiSelect] = useState(multiSelect);
+  const [currTocStyle, setCurrTocStyle] = useState<string>();
+
   useEffect(() => {
     setIsMultiSelect(multiSelect);
   }, [multiSelect]);
+
   useEffect(() => {
-    if (typeof root !== "undefined") fetchBookTree(root);
+    let tocStyle = "default";
+    if (typeof root !== "undefined") {
+      tocStyle = root;
+    } else {
+      const store = localStorage.getItem("pali_path_root");
+      if (store) {
+        tocStyle = store;
+      }
+    }
+    fetchBookTree(tocStyle);
+    setCurrTocStyle(tocStyle);
   }, [root]);
 
   function fetchBookTree(value: string) {
@@ -72,7 +85,7 @@ const Widget = ({
       <Space style={{ display: "flex", justifyContent: "space-between" }}>
         <Text>目录</Text>
         <TocStyleSelect
-          style={root}
+          style={currTocStyle}
           onChange={(value: string) => {
             console.log(`selected ${value}`);
             localStorage.setItem("pali_path_root", value);
