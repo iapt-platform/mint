@@ -14,20 +14,9 @@ const Widget = () => {
   return (
     <Layout>
       <h1>Home</h1>
-      <ChannelPicker
-        type="chapter"
-        articleId="168-867_7fea264d-7a26-40f8-bef7-bc95102760fb"
-      />
-      <div>
-        <Share
-          resId="466a625f-971f-4d8f-899a-80e2c516ffeb"
-          resType={EResType.channel}
-        />
-      </div>
       <h2>TreeTest</h2>
       <TreeTest />
-      <br />
-      <DemoForm />
+
       <br />
       <FontBox />
       <br />
