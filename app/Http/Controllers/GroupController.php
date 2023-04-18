@@ -55,7 +55,7 @@ class GroupController extends Controller
                 $table = GroupInfo::select($indexCol)->where('name','like', $request->get('key')."%");
                 break;
         }
-        if(isset($_GET["search"])){
+        if($request->has("search")){
             $table = $table->where('name', 'like', "%" . $request->get("search")."%");
         }
         $count = $table->count();
