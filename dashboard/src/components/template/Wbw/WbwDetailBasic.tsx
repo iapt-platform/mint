@@ -9,6 +9,7 @@ import WbwMeaningSelect from "./WbwMeaningSelect";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { getFactorsInDict } from "./WbwFactors";
+import { IApiResponseDictData } from "../../api/Dict";
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -26,17 +27,40 @@ export interface IWordBasic {
   factorMeaning?: string;
   parent?: string;
 }
-
+export const getParentInDict = (
+  wordIn: string,
+  wordIndex: string[],
+  wordList: IApiResponseDictData[]
+): string[] => {
+  if (wordIndex.includes(wordIn)) {
+    const result = wordList.filter((word) => word.word === wordIn);
+    //查重
+    //TODO 加入信心指数并排序
+    let myMap = new Map<string, number>();
+    let parent: string[] = [];
+    for (const iterator of result) {
+      myMap.set(iterator.parent, 1);
+    }
+    myMap.forEach((value, key, map) => {
+      parent.push(key);
+    });
+    return parent;
+  } else {
+    return [];
+  }
+};
 interface IWidget {
   data: IWbw;
   onChange?: Function;
+  showRelation?: boolean;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const Widget = ({ data, showRelation = true, onChange }: IWidget) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const [items, setItems] = useState<string[]>([]);
   const inlineDict = useAppSelector(_inlineDict);
   const [factorOptions, setFactorOptions] = useState<ValueType[]>([]);
+  const [parentOptions, setParentOptions] = useState<ValueType[]>([]);
   const onMeaningChange = (value: string | string[]) => {
     console.log(`Selected: ${value}`);
     if (typeof onChange !== "undefined") {
@@ -61,6 +85,19 @@ const Widget = ({ data, onChange }: IWidget) => {
       };
     });
     setFactorOptions(options);
+
+    const parent = getParentInDict(
+      data.word.value,
+      inlineDict.wordIndex,
+      inlineDict.wordList
+    );
+    const parentOptions = parent.map((item) => {
+      return {
+        label: item,
+        value: item,
+      };
+    });
+    setParentOptions(parentOptions);
   }, [inlineDict, data]);
 
   return (
@@ -90,9 +127,6 @@ const Widget = ({ data, onChange }: IWidget) => {
             mode="tags"
             onChange={onMeaningChange}
             style={{ width: "100%" }}
-            placeholder={intl.formatMessage({
-              id: "forms.fields.meaning.label",
-            })}
             options={items.map((item) => ({ label: item, value: item }))}
             dropdownRender={(menu) => (
               <>
@@ -126,13 +160,15 @@ const Widget = ({ data, onChange }: IWidget) => {
           label={intl.formatMessage({ id: "forms.fields.factors.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.factors.tooltip" })}
         >
-          <AutoComplete options={factorOptions}>
-            <Input
-              allowClear
-              placeholder={intl.formatMessage({
-                id: "forms.fields.factors.label",
-              })}
-            />
+          <AutoComplete
+            options={factorOptions}
+            onChange={(value: any, option: ValueType | ValueType[]) => {
+              if (typeof onChange !== "undefined") {
+                onChange({ field: "factors", value: value });
+              }
+            }}
+          >
+            <Input allowClear />
           </AutoComplete>
         </Form.Item>
         <Form.Item
@@ -145,12 +181,7 @@ const Widget = ({ data, onChange }: IWidget) => {
             id: "forms.fields.factor.meaning.tooltip",
           })}
         >
-          <Input
-            allowClear
-            placeholder={intl.formatMessage({
-              id: "forms.fields.factor.meaning.label",
-            })}
-          />
+          <Input allowClear />
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 6 }}
@@ -176,12 +207,16 @@ const Widget = ({ data, onChange }: IWidget) => {
             id: "forms.fields.parent.tooltip",
           })}
         >
-          <Input
-            allowClear
-            placeholder={intl.formatMessage({
-              id: "forms.fields.parent.label",
-            })}
-          />
+          <AutoComplete
+            options={parentOptions}
+            onChange={(value: any, option: ValueType | ValueType[]) => {
+              if (typeof onChange !== "undefined") {
+                onChange({ field: "parent", value: value });
+              }
+            }}
+          >
+            <Input allowClear />
+          </AutoComplete>
         </Form.Item>
         <Collapse bordered={false}>
           <Panel header="词源" key="1">
@@ -209,7 +244,11 @@ const Widget = ({ data, onChange }: IWidget) => {
               />
             </Form.Item>
           </Panel>
-          <Panel header="关系" key="2">
+          <Panel
+            header="关系"
+            key="2"
+            style={{ display: showRelation ? "block" : "none" }}
+          >
             关系语法
           </Panel>
         </Collapse>
