@@ -84,7 +84,6 @@ const Widget = ({
       dataSource={tableData}
       pagination={{
         onChange: (page) => {
-          console.log(page);
           setCurrPage(page);
         },
         showQuickJumper: true,
