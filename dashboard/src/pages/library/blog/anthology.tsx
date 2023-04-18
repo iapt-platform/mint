@@ -10,7 +10,7 @@ const Widget = () => {
   return (
     <>
       <BlogNav selectedKey="anthology" studio={studio ? studio : ""} />
-      <AnthologyList view="public_studio" id={studio ? studio : ""} />
+      <AnthologyList studioName={studio} />
     </>
   );
 };

@@ -6,54 +6,75 @@ import type { IAnthologyListResponse } from "../api/Article";
 import AnthologyCard from "./AnthologyCard";
 import type { IAnthologyData } from "./AnthologyCard";
 
-interface IWidgetAnthologyList {
-  view: string;
-  id?: string;
+interface IWidget {
+  studioName?: string;
+  searchKey?: string;
 }
-const Widget = (prop: IWidgetAnthologyList) => {
+const Widget = ({ studioName, searchKey }: IWidget) => {
   const [tableData, setTableData] = useState<IAnthologyData[]>([]);
+  const [total, setTotal] = useState<number>();
+  const [currPage, setCurrPage] = useState<number>(1);
+  const pageSize = 20;
 
   useEffect(() => {
-    console.log("useEffect", prop);
-    if (typeof prop.id === "undefined") {
-      fetchData(prop.view);
-    } else {
-      fetchData(prop.view, prop.id);
+    const offset = (currPage - 1) * pageSize;
+    let url = `/v2/anthology?view=public&offset=${offset}&limit=${pageSize}`;
+    if (typeof studioName !== "undefined") {
+      url += `&studio=${studioName}`;
     }
-  }, [prop]);
+    if (typeof searchKey === "string" && searchKey.length > 0) {
+      url += `&search=${searchKey}`;
+    }
 
-  function fetchData(view: string, id?: string) {
-    let url = `/v2/anthology?view=${view}` + (id ? `&studio=${id}` : "");
     console.log("get-url", url);
-    get<IAnthologyListResponse>(url).then(function (response) {
-      console.log("ajex", response);
-      let newTree: IAnthologyData[] = response.data.rows.map((item) => {
-        return {
-          id: item.uid,
-          title: item.title,
-          subTitle: item.subtitle,
-          summary: item.summary,
-          articles: item.article_list.map((al) => {
-            return {
-              key: al.article,
-              title: al.title,
-              level: parseInt(al.level),
-            };
-          }),
-          studio: item.studio,
-          created_at: item.created_at,
-          updated_at: item.updated_at,
-        };
-      });
-      setTableData(newTree);
+    get<IAnthologyListResponse>(url).then(function (json) {
+      if (json.ok) {
+        let newTree: IAnthologyData[] = json.data.rows.map((item) => {
+          return {
+            id: item.uid,
+            title: item.title,
+            subTitle: item.subtitle,
+            summary: item.summary,
+            articles: item.article_list.map((al) => {
+              return {
+                key: al.article,
+                title: al.title,
+                level: parseInt(al.level),
+              };
+            }),
+            studio: item.studio,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+          };
+        });
+        setTableData(newTree);
+        setTotal(json.data.count);
+      } else {
+        setTableData([]);
+        setTotal(0);
+      }
     });
-  }
+  }, [currPage, searchKey, studioName]);
 
   return (
     <List
       itemLayout="vertical"
       size="large"
       dataSource={tableData}
+      pagination={{
+        onChange: (page) => {
+          console.log(page);
+          setCurrPage(page);
+        },
+        showQuickJumper: true,
+        showSizeChanger: false,
+        pageSize: pageSize,
+        total: total,
+        position: "both",
+        showTotal: (total) => {
+          return `结果: ${total}`;
+        },
+      }}
       renderItem={(item) => (
         <List.Item>
           <AnthologyCard data={item} />
