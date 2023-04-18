@@ -77,6 +77,24 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "base",
       label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+      children: [
+        {
+          value: "base",
+          label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+        },
+        {
+          value: "prp",
+          label: intl.formatMessage({ id: "dict.fields.type.prp.label" }),
+        },
+        {
+          value: "pp",
+          label: intl.formatMessage({ id: "dict.fields.type.pp.label" }),
+        },
+        {
+          value: "fpp",
+          label: intl.formatMessage({ id: "dict.fields.type.fpp.label" }),
+        },
+      ],
     },
   ];
   const case3_pron = [
@@ -120,6 +138,13 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
           label: intl.formatMessage({ id: "dict.fields.type.f.label" }),
         },
       ],
+    },
+  ];
+  const case3_num = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
     },
   ];
   const caseVerb3 = [
@@ -280,7 +305,7 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "num",
       label: intl.formatMessage({ id: "dict.fields.type.num.label" }),
-      children: case3_ti,
+      children: case3_num,
     },
   ];
   return (
