@@ -4,10 +4,8 @@ import code_png from "../../assets/nut/code.png";
 import MarkdownForm from "./MarkdownForm";
 import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
-import DemoForm from "./Form";
 import TreeTest from "./TreeTest";
-import Share, { EResType } from "../share/Share";
-import ChannelPicker from "../channel/ChannelPicker";
+
 import { Layout } from "antd";
 
 const Widget = () => {

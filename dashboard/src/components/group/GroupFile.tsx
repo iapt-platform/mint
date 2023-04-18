@@ -4,7 +4,7 @@ import { ActionType, ProList } from "@ant-design/pro-components";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
 import { delete_, get } from "../../request";
 import { IShareListResponse } from "../api/Share";
-import { IDeleteResponse, IGroupMemberDeleteResponse } from "../api/Group";
+import { IDeleteResponse } from "../api/Group";
 
 const { Content } = Layout;
 

@@ -9,7 +9,6 @@ import { delete_, get, put } from "../../request";
 import {
   IShareDeleteResponse,
   IShareListResponse,
-  IShareRequest,
   IShareResponse,
   IShareUpdateRequest,
 } from "../api/Share";

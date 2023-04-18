@@ -1,6 +1,5 @@
 import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { channel } from "diagnostics_channel";
 import { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 

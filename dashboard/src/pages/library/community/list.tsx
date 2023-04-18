@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Affix, Row, Col, Divider, Space } from "antd";
 import { Typography } from "antd";
@@ -8,7 +7,6 @@ import ChannelList from "../../../components/channel/ChannelList";
 import BookTree from "../../../components/corpus/BookTree";
 import ChapterFilter from "../../../components/corpus/ChapterFilter";
 import ChapterList from "../../../components/corpus/ChapterList";
-import ChapterTagList from "../../../components/corpus/ChapterTagList";
 import ChapterTag from "../../../components/corpus/ChapterTag";
 import ChapterAppendTag from "../../../components/corpus/ChapterAppendTag";
 
@@ -19,7 +17,6 @@ const Widget = () => {
   const [progress, setProgress] = useState(0.9);
   const [lang, setLang] = useState("zh");
   const [type, setType] = useState("translation");
-  const navigate = useNavigate();
   return (
     <Row>
       <Col xs={0} sm={6} md={5}>

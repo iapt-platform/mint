@@ -1,9 +1,8 @@
 import { ProFormCascader } from "@ant-design/pro-components";
-import { message, Select } from "antd";
-import { useEffect, useState } from "react";
+import { message } from "antd";
+
 import { get } from "../../request";
 import { IApiResponseChannelList } from "../api/Channel";
-import { IStudio } from "../auth/StudioName";
 
 interface IOption {
   value: string;
