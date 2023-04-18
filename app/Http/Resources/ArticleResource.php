@@ -69,7 +69,6 @@ class ArticleResource extends JsonResource
                          * 查询用户在课程中的channel
                          */
                         $userId = UserApi::getIdByName($request->get('user'));
-                        Log::info("userId:{$userId}");
 
                         $userInCourse = CourseMember::where('course_id',$request->get('course'))
                                     ->where('user_id',$userId)
@@ -91,8 +90,6 @@ class ArticleResource extends JsonResource
                     $channel = Course::where('id',$request->get('course'))->value('channel_id');
                 }
             }
-            Log::info("channel:{$channel}");
-            Log::info("query_id:{$query_id}");
             if($request->has('mode')){
                 $mode = $request->get('mode');
             }else{

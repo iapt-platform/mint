@@ -117,8 +117,6 @@ class CorpusController extends Controller
         ->where('word_end',(int)$sentId[3])
         ->whereIn('channel_uid',$channels)
         ->get();
-        Log::info("sent count:".count($record));
-
 
         $channelIndex = $this->getChannelIndex($channels);
 

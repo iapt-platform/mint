@@ -172,8 +172,6 @@ class UserDictController extends Controller
     {
         //
 		$newData = $request->all();
-        Log::info("id={$id}");
-        Log::info($newData);
 		$result = UserDict::where('id', $id)
 				->update($newData);
 		if($result){
@@ -194,9 +192,6 @@ class UserDictController extends Controller
     public function destroy(Request $request,$id)
     {
         //
-		Log::info("userDictController->destroy start");
-		Log::info("userDictController->destroy id= {$id}");
-
         if(isset($_COOKIE["user_id"])){
             $user_id = $_COOKIE["user_id"];
         }else{
@@ -235,28 +230,23 @@ class UserDictController extends Controller
 
     }
 	public function delete(Request $request){
-		Log::info("userDictController->delete start");
 		$arrId = json_decode($request->get("id"),true) ;
-		Log::info("id=".$request->get("id"));
 		$count = 0;
 		$updateOk = false;
 		foreach ($arrId as $key => $id) {
 			$data = UserDict::where('id',$id)->first();
 			if($data){
 				# 找到对应数据
-				Log::info('creator_id:'.$data->creator_id);
 				$param = [
 					"id"=>$id,
 					'creator_id'=>$_COOKIE["user_id"]
 				];
-				Log::info($param);
 				$del = UserDict::where($param)->delete();
 				$count += $del;
 				$updateOk = $this->update_sys_wbw($data);
 				$this->update_redis($data);
 			}
 		}
-		Log::info("delete:".$count);
 		return $this->ok(['deleted'=>$count]);
 	}
 
@@ -381,10 +371,8 @@ class UserDictController extends Controller
 							);
 		}
 		$redisData = json_encode($redisWord,JSON_UNESCAPED_UNICODE);
-		Log::info("word={$word['word']} redis-data={$redisData}");
 		Redis::hSet("dict/user",$word['word'],$redisData);
 		$redisData1 = Redis::hGet("dict/user",$word['word']);
-		Log::info("word={$word['word']} redis-data1={$redisData1}");
 
 		#更新redis结束
 	}

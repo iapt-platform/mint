@@ -156,7 +156,6 @@ class SentPrController extends Controller
 				$palitext = mb_substr($palitext,0,20,"UTF-8");
 				$prtext = mb_substr($data['text'],0,140,"UTF-8");
 				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
-				Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 				switch ($data['channel']) {
 					//测试
 					//case '3b0cb0aa-ea88-4ce5-b67d-00a3e76220cc':
@@ -190,7 +189,6 @@ class SentPrController extends Controller
 							"content"=> $strMessage,
 						],
 					];
-				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
 					$response = Http::post($url, $param);
 					if($response->successful()){
@@ -221,7 +219,6 @@ class SentPrController extends Controller
 						->where('word_end' , $data['end'])
 						->where('channel_uid' , $data['channel'])
 						->count();
-		Log::info("count:{$count} webhook-ok={$robotMessageOk}");
 		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
 
     }
@@ -281,12 +278,10 @@ class SentPrController extends Controller
     public function destroy($id)
     {
         //
-		Log::info("user_uid=" .$_COOKIE['user_uid']);
 		$old = SentPr::where('id', $id)->first();
 		$result = SentPr::where('id', $id)
 							->where('editor_uid', $_COOKIE["user_uid"])
 							->delete();
-		Log::info("delete=" .$result);
 		if($result>0){
 					#同时返回此句子pr数量
 		$count = SentPr::where('book_id' , $old->book_id)

@@ -55,7 +55,7 @@ class WbwLookupController extends Controller
 		foreach ($input as $word) {
 			$wordPool[$word] = ['base' => false,'done' => false,'apply' => false];
 		}
-		Log::info("query start ".$request->get("word"));
+
 		if(empty($request->get("deep"))){
 			$deep = 2;
 		}else{
@@ -86,23 +86,18 @@ class WbwLookupController extends Controller
 								if(!isset($wordPool[$word]['factors']) && !empty($dictword->factors)){
 									//将第一个拆分作为最佳拆分存储
 									$wordPool[$word]['factors'] = $dictword->factors;
-									Log::info("best factor:{$dictword->factors}");
 								}
 							}
 						}
 					}
 
-					Log::info("query {$word} ".((microtime(true)-$startAt)*1000)."s.");
 					if($count == 0){
 						//没查到 去尾查
-						Log::info("没查到 去尾查");
 						$newBase = array();
 						$parents = $caseman->WordToBase($word);
 						foreach ($parents as $base => $rows) {
-							Log::info("found:{$base}");
 							array_push($output,$rows);
 						}
-						Log::info("去尾查结束");
 					}
 				}
 			}
@@ -124,7 +119,6 @@ class WbwLookupController extends Controller
 				# 将拆分放入池中
 				$wordPool[$part] = ['base' => false,'done' => false,'apply' => false];
 			}
-			Log::info("loop {$i} ".((microtime(true)-$startAt)*1000)."s.");
 		}
 
 		return $this->ok(["rows"=>$output,'count'=>count($output)]);

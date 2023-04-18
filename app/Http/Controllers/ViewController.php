@@ -47,7 +47,7 @@ class ViewController extends Controller
         }else{
             return false;
         }
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -80,14 +80,14 @@ class ViewController extends Controller
 					$views = $views->take(10);
 				}
                 $items = $views->get();
-                
+
                 return $this->ok($items);
                 break;
             default:
                 # code...
                 break;
         }
-        
+
     }
 
     /**
@@ -118,20 +118,14 @@ class ViewController extends Controller
         ];
         if(isset($_COOKIE['user_uid'])){
             //已经登陆
-			Log::info('已经登陆');
             $user_id = $_COOKIE['user_uid'];
             $param['user_id'] = $user_id;
         }else{
-			Log::info('没有登陆');
             $param['user_ip'] = $clientIp;
         }
-		
+
         $new = View::firstOrNew($param);
-		Log::info('获取记录或新建');
-		Log::info(print_r($new, true));
         $new->user_ip = $clientIp;
-		//获取标题 和 meta数据
-		Log::info('获取标题 和 meta数据');
 
 		switch($request->get("target_type")){
 			case "chapter":
@@ -142,20 +136,20 @@ class ViewController extends Controller
 				$new->org_title = PaliText::where("book",$request->get("book"))
 										->where("paragraph",$request->get("para"))
 										->value("toc");
-				Log::info('获取标题 成功');
+				//获取标题 成功
 
 				$new->meta = \json_encode([
 					"book"=>$request->get("book"),
 					"para"=>$request->get("para"),
 					"channel"=>$request->get("channel"),
 				]);
-				Log::info('获取meta数据成功');
+				//获取meta数据成功
 
 				break;
 		}
 		$new->count = $new->count+1;
         $new->save();
-		Log::info('保存成功');
+		//保存成功
 
         $count = View::where("target_id",$new->target_id)->count();
         return $this->ok($count);

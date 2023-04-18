@@ -27,7 +27,6 @@ class RelatedParagraphResource extends JsonResource
             'cs6_para'=> $this['cs6_para'],
         ];
         $paliTextUuid = PaliText::where('book',$bookTitle->book)->where('paragraph',$bookTitle->paragraph)->value('uid');
-        Log::info('uuid:'.$paliTextUuid);
         $tagIds = TagMap::where('anchor_id',$paliTextUuid)->select('tag_id')->get();
         $data['tags'] = Tag::whereIn('id',$tagIds)->select('id','name','color')->get();
 

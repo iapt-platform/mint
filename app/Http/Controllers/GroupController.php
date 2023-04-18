@@ -56,7 +56,7 @@ class GroupController extends Controller
                 break;
         }
         if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+            $table = $table->where('name', 'like', "%" . $request->get("search")."%");
         }
         $count = $table->count();
         if(isset($_GET["order"]) && isset($_GET["dir"])){

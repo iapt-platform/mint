@@ -221,10 +221,6 @@ class CourseMemberController extends Controller
             return $this->error(__('auth.failed'));
         }
 
-
-        Log::info('course'.$courseMember->course_id);
-        Log::info('user id'.$user["user_uid"]);
-
         $isOwner = Course::where('id',$courseMember->course_id)->where('studio_id',$user["user_uid"])->exists();
         if(!$isOwner){
             $courseUser = CourseMember::where('course_id',$courseMember->course_id)

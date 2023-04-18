@@ -10,7 +10,6 @@ class AuthApi{
     public static function current(Request $request){
         if($request->hasHeader('Authorization')){
             $token = $request->header('Authorization');
-            Log::info('token:'.$token);
             if(\substr($token,0,6) === 'Bearer'){
                 $token = trim(substr($token,6));
                 if($token === "null"){

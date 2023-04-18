@@ -136,7 +136,6 @@ class DictController extends Controller
                     # code...
                     if(!in_array($base,$searched)){
                         $word_base[$base] = $case;
-                        Log::info($case);
                     }
                 }
             }

@@ -245,7 +245,6 @@ class CollectionController extends Controller
         $collection  = Collection::find($id);
         if($collection){
             //鉴权
-            Log::info("找到文集");
             $user = \App\Http\Api\AuthApi::current($request);
             if($user && $collection->owner === $user["user_uid"]){
                 $collection->title = $request->get('title');
@@ -261,7 +260,6 @@ class CollectionController extends Controller
                 return $this->ok($collection);
             }else{
                 //鉴权失败
-                Log::info("鉴权失败");
 
                 //TODO 判断是否为协作
                 return $this->error(__('auth.failed'));
