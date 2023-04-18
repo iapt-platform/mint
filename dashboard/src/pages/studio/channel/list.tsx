@@ -387,9 +387,9 @@ const Widget = () => {
           // TODO
           console.log(params, sorter, filter);
           let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`;
-          if (typeof collaborator === "string") {
-            url = url + "&collaborator=" + collaborator;
-          }
+          url += collaborator ? "&collaborator=" + collaborator : "";
+          url += params.keyword ? "&search=" + params.keyword : "";
+
           console.log("url", url);
           const res: IApiResponseChannelList = await get(url);
           const items: IChannelItem[] = res.data.rows.map((item, id) => {

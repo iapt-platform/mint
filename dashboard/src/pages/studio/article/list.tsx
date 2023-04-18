@@ -362,9 +362,8 @@ const Widget = () => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 10);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
+
           if (typeof anthologyId !== "undefined") {
             url += "&anthology=" + anthologyId;
           }

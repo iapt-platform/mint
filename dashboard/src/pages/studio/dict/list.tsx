@@ -299,12 +299,9 @@ const Widget = () => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           let url = `/v2/userdict?view=studio&name=${studioname}&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
           console.log(url);
           const res = await get<IApiResponseDictList>(url);
-
           const items: IWord[] = res.data.rows.map((item, id) => {
             const date = new Date(item.updated_at);
             const id2 =
