@@ -270,9 +270,7 @@ const Widget = ({
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
 
           const res = await get<IAnthologyListResponse>(url);
           const items: IItem[] = res.data.rows.map((item, id) => {
