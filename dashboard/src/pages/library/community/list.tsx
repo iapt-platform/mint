@@ -27,9 +27,6 @@ const Widget = () => {
           <div style={{ height: "100vh", overflowY: "auto" }}>
             <BookTree
               multiSelectable={false}
-              onRootChange={(root: string) =>
-                navigate("/palicanon/list/" + root)
-              }
               onChange={(key: string[], path: string[]) => {
                 if (key.length > 0) {
                   setTags(key[0].split(","));
