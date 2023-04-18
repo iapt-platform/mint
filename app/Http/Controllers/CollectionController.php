@@ -62,12 +62,13 @@ class CollectionController extends Controller
 
 				break;
 			case 'public':
+                //全网公开
 				$table = Collection::select($indexCol)->where('status', 30);
+                if($request->has('studio')){
+                    $studioId = StudioApi::getIdByName($request->get('studio'));
+                    $table = $table->where('owner',$studioId);
+                }
 				break;
-            case 'public_studio':
-                $user = $userinfo->getUserByName($request->get('studio'));
-                $table = Collection::select($indexCol)->where('status', 30)->where('owner',$user['userid']);
-                break;
 			default:
 				# code...
 			    return $this->error("没有查询到数据");
