@@ -44,34 +44,27 @@ enum WbwStatus {
   auto = 3,
   manual = 5,
 }
-interface WbwElement {
-  value: string;
+interface WbwElement<R> {
+  value: R;
   status: WbwStatus;
 }
-interface WbwElement2 {
-  value: string[];
-  status: WbwStatus;
-}
-interface WbwElement3 {
-  value: number;
-  status: WbwStatus;
-}
+
 export interface IWbw {
   uid?: string;
-  word: WbwElement;
-  real?: WbwElement;
-  meaning?: WbwElement2;
-  type?: WbwElement;
-  grammar?: WbwElement;
-  style?: WbwElement;
-  case?: WbwElement2;
-  parent?: WbwElement;
-  factors?: WbwElement;
-  factorMeaning?: WbwElement;
-  relation?: WbwElement;
-  note?: WbwElement;
-  bookMarkColor?: WbwElement3;
-  bookMarkText?: WbwElement;
+  word: WbwElement<string>;
+  real?: WbwElement<string>;
+  meaning?: WbwElement<string[]>;
+  type?: WbwElement<string>;
+  grammar?: WbwElement<string>;
+  style?: WbwElement<string>;
+  case?: WbwElement<string[]>;
+  parent?: WbwElement<string>;
+  factors?: WbwElement<string>;
+  factorMeaning?: WbwElement<string>;
+  relation?: WbwElement<string>;
+  note?: WbwElement<string>;
+  bookMarkColor?: WbwElement<number>;
+  bookMarkText?: WbwElement<string>;
   locked?: boolean;
   confidence: number;
   attachments?: UploadFile[];
@@ -150,6 +143,7 @@ const Widget = ({
 
     console.log("lookup", word);
   };
+
   if (wordData.type?.value === ".ctl.") {
     if (wordData.word.value.includes("para")) {
       return <WbwPara data={wordData} />;
