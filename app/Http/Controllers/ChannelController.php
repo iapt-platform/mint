@@ -116,53 +116,53 @@ class ChannelController extends Controller
             case 'user-in-chapter':
                 #获取user 在某章节 所有有权限的channel列表
                 $user = AuthApi::current($request);
-                if($user){
-                    $channelById = [];
-                    $channelId = [];
-                    //获取共享channel
-                    $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
-                    foreach ($allSharedChannels as $key => $value) {
-                        # code...
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $channelById = [];
+                $channelId = [];
+                //获取共享channel
+                $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+                foreach ($allSharedChannels as $key => $value) {
+                    # code...
+                    $channelId[] = $value['res_id'];
+                    $channelById[$value['res_id']] = $value;
+                }
+                //获取全网公开channel
+                $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
+                $publicChannelsWithContent = Sentence::where('book_id',$request->get('book'))
+                                            ->whereBetween('paragraph',$chapter)
+                                            ->where('strlen','>',0)
+                                            ->where('status',30)
+                                            ->groupBy('channel_uid')
+                                            ->select('channel_uid')
+                                            ->get();
+                foreach ($publicChannelsWithContent as $key => $value) {
+                    # code...
+                    $value['res_id']=$value->channel_uid;
+                    $value['power'] = 10;
+                    $value['type'] = 2;
+                    if(!isset($channelById[$value['res_id']])){
                         $channelId[] = $value['res_id'];
                         $channelById[$value['res_id']] = $value;
                     }
-                    //获取全网公开channel
-                    $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
-                    $publicChannelsWithContent = Sentence::where('book_id',$request->get('book'))
-                                                ->whereBetween('paragraph',$chapter)
-                                                ->where('strlen','>',0)
-                                                ->where('status',30)
-                                                ->groupBy('channel_uid')
-                                                ->select('channel_uid')
-                                                ->get();
-                    foreach ($publicChannelsWithContent as $key => $value) {
-                        # code...
-                        $value['res_id']=$value->channel_uid;
-                        $value['power'] = 10;
-                        $value['type'] = 2;
-                        if(!isset($channelById[$value['res_id']])){
-                            $channelId[] = $value['res_id'];
-                            $channelById[$value['res_id']] = $value;
-                        }
-                    }
-                    $table = Channel::select($indexCol)
-                            ->whereIn('uid', $channelId)
-                            ->orWhere('owner_uid',$user['user_uid']);
-                }else{
-                    return $this->error(__('auth.failed'));
                 }
+                $table = Channel::select($indexCol)
+                        ->whereIn('uid', $channelId)
+                        ->orWhere('owner_uid',$user['user_uid']);
+
                 break;
 
         }
         //处理搜索
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has("search")){
+            $table = $table->where('name', 'like', "%".$request->get("search")."%");
         }
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
+        if($request->has("order") && $request->has("dir")){
+            $table = $table->orderBy($request->get("order"),$request->get("dir"));
         }else{
             //默认排序
             $table = $table->orderBy('updated_at','desc');
