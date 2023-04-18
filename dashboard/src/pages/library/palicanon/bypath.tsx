@@ -36,7 +36,7 @@ const Widget = () => {
     setBookPath(arrPath);
     setBookRoot(currRoot);
     console.log("index-load", root);
-  }, [root, path]);
+  }, [root, path, navigate]);
 
   // TODO
   return (
