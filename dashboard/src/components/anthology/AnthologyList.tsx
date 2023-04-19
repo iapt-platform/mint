@@ -25,6 +25,7 @@ import {
   IResNumberResponse,
   renderBadge,
 } from "../../pages/studio/channel/list";
+import StudioName, { IStudio } from "../auth/StudioName";
 
 const { Text } = Typography;
 
@@ -35,6 +36,7 @@ interface IItem {
   subtitle: string;
   publicity: number;
   articles: number;
+  studio?: IStudio;
   createdAt: number;
 }
 interface IWidget {
@@ -153,6 +155,16 @@ const Widget = ({
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.owner.label",
+            }),
+            dataIndex: "studio",
+            key: "studio",
+            render: (text, row, index, action) => {
+              return <StudioName data={row.studio} />;
+            },
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.publicity.label",
             }),
             dataIndex: "publicity",
@@ -171,7 +183,6 @@ const Widget = ({
             key: "articles",
             width: 100,
             search: false,
-            sorter: (a, b) => a.articles - b.articles,
           },
           {
             title: intl.formatMessage({
@@ -271,6 +282,10 @@ const Widget = ({
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
+          url += sorter.createdAt
+            ? "&order=created_at&dir=" +
+              (sorter.createdAt === "ascend" ? "asc" : "desc")
+            : "";
 
           const res = await get<IAnthologyListResponse>(url);
           const items: IItem[] = res.data.rows.map((item, id) => {
@@ -282,6 +297,7 @@ const Widget = ({
               subtitle: item.subtitle,
               publicity: item.status,
               articles: item.childrenNumber,
+              studio: item.studio,
               createdAt: date.getTime(),
             };
           });
