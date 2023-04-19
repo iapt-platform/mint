@@ -12,7 +12,7 @@ const { Title } = Typography;
 
 interface IItem<R> {
   value: R;
-  count: number;
+  score: number;
 }
 interface IWord {
   grammar: IItem<string>[];
@@ -48,7 +48,7 @@ const Widget = ({ word }: IWidget) => {
           if (it.exp) {
             //分数计算
             const currScore = Math.floor(
-              (it.exp * it.confidence) / (3600 * 100)
+              (it.exp / 3600) * (it.confidence / 100)
             );
 
             score = meaning.get(it.mean);
@@ -79,31 +79,31 @@ const Widget = ({ word }: IWidget) => {
         };
         meaning.forEach((value, key, map) => {
           if (key && key.length > 0) {
-            _data.meaning.push({ value: key, count: value });
+            _data.meaning.push({ value: key, score: value });
           }
         });
-        _data.meaning.sort((a, b) => b.count - a.count);
+        _data.meaning.sort((a, b) => b.score - a.score);
         grammar.forEach((value, key, map) => {
           if (key && key.length > 0) {
-            _data.grammar.push({ value: key, count: value });
+            _data.grammar.push({ value: key, score: value });
           }
         });
-        _data.grammar.sort((a, b) => b.count - a.count);
+        _data.grammar.sort((a, b) => b.score - a.score);
 
         parent.forEach((value, key, map) => {
           if (key && key.length > 0) {
-            _data.parent.push({ value: key, count: value });
+            _data.parent.push({ value: key, score: value });
           }
         });
-        _data.parent.sort((a, b) => b.count - a.count);
+        _data.parent.sort((a, b) => b.score - a.score);
 
         editorId.forEach((value, key, map) => {
           const currEditor = editor.get(key);
           if (currEditor) {
-            _data.editor.push({ value: currEditor, count: value });
+            _data.editor.push({ value: currEditor, score: value });
           }
         });
-        _data.editor.sort((a, b) => b.count - a.count);
+        _data.editor.sort((a, b) => b.score - a.score);
         setWordData(_data);
       })
       .catch((error) => {
@@ -111,8 +111,20 @@ const Widget = ({ word }: IWidget) => {
       });
   }, [word, setWordData]);
 
+  const isShow = (score: number, index: number) => {
+    const Ms = 500,
+      Rd = 5,
+      minScore = 15;
+    const minOrder = Math.log(score) / Math.log(Math.pow(Ms, 1 / Rd));
+    if (index < minOrder && score > minScore) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const meaningLow = wordData?.meaning.filter(
-    (value) => value.count < minScore
+    (value, index: number) => !isShow(value.score, index)
   );
   const meaningExtra = meaningLow?.map((item, id) => {
     return <>{item.value}</>;
@@ -127,17 +139,17 @@ const Widget = ({ word }: IWidget) => {
         <Space>
           {"意思："}
           {wordData?.meaning
-            .filter((value) => value.count >= minScore)
+            .filter((value, index: number) => isShow(value.score, index))
             .map((item, id) => {
               return (
                 <Space key={id}>
                   {item.value}
-                  <Badge color="geekblue" size="small" count={item.count} />
+                  <Badge color="geekblue" size="small" count={item.score} />
                 </Space>
               );
             })}
           {meaningLow && meaningLow.length > 0 ? (
-            <Popover content={meaningExtra} placement="bottom">
+            <Popover content={<Space>{meaningExtra}</Space>} placement="bottom">
               <MoreOutlined />
             </Popover>
           ) : undefined}
@@ -147,7 +159,7 @@ const Widget = ({ word }: IWidget) => {
         <Space>
           {"语法："}
           {wordData?.grammar
-            .filter((value) => value.count >= minScore)
+            .filter((value) => value.score >= minScore)
             .map((item, id) => {
               const grammar = item.value.split("$");
               const grammarGuide = grammar.map((item, id) => {
@@ -175,7 +187,7 @@ const Widget = ({ word }: IWidget) => {
                   >
                     {grammarGuide}
                   </Space>
-                  <Badge color="geekblue" size="small" count={item.count} />
+                  <Badge color="geekblue" size="small" count={item.score} />
                 </Space>
               );
             })}
@@ -185,12 +197,12 @@ const Widget = ({ word }: IWidget) => {
         <Space>
           {"词干："}
           {wordData?.parent
-            .filter((value) => value.count >= minScore)
+            .filter((value) => value.score >= minScore)
             .map((item, id) => {
               return (
                 <Space key={id}>
                   {item.value}
-                  <Badge color="geekblue" size="small" count={item.count} />
+                  <Badge color="geekblue" size="small" count={item.score} />
                 </Space>
               );
             })}
@@ -203,7 +215,7 @@ const Widget = ({ word }: IWidget) => {
             return (
               <Space key={id}>
                 <UserName {...item.value} />
-                <Badge color="geekblue" size="small" count={item.count} />
+                <Badge color="geekblue" size="small" count={item.score} />
               </Space>
             );
           })}
