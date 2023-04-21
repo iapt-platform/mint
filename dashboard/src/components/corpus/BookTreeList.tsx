@@ -30,17 +30,19 @@ interface IWidgetBookTreeList {
   path?: string[];
   tags?: string[];
   onChange?: Function;
+  onTocLoad?: Function;
 }
 const Widget = ({
   root = "default",
   path,
   tags,
   onChange,
+  onTocLoad,
 }: IWidgetBookTreeList) => {
   const [tocData, setTocData] = useState<ITocTree[]>([]);
   const [currData, setCurrData] = useState<ITocTree[]>([]);
   const [bookPath, setBookPath] = useState<pathData[]>([]);
-  const [currRoot, setCurrRoot] = useState<string>(root);
+  const [currRoot, setCurrRoot] = useState<string>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,14 +50,18 @@ const Widget = ({
   }, [root]);
 
   useEffect(() => {
+    let mPath: string[] = [];
     const newPath: pathData[] = path
       ? path.map((item) => {
-          return { to: item, title: item };
+          mPath.push(item);
+          return { to: mPath.join("_"), title: item };
         })
       : [];
+
     setBookPath(newPath);
-    const currPath = getListCurrRoot(tocData, newPath);
-    setCurrData(currPath);
+    const currDir = getListCurrRoot(tocData, mPath);
+    console.log("currDir", currDir);
+    setCurrData(currDir);
   }, [path, tocData]);
 
   useEffect(() => {
@@ -75,18 +81,23 @@ const Widget = ({
         console.log("Book List ajax", json);
         const treeData = json.map(treeMap);
         setTocData(treeData);
+        if (typeof onTocLoad !== "undefined") {
+          onTocLoad(json);
+        }
       });
     }
   }, [currRoot]);
 
   useEffect(() => {
-    const currPath = getListCurrRoot(tocData, bookPath);
-    setCurrData(currPath);
+    const currPath =
+      bookPath.length > 0 ? bookPath[bookPath.length - 1].to.split("_") : [];
+    const currDir = getListCurrRoot(tocData, currPath);
+    setCurrData(currDir);
   }, [bookPath, tocData]);
 
   function getListCurrRoot(
     allTocData: ITocTree[],
-    currPath: pathData[]
+    currPath: string[]
   ): ITocTree[] {
     let curr: ITocTree[];
     if (allTocData.length > 0) {
@@ -98,7 +109,7 @@ const Widget = ({
     for (const itPath of currPath) {
       let isFound = false;
       for (const itAll of curr) {
-        if (itPath.to === itAll.dir) {
+        if (itPath === itAll.dir) {
           curr = itAll.children;
           isFound = true;
           break;
@@ -118,6 +129,7 @@ const Widget = ({
       "_"
     );
     bookPath.push({ to: newPath, title: title });
+    console.log("newPath", newPath);
     console.log("book Path", bookPath);
 
     setBookPath(bookPath);
