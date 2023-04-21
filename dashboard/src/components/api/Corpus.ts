@@ -22,7 +22,7 @@ export interface IApiPaliChapterList {
   progress_line?: number[];
 }
 
-export interface IApiResponsePaliChapterList {
+export interface IPaliChapterListResponse {
   ok: boolean;
   message: string;
   data: { rows: IApiPaliChapterList[]; count: number };
@@ -53,12 +53,13 @@ export interface IApiResponsePaliPara {
 /**
  * progress?view=chapter_channels&book=98&par=22
  */
-export interface IApiChapterChannels {
+export interface IChapterChannelData {
   book: number;
   para: number;
   uid: string;
   channel_id: string;
   progress: number;
+  progress_line?: number[];
   updated_at: string;
   views: number;
   likes: number[];
@@ -77,10 +78,10 @@ export interface IApiChapterChannels {
   studio: IStudio;
 }
 
-export interface IApiResponseChapterChannelList {
+export interface IChapterChannelListResponse {
   ok: boolean;
   message: string;
-  data: { rows: IApiChapterChannels[]; count: number };
+  data: { rows: IChapterChannelData[]; count: number };
 }
 
 export interface IApiChapterTag {
