@@ -327,8 +327,6 @@ const Widget = () => {
                     ],
                     onClick: (e) => {
                       switch (e.key) {
-                        case "share":
-                          break;
                         case "remove":
                           showDeleteConfirm(row.uid, row.title);
                           break;
