@@ -1,6 +1,5 @@
 import { Row, Col } from "antd";
 import { Typography } from "antd";
-import { API_HOST } from "../../request";
 import { TinyLine } from "@ant-design/plots";
 import TocPath from "./TocPath";
 
