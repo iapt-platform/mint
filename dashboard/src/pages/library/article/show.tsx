@@ -12,7 +12,6 @@ import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
-import Test from "../../../components/article/Test";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
