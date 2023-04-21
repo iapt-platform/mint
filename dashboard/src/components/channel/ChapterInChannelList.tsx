@@ -50,8 +50,9 @@ interface IItem {
 }
 interface IWidget {
   channelId?: string;
+  onChange?: Function;
 }
-const Widget = ({ channelId }: IWidget) => {
+const Widget = ({ channelId, onChange }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -79,7 +80,12 @@ const Widget = ({ channelId }: IWidget) => {
               <div key={index}>
                 <div key={1}>
                   <Link
-                    to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}`}
+                    to={
+                      `/article/chapter/${row.book}-${row.paragraph}` +
+                      channelId
+                        ? `?channel=${channelId}`
+                        : ""
+                    }
                   >
                     {row.title ? row.title : row.subTitle}
                   </Link>
@@ -173,7 +179,12 @@ const Widget = ({ channelId }: IWidget) => {
                 }}
               >
                 <Link
-                  to={`/article/chapter/${row.book}-${row.paragraph}_${channelId}/edit`}
+                  to={
+                    `/article/chapter/${row.book}-${row.paragraph}/edit` +
+                    channelId
+                      ? `?channel=${channelId}`
+                      : ""
+                  }
                 >
                   {intl.formatMessage({
                     id: "buttons.edit",

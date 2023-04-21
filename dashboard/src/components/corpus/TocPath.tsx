@@ -27,12 +27,11 @@ const Widget = ({
   channel,
   onChange,
 }: IWidgetTocPath): JSX.Element => {
-  let sChannel = "";
-  if (typeof channel !== "undefined" && channel.length > 0) {
-    sChannel = "_" + channel.join("_");
-  }
-
   const path = data.map((item, id) => {
+    let sChannel = "";
+    if (typeof channel !== "undefined" && channel.length > 0) {
+      sChannel = "?channel=" + channel.join("_");
+    }
     const linkChapter = `/article/chapter/${item.book}-${item.paragraph}${sChannel}`;
     let oneItem = <></>;
     const title = <PaliText text={item.title} />;

@@ -45,7 +45,12 @@ const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
             <Col span={16}>
               <Title level={5}>
                 <Link
-                  to={`/article/chapter/${data.book}-${data.paragraph}_${data.channel.id}`}
+                  to={
+                    `/article/chapter/${data.book}-${data.paragraph}` +
+                    data.channel.id
+                      ? `?channel=${data.channel.id}`
+                      : ""
+                  }
                   target="_blank"
                 >
                   {data.title ? data.title : data.paliTitle}
