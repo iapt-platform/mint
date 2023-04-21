@@ -1,6 +1,7 @@
-import { Button, Col, List, Modal, Progress, Row, Space, Tabs } from "antd";
+import { Button, Col, List, Modal, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
 import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
+import { TinyLine } from "@ant-design/plots";
 
 import { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
@@ -16,6 +17,7 @@ export interface IChapterChannelData {
   channel: IChannelApiData;
   studio: IStudio;
   progress: number;
+  progressLine?: number[];
   hit: number;
   like: number;
   updatedAt: string;
@@ -57,35 +59,51 @@ const Widget = ({
                 },
               }
         }
-        renderItem={(item, id) => (
-          <List.Item key={id}>
-            <Row>
-              <Col span={12}>
-                <Link
-                  to={`/article/chapter/${book}-${para}_${item.channel.id}`}
-                  target={openTarget}
-                >
-                  <ChannelListItem
-                    channel={item.channel}
-                    studio={item.studio}
-                  />
-                </Link>
-              </Col>
-              <Col span={12}>
-                <Progress percent={item.progress} size="small" />
-              </Col>
-            </Row>
-
-            <Text type="secondary">
-              <Space style={{ paddingLeft: "2em" }}>
-                <EyeOutlined />
-                {item.hit} | <LikeOutlined />
-                {item.like} |
-                <TimeShow time={item.updatedAt} title={item.updatedAt} />
-              </Space>
-            </Text>
-          </List.Item>
-        )}
+        renderItem={(item, id) => {
+          const channel = item.channel.id ? `?channel=${item.channel.id}` : "";
+          return (
+            <List.Item key={id}>
+              <Row>
+                <Col span={12}>
+                  <Link
+                    to={`/article/chapter/${book}-${para}${channel}`}
+                    target={openTarget}
+                  >
+                    <ChannelListItem
+                      channel={item.channel}
+                      studio={item.studio}
+                    />
+                  </Link>
+                </Col>
+                <Col span={12}>
+                  {item.progressLine ? (
+                    <TinyLine
+                      height={32}
+                      width={150}
+                      autoFit={false}
+                      data={item.progressLine}
+                      smooth={true}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </Col>
+              </Row>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Text type="secondary">
+                  <Space style={{ paddingLeft: "2em" }}>
+                    <EyeOutlined />
+                    {item.hit} | <LikeOutlined />
+                    {item.like} |
+                    <TimeShow time={item.updatedAt} /> |
+                    <EyeOutlined />
+                    {`${item.progress}%`}
+                  </Space>
+                </Text>
+              </div>
+            </List.Item>
+          );
+        }}
       />
     ) : (
       <></>
