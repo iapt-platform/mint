@@ -12,6 +12,7 @@ import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
+import Test from "../../../components/article/Test";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
@@ -120,7 +121,11 @@ const Widget = () => {
               mode={articleMode}
               onArticleChange={(article: string) => {
                 console.log("article change", article);
-                navigate(`/article/${type}/${article}/${articleMode}`);
+                let url = `/article/${type}/${article}/${articleMode}?mode=${articleMode}`;
+                if (searchParams.get("channel")) {
+                  url += "&channel=" + searchParams.get("channel");
+                }
+                navigate(url);
               }}
             />
           </div>
@@ -131,12 +136,13 @@ const Widget = () => {
               articleId={id ? id : ""}
               selectedChannelKeys={channelId}
               onChannelSelect={(e: IChannel[]) => {
-                const oldId = id?.split("_");
-                const newId = [
-                  oldId ? oldId[0] : undefined,
-                  ...e.map((item) => item.id),
-                ];
-                navigate(`/article/${type}/${newId.join("_")}/${articleMode}`);
+                console.log("onChannelSelect", e);
+                const channels = e.map((item) => item.id).join("_");
+                let url = `/article/${type}/${id}/${articleMode}`;
+                if (e.length > 0) {
+                  url += `?channel=${channels}`;
+                }
+                navigate(url);
               }}
             />
           </div>
