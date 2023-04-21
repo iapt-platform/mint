@@ -155,7 +155,6 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
               <Button
                 style={{ color: "white" }}
                 icon={<SearchOutlined />}
-                ghost
                 type="text"
               />
             </Link>
