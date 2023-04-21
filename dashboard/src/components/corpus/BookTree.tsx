@@ -92,6 +92,7 @@ const Widget = ({
             if (typeof onRootChange !== "undefined") {
               onRootChange(value);
             }
+            setCurrTocStyle(value);
             fetchBookTree(value);
           }}
         />
