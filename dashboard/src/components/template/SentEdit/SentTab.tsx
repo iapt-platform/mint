@@ -40,7 +40,12 @@ const Widget = ({
         tabBarGutter={0}
         tabBarExtraContent={
           <Space>
-            <TocPath data={path} trigger={path ? path[0].paliTitle : <></>} />
+            <TocPath
+              data={path}
+              trigger={
+                path ? path.length > 0 ? path[0].paliTitle : <></> : <></>
+              }
+            />
             <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
           </Space>
         }
