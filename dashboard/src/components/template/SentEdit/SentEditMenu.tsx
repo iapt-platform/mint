@@ -1,6 +1,7 @@
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown } from "antd";
 import { useState } from "react";
 import { EditOutlined, CopyOutlined, MoreOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
 
 interface ISentEditMenu {
   children?: React.ReactNode;
@@ -9,23 +10,19 @@ interface ISentEditMenu {
 const Widget = ({ children, onModeChange }: ISentEditMenu) => {
   const [isHover, setIsHover] = useState(false);
 
-  const menu = (
-    <Menu
-      onClick={(e) => {
-        console.log(e);
-      }}
-      items={[
-        {
-          key: "en",
-          label: "时间线",
-        },
-        {
-          key: "zh-Hans",
-          label: "分享",
-        },
-      ]}
-    />
-  );
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log(e);
+  };
+  const items = [
+    {
+      key: "en",
+      label: "时间线",
+    },
+    {
+      key: "zh-Hans",
+      label: "分享",
+    },
+  ];
 
   return (
     <div
@@ -54,7 +51,7 @@ const Widget = ({ children, onModeChange }: ISentEditMenu) => {
           }}
         />
         <Button icon={<CopyOutlined />} size="small" />
-        <Dropdown overlay={menu} placement="bottomRight">
+        <Dropdown menu={{ items, onClick }} placement="bottomRight">
           <Button icon={<MoreOutlined />} size="small" />
         </Dropdown>
       </div>

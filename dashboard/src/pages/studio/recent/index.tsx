@@ -2,41 +2,13 @@ import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { Layout, Space, Table } from "antd";
-import type { MenuProps } from "antd";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { ProTable } from "@ant-design/pro-components";
 
 import LeftSider from "../../../components/studio/LeftSider";
 
 const { Content } = Layout;
-
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "1",
-        label: "在藏经阁中打开",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "2",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "3",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 
 interface IItem {
   id: number;
@@ -120,7 +92,40 @@ const Widget = () => {
               width: 120,
               valueType: "option",
               render: (text, row, index, action) => [
-                <Dropdown.Button type="link" key={index} overlay={menu}>
+                <Dropdown.Button
+                  type="link"
+                  key={index}
+                  trigger={["click", "contextMenu"]}
+                  menu={{
+                    items: [
+                      {
+                        key: "open",
+                        label: "在藏经阁中打开",
+                        icon: <SearchOutlined />,
+                      },
+                      {
+                        key: "share",
+                        label: "分享",
+                        icon: <SearchOutlined />,
+                      },
+                      {
+                        key: "delete",
+                        label: "删除",
+                        icon: <SearchOutlined />,
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "share":
+                          break;
+                        case "delete":
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
                   {intl.formatMessage({ id: "buttons.edit" })}
                 </Dropdown.Button>,
               ],
