@@ -13,6 +13,23 @@ use App\Http\Api\AuthApi;
 define("MAX_INTERVAL", 600000);
 define("MIN_INTERVAL", 60000);
 
+/**
+ * 	$active_type[10] = "channel_update";
+ * 	$active_type[11] = "channel_create";
+ * 	$active_type[20] = "article_update";
+ * 	$active_type[21] = "article_create";
+ * 	$active_type[30] = "dict_lookup";
+ * 	$active_type[40] = "term_update";
+ * 	$active_type[42] = "term_create";
+ * 	$active_type[41] = "term_lookup";
+ * 	$active_type[60] = "wbw_update";
+ * 	$active_type[61] = "wbw_create";
+ * 	$active_type[70] = "sent_update";
+ * 	$active_type[71] = "sent_create";
+ * 	$active_type[80] = "collection_update";
+ * 	$active_type[81] = "collection_create";
+ * 	$active_type[90] = "nissaya_open";
+ */
 class UserOperation
 {
     /**
@@ -30,9 +47,51 @@ class UserOperation
             return $response;
         }
 
+
+        $api = explode('/',$request->path());
+        if(count($api)<3){
+            return $response;
+        }if($api[0] !== 'api' || $api[1] !=='v2'){
+            return $response;
+        }
         $method = $request->method();
-        $api = substr($request->path(),7);
-        switch ($api) {
+        switch ($api[2]) {
+            case 'channel':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>11,
+                            "op_type"=>"channel_create",
+                            "content"=>$request->get('studio').'/'.$request->get('name'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>10,
+                            "op_type"=>"channel_update",
+                            "content"=>$request->get('name'),
+                        ];
+                        break;
+                }
+                break;
+            case 'article':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>21,
+                            "op_type"=>"article_create",
+                            "content"=>$request->get('studio').'/'.$request->get('title'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>20,
+                            "op_type"=>"article_update",
+                            "content"=>$request->get('title'),
+                        ];
+                        break;
+                }
+                break;
             case 'dict':
                 $newLog = [
                     "op_type_id"=>30,
@@ -40,8 +99,59 @@ class UserOperation
                     "content"=>$request->get("word")
                 ];
                 break;
-            default:
-                # code...
+            case 'terms':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>42,
+                            "op_type"=>"term_create",
+                            "content"=>$request->get('word'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>40,
+                            "op_type"=>"term_update",
+                            "content"=>$request->get('word'),
+                        ];
+                        break;
+                }
+                break;
+            case 'sentence':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>71,
+                            "op_type"=>"sent_create",
+                            "content"=>$request->get('channel'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>70,
+                            "op_type"=>"sent_update",
+                            "content"=>$request->get('channel'),
+                        ];
+                        break;
+                }
+                break;
+            case 'anthology':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>81,
+                            "op_type"=>"collection_create",
+                            "content"=>$request->get('title'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>80,
+                            "op_type"=>"collection_update",
+                            "content"=>$request->get('title'),
+                        ];
+                        break;
+                }
                 break;
         }
         if(isset($newLog)){
