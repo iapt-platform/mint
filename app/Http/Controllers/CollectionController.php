@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
-
+use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\DB;
 
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
@@ -78,8 +78,8 @@ class CollectionController extends Controller
             $table = $table->where('title', 'like', "%".$request->get("search")."%");
         }
         $count = $table->count();
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
+        if($request->has("order") && $request->has("dir")){
+            $table = $table->orderBy($request->get("order"),$request->get("dir"));
         }else{
             if($request->get('view') === 'studio_list'){
                 $table = $table->orderBy('count','desc');
@@ -87,47 +87,12 @@ class CollectionController extends Controller
                 $table = $table->orderBy('updated_at','desc');
             }
         }
-
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
+        if($request->has("limit")){
+            $table = $table->skip($request->get("offset",0))
+                           ->take($request->get("limit"));
         }
         $result = $table->get();
-		if($result){
-            foreach ($result as $key => $value) {
-                # code...
-                if(is_array(\json_decode($value->article_list))){
-                    $value->childrenNumber = count(\json_decode($value->article_list));
-                }else{
-                    $value->childrenNumber = 0;
-                }
-
-                if(isset($value->article_list) && !empty($value->article_list) ){
-                    $arrList = \json_decode($value->article_list);
-                    if(is_array($arrList)){
-                        $result[$key]->article_list = array_slice($arrList,0,4);
-                    }
-                }
-                $value->studio = [
-                    'id'=>$value->owner,
-                    'nickName'=>$userinfo->getName($value->owner)['nickname'],
-                    'studioName'=>$userinfo->getName($value->owner)['username'],
-                    'avastar'=>'',
-                    'owner' => [
-                        'id'=>$value->owner,
-                        'nickName'=>$userinfo->getName($value->owner)['nickname'],
-                        'userName'=>$userinfo->getName($value->owner)['username'],
-                        'avastar'=>'',
-                    ]
-                ];
-            }
-			return $this->ok(["rows"=>$result,"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+		return $this->ok(["rows"=>CollectionResource::collection($result),"count"=>$count]);
     }
 
             /**
