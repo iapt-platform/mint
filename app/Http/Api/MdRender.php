@@ -36,7 +36,12 @@ class MdRender{
         return $html;
     }
     public static function xmlQueryId(string $xml, string $id):string{
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            return "<div></div>";
+        }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             foreach ($tpl->children() as  $param) {
@@ -57,7 +62,12 @@ class MdRender{
     }
     public static function take_sentence(string $xml):array{
         $output = [];
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            return $output;
+        }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             foreach($tpl->attributes() as $a => $a_value){
@@ -85,8 +95,13 @@ class MdRender{
          * 获取模版参数
          * 生成react 组件参数
          */
-        //$xml = str_replace(['<b>','</b>'],['',''],$xml);
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            return "<span></span>";
+        }
+
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
