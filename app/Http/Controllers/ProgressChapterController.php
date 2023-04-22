@@ -15,6 +15,7 @@ use App\Models\View;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use App\Http\Api\StudioApi;
+use Illuminate\Support\Facades\Cache;
 
 class ProgressChapterController extends Controller
 {
@@ -225,6 +226,8 @@ class ProgressChapterController extends Controller
                     }
                     $chapters[$key]->likes = $likes;
                     $chapters[$key]->studio = StudioApi::getById($value->channel->owner_uid);
+                    $progress_key="/chapter_dynamic/{$value->book}/{$value->para}/ch_{$value->channel_id}";
+                    $chapters[$key]->progress_line = Cache::get($progress_key);
                 }
 
                 $all_count = count($chapters);
