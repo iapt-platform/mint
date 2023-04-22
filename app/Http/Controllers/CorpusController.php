@@ -291,18 +291,17 @@ class CorpusController extends Controller
 
      * @param  \Illuminate\Http\Request  $request
      * @param string $id
-     * @param string $mode
      * @return \Illuminate\Http\Response
      */
-    public function showChapter(Request $request, string $id,string $mode='read')
+    public function showChapter(Request $request, string $id)
     {
         //
-        $param = \explode('_',$id);
-        $sentId = \explode('-',$param[0]);
+        $sentId = \explode('-',$id);
         $channels = [];
-        if(count($param)>1){
-            $channels = array_slice($param,1);
+        if($request->has('channels')){
+            $channels = explode('_',$request->get('channels'));
         }
+        $mode = $request->get('mode','read');
         if($mode === 'read'){
             //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
