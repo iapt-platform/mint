@@ -99,8 +99,9 @@ Route::group(['prefix' => 'v2'],function(){
 
     Route::apiResource('corpus',CorpusController::class);
     Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
-    Route::get('corpus/chapter/{id}/{mode}',[CorpusController::class,'showChapter']);
+    Route::get('corpus-chapter/{id}',[CorpusController::class,'showChapter']);
     Route::get('corpus_sent/{type}/{id}/{mode}',[CorpusController::class,'showSentences']);
+
     Route::apiResource('article-progress',ArticleProgressController::class);
 
     Route::post('export_wbw',[ExportWbwController::class,'index']);
