@@ -99,7 +99,7 @@ class MdRender{
             $dom = simplexml_load_string($xml);
         }catch(\Exception $e){
             Log::error($e);
-            return "<span></span>";
+            return "<span>xml解析错误</span>";
         }
 
 
