@@ -13,12 +13,14 @@ const Widget = ({ onSelect }: IWidget) => {
   useEffect(() => {
     get<IChapterLangListResponse>(`/v2/progress?view=lang`).then((json) => {
       if (json.ok) {
-        const langs = json.data.rows.map((item) => {
-          return {
-            value: item.lang,
-            label: `${item.lang}-${item.count}`,
-          };
-        });
+        const langs = json.data.rows
+          .filter((value) => value.lang !== "")
+          .map((item) => {
+            return {
+              value: item.lang,
+              label: `${item.lang}-${item.count}`,
+            };
+          });
         setLang(langs);
       }
     });
