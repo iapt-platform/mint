@@ -24,7 +24,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams();
   const linkPalicanon = "/studio/" + studioname + "/palicanon";
-  const linkRecent = "/studio/" + studioname + "/recent";
+  const linkRecent = "/studio/" + studioname + "/recent/list";
   const linkChannel = "/studio/" + studioname + "/channel/list";
   const linkGroup = "/studio/" + studioname + "/group/list";
   const linkUserdict = "/studio/" + studioname + "/dict/list";
@@ -61,7 +61,6 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "recent",
-          disabled: true,
         },
         {
           label: (
