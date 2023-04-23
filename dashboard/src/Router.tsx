@@ -62,6 +62,7 @@ import StudioHome from "./pages/studio/home";
 
 import StudioPalicanon from "./pages/studio/palicanon";
 import StudioRecent from "./pages/studio/recent";
+import StudioRecentList from "./pages/studio/recent/list";
 
 import StudioChannel from "./pages/studio/channel";
 import StudioChannelList from "./pages/studio/channel/list";
@@ -218,7 +219,9 @@ const Widget = () => {
         <Route path="studio/:studioname" element={<Studio />}>
           <Route path="home" element={<StudioHome />} />
           <Route path="palicanon" element={<StudioPalicanon />}></Route>
-          <Route path="recent" element={<StudioRecent />}></Route>
+          <Route path="recent" element={<StudioRecent />}>
+            <Route path="list" element={<StudioRecentList />} />
+          </Route>
 
           <Route path="channel" element={<StudioChannel />}>
             <Route path="list" element={<StudioChannelList />} />
