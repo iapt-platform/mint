@@ -10,6 +10,7 @@ import PaliChapterListByTag from "../../../components/corpus/PaliChapterListByTa
 import BookViewer from "../../../components/corpus/BookViewer";
 import { IChapterClickEvent } from "../../../components/corpus/PaliChapterList";
 import { IPaliBookListResponse } from "../../../components/api/Corpus";
+import Recent from "../../../components/corpus/Recent";
 
 const Widget = () => {
   const { root, path, tag } = useParams();
@@ -108,7 +109,7 @@ const Widget = () => {
                 </div>
               </Affix>
             </Col>
-            <Col xs={24} sm={18} md={14}>
+            <Col xs={24} sm={18} md={13}>
               <BookTreeList
                 tags={bookTag}
                 root={bookRoot}
@@ -137,8 +138,8 @@ const Widget = () => {
                 }}
               />
             </Col>
-            <Col xs={0} sm={0} md={4}>
-              侧边栏
+            <Col xs={0} sm={0} md={5}>
+              <Recent />
             </Col>
           </Row>
         </Col>
