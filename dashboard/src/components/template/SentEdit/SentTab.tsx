@@ -5,25 +5,32 @@ import {
   BlockOutlined,
 } from "@ant-design/icons";
 
-import { IWidgetSentEditInner } from "../SentEdit";
 import SentTabButton from "./SentTabButton";
 import SentCanRead from "./SentCanRead";
 import SentSim from "./SentSim";
 import { useIntl } from "react-intl";
-import TocPath from "../../corpus/TocPath";
+import TocPath, { ITocPathNode } from "../../corpus/TocPath";
 
 const { Text } = Typography;
-
+interface IWidget {
+  id: string;
+  path?: ITocPathNode[];
+  layout?: "row" | "column";
+  tranNum?: number;
+  nissayaNum?: number;
+  commNum?: number;
+  originNum: number;
+  simNum?: number;
+}
 const Widget = ({
   id,
-  channels,
   path,
   tranNum,
   nissayaNum,
   commNum,
   originNum,
   simNum = 0,
-}: IWidgetSentEditInner) => {
+}: IWidget) => {
   const intl = useIntl();
 
   if (typeof id === "undefined") {
