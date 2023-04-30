@@ -37,6 +37,8 @@ interface IWidgetChapterCard {
 
 const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
+  let url = `/article/chapter/${data.book}-${data.paragraph}`;
+  url += data.channel.id ? `?channel=${data.channel.id}` : "";
   return (
     <>
       <Row>
@@ -44,15 +46,7 @@ const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
           <Row>
             <Col span={16}>
               <Title level={5}>
-                <Link
-                  to={
-                    `/article/chapter/${data.book}-${data.paragraph}` +
-                    data.channel.id
-                      ? `?channel=${data.channel.id}`
-                      : ""
-                  }
-                  target="_blank"
-                >
+                <Link to={url} target="_blank">
                   {data.title ? data.title : data.paliTitle}
                 </Link>
               </Title>
