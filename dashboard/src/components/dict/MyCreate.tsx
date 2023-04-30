@@ -24,6 +24,9 @@ const Widget = ({ word }: IWidget) => {
   const [wordSpell, setWordSpell] = useState(word);
   const [editWord, setEditWord] = useState<IWbw>({
     word: { value: word ? word : "", status: 1 },
+    book: 0,
+    para: 0,
+    sn: [0],
     confidence: 100,
   });
   const [loading, setLoading] = useState(false);
@@ -80,7 +83,7 @@ const Widget = ({ word }: IWidget) => {
           .join("$");
         mData.type = { value: _type, status: 7 };
         mData.grammar = { value: _grammar, status: 7 };
-        mData.case = { value: value.split("$"), status: 5 };
+        mData.case = { value: value, status: 7 };
         break;
       case "confidence":
         mData.confidence = parseFloat(value);
