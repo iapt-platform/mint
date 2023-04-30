@@ -14,12 +14,20 @@ interface ILayoutFlex {
 type TDirection = "row" | "column";
 interface IWidgetSentContent {
   sid?: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: TDirection;
 }
 const Widget = ({
   sid,
+  book,
+  para,
+  wordStart,
+  wordEnd,
   origin,
   translation,
   layout = "column",
@@ -73,7 +81,15 @@ const Widget = ({
       <div style={{ flex: layoutFlex.left, color: "#9f3a01" }}>
         {origin?.map((item, id) => {
           if (item.channel.type === "wbw") {
-            return <WbwSentCtl key={id} data={JSON.parse(item.content)} />;
+            return (
+              <WbwSentCtl
+                key={id}
+                book={book}
+                para={para}
+                channelId={item.channel.id}
+                data={JSON.parse(item.content)}
+              />
+            );
           } else {
             return <SentCell key={id} data={item} wordWidget={true} />;
           }
