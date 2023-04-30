@@ -7,11 +7,19 @@ import FontBox from "./FontBox";
 import TreeTest from "./TreeTest";
 
 import { Layout } from "antd";
+import WbwDetailFm from "../template/Wbw/WbwDetailFm";
 
 const Widget = () => {
   return (
     <Layout>
       <h1>Home</h1>
+      <WbwDetailFm
+        factors={["abhi", "dhamma"]}
+        initValue={[]}
+        onChange={(value: string[]) => {
+          console.log("fm change", value);
+        }}
+      />
       <h2>TreeTest</h2>
       <TreeTest />
 
