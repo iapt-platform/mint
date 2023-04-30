@@ -1,14 +1,20 @@
 import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Space, Table } from "antd";
-import { Button, Dropdown } from "antd";
+import { Dropdown } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { ProTable } from "@ant-design/pro-components";
 import { get } from "../../../request";
-import { json } from "stream/consumers";
+import { ArticleType } from "../../../components/article/Article";
 
-interface IMetaChapter {
+export interface IViewRequest {
+  target_type: ArticleType;
+  book: number;
+  para: number;
+  channel: string;
+  mode: string;
+}
+export interface IMetaChapter {
   book: number;
   para: number;
   channel: string;
@@ -17,13 +23,18 @@ interface IMetaChapter {
 interface IViewData {
   id: string;
   target_id: string;
-  target_type: string;
+  target_type: ArticleType;
   updated_at: string;
   title: string;
   org_title: string;
   meta: string;
 }
-export interface IArticleResponse {
+export interface IViewStoreResponse {
+  ok: boolean;
+  message: string;
+  data: number;
+}
+export interface IViewResponse {
   ok: boolean;
   message: string;
   data: IViewData;
@@ -37,11 +48,11 @@ export interface IViewListResponse {
   };
 }
 
-interface IView {
+export interface IView {
   id: string;
   title: string;
   subtitle: string;
-  type: string;
+  type: ArticleType;
   updatedAt: string;
   meta: IMetaChapter;
 }
