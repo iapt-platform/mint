@@ -145,6 +145,12 @@ const items = {
   "dict.fields.type.adj:base.short.label": "形词干",
   "dict.fields.type.fpp.label": "未来被动分词",
   "dict.fields.type.fpp.short.label": "未被分",
+  "dict.fields.type.cp.short.label": "合",
+  "dict.fields.type.cp.label": "复合词组分",
+  "dict.fields.type.indconj.short.label": "连",
+  "dict.fields.type.indconj.label": "连词",
+  "dict.fields.type.pron:base.short.label": "代干",
+  "dict.fields.type.pron:base.label": "代词词干",
 };
 
 export default items;
