@@ -1,4 +1,4 @@
-import { Button, List, Space } from "antd";
+import { Button, List } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IView, IViewListResponse } from "../../pages/studio/recent/list";
