@@ -36,6 +36,10 @@ export interface ISentenceId {
 }
 export interface IWidgetSentEditInner {
   id: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
   channels?: string[];
   origin?: ISentence[];
   translation?: ISentence[];
@@ -49,6 +53,11 @@ export interface IWidgetSentEditInner {
 }
 export const SentEditInner = ({
   id,
+  book,
+  para,
+  wordStart,
+  wordEnd,
+  channels,
   origin,
   translation,
   path,
@@ -65,6 +74,10 @@ export const SentEditInner = ({
       <SentMenu book={parseInt(sid[0])} para={parseInt(sid[1])}>
         <SentContent
           sid={id}
+          book={book}
+          para={para}
+          wordStart={wordStart}
+          wordEnd={wordEnd}
           origin={origin}
           translation={translation}
           layout={layout}
