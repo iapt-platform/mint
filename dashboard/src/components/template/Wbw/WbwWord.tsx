@@ -23,8 +23,10 @@ export type TFieldName =
   | "meaning"
   | "type"
   | "grammar"
+  | "grammar2"
   | "case"
   | "parent"
+  | "parent2"
   | "factors"
   | "factorMeaning"
   | "relation"
@@ -44,21 +46,26 @@ enum WbwStatus {
   auto = 3,
   manual = 5,
 }
-interface WbwElement<R> {
+export interface WbwElement<R> {
   value: R;
   status: WbwStatus;
 }
 
 export interface IWbw {
   uid?: string;
+  book: number;
+  para: number;
+  sn: number[];
   word: WbwElement<string>;
   real?: WbwElement<string>;
   meaning?: WbwElement<string[]>;
   type?: WbwElement<string>;
   grammar?: WbwElement<string>;
   style?: WbwElement<string>;
-  case?: WbwElement<string[]>;
+  case?: WbwElement<string>;
   parent?: WbwElement<string>;
+  parent2?: WbwElement<string>;
+  grammar2?: WbwElement<string>;
   factors?: WbwElement<string>;
   factorMeaning?: WbwElement<string>;
   relation?: WbwElement<string>;
@@ -84,7 +91,7 @@ interface IWidget {
   onChange?: Function;
   onSplit?: Function;
 }
-const Widget = ({
+const WbwWordWidget = ({
   data,
   display = "block",
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
@@ -170,6 +177,7 @@ const Widget = ({
         }}
       >
         <WbwPali
+          key="pali"
           data={wordData}
           display={display}
           onSave={(e: IWbw) => {
@@ -189,6 +197,7 @@ const Widget = ({
         >
           {fieldDisplay?.meaning ? (
             <WbwMeaning
+              key="meaning"
               data={wordData}
               display={display}
               onChange={(e: string) => {
@@ -204,6 +213,7 @@ const Widget = ({
           ) : undefined}
           {fieldDisplay?.factors ? (
             <WbwFactors
+              key="factors"
               data={wordData}
               display={display}
               onChange={(e: string) => {
@@ -212,11 +222,15 @@ const Widget = ({
                 newData.factors = { value: e, status: 5 };
                 setNewFactors(e);
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
           {fieldDisplay?.factorMeaning ? (
             <WbwFactorMeaning
+              key="fm"
               data={wordData}
               display={display}
               factors={newFactors}
@@ -224,11 +238,15 @@ const Widget = ({
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = { value: e, status: 5 };
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
           {fieldDisplay?.case ? (
             <WbwCase
+              key="case"
               data={wordData}
               display={display}
               onSplit={(e: boolean) => {
@@ -239,8 +257,11 @@ const Widget = ({
               }}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.case = { value: e.split("$"), status: 5 };
+                newData.case = { value: e, status: 7 };
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
@@ -250,4 +271,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default WbwWordWidget;

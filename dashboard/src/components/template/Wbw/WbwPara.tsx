@@ -6,7 +6,7 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   data: IWbw;
 }
-const Widget = ({ data }: IWidget) => {
+const WbwParaWidget = ({ data }: IWidget) => {
   return (
     <span>
       <Button size="small" type="link" icon={<PicCenterOutlined />} />
@@ -14,4 +14,4 @@ const Widget = ({ data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwParaWidget;

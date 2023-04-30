@@ -4,6 +4,7 @@ import {
   TagTwoTone,
   InfoCircleOutlined,
   CommentOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 
 import "./wbw.css";
@@ -23,7 +24,7 @@ interface IWidget {
   display?: TWbwDisplayMode;
   onSave?: Function;
 }
-const Widget = ({ data, display, onSave }: IWidget) => {
+const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   const [click, setClicked] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [isHover, setIsHover] = useState(false);
@@ -80,6 +81,10 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         };
       })}
     />
+  ) : undefined;
+
+  const relationIcon = data.relation ? (
+    <ApartmentOutlined style={{ color: "blue" }} />
   ) : undefined;
 
   const bookMarkIcon = data.bookMarkText ? (
@@ -146,7 +151,7 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         marginLeft: "-2em",
       };
       commentIconStyle = {
-        visibility: isHover ? "visible" : "hidden",
+        visibility: "hidden",
         cursor: "pointer",
       };
     }
@@ -193,6 +198,7 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         {videoIcon}
         {noteIcon}
         {bookMarkIcon}
+        {relationIcon}
         {discussionIcon}
       </div>
     );
@@ -206,4 +212,4 @@ const Widget = ({ data, display, onSave }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwPaliWidget;

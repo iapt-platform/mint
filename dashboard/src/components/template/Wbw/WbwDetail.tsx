@@ -23,37 +23,44 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
   function fieldChanged(field: TFieldName, value: string) {
+    console.log("field", field, "value", value);
     let mData = currWbwData;
     switch (field) {
       case "note":
-        mData.note = { value: value, status: 5 };
+        mData.note = { value: value, status: 7 };
         break;
       case "bookMarkColor":
-        mData.bookMarkColor = { value: parseInt(value), status: 5 };
+        mData.bookMarkColor = { value: parseInt(value), status: 7 };
         break;
       case "bookMarkText":
-        mData.bookMarkText = { value: value, status: 5 };
+        mData.bookMarkText = { value: value, status: 7 };
         break;
       case "word":
-        mData.word = { value: value, status: 5 };
+        mData.word = { value: value, status: 7 };
         break;
       case "real":
-        mData.real = { value: value, status: 5 };
+        mData.real = { value: value, status: 7 };
         break;
       case "meaning":
-        mData.meaning = { value: value.split("$"), status: 5 };
+        mData.meaning = { value: value.split("$"), status: 7 };
         break;
       case "factors":
-        mData.factors = { value: value, status: 5 };
+        mData.factors = { value: value, status: 7 };
         break;
       case "factorMeaning":
-        mData.factorMeaning = { value: value, status: 5 };
+        mData.factorMeaning = { value: value, status: 7 };
         break;
       case "parent":
-        mData.parent = { value: value, status: 5 };
+        mData.parent = { value: value, status: 7 };
+        break;
+      case "parent2":
+        mData.parent2 = { value: value, status: 7 };
+        break;
+      case "grammar2":
+        mData.grammar2 = { value: value, status: 7 };
         break;
       case "case":
-        mData.case = { value: value.split("$"), status: 5 };
+        mData.case = { value: value, status: 7 };
         break;
       case "confidence":
         mData.confidence = parseFloat(value);
