@@ -1,5 +1,6 @@
 import { useIntl } from "react-intl";
 import { Cascader } from "antd";
+import { useEffect, useState } from "react";
 
 interface CascaderOption {
   value: string | number;
@@ -7,11 +8,20 @@ interface CascaderOption {
   children?: CascaderOption[];
 }
 interface IWidget {
-  defaultValue?: string[];
+  value?: string;
   onCaseChange?: Function;
 }
-const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
+const Widget = ({ value, onCaseChange }: IWidget) => {
   const intl = useIntl();
+  const [currValue, setCurrValue] = useState<(string | number)[]>();
+
+  useEffect(() => {
+    const arrValue = value
+      ?.replaceAll("#", "$")
+      .split("$")
+      .map((item) => item.replaceAll(".", ""));
+    setCurrValue(arrValue);
+  }, [value]);
 
   const case8 = [
     {
@@ -310,12 +320,33 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
   ];
   return (
     <Cascader
+      value={currValue}
       options={options}
       placeholder="Please select case"
       onChange={(value: (string | number)[]) => {
         console.log("case changed", value);
+        let newValue: (string | number)[];
+        if (
+          value.length > 1 &&
+          value[value.length - 1] === value[value.length - 2]
+        ) {
+          newValue = value.slice(0, -1);
+        } else {
+          newValue = value;
+        }
+        setCurrValue(newValue);
         if (typeof onCaseChange !== "undefined") {
-          onCaseChange(value);
+          let output = newValue.map((item) => `.${item}.`).join("$");
+          output = output.replace(".$.base", ":base");
+          if (output.indexOf("$") > 0) {
+            output =
+              output.substring(0, output.indexOf("$")) +
+              "#" +
+              output.substring(output.indexOf("$") + 1);
+          } else {
+            output += "#";
+          }
+          onCaseChange(output);
         }
       }}
     />
