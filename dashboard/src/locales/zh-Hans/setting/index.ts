@@ -26,6 +26,8 @@ const items = {
   "setting.search.orderby.label": "排序",
   "setting.search.orderby.rank.label": "相关度",
   "setting.search.orderby.paragraph.label": "段落",
+  "setting.dict.lang.label": "字典语言",
+  "setting.dict.lang.description": "字典查询结果的语言排序",
 };
 
 export default items;
