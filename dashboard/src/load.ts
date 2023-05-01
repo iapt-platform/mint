@@ -12,6 +12,8 @@ import { get as getLang } from "./locales";
 import store from "./store";
 import { ITerm, push } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
+import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
+import { pushRelation } from "./reducers/relation";
 
 export interface ISiteInfoResponse {
   title: string;
@@ -101,6 +103,7 @@ const init = () => {
       }
     }
   );
+
   get<ITermResponse>(
     `/v2/term-vocabulary?view=community&lang=` + getLang()
   ).then((json) => {
@@ -108,6 +111,7 @@ const init = () => {
       store.dispatch(push(json.data.rows));
     }
   });
+
   //获取nissaya ending 表
   get<INissayaEndingResponse>(`/v2/nissaya-ending-vocabulary?lang=my`).then(
     (json) => {
@@ -117,6 +121,22 @@ const init = () => {
       }
     }
   );
+
+  //获取 relation 表
+  get<IRelationListResponse>(`/v2/relation?limit=1000`).then((json) => {
+    if (json.ok) {
+      const items: IRelation[] = json.data.rows.map((item, id) => {
+        return {
+          id: item.id,
+          name: item.name,
+          case: item.case,
+          to: item.to,
+        };
+      });
+      store.dispatch(pushRelation(items));
+    }
+  });
+
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");
   if (theme === "dark") {

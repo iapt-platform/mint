@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Popover, Typography } from "antd";
 import {
   TagTwoTone,
@@ -17,6 +17,8 @@ import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
 import store from "../../../store";
 import { command } from "../../../reducers/command";
+import { useAppSelector } from "../../../hooks";
+import { add, relationAddParam } from "../../../reducers/relation-add";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -25,10 +27,41 @@ interface IWidget {
   onSave?: Function;
 }
 const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
-  const [click, setClicked] = useState(false);
+  const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [isHover, setIsHover] = useState(false);
   const [hasComment, setHasComment] = useState(data.hasComment);
+  /**
+   * 处理 relation 链接事件
+   * 点击连接或取消后，打开弹窗
+   */
+  const addParam = useAppSelector(relationAddParam);
+  useEffect(() => {
+    if (
+      (addParam?.command === "apply" || addParam?.command === "cancel") &&
+      addParam.src_sn === data.sn.join("-") &&
+      addParam.book === data.book &&
+      addParam.para === data.para
+    ) {
+      setPopOpen(true);
+      store.dispatch(
+        add({
+          book: data.book,
+          para: data.para,
+          src_sn: data.sn.join("-"),
+          command: "finish",
+        })
+      );
+    }
+  }, [
+    addParam?.book,
+    addParam?.command,
+    addParam?.para,
+    addParam?.src_sn,
+    data.book,
+    data.para,
+    data.sn,
+  ]);
 
   const handleClickChange = (open: boolean) => {
     if (open) {
@@ -36,7 +69,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
     } else {
       setPaliColor("unset");
     }
-    setClicked(open);
+    setPopOpen(open);
   };
 
   const wbwDetail = (
@@ -44,12 +77,12 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       data={data}
       onClose={() => {
         setPaliColor("unset");
-        setClicked(false);
+        setPopOpen(false);
       }}
       onSave={(e: IWbw) => {
         if (typeof onSave !== "undefined") {
           onSave(e);
-          setClicked(false);
+          setPopOpen(false);
           setPaliColor("unset");
         }
       }}
@@ -190,7 +223,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
           content={wbwDetail}
           placement="bottom"
           trigger="click"
-          open={click}
+          open={popOpen}
           onOpenChange={handleClickChange}
         >
           {paliWord}

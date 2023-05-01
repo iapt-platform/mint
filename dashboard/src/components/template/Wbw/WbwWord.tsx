@@ -16,6 +16,7 @@ import WbwPali from "./WbwPali";
 import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
+import WbwRelationAdd from "./WbwRelationAdd";
 
 export type TFieldName =
   | "word"
@@ -101,6 +102,7 @@ const WbwWordWidget = ({
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [newFactors, setNewFactors] = useState<string>();
+  const [showRelationTool, setShowRelationTool] = useState(false);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
   const inlineWordIndex = useAppSelector(wordIndex);
 
@@ -163,6 +165,7 @@ const WbwWordWidget = ({
         className={`wbw_word ${display} ${wbwCtl} ${wbwAnchor} `}
         style={styleWbw}
         onMouseEnter={() => {
+          setShowRelationTool(true);
           if (intervalRef.current === null) {
             //开始计时，计时结束查字典
             intervalRef.current = window.setInterval(
@@ -174,8 +177,10 @@ const WbwWordWidget = ({
         }}
         onMouseLeave={() => {
           stopLookup();
+          setShowRelationTool(false);
         }}
       >
+        {showRelationTool ? <WbwRelationAdd data={data} /> : undefined}
         <WbwPali
           key="pali"
           data={wordData}

@@ -62,6 +62,9 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
       case "case":
         mData.case = { value: value, status: 7 };
         break;
+      case "relation":
+        mData.relation = { value: value, status: 7 };
+        break;
       case "confidence":
         mData.confidence = parseFloat(value);
         break;
@@ -103,6 +106,11 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
                   onChange={(e: IWbwField) => {
                     console.log("WbwDetailBasic onchange", e);
                     fieldChanged(e.field, e.value);
+                  }}
+                  onRelationAdd={() => {
+                    if (typeof onClose !== "undefined") {
+                      onClose();
+                    }
                   }}
                 />
               </div>

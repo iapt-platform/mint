@@ -55,10 +55,16 @@ export const getParentInDict = (
 
 interface IWidget {
   data: IWbw;
-  onChange?: Function;
   showRelation?: boolean;
+  onChange?: Function;
+  onRelationAdd?: Function;
 }
-const Widget = ({ data, showRelation = true, onChange }: IWidget) => {
+const Widget = ({
+  data,
+  showRelation = true,
+  onChange,
+  onRelationAdd,
+}: IWidget) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const [items, setItems] = useState<string[]>([]);
@@ -276,7 +282,19 @@ const Widget = ({ data, showRelation = true, onChange }: IWidget) => {
             key="relation"
             style={{ display: showRelation ? "block" : "none" }}
           >
-            <WbwDetailRelation data={data} />
+            <WbwDetailRelation
+              data={data}
+              onChange={(e: IWbwField) => {
+                if (typeof onChange !== "undefined") {
+                  onChange(e);
+                }
+              }}
+              onAdd={() => {
+                if (typeof onRelationAdd !== "undefined") {
+                  onRelationAdd();
+                }
+              }}
+            />
           </Panel>
         </Collapse>
       </Form>

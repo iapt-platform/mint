@@ -19,6 +19,7 @@ interface IWbwXml {
   parent?: WbwElement<string>;
   pg?: WbwElement<string>;
   parent2?: WbwElement<string>;
+  rela?: WbwElement<string>;
   lock?: boolean;
   bmt?: WbwElement<string>;
   bmc?: WbwElement<number>;
@@ -108,7 +109,7 @@ export const WbwSentCtl = ({
                   return {
                     pali: item.word,
                     real: item.real,
-                    id: `${book}-${para}-${e.sn[0]}`,
+                    id: `${book}-${para}-` + e.sn.join("-"),
                     type: item.type,
                     gramma: item.type,
                     mean: item.meaning
@@ -119,15 +120,11 @@ export const WbwSentCtl = ({
                       : undefined,
                     org: item.factors,
                     om: item.factorMeaning,
-                    case: item.case
-                      ? {
-                          value: item.case?.value,
-                          status: item.case?.status,
-                        }
-                      : undefined,
+                    case: item.case,
                     parent: item.parent,
                     pg: item.grammar2,
                     parent2: item.parent2,
+                    rela: item.relation,
                     lock: item.locked,
                     bmt: item.bookMarkText,
                     bmc: item.bookMarkColor,
