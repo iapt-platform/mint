@@ -68,8 +68,8 @@ export const CaseValueEnum = () => {
 
 export interface IRelationRequest {
   id?: string;
-  name?: string;
-  case?: string[];
+  name: string;
+  case?: string;
   to?: string[];
   editor?: IUser;
   updated_at?: string;
@@ -91,8 +91,8 @@ export interface IRelationResponse {
 export interface IRelation {
   sn?: number;
   id?: string;
-  name?: string;
-  case?: string[];
+  name: string;
+  case?: string;
   to?: string[];
   updatedAt?: number;
   createdAt?: number;
@@ -293,7 +293,7 @@ const Widget = () => {
             const date = new Date(item.created_at ? item.created_at : 0);
             const date2 = new Date(item.updated_at ? item.updated_at : 0);
             return {
-              sn: id + 1,
+              sn: offset + id + 1,
               id: item.id,
               name: item.name,
               case: item.case,
