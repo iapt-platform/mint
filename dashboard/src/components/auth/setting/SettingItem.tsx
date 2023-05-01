@@ -1,6 +1,13 @@
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
-import { Switch, Typography, Radio, RadioChangeEvent, Select } from "antd";
+import {
+  Switch,
+  Typography,
+  Radio,
+  RadioChangeEvent,
+  Select,
+  Transfer,
+} from "antd";
 
 import {
   onChange as onSettingChanged,
@@ -10,6 +17,7 @@ import {
 import { useAppSelector } from "../../../hooks";
 import store from "../../../store";
 import { ISetting } from "./default";
+import { TransferDirection } from "antd/lib/transfer";
 
 const { Text } = Typography;
 
@@ -22,9 +30,19 @@ const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
   const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
+
+  const [targetKeys, setTargetKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (typeof data?.defaultValue === "object") {
+      setTargetKeys(data.defaultValue);
+    }
+  }, [data?.defaultValue]);
+
   useEffect(() => {
     setValue(data?.defaultValue);
   }, [data?.defaultValue]);
+
   useEffect(() => {
     const currSetting = settings?.find((element) => element.key === data?.key);
     if (typeof currSetting !== "undefined") {
@@ -41,6 +59,44 @@ const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
       : undefined;
     switch (typeof data.defaultValue) {
       case "number":
+        break;
+      case "object":
+        switch (data.widget) {
+          case "transfer":
+            if (typeof data.options !== "undefined") {
+              content = (
+                <Transfer
+                  dataSource={data.options.map((item) => {
+                    return {
+                      key: item.value,
+                      title: intl.formatMessage({ id: item.label }),
+                    };
+                  })}
+                  titles={["备选", "我的选择"]}
+                  targetKeys={targetKeys}
+                  onChange={(
+                    newTargetKeys: string[],
+                    direction: TransferDirection,
+                    moveKeys: string[]
+                  ) => {
+                    setTargetKeys(newTargetKeys);
+                    store.dispatch(
+                      onSettingChanged({
+                        key: data.key,
+                        value: newTargetKeys,
+                      })
+                    );
+                    if (typeof onChange !== "undefined") {
+                      onChange(data.key, newTargetKeys);
+                    }
+                  }}
+                  render={(item) => item.title}
+                  oneWay
+                />
+              );
+            }
+            break;
+        }
         break;
       case "string":
         switch (data.widget) {
@@ -77,8 +133,8 @@ const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
                 </>
               );
             }
-
             break;
+
           default:
             if (typeof data.options !== "undefined") {
               content = (
