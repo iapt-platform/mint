@@ -47,6 +47,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\WordIndexController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\GrammarGuideController;
+use App\Http\Controllers\WbwController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +143,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('pali-word-index',WordIndexController::class);
     Route::apiResource('studio',StudioController::class);
     Route::apiResource('grammar-guide',GrammarGuideController::class);
+    Route::apiResource('wbw',WbwController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
 
