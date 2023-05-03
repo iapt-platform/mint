@@ -179,7 +179,7 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user ){
             //未登录用户
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],401);
         }
         $channel = Channel::where('uid',$request->get('channel'))->first();
         if(!$channel){
