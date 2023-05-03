@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -18,10 +17,8 @@ const onClick: MenuProps["onClick"] = ({ key }) => {
 interface ISentMenu {
   book?: number;
   para?: number;
-  children?: React.ReactNode;
 }
-const Widget = ({ book, para, children }: ISentMenu) => {
-  const [isHover, setIsHover] = useState(false);
+const Widget = ({ book, para }: ISentMenu) => {
   const items: MenuProps["items"] = [
     {
       key: "show-commentary",
@@ -42,32 +39,14 @@ const Widget = ({ book, para, children }: ISentMenu) => {
   ];
 
   return (
-    <div
-      onMouseEnter={() => {
-        setIsHover(true);
-      }}
-      onMouseLeave={() => {
-        setIsHover(false);
-      }}
-    >
-      <div
-        style={{
-          marginTop: "-1.5em",
-          position: "absolute",
-          display: isHover ? "block" : "none",
-        }}
-      >
-        <Dropdown menu={{ items, onClick }} placement="bottomLeft">
-          <Button
-            onClick={(e) => e.preventDefault()}
-            type="primary"
-            icon={<MoreOutlined />}
-            size="small"
-          />
-        </Dropdown>
-      </div>
-      {children}
-    </div>
+    <Dropdown menu={{ items, onClick }} placement="topRight">
+      <Button
+        onClick={(e) => e.preventDefault()}
+        icon={<MoreOutlined />}
+        size="small"
+        type="primary"
+      />
+    </Dropdown>
   );
 };
 
