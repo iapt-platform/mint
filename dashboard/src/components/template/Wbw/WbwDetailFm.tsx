@@ -99,11 +99,6 @@ const WbwDetailFmWidget = ({
   const [factorInputEnable, setFactorInputEnable] = useState(false);
   const [factorMeaning, setFactorMeaning] = useState<string[]>(initValue);
 
-  useEffect(() => {
-    console.log("value", initValue);
-    setFactorMeaning(initValue);
-  }, [initValue]);
-
   const resizeArray = (input: string[]) => {
     const newFm = factors.map((item, index) => {
       if (index < input.length) {
@@ -114,6 +109,11 @@ const WbwDetailFmWidget = ({
     });
     return newFm;
   };
+
+  useEffect(() => {
+    console.log("value", initValue);
+    setFactorMeaning(resizeArray(initValue));
+  }, []);
 
   useEffect(() => {
     setFactorMeaning(resizeArray(factorMeaning));
