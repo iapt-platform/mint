@@ -72,13 +72,19 @@ class UpgradeWbwTemplate extends Command
                 $type = $wbw_word->type=='?'? '':$wbw_word->type;
                 $grammar = $wbw_word->gramma=='?'? '':$wbw_word->gramma;
                 $part = $wbw_word->part=='?'? '':$wbw_word->part;
+                if(!empty($type) || !empty($grammar)){
+                    $case = "{$type}#$grammar";
+                }else{
+                    $case = "";
+                }
                 $wbwContent[] = [
+                    'sn'=>[$wbw_word->wid],
                     'word'=>['value'=>$wbw_word->word,'status'=>0],
                     'real'=> ['value'=>$wbw_word->word,'status'=>0],
                     'meaning'=> ['value'=>[],'status'=>0],
                     'type'=> ['value'=>$type,'status'=>0],
                     'grammar'=> ['value'=>$grammar,'status'=>0],
-                    'case'=> ['value'=>[],'status'=>0],
+                    'case'=> ['value'=>$case,'status'=>0],
                     'style'=> ['value'=>$wbw_word->style,'status'=>0],
                     'factors'=> ['value'=>$part,'status'=>0],
                     'factorMeaning'=> ['value'=>'','status'=>0],
