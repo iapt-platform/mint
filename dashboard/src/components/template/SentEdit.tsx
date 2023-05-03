@@ -1,12 +1,13 @@
 import { Card } from "antd";
+import { useEffect, useState } from "react";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
 import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
-import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
+import { IWbw } from "./Wbw/WbwWord";
 
 export interface ISuggestionCount {
   suggestion?: number;
@@ -68,30 +69,46 @@ export const SentEditInner = ({
   originNum,
   simNum,
 }: IWidgetSentEditInner) => {
-  const sid = id.split("-");
+  const [wbwData, setWbwData] = useState<IWbw[]>();
+
+  useEffect(() => {
+    const content = origin?.find(
+      (value) => value.channel.type === "wbw"
+    )?.content;
+    if (typeof content !== "undefined") {
+      setWbwData(JSON.parse(content));
+    }
+  }, []);
+
   return (
     <Card bodyStyle={{ paddingBottom: 0 }} size="small">
-      <SentMenu book={parseInt(sid[0])} para={parseInt(sid[1])}>
-        <SentContent
-          sid={id}
-          book={book}
-          para={para}
-          wordStart={wordStart}
-          wordEnd={wordEnd}
-          origin={origin}
-          translation={translation}
-          layout={layout}
-        />
-        <SentTab
-          id={id}
-          path={path}
-          tranNum={tranNum}
-          nissayaNum={nissayaNum}
-          commNum={commNum}
-          originNum={originNum}
-          simNum={simNum}
-        />
-      </SentMenu>
+      <SentContent
+        sid={id}
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+        origin={origin}
+        translation={translation}
+        layout={layout}
+        onWbwChange={(data: IWbw[]) => {
+          setWbwData(data);
+        }}
+      />
+      <SentTab
+        id={id}
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+        path={path}
+        tranNum={tranNum}
+        nissayaNum={nissayaNum}
+        commNum={commNum}
+        originNum={originNum}
+        simNum={simNum}
+        wbwData={wbwData}
+      />
     </Card>
   );
 };

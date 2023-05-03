@@ -10,10 +10,18 @@ import SentCanRead from "./SentCanRead";
 import SentSim from "./SentSim";
 import { useIntl } from "react-intl";
 import TocPath, { ITocPathNode } from "../../corpus/TocPath";
+import { IWbw } from "../Wbw/WbwWord";
+import RelaGraphic from "../Wbw/RelaGraphic";
+import SentMenu from "./SentMenu";
 
 const { Text } = Typography;
+
 interface IWidget {
   id: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
   path?: ITocPathNode[];
   layout?: "row" | "column";
   tranNum?: number;
@@ -21,15 +29,21 @@ interface IWidget {
   commNum?: number;
   originNum: number;
   simNum?: number;
+  wbwData?: IWbw[];
 }
 const Widget = ({
   id,
+  book,
+  para,
+  wordStart,
+  wordEnd,
   path,
   tranNum,
   nissayaNum,
   commNum,
   originNum,
   simNum = 0,
+  wbwData,
 }: IWidget) => {
   const intl = useIntl();
 
@@ -54,6 +68,7 @@ const Widget = ({
               }
             />
             <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+            <SentMenu book={book} para={para} />
           </Space>
         }
         items={[
@@ -181,6 +196,11 @@ const Widget = ({
                 limit={5}
               />
             ),
+          },
+          {
+            label: "关系图",
+            key: "relation-graphic",
+            children: <RelaGraphic wbwData={wbwData} />,
           },
         ]}
       />
