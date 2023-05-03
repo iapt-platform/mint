@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Popover, Typography } from "antd";
+import { Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -86,6 +86,13 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
           setPaliColor("unset");
         }
       }}
+      onCommentCountChange={(count: number) => {
+        if (count > 0) {
+          setHasComment(true);
+        } else {
+          setHasComment(false);
+        }
+      }}
     />
   );
 
@@ -165,37 +172,19 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   let commentShellStyle: React.CSSProperties = {
     display: "inline-block",
   };
-  let commentIconStyle: React.CSSProperties = {
-    cursor: "pointer",
-  };
 
-  if (display === "block") {
-    commentIconStyle = {
-      cursor: "pointer",
-      visibility: isHover || hasComment ? "visible" : "hidden",
-    };
-  } else {
-    if (!hasComment) {
-      commentShellStyle = {
-        display: "inline-block",
-        position: "absolute",
-        padding: 8,
-        marginTop: "-1.5em",
-        marginLeft: "-2em",
-      };
-      commentIconStyle = {
-        visibility: "hidden",
-        cursor: "pointer",
-      };
-    }
-  }
-
-  const discussionIcon = (
+  const discussionIcon = hasComment ? (
     <div style={commentShellStyle}>
       <CommentBox
         resId={data.uid}
         resType="wbw"
-        trigger={<CommentOutlined style={commentIconStyle} />}
+        trigger={
+          <CommentOutlined
+            style={{
+              cursor: "pointer",
+            }}
+          />
+        }
         onCommentCountChange={(count: number) => {
           if (count > 0) {
             setHasComment(true);
@@ -205,7 +194,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
         }}
       />
     </div>
-  );
+  ) : undefined;
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
@@ -228,11 +217,13 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
         >
           {paliWord}
         </Popover>
-        {videoIcon}
-        {noteIcon}
-        {bookMarkIcon}
-        {relationIcon}
-        {discussionIcon}
+        <Space>
+          {videoIcon}
+          {noteIcon}
+          {bookMarkIcon}
+          {relationIcon}
+          {discussionIcon}
+        </Space>
       </div>
     );
   } else {

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { mode } from "../../reducers/article-mode";
 import { post } from "../../request";
+import { ArticleMode } from "../article/Article";
 import WbwWord, { IWbw, IWbwFields, WbwElement } from "./Wbw/WbwWord";
 
 interface IWbwXml {
@@ -44,6 +45,7 @@ interface IWidget {
   channelId: string;
   display?: "block" | "inline";
   fields?: IWbwFields;
+  onChange?: Function;
 }
 export const WbwSentCtl = ({
   data,
@@ -52,15 +54,19 @@ export const WbwSentCtl = ({
   para,
   display = "inline",
   fields,
+  onChange,
 }: IWidget) => {
   const [wordData, setWordData] = useState<IWbw[]>(data);
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const newMode = useAppSelector(mode);
   useEffect(() => {
+    setDisplayMode(newMode);
     switch (newMode) {
       case "edit":
-        setWbwMode("inline");
+        setWbwMode("block");
+
         setFieldDisplay({
           meaning: true,
           factors: false,
@@ -79,6 +85,7 @@ export const WbwSentCtl = ({
         break;
     }
   }, [newMode]);
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
@@ -86,6 +93,7 @@ export const WbwSentCtl = ({
           <WbwWord
             data={item}
             key={id}
+            mode={displayMode}
             display={wbwMode}
             fields={fieldDisplay}
             onChange={(e: IWbw) => {
@@ -99,6 +107,7 @@ export const WbwSentCtl = ({
               });
               console.log("new data", newData);
               setWordData(newData);
+
               const data = newData.filter((value) => value.sn[0] === e.sn[0]);
               const postParam: IWbwRequest = {
                 book: book,
@@ -142,6 +151,10 @@ export const WbwSentCtl = ({
                   }
                 }
               );
+
+              if (typeof onChange !== "undefined") {
+                onChange(newData);
+              }
             }}
             onSplit={(isSplit: boolean) => {
               if (isSplit) {

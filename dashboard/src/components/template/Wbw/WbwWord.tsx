@@ -17,6 +17,7 @@ import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
 import WbwRelationAdd from "./WbwRelationAdd";
+import { ArticleMode } from "../../article/Article";
 
 export type TFieldName =
   | "word"
@@ -89,12 +90,14 @@ interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
+  mode?: ArticleMode;
   onChange?: Function;
   onSplit?: Function;
 }
 const WbwWordWidget = ({
   data,
   display = "block",
+  mode = "edit",
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
   onChange,
   onSplit,
@@ -162,7 +165,7 @@ const WbwWordWidget = ({
   } else {
     return (
       <div
-        className={`wbw_word ${display} ${wbwCtl} ${wbwAnchor} `}
+        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} `}
         style={styleWbw}
         onMouseEnter={() => {
           setShowRelationTool(true);
@@ -203,6 +206,7 @@ const WbwWordWidget = ({
           {fieldDisplay?.meaning ? (
             <WbwMeaning
               key="meaning"
+              mode={mode}
               data={wordData}
               display={display}
               onChange={(e: string) => {
