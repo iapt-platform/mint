@@ -153,6 +153,17 @@ class UserOperation
                         break;
                 }
                 break;
+            case 'wbw':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>60,
+                            "op_type"=>"wbw_update",
+                            "content"=>$request->get('book')."_".$request->get('para')."_".$request->get('channel_id'),
+                        ];
+                        break;
+                }
+                break;
         }
         if(isset($newLog)){
             $currTime = round((microtime(true))*1000,0);
