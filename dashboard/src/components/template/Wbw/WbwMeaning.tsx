@@ -5,20 +5,27 @@ import { Popover, Typography } from "antd";
 import { PaliReal } from "../../../utils";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
+import { ArticleMode } from "../../article/Article";
 
 const { Text } = Typography;
 
 interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
+  mode?: ArticleMode;
   onChange?: Function;
 }
-const Widget = ({ data, display = "block", onChange }: IWidget) => {
+const Widget = ({
+  data,
+  display = "block",
+  mode = "edit",
+  onChange,
+}: IWidget) => {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
   let meaning = <></>;
   if (
-    display === "block" &&
+    mode === "wbw" &&
     (typeof data.meaning === "undefined" ||
       data.meaning.value.length === 0 ||
       data.meaning.value[0] === "")
@@ -30,7 +37,7 @@ const Widget = ({ data, display = "block", onChange }: IWidget) => {
       </Text>
     );
   } else {
-    meaning = <span>{data.meaning?.value}</span>;
+    meaning = <Text>{data.meaning?.value}</Text>;
   }
   const hide = () => {
     setOpen(false);
