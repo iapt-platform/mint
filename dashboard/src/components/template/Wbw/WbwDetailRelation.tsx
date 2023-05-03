@@ -15,7 +15,7 @@ interface IOptions {
   label: JSX.Element;
 }
 
-interface IRelation {
+export interface IRelation {
   sour_id: string;
   sour_spell: string;
   dest_id: string;
@@ -44,7 +44,7 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
       const newRelation: IRelation = {
         sour_id: `${data.book}-${data.para}-` + data.sn.join("-"),
         sour_spell: data.word.value,
-        dest_id: `${addParam.book}-${addParam.para}-` + addParam.target_id,
+        dest_id: addParam.target_id ? addParam.target_id : "",
         dest_spell: addParam.target_spell,
       };
       setRelation([...relation, newRelation]);
