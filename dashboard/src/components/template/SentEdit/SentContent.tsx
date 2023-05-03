@@ -6,6 +6,7 @@ import { settingInfo } from "../../../reducers/setting";
 import { useEffect, useState } from "react";
 import { GetUserSetting } from "../../auth/setting/default";
 import { mode } from "../../../reducers/article-mode";
+import { IWbw } from "../Wbw/WbwWord";
 
 interface ILayoutFlex {
   left: number;
@@ -21,6 +22,7 @@ interface IWidgetSentContent {
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: TDirection;
+  onWbwChange?: Function;
 }
 const Widget = ({
   sid,
@@ -31,6 +33,7 @@ const Widget = ({
   origin,
   translation,
   layout = "column",
+  onWbwChange,
 }: IWidgetSentContent) => {
   const [layoutDirection, setLayoutDirection] = useState<TDirection>(layout);
   const [layoutFlex, setLayoutFlex] = useState<ILayoutFlex>({
@@ -88,6 +91,11 @@ const Widget = ({
                 para={para}
                 channelId={item.channel.id}
                 data={JSON.parse(item.content)}
+                onChange={(data: IWbw[]) => {
+                  if (typeof onWbwChange !== "undefined") {
+                    onWbwChange(data);
+                  }
+                }}
               />
             );
           } else {
