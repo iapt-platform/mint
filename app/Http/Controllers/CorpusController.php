@@ -11,6 +11,7 @@ use App\Models\Wbw;
 use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -396,7 +397,7 @@ class CorpusController extends Controller
             //有间隔
             $paraTo = $nextChapter - 1;
         }else{
-            if($chapter->chapter_strlen>15000){
+            if($chapter->chapter_strlen>5000){
                 if(count($toc)>0){
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -468,8 +469,6 @@ class CorpusController extends Controller
         foreach ($sentList as $currSentId => $arrSentId) {
             # code...
             $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
-            $sent["origin"] = [];
-            $sent["translation"] = [];
             foreach ($indexChannel as $channelId => $info) {
                 # code...
                 $sid = "{$currSentId}_{$channelId}";
@@ -516,19 +515,23 @@ class CorpusController extends Controller
                                 // 传过来的数据一定有一个原文channel
                                 //
                             if($mode !== "read"){
+
                                 $newSent['channel']['type'] = "wbw";
+
                                 if(isset($this->wbwChannels[0])){
+                                    $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                    $newSent['channel']['id'] = $this->wbwChannels[0];
                                     //存在一个translation channel
                                     //尝试查找逐词解析数据。找到，替换现有数据
-                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId);
+                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$this->wbwChannels[0]);
                                     if($wbwData){
                                         $newSent['content'] = $wbwData;
                                         $newSent['html'] = "";
                                     }
                                 }
                             }else{
-                                $newSent['html'] = $row->content;
                                 $newSent['content'] = "";
+                                $newSent['html'] = $row->content;
                             }
 
                             break;
@@ -563,141 +566,10 @@ class CorpusController extends Controller
             $content = $this->pushSent($content,$sent,0,$mode);
         }
 
-/*
-        foreach ($record as $key => $value) {
-            # 遍历结果生成html文件
-            $currSentId = $value->book_id.'-'.$value->paragraph.'-'.$value->word_start.'-'.$value->word_end;
-			if($currSentId !== $lastSent){
-				if($sentCount > 0){
-					//保存上一个句子
-					//增加标题的html标记
-					$level = 0;
-					if(isset($indexedHeading["{$value->book_id}-{$value->paragraph}"])){
-						$level = $indexedHeading["{$value->book_id}-{$value->paragraph}"];
-					}
-					$content = $this->pushSent($content,$sent,$level,$mode);
-				}
-				//新建句子
-				$sent = $this->newSent($value->book_id,$value->paragraph,$value->word_start,$value->word_end);
-
-				$lastSent = $currSentId;
-			}
-			$sentContent=$value->content;
-			$channelType = $indexChannel[$value->channel_uid]->type;
-			if($indexChannel[$value->channel_uid]->type==="original" && $mode !== 'read'){
-                //非阅读模式下。原文使用逐词解析数据。优先加载第一个translation channel 如果没有。加载默认逐词解析。
-				$channelType = 'wbw';
-                $html = "";
-
-                if(count($this->wbwChannels)>0){
-                    //获取逐词解析数据
-                    $wbwBlock = WbwBlock::where('channel_uid',$this->wbwChannels[0])
-                                        ->where('book_id',$value->book_id)
-                                        ->where('paragraph',$value->paragraph)
-                                        ->select('uid')
-                                        ->first();
-                    if($wbwBlock){
-                        //找到逐词解析数据
-                        $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
-                                      ->whereBetween('wid',[$value->word_start,$value->word_end])
-                                      ->select(['data','uid'])
-                                      ->orderBy('wid')
-                                      ->get();
-                        $wbwContent = [];
-                        foreach ($wbwData as $wbwrow) {
-                            $wbw = str_replace("&nbsp;",' ',$wbwrow->data);
-                            $wbw = str_replace("<br>",' ',$wbw);
-
-                            $xmlString = "<root>" . $wbw . "</root>";
-                            try{
-                                $xmlWord = simplexml_load_string($xmlString);
-                            }catch(Exception $e){
-                                continue;
-                            }
-                            $wordsList = $xmlWord->xpath('//word');
-                            foreach ($wordsList as $word) {
-                                $case = \str_replace(['#','.'],['$',''],$word->case->__toString());
-                                $case = \str_replace('$$','$',$case);
-                                $case = trim($case);
-                                $case = trim($case,"$");
-                                $wbwContent[] = [
-                                    'uid'=>$wbwrow->uid,
-                                    'word'=>['value'=>$word->pali->__toString(),'status'=>0],
-                                    'real'=> ['value'=>$word->real->__toString(),'status'=>0],
-                                    'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
-                                    'type'=> ['value'=>$word->type->__toString(),'status'=>0],
-                                    'grammar'=> ['value'=>$word->gramma->__toString(),'status'=>0],
-                                    'case'=> ['value'=>\explode('$',$case),'status'=>0],
-                                    'parent'=> ['value'=>$word->parent->__toString(),'status'=>0],
-                                    'style'=> ['value'=>$word->style->__toString(),'status'=>0],
-                                    'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
-                                    'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
-                                    'confidence'=> 0.5,
-                                    'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
-                                ];
-                            }
-                        }
-                        $sentContent = \json_encode($wbwContent);
-                    }
-                }
-			}else{
-                if($indexChannel[$value->channel_uid]->type==="original"){
-                    //原文直接使用
-                    $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
-                            function() use($value){
-                                return $value->content;
-                            });
-                }else{
-                    //译文需要markdown渲染
-                    $html = Cache::remember("/sent/{$value->channel_uid}/{$currSentId}",10,
-                            function() use($value){
-                                return MdRender::render($value->content,$value->channel_uid);
-                            });
-                }
-            }
-
-            $newSent = [
-                "content"=>$sentContent,
-                "html"=> $html,
-                "book"=> $value->book_id,
-                "para"=> $value->paragraph,
-                "wordStart"=> $value->word_start,
-                "wordEnd"=> $value->word_end,
-                "editor"=> [
-                    'id'=>$value->editor_uid,
-                    'nickName'=>'nickname',
-                    'realName'=>'realName',
-                    'avatar'=>'',
-                ],
-                "channel"=> [
-                    "name"=>$indexChannel[$value->channel_uid]->name,
-                    "type"=>$channelType,
-	                "id"=> $value->channel_uid,
-                ],
-                "updateAt"=> $value->updated_at,
-                "suggestionCount" => SuggestionApi::getCountBySent($value->book_id,$value->paragraph,$value->word_start,$value->word_end,$value->channel_uid),
-            ];
-			switch ($indexChannel[$value->channel_uid]->type) {
-				case 'original';
-				case 'wbw';
-					array_push($sent["origin"],$newSent);
-					break;
-				default:
-					array_push($sent["translation"],$newSent);
-					break;
-			}
-
-			$sentCount++;
-        }
-        if($onlyProps){
-            return $sent;
-        }
-        $content = $this->pushSent($content,$sent,0,$mode);
-*/
         $output = \implode("",$content);
         return "<div>{$output}</div>";
     }
-    private function getWbw($book,$para,$start,$end,$channel){
+    public function getWbw($book,$para,$start,$end,$channel){
         /**
          * 非阅读模式下。原文使用逐词解析数据。
          * 优先加载第一个translation channel 如果没有。加载默认逐词解析。
@@ -715,7 +587,7 @@ class CorpusController extends Controller
         //找到逐词解析数据
         $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
                       ->whereBetween('wid',[$start,$end])
-                      ->select(['data','uid'])
+                      ->select(['book_id','paragraph','wid','data','uid'])
                       ->orderBy('wid')
                       ->get();
         $wbwContent = [];
@@ -735,14 +607,19 @@ class CorpusController extends Controller
                 $case = \str_replace('$$','$',$case);
                 $case = trim($case);
                 $case = trim($case,"$");
-                $wbwContent[] = [
+                $wbwId = explode('-',$word->id->__toString());
+
+                $wbwData = [
                     'uid'=>$wbwrow->uid,
+                    'book'=>$wbwrow->book_id,
+                    'para'=>$wbwrow->paragraph,
+                    'sn'=> array_slice($wbwId,2),
                     'word'=>['value'=>$word->pali->__toString(),'status'=>0],
                     'real'=> ['value'=>$word->real->__toString(),'status'=>0],
                     'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
                     'type'=> ['value'=>$word->type->__toString(),'status'=>0],
                     'grammar'=> ['value'=>$word->gramma->__toString(),'status'=>0],
-                    'case'=> ['value'=>\explode('$',$case),'status'=>0],
+                    'case'=> ['value'=>$word->case->__toString(),'status'=>0],
                     'parent'=> ['value'=>$word->parent->__toString(),'status'=>0],
                     'style'=> ['value'=>$word->style->__toString(),'status'=>0],
                     'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
@@ -750,6 +627,58 @@ class CorpusController extends Controller
                     'confidence'=> 0.5,
                     'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
                 ];
+                if(isset($word->parent2)){
+                    $wbwData['parent2']['value'] = $word->parent2->__toString();
+                    if(isset($word->parent2['status'])){
+                        $wbwData['parent2']['status'] = (int)$word->parent2['status'];
+                    }else{
+                        $wbwData['parent2']['status'] = 0;
+                    }
+                }
+                if(isset($word->pg)){
+                    $wbwData['grammar2']['value'] = $word->pg->__toString();
+                    if(isset($word->pg['status'])){
+                        $wbwData['grammar2']['status'] = (int)$word->pg['status'];
+                    }else{
+                        $wbwData['grammar2']['status'] = 0;
+                    }
+                }
+                if(isset($word->rela)){
+                    $wbwData['relation']['value'] = $word->rela->__toString();
+                    if(isset($word->rela['status'])){
+                        $wbwData['relation']['status'] = (int)$word->rela['status'];
+                    }else{
+                        $wbwData['relation']['status'] = 7;
+                    }
+                }
+                if(isset($word->pali['status'])){
+                    $wbwData['word']['status'] = (int)$word->pali['status'];
+                }
+                if(isset($word->real['status'])){
+                    $wbwData['real']['status'] = (int)$word->real['status'];
+                }
+                if(isset($word->mean['status'])){
+                    $wbwData['meaning']['status'] = (int)$word->mean['status'];
+                }
+                if(isset($word->type['status'])){
+                    $wbwData['type']['status'] = (int)$word->type['status'];
+                }
+                if(isset($word->gramma['status'])){
+                    $wbwData['grammar']['status'] = (int)$word->gramma['status'];
+                }
+                if(isset($word->case['status'])){
+                    $wbwData['case']['status'] = (int)$word->case['status'];
+                }
+                if(isset($word->parent['status'])){
+                    $wbwData['parent']['status'] = (int)$word->parent['status'];
+                }
+                if(isset($word->org['status'])){
+                    $wbwData['factors']['status'] = (int)$word->org['status'];
+                }
+                if(isset($word->om['status'])){
+                    $wbwData['factorMeaning']['status'] = (int)$word->om['status'];
+                }
+                $wbwContent[] = $wbwData;
             }
         }
         return \json_encode($wbwContent,JSON_UNESCAPED_UNICODE);
@@ -776,6 +705,10 @@ class CorpusController extends Controller
 	private function newSent($book,$para,$word_start,$word_end){
 		$sent = [
             "id"=>"{$book}-{$para}-{$word_start}-{$word_end}",
+            "book"=>$book,
+            "para"=>$para,
+            "wordStart"=>$word_start,
+            "wordEnd"=>$word_end,
 			"origin"=>[],
 			"translation"=>[],
 		];
@@ -816,7 +749,9 @@ class CorpusController extends Controller
             $channelList = [];
             foreach ($channels as $key => $value) {
                 # code...
-                $channelList[] = $value->channel_uid;
+                if(Str::isUuid($value->channel_uid)){
+                    $channelList[] = $value->channel_uid;
+                }
             }
             $simId = PaliSentence::where('book',$book)
                                  ->where('paragraph',$para)
