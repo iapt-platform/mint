@@ -49,6 +49,10 @@ const Widget = ({ value, onCaseChange }: IWidget) => {
       label: intl.formatMessage({ id: "dict.fields.type.abl.label" }),
     },
     {
+      value: "loc",
+      label: intl.formatMessage({ id: "dict.fields.type.loc.label" }),
+    },
+    {
       value: "voc",
       label: intl.formatMessage({ id: "dict.fields.type.voc.label" }),
     },
