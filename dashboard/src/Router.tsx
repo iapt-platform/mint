@@ -32,7 +32,6 @@ import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
 import LibraryCourse from "./pages/library/course";
 import LibraryCourseList from "./pages/library/course/list";
 import LibraryCourseShow from "./pages/library/course/course";
-import LibraryLessonShow from "./pages/library/course/lesson";
 
 import LibraryTerm from "./pages/library/term/show";
 import LibraryDict from "./pages/library/dict";
@@ -168,7 +167,6 @@ const Widget = () => {
         <Route path="course" element={<LibraryCourse />}>
           <Route path="list" element={<LibraryCourseList />}></Route>
           <Route path="show/:id" element={<LibraryCourseShow />}></Route>
-          <Route path="lesson" element={<LibraryLessonShow />}></Route>
         </Route>
 
         <Route path="term/:word" element={<LibraryTerm />} />
