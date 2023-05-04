@@ -151,6 +151,8 @@ const items = {
   "dict.fields.type.indconj.label": "连词",
   "dict.fields.type.pron:base.short.label": "代干",
   "dict.fields.type.pron:base.label": "代词词干",
+  "dict.fields.type.note.short.label": "注释",
+  "dict.fields.type.note.label": "注释",
 };
 
 export default items;
