@@ -39,7 +39,7 @@ interface IWidget {
   onSelect?: Function;
 }
 
-const Widget = ({
+const FtsBookListWidget = ({
   keyWord,
   tags,
   bookId,
@@ -116,4 +116,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default FtsBookListWidget;

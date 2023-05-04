@@ -47,7 +47,7 @@ interface IWidget {
   view?: string;
   pageType?: string;
 }
-const Widget = ({
+const FullTxtSearchResultWidget = ({
   keyWord,
   tags,
   bookId,
@@ -146,4 +146,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default FullTxtSearchResultWidget;

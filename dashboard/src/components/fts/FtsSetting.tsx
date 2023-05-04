@@ -9,7 +9,12 @@ interface IWidget {
   match?: string | null;
   onChange?: Function;
 }
-const Widget = ({ trigger, orderBy = "rank", match, onChange }: IWidget) => {
+const FtsSettingWidget = ({
+  trigger,
+  orderBy = "rank",
+  match,
+  onChange,
+}: IWidget) => {
   const searchSetting: ISetting[] = [
     {
       key: "match",
@@ -40,8 +45,9 @@ const Widget = ({ trigger, orderBy = "rank", match, onChange }: IWidget) => {
       arrowPointAtCenter
       content={
         <>
-          {searchSetting.map((item) => (
+          {searchSetting.map((item, index) => (
             <SettingItem
+              key={index}
               data={item}
               onChange={(key: string, value: string | number | boolean) => {
                 if (typeof onChange !== "undefined") {
@@ -59,4 +65,4 @@ const Widget = ({ trigger, orderBy = "rank", match, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default FtsSettingWidget;
