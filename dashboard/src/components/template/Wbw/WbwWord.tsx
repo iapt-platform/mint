@@ -169,12 +169,16 @@ const WbwWordWidget = ({
         style={styleWbw}
         onMouseEnter={() => {
           setShowRelationTool(true);
-          if (intervalRef.current === null) {
+          if (
+            intervalRef.current === null &&
+            wordData.real &&
+            wordData.real.value.length > 0
+          ) {
             //开始计时，计时结束查字典
             intervalRef.current = window.setInterval(
               lookup,
-              200,
-              wordData.word.value
+              300,
+              wordData.real.value
             );
           }
         }}
