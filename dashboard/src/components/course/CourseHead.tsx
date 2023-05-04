@@ -48,7 +48,9 @@ const Widget = ({
                 <HomeOutlined />
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/course/list">课程</Link>
+                <Link to="/course/list">
+                  <Text>课程</Text>
+                </Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>{title}</Breadcrumb.Item>
             </Breadcrumb>
@@ -79,9 +81,13 @@ const Widget = ({
                 />
               </Space>
             </Space>
-            <div>
-              主讲人： <UserName {...teacher} />
-            </div>
+
+            <Space>
+              <Text>主讲人：</Text>{" "}
+              <Text>
+                <UserName {...teacher} />
+              </Text>
+            </Space>
           </Space>
         </Col>
         <Col flex="auto"></Col>

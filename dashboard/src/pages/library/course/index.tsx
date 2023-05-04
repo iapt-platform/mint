@@ -2,16 +2,17 @@ import { Outlet } from "react-router-dom";
 
 import HeadBar from "../../../components/library/HeadBar";
 import FooterBar from "../../../components/library/FooterBar";
+import { Layout } from "antd";
 
 const Widget = () => {
-	// TODO
-	return (
-		<div>
-			<HeadBar selectedKeys="course" />
-			<Outlet />
-			<FooterBar />
-		</div>
-	);
+  // TODO
+  return (
+    <Layout>
+      <HeadBar selectedKeys="course" />
+      <Outlet />
+      <FooterBar />
+    </Layout>
+  );
 };
 
 export default Widget;

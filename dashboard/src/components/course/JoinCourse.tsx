@@ -144,7 +144,7 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
   }
   return (
     <div>
-      <span>{labelStatus}</span>
+      <Text>{labelStatus}</Text>
       {button}
     </div>
   );
