@@ -17,6 +17,7 @@ import {
 import AcceptCourse from "./AcceptCourse";
 import AcceptNotCourse from "./AcceptNotCourse";
 import LeaveCourse from "./LeaveCourse";
+import SignUp from "./SignUp";
 
 const { Paragraph } = Typography;
 
@@ -130,6 +131,21 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
     if (courseStart < today) {
       labelStatus = "已经过期";
     } else {
+      if (joinMode === "manual" || joinMode === "open") {
+        labelStatus = "可报名";
+        operation = (
+          <Space>
+            <SignUp
+              courseId={courseId}
+              joinMode={joinMode}
+              expRequest={expRequest}
+              onStatusChanged={(status: ICourseMemberData | undefined) => {
+                setCurrMember(status);
+              }}
+            />
+          </Space>
+        );
+      }
     }
   }
   return (
