@@ -184,18 +184,11 @@ const Widget = ({ studioName, channelId }: IWidget) => {
                     items: [
                       {
                         key: "remove",
-                        label: (
-                          <Text type="danger">
-                            {intl.formatMessage({
-                              id: "buttons.delete",
-                            })}
-                          </Text>
-                        ),
-                        icon: (
-                          <Text type="danger">
-                            <DeleteOutlined />
-                          </Text>
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
                       },
                     ],
                     onClick: (e) => {

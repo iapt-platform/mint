@@ -154,18 +154,11 @@ const Widget = ({ channelId, onChange }: IWidget) => {
                     {
                       key: "remove",
                       disabled: true,
-                      label: (
-                        <Text type="danger">
-                          {intl.formatMessage({
-                            id: "buttons.delete",
-                          })}
-                        </Text>
-                      ),
-                      icon: (
-                        <Text type="danger">
-                          <DeleteOutlined />
-                        </Text>
-                      ),
+                      danger: true,
+                      label: intl.formatMessage({
+                        id: "buttons.delete",
+                      }),
+                      icon: <DeleteOutlined />,
                     },
                   ],
                   onClick: (e) => {
