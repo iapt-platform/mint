@@ -7,9 +7,9 @@ import { HomeOutlined } from "@ant-design/icons";
 import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
-import JoinCourse from "./JoinCourse";
 import { TCourseExpRequest, TCourseJoinMode } from "../api/Course";
 import { useIntl } from "react-intl";
+import Status from "./Status";
 
 const { Title, Text } = Typography;
 
@@ -69,11 +69,13 @@ const Widget = ({
                   {startAt}——{endAt}
                 </Text>
                 <Text>
-                  {intl.formatMessage({
-                    id: `course.join.mode.${join}.message`,
-                  })}
+                  {join
+                    ? intl.formatMessage({
+                        id: `course.join.mode.${join}.message`,
+                      })
+                    : undefined}
                 </Text>
-                <JoinCourse
+                <Status
                   courseId={id ? id : ""}
                   expRequest={exp}
                   joinMode={join}
