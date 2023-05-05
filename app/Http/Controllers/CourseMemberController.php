@@ -103,6 +103,7 @@ class CourseMemberController extends Controller
             'user_id' => 'required',
             'course_id' => 'required',
             'role' => 'required',
+            'operating' => 'required',
         ]);
         //查找重复的项目
         if(CourseMember::where('course_id', $validated['course_id'])
@@ -122,12 +123,30 @@ class CourseMemberController extends Controller
         $course  = Course::find($validated['course_id']);
         if($course){
             switch ($course->join) {
-                case 'open':
-                    $newMember->status = 'accepted';
+                case 'open': //开放学习课程
+                    switch ($validated['operating']) {
+                        case 'invite':
+                            $newMember->status = 'invited';
+                            break;
+                        case 'sign_up':
+                            $newMember->status = 'normal';
+                            break;
+                    }
                     break;
-                case 'manual':
-                    $newMember->status = 'progressing';
+                case 'manual': //人工审核课程
+                    switch ($validated['operating']) {
+                        case 'invite':
+                            $newMember->status = 'invited';
+                            break;
+                        case 'sign_up':
+                            $newMember->status = 'sign_up';
+                            break;
+                    }
                     break;
+                case 'invite': //仅限邀请
+                    $newMember->status = 'invited';
+                    break;
+
                 default:
                     # code...
                     break;
@@ -135,9 +154,7 @@ class CourseMemberController extends Controller
         }else{
             return $this->error('invalid course');
         }
-
         $newMember->save();
-
         return $this->ok(new CourseMemberResource($newMember));
 
     }
@@ -228,9 +245,12 @@ class CourseMemberController extends Controller
                 ->select('role')->first();
             //open 课程 可以删除自己
 
-           if(!$courseUser || $courseUser->role ==="student"){
-                //普通成员没有删除权限
-                return $this->error(__('auth.failed'));
+            if(!$courseUser){
+                //被删除的不是自己
+                if($courseUser->role ==="student"){
+                    //普通成员没有删除权限
+                    return $this->error(__('auth.failed'));
+                }
             }
         }
 
