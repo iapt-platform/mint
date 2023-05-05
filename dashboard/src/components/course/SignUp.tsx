@@ -74,7 +74,7 @@ const Widget = ({
                 if (json.ok) {
                   console.log("new", json.data);
                   if (typeof onStatusChanged !== "undefined") {
-                    onStatusChanged(json.data.status);
+                    onStatusChanged(json.data);
                   }
                   message.success(
                     intl.formatMessage({ id: "flashes.success" })
