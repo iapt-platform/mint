@@ -178,7 +178,7 @@ class GroupController extends Controller
                 return $this->error(__('auth.failed'));
             }
         }
-        return $this->ok($result);
+        return $this->ok(new GroupResource($result));
     }
 
     /**
