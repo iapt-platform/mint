@@ -1,5 +1,5 @@
 import { IStudio } from "../auth/StudioName";
-import { IStudioApiResponse, IUserRequest, TRole } from "./Auth";
+import { IUserRequest, TRole } from "./Auth";
 
 export interface IGroupRequest {
   id?: string;
@@ -16,6 +16,7 @@ export interface IGroupDataRequest {
   studio: IStudio;
   role: TRole;
   created_at: string;
+  updated_at: string;
 }
 export interface IGroupResponse {
   ok: boolean;
