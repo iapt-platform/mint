@@ -8,7 +8,6 @@ import {
   ICourseMemberDeleteResponse,
   ICourseMemberResponse,
   TCourseJoinMode,
-  TCourseMemberStatus,
 } from "../api/Course";
 
 const { confirm } = Modal;

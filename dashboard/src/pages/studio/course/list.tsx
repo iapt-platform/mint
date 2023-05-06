@@ -11,7 +11,6 @@ import {
   Image,
   message,
   Modal,
-  Typography,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
 import {
@@ -29,8 +28,6 @@ import {
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-
-const { Text } = Typography;
 
 interface DataItem {
   sn: number;

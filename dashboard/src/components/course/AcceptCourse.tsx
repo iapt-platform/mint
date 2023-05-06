@@ -1,21 +1,18 @@
 /**
  * 学生接受课程管理员的邀请 参加课程
  */
-import { Button, message, Modal, Typography } from "antd";
+import { Button, message, Modal } from "antd";
 import { useIntl } from "react-intl";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
-import { delete_, put } from "../../request";
+import { put } from "../../request";
 import {
   ICourseMemberData,
-  ICourseMemberDeleteResponse,
   ICourseMemberResponse,
   TCourseJoinMode,
-  TCourseMemberStatus,
 } from "../api/Course";
 
 const { confirm } = Modal;
-const { Text } = Typography;
 
 interface IWidget {
   joinMode?: TCourseJoinMode;

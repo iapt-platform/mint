@@ -298,7 +298,7 @@ const Widget = () => {
                 key: "collaboration",
                 label: (
                   <span>
-                    协作
+                    我加入的
                     {renderBadge(
                       collaborationNumber,
                       activeKey === "collaboration"

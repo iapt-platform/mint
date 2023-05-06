@@ -29,7 +29,6 @@ interface IWidget {
 const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-  const [isHover, setIsHover] = useState(false);
   const [hasComment, setHasComment] = useState(data.hasComment);
   /**
    * 处理 relation 链接事件
@@ -199,15 +198,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
-      <div
-        className="pali_shell"
-        onMouseEnter={() => {
-          setIsHover(true);
-        }}
-        onMouseLeave={() => {
-          setIsHover(false);
-        }}
-      >
+      <div className="pali_shell">
         <Popover
           content={wbwDetail}
           placement="bottom"

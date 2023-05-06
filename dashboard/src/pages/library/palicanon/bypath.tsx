@@ -13,7 +13,7 @@ import { IPaliBookListResponse } from "../../../components/api/Corpus";
 import Recent from "../../../components/corpus/Recent";
 
 const Widget = () => {
-  const { root, path, tag } = useParams();
+  const { root, path } = useParams();
   const navigate = useNavigate();
   const defaultPath: string[] = path ? path.split("_") : [];
   const [bookRoot, setBookRoot] = useState(root);

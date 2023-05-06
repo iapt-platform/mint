@@ -1,14 +1,6 @@
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
-import {
-  Button,
-  Space,
-  Table,
-  Dropdown,
-  Typography,
-  Modal,
-  message,
-} from "antd";
+import { Button, Space, Table, Dropdown, Modal, message } from "antd";
 import {
   ExclamationCircleOutlined,
   DeleteOutlined,
@@ -27,8 +19,6 @@ import { IChannel } from "../channel/Channel";
 import TermExport from "./TermExport";
 import DataImport from "../admin/relation/DataImport";
 import TermModal from "./TermModal";
-
-const { Text } = Typography;
 
 interface IItem {
   sn: number;

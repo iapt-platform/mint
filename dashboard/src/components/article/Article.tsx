@@ -15,9 +15,8 @@ import CommentListCard from "../comment/CommentListCard";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";
-import { modeChange } from "../../reducers/article-mode";
+
 import {
-  IMetaChapter,
   IViewRequest,
   IViewStoreResponse,
 } from "../../pages/studio/recent/list";

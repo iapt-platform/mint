@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Typography, Modal, message, Tag } from "antd";
+import { Button, Dropdown, Modal, message, Tag } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -19,8 +19,6 @@ import RelationEdit from "../../../components/admin/relation/RelationEdit";
 import DataImport from "../../../components/admin/relation/DataImport";
 import { useAppSelector } from "../../../hooks";
 import { getTerm } from "../../../reducers/term-vocabulary";
-
-const { Text } = Typography;
 
 export const CaseValueEnum = () => {
   const intl = useIntl();

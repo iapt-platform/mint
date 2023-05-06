@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Typography, Button, Space, Tag } from "antd";
+import { Typography, Button, Space } from "antd";
 import { SwapOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";

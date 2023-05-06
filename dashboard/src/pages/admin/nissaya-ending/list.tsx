@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Typography, Modal, message } from "antd";
+import { Button, Dropdown, Modal, message } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -21,7 +21,6 @@ import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
 import { CaseValueEnum } from "../relation/list";
 
-const { Text } = Typography;
 export interface INissayaEndingRequest {
   id?: string;
   ending?: string;

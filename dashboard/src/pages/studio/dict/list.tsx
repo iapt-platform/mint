@@ -28,7 +28,7 @@ import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../../components/api/Article";
 
-const { Link, Text } = Typography;
+const { Link } = Typography;
 
 export interface IWord {
   sn: number;
