@@ -6,8 +6,6 @@ import { IApiResponseDictData } from "../../api/Dict";
 import { IWbw } from "./WbwWord";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 
-const { Option } = Select;
-
 interface ValueType {
   key?: string;
   label: React.ReactNode;
