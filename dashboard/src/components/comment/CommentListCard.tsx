@@ -30,7 +30,7 @@ const Widget = ({
   const [data, setData] = useState<IComment[]>([]);
   useEffect(() => {
     console.log("changedAnswerCount", changedAnswerCount);
-    const newData = data.map((item) => {
+    const newData = [...data].map((item) => {
       const newItem = item;
       if (newItem.id && changedAnswerCount?.id === newItem.id) {
         newItem.childrenCount = changedAnswerCount.count;
