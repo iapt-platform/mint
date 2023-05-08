@@ -3,37 +3,14 @@ import { Progress, Typography } from "antd";
 import { ProTable } from "@ant-design/pro-components";
 import { Link } from "react-router-dom";
 import { Space, Table } from "antd";
-import type { MenuProps } from "antd";
-import { Button, Dropdown, Menu } from "antd";
-import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Dropdown } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 
 import { IChapterListResponse } from "../../components/api/Corpus";
 
 const { Text } = Typography;
-
-const onMenuClick: MenuProps["onClick"] = (e) => {
-  console.log("click", e);
-};
-
-const menu = (
-  <Menu
-    onClick={onMenuClick}
-    items={[
-      {
-        key: "share",
-        label: "分享",
-        icon: <SearchOutlined />,
-      },
-      {
-        key: "delete",
-        label: "删除",
-        icon: <SearchOutlined />,
-      },
-    ]}
-  />
-);
 
 interface IItem {
   sn: number;
