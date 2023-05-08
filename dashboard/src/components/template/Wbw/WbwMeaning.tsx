@@ -6,6 +6,7 @@ import { PaliReal } from "../../../utils";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 import { ArticleMode } from "../../article/Article";
+import CaseFormula from "./CaseFormula";
 
 const { Text } = Typography;
 
@@ -27,8 +28,9 @@ const Widget = ({
   if (
     mode === "wbw" &&
     (typeof data.meaning === "undefined" ||
+      data.meaning.value === null ||
       data.meaning.value.length === 0 ||
-      data.meaning.value[0] === "")
+      data.meaning.value === "")
   ) {
     //空白的意思在逐词解析模式显示占位字符串
     meaning = (
@@ -49,7 +51,7 @@ const Widget = ({
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
-      <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Popover
           open={open}
           onOpenChange={handleOpenChange}
@@ -71,6 +73,7 @@ const Widget = ({
         >
           {meaning}
         </Popover>
+        <CaseFormula data={data} />
       </div>
     );
   } else {

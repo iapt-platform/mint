@@ -44,7 +44,7 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
         mData.real = { value: value, status: 7 };
         break;
       case "meaning":
-        mData.meaning = { value: value.split("$"), status: 7 };
+        mData.meaning = { value: value, status: 7 };
         break;
       case "factors":
         mData.factors = { value: value, status: 7 };

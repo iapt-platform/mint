@@ -60,7 +60,7 @@ const Widget = ({ word }: IWidget) => {
         mData.word = { value: value, status: 5 };
         break;
       case "meaning":
-        mData.meaning = { value: value.split("$"), status: 5 };
+        mData.meaning = { value: value, status: 5 };
         break;
       case "factors":
         mData.factors = { value: value, status: 5 };
@@ -154,7 +154,7 @@ const Widget = ({ word }: IWidget) => {
                 word: editWord.word.value,
                 type: editWord.type?.value,
                 grammar: editWord.grammar?.value,
-                mean: editWord.meaning?.value.join("$"),
+                mean: editWord.meaning?.value,
                 parent: editWord.parent?.value,
                 note: editWord.note?.value,
                 factors: editWord.factors?.value,

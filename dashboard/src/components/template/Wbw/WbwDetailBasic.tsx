@@ -67,13 +67,12 @@ const Widget = ({
 }: IWidget) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const [items, setItems] = useState<string[]>([]);
   const inlineDict = useAppSelector(_inlineDict);
   const [factorOptions, setFactorOptions] = useState<ValueType[]>([]);
   const [parentOptions, setParentOptions] = useState<ValueType[]>([]);
   const [factors, setFactors] = useState<string[]>([]);
   const [openCreate, setOpenCreate] = useState(false);
-  const [_meaning, setMeaning] = useState<string[] | undefined>(
+  const [_meaning, setMeaning] = useState<string | undefined>(
     data.meaning?.value
   );
 
@@ -146,11 +145,11 @@ const Widget = ({
         >
           <div style={{ display: "flex" }}>
             <Input
-              value={_meaning?.join(";")}
+              value={_meaning}
               allowClear
               onChange={(e) => {
                 console.log(e.target.value);
-                setMeaning(e.target.value.split(";"));
+                setMeaning(e.target.value);
               }}
             />
             <Popover
@@ -158,16 +157,9 @@ const Widget = ({
                 <WbwMeaningSelect
                   data={data}
                   onSelect={(meaning: string) => {
-                    const currMeanings = _meaning ? _meaning : [];
+                    const currMeanings = _meaning ? _meaning : "";
                     console.log(meaning);
-                    if (!items.includes(meaning)) {
-                      setItems([...items, meaning]);
-                    }
-                    if (!currMeanings.includes(meaning)) {
-                      currMeanings.push(meaning);
-                      console.log("it push", meaning);
-                    }
-                    setMeaning(currMeanings);
+                    setMeaning(meaning);
                     form.setFieldsValue({
                       meaning: currMeanings,
                     });

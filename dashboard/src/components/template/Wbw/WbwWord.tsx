@@ -60,7 +60,7 @@ export interface IWbw {
   sn: number[];
   word: WbwElement<string>;
   real?: WbwElement<string>;
-  meaning?: WbwElement<string[]>;
+  meaning?: WbwElement<string>;
   type?: WbwElement<string>;
   grammar?: WbwElement<string>;
   style?: WbwElement<string>;
@@ -172,7 +172,7 @@ const WbwWordWidget = ({
           if (
             intervalRef.current === null &&
             wordData.real &&
-            wordData.real.value.length > 0
+            wordData.real.value?.length > 0
           ) {
             //开始计时，计时结束查字典
             intervalRef.current = window.setInterval(
@@ -216,7 +216,7 @@ const WbwWordWidget = ({
               onChange={(e: string) => {
                 console.log("meaning change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.meaning = { value: [e], status: 5 };
+                newData.meaning = { value: e, status: 5 };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);
