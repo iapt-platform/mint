@@ -63,8 +63,8 @@ export function PaliToEn(pali: string): string {
   return output;
 }
 
-export function PaliReal(inStr: string): string {
-  if (typeof inStr === "undefined") {
+export function PaliReal(inStr: string | undefined | null): string {
+  if (typeof inStr !== "string") {
     return "";
   }
   const paliLetter = "abcdefghijklmnoprstuvyāīūṅñṭḍṇḷṃ";
