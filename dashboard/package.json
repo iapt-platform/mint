@@ -25,7 +25,7 @@
     "@types/react-pdf": "^5.7.4",
     "@types/video.js": "^7.3.50",
     "@uiw/react-md-editor": "^3.19.7",
-    "antd": "^4.24.2",
+    "antd": "^4.24.10",
     "dayjs": "^1.11.6",
     "diff": "^5.1.0",
     "dinero.js": "^2.0.0-alpha.9",
