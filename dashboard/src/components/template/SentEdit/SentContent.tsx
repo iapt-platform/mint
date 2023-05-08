@@ -22,6 +22,7 @@ interface IWidgetSentContent {
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: TDirection;
+  magicDict?: string;
   onWbwChange?: Function;
 }
 const Widget = ({
@@ -33,6 +34,7 @@ const Widget = ({
   origin,
   translation,
   layout = "column",
+  magicDict,
   onWbwChange,
 }: IWidgetSentContent) => {
   const [layoutDirection, setLayoutDirection] = useState<TDirection>(layout);
@@ -89,6 +91,9 @@ const Widget = ({
                 key={id}
                 book={book}
                 para={para}
+                wordStart={wordStart}
+                wordEnd={wordEnd}
+                magicDict={magicDict}
                 channelId={item.channel.id}
                 data={JSON.parse(item.content)}
                 onChange={(data: IWbw[]) => {

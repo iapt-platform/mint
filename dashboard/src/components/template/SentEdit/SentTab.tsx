@@ -30,6 +30,7 @@ interface IWidget {
   originNum: number;
   simNum?: number;
   wbwData?: IWbw[];
+  onMagicDict?: Function;
 }
 const Widget = ({
   id,
@@ -44,6 +45,7 @@ const Widget = ({
   originNum,
   simNum = 0,
   wbwData,
+  onMagicDict,
 }: IWidget) => {
   const intl = useIntl();
 
@@ -68,7 +70,15 @@ const Widget = ({
               }
             />
             <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
-            <SentMenu book={book} para={para} />
+            <SentMenu
+              book={book}
+              para={para}
+              onMagicDict={(type: string) => {
+                if (typeof onMagicDict !== "undefined") {
+                  onMagicDict(type);
+                }
+              }}
+            />
           </Space>
         }
         items={[

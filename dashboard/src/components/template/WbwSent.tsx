@@ -7,6 +7,20 @@ import { post } from "../../request";
 import { ArticleMode } from "../article/Article";
 import WbwWord, { IWbw, IWbwFields, WbwElement } from "./Wbw/WbwWord";
 
+interface IMagicDictRequest {
+  book: number;
+  para: number;
+  word_start: number;
+  word_end: number;
+  data: IWbw[];
+  channel_id: string;
+}
+interface IMagicDictResponse {
+  ok: boolean;
+  message: string;
+  data: IWbw[];
+}
+
 interface IWbwXml {
   id: string;
   pali: WbwElement<string>;
@@ -42,9 +56,13 @@ interface IWidget {
   data: IWbw[];
   book: number;
   para: number;
+  wordStart: number;
+  wordEnd: number;
   channelId: string;
   display?: "block" | "inline";
   fields?: IWbwFields;
+  magicDict?: string;
+
   onChange?: Function;
 }
 export const WbwSentCtl = ({
@@ -52,8 +70,11 @@ export const WbwSentCtl = ({
   channelId,
   book,
   para,
+  wordStart,
+  wordEnd,
   display = "inline",
   fields,
+  magicDict,
   onChange,
 }: IWidget) => {
   const [wordData, setWordData] = useState<IWbw[]>(data);
@@ -86,6 +107,28 @@ export const WbwSentCtl = ({
     }
   }, [newMode]);
 
+  useEffect(() => {
+    if (typeof magicDict === "undefined") {
+      return;
+    }
+    const url = `/v2/wbwlookup`;
+    console.log("magic dict url", url);
+    post<IMagicDictRequest, IMagicDictResponse>(url, {
+      book: book,
+      para: para,
+      word_start: wordStart,
+      word_end: wordEnd,
+      data: wordData,
+      channel_id: channelId,
+    }).then((json) => {
+      if (json.ok) {
+        console.log("magic dict result", json.data);
+        setWordData(json.data);
+      } else {
+        console.error(json.message);
+      }
+    });
+  }, [magicDict]);
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
@@ -123,7 +166,7 @@ export const WbwSentCtl = ({
                     gramma: item.type,
                     mean: item.meaning
                       ? {
-                          value: item.meaning?.value.join("$"),
+                          value: item.meaning.value,
                           status: item.meaning?.status,
                         }
                       : undefined,
