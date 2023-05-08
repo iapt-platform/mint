@@ -8,7 +8,7 @@ interface IWidget {
 const Widget = ({ style = "default", onChange }: IWidget) => {
   return (
     <Select
-      defaultValue={style}
+      value={style}
       style={{ width: 90 }}
       loading={false}
       onChange={(value: string) => {

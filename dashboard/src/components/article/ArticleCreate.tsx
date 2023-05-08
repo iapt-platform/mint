@@ -15,13 +15,15 @@ interface IFormData {
   title: string;
   lang: string;
   studio: string;
+  anthologyId?: string;
 }
 
 interface IWidget {
   studio?: string;
+  anthologyId?: string;
   onSuccess?: Function;
 }
-const Widget = ({ studio, onSuccess }: IWidget) => {
+const Widget = ({ studio, anthologyId, onSuccess }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
 
@@ -34,6 +36,7 @@ const Widget = ({ studio, onSuccess }: IWidget) => {
           return;
         }
         values.studio = studio;
+        values.anthologyId = anthologyId;
         const res = await post<IArticleCreateRequest, IArticleResponse>(
           `/v2/article`,
           values

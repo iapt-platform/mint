@@ -5,7 +5,7 @@ const items = {
   "forms.fields.id.label": "ID",
   "forms.fields.message.label": "消息",
   "forms.fields.created-at.label": "创建时间",
-  "forms.fields.update-at.label": "更新时间",
+  "forms.fields.updated-at.label": "更新时间",
   "forms.fields.lang.label": "语言",
   "forms.message.lang.required": "请选择一种语言",
   "forms.fields.title.label": "标题",
@@ -51,10 +51,17 @@ const items = {
   "forms.fields.user.label": "用户",
   "forms.message.user.required": "请选择用户",
   "forms.message.user.delete": "删除用户吗？此操作无法恢复。",
-  "forms.message.member.delete": "删除此成员吗？此操作无法恢复。",
+  "forms.message.member.remove": "移除此成员吗？此操作无法恢复。",
   "forms.fields.description.label": "简介",
   "forms.fields.textbook.label": "课本",
   "forms.fields.status.label": "状态",
+  "forms.fields.ending.label": "语尾",
+  "forms.fields.relation.label": "关系",
+  "forms.fields.from.label": "从",
+  "forms.fields.to.label": "连接到",
+  "forms.fields.count.label": "计数",
+  "forms.fields.owner.label": "拥有者",
+  "forms.message.res.remove": "将此此资源从群中移除吗？",
 };
 
 export default items;

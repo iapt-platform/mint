@@ -53,43 +53,50 @@ const Widget = () => {
       size="small"
       split={false}
       dataSource={listData}
-      renderItem={(item) => (
-        <List.Item>
-          <Badge.Ribbon text="首发" color="darkred" style={{ display: "none" }}>
-            <Card
-              hoverable
-              bordered={false}
-              style={{ width: "100%", borderRadius: 20 }}
-              onClick={(e) => {
-                navigate(
-                  `/article/chapter/${item.book}-${item.paragraph}_${item.channel.id}`
-                );
-              }}
+      renderItem={(item) => {
+        const channel = item.channel.id ? `?channel=${item.channel.id}` : "";
+        return (
+          <List.Item>
+            <Badge.Ribbon
+              text="首发"
+              color="darkred"
+              style={{ display: "none" }}
             >
-              <Title level={5}>
-                <Link
-                  to={`/article/chapter/${item.book}-${item.paragraph}_${item.channel.id}`}
-                >
-                  {item.title ? item.title : item.paliTitle}
-                </Link>
-              </Title>
-              <div>
-                <Text type="secondary">{item.paliTitle}</Text>
-              </div>
-              <Paragraph
-                ellipsis={{
-                  rows: 2,
-                  expandable: false,
-                  symbol: "more",
+              <Card
+                hoverable
+                bordered={false}
+                style={{ width: "100%", borderRadius: 20 }}
+                onClick={(e) => {
+                  navigate(
+                    `/article/chapter/${item.book}-${item.paragraph}${channel}`
+                  );
                 }}
               >
-                <Text>{item.summary}</Text>
-              </Paragraph>
-              <StudioName data={item.studio} />
-            </Card>
-          </Badge.Ribbon>
-        </List.Item>
-      )}
+                <Title level={5}>
+                  <Link
+                    to={`/article/chapter/${item.book}-${item.paragraph}${channel}`}
+                  >
+                    {item.title ? item.title : item.paliTitle}
+                  </Link>
+                </Title>
+                <div>
+                  <Text type="secondary">{item.paliTitle}</Text>
+                </div>
+                <Paragraph
+                  ellipsis={{
+                    rows: 2,
+                    expandable: false,
+                    symbol: "more",
+                  }}
+                >
+                  <Text>{item.summary}</Text>
+                </Paragraph>
+                <StudioName data={item.studio} />
+              </Card>
+            </Badge.Ribbon>
+          </List.Item>
+        );
+      }}
     />
   );
 };

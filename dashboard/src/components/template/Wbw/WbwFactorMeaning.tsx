@@ -17,7 +17,12 @@ interface IWidget {
   display?: TWbwDisplayMode;
   onChange?: Function;
 }
-const Widget = ({ data, display, onChange, factors }: IWidget) => {
+const WbwFactorMeaningWidget = ({
+  data,
+  display,
+  onChange,
+  factors,
+}: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -54,12 +59,13 @@ const Widget = ({ data, display, onChange, factors }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [inlineDict]);
+  }, [data.word.value, inlineDict]);
 
   useEffect(() => {
     if (typeof factors !== "undefined") {
     }
   }, [factors]);
+
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {
@@ -99,4 +105,4 @@ const Widget = ({ data, display, onChange, factors }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwFactorMeaningWidget;

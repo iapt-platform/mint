@@ -15,6 +15,8 @@ const Widget = () => {
       <Divider>翻译</Divider>
 
       <Divider>逐词解析</Divider>
+      <Divider>字典</Divider>
+      <SettingItem data={SettingFind("setting.dict.lang")} />
     </div>
   );
 };

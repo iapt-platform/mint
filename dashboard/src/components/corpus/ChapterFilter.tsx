@@ -10,21 +10,21 @@ interface IWidget {
   onTypeChange?: Function;
   onLangChange?: Function;
   onProgressChange?: Function;
-  onSearchChange?: Function;
+  onSearch?: Function;
 }
 const Widget = ({
   onTypeChange,
   onLangChange,
   onProgressChange,
-  onSearchChange,
+  onSearch,
 }: IWidget) => {
   return (
     <Space style={{ margin: 8 }}>
       <Search
         placeholder="标题搜索"
         onSearch={(value: string) => {
-          if (typeof onSearchChange !== "undefined") {
-            onSearchChange(value);
+          if (typeof onSearch !== "undefined") {
+            onSearch(value);
           }
         }}
         style={{ width: 200 }}

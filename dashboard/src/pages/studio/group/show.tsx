@@ -29,10 +29,10 @@ const Widget = () => {
       }
     >
       <Row>
-        <Col flex="auto">
+        <Col flex="auto" style={{ paddingRight: 10 }}>
           <GroupFile groupId={groupId} />
         </Col>
-        <Col flex="400px">
+        <Col flex="380px">
           <GroupMember groupId={groupId} />
         </Col>
       </Row>

@@ -78,7 +78,7 @@ const Widget = ({ data, display, onChange }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [inlineDict]);
+  }, [data.word.value, inlineDict]);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);

@@ -1,21 +1,32 @@
-import { useState } from "react";
 import { Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-
-const onClick: MenuProps["onClick"] = ({ key }) => {
-  console.log(`Click on item ${key}`);
-};
+import RelatedPara from "../../corpus/RelatedPara";
 
 interface ISentMenu {
-  children?: React.ReactNode;
+  book?: number;
+  para?: number;
+  onMagicDict?: Function;
 }
-const Widget = ({ children }: ISentMenu) => {
-  const [isHover, setIsHover] = useState(false);
+const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
   const items: MenuProps["items"] = [
     {
+      key: "magic-dict",
+      label: "魔法字典",
+      children: [
+        {
+          key: "magic-dict-current",
+          label: "此句",
+        },
+        {
+          key: "magic-dict-below",
+          label: "此句及以下",
+        },
+      ],
+    },
+    {
       key: "show-commentary",
-      label: "相关段落",
+      label: <RelatedPara book={book} para={para} />,
     },
     {
       key: "show-nissaya",
@@ -30,34 +41,28 @@ const Widget = ({ children }: ISentMenu) => {
       label: "复制句子链接",
     },
   ];
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    console.log(`Click on item ${key}`);
+    switch (key) {
+      case "magic-dict-current":
+        if (typeof onMagicDict !== "undefined") {
+          onMagicDict("current");
+        }
+        break;
 
+      default:
+        break;
+    }
+  };
   return (
-    <div
-      onMouseEnter={() => {
-        setIsHover(true);
-      }}
-      onMouseLeave={() => {
-        setIsHover(false);
-      }}
-    >
-      <div
-        style={{
-          marginTop: "-1.5em",
-          position: "absolute",
-          display: isHover ? "block" : "none",
-        }}
-      >
-        <Dropdown menu={{ items, onClick }} placement="bottomLeft">
-          <Button
-            onClick={(e) => e.preventDefault()}
-            type="primary"
-            icon={<MoreOutlined />}
-            size="small"
-          />
-        </Dropdown>
-      </div>
-      {children}
-    </div>
+    <Dropdown menu={{ items, onClick }} placement="topRight">
+      <Button
+        onClick={(e) => e.preventDefault()}
+        icon={<MoreOutlined />}
+        size="small"
+        type="primary"
+      />
+    </Dropdown>
   );
 };
 

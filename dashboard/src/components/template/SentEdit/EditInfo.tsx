@@ -3,6 +3,7 @@ import { Space } from "antd";
 
 import StudioName from "../../auth/StudioName";
 import User from "../../auth/User";
+import Channel from "../../channel/Channel";
 import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";
 
@@ -17,7 +18,10 @@ const Widget = ({ data, isPr = false }: IWidget) => {
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
         <Space>
-          {isPr ? undefined : <StudioName data={data.studio} />}
+          {isPr ? undefined : (
+            <StudioName data={data.studio} showName={false} />
+          )}
+          <Channel {...data.channel} />
           <User {...data.editor} showAvatar={isPr ? true : false} />
           <span>edit</span>
           {data.prEditAt ? (

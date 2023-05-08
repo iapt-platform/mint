@@ -16,6 +16,8 @@ import WbwPali from "./WbwPali";
 import "./wbw.css";
 import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
+import WbwRelationAdd from "./WbwRelationAdd";
+import { ArticleMode } from "../../article/Article";
 
 export type TFieldName =
   | "word"
@@ -23,8 +25,10 @@ export type TFieldName =
   | "meaning"
   | "type"
   | "grammar"
+  | "grammar2"
   | "case"
   | "parent"
+  | "parent2"
   | "factors"
   | "factorMeaning"
   | "relation"
@@ -44,34 +48,32 @@ enum WbwStatus {
   auto = 3,
   manual = 5,
 }
-interface WbwElement {
-  value: string;
+export interface WbwElement<R> {
+  value: R;
   status: WbwStatus;
 }
-interface WbwElement2 {
-  value: string[];
-  status: WbwStatus;
-}
-interface WbwElement3 {
-  value: number;
-  status: WbwStatus;
-}
+
 export interface IWbw {
   uid?: string;
-  word: WbwElement;
-  real?: WbwElement;
-  meaning?: WbwElement2;
-  type?: WbwElement;
-  grammar?: WbwElement;
-  style?: WbwElement;
-  case?: WbwElement2;
-  parent?: WbwElement;
-  factors?: WbwElement;
-  factorMeaning?: WbwElement;
-  relation?: WbwElement;
-  note?: WbwElement;
-  bookMarkColor?: WbwElement3;
-  bookMarkText?: WbwElement;
+  book: number;
+  para: number;
+  sn: number[];
+  word: WbwElement<string>;
+  real?: WbwElement<string>;
+  meaning?: WbwElement<string>;
+  type?: WbwElement<string>;
+  grammar?: WbwElement<string>;
+  style?: WbwElement<string>;
+  case?: WbwElement<string>;
+  parent?: WbwElement<string>;
+  parent2?: WbwElement<string>;
+  grammar2?: WbwElement<string>;
+  factors?: WbwElement<string>;
+  factorMeaning?: WbwElement<string>;
+  relation?: WbwElement<string>;
+  note?: WbwElement<string>;
+  bookMarkColor?: WbwElement<number>;
+  bookMarkText?: WbwElement<string>;
   locked?: boolean;
   confidence: number;
   attachments?: UploadFile[];
@@ -88,12 +90,14 @@ interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
+  mode?: ArticleMode;
   onChange?: Function;
   onSplit?: Function;
 }
-const Widget = ({
+const WbwWordWidget = ({
   data,
   display = "block",
+  mode = "edit",
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
   onChange,
   onSplit,
@@ -101,6 +105,7 @@ const Widget = ({
   const [wordData, setWordData] = useState(data);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [newFactors, setNewFactors] = useState<string>();
+  const [showRelationTool, setShowRelationTool] = useState(false);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
   const inlineWordIndex = useAppSelector(wordIndex);
 
@@ -150,6 +155,7 @@ const Widget = ({
 
     console.log("lookup", word);
   };
+
   if (wordData.type?.value === ".ctl.") {
     if (wordData.word.value.includes("para")) {
       return <WbwPara data={wordData} />;
@@ -159,23 +165,31 @@ const Widget = ({
   } else {
     return (
       <div
-        className={`wbw_word ${display} ${wbwCtl} ${wbwAnchor} `}
+        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} `}
         style={styleWbw}
         onMouseEnter={() => {
-          if (intervalRef.current === null) {
+          setShowRelationTool(true);
+          if (
+            intervalRef.current === null &&
+            wordData.real &&
+            wordData.real.value?.length > 0
+          ) {
             //开始计时，计时结束查字典
             intervalRef.current = window.setInterval(
               lookup,
-              200,
-              wordData.word.value
+              300,
+              wordData.real.value
             );
           }
         }}
         onMouseLeave={() => {
           stopLookup();
+          setShowRelationTool(false);
         }}
       >
+        {showRelationTool ? <WbwRelationAdd data={data} /> : undefined}
         <WbwPali
+          key="pali"
           data={wordData}
           display={display}
           onSave={(e: IWbw) => {
@@ -195,12 +209,14 @@ const Widget = ({
         >
           {fieldDisplay?.meaning ? (
             <WbwMeaning
+              key="meaning"
+              mode={mode}
               data={wordData}
               display={display}
               onChange={(e: string) => {
                 console.log("meaning change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.meaning = { value: [e], status: 5 };
+                newData.meaning = { value: e, status: 5 };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);
@@ -210,6 +226,7 @@ const Widget = ({
           ) : undefined}
           {fieldDisplay?.factors ? (
             <WbwFactors
+              key="factors"
               data={wordData}
               display={display}
               onChange={(e: string) => {
@@ -218,11 +235,15 @@ const Widget = ({
                 newData.factors = { value: e, status: 5 };
                 setNewFactors(e);
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
           {fieldDisplay?.factorMeaning ? (
             <WbwFactorMeaning
+              key="fm"
               data={wordData}
               display={display}
               factors={newFactors}
@@ -230,11 +251,15 @@ const Widget = ({
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = { value: e, status: 5 };
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
           {fieldDisplay?.case ? (
             <WbwCase
+              key="case"
               data={wordData}
               display={display}
               onSplit={(e: boolean) => {
@@ -245,8 +270,11 @@ const Widget = ({
               }}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.case = { value: e.split("$"), status: 5 };
+                newData.case = { value: e, status: 7 };
                 setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
               }}
             />
           ) : undefined}
@@ -256,4 +284,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default WbwWordWidget;

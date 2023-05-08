@@ -8,4 +8,6 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: "Noto Sans", "NotoSans-ExtraLight", "Noto Sans SC",
+    "Noto Sans TC", "Noto Sans Myanmar", "ATaiThamKHNewV3-Normal";
 }

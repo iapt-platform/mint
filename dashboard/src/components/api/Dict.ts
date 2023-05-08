@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { ICaseListData } from "../dict/CaseList";
@@ -48,6 +49,8 @@ export interface IApiResponseDictData {
   confidence: number;
   creator_id: number;
   updated_at: string;
+  exp?: number;
+  editor?: IUser;
 }
 export interface IApiResponseDict {
   ok: boolean;

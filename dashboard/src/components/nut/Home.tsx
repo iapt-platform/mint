@@ -4,27 +4,19 @@ import code_png from "../../assets/nut/code.png";
 import MarkdownForm from "./MarkdownForm";
 import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
-import DemoForm from "./Form";
 import TreeTest from "./TreeTest";
-import Share from "../share/Share";
-import ChannelPicker from "../channel/ChannelPicker";
+
 import { Layout } from "antd";
+import CaseFormula from "../template/Wbw/CaseFormula";
 
 const Widget = () => {
   return (
     <Layout>
       <h1>Home</h1>
-      <ChannelPicker
-        type="chapter"
-        articleId="168-867_7fea264d-7a26-40f8-bef7-bc95102760fb"
-      />
-      <div>
-        <Share resId="dd" resType="dd" />
-      </div>
+      <CaseFormula />
       <h2>TreeTest</h2>
       <TreeTest />
-      <br />
-      <DemoForm />
+
       <br />
       <FontBox />
       <br />

@@ -131,17 +131,30 @@ const Widget = ({ studioName, courseId }: IWidget) => {
             filters: true,
             onFilter: true,
             valueEnum: {
+              /**"success","processing","error","default","warning" */
               all: {
                 text: intl.formatMessage({
                   id: "tables.publicity.all",
                 }),
-                status: "Default",
+                status: "default",
               },
-              progressing: {
+              normal: {
                 text: intl.formatMessage({
-                  id: "course.member.status.progressing.label",
+                  id: "course.member.status.normal.label",
+                }),
+                status: "success",
+              },
+              sign_up: {
+                text: intl.formatMessage({
+                  id: "course.member.status.sign_up.label",
                 }),
                 status: "Processing",
+              },
+              invited: {
+                text: intl.formatMessage({
+                  id: "course.member.status.invited.label",
+                }),
+                status: "default",
               },
               accepted: {
                 text: intl.formatMessage({
@@ -159,13 +172,13 @@ const Widget = ({ studioName, courseId }: IWidget) => {
                 text: intl.formatMessage({
                   id: "course.member.status.left.label",
                 }),
-                status: "warning",
+                status: "error",
               },
               blocked: {
                 text: intl.formatMessage({
                   id: "course.member.status.blocked.label",
                 }),
-                status: "warning",
+                status: "error",
               },
             },
           },
@@ -202,17 +215,18 @@ const Widget = ({ studioName, courseId }: IWidget) => {
                   items = [
                     {
                       key: "exp",
-                      label: "经验值",
+                      label: "查看经验值",
                       icon: <BarChartOutlined />,
                     },
                     {
-                      key: "delete",
-                      label: "删除",
+                      key: "block",
+                      label: "屏蔽",
                       icon: <DeleteOutlined />,
+                      danger: true,
                     },
                   ];
                   break;
-                case "progressing":
+                case "sign_up":
                   items = [
                     {
                       key: "accept",
@@ -223,10 +237,43 @@ const Widget = ({ studioName, courseId }: IWidget) => {
                       key: "reject",
                       label: "拒绝",
                       icon: <DeleteOutlined />,
+                      danger: true,
+                    },
+                  ];
+                  break;
+                case "invited":
+                  items = [
+                    {
+                      key: "delete",
+                      label: "删除",
+                      icon: <DeleteOutlined />,
+                      danger: true,
+                    },
+                  ];
+                  break;
+                case "normal":
+                  items = [
+                    {
+                      key: "exp",
+                      label: "查看经验值",
+                      icon: <BarChartOutlined />,
+                    },
+                    {
+                      key: "block",
+                      label: "屏蔽",
+                      icon: <DeleteOutlined />,
+                      danger: true,
                     },
                   ];
                   break;
                 default:
+                  items = [
+                    {
+                      key: "none",
+                      label: "无操作",
+                      disabled: true,
+                    },
+                  ];
                   break;
               }
 

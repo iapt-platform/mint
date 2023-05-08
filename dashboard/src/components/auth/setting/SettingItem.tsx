@@ -1,6 +1,13 @@
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
-import { Switch, Typography, Radio, RadioChangeEvent, Select } from "antd";
+import {
+  Switch,
+  Typography,
+  Radio,
+  RadioChangeEvent,
+  Select,
+  Transfer,
+} from "antd";
 
 import {
   onChange as onSettingChanged,
@@ -10,23 +17,32 @@ import {
 import { useAppSelector } from "../../../hooks";
 import store from "../../../store";
 import { ISetting } from "./default";
+import { TransferDirection } from "antd/lib/transfer";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface IWidgetSettingItem {
   data?: ISetting;
+  autoSave?: boolean;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidgetSettingItem) => {
+const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
   const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
-  const title = (
-    <Title level={5}>
-      {data?.label ? intl.formatMessage({ id: data.label }) : ""}
-    </Title>
-  );
-  console.log(data);
+
+  const [targetKeys, setTargetKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (typeof data?.defaultValue === "object") {
+      setTargetKeys(data.defaultValue);
+    }
+  }, [data?.defaultValue]);
+
+  useEffect(() => {
+    setValue(data?.defaultValue);
+  }, [data?.defaultValue]);
+
   useEffect(() => {
     const currSetting = settings?.find((element) => element.key === data?.key);
     if (typeof currSetting !== "undefined") {
@@ -38,9 +54,49 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
   if (typeof data === "undefined") {
     return content;
   } else {
-    const description: string = intl.formatMessage({ id: data.description });
+    const description: string | undefined = data.description
+      ? intl.formatMessage({ id: data.description })
+      : undefined;
     switch (typeof data.defaultValue) {
       case "number":
+        break;
+      case "object":
+        switch (data.widget) {
+          case "transfer":
+            if (typeof data.options !== "undefined") {
+              content = (
+                <Transfer
+                  dataSource={data.options.map((item) => {
+                    return {
+                      key: item.value,
+                      title: intl.formatMessage({ id: item.label }),
+                    };
+                  })}
+                  titles={["备选", "我的选择"]}
+                  targetKeys={targetKeys}
+                  onChange={(
+                    newTargetKeys: string[],
+                    direction: TransferDirection,
+                    moveKeys: string[]
+                  ) => {
+                    setTargetKeys(newTargetKeys);
+                    store.dispatch(
+                      onSettingChanged({
+                        key: data.key,
+                        value: newTargetKeys,
+                      })
+                    );
+                    if (typeof onChange !== "undefined") {
+                      onChange(data.key, newTargetKeys);
+                    }
+                  }}
+                  render={(item) => item.title}
+                  oneWay
+                />
+              );
+            }
+            break;
+        }
         break;
       case "string":
         switch (data.widget) {
@@ -53,12 +109,17 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                     buttonStyle="solid"
                     onChange={(e: RadioChangeEvent) => {
                       setValue(e.target.value);
-                      store.dispatch(
-                        onSettingChanged({
-                          key: data.key,
-                          value: e.target.value,
-                        })
-                      );
+                      if (autoSave) {
+                        store.dispatch(
+                          onSettingChanged({
+                            key: data.key,
+                            value: e.target.value,
+                          })
+                        );
+                      }
+                      if (typeof onChange !== "undefined") {
+                        onChange(data.key, e.target.value);
+                      }
                     }}
                   >
                     {data.options.map((item, id) => {
@@ -72,8 +133,8 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                 </>
               );
             }
-
             break;
+
           default:
             if (typeof data.options !== "undefined") {
               content = (
@@ -83,12 +144,17 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
                     style={{ width: 120 }}
                     onChange={(value: string) => {
                       console.log(`selected ${value}`);
-                      store.dispatch(
-                        onSettingChanged({
-                          key: data.key,
-                          value: value,
-                        })
-                      );
+                      if (autoSave) {
+                        store.dispatch(
+                          onSettingChanged({
+                            key: data.key,
+                            value: value,
+                          })
+                        );
+                      }
+                      if (typeof onChange !== "undefined") {
+                        onChange(data.key, value);
+                      }
                     }}
                     options={data.options.map((item) => {
                       return {
@@ -110,13 +176,15 @@ const Widget = ({ data, onChange }: IWidgetSettingItem) => {
             <Switch
               defaultChecked={value as boolean}
               onChange={(checked) => {
-                if (typeof onChange !== "undefined") {
-                  onChange(checked);
-                }
                 console.log("setting changed", data.key, checked);
-                store.dispatch(
-                  onSettingChanged({ key: data.key, value: checked })
-                );
+                if (autoSave) {
+                  store.dispatch(
+                    onSettingChanged({ key: data.key, value: checked })
+                  );
+                }
+                if (typeof onChange !== "undefined") {
+                  onChange(data.key, checked);
+                }
               }}
             />
           </div>

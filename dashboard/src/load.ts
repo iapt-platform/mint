@@ -7,8 +7,13 @@ import { ISite, refresh as refreshLayout } from "./reducers/layout";
 import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
 import { refresh as refreshTheme } from "./reducers/theme";
 import { get, IErrorResponse } from "./request";
-//import { GRPC_HOST,  grpc_metadata } from "./request";
+import { get as getLang } from "./locales";
+
 import store from "./store";
+import { ITerm, push } from "./reducers/term-vocabulary";
+import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
+import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
+import { pushRelation } from "./reducers/relation";
 
 export interface ISiteInfoResponse {
   title: string;
@@ -27,6 +32,25 @@ export interface ITokenRefreshResponse {
   data: IUserData;
 }
 
+interface ITermResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: ITerm[];
+    count: number;
+  };
+}
+interface INissayaEnding {
+  ending: string;
+}
+interface INissayaEndingResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: INissayaEnding[];
+    count: number;
+  };
+}
 const init = () => {
   get<ISiteInfoResponse | IErrorResponse>("/v2/siteinfo/en").then(
     (response) => {
@@ -71,6 +95,47 @@ const init = () => {
     const json: ISettingItem[] = JSON.parse(setting);
     store.dispatch(refreshSetting(json));
   }
+  //获取术语表
+  get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
+    (json) => {
+      if (json.ok) {
+        store.dispatch(push(json.data.rows));
+      }
+    }
+  );
+
+  get<ITermResponse>(
+    `/v2/term-vocabulary?view=community&lang=` + getLang()
+  ).then((json) => {
+    if (json.ok) {
+      store.dispatch(push(json.data.rows));
+    }
+  });
+
+  //获取nissaya ending 表
+  get<INissayaEndingResponse>(`/v2/nissaya-ending-vocabulary?lang=my`).then(
+    (json) => {
+      if (json.ok) {
+        const nissayaEnding = json.data.rows.map((item) => item.ending);
+        store.dispatch(nissayaEndingPush(nissayaEnding));
+      }
+    }
+  );
+
+  //获取 relation 表
+  get<IRelationListResponse>(`/v2/relation?limit=1000`).then((json) => {
+    if (json.ok) {
+      const items: IRelation[] = json.data.rows.map((item, id) => {
+        return {
+          id: item.id,
+          name: item.name,
+          case: item.case,
+          to: item.to,
+        };
+      });
+      store.dispatch(pushRelation(items));
+    }
+  });
 
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");

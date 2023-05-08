@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { message } from "../../reducers/command";
 
-import TermCreate, { IWidgetDictCreate } from "../term/TermCreate";
+import TermEdit, { ITerm } from "../term/TermEdit";
 
 const Widget = () => {
-  const [termProps, setTermProps] = useState<IWidgetDictCreate>();
+  const [termProps, setTermProps] = useState<ITerm>();
   //接收术语消息
   const commandMsg = useAppSelector(message);
   useEffect(() => {
@@ -17,7 +17,7 @@ const Widget = () => {
   }, [commandMsg]);
   return (
     <div>
-      <TermCreate type="inline" {...termProps} />
+      <TermEdit {...termProps} />
     </div>
   );
 };

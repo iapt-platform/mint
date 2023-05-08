@@ -1,42 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Key } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Layout, Space, Tree } from "antd";
+import { Button, Space, Switch, Tree } from "antd";
 import { Typography } from "antd";
-import type { TreeProps } from "antd/es/tree";
 
 import { get } from "../../request";
-import { useNavigate } from "react-router-dom";
 import TocStyleSelect from "./TocStyleSelect";
 import { IPaliBookListResponse } from "../api/Corpus";
 import { ITocTree } from "./BookTreeList";
 import { PaliToEn } from "../../utils";
+import PaliText from "../template/Wbw/PaliText";
 
 const { Text } = Typography;
 
 interface IWidgetBookTree {
   root?: string;
   path?: string[];
+  multiSelect?: boolean;
+  multiSelectable?: boolean;
   onChange?: Function;
+  onSelect?: Function;
+  onRootChange?: Function;
 }
-const Widget = ({ root = "default", path, onChange }: IWidgetBookTree) => {
-  //Library foot bar
-  //const intl = useIntl(); //i18n
-  const navigate = useNavigate();
-
+const Widget = ({
+  root,
+  path,
+  multiSelect = false,
+  multiSelectable = true,
+  onChange,
+  onSelect,
+  onRootChange,
+}: IWidgetBookTree) => {
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
+  const [isMultiSelect, setIsMultiSelect] = useState(multiSelect);
+  const [currTocStyle, setCurrTocStyle] = useState<string>();
 
   useEffect(() => {
-    if (typeof root !== "undefined") fetchBookTree(root);
-  }, [root]);
+    setIsMultiSelect(multiSelect);
+  }, [multiSelect]);
 
-  const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-    //let aaa: NewTree = info.node;
-    const node: ITocTree = info.node as unknown as ITocTree;
-    console.log("tree selected", selectedKeys, node.path);
-    if (typeof onChange !== "undefined" && selectedKeys.length > 0) {
-      onChange(selectedKeys[0], node.path);
+  useEffect(() => {
+    let tocStyle = "default";
+    if (typeof root !== "undefined") {
+      tocStyle = root;
+    } else {
+      const store = localStorage.getItem("pali_path_root");
+      if (store) {
+        tocStyle = store;
+      }
     }
-  };
+    fetchBookTree(tocStyle);
+    setCurrTocStyle(tocStyle);
+  }, [root]);
 
   function fetchBookTree(value: string) {
     function treeMap(params: IPaliBookListResponse): ITocTree {
@@ -63,28 +78,80 @@ const Widget = ({ root = "default", path, onChange }: IWidgetBookTree) => {
       setTreeData(newTree);
     });
   }
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-    localStorage.setItem("pali_path_root", value);
-    navigate("/palicanon/list/" + value);
-    fetchBookTree(value);
-  };
 
   // TODO
   return (
-    <Layout>
-      <Space>
-        <Text>目录风格</Text>
-        <TocStyleSelect style={root} onChange={handleChange} />
+    <Space direction="vertical" style={{ padding: 10, width: "100%" }}>
+      <Space style={{ display: "flex", justifyContent: "space-between" }}>
+        <Text>目录</Text>
+        <TocStyleSelect
+          style={currTocStyle}
+          onChange={(value: string) => {
+            console.log(`selected ${value}`);
+            localStorage.setItem("pali_path_root", value);
+            if (typeof onRootChange !== "undefined") {
+              onRootChange(value);
+            }
+            setCurrTocStyle(value);
+            fetchBookTree(value);
+          }}
+        />
       </Space>
+
+      <Space style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          onClick={() => {
+            setSelectedKeys([]);
+            if (typeof onChange !== "undefined") {
+              onChange([], []);
+            }
+          }}
+        >
+          清除选择
+        </Button>
+        {multiSelectable ? (
+          <Space>
+            {"多选"}
+            <Switch
+              size="small"
+              defaultChecked={multiSelect}
+              onChange={(checked) => {
+                setIsMultiSelect(checked);
+              }}
+            />
+          </Space>
+        ) : undefined}
+      </Space>
+
       <Tree
+        selectedKeys={selectedKeys}
+        multiple={isMultiSelect}
         showLine
         switcherIcon={<DownOutlined />}
         defaultExpandedKeys={["sutta"]}
-        onSelect={onSelect}
+        onCheck={(checkedKeysValue, info) => {
+          console.log("onCheck", checkedKeysValue);
+          //setCheckedKeys(checkedKeysValue);
+        }}
+        onSelect={(selectedKeys, info) => {
+          console.log("tree selected", selectedKeys, info);
+          setSelectedKeys(selectedKeys);
+          //let aaa: NewTree = info.node;
+          const node: ITocTree = info.node as unknown as ITocTree;
+
+          if (typeof onChange !== "undefined") {
+            onChange(selectedKeys, node.path);
+          }
+          if (typeof onSelect !== "undefined") {
+            onSelect(selectedKeys.length > 0 ? selectedKeys[0] : undefined);
+          }
+        }}
         treeData={treeData}
+        titleRender={(node: ITocTree) => {
+          return <PaliText text={node.title} />;
+        }}
       />
-    </Layout>
+    </Space>
   );
 };
 

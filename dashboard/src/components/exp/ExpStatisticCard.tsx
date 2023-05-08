@@ -15,10 +15,8 @@ const Widget = ({ studioName }: IWidget) => {
   const [wbwCount, setWbwCount] = useState<number>();
   const [lookupCount, setLookupCount] = useState<number>();
   const [translationCount, setTranslationCount] = useState<number>();
-  const [translationPubCount, setTranslationPubCount] = useState<number>();
   const [translationPieData, setTranslationPieData] = useState<IPieData[]>();
   const [termCount, setTermCount] = useState<number>();
-  const [termNoteCount, setTermNoteCount] = useState<number>();
   const [termPieData, setTermPieData] = useState<IPieData[]>();
   const [dictCount, setDictCount] = useState<number>();
   useEffect(() => {
@@ -29,7 +27,6 @@ const Widget = ({ studioName }: IWidget) => {
           setWbwCount(json.data.wbw.count);
           setLookupCount(json.data.lookup.count);
           setTranslationCount(json.data.translation.count);
-          setTranslationPubCount(json.data.translation.count_pub);
           setTranslationPieData([
             { type: "公开", value: json.data.translation.count_pub },
             {
@@ -39,7 +36,6 @@ const Widget = ({ studioName }: IWidget) => {
             },
           ]);
           setTermCount(json.data.term.count);
-          setTermNoteCount(json.data.term.count_with_note);
           setTermPieData([
             { type: "百科", value: json.data.term.count_with_note },
             {

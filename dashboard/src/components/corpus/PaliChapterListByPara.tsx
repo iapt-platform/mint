@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
-import { IApiResponsePaliChapterList } from "../api/Corpus";
+import { IPaliChapterListResponse } from "../api/Corpus";
 import { IChapter } from "./BookViewer";
 import { IPaliChapterData } from "./PaliChapterCard";
 import PaliChapterList, { IChapterClickEvent } from "./PaliChapterList";
@@ -16,7 +16,7 @@ const Widget = ({ chapter, onChapterClick }: IWidget) => {
   useEffect(() => {
     console.log("palichapterlist useEffect");
     let url = `/v2/palitext?view=chapter_children&book=${chapter.book}&para=${chapter.para}`;
-    get<IApiResponsePaliChapterList>(url).then(function (json) {
+    get<IPaliChapterListResponse>(url).then(function (json) {
       console.log("chapter ajex", json);
       const newTree: IPaliChapterData[] = json.data.rows.map((item) => {
         return {
@@ -26,6 +26,7 @@ const Widget = ({ chapter, onChapterClick }: IWidget) => {
           Path: item.path,
           Book: item.book,
           Paragraph: item.paragraph,
+          progressLine: item.progress_line,
         };
       });
       setTableData(newTree);

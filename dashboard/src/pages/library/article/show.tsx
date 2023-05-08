@@ -1,7 +1,7 @@
 import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import Article, {
   ArticleMode,
@@ -12,6 +12,7 @@ import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
+import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
@@ -39,6 +40,7 @@ const Widget = () => {
     mode as ArticleMode
   );
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   //const right = <ProTabs />;
   const rightBarWidth = "48px";
@@ -88,6 +90,7 @@ const Widget = () => {
                 <ToolButtonToc type={type} articleId={id} />
                 <ToolButtonTag type={type} articleId={id} />
                 <ToolButtonPr type={type} articleId={id} />
+                <ToolButtonDiscussion type={type} articleId={id} />
                 <ToolButtonSearch type={type} articleId={id} />
                 <ToolButtonSetting type={type} articleId={id} />
               </Space>
@@ -105,16 +108,23 @@ const Widget = () => {
         >
           <div
             key="Article"
-            style={{ marginLeft: "auto", marginRight: "auto", width: 960 }}
+            style={{ marginLeft: "auto", marginRight: "auto", width: 1200 }}
           >
             <Article
               active={true}
               type={type as ArticleType}
+              book={searchParams.get("book")}
+              para={searchParams.get("par")}
+              channelId={searchParams.get("channel")}
               articleId={id}
               mode={articleMode}
               onArticleChange={(article: string) => {
                 console.log("article change", article);
-                navigate(`/article/${type}/${article}/${articleMode}`);
+                let url = `/article/${type}/${article}/${articleMode}?mode=${articleMode}`;
+                if (searchParams.get("channel")) {
+                  url += "&channel=" + searchParams.get("channel");
+                }
+                navigate(url);
               }}
             />
           </div>
@@ -125,12 +135,13 @@ const Widget = () => {
               articleId={id ? id : ""}
               selectedChannelKeys={channelId}
               onChannelSelect={(e: IChannel[]) => {
-                const oldId = id?.split("_");
-                const newId = [
-                  oldId ? oldId[0] : undefined,
-                  ...e.map((item) => item.id),
-                ];
-                navigate(`/article/${type}/${newId.join("_")}/${articleMode}`);
+                console.log("onChannelSelect", e);
+                const channels = e.map((item) => item.id).join("_");
+                let url = `/article/${type}/${id}/${articleMode}`;
+                if (e.length > 0) {
+                  url += `?channel=${channels}`;
+                }
+                navigate(url);
               }}
             />
           </div>

@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Popover, Typography } from "antd";
+import { useEffect, useState } from "react";
+import { Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
   CommentOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 
 import "./wbw.css";
@@ -16,7 +17,8 @@ import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
 import store from "../../../store";
 import { command } from "../../../reducers/command";
-import { IWidgetDict } from "../../dict/DictComponent";
+import { useAppSelector } from "../../../hooks";
+import { add, relationAddParam } from "../../../reducers/relation-add";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -24,11 +26,41 @@ interface IWidget {
   display?: TWbwDisplayMode;
   onSave?: Function;
 }
-const Widget = ({ data, display, onSave }: IWidget) => {
-  const [click, setClicked] = useState(false);
+const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
+  const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-  const [isHover, setIsHover] = useState(false);
   const [hasComment, setHasComment] = useState(data.hasComment);
+  /**
+   * 处理 relation 链接事件
+   * 点击连接或取消后，打开弹窗
+   */
+  const addParam = useAppSelector(relationAddParam);
+  useEffect(() => {
+    if (
+      (addParam?.command === "apply" || addParam?.command === "cancel") &&
+      addParam.src_sn === data.sn.join("-") &&
+      addParam.book === data.book &&
+      addParam.para === data.para
+    ) {
+      setPopOpen(true);
+      store.dispatch(
+        add({
+          book: data.book,
+          para: data.para,
+          src_sn: data.sn.join("-"),
+          command: "finish",
+        })
+      );
+    }
+  }, [
+    addParam?.book,
+    addParam?.command,
+    addParam?.para,
+    addParam?.src_sn,
+    data.book,
+    data.para,
+    data.sn,
+  ]);
 
   const handleClickChange = (open: boolean) => {
     if (open) {
@@ -36,7 +68,7 @@ const Widget = ({ data, display, onSave }: IWidget) => {
     } else {
       setPaliColor("unset");
     }
-    setClicked(open);
+    setPopOpen(open);
   };
 
   const wbwDetail = (
@@ -44,13 +76,20 @@ const Widget = ({ data, display, onSave }: IWidget) => {
       data={data}
       onClose={() => {
         setPaliColor("unset");
-        setClicked(false);
+        setPopOpen(false);
       }}
       onSave={(e: IWbw) => {
         if (typeof onSave !== "undefined") {
           onSave(e);
-          setClicked(false);
+          setPopOpen(false);
           setPaliColor("unset");
+        }
+      }}
+      onCommentCountChange={(count: number) => {
+        if (count > 0) {
+          setHasComment(true);
+        } else {
+          setHasComment(false);
         }
       }}
     />
@@ -83,6 +122,10 @@ const Widget = ({ data, display, onSave }: IWidget) => {
     />
   ) : undefined;
 
+  const relationIcon = data.relation ? (
+    <ApartmentOutlined style={{ color: "blue" }} />
+  ) : undefined;
+
   const bookMarkIcon = data.bookMarkText ? (
     <Popover
       content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
@@ -99,6 +142,18 @@ const Widget = ({ data, display, onSave }: IWidget) => {
     padding = "4px";
   } else {
     padding = "4px 0";
+  }
+  let pali = <PaliText text={data.word.value} termToLocal={false} />;
+  if (data.word.value.indexOf("}") >= 0) {
+    const paliArray = data.word.value.replace("{", "").split("}");
+    pali = (
+      <>
+        <span style={{ fontWeight: 700 }}>
+          <PaliText text={paliArray[0]} termToLocal={false} />
+        </span>
+        <PaliText text={paliArray[1]} termToLocal={false} />
+      </>
+    );
   }
   const paliWord = (
     <span
@@ -121,44 +176,26 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         );
       }}
     >
-      {<PaliText text={data.word.value} />}
+      {pali}
     </span>
   );
 
   let commentShellStyle: React.CSSProperties = {
     display: "inline-block",
   };
-  let commentIconStyle: React.CSSProperties = {
-    cursor: "pointer",
-  };
 
-  if (display === "block") {
-    commentIconStyle = {
-      cursor: "pointer",
-      visibility: isHover || hasComment ? "visible" : "hidden",
-    };
-  } else {
-    if (!hasComment) {
-      commentShellStyle = {
-        display: "inline-block",
-        position: "absolute",
-        padding: 8,
-        marginTop: "-1.5em",
-        marginLeft: "-2em",
-      };
-      commentShellStyle = {
-        visibility: isHover ? "visible" : "hidden",
-        cursor: "pointer",
-      };
-    }
-  }
-
-  const discussionIcon = (
+  const discussionIcon = hasComment ? (
     <div style={commentShellStyle}>
       <CommentBox
         resId={data.uid}
         resType="wbw"
-        trigger={<CommentOutlined style={commentIconStyle} />}
+        trigger={
+          <CommentOutlined
+            style={{
+              cursor: "pointer",
+            }}
+          />
+        }
         onCommentCountChange={(count: number) => {
           if (count > 0) {
             setHasComment(true);
@@ -168,33 +205,28 @@ const Widget = ({ data, display, onSave }: IWidget) => {
         }}
       />
     </div>
-  );
+  ) : undefined;
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     //非标点符号
     return (
-      <div
-        className="pali_shell"
-        onMouseEnter={() => {
-          setIsHover(true);
-        }}
-        onMouseLeave={() => {
-          setIsHover(false);
-        }}
-      >
+      <div className="pali_shell">
         <Popover
           content={wbwDetail}
           placement="bottom"
           trigger="click"
-          open={click}
+          open={popOpen}
           onOpenChange={handleClickChange}
         >
           {paliWord}
         </Popover>
-        {videoIcon}
-        {noteIcon}
-        {bookMarkIcon}
-        {discussionIcon}
+        <Space>
+          {videoIcon}
+          {noteIcon}
+          {bookMarkIcon}
+          {relationIcon}
+          {discussionIcon}
+        </Space>
       </div>
     );
   } else {
@@ -207,4 +239,4 @@ const Widget = ({ data, display, onSave }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwPaliWidget;

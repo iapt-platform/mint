@@ -85,6 +85,11 @@ const SentReadFrame = ({
         style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
         ref={boxSent}
       >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `<div class="pcd_sent" id="sent_${sentId}"></div>`,
+          }}
+        />
         <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
           {origin?.map((item, id) => {
             return (

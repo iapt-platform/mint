@@ -1,0 +1,9 @@
+.search_content del {
+  background-color: yellow;
+  color: black;
+  text-decoration: none;
+}
+.search_content em {
+  color: #177ddc;
+  font-style: unset;
+}

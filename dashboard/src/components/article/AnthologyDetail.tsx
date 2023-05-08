@@ -13,7 +13,7 @@ import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import AnthologyTocTree from "../anthology/AnthologyTocTree";
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 interface IWidgetAnthologyDetail {
   aid?: string;
@@ -57,18 +57,20 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
       });
   }
   return (
-    <>
+    <div style={{ padding: 12 }}>
       <Title level={4}>{tableData?.title}</Title>
       <div>
         <Text type="secondary">{tableData?.subTitle}</Text>
       </div>
-      <Space>
-        <StudioName data={tableData?.studio} />
-        <TimeShow time={tableData?.updated_at} title="updated" />
-      </Space>
-      <div>
+      <Paragraph>
+        <Space>
+          <StudioName data={tableData?.studio} />
+          <TimeShow time={tableData?.updated_at} title="updated" />
+        </Space>
+      </Paragraph>
+      <Paragraph>
         <Marked text={tableData?.summary} />
-      </div>
+      </Paragraph>
       <Title level={5}>目录</Title>
 
       <AnthologyTocTree
@@ -81,7 +83,7 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
           }
         }}
       />
-    </>
+    </div>
   );
 };
 

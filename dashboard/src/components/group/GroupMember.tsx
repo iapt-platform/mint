@@ -28,7 +28,7 @@ interface IWidgetGroupFile {
 }
 const Widget = ({ groupId }: IWidgetGroupFile) => {
   const intl = useIntl(); //i18n
-  const [canDelete, setCanDelete] = useState(false);
+  const [canManage, setCanManage] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
 
   const ref = useRef<ActionType>();
@@ -44,12 +44,14 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
         }
         toolBarRender={() => {
           return [
-            <GroupAddMember
-              groupId={groupId}
-              onCreated={() => {
-                ref.current?.reload();
-              }}
-            />,
+            canManage ? (
+              <GroupAddMember
+                groupId={groupId}
+                onCreated={() => {
+                  ref.current?.reload();
+                }}
+              />
+            ) : undefined,
           ];
         }}
         showActions="hover"
@@ -71,10 +73,10 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
             setMemberCount(res.data.count);
             switch (res.data.role) {
               case "owner":
-                setCanDelete(true);
+                setCanManage(true);
                 break;
               case "manager":
-                setCanDelete(true);
+                setCanManage(true);
                 break;
             }
             const items: DataItem[] = res.data.rows.map((item, id) => {
@@ -132,15 +134,20 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
                   </Tag>
                 );
               });
-              return <Space size={0}>{showtag}</Space>;
+              return (
+                <Space size={0} key={index}>
+                  {showtag}
+                </Space>
+              );
             },
           },
           actions: {
             render: (text, row, index, action) => [
-              canDelete ? (
+              canManage ? (
                 <Popconfirm
+                  key={index}
                   title={intl.formatMessage({
-                    id: "forms.message.member.delete",
+                    id: "forms.message.member.remove",
                   })}
                   onConfirm={(
                     e?: React.MouseEvent<HTMLElement, MouseEvent>

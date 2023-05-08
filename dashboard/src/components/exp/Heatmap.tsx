@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { message, Select, Typography } from "antd";
+import { message, Select, Tooltip, Typography } from "antd";
 
 import { get } from "../../request";
 import { IUserOperationDailyResponse } from "../api/Exp";
@@ -71,7 +71,7 @@ const Widget = ({ studioName }: IWidget) => {
             month: date.getMonth() + 1,
             day: date.getDay(),
             week: week,
-            commits: item.duration / 1000 / 60,
+            commits: Math.floor(item.duration / 1000 / 60),
           };
         });
         console.log("data", data);
@@ -98,21 +98,22 @@ const Widget = ({ studioName }: IWidget) => {
     return (
       <div key={week}>
         {days.map((itemDay, day) => {
-          const time = dailyData.find(
+          const currDate = dailyData.find(
             (value) =>
               value.year === parseInt(currYear) &&
               value.week === week &&
               value.day === day
-          )?.commits;
+          );
+          const time = currDate?.commits;
           const color = time
-            ? time > 120
-              ? dayColor[0]
-              : time > 60
-              ? dayColor[1]
-              : time > 30
-              ? dayColor[2]
-              : time > 5
+            ? time > 100
               ? dayColor[3]
+              : time > 50
+              ? dayColor[2]
+              : time > 20
+              ? dayColor[1]
+              : time > 0
+              ? dayColor[0]
               : "rgba(0,0,0,0)"
             : "rgba(0,0,0,0)";
           return (
@@ -128,13 +129,18 @@ const Widget = ({ studioName }: IWidget) => {
                 outline: "1px solid gray",
               }}
             >
-              <div
-                style={{
-                  width: 12,
-                  height: 12,
-                  backgroundColor: color,
-                }}
-              ></div>
+              <Tooltip
+                placement="top"
+                title={`${currDate?.date}/${currDate?.commits}分钟`}
+              >
+                <div
+                  style={{
+                    width: 12,
+                    height: 12,
+                    backgroundColor: color,
+                  }}
+                ></div>
+              </Tooltip>
             </div>
           );
         })}

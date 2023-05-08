@@ -89,18 +89,20 @@ export interface ICourseNumberResponse {
 }
 
 export type TCourseMemberStatus =
-  | "normal"
-  | "progressing"
-  | "accepted"
-  | "rejected"
-  | "left"
-  | "blocked";
+  | "normal" /*开放课程直接加入*/
+  | "invited" /**管理员已经邀请学生加入 */
+  | "sign_up" /**学生已经报名 管理员尚未审核 */
+  | "accepted" /**已经接受 */
+  | "rejected" /**已经拒绝 */
+  | "left" /**学生自己退出 */
+  | "blocked"; /**学生被管理员屏蔽 */
 export interface ICourseMemberData {
   id?: string;
   user_id: string;
   course_id: string;
   channel_id?: string;
   role?: string;
+  operating?: "invite" | "sign_up";
   user?: IUserRequest;
   status?: TCourseMemberStatus;
   created_at?: string;

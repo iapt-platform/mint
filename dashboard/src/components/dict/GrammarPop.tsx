@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Popover, Typography } from "antd";
-import { ProCard } from "@ant-design/pro-components";
 
 import { get } from "../../request";
+import { get as getLang } from "../../locales";
 import { IGuideResponse } from "../api/Guide";
 import Marked from "../general/Marked";
 
@@ -14,10 +14,10 @@ interface IWidget {
 }
 const Widget = ({ text, gid }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
-  const grammarProfix = "guide-grammar-";
+  const grammarPrefix = "guide-grammar-";
   const handleMouseMouseEnter = () => {
     //sessionStorage缓存
-    const value = sessionStorage.getItem(grammarProfix + gid);
+    const value = sessionStorage.getItem(grammarPrefix + gid);
     if (value === null) {
       fetchData(gid);
     } else {
@@ -25,24 +25,26 @@ const Widget = ({ text, gid }: IWidget) => {
       setGuide(sGuide);
     }
   };
-  const userCard = (
-    <>
-      <ProCard style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
-        <Marked text={guide} />
-      </ProCard>
-    </>
-  );
+
   function fetchData(key: string) {
-    const url = `/v2/guide/zh-cn/${key}`;
+    const uiLang = getLang();
+    const url = `/v2/grammar-guide/${key}_${uiLang}`;
     get<IGuideResponse>(url).then((json) => {
       if (json.ok) {
-        sessionStorage.setItem(grammarProfix + key, json.data);
+        sessionStorage.setItem(grammarPrefix + key, json.data);
         setGuide(json.data);
       }
     });
   }
   return (
-    <Popover content={userCard} placement="bottom">
+    <Popover
+      content={
+        <div style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
+          <Marked text={guide} />
+        </div>
+      }
+      placement="bottom"
+    >
       <Link onMouseEnter={handleMouseMouseEnter}>{text}</Link>
     </Popover>
   );

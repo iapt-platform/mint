@@ -1,8 +1,7 @@
 import { message } from "antd";
-import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 
-import { get, post, put } from "../../request";
+import { get, put } from "../../request";
 import {
   IArticleMapAddResponse,
   IArticleMapListResponse,
@@ -16,7 +15,6 @@ interface IWidget {
 }
 const Widget = ({ anthologyId, onSelect }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
-  const [keys, setKeys] = useState<Key[]>();
 
   useEffect(() => {
     get<IArticleMapListResponse>(
@@ -29,6 +27,7 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
             key: item.article_id ? item.article_id : item.title,
             title: item.title,
             level: item.level,
+            deletedAt: item.deleted_at,
           };
         });
         setTocData(toc);
@@ -72,9 +71,6 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
               }
             })
             .catch((e) => console.error(e));
-        }}
-        onSelect={(selectedKeys: Key[]) => {
-          setKeys(selectedKeys);
         }}
       />
     </div>

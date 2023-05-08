@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { message, Modal, Space, Table, Typography } from "antd";
+import { Badge, message, Modal, Space, Table, Typography } from "antd";
 import { Button, Dropdown, Popover } from "antd";
 import {
   PlusOutlined,
@@ -16,15 +16,45 @@ import { delete_, get } from "../../../request";
 import { IApiResponseChannelList } from "../../../components/api/Channel";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { TRole } from "../../../components/api/Auth";
+import ShareModal from "../../../components/share/ShareModal";
+import { EResType } from "../../../components/share/Share";
+import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import StudioSelect from "../../../components/channel/StudioSelect";
 const { Text } = Typography;
 
-interface IItem {
+export interface IResNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
+
+export const renderBadge = (count: number, active = false) => {
+  return (
+    <Badge
+      count={count}
+      style={{
+        marginBlockStart: -2,
+        marginInlineStart: 4,
+        color: active ? "#1890FF" : "#999",
+        backgroundColor: active ? "#E6F7FF" : "#eee",
+      }}
+    />
+  );
+};
+
+interface IChannelItem {
   id: number;
   uid: string;
   title: string;
   summary: string;
   type: string;
+  role?: TRole;
+  studio?: IStudio;
   publicity: number;
   createdAt: number;
 }
@@ -33,6 +63,24 @@ const Widget = () => {
   const intl = useIntl();
   const { studioname } = useParams();
   const [openCreate, setOpenCreate] = useState(false);
+
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+  const [collaborator, setCollaborator] = useState<string>();
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/channel-my-number?studio=${studioname}`;
+    console.log("url", url);
+    get<IResNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioname]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -73,7 +121,7 @@ const Widget = () => {
 
   return (
     <>
-      <ProTable<IItem>
+      <ProTable<IChannelItem>
         actionRef={ref}
         columns={[
           {
@@ -95,12 +143,23 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link
-                  to={`/studio/${studioname}/channel/${row.uid}`}
-                  key={index}
-                >
-                  {row.title}
-                </Link>
+                <>
+                  <div key={1}>
+                    <Link
+                      to={`/studio/${studioname}/channel/${row.uid}`}
+                      key={index}
+                    >
+                      {row.title}
+                    </Link>
+                  </div>
+                  {activeKey !== "my" ? (
+                    <div key={3}>
+                      <Text type="secondary">
+                        <StudioName data={row.studio} />
+                      </Text>
+                    </div>
+                  ) : undefined}
+                </>
               );
             },
           },
@@ -112,6 +171,45 @@ const Widget = () => {
             key: "summary",
             tip: "过长会自动收缩",
             ellipsis: true,
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.role.label",
+            }),
+            dataIndex: "role",
+            key: "role",
+            width: 100,
+            search: false,
+            filters: true,
+            onFilter: true,
+            valueEnum: {
+              all: {
+                text: intl.formatMessage({
+                  id: "channel.type.all.title",
+                }),
+                status: "Default",
+              },
+              owner: {
+                text: intl.formatMessage({
+                  id: "auth.role.owner",
+                }),
+              },
+              manager: {
+                text: intl.formatMessage({
+                  id: "auth.role.manager",
+                }),
+              },
+              editor: {
+                text: intl.formatMessage({
+                  id: "auth.role.editor",
+                }),
+              },
+              member: {
+                text: intl.formatMessage({
+                  id: "auth.role.member",
+                }),
+              },
+            },
           },
           {
             title: intl.formatMessage({
@@ -195,36 +293,33 @@ const Widget = () => {
                 <Dropdown.Button
                   key={index}
                   type="link"
+                  trigger={["click", "contextMenu"]}
                   menu={{
                     items: [
                       {
                         key: "share",
-                        label: intl.formatMessage({
-                          id: "buttons.share",
-                        }),
+                        label: (
+                          <ShareModal
+                            trigger={intl.formatMessage({
+                              id: "buttons.share",
+                            })}
+                            resId={row.uid}
+                            resType={EResType.channel}
+                          />
+                        ),
                         icon: <TeamOutlined />,
-                        disabled: true,
                       },
                       {
                         key: "remove",
-                        label: (
-                          <Text type="danger">
-                            {intl.formatMessage({
-                              id: "buttons.delete",
-                            })}
-                          </Text>
-                        ),
-                        icon: (
-                          <Text type="danger">
-                            <DeleteOutlined />
-                          </Text>
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
                       },
                     ],
                     onClick: (e) => {
                       switch (e.key) {
-                        case "share":
-                          break;
                         case "remove":
                           showDeleteConfirm(row.uid, row.title);
                           break;
@@ -282,11 +377,13 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
+          let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`;
+          url += collaborator ? "&collaborator=" + collaborator : "";
+          url += params.keyword ? "&search=" + params.keyword : "";
 
-          const res: IApiResponseChannelList = await get(
-            `/v2/channel?view=studio&name=${studioname}`
-          );
-          const items: IItem[] = res.data.rows.map((item, id) => {
+          console.log("url", url);
+          const res: IApiResponseChannelList = await get(url);
+          const items: IChannelItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
               id: id,
@@ -294,6 +391,8 @@ const Widget = () => {
               title: item.name,
               summary: item.summary,
               type: item.type,
+              role: item.role,
+              studio: item.studio,
               publicity: item.status,
               createdAt: date.getTime(),
             };
@@ -315,6 +414,15 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
+          activeKey !== "my" ? (
+            <StudioSelect
+              studioName={studioname}
+              onSelect={(value: string) => {
+                setCollaborator(value);
+                ref.current?.reload();
+              }}
+            />
+          ) : undefined,
           <Popover
             content={
               <ChannelCreate
@@ -337,6 +445,40 @@ const Widget = () => {
             </Button>
           </Popover>,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              setCollaborator(undefined);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

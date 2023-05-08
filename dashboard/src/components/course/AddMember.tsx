@@ -31,6 +31,7 @@ const Widget = ({ courseId, onCreated }: IWidget) => {
             user_id: values.userId,
             role: values.role,
             course_id: courseId,
+            operating: "invite",
           }).then((json) => {
             console.log("add member", json);
             if (json.ok) {

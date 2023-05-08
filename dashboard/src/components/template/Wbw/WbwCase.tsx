@@ -11,6 +11,7 @@ import { PaliReal } from "../../../utils";
 import "./wbw.css";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import WbwParent2 from "./WbwParent2";
 
 const { Text } = Typography;
 
@@ -20,7 +21,7 @@ interface IWidget {
   onSplit?: Function;
   onChange?: Function;
 }
-const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
+const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -46,26 +47,28 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
       let myMap = new Map<string, number>();
       let factors: string[] = [];
       for (const iterator of result) {
-        myMap.set(iterator.type + "$" + iterator.grammar, 1);
+        myMap.set(iterator.type + "#" + iterator.grammar, 1);
       }
       myMap.forEach((value, key, map) => {
         factors.push(key);
       });
 
       const menu = factors.map((item) => {
-        const arrItem: string[] = item.replaceAll(".", "").split("$");
+        const arrItem: string[] = item
+          .replaceAll(".", "")
+          .replaceAll("#", "$")
+          .split("$");
         let noNull = arrItem.filter((item) => item !== "");
-        const key = noNull.join("$");
         noNull.forEach((item, index, arr) => {
           arr[index] = intl.formatMessage({
             id: `dict.fields.type.${item}.short.label`,
           });
         });
-        return { key: key, label: noNull.join(" ") };
+        return { key: item, label: noNull.join(" ") };
       });
       setItems(menu);
     }
-  }, [inlineDict]);
+  }, [data.word.value, inlineDict, intl]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {
@@ -73,32 +76,35 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
     }
   };
 
-  const showSplit: boolean = data.factors?.value.includes("+") ? true : false;
+  const showSplit: boolean = data.factors?.value?.includes("+") ? true : false;
   let caseElement: JSX.Element | JSX.Element[] | undefined;
   if (
     display === "block" &&
-    (typeof data.case === "undefined" ||
-      data.case.value.length === 0 ||
-      data.case.value[0] === "")
+    typeof data.case?.value === "string" &&
+    data.case.value.trim() !== ""
   ) {
+    caseElement = data.case.value
+      .replace("#", "$")
+      .split("$")
+      .map((item, id) => {
+        if (item !== "") {
+          const strCase = item.replaceAll(".", "");
+          return (
+            <span key={id} className="case">
+              {intl.formatMessage({
+                id: `dict.fields.type.${strCase}.short.label`,
+              })}
+            </span>
+          );
+        } else {
+          return <span key={id}></span>;
+        }
+      });
+  } else {
     //空白的语法信息在逐词解析模式显示占位字符串
     caseElement = (
       <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
     );
-  } else {
-    caseElement = data.case?.value.map((item, id) => {
-      if (item !== "") {
-        return (
-          <span key={id} className="case">
-            {intl.formatMessage({
-              id: `dict.fields.type.${item}.short.label`,
-            })}
-          </span>
-        );
-      } else {
-        return <></>;
-      }
-    });
   }
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
@@ -106,12 +112,17 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
       <div className="wbw_word_item" style={{ display: "flex" }}>
         <Text type="secondary">
           <div>
-            <Dropdown menu={{ items, onClick }} placement="bottomLeft">
+            <Dropdown
+              key="dropdown"
+              menu={{ items, onClick }}
+              placement="bottomLeft"
+            >
               <span>{caseElement}</span>
             </Dropdown>
-
+            <WbwParent2 data={data} />
             {showSplit ? (
               <Button
+                key="button"
                 className="wbw_split"
                 size="small"
                 shape="circle"
@@ -122,9 +133,7 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
                   }
                 }}
               />
-            ) : (
-              <></>
-            )}
+            ) : undefined}
           </div>
         </Text>
       </div>
@@ -135,4 +144,4 @@ const Widget = ({ data, display, onSplit, onChange }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwCaseWidget;

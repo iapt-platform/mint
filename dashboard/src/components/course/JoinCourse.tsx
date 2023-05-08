@@ -3,7 +3,7 @@
  * 已经报名显示报名状态
  * 未报名显示报名按钮以及必要的提示
  */
-import { Button, message, Modal, Typography } from "antd";
+import { Button, message, Modal, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -19,6 +19,8 @@ import {
   TCourseJoinMode,
 } from "../api/Course";
 import LeaveCourse from "./LeaveCourse";
+import AcceptCourse from "./AcceptCourse";
+import AcceptNotCourse from "./AcceptNotCourse";
 
 const { confirm } = Modal;
 const { Text } = Typography;
@@ -63,10 +65,7 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
     labelStatus = intl.formatMessage({
       id: `course.member.status.${currMember.status}.label`,
     });
-    if (
-      currMember.status === "accepted" ||
-      currMember.status === "progressing"
-    ) {
+    if (currMember.status === "accepted" || currMember.status === "sign_up") {
       button = (
         <LeaveCourse
           joinMode={joinMode}
@@ -75,6 +74,25 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
             loadStatus();
           }}
         />
+      );
+    } else if (currMember.status === "invited") {
+      button = (
+        <Space>
+          <AcceptCourse
+            joinMode={joinMode}
+            currUser={currMember}
+            onStatusChanged={() => {
+              loadStatus();
+            }}
+          />
+          <AcceptNotCourse
+            joinMode={joinMode}
+            currUser={currMember}
+            onStatusChanged={() => {
+              loadStatus();
+            }}
+          />
+        </Space>
       );
     }
   } else if (currMember?.role === "assistant") {
@@ -109,6 +127,7 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
                     user_id: user?.id ? user?.id : "",
                     role: "student",
                     course_id: courseId ? courseId : "",
+                    operating: "sign_up",
                   }
                 )
                   .then((json) => {
@@ -144,7 +163,7 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
   }
   return (
     <div>
-      <span>{labelStatus}</span>
+      <Text>{labelStatus}</Text>
       {button}
     </div>
   );

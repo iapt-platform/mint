@@ -43,7 +43,7 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
       .catch((e) => {
         message.error(e.message);
       });
-  }, [topicId]);
+  }, [intl, topicId]);
   return (
     <div>
       <List
@@ -62,6 +62,7 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
         )}
       />
       <CommentCreate
+        contentType="markdown"
         parent={topicId}
         onCreated={(e: IComment) => {
           console.log("create", e);

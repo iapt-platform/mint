@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
 import { ISentence } from "../SentEdit";
@@ -12,7 +12,9 @@ interface IWidget {
 const Widget = ({ data, onCreate }: IWidget) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
-
+  useEffect(() => {
+    setSentData(data);
+  }, [data]);
   return (
     <>
       <div style={{ display: isEditMode ? "none" : "block" }}>

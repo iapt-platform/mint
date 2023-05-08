@@ -5,7 +5,7 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   data: IWbw;
 }
-const Widget = ({ data }: IWidget) => {
+const WbwPageWidget = ({ data }: IWidget) => {
   return (
     <span>
       <Tag>{data.word.value}</Tag>
@@ -13,4 +13,4 @@ const Widget = ({ data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwPageWidget;

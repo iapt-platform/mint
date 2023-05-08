@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Tree } from "antd";
+import { Tree, Typography } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import {
@@ -11,10 +11,13 @@ import {
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
 
+const { Text } = Typography;
+
 interface TreeNodeData {
   key: string;
   title: string | React.ReactNode;
   children: TreeNodeData[];
+  deletedAt?: string;
   level: number;
 }
 export type ListNodeData = {
@@ -22,6 +25,7 @@ export type ListNodeData = {
   title: string | React.ReactNode;
   level: number;
   children?: number;
+  deletedAt?: string;
 };
 
 var tocActivePath: TreeNodeData[] = [];
@@ -47,6 +51,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
       title: element.title,
       children: [],
       level: element.level,
+      deletedAt: element.deletedAt,
     };
     /*
 		if (active == element.article) {
@@ -130,8 +135,8 @@ const Widget = ({
 
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
-
   const [keys, setKeys] = useState<Key>("");
+
   useEffect(() => {
     const data = tocGetTreeData(treeData);
     console.log("tree data", data);
@@ -208,10 +213,10 @@ const Widget = ({
       }
     }
     setGData(data);
+    const list = treeToList(data);
+    setListTreeData(list);
     if (typeof onChange !== "undefined") {
-      const list = treeToList(data);
       onChange(list);
-      setListTreeData(list);
     }
   };
 
@@ -242,6 +247,11 @@ const Widget = ({
 
             console.log("delete", keys, find, tmp);
             setGData(tmp);
+            const list = treeToList(tmp);
+            setListTreeData(list);
+            if (typeof onChange !== "undefined") {
+              onChange(list);
+            }
           }}
         >
           {intl.formatMessage({ id: "buttons.remove" })}
@@ -278,6 +288,15 @@ const Widget = ({
           }
         }}
         treeData={gData}
+        titleRender={(node: TreeNodeData) => {
+          return node.deletedAt ? (
+            <Text delete disabled>
+              {node.title}
+            </Text>
+          ) : (
+            <>{node.title}</>
+          );
+        }}
       />
     </>
   );

@@ -5,7 +5,8 @@ import StudioCard from "./StudioCard";
 export interface IStudio {
   id: string;
   nickName: string;
-  studioName: string;
+  studioName?: string;
+  realName?: string;
   avatar?: string;
 }
 interface IWidghtStudio {

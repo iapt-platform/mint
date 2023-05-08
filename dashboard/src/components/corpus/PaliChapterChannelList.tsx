@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
-import { IApiResponseChapterChannelList } from "../api/Corpus";
+import { IChapterChannelListResponse } from "../api/Corpus";
 import { IChapter } from "./BookViewer";
 import ChapterInChannel, { IChapterChannelData } from "./ChapterInChannel";
 
@@ -16,7 +16,7 @@ const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
 
   useEffect(() => {
     let url = `/v2/progress?view=chapter_channels&book=${para.book}&par=${para.para}`;
-    get<IApiResponseChapterChannelList>(url).then(function (json) {
+    get<IChapterChannelListResponse>(url).then(function (json) {
       const newData: IChapterChannelData[] = json.data.rows.map((item) => {
         return {
           channel: {
@@ -26,6 +26,7 @@ const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
           },
           studio: item.studio,
           progress: Math.ceil(item.progress * 100),
+          progressLine: item.progress_line,
           hit: item.views,
           like: 0,
           updatedAt: item.updated_at,

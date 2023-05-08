@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { List, Breadcrumb, Card, Row, Col } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
-import { PaliToEn } from "../../utils";
 import { get } from "../../request";
 import { IPaliBookListResponse } from "../api/Corpus";
 import TocStyleSelect from "./TocStyleSelect";
+import FullSearchInput from "../fts/FullSearchInput";
+import PaliText from "../template/Wbw/PaliText";
 
 export interface IEventBookTreeOnchange {
   path: string[];
@@ -27,37 +28,76 @@ interface pathData {
 interface IWidgetBookTreeList {
   root?: string;
   path?: string[];
+  tags?: string[];
   onChange?: Function;
+  onTocLoad?: Function;
 }
-const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
-  console.log("path", path);
-  let currRoot = root;
+const Widget = ({
+  root = "default",
+  path,
+  tags,
+  onChange,
+  onTocLoad,
+}: IWidgetBookTreeList) => {
   const [tocData, setTocData] = useState<ITocTree[]>([]);
   const [currData, setCurrData] = useState<ITocTree[]>([]);
   const [bookPath, setBookPath] = useState<pathData[]>([]);
+  const [currRoot, setCurrRoot] = useState<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    setCurrRoot(root);
+  }, [root]);
+
+  useEffect(() => {
+    let mPath: string[] = [];
     const newPath: pathData[] = path
       ? path.map((item) => {
-          return { to: item, title: item };
+          mPath.push(item);
+          return { to: mPath.join("_"), title: item };
         })
       : [];
+
     setBookPath(newPath);
-    //TODO 找到路径
-    const currPath = getListCurrRoot(tocData, newPath);
-    console.log("curr path", currPath);
-    setCurrData(currPath);
-  }, [path]);
+    const currDir = getListCurrRoot(tocData, mPath);
+    console.log("currDir", currDir);
+    setCurrData(currDir);
+  }, [path, tocData]);
 
   useEffect(() => {
-    if (root) {
-      fetchBookTree(root);
+    function treeMap(params: IPaliBookListResponse): ITocTree {
+      return {
+        title: params.name,
+        dir: params.name.toLowerCase(),
+        key: params.tag.join(),
+        tag: params.tag,
+        children: Array.isArray(params.children)
+          ? params.children.map(treeMap)
+          : [],
+      };
     }
-  }, [root]);
+    if (currRoot) {
+      get<IPaliBookListResponse[]>(`/v2/palibook/${currRoot}`).then((json) => {
+        console.log("Book List ajax", json);
+        const treeData = json.map(treeMap);
+        setTocData(treeData);
+        if (typeof onTocLoad !== "undefined") {
+          onTocLoad(json);
+        }
+      });
+    }
+  }, [currRoot]);
+
+  useEffect(() => {
+    const currPath =
+      bookPath.length > 0 ? bookPath[bookPath.length - 1].to.split("_") : [];
+    const currDir = getListCurrRoot(tocData, currPath);
+    setCurrData(currDir);
+  }, [bookPath, tocData]);
 
   function getListCurrRoot(
     allTocData: ITocTree[],
-    currPath: pathData[]
+    currPath: string[]
   ): ITocTree[] {
     let curr: ITocTree[];
     if (allTocData.length > 0) {
@@ -69,7 +109,7 @@ const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
     for (const itPath of currPath) {
       let isFound = false;
       for (const itAll of curr) {
-        if (itPath.to === itAll.dir) {
+        if (itPath === itAll.dir) {
           curr = itAll.children;
           isFound = true;
           break;
@@ -81,52 +121,34 @@ const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
     }
     return curr;
   }
-  function fetchBookTree(category: string) {
-    function treeMap(params: IPaliBookListResponse): ITocTree {
-      return {
-        title: params.name,
-        dir: PaliToEn(params.name),
-        key: params.tag.join(),
-        tag: params.tag,
-        children: Array.isArray(params.children)
-          ? params.children.map(treeMap)
-          : [],
-      };
-    }
-
-    get<IPaliBookListResponse[]>(`/v2/palibook/${category}`).then((json) => {
-      console.log("ajax", json);
-      const treeData = json.map(treeMap);
-      setTocData(treeData);
-      const currPath = getListCurrRoot(treeData, bookPath);
-      console.log("curr path", currPath);
-      setCurrData(currPath);
-    });
-  }
 
   function pushDir(dir: string, title: string, tag: string[]): void {
-    const newPath: string =
-      bookPath.length > 0 ? bookPath.slice(-1)[0].to + "-" + dir : dir;
+    console.log("push dir", dir, title);
+
+    const newPath: string = [...bookPath.map((item) => item.title), dir].join(
+      "_"
+    );
     bookPath.push({ to: newPath, title: title });
+    console.log("newPath", newPath);
+    console.log("book Path", bookPath);
+
     setBookPath(bookPath);
     if (typeof onChange !== "undefined") {
       onChange({
-        path: newPath.split("-"),
+        path: newPath.split("_"),
         tag: tag,
       });
     }
   }
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-    fetchBookTree(value);
-    currRoot = value;
-    setBookPath([]);
-  };
-  // TODO
+
   return (
     <>
       <Row style={{ padding: 10 }}>
-        <Col xs={18} sm={24}>
+        <Col
+          xs={18}
+          sm={24}
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Breadcrumb>
             <Breadcrumb.Item>
               <Link to={`/palicanon/list/${currRoot}`}>
@@ -137,29 +159,43 @@ const Widget = ({ root, path, onChange }: IWidgetBookTreeList) => {
               return (
                 <Breadcrumb.Item key={id}>
                   <Link to={`/palicanon/list/${currRoot}/${item.to}`}>
-                    {item.title}
+                    <PaliText text={item.title} />
                   </Link>
                 </Breadcrumb.Item>
               );
             })}
           </Breadcrumb>
+          <FullSearchInput
+            tags={tags}
+            onSearch={(value: string) => {
+              navigate(`/search/key/${value}?tags=${tags}`);
+            }}
+          />
         </Col>
         <Col xs={6} sm={0} style={{ textAlign: "right" }}>
-          <TocStyleSelect style={root} onChange={handleChange} />
+          <TocStyleSelect
+            style={currRoot}
+            onChange={(value: string) => {
+              setCurrRoot(value);
+            }}
+          />
         </Col>
       </Row>
-      <Card>
+      <Card style={{ display: currData.length === 0 ? "none" : "block" }}>
         <List
           dataSource={currData}
           renderItem={(item) => (
             <List.Item
               onClick={() => {
-                console.log("click", item.title);
                 setCurrData(item.children);
-                pushDir(item.dir, item.title, item.tag);
+                pushDir(
+                  item.title.toLowerCase(),
+                  item.title.toLowerCase(),
+                  item.tag
+                );
               }}
             >
-              {item.title}
+              <PaliText text={item.title} />
             </List.Item>
           )}
         />

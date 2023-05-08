@@ -8,7 +8,7 @@ import TagArea from "../tag/TagArea";
 import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import { IStudio } from "../auth/StudioName";
-import { ITagData } from "./ChapterTagList";
+import { ITagData } from "./ChapterTag";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -23,6 +23,7 @@ export interface ChapterData {
   channel: IChannelApiData;
   studio: IStudio;
   progress: number;
+  progressLine?: number[];
   createdAt: string;
   updatedAt: string;
   hit: number;
@@ -36,6 +37,8 @@ interface IWidgetChapterCard {
 
 const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
+  let url = `/article/chapter/${data.book}-${data.paragraph}`;
+  url += data.channel.id ? `?channel=${data.channel.id}` : "";
   return (
     <>
       <Row>
@@ -43,10 +46,7 @@ const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
           <Row>
             <Col span={16}>
               <Title level={5}>
-                <Link
-                  to={`/article/chapter/${data.book}-${data.paragraph}_${data.channel.id}`}
-                  target="_blank"
-                >
+                <Link to={url} target="_blank">
                   {data.title ? data.title : data.paliTitle}
                 </Link>
               </Title>

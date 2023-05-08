@@ -23,14 +23,14 @@ import {
   IApiResponseDictList,
   IUserDictDeleteRequest,
 } from "../../../components/api/Dict";
-import { delete_, delete_2, get } from "../../../request";
+import { delete_2, get } from "../../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../../components/api/Article";
 
-const { Link, Text } = Typography;
+const { Link } = Typography;
 
-interface IItem {
+export interface IWord {
   sn: number;
   wordId: string;
   word: string;
@@ -95,7 +95,7 @@ const Widget = () => {
 
   return (
     <>
-      <ProTable<IItem>
+      <ProTable<IWord>
         actionRef={ref}
         columns={[
           {
@@ -201,18 +201,11 @@ const Widget = () => {
                     items: [
                       {
                         key: "remove",
-                        label: (
-                          <Text type="danger">
-                            {intl.formatMessage({
-                              id: "buttons.delete",
-                            })}
-                          </Text>
-                        ),
-                        icon: (
-                          <Text type="danger">
-                            <DeleteOutlined />
-                          </Text>
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
                       },
                     ],
                     onClick: (e) => {
@@ -299,13 +292,10 @@ const Widget = () => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           let url = `/v2/userdict?view=studio&name=${studioname}&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
           console.log(url);
           const res = await get<IApiResponseDictList>(url);
-
-          const items: IItem[] = res.data.rows.map((item, id) => {
+          const items: IWord[] = res.data.rows.map((item, id) => {
             const date = new Date(item.updated_at);
             const id2 =
               ((params.current || 1) - 1) * (params.pageSize || 20) + id + 1;

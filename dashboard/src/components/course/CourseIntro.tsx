@@ -1,7 +1,8 @@
 //课程详情简介
-import { Col, Row } from "antd";
-import { marked } from "marked";
+import { Col, Row, Typography } from "antd";
 
+import Marked from "../general/Marked";
+const { Paragraph } = Typography;
 interface IWidget {
   intro?: string;
 }
@@ -10,11 +11,9 @@ const Widget = ({ intro }: IWidget) => {
     <Row>
       <Col flex="auto"></Col>
       <Col flex="960px">
-        <div
-          dangerouslySetInnerHTML={{
-            __html: marked.parse(intro ? intro : ""),
-          }}
-        />
+        <Paragraph>
+          <Marked text={intro} />
+        </Paragraph>
       </Col>
       <Col flex="auto"></Col>
     </Row>

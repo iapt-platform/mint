@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Divider, message, Tag } from "antd";
+import { Divider, message, Result, Tag } from "antd";
 
-import { modeChange } from "../../reducers/article-mode";
-import { get } from "../../request";
+import { get, post } from "../../request";
 import store from "../../store";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
@@ -17,11 +16,16 @@ import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";
 
+import {
+  IViewRequest,
+  IViewStoreResponse,
+} from "../../pages/studio/recent/list";
+
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
   | "article"
   | "chapter"
-  | "paragraph"
+  | "para"
   | "cs-para"
   | "sent"
   | "sim"
@@ -29,13 +33,35 @@ export type ArticleType =
   | "textbook"
   | "exercise"
   | "exercise-list"
-  | "corpus_sent/original"
-  | "corpus_sent/commentary"
-  | "corpus_sent/nissaya"
-  | "corpus_sent/translation";
+  | "sent-original"
+  | "sent-commentary"
+  | "sent-nissaya"
+  | "sent-translation"
+  | "term";
+/**
+ * 每种article type 对应的路由参数
+ * article/id?anthology=id&channel=id1,id2&mode=ArticleMode
+ * chapter/book-para?channel=id1,id2&mode=ArticleMode
+ * para/book?par=para1,para2&channel=id1,id2&mode=ArticleMode
+ * cs-para/book-para?channel=id1,id2&mode=ArticleMode
+ * sent/id?channel=id1,id2&mode=ArticleMode
+ * sim/id?channel=id1,id2&mode=ArticleMode
+ * textbook/articleId?course=id&mode=ArticleMode
+ * exercise/articleId?course=id&exercise=id&username=name&mode=ArticleMode
+ * exercise-list/articleId?course=id&exercise=id&mode=ArticleMode
+ * sent-original/id
+ */
 interface IWidgetArticle {
   type?: ArticleType;
+  id?: string;
+  book?: string | null;
+  para?: string | null;
+  channelId?: string | null;
   articleId?: string;
+  anthologyId?: string;
+  courseId?: string;
+  exerciseId?: string;
+  userName?: string;
   mode?: ArticleMode;
   active?: boolean;
   onArticleChange?: Function;
@@ -43,24 +69,28 @@ interface IWidgetArticle {
 }
 const Widget = ({
   type,
+  id,
+  book,
+  para,
+  channelId,
   articleId,
+  anthologyId,
+  courseId,
+  exerciseId,
+  userName,
   mode = "read",
   active = false,
   onArticleChange,
   onFinal,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleMode, setArticleMode] = useState<ArticleMode>(mode);
+  const [articleMode, setArticleMode] = useState<ArticleMode>();
   const [extra, setExtra] = useState(<></>);
   const [showSkeleton, setShowSkeleton] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
 
-  let channels: string[] = [];
-  if (typeof articleId !== "undefined") {
-    const aId = articleId.split("_");
-    if (aId.length > 1) {
-      channels = aId.slice(1);
-    }
-  }
+  const channels = channelId?.split("_");
+
   useEffect(() => {
     /**
      * 由课本进入查询当前用户的权限和channel
@@ -101,142 +131,167 @@ const Widget = ({
     if (!active) {
       return;
     }
-    setArticleMode(mode);
-    //发布mode变更
-    store.dispatch(modeChange(mode));
 
+    //发布mode变更
+    //store.dispatch(modeChange(mode));
     if (mode !== articleMode && mode !== "read" && articleMode !== "read") {
       console.log("set mode", mode, articleMode);
+      setArticleMode(mode);
       return;
     }
-
-    if (typeof type !== "undefined" && typeof articleId !== "undefined") {
+    setArticleMode(mode);
+    if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
+        case "chapter":
+          if (typeof articleId !== "undefined") {
+            url = `/v2/corpus-chapter/${articleId}?mode=${mode}`;
+            url += channelId ? `&channels=${channelId}` : "";
+          }
+          break;
+        case "para":
+          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+          url += channelId ? `&channels=${channelId}` : "";
+          break;
         case "article":
-          const aIds = articleId.split("_");
-          url = `/v2/article/${aIds[0]}?mode=${mode}`;
-          if (aIds.length > 1) {
-            const channels = aIds.slice(1);
-            url += "&channel=" + channels.join();
+          if (typeof articleId !== "undefined") {
+            url = `/v2/article/${articleId}?mode=${mode}`;
+            url += channelId ? `&channel=${channelId}` : "";
+            url += anthologyId ? `&anthology=${anthologyId}` : "";
           }
           break;
         case "textbook":
-          /**
-           * 从课本进入
-           * id两部分组成
-           * 课程id_文章id
-           */
-          const id = articleId.split("_");
-          if (id.length < 2) {
-            message.error("文章id期待2个，实际只给了一个");
-            return;
+          if (typeof articleId !== "undefined") {
+            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${mode}`;
           }
-          url = `/v2/article/${id[1]}?mode=${mode}&view=textbook&course=${id[0]}`;
           break;
         case "exercise":
-          /**
-           * 从练习进入
-           * id 由4部分组成
-           * 课程id_文章id_练习id_username
-           */
-          const exerciseId = articleId.split("_");
-          if (exerciseId.length < 3) {
-            message.error("练习id期待3个");
-            return;
+          if (typeof articleId !== "undefined") {
+            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
+            setExtra(
+              <ExerciseAnswer
+                courseId={courseId}
+                articleId={articleId}
+                exerciseId={exerciseId}
+              />
+            );
           }
-          console.log("exe", exerciseId);
-          url = `/v2/article/${exerciseId[1]}?mode=${mode}&course=${exerciseId[0]}&exercise=${exerciseId[2]}&user=${exerciseId[3]}`;
-
-          setExtra(
-            <ExerciseAnswer
-              courseId={exerciseId[0]}
-              articleId={exerciseId[1]}
-              exerciseId={exerciseId[2]}
-            />
-          );
           break;
         case "exercise-list":
-          /**
-           * 从练习进入
-           * id 由3部分组成
-           * 课程id_文章id_练习id
-           */
-          const exerciseListId = articleId.split("_");
-          if (exerciseListId.length < 3) {
-            message.error("练习id期待3个");
-            return;
-          }
-          url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}`;
+          if (typeof articleId !== "undefined") {
+            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}`;
 
-          //url = `/v2/article/${exerciseListId[1]}?mode=${mode}&course=${exerciseListId[0]}&exercise=${exerciseListId[2]}&list=true`;
-          setExtra(
-            <ExerciseList
-              courseId={exerciseListId[0]}
-              articleId={exerciseListId[1]}
-              exerciseId={exerciseListId[2]}
-            />
-          );
+            setExtra(
+              <ExerciseList
+                courseId={courseId}
+                articleId={articleId}
+                exerciseId={exerciseId}
+              />
+            );
+          }
           break;
         default:
-          const aid = articleId.split("_");
-
-          url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
-          if (aid.length > 0) {
-            const channels = aid.slice(1).join();
-            url += `&channels=${channels}`;
+          if (typeof articleId !== "undefined") {
+            url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
+            url += channelId ? `&channel=${channelId}` : "";
           }
           break;
       }
       console.log("url", url);
       setShowSkeleton(true);
-      get<IArticleResponse>(url).then((json) => {
-        console.log("article", json);
-        if (json.ok) {
-          setArticleData(json.data);
-          setShowSkeleton(false);
+      get<IArticleResponse>(url)
+        .then((json) => {
+          console.log("article", json);
+          if (json.ok) {
+            setArticleData(json.data);
+            setShowSkeleton(false);
 
-          setExtra(
-            <TocTree
-              treeData={json.data.toc?.map((item) => {
-                const strTitle = item.title ? item.title : item.pali_title;
-                const progress = item.progress?.map((item, id) => (
-                  <Tag key={id}>{Math.round(item * 100)}</Tag>
-                ));
+            setExtra(
+              <TocTree
+                treeData={json.data.toc?.map((item) => {
+                  const strTitle = item.title ? item.title : item.pali_title;
+                  const progress = item.progress?.map((item, id) => (
+                    <Tag key={id}>{Math.round(item * 100)}</Tag>
+                  ));
 
-                return {
-                  key: `${item.book}-${item.paragraph}`,
-                  title: (
-                    <>
-                      <PaliText text={strTitle} />
-                      {progress}
-                    </>
-                  ),
-                  level: item.level,
-                };
-              })}
-              onSelect={(keys: string[]) => {
-                console.log(keys);
-                if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-                  const aid = articleId.split("_");
-                  const channels =
-                    aid.length > 1 ? "_" + aid.slice(1).join("_") : undefined;
-                  onArticleChange(keys[0] + channels);
+                  return {
+                    key: `${item.book}-${item.paragraph}`,
+                    title: (
+                      <>
+                        <PaliText text={strTitle} />
+                        {progress}
+                      </>
+                    ),
+                    level: item.level,
+                  };
+                })}
+                onSelect={(keys: string[]) => {
+                  console.log(keys);
+                  if (
+                    typeof onArticleChange !== "undefined" &&
+                    keys.length > 0
+                  ) {
+                    onArticleChange(keys[0]);
+                  }
+                }}
+              />
+            );
+
+            switch (type) {
+              case "chapter":
+                if (typeof articleId === "string" && channelId) {
+                  const [book, para] = articleId?.split("-");
+                  post<IViewRequest, IViewStoreResponse>("/v2/view", {
+                    target_type: type,
+                    book: parseInt(book),
+                    para: parseInt(para),
+                    channel: channelId,
+                    mode: mode,
+                  }).then((json) => {
+                    console.log("view", json.data);
+                  });
                 }
-              }}
-            />
-          );
-        } else {
-          message.error(json.message);
-        }
-      });
+
+                break;
+              default:
+                break;
+            }
+          } else {
+            setShowSkeleton(false);
+            setUnauthorized(true);
+            message.error(json.message);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
-  }, [active, type, articleId, mode, articleMode]);
+  }, [
+    active,
+    type,
+    articleId,
+    mode,
+    articleMode,
+    book,
+    para,
+    channelId,
+    anthologyId,
+    courseId,
+    exerciseId,
+    userName,
+  ]);
 
   return (
     <div>
       {showSkeleton ? (
         <ArticleSkeleton />
+      ) : unauthorized ? (
+        <Result
+          status="403"
+          title="无权访问"
+          subTitle="您无权访问该内容。您可能没有登录，或者内容的所有者没有给您所需的权限。"
+          extra={<></>}
+        />
       ) : (
         <ArticleView
           id={articleData?.uid}

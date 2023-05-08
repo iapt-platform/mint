@@ -1,11 +1,13 @@
 import { Card } from "antd";
+import { useEffect, useState } from "react";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
-import SentMenu from "./SentEdit/SentMenu";
 import SentTab from "./SentEdit/SentTab";
+import { IWbw } from "./Wbw/WbwWord";
 
 export interface ISuggestionCount {
   suggestion?: number;
@@ -35,9 +37,14 @@ export interface ISentenceId {
 }
 export interface IWidgetSentEditInner {
   id: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
   channels?: string[];
   origin?: ISentence[];
   translation?: ISentence[];
+  path?: ITocPathNode[];
   layout?: "row" | "column";
   tranNum?: number;
   nissayaNum?: number;
@@ -45,10 +52,16 @@ export interface IWidgetSentEditInner {
   originNum: number;
   simNum?: number;
 }
-const SentEditInner = ({
+export const SentEditInner = ({
   id,
+  book,
+  para,
+  wordStart,
+  wordEnd,
+  channels,
   origin,
   translation,
+  path,
   layout = "column",
   tranNum,
   nissayaNum,
@@ -56,23 +69,51 @@ const SentEditInner = ({
   originNum,
   simNum,
 }: IWidgetSentEditInner) => {
+  const [wbwData, setWbwData] = useState<IWbw[]>();
+  const [magicDict, setMagicDict] = useState<string>();
+
+  useEffect(() => {
+    const content = origin?.find(
+      (value) => value.channel.type === "wbw"
+    )?.content;
+    if (typeof content !== "undefined") {
+      setWbwData(JSON.parse(content));
+    }
+  }, []);
+
   return (
-    <Card>
-      <SentMenu>
-        <SentContent
-          origin={origin}
-          translation={translation}
-          layout={layout}
-        />
-        <SentTab
-          id={id}
-          tranNum={tranNum}
-          nissayaNum={nissayaNum}
-          commNum={commNum}
-          originNum={originNum}
-          simNum={simNum}
-        />
-      </SentMenu>
+    <Card bodyStyle={{ paddingBottom: 0 }} size="small">
+      <SentContent
+        sid={id}
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+        origin={origin}
+        translation={translation}
+        layout={layout}
+        magicDict={magicDict}
+        onWbwChange={(data: IWbw[]) => {
+          setWbwData(data);
+        }}
+      />
+      <SentTab
+        id={id}
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+        path={path}
+        tranNum={tranNum}
+        nissayaNum={nissayaNum}
+        commNum={commNum}
+        originNum={originNum}
+        simNum={simNum}
+        wbwData={wbwData}
+        onMagicDict={(type: string) => {
+          setMagicDict(type);
+        }}
+      />
     </Card>
   );
 };

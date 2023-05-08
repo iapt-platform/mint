@@ -7,9 +7,9 @@ import { HomeOutlined } from "@ant-design/icons";
 import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
-import JoinCourse from "./JoinCourse";
 import { TCourseExpRequest, TCourseJoinMode } from "../api/Course";
 import { useIntl } from "react-intl";
+import Status from "./Status";
 
 const { Title, Text } = Typography;
 
@@ -48,7 +48,9 @@ const Widget = ({
                 <HomeOutlined />
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/course/list">课程</Link>
+                <Link to="/course/list">
+                  <Text>课程</Text>
+                </Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>{title}</Breadcrumb.Item>
             </Breadcrumb>
@@ -67,11 +69,13 @@ const Widget = ({
                   {startAt}——{endAt}
                 </Text>
                 <Text>
-                  {intl.formatMessage({
-                    id: `course.join.mode.${join}.message`,
-                  })}
+                  {join
+                    ? intl.formatMessage({
+                        id: `course.join.mode.${join}.message`,
+                      })
+                    : undefined}
                 </Text>
-                <JoinCourse
+                <Status
                   courseId={id ? id : ""}
                   expRequest={exp}
                   joinMode={join}
@@ -79,9 +83,13 @@ const Widget = ({
                 />
               </Space>
             </Space>
-            <div>
-              主讲人： <UserName {...teacher} />
-            </div>
+
+            <Space>
+              <Text>主讲人：</Text>{" "}
+              <Text>
+                <UserName {...teacher} />
+              </Text>
+            </Space>
           </Space>
         </Col>
         <Col flex="auto"></Col>

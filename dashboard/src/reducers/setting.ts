@@ -4,13 +4,13 @@ import type { RootState } from "../store";
 
 export interface ISettingItem {
   key: string;
-  value: string | number | boolean | undefined;
+  value: string | number | boolean | string[] | undefined;
 }
 
 interface IState {
   settings?: ISettingItem[];
   key?: string;
-  value?: string | number | boolean;
+  value?: string | string[] | number | boolean;
 }
 
 const initialState: IState = {};
@@ -60,6 +60,6 @@ export const onChangeKey = (state: RootState): string | undefined =>
   state.setting.key;
 export const onChangeValue = (
   state: RootState
-): string | number | boolean | undefined => state.setting.value;
+): string | string[] | number | boolean | undefined => state.setting.value;
 
 export default slice.reducer;

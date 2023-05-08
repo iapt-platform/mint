@@ -20,10 +20,6 @@ const Widget = () => {
   const [tableData, setTableData] = useState<IAnthologyStudioData[]>([]);
   useEffect(() => {
     console.log("useEffect");
-    fetchData();
-  }, []);
-
-  function fetchData() {
     let url = `/v2/anthology?view=studio_list`;
     get<IAnthologyStudioListApiResponse>(url).then(function (json) {
       console.log("ajex", json);
@@ -35,7 +31,7 @@ const Widget = () => {
       });
       setTableData(newTree);
     });
-  }
+  }, []);
 
   return (
     <Card title="作者">

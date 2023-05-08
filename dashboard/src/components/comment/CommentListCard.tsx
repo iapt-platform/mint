@@ -30,7 +30,7 @@ const Widget = ({
   const [data, setData] = useState<IComment[]>([]);
   useEffect(() => {
     console.log("changedAnswerCount", changedAnswerCount);
-    const newData = data.map((item) => {
+    const newData = [...data].map((item) => {
       const newItem = item;
       if (newItem.id && changedAnswerCount?.id === newItem.id) {
         newItem.childrenCount = changedAnswerCount.count;
@@ -77,7 +77,7 @@ const Widget = ({
       .catch((e) => {
         message.error(e.message);
       });
-  }, [resId, topicId]);
+  }, [intl, resId, topicId]);
 
   if (typeof resId === "undefined" && typeof topicId === "undefined") {
     return <div>该资源尚未创建，不能发表讨论。</div>;
@@ -85,7 +85,7 @@ const Widget = ({
 
   return (
     <div>
-      <Card title="问答" extra={<a href="#">More</a>}>
+      <Card title="讨论" extra={"More"}>
         {data.length > 0 ? (
           <CommentList
             onSelect={(
@@ -102,6 +102,7 @@ const Widget = ({
 
         {resId && resType ? (
           <CommentCreate
+            contentType="markdown"
             resId={resId}
             resType={resType}
             onCreated={(e: IComment) => {

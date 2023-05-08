@@ -13,9 +13,20 @@ import { IGroupListResponse } from "../../../components/api/Group";
 import GroupCreate from "../../../components/group/GroupCreate";
 import { RoleValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { renderBadge } from "../channel/list";
+import StudioName, { IStudio } from "../../../components/auth/StudioName";
 
 const { Text } = Typography;
+
+interface IMyNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
 
 interface DataItem {
   sn: number;
@@ -24,12 +35,30 @@ interface DataItem {
   description: string;
   role: string;
   createdAt: number;
+  studio?: IStudio;
 }
 
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
   const [openCreate, setOpenCreate] = useState(false);
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/group-my-number?studio=${studioname}`;
+    console.log("url", url);
+    get<IMyNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioname]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -98,10 +127,30 @@ const Widget = () => {
                       {row.name}
                     </Link>
                   </div>
-                  <Text type="secondary">{row.description}</Text>
+                  <Text type="secondary"></Text>
                 </div>
               );
             },
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.owner.label",
+            }),
+            key: "owner",
+            search: false,
+            render: (text, row, index, action) => {
+              return <StudioName data={row.studio} />;
+            },
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.description.label",
+            }),
+            dataIndex: "description",
+            key: "description",
+            search: false,
+            tip: "过长会自动收缩",
+            ellipsis: true,
           },
           {
             title: intl.formatMessage({
@@ -139,18 +188,11 @@ const Widget = () => {
                   items: [
                     {
                       key: "remove",
-                      label: (
-                        <Text type="danger">
-                          {intl.formatMessage({
-                            id: "buttons.delete",
-                          })}
-                        </Text>
-                      ),
-                      icon: (
-                        <Text type="danger">
-                          <DeleteOutlined />
-                        </Text>
-                      ),
+                      label: intl.formatMessage({
+                        id: "buttons.delete",
+                      }),
+                      icon: <DeleteOutlined />,
+                      danger: true,
                     },
                   ],
                   onClick: (e) => {
@@ -178,15 +220,13 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url = `/v2/group?view=studio&name=${studioname}`;
+          let url = `/v2/group?view=studio&name=${studioname}&view2=${activeKey}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
-
+          url += params.keyword ? "&search=" + params.keyword : "";
+          console.log(url);
           const res = await get<IGroupListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
@@ -197,6 +237,7 @@ const Widget = () => {
               description: item.description,
               role: item.role,
               createdAt: date.getTime(),
+              studio: item.studio,
             };
           });
           console.log(items);
@@ -239,6 +280,39 @@ const Widget = () => {
             </Button>
           </Popover>,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    我加入的
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

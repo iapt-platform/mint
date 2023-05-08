@@ -8,7 +8,6 @@ import {
   ICourseMemberDeleteResponse,
   ICourseMemberResponse,
   TCourseJoinMode,
-  TCourseMemberStatus,
 } from "../api/Course";
 
 const { confirm } = Modal;
@@ -19,22 +18,29 @@ interface IWidget {
   currUser?: ICourseMemberData;
   onStatusChanged?: Function;
 }
-const Widget = ({ joinMode, currUser, onStatusChanged }: IWidget) => {
+const LeaveCourseWidget = ({
+  joinMode,
+  currUser,
+  onStatusChanged,
+}: IWidget) => {
   const intl = useIntl();
+  console.log("user info", currUser);
   /**
    * 离开课程业务逻辑
    * open 直接删除记录
    * manual，invite
-   *  progressing 直接删除记录
+   *  sign_up 直接删除记录
    *  其他        设置为 left
    */
   let isDelete = false;
   if (joinMode === "open") {
-    isDelete = true;
-  } else if (currUser?.status === "progressing") {
+    if (currUser?.status === "normal") {
+      isDelete = true;
+    }
+  } else if (currUser?.status === "sign_up") {
     isDelete = true;
   }
-  const statusChange = (status: TCourseMemberStatus) => {
+  const statusChange = (status: ICourseMemberData | undefined) => {
     if (typeof onStatusChanged !== "undefined") {
       onStatusChanged(status);
     }
@@ -42,7 +48,6 @@ const Widget = ({ joinMode, currUser, onStatusChanged }: IWidget) => {
   return (
     <>
       <Button
-        type="primary"
         onClick={() => {
           confirm({
             title: "退出已经报名的课程吗?",
@@ -67,7 +72,7 @@ const Widget = ({ joinMode, currUser, onStatusChanged }: IWidget) => {
                       console.log("add member", json);
                       if (json.ok) {
                         console.log("delete", json.data);
-                        statusChange("normal");
+                        statusChange(undefined);
                         message.success(
                           intl.formatMessage({ id: "flashes.success" })
                         );
@@ -90,7 +95,7 @@ const Widget = ({ joinMode, currUser, onStatusChanged }: IWidget) => {
                       console.log("leave", json);
                       if (json.ok) {
                         console.log("leave", json.data);
-                        statusChange("left");
+                        statusChange(json.data);
                         message.success(
                           intl.formatMessage({ id: "flashes.success" })
                         );
@@ -111,4 +116,4 @@ const Widget = ({ joinMode, currUser, onStatusChanged }: IWidget) => {
   );
 };
 
-export default Widget;
+export default LeaveCourseWidget;

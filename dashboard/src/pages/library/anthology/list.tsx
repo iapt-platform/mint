@@ -1,4 +1,5 @@
-import { Space, Input } from "antd";
+import { useState } from "react";
+import { Input } from "antd";
 import { Layout, Affix, Col, Row } from "antd";
 
 import AnthologyList from "../../../components/article/AnthologyList";
@@ -8,52 +9,58 @@ const { Content, Header } = Layout;
 const { Search } = Input;
 
 const Widget = () => {
-	// TODO
-	const onSearch = (value: string) => console.log(value);
-	return (
-		<Layout>
-			<Header style={{ height: 200 }}>
-				<h2>composition</h2>
-				<p>
-					Make the Pāḷi easy to read <br />
-					solution of Pāḷi glossary For translating <br />
-					Pāḷi in Group Show the source reference in Pāḷi
-				</p>
-			</Header>
-			<Affix offsetTop={0}>
-				<Header style={{ backgroundColor: "gray", height: "3.5em" }}>
-					<Row style={{ paddingTop: "0.5em" }}>
-						<Col span="8" offset={8}>
-							<Search
-								placeholder="input search text"
-								onSearch={onSearch}
-								style={{ width: "100%" }}
-							/>
-						</Col>
-					</Row>
-				</Header>
-			</Affix>
+  // TODO
+  const [searchKey, setSearchKey] = useState<string>();
 
-			<Content>
-				<Row>
-					<Col flex="auto"></Col>
-					<Col flex="1260px">
-						<Row>
-							<Col span="18">
-								<AnthologyList view="public" />
-							</Col>
-							<Col span="6">
-								<AnthologStudioList />
-							</Col>
-						</Row>
-					</Col>
-					<Col flex="auto"></Col>
-				</Row>
+  return (
+    <Layout>
+      <Header style={{ height: 200, display: "none" }}>
+        <h2>composition</h2>
+        <p>
+          Make the Pāḷi easy to read <br />
+          solution of Pāḷi glossary For translating <br />
+          Pāḷi in Group Show the source reference in Pāḷi
+        </p>
+      </Header>
+      <Affix offsetTop={0}>
+        <div
+          style={{
+            backgroundColor: "rgba(100,100,100,0.3)",
+            backdropFilter: "blur(5px)",
+          }}
+        >
+          <Row style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
+            <Col span="8" offset={8}>
+              <Search
+                placeholder="标题搜索"
+                onSearch={(value: string) => {
+                  setSearchKey(value);
+                }}
+                style={{ width: "100%" }}
+              />
+            </Col>
+          </Row>
+        </div>
+      </Affix>
 
-				<Space></Space>
-			</Content>
-		</Layout>
-	);
+      <Content>
+        <Row>
+          <Col flex="auto"></Col>
+          <Col flex="1260px">
+            <Row>
+              <Col span="18">
+                <AnthologyList searchKey={searchKey} />
+              </Col>
+              <Col span="6">
+                <AnthologStudioList />
+              </Col>
+            </Row>
+          </Col>
+          <Col flex="auto"></Col>
+        </Row>
+      </Content>
+    </Layout>
+  );
 };
 
 export default Widget;

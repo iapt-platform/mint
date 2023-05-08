@@ -64,7 +64,7 @@ const Widget = () => {
     });
   }, [id]);
   return (
-    <div>
+    <>
       <CourseHead {...courseInfo} />
       <Divider />
       <CourseIntro {...courseInfo} />
@@ -73,7 +73,7 @@ const Widget = () => {
         anthologyId={courseInfo?.anthologyId}
         courseId={courseInfo?.id}
       />
-    </div>
+    </>
   );
 };
 

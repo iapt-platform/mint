@@ -1,5 +1,6 @@
 import Article from "./Article";
 import Exercise from "./Exercise";
+import Nissaya from "./Nissaya";
 import Note from "./Note";
 import Quote from "./Quote";
 import SentEdit from "./SentEdit";
@@ -33,6 +34,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Exercise props={props ? props : ""}>{children}</Exercise>;
     case "article":
       return <Article props={props ? props : ""} />;
+    case "nissaya":
+      return <Nissaya props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }

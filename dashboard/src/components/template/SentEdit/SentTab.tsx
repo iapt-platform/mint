@@ -1,59 +1,85 @@
-import { useState } from "react";
-import { Badge, Tabs, Typography } from "antd";
+import { Badge, Space, Tabs, Typography } from "antd";
 import {
   TranslationOutlined,
   CloseOutlined,
   BlockOutlined,
 } from "@ant-design/icons";
 
-import { IWidgetSentEditInner } from "../SentEdit";
-import Article from "../../article/Article";
 import SentTabButton from "./SentTabButton";
+import SentCanRead from "./SentCanRead";
+import SentSim from "./SentSim";
+import { useIntl } from "react-intl";
+import TocPath, { ITocPathNode } from "../../corpus/TocPath";
+import { IWbw } from "../Wbw/WbwWord";
+import RelaGraphic from "../Wbw/RelaGraphic";
+import SentMenu from "./SentMenu";
 
 const { Text } = Typography;
 
+interface IWidget {
+  id: string;
+  book: number;
+  para: number;
+  wordStart: number;
+  wordEnd: number;
+  path?: ITocPathNode[];
+  layout?: "row" | "column";
+  tranNum?: number;
+  nissayaNum?: number;
+  commNum?: number;
+  originNum: number;
+  simNum?: number;
+  wbwData?: IWbw[];
+  onMagicDict?: Function;
+}
 const Widget = ({
   id,
-  channels,
+  book,
+  para,
+  wordStart,
+  wordEnd,
+  path,
   tranNum,
   nissayaNum,
   commNum,
   originNum,
-  simNum,
-}: IWidgetSentEditInner) => {
-  const [translationActive, setTranslationActive] = useState<boolean>(false);
-  const [nissayaActive, setNissayaActive] = useState<boolean>(false);
-  const [commentaryActive, setCommentaryActive] = useState<boolean>(false);
-  const [originalActive, setOriginalActive] = useState<boolean>(false);
+  simNum = 0,
+  wbwData,
+  onMagicDict,
+}: IWidget) => {
+  const intl = useIntl();
+
   if (typeof id === "undefined") {
     return <></>;
   }
   const sentId = id.split("_");
+  const sId = sentId[0].split("-");
 
-  const onChange = (key: string) => {
-    switch (key) {
-      case "translation":
-        setTranslationActive(true);
-        break;
-      case "nissaya":
-        setNissayaActive(true);
-        break;
-      case "commentary":
-        setCommentaryActive(true);
-        break;
-      case "original":
-        setOriginalActive(true);
-        break;
-    }
-  };
   return (
     <>
       <Tabs
+        style={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
-        onChange={onChange}
         tabBarExtraContent={
-          <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+          <Space>
+            <TocPath
+              data={path}
+              trigger={
+                path ? path.length > 0 ? path[0].paliTitle : <></> : <></>
+              }
+            />
+            <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+            <SentMenu
+              book={book}
+              para={para}
+              onMagicDict={(type: string) => {
+                if (typeof onMagicDict !== "undefined") {
+                  onMagicDict(type);
+                }
+              }}
+            />
+          </Space>
         }
         items={[
           {
@@ -72,15 +98,19 @@ const Widget = ({
                 type="translation"
                 sentId={id}
                 count={tranNum}
+                title={intl.formatMessage({
+                  id: "channel.type.translation.label",
+                })}
               />
             ),
             key: "translation",
             children: (
-              <Article
-                active={translationActive}
-                type="corpus_sent/translation"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="translation"
               />
             ),
           },
@@ -91,15 +121,19 @@ const Widget = ({
                 type="nissaya"
                 sentId={id}
                 count={nissayaNum}
+                title={intl.formatMessage({
+                  id: "channel.type.nissaya.label",
+                })}
               />
             ),
             key: "nissaya",
             children: (
-              <Article
-                active={nissayaActive}
-                type="corpus_sent/nissaya"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="nissaya"
               />
             ),
           },
@@ -110,15 +144,19 @@ const Widget = ({
                 type="commentary"
                 sentId={id}
                 count={commNum}
+                title={intl.formatMessage({
+                  id: "channel.type.commentary.label",
+                })}
               />
             ),
             key: "commentary",
             children: (
-              <Article
-                active={commentaryActive}
-                type="corpus_sent/commentary"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="commentary"
               />
             ),
           },
@@ -129,17 +167,50 @@ const Widget = ({
                 type="original"
                 sentId={id}
                 count={originNum}
+                title={intl.formatMessage({
+                  id: "channel.type.original.label",
+                })}
               />
             ),
             key: "original",
+            disabled: true,
             children: (
-              <Article
-                active={originalActive}
-                type="corpus_sent/original"
-                articleId={id}
-                mode="edit"
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="original"
               />
             ),
+          },
+          {
+            label: (
+              <SentTabButton
+                icon={<BlockOutlined />}
+                type="original"
+                sentId={id}
+                count={simNum}
+                title={intl.formatMessage({
+                  id: "buttons.sim",
+                })}
+              />
+            ),
+            key: "sim",
+            children: (
+              <SentSim
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                limit={5}
+              />
+            ),
+          },
+          {
+            label: "关系图",
+            key: "relation-graphic",
+            children: <RelaGraphic wbwData={wbwData} />,
           },
         ]}
       />

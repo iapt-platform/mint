@@ -6,6 +6,7 @@ const items = {
   "labels.week.4": "星期四",
   "labels.week.5": "星期五",
   "labels.week.6": "星期六",
+  "labels.collaborators": "协作者",
 };
 
 export default items;

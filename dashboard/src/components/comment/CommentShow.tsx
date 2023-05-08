@@ -55,6 +55,7 @@ const Widget = ({ data, onEdit, onSelect }: IWidget) => {
   return (
     <div>
       <Card
+        size="small"
         title={
           <Space>
             {data.user.nickName}
@@ -70,7 +71,7 @@ const Widget = ({ data, onEdit, onSelect }: IWidget) => {
             ></Button>
           </Dropdown>
         }
-        style={{ width: "auto" }}
+        style={{ width: "100%" }}
       >
         <span
           onClick={(e) => {

@@ -6,6 +6,8 @@ const items = {
   "languages.es": "Español",
   "languages.ja": "日本語",
   "languages.ko": "한국어",
+  "languages.my": "Myanmar",
+  "languages.vi": "越南语",
 };
 
 export default items;

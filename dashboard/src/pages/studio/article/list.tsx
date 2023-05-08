@@ -9,6 +9,7 @@ import {
   message,
   Space,
   Table,
+  Badge,
 } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
@@ -16,22 +17,50 @@ import {
   DeleteOutlined,
   TeamOutlined,
   ExclamationCircleOutlined,
+  FolderAddOutlined,
+  ReconciliationOutlined,
 } from "@ant-design/icons";
 
 import ArticleCreate from "../../../components/article/ArticleCreate";
-import { delete_, get, post } from "../../../request";
+import { delete_, get } from "../../../request";
 import {
   IArticleListResponse,
-  IArticleMapAddRequest,
-  IArticleMapAddResponse,
   IDeleteResponse,
 } from "../../../components/api/Article";
 import { PublicityValueEnum } from "../../../components/studio/table";
-import { useRef, useState } from "react";
-import AnthologyModal from "../../../components/anthology/AnthologyModal";
+import { useEffect, useRef, useState } from "react";
 import ArticleTplMaker from "../../../components/article/ArticleTplMaker";
+import ShareModal from "../../../components/share/ShareModal";
+import { EResType } from "../../../components/share/Share";
+import AddToAnthology from "../../../components/article/AddToAnthology";
+import AnthologySelect from "../../../components/anthology/AnthologySelect";
+import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import { IUser } from "../../../components/auth/User";
 
 const { Text } = Typography;
+
+interface IArticleNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
+
+const renderBadge = (count: number, active = false) => {
+  return (
+    <Badge
+      count={count}
+      style={{
+        marginBlockStart: -2,
+        marginInlineStart: 4,
+        color: active ? "#1890FF" : "#999",
+        backgroundColor: active ? "#E6F7FF" : "#eee",
+      }}
+    />
+  );
+};
 
 interface DataItem {
   sn: number;
@@ -39,13 +68,35 @@ interface DataItem {
   title: string;
   subtitle: string;
   summary: string;
+  anthologyCount?: number;
+  anthologyTitle?: string;
   publicity: number;
   createdAt: number;
+  studio?: IStudio;
+  editor?: IUser;
 }
 const Widget = () => {
   const intl = useIntl(); //i18n
   const { studioname } = useParams(); //url 参数
   const [openCreate, setOpenCreate] = useState(false);
+  const [anthologyId, setAnthologyId] = useState<string>();
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/article-my-number?studio=${studioname}`;
+    console.log("url", url);
+    get<IArticleNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioname]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -81,7 +132,6 @@ const Widget = () => {
       },
     });
   };
-
   const ref = useRef<ActionType>();
   return (
     <>
@@ -107,20 +157,42 @@ const Widget = () => {
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
-                <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
-                  {row.title}
-                </Link>
+                <>
+                  <div key={1}>
+                    <Link to={`/studio/${studioname}/article/${row.id}/edit`}>
+                      {row.title}
+                    </Link>
+                  </div>
+                  <div key={2}>
+                    <Text type="secondary">{row.subtitle}</Text>
+                  </div>
+                  {activeKey !== "my" ? (
+                    <div key={3}>
+                      <Text type="secondary">
+                        <StudioName data={row.studio} />
+                      </Text>
+                    </div>
+                  ) : undefined}
+                </>
               );
             },
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.subtitle.label",
+              id: "columns.library.anthology.title",
             }),
             dataIndex: "subtitle",
             key: "subtitle",
-            tip: "过长会自动收缩",
-            ellipsis: true,
+            render: (text, row, index, action) => {
+              return (
+                <Space>
+                  {row.anthologyTitle}
+                  {row.anthologyCount ? (
+                    <Badge color="geekblue" count={row.anthologyCount} />
+                  ) : undefined}
+                </Space>
+              );
+            },
           },
           {
             title: intl.formatMessage({
@@ -131,7 +203,6 @@ const Widget = () => {
             tip: "过长会自动收缩",
             ellipsis: true,
           },
-
           {
             title: intl.formatMessage({
               id: "forms.fields.publicity.label",
@@ -163,6 +234,7 @@ const Widget = () => {
             render: (text, row, index, action) => {
               return [
                 <Dropdown.Button
+                  trigger={["click", "contextMenu"]}
                   key={index}
                   type="link"
                   menu={{
@@ -177,30 +249,39 @@ const Widget = () => {
                             trigger={<>模版</>}
                           />
                         ),
-                        icon: <TeamOutlined />,
+                        icon: <ReconciliationOutlined />,
                       },
                       {
                         key: "share",
-                        label: intl.formatMessage({
-                          id: "buttons.share",
-                        }),
+                        label: (
+                          <ShareModal
+                            trigger={intl.formatMessage({
+                              id: "buttons.share",
+                            })}
+                            resId={row.id}
+                            resType={EResType.article}
+                          />
+                        ),
                         icon: <TeamOutlined />,
-                        disabled: true,
+                      },
+                      {
+                        key: "addToAnthology",
+                        label: (
+                          <AddToAnthology
+                            trigger="加入文集"
+                            studioName={studioname}
+                            articleIds={[row.id]}
+                          />
+                        ),
+                        icon: <FolderAddOutlined />,
                       },
                       {
                         key: "remove",
-                        label: (
-                          <Text type="danger">
-                            {intl.formatMessage({
-                              id: "buttons.delete",
-                            })}
-                          </Text>
-                        ),
-                        icon: (
-                          <Text type="danger">
-                            <DeleteOutlined />
-                          </Text>
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
                       },
                     ],
                     onClick: (e) => {
@@ -257,50 +338,30 @@ const Widget = () => {
           onCleanSelected,
         }) => {
           return (
-            <Space size={16}>
-              <AnthologyModal
-                studioName={studioname}
-                trigger={<Button type="link">加入文集</Button>}
-                onSelect={(id: string) => {
-                  console.log(selectedRowKeys);
-                  post<IArticleMapAddRequest, IArticleMapAddResponse>(
-                    "/v2/article-map",
-                    {
-                      anthology_id: id,
-                      article_id: selectedRowKeys.map((item) =>
-                        item.toString()
-                      ),
-                      operation: "add",
-                    }
-                  )
-                    .finally(() => {
-                      onCleanSelected();
-                    })
-                    .then((json) => {
-                      if (json.ok) {
-                        message.success(json.data);
-                      } else {
-                        message.error(json.message);
-                      }
-                    })
-                    .catch((e) => console.error(e));
-                }}
-              />
-            </Space>
+            <AddToAnthology
+              studioName={studioname}
+              articleIds={selectedRowKeys.map((item) => item.toString())}
+              onFinally={() => {
+                onCleanSelected();
+              }}
+            />
           );
         }}
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
-          let url = `/v2/article?view=studio&name=${studioname}`;
+          console.log("anthology", anthologyId);
+          let url = `/v2/article?view=studio&view2=${activeKey}&name=${studioname}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
+            (params.pageSize ? params.pageSize : 10);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
 
+          if (typeof anthologyId !== "undefined") {
+            url += "&anthology=" + anthologyId;
+          }
           const res = await get<IArticleListResponse>(url);
+          console.log("article list", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
@@ -309,8 +370,12 @@ const Widget = () => {
               title: item.title,
               subtitle: item.subtitle,
               summary: item.summary,
+              anthologyCount: item.anthology_count,
+              anthologyTitle: item.anthology_first?.title,
               publicity: item.status,
               createdAt: date.getTime(),
+              studio: item.studio,
+              editor: item.editor,
             };
           });
           return {
@@ -324,16 +389,27 @@ const Widget = () => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
+          pageSize: 10,
         }}
         search={false}
         options={{
           search: true,
         }}
         toolBarRender={() => [
+          activeKey === "my" ? (
+            <AnthologySelect
+              studioName={studioname}
+              onSelect={(value: string) => {
+                setAnthologyId(value);
+                ref.current?.reload();
+              }}
+            />
+          ) : undefined,
           <Popover
             content={
               <ArticleCreate
                 studio={studioname}
+                anthologyId={anthologyId}
                 onSuccess={() => {
                   setOpenCreate(false);
                   ref.current?.reload();
@@ -352,6 +428,40 @@ const Widget = () => {
             </Button>
           </Popover>,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              setAnthologyId(undefined);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

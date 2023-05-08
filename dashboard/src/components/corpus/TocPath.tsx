@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Tooltip } from "antd";
 import PaliText from "../template/Wbw/PaliText";
+import React from "react";
 
 export interface ITocPathNode {
   book: number;
@@ -13,23 +14,24 @@ export interface ITocPathNode {
 export declare type ELinkType = "none" | "blank" | "self";
 
 interface IWidgetTocPath {
-  data: ITocPathNode[];
+  data?: ITocPathNode[];
+  trigger?: React.ReactNode;
   link?: ELinkType;
   channel?: string[];
   onChange?: Function;
 }
 const Widget = ({
-  data,
+  data = [],
+  trigger,
   link = "blank",
   channel,
   onChange,
-}: IWidgetTocPath) => {
-  let sChannel = "";
-  if (typeof channel !== "undefined" && channel.length > 0) {
-    sChannel = "_" + channel.join("_");
-  }
-
+}: IWidgetTocPath): JSX.Element => {
   const path = data.map((item, id) => {
+    let sChannel = "";
+    if (typeof channel !== "undefined" && channel.length > 0) {
+      sChannel = "?channel=" + channel.join("_");
+    }
     const linkChapter = `/article/chapter/${item.book}-${item.paragraph}${sChannel}`;
     let oneItem = <></>;
     const title = <PaliText text={item.title} />;
@@ -61,11 +63,20 @@ const Widget = ({
       </Breadcrumb.Item>
     );
   });
-  return (
-    <>
-      <Breadcrumb>{path}</Breadcrumb>
-    </>
+  const fullPath = (
+    <Breadcrumb style={{ whiteSpace: "nowrap", width: "100%" }}>
+      {path}
+    </Breadcrumb>
   );
+  if (typeof trigger === "undefined") {
+    return fullPath;
+  } else {
+    return (
+      <Tooltip placement="bottom" title={fullPath}>
+        {trigger}
+      </Tooltip>
+    );
+  }
 };
 
 export default Widget;

@@ -1,29 +1,40 @@
-import { Tag } from "antd";
-import { ITagData } from "../corpus/ChapterTagList";
+import ChapterTag, { ITagData } from "../corpus/ChapterTag";
 
 interface IWidget {
   data: ITagData[];
+  closable?: boolean;
+  max?: number;
+  onTagClose?: Function;
   onTagClick?: Function;
 }
-const Widget = ({ data, onTagClick }: IWidget) => {
+const Widget = ({
+  data,
+  closable,
+  max = 10000,
+  onTagClose,
+  onTagClick,
+}: IWidget) => {
   // TODO
   const tags = data.map((item, id) => {
-    return (
-      <Tag
-        color="green"
+    return id < max ? (
+      <ChapterTag
         key={id}
-        style={{ cursor: "pointer" }}
-        onClick={() => {
-          if (typeof onTagClick !== "undefined") {
-            onTagClick(item.key);
+        data={item}
+        closable={closable}
+        onTagClose={(key: string) => {
+          if (typeof onTagClose !== "undefined") {
+            onTagClose(key);
           }
         }}
-      >
-        {item.title}
-      </Tag>
-    );
+        onTagClick={(key: string) => {
+          if (typeof onTagClick !== "undefined") {
+            onTagClick(key);
+          }
+        }}
+      />
+    ) : undefined;
   });
-  return <>{tags}</>;
+  return <div style={{ width: "100%", lineHeight: "2em" }}>{tags}</div>;
 };
 
 export default Widget;

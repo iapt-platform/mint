@@ -40,20 +40,18 @@ const Widget = ({
   let currChannelList = <></>;
   switch (type) {
     case "chapter":
-      const chapterProps = articleId?.split("_");
+      const chapterProps = articleId?.split("-");
       if (typeof chapterProps === "object" && chapterProps.length > 0) {
-        const para = chapterProps[0].split("-");
-        const channels =
-          chapterProps.length > 1 ? chapterProps.slice(1) : undefined;
-        if (typeof para === "object" && para.length > 1) {
-          currChannelList = (
-            <PaliChapterChannelList
-              para={{ book: parseInt(para[0]), para: parseInt(para[1]) }}
-              channelId={channels}
-              openTarget="_self"
-            />
-          );
-        }
+        currChannelList = (
+          <PaliChapterChannelList
+            para={{
+              book: parseInt(chapterProps[0]),
+              para: parseInt(chapterProps[1]),
+            }}
+            channelId={channels}
+            openTarget="_self"
+          />
+        );
       }
 
       break;

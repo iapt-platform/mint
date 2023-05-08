@@ -8,15 +8,14 @@ import {
 } from "@ant-design/pro-components";
 import { message, Card } from "antd";
 
-import { IGroupResponse } from "../../../components/api/Group";
-import { get } from "../../../request";
+import { IGroupRequest, IGroupResponse } from "../../../components/api/Group";
+import { get, put } from "../../../request";
 import GoBack from "../../../components/studio/GoBack";
 
 interface IFormData {
   id: string;
   name: string;
   description: string;
-  studioId: string;
 }
 const Widget = () => {
   const intl = useIntl();
@@ -31,7 +30,13 @@ const Widget = () => {
         onFinish={async (values: IFormData) => {
           // TODO
           console.log(values);
-          message.success(intl.formatMessage({ id: "flashes.success" }));
+          const res = await put<IGroupRequest, IGroupResponse>(
+            `/v2/group/${groupId}`,
+            values
+          );
+          if (res.ok) {
+            message.success(intl.formatMessage({ id: "flashes.success" }));
+          }
         }}
         formKey="group_edit"
         request={async () => {
@@ -42,7 +47,6 @@ const Widget = () => {
             id: res.data.uid,
             name: res.data.name,
             description: res.data.description,
-            studioId: res.data.studio.id,
           };
         }}
       >
@@ -55,9 +59,6 @@ const Widget = () => {
             rules={[
               {
                 required: true,
-                message: intl.formatMessage({
-                  id: "channel.create.message.noname",
-                }),
               },
             ]}
           />

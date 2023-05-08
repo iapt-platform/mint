@@ -1,18 +1,22 @@
 import { IStudio } from "../auth/StudioName";
-import { IStudioApiResponse, IUserRequest, TRole } from "./Auth";
+import { IUserRequest, TRole } from "./Auth";
 
 export interface IGroupRequest {
+  id?: string;
   name: string;
-  studio_name: string;
+  description?: string;
+  studio_name?: string;
 }
 
 export interface IGroupDataRequest {
   uid: string;
   name: string;
   description: string;
-  studio: IStudioApiResponse;
+  owner: string;
+  studio: IStudio;
   role: TRole;
   created_at: string;
+  updated_at: string;
 }
 export interface IGroupResponse {
   ok: boolean;
@@ -58,4 +62,9 @@ export interface IGroupMemberDeleteResponse {
   ok: boolean;
   message: string;
   data: boolean;
+}
+export interface IDeleteResponse {
+  ok: boolean;
+  message: string;
+  data: number;
 }

@@ -8,6 +8,7 @@ import {
   ExclamationCircleOutlined,
   TeamOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 
 import AnthologyCreate from "../../components/anthology/AnthologyCreate";
@@ -17,7 +18,14 @@ import {
 } from "../../components/api/Article";
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ShareModal from "../share/ShareModal";
+import { EResType } from "../share/Share";
+import {
+  IResNumberResponse,
+  renderBadge,
+} from "../../pages/studio/channel/list";
+import StudioName, { IStudio } from "../auth/StudioName";
 
 const { Text } = Typography;
 
@@ -28,22 +36,45 @@ interface IItem {
   subtitle: string;
   publicity: number;
   articles: number;
+  studio?: IStudio;
   createdAt: number;
 }
 interface IWidget {
+  title?: string;
   studioName?: string;
   showCol?: string[];
   showCreate?: boolean;
+  showOption?: boolean;
   onTitleClick?: Function;
 }
 const Widget = ({
+  title,
   studioName,
   showCol,
   showCreate = true,
+  showOption = true,
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
   const [openCreate, setOpenCreate] = useState(false);
+
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [myNumber, setMyNumber] = useState<number>(0);
+  const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
+
+  useEffect(() => {
+    /**
+     * 获取各种课程的数量
+     */
+    const url = `/v2/anthology-my-number?studio=${studioName}`;
+    console.log("url", url);
+    get<IResNumberResponse>(url).then((json) => {
+      if (json.ok) {
+        setMyNumber(json.data.my);
+        setCollaborationNumber(json.data.collaboration);
+      }
+    });
+  }, [studioName]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -83,6 +114,7 @@ const Widget = ({
   return (
     <>
       <ProTable<IItem>
+        headerTitle={title}
         actionRef={ref}
         columns={[
           {
@@ -123,6 +155,16 @@ const Widget = ({
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.owner.label",
+            }),
+            dataIndex: "studio",
+            key: "studio",
+            render: (text, row, index, action) => {
+              return <StudioName data={row.studio} />;
+            },
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.publicity.label",
             }),
             dataIndex: "publicity",
@@ -141,7 +183,6 @@ const Widget = ({
             key: "articles",
             width: 100,
             search: false,
-            sorter: (a, b) => a.articles - b.articles,
           },
           {
             title: intl.formatMessage({
@@ -158,43 +199,46 @@ const Widget = ({
             title: intl.formatMessage({ id: "buttons.option" }),
             key: "option",
             width: 120,
+            hideInTable: !showOption,
             valueType: "option",
             render: (text, row, index, action) => [
               <Dropdown.Button
                 key={index}
                 type="link"
+                trigger={["click", "contextMenu"]}
                 menu={{
                   items: [
                     {
                       key: "open",
-                      label: intl.formatMessage({
-                        id: "buttons.open.in.library",
-                      }),
-                      icon: <TeamOutlined />,
-                      disabled: true,
+                      label: (
+                        <Link to={`/anthology/${row.id}`}>
+                          {intl.formatMessage({
+                            id: "buttons.open.in.library",
+                          })}
+                        </Link>
+                      ),
+                      icon: <EyeOutlined />,
                     },
                     {
                       key: "share",
-                      label: intl.formatMessage({
-                        id: "buttons.share",
-                      }),
+                      label: (
+                        <ShareModal
+                          trigger={intl.formatMessage({
+                            id: "buttons.share",
+                          })}
+                          resId={row.id}
+                          resType={EResType.collection}
+                        />
+                      ),
                       icon: <TeamOutlined />,
-                      disabled: true,
                     },
                     {
                       key: "remove",
-                      label: (
-                        <Text type="danger">
-                          {intl.formatMessage({
-                            id: "buttons.delete",
-                          })}
-                        </Text>
-                      ),
-                      icon: (
-                        <Text type="danger">
-                          <DeleteOutlined />
-                        </Text>
-                      ),
+                      label: intl.formatMessage({
+                        id: "buttons.delete",
+                      }),
+                      icon: <DeleteOutlined />,
+                      danger: true,
                     },
                   ],
                   onClick: (e) => {
@@ -225,14 +269,16 @@ const Widget = ({
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url = `/v2/anthology?view=studio&name=${studioName}`;
+          let url = `/v2/anthology?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
+          url += params.keyword ? "&search=" + params.keyword : "";
+          url += sorter.createdAt
+            ? "&order=created_at&dir=" +
+              (sorter.createdAt === "ascend" ? "asc" : "desc")
+            : "";
 
           const res = await get<IAnthologyListResponse>(url);
           const items: IItem[] = res.data.rows.map((item, id) => {
@@ -244,6 +290,7 @@ const Widget = ({
               subtitle: item.subtitle,
               publicity: item.status,
               articles: item.childrenNumber,
+              studio: item.studio,
               createdAt: date.getTime(),
             };
           });
@@ -259,6 +306,7 @@ const Widget = ({
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
+          pageSize: 10,
         }}
         search={false}
         options={{
@@ -289,6 +337,39 @@ const Widget = ({
             </Popover>
           ) : undefined,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "my",
+                label: (
+                  <span>
+                    此工作室的
+                    {renderBadge(myNumber, activeKey === "my")}
+                  </span>
+                ),
+              },
+              {
+                key: "collaboration",
+                label: (
+                  <span>
+                    协作
+                    {renderBadge(
+                      collaborationNumber,
+                      activeKey === "collaboration"
+                    )}
+                  </span>
+                ),
+              },
+            ],
+            onChange(key) {
+              console.log("show course", key);
+              setActiveKey(key);
+              ref.current?.reload();
+            },
+          },
+        }}
       />
     </>
   );

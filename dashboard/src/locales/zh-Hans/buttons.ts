@@ -39,6 +39,8 @@ const items = {
   "buttons.note": "注解",
   "buttons.advance": "高级",
   "buttons.attachments": "附件",
+  "buttons.sim": "相似句",
+  "buttons.add": "添加",
 };
 
 export default items;

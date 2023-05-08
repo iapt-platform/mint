@@ -1,5 +1,7 @@
+import { IStudio } from "../auth/StudioName";
+import { IUser } from "../auth/User";
 import { ITocPathNode } from "../corpus/TocPath";
-import type { IStudioApiResponse } from "./Auth";
+import type { IStudioApiResponse, TRole } from "./Auth";
 
 export interface IArticleListApiResponse {
   article: string;
@@ -85,6 +87,11 @@ export interface IArticleDataResponse {
   path?: ITocPathNode[];
   status: number;
   lang: string;
+  anthology_count?: number;
+  anthology_first?: { title: string };
+  role?: TRole;
+  studio?: IStudio;
+  editor?: IUser;
   created_at: string;
   updated_at: string;
 }
@@ -121,6 +128,7 @@ export interface IArticleMapRequest {
   level: number;
   title: string;
   children?: number;
+  deleted_at?: string;
 }
 export interface IArticleMapListResponse {
   ok: boolean;

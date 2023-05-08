@@ -13,6 +13,10 @@ import currentCourseReducer from "./reducers/current-course";
 import sentenceReducer from "./reducers/sentence";
 import themeReducer from "./reducers/theme";
 import acceptPrReducer from "./reducers/accept-pr";
+import termVocabularyReducer from "./reducers/term-vocabulary";
+import nissayaEndingVocabularyReducer from "./reducers/nissaya-ending-vocabulary";
+import relationReducer from "./reducers/relation";
+import relationAddReducer from "./reducers/relation-add";
 
 const store = configureStore({
   reducer: {
@@ -29,6 +33,10 @@ const store = configureStore({
     sentence: sentenceReducer,
     theme: themeReducer,
     acceptPr: acceptPrReducer,
+    termVocabulary: termVocabularyReducer,
+    nissayaEndingVocabulary: nissayaEndingVocabularyReducer,
+    relation: relationReducer,
+    relationAdd: relationAddReducer,
   },
 });
 

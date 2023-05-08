@@ -1,7 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { ISuggestionCount } from "../template/SentEdit";
+import { ISuggestionCount, IWidgetSentEditInner } from "../template/SentEdit";
 import { TChannelType } from "./Channel";
 import { TagNode } from "./Tag";
 
@@ -19,9 +19,10 @@ export interface IApiPaliChapterList {
   parent: number;
   chapter_strlen: number;
   path: string;
+  progress_line?: number[];
 }
 
-export interface IApiResponsePaliChapterList {
+export interface IPaliChapterListResponse {
   ok: boolean;
   message: string;
   data: { rows: IApiPaliChapterList[]; count: number };
@@ -52,12 +53,13 @@ export interface IApiResponsePaliPara {
 /**
  * progress?view=chapter_channels&book=98&par=22
  */
-export interface IApiChapterChannels {
+export interface IChapterChannelData {
   book: number;
   para: number;
   uid: string;
   channel_id: string;
   progress: number;
+  progress_line?: number[];
   updated_at: string;
   views: number;
   likes: number[];
@@ -76,10 +78,10 @@ export interface IApiChapterChannels {
   studio: IStudio;
 }
 
-export interface IApiResponseChapterChannelList {
+export interface IChapterChannelListResponse {
   ok: boolean;
   message: string;
-  data: { rows: IApiChapterChannels[]; count: number };
+  data: { rows: IChapterChannelData[]; count: number };
 }
 
 export interface IApiChapterTag {
@@ -169,6 +171,11 @@ export interface ISentenceResponse {
   message: string;
   data: ISentenceData;
 }
+export interface ISentenceListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: ISentenceData[]; count: number };
+}
 export interface ISentenceNewRequest {
   sentences: ISentenceDiffData[];
   channel?: string;
@@ -213,6 +220,7 @@ export interface IChapterData {
   like: number;
   status?: number;
   progress: number;
+  progress_line?: number[];
   created_at: string;
   updated_at: string;
 }
@@ -255,4 +263,10 @@ export interface ISentencePrResponse {
     count: number;
     webhook: { message: string; ok: boolean };
   };
+}
+
+export interface ISentenceSimListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IWidgetSentEditInner[]; count: number };
 }

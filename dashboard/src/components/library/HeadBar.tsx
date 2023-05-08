@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Layout, Col, Row, Space } from "antd";
-import { FormattedMessage, useIntl } from "react-intl";
+import { Button, Layout, Space } from "antd";
+import { FormattedMessage } from "react-intl";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
 import img_banner from "../../assets/library/images/wikipali_logo_library.svg";
 import UiLangSelect from "../general/UiLangSelect";
@@ -150,6 +151,13 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         </div>
         <div>
           <Space>
+            <Link to="/search/home">
+              <Button
+                style={{ color: "white" }}
+                icon={<SearchOutlined />}
+                type="text"
+              />
+            </Link>
             <ToStudio />
             <SignInAvatar />
             <UiLangSelect />

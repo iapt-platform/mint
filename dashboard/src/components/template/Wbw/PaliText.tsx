@@ -7,14 +7,34 @@ import { roman_to_my, my_to_roman } from "../../code/my";
 import { roman_to_si } from "../../code/si";
 import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
+import { getTerm } from "../../../reducers/term-vocabulary";
 
 interface IWidget {
   text?: string;
+  code?: string;
   primary?: boolean;
+  termToLocal?: boolean;
 }
-const Widget = ({ text, primary = true }: IWidget) => {
+const Widget = ({
+  text,
+  code = "roman",
+  primary = true,
+  termToLocal = true,
+}: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
+  const terms = useAppSelector(getTerm);
+
+  useEffect(() => {
+    if (!termToLocal) {
+      return;
+    }
+    const lowerCase = paliText?.toLowerCase();
+    const localName = terms?.find((item) => item.word === lowerCase)?.meaning;
+    if (localName) {
+      setPaliText(localName);
+    }
+  }, [paliText, termToLocal, terms]);
 
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
@@ -39,11 +59,16 @@ const Widget = ({ text, primary = true }: IWidget) => {
           setPaliText(roman_to_taitham(text));
           break;
         default:
-          setPaliText(text);
+          if (code === "my") {
+            setPaliText(my_to_roman(text));
+          } else {
+            setPaliText(text);
+          }
+
           break;
       }
     }
-  }, [text, settings]);
+  }, [text, settings, code]);
   return text ? <span>{paliText}</span> : <></>;
 };
 

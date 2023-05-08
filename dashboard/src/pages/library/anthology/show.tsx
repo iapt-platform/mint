@@ -5,7 +5,7 @@ import AnthologyDetail from "../../../components/article/AnthologyDetail";
 
 const Widget = () => {
   // TODO
-  const { id, tags } = useParams(); //url 参数
+  const { id } = useParams(); //url 参数
 
   const pageMaxWidth = "960px";
   return (

@@ -1,4 +1,4 @@
-import { Space, Statistic } from "antd";
+import { Space } from "antd";
 import { useParams } from "react-router-dom";
 import Heatmap from "../../../components/exp/Heatmap";
 import ExpStatisticCard from "../../../components/exp/ExpStatisticCard";

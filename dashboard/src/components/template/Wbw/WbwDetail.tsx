@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
 import type { MenuProps } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, CommentOutlined } from "@ant-design/icons";
 
 import { IWbw, IWbwField, TFieldName } from "./WbwWord";
 import WbwDetailBasic from "./WbwDetailBasic";
@@ -13,47 +13,59 @@ import { LockIcon, UnLockIcon } from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
+import CommentBox from "../../comment/CommentBox";
 
 interface IWidget {
   data: IWbw;
   onClose?: Function;
   onSave?: Function;
+  onCommentCountChange?: Function;
 }
-const Widget = ({ data, onClose, onSave }: IWidget) => {
+const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
   function fieldChanged(field: TFieldName, value: string) {
+    console.log("field", field, "value", value);
     let mData = currWbwData;
     switch (field) {
       case "note":
-        mData.note = { value: value, status: 5 };
+        mData.note = { value: value, status: 7 };
         break;
       case "bookMarkColor":
-        mData.bookMarkColor = { value: parseInt(value), status: 5 };
+        mData.bookMarkColor = { value: parseInt(value), status: 7 };
         break;
       case "bookMarkText":
-        mData.bookMarkText = { value: value, status: 5 };
+        mData.bookMarkText = { value: value, status: 7 };
         break;
       case "word":
-        mData.word = { value: value, status: 5 };
+        mData.word = { value: value, status: 7 };
         break;
       case "real":
-        mData.real = { value: value, status: 5 };
+        mData.real = { value: value, status: 7 };
         break;
       case "meaning":
-        mData.meaning = { value: value.split("$"), status: 5 };
+        mData.meaning = { value: value, status: 7 };
         break;
       case "factors":
-        mData.factors = { value: value, status: 5 };
+        mData.factors = { value: value, status: 7 };
         break;
       case "factorMeaning":
-        mData.factorMeaning = { value: value, status: 5 };
+        mData.factorMeaning = { value: value, status: 7 };
         break;
       case "parent":
-        mData.parent = { value: value, status: 5 };
+        mData.parent = { value: value, status: 7 };
+        break;
+      case "parent2":
+        mData.parent2 = { value: value, status: 7 };
+        break;
+      case "grammar2":
+        mData.grammar2 = { value: value, status: 7 };
         break;
       case "case":
-        mData.case = { value: value.split("$"), status: 5 };
+        mData.case = { value: value, status: 7 };
+        break;
+      case "relation":
+        mData.relation = { value: value, status: 7 };
         break;
       case "confidence":
         mData.confidence = parseFloat(value);
@@ -85,6 +97,18 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
       <Tabs
         size="small"
         type="card"
+        tabBarExtraContent={
+          <CommentBox
+            resId={data.uid}
+            resType="wbw"
+            trigger={<Button icon={<CommentOutlined />} type="text" />}
+            onCommentCountChange={(count: number) => {
+              if (typeof onCommentCountChange !== "undefined") {
+                onCommentCountChange(count);
+              }
+            }}
+          />
+        }
         items={[
           {
             label: intl.formatMessage({ id: "buttons.basic" }),
@@ -96,6 +120,11 @@ const Widget = ({ data, onClose, onSave }: IWidget) => {
                   onChange={(e: IWbwField) => {
                     console.log("WbwDetailBasic onchange", e);
                     fieldChanged(e.field, e.value);
+                  }}
+                  onRelationAdd={() => {
+                    if (typeof onClose !== "undefined") {
+                      onClose();
+                    }
                   }}
                 />
               </div>

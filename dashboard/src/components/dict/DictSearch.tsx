@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 
-import type {
-  IWidgetDictContentData,
-  IApiDictContentData,
-} from "./DictContent";
+import type { IDictContentData, IApiDictContentData } from "./DictContent";
 import { get } from "../../request";
 
 import DictContent from "./DictContent";
@@ -14,12 +11,12 @@ interface IWidget {
 }
 
 const Widget = ({ word, compact = false }: IWidget) => {
-  const defaultData: IWidgetDictContentData = {
+  const defaultData: IDictContentData = {
     dictlist: [],
     words: [],
     caselist: [],
   };
-  const [tableData, setTableData] = useState(defaultData);
+  const [tableData, setTableData] = useState<IDictContentData>(defaultData);
 
   useEffect(() => {
     if (typeof word === "undefined") {

@@ -1,4 +1,5 @@
-import { ISettingItem } from "../../../reducers/setting";
+import { useAppSelector } from "../../../hooks";
+import { ISettingItem, settingInfo } from "../../../reducers/setting";
 
 export interface ISettingItemOption {
   label: string;
@@ -7,10 +8,10 @@ export interface ISettingItemOption {
 export interface ISetting {
   key: string;
   label: string;
-  description: string;
-  defaultValue: string | number | boolean;
+  description?: string;
+  defaultValue: string | number | boolean | string[];
   value?: string | number | boolean;
-  widget?: "input" | "select" | "radio" | "radio-button";
+  widget?: "input" | "select" | "radio" | "radio-button" | "transfer";
   options?: ISettingItemOption[];
   max?: number;
   min?: number;
@@ -19,7 +20,7 @@ export interface ISetting {
 export const GetUserSetting = (
   key: string,
   curr?: ISettingItem[]
-): string | number | boolean | undefined => {
+): string | number | boolean | string[] | undefined => {
   const currSetting = curr?.find((element) => element.key === key);
   if (typeof currSetting !== "undefined") {
     return currSetting.value;
@@ -34,7 +35,13 @@ export const GetUserSetting = (
 };
 
 export const SettingFind = (key: string): ISetting | undefined => {
-  return defaultSetting.find((element) => element.key === key);
+  const settings = useAppSelector(settingInfo);
+  const userSetting = GetUserSetting(key, settings);
+  let result = defaultSetting.find((element) => element.key === key);
+  if (userSetting && result) {
+    result.defaultValue = userSetting;
+  }
+  return result;
 };
 
 export const defaultSetting: ISetting[] = [
@@ -142,6 +149,38 @@ export const defaultSetting: ISetting[] = [
       {
         value: "roman_to_si",
         label: "setting.pali.script.si.label",
+      },
+    ],
+  },
+  {
+    /**
+     * 字典语言
+     */
+    key: "setting.dict.lang",
+    label: "setting.dict.lang.label",
+    description: "setting.dict.lang.description",
+    defaultValue: ["zh-Hans"],
+    widget: "transfer",
+    options: [
+      {
+        value: "en",
+        label: "languages.en-US",
+      },
+      {
+        value: "zh-Hans",
+        label: "languages.zh-Hans",
+      },
+      {
+        value: "zh-Hant",
+        label: "languages.zh-Hant",
+      },
+      {
+        value: "my",
+        label: "languages.my",
+      },
+      {
+        value: "vi",
+        label: "languages.vi",
       },
     ],
   },

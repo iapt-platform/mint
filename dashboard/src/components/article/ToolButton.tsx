@@ -22,7 +22,7 @@ const Widget = ({ icon, content, title }: IWidget) => {
       </Tooltip>
       <Drawer
         title={title}
-        width={350}
+        width={460}
         placement="left"
         onClose={() => {
           setOpen(false);

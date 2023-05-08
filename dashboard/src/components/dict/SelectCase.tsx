@@ -1,5 +1,6 @@
 import { useIntl } from "react-intl";
 import { Cascader } from "antd";
+import { useEffect, useState } from "react";
 
 interface CascaderOption {
   value: string | number;
@@ -7,11 +8,20 @@ interface CascaderOption {
   children?: CascaderOption[];
 }
 interface IWidget {
-  defaultValue?: string[];
+  value?: string;
   onCaseChange?: Function;
 }
-const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
+const Widget = ({ value, onCaseChange }: IWidget) => {
   const intl = useIntl();
+  const [currValue, setCurrValue] = useState<(string | number)[]>();
+
+  useEffect(() => {
+    const arrValue = value
+      ?.replaceAll("#", "$")
+      .split("$")
+      .map((item) => item.replaceAll(".", ""));
+    setCurrValue(arrValue);
+  }, [value]);
 
   const case8 = [
     {
@@ -39,6 +49,10 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       label: intl.formatMessage({ id: "dict.fields.type.abl.label" }),
     },
     {
+      value: "loc",
+      label: intl.formatMessage({ id: "dict.fields.type.loc.label" }),
+    },
+    {
       value: "voc",
       label: intl.formatMessage({ id: "dict.fields.type.voc.label" }),
     },
@@ -53,10 +67,6 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       value: "pl",
       label: intl.formatMessage({ id: "dict.fields.type.pl.label" }),
       children: case8,
-    },
-    {
-      value: "base",
-      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
     },
   ];
   const case3 = [
@@ -74,6 +84,81 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
       value: "f",
       label: intl.formatMessage({ id: "dict.fields.type.f.label" }),
       children: case2,
+    },
+  ];
+  const case3_ti = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+      children: [
+        {
+          value: "base",
+          label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+        },
+        {
+          value: "prp",
+          label: intl.formatMessage({ id: "dict.fields.type.prp.label" }),
+        },
+        {
+          value: "pp",
+          label: intl.formatMessage({ id: "dict.fields.type.pp.label" }),
+        },
+        {
+          value: "fpp",
+          label: intl.formatMessage({ id: "dict.fields.type.fpp.label" }),
+        },
+      ],
+    },
+  ];
+  const case3_pron = [
+    ...case3,
+    {
+      value: "1p",
+      label: intl.formatMessage({ id: "dict.fields.type.1p.label" }),
+      children: case2,
+    },
+    {
+      value: "2p",
+      label: intl.formatMessage({ id: "dict.fields.type.2p.label" }),
+      children: case2,
+    },
+    {
+      value: "3p",
+      label: intl.formatMessage({ id: "dict.fields.type.3p.label" }),
+      children: case2,
+    },
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+    },
+  ];
+  const case3_n = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
+      children: [
+        {
+          value: "m",
+          label: intl.formatMessage({ id: "dict.fields.type.m.label" }),
+        },
+        {
+          value: "nt",
+          label: intl.formatMessage({ id: "dict.fields.type.nt.label" }),
+        },
+        {
+          value: "f",
+          label: intl.formatMessage({ id: "dict.fields.type.f.label" }),
+        },
+      ],
+    },
+  ];
+  const case3_num = [
+    ...case3,
+    {
+      value: "base",
+      label: intl.formatMessage({ id: "dict.fields.type.base.label" }),
     },
   ];
   const caseVerb3 = [
@@ -200,12 +285,12 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "n",
       label: intl.formatMessage({ id: "dict.fields.type.n.label" }),
-      children: case3,
+      children: case3_n,
     },
     {
       value: "ti",
       label: intl.formatMessage({ id: "dict.fields.type.ti.label" }),
-      children: case3,
+      children: case3_ti,
     },
     {
       value: "v",
@@ -224,21 +309,50 @@ const Widget = ({ defaultValue, onCaseChange }: IWidget) => {
     {
       value: "adj",
       label: intl.formatMessage({ id: "dict.fields.type.adj.label" }),
-      children: case3,
+      children: case3_ti,
+    },
+    {
+      value: "pron",
+      label: intl.formatMessage({ id: "dict.fields.type.pron.label" }),
+      children: case3_pron,
+    },
+    {
+      value: "num",
+      label: intl.formatMessage({ id: "dict.fields.type.num.label" }),
+      children: case3_num,
     },
   ];
-  const onChange = (value: (string | number)[]) => {
-    console.log("case changed", value);
-    if (typeof onCaseChange !== "undefined") {
-      onCaseChange(value);
-    }
-  };
-  console.log("case", defaultValue);
   return (
     <Cascader
+      value={currValue}
       options={options}
       placeholder="Please select case"
-      onChange={onChange}
+      onChange={(value: (string | number)[]) => {
+        console.log("case changed", value);
+        let newValue: (string | number)[];
+        if (
+          value.length > 1 &&
+          value[value.length - 1] === value[value.length - 2]
+        ) {
+          newValue = value.slice(0, -1);
+        } else {
+          newValue = value;
+        }
+        setCurrValue(newValue);
+        if (typeof onCaseChange !== "undefined") {
+          let output = newValue.map((item) => `.${item}.`).join("$");
+          output = output.replace(".$.base", ":base");
+          if (output.indexOf("$") > 0) {
+            output =
+              output.substring(0, output.indexOf("$")) +
+              "#" +
+              output.substring(output.indexOf("$") + 1);
+          } else {
+            output += "#";
+          }
+          onCaseChange(output);
+        }
+      }}
     />
   );
 };

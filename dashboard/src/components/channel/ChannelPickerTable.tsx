@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
-import { get, post } from "../../request";
+import { post } from "../../request";
 import { LockIcon } from "../../assets/icon";
 import StudioName, { IStudio } from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
@@ -21,7 +21,6 @@ import CopyToModal from "./CopyToModal";
 
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import { sentenceList } from "../../reducers/sentence";
 
 const { Link } = Typography;
 
@@ -64,7 +63,6 @@ const Widget = ({
   const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
   const user = useAppSelector(_currentUser);
   const ref = useRef<ActionType>();
-  const sentences = useAppSelector(sentenceList);
 
   useEffect(() => {
     if (reload) {
@@ -150,19 +148,21 @@ const Widget = ({
         request={async (params = {}, sorter, filter) => {
           // TODO
           console.log(params, sorter, filter);
-          let url: string = "";
-          if (typeof articleId !== "undefined") {
-            const id = articleId.split("_");
-            const [book, para] = id[0].split("-");
-            url = `/v2/channel-progress?view=user-in-chapter&book=${book}&para=${para}&progress=sent`;
+          const sentElement = document.querySelectorAll(".pcd_sent");
+          let sentList: string[] = [];
+          for (let index = 0; index < sentElement.length; index++) {
+            const element = sentElement[index];
+            const id = element.id.split("_")[1];
+            sentList.push(id);
           }
+          console.log("sentList", sentList);
           const res = await post<IProgressRequest, IApiResponseChannelList>(
-            url,
+            `/v2/channel-progress`,
             {
-              sentence: sentences,
+              sentence: sentList,
             }
           );
-          console.log("data", res.data.rows);
+          console.log("progress data", res.data.rows);
           const items: IItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             let all: number = 0;
@@ -208,10 +208,17 @@ const Widget = ({
           );
           console.log("user:", user);
           setSelectedRowKeys(selectedRowKeys);
+          const channelData = [
+            ...currChannel,
+            ...progressing,
+            ...myChannel,
+            ...others,
+          ];
+          console.log("channel list ", channelData);
           return {
             total: res.data.count,
             succcess: true,
-            data: [...currChannel, ...progressing, ...myChannel, ...others],
+            data: channelData,
           };
         }}
         rowKey="uid"

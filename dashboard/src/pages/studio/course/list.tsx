@@ -11,7 +11,6 @@ import {
   Image,
   message,
   Modal,
-  Typography,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
 import {
@@ -29,8 +28,6 @@ import {
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
-
-const { Text } = Typography;
 
 interface DataItem {
   sn: number;
@@ -264,18 +261,11 @@ const Widget = () => {
                     items: [
                       {
                         key: "remove",
-                        label: (
-                          <Text type="danger">
-                            {intl.formatMessage({
-                              id: "buttons.delete",
-                            })}
-                          </Text>
-                        ),
-                        icon: (
-                          <Text type="danger">
-                            <DeleteOutlined />
-                          </Text>
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
                       },
                     ],
                     onClick: (e) => {

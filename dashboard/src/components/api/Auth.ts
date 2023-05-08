@@ -3,6 +3,7 @@ export type TRole =
   | "manager"
   | "editor"
   | "member"
+  | "reader"
   | "student"
   | "assistant"
   | "unknown";

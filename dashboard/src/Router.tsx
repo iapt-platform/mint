@@ -18,17 +18,20 @@ import NutSwitchLanguage from "./pages/nut/switch-languages";
 import NutHome from "./pages/nut";
 
 import AdminHome from "./pages/admin";
+import AdminRelation from "./pages/admin/relation";
+import AdminRelationList from "./pages/admin/relation/list";
+import AdminNissayaEnding from "./pages/admin/nissaya-ending";
+import AdminNissayaEndingList from "./pages/admin/nissaya-ending/list";
+
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
-import LibraryCommunityRecent from "./pages/library/community/recent";
 import LibraryPalicanon from "./pages/library/palicanon";
 import LibraryPalicanonByPath from "./pages/library/palicanon/bypath";
 import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
 import LibraryCourse from "./pages/library/course";
 import LibraryCourseList from "./pages/library/course/list";
 import LibraryCourseShow from "./pages/library/course/course";
-import LibraryLessonShow from "./pages/library/course/lesson";
 
 import LibraryTerm from "./pages/library/term/show";
 import LibraryDict from "./pages/library/dict";
@@ -50,11 +53,15 @@ import LibraryDiscussion from "./pages/library/discussion";
 import LibraryDiscussionList from "./pages/library/discussion/list";
 import LibraryDiscussionTopic from "./pages/library/discussion/topic";
 
+import LibrarySearch from "./pages/library/search";
+import LibrarySearchKey from "./pages/library/search/search";
+
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
 import StudioPalicanon from "./pages/studio/palicanon";
 import StudioRecent from "./pages/studio/recent";
+import StudioRecentList from "./pages/studio/recent/list";
 
 import StudioChannel from "./pages/studio/channel";
 import StudioChannelList from "./pages/studio/channel/list";
@@ -97,7 +104,15 @@ const Widget = () => {
   return (
     <ConfigProvider prefixCls={theme}>
       <Routes>
-        <Route path="admin" element={<AdminHome />} />
+        <Route path="admin" element={<AdminHome />}>
+          <Route path="relation" element={<AdminRelation />}>
+            <Route path="list" element={<AdminRelationList />} />
+          </Route>
+          <Route path="nissaya-ending" element={<AdminNissayaEnding />}>
+            <Route path="list" element={<AdminNissayaEndingList />} />
+            <Route path="list/:relation" element={<AdminNissayaEndingList />} />
+          </Route>
+        </Route>
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">
             <Route path="sign-in" element={<NutUsersSignIn />} />
@@ -136,7 +151,6 @@ const Widget = () => {
 
         <Route path="community" element={<LibraryCommunity />}>
           <Route path="list" element={<LibraryCommunityList />} />
-          <Route path="recent" element={<LibraryCommunityRecent />} />
         </Route>
 
         <Route path="palicanon" element={<LibraryPalicanon />}>
@@ -153,7 +167,6 @@ const Widget = () => {
         <Route path="course" element={<LibraryCourse />}>
           <Route path="list" element={<LibraryCourseList />}></Route>
           <Route path="show/:id" element={<LibraryCourseShow />}></Route>
-          <Route path="lesson" element={<LibraryLessonShow />}></Route>
         </Route>
 
         <Route path="term/:word" element={<LibraryTerm />} />
@@ -173,6 +186,7 @@ const Widget = () => {
         </Route>
 
         <Route path="article" element={<LibraryArticle />}>
+          <Route path=":type" element={<LibraryArticleShow />} />
           <Route path=":type/:id" element={<LibraryArticleShow />} />
           <Route path=":type/:id/:mode" element={<LibraryArticleShow />} />
           <Route
@@ -195,10 +209,17 @@ const Widget = () => {
           <Route path="term" element={<LibraryBlogTerm />} />
         </Route>
 
+        <Route path="search" element={<LibrarySearch />}>
+          <Route path="home" element={<LibrarySearchKey />} />
+          <Route path="key/:key" element={<LibrarySearchKey />} />
+        </Route>
+
         <Route path="studio/:studioname" element={<Studio />}>
           <Route path="home" element={<StudioHome />} />
           <Route path="palicanon" element={<StudioPalicanon />}></Route>
-          <Route path="recent" element={<StudioRecent />}></Route>
+          <Route path="recent" element={<StudioRecent />}>
+            <Route path="list" element={<StudioRecentList />} />
+          </Route>
 
           <Route path="channel" element={<StudioChannel />}>
             <Route path="list" element={<StudioChannelList />} />

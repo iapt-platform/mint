@@ -27,9 +27,9 @@ const Widget = ({
   onOpenChange,
 }: IWidget) => {
   const user = useAppSelector(_currentUser);
-  const { type, id } = useParams(); //url 参数
+  const { id } = useParams(); //url 参数
   const navigate = useNavigate();
-
+  //TODO 从哪里拿到courseId?
   return (
     <ModalForm<{
       channel: string;
