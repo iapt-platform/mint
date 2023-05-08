@@ -76,18 +76,14 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
     }
   };
 
-  const showSplit: boolean = data.factors?.value.includes("+") ? true : false;
+  const showSplit: boolean = data.factors?.value?.includes("+") ? true : false;
   let caseElement: JSX.Element | JSX.Element[] | undefined;
   if (
     display === "block" &&
-    (typeof data.case === "undefined" || data.case.value.trim() === "")
+    typeof data.case?.value === "string" &&
+    data.case.value.trim() !== ""
   ) {
-    //空白的语法信息在逐词解析模式显示占位字符串
-    caseElement = (
-      <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
-    );
-  } else {
-    caseElement = data.case?.value
+    caseElement = data.case.value
       .replace("#", "$")
       .split("$")
       .map((item, id) => {
@@ -104,6 +100,11 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
           return <span key={id}></span>;
         }
       });
+  } else {
+    //空白的语法信息在逐词解析模式显示占位字符串
+    caseElement = (
+      <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
+    );
   }
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
