@@ -3,23 +3,27 @@ import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
 
-const onClick: MenuProps["onClick"] = ({ key }) => {
-  console.log(`Click on item ${key}`);
-  switch (key) {
-    case "show-commentary":
-      break;
-
-    default:
-      break;
-  }
-};
-
 interface ISentMenu {
   book?: number;
   para?: number;
+  onMagicDict?: Function;
 }
-const Widget = ({ book, para }: ISentMenu) => {
+const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
   const items: MenuProps["items"] = [
+    {
+      key: "magic-dict",
+      label: "魔法字典",
+      children: [
+        {
+          key: "magic-dict-current",
+          label: "此句",
+        },
+        {
+          key: "magic-dict-below",
+          label: "此句及以下",
+        },
+      ],
+    },
     {
       key: "show-commentary",
       label: <RelatedPara book={book} para={para} />,
@@ -37,7 +41,19 @@ const Widget = ({ book, para }: ISentMenu) => {
       label: "复制句子链接",
     },
   ];
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    console.log(`Click on item ${key}`);
+    switch (key) {
+      case "magic-dict-current":
+        if (typeof onMagicDict !== "undefined") {
+          onMagicDict("current");
+        }
+        break;
 
+      default:
+        break;
+    }
+  };
   return (
     <Dropdown menu={{ items, onClick }} placement="topRight">
       <Button
