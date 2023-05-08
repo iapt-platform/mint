@@ -13,19 +13,28 @@ interface IWidget {
   text?: string;
   code?: string;
   primary?: boolean;
+  termToLocal?: boolean;
 }
-const Widget = ({ text, code = "roman", primary = true }: IWidget) => {
+const Widget = ({
+  text,
+  code = "roman",
+  primary = true,
+  termToLocal = true,
+}: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
   const terms = useAppSelector(getTerm);
 
   useEffect(() => {
+    if (!termToLocal) {
+      return;
+    }
     const lowerCase = paliText?.toLowerCase();
     const localName = terms?.find((item) => item.word === lowerCase)?.meaning;
     if (localName) {
       setPaliText(localName);
     }
-  }, [paliText, terms]);
+  }, [paliText, termToLocal, terms]);
 
   useEffect(() => {
     const _paliCode1 = GetUserSetting("setting.pali.script.primary", settings);
