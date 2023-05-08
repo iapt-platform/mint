@@ -45,7 +45,6 @@ const Widget = () => {
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-  const [collaborator, setCollaborator] = useState<string>();
 
   useEffect(() => {
     /**
@@ -310,7 +309,6 @@ const Widget = () => {
             onChange(key) {
               console.log("show course", key);
               setActiveKey(key);
-              setCollaborator(undefined);
               ref.current?.reload();
             },
           },
