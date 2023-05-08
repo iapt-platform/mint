@@ -143,6 +143,18 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   } else {
     padding = "4px 0";
   }
+  let pali = <PaliText text={data.word.value} termToLocal={false} />;
+  if (data.word.value.indexOf("}") >= 0) {
+    const paliArray = data.word.value.replace("{", "").split("}");
+    pali = (
+      <>
+        <span style={{ fontWeight: 700 }}>
+          <PaliText text={paliArray[0]} termToLocal={false} />
+        </span>
+        <PaliText text={paliArray[1]} termToLocal={false} />
+      </>
+    );
+  }
   const paliWord = (
     <span
       className={classPali}
@@ -164,7 +176,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
         );
       }}
     >
-      {<PaliText text={data.word.value} />}
+      {pali}
     </span>
   );
 
