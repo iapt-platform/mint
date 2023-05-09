@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+
 import { useAppSelector } from "../../../hooks";
 import { settingInfo } from "../../../reducers/setting";
+import { getTerm } from "../../../reducers/term-vocabulary";
+
 import { GetUserSetting } from "../../auth/setting/default";
 import { TCodeConvertor } from "../utilities";
 import { roman_to_my, my_to_roman } from "../../code/my";
 import { roman_to_si } from "../../code/si";
 import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
-import { getTerm } from "../../../reducers/term-vocabulary";
 
 interface IWidget {
   text?: string;
