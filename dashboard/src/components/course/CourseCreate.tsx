@@ -21,7 +21,7 @@ interface IWidgetCourseCreate {
   studio?: string;
   onCreate?: Function;
 }
-const Widget = ({ studio = "", onCreate }: IWidgetCourseCreate) => {
+const CourseCreateWidget = ({ studio = "", onCreate }: IWidgetCourseCreate) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
 
@@ -70,4 +70,4 @@ const Widget = ({ studio = "", onCreate }: IWidgetCourseCreate) => {
   );
 };
 
-export default Widget;
+export default CourseCreateWidget;

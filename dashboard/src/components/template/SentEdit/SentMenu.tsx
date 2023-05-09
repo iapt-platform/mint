@@ -8,7 +8,7 @@ interface ISentMenu {
   para?: number;
   onMagicDict?: Function;
 }
-const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
+const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
   const items: MenuProps["items"] = [
     {
       key: "magic-dict",
@@ -66,4 +66,4 @@ const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
   );
 };
 
-export default Widget;
+export default SentMenuWidget;

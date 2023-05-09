@@ -9,7 +9,7 @@ interface IWidget {
   initMode?: string;
   onModeChange?: Function;
 }
-const Widget = ({ initMode = "read", onModeChange }: IWidget) => {
+const ModeSwitchWidget = ({ initMode = "read", onModeChange }: IWidget) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>(initMode);
   return (
@@ -50,4 +50,4 @@ const Widget = ({ initMode = "read", onModeChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ModeSwitchWidget;

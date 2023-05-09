@@ -19,7 +19,7 @@ import store from "../../store";
 interface IWidget {
   word?: string;
 }
-const Widget = ({ word }: IWidget) => {
+const MyCreateWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [wordSpell, setWordSpell] = useState(word);
   const [editWord, setEditWord] = useState<IWbw>({
@@ -187,4 +187,4 @@ const Widget = ({ word }: IWidget) => {
   );
 };
 
-export default Widget;
+export default MyCreateWidget;

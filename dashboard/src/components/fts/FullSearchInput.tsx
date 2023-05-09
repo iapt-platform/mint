@@ -37,7 +37,7 @@ interface IWidget {
   onSplit?: Function;
   onPageTypeChange?: Function;
 }
-const Widget = ({
+const FullSearchInputWidget = ({
   value,
   onSplit,
   tags,
@@ -160,4 +160,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default FullSearchInputWidget;

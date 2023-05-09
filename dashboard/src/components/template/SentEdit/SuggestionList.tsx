@@ -15,7 +15,7 @@ interface IWidget {
   reload?: boolean;
   onReload?: Function;
 }
-const Widget = ({
+const SuggestionListWidget = ({
   book,
   para,
   wordStart,
@@ -75,4 +75,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SuggestionListWidget;

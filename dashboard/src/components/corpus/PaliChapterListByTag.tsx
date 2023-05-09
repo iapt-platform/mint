@@ -10,7 +10,7 @@ interface IWidgetPaliChapterListByTag {
   onChapterClick?: Function;
 }
 
-const Widget = (prop: IWidgetPaliChapterListByTag) => {
+const PaliChapterListByTagWidget = (prop: IWidgetPaliChapterListByTag) => {
   const [tableData, setTableData] = useState<IPaliChapterData[]>([]);
 
   useEffect(() => {
@@ -52,4 +52,4 @@ const Widget = (prop: IWidgetPaliChapterListByTag) => {
   );
 };
 
-export default Widget;
+export default PaliChapterListByTagWidget;

@@ -14,7 +14,12 @@ interface IWidget {
   resType?: TResType;
   onCommentCountChange?: Function;
 }
-const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
+const CommentBoxWidget = ({
+  trigger,
+  resId,
+  resType,
+  onCommentCountChange,
+}: IWidget) => {
   const [open, setOpen] = useState(false);
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
@@ -82,4 +87,4 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentBoxWidget;

@@ -49,7 +49,7 @@ interface IWidget {
   reload?: boolean;
   onSelect?: Function;
 }
-const Widget = ({
+const ChannelPickerTableWidget = ({
   type,
   articleId,
   multiSelect = true,
@@ -376,4 +376,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChannelPickerTableWidget;

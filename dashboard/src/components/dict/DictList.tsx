@@ -10,7 +10,7 @@ export interface IAnchorData {
 interface IWidgetDictList {
   data: IAnchorData[];
 }
-const Widget = (prop: IWidgetDictList) => {
+const DictListWidget = (prop: IWidgetDictList) => {
   const GetLink = (anchors: IAnchorData[]) => {
     return anchors.map((it, id) => {
       return (
@@ -46,4 +46,4 @@ const Widget = (prop: IWidgetDictList) => {
   );
 };
 
-export default Widget;
+export default DictListWidget;

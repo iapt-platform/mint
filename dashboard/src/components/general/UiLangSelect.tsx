@@ -23,8 +23,7 @@ const uiLang: IUiLang[] = [
   },
 ];
 
-const Widget = () => {
-  // TODO
+const UiLangSelectWidget = () => {
   const [curr, setCurr] = useState<string>();
 
   const items: MenuProps["items"] = uiLang;
@@ -49,4 +48,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default UiLangSelectWidget;

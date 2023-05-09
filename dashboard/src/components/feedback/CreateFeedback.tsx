@@ -1,7 +1,7 @@
 import modal from "antd/lib/modal";
 import CommentCreate from "../comment/CommentCreate";
 
-const Widget = () => {
+const CreateFeedbackWidget = () => {
   const path = window.location.pathname;
   console.log(path);
   return (
@@ -20,4 +20,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default CreateFeedbackWidget;

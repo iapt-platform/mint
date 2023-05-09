@@ -10,7 +10,7 @@ const { Divider } = StatisticCard;
 interface IWidget {
   studioName?: string;
 }
-const Widget = ({ studioName }: IWidget) => {
+const ExpStatisticCardWidget = ({ studioName }: IWidget) => {
   const [expSum, setExpSum] = useState<number>();
   const [wbwCount, setWbwCount] = useState<number>();
   const [lookupCount, setLookupCount] = useState<number>();
@@ -103,4 +103,4 @@ const Widget = ({ studioName }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ExpStatisticCardWidget;

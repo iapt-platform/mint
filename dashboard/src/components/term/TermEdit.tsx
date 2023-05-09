@@ -38,7 +38,13 @@ interface IWidget {
   channelId?: string;
   onUpdate?: Function;
 }
-const Widget = ({ id, word, channelId, studioName, onUpdate }: IWidget) => {
+const TermEditWidget = ({
+  id,
+  word,
+  channelId,
+  studioName,
+  onUpdate,
+}: IWidget) => {
   const intl = useIntl();
   const [form] = Form.useForm<ITerm>();
   const formRef = useRef<ProFormInstance>();
@@ -257,4 +263,4 @@ const Widget = ({ id, word, channelId, studioName, onUpdate }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TermEditWidget;

@@ -47,7 +47,7 @@ interface IWidget {
   showOption?: boolean;
   onTitleClick?: Function;
 }
-const Widget = ({
+const AnthologyListWidget = ({
   title,
   studioName,
   showCol,
@@ -375,4 +375,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default AnthologyListWidget;

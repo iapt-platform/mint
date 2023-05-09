@@ -6,7 +6,7 @@ interface IProps {
   onReady: (player: videojs.Player) => void;
 }
 
-const Widget = ({ options, onReady }: IProps) => {
+const VideoPlayerWidget = ({ options, onReady }: IProps) => {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<videojs.Player | null>();
 
@@ -52,4 +52,4 @@ const Widget = ({ options, onReady }: IProps) => {
   );
 };
 
-export default Widget;
+export default VideoPlayerWidget;

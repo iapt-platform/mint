@@ -8,7 +8,12 @@ interface IWidget {
   onSelect?: Function;
   onCancel?: Function;
 }
-const Widget = ({ studioName, trigger, onSelect, onCancel }: IWidget) => {
+const AnthologyModalWidget = ({
+  studioName,
+  trigger,
+  onSelect,
+  onCancel,
+}: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -49,4 +54,4 @@ const Widget = ({ studioName, trigger, onSelect, onCancel }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyModalWidget;

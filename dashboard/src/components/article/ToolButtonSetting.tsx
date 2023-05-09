@@ -7,7 +7,7 @@ interface IWidget {
   type?: string;
   articleId?: string;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const ToolButtonSettingWidget = ({ type, articleId }: IWidget) => {
   return (
     <ToolButton
       title="设置"
@@ -17,4 +17,4 @@ const Widget = ({ type, articleId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ToolButtonSettingWidget;

@@ -12,7 +12,7 @@ interface IWidgetPaliChapterList {
   maxLevel?: number;
   onChapterClick?: Function;
 }
-const Widget = ({
+const PaliChapterListWidget = ({
   data,
   maxLevel = 8,
   onChapterClick,
@@ -47,4 +47,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default PaliChapterListWidget;

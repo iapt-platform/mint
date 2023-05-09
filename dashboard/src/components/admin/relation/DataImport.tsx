@@ -24,7 +24,7 @@ interface IWidget {
   trigger?: JSX.Element;
   onSuccess?: Function;
 }
-const Widget = ({
+const DataImportWidget = ({
   url,
   urlExtra,
   trigger = <>{"trigger"}</>,
@@ -96,4 +96,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default DataImportWidget;

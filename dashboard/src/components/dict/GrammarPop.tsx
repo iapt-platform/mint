@@ -12,7 +12,7 @@ interface IWidget {
   text: string;
   gid: string;
 }
-const Widget = ({ text, gid }: IWidget) => {
+const GrammarPopWidget = ({ text, gid }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
   const grammarPrefix = "guide-grammar-";
   const handleMouseMouseEnter = () => {
@@ -50,4 +50,4 @@ const Widget = ({ text, gid }: IWidget) => {
   );
 };
 
-export default Widget;
+export default GrammarPopWidget;

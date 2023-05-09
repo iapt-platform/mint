@@ -19,7 +19,7 @@ const onClick: MenuProps["onClick"] = (e) => {
 type IWidgetHeadBar = {
   selectedKeys?: string;
 };
-const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
+const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
   const intl = useIntl(); //i18n
   const { studioname } = useParams();
@@ -196,4 +196,4 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   );
 };
 
-export default Widget;
+export default LeftSiderWidget;

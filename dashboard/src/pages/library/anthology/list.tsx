@@ -3,7 +3,7 @@ import { Input } from "antd";
 import { Layout, Affix, Col, Row } from "antd";
 
 import AnthologyList from "../../../components/article/AnthologyList";
-import AnthologStudioList from "../../../components/article/AnthologStudioList";
+import AnthologyStudioList from "../../../components/article/AnthologyStudioList";
 
 const { Content, Header } = Layout;
 const { Search } = Input;
@@ -52,7 +52,7 @@ const Widget = () => {
                 <AnthologyList searchKey={searchKey} />
               </Col>
               <Col span="6">
-                <AnthologStudioList />
+                <AnthologyStudioList />
               </Col>
             </Row>
           </Col>

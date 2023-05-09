@@ -13,7 +13,7 @@ interface IFormData {
 interface IWidget {
   groupId?: string;
 }
-const Widget = ({ groupId }: IWidget) => {
+const AddTeacherWidget = ({ groupId }: IWidget) => {
   const intl = useIntl();
 
   const form = (
@@ -69,4 +69,4 @@ const Widget = ({ groupId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddTeacherWidget;

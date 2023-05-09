@@ -17,7 +17,7 @@ interface IWidget {
   label?: string;
   onSelect?: Function;
 }
-const Widget = ({
+const ChannelSelectWidget = ({
   width = "md",
   channelId,
   name = "channel",
@@ -69,4 +69,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChannelSelectWidget;

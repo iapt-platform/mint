@@ -21,7 +21,12 @@ interface IWidget {
   onSave?: Function;
   onCommentCountChange?: Function;
 }
-const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
+const WbwDetailWidget = ({
+  data,
+  onClose,
+  onSave,
+  onCommentCountChange,
+}: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
   function fieldChanged(field: TFieldName, value: string) {
@@ -248,4 +253,4 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailWidget;

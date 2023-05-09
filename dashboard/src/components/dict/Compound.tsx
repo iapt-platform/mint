@@ -19,7 +19,7 @@ interface IWidget {
   split?: string;
   onSearch?: Function;
 }
-const Widget = ({ word, add, split, onSearch }: IWidget) => {
+const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
   const [compound, setCompound] = useState<IOptions[]>([]);
   const [factors, setFactors] = useState<IOptions[]>([]);
   const [meaningData, setMeaningData] = useState<IFirstMeaning[]>();
@@ -108,4 +108,4 @@ const Widget = ({ word, add, split, onSearch }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CompoundWidget;

@@ -29,7 +29,7 @@ interface IWidget {
   onTagClick?: Function;
 }
 
-const Widget = ({
+const ChapterTagListWidget = ({
   progress = 0.9,
   lang = "zh",
   type = "translation",
@@ -85,4 +85,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChapterTagListWidget;

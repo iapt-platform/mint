@@ -10,7 +10,7 @@ interface IWidget {
   articleId?: string;
   multiSelect?: boolean;
 }
-const Widget = ({ type, articleId, multiSelect }: IWidget) => {
+const ChannelPickerWidget = ({ type, articleId, multiSelect }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -51,4 +51,4 @@ const Widget = ({ type, articleId, multiSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChannelPickerWidget;

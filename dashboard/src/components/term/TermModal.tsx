@@ -10,7 +10,7 @@ interface IWidget {
   channelId?: string;
   onUpdate?: Function;
 }
-const Widget = ({
+const TermModalWidget = ({
   trigger,
   id,
   word,
@@ -60,4 +60,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default TermModalWidget;

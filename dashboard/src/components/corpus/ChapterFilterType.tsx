@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 interface IWidget {
   onSelect?: Function;
 }
-const Widget = ({ onSelect }: IWidget) => {
+const ChapterFilterTypeWidget = ({ onSelect }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -40,4 +40,4 @@ const Widget = ({ onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChapterFilterTypeWidget;

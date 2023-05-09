@@ -23,7 +23,7 @@ const setting = (
   </>
 );
 
-const Widget = () => {
+const ProTabsWidget = () => {
   const [value2, setValue2] = useState("close");
   const divSetting = useRef<HTMLDivElement>(null);
   const divDict = useRef<HTMLDivElement>(null);
@@ -170,4 +170,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ProTabsWidget;

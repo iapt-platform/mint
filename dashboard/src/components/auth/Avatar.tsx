@@ -19,8 +19,7 @@ import { TooltipPlacement } from "antd/lib/tooltip";
 interface IWidget {
   placement?: TooltipPlacement;
 }
-const Widget = ({ placement = "bottomRight" }: IWidget) => {
-  // TODO
+const AvatarWidget = ({ placement = "bottomRight" }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
@@ -93,4 +92,4 @@ const Widget = ({ placement = "bottomRight" }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AvatarWidget;

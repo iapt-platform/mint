@@ -22,7 +22,7 @@ interface IWidget {
   articleId?: string;
   exerciseId?: string;
 }
-const Widget = ({ courseId, articleId, exerciseId }: IWidget) => {
+const ExerciseListWidget = ({ courseId, articleId, exerciseId }: IWidget) => {
   const [data, setData] = useState<DataItem[]>();
 
   useEffect(() => {
@@ -80,4 +80,4 @@ const Widget = ({ courseId, articleId, exerciseId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ExerciseListWidget;

@@ -11,7 +11,7 @@ interface IWidget {
   studioName?: string;
   onSelect?: Function;
 }
-const Widget = ({ studioName, onSelect }: IWidget) => {
+const AnthologyTocTreeWidget = ({ studioName, onSelect }: IWidget) => {
   const [anthology, setAnthology] = useState<IOptions[]>([
     { value: "all", label: "全部" },
     { value: "none", label: "没有加入文集的" },
@@ -49,4 +49,4 @@ const Widget = ({ studioName, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyTocTreeWidget;

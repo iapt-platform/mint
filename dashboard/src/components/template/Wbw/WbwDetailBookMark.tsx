@@ -13,7 +13,7 @@ interface IWidget {
   data: IWbw;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const WbwDetailBookMarkWidget = ({ data, onChange }: IWidget) => {
   const [value, setValue] = useState("none");
 
   const styleColor: React.CSSProperties = {
@@ -70,4 +70,4 @@ const Widget = ({ data, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailBookMarkWidget;

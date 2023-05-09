@@ -20,7 +20,7 @@ interface IWidget {
   anthologyId?: string;
   onTitleChange?: Function;
 }
-const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
+const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
   const intl = useIntl();
 
   return anthologyId ? (
@@ -125,4 +125,4 @@ const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyInfoEditWidget;

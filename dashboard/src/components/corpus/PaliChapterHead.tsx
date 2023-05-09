@@ -12,7 +12,7 @@ interface IWidget {
   onChange?: Function;
 }
 
-const Widget = ({ para, onChange }: IWidget) => {
+const PaliChapterHeadWidget = ({ para, onChange }: IWidget) => {
   const [pathData, setPathData] = useState<ITocPathNode[]>([]);
   const [chapterData, setChapterData] = useState<IChapterInfo>({ title: "" });
   useEffect(() => {
@@ -61,4 +61,4 @@ const Widget = ({ para, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default PaliChapterHeadWidget;

@@ -4,7 +4,7 @@ interface IWidget {
   onClose?: Function;
   onInit?: Function;
 }
-const Widget = ({ onClose, onInit }: IWidget) => {
+const CopytoResultWidget = ({ onClose, onInit }: IWidget) => {
   return (
     <Result
       status="success"
@@ -37,4 +37,4 @@ const Widget = ({ onClose, onInit }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CopytoResultWidget;

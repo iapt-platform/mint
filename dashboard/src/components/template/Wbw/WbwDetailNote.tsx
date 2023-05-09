@@ -8,7 +8,7 @@ interface IWidget {
   data: IWbw;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const WbwDetailNoteWidget = ({ data, onChange }: IWidget) => {
   const onTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -30,4 +30,4 @@ const Widget = ({ data, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailNoteWidget;

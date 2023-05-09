@@ -14,7 +14,7 @@ interface IWidget {
   data: ISentence;
   trigger?: JSX.Element;
 }
-const Widget = ({ trigger, data }: IWidget) => {
+const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
@@ -86,4 +86,4 @@ const Widget = ({ trigger, data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SuggestionBoxWidget;

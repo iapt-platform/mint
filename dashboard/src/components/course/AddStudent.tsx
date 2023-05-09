@@ -14,7 +14,7 @@ interface IWidget {
   courseId?: string;
 }
 
-const Widget = ({ courseId }: IWidget) => {
+const AddStudentWidget = ({ courseId }: IWidget) => {
   const intl = useIntl();
 
   const form = (
@@ -79,4 +79,4 @@ const Widget = ({ courseId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddStudentWidget;

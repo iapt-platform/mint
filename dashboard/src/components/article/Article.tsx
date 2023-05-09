@@ -67,7 +67,7 @@ interface IWidgetArticle {
   onArticleChange?: Function;
   onFinal?: Function;
 }
-const Widget = ({
+const ArticleWidget = ({
   type,
   id,
   book,
@@ -316,4 +316,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ArticleWidget;

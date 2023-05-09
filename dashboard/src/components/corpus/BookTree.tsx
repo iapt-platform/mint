@@ -21,7 +21,7 @@ interface IWidgetBookTree {
   onSelect?: Function;
   onRootChange?: Function;
 }
-const Widget = ({
+const BookTreeWidget = ({
   root,
   path,
   multiSelect = false,
@@ -155,4 +155,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default BookTreeWidget;

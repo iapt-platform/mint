@@ -12,7 +12,7 @@ import Confidence from "./Confidence";
 type IWidgetDictCreate = {
   word?: string;
 };
-const Widget = (prop: IWidgetDictCreate) => {
+const DictEditInnerWidget = (prop: IWidgetDictCreate) => {
   const intl = useIntl();
   /*
 	const onLangChange = (value: string) => {
@@ -116,4 +116,4 @@ const Widget = (prop: IWidgetDictCreate) => {
   );
 };
 
-export default Widget;
+export default DictEditInnerWidget;

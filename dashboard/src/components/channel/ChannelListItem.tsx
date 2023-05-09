@@ -11,7 +11,12 @@ interface IWidget {
   showLike?: boolean;
 }
 
-const Widget = ({ channel, studio, showProgress, showLike }: IWidget) => {
+const ChannelListItemWidget = ({
+  channel,
+  studio,
+  showProgress,
+  showLike,
+}: IWidget) => {
   const studioName = studio.nickName.slice(0, 2);
   return (
     <>
@@ -23,4 +28,4 @@ const Widget = ({ channel, studio, showProgress, showLike }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChannelListItemWidget;

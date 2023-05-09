@@ -7,8 +7,8 @@ export interface IGroup {
 interface IWidget {
   group?: IGroup;
 }
-const Widget = ({ group }: IWidget) => {
+const GroupWidget = ({ group }: IWidget) => {
   return <Space>{group?.name}</Space>;
 };
 
-export default Widget;
+export default GroupWidget;

@@ -41,7 +41,7 @@ export interface ITopArticleCardData {
 interface IWidgetTopArticleCard {
   data: ITopArticleCardData;
 }
-const Widget = (prop: IWidgetTopArticleCard) => {
+const TopArticleCardWidget = (prop: IWidgetTopArticleCard) => {
   const items: IIconParamListData[] = [
     {
       label: "经藏",
@@ -74,4 +74,4 @@ const Widget = (prop: IWidgetTopArticleCard) => {
   );
 };
 
-export default Widget;
+export default TopArticleCardWidget;

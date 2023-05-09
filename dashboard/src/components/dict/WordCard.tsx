@@ -29,7 +29,7 @@ export interface IWidgetWordCardData {
 interface IWidgetWordCard {
   data: IWidgetWordCardData;
 }
-const Widget = ({ data }: IWidgetWordCard) => {
+const WordCardWidget = ({ data }: IWidgetWordCard) => {
   const intl = useIntl();
   const caseList = data.case.map((element) => {
     return element.split("|").map((it, id) => {
@@ -90,4 +90,4 @@ const Widget = ({ data }: IWidgetWordCard) => {
   );
 };
 
-export default Widget;
+export default WordCardWidget;

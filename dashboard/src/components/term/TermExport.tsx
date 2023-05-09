@@ -17,7 +17,7 @@ interface IWidget {
   channelId?: string;
   studioName?: string;
 }
-const Widget = ({ channelId, studioName }: IWidget) => {
+const TermExportWidget = ({ channelId, studioName }: IWidget) => {
   const [loading, setLoading] = useState(false);
   return (
     <Button
@@ -66,4 +66,4 @@ const Widget = ({ channelId, studioName }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TermExportWidget;

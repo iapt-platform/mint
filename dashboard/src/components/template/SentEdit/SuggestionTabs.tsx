@@ -10,9 +10,8 @@ import SuggestionList from "./SuggestionList";
 interface IWidget {
   data: ISentence;
 }
-const Widget = ({ data }: IWidget) => {
+const SuggestionTabsWidget = ({ data }: IWidget) => {
   const [value, setValue] = useState("close");
-  const [showPanel, setShowPanel] = useState("none");
   const [showSuggestion, setShowSuggestion] = useState(false);
 
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
@@ -23,9 +22,6 @@ const Widget = ({ data }: IWidget) => {
         break;
     }
     setValue(value);
-  };
-  const closeAll = () => {
-    setShowPanel("none");
   };
 
   return (
@@ -43,7 +39,6 @@ const Widget = ({ data }: IWidget) => {
             onClick={() => {
               if (value === "suggestion") {
                 setValue("close");
-                closeAll();
               }
             }}
             style={{
@@ -78,4 +73,4 @@ const Widget = ({ data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SuggestionTabsWidget;

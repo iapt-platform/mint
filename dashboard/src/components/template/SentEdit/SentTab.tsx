@@ -32,7 +32,7 @@ interface IWidget {
   wbwData?: IWbw[];
   onMagicDict?: Function;
 }
-const Widget = ({
+const SentTabWidget = ({
   id,
   book,
   para,
@@ -218,4 +218,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SentTabWidget;

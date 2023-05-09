@@ -20,7 +20,11 @@ interface IWidgetAnthologyDetail {
   channels?: string[];
   onArticleSelect?: Function;
 }
-const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
+const AnthologyDetailWidget = ({
+  aid,
+  channels,
+  onArticleSelect,
+}: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState<IAnthologyData>();
   const navigate = useNavigate();
 
@@ -87,4 +91,4 @@ const Widget = ({ aid, channels, onArticleSelect }: IWidgetAnthologyDetail) => {
   );
 };
 
-export default Widget;
+export default AnthologyDetailWidget;

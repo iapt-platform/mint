@@ -235,9 +235,9 @@ export const WbwSentCtl = ({
 interface IWidgetWbwSent {
   props: string;
 }
-const Widget = ({ props }: IWidgetWbwSent) => {
+const WbwSentWidget = ({ props }: IWidgetWbwSent) => {
   const prop = JSON.parse(atob(props)) as IWidget;
   return <WbwSentCtl {...prop} />;
 };
 
-export default Widget;
+export default WbwSentWidget;

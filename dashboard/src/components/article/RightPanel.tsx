@@ -15,7 +15,7 @@ interface IWidget {
   onChannelSelect?: Function;
   channelReload?: boolean;
 }
-const Widget = ({
+const RightPanelWidget = ({
   curr = "close",
   type,
   articleId,
@@ -82,4 +82,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default RightPanelWidget;

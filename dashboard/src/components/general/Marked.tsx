@@ -3,7 +3,7 @@ import { marked } from "marked";
 interface IWidget {
   text?: string;
 }
-const Widget = ({ text }: IWidget) => {
+const MarkedWidget = ({ text }: IWidget) => {
   return (
     <div
       dangerouslySetInnerHTML={{
@@ -13,4 +13,4 @@ const Widget = ({ text }: IWidget) => {
   );
 };
 
-export default Widget;
+export default MarkedWidget;

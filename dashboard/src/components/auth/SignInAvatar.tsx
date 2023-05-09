@@ -15,8 +15,7 @@ import {
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-const Widget = () => {
-  // TODO
+const SignInAvatarWidget = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
@@ -95,4 +94,4 @@ const Widget = () => {
   }
 };
 
-export default Widget;
+export default SignInAvatarWidget;

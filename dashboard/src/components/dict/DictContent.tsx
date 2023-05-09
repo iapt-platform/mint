@@ -26,7 +26,7 @@ interface IWidget {
   compact?: boolean;
 }
 
-const Widget = ({ word, data, compact }: IWidget) => {
+const DictContentWidget = ({ word, data, compact }: IWidget) => {
   return (
     <>
       <Row>
@@ -68,4 +68,4 @@ const Widget = ({ word, data, compact }: IWidget) => {
   );
 };
 
-export default Widget;
+export default DictContentWidget;

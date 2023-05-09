@@ -9,7 +9,7 @@ interface IWidget {
   onChange?: Function;
   onUpload?: Function;
 }
-const Widget = ({ data, onChange, onUpload }: IWidget) => {
+const WbwDetailAttachmentWidget = ({ data, onChange, onUpload }: IWidget) => {
   return (
     <div>
       <WbwDetailUpload
@@ -24,4 +24,4 @@ const Widget = ({ data, onChange, onUpload }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailAttachmentWidget;

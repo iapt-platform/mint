@@ -14,7 +14,7 @@ export interface IWordByDict {
 interface IWidgetWordCardByDict {
   data: IWordByDict;
 }
-const Widget = (prop: IWidgetWordCardByDict) => {
+const WordCardByDictWidget = (prop: IWidgetWordCardByDict) => {
   return (
     <Card>
       <Title level={5} id={prop.data.anchor}>
@@ -38,4 +38,4 @@ const Widget = (prop: IWidgetWordCardByDict) => {
   );
 };
 
-export default Widget;
+export default WordCardByDictWidget;

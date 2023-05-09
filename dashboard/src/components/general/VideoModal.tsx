@@ -7,7 +7,7 @@ interface IWidget {
   type?: string;
   trigger?: JSX.Element;
 }
-export const Widget = ({ src, type, trigger }: IWidget) => {
+export const VideoModalWidget = ({ src, type, trigger }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -42,4 +42,4 @@ export const Widget = ({ src, type, trigger }: IWidget) => {
   );
 };
 
-export default Widget;
+export default VideoModalWidget;

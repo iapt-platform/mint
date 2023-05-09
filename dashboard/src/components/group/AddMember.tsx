@@ -15,7 +15,7 @@ interface IWidget {
   groupId?: string;
   onCreated?: Function;
 }
-const Widget = ({ groupId, onCreated }: IWidget) => {
+const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
 
@@ -92,4 +92,4 @@ const Widget = ({ groupId, onCreated }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddMemberWidget;

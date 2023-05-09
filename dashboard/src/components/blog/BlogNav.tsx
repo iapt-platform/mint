@@ -8,7 +8,7 @@ interface IWidgetBlogNav {
   selectedKey: string;
   studio?: string;
 }
-const Widget = ({ selectedKey, studio }: IWidgetBlogNav) => {
+const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
   //Library head bar
   const intl = useIntl(); //i18n
   // TODO
@@ -70,4 +70,4 @@ const Widget = ({ selectedKey, studio }: IWidgetBlogNav) => {
     </Row>
   );
 };
-export default Widget;
+export default BlogNavWidget;

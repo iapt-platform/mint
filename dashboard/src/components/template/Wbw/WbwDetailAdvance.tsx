@@ -6,7 +6,7 @@ interface IWidget {
   data: IWbw;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const WbwDetailAdvanceWidget = ({ data, onChange }: IWidget) => {
   const onWordChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -43,4 +43,4 @@ const Widget = ({ data, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailAdvanceWidget;

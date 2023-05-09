@@ -13,7 +13,7 @@ const onClick: MenuProps["onClick"] = (e) => {
 type IWidgetHeadBar = {
   selectedKeys?: string;
 };
-const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
+const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   const items: MenuProps["items"] = [
     {
       label: "管理",
@@ -54,4 +54,4 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   );
 };
 
-export default Widget;
+export default LeftSiderWidget;

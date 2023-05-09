@@ -3,7 +3,7 @@ import { Divider } from "antd";
 import { SettingFind } from "./default";
 import SettingItem from "./SettingItem";
 
-const Widget = () => {
+const SettingArticleWidget = () => {
   return (
     <div>
       <Divider>阅读</Divider>
@@ -21,4 +21,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default SettingArticleWidget;

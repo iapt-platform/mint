@@ -11,7 +11,10 @@ interface IWidget {
   topicId?: string;
   onItemCountChange?: Function;
 }
-const Widget = ({ topicId, onItemCountChange }: IWidget) => {
+const CommentTopicChildrenWidget = ({
+  topicId,
+  onItemCountChange,
+}: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>();
   useEffect(() => {
@@ -84,4 +87,4 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentTopicChildrenWidget;

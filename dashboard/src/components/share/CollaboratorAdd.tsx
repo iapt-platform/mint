@@ -20,7 +20,7 @@ interface IWidget {
   resType: EResType;
   onSuccess?: Function;
 }
-const Widget = ({ resId, resType, onSuccess }: IWidget) => {
+const CollaboratorAddWidget = ({ resId, resType, onSuccess }: IWidget) => {
   const roleList = ["editor", "reader"];
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
@@ -123,4 +123,4 @@ const Widget = ({ resId, resType, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CollaboratorAddWidget;

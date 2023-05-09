@@ -11,7 +11,7 @@ interface IWidget {
   value?: string;
   onCaseChange?: Function;
 }
-const Widget = ({ value, onCaseChange }: IWidget) => {
+const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
   const intl = useIntl();
   const [currValue, setCurrValue] = useState<(string | number)[]>();
 
@@ -357,4 +357,4 @@ const Widget = ({ value, onCaseChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SelectCaseWidget;

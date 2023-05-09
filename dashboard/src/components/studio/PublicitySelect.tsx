@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
 }
-const Widget = ({ width }: IWidget) => {
+const PublicitySelectWidget = ({ width }: IWidget) => {
   const intl = useIntl();
 
   const options = [
@@ -37,4 +37,4 @@ const Widget = ({ width }: IWidget) => {
   );
 };
 
-export default Widget;
+export default PublicitySelectWidget;

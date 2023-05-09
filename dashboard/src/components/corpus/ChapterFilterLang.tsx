@@ -8,7 +8,7 @@ import { IChapterLangListResponse } from "../api/Corpus";
 interface IWidget {
   onSelect?: Function;
 }
-const Widget = ({ onSelect }: IWidget) => {
+const ChpterFilterLangWidget = ({ onSelect }: IWidget) => {
   const [lang, setLang] = useState<DefaultOptionType[]>([]);
   useEffect(() => {
     get<IChapterLangListResponse>(`/v2/progress?view=lang`).then((json) => {
@@ -41,4 +41,4 @@ const Widget = ({ onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChpterFilterLangWidget;

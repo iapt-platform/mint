@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { refresh } from "../../reducers/theme";
 import store from "../../store";
 
-const Widget = () => {
+const ThemeSelectWidget = () => {
   const [isDark, setIsDark] = useState<boolean>();
   useEffect(() => {
     const currTheme = localStorage.getItem("theme");
@@ -33,4 +33,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ThemeSelectWidget;

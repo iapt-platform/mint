@@ -9,7 +9,7 @@ interface IWidget {
   data: ISentence;
   onCreate?: Function;
 }
-const Widget = ({ data, onCreate }: IWidget) => {
+const SuggestionAddWidget = ({ data, onCreate }: IWidget) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
   useEffect(() => {
@@ -47,4 +47,4 @@ const Widget = ({ data, onCreate }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SuggestionAddWidget;

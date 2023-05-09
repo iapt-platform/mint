@@ -7,7 +7,7 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   wbwData?: IWbw[];
 }
-const Widget = ({ wbwData }: IWidget) => {
+const RelaGraphicWidget = ({ wbwData }: IWidget) => {
   const terms = useAppSelector(getTerm);
 
   //根据relation 绘制关系图
@@ -42,4 +42,4 @@ const Widget = ({ wbwData }: IWidget) => {
   );
 };
 
-export default Widget;
+export default RelaGraphicWidget;

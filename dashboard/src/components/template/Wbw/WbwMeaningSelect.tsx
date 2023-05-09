@@ -47,7 +47,7 @@ interface IWidget {
   data: IWbw;
   onSelect?: Function;
 }
-const Widget = ({ data, onSelect }: IWidget) => {
+const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
   const intl = useIntl();
   const inlineDict = useAppSelector(_inlineDict);
   const [parent, setParent] = useState<IParent[]>();
@@ -205,4 +205,4 @@ const Widget = ({ data, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwMeaningSelectWidget;

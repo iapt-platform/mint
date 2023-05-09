@@ -10,7 +10,7 @@ interface IWidget {
   compact?: boolean;
 }
 
-const Widget = ({ word, compact = false }: IWidget) => {
+const DictSearchWidget = ({ word, compact = false }: IWidget) => {
   const defaultData: IDictContentData = {
     dictlist: [],
     words: [],
@@ -39,4 +39,4 @@ const Widget = ({ word, compact = false }: IWidget) => {
   );
 };
 
-export default Widget;
+export default DictSearchWidget;

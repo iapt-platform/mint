@@ -20,7 +20,7 @@ interface IWidgetTocPath {
   channel?: string[];
   onChange?: Function;
 }
-const Widget = ({
+const TocPathWidget = ({
   data = [],
   trigger,
   link = "blank",
@@ -79,4 +79,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default TocPathWidget;

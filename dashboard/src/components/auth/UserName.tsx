@@ -4,7 +4,7 @@ export interface IUser {
   realName?: string;
   onClick?: Function;
 }
-const Widget = ({ id, nickName, realName, onClick }: IUser) => {
+const UserNameWidget = ({ id, nickName, realName, onClick }: IUser) => {
   return (
     <span
       onClick={(e) => {
@@ -18,4 +18,4 @@ const Widget = ({ id, nickName, realName, onClick }: IUser) => {
   );
 };
 
-export default Widget;
+export default UserNameWidget;

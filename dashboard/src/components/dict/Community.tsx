@@ -25,7 +25,7 @@ interface IWord {
 interface IWidget {
   word: string | undefined;
 }
-const Widget = ({ word }: IWidget) => {
+const CommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [wordData, setWordData] = useState<IWord>();
   const minScore = 100; //分数阈值。低于这个分数只显示在弹出菜单中
@@ -225,4 +225,4 @@ const Widget = ({ word }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommunityWidget;

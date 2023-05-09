@@ -7,7 +7,7 @@ import Dictionary from "./Dictionary";
 export interface IWidgetDict {
   word?: string;
 }
-const Widget = ({ word }: IWidgetDict) => {
+const DictComponentWidget = ({ word }: IWidgetDict) => {
   const [wordSearch, setWordSearch] = useState(word);
   //接收查字典消息
   const commandMsg = useAppSelector(message);
@@ -21,4 +21,4 @@ const Widget = ({ word }: IWidgetDict) => {
   return <Dictionary word={wordSearch} compact={true} />;
 };
 
-export default Widget;
+export default DictComponentWidget;

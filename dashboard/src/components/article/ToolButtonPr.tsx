@@ -49,7 +49,7 @@ interface IWidget {
   type?: string;
   articleId?: string;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const ToolButtonPrWidget = ({ type, articleId }: IWidget) => {
   const [treeData, setTreeData] = useState<DataNode[]>([]);
 
   const refresh = () => {
@@ -127,4 +127,4 @@ const Widget = ({ type, articleId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ToolButtonPrWidget;

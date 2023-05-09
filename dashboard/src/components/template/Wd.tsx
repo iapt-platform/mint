@@ -38,9 +38,9 @@ export const WdCtl = ({ text }: IWidgetWdCtl) => {
 interface IWidgetTerm {
   props: string;
 }
-const Widget = ({ props }: IWidgetTerm) => {
+const WdWidget = ({ props }: IWidgetTerm) => {
   const prop = JSON.parse(atob(props)) as IWidgetWdCtl;
   return <WdCtl {...prop} />;
 };
 
-export default Widget;
+export default WdWidget;

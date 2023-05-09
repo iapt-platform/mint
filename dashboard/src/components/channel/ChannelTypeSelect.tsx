@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { ProFormSelect } from "@ant-design/pro-components";
 
-const Widget = () => {
+const ChannelTypeSelectWidget = () => {
   const intl = useIntl();
 
   const channelTypeOptions = [
@@ -46,4 +46,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ChannelTypeSelectWidget;

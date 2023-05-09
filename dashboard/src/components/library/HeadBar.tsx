@@ -114,7 +114,7 @@ export const mainMenuItems: MenuProps["items"] = [
 type IWidgetHeadBar = {
   selectedKeys?: string;
 };
-const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
+const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
   // TODO
 
@@ -169,4 +169,4 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   );
 };
 
-export default Widget;
+export default HeadBarWidget;

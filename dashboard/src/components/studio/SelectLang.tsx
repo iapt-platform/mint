@@ -14,7 +14,7 @@ const onLangSearch = (value: string) => {
 interface IWidgetSelectLang {
   lang?: string;
 }
-const Widget = (prop: IWidgetSelectLang) => {
+const SelectLangWidget = (prop: IWidgetSelectLang) => {
   const intl = useIntl();
 
   const data = [
@@ -56,4 +56,4 @@ const Widget = (prop: IWidgetSelectLang) => {
   );
 };
 
-export default Widget;
+export default SelectLangWidget;

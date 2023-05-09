@@ -13,7 +13,7 @@ interface IWidget {
   anthologyId?: string;
   onSelect?: Function;
 }
-const Widget = ({ anthologyId, onSelect }: IWidget) => {
+const EditableTocTreeWidget = ({ anthologyId, onSelect }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
 
   useEffect(() => {
@@ -77,4 +77,4 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default EditableTocTreeWidget;

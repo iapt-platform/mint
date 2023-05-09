@@ -2,7 +2,7 @@ import { Button, Dropdown } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { mainMenuItems } from "../library/HeadBar";
 
-const Widget = () => {
+const MainMenuWidget = () => {
   return (
     <Dropdown
       menu={{ items: mainMenuItems }}
@@ -18,4 +18,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default MainMenuWidget;

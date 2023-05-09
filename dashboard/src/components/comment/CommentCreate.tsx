@@ -27,7 +27,7 @@ interface IWidget {
   onCreated?: Function;
   contentType?: TContentType;
 }
-const Widget = ({
+const CommentCreateWidget = ({
   resId,
   resType,
   contentType = "html",
@@ -179,4 +179,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default CommentCreateWidget;

@@ -5,7 +5,7 @@ import CreateFeedback from "../feedback/CreateFeedback";
 const { Footer } = Layout;
 const { Title } = Typography;
 
-const Widget = () => {
+const FooterBarWidget = () => {
   //Library foot bar
   // TODO
   return (
@@ -36,4 +36,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default FooterBarWidget;

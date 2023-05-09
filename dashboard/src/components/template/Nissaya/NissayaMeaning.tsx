@@ -7,7 +7,7 @@ interface IWidget {
   code?: string;
 }
 
-const Widget = ({ text, code = "my" }: IWidget) => {
+const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
   const endings = useAppSelector(getEnding);
   if (typeof text === "undefined") {
     return <></>;
@@ -34,4 +34,4 @@ const Widget = ({ text, code = "my" }: IWidget) => {
   );
 };
 
-export default Widget;
+export default NissayaMeaningWidget;

@@ -10,7 +10,7 @@ interface IWidgetArticleCard {
   children?: React.ReactNode;
   onModeChange?: Function;
 }
-const Widget = ({ children, onModeChange }: IWidgetArticleCard) => {
+const AnchorCardWidget = ({ children, onModeChange }: IWidgetArticleCard) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>("read");
 
@@ -53,4 +53,4 @@ const Widget = ({ children, onModeChange }: IWidgetArticleCard) => {
   );
 };
 
-export default Widget;
+export default AnchorCardWidget;

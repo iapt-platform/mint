@@ -10,7 +10,7 @@ interface IWidget {
   para?: number;
   channel?: string;
 }
-const Widget = ({ book, para, channel }: IWidget) => {
+const PaliTextTocWidget = ({ book, para, channel }: IWidget) => {
   const [tocList, setTocList] = useState<ListNodeData[]>([]);
   useEffect(() => {
     get<IPaliTocListResponse>(
@@ -29,4 +29,4 @@ const Widget = ({ book, para, channel }: IWidget) => {
   return <TocTree treeData={tocList} expandedKey={[`${book}-${para}`]} />;
 };
 
-export default Widget;
+export default PaliTextTocWidget;

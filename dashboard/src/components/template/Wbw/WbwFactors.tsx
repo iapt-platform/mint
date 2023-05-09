@@ -41,7 +41,7 @@ interface IWidget {
   onChange?: Function;
 }
 
-const Widget = ({ data, display, onChange }: IWidget) => {
+const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -118,4 +118,4 @@ const Widget = ({ data, display, onChange }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwFactorsWidget;

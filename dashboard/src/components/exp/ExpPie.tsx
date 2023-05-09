@@ -7,7 +7,7 @@ export interface IPieData {
 interface IWidget {
   data?: IPieData[];
 }
-const Widget = ({ data = [] }: IWidget) => {
+const ExpPieWidget = ({ data = [] }: IWidget) => {
   console.log("pie data", data);
   const config = {
     appendPadding: 10,
@@ -49,4 +49,4 @@ const Widget = ({ data = [] }: IWidget) => {
   return <Pie {...config} style={{ height: 120 }} />;
 };
 
-export default Widget;
+export default ExpPieWidget;

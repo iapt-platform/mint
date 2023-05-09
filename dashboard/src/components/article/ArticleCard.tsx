@@ -16,7 +16,7 @@ interface IWidgetArticleCard {
   openInCol?: Function;
   showCol?: Function;
 }
-const Widget = ({
+const ArticleCardWidget = ({
   type,
   articleId,
   data,
@@ -86,4 +86,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ArticleCardWidget;

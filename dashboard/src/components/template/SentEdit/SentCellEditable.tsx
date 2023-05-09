@@ -22,7 +22,7 @@ interface ISentCellEditable {
   onCreate?: Function;
   isPr?: boolean;
 }
-const Widget = ({
+const SentCellEditableWidget = ({
   data,
   onDataChange,
   onClose,
@@ -155,4 +155,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SentCellEditableWidget;

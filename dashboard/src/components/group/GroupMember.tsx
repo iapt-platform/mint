@@ -26,7 +26,7 @@ interface DataItem {
 interface IWidgetGroupFile {
   groupId?: string;
 }
-const Widget = ({ groupId }: IWidgetGroupFile) => {
+const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
   const intl = useIntl(); //i18n
   const [canManage, setCanManage] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
@@ -180,4 +180,4 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
   );
 };
 
-export default Widget;
+export default GroupMemberWidget;

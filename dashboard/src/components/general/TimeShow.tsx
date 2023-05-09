@@ -10,7 +10,7 @@ interface IWidgetTimeShow {
   title?: string;
 }
 
-const Widget = ({
+const TimeShowWidget = ({
   showIcon = true,
   showTooltip = true,
   time,
@@ -24,6 +24,7 @@ const Widget = ({
     }
   };
 
+  //TODO bug time no update
   useEffect(() => {
     updateTime();
   }, [time]);
@@ -98,4 +99,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default TimeShowWidget;

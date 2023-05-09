@@ -18,7 +18,7 @@ interface IWidget {
   onSelect?: Function;
   onItemCountChange?: Function;
 }
-const Widget = ({
+const CommentListCardWidget = ({
   resId,
   resType,
   topicId,
@@ -120,4 +120,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default CommentListCardWidget;

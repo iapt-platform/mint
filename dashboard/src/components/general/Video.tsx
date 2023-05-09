@@ -6,7 +6,7 @@ interface IWidget {
   src?: string;
   type?: string;
 }
-export const Widget = ({ src, type }: IWidget) => {
+export const VideoWidget = ({ src, type }: IWidget) => {
   const playerRef = useRef<videojs.Player>();
 
   const handlePlayerReady = (player: videojs.Player) => {
@@ -42,4 +42,4 @@ export const Widget = ({ src, type }: IWidget) => {
   );
 };
 
-export default Widget;
+export default VideoWidget;

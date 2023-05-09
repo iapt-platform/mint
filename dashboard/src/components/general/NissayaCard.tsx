@@ -13,7 +13,10 @@ interface INissayaCardModal {
 }
 export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   return (
-    <Popover content={<Widget text={text} cache={true} />} placement="bottom">
+    <Popover
+      content={<NissayaCardWidget text={text} cache={true} />}
+      placement="bottom"
+    >
       <Link>{trigger}</Link>
     </Popover>
   );
@@ -44,7 +47,7 @@ export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
         onCancel={handleCancel}
         destroyOnClose
       >
-        <Widget text={text} />
+        <NissayaCardWidget text={text} />
       </Modal>
     </>
   );
@@ -54,7 +57,7 @@ interface IWidget {
   text?: string;
   cache?: boolean;
 }
-const Widget = ({ text, cache = false }: IWidget) => {
+const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
 
   useEffect(() => {
@@ -81,4 +84,4 @@ const Widget = ({ text, cache = false }: IWidget) => {
   return <Marked text={guide} />;
 };
 
-export default Widget;
+export default NissayaCardWidget;

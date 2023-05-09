@@ -15,7 +15,11 @@ interface ISentCell {
   wordWidget?: boolean;
   isPr?: boolean;
 }
-const Widget = ({ data, wordWidget = false, isPr = false }: ISentCell) => {
+const SentCellWidget = ({
+  data,
+  wordWidget = false,
+  isPr = false,
+}: ISentCell) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
   const acceptPr = useAppSelector(sentence);
@@ -84,4 +88,4 @@ const Widget = ({ data, wordWidget = false, isPr = false }: ISentCell) => {
   );
 };
 
-export default Widget;
+export default SentCellWidget;

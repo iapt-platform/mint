@@ -26,7 +26,9 @@ const defaultChannelFilterProps: ChannelFilterProps = {
   channelType: "translation",
 };
 
-const Widget = ({ filter = defaultChannelFilterProps }: IWidgetChannelList) => {
+const ChannelListWidget = ({
+  filter = defaultChannelFilterProps,
+}: IWidgetChannelList) => {
   const [tableData, setTableData] = useState<IChannelList[]>([]);
 
   useEffect(() => {
@@ -72,4 +74,4 @@ const Widget = ({ filter = defaultChannelFilterProps }: IWidgetChannelList) => {
   );
 };
 
-export default Widget;
+export default ChannelListWidget;

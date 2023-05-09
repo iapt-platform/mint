@@ -17,7 +17,7 @@ interface IWidget {
   onTagClick?: Function;
 }
 
-const Widget = ({
+const ChapterListWidget = ({
   searchKey,
   progress = 0.9,
   lang = "zh",
@@ -111,4 +111,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChapterListWidget;

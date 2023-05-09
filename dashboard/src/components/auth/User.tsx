@@ -8,7 +8,7 @@ export interface IUser {
   showAvatar?: boolean;
   showName?: boolean;
 }
-const Widget = ({
+const UserWidget = ({
   nickName,
   userName,
   avatar,
@@ -25,4 +25,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default UserWidget;

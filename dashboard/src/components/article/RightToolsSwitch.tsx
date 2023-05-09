@@ -7,7 +7,10 @@ interface IWidget {
   initMode?: string;
   onModeChange?: Function;
 }
-const Widget = ({ initMode = "close", onModeChange }: IWidget) => {
+const RightToolsSwitchWidget = ({
+  initMode = "close",
+  onModeChange,
+}: IWidget) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>(initMode);
   return (
@@ -44,4 +47,4 @@ const Widget = ({ initMode = "close", onModeChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default RightToolsSwitchWidget;

@@ -15,7 +15,7 @@ interface IWidget {
   chapter: IChapter;
   onChange?: Function;
 }
-const Widget = ({ chapter, onChange }: IWidget) => {
+const BookViewerWidget = ({ chapter, onChange }: IWidget) => {
   const [currChapter, setCurrChapter] = useState(chapter);
   useEffect(() => {
     if (typeof onChange !== "undefined") {
@@ -61,4 +61,4 @@ const Widget = ({ chapter, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default BookViewerWidget;

@@ -25,7 +25,7 @@ interface IWidgetSentContent {
   magicDict?: string;
   onWbwChange?: Function;
 }
-const Widget = ({
+const SentContentWidget = ({
   sid,
   book,
   para,
@@ -117,4 +117,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SentContentWidget;

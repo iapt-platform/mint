@@ -59,7 +59,7 @@ interface IWidget {
   onChange?: Function;
   onRelationAdd?: Function;
 }
-const Widget = ({
+const WbwDetailBasicWidget = ({
   data,
   showRelation = true,
   onChange,
@@ -291,4 +291,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default WbwDetailBasicWidget;

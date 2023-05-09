@@ -17,7 +17,7 @@ interface IWidget {
   courseId?: string;
   onCreated?: Function;
 }
-const Widget = ({ courseId, onCreated }: IWidget) => {
+const AddMemeberWidget = ({ courseId, onCreated }: IWidget) => {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
 
@@ -113,4 +113,4 @@ const Widget = ({ courseId, onCreated }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddMemeberWidget;

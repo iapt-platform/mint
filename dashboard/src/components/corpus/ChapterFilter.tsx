@@ -12,7 +12,7 @@ interface IWidget {
   onProgressChange?: Function;
   onSearch?: Function;
 }
-const Widget = ({
+const ChapterFilterWidget = ({
   onTypeChange,
   onLangChange,
   onProgressChange,
@@ -56,4 +56,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChapterFilterWidget;

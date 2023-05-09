@@ -125,7 +125,7 @@ interface IWidgetEditableTree {
   onSelect?: Function;
   onSave?: Function;
 }
-const Widget = ({
+const EditableTreeWidget = ({
   treeData,
   onChange,
   onSelect,
@@ -302,4 +302,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default EditableTreeWidget;

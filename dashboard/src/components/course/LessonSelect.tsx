@@ -3,8 +3,7 @@
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { ProList } from "@ant-design/pro-components";
-import { UserAddOutlined } from "@ant-design/icons";
-import { Space, Tag, Button, Layout } from "antd";
+import { Button, Layout } from "antd";
 import AddLesson from "./AddLesson";
 
 const { Content } = Layout;
@@ -18,11 +17,11 @@ const defaultData = [
     //  "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
   },
 ];
-type DataItem = typeof defaultData[number];
+type DataItem = (typeof defaultData)[number];
 interface IWidgetGroupFile {
   groupId?: string;
 }
-const Widget = ({ groupId }: IWidgetGroupFile) => {
+const LessonSelectWidget = ({ groupId }: IWidgetGroupFile) => {
   const intl = useIntl(); //i18n
   const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
 
@@ -78,4 +77,4 @@ const Widget = ({ groupId }: IWidgetGroupFile) => {
   );
 };
 
-export default Widget;
+export default LessonSelectWidget;

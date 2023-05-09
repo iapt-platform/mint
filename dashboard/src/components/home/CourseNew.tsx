@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import img_book from "../../assets/library/images/teachers.svg";
 import CourseNewList from "./CourseNewList";
 
-const Widget = () => {
+const CourseNewWidget = () => {
   return (
     <Row
       style={{
@@ -38,4 +38,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default CourseNewWidget;

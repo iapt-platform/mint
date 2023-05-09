@@ -11,7 +11,7 @@ import { IDictFormData } from "./DictCreate";
 interface IWidget {
   wordId?: string;
 }
-const Widget = ({ wordId }: IWidget) => {
+const DictEditWidget = ({ wordId }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -69,4 +69,4 @@ const Widget = ({ wordId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default DictEditWidget;

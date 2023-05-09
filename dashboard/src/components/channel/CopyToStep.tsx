@@ -16,7 +16,7 @@ interface IWidget {
   stepChange?: Function;
   onClose?: Function;
 }
-const Widget = ({
+const CopyToStepWidget = ({
   initStep = 0,
   channel,
   type,
@@ -121,4 +121,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default CopyToStepWidget;

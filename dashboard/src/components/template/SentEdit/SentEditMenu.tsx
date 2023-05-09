@@ -7,7 +7,7 @@ interface ISentEditMenu {
   children?: React.ReactNode;
   onModeChange?: Function;
 }
-const Widget = ({ children, onModeChange }: ISentEditMenu) => {
+const SentEditMenuWidget = ({ children, onModeChange }: ISentEditMenu) => {
   const [isHover, setIsHover] = useState(false);
 
   const onClick: MenuProps["onClick"] = (e) => {
@@ -60,4 +60,4 @@ const Widget = ({ children, onModeChange }: ISentEditMenu) => {
   );
 };
 
-export default Widget;
+export default SentEditMenuWidget;

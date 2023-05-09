@@ -26,7 +26,11 @@ interface IWidgetSettingItem {
   autoSave?: boolean;
   onChange?: Function;
 }
-const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
+const SettingItemWidget = ({
+  data,
+  onChange,
+  autoSave = true,
+}: IWidgetSettingItem) => {
   const intl = useIntl();
   const settings: ISettingItem[] | undefined = useAppSelector(settingInfo);
   const [value, setValue] = useState(data?.defaultValue);
@@ -206,4 +210,4 @@ const Widget = ({ data, onChange, autoSave = true }: IWidgetSettingItem) => {
   }
 };
 
-export default Widget;
+export default SettingItemWidget;

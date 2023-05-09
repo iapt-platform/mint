@@ -6,7 +6,7 @@ interface IWidget {
   name?: string;
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
 }
-const Widget = ({ name = "case", width = "md" }: IWidget) => {
+const CaseSelectWidget = ({ name = "case", width = "md" }: IWidget) => {
   const intl = useIntl();
   const _case = [
     "nom",
@@ -38,4 +38,4 @@ const Widget = ({ name = "case", width = "md" }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CaseSelectWidget;

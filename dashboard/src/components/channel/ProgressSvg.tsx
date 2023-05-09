@@ -4,7 +4,7 @@ interface IWidget {
   data?: IFinal[];
   width?: number;
 }
-const Widget = ({ data, width = 300 }: IWidget) => {
+const ProgressSvgWidget = ({ data, width = 300 }: IWidget) => {
   //绘制句子进度
   if (typeof data === "undefined" || data.length === 0) {
     return <></>;
@@ -92,4 +92,4 @@ const Widget = ({ data, width = 300 }: IWidget) => {
   return <div style={{ width: width }}>{progress}</div>;
 };
 
-export default Widget;
+export default ProgressSvgWidget;

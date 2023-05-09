@@ -6,7 +6,7 @@ interface IWidget {
   type?: string;
   articleId?: string;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const ToolButtonSearchWidget = ({ type, articleId }: IWidget) => {
   const id = articleId?.split("_");
   let tocWidget = <></>;
   if (id && id.length > 0) {
@@ -21,4 +21,4 @@ const Widget = ({ type, articleId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ToolButtonSearchWidget;

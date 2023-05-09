@@ -17,7 +17,7 @@ interface IWidget {
   primary?: boolean;
   termToLocal?: boolean;
 }
-const Widget = ({
+const PaliTextWidget = ({
   text,
   code = "roman",
   primary = true,
@@ -74,4 +74,4 @@ const Widget = ({
   return text ? <span>{paliText}</span> : <></>;
 };
 
-export default Widget;
+export default PaliTextWidget;

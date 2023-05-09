@@ -16,7 +16,7 @@ interface IWidget {
   mode?: ArticleMode;
   onChange?: Function;
 }
-const Widget = ({
+const WbwMeaningWidget = ({
   data,
   display = "block",
   mode = "edit",
@@ -131,4 +131,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default WbwMeaningWidget;

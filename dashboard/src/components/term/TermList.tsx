@@ -36,7 +36,7 @@ interface IWidget {
   studioName?: string;
   channelId?: string;
 }
-const Widget = ({ studioName, channelId }: IWidget) => {
+const TermListWidget = ({ studioName, channelId }: IWidget) => {
   const intl = useIntl();
 
   const showDeleteConfirm = (id: string[], title: string) => {
@@ -335,4 +335,4 @@ const Widget = ({ studioName, channelId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TermListWidget;

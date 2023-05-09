@@ -1,5 +1,5 @@
-const Widget = () => {
+const commentListItemWidget = () => {
   return <div>change password</div>;
 };
 
-export default Widget;
+export default commentListItemWidget;

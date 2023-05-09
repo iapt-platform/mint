@@ -6,7 +6,7 @@ interface IWidget {
   content?: JSX.Element;
   title?: string;
 }
-const Widget = ({ icon, content, title }: IWidget) => {
+const ToolButtonWidget = ({ icon, content, title }: IWidget) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -35,4 +35,4 @@ const Widget = ({ icon, content, title }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ToolButtonWidget;

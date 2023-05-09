@@ -14,7 +14,7 @@ interface IWidget {
   isPr?: boolean;
   onAccept?: Function;
 }
-const Widget = ({ data, isPr = false, onAccept }: IWidget) => {
+const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
   const [CommentCount, setCommentCount] = useState<number | undefined>(
     data.suggestionCount?.discussion
   );
@@ -50,4 +50,4 @@ const Widget = ({ data, isPr = false, onAccept }: IWidget) => {
   return <Text type="secondary">{isPr ? prButton : normalButton}</Text>;
 };
 
-export default Widget;
+export default SuggestionToolbarWidget;

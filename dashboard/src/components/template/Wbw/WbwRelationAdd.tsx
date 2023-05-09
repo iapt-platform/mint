@@ -7,7 +7,7 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   data: IWbw;
 }
-const Widget = ({ data }: IWidget) => {
+const WbwRelationAddWidget = ({ data }: IWidget) => {
   const [show, setShow] = useState(false);
   const addParam = useAppSelector(relationAddParam);
   useEffect(() => {
@@ -64,4 +64,4 @@ const Widget = ({ data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwRelationAddWidget;

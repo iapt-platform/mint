@@ -20,7 +20,7 @@ interface IWidget {
   studioName?: string;
   onSelect?: Function;
 }
-const Widget = ({ studioName, onSelect }: IWidget) => {
+const StudioSelectWidget = ({ studioName, onSelect }: IWidget) => {
   const [anthology, setAnthology] = useState<IOptions[]>([
     { value: "all", label: "全部" },
   ]);
@@ -53,4 +53,4 @@ const Widget = ({ studioName, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default StudioSelectWidget;

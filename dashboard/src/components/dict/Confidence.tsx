@@ -5,7 +5,7 @@ import type { SliderMarks } from "antd/es/slider";
 type IWidgetConfidence = {
   defaultValue?: number;
 };
-const Widget = ({ defaultValue = 75 }: IWidgetConfidence) => {
+const ConfidenceWidget = ({ defaultValue = 75 }: IWidgetConfidence) => {
   const intl = useIntl();
   const marks: SliderMarks = {
     0: intl.formatMessage({ id: "forms.fields.confidence.0.label" }),
@@ -24,4 +24,4 @@ const Widget = ({ defaultValue = 75 }: IWidgetConfidence) => {
   );
 };
 
-export default Widget;
+export default ConfidenceWidget;
