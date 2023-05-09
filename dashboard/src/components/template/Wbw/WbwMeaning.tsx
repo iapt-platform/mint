@@ -26,20 +26,40 @@ const Widget = ({
   const [open, setOpen] = useState(false);
   let meaning = <></>;
   if (
-    mode === "wbw" &&
-    (typeof data.meaning === "undefined" ||
-      data.meaning.value === null ||
-      data.meaning.value.length === 0 ||
-      data.meaning.value === "")
+    typeof data.meaning?.value === "string" &&
+    data.meaning.value.trim().length > 0
   ) {
+    const eMeaning = data.meaning.value
+      .replaceAll("[", "@[")
+      .replaceAll("]", "]@")
+      .replaceAll("{", "@{")
+      .replaceAll("}", "}@")
+      .split("@")
+      .map((item, index) => {
+        if (item.includes("[")) {
+          return (
+            <span key={index} style={{ color: "rosybrown" }}>
+              {item.replaceAll("[", "").replaceAll("]", "")}
+            </span>
+          );
+        } else if (item.includes("{")) {
+          return (
+            <span key={index} style={{ color: "lightskyblue" }}>
+              {item.replaceAll("{", "").replaceAll("}", "")}
+            </span>
+          );
+        } else {
+          return <Text>{item}</Text>;
+        }
+      });
+    meaning = <Text>{eMeaning}</Text>;
+  } else if (mode === "wbw") {
     //空白的意思在逐词解析模式显示占位字符串
     meaning = (
       <Text type="secondary">
         {intl.formatMessage({ id: "dict.fields.meaning.label" })}
       </Text>
     );
-  } else {
-    meaning = <Text>{data.meaning?.value}</Text>;
   }
   const hide = () => {
     setOpen(false);
@@ -56,7 +76,7 @@ const Widget = ({
           open={open}
           onOpenChange={handleOpenChange}
           content={
-            <div style={{ width: 500, height: "60vh", overflow: "auto" }}>
+            <div style={{ width: 500, height: "450px", overflow: "auto" }}>
               <WbwMeaningSelect
                 data={data}
                 onSelect={(e: string) => {
@@ -73,7 +93,36 @@ const Widget = ({
         >
           {meaning}
         </Popover>
-        <CaseFormula data={data} />
+        {mode === "wbw" ? (
+          <CaseFormula
+            data={data}
+            onChange={(formula: string) => {
+              /**
+               * 有 [ ] 不替换
+               * 有{ } 祛除 { }
+               * 把 格位公式中的 ~ 替换为 data.meaning.value
+               */
+              if (
+                data.meaning?.value &&
+                data.meaning?.value.indexOf("[") >= 0
+              ) {
+                return;
+              }
+              let meaning: string = data.meaning?.value
+                ? data.meaning?.value
+                : "";
+              meaning = meaning.replace(/\{(.+?)\}/g, "");
+
+              meaning = formula
+                .replaceAll("{", "[")
+                .replaceAll("}", "]")
+                .replace("~", meaning);
+              if (typeof onChange !== "undefined") {
+                onChange(meaning);
+              }
+            }}
+          />
+        ) : undefined}
       </div>
     );
   } else {
