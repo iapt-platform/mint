@@ -184,7 +184,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
                                         }
                                       }}
                                     >
-                                      {itemMeaning.text}-{itemMeaning.count}
+                                      {itemMeaning.text}
                                     </Tag>
                                   );
                                 }
