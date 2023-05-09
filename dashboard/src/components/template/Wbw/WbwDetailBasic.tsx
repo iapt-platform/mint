@@ -76,14 +76,10 @@ const Widget = ({
     data.meaning?.value
   );
 
-  const onMeaningChange = (value: string | string[]) => {
+  const onMeaningChange = (value: string) => {
     console.log(`Selected: ${value}`);
     if (typeof onChange !== "undefined") {
-      if (typeof value === "string") {
-        onChange({ field: "meaning", value: value });
-      } else {
-        onChange({ field: "meaning", value: value.join("$") });
-      }
+      onChange({ field: "meaning", value: value });
     }
   };
 
@@ -148,8 +144,9 @@ const Widget = ({
               value={_meaning}
               allowClear
               onChange={(e) => {
-                console.log(e.target.value);
+                console.log("meaning input", e.target.value);
                 setMeaning(e.target.value);
+                onMeaningChange(e.target.value);
               }}
             />
             <Popover
