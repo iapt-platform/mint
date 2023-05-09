@@ -37,11 +37,8 @@ const CaseFormulaWidget = ({ data, onChange }: IWidget) => {
         items: formula,
         onClick: (e) => {
           console.log("click ", e.key);
-          switch (e.key) {
-            case "showCol":
-              break;
-            default:
-              break;
+          if (typeof onChange !== "undefined") {
+            onChange(e.key);
           }
         },
       }}
