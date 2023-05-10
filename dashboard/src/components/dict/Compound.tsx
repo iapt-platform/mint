@@ -55,6 +55,9 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
     }
   }, [add, compound]);
   useEffect(() => {
+    if (typeof word === "undefined") {
+      return;
+    }
     get<IApiResponseDictList>(`/v2/userdict?view=compound&word=${word}`).then(
       (json) => {
         if (json.ok) {
