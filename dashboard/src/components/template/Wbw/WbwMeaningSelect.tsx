@@ -15,7 +15,7 @@
  */
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Collapse, Tag, Typography } from "antd";
+import { Button, Collapse, Tag, Typography } from "antd";
 
 import { IWbw } from "./WbwWord";
 import { useAppSelector } from "../../../hooks";
@@ -168,12 +168,14 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
                       {itemDict.case.map((itemCase, idCase) => {
                         return (
                           <div key={idCase}>
-                            <Text italic>{itemCase.local}</Text>
+                            <Tag>{itemCase.local}</Tag>
                             <span>
                               {itemCase.meaning.map(
                                 (itemMeaning, idMeaning) => {
                                   return (
-                                    <Tag
+                                    <Button
+                                      type="text"
+                                      size="middle"
                                       key={idMeaning}
                                       onClick={(
                                         e: React.MouseEvent<HTMLAnchorElement>
@@ -185,7 +187,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
                                       }}
                                     >
                                       {itemMeaning.text}
-                                    </Tag>
+                                    </Button>
                                   );
                                 }
                               )}
