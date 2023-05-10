@@ -1,7 +1,8 @@
 import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { IApiResponseDictList } from "../../../components/api/Dict";
 
 import Article, {
   ArticleMode,
@@ -20,6 +21,9 @@ import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
 import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
+import { add } from "../../../reducers/inline-dict";
+import { get } from "../../../request";
+import store from "../../../store";
 
 /**
  * type:
@@ -42,7 +46,18 @@ const Widget = () => {
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
 
-  //const right = <ProTabs />;
+  useEffect(() => {
+    /**
+     * 启动时载入格位公式字典
+     */
+    get<IApiResponseDictList>(`/v2/userdict?view=word&word=_formula_`).then(
+      (json) => {
+        console.log("_formula_ ok", json.data.count);
+        //存储到redux
+        store.dispatch(add(json.data.rows));
+      }
+    );
+  }, []);
   const rightBarWidth = "48px";
   const channelId = id?.split("_").slice(1);
   return (
