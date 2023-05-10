@@ -131,7 +131,9 @@ const ArticleWidget = ({
     if (!active) {
       return;
     }
-
+    if (mode === articleMode) {
+      return;
+    }
     //发布mode变更
     //store.dispatch(modeChange(mode));
     if (mode !== articleMode && mode !== "read" && articleMode !== "read") {
@@ -197,7 +199,7 @@ const ArticleWidget = ({
           }
           break;
       }
-      console.log("url", url);
+      console.log("article url", url);
       setShowSkeleton(true);
       get<IArticleResponse>(url)
         .then((json) => {
