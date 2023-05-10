@@ -49,7 +49,7 @@ const WbwMeaningWidget = ({
             </span>
           );
         } else {
-          return <Text>{item}</Text>;
+          return <Text key={index}>{item}</Text>;
         }
       });
     meaning = <Text>{eMeaning}</Text>;
@@ -96,22 +96,25 @@ const WbwMeaningWidget = ({
         {mode === "wbw" ? (
           <CaseFormula
             data={data}
-            onChange={(formula: string) => {
-              /**
-               * 有 [ ] 不替换
-               * 有{ } 祛除 { }
-               * 把 格位公式中的 ~ 替换为 data.meaning.value
-               */
+            onCaseChange={(formula: string) => {
               if (
                 data.meaning?.value &&
                 data.meaning?.value.indexOf("[") >= 0
               ) {
                 return;
               }
+            }}
+            onChange={(formula: string) => {
+              /**
+               * 有 [ ] 不自动替换
+               * 有{ } 祛除 { }
+               * 把 格位公式中的 ~ 替换为 data.meaning.value
+               */
               let meaning: string = data.meaning?.value
                 ? data.meaning?.value
                 : "";
               meaning = meaning.replace(/\{(.+?)\}/g, "");
+              meaning = meaning.replace(/\[(.+?)\]/g, "");
 
               meaning = formula
                 .replaceAll("{", "[")
