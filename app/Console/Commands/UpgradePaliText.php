@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\PaliText;
+use App\Models\BookTitle;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -198,6 +199,14 @@ class UpgradePaliText extends Command
                         $currParent = $title_data[$currParent-1]["parent"];
                         $iLoop++;
                     }
+                    if(count($path)>0){
+                        //插入书名
+                        $bookTitle = BookTitle::where('book',$book)
+                                            ->where('paragraph',end($path)['paragraph'])
+                                            ->value('title');
+                        $path[] = ["book"=>0,"paragraph"=>0,"title"=>$bookTitle,"level"=>0];
+                    }
+
                     # 将路径反向
                     $path1 = [];
                     for ($i=count($path)-1; $i >=0 ; $i--) {
