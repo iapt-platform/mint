@@ -199,8 +199,8 @@ class PaliTextController extends Controller
             }
         if($chapters){
             foreach ($chapters as $key => $value) {
-                $progress_key="/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
-                $chapters[$key]->progress_line = Cache::get($progress_key);
+                $progress_key="/chapter_dynamic/{$value['book']}/{$value['paragraph']}/global";
+                $chapters[$key]['progress_line'] = Cache::get($progress_key);
             }
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
