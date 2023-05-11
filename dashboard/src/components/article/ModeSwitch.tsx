@@ -1,9 +1,6 @@
 import { Segmented } from "antd";
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { modeChange } from "../../reducers/article-mode";
-import store from "../../store";
-import { ArticleMode } from "./Article";
 
 interface IWidget {
   initMode?: string;
@@ -20,6 +17,7 @@ const ModeSwitchWidget = ({ initMode = "read", onModeChange }: IWidget) => {
         backgroundColor: "rgb(129 129 129 / 17%)",
         display: "block",
       }}
+      defaultValue={initMode}
       options={[
         {
           label: intl.formatMessage({ id: "buttons.read" }),
@@ -38,13 +36,9 @@ const ModeSwitchWidget = ({ initMode = "read", onModeChange }: IWidget) => {
       onChange={(value) => {
         const newMode = value.toString();
         if (typeof onModeChange !== "undefined") {
-          if (mode === "read" || newMode === "read") {
-            onModeChange(newMode);
-          }
+          onModeChange(newMode);
         }
         setMode(newMode);
-        //发布mode变更
-        store.dispatch(modeChange(newMode as ArticleMode));
       }}
     />
   );
