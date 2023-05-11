@@ -77,7 +77,7 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
       };
     });
     setFormula(items);
-  }, [data?.case]);
+  }, [data?.case, inlineDict.wordList]);
 
   return (
     <Dropdown
