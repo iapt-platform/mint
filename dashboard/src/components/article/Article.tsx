@@ -20,6 +20,7 @@ import {
   IViewRequest,
   IViewStoreResponse,
 } from "../../pages/studio/recent/list";
+import { modeChange } from "../../reducers/article-mode";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -62,7 +63,7 @@ interface IWidgetArticle {
   courseId?: string;
   exerciseId?: string;
   userName?: string;
-  mode?: ArticleMode;
+  mode?: ArticleMode | null;
   active?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
@@ -127,6 +128,13 @@ const ArticleWidget = ({
   }, [articleId, type]);
 
   useEffect(() => {
+    setArticleMode(mode ? mode : "read");
+    //发布mode变更
+    console.log("发布mode变更", mode);
+    store.dispatch(modeChange(mode as ArticleMode));
+  }, [mode]);
+
+  useEffect(() => {
     console.log("mode", mode, articleMode);
     if (!active) {
       return;
@@ -136,12 +144,15 @@ const ArticleWidget = ({
     }
     //发布mode变更
     //store.dispatch(modeChange(mode));
-    if (mode !== articleMode && mode !== "read" && articleMode !== "read") {
+    if (
+      (mode === "edit" && articleMode === "wbw") ||
+      (mode === "wbw" && articleMode === "edit")
+    ) {
       console.log("set mode", mode, articleMode);
-      setArticleMode(mode);
+      setArticleMode(mode ? mode : "read");
       return;
     }
-    setArticleMode(mode);
+    setArticleMode(mode ? mode : "read");
     if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
@@ -248,7 +259,7 @@ const ArticleWidget = ({
                     book: parseInt(book),
                     para: parseInt(para),
                     channel: channelId,
-                    mode: mode,
+                    mode: mode ? mode : "read",
                   }).then((json) => {
                     console.log("view", json.data);
                   });
