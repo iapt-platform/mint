@@ -419,10 +419,9 @@ class CorpusController extends Controller
         if(count($record) ===0){
             return $this->error("no data");
         }
-
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading);
         $this->result['toc'] = TocResource::collection($toc);
-
+        Log::info("show chapter");
         return $this->ok($this->result);
     }
 
@@ -457,8 +456,8 @@ class CorpusController extends Controller
         $sent = [];
         $sent["origin"] = [];
         $sent["translation"] = [];
-        //获取句子编号列表
 
+        //获取句子编号列表
         $sentList = [];
         foreach ($record as $key => $value) {
             $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
@@ -616,7 +615,7 @@ class CorpusController extends Controller
                     'sn'=> array_slice($wbwId,2),
                     'word'=>['value'=>$word->pali->__toString(),'status'=>0],
                     'real'=> ['value'=>$word->real->__toString(),'status'=>0],
-                    'meaning'=> ['value'=>\explode('$',$word->mean->__toString()) ,'status'=>0],
+                    'meaning'=> ['value'=>$word->mean->__toString() ,'status'=>0],
                     'type'=> ['value'=>$word->type->__toString(),'status'=>0],
                     'grammar'=> ['value'=>$word->gramma->__toString(),'status'=>0],
                     'case'=> ['value'=>$word->case->__toString(),'status'=>0],
@@ -624,7 +623,7 @@ class CorpusController extends Controller
                     'style'=> ['value'=>$word->style->__toString(),'status'=>0],
                     'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
                     'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
-                    'confidence'=> 0.5,
+                    'confidence'=> $word->cf->__toString(),
                     'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
                 ];
                 if(isset($word->parent2)){
@@ -649,6 +648,30 @@ class CorpusController extends Controller
                         $wbwData['relation']['status'] = (int)$word->rela['status'];
                     }else{
                         $wbwData['relation']['status'] = 7;
+                    }
+                }
+                if(isset($word->bmt)){
+                    $wbwData['bookMarkText']['value'] = $word->bmt->__toString();
+                    if(isset($word->bmt['status'])){
+                        $wbwData['bookMarkText']['status'] = (int)$word->bmt['status'];
+                    }else{
+                        $wbwData['bookMarkText']['status'] = 7;
+                    }
+                }
+                if(isset($word->bmc)){
+                    $wbwData['bookMarkColor']['value'] = $word->bmc->__toString();
+                    if(isset($word->bmc['status'])){
+                        $wbwData['bookMarkColor']['status'] = (int)$word->bmc['status'];
+                    }else{
+                        $wbwData['bookMarkColor']['status'] = 7;
+                    }
+                }
+                if(isset($word->note)){
+                    $wbwData['note']['value'] = $word->note->__toString();
+                    if(isset($word->note['status'])){
+                        $wbwData['note']['status'] = (int)$word->note['status'];
+                    }else{
+                        $wbwData['note']['status'] = 7;
                     }
                 }
                 if(isset($word->pali['status'])){
@@ -678,8 +701,14 @@ class CorpusController extends Controller
                 if(isset($word->om['status'])){
                     $wbwData['factorMeaning']['status'] = (int)$word->om['status'];
                 }
+                if(isset($word->bmt['status'])){
+                    $wbwData['bmt']['status'] = (int)$word->bmt['status'];
+                }
                 $wbwContent[] = $wbwData;
             }
+        }
+        if(count($wbwContent)===0){
+            return false;
         }
         return \json_encode($wbwContent,JSON_UNESCAPED_UNICODE);
 
