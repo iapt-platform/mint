@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Breadcrumb, Tooltip } from "antd";
+import { Breadcrumb, Popover, Tooltip } from "antd";
 import PaliText from "../template/Wbw/PaliText";
 import React from "react";
 
@@ -23,7 +23,7 @@ interface IWidgetTocPath {
 const TocPathWidget = ({
   data = [],
   trigger,
-  link = "blank",
+  link = "self",
   channel,
   onChange,
 }: IWidgetTocPath): JSX.Element => {
@@ -39,15 +39,17 @@ const TocPathWidget = ({
       case "none":
         oneItem = <>{title}</>;
         break;
-      case "blank":
-        oneItem = (
-          <Link to={linkChapter} target="_blank">
-            {title}
-          </Link>
-        );
-        break;
-      case "self":
-        oneItem = <Link to={linkChapter}>{title}</Link>;
+      case "self" || "blank":
+        if (item.book === 0) {
+          oneItem = <>{title}</>;
+        } else {
+          oneItem = (
+            <Link to={linkChapter} target={`_${link}`}>
+              {title}
+            </Link>
+          );
+        }
+
         break;
     }
     return (
