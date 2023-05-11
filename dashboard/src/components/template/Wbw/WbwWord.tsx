@@ -103,7 +103,7 @@ const WbwWordWidget = ({
   onSplit,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
-  const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const fieldDisplay = fields;
   const [newFactors, setNewFactors] = useState<string>();
   const [showRelationTool, setShowRelationTool] = useState(false);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
@@ -111,8 +111,7 @@ const WbwWordWidget = ({
 
   useEffect(() => {
     setWordData(data);
-    setFieldDisplay(fields);
-  }, [data, fields]);
+  }, [data]);
 
   const color = wordData.bookMarkColor
     ? bookMarkColor[wordData.bookMarkColor.value]
