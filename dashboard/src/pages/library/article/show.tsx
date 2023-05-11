@@ -40,9 +40,6 @@ const Widget = () => {
   const { type, id, mode = "read" } = useParams(); //url 参数
   const navigate = useNavigate();
   console.log("mode", mode);
-  const [articleMode, setArticleMode] = useState<ArticleMode>(
-    mode as ArticleMode
-  );
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -60,6 +57,12 @@ const Widget = () => {
   }, []);
   const rightBarWidth = "48px";
   const channelId = id?.split("_").slice(1);
+  let currMode: ArticleMode;
+  if (searchParams.get("mode") !== null) {
+    currMode = searchParams.get("mode") as ArticleMode;
+  } else {
+    currMode = "read";
+  }
   return (
     <div>
       <Affix offsetTop={0}>
@@ -76,8 +79,16 @@ const Widget = () => {
           <div></div>
           <div key="right" style={{ display: "flex" }}>
             <ModeSwitch
+              initMode={currMode}
               onModeChange={(e: ArticleMode) => {
-                setArticleMode(e);
+                let output: any = { mode: e };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
               }}
             />
             <Divider type="vertical" />
@@ -132,13 +143,16 @@ const Widget = () => {
               para={searchParams.get("par")}
               channelId={searchParams.get("channel")}
               articleId={id}
-              mode={articleMode}
+              mode={searchParams.get("mode") as ArticleMode}
               onArticleChange={(article: string) => {
                 console.log("article change", article);
-                let url = `/article/${type}/${article}/${articleMode}?mode=${articleMode}`;
-                if (searchParams.get("channel")) {
-                  url += "&channel=" + searchParams.get("channel");
-                }
+                let url = `/article/${type}/${article}?mode=${currMode}`;
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    url += `&${key}=${value}`;
+                  }
+                });
                 navigate(url);
               }}
             />
@@ -150,12 +164,23 @@ const Widget = () => {
               articleId={id ? id : ""}
               selectedChannelKeys={channelId}
               onChannelSelect={(e: IChannel[]) => {
+                //channel 改变
                 console.log("onChannelSelect", e);
                 const channels = e.map((item) => item.id).join("_");
-                let url = `/article/${type}/${id}/${articleMode}`;
-                if (e.length > 0) {
-                  url += `?channel=${channels}`;
-                }
+                let url = `/article/${type}/${id}?mode=${currMode}`;
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    if (key === "channel") {
+                      if (e.length > 0) {
+                        url += `&channel=${channels}`;
+                      }
+                    } else {
+                      url += `&${key}=${value}`;
+                    }
+                  }
+                });
+
                 navigate(url);
               }}
             />
