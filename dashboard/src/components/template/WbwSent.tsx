@@ -82,6 +82,7 @@ export const WbwSentCtl = ({
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const newMode = useAppSelector(mode);
+  //console.log("wbw sent ", data);
   useEffect(() => {
     setDisplayMode(newMode);
     switch (newMode) {
@@ -163,7 +164,7 @@ export const WbwSentCtl = ({
                     real: item.real,
                     id: `${book}-${para}-` + e.sn.join("-"),
                     type: item.type,
-                    gramma: item.type,
+                    gramma: item.grammar,
                     mean: item.meaning
                       ? {
                           value: item.meaning.value,
@@ -178,6 +179,7 @@ export const WbwSentCtl = ({
                     parent2: item.parent2,
                     rela: item.relation,
                     lock: item.locked,
+                    note: item.note,
                     bmt: item.bookMarkText,
                     bmc: item.bookMarkColor,
                     cf: item.confidence,
