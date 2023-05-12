@@ -85,7 +85,7 @@ const ArticleWidget = ({
   onFinal,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleMode, setArticleMode] = useState<ArticleMode>();
+
   const [extra, setExtra] = useState(<></>);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -128,22 +128,22 @@ const ArticleWidget = ({
   }, [articleId, type]);
 
   useEffect(() => {
-    setArticleMode(mode ? mode : "read");
     //发布mode变更
     console.log("发布mode变更", mode);
     store.dispatch(modeChange(mode as ArticleMode));
   }, [mode]);
 
+  const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
   useEffect(() => {
-    console.log("mode", mode, articleMode);
+    console.log("srcDataMode", srcDataMode);
     if (!active) {
       return;
     }
+    /*
     if (mode === articleMode) {
       return;
     }
-    //发布mode变更
-    //store.dispatch(modeChange(mode));
+
     if (
       (mode === "edit" && articleMode === "wbw") ||
       (mode === "wbw" && articleMode === "edit")
@@ -153,34 +153,35 @@ const ArticleWidget = ({
       return;
     }
     setArticleMode(mode ? mode : "read");
+    */
     if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
         case "chapter":
           if (typeof articleId !== "undefined") {
-            url = `/v2/corpus-chapter/${articleId}?mode=${mode}`;
+            url = `/v2/corpus-chapter/${articleId}?mode=${srcDataMode}`;
             url += channelId ? `&channels=${channelId}` : "";
           }
           break;
         case "para":
-          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${srcDataMode}`;
           url += channelId ? `&channels=${channelId}` : "";
           break;
         case "article":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}`;
             url += channelId ? `&channel=${channelId}` : "";
             url += anthologyId ? `&anthology=${anthologyId}` : "";
           }
           break;
         case "textbook":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${mode}`;
+            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${srcDataMode}`;
           }
           break;
         case "exercise":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
             setExtra(
               <ExerciseAnswer
                 courseId={courseId}
@@ -192,7 +193,7 @@ const ArticleWidget = ({
           break;
         case "exercise-list":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}`;
 
             setExtra(
               <ExerciseList
@@ -205,7 +206,7 @@ const ArticleWidget = ({
           break;
         default:
           if (typeof articleId !== "undefined") {
-            url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
+            url = `/v2/corpus/${type}/${articleId}/${srcDataMode}?mode=${srcDataMode}`;
             url += channelId ? `&channel=${channelId}` : "";
           }
           break;
@@ -259,7 +260,7 @@ const ArticleWidget = ({
                     book: parseInt(book),
                     para: parseInt(para),
                     channel: channelId,
-                    mode: mode ? mode : "read",
+                    mode: srcDataMode,
                   }).then((json) => {
                     console.log("view", json.data);
                   });
@@ -283,8 +284,7 @@ const ArticleWidget = ({
     active,
     type,
     articleId,
-    mode,
-    articleMode,
+    srcDataMode,
     book,
     para,
     channelId,
