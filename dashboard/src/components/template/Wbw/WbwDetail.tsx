@@ -67,7 +67,10 @@ const WbwDetailWidget = ({
         mData.grammar2 = { value: value, status: 7 };
         break;
       case "case":
+        const arrCase = value.split("#");
         mData.case = { value: value, status: 7 };
+        mData.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
+        mData.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
         break;
       case "relation":
         mData.relation = { value: value, status: 7 };
@@ -164,8 +167,8 @@ const WbwDetailWidget = ({
             ),
           },
           {
-            label: intl.formatMessage({ id: "buttons.advance" }),
-            key: "advance",
+            label: intl.formatMessage({ id: "buttons.spell" }),
+            key: "spell",
             children: (
               <div style={{ minHeight: 270 }}>
                 <WbwDetailAdvance
@@ -214,7 +217,7 @@ const WbwDetailWidget = ({
         />
         <Rate
           allowHalf
-          defaultValue={5}
+          defaultValue={data.confidence * 5}
           onChange={(value: number) => {
             fieldChanged("confidence", (value / 5).toString());
           }}
