@@ -29,7 +29,6 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
       setFormula([]);
       return;
     }
-    console.log("grammar", grammar);
     let result = inlineDict.wordList.filter(
       (word) => word.word === "_formula_" && word.grammar === grammar
     );
@@ -40,7 +39,6 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
         (word) => word.word === "_formula_" && word.grammar === grammar
       );
     }
-    console.log("inline dict ", result);
     let strFormula: string;
     if (result.length > 0) {
       strFormula = result[0].mean;
