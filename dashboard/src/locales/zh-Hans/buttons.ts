@@ -41,6 +41,7 @@ const items = {
   "buttons.attachments": "附件",
   "buttons.sim": "相似句",
   "buttons.add": "添加",
+  "buttons.spell": "拼写",
 };
 
 export default items;
