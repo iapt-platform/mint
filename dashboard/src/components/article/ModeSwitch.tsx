@@ -1,14 +1,17 @@
 import { Segmented } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 interface IWidget {
-  initMode?: string;
+  currMode?: string;
   onModeChange?: Function;
 }
-const ModeSwitchWidget = ({ initMode = "read", onModeChange }: IWidget) => {
+const ModeSwitchWidget = ({ currMode = "read", onModeChange }: IWidget) => {
   const intl = useIntl();
-  const [mode, setMode] = useState<string>(initMode);
+  const [mode, setMode] = useState<string>(currMode);
+  useEffect(() => {
+    setMode(currMode);
+  }, [currMode]);
   return (
     <Segmented
       size="middle"
@@ -17,7 +20,7 @@ const ModeSwitchWidget = ({ initMode = "read", onModeChange }: IWidget) => {
         backgroundColor: "rgb(129 129 129 / 17%)",
         display: "block",
       }}
-      defaultValue={initMode}
+      defaultValue={currMode}
       options={[
         {
           label: intl.formatMessage({ id: "buttons.read" }),

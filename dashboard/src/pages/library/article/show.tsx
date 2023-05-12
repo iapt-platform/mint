@@ -79,7 +79,7 @@ const Widget = () => {
           <div></div>
           <div key="right" style={{ display: "flex" }}>
             <ModeSwitch
-              initMode={currMode}
+              currMode={currMode}
               onModeChange={(e: ArticleMode) => {
                 let output: any = { mode: e };
                 searchParams.forEach((value, key) => {
