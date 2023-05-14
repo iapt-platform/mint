@@ -71,6 +71,7 @@ export const SentEditInner = ({
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
+  const [magicDictLoading, setMagicDictLoading] = useState(false);
 
   useEffect(() => {
     const content = origin?.find(
@@ -96,6 +97,9 @@ export const SentEditInner = ({
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
         }}
+        onMagicDictDone={() => {
+          setMagicDictLoading(false);
+        }}
       />
       <SentTab
         id={id}
@@ -110,8 +114,10 @@ export const SentEditInner = ({
         originNum={originNum}
         simNum={simNum}
         wbwData={wbwData}
+        magicDictLoading={magicDictLoading}
         onMagicDict={(type: string) => {
           setMagicDict(type);
+          setMagicDictLoading(true);
         }}
       />
     </Card>

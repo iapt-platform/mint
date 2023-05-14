@@ -62,7 +62,7 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
   magicDict?: string;
-
+  onMagicDictDone?: Function;
   onChange?: Function;
 }
 export const WbwSentCtl = ({
@@ -76,6 +76,7 @@ export const WbwSentCtl = ({
   fields,
   magicDict,
   onChange,
+  onMagicDictDone,
 }: IWidget) => {
   const [wordData, setWordData] = useState<IWbw[]>(data);
   const [wbwMode, setWbwMode] = useState(display);
@@ -121,14 +122,20 @@ export const WbwSentCtl = ({
       word_end: wordEnd,
       data: wordData,
       channel_id: channelId,
-    }).then((json) => {
-      if (json.ok) {
-        console.log("magic dict result", json.data);
-        setWordData(json.data);
-      } else {
-        console.error(json.message);
-      }
-    });
+    })
+      .then((json) => {
+        if (json.ok) {
+          console.log("magic dict result", json.data);
+          setWordData(json.data);
+        } else {
+          console.error(json.message);
+        }
+      })
+      .finally(() => {
+        if (typeof onMagicDictDone !== "undefined") {
+          onMagicDictDone();
+        }
+      });
   }, [magicDict]);
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>

@@ -30,6 +30,7 @@ interface IWidget {
   originNum: number;
   simNum?: number;
   wbwData?: IWbw[];
+  magicDictLoading?: boolean;
   onMagicDict?: Function;
 }
 const SentTabWidget = ({
@@ -45,6 +46,7 @@ const SentTabWidget = ({
   originNum,
   simNum = 0,
   wbwData,
+  magicDictLoading = false,
   onMagicDict,
 }: IWidget) => {
   const intl = useIntl();
@@ -73,6 +75,7 @@ const SentTabWidget = ({
             <SentMenu
               book={book}
               para={para}
+              loading={magicDictLoading}
               onMagicDict={(type: string) => {
                 if (typeof onMagicDict !== "undefined") {
                   onMagicDict(type);

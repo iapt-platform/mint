@@ -24,6 +24,7 @@ interface IWidgetSentContent {
   layout?: TDirection;
   magicDict?: string;
   onWbwChange?: Function;
+  onMagicDictDone?: Function;
 }
 const SentContentWidget = ({
   sid,
@@ -36,6 +37,7 @@ const SentContentWidget = ({
   layout = "column",
   magicDict,
   onWbwChange,
+  onMagicDictDone,
 }: IWidgetSentContent) => {
   const [layoutDirection, setLayoutDirection] = useState<TDirection>(layout);
   const [layoutFlex, setLayoutFlex] = useState<ILayoutFlex>({
@@ -99,6 +101,11 @@ const SentContentWidget = ({
                 onChange={(data: IWbw[]) => {
                   if (typeof onWbwChange !== "undefined") {
                     onWbwChange(data);
+                  }
+                }}
+                onMagicDictDone={() => {
+                  if (typeof onMagicDictDone !== "undefined") {
+                    onMagicDictDone();
                   }
                 }}
               />

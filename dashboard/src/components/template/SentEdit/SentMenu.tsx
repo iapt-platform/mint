@@ -2,15 +2,19 @@ import { Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
-import { useState } from "react";
 
 interface ISentMenu {
   book?: number;
   para?: number;
+  loading?: boolean;
   onMagicDict?: Function;
 }
-const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
-  const [loading, setLoading] = useState(false);
+const SentMenuWidget = ({
+  book,
+  para,
+  loading = false,
+  onMagicDict,
+}: ISentMenu) => {
   const items: MenuProps["items"] = [
     {
       key: "magic-dict-current",
@@ -38,7 +42,6 @@ const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
     switch (key) {
       case "magic-dict-current":
         if (typeof onMagicDict !== "undefined") {
-          setLoading(true);
           onMagicDict("current");
         }
         break;
