@@ -102,7 +102,7 @@ class WbwController extends Controller
                 $xmlObj->addChild('real',$word->real->value)->addAttribute('status',0);
                 $xmlObj->addChild('type',$word->type->value)->addAttribute('status',0);
                 $xmlObj->addChild('gramma',$word->grammar->value)->addAttribute('status',0);
-                $xmlObj->addChild('case',implode('$', $word->case->value))->addAttribute('status',0);
+                $xmlObj->addChild('case',$word->case->value)->addAttribute('status',0);
                 $xmlObj->addChild('style',$word->style->value)->addAttribute('status',0);
                 $xmlObj->addChild('org',$word->factors->value)->addAttribute('status',0);
                 $xmlObj->addChild('om',$word->factorMeaning->value)->addAttribute('status',0);
