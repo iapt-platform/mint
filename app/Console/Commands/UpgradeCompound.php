@@ -16,7 +16,7 @@ class UpgradeCompound extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:compound {word?} {--debug} {--test}';
+    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test}';
 
     /**
      * The console command description.
@@ -100,13 +100,24 @@ class UpgradeCompound extends Command
 			return 0;
 		}
 
-		//$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
-		$words = WbwTemplate::select('real')
-						->where('type','<>','.ctl.')
-						->where('real','<>','')
-						->groupBy('real')->cursor();
+        if($this->option('book')){
+            $words = WbwTemplate::select('real')
+                            ->where('book',$this->option('book'))
+                            ->where('type','<>','.ctl.')
+                            ->where('real','<>','')
+                            ->groupBy('real')->cursor();
+        }else{
+            $words = WbwTemplate::select('real')
+                            ->where('type','<>','.ctl.')
+                            ->where('real','<>','')
+                            ->groupBy('real')->cursor();
+        }
+
 		$count = 0;
 		foreach ($words as $key => $word) {
+            UserDict::where('word',$word->real)
+                    ->where('dict_id',$dict_id)
+                    ->update(['flag'=>2]);
 			//先看目前字典里有没有
 			$isExists = UserDict::where('word',$word->real)
 								->where('dict_id',"<>",$dict_id)
@@ -114,7 +125,7 @@ class UpgradeCompound extends Command
 
 			if($isExists){
 				$this->info("Exists:{$word->real}");
-				continue;
+				//continue;
 			}
 			# code...
 			$count++;
@@ -126,6 +137,7 @@ class UpgradeCompound extends Command
                 if(isset($part['type']) && $part['type'] === ".v."){
                     continue;
                 }
+
                 $new = UserDict::firstOrNew(
                     [
                         'word' => $part['word'],
@@ -152,12 +164,9 @@ class UpgradeCompound extends Command
                 $new->flag = 1;
                 $new->save();
             }
-
-
-
 		}
 		//删除旧数据
-		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$dict_id)->where('flag',2)->delete();
 		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
 
         return 0;
