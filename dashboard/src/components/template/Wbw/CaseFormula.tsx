@@ -19,7 +19,7 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
       setFormula([]);
       return;
     }
-    const _case = data.case?.value.split("#");
+    const _case = data.case?.value?.split("#");
     if (_case?.length !== 2) {
       setFormula([]);
       return;
