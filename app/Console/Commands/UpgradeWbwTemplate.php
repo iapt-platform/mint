@@ -80,8 +80,8 @@ class UpgradeWbwTemplate extends Command
                 $wbwContent[] = [
                     'sn'=>[$wbw_word->wid],
                     'word'=>['value'=>$wbw_word->word,'status'=>0],
-                    'real'=> ['value'=>$wbw_word->word,'status'=>0],
-                    'meaning'=> ['value'=>[],'status'=>0],
+                    'real'=> ['value'=>$wbw_word->real,'status'=>0],
+                    'meaning'=> ['value'=>'','status'=>0],
                     'type'=> ['value'=>$type,'status'=>0],
                     'grammar'=> ['value'=>$grammar,'status'=>0],
                     'case'=> ['value'=>$case,'status'=>0],
