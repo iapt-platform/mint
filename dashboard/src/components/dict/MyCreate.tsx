@@ -24,6 +24,7 @@ const MyCreateWidget = ({ word }: IWidget) => {
   const [wordSpell, setWordSpell] = useState(word);
   const [editWord, setEditWord] = useState<IWbw>({
     word: { value: word ? word : "", status: 1 },
+    real: { value: word ? word : "", status: 1 },
     book: 0,
     para: 0,
     sn: [0],
