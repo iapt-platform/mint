@@ -2,6 +2,7 @@ import { Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
+import { useState } from "react";
 
 interface ISentMenu {
   book?: number;
@@ -9,20 +10,11 @@ interface ISentMenu {
   onMagicDict?: Function;
 }
 const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
+  const [loading, setLoading] = useState(false);
   const items: MenuProps["items"] = [
     {
-      key: "magic-dict",
+      key: "magic-dict-current",
       label: "魔法字典",
-      children: [
-        {
-          key: "magic-dict-current",
-          label: "此句",
-        },
-        {
-          key: "magic-dict-below",
-          label: "此句及以下",
-        },
-      ],
     },
     {
       key: "show-commentary",
@@ -46,6 +38,7 @@ const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
     switch (key) {
       case "magic-dict-current":
         if (typeof onMagicDict !== "undefined") {
+          setLoading(true);
           onMagicDict("current");
         }
         break;
@@ -57,6 +50,7 @@ const SentMenuWidget = ({ book, para, onMagicDict }: ISentMenu) => {
   return (
     <Dropdown menu={{ items, onClick }} placement="topRight">
       <Button
+        loading={loading}
         onClick={(e) => e.preventDefault()}
         icon={<MoreOutlined />}
         size="small"
