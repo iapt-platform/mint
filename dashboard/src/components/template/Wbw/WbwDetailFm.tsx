@@ -85,16 +85,16 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
 };
 
 interface IWidget {
-  factors: string[];
+  factors?: string[];
   initValue?: string[];
   onChange?: Function;
-  onOk?: Function;
+  onJoin?: Function;
 }
 const WbwDetailFmWidget = ({
-  factors,
+  factors = [],
   initValue = [],
   onChange,
-  onOk,
+  onJoin,
 }: IWidget) => {
   const [factorInputEnable, setFactorInputEnable] = useState(false);
   const [factorMeaning, setFactorMeaning] = useState<string[]>(initValue);
@@ -116,6 +116,7 @@ const WbwDetailFmWidget = ({
   }, []);
 
   useEffect(() => {
+    console.log("factors", factors);
     setFactorMeaning(resizeArray(factorMeaning));
   }, [factors]);
 
@@ -181,8 +182,12 @@ const WbwDetailFmWidget = ({
                       type="text"
                       icon={<CheckOutlined />}
                       onClick={() => {
-                        if (typeof onOk !== "undefined") {
-                          onOk(factorMeaning.join(""));
+                        if (typeof onJoin !== "undefined") {
+                          onJoin(
+                            factorMeaning
+                              .filter((value) => !value.includes("["))
+                              .join(" ")
+                          );
                         }
                       }}
                     />
