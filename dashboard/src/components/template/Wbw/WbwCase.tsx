@@ -38,9 +38,9 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
-    if (inlineDict.wordIndex.includes(data.word.value)) {
+    if (inlineDict.wordIndex.includes(data.real.value)) {
       const result = inlineDict.wordList.filter(
-        (word) => word.word === data.word.value
+        (word) => word.word === data.real.value
       );
       //查重
       //TODO 加入信心指数并排序
@@ -68,7 +68,7 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [data.word.value, inlineDict, intl]);
+  }, [data.real.value, inlineDict, intl]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {
