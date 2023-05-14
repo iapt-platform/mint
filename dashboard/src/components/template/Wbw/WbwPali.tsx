@@ -165,15 +165,16 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       }}
       onClick={() => {
         //发送点词查询消息
-
-        store.dispatch(
-          command({
-            prop: {
-              word: data.word.value,
-            },
-            type: "dict",
-          })
-        );
+        if (typeof data.real?.value === "string") {
+          store.dispatch(
+            command({
+              prop: {
+                word: data.real.value,
+              },
+              type: "dict",
+            })
+          );
+        }
       }}
     >
       {pali}
