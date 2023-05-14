@@ -674,6 +674,9 @@ class CorpusController extends Controller
                         $wbwData['note']['status'] = 7;
                     }
                 }
+                if(isset($word->cf)){
+                    $wbwData['confidence'] = (float)$word->cf->__toString();
+                }
                 if(isset($word->pali['status'])){
                     $wbwData['word']['status'] = (int)$word->pali['status'];
                 }
@@ -701,9 +704,7 @@ class CorpusController extends Controller
                 if(isset($word->om['status'])){
                     $wbwData['factorMeaning']['status'] = (int)$word->om['status'];
                 }
-                if(isset($word->bmt['status'])){
-                    $wbwData['bmt']['status'] = (int)$word->bmt['status'];
-                }
+
                 $wbwContent[] = $wbwData;
             }
         }
