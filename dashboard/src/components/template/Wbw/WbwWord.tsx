@@ -59,7 +59,7 @@ export interface IWbw {
   para: number;
   sn: number[];
   word: WbwElement<string>;
-  real?: WbwElement<string>;
+  real: WbwElement<string>;
   meaning?: WbwElement<string>;
   type?: WbwElement<string>;
   grammar?: WbwElement<string>;
@@ -85,6 +85,7 @@ export interface IWbwFields {
   factorMeaning?: boolean;
   case?: boolean;
 }
+
 export type TWbwDisplayMode = "block" | "inline";
 interface IWidget {
   data: IWbw;
@@ -148,6 +149,7 @@ const WbwWordWidget = ({
     }
     get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
       console.log("lookup ok", json.data.count);
+      console.log("time", json.data.time);
       //存储到redux
       store.dispatch(add(json.data.rows));
     });
