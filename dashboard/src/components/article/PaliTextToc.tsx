@@ -1,3 +1,4 @@
+import { Key } from "antd/lib/table/interface";
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
@@ -9,8 +10,9 @@ interface IWidget {
   book?: number;
   para?: number;
   channel?: string;
+  onSelect?: Function;
 }
-const PaliTextTocWidget = ({ book, para, channel }: IWidget) => {
+const PaliTextTocWidget = ({ book, para, channel, onSelect }: IWidget) => {
   const [tocList, setTocList] = useState<ListNodeData[]>([]);
   useEffect(() => {
     get<IPaliTocListResponse>(
@@ -26,7 +28,17 @@ const PaliTextTocWidget = ({ book, para, channel }: IWidget) => {
       setTocList(toc);
     });
   }, [book, para]);
-  return <TocTree treeData={tocList} expandedKey={[`${book}-${para}`]} />;
+  return (
+    <TocTree
+      treeData={tocList}
+      expandedKey={[`${book}-${para}`]}
+      onSelect={(selectedKeys: Key[]) => {
+        if (typeof onSelect !== "undefined") {
+          onSelect(selectedKeys);
+        }
+      }}
+    />
+  );
 };
 
 export default PaliTextTocWidget;
