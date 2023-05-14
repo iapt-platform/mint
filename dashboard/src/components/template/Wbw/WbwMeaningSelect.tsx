@@ -54,10 +54,13 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
 
   useEffect(() => {
     //判断单词列表里面是否有这个词
-    if (inlineDict.wordIndex.includes(data.word.value)) {
+    if (typeof data.real === "undefined") {
+      return;
+    }
+    if (inlineDict.wordIndex.includes(data.real.value)) {
       let baseRemind: string[] = [];
       let baseDone: string[] = [];
-      baseRemind.push(data.word.value);
+      baseRemind.push(data.real.value);
       let mParent: IParent[] = [];
       while (baseRemind.length > 0) {
         const word1 = baseRemind.pop();
@@ -85,7 +88,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
             //没找到，添加一个dict
             mParent[indexParent].dict.push({
               id: value.dict_id,
-              name: value.dict_shortname,
+              name: value.shortname,
               case: [],
             });
             indexDict = mParent[indexParent].dict.findIndex(
@@ -150,7 +153,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
 
       setParent(mParent);
     }
-  }, [data.word.value, inlineDict, intl]);
+  }, [data.real?.value, inlineDict]);
 
   return (
     <div>
@@ -161,7 +164,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
               {item.dict.map((itemDict, idDict) => {
                 return (
                   <div key={idDict} style={{ display: "flex" }}>
-                    <Text keyboard strong style={{ whiteSpace: "nowrap" }}>
+                    <Text strong style={{ whiteSpace: "nowrap" }}>
                       {itemDict.name}
                     </Text>
                     <div>
