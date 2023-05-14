@@ -1,5 +1,6 @@
 import { Affix, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
+import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { IApiResponseDictList } from "../../../components/api/Dict";
@@ -113,7 +114,19 @@ const Widget = () => {
           >
             <div>
               <Space direction="vertical">
-                <ToolButtonToc type={type} articleId={id} />
+                <ToolButtonToc
+                  type={type as ArticleType}
+                  articleId={id}
+                  onSelect={(key: Key) => {
+                    console.log("toc click", key);
+                    let url = `/article/${type}/${key}?`;
+                    let param: string[] = [];
+                    searchParams.forEach((value, key) => {
+                      param.push(`${key}=${value}`);
+                    });
+                    navigate(url + param.join("&"));
+                  }}
+                />
                 <ToolButtonTag type={type} articleId={id} />
                 <ToolButtonPr type={type} articleId={id} />
                 <ToolButtonDiscussion type={type} articleId={id} />
