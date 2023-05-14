@@ -153,6 +153,8 @@ const items = {
   "dict.fields.type.pron:base.label": "代词词干",
   "dict.fields.type.note.short.label": "注释",
   "dict.fields.type.note.label": "注释",
+  "dict.fields.type.vind.short.label": "动不变",
+  "dict.fields.type.vind.label": "动不变",
 };
 
 export default items;
