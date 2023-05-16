@@ -45,10 +45,10 @@
 .wbw_note {
   color: #177ddc;
 }
-.block .wbw_note {
+.block_wbw .wbw_note {
   font-weight: 500;
 }
-.block .wbw_body {
+.block_wbw .wbw_body {
   padding-right: 0.5em;
   padding-top: 0.2em;
 }
