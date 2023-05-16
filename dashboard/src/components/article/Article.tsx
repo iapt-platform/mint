@@ -164,7 +164,8 @@ const ArticleWidget = ({
           }
           break;
         case "para":
-          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${srcDataMode}`;
+          const _book = book ? book : articleId;
+          url = `/v2/corpus?view=para&book=${_book}&par=${para}&mode=${srcDataMode}`;
           url += channelId ? `&channels=${channelId}` : "";
           break;
         case "article":
