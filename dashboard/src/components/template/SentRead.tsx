@@ -19,12 +19,20 @@ interface IWidgetSentReadFrame {
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: "row" | "column";
+  book?: number;
+  para?: number;
+  wordStart?: number;
+  wordEnd?: number;
   sentId?: string;
 }
 const SentReadFrame = ({
   origin,
   translation,
   layout = "column",
+  book,
+  para,
+  wordStart,
+  wordEnd,
   sentId,
 }: IWidgetSentReadFrame) => {
   const [paliCode1, setPaliCode1] = useState<TCodeConvertor>("roman");
@@ -34,14 +42,15 @@ const SentReadFrame = ({
   const boxOrg = useRef<HTMLDivElement>(null);
   const boxSent = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (origin && origin.length > 0) {
-      store.dispatch(
-        push(
-          `${origin[0].book}-${origin[0].para}-${origin[0].wordStart}-${origin[0].wordEnd}`
-        )
-      );
-    }
-  }, [origin]);
+    store.dispatch(
+      push({
+        id: `${book}-${para}-${wordStart}-${wordEnd}`,
+        origin: origin?.map((item) => item.html),
+        translation: translation?.map((item) => item.html),
+      })
+    );
+  }, []);
+
   useEffect(() => {
     const displayOriginal = GetUserSetting(
       "setting.display.original",
@@ -87,7 +96,7 @@ const SentReadFrame = ({
       >
         <div
           dangerouslySetInnerHTML={{
-            __html: `<div class="pcd_sent" id="sent_${sentId}"></div>`,
+            __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
           }}
         />
         <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
