@@ -15,6 +15,7 @@ import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
+import ToolButtonNav from "../../../components/article/ToolButtonNav";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
@@ -127,6 +128,7 @@ const Widget = () => {
                     navigate(url + param.join("&"));
                   }}
                 />
+                <ToolButtonNav type={type} articleId={id} />
                 <ToolButtonTag type={type} articleId={id} />
                 <ToolButtonPr type={type} articleId={id} />
                 <ToolButtonDiscussion type={type} articleId={id} />
@@ -180,20 +182,18 @@ const Widget = () => {
                 //channel 改变
                 console.log("onChannelSelect", e);
                 const channels = e.map((item) => item.id).join("_");
+                console.log("channels", channels);
                 let url = `/article/${type}/${id}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
-                  if (key !== "mode") {
-                    if (key === "channel") {
-                      if (e.length > 0) {
-                        url += `&channel=${channels}`;
-                      }
-                    } else {
-                      url += `&${key}=${value}`;
-                    }
+                  if (key !== "mode" && key !== "channel") {
+                    url += `&${key}=${value}`;
                   }
                 });
-
+                if (e.length > 0) {
+                  url += `&channel=${channels}`;
+                }
+                console.log("url", url);
                 navigate(url);
               }}
             />
