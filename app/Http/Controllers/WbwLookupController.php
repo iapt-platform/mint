@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Api\DictApi;
 
 
 
@@ -19,7 +20,6 @@ class WbwLookupController extends Controller
 	private $dictList = [
 		'85dcc61c-c9e1-4ae0-9b44-cd6d9d9f0d01',//社区汇总
 		'4d3a0d92-0adc-4052-80f5-512a2603d0e8',// system irregular
-		'57afac99-0887-455c-b18e-67c8682158b0',// system regular
 		'ef620a93-a55d-4756-89c5-e188ab009e45',//社区字典
 		'8359757e-9575-455b-a772-cc6f036caea0',// system sandhi
 		'c42980f0-5967-4833-b695-84183344f68f',// robot compound
@@ -30,6 +30,8 @@ class WbwLookupController extends Controller
 		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
 		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
 	];
+
+
     /**
      * Display a listing of the resource.
      * @param  \Illuminate\Http\Request  $request
@@ -38,6 +40,9 @@ class WbwLookupController extends Controller
      */
     public function index(Request $request)
     {
+        // system regular
+        $dict_id = DictApi::getSysDict('system_regular');
+        $this->dictList[] = $dict_id;
         //
 		$startAt = microtime(true)*1000;
 		$words = \explode(',',$request->get("word"));
@@ -97,50 +102,6 @@ class WbwLookupController extends Controller
                 }
             }
 
-/*
-			foreach ($wordPool as $word => $info) {
-				# code...
-				if($info['done'] === false){
-					$wordPool[$word]['done'] = true;
-					$count = 0;
-					foreach ($this->dictList as  $dictId) {
-						# code...
-						$result = Cache::remember("dict/{$dictId}/".$word,10,function() use($word,$dictId,$dict_name){
-                            $data = UserDict::where('word',$word)->where('dict_id',$dictId)->orderBy('confidence','desc')->get();
-                            foreach ($data as $key => $value) {
-                                # code...
-                                $value->dict_shortname  = $dict_name[$dictId];
-                            }
-							return $data;
-						});
-						$count += count($result);
-						if(count($result)>0){
-							foreach ($result as  $dictword) {
-								# code...
-								array_push($output,$dictword);
-								if(!isset($wordPool[$word]['factors']) && !empty($dictword->factors)){
-									//将第一个拆分作为最佳拆分存储
-									$wordPool[$word]['factors'] = $dictword->factors;
-								}
-                                if(!empty($dictword->parent) && !isset($wordPool[$dictword->parent]) ){
-                                    //将parent 插入待查询列表
-                                    $wordPool[$dictword->parent] = ['base' => true,'done' => false,'apply' => false];
-                                }
-							}
-						}
-					}
-
-					//if($count === 0 && !$wordPool[$word]['base']){
-					//	//第一次循环没查到 去尾查
-					//	$parents = $caseman->WordToBase($word);
-					//	foreach ($parents as $base => $rows) {
-					//		array_push($output,$rows);
-					//	}
-					//}
-
-				}
-			}
-*/
 			//处理查询结果中的拆分信息
 			$newWordPart = array();
 			foreach ($wordPool as $word => $info) {
@@ -168,6 +129,10 @@ class WbwLookupController extends Controller
     {
         //
         $startAt = microtime(true)*1000;
+
+        // system regular
+        $dict_id = DictApi::getSysDict('system_regular');
+        $this->dictList[] = $dict_id;
 
         $channel = Channel::find($request->get('channel_id'));
         $orgData = $request->get('data');
