@@ -246,7 +246,6 @@ const WbwDetailWidget = ({
           type="primary"
           menu={{ items, onClick: onMenuClick }}
           onClick={() => {
-            console.log("data", currWbwData);
             if (typeof onSave !== "undefined") {
               onSave(currWbwData);
             }

@@ -65,7 +65,6 @@ const WbwDetailBasicWidget = ({
   onChange,
   onRelationAdd,
 }: IWidget) => {
-  console.log("data", data);
   const [form] = Form.useForm();
   const intl = useIntl();
   const inlineDict = useAppSelector(_inlineDict);
