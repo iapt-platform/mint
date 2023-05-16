@@ -204,7 +204,7 @@ class WbwLookupController extends Controller
                         }
                         //将全部结果加上得分放入数组
                         $parent = $this->insertValue([$value->parent],$parent,$increment);
-                        if($value->type !== ".cp."){
+                        if(!empty($value->type) && $value->type !== ".cp."){
                             $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
                         }
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
