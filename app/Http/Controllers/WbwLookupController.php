@@ -20,9 +20,7 @@ class WbwLookupController extends Controller
 	private $dictList = [
 		'85dcc61c-c9e1-4ae0-9b44-cd6d9d9f0d01',//社区汇总
 		'4d3a0d92-0adc-4052-80f5-512a2603d0e8',// system irregular
-		'ef620a93-a55d-4756-89c5-e188ab009e45',//社区字典
 		'8359757e-9575-455b-a772-cc6f036caea0',// system sandhi
-		'c42980f0-5967-4833-b695-84183344f68f',// robot compound
 		'61f23efb-b526-4a8e-999e-076965034e60',// pali myanmar grammar
 		'eae9fd6f-7bac-4940-b80d-ad6cd6f433bf',// Concise P-E Dict
 		'2f93d0fe-3d68-46ee-a80b-11fa445a29c6',// unity
@@ -30,7 +28,19 @@ class WbwLookupController extends Controller
 		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
 		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
 	];
-
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    private function initSysDict()
+    {
+        // system regular
+        $this->dictList[] = DictApi::getSysDict('system_regular');
+        $this->dictList[] = DictApi::getSysDict('robot_compound');
+        $this->dictList[] = DictApi::getSysDict('community');
+        $this->dictList[] = DictApi::getSysDict('community_extract');
+    }
 
     /**
      * Display a listing of the resource.
@@ -40,11 +50,12 @@ class WbwLookupController extends Controller
      */
     public function index(Request $request)
     {
-        // system regular
-        $dict_id = DictApi::getSysDict('system_regular');
-        $this->dictList[] = $dict_id;
+
         //
 		$startAt = microtime(true)*1000;
+
+        $this->initSysDict();
+
 		$words = \explode(',',$request->get("word"));
         $bases = \explode(',',$request->get("base"));
         # 查询深度
@@ -131,8 +142,7 @@ class WbwLookupController extends Controller
         $startAt = microtime(true)*1000;
 
         // system regular
-        $dict_id = DictApi::getSysDict('system_regular');
-        $this->dictList[] = $dict_id;
+        $this->initSysDict();
 
         $channel = Channel::find($request->get('channel_id'));
         $orgData = $request->get('data');
