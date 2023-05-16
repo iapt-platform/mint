@@ -88,18 +88,20 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
   };
 
   let factors = <></>;
-  if (
-    display === "block" &&
-    (typeof data.factors === "undefined" || data.factors.value === "")
-  ) {
-    //空白的意思在逐词解析模式显示占位字符串
-    factors = (
-      <Text type="secondary">
-        {intl.formatMessage({ id: "dict.fields.factors.label" })}
-      </Text>
-    );
-  } else {
-    factors = <span>{data.factors?.value}</span>;
+  if (display === "block") {
+    if (
+      typeof data.factors?.value === "string" &&
+      data.factors.value.trim().length > 0
+    ) {
+      factors = <span>{data.factors?.value}</span>;
+    } else {
+      //空白的意思在逐词解析模式显示占位字符串
+      factors = (
+        <Text type="secondary">
+          {intl.formatMessage({ id: "dict.fields.factors.label" })}
+        </Text>
+      );
+    }
   }
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
