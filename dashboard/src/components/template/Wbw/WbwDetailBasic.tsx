@@ -142,13 +142,12 @@ const WbwDetailBasicWidget = ({
                 <WbwMeaningSelect
                   data={data}
                   onSelect={(meaning: string) => {
-                    const currMeanings = _meaning ? _meaning : "";
                     console.log(meaning);
                     setMeaning(meaning);
                     form.setFieldsValue({
-                      meaning: currMeanings,
+                      meaning: meaning,
                     });
-                    onMeaningChange(currMeanings);
+                    onMeaningChange(meaning);
                   }}
                 />
               }
