@@ -46,10 +46,13 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
   };
 
   useEffect(() => {
-    if (typeof data.factors === "undefined") {
+    if (
+      typeof data.factors === "undefined" ||
+      typeof data.factors.value !== "string"
+    ) {
       return;
     }
-    lookup(data.factors.value.split("+"));
+    lookup(data.factors?.value.split("+"));
   }, [data.factors]);
 
   useEffect(() => {
