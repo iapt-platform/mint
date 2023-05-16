@@ -74,19 +74,20 @@ const WbwFactorMeaningWidget = ({
   };
 
   let factorMeaning = <></>;
-  if (
-    display === "block" &&
-    (typeof data.factorMeaning === "undefined" ||
-      data.factorMeaning.value === "")
-  ) {
-    //空白的意思在逐词解析模式显示占位字符串
-    factorMeaning = (
-      <Text type="secondary">
-        {intl.formatMessage({ id: "dict.fields.factormeaning.label" })}
-      </Text>
-    );
-  } else {
-    factorMeaning = <span>{data.factorMeaning?.value}</span>;
+  if (display === "block") {
+    if (
+      typeof data.factorMeaning?.value === "string" &&
+      data.factorMeaning.value.trim().length > 0
+    ) {
+      factorMeaning = <span>{data.factorMeaning?.value}</span>;
+    } else {
+      //空白的意思在逐词解析模式显示占位字符串
+      factorMeaning = (
+        <Text type="secondary">
+          {intl.formatMessage({ id: "dict.fields.factormeaning.label" })}
+        </Text>
+      );
+    }
   }
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
