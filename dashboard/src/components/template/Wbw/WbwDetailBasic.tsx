@@ -65,6 +65,7 @@ const WbwDetailBasicWidget = ({
   onChange,
   onRelationAdd,
 }: IWidget) => {
+  console.log("data", data);
   const [form] = Form.useForm();
   const intl = useIntl();
   const inlineDict = useAppSelector(_inlineDict);
@@ -76,7 +77,9 @@ const WbwDetailBasicWidget = ({
   const [_meaning, setMeaning] = useState<string | undefined>(
     data.meaning?.value
   );
-
+  useEffect(() => {
+    setMeaning(data.meaning?.value);
+  }, [data.meaning]);
   const onMeaningChange = (value: string) => {
     console.log(`Selected: ${value}`);
     if (typeof onChange !== "undefined") {

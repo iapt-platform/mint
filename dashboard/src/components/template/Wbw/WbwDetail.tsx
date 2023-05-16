@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
 import type { MenuProps } from "antd";
@@ -29,6 +29,10 @@ const WbwDetailWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
+
+  useEffect(() => {
+    setCurrWbwData(data);
+  }, [data]);
   function fieldChanged(field: TFieldName, value: string) {
     console.log("field", field, "value", value);
     let mData = currWbwData;
