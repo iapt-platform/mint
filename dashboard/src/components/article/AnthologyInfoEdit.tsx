@@ -26,9 +26,7 @@ const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
   return anthologyId ? (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
         console.log(values);
-
         const res = await put<IAnthologyDataRequest, IAnthologyResponse>(
           `/v2/anthology/${anthologyId}`,
           {
