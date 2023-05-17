@@ -102,6 +102,9 @@ class CorpusController extends Controller
     public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
         $sent = [];
         $sentId = \explode('-',$id);
+        if(count($sentId) !== 4){
+            return false;
+        }
         if($mode==='read'){
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }else{
