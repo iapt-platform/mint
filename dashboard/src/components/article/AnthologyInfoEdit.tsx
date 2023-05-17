@@ -11,7 +11,7 @@ import PublicitySelect from "../studio/PublicitySelect";
 interface IFormData {
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string;
   lang: string;
   status: number;
 }
@@ -66,7 +66,7 @@ const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
           return {
             title: res.data.title,
             subtitle: res.data.subtitle,
-            summary: res.data.summary,
+            summary: res.data.summary ? res.data.summary : undefined,
             lang: res.data.lang,
             status: res.data.status,
           };

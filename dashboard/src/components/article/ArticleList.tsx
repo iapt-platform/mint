@@ -171,7 +171,7 @@ const ArticleListWidget = ({
                     <Typography.Link
                       onClick={() => {
                         if (typeof onSelect !== "undefined") {
-                          onSelect(row.id);
+                          onSelect(row.id, row.title);
                         }
                       }}
                     >
