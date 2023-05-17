@@ -24,6 +24,7 @@ interface IWidgetSentReadFrame {
   wordStart?: number;
   wordEnd?: number;
   sentId?: string;
+  error?: string;
 }
 const SentReadFrame = ({
   origin,
@@ -34,6 +35,7 @@ const SentReadFrame = ({
   wordStart,
   wordEnd,
   sentId,
+  error,
 }: IWidgetSentReadFrame) => {
   const [paliCode1, setPaliCode1] = useState<TCodeConvertor>("roman");
   const key = useAppSelector(onChangeKey);
@@ -94,6 +96,9 @@ const SentReadFrame = ({
         style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
         ref={boxSent}
       >
+        <Text type="danger" mark>
+          {error}
+        </Text>
         <div
           dangerouslySetInnerHTML={{
             __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
