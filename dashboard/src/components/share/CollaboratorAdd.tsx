@@ -65,7 +65,7 @@ const CollaboratorAddWidget = ({ resId, resType, onSuccess }: IWidget) => {
         <ProFormSelect
           initialValue={"user"}
           name="userType"
-          label={intl.formatMessage({ id: "forms.fields.role.label" })}
+          label={intl.formatMessage({ id: "forms.fields.type.label" })}
           allowClear={false}
           options={[
             {
