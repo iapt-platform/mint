@@ -220,6 +220,9 @@ class TemplateRender{
         }
         $Sent = new CorpusController();
         $props = $Sent->getSentTpl($sentId,$channels,$this->mode,true);
+        if($props === false){
+            $props['error']="句子模版渲染错误。句子参数个数不符。应该是四个。";
+        }
         if($this->mode==='read'){
             $tpl = "sentread";
         }else{
