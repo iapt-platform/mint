@@ -6,7 +6,7 @@ import { get as getLang } from "../../locales";
 import { IGuideResponse } from "../api/Guide";
 import Marked from "../general/Marked";
 
-const { Link } = Typography;
+const { Link, Paragraph } = Typography;
 
 interface IWidget {
   text: string;
@@ -39,9 +39,9 @@ const GrammarPopWidget = ({ text, gid }: IWidget) => {
   return (
     <Popover
       content={
-        <div style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
+        <Paragraph style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
           <Marked text={guide} />
-        </div>
+        </Paragraph>
       }
       placement="bottom"
     >
