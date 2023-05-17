@@ -45,7 +45,7 @@ const WbwParent2Widget = ({ data, onChange }: IWidget) => {
   };
 
   useEffect(() => {
-    if (typeof data.parent === "undefined") {
+    if (typeof data.parent?.value !== "string") {
       return;
     }
     const parent = getParentInDict(

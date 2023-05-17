@@ -102,7 +102,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   ) : (
     <></>
   );
-  const color = data.bookMarkColor
+  const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
 

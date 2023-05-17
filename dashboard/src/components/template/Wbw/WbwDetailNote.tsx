@@ -20,7 +20,7 @@ const WbwDetailNoteWidget = ({ data, onChange }: IWidget) => {
   return (
     <>
       <TextArea
-        defaultValue={data.note?.value}
+        defaultValue={data.note?.value ? data.note?.value : undefined}
         showCount
         maxLength={512}
         autoSize={{ minRows: 8, maxRows: 10 }}

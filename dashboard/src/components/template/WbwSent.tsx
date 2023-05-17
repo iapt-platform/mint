@@ -25,19 +25,19 @@ interface IWbwXml {
   id: string;
   pali: WbwElement<string>;
   real?: WbwElement<string>;
-  type?: WbwElement<string>;
-  gramma?: WbwElement<string>;
-  mean?: WbwElement<string>;
-  org?: WbwElement<string>;
-  om?: WbwElement<string>;
-  case?: WbwElement<string>;
-  parent?: WbwElement<string>;
-  pg?: WbwElement<string>;
-  parent2?: WbwElement<string>;
-  rela?: WbwElement<string>;
+  type?: WbwElement<string | null>;
+  gramma?: WbwElement<string | null>;
+  mean?: WbwElement<string | null>;
+  org?: WbwElement<string | null>;
+  om?: WbwElement<string | null>;
+  case?: WbwElement<string | null>;
+  parent?: WbwElement<string | null>;
+  pg?: WbwElement<string | null>;
+  parent2?: WbwElement<string | null>;
+  rela?: WbwElement<string | null>;
   lock?: boolean;
-  bmt?: WbwElement<string>;
-  bmc?: WbwElement<number>;
+  bmt?: WbwElement<string | null>;
+  bmc?: WbwElement<number | null>;
   cf: number;
 }
 interface IWbwUpdateResponse {
@@ -210,25 +210,28 @@ export const WbwSentCtl = ({
             }}
             onSplit={(isSplit: boolean) => {
               if (isSplit) {
-                //拆分
-                const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
-                const children: IWbw[] | undefined = wordData[id].factors?.value
-                  .split("+")
-                  .map((item, index) => {
-                    return {
-                      word: { value: item, status: 5 },
-                      real: { value: item, status: 5 },
-                      book: wordData[id].book,
-                      para: wordData[id].para,
-                      sn: [...wordData[id].sn, index],
-                      confidence: 1,
-                    };
-                  });
-                if (typeof children !== "undefined") {
-                  console.log("children", children);
-                  newData.splice(id + 1, 0, ...children);
-                  console.log("new-data", newData);
-                  setWordData(newData);
+                //拆开
+                const factors = wordData[id]?.factors?.value;
+                if (typeof factors === "string") {
+                  const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+                  const children: IWbw[] | undefined = factors
+                    .split("+")
+                    .map((item, index) => {
+                      return {
+                        word: { value: item, status: 5 },
+                        real: { value: item, status: 5 },
+                        book: wordData[id].book,
+                        para: wordData[id].para,
+                        sn: [...wordData[id].sn, index],
+                        confidence: 1,
+                      };
+                    });
+                  if (typeof children !== "undefined") {
+                    console.log("children", children);
+                    newData.splice(id + 1, 0, ...children);
+                    console.log("new-data", newData);
+                    setWordData(newData);
+                  }
                 }
               } else {
                 //合并

@@ -73,11 +73,11 @@ const WbwDetailBasicWidget = ({
     data.factors?.value?.split("+")
   );
   const [openCreate, setOpenCreate] = useState(false);
-  const [_meaning, setMeaning] = useState<string | undefined>(
-    data.meaning?.value
-  );
+  const [_meaning, setMeaning] = useState<string | undefined>();
   useEffect(() => {
-    setMeaning(data.meaning?.value);
+    if (typeof data.meaning?.value === "string") {
+      setMeaning(data.meaning?.value);
+    }
   }, [data.meaning]);
   const onMeaningChange = (value: string) => {
     console.log(`Selected: ${value}`);
@@ -101,7 +101,7 @@ const WbwDetailBasicWidget = ({
     setParentOptions(parentOptions);
   }, [inlineDict, data]);
 
-  const relationCount = data.relation
+  const relationCount = data.relation?.value
     ? JSON.parse(data.relation.value).length
     : 0;
 

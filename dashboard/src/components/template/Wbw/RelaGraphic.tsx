@@ -17,7 +17,7 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
     const relationWords = data
       ?.filter((value) => value.relation)
       .map((item) => {
-        if (item.relation) {
+        if (item.relation && item.relation.value) {
           const json: IRelation[] = JSON.parse(item.relation.value);
           const graphic = json.map((relation) => {
             const localName = terms?.find(

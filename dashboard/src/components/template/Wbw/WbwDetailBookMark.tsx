@@ -60,7 +60,9 @@ const WbwDetailBookMarkWidget = ({ data, onChange }: IWidget) => {
         value={value}
       />
       <TextArea
-        defaultValue={data.bookMarkText?.value}
+        defaultValue={
+          data.bookMarkText?.value ? data.bookMarkText?.value : undefined
+        }
         showCount
         maxLength={512}
         autoSize={{ minRows: 6, maxRows: 8 }}

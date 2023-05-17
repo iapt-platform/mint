@@ -60,20 +60,20 @@ export interface IWbw {
   sn: number[];
   word: WbwElement<string>;
   real: WbwElement<string>;
-  meaning?: WbwElement<string>;
-  type?: WbwElement<string>;
-  grammar?: WbwElement<string>;
-  style?: WbwElement<string>;
-  case?: WbwElement<string>;
-  parent?: WbwElement<string>;
-  parent2?: WbwElement<string>;
-  grammar2?: WbwElement<string>;
-  factors?: WbwElement<string>;
-  factorMeaning?: WbwElement<string>;
-  relation?: WbwElement<string>;
-  note?: WbwElement<string>;
-  bookMarkColor?: WbwElement<number>;
-  bookMarkText?: WbwElement<string>;
+  meaning?: WbwElement<string | null>;
+  type?: WbwElement<string | null>;
+  grammar?: WbwElement<string | null>;
+  style?: WbwElement<string | null>;
+  case?: WbwElement<string | null>;
+  parent?: WbwElement<string | null>;
+  parent2?: WbwElement<string | null>;
+  grammar2?: WbwElement<string | null>;
+  factors?: WbwElement<string | null>;
+  factorMeaning?: WbwElement<string | null>;
+  relation?: WbwElement<string | null>;
+  note?: WbwElement<string | null>;
+  bookMarkColor?: WbwElement<number | null>;
+  bookMarkText?: WbwElement<string | null>;
   locked?: boolean;
   confidence: number;
   attachments?: UploadFile[];
@@ -114,7 +114,7 @@ const WbwWordWidget = ({
     setWordData(data);
   }, [data]);
 
-  const color = wordData.bookMarkColor
+  const color = wordData.bookMarkColor?.value
     ? bookMarkColor[wordData.bookMarkColor.value]
     : "unset";
   const wbwCtl = wordData.type?.value === ".ctl." ? "wbw_ctl" : "";
