@@ -31,7 +31,7 @@ import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
 import ArticleTplMaker from "../../components/article/ArticleTplMaker";
 import ShareModal from "../../components/share/ShareModal";
-import { EResType } from "../../components/share/Share";
+import Share, { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
 import AnthologySelect from "../../components/anthology/AnthologySelect";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
@@ -142,6 +142,24 @@ const ArticleListWidget = ({
     });
   };
   const ref = useRef<ActionType>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [shareResId, setShareResId] = useState<string>("");
+  const [shareResType, setShareResType] = useState<EResType>(EResType.article);
+  const showShareModal = (resId: string, resType: EResType) => {
+    setShareResId(resId);
+    setShareResType(resType);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <ProTable<DataItem>
@@ -269,15 +287,9 @@ const ArticleListWidget = ({
                       },
                       {
                         key: "share",
-                        label: (
-                          <ShareModal
-                            trigger={intl.formatMessage({
-                              id: "buttons.share",
-                            })}
-                            resId={row.id}
-                            resType={EResType.article}
-                          />
-                        ),
+                        label: intl.formatMessage({
+                          id: "buttons.share",
+                        }),
                         icon: <TeamOutlined />,
                       },
                       {
@@ -303,6 +315,7 @@ const ArticleListWidget = ({
                     onClick: (e) => {
                       switch (e.key) {
                         case "share":
+                          showShareModal(row.id, EResType.article);
                           break;
                         case "remove":
                           showDeleteConfirm(row.id, row.title);
@@ -479,6 +492,17 @@ const ArticleListWidget = ({
           },
         }}
       />
+
+      <Modal
+        destroyOnClose={true}
+        width={700}
+        title="协作"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Share resId={shareResId} resType={shareResType} />
+      </Modal>
     </>
   );
 };
