@@ -5,9 +5,9 @@ function ucenter_get($userid, $fields = "username")
 {
     //打开数据库
     $dns = "" . _FILE_DB_USERINFO_;
-    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh = new PDO($dns, _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "select username from user where id= ? ";
+    $query = "SELECT username from "._TABLE_USER_INFO_." where id= ? ";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($userid));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -22,11 +22,14 @@ function ucenter_get($userid, $fields = "username")
 
 function ucenter_getA($userid, $fields = "nickname")
 {
+    if(empty($userid)){
+        return "";
+    }
     //打开数据库
     $dns = _FILE_DB_USERINFO_;
-    $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+    $dbh = new PDO($dns, _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-    $query = "SELECT username,nickname FROM user WHERE userid= ? ";
+    $query = "SELECT username,nickname FROM "._TABLE_USER_INFO_." WHERE userid= ? ";
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($userid));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -48,7 +51,7 @@ class UserInfo
     public function __construct()
     {
         $dns = _FILE_DB_USERINFO_;
-        $this->dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+        $this->dbh = new PDO($dns,  _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $this->buffer = array();
         $this->log = "";
@@ -63,9 +66,16 @@ class UserInfo
             return $this->buffer[$id];
         }
         if ($this->dbh) {
-            $query = "SELECT nickname,username FROM user WHERE id = ? or userid= ? ";
-            $stmt = $this->dbh->prepare($query);
-            $stmt->execute(array($id,$id));
+            if(is_integer($id)){
+                $query = "SELECT nickname,username FROM "._TABLE_USER_INFO_." WHERE id = ? ";
+                $stmt = $this->dbh->prepare($query);
+                $stmt->execute(array($id));
+            }else{
+                $query = "SELECT nickname,username FROM "._TABLE_USER_INFO_." WHERE  userid= ? ";
+                $stmt = $this->dbh->prepare($query);
+                $stmt->execute(array($id));
+            }
+
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($user) > 0) {
                 $this->buffer[$id] = array("nickname" => $user[0]["nickname"], "username" => $user[0]["username"]);
@@ -85,7 +95,7 @@ class UserInfo
             return 0;
         }
         if ($this->dbh) {
-            $query = "SELECT id FROM user WHERE  userid= ? ";
+            $query = "SELECT id FROM "._TABLE_USER_INFO_." WHERE  userid= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($uuid));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -104,7 +114,7 @@ class UserInfo
             return false;
         }
         if ($this->dbh) {
-            $query = "SELECT id,userid,nickname,username FROM user WHERE  username= ? ";
+            $query = "SELECT id,userid,nickname,username FROM "._TABLE_USER_INFO_." WHERE  username= ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($name));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -119,7 +129,7 @@ class UserInfo
 	}
     public function getUserList($key){
         if ($this->dbh) {
-            $query = "SELECT id,userid,nickname,username FROM user WHERE  username like ? ";
+            $query = "SELECT id,userid,nickname,username FROM "._TABLE_USER_INFO_." WHERE  username like ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($key."%"));
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,7 +142,7 @@ class UserInfo
     }
 	public function check_password($userid,$password){
 		if ($this->dbh) {
-            $query = "SELECT username FROM user WHERE  userid= ? and password = ? ";
+            $query = "SELECT username FROM "._TABLE_USER_INFO_." WHERE  userid= ? and password = ? ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($userid,md5($password)));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -148,14 +158,14 @@ class UserInfo
 
     public function signIn($username,$password){
 		if ($this->dbh) {
-            $query = "SELECT userid,id FROM user WHERE  (username= ? and password = ?) or (email= ? and password = ?) ";
+            $query = "SELECT userid,id FROM "._TABLE_USER_INFO_." WHERE  (username= ? and password = ?) or (email= ? and password = ?) ";
             $stmt = $this->dbh->prepare($query);
             $stmt->execute(array($username,md5($password),$username,md5($password)));
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($user) {
                 return $user;
             } else {
-                $query = "SELECT userid,id,password FROM user WHERE  username= ?";
+                $query = "SELECT userid,id,password FROM "._TABLE_USER_INFO_." WHERE  username= ?";
                 $stmt = $this->dbh->prepare($query);
                 $stmt->execute(array($username));
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
