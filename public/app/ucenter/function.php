@@ -4,7 +4,7 @@ require_once __DIR__.'/../config.php';
 function ucenter_get($userid, $fields = "username")
 {
     //打开数据库
-    $dns = "" . _FILE_DB_USERINFO_;
+    $dns = _FILE_DB_USERINFO_;
     $dbh = new PDO($dns, _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     $query = "SELECT username from "._TABLE_USER_INFO_." where id= ? ";

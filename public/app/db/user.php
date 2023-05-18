@@ -30,7 +30,7 @@ CREATE TABLE users (
 class PCD_User extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USERINFO_, "user", "", "",$redis);
+		parent::__construct(_FILE_DB_USERINFO_, _TABLE_USER_INFO_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
 	public function  index(){
