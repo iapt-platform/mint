@@ -164,27 +164,24 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 $jwt = JWT::encode($payload,$key,'HS512');
                 //End of JWT
                 // set cookie
-                /*
+
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
-					setcookie("user_uid", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-				}else
-                */
-                {
+					setcookie("user_uid", $user_uuid, $ExpTime , "/","",false,true);
+					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/","",false,true);
+					setcookie("token", $jwt, $ExpTime,"/","",false,true);
+				}else{
                     //服务器运行
-					$ok = setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
-					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
-					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					setcookie("user_uid", $user_uuid, $ExpTime,"/","",true,true);
+					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/","",true,true);
+					setcookie("token", $jwt, $ExpTime,"/","",true,true);
 				}
 				#给js用的
-				setcookie("log", $ok, time()+60*60*24*365,"/");
-				setcookie("uid", $uid, time()+60*60*24*365,"/");
-				setcookie("username", $username, time()+60*60*24*365,"/");
-				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
-				setcookie("nickname", $nickname, time()+60*60*24*365,"/");
-				setcookie("email", $email, time()+60*60*24*365,"/");
+				setcookie("uid", $uid, $ExpTime,"/");
+				setcookie("username", $username, $ExpTime,"/");
+				setcookie("userid", $user_uuid, $ExpTime,"/");
+				setcookie("nickname", $nickname, $ExpTime,"/");
+				setcookie("email", $email, $ExpTime,"/");
 
 
 
