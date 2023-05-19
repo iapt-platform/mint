@@ -1,5 +1,13 @@
-import { Badge, Card, Popover, Space, Typography } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import {
+  Badge,
+  Card,
+  Dropdown,
+  MenuProps,
+  Popover,
+  Space,
+  Typography,
+} from "antd";
+import { MoreOutlined, DownOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
@@ -130,6 +138,33 @@ const CommunityWidget = ({ word }: IWidget) => {
     return <>{item.value}</>;
   });
 
+  const mainCollaboratorNum = 3; //默认显示的协作者数量，其余的在更多中显示
+  const collaboratorRender = (name: string, id: number, score: number) => {
+    return (
+      <Space key={id}>
+        {name}
+        <Badge color="geekblue" size="small" count={score} />
+      </Space>
+    );
+  };
+  const items: MenuProps["items"] = wordData?.editor
+    .filter((value, index) => index > mainCollaboratorNum)
+    .map((item, id) => {
+      return {
+        key: id,
+        label: collaboratorRender(item.value.nickName, id, item.score),
+      };
+    });
+  const more = wordData ? (
+    wordData.editor.length > mainCollaboratorNum ? (
+      <Dropdown menu={{ items }}>
+        <Space>
+          更多
+          <DownOutlined />
+        </Space>
+      </Dropdown>
+    ) : undefined
+  ) : undefined;
   return (
     <Card>
       <Title level={5} id={`community`}>
@@ -211,14 +246,12 @@ const CommunityWidget = ({ word }: IWidget) => {
       <div>
         <Space>
           {"贡献者："}
-          {wordData?.editor.map((item, id) => {
-            return (
-              <Space key={id}>
-                <UserName {...item.value} />
-                <Badge color="geekblue" size="small" count={item.score} />
-              </Space>
-            );
-          })}
+          {wordData?.editor
+            .filter((value, index) => index <= mainCollaboratorNum)
+            .map((item, id) => {
+              return collaboratorRender(item.value.nickName, id, item.score);
+            })}
+          {more}
         </Space>
       </div>
     </Card>
