@@ -164,7 +164,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 $jwt = JWT::encode($payload,$key,'HS512');
                 //End of JWT
                 // set cookie
-
+/*
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
 					$ok = setcookie("user_uid", $user_uuid, $ExpTime , "/");
@@ -176,13 +176,15 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
 					setcookie("token", $jwt, $ExpTime,"/");
 				}
+                */
 				#给js用的
-				setcookie("curr-time", time(), $ExpTime,"/");
+				setcookie("curr-time", time(), $ExpTime,"/","",true,true);
+                setcookie("user_id", $uid, $ExpTime,"/","",true,true);
+                setcookie("user_uid", $user_uuid, $ExpTime,"/","",true,true);
+
 				setcookie("uid", $uid, $ExpTime,"/");
-				setcookie("user_id", $uid, $ExpTime,"/");
 				setcookie("username", $username, $ExpTime,"/");
 				setcookie("userid", $user_uuid, $ExpTime,"/");
-				setcookie("user_uid", $user_uuid, $ExpTime,"/");
 				setcookie("nickname", $nickname, $ExpTime,"/");
 				setcookie("email", $email, $ExpTime,"/");
 
