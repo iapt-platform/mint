@@ -42,6 +42,7 @@ const items = {
   "buttons.sim": "相似句",
   "buttons.add": "添加",
   "buttons.spell": "拼写",
+  "buttons.more": "更多",
 };
 
 export default items;
