@@ -99,6 +99,7 @@ class MdRender{
             $dom = simplexml_load_string($xml);
         }catch(\Exception $e){
             Log::error($e);
+            Log::error($xml);
             return "<span>xml解析错误{$e}</span>";
         }
 
@@ -170,6 +171,7 @@ class MdRender{
             $replacement = '{{nissaya|$1|$2}}';
             $markdown = preg_replace($pattern,$replacement,$markdown);
         }
+        $markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
 
         /**
@@ -193,14 +195,19 @@ class MdRender{
         $replacement = '{{sent|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
 
-        #替换注释
+        #替换单行注释
         #<code>bla</code>
         #{{note|bla}}
         $pattern = '/<code>(.+?)<\/code>/';
         $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
 
-
+        #替换多行注释
+        #<pre><code>bla</code></pre>
+        #{{note|bla}}
+        $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
+        $replacement = '{{note|$1}}';
+        $html = preg_replace($pattern,$replacement,$html);
 
         return $html;
     }
