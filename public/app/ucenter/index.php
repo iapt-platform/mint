@@ -164,12 +164,15 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 $jwt = JWT::encode($payload,$key,'HS512');
                 //End of JWT
                 // set cookie
+                /*
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
 					setcookie("user_uid", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-				}else{
+				}else
+                */
+                {
                     //服务器运行
 					setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
