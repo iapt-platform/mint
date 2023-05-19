@@ -81,12 +81,26 @@ const Widget = () => {
           <div></div>
           <div key="right" style={{ display: "flex" }}>
             <ModeSwitch
+              channel={searchParams.get("channel")}
               currMode={currMode}
               onModeChange={(e: ArticleMode) => {
                 let output: any = { mode: e };
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
+              }}
+              onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
+                let output: any = {
+                  mode: mode,
+                  channel: channels.map((item) => item.id).join("_"),
+                };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode" && key !== "channel") {
                     output[key] = value;
                   }
                 });
