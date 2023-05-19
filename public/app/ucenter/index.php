@@ -174,11 +174,12 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 */
                 {
                     //服务器运行
-					setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					$ok = setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 				}
 				#给js用的
+				setcookie("log", $ok, time()+60*60*24*365,"/");
 				setcookie("uid", $uid, time()+60*60*24*365,"/");
 				setcookie("username", $username, time()+60*60*24*365,"/");
 				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
