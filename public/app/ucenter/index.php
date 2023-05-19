@@ -167,7 +167,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
-					setcookie("user_uid", $user_uuid, $ExpTime , "/");
+					$ok = setcookie("user_uid", $user_uuid, $ExpTime , "/");
 					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
 					setcookie("token", $jwt, $ExpTime,"/");
 				}else{
@@ -177,6 +177,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 					setcookie("token", $jwt, $ExpTime,"/");
 				}
 				#给js用的
+				setcookie("curr-time", time(), $ExpTime,"/");
 				setcookie("uid", $uid, $ExpTime,"/");
 				setcookie("user_id", $uid, $ExpTime,"/");
 				setcookie("username", $username, $ExpTime,"/");
