@@ -167,14 +167,14 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
-					setcookie("user_uid", $user_uuid, $ExpTime , "/","",false,true);
-					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/","",false,true);
-					setcookie("token", $jwt, $ExpTime,"/","",false,true);
+					setcookie("user_uid", $user_uuid, $ExpTime , "/");
+					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
+					setcookie("token", $jwt, $ExpTime,"/");
 				}else{
                     //服务器运行
-					setcookie("user_uid", $user_uuid, $ExpTime,"/","",true,true);
-					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/","",true,true);
-					setcookie("token", $jwt, $ExpTime,"/","",true,true);
+					setcookie("user_uid", $user_uuid, $ExpTime,"/");
+					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
+					setcookie("token", $jwt, $ExpTime,"/");
 				}
 				#给js用的
 				setcookie("uid", $uid, $ExpTime,"/");
