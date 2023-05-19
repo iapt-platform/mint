@@ -148,7 +148,7 @@ const CommunityWidget = ({ word }: IWidget) => {
     );
   };
   const items: MenuProps["items"] = wordData?.editor
-    .filter((value, index) => index > mainCollaboratorNum)
+    .filter((value, index) => index >= mainCollaboratorNum)
     .map((item, id) => {
       return {
         key: id,
@@ -247,7 +247,7 @@ const CommunityWidget = ({ word }: IWidget) => {
         <Space>
           {"贡献者："}
           {wordData?.editor
-            .filter((value, index) => index <= mainCollaboratorNum)
+            .filter((value, index) => index < mainCollaboratorNum)
             .map((item, id) => {
               return collaboratorRender(item.value.nickName, id, item.score);
             })}
