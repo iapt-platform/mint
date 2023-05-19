@@ -24,9 +24,6 @@ const FooterBarWidget = () => {
         </Col>
         <Col span={16}>
           <Title level={5}>问题反馈</Title>
-          <div>
-            <CreateFeedback />
-          </div>
         </Col>
       </Row>
       <Row>
