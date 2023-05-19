@@ -64,6 +64,7 @@ const ArticleCardWidget = ({
       extra={
         <Space>
           <ModeSwitch
+            channel={null}
             onModeChange={(mode: string) => {
               if (typeof onModeChange !== "undefined") {
                 onModeChange(mode);
