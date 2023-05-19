@@ -7,16 +7,15 @@ import {
   Space,
   Typography,
 } from "antd";
-import { MoreOutlined, DownOutlined } from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { IApiResponseDictList } from "../api/Dict";
 import { IUser } from "../auth/User";
-import UserName from "../auth/UserName";
 import GrammarPop from "./GrammarPop";
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 
 interface IItem<R> {
   value: R;
@@ -158,10 +157,14 @@ const CommunityWidget = ({ word }: IWidget) => {
   const more = wordData ? (
     wordData.editor.length > mainCollaboratorNum ? (
       <Dropdown menu={{ items }}>
-        <Space>
-          更多
-          <DownOutlined />
-        </Space>
+        <Link>
+          <Space>
+            {intl.formatMessage({
+              id: `buttons.more`,
+            })}
+            <DownOutlined />
+          </Space>
+        </Link>
       </Dropdown>
     ) : undefined
   ) : undefined;
@@ -185,7 +188,14 @@ const CommunityWidget = ({ word }: IWidget) => {
             })}
           {meaningLow && meaningLow.length > 0 ? (
             <Popover content={<Space>{meaningExtra}</Space>} placement="bottom">
-              <MoreOutlined />
+              <Link>
+                <Space>
+                  {intl.formatMessage({
+                    id: `buttons.more`,
+                  })}
+                  <DownOutlined />
+                </Space>
+              </Link>
             </Popover>
           ) : undefined}
         </Space>
