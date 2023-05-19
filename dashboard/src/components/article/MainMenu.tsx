@@ -11,9 +11,9 @@ const MainMenuWidget = () => {
     >
       <Button
         type="text"
-        style={{ display: "block" }}
+        style={{ display: "block", color: "white" }}
         icon={<AppstoreOutlined />}
-      ></Button>
+      />
     </Dropdown>
   );
 };
