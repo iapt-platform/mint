@@ -54,5 +54,5 @@ php artisan make:controller --api --model=Lesson  LessonController
 
 前端调用
 
-ApiFetch(`/progress?view=chapter-tag`)
+
 
