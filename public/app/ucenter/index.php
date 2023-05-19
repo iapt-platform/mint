@@ -181,6 +181,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 				setcookie("curr-time", time(), $ExpTime,"/");
                 setcookie("user_id", $uid, $ExpTime,"/","",false,true);
                 setcookie("user_uid", $user_uuid, $ExpTime,"/","",false,true);
+                setcookie("user_uid_1", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 
 				setcookie("uid", $uid, $ExpTime,"/");
 				setcookie("username", $username, $ExpTime,"/");
