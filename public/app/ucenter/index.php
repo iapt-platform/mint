@@ -179,8 +179,8 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 */
 				#给js用的
 				setcookie("curr-time", time(), $ExpTime,"/");
-                setcookie("user_id", $uid, $ExpTime,"/");
-                setcookie("user_uid", $user_uuid, $ExpTime,"/");
+                setcookie("user_id1", $uid, $ExpTime,"/");
+                setcookie("user_uid1", $user_uuid, $ExpTime,"/");
 
 				setcookie("uid", $uid, $ExpTime,"/");
 				setcookie("username", $username, $ExpTime,"/");
