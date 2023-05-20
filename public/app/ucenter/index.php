@@ -164,33 +164,24 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
                 $jwt = JWT::encode($payload,$key,'HS512');
                 //End of JWT
                 // set cookie
-/*
 				if(empty($_SERVER["HTTPS"])){
                     //本地开发
-					$ok = setcookie("user_uid", $user_uuid, $ExpTime , "/");
-					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
-					setcookie("token", $jwt, $ExpTime,"/");
+					setcookie("user_uid", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
 				}else{
                     //服务器运行
-					setcookie("user_uid", $user_uuid, $ExpTime,"/");
-					setcookie("user_id", $Fetch[0]["id"], $ExpTime,"/");
-					setcookie("token", $jwt, $ExpTime,"/");
+					setcookie("user_uid", $user_uuid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+					setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
 				}
-                */
 				#给js用的
-				setcookie("curr-time", time(), $ExpTime,"/");
-
-                setcookie("user_id", $uid, $ExpTime,"/");
-                setcookie("user_uid", $user_uuid, $ExpTime,"/","",false,true);
-
-                setcookie("user_id_1", $uid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-                setcookie("user_uid_1", $user_uuid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
-
-				setcookie("uid", $uid, $ExpTime,"/");
-				setcookie("userid", $user_uuid, $ExpTime,"/");
-				setcookie("username", $username, $ExpTime,"/");
-				setcookie("nickname", $nickname, $ExpTime,"/");
-				setcookie("email", $email, $ExpTime,"/");
+				setcookie("mint_token", $jwt, time()+60*60*24*365,"/");
+				setcookie("uid", $uid, time()+60*60*24*365,"/");
+				setcookie("username", $username, time()+60*60*24*365,"/");
+				setcookie("userid", $user_uuid, time()+60*60*24*365,"/");
+				setcookie("nickname", $nickname, time()+60*60*24*365,"/");
+				setcookie("email", $email, time()+60*60*24*365,"/");
 
 
 
