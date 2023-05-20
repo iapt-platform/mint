@@ -38,6 +38,7 @@ const TermModalWidget = ({
       <Modal
         width={760}
         title="术语"
+        footer={false}
         destroyOnClose={true}
         open={isModalOpen}
         onOk={handleOk}
