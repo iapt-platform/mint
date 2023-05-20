@@ -22,5 +22,6 @@ setcookie("email", $cookie_name, $ExpTime,"/");
 <body>
 user_id = <?php echo $_COOKIE['user_id']  ?><br />
 user_uid = <?php echo $_COOKIE['user_uid']  ?><br />
+user_uid_1 = <?php echo $_COOKIE['user_uid_1']  ?><br />
 </body>
 </html>
