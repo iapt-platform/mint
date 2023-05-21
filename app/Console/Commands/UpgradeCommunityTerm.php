@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Tools\Tools;
 use App\Models\DhammaTerm;
+use App\Models\UserOperationDaily;
+use App\Models\Sentence;
+
 use App\Http\Api\ChannelApi;
 use Illuminate\Support\Str;
 
@@ -70,43 +73,55 @@ class UpgradeCommunityTerm extends Command
             $allTerm = DhammaTerm::where('word',$word->word)
                                 ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
                                 ->get();
-            foreach ($allTerm as $term) {
-                # code..
+            $score = [];
+            foreach ($allTerm as $key => $term) {
                 //经验值
-                $exp = UserOperationDaily::where('user_id',$this->creator_id)
+                $exp = UserOperationDaily::where('user_id',$term->editor_id)
                                         ->where('date_int','<=',date_timestamp_get(date_create($term->updated_at))*1000)
                                         ->sum('duration');
                 $iExp = (int)($exp/1000);
                 $noteStrLen = mb_strlen($term->note);
                 $paliStrLen = 0;
-                #查找句子模版
-                $pattern = "/\{\{([0-9].+?)\}\}/";
-                $noteWithoutPali = preg_replace($pattern,"",$term->note);
-                $sentences = [];
-                $iSent = preg_match_all($pattern,$term->note,$sentences);
-                foreach ($sentences as  $sentence) {
-                    $sentId = explode("-",$sentence);
-                    if(count($sentId) === 4){
-                        $countTran = Sentence::where('book_id',$sentId[0])
-                                            ->where('paragraph',$sentId[1])
-                                            ->where('word_start',$sentId[2])
-                                            ->where('word_end',$sentId[3])
-                                            ->count();
+                $tranStrLen = 0;
+                $noteWithoutPali = "";
+                if(!empty(trim($term->note))){
+                    #查找句子模版
+                    $pattern = "/\{\{[0-9].+?\}\}/";
+                    //获取去掉句子模版的剩余部分
+                    $noteWithoutPali = preg_replace($pattern,"",$term->note);
+                    $sentences = [];
+                    $iSent = preg_match_all($pattern,$term->note,$sentences);
+                    if($iSent>0){
+                        foreach ($sentences[0] as  $sentence) {
+                            $sentId = explode("-",trim($sentence,"{}"));
+                            if(count($sentId) === 4){
+                                $hasTran = Sentence::where('book_id',$sentId[0])
+                                                    ->where('paragraph',$sentId[1])
+                                                    ->where('word_start',$sentId[2])
+                                                    ->where('word_end',$sentId[3])
+                                                    ->exists();
 
-                        $sentLen = Sentence::where('book_id',$sentId[0])
-                                            ->where('paragraph',$sentId[1])
-                                            ->where('word_start',$sentId[2])
-                                            ->where('word_end',$sentId[3])
-                                            ->where("channel_uid", $channelId)
-                                            ->value('strlen');
-                        if($sentLen){
-                            $paliStrLen += $sentLen;
+                                $sentLen = Sentence::where('book_id',$sentId[0])
+                                                    ->where('paragraph',$sentId[1])
+                                                    ->where('word_start',$sentId[2])
+                                                    ->where('word_end',$sentId[3])
+                                                    ->where("channel_uid", $channelId)
+                                                    ->value('strlen');
+                                if($sentLen){
+                                    $paliStrLen += $sentLen;
+                                    if($hasTran){
+                                        $tranStrLen += $sentLen;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-                //计算得分
 
+                }
+                //计算该术语总得分
+                $score["{$key}"] = $iExp*$noteStrLen;
             }
+
             $hotMeaning = DhammaTerm::selectRaw('meaning,count(*) as co')
                         ->where('word',$word->word)
                         ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
@@ -114,6 +129,12 @@ class UpgradeCommunityTerm extends Command
                         ->orderBy('co','desc')
                         ->first();
             if($hotMeaning){
+                $bestNote = "";
+                if(count($score)>0){
+                    arsort($score);
+                    $bestNote = $allTerm[(int)key($score)]->note;
+                }
+
                 $term = DhammaTerm::where('channal',$localTerm)->firstOrNew(
                         [
                             "word" => $word->word,
@@ -131,6 +152,7 @@ class UpgradeCommunityTerm extends Command
                         ]
                     );
                     $term->meaning = $hotMeaning->meaning;
+                    $term->note = $bestNote;
                     $term->modify_time = time()*1000;
                     $term->save();
             }
