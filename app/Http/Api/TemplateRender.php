@@ -17,10 +17,11 @@ class TemplateRender{
      * int $mode  'read' | 'edit'
      * @return void
      */
-    public function __construct($param, $channel_id, $mode)
+    public function __construct($param, $channelInfo, $mode)
     {
         $this->param = $param;
-        $this->channel_id = $channel_id;
+        $this->channel_id = $channelInfo->uid;
+        $this->channelInfo = $channelInfo;
         $this->mode = $mode;
     }
 
@@ -64,10 +65,18 @@ class TemplateRender{
     private function render_term(){
         $word = $this->get_param($this->param,"word",1);
         $channelId = $this->channel_id;
+        $channelInfo = $this->channelInfo;
         $props = Cache::remember("/term/{$this->channel_id}/{$word}",
               60,
-              function() use($word,$channelId){
-                $tplParam = DhammaTerm::where("word",$word)->first();
+              function() use($word,$channelId,$channelInfo){
+                //先查属于这个channel 的
+                $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
+                if(!$tplParam){
+                    //没有，再查这个studio的
+                    $tplParam = DhammaTerm::where("word",$word)
+                                          ->where('owner',$channelInfo->owner_uid)
+                                          ->first();
+                }
                 $output = [
                     "word" => $word,
                     "channel" => $channelId,
@@ -79,6 +88,13 @@ class TemplateRender{
                     $innerString = "{$output["meaning"]}({$output["word"]})";
                     if(!empty($tplParam->other_meaning)){
                         $output["meaning2"] = $tplParam->other_meaning;
+                    }
+                    if($tplParam->note){
+                        $output["summary"] = $tplParam->note;
+                    }else{
+                        //使用社区note
+                        //获取channel 语言
+                        //查找社区解释
                     }
                 }
                 $output['innerHtml'] = $innerString;
