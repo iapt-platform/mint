@@ -17,6 +17,7 @@ use App\Http\Resources\TermResource;
 use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Log;
 
 class DhammaTermController extends Controller
 {
@@ -81,21 +82,19 @@ class DhammaTermController extends Controller
                 break;
             case 'studio':
 				# 获取 studio 内所有 term
-                $search = $request->get('search');
                 $user = AuthApi::current($request);
                 if(!$user){
-                    return $this->error(__('auth.failed'));
+                    return $this->error(__('auth.failed'),[],401);
                 }
                 //判断当前用户是否有指定的studio的权限
                 if($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))){
-                    return $this->error(__('auth.failed'));
+                    return $this->error(__('auth.failed'),[],403);
                 }
                 $table = DhammaTerm::select($indexCol)
                                    ->where('owner', $user["user_uid"]);
 				break;
             case 'channel':
                 # 获取 studio 内所有 term
-                $search = $request->get('search');
                 $user = AuthApi::current($request);
                 if(!$user){
                     return $this->error(__('auth.failed'));
@@ -106,7 +105,7 @@ class DhammaTermController extends Controller
                     //看是否为协作
                     $power = ShareApi::getResPower($user['user_uid'],$request->get('id'));
                     if($power === 0){
-                        return $this->error(__('auth.failed'));
+                        return $this->error(__('auth.failed'),[],403);
                     }
                 }
                 $table = DhammaTerm::select($indexCol)
@@ -161,24 +160,19 @@ class DhammaTermController extends Controller
 				# code...
 				break;
 		}
+
+        $search = $request->get('search');
         if(!empty($search)){
-            $table->where('word', 'like', $search."%")
+            $table = $table->where(function($query) use($search){
+                $query->where('word', 'like', $search."%")
                   ->orWhere('word_en', 'like', $search."%")
                   ->orWhere('meaning', 'like', "%".$search."%");
-        }
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table->orderBy('updated_at','desc');
+            });
         }
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+        $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get('limit',1000));
         $result = $table->get();
 
 		if($result){
