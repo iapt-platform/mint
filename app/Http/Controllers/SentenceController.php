@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
+use App\Http\Api\ChannelApi;
 
 class SentenceController extends Controller
 {
@@ -23,6 +24,29 @@ class SentenceController extends Controller
 		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
+            case 'public':
+                //获取全部公开的译文
+                //首先获取某个类型的 channel 列表
+                $channels = [];
+                $channel_type = $request->get('channel_type','translation');
+                if($channel_type === "original"){
+                    $pali_channel = ChannelApi::getSysChannel("_System_Pali_VRI_");
+                    if($pali_channel !== false){
+                        $channels[] = $pali_channel;
+                    }
+                }else{
+                    $channelList = Channel::where('type',$channel_type)
+                                              ->where('status',30)
+                                              ->select('uid')->get();
+                    foreach ($channelList as $channel) {
+                        # code...
+                        $channels[] = $channel->uid;
+                    }
+                }
+                $table = Sentence::select($indexCol)
+                                  ->whereIn('channel_uid',$channels)
+                                  ->where('updated_at','>',$request->get('updated_after','1970-1-1'));
+                break;
             case 'fulltext':
                 if(isset($_COOKIE['user_uid'])){
                     $userUid = $_COOKIE['user_uid'];
@@ -108,27 +132,25 @@ class SentenceController extends Controller
 				# code...
 				break;
 		}
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table->orderBy('updated_at','desc');
-        }
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
+        if($request->get('strlen',false)){
+            $totalStrLen = $table->sum('strlen');
         }
+        $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get('limit',1000));
         $result = $table->get();
 
 		if($result){
             if($request->get('view') === 'sent-can-read'){
-			    return $this->ok(["rows"=>SentResource::collection($result),"count"=>$count]);
+                $output = ["rows"=>SentResource::collection($result),"count"=>$count];
             }else{
-                return $this->ok(["rows"=>$result,"count"=>$count]);
+                $output = ["rows"=>$result,"count"=>$count];
             }
+            if(isset($totalStrLen)){
+                $output['total_strlen'] = $totalStrLen;
+            }
+            return $this->ok($output);
 
 		}else{
 			return $this->error("没有查询到数据");
