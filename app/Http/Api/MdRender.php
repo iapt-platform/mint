@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use mustache\mustache;
 use App\Models\DhammaTerm;
 use App\Models\PaliText;
+use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -103,6 +104,7 @@ class MdRender{
             return "<span>xml解析错误{$e}</span>";
         }
 
+        $channelInfo = Channel::find($channelId);
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
@@ -132,7 +134,7 @@ class MdRender{
             /**
              * 生成模版参数
              */
-            $tplRender = new TemplateRender($props,$channelId,$mode);
+            $tplRender = new TemplateRender($props,$channelInfo,$mode);
             $tplProps = $tplRender->render($tpl_name);
             if($tplProps){
                 $tpl->addAttribute("props",$tplProps['props']);
