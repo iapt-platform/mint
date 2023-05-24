@@ -1381,12 +1381,13 @@ function renderNissayaPreview(str){
             }
             html += "</span>";
             html += "<span class='meaning'>";
+            const meaning = word[word.length-1];
             if (getCookie('language') !="my") {
-                let noPeriod = word[1].split('။');
+                let noPeriod = meaning.split('။');
                 noPeriod[0] = myEndingTooltip(noPeriod[0]);
                 html += noPeriod.join('။');
             }else{
-                html += word[1];
+                html += meaning;
             }
             html += "</span>";
             html += "</span>";
