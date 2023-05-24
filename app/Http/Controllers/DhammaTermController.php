@@ -290,16 +290,22 @@ class DhammaTermController extends Controller
         $dhammaTerm->tag = $request->get("tag");
         $dhammaTerm->channal = $request->get("channal");
         $dhammaTerm->language = $request->get("language");
-        if($request->has("channal")){
+        if($request->has("channal") && Str::isUuid($request->has("channal"))){
             $channelInfo = ChannelApi::getById($request->get("channal"));
             if(!$channelInfo){
                 return $this->error("channel id failed");
             }else{
                 $dhammaTerm->owner = $channelInfo['studio_id'];
             }
-        }else{
-            $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
         }
+        if($request->has("studioName")){
+            $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
+        }else if($request->has("studioId")){
+            $dhammaTerm->owner = $request->get("studioId");
+        }else{
+            $dhammaTerm->owner = null;
+        }
+
         $dhammaTerm->editor_id = $user["user_id"];
         $dhammaTerm->create_time = time()*1000;
         $dhammaTerm->modify_time = time()*1000;
