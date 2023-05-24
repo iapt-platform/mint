@@ -19,7 +19,7 @@ var gBuildinDictIsOpen = false;
 update 修改
 pr 修改建议
 */
-var _edit_mode = "update"; 
+var _edit_mode = "update";
 
 var note_renderer = new marked.Renderer();
 note_renderer.code = function(code, language) {
@@ -141,7 +141,7 @@ function note_refresh_new(callback = null) {
 	for (const iterator of objNotes) {
 		let id = iterator.id;
 		if (id == null || id == "") {
-            
+
 			//查看这个节点是第几层note嵌套。大于预定层数退出。
 			let layout = 1;
 			let parent = iterator.parentNode;
@@ -156,7 +156,7 @@ function note_refresh_new(callback = null) {
 				}
 				parent = parent.parentNode;
 			}
-            
+
 			id = com_guid();
 			iterator.id = id;
 			if (iterator.hasAttribute("info")) {
@@ -164,7 +164,7 @@ function note_refresh_new(callback = null) {
 				if (info != null || info != "") {
 					/*
 					let arrInfo = info.split("-");
-					
+
 					if (arrInfo.length >= 2) {
 						let book = arrInfo[0];
 						let para = arrInfo[1];
@@ -239,7 +239,7 @@ function note_refresh_new(callback = null) {
 						console.error(e);
 					}
 				}
-                
+
 			}
 		);
 	} else {
@@ -268,7 +268,7 @@ function render_pali_sent(palitext){
 	else{
 		output += marked(palitext.palitext);
 	}
-		
+
 	output +="</pali>";
 	return output;
 }
@@ -420,7 +420,7 @@ function note_channal_list() {
 						let firstChannel="";
 						if(_channal!=""){
 							firstChannel = _channal.split(",")[0];
-						}										
+						}
 						for (const iterator of _channalData) {
 							lang[iterator.lang]=1;
 							if(iterator.id==firstChannel){
@@ -440,7 +440,7 @@ function note_channal_list() {
 									htmlLangSelect += "selected ";
 									isLangMatched = true;
 								}
-								htmlLangSelect +=">"+strLang+"</option>";	
+								htmlLangSelect +=">"+strLang+"</option>";
 							}
 						}
 						$("#select_lang").html(htmlLangSelect);
@@ -466,7 +466,7 @@ function render_edition_list(lang=""){
 	let firstChannel="";
 	if(_channal!=""){
 		firstChannel = _channal.split(",")[0];
-	}	
+	}
 	let html = "";
 	html += "<div class='case_dropdown-content'>";
 	let currChannel="选择一个版本";
@@ -660,7 +660,7 @@ function note_ref_init(target='_blank') {
 		let urlChannel='';
 		if(_channal !== ""){
 			urlChannel = "&channel=" + _channal;
-		}		
+		}
 		window.open("../article/?view=para&book=" + bookid + "&par=" + para + urlChannel, target);
 	});
 }
@@ -723,7 +723,7 @@ function note_json_html(in_json) {
 		"_" +
 		in_json.begin +
 		"_" +
-		in_json.end + 
+		in_json.end +
 		"')\" >" +
 		gLocal.gui.copy_link +
 		"</a>";*/
@@ -788,7 +788,7 @@ function note_json_html(in_json) {
     //分隔线
 	output += "<span class='separate_line'></span>";
 
-	
+
 	output += "<span class='more_tran icon_expand'></span>";
 
 	//第二个按钮其他译文
@@ -965,7 +965,7 @@ function sent_pr_merge(id) {
 				}else{
 					ntf_show("找不到句子容器");
 				}
-				
+
 			}
 		}
 	);
@@ -1346,7 +1346,7 @@ function render_one_sent_tran_a(iterator, diff = false) {
 
 	html += "</div>"; //end of foot bar
 	html += '<ul class="tag_list">';
-	html += "<li class='pr' onclick=\"note_pr_show('" + iterator.channal + "','" + sid + "')\">";	
+	html += "<li class='pr' onclick=\"note_pr_show('" + iterator.channal + "','" + sid + "')\">";
 	if (iterator.pr_all && parseInt(iterator.pr_all) > 0) {
 		html += render_pr_number(iterator.pr_new,iterator.pr_all);
 	}
@@ -1381,12 +1381,13 @@ function renderNissayaPreview(str){
             }
             html += "</span>";
             html += "<span class='meaning'>";
+            const meaning = word[word.length-1];
             if (getCookie('language') !="my") {
-                let noPeriod = word[1].split('။');
+                let noPeriod = meaning.split('။');
                 noPeriod[0] = myEndingTooltip(noPeriod[0]);
                 html += noPeriod.join('။');
             }else{
-                html += word[1];
+                html += meaning;
             }
             html += "</span>";
             html += "</span>";
@@ -1409,12 +1410,12 @@ function myEndingTooltip(inStr){
             id:"my_nom2",
             name:"ကား",
             tooltip:'主格/主语',
-        },        
+        },
         {
             id:"my_nom3",
             name:"က",
             tooltip:'主格/主语',
-        },        
+        },
         {
             id:"my_acc1",
             name:"ကို",
@@ -1571,7 +1572,7 @@ function render_pr_number(pr_new,pr_all){
 	if(pr_all > 0){
 		html = "<span class='icon'>✋</span><span class='num'>" + pr_new + "/" + pr_all + "</span>";
 	}
- return html;	
+ return html;
 }
 function tran_sent_textarea_event_init() {
 	let textarea = document.querySelectorAll(".tran_sent_textarea");
@@ -1881,10 +1882,10 @@ function set_more_button_display() {
                 if(thisChannel && thisChannel.type=='commentary'){
                     commentaryChannel++;
                 }
-            }            
+            }
         }
 
-        
+
 		for (const iterator of _channalData) {
 			if (iterator.final && iterator.type==channelType) {
 				for (const onesent of iterator.final) {
@@ -1901,7 +1902,7 @@ function set_more_button_display() {
 				}
 			}
 		}
-		if (count > 0 || commentaryChannel>0) 
+		if (count > 0 || commentaryChannel>0)
         {
 			$(this).find(".other_tran_num").html(count);
 			$(this).find(".other_tran_num").attr("style", "display:inline-flex;");
@@ -1973,7 +1974,7 @@ function set_more_button_display() {
 
                     return false;    //  阻止事件冒泡
 				});
-		}else 
+		}else
         {
 			//隐藏自己
 			//$(this).hide();
@@ -2344,7 +2345,7 @@ function update_sent_text(sent_tran_div,result){
 				divPreview.html(
 					note_init(result.text, result.channal, result.editor, result.lang)
 				);
-				term_updata_translation();                        
+				term_updata_translation();
 				break;
 		}
 		popup_init();
@@ -2362,13 +2363,13 @@ function pr_create_callback(data) {
 			alert(e.message);
 			console.error('pr_create_callback',data);
 			return;
-		}			
-		
+		}
+
 	}else{
 		response = data;
 	}
 
-	
+
 	if (!response.ok) {
 		ntf_show("修改建议提交失败");
 		console.log("pr_create_callback", response.message);
@@ -2385,7 +2386,7 @@ function pr_create_callback(data) {
 			sent_tran_div.removeClass("loading");
 			sent_tran_div.find(".tag_list").first().children(".pr").first().html(render_pr_number(1,response.data.count));
 		}
-		
+
 		ntf_show("成功提交修改建议");
 	}
 }
@@ -2399,13 +2400,13 @@ function pr_update_callback(data) {
 			alert(e.message);
 			console.error('pr_create_callback',data);
 			return;
-		}			
-		
+		}
+
 	}else{
 		response = data;
 	}
 
-	
+
 	if (!response.ok) {
 		ntf_show("修改建议更新失败");
 		console.log("pr_update_callback", response.message);
@@ -2440,7 +2441,7 @@ function pr_update_callback(data) {
 			let tranText = str_diff(orgText, result.content);
 			sent_tran_div.find(".preview").html(tranText);
 		}
-		
+
 		ntf_show("成功更新修改建议");
 	}
 }
@@ -2604,7 +2605,7 @@ function set_pali_script(pos, script) {
 				default:
 					return(oldcontent);
 			}
-			
+
 		});
 	}
 }
@@ -2772,7 +2773,7 @@ function render_heading_toc() {
 }
 
 
-//术语输入At 
+//术语输入At
 const _term_max_menu=9;
 function term_set_word_list_data(el){
 	let sid = $(el).attr("sid");
@@ -2794,7 +2795,7 @@ function term_set_word_list_data(el){
 			let parents = term_parent(words[index]);
 
 			for (const key in parents) {
-				if (parents.hasOwnProperty.call(parents, key)) {		
+				if (parents.hasOwnProperty.call(parents, key)) {
 					//term_data.push({word:key,en:com_getPaliEn(key),weight:weight});
 					tmpWords[key]={word:key,en:com_getPaliEn(key),weight:3,exist:0};
 				}
@@ -2808,7 +2809,7 @@ function term_set_word_list_data(el){
 		}else{
 			tmpWords[iterator.word]={word:iterator.word,en:com_getPaliEn(iterator.word),weight:1,exist:1};
 		}
-	}	
+	}
 	//arrMyTerm 词头查重
 	let tmpMyTerm=[];
 	for (const iterator of arrMyTerm) {
@@ -2846,7 +2847,7 @@ function text_input_textarea_focuse(el){
 		term_input_text.parentElement.querySelector(".text_shadow").style.height=term_input_text.clientHeight+"px";
 	}
 	term_input_text.onkeydown = function (e) {
-	
+
 		let menu = term_input_text.parentElement.querySelector('.menu');
 		switch (e.key) {
 			case "ArrowDown"://down arrow
@@ -2856,7 +2857,7 @@ function text_input_textarea_focuse(el){
 						menuFocusIndex=_term_max_menu;
 					}
 					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
-					return false;					
+					return false;
 				}
 				break;
 			case "ArrowUp"://up arrow
@@ -2866,7 +2867,7 @@ function text_input_textarea_focuse(el){
 						menuFocusIndex=0;
 					}
 					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
-					return false;					
+					return false;
 				}
 			break;
 			case "Enter":
@@ -2886,7 +2887,7 @@ function text_input_textarea_focuse(el){
 				}else{
 					tran_sent_edit_cancel(e.currentTarget);
 				}
-				
+
 				break;
 			default:
 				break;
@@ -2915,7 +2916,7 @@ function text_input_textarea_focuse(el){
 	mirror.appendChild(textNode1)
 	mirror.appendChild(cursor)
 	mirror.appendChild(textNode2)
-	let menu = term_input_text.parentElement.querySelector('.menu');	
+	let menu = term_input_text.parentElement.querySelector('.menu');
 	if(str1.slice(-2)=="[[" ){
 		if( menu.style.display!="block"){
 			menuFocusIndex=0;
@@ -2933,7 +2934,7 @@ function text_input_textarea_focuse(el){
 		}
 	}
 
-	
+
 	if(menu.style.display=="block"){
 		//term_input += e.key;
 		let value = term_input_text.value
@@ -3002,13 +3003,13 @@ function TermAtRenderMenu(params) {
 	let focusIndex = params.focus%term_data.length;
 	for (const it of term_data) {
 		if(term_input=="" || it.word.indexOf(term_input)==0 || it.en.indexOf(term_input)==0){
-			
+
 			html +="<li ";
 			if(focusIndex==index){
 				html +="class='trem_focus' "
 			}
 			html += "onclick=\"term_insert('"+it.word+"')\" ";
-			
+
 			html +=">";
 			html += (index+1)+ ". ";
 			if(it.exist>0){
@@ -3023,7 +3024,7 @@ function TermAtRenderMenu(params) {
 			}
 			index++;
 		}
-		
+
 	}
 	return html;
 }
@@ -3038,7 +3039,7 @@ function term_parent(paliword) {
 				let wordParent = paliword.slice(0, 0 - it.end2.length) + it.end1;
 				output[wordParent]=1;
 			}
-		}		
+		}
 	}
 	return output;
 }
