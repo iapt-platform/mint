@@ -79,12 +79,14 @@ class TemplateRender{
                 }
                 $output = [
                     "word" => $word,
-                    "channel" => $channelId,
+                    "parentChannelId" => $channelId,
+                    "parentStudioId" => $channelInfo->owner_uid,
                     ];
                     $innerString = $output["word"];
                 if($tplParam){
                     $output["id"] = $tplParam->guid;
                     $output["meaning"] = $tplParam->meaning;
+                    $output["channel"] = $tplParam->channal;
                     $innerString = "{$output["meaning"]}({$output["word"]})";
                     if(!empty($tplParam->other_meaning)){
                         $output["meaning2"] = $tplParam->other_meaning;
