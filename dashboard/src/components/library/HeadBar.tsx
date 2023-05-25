@@ -151,6 +151,7 @@ const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         </div>
         <div>
           <Space>
+            <Link to="/download/download">下载</Link>
             <Link to="/search/home">
               <Button
                 style={{ color: "white" }}
