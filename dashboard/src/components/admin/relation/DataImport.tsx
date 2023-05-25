@@ -19,12 +19,14 @@ export interface INissayaEndingImportResponse {
 }
 
 interface IWidget {
+  title?: string;
   url: string;
   urlExtra?: string;
   trigger?: JSX.Element;
   onSuccess?: Function;
 }
 const DataImportWidget = ({
+  title = "upload",
   url,
   urlExtra,
   trigger = <>{"trigger"}</>,
@@ -34,7 +36,7 @@ const DataImportWidget = ({
 
   return (
     <ModalForm<INissayaEndingUpload>
-      title="upload"
+      title={title}
       trigger={trigger}
       form={form}
       autoFocusFirstInput
@@ -85,7 +87,7 @@ const DataImportWidget = ({
     >
       <ProFormUploadDragger
         max={1}
-        label="上传xlsx"
+        label="请确保您的xlsx文件是用导出功能导出的。word为空可以删除该词条。使用其他studio导出的数据，请将channel_id设置为空。否则该术语将被忽略。"
         name="filename"
         fieldProps={{
           name: "file",
