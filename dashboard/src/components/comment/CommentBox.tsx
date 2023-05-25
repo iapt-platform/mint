@@ -25,17 +25,6 @@ const CommentBoxWidget = ({
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
-      document.getElementsByTagName("body")[0].removeAttribute("style");
-    }
-  };
-
   const showChildrenDrawer = (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
     comment: IComment
@@ -44,17 +33,24 @@ const CommentBoxWidget = ({
     setTopicComment(comment);
   };
 
-  const onChildrenDrawerClose = () => {
-    setChildrenDrawer(false);
-  };
-
   return (
     <>
-      <span onClick={showDrawer}>{trigger}</span>
+      <span
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        {trigger}
+      </span>
       <Drawer
         title="Discussion"
         width={520}
-        onClose={onClose}
+        onClose={() => {
+          setOpen(false);
+          if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+            document.getElementsByTagName("body")[0].removeAttribute("style");
+          }
+        }}
         open={open}
         maskClosable={false}
       >
@@ -72,7 +68,9 @@ const CommentBoxWidget = ({
         <Drawer
           title="回答"
           width={480}
-          onClose={onChildrenDrawerClose}
+          onClose={() => {
+            setChildrenDrawer(false);
+          }}
           open={childrenDrawer}
         >
           <CommentTopic
