@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "antd";
 import TermEdit from "./TermEdit";
+import { ITermDataResponse } from "../api/Term";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -8,7 +9,10 @@ interface IWidget {
   word?: string;
   studioName?: string;
   channelId?: string;
+  parentChannelId?: string;
+  parentStudioId?: string;
   onUpdate?: Function;
+  onClose?: Function;
 }
 const TermModalWidget = ({
   trigger,
@@ -16,7 +20,10 @@ const TermModalWidget = ({
   word,
   studioName,
   channelId,
+  parentChannelId,
+  parentStudioId,
   onUpdate,
+  onClose,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,10 +33,16 @@ const TermModalWidget = ({
 
   const handleOk = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   return (
@@ -49,10 +62,12 @@ const TermModalWidget = ({
           word={word}
           studioName={studioName}
           channelId={channelId}
-          onUpdate={() => {
+          parentChannelId={parentChannelId}
+          parentStudioId={parentStudioId}
+          onUpdate={(value: ITermDataResponse) => {
             setIsModalOpen(false);
             if (typeof onUpdate !== "undefined") {
-              onUpdate();
+              onUpdate(value);
             }
           }}
         />
