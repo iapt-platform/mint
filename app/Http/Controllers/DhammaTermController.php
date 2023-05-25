@@ -422,6 +422,33 @@ class DhammaTermController extends Controller
         if(!$user){
             return $this->error(__('auth.failed'));
         }
+        /**
+         * 判断是否有权限
+         */
+        switch ($request->get('view')) {
+            case 'channel':
+                # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
+                $channel = ChannelApi::getById($request->get('id'));
+                $owner_id = $channel['studio_id'];
+                if($owner_id !== $user["user_uid"]){
+                    //判断是否为协作
+                    $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
+                    if($power<30){
+                        return $this->error(__('auth.failed'),[],403);
+                    }
+                }
+                $language = $channel['lang'];
+                break;
+            case 'studio':
+                # 向 studio 里面导入，忽略源数据的 owner 但是要检测 channel id 是否有权限
+                $owner_id = StudioApi::getIdByName($request->get('name'));
+                if(!$owner_id){
+                    return $this->error('no studio name',[],403);
+                }
+
+                break;
+        }
+
         $message = "";
         $filename = $request->get('filename');
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -430,6 +457,7 @@ class DhammaTermController extends Controller
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $currLine = 2;
         $countFail = 0;
+
         do {
             # code...
             $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
@@ -439,35 +467,73 @@ class DhammaTermController extends Controller
             $note = $activeWorksheet->getCell("E{$currLine}")->getValue();
             $tag = $activeWorksheet->getCell("F{$currLine}")->getValue();
             $language = $activeWorksheet->getCell("G{$currLine}")->getValue();
+            $channel_id = $activeWorksheet->getCell("H{$currLine}")->getValue();
             $query = ['word'=>$word,'tag'=>$tag];
             $channelId = null;
             switch ($request->get('view')) {
                 case 'channel':
-                    # code...
+                    # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
                     $query['channal'] = $request->get('id');
-                    $channel = ChannelApi::getById($request->get('id'));
-                    $owner_id = $channel['studio_id'];
-                    $lang = $channel['lang'];
                     $channelId = $request->get('id');
                     break;
                 case 'studio':
-                    $owner_id = StudioApi::getIdByName($request->get('name'));
-                    if(!$owner_id){
-                        return $this->error('no studio name');
+                    # 向 studio 里面导入，忽略源数据的owner 但是要检测 channel id 是否有权限
+                    $query['owner'] = $owner_id;
+                    if(!empty($channel_id)){
+
+                        //有channel 数据，查看是否在studio中
+                        $channel = ChannelApi::getById($channel_id);
+                        if($channel === false){
+                            $message .= "没有查到版本信息：{$channel_id} - {$word}\n";
+                            $currLine++;
+                            $countFail++;
+                            continue;
+                        }
+                        if($owner_id != $channel['studio_id']){
+                            $message .= "版本不在studio中：{$channel_id} - {$word}\n";
+                            $currLine++;
+                            $countFail++;
+                            continue;
+                        }
+                        $query['channal'] = $channel_id;
+                        $channelId = $channel_id;
                     }
-                    # code...
-                    break;
-                default:
                     # code...
                     break;
             }
 
-            if(empty($word)){
+            if(empty($id) && empty($word)){
                 break;
             }
+
             //查询此id是否有旧数据
             if(!empty($id)){
                 $oldRow = DhammaTerm::find($id);
+                //TODO 有 id 无 word 删除数据
+                if(empty($word)){
+                    //查看权限
+                    if($oldRow->owner !== $user['user_uid']){
+                        if(!empty($oldRow->channal)){
+                            //看是否为协作
+                            $power = ShareApi::getResPower($user['user_uid'],$oldRow->channal);
+                            if($power < 20){
+                                $message .= "无删除权限：{$id} - {$word}\n";
+                                $currLine++;
+                                $countFail++;
+                                continue;
+                            }
+                        }else{
+                            $message .= "无删除权限：{$id} - {$word}\n";
+                            $currLine++;
+                            $countFail++;
+                            continue;
+                        }
+                    }
+                    //删除
+                    $oldRow->delete();
+                    $currLine++;
+                    continue;
+                }
             }else{
                 $oldRow = null;
             }
@@ -500,7 +566,7 @@ class DhammaTermController extends Controller
             $row->other_meaning = $other_meaning;
             $row->note = $note;
             $row->tag = $tag;
-            $row->language = $lang;
+            $row->language = $language;
             $row->channal = $channelId;
             $row->editor_id = $user['user_id'];
             $row->owner = $owner_id;
