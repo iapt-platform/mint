@@ -11,6 +11,7 @@ export interface ITermDataRequest {
   note?: string;
   channal?: string;
   studioName?: string;
+  studioId?: string;
   language?: string;
 }
 export interface ITermDataResponse {
