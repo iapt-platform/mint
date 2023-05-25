@@ -1,5 +1,4 @@
 import { useIntl } from "react-intl";
-
 import {
   ProForm,
   ProFormInstance,
@@ -9,15 +8,22 @@ import {
 
 import LangSelect from "../general/LangSelect";
 import ChannelSelect from "../channel/ChannelSelect";
-import { Form, message } from "antd";
-import { useRef } from "react";
+import { AutoComplete, Form, Input, message, Space, Tag } from "antd";
+import { useEffect, useRef, useState } from "react";
 import {
   ITermCreateResponse,
   ITermDataRequest,
+  ITermListResponse,
   ITermResponse,
 } from "../api/Term";
 import { get, post, put } from "../../request";
 import MDEditor from "@uiw/react-md-editor";
+
+interface ValueType {
+  key?: string;
+  label: React.ReactNode;
+  value: string | number;
+}
 
 export interface ITerm {
   id?: string;
@@ -26,6 +32,7 @@ export interface ITerm {
   meaning?: string;
   meaning2?: string[];
   note?: string;
+  summary?: string;
   channel?: string[];
   channelId?: string;
   lang?: string;
@@ -36,6 +43,8 @@ interface IWidget {
   word?: string;
   studioName?: string;
   channelId?: string;
+  parentChannelId?: string;
+  parentStudioId?: string;
   onUpdate?: Function;
 }
 const TermEditWidget = ({
@@ -43,18 +52,57 @@ const TermEditWidget = ({
   word,
   channelId,
   studioName,
+  parentChannelId,
+  parentStudioId,
   onUpdate,
 }: IWidget) => {
   const intl = useIntl();
+  const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([
+    { label: "dd", value: "dd" },
+  ]);
+
   const [form] = Form.useForm<ITerm>();
   const formRef = useRef<ProFormInstance>();
+  useEffect(() => {
+    if (word) {
+      const url = `/v2/terms?view=word&word=${word}`;
+      get<ITermListResponse>(url).then((json) => {
+        const meaning = json.data.rows.map((item) => item.meaning);
+        let meaningMap = new Map<string, number>();
+        for (const it of meaning) {
+          const count = meaningMap.get(it);
+          if (typeof count === "undefined") {
+            meaningMap.set(it, 1);
+          } else {
+            meaningMap.set(it, count + 1);
+          }
+        }
+        const meaningList: ValueType[] = [];
+        meaningMap.forEach((value, key, map) => {
+          meaningList.push({
+            value: key,
+            label: (
+              <Space
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                {key}
+                <Tag>{value}</Tag>
+              </Space>
+            ),
+          });
+        });
+
+        setMeaningOptions(meaningList);
+      });
+    }
+  }, [word]);
   return (
     <ProForm<ITerm>
       form={form}
       formRef={formRef}
       autoFocusFirstInput={true}
       onFinish={async (values: ITerm) => {
-        console.log(values.word);
+        console.log("term submit", values);
         if (
           typeof values.word === "undefined" ||
           typeof values.meaning === "undefined"
@@ -72,6 +120,7 @@ const TermEditWidget = ({
             ? values.channel[values.channel.length - 1]
             : undefined,
           studioName: studioName,
+          studioId: parentStudioId,
           language: values.lang,
         };
         let res: ITermResponse;
@@ -86,11 +135,11 @@ const TermEditWidget = ({
             newValue
           );
         }
-        console.log(res);
+        console.log("term ", res);
         if (res.ok) {
           message.success("提交成功");
           if (typeof onUpdate !== "undefined") {
-            onUpdate();
+            onUpdate(res.data);
           }
         } else {
           message.error(res.message);
@@ -120,7 +169,7 @@ const TermEditWidget = ({
             meaning2 = res.data.other_meaning.split(",");
           }
 
-          return {
+          data = {
             id: res.data.guid,
             word: res.data.word,
             tag: res.data.tag,
@@ -144,28 +193,19 @@ const TermEditWidget = ({
             meaning2: [],
             note: "",
             lang: res.data.language,
-            channel: [res.data.studio.id, channelId],
+            channel: [""],
           };
-          return data;
         } else if (typeof studioName !== "undefined") {
           //在studio新建
           url = `/v2/terms?view=create-by-studio&studio=${studioName}&word=${word}`;
-        } else {
-          return {
-            word: "",
-            tag: "",
-            meaning: "",
-            meaning2: [],
-            note: "",
-            lang: "",
-            channel: [],
-          };
         }
+
         return data;
       }}
     >
       <ProForm.Group>
         <ProFormText width="md" name="id" hidden />
+
         <ProFormText
           width="md"
           name="word"
@@ -196,28 +236,26 @@ const TermEditWidget = ({
         />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText
-          width="md"
+        <Form.Item
           name="meaning"
-          tooltip={intl.formatMessage({
-            id: "term.fields.meaning.tooltip",
-          })}
           label={intl.formatMessage({
-            id: "forms.fields.meaning.label",
+            id: "term.fields.meaning.label",
           })}
           rules={[
             {
               required: true,
-              message: intl.formatMessage({
-                id: "forms.message.meaning.required",
-              }),
             },
           ]}
-          fieldProps={{
-            showCount: true,
-            maxLength: 128,
-          }}
-        />
+        >
+          <AutoComplete
+            options={meaningOptions}
+            onChange={(value: any) => {}}
+            maxLength={128}
+          >
+            <Input allowClear showCount={true} />
+          </AutoComplete>
+        </Form.Item>
+
         <ProFormSelect
           width="md"
           name="meaning2"
@@ -239,6 +277,7 @@ const TermEditWidget = ({
       <ProForm.Group>
         <ChannelSelect
           channelId={channelId}
+          parentChannelId={parentChannelId}
           width="md"
           name="channel"
           tooltip={intl.formatMessage({
