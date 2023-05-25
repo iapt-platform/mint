@@ -17,6 +17,7 @@ import termVocabularyReducer from "./reducers/term-vocabulary";
 import nissayaEndingVocabularyReducer from "./reducers/nissaya-ending-vocabulary";
 import relationReducer from "./reducers/relation";
 import relationAddReducer from "./reducers/relation-add";
+import termChangeReducer from "./reducers/term-change";
 
 const store = configureStore({
   reducer: {
@@ -37,6 +38,7 @@ const store = configureStore({
     nissayaEndingVocabulary: nissayaEndingVocabularyReducer,
     relation: relationReducer,
     relationAdd: relationAddReducer,
+    termChange: termChangeReducer,
   },
 });
 
