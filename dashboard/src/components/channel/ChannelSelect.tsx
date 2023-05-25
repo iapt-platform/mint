@@ -15,6 +15,8 @@ interface IWidget {
   name?: string;
   tooltip?: string;
   label?: string;
+  parentChannelId?: string;
+  parentStudioId?: string;
   onSelect?: Function;
 }
 const ChannelSelectWidget = ({
@@ -23,6 +25,8 @@ const ChannelSelectWidget = ({
   name = "channel",
   tooltip,
   label,
+  parentChannelId,
+  parentStudioId,
   onSelect,
 }: IWidget) => {
   return (
@@ -42,8 +46,10 @@ const ChannelSelectWidget = ({
           for (const iterator of json.data.rows) {
             studio.set(iterator.studio.id, iterator.studio.nickName);
           }
-          let channels: IOption[] = [];
-
+          let channels: IOption[] = [{ value: "", label: "通用于此Studio" }];
+          if (typeof parentChannelId === "string") {
+            channels.push({ value: parentChannelId, label: "仅此版本" });
+          }
           studio.forEach((value, key, map) => {
             const node = {
               value: key,
