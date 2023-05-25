@@ -2,11 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
 
-export interface IAuthor {
-  name: string;
-  email: string;
-}
-
 export type TTheme = "dark" | "ant" | undefined;
 
 interface IState {
