@@ -244,7 +244,7 @@ class DhammaTermController extends Controller
             $term->save();
             return $this->ok($term);
         }else{
-            return $this->error("word existed");
+            return $this->error("word existed",[],200);
         }
 
     }
@@ -487,13 +487,13 @@ class DhammaTermController extends Controller
                             $message .= "没有查到版本信息：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue;
+                            continue 1;
                         }
                         if($owner_id != $channel['studio_id']){
                             $message .= "版本不在studio中：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue;
+                            continue 1;
                         }
                         $query['channal'] = $channel_id;
                         $channelId = $channel_id;
@@ -520,19 +520,19 @@ class DhammaTermController extends Controller
                                 $message .= "无删除权限：{$id} - {$word}\n";
                                 $currLine++;
                                 $countFail++;
-                                continue;
+                                continue 1;
                             }
                         }else{
                             $message .= "无删除权限：{$id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue;
+                            continue 1;
                         }
                     }
                     //删除
                     $oldRow->delete();
                     $currLine++;
-                    continue;
+                    continue 1;
                 }
             }else{
                 $oldRow = null;
@@ -558,7 +558,7 @@ class DhammaTermController extends Controller
                     $message .= "重复的数据：{$id} - {$word}\n";
                     $currLine++;
                     $countFail++;
-                    continue;
+                    continue 1;
                 }
             }
             $row->word_en = Tools::getWordEn($word);
