@@ -1443,6 +1443,11 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_imp",
+            name:"အားဖြင့်",
+            tooltip:'具格/用',
+        },
+        {
+            id:"my_imp",
             name:"ဖြင့်",
             tooltip:'具格/用',
         },
@@ -1453,7 +1458,7 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_soi",
-            name:"နှင့်",
+            name:"နှင့်",//异体编码
             tooltip:'具格/与',
         },
         {
@@ -1545,6 +1550,11 @@ function myEndingTooltip(inStr){
             id:"my_abs",
             name:"၍",
             tooltip:'连续体',
+        },
+        {
+            id:"my_imper",
+            name:"ပါစေသတည်း",
+            tooltip:'祈愿式',
         },
         {
             id:"my_pl",
@@ -1652,6 +1662,11 @@ function myEndingTooltip(inStr){
             tooltip:'的(同类修饰)',
         },
         {
+            id:"my_iad",
+            name:"သည့်",
+            tooltip:'的(同类修饰)',
+        },
+        {
             id:"my_pl_fut",
             name:"ကုန်လတ္တံ့",
             tooltip:'复数将来式',
@@ -1680,6 +1695,11 @@ function myEndingTooltip(inStr){
             id:"my_ca",
             name:"ရယ်",
             tooltip:'和',
+        },
+        {
+            id:"my_pp",
+            name:"ပြီ",
+            tooltip:'过去分词',
         },
         {
             id:"my_ca",
