@@ -1,4 +1,4 @@
-# {{ending}}-{{ending_tag}}
+### {{ending}}-{{ending_tag}}
 
 **{{ending_meaning}}**
 
