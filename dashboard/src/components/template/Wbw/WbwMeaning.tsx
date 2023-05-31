@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Popover, Typography } from "antd";
 
-import { PaliReal } from "../../../utils";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 import { ArticleMode } from "../../article/Article";
@@ -68,7 +67,10 @@ const WbwMeaningWidget = ({
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (
+    typeof data.real?.value === "string" &&
+    data.real.value.trim().length > 0
+  ) {
     //非标点符号
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
