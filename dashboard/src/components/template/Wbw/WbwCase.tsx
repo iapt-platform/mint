@@ -7,7 +7,6 @@ import { Dropdown } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
-import { PaliReal } from "../../../utils";
 import "./wbw.css";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
@@ -81,7 +80,7 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
   if (display === "block") {
     if (
       typeof data.case?.value === "string" &&
-      data.case.value.trim().length > 0
+      data.case.value?.trim().length > 0
     ) {
       caseElement = data.case.value
         .replace("#", "$")
@@ -108,7 +107,11 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
     }
   }
 
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (
+    typeof data.real?.value === "string" &&
+    data.real.value.trim().length > 0
+  ) {
+    //非标点符号
     return (
       <div className="wbw_word_item" style={{ display: "flex" }}>
         <Text type="secondary">
