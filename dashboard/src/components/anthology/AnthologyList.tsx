@@ -19,7 +19,6 @@ import {
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
-import ShareModal from "../share/ShareModal";
 import Share, { EResType } from "../share/Share";
 import {
   IResNumberResponse,
