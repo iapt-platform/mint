@@ -9,6 +9,9 @@ import SuggestionToolbar from "./SuggestionToolbar";
 import { Divider } from "antd";
 import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
+import { IWbw } from "../Wbw/WbwWord";
+import { WbwSentCtl } from "../WbwSent";
+import { my_to_roman } from "../../code/my";
 
 interface ISentCell {
   data: ISentence;
@@ -22,6 +25,8 @@ const SentCellWidget = ({
 }: ISentCell) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
+  const [wbwData, setWbwData] = useState<IWbw[]>([]);
+
   const acceptPr = useAppSelector(sentence);
   useEffect(() => {
     setSentData(data);
@@ -56,6 +61,32 @@ const SentCellWidget = ({
             setIsEditMode(true);
           }
         }}
+        onConvert={(format: string) => {
+          console.log("format", format);
+          switch (format) {
+            case "json":
+              const wbw: IWbw[] = data.content.split("\n").map((item, id) => {
+                const parts = item.split("=");
+                const word = my_to_roman(parts[0]);
+                const meaning = parts.length > 1 ? parts[1].trim() : "";
+                return {
+                  book: data.book,
+                  para: data.para,
+                  sn: [id],
+                  word: { value: word ? word : parts[0], status: 0 },
+                  real: { value: meaning, status: 0 },
+                  meaning: { value: "", status: 0 },
+                  factors: {
+                    value: meaning.replaceAll(" ", "+"),
+                    status: 0,
+                  },
+                  confidence: 0.5,
+                };
+              });
+              setWbwData(wbw);
+              break;
+          }
+        }}
       >
         <EditInfo data={sentData} />
         <div
@@ -67,16 +98,38 @@ const SentCellWidget = ({
           />
         </div>
         <div style={{ display: isEditMode ? "block" : "none" }}>
-          <SentCellEditable
-            data={sentData}
-            isPr={isPr}
-            onClose={() => {
-              setIsEditMode(false);
-            }}
-            onDataChange={(data: ISentence) => {
-              setSentData(data);
-            }}
-          />
+          {wbwData.length > 0 ? (
+            <WbwSentCtl
+              book={data.book}
+              para={data.para}
+              wordStart={data.wordStart}
+              wordEnd={data.wordEnd}
+              data={wbwData}
+              refreshable={true}
+              display="block"
+              fields={{
+                meaning: true,
+                factors: false,
+                factorMeaning: false,
+                case: true,
+              }}
+              channelId={data.channel.id}
+              onChange={(data: IWbw[]) => {
+                setWbwData(data);
+              }}
+            />
+          ) : (
+            <SentCellEditable
+              data={sentData}
+              isPr={isPr}
+              onClose={() => {
+                setIsEditMode(false);
+              }}
+              onDataChange={(data: ISentence) => {
+                setSentData(data);
+              }}
+            />
+          )}
         </div>
 
         <div style={{ marginLeft: "2em" }}>
