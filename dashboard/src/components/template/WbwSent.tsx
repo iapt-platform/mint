@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { mode } from "../../reducers/article-mode";
 import { post } from "../../request";
+import { PaliReal } from "../../utils";
 import { ArticleMode } from "../article/Article";
 import WbwWord, { IWbw, IWbwFields, WbwElement } from "./Wbw/WbwWord";
 
@@ -62,6 +63,7 @@ interface IWidget {
   display?: "block" | "inline";
   fields?: IWbwFields;
   magicDict?: string;
+  refreshable?: boolean;
   onMagicDictDone?: Function;
   onChange?: Function;
 }
@@ -75,6 +77,7 @@ export const WbwSentCtl = ({
   display = "inline",
   fields,
   magicDict,
+  refreshable = false,
   onChange,
   onMagicDictDone,
 }: IWidget) => {
@@ -82,8 +85,20 @@ export const WbwSentCtl = ({
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
+
   const newMode = useAppSelector(mode);
-  //console.log("wbw sent ", data);
+  const update = (data: IWbw[]) => {
+    setWordData(data);
+    if (typeof onChange !== "undefined") {
+      onChange(data);
+    }
+  };
+  useEffect(() => {
+    if (refreshable) {
+      setWordData(data);
+    }
+  }, [data]);
+
   useEffect(() => {
     setDisplayMode(newMode);
     switch (newMode) {
@@ -126,7 +141,7 @@ export const WbwSentCtl = ({
       .then((json) => {
         if (json.ok) {
           console.log("magic dict result", json.data);
-          setWordData(json.data);
+          update(json.data);
         } else {
           console.error(json.message);
         }
@@ -137,6 +152,8 @@ export const WbwSentCtl = ({
         }
       });
   }, [magicDict]);
+
+  console.log("wbw sent return");
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
@@ -149,6 +166,7 @@ export const WbwSentCtl = ({
             fields={fieldDisplay}
             onChange={(e: IWbw) => {
               console.log("word changed", e);
+
               let newData = [...wordData];
               newData.forEach((value, index, array) => {
                 if (value.sn.join() === e.sn.join()) {
@@ -156,8 +174,6 @@ export const WbwSentCtl = ({
                   array[index] = e;
                 }
               });
-              console.log("new data", newData);
-              setWordData(newData);
 
               const data = newData.filter((value) => value.sn[0] === e.sn[0]);
               const postParam: IWbwRequest = {
@@ -193,7 +209,7 @@ export const WbwSentCtl = ({
                   };
                 }),
               };
-              console.log("wbw post", postParam);
+
               post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then(
                 (json) => {
                   if (json.ok) {
@@ -204,22 +220,46 @@ export const WbwSentCtl = ({
                 }
               );
 
-              if (typeof onChange !== "undefined") {
-                onChange(newData);
-              }
+              update(newData);
             }}
-            onSplit={(isSplit: boolean) => {
-              if (isSplit) {
+            onSplit={() => {
+              const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+              if (
+                id < wordData.length - 1 &&
+                wordData[id + 1].sn
+                  .join("-")
+                  .indexOf(wordData[id].sn.join("-")) === 0
+              ) {
+                //合并
+                console.log("合并");
+                const compactData = newData.filter((value, index) => {
+                  if (
+                    index !== id &&
+                    value.sn.join("-").indexOf(wordData[id].sn.join("-")) === 0
+                  ) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                });
+                update(compactData);
+              } else {
                 //拆开
-                const factors = wordData[id]?.factors?.value;
+                console.log("拆开");
+                let factors = wordData[id]?.factors?.value;
                 if (typeof factors === "string") {
-                  const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+                  if (wordData[id].case?.value?.split("#")[0] === ".un.") {
+                    factors = `[+${factors}+]`;
+                  } else {
+                    factors = factors.replaceAll("+", "+-+");
+                  }
+
                   const children: IWbw[] | undefined = factors
                     .split("+")
                     .map((item, index) => {
                       return {
                         word: { value: item, status: 5 },
-                        real: { value: item, status: 5 },
+                        real: { value: PaliReal(item), status: 5 },
                         book: wordData[id].book,
                         para: wordData[id].para,
                         sn: [...wordData[id].sn, index],
@@ -230,11 +270,9 @@ export const WbwSentCtl = ({
                     console.log("children", children);
                     newData.splice(id + 1, 0, ...children);
                     console.log("new-data", newData);
-                    setWordData(newData);
+                    update(newData);
                   }
                 }
-              } else {
-                //合并
               }
             }}
           />
