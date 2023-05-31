@@ -15,7 +15,11 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
   const inlineDict = useAppSelector(_inlineDict);
 
   useEffect(() => {
-    if (typeof data === "undefined" || typeof data.case === "undefined") {
+    if (
+      typeof data === "undefined" ||
+      typeof data.case === "undefined" ||
+      typeof data.case.value !== "string"
+    ) {
       setFormula([]);
       return;
     }
