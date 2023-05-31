@@ -11,7 +11,6 @@ import "./wbw.css";
 import WbwDetail from "./WbwDetail";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
-import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
@@ -138,7 +137,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   );
   const classPali = data.style?.value === "note" ? "wbw_note" : "pali";
   let padding: string;
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (typeof data.real !== "undefined" && data.real.value !== "") {
     padding = "4px";
   } else {
     padding = "4px 0";
@@ -208,7 +207,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
     </div>
   ) : undefined;
 
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
     return (
       <div className="pali_shell">
