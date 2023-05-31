@@ -74,9 +74,9 @@ const TocPathWidget = ({
     return fullPath;
   } else {
     return (
-      <Tooltip placement="bottom" title={fullPath}>
+      <Popover placement="bottomRight" title={fullPath}>
         {trigger}
-      </Tooltip>
+      </Popover>
     );
   }
 };
