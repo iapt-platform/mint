@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Typography } from "antd";
 
 import { useAppSelector } from "../../../hooks";
 import { settingInfo } from "../../../reducers/setting";
@@ -11,7 +12,10 @@ import { roman_to_si } from "../../code/si";
 import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
 
+const { Text } = Typography;
+
 interface IWidget {
+  style?: React.CSSProperties;
   text?: string;
   code?: string;
   primary?: boolean;
@@ -19,6 +23,7 @@ interface IWidget {
 }
 const PaliTextWidget = ({
   text,
+  style,
   code = "roman",
   primary = true,
   termToLocal = true,
@@ -71,7 +76,7 @@ const PaliTextWidget = ({
       }
     }
   }, [text, settings, code]);
-  return text ? <span>{paliText}</span> : <></>;
+  return text ? <Text style={style}>{paliText}</Text> : <></>;
 };
 
 export default PaliTextWidget;
