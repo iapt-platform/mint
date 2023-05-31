@@ -92,6 +92,7 @@ interface IWidget {
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
   mode?: ArticleMode;
+  wordDark?: boolean;
   onChange?: Function;
   onSplit?: Function;
 }
@@ -100,6 +101,7 @@ const WbwWordWidget = ({
   display = "block",
   mode = "edit",
   fields = { meaning: true, factors: true, factorMeaning: true, case: true },
+  wordDark = false,
   onChange,
   onSplit,
 }: IWidget) => {
@@ -119,6 +121,7 @@ const WbwWordWidget = ({
     : "unset";
   const wbwCtl = wordData.type?.value === ".ctl." ? "wbw_ctl" : "";
   const wbwAnchor = wordData.grammar?.value === ".a." ? "wbw_anchor" : "";
+  const wbwDark = wordDark ? "dark" : undefined;
 
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
@@ -166,7 +169,7 @@ const WbwWordWidget = ({
   } else {
     return (
       <div
-        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} `}
+        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} ${wbwDark} `}
         style={styleWbw}
         onMouseEnter={() => {
           setShowRelationTool(true);
