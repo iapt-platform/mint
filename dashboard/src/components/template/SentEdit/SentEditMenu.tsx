@@ -6,20 +6,49 @@ import type { MenuProps } from "antd";
 interface ISentEditMenu {
   children?: React.ReactNode;
   onModeChange?: Function;
+  onConvert?: Function;
 }
-const SentEditMenuWidget = ({ children, onModeChange }: ISentEditMenu) => {
+const SentEditMenuWidget = ({
+  children,
+  onModeChange,
+  onConvert,
+}: ISentEditMenu) => {
   const [isHover, setIsHover] = useState(false);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log(e);
+    switch (e.key) {
+      case "json":
+        if (typeof onConvert !== "undefined") {
+          onConvert("json");
+        }
+        break;
+
+      default:
+        break;
+    }
   };
   const items = [
     {
-      key: "en",
+      key: "timeline",
       label: "时间线",
     },
     {
-      key: "zh-Hans",
+      key: "convert",
+      label: "转换格式",
+      children: [
+        {
+          key: "markdown",
+          label: "markdown",
+        },
+        {
+          key: "json",
+          label: "json",
+        },
+      ],
+    },
+    {
+      key: "share",
       label: "分享",
     },
   ];
