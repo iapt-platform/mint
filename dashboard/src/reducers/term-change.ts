@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITermDataResponse } from "../components/api/Term";
-import { ITerm } from "../components/term/TermEdit";
 
 import type { RootState } from "../store";
 
