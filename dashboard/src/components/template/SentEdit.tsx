@@ -99,6 +99,7 @@ export const SentEditInner = ({
         }}
         onMagicDictDone={() => {
           setMagicDictLoading(false);
+          setMagicDict(undefined);
         }}
       />
       <SentTab
