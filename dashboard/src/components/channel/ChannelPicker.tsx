@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 
 import ChannelPickerTable from "./ChannelPickerTable";
 import { IChannel } from "./Channel";
@@ -34,10 +34,16 @@ const ChannelPickerWidget = ({
 
   const handleOk = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   return (
@@ -46,6 +52,7 @@ const ChannelPickerWidget = ({
       <Modal
         width={"80%"}
         title="选择版本风格"
+        footer={false}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
