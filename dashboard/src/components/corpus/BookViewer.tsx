@@ -9,6 +9,7 @@ import { Tabs } from "antd";
 export interface IChapter {
   book: number;
   para: number;
+  level?: number;
 }
 
 interface IWidget {
