@@ -153,7 +153,6 @@ export const WbwSentCtl = ({
       });
   }, [magicDict]);
 
-  console.log("wbw sent return");
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
