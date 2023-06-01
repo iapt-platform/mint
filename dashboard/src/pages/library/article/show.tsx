@@ -23,7 +23,9 @@ import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
 import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
+import { useAppSelector } from "../../../hooks";
 import { add } from "../../../reducers/inline-dict";
+import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
 
@@ -44,6 +46,36 @@ const Widget = () => {
   console.log("mode", mode);
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
+  const paraChange = useAppSelector(paraParam);
+
+  useEffect(() => {
+    if (typeof paraChange === "undefined") {
+      return;
+    }
+    let newType: string = paraChange?.type;
+    let newId: string;
+    switch (paraChange?.type) {
+      case "chapter":
+        newId = `${paraChange.book}-${paraChange.para}`;
+        break;
+      case "para":
+        newId = `${paraChange.book}-${paraChange.para}`;
+        break;
+      default:
+        newId = "";
+        break;
+    }
+    let url = `/article/${newType}/${newId}?`;
+    let param: string[] = [];
+    searchParams.forEach((value, key) => {
+      if (key !== "book" && key !== "par") {
+        param.push(`${key}=${value}`);
+      }
+    });
+    param.push(`book=${paraChange.book}`);
+    param.push(`par=${paraChange.para}`);
+    navigate(url + param.join("&"));
+  }, [paraChange]);
 
   useEffect(() => {
     /**
