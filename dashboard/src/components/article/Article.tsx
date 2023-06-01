@@ -139,21 +139,6 @@ const ArticleWidget = ({
     if (!active) {
       return;
     }
-    /*
-    if (mode === articleMode) {
-      return;
-    }
-
-    if (
-      (mode === "edit" && articleMode === "wbw") ||
-      (mode === "wbw" && articleMode === "edit")
-    ) {
-      console.log("set mode", mode, articleMode);
-      setArticleMode(mode ? mode : "read");
-      return;
-    }
-    setArticleMode(mode ? mode : "read");
-    */
     if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
