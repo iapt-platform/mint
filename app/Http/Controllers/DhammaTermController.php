@@ -487,13 +487,13 @@ class DhammaTermController extends Controller
                             $message .= "没有查到版本信息：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue 1;
+                            continue 2;
                         }
                         if($owner_id != $channel['studio_id']){
                             $message .= "版本不在studio中：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue 1;
+                            continue 2;
                         }
                         $query['channal'] = $channel_id;
                         $channelId = $channel_id;
@@ -520,19 +520,19 @@ class DhammaTermController extends Controller
                                 $message .= "无删除权限：{$id} - {$word}\n";
                                 $currLine++;
                                 $countFail++;
-                                continue 1;
+                                continue;
                             }
                         }else{
                             $message .= "无删除权限：{$id} - {$word}\n";
                             $currLine++;
                             $countFail++;
-                            continue 1;
+                            continue;
                         }
                     }
                     //删除
                     $oldRow->delete();
                     $currLine++;
-                    continue 1;
+                    continue;
                 }
             }else{
                 $oldRow = null;
@@ -558,7 +558,7 @@ class DhammaTermController extends Controller
                     $message .= "重复的数据：{$id} - {$word}\n";
                     $currLine++;
                     $countFail++;
-                    continue 1;
+                    continue;
                 }
             }
             $row->word_en = Tools::getWordEn($word);
