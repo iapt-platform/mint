@@ -217,8 +217,9 @@ class CorpusController extends Controller
             $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }
 
-        if($request->has('channel')){
-            $channels = array_merge($channels,explode(",",$request->get('channel')) );
+        if($request->has('channels')){
+            $getChannel = explode(",",$request->get('channels'));
+            $channels = array_merge($channels,$getChannel );
         }
         $para = explode(",",$request->get('par'));
 
