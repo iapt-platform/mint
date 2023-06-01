@@ -15,20 +15,20 @@ import { ISentence } from "../SentEdit";
 
 const { Text } = Typography;
 
-interface ISentCellEditable {
+interface IWidget {
   data: ISentence;
-  onDataChange?: Function;
+  isPr?: boolean;
+  onSave?: Function;
   onClose?: Function;
   onCreate?: Function;
-  isPr?: boolean;
 }
 const SentCellEditableWidget = ({
   data,
-  onDataChange,
+  onSave,
   onClose,
   onCreate,
   isPr = false,
-}: ISentCellEditable) => {
+}: IWidget) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
@@ -82,7 +82,7 @@ const SentCellEditableWidget = ({
 
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onDataChange !== "undefined") {
+          if (typeof onSave !== "undefined") {
             const newData: ISentence = {
               content: json.data.content,
               html: json.data.html,
@@ -94,7 +94,7 @@ const SentCellEditableWidget = ({
               channel: json.data.channel,
               updateAt: json.data.updated_at,
             };
-            onDataChange(newData);
+            onSave(newData);
           }
         } else {
           message.error(json.message);
