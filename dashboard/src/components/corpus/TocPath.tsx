@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { Breadcrumb, Popover, Tooltip } from "antd";
+import { Breadcrumb, Popover, Tag, Typography } from "antd";
 import PaliText from "../template/Wbw/PaliText";
 import React from "react";
+import { IChapter } from "./BookViewer";
 
 export interface ITocPathNode {
   book: number;
@@ -35,17 +36,18 @@ const TocPathWidget = ({
     const linkChapter = `/article/chapter/${item.book}-${item.paragraph}${sChannel}`;
     let oneItem = <></>;
     const title = <PaliText text={item.title} />;
+    const eTitle = item.level < 9 ? title : <Tag>{title}</Tag>;
     switch (link) {
       case "none":
-        oneItem = <>{title}</>;
+        oneItem = <Typography.Link>{eTitle}</Typography.Link>;
         break;
       case "self" || "blank":
         if (item.book === 0) {
-          oneItem = <>{title}</>;
+          oneItem = <>{eTitle}</>;
         } else {
           oneItem = (
             <Link to={linkChapter} target={`_${link}`}>
-              {title}
+              {eTitle}
             </Link>
           );
         }
@@ -54,9 +56,16 @@ const TocPathWidget = ({
     }
     return (
       <Breadcrumb.Item
-        onClick={() => {
+        onClick={(
+          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+        ) => {
           if (typeof onChange !== "undefined") {
-            onChange({ book: item.book, para: item.paragraph });
+            const para: IChapter = {
+              book: item.book,
+              para: item.paragraph,
+              level: item.level,
+            };
+            onChange(para, e);
           }
         }}
         key={id}
