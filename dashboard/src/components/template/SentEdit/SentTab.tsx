@@ -13,6 +13,9 @@ import TocPath, { ITocPathNode } from "../../corpus/TocPath";
 import { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
+import { IChapter } from "../../corpus/BookViewer";
+import store from "../../../store";
+import { change } from "../../../reducers/para-change";
 
 const { Text } = Typography;
 
@@ -50,7 +53,12 @@ const SentTabWidget = ({
   onMagicDict,
 }: IWidget) => {
   const intl = useIntl();
-
+  const mPath = path
+    ? [
+        ...path,
+        { book: book, paragraph: para, title: para.toString(), level: 100 },
+      ]
+    : [];
   if (typeof id === "undefined") {
     return <></>;
   }
@@ -66,10 +74,22 @@ const SentTabWidget = ({
         tabBarExtraContent={
           <Space>
             <TocPath
-              data={path}
+              link="none"
+              data={mPath}
               trigger={
                 path ? path.length > 0 ? path[0].paliTitle : <></> : <></>
               }
+              onChange={(para: IChapter) => {
+                //点击章节目录
+                const type = para.level
+                  ? para.level < 8
+                    ? "chapter"
+                    : "para"
+                  : "para";
+                store.dispatch(
+                  change({ book: para.book, para: para.para, type: type })
+                );
+              }}
             />
             <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
             <SentMenu
