@@ -89,48 +89,50 @@ const SentCellWidget = ({
         }}
       >
         <EditInfo data={sentData} />
-        <div
-          style={{ display: isEditMode ? "none" : "block", marginLeft: "2em" }}
-        >
-          <MdView
-            html={sentData.html !== "" ? sentData.html : "请输入"}
-            wordWidget={wordWidget}
-          />
-        </div>
-        <div style={{ display: isEditMode ? "block" : "none" }}>
-          {wbwData.length > 0 ? (
-            <WbwSentCtl
-              book={data.book}
-              para={data.para}
-              wordStart={data.wordStart}
-              wordEnd={data.wordEnd}
-              data={wbwData}
-              refreshable={true}
-              display="block"
-              fields={{
-                meaning: true,
-                factors: false,
-                factorMeaning: false,
-                case: true,
-              }}
-              channelId={data.channel.id}
-              onChange={(data: IWbw[]) => {
-                setWbwData(data);
-              }}
+        {isEditMode ? (
+          <div>
+            {wbwData.length > 0 ? (
+              <WbwSentCtl
+                book={data.book}
+                para={data.para}
+                wordStart={data.wordStart}
+                wordEnd={data.wordEnd}
+                data={wbwData}
+                refreshable={true}
+                display="block"
+                fields={{
+                  meaning: true,
+                  factors: false,
+                  factorMeaning: false,
+                  case: true,
+                }}
+                channelId={data.channel.id}
+                onChange={(data: IWbw[]) => {
+                  setWbwData(data);
+                }}
+              />
+            ) : (
+              <SentCellEditable
+                data={sentData}
+                isPr={isPr}
+                onClose={() => {
+                  setIsEditMode(false);
+                }}
+                onSave={(data: ISentence) => {
+                  setSentData(data);
+                  setIsEditMode(false);
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <div style={{ marginLeft: "2em" }}>
+            <MdView
+              html={sentData.html !== "" ? sentData.html : "请输入"}
+              wordWidget={wordWidget}
             />
-          ) : (
-            <SentCellEditable
-              data={sentData}
-              isPr={isPr}
-              onClose={() => {
-                setIsEditMode(false);
-              }}
-              onDataChange={(data: ISentence) => {
-                setSentData(data);
-              }}
-            />
-          )}
-        </div>
+          </div>
+        )}
 
         <div style={{ marginLeft: "2em" }}>
           <SuggestionToolbar data={data} isPr={isPr} />
