@@ -74,9 +74,9 @@ const WbwParent2Widget = ({ data, onChange }: IWidget) => {
       <div style={{ display: "flex" }}>
         <Form.Item
           name="parent2"
-          label={intl.formatMessage({ id: "forms.fields.parent.label" })}
+          label={intl.formatMessage({ id: "forms.fields.parent2.label" })}
           tooltip={intl.formatMessage({
-            id: "forms.fields.parent.tooltip",
+            id: "forms.fields.parent2.tooltip",
           })}
         >
           <AutoComplete

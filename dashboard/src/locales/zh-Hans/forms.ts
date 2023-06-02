@@ -62,6 +62,8 @@ const items = {
   "forms.fields.count.label": "计数",
   "forms.fields.owner.label": "拥有者",
   "forms.message.res.remove": "将此此资源从群中移除吗？",
+  "forms.fields.parent2.label": "词典原型",
+  "forms.fields.parent2.tooltip": "最长为 256个字符",
 };
 
 export default items;
