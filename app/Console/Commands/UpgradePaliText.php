@@ -101,7 +101,6 @@ class UpgradePaliText extends Command
             }
 
             for ($iPar = 0; $iPar < count($title_data); $iPar++) {
-                $this->info($iPar);
                 $book = $from ;
                 $paragraph = $title_data[$iPar]["paragraph"];
                 $true_level = (int) $title_data[$iPar]["level"];
