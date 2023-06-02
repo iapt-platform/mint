@@ -90,143 +90,140 @@ class UpgradePaliText extends Command
 			}
 			$title_data = PaliText::select(['book','paragraph','level','parent','toc','lenght'])
 								->where('book',$from)->orderby('paragraph','asc')->get();
-            {
-				$paragraph_count = count($title_data);
-				$paragraph_info = array();
-				$paragraph_info[] = array($from, -1, $paragraph_count, -1, -1, -1);
+
+            $paragraph_count = count($title_data);
+            $paragraph_info = array();
+            $paragraph_info[] = array($from, -1, $paragraph_count, -1, -1, -1);
 
 
-                for ($iPar = 0; $iPar < count($title_data); $iPar++) {
-                    $title_data[$iPar]["level"] = $arrInserString[$iPar][3];
+            for ($iPar = 0; $iPar < count($title_data); $iPar++) {
+                $title_data[$iPar]["level"] = $arrInserString[$iPar][3];
+            }
+
+            for ($iPar = 0; $iPar < count($title_data); $iPar++) {
+                $this->info($iPar);
+                $book = $from ;
+                $paragraph = $title_data[$iPar]["paragraph"];
+                $true_level = (int) $title_data[$iPar]["level"];
+
+                if ((int) $title_data[$iPar]["level"] == 8) {
+                    $title_data[$iPar]["level"] = 100;
+                }
+                $curr_level = (int) $title_data[$iPar]["level"];
+                # 计算这个chapter的段落数量
+                $length = -1;
+
+
+                for ($iPar1 = $iPar + 1; $iPar1 < count($title_data); $iPar1++) {
+                    $thislevel = (int) $title_data[$iPar1]["level"];
+                    if ($thislevel <= $curr_level) {
+                        $length = (int) $title_data[$iPar1]["paragraph"] - $paragraph;
+                        break;
+                    }
                 }
 
+                if ($length == -1) {
+                    $length = $paragraph_count - $paragraph + 1;
+                }
 
-				for ($iPar = 0; $iPar < count($title_data); $iPar++) {
-					$book = $from ;
-					$paragraph = $title_data[$iPar]["paragraph"];
-
-					if ((int) $title_data[$iPar]["level"] == 8) {
-						$title_data[$iPar]["level"] = 100;
-					}
-
-					$curr_level = (int) $title_data[$iPar]["level"];
-					# 计算这个chapter的段落数量
-					$length = -1;
-
-
-					for ($iPar1 = $iPar + 1; $iPar1 < count($title_data); $iPar1++) {
-						$thislevel = (int) $title_data[$iPar1]["level"];
-						if ($thislevel <= $curr_level) {
-							$length = (int) $title_data[$iPar1]["paragraph"] - $paragraph;
-							break;
-						}
-					}
-
-					if ($length == -1) {
-						$length = $paragraph_count - $paragraph + 1;
-					}
-
-                    /*
-                    上一个段落
-                    算法：查找上一个标题段落。而且该标题段落的下一个段落不是标题段落
-                    */
-                    $prev = -1;
-                    if ($iPar > 0) {
-                        for ($iPar1 = $iPar - 1; $iPar1 >= 0; $iPar1--) {
-                            if ($title_data[$iPar1]["level"] < 8 && $title_data[$iPar1+1]["level"]==100) {
-                                $prev = $title_data[$iPar1]["paragraph"];
-                                break;
-                            }
+                /*
+                上一个段落
+                算法：查找上一个标题段落。而且该标题段落的下一个段落不是标题段落
+                */
+                $prev = -1;
+                if ($iPar > 0) {
+                    for ($iPar1 = $iPar - 1; $iPar1 >= 0; $iPar1--) {
+                        if ($title_data[$iPar1]["level"] < 8 && $title_data[$iPar1+1]["level"]==100) {
+                            $prev = $title_data[$iPar1]["paragraph"];
+                            break;
                         }
                     }
-                    /*
-                    下一个段落
-                    算法：查找下一个标题段落。而且该标题段落的下一个段落不是标题段落
-                    */
-                    $next = -1;
-                    if ($iPar < count($title_data) - 1) {
-                        for ($iPar1 = $iPar + 1; $iPar1 < count($title_data)-1; $iPar1++) {
-                            if ($title_data[$iPar1]["level"] <8 && $title_data[$iPar1+1]["level"]==100) {
-                                $next = $title_data[$iPar1]["paragraph"];
-                                break;
-                            }
+                }
+                /*
+                下一个段落
+                算法：查找下一个标题段落。而且该标题段落的下一个段落不是标题段落
+                */
+                $next = -1;
+                if ($iPar < count($title_data) - 1) {
+                    for ($iPar1 = $iPar + 1; $iPar1 < count($title_data)-1; $iPar1++) {
+                        if ($title_data[$iPar1]["level"] <8 && $title_data[$iPar1+1]["level"]==100) {
+                            $next = $title_data[$iPar1]["paragraph"];
+                            break;
                         }
                     }
-
-					$parent = -1;
-					if ($iPar > 0) {
-						for ($iPar1 = $iPar - 1; $iPar1 >= 0; $iPar1--) {
-							if ($title_data[$iPar1]["level"] < $curr_level) {
-								$parent = $title_data[$iPar1]["paragraph"];
-								break;
-							}
-						}
-					}
-					//计算章节包含总字符数
-					$iChapter_strlen = 0;
-
-					for ($i = $iPar; $i < $iPar + $length; $i++) {
-						$iChapter_strlen += $title_data[$i]["lenght"];
-					}
-
-					$newData = [
-						'level' => $arrInserString[$iPar][3],
-						'toc' => $arrInserString[$iPar][5],
-						'chapter_len' => $length,
-						'next_chapter' => $next,
-						'prev_chapter' => $prev,
-						'parent' => $parent,
-						'chapter_strlen'=> $iChapter_strlen,
-					];
-
-                    $path = [];
-
-                    $title_data[$iPar]["level"] = $newData["level"];
-                    $title_data[$iPar]["toc"] = $newData["toc"];
-                    $title_data[$iPar]["parent"] = $newData["parent"];
-
-					/*
-                    *获取路径
-                    */
-                    $currParent = $parent;
-
-                    $iLoop = 0;
-                    while ($currParent != -1 && $iLoop<7) {
-                        # code...
-                        $pathTitle = $title_data[$currParent-1]["toc"];
-                        $pathLevel = $title_data[$currParent-1]['level'];
-                        $path[] = ["book"=>$book,"paragraph"=>$currParent,"title"=>$pathTitle,"level"=>$pathLevel];
-                        $currParent = $title_data[$currParent-1]["parent"];
-                        $iLoop++;
+                }
+                //查找parent
+                $parent = -1;
+                if ($iPar > 0) {
+                    for ($iPar1 = $iPar - 1; $iPar1 >= 0; $iPar1--) {
+                        if ($title_data[$iPar1]["level"] < $true_level) {
+                            $parent = $title_data[$iPar1]["paragraph"];
+                            break;
+                        }
                     }
-                    if(count($path)>0){
-                        //插入书名
-                        $bookTitle = BookTitle::where('book',$book)
-                                            ->where('paragraph',end($path)['paragraph'])
-                                            ->value('title');
-                        $path[] = ["book"=>0,"paragraph"=>0,"title"=>$bookTitle,"level"=>0];
-                    }
+                }
+                //计算章节包含总字符数
+                $iChapter_strlen = 0;
 
-                    # 将路径反向
-                    $path1 = [];
-                    for ($i=count($path)-1; $i >=0 ; $i--) {
-                        # code...
-                        $path1[] = $path[$i];
-                    }
-                    $newData['path'] = $path1;
+                for ($i = $iPar; $i < $iPar + $length; $i++) {
+                    $iChapter_strlen += $title_data[$i]["lenght"];
+                }
+
+                $newData = [
+                    'level' => $arrInserString[$iPar][3],
+                    'toc' => $arrInserString[$iPar][5],
+                    'chapter_len' => $length,
+                    'next_chapter' => $next,
+                    'prev_chapter' => $prev,
+                    'parent' => $parent,
+                    'chapter_strlen'=> $iChapter_strlen,
+                ];
+
+                $path = [];
+
+                $title_data[$iPar]["level"] = $newData["level"];
+                $title_data[$iPar]["toc"] = $newData["toc"];
+                $title_data[$iPar]["parent"] = $newData["parent"];
+
+                /*
+                *获取路径
+                */
+                $currParent = $parent;
+
+                $iLoop = 0;
+                while ($currParent != -1 && $iLoop<7) {
+                    # code...
+                    $pathTitle = $title_data[$currParent-1]["toc"];
+                    $pathLevel = $title_data[$currParent-1]['level'];
+                    $path[] = ["book"=>$book,"paragraph"=>$currParent,"title"=>$pathTitle,"level"=>$pathLevel];
+                    $currParent = $title_data[$currParent-1]["parent"];
+                    $iLoop++;
+                }
+                if(count($path)>0){
+                    //插入书名
+                    $bookTitle = BookTitle::where('book',$book)
+                                        ->where('paragraph',end($path)['paragraph'])
+                                        ->value('title');
+                    $path[] = ["book"=>0,"paragraph"=>0,"title"=>$bookTitle,"level"=>0];
+                }
+
+                # 将路径反向
+                $path1 = [];
+                for ($i=count($path)-1; $i >=0 ; $i--) {
+                    # code...
+                    $path1[] = $path[$i];
+                }
+                $newData['path'] = $path1;
 
 
-					PaliText::where('book',$book)
-							->where('paragraph',$paragraph)
-							->update($newData);
+                PaliText::where('book',$book)
+                        ->where('paragraph',$paragraph)
+                        ->update($newData);
 
-					if ($curr_level > 0 && $curr_level < 8) {
-						$paragraph_info[] = array($book, $paragraph, $length, $prev, $next, $parent);
-					}
-				}
-			}
-
-
+                if ($curr_level > 0 && $curr_level < 8) {
+                    $paragraph_info[] = array($book, $paragraph, $length, $prev, $next, $parent);
+                }
+            }
 			$bar->advance();
 		}
 		$bar->finish();
