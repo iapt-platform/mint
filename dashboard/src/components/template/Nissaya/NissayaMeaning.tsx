@@ -2,6 +2,7 @@ import { Space } from "antd";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../hooks";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
+import Lookup from "../../dict/Lookup";
 import { NissayaCardPop } from "../../general/NissayaCard";
 
 interface IMeaning {
@@ -22,7 +23,6 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
     if (typeof text === "undefined") {
       return;
     }
-    console.log("ending", endings);
 
     const mWords: IMeaning[] = text.split(" ").map((item) => {
       let word = item.replaceAll("။", "");
@@ -52,7 +52,7 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
       {words?.map((item, id) => {
         return (
           <span key={id}>
-            {item.base}
+            <Lookup search={item.base}>{item.base}</Lookup>
             {item.ending?.map((item, id) => {
               return <NissayaCardPop text={item} key={id} trigger={item} />;
             })}
