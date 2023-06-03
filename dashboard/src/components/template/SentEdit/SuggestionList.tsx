@@ -14,6 +14,7 @@ interface IWidget {
   channel: IChannel;
   reload?: boolean;
   onReload?: Function;
+  onChange?: Function;
 }
 const SuggestionListWidget = ({
   book,
@@ -23,6 +24,7 @@ const SuggestionListWidget = ({
   channel,
   reload = false,
   onReload,
+  onChange,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
 
@@ -48,6 +50,9 @@ const SuggestionListWidget = ({
             };
           });
           setSentData(newData);
+          if (typeof onChange !== "undefined") {
+            onChange(json.data.count);
+          }
         } else {
           message.error(json.message);
         }
