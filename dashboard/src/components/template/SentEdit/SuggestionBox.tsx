@@ -18,6 +18,7 @@ const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
+  const [prNumber, setPrNumber] = useState(data.suggestionCount?.suggestion);
 
   useEffect(() => {
     if (localStorage.getItem("read_pr_Notification") === "ok") {
@@ -36,7 +37,10 @@ const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
 
   return (
     <>
-      <span onClick={showDrawer}>{trigger}</span>
+      <Space onClick={showDrawer}>
+        {trigger}
+        {prNumber}
+      </Space>
 
       <Drawer
         title="修改建议"
@@ -79,6 +83,7 @@ const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
             {...data}
             reload={reload}
             onReload={() => setReload(false)}
+            onChange={(count: number) => setPrNumber(count)}
           />
         </Space>
       </Drawer>
