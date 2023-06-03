@@ -11,6 +11,8 @@ import { roman_to_my, my_to_roman } from "../../code/my";
 import { roman_to_si } from "../../code/si";
 import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
+import store from "../../../store";
+import { lookup as _lookup } from "../../../reducers/command";
 
 const { Text } = Typography;
 
@@ -20,6 +22,7 @@ interface IWidget {
   code?: string;
   primary?: boolean;
   termToLocal?: boolean;
+  lookup?: boolean;
 }
 const PaliTextWidget = ({
   text,
@@ -27,11 +30,18 @@ const PaliTextWidget = ({
   code = "roman",
   primary = true,
   termToLocal = true,
+  lookup = false,
 }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
   const terms = useAppSelector(getTerm);
 
+  let romanText: string | undefined;
+  if (code === "my") {
+    romanText = my_to_roman(text);
+  } else {
+    romanText = text;
+  }
   useEffect(() => {
     if (!termToLocal) {
       return;
@@ -76,7 +86,25 @@ const PaliTextWidget = ({
       }
     }
   }, [text, settings, code]);
-  return text ? <Text style={style}>{paliText}</Text> : <></>;
+
+  const nodePali = text ? <Text style={style}>{paliText}</Text> : <></>;
+  if (lookup) {
+    return (
+      <Typography.Text
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          //发送点词查询消息
+          if (typeof romanText === "string") {
+            store.dispatch(_lookup(romanText));
+          }
+        }}
+      >
+        {nodePali}
+      </Typography.Text>
+    );
+  } else {
+    return nodePali;
+  }
 };
 
 export default PaliTextWidget;
