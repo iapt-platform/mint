@@ -29,7 +29,6 @@ const WbwDetailWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
-
   useEffect(() => {
     setCurrWbwData(data);
   }, [data]);
@@ -110,16 +109,18 @@ const WbwDetailWidget = ({
         size="small"
         type="card"
         tabBarExtraContent={
-          <CommentBox
-            resId={data.uid}
-            resType="wbw"
-            trigger={<Button icon={<CommentOutlined />} type="text" />}
-            onCommentCountChange={(count: number) => {
-              if (typeof onCommentCountChange !== "undefined") {
-                onCommentCountChange(count);
-              }
-            }}
-          />
+          data.uid ? (
+            <CommentBox
+              resId={data.uid}
+              resType="wbw"
+              trigger={<Button icon={<CommentOutlined />} type="text" />}
+              onCommentCountChange={(count: number) => {
+                if (typeof onCommentCountChange !== "undefined") {
+                  onCommentCountChange(count);
+                }
+              }}
+            />
+          ) : undefined
         }
         items={[
           {
