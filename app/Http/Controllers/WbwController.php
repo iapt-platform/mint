@@ -130,16 +130,27 @@ class WbwController extends Controller
                 }
             }
         }
-        $wbwData = "";
-        foreach ($request->get('data') as $key => $word) {
-            $xml = Tools::JsonToXml($word);
-            $xml = str_replace('<?xml version="1.0"?>','',$xml);
-            $wbwData .= $xml;
+
+        $count=0;
+        foreach ($request->get('data') as $row) {
+            $wbw = Wbw::where('block_uid',$wbwBlockId)
+                        ->where('wid',$row['sn'])
+                        ->first();
+            if($wbw){
+                $wbwData = "";
+                foreach ($row['words'] as $word) {
+                    $xml = Tools::JsonToXml($word);
+                    $xml = str_replace('<?xml version="1.0"?>','',$xml);
+                    $wbwData .= $xml;
+                }
+                $wbw->data = $wbwData;
+                $wbw->status = 5;
+                $wbw->save();
+                $count++;
+            }
         }
-        $wbw->data = $wbwData;
-        $wbw->status = 5;
-        $wbw->save();
-        return $this->ok(1);
+
+        return $this->ok($count);
     }
 
     /**
