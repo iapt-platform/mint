@@ -133,7 +133,7 @@ const SentCellWidget = ({
         )}
 
         <div style={{ marginLeft: "2em" }}>
-          <SuggestionToolbar data={data} isPr={isPr} />
+          <SuggestionToolbar data={sentData} isPr={isPr} />
         </div>
       </SentEditMenu>
       <Divider style={{ margin: "10px 0" }} />
