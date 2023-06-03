@@ -10,6 +10,8 @@ import {
 import { useAppSelector } from "../../../hooks";
 
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import store from "../../../store";
+import { lookup } from "../../../reducers/command";
 
 interface IWFMI {
   pali: string;
@@ -19,7 +21,7 @@ interface IWFMI {
 const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
   const defaultMenu: MenuProps["items"] = [
     {
-      key: "lookup",
+      key: "_lookup",
       label: (
         <Space>
           <SearchOutlined />
@@ -64,7 +66,9 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       menu={{
         items: items,
         onClick: (e) => {
-          if (typeof onChange !== "undefined") {
+          if (e.key === "_lookup") {
+            store.dispatch(lookup(pali));
+          } else if (typeof onChange !== "undefined") {
             onChange(e.key);
           }
         },
