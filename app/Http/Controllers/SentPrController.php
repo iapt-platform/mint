@@ -61,18 +61,26 @@ class SentPrController extends Controller
                             ->where('channel_uid',$sentence['channel_id'])
                             ->select('content','editor_uid')
                             ->orderBy('created_at','desc')->get();
-            $output[] = [
-                'sentence' => [
-                    'book' => $sentInfo->book_id,
-                    'paragraph' => $sentInfo->paragraph,
-                    'word_start' => $sentInfo->word_start,
-                    'word_end' => $sentInfo->word_end,
-                    'channel_id' => $sentInfo->channel_uid,
-                    'content' => $sentInfo->content,
-                    'pr_count' => count($sentPr),
-                ],
-                'pr' => $sentPr,
-            ];
+            if(count($sentPr)>0){
+                if($sentInfo){
+                    $content = $sentInfo->content;
+                }else{
+                    $content = "null";
+                }
+                $output[] = [
+                    'sentence' => [
+                        'book' => $sentence['book'],
+                        'paragraph' => $sentence['paragraph'],
+                        'word_start' => $sentence['word_start'],
+                        'word_end' => $sentence['word_end'],
+                        'channel_id' => $sentence['channel_id'],
+                        'content' => $content,
+                        'pr_count' => count($sentPr),
+                    ],
+                    'pr' => $sentPr,
+                ];
+            }
+
         }
         return $this->ok(['rows'=>$output,'count'=>count($output)]);
     }
