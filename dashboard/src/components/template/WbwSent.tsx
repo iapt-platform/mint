@@ -46,12 +46,16 @@ interface IWbwUpdateResponse {
   message: string;
   data: { rows?: IWbwXml[]; count: number };
 }
+interface IWbwWord {
+  words: IWbwXml[];
+  sn: number;
+}
 interface IWbwRequest {
   book: number;
   para: number;
   sn: number;
   channel_id: string;
-  data: IWbwXml[];
+  data: IWbwWord[];
 }
 interface IWidget {
   data: IWbw[];
@@ -168,45 +172,53 @@ export const WbwSentCtl = ({
 
               let newData = [...wordData];
               newData.forEach((value, index, array) => {
+                //把新的数据更新到数组
                 if (value.sn.join() === e.sn.join()) {
                   console.log("found", e.sn);
                   array[index] = e;
                 }
               });
+              update(newData);
 
               const data = newData.filter((value) => value.sn[0] === e.sn[0]);
+
               const postParam: IWbwRequest = {
                 book: book,
                 para: para,
-                sn: e.sn[0],
                 channel_id: channelId,
-                data: data.map((item) => {
-                  return {
-                    pali: item.word,
-                    real: item.real,
-                    id: `${book}-${para}-` + e.sn.join("-"),
-                    type: item.type,
-                    gramma: item.grammar,
-                    mean: item.meaning
-                      ? {
-                          value: item.meaning.value,
-                          status: item.meaning?.status,
-                        }
-                      : undefined,
-                    org: item.factors,
-                    om: item.factorMeaning,
-                    case: item.case,
-                    parent: item.parent,
-                    pg: item.grammar2,
-                    parent2: item.parent2,
-                    rela: item.relation,
-                    lock: item.locked,
-                    note: item.note,
-                    bmt: item.bookMarkText,
-                    bmc: item.bookMarkColor,
-                    cf: item.confidence,
-                  };
-                }),
+                sn: e.sn[0],
+                data: [
+                  {
+                    sn: e.sn[0],
+                    words: data.map((item) => {
+                      return {
+                        pali: item.word,
+                        real: item.real,
+                        id: `${book}-${para}-` + e.sn.join("-"),
+                        type: item.type,
+                        gramma: item.grammar,
+                        mean: item.meaning
+                          ? {
+                              value: item.meaning.value,
+                              status: item.meaning?.status,
+                            }
+                          : undefined,
+                        org: item.factors,
+                        om: item.factorMeaning,
+                        case: item.case,
+                        parent: item.parent,
+                        pg: item.grammar2,
+                        parent2: item.parent2,
+                        rela: item.relation,
+                        lock: item.locked,
+                        note: item.note,
+                        bmt: item.bookMarkText,
+                        bmc: item.bookMarkColor,
+                        cf: item.confidence,
+                      };
+                    }),
+                  },
+                ],
               };
 
               post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then(
@@ -218,8 +230,6 @@ export const WbwSentCtl = ({
                   }
                 }
               );
-
-              update(newData);
             }}
             onSplit={() => {
               const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
