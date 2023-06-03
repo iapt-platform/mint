@@ -84,6 +84,7 @@ const SentCellEditableWidget = ({
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onSave !== "undefined") {
             const newData: ISentence = {
+              id: json.data.id,
               content: json.data.content,
               html: json.data.html,
               book: json.data.book,
