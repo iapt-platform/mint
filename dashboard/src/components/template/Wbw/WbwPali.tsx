@@ -15,7 +15,7 @@ import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
 import store from "../../../store";
-import { command } from "../../../reducers/command";
+import { lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 
@@ -165,14 +165,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       onClick={() => {
         //发送点词查询消息
         if (typeof data.real?.value === "string") {
-          store.dispatch(
-            command({
-              prop: {
-                word: data.real.value,
-              },
-              type: "dict",
-            })
-          );
+          store.dispatch(lookup(data.real.value));
         }
       }}
     >
