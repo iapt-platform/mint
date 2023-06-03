@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { command } from "../../reducers/command";
+import { command, lookup } from "../../reducers/command";
 import store from "../../store";
 import { IWidgetDict } from "../dict/DictComponent";
 
@@ -19,10 +19,7 @@ export const WdCtl = ({ text }: IWidgetWdCtl) => {
       }}
       onClick={() => {
         //发送点词查询消息
-        const it: IWidgetDict = {
-          word: text,
-        };
-        store.dispatch(command({ prop: it, type: "dict" }));
+        store.dispatch(lookup(text));
       }}
       style={{
         textDecoration: isHover ? "underline dotted" : "none",
