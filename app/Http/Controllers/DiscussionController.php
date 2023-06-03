@@ -74,22 +74,25 @@ class DiscussionController extends Controller
                                 ->where('word_end',$sentence['word_end'])
                                 ->where('channel_uid',$sentence['channel_id'])
                                 ->first();
-            $sentPr = Discussion::where('res_id',$sentInfo['uid'])
-                            ->whereNull('parent')
-                            ->select('title','children_count','editor_uid')
-                            ->orderBy('created_at','desc')->get();
-            $output[] = [
-                'sentence' => [
-                    'book' => $sentInfo->book_id,
-                    'paragraph' => $sentInfo->paragraph,
-                    'word_start' => $sentInfo->word_start,
-                    'word_end' => $sentInfo->word_end,
-                    'channel_id' => $sentInfo->channel_uid,
-                    'content' => $sentInfo->content,
-                    'pr_count' => count($sentPr),
-                ],
-                'pr' => $sentPr,
-            ];
+            if($sentInfo){
+                $sentPr = Discussion::where('res_id',$sentInfo['uid'])
+                                ->whereNull('parent')
+                                ->select('title','children_count','editor_uid')
+                                ->orderBy('created_at','desc')->get();
+                $output[] = [
+                    'sentence' => [
+                        'book' => $sentInfo->book_id,
+                        'paragraph' => $sentInfo->paragraph,
+                        'word_start' => $sentInfo->word_start,
+                        'word_end' => $sentInfo->word_end,
+                        'channel_id' => $sentInfo->channel_uid,
+                        'content' => $sentInfo->content,
+                        'pr_count' => count($sentPr),
+                    ],
+                    'pr' => $sentPr,
+                ];
+            }
+
         }
         return $this->ok(['rows'=>$output,'count'=>count($output)]);
     }
