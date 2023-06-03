@@ -35,7 +35,7 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
   const normalButton = (
     <Space>
       <SuggestionBox data={data} trigger={<HandOutlinedIcon />} />
-      {data.suggestionCount?.suggestion} <Divider type="vertical" />
+      <Divider type="vertical" />
       <CommentBox
         resId={data.id}
         resType="sentence"
