@@ -69,7 +69,9 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
     const mRelation = relations
       ?.filter(
         (value) =>
-          value.case === caseEnd[caseEnd.length - 1].replaceAll(".", "")
+          value.case === caseEnd[caseEnd.length - 1].replaceAll(".", "") ||
+          value.case === "" ||
+          value.case === null
       )
       .map((item) => {
         const localName = terms?.find(
