@@ -23,17 +23,14 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
             const localName = terms?.find(
               (item) => item.word === relation.relation
             )?.meaning;
-            return `${relation.sour_id}(${
-              relation.sour_spell
-            }<br />${item.meaning?.value
-              ?.replaceAll("[", "")
-              .replaceAll("]", "")
-              .replaceAll("{", "")
-              .replaceAll("}", "")}) --"${
-              relation.relation
-            }<br />${localName}"--> ${relation.dest_id}(${
-              relation.dest_spell
-            })\n`;
+            const meaning = item.meaning?.value
+              ? item.meaning?.value
+                  ?.replaceAll("[", "")
+                  .replaceAll("]", "")
+                  .replaceAll("{", "")
+                  .replaceAll("}", "")
+              : "";
+            return `${relation.sour_id}(${relation.sour_spell}<br />${meaning}) --"${relation.relation}<br />${localName}"--> ${relation.dest_id}(${relation.dest_spell})\n`;
           });
           return graphic.join("");
         } else {
