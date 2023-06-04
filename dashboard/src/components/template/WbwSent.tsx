@@ -157,6 +157,56 @@ export const WbwSentCtl = ({
       });
   }, [magicDict]);
 
+  const updateWord = (wbwData: IWbw[], sn: number) => {
+    const data = wbwData.filter((value) => value.sn[0] === sn);
+
+    const postParam: IWbwRequest = {
+      book: book,
+      para: para,
+      channel_id: channelId,
+      sn: sn,
+      data: [
+        {
+          sn: sn,
+          words: data.map((item) => {
+            return {
+              pali: item.word,
+              real: item.real,
+              id: `${book}-${para}-` + item.sn.join("-"),
+              type: item.type,
+              gramma: item.grammar,
+              mean: item.meaning
+                ? {
+                    value: item.meaning.value,
+                    status: item.meaning?.status,
+                  }
+                : undefined,
+              org: item.factors,
+              om: item.factorMeaning,
+              case: item.case,
+              parent: item.parent,
+              pg: item.grammar2,
+              parent2: item.parent2,
+              rela: item.relation,
+              lock: item.locked,
+              note: item.note,
+              bmt: item.bookMarkText,
+              bmc: item.bookMarkColor,
+              cf: item.confidence,
+            };
+          }),
+        },
+      ],
+    };
+
+    post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then((json) => {
+      if (json.ok) {
+        message.info(json.data.count + " updated");
+      } else {
+        message.error(json.message);
+      }
+    });
+  };
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       {wordData.map((item, id) => {
@@ -179,60 +229,11 @@ export const WbwSentCtl = ({
                 }
               });
               update(newData);
-
-              const data = newData.filter((value) => value.sn[0] === e.sn[0]);
-
-              const postParam: IWbwRequest = {
-                book: book,
-                para: para,
-                channel_id: channelId,
-                sn: e.sn[0],
-                data: [
-                  {
-                    sn: e.sn[0],
-                    words: data.map((item) => {
-                      return {
-                        pali: item.word,
-                        real: item.real,
-                        id: `${book}-${para}-` + e.sn.join("-"),
-                        type: item.type,
-                        gramma: item.grammar,
-                        mean: item.meaning
-                          ? {
-                              value: item.meaning.value,
-                              status: item.meaning?.status,
-                            }
-                          : undefined,
-                        org: item.factors,
-                        om: item.factorMeaning,
-                        case: item.case,
-                        parent: item.parent,
-                        pg: item.grammar2,
-                        parent2: item.parent2,
-                        rela: item.relation,
-                        lock: item.locked,
-                        note: item.note,
-                        bmt: item.bookMarkText,
-                        bmc: item.bookMarkColor,
-                        cf: item.confidence,
-                      };
-                    }),
-                  },
-                ],
-              };
-
-              post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then(
-                (json) => {
-                  if (json.ok) {
-                    message.info(e.word.value + " updated");
-                  } else {
-                    message.error(json.message);
-                  }
-                }
-              );
+              updateWord(newData, e.sn[0]);
             }}
             onSplit={() => {
               const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+
               if (
                 id < wordData.length - 1 &&
                 wordData[id + 1].sn
@@ -252,6 +253,7 @@ export const WbwSentCtl = ({
                   }
                 });
                 update(compactData);
+                updateWord(compactData, wordData[id].sn[0]);
               } else {
                 //拆开
                 console.log("拆开");
@@ -280,6 +282,7 @@ export const WbwSentCtl = ({
                     newData.splice(id + 1, 0, ...children);
                     console.log("new-data", newData);
                     update(newData);
+                    updateWord(newData, wordData[id].sn[0]);
                   }
                 }
               }
