@@ -146,6 +146,7 @@ export const WbwSentCtl = ({
         if (json.ok) {
           console.log("magic dict result", json.data);
           update(json.data);
+          updateWbwAll(json.data);
         } else {
           console.error(json.message);
         }
@@ -156,6 +157,64 @@ export const WbwSentCtl = ({
         }
       });
   }, [magicDict]);
+
+  const wbwToXml = (item: IWbw) => {
+    return {
+      pali: item.word,
+      real: item.real,
+      id: `${book}-${para}-` + item.sn.join("-"),
+      type: item.type,
+      gramma: item.grammar,
+      mean: item.meaning
+        ? {
+            value: item.meaning.value,
+            status: item.meaning?.status,
+          }
+        : undefined,
+      org: item.factors,
+      om: item.factorMeaning,
+      case: item.case,
+      parent: item.parent,
+      pg: item.grammar2,
+      parent2: item.parent2,
+      rela: item.relation,
+      lock: item.locked,
+      note: item.note,
+      bmt: item.bookMarkText,
+      bmc: item.bookMarkColor,
+      cf: item.confidence,
+    };
+  };
+
+  const updateWbwAll = (wbwData: IWbw[]) => {
+    let arrSn: number[] = [];
+    wbwData.forEach((value) => {
+      if (!arrSn.includes(value.sn[0])) {
+        arrSn.push(value.sn[0]);
+      }
+    });
+
+    const postParam: IWbwRequest = {
+      book: book,
+      para: para,
+      channel_id: channelId,
+      sn: wbwData[0].sn[0],
+      data: arrSn.map((item) => {
+        return {
+          sn: item,
+          words: wbwData.filter((value) => value.sn[0] === item).map(wbwToXml),
+        };
+      }),
+    };
+
+    post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then((json) => {
+      if (json.ok) {
+        message.info(json.data.count + " updated");
+      } else {
+        message.error(json.message);
+      }
+    });
+  };
 
   const updateWord = (wbwData: IWbw[], sn: number) => {
     const data = wbwData.filter((value) => value.sn[0] === sn);
@@ -168,33 +227,7 @@ export const WbwSentCtl = ({
       data: [
         {
           sn: sn,
-          words: data.map((item) => {
-            return {
-              pali: item.word,
-              real: item.real,
-              id: `${book}-${para}-` + item.sn.join("-"),
-              type: item.type,
-              gramma: item.grammar,
-              mean: item.meaning
-                ? {
-                    value: item.meaning.value,
-                    status: item.meaning?.status,
-                  }
-                : undefined,
-              org: item.factors,
-              om: item.factorMeaning,
-              case: item.case,
-              parent: item.parent,
-              pg: item.grammar2,
-              parent2: item.parent2,
-              rela: item.relation,
-              lock: item.locked,
-              note: item.note,
-              bmt: item.bookMarkText,
-              bmc: item.bookMarkColor,
-              cf: item.confidence,
-            };
-          }),
+          words: data.map(wbwToXml),
         },
       ],
     };
