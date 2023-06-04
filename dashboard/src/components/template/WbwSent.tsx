@@ -1,5 +1,6 @@
-import { message } from "antd";
+import { Button, Dropdown, message, Popover } from "antd";
 import { useEffect, useState } from "react";
+import { MoreOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { mode } from "../../reducers/article-mode";
@@ -89,6 +90,11 @@ export const WbwSentCtl = ({
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
+  const [magic, setMagic] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setMagic(magicDict);
+  }, [magicDict]);
 
   const newMode = useAppSelector(mode);
   const update = (data: IWbw[]) => {
@@ -129,7 +135,7 @@ export const WbwSentCtl = ({
   }, [newMode]);
 
   useEffect(() => {
-    if (typeof magicDict === "undefined") {
+    if (typeof magic === "undefined") {
       return;
     }
     const url = `/v2/wbwlookup`;
@@ -152,11 +158,13 @@ export const WbwSentCtl = ({
         }
       })
       .finally(() => {
+        setMagic(undefined);
+        setLoading(false);
         if (typeof onMagicDictDone !== "undefined") {
           onMagicDictDone();
         }
       });
-  }, [magicDict]);
+  }, [magic]);
 
   const wbwToXml = (item: IWbw) => {
     return {
@@ -240,8 +248,38 @@ export const WbwSentCtl = ({
       }
     });
   };
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: "magic-dict-current",
+              label: "魔法字典",
+            },
+          ],
+          onClick: ({ key }) => {
+            console.log(`Click on item ${key}`);
+            switch (key) {
+              case "magic-dict-current":
+                setLoading(true);
+                setMagic("curr");
+                break;
+            }
+          },
+        }}
+        placement="bottomLeft"
+      >
+        <Button
+          loading={loading}
+          onClick={(e) => e.preventDefault()}
+          icon={<MoreOutlined />}
+          size="small"
+          type="text"
+          style={{ backgroundColor: "lightblue", opacity: 0.3 }}
+        />
+      </Dropdown>
       {wordData.map((item, id) => {
         return (
           <WbwWord
