@@ -8,7 +8,7 @@ interface CascaderOption {
   children?: CascaderOption[];
 }
 interface IWidget {
-  value?: string;
+  value?: string | null;
   onCaseChange?: Function;
 }
 const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
@@ -16,12 +16,14 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
   const [currValue, setCurrValue] = useState<(string | number)[]>();
 
   useEffect(() => {
-    const arrValue = value
-      ?.replaceAll("#", "$")
-      .replaceAll(":", ".$.")
-      .split("$")
-      .map((item) => item.replaceAll(".", ""));
-    setCurrValue(arrValue);
+    if (typeof value === "string") {
+      const arrValue = value
+        ?.replaceAll("#", "$")
+        .replaceAll(":", ".$.")
+        .split("$")
+        .map((item) => item.replaceAll(".", ""));
+      setCurrValue(arrValue);
+    }
   }, [value]);
 
   const case8 = [
