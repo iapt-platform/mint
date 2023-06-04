@@ -150,7 +150,10 @@ class WbwLookupController extends Controller
         $words = [];
         foreach ($orgData as  $word) {
             # code...
-            if($word['type']['value'] !== '.ctl.' && !empty($word['real']['value'])){
+            if( isset($word['type']) && $word['type']['value'] === '.ctl.'){
+                continue;
+            }
+            if(!empty($word['real']['value'])){
                 $words[] = $word['real']['value'];
             }
         }
@@ -159,7 +162,13 @@ class WbwLookupController extends Controller
         $indexed = $this->toIndexed($result);
 
         foreach ($orgData as  $key => $word) {
-            if($word['type']['value'] !== '.ctl.' && !empty($word['real']['value'])){
+            if( isset($word['type']) && $word['type']['value'] === '.ctl.'){
+                continue;
+            }
+            if(empty($word['real']['value'])){
+                continue;
+            }
+            {
                 $data = $word;
                 if(isset($indexed[$word['real']['value']])){
                     //parent
@@ -251,9 +260,6 @@ class WbwLookupController extends Controller
                         $data['parent2'] = ['value'=>$first[1],'status'=>3];
                         $data['grammar2'] = ['value'=>$first[0],'status'=>3];
                     }
-
-
-
                 }
                 $orgData[$key] = $data;
             }
