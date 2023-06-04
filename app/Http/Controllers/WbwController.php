@@ -150,7 +150,7 @@ class WbwController extends Controller
             }
         }
 
-        return $this->ok($count);
+        return $this->ok(['rows'=>[],"count"=>$count]);
     }
 
     /**
