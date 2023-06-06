@@ -1,6 +1,8 @@
 import { Segmented } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { useAppSelector } from "../../hooks";
+import { rightPanel } from "../../reducers/right-panel";
 import { TPanelName } from "./RightPanel";
 
 interface IWidget {
@@ -13,6 +15,17 @@ const RightToolsSwitchWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>(initMode);
+  const _openPanel = useAppSelector(rightPanel);
+
+  useEffect(() => {
+    if (typeof _openPanel !== "undefined") {
+      if (typeof onModeChange !== "undefined") {
+        onModeChange(_openPanel);
+      }
+      setMode(_openPanel);
+    }
+  }, [_openPanel]);
+
   return (
     <Segmented
       size="middle"

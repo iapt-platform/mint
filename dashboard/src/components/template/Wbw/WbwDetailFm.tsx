@@ -12,6 +12,7 @@ import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import store from "../../../store";
 import { lookup } from "../../../reducers/command";
+import { openPanel } from "../../../reducers/right-panel";
 
 interface IWFMI {
   pali: string;
@@ -68,6 +69,7 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
         onClick: (e) => {
           if (e.key === "_lookup") {
             store.dispatch(lookup(pali));
+            store.dispatch(openPanel("dict"));
           } else if (typeof onChange !== "undefined") {
             onChange(e.key);
           }
