@@ -19,6 +19,7 @@ import relationReducer from "./reducers/relation";
 import relationAddReducer from "./reducers/relation-add";
 import termChangeReducer from "./reducers/term-change";
 import paraChangeReducer from "./reducers/para-change";
+import rightPanelReducer from "./reducers/right-panel";
 
 const store = configureStore({
   reducer: {
@@ -41,6 +42,7 @@ const store = configureStore({
     relationAdd: relationAddReducer,
     termChange: termChangeReducer,
     paraChange: paraChangeReducer,
+    rightPanel: rightPanelReducer,
   },
 });
 
