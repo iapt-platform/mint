@@ -68,7 +68,7 @@ const SentTabWidget = ({
   return (
     <>
       <Tabs
-        style={{ marginBottom: 0 }}
+        tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
         tabBarExtraContent={
