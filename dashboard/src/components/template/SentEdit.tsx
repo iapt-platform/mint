@@ -83,7 +83,11 @@ export const SentEditInner = ({
   }, []);
 
   return (
-    <Card bodyStyle={{ paddingBottom: 0 }} size="small">
+    <Card
+      bodyStyle={{ paddingBottom: 0 }}
+      style={{ border: "solid 2px #dfdfdf", marginTop: 4, borderRadius: 5 }}
+      size="small"
+    >
       <SentContent
         sid={id}
         book={book}
