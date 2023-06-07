@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import type { MenuProps } from "antd";
+import { MenuProps, Tooltip } from "antd";
 import { Dropdown, Space, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -55,8 +55,8 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
     },
   ];
   const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
-
   const inlineDict = useAppSelector(_inlineDict);
+
   useEffect(() => {
     if (inlineDict.wordIndex.includes(data.real.value)) {
       const result = inlineDict.wordList.filter(
@@ -87,24 +87,36 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
     }
   };
 
-  let factors = <></>;
-  if (display === "block") {
-    if (
-      typeof data.factors?.value === "string" &&
-      data.factors.value.trim().length > 0
-    ) {
-      factors = <span>{data.factors?.value}</span>;
-    } else {
-      //空白的意思在逐词解析模式显示占位字符串
-      factors = (
-        <Text type="secondary">
-          {intl.formatMessage({ id: "dict.fields.factors.label" })}
-        </Text>
-      );
+  if (
+    typeof data.real?.value === "string" &&
+    data.real.value.trim().length > 0
+  ) {
+    let factors = <></>;
+    if (display === "block") {
+      if (
+        typeof data.factors?.value === "string" &&
+        data.factors.value.trim().length > 0
+      ) {
+        const shortString = data.factors.value.slice(
+          0,
+          data.real.value.length * 1.6
+        );
+        if (shortString === data.factors.value) {
+          factors = <span>{shortString}</span>;
+        } else {
+          factors = (
+            <Tooltip title={data.factors.value}>{`${shortString}…`}</Tooltip>
+          );
+        }
+      } else {
+        //空白的意思在逐词解析模式显示占位字符串
+        factors = (
+          <Text type="secondary">
+            {intl.formatMessage({ id: "dict.fields.factors.label" })}
+          </Text>
+        );
+      }
     }
-  }
-
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     return (
       <div>
         <Text type="secondary">
