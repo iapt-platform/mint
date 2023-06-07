@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Popover, Space, Typography } from "antd";
+import { Button, Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -182,13 +182,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       <CommentBox
         resId={data.uid}
         resType="wbw"
-        trigger={
-          <CommentOutlined
-            style={{
-              cursor: "pointer",
-            }}
-          />
-        }
+        trigger={<Button icon={<CommentOutlined />} type="text" title="讨论" />}
         onCommentCountChange={(count: number) => {
           if (count > 0) {
             setHasComment(true);
