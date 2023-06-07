@@ -1,4 +1,4 @@
-import { Divider, Space, Typography } from "antd";
+import { Divider, Space, Tooltip, Typography } from "antd";
 import { CommentOutlined, LikeOutlined } from "@ant-design/icons";
 import { ISentence } from "../SentEdit";
 import { useState } from "react";
@@ -34,12 +34,23 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
   );
   const normalButton = (
     <Space>
-      <SuggestionBox data={data} trigger={<HandOutlinedIcon />} />
+      <SuggestionBox
+        data={data}
+        trigger={
+          <Tooltip title="修改建议">
+            <HandOutlinedIcon style={{ cursor: "pointer" }} />
+          </Tooltip>
+        }
+      />
       <Divider type="vertical" />
       <CommentBox
         resId={data.id}
         resType="sentence"
-        trigger={<CommentOutlined />}
+        trigger={
+          <Tooltip title="讨论">
+            <CommentOutlined style={{ cursor: "pointer" }} />
+          </Tooltip>
+        }
         onCommentCountChange={(count: number) => {
           setCommentCount(count);
         }}
