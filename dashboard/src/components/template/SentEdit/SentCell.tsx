@@ -100,7 +100,7 @@ const SentCellWidget = ({
                 display="block"
                 fields={{
                   meaning: true,
-                  factors: false,
+                  factors: true,
                   factorMeaning: false,
                   case: true,
                 }}
