@@ -161,30 +161,32 @@ const ChannelPickerTableWidget = ({
           }
         );
         console.log("progress data", res.data.rows);
-        const items: IItem[] = res.data.rows.map((item, id) => {
-          const date = new Date(item.created_at);
-          let all: number = 0;
-          let finished: number = 0;
-          item.final?.forEach((value) => {
-            all += value[0];
-            finished += value[1] ? value[0] : 0;
+        const items: IItem[] = res.data.rows
+          .filter((value) => value.name.substring(0, 4) !== "_Sys")
+          .map((item, id) => {
+            const date = new Date(item.created_at);
+            let all: number = 0;
+            let finished: number = 0;
+            item.final?.forEach((value) => {
+              all += value[0];
+              finished += value[1] ? value[0] : 0;
+            });
+            const progress = finished / all;
+            return {
+              id: id,
+              uid: item.uid,
+              title: item.name,
+              summary: item.summary,
+              studio: item.studio,
+              shareType: "my",
+              role: item.role,
+              type: item.type,
+              publicity: item.status,
+              createdAt: date.getTime(),
+              final: item.final,
+              progress: progress,
+            };
           });
-          const progress = finished / all;
-          return {
-            id: id,
-            uid: item.uid,
-            title: item.name,
-            summary: item.summary,
-            studio: item.studio,
-            shareType: "my",
-            role: item.role,
-            type: item.type,
-            publicity: item.status,
-            createdAt: date.getTime(),
-            final: item.final,
-            progress: progress,
-          };
-        });
         //当前被选择的
         const currChannel = items.filter((value) =>
           selectedRowKeys.includes(value.uid)
