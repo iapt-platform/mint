@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { Popover, Typography } from "antd";
+import { Input, Popover, Typography } from "antd";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
@@ -23,6 +23,9 @@ const WbwMeaningWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
+  const [input, setInput] = useState<string>();
+  const [editable, setEditable] = useState(false);
+
   let meaning = <></>;
   if (
     typeof data.meaning?.value === "string" &&
@@ -60,6 +63,43 @@ const WbwMeaningWidget = ({
       </Text>
     );
   }
+
+  const meaningInner = editable ? (
+    <Input
+      defaultValue={data.meaning?.value ? data.meaning?.value : ""}
+      placeholder="meaning"
+      style={{ width: "100%" }}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(event.target.value);
+      }}
+      onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        inputOk();
+      }}
+      onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Escape") {
+          setEditable(false);
+        }
+      }}
+    />
+  ) : (
+    <span
+      onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        if (event.ctrlKey) {
+          setEditable(true);
+        }
+      }}
+    >
+      {meaning}
+    </span>
+  );
+
+  const inputOk = () => {
+    setEditable(false);
+    if (typeof onChange !== "undefined") {
+      onChange(input);
+    }
+  };
+
   const hide = () => {
     setOpen(false);
   };
@@ -72,7 +112,9 @@ const WbwMeaningWidget = ({
     data.real.value.trim().length > 0
   ) {
     //非标点符号
-    return (
+    return editable ? (
+      meaningInner
+    ) : (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Popover
           open={open}
@@ -93,7 +135,7 @@ const WbwMeaningWidget = ({
           placement="bottomLeft"
           trigger="hover"
         >
-          {meaning}
+          {meaningInner}
         </Popover>
         {mode === "wbw" ? (
           <CaseFormula
