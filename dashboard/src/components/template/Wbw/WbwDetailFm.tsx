@@ -16,7 +16,7 @@ import { openPanel } from "../../../reducers/right-panel";
 
 interface IWFMI {
   pali: string;
-  meaning: string;
+  meaning?: string;
   onChange?: Function;
 }
 const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
@@ -30,9 +30,20 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
         </Space>
       ),
     },
+    {
+      key: "_edit",
+      label: (
+        <Space>
+          <EditOutlined />
+          {"修改"}
+        </Space>
+      ),
+    },
     { key: pali, label: pali },
   ];
   const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+  const [input, setInput] = useState<string>();
+  const [editable, setEditable] = useState(false);
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
@@ -62,30 +73,79 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       setItems([...defaultMenu, ...menu]);
     }
   }, [pali, inlineDict]);
-  return (
+
+  const inputOk = () => {
+    setEditable(false);
+    if (typeof onChange !== "undefined") {
+      onChange(input);
+    }
+  };
+
+  const meaningInner = editable ? (
+    <Input
+      defaultValue={meaning}
+      size="small"
+      addonAfter={
+        <CheckOutlined
+          style={{ cursor: "pointer" }}
+          onClick={() => inputOk()}
+        />
+      }
+      placeholder="Basic usage"
+      style={{ width: 100 }}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(event.target.value);
+      }}
+      onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        inputOk();
+      }}
+      onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Escape") {
+          setEditable(false);
+        }
+      }}
+    />
+  ) : (
+    <Button
+      key={1}
+      size="small"
+      type="text"
+      icon={meaning === "" ? <MoreOutlined /> : undefined}
+      onClick={() => {
+        setEditable(true);
+      }}
+    >
+      {meaning}
+    </Button>
+  );
+
+  return editable ? (
+    meaningInner
+  ) : (
     <Dropdown
       menu={{
         items: items,
         onClick: (e) => {
-          if (e.key === "_lookup") {
-            store.dispatch(lookup(pali));
-            store.dispatch(openPanel("dict"));
-          } else if (typeof onChange !== "undefined") {
-            onChange(e.key);
+          switch (e.key) {
+            case "_lookup":
+              store.dispatch(lookup(pali));
+              store.dispatch(openPanel("dict"));
+              break;
+            case "_edit":
+              setEditable(true);
+              break;
+            default:
+              if (typeof onChange !== "undefined") {
+                onChange(e.key);
+              }
+              break;
           }
         },
       }}
       placement="bottomLeft"
       trigger={["hover"]}
     >
-      <Button
-        key={1}
-        size="small"
-        type="text"
-        icon={meaning === "" ? <MoreOutlined /> : undefined}
-      >
-        {meaning}
-      </Button>
+      {meaningInner}
     </Dropdown>
   );
 };
