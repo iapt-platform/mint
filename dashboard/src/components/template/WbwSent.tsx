@@ -224,7 +224,7 @@ export const WbwSentCtl = ({
     });
   };
 
-  const updateWord = (wbwData: IWbw[], sn: number) => {
+  const saveWord = (wbwData: IWbw[], sn: number) => {
     const data = wbwData.filter((value) => value.sn[0] === sn);
 
     const postParam: IWbwRequest = {
@@ -299,8 +299,40 @@ export const WbwSentCtl = ({
                   array[index] = e;
                 }
               });
+
+              if (e.sn.length > 1) {
+                //把meaning 数据更新到 拆分前单词的factor meaning
+                const factorMeaning = newData
+                  .filter((value) => {
+                    if (
+                      value.sn.length === e.sn.length &&
+                      e.sn.slice(0, e.sn.length - 1).join() ===
+                        value.sn.slice(0, e.sn.length - 1).join() &&
+                      value.real.value.length > 0
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  })
+                  .map((item) => item.meaning?.value)
+                  .join("+");
+                console.log("fm", factorMeaning);
+                newData.forEach((value, index, array) => {
+                  //把新的数据更新到数组
+                  if (
+                    value.sn.join() === e.sn.slice(0, e.sn.length - 1).join()
+                  ) {
+                    console.log("found", value.sn);
+                    array[index].factorMeaning = {
+                      value: factorMeaning,
+                      status: 5,
+                    };
+                  }
+                });
+              }
               update(newData);
-              updateWord(newData, e.sn[0]);
+              saveWord(newData, e.sn[0]);
             }}
             onSplit={() => {
               const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
@@ -324,17 +356,24 @@ export const WbwSentCtl = ({
                   }
                 });
                 update(compactData);
-                updateWord(compactData, wordData[id].sn[0]);
+                saveWord(compactData, wordData[id].sn[0]);
               } else {
                 //拆开
                 console.log("拆开");
                 let factors = wordData[id]?.factors?.value;
                 if (typeof factors === "string") {
+                  let sFm = wordData[id]?.factorMeaning?.value;
+                  if (typeof sFm === "undefined" || sFm === null) {
+                    sFm = new Array(factors.split("+")).fill([""]).join("+");
+                  }
                   if (wordData[id].case?.value?.split("#")[0] === ".un.") {
                     factors = `[+${factors}+]`;
+                    sFm = `+${sFm}+`;
                   } else {
                     factors = factors.replaceAll("+", "+-+");
+                    sFm = sFm.replaceAll("+", "+-+");
                   }
+                  let fm = sFm.split("+");
 
                   const children: IWbw[] | undefined = factors
                     .split("+")
@@ -342,6 +381,7 @@ export const WbwSentCtl = ({
                       return {
                         word: { value: item, status: 5 },
                         real: { value: PaliReal(item), status: 5 },
+                        meaning: { value: fm[index], status: 5 },
                         book: wordData[id].book,
                         para: wordData[id].para,
                         sn: [...wordData[id].sn, index],
@@ -353,7 +393,7 @@ export const WbwSentCtl = ({
                     newData.splice(id + 1, 0, ...children);
                     console.log("new-data", newData);
                     update(newData);
-                    updateWord(newData, wordData[id].sn[0]);
+                    saveWord(newData, wordData[id].sn[0]);
                   }
                 }
               }
