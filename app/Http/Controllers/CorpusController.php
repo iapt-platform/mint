@@ -401,7 +401,7 @@ class CorpusController extends Controller
             //有间隔
             $paraTo = $nextChapter - 1;
         }else{
-            if($chapter->chapter_strlen>5000){
+            if($chapter->chapter_strlen>2000){
                 if(count($toc)>0){
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -453,7 +453,7 @@ class CorpusController extends Controller
      * $indexChannel channel索引
      * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
      */
-    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false){
+    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false,$paraMark=false){
         $content = [];
 		$lastSent = "0-0";
 		$sentCount = 0;
@@ -469,8 +469,11 @@ class CorpusController extends Controller
             $value['sid'] = "{$currSentId}_{$value->channel_uid}";
         }
         //遍历列表查找每个句子的所有channel的数据，并填充
+        $currPara = "";
         foreach ($sentList as $currSentId => $arrSentId) {
-            # code...
+            if($currPara === ""){
+                $currPara = $arrSentId[0]."-".$arrSentId[1];
+            }
             $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
             foreach ($indexChannel as $channelId => $info) {
                 # code...
