@@ -27,6 +27,7 @@ class WbwLookupController extends Controller
 		'beb45062-7c20-4047-bcd4-1f636ba443d1',// U Hau Sein
 		'8833de18-0978-434c-b281-a2e7387f69be',// 巴汉增订
 		'3acf0c0f-59a7-4d25-a3d9-bf394a266ebd',// 汉译パーリ语辞典-黃秉榮
+        '9ce6a53b-e28f-4fb7-b69d-b35fd5d76a24',//缅英字典
 	];
     /**
      * Create a new command instance.
