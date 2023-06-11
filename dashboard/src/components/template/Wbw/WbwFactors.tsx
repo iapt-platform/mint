@@ -5,7 +5,6 @@ import { Dropdown, Space, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
-import { PaliReal } from "../../../utils";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { IApiResponseDictData } from "../../api/Dict";
