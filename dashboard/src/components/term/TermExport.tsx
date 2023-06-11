@@ -37,20 +37,18 @@ const TermExportWidget = ({ channelId, studioName }: IWidget) => {
         get<IExportResponse>(url)
           .then((json) => {
             if (json.ok) {
-              console.log("download", json);
               const link = `${API_HOST}/api/v2/download/${json.data.type}/${json.data.uuid}/${json.data.filename}`;
               modal.info({
-                title: "download",
+                title: intl.formatMessage({ id: "buttons.download" }),
                 content: (
                   <>
-                    {"link: "}
                     <a
                       href={link}
                       target="_blank"
                       key="export"
                       rel="noreferrer"
                     >
-                      Download
+                      {intl.formatMessage({ id: "buttons.download.link" })}
                     </a>
                   </>
                 ),

@@ -48,6 +48,8 @@ const items = {
   "buttons.add.tag": "添加标签",
   "buttons.remove.selected": "清除选择",
   "buttons.multiple.select": "多选",
+  "buttons.download": "下载",
+  "buttons.download.link": "下载链接",
 };
 
 export default items;
