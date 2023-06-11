@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useIntl } from "react-intl";
 import {
   Button,
@@ -30,7 +30,6 @@ import {
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
 import ArticleTplMaker from "../../components/article/ArticleTplMaker";
-import ShareModal from "../../components/share/ShareModal";
 import Share, { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
 import AnthologySelect from "../../components/anthology/AnthologySelect";
@@ -79,10 +78,12 @@ interface DataItem {
 interface IWidget {
   studioName?: string;
   editable?: boolean;
+  multiple?: boolean;
   onSelect?: Function;
 }
 const ArticleListWidget = ({
   studioName,
+  multiple = true,
   editable = false,
   onSelect,
 }: IWidget) => {
@@ -340,11 +341,15 @@ const ArticleListWidget = ({
             },
           },
         ]}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
+        rowSelection={
+          multiple
+            ? {
+                // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+                // 注释该行则默认不显示下拉选项
+                selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+              }
+            : undefined
+        }
         tableAlertRender={({
           selectedRowKeys,
           selectedRows,
@@ -377,8 +382,6 @@ const ArticleListWidget = ({
           );
         }}
         request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-          console.log("anthology", anthologyId);
           let url = `/v2/article?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
@@ -390,7 +393,6 @@ const ArticleListWidget = ({
             url += "&anthology=" + anthologyId;
           }
           const res = await get<IArticleListResponse>(url);
-          console.log("article list", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
