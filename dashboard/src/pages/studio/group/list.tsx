@@ -208,7 +208,10 @@ const Widget = () => {
                   },
                 }}
               >
-                <Link to={`/studio/${studioname}/group/${row.id}/edit`}>
+                <Link
+                  to={`/studio/${studioname}/group/${row.id}/edit`}
+                  target="_blank"
+                >
                   {intl.formatMessage({
                     id: "buttons.edit",
                   })}
