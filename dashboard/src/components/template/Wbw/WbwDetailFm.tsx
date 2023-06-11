@@ -182,7 +182,6 @@ const WbwDetailFmWidget = ({
   }, []);
 
   useEffect(() => {
-    console.log("factors", factors);
     if (factors.length === factorMeaning.length) {
       return;
     }
