@@ -30,7 +30,6 @@ const EditableTocTreeWidget = ({
     get<IArticleMapListResponse>(
       `/v2/article-map?view=anthology&id=${anthologyId}`
     ).then((json) => {
-      console.log("文集get", json);
       if (json.ok) {
         const toc: ListNodeData[] = json.data.rows.map((item) => {
           return {
@@ -44,6 +43,7 @@ const EditableTocTreeWidget = ({
       }
     });
   }, [anthologyId]);
+
   return (
     <div>
       <EditableTree
@@ -53,6 +53,7 @@ const EditableTocTreeWidget = ({
           <ArticleListModal
             studioName={studioName}
             trigger={<Button icon={<FileAddOutlined />}>添加</Button>}
+            multiple={false}
             onSelect={(id: string, title: string) => {
               console.log("add article", id);
               const newNode: TreeNodeData = {
