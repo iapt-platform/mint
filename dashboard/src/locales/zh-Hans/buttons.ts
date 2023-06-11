@@ -46,6 +46,7 @@ const items = {
   "buttons.import": "导入",
   "buttons.export": "导出",
   "buttons.add.tag": "添加标签",
+  "buttons.remove.selected": "清除选择",
 };
 
 export default items;
