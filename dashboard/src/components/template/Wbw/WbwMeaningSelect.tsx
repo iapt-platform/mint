@@ -113,7 +113,6 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
               (item) => item.name === wordType
             );
           }
-          console.log("indexCase", indexCase, value.mean);
           if (value.mean && value.mean.trim() !== "") {
             for (const valueMeaning of value.mean.trim().split("$")) {
               if (valueMeaning.trim() !== "") {
