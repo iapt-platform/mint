@@ -40,7 +40,7 @@ const ChapterAppendTagWidget = ({
         </div>
       }
       placement="bottom"
-      trigger="hover"
+      trigger="click"
     >
       <Button type="dashed" icon={<PlusOutlined />}>
         {intl.formatMessage({
