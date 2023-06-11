@@ -1,6 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { TContentType } from "../comment/CommentCreate";
 import { ISuggestionCount, IWidgetSentEditInner } from "../template/SentEdit";
 import { TChannelType } from "./Channel";
 import { TagNode } from "./Tag";
@@ -144,6 +145,7 @@ export interface ISentenceRequest {
   wordEnd: number;
   channel: string;
   content: string;
+  contentType?: TContentType;
   prEditor?: string;
   prId?: string;
   prEditAt?: string;
@@ -156,6 +158,7 @@ export interface ISentenceData {
   word_start: number;
   word_end: number;
   content: string;
+  content_type?: TContentType;
   html: string;
   editor: IUser;
   channel: IChannel;
