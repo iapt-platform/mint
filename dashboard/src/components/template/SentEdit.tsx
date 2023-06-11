@@ -1,9 +1,11 @@
 import { Card } from "antd";
 import { useEffect, useState } from "react";
+import { TChannelType } from "../api/Channel";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { TContentType } from "../comment/CommentCreate";
 import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
@@ -16,6 +18,7 @@ export interface ISuggestionCount {
 export interface ISentence {
   id?: string;
   content: string;
+  contentType?: TContentType;
   html: string;
   book: number;
   para: number;
