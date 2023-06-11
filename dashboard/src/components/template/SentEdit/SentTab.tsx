@@ -183,7 +183,7 @@ const SentTabWidget = ({
               />
             ),
           },
-          {
+          /*{
             label: (
               <SentTabButton
                 icon={<BlockOutlined />}
@@ -196,7 +196,6 @@ const SentTabWidget = ({
               />
             ),
             key: "original",
-            disabled: true,
             children: (
               <SentCanRead
                 book={parseInt(sId[0])}
@@ -206,7 +205,7 @@ const SentTabWidget = ({
                 type="original"
               />
             ),
-          },
+          },*/
           {
             label: (
               <SentTabButton
