@@ -43,6 +43,8 @@ const items = {
   "buttons.add": "添加",
   "buttons.spell": "拼写",
   "buttons.more": "更多",
+  "buttons.import": "导入",
+  "buttons.export": "导出",
 };
 
 export default items;

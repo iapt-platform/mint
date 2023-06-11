@@ -1,8 +1,10 @@
+import { useState } from "react";
+import { useIntl } from "react-intl";
 import { Button, message } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
-import { API_HOST, get } from "../../request";
 import modal from "antd/lib/modal";
-import { useState } from "react";
+
+import { API_HOST, get } from "../../request";
 
 interface IExportResponse {
   ok: boolean;
@@ -18,6 +20,7 @@ interface IWidget {
   studioName?: string;
 }
 const TermExportWidget = ({ channelId, studioName }: IWidget) => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   return (
     <Button
@@ -61,7 +64,7 @@ const TermExportWidget = ({ channelId, studioName }: IWidget) => {
           });
       }}
     >
-      Export
+      {intl.formatMessage({ id: "buttons.export" })}
     </Button>
   );
 };
