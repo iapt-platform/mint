@@ -1,13 +1,18 @@
-import { Button, Dropdown, message, Popover } from "antd";
+import { Button, Dropdown, message, Tree } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { mode } from "../../reducers/article-mode";
 import { post } from "../../request";
-import { PaliReal } from "../../utils";
 import { ArticleMode } from "../article/Article";
-import WbwWord, { IWbw, IWbwFields, WbwElement } from "./Wbw/WbwWord";
+import WbwWord, {
+  IWbw,
+  IWbwFields,
+  WbwElement,
+  WbwStatus,
+} from "./Wbw/WbwWord";
+import { TChannelType } from "../api/Channel";
 
 interface IMagicDictRequest {
   book: number;
@@ -65,8 +70,10 @@ interface IWidget {
   wordStart: number;
   wordEnd: number;
   channelId: string;
+  channelType?: TChannelType;
   display?: "block" | "inline";
   fields?: IWbwFields;
+  layoutDirection?: "h" | "v";
   magicDict?: string;
   refreshable?: boolean;
   onMagicDictDone?: Function;
@@ -75,12 +82,14 @@ interface IWidget {
 export const WbwSentCtl = ({
   data,
   channelId,
+  channelType,
   book,
   para,
   wordStart,
   wordEnd,
-  display = "inline",
+  display = "block",
   fields,
+  layoutDirection = "h",
   magicDict,
   refreshable = false,
   onChange,
@@ -113,23 +122,32 @@ export const WbwSentCtl = ({
     setDisplayMode(newMode);
     switch (newMode) {
       case "edit":
-        setWbwMode("block");
+        if (typeof display === "undefined") {
+          setWbwMode("block");
+        }
 
-        setFieldDisplay({
-          meaning: true,
-          factors: false,
-          factorMeaning: false,
-          case: false,
-        });
+        if (typeof fields === "undefined") {
+          setFieldDisplay({
+            meaning: true,
+            factors: false,
+            factorMeaning: false,
+            case: false,
+          });
+        }
+
         break;
       case "wbw":
-        setWbwMode("block");
-        setFieldDisplay({
-          meaning: true,
-          factors: true,
-          factorMeaning: true,
-          case: true,
-        });
+        if (typeof display === "undefined") {
+          setWbwMode("block");
+        }
+        if (typeof fields === "undefined") {
+          setFieldDisplay({
+            meaning: true,
+            factors: true,
+            factorMeaning: true,
+            case: true,
+          });
+        }
         break;
     }
   }, [newMode]);
@@ -225,32 +243,170 @@ export const WbwSentCtl = ({
   };
 
   const saveWord = (wbwData: IWbw[], sn: number) => {
-    const data = wbwData.filter((value) => value.sn[0] === sn);
+    if (channelType === "nissaya") {
+    } else {
+      const data = wbwData.filter((value) => value.sn[0] === sn);
 
-    const postParam: IWbwRequest = {
-      book: book,
-      para: para,
-      channel_id: channelId,
-      sn: sn,
-      data: [
-        {
-          sn: sn,
-          words: data.map(wbwToXml),
-        },
-      ],
-    };
+      const postParam: IWbwRequest = {
+        book: book,
+        para: para,
+        channel_id: channelId,
+        sn: sn,
+        data: [
+          {
+            sn: sn,
+            words: data.map(wbwToXml),
+          },
+        ],
+      };
 
-    post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then((json) => {
-      if (json.ok) {
-        message.info(json.data.count + " updated");
-      } else {
-        message.error(json.message);
+      post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then(
+        (json) => {
+          if (json.ok) {
+            message.info(json.data.count + " updated");
+          } else {
+            message.error(json.message);
+          }
+        }
+      );
+    }
+  };
+
+  const wordSplit = (id: number, hyphen = "-") => {
+    let factors = wordData[id]?.factors?.value;
+    if (typeof factors === "string") {
+      let sFm = wordData[id]?.factorMeaning?.value;
+      if (typeof sFm === "undefined" || sFm === null) {
+        sFm = new Array(factors.split("+")).fill([""]).join("+");
       }
-    });
+      if (wordData[id].case?.value?.split("#")[0] === ".un.") {
+        factors = `[+${factors}+]`;
+        sFm = `+${sFm}+`;
+      } else if (hyphen !== "") {
+        factors = factors.replaceAll("+", `+${hyphen}+`);
+        sFm = sFm.replaceAll("+", `+${hyphen}+`);
+      }
+      let fm = sFm.split("+");
+
+      const children: IWbw[] | undefined = factors
+        .split("+")
+        .map((item, index) => {
+          return {
+            word: { value: item, status: 5 },
+            real: {
+              value: item
+                .replaceAll("-", "")
+                .replaceAll("[", "")
+                .replaceAll("]", ""),
+              status: 5,
+            },
+            meaning: { value: fm[index], status: 5 },
+            book: wordData[id].book,
+            para: wordData[id].para,
+            sn: [...wordData[id].sn, index],
+            confidence: 1,
+          };
+        });
+      if (typeof children !== "undefined") {
+        console.log("children", children);
+        const newData: IWbw[] = [...wordData];
+        newData.splice(id + 1, 0, ...children);
+        console.log("new-data", newData);
+        update(newData);
+        saveWord(newData, wordData[id].sn[0]);
+      }
+    }
+  };
+  const wbwRender = (item: IWbw, id: number) => {
+    return (
+      <WbwWord
+        data={item}
+        key={id}
+        mode={displayMode}
+        display={wbwMode}
+        fields={fieldDisplay}
+        onChange={(e: IWbw) => {
+          let newData = [...wordData];
+          newData.forEach((value, index, array) => {
+            //把新的数据更新到数组
+            if (value.sn.join() === e.sn.join()) {
+              console.log("found", e.sn);
+              array[index] = e;
+            }
+          });
+
+          if (e.sn.length > 1) {
+            //把meaning 数据更新到 拆分前单词的factor meaning
+            const factorMeaning = newData
+              .filter((value) => {
+                if (
+                  value.sn.length === e.sn.length &&
+                  e.sn.slice(0, e.sn.length - 1).join() ===
+                    value.sn.slice(0, e.sn.length - 1).join() &&
+                  value.real.value.length > 0
+                ) {
+                  return true;
+                } else {
+                  return false;
+                }
+              })
+              .map((item) => item.meaning?.value)
+              .join("+");
+            console.log("fm", factorMeaning);
+            newData.forEach((value, index, array) => {
+              //把新的数据更新到数组
+              if (value.sn.join() === e.sn.slice(0, e.sn.length - 1).join()) {
+                console.log("found", value.sn);
+                array[index].factorMeaning = {
+                  value: factorMeaning,
+                  status: 5,
+                };
+                if (array[index].meaning?.status !== WbwStatus.manual) {
+                  array[index].meaning = {
+                    value: factorMeaning.replaceAll("+", " "),
+                    status: 5,
+                  };
+                }
+              }
+            });
+          }
+          update(newData);
+          saveWord(newData, e.sn[0]);
+        }}
+        onSplit={() => {
+          const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
+
+          if (
+            id < wordData.length - 1 &&
+            wordData[id + 1].sn.join("-").indexOf(wordData[id].sn.join("-")) ===
+              0
+          ) {
+            //合并
+            console.log("合并");
+            const compactData = newData.filter((value, index) => {
+              if (
+                index !== id &&
+                value.sn.join("-").indexOf(wordData[id].sn.join("-")) === 0
+              ) {
+                return false;
+              } else {
+                return true;
+              }
+            });
+            update(compactData);
+            saveWord(compactData, wordData[id].sn[0]);
+          } else {
+            //拆开
+            console.log("拆开");
+            wordSplit(id);
+          }
+        }}
+      />
+    );
   };
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
+    <div className={`layout-${layoutDirection}`}>
       <Dropdown
         menu={{
           items: [
@@ -280,127 +436,51 @@ export const WbwSentCtl = ({
           style={{ backgroundColor: "lightblue", opacity: 0.3 }}
         />
       </Dropdown>
-      {wordData.map((item, id) => {
-        return (
-          <WbwWord
-            data={item}
-            key={id}
-            mode={displayMode}
-            display={wbwMode}
-            fields={fieldDisplay}
-            onChange={(e: IWbw) => {
-              console.log("word changed", e);
+      {layoutDirection === "h" ? (
+        wordData.map((item, id) => {
+          return wbwRender(item, id);
+        })
+      ) : (
+        <Tree
+          treeData={wordData
+            .filter((value) => value.sn.length === 1)
+            .map((item, id) => {
+              const children = wordData.filter(
+                (value) =>
+                  value.sn.length === 2 &&
+                  value.sn.slice(0, 1).join() === wordData[id].sn.join()
+              );
 
-              let newData = [...wordData];
-              newData.forEach((value, index, array) => {
-                //把新的数据更新到数组
-                if (value.sn.join() === e.sn.join()) {
-                  console.log("found", e.sn);
-                  array[index] = e;
-                }
-              });
-
-              if (e.sn.length > 1) {
-                //把meaning 数据更新到 拆分前单词的factor meaning
-                const factorMeaning = newData
-                  .filter((value) => {
-                    if (
-                      value.sn.length === e.sn.length &&
-                      e.sn.slice(0, e.sn.length - 1).join() ===
-                        value.sn.slice(0, e.sn.length - 1).join() &&
-                      value.real.value.length > 0
-                    ) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  })
-                  .map((item) => item.meaning?.value)
-                  .join("+");
-                console.log("fm", factorMeaning);
-                newData.forEach((value, index, array) => {
-                  //把新的数据更新到数组
-                  if (
-                    value.sn.join() === e.sn.slice(0, e.sn.length - 1).join()
-                  ) {
-                    console.log("found", value.sn);
-                    array[index].factorMeaning = {
-                      value: factorMeaning,
-                      status: 5,
-                    };
-                  }
-                });
+              return {
+                title: wbwRender(item, id),
+                key: item.sn.join(),
+                isLeaf: !item.factors?.value?.includes("+"),
+                children:
+                  children.length > 0
+                    ? children.map((item, id) => {
+                        return {
+                          title: wbwRender(item, id),
+                          key: item.sn.join(),
+                          isLeaf: true,
+                        };
+                      })
+                    : undefined,
+              };
+            })}
+          loadData={({ key, children }: any) =>
+            new Promise<void>((resolve) => {
+              console.log("key", key, children);
+              if (children) {
+                resolve();
+                return;
               }
-              update(newData);
-              saveWord(newData, e.sn[0]);
-            }}
-            onSplit={() => {
-              const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
 
-              if (
-                id < wordData.length - 1 &&
-                wordData[id + 1].sn
-                  .join("-")
-                  .indexOf(wordData[id].sn.join("-")) === 0
-              ) {
-                //合并
-                console.log("合并");
-                const compactData = newData.filter((value, index) => {
-                  if (
-                    index !== id &&
-                    value.sn.join("-").indexOf(wordData[id].sn.join("-")) === 0
-                  ) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                });
-                update(compactData);
-                saveWord(compactData, wordData[id].sn[0]);
-              } else {
-                //拆开
-                console.log("拆开");
-                let factors = wordData[id]?.factors?.value;
-                if (typeof factors === "string") {
-                  let sFm = wordData[id]?.factorMeaning?.value;
-                  if (typeof sFm === "undefined" || sFm === null) {
-                    sFm = new Array(factors.split("+")).fill([""]).join("+");
-                  }
-                  if (wordData[id].case?.value?.split("#")[0] === ".un.") {
-                    factors = `[+${factors}+]`;
-                    sFm = `+${sFm}+`;
-                  } else {
-                    factors = factors.replaceAll("+", "+-+");
-                    sFm = sFm.replaceAll("+", "+-+");
-                  }
-                  let fm = sFm.split("+");
-
-                  const children: IWbw[] | undefined = factors
-                    .split("+")
-                    .map((item, index) => {
-                      return {
-                        word: { value: item, status: 5 },
-                        real: { value: PaliReal(item), status: 5 },
-                        meaning: { value: fm[index], status: 5 },
-                        book: wordData[id].book,
-                        para: wordData[id].para,
-                        sn: [...wordData[id].sn, index],
-                        confidence: 1,
-                      };
-                    });
-                  if (typeof children !== "undefined") {
-                    console.log("children", children);
-                    newData.splice(id + 1, 0, ...children);
-                    console.log("new-data", newData);
-                    update(newData);
-                    saveWord(newData, wordData[id].sn[0]);
-                  }
-                }
-              }
-            }}
-          />
-        );
-      })}
+              wordSplit(key, "");
+              resolve();
+            })
+          }
+        />
+      )}
     </div>
   );
 };
