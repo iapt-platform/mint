@@ -5,6 +5,7 @@ import { API_HOST, get } from "../../../request";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
 import modal from "antd/lib/modal";
+import { useIntl } from "react-intl";
 
 interface INissayaEndingUpload {
   filename: UploadFile<IAttachmentResponse>[];
@@ -26,17 +27,18 @@ interface IWidget {
   onSuccess?: Function;
 }
 const DataImportWidget = ({
-  title = "upload",
+  title,
   url,
   urlExtra,
   trigger = <>{"trigger"}</>,
   onSuccess,
 }: IWidget) => {
+  const intl = useIntl();
   const [form] = Form.useForm<INissayaEndingUpload>();
-
+  const formTitle = title ? title : intl.formatMessage({ id: "labels.upload" });
   return (
     <ModalForm<INissayaEndingUpload>
-      title={title}
+      title={formTitle}
       trigger={trigger}
       form={form}
       autoFocusFirstInput
@@ -61,10 +63,7 @@ const DataImportWidget = ({
         }
 
         const queryUrl = `${url}?filename=${_filename}&${urlExtra}`;
-        console.log("url", queryUrl);
         const res = await get<INissayaEndingImportResponse>(queryUrl);
-
-        console.log("import", res);
         if (res.ok) {
           if (res.data.fail > 0) {
             modal.info({
