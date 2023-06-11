@@ -47,6 +47,7 @@ const items = {
   "buttons.export": "导出",
   "buttons.add.tag": "添加标签",
   "buttons.remove.selected": "清除选择",
+  "buttons.multiple.select": "多选",
 };
 
 export default items;

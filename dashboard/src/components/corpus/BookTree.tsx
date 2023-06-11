@@ -115,7 +115,9 @@ const BookTreeWidget = ({
         </Button>
         {multiSelectable ? (
           <Space>
-            {"多选"}
+            {intl.formatMessage({
+              id: "buttons.multiple.select",
+            })}
             <Switch
               size="small"
               defaultChecked={multiSelect}
