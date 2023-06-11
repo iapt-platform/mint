@@ -55,7 +55,7 @@ const WbwMeaningWidget = ({
         }
       });
     meaning = <Text>{eMeaning}</Text>;
-  } else if (mode === "wbw") {
+  } else if (mode === "wbw" || display === "inline") {
     //空白的意思在逐词解析模式显示占位字符串
     meaning = (
       <Text type="secondary">
@@ -112,64 +112,68 @@ const WbwMeaningWidget = ({
     data.real.value.trim().length > 0
   ) {
     //非标点符号
-    return editable ? (
-      meaningInner
-    ) : (
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Popover
-          open={open}
-          onOpenChange={handleOpenChange}
-          content={
-            <div style={{ width: 500, height: "450px", overflow: "auto" }}>
-              <WbwMeaningSelect
+    return (
+      <div className="wbw_word_item">
+        {editable ? (
+          meaningInner
+        ) : (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Popover
+              open={open}
+              onOpenChange={handleOpenChange}
+              content={
+                <div style={{ width: 500, height: "450px", overflow: "auto" }}>
+                  <WbwMeaningSelect
+                    data={data}
+                    onSelect={(e: string) => {
+                      hide();
+                      if (typeof onChange !== "undefined") {
+                        onChange(e);
+                      }
+                    }}
+                  />
+                </div>
+              }
+              placement="bottomLeft"
+              trigger="hover"
+            >
+              {meaningInner}
+            </Popover>
+            {mode === "wbw" ? (
+              <CaseFormula
                 data={data}
-                onSelect={(e: string) => {
-                  hide();
+                onCaseChange={(formula: string) => {
+                  if (
+                    data.meaning?.value &&
+                    data.meaning?.value.indexOf("[") >= 0
+                  ) {
+                    return;
+                  }
+                }}
+                onChange={(formula: string) => {
+                  /**
+                   * 有 [ ] 不自动替换
+                   * 有{ } 祛除 { }
+                   * 把 格位公式中的 ~ 替换为 data.meaning.value
+                   */
+                  let meaning: string = data.meaning?.value
+                    ? data.meaning?.value
+                    : "";
+                  meaning = meaning.replace(/\{(.+?)\}/g, "");
+                  meaning = meaning.replace(/\[(.+?)\]/g, "");
+
+                  meaning = formula
+                    .replaceAll("{", "[")
+                    .replaceAll("}", "]")
+                    .replace("~", meaning);
                   if (typeof onChange !== "undefined") {
-                    onChange(e);
+                    onChange(meaning);
                   }
                 }}
               />
-            </div>
-          }
-          placement="bottomLeft"
-          trigger="hover"
-        >
-          {meaningInner}
-        </Popover>
-        {mode === "wbw" ? (
-          <CaseFormula
-            data={data}
-            onCaseChange={(formula: string) => {
-              if (
-                data.meaning?.value &&
-                data.meaning?.value.indexOf("[") >= 0
-              ) {
-                return;
-              }
-            }}
-            onChange={(formula: string) => {
-              /**
-               * 有 [ ] 不自动替换
-               * 有{ } 祛除 { }
-               * 把 格位公式中的 ~ 替换为 data.meaning.value
-               */
-              let meaning: string = data.meaning?.value
-                ? data.meaning?.value
-                : "";
-              meaning = meaning.replace(/\{(.+?)\}/g, "");
-              meaning = meaning.replace(/\[(.+?)\]/g, "");
-
-              meaning = formula
-                .replaceAll("{", "[")
-                .replaceAll("}", "]")
-                .replace("~", meaning);
-              if (typeof onChange !== "undefined") {
-                onChange(meaning);
-              }
-            }}
-          />
-        ) : undefined}
+            ) : undefined}
+          </div>
+        )}
       </div>
     );
   } else {
