@@ -83,51 +83,41 @@ const SentReadFrame = ({
     }
   }, [key, value, settings]);
   return (
-    <Tooltip
-      placement="topLeft"
-      color="white"
-      title={
-        <Button type="link" size="small">
-          aa
-        </Button>
-      }
+    <div
+      style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
+      ref={boxSent}
     >
+      <Text type="danger" mark>
+        {error}
+      </Text>
       <div
-        style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
-        ref={boxSent}
-      >
-        <Text type="danger" mark>
-          {error}
-        </Text>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
-          }}
-        />
-        <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
-          {origin?.map((item, id) => {
-            return (
-              <MdView
-                key={id}
-                html={item.html}
-                wordWidget={true}
-                convertor={paliCode1}
-              />
-            );
-          })}
-        </div>
-        <div style={{ flex: "5" }}>
-          {translation?.map((item, id) => {
-            if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
-            return (
-              <Text key={id}>
-                <MdView html={item.html} />
-              </Text>
-            );
-          })}
-        </div>
+        dangerouslySetInnerHTML={{
+          __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
+        }}
+      />
+      <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
+        {origin?.map((item, id) => {
+          return (
+            <MdView
+              key={id}
+              html={item.html}
+              wordWidget={true}
+              convertor={paliCode1}
+            />
+          );
+        })}
       </div>
-    </Tooltip>
+      <div style={{ flex: "5" }}>
+        {translation?.map((item, id) => {
+          if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
+          return (
+            <Text key={id}>
+              <MdView html={item.html} />
+            </Text>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
