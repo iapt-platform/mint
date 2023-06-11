@@ -10,8 +10,8 @@ import { Divider } from "antd";
 import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
-import { WbwSentCtl } from "../WbwSent";
 import { my_to_roman } from "../../code/my";
+import SentWbwEdit from "./SentWbwEdit";
 
 interface ISentCell {
   data: ISentence;
@@ -54,6 +54,7 @@ const SentCellWidget = ({
         />
       )}
       <SentEditMenu
+        data={data}
         onModeChange={(mode: string) => {
           if (mode === "edit") {
             setIsEditMode(true);
@@ -81,7 +82,12 @@ const SentCellWidget = ({
                   confidence: 0.5,
                 };
               });
-              setWbwData(wbw);
+              setSentData((origin) => {
+                origin.contentType = "json";
+                origin.content = JSON.stringify(wbw);
+                return origin;
+              });
+              setIsEditMode(true);
               break;
           }
         }}
@@ -89,24 +95,14 @@ const SentCellWidget = ({
         <EditInfo data={sentData} />
         {isEditMode ? (
           <div>
-            {wbwData.length > 0 ? (
-              <WbwSentCtl
-                book={data.book}
-                para={data.para}
-                wordStart={data.wordStart}
-                wordEnd={data.wordEnd}
-                data={wbwData}
-                refreshable={true}
-                display="block"
-                fields={{
-                  meaning: true,
-                  factors: true,
-                  factorMeaning: false,
-                  case: true,
+            {sentData.contentType === "json" ? (
+              <SentWbwEdit
+                data={sentData}
+                onClose={() => {
+                  setIsEditMode(false);
                 }}
-                channelId={data.channel.id}
-                onChange={(data: IWbw[]) => {
-                  setWbwData(data);
+                onSave={(data: ISentence) => {
+                  setSentData(data);
                 }}
               />
             ) : (
