@@ -18,6 +18,7 @@ import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
 import WbwRelationAdd from "./WbwRelationAdd";
 import { ArticleMode } from "../../article/Article";
+import WbwReal from "./WbwReal";
 
 export type TFieldName =
   | "word"
@@ -43,10 +44,11 @@ export interface IWbwField {
   value: string;
 }
 
-enum WbwStatus {
+export enum WbwStatus {
   initiate = 0,
   auto = 3,
-  manual = 5,
+  apply = 5,
+  manual = 7,
 }
 export interface WbwElement<R> {
   value: R;
@@ -80,6 +82,7 @@ export interface IWbw {
   hasComment?: boolean;
 }
 export interface IWbwFields {
+  real?: boolean;
   meaning?: boolean;
   factors?: boolean;
   factorMeaning?: boolean;
@@ -100,7 +103,13 @@ const WbwWordWidget = ({
   data,
   display = "block",
   mode = "edit",
-  fields = { meaning: true, factors: true, factorMeaning: true, case: true },
+  fields = {
+    real: false,
+    meaning: true,
+    factors: true,
+    factorMeaning: true,
+    case: true,
+  },
   wordDark = false,
   onChange,
   onSplit,
@@ -121,7 +130,7 @@ const WbwWordWidget = ({
     : "unset";
   const wbwCtl = wordData.type?.value === ".ctl." ? "wbw_ctl" : "";
   const wbwAnchor = wordData.grammar?.value === ".a." ? "wbw_anchor" : "";
-  const wbwDark = wordDark ? "dark" : undefined;
+  const wbwDark = wordDark ? "dark" : "";
 
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
@@ -211,6 +220,22 @@ const WbwWordWidget = ({
             background: `linear-gradient(90deg, rgba(255, 255, 255, 0), ${color})`,
           }}
         >
+          {fieldDisplay?.real ? (
+            <WbwReal
+              key="real"
+              data={wordData}
+              display={display}
+              onChange={(e: string) => {
+                console.log("meaning change", e);
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.meaning = { value: e, status: 5 };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+            />
+          ) : undefined}
           {fieldDisplay?.meaning ? (
             <WbwMeaning
               key="meaning"
@@ -220,7 +245,7 @@ const WbwWordWidget = ({
               onChange={(e: string) => {
                 console.log("meaning change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.meaning = { value: e, status: 5 };
+                newData.meaning = { value: e, status: WbwStatus.manual };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);
