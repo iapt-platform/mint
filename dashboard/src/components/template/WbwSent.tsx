@@ -13,6 +13,8 @@ import WbwWord, {
   WbwStatus,
 } from "./Wbw/WbwWord";
 import { TChannelType } from "../api/Channel";
+import { IDictRequest, IDictResponse, IUserDictCreate } from "../api/Dict";
+import { useIntl } from "react-intl";
 
 interface IMagicDictRequest {
   book: number;
@@ -95,6 +97,7 @@ export const WbwSentCtl = ({
   onChange,
   onMagicDictDone,
 }: IWidget) => {
+  const intl = useIntl();
   const [wordData, setWordData] = useState<IWbw[]>(data);
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
@@ -317,6 +320,58 @@ export const WbwSentCtl = ({
       }
     }
   };
+
+  const wbwPublish = (wbwData: IWbw[]) => {
+    let wordData: IDictRequest[] = [];
+
+    wbwData.forEach((data) => {
+      const [wordType, wordGrammar] = data.case?.value
+        ? data.case?.value?.split("#")
+        : ["", ""];
+
+      wordData.push({
+        word: data.real.value,
+        type: wordType,
+        grammar: wordGrammar,
+        mean: data.meaning?.value,
+        parent: data.parent?.value,
+        factors: data.factors?.value,
+        factormean: data.factorMeaning?.value,
+        confidence: data.confidence,
+      });
+      if (data.parent?.value && wordType !== "") {
+        if (!wordType.includes("base") && wordType !== ".ind.") {
+          wordData.push({
+            word: data.parent.value,
+            type: "." + wordType.replaceAll(".", "") + ":base.",
+            grammar: wordGrammar,
+            mean: data.meaning?.value,
+            parent: data.parent2?.value ? data.parent2?.value : undefined,
+            factors: data.factors?.value,
+            factormean: data.factorMeaning?.value,
+            confidence: data.confidence,
+          });
+        }
+      }
+    });
+
+    post<IUserDictCreate, IDictResponse>("/v2/userdict", {
+      view: "wbw",
+      data: JSON.stringify(wordData),
+    })
+      .finally(() => {
+        setLoading(false);
+      })
+      .then((json) => {
+        if (json.ok) {
+          message.success(
+            "wbw " + intl.formatMessage({ id: "flashes.success" })
+          );
+        } else {
+          message.error(json.message);
+        }
+      });
+  };
   const wbwRender = (item: IWbw, id: number) => {
     return (
       <WbwWord
@@ -325,7 +380,7 @@ export const WbwSentCtl = ({
         mode={displayMode}
         display={wbwMode}
         fields={fieldDisplay}
-        onChange={(e: IWbw) => {
+        onChange={(e: IWbw, isPublish?: boolean) => {
           let newData = [...wordData];
           newData.forEach((value, index, array) => {
             //把新的数据更新到数组
@@ -372,6 +427,9 @@ export const WbwSentCtl = ({
           }
           update(newData);
           saveWord(newData, e.sn[0]);
+          if (isPublish) {
+            wbwPublish([e]);
+          }
         }}
         onSplit={() => {
           const newData: IWbw[] = JSON.parse(JSON.stringify(wordData));
@@ -414,6 +472,10 @@ export const WbwSentCtl = ({
               key: "magic-dict-current",
               label: "魔法字典",
             },
+            {
+              key: "wbw-dict-publish-all",
+              label: "发布全部单词",
+            },
           ],
           onClick: ({ key }) => {
             console.log(`Click on item ${key}`);
@@ -421,6 +483,9 @@ export const WbwSentCtl = ({
               case "magic-dict-current":
                 setLoading(true);
                 setMagic("curr");
+                break;
+              case "wbw-dict-publish-all":
+                wbwPublish(wordData);
                 break;
             }
           },
