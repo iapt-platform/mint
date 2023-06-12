@@ -134,7 +134,7 @@ const CommunityWidget = ({ word }: IWidget) => {
     (value, index: number) => !isShow(value.score, index)
   );
   const meaningExtra = meaningLow?.map((item, id) => {
-    return <>{item.value}</>;
+    return <span key={id}>{item.value}</span>;
   });
 
   const mainCollaboratorNum = 3; //默认显示的协作者数量，其余的在更多中显示
@@ -173,7 +173,7 @@ const CommunityWidget = ({ word }: IWidget) => {
       <Title level={5} id={`community`}>
         {"社区字典"}
       </Title>
-      <div>
+      <div key="meaning">
         <Space>
           {"意思："}
           {wordData?.meaning
@@ -200,7 +200,7 @@ const CommunityWidget = ({ word }: IWidget) => {
           ) : undefined}
         </Space>
       </div>
-      <div>
+      <div key="grammar">
         <Space>
           {"语法："}
           {wordData?.grammar
@@ -238,7 +238,7 @@ const CommunityWidget = ({ word }: IWidget) => {
             })}
         </Space>
       </div>
-      <div>
+      <div key="base">
         <Space>
           {"词干："}
           {wordData?.parent
@@ -253,7 +253,7 @@ const CommunityWidget = ({ word }: IWidget) => {
             })}
         </Space>
       </div>
-      <div>
+      <div key="collaborator">
         <Space>
           {"贡献者："}
           {wordData?.editor
