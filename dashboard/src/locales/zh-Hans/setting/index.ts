@@ -28,6 +28,10 @@ const items = {
   "setting.search.orderby.paragraph.label": "段落",
   "setting.dict.lang.label": "字典语言",
   "setting.dict.lang.description": "字典查询结果的语言排序",
+  "setting.nissaya.layout.read.label": "阅读排版方式",
+  "setting.nissaya.layout.edit.label": "阅读排版方式",
+  "setting.nissaya.layout.inline.label": "连续",
+  "setting.nissaya.layout.list.label": "列表",
 };
 
 export default items;
