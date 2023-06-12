@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { ICaseListData } from "../dict/CaseList";
@@ -8,11 +7,11 @@ export interface IDictRequest {
   word: string;
   type?: string;
   grammar?: string;
-  mean?: string;
-  parent?: string;
+  mean?: string | null;
+  parent?: string | null;
   note?: string;
-  factors?: string;
-  factormean?: string;
+  factors?: string | null;
+  factormean?: string | null;
   confidence: number;
   dict_id?: string;
   dict_name?: string;
