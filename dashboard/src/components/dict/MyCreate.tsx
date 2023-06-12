@@ -148,7 +148,6 @@ const MyCreateWidget = ({ word }: IWidget) => {
           loading={loading}
           icon={<SaveOutlined />}
           onClick={() => {
-            console.log("edit word", editWord);
             setLoading(true);
             const data = [
               {
@@ -163,7 +162,6 @@ const MyCreateWidget = ({ word }: IWidget) => {
                 confidence: editWord.confidence,
               },
             ];
-            console.log("wbw data", data);
             post<IUserDictCreate, IDictResponse>("/v2/userdict", {
               view: "dict",
               data: JSON.stringify(data),
@@ -173,7 +171,9 @@ const MyCreateWidget = ({ word }: IWidget) => {
               })
               .then((json) => {
                 if (json.ok) {
-                  message.success("成功");
+                  message.success(
+                    intl.formatMessage({ id: "flashes.success" })
+                  );
                 } else {
                   message.error(json.message);
                 }
