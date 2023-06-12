@@ -22,6 +22,13 @@ const SettingArticleWidget = () => {
       <Divider>翻译</Divider>
 
       <Divider>逐词解析</Divider>
+      <Divider>Nissaya</Divider>
+      <SettingItem
+        data={SettingFind("setting.nissaya.layout.read", settings)}
+      />
+      <SettingItem
+        data={SettingFind("setting.nissaya.layout.edit", settings)}
+      />
       <Divider>字典</Divider>
       <SettingItem data={SettingFind("setting.dict.lang", settings)} />
     </div>
