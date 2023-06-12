@@ -205,12 +205,11 @@ const WbwWordWidget = ({
           key="pali"
           data={wordData}
           display={display}
-          onSave={(e: IWbw) => {
-            console.log("save", e);
+          onSave={(e: IWbw, isPublish: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));
             setWordData(newData);
             if (typeof onChange !== "undefined") {
-              onChange(e);
+              onChange(e, isPublish);
             }
           }}
         />

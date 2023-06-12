@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
-import type { MenuProps } from "antd";
 import { SaveOutlined, CommentOutlined } from "@ant-design/icons";
 
 import { IWbw, IWbwField, TFieldName } from "./WbwWord";
@@ -89,9 +88,6 @@ const WbwDetailWidget = ({
     }
     setCurrWbwData(mData);
   }
-  const onMenuClick: MenuProps["onClick"] = (e) => {
-    console.log("click", e);
-  };
 
   const items = [
     {
@@ -245,10 +241,23 @@ const WbwDetailWidget = ({
         <Dropdown.Button
           style={{ width: "unset" }}
           type="primary"
-          menu={{ items, onClick: onMenuClick }}
+          menu={{
+            items: [
+              {
+                key: "user-dict",
+                label: intl.formatMessage({ id: "buttons.save.publish" }),
+              },
+            ],
+            onClick: (e) => {
+              if (typeof onSave !== "undefined") {
+                //保存并发布
+                onSave(currWbwData, true);
+              }
+            },
+          }}
           onClick={() => {
             if (typeof onSave !== "undefined") {
-              onSave(currWbwData);
+              onSave(currWbwData, false);
             }
           }}
         >

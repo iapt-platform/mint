@@ -77,9 +77,9 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
         setPaliColor("unset");
         setPopOpen(false);
       }}
-      onSave={(e: IWbw) => {
+      onSave={(e: IWbw, isPublish: boolean) => {
         if (typeof onSave !== "undefined") {
-          onSave(e);
+          onSave(e, isPublish);
           setPopOpen(false);
           setPaliColor("unset");
         }
