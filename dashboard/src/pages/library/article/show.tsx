@@ -1,8 +1,9 @@
-import { Affix, Divider, Space } from "antd";
+import { Affix, Button, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ColumnOutlinedIcon } from "../../../assets/icon";
 import { IApiResponseDictList } from "../../../components/api/Dict";
 
 import Article, {
@@ -112,6 +113,8 @@ const Widget = () => {
           <MainMenu />
           <div></div>
           <div key="right" style={{ display: "flex" }}>
+            <Avatar placement="bottom" />
+            <Divider type="vertical" />
             <ModeSwitch
               channel={searchParams.get("channel")}
               currMode={currMode}
@@ -140,10 +143,13 @@ const Widget = () => {
               }}
             />
             <Divider type="vertical" />
-            <RightToolsSwitch
-              onModeChange={(open: TPanelName) => {
-                setRightPanel(open);
-              }}
+            <Button
+              style={{ display: "block", color: "white" }}
+              icon={<ColumnOutlinedIcon />}
+              type="text"
+              onClick={() =>
+                setRightPanel((value) => (value === "close" ? "dict" : "close"))
+              }
             />
           </div>
         </Header>
@@ -180,11 +186,6 @@ const Widget = () => {
                 <ToolButtonDiscussion type={type} articleId={id} />
                 <ToolButtonSearch type={type} articleId={id} />
                 <ToolButtonSetting type={type} articleId={id} />
-              </Space>
-            </div>
-            <div>
-              <Space direction="vertical">
-                <Avatar placement="rightBottom" />
               </Space>
             </div>
           </div>
@@ -224,6 +225,9 @@ const Widget = () => {
               type={type as ArticleType}
               articleId={id ? id : ""}
               selectedChannelKeys={channelId}
+              onClose={() => {
+                setRightPanel("close");
+              }}
               onChannelSelect={(e: IChannel[]) => {
                 //channel 改变
                 console.log("onChannelSelect", e);
