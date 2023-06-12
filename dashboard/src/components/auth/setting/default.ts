@@ -186,4 +186,42 @@ export const defaultSetting: ISetting[] = [
       },
     ],
   },
+  {
+    /**
+     * nissaya 显示模式切换
+     */
+    key: "setting.nissaya.layout.read",
+    label: "setting.nissaya.layout.read.label",
+    defaultValue: "inline",
+    options: [
+      {
+        value: "inline",
+        label: "setting.nissaya.layout.inline.label",
+      },
+      {
+        value: "list",
+        label: "setting.nissaya.layout.list.label",
+      },
+    ],
+    widget: "radio-button",
+  },
+  {
+    /**
+     * nissaya 显示模式切换
+     */
+    key: "setting.nissaya.layout.edit",
+    label: "setting.nissaya.layout.edit.label",
+    defaultValue: "list",
+    options: [
+      {
+        value: "inline",
+        label: "setting.nissaya.layout.inline.label",
+      },
+      {
+        value: "list",
+        label: "setting.nissaya.layout.list.label",
+      },
+    ],
+    widget: "radio-button",
+  },
 ];
