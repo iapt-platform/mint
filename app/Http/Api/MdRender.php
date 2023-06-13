@@ -147,8 +147,8 @@ class MdRender{
         return $html;
     }
 
-    public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType){
-        $wiki = MdRender::markdown2wiki($markdown,$channelType);
+    public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType,$contentType="markdown"){
+        $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
@@ -156,22 +156,44 @@ class MdRender{
         $tpl = MdRender::xml2tpl($html,$channelId,$mode);
         return $tpl;
     }
-    public static function markdown2wiki(string $markdown,$channelType): string{
+    public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
                 /**
          * nissaya
          * aaa=bbb\n
          * {{nissaya|aaa|bbb}}
          */
         if($channelType==='nissaya'){
-            $pattern = '/(.+?)=(.+?)\n/';
-            $replacement = '{{nissaya|$1|$2}}';
-            $markdown = preg_replace($pattern,$replacement,$markdown);
-            $pattern = '/(.+?)=(.?)\n/';
-            $replacement = '{{nissaya|$1|$2}}';
-            $markdown = preg_replace($pattern,$replacement,$markdown);
-            $pattern = '/(.?)=(.+?)\n/';
-            $replacement = '{{nissaya|$1|$2}}';
-            $markdown = preg_replace($pattern,$replacement,$markdown);
+            if($contentType === "json"){
+                $json = json_decode($markdown);
+                $nissayaWord = [];
+                foreach ($json as $word) {
+                    if(count($word->sn) === 1){
+                        //只输出第一层级
+                        $str = "{{nissaya|";
+                        if(isset($word->word->value)){
+                            $str .= $word->word->value;
+                        }
+                        $str .= "|";
+                        if(isset($word->meaning->value)){
+                            $str .= $word->meaning->value;
+                        }
+                        $str .= "}}";
+                        $nissayaWord[] = $str;
+                    }
+
+                }
+                $markdown = implode('',$nissayaWord);
+            }else{
+                $pattern = '/(.+?)=(.+?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+                $pattern = '/(.+?)=(.?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+                $pattern = '/(.?)=(.+?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+            }
         }
         $markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
@@ -217,8 +239,8 @@ class MdRender{
     /**
      *
      */
-    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation'){
-        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown"){
+        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
     }
 
 }

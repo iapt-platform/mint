@@ -21,7 +21,7 @@ class SentenceController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
@@ -266,7 +266,7 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user){
             //未登录鉴权失败
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],403);
         }
         $channel = Channel::where('uid',$param[4])->first();
         if(!$channel){
@@ -274,7 +274,7 @@ class SentenceController extends Controller
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //TODO 判断是否为协作
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],403);
         }
 
         $sent = Sentence::firstOrNew([
@@ -289,6 +289,9 @@ class SentenceController extends Controller
             "create_time"=>time()*1000,
         ]);
         $sent->content = $request->get('content');
+        if($request->has('content_type')){
+            $sent->content_type = $request->get('content_type');
+        }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
         $sent->editor_uid = $user["user_uid"];

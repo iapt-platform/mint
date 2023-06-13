@@ -28,6 +28,7 @@ class SentResource extends JsonResource
         $data = [
                 "id" => $this->uid,
                 "content"=>$this->content,
+                "content_type"=>$this->content_type,
                 "html"=> "",
                 "book"=> $this->book_id,
                 "paragraph"=> $this->paragraph,
@@ -39,7 +40,12 @@ class SentResource extends JsonResource
                 "updated_at"=> $this->updated_at,
             ];
         if($request->get('html',true)){
-            $data['html'] = MdRender::render($this->content,$this->channel_uid,null,$mode,$channel['type']);
+            $data['html'] = MdRender::render($this->content,
+                                             $this->channel_uid,
+                                             null,
+                                             $mode,
+                                             $channel['type'],
+                                             $this->content_type);
         }
         if($request->get('mode')==="edit" || $request->get('mode')==="wbw"){
             $data['suggestionCount'] = SuggestionApi::getCountBySent($this->book_id,

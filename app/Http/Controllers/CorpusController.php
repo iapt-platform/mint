@@ -50,6 +50,7 @@ class CorpusController extends Controller
         "word_end",
         'channel_uid',
         'content',
+        'content_type',
         'editor_uid',
         'acceptor_uid',
         'pr_edit_at',
@@ -501,6 +502,7 @@ class CorpusController extends Controller
                 if($row){
                     $newSent['id'] = $row->uid;
                     $newSent['content'] = $row->content;
+                    $newSent['contentType'] = $row->content_type;
                     $newSent['html'] = "";
                     $newSent["editor"]=UserApi::getById($row->editor_uid);
                     $newSent['updateAt'] = $row->updated_at;
@@ -544,7 +546,7 @@ class CorpusController extends Controller
                         case 'nissaya':
                             $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
                             function() use($row,$mode){
-                                return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya");
+                                return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya",$row->content_type);
                             });
                             break;
                         default:
