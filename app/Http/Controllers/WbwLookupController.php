@@ -131,6 +131,13 @@ class WbwLookupController extends Controller
 
         return $output;
     }
+    private function langCheck($query,$lang){
+        if($query===[]){
+            return true;
+        }else{
+            return in_array($lang,$query);
+        }
+    }
     /**
      * 自动查词
      *
@@ -147,6 +154,7 @@ class WbwLookupController extends Controller
 
         $channel = Channel::find($request->get('channel_id'));
         $orgData = $request->get('data');
+        $lang = $request->get('lang',[]);
         //句子中的单词
         $words = [];
         foreach ($orgData as  $word) {
@@ -194,7 +202,9 @@ class WbwLookupController extends Controller
                         }
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
                         $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
-                        $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                        if($this->langCheck($lang,$value->language)){
+                            $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                        }
                     }
                     if(count($case)>0){
                         arsort($case);
@@ -242,7 +252,9 @@ class WbwLookupController extends Controller
                                 //根据base 查找词意
                                 //非base优先
                                 $increment = 10;
-                                $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                                if($this->langCheck($lang,$value->language)){
+                                    $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                                }
                                 //查找词源
                                 if(!empty($value->parent) && $value->parent !== $value->word && strstr($value->type,"base") !== FALSE ){
                                     $parent2 = $this->insertValue([$value->grammar."$".$value->parent],$parent2,1,false);
