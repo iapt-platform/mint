@@ -15,6 +15,8 @@ import WbwWord, {
 import { TChannelType } from "../api/Channel";
 import { IDictRequest, IDictResponse, IUserDictCreate } from "../api/Dict";
 import { useIntl } from "react-intl";
+import { add } from "../../reducers/sent-word";
+import store from "../../store";
 
 interface IMagicDictRequest {
   book: number;
@@ -120,6 +122,27 @@ export const WbwSentCtl = ({
       setWordData(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    //发布句子里面的单词的变更。给术语输入菜单用。
+    let words = new Map<string, number>();
+    wordData
+      .filter(
+        (value) => value.type?.value !== ".ctl." && value.real.value.length > 0
+      )
+      .forEach((value) => {
+        words.set(value.real.value, 1);
+        if (value.parent?.value) {
+          words.set(value.parent.value, 1);
+        }
+      });
+    let pubWords: string[] = [];
+    words.forEach((value, key) => pubWords.push(key));
+
+    const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
+    console.log("pub words", sentId, pubWords);
+    store.dispatch(add({ sentId: sentId, words: pubWords }));
+  }, [book, para, wordData, wordEnd, wordStart]);
 
   useEffect(() => {
     setDisplayMode(newMode);
