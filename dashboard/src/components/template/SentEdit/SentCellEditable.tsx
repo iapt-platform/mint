@@ -125,14 +125,20 @@ const SentCellEditableWidget = ({
       <TermTextArea
         value={value}
         menuOptions={termList}
-        onChange={(e: string) => setValue(e)}
+        onChange={(value: string) => {
+          console.log("change", value);
+          setValue(value);
+        }}
         placeholder="请输入"
         onClose={() => {
           if (typeof onClose !== "undefined") {
             onClose();
           }
         }}
-        onSave={() => (isPr ? savePr() : save())}
+        onSave={(value: string) => {
+          setValue(value);
+          isPr ? savePr() : save();
+        }}
       />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>

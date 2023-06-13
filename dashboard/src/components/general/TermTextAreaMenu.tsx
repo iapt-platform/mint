@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 interface IWidget {
   items?: string[];
   searchKey?: string;
@@ -16,10 +18,21 @@ const TermTextAreaMenuWidget = ({
   onChange,
   onSelect,
 }: IWidget) => {
+  console.log("currIndex", currIndex);
+  const filteredItem = searchKey
+    ? items?.filter((value) => value.slice(0, searchKey.length) === searchKey)
+    : items;
+  useEffect(() => {
+    if (filteredItem && typeof onChange !== "undefined") {
+      if (currIndex < filteredItem?.length) {
+        onChange(filteredItem[currIndex]);
+      } else {
+        onChange(filteredItem[filteredItem.length - 1]);
+      }
+    }
+  }, [currIndex]);
+
   if (visible) {
-    const filteredItem = searchKey
-      ? items?.filter((value) => value.slice(0, searchKey.length) === searchKey)
-      : items;
     return (
       <>
         <div className="term_at_menu_input" key="head">

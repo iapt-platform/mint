@@ -60,7 +60,11 @@ const TermTextAreaWidget = ({
     const newValue = str1 + strTerm + "]]" + str2;
     refTextArea.current.value = newValue;
     setTextAreaValue(newValue);
+    if (typeof onChange !== "undefined") {
+      onChange(newValue);
+    }
     term_at_menu_hide();
+    refTextArea.current.focus();
   }
   return (
     <div className="text_input">
@@ -91,6 +95,13 @@ const TermTextAreaWidget = ({
         ref={refTextArea}
         style={{ height: textAreaHeight }}
         placeholder={placeholder}
+        value={textAreaValue}
+        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+          setTextAreaValue(event.target.value);
+          if (typeof onChange !== "undefined") {
+            onChange(event.target.value);
+          }
+        }}
         onResize={(event) => {
           setShadowHeight(refTextArea.current?.clientHeight);
         }}
@@ -99,27 +110,31 @@ const TermTextAreaWidget = ({
             case "ArrowDown":
               if (menuDisplay === "block") {
                 if (menuFocusIndex < _term_max_menu) {
-                  setMenuFocusIndex((value) => value++);
+                  setMenuFocusIndex((value) => ++value);
                 }
+                event.preventDefault();
               }
               break;
             case "ArrowUp":
               if (menuDisplay === "block") {
                 if (menuFocusIndex > 0) {
-                  setMenuFocusIndex((value) => value--);
+                  setMenuFocusIndex((value) => --value);
                 }
+                event.preventDefault();
               }
               break;
             case "Enter":
               if (menuDisplay === "block") {
+                console.log("enter", menuSelected);
                 if (menuSelected) {
                   termInsert(menuSelected);
                 }
                 setMenuDisplay("none");
+                event.preventDefault();
               }
               if (event.ctrlKey) {
                 //回车存盘
-                console.log("save");
+                console.log("save", textAreaValue);
                 if (typeof onSave !== "undefined") {
                   onSave(textAreaValue);
                 }
@@ -186,8 +201,8 @@ const TermTextAreaWidget = ({
               let pos2 = str1.lastIndexOf("]]");
               if (pos1 === -1 || (pos1 !== -1 && pos2 > pos1)) {
                 //光标前没有[[ 或 光标在[[]] 之后
-                //term_at_menu_hide();
                 setMenuDisplay("none");
+                setTermSearch("");
               }
             }
           }
@@ -203,21 +218,11 @@ const TermTextAreaWidget = ({
                 //光标
                 const term_input = str1.slice(str1.lastIndexOf("[[") + 2);
                 setTermSearch(term_input);
-                console.log("term_input", term_input);
               }
             }
-
-            //menu.innerHTML = TermAtRenderMenu({ focus: menuFocusIndex });
           }
         }}
-        onChange={(event) => {
-          if (typeof onChange !== "undefined") {
-            onChange(event.target.value);
-          }
-        }}
-      >
-        {value}
-      </textarea>
+      />
     </div>
   );
 };
