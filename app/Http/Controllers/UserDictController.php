@@ -192,18 +192,16 @@ class UserDictController extends Controller
     public function destroy(Request $request,$id)
     {
         //
-        if(isset($_COOKIE["user_id"])){
-            $user_id = $_COOKIE["user_id"];
-        }else{
-            $user = AuthApi::current($request);
-            if(!$user){
-                return $this->error(__('auth.failed'));
-            }
-            $user_id = $user['user_id'];
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],403);
         }
+        $user_id = $user['user_id'];
+
         if($request->has("id")){
             $arrId = json_decode($request->get("id"),true) ;
             $count = 0;
+            $updateOk = false;
             foreach ($arrId as $key => $id) {
                 # 找到对应数据
                 $data = UserDict::find($id);
@@ -314,7 +312,7 @@ class UserDictController extends Controller
                 #系统字典没有 新增
                 $result = UserDict::insert(
 				[
-                    'id' =>$snowflake->id(),
+                    'id' =>app('snowflake')->id(),
 					'word'=>$data["word"],
 					'type'=>$data["type"],
 					'grammar'=>$data["grammar"],
