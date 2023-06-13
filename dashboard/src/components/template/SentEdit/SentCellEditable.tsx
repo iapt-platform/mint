@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Button, message, Typography } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
-import TextArea from "antd/lib/input/TextArea";
 
 import { post, put } from "../../../request";
 import {
@@ -12,6 +11,9 @@ import {
   ISentenceResponse,
 } from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
+import TermTextArea from "../../general/TermTextArea";
+import { useAppSelector } from "../../../hooks";
+import { wordList } from "../../../reducers/sent-word";
 
 const { Text } = Typography;
 
@@ -32,6 +34,16 @@ const SentCellEditableWidget = ({
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
+  const [termList, setTermList] = useState<string[]>();
+
+  const sentWords = useAppSelector(wordList);
+
+  useEffect(() => {
+    console.log("get word list", sentWords);
+    const sentId = `${data.book}-${data.para}-${data.wordStart}-${data.wordEnd}`;
+    console.log("word list", sentWords);
+    setTermList(sentWords.find((value) => value.sentId === sentId)?.words);
+  }, [data.book, data.para, data.wordEnd, data.wordStart, sentWords]);
 
   const savePr = () => {
     setSaving(true);
@@ -109,12 +121,18 @@ const SentCellEditableWidget = ({
   };
 
   return (
-    <div>
-      <TextArea
+    <Typography.Paragraph>
+      <TermTextArea
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        menuOptions={termList}
+        onChange={(e: string) => setValue(e)}
         placeholder="请输入"
-        autoSize={{ minRows: 3, maxRows: 5 }}
+        onClose={() => {
+          if (typeof onClose !== "undefined") {
+            onClose();
+          }
+        }}
+        onSave={() => (isPr ? savePr() : save())}
       />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
@@ -125,7 +143,7 @@ const SentCellEditableWidget = ({
               type="link"
               onClick={(e) => {
                 if (typeof onClose !== "undefined") {
-                  onClose(e);
+                  onClose();
                 }
               }}
             >
@@ -152,7 +170,7 @@ const SentCellEditableWidget = ({
           </Button>
         </div>
       </div>
-    </div>
+    </Typography.Paragraph>
   );
 };
 
