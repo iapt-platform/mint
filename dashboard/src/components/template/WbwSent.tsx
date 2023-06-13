@@ -17,6 +17,8 @@ import { IDictRequest, IDictResponse, IUserDictCreate } from "../api/Dict";
 import { useIntl } from "react-intl";
 import { add } from "../../reducers/sent-word";
 import store from "../../store";
+import { settingInfo } from "../../reducers/setting";
+import { GetUserSetting } from "../auth/setting/default";
 
 interface IMagicDictRequest {
   book: number;
@@ -25,6 +27,7 @@ interface IMagicDictRequest {
   word_end: number;
   data: IWbw[];
   channel_id: string;
+  lang?: string[];
 }
 interface IMagicDictResponse {
   ok: boolean;
@@ -106,6 +109,8 @@ export const WbwSentCtl = ({
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const [magic, setMagic] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const settings = useAppSelector(settingInfo);
+
   useEffect(() => {
     setMagic(magicDict);
   }, [magicDict]);
@@ -128,7 +133,10 @@ export const WbwSentCtl = ({
     let words = new Map<string, number>();
     wordData
       .filter(
-        (value) => value.type?.value !== ".ctl." && value.real.value.length > 0
+        (value) =>
+          value.type?.value !== null &&
+          value.type?.value !== ".ctl." &&
+          value.real.value.length > 0
       )
       .forEach((value) => {
         words.set(value.real.value, 1);
@@ -182,8 +190,11 @@ export const WbwSentCtl = ({
     if (typeof magic === "undefined") {
       return;
     }
+    let _lang = GetUserSetting("setting.dict.lang", settings);
     const url = `/v2/wbwlookup`;
     console.log("magic dict url", url);
+    if (typeof _lang === "object") {
+    }
     post<IMagicDictRequest, IMagicDictResponse>(url, {
       book: book,
       para: para,
@@ -191,6 +202,7 @@ export const WbwSentCtl = ({
       word_end: wordEnd,
       data: wordData,
       channel_id: channelId,
+      lang: _lang?.toString().split(","),
     })
       .then((json) => {
         if (json.ok) {
