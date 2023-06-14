@@ -91,6 +91,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	$updated_at = date("Y-m-d H:i:s.",$srcData["modify_time"]/1000).($srcData["modify_time"]%1000)." UTC";
     if($srcData["email"]==="test@test.com"){
         $email = $srcData["username"].$srcData["email"];
+        echo "Email Exist ".$srcData["username"].PHP_EOL;
     }else{
         $email = $srcData["email"];
     }
