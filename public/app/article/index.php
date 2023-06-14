@@ -153,6 +153,9 @@ require_once "../pcdl/html_head.php";
 <script src="../article/article_add_dlg.js"></script>
 <script src="../../node_modules/mustache/mustache.js"></script>
 
+<?php
+    require_once("../pcdl/head_bar.php");
+?>
 <style>
 ul.fancytree-container{
 	border:unset;
@@ -227,12 +230,13 @@ span.fancytree-node{
 	white-space: normal;
 	overflow-wrap: anywhere;
 }
+.show_pc{
+	color: var(--main-color);
+}
 
 </style>
 
-<?php
-    require_once("../pcdl/head_bar.php");
-?>
+
 <script>
 function show_content(){
 	$("#left_pannal").toggleClass("hidden");
@@ -283,7 +287,7 @@ function set_toc_visible(isVisible){
 </script>
 <div id="head_bar" >
 	<div style="display:flex;">
-	<button class="icon_btn" onclick="show_content()"><?php echo $_local->gui->contents; ?></button>
+	<button class="icon_btn" onclick="show_content()" style="color: var(--main-color);"><?php echo $_local->gui->contents; ?></button>
 	</div>
 
 	<div style="margin: auto 0;">
@@ -340,8 +344,11 @@ function set_toc_visible(isVisible){
 		
 
 		?>
+		<button id="btn_show_channel" class="icon_btn show_pc" onclick='show_channel_detail_pannal()'>
+			<?php echo $_local->gui->contributor.$_local->gui->white_space.$_local->gui->list; ?>
+		</button>
 		<span>
-		<?php include "../reader/right_tool_bar.php";?>
+			<?php include "../reader/right_tool_bar.php";?>
 		</span>
 		</span>
 	</div>
@@ -364,18 +371,19 @@ function set_toc_visible(isVisible){
 			<div id="head_nav_right" >
 				<select id="select_lang" onchange="lang_changed(this)">
 						<option>全部语言</option>
-						<option>简体中文</option>
-						<option>繁体中文</option>
-						<option>英文</option>
+						<option><?php echo $_local->language->zh_cn; ?></option>
+						<option><?php echo $_local->language->zh_tw; ?></option>
+						<option><?php echo $_local->language->en; ?></option>
+						<option><?php echo $_local->language->si; ?></option>
+						<option><?php echo $_local->language->my; ?></option>
 				</select>
 				<div id="article_edition" style="display:flex;">
-					<span  style='font-weight: 700;'>文章版本 </span>
+					<span  style='font-weight: 700;'>
+						<?php echo $_local->gui->channels; ?>
+					</span>
 					<div id="edition_dropdown" class="case_dropdown">
 						<span></span>
 					</div>
-				</div>
-				<div>
-					<button id="btn_show_channel" onclick='show_channel_detail_pannal()'>Details</button>
 				</div>
 			</div>
 		</div>

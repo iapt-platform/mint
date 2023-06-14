@@ -8,9 +8,9 @@ if (!isset($_COOKIE["userid"])) {
     if (isset($_POST["pwd_set"])) {
         if ($_POST["password"] == $_POST["repassword"]) {
             $md5_password = md5($_POST["password"]);
-            $PDO = new PDO("" . _FILE_DB_USERINFO_, "", "");
+            $PDO = new PDO(_FILE_DB_USERINFO_, _DB_USERNAME_,_DB_PASSWORD_);
             $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-            $query = "UPDATE user SET password = ? WHERE userid = ? ";
+            $query = "UPDATE "._TABLE_USER_INFO_." SET password = ? WHERE userid = ? ";
             $stmt = $PDO->prepare($query);
             $stmt->execute(array($md5_password, $_COOKIE["userid"]));
             if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {

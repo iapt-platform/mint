@@ -78,7 +78,7 @@ class CustomBookSentence extends Table
 	}
 
 	#将句子插入数据库
-	#包含句子识别算法，表格算一个句子，list算一个句子
+	#包含句子识别算法，表格算一个句子
 	public function insert($book,$content,$lang)
 	{
 		$respond['status']=0;
@@ -111,6 +111,7 @@ class CustomBookSentence extends Table
 		$isList=false;
 		$newSent="";		
 		foreach ($content as $data) {
+			//$data 为一行文本
             $listHead= "";
             $isList = false;
 
@@ -130,12 +131,14 @@ class CustomBookSentence extends Table
 
             # TODO 判断是否为标题
             # [#]+\s
-			
-			if(mb_substr($trimData,0,1,"UTF-8")=="|"){
+
+			//判断是否为表格开始
+			if(mb_substr($trimData,0,1,"UTF-8") == "|"){
 				$isTable=true;
 			}
 			if($trimData!="" && $isTable == true){
-				$newSent .= "\n";
+				//如果是表格 不新增句子
+				$newSent .= "{$data}\n";
 				continue;
 			}
             if($isList == true){
@@ -152,7 +155,6 @@ class CustomBookSentence extends Table
 				#空行
 				if(strlen($newSent)>0){
 					//之前有内容
-					{
 					$newText .='{{'."{$book}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
 					$sth->execute(
 							array(
@@ -169,14 +171,13 @@ class CustomBookSentence extends Table
 								mTime(),
 								mTime()
 							)); 
-						}
 					$newSent="";				
 				}
 				#新的段落 不插入数据库
 				$para++;
 				$sentNum = 1;
 				$newText .="\n";
-				$isTable = false;
+				$isTable = false; //表格开始标记
 				$isList = false;			
 				continue;
 			}else{

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * 生成系统规则变形词典
+ * 算法： 扫描字典里的所有单词。根据语尾表变形。
+ * 并在词库中查找是否在三藏中出现。出现的保存。
+ */
 namespace App\Console\Commands;
 
 use App\Models\UserDict;
@@ -8,6 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Api\DictApi;
 
 class UpgradeRegular extends Command
 {
@@ -16,15 +21,14 @@ class UpgradeRegular extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:regular';
+    protected $signature = 'upgrade:regular {word?} {--debug}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
-
+    protected $description = 'upgrade regular';
     /**
      * Create a new command instance.
      *
@@ -42,6 +46,11 @@ class UpgradeRegular extends Command
      */
     public function handle()
     {
+        $dict_id = DictApi::getSysDict('system_regular');
+        if(!$dict_id){
+            $this->error('没有找到 system_regular 字典');
+            return 1;
+        }
 		$nounEnding = array();
 		$rowCount=0;
 		if(($handle=fopen(public_path('app/public/ending/noun.csv'),'r'))!==FALSE){
@@ -75,19 +84,28 @@ class UpgradeRegular extends Command
 		}
 		fclose($handle);
 
-		
-		$words = UserDict::where('type','.n:base.')
-						->orWhere('type','.v:base.')
-						->orWhere('type','.adj:base.')
-						->orWhere('type','.ti:base.')
-						->select(['word','type','grammar'])
+		if(empty($this->argument('word'))){
+			$words = UserDict::where('type','.n:base.')
+							->orWhere('type','.v:base.')
+							->orWhere('type','.adj:base.')
+							->orWhere('type','.ti:base.');
+		}else{
+			$words = UserDict::where('word',$this->argument('word'))
+							->where(function($query) {
+								$query->where('type','.n:base.')
+								->orWhere('type','.v:base.')
+								->orWhere('type','.adj:base.')
+								->orWhere('type','.ti:base.');
+							});
+		}
+		$words = $words->select(['word','type','grammar'])
 						->groupBy(['word','type','grammar'])
 						->orderBy('word');
 		$query = "
-		select count(*) from (select count(*) from user_dicts ud where 
-			\"type\" = '.v:base.' or 
-			\"type\" = '.n:base.' or 
-			\"type\" = '.ti:base.' or 
+		select count(*) from (select count(*) from user_dicts ud where
+			\"type\" = '.v:base.' or
+			\"type\" = '.n:base.' or
+			\"type\" = '.ti:base.' or
 			\"type\" = '.adj:base.'
 			group by word,type,grammar) as t;
 		";
@@ -123,7 +141,7 @@ class UpgradeRegular extends Command
 			if($casetable === false){
 				continue;
 			}
-			//$this->info("{$word->word}:{$word->type}");
+			if($this->option('debug'))  $this->info("{$word->word}:{$word->type}");
 			foreach($casetable as $thiscase){
 				if($word->type==".v:base."){
 					$endLen = (int)$thiscase[0];
@@ -139,7 +157,7 @@ class UpgradeRegular extends Command
 					$head = mb_substr($word->word,0,(0-$endLen),"UTF-8");//原词剩余的部分
 					$newEnding = $thiscase[3];
 					$newGrammar = $thiscase[4];
-					$newword=$head.$thiscase[2];					
+					$newword=$head.$thiscase[2];
 					if($word->type==".n:base."){
 						//名词
 						if($thiscase[0]==$word->grammar  && $thiscase[1]==$end){
@@ -147,7 +165,7 @@ class UpgradeRegular extends Command
 							$isMatch = true;
 						}else{
 							$isMatch = false;
-						}						
+						}
 					}else{
 						//形容词
 						if($thiscase[1]==$end){
@@ -155,19 +173,19 @@ class UpgradeRegular extends Command
 							$isMatch = true;
 						}else{
 							$isMatch = false;
-						}							
+						}
 					}
 
 				}
 
 				if($isMatch){
-					//$this->error($newword.':match');
+					if($this->option('debug'))  $this->error($newword.':match');
 					//查询这个词是否在三藏存在
-					$exist = Cache::remember('palicanon/word/exists/'.$newword, 10 , function() use($newword) {
+					$exist = Cache::remember('palicanon/word/exists/'.$newword, 100 , function() use($newword) {
 						return WbwTemplate::where('real',$newword)->exists();
 					});
 					if($exist){
-						//$this->info("{$newword} exists");
+						if($this->option('debug'))  $this->info('exist');
 						$new = UserDict::firstOrNew(
 							[
 								'word' => $newword,
@@ -175,23 +193,34 @@ class UpgradeRegular extends Command
 								'grammar' => $newGrammar,
 								'parent' => $word->word,
 								'factors' => "{$word->word}+[{$newEnding}]",
-								'source' => '_SYS_REGULAR_'
+								'dict_id' => $dict_id,
 							],
 							[
 								'id' => app('snowflake')->id(),
+								'source' => '_ROBOT_',
 								'create_time'=>(int)(microtime(true)*1000)
 							]
 						);
 						$new->confidence = 80;
 						$new->language = 'cm';
 						$new->creator_id = 1;
+						$new->flag = 1;
 						$new->save();
+					}else{
+						if($this->option('debug'))  $this->info('not exist');
 					}
 				}
 			}
 			$bar->advance();
 		}
 		$bar->finish();
+		//删除旧数据
+		$delOld = UserDict::where('dict_id',$dict_id);
+		if(!empty($this->argument('word'))){
+			$delOld = $delOld->where('word',$this->argument('word'));
+		}
+		$delOld->where('flag',0)->delete();
+		$delOld->where('flag',1)->update(['flag'=>0]);
         return 0;
     }
 }

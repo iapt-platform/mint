@@ -452,6 +452,7 @@
 	}
 </style>
 <?php
+//根据用户界面语言设置显示对应的帮助文件
 $help_lang = '';
 switch($_COOKIE['language']){
 	case "zh-cn":
@@ -461,7 +462,7 @@ switch($_COOKIE['language']){
 		$help_lang = "zh-Hans";
 		break;
 	default:
-		$help_lang = "zh-Hans";
+		$help_lang = "en-US";
 }
 ?>
 <!-- new tool bar begin-->
@@ -487,9 +488,9 @@ switch($_COOKIE['language']){
 	<input type="checkbox" id="nav-toggle" class="nav-toggle">
 	<nav>
 		<ul>
+			<li class="nav_link" id="nav_community"><a href="../community/"><?php echo "最新"; ?></a></li>
 			<li class="nav_link" id="nav_palicanon"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
 			<li class="nav_link" id="nav_course"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
-			<li class="nav_link" id="nav_wiki"><a href="../wiki/"><?php echo $_local->gui->encyclopedia; ?></a></li>
 			<li class="nav_link" id="nav_dict"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
 			<li class="nav_link" id="nav_collection"><a href="../collect/"><?php echo $_local->gui->composition; ?></a></li>
 			<li class="nav_link"><a href="<?php echo URL_HELP.'/'.$help_lang ?>"  target="_blank"><?php echo $_local->gui->help; ?></a></li>
@@ -515,7 +516,7 @@ switch($_COOKIE['language']){
 							</a>
 						</li>
 						<li>
-							<a href="../statistics" target="_blank">
+							<a href="../statistics/" target="_blank">
 								<div class="nav_link"><?php echo $_local->gui->corpus_statistics; ?></div>
 							</a>
 						</li>

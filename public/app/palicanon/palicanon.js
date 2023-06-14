@@ -1123,7 +1123,7 @@ function renderPalicanonCategoryList(){
 }
 
 function loadTagCategory(name="defualt"){
-    $.getJSON("./category/"+name+".json",function(result){
+    $.getJSON("../palicanon/category/"+name+".json",function(result){
 
         _palicanonCategory = result;
         _palicanonCategoryCurrent = _palicanonCategory.slice();
@@ -1166,7 +1166,7 @@ function tocGetTagCategory(data){
 }
 
 function loadTagCategoryIndex(){
-    $.getJSON("./category/index.json",function(result){
+    $.getJSON("../palicanon/category/index.json",function(result){
             let indexFilename = localStorage.getItem('palicanon_tag_category');
             if(!indexFilename){
                 indexFilename = "defualt";
@@ -1259,8 +1259,8 @@ function LoadAllLanguage(){
 		{},
 		function (data, status) {
             let html = "";
-            html += "<option value='auto'>自动</option>";
-            html += "<option value=''>全部</option>";
+            html += "<option value='auto'>自动选择语言</option>";
+            html += "<option value=''>全部语言</option>";
             for (const iterator of data.data.rows) {
                 if(iterator.lang!=''){
                     html += "<option value='"+iterator.lang+"' ";

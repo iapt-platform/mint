@@ -1,0 +1,77 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.channel.v1;
+
+
+/*
+ * channel/版本 服务
+ * Studio 建立的时候会建立一个默认channel 
+ * 默认channel 一定为公开channel
+ */
+service Channel{
+	rpc GetChannelListForStudio (ChannelListRequest) returns (ChannelListReply){}
+	rpc GetChannel (ChannelRequest) returns (ChannelReply){}
+	rpc SetChannel (ChannelRequest) returns (ChannelReply){}
+	rpc AddChannel (ChannelRequest) returns (ChannelReply){}
+	rpc DelChannel (ChannelRequest) returns (ChannelReply){}
+}
+
+message ChannelListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_NAME = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_NAME =  1;
+}
+
+enum EnumChannelType{
+	ECT_TRANSLATION = 0;
+	ECT_ORIGINAL = 1;
+	ECT_NISSAYA = 2;
+	ECT_COMMENTRAY = 3;
+	ECT_GENERAL = 4;
+}
+
+message ChannelRequest{
+	string Id        = 1;
+	string Name     = 2;
+	string Summary   = 3;	
+	EnumChannelType ChannelType = 4;
+	string StudioId     = 5;
+
+	string Lang = 51;
+	string EditorId = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message ChannelReply{
+	bool ok = 1;
+	string message = 2;
+	ChannelRequest data = 3;
+}
+
+message ChannelListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated ChannelRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

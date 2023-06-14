@@ -8,7 +8,7 @@
 
 $CV=\frac{1}{1+640\times{(\frac{1}{1.1+N^{1.18}})}^L}$
 
-Unreliable $0<CV<1$ Reliable
+这里：CV值的范围控制在0~1之间
 
 ## final confidence value<br>最终信心值
 

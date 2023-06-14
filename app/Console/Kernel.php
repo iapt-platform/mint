@@ -19,6 +19,10 @@ class Kernel extends ConsoleKernel
                  ->dailyAt('00:00')
                  ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
 				 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
+
+        $schedule->command('upgrade:weekly')
+                 ->weekly()
+                 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
     }
 
     /**

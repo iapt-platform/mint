@@ -1,9 +1,11 @@
 var setting;
-$(document).load(function () {
+$(document).ready(function () {
 	$.post("../ucenter/get_setting.php", {}, function (data, status) {
 		try {
 			setting = JSON.parse(data);
-		} catch (e) {}
+		} catch (e) {
+			console.error(e.message);
+		}
 	});
 });
 function setting_head_render(file) {

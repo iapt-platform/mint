@@ -278,13 +278,9 @@ require_once '../public/function.php';
             loadTagCategoryIndex();
             loadFilterSetting();//载入上次的过滤器配置
             LoadAllLanguage();
+			_view = 'category';
+            updataHistory();
             <?php
-            if(isset($_GET["view"])){
-                echo "_view = '{$_GET["view"]}';";
-            }else{
-                echo "_view = 'community';";
-                echo "updataHistory();";
-            }
 
             if(isset($_GET["tag"])){
                 echo "_tags = '{$_GET["tag"]}';";
@@ -308,7 +304,7 @@ require_once '../public/function.php';
             ?>
             list_tag = _tags.split(',');
             refresh_selected_tag();
-            ReanderMainMenu();
+            //ReanderMainMenu();
             updateFirstListView();
             //载入用户最近的阅读列表
             loadUserRecent();

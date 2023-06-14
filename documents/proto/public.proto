@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+
+
+enum EnumContentType{
+	ECT_MARKDOWN = 0;
+	ECT_HTML = 1;
+	ECT_TEXT = 2;
+}
+
+enum EnumResType{
+	ERT_CHANNEL = 0;
+	ERT_TRANSLATION = 1;
+	ERT_CHAPTER = 2;
+	ERT_ARTICLE = 3;
+}
+
+enum EnumPublicity{
+	EP_PRIVATE = 0;
+	EP_PUBLIC = 1;
+	EP_PUBLICEDIT = 2;
+	EP_DISABLE = 100;
+}
+
+message Tag{
+	string Id = 1;
+	string Name = 2;
+}
+
+message Channel{
+	string Id = 1;
+	string Name = 2;
+}
+
+message Studio{
+	string Id = 1;
+	string Name = 2;
+}
+message User{
+	string Id = 1;
+	string Name = 2;
+	string NickName = 3;
+}

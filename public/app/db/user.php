@@ -6,6 +6,9 @@ require_once "../public/function.php";
 // Require Composer's autoloader.
 require_once '../../vendor/autoload.php';
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 // Using Medoo namespace.
 use Medoo\Medoo;
 
@@ -24,10 +27,10 @@ CREATE TABLE users (
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL //自动更新
 );
 */
-class User extends Table
+class PCD_User extends Table
 {
     function __construct($redis=false) {
-		parent::__construct(_FILE_DB_USERINFO_, "user", "", "",$redis);
+		parent::__construct(_FILE_DB_USERINFO_, _TABLE_USER_INFO_, _DB_USERNAME_,_DB_PASSWORD_,$redis);
     }
 
 	public function  index(){
@@ -36,7 +39,7 @@ class User extends Table
 		$where["resource_id"] = explode($_GET["id"],",");
 		echo json_encode($this->_index(["resource_id","user_id"],$where), JSON_UNESCAPED_UNICODE);
 	}
-	
+
 	public function  list(){
 		if(!isset($_COOKIE["userid"])){
 			$userId = $_COOKIE["userid"];
@@ -81,23 +84,23 @@ class User extends Table
 			if ($this->redis == false) {
 				$this->result["ok"]=false;
 				$this->result["message"]="no_redis_connect";
-				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
-				return;	
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+				return;
 			}
 			$redisKey = "invitecode://".$data["invite"];
 			$code = $this->redis->exists($redisKey);
 			if(!$code){
 				$this->result["ok"]=false;
 				$this->result["message"]="invite_code_invalid";
-				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
-				return;	
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+				return;
 			}
-			$data["email"] = $this->redis->get($redisKey);				
+			$data["email"] = $this->redis->get($redisKey);
 		}else{
 			$this->result["ok"]=false;
 			$this->result["message"]="no_invite_code";
-			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);	
-			return;	
+			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+			return;
 		}
 		//验证用户名有效性
 		if(!$this->isValidUsername($data["username"])){
@@ -158,11 +161,11 @@ class User extends Table
 				}else{
 					echo json_encode($result, JSON_UNESCAPED_UNICODE);
 				}
-				
+
 			}else{
 				$this->result["ok"]=false;
 				$this->result["message"]="email_is_exist";
-				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);				
+				echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 			}
 		}
 		else{
@@ -171,7 +174,7 @@ class User extends Table
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
-	
+
 
 
 	#发送密码重置邮件
@@ -189,7 +192,7 @@ class User extends Table
 				#send email
 				$resetLink="https://".$_SERVER['SERVER_NAME']."/app/ucenter/reset.php?token=".$resetToken;
 				$resetString="https://".$_SERVER['SERVER_NAME']."/app/ucenter/reset.php";
-		
+
 				// 打开文件并读取数据
 				$irow=0;
 				$strSubject = "";
@@ -198,9 +201,9 @@ class User extends Table
 					while(($data=fgets($fp))!==FALSE){
 						$irow++;
 						if($irow==1){
-							$strSubject = $data; 
+							$strSubject = $data;
 						}else{
-							$strBody .= $data; 
+							$strBody .= $data;
 						}
 					}
 					fclose($fp);
@@ -211,15 +214,15 @@ class User extends Table
 					echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 					return;
 				}
-		
+
 				$strBody = str_replace("%ResetLink%",$resetLink,$strBody);
 				$strBody = str_replace("%ResetString%",$resetString,$strBody);
-		
+
 				//TODO sendmail
-		
+
 				//Create an instance; passing `true` enables exceptions
 				$mail = new PHPMailer(true);
-		
+
 				try {
 					//Server settings
 					$mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
@@ -235,13 +238,13 @@ class User extends Table
 					//Recipients
 					$mail->setFrom(Email["From"], Email["Sender"]);
 					$mail->addAddress($email);     //Add a recipient Name is optional
-		
+
 					//Content
 					$mail->isHTML(true);                                  //Set email format to HTML
 					$mail->Subject = $strSubject;
 					$mail->Body    = $strBody;
 					$mail->AltBody = $strBody;
-		
+
 					$mail->send();
 					#邮件发送成功，修改数据库
 					$this->_update(["reset_password_sent_at"=>Medoo::raw('datetime(<now>)')],["reset_password_sent_at"],["email"=>$email]);
@@ -285,7 +288,7 @@ class User extends Table
 				$ok = $this->_update(["reset_password_token"=>null,
 									  "reset_password_sent_at"=>null],
 									  null,
-									  ["username"=>$data["username"]]);	
+									  ["username"=>$data["username"]]);
 			}
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}else{
@@ -294,6 +297,47 @@ class User extends Table
 			echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
 		}
 	}
+
+    public function signin(){
+        $isExist = $this->medoo->has($this->table,["username"=>$_REQUEST["username"],'password'=>md5($_REQUEST["password"])]);
+        if(!$isExist){
+            $isExist = $this->medoo->has($this->table,["email"=>$_REQUEST["username"],'password'=>md5($_REQUEST["password"])]);
+            if(!$isExist){
+                $this->result["ok"]=false;
+                $this->result["message"]="wrong username or password";
+                echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+            }else{
+                $uid = $this->medoo->get( $this->table, 'userid', ["email"=>$_REQUEST["username"]] );
+            }
+        }else{
+            $uid = $this->medoo->get( $this->table, 'userid', ["username"=>$_REQUEST["username"]] );
+        }
+        //JWT
+
+        $key = APP_KEY;
+        $payload = [
+            'nbf' => time(),
+            'exp' => time()+60*60*24*365,
+            'uid' => $uid
+        ];
+        $jwt = JWT::encode($payload,$key,'HS512');
+        //End of JWT
+        // set cookie
+        if(empty($_SERVER["HTTPS"])){
+            //本地开发
+            setcookie("user_uid", $uid,["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+//            setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+            setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>false,"httponly"=>true]);
+        }else{
+            //服务器运行
+            setcookie("user_uid", $uid, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+//            setcookie("user_id", $Fetch[0]["id"], ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+            setcookie("token", $jwt, ["expires"=>$ExpTime,"path"=>"/","secure"=>true,"httponly"=>true]);
+        }
+        $this->result["ok"]=true;
+        $this->result["data"]=['token'=>$jwt];
+        echo json_encode($this->result, JSON_UNESCAPED_UNICODE);
+    }
 
 	private function isValidPassword($password){
 		if(mb_strlen($password,"UTF-8")<6){
@@ -344,7 +388,7 @@ class User extends Table
 		}
 		return true;
 	}
-	private function isValidEmail($email){	
+	private function isValidEmail($email){
 		$isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
 		if($isValid===false){
 			$this->result["ok"]=false;

@@ -14,6 +14,8 @@ guide {
 }
 guide:hover .guide_contence {
 	display: inline-block;
+    width: fit-content;
+    max-width: unset;
 }
 guide ul {
 	list-style-type: disc;
@@ -25,7 +27,7 @@ guide ol {
 }
 .guide_contence {
 	/*border-top: 7px;*/
-	position: absolute;
+	position: fixed;
 	border: 1px solid var(--border-line-color);
 	border-radius: 5px;
 	top: 100%;
@@ -44,7 +46,9 @@ guide ol {
 	color: var(--main-color);
 	z-index: 200;
 }
-
+.nsy_word .guide_contence{
+	white-space: nowrap;
+}
 .guide_contence:after {
 	content: "\00a0";
 	width: 0;

@@ -496,7 +496,7 @@ function reader_draw_para_menu() {
 		html += "<a onclick=\"edit_wbw('" + _book + "','" + strPara + "')\">" + gLocal.gui.edit_now + "</a>";
 		html += "<a  onclick='goto_nissaya(" + _book + "," + strPara + ")'>" + gLocal.gui.show_nissaya + "</a>";
 		html +=
-			"<a onclick=\"copy_para_ref('" + _book + "','" + strPara + "')\">" + gLocal.gui.copy_link + "</a>";
+			"<a onclick=\"copy_para_ref('" + _book + "','" + strPara + "')\">" + gLocal.gui.copy_to_clipboard + "</a>";
 		html +=
 			"<a onclick=\"copy_text('" +
 			_book +

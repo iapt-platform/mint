@@ -28,7 +28,7 @@ function my_collect_list() {
 						html += "</a>";
 						html += "</div>";
 						html += "<div style='flex:2;'>" + render_status(iterator.status) + "</div>";
-						//html += "<div style='flex:1;'>" + gLocal.gui.copy_link + "</div>";
+						//html += "<div style='flex:1;'>" + gLocal.gui.copy_to_clipboard + "</div>";
 						html += "<div style='flex:1;'>";
 						html += "<a href='../article/?view=collection&collection=" + iterator.id + "' target='_blank'>" + gLocal.gui.preview + "</a>";
 						html += "</div>";

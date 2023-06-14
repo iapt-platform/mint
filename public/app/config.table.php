@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 # 雪花算法id 起始日期2021-12-22 绝对不可修改！！！
 define("_SnowFlakeDate_","2021-12-22");
@@ -15,7 +15,7 @@ define("_DB_PASSWORD_", Database["password"]);
 //PostgreSQL
 define("_PDO_DB_DSN_", Database["type"].":host=".Database["server"].";port=".Database["port"].";dbname=".Database["name"].";user=".Database["user"].";password=".Database["password"].";");
 
-//语料库数据表 pali canon db file 
+//语料库数据表 pali canon db file
 
 /*
 巴利语料模版表
@@ -145,10 +145,10 @@ define("_PG_TABLE_PALI_SENT_INDEX_", "pali_sent_indices");
 
 /*
 相似句
-数据迁移 
+数据迁移
 php ./deploy/migaration/20211127214800_sent_sim.php
 php ./deploy/migaration/20211127214900-sent_sim_index.php
-redis: 
+redis:
 php ./app/pali_sent/redis_upgrade_pali_sent.php
 */
 //sqlite
@@ -252,7 +252,7 @@ define("_PG_TABLE_USER_OPERATION_LOG_", "user_operation_logs");
 
 
 
-//读取频繁 写入不频繁 
+//读取频繁 写入不频繁
 # 用户账号
 #sqlite
 define("_SQLITE_DB_USERINFO_", "sqlite:" . __DIR__ . "/../tmp/user/userinfo.db3");
@@ -263,7 +263,7 @@ define("_PG_DB_USERINFO_", _PDO_DB_DSN_);
 define("_PG_TABLE_USER_INFO_", "user_infos");
 
 
-# 版本风格 
+# 版本风格
 #sqlite
 define("_SQLITE_DB_CHANNAL_", "sqlite:" . __DIR__ . "/../tmp/user/channal.db3");
 define("_SQLITE_TABLE_CHANNEL_", "channal");
@@ -456,7 +456,7 @@ define("_FILE_DB_COMMENTS_", "sqlite:" . __DIR__ . "/../tmp/user/comments.db3");
 Sqlite:  _SQLITE_
 PostgreSql:  _PG_
 */
-//语料库数据表 pali canon db file 
+//语料库数据表 pali canon db file
 /*
 巴利语料模版表
 运行app/install/db_insert_templet.php 刷库
@@ -543,10 +543,10 @@ define("_TABLE_PALI_SENT_INDEX_", _PG_TABLE_PALI_SENT_INDEX_);
 
 /*
 相似句
-数据迁移 
+数据迁移
 php ./deploy/migaration/20211127214800_sent_sim.php
 php ./deploy/migaration/20211127214900-sent_sim_index.php
-redis: 
+redis:
 php ./app/pali_sent/redis_upgrade_pali_sent.php
 */
 
@@ -630,11 +630,11 @@ define("_FILE_DB_USER_ACTIVE_LOG_", _PG_DB_USER_ACTIVE_LOG_);
 define("_TABLE_USER_OPERATION_LOG_", _PG_TABLE_USER_OPERATION_LOG_);
 
 
-//读取频繁 写入不频繁 
+//读取频繁 写入不频繁
 
 
 
-# 版本风格 
+# 版本风格
 #sqlite
 define("_FILE_DB_CHANNAL_", _PG_DB_CHANNAL_);
 define("_TABLE_CHANNEL_", _PG_TABLE_CHANNEL_);
@@ -680,8 +680,8 @@ define("_TABLE_LESSON_",_SQLITE_TABLE_LESSON_);
 
 
 # 用户账号
-define("_FILE_DB_USERINFO_", _SQLITE_DB_USERINFO_);
-define("_TABLE_USER_INFO_", _SQLITE_TABLE_USER_INFO_);
+define("_FILE_DB_USERINFO_", _PG_DB_USERINFO_);
+define("_TABLE_USER_INFO_", _PG_TABLE_USER_INFO_);
 
 # 逐词译和译文编辑消息 无需迁移数据
 define("_FILE_DB_MESSAGE_", _SQLITE_DB_MESSAGE_);

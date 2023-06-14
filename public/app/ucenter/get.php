@@ -3,7 +3,7 @@ require_once '../config.php';
 
 //打开数据库
 
-$dbh = new PDO(_FILE_DB_USERINFO_, "", "", array(PDO::ATTR_PERSISTENT => true));
+$dbh = new PDO(_FILE_DB_USERINFO_, _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 if (isset($_GET["id"])) {
 	if(isset($_GET["bio"])){
@@ -12,7 +12,7 @@ if (isset($_GET["id"])) {
 	else{
 		$query = "SELECT userid as id ,username,nickname from user where userid = ? ";
 	}
-    
+
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($_GET["id"]));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);

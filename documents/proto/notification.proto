@@ -1,0 +1,80 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.notification.v1;
+
+
+/*
+ * 通知
+ * 
+ *  
+ * 
+ */
+service Notification{
+	rpc GetNotificationList (NotificationListRequest) returns (NotificationListReply){}
+	rpc GetNotification (NotificationRequest) returns (NotificationReply){}
+	rpc AddNotification (NotificationRequest) returns (NotificationReply){}
+	rpc DelNotification (NotificationRequest) returns (NotificationReply){}
+}
+
+message NotificationListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_WORD = 0;
+	EAS_NOTE = 1;
+}
+enum EnumAllowingOrderby{
+	EAO_UPDATED_AT = 0;
+	EAO_CREATED_AT = 1;
+	EAO_WORD       = 2;
+}
+
+enum EnumSendMethod{
+	ESM_WEB     = 0;
+	ESM_WECHAT  = 1;
+	ESM_DING    = 2;
+	ESM_EMAIL   = 3;
+}
+
+message NotificationRequest{
+	string Id                       = 1;
+	string Title                    = 2;
+	string Message                  = 3;	
+	repeated EnumSendMethod Method  = 4;
+	string Param                    = 5; // 发送参数，比如用wechat发送，要设置url
+	string Topic                    = 6; //Topic uuid
+	Studio Studio                   = 7;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message NotificationReply{
+	bool ok                  = 1;
+	string message           = 2;
+	NotificationRequest data = 3;
+}
+
+message NotificationListReply{
+	bool ok        = 1;
+	string message = 2;
+	message data{
+		repeated NotificationRequest rows = 1;
+		int32    Count                    = 2;
+		int32    CurrentPage              = 3;
+		int32    PerPage 				  = 4;
+	}
+}

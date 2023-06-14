@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class GroupMember extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id';
+	protected $casts = [
+		'id' => 'string'
+	];
 }

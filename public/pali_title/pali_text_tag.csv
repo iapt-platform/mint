@@ -652,16 +652,19 @@ book,paragraph,level,title,tag
 77,3307,2,21. ekavīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
 77,3361,2,22. bāvīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
 77,3417,2,23. tevīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
-78,4,2,1. mūlayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,309,2,2. khandhayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,1463,2,3. āyatanayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,3544,2,4. dhātuyamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,3809,2,5. saccayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,4,2,6. saṅkhārayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,822,2,7. anusayayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,3204,2,8. cittayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-80,4,2,9. dhammayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-80,1122,2,10. indriyayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3,1,1. Yamakapāḷi (paṭhamo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,4,2,1. mūlayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,309,2,2. khandhayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,1463,2,3. āyatanayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3544,2,4. dhātuyamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3809,2,5. saccayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,3,2,6. Yamakapāḷi (dutiyo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,4,2,6. saṅkhārayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,822,2,7. anusayayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,3204,2,8. cittayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,3,2,9. Yamakapāḷi (tatiyo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,4,2,9. dhammayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,1122,2,10. indriyayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
 81,3,1,paṭṭhānapāḷi,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:
 81,5,2,dhammānulome,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:
 81,153,2,1. kusalattikaṃ,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:
@@ -2639,44 +2642,44 @@ book,paragraph,level,title,tag
 210,1779,1,mahāvaggavaṇṇanā,:vimativinodanī::ṭīkā::vinaya::khandhaka::mahāvagga:
 210,2431,1,cūḷavaggavaṇṇanā,:vimativinodanī::ṭīkā::vinaya::khandhaka::cūḷavagga:
 210,2792,1,parivāravaṇṇanā,:vimativinodanī::ṭīkā::vinaya::parivāra::parivārapāḷi:
-211,3,1,vinayālaṅkāra-ṭīkā (paṭhamo bhāgo),:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,4,2,ganthārambhakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,37,2,ganthārambhakathāvaṇṇanā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,68,2,1. divāseyyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,135,2,2. parikkhāravinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,294,2,3. bhesajjādikaraṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,317,2,4. viññattivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,329,2,5. kulasaṅgahavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,350,2,6. macchamaṃsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,358,2,7. anāmāsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,374,2,8. adhiṭṭhānavikappanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,420,2,9. cīvaravippavāsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,435,2,10. bhaṇḍapaṭisāmanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,449,2,11. kayavikkayasamāpattivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,464,2,12. rūpiyādipaṭiggahaṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,539,2,13. dānalakkhaṇādivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,558,2,14. pathavīkhaṇanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,570,2,15. bhūtagāmavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,584,2,16. sahaseyyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,593,2,17. mañcapīṭhādisaṅghikasenāsanesupaṭipajjitabbavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,613,2,18. kālikavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,667,2,19. kappiyabhūmivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,680,2,20. paṭiggahaṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,712,2,21. pavāraṇāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,735,2,22. pabbajjāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,872,2,23. nissayavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,891,2,24. sīmāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1029,2,25. uposathapavāraṇāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1143,2,26. vassūpanāyikavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1183,2,27. upajjhāyādivattavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1250,2,28. catupaccayabhājanīyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1426,2,29. kathinatthāravinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1555,2,30. garubhaṇḍavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1590,2,31. codanādivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1702,2,32. garukāpattivuṭṭhānavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1811,2,33. kammākammavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,1892,2,34. pakiṇṇakavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
-211,2344,2,nigamanakathā,:vinayālaṅkāra::ṭīkā::vinaya::vinayasaṅgaha:
+211,3,1,vinayālaṅkāra-ṭīkā (paṭhamo bhāgo),:vinayālaṅkāra::ṭīkā::vinaya:
+211,4,2,ganthārambhakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,37,2,ganthārambhakathāvaṇṇanā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,68,2,1. divāseyyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,135,2,2. parikkhāravinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,294,2,3. bhesajjādikaraṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,317,2,4. viññattivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,329,2,5. kulasaṅgahavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,350,2,6. macchamaṃsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,358,2,7. anāmāsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,374,2,8. adhiṭṭhānavikappanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,420,2,9. cīvaravippavāsavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,435,2,10. bhaṇḍapaṭisāmanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,449,2,11. kayavikkayasamāpattivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,464,2,12. rūpiyādipaṭiggahaṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,539,2,13. dānalakkhaṇādivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,558,2,14. pathavīkhaṇanavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,570,2,15. bhūtagāmavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,584,2,16. sahaseyyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,593,2,17. mañcapīṭhādisaṅghikasenāsanesupaṭipajjitabbavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,613,2,18. kālikavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,667,2,19. kappiyabhūmivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,680,2,20. paṭiggahaṇavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,712,2,21. pavāraṇāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,735,2,22. pabbajjāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,872,2,23. nissayavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,891,2,24. sīmāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1029,2,25. uposathapavāraṇāvinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1143,2,26. vassūpanāyikavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1183,2,27. upajjhāyādivattavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1250,2,28. catupaccayabhājanīyavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1426,2,29. kathinatthāravinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1555,2,30. garubhaṇḍavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1590,2,31. codanādivinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1702,2,32. garukāpattivuṭṭhānavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1811,2,33. kammākammavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,1892,2,34. pakiṇṇakavinicchayakathā,:vinayālaṅkāra::ṭīkā::vinaya:
+211,2344,2,nigamanakathā,:vinayālaṅkāra::ṭīkā::vinaya:
 212,2,1,kaṅkhāvitaraṇīpurāṇa-ṭīkā,:kaṅkhāvitaraṇī::ṭīkā::vinaya::pātimokkha::purāṇaṭīkā:
 212,3,2,ganthārambhakathā,:kaṅkhāvitaraṇī::ṭīkā::vinaya::bhikkhupātimokkha::pātimokkha::purāṇaṭīkā:
 212,7,2,ganthārambhakathāvaṇṇanā,:kaṅkhāvitaraṇī::ṭīkā::vinaya::bhikkhupātimokkha::pātimokkha::purāṇaṭīkā:

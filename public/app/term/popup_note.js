@@ -16,4 +16,14 @@ function popup_init() {
 			$(this).attr("init", "1");
 		}
 	});
+	$("code").mouseenter(function (event) {
+		let mouse_x=event.clientX - 20
+		let mouse_y=event.clientY
+		$(this).children(".popup_contence").first().css("left",mouse_x+"px")
+		$(this).children(".popup_contence").first().css("top",mouse_y+"px")
+	if ($(this).children(".popup_contence").first().html().length > 0) {
+			return;
+		}
+	});
+	
 }

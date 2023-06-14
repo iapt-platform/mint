@@ -1,0 +1,66 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.studio.v1;
+
+
+/*
+ * studio 服务
+ * 每个用户注册时有一个默认studio。与用户名相同。
+ * 用户可以建立另外的studio 
+ * 默认studio 不能转让，其他studio可以转让
+ */
+service Studio{
+	rpc GetStudioListForUser (StudioListRequest) returns (StudioListReply){}
+	rpc GetStudio (StudioRequest) returns (StudioReply){}
+	rpc SetStudio (StudioRequest) returns (StudioReply){}
+	rpc TransferStudio (StudioRequest) returns (StudioReply){} //转让
+	rpc AddStudio (StudioRequest) returns (StudioReply){}
+	rpc DelStudio (StudioRequest) returns (StudioReply){}
+}
+
+message StudioListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_NAME = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_NAME =  1;
+}
+ 
+message StudioRequest{
+	string Id        = 1;
+	string Name     = 2;
+	string Summary   = 3;	
+	string Cover     = 4;
+	string Owner     = 5;
+	string CreatedAt = 6; 
+	string UpdatedAt = 7; 
+}
+
+
+message StudioReply{
+	bool ok = 1;
+	string message = 2;
+	StudioRequest data = 3;
+}
+
+message StudioListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated StudioRequest rows = 1;
+		int32    Count = 2;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
+	}
+}

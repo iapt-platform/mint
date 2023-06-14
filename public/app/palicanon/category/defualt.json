@@ -1,6 +1,6 @@
 [
            {
-                "name":"Sutta Piṭaka",
+                "name":"Suttapiṭaka",
                 "tag":["sutta"],
                 "children":[
                     {
@@ -22,7 +22,7 @@
                         ]
                     },
                     {
-                        "name":"Majjhima Nikāya",
+                        "name":"Majjhimanikāya",
                         "tag":["sutta","majjhimanikāya"],
                         "children":[
                             {
@@ -152,6 +152,10 @@
                                 "tag":["sutta","khuddakanikāya","theragāthā"]
                             },
                             {
+                                "name":"Therīgāthā",
+                                "tag":["sutta","khuddakanikāya","therīgāthā"]
+                            },
+                            {
                                 "name":"Therāpadāna",
                                 "tag":["sutta","khuddakanikāya","therāpadāna"]
                             },
@@ -196,7 +200,7 @@
                 ]
             },
             {
-                "name":"Vinaya Piṭaka",
+                "name":"Vinayapiṭaka",
                 "tag":["vinaya"],
                 "children":[
                     {
@@ -243,6 +247,14 @@
 								"name":"Vinayavinicchayo",
 								"tag":["vinaya","ṭīkā","vinayavinicchaya"]
 							},
+                            {
+								"name":"Vinayasaṅgaha",
+								"tag":["vinaya","ṭīkā","vinayasaṅgaha"]
+							},
+                            {
+								"name":"Vinayālaṅkāra",
+								"tag":["vinaya","ṭīkā","vinayālaṅkāra"]
+							},
 							{
 								"name":"Uttaravinicchaya",
 								"tag":["vinaya","ṭīkā","uttaravinicchaya"]
@@ -264,7 +276,7 @@
                 ]
             },
             {
-                "name":"Abhidhamma Piṭaka",
+                "name":"Abhidhammapiṭaka",
                 "tag":["abhidhamma"],
                 "children":[
                     {
@@ -294,6 +306,40 @@
                     {
                         "name":"Paṭṭhāna",
                         "tag":["abhidhamma","paṭṭhāna"]
+                    },
+                    {
+                        "name":"Añña",
+                        "tag":[],
+						"children":[
+							{
+								"name":"Abhidhammatthasaṅgaha",
+								"tag":["abhidhamma","abhidhammatthasaṅgaha"]
+							},
+							{
+								"name":"Abhidhammāvatāra",
+								"tag":["abhidhamma","abhidhammāvatāra"]
+							},
+							{
+								"name":"Nāmarūpaparicchedo",
+								"tag":["abhidhamma","nāmarūpapariccheda"]
+							},
+							{
+								"name":"Paramatthavinicchayo",
+								"tag":["abhidhamma","paramatthavinicchaya"]
+							},
+							{
+								"name":"Saccasaṅkhepo",
+								"tag":["abhidhamma","saccasaṅkhepa"]
+							},
+							{
+								"name":"Abhidhammamātikāpāḷi",
+								"tag":["abhidhamma","abhidhammamātikāpāḷi"]
+							},
+							{
+								"name":"Mohavicchedanī",
+								"tag":["abhidhamma","mohavicchedanī"]
+							}
+						]
                     }
                 ]
             },
@@ -306,20 +352,12 @@
                 "tag":["añña","visuddhimagga"],
                 "children":[
                     {
-                        "name":"Visuddhimagga-1",
-                        "tag":["añña","visuddhimagga","aṭṭhakathā","paṭhamo bhāgo"]
+                        "name":"Visuddhimagga",
+                        "tag":["añña","visuddhimagga","aṭṭhakathā"]
                     },
                     {
-                        "name":"Visuddhimagga-2",
-                        "tag":["añña","visuddhimagga","aṭṭhakathā","dutiyo bhāgo"]
-                    },
-                    {
-                        "name":"Visuddhimagga-mahāṭīkā-1",
-                        "tag":["añña","visuddhimagga","ṭīkā","paṭhamo bhāgo"]
-                    },
-                    {
-                        "name":"Visuddhimagga-mahāṭīkā-2",
-                        "tag":["añña","visuddhimagga","ṭīkā","dutiyo bhāgo"]
+                        "name":"Visuddhimagga-mahāṭīkā",
+                        "tag":["añña","visuddhimagga","ṭīkā","visuddhimaggamahāṭīkā"]
                     },
                     {
                         "name":"Visuddhimagga-nidānakathā",

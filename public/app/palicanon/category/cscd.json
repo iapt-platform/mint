@@ -156,6 +156,10 @@
                                 "tag":["mūla","sutta","khuddakanikāya","theragāthā"]
                             },
                             {
+                                "name":"Therīgāthāpāḷi",
+                                "tag":["mūla","sutta","khuddakanikāya","therīgāthā"]
+                            },
+                            {
                                 "name":"Therāpadānapāḷi",
                                 "tag":["mūla","sutta","khuddakanikāya","therāpadāna"]
                             },
@@ -748,7 +752,7 @@
                     },
                     {
                         "name":"Abhidhammatthasaṅgaho",
-                        "tag":["ṭīkā","abhidhamma","abhidhammatthasaṅgaho"]
+                        "tag":["ṭīkā","abhidhamma","abhidhammatthasaṅgaha"]
                     },
                     {
                         "name":"Abhidhammāvatāra-Purāṇaṭīkā",

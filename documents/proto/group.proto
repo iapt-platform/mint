@@ -1,0 +1,82 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.group.v1;
+
+/*
+ * Group/群组 服务
+ */
+service Group{
+	rpc GetGroupListForStudio (GroupListRequest) returns (GroupListReply){}
+	rpc GetGroup (GroupRequest) returns (GroupReply){}
+	rpc SetGroup (GroupRequest) returns (GroupReply){}
+	rpc AddGroup (GroupRequest) returns (GroupReply){}
+	rpc DelGroup (GroupRequest) returns (GroupReply){}
+
+	rpc AddMember (User) returns (MemberReply){}
+	rpc RemoveMember (User) returns (MemberReply){}
+	rpc GetMemberListForGroup (GroupListRequest) returns (GroupMemberListReply){}
+
+}
+
+message GroupListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5; //current page number
+	int32  PerPage = 6; //The number of items to be shown per page.
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_NAME = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_NAME =  1;
+}
+
+
+message GroupRequest{
+	string Id        = 1;
+	string Name     = 2;
+	string Summary   = 3;	
+	string StudioId     = 5;
+
+	string EditorId = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message GroupReply{
+	bool ok = 1;
+	string message = 2;
+	GroupRequest data = 3;
+}
+
+message GroupListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated GroupRequest rows = 1;
+		int32    Count = 2;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
+	}
+}
+message MemberReply{
+	bool ok = 1;
+	string message = 2;
+	User data = 3;
+}
+message GroupMemberListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated User rows = 1;
+	}
+}

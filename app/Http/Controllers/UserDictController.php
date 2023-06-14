@@ -6,6 +6,10 @@ use App\Models\UserDict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api;
+use App\Http\Api\AuthApi;
+use App\Http\Api\DictApi;
+use App\Http\Resources\UserDictResource;
 
 class UserDictController extends Controller
 {
@@ -18,43 +22,71 @@ class UserDictController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','word','type','grammar','mean','factors','confidence','updated_at','creator_id'];
+		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','updated_at','creator_id'];
 		switch ($request->get('view')) {
+            case 'studio':
+				# 获取studio内所有channel
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = UserDict::select($indexCol)
+                            ->where('creator_id', $user["user_id"])
+                            ->where('source', "_USER_WBW_");
+				break;
 			case 'user':
 				# code...
 				$table = UserDict::select($indexCol)
 									->where('creator_id', $_COOKIE["user_id"])
 									->where('source', '<>', "_SYS_USER_WBW_");
-				if(isset($_GET["search"])){
-					$table->where('word', 'like', $_GET["search"]."%");
-				}
-				if(isset($_GET["order"]) && isset($_GET["dir"])){
-					$table->orderBy($_GET["order"],$_GET["dir"]);
-				}else{
-					$table->orderBy('updated_at','desc');
-				}
-				$count = $table->count();
-				if(isset($_GET["limit"])){
-					$offset = 0;
-					if(isset($_GET["offset"])){
-						$offset = $_GET["offset"];
-					}
-					$table->skip($offset)->take($_GET["limit"]);
-				}			
-				$result = $table->get();
 				break;
 			case 'word':
-				$result = UserDict::select($indexCol)
-									->where('word', $_GET["word"])
-									->orderBy('created_at','desc')
-									->get();				
+				$table = UserDict::select($indexCol)
+								 ->where('word', $request->get("word"));
 				break;
+            case 'community':
+                $table = UserDict::select($indexCol)
+                                ->where('word', $request->get("word"))
+                                ->where('source', "_USER_WBW_");;
+                break;
+            case 'compound':
+                $dict_id = DictApi::getSysDict('robot_compound');
+                if($dict_id===false){
+                    $this->error('no robot_compound');
+                }
+                $table = UserDict::where("dict_id",$dict_id)->where("word",$request->get('word'));
+                break;
 			default:
 				# code...
 				break;
 		}
+        if(isset($_GET["search"])){
+            $table->where('word', 'like', $_GET["search"]."%");
+        }
+        if(isset($_GET["order"]) && isset($_GET["dir"])){
+            $table->orderBy($_GET["order"],$_GET["dir"]);
+        }else{
+            if($request->get('view') === "compound"){
+                $table->orderBy('confidence','desc');
+            }else{
+                $table->orderBy('updated_at','desc');
+            }
+        }
+        $count = $table->count();
+        if(isset($_GET["limit"])){
+            $offset = 0;
+            if(isset($_GET["offset"])){
+                $offset = $_GET["offset"];
+            }
+            $table->skip($offset)->take($_GET["limit"]);
+        }
+        $result = $table->get();
 		if($result){
-			return $this->ok(["rows"=>$result,"count"=>$count]);
+			return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -69,47 +101,47 @@ class UserDictController extends Controller
     public function store(Request $request)
     {
         //
-		if(!isset($_COOKIE["user_id"])){
+        $user  = AuthApi::current($request);
+		if(!$user){
 			$this->error("not login");
 		}
-        $snowflake = new SnowFlakeId();
 
-		$_data = json_decode($_POST["data"],true);
+		$_data = json_decode($request->get("data"),true);
 		switch($request->get('view')){
+            case "dict":
+                $src = "_USER_DICT_";
 			case "wbw":
+                $src = "_USER_WBW_";
 				#查询用户重复的数据
 				$iOk = 0;
 				$updateOk=0;
 				foreach ($_data as $key => $word) {
 					# code...
-					$isDoesntExist = UserDict::where('creator_id', $_COOKIE["user_id"])
-										->where('word',$word["word"])
-										->where('type',$word["type"])
-										->where('grammar',$word["grammar"])
-										->where('parent',$word["parent"])
-										->where('mean',$word["mean"])
-										->where('factors',$word["factors"])
-										->where('factormean',$word["factormean"])
-										->where('source','_USER_WBW_')
-										->doesntExist();
-					
+					$table = UserDict::where('creator_id', $user["user_id"])
+										->where('word',$word["word"]);
+                    if(isset($word["type"])){$table = $table->where('type',$word["type"]);}
+                    if(isset($word["grammar"])){$table = $table->where('grammar',$word["grammar"]);}
+                    if(isset($word["parent"])){$table = $table->where('parent',$word["parent"]);}
+                    if(isset($word["mean"])){$table = $table->where('mean',$word["mean"]);}
+                    if(isset($word["factors"])){$table = $table->where('factors',$word["factors"]);}
+					$isDoesntExist = $table->doesntExist();
+
 					if($isDoesntExist){
 						#不存在插入数据
 						$word["id"]=app('snowflake')->id();
-						$word["source"]='_USER_WBW_';
-						$word["create_time"]=mTime();
-						$word["creator_id"]=$_COOKIE["user_id"];
+						$word["source"] = $src;
+						$word["create_time"] = time()*1000;
+						$word["creator_id"]=$user["user_id"];
 						$id = UserDict::insert($word);
 						$updateOk = $this->update_sys_wbw($word);
 						$this->update_redis($word);
 						$iOk++;
 					}
 				}
-				$this->ok([$iOk,$updateOk]);
-				break;
-			case "dict":
+
 				break;
 		}
+        return $this->ok([$iOk,$updateOk]);
     }
 
     /**
@@ -123,9 +155,9 @@ class UserDictController extends Controller
         //
 		$result = UserDict::find($id);
 		if($result){
-			$this->ok($result);
+			return $this->ok($result);
 		}else{
-			$this->error("没有查询到数据");
+			return $this->error("没有查询到数据");
 		}
     }
 
@@ -145,9 +177,9 @@ class UserDictController extends Controller
 		if($result){
 			$updateOk = $this->update_sys_wbw($newData);
 			$this->update_redis($newData);
-			$this->ok([$result,$updateOk]);
+			return $this->ok([$result,$updateOk]);
 		}else{
-		$this->error("没有查询到数据");
+		    return $this->error("没有查询到数据");
 		}
     }
 
@@ -160,47 +192,59 @@ class UserDictController extends Controller
     public function destroy(Request $request,$id)
     {
         //
-		Log::info("userDictController->destroy start");
-		Log::info("userDictController->destroy id= {$id}");
-		$arrId = json_decode($request->get("id"),true) ;
-		$count = 0;
-		foreach ($arrId as $key => $id) {
-			# 找到对应数据
-			$data = UserDict::find($id);
-			//查看是否有权限删除
-			if($data->creator_id == $_COOKIE["user_id"]){
-				$result = UserDict::where('id', $id)
-								->delete();
-				$count += $result;
-				$updateOk = $this->update_sys_wbw($data);
-				$this->update_redis($data);
-			}
-		}
-		return $this->ok([$count,$updateOk]);
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],403);
+        }
+        $user_id = $user['user_id'];
+
+        if($request->has("id")){
+            $arrId = json_decode($request->get("id"),true) ;
+            $count = 0;
+            $updateOk = false;
+            foreach ($arrId as $key => $id) {
+                # 找到对应数据
+                $data = UserDict::find($id);
+                //查看是否有权限删除
+                if($data->creator_id == $user_id){
+                    $result = UserDict::where('id', $id)
+                                    ->delete();
+                    $count += $result;
+                    $updateOk = $this->update_sys_wbw($data);
+                    $this->update_redis($data);
+                }
+            }
+            return $this->ok([$count,$updateOk]);
+        }else{
+            //删除单个单词
+            $userDict = UserDict::find($id);
+            //判断当前用户是否有指定的studio的权限
+            if((int)$user_id !== $userDict->creator_id){
+                return $this->error(__('auth.failed'));
+            }
+            $delete = $userDict->delete();
+            return $this->ok($delete);
+        }
+
     }
 	public function delete(Request $request){
-		Log::info("userDictController->delete start");
 		$arrId = json_decode($request->get("id"),true) ;
-		Log::info("id=".$request->get("id"));
 		$count = 0;
 		$updateOk = false;
 		foreach ($arrId as $key => $id) {
 			$data = UserDict::where('id',$id)->first();
 			if($data){
-				# 找到对应数据 
-				Log::info('creator_id:'.$data->creator_id);
+				# 找到对应数据
 				$param = [
 					"id"=>$id,
 					'creator_id'=>$_COOKIE["user_id"]
 				];
-				Log::info($param);
 				$del = UserDict::where($param)->delete();
 				$count += $del;
 				$updateOk = $this->update_sys_wbw($data);
-				$this->update_redis($data);				
+				$this->update_redis($data);
 			}
 		}
-		Log::info("delete:".$count);
 		return $this->ok(['deleted'=>$count]);
 	}
 
@@ -210,15 +254,22 @@ class UserDictController extends Controller
 	private function update_sys_wbw($data){
 
 		#查询用户重复的数据
+        if(!isset($data["type"])){$data["type"]='';}
+        if(!isset($data["grammar"])){$data["grammar"]='';}
+        if(!isset($data["parent"])){$data["parent"]='';}
+        if(!isset($data["mean"])){$data["mean"]='';}
+        if(!isset($data["factors"])){$data["factors"]='';}
+        if(!isset($data["factormean"])){$data["factormean"]='';}
+
 		$count = UserDict::where('word',$data["word"])
-		->where('type',$data["type"])
-		->where('grammar',$data["grammar"])
-		->where('parent',$data["parent"])
-		->where('mean',$data["mean"])
-		->where('factors',$data["factors"])
-		->where('factormean',$data["factormean"])
-		->where('source','_USER_WBW_')
-		->count();
+                        ->where('type',$data["type"])
+                        ->where('grammar',$data["grammar"])
+                        ->where('parent',$data["parent"])
+                        ->where('mean',$data["mean"])
+                        ->where('factors',$data["factors"])
+                        ->where('factormean',$data["factormean"])
+                        ->where('source','_USER_WBW_')
+                        ->count();
 
 		if($count==0){
             # 没有任何用户有这个数据
@@ -261,7 +312,7 @@ class UserDictController extends Controller
                 #系统字典没有 新增
                 $result = UserDict::insert(
 				[
-                    'id' =>$snowflake->id(),
+                    'id' =>app('snowflake')->id(),
 					'word'=>$data["word"],
 					'type'=>$data["type"],
 					'grammar'=>$data["grammar"],
@@ -318,10 +369,8 @@ class UserDictController extends Controller
 							);
 		}
 		$redisData = json_encode($redisWord,JSON_UNESCAPED_UNICODE);
-		Log::info("word={$word['word']} redis-data={$redisData}");
 		Redis::hSet("dict/user",$word['word'],$redisData);
 		$redisData1 = Redis::hGet("dict/user",$word['word']);
-		Log::info("word={$word['word']} redis-data1={$redisData1}");
 
 		#更新redis结束
 	}

@@ -82,8 +82,8 @@ switch ($currSettingItem) {
 <?php
 switch ($currSettingItem) {
     case "account":
-        PDO_Connect("" . _FILE_DB_USERINFO_);
-        $query = "SELECT * from 'user' where 1 limit 0,1000";
+        PDO_Connect(_FILE_DB_USERINFO_);
+        $query = "SELECT * from "._TABLE_USER_INFO_." where 1 limit 0,1000";
         $user_info = PDO_FetchAll($query);
         echo "<table>";
         echo "<tr><th>id</th><th>user name</th><th>nick name</th></tr>";

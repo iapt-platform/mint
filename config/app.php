@@ -255,7 +255,7 @@ return [
 	'admin' => [
 		'root_uuid' => '6e12f8ea-ee4d-4e0f-a6b0-472f2d99a814',
 		'robot_uuid' => '6e12f8ea-ee4d-4e0f-a6b0-472f2d99a814',
-		'cs6_channel' => '1e4b926d-54d7-4932-b8a6-7cdc65abd992',
+		'cs_channel' => '1e4b926d-54d7-4932-b8a6-7cdc65abd992',
 	],
 
 	'dependence' => [

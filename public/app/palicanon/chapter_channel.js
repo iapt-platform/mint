@@ -42,7 +42,7 @@ function render_chapter_progress_list(chapterList,param) {
                 }
             }
             html += "<li>";
-            html += "<span clsss='channel_name' style='flex:2;'>";
+            html += "<span class='channel_name' style='flex:2;'>";
             html += "<a href='../article/?view=chapter&book="+iterator.book+"&par="+iterator.para+"&channel="+iterator.channel.uid+"' target='_blanck'>";
             html += iterator.channel.name;
             html += "</a>";
@@ -71,11 +71,11 @@ function render_chapter_progress_list_readonly(chapterList,param) {
 	let html = "";
     html += "<ul class='chapter_info_list'>";
 	html += "<li>";
-	html += "<span clsss='channel_name' >版本</span>";
-	html += "<span clsss='progress_bar' >进度</span>";
-	html += "<span clsss='views' >阅读</span>";
-	html += "<span clsss='likes' >点赞</span>";
-	html += "<span clsss='updated_at' >更新于</span>";
+	html += "<span class='channel_name' >版本</span>";
+	html += "<span class='progress_bar' >进度</span>";
+	html += "<span class='views' >阅读</span>";
+	html += "<span class='likes' >点赞</span>";
+	html += "<span class='updated_at' >更新于</span>";
 	html += "</li>";
 
 	for (const iterator of chapterList) {
@@ -86,7 +86,7 @@ function render_chapter_progress_list_readonly(chapterList,param) {
                 }
             }
             html += "<li>";
-            html += "<span clsss='channel_name' style='flex:3;'>";
+            html += "<span class='channel_name' style='flex:3;'>";
             html += "<a href='../article/?view=chapter&book="+iterator.book+"&par="+iterator.para+"&channel="+iterator.channel.uid+"' target='_blanck'>";
             html += iterator.channel.name;
             html += "</a>";

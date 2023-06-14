@@ -324,11 +324,12 @@ li.level_1.selected {
 .bangdan li{
     list-style-type:unset;
     white-space: nowrap;
-    overflow: auto;
+    overflow: hidden;
 }
 .bangdan ol{
     padding-left: 1.5em;
     width: 200px;
+    overflow: auto;/*整体列表增加滚动条*/
 }
 
 .chapter_list ul {
