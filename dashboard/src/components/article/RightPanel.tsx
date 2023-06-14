@@ -6,6 +6,9 @@ import { IChannel } from "../channel/Channel";
 import ChannelPickerTable from "../channel/ChannelPickerTable";
 import DictComponent from "../dict/DictComponent";
 import { ArticleType } from "./Article";
+import { useAppSelector } from "../../hooks";
+import { openPanel, rightPanel } from "../../reducers/right-panel";
+import store from "../../store";
 
 export type TPanelName = "dict" | "channel" | "close" | "open";
 interface IWidget {
@@ -15,6 +18,7 @@ interface IWidget {
   selectedChannelKeys?: string[];
   onChannelSelect?: Function;
   onClose?: Function;
+  onTabChange?: Function;
 }
 const RightPanelWidget = ({
   curr = "close",
@@ -23,8 +27,22 @@ const RightPanelWidget = ({
   onChannelSelect,
   selectedChannelKeys,
   onClose,
+  onTabChange,
 }: IWidget) => {
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("dict");
+
+  const _openPanel = useAppSelector(rightPanel);
+
+  useEffect(() => {
+    console.log("panel", _openPanel);
+    if (typeof _openPanel !== "undefined") {
+      if (typeof onTabChange !== "undefined") {
+        onTabChange(_openPanel);
+      }
+      store.dispatch(openPanel(undefined));
+    }
+  }, [_openPanel]);
 
   useEffect(() => {
     switch (curr) {
@@ -33,9 +51,11 @@ const RightPanelWidget = ({
         break;
       case "dict":
         setOpen(true);
+        setActiveTab(curr);
         break;
       case "channel":
         setOpen(true);
+        setActiveTab(curr);
         break;
       case "close":
         setOpen(false);
@@ -59,6 +79,8 @@ const RightPanelWidget = ({
         <Tabs
           size="small"
           defaultActiveKey={curr}
+          activeKey={activeTab}
+          onChange={(activeKey: string) => setActiveTab(activeKey)}
           tabBarExtraContent={{
             right: (
               <Button
