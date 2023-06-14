@@ -14,7 +14,6 @@ import Article, {
 import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
-import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonNav from "../../../components/article/ToolButtonNav";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
@@ -148,7 +147,7 @@ const Widget = () => {
               icon={<ColumnOutlinedIcon />}
               type="text"
               onClick={() =>
-                setRightPanel((value) => (value === "close" ? "dict" : "close"))
+                setRightPanel((value) => (value === "close" ? "open" : "close"))
               }
             />
           </div>
@@ -228,6 +227,7 @@ const Widget = () => {
               onClose={() => {
                 setRightPanel("close");
               }}
+              onTabChange={(curr: TPanelName) => setRightPanel(curr)}
               onChannelSelect={(e: IChannel[]) => {
                 //channel 改变
                 console.log("onChannelSelect", e);
