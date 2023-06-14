@@ -58,22 +58,25 @@ const PaliTextWidget = ({
     if (typeof _paliCode1 === "string") {
       const paliConvertor = _paliCode1 as TCodeConvertor;
       //编码转换
-
+      let original = text;
+      if (code === "my") {
+        original = my_to_roman(text);
+      }
       switch (paliConvertor) {
         case "roman_to_my":
-          setPaliText(roman_to_my(text));
+          setPaliText(roman_to_my(original));
           break;
         case "my_to_roman":
-          setPaliText(my_to_roman(text));
+          setPaliText(my_to_roman(original));
           break;
         case "roman_to_si":
-          setPaliText(roman_to_si(text));
+          setPaliText(roman_to_si(original));
           break;
         case "roman_to_thai":
-          setPaliText(roman_to_thai(text));
+          setPaliText(roman_to_thai(original));
           break;
         case "roman_to_taitham":
-          setPaliText(roman_to_taitham(text));
+          setPaliText(roman_to_taitham(original));
           break;
         default:
           if (code === "my") {
