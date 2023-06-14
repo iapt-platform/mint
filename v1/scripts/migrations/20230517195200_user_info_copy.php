@@ -89,7 +89,11 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 	}
     $created_at = date("Y-m-d H:i:s.",$srcData["create_time"]/1000).($srcData["create_time"]%1000)." UTC";
 	$updated_at = date("Y-m-d H:i:s.",$srcData["modify_time"]/1000).($srcData["modify_time"]%1000)." UTC";
-
+    if($srcData["email"]==="test@test.com"){
+        $email = $srcData["username"].$srcData["email"];
+    }else{
+        $email = $srcData["email"];
+    }
 	#插入目标表
 	$commitData = array(
 			$srcData["id"],
@@ -98,7 +102,7 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
 			$srcData["username"],
 			$srcData["password"],
 			$srcData["nickname"],
-			$srcData["email"],
+			$email,
 			$srcData["create_time"],
 			$srcData["modify_time"],
 			$srcData["receive_time"],
