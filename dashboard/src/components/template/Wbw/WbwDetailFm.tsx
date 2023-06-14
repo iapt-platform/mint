@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { Button, Dropdown, Input, MenuProps, Space } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -20,13 +21,16 @@ interface IWFMI {
   onChange?: Function;
 }
 const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
+  const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
       key: "_lookup",
       label: (
         <Space>
           <SearchOutlined />
-          {"查字典"}
+          {intl.formatMessage({
+            id: "buttons.lookup",
+          })}
         </Space>
       ),
     },
@@ -35,7 +39,9 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       label: (
         <Space>
           <EditOutlined />
-          {"修改"}
+          {intl.formatMessage({
+            id: "buttons.edit",
+          })}
         </Space>
       ),
     },
