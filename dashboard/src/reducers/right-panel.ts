@@ -2,13 +2,14 @@
  * 查字典，添加术语命令
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TPanelName } from "../components/article/RightPanel";
 
 import type { RootState } from "../store";
 
 export interface ITermCommand {}
 
 interface IState {
-  open?: "dict" | "channel" | "close";
+  open?: TPanelName;
 }
 
 const initialState: IState = {};
@@ -18,7 +19,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     //TODO 去掉command
-    openPanel: (state, action: PayloadAction<"dict" | "channel" | "close">) => {
+    openPanel: (state, action: PayloadAction<TPanelName | undefined>) => {
       state.open = action.payload;
     },
   },
@@ -26,7 +27,7 @@ export const slice = createSlice({
 
 export const { openPanel } = slice.actions;
 
-export const rightPanel = (state: RootState): string | undefined =>
+export const rightPanel = (state: RootState): TPanelName | undefined =>
   state.rightPanel.open;
 
 export default slice.reducer;
