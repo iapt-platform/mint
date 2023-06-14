@@ -43,7 +43,9 @@ class UpgradeAt20230227 extends Command
         $this->call('upgrade:dict.vocabulary');
         $this->call('upgrade:dict.default.meaning');
         $this->call('upgrade:related.paragraph');
-        $this->call('upgrade:fts',['--book'=>'']);
+        $this->call('upgrade:fts',['--content'=>true]);
+        $this->call('upgrade:pcd.book.id');
+
         return 0;
     }
 }
