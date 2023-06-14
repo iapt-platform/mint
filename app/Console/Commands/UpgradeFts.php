@@ -14,14 +14,16 @@ class UpgradeFts extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:fts {--content} {para?} {--test}';
+    protected $signature = 'upgrade:fts {--content : upgrade col content}
+        {para?}
+        {--test : output log}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'upgrade full text search table';
 
     /**
      * Create a new command instance.
