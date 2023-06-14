@@ -50,6 +50,7 @@ const items = {
   "buttons.multiple.select": "多选",
   "buttons.download": "下载",
   "buttons.download.link": "下载链接",
+  "buttons.lookup": "查字典",
 };
 
 export default items;
