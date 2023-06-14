@@ -127,7 +127,7 @@ const SearchVocabularyWidget = ({ value, onSplit, onSearch }: IWidget) => {
       >
         <Input.Search
           size="large"
-          placeholder="input here"
+          placeholder="search here"
           onSearch={(value: string) => {
             console.log("on search", value);
             if (typeof onSearch !== "undefined") {

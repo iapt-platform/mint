@@ -147,7 +147,7 @@ const FullSearchInputWidget = ({
         <Input.Search
           size={size}
           width={width}
-          placeholder="input here"
+          placeholder="search here"
           onSearch={(value: string) => {
             console.log("on search", value, tags);
             if (typeof onSearch !== "undefined") {
