@@ -92,6 +92,9 @@ while($srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC)){
     if($srcData["email"]==="test@test.com"){
         $email = $srcData["username"].$srcData["email"];
         echo "Email Exist ".$srcData["username"].PHP_EOL;
+    }else if($srcData["email"]===""){
+        $email = $srcData["username"]."@email.com";
+        echo "Email empty ".$srcData["username"].PHP_EOL;
     }else{
         $email = $srcData["email"];
     }
