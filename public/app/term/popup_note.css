@@ -35,7 +35,7 @@ code ol {
 	top: 180%;
 	width: max-content;
 	min-width: 18em;
-	max-width: max(25vw, 100%);
+	max-width: 50vw;
 	min-height: 15em;
 	padding: 10px;
 	background-color: var(--drop-bg-color);

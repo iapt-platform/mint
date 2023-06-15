@@ -27,7 +27,7 @@
 	nav a:link,
 	nav a:visited {
 		color: unset;
-		
+
 	}
 
 	header ul,
@@ -479,8 +479,8 @@ switch($_COOKIE['language']){
 				<span class="goto-platform"> ▸ <?php echo $_local->gui->studio; ?></span></a>
 		</div>
 	</div>
-    <?php 
-        $host = $_SERVER ['HTTP_HOST']; 
+    <?php
+        $host = $_SERVER ['HTTP_HOST'];
         if(stripos('staging',$host)>0){
             echo "<span style='backgroud-color:red;color:white;padding:0.5em;font-size:120%;' title='本服务器仅仅作为功能测试之用，所有用户数据均不保留。'>测试服务器</span>";
         }
@@ -488,7 +488,7 @@ switch($_COOKIE['language']){
 	<input type="checkbox" id="nav-toggle" class="nav-toggle">
 	<nav>
 		<ul>
-			<li class="nav_link" id="nav_community"><a href="../community/"><?php echo "最新"; ?></a></li>
+			<li class="nav_link" id="nav_community"><a href="../community/"><?php echo $_local->gui->latest;; ?></a></li>
 			<li class="nav_link" id="nav_palicanon"><a href="../palicanon/"><?php echo $_local->gui->pali_canon; ?></a></li>
 			<li class="nav_link" id="nav_course"><a href="../course/"><?php echo $_local->gui->lesson; ?></a></li>
 			<li class="nav_link" id="nav_dict"><a href="../dict/"><?php echo $_local->gui->dictionary; ?></a></li>
@@ -522,7 +522,7 @@ switch($_COOKIE['language']){
 						</li>
 						<li>
 							<a href="../calendar/history.html" target="_blank">
-								<div class="nav_link"><?php echo $_local->gui->history; ?></div>
+								<div class="nav_link"><?php echo $_local->gui->dev_history; ?></div>
 							</a>
 						</li>
 						<li>
@@ -532,15 +532,18 @@ switch($_COOKIE['language']){
 						</li>
 					</ul>
 			</li>
-			<li class="nav_link nav-mobile"><a href="../calendar/">
+			<li class="nav_link nav-mobile"><a href="../calendar/index.html">
 					<?php echo $_local->gui->buddhist_calendar; ?>
 				</a></li>
 			<li class="nav_link nav-mobile"><a href="../tools/unicode.html">
 					<?php echo $_local->gui->code_convert; ?>
 				</a></li>
-			<li class="nav_link nav-mobile"><a href="../statistics/">
-					<?php echo $_local->gui->corpus_statistics; ?>
+			<li class="nav_link nav-mobile"><a href="../calendar/history.html">
+					<?php echo $_local->gui->dev_history; ?>
 				</a></li>
+            <li class="nav_link nav-mobile"><a href="../statistics/">
+                <?php echo $_local->gui->corpus_statistics; ?>
+            </a></li>
 			<li class="nav_link nav-mobile"><a href="../tools/kammavaca.html">
 			<?php echo "作持语"; ?>
 		</a></li>

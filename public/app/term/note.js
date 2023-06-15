@@ -1408,8 +1408,13 @@ function myEndingTooltip(inStr){
         },
         {
             id:"my_nom2",
+            name:"တည်း",
+            tooltip:'就是，表示强调',
+        },
+        {
+            id:"my_nama1",
             name:"ကား",
-            tooltip:'主格/主语',
+            tooltip:'位于名词、代词、成分助词之后，起强调和对比的作用',
         },
         {
             id:"my_nom3",
@@ -1427,78 +1432,113 @@ function myEndingTooltip(inStr){
             tooltip:'宾格/趋向',
         },
         {
-            id:"my_inst1",
+            id:"my_inst_imp",
+            name:"အစွမ်းဖြင့်",
+            tooltip:'vasena',
+        },
+        {
+            id:"my_inst_imp",
+            name:"အစွမ်းအားဖြင့်",
+            tooltip:'vasena',
+        },
+        {
+            id:"my_imp",
             name:"ဖြင့်",
             tooltip:'具格/用',
         },
         {
-            id:"my_inst2",
+            id:"my_soi",
             name:"နှင့်",
             tooltip:'具格/与',
         },
         {
-            id:"my_inst2",
+            id:"my_soi",
             name:"နှင့်",
             tooltip:'具格/与',
         },
         {
-            id:"my_inst3",
+            id:"my_cau",
             name:"ကြောင့်",
             tooltip:'具格/凭借;从格/原因',
         },
         {
-            id:"my_inst3",
+            id:"my_cau",
             name:"ကြောင်း",
             tooltip:'具格/凭借;从格/原因',
         },
         {
-            id:"my_dat1",
+            id:"my_dat3",
+            name:"အကျိုးငှာ",
+            tooltip:'atthāya和atthaṃ',
+        },
+        {
+            id:"my_rec",
             name:"အား",
             tooltip:'目的格/对象(间接宾语)，对……来说',
         },
         {
-            id:"my_dat2",
+            id:"my_pur",
             name:"ငှာ",
             tooltip:'目的格/表示目的，为了……',
         },
         {
-            id:"my_dat2",
+            id:"my_pur",
+            name:"ဖို့",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_pur",
+            name:"ငှါ",
+            tooltip:'目的格/表示目的，为了……',
+        },
+        {
+            id:"my_pur",
             name:"အတွက်",
             tooltip:'目的格/表示目的，为了……',
         },
         {
-            id:"my_abl1",
+            id:"my_det",
             name:"မှ",
             tooltip:'从格/表示来源，从……',
         },
         {
-            id:"my_abl2",
+            id:"my_coc1",
             name:"အောက်",
             tooltip:'从格/表达比较，比……多',
         },
         {
-            id:"my_abl3",
+            id:"my_coc0",
             name:"ထက်",
             tooltip:'从格/表达比较，比……少',
         },
         {
-            id:"my_gen1",
+            id:"my_pos",
             name:"၏",
             tooltip:'属格/的',
         },
         {
-            id:"my_gen2",
+            id:"my_coi",
             name:"တွင်",
             tooltip:'属格/表达范围，……中的',
         },
         {
-            id:"my_loc1",
+            id:"my_coi",
+            name:"အနက်",
+            tooltip:'属格/表达范围，……中的',
+        },
+        {
+            id:"my_coi",
+            name:"ထဲမှ",
+            tooltip:'属格/表达范围，……中的',
+        },
+        {
+            id:"my_lov",
             name:"၌",
             tooltip:'处格/处(范围)',
         },
         {
             id:"my_loc2",
-            name:"ကြောင့်",
+            name:"အဖို့၌",
             tooltip:'处格/表达动机，因……，旨在……',
         },
         {
@@ -1537,14 +1577,19 @@ function myEndingTooltip(inStr){
             tooltip:'时间的整数',
         },
         {
-            id:"my_length",
+            id:"my_time",
             name:"တိုင်တိုင်",
             tooltip:'距离,长度的整数',
         },
         {
-            id:"my_length",
+            id:"my_time",
             name:"တိုင်အောင်",
             tooltip:'距离,长度的整数',
+        },
+        {
+            id:"my_def",
+            name:"စဉ်",
+            tooltip:'同时发生的时间状语(当……的时候)',
         },
         {
             id:"my_def",
@@ -1555,6 +1600,111 @@ function myEndingTooltip(inStr){
             id:"my_def",
             name:"လျက်",
             tooltip:'同时发生的时间状语(当……的时候)',
+        },
+        {
+            id:"my_def_eva",
+            name:"မှသာ",
+            tooltip:'只有……才……',
+        },
+        {
+            id:"my_def_eva",
+            name:"မှသာလျှင်",
+            tooltip:'只有……才……',
+        },
+        {
+            id:"my_eva",
+            name:"သာလျှင်",
+            tooltip:'就，只是',
+        },
+        {
+            id:"my_eva",
+            name:"ပင်",
+            tooltip:'就，只是',
+        },
+        {
+            id:"my_eva",
+            name:"ပင်လျှင်",
+            tooltip:'就，只是',
+        },
+        {
+            id:"my_def",
+            name:"လျှင်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
+        {
+            id:"my_def",
+            name:"သော်",
+            tooltip:'同时发生的时间状语(当……的时候)',
+        },
+        {
+            id:"my_api",
+            name:"လည်း",
+            tooltip:'也',
+        },
+        {
+            id:"my_api",
+            name:"ပါ",
+            tooltip:'也',
+        },
+        {
+            id:"my_iad",
+            name:"သော",
+            tooltip:'的(同类修饰)',
+        },
+        {
+            id:"my_pl_fut",
+            name:"ကုန်လတ္တံ့",
+            tooltip:'复数将来式',
+        },
+        {
+            id:"my_fut",
+            name:"လတ္တံ့",
+            tooltip:'将来式',
+        },
+        {
+            id:"my_va",
+            name:"သော်၎င်း",
+            tooltip:'或',
+        },
+        {
+            id:"my_ca",
+            name:"လည်းကောင်း",
+            tooltip:'和',
+        },
+        {
+            id:"my_ca",
+            name:"၎င်း",
+            tooltip:'和',
+        },
+        {
+            id:"my_ca",
+            name:"ရယ်",
+            tooltip:'和',
+        },
+        {
+            id:"my_ca",
+            name:"လည်း",
+            tooltip:'和',
+        },
+        {
+            id:"my_eyya",
+            name:"ကောင်း",
+            tooltip:'也许',
+        },
+        {
+            id:"my_adv",
+            name:"စွာ",
+            tooltip:'副词',
+        },
+        {
+            id:"my_num1",
+            name:"လုံး",
+            tooltip:'整体性',
+        },
+        {
+            id:"my_num1",
+            name:"စလုံး",
+            tooltip:'整体性',
         },
     ];
 

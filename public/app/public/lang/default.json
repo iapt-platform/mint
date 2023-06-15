@@ -664,6 +664,8 @@
 		"show_this_para_only": "show this paragraph only",
 		"original_text":"original text",
 		"white_space": "&nbsp;",
+		"latest": "latest",
+		"dev_history": "development history",
 		"": ""
 	},
 	"grammastr": [

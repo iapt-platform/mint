@@ -19,16 +19,19 @@ function guide_init() {
 	});
 
 	$("guide").mouseenter(function (event) {
-		let mouse_x=event.clientX
-		let mouse_y=event.clientY
-	if ($(this).offset().left < $(document.body).width() / 2) {//左边
-		$(this).children(".guide_contence").first().css("left",(mouse_x-20)+"px")
-		$(this).children(".guide_contence").first().css("top",mouse_y+"px")
-		$(this).children(".guide_contence").first().css("max-width",($(document.body).width()-mouse_x-20)+"px")
+		let mouse_x=event.pageX
+		let mouse_y=event.pageY
+		$(this).children(".guide_contence").first().css("top","15px")
+        $(this).children(".guide_contence").first().css("width","max-content")
+        //if ($(this).offset().left < $(document.body).width() / 2) {//左边
+    if (mouse_x < ($(document.body).width() / 2)) {//左边
+    		$(this).children(".guide_contence").first().css("left","-10px")
+            $(this).children(".guide_contence").first().css("max-width",("calc(100vw - "+mouse_x+"px - 20px"))
 	} else {//右边
-		$(this).children(".guide_contence").first().css("right",($(document.body).width()-mouse_x-20)+"px")
-		$(this).children(".guide_contence").first().css("top",mouse_y+"px")
+		//$(this).children(".guide_contence").first().css("right",($(document.body).width()-mouse_x-20)+"px")
+		//$(this).children(".guide_contence").first().css("top",mouse_y+"px")
 		$(this).children(".guide_contence").first().css("max-width",(mouse_x-20)+"px")
+        $(this).children(".guide_contence").first().css("right","-10px")
 	}
 	if ($(this).children(".guide_contence").first().html().length > 0) {
 			return;

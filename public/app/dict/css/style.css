@@ -99,7 +99,7 @@ body {
 	display: none;
     background-color: var(--tool-bg-color);
     box-shadow: 0 0 10px var(--border-shadow);
-    color: var(--tool-color);	
+    color: var(--tool-color);
 }
 
 
@@ -258,6 +258,7 @@ input[type="submit"] {
 }
 #main_result {
 	flex: 7;
+    width: 100%;
 }
 #right_bar {
 	flex: 3;

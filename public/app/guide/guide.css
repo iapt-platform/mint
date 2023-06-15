@@ -27,7 +27,7 @@ guide ol {
 }
 .guide_contence {
 	/*border-top: 7px;*/
-	position: fixed;
+	position: absolute;
 	border: 1px solid var(--border-line-color);
 	border-radius: 5px;
 	top: 100%;
