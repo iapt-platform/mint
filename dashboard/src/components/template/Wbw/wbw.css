@@ -42,6 +42,9 @@
 .wbw_word:hover .wbw_split {
   visibility: visible;
 }
+.block_wbw .pali {
+  font-size: 1.1em;
+}
 .pali:hover {
   cursor: pointer;
 }
