@@ -505,7 +505,7 @@ export const WbwSentCtl = ({
           items: [
             {
               key: "magic-dict-current",
-              label: "魔法字典",
+              label: "神奇字典",
             },
             {
               key: "wbw-dict-publish-all",
