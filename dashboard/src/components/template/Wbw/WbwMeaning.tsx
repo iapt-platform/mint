@@ -84,7 +84,7 @@ const WbwMeaningWidget = ({
   ) : (
     <span
       onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.metaKey) {
           setEditable(true);
         }
       }}
