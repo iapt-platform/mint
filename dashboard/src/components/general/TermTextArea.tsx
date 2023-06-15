@@ -132,7 +132,7 @@ const TermTextAreaWidget = ({
                 setMenuDisplay("none");
                 event.preventDefault();
               }
-              if (event.ctrlKey) {
+              if (event.ctrlKey || event.metaKey) {
                 //回车存盘
                 console.log("save", textAreaValue);
                 if (typeof onSave !== "undefined") {
