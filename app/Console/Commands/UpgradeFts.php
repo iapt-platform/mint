@@ -46,29 +46,32 @@ class UpgradeFts extends Command
         if($this->option('content')){
             if(!empty($this->argument('para'))){
                 $para = explode('-',$this->argument('para'));
-                $content = $this->getContent($para[0],$para[1]);
-                if($this->option('test')){
-                    $this->info($content);
-                }else{
-                    FtsText::where('book',$para[0])->where('paragraph',$para[1])->update(['content'=>$content]);
-                }
-            }else{
-                for ($iBook=1; $iBook <= 217; $iBook++) {
-                    # code...
-                    $this->info('book:'.$iBook);
-                    $maxParagraph = WbwTemplate::where('book',$iBook)->max('paragraph');
-                    $bar = $this->output->createProgressBar($maxParagraph-1);
-                    for($iPara=1; $iPara <= $maxParagraph; $iPara++){
-                        $content = $this->getContent($iBook,$iPara);
-                        FtsText::where('book',$iBook)->where('paragraph',$iPara)->update(['content'=>$content]);
-                        $bar->advance();
-                    }
-                    $bar->finish();
-                    $this->info('done');
-                }
             }
-
-
+            for ($iBook=1; $iBook <= 217; $iBook++) {
+                if(isset($para[0]) && $para[0] != $iBook){
+                    continue;
+                }
+                # code...
+                $this->info('book:'.$iBook);
+                $maxParagraph = WbwTemplate::where('book',$iBook)->max('paragraph');
+                $bar = $this->output->createProgressBar($maxParagraph-1);
+                for($iPara=1; $iPara <= $maxParagraph; $iPara++){
+                    if(isset($para[1]) && $para[1] != $iPara){
+                        $bar->advance();
+                        continue;
+                    }
+                    $content = $this->getContent($iBook,$iPara);
+                    if($this->option('test')){
+                        $this->info($content);
+                    }else{
+                        //TODO update bold
+                        FtsText::where('book',$iBook)->where('paragraph',$iPara)->update(['content'=>$content]);
+                    }
+                    $bar->advance();
+                }
+                $bar->finish();
+                $this->info('done');
+            }
         }
         return 0;
     }
