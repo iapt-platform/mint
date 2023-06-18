@@ -23,6 +23,7 @@ import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
 import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
+import NetStatus from "../../../components/general/NetStatus";
 import { useAppSelector } from "../../../hooks";
 import { add } from "../../../reducers/inline-dict";
 import { paraParam } from "../../../reducers/para-change";
@@ -109,7 +110,10 @@ const Widget = () => {
             padding: "5px",
           }}
         >
-          <MainMenu />
+          <Space>
+            <MainMenu />
+            <NetStatus style={{ color: "white" }} />
+          </Space>
           <div></div>
           <div key="right" style={{ display: "flex" }}>
             <Avatar placement="bottom" />
