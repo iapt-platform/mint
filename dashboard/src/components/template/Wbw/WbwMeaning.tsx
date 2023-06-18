@@ -6,6 +6,7 @@ import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 import { ArticleMode } from "../../article/Article";
 import CaseFormula from "./CaseFormula";
+import EditableLabel from "../../general/EditableLabel";
 
 const { Text } = Typography;
 
@@ -64,34 +65,65 @@ const WbwMeaningWidget = ({
     );
   }
 
-  const meaningInner = editable ? (
-    <Input
-      defaultValue={data.meaning?.value ? data.meaning?.value : ""}
-      placeholder="meaning"
-      style={{ width: "100%" }}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(event.target.value);
-      }}
-      onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
-        inputOk();
-      }}
-      onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Escape") {
-          setEditable(false);
-        }
-      }}
-    />
-  ) : (
-    <span
-      onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        if (event.ctrlKey || event.metaKey) {
+  let meaningInner = <></>;
+  if (display === "list") {
+    meaningInner = (
+      <EditableLabel
+        defaultValue={data.meaning?.value ? data.meaning?.value : ""}
+        placeholder="meaning"
+        style={{ width: "100%" }}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          console.log("on change", event.target.value);
+          setInput(event.target.value);
+        }}
+        onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
+          if (typeof onChange !== "undefined") {
+            onChange(input);
+          }
+        }}
+        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {}}
+        onBlur={() => {
+          if (typeof onChange !== "undefined") {
+            onChange(input);
+          }
+        }}
+      />
+    );
+  } else if (editable) {
+    meaningInner = (
+      <Input
+        defaultValue={data.meaning?.value ? data.meaning?.value : ""}
+        placeholder="meaning"
+        style={{ width: "100%" }}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setInput(event.target.value);
+        }}
+        onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
+          if (typeof onChange !== "undefined") {
+            onChange(input);
+          }
+        }}
+        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+          if (event.key === "Escape") {
+            setEditable(false);
+          }
+        }}
+        onBlur={(event) => {
+          inputOk();
+        }}
+      />
+    );
+  } else {
+    meaningInner = (
+      <span
+        onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
           setEditable(true);
-        }
-      }}
-    >
-      {meaning}
-    </span>
-  );
+        }}
+      >
+        {meaning}
+      </span>
+    );
+  }
 
   const inputOk = () => {
     setEditable(false);
@@ -114,7 +146,7 @@ const WbwMeaningWidget = ({
     //非标点符号
     return (
       <div className="wbw_word_item">
-        {editable ? (
+        {editable || display === "list" ? (
           meaningInner
         ) : (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
