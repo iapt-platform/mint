@@ -89,7 +89,7 @@ export interface IWbwFields {
   case?: boolean;
 }
 
-export type TWbwDisplayMode = "block" | "inline";
+export type TWbwDisplayMode = "block" | "inline" | "list";
 interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
@@ -178,7 +178,7 @@ const WbwWordWidget = ({
   } else {
     return (
       <div
-        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} ${wbwDark} `}
+        className={`wbw_word ${display}_${mode} display_${display} ${wbwCtl} ${wbwAnchor} ${wbwDark} `}
         style={styleWbw}
         onMouseEnter={() => {
           setShowRelationTool(true);
