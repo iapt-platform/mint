@@ -8,6 +8,8 @@ import { ISentenceRequest, ISentenceResponse } from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
 import { WbwSentCtl } from "../WbwSent";
 import { IWbw } from "../Wbw/WbwWord";
+import store from "../../../store";
+import { statusChange } from "../../../reducers/net-status";
 
 interface IWidget {
   data: ISentence;
@@ -17,7 +19,6 @@ interface IWidget {
 }
 const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
   const intl = useIntl();
-  const [saving, setSaving] = useState<boolean>(false);
   const [wbwData, setWbwData] = useState<IWbw[]>([]);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
   }, [data.content, data.contentType]);
 
   const save = (content: string) => {
-    setSaving(true);
+    store.dispatch(statusChange({ status: "loading" }));
     put<ISentenceRequest, ISentenceResponse>(
       `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`,
       {
@@ -42,10 +43,14 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
     )
       .then((json) => {
         console.log(json);
-        setSaving(false);
-
         if (json.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
+          store.dispatch(
+            statusChange({
+              status: "success",
+              message: intl.formatMessage({ id: "flashes.success" }),
+            })
+          );
+
           if (typeof onSave !== "undefined") {
             const newData: ISentence = {
               id: json.data.id,
@@ -64,12 +69,23 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
           }
         } else {
           message.error(json.message);
+          store.dispatch(
+            statusChange({
+              status: "fail",
+              message: json.message,
+            })
+          );
         }
       })
       .catch((e) => {
-        setSaving(false);
         console.error("catch", e);
         message.error(e.message);
+        store.dispatch(
+          statusChange({
+            status: "fail",
+            message: e.message,
+          })
+        );
       });
   };
 
@@ -103,7 +119,6 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
           size="small"
           type="primary"
           icon={<EyeOutlined />}
-          loading={saving}
           onClick={() => {
             if (typeof onClose !== "undefined") {
               onClose();
