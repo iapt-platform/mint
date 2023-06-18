@@ -82,7 +82,7 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
         wordEnd={data.wordEnd}
         data={wbwData}
         refreshable={true}
-        display="inline"
+        display="list"
         layoutDirection="v"
         fields={{
           real: true,
