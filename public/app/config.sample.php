@@ -1,11 +1,13 @@
-<?php 
+<?php
 
 
 #域名设置
 
 define("RPC_SERVER","https://rpc.wikipali.org");
 define("ASSETS_SERVER","https://assets-hk.wikipali.org");
-
+define("HELP_SERVER","https://help-hk.wikipali.org");
+define("GRAMMAR_SERVER","https://grammar-hk.wikipali.org");
+define('APP_KEY','base64:QHiqLcUthgo1V7Hj4UyoFxpCr1UmKJQu4cUr55z5zGc=');
 /*
 电子邮件设置
 PHPMailer
