@@ -17,7 +17,7 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
     data.real.value.trim().length > 0
   ) {
     let wordReal = <></>;
-    if (display === "block" || display === "inline") {
+    if (display === "block" || display === "list") {
       if (
         typeof data.real?.value === "string" &&
         data.real.value.trim().length > 0
