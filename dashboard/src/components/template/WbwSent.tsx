@@ -9,6 +9,7 @@ import { ArticleMode } from "../article/Article";
 import WbwWord, {
   IWbw,
   IWbwFields,
+  TWbwDisplayMode,
   WbwElement,
   WbwStatus,
 } from "./Wbw/WbwWord";
@@ -78,7 +79,7 @@ interface IWidget {
   wordEnd: number;
   channelId: string;
   channelType?: TChannelType;
-  display?: "block" | "inline";
+  display?: TWbwDisplayMode;
   fields?: IWbwFields;
   layoutDirection?: "h" | "v";
   magicDict?: string;
