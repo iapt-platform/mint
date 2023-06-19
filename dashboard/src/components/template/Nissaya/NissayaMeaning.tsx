@@ -5,10 +5,28 @@ import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import Lookup from "../../dict/Lookup";
 import { NissayaCardPop } from "../../general/NissayaCard";
 
-interface IMeaning {
+export interface IMeaning {
   base: string;
   ending?: string[];
 }
+
+export const nissayaBase = (item: string, endings: string[]): IMeaning => {
+  let word = item.replaceAll("။", "");
+  let end: string[] = [];
+  for (let loop = 0; loop < 3; loop++) {
+    for (let i = 0; i < word.length; i++) {
+      const ending = word.slice(i);
+      if (endings?.includes(ending)) {
+        end.unshift(word.slice(i));
+        word = word.slice(0, i);
+      }
+    }
+  }
+  return {
+    base: word,
+    ending: end,
+  };
+};
 
 interface IWidget {
   text?: string;
@@ -20,26 +38,12 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
   const endings = useAppSelector(getEnding);
 
   useEffect(() => {
-    if (typeof text === "undefined") {
+    if (typeof text === "undefined" || typeof endings === "undefined") {
       return;
     }
 
     const mWords: IMeaning[] = text.split(" ").map((item) => {
-      let word = item.replaceAll("။", "");
-      let end: string[] = [];
-      for (let loop = 0; loop < 3; loop++) {
-        for (let i = 0; i < word.length; i++) {
-          const ending = word.slice(i);
-          if (endings?.includes(ending)) {
-            end.unshift(word.slice(i));
-            word = word.slice(0, i);
-          }
-        }
-      }
-      return {
-        base: word,
-        ending: end,
-      };
+      return nissayaBase(item, endings);
     });
     setWords(mWords);
   }, [endings, text]);
