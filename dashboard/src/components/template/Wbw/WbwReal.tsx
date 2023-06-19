@@ -1,5 +1,6 @@
-import { Tooltip } from "antd";
+import { Space, Tooltip } from "antd";
 import { Typography } from "antd";
+import Lookup from "../../dict/Lookup";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 
@@ -16,32 +17,33 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
     typeof data.real?.value === "string" &&
     data.real.value.trim().length > 0
   ) {
-    let wordReal = <></>;
-    if (display === "block" || display === "list") {
-      if (
-        typeof data.real?.value === "string" &&
-        data.real.value.trim().length > 0
-      ) {
-        if (display === "block") {
-          const shortString = data.real.value.slice(
-            0,
-            data.word.value.length * 1.3 + 3
-          );
-          if (shortString === data.real.value) {
-            wordReal = <span>{shortString}</span>;
-          } else {
-            wordReal = (
-              <Tooltip title={data.real.value}>{`${shortString}…`}</Tooltip>
-            );
-          }
-        } else {
-          wordReal = <span>{data.real.value}</span>;
-        }
+    let wordReal: React.ReactNode = <></>;
+
+    if (display === "block") {
+      //block 模式下 限制宽度
+      const shortString = data.real.value.slice(
+        0,
+        data.word.value.length * 1.3 + 3
+      );
+      if (shortString === data.real.value) {
+        wordReal = <span>{shortString}</span>;
       } else {
-        //空白的意思在逐词解析模式显示占位字符串
-        wordReal = <Text type="secondary">real</Text>;
+        wordReal = (
+          <Tooltip title={data.real.value}>{`${shortString}…`}</Tooltip>
+        );
       }
+    } else {
+      wordReal = (
+        <Space>
+          {data.real.value.split(" ").map((item, index) => (
+            <Lookup search={item} key={index}>
+              <Text type="secondary">{item}</Text>
+            </Lookup>
+          ))}
+        </Space>
+      );
     }
+
     return (
       <div className="wbw_word_item">
         <Text type="secondary">{wordReal}</Text>
