@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import type { UploadFile } from "antd/es/upload/interface";
 
 import { useAppSelector } from "../../../hooks";
-import { add, wordIndex } from "../../../reducers/inline-dict";
+import { add, updateIndex, wordIndex } from "../../../reducers/inline-dict";
 import { get } from "../../../request";
 import store from "../../../store";
 
@@ -19,6 +19,7 @@ import WbwPage from "./WbwPage";
 import WbwRelationAdd from "./WbwRelationAdd";
 import { ArticleMode } from "../../article/Article";
 import WbwReal from "./WbwReal";
+import WbwDetailFm from "./WbwDetailFm";
 
 export type TFieldName =
   | "word"
@@ -86,6 +87,7 @@ export interface IWbwFields {
   meaning?: boolean;
   factors?: boolean;
   factorMeaning?: boolean;
+  factorMeaning2?: boolean;
   case?: boolean;
 }
 
@@ -108,6 +110,7 @@ const WbwWordWidget = ({
     meaning: true,
     factors: true,
     factorMeaning: true,
+    factorMeaning2: false,
     case: true,
   },
   wordDark = false,
@@ -152,21 +155,32 @@ const WbwWordWidget = ({
    * 查字典
    * @param word 要查的单词
    */
-  const lookup = (word: string) => {
+  const lookup = (words: string[]) => {
     stopLookup();
+
     //查询这个词在内存字典里是否有
-    if (inlineWordIndex.includes(word)) {
-      //已经有了，退出
+    const searchWord = words.filter((value) => {
+      if (inlineWordIndex.includes(value)) {
+        //已经有了
+        return false;
+      } else {
+        return true;
+      }
+    });
+    if (searchWord.length === 0) {
       return;
     }
-    get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
-      console.log("lookup ok", json.data.count);
-      console.log("time", json.data.time);
-      //存储到redux
-      store.dispatch(add(json.data.rows));
-    });
+    get<IApiResponseDictList>(`/v2/wbwlookup?word=${searchWord.join()}`).then(
+      (json) => {
+        console.log("lookup ok", json.data.count);
+        console.log("time", json.data.time);
+        //存储到redux
+        store.dispatch(add(json.data.rows));
+        store.dispatch(updateIndex(searchWord));
+      }
+    );
 
-    console.log("lookup", word);
+    console.log("lookup", searchWord);
   };
 
   if (wordData.type?.value === ".ctl.") {
@@ -188,11 +202,22 @@ const WbwWordWidget = ({
             wordData.real.value?.length > 0
           ) {
             //开始计时，计时结束查字典
-            intervalRef.current = window.setInterval(
-              lookup,
-              300,
-              wordData.real.value
-            );
+            let words: string[] = [wordData.real.value];
+            if (
+              wordData.parent &&
+              wordData.parent?.value !== "" &&
+              wordData.parent?.value !== null
+            ) {
+              words.push(wordData.parent.value);
+            }
+            if (
+              wordData.factors &&
+              wordData.factors?.value !== "" &&
+              wordData.factors?.value !== null
+            ) {
+              words = [...words, ...wordData.factors.value.split("+")];
+            }
+            intervalRef.current = window.setInterval(lookup, 300, words);
           }
         }}
         onMouseLeave={() => {
@@ -242,7 +267,6 @@ const WbwWordWidget = ({
               data={wordData}
               display={display}
               onChange={(e: string) => {
-                console.log("meaning change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.meaning = { value: e, status: WbwStatus.manual };
                 setWordData(newData);
@@ -278,6 +302,31 @@ const WbwWordWidget = ({
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = { value: e, status: 5 };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+            />
+          ) : undefined}
+          {fieldDisplay?.factorMeaning2 ? (
+            <WbwDetailFm
+              factors={data.factors?.value?.split("+")}
+              initValue={data.factorMeaning?.value?.split("+")}
+              onChange={(value: string[]) => {
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.factorMeaning = {
+                  value: value.join("+"),
+                  status: WbwStatus.manual,
+                };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+              onJoin={(value: string) => {
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.meaning = { value: value, status: WbwStatus.manual };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);
