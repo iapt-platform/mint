@@ -1,0 +1,8 @@
+.pcd_word {
+  text-decoration: none;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.pcd_word:hover {
+  text-decoration: underline dotted;
+}
