@@ -105,7 +105,8 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
           meaning: true,
           factors: false,
           factorMeaning: false,
-          case: true,
+          factorMeaning2: true,
+          case: false,
         }}
         channelId={data.channel.id}
         channelType={data.channel.type}
