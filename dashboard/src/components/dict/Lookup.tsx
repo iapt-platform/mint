@@ -6,7 +6,7 @@ interface IWidget {
   search?: string;
   children?: React.ReactNode;
 }
-const Widget = ({ search, children }: IWidget) => {
+const LookupWidget = ({ search, children }: IWidget) => {
   return (
     <Typography.Text
       style={{ cursor: "pointer" }}
@@ -22,4 +22,4 @@ const Widget = ({ search, children }: IWidget) => {
   );
 };
 
-export default Widget;
+export default LookupWidget;
