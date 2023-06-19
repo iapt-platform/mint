@@ -149,7 +149,6 @@ export const WbwSentCtl = ({
     words.forEach((value, key) => pubWords.push(key));
 
     const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
-    console.log("pub words", sentId, pubWords);
     store.dispatch(add({ sentId: sentId, words: pubWords }));
   }, [book, para, wordData, wordEnd, wordStart]);
 
@@ -543,6 +542,7 @@ export const WbwSentCtl = ({
         })
       ) : (
         <Tree
+          selectable={false}
           treeData={wordData
             .filter((value) => value.sn.length === 1)
             .map((item, id) => {
