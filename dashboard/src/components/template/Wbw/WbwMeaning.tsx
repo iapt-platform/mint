@@ -24,7 +24,7 @@ const WbwMeaningWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState<string>();
+  const [input, setInput] = useState(data.meaning?.value);
   const [editable, setEditable] = useState(false);
 
   let meaning = <></>;
@@ -70,6 +70,7 @@ const WbwMeaningWidget = ({
     meaningInner = (
       <EditableLabel
         defaultValue={data.meaning?.value ? data.meaning?.value : ""}
+        value={data.meaning?.value ? data.meaning?.value : ""}
         placeholder="meaning"
         style={{ width: "100%" }}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,13 +79,13 @@ const WbwMeaningWidget = ({
         }}
         onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
           if (typeof onChange !== "undefined") {
-            onChange(input);
+            onChange(input ? input : "");
           }
         }}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {}}
         onBlur={() => {
           if (typeof onChange !== "undefined") {
-            onChange(input);
+            onChange(input ? input : "");
           }
         }}
       />
@@ -100,7 +101,7 @@ const WbwMeaningWidget = ({
         }}
         onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
           if (typeof onChange !== "undefined") {
-            onChange(input);
+            onChange(input ? input : "");
           }
         }}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -128,7 +129,7 @@ const WbwMeaningWidget = ({
   const inputOk = () => {
     setEditable(false);
     if (typeof onChange !== "undefined") {
-      onChange(input);
+      onChange(input ? input : "");
     }
   };
 
