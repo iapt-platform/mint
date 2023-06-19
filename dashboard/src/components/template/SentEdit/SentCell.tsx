@@ -12,6 +12,8 @@ import { sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
 import { my_to_roman } from "../../code/my";
 import SentWbwEdit from "./SentWbwEdit";
+import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
+import { nissayaBase } from "../Nissaya/NissayaMeaning";
 
 interface ISentCell {
   data: ISentence;
@@ -25,7 +27,7 @@ const SentCellWidget = ({
 }: ISentCell) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
-  const [wbwData, setWbwData] = useState<IWbw[]>([]);
+  const endings = useAppSelector(getEnding);
 
   const acceptPr = useAppSelector(sentence);
   useEffect(() => {
@@ -44,6 +46,7 @@ const SentCellWidget = ({
     }
   }, [acceptPr, data, isPr]);
   const sid = `${sentData.book}_${sentData.para}_${sentData.wordStart}_${sentData.wordEnd}_${sentData.channel.id}`;
+
   return (
     <div style={{ marginBottom: "8px" }}>
       {isPr ? undefined : (
@@ -67,7 +70,17 @@ const SentCellWidget = ({
               const wbw: IWbw[] = data.content.split("\n").map((item, id) => {
                 const parts = item.split("=");
                 const word = my_to_roman(parts[0]);
-                const meaning = parts.length > 1 ? parts[1].trim() : "";
+                const meaning: string = parts.length > 1 ? parts[1].trim() : "";
+                let parent: string = "";
+                let factors: string = "";
+                if (!meaning.includes(" ") && endings) {
+                  const base = nissayaBase(meaning, endings);
+                  parent = base.base;
+                  const end = base.ending ? base.ending : [];
+                  factors = [base.base, ...end].join("+");
+                } else {
+                  factors = meaning.replaceAll(" ", "+");
+                }
                 return {
                   book: data.book,
                   para: data.para,
@@ -75,8 +88,9 @@ const SentCellWidget = ({
                   word: { value: word ? word : parts[0], status: 0 },
                   real: { value: meaning, status: 0 },
                   meaning: { value: "", status: 0 },
+                  parent: { value: parent, status: 0 },
                   factors: {
-                    value: meaning.replaceAll(" ", "+"),
+                    value: factors,
                     status: 0,
                   },
                   confidence: 0.5,
