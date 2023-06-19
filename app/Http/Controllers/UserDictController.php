@@ -36,7 +36,7 @@ class UserDictController extends Controller
                 }
                 $table = UserDict::select($indexCol)
                             ->where('creator_id', $user["user_id"])
-                            ->where('source', "_USER_WBW_");
+                            ->whereIn('source', ["_USER_WBW_","_USER_DICT_"]);
 				break;
 			case 'user':
 				# code...
@@ -107,40 +107,44 @@ class UserDictController extends Controller
 		}
 
 		$_data = json_decode($request->get("data"),true);
+
 		switch($request->get('view')){
             case "dict":
                 $src = "_USER_DICT_";
+                break;
 			case "wbw":
                 $src = "_USER_WBW_";
-				#查询用户重复的数据
-				$iOk = 0;
-				$updateOk=0;
-				foreach ($_data as $key => $word) {
-					# code...
-					$table = UserDict::where('creator_id', $user["user_id"])
-										->where('word',$word["word"]);
-                    if(isset($word["type"])){$table = $table->where('type',$word["type"]);}
-                    if(isset($word["grammar"])){$table = $table->where('grammar',$word["grammar"]);}
-                    if(isset($word["parent"])){$table = $table->where('parent',$word["parent"]);}
-                    if(isset($word["mean"])){$table = $table->where('mean',$word["mean"]);}
-                    if(isset($word["factors"])){$table = $table->where('factors',$word["factors"]);}
-					$isDoesntExist = $table->doesntExist();
+                break;
+            default:
+                $this->error("not view");
+                break;
+        }
+        #查询用户重复的数据
+        $iOk = 0;
+        $updateOk=0;
+        foreach ($_data as $key => $word) {
+            # code...
+            $table = UserDict::where('creator_id', $user["user_id"])
+                                ->where('word',$word["word"]);
+            if(isset($word["type"])){$table = $table->where('type',$word["type"]);}
+            if(isset($word["grammar"])){$table = $table->where('grammar',$word["grammar"]);}
+            if(isset($word["parent"])){$table = $table->where('parent',$word["parent"]);}
+            if(isset($word["mean"])){$table = $table->where('mean',$word["mean"]);}
+            if(isset($word["factors"])){$table = $table->where('factors',$word["factors"]);}
+            $isDoesntExist = $table->doesntExist();
+            if($isDoesntExist){
+                #不存在插入数据
+                $word["id"]=app('snowflake')->id();
+                $word["source"] = $src;
+                $word["create_time"] = time()*1000;
+                $word["creator_id"]=$user["user_id"];
+                $id = UserDict::insert($word);
+                $updateOk = $this->update_sys_wbw($word);
+                $this->update_redis($word);
+                $iOk++;
+            }
+        }
 
-					if($isDoesntExist){
-						#不存在插入数据
-						$word["id"]=app('snowflake')->id();
-						$word["source"] = $src;
-						$word["create_time"] = time()*1000;
-						$word["creator_id"]=$user["user_id"];
-						$id = UserDict::insert($word);
-						$updateOk = $this->update_sys_wbw($word);
-						$this->update_redis($word);
-						$iOk++;
-					}
-				}
-
-				break;
-		}
         return $this->ok([$iOk,$updateOk]);
     }
 
@@ -254,12 +258,12 @@ class UserDictController extends Controller
 	private function update_sys_wbw($data){
 
 		#查询用户重复的数据
-        if(!isset($data["type"])){$data["type"]='';}
-        if(!isset($data["grammar"])){$data["grammar"]='';}
-        if(!isset($data["parent"])){$data["parent"]='';}
-        if(!isset($data["mean"])){$data["mean"]='';}
-        if(!isset($data["factors"])){$data["factors"]='';}
-        if(!isset($data["factormean"])){$data["factormean"]='';}
+        if(!isset($data["type"])){$data["type"]=null;}
+        if(!isset($data["grammar"])){$data["grammar"]=null;}
+        if(!isset($data["parent"])){$data["parent"]=null;}
+        if(!isset($data["mean"])){$data["mean"]=null;}
+        if(!isset($data["factors"])){$data["factors"]=null;}
+        if(!isset($data["factormean"])){$data["factormean"]=null;}
 
 		$count = UserDict::where('word',$data["word"])
                         ->where('type',$data["type"])
@@ -268,10 +272,10 @@ class UserDictController extends Controller
                         ->where('mean',$data["mean"])
                         ->where('factors',$data["factors"])
                         ->where('factormean',$data["factormean"])
-                        ->where('source','_USER_WBW_')
+                        ->where('source',$data["source"])
                         ->count();
 
-		if($count==0){
+		if($count === 0){
             # 没有任何用户有这个数据
 			#删除数据
 			$result = UserDict::where('word',$data["word"])
@@ -295,7 +299,7 @@ class UserDictController extends Controller
 							->where('mean',$data["mean"])
 							->where('factors',$data["factors"])
 							->where('factormean',$data["factormean"])
-							->where('source','_USER_WBW_')
+							->whereIn('source',['_USER_WBW_','_USER_DICT_'])
 							->orderby("created_at",'asc')
 							->value("creator_id");
 
@@ -308,8 +312,8 @@ class UserDictController extends Controller
                         ->where('factormean',$data["factormean"])
                         ->where('source','_SYS_USER_WBW_')
                         ->count();
-            if($count==0){
-                #系统字典没有 新增
+            if($count === 0){
+                #社区字典没有 新增
                 $result = UserDict::insert(
 				[
                     'id' =>app('snowflake')->id(),
@@ -321,8 +325,9 @@ class UserDictController extends Controller
 					'factors'=>$data["factors"],
 					'factormean'=>$data["factormean"],
 					'source'=>"_SYS_USER_WBW_",
-                    'creator_id' => $creator_id,
+                    'creator_id' => $data["creator_id"],
 					'ref_counter' => 1,
+                    'dict_id' => DictApi::getSysDict('community_extract'),
                     "create_time"=>time()*1000
                     ]);
             }else{
