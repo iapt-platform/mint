@@ -13,7 +13,7 @@ import {
   IUserDictCreate,
 } from "../api/Dict";
 import { useAppSelector } from "../../hooks";
-import { add, wordIndex } from "../../reducers/inline-dict";
+import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
 
 interface IWidget {
@@ -33,6 +33,8 @@ const MyCreateWidget = ({ word }: IWidget) => {
   const [loading, setLoading] = useState(false);
   const inlineWordIndex = useAppSelector(wordIndex);
 
+  useEffect(() => setWordSpell(word), [word]);
+
   useEffect(() => {
     //查询这个词在内存字典里是否有
     if (typeof wordSpell === "undefined") {
@@ -47,6 +49,7 @@ const MyCreateWidget = ({ word }: IWidget) => {
         console.log("lookup ok", json.data.count);
         //存储到redux
         store.dispatch(add(json.data.rows));
+        store.dispatch(updateIndex([wordSpell]));
       }
     );
   }, [inlineWordIndex, wordSpell]);
@@ -55,33 +58,28 @@ const MyCreateWidget = ({ word }: IWidget) => {
     let mData: IWbw = JSON.parse(JSON.stringify(editWord));
     switch (field) {
       case "note":
-        mData.note = { value: value, status: 5 };
+        mData.note = { value: value, status: 7 };
         break;
       case "word":
-        mData.word = { value: value, status: 5 };
+        mData.word = { value: value, status: 7 };
         break;
       case "meaning":
-        mData.meaning = { value: value, status: 5 };
+        mData.meaning = { value: value, status: 7 };
         break;
       case "factors":
-        mData.factors = { value: value, status: 5 };
+        mData.factors = { value: value, status: 7 };
         break;
       case "factorMeaning":
-        mData.factorMeaning = { value: value, status: 5 };
+        mData.factorMeaning = { value: value, status: 7 };
         break;
       case "parent":
-        mData.parent = { value: value, status: 5 };
+        mData.parent = { value: value, status: 7 };
         break;
       case "case":
-        const _case = value
-          .replaceAll("n$base", "n.:.base")
-          .replaceAll("ti$base", "ti.:.base")
-          .split("$");
-        const _type = "." + _case[0] + ".";
-        const _grammar = _case
-          .slice(1)
-          .map((item) => `.${item}.`)
-          .join("$");
+        console.log("case", value);
+        const _case = value.replaceAll("#", "$").split("$");
+        const _type = _case[0];
+        const _grammar = _case.slice(1).join("$");
         mData.type = { value: _type, status: 7 };
         mData.grammar = { value: _grammar, status: 7 };
         mData.case = { value: value, status: 7 };
