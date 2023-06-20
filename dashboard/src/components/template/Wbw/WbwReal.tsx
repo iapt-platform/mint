@@ -34,13 +34,13 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
       }
     } else {
       wordReal = (
-        <Space>
+        <>
           {data.real.value.split(" ").map((item, index) => (
             <Lookup search={item} key={index}>
-              <Text type="secondary">{item}</Text>
+              <Text type="secondary">{item} </Text>
             </Lookup>
           ))}
-        </Space>
+        </>
       );
     }
 
