@@ -289,8 +289,8 @@ class SentenceController extends Controller
             "create_time"=>time()*1000,
         ]);
         $sent->content = $request->get('content');
-        if($request->has('content_type')){
-            $sent->content_type = $request->get('content_type');
+        if($request->has('contentType')){
+            $sent->content_type = $request->get('contentType');
         }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
