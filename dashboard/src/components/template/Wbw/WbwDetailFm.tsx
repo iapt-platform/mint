@@ -224,7 +224,7 @@ const WbwDetailFmWidget = ({
         <Space size={0} key="space">
           {factorMeaning.map((item, index) => {
             return (
-              <span key={index}>
+              <span key={index} style={{ display: "flex" }}>
                 <WbwFactorMeaningItem
                   key={index}
                   pali={factors[index]}
