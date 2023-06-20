@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { IntlShape, useIntl } from "react-intl";
 import { Button, message } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 
@@ -11,13 +11,57 @@ import { IWbw } from "../Wbw/WbwWord";
 import store from "../../../store";
 import { statusChange } from "../../../reducers/net-status";
 
+export const sentSave = (sent: ISentence, intl: IntlShape) => {
+  store.dispatch(statusChange({ status: "loading" }));
+  put<ISentenceRequest, ISentenceResponse>(
+    `/v2/sentence/${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`,
+    {
+      book: sent.book,
+      para: sent.para,
+      wordStart: sent.wordStart,
+      wordEnd: sent.wordEnd,
+      channel: sent.channel.id,
+      content: sent.content,
+      contentType: sent.contentType,
+    }
+  )
+    .then((json) => {
+      console.log(json);
+      if (json.ok) {
+        store.dispatch(
+          statusChange({
+            status: "success",
+            message: intl.formatMessage({ id: "flashes.success" }),
+          })
+        );
+      } else {
+        message.error(json.message);
+        store.dispatch(
+          statusChange({
+            status: "fail",
+            message: json.message,
+          })
+        );
+      }
+    })
+    .catch((e) => {
+      console.error("catch", e);
+      message.error(e.message);
+      store.dispatch(
+        statusChange({
+          status: "fail",
+          message: e.message,
+        })
+      );
+    });
+};
+
 interface IWidget {
   data: ISentence;
   onSave?: Function;
   onClose?: Function;
-  onCreate?: Function;
 }
-const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
+const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
   const intl = useIntl();
   const [wbwData, setWbwData] = useState<IWbw[]>([]);
 
@@ -26,68 +70,6 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
       setWbwData(JSON.parse(data.content));
     }
   }, [data.content, data.contentType]);
-
-  const save = (content: string) => {
-    store.dispatch(statusChange({ status: "loading" }));
-    put<ISentenceRequest, ISentenceResponse>(
-      `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`,
-      {
-        book: data.book,
-        para: data.para,
-        wordStart: data.wordStart,
-        wordEnd: data.wordEnd,
-        channel: data.channel.id,
-        content: content,
-        contentType: data.contentType,
-      }
-    )
-      .then((json) => {
-        console.log(json);
-        if (json.ok) {
-          store.dispatch(
-            statusChange({
-              status: "success",
-              message: intl.formatMessage({ id: "flashes.success" }),
-            })
-          );
-
-          if (typeof onSave !== "undefined") {
-            const newData: ISentence = {
-              id: json.data.id,
-              content: json.data.content,
-              contentType: json.data.content_type,
-              html: json.data.html,
-              book: json.data.book,
-              para: json.data.paragraph,
-              wordStart: json.data.word_start,
-              wordEnd: json.data.word_end,
-              editor: json.data.editor,
-              channel: json.data.channel,
-              updateAt: json.data.updated_at,
-            };
-            onSave(newData);
-          }
-        } else {
-          message.error(json.message);
-          store.dispatch(
-            statusChange({
-              status: "fail",
-              message: json.message,
-            })
-          );
-        }
-      })
-      .catch((e) => {
-        console.error("catch", e);
-        message.error(e.message);
-        store.dispatch(
-          statusChange({
-            status: "fail",
-            message: e.message,
-          })
-        );
-      });
-  };
 
   return (
     <div>
@@ -110,8 +92,13 @@ const SentWbwEditWidget = ({ data, onSave, onClose, onCreate }: IWidget) => {
         }}
         channelId={data.channel.id}
         channelType={data.channel.type}
-        onChange={(data: IWbw[]) => {
-          save(JSON.stringify(data));
+        onChange={(wbwData: IWbw[]) => {
+          let newSent = data;
+          newSent.content = JSON.stringify(wbwData);
+          sentSave(newSent, intl);
+          if (typeof onSave !== "undefined") {
+            onSave(newSent);
+          }
         }}
       />
 
