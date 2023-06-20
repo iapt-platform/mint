@@ -63,6 +63,8 @@ const EditableLabelWidget = ({
           minWidth: "15em",
           resize: "none",
           overflow: "hidden",
+          borderBottom: "1px solid",
+          borderRadius: 0,
         }}
         placeholder={placeholder}
         value={textAreaValue}
