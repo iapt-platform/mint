@@ -542,7 +542,8 @@ export const WbwSentCtl = ({
         })
       ) : (
         <Tree
-          selectable={false}
+          selectable={true}
+          blockNode
           treeData={wordData
             .filter((value) => value.sn.length === 1)
             .map((item, id) => {
