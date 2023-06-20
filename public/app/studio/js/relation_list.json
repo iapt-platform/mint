@@ -1586,7 +1586,7 @@
     {
         "id": "LOV",
         "case": ".adv.",
-        "note": "容纳 ➡ 被容纳<br>在…",
+        "note": "时空状语 ➡ 动词<br>在…",
         "sys_name": "Sadda Pan Goun",
         "author": "Ven. Pandita Pariyatti Faculty ITBMU",
         "editor": "Bhikkhu Kosalla sy1987",
@@ -1628,4 +1628,4 @@
         "editor": "Bhikkhu Kosalla sy1987",
         "language": "default"
     }
-];
+]
