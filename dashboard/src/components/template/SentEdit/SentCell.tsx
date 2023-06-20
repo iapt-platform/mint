@@ -11,9 +11,10 @@ import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
 import { my_to_roman } from "../../code/my";
-import SentWbwEdit from "./SentWbwEdit";
+import SentWbwEdit, { sentSave } from "./SentWbwEdit";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
+import { useIntl } from "react-intl";
 
 interface ISentCell {
   data: ISentence;
@@ -25,6 +26,7 @@ const SentCellWidget = ({
   wordWidget = false,
   isPr = false,
 }: ISentCell) => {
+  const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(false);
   const [sentData, setSentData] = useState<ISentence>(data);
   const endings = useAppSelector(getEnding);
@@ -99,6 +101,26 @@ const SentCellWidget = ({
               setSentData((origin) => {
                 origin.contentType = "json";
                 origin.content = JSON.stringify(wbw);
+                sentSave(origin, intl);
+                return origin;
+              });
+              setIsEditMode(true);
+              break;
+            case "markdown":
+              setSentData((origin) => {
+                const wbwData: IWbw[] = JSON.parse(origin.content);
+                const newContent = wbwData
+                  .map((item) => {
+                    return [
+                      item.word.value,
+                      item.real.value,
+                      item.meaning?.value,
+                    ].join("=");
+                  })
+                  .join("\n");
+                origin.content = newContent;
+                origin.contentType = "markdown";
+                sentSave(origin, intl);
                 return origin;
               });
               setIsEditMode(true);
