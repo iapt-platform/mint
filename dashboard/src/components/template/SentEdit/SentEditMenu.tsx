@@ -26,7 +26,11 @@ const SentEditMenuWidget = ({
           onConvert("json");
         }
         break;
-
+      case "markdown":
+        if (typeof onConvert !== "undefined") {
+          onConvert("markdown");
+        }
+        break;
       default:
         break;
     }
