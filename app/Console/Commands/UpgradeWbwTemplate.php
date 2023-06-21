@@ -109,6 +109,7 @@ class UpgradeWbwTemplate extends Command
 				);
             $newRow->editor_uid = config("app.admin.root_uuid");
             $newRow->content = trim($sent);
+            $newRow->content_type = "json";
             $newRow->strlen = mb_strlen($sent,"UTF-8");
             $newRow->status = 10;
             $newRow->create_time = time()*1000;
