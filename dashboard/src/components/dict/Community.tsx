@@ -15,7 +15,7 @@ import { IApiResponseDictList } from "../api/Dict";
 import { IUser } from "../auth/User";
 import GrammarPop from "./GrammarPop";
 
-const { Title, Link } = Typography;
+const { Title, Link, Text } = Typography;
 
 interface IItem<R> {
   value: R;
@@ -174,8 +174,8 @@ const CommunityWidget = ({ word }: IWidget) => {
         {"社区字典"}
       </Title>
       <div key="meaning">
-        <Space>
-          {"意思："}
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"意思："}</Text>
           {wordData?.meaning
             .filter((value, index: number) => isShow(value.score, index))
             .map((item, id) => {
@@ -201,8 +201,8 @@ const CommunityWidget = ({ word }: IWidget) => {
         </Space>
       </div>
       <div key="grammar">
-        <Space>
-          {"语法："}
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"语法："}</Text>
           {wordData?.grammar
             .filter((value) => value.score >= minScore)
             .map((item, id) => {
@@ -239,8 +239,8 @@ const CommunityWidget = ({ word }: IWidget) => {
         </Space>
       </div>
       <div key="base">
-        <Space>
-          {"词干："}
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"词干："}</Text>
           {wordData?.parent
             .filter((value) => value.score >= minScore)
             .map((item, id) => {
@@ -254,8 +254,8 @@ const CommunityWidget = ({ word }: IWidget) => {
         </Space>
       </div>
       <div key="collaborator">
-        <Space>
-          {"贡献者："}
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"贡献者："}</Text>
           {wordData?.editor
             .filter((value, index) => index < mainCollaboratorNum)
             .map((item, id) => {
