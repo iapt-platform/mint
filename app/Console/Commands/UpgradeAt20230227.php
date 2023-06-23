@@ -18,7 +18,7 @@ class UpgradeAt20230227 extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'update to 2.0';
 
     /**
      * Create a new command instance.
@@ -42,6 +42,12 @@ class UpgradeAt20230227 extends Command
         $this->call('upgrade:dict');
         $this->call('upgrade:dict.vocabulary');
         $this->call('upgrade:dict.default.meaning');
+
+        //语料库
+        $this->call('init:cs6sentence');
+        $this->call('upgrade:palitext');
+        $this->call('upgrade:wbw.template');
+
         $this->call('upgrade:related.paragraph');
         $this->call('upgrade:fts',['--content'=>true]);
         $this->call('upgrade:pcd.book.id');
