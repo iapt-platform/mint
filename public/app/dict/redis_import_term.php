@@ -8,11 +8,11 @@ if (PHP_SAPI == "cli") {
 	if ($redis != false) {
 		$dbh = new PDO(_FILE_DB_TERM_, _DB_USERNAME_, _DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$query = "SELECT word from term where word !='' group by word";
+		$query = "SELECT word from "._TABLE_TERM_." where word !='' group by word";
 		$stmtPali = $dbh->query($query);
 		while ($word = $stmtPali->fetch(PDO::FETCH_ASSOC)) {
 			# code...
-			$query = "SELECT * from term where word = ? ";
+			$query = "SELECT * from "._TABLE_TERM_." where word = ? ";
 			$stmt = $dbh->prepare($query);
 			$stmt->execute(array($word["word"]));
 			if ($stmt) {
@@ -43,7 +43,7 @@ if (PHP_SAPI == "cli") {
 	}else{
 		fwrite(STDERR,"redis connect is fail".PHP_EOL);
 	}
-	
+
 }
 
 ?>
