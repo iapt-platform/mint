@@ -1,8 +1,9 @@
-<?php  
+<?php
 /*
 将csv字典载入redis
 #例:
 # php redis_import_dict.php ../../dicttext/rich/rich.json
+# php redis_import_dict.php ../../dicttext/system/system.json
 */
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../install/filelist.php";
@@ -22,7 +23,7 @@ if (PHP_SAPI == "cli") {
             fwrite(STDERR,"no redis connect\n") ;
             exit;
 		}
-		
+
 		$taskList = json_decode(file_get_contents(__DIR__."/".$list));
 		$dir = dirname(__DIR__."/".$list);
 		if($tableNum<0){
@@ -30,7 +31,7 @@ if (PHP_SAPI == "cli") {
 			foreach ($taskList as $key => $task) {
 				# code...
 				runTask($redis,$task,$dir);
-			}			
+			}
 		}
 		else{
 			//只导入指定的
@@ -68,7 +69,7 @@ function runTask($redis,$task,$dir){
 					else{
 						$new[] = $data1;
 					}
-					$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));							
+					$redis->hSet($task->rediskey,$data1[$task->keycol],json_encode($new, JSON_UNESCAPED_UNICODE));
 				}
 				else{
 					//echo "列不足够：行：{$row} 列：".count($data1)." 数据：{$data} \n";
@@ -82,10 +83,10 @@ function runTask($redis,$task,$dir){
 			fclose($fp);
 			sleep(1);
 			fwrite(STDOUT,  "task : {$task->rediskey}:".$redis->hLen($task->rediskey)."\n");
-			
+
 		} else {
 			fwrite(STDERR,  "can not open csv file. ".PHP_EOL);
-		}	
+		}
 	}
 }
 
