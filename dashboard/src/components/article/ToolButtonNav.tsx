@@ -4,7 +4,6 @@ import { Button, message, Space, Tag, Tree, Typography } from "antd";
 import { CompassOutlined, ReloadOutlined } from "@ant-design/icons";
 
 import ToolButton from "./ToolButton";
-import { IUser } from "../auth/User";
 import { useAppSelector } from "../../hooks";
 import { sentenceList } from "../../reducers/sentence";
 import ToolButtonNavMore from "./ToolButtonNavMore";
@@ -12,38 +11,6 @@ import ToolButtonNavSliceTitle from "./ToolButtonNavSliceTitle";
 
 const { Text } = Typography;
 
-interface IPrTreeData {
-  book: number;
-  paragraph: number;
-  word_start: number;
-  word_end: number;
-  channel_id: string;
-  content: string;
-  pr_count: number;
-}
-interface IPrTreeRequestData {
-  book: number;
-  paragraph: number;
-  word_start: number;
-  word_end: number;
-}
-interface IPrData {
-  title: string;
-  children_count: number;
-  editor?: IUser;
-}
-interface IPrTreeRequest {
-  data: IPrTreeRequestData[];
-}
-interface IPrTreeResponseData {
-  sentence: IPrTreeData;
-  pr: IPrData[];
-}
-interface IPrTreeResponse {
-  ok: boolean;
-  message: string;
-  data: { rows: IPrTreeResponseData[]; count: number };
-}
 interface DataNode {
   title: React.ReactNode;
   key: string;
