@@ -154,6 +154,11 @@ class MdRender{
             $html = MdRender::xmlQueryId($html, $queryId);
         }
         $tpl = MdRender::xml2tpl($html,$channelId,$mode);
+        //生成可展开组件
+        $tpl = str_replace("<div/>","<div></div>",$tpl);
+        $pattern = '/<li><div>(.+?)<\/div><\/li>/';
+        $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
+        $tpl = preg_replace($pattern,$replacement,$tpl);
         return $tpl;
     }
     public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
