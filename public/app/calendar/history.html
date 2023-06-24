@@ -4,13 +4,14 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <figure class="highcharts-figure">
-	<div id="container"></div>
+	<div id="container" style="height: 80rem;width: 100vw"></div>
 	<p class="highcharts-description">More stories need to be added, more history need to be create by you!</p>
 </figure>
 <script>
 	Highcharts.chart("container", {
 		chart: {
 			type: "timeline",
+            inverted: true
 		},
 		accessibility: {
 			screenReaderSection: {
@@ -26,7 +27,9 @@
 			},
 		},
 		xAxis: {
-			visible: false,
+			visible: true,
+            type: 'datetime'
+            //type: 'linear',
 		},
 		yAxis: {
 			visible: false,
@@ -40,58 +43,114 @@
 		colors: ["#4185F3", "#427CDD", "#406AB2", "#3E5A8E", "#3B4A68", "#363C46"],
 		series: [
 			{
+                dataLabels: {
+                //allowOverlap: false,
+                format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+                '{point.x:%b %Y}</span><br/>{point.label}'
+                },
+                style: {
+                    width: 800,
+                    distance: 800,
+                },
+                marker: {
+                symbol: 'circle'
+                },
 				data: [
 					{
-						name: "Display Only",
-						label: "2017 Vassa",
+						x: Date.UTC(2017, 6),
+                        name: "Word by Word Display Only",
+						label: "Word by Word can Display",
 						description:
-							"pāli Word by word translation display on Html, solve the working memory limitation on understanding the pāli text",
+							"pāli Word by word translation display as static Web page, solve the working memory limitation on understanding the pāli text",
 					},
 					{
-						name: "Magic Dictionary",
-						label: "2018 spring festival",
+						x: Date.UTC(2018, 1, 15),
+                        name: "Magic Dictionary",
+						label: "Auto Look up Dictionary",
 						description: "look up dictionary in batch work, reduce the difficulty of translating work",
 					},
 					{
+						x: Date.UTC(2018, 6, 27),
 						name: "establishment of pāli corpus",
-						label: "2018 July 27",
+						label: "Establishment of Pāli Corpus",
 						description: "convert the XML pāli text into database, realize the fragmentation",
 					},
 					{
-						name: "conference in Sri Lanka",
-						label: "2020 Feb",
+						x: Date.UTC(2020, 1, 1),
+						name: "Conference in Sri Lanka",
+						label: "Conference in Sri Lanka",
 						description:
 							"Discuss the tipiṭaka translating project and the establishment of  wikipāli platform, supported by many kinds of conditions",
 					},
 					{
-						name: "pilot class in Dawei Pa-auk",
-						label: "2020 March",
+						x: Date.UTC(2020, 2, 5),
+						name: "Pilot Class in Dawei Pa-auk",
+						label: "Pilot Class in Dawei Pa-auk",
 						description:
 							"Testing and figure out the possible way of learning and translating pāli, U Kuṇḍadhāna Sayadaw join as the pioneer teacher",
 					},
 					{
-						name: "wikipāli online test",
-						label: "2020 vassa",
+						x: Date.UTC(2020, 7, 27),
+						name: "Wikipāli 1.0 on-line Beta",
+						label: "Wikipāli 1.0 on-line Beta",
 						description:
 							"online class + online translation; word by word teaching get more and more acknowledge",
 					},
-                    {
-						name: "Nissaya digitization project start",
-						label: "2022 Feb.",
+					{
+						x: Date.UTC(2021, 5, 1),
+						name: "Recruited wikipāli students",
+						label: "Recruited wikipāli students",
 						description:
-							"Nissaya digitization project start",
+							" in Sipsongpanna, China",
 					},
-                    {
-						name: "wikipāli 2.0 rebuild start",
-						label: "2022 Oct.",
+					{
+						x: Date.UTC(2021, 7, 31),
+						name: "start translating nibbāna-gāminī-paṭipadā into Chinese",
+						label: "Trans:nibbāna-gāminī-paṭipadā",
 						description:
-							"Rebuild frontend and backend by popular framework.Further and user-friendly.",
+							"Burmese to Chinese, ānāpānassati",
 					},
-                    {
-						name: "wikipāli 2.0 rebuild test",
-						label: "2023 Jun.",
+					{
+						x: Date.UTC(2022, 0, 1),
+						name: "gradually set Beginner, Intermediate & Advanced",
+						label: "set class in three levels",
 						description:
-							"Rebuild test.",
+							"Beginner, Intermediate & Advanced",
+					},
+					{
+						x: Date.UTC(2022, 1, 31),
+						name: "Digitization of Burmese Nissaya",
+						label: "Digitization of Burmese Nissaya",
+						description:
+							"Beginner, Intermediate & Advanced",
+					},
+					{
+						x: Date.UTC(2022, 7, 24),
+						name: "云台寺建立新的基地",
+						label: "New Base in Yuntai Monastery",
+						description:
+							"Less bothering, More Concentration",
+					},
+					{
+						x: Date.UTC(2023, 4, 1),
+						name: "翻译缅语依词释nissaya",
+						label: "translate Nissaya into Chinese",
+						description:
+							"Reappear the Learning Experince of Myanmar Students",
+					},
+					{
+						x: Date.UTC(2023, 5, 24),
+						name: "开设缅语初级班",
+						label: "Burmese Class for Beginners",
+						description:
+							"For further studying",
+					},
+					{
+						x: Date.UTC(2023, 6, 31),
+						name: "Wikipāli 2.0 on-line Beta",
+						label: "Wikipāli 2.0 on-line Beta",
+						description:
+							"Coming Soon",
 					},
 				],
 			},
