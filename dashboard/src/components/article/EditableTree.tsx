@@ -3,17 +3,13 @@ import { useEffect } from "react";
 import { Tree, Typography } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
-import {
-  FileAddOutlined,
-  DeleteOutlined,
-  SaveOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
-interface TreeNodeData {
+export interface TreeNodeData {
   key: string;
   title: string | React.ReactNode;
   children: TreeNodeData[];
@@ -119,23 +115,41 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
 
   return arrTocTree;
 }
-interface IWidgetEditableTree {
+interface IWidget {
   treeData: ListNodeData[];
+  addFileButton?: React.ReactNode;
+  addOnArticle?: TreeNodeData;
   onChange?: Function;
   onSelect?: Function;
   onSave?: Function;
+  onAddFile?: Function;
 }
-const Widget = ({
+const EditableTreeWidget = ({
   treeData,
+  addFileButton,
+  addOnArticle,
   onChange,
   onSelect,
   onSave,
-}: IWidgetEditableTree) => {
+  onAddFile,
+}: IWidget) => {
   const intl = useIntl();
 
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
   const [keys, setKeys] = useState<Key>("");
+
+  useEffect(() => {
+    if (typeof addOnArticle === "undefined") {
+      return;
+    }
+    console.log("add ", addOnArticle);
+
+    const newTreeData = [...gData, addOnArticle];
+    setGData(newTreeData);
+    const list = treeToList(newTreeData);
+    setListTreeData(list);
+  }, [addOnArticle]);
 
   useEffect(() => {
     const data = tocGetTreeData(treeData);
@@ -223,7 +237,8 @@ const Widget = ({
   return (
     <>
       <Space>
-        <Button icon={<FileAddOutlined />}>添加</Button>
+        {addFileButton}
+
         <Button
           icon={<DeleteOutlined />}
           danger
@@ -302,4 +317,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default EditableTreeWidget;

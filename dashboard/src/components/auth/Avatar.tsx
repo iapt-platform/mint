@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Tooltip } from "antd";
+import { Tooltip, Typography } from "antd";
 import { Avatar } from "antd";
 import { Popover } from "antd";
 import { ProCard } from "@ant-design/pro-components";
@@ -16,11 +16,12 @@ import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { TooltipPlacement } from "antd/lib/tooltip";
 
+const { Title } = Typography;
+
 interface IWidget {
   placement?: TooltipPlacement;
 }
-const Widget = ({ placement = "bottomRight" }: IWidget) => {
-  // TODO
+const AvatarWidget = ({ placement = "bottomRight" }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
@@ -68,7 +69,7 @@ const Widget = ({ placement = "bottomRight" }: IWidget) => {
       ]}
     >
       <div>
-        <h2>{nickName}</h2>
+        <Title level={4}>{nickName}</Title>
         <div style={{ textAlign: "right" }}>
           {intl.formatMessage({
             id: "buttons.welcome",
@@ -93,4 +94,4 @@ const Widget = ({ placement = "bottomRight" }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AvatarWidget;

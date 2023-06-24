@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Tooltip, Button, Typography } from "antd";
+import { Typography } from "antd";
 
 import { useAppSelector } from "../../hooks";
 import {
@@ -19,13 +19,23 @@ interface IWidgetSentReadFrame {
   origin?: ISentence[];
   translation?: ISentence[];
   layout?: "row" | "column";
+  book?: number;
+  para?: number;
+  wordStart?: number;
+  wordEnd?: number;
   sentId?: string;
+  error?: string;
 }
 const SentReadFrame = ({
   origin,
   translation,
   layout = "column",
+  book,
+  para,
+  wordStart,
+  wordEnd,
   sentId,
+  error,
 }: IWidgetSentReadFrame) => {
   const [paliCode1, setPaliCode1] = useState<TCodeConvertor>("roman");
   const key = useAppSelector(onChangeKey);
@@ -34,14 +44,15 @@ const SentReadFrame = ({
   const boxOrg = useRef<HTMLDivElement>(null);
   const boxSent = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (origin && origin.length > 0) {
-      store.dispatch(
-        push(
-          `${origin[0].book}-${origin[0].para}-${origin[0].wordStart}-${origin[0].wordEnd}`
-        )
-      );
-    }
-  }, [origin]);
+    store.dispatch(
+      push({
+        id: `${book}-${para}-${wordStart}-${wordEnd}`,
+        origin: origin?.map((item) => item.html),
+        translation: translation?.map((item) => item.html),
+      })
+    );
+  }, []);
+
   useEffect(() => {
     const displayOriginal = GetUserSetting(
       "setting.display.original",
@@ -72,48 +83,41 @@ const SentReadFrame = ({
     }
   }, [key, value, settings]);
   return (
-    <Tooltip
-      placement="topLeft"
-      color="white"
-      title={
-        <Button type="link" size="small">
-          aa
-        </Button>
-      }
+    <div
+      style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
+      ref={boxSent}
     >
+      <Text type="danger" mark>
+        {error}
+      </Text>
       <div
-        style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
-        ref={boxSent}
-      >
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `<div class="pcd_sent" id="sent_${sentId}"></div>`,
-          }}
-        />
-        <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
-          {origin?.map((item, id) => {
-            return (
-              <MdView
-                key={id}
-                html={item.html}
-                wordWidget={true}
-                convertor={paliCode1}
-              />
-            );
-          })}
-        </div>
-        <div style={{ flex: "5" }}>
-          {translation?.map((item, id) => {
-            if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
-            return (
-              <Text key={id}>
-                <MdView html={item.html} />
-              </Text>
-            );
-          })}
-        </div>
+        dangerouslySetInnerHTML={{
+          __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
+        }}
+      />
+      <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
+        {origin?.map((item, id) => {
+          return (
+            <MdView
+              key={id}
+              html={item.html}
+              wordWidget={true}
+              convertor={paliCode1}
+            />
+          );
+        })}
       </div>
-    </Tooltip>
+      <div style={{ flex: "5" }}>
+        {translation?.map((item, id) => {
+          if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
+          return (
+            <Text key={id}>
+              <MdView html={item.html} />
+            </Text>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

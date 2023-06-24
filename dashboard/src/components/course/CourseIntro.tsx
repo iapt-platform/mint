@@ -6,7 +6,7 @@ const { Paragraph } = Typography;
 interface IWidget {
   intro?: string;
 }
-const Widget = ({ intro }: IWidget) => {
+const CourseIntroWidget = ({ intro }: IWidget) => {
   return (
     <Row>
       <Col flex="auto"></Col>
@@ -20,4 +20,4 @@ const Widget = ({ intro }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CourseIntroWidget;

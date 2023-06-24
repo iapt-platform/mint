@@ -10,7 +10,7 @@ import { API_HOST, get } from "../../request";
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
-const Widget = () => {
+const LecturerListWidget = () => {
   const [data, setData] = useState<ICourse[]>();
   const navigate = useNavigate();
 
@@ -69,4 +69,4 @@ const Widget = () => {
     />
   );
 };
-export default Widget;
+export default LecturerListWidget;

@@ -5,7 +5,7 @@ import CreateFeedback from "../feedback/CreateFeedback";
 const { Footer } = Layout;
 const { Title } = Typography;
 
-const Widget = () => {
+const FooterBarWidget = () => {
   //Library foot bar
   // TODO
   return (
@@ -24,9 +24,6 @@ const Widget = () => {
         </Col>
         <Col span={16}>
           <Title level={5}>问题反馈</Title>
-          <div>
-            <CreateFeedback />
-          </div>
         </Col>
       </Row>
       <Row>
@@ -36,4 +33,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default FooterBarWidget;

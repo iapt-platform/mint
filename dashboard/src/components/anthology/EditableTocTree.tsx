@@ -1,5 +1,6 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import { useEffect, useState } from "react";
+import { FileAddOutlined } from "@ant-design/icons";
 
 import { get, put } from "../../request";
 import {
@@ -7,20 +8,28 @@ import {
   IArticleMapListResponse,
   IArticleMapUpdateRequest,
 } from "../api/Article";
-import EditableTree, { ListNodeData } from "../article/EditableTree";
+import ArticleListModal from "../article/ArticleListModal";
+import EditableTree, {
+  ListNodeData,
+  TreeNodeData,
+} from "../article/EditableTree";
 
 interface IWidget {
   anthologyId?: string;
+  studioName?: string;
   onSelect?: Function;
 }
-const Widget = ({ anthologyId, onSelect }: IWidget) => {
+const EditableTocTreeWidget = ({
+  anthologyId,
+  studioName,
+  onSelect,
+}: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
-
+  const [addArticle, setAddArticle] = useState<TreeNodeData>();
   useEffect(() => {
     get<IArticleMapListResponse>(
       `/v2/article-map?view=anthology&id=${anthologyId}`
     ).then((json) => {
-      console.log("文集get", json);
       if (json.ok) {
         const toc: ListNodeData[] = json.data.rows.map((item) => {
           return {
@@ -34,10 +43,29 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
       }
     });
   }, [anthologyId]);
+
   return (
     <div>
       <EditableTree
         treeData={tocData}
+        addOnArticle={addArticle}
+        addFileButton={
+          <ArticleListModal
+            studioName={studioName}
+            trigger={<Button icon={<FileAddOutlined />}>添加</Button>}
+            multiple={false}
+            onSelect={(id: string, title: string) => {
+              console.log("add article", id);
+              const newNode: TreeNodeData = {
+                key: id,
+                title: title,
+                children: [],
+                level: 1,
+              };
+              setAddArticle(newNode);
+            }}
+          />
+        }
         onChange={(data: ListNodeData[]) => {
           console.log("onChange", data);
         }}
@@ -77,4 +105,4 @@ const Widget = ({ anthologyId, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default EditableTocTreeWidget;

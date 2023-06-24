@@ -6,7 +6,7 @@ interface IWidget {
   type?: string;
   articleId?: string;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const ToolButtonTagWidget = ({ type, articleId }: IWidget) => {
   const id = articleId?.split("_");
   let tocWidget = <></>;
   if (id && id.length > 0) {
@@ -19,4 +19,4 @@ const Widget = ({ type, articleId }: IWidget) => {
   return <ToolButton title="标签" icon={<TagOutlined />} content={tocWidget} />;
 };
 
-export default Widget;
+export default ToolButtonTagWidget;

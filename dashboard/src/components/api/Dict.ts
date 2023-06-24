@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { ICaseListData } from "../dict/CaseList";
@@ -8,11 +7,11 @@ export interface IDictRequest {
   word: string;
   type?: string;
   grammar?: string;
-  mean?: string;
-  parent?: string;
+  mean?: string | null;
+  parent?: string | null;
   note?: string;
-  factors?: string;
-  factormean?: string;
+  factors?: string | null;
+  factormean?: string | null;
   confidence: number;
   dict_id?: string;
   dict_name?: string;
@@ -46,6 +45,7 @@ export interface IApiResponseDictData {
   dict_id: string;
   dict_name?: string;
   dict_shortname?: string;
+  shortname?: string;
   confidence: number;
   creator_id: number;
   updated_at: string;
@@ -63,6 +63,7 @@ export interface IApiResponseDictList {
   data: {
     rows: IApiResponseDictData[];
     count: number;
+    time?: number;
   };
 }
 

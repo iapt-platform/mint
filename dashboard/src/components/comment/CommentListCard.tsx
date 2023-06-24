@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import { Card, message } from "antd";
+import { Card, message, Typography } from "antd";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
@@ -18,7 +18,7 @@ interface IWidget {
   onSelect?: Function;
   onItemCountChange?: Function;
 }
-const Widget = ({
+const CommentListCardWidget = ({
   resId,
   resType,
   topicId,
@@ -80,7 +80,11 @@ const Widget = ({
   }, [intl, resId, topicId]);
 
   if (typeof resId === "undefined" && typeof topicId === "undefined") {
-    return <div>该资源尚未创建，不能发表讨论。</div>;
+    return (
+      <Typography.Paragraph>
+        该资源尚未创建，不能发表讨论。
+      </Typography.Paragraph>
+    );
   }
 
   return (
@@ -120,4 +124,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default CommentListCardWidget;

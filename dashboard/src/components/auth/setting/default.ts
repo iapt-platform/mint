@@ -25,17 +25,19 @@ export const GetUserSetting = (
   if (typeof currSetting !== "undefined") {
     return currSetting.value;
   } else {
-    const defaultSetting = SettingFind(key);
-    if (typeof defaultSetting !== "undefined") {
-      return defaultSetting.defaultValue;
+    const _default = defaultSetting.find((element) => element.key === key);
+    if (typeof _default !== "undefined") {
+      return _default.defaultValue;
     } else {
       return undefined;
     }
   }
 };
 
-export const SettingFind = (key: string): ISetting | undefined => {
-  const settings = useAppSelector(settingInfo);
+export const SettingFind = (
+  key: string,
+  settings?: ISettingItem[]
+): ISetting | undefined => {
   const userSetting = GetUserSetting(key, settings);
   let result = defaultSetting.find((element) => element.key === key);
   if (userSetting && result) {
@@ -183,5 +185,43 @@ export const defaultSetting: ISetting[] = [
         label: "languages.vi",
       },
     ],
+  },
+  {
+    /**
+     * nissaya 显示模式切换
+     */
+    key: "setting.nissaya.layout.read",
+    label: "setting.nissaya.layout.read.label",
+    defaultValue: "inline",
+    options: [
+      {
+        value: "inline",
+        label: "setting.nissaya.layout.inline.label",
+      },
+      {
+        value: "list",
+        label: "setting.nissaya.layout.list.label",
+      },
+    ],
+    widget: "radio-button",
+  },
+  {
+    /**
+     * nissaya 显示模式切换
+     */
+    key: "setting.nissaya.layout.edit",
+    label: "setting.nissaya.layout.edit.label",
+    defaultValue: "list",
+    options: [
+      {
+        value: "inline",
+        label: "setting.nissaya.layout.inline.label",
+      },
+      {
+        value: "list",
+        label: "setting.nissaya.layout.list.label",
+      },
+    ],
+    widget: "radio-button",
   },
 ];

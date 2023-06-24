@@ -35,7 +35,7 @@ interface IWidget {
   goPrev?: Function;
   onSubmit?: Function;
 }
-const Widget = ({
+const ChannelSentDiffWidget = ({
   srcChannel,
   destChannel,
   sentences,
@@ -206,4 +206,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChannelSentDiffWidget;

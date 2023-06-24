@@ -33,7 +33,7 @@ interface IWidget {
   trigger?: JSX.Element;
   onSelect?: Function;
 }
-const Widget = ({ book, para, trigger, onSelect }: IWidget) => {
+const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState<IRelatedParaData[]>([]);
 
@@ -125,4 +125,4 @@ const Widget = ({ book, para, trigger, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default RelatedParaWidget;

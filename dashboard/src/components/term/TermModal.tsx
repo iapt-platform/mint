@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "antd";
 import TermEdit from "./TermEdit";
+import { ITermDataResponse } from "../api/Term";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -8,15 +9,21 @@ interface IWidget {
   word?: string;
   studioName?: string;
   channelId?: string;
+  parentChannelId?: string;
+  parentStudioId?: string;
   onUpdate?: Function;
+  onClose?: Function;
 }
-const Widget = ({
+const TermModalWidget = ({
   trigger,
   id,
   word,
   studioName,
   channelId,
+  parentChannelId,
+  parentStudioId,
   onUpdate,
+  onClose,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,10 +33,16 @@ const Widget = ({
 
   const handleOk = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   return (
@@ -38,6 +51,7 @@ const Widget = ({
       <Modal
         width={760}
         title="术语"
+        footer={false}
         destroyOnClose={true}
         open={isModalOpen}
         onOk={handleOk}
@@ -48,10 +62,12 @@ const Widget = ({
           word={word}
           studioName={studioName}
           channelId={channelId}
-          onUpdate={() => {
+          parentChannelId={parentChannelId}
+          parentStudioId={parentStudioId}
+          onUpdate={(value: ITermDataResponse) => {
             setIsModalOpen(false);
             if (typeof onUpdate !== "undefined") {
-              onUpdate();
+              onUpdate(value);
             }
           }}
         />
@@ -60,4 +76,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default TermModalWidget;

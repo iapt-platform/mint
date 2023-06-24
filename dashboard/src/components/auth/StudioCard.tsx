@@ -7,7 +7,7 @@ interface IWidget {
   studio?: IStudio;
   children?: JSX.Element;
 }
-const Widget = ({ studio, children }: IWidget) => {
+const StudioCardWidget = ({ studio, children }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -46,4 +46,4 @@ const Widget = ({ studio, children }: IWidget) => {
   );
 };
 
-export default Widget;
+export default StudioCardWidget;

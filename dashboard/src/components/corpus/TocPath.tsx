@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { Breadcrumb, Tooltip } from "antd";
+import { Breadcrumb, Popover, Tag, Typography } from "antd";
 import PaliText from "../template/Wbw/PaliText";
 import React from "react";
+import { IChapter } from "./BookViewer";
 
 export interface ITocPathNode {
   book: number;
@@ -20,10 +21,10 @@ interface IWidgetTocPath {
   channel?: string[];
   onChange?: Function;
 }
-const Widget = ({
+const TocPathWidget = ({
   data = [],
   trigger,
-  link = "blank",
+  link = "self",
   channel,
   onChange,
 }: IWidgetTocPath): JSX.Element => {
@@ -35,26 +36,36 @@ const Widget = ({
     const linkChapter = `/article/chapter/${item.book}-${item.paragraph}${sChannel}`;
     let oneItem = <></>;
     const title = <PaliText text={item.title} />;
+    const eTitle = item.level < 9 ? title : <Tag>{title}</Tag>;
     switch (link) {
       case "none":
-        oneItem = <>{title}</>;
+        oneItem = <Typography.Link>{eTitle}</Typography.Link>;
         break;
-      case "blank":
-        oneItem = (
-          <Link to={linkChapter} target="_blank">
-            {title}
-          </Link>
-        );
-        break;
-      case "self":
-        oneItem = <Link to={linkChapter}>{title}</Link>;
+      case "self" || "blank":
+        if (item.book === 0) {
+          oneItem = <>{eTitle}</>;
+        } else {
+          oneItem = (
+            <Link to={linkChapter} target={`_${link}`}>
+              {eTitle}
+            </Link>
+          );
+        }
+
         break;
     }
     return (
       <Breadcrumb.Item
-        onClick={() => {
+        onClick={(
+          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+        ) => {
           if (typeof onChange !== "undefined") {
-            onChange({ book: item.book, para: item.paragraph });
+            const para: IChapter = {
+              book: item.book,
+              para: item.paragraph,
+              level: item.level,
+            };
+            onChange(para, e);
           }
         }}
         key={id}
@@ -72,11 +83,11 @@ const Widget = ({
     return fullPath;
   } else {
     return (
-      <Tooltip placement="bottom" title={fullPath}>
+      <Popover placement="bottomRight" title={fullPath}>
         {trigger}
-      </Tooltip>
+      </Popover>
     );
   }
 };
 
-export default Widget;
+export default TocPathWidget;

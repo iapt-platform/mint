@@ -8,7 +8,7 @@ interface IWidget {
   trigger: JSX.Element | string;
   channel?: IChannel;
 }
-const Widget = ({ trigger, channel }: IWidget) => {
+const CopyToModalWidget = ({ trigger, channel }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initStep, setInitStep] = useState(0);
 
@@ -50,4 +50,4 @@ const Widget = ({ trigger, channel }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CopyToModalWidget;

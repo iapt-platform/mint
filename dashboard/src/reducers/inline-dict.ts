@@ -23,27 +23,33 @@ export const slice = createSlice({
   initialState,
   reducers: {
     add: (state, action: PayloadAction<IApiResponseDictData[]>) => {
-      let words: string[] = [];
+      let wordIndex: string[] = [];
       let newWordData = new Array(...state.wordList);
       let newIndexData = new Array(...state.wordIndex);
       //查询没有的词并添加
       for (const iterator of action.payload) {
         if (!newIndexData.includes(iterator.word)) {
-          if (!words.includes(iterator.word)) {
-            words.push(iterator.word);
+          if (!wordIndex.includes(iterator.word)) {
+            wordIndex.push(iterator.word);
           }
           newWordData.push(iterator);
         }
       }
-      newIndexData = [...newIndexData, ...words];
+      newIndexData = [...newIndexData, ...wordIndex];
       state.wordList = newWordData;
       state.wordIndex = newIndexData;
-      console.log("add inline dict", words);
+    },
+    updateIndex: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((value) => {
+        if (!state.wordIndex.includes(value)) {
+          state.wordIndex.push(value);
+        }
+      });
     },
   },
 });
 
-export const { add } = slice.actions;
+export const { add, updateIndex } = slice.actions;
 
 export const inlineDict = (state: RootState): IState => state.inlineDict;
 

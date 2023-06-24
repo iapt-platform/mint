@@ -36,7 +36,7 @@ interface IWidget {
   studioName?: string;
   channelId?: string;
 }
-const Widget = ({ studioName, channelId }: IWidget) => {
+const TermListWidget = ({ studioName, channelId }: IWidget) => {
   const intl = useIntl();
 
   const showDeleteConfirm = (id: string[], title: string) => {
@@ -308,7 +308,11 @@ const Widget = ({ studioName, channelId }: IWidget) => {
                 ? `view=channel&id=${channelId}`
                 : `view=studio&name=${studioName}`
             }
-            trigger={<Button icon={<ImportOutlined />}>Import</Button>}
+            trigger={
+              <Button icon={<ImportOutlined />}>
+                {intl.formatMessage({ id: "buttons.import" })}
+              </Button>
+            }
             onSuccess={() => {
               ref.current?.reload();
             }}
@@ -335,4 +339,4 @@ const Widget = ({ studioName, channelId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TermListWidget;

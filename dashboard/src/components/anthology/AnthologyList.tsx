@@ -19,8 +19,7 @@ import {
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
-import ShareModal from "../share/ShareModal";
-import { EResType } from "../share/Share";
+import Share, { EResType } from "../share/Share";
 import {
   IResNumberResponse,
   renderBadge,
@@ -47,7 +46,7 @@ interface IWidget {
   showOption?: boolean;
   onTitleClick?: Function;
 }
-const Widget = ({
+const AnthologyListWidget = ({
   title,
   studioName,
   showCol,
@@ -110,6 +109,26 @@ const Widget = ({
       },
     });
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [shareResId, setShareResId] = useState<string>("");
+  const [shareResType, setShareResType] = useState<EResType>(
+    EResType.collection
+  );
+  const showShareModal = (resId: string, resType: EResType) => {
+    setShareResId(resId);
+    setShareResType(resType);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const ref = useRef<ActionType>();
   return (
     <>
@@ -221,15 +240,9 @@ const Widget = ({
                     },
                     {
                       key: "share",
-                      label: (
-                        <ShareModal
-                          trigger={intl.formatMessage({
-                            id: "buttons.share",
-                          })}
-                          resId={row.id}
-                          resType={EResType.collection}
-                        />
-                      ),
+                      label: intl.formatMessage({
+                        id: "buttons.share",
+                      }),
                       icon: <TeamOutlined />,
                     },
                     {
@@ -247,11 +260,11 @@ const Widget = ({
                         window.open(`/anthology/${row.id}`, "_blank");
                         break;
                       case "share":
+                        console.log("share");
+                        showShareModal(row.id, EResType.collection);
                         break;
                       case "remove":
                         showDeleteConfirm(row.id, row.title);
-                        break;
-                      default:
                         break;
                     }
                   },
@@ -371,8 +384,19 @@ const Widget = ({
           },
         }}
       />
+
+      <Modal
+        destroyOnClose={true}
+        width={700}
+        title="协作"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Share resId={shareResId} resType={shareResType} />
+      </Modal>
     </>
   );
 };
 
-export default Widget;
+export default AnthologyListWidget;

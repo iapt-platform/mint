@@ -5,8 +5,8 @@ export interface IChannel {
   id: string;
   type?: TChannelType;
 }
-const Widget = ({ name, id }: IChannel) => {
+const ChannelWidget = ({ name, id }: IChannel) => {
   return <span>{name}</span>;
 };
 
-export default Widget;
+export default ChannelWidget;

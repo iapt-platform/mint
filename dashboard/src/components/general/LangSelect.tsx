@@ -26,7 +26,7 @@ export const LangValueEnum = () => {
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
 }
-const Widget = ({ width }: IWidget) => {
+const LangSelectWidget = ({ width }: IWidget) => {
   const intl = useIntl();
 
   const langOptions = [
@@ -68,4 +68,4 @@ const Widget = ({ width }: IWidget) => {
   );
 };
 
-export default Widget;
+export default LangSelectWidget;

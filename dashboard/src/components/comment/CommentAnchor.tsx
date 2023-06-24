@@ -7,7 +7,7 @@ import AnchorCard from "./AnchorCard";
 interface IWidget {
   id?: string;
 }
-const Widget = ({ id }: IWidget) => {
+const CommentAnchorWidget = ({ id }: IWidget) => {
   const [content, setContent] = useState<string>();
   useEffect(() => {
     if (typeof id === "string") {
@@ -30,4 +30,4 @@ const Widget = ({ id }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentAnchorWidget;

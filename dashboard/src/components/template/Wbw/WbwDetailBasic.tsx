@@ -9,11 +9,11 @@ import { IWbw, IWbwField } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
-import { getFactorsInDict } from "./WbwFactors";
 import { IApiResponseDictData } from "../../api/Dict";
 import WbwDetailFm from "./WbwDetailFm";
 import WbwDetailParent2 from "./WbwDetailParent2";
 import WbwDetailRelation from "./WbwDetailRelation";
+import WbwDetailFactor from "./WbwDetailFactor";
 
 const { Panel } = Collapse;
 
@@ -59,7 +59,7 @@ interface IWidget {
   onChange?: Function;
   onRelationAdd?: Function;
 }
-const Widget = ({
+const WbwDetailBasicWidget = ({
   data,
   showRelation = true,
   onChange,
@@ -68,39 +68,25 @@ const Widget = ({
   const [form] = Form.useForm();
   const intl = useIntl();
   const inlineDict = useAppSelector(_inlineDict);
-  const [factorOptions, setFactorOptions] = useState<ValueType[]>([]);
   const [parentOptions, setParentOptions] = useState<ValueType[]>([]);
-  const [factors, setFactors] = useState<string[]>([]);
-  const [openCreate, setOpenCreate] = useState(false);
-  const [_meaning, setMeaning] = useState<string | undefined>(
-    data.meaning?.value
+  const [factors, setFactors] = useState<string[] | undefined>(
+    data.factors?.value?.split("+")
   );
-
-  const onMeaningChange = (value: string | string[]) => {
+  const [openCreate, setOpenCreate] = useState(false);
+  const [_meaning, setMeaning] = useState<string | undefined>();
+  useEffect(() => {
+    if (typeof data.meaning?.value === "string") {
+      setMeaning(data.meaning?.value);
+    }
+  }, [data.meaning]);
+  const onMeaningChange = (value: string) => {
     console.log(`Selected: ${value}`);
     if (typeof onChange !== "undefined") {
-      if (typeof value === "string") {
-        onChange({ field: "meaning", value: value });
-      } else {
-        onChange({ field: "meaning", value: value.join("$") });
-      }
+      onChange({ field: "meaning", value: value });
     }
   };
 
   useEffect(() => {
-    const factors = getFactorsInDict(
-      data.word.value,
-      inlineDict.wordIndex,
-      inlineDict.wordList
-    );
-    const options = factors.map((item) => {
-      return {
-        label: item,
-        value: item,
-      };
-    });
-    setFactorOptions(options);
-
     const parent = getParentInDict(
       data.word.value,
       inlineDict.wordIndex,
@@ -115,7 +101,7 @@ const Widget = ({
     setParentOptions(parentOptions);
   }, [inlineDict, data]);
 
-  const relationCount = data.relation
+  const relationCount = data.relation?.value
     ? JSON.parse(data.relation.value).length
     : 0;
 
@@ -148,8 +134,9 @@ const Widget = ({
               value={_meaning}
               allowClear
               onChange={(e) => {
-                console.log(e.target.value);
+                console.log("meaning input", e.target.value);
                 setMeaning(e.target.value);
+                onMeaningChange(e.target.value);
               }}
             />
             <Popover
@@ -157,13 +144,12 @@ const Widget = ({
                 <WbwMeaningSelect
                   data={data}
                   onSelect={(meaning: string) => {
-                    const currMeanings = _meaning ? _meaning : "";
                     console.log(meaning);
                     setMeaning(meaning);
                     form.setFieldsValue({
-                      meaning: currMeanings,
+                      meaning: meaning,
                     });
-                    onMeaningChange(currMeanings);
+                    onMeaningChange(meaning);
                   }}
                 />
               }
@@ -185,17 +171,15 @@ const Widget = ({
           label={intl.formatMessage({ id: "forms.fields.factors.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.factors.tooltip" })}
         >
-          <AutoComplete
-            options={factorOptions}
-            onChange={(value: string, option: ValueType | ValueType[]) => {
+          <WbwDetailFactor
+            data={data}
+            onChange={(value: string) => {
               setFactors(value.split("+"));
               if (typeof onChange !== "undefined") {
                 onChange({ field: "factors", value: value });
               }
             }}
-          >
-            <Input allowClear />
-          </AutoComplete>
+          />
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 6 }}
@@ -209,12 +193,16 @@ const Widget = ({
         >
           <WbwDetailFm
             factors={factors}
-            initValue={data.factorMeaning?.value.split("+")}
+            initValue={data.factorMeaning?.value?.split("+")}
             onChange={(value: string[]) => {
               console.log("fm change", value);
               if (typeof onChange !== "undefined") {
                 onChange({ field: "factorMeaning", value: value.join("+") });
               }
+            }}
+            onJoin={(value: string) => {
+              setMeaning(value);
+              onMeaningChange(value);
             }}
           />
         </Form.Item>
@@ -294,4 +282,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default WbwDetailBasicWidget;

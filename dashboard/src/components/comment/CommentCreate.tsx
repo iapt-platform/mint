@@ -18,7 +18,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useRef } from "react";
 import MDEditor from "@uiw/react-md-editor";
 
-export type TContentType = "text" | "markdown" | "html";
+export type TContentType = "text" | "markdown" | "html" | "json";
 
 interface IWidget {
   resId?: string;
@@ -27,7 +27,7 @@ interface IWidget {
   onCreated?: Function;
   contentType?: TContentType;
 }
-const Widget = ({
+const CommentCreateWidget = ({
   resId,
   resType,
   contentType = "html",
@@ -179,4 +179,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default CommentCreateWidget;

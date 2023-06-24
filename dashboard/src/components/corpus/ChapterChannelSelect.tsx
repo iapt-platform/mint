@@ -18,7 +18,12 @@ interface IWidget {
   currChannel?: string;
   onSelect?: Function;
 }
-const Widget = ({ trigger, channels, currChannel, onSelect }: IWidget) => {
+const ChapterChannelSelectWidget = ({
+  trigger,
+  channels,
+  currChannel,
+  onSelect,
+}: IWidget) => {
   const [open, setOpen] = useState(false);
 
   const handleCancel = () => {
@@ -97,4 +102,4 @@ const Widget = ({ trigger, channels, currChannel, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChapterChannelSelectWidget;

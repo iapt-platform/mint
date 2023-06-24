@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-const Widget = () => {
+const ToStudioWidget = () => {
   const intl = useIntl();
 
   const user = useAppSelector(_currentUser);
@@ -34,4 +34,4 @@ const Widget = () => {
   }
 };
 
-export default Widget;
+export default ToStudioWidget;

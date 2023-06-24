@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Col, Row, Input, Layout, Space } from "antd";
+import { Input, Layout, Space } from "antd";
 
 import img_banner from "../../assets/studio/images/wikipali_banner.svg";
 import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
-import ToLibaray from "../auth/ToLibaray";
+import ToLibrary from "../auth/ToLibrary";
 import ThemeSelect from "../general/ThemeSelect";
 
 const { Search } = Input;
@@ -12,7 +12,7 @@ const { Header } = Layout;
 
 const onSearch = (value: string) => console.log(value);
 
-const Widget = () => {
+const HeadBarWidget = () => {
   return (
     <Header
       className="header"
@@ -45,7 +45,7 @@ const Widget = () => {
         </div>
         <div>
           <Space>
-            <ToLibaray />
+            <ToLibrary />
             <SignInAvatar />
             <UiLangSelect />
             <ThemeSelect />
@@ -56,4 +56,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default HeadBarWidget;

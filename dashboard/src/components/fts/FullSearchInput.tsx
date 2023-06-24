@@ -37,7 +37,7 @@ interface IWidget {
   onSplit?: Function;
   onPageTypeChange?: Function;
 }
-const Widget = ({
+const FullSearchInputWidget = ({
   value,
   onSplit,
   tags,
@@ -147,7 +147,7 @@ const Widget = ({
         <Input.Search
           size={size}
           width={width}
-          placeholder="input here"
+          placeholder="search here"
           onSearch={(value: string) => {
             console.log("on search", value, tags);
             if (typeof onSearch !== "undefined") {
@@ -160,4 +160,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default FullSearchInputWidget;

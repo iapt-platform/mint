@@ -3,6 +3,7 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import type { ChannelFilterProps } from "../channel/ChannelList";
 import ChapterTagList from "./ChapterTagList";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   filter?: ChannelFilterProps;
@@ -12,13 +13,15 @@ interface IWidget {
   tags?: string[];
   onTagClick?: Function;
 }
-const Widget = ({
+const ChapterAppendTagWidget = ({
   progress = 0.9,
   lang = "zh",
   type = "translation",
   tags = [],
   onTagClick,
 }: IWidget) => {
+  const intl = useIntl();
+
   return (
     <Popover
       content={
@@ -37,13 +40,15 @@ const Widget = ({
         </div>
       }
       placement="bottom"
-      trigger="hover"
+      trigger="click"
     >
       <Button type="dashed" icon={<PlusOutlined />}>
-        添加标签
+        {intl.formatMessage({
+          id: "buttons.add.tag",
+        })}
       </Button>
     </Popover>
   );
 };
 
-export default Widget;
+export default ChapterAppendTagWidget;

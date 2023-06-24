@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 
 import { useAppSelector } from "../../hooks";
-import { message } from "../../reducers/command";
+import { lookupWord } from "../../reducers/command";
 import Dictionary from "./Dictionary";
 
 export interface IWidgetDict {
   word?: string;
 }
-const Widget = ({ word }: IWidgetDict) => {
+const DictComponentWidget = ({ word }: IWidgetDict) => {
   const [wordSearch, setWordSearch] = useState(word);
   //接收查字典消息
-  const commandMsg = useAppSelector(message);
+  const searchWord = useAppSelector(lookupWord);
   useEffect(() => {
-    console.log("get command", commandMsg);
-    if (commandMsg?.type === "dict") {
-      setWordSearch(commandMsg.prop?.word);
+    console.log("get command", searchWord);
+    if (typeof searchWord === "string") {
+      setWordSearch(searchWord);
     }
-  }, [commandMsg]);
+  }, [searchWord]);
 
   return <Dictionary word={wordSearch} compact={true} />;
 };
 
-export default Widget;
+export default DictComponentWidget;

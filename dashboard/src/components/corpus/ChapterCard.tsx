@@ -35,7 +35,7 @@ interface IWidgetChapterCard {
   onTagClick?: Function;
 }
 
-const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
+const ChpterCardWidget = ({ data, onTagClick }: IWidgetChapterCard) => {
   const path = JSON.parse(data.path);
   let url = `/article/chapter/${data.book}-${data.paragraph}`;
   url += data.channel.id ? `?channel=${data.channel.id}` : "";
@@ -92,4 +92,4 @@ const Widget = ({ data, onTagClick }: IWidgetChapterCard) => {
   );
 };
 
-export default Widget;
+export default ChpterCardWidget;

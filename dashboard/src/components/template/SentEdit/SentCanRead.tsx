@@ -17,7 +17,7 @@ interface IWidget {
   reload?: boolean;
   onReload?: Function;
 }
-const Widget = ({
+const SentCanReadWidget = ({
   book,
   para,
   wordStart,
@@ -87,4 +87,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SentCanReadWidget;

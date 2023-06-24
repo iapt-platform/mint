@@ -9,7 +9,7 @@ export interface IVideo {
 interface IWidget {
   video: IVideo[];
 }
-const Widget = ({ video }: IWidget) => {
+const WbwVideoButtonWidget = ({ video }: IWidget) => {
   const url = video ? video[0].url : "";
   const src: string = process.env.REACT_APP_WEB_HOST
     ? process.env.REACT_APP_WEB_HOST
@@ -25,4 +25,4 @@ const Widget = ({ video }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwVideoButtonWidget;

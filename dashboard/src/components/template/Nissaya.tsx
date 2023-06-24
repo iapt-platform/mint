@@ -10,7 +10,13 @@ interface IWidgetNissayaCtl {
 const NissayaCtl = ({ pali, meaning, children }: IWidgetNissayaCtl) => {
   return (
     <Space style={{ marginRight: 10 }}>
-      <PaliText text={pali} code="my" />
+      <PaliText
+        lookup={true}
+        text={pali}
+        code="my"
+        termToLocal={false}
+        style={{ fontWeight: 700 }}
+      />
       <NissayaMeaning text={meaning} />
     </Space>
   );

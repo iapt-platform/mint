@@ -32,7 +32,7 @@ interface IWidgetBookTreeList {
   onChange?: Function;
   onTocLoad?: Function;
 }
-const Widget = ({
+const BoolTreeListWidget = ({
   root = "default",
   path,
   tags,
@@ -204,4 +204,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default BoolTreeListWidget;

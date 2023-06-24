@@ -13,7 +13,7 @@ interface IWidget {
   data: IWbw;
   onChange?: Function;
 }
-const Widget = ({ data, onChange }: IWidget) => {
+const WbwDetailBookMarkWidget = ({ data, onChange }: IWidget) => {
   const [value, setValue] = useState("none");
 
   const styleColor: React.CSSProperties = {
@@ -60,7 +60,9 @@ const Widget = ({ data, onChange }: IWidget) => {
         value={value}
       />
       <TextArea
-        defaultValue={data.bookMarkText?.value}
+        defaultValue={
+          data.bookMarkText?.value ? data.bookMarkText?.value : undefined
+        }
         showCount
         maxLength={512}
         autoSize={{ minRows: 6, maxRows: 8 }}
@@ -70,4 +72,4 @@ const Widget = ({ data, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailBookMarkWidget;

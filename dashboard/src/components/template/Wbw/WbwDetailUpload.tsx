@@ -11,7 +11,7 @@ interface IWidget {
   data: IWbw;
   onUpload?: Function;
 }
-const Widget = ({ data, onUpload }: IWidget) => {
+const WbwDetailUploadWidget = ({ data, onUpload }: IWidget) => {
   const intl = useIntl();
 
   const props: UploadProps = {
@@ -50,4 +50,4 @@ const Widget = ({ data, onUpload }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailUploadWidget;

@@ -14,7 +14,7 @@ export interface IChapterInfo {
 interface IWidgetPaliChapterHeading {
   data: IChapterInfo;
 }
-const Widget = (prop: IWidgetPaliChapterHeading) => {
+const ChapterHeadWidget = (prop: IWidgetPaliChapterHeading) => {
   return (
     <>
       <Title level={4}>
@@ -31,4 +31,4 @@ const Widget = (prop: IWidgetPaliChapterHeading) => {
   );
 };
 
-export default Widget;
+export default ChapterHeadWidget;

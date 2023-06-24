@@ -16,7 +16,7 @@ interface IWidgetAnthologyList {
 	data: IAnthologyData[];
 }
 */
-const Widget = () => {
+const AnthologyStudioListWidget = () => {
   const [tableData, setTableData] = useState<IAnthologyStudioData[]>([]);
   useEffect(() => {
     console.log("useEffect");
@@ -54,4 +54,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default AnthologyStudioListWidget;

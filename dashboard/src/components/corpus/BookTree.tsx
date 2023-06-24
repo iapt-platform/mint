@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useState, useEffect, Key } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Space, Switch, Tree } from "antd";
@@ -21,7 +22,7 @@ interface IWidgetBookTree {
   onSelect?: Function;
   onRootChange?: Function;
 }
-const Widget = ({
+const BookTreeWidget = ({
   root,
   path,
   multiSelect = false,
@@ -30,6 +31,7 @@ const Widget = ({
   onSelect,
   onRootChange,
 }: IWidgetBookTree) => {
+  const intl = useIntl();
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const [isMultiSelect, setIsMultiSelect] = useState(multiSelect);
@@ -107,11 +109,15 @@ const Widget = ({
             }
           }}
         >
-          清除选择
+          {intl.formatMessage({
+            id: "buttons.remove.selected",
+          })}
         </Button>
         {multiSelectable ? (
           <Space>
-            {"多选"}
+            {intl.formatMessage({
+              id: "buttons.multiple.select",
+            })}
             <Switch
               size="small"
               defaultChecked={multiSelect}
@@ -155,4 +161,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default BookTreeWidget;

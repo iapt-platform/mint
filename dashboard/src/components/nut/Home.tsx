@@ -6,13 +6,18 @@ import MarkdownShow from "./MarkdownShow";
 import FontBox from "./FontBox";
 import TreeTest from "./TreeTest";
 
-import { Layout } from "antd";
+import { Layout, Typography } from "antd";
 import CaseFormula from "../template/Wbw/CaseFormula";
+import EditableLabel from "../general/EditableLabel";
+const { Paragraph } = Typography;
 
 const Widget = () => {
   return (
     <Layout>
       <h1>Home</h1>
+      <Paragraph style={{ width: 200 }}>
+        <EditableLabel value="测试意思" />
+      </Paragraph>
       <CaseFormula />
       <h2>TreeTest</h2>
       <TreeTest />

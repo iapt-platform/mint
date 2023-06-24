@@ -29,7 +29,7 @@ interface IWidgetChapterInChannel {
   channelId?: string[];
   openTarget?: React.HTMLAttributeAnchorTarget;
 }
-const Widget = ({
+const ChapterInChannelWidget = ({
   data,
   book,
   para,
@@ -179,4 +179,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default ChapterInChannelWidget;

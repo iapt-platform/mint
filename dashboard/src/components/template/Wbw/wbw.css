@@ -1,3 +1,22 @@
+.layout-h {
+  display: flex;
+  flex-wrap: wrap;
+}
+.layout-v {
+  display: block;
+}
+.layout-v .pali_shell {
+  display: flex;
+}
+.block_wbw {
+  display: block;
+}
+.inline_wbw {
+  display: flex;
+}
+.layout-v .wbw_body {
+  display: flex;
+}
 .wbw_word {
   margin: 0 0 0.2em 0;
   padding-right: 0;
@@ -23,6 +42,9 @@
 .wbw_word:hover .wbw_split {
   visibility: visible;
 }
+.block_wbw .pali {
+  font-size: 1.1em;
+}
 .pali:hover {
   cursor: pointer;
 }
@@ -45,10 +67,10 @@
 .wbw_note {
   color: #177ddc;
 }
-.block .wbw_note {
+.block_wbw .wbw_note {
   font-weight: 500;
 }
-.block .wbw_body {
+.block_wbw .wbw_body {
   padding-right: 0.5em;
   padding-top: 0.2em;
 }
@@ -56,7 +78,9 @@
   padding: 0;
   cursor: pointer;
 }
-
+.layout-v .wbw_word_item {
+  margin-right: 8px;
+}
 .case {
   padding: 0 2px;
   line-height: 1.5em;

@@ -6,13 +6,13 @@ import { get as getLang } from "../../locales";
 import { IGuideResponse } from "../api/Guide";
 import Marked from "../general/Marked";
 
-const { Link } = Typography;
+const { Link, Paragraph } = Typography;
 
 interface IWidget {
   text: string;
   gid: string;
 }
-const Widget = ({ text, gid }: IWidget) => {
+const GrammarPopWidget = ({ text, gid }: IWidget) => {
   const [guide, setGuide] = useState("Loading");
   const grammarPrefix = "guide-grammar-";
   const handleMouseMouseEnter = () => {
@@ -39,9 +39,9 @@ const Widget = ({ text, gid }: IWidget) => {
   return (
     <Popover
       content={
-        <div style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
+        <Paragraph style={{ maxWidth: 500, minWidth: 300, margin: 0 }}>
           <Marked text={guide} />
-        </div>
+        </Paragraph>
       }
       placement="bottom"
     >
@@ -50,4 +50,4 @@ const Widget = ({ text, gid }: IWidget) => {
   );
 };
 
-export default Widget;
+export default GrammarPopWidget;

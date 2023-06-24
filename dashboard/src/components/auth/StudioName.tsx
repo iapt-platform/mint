@@ -15,7 +15,7 @@ interface IWidghtStudio {
   showName?: boolean;
   onClick?: Function;
 }
-const Widget = ({
+const StudioNameWidget = ({
   data,
   showAvatar = true,
   showName = true,
@@ -39,4 +39,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default StudioNameWidget;

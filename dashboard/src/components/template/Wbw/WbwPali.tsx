@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Popover, Space, Typography } from "antd";
+import { Button, Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -11,12 +11,11 @@ import "./wbw.css";
 import WbwDetail from "./WbwDetail";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
-import { PaliReal } from "../../../utils";
 import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../comment/CommentBox";
 import PaliText from "./PaliText";
 import store from "../../../store";
-import { command } from "../../../reducers/command";
+import { lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 
@@ -78,9 +77,9 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
         setPaliColor("unset");
         setPopOpen(false);
       }}
-      onSave={(e: IWbw) => {
+      onSave={(e: IWbw, isPublish: boolean) => {
         if (typeof onSave !== "undefined") {
-          onSave(e);
+          onSave(e, isPublish);
           setPopOpen(false);
           setPaliColor("unset");
         }
@@ -102,7 +101,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   ) : (
     <></>
   );
-  const color = data.bookMarkColor
+  const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
 
@@ -138,7 +137,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   );
   const classPali = data.style?.value === "note" ? "wbw_note" : "pali";
   let padding: string;
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (typeof data.real !== "undefined" && data.real.value !== "") {
     padding = "4px";
   } else {
     padding = "4px 0";
@@ -165,15 +164,9 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       }}
       onClick={() => {
         //发送点词查询消息
-
-        store.dispatch(
-          command({
-            prop: {
-              word: data.word.value,
-            },
-            type: "dict",
-          })
-        );
+        if (typeof data.real?.value === "string") {
+          store.dispatch(lookup(data.real.value));
+        }
       }}
     >
       {pali}
@@ -189,13 +182,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
       <CommentBox
         resId={data.uid}
         resType="wbw"
-        trigger={
-          <CommentOutlined
-            style={{
-              cursor: "pointer",
-            }}
-          />
-        }
+        trigger={<Button icon={<CommentOutlined />} type="text" title="讨论" />}
         onCommentCountChange={(count: number) => {
           if (count > 0) {
             setHasComment(true);
@@ -207,7 +194,7 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
     </div>
   ) : undefined;
 
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
     return (
       <div className="pali_shell">

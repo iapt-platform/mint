@@ -1,9 +1,5 @@
 import { useIntl } from "react-intl";
-import {
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-} from "@ant-design/pro-components";
+import { ProForm, ProFormSelect } from "@ant-design/pro-components";
 import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { get } from "../../request";
@@ -17,7 +13,7 @@ interface IFormData {
 interface IWidget {
   groupId?: string;
 }
-const Widget = ({ groupId }: IWidget) => {
+const AddLessonWidget = ({ groupId }: IWidget) => {
   const intl = useIntl();
 
   const form = (
@@ -73,4 +69,4 @@ const Widget = ({ groupId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddLessonWidget;

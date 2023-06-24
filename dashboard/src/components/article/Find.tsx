@@ -3,7 +3,7 @@ import { Input, Space, Select } from "antd";
 
 const { Search } = Input;
 
-const Widget = () => {
+const FindWidget = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSearch = (value: string) => {
@@ -53,4 +53,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default FindWidget;

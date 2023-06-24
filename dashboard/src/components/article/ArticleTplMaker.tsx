@@ -13,7 +13,7 @@ interface IWidget {
   onSelect?: Function;
   onCancel?: Function;
 }
-const Widget = ({
+const ArticleTplMakerWidget = ({
   type,
   id,
   title,
@@ -112,4 +112,4 @@ style=${styleText}`;
   );
 };
 
-export default Widget;
+export default ArticleTplMakerWidget;

@@ -36,7 +36,7 @@ export interface ICourseMember {
 interface IWidget {
   courseId?: string;
 }
-const Widget = ({ courseId }: IWidget) => {
+const CourseMemberWidget = ({ courseId }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
@@ -186,4 +186,4 @@ const Widget = ({ courseId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CourseMemberWidget;

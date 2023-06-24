@@ -5,7 +5,7 @@ const { Option } = Select;
 interface IWidget {
   onSelect?: Function;
 }
-const Widget = ({ onSelect }: IWidget) => {
+const ChpterFilterProgressWidget = ({ onSelect }: IWidget) => {
   return (
     <Select
       style={{ width: 100 }}
@@ -28,4 +28,4 @@ const Widget = ({ onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChpterFilterProgressWidget;

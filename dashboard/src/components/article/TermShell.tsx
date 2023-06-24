@@ -5,7 +5,7 @@ import { message } from "../../reducers/command";
 
 import TermEdit, { ITerm } from "../term/TermEdit";
 
-const Widget = () => {
+const TermShellWidget = () => {
   const [termProps, setTermProps] = useState<ITerm>();
   //接收术语消息
   const commandMsg = useAppSelector(message);
@@ -22,4 +22,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default TermShellWidget;

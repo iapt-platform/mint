@@ -13,7 +13,7 @@ interface IWidget {
   data: ISentence;
   onAccept?: Function;
 }
-const Widget = ({ data, onAccept }: IWidget) => {
+const PrAcceptButtonWidget = ({ data, onAccept }: IWidget) => {
   const intl = useIntl();
 
   const [saving, setSaving] = useState<boolean>(false);
@@ -82,4 +82,4 @@ const Widget = ({ data, onAccept }: IWidget) => {
   );
 };
 
-export default Widget;
+export default PrAcceptButtonWidget;

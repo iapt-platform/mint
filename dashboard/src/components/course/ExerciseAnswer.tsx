@@ -14,7 +14,7 @@ interface IWidget {
   mode?: string;
   active?: boolean;
 }
-const Widget = ({
+const ExerciseAnswerWidget = ({
   courseId,
   articleId,
   exerciseId,
@@ -45,4 +45,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ExerciseAnswerWidget;

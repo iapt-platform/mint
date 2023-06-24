@@ -14,22 +14,16 @@ interface IWidget {
   resType?: TResType;
   onCommentCountChange?: Function;
 }
-const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
+const CommentBoxWidget = ({
+  trigger,
+  resId,
+  resType,
+  onCommentCountChange,
+}: IWidget) => {
   const [open, setOpen] = useState(false);
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
-      document.getElementsByTagName("body")[0].removeAttribute("style");
-    }
-  };
 
   const showChildrenDrawer = (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
@@ -39,17 +33,24 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
     setTopicComment(comment);
   };
 
-  const onChildrenDrawerClose = () => {
-    setChildrenDrawer(false);
-  };
-
   return (
     <>
-      <span onClick={showDrawer}>{trigger}</span>
+      <span
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        {trigger}
+      </span>
       <Drawer
         title="Discussion"
         width={520}
-        onClose={onClose}
+        onClose={() => {
+          setOpen(false);
+          if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+            document.getElementsByTagName("body")[0].removeAttribute("style");
+          }
+        }}
         open={open}
         maskClosable={false}
       >
@@ -67,7 +68,9 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
         <Drawer
           title="回答"
           width={480}
-          onClose={onChildrenDrawerClose}
+          onClose={() => {
+            setChildrenDrawer(false);
+          }}
           open={childrenDrawer}
         >
           <CommentTopic
@@ -82,4 +85,4 @@ const Widget = ({ trigger, resId, resType, onCommentCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentBoxWidget;

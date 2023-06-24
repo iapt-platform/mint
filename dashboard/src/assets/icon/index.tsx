@@ -81,6 +81,25 @@ const HandOutlined = () => (
     ></path>
   </svg>
 );
+
+const ColumnOutlined = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="865"
+    width="1em"
+    height="1em"
+    fill="currentColor"
+  >
+    <path
+      d="M176 177h672v672H176V177z m-56-64a8 8 0 0 0-8 8v760c0 17.673 14.327 32 32 32h736c17.673 0 32-14.327 32-32V121a8 8 0 0 0-8-8H120z"
+      p-id="866"
+    ></path>
+    <path d="M164 159h700v82H164v-82z" p-id="867"></path>
+    <path d="M546 177v700h-64V177h64z" p-id="868"></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -103,3 +122,7 @@ export const UnLockIcon = (props: Partial<CustomIconComponentProps>) => (
 export const HandOutlinedIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HandOutlined} {...props} />
 );
+
+export const ColumnOutlinedIcon = (
+  props: Partial<CustomIconComponentProps>
+) => <Icon component={ColumnOutlined} {...props} />;

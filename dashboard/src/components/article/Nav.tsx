@@ -1,6 +1,6 @@
 import { Space, Select } from "antd";
 
-const Widget = () => {
+const NavWidget = () => {
   return (
     <div>
       <Space direction="vertical">
@@ -35,4 +35,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default NavWidget;

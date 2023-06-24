@@ -21,7 +21,7 @@ interface IWidget {
   resId: string;
   resType: EResType;
 }
-const Widget = ({ resId, resType }: IWidget) => {
+const ShareWidget = ({ resId, resType }: IWidget) => {
   const [reload, setReload] = useState(false);
   return (
     <div>
@@ -44,4 +44,4 @@ const Widget = ({ resId, resType }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ShareWidget;

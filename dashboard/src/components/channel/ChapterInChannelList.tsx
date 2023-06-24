@@ -29,7 +29,7 @@ interface IWidget {
   channelId?: string;
   onChange?: Function;
 }
-const Widget = ({ channelId, onChange }: IWidget) => {
+const ChpaterInChannelListWidget = ({ channelId, onChange }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -245,4 +245,4 @@ const Widget = ({ channelId, onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChpaterInChannelListWidget;

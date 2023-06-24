@@ -114,7 +114,7 @@ export const mainMenuItems: MenuProps["items"] = [
 type IWidgetHeadBar = {
   selectedKeys?: string;
 };
-const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
+const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
   // TODO
 
@@ -151,6 +151,7 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         </div>
         <div>
           <Space>
+            <Link to="/download/download">下载</Link>
             <Link to="/search/home">
               <Button
                 style={{ color: "white" }}
@@ -169,4 +170,4 @@ const Widget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   );
 };
 
-export default Widget;
+export default HeadBarWidget;

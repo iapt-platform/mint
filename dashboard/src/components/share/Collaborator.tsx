@@ -33,7 +33,7 @@ interface IWidget {
   load?: boolean;
   onReload?: Function;
 }
-const Widget = ({ resId, load = false, onReload }: IWidget) => {
+const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const [memberCount, setMemberCount] = useState<number>();
@@ -222,4 +222,4 @@ const Widget = ({ resId, load = false, onReload }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CollaboratorWidget;

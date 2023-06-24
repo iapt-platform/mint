@@ -27,7 +27,7 @@ interface IWidget {
   courseId?: string;
 }
 
-const Widget = ({ studioName, courseId }: IWidget) => {
+const CourseMemberListWidget = ({ studioName, courseId }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const ref = useRef<ActionType>();
@@ -450,4 +450,4 @@ const Widget = ({ studioName, courseId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CourseMemberListWidget;

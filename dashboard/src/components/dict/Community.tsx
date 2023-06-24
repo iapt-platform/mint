@@ -1,14 +1,21 @@
-import { Badge, Card, Popover, Space, Typography } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import {
+  Badge,
+  Card,
+  Dropdown,
+  MenuProps,
+  Popover,
+  Space,
+  Typography,
+} from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { IApiResponseDictList } from "../api/Dict";
 import { IUser } from "../auth/User";
-import UserName from "../auth/UserName";
 import GrammarPop from "./GrammarPop";
 
-const { Title } = Typography;
+const { Title, Link, Text } = Typography;
 
 interface IItem<R> {
   value: R;
@@ -25,7 +32,7 @@ interface IWord {
 interface IWidget {
   word: string | undefined;
 }
-const Widget = ({ word }: IWidget) => {
+const CommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [wordData, setWordData] = useState<IWord>();
   const minScore = 100; //分数阈值。低于这个分数只显示在弹出菜单中
@@ -127,17 +134,48 @@ const Widget = ({ word }: IWidget) => {
     (value, index: number) => !isShow(value.score, index)
   );
   const meaningExtra = meaningLow?.map((item, id) => {
-    return <>{item.value}</>;
+    return <span key={id}>{item.value}</span>;
   });
 
+  const mainCollaboratorNum = 3; //默认显示的协作者数量，其余的在更多中显示
+  const collaboratorRender = (name: string, id: number, score: number) => {
+    return (
+      <Space key={id}>
+        {name}
+        <Badge color="geekblue" size="small" count={score} />
+      </Space>
+    );
+  };
+  const items: MenuProps["items"] = wordData?.editor
+    .filter((value, index) => index >= mainCollaboratorNum)
+    .map((item, id) => {
+      return {
+        key: id,
+        label: collaboratorRender(item.value.nickName, id, item.score),
+      };
+    });
+  const more = wordData ? (
+    wordData.editor.length > mainCollaboratorNum ? (
+      <Dropdown menu={{ items }}>
+        <Link>
+          <Space>
+            {intl.formatMessage({
+              id: `buttons.more`,
+            })}
+            <DownOutlined />
+          </Space>
+        </Link>
+      </Dropdown>
+    ) : undefined
+  ) : undefined;
   return (
     <Card>
       <Title level={5} id={`community`}>
         {"社区字典"}
       </Title>
-      <div>
-        <Space>
-          {"意思："}
+      <div key="meaning">
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"意思："}</Text>
           {wordData?.meaning
             .filter((value, index: number) => isShow(value.score, index))
             .map((item, id) => {
@@ -150,14 +188,21 @@ const Widget = ({ word }: IWidget) => {
             })}
           {meaningLow && meaningLow.length > 0 ? (
             <Popover content={<Space>{meaningExtra}</Space>} placement="bottom">
-              <MoreOutlined />
+              <Link>
+                <Space>
+                  {intl.formatMessage({
+                    id: `buttons.more`,
+                  })}
+                  <DownOutlined />
+                </Space>
+              </Link>
             </Popover>
           ) : undefined}
         </Space>
       </div>
-      <div>
-        <Space>
-          {"语法："}
+      <div key="grammar">
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"语法："}</Text>
           {wordData?.grammar
             .filter((value) => value.score >= minScore)
             .map((item, id) => {
@@ -193,9 +238,9 @@ const Widget = ({ word }: IWidget) => {
             })}
         </Space>
       </div>
-      <div>
-        <Space>
-          {"词干："}
+      <div key="base">
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"词干："}</Text>
           {wordData?.parent
             .filter((value) => value.score >= minScore)
             .map((item, id) => {
@@ -208,21 +253,19 @@ const Widget = ({ word }: IWidget) => {
             })}
         </Space>
       </div>
-      <div>
-        <Space>
-          {"贡献者："}
-          {wordData?.editor.map((item, id) => {
-            return (
-              <Space key={id}>
-                <UserName {...item.value} />
-                <Badge color="geekblue" size="small" count={item.score} />
-              </Space>
-            );
-          })}
+      <div key="collaborator">
+        <Space style={{ flexWrap: "wrap" }}>
+          <Text strong>{"贡献者："}</Text>
+          {wordData?.editor
+            .filter((value, index) => index < mainCollaboratorNum)
+            .map((item, id) => {
+              return collaboratorRender(item.value.nickName, id, item.score);
+            })}
+          {more}
         </Space>
       </div>
     </Card>
   );
 };
 
-export default Widget;
+export default CommunityWidget;

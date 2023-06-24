@@ -9,7 +9,12 @@ interface IWidget {
   articleIds?: string[];
   onFinally?: Function;
 }
-const Widget = ({ trigger, studioName, articleIds, onFinally }: IWidget) => {
+const AddToAnthologyWidget = ({
+  trigger,
+  studioName,
+  articleIds,
+  onFinally,
+}: IWidget) => {
   return (
     <AnthologyModal
       studioName={studioName}
@@ -43,4 +48,4 @@ const Widget = ({ trigger, studioName, articleIds, onFinally }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AddToAnthologyWidget;

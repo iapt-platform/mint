@@ -3,7 +3,7 @@ interface IItem {
   value: string;
 }
 
-const Widget = () => {
+const FontBoxWidget = () => {
   const items: IItem[] = [
     { id: "bbho", value: "ᨻᩮ᩠ᨽᩣ" },
     { id: "ccho", value: "ᨧᩮ᩠ᨨᩣ" },
@@ -31,4 +31,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default FontBoxWidget;

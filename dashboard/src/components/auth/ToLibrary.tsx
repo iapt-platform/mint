@@ -2,7 +2,7 @@ import { useIntl } from "react-intl";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 
-const Widget = () => {
+const ToLibraryWidget = () => {
   const intl = useIntl();
 
   return (
@@ -25,4 +25,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ToLibraryWidget;

@@ -59,7 +59,9 @@ const Widget = () => {
             {
               key: "toc",
               label: `目录`,
-              children: <TocTree anthologyId={anthology_id} />,
+              children: (
+                <TocTree studioName={studioname} anthologyId={anthology_id} />
+              ),
             },
           ]}
         />

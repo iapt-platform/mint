@@ -10,7 +10,7 @@ interface IWidget {
   studioName?: string;
   searchKey?: string;
 }
-const Widget = ({ studioName, searchKey }: IWidget) => {
+const AnthologyListWidget = ({ studioName, searchKey }: IWidget) => {
   const [tableData, setTableData] = useState<IAnthologyData[]>([]);
   const [total, setTotal] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
@@ -84,4 +84,4 @@ const Widget = ({ studioName, searchKey }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyListWidget;

@@ -2,24 +2,62 @@ import { Button, Dropdown } from "antd";
 import { useState } from "react";
 import { EditOutlined, CopyOutlined, MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import { ISentence } from "../SentEdit";
 
-interface ISentEditMenu {
+interface IWidget {
+  data: ISentence;
   children?: React.ReactNode;
   onModeChange?: Function;
+  onConvert?: Function;
 }
-const Widget = ({ children, onModeChange }: ISentEditMenu) => {
+const SentEditMenuWidget = ({
+  data,
+  children,
+  onModeChange,
+  onConvert,
+}: IWidget) => {
   const [isHover, setIsHover] = useState(false);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log(e);
+    switch (e.key) {
+      case "json":
+        if (typeof onConvert !== "undefined") {
+          onConvert("json");
+        }
+        break;
+      case "markdown":
+        if (typeof onConvert !== "undefined") {
+          onConvert("markdown");
+        }
+        break;
+      default:
+        break;
+    }
   };
-  const items = [
+  const items: MenuProps["items"] = [
     {
-      key: "en",
+      key: "timeline",
       label: "时间线",
     },
     {
-      key: "zh-Hans",
+      type: "divider",
+    },
+    {
+      key: "markdown",
+      label: "Markdown",
+      disabled: data.contentType === "markdown",
+    },
+    {
+      key: "json",
+      label: "Json",
+      disabled: data.contentType === "json",
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "share",
       label: "分享",
     },
   ];
@@ -60,4 +98,4 @@ const Widget = ({ children, onModeChange }: ISentEditMenu) => {
   );
 };
 
-export default Widget;
+export default SentEditMenuWidget;

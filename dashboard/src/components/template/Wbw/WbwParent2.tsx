@@ -14,7 +14,7 @@ const WbwParent2Widget = ({ data }: IWidget) => {
           {intl.formatMessage({
             id:
               "dict.fields.type." +
-              data.grammar2.value.replaceAll(".", "") +
+              data.grammar2.value?.replaceAll(".", "") +
               ".short.label",
           })}
         </Tag>

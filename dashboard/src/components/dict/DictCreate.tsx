@@ -22,17 +22,9 @@ type IWidgetDictCreate = {
   studio: string;
   word?: string;
 };
-const Widget = (prop: IWidgetDictCreate) => {
+const DictCreateWidget = (prop: IWidgetDictCreate) => {
   const intl = useIntl();
-  /*
-	const onLangChange = (value: string) => {
-		console.log(`selected ${value}`);
-	};
 
-	const onLangSearch = (value: string) => {
-		console.log("search:", value);
-	};
-	*/
   return (
     <>
       <ProForm<IDictFormData>
@@ -48,4 +40,4 @@ const Widget = (prop: IWidgetDictCreate) => {
   );
 };
 
-export default Widget;
+export default DictCreateWidget;

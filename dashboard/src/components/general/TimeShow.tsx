@@ -10,7 +10,7 @@ interface IWidgetTimeShow {
   title?: string;
 }
 
-const Widget = ({
+const TimeShowWidget = ({
   showIcon = true,
   showTooltip = true,
   time,
@@ -18,15 +18,25 @@ const Widget = ({
 }: IWidgetTimeShow) => {
   const intl = useIntl(); //i18n
   const [passTime, setPassTime] = useState<string>();
-  const updateTime = () => {
+  const [mTime, setMTime] = useState(0);
+
+  useEffect(() => {
+    if (typeof time === "undefined") {
+      return;
+    }
+    let timer = setInterval(() => {
+      setMTime((mTime) => mTime + 1);
+    }, 1000 * 60);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
     if (typeof time !== "undefined" && time !== "") {
       setPassTime(getPassDataTime(time));
     }
-  };
-
-  useEffect(() => {
-    updateTime();
-  }, [time]);
+  }, [mTime, time]);
 
   if (typeof time === "undefined" || time === "") {
     return <></>;
@@ -98,4 +108,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default TimeShowWidget;

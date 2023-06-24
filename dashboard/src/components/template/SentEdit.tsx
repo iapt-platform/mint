@@ -1,9 +1,11 @@
 import { Card } from "antd";
 import { useEffect, useState } from "react";
+import { TChannelType } from "../api/Channel";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { TContentType } from "../comment/CommentCreate";
 import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
@@ -16,6 +18,7 @@ export interface ISuggestionCount {
 export interface ISentence {
   id?: string;
   content: string;
+  contentType?: TContentType;
   html: string;
   book: number;
   para: number;
@@ -71,6 +74,7 @@ export const SentEditInner = ({
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
+  const [magicDictLoading, setMagicDictLoading] = useState(false);
 
   useEffect(() => {
     const content = origin?.find(
@@ -82,7 +86,11 @@ export const SentEditInner = ({
   }, []);
 
   return (
-    <Card bodyStyle={{ paddingBottom: 0 }} size="small">
+    <Card
+      bodyStyle={{ paddingBottom: 0 }}
+      style={{ border: "solid 2px #dfdfdf", marginTop: 4, borderRadius: 5 }}
+      size="small"
+    >
       <SentContent
         sid={id}
         book={book}
@@ -95,6 +103,10 @@ export const SentEditInner = ({
         magicDict={magicDict}
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
+        }}
+        onMagicDictDone={() => {
+          setMagicDictLoading(false);
+          setMagicDict(undefined);
         }}
       />
       <SentTab
@@ -110,8 +122,10 @@ export const SentEditInner = ({
         originNum={originNum}
         simNum={simNum}
         wbwData={wbwData}
+        magicDictLoading={magicDictLoading}
         onMagicDict={(type: string) => {
           setMagicDict(type);
+          setMagicDictLoading(true);
         }}
       />
     </Card>

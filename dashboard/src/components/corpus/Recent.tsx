@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { IView, IViewListResponse } from "../../pages/studio/recent/list";
 import { get } from "../../request";
 
-const Widget = () => {
+const RecentWidget = () => {
   const [listData, setListData] = useState<IView[]>([]);
   useEffect(() => {
     let url = `/v2/view?view=user&limit=10`;
@@ -56,4 +56,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default RecentWidget;

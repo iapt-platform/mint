@@ -7,7 +7,7 @@ interface IWidget {
   topicId?: string;
   onItemCountChange?: Function;
 }
-const Widget = ({ topicId, onItemCountChange }: IWidget) => {
+const CommentTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
   return (
     <div>
       <CommentTopicInfo topicId={topicId} />
@@ -25,4 +25,4 @@ const Widget = ({ topicId, onItemCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentTopicWidget;

@@ -5,6 +5,7 @@ import { API_HOST, get } from "../../../request";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
 import modal from "antd/lib/modal";
+import { useIntl } from "react-intl";
 
 interface INissayaEndingUpload {
   filename: UploadFile<IAttachmentResponse>[];
@@ -19,22 +20,25 @@ export interface INissayaEndingImportResponse {
 }
 
 interface IWidget {
+  title?: string;
   url: string;
   urlExtra?: string;
   trigger?: JSX.Element;
   onSuccess?: Function;
 }
-const Widget = ({
+const DataImportWidget = ({
+  title,
   url,
   urlExtra,
   trigger = <>{"trigger"}</>,
   onSuccess,
 }: IWidget) => {
+  const intl = useIntl();
   const [form] = Form.useForm<INissayaEndingUpload>();
-
+  const formTitle = title ? title : intl.formatMessage({ id: "labels.upload" });
   return (
     <ModalForm<INissayaEndingUpload>
-      title="upload"
+      title={formTitle}
       trigger={trigger}
       form={form}
       autoFocusFirstInput
@@ -59,10 +63,7 @@ const Widget = ({
         }
 
         const queryUrl = `${url}?filename=${_filename}&${urlExtra}`;
-        console.log("url", queryUrl);
         const res = await get<INissayaEndingImportResponse>(queryUrl);
-
-        console.log("import", res);
         if (res.ok) {
           if (res.data.fail > 0) {
             modal.info({
@@ -85,7 +86,7 @@ const Widget = ({
     >
       <ProFormUploadDragger
         max={1}
-        label="上传xlsx"
+        label="请确保您的xlsx文件是用导出功能导出的。word为空可以删除该词条。使用其他studio导出的数据，请将channel_id设置为空。否则该术语将被忽略。"
         name="filename"
         fieldProps={{
           name: "file",
@@ -96,4 +97,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default DataImportWidget;

@@ -10,7 +10,7 @@ interface IWidget {
   onEdit?: Function;
   onSelect?: Function;
 }
-const Widget = ({ data, onEdit, onSelect }: IWidget) => {
+const CommentShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
@@ -87,4 +87,4 @@ const Widget = ({ data, onEdit, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentShowWidget;

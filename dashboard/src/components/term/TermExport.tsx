@@ -1,8 +1,10 @@
+import { useState } from "react";
+import { useIntl } from "react-intl";
 import { Button, message } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
-import { API_HOST, get } from "../../request";
 import modal from "antd/lib/modal";
-import { useState } from "react";
+
+import { API_HOST, get } from "../../request";
 
 interface IExportResponse {
   ok: boolean;
@@ -17,7 +19,8 @@ interface IWidget {
   channelId?: string;
   studioName?: string;
 }
-const Widget = ({ channelId, studioName }: IWidget) => {
+const TermExportWidget = ({ channelId, studioName }: IWidget) => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   return (
     <Button
@@ -34,20 +37,18 @@ const Widget = ({ channelId, studioName }: IWidget) => {
         get<IExportResponse>(url)
           .then((json) => {
             if (json.ok) {
-              console.log("download", json);
               const link = `${API_HOST}/api/v2/download/${json.data.type}/${json.data.uuid}/${json.data.filename}`;
               modal.info({
-                title: "download",
+                title: intl.formatMessage({ id: "buttons.download" }),
                 content: (
                   <>
-                    {"link: "}
                     <a
                       href={link}
                       target="_blank"
                       key="export"
                       rel="noreferrer"
                     >
-                      Download
+                      {intl.formatMessage({ id: "buttons.download.link" })}
                     </a>
                   </>
                 ),
@@ -61,9 +62,9 @@ const Widget = ({ channelId, studioName }: IWidget) => {
           });
       }}
     >
-      Export
+      {intl.formatMessage({ id: "buttons.export" })}
     </Button>
   );
 };
 
-export default Widget;
+export default TermExportWidget;

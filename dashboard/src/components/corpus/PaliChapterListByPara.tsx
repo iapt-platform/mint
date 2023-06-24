@@ -10,7 +10,7 @@ interface IWidget {
   chapter: IChapter;
   onChapterClick?: Function;
 }
-const Widget = ({ chapter, onChapterClick }: IWidget) => {
+const PaliChapterListByParaWidget = ({ chapter, onChapterClick }: IWidget) => {
   const [tableData, setTableData] = useState<IPaliChapterData[]>([]);
 
   useEffect(() => {
@@ -47,4 +47,4 @@ const Widget = ({ chapter, onChapterClick }: IWidget) => {
   );
 };
 
-export default Widget;
+export default PaliChapterListByParaWidget;

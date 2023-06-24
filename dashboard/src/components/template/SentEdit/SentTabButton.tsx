@@ -20,7 +20,13 @@ interface IWidget {
   count?: number;
   title?: string;
 }
-const Widget = ({ icon, type, sentId, title, count = 0 }: IWidget) => {
+const SentTabButtonWidget = ({
+  icon,
+  type,
+  sentId,
+  title,
+  count = 0,
+}: IWidget) => {
   const intl = useIntl();
   const items: MenuProps["items"] = [
     {
@@ -67,4 +73,4 @@ const Widget = ({ icon, type, sentId, title, count = 0 }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SentTabButtonWidget;

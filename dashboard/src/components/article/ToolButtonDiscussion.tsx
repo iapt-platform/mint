@@ -50,11 +50,11 @@ interface IWidget {
   type?: string;
   articleId?: string;
 }
-const Widget = ({ type, articleId }: IWidget) => {
+const ToolButtonDiscussionWidget = ({ type, articleId }: IWidget) => {
   const [treeData, setTreeData] = useState<DataNode[]>([]);
 
   const refresh = () => {
-    const pr = document.querySelectorAll("div.pr_icon[has-disc='true']");
+    const pr = document.querySelectorAll("div.tran_sent");
 
     let prRequestData: IPrTreeRequestData[] = [];
     for (let index = 0; index < pr.length; index++) {
@@ -128,4 +128,4 @@ const Widget = ({ type, articleId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ToolButtonDiscussionWidget;

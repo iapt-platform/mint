@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
-import type { MenuProps } from "antd";
 import { SaveOutlined, CommentOutlined } from "@ant-design/icons";
 
 import { IWbw, IWbwField, TFieldName } from "./WbwWord";
@@ -21,9 +20,17 @@ interface IWidget {
   onSave?: Function;
   onCommentCountChange?: Function;
 }
-const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
+const WbwDetailWidget = ({
+  data,
+  onClose,
+  onSave,
+  onCommentCountChange,
+}: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState(data);
+  useEffect(() => {
+    setCurrWbwData(data);
+  }, [data]);
   function fieldChanged(field: TFieldName, value: string) {
     console.log("field", field, "value", value);
     let mData = currWbwData;
@@ -62,7 +69,10 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
         mData.grammar2 = { value: value, status: 7 };
         break;
       case "case":
+        const arrCase = value.split("#");
         mData.case = { value: value, status: 7 };
+        mData.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
+        mData.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
         break;
       case "relation":
         mData.relation = { value: value, status: 7 };
@@ -78,9 +88,6 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
     }
     setCurrWbwData(mData);
   }
-  const onMenuClick: MenuProps["onClick"] = (e) => {
-    console.log("click", e);
-  };
 
   const items = [
     {
@@ -98,16 +105,18 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
         size="small"
         type="card"
         tabBarExtraContent={
-          <CommentBox
-            resId={data.uid}
-            resType="wbw"
-            trigger={<Button icon={<CommentOutlined />} type="text" />}
-            onCommentCountChange={(count: number) => {
-              if (typeof onCommentCountChange !== "undefined") {
-                onCommentCountChange(count);
-              }
-            }}
-          />
+          data.uid ? (
+            <CommentBox
+              resId={data.uid}
+              resType="wbw"
+              trigger={<Button icon={<CommentOutlined />} type="text" />}
+              onCommentCountChange={(count: number) => {
+                if (typeof onCommentCountChange !== "undefined") {
+                  onCommentCountChange(count);
+                }
+              }}
+            />
+          ) : undefined
         }
         items={[
           {
@@ -159,8 +168,8 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
             ),
           },
           {
-            label: intl.formatMessage({ id: "buttons.advance" }),
-            key: "advance",
+            label: intl.formatMessage({ id: "buttons.spell" }),
+            key: "spell",
             children: (
               <div style={{ minHeight: 270 }}>
                 <WbwDetailAdvance
@@ -209,7 +218,7 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
         />
         <Rate
           allowHalf
-          defaultValue={5}
+          defaultValue={data.confidence * 5}
           onChange={(value: number) => {
             fieldChanged("confidence", (value / 5).toString());
           }}
@@ -232,11 +241,23 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
         <Dropdown.Button
           style={{ width: "unset" }}
           type="primary"
-          menu={{ items, onClick: onMenuClick }}
+          menu={{
+            items: [
+              {
+                key: "user-dict",
+                label: intl.formatMessage({ id: "buttons.save.publish" }),
+              },
+            ],
+            onClick: (e) => {
+              if (typeof onSave !== "undefined") {
+                //保存并发布
+                onSave(currWbwData, true);
+              }
+            },
+          }}
           onClick={() => {
-            console.log("data", currWbwData);
             if (typeof onSave !== "undefined") {
-              onSave(currWbwData);
+              onSave(currWbwData, false);
             }
           }}
         >
@@ -248,4 +269,4 @@ const Widget = ({ data, onClose, onSave, onCommentCountChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwDetailWidget;

@@ -12,7 +12,7 @@ interface IWidget {
   data: IComment;
   onCreated?: Function;
 }
-const Widget = ({ data, onCreated }: IWidget) => {
+const CommentEditWidget = ({ data, onCreated }: IWidget) => {
   const intl = useIntl();
   const formItemLayout = {
     labelCol: { span: 4 },
@@ -85,4 +85,4 @@ const Widget = ({ data, onCreated }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentEditWidget;

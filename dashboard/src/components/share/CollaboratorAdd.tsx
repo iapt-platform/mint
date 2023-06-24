@@ -20,7 +20,7 @@ interface IWidget {
   resType: EResType;
   onSuccess?: Function;
 }
-const Widget = ({ resId, resType, onSuccess }: IWidget) => {
+const CollaboratorAddWidget = ({ resId, resType, onSuccess }: IWidget) => {
   const roleList = ["editor", "reader"];
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
@@ -65,7 +65,7 @@ const Widget = ({ resId, resType, onSuccess }: IWidget) => {
         <ProFormSelect
           initialValue={"user"}
           name="userType"
-          label={intl.formatMessage({ id: "forms.fields.role.label" })}
+          label={intl.formatMessage({ id: "forms.fields.type.label" })}
           allowClear={false}
           options={[
             {
@@ -123,4 +123,4 @@ const Widget = ({ resId, resType, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CollaboratorAddWidget;

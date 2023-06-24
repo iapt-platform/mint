@@ -1,53 +1,81 @@
 import { Segmented } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { modeChange } from "../../reducers/article-mode";
-import store from "../../store";
-import { ArticleMode } from "./Article";
+import { IChannel } from "../channel/Channel";
+import ChannelPicker from "../channel/ChannelPicker";
 
 interface IWidget {
-  initMode?: string;
+  currMode?: string;
+  channel: string | null;
   onModeChange?: Function;
+  onChannelChange?: Function;
 }
-const Widget = ({ initMode = "read", onModeChange }: IWidget) => {
+const ModeSwitchWidget = ({
+  currMode = "read",
+  onModeChange,
+  channel,
+  onChannelChange,
+}: IWidget) => {
   const intl = useIntl();
-  const [mode, setMode] = useState<string>(initMode);
+  const [mode, setMode] = useState<string>(currMode);
+  const [newMode, setNewMode] = useState<string>();
+  const [channelPickerOpen, setChannelPickerOpen] = useState(false);
+  useEffect(() => {
+    setMode(currMode);
+  }, [currMode]);
   return (
-    <Segmented
-      size="middle"
-      style={{
-        color: "rgb(134 134 134 / 90%)",
-        backgroundColor: "rgb(129 129 129 / 17%)",
-        display: "block",
-      }}
-      options={[
-        {
-          label: intl.formatMessage({ id: "buttons.read" }),
-          value: "read",
-        },
-        {
-          label: intl.formatMessage({ id: "buttons.translate" }),
-          value: "edit",
-        },
-        {
-          label: intl.formatMessage({ id: "buttons.wbw" }),
-          value: "wbw",
-        },
-      ]}
-      value={mode}
-      onChange={(value) => {
-        const newMode = value.toString();
-        if (typeof onModeChange !== "undefined") {
-          if (mode === "read" || newMode === "read") {
-            onModeChange(newMode);
+    <>
+      <Segmented
+        size="middle"
+        style={{
+          color: "rgb(134 134 134 / 90%)",
+          backgroundColor: "rgb(129 129 129 / 17%)",
+          display: "block",
+        }}
+        defaultValue={currMode}
+        options={[
+          {
+            label: intl.formatMessage({ id: "buttons.read" }),
+            value: "read",
+          },
+          {
+            label: intl.formatMessage({ id: "buttons.translate" }),
+            value: "edit",
+          },
+          {
+            label: intl.formatMessage({ id: "buttons.wbw" }),
+            value: "wbw",
+          },
+        ]}
+        value={mode}
+        onChange={(value) => {
+          const _mode = value.toString();
+
+          if (_mode !== "read" && channel === null) {
+            setChannelPickerOpen(true);
+            setNewMode(_mode);
+          } else {
+            if (typeof onModeChange !== "undefined") {
+              onModeChange(_mode);
+            }
+            setMode(_mode);
           }
-        }
-        setMode(newMode);
-        //发布mode变更
-        store.dispatch(modeChange(newMode as ArticleMode));
-      }}
-    />
+        }}
+      />
+      <ChannelPicker
+        open={channelPickerOpen}
+        onClose={() => setChannelPickerOpen(false)}
+        onSelect={(channels: IChannel[]) => {
+          if (newMode) {
+            setMode(newMode);
+          }
+          if (typeof onChannelChange !== "undefined") {
+            onChannelChange(channels, newMode);
+          }
+        }}
+      />
+    </>
   );
 };
 
-export default Widget;
+export default ModeSwitchWidget;

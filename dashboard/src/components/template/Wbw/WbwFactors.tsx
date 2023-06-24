@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import type { MenuProps } from "antd";
+import { MenuProps, Tooltip } from "antd";
 import { Dropdown, Space, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
-import { PaliReal } from "../../../utils";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { IApiResponseDictData } from "../../api/Dict";
@@ -41,7 +40,7 @@ interface IWidget {
   onChange?: Function;
 }
 
-const Widget = ({ data, display, onChange }: IWidget) => {
+const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -55,12 +54,12 @@ const Widget = ({ data, display, onChange }: IWidget) => {
     },
   ];
   const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
-
   const inlineDict = useAppSelector(_inlineDict);
+
   useEffect(() => {
-    if (inlineDict.wordIndex.includes(data.word.value)) {
+    if (inlineDict.wordIndex.includes(data.real.value)) {
       const result = inlineDict.wordList.filter(
-        (word) => word.word === data.word.value
+        (word) => word.word === data.real.value
       );
       //查重
       //TODO 加入信心指数并排序
@@ -78,7 +77,7 @@ const Widget = ({ data, display, onChange }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [data.word.value, inlineDict]);
+  }, [data.real.value, inlineDict]);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -87,22 +86,36 @@ const Widget = ({ data, display, onChange }: IWidget) => {
     }
   };
 
-  let factors = <></>;
   if (
-    display === "block" &&
-    (typeof data.factors === "undefined" || data.factors.value === "")
+    typeof data.real?.value === "string" &&
+    data.real.value.trim().length > 0
   ) {
-    //空白的意思在逐词解析模式显示占位字符串
-    factors = (
-      <Text type="secondary">
-        {intl.formatMessage({ id: "dict.fields.factors.label" })}
-      </Text>
-    );
-  } else {
-    factors = <span>{data.factors?.value}</span>;
-  }
-
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+    let factors = <></>;
+    if (display === "block") {
+      if (
+        typeof data.factors?.value === "string" &&
+        data.factors.value.trim().length > 0
+      ) {
+        const shortString = data.factors.value.slice(
+          0,
+          data.real.value.length * 1.3 + 3
+        );
+        if (shortString === data.factors.value) {
+          factors = <span>{shortString}</span>;
+        } else {
+          factors = (
+            <Tooltip title={data.factors.value}>{`${shortString}…`}</Tooltip>
+          );
+        }
+      } else {
+        //空白的意思在逐词解析模式显示占位字符串
+        factors = (
+          <Text type="secondary">
+            {intl.formatMessage({ id: "dict.fields.factors.label" })}
+          </Text>
+        );
+      }
+    }
     return (
       <div>
         <Text type="secondary">
@@ -118,4 +131,4 @@ const Widget = ({ data, display, onChange }: IWidget) => {
   }
 };
 
-export default Widget;
+export default WbwFactorsWidget;

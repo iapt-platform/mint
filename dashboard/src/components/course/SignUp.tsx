@@ -28,7 +28,7 @@ interface IWidget {
   expRequest?: TCourseExpRequest;
   onStatusChanged?: Function;
 }
-const Widget = ({
+const SignUpWidget = ({
   courseId,
   joinMode,
   startAt,
@@ -95,4 +95,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SignUpWidget;

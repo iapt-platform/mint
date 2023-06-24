@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import type { UploadFile } from "antd/es/upload/interface";
 
 import { useAppSelector } from "../../../hooks";
-import { add, wordIndex } from "../../../reducers/inline-dict";
+import { add, updateIndex, wordIndex } from "../../../reducers/inline-dict";
 import { get } from "../../../request";
 import store from "../../../store";
 
@@ -18,6 +18,8 @@ import WbwPara from "./WbwPara";
 import WbwPage from "./WbwPage";
 import WbwRelationAdd from "./WbwRelationAdd";
 import { ArticleMode } from "../../article/Article";
+import WbwReal from "./WbwReal";
+import WbwDetailFm from "./WbwDetailFm";
 
 export type TFieldName =
   | "word"
@@ -43,10 +45,11 @@ export interface IWbwField {
   value: string;
 }
 
-enum WbwStatus {
+export enum WbwStatus {
   initiate = 0,
   auto = 3,
-  manual = 5,
+  apply = 5,
+  manual = 7,
 }
 export interface WbwElement<R> {
   value: R;
@@ -59,38 +62,42 @@ export interface IWbw {
   para: number;
   sn: number[];
   word: WbwElement<string>;
-  real?: WbwElement<string>;
-  meaning?: WbwElement<string>;
-  type?: WbwElement<string>;
-  grammar?: WbwElement<string>;
-  style?: WbwElement<string>;
-  case?: WbwElement<string>;
-  parent?: WbwElement<string>;
-  parent2?: WbwElement<string>;
-  grammar2?: WbwElement<string>;
-  factors?: WbwElement<string>;
-  factorMeaning?: WbwElement<string>;
-  relation?: WbwElement<string>;
-  note?: WbwElement<string>;
-  bookMarkColor?: WbwElement<number>;
-  bookMarkText?: WbwElement<string>;
+  real: WbwElement<string>;
+  meaning?: WbwElement<string | null>;
+  type?: WbwElement<string | null>;
+  grammar?: WbwElement<string | null>;
+  style?: WbwElement<string | null>;
+  case?: WbwElement<string | null>;
+  parent?: WbwElement<string | null>;
+  parent2?: WbwElement<string | null>;
+  grammar2?: WbwElement<string | null>;
+  factors?: WbwElement<string | null>;
+  factorMeaning?: WbwElement<string | null>;
+  relation?: WbwElement<string | null>;
+  note?: WbwElement<string | null>;
+  bookMarkColor?: WbwElement<number | null>;
+  bookMarkText?: WbwElement<string | null>;
   locked?: boolean;
   confidence: number;
   attachments?: UploadFile[];
   hasComment?: boolean;
 }
 export interface IWbwFields {
+  real?: boolean;
   meaning?: boolean;
   factors?: boolean;
   factorMeaning?: boolean;
+  factorMeaning2?: boolean;
   case?: boolean;
 }
-export type TWbwDisplayMode = "block" | "inline";
+
+export type TWbwDisplayMode = "block" | "inline" | "list";
 interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
   mode?: ArticleMode;
+  wordDark?: boolean;
   onChange?: Function;
   onSplit?: Function;
 }
@@ -98,12 +105,20 @@ const WbwWordWidget = ({
   data,
   display = "block",
   mode = "edit",
-  fields = { meaning: true, factors: true, factorMeaning: true, case: true },
+  fields = {
+    real: false,
+    meaning: true,
+    factors: true,
+    factorMeaning: true,
+    factorMeaning2: false,
+    case: true,
+  },
+  wordDark = false,
   onChange,
   onSplit,
 }: IWidget) => {
   const [wordData, setWordData] = useState(data);
-  const [fieldDisplay, setFieldDisplay] = useState(fields);
+  const fieldDisplay = fields;
   const [newFactors, setNewFactors] = useState<string>();
   const [showRelationTool, setShowRelationTool] = useState(false);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
@@ -111,14 +126,14 @@ const WbwWordWidget = ({
 
   useEffect(() => {
     setWordData(data);
-    setFieldDisplay(fields);
-  }, [data, fields]);
+  }, [data]);
 
-  const color = wordData.bookMarkColor
+  const color = wordData.bookMarkColor?.value
     ? bookMarkColor[wordData.bookMarkColor.value]
     : "unset";
   const wbwCtl = wordData.type?.value === ".ctl." ? "wbw_ctl" : "";
   const wbwAnchor = wordData.grammar?.value === ".a." ? "wbw_anchor" : "";
+  const wbwDark = wordDark ? "dark" : "";
 
   const styleWbw: React.CSSProperties = {
     display: display === "block" ? "block" : "flex",
@@ -140,20 +155,32 @@ const WbwWordWidget = ({
    * 查字典
    * @param word 要查的单词
    */
-  const lookup = (word: string) => {
+  const lookup = (words: string[]) => {
     stopLookup();
+
     //查询这个词在内存字典里是否有
-    if (inlineWordIndex.includes(word)) {
-      //已经有了，退出
+    const searchWord = words.filter((value) => {
+      if (inlineWordIndex.includes(value)) {
+        //已经有了
+        return false;
+      } else {
+        return true;
+      }
+    });
+    if (searchWord.length === 0) {
       return;
     }
-    get<IApiResponseDictList>(`/v2/wbwlookup?word=${word}`).then((json) => {
-      console.log("lookup ok", json.data.count);
-      //存储到redux
-      store.dispatch(add(json.data.rows));
-    });
+    get<IApiResponseDictList>(`/v2/wbwlookup?word=${searchWord.join()}`).then(
+      (json) => {
+        console.log("lookup ok", json.data.count);
+        console.log("time", json.data.time);
+        //存储到redux
+        store.dispatch(add(json.data.rows));
+        store.dispatch(updateIndex(searchWord));
+      }
+    );
 
-    console.log("lookup", word);
+    console.log("lookup", searchWord);
   };
 
   if (wordData.type?.value === ".ctl.") {
@@ -165,7 +192,7 @@ const WbwWordWidget = ({
   } else {
     return (
       <div
-        className={`wbw_word ${display}_${mode} ${wbwCtl} ${wbwAnchor} `}
+        className={`wbw_word ${display}_${mode} display_${display} ${wbwCtl} ${wbwAnchor} ${wbwDark} `}
         style={styleWbw}
         onMouseEnter={() => {
           setShowRelationTool(true);
@@ -175,11 +202,22 @@ const WbwWordWidget = ({
             wordData.real.value?.length > 0
           ) {
             //开始计时，计时结束查字典
-            intervalRef.current = window.setInterval(
-              lookup,
-              300,
-              wordData.real.value
-            );
+            let words: string[] = [wordData.real.value];
+            if (
+              wordData.parent &&
+              wordData.parent?.value !== "" &&
+              wordData.parent?.value !== null
+            ) {
+              words.push(wordData.parent.value);
+            }
+            if (
+              wordData.factors &&
+              wordData.factors?.value !== "" &&
+              wordData.factors?.value !== null
+            ) {
+              words = [...words, ...wordData.factors.value.split("+")];
+            }
+            intervalRef.current = window.setInterval(lookup, 300, words);
           }
         }}
         onMouseLeave={() => {
@@ -192,12 +230,11 @@ const WbwWordWidget = ({
           key="pali"
           data={wordData}
           display={display}
-          onSave={(e: IWbw) => {
-            console.log("save", e);
+          onSave={(e: IWbw, isPublish: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));
             setWordData(newData);
             if (typeof onChange !== "undefined") {
-              onChange(e);
+              onChange(e, isPublish);
             }
           }}
         />
@@ -207,6 +244,22 @@ const WbwWordWidget = ({
             background: `linear-gradient(90deg, rgba(255, 255, 255, 0), ${color})`,
           }}
         >
+          {fieldDisplay?.real ? (
+            <WbwReal
+              key="real"
+              data={wordData}
+              display={display}
+              onChange={(e: string) => {
+                console.log("meaning change", e);
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.meaning = { value: e, status: 5 };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+            />
+          ) : undefined}
           {fieldDisplay?.meaning ? (
             <WbwMeaning
               key="meaning"
@@ -214,9 +267,8 @@ const WbwWordWidget = ({
               data={wordData}
               display={display}
               onChange={(e: string) => {
-                console.log("meaning change", e);
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
-                newData.meaning = { value: e, status: 5 };
+                newData.meaning = { value: e, status: WbwStatus.manual };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);
@@ -250,6 +302,31 @@ const WbwWordWidget = ({
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = { value: e, status: 5 };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+            />
+          ) : undefined}
+          {fieldDisplay?.factorMeaning2 ? (
+            <WbwDetailFm
+              factors={data.factors?.value?.split("+")}
+              initValue={data.factorMeaning?.value?.split("+")}
+              onChange={(value: string[]) => {
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.factorMeaning = {
+                  value: value.join("+"),
+                  status: WbwStatus.manual,
+                };
+                setWordData(newData);
+                if (typeof onChange !== "undefined") {
+                  onChange(newData);
+                }
+              }}
+              onJoin={(value: string) => {
+                const newData: IWbw = JSON.parse(JSON.stringify(wordData));
+                newData.meaning = { value: value, status: WbwStatus.manual };
                 setWordData(newData);
                 if (typeof onChange !== "undefined") {
                   onChange(newData);

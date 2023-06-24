@@ -1,7 +1,10 @@
-import { Affix, Divider, Space } from "antd";
+import { Affix, Button, Divider, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { useState } from "react";
+import { Key } from "antd/lib/table/interface";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ColumnOutlinedIcon } from "../../../assets/icon";
+import { IApiResponseDictList } from "../../../components/api/Dict";
 
 import Article, {
   ArticleMode,
@@ -11,8 +14,8 @@ import Article, {
 import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
-import RightToolsSwitch from "../../../components/article/RightToolsSwitch";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
+import ToolButtonNav from "../../../components/article/ToolButtonNav";
 import ToolButtonPr from "../../../components/article/ToolButtonPr";
 import ToolButtonSearch from "../../../components/article/ToolButtonSearch";
 import ToolButtonSetting from "../../../components/article/ToolButtonSetting";
@@ -20,6 +23,12 @@ import ToolButtonTag from "../../../components/article/ToolButtonTag";
 import ToolButtonToc from "../../../components/article/ToolButtonToc";
 import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
+import NetStatus from "../../../components/general/NetStatus";
+import { useAppSelector } from "../../../hooks";
+import { add } from "../../../reducers/inline-dict";
+import { paraParam } from "../../../reducers/para-change";
+import { get } from "../../../request";
+import store from "../../../store";
 
 /**
  * type:
@@ -36,15 +45,59 @@ const Widget = () => {
   const { type, id, mode = "read" } = useParams(); //url 参数
   const navigate = useNavigate();
   console.log("mode", mode);
-  const [articleMode, setArticleMode] = useState<ArticleMode>(
-    mode as ArticleMode
-  );
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
+  const paraChange = useAppSelector(paraParam);
 
-  //const right = <ProTabs />;
+  useEffect(() => {
+    if (typeof paraChange === "undefined") {
+      return;
+    }
+    let newType: string = paraChange?.type;
+    let newId: string;
+    switch (paraChange?.type) {
+      case "chapter":
+        newId = `${paraChange.book}-${paraChange.para}`;
+        break;
+      case "para":
+        newId = `${paraChange.book}-${paraChange.para}`;
+        break;
+      default:
+        newId = "";
+        break;
+    }
+    let url = `/article/${newType}/${newId}?`;
+    let param: string[] = [];
+    searchParams.forEach((value, key) => {
+      if (key !== "book" && key !== "par") {
+        param.push(`${key}=${value}`);
+      }
+    });
+    param.push(`book=${paraChange.book}`);
+    param.push(`par=${paraChange.para}`);
+    navigate(url + param.join("&"));
+  }, [paraChange]);
+
+  useEffect(() => {
+    /**
+     * 启动时载入格位公式字典
+     */
+    get<IApiResponseDictList>(`/v2/userdict?view=word&word=_formula_`).then(
+      (json) => {
+        console.log("_formula_ ok", json.data.count);
+        //存储到redux
+        store.dispatch(add(json.data.rows));
+      }
+    );
+  }, []);
   const rightBarWidth = "48px";
   const channelId = id?.split("_").slice(1);
+  let currMode: ArticleMode;
+  if (searchParams.get("mode") !== null) {
+    currMode = searchParams.get("mode") as ArticleMode;
+  } else {
+    currMode = "read";
+  }
   return (
     <div>
       <Affix offsetTop={0}>
@@ -57,19 +110,49 @@ const Widget = () => {
             padding: "5px",
           }}
         >
-          <MainMenu />
+          <Space>
+            <MainMenu />
+            <NetStatus style={{ color: "white" }} />
+          </Space>
           <div></div>
           <div key="right" style={{ display: "flex" }}>
+            <Avatar placement="bottom" />
+            <Divider type="vertical" />
             <ModeSwitch
+              channel={searchParams.get("channel")}
+              currMode={currMode}
               onModeChange={(e: ArticleMode) => {
-                setArticleMode(e);
+                let output: any = { mode: e };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
+              }}
+              onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
+                let output: any = {
+                  mode: mode,
+                  channel: channels.map((item) => item.id).join("_"),
+                };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode" && key !== "channel") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
               }}
             />
             <Divider type="vertical" />
-            <RightToolsSwitch
-              onModeChange={(open: TPanelName) => {
-                setRightPanel(open);
-              }}
+            <Button
+              style={{ display: "block", color: "white" }}
+              icon={<ColumnOutlinedIcon />}
+              type="text"
+              onClick={() =>
+                setRightPanel((value) => (value === "close" ? "open" : "close"))
+              }
             />
           </div>
         </Header>
@@ -87,17 +170,25 @@ const Widget = () => {
           >
             <div>
               <Space direction="vertical">
-                <ToolButtonToc type={type} articleId={id} />
+                <ToolButtonToc
+                  type={type as ArticleType}
+                  articleId={id}
+                  onSelect={(key: Key) => {
+                    console.log("toc click", key);
+                    let url = `/article/${type}/${key}?`;
+                    let param: string[] = [];
+                    searchParams.forEach((value, key) => {
+                      param.push(`${key}=${value}`);
+                    });
+                    navigate(url + param.join("&"));
+                  }}
+                />
+                <ToolButtonNav type={type} articleId={id} />
                 <ToolButtonTag type={type} articleId={id} />
                 <ToolButtonPr type={type} articleId={id} />
                 <ToolButtonDiscussion type={type} articleId={id} />
                 <ToolButtonSearch type={type} articleId={id} />
                 <ToolButtonSetting type={type} articleId={id} />
-              </Space>
-            </div>
-            <div>
-              <Space direction="vertical">
-                <Avatar placement="rightBottom" />
               </Space>
             </div>
           </div>
@@ -117,13 +208,16 @@ const Widget = () => {
               para={searchParams.get("par")}
               channelId={searchParams.get("channel")}
               articleId={id}
-              mode={articleMode}
+              mode={searchParams.get("mode") as ArticleMode}
               onArticleChange={(article: string) => {
                 console.log("article change", article);
-                let url = `/article/${type}/${article}/${articleMode}?mode=${articleMode}`;
-                if (searchParams.get("channel")) {
-                  url += "&channel=" + searchParams.get("channel");
-                }
+                let url = `/article/${type}/${article}?mode=${currMode}`;
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    url += `&${key}=${value}`;
+                  }
+                });
                 navigate(url);
               }}
             />
@@ -134,13 +228,26 @@ const Widget = () => {
               type={type as ArticleType}
               articleId={id ? id : ""}
               selectedChannelKeys={channelId}
+              onClose={() => {
+                setRightPanel("close");
+              }}
+              onTabChange={(curr: TPanelName) => setRightPanel(curr)}
               onChannelSelect={(e: IChannel[]) => {
+                //channel 改变
                 console.log("onChannelSelect", e);
                 const channels = e.map((item) => item.id).join("_");
-                let url = `/article/${type}/${id}/${articleMode}`;
+                console.log("channels", channels);
+                let url = `/article/${type}/${id}?mode=${currMode}`;
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode" && key !== "channel") {
+                    url += `&${key}=${value}`;
+                  }
+                });
                 if (e.length > 0) {
-                  url += `?channel=${channels}`;
+                  url += `&channel=${channels}`;
                 }
+                console.log("url", url);
                 navigate(url);
               }}
             />

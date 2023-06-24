@@ -12,7 +12,7 @@ export interface IArticleListApiResponse {
 export interface IAnthologyDataRequest {
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string;
   article_list?: IArticleListApiResponse[];
   lang: string;
   status: number;

@@ -16,7 +16,7 @@ interface IDailyData {
 interface IWidget {
   studioName?: string;
 }
-const Widget = ({ studioName }: IWidget) => {
+const StudyTimeDualAxesWidget = ({ studioName }: IWidget) => {
   const [dailyData, setDailyData] = useState<IDailyData[]>([]);
 
   useEffect(() => {
@@ -103,4 +103,4 @@ const Widget = ({ studioName }: IWidget) => {
   return <DualAxes {...config} />;
 };
 
-export default Widget;
+export default StudyTimeDualAxesWidget;

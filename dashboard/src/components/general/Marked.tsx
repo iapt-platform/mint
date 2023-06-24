@@ -1,16 +1,21 @@
+import { Typography } from "antd";
 import { marked } from "marked";
+
+const { Text } = Typography;
 
 interface IWidget {
   text?: string;
 }
-const Widget = ({ text }: IWidget) => {
+const MarkedWidget = ({ text }: IWidget) => {
   return (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: marked.parse(text ? text : ""),
-      }}
-    />
+    <Text>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: marked.parse(text ? text : ""),
+        }}
+      />
+    </Text>
   );
 };
 
-export default Widget;
+export default MarkedWidget;

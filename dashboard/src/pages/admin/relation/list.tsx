@@ -67,7 +67,7 @@ export const CaseValueEnum = () => {
 export interface IRelationRequest {
   id?: string;
   name: string;
-  case?: string;
+  case?: string | null;
   to?: string[];
   editor?: IUser;
   updated_at?: string;
@@ -90,7 +90,7 @@ export interface IRelation {
   sn?: number;
   id?: string;
   name: string;
-  case?: string;
+  case?: string | null;
   to?: string[];
   updatedAt?: number;
   createdAt?: number;

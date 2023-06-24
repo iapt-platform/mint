@@ -20,6 +20,7 @@ import {
   IViewRequest,
   IViewStoreResponse,
 } from "../../pages/studio/recent/list";
+import { modeChange } from "../../reducers/article-mode";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -62,12 +63,12 @@ interface IWidgetArticle {
   courseId?: string;
   exerciseId?: string;
   userName?: string;
-  mode?: ArticleMode;
+  mode?: ArticleMode | null;
   active?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
 }
-const Widget = ({
+const ArticleWidget = ({
   type,
   id,
   book,
@@ -84,7 +85,7 @@ const Widget = ({
   onFinal,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleMode, setArticleMode] = useState<ArticleMode>();
+
   const [extra, setExtra] = useState(<></>);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -127,47 +128,46 @@ const Widget = ({
   }, [articleId, type]);
 
   useEffect(() => {
-    console.log("mode", mode, articleMode);
+    //发布mode变更
+    console.log("发布mode变更", mode);
+    store.dispatch(modeChange(mode as ArticleMode));
+  }, [mode]);
+
+  const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
+  useEffect(() => {
+    console.log("srcDataMode", srcDataMode);
     if (!active) {
       return;
     }
-
-    //发布mode变更
-    //store.dispatch(modeChange(mode));
-    if (mode !== articleMode && mode !== "read" && articleMode !== "read") {
-      console.log("set mode", mode, articleMode);
-      setArticleMode(mode);
-      return;
-    }
-    setArticleMode(mode);
     if (typeof type !== "undefined") {
       let url = "";
       switch (type) {
         case "chapter":
           if (typeof articleId !== "undefined") {
-            url = `/v2/corpus-chapter/${articleId}?mode=${mode}`;
+            url = `/v2/corpus-chapter/${articleId}?mode=${srcDataMode}`;
             url += channelId ? `&channels=${channelId}` : "";
           }
           break;
         case "para":
-          url = `/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+          const _book = book ? book : articleId;
+          url = `/v2/corpus?view=para&book=${_book}&par=${para}&mode=${srcDataMode}`;
           url += channelId ? `&channels=${channelId}` : "";
           break;
         case "article":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}`;
             url += channelId ? `&channel=${channelId}` : "";
             url += anthologyId ? `&anthology=${anthologyId}` : "";
           }
           break;
         case "textbook":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${mode}`;
+            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${srcDataMode}`;
           }
           break;
         case "exercise":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
             setExtra(
               <ExerciseAnswer
                 courseId={courseId}
@@ -179,7 +179,7 @@ const Widget = ({
           break;
         case "exercise-list":
           if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${mode}&course=${courseId}&exercise=${exerciseId}`;
+            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}`;
 
             setExtra(
               <ExerciseList
@@ -192,12 +192,12 @@ const Widget = ({
           break;
         default:
           if (typeof articleId !== "undefined") {
-            url = `/v2/corpus/${type}/${articleId}/${mode}?mode=${mode}`;
+            url = `/v2/corpus/${type}/${articleId}/${srcDataMode}?mode=${srcDataMode}`;
             url += channelId ? `&channel=${channelId}` : "";
           }
           break;
       }
-      console.log("url", url);
+      console.log("article url", url);
       setShowSkeleton(true);
       get<IArticleResponse>(url)
         .then((json) => {
@@ -246,7 +246,7 @@ const Widget = ({
                     book: parseInt(book),
                     para: parseInt(para),
                     channel: channelId,
-                    mode: mode,
+                    mode: srcDataMode,
                   }).then((json) => {
                     console.log("view", json.data);
                   });
@@ -270,8 +270,7 @@ const Widget = ({
     active,
     type,
     articleId,
-    mode,
-    articleMode,
+    srcDataMode,
     book,
     para,
     channelId,
@@ -316,4 +315,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ArticleWidget;

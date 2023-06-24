@@ -16,7 +16,7 @@ interface IWidget {
   onTagClose?: Function;
   onTagClick?: Function;
 }
-const Widget = ({
+const ChapterTagWidget = ({
   data,
   color,
   closable = false,
@@ -61,4 +61,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ChapterTagWidget;

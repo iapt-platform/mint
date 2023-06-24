@@ -11,7 +11,11 @@ interface IWidget {
   onSelect?: Function;
   onArticleSelect?: Function;
 }
-const Widget = ({ anthologyId, onSelect, onArticleSelect }: IWidget) => {
+const AnthologyTocTreeWidget = ({
+  anthologyId,
+  onSelect,
+  onArticleSelect,
+}: IWidget) => {
   const navigate = useNavigate();
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
 
@@ -49,4 +53,4 @@ const Widget = ({ anthologyId, onSelect, onArticleSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyTocTreeWidget;

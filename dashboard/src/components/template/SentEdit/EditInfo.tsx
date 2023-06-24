@@ -13,7 +13,7 @@ interface IWidget {
   data: ISentence;
   isPr?: boolean;
 }
-const Widget = ({ data, isPr = false }: IWidget) => {
+const EditInfoWidget = ({ data, isPr = false }: IWidget) => {
   return (
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
@@ -40,4 +40,4 @@ const Widget = ({ data, isPr = false }: IWidget) => {
   );
 };
 
-export default Widget;
+export default EditInfoWidget;

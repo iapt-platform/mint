@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { Button, Dropdown, Input, MenuProps, Space } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -10,26 +11,45 @@ import {
 import { useAppSelector } from "../../../hooks";
 
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import store from "../../../store";
+import { lookup } from "../../../reducers/command";
+import { openPanel } from "../../../reducers/right-panel";
 
 interface IWFMI {
   pali: string;
-  meaning: string;
+  meaning?: string;
   onChange?: Function;
 }
 const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
+  const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
-      key: "lookup",
+      key: "_lookup",
       label: (
         <Space>
           <SearchOutlined />
-          {"查字典"}
+          {intl.formatMessage({
+            id: "buttons.lookup",
+          })}
+        </Space>
+      ),
+    },
+    {
+      key: "_edit",
+      label: (
+        <Space>
+          <EditOutlined />
+          {intl.formatMessage({
+            id: "buttons.edit",
+          })}
         </Space>
       ),
     },
     { key: pali, label: pali },
   ];
   const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+  const [input, setInput] = useState<string>();
+  const [editable, setEditable] = useState(false);
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
@@ -59,42 +79,94 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       setItems([...defaultMenu, ...menu]);
     }
   }, [pali, inlineDict]);
-  return (
+
+  const inputOk = () => {
+    setEditable(false);
+    if (typeof onChange !== "undefined") {
+      onChange(input);
+    }
+  };
+
+  const meaningInner = editable ? (
+    <Input
+      defaultValue={meaning}
+      size="small"
+      addonAfter={
+        <CheckOutlined
+          style={{ cursor: "pointer" }}
+          onClick={() => inputOk()}
+        />
+      }
+      placeholder="Basic usage"
+      style={{ width: 100 }}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(event.target.value);
+      }}
+      onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        inputOk();
+      }}
+      onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Escape") {
+          setEditable(false);
+        }
+      }}
+    />
+  ) : (
+    <Button
+      key={1}
+      size="small"
+      type="text"
+      icon={meaning === "" ? <MoreOutlined /> : undefined}
+      onClick={() => {
+        setEditable(true);
+      }}
+    >
+      {meaning}
+    </Button>
+  );
+
+  return editable ? (
+    meaningInner
+  ) : (
     <Dropdown
       menu={{
         items: items,
         onClick: (e) => {
-          if (typeof onChange !== "undefined") {
-            onChange(e.key);
+          switch (e.key) {
+            case "_lookup":
+              store.dispatch(lookup(pali));
+              store.dispatch(openPanel("dict"));
+              break;
+            case "_edit":
+              setEditable(true);
+              break;
+            default:
+              if (typeof onChange !== "undefined") {
+                onChange(e.key);
+              }
+              break;
           }
         },
       }}
       placement="bottomLeft"
       trigger={["hover"]}
     >
-      <Button
-        key={1}
-        size="small"
-        type="text"
-        icon={meaning === "" ? <MoreOutlined /> : undefined}
-      >
-        {meaning}
-      </Button>
+      {meaningInner}
     </Dropdown>
   );
 };
 
 interface IWidget {
-  factors: string[];
+  factors?: string[];
   initValue?: string[];
   onChange?: Function;
-  onOk?: Function;
+  onJoin?: Function;
 }
 const WbwDetailFmWidget = ({
-  factors,
+  factors = [],
   initValue = [],
   onChange,
-  onOk,
+  onJoin,
 }: IWidget) => {
   const [factorInputEnable, setFactorInputEnable] = useState(false);
   const [factorMeaning, setFactorMeaning] = useState<string[]>(initValue);
@@ -116,6 +188,9 @@ const WbwDetailFmWidget = ({
   }, []);
 
   useEffect(() => {
+    if (factors.length === factorMeaning.length) {
+      return;
+    }
     setFactorMeaning(resizeArray(factorMeaning));
   }, [factors]);
 
@@ -149,7 +224,7 @@ const WbwDetailFmWidget = ({
         <Space size={0} key="space">
           {factorMeaning.map((item, index) => {
             return (
-              <>
+              <span key={index} style={{ display: "flex" }}>
                 <WbwFactorMeaningItem
                   key={index}
                   pali={factors[index]}
@@ -181,14 +256,18 @@ const WbwDetailFmWidget = ({
                       type="text"
                       icon={<CheckOutlined />}
                       onClick={() => {
-                        if (typeof onOk !== "undefined") {
-                          onOk(factorMeaning.join(""));
+                        if (typeof onJoin !== "undefined") {
+                          onJoin(
+                            factorMeaning
+                              .filter((value) => !value.includes("["))
+                              .join(" ")
+                          );
                         }
                       }}
                     />
                   </>
                 )}
-              </>
+              </span>
             );
           })}
         </Space>

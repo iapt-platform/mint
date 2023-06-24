@@ -11,7 +11,7 @@ const { Title, Text } = Typography;
 interface IWidget {
   topicId?: string;
 }
-const Widget = ({ topicId }: IWidget) => {
+const CommentTopicInfoWidget = ({ topicId }: IWidget) => {
   const [data, setData] = useState<IComment>();
   useEffect(() => {
     if (typeof topicId === "undefined") {
@@ -65,4 +65,4 @@ const Widget = ({ topicId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentTopicInfoWidget;

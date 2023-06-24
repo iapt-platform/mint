@@ -21,7 +21,7 @@ interface IDailyData {
 interface IWidget {
   studioName?: string;
 }
-const Widget = ({ studioName }: IWidget) => {
+const HeatmapWidget = ({ studioName }: IWidget) => {
   const [dailyData, setDailyData] = useState<IDailyData[]>([]);
   const [year, setYear] = useState<IOptions[]>([]);
 
@@ -171,4 +171,4 @@ const Widget = ({ studioName }: IWidget) => {
   );
 };
 
-export default Widget;
+export default HeatmapWidget;

@@ -1,6 +1,6 @@
 import { Divider, Skeleton } from "antd";
 
-const Widget = () => {
+const ArticleSkeletonWidget = () => {
   return (
     <div style={{ paddingTop: "1em" }}>
       <Skeleton title={{ width: 200 }} paragraph={{ rows: 1 }} active />
@@ -10,4 +10,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ArticleSkeletonWidget;

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import img_book from "../../assets/library/images/books.svg";
 import ChapterNewList from "./ChapterNewList";
 
-const Widget = () => {
+const ChapterNewWidget = () => {
   return (
     <Row
       style={{
@@ -35,4 +35,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ChapterNewWidget;

@@ -9,7 +9,7 @@ import { API_HOST, get } from "../../request";
 
 const { Paragraph } = Typography;
 
-const Widget = () => {
+const CourseNewListWidget = () => {
   const [data, setData] = useState<ICourse[]>();
   const navigate = useNavigate();
 
@@ -69,4 +69,4 @@ const Widget = () => {
     />
   );
 };
-export default Widget;
+export default CourseNewListWidget;

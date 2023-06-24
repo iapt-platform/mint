@@ -16,7 +16,7 @@ interface IWidget {
   onSearch?: Function;
   onSplit?: Function;
 }
-const Widget = ({ value, onSplit, onSearch }: IWidget) => {
+const SearchVocabularyWidget = ({ value, onSplit, onSearch }: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -127,7 +127,7 @@ const Widget = ({ value, onSplit, onSearch }: IWidget) => {
       >
         <Input.Search
           size="large"
-          placeholder="input here"
+          placeholder="search here"
           onSearch={(value: string) => {
             console.log("on search", value);
             if (typeof onSearch !== "undefined") {
@@ -156,4 +156,4 @@ const Widget = ({ value, onSplit, onSearch }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SearchVocabularyWidget;

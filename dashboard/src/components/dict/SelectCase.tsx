@@ -8,19 +8,22 @@ interface CascaderOption {
   children?: CascaderOption[];
 }
 interface IWidget {
-  value?: string;
+  value?: string | null;
   onCaseChange?: Function;
 }
-const Widget = ({ value, onCaseChange }: IWidget) => {
+const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
   const intl = useIntl();
   const [currValue, setCurrValue] = useState<(string | number)[]>();
 
   useEffect(() => {
-    const arrValue = value
-      ?.replaceAll("#", "$")
-      .split("$")
-      .map((item) => item.replaceAll(".", ""));
-    setCurrValue(arrValue);
+    if (typeof value === "string") {
+      const arrValue = value
+        ?.replaceAll("#", "$")
+        .replaceAll(":", ".$.")
+        .split("$")
+        .map((item) => item.replaceAll(".", ""));
+      setCurrValue(arrValue);
+    }
   }, [value]);
 
   const case8 = [
@@ -327,8 +330,11 @@ const Widget = ({ value, onCaseChange }: IWidget) => {
       value={currValue}
       options={options}
       placeholder="Please select case"
-      onChange={(value: (string | number)[]) => {
+      onChange={(value?: (string | number)[]) => {
         console.log("case changed", value);
+        if (typeof value === "undefined") {
+          return;
+        }
         let newValue: (string | number)[];
         if (
           value.length > 1 &&
@@ -341,7 +347,7 @@ const Widget = ({ value, onCaseChange }: IWidget) => {
         setCurrValue(newValue);
         if (typeof onCaseChange !== "undefined") {
           let output = newValue.map((item) => `.${item}.`).join("$");
-          output = output.replace(".$.base", ":base");
+          output = output.replace(".$.base", ":base").replace(".$.ind", ":ind");
           if (output.indexOf("$") > 0) {
             output =
               output.substring(0, output.indexOf("$")) +
@@ -357,4 +363,4 @@ const Widget = ({ value, onCaseChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default SelectCaseWidget;

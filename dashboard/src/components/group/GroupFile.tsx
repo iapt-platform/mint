@@ -22,7 +22,7 @@ interface DataItem {
 interface IWidget {
   groupId?: string;
 }
-const Widget = ({ groupId }: IWidget) => {
+const GroupFileWidget = ({ groupId }: IWidget) => {
   const intl = useIntl(); //i18n
   const [canDelete, setCanDelete] = useState(false);
   const [resCount, setResCount] = useState(0);
@@ -168,4 +168,4 @@ const Widget = ({ groupId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default GroupFileWidget;

@@ -55,19 +55,23 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
     if (typeof data.relation === "undefined") {
       return;
     }
-    const arrRelation: IRelation[] = JSON.parse(data.relation?.value);
+    const arrRelation: IRelation[] = JSON.parse(
+      data.relation?.value ? data.relation?.value : "[]"
+    );
     setRelation(arrRelation);
   }, [data.relation]);
 
   useEffect(() => {
-    const caseEnd = data.case?.value.split("$");
+    const caseEnd = data.case?.value?.split("$");
     if (typeof caseEnd === "undefined") {
       return;
     }
     const mRelation = relations
       ?.filter(
         (value) =>
-          value.case === caseEnd[caseEnd.length - 1].replaceAll(".", "")
+          value.case === caseEnd[caseEnd.length - 1].replaceAll(".", "") ||
+          value.case === "" ||
+          value.case === null
       )
       .map((item) => {
         const localName = terms?.find(

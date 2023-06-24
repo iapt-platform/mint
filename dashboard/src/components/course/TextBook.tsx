@@ -6,7 +6,7 @@ interface IWidget {
   anthologyId?: string;
   courseId?: string;
 }
-const Widget = ({ anthologyId, courseId }: IWidget) => {
+const TextBookWidget = ({ anthologyId, courseId }: IWidget) => {
   const navigate = useNavigate();
 
   console.log("anthologyId", anthologyId);
@@ -28,4 +28,4 @@ const Widget = ({ anthologyId, courseId }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TextBookWidget;

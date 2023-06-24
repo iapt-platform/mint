@@ -60,9 +60,9 @@ interface IWidget {
   props: string;
   children?: React.ReactNode;
 }
-const Widget = ({ props, children }: IWidget) => {
+const ArticleWidget = ({ props, children }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetChapterCtl;
   return <ArticleCtl {...prop} />;
 };
 
-export default Widget;
+export default ArticleWidget;

@@ -15,7 +15,7 @@
  */
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Collapse, Tag, Typography } from "antd";
+import { Button, Collapse, Tag, Typography } from "antd";
 
 import { IWbw } from "./WbwWord";
 import { useAppSelector } from "../../../hooks";
@@ -47,17 +47,20 @@ interface IWidget {
   data: IWbw;
   onSelect?: Function;
 }
-const Widget = ({ data, onSelect }: IWidget) => {
+const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
   const intl = useIntl();
   const inlineDict = useAppSelector(_inlineDict);
   const [parent, setParent] = useState<IParent[]>();
 
   useEffect(() => {
     //判断单词列表里面是否有这个词
-    if (inlineDict.wordIndex.includes(data.word.value)) {
+    if (typeof data.real === "undefined") {
+      return;
+    }
+    if (inlineDict.wordIndex.includes(data.real.value)) {
       let baseRemind: string[] = [];
       let baseDone: string[] = [];
-      baseRemind.push(data.word.value);
+      baseRemind.push(data.real.value);
       let mParent: IParent[] = [];
       while (baseRemind.length > 0) {
         const word1 = baseRemind.pop();
@@ -85,7 +88,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
             //没找到，添加一个dict
             mParent[indexParent].dict.push({
               id: value.dict_id,
-              name: value.dict_shortname,
+              name: value.shortname,
               case: [],
             });
             indexDict = mParent[indexParent].dict.findIndex(
@@ -110,7 +113,6 @@ const Widget = ({ data, onSelect }: IWidget) => {
               (item) => item.name === wordType
             );
           }
-          console.log("indexCase", indexCase, value.mean);
           if (value.mean && value.mean.trim() !== "") {
             for (const valueMeaning of value.mean.trim().split("$")) {
               if (valueMeaning.trim() !== "") {
@@ -150,7 +152,7 @@ const Widget = ({ data, onSelect }: IWidget) => {
 
       setParent(mParent);
     }
-  }, [data.word.value, inlineDict, intl]);
+  }, [data.real?.value, inlineDict]);
 
   return (
     <div>
@@ -161,19 +163,21 @@ const Widget = ({ data, onSelect }: IWidget) => {
               {item.dict.map((itemDict, idDict) => {
                 return (
                   <div key={idDict} style={{ display: "flex" }}>
-                    <Text keyboard strong style={{ whiteSpace: "nowrap" }}>
+                    <Text strong style={{ whiteSpace: "nowrap" }}>
                       {itemDict.name}
                     </Text>
                     <div>
                       {itemDict.case.map((itemCase, idCase) => {
                         return (
                           <div key={idCase}>
-                            <Text italic>{itemCase.local}</Text>
+                            <Tag>{itemCase.local}</Tag>
                             <span>
                               {itemCase.meaning.map(
                                 (itemMeaning, idMeaning) => {
                                   return (
-                                    <Tag
+                                    <Button
+                                      type="text"
+                                      size="middle"
                                       key={idMeaning}
                                       onClick={(
                                         e: React.MouseEvent<HTMLAnchorElement>
@@ -184,8 +188,8 @@ const Widget = ({ data, onSelect }: IWidget) => {
                                         }
                                       }}
                                     >
-                                      {itemMeaning.text}-{itemMeaning.count}
-                                    </Tag>
+                                      {itemMeaning.text}
+                                    </Button>
                                   );
                                 }
                               )}
@@ -205,4 +209,4 @@ const Widget = ({ data, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default WbwMeaningSelectWidget;

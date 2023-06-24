@@ -41,6 +41,16 @@ const items = {
   "buttons.attachments": "附件",
   "buttons.sim": "相似句",
   "buttons.add": "添加",
+  "buttons.spell": "拼写",
+  "buttons.more": "更多",
+  "buttons.import": "导入",
+  "buttons.export": "导出",
+  "buttons.add.tag": "添加标签",
+  "buttons.remove.selected": "清除选择",
+  "buttons.multiple.select": "多选",
+  "buttons.download": "下载",
+  "buttons.download.link": "下载链接",
+  "buttons.lookup": "查字典",
 };
 
 export default items;

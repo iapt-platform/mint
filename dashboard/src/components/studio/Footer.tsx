@@ -1,5 +1,5 @@
-const Widget = () => {
+const FooterWidget = () => {
   return <div>Studio Footer</div>;
 };
 
-export default Widget;
+export default FooterWidget;

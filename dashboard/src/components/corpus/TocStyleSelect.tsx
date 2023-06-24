@@ -5,7 +5,7 @@ interface IWidget {
   style?: string;
   onChange?: Function;
 }
-const Widget = ({ style = "default", onChange }: IWidget) => {
+const TocStyleSelectWidget = ({ style = "default", onChange }: IWidget) => {
   return (
     <Select
       value={style}
@@ -23,4 +23,4 @@ const Widget = ({ style = "default", onChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TocStyleSelectWidget;

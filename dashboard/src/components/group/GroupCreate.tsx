@@ -17,7 +17,7 @@ interface IWidgetGroupCreate {
   studio?: string;
   onCreate?: Function;
 }
-const Widget = ({ studio, onCreate }: IWidgetGroupCreate) => {
+const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
 
@@ -66,4 +66,4 @@ const Widget = ({ studio, onCreate }: IWidgetGroupCreate) => {
   );
 };
 
-export default Widget;
+export default GroupCreateWidget;

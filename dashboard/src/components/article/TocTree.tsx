@@ -95,7 +95,7 @@ interface IWidgetTocTree {
   onSelect?: Function;
 }
 
-const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
+const TocTreeWidget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState(expandedKey);
   console.log("new tree data", treeData);
@@ -142,4 +142,4 @@ const Widget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
   );
 };
 
-export default Widget;
+export default TocTreeWidget;

@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Tooltip } from "antd";
+import { Tooltip, Typography } from "antd";
 import { Avatar } from "antd";
 import { Popover } from "antd";
 import { ProCard } from "@ant-design/pro-components";
@@ -15,8 +15,9 @@ import {
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-const Widget = () => {
-  // TODO
+const { Title, Paragraph } = Typography;
+
+const SignInAvatarWidget = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
@@ -64,14 +65,14 @@ const Widget = () => {
           </Tooltip>,
         ]}
       >
-        <div>
-          <h2>{nickName}</h2>
-          <div style={{ textAlign: "right" }}>
+        <Paragraph>
+          <Title level={3}>{nickName}</Title>
+          <Paragraph style={{ textAlign: "right" }}>
             {intl.formatMessage({
               id: "buttons.welcome",
             })}
-          </div>
-        </div>
+          </Paragraph>
+        </Paragraph>
       </ProCard>
     </>
   );
@@ -95,4 +96,4 @@ const Widget = () => {
   }
 };
 
-export default Widget;
+export default SignInAvatarWidget;

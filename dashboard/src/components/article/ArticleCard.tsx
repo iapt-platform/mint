@@ -16,7 +16,7 @@ interface IWidgetArticleCard {
   openInCol?: Function;
   showCol?: Function;
 }
-const Widget = ({
+const ArticleCardWidget = ({
   type,
   articleId,
   data,
@@ -64,6 +64,7 @@ const Widget = ({
       extra={
         <Space>
           <ModeSwitch
+            channel={null}
             onModeChange={(mode: string) => {
               if (typeof onModeChange !== "undefined") {
                 onModeChange(mode);
@@ -86,4 +87,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ArticleCardWidget;

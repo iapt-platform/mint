@@ -23,7 +23,7 @@ interface IWidget {
   anthologyId?: string;
   onSuccess?: Function;
 }
-const Widget = ({ studio, anthologyId, onSuccess }: IWidget) => {
+const ArticleCreateWidget = ({ studio, anthologyId, onSuccess }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
 
@@ -76,4 +76,4 @@ const Widget = ({ studio, anthologyId, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ArticleCreateWidget;

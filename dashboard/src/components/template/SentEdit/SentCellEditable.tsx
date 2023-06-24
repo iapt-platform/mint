@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Button, message, Typography } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
-import TextArea from "antd/lib/input/TextArea";
 
 import { post, put } from "../../../request";
 import {
@@ -12,26 +11,39 @@ import {
   ISentenceResponse,
 } from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
+import TermTextArea from "../../general/TermTextArea";
+import { useAppSelector } from "../../../hooks";
+import { wordList } from "../../../reducers/sent-word";
 
 const { Text } = Typography;
 
-interface ISentCellEditable {
+interface IWidget {
   data: ISentence;
-  onDataChange?: Function;
+  isPr?: boolean;
+  onSave?: Function;
   onClose?: Function;
   onCreate?: Function;
-  isPr?: boolean;
 }
-const Widget = ({
+const SentCellEditableWidget = ({
   data,
-  onDataChange,
+  onSave,
   onClose,
   onCreate,
   isPr = false,
-}: ISentCellEditable) => {
+}: IWidget) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
+  const [termList, setTermList] = useState<string[]>();
+
+  const sentWords = useAppSelector(wordList);
+
+  useEffect(() => {
+    console.log("get word list", sentWords);
+    const sentId = `${data.book}-${data.para}-${data.wordStart}-${data.wordEnd}`;
+    console.log("word list", sentWords);
+    setTermList(sentWords.find((value) => value.sentId === sentId)?.words);
+  }, [data.book, data.para, data.wordEnd, data.wordStart, sentWords]);
 
   const savePr = () => {
     setSaving(true);
@@ -82,8 +94,9 @@ const Widget = ({
 
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onDataChange !== "undefined") {
+          if (typeof onSave !== "undefined") {
             const newData: ISentence = {
+              id: json.data.id,
               content: json.data.content,
               html: json.data.html,
               book: json.data.book,
@@ -94,7 +107,7 @@ const Widget = ({
               channel: json.data.channel,
               updateAt: json.data.updated_at,
             };
-            onDataChange(newData);
+            onSave(newData);
           }
         } else {
           message.error(json.message);
@@ -108,12 +121,24 @@ const Widget = ({
   };
 
   return (
-    <div>
-      <TextArea
+    <Typography.Paragraph>
+      <TermTextArea
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        menuOptions={termList}
+        onChange={(value: string) => {
+          console.log("change", value);
+          setValue(value);
+        }}
         placeholder="请输入"
-        autoSize={{ minRows: 3, maxRows: 5 }}
+        onClose={() => {
+          if (typeof onClose !== "undefined") {
+            onClose();
+          }
+        }}
+        onSave={(value: string) => {
+          setValue(value);
+          isPr ? savePr() : save();
+        }}
       />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
@@ -124,7 +149,7 @@ const Widget = ({
               type="link"
               onClick={(e) => {
                 if (typeof onClose !== "undefined") {
-                  onClose(e);
+                  onClose();
                 }
               }}
             >
@@ -151,8 +176,8 @@ const Widget = ({
           </Button>
         </div>
       </div>
-    </div>
+    </Typography.Paragraph>
   );
 };
 
-export default Widget;
+export default SentCellEditableWidget;

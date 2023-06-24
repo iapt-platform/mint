@@ -22,7 +22,11 @@ interface IWidget {
   id?: string;
   onSuccess?: Function;
 }
-const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
+const RelationEditWidget = ({
+  trigger = <>{"trigger"}</>,
+  id,
+  onSuccess,
+}: IWidget) => {
   const [title, setTitle] = useState<string | undefined>(id ? "" : "新建");
   const [form] = Form.useForm<IRelation>();
   const formRef = useRef<ProFormInstance>();
@@ -124,4 +128,4 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default RelationEditWidget;

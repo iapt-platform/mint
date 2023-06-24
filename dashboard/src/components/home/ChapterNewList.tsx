@@ -7,7 +7,7 @@ import StudioName from "../auth/StudioName";
 import { ChapterData } from "../corpus/ChapterCard";
 const { Title, Text, Paragraph } = Typography;
 
-const Widget = () => {
+const ChapterNewListWidget = () => {
   const [listData, setListData] = useState<ChapterData[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -101,4 +101,4 @@ const Widget = () => {
   );
 };
 
-export default Widget;
+export default ChapterNewListWidget;

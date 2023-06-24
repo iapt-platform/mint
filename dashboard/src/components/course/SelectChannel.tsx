@@ -18,7 +18,7 @@ interface IWidget {
   open?: boolean;
   onOpenChange?: Function;
 }
-const Widget = ({
+const SelectChannelWidget = ({
   courseId,
   exerciseId,
   channel,
@@ -111,4 +111,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SelectChannelWidget;

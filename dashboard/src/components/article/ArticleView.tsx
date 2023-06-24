@@ -23,7 +23,7 @@ export interface IWidgetArticleData {
   articleId?: string;
 }
 
-const Widget = ({
+const ArticleViewWidget = ({
   id,
   title = "",
   subTitle,
@@ -94,4 +94,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default ArticleViewWidget;

@@ -11,7 +11,7 @@ import PublicitySelect from "../studio/PublicitySelect";
 interface IFormData {
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string;
   lang: string;
   status: number;
 }
@@ -20,15 +20,13 @@ interface IWidget {
   anthologyId?: string;
   onTitleChange?: Function;
 }
-const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
+const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
   const intl = useIntl();
 
   return anthologyId ? (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
         console.log(values);
-
         const res = await put<IAnthologyDataRequest, IAnthologyResponse>(
           `/v2/anthology/${anthologyId}`,
           {
@@ -66,7 +64,7 @@ const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
           return {
             title: res.data.title,
             subtitle: res.data.subtitle,
-            summary: res.data.summary,
+            summary: res.data.summary ? res.data.summary : undefined,
             lang: res.data.lang,
             status: res.data.status,
           };
@@ -125,4 +123,4 @@ const Widget = ({ anthologyId, onTitleChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default AnthologyInfoEditWidget;

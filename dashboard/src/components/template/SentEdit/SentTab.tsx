@@ -13,6 +13,9 @@ import TocPath, { ITocPathNode } from "../../corpus/TocPath";
 import { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
+import { IChapter } from "../../corpus/BookViewer";
+import store from "../../../store";
+import { change } from "../../../reducers/para-change";
 
 const { Text } = Typography;
 
@@ -30,9 +33,10 @@ interface IWidget {
   originNum: number;
   simNum?: number;
   wbwData?: IWbw[];
+  magicDictLoading?: boolean;
   onMagicDict?: Function;
 }
-const Widget = ({
+const SentTabWidget = ({
   id,
   book,
   para,
@@ -45,10 +49,16 @@ const Widget = ({
   originNum,
   simNum = 0,
   wbwData,
+  magicDictLoading = false,
   onMagicDict,
 }: IWidget) => {
   const intl = useIntl();
-
+  const mPath = path
+    ? [
+        ...path,
+        { book: book, paragraph: para, title: para.toString(), level: 100 },
+      ]
+    : [];
   if (typeof id === "undefined") {
     return <></>;
   }
@@ -58,21 +68,34 @@ const Widget = ({
   return (
     <>
       <Tabs
-        style={{ marginBottom: 0 }}
+        tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
         tabBarExtraContent={
           <Space>
             <TocPath
-              data={path}
+              link="none"
+              data={mPath}
               trigger={
                 path ? path.length > 0 ? path[0].paliTitle : <></> : <></>
               }
+              onChange={(para: IChapter) => {
+                //点击章节目录
+                const type = para.level
+                  ? para.level < 8
+                    ? "chapter"
+                    : "para"
+                  : "para";
+                store.dispatch(
+                  change({ book: para.book, para: para.para, type: type })
+                );
+              }}
             />
             <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
             <SentMenu
               book={book}
               para={para}
+              loading={magicDictLoading}
               onMagicDict={(type: string) => {
                 if (typeof onMagicDict !== "undefined") {
                   onMagicDict(type);
@@ -160,7 +183,7 @@ const Widget = ({
               />
             ),
           },
-          {
+          /*{
             label: (
               <SentTabButton
                 icon={<BlockOutlined />}
@@ -173,7 +196,6 @@ const Widget = ({
               />
             ),
             key: "original",
-            disabled: true,
             children: (
               <SentCanRead
                 book={parseInt(sId[0])}
@@ -183,7 +205,7 @@ const Widget = ({
                 type="original"
               />
             ),
-          },
+          },*/
           {
             label: (
               <SentTabButton
@@ -218,4 +240,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default SentTabWidget;

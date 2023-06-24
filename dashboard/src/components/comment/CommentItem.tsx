@@ -22,7 +22,7 @@ interface IWidget {
   onSelect?: Function;
   onCreated?: Function;
 }
-const Widget = ({ data, onSelect, onCreated }: IWidget) => {
+const CommentItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
   console.log(data);
   return (
@@ -53,4 +53,4 @@ const Widget = ({ data, onSelect, onCreated }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentItemWidget;

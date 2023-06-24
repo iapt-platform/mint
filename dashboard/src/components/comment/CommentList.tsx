@@ -7,7 +7,7 @@ interface IWidget {
   data: IComment[];
   onSelect?: Function;
 }
-const Widget = ({ data, onSelect }: IWidget) => {
+const CommentListWidget = ({ data, onSelect }: IWidget) => {
   return (
     <div>
       <List
@@ -53,4 +53,4 @@ const Widget = ({ data, onSelect }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CommentListWidget;

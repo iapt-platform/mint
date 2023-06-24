@@ -23,7 +23,7 @@ interface IWidget {
   studio?: string;
   onSuccess?: Function;
 }
-const Widget = ({ studio, onSuccess }: IWidget) => {
+const ChannelCreateWidget = ({ studio, onSuccess }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
 
@@ -71,4 +71,4 @@ const Widget = ({ studio, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ChannelCreateWidget;

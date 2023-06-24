@@ -17,7 +17,11 @@ interface IWidget {
   id?: string;
   onSuccess?: Function;
 }
-const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
+const NissayaEndingWidget = ({
+  trigger = <>{"trigger"}</>,
+  id,
+  onSuccess,
+}: IWidget) => {
   const [title, setTitle] = useState<string | undefined>(id ? "" : "新建");
   const [form] = Form.useForm<INissayaEnding>();
   const intl = useIntl();
@@ -108,4 +112,4 @@ const Widget = ({ trigger = <>{"trigger"}</>, id, onSuccess }: IWidget) => {
   );
 };
 
-export default Widget;
+export default NissayaEndingWidget;

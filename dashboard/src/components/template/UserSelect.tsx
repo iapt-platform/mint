@@ -10,7 +10,7 @@ interface IWidget {
   multiple?: boolean;
   hidden?: boolean;
 }
-const Widget = ({
+const UserSelectWidget = ({
   name = "user",
   multiple = false,
   width = "md",
@@ -56,4 +56,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
+export default UserSelectWidget;

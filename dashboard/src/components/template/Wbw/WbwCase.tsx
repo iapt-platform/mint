@@ -7,7 +7,6 @@ import { Dropdown } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
-import { PaliReal } from "../../../utils";
 import "./wbw.css";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
@@ -38,9 +37,9 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
-    if (inlineDict.wordIndex.includes(data.word.value)) {
+    if (inlineDict.wordIndex.includes(data.real.value)) {
       const result = inlineDict.wordList.filter(
-        (word) => word.word === data.word.value
+        (word) => word.word === data.real.value
       );
       //查重
       //TODO 加入信心指数并排序
@@ -68,7 +67,7 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
       });
       setItems(menu);
     }
-  }, [data.word.value, inlineDict, intl]);
+  }, [data.real.value, inlineDict, intl]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     if (typeof onChange !== "undefined") {
@@ -78,36 +77,41 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
 
   const showSplit: boolean = data.factors?.value?.includes("+") ? true : false;
   let caseElement: JSX.Element | JSX.Element[] | undefined;
-  if (
-    display === "block" &&
-    typeof data.case?.value === "string" &&
-    data.case.value.trim() !== ""
-  ) {
-    caseElement = data.case.value
-      .replace("#", "$")
-      .split("$")
-      .map((item, id) => {
-        if (item !== "") {
-          const strCase = item.replaceAll(".", "");
-          return (
-            <span key={id} className="case">
-              {intl.formatMessage({
-                id: `dict.fields.type.${strCase}.short.label`,
-              })}
-            </span>
-          );
-        } else {
-          return <span key={id}></span>;
-        }
-      });
-  } else {
-    //空白的语法信息在逐词解析模式显示占位字符串
-    caseElement = (
-      <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
-    );
+  if (display === "block") {
+    if (
+      typeof data.case?.value === "string" &&
+      data.case.value?.trim().length > 0
+    ) {
+      caseElement = data.case.value
+        .replace("#", "$")
+        .split("$")
+        .map((item, id) => {
+          if (item !== "") {
+            const strCase = item.replaceAll(".", "");
+            return (
+              <span key={id} className="case">
+                {intl.formatMessage({
+                  id: `dict.fields.type.${strCase}.short.label`,
+                })}
+              </span>
+            );
+          } else {
+            return <span key={id}>-</span>;
+          }
+        });
+    } else {
+      //空白的语法信息在逐词解析模式显示占位字符串
+      caseElement = (
+        <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
+      );
+    }
   }
 
-  if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+  if (
+    typeof data.real?.value === "string" &&
+    data.real.value.trim().length > 0
+  ) {
+    //非标点符号
     return (
       <div className="wbw_word_item" style={{ display: "flex" }}>
         <Text type="secondary">

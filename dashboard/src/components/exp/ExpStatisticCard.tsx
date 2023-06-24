@@ -1,6 +1,7 @@
 import { StatisticCard } from "@ant-design/pro-components";
 import { message } from "antd";
 import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { IUserStatisticResponse } from "../api/Exp";
 import ExpPie, { IPieData } from "./ExpPie";
@@ -10,7 +11,8 @@ const { Divider } = StatisticCard;
 interface IWidget {
   studioName?: string;
 }
-const Widget = ({ studioName }: IWidget) => {
+const ExpStatisticCardWidget = ({ studioName }: IWidget) => {
+  const intl = useIntl();
   const [expSum, setExpSum] = useState<number>();
   const [wbwCount, setWbwCount] = useState<number>();
   const [lookupCount, setLookupCount] = useState<number>();
@@ -71,7 +73,9 @@ const Widget = ({ studioName }: IWidget) => {
       />
       <StatisticCard
         statistic={{
-          title: "查字典",
+          title: intl.formatMessage({
+            id: "buttons.lookup",
+          }),
           value: lookupCount,
           suffix: "次",
         }}
@@ -103,4 +107,4 @@ const Widget = ({ studioName }: IWidget) => {
   );
 };
 
-export default Widget;
+export default ExpStatisticCardWidget;

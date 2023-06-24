@@ -11,7 +11,11 @@ interface IWidget {
   openTarget?: React.HTMLAttributeAnchorTarget;
 }
 
-const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
+const PaliChapterchannelListWidget = ({
+  para,
+  channelId,
+  openTarget = "_blank",
+}: IWidget) => {
   const [tableData, setTableData] = useState<IChapterChannelData[]>([]);
 
   useEffect(() => {
@@ -52,4 +56,4 @@ const Widget = ({ para, channelId, openTarget = "_blank" }: IWidget) => {
   }
 };
 
-export default Widget;
+export default PaliChapterchannelListWidget;

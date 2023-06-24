@@ -6,23 +6,19 @@ import RelatedPara from "../../corpus/RelatedPara";
 interface ISentMenu {
   book?: number;
   para?: number;
+  loading?: boolean;
   onMagicDict?: Function;
 }
-const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
+const SentMenuWidget = ({
+  book,
+  para,
+  loading = false,
+  onMagicDict,
+}: ISentMenu) => {
   const items: MenuProps["items"] = [
     {
-      key: "magic-dict",
-      label: "魔法字典",
-      children: [
-        {
-          key: "magic-dict-current",
-          label: "此句",
-        },
-        {
-          key: "magic-dict-below",
-          label: "此句及以下",
-        },
-      ],
+      key: "magic-dict-current",
+      label: "神奇字典",
     },
     {
       key: "show-commentary",
@@ -57,6 +53,7 @@ const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
   return (
     <Dropdown menu={{ items, onClick }} placement="topRight">
       <Button
+        loading={loading}
         onClick={(e) => e.preventDefault()}
         icon={<MoreOutlined />}
         size="small"
@@ -66,4 +63,4 @@ const Widget = ({ book, para, onMagicDict }: ISentMenu) => {
   );
 };
 
-export default Widget;
+export default SentMenuWidget;

@@ -24,7 +24,7 @@ interface IWidget {
   join?: TCourseJoinMode;
   exp?: TCourseExpRequest;
 }
-const Widget = ({
+const CourseHeadWidget = ({
   id,
   title,
   subtitle,
@@ -98,11 +98,4 @@ const Widget = ({
   );
 };
 
-export default Widget;
-
-/*
-<Button type="primary">关注</Button>
-<Button type="primary" disabled>
-  已关注
-</Button>
-*/
+export default CourseHeadWidget;

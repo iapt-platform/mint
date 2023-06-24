@@ -7,7 +7,7 @@ import { IWbw } from "./WbwWord";
 interface IWidget {
   wbwData?: IWbw[];
 }
-const Widget = ({ wbwData }: IWidget) => {
+const RelaGraphicWidget = ({ wbwData }: IWidget) => {
   const terms = useAppSelector(getTerm);
 
   //根据relation 绘制关系图
@@ -17,13 +17,20 @@ const Widget = ({ wbwData }: IWidget) => {
     const relationWords = data
       ?.filter((value) => value.relation)
       .map((item) => {
-        if (item.relation) {
+        if (item.relation && item.relation.value) {
           const json: IRelation[] = JSON.parse(item.relation.value);
           const graphic = json.map((relation) => {
             const localName = terms?.find(
               (item) => item.word === relation.relation
             )?.meaning;
-            return `${relation.sour_id}(${relation.sour_spell}<br />${item.meaning?.value}) --"${relation.relation}<br />${localName}"--> ${relation.dest_id}(${relation.dest_spell})\n`;
+            const meaning = item.meaning?.value
+              ? item.meaning?.value
+                  ?.replaceAll("[", "")
+                  .replaceAll("]", "")
+                  .replaceAll("{", "")
+                  .replaceAll("}", "")
+              : "";
+            return `${relation.sour_id}(${relation.sour_spell}<br />${meaning}) --"${relation.relation}<br />${localName}"--> ${relation.dest_id}(${relation.dest_spell})\n`;
           });
           return graphic.join("");
         } else {
@@ -42,4 +49,4 @@ const Widget = ({ wbwData }: IWidget) => {
   );
 };
 
-export default Widget;
+export default RelaGraphicWidget;

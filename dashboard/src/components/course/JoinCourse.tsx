@@ -31,7 +31,12 @@ interface IWidget {
   joinMode?: TCourseJoinMode;
   expRequest?: TCourseExpRequest;
 }
-const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
+const JoinCourseWidget = ({
+  courseId,
+  joinMode,
+  startAt,
+  expRequest,
+}: IWidget) => {
   const user = useAppSelector(_currentUser);
   const intl = useIntl();
   const [currMember, setCurrMember] = useState<ICourseMemberData>();
@@ -169,4 +174,4 @@ const Widget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
   );
 };
 
-export default Widget;
+export default JoinCourseWidget;

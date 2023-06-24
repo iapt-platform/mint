@@ -12,7 +12,7 @@ interface IWidget {
   compact?: boolean;
   onSearch?: Function;
 }
-const Widget = ({ word, compact = false, onSearch }: IWidget) => {
+const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   const [split, setSplit] = useState<string>();
   const [wordSearch, setWordSearch] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -67,4 +67,4 @@ const Widget = ({ word, compact = false, onSearch }: IWidget) => {
   );
 };
 
-export default Widget;
+export default DictionaryWidget;

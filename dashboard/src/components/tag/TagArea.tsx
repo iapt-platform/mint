@@ -7,14 +7,13 @@ interface IWidget {
   onTagClose?: Function;
   onTagClick?: Function;
 }
-const Widget = ({
+const TagAreaWidget = ({
   data,
   closable,
   max = 10000,
   onTagClose,
   onTagClick,
 }: IWidget) => {
-  // TODO
   const tags = data.map((item, id) => {
     return id < max ? (
       <ChapterTag
@@ -37,4 +36,4 @@ const Widget = ({
   return <div style={{ width: "100%", lineHeight: "2em" }}>{tags}</div>;
 };
 
-export default Widget;
+export default TagAreaWidget;

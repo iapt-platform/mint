@@ -20,7 +20,7 @@ interface IWidget {
   onTitleClick?: Function;
 }
 
-const Widget = ({ data, onTitleClick }: IWidget) => {
+const PaliChapterCardWidget = ({ data, onTitleClick }: IWidget) => {
   const path = JSON.parse(data.Path);
 
   return (
@@ -79,4 +79,4 @@ const Widget = ({ data, onTitleClick }: IWidget) => {
   );
 };
 
-export default Widget;
+export default PaliChapterCardWidget;

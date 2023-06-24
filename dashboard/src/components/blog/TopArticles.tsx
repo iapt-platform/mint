@@ -5,7 +5,7 @@ import TopArticleCard, { ITopArticleCardData } from "./TopArticleCard";
 interface IWidgetTopArticles {
   studio: string;
 }
-const Widget = (prop: IWidgetTopArticles) => {
+const TopArticlesWidget = (prop: IWidgetTopArticles) => {
   const data: ITopArticleCardData[] = [
     {
       title: "法句心品",
@@ -47,4 +47,4 @@ const Widget = (prop: IWidgetTopArticles) => {
   return <Row>{list}</Row>;
 };
 
-export default Widget;
+export default TopArticlesWidget;

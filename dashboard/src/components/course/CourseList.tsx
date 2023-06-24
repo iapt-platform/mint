@@ -12,7 +12,7 @@ const { Paragraph } = Typography;
 interface IWidget {
   type: "open" | "close";
 }
-const Widget = ({ type }: IWidget) => {
+const CourseListWidget = ({ type }: IWidget) => {
   const [data, setData] = useState<ICourse[]>();
 
   useEffect(() => {
@@ -68,4 +68,4 @@ const Widget = ({ type }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CourseListWidget;

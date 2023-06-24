@@ -33,7 +33,7 @@ interface IWidgetAnthologyCard {
   data: IAnthologyData;
 }
 
-const Widget = (prop: IWidgetAnthologyCard) => {
+const AnthologyCardWidget = (prop: IWidgetAnthologyCard) => {
   const articleList = prop.data.articles.map((item, id) => {
     return <div key={id}>{item.title}</div>;
   });
@@ -65,4 +65,4 @@ const Widget = (prop: IWidgetAnthologyCard) => {
   );
 };
 
-export default Widget;
+export default AnthologyCardWidget;

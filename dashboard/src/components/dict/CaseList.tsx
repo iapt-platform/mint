@@ -12,10 +12,13 @@ export interface ICaseListData {
 interface IWidget {
   word?: string;
 }
-const Widget = ({ word }: IWidget) => {
+const CaseListWidget = ({ word }: IWidget) => {
   const [caseData, setCaseData] = useState<ICaseListData[]>();
   const [count, setCount] = useState<number>();
   useEffect(() => {
+    if (typeof word === "undefined") {
+      return;
+    }
     get<ICaseListResponse>(`/v2/case/${word}`).then((json) => {
       console.log("case", json);
       if (json.ok) {
@@ -49,4 +52,4 @@ const Widget = ({ word }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CaseListWidget;

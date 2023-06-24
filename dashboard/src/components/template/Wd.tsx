@@ -1,46 +1,35 @@
 import { useState } from "react";
 
-import { command } from "../../reducers/command";
+import { lookup } from "../../reducers/command";
 import store from "../../store";
-import { IWidgetDict } from "../dict/DictComponent";
+import "./style.css";
 
 interface IWidgetWdCtl {
   text?: string;
 }
 export const WdCtl = ({ text }: IWidgetWdCtl) => {
-  const [isHover, setIsHover] = useState(false);
   return (
-    <span
-      onMouseEnter={() => {
-        setIsHover(true);
-      }}
-      onMouseLeave={() => {
-        setIsHover(false);
-      }}
-      onClick={() => {
-        //发送点词查询消息
-        const it: IWidgetDict = {
-          word: text,
-        };
-        store.dispatch(command({ prop: it, type: "dict" }));
-      }}
-      style={{
-        textDecoration: isHover ? "underline dotted" : "none",
-        textUnderlineOffset: 4,
-        cursor: "pointer",
-      }}
-    >
-      {text}{" "}
-    </span>
+    <>
+      {text !== "ti" ? " " : undefined}
+      <span
+        className="pcd_word"
+        onClick={() => {
+          //发送点词查询消息
+          store.dispatch(lookup(text));
+        }}
+      >
+        {text}
+      </span>
+    </>
   );
 };
 
 interface IWidgetTerm {
   props: string;
 }
-const Widget = ({ props }: IWidgetTerm) => {
+const WdWidget = ({ props }: IWidgetTerm) => {
   const prop = JSON.parse(atob(props)) as IWidgetWdCtl;
   return <WdCtl {...prop} />;
 };
 
-export default Widget;
+export default WdWidget;

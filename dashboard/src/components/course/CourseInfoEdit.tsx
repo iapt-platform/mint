@@ -49,7 +49,11 @@ interface IWidget {
   courseId?: string;
   onTitleChange?: Function;
 }
-const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
+const CourseInfoEditWidget = ({
+  studioName,
+  courseId,
+  onTitleChange,
+}: IWidget) => {
   const intl = useIntl();
   const [teacherOption, setTeacherOption] = useState<DefaultOptionType[]>([]);
   const [currTeacher, setCurrTeacher] = useState<RequestOptionsType>();
@@ -403,4 +407,4 @@ const Widget = ({ studioName, courseId, onTitleChange }: IWidget) => {
   );
 };
 
-export default Widget;
+export default CourseInfoEditWidget;

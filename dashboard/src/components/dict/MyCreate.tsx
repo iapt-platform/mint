@@ -13,17 +13,18 @@ import {
   IUserDictCreate,
 } from "../api/Dict";
 import { useAppSelector } from "../../hooks";
-import { add, wordIndex } from "../../reducers/inline-dict";
+import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
 
 interface IWidget {
   word?: string;
 }
-const Widget = ({ word }: IWidget) => {
+const MyCreateWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [wordSpell, setWordSpell] = useState(word);
   const [editWord, setEditWord] = useState<IWbw>({
     word: { value: word ? word : "", status: 1 },
+    real: { value: word ? word : "", status: 1 },
     book: 0,
     para: 0,
     sn: [0],
@@ -31,6 +32,8 @@ const Widget = ({ word }: IWidget) => {
   });
   const [loading, setLoading] = useState(false);
   const inlineWordIndex = useAppSelector(wordIndex);
+
+  useEffect(() => setWordSpell(word), [word]);
 
   useEffect(() => {
     //查询这个词在内存字典里是否有
@@ -46,6 +49,7 @@ const Widget = ({ word }: IWidget) => {
         console.log("lookup ok", json.data.count);
         //存储到redux
         store.dispatch(add(json.data.rows));
+        store.dispatch(updateIndex([wordSpell]));
       }
     );
   }, [inlineWordIndex, wordSpell]);
@@ -54,33 +58,28 @@ const Widget = ({ word }: IWidget) => {
     let mData: IWbw = JSON.parse(JSON.stringify(editWord));
     switch (field) {
       case "note":
-        mData.note = { value: value, status: 5 };
+        mData.note = { value: value, status: 7 };
         break;
       case "word":
-        mData.word = { value: value, status: 5 };
+        mData.word = { value: value, status: 7 };
         break;
       case "meaning":
-        mData.meaning = { value: value, status: 5 };
+        mData.meaning = { value: value, status: 7 };
         break;
       case "factors":
-        mData.factors = { value: value, status: 5 };
+        mData.factors = { value: value, status: 7 };
         break;
       case "factorMeaning":
-        mData.factorMeaning = { value: value, status: 5 };
+        mData.factorMeaning = { value: value, status: 7 };
         break;
       case "parent":
-        mData.parent = { value: value, status: 5 };
+        mData.parent = { value: value, status: 7 };
         break;
       case "case":
-        const _case = value
-          .replaceAll("n$base", "n.:.base")
-          .replaceAll("ti$base", "ti.:.base")
-          .split("$");
-        const _type = "." + _case[0] + ".";
-        const _grammar = _case
-          .slice(1)
-          .map((item) => `.${item}.`)
-          .join("$");
+        console.log("case", value);
+        const _case = value.replaceAll("#", "$").split("$");
+        const _type = _case[0];
+        const _grammar = _case.slice(1).join("$");
         mData.type = { value: _type, status: 7 };
         mData.grammar = { value: _grammar, status: 7 };
         mData.case = { value: value, status: 7 };
@@ -147,7 +146,6 @@ const Widget = ({ word }: IWidget) => {
           loading={loading}
           icon={<SaveOutlined />}
           onClick={() => {
-            console.log("edit word", editWord);
             setLoading(true);
             const data = [
               {
@@ -162,7 +160,6 @@ const Widget = ({ word }: IWidget) => {
                 confidence: editWord.confidence,
               },
             ];
-            console.log("wbw data", data);
             post<IUserDictCreate, IDictResponse>("/v2/userdict", {
               view: "dict",
               data: JSON.stringify(data),
@@ -172,7 +169,9 @@ const Widget = ({ word }: IWidget) => {
               })
               .then((json) => {
                 if (json.ok) {
-                  message.success("成功");
+                  message.success(
+                    intl.formatMessage({ id: "flashes.success" })
+                  );
                 } else {
                   message.error(json.message);
                 }
@@ -187,4 +186,4 @@ const Widget = ({ word }: IWidget) => {
   );
 };
 
-export default Widget;
+export default MyCreateWidget;
