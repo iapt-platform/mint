@@ -13,24 +13,6 @@ class CreateSentencesTable extends Migration
      */
     public function up()
     {
-		/*
-
-	parent_uid VARCHAR (36), 
-	block_uid VARCHAR (36), 
-	channel_uid VARCHAR (36), 
-	book_id INTEGER NOT NULL, 
-	paragraph INTEGER NOT NULL, 
-	word_start INTEGER NOT NULL, 
-	word_end INTEGER NOT NULL, 
-	author TEXT, 
-	editor_uid VARCHAR (36), 
-	content TEXT, 
-	language VARCHAR (16), 
-	version INTEGER NOT NULL DEFAULT (1), 
-	status INTEGER NOT NULL DEFAULT (10), 
-	strlen INTEGER, 
-
-		*/
         Schema::create('sentences', function (Blueprint $table) {
 			#使用雪花id
             $table->bigInteger('id')->primary();

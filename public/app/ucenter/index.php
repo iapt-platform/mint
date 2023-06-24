@@ -67,7 +67,7 @@ $post_username = "";
 $post_password = "";
 $post_email = "";
 if (isset($_POST["op"]) && $_POST["op"] == "new") {
-	PDO_Connect( _FILE_DB_USERINFO_);
+	PDO_Connect( _FILE_DB_USERINFO_ , _DB_USERNAME_ , _DB_PASSWORD_);
 	//建立账号
     $op = "new";
     $post_username = trim($_POST["username"]);
@@ -80,7 +80,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
 		$post_error = true;
     }
 	else{
-        $query = "select count(*) as co from user where username = ?" ;
+        $query = "SELECT count(*) as co from "._TABLE_USER_INFO_." where username = ?" ;
         $iFetch = PDO_FetchOne($query,array($post_username));
         if ($iFetch > 0) { //username is existed
             $error_username = $_local->gui->account_existed;
@@ -91,7 +91,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
         $error_email = $_local->gui->email . $_local->gui->cannot_empty;
 		$post_error = true;
     }else{
-		$query = "select count(*) as co from user where email = ?" ;
+		$query = "SELECT count(*) as co from "._TABLE_USER_INFO_." where email = ?" ;
 		$iFetch = PDO_FetchOne($query,array($post_email));
 		if ($iFetch > 0) { //username is existed
 			$error_email = $_local->gui->email . "已经存在";
@@ -117,7 +117,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
         $md5_password = md5($post_password);
         $new_userid = UUID::v4();
 
-				$query = "INSERT INTO user ('id','userid','username','password','nickname','email') VALUES (NULL," . $PDO->quote($new_userid) . "," . $PDO->quote($post_username) . "," . $PDO->quote($md5_password) . "," . $PDO->quote($post_nickname) . "," . $PDO->quote($post_email) . ")";
+				$query = "INSERT INTO "._TABLE_USER_INFO_." ('id','userid','username','password','nickname','email') VALUES (NULL," . $PDO->quote($new_userid) . "," . $PDO->quote($post_username) . "," . $PDO->quote($md5_password) . "," . $PDO->quote($post_nickname) . "," . $PDO->quote($post_email) . ")";
 				$stmt = @PDO_Execute($query);
 				if (!$stmt || ($stmt && $stmt->errorCode() != 0)) {
 					$error = PDO_ErrorInfo();
@@ -142,7 +142,7 @@ if (isset($_POST["op"]) && $_POST["op"] == "new") {
         } else if (isset($_POST["password"])) {
             $md5_password = md5($_POST["password"]);
             PDO_Connect(_FILE_DB_USERINFO_);
-            $query = "select * from user where (\"username\"=" . $PDO->quote($_POST["username"]) . " or \"email\"=" . $PDO->quote($_POST["username"]) . " ) and \"password\"=" . $PDO->quote($md5_password);
+            $query = "SELECT * from "._TABLE_USER_INFO_." where (\"username\"=" . $PDO->quote($_POST["username"]) . " or \"email\"=" . $PDO->quote($_POST["username"]) . " ) and \"password\"=" . $PDO->quote($md5_password);
             $Fetch = PDO_FetchAll($query);
             $iFetch = count($Fetch);
             if ($iFetch > 0) {

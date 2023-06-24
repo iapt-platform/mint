@@ -8,6 +8,8 @@ use App\Models\BookTitle;
 use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class PaliTextController extends Controller
 {
@@ -131,7 +133,9 @@ class PaliTextController extends Controller
                 $chapters = $table->orderBy('paragraph')->get();
                 break;
             case 'paragraph':
-                $result = PaliText::where('book',$request->get('book'))->where('paragraph',$request->get('para'))->first();
+                $result = PaliText::where('book',$request->get('book'))
+                                  ->where('paragraph',$request->get('para'))
+                                  ->first();
                 if($result){
                     return $this->ok($result);
                 }else{
@@ -196,6 +200,12 @@ class PaliTextController extends Controller
                 break;
             }
         if($chapters){
+            if($request->get('view') !== 'book-toc'){
+                foreach ($chapters as $key => $value) {
+                    $progress_key="/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
+                    $chapters[$key]->progress_line = Cache::get($progress_key);
+                }
+            }
             return $this->ok(["rows"=>$chapters,"count"=>$all_count]);
         }else{
             return $this->error("no data");

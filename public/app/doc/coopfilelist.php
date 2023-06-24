@@ -15,7 +15,7 @@ else{
 	exit;
 }
 
-    PDO_Connect(""._FILE_DB_FILEINDEX_);
+    PDO_Connect(_FILE_DB_FILEINDEX_);
     $query = "SELECT * from power where user = ? order by modify_time DESC";
     $Fetch = PDO_FetchAll($query,array($_COOKIE["userid"]));
     $result=array();
@@ -35,5 +35,5 @@ else{
         }
     }
 	echo json_encode($result, JSON_UNESCAPED_UNICODE);
-	
+
 ?>

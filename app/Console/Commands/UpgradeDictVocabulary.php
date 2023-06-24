@@ -42,15 +42,20 @@ class UpgradeDictVocabulary extends Command
     {
         $words = UserDict::where('source','_PAPER_')->selectRaw('word,count(*)')->groupBy('word')->cursor();
 
-		$bar = $this->output->createProgressBar(200000);
+		$bar = $this->output->createProgressBar(230000);
 		foreach ($words as $word) {
-			$update = Vocabulary::where('word',$word->word)->updateOrCreate(
-                ['count' => $word->count, 'flag' => 1],
-                ['word' => $word->word, 'word_en'=>Tools::getWordEn($word->word)]
+			$update = Vocabulary::firstOrNew(
+                ['word' => $word->word],
+                ['word_en'=>Tools::getWordEn($word->word)]
             );
+            $update->count = $word->count;
+            $update->flag = 1;
+            $update->strlen = mb_strlen($word->word,"UTF-8");
+            $update->save();
             $bar->advance();
 		}
         $bar->finish();
+        Vocabulary::where('flag',0)->delete();
         return 0;
     }
 }

@@ -14,5 +14,6 @@ class DhammaTerm extends Model
         'guid' => 'string'
     ];
     public  $incrementing = false;
+	protected $fillable = ['id' , 'guid', 'word','word_en','meaning','channal','language','owner','editor_id','create_time','modify_time'];
 
 }

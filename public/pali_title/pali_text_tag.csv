@@ -652,16 +652,19 @@ book,paragraph,level,title,tag
 77,3307,2,21. ekavīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
 77,3361,2,22. bāvīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
 77,3417,2,23. tevīsatimavaggo,:kathāvatthu::mūla::abhidhamma::kathāvatthu::pāḷi:
-78,4,2,1. mūlayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,309,2,2. khandhayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,1463,2,3. āyatanayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,3544,2,4. dhātuyamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-78,3809,2,5. saccayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,4,2,6. saṅkhārayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,822,2,7. anusayayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-79,3204,2,8. cittayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-80,4,2,9. dhammayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
-80,1122,2,10. indriyayamakaṃ,:yamaka::mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3,1,1. Yamakapāḷi (paṭhamo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,4,2,1. mūlayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,309,2,2. khandhayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,1463,2,3. āyatanayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3544,2,4. dhātuyamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+78,3809,2,5. saccayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,3,2,6. Yamakapāḷi (dutiyo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,4,2,6. saṅkhārayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,822,2,7. anusayayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+79,3204,2,8. cittayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,3,2,9. Yamakapāḷi (tatiyo bhāgo),:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,4,2,9. dhammayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
+80,1122,2,10. indriyayamakaṃ,:mūla::abhidhamma::yamaka::yamakapāḷi::pāḷi:
 81,3,1,paṭṭhānapāḷi,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:
 81,5,2,dhammānulome,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:
 81,153,2,1. kusalattikaṃ,:paṭṭhāna::mūla::abhidhamma::paṭṭhāna::paṭṭhānapāḷi::pāḷi:

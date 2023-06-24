@@ -16,7 +16,7 @@ class UpgradeCompound extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:compound {word?} {--test}';
+    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test}';
 
     /**
      * The console command description.
@@ -55,11 +55,16 @@ class UpgradeCompound extends Command
 		$_word = $this->argument('word');
 		if(!empty($_word)){
 			$ts = new TurboSplit();
+            if($this->option('debug')){
+                $ts->debug(true);
+            }
 			$results = $ts->splitA($_word);
 			Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
 			foreach ($results as $key => $value) {
 				# code...
-				Storage::disk('local')->append("tmp/compound1.csv", "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}");
+                $output = "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}";
+                $this->info($output);
+				Storage::disk('local')->append("tmp/compound1.csv", $output);
 			}
 			return 0;
 		}
@@ -85,8 +90,9 @@ class UpgradeCompound extends Command
 					$parts = $ts->splitA($word->word);
 					foreach ($parts as $part) {
 						# code...
-						$this->info("{$part['word']},{$part['factors']},{$part['confidence']}");
-						Storage::disk('local')->append("tmp/compound.md", "- `{$part['word']}`,{$part['factors']},{$part['confidence']}");
+                        $info = "`{$part['word']}`,{$part['factors']},{$part['confidence']}";
+						$this->info($info);
+						Storage::disk('local')->append("tmp/compound.md", "- {$info}");
 					}
 				}
 			}
@@ -94,13 +100,24 @@ class UpgradeCompound extends Command
 			return 0;
 		}
 
-		//$words = WordIndex::where('final',0)->select('word')->orderBy('count','desc')->skip(72300)->cursor();
-		$words = WbwTemplate::select('real')
-						->where('type','<>','.ctl.')
-						->where('real','<>','')
-						->groupBy('real')->cursor();
+        if($this->option('book')){
+            $words = WbwTemplate::select('real')
+                            ->where('book',$this->option('book'))
+                            ->where('type','<>','.ctl.')
+                            ->where('real','<>','')
+                            ->groupBy('real')->cursor();
+        }else{
+            $words = WbwTemplate::select('real')
+                            ->where('type','<>','.ctl.')
+                            ->where('real','<>','')
+                            ->groupBy('real')->cursor();
+        }
+
 		$count = 0;
 		foreach ($words as $key => $word) {
+            UserDict::where('word',$word->real)
+                    ->where('dict_id',$dict_id)
+                    ->update(['flag'=>2]);
 			//先看目前字典里有没有
 			$isExists = UserDict::where('word',$word->real)
 								->where('dict_id',"<>",$dict_id)
@@ -108,43 +125,48 @@ class UpgradeCompound extends Command
 
 			if($isExists){
 				$this->info("Exists:{$word->real}");
-				continue;
+				//continue;
 			}
 			# code...
 			$count++;
 			$this->info("{$count}:{$word->real}");
 			$ts = new TurboSplit();
-			$parts = $ts->splitA($word->real);
-			foreach ($parts as $part) {
-				$new = UserDict::firstOrNew(
-					[
-						'word' => $part['word'],
-						'factors' => $part['factors'],
-						'dict_id' => $dict_id,
-					],
-					[
-						'id' => app('snowflake')->id(),
-						'source' => '_ROBOT_',
-						'create_time'=>(int)(microtime(true)*1000),
-					]
-				);
-				if(isset($part['type'])){
-					$new->type = $part['type'];
-				}else{
-					$new->type = ".cp.";
-				}
-				if(isset($part['grammar'])) $new->parent = $part['grammar'];
-				if(isset($part['parent'])) $new->parent = $part['parent'];
-				$new->confidence = 50*$part['confidence'];
-				$new->note = $part['confidence'];
-				$new->language = 'cm';
-				$new->creator_id = 1;
-				$new->flag = 1;
-				$new->save();
-			}
+
+            $parts = $ts->splitA($word->real);
+            foreach ($parts as $part) {
+                if(isset($part['type']) && $part['type'] === ".v."){
+                    continue;
+                }
+
+                $new = UserDict::firstOrNew(
+                    [
+                        'word' => $part['word'],
+                        'factors' => $part['factors'],
+                        'dict_id' => $dict_id,
+                    ],
+                    [
+                        'id' => app('snowflake')->id(),
+                        'source' => '_ROBOT_',
+                        'create_time'=>(int)(microtime(true)*1000),
+                    ]
+                );
+                if(isset($part['type'])){
+                    $new->type = $part['type'];
+                }else{
+                    $new->type = ".cp.";
+                }
+                if(isset($part['grammar'])) $new->grammar = $part['grammar'];
+                if(isset($part['parent'])) $new->parent = $part['parent'];
+                $new->confidence = 50*$part['confidence'];
+                $new->note = $part['confidence'];
+                $new->language = 'cm';
+                $new->creator_id = 1;
+                $new->flag = 1;
+                $new->save();
+            }
 		}
 		//删除旧数据
-		UserDict::where('dict_id',$dict_id)->where('flag',0)->delete();
+		UserDict::where('dict_id',$dict_id)->where('flag',2)->delete();
 		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
 
         return 0;

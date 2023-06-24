@@ -8,11 +8,11 @@ function get_setting()
     } else {
         $setting = json_decode(file_get_contents("../ucenter/default.json"), true);
         //打开数据库
-        $dns = "" . _FILE_DB_USERINFO_;
-        $dbh = new PDO($dns, "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dns = _FILE_DB_USERINFO_;
+        $dbh = new PDO($dns, _DB_USERNAME_,_DB_PASSWORD_, array(PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-        $query = "select setting from user where userid = ? ";
+        $query = "SELECT setting from "._TABLE_USER_INFO_." where userid = ? ";
         $stmt = $dbh->prepare($query);
         $stmt->execute(array($_COOKIE["userid"]));
         $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);

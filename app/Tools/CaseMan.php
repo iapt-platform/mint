@@ -170,7 +170,6 @@ class CaseMan
 				}
 				# 只保存语法信息合理的数据
 				if(isset($case[$parentType])){
-					Log::info("found:{$value['type']}-{$value['grammar']}-{$value['parent']}");
 					array_push($output,$value);
 				}
 			}

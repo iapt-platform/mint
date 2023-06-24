@@ -11,7 +11,7 @@ set_error_handler("customError");
 
 function user_db_is_exist()
 {
-    $PDO = new PDO("" . _FILE_DB_USERINFO_, "", "");
+    $PDO = new PDO( _FILE_DB_USERINFO_, _DB_USERNAME_,_DB_PASSWORD_);
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     $stmt = $PDO->query("SELECT count(*) as co FROM sqlite_master WHERE type=\"table\" AND name = \"user\"");
 

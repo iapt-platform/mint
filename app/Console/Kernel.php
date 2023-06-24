@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
                  ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
 				 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
 
-        $schedule->command('export:offline')
+        $schedule->command('upgrade:weekly')
                  ->weekly()
                  ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
     }

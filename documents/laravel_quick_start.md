@@ -17,9 +17,12 @@ php artisan migrate
 
 6. 建立控制器
 
+php artisan make:controller --api --model=<model name>  <model name>Controller
+
+如： model = Lesson
 php artisan make:controller --api --model=Lesson  LessonController
 
-7. 数据库查询
+1. 数据库查询
 
         $table = new Tag();
         $table = $table->where('name','aaa');
@@ -54,5 +57,5 @@ php artisan make:controller --api --model=Lesson  LessonController
 
 前端调用
 
-ApiFetch(`/progress?view=chapter-tag`)
+
 

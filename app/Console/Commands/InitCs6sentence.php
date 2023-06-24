@@ -58,6 +58,7 @@ class InitCs6sentence extends Command
 		}
 		$bar = $this->output->createProgressBar($pali->count());
 		$pali = $pali->select('book','paragraph','word_begin','word_end')->cursor();
+
 		foreach ($pali as $value) {
 			# code...
 			$words = WbwTemplate::where("book",$value->book)
@@ -69,11 +70,22 @@ class InitCs6sentence extends Command
 			$sent = '';
 			$boldStart = false;
 			$boldCount = 0;
+            $lastWord = null;
 			foreach ($words as $word) {
 				# code...
 				//if($word->style != "note" && $word->type != '.ctl.')
 				if( $word->type != '.ctl.')
                 {
+                    if($lastWord !== null){
+                        if($word->real !== "ti" ){
+
+                            if(!(empty($word->real) && empty($lastWord->real))) {
+                                    #如果不是标点符号，在词的前面加空格 。
+                                $sent .= " ";
+                            }
+                        }
+                    }
+
 					if(strpos($word->word,'{') >=0 ){
                         //一个单词里面含有黑体字的
 						$paliWord = \str_replace("{","<strong>",$word->word) ;
@@ -87,12 +99,8 @@ class InitCs6sentence extends Command
                         }
 					}
 
-					if(!empty($word->real) ){
-						#如果不是标点符号，在词的前面加空格 。
-						$sent .= " ";
-					}
-
 				}
+                $lastWord = $word;
 			}
 
 			#将wikipali风格的引用 改为缅文风格
@@ -114,6 +122,7 @@ class InitCs6sentence extends Command
 				[
 					'id' =>app('snowflake')->id(),
 					'uid' =>Str::uuid(),
+                    'create_time' => time()*1000,
 				]
 				);
             $newRow->editor_uid = config("app.admin.root_uuid");
@@ -121,7 +130,6 @@ class InitCs6sentence extends Command
             $newRow->strlen = mb_strlen($sent,"UTF-8");
             $newRow->status = 10;
             $newRow->content_type = "html";
-            $newRow->create_time = time()*1000;
             $newRow->modify_time = time()*1000;
             $newRow->language = 'en';
             $newRow->save();

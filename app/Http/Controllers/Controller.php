@@ -32,7 +32,7 @@ class Controller extends BaseController
 		return response()->json($response,$code);
 	}
 
-    public function error($error, $errorMessages="", $code=404){
+    public function error($error, $errorMessages=[], $code=404){
         return $this->sendError($error, $errorMessages, $code);
     }
 }

@@ -120,7 +120,7 @@ if ($FetchParInfo) {
     }
 
     //获取下级目录
-    $query = "SELECT level,paragraph,toc FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND (paragraph BETWEEN ?AND ? ) AND level < 8 order by paragraph asc";
+    $query = "SELECT level,paragraph,toc FROM "._TABLE_PALI_TEXT_."  WHERE book= ? AND (paragraph BETWEEN ? AND ? ) AND level < 8 order by paragraph asc";
     $toc = PDO_FetchAll($query, array($_book, $paraBegin, $paraEnd));
 	if(count($toc)>0){
 		$output["title"] = $toc[0]["toc"];
@@ -158,7 +158,7 @@ if ($FetchParInfo) {
 			}
 			$currLevel = $value["level"];
             $space = "";
-			for ($i=$minLevel; $i < $currLevel; $i++) { 
+			for ($i=$minLevel; $i < $currLevel; $i++) {
 				# code...
 				$space .= "  ";
 			}
@@ -226,7 +226,7 @@ if ($FetchParInfo) {
 					$output["content"] .= "\n\n</div>";
 				}
 			}
-			$output["content"] .= "<div class='page_number' page='{$iCurrPara}'>{$iCurrPara}</div>\n\n";			
+			$output["content"] .= "<div class='page_number' page='{$iCurrPara}'>{$iCurrPara}</div>\n\n";
 		}
 
 		$output["content"] .= "{{". $value["book"] . "-" . $value["paragraph"] . "-". $value["begin"] . "-" . $value["end"] . "}}";

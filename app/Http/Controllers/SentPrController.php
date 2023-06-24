@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\SentPr;
 use App\Models\Channel;
 use App\Models\PaliSentence;
+use App\Models\Sentence;
 use App\Http\Resources\SentPrResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -31,7 +32,8 @@ class SentPrController extends Controller
                                 ->where('word_end',$request->get('end'))
                                 ->where('channel_uid',$request->get('channel'));
                 $all_count = $table->count();
-                $chapters = $table->orderBy('paragraph')->get();
+                $chapters = $table->orderBy('created_at','desc')->get();
+
                 break;
         }
         if($chapters){
@@ -41,6 +43,47 @@ class SentPrController extends Controller
         }
     }
 
+    public function pr_tree(Request $request){
+        $output = [];
+        $sentences = $request->get("data");
+        foreach ($sentences as $key => $sentence) {
+            # 先查句子信息
+            $sentInfo = Sentence::where('book_id',$sentence['book'])
+                                ->where('paragraph',$sentence['paragraph'])
+                                ->where('word_start',$sentence['word_start'])
+                                ->where('word_end',$sentence['word_end'])
+                                ->where('channel_uid',$sentence['channel_id'])
+                                ->first();
+            $sentPr = SentPr::where('book_id',$sentence['book'])
+                            ->where('paragraph',$sentence['paragraph'])
+                            ->where('word_start',$sentence['word_start'])
+                            ->where('word_end',$sentence['word_end'])
+                            ->where('channel_uid',$sentence['channel_id'])
+                            ->select('content','editor_uid')
+                            ->orderBy('created_at','desc')->get();
+            if(count($sentPr)>0){
+                if($sentInfo){
+                    $content = $sentInfo->content;
+                }else{
+                    $content = "null";
+                }
+                $output[] = [
+                    'sentence' => [
+                        'book' => $sentence['book'],
+                        'paragraph' => $sentence['paragraph'],
+                        'word_start' => $sentence['word_start'],
+                        'word_end' => $sentence['word_end'],
+                        'channel_id' => $sentence['channel_id'],
+                        'content' => $content,
+                        'pr_count' => count($sentPr),
+                    ],
+                    'pr' => $sentPr,
+                ];
+            }
+
+        }
+        return $this->ok(['rows'=>$output,'count'=>count($output)]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -50,11 +93,11 @@ class SentPrController extends Controller
     public function store(Request $request)
     {
         //
-        if(!isset($_COOKIE['user_uid'])){
-            return $this->error('not login');
-        }else{
-			$user_uid = $_COOKIE['user_uid'];
-		}
+        $user = \App\Http\Api\AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $user_uid = $user['user_uid'];
 
         $data = $request->all();
 
@@ -121,7 +164,6 @@ class SentPrController extends Controller
 				$palitext = mb_substr($palitext,0,20,"UTF-8");
 				$prtext = mb_substr($data['text'],0,140,"UTF-8");
 				$link = "https://www-hk.wikipali.org/app/article/index.php?view=para&book={$data['book']}&par={$data['para']}&begin={$data['begin']}&end={$data['end']}&channel={$data['channel']}&mode=edit";
-				Log::info("palitext:{$palitext} prtext = {$prtext} link={$link}");
 				switch ($data['channel']) {
 					//测试
 					//case '3b0cb0aa-ea88-4ce5-b67d-00a3e76220cc':
@@ -155,7 +197,6 @@ class SentPrController extends Controller
 							"content"=> $strMessage,
 						],
 					];
-				Log::info("message:{$strMessage}");
 				if(!empty($strMessage)){
 					$response = Http::post($url, $param);
 					if($response->successful()){
@@ -186,7 +227,6 @@ class SentPrController extends Controller
 						->where('word_end' , $data['end'])
 						->where('channel_uid' , $data['channel'])
 						->count();
-		Log::info("count:{$count} webhook-ok={$robotMessageOk}");
 		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
 
     }
@@ -246,12 +286,10 @@ class SentPrController extends Controller
     public function destroy($id)
     {
         //
-		Log::info("user_uid=" .$_COOKIE['user_uid']);
 		$old = SentPr::where('id', $id)->first();
 		$result = SentPr::where('id', $id)
 							->where('editor_uid', $_COOKIE["user_uid"])
 							->delete();
-		Log::info("delete=" .$result);
 		if($result>0){
 					#同时返回此句子pr数量
 		$count = SentPr::where('book_id' , $old->book_id)

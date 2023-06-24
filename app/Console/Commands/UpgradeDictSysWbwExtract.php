@@ -129,6 +129,8 @@ class UpgradeDictSysWbwExtract extends Command
 				$bar->advance();
 		}
 		$bar->finish();
+
+        //TODO 删除旧数据
         return 0;
     }
 }
