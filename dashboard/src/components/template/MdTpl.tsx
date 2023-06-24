@@ -6,6 +6,7 @@ import Quote from "./Quote";
 import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
 import Term from "./Term";
+import Toggle from "./Toggle";
 import WbwSent from "./WbwSent";
 import Wd from "./Wd";
 
@@ -36,6 +37,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Article props={props ? props : ""} />;
     case "nissaya":
       return <Nissaya props={props ? props : ""} />;
+    case "toggle":
+      return <Toggle props={props ? props : undefined}>{children}</Toggle>;
     default:
       return <>未定义模版({tpl})</>;
   }
