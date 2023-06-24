@@ -38,13 +38,23 @@ class TestMdRender extends Command
      */
     public function handle()
     {
-        $markdown = "# heading \n\n";
+        $markdown = "";
         //$markdown .= "[[isipatana]] `bla` [[dhammacakka]]\n\n";
-        $markdown .= "前面的\n";
-        $markdown .= "{{note|\n";
-        $markdown .= "多**行注**释\n\n";
-        $markdown .= "多行注释\n";
-        $markdown .= "}}\n\n";
+        //$markdown .= "前面的\n";
+        //$markdown .= "{{note|\n";
+        //$markdown .= "多**行注**释\n\n";
+        //$markdown .= "多行注释\n";
+        //$markdown .= "}}\n\n";
+        $markdown .= "- title \n";
+        $markdown .= "  \n";
+        $markdown .= "  content-1\n";
+        $markdown .= "- title-2 \n";
+        $markdown .= "  \n";
+        $markdown .= "  content-2\n";
+        $markdown .= "  \n";
+        $markdown .= "\n";
+        $markdown .= "\n";
+        $markdown .= "aaa bbb\n";
         /*
         $markdown .= "```\n";
         $markdown .= "content **content**\n";
@@ -69,6 +79,7 @@ class TestMdRender extends Command
         //$html = MdRender::xmlQueryId($xml, "1");
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
+
         echo MdRender::render2($markdown,'00ae2c48-c204-4082-ae79-79ba2740d506',null,'read','nissaya');
         return 0;
     }
