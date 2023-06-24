@@ -149,7 +149,11 @@ class MdRender{
 
     public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType,$contentType="markdown"){
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
+        Log::info("wiki");
+        Log::info($wiki);
         $html = MdRender::wiki2xml($wiki);
+        Log::info("html");
+        Log::info($html);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
@@ -200,7 +204,7 @@ class MdRender{
                 $markdown = preg_replace($pattern,$replacement,$markdown);
             }
         }
-        $markdown = preg_replace("/\n\n/","<div></div>",$markdown);
+        //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
 
         /**
