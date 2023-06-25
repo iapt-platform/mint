@@ -200,7 +200,7 @@ class MdRender{
                 $markdown = preg_replace($pattern,$replacement,$markdown);
             }
         }
-        $markdown = preg_replace("/\n\n/","<div></div>",$markdown);
+        //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
 
         /**
