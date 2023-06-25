@@ -53,8 +53,10 @@ class StatisticsNissaya extends Command
                             ->first();
         $firstDay = strtotime($firstDay->created_at);
         $firstMonth = Carbon::create(date("Y-m",$firstDay));
-        $current = Carbon::now();
-        while ($current >= $firstMonth) {
+        $now = Carbon::now();
+        $current = $firstMonth;
+        $sumStrlen = 0;
+        while ($current <= $now) {
             # code...
             $start = Carbon::create($current)->startOfMonth();
             $end = Carbon::create($current)->endOfMonth();
@@ -63,15 +65,16 @@ class StatisticsNissaya extends Command
                               ->whereDate('created_at','>=',$start)
                               ->whereDate('created_at','<=',$end)
                               ->sum('strlen');
+            $sumStrlen += $strlen;
             $editor = Sentence::whereIn('channel_uid',$nissaya_channel)
                               ->whereDate('created_at','>=',$start)
                               ->whereDate('created_at','<=',$end)
                               ->groupBy('editor_uid')
                               ->select('editor_uid')->get();
-            $info = $date.','.$strlen.','.count($editor);
+            $info = $date.','.$strlen.','.$sumStrlen.','.count($editor);
             $this->info($info);
             Storage::disk('local')->append($file, $info);
-            $current->modify('-1 month');
+            $current->addMonth(1);
         }
         return 0;
     }
