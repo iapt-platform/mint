@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Channel;
 use App\Models\Sentence;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class StatisticsNissaya extends Command
 {
@@ -21,7 +22,7 @@ class StatisticsNissaya extends Command
      *
      * @var string
      */
-    protected $description = '统计nissaya 每日录入进度';
+    protected $description = '统计nissaya 每月录入进度';
 
     /**
      * Create a new command instance.
@@ -41,45 +42,36 @@ class StatisticsNissaya extends Command
     public function handle()
     {
         $nissaya_channel = Channel::where('type','nissaya')->select('uid')->get();
-        $channels = [];
-        foreach ($nissaya_channel as $key => $value) {
-            # code...
-            $channels[] = $value->uid;
-        }
-        $this->info('channel:'.count($channels));
+        $this->info('channel:'.count($nissaya_channel));
         $maxDay = 360;
-        $file = "public/export/nissaya-daily.csv";
+        $file = "public/statistics/nissaya-monthly.csv";
         Storage::disk('local')->put($file, "");
-        #按天获取数据
-        for($i = 1; $i <= $maxDay; $i++){
-            $day = strtotime("today -{$i} day");
-            $date = date("Y-m-d",$day);
-            $strlen = Sentence::whereIn('channel_uid',$channels)
-                    ->whereDate('created_at','=',$date)
-                    ->sum('strlen');
-            $editor = Sentence::whereIn('channel_uid',$channels)
-                    ->whereDate('created_at','=',$date)
-                    ->groupBy('editor_uid')
-                    ->select('editor_uid')->get();
+        #按月获取数据
+        $firstDay = Sentence::whereIn('channel_uid',$nissaya_channel)
+                            ->orderBy('created_at')
+                            ->select('created_at')
+                            ->first();
+        $firstDay = strtotime($firstDay->created_at);
+        $firstMonth = Carbon::create(date("Y-m",$firstDay));
+        $current = Carbon::now();
+        while ($current >= $firstMonth) {
+            # code...
+            $start = Carbon::create($current)->startOfMonth();
+            $end = Carbon::create($current)->endOfMonth();
+            $date = $current->format('Y-m');
+            $strlen = Sentence::whereIn('channel_uid',$nissaya_channel)
+                              ->whereDate('created_at','>=',$start)
+                              ->whereDate('created_at','<=',$end)
+                              ->sum('strlen');
+            $editor = Sentence::whereIn('channel_uid',$nissaya_channel)
+                              ->whereDate('created_at','>=',$start)
+                              ->whereDate('created_at','<=',$end)
+                              ->groupBy('editor_uid')
+                              ->select('editor_uid')->get();
             $info = $date.','.$strlen.','.count($editor);
             $this->info($info);
             Storage::disk('local')->append($file, $info);
-        }
-        $file = "public/export/nissaya-week.csv";
-        Storage::disk('local')->put($file, "");
-        for($i = 1; $i <= $maxDay; $i=$i+7){
-            $day1 = strtotime("today -{$i} day");
-            $date1 = date("Y-m-d",$day1);
-            $j = $i - 7;
-            $date2 = date("Y-m-d",strtotime("today -{$j} day"));
-            $editor = Sentence::whereIn('channel_uid',$channels)
-                    ->whereDate('created_at','>',$date1)
-                    ->whereDate('created_at','<=',$date2)
-                    ->groupBy('editor_uid')
-                    ->select('editor_uid')->get();
-            $info = $date2.','.$date1.','.count($editor);
-            $this->info($info);
-            Storage::disk('local')->append($file, $info);
+            $current->modify('-1 month');
         }
         return 0;
     }
