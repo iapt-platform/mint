@@ -339,6 +339,7 @@ const Widget = () => {
             },
           },
         ]}
+        /*
         rowSelection={{
           // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
           // 注释该行则默认不显示下拉选项
@@ -374,8 +375,9 @@ const Widget = () => {
             </Space>
           );
         }}
+        */
         request={async (params = {}, sorter, filter) => {
-          // TODO
+          // TODO 分页
           console.log(params, sorter, filter);
           let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioname}`;
           url += collaborator ? "&collaborator=" + collaborator : "";
@@ -386,7 +388,7 @@ const Widget = () => {
           const items: IChannelItem[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at);
             return {
-              id: id,
+              id: id + 1,
               uid: item.uid,
               title: item.name,
               summary: item.summary,
