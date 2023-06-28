@@ -25,7 +25,7 @@ const TimeShowWidget = ({
       return;
     }
     let timer = setInterval(() => {
-      setMTime((mTime) => mTime + 1);
+      setMTime((origin) => origin + 1);
     }, 1000 * 60);
     return () => {
       clearInterval(timer);
