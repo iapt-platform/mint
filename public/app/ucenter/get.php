@@ -10,14 +10,14 @@ if (isset($_GET["id"])) {
 		$query = "SELECT bio,email from profile where user_id = ? ";
 	}
 	else{
-		$query = "SELECT userid as id ,username,nickname from user where userid = ? ";
+		$query = "SELECT userid as id ,username,nickname from "._TABLE_USER_INFO_." where userid = ? ";
 	}
 
     $stmt = $dbh->prepare($query);
     $stmt->execute(array($_GET["id"]));
     $fUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else if (isset($_GET["username"])) {
-    $query = "SELECT userid as id ,username,nickname,email from user where  nickname like ? limit 0,8";
+    $query = "SELECT userid as id ,username,nickname,email from "._TABLE_USER_INFO_." where  nickname like ? limit 10 offset 0";
     $stmt = $dbh->prepare($query);
     $username = "%" . $_GET["username"] . "%";
     $stmt->execute(array($username));
