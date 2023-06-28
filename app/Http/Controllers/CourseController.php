@@ -96,23 +96,16 @@ class CourseController extends Controller
                 break;
         }
         $table = $table->select($indexCol);
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if($request->has('search')){
+            $table = $table->where('title', 'like', $request->get('search')."%");
         }
         $count = $table->count();
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            $table = $table->orderBy('updated_at','desc');
-        }
+        $table = $table->orderBy($request->get('order','updated_at'),
+                                 $request->get('dir','desc'));
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
-        }
+        $table = $table->skip($request->get('offset',0))
+                       ->take($request->get('limit',1000));
+
         $result = $table->get();
 		if($result){
 			return $this->ok(["rows"=>CourseResource::collection($result),"count"=>$count]);
