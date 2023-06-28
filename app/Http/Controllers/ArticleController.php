@@ -317,6 +317,39 @@ class ArticleController extends Controller
         }
         return $this->ok(new ArticleResource($article));
     }
+    /**
+     * Display the specified resource.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function preview(Request  $request,string $articleId)
+    {
+        //
+        $article = Article::find($articleId);
+        if(!$article){
+            return $this->error("no recorder");
+        }
+        //判断权限
+        $user = AuthApi::current($request);
+        if(!$user){
+            $user_uid="";
+        }else{
+            $user_uid=$user['user_uid'];
+        }
+
+        $canRead = ArticleController::userCanRead($user_uid,$article);
+        if(!$canRead){
+            return $this->error(__('auth.failed'),[],401);
+        }
+        if($request->has('content')){
+            $article->content = $request->get('content');
+            return $this->ok(new ArticleResource($article));
+        }else{
+            return $this->error('no content',[],200);
+        }
+
+    }
 
     /**
      * Update the specified resource in storage.
