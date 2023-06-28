@@ -62,6 +62,21 @@ class InitSystemChannel extends Command
             'type'=>'translation',
             'lang'=>'en',
         ],
+        [
+            "name"=>'_community_translation_zh-hans_',
+            'type'=>'translation',
+            'lang'=>'zh-Hans',
+        ],
+        [
+            "name"=>'_community_translation_zh-hant_',
+            'type'=>'translation',
+            'lang'=>'zh-Hant',
+        ],
+        [
+            "name"=>'_community_translation_en_',
+            'type'=>'translation',
+            'lang'=>'en',
+        ],
     ];
 
     /**
