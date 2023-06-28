@@ -150,7 +150,7 @@ const Widget = () => {
               return (
                 <Space key={index}>
                   <Image
-                    src={`${API_HOST}/${row.cover_img_name}`}
+                    src={`${API_HOST}${row.cover_img_name}`}
                     width={64}
                     fallback={`${API_HOST}/app/course/img/default.jpg`}
                   />
