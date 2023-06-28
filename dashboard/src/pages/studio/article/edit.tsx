@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormInstance,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
@@ -23,6 +24,7 @@ import ShareModal from "../../../components/share/ShareModal";
 import { EResType } from "../../../components/share/Share";
 import AddToAnthology from "../../../components/article/AddToAnthology";
 import ReadonlyLabel from "../../../components/general/ReadonlyLabel";
+import ArticlePrevDrawer from "../../../components/article/ArticlePrevDrawer";
 
 interface IFormData {
   uid: string;
@@ -41,6 +43,7 @@ const Widget = () => {
   const [title, setTitle] = useState("loading");
   const [unauthorized, setUnauthorized] = useState(false);
   const [readonly, setReadonly] = useState(false);
+  const [content, setContent] = useState<string>();
 
   return (
     <Card
@@ -128,6 +131,7 @@ const Widget = () => {
               const readonly = res.data.role === "editor" ? false : true;
               setReadonly(readonly);
               setTitle(res.data.title);
+              setContent(res.data.content);
             } else {
               setUnauthorized(true);
               setTitle("无权访问");
@@ -206,11 +210,17 @@ const Widget = () => {
                           {intl.formatMessage({
                             id: "forms.fields.content.label",
                           })}
-                          <Button>预览</Button>
+                          {articleid ? (
+                            <ArticlePrevDrawer
+                              trigger={<Button>预览</Button>}
+                              articleId={articleid}
+                              content={content}
+                            />
+                          ) : undefined}
                         </Space>
                       }
                     >
-                      <MDEditor />
+                      <MDEditor onChange={(value) => setContent(value)} />
                     </Form.Item>
                   </ProForm.Group>
                 ),
