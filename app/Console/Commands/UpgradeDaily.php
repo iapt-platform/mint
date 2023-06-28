@@ -50,9 +50,9 @@ class UpgradeDaily extends Command
 		}
 
         //巴利原文段落库目录结构改变时运行
-        $this->call('upgrade:palitext');
+        //$this->call('upgrade:palitext');
         #巴利段落标签
-        $this->call('upgrade:palitexttag');
+        //$this->call('upgrade:palitexttag');
 
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');

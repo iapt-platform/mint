@@ -7,6 +7,11 @@ require_once "../public/_pdo.php";
 require_once "../public/function.php";
 require_once "../ucenter/function.php";
 
+if(!isset($_COOKIE['user_uid'])){
+    echo json_encode([], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $sent = $_POST["sent"];
 $filter = $_POST["filter"];
 
@@ -33,11 +38,15 @@ $query = "SELECT uid as id,
 				 version as ver,
 				 status,
 				 strlen,
-				 modify_time FROM "._TABLE_SENTENCE_." WHERE (book_id = ?  AND paragraph = ? AND word_start = ? AND word_end = ? AND strlen > 0  ) order by modify_time DESC limit 10";
+				 modify_time FROM "._TABLE_SENTENCE_.
+        " WHERE (book_id = ?  AND paragraph = ? AND word_start = ? AND word_end = ? AND strlen > 0)
+                 and (status = 30 or editor_uid = ? )
+                 order by modify_time DESC limit 10";
+
 $stmt = $dbh->prepare($query);
 foreach ($sentList as $key => $value) {
     # code...
-    $stmt->execute(array($value->book, $value->para, $value->start, $value->end));
+    $stmt->execute(array($value->book, $value->para, $value->start, $value->end,$_COOKIE['user_uid']));
     $Fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
     for ($i = 0; $i < count($Fetch); $i++) {
         $Fetch[$i]["nickname"] = ucenter_getA($Fetch[$i]["editor"]);
