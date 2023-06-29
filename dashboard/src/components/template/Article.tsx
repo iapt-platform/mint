@@ -1,10 +1,10 @@
-import { Modal } from "antd";
+import { Card, Collapse, Modal } from "antd";
 import { Typography } from "antd";
 import { useState } from "react";
 import Article, { ArticleType } from "../article/Article";
 
 const { Link } = Typography;
-export type TDisplayStyle = "modal" | "card";
+export type TDisplayStyle = "modal" | "card" | "toggle";
 interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
@@ -33,27 +33,51 @@ const ArticleCtl = ({
     setIsModalOpen(false);
   };
   const aTitle = title ? title : "chapter" + id;
-  return (
-    <>
-      <Link onClick={showModal}>{aTitle}</Link>
-      <Modal
-        width={"80%"}
-        style={{ maxWidth: 1000 }}
-        title={aTitle}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[]}
-      >
-        <Article
-          active={true}
-          type={type}
-          articleId={id + (channel ? "_" + channel : "")}
-          mode="read"
-        />
-      </Modal>
-    </>
+  const article = (
+    <Article
+      active={true}
+      type={type}
+      articleId={id}
+      channelId={channel}
+      mode="read"
+    />
   );
+  let output = <></>;
+  switch (style) {
+    case "modal":
+      output = (
+        <>
+          <Link onClick={showModal}>{aTitle}</Link>
+          <Modal
+            width={"80%"}
+            style={{ maxWidth: 1000 }}
+            title={aTitle}
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[]}
+          >
+            {article}
+          </Modal>
+        </>
+      );
+      break;
+    case "card":
+      output = <Card title={aTitle}>{article}</Card>;
+      break;
+    case "toggle":
+      output = (
+        <Collapse bordered={false}>
+          <Collapse.Panel header={aTitle} key="parent2">
+            {article}
+          </Collapse.Panel>
+        </Collapse>
+      );
+      break;
+    default:
+      break;
+  }
+  return output;
 };
 
 interface IWidget {
