@@ -769,6 +769,8 @@ function palicanon_render_chapter_row(chapter,isSub=false) {
 	html += "</div>";
 	html += '<div class="title_right" >';
     if(isSub){
+        html += "<span></span>";
+    }else{
         html += "<img class='chapter_dynamic_svg' src='/api/v2/progress-img/-chapter_dynamic-";
         html += chapter.book + "-";
         if(chapter.paragraph){
@@ -782,8 +784,6 @@ function palicanon_render_chapter_row(chapter,isSub=false) {
             html += "-global";
         }
         html += "' />";
-    }else{
-        html += "<span></span>";
     }
 
 	html += "</div>";
