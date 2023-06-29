@@ -618,7 +618,7 @@ function renderProgress(progress=0,width=16,height=16){
     return html;
 
 }
-function palicanon_render_chapter_row(chapter) {
+function palicanon_render_chapter_row(chapter,isSub=false) {
 	let html = "";
 	let levelClass = "";
 	if (chapter.level == 1) {
@@ -647,9 +647,14 @@ function palicanon_render_chapter_row(chapter) {
     if(typeof chapter.views != "undefined"){
         html += "<div class='left_item'>";
         html += "<span class='item'>";
-        html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
-        html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
-        html += "</svg>" ;
+        if(isSub){
+            html += "<svg class='small_icon' style='fill: var(--box-bg-color1)'>";
+            html += "<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#eye'>";
+            html += "</svg>" ;
+        }else{
+            html += "<span></span>";
+        }
+
         html += "<span class='text'>";
         html += chapter.views;
         html += "</span>";
@@ -846,7 +851,7 @@ function palicanon_render_chapter_row(chapter) {
     if(chapter.children){
         html += "<ul class='subchapter_inner'>";
         for (const subchapter of chapter.children) {
-            html +=palicanon_render_chapter_row(subchapter);
+            html +=palicanon_render_chapter_row(subchapter,true);
         }
         html += "</ul>";
     }
