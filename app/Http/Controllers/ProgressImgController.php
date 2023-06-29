@@ -57,7 +57,6 @@ class ProgressImgController extends Controller
                 return $svg;
             } , 0.1*24 );
             echo $svg;
-            Log::info('svg'.$svg);
         }, 200, ['Content-Type' => 'image/svg+xml']);
     /*
     ————————————————
