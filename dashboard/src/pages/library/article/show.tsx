@@ -4,7 +4,9 @@ import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ColumnOutlinedIcon } from "../../../assets/icon";
+import { IArticleDataResponse } from "../../../components/api/Article";
 import { IApiResponseDictList } from "../../../components/api/Dict";
+import AnchorNav from "../../../components/article/AnchorNav";
 
 import Article, {
   ArticleMode,
@@ -220,9 +222,11 @@ const Widget = () => {
                 });
                 navigate(url);
               }}
+              onLoad={(article: IArticleDataResponse) => {}}
             />
           </div>
           <div key="RightPanel">
+            <AnchorNav />
             <RightPanel
               curr={rightPanel}
               type={type as ArticleType}
