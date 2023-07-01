@@ -22,7 +22,7 @@ class AttachmentResource extends JsonResource
             "title" => $this->title,
             "size" => $this->size,
             "content_type" => $this->content_type,
-            "url" => Storage::url($this->name),
+            "url" => Storage::disk('public')->url($this->bucket.'/'.$this->name),
             "status" => $this->status,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
