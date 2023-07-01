@@ -11,6 +11,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Resources\AttachmentResource;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
+use FFMpeg\FFMpeg;
 
 class AttachmentController extends Controller
 {
@@ -88,13 +89,27 @@ class AttachmentController extends Controller
         $attachment->status = 'public';
         $attachment->save();
 
-        $resize = Image::make($file)->fit(128);
-        Storage::disk('public')->put($bucket.'/'.$fileId.'_s.jpg',$resize->stream());
-        $resize = Image::make($file)->fit(256);
-        Storage::disk('public')->put($bucket.'/'.$fileId.'_m.jpg',$resize->stream());
-        $resize = Image::make($file)->fit(512);
-        Storage::disk('public')->put($bucket.'/'.$fileId.'_l.jpg',$resize->stream());
-
+        $type = explode('/',$file->getMimeType());
+        switch ($type[0]) {
+            case 'image':
+                $resize = Image::make($file)->fit(128);
+                Storage::disk('public')->put($bucket.'/'.$fileId.'_s.jpg',$resize->stream());
+                $resize = Image::make($file)->fit(256);
+                Storage::disk('public')->put($bucket.'/'.$fileId.'_m.jpg',$resize->stream());
+                $resize = Image::make($file)->fit(512);
+                Storage::disk('public')->put($bucket.'/'.$fileId.'_l.jpg',$resize->stream());
+                break;
+            case 'video':
+                //$path = public_path($filename);
+                //$ffmpeg = FFMpeg::create();
+                //$video = $ffmpeg->open(public_path($filename));
+                //$frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds(1));
+                //$frame->save('image.jpg');
+                break;
+            default:
+                # code...
+                break;
+        }
         $json = array(
             'name' => $filename,
             'size' => $file->getSize(),
@@ -102,7 +117,7 @@ class AttachmentController extends Controller
             'url' => Storage::disk('public')->url($filename),
             'uid' => $attachment->id,
             );
-        return $this->ok($json);
+        return $this->ok(new AttachmentResource($attachment));
 
     }
 
@@ -115,6 +130,7 @@ class AttachmentController extends Controller
     public function show(Attachment $attachment)
     {
         //
+        return $this->ok(new AttachmentResource($attachment));
     }
 
     /**
